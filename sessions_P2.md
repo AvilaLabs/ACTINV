@@ -1,0 +1,19 @@
+# ACTINV P2 — session close, 2026-08-25
+
+**Protocol:** protocols/ACTINV-P2_PROTOCOL.md (600ba0da…); Amendments A (3e91d74d…, G2 criteria), B (3d850970…,
+trace-activation formulation — G4's repair round), C (harness alignment rules). **Verdict: P2-CONDITIONAL.**
+
+| gate | result |
+|---|---|
+| G1 library | 816 EAF-2010 targets, 115,831 rows; controls 4.2e-16 / 4.1e-14 / 0 failures (after the reduceat repair) |
+| G2 CLI | pruned 10 states 0.104 ms vs 3,822 states 31.6 ms; = Python 0.0; Amendment A criteria met at 2e-16 |
+| G3 harness | evaluator 0.0; `.out`=`.nuclides` 2.2e-16 over 2,379 points; 132 compositions close to 2e-16 |
+| G4 FNS | 132/132, 0 errors, C/E reproduced to 3.8e-16; median gm C/E 1.024 (ACTINV) vs 1.009 (FISPACT-II); tracks FISPACT within 20 % everywhere in 103/132 |
+| G5 PyO3 | `import actinv` installed via maturin; Python step = CLI at 0.0 |
+
+**What the instrument caught in my own method:** cumulative-sum precision loss in the library build (1e-9 → 4e-16);
+CRAM round-off relative to the stable bulk producing spurious heat (→ trace formulation); index-based measurement
+alignment (→ time-based). Each is recorded with numbers, the amendment, and the rerun.
+**Accuracy is reported, not claimed:** a 2010 activation library with 2018 decay data reproduces the FNS decay-heat
+set as well as the licensed reference to within the spread of the measurements, and the per-nuclide diagnostics
+locate every large difference in the data libraries.

@@ -1,0 +1,15 @@
+[package]
+name = "actinv-py"
+version = "0.0.1"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "ACTINV Python binding (PyO3)"
+
+[lib]
+name = "actinv"
+crate-type = ["cdylib"]
+
+[dependencies]
+actinv-core = { path = "../crates/actinv-core" }
+num-complex = "0.4"
+pyo3 = { version = "0.22", features = ["extension-module"] }

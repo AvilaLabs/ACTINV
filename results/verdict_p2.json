@@ -1,0 +1,23 @@
+{
+ "gates": {
+  "G1": "PASS (a: 655 reactions max 4.2e-16; b: 1661 max 4.1e-14; c: 0 failures / 0 mismatches)",
+  "G2": "PASS; pruned 0.104 ms vs unpruned 31.6 ms",
+  "G3": "PASS",
+  "G4": "PASS (ran 132, errors 0, C/E reproduction worst 3.8e-16); median max|lnCE| ACTINV 0.2835355817850367 vs FISPACT 0.2232260220473155; no trigger; dispositions {'AGREE_MEAS': 41, 'AGREE_REF': 32, 'DISAGREE': 59}",
+  "G5": "PASS"
+ },
+ "g4": {
+  "n_ok": 132,
+  "n_err": 0,
+  "worst_reproduction": 3.8210940736217236e-16,
+  "median_maxlnCE_actinv": 0.2835355817850367,
+  "median_maxlnCE_fispact": 0.2232260220473155,
+  "instrument_suspect": false,
+  "dispositions": {
+   "AGREE_MEAS": 41,
+   "AGREE_REF": 32,
+   "DISAGREE": 59
+  }
+ },
+ "verdict": "P2-CONDITIONAL"
+}

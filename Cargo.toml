@@ -1,9 +1,12 @@
 [workspace]
 resolver = "2"
 members = ["crates/actinv-core", "crates/actinv-data", "crates/actinv-cli"]
+exclude = ["python"]
 
 [workspace.package]
 version = "0.0.1"
 edition = "2021"
 authors = ["Connor Avila <connoravila0@gmail.com>"]
 description = "ACTINV — open, standalone, activation-grade nuclide-inventory solver"
+license = "MIT OR Apache-2.0"
+repository = ""

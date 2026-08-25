@@ -3,6 +3,7 @@ name = "actinv-data"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
+license.workspace = true
 description = "ACTINV actinv-data (placeholder)"
 
 [dependencies]

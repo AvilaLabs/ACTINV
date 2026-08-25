@@ -50,3 +50,73 @@
   G3 PASS; G4 recorded). Session closed; MANIFEST.sha256 regenerated once; local git commit.
 - For P2: prune to the reachable network before factorising (10 states here vs 3,822); resonance
   reconstruction for TENDL; the FNS accuracy gate (measured decay heat vs ACTINV, code-agnostic runner).
+
+## 3 — 2026-08-25 — P2 opened
+- Principal: licence dual MIT OR Apache-2.0 confirmed; "P2 can proceed". LICENSE-MIT written; LICENSE-APACHE
+  fetched verbatim (sha256 cfc7749b…); Cargo `license = "MIT OR Apache-2.0"`; README updated.
+- P2 protocol hashed (protocols/protocol_hash.txt). Python.h present in the venv → PyO3 feasible (G5).
+- FNS conventions (survey, not scored): 132 experiments / 73 materials; MASS card = element wt-%; fluxes file in
+  absolute units (Fe: Σ = 1.1166e10 vs FLUX 1.116e10); schedule units SECS (default) / MINS / DAYS; 5-min
+  experiments report times in minutes, 7-hour ones in days; `.nuclides` gives per-nuclide kW/kg vs time (years).
+- EAF-2010 full library download started (background, 817 zips, 4 parallel).
+
+## 4 — 2026-08-25 — P2 G1/G2/G3 results and repairs
+- G1 library: 816 EAF-2010 targets (70 metastable), 115,831 (target, MT, product, LFS) rows, 0 parse failures,
+  0 MF=8 header mismatches, 55 s build. Control (a) first run 1.1e-9 — cumulative-sum differencing lost precision
+  on small groups; repair: direct per-group summation (`np.add.reduceat`); rebuilt; **4.2e-16** over 655 reactions.
+  Control (b) 4.1e-14 over 1,661 reactions (openmc TAB1 reader). Control (c) 0/0. One repair round used for G1.
+- G2 CLI (`actinv-solve`, reachable-set pruning): P1 Fe-56 schedule — pruned 10 states **0.105 ms** total vs
+  unpruned 3,822 states 31.6 ms. First-run criteria unattainable (Mn-56 equilibrium component differs by 2.5e-18
+  = 2.2e-16 of ΣN; per-unit-flux scaling differs from P1 by 4e-25 on a 5.6e-17 component); **P2 Amendment A**
+  (sha 3e91d74d…): |Δ|/ΣN ≤ 1e-12 and ≤ 1e-12 relative on components > 1e-3 ΣN → pruned vs unpruned 2.2e-16 /
+  3.5e-16; vs P1 Rust 4.1e-25; vs Python 0.0. PASS.
+- G3 harness: (a) Mn-56 evaluator vs hand 0.0; (b) `.out` TOTAL HEAT → kW/kg vs `.nuclides` Total 2.2e-16 over
+  2,379 points (readers and units verified on every experiment); (c) 132 compositions: abundance sums exact, mass
+  balance 2.2e-16 g. Reader fixes before scoring: `.nuclides` header tokens are space-padded symbols ("H   3") —
+  regex parse; natural Ta-180 is the isomer (openmc `Ta180_m1`) — composition keeps LISO.
+- G4 first run used the pre-repair library; discarded; rerun launched with the rebuilt library.
+- G5: maturin needs VIRTUAL_ENV; build relaunched.
+
+## 5 — 2026-08-25 — G4 method repair (Amendment B) and harness alignment (Amendment C)
+- G4 run 1 (post-library-repair): 132/132 ran, 0 errors, but 55 experiments returned non-finite ACTINV C/E and the
+  C/E-reproduction control failed ×180. Diagnosis: reachable networks of 1,444 states; CRAM absolute error
+  ~1e-16 × ‖n‖ with ‖n‖ = the stable bulk (~1e22 atoms/g) → ~1e6 atoms/g of signed round-off on unpopulated
+  products with λ up to 1e22 s⁻¹ → spurious/negative heat of the signal's order. The stored inventories excluded
+  negatives while the heat included them — the reproduction control caught the inconsistency.
+- **P2 Amendment B** (sha 3d850970…): trace-activation formulation — bulk composition as a constant source through
+  a unit state; products solved by CRAM; negative components zeroed and ledgered; bulk natural radioactivity as a
+  source plus its constant heat reported separately; validity recorded as max burn-up fraction per experiment.
+  Run 2: burn-up 1e-12…1e-10 on every experiment; zeroed round-off ≤ 8e-5 atoms/g (products ~1e10); Al 5-min
+  ACTINV C/E 0.972 vs FISPACT-II 0.963 with Mg-27 1.072 vs 1.064 μW/g; Co 5-min 1.032 vs 1.035 (Mn-56 0.02826 vs
+  0.02820 μW/g); Br 1.028 vs 1.014.
+- Findings in run 2 that are the data, not the code: Al 1996exp_7hour at 13–50 d — measured ~5e-5 μW/g floor vs
+  both codes 1e-6…1e-9 (ACTINV and FISPACT within 10 % of each other); Bi 1996exp_5min has measured rows ≤ 0.
+- **P2 Amendment C** (sha 2eb19cf6…): alignment by time with unit inference, exclusion of
+  non-positive measurements (ledgered), `.nuclides` name regex tolerant of unspaced names ("Ir194", "Au196n").
+  Run 3 launched; its records are the scored ones. G4 has used its repair round (B); C is a reader rule.
+
+## 6 — 2026-08-25 — G4 final run, verdict, close
+- Final G4 run (Amendments B + C, unit inference excluding padded zero rows): **132/132 experiments, 0 errors,
+  0 unmatched experiments**; every C/E reproduced by `check_p2.py` from the stored inventories to 3.8e-16; wall 50 s
+  for all 132 (solver ≤ 92 ms per experiment, ~1,440-state pruned networks); max burn-up fraction 6.6e-10
+  (trace formulation valid everywhere). 47 measured rows excluded and ledgered (padded zeros, heat ≤ 0, no step).
+- **Accuracy (reported, not gated):** median geometric-mean C/E ACTINV **1.024** vs FISPACT-II/TENDL-2017 **1.009**;
+  median max|ln C/E| 0.284 vs 0.223; experiments with max|ln C/E| ≤ ln 1.3: 47 % vs 52 %. ACTINV tracks FISPACT
+  within 20 % at every measured point in 103/132 experiments; geometric-mean C/E within 10 % of FISPACT's in 88/132;
+  corr(ln C/E) 0.79; median |ln(gm_A/gm_F)| 0.06. Dispositions: AGREE-MEAS 41, AGREE-REF 32, DISAGREE 59 — of the
+  59, both codes are > 30 % off the measurement somewhere (measurement-driven: late-time calorimeter floor in the
+  7-hour series (Al, V), Tb/Dy/Ba patterns identical in both codes). ACTINV > 30 % off where FISPACT is within 30 %:
+  11 mild cases (Ag, Hg, Inc600, K, Mo, Na 7h, Nb, Pt, Re, Se, Sr; 0.27–0.37 vs 0.03–0.25); the reverse: 4 (Re 5-min,
+  S, Sb, Ta). Diagnostic trigger not fired (0.284 − 0.223 < ln 2).
+- Library-difference findings (EAF-2010 + ENDF/B-VIII.0 vs TENDL-2017 + UKDD): Bi — Tl-206m from Bi-209(n,α)
+  6.7e-5 vs 2.0e-3 μW/g and Bi-210 6.4e-5 vs 1.9e-5 μW/g (ACTINV closer to measurement at early times in
+  2000exp_5min: C/E 1.1–1.6 vs 3.0–4.8); Tb-158m 3.0e-2 vs 1.5e-2; Sc-47 in V 1.5e-4 vs 3.7e-5. Oxide samples show
+  N-16 from O-16(n,p) as the top early contributor in both codes (Tb, Dy, Ca).
+- Ledger totals over 132 experiments: 2,640 product-without-decay-record events (the same 20 EAF products lack an
+  ENDF/B-VIII.0 decay record — listed per experiment; to be resolved in P3 with a second decay source), 11,243
+  bulk-production terms dropped (constant-bulk approximation, rates recorded), 0 composition isotopes absent,
+  0 nuclides without mean-energy data.
+- `.problem` files (regenerable by `controls/run_fns.py`, 238 MB) deleted before the manifest; `.result` and `.json`
+  records kept. Figures: results/fns_figures/summary.png, ce_all.png. Report: results/FNS_REPORT.md.
+- `controls/check_p2.py` → **P2-CONDITIONAL** (G1–G5 PASS; G4 after its repair round). Session closed; manifest
+  regenerated once; local git commit. No external contact; no remote repository.

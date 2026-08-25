@@ -1,0 +1,34 @@
+{
+ "controls": {
+  "pruned_vs_unpruned": {
+   "pass": true,
+   "max_abs_over_total": 2.220446049250313e-16,
+   "max_rel_components_gt_1e-3": 3.5205282173726923e-16,
+   "pruned_size": 10,
+   "criterion": "P2 Amendment A"
+  },
+  "unpruned_vs_p1_rust": {
+   "pass": true,
+   "max_abs_over_total": 4.104480884017439e-25,
+   "criterion": "P2 Amendment A"
+  },
+  "unpruned_vs_python": {
+   "pass": true,
+   "max_rel": 0.0
+  }
+ },
+ "timing": {
+  "prune0": {
+   "ms_total": 31.5708,
+   "ms_per_step_max": 10.805,
+   "pruned_size": 3822,
+   "wall_s_incl_io": 0.03589606285095215
+  },
+  "prune1": {
+   "ms_total": 0.1045,
+   "ms_per_step_max": 0.039,
+   "pruned_size": 10,
+   "wall_s_incl_io": 0.003484487533569336
+  }
+ }
+}

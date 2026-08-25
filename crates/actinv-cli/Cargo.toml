@@ -3,6 +3,13 @@ name = "actinv-cli"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true
-description = "ACTINV actinv-cli (placeholder)"
+license.workspace = true
+description = "ACTINV command-line solver: actinv-solve PROBLEM OUT"
 
 [dependencies]
+actinv-core = { path = "../actinv-core" }
+num-complex = "0.4"
+
+[[bin]]
+name = "actinv-solve"
+path = "src/main.rs"

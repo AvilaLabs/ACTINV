@@ -1,0 +1,21 @@
+{
+ "control_a": {
+  "evaluator_W_g": 0.03017547959474283,
+  "hand_W_g": 0.03017547959474283,
+  "rel": 0.0,
+  "pass": true
+ },
+ "control_b": {
+  "n_points": 2379,
+  "max_rel": 2.2116832998302902e-16,
+  "pass": true
+ },
+ "control_c": {
+  "n_experiments": 132,
+  "max_abundance_sum_dev": 0.0,
+  "max_mass_balance_dev_g": 2.220446049250313e-16,
+  "pass": true,
+  "issues": []
+ },
+ "pass": true
+}

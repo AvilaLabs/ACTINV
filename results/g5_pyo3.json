@@ -1,0 +1,7 @@
+{
+ "pass": true,
+ "max_abs_over_total_vs_cli": 0.0,
+ "max_rel_vs_python_populated": 0.0,
+ "n": 3822,
+ "module": "/home/connoravila/.venvs/w003env/lib/python3.12/site-packages/actinv/__init__.py"
+}

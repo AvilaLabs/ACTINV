@@ -4,7 +4,7 @@ Open, standalone, activation-grade nuclide-inventory solver. Any neutron flux sp
 (MCNP, PHITS, Serpent, OpenMC, or measured); nuclide inventory, activity, decay heat, decay-photon
 source and waste-classification quantities out. Rust core, Python API.
 
-Status: P1 (feasibility gates) — not usable yet. Licence: to be confirmed (MIT OR Apache-2.0 proposed).
+Status: P1 (feasibility gates) — not usable yet. Licence: dual MIT OR Apache-2.0 (see LICENSE-MIT and LICENSE-APACHE); contributions under the DCO.
 
 Rules this project keeps from day one: nuclear data are never bundled — they are fetched from their
 public hosts and pinned by SHA-256; every result carries a missing-data ledger; every benchmark runner
