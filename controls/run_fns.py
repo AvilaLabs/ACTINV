@@ -12,7 +12,8 @@ BIN = os.path.join(ROOT, "target", "release", "actinv-solve"); LIB = os.path.exp
 DATA = os.path.expanduser("~/nuclear-data/conderc-fns/fns")
 cc = json.load(open(os.path.expanduser("~/Documents/Avila-Labs/scouting/act-p0/results/cram_coefficients.json")))["Cram16Solver"]
 # ---- library
-L = np.load(os.path.join(LIB, "actinv_eaf2010_709g.npz")); ROWS, SIG, BOUNDS = L["rows"], L["sig"], L["bounds"]; IDXJ = json.load(open(os.path.join(LIB, "actinv_eaf2010_709g_index.json")))
+LIB_NPZ = os.environ.get("ACTINV_LIBRARY", os.path.join(LIB, "actinv_eaf2010_709g.npz")); LIB_IDX = LIB_NPZ.replace(".npz", "_index.json")
+L = np.load(LIB_NPZ); ROWS, SIG, BOUNDS = L["rows"], L["sig"], L["bounds"]; IDXJ = json.load(open(LIB_IDX))
 TARGETS = [(t["za"], t["liso"]) for t in IDXJ["targets"]]; T_INDEX = {t: k for k, t in enumerate(TARGETS)}
 # ---- decay chain (once)
 keys, recs, idx, lam, entries, leak = build(); N = len(keys) + 2; LEAK = N - 2; UNIT = N - 1   # Amendment B: constant unit state
@@ -35,6 +36,8 @@ def reaction_matrix(phi):
             if (za, liso) not in led["targets_absent_from_decay_lib"]: led["targets_absent_from_decay_lib"].append((za, liso))
             continue
         if zap == -1: R[(col, col)] = R.get((col, col), 0.0) - rate; continue
+        if lmf == -2:   # builder could not map the product (no MF=8, MT not in the arithmetic table) -> leakage, own category
+            led.setdefault("products_unmapped_to_leakage", {})[f"{za}_{liso}_MT{mt}"] = rate; R[(LEAK, col)] = R.get((LEAK, col), 0.0) + rate; continue
         if mt == 18 and zap == 0:   # fission: no yields in ACTINV yet -> leakage, own ledger category
             led.setdefault("fission_no_yields_to_leakage", {})[f"{za}_{liso}"] = rate; R[(LEAK, col)] = R.get((LEAK, col), 0.0) + rate; continue
         row = idx.get((int(zap), int(lfs)))
@@ -71,7 +74,7 @@ def read_result(path):
 def run_experiment(mat, tag):
     d = os.path.join(DATA, mat); ifile = os.path.join(d, f"TENDL-2017_{tag}.i"); ef = os.path.join(d, f"{tag}.exp"); ff = os.path.join(d, f"{tag}_fluxes")
     of = os.path.join(d, f"TENDL-2017_{tag}.out"); nf = os.path.join(d, f"TENDL-2017_{tag}.nuclides")
-    rec = {"material": mat, "experiment": tag, "ledger": {}}
+    rec = {"material": mat, "experiment": tag, "ledger": {}, "library": os.path.basename(LIB_NPZ)}
     inp = fio.read_i(ifile); exp = fio.read_exp(ef); nuc = fio.read_nuclides(nf) if os.path.exists(nf) else None
     phi = flux_from_file(ff, inp["flux_total"]); rec["flux_total"] = inp["flux_total"]; rec["t_irr_s"] = inp["t_irr_s"]; rec["cooling_cum_s"] = inp["cooling_cum_s"]
     inv0, cdiag = comp.atoms_per_gram(inp["elements"]); rec["composition"] = {"elements_wt": inp["elements"], "diag": cdiag["elements"]}

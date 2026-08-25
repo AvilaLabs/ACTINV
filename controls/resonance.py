@@ -66,7 +66,7 @@ def phase_shift(l, rho):
     if l == 3: return rho - np.arctan((15 * rho - rho ** 3) / (15 - 6 * rho * rho))
     if l == 4: return rho - np.arctan((105 * rho - 10 * rho ** 3) / (105 - 45 * rho * rho + rho ** 4))
     raise ValueError("l>4")
-def reconstruct_range(rg, E, awr_file, chunk=8000):
+def reconstruct_range(rg, E, awr_file, chunk=2000):
     """Memory-bounded wrapper: evaluates in energy chunks (each chunk allocates ~chunk × n_resonances complex arrays)."""
     E = np.asarray(E, float)
     if E.size <= chunk: return _reconstruct_range(rg, E, awr_file)

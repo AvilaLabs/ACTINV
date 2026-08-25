@@ -186,3 +186,48 @@
 - `controls/check_p3b.py` → **P3b-PASS**. Combined with P3: every P3 gate now has a passing successor record.
 - Housekeeping this session at the principal's direction: author email on all commits set to the principal's GitHub
   address by history rewrite; no assistant attribution anywhere in the repository.
+
+## 12 — 2026-08-26 — P4 opened
+- Roadmap row P4; protocol hashed. TENDL-2023 neutron library download from the IAEA mirror started (2,848 zips,
+  4 parallel, under `~/nuclear-data/tendl-2023/`).
+- Builder `controls/tendl_build.py` smoke-tested on the four local TENDL-2023 files (Fe-56, Ag-107, Ag-107m, W-186):
+  237 rows, 0 errors; Fe-56 58 s (broadening dominates). Fe-56 one-group capture 2.052e-3 b at density 1 vs
+  2.148e-3 b on P3b's density — 4.5 % grid sensitivity → G2 (c) convergence is run on the seeded sample BEFORE the
+  full build to choose the density. MT=5 (n,anything) products are not tracked (ledgered per target).
+- TENDL-2023: 2,847 target files (the listing's 2,848th entry was the parent-directory link); 2.9 GB zipped, 12 GB
+  unzipped; zip manifest written. FENDL-3.2c: all 192 ENDF-6 files fetched; MF=2-identical twins with TENDL-2023:
+  Be-9, F-19 (no resolved resonances — trivial) and Th-232 (Reich–Moore, the meaningful reference); their ACE files
+  fetched (Th-232 85 MB, 293.6 K).
+- Builder cost: the SIGMA1 kernel now evaluates exp/erf once per array (exactness re-verified 1e-12…1e-16); the
+  thermal backbone below 1 eV is sparse (300 points) because on a log grid the sub-0.03 eV region put thousands of
+  points inside every ±8 window; dense backbone 2,000/decade × density above 1 eV. Smoke set at density 2: Fe-56 51 s,
+  Ag-107 86 s, W-186 19 s. Fe-56 capture one-group 2.0512e-3 b at density 1 and 2.0512e-3 b at density 2 (5e-4 apart):
+  the earlier "4.5 % sensitivity" was P3b's control (d), whose resonance windows predate the arctan sampling — the
+  builder is the converged one. Convergence control (density 1 vs 2, 40 seeded targets) launched to decide the density.
+- Process note: `pkill -f` killed the tool's own shell three times (pattern present in the command text); rule saved.
+- Density-1 sample (40 targets, 8 workers): 379 s, median 12 s per target, max 337 s → full build projected ≈ 2 h.
+  Sample ledgers: no INCOMPLETE-URR, no LRF=7 (TENDL uses LSSF=1, LRF 2/3); MT=5 lumping flagged on 39/40.
+  Actinide fission without MF=8 products was labelled "unmapped"; builder now emits the fission row (ZAP 0) that the
+  runner books to its fission category. Fresh-clone test of the repository: builds in 3.7 s, solves a stored problem.
+- Website: two routes (/actinv, /actinv/docs) and a header link added to AvilaLabs.org on branch actinv-pages;
+  typecheck, lint and build pass; PR #15 opened for the principal to merge and deploy. Status text dated 26 Aug 2026.
+- Convergence control (density 1 vs 2, 40 targets, 4 workers, 2 GB cap): control (b) 4.3e-16 PASS; control (c)
+  FAIL — 20 rows > 1e-3, K-42 capture 62 % in group 423, Cr-50 7.7 %, Co-62m 8.8 %, Zn-67 3.1 %, Se-77m 4.5 %;
+  four heavy targets hit the 2 GB virtual cap (33 MiB window arrays). Repairs before the full build: broadening chunk
+  512 → 128; cap 4 GB, 3 workers; the K-42 case investigated before choosing a density.
+- K-42 diagnosis: resonance at 2948.50 eV lies 0.009 eV above the range's EH = 2948.491 eV; the adaptive grid placed
+  points only for resonances strictly inside the range, leaving the half-peak below EH to the 3.4 eV backbone
+  (width 0.81 eV, Doppler 2.6 eV). Reconstruction was correct; sampling was not. Builder now samples every resonance
+  within ±200 Γ of the range bounds. Convergence control relaunched (3 workers, 4 GB cap, chunk 128).
+- Convergence rerun after the boundary fix: errors 0/0; K-42 62 % → 0.28 %; but Cr-50 (group 500, 100 keV) 7.7 %,
+  Zn-67 3.1 %, Zn-77m 3.8 %, Sr-89 7.8 % persisted. Probe on Cr-50: unbroadened group value converged (0.3 %),
+  broadened not (3.38 → 3.14 → 3.11e-3 b with density). Cause: resonances 0.5 eV wide at 100 keV against a 14 eV
+  Doppler width — the grid resolved Γ, not the broadened line. Sampling width is now max(Γ, Γ_D(E_r), 1e-3 eV):
+  Cr-50 group 500 = 3.09565e-3 / 3.09550e-3 / 3.09519e-3 b at densities 1/2/4. Convergence control relaunched.
+- Boundary handling: explicit grid points at EL⁺ and EH⁻, MF=3 side from EH inclusive, iterative (≤8-pass) midpoint
+  refinement, broadening kernel fed with the MF=3 points above EH; zero-length segments (ENDF double points at
+  discontinuities) now contribute nothing in the group integral (they produced NaN). Y-79 group 239: 6.5e-5.
+- After the boundary/double-point fixes: Cr-50 group 544 rel 4.2e-5, Sr-89 group 463 2.2e-6, Y-79 6.5e-5; Zn-67 group 492
+  (EH = 70 keV inside the group; MF=3 jumps 30× at the RRR/URR boundary) 4.2e-3 — still above 1e-3. CHECKPOINT
+  2026-08-26: the convergence control must be rerun with the final builder before the full build; the full build has not
+  started. Work committed as P4-in-progress.
