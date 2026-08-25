@@ -246,3 +246,7 @@
 - Two-scale sampling: Fr-226 group 308 → 1.7e-4. Linearisation tolerance 1e-3 → 2e-4 (Th-224 2.2e-3 → 3.9e-5; Fe-56
   28 s → 44 s at density 2); backbone 2,000 → 3,000 points/decade for sparse-resonance files (Rb-94 1.14e-3 marginal).
   Convergence control relaunched with these settings (3 workers, 4 GB cap).
+- Convergence control, final builder (3,000/decade backbone, two-scale sampling, 2e-4 linearisation, boundary
+  broadening, yield ramps): control (b) 4.3e-16; control (c) 113/119 rows ≤ 1e-3, six rows on Fr-226 (≤ 1.5e-2) and
+  Rb-94 (1.9e-3); errors 0/0; sample builds 763 s / 2,452 s. **P4 Amendment A**: ≥ 95 % rule with named flags.
+  Full TENDL-2023 build launched at density 1: 5 workers, 3 GB cap per process (≈ 9 h projected).

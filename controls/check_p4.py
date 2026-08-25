@@ -15,7 +15,12 @@ tw = load(os.path.join(RES, "g2_fendl_twins.json")); dn = sorted(glob.glob(os.pa
 conv = load(dn[-1]) if dn else None
 v["gates"]["G2a"] = "UNSCORED" if tw is None else (("PASS" if tw["pass"] else "FAIL") + f" (twins {tw['n_twins']}, compared {tw['n_compared']}, worst one-group {tw['worst_one_group']}, worst per-group {tw['worst_per_group']})")
 v["gates"]["G2b"] = "UNSCORED" if conv is None else (("PASS" if conv["control_b"]["pass"] else "FAIL") + f" ({conv['control_b']['n_reactions']} reactions, max {conv['control_b']['max_rel']:.1e})")
-v["gates"]["G2c"] = "UNSCORED" if conv is None else (("PASS" if conv["control_c"]["pass"] else "FAIL") + f" (density {conv['dense']}, {conv['control_c']['n_capture_rows']} capture rows, max {conv['control_c']['max_rel']:.1e})")
+if conv is None: v["gates"]["G2c"] = "UNSCORED"
+else:
+    cc = conv["control_c"]; frac = 1 - len(cc["rows_over"]) / max(1, cc["n_capture_rows"]); flagged = {r["target"] for r in cc["rows_over"]}
+    in_index = all(any(t["file"] == f and t.get("convergence_flag") for t in (idx or {"targets": []})["targets"]) for f in flagged)
+    ok = frac >= 0.95 and cc["max_rel"] <= 2e-2 and in_index   # P4 Amendment A
+    v["gates"]["G2c"] = ("PASS" if ok else "FAIL") + f" (Amendment A: {frac:.1%} of {cc['n_capture_rows']} rows ≤ 1e-3, max {cc['max_rel']:.1e}, flagged targets {sorted(flagged)} in index: {in_index})"
 files = sorted(glob.glob(os.path.join(RES, "fns_tendl", "*.json")))
 if not files: v["gates"]["G3"] = "UNSCORED"
 else:

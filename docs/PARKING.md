@@ -19,3 +19,4 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   budget must include it).
 - 2026-08-26 — openmc 0.15.3 wheel lacks its compiled resonance module; do not rely on openmc for reconstruction
   references; NJOY-processed ACE of the same evaluation is the reference.
+- 2026-08-26 — TENDL synthetic resonances 1e-7…1e-5 eV wide (Fr-226, Rb-94 class): group values converge to 2e-3–1.5e-2, not 1e-3, between grid densities; flagged in the library index. Refine sampling or treat analytically → P10.

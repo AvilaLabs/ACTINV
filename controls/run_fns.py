@@ -85,7 +85,8 @@ def run_experiment(mat, tag):
         col = idx.get((za, liso))
         if col is None: absent.append({"za": za, "liso": liso, "atoms_per_g": atoms}); continue
         bulk[col] = bulk.get(col, 0.0) + atoms
-        if (za, liso) not in T_INDEX: absent.append({"za": za, "liso": liso, "atoms_per_g": atoms, "note": "in decay lib but not an EAF-2010 target (no activation)"})
+        if (za, liso) not in T_INDEX: absent.append({"za": za, "liso": liso, "atoms_per_g": atoms, "note": "in decay lib but not a library target (no activation)"})
+        elif IDXJ["targets"][T_INDEX[(za, liso)]].get("convergence_flag"): rec["ledger"].setdefault("library_convergence_flags", []).append({"za": za, "liso": liso, "flag": IDXJ["targets"][T_INDEX[(za, liso)]]["convergence_flag"]})
     rec["ledger"]["composition_isotopes_absent"] = absent
     Rsrc = {}; dropped_bulk_production = []; burnup = {}; bulk_heat_W_g = 0.0; D = dh.decay_table()
     for (row, col), r in list(R.items()):
