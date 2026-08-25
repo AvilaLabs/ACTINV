@@ -1,0 +1,9 @@
+/target/
+**/target/
+/results/*.h5
+/results/*.npy
+__pycache__/
+*.pyc
+/python/build/
+/python/*.egg-info/
+/.venv/
