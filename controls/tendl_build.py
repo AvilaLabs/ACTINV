@@ -71,6 +71,8 @@ def resonant_pointwise(path, awr, mf3, led):
         if rg.get("unsupported"): led.append(f"unsupported range {rg['EL']:.3g}-{rg['EH']:.3g} eV: {rg['unsupported']}")
         if rg["LRU"] == 2 and rg.get("LSSF", 1) == 0: led.append(f"INCOMPLETE-URR {rg['EL']:.3g}-{rg['EH']:.3g} eV: LSSF=0, MF=3 background only")
         if rg["LRU"] == 1 and rg["LRF"] not in (1, 2, 3): led.append(f"unsupported resolved formalism LRF={rg['LRF']} {rg['EL']:.3g}-{rg['EH']:.3g} eV: MF=3 background only")
+    narrow = sum(int(((Lg["GN"] + Lg["GG"]) < 1e-5).sum()) for rg in rr for Lg in rg["L"]); nres = sum(int(Lg["ER"].size) for rg in rr for Lg in rg["L"])
+    if narrow: led.append(f"DATA-QUALITY: {narrow}/{nres} resolved resonances narrower than 1e-5 eV (synthetic placeholders; integrated at two scales)")
     if not rr: return {}
     out = {}
     for mt, key in ((102, "capture"), (18, "fission")):
@@ -81,11 +83,13 @@ def resonant_pointwise(path, awr, mf3, led):
             npts = int(201 * DENSE); th = np.linspace(-np.arctan(200.0), np.arctan(200.0), npts)
             lo = max(rg["EL"], 1e-5); split = min(1.0, rg["EH"])   # sparse backbone below 1 eV (smooth 1/v region), dense above
             dense = [np.logspace(np.log10(lo), np.log10(split), 300)]
-            if rg["EH"] > 1.0: dense.append(np.logspace(0.0, np.log10(rg["EH"]), int(2000 * DENSE * max(1.0, np.log10(rg["EH"])))))
+            if rg["EH"] > 1.0: dense.append(np.logspace(0.0, np.log10(rg["EH"]), int(3000 * DENSE * max(1.0, np.log10(rg["EH"])))))
             kT_A = 8.617333262e-5 * T_K / awr
             for e, g in zip(Er_all, widths):   # every resonance whose wings reach into the range, including those at or beyond its bounds
-                gw = max(g, 1e-3, np.sqrt(4 * kT_A * awr * abs(e) / awr))   # sample the broadened line: max(Gamma, Doppler width)
-                if rg["EL"] - 200 * gw < e < rg["EH"] + 200 * gw: dense.append(e + gw / 2 * np.tan(th))
+                gD = np.sqrt(4 * kT_A * abs(e)); g0 = max(g, 1e-9); gw = max(g0, gD)
+                if rg["EL"] - 200 * gw < e < rg["EH"] + 200 * gw:
+                    dense.append(e + g0 / 2 * np.tan(th))                       # 0 K peak: resolves Gamma, so the area is right
+                    if gD > 3 * g0: dense.append(e + gD / 2 * np.tan(th))       # broadened line: resolves the Doppler width
             dense.append(np.array([rg["EL"] * (1 + 1e-9), rg["EH"] * (1 - 1e-9)]))   # explicit end points so the range boundary is not bridged by a grid-dependent segment
             Ed = np.unique(np.concatenate(dense)); Ed = Ed[(Ed > rg["EL"]) & (Ed < rg["EH"])]
             rec = reconstruct_range(rg, Ed, awr)
@@ -96,20 +100,26 @@ def resonant_pointwise(path, awr, mf3, led):
             for _pass in range(8):
                 Em = 0.5 * (Ed[:-1] + Ed[1:]); mid = reconstruct_range(rg, Em, awr)[key]
                 if mt in mf3: mid = mid + interp_tab1(x, y, nbt, Em)
-                need = np.abs(mid - 0.5 * (s0[:-1] + s0[1:])) > 1e-3 * np.maximum(np.abs(mid), 1e-6)
+                need = np.abs(mid - 0.5 * (s0[:-1] + s0[1:])) > 2e-4 * np.maximum(np.abs(mid), 1e-6)
                 if not need.any(): break
                 E2 = np.concatenate([Ed, Em[need]]); o = np.argsort(E2); Ed = E2[o]; s0 = np.concatenate([s0, mid[need]])[o]
-            else: led.append(f"MT{mt}: linearisation not converged in 8 passes ({int(need.sum())} segments > 1e-3)")
+            else: led.append(f"MT{mt}: linearisation not converged in 8 passes ({int(need.sum())} segments > 2e-4)")
             # broaden with the MF=3 points above the range included as kernel input, so the top of the range is not a constant tail
+            gD = np.sqrt(4 * kT_A * rg["EH"])   # Doppler width at the range boundary
             if mt in mf3:
                 hi_ = x >= rg["EH"]; E_in = np.concatenate([Ed, x[hi_]]); s_in = np.concatenate([s0, y[hi_]])
-            else: E_in, s_in = Ed, s0
-            sT = broaden(E_in, s_in, T_K, awr, Eout=Ed); sT = np.maximum(sT, 0.0)
-            pieces_E.append(Ed); pieces_s.append(sT)
+                # broaden across the boundary: dense output points through EH + 10 Gamma_D, then splice to unbroadened MF=3
+                E_over = rg["EH"] + gD * np.linspace(0.0, 10.0, 81)[1:]; E_over = E_over[E_over < x[-1]]
+                E_under = rg["EH"] - gD * np.linspace(0.0, 10.0, 81)[1:]; E_under = E_under[E_under > rg["EL"]]   # dense on both sides of the step
+                Eout = np.unique(np.concatenate([Ed, E_under, E_over])); order_in = np.argsort(E_in); E_in, s_in = E_in[order_in], s_in[order_in]
+                sT = np.maximum(broaden(E_in, s_in, T_K, awr, Eout=Eout), 0.0)
+                pieces_E.append(Eout); pieces_s.append(sT); rg_top = rg["EH"] + 10 * gD
+            else:
+                sT = np.maximum(broaden(Ed, s0, T_K, awr), 0.0); pieces_E.append(Ed); pieces_s.append(sT); rg_top = rg["EH"]
         if not pieces_E: continue
-        Ehi = max(rg["EH"] for rg in rr)
+        Ehi = max(pe.max() for pe in pieces_E)   # top of the broadened region (EH + 10 Gamma_D of the last range)
         if mt in mf3:
-            nbt, x, y = mf3[mt]; hi = x >= Ehi
+            nbt, x, y = mf3[mt]; hi = x > Ehi
             E_all = np.concatenate(pieces_E + [x[hi]]); s_all = np.concatenate(pieces_s + [y[hi]])
         else: E_all = np.concatenate(pieces_E); s_all = np.concatenate(pieces_s)
         o = np.argsort(E_all); out[mt] = (E_all[o], s_all[o])
@@ -139,7 +149,10 @@ def build_one(args):
                 E, s = res[mt] if mt in res else (None, None)
                 for (izap, lfs, nbt, x, y) in mf9[mt]:
                     if E is None: nbt3, x3, y3 = mf3[mt]; grid = np.union1d(np.union1d(x3, x), BOUNDS); grid = grid[(grid >= BOUNDS[0]) & (grid <= BOUNDS[-1])]; prod = interp_tab1(x3, y3, nbt3, grid) * interp_tab1(x, y, nbt, grid)
-                    else: grid = np.union1d(E, BOUNDS); grid = grid[(grid >= BOUNDS[0]) & (grid <= BOUNDS[-1])]; prod = np.interp(grid, E, s, left=0.0, right=0.0) * interp_tab1(x, y, nbt, grid)
+                    else:
+                        xa, ya = np.asarray(x, float), np.asarray(y, float); ramp = [np.geomspace(max(xa[i], 1e-5), xa[i + 1], 65)[1:-1] for i in range(len(xa) - 1) if ya[i] != ya[i + 1] and xa[i + 1] > xa[i] > 0]
+                        grid = np.union1d(np.union1d(np.union1d(E, xa), BOUNDS), np.concatenate(ramp) if ramp else np.array([])); grid = grid[(grid >= BOUNDS[0]) & (grid <= BOUNDS[-1])]
+                        prod = np.interp(grid, E, s, left=0.0, right=0.0) * interp_tab1(x, y, nbt, grid)   # yield points + dense sampling across every yield ramp
                     rows.append((tk, mt, izap, lfs, 9)); sig.append(group_avg_grid(grid, prod)); done.add((izap, lfs))
             for (zap, lfs, lmf) in prods:
                 if lmf == 3 and (zap, lfs) not in done: rows.append((tk, mt, zap, lfs, 3)); sig.append(g_tot); done.add((zap, lfs))

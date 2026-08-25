@@ -231,3 +231,18 @@
   (EH = 70 keV inside the group; MF=3 jumps 30× at the RRR/URR boundary) 4.2e-3 — still above 1e-3. CHECKPOINT
   2026-08-26: the convergence control must be rerun with the final builder before the full build; the full build has not
   started. Work committed as P4-in-progress.
+- Boundary broadening: the Doppler-smoothed step at EH (Zn-67: MF=3 0 → 0.0786 b at 70 keV, Γ_D 10 eV) was sampled at
+  the backbone spacing; output points now dense (80 per 10 Γ_D) on both sides of EH and the broadening extends 10 Γ_D
+  above EH before splicing to unbroadened MF=3. Zn-67 group 492: 5.8e-11; Sr-84 0; Se-77m 6.4e-7; Cr-50 4.2e-5;
+  K-42 5.1e-5. Convergence control relaunched with the final builder.
+- Convergence rerun with the final resolved-range handling: all boundary/high-energy rows converged; remaining rows
+  were MF=9 isomer-product rows (Np-235 → Np-236m 118 %, Cs-120m 15 %, Tl-188m 15 %, Y-79 4 %): the product grid
+  σ(E)·y(E) lacked the yield table's own points and its linear ramps (lin-lin, e.g. 0 → 0.2255 across 0.0147–0.0253 eV)
+  were integrated as if the product were linear. Yield points added and each ramp sampled with 64 geometric points:
+  Np-235 118 % → 6.9e-4. Probe of the last two rows running.
+- Fr-226 (41 % in group 308): TENDL synthetic resonances 1e-7…1e-3 eV wide against Γ_D = 0.08 eV; sampling at the
+  broadened scale skipped the 0 K peaks (area wrong; refinement flagged "not converged in 8 passes"). Resonances are
+  now sampled at two scales — Γ itself (no floor) for the area, Γ_D for the broadened shape. Probe running.
+- Two-scale sampling: Fr-226 group 308 → 1.7e-4. Linearisation tolerance 1e-3 → 2e-4 (Th-224 2.2e-3 → 3.9e-5; Fe-56
+  28 s → 44 s at density 2); backbone 2,000 → 3,000 points/decade for sparse-resonance files (Rb-94 1.14e-3 marginal).
+  Convergence control relaunched with these settings (3 workers, 4 GB cap).
