@@ -1,13 +1,13 @@
 {
  "n_experiments": 132,
- "wall_s": 50.046838998794556,
+ "wall_s": 35.6057026386261,
  "experiments": [
   {
    "material": "Ag",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 73.6454,
+   "pruned": 67,
+   "ms": 2.8883,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0064808967599,
@@ -25,13 +25,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 21,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -39,12 +42,12 @@
    "material": "Al",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 64.5203,
+   "pruned": 27,
+   "ms": 1.0627,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9723644513936016,
-     "max_abs_lnCE": 0.09956403759129527,
+     "geomean_CE": 0.9723644513935901,
+     "max_abs_lnCE": 0.09956403759129576,
      "n": 20
     },
     "fispact": {
@@ -58,13 +61,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 4,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -72,12 +78,12 @@
    "material": "Al",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1444,
-   "ms": 39.421,
+   "pruned": 39,
+   "ms": 0.7554,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.03737463549303511,
-     "max_abs_lnCE": 10.270196504661378,
+     "geomean_CE": 0.037374635486084364,
+     "max_abs_lnCE": 10.270196503188888,
      "n": 7
     },
     "fispact": {
@@ -91,13 +97,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 4,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 7,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 3
    }
   },
@@ -105,12 +114,12 @@
    "material": "Al",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 64.7911,
+   "pruned": 27,
+   "ms": 1.0381,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0783202338554672,
-     "max_abs_lnCE": 0.1133824362439745,
+     "geomean_CE": 1.0783202338553994,
+     "max_abs_lnCE": 0.11338243624375385,
      "n": 21
     },
     "fispact": {
@@ -124,13 +133,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 4,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -138,8 +150,8 @@
    "material": "As",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 74.8629,
+   "pruned": 66,
+   "ms": 2.653,
    "summary": {
     "actinv": {
      "geomean_CE": 1.084497915663145,
@@ -157,13 +169,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 36,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -171,8 +186,8 @@
    "material": "Au",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 83.3493,
+   "pruned": 61,
+   "ms": 2.8981,
    "summary": {
     "actinv": {
      "geomean_CE": 1.334285305911082,
@@ -190,13 +205,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 23,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -204,8 +222,8 @@
    "material": "Ba",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1433,
-   "ms": 78.25,
+   "pruned": 111,
+   "ms": 5.1694,
    "summary": {
     "actinv": {
      "geomean_CE": 0.4674736252410651,
@@ -223,13 +241,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 151,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -237,12 +258,12 @@
    "material": "Ba",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1433,
-   "ms": 42.4531,
+   "pruned": 138,
+   "ms": 3.0194,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.067495164317579,
-     "max_abs_lnCE": 0.17324180350870078,
+     "geomean_CE": 1.0674951643175725,
+     "max_abs_lnCE": 0.17324180350869256,
      "n": 6
     },
     "fispact": {
@@ -256,13 +277,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 151,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 6,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 4
    }
   },
@@ -270,8 +294,8 @@
    "material": "Ba",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1433,
-   "ms": 81.8145,
+   "pruned": 111,
+   "ms": 4.9203,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1491087450718598,
@@ -289,13 +313,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 151,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -303,12 +330,12 @@
    "material": "Bi",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 82.7183,
+   "pruned": 40,
+   "ms": 1.6779,
    "summary": {
     "actinv": {
      "geomean_CE": 1.3958468727960165,
-     "max_abs_lnCE": 0.9114270571325985,
+     "max_abs_lnCE": 0.9114270571325986,
      "n": 18
     },
     "fispact": {
@@ -322,13 +349,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 7,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 2
    }
   },
@@ -336,12 +366,12 @@
    "material": "Bi",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1444,
-   "ms": 46.3911,
+   "pruned": 50,
+   "ms": 0.9691,
    "summary": {
     "actinv": {
-     "geomean_CE": 17.293887532596283,
-     "max_abs_lnCE": 3.44966241222204,
+     "geomean_CE": 17.293887532594432,
+     "max_abs_lnCE": 3.4496624122219792,
      "n": 5
     },
     "fispact": {
@@ -355,13 +385,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 7,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 5,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 5
    }
   },
@@ -369,8 +402,8 @@
    "material": "Bi",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 81.363,
+   "pruned": 39,
+   "ms": 1.635,
    "summary": {
     "actinv": {
      "geomean_CE": 1.9539200680745212,
@@ -388,13 +421,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 7,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -402,8 +438,8 @@
    "material": "Br",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1436,
-   "ms": 68.8498,
+   "pruned": 77,
+   "ms": 3.1275,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0281952850648417,
@@ -421,13 +457,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 74,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -435,8 +474,8 @@
    "material": "Ca",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1436,
-   "ms": 63.2975,
+   "pruned": 95,
+   "ms": 3.5395,
    "summary": {
     "actinv": {
      "geomean_CE": 0.6376062897779774,
@@ -454,13 +493,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 72,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -468,8 +510,8 @@
    "material": "Ca",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1436,
-   "ms": 36.4933,
+   "pruned": 111,
+   "ms": 1.8245,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8331035935330146,
@@ -487,13 +529,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 72,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 6,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 4
    }
   },
@@ -501,8 +546,8 @@
    "material": "Ca",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1436,
-   "ms": 64.8707,
+   "pruned": 95,
+   "ms": 3.6471,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9174454051916097,
@@ -520,13 +565,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 72,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -534,8 +582,8 @@
    "material": "Cd",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1437,
-   "ms": 79.3791,
+   "pruned": 103,
+   "ms": 4.7262,
    "summary": {
     "actinv": {
      "geomean_CE": 1.078114825969729,
@@ -553,13 +601,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 110,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -567,8 +618,8 @@
    "material": "Ce",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1438,
-   "ms": 82.4206,
+   "pruned": 99,
+   "ms": 4.3395,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1900253593270689,
@@ -586,13 +637,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 96,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -600,12 +654,12 @@
    "material": "Cl",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 65.4635,
+   "pruned": 56,
+   "ms": 2.287,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.327484134415091,
-     "max_abs_lnCE": 0.36722978141167517,
+     "geomean_CE": 1.3274841344153474,
+     "max_abs_lnCE": 0.3672297814130454,
      "n": 21
     },
     "fispact": {
@@ -619,13 +673,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 42,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -633,12 +690,12 @@
    "material": "Co",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 66.3065,
+   "pruned": 30,
+   "ms": 1.4413,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0167619565377677,
-     "max_abs_lnCE": 0.044521522441563835,
+     "geomean_CE": 1.0167619565377672,
+     "max_abs_lnCE": 0.04452152244156235,
      "n": 5
     },
     "fispact": {
@@ -652,13 +709,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 15
    }
   },
@@ -666,12 +726,12 @@
    "material": "Co",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1444,
-   "ms": 46.7176,
+   "pruned": 56,
+   "ms": 1.4013,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9649562434790409,
-     "max_abs_lnCE": 0.3204849618800923,
+     "geomean_CE": 0.9649562434790646,
+     "max_abs_lnCE": 0.3204849618802841,
      "n": 10
     },
     "fispact": {
@@ -685,13 +745,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -699,12 +762,12 @@
    "material": "Co",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 66.0732,
+   "pruned": 30,
+   "ms": 1.2341,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0986148407297731,
-     "max_abs_lnCE": 0.1815317603083677,
+     "geomean_CE": 1.0986148407296745,
+     "max_abs_lnCE": 0.18153176030832846,
      "n": 21
     },
     "fispact": {
@@ -718,13 +781,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -732,8 +798,8 @@
    "material": "Cr",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 63.2687,
+   "pruned": 40,
+   "ms": 1.5511,
    "summary": {
     "actinv": {
      "geomean_CE": 0.7176549640876259,
@@ -751,13 +817,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 60,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -765,11 +834,11 @@
    "material": "Cr",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1441,
-   "ms": 43.6716,
+   "pruned": 63,
+   "ms": 1.5161,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.6584718716498698,
+     "geomean_CE": 0.6584718716498625,
      "max_abs_lnCE": 2.2301144410719402,
      "n": 9
     },
@@ -784,13 +853,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 60,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 9,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 1
    }
   },
@@ -798,8 +870,8 @@
    "material": "Cr",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 65.9307,
+   "pruned": 40,
+   "ms": 1.6581,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9115121222206851,
@@ -817,13 +889,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 60,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -831,8 +906,8 @@
    "material": "Cs",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 83.5527,
+   "pruned": 72,
+   "ms": 3.1616,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1516767345544408,
@@ -850,13 +925,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 57,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -864,12 +942,12 @@
    "material": "Cu",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 66.5727,
+   "pruned": 41,
+   "ms": 1.5513,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9491746706229561,
-     "max_abs_lnCE": 0.07087315159156805,
+     "geomean_CE": 0.9491746706229557,
+     "max_abs_lnCE": 0.07087315159156841,
      "n": 20
     },
     "fispact": {
@@ -883,13 +961,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 28,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -897,12 +978,12 @@
    "material": "Cu",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1443,
-   "ms": 47.0744,
+   "pruned": 58,
+   "ms": 1.386,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9717078876130114,
-     "max_abs_lnCE": 0.13356132354766168,
+     "geomean_CE": 0.9717078876129922,
+     "max_abs_lnCE": 0.13356132354777764,
      "n": 10
     },
     "fispact": {
@@ -916,13 +997,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 28,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -930,8 +1014,8 @@
    "material": "Cu",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 67.7626,
+   "pruned": 39,
+   "ms": 1.5722,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0833520613776508,
@@ -949,13 +1033,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 28,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -963,8 +1050,8 @@
    "material": "Dy",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1435,
-   "ms": 84.1218,
+   "pruned": 92,
+   "ms": 3.7943,
    "summary": {
     "actinv": {
      "geomean_CE": 1.8721181791630772,
@@ -982,13 +1069,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 135,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -996,8 +1086,8 @@
    "material": "Er",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1436,
-   "ms": 86.5716,
+   "pruned": 97,
+   "ms": 4.0995,
    "summary": {
     "actinv": {
      "geomean_CE": 1.3337956129320092,
@@ -1015,13 +1105,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 131,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1029,8 +1122,8 @@
    "material": "Eu",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 82.7105,
+   "pruned": 81,
+   "ms": 3.339,
    "summary": {
     "actinv": {
      "geomean_CE": 1.5021084207278783,
@@ -1048,13 +1141,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 70,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1062,11 +1158,11 @@
    "material": "F",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1442,
-   "ms": 64.699,
+   "pruned": 30,
+   "ms": 1.2113,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0134362924916214,
+     "geomean_CE": 1.0134362924916211,
      "max_abs_lnCE": 0.05449632091068416,
      "n": 20
     },
@@ -1081,13 +1177,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 21,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1095,8 +1194,8 @@
    "material": "F",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1442,
-   "ms": 63.2773,
+   "pruned": 30,
+   "ms": 1.2661,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9500684437063193,
@@ -1114,13 +1213,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 21,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1128,8 +1230,8 @@
    "material": "Fe",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 64.8164,
+   "pruned": 41,
+   "ms": 1.5265,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9485506823994283,
@@ -1147,13 +1249,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 58,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1161,12 +1266,12 @@
    "material": "Fe",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1441,
-   "ms": 46.1626,
+   "pruned": 66,
+   "ms": 1.6775,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9861588314016916,
-     "max_abs_lnCE": 0.12374867701085948,
+     "geomean_CE": 0.9861588313998476,
+     "max_abs_lnCE": 0.12374867702492973,
      "n": 10
     },
     "fispact": {
@@ -1180,13 +1285,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 58,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1194,8 +1302,8 @@
    "material": "Fe",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 66.7774,
+   "pruned": 40,
+   "ms": 1.5052,
    "summary": {
     "actinv": {
      "geomean_CE": 1.08739909730014,
@@ -1213,13 +1321,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 58,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1227,8 +1338,8 @@
    "material": "Ga",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 70.8699,
+   "pruned": 69,
+   "ms": 2.7425,
    "summary": {
     "actinv": {
      "geomean_CE": 1.086431651326684,
@@ -1246,13 +1357,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 50,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1260,8 +1374,8 @@
    "material": "Gd",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1435,
-   "ms": 88.3031,
+   "pruned": 91,
+   "ms": 3.7564,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1938278260872295,
@@ -1279,13 +1393,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 150,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1293,8 +1410,8 @@
    "material": "Ge",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1437,
-   "ms": 70.3537,
+   "pruned": 91,
+   "ms": 3.9437,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1777778743595142,
@@ -1312,13 +1429,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 98,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1326,8 +1446,8 @@
    "material": "Hf",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 84.2472,
+   "pruned": 74,
+   "ms": 3.2279,
    "summary": {
     "actinv": {
      "geomean_CE": 1.3250734622996991,
@@ -1345,13 +1465,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 140,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1359,8 +1482,8 @@
    "material": "Hg",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1435,
-   "ms": 84.7999,
+   "pruned": 101,
+   "ms": 4.3386,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8369065268774317,
@@ -1378,13 +1501,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 151,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1392,8 +1518,8 @@
    "material": "Ho",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 88.4176,
+   "pruned": 62,
+   "ms": 2.5508,
    "summary": {
     "actinv": {
      "geomean_CE": 0.839815099285444,
@@ -1411,13 +1537,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 46,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1425,8 +1554,8 @@
    "material": "I",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1437,
-   "ms": 78.8456,
+   "pruned": 82,
+   "ms": 3.7208,
    "summary": {
     "actinv": {
      "geomean_CE": 1.810280692669805,
@@ -1444,13 +1573,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 61,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1458,8 +1590,8 @@
    "material": "In",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 75.4355,
+   "pruned": 78,
+   "ms": 3.5773,
    "summary": {
     "actinv": {
      "geomean_CE": 1.9219832649851214,
@@ -1477,13 +1609,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 24,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1491,8 +1626,8 @@
    "material": "Inc600",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1431,
-   "ms": 64.3073,
+   "pruned": 81,
+   "ms": 3.0555,
    "summary": {
     "actinv": {
      "geomean_CE": 0.7858355033837893,
@@ -1510,13 +1645,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 197,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1524,12 +1662,12 @@
    "material": "Inc600",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1431,
-   "ms": 46.3438,
+   "pruned": 109,
+   "ms": 2.5565,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.020835652226614,
-     "max_abs_lnCE": 0.07911443302327933,
+     "geomean_CE": 1.0208356522266107,
+     "max_abs_lnCE": 0.07911443302327789,
      "n": 10
     },
     "fispact": {
@@ -1543,13 +1681,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 197,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1557,8 +1698,8 @@
    "material": "Inc600",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1431,
-   "ms": 66.8279,
+   "pruned": 80,
+   "ms": 3.0814,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8582852382291535,
@@ -1576,13 +1717,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 197,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1590,11 +1734,11 @@
    "material": "Ir",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 81.2535,
+   "pruned": 65,
+   "ms": 2.8196,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0980840790628172,
+     "geomean_CE": 1.0980840790628175,
      "max_abs_lnCE": 0.38406762963718266,
      "n": 19
     },
@@ -1609,13 +1753,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 53,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1623,8 +1770,8 @@
    "material": "K",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1437,
-   "ms": 62.7496,
+   "pruned": 72,
+   "ms": 2.6895,
    "summary": {
     "actinv": {
      "geomean_CE": 1.2552260640371729,
@@ -1642,13 +1789,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 61,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1656,8 +1806,8 @@
    "material": "K",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1437,
-   "ms": 40.6292,
+   "pruned": 94,
+   "ms": 1.8845,
    "summary": {
     "actinv": {
      "geomean_CE": 1.3244513095653936,
@@ -1675,13 +1825,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 61,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 8,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 2
    }
   },
@@ -1689,8 +1842,8 @@
    "material": "K",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1437,
-   "ms": 64.1053,
+   "pruned": 72,
+   "ms": 3.1095,
    "summary": {
     "actinv": {
      "geomean_CE": 1.2535519185470994,
@@ -1708,13 +1861,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 61,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1722,8 +1878,8 @@
    "material": "La",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 81.3351,
+   "pruned": 71,
+   "ms": 3.1843,
    "summary": {
     "actinv": {
      "geomean_CE": 2.044594811944022,
@@ -1741,13 +1897,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 66,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1755,8 +1914,8 @@
    "material": "Lu",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 92.458,
+   "pruned": 75,
+   "ms": 3.1242,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1376155202612677,
@@ -1774,13 +1933,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 71,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1788,12 +1950,12 @@
    "material": "Mg",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 59.1076,
+   "pruned": 44,
+   "ms": 1.6136,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.987279459368494,
-     "max_abs_lnCE": 0.10911826914450248,
+     "geomean_CE": 0.9872794593684787,
+     "max_abs_lnCE": 0.10911826914450284,
      "n": 19
     },
     "fispact": {
@@ -1807,13 +1969,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 40,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1821,8 +1986,8 @@
    "material": "Mn",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 65.4108,
+   "pruned": 24,
+   "ms": 0.9434,
    "summary": {
     "actinv": {
      "geomean_CE": 1.024740866808291,
@@ -1840,13 +2005,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1854,8 +2022,8 @@
    "material": "Mn",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1444,
-   "ms": 46.3421,
+   "pruned": 50,
+   "ms": 1.2287,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0540707846096282,
@@ -1873,13 +2041,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1887,11 +2058,11 @@
    "material": "Mn",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 69.7178,
+   "pruned": 24,
+   "ms": 0.9887,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.1141475614777934,
+     "geomean_CE": 1.114147561477793,
      "max_abs_lnCE": 0.16205195102871248,
      "n": 22
     },
@@ -1906,13 +2077,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1920,12 +2094,12 @@
    "material": "Mo",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1438,
-   "ms": 69.532,
+   "pruned": 90,
+   "ms": 4.1778,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.206868747897837,
-     "max_abs_lnCE": 0.22915544433806856,
+     "geomean_CE": 1.2068687478978368,
+     "max_abs_lnCE": 0.2291554443380677,
      "n": 20
     },
     "fispact": {
@@ -1939,13 +2113,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 138,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -1953,12 +2130,12 @@
    "material": "Mo",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1438,
-   "ms": 51.9433,
+   "pruned": 134,
+   "ms": 3.8366,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9597548292399121,
-     "max_abs_lnCE": 0.3139937338394418,
+     "geomean_CE": 0.9597548292398955,
+     "max_abs_lnCE": 0.31399373383953894,
      "n": 9
     },
     "fispact": {
@@ -1972,13 +2149,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 138,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 9,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 1
    }
   },
@@ -1986,11 +2166,11 @@
    "material": "Mo",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1438,
-   "ms": 69.1499,
+   "pruned": 90,
+   "ms": 3.9572,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.306687281069108,
+     "geomean_CE": 1.3066872810691077,
      "max_abs_lnCE": 0.2996077996935755,
      "n": 20
     },
@@ -2005,13 +2185,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 138,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2019,11 +2202,11 @@
    "material": "Na",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 61.0242,
+   "pruned": 41,
+   "ms": 1.5658,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.42865800410327903,
+     "geomean_CE": 0.4286580040982048,
      "max_abs_lnCE": 1.6665542877257016,
      "n": 20
     },
@@ -2038,13 +2221,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 43,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2052,12 +2238,12 @@
    "material": "Na",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1439,
-   "ms": 45.9327,
+   "pruned": 46,
+   "ms": 1.1032,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.7957077668812753,
-     "max_abs_lnCE": 0.369444254304076,
+     "geomean_CE": 0.7957077668803552,
+     "max_abs_lnCE": 0.36944425430756594,
      "n": 10
     },
     "fispact": {
@@ -2071,13 +2257,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 43,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2085,12 +2274,12 @@
    "material": "Na",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 65.2671,
+   "pruned": 41,
+   "ms": 1.6995,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0395128034729373,
-     "max_abs_lnCE": 0.6507237573961183,
+     "geomean_CE": 1.0395128034734096,
+     "max_abs_lnCE": 0.6507237574159292,
      "n": 22
     },
     "fispact": {
@@ -2104,13 +2293,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 43,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2118,8 +2310,8 @@
    "material": "Nb",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 68.9107,
+   "pruned": 44,
+   "ms": 1.8734,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1328918798830392,
@@ -2137,13 +2329,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 29,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2151,11 +2346,11 @@
    "material": "Nb",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1444,
-   "ms": 45.5602,
+   "pruned": 75,
+   "ms": 2.0246,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9544625770593813,
+     "geomean_CE": 0.9544625770593822,
      "max_abs_lnCE": 0.11466579758233754,
      "n": 8
     },
@@ -2170,13 +2365,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 29,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 8,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 2
    }
   },
@@ -2184,8 +2382,8 @@
    "material": "Nb",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 68.9274,
+   "pruned": 44,
+   "ms": 1.9453,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9719353808673091,
@@ -2203,13 +2401,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 29,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2217,8 +2418,8 @@
    "material": "Nd",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1435,
-   "ms": 79.8454,
+   "pruned": 98,
+   "ms": 4.2119,
    "summary": {
     "actinv": {
      "geomean_CE": 1.6176147533661136,
@@ -2236,13 +2437,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 182,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2250,12 +2454,12 @@
    "material": "Ni",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 65.0104,
+   "pruned": 62,
+   "ms": 2.4133,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9552817649875159,
-     "max_abs_lnCE": 0.13186676188525473,
+     "geomean_CE": 0.9552817649875114,
+     "max_abs_lnCE": 0.13186676188525498,
      "n": 20
     },
     "fispact": {
@@ -2269,13 +2473,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 64,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2283,12 +2490,12 @@
    "material": "Ni",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1440,
-   "ms": 46.9703,
+   "pruned": 83,
+   "ms": 1.9896,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0228985039816951,
-     "max_abs_lnCE": 0.09903232060428657,
+     "geomean_CE": 1.022898503981692,
+     "max_abs_lnCE": 0.09903232060428697,
      "n": 10
     },
     "fispact": {
@@ -2302,13 +2509,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 64,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2316,12 +2526,12 @@
    "material": "Ni",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 67.7223,
+   "pruned": 62,
+   "ms": 2.4263,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0400737459408287,
-     "max_abs_lnCE": 0.09891491258347059,
+     "geomean_CE": 1.0400737459408251,
+     "max_abs_lnCE": 0.09891491258346455,
      "n": 21
     },
     "fispact": {
@@ -2335,13 +2545,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 64,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2349,8 +2562,8 @@
    "material": "NiCr",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1432,
-   "ms": 65.1886,
+   "pruned": 82,
+   "ms": 3.203,
    "summary": {
     "actinv": {
      "geomean_CE": 0.881534328818368,
@@ -2368,13 +2581,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 182,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2382,12 +2598,12 @@
    "material": "NiCr",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1432,
-   "ms": 46.9223,
+   "pruned": 110,
+   "ms": 3.0359,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0217802817110975,
-     "max_abs_lnCE": 0.07941990473722225,
+     "geomean_CE": 1.0217802817110961,
+     "max_abs_lnCE": 0.07941990473722492,
      "n": 10
     },
     "fispact": {
@@ -2401,13 +2617,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 182,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2415,8 +2634,8 @@
    "material": "NiCr",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1432,
-   "ms": 66.6485,
+   "pruned": 82,
+   "ms": 3.3199,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9105364723083957,
@@ -2434,13 +2653,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 182,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2448,8 +2670,8 @@
    "material": "Os",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1438,
-   "ms": 85.5119,
+   "pruned": 99,
+   "ms": 4.5098,
    "summary": {
     "actinv": {
      "geomean_CE": 2.4168995263307433,
@@ -2467,13 +2689,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 159,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2481,8 +2706,8 @@
    "material": "P",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1442,
-   "ms": 64.1522,
+   "pruned": 48,
+   "ms": 1.85,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9292218980994692,
@@ -2500,13 +2725,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 18,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2514,8 +2742,8 @@
    "material": "Pb",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 82.7018,
+   "pruned": 58,
+   "ms": 2.5169,
    "summary": {
     "actinv": {
      "geomean_CE": 0.6877725817787876,
@@ -2533,13 +2761,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2547,12 +2778,12 @@
    "material": "Pb",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1441,
-   "ms": 52.1566,
+   "pruned": 69,
+   "ms": 1.8622,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.509384504306818,
-     "max_abs_lnCE": 3.359538856943029,
+     "geomean_CE": 0.5093845043068563,
+     "max_abs_lnCE": 3.359538856942011,
      "n": 7
     },
     "fispact": {
@@ -2566,13 +2797,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 7,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 3
    }
   },
@@ -2580,8 +2814,8 @@
    "material": "Pb",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 85.5216,
+   "pruned": 58,
+   "ms": 2.5217,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8370719005230001,
@@ -2599,13 +2833,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2613,8 +2850,8 @@
    "material": "Pd",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 74.1161,
+   "pruned": 82,
+   "ms": 4.0435,
    "summary": {
     "actinv": {
      "geomean_CE": 1.206168177151712,
@@ -2632,13 +2869,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 86,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2646,8 +2886,8 @@
    "material": "Pr",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 82.0135,
+   "pruned": 58,
+   "ms": 2.3965,
    "summary": {
     "actinv": {
      "geomean_CE": 1.4059992162734394,
@@ -2665,13 +2905,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 48,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2679,11 +2922,11 @@
    "material": "Pt",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 83.7596,
+   "pruned": 92,
+   "ms": 4.2461,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.272811767477667,
+     "geomean_CE": 1.2728117674776667,
      "max_abs_lnCE": 0.2867870137153585,
      "n": 20
     },
@@ -2698,13 +2941,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 127,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2712,8 +2958,8 @@
    "material": "Rb",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1438,
-   "ms": 70.6564,
+   "pruned": 77,
+   "ms": 3.3801,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0496740488791527,
@@ -2731,13 +2977,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 79,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2745,8 +2994,8 @@
    "material": "Re",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 87.4256,
+   "pruned": 64,
+   "ms": 2.9914,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1774980711546954,
@@ -2764,13 +3013,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 50,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2778,8 +3030,8 @@
    "material": "Re",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1443,
-   "ms": 61.1845,
+   "pruned": 102,
+   "ms": 3.1637,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9104399049879301,
@@ -2797,13 +3049,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 50,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2811,12 +3066,12 @@
    "material": "Re",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 87.7834,
+   "pruned": 64,
+   "ms": 2.8513,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0257880883320512,
-     "max_abs_lnCE": 0.30616571042632146,
+     "max_abs_lnCE": 0.3061657104263216,
      "n": 20
     },
     "fispact": {
@@ -2830,13 +3085,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 50,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2844,8 +3102,8 @@
    "material": "Rh",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1444,
-   "ms": 70.2148,
+   "pruned": 46,
+   "ms": 1.902,
    "summary": {
     "actinv": {
      "geomean_CE": 3.408369775386541,
@@ -2863,13 +3121,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 15,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2877,8 +3138,8 @@
    "material": "Ru",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1438,
-   "ms": 73.2545,
+   "pruned": 90,
+   "ms": 3.9678,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9993772791746774,
@@ -2896,13 +3157,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 117,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2910,8 +3174,8 @@
    "material": "S",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 68.1441,
+   "pruned": 38,
+   "ms": 1.4914,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9737122818970904,
@@ -2929,13 +3193,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 38,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -2943,8 +3210,8 @@
    "material": "S",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1441,
-   "ms": 43.922,
+   "pruned": 55,
+   "ms": 1.1507,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9628437662668882,
@@ -2962,13 +3229,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 38,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 9,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 1
    }
   },
@@ -2976,8 +3246,8 @@
    "material": "S",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 59.9378,
+   "pruned": 38,
+   "ms": 1.3172,
    "summary": {
     "actinv": {
      "geomean_CE": 1.5621187341842766,
@@ -2995,13 +3265,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 38,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3009,11 +3282,11 @@
    "material": "SS304",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1428,
-   "ms": 67.7272,
+   "pruned": 104,
+   "ms": 3.8356,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.8923495114721628,
+     "geomean_CE": 0.8923495114721627,
      "max_abs_lnCE": 0.15247828768039698,
      "n": 20
     },
@@ -3028,13 +3301,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 222,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3042,12 +3318,12 @@
    "material": "SS304",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1428,
-   "ms": 46.0429,
+   "pruned": 156,
+   "ms": 3.6622,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9652147327415712,
-     "max_abs_lnCE": 0.1067053037035613,
+     "geomean_CE": 0.9652147327415604,
+     "max_abs_lnCE": 0.106705303703586,
      "n": 10
     },
     "fispact": {
@@ -3061,13 +3337,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 222,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3075,8 +3354,8 @@
    "material": "SS304",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1428,
-   "ms": 74.198,
+   "pruned": 104,
+   "ms": 4.0802,
    "summary": {
     "actinv": {
      "geomean_CE": 0.978991113794859,
@@ -3094,13 +3373,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 222,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3108,11 +3390,11 @@
    "material": "SS316",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1421,
-   "ms": 70.9,
+   "pruned": 192,
+   "ms": 7.7241,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.908035461882025,
+     "geomean_CE": 0.9080354618820249,
      "max_abs_lnCE": 0.12212115578904494,
      "n": 20
     },
@@ -3127,13 +3409,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 360,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3141,12 +3426,12 @@
    "material": "SS316",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1421,
-   "ms": 49.2198,
+   "pruned": 287,
+   "ms": 7.495,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9599264895357055,
-     "max_abs_lnCE": 0.10275796359209322,
+     "geomean_CE": 0.959926489535705,
+     "max_abs_lnCE": 0.102757963592107,
      "n": 10
     },
     "fispact": {
@@ -3160,13 +3445,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 360,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3174,8 +3462,8 @@
    "material": "SS316",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1421,
-   "ms": 70.7474,
+   "pruned": 191,
+   "ms": 8.2945,
    "summary": {
     "actinv": {
      "geomean_CE": 1.010624017216801,
@@ -3193,13 +3481,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 360,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3207,8 +3498,8 @@
    "material": "Sb",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 76.7394,
+   "pruned": 66,
+   "ms": 3.542,
    "summary": {
     "actinv": {
      "geomean_CE": 1.204982811308987,
@@ -3226,13 +3517,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 38,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3240,8 +3534,8 @@
    "material": "Sc",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 65.2165,
+   "pruned": 58,
+   "ms": 2.2903,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0284965968887192,
@@ -3259,13 +3553,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 30,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3273,8 +3570,8 @@
    "material": "Se",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1439,
-   "ms": 66.6998,
+   "pruned": 81,
+   "ms": 3.433,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1683826553765069,
@@ -3292,13 +3589,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 74,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3306,12 +3606,12 @@
    "material": "Si",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1442,
-   "ms": 63.5015,
+   "pruned": 29,
+   "ms": 1.107,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0586067261329641,
-     "max_abs_lnCE": 0.12904864997454787,
+     "geomean_CE": 1.058606726132962,
+     "max_abs_lnCE": 0.1290486499745473,
      "n": 21
     },
     "fispact": {
@@ -3325,13 +3625,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 25,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3339,8 +3642,8 @@
    "material": "Sm",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1435,
-   "ms": 79.8264,
+   "pruned": 111,
+   "ms": 4.415,
    "summary": {
     "actinv": {
      "geomean_CE": 1.072144955937045,
@@ -3358,13 +3661,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 183,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3372,11 +3678,11 @@
    "material": "Sn",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1432,
-   "ms": 72.7587,
+   "pruned": 145,
+   "ms": 6.2007,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9455639011158695,
+     "geomean_CE": 0.9455639011158635,
      "max_abs_lnCE": 0.1669007634569916,
      "n": 20
     },
@@ -3391,13 +3697,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 187,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3405,8 +3714,8 @@
    "material": "Sn",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1432,
-   "ms": 49.52,
+   "pruned": 204,
+   "ms": 5.5215,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9247678440149891,
@@ -3424,13 +3733,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 187,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3438,12 +3750,12 @@
    "material": "Sn",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1432,
-   "ms": 70.26,
+   "pruned": 145,
+   "ms": 6.3845,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.2195169099725283,
-     "max_abs_lnCE": 0.6537776821955223,
+     "geomean_CE": 1.2195169099725192,
+     "max_abs_lnCE": 0.6537776821955221,
      "n": 21
     },
     "fispact": {
@@ -3457,13 +3769,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 187,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3471,8 +3786,8 @@
    "material": "Sr",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1436,
-   "ms": 68.8141,
+   "pruned": 84,
+   "ms": 3.3547,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8123470324196497,
@@ -3490,13 +3805,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 122,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3504,12 +3822,12 @@
    "material": "Sr",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1436,
-   "ms": 49.2593,
+   "pruned": 135,
+   "ms": 3.4294,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.0715648800061184,
-     "max_abs_lnCE": 0.2545904245724911,
+     "geomean_CE": 1.0715648800061146,
+     "max_abs_lnCE": 0.2545904245724806,
      "n": 10
     },
     "fispact": {
@@ -3523,13 +3841,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 122,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3537,8 +3858,8 @@
    "material": "Sr",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1436,
-   "ms": 71.032,
+   "pruned": 84,
+   "ms": 3.4452,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9049340282627214,
@@ -3556,13 +3877,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 122,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3570,8 +3894,8 @@
    "material": "Ta",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 86.506,
+   "pruned": 59,
+   "ms": 2.602,
    "summary": {
     "actinv": {
      "geomean_CE": 1.2131490724520704,
@@ -3589,13 +3913,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3603,11 +3930,11 @@
    "material": "Ta",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1443,
-   "ms": 60.5779,
+   "pruned": 78,
+   "ms": 2.2134,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.8291170442267204,
+     "geomean_CE": 0.8291170442267163,
      "max_abs_lnCE": 0.8583619852639784,
      "n": 10
     },
@@ -3622,13 +3949,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3636,8 +3966,8 @@
    "material": "Ta",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 89.4845,
+   "pruned": 59,
+   "ms": 2.6238,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8475789321834544,
@@ -3655,13 +3985,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3669,8 +4002,8 @@
    "material": "Tb",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 86.6184,
+   "pruned": 63,
+   "ms": 2.6279,
    "summary": {
     "actinv": {
      "geomean_CE": 0.19581929445736118,
@@ -3688,13 +4021,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 41,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3702,8 +4038,8 @@
    "material": "Te",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1434,
-   "ms": 79.9619,
+   "pruned": 141,
+   "ms": 6.2575,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0644440678492082,
@@ -3721,13 +4057,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 177,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3735,8 +4074,8 @@
    "material": "Ti",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 64.1063,
+   "pruned": 46,
+   "ms": 1.7797,
    "summary": {
     "actinv": {
      "geomean_CE": 0.8955624521417949,
@@ -3754,13 +4093,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 54,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3768,8 +4110,8 @@
    "material": "Ti",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1440,
-   "ms": 44.7913,
+   "pruned": 80,
+   "ms": 1.9811,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9147974930452809,
@@ -3787,13 +4129,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 54,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3801,8 +4146,8 @@
    "material": "Ti",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 66.3583,
+   "pruned": 46,
+   "ms": 1.9671,
    "summary": {
     "actinv": {
      "geomean_CE": 1.0111222711961427,
@@ -3820,13 +4165,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 54,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3834,8 +4182,8 @@
    "material": "Tl",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 82.4357,
+   "pruned": 66,
+   "ms": 2.5769,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9966858221530682,
@@ -3853,13 +4201,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 55,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3867,8 +4218,8 @@
    "material": "Tm",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 89.859,
+   "pruned": 62,
+   "ms": 2.5737,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9424822174183131,
@@ -3886,13 +4237,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 44,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3900,8 +4254,8 @@
    "material": "V",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 65.6806,
+   "pruned": 32,
+   "ms": 1.2969,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9231258864996764,
@@ -3919,13 +4273,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 25,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3933,11 +4290,11 @@
    "material": "V",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1443,
-   "ms": 39.5207,
+   "pruned": 50,
+   "ms": 1.0209,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.5109196009561038,
+     "geomean_CE": 0.5109196009561103,
      "max_abs_lnCE": 4.027275946998259,
      "n": 7
     },
@@ -3952,13 +4309,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 25,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 7,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 3
    }
   },
@@ -3966,8 +4326,8 @@
    "material": "V",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1443,
-   "ms": 68.4796,
+   "pruned": 32,
+   "ms": 1.4004,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1244810209325105,
@@ -3985,13 +4345,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 25,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -3999,8 +4362,8 @@
    "material": "W",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 86.7332,
+   "pruned": 80,
+   "ms": 3.625,
    "summary": {
     "actinv": {
      "geomean_CE": 1.3923618117631422,
@@ -4018,13 +4381,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 122,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4032,11 +4398,11 @@
    "material": "W",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1440,
-   "ms": 61.0696,
+   "pruned": 110,
+   "ms": 3.2856,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.1638553142780754,
+     "geomean_CE": 1.1638553142780748,
      "max_abs_lnCE": 0.4536384152420099,
      "n": 10
     },
@@ -4051,13 +4417,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 122,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4065,8 +4434,8 @@
    "material": "W",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 86.3239,
+   "pruned": 80,
+   "ms": 3.7018,
    "summary": {
     "actinv": {
      "geomean_CE": 1.8520323611241547,
@@ -4084,13 +4453,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 122,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4098,8 +4470,8 @@
    "material": "Y",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 68.2441,
+   "pruned": 63,
+   "ms": 2.5672,
    "summary": {
     "actinv": {
      "geomean_CE": 0.5701835945222088,
@@ -4117,13 +4489,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4131,12 +4506,12 @@
    "material": "Y",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1441,
-   "ms": 49.7598,
+   "pruned": 109,
+   "ms": 2.8034,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.8595255039176936,
-     "max_abs_lnCE": 0.17125688030920552,
+     "geomean_CE": 0.8595255039176841,
+     "max_abs_lnCE": 0.1712568803092059,
      "n": 10
     },
     "fispact": {
@@ -4150,13 +4525,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4164,8 +4542,8 @@
    "material": "Y",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1441,
-   "ms": 69.9624,
+   "pruned": 63,
+   "ms": 2.697,
    "summary": {
     "actinv": {
      "geomean_CE": 0.9385761775044605,
@@ -4183,13 +4561,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 51,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4197,8 +4578,8 @@
    "material": "Yb",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1435,
-   "ms": 88.928,
+   "pruned": 98,
+   "ms": 4.1775,
    "summary": {
     "actinv": {
      "geomean_CE": 1.1468433187221354,
@@ -4216,13 +4597,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 163,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 1
    }
   },
@@ -4230,11 +4614,11 @@
    "material": "Zn",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 67.4964,
+   "pruned": 59,
+   "ms": 2.454,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.027820978154225,
+     "geomean_CE": 1.0278209781542247,
      "max_abs_lnCE": 0.06067793457867641,
      "n": 21
     },
@@ -4249,13 +4633,16 @@
     "AGREE_REF": false
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 76,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4263,11 +4650,11 @@
    "material": "Zr",
    "experiment": "1996exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 67.3835,
+   "pruned": 74,
+   "ms": 3.21,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.051054042262815,
+     "geomean_CE": 1.0510540422628147,
      "max_abs_lnCE": 0.11259887139374068,
      "n": 20
     },
@@ -4282,13 +4669,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 116,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4296,12 +4686,12 @@
    "material": "Zr",
    "experiment": "1996exp_7hour",
    "error": null,
-   "pruned": 1440,
-   "ms": 48.1348,
+   "pruned": 110,
+   "ms": 3.0898,
    "summary": {
     "actinv": {
-     "geomean_CE": 0.9278606067090255,
-     "max_abs_lnCE": 0.43771325470508726,
+     "geomean_CE": 0.9278606067090227,
+     "max_abs_lnCE": 0.43771325470508826,
      "n": 10
     },
     "fispact": {
@@ -4315,13 +4705,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 116,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   },
@@ -4329,11 +4722,11 @@
    "material": "Zr",
    "experiment": "2000exp_5min",
    "error": null,
-   "pruned": 1440,
-   "ms": 68.1587,
+   "pruned": 73,
+   "ms": 3.2849,
    "summary": {
     "actinv": {
-     "geomean_CE": 1.1479728621983831,
+     "geomean_CE": 1.147972862198383,
      "max_abs_lnCE": 0.19407371616472496,
      "n": 21
     },
@@ -4348,13 +4741,16 @@
     "AGREE_REF": true
    },
    "ledger_counts": {
-    "products_no_decay_record": 20,
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 18,
     "targets_absent_from_decay_lib": 0,
+    "fission_no_yields_to_leakage": 102,
     "composition_isotopes_absent": 0,
     "bulk_production_dropped": 116,
     "burnup_flag": false,
+    "rate_pruning": 3,
     "nuclides_without_decay_energy_data": 0,
     "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
     "measured_rows_excluded": 0
    }
   }

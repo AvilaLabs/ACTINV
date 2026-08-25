@@ -120,3 +120,56 @@
   records kept. Figures: results/fns_figures/summary.png, ce_all.png. Report: results/FNS_REPORT.md.
 - `controls/check_p2.py` → **P2-CONDITIONAL** (G1–G5 PASS; G4 after its repair round). Session closed; manifest
   regenerated once; local git commit. No external contact; no remote repository.
+
+## 7 — 2026-08-25 — P3 opened
+- Principal: "continue". P3 protocol hashed (protocols/protocol_hash.txt). Scope: decay fallback, own resonance
+  reconstruction + Doppler, rate-significance pruning, certificate, docs.
+
+## 8 — 2026-08-26 — memory incident and rule
+- The first `controls/doppler.py` vectorised the SIGMA1 kernel over all (output × input) pairs — for the 58,000-point
+  Fe-56 grid that is a 27 GB array; the laptop (30 GB) killed the session. Own defect. Fix: chunked outputs (512) and
+  a ±8 half-width window on input segments; peak memory ~ MB. Rule from now on: every heavy control or run executes
+  under `ulimit -v 12000000` (12 GB) so a mistake fails the job, not the machine; no single array may exceed ~1 GB
+  without a stated reason in the ledger. The FENDL-reference control (Amendment A) is rerun under this rule.
+- FENDL-3.2c W-186 uses LRF=7 (R-matrix limited) — unsupported in P3, ledgered; TENDL-2023 W-186 is MLBW.
+
+## 9 — 2026-08-26 — P3 G1, remote repository, attribution, amendments
+- G1 (a): own parser vs openmc.data.Decay on JEFF-3.3 (3,852 materials), 200 seeded nuclides (seed 20260826):
+  **0 mismatches** at 1e-12. Merge: 50 nuclides added from JEFF-3.3 (absent from ENDF/B-VIII.0), source recorded per
+  nuclide. Coverage of the 19 exotic EAF products: 1 (JEFF-3.3); 18 have no evaluated decay data in either library —
+  ledgered under `products_no_evaluated_decay_data_ENDFB80_JEFF33` and booked to leakage; realised atoms in FNS runs
+  are nil (rates ≤ 5e-17 /s/g). The "ZA=0 product" rows are MT=18 fission on 102 actinide targets → own category
+  `fission_no_yields_to_leakage`. The EAF-2010 `isotopes*.zip` archives are cross-section files, not decay data.
+  Largest half-life disagreements ENDF/B-VIII.0 vs JEFF-3.3 (information): F-14 5e-22 s vs 1e-9 s; Be-13; Re-164;
+  Po-219 3e-7 s vs 120 s — placeholders in one library or the other; all far from anything measured here.
+- Remote: the principal created https://github.com/AvilaLabs/ACTINV (private) and authorised its use; `origin`
+  added and the P0–P2 history pushed (commits adb4e11, f7e2b5e, 74cc621). Principal's rule recorded: no Claude
+  co-author trailers or contributor listing — commits are authored by Connor Avila; `attribution` cleared in
+  settings; all existing commits verified trailer-free.
+- **P3 Amendment A** (sha 8008e60c… protocol; amendment 314a2e42…/see protocol_hash.txt): G2 control (a) reference
+  changed to IAEA's NJOY-processed FENDL-3.2c ACE (293.6 K) of the same evaluation, because the openmc wheel lacks
+  its compiled reconstruction module. **P3 Amendment B**: adaptive 0 K grid before broadening; constant-invariance
+  window y ≥ 10; control (c) split into brute-force quadrature (≤1e-6) and ψ-function (O(Γ_D/E_r), ≤2e-3);
+  G3 criterion two-part (heat ≤1e-8 relative; fail-closed bound on removed heat ≤1e-12 using E·min(λB, F) with
+  F the feed-rate bound — the atom-only bound was honest but vacuous for λ ~ 1e20 s⁻¹ nuclides).
+- SIGMA1 defect found and fixed: segment slope per eV used where per x² (E = kT x²) was required; brute-force
+  quadrature now agrees on 1/v, constant, linear to 1e-9. The 0 K reconstruction agreed with NJOY at 1 eV to 1e-5
+  before any broadening (Ag-107 elastic 7.0732 vs 7.0739 b; capture 5.2489 vs 5.2500 b).
+- Data finding (G2 d): Fe-56 on the FNS D-T spectrum, TENDL-2023 vs EAF-2010 — (n,2n) 0.360 vs 0.442 b (−19 %),
+  (n,α) 0.0404 vs 0.0364 b (+11 %), (n,p) 0.0936 vs 0.0940 b, (n,γ) 2.15e-3 vs 1.34e-3 b (+60 %; Doppler 293 K
+  changes it by <0.1 % on this spectrum).
+
+## 10 — 2026-08-26 — P3 close: P3-FAIL on G2
+- G2 after Amendment B: (c1) SIGMA1 vs exact-kernel quadrature 1e-12…1e-15 (implementation exact); (c2) ψ peak 5.5e-7,
+  wings ±20 Γ 1.2 % (the ψ reference is a Gaussian-in-energy approximation; not accurate to 2e-3 in the far wings);
+  (b) 1/v 2.1e-6 (interpolation of 1/v on a 400/decade grid); constant at y ≥ 10 deviates 0.498 % — because a constant
+  is NOT invariant: the exact law is σ₀(1 + 1/(2y²)) (second moment of the kernel), my control premise was wrong;
+  (a) vs NJOY/FENDL ACE: medians 5e-5 / 3e-5 (elastic) and 2.5e-4 / 1.1e-3 (capture), p99 0.25–1.3 %, maxima
+  0.9–2.0 % at narrow resonances (Fe-56 307 keV; Ag-107 3.7–3.9 keV) — the 0 K sampling (161 linear points over
+  ±40 Γ) under-resolves resonances narrower than ~1 eV and Doppler-dominated peak heights inherit the area error.
+  G2 has used its repair round → **G2 FAIL** by the protocol; corrections go to P3b under a new protocol.
+- G3 PASS (threshold 1e-8 atoms/g; heat difference 2.8e-9; removed-heat bound 3.1e-13; median 71 states, 2.7 ms;
+  all 132 experiments 0.4 s of solver time). G4 PASS (certificate: every input hash matched, every C/E re-derived to
+  3.8e-16). G1 PASS. G5 recorded (README, CONTRIBUTING, docs/METHOD, DATA, HARNESS, LEDGER, VALIDATION).
+- Verdict `controls/check_p3.py`: **P3-FAIL**. Session closed; manifest regenerated once; committed and pushed to the
+  private remote (author Connor Avila, no trailers).

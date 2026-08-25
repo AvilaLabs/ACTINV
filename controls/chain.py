@@ -5,6 +5,7 @@ booked to leakage with a reason — never dropped. Writes results/chain_stats.js
 import os, sys, json, math
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from endf_decay import parse_decay_file
+from decay_sources import merged_records
 LN2 = math.log(2.0)
 STEP = {1: (1, 0), 2: (-1, 0), 3: (0, 0), 4: (-2, -4), 5: (0, -1), 7: (-1, -1)}  # dZ, dA per elementary mode
 def rtyp_digits(rtyp):
@@ -12,8 +13,8 @@ def rtyp_digits(rtyp):
     if "." in s: a, b = s.split("."); return [int(a)] + [int(ch) for ch in b]
     return [int(s)]
 def build(path=None):
-    path = path or os.path.expanduser("~/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat")
-    recs = parse_decay_file(path)
+    if path is None: recs, prov, _stats = merged_records()   # P3-G1: primary + fallback with provenance
+    else: recs = parse_decay_file(path); prov = {}
     keys = sorted(recs, key=lambda m: (recs[m]["za"], recs[m]["liso"]))  # order by ZA (≈ Z then A), then isomer
     idx = {(int(round(recs[m]["za"])), recs[m]["liso"]): k for k, m in enumerate(keys)}
     n = len(keys); LEAK = n  # leakage row index

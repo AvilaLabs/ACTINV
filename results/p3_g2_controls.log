@@ -1,0 +1,52 @@
+[     3 s] Fe56: reconstructing 108612 points
+[     4 s] Fe56: reconstructed
+[    67 s] Fe56 MT2: broadened
+[   127 s] Fe56 MT102: broadened
+[   128 s] Ag107: reconstructing 142027 points
+[   130 s] Ag107: reconstructed
+[   190 s] Ag107 MT2: broadened
+[   250 s] Ag107 MT102: broadened
+Fe56 {"reference": "FENDL-3.2c ACE (NJOY2016, 293.6 K)", "LRF": 3, "NAPS": 1, "EL": 1e-05, "EH": 850000.0, "n_resonances": 312, "n_ace_points_in_RRR": 40765, "n_dense_0K_points": 108612, "MT2": {"max_rel": 0.009379398779038596, "median_rel": 5.08275820377084e-05, "p99_rel": 0.002524136182345183, "n": 40758, "E_at_max": 306990.7, "own_293K_at_1eV_b": 12.097377127103822, "ace_at_1eV_b": 12.0972, "own_0K_at_1eV_b": 12.094622705916965}, "MT102": {"max_rel": 0.016612587705802238, "median_rel": 0.0002485140539008354, "p99_rel": 0.008491314660904432, "n": 40758, "E_at_max": 306990.7, "own_293K_at_1eV_b": 0.40952539186312525, "ace_at_1eV_b": 0.4096114, "own_0K_at_1eV_b": 0.40952556287539366}}
+Ag107 {"reference": "FENDL-3.2c ACE (NJOY2016, 293.6 K)", "LRF": 2, "NAPS": 0, "EL": 1e-05, "EH": 6500.0, "n_resonances": 400, "n_ace_points_in_RRR": 58321, "n_dense_0K_points": 142027, "MT2": {"max_rel": 0.009588763557058061, "median_rel": 3.288956593139065e-05, "p99_rel": 0.0038605291001960695, "n": 58266, "E_at_max": 3735.683, "own_293K_at_1eV_b": 7.073924067388543, "ace_at_1eV_b": 7.073905, "own_0K_at_1eV_b": 7.073221220091524}, "MT102": {"max_rel": 0.01950545604371503, "median_rel": 0.001056942107342218, "p99_rel": 0.013381639834420048, "n": 58266, "E_at_max": 3890.4700000000003, "own_293K_at_1eV_b": 5.248721595702254, "ace_at_1eV_b": 5.250016, "own_0K_at_1eV_b": 5.248919848381703}}
+control b: {'one_over_v_max_rel': 2.0720928762820755e-06, 'constant_max_rel_y_ge_10': 0.004980246485020749, 'pass': False, 'window_eV_1v': [0.001, 10000.0], 'constant_window': 'y>=10'}
+control c1: {'max_rel_by_function': {'1/v': 1.4351518089433773e-12, 'constant': 2.960587978598411e-16, 'linear': 2.1984561714767974e-16, 'line': 1.9071051551231676e-15}, 'pass': True}
+control c2: {'Er': 100000.0, 'Gn': 0.4, 'Gg': 1.6, 'Doppler_width_eV': 13.509150086396337, 'beta': 0.14804780368929296, 'GammaD_over_Er': 0.00013509150086396337, 'max_rel_peak': 5.547098607629965e-07, 'max_rel_wings_20G': 0.01170512756724215, 'pass': False}
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+control d: {
+ "102": {
+  "tendl2023_293K": 0.002147989182156308,
+  "tendl2023_0K": 0.0021481060992517864,
+  "eaf2010": 0.0013400407080019553,
+  "n_resonances_RRR": 305
+ },
+ "103": {
+  "tendl2023": 0.09361200325008395,
+  "eaf2010": 0.09398681262795983
+ },
+ "107": {
+  "tendl2023": 0.04036195020025281,
+  "eaf2010": 0.03641713832033194
+ },
+ "16": {
+  "tendl2023": 0.35979645590266296,
+  "eaf2010": 0.44245242425593023
+ }
+}
+FAIL

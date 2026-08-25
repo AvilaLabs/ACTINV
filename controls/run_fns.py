@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from chain import build
 from harness import fispact_io as fio, composition as comp, decayheat as dh
 from harness.elements import SYM_OF
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); RES = os.path.join(ROOT, "results"); FNS = os.path.join(RES, "fns"); os.makedirs(FNS, exist_ok=True)
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); RES = os.path.join(ROOT, "results"); FNS = os.path.join(RES, os.environ.get("ACTINV_FNS_DIR", "fns")); os.makedirs(FNS, exist_ok=True)
 BIN = os.path.join(ROOT, "target", "release", "actinv-solve"); LIB = os.path.expanduser("~/nuclear-data/eaf-2010")
 DATA = os.path.expanduser("~/nuclear-data/conderc-fns/fns")
 cc = json.load(open(os.path.expanduser("~/Documents/Avila-Labs/scouting/act-p0/results/cram_coefficients.json")))["Cram16Solver"]
@@ -27,7 +27,7 @@ def flux_from_file(path, total):
 def reaction_matrix(phi):
     """Per-atom rates (s^-1) for every library target under group flux phi (ascending). Returns dict (row, col)->rate, ledger."""
     sbar = SIG @ phi / phi.sum() * 1e-24 * phi.sum()   # = sum_g sig_g phi_g * 1e-24  (rate per atom, s^-1)
-    R = {}; led = {"products_no_decay_record": {}, "targets_absent_from_decay_lib": []}
+    R = {}; led = {"products_no_evaluated_decay_data_ENDFB80_JEFF33": {}, "targets_absent_from_decay_lib": []}
     for (tk, mt, zap, lfs, lmf), rate in zip(ROWS, sbar):
         if rate == 0.0: continue
         za, liso = TARGETS[tk]; col = idx.get((za, liso))
@@ -35,10 +35,12 @@ def reaction_matrix(phi):
             if (za, liso) not in led["targets_absent_from_decay_lib"]: led["targets_absent_from_decay_lib"].append((za, liso))
             continue
         if zap == -1: R[(col, col)] = R.get((col, col), 0.0) - rate; continue
+        if mt == 18 and zap == 0:   # fission: no yields in ACTINV yet -> leakage, own ledger category
+            led.setdefault("fission_no_yields_to_leakage", {})[f"{za}_{liso}"] = rate; R[(LEAK, col)] = R.get((LEAK, col), 0.0) + rate; continue
         row = idx.get((int(zap), int(lfs)))
         if row is None:
             row = idx.get((int(zap), 0))
-            if row is None: led["products_no_decay_record"][f"{int(zap)}_{int(lfs)}"] = led["products_no_decay_record"].get(f"{int(zap)}_{int(lfs)}", 0.0) + rate; row = LEAK
+            if row is None: led["products_no_evaluated_decay_data_ENDFB80_JEFF33"][f"{int(zap)}_{int(lfs)}"] = led["products_no_evaluated_decay_data_ENDFB80_JEFF33"].get(f"{int(zap)}_{int(lfs)}", 0.0) + rate; row = LEAK
         R[(row, col)] = R.get((row, col), 0.0) + rate
     return R, led
 def write_problem(path, n0, R, sched, Dm):
@@ -53,14 +55,19 @@ def write_problem(path, n0, R, sched, Dm):
         for a, b, c, d in zip(cc["theta_re"], cc["theta_im"], cc["alpha_re"], cc["alpha_im"]): f.write("%.17e %.17e %.17e %.17e\n" % (a, b, c, d))
         f.write("schedule %d\n" % len(sched))
         for dt, on in sched: f.write("%.17e %.17e\n" % (dt, on))
-        f.write("prune 1\n")
+        f.write("prune %s %s\n" % (os.environ.get("ACTINV_PRUNE", "2"), os.environ.get("ACTINV_BMIN", "1e-8")))
 def read_result(path):
     lines = open(path).read().splitlines(); hdr = dict(zip(lines[1].split()[0::2], lines[1].split()[1::2])); steps = []; i = 2
+    dropped = []
     while i < len(lines):
-        p = lines[i].split(); k = int(p[5]); vec = {}
+        p = lines[i].split()
+        if p[0] == "dropped":
+            for l in lines[i + 1:i + 1 + int(p[1])]: a, b, fr = l.split(); dropped.append((int(a), float(b), float(fr)))
+            break
+        k = int(p[5]); vec = {}
         for l in lines[i + 1:i + 1 + k]: a, b = l.split(); vec[int(a)] = float(b)
         steps.append({"t": float(p[3]), "vec": vec}); i += 1 + k
-    return hdr, steps
+    hdr["_dropped"] = dropped; return hdr, steps
 def run_experiment(mat, tag):
     d = os.path.join(DATA, mat); ifile = os.path.join(d, f"TENDL-2017_{tag}.i"); ef = os.path.join(d, f"{tag}.exp"); ff = os.path.join(d, f"{tag}_fluxes")
     of = os.path.join(d, f"TENDL-2017_{tag}.out"); nf = os.path.join(d, f"TENDL-2017_{tag}.nuclides")
@@ -104,7 +111,7 @@ def run_experiment(mat, tag):
     pf = os.path.join(FNS, f"{mat}_{tag}.problem"); rf = os.path.join(FNS, f"{mat}_{tag}.result"); write_problem(pf, n0, Rsrc, sched, Dsrc)
     t0 = time.time(); p = subprocess.run([BIN, pf, rf], capture_output=True, text=True); rec["solve_wall_s"] = time.time() - t0
     if p.returncode != 0: rec["error"] = p.stderr[-500:]; return rec
-    hdr, steps = read_result(rf); rec["pruned_size"] = int(hdr["pruned"]); rec["ms_total"] = float(hdr["ms_total"])
+    hdr, steps = read_result(rf); rec["pruned_size"] = int(hdr["pruned"]); rec["ms_total"] = float(hdr["ms_total"]); rec["prune_mode"] = int(hdr.get("prune_mode", 1)); rec["ledger"]["rate_pruning"] = {"dropped_nodes": int(hdr.get("dropped_nodes", 0)), "dropped_bound_atoms_per_g": float(hdr.get("dropped_bound_atoms", 0.0)), "dropped": [{"za": NAME[i][0], "liso": NAME[i][1], "bound_atoms_per_g": b, "feed_bound_atoms_per_s_g": fr} for i, b, fr in hdr.get("_dropped", []) if i in NAME]}
     # heats at each cooling step (steps[1:]), interchange records
     inventories = []; heats = []; top = []; missing_energy = set(); zeroed = []
     for s in steps[1:]:
@@ -115,6 +122,7 @@ def run_experiment(mat, tag):
         top.append(sorted(((nuc_name(*k), v * 1e6) for k, v in per.items()), key=lambda kv: -kv[1])[:5])
         inventories.append({"t_s": s["t"] - inp["t_irr_s"], "nuclides": [{"Z": k[0] // 1000, "A": k[0] % 1000, "LISO": k[1], "atoms_per_g": v} for k, v in inv.items()], "leakage_atoms_per_g": s["vec"].get(LEAK, 0.0), "source": "ACTINV P2 (Amendment B)"})
     rec["ledger"]["nuclides_without_decay_energy_data"] = sorted(missing_energy); rec["ledger"]["negative_atoms_zeroed_per_step"] = zeroed
+    D_ = dh.decay_table(); rec["ledger"]["decay_data_sources_used"] = sorted({D_[k]["source"] for inv_ in inventories for x in inv_["nuclides"] for k in [(x["Z"] * 1000 + x["A"], x["LISO"])] if k in D_})
     rec["inventories"] = inventories; rec["heat_uW_g_actinv"] = heats; rec["top_contributors_actinv"] = {"first": top[0], "last": top[-1]}
     # measured and reference alignment — Amendment C: by time, unit inferred; non-positive rows excluded
     cool = np.array(cool); traw = np.array(exp["t_raw"]); units = {"s": 1.0, "min": 60.0, "h": 3600.0, "d": 86400.0, "y": 365.25 * 86400.0}
@@ -161,5 +169,5 @@ def main():
         s = {"material": mat, "experiment": tag, "error": rec.get("error"), "pruned": rec.get("pruned_size"), "ms": rec.get("ms_total"), "summary": rec.get("summary"), "disposition": rec.get("disposition"),
              "ledger_counts": {kk: (len(v) if hasattr(v, "__len__") else v) for kk, v in rec.get("ledger", {}).items()}}
         summary.append(s); print(f"{k+1:3d}/{len(exps)} {mat:7s} {tag:16s} " + (f"ERR {rec['error'][-120:]}" if rec.get("error") else f"pruned {rec['pruned_size']:4d} {rec['ms_total']:7.2f} ms  ACTINV gm C/E {rec['summary']['actinv']['geomean_CE']:.3f} max|ln| {rec['summary']['actinv']['max_abs_lnCE']:.3f}" + (f" | FISPACT gm {rec['summary']['fispact']['geomean_CE']:.3f} max|ln| {rec['summary']['fispact']['max_abs_lnCE']:.3f}" if 'fispact' in rec['summary'] else "")), file=sys.stderr)
-    json.dump({"n_experiments": len(exps), "wall_s": time.time() - t0, "experiments": summary}, open(os.path.join(RES, "fns_summary.json"), "w"), indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
+    json.dump({"n_experiments": len(exps), "wall_s": time.time() - t0, "experiments": summary}, open(os.path.join(RES, os.environ.get("ACTINV_FNS_DIR", "fns") + "_summary.json"), "w"), indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o))
 if __name__ == "__main__": main()

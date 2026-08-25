@@ -1,0 +1,279 @@
+{
+ "fallback_file": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat",
+ "n_fallback": 3852,
+ "n_checked": 200,
+ "n_mismatch": 0,
+ "mismatches": [],
+ "pass": true,
+ "merge": {
+  "primary": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+  "n_primary": 3821,
+  "fallback": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat",
+  "n_added_from_fallback": 50
+ },
+ "added_from_fallback_examples": [
+  [
+   16047,
+   0
+  ],
+  [
+   24045,
+   1
+  ],
+  [
+   25046,
+   1
+  ],
+  [
+   27047,
+   0
+  ],
+  [
+   27048,
+   0
+  ],
+  [
+   27052,
+   1
+  ],
+  [
+   30061,
+   3
+  ],
+  [
+   33060,
+   1
+  ],
+  [
+   33084,
+   1
+  ],
+  [
+   37083,
+   1
+  ],
+  [
+   37096,
+   1
+  ],
+  [
+   41086,
+   1
+  ],
+  [
+   43087,
+   1
+  ],
+  [
+   45114,
+   1
+  ],
+  [
+   47124,
+   1
+  ],
+  [
+   48129,
+   1
+  ],
+  [
+   49099,
+   1
+  ],
+  [
+   49101,
+   1
+  ],
+  [
+   49128,
+   2
+  ],
+  [
+   59127,
+   1
+  ],
+  [
+   59129,
+   1
+  ],
+  [
+   59130,
+   1
+  ],
+  [
+   59132,
+   1
+  ],
+  [
+   61137,
+   1
+  ],
+  [
+   62135,
+   1
+  ],
+  [
+   62137,
+   1
+  ],
+  [
+   67145,
+   1
+  ],
+  [
+   69150,
+   2
+  ],
+  [
+   69161,
+   1
+  ],
+  [
+   71159,
+   1
+  ]
+ ],
+ "n_in_both_radioactive": 3542,
+ "top20_half_life_disagreements": [
+  {
+   "za": 9014,
+   "liso": 0,
+   "T12_endfb80_s": 5.0007e-22,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 28.32402830628758
+  },
+  {
+   "za": 4013,
+   "liso": 0,
+   "T12_endfb80_s": 2.7e-21,
+   "T12_jeff33_s": 5e-10,
+   "abs_ln_ratio": 25.94462216235832
+  },
+  {
+   "za": 75164,
+   "liso": 0,
+   "T12_endfb80_s": 0.53,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 20.08838756451044
+  },
+  {
+   "za": 84219,
+   "liso": 0,
+   "T12_endfb80_s": 3e-07,
+   "T12_jeff33_s": 120.0,
+   "abs_ln_ratio": 19.806975105072254
+  },
+  {
+   "za": 84220,
+   "liso": 0,
+   "T12_endfb80_s": 3e-07,
+   "T12_jeff33_s": 40.0,
+   "abs_ln_ratio": 18.708362816404147
+  },
+  {
+   "za": 33063,
+   "liso": 0,
+   "T12_endfb80_s": 0.0921,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 18.338385501225535
+  },
+  {
+   "za": 21037,
+   "liso": 0,
+   "T12_endfb80_s": 0.056,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 17.840862248699423
+  },
+  {
+   "za": 35067,
+   "liso": 0,
+   "T12_endfb80_s": 0.0443,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 17.606495235015363
+  },
+  {
+   "za": 32059,
+   "liso": 0,
+   "T12_endfb80_s": 0.0418,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 17.548406897494985
+  },
+  {
+   "za": 31059,
+   "liso": 0,
+   "T12_endfb80_s": 0.0418,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 17.548406897494985
+  },
+  {
+   "za": 33062,
+   "liso": 0,
+   "T12_endfb80_s": 0.0259,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 17.069753526669768
+  },
+  {
+   "za": 23041,
+   "liso": 0,
+   "T12_endfb80_s": 0.0244,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 17.01009369026343
+  },
+  {
+   "za": 41081,
+   "liso": 0,
+   "T12_endfb80_s": 0.8,
+   "T12_jeff33_s": 4.4e-08,
+   "abs_ln_ratio": 16.715932651713942
+  },
+  {
+   "za": 33061,
+   "liso": 0,
+   "T12_endfb80_s": 0.0166,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 16.62491325332677
+  },
+  {
+   "za": 32058,
+   "liso": 0,
+   "T12_endfb80_s": 0.0152,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 16.536805985816503
+  },
+  {
+   "za": 31058,
+   "liso": 0,
+   "T12_endfb80_s": 0.0152,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 16.536805985816503
+  },
+  {
+   "za": 69151,
+   "liso": 1,
+   "T12_endfb80_s": 4.51e-07,
+   "T12_jeff33_s": 6.6,
+   "abs_ln_ratio": 16.498868146476113
+  },
+  {
+   "za": 31057,
+   "liso": 0,
+   "T12_endfb80_s": 0.0123,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 16.325109820342647
+  },
+  {
+   "za": 21036,
+   "liso": 0,
+   "T12_endfb80_s": 0.0088,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 15.990262279448435
+  },
+  {
+   "za": 33060,
+   "liso": 0,
+   "T12_endfb80_s": 0.0083,
+   "T12_jeff33_s": 1e-09,
+   "abs_ln_ratio": 15.931766072766827
+  }
+ ]
+}

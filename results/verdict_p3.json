@@ -1,0 +1,14 @@
+{
+ "gates": {
+  "G1": "PASS (parser 0/200 mismatches; 50 nuclides from JEFF-3.3; FNS residual products without evaluated decay data per experiment: {'min': 18, 'max': 18})",
+  "G2": "FAIL (a worst 0.01950545604371503; b False; c1 True; c2 False)",
+  "G3": "PASS (worst rel 2.78e-09; bound fraction 3.1108189450100397e-13; states [1440.0, 71.5]; ms [68.65895, 2.7197500000000003])",
+  "G4": "PASS (inputs mismatched []; experiments mismatched []; C/E re-derivation worst 3.8e-16; 132 experiments)",
+  "G5": "recorded"
+ },
+ "verdict": "P3-FAIL",
+ "amendments": [
+  "ACTINV-P3_AMENDMENT_B.md",
+  "ACTINV-P3_AMENDMENT_A.md"
+ ]
+}
