@@ -1,0 +1,10 @@
+{
+ "gates": {
+  "a": true,
+  "b": true,
+  "c1": true,
+  "c2": true
+ },
+ "a_worst": 0.0023230777554372802,
+ "verdict": "P3b-PASS"
+}

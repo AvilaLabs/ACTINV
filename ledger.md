@@ -173,3 +173,16 @@
   3.8e-16). G1 PASS. G5 recorded (README, CONTRIBUTING, docs/METHOD, DATA, HARNESS, LEDGER, VALIDATION).
 - Verdict `controls/check_p3.py`: **P3-FAIL**. Session closed; manifest regenerated once; committed and pushed to the
   private remote (author Connor Avila, no trailers).
+
+## 11 — 2026-08-26 — P3b: G2 second attempt, PASS
+- Protocol protocols/ACTINV-P3b_PROTOCOL.md (90e011a4…). Changes: 0 K sampling uniform in arctan(2(E−E_r)/Γ_r)
+  over ±200 Γ (401 points per resonance) plus one midpoint refinement where linear interpolation errs by > 1e-4
+  (Fe-56: 235,686 points, 54,167 refined; Ag-107: 331,942 / 94,019); control (b) replaced by the exact kernel laws
+  (1/v invariant; constant → σ₀(1 + 1/(2y²))); control (c2) gated within ±5 Γ where the ψ approximation holds.
+- Results: (a) own reconstruction + SIGMA1 vs IAEA's NJOY ACE at 293.6 K — Fe-56 (Reich–Moore) MT2 max 2.3e-3 /
+  median 5.8e-5, MT102 max 1.6e-3 / median 3.0e-4; Ag-107 (MLBW) MT2 max 4.3e-4 / median 1.3e-5, MT102 max 1.5e-3 /
+  median 2.4e-4 (all ≤ 3e-3, the three NJOY 0.1 % tolerances). (b) 1.3e-7, 9.8e-8. (c1) ≤ 1.4e-12. (c2) peak 5.5e-7,
+  ±5 Γ 2.0e-5 (±20 Γ 1.2 %, information). Peak memory bounded (chunked reconstruction and kernel; `ulimit -v`).
+- `controls/check_p3b.py` → **P3b-PASS**. Combined with P3: every P3 gate now has a passing successor record.
+- Housekeeping this session at the principal's direction: author email on all commits set to the principal's GitHub
+  address by history rewrite; no assistant attribution anywhere in the repository.

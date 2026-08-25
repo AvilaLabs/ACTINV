@@ -1,0 +1,54 @@
+[     3 s] Fe56: reconstructing 181519 points
+[     4 s] Fe56: reconstructed
+[     5 s] Fe56: refined 54167 midpoints -> 235686 points
+[   136 s] Fe56 MT2: broadened
+[   268 s] Fe56 MT102: broadened
+[   268 s] Ag107: reconstructing 237923 points
+[   273 s] Ag107: reconstructed
+[   278 s] Ag107: refined 94019 midpoints -> 331942 points
+[   409 s] Ag107 MT2: broadened
+[   539 s] Ag107 MT102: broadened
+Fe56 {"reference": "FENDL-3.2c ACE (NJOY2016, 293.6 K)", "LRF": 3, "NAPS": 1, "EL": 1e-05, "EH": 850000.0, "n_resonances": 312, "n_ace_points_in_RRR": 40765, "n_dense_0K_points": 235686, "n_midpoints_refined": 54167, "MT2": {"max_rel": 0.0023230777554372802, "median_rel": 5.781276402710319e-05, "p99_rel": 0.0007563355541962782, "n": 40758, "E_at_max": 24508.510000000002, "own_293K_at_1eV_b": 12.097377127103824, "ace_at_1eV_b": 12.0972, "own_0K_at_1eV_b": 12.094622705916965}, "MT102": {"max_rel": 0.0015919751096181236, "median_rel": 0.0002992160446878188, "p99_rel": 0.0007674876858007103, "n": 40758, "E_at_max": 173189.5, "own_293K_at_1eV_b": 0.4095253918631252, "ace_at_1eV_b": 0.4096114, "own_0K_at_1eV_b": 0.40952556287539366}}
+Ag107 {"reference": "FENDL-3.2c ACE (NJOY2016, 293.6 K)", "LRF": 2, "NAPS": 0, "EL": 1e-05, "EH": 6500.0, "n_resonances": 400, "n_ace_points_in_RRR": 58321, "n_dense_0K_points": 331942, "n_midpoints_refined": 94019, "MT2": {"max_rel": 0.00043212714322886836, "median_rel": 1.3216522871753834e-05, "p99_rel": 0.00017376950644954004, "n": 58266, "E_at_max": 199.7434, "own_293K_at_1eV_b": 7.0739240673885435, "ace_at_1eV_b": 7.073905, "own_0K_at_1eV_b": 7.073221220091524}, "MT102": {"max_rel": 0.0015010799721080917, "median_rel": 0.00023933997642922717, "p99_rel": 0.0007287261981484036, "n": 58266, "E_at_max": 6493.477, "own_293K_at_1eV_b": 5.2487215957022535, "ace_at_1eV_b": 5.250016, "own_0K_at_1eV_b": 5.248919848381703}}
+control b: {'one_over_v_max_rel': 1.2945937576165195e-07, 'constant_law_max_rel_y_ge_3': 9.82753988382222e-08, 'constant_law': 'sigma0*(1+1/(2y^2)) (second moment of the SIGMA1 kernel)', 'pass': True}
+control c1: {'max_rel_by_function': {'1/v': 1.4351518089433773e-12, 'constant': 2.960587978598411e-16, 'linear': 2.1984561714767974e-16, 'line': 1.9071051551231676e-15}, 'pass': True}
+control c2: {'Er': 100000.0, 'Gn': 0.4, 'Gg': 1.6, 'Doppler_width_eV': 13.509150086396337, 'beta': 0.14804780368929296, 'GammaD_over_Er': 0.00013509150086396337, 'max_rel_peak': 5.547098607629965e-07, 'max_rel_within_5G': 2.0331700549138592e-05, 'max_rel_within_20G_info': 0.01170512756724215, 'pass': True}
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+control d: {
+ "102": {
+  "tendl2023_293K": 0.002147989182156308,
+  "tendl2023_0K": 0.0021481060992517864,
+  "eaf2010": 0.0013400407080019553,
+  "n_resonances_RRR": 305
+ },
+ "103": {
+  "tendl2023": 0.09361200325008395,
+  "eaf2010": 0.09398681262795983
+ },
+ "107": {
+  "tendl2023": 0.04036195020025281,
+  "eaf2010": 0.03641713832033194
+ },
+ "16": {
+  "tendl2023": 0.35979645590266296,
+  "eaf2010": 0.44245242425593023
+ }
+}
+PASS

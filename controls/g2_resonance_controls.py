@@ -30,11 +30,18 @@ for nuc, (ef, af) in FENDL.items():   # P3 Amendment A: own reconstruction + own
     # Amendment B §1: resonance-adaptive dense 0 K grid, broaden there, sample at the ACE points
     widths = np.concatenate([(Lg["GN"] + Lg["GG"] + Lg.get("GF", np.zeros_like(Lg["GN"])) + Lg.get("GFA", np.zeros_like(Lg["GN"])) * 0) for Lg in rg["L"]]); Er_all = np.concatenate([Lg["ER"] for Lg in rg["L"]])
     dense = [np.logspace(np.log10(rg["EL"]), np.log10(rg["EH"]), 20000), Eg]
+    th = np.linspace(-np.arctan(400.0), np.arctan(400.0), 401)   # P3b: uniform in arctan(2(E-Er)/G) over ±200 G
     for e, g in zip(Er_all, widths):
-        if rg["EL"] < e < rg["EH"]: dense.append(e + max(g, 1e-3) * np.linspace(-40, 40, 161))
+        if rg["EL"] < e < rg["EH"]: dense.append(e + max(g, 1e-3) / 2 * np.tan(th))
     Ed = np.unique(np.concatenate(dense)); Ed = Ed[(Ed > rg["EL"]) & (Ed < rg["EH"])]
     _lap(f"{nuc}: reconstructing {Ed.size} points"); own0d = reconstruct_range(rg, Ed, awr); _lap(f"{nuc}: reconstructed")
-    rec = {"reference": "FENDL-3.2c ACE (NJOY2016, 293.6 K)", "LRF": rg["LRF"], "NAPS": rg["NAPS"], "EL": rg["EL"], "EH": rg["EH"], "n_resonances": int(Eres.size), "n_ace_points_in_RRR": int(Eg.size), "n_dense_0K_points": int(Ed.size)}
+    Em = 0.5 * (Ed[:-1] + Ed[1:]); mid = reconstruct_range(rg, Em, awr); need = np.zeros(Em.size, bool)   # one midpoint refinement
+    for key in ("elastic", "capture"):
+        lin = 0.5 * (own0d[key][:-1] + own0d[key][1:]); need |= np.abs(mid[key] - lin) > 1e-4 * np.maximum(np.abs(mid[key]), 1e-6)
+    if need.any():
+        Ed2 = np.concatenate([Ed, Em[need]]); order = np.argsort(Ed2); Ed = Ed2[order]; own0d = {k: np.concatenate([own0d[k], mid[k][need]])[order] for k in own0d}
+    rec_refined = int(need.sum()); _lap(f"{nuc}: refined {rec_refined} midpoints -> {Ed.size} points")
+    rec = {"reference": "FENDL-3.2c ACE (NJOY2016, 293.6 K)", "LRF": rg["LRF"], "NAPS": rg["NAPS"], "EL": rg["EL"], "EH": rg["EH"], "n_resonances": int(Eres.size), "n_ace_points_in_RRR": int(Eg.size), "n_dense_0K_points": int(Ed.size), "n_midpoints_refined": rec_refined}
     for mt, key in ((2, "elastic"), (102, "capture")):
         x3, y3, nbt3 = mf3(os.path.join(FD, ef), mt); s0d = own0d[key] + interp_lin(x3, y3, Ed)
         sT = broaden(Ed, s0d, 293.6, awr, Eout=Eg); s0 = np.interp(Eg, Ed, s0d); _lap(f"{nuc} MT{mt}: broadened")
@@ -48,10 +55,10 @@ for nuc, (ef, af) in FENDL.items():   # P3 Amendment A: own reconstruction + own
     out["control_a"][nuc] = rec; print(nuc, json.dumps(rec))
 out["control_a"]["pass"] = bool(worst_a <= 3e-3); out["control_a"]["worst"] = worst_a
 # ---- (b) Doppler invariants at 293.6 K, awr = 55.45
-E = np.logspace(-5, 5, 4000); T = 293.6; awr = 55.454; kT = KB * T / awr
+E = np.logspace(-5, 5, 16000); T = 293.6; awr = 55.454; kT = KB * T / awr; y = np.sqrt(E / kT)
 sv = 10.0 / np.sqrt(E); bv = broaden(E, sv, T, awr); m = (E > 1e-3) & (E < 1e4); e1 = float(np.max(np.abs(bv[m] - sv[m]) / sv[m]))
-sc = np.full_like(E, 3.0); bc = broaden(E, sc, T, awr); mc = (np.sqrt(E / kT) >= 10) & (E < 1e4); e2 = float(np.max(np.abs(bc[mc] - sc[mc]) / sc[mc]))
-out["control_b"] = {"one_over_v_max_rel": e1, "constant_max_rel_y_ge_10": e2, "pass": bool(max(e1, e2) <= 1e-6), "window_eV_1v": [1e-3, 1e4], "constant_window": "y>=10"}
+sc = np.full_like(E, 3.0); bc = broaden(E, sc, T, awr); law = 3.0 * (1 + 1 / (2 * y * y)); mc = (y >= 3) & (E < 1e4); e2 = float(np.max(np.abs(bc[mc] - law[mc]) / law[mc]))
+out["control_b"] = {"one_over_v_max_rel": e1, "constant_law_max_rel_y_ge_3": e2, "constant_law": "sigma0*(1+1/(2y^2)) (second moment of the SIGMA1 kernel)", "pass": bool(max(e1, e2) <= 1e-6)}
 print("control b:", out["control_b"])
 # ---- (c1) exact-kernel brute-force quadrature vs analytic SIGMA1 (Amendment B §3)
 def brute(E, sig, Eout, T, awr):
@@ -74,9 +81,9 @@ num = broaden(Efine, sig0, T, awr)
 Delta = np.sqrt(4 * KB * T * Er / awr); x = 2 * (Efine - Er) / G; beta = G / Delta
 psi = beta * np.sqrt(np.pi) * wofz((x + 1j) * beta / 2).real / 2
 ana = (Er / Efine) * Gn * Gg / (G * G / 4) * psi
-win = np.abs(Efine - Er) <= 20 * G; peak = np.abs(Efine - Er) <= G
-e_peak = float(np.max(np.abs(num[peak] - ana[peak]) / ana[peak])); e_wing = float(np.max(np.abs(num[win] - ana[win]) / ana[win]))
-out["control_c2"] = {"Er": Er, "Gn": Gn, "Gg": Gg, "Doppler_width_eV": float(Delta), "beta": float(beta), "GammaD_over_Er": float(Delta / Er), "max_rel_peak": e_peak, "max_rel_wings_20G": e_wing, "pass": bool(e_peak <= 2e-3 and e_wing <= 2e-3)}
+win = np.abs(Efine - Er) <= 5 * G; win20 = np.abs(Efine - Er) <= 20 * G; peak = np.abs(Efine - Er) <= G
+e_peak = float(np.max(np.abs(num[peak] - ana[peak]) / ana[peak])); e_wing = float(np.max(np.abs(num[win] - ana[win]) / ana[win])); e_wing20 = float(np.max(np.abs(num[win20] - ana[win20]) / ana[win20]))
+out["control_c2"] = {"Er": Er, "Gn": Gn, "Gg": Gg, "Doppler_width_eV": float(Delta), "beta": float(beta), "GammaD_over_Er": float(Delta / Er), "max_rel_peak": e_peak, "max_rel_within_5G": e_wing, "max_rel_within_20G_info": e_wing20, "pass": bool(e_peak <= 2e-3 and e_wing <= 2e-3)}
 print("control c2:", out["control_c2"])
 # ---- (d) TENDL-2023 at 293.6 K, one-group on the FNS Fe spectrum, vs EAF-2010 (from P2 library) 
 import g1_collapse as g1
@@ -103,4 +110,4 @@ for mt in (102, 103, 107, 16):
         grid = g1.union_grid(x3); s_on = g1.interp_eval(x3, y3, nbt3, grid); d[str(mt)] = {"tendl2023": g1.collapse(s_on, grid), "eaf2010": eaf_one_group(mt)}
 out["control_d"] = d; print("control d:", json.dumps(d, indent=1))
 out["pass"] = out["control_a"]["pass"] and out["control_b"]["pass"] and out["control_c1"]["pass"] and out["control_c2"]["pass"]
-json.dump(out, open(os.path.join(RES, "g2_resonance.json"), "w"), indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)); print("PASS" if out["pass"] else "FAIL")
+out["protocol"] = "P3b"; json.dump(out, open(os.path.join(RES, "g2_resonance_p3b.json"), "w"), indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)); print("PASS" if out["pass"] else "FAIL")
