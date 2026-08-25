@@ -1,0 +1,11 @@
+{
+ "gates": {
+  "G1": "PASS (worst rel 0.0, 16 compared, 0 without control)",
+  "G2": "controls PASS, timing PASS (8.4415 ms)",
+  "G3": "PASS",
+  "G4": "recorded (Cargo workspace builds; local git)"
+ },
+ "g2_ok": true,
+ "g2_timing": "PASS",
+ "verdict": "P1-PASS"
+}

@@ -1,0 +1,209 @@
+{
+ "route": "ROUTE-B\u2032",
+ "library": "EAF-2010 (IAEA mirror)",
+ "spectrum": "results/spectrum.json",
+ "tests": [
+  {
+   "nuclide": "Fe56",
+   "mt": 102,
+   "laws": [
+    2
+   ],
+   "npoints": 43235,
+   "sigma_own_b": 0.0013400407080019555,
+   "sigma_openmc_b": 0.0013400407080019555,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 103,
+   "laws": [
+    2,
+    4,
+    5
+   ],
+   "npoints": 54,
+   "sigma_own_b": 0.09398681262795984,
+   "sigma_openmc_b": 0.09398681262795984,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 2.1678987251535603e-16
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 107,
+   "laws": [
+    5
+   ],
+   "npoints": 100,
+   "sigma_own_b": 0.03641713832033194,
+   "sigma_openmc_b": 0.03641713832033194,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 3.424056417714696e-16
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 16,
+   "laws": [
+    1,
+    2
+   ],
+   "npoints": 39,
+   "sigma_own_b": 0.44245242425593023,
+   "sigma_openmc_b": 0.44245242425593023,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 105,
+   "laws": [
+    2,
+    5
+   ],
+   "npoints": 39,
+   "sigma_own_b": 8.475636057728339e-05,
+   "sigma_openmc_b": 8.475636057728339e-05,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 104,
+   "laws": [
+    2
+   ],
+   "npoints": 44,
+   "sigma_own_b": 0.007468241806310358,
+   "sigma_openmc_b": 0.007468241806310358,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 28,
+   "laws": [
+    1,
+    2
+   ],
+   "npoints": 45,
+   "sigma_own_b": 0.08297873674426094,
+   "sigma_openmc_b": 0.08297873674426094,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 22,
+   "laws": [
+    2
+   ],
+   "npoints": 52,
+   "sigma_own_b": 0.002586244086659712,
+   "sigma_openmc_b": 0.002586244086659712,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 32,
+   "laws": [
+    2
+   ],
+   "npoints": 28,
+   "sigma_own_b": 0.0,
+   "sigma_openmc_b": 0.0,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Fe56",
+   "mt": 111,
+   "laws": [
+    2
+   ],
+   "npoints": 35,
+   "sigma_own_b": 1.8372719504623344e-09,
+   "sigma_openmc_b": 1.8372719504623344e-09,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Ag107",
+   "mt": 102,
+   "laws": [
+    2
+   ],
+   "npoints": 10628,
+   "sigma_own_b": 0.030288713590602857,
+   "sigma_openmc_b": 0.030288713590602857,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 0.0
+  },
+  {
+   "nuclide": "Ag107",
+   "mt": 102,
+   "mf": 9,
+   "isomer_lfs": 0,
+   "izap": 47108,
+   "sigma_own_b": 0.029508219388900667,
+   "control": "openmc.data.endf.get_tab1_record on MF=9",
+   "sigma_openmc_b": 0.029508219388900667,
+   "max_rel_diff": 0.0
+  },
+  {
+   "nuclide": "Ag107",
+   "mt": 102,
+   "mf": 9,
+   "isomer_lfs": 1,
+   "izap": 47108,
+   "sigma_own_b": 0.0007804942017020982,
+   "control": "openmc.data.endf.get_tab1_record on MF=9",
+   "sigma_openmc_b": 0.0007804942017020982,
+   "max_rel_diff": 0.0
+  },
+  {
+   "nuclide": "W186",
+   "mt": 102,
+   "laws": [
+    2,
+    5
+   ],
+   "npoints": 8749,
+   "sigma_own_b": 0.06922947011739895,
+   "sigma_openmc_b": 0.06922947011739895,
+   "max_rel_diff": 0.0,
+   "pointwise_max_rel": 2.2394182843348826e-16
+  },
+  {
+   "nuclide": "W186",
+   "mt": 16,
+   "mf": 10,
+   "isomer_lfs": 0,
+   "izap": 74185,
+   "sigma_own_b": 0.8960367654713007,
+   "control": "openmc.data.endf.get_tab1_record on MF=10",
+   "sigma_openmc_b": 0.8960367654713007,
+   "max_rel_diff": 0.0
+  },
+  {
+   "nuclide": "W186",
+   "mt": 16,
+   "mf": 10,
+   "isomer_lfs": 1,
+   "izap": 74185,
+   "sigma_own_b": 0.6212342978152494,
+   "control": "openmc.data.endf.get_tab1_record on MF=10",
+   "sigma_openmc_b": 0.6212342978152494,
+   "max_rel_diff": 0.0
+  }
+ ],
+ "tendl2023_Fe56": {
+  "LRP": 1,
+  "EL_eV": 1e-05,
+  "EH_eV": 850010.0,
+  "LRU": 1,
+  "LRF": 3,
+  "note": "resolved-resonance reconstruction required before collapse; not attempted in P1"
+ }
+}

@@ -1,0 +1,387 @@
+{
+ "controls": {
+  "analytic_3chain": {
+   "pass": true,
+   "max_rel": 2.220446049250313e-15,
+   "cram": [
+    0.03125000000000007,
+    0.7509519790961643,
+    0.2177980209038357
+   ],
+   "exact": [
+    0.03125,
+    0.750951979096164,
+    0.21779802090383604
+   ]
+  },
+  "dense_expm": {
+   "pass": true,
+   "domain": "closed reachable sub-network (Amendment A)",
+   "sub_network_size": 10,
+   "max_rel_irradiation_1y": 1.2806766599038984e-11,
+   "n_compared": 9,
+   "max_rel_cooling_1d": 1.332235510529656e-11,
+   "n_compared_cooling": 9,
+   "expm_seconds": 0.0007283687591552734,
+   "cram_mass_outside_subnetwork": 6.227576684053171e-20,
+   "sub_network_za": [
+    [
+     24052,
+     0
+    ],
+    [
+     24053,
+     0
+    ],
+    [
+     24054,
+     0
+    ],
+    [
+     24055,
+     0
+    ],
+    [
+     25054,
+     0
+    ],
+    [
+     25055,
+     0
+    ],
+    [
+     25056,
+     0
+    ],
+    [
+     26055,
+     0
+    ],
+    [
+     26056,
+     0
+    ],
+    [
+     26057,
+     0
+    ]
+   ]
+  },
+  "conservation": {
+   "pass": true,
+   "max_rel_dev": 6.661338147750939e-16,
+   "totals": [
+    1.0,
+    1.0,
+    1.0000000000000004,
+    1.0000000000000007,
+    1.0000000000000007
+   ],
+   "leakage_atoms": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  "rust_vs_python": {
+   "pass": true,
+   "max_rel": 0.0,
+   "max_abs": 0.0,
+   "n_compared": 9
+  }
+ },
+ "timing": {
+  "python_s_per_step": 0.1437075138092041,
+  "rust_ms_per_cram16_step": 8.4415,
+  "rust_reps": 50,
+  "matrix_n": 3822,
+  "matrix_nnz": 8760,
+  "max_LU_nnz": 14998
+ },
+ "inventory": {
+  "after_1y_irradiation": [
+   {
+    "za": 26056,
+    "liso": 0,
+    "atoms_frac": 0.9981922260796638,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26055,
+    "liso": 0,
+    "atoms_frac": 0.001232715311394343,
+    "activity_Bq_per_atom0": 9.867342415859563e-12
+   },
+   {
+    "za": 25055,
+    "liso": 0,
+    "atoms_frac": 0.00044746668062760087,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24053,
+    "liso": 0,
+    "atoms_frac": 0.00011481983179864481,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24052,
+    "liso": 0,
+    "atoms_frac": 8.154185768482457e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26057,
+    "liso": 0,
+    "atoms_frac": 4.225023046641161e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 25054,
+    "liso": 0,
+    "atoms_frac": 1.8302135547606401e-07,
+    "activity_Bq_per_atom0": 4.7053214603285505e-15
+   },
+   {
+    "za": 25056,
+    "liso": 0,
+    "atoms_frac": 1.256588209068896e-07,
+    "activity_Bq_per_atom0": 9.381697776409583e-12
+   }
+  ],
+  "after_1d_cooling": [
+   {
+    "za": 26056,
+    "liso": 0,
+    "atoms_frac": 0.9981923515400035,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26055,
+    "liso": 0,
+    "atoms_frac": 0.0012318630677468335,
+    "activity_Bq_per_atom0": 9.860520581317572e-12
+   },
+   {
+    "za": 25055,
+    "liso": 0,
+    "atoms_frac": 0.000448318924275165,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24053,
+    "liso": 0,
+    "atoms_frac": 0.00011481983179864476,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24052,
+    "liso": 0,
+    "atoms_frac": 8.154185768482452e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26057,
+    "liso": 0,
+    "atoms_frac": 4.225023046641163e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 25054,
+    "liso": 0,
+    "atoms_frac": 1.8261526688498533e-07,
+    "activity_Bq_per_atom0": 4.694881272311001e-15
+   },
+   {
+    "za": 24054,
+    "liso": 0,
+    "atoms_frac": 8.461361254389828e-08,
+    "activity_Bq_per_atom0": 0.0
+   }
+  ],
+  "after_1y_cooling": [
+   {
+    "za": 26056,
+    "liso": 0,
+    "atoms_frac": 0.9981923517384849,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26055,
+    "liso": 0,
+    "atoms_frac": 0.0009575423166653553,
+    "activity_Bq_per_atom0": 7.664703949791352e-12
+   },
+   {
+    "za": 25055,
+    "liso": 0,
+    "atoms_frac": 0.0007226396753566436,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24053,
+    "liso": 0,
+    "atoms_frac": 0.00011481983179864473,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24052,
+    "liso": 0,
+    "atoms_frac": 8.15418576848245e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26057,
+    "liso": 0,
+    "atoms_frac": 4.225023046641162e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24054,
+    "liso": 0,
+    "atoms_frac": 1.85917650922813e-07,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 25054,
+    "liso": 0,
+    "atoms_frac": 8.131122850607062e-08,
+    "activity_Bq_per_atom0": 2.090441672558423e-15
+   }
+  ],
+  "after_100y_cooling": [
+   {
+    "za": 26056,
+    "liso": 0,
+    "atoms_frac": 0.9981923517384849,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 25055,
+    "liso": 0,
+    "atoms_frac": 0.0016801819920088043,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24053,
+    "liso": 0,
+    "atoms_frac": 0.00011481983179864475,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24052,
+    "liso": 0,
+    "atoms_frac": 8.15418576848245e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26057,
+    "liso": 0,
+    "atoms_frac": 4.225023046641164e-06,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 24054,
+    "liso": 0,
+    "atoms_frac": 2.672288794288837e-07,
+    "activity_Bq_per_atom0": 0.0
+   },
+   {
+    "za": 26055,
+    "liso": 0,
+    "atoms_frac": 1.3194289547195291e-14,
+    "activity_Bq_per_atom0": 1.0561446888244607e-22
+   },
+   {
+    "za": 25056,
+    "liso": 0,
+    "atoms_frac": 4.187505618286948e-21,
+    "activity_Bq_per_atom0": 3.126395096202225e-25
+   }
+  ]
+ },
+ "ledger_v0": {
+  "reaction_products_not_in_library": [],
+  "decay_daughters_missing": 8,
+  "sf_branches_to_leakage": 128,
+  "examples": [
+   [
+    578,
+    28048.0,
+    2.0,
+    [
+     27048,
+     0
+    ]
+   ],
+   [
+    3631,
+    98239.0,
+    2.0,
+    [
+     97239,
+     0
+    ]
+   ],
+   [
+    3648,
+    98256.0,
+    4.0,
+    [
+     96252,
+     0
+    ]
+   ],
+   [
+    3649,
+    99240.0,
+    4.0,
+    [
+     97236,
+     0
+    ]
+   ],
+   [
+    3652,
+    99243.0,
+    4.0,
+    [
+     97239,
+     0
+    ]
+   ],
+   [
+    3671,
+    99258.0,
+    2.0,
+    [
+     98258,
+     0
+    ]
+   ],
+   [
+    3744,
+    104253.0,
+    4.0,
+    [
+     102249,
+     0
+    ]
+   ],
+   [
+    3820,
+    110279.0,
+    4.0,
+    [
+     108275,
+     0
+    ]
+   ]
+  ],
+  "leakage_fraction_of_atoms": {
+   "1y_irr": 0.0,
+   "100y": 0.0
+  }
+ }
+}

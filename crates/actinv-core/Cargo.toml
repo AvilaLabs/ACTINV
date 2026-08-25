@@ -1,0 +1,13 @@
+[package]
+name = "actinv-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "ACTINV core: sparse Bateman/CRAM solver"
+
+[dependencies]
+num-complex = "0.4"
+
+[[bin]]
+name = "cram_probe"
+path = "src/bin/cram_probe.rs"

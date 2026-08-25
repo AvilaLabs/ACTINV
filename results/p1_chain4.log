@@ -1,0 +1,24 @@
+control 1 analytic 3-chain: max rel 2.220446049250313e-15
+python own-LU CRAM step (irradiation 1 y): 0.1 s
+control 2 dense expm on 10-nuclide reachable sub-network: irr max rel 1.281e-11 (9), cooling max rel 1.332e-11 (9); mass outside 6.2e-20; expm 0.00 s
+control 4 conservation (incl. leakage): max rel dev 6.661e-16; leakage atoms at 100 y: 0.000e+00
+top after 1 y irradiation: [(26056, 0, '9.982e-01'), (26055, 0, '1.233e-03'), (25055, 0, '4.475e-04'), (24053, 0, '1.148e-04'), (24052, 0, '8.154e-06'), (26057, 0, '4.225e-06')]
+Fe-56 sigma used (b): {102: '1.3400e-03', 103: '9.3987e-02', 107: '3.6417e-02', 16: '4.4245e-01', 105: '8.4756e-05', 104: '7.4682e-03', 28: '8.2979e-02', 22: '2.5862e-03', 32: '0.0000e+00', 111: '1.8373e-09'}
+reaction ledger: []
+n=3822 nnz=8760 max_LU_nnz=14998 ms_per_step=8.4415
+control 3 rust vs python: max rel 0.000e+00 (abs 0.000e+00) over 9 nuclides; rust 8.441 ms/step; LU nnz 14998
+supplementary: deleted radioactive ZA 25056 | activity share (unmodified): {'1y_irr': '4.873e-01', '1d_cool': '1.500e-03', '1y_cool': '-1.547e-11'} | named: True
+planted deletion of ZA 24053 -> ledger names it: True | activity share it carried (unmodified): {'1y_irr': '0.000e+00', '1d_cool': '0.000e+00', '1y_cool': '0.000e+00'} | leakage atoms after deletion: {'1y_irr': '1.148e-04', '1d_cool': '1.148e-04', '1y_cool': '1.148e-04'}
+PASS
+{
+ "gates": {
+  "G1": "PASS (worst rel 0.0, 16 compared, 0 without control)",
+  "G2": "controls PASS, timing PASS (8.4415 ms)",
+  "G3": "PASS",
+  "G4": "recorded (Cargo workspace builds; local git)"
+ },
+ "g2_ok": true,
+ "g2_timing": "PASS",
+ "verdict": "P1-PASS"
+}
+chain exit=0

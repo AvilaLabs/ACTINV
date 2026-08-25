@@ -1,0 +1,59 @@
+{
+ "seed": 20260825,
+ "candidate_products_za": [
+  24052,
+  24053,
+  24055,
+  25054,
+  25055,
+  25056,
+  26055,
+  26057
+ ],
+ "planted_deleted_za": 24053,
+ "unmodified_activity_share_of_target": {
+  "1y_irr": 0.0,
+  "1d_cool": 0.0,
+  "1y_cool": 0.0
+ },
+ "planted_ledger_entries_naming_target": [
+  {
+   "mt": 107,
+   "product_za": 24053,
+   "rate_per_s": 3.641713832033194e-12,
+   "disposition": "product has no decay record in library -> booked to leakage"
+  }
+ ],
+ "planted_leakage_atom_fraction": {
+  "1y_irr": 0.00011481983179864481,
+  "1d_cool": 0.00011481983179864477,
+  "1y_cool": 0.00011481983179864475
+ },
+ "baseline_leakage_atom_fraction": {
+  "1y_irr": 0.0,
+  "1d_cool": 0.0,
+  "1y_cool": 0.0
+ },
+ "pass": true,
+ "supplementary_radioactive": {
+  "deleted_za": 25056,
+  "unmodified_activity_share": {
+   "1y_irr": 0.4872661103877515,
+   "1d_cool": 0.001499855911714671,
+   "1y_cool": -1.5472691332407074e-11
+  },
+  "ledger_entries_naming_it": [
+   {
+    "mt": 103,
+    "product_za": 25056,
+    "rate_per_s": 9.398681262795984e-12,
+    "disposition": "product has no decay record in library -> booked to leakage"
+   }
+  ],
+  "leakage_atom_fraction_after_deletion": {
+   "1y_irr": 0.000296287740504014,
+   "1d_cool": 0.0002962877405040139,
+   "1y_cool": 0.0002962877405040137
+  }
+ }
+}

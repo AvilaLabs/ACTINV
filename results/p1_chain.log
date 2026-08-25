@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/controls/g1_collapse.py", line 122, in <module>
+    want = "W185_m1" if it["lfs"] == 1 else "W185"; p = [p for p in inc.reactions[16].products if p.particle == want]
+                                                                    ~~~~~~~~~~~~~^^^^
+KeyError: 16
+=== G1 done
+control 1 analytic 3-chain: max rel 2.220446049250313e-15
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/controls/cram_ref.py", line 142, in <module>
+    main()
+  File "/home/connoravila/Documents/actinv/controls/cram_ref.py", line 91, in main
+    g1 = json.load(open(os.path.join(RES, "g1_collapse.json")))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/connoravila/Documents/actinv/controls/../results/g1_collapse.json'
+=== cram_ref done
+
+thread 'main' (4082152) panicked at crates/actinv-core/src/bin/cram_probe.rs:9:58:
+called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

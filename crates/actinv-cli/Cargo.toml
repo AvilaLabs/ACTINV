@@ -1,0 +1,8 @@
+[package]
+name = "actinv-cli"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+description = "ACTINV actinv-cli (placeholder)"
+
+[dependencies]

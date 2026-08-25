@@ -1,0 +1,38 @@
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+=== G1 done
+control 1 analytic 3-chain: max rel 2.220446049250313e-15
+python own-LU CRAM step (irradiation 1 y): 0.1 s
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/controls/cram_ref.py", line 142, in <module>
+    main()
+  File "/home/connoravila/Documents/actinv/controls/cram_ref.py", line 115, in main
+    e_irr, k_irr = cmp(y_irr, ref_irr); e_c1d, k_c1d = cmp(y_c1d, ref_c1d)
+                   ^^^^^^^^^^^^^^^^^^^
+  File "/home/connoravila/Documents/actinv/controls/cram_ref.py", line 114, in cmp
+    return float(np.max(np.abs(a[m] - b[m]) / np.abs(b[m]))), int(m.sum())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/connoravila/.venvs/w003env/lib/python3.12/site-packages/numpy/_core/fromnumeric.py", line 3161, in max
+    return _wrapreduction(a, np.maximum, 'max', axis, None, out,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/connoravila/.venvs/w003env/lib/python3.12/site-packages/numpy/_core/fromnumeric.py", line 83, in _wrapreduction
+    return ufunc.reduce(obj, axis, dtype, out, **passkwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: zero-size array to reduction operation maximum which has no identity
+chain exit=1
