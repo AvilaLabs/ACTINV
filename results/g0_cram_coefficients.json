@@ -1,0 +1,28 @@
+{
+ "CRAM16": {
+  "generated_equals_recorded": true,
+  "r_at_0": 1.0000000000000004,
+  "r0_error": 4.440892098500626e-16,
+  "worst_abs_vs_exp_on_[-50,0]": 9.992007221626409e-16,
+  "at_z_abs": -0.35,
+  "worst_rel_where_exp_ge_1e-6": 1.412889676355853e-10,
+  "at_z_rel": -13.600000000000058,
+  "asymptotic_floor_r(-745)": 2.056659142215998e-16,
+  "alpha0": 2.124853710495224e-16,
+  "pass": true
+ },
+ "CRAM48": {
+  "generated_equals_recorded": true,
+  "r_at_0": 1.0000000000000009,
+  "r0_error": 8.881784197001252e-16,
+  "worst_abs_vs_exp_on_[-50,0]": 1.887379141862766e-15,
+  "at_z_abs": -0.2,
+  "worst_rel_where_exp_ge_1e-6": 3.3359854295112707e-15,
+  "at_z_rel": -13.800000000000061,
+  "asymptotic_floor_r(-745)": 1.7064644475336865e-47,
+  "alpha0": 2.258038182743983e-47,
+  "pass": true
+ },
+ "citation": "M. Pusa, Higher-Order Chebyshev Rational Approximation Method and Application to Burnup Equations, Nucl. Sci. Eng. 182 (2016) 297-318",
+ "pass": true
+}

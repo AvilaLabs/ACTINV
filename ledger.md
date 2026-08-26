@@ -375,3 +375,21 @@
   100.01 %. Both codes use compositions as given, as FISPACT does; the control now compares against the stated total.
   **To carry into the assembly path**: a composition whose weight percentages do not sum to 100 % is a ledger entry,
   not a silent normalisation.
+- P5 assembly path built in Rust: `spec.rs` (strict `actinv-spec-1`, unknown fields are an error), `chain.rs` (decay
+  network + reaction rates + trace formulation), `prune.rs`, `run.rs` (spec → inventory, activity, heat split, ledger,
+  certificate), and the `actinv` CLI. First end-to-end run of the FNS Fe 5-minute spec: mode trace (burn-up 3.3e-12),
+  38 of 3,873 states after rate pruning, 330 ms, 0.115 μW/g at the first cooling point against 0.118 for the
+  FISPACT-II reference and 0.128 measured; top nuclides Fe-55, Mn-56, Mn-55, Cr-53.
+- **Defect found and fixed — CRAM coefficients transcribed by hand.** Porting the solver into the library, I typed the
+  16 θ and 16 α values from memory instead of reading the file recorded in ACT-P0. All 32 were wrong (a different
+  ordering entirely); α0 alone was right. The symptom was total: every inventory came back empty, because the transfer
+  function gave r(0) = −2.6e-12 where a state with no diagonal requires exactly 1. Structural fix: `controls/gen_cram.py`
+  generates `crates/actinv-core/src/cram_coeffs.rs` from the recorded JSON with its citation — constants are generated,
+  never typed — and the P1 probe's practice of *reading* them is restored as the rule.
+- **New control `controls/g0_cram_coefficients.py`** (would have caught the above in one second): the generated Rust
+  constants equal the recorded values exactly; r(0) = 1 to 4.4e-16; absolute error vs exp(z) ≤ 1.0e-15 on [−50, 0].
+  Two control-premise corrections while writing it, both instructive: relative error against exp(z) is *unbounded* as
+  z → −∞ because CRAM floors at α0 — measured 2.057e-16 against α0 = 2.125e-16 for CRAM-16, and 1.7e-47 against
+  2.3e-47 for CRAM-48, exactly as the method predicts. The criterion is therefore absolute error over the range plus
+  relative error only where exp(z) ≥ 1e-6; CRAM-16 gives 1.4e-10 there, CRAM-48 3.3e-15. This floor is also the origin
+  of the small negative populations the solver zeroes and ledgers.

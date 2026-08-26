@@ -1,4 +1,9 @@
-//! ACTINV core — sparse complex LU and CRAM-16 (P1-G2). No external linear-algebra crates.
+//! ACTINV core.
 pub mod sparse;
 pub mod cram;
+pub mod cram_coeffs;
 pub mod doppler;
+pub mod spec;
+pub mod chain;
+pub mod prune;
+pub mod run;
