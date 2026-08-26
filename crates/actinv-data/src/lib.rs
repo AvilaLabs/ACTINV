@@ -3,3 +3,5 @@
 pub mod endf;
 pub mod decay;
 pub mod library;
+pub mod composition;
+pub mod tables;

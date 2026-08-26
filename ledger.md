@@ -367,3 +367,11 @@
   group values and reported 5.1e-15 — float addition is not associative, so numpy's pairwise summation and a sequential
   Rust sum differ in the last bit on identical data. Replaced by raw byte comparison of the `rows` and `sig` arrays,
   a strictly stronger test. Dependency licences checked before use: zip MIT; serde, serde_json, flate2 MIT OR Apache-2.0.
+- P5-G2 **PASS**. Rust composition (`crates/actinv-data/src/composition.rs`, tables embedded from
+  results/tables/abundance_mass.json by `controls/gen_tables.py`, 289 isotopes over 84 elements) vs the Python harness
+  on all 132 FNS materials: atoms per gram 3.5e-16, mass balance 2.2e-16, abundance sums exact, provenance string
+  carried in the binary and verified. Control correction before scoring (fourth of its kind, premise wrong): the mass
+  balance was compared against exactly 1 g, but one composition — Br (BR 39.75, C 41.83, H 2.51, O 15.92) — sums to
+  100.01 %. Both codes use compositions as given, as FISPACT does; the control now compares against the stated total.
+  **To carry into the assembly path**: a composition whose weight percentages do not sum to 100 % is a ledger entry,
+  not a silent normalisation.

@@ -1,7 +1,7 @@
 //! P5-G1 helper: dump what the Rust readers see, for comparison against the Python implementations.
 //!   dump decay FILE          -> "ZA LISO NST half_life e_light e_em e_heavy nmodes br0 q0 ..." per nuclide
 //!   dump library FILE [PHI]  -> "target mt zap lfs lmf checksum" per row (checksum = sum of group values)
-use actinv_data::{decay, library};
+use actinv_data::{composition, decay, library};
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -32,6 +32,23 @@ fn main() {
             fs.flush().unwrap();
             println!("{} {}", l.rows.len(), l.ngroups);
         }
-        _ => eprintln!("usage: dump decay|library FILE"),
+        "composition" => {
+            // dump composition '{"Fe":63.72,"Cr":18.28}' -> "ZA LISO atoms_per_g" per isotope, then the diagnostics
+            let spec = &a[2];
+            let mut el = std::collections::BTreeMap::new();
+            for part in spec.trim_matches(|c| c == '{' || c == '}').split(',') {
+                let mut kv = part.splitn(2, ':');
+                let k = kv.next().unwrap_or("").trim().trim_matches('"').to_string();
+                let v: f64 = kv.next().unwrap_or("0").trim().parse().unwrap_or(0.0);
+                if !k.is_empty() { el.insert(k, v); }
+            }
+            let (inv, diag) = composition::atoms_per_gram(&el);
+            println!("{}", inv.len());
+            for ((za, liso), n) in &inv { println!("{} {} {:.17e}", za, liso, n); }
+            for (e, (molar, apg, niso)) in &diag.elements { println!("# {} {:.17e} {:.17e} {}", e, molar, apg, niso); }
+            for u in &diag.unknown { println!("# UNKNOWN {}", u); }
+        }
+        "provenance" => println!("{}", composition::provenance()),
+        _ => eprintln!("usage: dump decay|library|composition|provenance ..."),
     }
 }

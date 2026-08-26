@@ -1,0 +1,16 @@
+{
+ "n_compositions": 132,
+ "worst_atoms_rel": 3.4503614062725406e-16,
+ "worst_mass_balance_rel": 2.220446049250313e-16,
+ "compositions_not_summing_to_100": [
+  [
+   "Br",
+   100.00999999999999
+  ]
+ ],
+ "worst_abundance_sum_dev": 0.0,
+ "provenance_matches": true,
+ "provenance": "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; abunda",
+ "failures": [],
+ "pass": true
+}
