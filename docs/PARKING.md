@@ -28,3 +28,8 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   parser only implements natural elemental compositions. P7 corrected the normative documentation and the three
   elemental bases rather than pretending isotope keys work. Explicit isotope/isomer compositions are needed before
   coupled fuel/fission work and are routed to P9.
+- 2026-08-26 — finite-dilution unresolved self-shielding, Bondarenko factors and probability-table use are distinct
+  from P10's required infinite-dilution LSSF=0 averages. They remain out of v1.0 unless a later licensing use case
+  explicitly requires them; ACTINV must not imply them from the P10 implementation.
+- 2026-08-26 — TENDL-2025 also publishes triton, helion and gamma incident-particle sublibraries. The v1.0 roadmap
+  names neutron plus proton/deuteron/alpha only, so those three additional projectiles remain post-v1.0 scope.

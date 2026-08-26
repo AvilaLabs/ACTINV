@@ -616,3 +616,26 @@
   fixed and unit-tested.
 - P5 retains PASS; P6, P7 and P8 retain their conditional verdicts. P10 — Data completeness — is next but remains
   unopened and unhashed. P9 alone does not complete v0.5; tagging, pushing and publishing remain external acts.
+
+## 26 — 2026-08-26 — P10 opened (data completeness and Rust library construction)
+- Protocol hashed as `74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27` before implementation or gate
+  evidence. Minimum gate data are four neutron evaluations, one EAF sample, six charged Fe-56 evaluations, three
+  official TENDL-2025 residual tables, W/Ag NJOY controls, the official 709/162 boundaries and three Fe-56 records
+  from the official processed FISPACT TENDL-2017 library. Full-library downloads/builds are deferred until G1-G6
+  settle the implementation and profile, then resume per target under standing rule 7.
+- The moving roadmap phrase “TENDL (latest)” is frozen as TENDL-2025, the thirteenth/current release at opening.
+  TENDL-2023 remains a historical P4 baseline. The phase cannot close on a gate subset alone: complete external
+  TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 Rust builds, with manifests and no target errors or convergence
+  flags, are G7.
+- Charged validation is split by data identity. Official FISPACT `gxs-162` is TENDL-2017, so its Fe-56 rows are
+  compared to ACTINV processing of the pinned 2017 p/d/alpha evaluations. The current 2025 MF=6/MT=5 path is instead
+  checked at 35/50/100/200 MeV against official TENDL residual tables. The licensed FISPACT executable is neither
+  available nor claimed; the reproducible reference is its public processed library and documented rate dot product.
+- Opening reconnaissance resolved two misleading inherited labels without producing gate evidence. W-186 is a
+  compact Reich-Moore RML case suitable for the NJOY gate. Ag-107 is LSSF=0 and supplies the UNRESR gate. Fr-226 has
+  positive LRF=2 lines many orders narrower than Doppler width and receives an area/delta-kernel treatment; Rb-94's
+  prior density residual occurs in the group spanning its resolved/unresolved boundary and is a splice problem, not
+  an ultra-narrow resonance.
+- Pinned opening references include FENDL W-186/Ag-107 raw plus NJOY artifacts, TENDL-2023 Fr-226/Rb-94,
+  TENDL-2017 and TENDL-2025 p/d/alpha Fe-56, the official `ebins` object, expected 2.595 GB FISPACT TENDL-2017 LFS
+  object `7f305df2…`, and NJOY2016.79 commit `ac5adf5f…`. Source data and future libraries remain outside Git.
