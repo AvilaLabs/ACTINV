@@ -144,8 +144,22 @@ def build_one(args):
     try:
         za, liso, awr, mf3, mf8, mf9, mf10 = parse_file(path)
         res = resonant_pointwise(path, awr, mf3, led)
+        INELASTIC = lambda m: m == 4 or (51 <= m <= 91)
         for mt in sorted(set(mf3) | set(mf10)):
-            if mt in (1, 2, 3, 4, 5, 27, 101, 444) or (51 <= mt <= 91) or (201 <= mt <= 207) or (600 <= mt <= 849) or mt >= 1000 or (mt in (18, 19, 20, 21, 38) and mt != 18):
+            if INELASTIC(mt):
+                # (n,n') is a transmutation only when it leaves the nucleus in a metastable state: keep the LFS>0
+                # partials as production of the isomer, and the loss of the ground state equals their sum.
+                iso = [(izap, lfs, nbt, x, y) for (izap, lfs, nbt, x, y) in mf10.get(mt, []) if lfs > 0]
+                if not iso: continue
+                g_iso = None
+                for (izap, lfs, nbt, x, y) in iso:
+                    grid = np.union1d(x, BOUNDS); grid = grid[(grid >= BOUNDS[0]) & (grid <= BOUNDS[-1])]
+                    g = group_avg_grid(grid, interp_tab1(x, y, nbt, grid))
+                    rows.append((tk, mt, izap if izap else za, lfs, 10)); sig.append(g); g_iso = g if g_iso is None else g_iso + g
+                rows.append((tk, mt, -1, -1, 0)); sig.append(g_iso)   # loss of the ground state = sum of isomer partials
+                led.append(f"MT{mt}: inelastic isomer production kept ({len(iso)} metastable channel(s))")
+                continue
+            if mt in (1, 2, 3, 5, 27, 101, 444) or (201 <= mt <= 207) or (600 <= mt <= 849) or mt >= 1000 or (mt in (19, 20, 21, 38)):
                 if mt == 5 and mf8.get(5): led.append("MT=5 (n,anything) products not tracked")
                 continue
             if mt in res: E, s = res[mt]; g_tot = group_avg_grid(E, s)

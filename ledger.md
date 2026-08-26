@@ -275,3 +275,15 @@
   (all present in TENDL-2023; symlinked in ~/nuclear-data/tendl-2023/fns_subset). Subset library building now with
   7 workers; the full library follows. Control to run once both exist: FNS results from the subset library equal those
   from the full library (products' own activation is trace and already bounded by the rate pruning).
+
+## 15 — 2026-08-26 — the FNS gate caught a completeness bug in the TENDL pipeline
+- First TENDL-2023 run (subset library, 255 targets, 18 min): median gm C/E 0.988 (vs EAF-2010 1.024, reference 1.009)
+  but median max|ln C/E| 0.472 vs 0.284 — better centre, much worse spread. Diagnosis from the per-nuclide table:
+  every large loss is a **metastable state produced by inelastic scattering** — Y-89m (Y 5-min gm 0.94 → 0.28),
+  Ba-137m, Ce-139m, Hg-199m, Rb-86m — all exactly zero under TENDL.
+- Cause (own bug): `tendl_build.py` skipped MT=4 and MT=51–91 as "no transmutation". True for the ground state, false
+  for isomers: both TENDL and EAF encode (n,n')→metastable as MF=10/MT=4 partials with LFS>0. The EAF builder had no
+  such skip list, so only the TENDL library lost them. Fix: for inelastic MTs keep the LFS>0 partials as production of
+  the isomer and set the ground-state loss to their sum (never the total inelastic cross section). Verified on Y-89:
+  MT=4 → Y-89m 3.93e-1 b one-group on the FNS spectrum, previously absent; ledger entry per target.
+- **This is the value of the subset schedule**: the bug surfaced 20 minutes after the library existed, not 4 hours.
