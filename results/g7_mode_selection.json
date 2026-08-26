@@ -1,0 +1,30 @@
+{
+ "low_burnup": {
+  "burnup": 3.2638155653656416e-12,
+  "auto_mode": "trace",
+  "trace_vs_coupled_max_rel_heat": 0.0002510562782193953,
+  "floor_coupled_atoms_per_g": 2102420.255254152,
+  "floor_trace_atoms_per_g": 2.533350917517975e-06,
+  "floor_ratio_coupled_over_trace": 829896971918.1176,
+  "significant_nuclides": [
+   "Cr55",
+   "Fe53",
+   "Mn56",
+   "Mn57"
+  ],
+  "worst_abs_difference_atoms_per_g": 0.0028200149536132812,
+  "difference_within_coupled_floor": true,
+  "pass": true
+ },
+ "high_fluence": {
+  "flux_total": 1.116e+21,
+  "burnup": 34332.72869519425,
+  "auto_mode": "coupled",
+  "trace_vs_coupled_max_rel": 0.9999407677146044,
+  "expected_first_order": 34332.72869519425,
+  "difference_is_first_order_in_burnup": false,
+  "pass": true
+ },
+ "threshold": 1e-06,
+ "pass": true
+}

@@ -1,0 +1,14 @@
+{
+ "gates": {
+  "G0 cram coefficients": "PASS \u2014 r(0) exact to 4.4e-16, abs vs exp 1.0e-15, generated == recorded",
+  "G1 readers": "PASS \u2014 decay 0 mismatches over 3821; library 164315 rows byte-identical",
+  "G2 composition": "PASS \u2014 132 materials, atoms 3.5e-16, mass 2.2e-16",
+  "G3 entry points": "PASS \u2014 1372 scalars, 0 differences, certificates identical",
+  "G4 physics unchanged": "PASS \u2014 132 experiments, worst 4.8e-13 uW/g abs, 2.1e-10 rel",
+  "G5 pathways": "PASS \u2014 closure 6.2e-15; planted removal exact to 7.8e-16",
+  "G6 ledger/certificate": "PASS \u2014 19/19 categories; planted failure identical across entry points",
+  "G7 mode selection": "PASS \u2014 auto=trace at burnup 3.3e-12; coupled floor 8.3e+11x trace's"
+ },
+ "amendments": [],
+ "verdict": "P5-PASS"
+}

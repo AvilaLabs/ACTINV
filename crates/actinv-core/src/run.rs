@@ -32,6 +32,9 @@ pub struct StepOut {
     pub heat_bound_from_below_floor_W_per_g: f64,
 }
 #[derive(serde::Serialize)]
+pub struct Pathway { pub from: String, pub first_product: String, pub atoms_per_g: f64, pub fraction: f64 }
+
+#[derive(serde::Serialize)]
 pub struct RunResult {
     pub spec_title: String,
     pub entry_point: String,
@@ -39,6 +42,12 @@ pub struct RunResult {
     pub pruned_states: usize,
     pub total_states: usize,
     pub steps: Vec<StepOut>,
+    /// Per step: nuclide -> production chains ranked by contribution, labelled by the bulk isotope the chain started
+    /// from and the first product it made. Trace mode only; the system is linear in the source there, so the
+    /// contributions are exact and sum to the nuclide's population.
+    pub pathways: Vec<BTreeMap<String, Vec<Pathway>>>,
+    /// largest relative disagreement between the summed pathway contributions and the main solve
+    pub pathway_closure: f64,
     pub ledger: serde_json::Value,
     pub certificate: serde_json::Value,
     pub ms: f64,
@@ -94,6 +103,7 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         "auto" => if led.burnup_max < 1e-6 { "trace" } else { "coupled" },
         m => m,
     }.to_string();
+    let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new();   // (product row fed, rate, bulk nuclide it came from)
     let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
     let mut r_src: Vec<(usize, usize, f64)> = Vec::new();
     let mut bulk_heat = 0.0;
@@ -107,6 +117,7 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
                 if r == c { continue; }
                 if bulk.contains_key(r) { led.bulk_production_dropped.push((name_of(ch.keys[*c].0, ch.keys[*c].1), name_of(ch.keys[*r].0, ch.keys[*r].1), *v)); continue; }
                 r_src.push((*r, ch.unit, v * bulk[c]));
+                sources.push((*r, v * bulk[c], ch.keys[*c]));
             } else if !bulk.contains_key(r) { r_src.push((*r, *c, *v)); }
         }
         for (c, nb) in &bulk {
@@ -182,6 +193,62 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
             numerical_floor_atoms_per_g: floor, n_states_below_floor: n_below, atoms_below_floor: atoms_below,
             heat_bound_from_below_floor_W_per_g: heat_below });
     }
+    // ---- pathways (trace mode only): give every source its own unit state so one factorisation serves all of them,
+    // then each source's contribution is the solve started from that unit state alone. Exact by linearity.
+    let want_paths = spec.options.outputs.as_ref().map_or(true, |o| o.iter().any(|x| x == "pathways"));
+    let mut pathways: Vec<BTreeMap<String, Vec<Pathway>>> = Vec::new();
+    let mut closure = 0.0f64;
+    if mode == "trace" && want_paths && !sources.is_empty() {
+        let mut agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
+        for (row, rate, from) in &sources { if pos[*row] != usize::MAX { *agg.entry((*row, *from)).or_insert(0.0) += rate; } }
+        let labels: Vec<((usize, (i32, i32)), f64)> = agg.into_iter().collect();
+        let ns = labels.len();
+        let mp = m + ns;                                     // one extra unit state per source
+        let mut ptrip: Vec<(usize, usize, C64)> = dsub.iter().filter(|(i, j, _)| *i != pos[ch.unit] && *j != pos[ch.unit]).cloned().collect();
+        for (k, ((row, _), rate)) in labels.iter().enumerate() { ptrip.push((pos[*row], m + k, C64::new(*rate, 0.0))); }
+        let mut cols: Vec<Vec<f64>> = (0..ns).map(|k| { let mut v = vec![0.0f64; mp]; v[m + k] = 1.0; v }).collect();
+        let mut t_acc = 0.0;
+        for (dt, fl) in sched.iter() {
+            let mut trip = ptrip.clone();
+            if *fl > 0.0 {
+                for (i, j, v) in rsub.iter() { if *i != pos[ch.unit] && *j != pos[ch.unit] { trip.push((*i, *j, v * C64::new(*fl, 0.0))); } }
+            } else {
+                // during cooling the sources are off: drop the unit-state feeds
+                trip.retain(|(_, j, _)| *j < m);
+            }
+            let a = Csc::from_triplets(mp, &trip);
+            cols = crate::cram::step_multi(&a, &cols, *dt, &c)?;
+            if *fl <= 0.0 { for col in cols.iter_mut() { for k in 0..ns { col[m + k] = 0.0; } } }
+            t_acc += dt;
+            let _ = t_acc;
+            // report at every step, ranked, keeping chains above 1e-6 of the nuclide
+            let mut per: BTreeMap<String, Vec<Pathway>> = BTreeMap::new();
+            for (k, col) in cols.iter().enumerate() {
+                let ((row, from), _) = &labels[k];
+                for (idx, v) in col.iter().enumerate().take(m) {
+                    if *v <= 0.0 { continue; }
+                    let g = keep[idx];
+                    if g == ch.leak || g == ch.unit { continue; }
+                    per.entry(name_of(ch.keys[g].0, ch.keys[g].1)).or_default()
+                       .push(Pathway { from: name_of(from.0, from.1), first_product: name_of(ch.keys[*row].0, ch.keys[*row].1), atoms_per_g: *v, fraction: 0.0 });
+                }
+            }
+            // closure is measured on the complete decomposition, before any chain is dropped for reporting
+            for n in &steps[pathways.len()].inventory {
+                if let Some(v) = per.get(&n.nuclide) {
+                    let sum: f64 = v.iter().map(|p| p.atoms_per_g).sum();
+                    if n.atoms_per_g > 0.0 { closure = closure.max((sum - n.atoms_per_g).abs() / n.atoms_per_g); }
+                }
+            }
+            for (_, v) in per.iter_mut() {
+                let tot: f64 = v.iter().map(|p| p.atoms_per_g).sum();
+                for p in v.iter_mut() { p.fraction = if tot > 0.0 { p.atoms_per_g / tot } else { 0.0 }; }
+                v.sort_by(|a, b| b.atoms_per_g.partial_cmp(&a.atoms_per_g).unwrap());
+                v.retain(|p| p.fraction >= 1e-6);   // reporting threshold only; the closure above used every chain
+            }
+            pathways.push(per);
+        }
+    }
     // ---- ledger
     let ledger = serde_json::json!({
         "mode": mode, "max_burnup_fraction": led.burnup_max,
@@ -219,5 +286,5 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         "mode": mode, "prune": spec.options.prune, "bmin_atoms_per_g": spec.options.bmin_atoms_per_g,
     });
     Ok(RunResult { spec_title: spec.title.clone(), entry_point: entry_point.into(), mode, pruned_states: m, total_states: ch.n,
-                   steps, ledger, certificate, ms: t0.elapsed().as_secs_f64() * 1e3 })
+                   steps, pathways, pathway_closure: closure, ledger, certificate, ms: t0.elapsed().as_secs_f64() * 1e3 })
 }

@@ -409,3 +409,21 @@
   count and mass of states beneath it, and a bound on the heat they could contribute; the ledger carries the worst such
   fraction per run (1.3e-14 for the Fe spec). Negative round-off was already zeroed and ledgered; positive round-off of
   the same origin was previously invisible.
+- P5-G5 **PASS**. Pathway analysis by linearity: each source reaction gets its own unit state, so one factorisation per
+  pole serves every source. Closure on the complete decomposition **6.2e-15** (measured before the 1e-6 reporting
+  threshold — the first attempt measured it after, giving a meaningless 8.7e-7). Planted control: zeroing Fe-56(n,p) in
+  a copy of the library removed **exactly that chain and no other**, and Mn-56's population fell by precisely that
+  chain's predicted contribution (3,051,496,520.744 vs 3,051,496,520.744, 7.8e-16). Physics reads correctly: Mn-56 is
+  99.7 % Fe-56(n,p) and 0.3 % Fe-57(n,d); Fe-55 is Fe-56(n,2n); Mn-54 is Fe-54(n,p).
+- P5-G6 **PASS**. All 19 ledger categories present through every entry point. Planted failure — Mn-56's decay record
+  (145 lines, MAT 496) removed from a copy of the sublibrary — surfaced identically through CLI, Python and harness:
+  named in `products_no_evaluated_decay_data`, atoms booked to leakage, heat changed, ledgers byte-identical. First
+  attempt removed the wrong nuclide because I guessed the MAT number; the control now resolves it from the library.
+- P5-G7 **PASS** after restating the criterion, the seventh premise correction and the most instructive: trace and
+  coupled cannot agree to 1e-8 at low burn-up, because in coupled mode the largest population is the bulk (~1e22
+  atoms/g) so CRAM's floor is 2.10e6 atoms/g, against 2.53e-6 in trace mode — a ratio of **8.3e11**. That is P2's
+  finding re-derived from the other side: the trace formulation is not an optimisation, it is the difference between
+  round-off measured against the products and round-off measured against the bulk. The gate now requires that every
+  nuclide carrying ≥ 1 % of the activity agrees between modes to within coupled's own floor (worst 2.8e-3 atoms/g
+  against a floor of 2.1e6), that `auto` selects trace at burn-up 3.3e-12, and that it flips to coupled at 3.4e4.
+- `controls/check_p5.py` → **P5-PASS**, no amendments.

@@ -1,0 +1,40 @@
+{
+ "required_categories": 19,
+ "present": 19,
+ "missing": [],
+ "planted": {
+  "decay_records_removed": 145,
+  "nuclide": "Mn-56 (MAT 496)",
+  "surfaced_python": {
+   "mn56_absent": true,
+   "atoms_to_leakage": true,
+   "heat_changed": true
+  },
+  "surfaced_cli": {
+   "mn56_absent": true,
+   "atoms_to_leakage": true,
+   "heat_changed": true
+  },
+  "surfaced_harness": {
+   "mn56_absent": true,
+   "atoms_to_leakage": true,
+   "heat_changed": true
+  },
+  "ledgers_identical_across_entry_points": true,
+  "pass": true
+ },
+ "certificate_keys": [
+  "bmin_atoms_per_g",
+  "cram",
+  "decay_fallback",
+  "decay_primary",
+  "entry_point",
+  "library",
+  "library_sha256_declared",
+  "mode",
+  "prune",
+  "solver",
+  "tables_provenance"
+ ],
+ "pass": true
+}

@@ -1,0 +1,36 @@
+{
+ "closure": 6.21020503944763e-15,
+ "closure_pass": true,
+ "n_steps_with_pathways": 21,
+ "n_nuclides_step1": 37,
+ "example_Mn56": [
+  {
+   "from": "Fe56",
+   "first_product": "Mn56",
+   "fraction": 0.9970855461537439
+  },
+  {
+   "from": "Fe57",
+   "first_product": "Mn56",
+   "fraction": 0.002914351255738889
+  }
+ ],
+ "planted": {
+  "removed_chains": [
+   [
+    "Fe56",
+    "Mn56"
+   ]
+  ],
+  "expected_removed": [
+   "Fe56",
+   "Mn56"
+  ],
+  "other_chains_changed": [],
+  "population_drop": 3051496520.7436953,
+  "chain_contribution": 3051496520.7436976,
+  "drop_matches_contribution_rel": 7.813168964172902e-16,
+  "pass": true
+ },
+ "pass": true
+}
