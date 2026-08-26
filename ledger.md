@@ -261,3 +261,17 @@
   the physics invalidates it. Verified on the smoke set: two independent cold builds bit-identical (237 rows, rows and
   sig arrays equal), resumed build 0.4 s vs 147 s, `n_from_cache` recorded in the index. Rule for the roadmap's
   standing rules: any job over ~10 minutes checkpoints per unit of work.
+
+## 14 — 2026-08-26 — build cost attacked (profile, Rust kernel, subset scheduling)
+- Profile: SIGMA1 broadening is **91–97 %** of per-target time (Fe-56 13.97 s of 15.35 s; Th-224 19.76 s of 20.35 s);
+  reconstruction 1.3 s / 0.5 s, parsing and collapse negligible.
+- Rust SIGMA1 kernel (`crates/actinv-core/src/doppler.rs`, exposed as `actinv.broaden`): verified against the exact
+  quadrature control at 1.4e-12 (1/v) and ~1e-15 (constant, linear, resonance line), and against the numpy kernel at
+  8.5e-16; on a real 90 k-point Fe-56 grid 294 s → 131 s (**2.2×**, max rel diff 1.9e-10 from summation order).
+  Only 2× because numpy was already vectorised and the kernel is transcendental-bound (exp, erf) — recorded so the
+  next optimisation targets the algorithm, not the language. `controls/doppler.py` now calls it with a pure-Python
+  fallback (`ACTINV_PURE_PYTHON=1`).
+- Scheduling: the FNS validation needs only the composition isotopes of the 73 materials — **255 targets, not 2,847**
+  (all present in TENDL-2023; symlinked in ~/nuclear-data/tendl-2023/fns_subset). Subset library building now with
+  7 workers; the full library follows. Control to run once both exist: FNS results from the subset library equal those
+  from the full library (products' own activation is trace and already bounded by the rate pruning).

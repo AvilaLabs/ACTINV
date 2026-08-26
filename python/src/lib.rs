@@ -2,6 +2,7 @@
 use pyo3::prelude::*;
 use num_complex::Complex64 as C64;
 use actinv_core::sparse::Csc;
+use actinv_core::doppler as dop;
 use actinv_core::cram::{Cram, step};
 
 /// cram_step(n, rows, cols, vals, n0, dt, alpha0, theta_re, theta_im, alpha_re, alpha_im) -> list[float]
@@ -16,5 +17,11 @@ fn cram_step(n: usize, rows: Vec<usize>, cols: Vec<usize>, vals: Vec<f64>, n0: V
     Ok(y)
 }
 
+/// broaden(e, sig, T_K, awr, eout) -> list[float] — SIGMA1 Doppler broadening.
+#[pyfunction]
+fn broaden(e: Vec<f64>, sig: Vec<f64>, t_k: f64, awr: f64, eout: Vec<f64>) -> PyResult<Vec<f64>> {
+    Ok(dop::broaden(&e, &sig, t_k, awr, &eout))
+}
+
 #[pymodule]
-fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> { m.add_function(wrap_pyfunction!(cram_step, m)?)?; Ok(()) }
+fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> { m.add_function(wrap_pyfunction!(cram_step, m)?)?; m.add_function(wrap_pyfunction!(broaden, m)?)?; Ok(()) }

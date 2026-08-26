@@ -2,6 +2,7 @@
 linear in energy between grid points; 1/v extrapolation below the first point; constant above the last.
 Memory-bounded: output points are processed in chunks and only input segments within |x - y| <= WINDOW contribute
 (the Gaussian kernel is < 1e-28 beyond 8 half-widths). Peak memory ~ chunk × window points."""
+import os
 import numpy as np
 from scipy.special import erf
 KB = 8.617333262e-5  # eV/K
@@ -15,7 +16,19 @@ def _F(n, t):
     if n == 4: return 3 * SQPI / 8 * erf(t) - (t ** 3 / 2 + 3 * t / 4) * e
     raise ValueError
 _FINF = {0: SQPI / 2, 1: 0.0, 2: SQPI / 4, 3: 0.0, 4: 3 * SQPI / 8}
+try:
+    import actinv as _rust                      # Rust SIGMA1 kernel (crates/actinv-core/src/doppler.rs); same algebra, ~2x faster
+    _HAVE_RUST = hasattr(_rust, "broaden")
+except Exception:
+    _HAVE_RUST = False
+
 def broaden(E, sig, T, awr, Eout=None):
+    if _HAVE_RUST and not os.environ.get("ACTINV_PURE_PYTHON"):
+        E = np.asarray(E, float); sig = np.asarray(sig, float); Eo = E if Eout is None else np.asarray(Eout, float)
+        return np.asarray(_rust.broaden(E.tolist(), sig.tolist(), float(T), float(awr), Eo.tolist()))
+    return _broaden_numpy(E, sig, T, awr, Eout)
+
+def _broaden_numpy(E, sig, T, awr, Eout=None):
     E = np.asarray(E, float); sig = np.asarray(sig, float); Eout = E if Eout is None else np.asarray(Eout, float)
     kT = KB * T / awr; x = np.sqrt(E / kT); y = np.sqrt(Eout / kT)
     dE = np.diff(E); okseg = dE > 0; b_all = np.where(okseg, np.diff(sig) / np.where(okseg, dE, 1.0), 0.0); a_all = sig[:-1] - b_all * E[:-1]; b_all = b_all * kT   # slope per unit x^2; zero-length segments (double points) carry no weight

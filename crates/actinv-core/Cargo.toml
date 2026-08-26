@@ -8,6 +8,7 @@ description = "ACTINV core: sparse Bateman/CRAM solver"
 
 [dependencies]
 num-complex = "0.4"
+libm = "0.2"
 
 [[bin]]
 name = "cram_probe"

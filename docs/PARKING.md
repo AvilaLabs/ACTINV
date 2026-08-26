@@ -20,3 +20,7 @@ of `ROADMAP.md` or explicitly left out of v1.0.
 - 2026-08-26 — openmc 0.15.3 wheel lacks its compiled resonance module; do not rely on openmc for reconstruction
   references; NJOY-processed ACE of the same evaluation is the reference.
 - 2026-08-26 — TENDL synthetic resonances 1e-7…1e-5 eV wide (Fr-226, Rb-94 class): group values converge to 2e-3–1.5e-2, not 1e-3, between grid densities; flagged in the library index. Refine sampling or treat analytically → P10.
+- 2026-08-26 — SIGMA1 cost is dominated by output points in the smooth thermal region, where the exact kernel laws
+  (1/v invariant; constant → σ₀(1+1/(2y²))) make the correction analytic. Broadening only where σ departs from
+  linear-in-E across the window, or reformulating as per-group kernel weights (≈130 grid points per group), would cut
+  the dominant cost by ~10–100× → P10, with the exact-quadrature control as the gate.
