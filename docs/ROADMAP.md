@@ -59,6 +59,16 @@ part that does not compress: users, issues, and the validation record accumulati
    where it does not (NJOY at its stated tolerances); a control whose premise turns out wrong is corrected by
    amendment with the numbers that showed it.
 6. External acts — publishing the repository, releases, contact, filings — are the principal's.
+7. **Cost is designed, not discovered.** Before any computation expected to exceed ~10 minutes: (a) state the smallest
+   input set that settles the gate and use it — a gate's prerequisite is not the phase's deliverable, and the two are
+   scheduled separately; (b) profile one representative unit and record where the time goes; (c) checkpoint per unit of
+   work so an interruption resumes. A phase's protocol names its minimum gate input alongside its gates.
+
+   *Learned the expensive way in P4 (2026-08-26): the gate needed 255 of 2,847 library targets, but the phase was
+   executed in the order it was written, so a four-hour build blocked a twenty-minute validation. Profiling afterwards
+   showed 91–97 % of the cost in one kernel.*
 
 ## Changelog
 - 2026-08-26 — roadmap written after P3b (v0.1 = P4–P6, v0.2 = P7–P8, v0.5 = P9–P10, v1.0 = P11–P12).
+- 2026-08-26 — standing rule 7 added (cost is designed, not discovered): minimum gate input, profile first, checkpoint.
+  Phases P7–P12 are re-read under it — each now states its minimum gate input before its full deliverable.
