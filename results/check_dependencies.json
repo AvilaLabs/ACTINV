@@ -1,0 +1,17 @@
+{
+ "ci_entry_points": [
+  "controls/g0_cram_coefficients.py",
+  "controls/gen_cram.py",
+  "controls/check_release_notes.py",
+  "controls/ci_end_to_end.py",
+  "controls/g1_self_contained.py",
+  "controls/tendl_build.py"
+ ],
+ "declared": [
+  "maturin",
+  "numpy",
+  "scipy"
+ ],
+ "undeclared": {},
+ "pass": true
+}

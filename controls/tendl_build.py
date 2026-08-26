@@ -7,30 +7,24 @@ per target. Output: <outdir>/actinv_tendl2023_709g.npz + index JSON. Usage: tend
 [--limit K] [--dense 2] """
 import os, sys, json, glob, math, time, re, hashlib, traceback, numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from endf_common import endf_float, fields, read_tab1, read_list, sections
+from endf_common import endf_float, fields, read_tab1, read_list, sections, interp_eval
 from resonance import parse_mf2, reconstruct_range
 from doppler import broaden
-import pypact as pp
-BOUNDS = np.array(pp.ALL_GROUPS[709], float); BOUNDS = BOUNDS[::-1] if BOUNDS[0] > BOUNDS[-1] else BOUNDS; LNW = np.log(BOUNDS[1:] / BOUNDS[:-1])
+
+def _group_boundaries(name="fispact-709"):
+    """709-group boundaries, ascending (eV), from the vendored table — no runtime package dependency."""
+    import json as _json, os as _os
+    p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "fispact_709_groups.json")
+    b = _json.load(open(p))["boundaries_eV"]
+    return b[::-1] if b[0] > b[-1] else b
+
+BOUNDS = np.array(_group_boundaries(), float); LNW = np.log(BOUNDS[1:] / BOUNDS[:-1])
 T_K = 293.6; DENSE = float(os.environ.get("ACTINV_DENSE", "1"))
 PART = {"n": (0, -1), "p": (-1, -1), "d": (-1, -2), "t": (-1, -3), "3He": (-2, -3), "a": (-2, -4), "gamma": (0, 0)}
 def mt_table():
-    """MT -> (dZ, dA) for the residual, from openmc.data.REACTION_NAME (recorded in results/tables/mt_products.json)."""
-    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "tables", "mt_products.json")
-    if os.path.exists(p): return {int(k): tuple(v) for k, v in json.load(open(p))["table"].items()}
-    import openmc.data; tab = {}
-    for mt, name in openmc.data.REACTION_NAME.items():
-        m = re.match(r"\(n,(.+)\)$", name)
-        if not m: continue
-        s = m.group(1)
-        if s in ("n'", "elastic", "total", "level", "continuum", "anything", "disappear", "absorption") or "'" in s or s in ("heating", "damage-energy", "heating-local"): continue
-        dz, da = 0, 1; ok = True
-        for mult, part in re.findall(r"(\d*)(3He|n|p|d|t|a|gamma)", s):
-            if part not in PART: ok = False; break
-            k = int(mult) if mult else 1; dz += k * PART[part][0]; da += k * PART[part][1]
-        if ok and re.fullmatch(r"(\d*(3He|n|p|d|t|a|gamma))+", s): tab[mt] = (dz, da)
-    os.makedirs(os.path.dirname(p), exist_ok=True); json.dump({"source": "openmc.data.REACTION_NAME (OpenMC 0.15.3), parsed for emitted particles; residual = target + n - emitted", "table": {str(k): v for k, v in tab.items()}}, open(p, "w"), indent=1)
-    return tab
+    """Residual (dZ, dA) per MT, from the vendored table (controls/gen_mt_products.py). No runtime package needed."""
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "mt_products.json")
+    return {int(k): tuple(v) for k, v in json.load(open(p))["table"].items()}
 MT_PROD = mt_table()
 def source_fingerprint():
     """sha256 over the modules that determine a target's numbers; cached results from a different fingerprint are ignored."""
@@ -45,8 +39,7 @@ def group_avg_grid(E, s):
     b = np.where(ok, (s2 - s1) / np.where(ok, dE, 1.0), 0.0); a = s1 - b * E1; seg = np.where(ok, a * np.log(np.where(ok, E2 / E1, 1.0)) + b * dE, 0.0)
     gi = np.searchsorted(grid, BOUNDS); sums = np.add.reduceat(np.concatenate([seg, [0.0]]), gi[:-1]); sums[gi[:-1] == gi[1:]] = 0.0; return sums / LNW
 def interp_tab1(x, y, nbt, grid):
-    from g1_collapse import interp_eval   # same interpolation-law code as P1/P2 (import triggers P1 work once per worker, ~10 s)
-    return interp_eval(x, y, nbt, grid)
+    return interp_eval(x, y, nbt, grid)   # same interpolation-law code as P1/P2, now in endf_common (no openmc import)
 def parse_file(path):
     za = liso = awr = None; mf3 = {}; mf8 = {}; mf9 = {}; mf10 = {}
     for (mat, mf, mt), lines in sections(path):

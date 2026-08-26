@@ -11,10 +11,10 @@ jobs:
   build-and-control:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@v2.9.2
 
       - name: Build workspace
         run: cargo build --release --workspace
@@ -22,13 +22,13 @@ jobs:
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with: { python-version: "3.12" }
 
       - name: Python environment
         run: |
           python -m pip install --upgrade pip
-          pip install numpy scipy maturin
+          pip install -r requirements-ci.txt
 
       - name: CRAM coefficient control (G0 — needs no nuclear data)
         run: python controls/g0_cram_coefficients.py
@@ -40,6 +40,9 @@ jobs:
 
       - name: Release notes carry every known limitation
         run: python controls/check_release_notes.py
+
+      - name: No undeclared dependencies
+        run: python controls/check_dependencies.py
 
       - name: Fetch the pinned data subset
         run: bash scripts/fetch_ci_data.sh

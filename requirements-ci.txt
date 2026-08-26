@@ -1,0 +1,5 @@
+# Everything the CI controls may import. Anything not listed here fails controls/check_dependencies.py.
+# Constants (CRAM coefficients, the 709-group structure) are vendored under data/ rather than pulled from a package.
+numpy
+scipy
+maturin

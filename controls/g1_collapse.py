@@ -3,15 +3,21 @@
 control vs openmc.data on the same file/grid/integrator. Writes results/spectrum.json first, then results/g1_collapse.json."""
 import os, sys, json, math, numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from endf_common import endf_float, fields, read_tab1, sections
+from endf_common import endf_float, fields, read_tab1, sections, interp_eval
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); RES = os.path.join(ROOT, "results"); os.makedirs(RES, exist_ok=True)
 DATA = os.path.expanduser("~/nuclear-data/tendl-eaf-test/EAF-2010")
 FILES = {"Fe56": "n_2631_26-FE-56.dat", "Ag107": "n_4725_47-AG-107.dat", "W186": "n_7443_74-W-186.dat"}
 WANT = {"Fe56": [102, 103, 107, 16, 105, 104, 28, 22, 32, 111], "W186": [102], "Ag107": [102]}
 # ---------------- spectrum (written before any collapse)
-import pypact as pp
-bounds = np.array(pp.ALL_GROUPS[709], float)
-if bounds[0] > bounds[-1]: bounds = bounds[::-1]  # pypact stores the structure descending
+
+def _group_boundaries(name="fispact-709"):
+    """709-group boundaries, ascending (eV), from the vendored table — no runtime package dependency."""
+    import json as _json, os as _os
+    p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "fispact_709_groups.json")
+    b = _json.load(open(p))["boundaries_eV"]
+    return b[::-1] if b[0] > b[-1] else b
+
+bounds = np.array(_group_boundaries(), float)
 assert bounds.size == 710 and np.all(np.diff(bounds) > 0), (bounds.size, bounds[:3])
 ffile = os.path.expanduser("~/nuclear-data/conderc-fns/fns/Fe/1996exp_5min_fluxes")
 vals = []
@@ -19,32 +25,11 @@ for line in open(ffile):
     try: vals += [float(x) for x in line.split()]
     except ValueError: break
 flux_desc = np.array(vals[:709]); flux_asc = flux_desc[::-1]  # file lists highest-energy group first
-spec = {"source": ffile, "groups": 709, "boundaries_source": "pypact.ALL_GROUPS[709] (fispact/pypact, Apache-2.0)", "boundaries_eV_min_max": [float(bounds[0]), float(bounds[-1])],
+spec = {"source": ffile, "groups": 709, "boundaries_source": "data/fispact_709_groups.json (vendored from pypact, Apache-2.0)", "boundaries_eV_min_max": [float(bounds[0]), float(bounds[-1])],
         "file_order": "descending energy (FISPACT-II fluxes format); reversed to ascending for use", "intra_group_shape": "flat in lethargy: phi(E) = phi_g / (E ln(Ehi/Elo))",
         "total_flux_file_units": float(flux_asc.sum()), "nonzero_groups": int((flux_asc > 0).sum()), "flux_ascending": flux_asc.tolist()}
 json.dump(spec, open(os.path.join(RES, "spectrum.json"), "w"), indent=1)
 # ---------------- own parser
-def interp_eval(x, y, nbt, xs):
-    """Evaluate a TAB1 (x,y, interpolation regions) at points xs (numpy), honoring INT 1-5."""
-    x = np.asarray(x); y = np.asarray(y); out = np.zeros_like(xs, float)
-    idx = np.searchsorted(x, xs, side="right") - 1; idx = np.clip(idx, 0, len(x) - 2)
-    x1, x2, y1, y2 = x[idx], x[idx + 1], y[idx], y[idx + 1]
-    # interpolation law per point: region r covers points up to NBT_r (1-based) -> segment i uses law of first region with NBT > i+1
-    laws = np.ones(len(x) - 1, int)
-    start = 0
-    for nb, law in nbt:
-        laws[start:nb - 1] = law; start = nb - 1
-    law = laws[idx]
-    with np.errstate(divide="ignore", invalid="ignore"):
-        t_lin = np.where(x2 != x1, (xs - x1) / (x2 - x1), 0.0)
-        t_log = np.where((x2 > 0) & (x1 > 0) & (x2 != x1), np.log(xs / x1) / np.log(x2 / x1), 0.0)
-        out = np.where(law == 1, y1, out)
-        out = np.where(law == 2, y1 + t_lin * (y2 - y1), out)
-        out = np.where(law == 3, y1 + t_log * (y2 - y1), out)
-        out = np.where(law == 4, np.where((y1 > 0) & (y2 > 0), y1 * (y2 / y1) ** t_lin, y1 + t_lin * (y2 - y1)), out)
-        out = np.where(law == 5, np.where((y1 > 0) & (y2 > 0), y1 * (y2 / y1) ** t_log, y1 + t_log * (y2 - y1)), out)
-    out[(xs < x[0]) | (xs > x[-1])] = 0.0
-    return out
 def parse_file(path):
     mf3, mf9, mf10 = {}, {}, {}
     for (mat, mf, mt), lines in sections(path):

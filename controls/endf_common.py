@@ -1,5 +1,6 @@
 """ACTINV shared ENDF-6 primitives (own code; ACT-P0 lineage)."""
 import re
+import numpy as np
 _F = re.compile(r"^\s*([+-]?\d*\.?\d*)([+-]\d+)\s*$")
 def endf_float(s):
     s = s.strip()
@@ -48,3 +49,26 @@ def sections(path):
                 cur, buf = key, []
             buf.append(line.rstrip("\n"))
     if cur is not None and buf: yield cur, buf
+
+
+def interp_eval(x, y, nbt, xs):
+    """Evaluate a TAB1 (x,y, interpolation regions) at points xs (numpy), honoring INT 1-5."""
+    x = np.asarray(x); y = np.asarray(y); out = np.zeros_like(xs, float)
+    idx = np.searchsorted(x, xs, side="right") - 1; idx = np.clip(idx, 0, len(x) - 2)
+    x1, x2, y1, y2 = x[idx], x[idx + 1], y[idx], y[idx + 1]
+    # interpolation law per point: region r covers points up to NBT_r (1-based) -> segment i uses law of first region with NBT > i+1
+    laws = np.ones(len(x) - 1, int)
+    start = 0
+    for nb, law in nbt:
+        laws[start:nb - 1] = law; start = nb - 1
+    law = laws[idx]
+    with np.errstate(divide="ignore", invalid="ignore"):
+        t_lin = np.where(x2 != x1, (xs - x1) / (x2 - x1), 0.0)
+        t_log = np.where((x2 > 0) & (x1 > 0) & (x2 != x1), np.log(xs / x1) / np.log(x2 / x1), 0.0)
+        out = np.where(law == 1, y1, out)
+        out = np.where(law == 2, y1 + t_lin * (y2 - y1), out)
+        out = np.where(law == 3, y1 + t_log * (y2 - y1), out)
+        out = np.where(law == 4, np.where((y1 > 0) & (y2 > 0), y1 * (y2 / y1) ** t_lin, y1 + t_lin * (y2 - y1)), out)
+        out = np.where(law == 5, np.where((y1 > 0) & (y2 > 0), y1 * (y2 / y1) ** t_log, y1 + t_log * (y2 - y1)), out)
+    out[(xs < x[0]) | (xs > x[-1])] = 0.0
+    return out

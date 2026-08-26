@@ -6,10 +6,17 @@ import os, sys, json, glob, math, time, re, hashlib, numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from endf_common import endf_float, fields, read_tab1, read_list, sections
 from g1_collapse import interp_eval  # same interpolation code as P1 (module runs its P1 work on import; acceptable, ~10 s)
-import pypact as pp
+
+def _group_boundaries(name="fispact-709"):
+    """709-group boundaries, ascending (eV), from the vendored table — no runtime package dependency."""
+    import json as _json, os as _os
+    p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "fispact_709_groups.json")
+    b = _json.load(open(p))["boundaries_eV"]
+    return b[::-1] if b[0] > b[-1] else b
+
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); RES = os.path.join(ROOT, "results")
 LIB = os.path.expanduser("~/nuclear-data/eaf-2010"); OUT = os.path.join(LIB, "actinv_eaf2010_709g.npz"); IDX = os.path.join(LIB, "actinv_eaf2010_709g_index.json")
-bounds = np.array(pp.ALL_GROUPS[709], float); bounds = bounds[::-1] if bounds[0] > bounds[-1] else bounds; LNW = np.log(bounds[1:] / bounds[:-1])
+bounds = np.array(_group_boundaries(), float); LNW = np.log(bounds[1:] / bounds[:-1])
 def group_avg(x, y, nbt):
     """709-group flat-lethargy averages of a TAB1 function: (1/ln(E2/E1)) ∫ σ(E) dE/E with lin-lin between union points."""
     grid = np.union1d(np.asarray(x, float), bounds); grid = grid[(grid >= bounds[0]) & (grid <= bounds[-1])]
