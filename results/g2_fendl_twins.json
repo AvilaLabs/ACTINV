@@ -1,0 +1,52 @@
+{
+ "n_fendl_checked": 192,
+ "n_twins": 3,
+ "n_compared": 3,
+ "pass": true,
+ "worst_one_group": 0.0001368525228258123,
+ "worst_per_group": 0.0023111678308461977,
+ "results": [
+  {
+   "za": 4009,
+   "liso": 0,
+   "fendl": "n_0425_4-Be-9.endf",
+   "tendl": "n_004-Be-9_0425.dat",
+   "tk": 0,
+   "status": "compared",
+   "one_group_lib": 2.6326869679889945e-06,
+   "one_group_njoy": 2.6330473071556984e-06,
+   "one_group_rel": 0.0001368525228258123,
+   "n_groups": 370,
+   "per_group_max_rel": 0.0023111678308461977,
+   "per_group_median_rel": 0.0004674967581290137
+  },
+  {
+   "za": 9019,
+   "liso": 0,
+   "fendl": "n_0925_9-F-19.endf",
+   "tendl": "n_009-F-19_0925.dat",
+   "tk": 1,
+   "status": "compared",
+   "one_group_lib": 6.4955184503333e-05,
+   "one_group_njoy": 6.495772710953299e-05,
+   "one_group_rel": 3.9142474854542154e-05,
+   "n_groups": 453,
+   "per_group_max_rel": 0.0016955643262686728,
+   "per_group_median_rel": 9.915425933162758e-05
+  },
+  {
+   "za": 90232,
+   "liso": 0,
+   "fendl": "n_9040_90-Th-232.endf",
+   "tendl": "n_090-Th-232_9040.dat",
+   "tk": 2,
+   "status": "compared",
+   "one_group_lib": 0.02568004524184558,
+   "one_group_njoy": 0.02567859753568289,
+   "one_group_rel": 5.637792954530584e-05,
+   "n_groups": 654,
+   "per_group_max_rel": 0.0010978361061167612,
+   "per_group_median_rel": 5.3852436607272186e-05
+  }
+ ]
+}

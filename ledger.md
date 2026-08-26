@@ -302,3 +302,7 @@
 - **P4 Amendment B** (gate input vs deliverable, per standing rule 7): gates scored on the 255-target FNS subset plus
   the 3-target twins library; G1 scored on the full 2,847-target deliverable; added control — subset and full library
   must give identical FNS results.
+- **G2a PASS**: the three MF=2-identical FENDL/TENDL twins (Be-9, F-19, Th-232) built by ACTINV's pipeline vs IAEA's
+  NJOY-processed ACE at 293.6 K — one-group on the FNS spectrum within 1.4e-4 (worst, Be-9), per-group within 2.3e-3;
+  Th-232 (Reich–Moore, resonance-dominated) 5.6e-5 / 1.1e-3. 192 FENDL files checked to find the twins.
+- Full 2,847-target deliverable build launched with both isomer fixes (6 workers, 3 GB cap, resumable cache).
