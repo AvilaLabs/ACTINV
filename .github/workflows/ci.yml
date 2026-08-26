@@ -1,0 +1,45 @@
+name: controls
+
+# Builds the workspace and runs every control that does not need a bulk nuclear-data library.
+# The data subset is fetched from its public host and pinned by SHA-256; nothing nuclear is stored in this repository.
+on:
+  push: { branches: [master, main] }
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build-and-control:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Build workspace
+        run: cargo build --release --workspace
+
+      - name: Unit probe (constant source, analytic answer)
+        run: ./target/release/unit_probe
+
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: Python environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy scipy maturin
+
+      - name: CRAM coefficient control (G0 — needs no nuclear data)
+        run: python controls/g0_cram_coefficients.py
+
+      - name: Fetch the pinned data subset
+        run: bash scripts/fetch_ci_data.sh
+
+      - name: Build the Python module
+        run: |
+          cd python && maturin build --release --out ../dist
+          pip install ../dist/*.whl
+
+      - name: End-to-end spec through both entry points
+        run: python controls/ci_end_to_end.py

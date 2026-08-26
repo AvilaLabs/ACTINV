@@ -1,0 +1,13 @@
+{
+ "data_dir": "/home/connoravila/actinv-ci-data",
+ "library_targets": 10,
+ "expected_first_cooling_W_per_g": 1.1497333991518499e-07,
+ "cli_first_cooling_W_per_g": 1.1497333991518499e-07,
+ "max_abs_deviation_cli_W_per_g": 0.0,
+ "max_abs_deviation_python_W_per_g": 0.0,
+ "criterion_abs_W_per_g": 9.999999999999999e-18,
+ "cli_equals_python": true,
+ "mode": "trace",
+ "pruned_states": 36,
+ "pass": true
+}
