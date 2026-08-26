@@ -1,0 +1,22 @@
+# ACTINV P4 — session close, 2026-08-26/27
+
+**Protocol:** protocols/ACTINV-P4_PROTOCOL.md (92b81f9e…); Amendment A (convergence criterion), Amendment B (gate input
+separated from phase deliverable). **Verdict (controls/check_p4.py): P4-FAIL** — G2b and G2c.
+
+| gate | result |
+|---|---|
+| G1 build | **PASS** — 2,847 targets, 164,315 rows, 0 errors; 2 unsupported resolved ranges ledgered, 0 INCOMPLETE-URR |
+| G2a twins vs NJOY | **PASS** — Be-9, F-19, Th-232: 1.4e-4 one-group, 2.3e-3 per-group |
+| G2b non-resonant consistency | **FAIL** — 9.3e-1, entirely on MT=4; the control compares the total inelastic cross section against the library's isomer partial. Control premise, not a library defect |
+| G2c grid convergence | **FAIL** — 94.96 % of rows ≤1e-3 against a ≥95 % rule; Fr-226 and Rb-94 flagged in the index |
+| G3 FNS on equal data | **PASS** — 132/132, C/E re-derived to 3.2e-16; median gm C/E 1.035 (EAF-2010 1.024, FISPACT-II/TENDL-2017 1.009) |
+| G4 certificate | **PASS** — 69 inputs re-matched after regeneration |
+
+**What the phase produced beyond the library:** two completeness bugs found by the FNS gate and fixed — inelastic
+isomer channels dropped (Y-89m at 0.39 b absent), and ENDF level indices mistaken for isomeric-state numbers (Ba-137m,
+Hg-199m, W-185m, Rb-86m all falling back to ground silently). Both are written up in docs/DATA_TRAPS.md. Standing rule 7
+(cost is designed, not discovered) and the resumable build come from this phase's mistakes.
+
+**Open for the principal:** G2b's control and the subset-vs-full criterion are demonstrably mis-specified — correcting
+them is a control repair of the kind P3b made, and needs a protocol. G2c's failure is real and bounded, already carried
+in the roadmap's v0.1 known-limitations table with its guard.

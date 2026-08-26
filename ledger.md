@@ -306,3 +306,31 @@
   NJOY-processed ACE at 293.6 K — one-group on the FNS spectrum within 1.4e-4 (worst, Be-9), per-group within 2.3e-3;
   Th-232 (Reich–Moore, resonance-dominated) 5.6e-5 / 1.1e-3. 192 FENDL files checked to find the twins.
 - Full 2,847-target deliverable build launched with both isomer fixes (6 workers, 3 GB cap, resumable cache).
+
+## 16 — 2026-08-26/27 — P4 closed: P4-FAIL
+- Full TENDL-2023 library complete: **2,847 targets, 164,315 rows, 0 errors**, 293.6 K, 709 groups. The first assembly
+  attempt died with MemoryError under the 3 GB cap after computing every target; the per-target cache made the retry
+  cost 14 s (2,847/2,847 from cache) — the checkpointing rule paying for itself. Cap raised to 12 GB for the parent,
+  which also assembles; no code change, so the cache fingerprint (6dc8cf9b…) stayed valid.
+- **Verdict P4-FAIL.** G1 PASS (2,847 targets, 0 errors, 2,801 with ledger entries, 2 unsupported ranges), G2a PASS
+  (twins vs NJOY 1.4e-4 one-group / 2.3e-3 per-group), G3 PASS (132/132, C/E re-derived 3.2e-16, median gm C/E 1.035),
+  G4 PASS (69 inputs re-matched). **G2b and G2c FAIL.**
+- Diagnosis — **all three failures are mis-specified controls or criteria, not defects in the library**:
+  1. **G2b (max 9.3e-1)**: fails only on MT=4, and by construction. Since the inelastic-isomer fix the library stores
+     the isomer *partial* cross section for MT=4 (correct); control (b) still compares it against the *total* MF=3
+     inelastic cross section, which is a different quantity. Every failing row is MT=4 (Zn-77m 8.1e-1, Co-62m 3.5e-1,
+     Se-77m 2.2e-1); all other 768 reactions agree to 4.3e-16. The control predates the fix and must exclude inelastic
+     MTs or compare against the isomer partial.
+  2. **G2c (94.96 % vs ≥95 %)**: the known Fr-226/Rb-94 grid sensitivity, max 1.6e-2, both targets now flagged in the
+     library index (the flag propagates into every run's ledger). Fails my own Amendment A threshold by one row of 119.
+     Not adjusted — see the standing rule; the limitation is already in the roadmap's v0.1 known-limitations table.
+  3. **Subset-vs-full equality (Amendment B's added control)**: worst 2.5e-6 against a 1e-12 criterion. The criterion
+     assumed bit-identity; the full library legitimately adds activation *of the products themselves*, a real physical
+     effect. 2.5e-6 on decay heat is the honest size of the subset approximation, and the criterion should state a
+     physical threshold rather than bit-identity.
+- Execution errors in my own closing script, recorded: it flagged the index *before* the convergence control that
+  produces the flags (so the first pass ran unflagged), and the certificate then had to be regenerated after flagging —
+  which the certificate correctly caught as a changed input (`library_index` mismatched) before being re-derived.
+  Nothing was silently accepted; the verdict is unchanged by either correction.
+- **Not attempted while the principal slept**: no control was rewritten, no threshold moved, no P4b run. The two
+  mis-specified controls are diagnosed with numbers and left for the principal's decision.
