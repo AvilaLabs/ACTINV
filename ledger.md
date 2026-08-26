@@ -334,3 +334,21 @@
   Nothing was silently accepted; the verdict is unchanged by either correction.
 - **Not attempted while the principal slept**: no control was rewritten, no threshold moved, no P4b run. The two
   mis-specified controls are diagnosed with numbers and left for the principal's decision.
+
+## 17 — 2026-08-27 — P4b: the two mis-specified controls corrected — P4b-PASS
+- Protocol protocols/ACTINV-P4b_PROTOCOL.md (72b1955c…), hashed before the corrections. Scope: only the controls whose
+  premises P4 disproved. No change to the library, the solver or any physics — the same 2,847-target library and the
+  same FNS records are re-scored.
+- **C1 (replaces G2b).** Non-inelastic MTs keep the original test against a pointwise collapse: **757 reactions,
+  4.3e-16**. Inelastic MTs are tested for what the library actually asserts — the ground-state loss equals the sum of
+  that MT's isomer-partial product rows: **14 reactions, exactly 0.0**. The earlier 9.3e-1 was the control comparing the
+  total inelastic cross section against the isomer partial, two different quantities.
+- **C2 (replaces the Amendment B criterion).** Subset vs full library on all 132 FNS experiments: **2.5e-6** against a
+  1e-4 physical threshold (~500× below the measurements' ~5 % uncertainty). The difference is activation of the products
+  themselves, which a composition-only subset cannot represent — a real effect, correctly sized, not numerical noise.
+  The 1e-12 bit-identity criterion was wrong on its face.
+- No regression: G1, G2a, G3, G4 re-derived PASS; certificate regenerated (70 inputs) and re-matched.
+- **G2c deliberately out of scope and still FAIL** — Fr-226/Rb-94 grid sensitivity, 94.96 % of rows ≤ 1e-3, max 1.6e-2,
+  both targets flagged in the library index with the flag propagating into every run's ledger, carried in the roadmap's
+  v0.1 known-limitations table, routed to P10. Not touched, not re-thresholded.
+- `controls/check_p4b.py` → **P4b-PASS**. P4's own record keeps its P4-FAIL close; nothing was rewritten retroactively.

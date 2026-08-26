@@ -58,13 +58,20 @@
   ]
  },
  "control_b": {
-  "n_reactions": 771,
-  "max_rel": 0.9308595394003593,
-  "pass": false
+  "n_reactions": 757,
+  "max_rel": 4.274011794524651e-16,
+  "pass": true,
+  "criterion": "P4b C1: non-inelastic MTs vs pointwise collapse"
+ },
+ "control_b_inelastic": {
+  "n_reactions": 14,
+  "max_rel": 0.0,
+  "pass": true,
+  "criterion": "P4b C1: loss row = sum of isomer partials"
  },
  "build_seconds": [
-  228.00202131271362,
-  674.686695098877
+  0.16000699996948242,
+  0.16175293922424316
  ],
  "errors": [
   0,

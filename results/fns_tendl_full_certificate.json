@@ -96,6 +96,10 @@
    "path": "/home/connoravila/Documents/actinv/controls/../protocols/ACTINV-P4_PROTOCOL.md",
    "sha256": "92b81f9e6d8da78c2b1e73e168e1e72bf2e14f70883853ea0a77fe39453268e5"
   },
+  "protocol:ACTINV-P4b_PROTOCOL.md": {
+   "path": "/home/connoravila/Documents/actinv/controls/../protocols/ACTINV-P4b_PROTOCOL.md",
+   "sha256": "72b1955c927b51f40a4aa4d9f43c987ed1c357cdffaf885480dbf6175ba39158"
+  },
   "protocol:DRAFT-P4b_PROTOCOL.md": {
    "path": "/home/connoravila/Documents/actinv/controls/../protocols/DRAFT-P4b_PROTOCOL.md",
    "sha256": "17c009da211f1017ecb9f421ca3c66880dfe707b1ca669b6bc4971ff2e3d33bc"
@@ -130,7 +134,7 @@
   },
   "source:controls/check_p4.py": {
    "path": "/home/connoravila/Documents/actinv/controls/../controls/check_p4.py",
-   "sha256": "0f5afb41fe23f76335576a0762320c55ddc590cf6752c995674b6721403618a8"
+   "sha256": "479b2a63985a5999022b8c0c26c3e18abb33acff8fa3dfe35496a29bf47dacdd"
   },
   "source:controls/cram_ref.py": {
    "path": "/home/connoravila/Documents/actinv/controls/../controls/cram_ref.py",
@@ -198,7 +202,7 @@
   },
   "source:controls/g2_tendl_controls.py": {
    "path": "/home/connoravila/Documents/actinv/controls/../controls/g2_tendl_controls.py",
-   "sha256": "ff8db9c86e709cbc764218560995a6977611199407292856bb2f0774bcc0191c"
+   "sha256": "6a500ce47e8ac5e58bb2cf1bb9a0140a260447412136c57f0e940fb590282709"
   },
   "source:controls/g3_harness_controls.py": {
    "path": "/home/connoravila/Documents/actinv/controls/../controls/g3_harness_controls.py",
@@ -1207,5 +1211,5 @@
    "error": false
   }
  },
- "certificate_body_sha256": "6a9b2626b2de1f351f37e1b0b484f0a37890f22a6b2e54907623df9122df21e2"
+ "certificate_body_sha256": "e38fca6ceb5a6fe0bc1de6de666585cafc09103ba4cbba95da12c40103c0fc96"
 }

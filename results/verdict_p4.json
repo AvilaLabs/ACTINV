@@ -2,10 +2,11 @@
  "gates": {
   "G1": "PASS (targets 2847, errors 0, targets with ledger entries 2801, INCOMPLETE-URR 0, unsupported formalism/range 2, rows 164315, build 0.0 h)",
   "G2a": "PASS (twins 3, compared 3, worst one-group 0.0001368525228258123, worst per-group 0.0023111678308461977)",
-  "G2b": "FAIL (771 reactions, max 9.3e-01)",
+  "G2b": "PASS (non-inelastic 757 reactions max 4.3e-16; inelastic loss=sum-of-partials 14 reactions max 0.0e+00)",
+  "C2_subset_vs_full": "PASS (132 experiments, worst 2.5e-06 vs 1e-4; difference is product activation absent from the composition-only subset)",
   "G2c": "FAIL (Amendment A: 95.0% of 119 rows \u2264 1e-3, max 1.6e-02, flagged targets ['n_037-Rb-94_3752.dat', 'n_087-Fr-226_8767.dat'] in index: True)",
   "G3": "PASS (ran 132, errors 0, reproduction worst 3.2e-16, median gm C/E 1.035)",
-  "G4": "PASS (inputs 69, mismatched [])"
+  "G4": "PASS (inputs 70, mismatched [])"
  },
  "verdict": "P4-FAIL",
  "amendments": [

@@ -28,15 +28,24 @@ for key, i in ka.items():
 # (b) non-resonant consistency vs pointwise collapse
 import g1_collapse as g1
 from tendl_build import parse_file, interp_tab1
-worst_b = 0.0; n_b = 0
+INELASTIC = lambda m: m == 4 or (51 <= m <= 91)
+worst_b = 0.0; n_b = 0; worst_i = 0.0; n_i = 0   # P4b C1: inelastic MTs store the isomer partial by design
 for t in ia["targets"][:40]:
     tk = ia["targets"].index(t); za, liso, awr, mf3, mf8, mf9, mf10 = parse_file(os.path.join(sd, t["file"])); resonant = set(t.get("resonant_mts", []))
     for mt, (nbt, x, y) in mf3.items():
         key = (tk, mt, -1, -1, 0)
         if key not in ka or mt in resonant: continue
-        grid = g1.union_grid(x); s = g1.interp_eval(x, y, nbt, grid); one_pt = g1.collapse(s, grid); one_lib = float(A["sig"][ka[key]] @ g1.flux_asc / g1.flux_asc.sum())
+        if INELASTIC(mt):
+            # internal consistency: the ground-state loss must equal the sum of that MT's isomer-partial product rows
+            parts = [A["sig"][i] for r, i in ka.items() if r[0] == tk and r[1] == mt and r[3] > 0]
+            if not parts: continue
+            lo = A["sig"][ka[key]]; su = np.sum(parts, axis=0); m = su > 0
+            if m.any(): worst_i = max(worst_i, float(np.max(np.abs(lo[m] - su[m]) / su[m]))); n_i += 1
+            continue
+        grid = g1.union_grid(x); sg = g1.interp_eval(x, y, nbt, grid); one_pt = g1.collapse(sg, grid); one_lib = float(A["sig"][ka[key]] @ g1.flux_asc / g1.flux_asc.sum())
         if one_pt != 0: worst_b = max(worst_b, abs(one_lib - one_pt) / abs(one_pt)); n_b += 1
 out = {"dense": dense, "sample_seed": 20260826, "n_sample": len(sample), "control_c": {"n_capture_rows": n_c, "max_rel": worst_c, "pass": bool(worst_c <= 1e-3), "rows_over": worst_rows[:20]},
-       "control_b": {"n_reactions": n_b, "max_rel": worst_b, "pass": bool(worst_b <= 1e-12)}, "build_seconds": [ia["build_seconds"], ib["build_seconds"]], "errors": [ia["n_errors"], ib["n_errors"]],
+       "control_b": {"n_reactions": n_b, "max_rel": worst_b, "pass": bool(worst_b <= 1e-12), "criterion": "P4b C1: non-inelastic MTs vs pointwise collapse"},
+       "control_b_inelastic": {"n_reactions": n_i, "max_rel": worst_i, "pass": bool(worst_i <= 1e-12), "criterion": "P4b C1: loss row = sum of isomer partials"}, "build_seconds": [ia["build_seconds"], ib["build_seconds"]], "errors": [ia["n_errors"], ib["n_errors"]],
        "ledgers": {t["file"]: t["ledger"] for t in ia["targets"] if t["ledger"]}}
 json.dump(out, open(os.path.join(RES, f"g2_tendl_dense{dense:g}.json"), "w"), indent=1, default=lambda o: o.item() if hasattr(o, "item") else str(o)); print(json.dumps({k: v for k, v in out.items() if k != "ledgers"}, indent=1, default=str))

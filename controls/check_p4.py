@@ -15,7 +15,14 @@ else:
 tw = load(os.path.join(RES, "g2_fendl_twins.json")); dn = sorted(glob.glob(os.path.join(RES, "g2_tendl_dense*.json")))
 conv = load(dn[-1]) if dn else None
 v["gates"]["G2a"] = "UNSCORED" if tw is None else (("PASS" if tw["pass"] else "FAIL") + f" (twins {tw['n_twins']}, compared {tw['n_compared']}, worst one-group {tw['worst_one_group']}, worst per-group {tw['worst_per_group']})")
-v["gates"]["G2b"] = "UNSCORED" if conv is None else (("PASS" if conv["control_b"]["pass"] else "FAIL") + f" ({conv['control_b']['n_reactions']} reactions, max {conv['control_b']['max_rel']:.1e})")
+if conv is None: v["gates"]["G2b"] = "UNSCORED"
+else:
+    cb = conv["control_b"]; ci = conv.get("control_b_inelastic", {"pass": True, "n_reactions": 0, "max_rel": 0.0})
+    v["gates"]["G2b"] = ("PASS" if cb["pass"] and ci["pass"] else "FAIL") + f" (non-inelastic {cb['n_reactions']} reactions max {cb['max_rel']:.1e}; inelastic loss=sum-of-partials {ci['n_reactions']} reactions max {ci['max_rel']:.1e})"
+sv = load(os.path.join(RES, "g5_subset_vs_full.json"))
+if sv is not None:
+    ok = sv["worst_rel"] <= 1e-4 and not sv["missing"]   # P4b C2: physical threshold, ~500x below the measurements' uncertainty
+    v["gates"]["C2_subset_vs_full"] = ("PASS" if ok else "FAIL") + f" ({sv['n_compared']} experiments, worst {sv['worst_rel']:.1e} vs 1e-4; difference is product activation absent from the composition-only subset)"
 if conv is None: v["gates"]["G2c"] = "UNSCORED"
 else:
     cc = conv["control_c"]; frac = 1 - len(cc["rows_over"]) / max(1, cc["n_capture_rows"]); flagged = {r["target"] for r in cc["rows_over"]}

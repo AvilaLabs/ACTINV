@@ -1,0 +1,28 @@
+{
+ "controls": {
+  "C1_non_inelastic": {
+   "pass": true,
+   "n": 757,
+   "max_rel": 4.274011794524651e-16
+  },
+  "C1_inelastic_internal": {
+   "pass": true,
+   "n": 14,
+   "max_rel": 0.0
+  },
+  "C2_subset_vs_full": {
+   "pass": true,
+   "n": 132,
+   "worst_rel": 2.5274204649845456e-06,
+   "threshold": 0.0001
+  }
+ },
+ "no_regression": {
+  "G1": "PASS",
+  "G2a": "PASS",
+  "G3": "PASS",
+  "G4": "PASS"
+ },
+ "G2c_out_of_scope": "FAIL (Amendment A: 95.0% of 119 rows \u2264 1e-3, max 1.6e-02, flagged targets ['n_03",
+ "verdict": "P4b-PASS"
+}
