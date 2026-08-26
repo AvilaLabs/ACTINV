@@ -472,3 +472,14 @@
   full chain builds a 10-target library from pinned data and reproduces the recorded value at 0.0 deviation.
 - Workflow also updated for the Node 20 deprecation: `actions/checkout@v7`, `actions/setup-python@v7`,
   `Swatinem/rust-cache` pinned to v2.9.2.
+
+## 20 — 2026-08-26 — P7 opened (decay-photon source and gamma-dose proxy)
+- Protocol hashed as `5dd3c3f5…` before implementation or gate evidence. Minimum gate data are four named decay
+  evaluations (Co-60, Cs-137, Ba-137m, Mn-68), NIST dry-air/Fe photon-response tables and the existing 10-target CI
+  activation library; no activation-library build and no full FNS run.
+- Normative choices fixed before evidence: photon radiation is ENDF `STYP=0+9`; raw intensities remain inspectable;
+  transport spectra are explicitly energy-normalized to `E_EM` with every correction ledgered; contact dose is the
+  FISPACT semi-infinite-slab air-dose proxy with `B=2`; OpenMC/MCNP exports carry energy and strength with an explicit
+  point-at-origin spatial placeholder for P8 to replace.
+- Dependency proposed for verified input certificates: `sha2` (MIT OR Apache-2.0), a standard SHA-256 implementation.
+  Licence checked before use; no other new Rust dependency is planned.
