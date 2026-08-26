@@ -294,3 +294,11 @@
   (MT, product) in increasing level order onto isomeric ordinals and ledgers every remap; the runner now ledgers the
   ground-state fallback instead of taking it silently (`isomer_state_absent_from_decay_library_used_ground`).
   Verified: Ba-137 MT=4 LFS 2 → LISO 1, 0.166 b one-group on the FNS spectrum.
+- After both isomer fixes (subset rebuilt, 132 experiments rerun): ACTINV/TENDL-2023 median gm C/E **1.035**,
+  median max|ln C/E| 0.311, within 30 % everywhere 45 % — against ACTINV/EAF-2010 1.024 / 0.284 / 47 % and the
+  FISPACT-II/TENDL-2017 reference 1.009 / 0.223 / 52 %. TENDL-2023 is closer to the measurement than EAF-2010 in
+  59/132 experiments and closer to the reference in 75/132. Two independent libraries built by ACTINV's own pipeline
+  now agree with each other and with the licensed reference.
+- **P4 Amendment B** (gate input vs deliverable, per standing rule 7): gates scored on the 255-target FNS subset plus
+  the 3-target twins library; G1 scored on the full 2,847-target deliverable; added control — subset and full library
+  must give identical FNS results.
