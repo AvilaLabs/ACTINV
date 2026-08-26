@@ -1,0 +1,23 @@
+{
+ "spec": "fns_fe_5min.json",
+ "entry_points": [
+  "cli",
+  "python",
+  "python"
+ ],
+ "scalars_compared_per_pair": 1372,
+ "cli_vs_python": {
+  "name": "cli vs python",
+  "n_differences": 0,
+  "examples": [],
+  "pass": true
+ },
+ "python_vs_harness": {
+  "name": "python vs harness",
+  "n_differences": 0,
+  "examples": [],
+  "pass": true
+ },
+ "certificates_identical_apart_from_entry_point": true,
+ "pass": true
+}

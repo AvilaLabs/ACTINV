@@ -24,6 +24,12 @@ pub struct StepOut {
     pub negative_atoms_zeroed: f64,
     pub total_atoms_per_g: f64,
     pub n_states_populated: usize,
+    /// CRAM's approximation floors at alpha0, so any population below alpha0 * max(N) is indistinguishable from zero
+    /// by this method. Reported, never silently removed.
+    pub numerical_floor_atoms_per_g: f64,
+    pub n_states_below_floor: usize,
+    pub atoms_below_floor: f64,
+    pub heat_bound_from_below_floor_W_per_g: f64,
 }
 #[derive(serde::Serialize)]
 pub struct RunResult {
@@ -142,6 +148,17 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         for (k, v) in y.iter_mut().enumerate() {
             if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit { zeroed += -*v; *v = 0.0; }
         }
+        // ---- numerical floor: CRAM approximates exp(z) with an absolute floor of alpha0, so states whose population
+        // is below alpha0 * max(N) carry no information. They are reported with a bound on the heat they could add.
+        let nmax = y.iter().cloned().fold(0.0f64, f64::max);
+        let floor = c.alpha0 * nmax;
+        let (mut n_below, mut atoms_below, mut heat_below) = (0usize, 0.0, 0.0);
+        for (k, v) in y.iter().enumerate() {
+            let g = keep[k];
+            if g == ch.leak || g == ch.unit || *v <= 0.0 || *v >= floor { continue; }
+            n_below += 1; atoms_below += *v;
+            if let Some(nu) = nuclides.get(&ch.keys[g]) { heat_below += nu.lambda() * *v * (nu.e_light() + nu.e_em() + nu.e_heavy()) * EV; }
+        }
         // ---- outputs
         let mut inv = Vec::new(); let mut act = BTreeMap::new();
         let (mut ha, mut hb, mut hg) = (0.0, 0.0, 0.0);
@@ -161,7 +178,9 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         steps.push(StepOut { step: si + 1, t_s: t_cum, flux: *fl, inventory: inv, activity_Bq_per_g: act, heat_W_per_g: heat,
             leakage_atoms_per_g: pos[ch.leak].checked_sub(0).and_then(|p| if p != usize::MAX { y.get(p).copied() } else { None }).unwrap_or(0.0),
             negative_atoms_zeroed: zeroed,
-            total_atoms_per_g: y.iter().sum(), n_states_populated: y.iter().filter(|v| **v > 0.0).count() });
+            total_atoms_per_g: y.iter().sum(), n_states_populated: y.iter().filter(|v| **v > 0.0).count(),
+            numerical_floor_atoms_per_g: floor, n_states_below_floor: n_below, atoms_below_floor: atoms_below,
+            heat_bound_from_below_floor_W_per_g: heat_below });
     }
     // ---- ledger
     let ledger = serde_json::json!({
@@ -180,6 +199,12 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         "spontaneous_fission_branches_to_leakage": ch.ledger.sf_branches,
         "decay_nuclides_from_fallback": n_fallback,
         "negative_atoms_zeroed_per_step": steps.iter().map(|s| s.negative_atoms_zeroed).collect::<Vec<_>>(),
+        "numerical_floor": {
+            "alpha0": c.alpha0,
+            "note": "CRAM's absolute error floors at alpha0; populations below alpha0 * max(N) are indistinguishable from zero and are reported, not removed",
+            "worst_heat_bound_fraction": steps.iter().map(|s| if s.heat_W_per_g.total > 0.0 { s.heat_bound_from_below_floor_W_per_g / s.heat_W_per_g.total } else { 0.0 }).fold(0.0f64, f64::max),
+            "max_states_below_floor": steps.iter().map(|s| s.n_states_below_floor).max().unwrap_or(0),
+        },
         "bulk_background_heat_W_per_g": bulk_heat,
         "assembly": {"n_bulk_isotopes": bulk.len(), "n_decay_triplets": d_src.len(), "n_reaction_triplets": r_src.len(),
                      "n_library_rows": lib.rows.len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>()},

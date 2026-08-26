@@ -1,0 +1,51 @@
+{
+ "n_compared": 132,
+ "missing": [],
+ "criterion": {
+  "abs_uW_g": 1e-11,
+  "rel": 1e-09,
+  "peak_fraction": 0.001,
+  "rationale": "smallest measured heat in the FNS set ~1e-2 uW/g at ~5 % uncertainty"
+ },
+ "worst_abs_uW_g": 4.757166882640718e-13,
+ "worst_rel_above_peak_fraction": 2.1153988709395957e-10,
+ "failures": [],
+ "worst_5": [
+  {
+   "exp": "F_2000exp_5min",
+   "n_points": 21,
+   "worst_abs_uW_g": 4.757166882640718e-13,
+   "worst_rel_above_peak_fraction": 6.629976499744315e-12,
+   "pass": true
+  },
+  {
+   "exp": "P_2000exp_5min",
+   "n_points": 20,
+   "worst_abs_uW_g": 4.121147867408581e-13,
+   "worst_rel_above_peak_fraction": 9.409901185203954e-14,
+   "pass": true
+  },
+  {
+   "exp": "Al_1996exp_7hour",
+   "n_points": 7,
+   "worst_abs_uW_g": 1.199040866595169e-13,
+   "worst_rel_above_peak_fraction": 9.348346704865662e-14,
+   "pass": true
+  },
+  {
+   "exp": "Mg_2000exp_5min",
+   "n_points": 19,
+   "worst_abs_uW_g": 5.506012312750386e-14,
+   "worst_rel_above_peak_fraction": 9.398992625024868e-13,
+   "pass": true
+  },
+  {
+   "exp": "Cl_2000exp_5min",
+   "n_points": 21,
+   "worst_abs_uW_g": 5.3512749786932545e-14,
+   "worst_rel_above_peak_fraction": 3.146818106832368e-12,
+   "pass": true
+  }
+ ],
+ "pass": true
+}

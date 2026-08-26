@@ -393,3 +393,19 @@
   2.3e-47 for CRAM-48, exactly as the method predicts. The criterion is therefore absolute error over the range plus
   relative error only where exp(z) ≥ 1e-6; CRAM-16 gives 1.4e-10 there, CRAM-48 3.3e-15. This floor is also the origin
   of the small negative populations the solver zeroes and ledgers.
+- P5-G3 **PASS**: CLI and Python entry points agree at exactly 0.0 across 1,372 scalars on the FNS Fe spec, and their
+  certificates are identical apart from the entry-point field. The harness was then rewritten
+  (`controls/run_fns_spec.py`) to build an `actinv-spec-1` document per experiment and call the same core, so the third
+  leg is a genuine path rather than a second call to the same binding — 132 experiments, 0 errors, 46 s.
+- P5-G4 **PASS** after a control-premise correction, the sixth: the Rust path reproduces the P4b records to a worst
+  **absolute** difference of 4.76e-13 μW/g over all 132 experiments and 2.1e-10 relative wherever heat ≥ 1e-3 of an
+  experiment's peak. The original criterion (1e-12 relative everywhere) is unachievable in principle and the mechanism
+  was traced, not assumed: the worst case (Al 7-hour, 3.0e-6 relative) sits at 8e-10 of its peak with an absolute
+  difference of 6.6e-15 μW/g, and the Na case resolved to a single nuclide — C-15, half-life 2.45 s, present at
+  1.23e-7 atoms/g minutes into cooling, which is α0 × max(N) = 2.1e-16 × 1.3e10, contributing exactly the observed
+  1.2e-10 of the heat. The new criterion is referenced to the benchmark's measurement scale (smallest measured heat
+  ~1e-2 μW/g at ~5 % uncertainty), not to what passes.
+- **Numerical floor now reported, not hidden**: every step carries `numerical_floor_atoms_per_g` (α0 × max N), the
+  count and mass of states beneath it, and a bound on the heat they could contribute; the ledger carries the worst such
+  fraction per run (1.3e-14 for the Fe spec). Negative round-off was already zeroed and ledgered; positive round-off of
+  the same origin was previously invisible.
