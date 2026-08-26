@@ -567,3 +567,17 @@
   local CPython 3.13 wheel hash is `60ce0eff2f41b6a9932a1e8aba0b701d8b3a2d101e7cec0321e4fbfeba1c70a7`.
 - P8 closes the v0.2 milestone. P9 — Fission & coupled mode — is next in the roadmap but remains unopened and unhashed.
   Tagging, pushing and publishing are the principal's external acts.
+
+## 24 — 2026-08-26 — P9 opened (fission yields, coupled burn-up and pulsed histories)
+- Protocol hashed as `028c5846865490e9dee5902f22f5ad4be583ee332be9d92ce23efa80c52d39c0` before
+  implementation or gate evidence. Minimum gate data are one synthetic fission fixture, the existing TENDL U-235 and
+  ENDF/B-VIII.0 decay inputs, one official U-235 NFPY evaluation, two CoNDERC U-235 thermal histories, OpenMC 0.15.3,
+  and a pinned ALARA 2.9.2 Fe-56(n,p)Mn-56 pulse subset; no full data build or transport solve is a gate prerequisite.
+- Normative corrections fixed before evidence: ENDF independent yields sum to two fragments rather than neutron
+  nubar; MT=459 cumulative yields are diagnostic only; automatic mode selection uses
+  `-expm1(-loss_rate * sum(dt * flux_multiplier))`; and the existing ordered schedule is the explicit arbitrary
+  piecewise-constant pulse representation, with zero-flux segments retained as decay gaps.
+- Official control sources were resolved before opening. The ENDF/B-VIII.0 NFPY archive is
+  `92c5371fdb21eecf4989f48828671b904186abc6386b3d7510c8fcee2ee5ffcf` (U-235 file `9e132029…`); the CoNDERC fission
+  archive is `30756fef…`; and official ALARA 2.9.2 commit `faa5b330…` builds locally and executes its bundled nested
+  pulse schedule. Those data and build products remain outside the repository.

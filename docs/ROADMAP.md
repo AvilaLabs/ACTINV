@@ -6,8 +6,9 @@ time. Every phase ends with a checker-derived verdict, a session file, a manifes
 dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-26):** P8 is closed **P8-CONDITIONAL** after one documented control repair pass; all six gates
-pass and the **v0.2 milestone is complete**. The next phase is **P9 — Fission & coupled mode**. P9 is not open and has
-no protocol hash; its roadmap row remains the authoritative scope until a protocol is written and hashed.
+pass and the **v0.2 milestone is complete**. **P9 — Fission & coupled mode is open** under protocol hash
+`028c5846865490e9dee5902f22f5ad4be583ee332be9d92ce23efa80c52d39c0`; its scope is frozen until the checker-derived
+close.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -98,3 +99,7 @@ part that does not compress: users, issues, and the validation record accumulati
 - 2026-08-26 — P8 closed P8-CONDITIONAL: all six gates pass after the single repair pass recorded in P8 Amendment A;
   four source formats, exact mesh/single-cell identity, thread-deterministic records and bounded-memory sizing are
   delivered. v0.2 is complete. P9 is next but remains unopened and unhashed.
+- 2026-08-26 — P9 opened under protocol `028c5846…`: explicit isotope/isomer materials, independently parsed and
+  hashed ENDF/B-VIII.0 MT=454 fission yields, corrected fluence-aware burn-up selection, explicit piecewise pulse
+  histories, and CoNDERC/OpenMC/ALARA validation. The roadmap's “nu_f-consistent” shorthand is fixed before evidence
+  as the ENDF independent-yield sum of two fission fragments, not prompt-neutron nubar.
