@@ -32,6 +32,12 @@ def mt_table():
     os.makedirs(os.path.dirname(p), exist_ok=True); json.dump({"source": "openmc.data.REACTION_NAME (OpenMC 0.15.3), parsed for emitted particles; residual = target + n - emitted", "table": {str(k): v for k, v in tab.items()}}, open(p, "w"), indent=1)
     return tab
 MT_PROD = mt_table()
+def source_fingerprint():
+    """sha256 over the modules that determine a target's numbers; cached results from a different fingerprint are ignored."""
+    h = hashlib.sha256(); d = os.path.dirname(os.path.abspath(__file__))
+    for f in ("tendl_build.py", "resonance.py", "doppler.py", "endf_common.py", "g1_collapse.py"): h.update(open(os.path.join(d, f), "rb").read())
+    h.update(("dense=%s;T=%s" % (os.environ.get("ACTINV_DENSE", "1"), T_K)).encode()); return h.hexdigest()
+FINGERPRINT = None   # set in main(), inherited by forked workers
 def group_avg_grid(E, s):
     """709-group flat-lethargy averages of a function given lin-lin on grid E (ascending)."""
     grid = np.union1d(E, BOUNDS); grid = grid[(grid >= BOUNDS[0]) & (grid <= BOUNDS[-1])]; sv = np.interp(grid, E, s, left=0.0, right=0.0)
@@ -126,7 +132,15 @@ def resonant_pointwise(path, awr, mf3, led):
     return out
 def build_one(args):
     global DENSE; DENSE = float(os.environ.get("ACTINV_DENSE", "1"))
-    path, tk = args; led = []; rows = []; sig = []; t0 = time.time()
+    path, tk, cache_dir = args if len(args) == 3 else (args[0], args[1], None); led = []; rows = []; sig = []; t0 = time.time()
+    cf = os.path.join(cache_dir, os.path.basename(path) + ".npz") if cache_dir else None
+    if cf and os.path.exists(cf):
+        try:
+            z = np.load(cf, allow_pickle=False); info = json.loads(str(z["info"])); 
+            if info.get("fingerprint") == FINGERPRINT:
+                r = z["rows"]; info["cached"] = True
+                return info, [(tk, int(a), int(b), int(c), int(d)) for a, b, c, d in r.tolist()] if r.size else [], list(z["sig"])
+        except Exception: pass
     try:
         za, liso, awr, mf3, mf8, mf9, mf10 = parse_file(path)
         res = resonant_pointwise(path, awr, mf3, led)
@@ -160,22 +174,31 @@ def build_one(args):
                 if mt == 18: rows.append((tk, 18, 0, 0, 0)); sig.append(g_tot)
                 elif mt in MT_PROD: dz, da = MT_PROD[mt]; rows.append((tk, mt, za + dz * 1000 + da, 0, -1)); sig.append(g_tot)
                 else: rows.append((tk, mt, 0, 0, -2)); sig.append(g_tot); led.append(f"MT{mt}: product unmapped -> leakage")
-        info = {"file": os.path.basename(path), "za": za, "liso": liso, "awr": awr, "n_mf3": len(mf3), "resonant_mts": sorted(res), "ledger": led, "seconds": time.time() - t0}
+        info = {"file": os.path.basename(path), "za": za, "liso": liso, "awr": awr, "n_mf3": len(mf3), "resonant_mts": sorted(res), "ledger": led, "seconds": time.time() - t0, "fingerprint": FINGERPRINT}
+        if cf:
+            tmp = cf + ".tmp.npz"; np.savez_compressed(tmp, rows=np.array([r[1:] for r in rows], dtype=np.int64) if rows else np.zeros((0, 4), np.int64), sig=np.array(sig) if sig else np.zeros((0, 709)), info=json.dumps(info)); os.replace(tmp, cf)
         return info, rows, sig
     except Exception:
-        return {"file": os.path.basename(path), "za": None, "liso": None, "error": traceback.format_exc()[-600:], "ledger": led, "seconds": time.time() - t0}, [], []
+        info = {"file": os.path.basename(path), "za": None, "liso": None, "error": traceback.format_exc()[-600:], "ledger": led, "seconds": time.time() - t0, "fingerprint": FINGERPRINT}
+        if cf:
+            tmp = cf + ".tmp.npz"; np.savez_compressed(tmp, rows=np.zeros((0, 4), np.int64), sig=np.zeros((0, 709)), info=json.dumps(info)); os.replace(tmp, cf)
+        return info, [], []
 def main():
     import argparse, multiprocessing as mp
     ap = argparse.ArgumentParser(); ap.add_argument("files_dir"); ap.add_argument("out_dir"); ap.add_argument("--workers", type=int, default=8); ap.add_argument("--limit", type=int, default=0); ap.add_argument("--name", default="actinv_tendl2023_709g"); ap.add_argument("--dense", type=float, default=None)
     a = ap.parse_args(); files = sorted(glob.glob(os.path.join(a.files_dir, "*.dat")))
     if a.dense: os.environ["ACTINV_DENSE"] = str(a.dense)
+    global FINGERPRINT; FINGERPRINT = source_fingerprint()
     if a.limit: files = files[:a.limit]
-    os.makedirs(a.out_dir, exist_ok=True); t0 = time.time(); targets = []; ROWS = []; SIG = []; nerr = 0
+    os.makedirs(a.out_dir, exist_ok=True); cache = os.path.join(a.out_dir, "cache_" + a.name); os.makedirs(cache, exist_ok=True)
+    have = sum(1 for f in files if os.path.exists(os.path.join(cache, os.path.basename(f) + ".npz")))
+    print(f"fingerprint {FINGERPRINT[:12]}; {have}/{len(files)} targets already cached in {cache}", file=sys.stderr, flush=True)
+    t0 = time.time(); targets = []; ROWS = []; SIG = []; nerr = 0
     with mp.Pool(a.workers, maxtasksperchild=20) as pool:
-        for k, (info, rows, sig) in enumerate(pool.imap(build_one, [(f, i) for i, f in enumerate(files)], chunksize=1)):
+        for k, (info, rows, sig) in enumerate(pool.imap(build_one, [(f, i, cache) for i, f in enumerate(files)], chunksize=1)):
             targets.append(info); ROWS += rows; SIG += sig; nerr += 1 if info.get("error") else 0
-            if k % 50 == 0 or info.get("error"): print(f"  {k+1}/{len(files)} {info['file']} {info.get('seconds', 0):.1f}s rows={len(rows)} led={len(info['ledger'])}{' ERROR' if info.get('error') else ''}  total {time.time()-t0:.0f}s", file=sys.stderr, flush=True)
+            if k % 50 == 0 or info.get("error"): print(f"  {k+1}/{len(files)} {info['file']} {info.get('seconds', 0):.1f}s rows={len(rows)} led={len(info['ledger'])}{' cached' if info.get('cached') else ''}{' ERROR' if info.get('error') else ''}  total {time.time()-t0:.0f}s", file=sys.stderr, flush=True)
     R = np.array(ROWS, dtype=np.int64); S = np.array(SIG); out = os.path.join(a.out_dir, a.name + ".npz"); np.savez_compressed(out, rows=R, sig=S, bounds=BOUNDS)
-    json.dump({"targets": targets, "n_rows": len(ROWS), "n_errors": nerr, "columns": "rows: (target_index, MT, product ZA (-1 loss term, 0 unmapped), LFS, LMF source: 3/9/10, -1 MT arithmetic, -2 leakage)", "groups": 709, "weighting": "flat lethargy", "temperature_K": T_K, "dense_factor": DENSE, "sha256_npz": hashlib.sha256(open(out, "rb").read()).hexdigest(), "build_seconds": time.time() - t0}, open(os.path.join(a.out_dir, a.name + "_index.json"), "w"), indent=1)
+    json.dump({"targets": targets, "n_rows": len(ROWS), "n_errors": nerr, "columns": "rows: (target_index, MT, product ZA (-1 loss term, 0 unmapped), LFS, LMF source: 3/9/10, -1 MT arithmetic, -2 leakage)", "groups": 709, "weighting": "flat lethargy", "temperature_K": T_K, "dense_factor": DENSE, "fingerprint": FINGERPRINT, "n_from_cache": sum(1 for t in targets if t.get("cached")), "sha256_npz": hashlib.sha256(open(out, "rb").read()).hexdigest(), "build_seconds": time.time() - t0}, open(os.path.join(a.out_dir, a.name + "_index.json"), "w"), indent=1)
     print(f"targets {len(targets)} rows {len(ROWS)} errors {nerr} {time.time()-t0:.0f}s -> {out}")
 if __name__ == "__main__": main()

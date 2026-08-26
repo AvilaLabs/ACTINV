@@ -250,3 +250,14 @@
   broadening, yield ramps): control (b) 4.3e-16; control (c) 113/119 rows ≤ 1e-3, six rows on Fr-226 (≤ 1.5e-2) and
   Rb-94 (1.9e-3); errors 0/0; sample builds 763 s / 2,452 s. **P4 Amendment A**: ≥ 95 % rule with named flags.
   Full TENDL-2023 build launched at density 1: 5 workers, 3 GB cap per process (≈ 9 h projected).
+
+## 13 — 2026-08-26 — build interrupted by a machine shutdown; builder made resumable
+- The full TENDL-2023 build reached 2,451/2,847 targets (86 %, 13,272 s, 0 errors) when the laptop shut down. All of it
+  was lost: `tendl_build.py` accumulated rows in memory and wrote the .npz only at the end. Own design defect for a
+  multi-hour job — not a data or physics problem, and nothing else was affected (protocol, controls, convergence
+  results and the amendment are committed at 4611f63).
+- Repair: per-target cache (`<out>/cache_<name>/<file>.npz`) written atomically as each target finishes, keyed by a
+  fingerprint over tendl_build/resonance/doppler/endf_common/g1_collapse plus density and temperature, so any change to
+  the physics invalidates it. Verified on the smoke set: two independent cold builds bit-identical (237 rows, rows and
+  sig arrays equal), resumed build 0.4 s vs 147 s, `n_from_cache` recorded in the index. Rule for the roadmap's
+  standing rules: any job over ~10 minutes checkpoints per unit of work.
