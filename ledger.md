@@ -352,3 +352,10 @@
   both targets flagged in the library index with the flag propagating into every run's ledger, carried in the roadmap's
   v0.1 known-limitations table, routed to P10. Not touched, not re-thresholded.
 - `controls/check_p4b.py` → **P4b-PASS**. P4's own record keeps its P4-FAIL close; nothing was rewritten retroactively.
+
+## 18 — 2026-08-27 — P5 opened
+- Protocol hashed (72b1955c… is P4b; P5 hash in protocols/protocol_hash.txt). Scope: the Rust core owns spec → result;
+  three entry points must be one binary. Minimum gate input: the FNS Fe 5-min spec plus the existing 132-experiment set;
+  no new data, no library rebuild.
+- Dependencies to be linked (I/O, not numerics), licences checked before use: serde + serde_json (MIT OR Apache-2.0),
+  zip and flate2 for the .npz container (MIT / MIT OR Apache-2.0). Recorded per standing rule.
