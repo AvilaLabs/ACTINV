@@ -12,7 +12,7 @@ recorded one and that the rational approximation is what it claims to be.
 """
 import os, re, json, cmath
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); RES = os.path.join(ROOT, "results")
-SRC = os.path.expanduser("~/Documents/Avila-Labs/scouting/act-p0/results/cram_coefficients.json")
+SRC = os.path.join(ROOT, "data", "cram_coefficients.json")   # vendored: no control may read outside the clone
 rec = json.load(open(SRC))
 rs = open(os.path.join(ROOT, "crates", "actinv-core", "src", "cram_coeffs.rs")).read()
 def pairs(name):
