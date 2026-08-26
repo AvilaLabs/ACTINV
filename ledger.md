@@ -427,3 +427,8 @@
   nuclide carrying ≥ 1 % of the activity agrees between modes to within coupled's own floor (worst 2.8e-3 atoms/g
   against a floor of 2.1e6), that `auto` selects trace at burn-up 3.3e-12, and that it flips to coupled at 3.4e4.
 - `controls/check_p5.py` → **P5-PASS**, no amendments.
+
+## 19 — 2026-08-27 — P6 opened (v0.1 release engineering)
+- Protocol hashed. Gates: clean-clone build, CI control suite on a pinned data subset, wheel and binary identity,
+  reproducibility across builds, release notes carrying the known-limitations table, version and licence hygiene.
+  Minimum gate input: the FNS Fe spec and the 255-target subset library — no full-library build.
