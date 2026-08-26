@@ -153,6 +153,7 @@ pub struct Unresolved {
     pub add_to_background: bool,
     pub case: UnresolvedCase,
     pub sequences: Vec<UnresolvedSequence>,
+    pub interpolation_energies: Vec<f64>,
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -515,11 +516,52 @@ fn validate_unresolved_point(point: &UnresolvedPoint) -> Result<(), String> {
     Ok(())
 }
 
+const UNRESR_GRID_MANTISSAS: [f64; 13] = [
+    1.0, 1.25, 1.5, 1.7, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 7.2, 8.5,
+];
+const UNRESR_GRID_DECADES: [f64; 6] = [10.0, 100.0, 1e3, 1e4, 1e5, 1e6];
+
+fn unresolved_cross_section_mesh(
+    energy_min: f64,
+    energy_max: f64,
+    case: UnresolvedCase,
+    mut parameter_energies: Vec<f64>,
+) -> Vec<f64> {
+    parameter_energies.push(energy_min);
+    parameter_energies.push(energy_max);
+    parameter_energies.sort_by(f64::total_cmp);
+    parameter_energies.dedup_by(|left, right| left.to_bits() == right.to_bits());
+
+    let mut mesh = Vec::with_capacity(
+        parameter_energies.len() + UNRESR_GRID_DECADES.len() * UNRESR_GRID_MANTISSAS.len(),
+    );
+    mesh.push(parameter_energies[0]);
+    for &high in &parameter_energies[1..] {
+        let low = *mesh.last().expect("unresolved mesh was seeded");
+        if case == UnresolvedCase::A || high >= 1.26 * low {
+            let mut cursor = low;
+            for decade in UNRESR_GRID_DECADES {
+                for mantissa in UNRESR_GRID_MANTISSAS {
+                    let candidate = mantissa * decade;
+                    if candidate > 1.01 * cursor && candidate < high {
+                        mesh.push(candidate);
+                        cursor = candidate;
+                    }
+                }
+            }
+        }
+        mesh.push(high);
+    }
+    mesh
+}
+
 fn parse_unresolved(
     lines: &[&str],
     index: usize,
     lrf: i32,
     fission_widths: bool,
+    energy_min: f64,
+    energy_max: f64,
 ) -> Result<(RangeData, usize), String> {
     let case = if lrf == 2 {
         UnresolvedCase::C
@@ -678,6 +720,12 @@ fn parse_unresolved(
             }
         }
     }
+    let interpolation_energies: Vec<f64> = sequences
+        .iter()
+        .flat_map(|sequence| sequence.points.iter().filter_map(|point| point.energy))
+        .collect();
+    let interpolation_energies =
+        unresolved_cross_section_mesh(energy_min, energy_max, case, interpolation_energies);
     Ok((
         RangeData::Unresolved(Unresolved {
             spin,
@@ -685,6 +733,7 @@ fn parse_unresolved(
             add_to_background,
             case,
             sequences,
+            interpolation_energies,
         }),
         index,
     ))
@@ -738,7 +787,9 @@ pub fn parse_mf2(section: &Section<'_>) -> Result<ResonanceEvaluation, String> {
                 }
                 (1, 1..=3) => parse_legacy_resolved(lines, index, range.l2)?,
                 (1, 7) => parse_rmatrix_limited(lines, index)?,
-                (2, 1 | 2) => parse_unresolved(lines, index, range.l2, isotope.l2 == 1)?,
+                (2, 1 | 2) => {
+                    parse_unresolved(lines, index, range.l2, isotope.l2 == 1, range.c1, range.c2)?
+                }
                 (lru, lrf) => {
                     return Err(format!("unsupported MF=2 LRU={lru}/LRF={lrf}"));
                 }
@@ -1399,11 +1450,7 @@ fn width_samples(width: f64, degrees: i32, label: &str) -> Result<Vec<(f64, f64)
         .collect())
 }
 
-/// Infinite-dilution average cross sections for one unresolved range.
-///
-/// `LSSF=0` returns the resonance contribution to add to MF=3. `LSSF=1` returns exact zeros because MF=3 already
-/// contains the evaluated average. Width-fluctuation averages use NJOY's published ten-point Hwang quadrature.
-pub fn reconstruct_unresolved(
+fn reconstruct_unresolved_node(
     range: &ResonanceRange,
     energy: f64,
 ) -> Result<CrossSections, String> {
@@ -1499,6 +1546,46 @@ pub fn reconstruct_unresolved(
             / point.spacing;
     }
     result.checked("unresolved resonance reconstruction")
+}
+
+/// Infinite-dilution average cross sections for one unresolved range.
+///
+/// `LSSF=0` returns the resonance contribution to add to MF=3. `LSSF=1` returns exact zeros because MF=3 already
+/// contains the evaluated average. Width-fluctuation averages use NJOY's published ten-point Hwang quadrature.
+/// Energy-dependent cases are evaluated on their declared and UNRESR-refined energy mesh and the resulting cross
+/// sections are linearly interpolated, matching UNRESR's ENDF output contract; interpolating widths through the
+/// nonlinear fluctuation integral would agree at parameter nodes but produce different multigroup averages.
+pub fn reconstruct_unresolved(
+    range: &ResonanceRange,
+    energy: f64,
+) -> Result<CrossSections, String> {
+    if energy <= 0.0 || energy < range.energy_min || energy > range.energy_max {
+        return Ok(CrossSections::default());
+    }
+    let RangeData::Unresolved(unresolved) = &range.data else {
+        return Err("range is not unresolved".into());
+    };
+    let nodes = &unresolved.interpolation_energies;
+    if nodes.len() < 2 || energy <= nodes[0] || energy >= nodes[nodes.len() - 1] {
+        return reconstruct_unresolved_node(range, energy);
+    }
+    match nodes.binary_search_by(|node| node.total_cmp(&energy)) {
+        Ok(_) => reconstruct_unresolved_node(range, energy),
+        Err(upper) => {
+            let low = nodes[upper - 1];
+            let high = nodes[upper];
+            let left = reconstruct_unresolved_node(range, low)?;
+            let right = reconstruct_unresolved_node(range, high)?;
+            let fraction = (energy - low) / (high - low);
+            CrossSections {
+                elastic: left.elastic + fraction * (right.elastic - left.elastic),
+                capture: left.capture + fraction * (right.capture - left.capture),
+                fission: left.fission + fraction * (right.fission - left.fission),
+                competitive: left.competitive + fraction * (right.competitive - left.competitive),
+            }
+            .checked("interpolated unresolved resonance reconstruction")
+        }
+    }
 }
 
 /// Reconstruct one legacy LRF=1/2/3 range at zero Kelvin.
@@ -1702,6 +1789,51 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
 mod tests {
     use super::*;
 
+    fn energy_dependent_unresolved_range() -> ResonanceRange {
+        ResonanceRange {
+            energy_min: 10.0,
+            energy_max: 20.0,
+            lru: 2,
+            lrf: 2,
+            naps: 1,
+            scattering_radius: None,
+            data: RangeData::Unresolved(Unresolved {
+                spin: 0.5,
+                ap: 0.5,
+                add_to_background: true,
+                case: UnresolvedCase::C,
+                sequences: vec![UnresolvedSequence {
+                    awri: 100.0,
+                    l: 0,
+                    spin: 0.5,
+                    interpolation: 2,
+                    competitive_dof: 1,
+                    neutron_dof: 1,
+                    fission_dof: 1,
+                    points: vec![
+                        UnresolvedPoint {
+                            energy: Some(10.0),
+                            spacing: 1.0,
+                            competitive: 0.2,
+                            neutron: 0.02,
+                            capture: 0.1,
+                            fission: 0.3,
+                        },
+                        UnresolvedPoint {
+                            energy: Some(20.0),
+                            spacing: 5.0,
+                            competitive: 2.0,
+                            neutron: 0.5,
+                            capture: 3.0,
+                            fission: 1.0,
+                        },
+                    ],
+                }],
+                interpolation_energies: vec![10.0, 20.0],
+            }),
+        }
+    }
+
     fn scalar_rml_range() -> ResonanceRange {
         ResonanceRange {
             energy_min: 1e-5,
@@ -1786,6 +1918,47 @@ mod tests {
         assert_eq!(actual.fission, 0.0);
         assert_eq!(actual.competitive, 0.0);
         assert!(actual.elastic.is_finite() && actual.elastic >= 0.0);
+    }
+
+    #[test]
+    fn unresolved_interpolates_averaged_cross_sections_between_parameter_nodes() {
+        let range = energy_dependent_unresolved_range();
+        let left = reconstruct_unresolved_node(&range, 10.0).unwrap();
+        let right = reconstruct_unresolved_node(&range, 20.0).unwrap();
+        let midpoint = reconstruct_unresolved(&range, 15.0).unwrap();
+        for (actual, expected) in [
+            (midpoint.elastic, (left.elastic + right.elastic) / 2.0),
+            (midpoint.capture, (left.capture + right.capture) / 2.0),
+            (midpoint.fission, (left.fission + right.fission) / 2.0),
+            (
+                midpoint.competitive,
+                (left.competitive + right.competitive) / 2.0,
+            ),
+        ] {
+            assert!((actual - expected).abs() <= 2e-14 * expected.abs().max(1.0));
+        }
+
+        let width_interpolated = reconstruct_unresolved_node(&range, 15.0).unwrap();
+        assert!(
+            (midpoint.capture - width_interpolated.capture).abs() > 1e-4 * midpoint.capture.abs()
+        );
+    }
+
+    #[test]
+    fn unresolved_cross_section_mesh_matches_unresr_refinement_rule() {
+        let mesh = unresolved_cross_section_mesh(
+            6_500.0,
+            31_810.0,
+            UnresolvedCase::C,
+            vec![6_500.0, 7_400.0, 10_670.0, 13_940.0, 17_210.0, 31_810.0],
+        );
+        assert_eq!(
+            mesh,
+            vec![
+                6_500.0, 7_400.0, 8_500.0, 10_000.0, 10_670.0, 12_500.0, 13_940.0, 17_210.0,
+                20_000.0, 25_000.0, 30_000.0, 31_810.0,
+            ]
+        );
     }
 
     #[test]

@@ -348,15 +348,41 @@ fn push_thermal_transition(grid: &mut Vec<f64>, energy: f64, temperature_k: f64,
     }
 }
 
+fn push_background_thermal_features(
+    grid: &mut Vec<f64>,
+    background: &Tabulated,
+    temperature_k: f64,
+    awr: f64,
+) {
+    for index in 1..background.x.len() - 1 {
+        let left_width = background.x[index] - background.x[index - 1];
+        let right_width = background.x[index + 1] - background.x[index];
+        if left_width <= 0.0 || right_width <= 0.0 {
+            continue;
+        }
+        let left_slope = (background.y[index] - background.y[index - 1]) / left_width;
+        let right_slope = (background.y[index + 1] - background.y[index]) / right_width;
+        let thermal_width =
+            (4.0 * doppler::KB_EV_PER_K * temperature_k * background.x[index] / awr).sqrt();
+        let local_scale = background.y[index - 1]
+            .abs()
+            .max(background.y[index].abs())
+            .max(background.y[index + 1].abs())
+            .max(1e-12);
+        if (right_slope - left_slope).abs() * thermal_width > LINEARIZATION_TOLERANCE * local_scale
+        {
+            push_thermal_transition(grid, background.x[index], temperature_k, awr);
+        }
+    }
+}
+
 fn push_unresolved_grid(grid: &mut Vec<f64>, range: &ResonanceRange) {
     let RangeData::Unresolved(data) = &range.data else {
         return;
     };
     grid.push(range.energy_min);
     grid.push(range.energy_max);
-    for sequence in &data.sequences {
-        grid.extend(sequence.points.iter().filter_map(|point| point.energy));
-    }
+    grid.extend(data.interpolation_energies.iter().copied());
 }
 
 fn sorted_grid(mut grid: Vec<f64>, low: f64, high: f64) -> Result<Vec<f64>, String> {
@@ -1216,6 +1242,12 @@ pub fn process_reaction(
                 smooth_evaluation.awr,
             );
         }
+        push_background_thermal_features(
+            &mut output_seed,
+            background,
+            temperature_k,
+            smooth_evaluation.awr,
+        );
         for isotope in &smooth_evaluation.isotopes {
             for range in &isotope.ranges {
                 output_seed.push(range.energy_min);
@@ -1485,6 +1517,21 @@ mod tests {
         .unwrap();
         assert_eq!(energy, vec![1.0, 2.0, 2.0, 4.0]);
         assert_eq!(sigma, vec![1.0, 1.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn sharp_background_kink_gets_a_thermal_transition_grid() {
+        let background = Tabulated {
+            interpolation: vec![(4, 2)],
+            x: vec![1.95e7, 2.0e7, 2.000_001e7, 2.0e8],
+            y: vec![2.427e-5, 2.041e-5, 0.0, 0.0],
+        };
+        let mut grid = Vec::new();
+        push_background_thermal_features(&mut grid, &background, 293.6, 106.0);
+        let width = (4.0 * doppler::KB_EV_PER_K * 293.6 * 2.0e7 / 106.0).sqrt();
+        assert!(grid
+            .iter()
+            .any(|energy| (*energy - (2.0e7 + width / 8.0)).abs() <= 1e-8));
     }
 
     #[test]

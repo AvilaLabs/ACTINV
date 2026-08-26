@@ -639,3 +639,25 @@
 - Pinned opening references include FENDL W-186/Ag-107 raw plus NJOY artifacts, TENDL-2023 Fr-226/Rb-94,
   TENDL-2017 and TENDL-2025 p/d/alpha Fe-56, the official `ebins` object, expected 2.595 GB FISPACT TENDL-2017 LFS
   object `7f305df2…`, and NJOY2016.79 commit `ac5adf5f…`. Source data and future libraries remain outside Git.
+
+## 27 — 2026-08-26 — P10 resonance-processing checkpoint
+- The strict MF=2 path now reconstructs the required resolved formalisms and all three unresolved cases, with
+  SIGMA1 broadening, deterministic linearisation and the analytic ultra-narrow path integrated into the Rust
+  builder. Fr-226 capture/fission and Rb-94 capture controls complete in seconds under the memory bound; density
+  1/2/4 changes are below `8.80e-5`, more than tenfold inside the G4 `1e-3` criterion.
+- A sharp ten-eV MF=3 terminal ramp in Ag-107 exposed a missing thermal transition seed. Slope-change detection now
+  adds a bounded Doppler-scale grid around such background kinks; the planted unit control passes and the production
+  Ag-107 build completes without a linearisation failure.
+- The actual-data portion of G3 now runs a fresh, source-pinned NJOY2016.79 RECONR/BROADR/UNRESR chain. Rust matches
+  one-sided Ag-107 elastic/capture values to `1.18e-5`/`3.75e-5` relative and all 59 unresolved CCFE-709 capture
+  groups to `4.51e-5`, within the `2e-4`/`5e-4` criteria. The deterministic PENDF hash is
+  `f04147f65915f232d2c3ed638212f5affa3c2a8619a845efe25c214c168ae9b0`; two fresh control runs produced identical
+  tracked evidence. The separate high-order cases A/B/C and LSSF addition control remain required before G3 itself
+  is called complete.
+- The UNRESR discrepancy was traced through the pinned Fortran source: nonlinear width-fluctuation averages are
+  calculated on its declared/refined energy mesh and the resulting cross sections are interpolated. Rust now uses
+  that contract, including the documented `1.26` spacing trigger and reference mesh, with regression tests for both
+  final-average interpolation and mesh construction.
+- The repository now states the Rust closed-loop/ownership policy in `AGENTS.md` and `CONTRIBUTING.md`; CI explicitly
+  enforces rustfmt, workspace/all-target/all-feature check, strict Clippy and tests. At this checkpoint all 39 Rust
+  tests and those local quality gates pass. P10 remains open.
