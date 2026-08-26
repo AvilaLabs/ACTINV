@@ -1,0 +1,54 @@
+{
+ "nuclides": {
+  "Co60": {
+   "raw_count": 1.9985978370967459,
+   "raw_energy_eV": 2503843.8736878303,
+   "source_scale": 1.0000000504473026,
+   "python_rust_max_relative": 3.0634009182668897e-16,
+   "count_closure_relative": 1.1110018714221794e-16,
+   "energy_to_E_EM_relative": 0.0
+  },
+  "Cs137": {
+   "raw_count": 5.8e-06,
+   "raw_energy_eV": 1.6443,
+   "source_scale": 1.0,
+   "python_rust_max_relative": 2.2204460492503126e-16,
+   "count_closure_relative": 0.0,
+   "energy_to_E_EM_relative": 1.3503898614914022e-16
+  },
+  "Ba137m1": {
+   "raw_count": 0.9811023560000001,
+   "raw_energy_eV": 597253.2525308601,
+   "source_scale": 1.0000000794790815,
+   "python_rust_max_relative": 2.227194032336161e-16,
+   "count_closure_relative": 1.131607654997474e-16,
+   "energy_to_E_EM_relative": 1.949178377531523e-16
+  },
+  "Mn68": {
+   "raw_count": 3.7522353325604207,
+   "raw_energy_eV": 3227913.1992743975,
+   "source_scale": 0.99418813390688,
+   "python_rust_max_relative": 1.1430982104505787e-15,
+   "count_closure_relative": 3.5713534359285336e-16,
+   "energy_to_E_EM_relative": 2.902082183727228e-15
+  }
+ },
+ "normalizations_ledgered": [
+  "Ba137m1",
+  "Co60",
+  "Mn68"
+ ],
+ "worst_python_rust_relative": 1.1430982104505787e-15,
+ "worst_count_closure_relative": 3.5713534359285336e-16,
+ "worst_energy_to_E_EM_relative": 2.902082183727228e-15,
+ "planted_missing_spectrum": {
+  "expected_power_W_g": 1.002900087995274e-12,
+  "pass": true
+ },
+ "planted_outside_groups": {
+  "max_relative": 2.689715103289757e-16,
+  "pass": true
+ },
+ "failures": [],
+ "pass": true
+}

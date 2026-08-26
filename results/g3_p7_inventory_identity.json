@@ -1,0 +1,24 @@
+{
+ "steps": 21,
+ "photon_nuclide_rows": 518,
+ "cli_vs_python_differences": 0,
+ "python_vs_harness_differences": 0,
+ "difference_examples": [],
+ "closure_worst": {
+  "nuclide_group_count_relative": 2.3175886819232706e-16,
+  "nuclide_group_power_relative": 3.6535247899036193e-16,
+  "nuclide_total_count_relative": 4.1443871700458605e-16,
+  "gamma_heat_bound_relative": 4.0413301439757086e-16,
+  "contact_contribution_relative": 2.4305101112714215e-16
+ },
+ "closure_failures": [],
+ "certificate_hashes_match_independent_sha256": true,
+ "certificate_hashes": {
+  "library": "e53d61fa94fce0d06f074657cf7b90c32da5bac6ba1b7b16f365451f57ad03aa",
+  "library_index": "f83f280c07af7c25456c1780ec78bdaf01b98eee76c4e6193e4c03e030690d7f",
+  "decay_primary": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "decay_fallback": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+  "photon_response": "4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307"
+ },
+ "pass": true
+}

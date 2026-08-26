@@ -3,6 +3,7 @@ pub mod sparse;
 pub mod cram;
 pub mod cram_coeffs;
 pub mod doppler;
+pub mod photon;
 pub mod spec;
 pub mod chain;
 pub mod prune;

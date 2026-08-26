@@ -1,5 +1,27 @@
 # Changelog
 
+## Unreleased
+
+**Added**
+
+- ENDF-6 MF=8/MT=457 discrete and continuous decay-photon parsing, including ENDF interpolation metadata.
+- Per-step evaluated line and FISPACT-24/custom multigroup photon sources with explicit `E_EM` energy normalization,
+  missing-spectrum bounds and per-gram/total strengths.
+- NIST-response specific gamma constants and a clearly labelled FISPACT semi-infinite-slab contact air-dose proxy.
+- OpenMC `IndependentSource` and MCNP `SDEF` photon-source exports.
+- Reproducible external NIST photon-response builder and independent P7 G1–G6 controls.
+
+**Fixed**
+
+- Certificates now compute and verify hashes for the activation library, its index, primary/fallback decay files and
+  photon response; declarations are no longer repeated without verification.
+- `atom_fraction` and `atoms_per_g` material bases now follow their documented meanings, including response mass
+  fractions; non-finite specification values and mismatched custom/library boundaries fail validation.
+- Rate-pruning bounds and relevant activation-library convergence/unsupported-feature guards now propagate to each
+  run ledger as promised by the v0.1 documentation.
+- Radioactive constant-bulk components now contribute to split alpha/beta/gamma heat and photon activity in trace mode.
+- PyO3 updated from 0.22 to 0.29 so the binding builds normally with Python 3.14.
+
 ## v0.1.0 — 2026-08-27
 
 First release. ACTINV computes nuclide inventories, activity and decay heat from any neutron flux spectrum.

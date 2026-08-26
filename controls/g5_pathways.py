@@ -2,7 +2,7 @@
 """P5-G5: pathway analysis. (a) contributions sum to each nuclide's population to 1e-12 (measured on the complete
 decomposition, before any reporting threshold); (b) planted control — removing one reaction from the library removes
 exactly that chain and no other, and the nuclide's population falls by that chain's contribution."""
-import os, sys, json, shutil, numpy as np
+import os, sys, json, hashlib, numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 os.environ["PYTHONWARNINGS"] = "ignore"
 import actinv
@@ -21,7 +21,9 @@ assert hit, "Fe-56 (n,p) -> Mn-56 row not found"
 sig[hit[0]] = 0.0
 tmp = os.path.join(RES, "_g5_planted.npz")
 np.savez_compressed(tmp, rows=rows, sig=sig, bounds=L["bounds"])
-shutil.copy(libp.replace(".npz", "_index.json"), tmp.replace(".npz", "_index.json"))
+planted_index = json.load(open(libp.replace(".npz", "_index.json")))
+planted_index["sha256_npz"] = hashlib.sha256(open(tmp, "rb").read()).hexdigest()
+json.dump(planted_index, open(tmp.replace(".npz", "_index.json"), "w"))
 sp2 = json.loads(json.dumps(spec)); sp2["library"]["path"] = tmp
 planted = json.loads(actinv.run(json.dumps(sp2)))
 os.remove(tmp); os.remove(tmp.replace(".npz", "_index.json"))

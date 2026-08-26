@@ -1,0 +1,39 @@
+{
+ "hash_mismatch_hard_errors": true,
+ "cli_failures": {
+  "response": {
+   "returncode": 1,
+   "message": "SHA-256 mismatch for /home/connoravila/nuclear-data/photon-response/nist-xcom-air-fe.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307"
+  },
+  "library": {
+   "returncode": 1,
+   "message": "SHA-256 mismatch for /home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_fns_709g.npz: declared 0000000000000000000000000000000000000000000000000000000000000000, computed e53d61fa94fce0d06f074657cf7b90c32da5bac6ba1b7b16f365451f57ad03aa"
+  }
+ },
+ "python_failures": {
+  "response": {
+   "raised": true,
+   "message": "SHA-256 mismatch for /home/connoravila/nuclear-data/photon-response/nist-xcom-air-fe.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307"
+  },
+  "library": {
+   "raised": true,
+   "message": "SHA-256 mismatch for /home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_fns_709g.npz: declared 0000000000000000000000000000000000000000000000000000000000000000, computed e53d61fa94fce0d06f074657cf7b90c32da5bac6ba1b7b16f365451f57ad03aa"
+  }
+ },
+ "computed_certificate_hashes_all_entry_points": true,
+ "pre_P7_scalar_regression": {
+  "baseline": "results/fns_spec/Fe_1996exp_5min.json",
+  "differences": 0,
+  "examples": []
+ },
+ "prior_control_verdicts": {
+  "P5": "P5-PASS",
+  "P6": "P6-CONDITIONAL",
+  "green": true
+ },
+ "python_binding": {
+  "python": "3.14.4",
+  "module": "/tmp/p7-python/actinv.so"
+ },
+ "pass": true
+}

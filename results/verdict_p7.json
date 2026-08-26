@@ -1,0 +1,13 @@
+{
+ "gates": {
+  "G1 spectrum reader": "PASS \u2014 3821 sections/7113 spectra; selected-field max 3.04e-16",
+  "G2 source conservation": "PASS \u2014 count 3.57e-16, E_EM 2.90e-15; missing/outside plants recovered",
+  "G3 inventory identity": "PASS \u2014 21 steps/518 nuclide rows; CLI/Python differences 0",
+  "G4 dose references": "PASS \u2014 Co60 1.09%, Cs137 equilibrium 1.34% from reference",
+  "G5 transport exports": "PASS \u2014 24 groups, strength 0.0e+00, MCNP max line 76",
+  "G6 provenance/regression": "PASS \u2014 hash failures hard=True; pre-P7 scalar differences 0"
+ },
+ "repair_round": true,
+ "amendment": "ACTINV-P7_AMENDMENT_A.md",
+ "verdict": "P7-CONDITIONAL"
+}

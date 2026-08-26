@@ -24,3 +24,26 @@ Generated from `results/fns/*.json` (P3 run: EAF-2010 709-group library, ENDF/B-
 | La_2000exp_5min | 2.89 | 2.77 |  |
 
 Figures: `results/fns_figures/summary.png`, `results/fns_figures/ce_all.png`. Full table: `results/FNS_REPORT.md`.
+
+## P7 decay-photon and dose controls
+
+P7 uses ENDF/B-VIII.0 MF=8/MT=457 spectra and a response file built from NIST dry-air/elemental coefficient tables.
+The gate set is intentionally small for dose physics (Co-60, Cs-137, Ba-137m and continuous-spectrum Mn-68) while the
+reader audit still traverses the complete primary decay sublibrary.
+
+| gate | result |
+|---|---|
+| G1 spectrum reader | Independent Python/Rust readers agree over 3,785 selected record lines; maximum numeric difference `3.04e-16` relative. Both parse 3,821 sections and count 7,113 spectra identically by `STYP/LCON`. |
+| G2 source conservation | Maximum independent/Rust difference `1.14e-15`; photon-count closure `3.57e-16`; normalized energy-to-`E_EM` closure `2.90e-15`. Missing-spectrum and custom-boundary omissions are planted and recovered exactly. |
+| G3 inventory integration | 21-step Fe problem, 518 per-nuclide photon rows: CLI = Python = harness at 0.0. Worst group/source/heat identity `4.15e-16`; all five input hashes match an independent SHA-256. |
+| G4 dose references | Co-60 `0.305647` vs `0.309` (1.09%); equilibrium Cs-137/Ba-137m `0.0769510` vs `0.078` (1.34%). Independent Fe-slab equation and nuclide contribution sum agree at or below `2.47e-16`. |
+| G5 transport export | OpenMC/MCNP readers recover identical energies after eV/MeV conversion and identical probabilities at 0.0; strength difference 0.0; OpenMC syntax and MCNP 78-column continuation rules pass. |
+| G6 provenance/regression | Wrong response/library hashes fail through CLI and Python. The recorded pre-P7 Fe inventory/activity/heat result has zero scalar differences; P5 and the 10-target P6 CI path remain green. |
+
+The checker verdict is P7-CONDITIONAL because the first G5 execution required one repair round: its independent MCNP
+reader skipped the first `SP1` probability, and the export's explanatory comment used 80 rather than the enforced 78
+columns. [Amendment A](../protocols/ACTINV-P7_AMENDMENT_A.md) records the repair; no physics tolerance changed.
+
+These are source-term and screening-dose controls, not shutdown-dose-rate transport validation. The contact result is a
+semi-infinite-slab air-dose proxy, and the transport exports have a point-at-origin spatial placeholder. Geometry,
+self-shielding and mesh coupling begin in P8.

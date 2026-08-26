@@ -29,9 +29,12 @@
   "decay_fallback",
   "decay_primary",
   "entry_point",
+  "inputs",
   "library",
   "library_sha256_declared",
+  "material_basis",
   "mode",
+  "photon",
   "prune",
   "solver",
   "tables_provenance"

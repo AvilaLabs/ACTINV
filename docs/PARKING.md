@@ -24,3 +24,7 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   (1/v invariant; constant → σ₀(1+1/(2y²))) make the correction analytic. Broadening only where σ departs from
   linear-in-E across the window, or reformulating as per-group kernel weights (≈130 grid points per group), would cut
   the dominant cost by ~10–100× → P10, with the exact-quadrature control as the gate.
+- 2026-08-26 — the original P5 draft claimed explicit isotope/isomer material keys (`Fe56`, `Ta180m`), but the shipped
+  parser only implements natural elemental compositions. P7 corrected the normative documentation and the three
+  elemental bases rather than pretending isotope keys work. Explicit isotope/isomer compositions are needed before
+  coupled fuel/fission work and are routed to P9.

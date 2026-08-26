@@ -1,0 +1,50 @@
+{
+ "independent": {
+  "Co60": {
+   "gamma_constant_mGy_m2_GBq_h": 0.3056472266881015,
+   "contact_Fe_Gy_h_per_Bq_g": 7.193241693174981e-07,
+   "rust_gamma_relative": 0.0,
+   "rust_contact_relative": 0.0
+  },
+  "Cs137": {
+   "gamma_constant_mGy_m2_GBq_h": 2.1458277794553308e-07,
+   "contact_Fe_Gy_h_per_Bq_g": 2.3582865017043267e-13,
+   "rust_gamma_relative": 2.467092639504893e-16,
+   "rust_contact_relative": 2.1408381847437902e-16
+  },
+  "Ba137m1": {
+   "gamma_constant_mGy_m2_GBq_h": 0.08125794113451454,
+   "contact_Fe_Gy_h_per_Bq_g": 1.3680598087040584e-07,
+   "rust_gamma_relative": 0.0,
+   "rust_contact_relative": 0.0
+  },
+  "Mn68": {
+   "gamma_constant_mGy_m2_GBq_h": 0.33847121096245053,
+   "contact_Fe_Gy_h_per_Bq_g": 9.525773915751335e-07,
+   "rust_gamma_relative": 0.0,
+   "rust_contact_relative": 1.1115014836926922e-16
+  }
+ },
+ "references": {
+  "Co60": {
+   "calculated": 0.3056472266881015,
+   "tabulated": 0.309,
+   "relative": 0.01085039906763263
+  },
+  "Cs137_Ba137m_equilibrium": {
+   "branch_to_Ba137m": 0.9469945,
+   "calculated": 0.07695103791848698,
+   "tabulated": 0.078,
+   "relative": 0.013448231814269474
+  }
+ },
+ "max_independent_rust_gamma_relative": 2.467092639504893e-16,
+ "max_independent_rust_contact_relative": 2.1408381847437902e-16,
+ "combined_contact": {
+  "independent_Gy_h": 4.94005214988655e-06,
+  "rust_Gy_h": 4.94005214988655e-06,
+  "equation_relative": 0.0,
+  "nuclide_sum_relative": 0.0
+ },
+ "pass": true
+}

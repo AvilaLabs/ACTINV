@@ -483,3 +483,40 @@
   point-at-origin spatial placeholder for P8 to replace.
 - Dependency proposed for verified input certificates: `sha2` (MIT OR Apache-2.0), a standard SHA-256 implementation.
   Licence checked before use; no other new Rust dependency is planned.
+
+## 21 — 2026-08-26 — P7 closed: P7-CONDITIONAL
+- Protocol `protocols/ACTINV-P7_PROTOCOL.md` remained fixed at `5dd3c3f5…`. All six gates pass. The checker-derived
+  verdict is **P7-CONDITIONAL** because G5 required one repair round, recorded before the repair in
+  `protocols/ACTINV-P7_AMENDMENT_A.md` (`5f5319ce…`): the first independent MCNP control skipped the first `SP1`
+  probability, and the control's prose claimed an 80-column limit while its code correctly enforced the protocol's
+  78-column limit. The exporter did not change in that repair.
+- **G1 PASS.** Independent Python and Rust readers agree over 3,821 MF=8/MT=457 sections and 7,113 spectra, including
+  identical `STYP`/`LCON` counts. Across 3,785 selected records for Co-60, Cs-137, Ba-137m and Mn-68, the largest
+  relative field difference is `3.04e-16`.
+- **G2 PASS.** Analytic ENDF interpolation-law integrals and the Rust source agree to `1.14e-15`; photon-count closure
+  is `3.57e-16` and normalization to evaluated `E_EM` closes to `2.90e-15`. Planted missing-spectrum and out-of-group
+  cases recover their exact ledgered power bounds.
+- **G3 PASS.** A 21-step activation run produces 518 per-nuclide photon rows. CLI, PyO3 and the harness are identical
+  at zero differing fields; all independent closure checks are at or below `4.15e-16`; the library, index, primary and
+  fallback decay files, and photon-response certificate hashes independently re-match.
+- **G4 PASS.** Co-60's calculated specific gamma constant is 0.305647 against 0.309 tabulated (1.09 %); equilibrium
+  Cs-137/Ba-137m is 0.0769510 against 0.078 (1.34 %). The independent dose implementation and Rust agree within
+  `2.47e-16`, including an exact multi-nuclide contact-dose sum.
+- **G5 PASS after Amendment A.** All 24 populated groups preserve energies, probabilities and total strength through
+  OpenMC and MCNP exports; OpenMC output compiles as Python, MCNP lines are at most 76 columns with continuations, and
+  export rejects a custom group structure that omits source photons.
+- **G6 PASS.** Incorrect library and response hashes are hard errors through CLI and PyO3; computed certificate hashes
+  are present through every entry point; the pre-P7 scalar result is bit-identical; P5 remains P5-PASS and the repaired
+  P6 remains P6-CONDITIONAL.
+- Reproducible response data are built outside the repository from official NIST XCOM dry-air and elemental tables by
+  `scripts/build_photon_response.py`. The Fe gate artifact is
+  `/home/connoravila/nuclear-data/photon-response/nist-xcom-air-fe.json`, SHA-256
+  `4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307`; an offline rebuild from the cached source pages
+  was byte-identical.
+- Finish-line defects fixed while in touched paths: all declared and implicit input hashes are now computed and
+  verified; material bases `wt_percent`, `atom_fraction` and `atoms_per_g` have distinct correct semantics; radioactive
+  trace material is included in alpha/beta/gamma heat and photon activity; rate-pruning heat bounds and inherited
+  library convergence/unsupported-range flags reach the ledger; PyO3 moved from 0.22 to 0.29.2 so the binding builds
+  natively on CPython 3.14. Workspace tests, strict Clippy, P5 regressions and the P6 CI path are green.
+- v0.2 is half complete. The documented next phase is **P8 — Flux import & mesh**; it remains unopened and has no
+  protocol hash.

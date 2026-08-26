@@ -5,6 +5,11 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
+**Current status (2026-08-26):** P7 is closed P7-CONDITIONAL after one documented G5 repair round. The next phase is
+**P8 — Flux import & mesh**: OpenMC statepoint, MCNP meshtal/mctal and FISPACT flux readers, followed by independent
+parallel mesh-cell solves and a 10^6-cell sizing table. P8 has not been opened or protocol-hashed; its row below is the
+scope boundary for the next session.
+
 ## What v1.0 means (acceptance criteria — all measurable)
 
 | area | v1.0 requirement |
@@ -86,3 +91,5 @@ part that does not compress: users, issues, and the validation record accumulati
 - 2026-08-26 — P5 scope set by the principal ("do it the right way, not cut corners"): the Rust core owns spec → result,
   so the three entry points are one code path and the certificate's solver hash is meaningful. Estimate 2–3 → 4 days.
   P10 completes the move by porting library building (`actinv-data`), leaving a single binary.
+- 2026-08-26 — P7 closed P7-CONDITIONAL: decay photons, NIST-response dose proxy and OpenMC/MCNP exports delivered;
+  one G5 repair round is recorded in P7 Amendment A. P8 is next and remains unopened.

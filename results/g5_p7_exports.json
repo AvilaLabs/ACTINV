@@ -1,0 +1,17 @@
+{
+ "nonzero_groups": 24,
+ "identity_at_float_parse": {
+  "cross_export_energy_after_unit_conversion": true,
+  "cross_export_probability": true
+ },
+ "source_energy_max_relative": 1.3115845773403797e-16,
+ "source_probability_max_absolute": 5.551115123125783e-17,
+ "openmc_probability_sum": 0.9999999999999999,
+ "mcnp_probability_sum": 0.9999999999999999,
+ "strength_relative": 0.0,
+ "openmc_python_syntax": "PASS",
+ "mcnp_max_line_length": 76,
+ "mcnp_continuations": true,
+ "incomplete_group_export_rejected": true,
+ "pass": true
+}
