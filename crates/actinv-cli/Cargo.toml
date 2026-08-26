@@ -9,6 +9,7 @@ description = "ACTINV command-line solver: actinv-solve PROBLEM OUT"
 
 [dependencies]
 actinv-core = { path = "../actinv-core" }
+actinv-data = { path = "../actinv-data" }
 num-complex = "0.4"
 serde_json = "1"
 

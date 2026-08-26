@@ -2,8 +2,10 @@
 //!   dump decay FILE          -> "ZA LISO NST half_life e_light e_em e_heavy nmodes br0 q0 ..." per nuclide
 //!   dump spectra FILE [ZA:LISO ...] -> lossless line-oriented MF=8/MT=457 spectrum records
 //!   dump spectra-summary FILE -> all-file section/spectrum and STYP/LCON counts
+//!   dump activation FILE -> strict MF=3/6/8/9/10 evaluation summary
 //!   dump library FILE OUT    -> raw row and group arrays for byte comparison
-use actinv_data::{composition, decay, fission, library};
+//!   dump library-target-compare OLD.npz OLD_TARGET NEW.npz NEW_TARGET -> bounded-memory row/group comparison
+use actinv_data::{activation, composition, decay, fission, library};
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -154,6 +156,55 @@ fn main() {
                 println!("Y {za} {liso} {value:.17e}");
             }
         }
+        "activation" => {
+            let evaluations = activation::parse_file(&a[2], None).expect("read activation file");
+            println!("{}", evaluations.len());
+            for evaluation in evaluations {
+                let laws: std::collections::BTreeSet<i32> = evaluation
+                    .mf6
+                    .values()
+                    .flatten()
+                    .map(|product| product.law)
+                    .collect();
+                println!(
+                    "E {} {} {} {} {:.17e} {:.17e} {} {} {} {} {} {:?}",
+                    evaluation.metadata.mat,
+                    evaluation.metadata.za,
+                    evaluation.metadata.liso,
+                    evaluation.metadata.projectile.name(),
+                    evaluation.metadata.awr,
+                    evaluation.metadata.awi,
+                    evaluation.mf3.len(),
+                    evaluation.mf6.len(),
+                    evaluation.mf8.len(),
+                    evaluation.mf9.len(),
+                    evaluation.mf10.len(),
+                    laws
+                );
+                if let Some(mt) = a.get(3).and_then(|value| value.parse::<i32>().ok()) {
+                    if let Some(table) = evaluation.mf3.get(&mt) {
+                        println!(
+                            "X {mt} {} {:.17e} {:.17e}",
+                            table.x.len(),
+                            table.y.iter().copied().fold(f64::INFINITY, f64::min),
+                            table.y.iter().copied().fold(f64::NEG_INFINITY, f64::max)
+                        );
+                    }
+                    for product in evaluation.mf8.get(&mt).into_iter().flatten() {
+                        println!("R {mt} {} {} {}", product.zap, product.lfs, product.lmf);
+                    }
+                    for product in evaluation.mf6.get(&mt).into_iter().flatten() {
+                        println!(
+                            "Y {mt} {} {} {} {}",
+                            product.zap,
+                            product.law,
+                            product.yield_table.x.len(),
+                            product.yield_table.y.iter().copied().fold(0.0, f64::max)
+                        );
+                    }
+                }
+            }
+        }
         "library" => {
             // Write rows and sig as raw little-endian bytes so the control can test byte identity with numpy.
             // (A checksum cannot: floating-point addition is not associative, so summation order alone moves the last bit.)
@@ -181,6 +232,87 @@ fn main() {
             }
             fs.flush().unwrap();
             println!("{} {}", l.rows.len(), l.ngroups);
+        }
+        "library-target-compare" => {
+            let old_target: usize = a[3].parse().expect("old target index");
+            let new_target: usize = a[5].parse().expect("new target index");
+            let maximum_energy: f64 = a
+                .get(6)
+                .map(|value| value.parse().expect("maximum comparison energy"))
+                .unwrap_or(f64::INFINITY);
+            let old = library::read_npz_target(&a[2], old_target).expect("stream old target");
+            let new = library::read_npz_target(&a[4], new_target).expect("stream new target");
+            assert_eq!(old.ngroups, new.ngroups, "group count");
+            assert_eq!(old.bounds, new.bounds, "group boundaries");
+            let key = |row: &library::Row| (row.mt, row.zap, row.lfs, row.lmf);
+            let old_rows: std::collections::BTreeMap<_, _> = old
+                .rows
+                .iter()
+                .enumerate()
+                .map(|(index, row)| (key(row), index))
+                .collect();
+            let new_rows: std::collections::BTreeMap<_, _> = new
+                .rows
+                .iter()
+                .enumerate()
+                .map(|(index, row)| (key(row), index))
+                .collect();
+            let old_only: Vec<_> = old_rows
+                .keys()
+                .filter(|key| !new_rows.contains_key(key))
+                .collect();
+            let new_only: Vec<_> = new_rows
+                .keys()
+                .filter(|key| !old_rows.contains_key(key))
+                .collect();
+            let mut maximum_absolute = 0.0f64;
+            let mut maximum_relative = 0.0f64;
+            let mut worst = None;
+            let mut compared = 0usize;
+            let mut negative_old = 0usize;
+            let mut minimum_old = 0.0f64;
+            for (identity, &old_index) in &old_rows {
+                let Some(&new_index) = new_rows.get(identity) else {
+                    continue;
+                };
+                for (group, (&left, &right)) in old
+                    .sigma(old_index)
+                    .iter()
+                    .zip(new.sigma(new_index))
+                    .enumerate()
+                {
+                    if old.bounds[group + 1] > maximum_energy {
+                        continue;
+                    }
+                    if left < 0.0 {
+                        negative_old += 1;
+                        minimum_old = minimum_old.min(left);
+                    }
+                    let absolute = (left - right).abs();
+                    maximum_absolute = maximum_absolute.max(absolute);
+                    if left.abs().max(right.abs()) >= 1e-12 {
+                        compared += 1;
+                        let relative = absolute / left.abs().max(right.abs());
+                        if relative > maximum_relative {
+                            maximum_relative = relative;
+                            worst = Some((identity, group, left, right));
+                        }
+                    }
+                }
+            }
+            println!(
+                "old_rows={} new_rows={} common={} old_only={} new_only={} compared={} max_abs={maximum_absolute:.17e} max_rel={maximum_relative:.17e} negative_old={} min_old={minimum_old:.17e}",
+                old.rows.len(),
+                new.rows.len(),
+                old_rows.len() - old_only.len(),
+                old_only.len(),
+                new_only.len(),
+                compared,
+                negative_old
+            );
+            println!("worst={worst:?}");
+            println!("old_only={:?}", &old_only[..old_only.len().min(20)]);
+            println!("new_only={:?}", &new_only[..new_only.len().min(20)]);
         }
         "composition" => {
             // dump composition '{"Fe":63.72,"Cr":18.28}' -> "ZA LISO atoms_per_g" per isotope, then the diagnostics

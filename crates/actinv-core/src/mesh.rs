@@ -8,7 +8,7 @@ use crate::flux::{
 use crate::run::{PreparedRun, RunResult};
 use crate::spec::{
     DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options, PhotonOptions,
-    Spec, Spectrum, Step,
+    Projectile, Spec, Spectrum, Step,
 };
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -35,6 +35,8 @@ pub struct MeshSpec {
     pub spec: String,
     #[serde(default)]
     pub title: String,
+    #[serde(default)]
+    pub projectile: Projectile,
     pub library: LibraryRef,
     #[serde(default)]
     pub decay: DecayRef,
@@ -93,6 +95,7 @@ impl MeshSpec {
         Spec {
             spec: "actinv-spec-1".into(),
             title: self.title.clone(),
+            projectile: self.projectile,
             library: self.library.clone(),
             decay: self.decay.clone(),
             material: self.material.clone(),
@@ -117,6 +120,8 @@ struct MeshHeader {
     schema: &'static str,
     spec_title: String,
     cell_count: u64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    projectile: Option<String>,
     flux_units: &'static str,
     source_energy_boundaries_eV: Vec<f64>,
     activation_energy_boundaries_eV: Vec<f64>,
@@ -128,6 +133,8 @@ struct MeshHeader {
 #[derive(Debug, Serialize)]
 struct MeshCertificate {
     solver: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    projectile: Option<String>,
     canonical_flux: CanonicalFluxCertificate,
     upstream_source: FluxSource,
 }
@@ -351,11 +358,24 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
 
     let mut stream = FluxStream::open(&spec.flux.path)?;
     let source_header = stream.header.clone();
+    let expected_flux_units = if spec.projectile.is_neutron() {
+        "n cm^-2 s^-1"
+    } else {
+        "particles cm^-2 s^-1"
+    };
+    if source_header.flux_units != expected_flux_units {
+        return Err(format!(
+            "canonical flux units '{}' do not match {} projectile; expected '{expected_flux_units}'",
+            source_header.flux_units,
+            spec.projectile.name()
+        ));
+    }
     let prepared = PreparedRun::prepare_inputs(
         &spec.library,
         &spec.decay,
         &spec.photon,
         &spec.fission_yields,
+        spec.projectile,
         spec.options.temperature_K,
     )?;
     let activation_boundaries = prepared.library_boundaries_eV().to_vec();
@@ -372,12 +392,14 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
         schema: MESH_RESULT_SCHEMA,
         spec_title: spec.title.clone(),
         cell_count: source_header.cell_count,
-        flux_units: "n cm^-2 s^-1",
+        projectile: (!spec.projectile.is_neutron()).then(|| spec.projectile.name().to_owned()),
+        flux_units: expected_flux_units,
         source_energy_boundaries_eV: source_header.energy_boundaries_eV.clone(),
         activation_energy_boundaries_eV: activation_boundaries.clone(),
         geometry: source_header.geometry.clone(),
         certificate: MeshCertificate {
             solver: format!("actinv-core {}", env!("CARGO_PKG_VERSION")),
+            projectile: (!spec.projectile.is_neutron()).then(|| spec.projectile.name().to_owned()),
             canonical_flux: CanonicalFluxCertificate {
                 path: spec.flux.path.clone(),
                 sha256_declared: spec.flux.sha256.clone(),
@@ -477,6 +499,7 @@ mod tests {
         MeshSpec {
             spec: MESH_SPEC_SCHEMA.into(),
             title: String::new(),
+            projectile: Projectile::Neutron,
             library: LibraryRef {
                 path: "library.npz".into(),
                 sha256: None,

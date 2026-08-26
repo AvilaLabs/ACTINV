@@ -16,6 +16,7 @@ jobs:
       ACTINV_P8_WORK: /tmp/actinv-p8
       ACTINV_P9_WORK: /tmp/actinv-p9
       ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
     steps:
       - uses: actions/checkout@v7
 
@@ -75,6 +76,9 @@ jobs:
         run: |
           python controls/g2_p9_fission_matrix.py
           python controls/g3_p9_coupled_auto.py
+
+      - name: P10 charged-projectile runtime contract
+        run: python controls/g6_p10_projectile_runtime.py
 
       - name: Repository is self-contained
         run: python controls/g1_self_contained.py

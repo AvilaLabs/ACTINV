@@ -4,8 +4,10 @@ use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, Cram};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::sparse::Csc;
-use crate::spec::{DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Spec};
-use actinv_data::{composition, decay, fission, library};
+use crate::spec::{
+    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Projectile, Spec,
+};
+use actinv_data::{composition, decay, fission, groups::GroupStructure, library};
 use num_complex::Complex64 as C64;
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, HashMap};
@@ -35,7 +37,10 @@ pub struct StepOut {
     pub t_s: f64,
     pub flux: f64,
     pub flux_weighted_time_s: f64,
-    pub fluence_n_cm2: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fluence_n_cm2: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fluence_particles_cm2: Option<f64>,
     pub inventory: Vec<NuclideOut>,
     pub activity_Bq_per_g: BTreeMap<String, f64>,
     pub heat_W_per_g: Heat,
@@ -64,6 +69,8 @@ pub struct Pathway {
 pub struct RunResult {
     pub spec_title: String,
     pub entry_point: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub projectile: Option<String>,
     pub mode: String,
     pub pruned_states: usize,
     pub total_states: usize,
@@ -230,6 +237,8 @@ pub struct PreparedRun {
     fission_options: FissionYieldOptions,
     fission_yields: HashMap<(i32, i32), fission::FissionYields>,
     fission_yield_inputs: Vec<(HashedFileRef, String, (i32, i32))>,
+    projectile: Projectile,
+    library_group_structure: Option<String>,
     temperature_K: f64,
 }
 
@@ -240,6 +249,7 @@ impl PreparedRun {
             &spec.decay,
             &spec.photon,
             &spec.fission_yields,
+            spec.projectile,
             spec.options.temperature_K,
         )
     }
@@ -249,8 +259,24 @@ impl PreparedRun {
         decay_ref: &DecayRef,
         photon_options: &PhotonOptions,
         fission_options: &FissionYieldOptions,
+        projectile: Projectile,
         temperature_K: f64,
     ) -> Result<Self, String> {
+        if !temperature_K.is_finite() || temperature_K < 0.0 {
+            return Err("temperature_K must be finite and nonnegative".into());
+        }
+        if !projectile.is_neutron() && temperature_K != 0.0 {
+            return Err(format!(
+                "{} prepared runs require temperature_K: 0",
+                projectile.name()
+            ));
+        }
+        if !projectile.is_neutron() && !fission_options.files.is_empty() {
+            return Err(format!(
+                "fission-yield files are not supported for {} activation",
+                projectile.name()
+            ));
+        }
         let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;
         let idx_path = index_path(&library_ref.path);
         let index_sha = verify_hash(&idx_path, None)?;
@@ -286,19 +312,93 @@ impl PreparedRun {
         let index: serde_json::Value =
             serde_json::from_str(&std::fs::read_to_string(&idx_path).map_err(|e| e.to_string())?)
                 .map_err(|e| e.to_string())?;
-        if let Some(recorded) = index["sha256_npz"].as_str() {
-            if !library_sha.eq_ignore_ascii_case(recorded) {
+        let index_projectile = match index.get("projectile") {
+            None | Some(serde_json::Value::Null) => Projectile::Neutron,
+            Some(serde_json::Value::String(value)) => Projectile::parse(value)?,
+            Some(_) => return Err("activation-library index projectile must be a string".into()),
+        };
+        if index_projectile != projectile {
+            return Err(format!(
+                "spec projectile '{}' does not match activation-library projectile '{}'",
+                projectile.name(),
+                index_projectile.name()
+            ));
+        }
+        match index.get("sha256_npz") {
+            Some(serde_json::Value::String(recorded)) => {
+                if !library_sha.eq_ignore_ascii_case(recorded) {
+                    return Err(format!(
+                        "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
+                    ));
+                }
+            }
+            Some(_) => return Err("activation-library index sha256_npz must be a string".into()),
+            None if !projectile.is_neutron() => {
+                return Err("charged activation-library index has no sha256_npz".into());
+            }
+            None => {}
+        }
+        let library_group_structure = index
+            .get("groups")
+            .and_then(serde_json::Value::as_str)
+            .map(str::to_owned);
+        let actual_group_hash = GroupStructure {
+            name: library_group_structure
+                .clone()
+                .unwrap_or_else(|| "custom".into()),
+            boundaries_ev: library.bounds.clone(),
+        }
+        .hash();
+        if let Some(recorded) = index.get("group_boundary_sha256") {
+            let recorded = recorded
+                .as_str()
+                .ok_or("activation-library group_boundary_sha256 must be a string")?;
+            if !actual_group_hash.eq_ignore_ascii_case(recorded) {
                 return Err(format!(
-                    "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
+                    "activation-library group-boundary hash mismatch: index records {recorded}, computed {actual_group_hash}"
                 ));
+            }
+        } else if !projectile.is_neutron() {
+            return Err("charged activation-library index has no group_boundary_sha256".into());
+        }
+        if !projectile.is_neutron() && library_group_structure.is_none() {
+            return Err("charged activation-library index has no named group structure".into());
+        }
+        if let Some(name) = library_group_structure.as_deref() {
+            let canonical = match name {
+                "fispact-709" => Some(GroupStructure::fispact_709()?),
+                "fispact-162" => Some(GroupStructure::fispact_162()?),
+                _ => None,
+            };
+            if let Some(canonical) = canonical {
+                if canonical.boundaries_ev.len() != library.bounds.len()
+                    || canonical
+                        .boundaries_ev
+                        .iter()
+                        .zip(&library.bounds)
+                        .any(|(expected, stored)| expected.to_bits() != stored.to_bits())
+                {
+                    return Err(format!(
+                        "activation-library boundaries do not match declared group structure '{name}'"
+                    ));
+                }
             }
         }
-        if let Some(temperature) = index["temperature_K"].as_f64() {
-            if (temperature - temperature_K).abs() > 1e-9 {
-                return Err(format!(
-                    "requested temperature {temperature_K} K does not match library temperature {temperature} K"
-                ));
+        match index.get("temperature_K") {
+            Some(value) => {
+                let temperature = value
+                    .as_f64()
+                    .ok_or("activation-library temperature_K must be numeric")?;
+                if (temperature - temperature_K).abs() > 1e-9 {
+                    return Err(format!(
+                        "requested temperature {temperature_K} K does not match library temperature {temperature} K"
+                    ));
+                }
             }
+            None if !projectile.is_neutron() => {
+                return Err("charged activation-library index has no temperature_K".into());
+            }
+            None => {}
         }
         let library_targets: Vec<(i32, i32)> = index["targets"]
             .as_array()
@@ -356,6 +456,8 @@ impl PreparedRun {
             fission_options: fission_options.clone(),
             fission_yields,
             fission_yield_inputs,
+            projectile,
+            library_group_structure,
             temperature_K,
         })
     }
@@ -385,9 +487,22 @@ impl PreparedRun {
                     .as_ref()
                     .map(|value| (&value.path, &value.sha256))
             || spec.fission_yields != self.fission_options
+            || spec.projectile != self.projectile
             || (spec.options.temperature_K - self.temperature_K).abs() > 1e-9
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
+        }
+        if spec.spectrum.structure != "custom"
+            && self
+                .library_group_structure
+                .as_deref()
+                .is_some_and(|structure| structure != spec.spectrum.structure)
+        {
+            return Err(format!(
+                "spec group structure '{}' does not match activation-library group structure '{}'",
+                spec.spectrum.structure,
+                self.library_group_structure.as_deref().unwrap_or_default()
+            ));
         }
         Ok(())
     }
@@ -749,7 +864,12 @@ impl PreparedRun {
                 t_s: t_cum,
                 flux: *fl,
                 flux_weighted_time_s: flux_weighted_time_cum,
-                fluence_n_cm2: base_flux_total * flux_weighted_time_cum,
+                fluence_n_cm2: spec
+                    .projectile
+                    .is_neutron()
+                    .then_some(base_flux_total * flux_weighted_time_cum),
+                fluence_particles_cm2: (!spec.projectile.is_neutron())
+                    .then_some(base_flux_total * flux_weighted_time_cum),
                 inventory: inv,
                 activity_Bq_per_g: act,
                 heat_W_per_g: heat,
@@ -994,7 +1114,20 @@ impl PreparedRun {
                 })
             })
             .collect();
-        let ledger = serde_json::json!({
+        let schedule_ledger = if spec.projectile.is_neutron() {
+            serde_json::json!({
+                "segments": sched.len(),
+                "flux_weighted_time_s": flux_weighted_time_s,
+                "fluence_n_cm2": base_flux_total * flux_weighted_time_s,
+            })
+        } else {
+            serde_json::json!({
+                "segments": sched.len(),
+                "flux_weighted_time_s": flux_weighted_time_s,
+                "fluence_particles_cm2": base_flux_total * flux_weighted_time_s,
+            })
+        };
+        let mut ledger = serde_json::json!({
             "mode": mode,
             "max_burnup_fraction": led.burnup_fraction_max,
             "max_burnup_optical_depth": led.burnup_optical_depth_max,
@@ -1034,15 +1167,17 @@ impl PreparedRun {
             },
             "bulk_background_heat_W_per_g": bulk_heat,
             "photon_spectra": photon_diagnostics,
-            "schedule": {
-                "segments": sched.len(),
-                "flux_weighted_time_s": flux_weighted_time_s,
-                "fluence_n_cm2": base_flux_total * flux_weighted_time_s,
-            },
+            "schedule": schedule_ledger,
             "assembly": {"n_bulk_isotopes": bulk.len(), "n_decay_triplets": d_src.len(), "n_reaction_triplets": r_src.len(),
                          "n_library_rows": lib.rows.len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>()},
         });
-        let certificate = serde_json::json!({
+        if !spec.projectile.is_neutron() {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "projectile".into(),
+                serde_json::Value::String(spec.projectile.name().into()),
+            );
+        }
+        let mut certificate = serde_json::json!({
             "solver": concat!("actinv-core ", env!("CARGO_PKG_VERSION")),
             "entry_point": entry_point,
             "library": spec.library.path, "library_sha256_declared": spec.library.sha256,
@@ -1069,9 +1204,19 @@ impl PreparedRun {
                 "selection": fission_yield_selection,
             },
         });
+        if !spec.projectile.is_neutron() {
+            certificate
+                .as_object_mut()
+                .expect("certificate is an object")
+                .insert(
+                    "projectile".into(),
+                    serde_json::Value::String(spec.projectile.name().into()),
+                );
+        }
         Ok(RunResult {
             spec_title: spec.title.clone(),
             entry_point: entry_point.into(),
+            projectile: (!spec.projectile.is_neutron()).then(|| spec.projectile.name().to_owned()),
             mode,
             pruned_states: m,
             total_states: ch.n,
@@ -1089,4 +1234,49 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
     let started = std::time::Instant::now();
     let prepared = PreparedRun::prepare(spec)?;
     prepared.run_started(spec, entry_point, started)
+}
+
+#[cfg(test)]
+mod projectile_output_tests {
+    use super::{Heat, StepOut};
+    use std::collections::BTreeMap;
+
+    fn step(neutron: bool) -> StepOut {
+        StepOut {
+            step: 1,
+            t_s: 2.0,
+            flux: 3.0,
+            flux_weighted_time_s: 6.0,
+            fluence_n_cm2: neutron.then_some(12.0),
+            fluence_particles_cm2: (!neutron).then_some(12.0),
+            inventory: Vec::new(),
+            activity_Bq_per_g: BTreeMap::new(),
+            heat_W_per_g: Heat {
+                total: 0.0,
+                alpha: 0.0,
+                beta: 0.0,
+                gamma: 0.0,
+            },
+            leakage_atoms_per_g: 0.0,
+            negative_atoms_zeroed: 0.0,
+            total_atoms_per_g: 0.0,
+            n_states_populated: 0,
+            numerical_floor_atoms_per_g: 0.0,
+            n_states_below_floor: 0,
+            atoms_below_floor: 0.0,
+            heat_bound_from_below_floor_W_per_g: 0.0,
+            photon_source: None,
+        }
+    }
+
+    #[test]
+    fn neutron_and_charged_fluence_fields_are_disjoint() {
+        let neutron = serde_json::to_value(step(true)).unwrap();
+        assert_eq!(neutron["fluence_n_cm2"], 12.0);
+        assert!(neutron.get("fluence_particles_cm2").is_none());
+
+        let charged = serde_json::to_value(step(false)).unwrap();
+        assert_eq!(charged["fluence_particles_cm2"], 12.0);
+        assert!(charged.get("fluence_n_cm2").is_none());
+    }
 }

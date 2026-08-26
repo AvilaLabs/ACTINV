@@ -9,3 +9,9 @@ description = "ACTINV data readers: ENDF-6 decay sublibraries and 709-group acti
 
 [dependencies]
 zip = { version = "2", default-features = false, features = ["deflate"] }
+libm = "0.2"
+num-complex = "0.4"
+rayon = "1.12"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"

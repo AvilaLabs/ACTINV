@@ -1,28 +1,63 @@
-//! ENDF-6 primitives: the fixed-width record layout and the library's own float notation (`1.234-5` = 1.234e-5).
+//! ENDF-6 primitives: checked fixed-width records and the exponent-without-`e` number form.
+//!
+//! The tuple-returning helpers at the top are retained for the decay reader's stable API. New production parsers use
+//! the checked records below: malformed numeric fields, truncated payloads and missing SEND records are errors rather
+//! than values silently changed to zero.
+
+use std::collections::HashSet;
 
 pub type ListRecord = (f64, f64, i32, i32, usize, usize, Vec<f64>);
 pub type Tab1Record = (f64, f64, i32, i32, Vec<(usize, i32)>, Vec<(f64, f64)>);
 
+/// Parse one ENDF floating-point field. A blank data field is the ENDF zero value.
+pub fn parse_endf_float(s: &str) -> Result<f64, String> {
+    let text = s.trim();
+    if text.is_empty() {
+        return Ok(0.0);
+    }
+    let value = if let Ok(value) = text.parse::<f64>() {
+        value
+    } else {
+        let bytes = text.as_bytes();
+        let split = (1..bytes.len()).find(|&index| {
+            matches!(bytes[index], b'+' | b'-') && !matches!(bytes[index - 1], b'e' | b'E')
+        });
+        let index = split.ok_or_else(|| format!("invalid ENDF number '{text}'"))?;
+        let (mantissa, exponent) = text.split_at(index);
+        let mantissa = mantissa
+            .parse::<f64>()
+            .map_err(|_| format!("invalid ENDF number '{text}'"))?;
+        let exponent = exponent
+            .parse::<i32>()
+            .map_err(|_| format!("invalid ENDF number '{text}'"))?;
+        mantissa * 10f64.powi(exponent)
+    };
+    if value.is_finite() {
+        Ok(value)
+    } else {
+        Err(format!("nonfinite ENDF number '{text}'"))
+    }
+}
+
+/// Parse one ENDF integer field. Blank integer fields are zero.
+pub fn parse_endf_i32(s: &str) -> Result<i32, String> {
+    let text = s.trim();
+    if text.is_empty() {
+        Ok(0)
+    } else {
+        text.parse::<i32>()
+            .map_err(|_| format!("invalid ENDF integer '{text}'"))
+    }
+}
+
+pub fn parse_endf_usize(s: &str) -> Result<usize, String> {
+    let value = parse_endf_i32(s)?;
+    usize::try_from(value).map_err(|_| format!("negative ENDF count {value}"))
+}
+
 /// Parse an ENDF numeric field: standard floats plus the exponent-without-`e` form used throughout ENDF.
 pub fn endf_float(s: &str) -> f64 {
-    let t = s.trim();
-    if t.is_empty() {
-        return 0.0;
-    }
-    if let Ok(v) = t.parse::<f64>() {
-        return v;
-    }
-    // find an exponent sign after the first character (e.g. "1.234-5", "-1.234+5")
-    let b = t.as_bytes();
-    for i in 1..b.len() {
-        if (b[i] == b'+' || b[i] == b'-') && b[i - 1] != b'e' && b[i - 1] != b'E' {
-            let (m, e) = t.split_at(i);
-            if let (Ok(mv), Ok(ev)) = (m.parse::<f64>(), e.parse::<i32>()) {
-                return mv * 10f64.powi(ev);
-            }
-        }
-    }
-    0.0
+    parse_endf_float(s).expect("invalid ENDF float in legacy parser")
 }
 
 /// The six 11-character data fields of an ENDF record.
@@ -41,6 +76,19 @@ pub fn fields(line: &str) -> [&str; 6] {
     out
 }
 
+/// Checked six-field data area. ENDF records are ASCII; byte slicing a non-ASCII record would be ambiguous.
+pub fn checked_fields(line: &str) -> Result<[&str; 6], String> {
+    if !line.is_ascii() {
+        return Err("non-ASCII ENDF record".into());
+    }
+    if line.len() < 66 {
+        return Err(format!("truncated ENDF record: {} columns", line.len()));
+    }
+    Ok(std::array::from_fn(|index| {
+        &line[index * 11..(index + 1) * 11]
+    }))
+}
+
 /// (MAT, MF, MT) from the tail of an ENDF record, if present.
 pub fn tail(line: &str) -> Option<(i32, i32, i32)> {
     if line.len() < 75 {
@@ -50,6 +98,274 @@ pub fn tail(line: &str) -> Option<(i32, i32, i32)> {
     let mf = line[70..72].trim().parse::<i32>().ok()?;
     let mt = line[72..75].trim().parse::<i32>().ok()?;
     Some((mat, mf, mt))
+}
+
+pub fn checked_tail(line: &str) -> Result<(i32, i32, i32), String> {
+    if !line.is_ascii() {
+        return Err("non-ASCII ENDF record".into());
+    }
+    if line.len() < 75 {
+        return Err(format!("truncated ENDF record: {} columns", line.len()));
+    }
+    Ok((
+        parse_endf_i32(&line[66..70])?,
+        parse_endf_i32(&line[70..72])?,
+        parse_endf_i32(&line[72..75])?,
+    ))
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ContRecord {
+    pub c1: f64,
+    pub c2: f64,
+    pub l1: i32,
+    pub l2: i32,
+    pub n1: usize,
+    pub n2: usize,
+}
+
+impl ContRecord {
+    pub fn parse(line: &str) -> Result<Self, String> {
+        let value = checked_fields(line)?;
+        Ok(Self {
+            c1: parse_endf_float(value[0])?,
+            c2: parse_endf_float(value[1])?,
+            l1: parse_endf_i32(value[2])?,
+            l2: parse_endf_i32(value[3])?,
+            n1: parse_endf_usize(value[4])?,
+            n2: parse_endf_usize(value[5])?,
+        })
+    }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct CheckedListRecord {
+    pub head: ContRecord,
+    pub values: Vec<f64>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct CheckedTab1Record {
+    pub head: ContRecord,
+    /// One-based `(NBT, INT)` pairs.
+    pub interpolation: Vec<(usize, i32)>,
+    pub points: Vec<(f64, f64)>,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct CheckedTab2Record {
+    pub head: ContRecord,
+    /// One-based `(NBT, INT)` pairs for the following records.
+    pub interpolation: Vec<(usize, i32)>,
+}
+
+fn line_at<'a>(lines: &'a [&'a str], index: usize, kind: &str) -> Result<&'a str, String> {
+    lines
+        .get(index)
+        .copied()
+        .ok_or_else(|| format!("truncated ENDF {kind} at record {}", index + 1))
+}
+
+pub fn read_cont_checked(lines: &[&str], index: usize) -> Result<(ContRecord, usize), String> {
+    let head = ContRecord::parse(line_at(lines, index, "CONT")?)?;
+    Ok((head, index + 1))
+}
+
+pub fn read_list_checked(
+    lines: &[&str],
+    index: usize,
+) -> Result<(CheckedListRecord, usize), String> {
+    let (head, mut next) = read_cont_checked(lines, index)?;
+    let mut values = Vec::with_capacity(head.n1);
+    while values.len() < head.n1 {
+        let fields = checked_fields(line_at(lines, next, "LIST payload")?)?;
+        for field in fields {
+            if values.len() == head.n1 {
+                break;
+            }
+            values.push(parse_endf_float(field)?);
+        }
+        next += 1;
+    }
+    Ok((CheckedListRecord { head, values }, next))
+}
+
+pub fn read_tab1_checked(
+    lines: &[&str],
+    index: usize,
+) -> Result<(CheckedTab1Record, usize), String> {
+    let (head, mut next) = read_cont_checked(lines, index)?;
+    let mut raw_interpolation = Vec::with_capacity(2 * head.n1);
+    while raw_interpolation.len() < 2 * head.n1 {
+        let fields = checked_fields(line_at(lines, next, "TAB1 interpolation payload")?)?;
+        for field in fields {
+            if raw_interpolation.len() == 2 * head.n1 {
+                break;
+            }
+            raw_interpolation.push(parse_endf_i32(field)?);
+        }
+        next += 1;
+    }
+    let mut interpolation = Vec::with_capacity(head.n1);
+    let mut previous = 0usize;
+    for pair in raw_interpolation.as_chunks::<2>().0 {
+        let nbt = usize::try_from(pair[0]).map_err(|_| format!("negative TAB1 NBT {}", pair[0]))?;
+        if nbt <= previous || nbt > head.n2 {
+            return Err(format!(
+                "invalid TAB1 NBT {nbt}; previous={previous}, NP={}",
+                head.n2
+            ));
+        }
+        if !(1..=5).contains(&pair[1]) {
+            return Err(format!("unsupported TAB1 interpolation INT={}", pair[1]));
+        }
+        interpolation.push((nbt, pair[1]));
+        previous = nbt;
+    }
+    if head.n2 > 0 && (interpolation.is_empty() || previous != head.n2) {
+        return Err(format!(
+            "TAB1 interpolation ends at NBT={previous}, expected NP={}",
+            head.n2
+        ));
+    }
+
+    let mut raw_points = Vec::with_capacity(2 * head.n2);
+    while raw_points.len() < 2 * head.n2 {
+        let fields = checked_fields(line_at(lines, next, "TAB1 point payload")?)?;
+        for field in fields {
+            if raw_points.len() == 2 * head.n2 {
+                break;
+            }
+            raw_points.push(parse_endf_float(field)?);
+        }
+        next += 1;
+    }
+    let points: Vec<(f64, f64)> = raw_points
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|pair| (pair[0], pair[1]))
+        .collect();
+    if points.windows(2).any(|pair| pair[1].0 < pair[0].0) {
+        return Err("TAB1 abscissae are not nondecreasing".into());
+    }
+    Ok((
+        CheckedTab1Record {
+            head,
+            interpolation,
+            points,
+        },
+        next,
+    ))
+}
+
+pub fn read_tab2_checked(
+    lines: &[&str],
+    index: usize,
+) -> Result<(CheckedTab2Record, usize), String> {
+    let (head, mut next) = read_cont_checked(lines, index)?;
+    let mut raw = Vec::with_capacity(2 * head.n1);
+    while raw.len() < 2 * head.n1 {
+        let fields = checked_fields(line_at(lines, next, "TAB2 interpolation payload")?)?;
+        for field in fields {
+            if raw.len() == 2 * head.n1 {
+                break;
+            }
+            raw.push(parse_endf_i32(field)?);
+        }
+        next += 1;
+    }
+    let mut interpolation = Vec::with_capacity(head.n1);
+    let mut previous = 0usize;
+    for pair in raw.as_chunks::<2>().0 {
+        let nbt = usize::try_from(pair[0]).map_err(|_| format!("negative TAB2 NBT {}", pair[0]))?;
+        if nbt <= previous || nbt > head.n2 {
+            return Err(format!(
+                "invalid TAB2 NBT {nbt}; previous={previous}, NZ={}",
+                head.n2
+            ));
+        }
+        if !(1..=5).contains(&pair[1]) {
+            return Err(format!("unsupported TAB2 interpolation INT={}", pair[1]));
+        }
+        interpolation.push((nbt, pair[1]));
+        previous = nbt;
+    }
+    if head.n2 > 0 && (interpolation.is_empty() || previous != head.n2) {
+        return Err(format!(
+            "TAB2 interpolation ends at NBT={previous}, expected NZ={}",
+            head.n2
+        ));
+    }
+    Ok((
+        CheckedTab2Record {
+            head,
+            interpolation,
+        },
+        next,
+    ))
+}
+
+#[derive(Clone, Debug)]
+pub struct Section<'a> {
+    pub mat: i32,
+    pub mf: i32,
+    pub mt: i32,
+    pub lines: Vec<&'a str>,
+}
+
+/// Split a complete ENDF tape into checked sections. Control records are consumed but not returned.
+pub fn parse_sections(text: &str) -> Result<Vec<Section<'_>>, String> {
+    let mut sections: Vec<Section<'_>> = Vec::new();
+    let mut active: Option<Section<'_>> = None;
+    let mut seen = HashSet::new();
+    for (line_number, raw_line) in text.lines().enumerate() {
+        let line = raw_line.strip_suffix('\r').unwrap_or(raw_line);
+        if line.is_empty() {
+            return Err(format!("blank ENDF record at line {}", line_number + 1));
+        }
+        let (mat, mf, mt) =
+            checked_tail(line).map_err(|error| format!("line {}: {error}", line_number + 1))?;
+        match active.as_mut() {
+            Some(section) if mat == section.mat && mf == section.mf && mt == section.mt => {
+                section.lines.push(line);
+            }
+            Some(section) if mat == section.mat && mf == section.mf && mt == 0 => {
+                let finished = active.take().expect("active section");
+                sections.push(finished);
+            }
+            Some(section) => {
+                return Err(format!(
+                    "line {}: MF={}/MT={} section changed to MAT={mat}/MF={mf}/MT={mt} without SEND",
+                    line_number + 1,
+                    section.mf,
+                    section.mt
+                ));
+            }
+            None if mat > 0 && mf > 0 && mt > 0 => {
+                if !seen.insert((mat, mf, mt)) {
+                    return Err(format!(
+                        "line {}: duplicate MAT={mat}/MF={mf}/MT={mt} section",
+                        line_number + 1
+                    ));
+                }
+                active = Some(Section {
+                    mat,
+                    mf,
+                    mt,
+                    lines: vec![line],
+                });
+            }
+            None => {}
+        }
+    }
+    if let Some(section) = active {
+        return Err(format!(
+            "MAT={}/MF={}/MT={} section ended without SEND",
+            section.mat, section.mf, section.mt
+        ));
+    }
+    Ok(sections)
 }
 
 /// Read a LIST record starting at `i`: returns ((C1, C2, L1, L2, N1, N2, values), next index).

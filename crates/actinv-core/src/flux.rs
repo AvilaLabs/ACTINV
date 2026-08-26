@@ -18,6 +18,7 @@ use std::time::UNIX_EPOCH;
 
 const FLUX_SCHEMA: &str = "actinv-flux-1";
 const FLUX_UNITS: &str = "n cm^-2 s^-1";
+const PARTICLE_FLUX_UNITS: &str = "particles cm^-2 s^-1";
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 #[serde(deny_unknown_fields)]
@@ -213,7 +214,7 @@ impl FluxHeader {
         if self.record != "header" || self.schema != FLUX_SCHEMA {
             return Err("canonical flux must begin with an actinv-flux-1 header".into());
         }
-        if self.flux_units != FLUX_UNITS {
+        if self.flux_units != FLUX_UNITS && self.flux_units != PARTICLE_FLUX_UNITS {
             return Err(format!(
                 "unsupported canonical flux units '{}'",
                 self.flux_units

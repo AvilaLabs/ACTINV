@@ -1,6 +1,7 @@
 #![allow(non_snake_case)] // field names are the JSON wire format (boundaries_eV, temperature_K)
 //! `actinv-spec-1`: the one problem description the CLI, the Python API and the harness all consume.
 //! Unknown fields are an error (`deny_unknown_fields`) — a misspelt option must never be silently ignored.
+pub use actinv_data::activation::Projectile;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
@@ -10,6 +11,8 @@ pub struct Spec {
     pub spec: String,
     #[serde(default)]
     pub title: String,
+    #[serde(default)]
+    pub projectile: Projectile,
     pub library: LibraryRef,
     #[serde(default)]
     pub decay: DecayRef,
@@ -129,7 +132,7 @@ pub struct Spectrum {
     #[serde(default = "g709")]
     pub structure: String,
     pub flux_per_group: Vec<f64>,
-    /// total flux (n cm^-2 s^-1); the group values are scaled to it when given
+    /// total projectile flux (particles cm^-2 s^-1); the group values are scaled to it when given
     #[serde(default)]
     pub total: Option<f64>,
     /// ascending group boundaries in eV; required only when `structure` is "custom"
@@ -287,8 +290,20 @@ impl Spec {
         if !self.options.bmin_atoms_per_g.is_finite() || self.options.bmin_atoms_per_g < 0.0 {
             return Err("options.bmin_atoms_per_g must be finite and nonnegative".into());
         }
-        if !self.options.temperature_K.is_finite() || self.options.temperature_K <= 0.0 {
-            return Err("options.temperature_K must be finite and positive".into());
+        if !self.options.temperature_K.is_finite() || self.options.temperature_K < 0.0 {
+            return Err("options.temperature_K must be finite and nonnegative".into());
+        }
+        if !self.projectile.is_neutron() && self.options.temperature_K != 0.0 {
+            return Err(format!(
+                "{} specs require options.temperature_K: 0",
+                self.projectile.name()
+            ));
+        }
+        if !self.projectile.is_neutron() && !self.fission_yields.files.is_empty() {
+            return Err(format!(
+                "fission-yield files are not supported for {} activation",
+                self.projectile.name()
+            ));
         }
         if let Some(outputs) = &self.options.outputs {
             for output in outputs {
@@ -316,16 +331,30 @@ impl Spec {
             if b.iter().any(|value| !value.is_finite()) || b.windows(2).any(|w| w[1] <= w[0]) {
                 return Err("boundaries_eV must be finite and strictly ascending".into());
             }
-        } else if self.spectrum.structure != "fispact-709" {
-            return Err(format!(
-                "unknown spectrum.structure '{}'",
-                self.spectrum.structure
-            ));
-        } else if self.spectrum.flux_per_group.len() != 709 {
-            return Err(format!(
-                "fispact-709 requires 709 flux values, got {}",
-                self.spectrum.flux_per_group.len()
-            ));
+        } else {
+            let (groups, expected_projectile) = match self.spectrum.structure.as_str() {
+                "fispact-709" => (709, Projectile::Neutron),
+                "fispact-162" if !self.projectile.is_neutron() => (162, self.projectile),
+                "fispact-162" => {
+                    return Err("fispact-162 is reserved for charged-particle spectra".into());
+                }
+                value => return Err(format!("unknown spectrum.structure '{value}'")),
+            };
+            if self.projectile != expected_projectile {
+                return Err(format!(
+                    "{} requires projectile '{}', got '{}'",
+                    self.spectrum.structure,
+                    expected_projectile.name(),
+                    self.projectile.name()
+                ));
+            }
+            if self.spectrum.flux_per_group.len() != groups {
+                return Err(format!(
+                    "{} requires {groups} flux values, got {}",
+                    self.spectrum.structure,
+                    self.spectrum.flux_per_group.len()
+                ));
+            }
         }
         if self
             .spectrum
@@ -466,7 +495,25 @@ impl Spec {
 
 #[cfg(test)]
 mod duration_tests {
-    use super::parse_duration;
+    use super::{parse_duration, Projectile, Spec};
+
+    fn minimal_spec() -> serde_json::Value {
+        serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "activation.npz"},
+            "decay": {"primary": "decay.endf"},
+            "material": {
+                "basis": "wt_percent",
+                "composition": {"FE": 100.0},
+            },
+            "spectrum": {
+                "structure": "custom",
+                "boundaries_eV": [1.0, 2.0],
+                "flux_per_group": [1.0],
+            },
+            "schedule": [{"dt": "1 s", "flux": 1.0}],
+        })
+    }
 
     #[test]
     fn scientific_notation_is_not_a_unit_suffix() {
@@ -476,5 +523,34 @@ mod duration_tests {
             "unknown time unit 'ms' in '2.5E+3ms'"
         );
         assert_eq!(parse_duration("3e2").unwrap(), 300.0);
+    }
+
+    #[test]
+    fn omitted_projectile_is_backward_compatible_neutron() {
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert_eq!(spec.projectile, Projectile::Neutron);
+        assert_eq!(spec.options.temperature_K, 293.6);
+    }
+
+    #[test]
+    fn charged_projectiles_require_zero_kelvin_and_no_fission_yields() {
+        let mut value = minimal_spec();
+        value["projectile"] = serde_json::json!("proton");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("temperature_K: 0"));
+
+        value["options"] = serde_json::json!({"temperature_K": 0.0});
+        assert_eq!(
+            Spec::from_json(&value.to_string()).unwrap().projectile,
+            Projectile::Proton
+        );
+
+        value["fission_yields"] = serde_json::json!({
+            "files": [{"path": "yield.endf", "sha256": "0".repeat(64)}],
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("not supported for proton"));
     }
 }

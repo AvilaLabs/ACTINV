@@ -20,6 +20,12 @@ dependencies = [
 name = "actinv-data"
 version = "0.2.0"
 dependencies = [
+ "libm",
+ "num-complex",
+ "rayon",
+ "serde",
+ "serde_json",
+ "sha2",
  "zip",
 ]
 

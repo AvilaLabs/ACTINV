@@ -7,6 +7,11 @@ use actinv_core::{
     run::run,
     spec::Spec,
 };
+use actinv_data::{
+    activation::Projectile,
+    builder::{self, BuildOptions, LibraryFormat},
+    groups::GroupStructure,
+};
 use std::collections::BTreeMap;
 
 fn die(message: impl std::fmt::Display, code: i32) -> ! {
@@ -148,6 +153,72 @@ fn import_flux(args: &[String]) -> ImportSummary {
     .unwrap_or_else(|error| die(error, 1))
 }
 
+fn build_library(args: &[String]) {
+    if args.len() < 2 {
+        die("build-library needs INPUT OUTPUT.npz", 2);
+    }
+    let input = &args[0];
+    let output = &args[1];
+    let options = valued_options(&args[2..]);
+    reject_unknown(
+        &options,
+        &[
+            "--format",
+            "--projectile",
+            "--groups",
+            "--temperature-K",
+            "--workers",
+            "--cache",
+            "--grid-density",
+        ],
+    );
+    let format = LibraryFormat::parse(options.get("--format").copied().unwrap_or("auto"))
+        .unwrap_or_else(|error| die(error, 2));
+    let projectile_value = options.get("--projectile").copied().unwrap_or("auto");
+    let requested_projectile = if projectile_value == "auto" {
+        None
+    } else {
+        Some(Projectile::parse(projectile_value).unwrap_or_else(|error| die(error, 2)))
+    };
+    let detected_projectile = requested_projectile.unwrap_or_else(|| {
+        builder::inspect_projectile(input).unwrap_or_else(|error| die(error, 2))
+    });
+    let groups = match options.get("--groups").copied() {
+        Some("fispact-709") => GroupStructure::fispact_709(),
+        Some("fispact-162") => GroupStructure::fispact_162(),
+        Some(path) => GroupStructure::from_json(&read(path)),
+        None if detected_projectile == Projectile::Neutron => GroupStructure::fispact_709(),
+        None => GroupStructure::fispact_162(),
+    }
+    .unwrap_or_else(|error| die(error, 2));
+    let default_temperature = if detected_projectile == Projectile::Neutron {
+        293.6
+    } else {
+        0.0
+    };
+    let build_options = BuildOptions {
+        format,
+        projectile: requested_projectile,
+        groups,
+        temperature_K: parsed_option(&options, "--temperature-K").unwrap_or(default_temperature),
+        workers: parsed_option(&options, "--workers").unwrap_or(1),
+        cache: options.get("--cache").map(std::path::PathBuf::from),
+        grid_density: parsed_option(&options, "--grid-density").unwrap_or(1.0),
+    };
+    let summary =
+        builder::build_library(input, output, &build_options).unwrap_or_else(|error| die(error, 1));
+    println!(
+        "{} targets, {} rows, {} cache hits, {} {}, sha256 {}",
+        summary.targets,
+        summary.rows,
+        summary.cache_hits,
+        summary.projectile.name(),
+        summary.output.display(),
+        summary.sha256_npz
+    );
+    eprintln!("index -> {}", summary.index.display());
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let usage = "usage: actinv run SPEC.json [OUT.json]\n\
@@ -155,6 +226,7 @@ fn main() {
                  actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
                  actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                  actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
+                 actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D]\n\
                  actinv mesh SPEC.json OUT.ndjson\n\
                  actinv export-openmc RESULT.json STEP OUT.py\n\
                  actinv export-mcnp RESULT.json STEP OUT.sdef";
@@ -162,6 +234,7 @@ fn main() {
         die(usage, 2);
     }
     match a[1].as_str() {
+        "build-library" => build_library(&a[2..]),
         "import-flux" => {
             let summary = import_flux(&a[2..]);
             println!(

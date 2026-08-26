@@ -7,6 +7,7 @@ name = "actinv-cli"
 version = "0.2.0"
 dependencies = [
  "actinv-core",
+ "actinv-data",
  "num-complex",
  "serde_json",
 ]
@@ -29,6 +30,12 @@ dependencies = [
 name = "actinv-data"
 version = "0.2.0"
 dependencies = [
+ "libm",
+ "num-complex",
+ "rayon",
+ "serde",
+ "serde_json",
+ "sha2",
  "zip",
 ]
 
