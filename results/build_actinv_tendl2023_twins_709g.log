@@ -1,0 +1,58 @@
+fingerprint 6dc8cf9bf0b7; 0/3 targets already cached in /home/connoravila/nuclear-data/tendl-2023/cache_actinv_tendl2023_twins_709g
+  1/3 n_004-Be-9_0425.dat 1.9s rows=12 led=0  total 2s
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+targets 3 rows 46 errors 0 234s -> /home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_twins_709g.npz
+build exit=0

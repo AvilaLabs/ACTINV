@@ -1,0 +1,236 @@
+{
+ "dense": 1.0,
+ "sample_seed": 20260826,
+ "n_sample": 40,
+ "control_c": {
+  "n_capture_rows": 119,
+  "max_rel": 0.01633053205675924,
+  "pass": false,
+  "rows_over": [
+   {
+    "target": "n_037-Rb-94_3752.dat",
+    "mt": 102,
+    "zap": -1,
+    "lfs": -1,
+    "max_rel": 0.0025224770782844544,
+    "group": 372
+   },
+   {
+    "target": "n_037-Rb-94_3752.dat",
+    "mt": 102,
+    "zap": 37095,
+    "lfs": 0,
+    "max_rel": 0.0025224770782844544,
+    "group": 372
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 18,
+    "zap": -1,
+    "lfs": -1,
+    "max_rel": 0.01633053205675924,
+    "group": 247
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 18,
+    "zap": 0,
+    "lfs": 0,
+    "max_rel": 0.01633053205675924,
+    "group": 247
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 102,
+    "zap": -1,
+    "lfs": -1,
+    "max_rel": 0.014361683421793413,
+    "group": 220
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 102,
+    "zap": 87227,
+    "lfs": 0,
+    "max_rel": 0.014361683421793413,
+    "group": 220
+   }
+  ]
+ },
+ "control_b": {
+  "n_reactions": 771,
+  "max_rel": 0.9308595394003593,
+  "pass": false
+ },
+ "build_seconds": [
+  228.00202131271362,
+  674.686695098877
+ ],
+ "errors": [
+  0,
+  0
+ ],
+ "ledgers": {
+  "n_019-K-42_1934.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_023-V-55_2340.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_024-Cr-50_2425.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT112->21046: LFS [2] -> LISO [1]"
+  ],
+  "n_027-Co-62M_2735.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_030-Zn-67_3034.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_030-Zn-77M_3065.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->30077: LFS [2] -> LISO [1]; MT25->28071: LFS [2] -> LISO [1]"
+  ],
+  "n_034-Se-77M_3435.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT22->32073: LFS [2] -> LISO [1]; MT44->32075: LFS [2] -> LISO [1]; MT106->32075: LFS [2] -> LISO [1]; MT115->32075: LFS [2] -> LISO [1]"
+  ],
+  "n_037-Rb-94_3752.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_038-Sr-84_3825.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT16->38083: LFS [2] -> LISO [1]; MT34->36081: LFS [2] -> LISO [1]; MT102->38085: LFS [2] -> LISO [1]; MT103->37084: LFS [2] -> LISO [1]; MT107->36081: LFS [2] -> LISO [1]; MT111->36083: LFS [2] -> LISO [1]; MT112->35080: LFS [2] -> LISO [1]; MT116->36081: LFS [2] -> LISO [1]"
+  ],
+  "n_038-Sr-89_3840.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT11->37086: LFS [2] -> LISO [1]"
+  ],
+  "n_039-Y-79_3895.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT16->39078: LFS [2] -> LISO [1]; MT111->37078: LFS [3] -> LISO [1]"
+  ],
+  "n_039-Y-90M_3929.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->39090: LFS [2] -> LISO [1]; MT22->37086: LFS [2] -> LISO [1]"
+  ],
+  "n_041-Nb-93_4125.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT11->40090: LFS [3] -> LISO [1]; MT33->40090: LFS [3] -> LISO [1]; MT34->39090: LFS [2] -> LISO [1]; MT42->40090: LFS [3] -> LISO [1]; MT107->39090: LFS [2] -> LISO [1]; MT108->37086: LFS [2] -> LISO [1]; MT116->39090: LFS [2] -> LISO [1]"
+  ],
+  "n_043-Tc-105_4343.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT24->41100: LFS [4] -> LISO [1]; MT37->43102: LFS [3] -> LISO [1]; MT111->41104: LFS [4] -> LISO [1]"
+  ],
+  "n_045-Rh-95_4501.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT16->45094: LFS [2] -> LISO [1]; MT24->43090: LFS [2] -> LISO [1]"
+  ],
+  "n_048-Cd-99_4804.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT22->46095: LFS [5] -> LISO [1]; MT29->44091: LFS [2] -> LISO [1]; MT45->45094: LFS [2] -> LISO [1]; MT103->47099: LFS [2] -> LISO [1]; MT117->45094: LFS [2] -> LISO [1]"
+  ],
+  "n_049-In-117M_4938.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT16->49116: LFS [1, 4] -> LISO [1, 2]; MT102->49118: LFS [1, 3] -> LISO [1, 2]; MT103->48117: LFS [2] -> LISO [1]; MT108->45110: LFS [6] -> LISO [1]; MT111->47116: LFS [1, 4] -> LISO [1, 2]; MT112->46113: LFS [2] -> LISO [1]"
+  ],
+  "n_051-Sb-111_5095.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT29->47103: LFS [2] -> LISO [1]; MT109->45100: LFS [4] -> LISO [1]"
+  ],
+  "n_052-Te-109_5192.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT45->49104: LFS [3] -> LISO [1]; MT117->49104: LFS [3] -> LISO [1]"
+  ],
+  "n_055-Cs-120M_5487.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->55120: LFS [5] -> LISO [1]; MT25->53114: LFS [3] -> LISO [1]; MT44->53118: LFS [4] -> LISO [1]; MT106->53118: LFS [4] -> LISO [1]; MT115->53118: LFS [4] -> LISO [1]"
+  ],
+  "n_059-Pr-134M_5905.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT16->59133: LFS [3] -> LISO [1]; MT24->57129: LFS [2] -> LISO [1]; MT25->57128: LFS [6] -> LISO [1]; MT37->59131: LFS [2] -> LISO [1]; MT44->57132: LFS [4] -> LISO [1]; MT106->57132: LFS [4] -> LISO [1]; MT115->57132: LFS [4] -> LISO [1]"
+  ],
+  "n_067-Ho-171_6743.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_068-Er-149_6786.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->68149: LFS [2] -> LISO [1]; MT17->68147: LFS [2] -> LISO [1]; MT22->66145: LFS [2] -> LISO [1]; MT28->67148: LFS [4] -> LISO [1]; MT29->64141: LFS [4] -> LISO [1]; MT44->66147: LFS [2] -> LISO [1]; MT45->65144: LFS [4] -> LISO [1]; MT104->67148: LFS [4] -> LISO [1] (+3 more)"
+  ],
+  "n_074-W-164_7377.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_075-Re-188M_7535.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->75188: LFS [4] -> LISO [1]; MT11->74185: LFS [6] -> LISO [1]; MT17->75186: LFS [4] -> LISO [1]; MT33->74185: LFS [6] -> LISO [1]; MT42->74185: LFS [6] -> LISO [1]; MT112->72184: LFS [5] -> LISO [1]"
+  ],
+  "n_076-Os-197_7664.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT17->76195: LFS [2] -> LISO [1]"
+  ],
+  "n_077-Ir-201_7755.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_079-Au-180_7874.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT37->79177: LFS [2] -> LISO [1]"
+  ],
+  "n_080-Hg-209_8064.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT25->78203: LFS [2] -> LISO [1]"
+  ],
+  "n_081-Tl-188M_8081.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT11->80185: LFS [4] -> LISO [1]; MT16->81187: LFS [2] -> LISO [1]; MT33->80185: LFS [4] -> LISO [1]; MT34->79185: LFS [6] -> LISO [1]; MT37->81185: LFS [3] -> LISO [1]; MT42->80185: LFS [4] -> LISO [1]; MT107->79185: LFS [6] -> LISO [1]; MT111->79187: LFS [2] -> LISO [1] (+1 more)"
+  ],
+  "n_081-Tl-195M_8102.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->81195: LFS [2] -> LISO [1]; MT16->81194: LFS [4] -> LISO [1]; MT17->81193: LFS [2] -> LISO [1]; MT22->79191: LFS [4] -> LISO [1]; MT25->79189: LFS [3] -> LISO [1]; MT32->80193: LFS [3] -> LISO [1]; MT41->80193: LFS [3] -> LISO [1]; MT44->79193: LFS [4] -> LISO [1] (+6 more)"
+  ],
+  "n_083-Bi-210_8328.dat": [
+   "MT4: inelastic isomer production kept (1 metastable channel(s))",
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT4->83210: LFS [2] -> LISO [1]; MT11->82207: LFS [3] -> LISO [1]; MT33->82207: LFS [3] -> LISO [1]; MT34->81207: LFS [2] -> LISO [1]; MT42->82207: LFS [3] -> LISO [1]; MT107->81207: LFS [2] -> LISO [1]; MT116->81207: LFS [2] -> LISO [1]"
+  ],
+  "n_087-Fr-226_8767.dat": [
+   "DATA-QUALITY: 46/99 resolved resonances narrower than 1e-5 eV (synthetic placeholders; integrated at two scales)",
+   "MT102: linearisation not converged in 8 passes (1887 segments > 2e-4)",
+   "MT18: linearisation not converged in 8 passes (1886 segments > 2e-4)",
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_088-Ra-226_8834.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_090-Th-224_9016.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT32->89222: LFS [3] -> LISO [1]; MT41->89222: LFS [3] -> LISO [1]; MT105->89222: LFS [3] -> LISO [1]"
+  ],
+  "n_093-Np-235_9340.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT111->91234: LFS [2] -> LISO [1]"
+  ],
+  "n_095-Am-233_9519.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ],
+  "n_098-Cf-245_9840.dat": [
+   "MT=5 (n,anything) products not tracked",
+   "LFS->LISO remap: MT29->94237: LFS [3] -> LISO [1]"
+  ],
+  "n_107-Bh-272_0772.dat": [
+   "MT=5 (n,anything) products not tracked"
+  ]
+ }
+}

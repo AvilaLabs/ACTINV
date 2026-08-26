@@ -1,0 +1,5691 @@
+{
+ "n": 132,
+ "medians": {
+  "gm_eaf": 1.0238196853949915,
+  "gm_tendl": 1.0351075447479525,
+  "gm_fispact": 1.0085200841086217,
+  "max_eaf": 0.2835355817850367,
+  "max_tendl": 0.31095665447884635,
+  "max_fispact": 0.2232260220473155
+ },
+ "closer_meas_tendl": 59,
+ "closer_ref_tendl": 75,
+ "rows": [
+  {
+   "exp": "Ag_2000exp_5min",
+   "gm_eaf": 1.0064808967599,
+   "gm_tendl": 1.1241915813429175,
+   "gm_fispact": 1.0324066306380224,
+   "max_eaf": 0.26931496481699596,
+   "max_tendl": 0.3479112776853376,
+   "max_fispact": 0.20239398039556158,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ag108",
+     1.2609281114208815
+    ],
+    [
+     "Ag106",
+     0.5131340110285781
+    ],
+    [
+     "Ag110",
+     0.18847158910443876
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ag108",
+     1.3535274393215813
+    ],
+    [
+     "Ag106",
+     0.5675725548947711
+    ],
+    [
+     "Ag110",
+     0.18918563877259995
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Al_1996exp_5min",
+   "gm_eaf": 0.9723644513935901,
+   "gm_tendl": 0.9630508700649796,
+   "gm_fispact": 0.9633924589943399,
+   "max_eaf": 0.09956403759129576,
+   "max_tendl": 0.10508913458121981,
+   "max_fispact": 0.10311842162757988,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mg27",
+     1.0719648377495412
+    ],
+    [
+     "Na24",
+     0.07058259121278934
+    ],
+    [
+     "Al28",
+     0.04339769460440874
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mg27",
+     1.0607247938125028
+    ],
+    [
+     "Na24",
+     0.07028594010453837
+    ],
+    [
+     "Al28",
+     0.041622559528629643
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Al_1996exp_7hour",
+   "gm_eaf": 0.037374635486084364,
+   "gm_tendl": 0.03733946500393453,
+   "gm_fispact": 0.07510601380300176,
+   "max_eaf": 10.270196503188888,
+   "max_tendl": 10.277247216949537,
+   "max_fispact": 7.799512722730529,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Na24",
+     2.7229429048773257
+    ],
+    [
+     "Al26",
+     2.1750146327964103e-09
+    ],
+    [
+     "Na22",
+     1.7178335459064307e-15
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Na24",
+     2.727001182431483
+    ],
+    [
+     "Al26",
+     2.1597327008831046e-09
+    ],
+    [
+     "Na26",
+     6.24479257609914e-14
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Al_2000exp_5min",
+   "gm_eaf": 1.0783202338553994,
+   "gm_tendl": 1.0728595795010183,
+   "gm_fispact": 1.0719337087499172,
+   "max_eaf": 0.11338243624375385,
+   "max_tendl": 0.10719661951872249,
+   "max_fispact": 0.10107429808249849,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mg27",
+     1.1465263555458298
+    ],
+    [
+     "Na24",
+     0.07155185189853334
+    ],
+    [
+     "Al28",
+     0.05393239316867036
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mg27",
+     1.1407859130387914
+    ],
+    [
+     "Na24",
+     0.0714200916074129
+    ],
+    [
+     "Al28",
+     0.05144646893287534
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "As_2000exp_5min",
+   "gm_eaf": 1.084497915663145,
+   "gm_tendl": 1.2319355612856726,
+   "gm_fispact": 1.0336965412956167,
+   "max_eaf": 0.35086812180867244,
+   "max_tendl": 0.3259585290827692,
+   "max_fispact": 0.3278470343530849,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.11838475989274007
+    ],
+    [
+     "Ge75m1",
+     0.00927387768499812
+    ],
+    [
+     "Ge75",
+     0.004159889504787797
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.11992462272004965
+    ],
+    [
+     "Ge75m1",
+     0.009959544655529564
+    ],
+    [
+     "Ge75",
+     0.004316886558841622
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Au_2000exp_5min",
+   "gm_eaf": 1.334285305911082,
+   "gm_tendl": 0.7607393698729961,
+   "gm_fispact": 1.2895765659826182,
+   "max_eaf": 0.4879738520559666,
+   "max_tendl": 0.5162493267975895,
+   "max_fispact": 0.548035699529715,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Au197m1",
+     0.030678927005148748
+    ],
+    [
+     "Au196m1",
+     0.002894719973698594
+    ],
+    [
+     "Au196m2",
+     0.0021611731338855964
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Au196m1",
+     0.024844570242764444
+    ],
+    [
+     "Au197m1",
+     0.012948521715559208
+    ],
+    [
+     "Au196",
+     0.002083672217300665
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ba_1996exp_5min",
+   "gm_eaf": 0.4674736252410651,
+   "gm_tendl": 0.43341301346345107,
+   "gm_fispact": 0.5082333624288151,
+   "max_eaf": 2.3293247585277386,
+   "max_tendl": 2.174415715999992,
+   "max_fispact": 2.300982211628352,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ba137m1",
+     1.1897667512494576
+    ],
+    [
+     "N16",
+     0.006423366455172844
+    ],
+    [
+     "Cs138",
+     0.003077964926336862
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ba137m1",
+     0.9996314220525001
+    ],
+    [
+     "N16",
+     0.006506916932780508
+    ],
+    [
+     "Cs138",
+     0.0035072727351739036
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ba_1996exp_7hour",
+   "gm_eaf": 1.0674951643175725,
+   "gm_tendl": 1.0971088504250484,
+   "gm_fispact": 1.077653922681943,
+   "max_eaf": 0.17324180350869256,
+   "max_tendl": 0.4070709311437331,
+   "max_fispact": 0.2156308136246841,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ba135m1",
+     0.013176859562155288
+    ],
+    [
+     "Ba133m1",
+     0.002458350309656522
+    ],
+    [
+     "Xe135",
+     0.0006515248232000318
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ba135m1",
+     0.01257652632824494
+    ],
+    [
+     "Ba133m1",
+     0.0019091597262989482
+    ],
+    [
+     "Xe135",
+     0.00144915810047755
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ba_2000exp_5min",
+   "gm_eaf": 1.1491087450718598,
+   "gm_tendl": 1.0503240667784597,
+   "gm_fispact": 1.2532168586379981,
+   "max_eaf": 0.30940104913436767,
+   "max_tendl": 0.4652809092355962,
+   "max_fispact": 0.3364118726263054,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ba137m1",
+     1.4585814123495846
+    ],
+    [
+     "N16",
+     0.5101190096859363
+    ],
+    [
+     "Cs138",
+     0.0029892736078587527
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ba137m1",
+     1.2254871047556977
+    ],
+    [
+     "N16",
+     0.5167542666331231
+    ],
+    [
+     "Cs138",
+     0.0034525697668974847
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Bi_1996exp_5min",
+   "gm_eaf": 1.3958468727960165,
+   "gm_tendl": 1.850389073743862,
+   "gm_fispact": 3.7672234722398614,
+   "max_eaf": 0.9114270571325986,
+   "max_tendl": 1.1170214959014775,
+   "max_fispact": 1.8633403866825196,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Tl206",
+     0.0010645683399020118
+    ],
+    [
+     "Tl206m1",
+     6.409400636209961e-05
+    ],
+    [
+     "Pb209",
+     2.1361298734211255e-05
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Tl206",
+     0.0013550108755475178
+    ],
+    [
+     "Pb209",
+     4.2788748175187525e-05
+    ],
+    [
+     "Bi210",
+     3.873317184098709e-07
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Bi_1996exp_7hour",
+   "gm_eaf": 17.293887532594432,
+   "gm_tendl": 6.867224122157934,
+   "gm_fispact": 6.300906496099784,
+   "max_eaf": 3.4496624122219792,
+   "max_tendl": 2.3434855348753425,
+   "max_fispact": 2.2610341793464026,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Bi210",
+     6.373066719736824e-05
+    ],
+    [
+     "Pb209",
+     3.088736345203919e-05
+    ],
+    [
+     "Po210",
+     3.7662627968970506e-06
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Pb209",
+     6.111393291130928e-05
+    ],
+    [
+     "Bi210",
+     2.0558529061471498e-05
+    ],
+    [
+     "Po210",
+     1.214938216866209e-06
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Bi_2000exp_5min",
+   "gm_eaf": 1.9539200680745212,
+   "gm_tendl": 2.6370250531224286,
+   "gm_fispact": 5.1530511860591535,
+   "max_eaf": 3.6401870505456495,
+   "max_tendl": 4.221229487920018,
+   "max_fispact": 4.346351898419772,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Tl206",
+     0.0011088238521860378
+    ],
+    [
+     "Tl206m1",
+     6.713357039038108e-05
+    ],
+    [
+     "Pb209",
+     2.138027237236525e-05
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Tl206",
+     0.001412058549104074
+    ],
+    [
+     "Pb209",
+     4.282675420820267e-05
+    ],
+    [
+     "Bi210",
+     3.8734101835083375e-07
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Br_2000exp_5min",
+   "gm_eaf": 1.0281952850648417,
+   "gm_tendl": 0.999687856309346,
+   "gm_fispact": 1.0142273928192338,
+   "max_eaf": 0.19314746626225937,
+   "max_tendl": 0.09581851105027794,
+   "max_fispact": 0.11206694655343317,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Br78",
+     1.7833399104381884
+    ],
+    [
+     "Br80",
+     0.15678095986365595
+    ],
+    [
+     "N16",
+     0.08561862722898281
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Br78",
+     1.8128513518660512
+    ],
+    [
+     "Br80",
+     0.11991062173828021
+    ],
+    [
+     "N16",
+     0.08673229204119873
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ca_1996exp_5min",
+   "gm_eaf": 0.6376062897779774,
+   "gm_tendl": 1.2119462869168982,
+   "gm_fispact": 0.6700934399067027,
+   "max_eaf": 0.6013476857971616,
+   "max_tendl": 0.3823811727687097,
+   "max_fispact": 0.549769187120209,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "K44",
+     0.007764988497250829
+    ],
+    [
+     "N16",
+     0.00753530612525005
+    ],
+    [
+     "Ar41",
+     0.0005546212883530588
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "K44",
+     0.01634933724170554
+    ],
+    [
+     "N16",
+     0.0076333199051080575
+    ],
+    [
+     "Ar41",
+     0.00044485817971717415
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ca_1996exp_7hour",
+   "gm_eaf": 0.8331035935330146,
+   "gm_tendl": 0.888310928859151,
+   "gm_fispact": 0.942882640181833,
+   "max_eaf": 0.2309062810209185,
+   "max_tendl": 0.16599151700321546,
+   "max_fispact": 0.11386438247235693,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "K42",
+     0.004774230890705086
+    ],
+    [
+     "Ca47",
+     0.001466258888023056
+    ],
+    [
+     "K43",
+     0.0004781981928215136
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "K42",
+     0.004782719918758644
+    ],
+    [
+     "Ca47",
+     0.0016272946987637203
+    ],
+    [
+     "K43",
+     0.000603606042367475
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ca_2000exp_5min",
+   "gm_eaf": 0.9174454051916097,
+   "gm_tendl": 1.6668720016457153,
+   "gm_fispact": 0.9619354585737823,
+   "max_eaf": 0.8528130605172018,
+   "max_tendl": 0.9203943870042491,
+   "max_fispact": 0.83197422885451,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.12632420595236424
+    ],
+    [
+     "K44",
+     0.007883435234536591
+    ],
+    [
+     "Ar41",
+     0.0005563190723752264
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.12796733931777113
+    ],
+    [
+     "K44",
+     0.01659872919557003
+    ],
+    [
+     "Ar41",
+     0.0004462199613968815
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cd_2000exp_5min",
+   "gm_eaf": 1.078114825969729,
+   "gm_tendl": 1.1149284484592346,
+   "gm_fispact": 1.144229986969175,
+   "max_eaf": 0.09158502842510974,
+   "max_tendl": 0.17467634488005268,
+   "max_fispact": 0.14968921165006818,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Cd111m1",
+     0.03866250807765161
+    ],
+    [
+     "Ag110",
+     0.010843353090234936
+    ],
+    [
+     "Cd105",
+     0.006473332974672662
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Cd111m1",
+     0.037800288524748746
+    ],
+    [
+     "Ag110",
+     0.0182568697504114
+    ],
+    [
+     "Cd105",
+     0.006329121624724423
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ce_2000exp_5min",
+   "gm_eaf": 1.1900253593270689,
+   "gm_tendl": 1.0980615724813643,
+   "gm_fispact": 1.3336157008153624,
+   "max_eaf": 1.7861732855106978,
+   "max_tendl": 1.4331244723488927,
+   "max_fispact": 1.851979549405409,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ce139m1",
+     1.946349050712814
+    ],
+    [
+     "N16",
+     0.09071610413874853
+    ],
+    [
+     "Ba137m1",
+     0.006854091942686235
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ce139m1",
+     2.1520744748100786
+    ],
+    [
+     "N16",
+     0.09189607322200015
+    ],
+    [
+     "Ba137m1",
+     0.005070037650628621
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cl_2000exp_5min",
+   "gm_eaf": 1.3274841344153474,
+   "gm_tendl": 1.1406463228178316,
+   "gm_fispact": 1.0996072976051696,
+   "max_eaf": 0.3672297814130454,
+   "max_tendl": 0.22887895273641576,
+   "max_fispact": 0.3130852175703122,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "S37",
+     0.22522577644948003
+    ],
+    [
+     "P34",
+     0.05453512301365083
+    ],
+    [
+     "Cl34m1",
+     0.03964102266832994
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "S37",
+     0.19056340615320144
+    ],
+    [
+     "P34",
+     0.05099096297038201
+    ],
+    [
+     "Cl34m1",
+     0.03449109954211274
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Co_1996exp_5min",
+   "gm_eaf": 1.0167619565377672,
+   "gm_tendl": 0.9777909992200458,
+   "gm_fispact": 1.0202597728992329,
+   "max_eaf": 0.04452152244156235,
+   "max_tendl": 0.035365407065338986,
+   "max_fispact": 0.05036601572294695,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.02825509474175616
+    ],
+    [
+     "Co60m1",
+     0.0029442479622303085
+    ],
+    [
+     "Co58m1",
+     0.0012887056634254407
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.028139329348777227
+    ],
+    [
+     "Co60m1",
+     0.0015208964294628048
+    ],
+    [
+     "Co58m1",
+     0.0011725293289222142
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Co_1996exp_7hour",
+   "gm_eaf": 0.9649562434790646,
+   "gm_tendl": 0.9940688344916272,
+   "gm_fispact": 0.9946720436476594,
+   "max_eaf": 0.3204849618802841,
+   "max_tendl": 0.31648516574277097,
+   "max_fispact": 0.31449413659443176,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Co58",
+     0.03011351448483785
+    ],
+    [
+     "Co58m1",
+     0.027157147226774123
+    ],
+    [
+     "Mn56",
+     0.019077666130887384
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Co58",
+     0.032052149959619025
+    ],
+    [
+     "Co58m1",
+     0.02502721165475005
+    ],
+    [
+     "Mn56",
+     0.01902016118062026
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Co_2000exp_5min",
+   "gm_eaf": 1.0986148407296745,
+   "gm_tendl": 1.0619919939968556,
+   "gm_fispact": 1.1015988384701738,
+   "max_eaf": 0.18153176030832846,
+   "max_tendl": 0.13075605121744532,
+   "max_fispact": 0.18811274372742212,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.02829897031629724
+    ],
+    [
+     "Co60m1",
+     0.002966013574024573
+    ],
+    [
+     "Co58m1",
+     0.0012711867996923545
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.028192713566503387
+    ],
+    [
+     "Co60m1",
+     0.0015271258590770162
+    ],
+    [
+     "Co58m1",
+     0.001159708259009108
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cr_1996exp_5min",
+   "gm_eaf": 0.7176549640876259,
+   "gm_tendl": 0.9066889737945927,
+   "gm_fispact": 0.8188776793919492,
+   "max_eaf": 1.2851465505986968,
+   "max_tendl": 1.697774213924365,
+   "max_fispact": 1.18121740246593,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "V52",
+     1.4593840656809516
+    ],
+    [
+     "V53",
+     0.09370570446558876
+    ],
+    [
+     "V54",
+     0.02193864755464746
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     2.039086300261517
+    ],
+    [
+     "V53",
+     0.0876609112649796
+    ],
+    [
+     "V54",
+     0.015855076422204878
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cr_1996exp_7hour",
+   "gm_eaf": 0.6584718716498625,
+   "gm_tendl": 0.6608315777474522,
+   "gm_fispact": 0.645206879238689,
+   "max_eaf": 2.2301144410719402,
+   "max_tendl": 2.2294215691196504,
+   "max_fispact": 2.255719266136426,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Cr51",
+     0.0015014008731851032
+    ],
+    [
+     "V49",
+     5.918523889347406e-07
+    ],
+    [
+     "V48",
+     5.282364907226952e-09
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Cr51",
+     0.0015020464328026903
+    ],
+    [
+     "V49",
+     9.86590807285937e-07
+    ],
+    [
+     "V48",
+     6.9004009648183444e-09
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cr_2000exp_5min",
+   "gm_eaf": 0.9115121222206851,
+   "gm_tendl": 1.1661127274641871,
+   "gm_fispact": 1.040364663165366,
+   "max_eaf": 0.6574680641962584,
+   "max_tendl": 1.0473051282912156,
+   "max_fispact": 0.5518222672776201,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "V52",
+     1.6108786381185105
+    ],
+    [
+     "V53",
+     0.11907378185303176
+    ],
+    [
+     "V54",
+     0.034248596600963195
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     2.2507581380282713
+    ],
+    [
+     "V53",
+     0.11139253778127575
+    ],
+    [
+     "V54",
+     0.02475148548281894
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cs_2000exp_5min",
+   "gm_eaf": 1.1516767345544408,
+   "gm_tendl": 1.2134933658945188,
+   "gm_fispact": 1.0181538573099809,
+   "max_eaf": 1.5541339523328512,
+   "max_tendl": 1.5376771487154641,
+   "max_fispact": 1.541049615499453,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.07921874240470575
+    ],
+    [
+     "Cs132",
+     0.002332972916310091
+    ],
+    [
+     "I130m1",
+     0.00028988912758862607
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.080249162171285
+    ],
+    [
+     "Cs132",
+     0.0023751179609240885
+    ],
+    [
+     "I130m1",
+     0.0006131351985833681
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cu_1996exp_5min",
+   "gm_eaf": 0.9491746706229557,
+   "gm_tendl": 0.9236170953229306,
+   "gm_fispact": 0.9150377034127725,
+   "max_eaf": 0.07087315159156841,
+   "max_tendl": 0.10122831831442415,
+   "max_fispact": 0.09678544164231564,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Cu62",
+     3.8599998620892646
+    ],
+    [
+     "Co62",
+     0.05259680623913502
+    ],
+    [
+     "Co62m1",
+     0.026059966659289308
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Cu62",
+     3.7238378731365236
+    ],
+    [
+     "Co62",
+     0.12046758365412383
+    ],
+    [
+     "Co62m1",
+     0.03546879154778159
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cu_1996exp_7hour",
+   "gm_eaf": 0.9717078876129922,
+   "gm_tendl": 0.9227258711210736,
+   "gm_fispact": 0.9273748250864771,
+   "max_eaf": 0.13356132354777764,
+   "max_tendl": 0.2097282773929599,
+   "max_fispact": 0.20940258200501177,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Cu64",
+     0.19967532561347834
+    ],
+    [
+     "Ni65",
+     0.001522379901061791
+    ],
+    [
+     "Co60",
+     0.00014293513317767908
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Cu64",
+     0.19947572762884633
+    ],
+    [
+     "Ni65",
+     0.001055715893444423
+    ],
+    [
+     "Co60",
+     0.00013245037977502246
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Cu_2000exp_5min",
+   "gm_eaf": 1.0833520613776508,
+   "gm_tendl": 1.0614640024733992,
+   "gm_fispact": 1.048460967138203,
+   "max_eaf": 0.09415752923785352,
+   "max_tendl": 0.08497782209976557,
+   "max_fispact": 0.05538064406708945,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Cu62",
+     3.888339786605369
+    ],
+    [
+     "Co62",
+     0.06603904563757944
+    ],
+    [
+     "Co62m1",
+     0.026468738964509218
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Cu62",
+     3.770065789697984
+    ],
+    [
+     "Co62",
+     0.15279687400576578
+    ],
+    [
+     "Co62m1",
+     0.03604095500398307
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Dy_2000exp_5min",
+   "gm_eaf": 1.8721181791630772,
+   "gm_tendl": 1.8801702627409809,
+   "gm_fispact": 1.8870770018054768,
+   "max_eaf": 3.4557286629290465,
+   "max_tendl": 3.4697973799035156,
+   "max_fispact": 3.462884102079503,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.014611022577650437
+    ],
+    [
+     "Dy165m1",
+     0.013652308894733935
+    ],
+    [
+     "Tb164",
+     0.006832851248803665
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.01480107212927084
+    ],
+    [
+     "Dy165m1",
+     0.008780000259639723
+    ],
+    [
+     "Tb164",
+     0.006332499118151117
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Er_2000exp_5min",
+   "gm_eaf": 1.3337956129320092,
+   "gm_tendl": 1.4931573250094952,
+   "gm_fispact": 1.3294612191969495,
+   "max_eaf": 2.261462404179513,
+   "max_tendl": 2.301494185991947,
+   "max_fispact": 2.3141876971397157,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.061241910002221296
+    ],
+    [
+     "Ho168",
+     0.003417097898415062
+    ],
+    [
+     "Ho170",
+     0.0013319361985603142
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.062038500211732205
+    ],
+    [
+     "Ho168",
+     0.0037056513960090414
+    ],
+    [
+     "Ho170",
+     0.0023761703162039184
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Eu_2000exp_5min",
+   "gm_eaf": 1.5021084207278783,
+   "gm_tendl": 1.5082498766105843,
+   "gm_fispact": 1.8672091659081065,
+   "max_eaf": 1.162188290816973,
+   "max_tendl": 1.1672662060995747,
+   "max_fispact": 1.4081501095346625,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.015485186321612431
+    ],
+    [
+     "Eu152m1",
+     0.009199286727356568
+    ],
+    [
+     "Eu150m1",
+     0.0021773809402429478
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.015686606359227223
+    ],
+    [
+     "Eu152m1",
+     0.008671787599332162
+    ],
+    [
+     "Eu150m1",
+     0.002313323042286249
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "F_1996exp_5min",
+   "gm_eaf": 1.0134362924916211,
+   "gm_tendl": 1.079533693742339,
+   "gm_fispact": 1.080900435434706,
+   "max_eaf": 0.05449632091068416,
+   "max_tendl": 0.1186540682428486,
+   "max_fispact": 0.12025759014242975,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "O19",
+     0.3413412855297387
+    ],
+    [
+     "F18",
+     0.07270357213341945
+    ],
+    [
+     "N16",
+     0.015173624738017798
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "O19",
+     0.3413412816295609
+    ],
+    [
+     "F18",
+     0.07843390166412866
+    ],
+    [
+     "N16",
+     0.013065445931133379
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "F_2000exp_5min",
+   "gm_eaf": 0.9500684437063193,
+   "gm_tendl": 1.0025535832179155,
+   "gm_fispact": 1.0035779063522599,
+   "max_eaf": 0.1649714697590084,
+   "max_tendl": 0.12482916611019744,
+   "max_fispact": 0.1244254077674665,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "O19",
+     0.7790366007663223
+    ],
+    [
+     "N16",
+     0.34051449454740795
+    ],
+    [
+     "F18",
+     0.07294883272884965
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "O19",
+     0.7790365918650215
+    ],
+    [
+     "N16",
+     0.29320441187196233
+    ],
+    [
+     "F18",
+     0.07869849313961709
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Fe_1996exp_5min",
+   "gm_eaf": 0.9485506823994283,
+   "gm_tendl": 0.9258564824458466,
+   "gm_fispact": 0.9359195539985083,
+   "max_eaf": 0.0861385034235114,
+   "max_tendl": 0.1256328312632334,
+   "max_fispact": 0.10204151464910939,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.09282644772458401
+    ],
+    [
+     "Mn57",
+     0.013238055455239435
+    ],
+    [
+     "Fe53",
+     0.01193832711029626
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.09234951940716622
+    ],
+    [
+     "Mn57",
+     0.01233797900738642
+    ],
+    [
+     "Fe53",
+     0.008309384997498039
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Fe_1996exp_7hour",
+   "gm_eaf": 0.9861588313998476,
+   "gm_tendl": 0.9007739167662236,
+   "gm_fispact": 0.9147738430163692,
+   "max_eaf": 0.12374867702492973,
+   "max_tendl": 0.1639813999843738,
+   "max_fispact": 0.1515867227407769,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.06331637945802696
+    ],
+    [
+     "Mn54",
+     0.00020486414079278425
+    ],
+    [
+     "Cr51",
+     2.4380536324194342e-05
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.0626716587090088
+    ],
+    [
+     "Mn54",
+     0.00018319894832851766
+    ],
+    [
+     "Cr51",
+     2.5816057394405118e-05
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Fe_2000exp_5min",
+   "gm_eaf": 1.08739909730014,
+   "gm_tendl": 1.0589274860359226,
+   "gm_fispact": 1.0733245134024694,
+   "max_eaf": 0.09239940063123707,
+   "max_tendl": 0.08010913207344975,
+   "max_fispact": 0.08535330841753941,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.09392816704872006
+    ],
+    [
+     "Mn57",
+     0.017087940811642
+    ],
+    [
+     "Fe53",
+     0.011410485950535417
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.09335070693812407
+    ],
+    [
+     "Mn57",
+     0.01584092228908049
+    ],
+    [
+     "Fe53",
+     0.007831353232769648
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ga_2000exp_5min",
+   "gm_eaf": 1.086431651326684,
+   "gm_tendl": 1.0238038903834903,
+   "gm_fispact": 1.0228557118931156,
+   "max_eaf": 0.1026291762278041,
+   "max_tendl": 0.09519523840266482,
+   "max_fispact": 0.08646769364337747,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.5920218170211423
+    ],
+    [
+     "Ga68",
+     0.4990465288922299
+    ],
+    [
+     "Ga70",
+     0.44129596107437413
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.5997224060987661
+    ],
+    [
+     "Ga68",
+     0.4700607193858417
+    ],
+    [
+     "Ga70",
+     0.42540861518109413
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Gd_2000exp_5min",
+   "gm_eaf": 1.1938278260872295,
+   "gm_tendl": 1.2166218901197015,
+   "gm_fispact": 1.1697242894652111,
+   "max_eaf": 1.0819026338618973,
+   "max_tendl": 1.0665469724181251,
+   "max_fispact": 1.0023437534510713,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.06460899509397688
+    ],
+    [
+     "Gd161",
+     0.004164195629062189
+    ],
+    [
+     "Eu160",
+     0.004072789186564269
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.06544938189668002
+    ],
+    [
+     "Eu160",
+     0.004221107244938377
+    ],
+    [
+     "Gd161",
+     0.0041178308945218085
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ge_2000exp_5min",
+   "gm_eaf": 1.1777778743595142,
+   "gm_tendl": 1.4576743388087616,
+   "gm_fispact": 1.0195592453372524,
+   "max_eaf": 0.43097921435057573,
+   "max_tendl": 0.6044544928203092,
+   "max_fispact": 0.4483345107461075,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.7071435916703143
+    ],
+    [
+     "Ga74",
+     0.08666028115730946
+    ],
+    [
+     "Ge75m1",
+     0.06762372076618577
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.7163416010371434
+    ],
+    [
+     "Ga74",
+     0.14531998857915948
+    ],
+    [
+     "Ge75m1",
+     0.05543945068932524
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Hf_2000exp_5min",
+   "gm_eaf": 1.3250734622996991,
+   "gm_tendl": 0.9641857966826813,
+   "gm_fispact": 0.9243006172221983,
+   "max_eaf": 0.9121562720178017,
+   "max_tendl": 0.6712398771600077,
+   "max_fispact": 0.5436414084769317,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Hf179m1",
+     0.0769788961380732
+    ],
+    [
+     "Lu180",
+     0.004374065542946515
+    ],
+    [
+     "Hf177m1",
+     0.0007398482756522585
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Hf179m1",
+     0.02748593653185932
+    ],
+    [
+     "Lu180",
+     0.005621344993325846
+    ],
+    [
+     "Hf180m1",
+     0.0007146207523294626
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Hg_2000exp_5min",
+   "gm_eaf": 0.8369065268774317,
+   "gm_tendl": 0.9752646918218117,
+   "gm_fispact": 1.1215203804796736,
+   "max_eaf": 0.2963666300055808,
+   "max_tendl": 0.21577358675175565,
+   "max_fispact": 0.15068709534273006,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Hg199m1",
+     0.036252742107049526
+    ],
+    [
+     "N16",
+     0.03606196931604904
+    ],
+    [
+     "Au202",
+     0.0017258023014014579
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Hg199m1",
+     0.04250081452305556
+    ],
+    [
+     "N16",
+     0.036531037176470174
+    ],
+    [
+     "Au202",
+     0.0014947114545153157
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ho_2000exp_5min",
+   "gm_eaf": 0.839815099285444,
+   "gm_tendl": 0.9640359176967073,
+   "gm_fispact": 1.0706977370249684,
+   "max_eaf": 1.3420950711336939,
+   "max_tendl": 1.1596051239356473,
+   "max_fispact": 1.1381590422900656,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ho164",
+     0.07819996647003576
+    ],
+    [
+     "N16",
+     0.06830129182211564
+    ],
+    [
+     "Ho164m1",
+     0.06324453502351256
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ho164",
+     0.1480636410213039
+    ],
+    [
+     "N16",
+     0.06918970533437331
+    ],
+    [
+     "Ho164m1",
+     0.030558086577573286
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "I_2000exp_5min",
+   "gm_eaf": 1.810280692669805,
+   "gm_tendl": 1.82643669023265,
+   "gm_fispact": 1.8310556979247565,
+   "max_eaf": 1.0142060384514384,
+   "max_tendl": 1.0184981911921296,
+   "max_fispact": 1.0150843136243313,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.03547638930009153
+    ],
+    [
+     "I128",
+     0.01661275659739187
+    ],
+    [
+     "Sb124m1",
+     0.003006490065225871
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.03593784036169666
+    ],
+    [
+     "I128",
+     0.016940637192678416
+    ],
+    [
+     "Sb124m1",
+     0.0025287769394495624
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "In_2000exp_5min",
+   "gm_eaf": 1.9219832649851214,
+   "gm_tendl": 1.8941968927776587,
+   "gm_fispact": 29.055522926032342,
+   "max_eaf": 1.0092898996165172,
+   "max_tendl": 0.8288006079208424,
+   "max_fispact": 4.211782662443181,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "In114",
+     1.1195413346923326
+    ],
+    [
+     "In116m1",
+     0.21372805052623378
+    ],
+    [
+     "In116",
+     0.07938040795856963
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "In114",
+     1.5250587230340282
+    ],
+    [
+     "In116m1",
+     0.17265497554124756
+    ],
+    [
+     "In116",
+     0.14640944134669662
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Inc600_1996exp_5min",
+   "gm_eaf": 0.7858355033837893,
+   "gm_tendl": 0.9496752792176371,
+   "gm_fispact": 0.8497767712992171,
+   "max_eaf": 0.32241788373637026,
+   "max_tendl": 0.15001036957757957,
+   "max_fispact": 0.20636555913861607,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.23518570383279291
+    ],
+    [
+     "Co62",
+     0.016874948970939645
+    ],
+    [
+     "V53",
+     0.015193627790849028
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.32606302794207964
+    ],
+    [
+     "Co62",
+     0.025362282255749182
+    ],
+    [
+     "V53",
+     0.014150862208565384
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Inc600_1996exp_7hour",
+   "gm_eaf": 1.0208356522266107,
+   "gm_tendl": 0.9792787449900624,
+   "gm_fispact": 0.9977625442695408,
+   "max_eaf": 0.07911443302327789,
+   "max_tendl": 0.06443894110410013,
+   "max_fispact": 0.06068285173568781,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ni57",
+     0.06306963359358359
+    ],
+    [
+     "Co58",
+     0.007630247694733156
+    ],
+    [
+     "Mn56",
+     0.0054567332201379505
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ni57",
+     0.05992287374612785
+    ],
+    [
+     "Co58",
+     0.007244508170734515
+    ],
+    [
+     "Mn56",
+     0.005401195292085756
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Inc600_2000exp_5min",
+   "gm_eaf": 0.8582852382291535,
+   "gm_tendl": 1.056018288246905,
+   "gm_fispact": 0.9369293623371135,
+   "max_eaf": 0.21032690359932804,
+   "max_tendl": 0.12280275363864812,
+   "max_fispact": 0.11924427363783666,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.2588520197610993
+    ],
+    [
+     "Co62",
+     0.021116789992784983
+    ],
+    [
+     "V53",
+     0.018874241049778286
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.36129974403437354
+    ],
+    [
+     "Co62",
+     0.031576197480682085
+    ],
+    [
+     "V53",
+     0.017656696348362574
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ir_2000exp_5min",
+   "gm_eaf": 1.0980840790628175,
+   "gm_tendl": 0.4773282812906241,
+   "gm_fispact": 0.577037331657406,
+   "max_eaf": 0.38406762963718266,
+   "max_tendl": 1.3137496822562709,
+   "max_fispact": 1.2005698148259654,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ir192m1",
+     0.030332711596460015
+    ],
+    [
+     "Os190m1",
+     0.0016518818302859652
+    ],
+    [
+     "Ir190",
+     0.001005395785315544
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ir192m1",
+     0.022321187708922968
+    ],
+    [
+     "Ir194",
+     0.0009927456160379207
+    ],
+    [
+     "Ir190",
+     0.0009265009541970288
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "K_1996exp_5min",
+   "gm_eaf": 1.2552260640371729,
+   "gm_tendl": 1.2090191048087748,
+   "gm_fispact": 1.0848467758175186,
+   "max_eaf": 0.26662026680708745,
+   "max_tendl": 0.24224625997588192,
+   "max_fispact": 0.10399838436469194,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "K38",
+     0.1334338969570103
+    ],
+    [
+     "N16",
+     0.009172841981420755
+    ],
+    [
+     "Cl38",
+     0.008293073917732801
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "K38",
+     0.11746928074053413
+    ],
+    [
+     "Cl38",
+     0.011122699961520315
+    ],
+    [
+     "N16",
+     0.009292155636326767
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "K_1996exp_7hour",
+   "gm_eaf": 1.3244513095653936,
+   "gm_tendl": 1.0337367020027906,
+   "gm_fispact": 1.248507177613339,
+   "max_eaf": 2.8307051735918822,
+   "max_tendl": 2.3217929727902806,
+   "max_fispact": 2.3463717886115445,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ar41",
+     0.00019880252264471278
+    ],
+    [
+     "K42",
+     0.00018329917741460102
+    ],
+    [
+     "S35",
+     4.0549247703478694e-06
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "K42",
+     0.00028756008552737107
+    ],
+    [
+     "Ar41",
+     0.00019326188993903636
+    ],
+    [
+     "S35",
+     2.4525098460105923e-06
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "K_2000exp_5min",
+   "gm_eaf": 1.2535519185470994,
+   "gm_tendl": 1.2022678198871404,
+   "gm_fispact": 1.0864607695224648,
+   "max_eaf": 0.2498981823557117,
+   "max_tendl": 0.31126623483815247,
+   "max_fispact": 0.13154611360249474,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.1867798318883523
+    ],
+    [
+     "K38",
+     0.13984097619739816
+    ],
+    [
+     "Cl38",
+     0.008373232288330971
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.1892093280521878
+    ],
+    [
+     "K38",
+     0.12310978894107363
+    ],
+    [
+     "Cl38",
+     0.011230208650627899
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "La_2000exp_5min",
+   "gm_eaf": 2.044594811944022,
+   "gm_tendl": 2.117834538246469,
+   "gm_fispact": 1.8853956329273855,
+   "max_eaf": 2.8883310428644693,
+   "max_tendl": 2.9156087013739507,
+   "max_fispact": 2.7689700420963668,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.07187994695878243
+    ],
+    [
+     "Ba139",
+     0.001080602380086017
+    ],
+    [
+     "Cs136m1",
+     0.00041647538496958423
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.07281490901345142
+    ],
+    [
+     "Ba139",
+     0.0011235447895457799
+    ],
+    [
+     "Cs136m1",
+     0.0009883072890791416
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Lu_2000exp_5min",
+   "gm_eaf": 1.1376155202612677,
+   "gm_tendl": 1.3516856878894943,
+   "gm_fispact": 1.214975895323632,
+   "max_eaf": 1.6167634819595005,
+   "max_tendl": 1.810225705578826,
+   "max_fispact": 1.6888697711320513,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.06485933695863892
+    ],
+    [
+     "Lu176m1",
+     0.0028759834893956598
+    ],
+    [
+     "Lu174m1",
+     8.35880515792442e-06
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.06570298002618445
+    ],
+    [
+     "Lu176m1",
+     0.00349553760029188
+    ],
+    [
+     "Yb176m1",
+     3.374770352031189e-05
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mg_2000exp_5min",
+   "gm_eaf": 0.9872794593684787,
+   "gm_tendl": 0.9071645632895224,
+   "gm_fispact": 0.9434290024338589,
+   "max_eaf": 0.10911826914450284,
+   "max_tendl": 0.27054271264133506,
+   "max_fispact": 0.1626546107633079,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Na25",
+     0.1374132510484924
+    ],
+    [
+     "Ne23",
+     0.09091539400252455
+    ],
+    [
+     "Na24",
+     0.061527648952811015
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Na25",
+     0.10346619647607248
+    ],
+    [
+     "Ne23",
+     0.07595230621937975
+    ],
+    [
+     "Na24",
+     0.05896351407589168
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mn_1996exp_5min",
+   "gm_eaf": 1.024740866808291,
+   "gm_tendl": 1.211258105475017,
+   "gm_fispact": 1.0378521708196138,
+   "max_eaf": 0.2425138700010975,
+   "max_tendl": 0.2802929238404124,
+   "max_fispact": 0.12323917728777889,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.5580367085452939
+    ],
+    [
+     "Cr55",
+     0.3415990935419294
+    ],
+    [
+     "Mn56",
+     0.004323801204698531
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.6921720542168815
+    ],
+    [
+     "Cr55",
+     0.37020277614511915
+    ],
+    [
+     "Mn56",
+     0.005090608304233712
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mn_1996exp_7hour",
+   "gm_eaf": 1.0540707846096282,
+   "gm_tendl": 0.9965175483875577,
+   "gm_fispact": 0.9612493705105666,
+   "max_eaf": 0.07833097112015792,
+   "max_tendl": 0.07420466574447007,
+   "max_fispact": 0.10831809454572099,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mn54",
+     0.007998000613178239
+    ],
+    [
+     "Mn56",
+     0.00040883968223003823
+    ],
+    [
+     "Sc48",
+     1.3947816006082973e-14
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn54",
+     0.0075591451118182185
+    ],
+    [
+     "Mn56",
+     0.00040908437417418473
+    ],
+    [
+     "Sc48",
+     2.7641576074019282e-14
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mn_2000exp_5min",
+   "gm_eaf": 1.114147561477793,
+   "gm_tendl": 1.3167434783907441,
+   "gm_fispact": 1.1202517199564712,
+   "max_eaf": 0.16205195102871248,
+   "max_tendl": 0.3291503649037688,
+   "max_fispact": 0.13980978525913673,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.643164071034801
+    ],
+    [
+     "Cr55",
+     0.39766116619212455
+    ],
+    [
+     "Mn56",
+     0.004338676239279437
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.7977614902918471
+    ],
+    [
+     "Cr55",
+     0.43095918716587733
+    ],
+    [
+     "Mn56",
+     0.00510812136068067
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mo_1996exp_5min",
+   "gm_eaf": 1.2068687478978368,
+   "gm_tendl": 0.7468959137032856,
+   "gm_fispact": 0.900704333109006,
+   "max_eaf": 0.2291554443380677,
+   "max_tendl": 0.3106470741195403,
+   "max_fispact": 0.11781428614467476,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mo91",
+     0.22106293538526592
+    ],
+    [
+     "Mo91m1",
+     0.057609700234847655
+    ],
+    [
+     "Zr89m1",
+     0.0035596700505611677
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mo91",
+     0.12920016290155864
+    ],
+    [
+     "Mo91m1",
+     0.029217856321069383
+    ],
+    [
+     "Zr89m1",
+     0.003845525841877987
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mo_1996exp_7hour",
+   "gm_eaf": 0.9597548292398955,
+   "gm_tendl": 1.0711674114306022,
+   "gm_fispact": 1.0411262755797246,
+   "max_eaf": 0.31399373383953894,
+   "max_tendl": 0.4732417809319043,
+   "max_fispact": 0.3663647857175745,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mo99",
+     0.05222220957131407
+    ],
+    [
+     "Nb96",
+     0.01396996941864163
+    ],
+    [
+     "Tc99m1",
+     0.011403534306966416
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mo99",
+     0.04982735979171409
+    ],
+    [
+     "Nb96",
+     0.0186008822149392
+    ],
+    [
+     "Tc99m1",
+     0.010880580248957118
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Mo_2000exp_5min",
+   "gm_eaf": 1.3066872810691077,
+   "gm_tendl": 0.8129723065371686,
+   "gm_fispact": 0.981965796307686,
+   "max_eaf": 0.2996077996935755,
+   "max_tendl": 0.2300919675993183,
+   "max_fispact": 0.029020975091132245,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mo91",
+     0.2131855145256136
+    ],
+    [
+     "Mo91m1",
+     0.06465012046730328
+    ],
+    [
+     "Zr89m1",
+     0.0036604490924117693
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mo91",
+     0.1259235944920799
+    ],
+    [
+     "Mo91m1",
+     0.03198891891077648
+    ],
+    [
+     "Zr89m1",
+     0.003969473329868102
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Na_1996exp_5min",
+   "gm_eaf": 0.4286580040982048,
+   "gm_tendl": 0.35322294534262544,
+   "gm_fispact": 0.3710570936807027,
+   "max_eaf": 1.6665542877257016,
+   "max_tendl": 1.8575486581881462,
+   "max_fispact": 1.8370993265730962,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ne23",
+     0.39471865560639924
+    ],
+    [
+     "F20",
+     0.13040089551758746
+    ],
+    [
+     "N16",
+     0.006675445821873993
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ne23",
+     0.3291486031851399
+    ],
+    [
+     "F20",
+     0.0777076137174332
+    ],
+    [
+     "N16",
+     0.006762275194680375
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Na_1996exp_7hour",
+   "gm_eaf": 0.7957077668803552,
+   "gm_tendl": 0.7929944995137357,
+   "gm_fispact": 0.8441116704016036,
+   "max_eaf": 0.36944425430756594,
+   "max_tendl": 0.28537953311666475,
+   "max_fispact": 0.2151564185992397,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Na24",
+     0.003835999331387822
+    ],
+    [
+     "Na22",
+     0.00027359433324096455
+    ],
+    [
+     "C14",
+     2.6276917023811036e-11
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Na24",
+     0.002664454629013612
+    ],
+    [
+     "Na22",
+     0.0002975883718949565
+    ],
+    [
+     "C14",
+     1.8855259471605943e-11
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Na_2000exp_5min",
+   "gm_eaf": 1.0395128034734096,
+   "gm_tendl": 0.8408240928411479,
+   "gm_fispact": 0.8969892594995603,
+   "max_eaf": 0.6507237574159292,
+   "max_tendl": 0.7224769575041806,
+   "max_fispact": 0.6890721320905087,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "F20",
+     3.292701370476781
+    ],
+    [
+     "N16",
+     1.0469608795682177
+    ],
+    [
+     "Ne23",
+     1.03903526836088
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "F20",
+     1.9621641796881912
+    ],
+    [
+     "N16",
+     1.0605789897216764
+    ],
+    [
+     "Ne23",
+     0.866432337016543
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Nb_1996exp_5min",
+   "gm_eaf": 1.1328918798830392,
+   "gm_tendl": 1.12307915730808,
+   "gm_fispact": 1.0973544813198701,
+   "max_eaf": 0.26950047703196184,
+   "max_tendl": 0.2501259209214356,
+   "max_fispact": 0.1805106659023488,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Y89m1",
+     0.001970008944150822
+    ],
+    [
+     "Nb92m1",
+     0.0011291080471832458
+    ],
+    [
+     "Nb94m1",
+     0.0009926865872867676
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Y89m1",
+     0.0020053304436176145
+    ],
+    [
+     "Nb92m1",
+     0.0010975733885443557
+    ],
+    [
+     "Y90m1",
+     0.0008171708874363814
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Nb_1996exp_7hour",
+   "gm_eaf": 0.9544625770593822,
+   "gm_tendl": 0.9279465760551031,
+   "gm_fispact": 0.9278898433065769,
+   "max_eaf": 0.11466579758233754,
+   "max_tendl": 0.1445472357622217,
+   "max_fispact": 0.14267767224074465,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Nb92m1",
+     0.09775901387769588
+    ],
+    [
+     "Y90",
+     0.008614532167389334
+    ],
+    [
+     "Y90m1",
+     0.0013130655462786816
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Nb92m1",
+     0.09502026600533527
+    ],
+    [
+     "Y90",
+     0.008424570394042999
+    ],
+    [
+     "Y90m1",
+     0.0014540455117251375
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Nb_2000exp_5min",
+   "gm_eaf": 0.9719353808673091,
+   "gm_tendl": 0.9621662042453798,
+   "gm_fispact": 0.937222285276661,
+   "max_eaf": 0.14403131497658533,
+   "max_tendl": 0.18139483946909932,
+   "max_fispact": 0.20176986437054473,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Y89m1",
+     0.0032053773473511883
+    ],
+    [
+     "Nb92m1",
+     0.0011291178641145516
+    ],
+    [
+     "Nb94m1",
+     0.0010130340391641378
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Y89m1",
+     0.0032628485251365723
+    ],
+    [
+     "Nb92m1",
+     0.001097582931300326
+    ],
+    [
+     "Nb94m1",
+     0.0008297392279224631
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Nd_2000exp_5min",
+   "gm_eaf": 1.6176147533661136,
+   "gm_tendl": 1.567293616700601,
+   "gm_fispact": 1.576298051986471,
+   "max_eaf": 0.6839175298622492,
+   "max_tendl": 0.6544939049657627,
+   "max_fispact": 0.6536702814489028,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Nd141m1",
+     0.47596409050857524
+    ],
+    [
+     "N16",
+     0.06958642522961557
+    ],
+    [
+     "Nd149",
+     0.01515058117536597
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Nd141m1",
+     0.45454968443724375
+    ],
+    [
+     "N16",
+     0.07049155482225505
+    ],
+    [
+     "Nd149",
+     0.01503118159648699
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "NiCr_1996exp_5min",
+   "gm_eaf": 0.881534328818368,
+   "gm_tendl": 1.0871354013398526,
+   "gm_fispact": 0.9622451442861863,
+   "max_eaf": 0.21108546730916752,
+   "max_tendl": 0.140330967673357,
+   "max_fispact": 0.09588996870251008,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.28636187334046537
+    ],
+    [
+     "V53",
+     0.01872344705797574
+    ],
+    [
+     "Co62",
+     0.017820041018759995
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.3939031907936114
+    ],
+    [
+     "Co62",
+     0.02685992034428957
+    ],
+    [
+     "V53",
+     0.01736645437924428
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "NiCr_1996exp_7hour",
+   "gm_eaf": 1.0217802817110961,
+   "gm_tendl": 0.9803220917548752,
+   "gm_fispact": 0.9991694361549806,
+   "max_eaf": 0.07941990473722492,
+   "max_tendl": 0.11251347792160876,
+   "max_fispact": 0.048732564476974626,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ni57",
+     0.06620582218937775
+    ],
+    [
+     "Co58",
+     0.008114334435234564
+    ],
+    [
+     "Co58m1",
+     0.004505826054547517
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ni57",
+     0.06290258716068205
+    ],
+    [
+     "Co58",
+     0.007708676964480622
+    ],
+    [
+     "Co58m1",
+     0.0048688120968927925
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "NiCr_2000exp_5min",
+   "gm_eaf": 0.9105364723083957,
+   "gm_tendl": 1.149073338004248,
+   "gm_fispact": 1.0082585126711001,
+   "max_eaf": 0.1465405981907208,
+   "max_tendl": 0.24422274929272017,
+   "max_fispact": 0.1585860679777813,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.3154016003577797
+    ],
+    [
+     "V53",
+     0.023211652736685028
+    ],
+    [
+     "Co62",
+     0.022364524352685763
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.440686655067792
+    ],
+    [
+     "Co62",
+     0.03344195011472928
+    ],
+    [
+     "V53",
+     0.021714309096424786
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ni_1996exp_5min",
+   "gm_eaf": 0.9552817649875114,
+   "gm_tendl": 1.0364783874931147,
+   "gm_fispact": 0.9896819816240394,
+   "max_eaf": 0.13186676188525498,
+   "max_tendl": 0.15267821002012716,
+   "max_fispact": 0.05977304377740282,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Co62",
+     0.0221208708133788
+    ],
+    [
+     "Co62m1",
+     0.007999316292105825
+    ],
+    [
+     "Co60m1",
+     0.005082963736398899
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Co62",
+     0.0330699121363203
+    ],
+    [
+     "Co62m1",
+     0.007948383777945609
+    ],
+    [
+     "Co60m1",
+     0.005214321954317671
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ni_1996exp_7hour",
+   "gm_eaf": 1.022898503981692,
+   "gm_tendl": 0.9809767721136294,
+   "gm_fispact": 1.000252105588364,
+   "max_eaf": 0.09903232060428697,
+   "max_tendl": 0.0986757710705061,
+   "max_fispact": 0.05417110154290284,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ni57",
+     0.08404294113310562
+    ],
+    [
+     "Co58",
+     0.010013785963764225
+    ],
+    [
+     "Co58m1",
+     0.006047972565566924
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ni57",
+     0.07984975120078533
+    ],
+    [
+     "Co58",
+     0.009500729259633552
+    ],
+    [
+     "Co58m1",
+     0.006535192799817269
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ni_2000exp_5min",
+   "gm_eaf": 1.0400737459408251,
+   "gm_tendl": 1.1548204977277587,
+   "gm_fispact": 1.0843992241140858,
+   "max_eaf": 0.09891491258346455,
+   "max_tendl": 0.35741714393443486,
+   "max_fispact": 0.169354636811796,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Co62",
+     0.028065958496277136
+    ],
+    [
+     "Co62m1",
+     0.00820794030670406
+    ],
+    [
+     "Co60m1",
+     0.005259885605526499
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Co62",
+     0.041967667600725095
+    ],
+    [
+     "Co62m1",
+     0.008155679460822771
+    ],
+    [
+     "Co60m1",
+     0.00539581598697913
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Os_2000exp_5min",
+   "gm_eaf": 2.4168995263307433,
+   "gm_tendl": 0.6575811115184694,
+   "gm_fispact": 0.5534977325566253,
+   "max_eaf": 1.8070141951480578,
+   "max_tendl": 1.7236530024094188,
+   "max_fispact": 1.5577061137460237,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Os190m1",
+     0.014864320854189088
+    ],
+    [
+     "Re192",
+     0.004643812971828617
+    ],
+    [
+     "Re190",
+     0.0030532127657871898
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Re190",
+     0.0030235577053925773
+    ],
+    [
+     "Re192",
+     0.0013866245959617317
+    ],
+    [
+     "Os189m1",
+     0.0006726428364463418
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "P_2000exp_5min",
+   "gm_eaf": 0.9292218980994692,
+   "gm_tendl": 1.0007204771891416,
+   "gm_fispact": 1.0034490161199392,
+   "max_eaf": 0.16157641948076676,
+   "max_tendl": 0.11979404058500882,
+   "max_fispact": 0.12005149148446256,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Al28",
+     3.7874709744615833
+    ],
+    [
+     "P30",
+     0.3437029963957403
+    ],
+    [
+     "N13",
+     0.09592328160410644
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Al28",
+     3.98633430017211
+    ],
+    [
+     "P30",
+     0.6161295176204123
+    ],
+    [
+     "N13",
+     0.09571381672298994
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Pb_1996exp_5min",
+   "gm_eaf": 0.6877725817787876,
+   "gm_tendl": 0.7476311743471263,
+   "gm_fispact": 0.8642379487940695,
+   "max_eaf": 0.40268702033904674,
+   "max_tendl": 0.3365362275623211,
+   "max_fispact": 0.3352650447785039,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Tl208",
+     0.004868359968916964
+    ],
+    [
+     "Tl206",
+     0.000890116153019746
+    ],
+    [
+     "Tl207",
+     0.0005827165678279947
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Tl208",
+     0.0049348386656669
+    ],
+    [
+     "Tl206",
+     0.001245264586517211
+    ],
+    [
+     "Tl207",
+     0.00073268186049268
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Pb_1996exp_7hour",
+   "gm_eaf": 0.5093845043068563,
+   "gm_tendl": 0.6154776954500497,
+   "gm_fispact": 0.5071210802211681,
+   "max_eaf": 3.359538856942011,
+   "max_tendl": 2.3431450168583168,
+   "max_fispact": 3.091952301106539,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Pb203",
+     0.00424286218600172
+    ],
+    [
+     "Pb209",
+     1.801818696880636e-05
+    ],
+    [
+     "Pb204m1",
+     8.577307526013375e-07
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Pb203",
+     0.0042460394183475286
+    ],
+    [
+     "Pb209",
+     1.767239337567408e-05
+    ],
+    [
+     "Hg203",
+     2.1914086466076052e-06
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Pb_2000exp_5min",
+   "gm_eaf": 0.8370719005230001,
+   "gm_tendl": 0.9078796813597072,
+   "gm_fispact": 1.0362223479486186,
+   "max_eaf": 0.4165622186622315,
+   "max_tendl": 0.3629303785164055,
+   "max_fispact": 0.6358851044999,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Tl208",
+     0.005152678270333223
+    ],
+    [
+     "Tl206",
+     0.0009274188684026714
+    ],
+    [
+     "Tl207",
+     0.0006042749896408939
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Tl208",
+     0.00522303940598681
+    ],
+    [
+     "Tl206",
+     0.001297691802373878
+    ],
+    [
+     "Tl207",
+     0.000759788459953334
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Pd_2000exp_5min",
+   "gm_eaf": 1.206168177151712,
+   "gm_tendl": 1.1360802925869407,
+   "gm_fispact": 1.0851175639691664,
+   "max_eaf": 0.2419213340228606,
+   "max_tendl": 0.2671609733562563,
+   "max_fispact": 0.14276600812458676,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Pd107m1",
+     0.07672963930855801
+    ],
+    [
+     "Pd109m1",
+     0.049672484079572365
+    ],
+    [
+     "Rh104",
+     0.03176472886348361
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Pd107m1",
+     0.06800983872260453
+    ],
+    [
+     "Rh104",
+     0.05741731504368586
+    ],
+    [
+     "Pd109m1",
+     0.02855062371187415
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Pr_2000exp_5min",
+   "gm_eaf": 1.4059992162734394,
+   "gm_tendl": 1.505477821243246,
+   "gm_fispact": 1.4994180673952922,
+   "max_eaf": 0.8430668901241095,
+   "max_tendl": 0.8666244353000353,
+   "max_fispact": 0.8706175317440165,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Pr140",
+     5.509505031812855
+    ],
+    [
+     "N16",
+     0.08407953062456357
+    ],
+    [
+     "Ce139m1",
+     0.0014278358387324421
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Pr140",
+     5.917353989468651
+    ],
+    [
+     "N16",
+     0.08517317598790002
+    ],
+    [
+     "Ce139m1",
+     0.0006352471380864683
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Pt_2000exp_5min",
+   "gm_eaf": 1.2728117674776667,
+   "gm_tendl": 1.0901534081873874,
+   "gm_fispact": 1.191362044701904,
+   "max_eaf": 0.2867870137153585,
+   "max_tendl": 0.1290447990566703,
+   "max_fispact": 0.2236030663172234,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Pt197m1",
+     0.006073405200289683
+    ],
+    [
+     "Ir196",
+     0.0012513620419742268
+    ],
+    [
+     "Pt199",
+     0.0004099318084333443
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Pt197m1",
+     0.00501676612051452
+    ],
+    [
+     "Ir196",
+     0.001165142783132524
+    ],
+    [
+     "Pt199",
+     0.0003602712801754242
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Rb_2000exp_5min",
+   "gm_eaf": 1.0496740488791527,
+   "gm_tendl": 1.0675586598859454,
+   "gm_fispact": 1.008781655546143,
+   "max_eaf": 0.13953803413164464,
+   "max_tendl": 0.10967975525644384,
+   "max_fispact": 0.05676810717589077,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Rb86m1",
+     0.44872974260848786
+    ],
+    [
+     "Rb84m1",
+     0.2011956500273692
+    ],
+    [
+     "N16",
+     0.10140293942997275
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Rb86m1",
+     0.3119707284657324
+    ],
+    [
+     "Rb84m1",
+     0.21987428124720618
+    ],
+    [
+     "N16",
+     0.10272191509161713
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Re_1996exp_5min",
+   "gm_eaf": 1.1774980711546954,
+   "gm_tendl": 1.2498871457234817,
+   "gm_fispact": 1.3124839393738192,
+   "max_eaf": 0.24372284905974145,
+   "max_tendl": 0.302572731981895,
+   "max_fispact": 0.3625507509726547,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Re186",
+     0.0013147625660828693
+    ],
+    [
+     "Re188",
+     0.000675071084013865
+    ],
+    [
+     "W185m1",
+     0.0006021398415664671
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Re186",
+     0.0014563902065375899
+    ],
+    [
+     "Re188",
+     0.0006943156031405071
+    ],
+    [
+     "W185m1",
+     0.0003093303990921801
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Re_1996exp_7hour",
+   "gm_eaf": 0.9104399049879301,
+   "gm_tendl": 1.0598935165380725,
+   "gm_fispact": 1.0682262431692064,
+   "max_eaf": 0.17887111016424295,
+   "max_tendl": 0.1368293886429469,
+   "max_fispact": 0.14724237549848274,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Re186",
+     0.0931834347435868
+    ],
+    [
+     "Re184",
+     0.015658089269068916
+    ],
+    [
+     "Re188",
+     0.002919854425658449
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Re186",
+     0.1046058199887322
+    ],
+    [
+     "Re184",
+     0.018991944058441762
+    ],
+    [
+     "Re188",
+     0.0029569539101443726
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Re_2000exp_5min",
+   "gm_eaf": 1.0257880883320512,
+   "gm_tendl": 1.0819652488129785,
+   "gm_fispact": 1.1400411074978487,
+   "max_eaf": 0.3061657104263216,
+   "max_tendl": 0.3363925561932133,
+   "max_fispact": 0.2473375933159632,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Re186",
+     0.001314805117392385
+    ],
+    [
+     "Re188",
+     0.0006749542649098599
+    ],
+    [
+     "W185m1",
+     0.0006679773469976373
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Re186",
+     0.0014564373415204104
+    ],
+    [
+     "Re188",
+     0.0006941760581771952
+    ],
+    [
+     "W185m1",
+     0.00034315234612906204
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Rh_2000exp_5min",
+   "gm_eaf": 3.408369775386541,
+   "gm_tendl": 3.2025957419961575,
+   "gm_fispact": 3.194095419253563,
+   "max_eaf": 1.4191621450342364,
+   "max_tendl": 1.4322065576985694,
+   "max_fispact": 1.4255426138662566,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Rh104",
+     0.38000172555156014
+    ],
+    [
+     "Tc100",
+     0.025320547484698596
+    ],
+    [
+     "Rh103m1",
+     0.0070315332246279625
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Rh104",
+     0.3486880300970956
+    ],
+    [
+     "Tc100",
+     0.05284712591634574
+    ],
+    [
+     "Rh103m1",
+     0.007731056247439343
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ru_2000exp_5min",
+   "gm_eaf": 0.9993772791746774,
+   "gm_tendl": 1.1316866889271735,
+   "gm_fispact": 0.9901122935520438,
+   "max_eaf": 0.16442574618314368,
+   "max_tendl": 0.200105128527818,
+   "max_fispact": 0.1319604792628901,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Tc102m1",
+     0.03812018249368649
+    ],
+    [
+     "Ru95",
+     0.013713132355344913
+    ],
+    [
+     "Tc100",
+     0.010214451580339363
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Tc102m1",
+     0.05390920499468945
+    ],
+    [
+     "Ru95",
+     0.013031371618126283
+    ],
+    [
+     "Tc100",
+     0.012122622490833186
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "SS304_1996exp_5min",
+   "gm_eaf": 0.8923495114721627,
+   "gm_tendl": 1.0030908737340862,
+   "gm_fispact": 0.9313677540075691,
+   "max_eaf": 0.15247828768039698,
+   "max_tendl": 0.07745718401881277,
+   "max_fispact": 0.07920493609680017,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.27098267154983646
+    ],
+    [
+     "Al28",
+     0.06957836003904039
+    ],
+    [
+     "Mn56",
+     0.06612732773653271
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.37486949324950797
+    ],
+    [
+     "Al28",
+     0.0737025802113893
+    ],
+    [
+     "Mn56",
+     0.06579996071274337
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "SS304_1996exp_7hour",
+   "gm_eaf": 0.9652147327415604,
+   "gm_tendl": 0.921002095276572,
+   "gm_fispact": 0.9295965698059427,
+   "max_eaf": 0.106705303703586,
+   "max_tendl": 0.18103769812049408,
+   "max_fispact": 0.15889442389881456,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.047457081184469445
+    ],
+    [
+     "Ni57",
+     0.007312813909494747
+    ],
+    [
+     "Co58",
+     0.0008889730338902142
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.04697393792554132
+    ],
+    [
+     "Ni57",
+     0.006947952598731479
+    ],
+    [
+     "Co58",
+     0.0008442182372811307
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "SS304_2000exp_5min",
+   "gm_eaf": 0.978991113794859,
+   "gm_tendl": 1.1168575339160987,
+   "gm_fispact": 1.029907929548645,
+   "max_eaf": 0.0598039575048897,
+   "max_tendl": 0.16528843352837744,
+   "max_fispact": 0.039412869847717164,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.29912289171353756
+    ],
+    [
+     "Al28",
+     0.08271048656301862
+    ],
+    [
+     "Mn56",
+     0.06691108351379277
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.416554664979055
+    ],
+    [
+     "Al28",
+     0.08744970154367745
+    ],
+    [
+     "Mn56",
+     0.06651117274802557
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "SS316_1996exp_5min",
+   "gm_eaf": 0.9080354618820249,
+   "gm_tendl": 1.0106703488017057,
+   "gm_fispact": 0.9417296691254362,
+   "max_eaf": 0.12212115578904494,
+   "max_tendl": 0.0897815157013234,
+   "max_fispact": 0.08635684150008915,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.2730850923268804
+    ],
+    [
+     "Al28",
+     0.12020040106218947
+    ],
+    [
+     "Mn56",
+     0.05920291654290841
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.3777945578854732
+    ],
+    [
+     "Al28",
+     0.12732521571006433
+    ],
+    [
+     "Mn56",
+     0.05891112424353196
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "SS316_1996exp_7hour",
+   "gm_eaf": 0.959926489535705,
+   "gm_tendl": 0.9197861588769329,
+   "gm_fispact": 0.9303810562703251,
+   "max_eaf": 0.102757963592107,
+   "max_tendl": 0.1702954815159889,
+   "max_fispact": 0.14128000116710093,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Mn56",
+     0.0436008169544437
+    ],
+    [
+     "Ni57",
+     0.01120571706804005
+    ],
+    [
+     "Co58",
+     0.0013584794966572996
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Mn56",
+     0.04315694255494875
+    ],
+    [
+     "Ni57",
+     0.01064662549698571
+    ],
+    [
+     "Co58",
+     0.0012899255233164786
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "SS316_2000exp_5min",
+   "gm_eaf": 1.010624017216801,
+   "gm_tendl": 1.1420853783996088,
+   "gm_fispact": 1.0567668536713983,
+   "max_eaf": 0.05251925896894034,
+   "max_tendl": 0.1987660452722097,
+   "max_fispact": 0.07997672611535814,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "V52",
+     0.30237647505214116
+    ],
+    [
+     "Al28",
+     0.14362522157710608
+    ],
+    [
+     "Mn56",
+     0.059908962102318566
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "V52",
+     0.42110492361825286
+    ],
+    [
+     "Al28",
+     0.1518547802459248
+    ],
+    [
+     "Mn56",
+     0.05955209875221955
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "S_1996exp_5min",
+   "gm_eaf": 0.9737122818970904,
+   "gm_tendl": 0.6708955303392475,
+   "gm_fispact": 0.6986520859919425,
+   "max_eaf": 0.09855521610339701,
+   "max_tendl": 0.5729334637093717,
+   "max_fispact": 0.5362101033062192,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "P34",
+     0.006581544431946131
+    ],
+    [
+     "Si31",
+     0.00401623221999673
+    ],
+    [
+     "P30",
+     0.0018637018925615353
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "P34",
+     0.007108561323335537
+    ],
+    [
+     "Si31",
+     0.002634649608448992
+    ],
+    [
+     "P32",
+     0.000764796645046438
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "S_1996exp_7hour",
+   "gm_eaf": 0.9628437662668882,
+   "gm_tendl": 0.9457741549247214,
+   "gm_fispact": 0.9463886195685709,
+   "max_eaf": 0.057330071499179285,
+   "max_tendl": 0.0739664167138686,
+   "max_fispact": 0.07473445099161777,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "P32",
+     0.06432962880937448
+    ],
+    [
+     "Si31",
+     0.00188403984387945
+    ],
+    [
+     "P33",
+     5.2090129487232336e-05
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "P32",
+     0.06327543301950257
+    ],
+    [
+     "Si31",
+     0.001259781273600532
+    ],
+    [
+     "P33",
+     4.6801041157344475e-05
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "S_2000exp_5min",
+   "gm_eaf": 1.5621187341842766,
+   "gm_tendl": 1.072503391022575,
+   "gm_fispact": 1.1165788206525074,
+   "max_eaf": 1.3993175463889913,
+   "max_tendl": 1.195111385638459,
+   "max_fispact": 1.1765733086524959,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "P34",
+     0.006224576330981494
+    ],
+    [
+     "Si31",
+     0.00401593727002676
+    ],
+    [
+     "P30",
+     0.0018551027653614777
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "P34",
+     0.006723009016818415
+    ],
+    [
+     "Si31",
+     0.002634456121175265
+    ],
+    [
+     "P32",
+     0.0007647962148698641
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sb_2000exp_5min",
+   "gm_eaf": 1.204982811308987,
+   "gm_tendl": 1.225259026028588,
+   "gm_fispact": 1.2405798959948222,
+   "max_eaf": 0.2429258287749777,
+   "max_tendl": 0.22874746430776535,
+   "max_fispact": 0.2647947489888135,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Sb120",
+     0.6889731660476499
+    ],
+    [
+     "Sb122m1",
+     0.14792928114868537
+    ],
+    [
+     "In118m1",
+     0.01703956725238407
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sb120",
+     0.7228886782507824
+    ],
+    [
+     "Sb122m1",
+     0.10452978339368711
+    ],
+    [
+     "In118m1",
+     0.015120113140438872
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sc_2000exp_5min",
+   "gm_eaf": 1.0284965968887192,
+   "gm_tendl": 0.8115323394238512,
+   "gm_fispact": 0.9204672396916477,
+   "max_eaf": 0.4889175032670346,
+   "max_tendl": 0.5712985508021111,
+   "max_fispact": 0.5227791599358936,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.18715629570154507
+    ],
+    [
+     "Sc44",
+     0.11165664859714823
+    ],
+    [
+     "K42",
+     0.006120498694461504
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.18959068863277098
+    ],
+    [
+     "Sc44",
+     0.0836451041908037
+    ],
+    [
+     "K42",
+     0.008031011497045434
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Se_2000exp_5min",
+   "gm_eaf": 1.1683826553765069,
+   "gm_tendl": 1.027871538140694,
+   "gm_fispact": 1.0079387525790682,
+   "max_eaf": 0.28028414985471495,
+   "max_tendl": 0.18209193433836793,
+   "max_fispact": 0.18658997735968755,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Se77m1",
+     0.10227530237050363
+    ],
+    [
+     "Se79m1",
+     0.05207444115168289
+    ],
+    [
+     "Se81",
+     0.05177727015962932
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Se77m1",
+     0.08602313264559396
+    ],
+    [
+     "As80",
+     0.05718898187423425
+    ],
+    [
+     "Se79m1",
+     0.04109400123623376
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Si_2000exp_5min",
+   "gm_eaf": 1.058606726132962,
+   "gm_tendl": 1.1316592266230128,
+   "gm_fispact": 1.0845660787591882,
+   "max_eaf": 0.1290486499745473,
+   "max_tendl": 0.18627887680697894,
+   "max_fispact": 0.17507351681312194,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Al28",
+     14.960960580948557
+    ],
+    [
+     "Al29",
+     0.1935250231951091
+    ],
+    [
+     "Mg27",
+     0.03417181503285583
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Al28",
+     15.818206275617172
+    ],
+    [
+     "Al29",
+     0.23487011615699446
+    ],
+    [
+     "Mg27",
+     0.030206105693246495
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sm_2000exp_5min",
+   "gm_eaf": 1.072144955937045,
+   "gm_tendl": 0.9872897874446218,
+   "gm_fispact": 0.9535514061583562,
+   "max_eaf": 0.46346277642707434,
+   "max_tendl": 0.5352426391007794,
+   "max_fispact": 0.5702244246100239,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Sm143",
+     0.06831117930691305
+    ],
+    [
+     "Sm143m1",
+     0.0465470113399319
+    ],
+    [
+     "N16",
+     0.015598714080568534
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sm143",
+     0.05978604818539777
+    ],
+    [
+     "Sm143m1",
+     0.03660899360114128
+    ],
+    [
+     "N16",
+     0.015801610804676094
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sn_1996exp_5min",
+   "gm_eaf": 0.9455639011158635,
+   "gm_tendl": 1.0418725831795965,
+   "gm_fispact": 0.8497410056853463,
+   "max_eaf": 0.1669007634569916,
+   "max_tendl": 0.22965965077828443,
+   "max_fispact": 0.24577985259628934,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "In118m1",
+     0.018973115715767694
+    ],
+    [
+     "In120m1",
+     0.011423732203424568
+    ],
+    [
+     "Sn111",
+     0.011071079678182027
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "In120m1",
+     0.018779182460092615
+    ],
+    [
+     "In118m1",
+     0.01788832445743393
+    ],
+    [
+     "Sn123m1",
+     0.011541842603212298
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sn_1996exp_7hour",
+   "gm_eaf": 0.9247678440149891,
+   "gm_tendl": 0.8374229920356681,
+   "gm_fispact": 0.8917314209156637,
+   "max_eaf": 0.5042986191109972,
+   "max_tendl": 0.425852060576511,
+   "max_fispact": 0.4408638114326688,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Sn117m1",
+     0.006093120107472653
+    ],
+    [
+     "In111",
+     0.00206086001550157
+    ],
+    [
+     "Sn121",
+     0.00201786166265599
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sn117m1",
+     0.00543243674817382
+    ],
+    [
+     "Sn121",
+     0.00211963410237513
+    ],
+    [
+     "In111",
+     0.001857422027707028
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sn_2000exp_5min",
+   "gm_eaf": 1.2195169099725192,
+   "gm_tendl": 1.3404699712536792,
+   "gm_fispact": 1.1169963274489154,
+   "max_eaf": 0.6537776821955221,
+   "max_tendl": 0.5911214199756426,
+   "max_fispact": 0.6025040652553608,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.10359886448981344
+    ],
+    [
+     "In118m1",
+     0.020501580935307323
+    ],
+    [
+     "In120m1",
+     0.017917690762397746
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.10494640314701785
+    ],
+    [
+     "In120m1",
+     0.02945443556438713
+    ],
+    [
+     "In118m1",
+     0.01933307078762386
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sr_1996exp_5min",
+   "gm_eaf": 0.8123470324196497,
+   "gm_tendl": 0.8888258314348967,
+   "gm_fispact": 0.9128453100268213,
+   "max_eaf": 0.28718030020777485,
+   "max_tendl": 0.18793583399665081,
+   "max_fispact": 0.15766289186662197,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Rb88",
+     0.03805355036578713
+    ],
+    [
+     "Sr87m1",
+     0.010888101401917006
+    ],
+    [
+     "N16",
+     0.008586498497437048
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Rb88",
+     0.04355804543393495
+    ],
+    [
+     "Sr87m1",
+     0.011330945609589423
+    ],
+    [
+     "N16",
+     0.008698185422890397
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sr_1996exp_7hour",
+   "gm_eaf": 1.0715648800061146,
+   "gm_tendl": 0.8849378608059512,
+   "gm_fispact": 0.9472601031116326,
+   "max_eaf": 0.2545904245724806,
+   "max_tendl": 0.21573793929270108,
+   "max_fispact": 0.11539493200037472,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Sr87m1",
+     0.007899198108154211
+    ],
+    [
+     "Sr83",
+     0.00243509140652186
+    ],
+    [
+     "Sr85",
+     0.0011220636487098597
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sr87m1",
+     0.008339298541900832
+    ],
+    [
+     "Sr83",
+     0.002135739024049138
+    ],
+    [
+     "Sr85",
+     0.000864713661318116
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Sr_2000exp_5min",
+   "gm_eaf": 0.9049340282627214,
+   "gm_tendl": 0.9866859066157587,
+   "gm_fispact": 1.0129628963945034,
+   "max_eaf": 0.31952596907243314,
+   "max_tendl": 0.2851349618292466,
+   "max_fispact": 0.26917029900429584,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.14394672048760468
+    ],
+    [
+     "Rb88",
+     0.038777663302220884
+    ],
+    [
+     "Sr87m1",
+     0.010909719899513433
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.14581907470104236
+    ],
+    [
+     "Rb88",
+     0.04438690223918169
+    ],
+    [
+     "Sr87m1",
+     0.011353443381366509
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ta_1996exp_5min",
+   "gm_eaf": 1.2131490724520704,
+   "gm_tendl": 1.232588280114177,
+   "gm_fispact": 1.2970007707050557,
+   "max_eaf": 0.26172292034812433,
+   "max_tendl": 0.24554789261708776,
+   "max_fispact": 0.306727037772521,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ta180",
+     0.004476913259108859
+    ],
+    [
+     "Lu178m1",
+     0.00028423353764918803
+    ],
+    [
+     "Lu178",
+     0.00025553792864943514
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ta180",
+     0.004377578997584438
+    ],
+    [
+     "Lu178m1",
+     0.0006110226941807327
+    ],
+    [
+     "Lu178",
+     0.0003202534533659464
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ta_1996exp_7hour",
+   "gm_eaf": 0.8291170442267163,
+   "gm_tendl": 0.6116970633963272,
+   "gm_fispact": 0.620064750144572,
+   "max_eaf": 0.8583619852639784,
+   "max_tendl": 1.3977994991671077,
+   "max_fispact": 1.3092651758881784,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ta180",
+     0.08911908623540073
+    ],
+    [
+     "Hf180m1",
+     0.00044463869735923895
+    ],
+    [
+     "Ta182",
+     0.00016080254985088358
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ta180",
+     0.08746158133742306
+    ],
+    [
+     "Ta182",
+     9.071676326630029e-05
+    ],
+    [
+     "Hf181",
+     7.520935642824982e-05
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ta_2000exp_5min",
+   "gm_eaf": 0.8475789321834544,
+   "gm_tendl": 0.8630245142742365,
+   "gm_fispact": 0.9075781201439284,
+   "max_eaf": 0.2610602829088952,
+   "max_tendl": 0.22879325061443562,
+   "max_fispact": 0.1819385248655829,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ta180",
+     0.004479980003907044
+    ],
+    [
+     "Lu178m1",
+     0.00028838583703409964
+    ],
+    [
+     "Lu178",
+     0.0002585702368354053
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ta180",
+     0.0043805776970995925
+    ],
+    [
+     "Lu178m1",
+     0.0006199489777509185
+    ],
+    [
+     "Lu178",
+     0.00032405370005871465
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Tb_2000exp_5min",
+   "gm_eaf": 0.19581929445736118,
+   "gm_tendl": 0.18413851529195965,
+   "gm_fispact": 0.17900334193791306,
+   "max_eaf": 3.8173569875575186,
+   "max_tendl": 3.878329281283367,
+   "max_fispact": 3.829559673771294,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.07309990532536055
+    ],
+    [
+     "Tb158m1",
+     0.030287494237273224
+    ],
+    [
+     "Gd159",
+     3.194775571317054e-05
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.07405073571089622
+    ],
+    [
+     "Tb158m1",
+     0.02722520557102826
+    ],
+    [
+     "Gd159",
+     3.314432830609713e-05
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Te_2000exp_5min",
+   "gm_eaf": 1.0644440678492082,
+   "gm_tendl": 0.9297342799110296,
+   "gm_fispact": 1.0013986850654293,
+   "max_eaf": 0.087838346659102,
+   "max_tendl": 0.19883753339773544,
+   "max_fispact": 0.04604822296401732,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.09784066099956472
+    ],
+    [
+     "Te129",
+     0.03978691384563452
+    ],
+    [
+     "Sb130m1",
+     0.002671996086418462
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.09911330113507809
+    ],
+    [
+     "Te129",
+     0.030121403892555233
+    ],
+    [
+     "Sb128m1",
+     0.005501222155624148
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ti_1996exp_5min",
+   "gm_eaf": 0.8955624521417949,
+   "gm_tendl": 0.9458395048415399,
+   "gm_fispact": 0.9075279951915308,
+   "max_eaf": 0.15433226677195686,
+   "max_tendl": 0.09687526775920723,
+   "max_fispact": 0.14404314088547537,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Sc50",
+     0.0404237748104869
+    ],
+    [
+     "Sc48",
+     0.004348427238871321
+    ],
+    [
+     "Ti45",
+     0.0021000821885147508
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sc50",
+     0.043941044064344015
+    ],
+    [
+     "Sc48",
+     0.00429884124825848
+    ],
+    [
+     "Sc49",
+     0.0025505011660113767
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ti_1996exp_7hour",
+   "gm_eaf": 0.9147974930452809,
+   "gm_tendl": 0.8941636780397849,
+   "gm_fispact": 0.9249707188036208,
+   "max_eaf": 0.20712104257081257,
+   "max_tendl": 0.24879442577442326,
+   "max_fispact": 0.16003570898011563,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Sc48",
+     0.2921594485299434
+    ],
+    [
+     "Sc47",
+     0.006328529198910221
+    ],
+    [
+     "Sc46",
+     0.0025598132635501545
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sc48",
+     0.29008544188990176
+    ],
+    [
+     "Sc47",
+     0.005928454055339817
+    ],
+    [
+     "Sc46",
+     0.002464125003418375
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Ti_2000exp_5min",
+   "gm_eaf": 1.0111222711961427,
+   "gm_tendl": 1.0730458111795453,
+   "gm_fispact": 1.0298399464567753,
+   "max_eaf": 0.08135114865242847,
+   "max_tendl": 0.1771364057384883,
+   "max_fispact": 0.1376038434485275,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Sc50",
+     0.04985171277199031
+    ],
+    [
+     "Sc48",
+     0.00434902161772425
+    ],
+    [
+     "Sc46m1",
+     0.003649324723007984
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sc50",
+     0.05418930611667595
+    ],
+    [
+     "Sc46m1",
+     0.005000710682541282
+    ],
+    [
+     "Sc48",
+     0.004299428849289772
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Tl_2000exp_5min",
+   "gm_eaf": 0.9966858221530682,
+   "gm_tendl": 1.357409713950527,
+   "gm_fispact": 1.3834732339582627,
+   "max_eaf": 0.35950509214184095,
+   "max_tendl": 0.47008965194558805,
+   "max_fispact": 0.5563929306087176,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.0029063106292762345
+    ],
+    [
+     "Tl206",
+     0.0019197703936192569
+    ],
+    [
+     "Hg205",
+     0.001312083225361684
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Au202",
+     0.00364129064845944
+    ],
+    [
+     "N16",
+     0.0029441138034913238
+    ],
+    [
+     "Hg205",
+     0.0023273006272369295
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Tm_2000exp_5min",
+   "gm_eaf": 0.9424822174183131,
+   "gm_tendl": 0.999608891755813,
+   "gm_fispact": 0.9506896828428698,
+   "max_eaf": 2.2067923735072257,
+   "max_tendl": 2.274288837345561,
+   "max_fispact": 2.210686730375761,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.0607051283209269
+    ],
+    [
+     "Tm168",
+     0.00033754588226317215
+    ],
+    [
+     "Ho166",
+     1.2717866159549245e-05
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.06149473646485644
+    ],
+    [
+     "Tm168",
+     0.00035974407335109603
+    ],
+    [
+     "O19",
+     1.8508067456254666e-05
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "V_1996exp_5min",
+   "gm_eaf": 0.9231258864996764,
+   "gm_tendl": 1.0489552533045832,
+   "gm_fispact": 0.9457450222148872,
+   "max_eaf": 0.37005743776056754,
+   "max_tendl": 0.35247514514258077,
+   "max_fispact": 0.37824349553290204,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ti51",
+     0.26780500428703286
+    ],
+    [
+     "V52",
+     0.03802623781494861
+    ],
+    [
+     "Sc48",
+     0.0015467924570967224
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ti51",
+     0.3114590179082062
+    ],
+    [
+     "V52",
+     0.040485911851721894
+    ],
+    [
+     "Sc48",
+     0.0015303995294477396
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "V_1996exp_7hour",
+   "gm_eaf": 0.5109196009561103,
+   "gm_tendl": 0.496943533294746,
+   "gm_fispact": 0.500571520894265,
+   "max_eaf": 4.027275946998259,
+   "max_tendl": 4.096682903848663,
+   "max_fispact": 4.049837583320397,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Sc48",
+     0.09831475137567311
+    ],
+    [
+     "Sc47",
+     0.00015193555782249722
+    ],
+    [
+     "V49",
+     9.588570475920319e-08
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Sc48",
+     0.09775814850793435
+    ],
+    [
+     "Sc47",
+     2.1937758000099334e-05
+    ],
+    [
+     "V49",
+     9.780868321143615e-08
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "V_2000exp_5min",
+   "gm_eaf": 1.1244810209325105,
+   "gm_tendl": 1.2838087794150608,
+   "gm_fispact": 1.1549953661226433,
+   "max_eaf": 0.17313017188853072,
+   "max_tendl": 0.31458157534456915,
+   "max_fispact": 0.22284897777740764,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Ti51",
+     0.2946752375788104
+    ],
+    [
+     "V52",
+     0.04291094316054225
+    ],
+    [
+     "Sc48",
+     0.001519826020072396
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ti51",
+     0.34368409045065934
+    ],
+    [
+     "V52",
+     0.04544382589505415
+    ],
+    [
+     "Sc48",
+     0.0015061543386228312
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "W_1996exp_5min",
+   "gm_eaf": 1.3923618117631422,
+   "gm_tendl": 1.7907995157453667,
+   "gm_fispact": 1.3569055922119446,
+   "max_eaf": 0.6176576465525978,
+   "max_tendl": 0.7906094956990398,
+   "max_fispact": 0.5056805327267726,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "W185m1",
+     0.11078509801057708
+    ],
+    [
+     "Ta186",
+     0.002278902765798134
+    ],
+    [
+     "W179m1",
+     0.0002459034972223908
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "W185m1",
+     0.17671373054396705
+    ],
+    [
+     "Ta186",
+     0.0025843474805352334
+    ],
+    [
+     "W187",
+     0.00020933001282690537
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "W_1996exp_7hour",
+   "gm_eaf": 1.1638553142780748,
+   "gm_tendl": 1.2417191391785498,
+   "gm_fispact": 1.2119702608399099,
+   "max_eaf": 0.4536384152420099,
+   "max_tendl": 0.5161770752529198,
+   "max_fispact": 0.5083397978791467,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Ta184",
+     0.0013082286103905474
+    ],
+    [
+     "W185",
+     0.0009677146321151394
+    ],
+    [
+     "W187",
+     0.0004969160281667247
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Ta184",
+     0.0014698439637841646
+    ],
+    [
+     "W185",
+     0.0010425371349550535
+    ],
+    [
+     "W187",
+     0.0005248886120101822
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "W_2000exp_5min",
+   "gm_eaf": 1.8520323611241547,
+   "gm_tendl": 2.4457009510049135,
+   "gm_fispact": 1.8271348706088486,
+   "max_eaf": 0.8991192844417164,
+   "max_tendl": 1.099507306721037,
+   "max_fispact": 0.7952123587155865,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "W185m1",
+     0.12494412876095026
+    ],
+    [
+     "Ta186",
+     0.0022105091050724527
+    ],
+    [
+     "W183m1",
+     0.000426570807811453
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "W185m1",
+     0.20021114694394815
+    ],
+    [
+     "Ta186",
+     0.0025062368711543147
+    ],
+    [
+     "W183m1",
+     0.0003902635964027656
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Y_1996exp_5min",
+   "gm_eaf": 0.5701835945222088,
+   "gm_tendl": 0.5277873649560667,
+   "gm_fispact": 0.6026593405699102,
+   "max_eaf": 1.0311645401827154,
+   "max_tendl": 1.4059985835066464,
+   "max_fispact": 0.9513710201642183,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Y89m1",
+     0.16834008490848607
+    ],
+    [
+     "N16",
+     0.005615163274546652
+    ],
+    [
+     "Rb86m1",
+     0.004477315267777326
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Y89m1",
+     0.19059425514655268
+    ],
+    [
+     "N16",
+     0.005688201233179016
+    ],
+    [
+     "Rb86m1",
+     0.0015284278023594768
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Y_1996exp_7hour",
+   "gm_eaf": 0.8595255039176841,
+   "gm_tendl": 0.8338963187275366,
+   "gm_fispact": 0.8362733709436321,
+   "max_eaf": 0.1712568803092059,
+   "max_tendl": 0.2012602999642005,
+   "max_fispact": 0.1999456618622681,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Y88",
+     0.04387914492127764
+    ],
+    [
+     "Y90",
+     0.0007784413720035746
+    ],
+    [
+     "Rb86",
+     0.0004550249345281076
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Y88",
+     0.04256215055193472
+    ],
+    [
+     "Y90",
+     0.0006834372162004555
+    ],
+    [
+     "Rb86",
+     0.0004630305714132945
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Y_2000exp_5min",
+   "gm_eaf": 0.9385761775044605,
+   "gm_tendl": 0.8824979167681715,
+   "gm_fispact": 1.002519976322405,
+   "max_eaf": 0.7804508988038805,
+   "max_tendl": 0.7397906041755349,
+   "max_fispact": 0.768529700166513,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Y89m1",
+     0.6349841734317516
+    ],
+    [
+     "N16",
+     0.10374525949380264
+    ],
+    [
+     "Rb86m1",
+     0.006295303762921428
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Y89m1",
+     0.7189276140945602
+    ],
+    [
+     "N16",
+     0.10509470235071129
+    ],
+    [
+     "Rb86m1",
+     0.00214903725113911
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Yb_2000exp_5min",
+   "gm_eaf": 1.1468433187221354,
+   "gm_tendl": 1.0917203014982155,
+   "gm_fispact": 0.9763050945761585,
+   "max_eaf": 1.4475843818162542,
+   "max_tendl": 1.431128810395,
+   "max_fispact": 1.4574853164611172,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "N16",
+     0.05943637161968563
+    ],
+    [
+     "Tm174",
+     0.004809668491331048
+    ],
+    [
+     "Tm176",
+     0.0023549863065947924
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "N16",
+     0.06020947669951379
+    ],
+    [
+     "Tm174",
+     0.004297001860600911
+    ],
+    [
+     "Tm176",
+     0.0023253934903676916
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Zn_2000exp_5min",
+   "gm_eaf": 1.0278209781542247,
+   "gm_tendl": 0.625073154885779,
+   "gm_fispact": 0.8935715669800898,
+   "max_eaf": 0.06067793457867641,
+   "max_tendl": 0.7249480508265452,
+   "max_fispact": 0.17677380993010686,
+   "closer_to_measurement": "EAF",
+   "closer_to_reference": "EAF",
+   "top_first_eaf": [
+    [
+     "Zn63",
+     0.20988777376742598
+    ],
+    [
+     "Cu66",
+     0.17044017747338705
+    ],
+    [
+     "Cu68",
+     0.04713305208126138
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Cu66",
+     0.16821808308984887
+    ],
+    [
+     "Zn63",
+     0.0971050507380972
+    ],
+    [
+     "Cu68",
+     0.07500681232460785
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Zr_1996exp_5min",
+   "gm_eaf": 1.0510540422628147,
+   "gm_tendl": 1.0317400441236746,
+   "gm_fispact": 1.018965214792959,
+   "max_eaf": 0.11259887139374068,
+   "max_tendl": 0.11034305743695216,
+   "max_fispact": 0.04511260531245505,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Zr89m1",
+     0.27773542355790015
+    ],
+    [
+     "Y89m1",
+     0.006791464039230348
+    ],
+    [
+     "Y94",
+     0.006238277807577159
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Zr89m1",
+     0.24335307061718847
+    ],
+    [
+     "Y94",
+     0.009811527706561947
+    ],
+    [
+     "Y89m1",
+     0.006854636971801326
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Zr_1996exp_7hour",
+   "gm_eaf": 0.9278606067090227,
+   "gm_tendl": 0.9462522782793426,
+   "gm_fispact": 0.9410268429554758,
+   "max_eaf": 0.43771325470508826,
+   "max_tendl": 0.4193965993930636,
+   "max_fispact": 0.42982038780318665,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Y89m1",
+     0.20049334676479982
+    ],
+    [
+     "Zr89",
+     0.0778511420546472
+    ],
+    [
+     "Y90",
+     0.01653859761121419
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Y89m1",
+     0.2053945789852514
+    ],
+    [
+     "Zr89",
+     0.07975428016981366
+    ],
+    [
+     "Y90",
+     0.012252503023895786
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  },
+  {
+   "exp": "Zr_2000exp_5min",
+   "gm_eaf": 1.147972862198383,
+   "gm_tendl": 1.1267151077155848,
+   "gm_fispact": 1.115318728845714,
+   "max_eaf": 0.19407371616472496,
+   "max_tendl": 0.17693631184482367,
+   "max_fispact": 0.11996692684829685,
+   "closer_to_measurement": "TENDL",
+   "closer_to_reference": "TENDL",
+   "top_first_eaf": [
+    [
+     "Zr89m1",
+     0.2943190920882644
+    ],
+    [
+     "Y89m1",
+     0.03467541801557914
+    ],
+    [
+     "Y94",
+     0.006283239109934852
+    ]
+   ],
+   "top_first_tendl": [
+    [
+     "Zr89m1",
+     0.2625295813554718
+    ],
+    [
+     "Y89m1",
+     0.03564160936143937
+    ],
+    [
+     "Y94",
+     0.009745419970484804
+    ]
+   ],
+   "ledger_tendl": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "composition_isotopes_absent": 0
+   }
+  }
+ ]
+}

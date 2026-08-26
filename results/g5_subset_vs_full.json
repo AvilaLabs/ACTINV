@@ -1,0 +1,7 @@
+{
+ "n_compared": 132,
+ "missing": [],
+ "worst_rel": 2.5274204649845456e-06,
+ "pass": false,
+ "note": "FNS results from the 255-target subset library vs the full 2,847-target library (P4 Amendment B)"
+}

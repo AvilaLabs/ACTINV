@@ -1,0 +1,4758 @@
+{
+ "n_experiments": 132,
+ "wall_s": 10.563243627548218,
+ "experiments": [
+  {
+   "material": "Ag",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 64,
+   "ms": 2.9903,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1241915813429175,
+     "max_abs_lnCE": 0.3479112776853376,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.0324066306380224,
+     "max_abs_lnCE": 0.20239398039556158,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 6,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Al",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 23,
+   "ms": 0.9702,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9630508700649796,
+     "max_abs_lnCE": 0.10508913458121981,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9633924589943399,
+     "max_abs_lnCE": 0.10311842162757988,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 3,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Al",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 35,
+   "ms": 0.6937,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.03733946500393453,
+     "max_abs_lnCE": 10.277247216949537,
+     "n": 7
+    },
+    "fispact": {
+     "geomean_CE": 0.07510601380300176,
+     "max_abs_lnCE": 7.799512722730529,
+     "n": 7
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 3,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 7,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 3
+   }
+  },
+  {
+   "material": "Al",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 23,
+   "ms": 0.9919,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0728595795010183,
+     "max_abs_lnCE": 0.10719661951872249,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0719337087499172,
+     "max_abs_lnCE": 0.10107429808249849,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 3,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "As",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 52,
+   "ms": 2.3791,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2319355612856726,
+     "max_abs_lnCE": 0.3259585290827692,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0336965412956167,
+     "max_abs_lnCE": 0.3278470343530849,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Au",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 39,
+   "ms": 1.9017,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.7607393698729961,
+     "max_abs_lnCE": 0.5162493267975895,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.2895765659826182,
+     "max_abs_lnCE": 0.548035699529715,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 4,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ba",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 88,
+   "ms": 3.6775,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.43341301346345107,
+     "max_abs_lnCE": 2.174415715999992,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.5082333624288151,
+     "max_abs_lnCE": 2.300982211628352,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 58,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ba",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 103,
+   "ms": 1.6811,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0971088504250484,
+     "max_abs_lnCE": 0.4070709311437331,
+     "n": 6
+    },
+    "fispact": {
+     "geomean_CE": 1.077653922681943,
+     "max_abs_lnCE": 0.2156308136246841,
+     "n": 6
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 58,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 6,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 4
+   }
+  },
+  {
+   "material": "Ba",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 88,
+   "ms": 6.9319,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0503240667784597,
+     "max_abs_lnCE": 0.4652809092355962,
+     "n": 22
+    },
+    "fispact": {
+     "geomean_CE": 1.2532168586379981,
+     "max_abs_lnCE": 0.3364118726263054,
+     "n": 22
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 58,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Bi",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 25,
+   "ms": 1.1961,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.850389073743862,
+     "max_abs_lnCE": 1.1170214959014775,
+     "n": 18
+    },
+    "fispact": {
+     "geomean_CE": 3.7672234722398614,
+     "max_abs_lnCE": 1.8633403866825196,
+     "n": 18
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 0,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 2
+   }
+  },
+  {
+   "material": "Bi",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 30,
+   "ms": 0.5721,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 6.867224122157934,
+     "max_abs_lnCE": 2.3434855348753425,
+     "n": 5
+    },
+    "fispact": {
+     "geomean_CE": 6.300906496099784,
+     "max_abs_lnCE": 2.2610341793464026,
+     "n": 5
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 0,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 5,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 5
+   }
+  },
+  {
+   "material": "Bi",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 25,
+   "ms": 1.4877,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 2.6370250531224286,
+     "max_abs_lnCE": 4.221229487920018,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 5.1530511860591535,
+     "max_abs_lnCE": 4.346351898419772,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 0,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Br",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 53,
+   "ms": 2.4142,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.999687856309346,
+     "max_abs_lnCE": 0.09581851105027794,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0142273928192338,
+     "max_abs_lnCE": 0.11206694655343317,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 22,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ca",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 79,
+   "ms": 3.5098,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2119462869168982,
+     "max_abs_lnCE": 0.3823811727687097,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.6700934399067027,
+     "max_abs_lnCE": 0.549769187120209,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 31,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ca",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 93,
+   "ms": 1.6243,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.888310928859151,
+     "max_abs_lnCE": 0.16599151700321546,
+     "n": 6
+    },
+    "fispact": {
+     "geomean_CE": 0.942882640181833,
+     "max_abs_lnCE": 0.11386438247235693,
+     "n": 6
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 31,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 6,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 4
+   }
+  },
+  {
+   "material": "Ca",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 79,
+   "ms": 3.467,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.6668720016457153,
+     "max_abs_lnCE": 0.9203943870042491,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.9619354585737823,
+     "max_abs_lnCE": 0.83197422885451,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 31,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cd",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 103,
+   "ms": 5.4368,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1149284484592346,
+     "max_abs_lnCE": 0.17467634488005268,
+     "n": 22
+    },
+    "fispact": {
+     "geomean_CE": 1.144229986969175,
+     "max_abs_lnCE": 0.14968921165006818,
+     "n": 22
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 48,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ce",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 79,
+   "ms": 3.7112,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0980615724813643,
+     "max_abs_lnCE": 1.4331244723488927,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.3336157008153624,
+     "max_abs_lnCE": 1.851979549405409,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 32,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cl",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 41,
+   "ms": 1.7587,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1406463228178316,
+     "max_abs_lnCE": 0.22887895273641576,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0996072976051696,
+     "max_abs_lnCE": 0.3130852175703122,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 17,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Co",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 25,
+   "ms": 1.1457,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9777909992200458,
+     "max_abs_lnCE": 0.035365407065338986,
+     "n": 5
+    },
+    "fispact": {
+     "geomean_CE": 1.0202597728992329,
+     "max_abs_lnCE": 0.05036601572294695,
+     "n": 5
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 4,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 15
+   }
+  },
+  {
+   "material": "Co",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 39,
+   "ms": 1.011,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9940688344916272,
+     "max_abs_lnCE": 0.31648516574277097,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9946720436476594,
+     "max_abs_lnCE": 0.31449413659443176,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 4,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Co",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 25,
+   "ms": 1.1418,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0619919939968556,
+     "max_abs_lnCE": 0.13075605121744532,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.1015988384701738,
+     "max_abs_lnCE": 0.18811274372742212,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 4,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cr",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 39,
+   "ms": 1.6989,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9066889737945927,
+     "max_abs_lnCE": 1.697774213924365,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.8188776793919492,
+     "max_abs_lnCE": 1.18121740246593,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 23,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cr",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 57,
+   "ms": 1.376,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.6608315777474522,
+     "max_abs_lnCE": 2.2294215691196504,
+     "n": 9
+    },
+    "fispact": {
+     "geomean_CE": 0.645206879238689,
+     "max_abs_lnCE": 2.255719266136426,
+     "n": 9
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 23,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 9,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 1
+   }
+  },
+  {
+   "material": "Cr",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 39,
+   "ms": 1.7899,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1661127274641871,
+     "max_abs_lnCE": 1.0473051282912156,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.040364663165366,
+     "max_abs_lnCE": 0.5518222672776201,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 23,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cs",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 50,
+   "ms": 2.2659,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2134933658945188,
+     "max_abs_lnCE": 1.5376771487154641,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0181538573099809,
+     "max_abs_lnCE": 1.541049615499453,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 22,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cu",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 36,
+   "ms": 1.5699,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9236170953229306,
+     "max_abs_lnCE": 0.10122831831442415,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9150377034127725,
+     "max_abs_lnCE": 0.09678544164231564,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 5,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cu",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 47,
+   "ms": 1.2609,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9227258711210736,
+     "max_abs_lnCE": 0.2097282773929599,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9273748250864771,
+     "max_abs_lnCE": 0.20940258200501177,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 5,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Cu",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 36,
+   "ms": 1.6321,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0614640024733992,
+     "max_abs_lnCE": 0.08497782209976557,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.048460967138203,
+     "max_abs_lnCE": 0.05538064406708945,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 5,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Dy",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 79,
+   "ms": 3.3722,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.8801702627409809,
+     "max_abs_lnCE": 3.4697973799035156,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.8870770018054768,
+     "max_abs_lnCE": 3.462884102079503,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 55,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Er",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 78,
+   "ms": 3.427,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.4931573250094952,
+     "max_abs_lnCE": 2.301494185991947,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.3294612191969495,
+     "max_abs_lnCE": 2.3141876971397157,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 48,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Eu",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 60,
+   "ms": 2.5936,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.5082498766105843,
+     "max_abs_lnCE": 1.1672662060995747,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.8672091659081065,
+     "max_abs_lnCE": 1.4081501095346625,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 19,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "F",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 18,
+   "ms": 0.8723,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.079533693742339,
+     "max_abs_lnCE": 0.1186540682428486,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.080900435434706,
+     "max_abs_lnCE": 0.12025759014242975,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 8,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "F",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 18,
+   "ms": 0.9115,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0025535832179155,
+     "max_abs_lnCE": 0.12482916611019744,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0035779063522599,
+     "max_abs_lnCE": 0.1244254077674665,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 8,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Fe",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 38,
+   "ms": 1.6177,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9258564824458466,
+     "max_abs_lnCE": 0.1256328312632334,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9359195539985083,
+     "max_abs_lnCE": 0.10204151464910939,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Fe",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 59,
+   "ms": 1.5537,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9007739167662236,
+     "max_abs_lnCE": 0.1639813999843738,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9147738430163692,
+     "max_abs_lnCE": 0.1515867227407769,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Fe",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 38,
+   "ms": 1.6713,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0589274860359226,
+     "max_abs_lnCE": 0.08010913207344975,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0733245134024694,
+     "max_abs_lnCE": 0.08535330841753941,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ga",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 56,
+   "ms": 2.6608,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0238038903834903,
+     "max_abs_lnCE": 0.09519523840266482,
+     "n": 22
+    },
+    "fispact": {
+     "geomean_CE": 1.0228557118931156,
+     "max_abs_lnCE": 0.08646769364337747,
+     "n": 22
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 17,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Gd",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 76,
+   "ms": 3.3188,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2166218901197015,
+     "max_abs_lnCE": 1.0665469724181251,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.1697242894652111,
+     "max_abs_lnCE": 1.0023437534510713,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 61,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ge",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 72,
+   "ms": 3.4123,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.4576743388087616,
+     "max_abs_lnCE": 0.6044544928203092,
+     "n": 22
+    },
+    "fispact": {
+     "geomean_CE": 1.0195592453372524,
+     "max_abs_lnCE": 0.4483345107461075,
+     "n": 22
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 32,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Hf",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 62,
+   "ms": 2.6817,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9641857966826813,
+     "max_abs_lnCE": 0.6712398771600077,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9243006172221983,
+     "max_abs_lnCE": 0.5436414084769317,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 45,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Hg",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 81,
+   "ms": 3.7023,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9752646918218117,
+     "max_abs_lnCE": 0.21577358675175565,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.1215203804796736,
+     "max_abs_lnCE": 0.15068709534273006,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 42,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ho",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 49,
+   "ms": 2.1838,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9640359176967073,
+     "max_abs_lnCE": 1.1596051239356473,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0706977370249684,
+     "max_abs_lnCE": 1.1381590422900656,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 15,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "I",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 62,
+   "ms": 2.9046,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.82643669023265,
+     "max_abs_lnCE": 1.0184981911921296,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.8310556979247565,
+     "max_abs_lnCE": 1.0150843136243313,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "In",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 79,
+   "ms": 4.0562,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.8941968927776587,
+     "max_abs_lnCE": 0.8288006079208424,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 29.055522926032342,
+     "max_abs_lnCE": 4.211782662443181,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 6,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Inc600",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 72,
+   "ms": 3.0445,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9496752792176371,
+     "max_abs_lnCE": 0.15001036957757957,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.8497767712992171,
+     "max_abs_lnCE": 0.20636555913861607,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 68,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Inc600",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 93,
+   "ms": 2.2977,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9792787449900624,
+     "max_abs_lnCE": 0.06443894110410013,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9977625442695408,
+     "max_abs_lnCE": 0.06068285173568781,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 68,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Inc600",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 72,
+   "ms": 3.1268,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.056018288246905,
+     "max_abs_lnCE": 0.12280275363864812,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.9369293623371135,
+     "max_abs_lnCE": 0.11924427363783666,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 68,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ir",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 46,
+   "ms": 2.0838,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.4773282812906241,
+     "max_abs_lnCE": 1.3137496822562709,
+     "n": 19
+    },
+    "fispact": {
+     "geomean_CE": 0.577037331657406,
+     "max_abs_lnCE": 1.2005698148259654,
+     "n": 19
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 10,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "K",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 54,
+   "ms": 2.2793,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2090191048087748,
+     "max_abs_lnCE": 0.24224625997588192,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.0848467758175186,
+     "max_abs_lnCE": 0.10399838436469194,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 27,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "K",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 67,
+   "ms": 1.4125,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0337367020027906,
+     "max_abs_lnCE": 2.3217929727902806,
+     "n": 8
+    },
+    "fispact": {
+     "geomean_CE": 1.248507177613339,
+     "max_abs_lnCE": 2.3463717886115445,
+     "n": 8
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 27,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 8,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 2
+   }
+  },
+  {
+   "material": "K",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 54,
+   "ms": 2.3375,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2022678198871404,
+     "max_abs_lnCE": 0.31126623483815247,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0864607695224648,
+     "max_abs_lnCE": 0.13154611360249474,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 27,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "La",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 54,
+   "ms": 2.5999,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 2.117834538246469,
+     "max_abs_lnCE": 2.9156087013739507,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.8853956329273855,
+     "max_abs_lnCE": 2.7689700420963668,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 22,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Lu",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 55,
+   "ms": 2.4894,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.3516856878894943,
+     "max_abs_lnCE": 1.810225705578826,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.214975895323632,
+     "max_abs_lnCE": 1.6888697711320513,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 25,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Mg",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 35,
+   "ms": 1.4349,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9071645632895224,
+     "max_abs_lnCE": 0.27054271264133506,
+     "n": 19
+    },
+    "fispact": {
+     "geomean_CE": 0.9434290024338589,
+     "max_abs_lnCE": 0.1626546107633079,
+     "n": 19
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 24,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Mn",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 23,
+   "ms": 1.0304,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.211258105475017,
+     "max_abs_lnCE": 0.2802929238404124,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.0378521708196138,
+     "max_abs_lnCE": 0.12323917728777889,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 5,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Mn",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 41,
+   "ms": 1.0714,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9965175483875577,
+     "max_abs_lnCE": 0.07420466574447007,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9612493705105666,
+     "max_abs_lnCE": 0.10831809454572099,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 5,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Mn",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 23,
+   "ms": 1.1018,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.3167434783907441,
+     "max_abs_lnCE": 0.3291503649037688,
+     "n": 22
+    },
+    "fispact": {
+     "geomean_CE": 1.1202517199564712,
+     "max_abs_lnCE": 0.13980978525913673,
+     "n": 22
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 5,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Mo",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 78,
+   "ms": 3.5901,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.7468959137032856,
+     "max_abs_lnCE": 0.3106470741195403,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.900704333109006,
+     "max_abs_lnCE": 0.11781428614467476,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 43,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Mo",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 108,
+   "ms": 2.6146,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0711674114306022,
+     "max_abs_lnCE": 0.4732417809319043,
+     "n": 9
+    },
+    "fispact": {
+     "geomean_CE": 1.0411262755797246,
+     "max_abs_lnCE": 0.3663647857175745,
+     "n": 9
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 43,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 9,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 1
+   }
+  },
+  {
+   "material": "Mo",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 78,
+   "ms": 3.5592,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8129723065371686,
+     "max_abs_lnCE": 0.2300919675993183,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.981965796307686,
+     "max_abs_lnCE": 0.029020975091132245,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 43,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Na",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 23,
+   "ms": 0.9423,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.35322294534262544,
+     "max_abs_lnCE": 1.8575486581881462,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.3710570936807027,
+     "max_abs_lnCE": 1.8370993265730962,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Na",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 27,
+   "ms": 0.6411,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.7929944995137357,
+     "max_abs_lnCE": 0.28537953311666475,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.8441116704016036,
+     "max_abs_lnCE": 0.2151564185992397,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Na",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 23,
+   "ms": 1.0684,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8408240928411479,
+     "max_abs_lnCE": 0.7224769575041806,
+     "n": 22
+    },
+    "fispact": {
+     "geomean_CE": 0.8969892594995603,
+     "max_abs_lnCE": 0.6890721320905087,
+     "n": 22
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 22,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Nb",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 32,
+   "ms": 1.4871,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.12307915730808,
+     "max_abs_lnCE": 0.2501259209214356,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.0973544813198701,
+     "max_abs_lnCE": 0.1805106659023488,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 3,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Nb",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 50,
+   "ms": 1.2322,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9279465760551031,
+     "max_abs_lnCE": 0.1445472357622217,
+     "n": 8
+    },
+    "fispact": {
+     "geomean_CE": 0.9278898433065769,
+     "max_abs_lnCE": 0.14267767224074465,
+     "n": 8
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 3,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 8,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 2
+   }
+  },
+  {
+   "material": "Nb",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 32,
+   "ms": 1.5097,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9621662042453798,
+     "max_abs_lnCE": 0.18139483946909932,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.937222285276661,
+     "max_abs_lnCE": 0.20176986437054473,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 3,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Nd",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 79,
+   "ms": 3.5223,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.567293616700601,
+     "max_abs_lnCE": 0.6544939049657627,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.576298051986471,
+     "max_abs_lnCE": 0.6536702814489028,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 58,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ni",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 52,
+   "ms": 2.2421,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0364783874931147,
+     "max_abs_lnCE": 0.15267821002012716,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9896819816240394,
+     "max_abs_lnCE": 0.05977304377740282,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ni",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 72,
+   "ms": 1.9071,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9809767721136294,
+     "max_abs_lnCE": 0.0986757710705061,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 1.000252105588364,
+     "max_abs_lnCE": 0.05417110154290284,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ni",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 52,
+   "ms": 2.3695,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1548204977277587,
+     "max_abs_lnCE": 0.35741714393443486,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0843992241140858,
+     "max_abs_lnCE": 0.169354636811796,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 20,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "NiCr",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 74,
+   "ms": 3.0942,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0871354013398526,
+     "max_abs_lnCE": 0.140330967673357,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9622451442861863,
+     "max_abs_lnCE": 0.09588996870251008,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 63,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "NiCr",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 94,
+   "ms": 2.3141,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9803220917548752,
+     "max_abs_lnCE": 0.11251347792160876,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9991694361549806,
+     "max_abs_lnCE": 0.048732564476974626,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 63,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "NiCr",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 73,
+   "ms": 3.1326,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.149073338004248,
+     "max_abs_lnCE": 0.24422274929272017,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0082585126711001,
+     "max_abs_lnCE": 0.1585860679777813,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 63,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Os",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 72,
+   "ms": 3.3847,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.6575811115184694,
+     "max_abs_lnCE": 1.7236530024094188,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.5534977325566253,
+     "max_abs_lnCE": 1.5577061137460237,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 42,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "P",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 32,
+   "ms": 1.3401,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0007204771891416,
+     "max_abs_lnCE": 0.11979404058500882,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.0034490161199392,
+     "max_abs_lnCE": 0.12005149148446256,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 10,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Pb",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 37,
+   "ms": 1.5857,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.7476311743471263,
+     "max_abs_lnCE": 0.3365362275623211,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.8642379487940695,
+     "max_abs_lnCE": 0.3352650447785039,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 9,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Pb",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 50,
+   "ms": 1.0546,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.6154776954500497,
+     "max_abs_lnCE": 2.3431450168583168,
+     "n": 7
+    },
+    "fispact": {
+     "geomean_CE": 0.5071210802211681,
+     "max_abs_lnCE": 3.091952301106539,
+     "n": 7
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 9,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 7,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 3
+   }
+  },
+  {
+   "material": "Pb",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 37,
+   "ms": 2.8299,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9078796813597072,
+     "max_abs_lnCE": 0.3629303785164055,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.0362223479486186,
+     "max_abs_lnCE": 0.6358851044999,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 9,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Pd",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 73,
+   "ms": 3.5134,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1360802925869407,
+     "max_abs_lnCE": 0.2671609733562563,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0851175639691664,
+     "max_abs_lnCE": 0.14276600812458676,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 36,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Pr",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 46,
+   "ms": 2.0661,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.505477821243246,
+     "max_abs_lnCE": 0.8666244353000353,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.4994180673952922,
+     "max_abs_lnCE": 0.8706175317440165,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Pt",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 75,
+   "ms": 3.4201,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0901534081873874,
+     "max_abs_lnCE": 0.1290447990566703,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.191362044701904,
+     "max_abs_lnCE": 0.2236030663172234,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 34,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Rb",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 58,
+   "ms": 2.9113,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0675586598859454,
+     "max_abs_lnCE": 0.10967975525644384,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.008781655546143,
+     "max_abs_lnCE": 0.05676810717589077,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 26,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Re",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 46,
+   "ms": 2.14,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2498871457234817,
+     "max_abs_lnCE": 0.302572731981895,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.3124839393738192,
+     "max_abs_lnCE": 0.3625507509726547,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Re",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 71,
+   "ms": 2.1176,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0598935165380725,
+     "max_abs_lnCE": 0.1368293886429469,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 1.0682262431692064,
+     "max_abs_lnCE": 0.14724237549848274,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Re",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 46,
+   "ms": 2.5195,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0819652488129785,
+     "max_abs_lnCE": 0.3363925561932133,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.1400411074978487,
+     "max_abs_lnCE": 0.2473375933159632,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Rh",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 45,
+   "ms": 2.0524,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 3.2025957419961575,
+     "max_abs_lnCE": 1.4322065576985694,
+     "n": 19
+    },
+    "fispact": {
+     "geomean_CE": 3.194095419253563,
+     "max_abs_lnCE": 1.4255426138662566,
+     "n": 19
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 4,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ru",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 81,
+   "ms": 4.1573,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1316866889271735,
+     "max_abs_lnCE": 0.200105128527818,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.9901122935520438,
+     "max_abs_lnCE": 0.1319604792628901,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 37,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "S",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 36,
+   "ms": 1.6363,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.6708955303392475,
+     "max_abs_lnCE": 0.5729334637093717,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.6986520859919425,
+     "max_abs_lnCE": 0.5362101033062192,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 15,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "S",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 47,
+   "ms": 1.0521,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9457741549247214,
+     "max_abs_lnCE": 0.0739664167138686,
+     "n": 9
+    },
+    "fispact": {
+     "geomean_CE": 0.9463886195685709,
+     "max_abs_lnCE": 0.07473445099161777,
+     "n": 9
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 15,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 9,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 1
+   }
+  },
+  {
+   "material": "S",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 36,
+   "ms": 1.4968,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.072503391022575,
+     "max_abs_lnCE": 1.195111385638459,
+     "n": 19
+    },
+    "fispact": {
+     "geomean_CE": 1.1165788206525074,
+     "max_abs_lnCE": 1.1765733086524959,
+     "n": 19
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 15,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 19,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "SS304",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 93,
+   "ms": 3.7372,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0030908737340862,
+     "max_abs_lnCE": 0.07745718401881277,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9313677540075691,
+     "max_abs_lnCE": 0.07920493609680017,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 82,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "SS304",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 132,
+   "ms": 3.1942,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.921002095276572,
+     "max_abs_lnCE": 0.18103769812049408,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9295965698059427,
+     "max_abs_lnCE": 0.15889442389881456,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 82,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "SS304",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 93,
+   "ms": 5.1064,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1168575339160987,
+     "max_abs_lnCE": 0.16528843352837744,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.029907929548645,
+     "max_abs_lnCE": 0.039412869847717164,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 82,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "SS316",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 165,
+   "ms": 7.306,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0106703488017057,
+     "max_abs_lnCE": 0.0897815157013234,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9417296691254362,
+     "max_abs_lnCE": 0.08635684150008915,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 125,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "SS316",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 236,
+   "ms": 5.9669,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9197861588769329,
+     "max_abs_lnCE": 0.1702954815159889,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9303810562703251,
+     "max_abs_lnCE": 0.14128000116710093,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 125,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "SS316",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 165,
+   "ms": 7.7371,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1420853783996088,
+     "max_abs_lnCE": 0.1987660452722097,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0567668536713983,
+     "max_abs_lnCE": 0.07997672611535814,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 125,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sb",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 58,
+   "ms": 2.9174,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.225259026028588,
+     "max_abs_lnCE": 0.22874746430776535,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.2405798959948222,
+     "max_abs_lnCE": 0.2647947489888135,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 6,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sc",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 43,
+   "ms": 1.9041,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8115323394238512,
+     "max_abs_lnCE": 0.5712985508021111,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.9204672396916477,
+     "max_abs_lnCE": 0.5227791599358936,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 12,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Se",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 74,
+   "ms": 3.3979,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.027871538140694,
+     "max_abs_lnCE": 0.18209193433836793,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0079387525790682,
+     "max_abs_lnCE": 0.18658997735968755,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Si",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 26,
+   "ms": 1.5469,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1316592266230128,
+     "max_abs_lnCE": 0.18627887680697894,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0845660787591882,
+     "max_abs_lnCE": 0.17507351681312194,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 14,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sm",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 96,
+   "ms": 4.0896,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9872897874446218,
+     "max_abs_lnCE": 0.5352426391007794,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9535514061583562,
+     "max_abs_lnCE": 0.5702244246100239,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 53,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sn",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 128,
+   "ms": 5.8735,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0418725831795965,
+     "max_abs_lnCE": 0.22965965077828443,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.8497410056853463,
+     "max_abs_lnCE": 0.24577985259628934,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 53,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sn",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 169,
+   "ms": 4.7397,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8374229920356681,
+     "max_abs_lnCE": 0.425852060576511,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.8917314209156637,
+     "max_abs_lnCE": 0.4408638114326688,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 53,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sn",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 128,
+   "ms": 6.6316,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.3404699712536792,
+     "max_abs_lnCE": 0.5911214199756426,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.1169963274489154,
+     "max_abs_lnCE": 0.6025040652553608,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 53,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sr",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 59,
+   "ms": 2.5259,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8888258314348967,
+     "max_abs_lnCE": 0.18793583399665081,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9128453100268213,
+     "max_abs_lnCE": 0.15766289186662197,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 39,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sr",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 87,
+   "ms": 2.9345,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8849378608059512,
+     "max_abs_lnCE": 0.21573793929270108,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9472601031116326,
+     "max_abs_lnCE": 0.11539493200037472,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 39,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Sr",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 59,
+   "ms": 2.6441,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9866859066157587,
+     "max_abs_lnCE": 0.2851349618292466,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0129628963945034,
+     "max_abs_lnCE": 0.26917029900429584,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 39,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ta",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 41,
+   "ms": 1.9088,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.232588280114177,
+     "max_abs_lnCE": 0.24554789261708776,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.2970007707050557,
+     "max_abs_lnCE": 0.306727037772521,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ta",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 59,
+   "ms": 1.6645,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.6116970633963272,
+     "max_abs_lnCE": 1.3977994991671077,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.620064750144572,
+     "max_abs_lnCE": 1.3092651758881784,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ta",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 41,
+   "ms": 1.9908,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8630245142742365,
+     "max_abs_lnCE": 0.22879325061443562,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.9075781201439284,
+     "max_abs_lnCE": 0.1819385248655829,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 13,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Tb",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 42,
+   "ms": 1.7843,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.18413851529195965,
+     "max_abs_lnCE": 3.878329281283367,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.17900334193791306,
+     "max_abs_lnCE": 3.829559673771294,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 15,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Te",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 112,
+   "ms": 5.1353,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9297342799110296,
+     "max_abs_lnCE": 0.19883753339773544,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0013986850654293,
+     "max_abs_lnCE": 0.04604822296401732,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 31,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ti",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 42,
+   "ms": 1.7419,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9458395048415399,
+     "max_abs_lnCE": 0.09687526775920723,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9075279951915308,
+     "max_abs_lnCE": 0.14404314088547537,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 27,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ti",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 69,
+   "ms": 1.7851,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8941636780397849,
+     "max_abs_lnCE": 0.24879442577442326,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9249707188036208,
+     "max_abs_lnCE": 0.16003570898011563,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 27,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Ti",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 42,
+   "ms": 1.8545,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0730458111795453,
+     "max_abs_lnCE": 0.1771364057384883,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.0298399464567753,
+     "max_abs_lnCE": 0.1376038434485275,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 27,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Tl",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 52,
+   "ms": 2.2207,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.357409713950527,
+     "max_abs_lnCE": 0.47008965194558805,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.3834732339582627,
+     "max_abs_lnCE": 0.5563929306087176,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 18,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Tm",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 50,
+   "ms": 2.2786,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.999608891755813,
+     "max_abs_lnCE": 2.274288837345561,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.9506896828428698,
+     "max_abs_lnCE": 2.210686730375761,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 15,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "V",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 29,
+   "ms": 1.3364,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0489552533045832,
+     "max_abs_lnCE": 0.35247514514258077,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9457450222148872,
+     "max_abs_lnCE": 0.37824349553290204,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 9,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "V",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 43,
+   "ms": 0.907,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.496943533294746,
+     "max_abs_lnCE": 4.096682903848663,
+     "n": 7
+    },
+    "fispact": {
+     "geomean_CE": 0.500571520894265,
+     "max_abs_lnCE": 4.049837583320397,
+     "n": 7
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 9,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 7,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 3
+   }
+  },
+  {
+   "material": "V",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 29,
+   "ms": 1.3841,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2838087794150608,
+     "max_abs_lnCE": 0.31458157534456915,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.1549953661226433,
+     "max_abs_lnCE": 0.22284897777740764,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 9,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "W",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 65,
+   "ms": 2.9894,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.7907995157453667,
+     "max_abs_lnCE": 0.7906094956990398,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.3569055922119446,
+     "max_abs_lnCE": 0.5056805327267726,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 38,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "W",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 83,
+   "ms": 2.3427,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.2417191391785498,
+     "max_abs_lnCE": 0.5161770752529198,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 1.2119702608399099,
+     "max_abs_lnCE": 0.5083397978791467,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 38,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "W",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 65,
+   "ms": 3.0521,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 2.4457009510049135,
+     "max_abs_lnCE": 1.099507306721037,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.8271348706088486,
+     "max_abs_lnCE": 0.7952123587155865,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 38,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Y",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 48,
+   "ms": 2.454,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.5277873649560667,
+     "max_abs_lnCE": 1.4059985835066464,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.6026593405699102,
+     "max_abs_lnCE": 0.9513710201642183,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 14,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Y",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 67,
+   "ms": 1.76,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8338963187275366,
+     "max_abs_lnCE": 0.2012602999642005,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.8362733709436321,
+     "max_abs_lnCE": 0.1999456618622681,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 14,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Y",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 48,
+   "ms": 2.1854,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.8824979167681715,
+     "max_abs_lnCE": 0.7397906041755349,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.002519976322405,
+     "max_abs_lnCE": 0.768529700166513,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 14,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Yb",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 81,
+   "ms": 4.9169,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0917203014982155,
+     "max_abs_lnCE": 1.431128810395,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 0.9763050945761585,
+     "max_abs_lnCE": 1.4574853164611172,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 60,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 1
+   }
+  },
+  {
+   "material": "Zn",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 55,
+   "ms": 2.8659,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.625073154885779,
+     "max_abs_lnCE": 0.7249480508265452,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 0.8935715669800898,
+     "max_abs_lnCE": 0.17677380993010686,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": false
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 24,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Zr",
+   "experiment": "1996exp_5min",
+   "error": null,
+   "pruned": 58,
+   "ms": 2.9794,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.0317400441236746,
+     "max_abs_lnCE": 0.11034305743695216,
+     "n": 20
+    },
+    "fispact": {
+     "geomean_CE": 1.018965214792959,
+     "max_abs_lnCE": 0.04511260531245505,
+     "n": 20
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": true,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 36,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 20,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Zr",
+   "experiment": "1996exp_7hour",
+   "error": null,
+   "pruned": 82,
+   "ms": 2.2263,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 0.9462522782793426,
+     "max_abs_lnCE": 0.4193965993930636,
+     "n": 10
+    },
+    "fispact": {
+     "geomean_CE": 0.9410268429554758,
+     "max_abs_lnCE": 0.42982038780318665,
+     "n": 10
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 36,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 10,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  },
+  {
+   "material": "Zr",
+   "experiment": "2000exp_5min",
+   "error": null,
+   "pruned": 58,
+   "ms": 3.1107,
+   "summary": {
+    "actinv": {
+     "geomean_CE": 1.1267151077155848,
+     "max_abs_lnCE": 0.17693631184482367,
+     "n": 21
+    },
+    "fispact": {
+     "geomean_CE": 1.115318728845714,
+     "max_abs_lnCE": 0.11996692684829685,
+     "n": 21
+    }
+   },
+   "disposition": {
+    "AGREE_MEAS": false,
+    "AGREE_REF": true
+   },
+   "ledger_counts": {
+    "products_no_evaluated_decay_data_ENDFB80_JEFF33": 2,
+    "targets_absent_from_decay_lib": 0,
+    "isomer_state_absent_from_decay_library_used_ground": 6,
+    "composition_isotopes_absent": 0,
+    "bulk_production_dropped": 36,
+    "burnup_flag": false,
+    "rate_pruning": 3,
+    "nuclides_without_decay_energy_data": 0,
+    "negative_atoms_zeroed_per_step": 21,
+    "decay_data_sources_used": 1,
+    "measured_rows_excluded": 0
+   }
+  }
+ ]
+}

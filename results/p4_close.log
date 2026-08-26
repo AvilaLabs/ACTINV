@@ -1,0 +1,259 @@
+[00:25] waiting for the full library build
+[01:54] library present: 107M
+[01:54] 1/6 flagging the full library index
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/controls/flag_library.py", line 6, in <module>
+    idx_path = sys.argv[1]; idx = json.load(open(idx_path)); g = json.load(open(os.path.join(RES, "g2_tendl_dense1.json")))
+                                            ^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g_index.json'
+[01:54] 2/6 convergence control (G2b, G2c) on the seeded sample
+Fe56   MT102        own=1.340041e-03 b  omc=1.340041e-03 b  rel=0.00e+00  
+Fe56   MT103        own=9.398681e-02 b  omc=9.398681e-02 b  rel=0.00e+00  
+Fe56   MT107        own=3.641714e-02 b  omc=3.641714e-02 b  rel=0.00e+00  
+Fe56   MT16         own=4.424524e-01 b  omc=4.424524e-01 b  rel=0.00e+00  
+Fe56   MT105        own=8.475636e-05 b  omc=8.475636e-05 b  rel=0.00e+00  
+Fe56   MT104        own=7.468242e-03 b  omc=7.468242e-03 b  rel=0.00e+00  
+Fe56   MT28         own=8.297874e-02 b  omc=8.297874e-02 b  rel=0.00e+00  
+Fe56   MT22         own=2.586244e-03 b  omc=2.586244e-03 b  rel=0.00e+00  
+Fe56   MT32         own=0.000000e+00 b  omc=0.000000e+00 b  rel=0.00e+00  
+Fe56   MT111        own=1.837272e-09 b  omc=1.837272e-09 b  rel=0.00e+00  
+Ag107  MT102        own=3.028871e-02 b  omc=3.028871e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=0 own=2.950822e-02 b  omc=2.950822e-02 b  rel=0.00e+00  
+Ag107  MT102  lfs=1 own=7.804942e-04 b  omc=7.804942e-04 b  rel=0.00e+00  
+W186   MT102        own=6.922947e-02 b  omc=6.922947e-02 b  rel=0.00e+00  
+W186   MT16   lfs=0 own=8.960368e-01 b  omc=8.960368e-01 b  rel=0.00e+00  
+W186   MT16   lfs=1 own=6.212343e-01 b  omc=6.212343e-01 b  rel=0.00e+00  
+openmc errors: None
+TENDL: {'LRP': 1, 'EL_eV': 1e-05, 'EH_eV': 850010.0, 'LRU': 1, 'LRF': 3, 'note': 'resolved-resonance reconstruction required before collapse; not attempted in P1'}
+{
+ "dense": 1.0,
+ "sample_seed": 20260826,
+ "n_sample": 40,
+ "control_c": {
+  "n_capture_rows": 119,
+  "max_rel": 0.01633053205675924,
+  "pass": false,
+  "rows_over": [
+   {
+    "target": "n_037-Rb-94_3752.dat",
+    "mt": 102,
+    "zap": -1,
+    "lfs": -1,
+    "max_rel": 0.0025224770782844544,
+    "group": 372
+   },
+   {
+    "target": "n_037-Rb-94_3752.dat",
+    "mt": 102,
+    "zap": 37095,
+    "lfs": 0,
+    "max_rel": 0.0025224770782844544,
+    "group": 372
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 18,
+    "zap": -1,
+    "lfs": -1,
+    "max_rel": 0.01633053205675924,
+    "group": 247
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 18,
+    "zap": 0,
+    "lfs": 0,
+    "max_rel": 0.01633053205675924,
+    "group": 247
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 102,
+    "zap": -1,
+    "lfs": -1,
+    "max_rel": 0.014361683421793413,
+    "group": 220
+   },
+   {
+    "target": "n_087-Fr-226_8767.dat",
+    "mt": 102,
+    "zap": 87227,
+    "lfs": 0,
+    "max_rel": 0.014361683421793413,
+    "group": 220
+   }
+  ]
+ },
+ "control_b": {
+  "n_reactions": 771,
+  "max_rel": 0.9308595394003593,
+  "pass": false
+ },
+ "build_seconds": [
+  228.00202131271362,
+  674.686695098877
+ ],
+ "errors": [
+  0,
+  0
+ ]
+}
+[02:10] 3/6 subset-vs-full equality control (Amendment B)
+  1/132 Ag      2000exp_5min     pruned   66    3.10 ms  ACTINV gm C/E 1.124 max|ln| 0.348 | FISPACT gm 1.032 max|ln| 0.202
+  2/132 Al      1996exp_5min     pruned   30    1.16 ms  ACTINV gm C/E 0.963 max|ln| 0.105 | FISPACT gm 0.963 max|ln| 0.103
+  3/132 Al      1996exp_7hour    pruned   50    1.04 ms  ACTINV gm C/E 0.037 max|ln| 10.277 | FISPACT gm 0.075 max|ln| 7.800
+  4/132 Al      2000exp_5min     pruned   30    1.26 ms  ACTINV gm C/E 1.073 max|ln| 0.107 | FISPACT gm 1.072 max|ln| 0.101
+  5/132 As      2000exp_5min     pruned   69    2.85 ms  ACTINV gm C/E 1.232 max|ln| 0.326 | FISPACT gm 1.034 max|ln| 0.328
+  6/132 Au      2000exp_5min     pruned   50    2.40 ms  ACTINV gm C/E 0.761 max|ln| 0.516 | FISPACT gm 1.290 max|ln| 0.548
+  7/132 Ba      1996exp_5min     pruned  116    5.11 ms  ACTINV gm C/E 0.433 max|ln| 2.174 | FISPACT gm 0.508 max|ln| 2.301
+  8/132 Ba      1996exp_7hour    pruned  132    3.47 ms  ACTINV gm C/E 1.097 max|ln| 0.407 | FISPACT gm 1.078 max|ln| 0.216
+  9/132 Ba      2000exp_5min     pruned  116    5.47 ms  ACTINV gm C/E 1.050 max|ln| 0.465 | FISPACT gm 1.253 max|ln| 0.336
+ 10/132 Bi      1996exp_5min     pruned   35    1.50 ms  ACTINV gm C/E 1.850 max|ln| 1.117 | FISPACT gm 3.767 max|ln| 1.863
+ 11/132 Bi      1996exp_7hour    pruned   41    0.81 ms  ACTINV gm C/E 6.867 max|ln| 2.343 | FISPACT gm 6.301 max|ln| 2.261
+ 12/132 Bi      2000exp_5min     pruned   35    1.50 ms  ACTINV gm C/E 2.637 max|ln| 4.221 | FISPACT gm 5.153 max|ln| 4.346
+ 13/132 Br      2000exp_5min     pruned   84    3.70 ms  ACTINV gm C/E 1.000 max|ln| 0.096 | FISPACT gm 1.014 max|ln| 0.112
+ 14/132 Ca      1996exp_5min     pruned  103    4.17 ms  ACTINV gm C/E 1.212 max|ln| 0.382 | FISPACT gm 0.670 max|ln| 0.550
+ 15/132 Ca      1996exp_7hour    pruned  131    2.65 ms  ACTINV gm C/E 0.888 max|ln| 0.166 | FISPACT gm 0.943 max|ln| 0.114
+ 16/132 Ca      2000exp_5min     pruned  103    4.23 ms  ACTINV gm C/E 1.667 max|ln| 0.920 | FISPACT gm 0.962 max|ln| 0.832
+ 17/132 Cd      2000exp_5min     pruned  122    6.79 ms  ACTINV gm C/E 1.115 max|ln| 0.175 | FISPACT gm 1.144 max|ln| 0.150
+ 18/132 Ce      2000exp_5min     pruned   99    4.40 ms  ACTINV gm C/E 1.098 max|ln| 1.433 | FISPACT gm 1.334 max|ln| 1.852
+ 19/132 Cl      2000exp_5min     pruned   60    2.47 ms  ACTINV gm C/E 1.141 max|ln| 0.229 | FISPACT gm 1.100 max|ln| 0.313
+ 20/132 Co      1996exp_5min     pruned   31    1.27 ms  ACTINV gm C/E 0.978 max|ln| 0.035 | FISPACT gm 1.020 max|ln| 0.050
+ 21/132 Co      1996exp_7hour    pruned   64    1.71 ms  ACTINV gm C/E 0.994 max|ln| 0.316 | FISPACT gm 0.995 max|ln| 0.314
+ 22/132 Co      2000exp_5min     pruned   31    1.25 ms  ACTINV gm C/E 1.062 max|ln| 0.131 | FISPACT gm 1.102 max|ln| 0.188
+ 23/132 Cr      1996exp_5min     pruned   46    1.91 ms  ACTINV gm C/E 0.907 max|ln| 1.698 | FISPACT gm 0.819 max|ln| 1.181
+ 24/132 Cr      1996exp_7hour    pruned   77    2.08 ms  ACTINV gm C/E 0.661 max|ln| 2.229 | FISPACT gm 0.645 max|ln| 2.256
+ 25/132 Cr      2000exp_5min     pruned   46    1.98 ms  ACTINV gm C/E 1.166 max|ln| 1.047 | FISPACT gm 1.040 max|ln| 0.552
+ 26/132 Cs      2000exp_5min     pruned   75    3.28 ms  ACTINV gm C/E 1.213 max|ln| 1.538 | FISPACT gm 1.018 max|ln| 1.541
+ 27/132 Cu      1996exp_5min     pruned   44    1.81 ms  ACTINV gm C/E 0.924 max|ln| 0.101 | FISPACT gm 0.915 max|ln| 0.097
+ 28/132 Cu      1996exp_7hour    pruned   78    2.23 ms  ACTINV gm C/E 0.923 max|ln| 0.210 | FISPACT gm 0.927 max|ln| 0.209
+ 29/132 Cu      2000exp_5min     pruned   44    1.95 ms  ACTINV gm C/E 1.061 max|ln| 0.085 | FISPACT gm 1.048 max|ln| 0.055
+ 30/132 Dy      2000exp_5min     pruned   97    4.38 ms  ACTINV gm C/E 1.880 max|ln| 3.470 | FISPACT gm 1.887 max|ln| 3.463
+ 31/132 Er      2000exp_5min     pruned  103    4.48 ms  ACTINV gm C/E 1.493 max|ln| 2.301 | FISPACT gm 1.329 max|ln| 2.314
+ 32/132 Eu      2000exp_5min     pruned   79    3.31 ms  ACTINV gm C/E 1.508 max|ln| 1.167 | FISPACT gm 1.867 max|ln| 1.408
+ 33/132 F       1996exp_5min     pruned   35    1.45 ms  ACTINV gm C/E 1.080 max|ln| 0.119 | FISPACT gm 1.081 max|ln| 0.120
+ 34/132 F       2000exp_5min     pruned   35    1.49 ms  ACTINV gm C/E 1.003 max|ln| 0.125 | FISPACT gm 1.004 max|ln| 0.124
+ 35/132 Fe      1996exp_5min     pruned   47    1.84 ms  ACTINV gm C/E 0.926 max|ln| 0.126 | FISPACT gm 0.936 max|ln| 0.102
+ 36/132 Fe      1996exp_7hour    pruned   81    2.40 ms  ACTINV gm C/E 0.901 max|ln| 0.164 | FISPACT gm 0.915 max|ln| 0.152
+ 37/132 Fe      2000exp_5min     pruned   47    1.91 ms  ACTINV gm C/E 1.059 max|ln| 0.080 | FISPACT gm 1.073 max|ln| 0.085
+ 38/132 Ga      2000exp_5min     pruned   75    3.27 ms  ACTINV gm C/E 1.024 max|ln| 0.095 | FISPACT gm 1.023 max|ln| 0.086
+ 39/132 Gd      2000exp_5min     pruned   98    4.33 ms  ACTINV gm C/E 1.217 max|ln| 1.067 | FISPACT gm 1.170 max|ln| 1.002
+ 40/132 Ge      2000exp_5min     pruned   97    4.50 ms  ACTINV gm C/E 1.458 max|ln| 0.604 | FISPACT gm 1.020 max|ln| 0.448
+ 41/132 Hf      2000exp_5min     pruned   73    3.25 ms  ACTINV gm C/E 0.964 max|ln| 0.671 | FISPACT gm 0.924 max|ln| 0.544
+ 42/132 Hg      2000exp_5min     pruned  101    4.81 ms  ACTINV gm C/E 0.975 max|ln| 0.216 | FISPACT gm 1.122 max|ln| 0.151
+ 43/132 Ho      2000exp_5min     pruned   65    2.71 ms  ACTINV gm C/E 0.964 max|ln| 1.160 | FISPACT gm 1.071 max|ln| 1.138
+ 44/132 I       2000exp_5min     pruned   87    4.04 ms  ACTINV gm C/E 1.826 max|ln| 1.018 | FISPACT gm 1.831 max|ln| 1.015
+ 45/132 In      2000exp_5min     pruned   80    4.32 ms  ACTINV gm C/E 1.894 max|ln| 0.829 | FISPACT gm 29.056 max|ln| 4.212
+ 46/132 Inc600  1996exp_5min     pruned   93    3.78 ms  ACTINV gm C/E 0.950 max|ln| 0.150 | FISPACT gm 0.850 max|ln| 0.206
+ 47/132 Inc600  1996exp_7hour    pruned  135    4.12 ms  ACTINV gm C/E 0.979 max|ln| 0.064 | FISPACT gm 0.998 max|ln| 0.061
+ 48/132 Inc600  2000exp_5min     pruned   93    3.93 ms  ACTINV gm C/E 1.056 max|ln| 0.123 | FISPACT gm 0.937 max|ln| 0.119
+ 49/132 Ir      2000exp_5min     pruned   57    2.70 ms  ACTINV gm C/E 0.477 max|ln| 1.314 | FISPACT gm 0.577 max|ln| 1.201
+ 50/132 K       1996exp_5min     pruned   80    3.23 ms  ACTINV gm C/E 1.209 max|ln| 0.242 | FISPACT gm 1.085 max|ln| 0.104
+ 51/132 K       1996exp_7hour    pruned  108    2.41 ms  ACTINV gm C/E 1.034 max|ln| 2.322 | FISPACT gm 1.249 max|ln| 2.346
+ 52/132 K       2000exp_5min     pruned   80    3.33 ms  ACTINV gm C/E 1.202 max|ln| 0.311 | FISPACT gm 1.086 max|ln| 0.132
+ 53/132 La      2000exp_5min     pruned   70    3.09 ms  ACTINV gm C/E 2.118 max|ln| 2.916 | FISPACT gm 1.885 max|ln| 2.769
+ 54/132 Lu      2000exp_5min     pruned   74    3.11 ms  ACTINV gm C/E 1.352 max|ln| 1.810 | FISPACT gm 1.215 max|ln| 1.689
+ 55/132 Mg      2000exp_5min     pruned   50    1.85 ms  ACTINV gm C/E 0.907 max|ln| 0.271 | FISPACT gm 0.943 max|ln| 0.163
+ 56/132 Mn      1996exp_5min     pruned   30    1.16 ms  ACTINV gm C/E 1.211 max|ln| 0.280 | FISPACT gm 1.038 max|ln| 0.123
+ 57/132 Mn      1996exp_7hour    pruned   63    1.75 ms  ACTINV gm C/E 0.997 max|ln| 0.074 | FISPACT gm 0.961 max|ln| 0.108
+ 58/132 Mn      2000exp_5min     pruned   30    1.23 ms  ACTINV gm C/E 1.317 max|ln| 0.329 | FISPACT gm 1.120 max|ln| 0.140
+ 59/132 Mo      1996exp_5min     pruned   98    4.65 ms  ACTINV gm C/E 0.747 max|ln| 0.311 | FISPACT gm 0.901 max|ln| 0.118
+ 60/132 Mo      1996exp_7hour    pruned  153    5.41 ms  ACTINV gm C/E 1.071 max|ln| 0.473 | FISPACT gm 1.041 max|ln| 0.366
+ 61/132 Mo      2000exp_5min     pruned   98    4.68 ms  ACTINV gm C/E 0.813 max|ln| 0.230 | FISPACT gm 0.982 max|ln| 0.029
+ 62/132 Na      1996exp_5min     pruned   46    1.98 ms  ACTINV gm C/E 0.353 max|ln| 1.858 | FISPACT gm 0.371 max|ln| 1.837
+ 63/132 Na      1996exp_7hour    pruned   59    1.40 ms  ACTINV gm C/E 0.793 max|ln| 0.285 | FISPACT gm 0.844 max|ln| 0.215
+ 64/132 Na      2000exp_5min     pruned   46    2.02 ms  ACTINV gm C/E 0.841 max|ln| 0.722 | FISPACT gm 0.897 max|ln| 0.689
+ 65/132 Nb      1996exp_5min     pruned   41    1.72 ms  ACTINV gm C/E 1.123 max|ln| 0.250 | FISPACT gm 1.097 max|ln| 0.181
+ 66/132 Nb      1996exp_7hour    pruned   74    2.01 ms  ACTINV gm C/E 0.928 max|ln| 0.145 | FISPACT gm 0.928 max|ln| 0.143
+ 67/132 Nb      2000exp_5min     pruned   41    1.72 ms  ACTINV gm C/E 0.962 max|ln| 0.181 | FISPACT gm 0.937 max|ln| 0.202
+ 68/132 Nd      2000exp_5min     pruned  104    4.70 ms  ACTINV gm C/E 1.567 max|ln| 0.654 | FISPACT gm 1.576 max|ln| 0.654
+ 69/132 Ni      1996exp_5min     pruned   67    2.76 ms  ACTINV gm C/E 1.036 max|ln| 0.153 | FISPACT gm 0.990 max|ln| 0.060
+ 70/132 Ni      1996exp_7hour    pruned  102    2.89 ms  ACTINV gm C/E 0.981 max|ln| 0.099 | FISPACT gm 1.000 max|ln| 0.054
+ 71/132 Ni      2000exp_5min     pruned   67    2.88 ms  ACTINV gm C/E 1.155 max|ln| 0.357 | FISPACT gm 1.084 max|ln| 0.169
+ 72/132 NiCr    1996exp_5min     pruned   93    3.84 ms  ACTINV gm C/E 1.087 max|ln| 0.140 | FISPACT gm 0.962 max|ln| 0.096
+ 73/132 NiCr    1996exp_7hour    pruned  136    3.93 ms  ACTINV gm C/E 0.980 max|ln| 0.113 | FISPACT gm 0.999 max|ln| 0.049
+ 74/132 NiCr    2000exp_5min     pruned   93    4.01 ms  ACTINV gm C/E 1.149 max|ln| 0.244 | FISPACT gm 1.008 max|ln| 0.159
+ 75/132 Os      2000exp_5min     pruned   84    4.30 ms  ACTINV gm C/E 0.658 max|ln| 1.724 | FISPACT gm 0.553 max|ln| 1.558
+ 76/132 P       2000exp_5min     pruned   53    2.10 ms  ACTINV gm C/E 1.001 max|ln| 0.120 | FISPACT gm 1.003 max|ln| 0.120
+ 77/132 Pb      1996exp_5min     pruned   47    1.93 ms  ACTINV gm C/E 0.748 max|ln| 0.337 | FISPACT gm 0.864 max|ln| 0.335
+ 78/132 Pb      1996exp_7hour    pruned   64    1.56 ms  ACTINV gm C/E 0.615 max|ln| 2.343 | FISPACT gm 0.507 max|ln| 3.092
+ 79/132 Pb      2000exp_5min     pruned   47    1.94 ms  ACTINV gm C/E 0.908 max|ln| 0.363 | FISPACT gm 1.036 max|ln| 0.636
+ 80/132 Pd      2000exp_5min     pruned   88    4.53 ms  ACTINV gm C/E 1.136 max|ln| 0.267 | FISPACT gm 1.085 max|ln| 0.143
+ 81/132 Pr      2000exp_5min     pruned   59    2.55 ms  ACTINV gm C/E 1.505 max|ln| 0.867 | FISPACT gm 1.499 max|ln| 0.871
+ 82/132 Pt      2000exp_5min     pruned   85    3.93 ms  ACTINV gm C/E 1.090 max|ln| 0.129 | FISPACT gm 1.191 max|ln| 0.224
+ 83/132 Rb      2000exp_5min     pruned   87    3.78 ms  ACTINV gm C/E 1.068 max|ln| 0.110 | FISPACT gm 1.009 max|ln| 0.057
+ 84/132 Re      1996exp_5min     pruned   58    2.56 ms  ACTINV gm C/E 1.250 max|ln| 0.303 | FISPACT gm 1.312 max|ln| 0.363
+ 85/132 Re      1996exp_7hour    pruned   95    3.28 ms  ACTINV gm C/E 1.060 max|ln| 0.137 | FISPACT gm 1.068 max|ln| 0.147
+ 86/132 Re      2000exp_5min     pruned   58    2.74 ms  ACTINV gm C/E 1.082 max|ln| 0.336 | FISPACT gm 1.140 max|ln| 0.247
+ 87/132 Rh      2000exp_5min     pruned   50    2.12 ms  ACTINV gm C/E 3.203 max|ln| 1.432 | FISPACT gm 3.194 max|ln| 1.426
+ 88/132 Ru      2000exp_5min     pruned   95    4.58 ms  ACTINV gm C/E 1.132 max|ln| 0.200 | FISPACT gm 0.990 max|ln| 0.132
+ 89/132 S       1996exp_5min     pruned   49    2.00 ms  ACTINV gm C/E 0.671 max|ln| 0.573 | FISPACT gm 0.699 max|ln| 0.536
+ 90/132 S       1996exp_7hour    pruned   69    1.64 ms  ACTINV gm C/E 0.946 max|ln| 0.074 | FISPACT gm 0.946 max|ln| 0.075
+ 91/132 S       2000exp_5min     pruned   48    1.87 ms  ACTINV gm C/E 1.073 max|ln| 1.195 | FISPACT gm 1.117 max|ln| 1.177
+ 92/132 SS304   1996exp_5min     pruned  118    4.61 ms  ACTINV gm C/E 1.003 max|ln| 0.077 | FISPACT gm 0.931 max|ln| 0.079
+ 93/132 SS304   1996exp_7hour    pruned  187    5.09 ms  ACTINV gm C/E 0.921 max|ln| 0.181 | FISPACT gm 0.930 max|ln| 0.159
+ 94/132 SS304   2000exp_5min     pruned  118    4.76 ms  ACTINV gm C/E 1.117 max|ln| 0.165 | FISPACT gm 1.030 max|ln| 0.039
+ 95/132 SS316   1996exp_5min     pruned  215    9.55 ms  ACTINV gm C/E 1.011 max|ln| 0.090 | FISPACT gm 0.942 max|ln| 0.086
+ 96/132 SS316   1996exp_7hour    pruned  324    9.74 ms  ACTINV gm C/E 0.920 max|ln| 0.170 | FISPACT gm 0.930 max|ln| 0.141
+ 97/132 SS316   2000exp_5min     pruned  215    9.80 ms  ACTINV gm C/E 1.142 max|ln| 0.199 | FISPACT gm 1.057 max|ln| 0.080
+ 98/132 Sb      2000exp_5min     pruned   70    3.64 ms  ACTINV gm C/E 1.225 max|ln| 0.229 | FISPACT gm 1.241 max|ln| 0.265
+ 99/132 Sc      2000exp_5min     pruned   61    2.37 ms  ACTINV gm C/E 0.812 max|ln| 0.571 | FISPACT gm 0.920 max|ln| 0.523
+100/132 Se      2000exp_5min     pruned   91    4.33 ms  ACTINV gm C/E 1.028 max|ln| 0.182 | FISPACT gm 1.008 max|ln| 0.187
+101/132 Si      2000exp_5min     pruned   33    1.32 ms  ACTINV gm C/E 1.132 max|ln| 0.186 | FISPACT gm 1.085 max|ln| 0.175
+102/132 Sm      2000exp_5min     pruned  117    5.10 ms  ACTINV gm C/E 0.987 max|ln| 0.535 | FISPACT gm 0.954 max|ln| 0.570
+103/132 Sn      1996exp_5min     pruned  156    8.09 ms  ACTINV gm C/E 1.042 max|ln| 0.230 | FISPACT gm 0.850 max|ln| 0.246
+104/132 Sn      1996exp_7hour    pruned  238   10.12 ms  ACTINV gm C/E 0.837 max|ln| 0.426 | FISPACT gm 0.892 max|ln| 0.441
+105/132 Sn      2000exp_5min     pruned  156    8.71 ms  ACTINV gm C/E 1.340 max|ln| 0.591 | FISPACT gm 1.117 max|ln| 0.603
+106/132 Sr      1996exp_5min     pruned   91    4.04 ms  ACTINV gm C/E 0.889 max|ln| 0.188 | FISPACT gm 0.913 max|ln| 0.158
+107/132 Sr      1996exp_7hour    pruned  148    4.66 ms  ACTINV gm C/E 0.885 max|ln| 0.216 | FISPACT gm 0.947 max|ln| 0.115
+108/132 Sr      2000exp_5min     pruned   91    3.92 ms  ACTINV gm C/E 0.987 max|ln| 0.285 | FISPACT gm 1.013 max|ln| 0.269
+109/132 Ta      1996exp_5min     pruned   50    2.29 ms  ACTINV gm C/E 1.233 max|ln| 0.246 | FISPACT gm 1.297 max|ln| 0.307
+110/132 Ta      1996exp_7hour    pruned   79    2.58 ms  ACTINV gm C/E 0.612 max|ln| 1.398 | FISPACT gm 0.620 max|ln| 1.309
+111/132 Ta      2000exp_5min     pruned   50    2.30 ms  ACTINV gm C/E 0.863 max|ln| 0.229 | FISPACT gm 0.908 max|ln| 0.182
+112/132 Tb      2000exp_5min     pruned   60    2.58 ms  ACTINV gm C/E 0.184 max|ln| 3.878 | FISPACT gm 0.179 max|ln| 3.830
+113/132 Te      2000exp_5min     pruned  148    8.64 ms  ACTINV gm C/E 0.930 max|ln| 0.199 | FISPACT gm 1.001 max|ln| 0.046
+114/132 Ti      1996exp_5min     pruned   50    2.21 ms  ACTINV gm C/E 0.946 max|ln| 0.097 | FISPACT gm 0.908 max|ln| 0.144
+115/132 Ti      1996exp_7hour    pruned   93    2.68 ms  ACTINV gm C/E 0.894 max|ln| 0.249 | FISPACT gm 0.925 max|ln| 0.160
+116/132 Ti      2000exp_5min     pruned   50    2.25 ms  ACTINV gm C/E 1.073 max|ln| 0.177 | FISPACT gm 1.030 max|ln| 0.138
+117/132 Tl      2000exp_5min     pruned   72    3.00 ms  ACTINV gm C/E 1.357 max|ln| 0.470 | FISPACT gm 1.383 max|ln| 0.556
+118/132 Tm      2000exp_5min     pruned   63    2.75 ms  ACTINV gm C/E 1.000 max|ln| 2.274 | FISPACT gm 0.951 max|ln| 2.211
+119/132 V       1996exp_5min     pruned   35    1.43 ms  ACTINV gm C/E 1.049 max|ln| 0.352 | FISPACT gm 0.946 max|ln| 0.378
+120/132 V       1996exp_7hour    pruned   57    1.41 ms  ACTINV gm C/E 0.497 max|ln| 4.097 | FISPACT gm 0.501 max|ln| 4.050
+121/132 V       2000exp_5min     pruned   35    1.47 ms  ACTINV gm C/E 1.284 max|ln| 0.315 | FISPACT gm 1.155 max|ln| 0.223
+122/132 W       1996exp_5min     pruned   76    3.63 ms  ACTINV gm C/E 1.791 max|ln| 0.791 | FISPACT gm 1.357 max|ln| 0.506
+123/132 W       1996exp_7hour    pruned  111    3.82 ms  ACTINV gm C/E 1.242 max|ln| 0.516 | FISPACT gm 1.212 max|ln| 0.508
+124/132 W       2000exp_5min     pruned   76    3.55 ms  ACTINV gm C/E 2.446 max|ln| 1.100 | FISPACT gm 1.827 max|ln| 0.795
+125/132 Y       1996exp_5min     pruned   66    2.65 ms  ACTINV gm C/E 0.528 max|ln| 1.406 | FISPACT gm 0.603 max|ln| 0.951
+126/132 Y       1996exp_7hour    pruned  120    3.37 ms  ACTINV gm C/E 0.834 max|ln| 0.201 | FISPACT gm 0.836 max|ln| 0.200
+127/132 Y       2000exp_5min     pruned   66    2.84 ms  ACTINV gm C/E 0.882 max|ln| 0.740 | FISPACT gm 1.003 max|ln| 0.769
+128/132 Yb      2000exp_5min     pruned  103    4.47 ms  ACTINV gm C/E 1.092 max|ln| 1.431 | FISPACT gm 0.976 max|ln| 1.457
+129/132 Zn      2000exp_5min     pruned   67    3.09 ms  ACTINV gm C/E 0.625 max|ln| 0.725 | FISPACT gm 0.894 max|ln| 0.177
+130/132 Zr      1996exp_5min     pruned   79    3.65 ms  ACTINV gm C/E 1.032 max|ln| 0.110 | FISPACT gm 1.019 max|ln| 0.045
+131/132 Zr      1996exp_7hour    pruned  129    4.74 ms  ACTINV gm C/E 0.946 max|ln| 0.419 | FISPACT gm 0.941 max|ln| 0.430
+132/132 Zr      2000exp_5min     pruned   79    3.78 ms  ACTINV gm C/E 1.127 max|ln| 0.177 | FISPACT gm 1.115 max|ln| 0.120
+subset-vs-full: {"n_compared": 132, "missing": [], "worst_rel": 2.5274204649845456e-06, "pass": false, "note": "FNS results from the 255-target subset library vs the full 2,847-target library (P4 Amendment B)"}
+[02:11] 4/6 certificate
+certificate: 69 inputs, 132 experiments, body sha 4d7d2530bb59b6c0
+[02:11] 5/6 verdict
+{
+ "gates": {
+  "G1": "PASS (targets 2847, errors 0, targets with ledger entries 2801, INCOMPLETE-URR 0, unsupported formalism/range 2, rows 164315, build 0.0 h)",
+  "G2a": "PASS (twins 3, compared 3, worst one-group 0.0001368525228258123, worst per-group 0.0023111678308461977)",
+  "G2b": "FAIL (771 reactions, max 9.3e-01)",
+  "G2c": "FAIL (Amendment A: 95.0% of 119 rows \u2264 1e-3, max 1.6e-02, flagged targets ['n_037-Rb-94_3752.dat', 'n_087-Fr-226_8767.dat'] in index: False)",
+  "G3": "PASS (ran 132, errors 0, reproduction worst 3.2e-16, median gm C/E 1.035)",
+  "G4": "PASS (inputs 69, mismatched [])"
+ },
+ "verdict": "P4-FAIL",
+ "amendments": [
+  "ACTINV-P4_AMENDMENT_A.md",
+  "ACTINV-P4_AMENDMENT_B.md"
+ ]
+}
+[02:11] verdict: P4-FAIL
+[02:11] 6/6 manifest and commit
+[02:11] manifest verifies (1220 paths)
+The following paths are ignored by one of your .gitignore files:
+scratch
+hint: Use -f if you really want to add them.
+hint: Disable this message with "git config set advice.addIgnoredFile false"
