@@ -287,3 +287,10 @@
   the isomer and set the ground-state loss to their sum (never the total inelastic cross section). Verified on Y-89:
   MT=4 → Y-89m 3.93e-1 b one-group on the FNS spectrum, previously absent; ledger entry per target.
 - **This is the value of the subset schedule**: the bug surfaced 20 minutes after the library existed, not 4 hours.
+- Second cause, same gate: **ENDF `LFS` is the product's nuclear level index, not the isomeric-state number**, and the
+  numbering is library-dependent — TENDL gives Ba-137m as level 2, Hg-199m as 7, W-185m as 6, Rb-86m as 2, while the
+  decay sublibraries index isomers as LISO = 1, 2. EAF-2010 happens to use 1, so only the TENDL library was affected:
+  every isomer fell back silently to its ground state. Fix: the builder renumbers the distinct positive LFS of each
+  (MT, product) in increasing level order onto isomeric ordinals and ledgers every remap; the runner now ledgers the
+  ground-state fallback instead of taking it silently (`isomer_state_absent_from_decay_library_used_ground`).
+  Verified: Ba-137 MT=4 LFS 2 → LISO 1, 0.166 b one-group on the FNS spectrum.

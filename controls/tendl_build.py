@@ -188,6 +188,20 @@ def build_one(args):
                 if mt == 18: rows.append((tk, 18, 0, 0, 0)); sig.append(g_tot)
                 elif mt in MT_PROD: dz, da = MT_PROD[mt]; rows.append((tk, mt, za + dz * 1000 + da, 0, -1)); sig.append(g_tot)
                 else: rows.append((tk, mt, 0, 0, -2)); sig.append(g_tot); led.append(f"MT{mt}: product unmapped -> leakage")
+        # ENDF LFS is the product's LEVEL index and is library-dependent (TENDL: Ba-137m = level 2, Hg-199m = 7,
+        # W-185m = 6); decay libraries index isomers by LISO = 1, 2, ... Renumber the distinct positive LFS values of
+        # each (MT, product) in increasing level order onto isomeric ordinals, which is what the ordering encodes.
+        remaps = []
+        by_mt_zap = {}
+        for i, r in enumerate(rows):
+            if r[3] > 0: by_mt_zap.setdefault((r[1], r[2]), []).append(i)
+        for (mt_, zap_), ii in by_mt_zap.items():
+            levels = sorted({rows[i][3] for i in ii})
+            if levels == list(range(1, len(levels) + 1)): continue
+            m = {lv: k + 1 for k, lv in enumerate(levels)}
+            for i in ii: rows[i] = (rows[i][0], rows[i][1], rows[i][2], m[rows[i][3]], rows[i][4])
+            remaps.append(f"MT{mt_}->{zap_}: LFS {levels} -> LISO {[m[l] for l in levels]}")
+        if remaps: led.append("LFS->LISO remap: " + "; ".join(remaps[:8]) + (f" (+{len(remaps)-8} more)" if len(remaps) > 8 else ""))
         info = {"file": os.path.basename(path), "za": za, "liso": liso, "awr": awr, "n_mf3": len(mf3), "resonant_mts": sorted(res), "ledger": led, "seconds": time.time() - t0, "fingerprint": FINGERPRINT}
         if cf:
             tmp = cf + ".tmp.npz"; np.savez_compressed(tmp, rows=np.array([r[1:] for r in rows], dtype=np.int64) if rows else np.zeros((0, 4), np.int64), sig=np.array(sig) if sig else np.zeros((0, 709)), info=json.dumps(info)); os.replace(tmp, cf)

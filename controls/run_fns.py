@@ -44,6 +44,7 @@ def reaction_matrix(phi):
         if row is None:
             row = idx.get((int(zap), 0))
             if row is None: led["products_no_evaluated_decay_data_ENDFB80_JEFF33"][f"{int(zap)}_{int(lfs)}"] = led["products_no_evaluated_decay_data_ENDFB80_JEFF33"].get(f"{int(zap)}_{int(lfs)}", 0.0) + rate; row = LEAK
+            elif lfs: led.setdefault("isomer_state_absent_from_decay_library_used_ground", {})[f"{int(zap)}_m{int(lfs)}"] = led.setdefault("isomer_state_absent_from_decay_library_used_ground", {}).get(f"{int(zap)}_m{int(lfs)}", 0.0) + rate
         R[(row, col)] = R.get((row, col), 0.0) + rate
     return R, led
 def write_problem(path, n0, R, sched, Dm):
