@@ -4,8 +4,8 @@ use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, Cram};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::sparse::Csc;
-use crate::spec::{DecayRef, LibraryRef, PhotonOptions, Spec};
-use actinv_data::{composition, decay, library};
+use crate::spec::{DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Spec};
+use actinv_data::{composition, decay, fission, library};
 use num_complex::Complex64 as C64;
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, HashMap};
@@ -34,6 +34,8 @@ pub struct StepOut {
     pub step: usize,
     pub t_s: f64,
     pub flux: f64,
+    pub flux_weighted_time_s: f64,
+    pub fluence_n_cm2: f64,
     pub inventory: Vec<NuclideOut>,
     pub activity_Bq_per_g: BTreeMap<String, f64>,
     pub heat_W_per_g: Heat,
@@ -165,6 +167,41 @@ fn cram16() -> Cram {
     }
 }
 
+fn fission_average_energy_eV(
+    library: &library::Library,
+    targets: &[(i32, i32)],
+    phi: &[f64],
+    parent: (i32, i32),
+) -> Result<Option<f64>, String> {
+    let row_index = library.rows.iter().position(|row| {
+        row.mt == 18 && row.zap == 0 && targets.get(row.target).is_some_and(|key| *key == parent)
+    });
+    let Some(row_index) = row_index else {
+        return Ok(None);
+    };
+    let sigma = library.sigma(row_index);
+    let mut numerator = 0.0;
+    let mut denominator = 0.0;
+    for (group, (&cross_section, &flux)) in sigma.iter().zip(phi).enumerate() {
+        let weight = cross_section * flux;
+        if weight == 0.0 {
+            continue;
+        }
+        let low = library.bounds[group];
+        let high = library.bounds[group + 1];
+        if !(low.is_finite() && high.is_finite() && low > 0.0 && high > low) {
+            return Err(format!(
+                "cannot compute spectrum-average fission energy for {}_{}: contributing group [{low}, {high}] eV is not strictly positive",
+                parent.0, parent.1
+            ));
+        }
+        let representative = (high - low) / (high / low).ln();
+        numerator += weight * representative;
+        denominator += weight;
+    }
+    Ok((denominator > 0.0).then_some(numerator / denominator))
+}
+
 /// Immutable, verified nuclear data shared by ordinary and mesh solves.
 ///
 /// A prepared value owns the decompressed activation library, parsed decay records, decay
@@ -184,11 +221,15 @@ pub struct PreparedRun {
     decay_fallback: Option<String>,
     decay_fallback_sha: Option<String>,
     nuclides: HashMap<(i32, i32), decay::Nuclide>,
+    decay_fallback_keys: std::collections::HashSet<(i32, i32)>,
     chain: chain::Chain,
     decay_nuclides_from_fallback: usize,
     photon_options: PhotonOptions,
     response: Option<PhotonResponse>,
     response_sha: Option<String>,
+    fission_options: FissionYieldOptions,
+    fission_yields: HashMap<(i32, i32), fission::FissionYields>,
+    fission_yield_inputs: Vec<(HashedFileRef, String, (i32, i32))>,
     temperature_K: f64,
 }
 
@@ -198,6 +239,7 @@ impl PreparedRun {
             &spec.library,
             &spec.decay,
             &spec.photon,
+            &spec.fission_yields,
             spec.options.temperature_K,
         )
     }
@@ -206,6 +248,7 @@ impl PreparedRun {
         library_ref: &LibraryRef,
         decay_ref: &DecayRef,
         photon_options: &PhotonOptions,
+        fission_options: &FissionYieldOptions,
         temperature_K: f64,
     ) -> Result<Self, String> {
         let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;
@@ -225,6 +268,20 @@ impl PreparedRun {
             }
             None => (None, None),
         };
+        let mut fission_yields = HashMap::new();
+        let mut fission_yield_inputs = Vec::with_capacity(fission_options.files.len());
+        for reference in &fission_options.files {
+            let sha = verify_hash(&reference.path, Some(&reference.sha256))?;
+            let parsed = fission::parse_file(&reference.path)?;
+            let parent = parsed.parent;
+            if fission_yields.insert(parent, parsed).is_some() {
+                return Err(format!(
+                    "duplicate fission-yield parent {}_{}",
+                    parent.0, parent.1
+                ));
+            }
+            fission_yield_inputs.push((reference.clone(), sha, parent));
+        }
         let library = library::read_npz(&library_ref.path)?;
         let index: serde_json::Value =
             serde_json::from_str(&std::fs::read_to_string(&idx_path).map_err(|e| e.to_string())?)
@@ -257,6 +314,7 @@ impl PreparedRun {
         let mut nuclides =
             decay::parse_file(&decay_ref.primary).map_err(|error| error.to_string())?;
         let mut decay_nuclides_from_fallback = 0usize;
+        let mut decay_fallback_keys = std::collections::HashSet::new();
         if let Some(fallback) = &decay_ref.fallback {
             if !fallback.is_empty() {
                 for (key, value) in
@@ -265,6 +323,7 @@ impl PreparedRun {
                     if let std::collections::hash_map::Entry::Vacant(entry) = nuclides.entry(key) {
                         entry.insert(value);
                         decay_nuclides_from_fallback += 1;
+                        decay_fallback_keys.insert(key);
                     }
                 }
             }
@@ -288,11 +347,15 @@ impl PreparedRun {
                 .cloned(),
             decay_fallback_sha,
             nuclides,
+            decay_fallback_keys,
             chain,
             decay_nuclides_from_fallback,
             photon_options: photon_options.clone(),
             response,
             response_sha,
+            fission_options: fission_options.clone(),
+            fission_yields,
+            fission_yield_inputs,
             temperature_K,
         })
     }
@@ -321,6 +384,7 @@ impl PreparedRun {
                     .response
                     .as_ref()
                     .map(|value| (&value.path, &value.sha256))
+            || spec.fission_yields != self.fission_options
             || (spec.options.temperature_K - self.temperature_K).abs() > 1e-9
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
@@ -377,16 +441,59 @@ impl PreparedRun {
         }
         // ---- material
         let composition_total: f64 = spec.material.composition.values().sum();
-        let (bulk_inv, cdiag) =
-            composition::atoms_per_gram_basis(&spec.material.composition, &spec.material.basis);
+        let (bulk_inv, cdiag) = composition::material_atoms_per_gram(
+            &spec.material.composition,
+            &spec.material.basis,
+            nuclides,
+        )?;
         let material_mass_fractions = if response.is_some() {
-            composition::mass_fractions(&spec.material.composition, &spec.material.basis)?
+            composition::material_mass_fractions(
+                &spec.material.composition,
+                &spec.material.basis,
+                nuclides,
+            )?
         } else {
             BTreeMap::new()
         };
         let phi = spec.flux_ascending();
+        let mut effective_fission_yields = HashMap::new();
+        let mut fission_yield_selection = Vec::new();
+        let mut fission_parents: Vec<_> = self.fission_yields.keys().copied().collect();
+        fission_parents.sort_unstable();
+        for parent in fission_parents {
+            let requested_energy = match spec.fission_yields.energy.as_str() {
+                "fixed" => spec.fission_yields.fixed_energy_eV,
+                "spectrum_average" => fission_average_energy_eV(lib, lib_targets, &phi, parent)?,
+                _ => None, // validated before preparation
+            };
+            let Some(requested_energy) = requested_energy else {
+                continue;
+            };
+            let effective = self.fission_yields[&parent].effective(requested_energy)?;
+            fission_yield_selection.push(serde_json::json!({
+                "parent": name_of(parent.0, parent.1),
+                "parent_ZA": parent.0,
+                "parent_LISO": parent.1,
+                "mode": spec.fission_yields.energy,
+                "requested_energy_eV": effective.requested_energy_ev,
+                "lower_energy_eV": effective.lower_energy_ev,
+                "upper_energy_eV": effective.upper_energy_ev,
+                "upper_weight": effective.upper_weight,
+                "clamped": effective.clamped,
+                "effective_yield_sum": effective.sum,
+                "products": effective.products.len(),
+            }));
+            effective_fission_yields.insert(parent, effective);
+        }
         let mut led = RateLedger::default();
-        let react = chain::reaction_rates(lib, lib_targets, &phi, ch, &mut led);
+        let react = chain::reaction_rates(
+            lib,
+            lib_targets,
+            &phi,
+            ch,
+            &effective_fission_yields,
+            &mut led,
+        );
         // ---- trace formulation: bulk isotopes become constant sources through the unit state
         let mut bulk: HashMap<usize, f64> = HashMap::new();
         let mut absent: Vec<(i32, i32)> = Vec::new();
@@ -398,22 +505,25 @@ impl PreparedRun {
                 None => absent.push((*za, *liso)),
             }
         }
-        let t_irr: f64 = spec
-            .schedule_seconds()
-            .iter()
-            .filter(|(_, f)| *f > 0.0)
-            .map(|(d, _)| d)
-            .sum();
-        let mut burnup: HashMap<usize, f64> = HashMap::new();
+        let sched = spec.schedule_seconds();
+        let flux_weighted_time_s: f64 = sched.iter().map(|(duration, flux)| duration * flux).sum();
+        let mut burnup_optical_depth: HashMap<usize, f64> = HashMap::new();
         for (r, c, v) in &react {
-            if *r == *c && bulk.contains_key(c) {
-                *burnup.entry(*c).or_insert(0.0) += -v * t_irr;
+            if *r == *c && *v < 0.0 && bulk.contains_key(c) {
+                *burnup_optical_depth.entry(*c).or_insert(0.0) += -v * flux_weighted_time_s;
             }
         }
-        led.burnup_max = burnup.values().cloned().fold(0.0, f64::max);
+        for (index, optical_depth) in burnup_optical_depth {
+            let fraction = -(-optical_depth).exp_m1();
+            if optical_depth > led.burnup_optical_depth_max {
+                led.burnup_optical_depth_max = optical_depth;
+                led.burnup_fraction_max = fraction;
+                led.burnup_nuclide = Some(ch.keys[index]);
+            }
+        }
         let mode = match spec.options.mode.as_str() {
             "auto" => {
-                if led.burnup_max < 1e-6 {
+                if led.burnup_fraction_max < 1e-6 {
                     "trace"
                 } else {
                     "coupled"
@@ -484,7 +594,6 @@ impl PreparedRun {
             }
         }
         // ---- prune
-        let sched = spec.schedule_seconds();
         let (keep, rate_pruned): (Vec<usize>, Vec<(usize, f64, f64)>) =
             match spec.options.prune.as_str() {
                 "none" => ((0..ch.n).collect(), Vec::new()),
@@ -534,6 +643,8 @@ impl PreparedRun {
         let mut photon_diagnostics: Vec<PhotonDiagnostics> = Vec::new();
         let mut steps = Vec::new();
         let mut t_cum = 0.0;
+        let mut flux_weighted_time_cum = 0.0;
+        let base_flux_total: f64 = phi.iter().sum();
         for (si, (dt, fl)) in sched.iter().enumerate() {
             let mut trip = dsub.clone();
             if *fl > 0.0 {
@@ -545,6 +656,7 @@ impl PreparedRun {
             let (yy, _) = cram_step(&a, &y, *dt, &c)?;
             y = yy;
             t_cum += dt;
+            flux_weighted_time_cum += dt * fl;
             let mut zeroed = 0.0;
             for (k, v) in y.iter_mut().enumerate() {
                 if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit {
@@ -636,6 +748,8 @@ impl PreparedRun {
                 step: si + 1,
                 t_s: t_cum,
                 flux: *fl,
+                flux_weighted_time_s: flux_weighted_time_cum,
+                fluence_n_cm2: base_flux_total * flux_weighted_time_cum,
                 inventory: inv,
                 activity_Bq_per_g: act,
                 heat_W_per_g: heat,
@@ -810,16 +924,93 @@ impl PreparedRun {
                 }
             }
         }
+        let explicit_isotope_masses: Vec<_> = cdiag
+            .explicit_nuclides
+            .iter()
+            .map(|(name, (za, liso, molar_mass, atoms_per_g))| {
+                let nuclide = nuclides.get(&(*za, *liso));
+                let source = if nuclide.is_none() {
+                    None
+                } else if self.decay_fallback_keys.contains(&(*za, *liso)) {
+                    self.decay_fallback.as_deref()
+                } else {
+                    Some(self.decay_primary.as_str())
+                };
+                serde_json::json!({
+                    "nuclide": name,
+                    "ZA": za,
+                    "LISO": liso,
+                    "awr": nuclide.map(|value| value.awr),
+                    "neutron_mass_u": composition::NEUTRON_MASS_AMU,
+                    "molar_mass_g_mol": molar_mass,
+                    "atoms_per_g": atoms_per_g,
+                    "source": source,
+                })
+            })
+            .collect();
+        // Reaction rows exist for the whole library. Fission diagnostics describe parents that were actually present
+        // in this solve, not every zero-population actinide whose cross section happened to collapse nonzero.
+        let mut active_fission_parents: std::collections::HashSet<String> = bulk
+            .keys()
+            .map(|index| {
+                let key = ch.keys[*index];
+                format!("{}_{}", key.0, key.1)
+            })
+            .collect();
+        for step in &steps {
+            for nuclide in &step.inventory {
+                active_fission_parents.insert(format!(
+                    "{}_{}",
+                    nuclide.Z * 1000 + nuclide.A,
+                    nuclide.LISO
+                ));
+            }
+        }
+        led.fission_no_yields
+            .retain(|parent, _| active_fission_parents.contains(parent));
+        led.fission_product_leakage
+            .retain(|entry| active_fission_parents.contains(&entry.parent));
+        led.fission_balance
+            .retain(|parent, _| active_fission_parents.contains(parent));
+        let fission_yield_inputs: Vec<_> = self
+            .fission_yield_inputs
+            .iter()
+            .map(|(reference, computed_sha, parent)| {
+                let data = &self.fission_yields[parent];
+                serde_json::json!({
+                    "path": reference.path,
+                    "sha256_declared": reference.sha256,
+                    "sha256": computed_sha,
+                    "parent": name_of(parent.0, parent.1),
+                    "parent_ZA": parent.0,
+                    "parent_LISO": parent.1,
+                    "awr": data.awr,
+                    "independent": data.independent.iter().map(|table| serde_json::json!({
+                        "energy_eV": table.energy_ev,
+                        "products": table.products.len(),
+                        "sum": table.sum,
+                    })).collect::<Vec<_>>(),
+                    "cumulative_tables": data.cumulative.len(),
+                })
+            })
+            .collect();
         let ledger = serde_json::json!({
-            "mode": mode, "max_burnup_fraction": led.burnup_max,
+            "mode": mode,
+            "max_burnup_fraction": led.burnup_fraction_max,
+            "max_burnup_optical_depth": led.burnup_optical_depth_max,
+            "max_burnup_nuclide": led.burnup_nuclide.map(|key| name_of(key.0, key.1)),
             "composition_basis": spec.material.basis,
             "composition_input_total": composition_total,
             "composition_weight_percent_total": if spec.material.basis == "wt_percent" { Some(composition_total) } else { None },
             "composition_not_summing_to_100": spec.material.basis == "wt_percent" && (composition_total - 100.0).abs() > 1e-9,
             "composition_isotopes_absent_from_decay_library": absent.iter().map(|(z, l)| format!("{z}_{l}")).collect::<Vec<_>>(),
             "composition_elements_unknown": cdiag.unknown,
+            "explicit_isotope_masses": explicit_isotope_masses,
             "products_no_evaluated_decay_data": led.products_no_decay_data,
             "fission_no_yields_to_leakage": led.fission_no_yields,
+            "fission_yield_products_to_leakage": led.fission_product_leakage,
+            "fission_yield_balance": led.fission_balance,
+            "fission_yield_selection": fission_yield_selection,
             "products_unmapped_to_leakage": led.products_unmapped,
             "isomer_state_absent_from_decay_library_used_ground": led.isomer_fell_back_to_ground,
             "targets_absent_from_decay_library": led.targets_absent_from_decay_lib.iter().map(|(z, l)| format!("{z}_{l}")).collect::<Vec<_>>(),
@@ -843,6 +1034,11 @@ impl PreparedRun {
             },
             "bulk_background_heat_W_per_g": bulk_heat,
             "photon_spectra": photon_diagnostics,
+            "schedule": {
+                "segments": sched.len(),
+                "flux_weighted_time_s": flux_weighted_time_s,
+                "fluence_n_cm2": base_flux_total * flux_weighted_time_s,
+            },
             "assembly": {"n_bulk_isotopes": bulk.len(), "n_decay_triplets": d_src.len(), "n_reaction_triplets": r_src.len(),
                          "n_library_rows": lib.rows.len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>()},
         });
@@ -859,6 +1055,7 @@ impl PreparedRun {
                     .map(|(path, sha)| serde_json::json!({"path": path, "sha256": sha})),
                 "photon_response": spec.photon.response.as_ref().zip(response_sha.as_ref())
                     .map(|(r, sha)| serde_json::json!({"path": r.path, "sha256": sha})),
+                "fission_yields": fission_yield_inputs,
             },
             "tables_provenance": composition::provenance(),
             "cram": "CRAM-16, incomplete partial fractions (Pusa, NSE 182:297, 2016)",
@@ -866,6 +1063,11 @@ impl PreparedRun {
             "material_basis": spec.material.basis,
             "photon": {"group_structure": spec.photon.group_structure, "build_up_factor": spec.photon.build_up_factor,
                        "gamma_constant_cutoff_eV": spec.photon.gamma_constant_cutoff_eV},
+            "fission_yields": {
+                "energy": spec.fission_yields.energy,
+                "fixed_energy_eV": spec.fission_yields.fixed_energy_eV,
+                "selection": fission_yield_selection,
+            },
         });
         Ok(RunResult {
             spec_title: spec.title.clone(),

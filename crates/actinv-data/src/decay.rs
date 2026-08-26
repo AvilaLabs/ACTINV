@@ -59,6 +59,8 @@ pub struct Spectrum {
 pub struct Nuclide {
     pub mat: i32,
     pub za: i32,
+    /// Target mass relative to the neutron mass, from the ENDF HEAD record.
+    pub awr: f64,
     pub liso: i32,
     pub nst: i32,
     pub half_life: f64,
@@ -98,6 +100,7 @@ impl Nuclide {
 fn parse_section(mat: i32, lines: &[&str]) -> Option<Nuclide> {
     let f = fields(lines[0]);
     let za = endf_float(f[0]).round() as i32;
+    let awr = endf_float(f[1]);
     let liso = f[3].trim().parse::<i32>().unwrap_or(0);
     let nst = f[4].trim().parse::<i32>().unwrap_or(0);
     let nsp = f[5].trim().parse::<usize>().unwrap_or(0);
@@ -179,6 +182,7 @@ fn parse_section(mat: i32, lines: &[&str]) -> Option<Nuclide> {
     Some(Nuclide {
         mat,
         za,
+        awr,
         liso,
         nst,
         half_life: t12,

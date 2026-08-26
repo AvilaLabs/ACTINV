@@ -12,7 +12,9 @@
   "controls/g4_p8_provenance.py",
   "controls/g5_p8_mesh_identity.py",
   "controls/g6_p8_scaling_regression.py",
-  "controls/check_p8.py"
+  "controls/check_p8.py",
+  "controls/g2_p9_fission_matrix.py",
+  "controls/g3_p9_coupled_auto.py"
  ],
  "declared": [
   "h5py",

@@ -2,8 +2,9 @@
 
 **Open, standalone, activation-grade nuclide-inventory solver.** A neutron flux spectrum from any source — MCNP, PHITS,
 Serpent, OpenMC, or a measurement — plus a material and an irradiation history gives the nuclide inventory, activity,
-decay heat and evaluated decay-photon source over cooling time, with a ledger of everything the calculation could not
-account for.
+decay heat and evaluated decay-photon source over cooling time. Hash-pinned independent fission yields, explicit
+isotopes/isomers, coupled burn-up and pulsed histories are supported, with a ledger of everything the calculation
+could not account for.
 
 Rust core, Python API, code-agnostic validation harness. Avila Labs, Oviedo, Florida.
 Licence: **MIT OR Apache-2.0**. Current version: **v0.2.0** (tagging and publishing are external acts).
@@ -29,6 +30,11 @@ the gate references. See [Validation](docs/VALIDATION.md) for the complete gate 
 
 P8 imports the supported OpenMC/MCNP/FISPACT flux subsets into a hashed streaming format. Its eight-cell control gives
 exact mesh/single-run identity for all cells and byte-identical cell records at one and four threads.
+
+P9 reports all 175 finite U-235 thermal decay-heat channel points in the CoNDERC Dickens pulse and Yarnell 20,000 s
+sets. Geometric-mean total C/E is **1.0070** and **0.9845**, respectively. On identical Fe-56(n,p)Mn-56 data and a
+10-pulse history, shutdown inventory differs from ALARA 2.9.2 by at most `4.12e-8`; pulse evolution agrees with OpenMC
+CRAM48 at `3.91e-15` on resolvable populations.
 
 ## Install
 
@@ -95,16 +101,17 @@ identical to 0.0, which is what makes the certificate's solver field meaningful.
 
 ## What a specification looks like
 
-See [docs/SPEC.md](docs/SPEC.md). In short: a library and decay data, an elemental material, a group flux spectrum, an
-irradiation/cooling schedule and optional external photon-response data. Unknown fields are an error — a misspelt
-option is never silently ignored.
+See [docs/SPEC.md](docs/SPEC.md). In short: a library and decay data, a natural-element and/or explicit-nuclide
+material, a group flux spectrum, an irradiation/cooling schedule, optional hash-pinned fission yields and optional
+external photon-response data. Unknown fields are an error — a misspelt option is never silently ignored.
 
 ## Principles
 
 - **Data are never bundled**; every input receives a computed SHA-256 in the run certificate, and declarations fail
   closed on a mismatch.
-- **Fail closed, report everything.** Missing decay data, unmapped products, fission without yields, pruned nuclides,
-  round-off, and the method's own numerical resolution floor all appear in the ledger — see [docs/LEDGER.md](docs/LEDGER.md).
+- **Fail closed, report everything.** Missing decay/yield data, unmapped fission products, yield balance/leakage,
+  burn-up selection, pruned nuclides, round-off, and the method's own numerical resolution floor all appear in the
+  ledger — see [docs/LEDGER.md](docs/LEDGER.md).
 - **Protocols are hashed before evidence**, verdicts are derived by checkers, ledgers are append-only.
 - **The validation harness accepts any code's inventories** — see [docs/HARNESS.md](docs/HARNESS.md).
 

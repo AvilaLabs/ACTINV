@@ -1,0 +1,81 @@
+{
+  "coupled_parent": {
+    "calculated_atoms_per_g": 8.187307530779815e+19,
+    "exact_atoms_per_g": 8.187307530779818e+19,
+    "optical_depth": 0.2,
+    "relative": 4.0022925579392444e-16
+  },
+  "explicit_modes_honored": true,
+  "low_burnup_trace_vs_coupled": {
+    "analytic_first_order_relative_difference": 4.999999969612645e-09,
+    "coupled_numerical_floor_atoms_per_g": 21248.53689246687,
+    "first_order_relative": 1.4171115926540302e-07,
+    "maximum_absolute_difference_atoms_per_g": 3000.0,
+    "optical_depth": 1e-08,
+    "products": {
+      "Ba141": 2250.0003051757812,
+      "Kr92": 3000.0,
+      "Sr100": 2500.0
+    },
+    "relative_product_difference": 5.0000006781685376e-09
+  },
+  "multiplier_choice": {
+    "changes_choice": true,
+    "double_fraction": 1.4999994375e-06,
+    "double_mode": "coupled",
+    "single_fraction": 7.499999999999999e-07,
+    "single_mode": "trace"
+  },
+  "pass": true,
+  "per_initial_isotope": {
+    "Fe56": {
+      "fraction": 1.9999800001333326e-05,
+      "ledger_fraction": 1.9999800001333326e-05,
+      "ledger_nuclide": "Fe56",
+      "ledger_optical_depth": 1.9999999999999998e-05,
+      "loss_rate_per_s": 4e-06,
+      "mode": "coupled",
+      "multiplier_weighted_time_s": 5.0,
+      "optical_depth": 1.9999999999999998e-05
+    },
+    "U235": {
+      "fraction": 9.999950000166665e-06,
+      "ledger_fraction": 9.999950000166665e-06,
+      "ledger_nuclide": "U235",
+      "ledger_optical_depth": 9.999999999999999e-06,
+      "loss_rate_per_s": 2e-06,
+      "mode": "coupled",
+      "multiplier_weighted_time_s": 5.0,
+      "optical_depth": 9.999999999999999e-06
+    },
+    "U236": {
+      "fraction": 2.4999968750026038e-06,
+      "ledger_fraction": 2.4999968750026038e-06,
+      "ledger_nuclide": "U236",
+      "ledger_optical_depth": 2.4999999999999998e-06,
+      "loss_rate_per_s": 5e-07,
+      "mode": "coupled",
+      "multiplier_weighted_time_s": 5.0,
+      "optical_depth": 2.4999999999999998e-06
+    }
+  },
+  "per_initial_isotope_worst_relative": 0.0,
+  "threshold": 1e-06,
+  "threshold_cases": {
+    "above": {
+      "ledger_fraction": 1.0000009999999996e-06,
+      "ledger_optical_depth": 1.000001500001333e-06,
+      "mode": "coupled",
+      "target_fraction": 1.0000009999999998e-06,
+      "target_optical_depth": 1.0000015000013331e-06
+    },
+    "below": {
+      "ledger_fraction": 9.999989999999997e-07,
+      "ledger_optical_depth": 9.99999499999333e-07,
+      "mode": "trace",
+      "target_fraction": 9.99999e-07,
+      "target_optical_depth": 9.999994999993332e-07
+    }
+  },
+  "threshold_worst_relative": 2.1175844857202368e-16
+}

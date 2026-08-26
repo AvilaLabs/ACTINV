@@ -14,6 +14,8 @@ jobs:
       ACTINV_CI_DATA: /tmp/actinv-ci-data
       ACTINV_CI_OUT: /tmp/actinv-ci
       ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
     steps:
       - uses: actions/checkout@v7
 
@@ -68,6 +70,11 @@ jobs:
           python controls/g5_p8_mesh_identity.py
           python controls/g6_p8_scaling_regression.py
           python controls/check_p8.py
+
+      - name: P9 deterministic fission and coupled-mode subset
+        run: |
+          python controls/g2_p9_fission_matrix.py
+          python controls/g3_p9_coupled_auto.py
 
       - name: Repository is self-contained
         run: python controls/g1_self_contained.py

@@ -5,10 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-26):** P8 is closed **P8-CONDITIONAL** after one documented control repair pass; all six gates
-pass and the **v0.2 milestone is complete**. **P9 — Fission & coupled mode is open** under protocol hash
-`028c5846865490e9dee5902f22f5ad4be583ee332be9d92ce23efa80c52d39c0`; its scope is frozen until the checker-derived
-close.
+**Current status (2026-08-26):** P9 is closed **P9-CONDITIONAL** after the one repair pass recorded in Amendment A; all
+six gates pass. The **v0.2 milestone remains complete** and P9 is the completed first half of v0.5. **P10 — Data
+completeness is next but remains unopened and unhashed.** P9's protocol remains fixed at
+`028c5846865490e9dee5902f22f5ad4be583ee332be9d92ce23efa80c52d39c0`.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -58,6 +58,10 @@ Written here so they cannot be forgotten at release. Each must appear in the v0.
 | Fission products are not followed (no yields) | actinide targets | explicit leakage state, `fission_no_yields_to_leakage` with rates | P9 |
 | 18 reaction products have no evaluated decay data in ENDF/B-VIII.0 or JEFF-3.3 | exotic products, nil realised in FNS | `products_no_evaluated_decay_data_ENDFB80_JEFF33`, booked to leakage | none known |
 
+**P9 status update:** the fission-products row is retained verbatim because it records what v0.1 shipped and is checked
+against those release notes. P9 resolves it when a matching hash-pinned NFPY evaluation is supplied; an active parent
+without yields deliberately retains the named leakage guard.
+
 **Total:** ~25–30 working days → at two to three sessions a week, roughly three months to a v1.0 candidate. The
 part that does not compress: users, issues, and the validation record accumulating afterwards.
 
@@ -103,3 +107,7 @@ part that does not compress: users, issues, and the validation record accumulati
   hashed ENDF/B-VIII.0 MT=454 fission yields, corrected fluence-aware burn-up selection, explicit piecewise pulse
   histories, and CoNDERC/OpenMC/ALARA validation. The roadmap's “nu_f-consistent” shorthand is fixed before evidence
   as the ENDF independent-yield sum of two fission fragments, not prompt-neutron nubar.
+- 2026-08-26 — P9 closed P9-CONDITIONAL: all six gates pass after the single repair round recorded in Amendment A.
+  Explicit-nuclide materials, independent NFPY matrix feeds, exposure-based auto mode, boundary-level pulse records,
+  and OpenMC/ALARA/CoNDERC evidence are delivered. Dickens total pulse and Yarnell 20,000 s geometric-mean C/E are
+  1.0070 and 0.9845. P10 is next but remains unopened; v0.5 is not yet claimed.

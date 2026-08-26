@@ -1,14 +1,31 @@
 //! Material composition -> atoms per gram, from the embedded natural-abundance and atomic-mass tables.
 //! Mirrors controls/harness/composition.py; the P5-G2 control requires agreement on all 132 FNS compositions.
+use crate::decay::Nuclide;
 use crate::tables::{ISOTOPES, PROVENANCE};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap, HashSet};
 
 pub const NA: f64 = 6.02214076e23;
+/// Atomic mass of a neutron in unified atomic mass units, used to convert ENDF AWR.
+pub const NEUTRON_MASS_AMU: f64 = 1.00866491595;
+pub type IsotopeInventory = BTreeMap<(i32, i32), f64>;
 
 #[derive(Debug, Default)]
 pub struct CompositionDiag {
     pub elements: BTreeMap<String, (f64, f64, usize)>,
+    /// canonical name -> (ZA, LISO, molar mass in g/mol, atoms/g)
+    pub explicit_nuclides: BTreeMap<String, (i32, i32, f64, f64)>,
     pub unknown: Vec<String>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum MaterialKey {
+    Element(String),
+    Nuclide {
+        symbol: String,
+        za: i32,
+        liso: i32,
+        canonical: String,
+    },
 }
 
 fn isotopes(element: &str) -> Vec<&'static (&'static str, i32, i32, f64, f64)> {
@@ -35,6 +52,210 @@ fn cap(el: &str) -> String {
         Some(f) => f.to_uppercase().collect::<String>() + &c.as_str().to_lowercase(),
         None => String::new(),
     }
+}
+
+/// Parse a natural-element or explicit-nuclide material key.
+pub fn material_key(raw: &str) -> Result<MaterialKey, String> {
+    if raw.is_empty() || raw != raw.trim() || !raw.is_ascii() {
+        return Err(format!("malformed material composition key '{raw}'"));
+    }
+    let digit = raw.find(|character: char| character.is_ascii_digit());
+    let Some(digit) = digit else {
+        if !raw.chars().all(|character| character.is_ascii_alphabetic()) {
+            return Err(format!("malformed material composition key '{raw}'"));
+        }
+        return Ok(MaterialKey::Element(cap(raw)));
+    };
+    let (symbol_raw, rest) = raw.split_at(digit);
+    if !(1..=2).contains(&symbol_raw.len())
+        || !symbol_raw
+            .chars()
+            .all(|character| character.is_ascii_alphabetic())
+    {
+        return Err(format!("malformed explicit nuclide key '{raw}'"));
+    }
+    let symbol = cap(symbol_raw);
+    let z =
+        z_of(&symbol).ok_or_else(|| format!("unknown element symbol in nuclide key '{raw}'"))?;
+    let mass_len = rest
+        .chars()
+        .take_while(|character| character.is_ascii_digit())
+        .count();
+    if mass_len == 0 {
+        return Err(format!("malformed explicit nuclide key '{raw}'"));
+    }
+    let mass: i32 = rest[..mass_len]
+        .parse()
+        .map_err(|_| format!("invalid mass number in nuclide key '{raw}'"))?;
+    if !(1..=999).contains(&mass) {
+        return Err(format!("invalid mass number in nuclide key '{raw}'"));
+    }
+    let suffix = &rest[mass_len..];
+    let liso = if suffix.is_empty() {
+        0
+    } else if suffix.eq_ignore_ascii_case("m") {
+        1
+    } else if suffix
+        .get(..1)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("m"))
+    {
+        let state: i32 = suffix[1..]
+            .parse()
+            .map_err(|_| format!("invalid isomer state in nuclide key '{raw}'"))?;
+        if state <= 0 {
+            return Err(format!("invalid isomer state in nuclide key '{raw}'"));
+        }
+        state
+    } else {
+        return Err(format!("malformed explicit nuclide key '{raw}'"));
+    };
+    let canonical = if liso == 0 {
+        format!("{symbol}{mass}")
+    } else {
+        format!("{symbol}{mass}m{liso}")
+    };
+    Ok(MaterialKey::Nuclide {
+        symbol,
+        za: z * 1000 + mass,
+        liso,
+        canonical,
+    })
+}
+
+fn checked_keys(elements: &BTreeMap<String, f64>) -> Result<Vec<(MaterialKey, f64)>, String> {
+    let mut normalized = HashSet::new();
+    let mut natural_elements = HashSet::new();
+    let mut explicit_elements = HashSet::new();
+    let mut parsed = Vec::with_capacity(elements.len());
+    for (raw, value) in elements {
+        let key = material_key(raw)?;
+        let (canonical, symbol, explicit) = match &key {
+            MaterialKey::Element(symbol) => (symbol.clone(), symbol.clone(), false),
+            MaterialKey::Nuclide {
+                symbol, canonical, ..
+            } => (canonical.clone(), symbol.clone(), true),
+        };
+        if !normalized.insert(canonical.clone()) {
+            return Err(format!(
+                "material composition keys collide after normalization at '{canonical}'"
+            ));
+        }
+        if explicit {
+            explicit_elements.insert(symbol);
+        } else {
+            natural_elements.insert(symbol);
+        }
+        parsed.push((key, *value));
+    }
+    if let Some(symbol) = natural_elements.intersection(&explicit_elements).next() {
+        return Err(format!(
+            "material composition cannot mix natural element '{symbol}' with its explicit isotopes"
+        ));
+    }
+    Ok(parsed)
+}
+
+pub fn validate_material_keys(elements: &BTreeMap<String, f64>) -> Result<(), String> {
+    checked_keys(elements).map(|_| ())
+}
+
+fn explicit_mass(
+    za: i32,
+    liso: i32,
+    nuclides: &HashMap<(i32, i32), Nuclide>,
+) -> Result<f64, String> {
+    let nuclide = nuclides.get(&(za, liso)).ok_or_else(|| {
+        format!(
+            "explicit nuclide {}_{} is absent from the decay library",
+            za, liso
+        )
+    })?;
+    let mass = nuclide.awr * NEUTRON_MASS_AMU;
+    if !mass.is_finite() || mass <= 0.0 {
+        return Err(format!(
+            "explicit nuclide {}_{} has invalid evaluated AWR {}",
+            za, liso, nuclide.awr
+        ));
+    }
+    Ok(mass)
+}
+
+/// Convert a mixed natural-element/explicit-nuclide material to atoms per gram.
+pub fn material_atoms_per_gram(
+    composition: &BTreeMap<String, f64>,
+    basis: &str,
+    nuclides: &HashMap<(i32, i32), Nuclide>,
+) -> Result<(IsotopeInventory, CompositionDiag), String> {
+    let parsed = checked_keys(composition)?;
+    let mut masses = Vec::with_capacity(parsed.len());
+    for (key, value) in &parsed {
+        let mass = match key {
+            MaterialKey::Element(symbol) => molar_mass(symbol),
+            MaterialKey::Nuclide { za, liso, .. } if basis == "atoms_per_g" => nuclides
+                .get(&(*za, *liso))
+                .map(|nuclide| nuclide.awr * NEUTRON_MASS_AMU),
+            MaterialKey::Nuclide { za, liso, .. } => Some(explicit_mass(*za, *liso, nuclides)?),
+        };
+        masses.push((*value, mass));
+    }
+    let atom_fraction_denominator: f64 = if basis == "atom_fraction" {
+        masses
+            .iter()
+            .filter_map(|(value, mass)| mass.map(|mass| value * mass))
+            .sum()
+    } else {
+        0.0
+    };
+
+    let mut out = BTreeMap::new();
+    let mut diagnostic = CompositionDiag::default();
+    for ((key, value), (_, mass)) in parsed.into_iter().zip(masses) {
+        match key {
+            MaterialKey::Element(symbol) => {
+                let isotope_rows = isotopes(&symbol);
+                let Some(molar) = mass else {
+                    diagnostic.unknown.push(symbol);
+                    continue;
+                };
+                let atoms = match basis {
+                    "wt_percent" => NA * ((value / 100.0) / molar),
+                    "atom_fraction" if atom_fraction_denominator > 0.0 => {
+                        NA * value / atom_fraction_denominator
+                    }
+                    "atoms_per_g" => value,
+                    _ => 0.0,
+                };
+                let z = z_of(&symbol).expect("element with abundance data has a Z");
+                for (_, a, liso, abundance, _) in &isotope_rows {
+                    *out.entry((z * 1000 + a, *liso)).or_insert(0.0) += atoms * abundance;
+                }
+                diagnostic
+                    .elements
+                    .insert(symbol, (molar, atoms, isotope_rows.len()));
+            }
+            MaterialKey::Nuclide {
+                za,
+                liso,
+                canonical,
+                ..
+            } => {
+                let molar = mass.unwrap_or(0.0);
+                let atoms = match basis {
+                    "wt_percent" => NA * ((value / 100.0) / molar),
+                    "atom_fraction" if atom_fraction_denominator > 0.0 => {
+                        NA * value / atom_fraction_denominator
+                    }
+                    "atoms_per_g" => value,
+                    _ => 0.0,
+                };
+                *out.entry((za, liso)).or_insert(0.0) += atoms;
+                diagnostic
+                    .explicit_nuclides
+                    .insert(canonical, (za, liso, molar, atoms));
+            }
+        }
+    }
+    Ok((out, diagnostic))
 }
 
 /// Element weight-percent -> atoms per gram keyed by (ZA, LISO). Elements are expanded over natural abundance.
@@ -118,6 +339,43 @@ pub fn mass_fractions(
     Ok(masses)
 }
 
+/// Initial elemental mass fractions, including explicit isotope keys aggregated by element.
+pub fn material_mass_fractions(
+    composition: &BTreeMap<String, f64>,
+    basis: &str,
+    nuclides: &HashMap<(i32, i32), Nuclide>,
+) -> Result<BTreeMap<String, f64>, String> {
+    let parsed = checked_keys(composition)?;
+    let mut masses: BTreeMap<String, f64> = BTreeMap::new();
+    for (key, value) in parsed {
+        let (symbol, molar) = match key {
+            MaterialKey::Element(symbol) => {
+                let molar = molar_mass(&symbol).ok_or_else(|| {
+                    format!("material element '{symbol}' has no natural-isotope mass data")
+                })?;
+                (symbol, molar)
+            }
+            MaterialKey::Nuclide {
+                symbol, za, liso, ..
+            } => (symbol, explicit_mass(za, liso, nuclides)?),
+        };
+        let mass = match basis {
+            "wt_percent" => value,
+            "atom_fraction" | "atoms_per_g" => value * molar,
+            value => return Err(format!("unknown material basis '{value}'")),
+        };
+        *masses.entry(symbol).or_insert(0.0) += mass;
+    }
+    let total: f64 = masses.values().sum();
+    if total <= 0.0 {
+        return Err("material composition has no positive mass".into());
+    }
+    for value in masses.values_mut() {
+        *value /= total;
+    }
+    Ok(masses)
+}
+
 pub fn provenance() -> &'static str {
     PROVENANCE
 }
@@ -141,7 +399,7 @@ pub fn symbol_of(z: i32) -> &'static str {
 
 #[cfg(test)]
 mod tests {
-    use super::{atoms_per_gram_basis, mass_fractions, NA};
+    use super::{atoms_per_gram_basis, mass_fractions, material_key, MaterialKey, NA};
     use std::collections::BTreeMap;
 
     #[test]
@@ -167,5 +425,24 @@ mod tests {
         let fractions = mass_fractions(&equiatomic, "atom_fraction").unwrap();
         assert!(fractions["Fe"] > fractions["C"]);
         assert!((fractions.values().sum::<f64>() - 1.0).abs() < 1e-15);
+    }
+
+    #[test]
+    fn explicit_key_aliases_are_canonical() {
+        assert_eq!(
+            material_key("ta180M").unwrap(),
+            MaterialKey::Nuclide {
+                symbol: "Ta".into(),
+                za: 73_180,
+                liso: 1,
+                canonical: "Ta180m1".into(),
+            }
+        );
+        assert_eq!(
+            material_key("FE").unwrap(),
+            MaterialKey::Element("Fe".into())
+        );
+        assert!(material_key("Fe56m0").is_err());
+        assert!(material_key("Xx56").is_err());
     }
 }

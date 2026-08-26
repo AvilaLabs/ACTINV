@@ -86,10 +86,45 @@ Rayon parallelizes only a bounded chunk; indexed collection restores input order
 thread count changes scheduling, not deterministic result records. Self-shielding, spatial interpolation, transport
 feedback and heterogeneous material maps remain outside this method.
 
+## Fission yields, coupled burn-up and pulses (P9)
+
+Neutron-induced fission uses ENDF-6 MF=8/MT=454 independent yields. For parent `i`, the existing MT=18 loss removes
+one parent atom at rate `r_f,i`; every product `j` receives
+
+`A[j,i] += Y_j(E_eff) r_f,i`.
+
+The raw yield sum must be two fission fragments within `1e-6` and is never normalized. Products outside the decay
+chain receive the same yield-weighted feed in the leakage state, so `mapped yield + leakage yield = raw yield`.
+An active fission parent without a supplied evaluation sends one fission event per parent to the established
+no-yields leakage path. MT=459 cumulative yields are structurally parsed but cannot feed the matrix; spontaneous
+fission yields remain out of scope.
+
+At a fixed incident energy, yields are selected exactly, clamped outside the evaluation, or linearly interpolated over
+the union of adjacent product tables, treating an absent endpoint product as zero. Spectrum-average mode first computes
+each parent's fission-rate-weighted representative energy,
+
+`E_eff = sum_g(Erep_g sigma_f,g Phi_g) / sum_g(sigma_f,g Phi_g)`,
+
+where `Erep_g = (E_hi - E_lo) / ln(E_hi/E_lo)` is the logarithmic-mean energy consistent with constant flux per unit
+lethargy. This is an energy-selection model, not direct energy integration of the yield surface; the selected bracket
+and any clamping are certified.
+
+The trace/coupled decision is based on physical exposure. For each initial nuclide `i`, ACTINV computes
+
+`tau_i = L_i sum_k(dt_k m_k)`, `f_i = -expm1(-tau_i)`,
+
+where `L_i` is its total base-spectrum neutron loss rate and `m_k` is the schedule multiplier. Automatic mode holds
+the initial bulk constant only when `max(f_i) < 1e-6`; otherwise the full initial material and all products evolve in
+one coupled matrix. Explicit modes bypass this choice. Positive multipliers scale all neutron reactions, while a zero
+segment is decay-only. Decay remains active in every segment, so replacing separated pulses with a same-fluence
+average is generally not equivalent. Elapsed time, multiplier-weighted time and physical fluence are accumulated after
+every boundary.
+
 **Certificate and ledger.** The core computes SHA-256 for the activation library, its index, both decay files and the
-optional photon response before solving. Declared hashes and the library/index link fail closed. Every run reports
-composition gaps, products without evaluated decay data, fission booked to leakage, numerical-floor/negative
-round-off, photon normalization and missing-spectrum bounds, and response coverage.
+optional photon response and every fission-yield evaluation before solving. Declared hashes and the library/index link
+fail closed. Every run reports composition gaps, explicit-isotope masses, products without evaluated decay data,
+fission selection/balance/leakage, burn-up selection, numerical-floor/negative round-off, photon normalization and
+missing-spectrum bounds, and response coverage.
 
 Known failure modes in activation data, and the controls that guard against each, are collected in
 [DATA_TRAPS.md](DATA_TRAPS.md).

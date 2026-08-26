@@ -70,3 +70,38 @@ full measured and extrapolated table is in `results/g6_p8_scaling_regression.jso
 The checker verdict is P8-CONDITIONAL. Amendment A records one control repair pass: the independent MESHTAL control
 used exact float lookup after MeV/eV conversion, retained source order for total rows, and G4 expected a narrower error
 phrase than the strict JSON decoder emitted. Production output and all gate tolerances were unchanged.
+
+## P9 fission, coupled-mode and pulse controls
+
+P9 adds hash-pinned ENDF/B-VIII.0 independent fission yields, explicit isotope/isomer materials, exposure-based
+automatic trace/coupled selection and arbitrary piecewise-constant pulse histories. Its final gates use one analytic
+synthetic fission fixture, OpenMC 0.15.3, official ALARA 2.9.2, and the CoNDERC U-235 thermal Dickens pulse and Yarnell
+20,000 s measurement sets.
+
+| gate | result |
+|---|---|
+| G1 composition/NFPY | Rust and OpenMC agree on every U-235 yield table at `3.24e-16` worst relative. The three raw independent sums differ from two fragments by at most `4.89e-7`. All explicit ground/isomer material bases agree with independent mass calculations at `1.49e-16`; malformed/ambiguous inputs and bad data fail closed. |
+| G2 fission matrix | Exact/interpolated/clamped synthetic matrices agree with independent dense assembly at `1.85e-16`. Parent loss occurs once, mapped plus leakage yield closes exactly to the raw source, missing-product/parent paths remain distinct, and changing MT=459 has no effect. |
+| G3 coupled/auto | Threshold optical depths/fractions agree at `2.12e-16`; cases immediately below/above `1e-6` select trace/coupled and non-unit multipliers change the decision. Coupled parent depletion agrees with `N0 exp(-tau)` at `4.00e-16`. |
+| G4 pulses/OpenMC | Every boundary agrees with a dense exponential at `1.33e-15` and OpenMC CRAM48 at `3.91e-15` on resolvable populations. Time/exposure/fluence are exact; split/merged equal-flux histories agree at `7.09e-16`, and the decay-gap effect matches its analytic prediction. |
+| G5 ALARA | Official source commit `faa5b330…` builds and executes its reference pulse case. With identical FENDL-2 Fe-56(n,p)Mn-56 data, the collapsed rate is exact, 10 pulses/9 gaps are exact, and shutdown Fe-56/Mn-56 differ by at most `4.12e-8`, far below the `5e-4` text-precision tolerance. |
+| G6 CoNDERC/provenance | All 175 finite channel points are reported; both per-fission normalizations close independently, all external/certificate hashes rematch, the pre-P9 deterministic result has zero differences, and tests/strict Clippy/rustfmt pass. Accuracy remains reported rather than gated. |
+
+CoNDERC aggregate C/E results are:
+
+| history/channel | points | geometric mean C/E | C/E range | max \|ln C/E\| | RMS experimental sigma |
+|---|---:|---:|---:|---:|---:|
+| Dickens pulse beta | 32 | 0.9882 | 0.9305–1.0430 | 0.0720 | 0.925 |
+| Dickens pulse gamma | 32 | 1.0183 | 0.8852–1.1884 | 0.1726 | 2.169 |
+| Dickens pulse total | 32 | 1.0070 | 0.9555–1.0691 | 0.0668 | 0.993 |
+| Yarnell 20,000 s total | 79 | 0.9845 | 0.9218–1.0194 | 0.0814 | 1.144 |
+
+The paired FISPACT-II context is UKAEA-R(18)003. ORIGEN values from Gauld's 2019 summary are context rather than a
+same-data code comparison because they use SCALE 6.1.3 with ENDF/B-VII.0 yields and ENDF/B-VII.1 decay. The complete
+point tables, source-unit treatment, archive metadata anomalies and hashes are in
+`results/g6_p9_conderc.json` and [the P9 session record](../sessions_P9.md).
+
+The checker verdict is **P9-CONDITIONAL**. [Amendment A](../protocols/ACTINV-P9_AMENDMENT_A.md) records the one repair
+pass: ALARA transcript markers, the FISPACT flux-file trailer, the Dickens pulse ordinate definition, and two
+mechanical Rust 1.98 Clippy findings. No physics implementation, source datum, acceptance tolerance or post-hoc
+accuracy threshold changed.

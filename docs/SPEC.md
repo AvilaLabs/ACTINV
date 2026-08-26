@@ -56,16 +56,23 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
 | `library.sha256` | Optional declared hash. ACTINV always computes the library hash and fails if a declaration differs. The index's recorded library hash is checked too. |
 | `decay.primary` | ENDF-6 radioactive-decay sublibrary. |
 | `decay.fallback` | Optional second decay sublibrary; records absent from the primary are taken from it. |
-| `material.composition` | Natural element symbols and nonnegative values. Explicit isotope keys are not implemented yet. |
+| `material.composition` | Natural element symbols or explicit nuclides (`U235`, `Ba137m1`) and nonnegative values interpreted by `material.basis`. |
 | `spectrum.flux_per_group` | Group-integrated fluxes. `descending: true` reverses the supplied order before use. |
 | `schedule` | At least one duration/flux-multiplier pair. Accepted duration units: seconds, minutes, hours, days and years. |
+| `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 
-The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data and
-photon response. A declaration is a constraint, not a value copied into the certificate.
+The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data,
+every fission-yield evaluation and the photon response. A declaration is a constraint, not a value copied into the
+certificate.
 
 ## Material bases
 
 `material.mass_g` defaults to 1 g. Inventories remain per gram; the mass scales the total photon rates and powers.
+Composition keys are case-insensitive natural element symbols or explicit `SymbolA[mN]` nuclides. Bare `m` means
+`m1`, so `BA137M`, `Ba137m` and `Ba137m1` identify the same state; aliases which collide are an error. A natural
+element and one of its explicit isotopes cannot appear together. Explicit mass-based entries use the selected decay
+evaluation's AWR times `1.00866491595 u` and fail if that record is absent. A literal `atoms_per_g` entry may instead
+be ledgered as absent from the solvable chain; a photon-response calculation still requires its mass.
 
 - `wt_percent` (default): each value is grams per 100 g. Values are used as stated rather than silently normalized;
   a total other than 100 is ledgered. Photon-response mixing normalizes them to mass fractions.
@@ -73,11 +80,43 @@ photon response. A declaration is a constraint, not a value copied into the cert
   normalized to one gram using the abundance-weighted elemental masses.
 - `atoms_per_g`: each value is an elemental atom density per gram and is expanded by natural isotopic abundance.
 
+All three bases apply identically to explicit nuclides: literal atom density for `atoms_per_g`, grams per 100 g for
+`wt_percent`, and an arbitrary atom ratio normalized to one gram for `atom_fraction`. Response-function mixing
+aggregates explicit isotopes back to elemental mass fractions.
+
 ## Neutron spectrum
 
 `fispact-709` requires exactly 709 values. `custom` requires one more strictly increasing boundary than flux values;
 those boundaries must match the boundaries stored in the activation library to 1e-12 relative. `total`, when present,
 rescales the group values while preserving shape. The library temperature and `options.temperature_K` must agree.
+
+## Fission yields
+
+`fission_yields` is optional. Each file is one hash-pinned ENDF evaluation for one parent:
+
+```json
+"fission_yields": {
+  "files": [
+    {
+      "path": "/data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+      "sha256": "64 hexadecimal digits"
+    }
+  ],
+  "energy": "fixed",
+  "fixed_energy_eV": 0.0253
+}
+```
+
+The production source is MF=8/MT=454 independent yield. MF=8/MT=459 cumulative tables are parsed and checked but
+never used as matrix sources. Every independent table must sum to two fission fragments within `1e-6`; values are not
+renormalized. Duplicate parents, energies or products, malformed/truncated records, negative/nonfinite values and hash
+mismatches fail closed.
+
+`energy: "fixed"` requires a finite nonnegative `fixed_energy_eV`; selection is exact, linearly interpolated, or
+clamped to the evaluated range. `energy: "spectrum_average"` is the default and forbids `fixed_energy_eV`; it uses
+the fission-rate-weighted representative incident energy separately for each parent. The certificate records the
+requested energy, selected bracket, interpolation weight, clamp decision, product count and effective yield sum.
+Fissioning parents without a matching file remain explicit leakage and never borrow another parent's evaluation.
 
 ## Photon options
 
@@ -97,9 +136,18 @@ curves for every material element to produce the contact-dose proxy.
 
 ## Options and result
 
-`mode` is `auto`, `trace`, or `coupled`; `auto` selects trace below a recorded burn-up fraction of 1e-6. `prune` is
-`rate`, `reach`, or `none`. The `outputs` list controls the optional pathway and photon/dose calculations; the core
-inventory/activity/heat diagnostics remain in each result step.
+`mode` is `auto`, `trace`, or `coupled`. For each initial nuclide, `auto` computes the base-spectrum reaction-loss
+optical depth `tau = loss_rate * sum(dt * flux_multiplier)` and burn-up fraction `-expm1(-tau)`; it selects `trace`
+only when the largest fraction is strictly below `1e-6`. The controlling nuclide, optical depth and fraction are
+ledgered. Explicitly requested modes are always honored. `prune` is `rate`, `reach`, or `none`. The `outputs` list
+controls optional pathway and photon/dose calculations; the core inventory/activity/heat diagnostics remain in each
+result step.
+
+The ordered schedule is the pulse representation: every positive `flux` multiplier scales all base neutron rates,
+and zero is an exact decay-only gap. Results are emitted after every segment. Each step records the current multiplier
+as `flux`, cumulative elapsed `t_s`, cumulative multiplier-weighted exposure `flux_weighted_time_s`, and physical
+`fluence_n_cm2` (base total flux times weighted exposure). Scientific notation in a duration, such as `1e-8 s`, is
+accepted as a number rather than mistaken for a unit suffix.
 
 When photons are requested (or `outputs` is omitted), `steps[].photon_source` contains:
 
@@ -159,7 +207,8 @@ file variants produce a named error rather than a guessed interpretation.
 ## Independent mesh specification (`actinv-mesh-spec-1`)
 
 Mesh mode replaces the ordinary `spectrum` with a mandatory canonical-file path and SHA-256. All cells receive the
-same explicit library, decay data, material, schedule, options and photon configuration and solve independently.
+same explicit library, decay data, optional fission-yield files, material, schedule, options and photon configuration
+and solve independently.
 
 ```json
 {

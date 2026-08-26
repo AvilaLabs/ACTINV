@@ -20,6 +20,8 @@ pub struct Spec {
     pub options: Options,
     #[serde(default)]
     pub photon: PhotonOptions,
+    #[serde(default)]
+    pub fission_yields: FissionYieldOptions,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -30,11 +32,36 @@ pub struct LibraryRef {
     pub sha256: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct HashedFileRef {
     pub path: String,
     pub sha256: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct FissionYieldOptions {
+    #[serde(default)]
+    pub files: Vec<HashedFileRef>,
+    #[serde(default = "spectrum_average")]
+    pub energy: String,
+    #[serde(default)]
+    pub fixed_energy_eV: Option<f64>,
+}
+
+fn spectrum_average() -> String {
+    "spectrum_average".into()
+}
+
+impl Default for FissionYieldOptions {
+    fn default() -> Self {
+        Self {
+            files: Vec::new(),
+            energy: spectrum_average(),
+            fixed_energy_eV: None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
@@ -166,7 +193,17 @@ impl Default for Options {
 /// Parse a duration like "5 min" (also "5min", "300", "1 y"). Seconds when no unit is given.
 pub fn parse_duration(s: &str) -> Result<f64, String> {
     let t = s.trim();
-    let split = t.find(|c: char| c.is_alphabetic()).unwrap_or(t.len());
+    let split = (0..=t.len())
+        .rev()
+        .find(|index| {
+            t.is_char_boundary(*index)
+                && t[..*index].trim().parse::<f64>().is_ok()
+                && t[*index..]
+                    .trim()
+                    .chars()
+                    .all(|character| character.is_ascii_alphabetic())
+        })
+        .ok_or_else(|| format!("bad duration '{s}'"))?;
     let (num, unit) = t.split_at(split);
     let v: f64 = num
         .trim()
@@ -222,6 +259,7 @@ impl Spec {
                     .into(),
             );
         }
+        actinv_data::composition::validate_material_keys(&self.material.composition)?;
         match self.material.basis.as_str() {
             "wt_percent" | "atom_fraction" | "atoms_per_g" => {}
             b => return Err(format!("unknown material.basis '{b}'")),
@@ -345,6 +383,53 @@ impl Spec {
                 return Err("photon.response requires a path and a 64-hex-digit sha256".into());
             }
         }
+        let mut yield_paths = std::collections::HashSet::new();
+        for reference in &self.fission_yields.files {
+            if reference.path.is_empty()
+                || reference.sha256.len() != 64
+                || !reference
+                    .sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err(
+                    "every fission_yields file requires a path and a 64-hex-digit sha256".into(),
+                );
+            }
+            if !yield_paths.insert(&reference.path) {
+                return Err(format!(
+                    "duplicate fission_yields file path '{}'",
+                    reference.path
+                ));
+            }
+        }
+        match self.fission_yields.energy.as_str() {
+            "spectrum_average" => {
+                if self.fission_yields.fixed_energy_eV.is_some() {
+                    return Err(
+                        "fission_yields.fixed_energy_eV is forbidden with spectrum_average".into(),
+                    );
+                }
+            }
+            "fixed" => {
+                let energy = self
+                    .fission_yields
+                    .fixed_energy_eV
+                    .ok_or("fission_yields.energy 'fixed' requires fixed_energy_eV")?;
+                if !energy.is_finite() || energy < 0.0 {
+                    return Err(
+                        "fission_yields.fixed_energy_eV must be finite and nonnegative".into(),
+                    );
+                }
+            }
+            value => return Err(format!("unknown fission_yields.energy '{value}'")),
+        }
+        if self.fission_yields.files.is_empty()
+            && (self.fission_yields.energy != "spectrum_average"
+                || self.fission_yields.fixed_energy_eV.is_some())
+        {
+            return Err("empty fission_yields.files requires the default energy settings".into());
+        }
         Ok(())
     }
     /// Group fluxes in ascending-energy order, scaled to `total` when given.
@@ -376,5 +461,20 @@ impl Spec {
             Some(v) => v.clone(),
             None => crate::photon::FISPACT_24_BOUNDARIES_EV.to_vec(),
         }
+    }
+}
+
+#[cfg(test)]
+mod duration_tests {
+    use super::parse_duration;
+
+    #[test]
+    fn scientific_notation_is_not_a_unit_suffix() {
+        assert_eq!(parse_duration("1e-8 s").unwrap(), 1e-8);
+        assert_eq!(
+            parse_duration("2.5E+3ms").unwrap_err(),
+            "unknown time unit 'ms' in '2.5E+3ms'"
+        );
+        assert_eq!(parse_duration("3e2").unwrap(), 300.0);
     }
 }

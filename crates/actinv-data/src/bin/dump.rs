@@ -3,7 +3,7 @@
 //!   dump spectra FILE [ZA:LISO ...] -> lossless line-oriented MF=8/MT=457 spectrum records
 //!   dump spectra-summary FILE -> all-file section/spectrum and STYP/LCON counts
 //!   dump library FILE OUT    -> raw row and group arrays for byte comparison
-use actinv_data::{composition, decay, library};
+use actinv_data::{composition, decay, fission, library};
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -106,6 +106,54 @@ fn main() {
                 println!("C {styp} {lcon} {count}");
             }
         }
+        "fission-yields" => {
+            let yields = fission::parse_file(&a[2]).expect("read fission-yield file");
+            println!(
+                "F {} {} {:.17e} {} {}",
+                yields.parent.0,
+                yields.parent.1,
+                yields.awr,
+                yields.independent.len(),
+                yields.cumulative.len()
+            );
+            for (kind, tables) in [
+                ("I", &yields.independent),
+                ("C", &yields.cumulative),
+            ] {
+                for table in tables {
+                    println!(
+                        "{kind} {:.17e} {} {:.17e}",
+                        table.energy_ev,
+                        table.products.len(),
+                        table.sum
+                    );
+                    for ((za, liso), value) in &table.products {
+                        println!(
+                            "Y {kind} {:.17e} {za} {liso} {:.17e} {:.17e}",
+                            table.energy_ev, value.value, value.uncertainty
+                        );
+                    }
+                }
+            }
+        }
+        "fission-effective" => {
+            let yields = fission::parse_file(&a[2]).expect("read fission-yield file");
+            let energy: f64 = a[3].parse().expect("incident energy in eV");
+            let effective = yields.effective(energy).expect("select effective yields");
+            println!(
+                "E {:.17e} {:.17e} {:.17e} {:.17e} {} {:.17e} {}",
+                effective.requested_energy_ev,
+                effective.lower_energy_ev,
+                effective.upper_energy_ev,
+                effective.upper_weight,
+                usize::from(effective.clamped),
+                effective.sum,
+                effective.products.len()
+            );
+            for ((za, liso), value) in effective.products {
+                println!("Y {za} {liso} {value:.17e}");
+            }
+        }
         "library" => {
             // Write rows and sig as raw little-endian bytes so the control can test byte identity with numpy.
             // (A checksum cannot: floating-point addition is not associative, so summation order alone moves the last bit.)
@@ -158,9 +206,40 @@ fn main() {
                 println!("# UNKNOWN {}", u);
             }
         }
+        "material" => {
+            // dump material DECAY BASIS KEY VALUE [KEY VALUE ...]
+            // Uses the complete mixed natural-element/explicit-nuclide path exercised by the solver.
+            assert!(a.len() >= 6 && a.len().is_multiple_of(2));
+            let nuclides = decay::parse_file(&a[2]).expect("read decay file");
+            let mut values = std::collections::BTreeMap::new();
+            let (pairs, remainder) = a[4..].as_chunks::<2>();
+            assert!(remainder.is_empty());
+            for pair in pairs {
+                values.insert(
+                    pair[0].clone(),
+                    pair[1].parse::<f64>().expect("material value"),
+                );
+            }
+            let (inventory, diagnostic) =
+                composition::material_atoms_per_gram(&values, &a[3], &nuclides)
+                    .expect("convert material");
+            println!("{}", inventory.len());
+            for ((za, liso), atoms) in inventory {
+                println!("I {za} {liso} {atoms:.17e}");
+            }
+            for (name, (za, liso, molar_mass, atoms)) in diagnostic.explicit_nuclides {
+                println!("N {name} {za} {liso} {molar_mass:.17e} {atoms:.17e}");
+            }
+            for (element, (molar_mass, atoms, isotopes)) in diagnostic.elements {
+                println!("E {element} {molar_mass:.17e} {atoms:.17e} {isotopes}");
+            }
+            for unknown in diagnostic.unknown {
+                println!("U {unknown}");
+            }
+        }
         "provenance" => println!("{}", composition::provenance()),
         _ => eprintln!(
-            "usage: dump decay|spectra|spectra-summary|library|composition|provenance ..."
+            "usage: dump decay|spectra|spectra-summary|fission-yields|fission-effective|library|composition|material|provenance ..."
         ),
     }
 }

@@ -20,3 +20,7 @@ hdf5-pure = "=0.39.0"
 [[bin]]
 name = "cram_probe"
 path = "src/bin/cram_probe.rs"
+
+[[bin]]
+name = "fission_probe"
+path = "src/bin/fission_probe.rs"

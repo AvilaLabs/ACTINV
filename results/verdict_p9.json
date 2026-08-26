@@ -1,0 +1,13 @@
+{
+ "gates": {
+  "G1 composition/NFPY": "PASS \u2014 Rust/OpenMC max 3.24e-16; yield-sum max deviation 4.89e-07",
+  "G2 fission matrix/conservation": "PASS \u2014 matrix max 1.85e-16; mapped+leakage=2",
+  "G3 coupled/auto": "PASS \u2014 threshold max 2.12e-16; coupled parent 4.00e-16",
+  "G4 pulses/OpenMC": "PASS \u2014 dense 1.33e-15; OpenMC CRAM48 3.91e-15",
+  "G5 ALARA identical data": "PASS \u2014 rate 0.0e+00; inventory max 4.11e-08",
+  "G6 CoNDERC/provenance/regression": "PASS \u2014 Dickens total geom C/E 1.0070; Yarnell total 0.9845; regression differences 0"
+ },
+ "repair_round": true,
+ "amendment": "ACTINV-P9_AMENDMENT_A.md",
+ "verdict": "P9-CONDITIONAL"
+}

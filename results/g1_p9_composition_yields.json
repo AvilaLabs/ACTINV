@@ -1,0 +1,130 @@
+{
+  "explicit_composition": {
+    "aliases_normalized": true,
+    "cases": {
+      "atom_fraction": {
+        "atoms_per_g": {
+          "ba137m1": 1.2303523223162582e+21,
+          "u235": 1.8455284834743872e+21
+        },
+        "expected_atoms_per_g": {
+          "ba137m1": 1.2303523223162582e+21,
+          "u235": 1.8455284834743872e+21
+        },
+        "inputs": {
+          "BA137M": 2.0,
+          "u235": 3.0
+        },
+        "molar_mass_relative_deviation": {
+          "ba137m1": 0.0,
+          "u235": 0.0
+        },
+        "relative_deviation": {
+          "ba137m1": 0.0,
+          "u235": 0.0
+        }
+      },
+      "atoms_per_g": {
+        "atoms_per_g": {
+          "ba137m1": 4e+20,
+          "u235": 6e+20
+        },
+        "expected_atoms_per_g": {
+          "ba137m1": 4e+20,
+          "u235": 6e+20
+        },
+        "inputs": {
+          "BA137M": 4e+20,
+          "u235": 6e+20
+        },
+        "molar_mass_relative_deviation": {
+          "ba137m1": 0.0,
+          "u235": 0.0
+        },
+        "relative_deviation": {
+          "ba137m1": 0.0,
+          "u235": 0.0
+        }
+      },
+      "wt_percent": {
+        "atoms_per_g": {
+          "ba137m1": 1.7591065643111004e+21,
+          "u235": 1.53744403758074e+21
+        },
+        "expected_atoms_per_g": {
+          "ba137m1": 1.7591065643111007e+21,
+          "u235": 1.53744403758074e+21
+        },
+        "inputs": {
+          "BA137M": 40.0,
+          "u235": 60.0
+        },
+        "molar_mass_relative_deviation": {
+          "ba137m1": 0.0,
+          "u235": 0.0
+        },
+        "relative_deviation": {
+          "ba137m1": 1.4902110271111434e-16,
+          "u235": 0.0
+        }
+      }
+    },
+    "neutron_mass_u": 1.00866491595,
+    "worst_relative": 1.4902110271111434e-16
+  },
+  "fail_closed": {
+    "alias_collision": true,
+    "bad_hash": true,
+    "duplicate": true,
+    "element_isotope_mixing": true,
+    "malformed_key": true,
+    "missing_mass_record": true,
+    "negative": true,
+    "truncated": true
+  },
+  "failure_messages": {
+    "alias_collision": "thread 'main' (15) panicked at crates/actinv-data/src/bin/dump.rs:225:22:\nconvert material: \"material composition keys collide after normalization at 'Ba137m1'\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "bad_hash": "SHA-256 mismatch for /tmp/actinv-p9-final/g1/p9-synthetic-yields.endf: declared 0000000000000000000000000000000000000000000000000000000000000000, computed f36f3d6d3eee448a71f07f88a3e8017e7a7d0da6a1c2d7f1f93810df493f349d",
+    "duplicate": "thread 'main' (20) panicked at crates/actinv-data/src/bin/dump.rs:110:53:\nread fission-yield file: \"duplicate fission product (36092, 0) at 1 eV\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "element_isotope_mixing": "thread 'main' (16) panicked at crates/actinv-data/src/bin/dump.rs:225:22:\nconvert material: \"material composition cannot mix natural element 'Ba' with its explicit isotopes\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "malformed_key": "thread 'main' (17) panicked at crates/actinv-data/src/bin/dump.rs:225:22:\nconvert material: \"malformed explicit nuclide key 'U-235'\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "missing_mass_record": "thread 'main' (18) panicked at crates/actinv-data/src/bin/dump.rs:225:22:\nconvert material: \"explicit nuclide 54140_0 is absent from the decay library\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "negative": "thread 'main' (19) panicked at crates/actinv-data/src/bin/dump.rs:110:53:\nread fission-yield file: \"invalid fission yield for (36092, 0)\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace",
+    "truncated": "thread 'main' (21) panicked at crates/actinv-data/src/bin/dump.rs:110:53:\nread fission-yield file: \"MF=8/MT=459 section ended without SEND\"\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace"
+  },
+  "official_u235": {
+    "cumulative_tables": 3,
+    "expected_sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41",
+    "independent_sums": [
+      {
+        "deviation_from_two": 2.3237240265316927e-07,
+        "energy_eV": 0.0253,
+        "products": 1247,
+        "sum": 1.9999997676275973
+      },
+      {
+        "deviation_from_two": 4.887408420195527e-07,
+        "energy_eV": 500000.0,
+        "products": 1260,
+        "sum": 1.999999511259158
+      },
+      {
+        "deviation_from_two": 3.8968436744113433e-07,
+        "energy_eV": 14000000.0,
+        "products": 1237,
+        "sum": 1.9999996103156326
+      }
+    ],
+    "independent_tables": 3,
+    "mismatches": [],
+    "openmc_version": "0.15.3",
+    "parent": [
+      92235,
+      0
+    ],
+    "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+    "rust_vs_openmc_worst_relative": 3.23826488991207e-16,
+    "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+  },
+  "pass": true
+}

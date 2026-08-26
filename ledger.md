@@ -581,3 +581,38 @@
   `92c5371fdb21eecf4989f48828671b904186abc6386b3d7510c8fcee2ee5ffcf` (U-235 file `9e132029…`); the CoNDERC fission
   archive is `30756fef…`; and official ALARA 2.9.2 commit `faa5b330…` builds locally and executes its bundled nested
   pulse schedule. Those data and build products remain outside the repository.
+
+## 25 — 2026-08-26 — P9 closed: P9-CONDITIONAL
+- Protocol `protocols/ACTINV-P9_PROTOCOL.md` remained fixed at
+  `028c5846865490e9dee5902f22f5ad4be583ee332be9d92ce23efa80c52d39c0`. All six gates pass. The checker-derived
+  verdict is **P9-CONDITIONAL** because the single staging repair pass is recorded in Amendment A,
+  `5ac1f139b4f4c878f8595b685bdc1e7f0be95abc74b21ad3309df9ecc13dd4f6`.
+- **G1 PASS.** Rust/OpenMC U-235 MF=8/MT=454/459 values agree at `3.238e-16` worst relative. The three raw independent
+  yield sums differ from two by at most `4.887e-7`; explicit ground/isomer values across all three material bases
+  agree at `1.490e-16`. Alias/mixture/data-integrity plants fail closed.
+- **G2 PASS.** Exact, midpoint and clamped fission matrices agree with independent assembly at `1.850e-16`. One
+  parent loss, product feeds, mapped/leakage conservation and the no-yields path close; cumulative yields cannot
+  affect the matrix or ledger.
+- **G3 PASS.** Per-isotope optical depth/burn-up and the two threshold cases agree at `2.118e-16`; non-unit
+  multipliers change automatic selection as required. Coupled parent depletion agrees analytically at `4.002e-16`,
+  and low-burn-up trace/coupled product differences have the predicted first-order scale within the CRAM floor.
+- **G4 PASS.** Every pulse boundary agrees with an independent dense exponential at `1.326e-15` and OpenMC CRAM48 at
+  `3.911e-15` on resolvable populations. Cumulative time/exposure/fluence are exact, split/merged segments agree at
+  `7.087e-16`, and the decay-gap effect agrees with its analytic prediction.
+- **G5 PASS.** Official ALARA 2.9.2 commit `faa5b330…` builds and runs its reference sample. ACTINV and ALARA recover
+  the identical FENDL-2 Fe-56(n,p) rate exactly and the same ten-pulse/nine-gap timeline; shutdown Fe-56/Mn-56 differ
+  by at most `4.115e-8`, below the `5e-4` gate.
+- **G6 PASS.** All 175 finite CoNDERC points are reported. Geometric-mean C/E is 0.9882 beta, 1.0183 gamma and 1.0070
+  total for Dickens pulse, and 0.9845 total for Yarnell 20,000 s. All external and certificate hashes rematch, both
+  per-fission normalizations close, the pre-P9 deterministic result has zero differences, and workspace tests, strict
+  Clippy and rustfmt pass.
+- Amendment A records the control/report repairs: actual ALARA transcript/mass-56 markers, the FISPACT flux trailer,
+  the UKAEA report's time-weighted Dickens pulse ordinate, and two mechanical Rust 1.98 Clippy findings. No production
+  physics, data value, tolerance or accuracy threshold changed. The unmodified archive's Yarnell author/history
+  metadata anomalies are retained and named in the evidence.
+- P9 delivers explicit isotope/isomer materials, strict hash-pinned independent fission yields, yield-expanded matrix
+  assembly and leakage balance, exposure-correct automatic coupled selection, and boundary-level pulse time/exposure/
+  fluence through ordinary and mesh paths. A scientific-notation duration parsing defect found in touched code is
+  fixed and unit-tested.
+- P5 retains PASS; P6, P7 and P8 retain their conditional verdicts. P10 — Data completeness — is next but remains
+  unopened and unhashed. P9 alone does not complete v0.5; tagging, pushing and publishing remain external acts.

@@ -5,12 +5,16 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 
 ## Model and material
 
-- `mode`, `max_burnup_fraction` — selected trace/coupled formulation and the value used by `auto`.
+- `mode`, `max_burnup_fraction`, `max_burnup_optical_depth`, `max_burnup_nuclide` — selected trace/coupled
+  formulation and the largest initial-nuclide reaction loss over multiplier-weighted exposure used by `auto`.
 - `composition_basis`, `composition_input_total`, `composition_weight_percent_total`,
   `composition_not_summing_to_100` — how the input composition was interpreted. The weight-percent total is `null`
   for other bases.
 - `composition_elements_unknown` — material keys without natural-isotope mass/abundance data.
 - `composition_isotopes_absent_from_decay_library` — initial isotopes which cannot enter the decay network.
+- `explicit_isotope_masses` — canonical nuclide, ZA/LISO, evaluated AWR, neutron-mass conversion, molar mass, resulting
+  atoms per gram and primary/fallback source for each explicit isotope key. A literal unsolved `atoms_per_g` key may
+  carry null AWR/source and zero diagnostic molar mass because no mass conversion was needed.
 - `bulk_production_dropped` — count of reactions whose product is held as part of the constant bulk in trace mode.
 - `bulk_background_heat_W_per_g` — decay heat from a radioactive constant-bulk component.
 
@@ -19,7 +23,14 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 - `products_no_evaluated_decay_data` — reaction products absent from primary and fallback decay data; production is
   sent to the explicit leakage state.
 - `products_unmapped_to_leakage` — activation-library rows whose product could not be mapped.
-- `fission_no_yields_to_leakage` — fission rate sent to leakage because fission yields are P9.
+- `fission_no_yields_to_leakage` — active-parent fission rate sent to leakage because no matching yield evaluation was
+  supplied.
+- `fission_yield_selection` — per-parent effective incident energy, evaluated bracket, interpolation weight, clamp
+  decision, product count and effective independent-yield sum.
+- `fission_yield_balance` — per-parent fission rate plus raw, chain-mapped and leakage yield sums. Mapped plus leakage
+  equals the unnormalized MF=8/MT=454 source.
+- `fission_yield_products_to_leakage` — each independent-yield product absent from the decay chain, with parent,
+  product, yield and production rate per parent atom.
 - `isomer_state_absent_from_decay_library_used_ground` — requested product isomer replaced by evaluated ground state.
 - `targets_absent_from_decay_library` — activation-library targets absent from the assembled decay network.
 - `decay_daughters_missing`, `spontaneous_fission_branches_to_leakage` — missing/unsupported decay daughters routed to
@@ -30,6 +41,10 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
   affecting an initial isotope. These two categories repair the v0.1 promise that library-index guards propagate.
 
 `steps[].leakage_atoms_per_g` is the accumulated amount routed to leakage; the categories above explain why.
+
+The certificate's `inputs.fission_yields` records every declared and recomputed file hash, parent, AWR and independent
+table size/sum; `certificate.fission_yields.selection` repeats the effective selection. Cumulative MT=459 tables are
+counted for inspection only and never appear as production sources.
 
 ## Numerical resolution and pruning
 
@@ -69,3 +84,7 @@ pruned state counts. Import-source total checks remain in the canonical flux foo
 `assembly` records the bulk isotope count, matrix triplet counts, activation-library row count, decay-chain size and
 total neutron flux. A ledger with entries is not intrinsically a bad result; it is a result whose limitations are
 machine-readable rather than hidden.
+
+`schedule` records segment count, total multiplier-weighted seconds and physical fluence. The corresponding
+`steps[]` fields are cumulative elapsed `t_s`, current multiplier `flux`, `flux_weighted_time_s` and `fluence_n_cm2`,
+so decay gaps and pulse normalization remain independently auditable.

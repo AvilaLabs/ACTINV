@@ -1,0 +1,262 @@
+{
+  "actinv": {
+    "certificate": {
+      "bmin_atoms_per_g": 0.0,
+      "cram": "CRAM-16, incomplete partial fractions (Pusa, NSE 182:297, 2016)",
+      "decay_fallback": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+      "decay_primary": "/home/connoravila/nuclear-data/alara-2.9.2/sample/data/truncated_fendld-2.0_for_samples_only",
+      "entry_point": "cli",
+      "fission_yields": {
+        "energy": "spectrum_average",
+        "fixed_energy_eV": null,
+        "selection": []
+      },
+      "inputs": {
+        "decay_fallback": {
+          "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+          "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+        },
+        "decay_primary": {
+          "path": "/home/connoravila/nuclear-data/alara-2.9.2/sample/data/truncated_fendld-2.0_for_samples_only",
+          "sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940"
+        },
+        "fission_yields": [],
+        "library": {
+          "path": "/tmp/actinv-p9-final/g5/fendl2-fe56-np.npz",
+          "sha256": "5b579d6b4ed2b3002c38d8a581bea9f81e331aa95281c84e358ad7a8b5f3e18c"
+        },
+        "library_index": {
+          "path": "/tmp/actinv-p9-final/g5/fendl2-fe56-np_index.json",
+          "sha256": "ffa6623d11c959b29c094349b63c04f4c4d56bc3295add13e42cd5745e6633ef"
+        },
+        "photon_response": null
+      },
+      "library": "/tmp/actinv-p9-final/g5/fendl2-fe56-np.npz",
+      "library_sha256_declared": "5b579d6b4ed2b3002c38d8a581bea9f81e331aa95281c84e358ad7a8b5f3e18c",
+      "material_basis": "atoms_per_g",
+      "mode": "coupled",
+      "photon": {
+        "build_up_factor": 2.0,
+        "gamma_constant_cutoff_eV": 20000.0,
+        "group_structure": "fispact-24"
+      },
+      "prune": "none",
+      "solver": "actinv-core 0.2.0",
+      "tables_provenance": "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; abundances per Meija et al., Pure Appl. Chem. 88 (2016); masses AME2020 via openmc mass data)"
+    },
+    "ledger": {
+      "assembly": {
+        "flux_total": 1e+16,
+        "n_bulk_isotopes": 1,
+        "n_chain_nuclides": 3821,
+        "n_decay_triplets": 8748,
+        "n_library_rows": 2,
+        "n_reaction_triplets": 2
+      },
+      "bulk_background_heat_W_per_g": 0.0,
+      "bulk_production_dropped": 0,
+      "composition_basis": "atoms_per_g",
+      "composition_elements_unknown": [],
+      "composition_input_total": 1e+20,
+      "composition_isotopes_absent_from_decay_library": [],
+      "composition_not_summing_to_100": false,
+      "composition_weight_percent_total": null,
+      "decay_daughters_missing": 8,
+      "decay_nuclides_from_fallback": 3566,
+      "explicit_isotope_masses": [
+        {
+          "LISO": 0,
+          "ZA": 26056,
+          "atoms_per_g": 1e+20,
+          "awr": 55.454429999999995,
+          "molar_mass_g_mol": 55.934937975005155,
+          "neutron_mass_u": 1.00866491595,
+          "nuclide": "Fe56",
+          "source": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat"
+        }
+      ],
+      "fission_no_yields_to_leakage": {},
+      "fission_yield_balance": {},
+      "fission_yield_products_to_leakage": [],
+      "fission_yield_selection": [],
+      "isomer_state_absent_from_decay_library_used_ground": {},
+      "library_convergence_flags": [],
+      "library_target_limitations": [],
+      "max_burnup_fraction": 5.784939983267234e-09,
+      "max_burnup_nuclide": "Fe56",
+      "max_burnup_optical_depth": 5.784939999999999e-09,
+      "mode": "coupled",
+      "negative_atoms_zeroed_per_step": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "numerical_floor": {
+        "alpha0": 2.124853710495224e-16,
+        "max_states_below_floor": 0,
+        "note": "CRAM's absolute error floors at alpha0; populations below alpha0 * max(N) are indistinguishable from zero and are reported, not removed",
+        "worst_heat_bound_fraction": 0.0
+      },
+      "photon_spectra": [],
+      "products_no_evaluated_decay_data": {},
+      "products_unmapped_to_leakage": {},
+      "rate_pruning": {
+        "dropped": [],
+        "removed_heat_W_per_g_bound": -0.0,
+        "threshold_atoms_per_g": 0.0
+      },
+      "schedule": {
+        "fluence_n_cm2": 1e+17,
+        "flux_weighted_time_s": 10.0,
+        "segments": 19
+      },
+      "spontaneous_fission_branches_to_leakage": 128,
+      "targets_absent_from_decay_library": []
+    },
+    "mode": "coupled",
+    "numerical_floor_atoms_per_g": 21248.53698228277
+  },
+  "alara": {
+    "binary": "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara",
+    "build_command": [
+      "ninja",
+      "-C",
+      "/home/connoravila/nuclear-data/alara-2.9.2-build",
+      "alara"
+    ],
+    "build_directory": "/home/connoravila/nuclear-data/alara-2.9.2-build",
+    "build_output_tail": [
+      "ninja: Entering directory `/home/connoravila/nuclear-data/alara-2.9.2-build'",
+      "ninja: no work to do."
+    ],
+    "commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+    "source": "/home/connoravila/nuclear-data/alara-2.9.2",
+    "version": "ALARA 2.9.2"
+  },
+  "alara_text_inventory": {
+    "fe-56": {
+      "half_life_s": -1.0,
+      "pre_irrad": 8.4726e+22,
+      "shutdown": 8.4726e+22
+    },
+    "mn-56": {
+      "half_life_s": 9284.4,
+      "pre_irrad": 0.0,
+      "shutdown": 489130000000000.0
+    }
+  },
+  "analytic_comparison": {
+    "Fe56": {
+      "actinv_relative": 1.6653345465518414e-15,
+      "alara_relative": 5.7730799030153435e-09,
+      "reference": 0.9999999942269201
+    },
+    "Mn56": {
+      "actinv_relative": 2.9372886614762014e-14,
+      "alara_relative": 4.114585897277638e-08,
+      "reference": 5.77308004478349e-09
+    }
+  },
+  "comparisons": {
+    "Fe56": {
+      "above_1e-10_initial": true,
+      "actinv_fraction_of_initial": 0.9999999942269218,
+      "alara_fraction_of_initial": 1.0,
+      "relative_difference": 5.7730782376808065e-09
+    },
+    "Mn56": {
+      "above_1e-10_initial": true,
+      "actinv_fraction_of_initial": 5.773080044783321e-09,
+      "alara_fraction_of_initial": 5.773080282321837e-09,
+      "relative_difference": 4.1145888345661785e-08
+    }
+  },
+  "data": {
+    "actinv_index": "/tmp/actinv-p9-final/g5/fendl2-fe56-np_index.json",
+    "actinv_index_sha256": "ffa6623d11c959b29c094349b63c04f4c4d56bc3295add13e42cd5745e6633ef",
+    "actinv_library": "/tmp/actinv-p9-final/g5/fendl2-fe56-np.npz",
+    "actinv_library_sha256": "5b579d6b4ed2b3002c38d8a581bea9f81e331aa95281c84e358ad7a8b5f3e18c",
+    "activation_subset_sha256": "d1dfe38bf722dc19c40dd1a1e07e44f51041ab4c69b79b1a67b0653df837c421",
+    "active_eaf_group_zero_based": 0,
+    "cross_section_barns": 0.0578494,
+    "flux": "/tmp/actinv-p9-final/g5/fe56-flux",
+    "flux_n_cm2_s": 1e+16,
+    "flux_sha256": "cd25b606a198ff8b154198e7c519ceb02b016a9e968459ad7edf62b59917f6e9",
+    "groups": 175,
+    "official_hashes": {
+      "activation_sha256": "f45ced4d5676c993f6b6dd562d5e312e897eabb959dc6ebba56bbeaecde22312",
+      "decay_sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940",
+      "element_sha256": "bdfcfdb255d89b4988be9fab4279c36fb9615709ee6a738e963591db6146c290",
+      "fallback_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+      "sample1_sha256": "f5eced7f053d74c31d59ddb9314ea92b160b0f55f2c81c51ffe4a5a2a9f90f65",
+      "sample3_sha256": "ba12dc9dcf05952eafd3490273dc954eeb207b1df76bd2fcd1d8097402dd9787"
+    },
+    "official_nonzero_cross_sections": 39
+  },
+  "identical_data_run": {
+    "activation_subset": "/tmp/actinv-p9-final/g5/fendl2-fe56-np.eaf",
+    "activation_subset_sha256": "d1dfe38bf722dc19c40dd1a1e07e44f51041ab4c69b79b1a67b0653df837c421",
+    "conversion_input": "/tmp/actinv-p9-final/g5/convert-fe56",
+    "conversion_input_sha256": "aaf8fe72e2f2c2f4bc826f90ade03dd3e8780e8eedfab41e9385d6d2955dac56",
+    "conversion_succeeded": true,
+    "converted_library_stem": "/tmp/actinv-p9-final/g5/fendl2-fe56-np-bin",
+    "pulse_markers": {
+      "five_second_delay": true,
+      "solver_output": true,
+      "ten_pulses": true
+    },
+    "run_input": "/tmp/actinv-p9-final/g5/fe56-pulses",
+    "run_input_sha256": "0fb1ace1ac02f702ce430f2cfd57697331c45bc590f1ffb17fe1c10a9fb9197b",
+    "run_succeeded": true
+  },
+  "maximum_inventory_relative_above_1e-10_initial": 4.1145888345661785e-08,
+  "official_reference": {
+    "conversion_succeeded": true,
+    "generated_files": [
+      "dump_files/sample10_dump.file",
+      "dump_files/sample3.dump"
+    ],
+    "pulse_markers": {
+      "five_second_delay": true,
+      "solver_output": true,
+      "ten_pulses": true
+    },
+    "run_succeeded": true,
+    "sample1_sha256": "f5eced7f053d74c31d59ddb9314ea92b160b0f55f2c81c51ffe4a5a2a9f90f65",
+    "sample3_sha256": "ba12dc9dcf05952eafd3490273dc954eeb207b1df76bd2fcd1d8097402dd9787"
+  },
+  "pass": true,
+  "rates": {
+    "actinv_ascending_order_per_s": 5.78494e-10,
+    "alara_eaf_order_per_s": 5.78494e-10,
+    "relative_difference": 0.0
+  },
+  "timeline": {
+    "actinv_fluence_n_cm2": 1e+17,
+    "actinv_flux_weighted_time_s": 10.0,
+    "actinv_time_s": 55.0,
+    "expected_fluence_n_cm2": 1e+17,
+    "expected_flux_weighted_time_s": 10.0,
+    "expected_time_s": 55.0,
+    "gaps": 9,
+    "pulses": 10,
+    "segments": 19,
+    "worst_relative": 0.0
+  }
+}

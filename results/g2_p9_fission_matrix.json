@@ -1,0 +1,130 @@
+{
+  "cumulative_tables_cannot_affect_matrix_or_ledger": true,
+  "energies": {
+    "clamp_high": {
+      "conservation_relative": 0.0,
+      "effective_products": {
+        "36092_0": 0.4,
+        "38100_0": 1.0,
+        "54140_0": 0.6
+      },
+      "effective_relative": 0.0,
+      "energy_eV": 4.0,
+      "matrix_relative": 1.8503717077085943e-16,
+      "selection": {
+        "clamped": true,
+        "lower": 3.0,
+        "upper": 3.0,
+        "weight": 0.0
+      },
+      "selection_exact": true,
+      "source_conservation_relative": 0.0
+    },
+    "clamp_low": {
+      "conservation_relative": 0.0,
+      "effective_products": {
+        "36092_0": 0.8,
+        "54140_0": 0.3,
+        "56141_0": 0.9
+      },
+      "effective_relative": 0.0,
+      "energy_eV": 0.0,
+      "matrix_relative": 1.8503717077085943e-16,
+      "selection": {
+        "clamped": true,
+        "lower": 1.0,
+        "upper": 1.0,
+        "weight": 0.0
+      },
+      "selection_exact": true,
+      "source_conservation_relative": 0.0
+    },
+    "exact_high": {
+      "conservation_relative": 0.0,
+      "effective_products": {
+        "36092_0": 0.4,
+        "38100_0": 1.0,
+        "54140_0": 0.6
+      },
+      "effective_relative": 0.0,
+      "energy_eV": 3.0,
+      "matrix_relative": 1.8503717077085943e-16,
+      "selection": {
+        "clamped": false,
+        "lower": 3.0,
+        "upper": 3.0,
+        "weight": 0.0
+      },
+      "selection_exact": true,
+      "source_conservation_relative": 0.0
+    },
+    "exact_low": {
+      "conservation_relative": 0.0,
+      "effective_products": {
+        "36092_0": 0.8,
+        "54140_0": 0.3,
+        "56141_0": 0.9
+      },
+      "effective_relative": 0.0,
+      "energy_eV": 1.0,
+      "matrix_relative": 1.8503717077085943e-16,
+      "selection": {
+        "clamped": false,
+        "lower": 1.0,
+        "upper": 1.0,
+        "weight": 0.0
+      },
+      "selection_exact": true,
+      "source_conservation_relative": 0.0
+    },
+    "interpolated": {
+      "conservation_relative": 0.0,
+      "effective_products": {
+        "36092_0": 0.6000000000000001,
+        "38100_0": 0.5,
+        "54140_0": 0.44999999999999996,
+        "56141_0": 0.45
+      },
+      "effective_relative": 0.0,
+      "energy_eV": 2.0,
+      "matrix_relative": 1.850371707708594e-16,
+      "selection": {
+        "clamped": false,
+        "lower": 1.0,
+        "upper": 3.0,
+        "weight": 0.5
+      },
+      "selection_exact": true,
+      "source_conservation_relative": 0.0
+    }
+  },
+  "fixture": {
+    "decay": {
+      "path": "/tmp/actinv-p9-final/g2/p9-synthetic-decay.endf"
+    },
+    "index": {
+      "path": "/tmp/actinv-p9-final/g2/p9-synthetic_index.json"
+    },
+    "library": {
+      "path": "/tmp/actinv-p9-final/g2/p9-synthetic.npz"
+    },
+    "yields": {
+      "path": "/tmp/actinv-p9-final/g2/p9-synthetic-yields.endf"
+    },
+    "yields_cumulative_changed": {
+      "path": "/tmp/actinv-p9-final/g2/p9-synthetic-yields-cumulative-changed.endf"
+    }
+  },
+  "matrix_mismatches": [],
+  "midpoint_balance": {
+    "fission_rate_per_parent_s": 1.9999999999999998,
+    "leakage_yield_sum": 0.44999999999999996,
+    "mapped_yield_sum": 1.55,
+    "raw_yield_sum": 2.0
+  },
+  "missing_product_and_parent_use_distinct_paths": true,
+  "no_yields_matrix_relative": 1.1102230246251565e-16,
+  "parent_loss_once": true,
+  "pass": true,
+  "worst_matrix_relative": 1.8503717077085943e-16
+}

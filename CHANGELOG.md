@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+**Added**
+
+- Explicit ground-state/isomer material keys across weight-percent, atom-fraction and literal atoms-per-gram bases,
+  with evaluated AWR provenance and ambiguity checks.
+- Strict, hash-pinned ENDF-6 MF=8/MT=454/459 fission-yield parsing; independent-yield interpolation/selection; and
+  yield-expanded MT=18 matrix feeds with complete mapped/leakage balance.
+- Per-boundary elapsed time, multiplier-weighted exposure and physical fluence for arbitrary piecewise-constant pulse
+  histories, through ordinary and mesh runs.
+- Independent P9 controls against dense exponentials, OpenMC CRAM48, ALARA 2.9.2 and the CoNDERC U-235 Dickens pulse
+  and Yarnell 20,000 s decay-heat sets.
+
+**Fixed**
+
+- Automatic trace/coupled selection now uses each initial isotope's reaction-loss optical depth over the complete
+  multiplier-weighted schedule; non-unit pulse multipliers and cooling gaps can no longer be miscounted.
+- Scientific-notation durations such as `1e-8 s` no longer treat the exponent marker as a unit suffix.
+
 ## v0.2.0 — 2026-08-26
 
 **Added**

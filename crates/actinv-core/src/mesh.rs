@@ -7,7 +7,8 @@ use crate::flux::{
 };
 use crate::run::{PreparedRun, RunResult};
 use crate::spec::{
-    DecayRef, HashedFileRef, LibraryRef, Material, Options, PhotonOptions, Spec, Spectrum, Step,
+    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options, PhotonOptions,
+    Spec, Spectrum, Step,
 };
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -44,6 +45,8 @@ pub struct MeshSpec {
     pub options: Options,
     #[serde(default)]
     pub photon: PhotonOptions,
+    #[serde(default)]
+    pub fission_yields: FissionYieldOptions,
     #[serde(default = "default_chunk_cells")]
     pub chunk_cells: usize,
     #[serde(default = "default_threads")]
@@ -103,6 +106,7 @@ impl MeshSpec {
             schedule: self.schedule.clone(),
             options: self.options.clone(),
             photon: self.photon.clone(),
+            fission_yields: self.fission_yields.clone(),
         }
     }
 }
@@ -351,6 +355,7 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
         &spec.library,
         &spec.decay,
         &spec.photon,
+        &spec.fission_yields,
         spec.options.temperature_K,
     )?;
     let activation_boundaries = prepared.library_boundaries_eV().to_vec();
@@ -495,6 +500,7 @@ mod tests {
             }],
             options: Options::default(),
             photon: PhotonOptions::default(),
+            fission_yields: FissionYieldOptions::default(),
             chunk_cells: 1,
             threads: 1,
         }
