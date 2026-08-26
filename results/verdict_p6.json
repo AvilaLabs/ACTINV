@@ -1,0 +1,11 @@
+{
+ "gates": {
+  "G1 clean-clone build": "PASS \u2014 clone builds and runs the end-to-end control",
+  "G2 CI control suite": "PASS \u2014 10-target library from pinned data, deviation 0.0e+00 W/g, CLI == Python",
+  "G3 wheel and binary": "PASS \u2014 wheel and cargo-install binary both at 0.0e+00 deviation",
+  "G4 reproducibility": "PASS \u2014 independent builds give identical result JSON (215875 bytes) and certificates",
+  "G5 release notes": "PASS \u2014 4 known limitations carried from the roadmap, none added or dropped",
+  "G6 version and licence": "PASS \u2014 3 crates at 0.1.0 under MIT OR Apache-2.0; licence files and changelog present"
+ },
+ "verdict": "P6-PASS"
+}

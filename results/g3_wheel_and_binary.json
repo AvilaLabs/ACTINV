@@ -1,0 +1,8 @@
+{
+ "cargo_install_binary": "/tmp/claude-1000/-home-connoravila-Documents-Avila-Labs/6e85a920-a406-42e2-bc97-176dc75b5c8c/scratchpad/cargoroot/bin/actinv",
+ "first_cooling_W_per_g": 1.1497333991518499e-07,
+ "max_deviation_from_recorded": 0.0,
+ "wheel": "actinv-0.1.0-cp312-cp312-manylinux_2_35_x86_64.whl",
+ "wheel_deviation": 0.0,
+ "pass": true
+}

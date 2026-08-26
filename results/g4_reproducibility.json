@@ -1,0 +1,10 @@
+{
+ "identical": true,
+ "bytes": 215875,
+ "certificates_identical": true,
+ "builds": [
+  "development tree",
+  "clean clone, independent cargo build"
+ ],
+ "pass": true
+}

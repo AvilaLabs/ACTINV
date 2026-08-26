@@ -432,3 +432,17 @@
 - Protocol hashed. Gates: clean-clone build, CI control suite on a pinned data subset, wheel and binary identity,
   reproducibility across builds, release notes carrying the known-limitations table, version and licence hygiene.
   Minimum gate input: the FNS Fe spec and the 255-target subset library — no full-library build.
+- P6 **PASS**, all six gates. G1: a clean clone builds in 9 s and runs the end-to-end control. G2: CI builds a
+  10-target iron-only library from the pinned data subset and runs the FNS Fe spec through both entry points at
+  **0.0 deviation** from the recorded values — the iron-only library reproduces the 255-target library on this spec
+  (2.6e-12) because only iron targets contribute to a pure-iron sample. G3: the maturin wheel
+  (`actinv-0.1.0-cp312-manylinux_2_35_x86_64.whl`, 579 kB) installs into a fresh virtual environment with no source
+  present, and `cargo install` produces a working `actinv`; both at 0.0 deviation. G4: two independent builds give
+  **byte-identical result JSON** (215,875 bytes) and identical certificates. G5: the release notes carry exactly the
+  four known limitations from the roadmap, enforced by `controls/check_release_notes.py`. G6: three crates at 0.1.0
+  under MIT OR Apache-2.0, both licence files and the changelog present.
+- Fixes during P6: the crate author address was the one GitHub attributes to the wrong account (corrected to the
+  principal's); the known-limitations table had been inserted *inside* the roadmap's phases table, so six phase rows
+  were being carried into the release notes as limitations — the section was moved below the table and a checker now
+  enforces that the two lists match exactly. Wheel builds must pin `--interpreter`: maturin otherwise selects the
+  system CPython 3.14, which PyO3 0.22 does not support.
