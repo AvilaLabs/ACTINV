@@ -5,10 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-26):** P7 is closed P7-CONDITIONAL after one documented G5 repair round. The next phase is
-**P8 — Flux import & mesh**: OpenMC statepoint, MCNP meshtal/mctal and FISPACT flux readers, followed by independent
-parallel mesh-cell solves and a 10^6-cell sizing table. P8 has not been opened or protocol-hashed; its row below is the
-scope boundary for the next session.
+**Current status (2026-08-26):** P7 is closed P7-CONDITIONAL after one documented G5 repair round. **P8 — Flux import
+& mesh** is open under protocol `bd3111cd…`: OpenMC statepoint, MCNP meshtal/mctal and FISPACT flux readers, followed
+by deterministic independent parallel mesh-cell solves and a measured sizing table through 10^6 cells. The protocol
+was hashed before implementation or gate evidence.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -93,3 +93,6 @@ part that does not compress: users, issues, and the validation record accumulati
   P10 completes the move by porting library building (`actinv-data`), leaving a single binary.
 - 2026-08-26 — P7 closed P7-CONDITIONAL: decay photons, NIST-response dose proxy and OpenMC/MCNP exports delivered;
   one G5 repair round is recorded in P7 Amendment A. P8 is next and remains unopened.
+- 2026-08-26 — P8 opened under protocol `bd3111cd…`: a hashed streaming flux interchange, fail-closed supported
+  subsets for OpenMC statepoint/MCNP meshtal+mctal/FISPACT fluxes, conservative lethargy rebinning, deterministic
+  chunked Rayon cells, and measured/extrapolated sizing through 10^6 cells.

@@ -520,3 +520,16 @@
   natively on CPython 3.14. Workspace tests, strict Clippy, P5 regressions and the P6 CI path are green.
 - v0.2 is half complete. The documented next phase is **P8 — Flux import & mesh**; it remains unopened and has no
   protocol hash.
+
+## 22 — 2026-08-26 — P8 opened (flux import and independent mesh execution)
+- Protocol hashed as `bd3111cd4bc527ae60a2d34ea0d06de065f77caf6276eb63fdca78fa290637e3` before
+  implementation or gate evidence. Minimum gate data are deterministic four-group/four-cell OpenMC 18.2, MCNP
+  meshtal/mctal and FISPACT fixtures, the existing 10-target CI nuclear data, and one eight-cell exact-grid canonical
+  case; no transport executable, library build, FNS rerun or million-cell solve is required to settle a gate.
+- Normative choices fixed before evidence: `actinv-flux-1` and mesh results are bounded line-delimited JSON streams;
+  group values are integrated physical flux; OpenMC/MCNP require explicit source-rate normalization; source and
+  canonical hashes fail closed; rebinning is exact-copy on matching grids and otherwise equal flux per lethargy with
+  separately ledgered underflow/overflow; one material/schedule is applied to independently pruned ordered cells.
+- Dependencies approved before use: production `rayon` 1.12 (MIT OR Apache-2.0), exact-pinned production
+  `hdf5-pure` 0.39.0 (MIT), and control-only `h5py` 3.16.0 (BSD-3-Clause). The HDF5 parser must demonstrate reference
+  compatibility and bounded streaming; unsupported encodings are errors, never an implicit alternate path.
