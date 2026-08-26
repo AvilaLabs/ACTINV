@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""P6-G1: the repository must be self-contained. Every control CI runs is executed from a fresh clone with HOME
+"""P6-G1: the repository must be self-contained. Run it with an interpreter that has only requirements-ci.txt
+installed — `controls/check_dependencies.py` enforces the declaration, this proves the declaration is enough. Every control CI runs is executed from a fresh clone with HOME
 redirected to an empty directory, so any dependence on a file outside the clone fails immediately. Nuclear data are the
 one permitted exception and reach the controls only through documented environment variables."""
 import os, sys, json, shutil, subprocess, tempfile
@@ -8,7 +9,8 @@ STEPS = [("cargo build", ["cargo", "build", "--release", "--quiet", "--workspace
          ("unit probe", ["./target/release/unit_probe"]),
          ("G0 cram coefficients", [sys.executable, "controls/g0_cram_coefficients.py"]),
          ("gen_cram is reproducible", [sys.executable, "controls/gen_cram.py"]),
-         ("release notes match roadmap", [sys.executable, "controls/check_release_notes.py"])]
+         ("release notes match roadmap", [sys.executable, "controls/check_release_notes.py"]),
+         ("no undeclared dependencies", [sys.executable, "controls/check_dependencies.py"])]
 tmp = tempfile.mkdtemp(prefix="actinv-selftest-"); clone = os.path.join(tmp, "clone"); fake_home = os.path.join(tmp, "home")
 os.makedirs(fake_home)
 subprocess.run(["git", "clone", "--quiet", ROOT, clone], check=True)

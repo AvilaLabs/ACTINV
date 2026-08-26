@@ -458,3 +458,17 @@
   CI gained three steps it should have had: generated-source reproducibility, the release-notes checker, and the
   self-contained test. The v0.1.0 tag stands — no result changed, only the location of a constants file and the
   strength of a gate.
+- **Second CI failure, same class as the first.** `controls/tendl_build.py` imported `pypact` for the 709-group
+  boundaries, and (through `g1_collapse`) `openmc` for an interpolation helper and the MT-product table. Neither is in
+  the CI environment. The first repair fixed the *instance* (a path outside the clone); the class is "a control depends
+  on something the CI environment does not have", and I did not fix the class.
+  Class repair: (1) the 709-group structure is vendored to `data/fispact_709_groups.json` — verified identical to
+  `pypact.ALL_GROUPS[709]`; (2) the MT-product table to `data/mt_products.json` behind `controls/gen_mt_products.py`;
+  (3) `interp_eval` moved from `g1_collapse` to `endf_common`, so the library build imports neither openmc nor any
+  control that does; (4) `requirements-ci.txt` declares what CI installs, and **`controls/check_dependencies.py`**
+  walks every CI entry point and its repository-local imports and fails on anything undeclared — this control found the
+  `openmc` dependency that would have been the *next* CI failure; (5) `g1_self_contained.py` now includes it.
+  Verified in a venv containing only numpy, scipy and the wheel — pypact, openmc and matplotlib all absent — where the
+  full chain builds a 10-target library from pinned data and reproduces the recorded value at 0.0 deviation.
+- Workflow also updated for the Node 20 deprecation: `actions/checkout@v7`, `actions/setup-python@v7`,
+  `Swatinem/rust-cache` pinned to v2.9.2.
