@@ -1,7 +1,14 @@
 # DRAFT — ACTINV P5 — problem spec, CLI, Python API, pathway analysis   (not hashed; opens after P4 closes)
 
-**Roadmap row:** P5. **Scope:** a JSON problem specification and the three ways to run it — CLI, Python, library — plus
-pathway analysis. Nothing else (no new physics, no new data; TENDL/EAF libraries as built in P4).
+**Roadmap row:** P5. **Scope:** a JSON problem specification and the three ways to run it — CLI, Python, harness — plus pathway analysis.
+No new physics and no new data (TENDL/EAF libraries as built in P4). **Architecture (principal's decision, 2026-08-26):
+the Rust core owns the entire path from spec to result.** Python retains library building, the FNS harness and the
+checkers; it no longer assembles problems. The three entry points must therefore be one binary, not three code paths —
+this is what makes G1's identity gate meaningful and the certificate's solver hash real.
+
+**Work implied by that decision:** a reader for the library file (`.npz` is zipped `.npy`; no new format is invented, so
+the Python tooling keeps working), a reader for the decay sublibraries, the abundance and atomic-mass tables embedded in
+the binary with their provenance, and the ledger/certificate emitters moved into the core.
 
 ## Spec (`actinv-spec-1`)
 ```
