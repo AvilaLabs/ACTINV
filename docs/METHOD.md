@@ -20,3 +20,6 @@ state and only products are solved — CRAM's absolute round-off is then relativ
 **Ledger.** Every run reports: composition isotopes without cross sections, products without evaluated decay data,
 fission booked to leakage (no yields yet), atoms booked to leakage for any reason, negative round-off zeroed, decay
 sources used, pruning bounds, measurement rows excluded and why.
+
+Known failure modes in activation data, and the controls that guard against each, are collected in
+[DATA_TRAPS.md](DATA_TRAPS.md).

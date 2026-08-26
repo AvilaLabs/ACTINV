@@ -25,4 +25,5 @@ python controls/check_p3.py                  # re-derives every C/E and hash; pr
   `protocols/`, `sessions_*.md`).
 - The validation harness accepts any code's inventories (docs/HARNESS.md).
 
-See docs/METHOD.md for the physics and docs/DATA.md for sources and terms.
+See docs/METHOD.md for the physics, docs/DATA.md for sources and terms, and docs/DATA_TRAPS.md for the failure modes
+that produce silently wrong inventories and the controls that catch them.
