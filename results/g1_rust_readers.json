@@ -1,0 +1,22 @@
+{
+ "decay": {
+  "n_rust": 3821,
+  "n_python": 3821,
+  "n_checked": 3821,
+  "n_mismatch": 0,
+  "examples": [],
+  "pass": true
+ },
+ "library": {
+  "path": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g.npz",
+  "rows": 164315,
+  "groups": 709,
+  "rows_bytes_identical": true,
+  "sig_bytes_identical": true,
+  "sig_bytes": 931994680,
+  "first_differing_byte": null,
+  "criterion": "byte identity of rows and sig arrays",
+  "pass": true
+ },
+ "pass": true
+}

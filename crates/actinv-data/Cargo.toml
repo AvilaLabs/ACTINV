@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 authors.workspace = true
 license.workspace = true
-description = "ACTINV actinv-data (placeholder)"
+description = "ACTINV data readers: ENDF-6 decay sublibraries and 709-group activation libraries"
 
 [dependencies]
+zip = { version = "2", default-features = false, features = ["deflate"] }

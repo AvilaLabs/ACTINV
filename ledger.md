@@ -359,3 +359,11 @@
   no new data, no library rebuild.
 - Dependencies to be linked (I/O, not numerics), licences checked before use: serde + serde_json (MIT OR Apache-2.0),
   zip and flate2 for the .npz container (MIT / MIT OR Apache-2.0). Recorded per standing rule.
+- P5-G1 **PASS**. Rust decay parser (`crates/actinv-data/src/decay.rs`) vs the Python parser on all 3,821
+  ENDF/B-VIII.0 materials: half-life, mean light/EM/heavy energies, every branching ratio and Q value — **0 mismatches**
+  at 1e-12. Rust `.npz` reader (`library.rs`, own minimal `.npy` decoder; `zip` crate for the container) vs numpy on the
+  full TENDL-2023 library: 164,315 rows and 932 MB of group cross sections **byte-identical**.
+  Control correction before scoring (premise wrong, third of its kind): the control first compared per-row *sums* of
+  group values and reported 5.1e-15 — float addition is not associative, so numpy's pairwise summation and a sequential
+  Rust sum differ in the last bit on identical data. Replaced by raw byte comparison of the `rows` and `sig` arrays,
+  a strictly stronger test. Dependency licences checked before use: zip MIT; serde, serde_json, flate2 MIT OR Apache-2.0.
