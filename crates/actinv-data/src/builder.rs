@@ -4,6 +4,7 @@
 use crate::activation::{parse_evaluations, Evaluation, Mf6Product, ProductRef, Projectile};
 use crate::groups::{GroupStructure, Tabulated};
 use crate::library::{write_npz, Library, Row};
+use crate::processing::{has_resonance_contribution, process_reaction, ProcessedReaction};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -119,6 +120,13 @@ struct BuiltTarget {
     rows: Vec<BuiltRow>,
 }
 
+#[derive(Clone, Copy)]
+struct EvaluationBuildSettings<'a> {
+    groups: &'a GroupStructure,
+    temperature_K: f64,
+    grid_density: f64,
+}
+
 #[derive(Clone, Debug)]
 struct BuiltSource {
     format: LibraryFormat,
@@ -167,6 +175,8 @@ pub fn builder_fingerprint() -> String {
     hash.update(include_bytes!("endf.rs"));
     hash.update(include_bytes!("groups.rs"));
     hash.update(include_bytes!("doppler.rs"));
+    hash.update(include_bytes!("resonance.rs"));
+    hash.update(include_bytes!("processing.rs"));
     hash.update(include_bytes!("library.rs"));
     hash.update(include_bytes!("../../../data/mt_products.json"));
     format!("{:x}", hash.finalize())
@@ -517,7 +527,10 @@ fn inelastic(mt: i32) -> bool {
 
 fn descriptor_set(products: &[ProductRef], lmf: i32) -> Result<BTreeSet<(i32, i32)>, String> {
     let mut set = BTreeSet::new();
-    for product in products.iter().filter(|product| product.lmf == lmf) {
+    for product in products
+        .iter()
+        .filter(|product| product.lmf == lmf && product.zap >= 0)
+    {
         if !set.insert((product.zap, product.lfs)) {
             return Err(format!(
                 "duplicate MF=8 product ZAP={}/LFS={}/LMF={lmf}",
@@ -630,24 +643,87 @@ fn build_evaluation(
     format: LibraryFormat,
     file: &str,
     source_sha256: &str,
-    groups: &GroupStructure,
-    temperature_K: f64,
+    settings: EvaluationBuildSettings<'_>,
     products_by_mt: &BTreeMap<i32, (i32, i32)>,
 ) -> Result<BuiltTarget, String> {
+    let EvaluationBuildSettings {
+        groups,
+        temperature_K,
+        grid_density,
+    } = settings;
     let metadata = &evaluation.metadata;
+    let mut ledger = Vec::new();
     if metadata.projectile != Projectile::Neutron && temperature_K != 0.0 {
         return Err(format!(
             "{} target requires 0 K, requested {temperature_K} K",
             metadata.projectile.name()
         ));
     }
-    if !evaluation.mf2_sections.is_empty() && format != LibraryFormat::Eaf {
-        return Err(format!(
-            "MF=2 resonance reconstruction is required for MT sections {:?} and is not yet available in this builder checkpoint",
-            evaluation.mf2_sections
-        ));
-    }
-    if metadata.evaluation_temperature_k.to_bits() != temperature_K.to_bits() {
+    let mut processed: BTreeMap<i32, ProcessedReaction> = BTreeMap::new();
+    if format != LibraryFormat::Eaf && !evaluation.mf2_sections.is_empty() {
+        if metadata.projectile != Projectile::Neutron {
+            return Err(format!(
+                "MF=2 resonance processing is unsupported for {} evaluations",
+                metadata.projectile.name()
+            ));
+        }
+        if metadata.evaluation_temperature_k != 0.0 {
+            return Err(format!(
+                "raw MF=2 processing requires a 0 K evaluation, got {} K",
+                metadata.evaluation_temperature_k
+            ));
+        }
+        if evaluation.mf2_sections != BTreeSet::from([151]) {
+            return Err(format!(
+                "unsupported MF=2 sections {:?}; expected only MT=151",
+                evaluation.mf2_sections
+            ));
+        }
+        let resonance = evaluation
+            .resonance
+            .as_ref()
+            .ok_or("MF=2/MT=151 was declared without parsed resonance parameters")?;
+        for mt in [18, 102] {
+            if has_resonance_contribution(resonance, mt) {
+                let background = evaluation.mf3.get(&mt).ok_or_else(|| {
+                    format!("MF=2 contributes to MT{mt} but MF=3 background is missing")
+                })?;
+                let reaction = process_reaction(
+                    resonance,
+                    background,
+                    groups,
+                    mt,
+                    temperature_K,
+                    grid_density,
+                )
+                .map_err(|error| format!("MT{mt} resonance processing: {error}"))?;
+                ledger.push(format!(
+                    "MT{mt}: raw 0 K MF=2+MF=3 reconstructed on {} points and processed to {} K on {} points",
+                    reaction.certificate.zero_k_points,
+                    temperature_K,
+                    reaction.certificate.output_points
+                ));
+                for line in &reaction.certificate.ultra_narrow_lines {
+                    ledger.push(format!(
+                        "MT{mt}: ultra-narrow ZAI={} E={:.17e} eV Gamma={:.17e} eV, Gamma/Gamma_D={:.17e} at {:.17e} K, direct area={:.17e} barn eV, closed area={:.17e} barn eV, abundance-weighted area={:.17e} barn eV, group={}, range-edge={}, core=[{:.17e},{:.17e}] eV",
+                        line.isotope_zai,
+                        line.energy_ev,
+                        line.total_width_ev,
+                        line.width_to_doppler_ratio,
+                        line.classification_temperature_k,
+                        line.direct_area_barn_ev,
+                        line.closed_form_area_barn_ev,
+                        line.weighted_area_barn_ev,
+                        line.affected_group,
+                        line.range_edge_decomposition,
+                        line.core_low_ev,
+                        line.core_high_ev
+                    ));
+                }
+                processed.insert(mt, reaction);
+            }
+        }
+    } else if metadata.evaluation_temperature_k.to_bits() != temperature_K.to_bits() {
         return Err(format!(
             "tabulated evaluation is at {} K but {temperature_K} K was requested and no raw MF=2 reconstruction applies",
             metadata.evaluation_temperature_k
@@ -655,8 +731,7 @@ fn build_evaluation(
     }
 
     let mut rows = Vec::new();
-    let mut ledger = Vec::new();
-    if !evaluation.mf2_sections.is_empty() {
+    if format == LibraryFormat::Eaf && !evaluation.mf2_sections.is_empty() {
         ledger.push(format!(
             "EAF processed MF=3 used at its declared temperature; MF=2 sections {:?} are not added a second time",
             evaluation.mf2_sections
@@ -721,21 +796,31 @@ fn build_evaluation(
             continue;
         }
 
-        let total = if let Some(table) = evaluation.mf3.get(&mt) {
+        let total = if let Some(reaction) = processed.get(&mt) {
+            checked_groups(reaction.collapse(groups)?, &format!("MT{mt}/MF=2+MF=3"))?
+        } else if let Some(table) = evaluation.mf3.get(&mt) {
             checked_collapse(groups, table, &format!("MT{mt}/MF=3"))?
         } else {
             let products = evaluation
                 .mf10
                 .get(&mt)
                 .ok_or_else(|| format!("MT{mt} has neither MF=3 nor MF=10 data"))?;
-            let mut total = vec![0.0; groups.groups()];
-            for product in products {
-                sum_groups(
-                    &mut total,
-                    &checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?,
-                )?;
+            if let Some(total_fission) = products.iter().find(|product| product.zap == -1) {
+                checked_collapse(
+                    groups,
+                    &total_fission.table,
+                    &format!("MT{mt}/MF=10 total-fission sentinel"),
+                )?
+            } else {
+                let mut total = vec![0.0; groups.groups()];
+                for product in products.iter().filter(|product| product.zap >= 0) {
+                    sum_groups(
+                        &mut total,
+                        &checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?,
+                    )?;
+                }
+                total
             }
-            total
         };
         rows.push(BuiltRow {
             mt,
@@ -747,17 +832,30 @@ fn build_evaluation(
         let mut done = HashSet::new();
 
         if let Some(products) = evaluation.mf10.get(&mt) {
+            let total_fission = products.iter().filter(|product| product.zap == -1).count();
+            if total_fission > 1 || (total_fission == 1 && mt != 18) {
+                return Err(format!(
+                    "MT{mt}/MF=10 contains an invalid total-fission sentinel"
+                ));
+            }
+            if total_fission == 1 {
+                ledger.push(
+                    "MT18: MF=10 IZAP=-1 total-fission sentinel validated and omitted as an inventory product"
+                        .into(),
+                );
+            }
             let actual: BTreeSet<_> = products
                 .iter()
+                .filter(|product| product.zap >= 0)
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            if actual.len() != products.len() {
+            if actual.len() + total_fission != products.len() {
                 return Err(format!(
                     "MT{mt}/MF=10 contains duplicate product identities"
                 ));
             }
             validate_descriptors(descriptors, 10, &actual)?;
-            for product in products {
+            for product in products.iter().filter(|product| product.zap >= 0) {
                 if !done.insert((product.zap, product.lfs)) {
                     return Err(format!(
                         "MT{mt} product ZAP={}/LFS={} has conflicting definitions",
@@ -794,16 +892,24 @@ fn build_evaluation(
                         product.zap, product.lfs
                     ));
                 }
+                let sigma = if let Some(processed) = processed.get(&mt) {
+                    checked_groups(
+                        processed.collapse_product(groups, &[&product.table])?,
+                        &format!("MT{mt}/MF=2+MF=3*MF=9"),
+                    )?
+                } else {
+                    checked_product(
+                        groups,
+                        &[reaction, &product.table],
+                        &format!("MT{mt}/MF=3*MF=9"),
+                    )?
+                };
                 rows.push(BuiltRow {
                     mt,
                     zap: product.zap,
                     lfs: product.lfs,
                     lmf: 9,
-                    sigma: checked_product(
-                        groups,
-                        &[reaction, &product.table],
-                        &format!("MT{mt}/MF=3*MF=9"),
-                    )?,
+                    sigma,
                 });
             }
         }
@@ -993,8 +1099,11 @@ fn build_source(
                 format,
                 filename,
                 &before,
-                &options.groups,
-                options.temperature_K,
+                EvaluationBuildSettings {
+                    groups: &options.groups,
+                    temperature_K: options.temperature_K,
+                    grid_density: options.grid_density,
+                },
                 products_by_mt,
             )
             .map_err(|error| format!("{}: {error}", path.display()))?,
@@ -1223,6 +1332,7 @@ mod tests {
                 evaluation_temperature_k: 0.0,
             },
             mf2_sections: BTreeSet::new(),
+            resonance: None,
             mf3: BTreeMap::from([(102, table([2.0, 2.0]))]),
             mf6: BTreeMap::new(),
             mf8: BTreeMap::new(),
@@ -1243,8 +1353,11 @@ mod tests {
             LibraryFormat::Tendl,
             "p-Fe056",
             &"0".repeat(64),
-            &groups,
-            0.0,
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
             &products,
         )
         .unwrap();
@@ -1267,11 +1380,17 @@ mod tests {
             LibraryFormat::Tendl,
             "n-Fe056",
             &"0".repeat(64),
-            &groups,
-            0.0,
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
             &BTreeMap::new(),
         )
         .unwrap_err();
-        assert!(error.contains("MF=2 resonance reconstruction"), "{error}");
+        assert!(
+            error.contains("without parsed resonance parameters"),
+            "{error}"
+        );
     }
 }

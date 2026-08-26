@@ -9,6 +9,7 @@ use crate::endf::{
     ContRecord, Section,
 };
 use crate::groups::Tabulated;
+use crate::resonance::{parse_mf2, ResonanceEvaluation};
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
@@ -132,6 +133,7 @@ pub struct Evaluation {
     /// MF=2 MT numbers present in the evaluation. Resonance parsing owns these sections in the next builder layer;
     /// retaining their presence here prevents a caller from silently treating raw MF=3 as a processed neutron file.
     pub mf2_sections: BTreeSet<i32>,
+    pub resonance: Option<ResonanceEvaluation>,
     pub mf3: BTreeMap<i32, Tabulated>,
     pub mf6: BTreeMap<i32, Vec<Mf6Product>>,
     pub mf8: BTreeMap<i32, Vec<ProductRef>>,
@@ -231,12 +233,21 @@ fn parse_mf8(section: &Section<'_>) -> Result<Vec<ProductRef>, String> {
             product_head = record;
             next = after;
         }
-        let zap = exact_nonnegative_i32(product_head.c1, "MF=8 ZAP")?;
+        let zap = if product_head.c1 == -1.0 {
+            -1
+        } else {
+            exact_nonnegative_i32(product_head.c1, "MF=8 ZAP")?
+        };
         if product_head.l2 < 0 {
             return Err(format!("invalid MF=8 LFS={}", product_head.l2));
         }
         if !matches!(product_head.l1, 3 | 6 | 9 | 10) {
             return Err(format!("unsupported MF=8 LMF={}", product_head.l1));
+        }
+        if zap == -1 && (section.mt != 18 || product_head.l1 != 10 || product_head.l2 != 0) {
+            return Err(
+                "MF=8 ZAP=-1 is valid only for the MT=18/LMF=10 total-fission sentinel".into(),
+            );
         }
         products.push(ProductRef {
             zap,
@@ -259,11 +270,18 @@ fn parse_mf9_or_10(section: &Section<'_>) -> Result<Vec<ProductTable>, String> {
     for _ in 0..head.n1 {
         let (record, after) = read_tab1_checked(&section.lines, next)?;
         next = after;
-        let zap = exact_nonnegative_i32(f64::from(record.head.l1), "product IZAP")?;
+        let zap = if record.head.l1 == -1 {
+            -1
+        } else {
+            exact_nonnegative_i32(f64::from(record.head.l1), "product IZAP")?
+        };
         if record.head.l2 < 0 {
             return Err(format!("invalid product LFS={}", record.head.l2));
         }
         let lfs = record.head.l2;
+        if zap == -1 && (section.mf != 10 || section.mt != 18 || lfs != 0) {
+            return Err("IZAP=-1 is valid only for the MF=10/MT=18 total-fission sentinel".into());
+        }
         let table = Tabulated::try_from(record)?;
         validate_incident_table(&table, "product TAB1", true)?;
         products.push(ProductTable { zap, lfs, table });
@@ -381,6 +399,7 @@ pub fn parse_evaluations(
         let mut evaluation = Evaluation {
             metadata,
             mf2_sections: BTreeSet::new(),
+            resonance: None,
             mf3: BTreeMap::new(),
             mf6: BTreeMap::new(),
             mf8: BTreeMap::new(),
@@ -390,6 +409,24 @@ pub fn parse_evaluations(
         for section in material_sections {
             let context = format!("MAT={mat}/MF={}/MT={}", section.mf, section.mt);
             match (section.mf, section.mt) {
+                (2, 151) => {
+                    if evaluation.resonance.is_some() {
+                        return Err(format!("{context}: duplicate resonance evaluation"));
+                    }
+                    let parsed =
+                        parse_mf2(section).map_err(|error| format!("{context}: {error}"))?;
+                    if parsed.za != evaluation.metadata.za
+                        || (parsed.awr - evaluation.metadata.awr).abs()
+                            > 1e-7 * evaluation.metadata.awr.abs().max(1.0)
+                    {
+                        return Err(format!(
+                            "{context}: MF=2 ZA/AWR {}/{} disagree with MF=1 {}/{}",
+                            parsed.za, parsed.awr, evaluation.metadata.za, evaluation.metadata.awr
+                        ));
+                    }
+                    evaluation.mf2_sections.insert(151);
+                    evaluation.resonance = Some(parsed);
+                }
                 (2, mt) => {
                     evaluation.mf2_sections.insert(mt);
                 }

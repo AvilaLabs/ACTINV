@@ -3,9 +3,14 @@
 //!   dump spectra FILE [ZA:LISO ...] -> lossless line-oriented MF=8/MT=457 spectrum records
 //!   dump spectra-summary FILE -> all-file section/spectrum and STYP/LCON counts
 //!   dump activation FILE -> strict MF=3/6/8/9/10 evaluation summary
+//!   dump resonance FILE -> strict MF=2/MT=151 structure summary
+//!   dump resonance-xs FILE ENERGY_EV [...] -> zero-K resonance-only cross sections
+//!   dump processed-xs FILE MT TEMPERATURE_K [ENERGY_EV ...] -> processed points or 709 groups
 //!   dump library FILE OUT    -> raw row and group arrays for byte comparison
 //!   dump library-target-compare OLD.npz OLD_TARGET NEW.npz NEW_TARGET -> bounded-memory row/group comparison
-use actinv_data::{activation, composition, decay, fission, library};
+use actinv_data::{
+    activation, composition, decay, endf, fission, groups, library, processing, resonance,
+};
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -203,6 +208,258 @@ fn main() {
                         );
                     }
                 }
+            }
+        }
+        "resonance" => {
+            let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
+            let sections = endf::parse_sections(&text).expect("parse ENDF sections");
+            let mut count = 0usize;
+            for section in sections
+                .iter()
+                .filter(|section| section.mf == 2 && section.mt == 151)
+            {
+                let evaluation = resonance::parse_mf2(section).expect("parse MF=2/MT=151");
+                println!(
+                    "E {} {} {:.17e} {}",
+                    section.mat,
+                    evaluation.za,
+                    evaluation.awr,
+                    evaluation.isotopes.len()
+                );
+                for isotope in &evaluation.isotopes {
+                    println!(
+                        "I {} {:.17e} {} {}",
+                        isotope.zai,
+                        isotope.abundance,
+                        usize::from(isotope.fission_widths),
+                        isotope.ranges.len()
+                    );
+                    for range in &isotope.ranges {
+                        let (kind, groups, resonances, channels, sequences, points) = match &range.data {
+                            resonance::RangeData::ScatteringOnly { .. } => {
+                                ("scattering", 0, 0, 0, 0, 0)
+                            }
+                            resonance::RangeData::BreitWigner(data) => (
+                                "breit-wigner",
+                                data.groups.len(),
+                                data.groups.iter().map(|group| group.resonances.len()).sum(),
+                                0,
+                                0,
+                                0,
+                            ),
+                            resonance::RangeData::ReichMoore(data) => (
+                                "reich-moore",
+                                data.groups.len(),
+                                data.groups.iter().map(|group| group.resonances.len()).sum(),
+                                0,
+                                0,
+                                0,
+                            ),
+                            resonance::RangeData::RMatrixLimited(data) => (
+                                "r-matrix-limited",
+                                data.spin_groups.len(),
+                                data.spin_groups
+                                    .iter()
+                                    .map(|group| group.resonances.len())
+                                    .sum(),
+                                data.spin_groups.iter().map(|group| group.channels.len()).sum(),
+                                0,
+                                0,
+                            ),
+                            resonance::RangeData::Unresolved(data) => (
+                                "unresolved",
+                                0,
+                                0,
+                                0,
+                                data.sequences.len(),
+                                data.sequences.iter().map(|sequence| sequence.points.len()).sum(),
+                            ),
+                        };
+                        println!(
+                            "R {:.17e} {:.17e} {} {} {} {} {} {} {} {} {} {}",
+                            range.energy_min,
+                            range.energy_max,
+                            range.lru,
+                            range.lrf,
+                            range.naps,
+                            usize::from(range.scattering_radius.is_some()),
+                            kind,
+                            groups,
+                            resonances,
+                            channels,
+                            sequences,
+                            points
+                        );
+                    }
+                }
+                count += 1;
+            }
+            println!("N {count}");
+        }
+        "resonance-xs" => {
+            let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
+            let sections = endf::parse_sections(&text).expect("parse ENDF sections");
+            let section = sections
+                .iter()
+                .find(|section| section.mf == 2 && section.mt == 151)
+                .expect("find MF=2/MT=151");
+            let evaluation = resonance::parse_mf2(section).expect("parse MF=2/MT=151");
+            for value in &a[3..] {
+                let energy: f64 = value.parse().expect("energy in eV");
+                let mut total = resonance::CrossSections::default();
+                for isotope in &evaluation.isotopes {
+                    for range in &isotope.ranges {
+                        let xs = match &range.data {
+                            resonance::RangeData::BreitWigner(_)
+                            | resonance::RangeData::ReichMoore(_) => {
+                                resonance::reconstruct_legacy(range, energy)
+                            }
+                            resonance::RangeData::RMatrixLimited(_) => {
+                                resonance::reconstruct_rmatrix_limited(range, energy)
+                            }
+                            resonance::RangeData::Unresolved(_) => {
+                                resonance::reconstruct_unresolved(range, energy)
+                            }
+                            _ => Ok(resonance::CrossSections::default()),
+                        }
+                        .expect("reconstruct resonance range");
+                        total.elastic += isotope.abundance * xs.elastic;
+                        total.capture += isotope.abundance * xs.capture;
+                        total.fission += isotope.abundance * xs.fission;
+                        total.competitive += isotope.abundance * xs.competitive;
+                    }
+                }
+                println!(
+                    "X {:.17e} {:.17e} {:.17e} {:.17e} {:.17e}",
+                    energy, total.elastic, total.capture, total.fission, total.competitive
+                );
+            }
+        }
+        "processed-xs" => {
+            let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
+            let mt: i32 = a[3].parse().expect("MT");
+            let temperature: f64 = a[4].parse().expect("temperature K");
+            let sections = endf::parse_sections(&text).expect("parse ENDF sections");
+            let resonance_section = sections
+                .iter()
+                .find(|section| section.mf == 2 && section.mt == 151)
+                .expect("find MF=2/MT=151");
+            let evaluation =
+                resonance::parse_mf2(resonance_section).expect("parse MF=2/MT=151");
+            let mf3_section = sections
+                .iter()
+                .find(|section| section.mf == 3 && section.mt == mt)
+                .expect("find MF=3 reaction");
+            let (record, next) = endf::read_tab1_checked(&mf3_section.lines, 1)
+                .expect("parse MF=3 TAB1");
+            assert_eq!(next, mf3_section.lines.len(), "consume MF=3 reaction");
+            let background = groups::Tabulated::try_from(record).expect("validate MF=3 TAB1");
+            let group_structure = groups::GroupStructure::fispact_709().expect("709 groups");
+            let processed = processing::process_reaction(
+                &evaluation,
+                &background,
+                &group_structure,
+                mt,
+                temperature,
+                1.0,
+            )
+            .expect("process resonances");
+            println!(
+                "C {} {} {} {}",
+                processed.certificate.zero_k_points,
+                processed.certificate.output_points,
+                processed.certificate.zero_k_refinement_passes,
+                processed.certificate.output_refinement_passes
+            );
+            for line in &processed.certificate.ultra_narrow_lines {
+                println!(
+                    "U {} {:.17e} {:.17e} {:.17e} {:.17e} {:.17e} {:.17e} {} {} {:.17e} {:.17e}",
+                    line.isotope_zai,
+                    line.energy_ev,
+                    line.total_width_ev,
+                    line.doppler_width_ev,
+                    line.width_to_doppler_ratio,
+                    line.direct_area_barn_ev,
+                    line.closed_form_area_barn_ev,
+                    line.affected_group,
+                    usize::from(line.range_edge_decomposition),
+                    line.core_low_ev,
+                    line.core_high_ev
+                );
+            }
+            if a.len() > 5 {
+                for value in &a[5..] {
+                    let energy: f64 = value.parse().expect("energy in eV");
+                    println!(
+                        "X {:.17e} {:.17e}",
+                        energy,
+                        processed.table.evaluate(energy).expect("evaluate processed table")
+                    );
+                }
+            } else {
+                for (index, value) in processed
+                    .collapse(&group_structure)
+                    .expect("collapse processed reaction")
+                    .into_iter()
+                    .enumerate()
+                {
+                    println!("G {index} {value:.17e}");
+                }
+            }
+        }
+        "ultra-lines" => {
+            let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
+            let mt: i32 = a[3].parse().expect("MT");
+            let temperature: f64 = a[4].parse().expect("temperature K");
+            let sections = endf::parse_sections(&text).expect("parse ENDF sections");
+            let section = sections
+                .iter()
+                .find(|section| section.mf == 2 && section.mt == 151)
+                .expect("find MF=2/MT=151");
+            let evaluation = resonance::parse_mf2(section).expect("parse MF=2/MT=151");
+            let groups = groups::GroupStructure::fispact_709().expect("709 groups");
+            let lines = processing::ultra_narrow_certificates(
+                &evaluation,
+                &groups,
+                mt,
+                temperature,
+            )
+            .expect("classify ultra-narrow lines");
+            for line in &lines {
+                println!(
+                    "U {} {:.17e} {:.17e} {:.17e} {:.17e} {:.17e} {:.17e} {} {} {:.17e} {:.17e}",
+                    line.isotope_zai,
+                    line.energy_ev,
+                    line.total_width_ev,
+                    line.doppler_width_ev,
+                    line.width_to_doppler_ratio,
+                    line.direct_area_barn_ev,
+                    line.closed_form_area_barn_ev,
+                    line.affected_group,
+                    usize::from(line.range_edge_decomposition),
+                    line.core_low_ev,
+                    line.core_high_ev
+                );
+            }
+            println!("N {}", lines.len());
+            for candidate in processing::ultra_narrow_diagnostics(
+                &evaluation,
+                &groups,
+                mt,
+                temperature,
+            )
+            .expect("diagnose ultra-narrow candidates")
+            {
+                println!(
+                    "D {:.17e} {:.17e} {:.17e} {:.17e} {} {:.17e} {}",
+                    candidate.energy_ev,
+                    candidate.width_to_doppler_ratio,
+                    candidate.edge_distance_widths,
+                    candidate.nearest_line_distance_widths,
+                    usize::from(candidate.treated),
+                    candidate.area_relative_difference.unwrap_or(f64::NAN),
+                    candidate.reason
+                );
             }
         }
         "library" => {

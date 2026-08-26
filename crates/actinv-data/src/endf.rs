@@ -285,7 +285,10 @@ pub fn read_tab2_checked(
                 head.n2
             ));
         }
-        if !(1..=5).contains(&pair[1]) {
+        // TAB2 permits ordinary, corresponding-points (11--15), and unit-base (21--25) interpolation.  The
+        // activation reader consumes MF=6 distribution bodies structurally, so retaining these declared schemes is
+        // sufficient; TAB1 cross sections remain restricted to the independently integrated one-dimensional laws.
+        if !matches!(pair[1], 1..=5 | 11..=15 | 21..=25) {
             return Err(format!("unsupported TAB2 interpolation INT={}", pair[1]));
         }
         interpolation.push((nbt, pair[1]));
@@ -319,9 +322,19 @@ pub fn parse_sections(text: &str) -> Result<Vec<Section<'_>>, String> {
     let mut sections: Vec<Section<'_>> = Vec::new();
     let mut active: Option<Section<'_>> = None;
     let mut seen = HashSet::new();
+    let line_count = text.lines().count();
+    let trailing_blank = text
+        .lines()
+        .rev()
+        .take_while(|line| line.strip_suffix('\r').unwrap_or(line).is_empty())
+        .count();
+    let record_count = line_count - trailing_blank;
     for (line_number, raw_line) in text.lines().enumerate() {
         let line = raw_line.strip_suffix('\r').unwrap_or(raw_line);
         if line.is_empty() {
+            if line_number >= record_count {
+                continue;
+            }
             return Err(format!("blank ENDF record at line {}", line_number + 1));
         }
         let (mat, mf, mt) =
