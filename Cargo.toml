@@ -4,9 +4,12 @@ members = ["crates/actinv-core", "crates/actinv-data", "crates/actinv-cli"]
 exclude = ["python"]
 
 [workspace.package]
-version = "0.0.1"
+version = "0.1.0"
 edition = "2021"
-authors = ["Connor Avila <connoravila0@gmail.com>"]
+authors = ["Connor Avila <Connoravila@gmail.com>"]
 description = "ACTINV — open, standalone, activation-grade nuclide-inventory solver"
 license = "MIT OR Apache-2.0"
-repository = ""
+readme = "README.md"
+keywords = ["nuclear", "activation", "inventory", "decay-heat", "neutronics"]
+categories = ["science", "simulation"]
+repository = "https://github.com/AvilaLabs/ACTINV"
