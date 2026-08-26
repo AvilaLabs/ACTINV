@@ -446,3 +446,15 @@
   were being carried into the release notes as limitations — the section was moved below the table and a checker now
   enforces that the two lists match exactly. Wheel builds must pin `--interpreter`: maturin otherwise selects the
   system CPython 3.14, which PyO3 0.22 does not support.
+- **P6 rescored P6-CONDITIONAL after a repair round.** The first CI run on the private repository failed at the CRAM
+  coefficient control: it read the recorded coefficients from a path inside the private Avila-Labs repository, so a
+  clone could not run it. G1 states exactly this requirement — "no file outside the clone" — and I had scored it PASS
+  from a clean-clone *build* plus the end-to-end control, without ever running the other CI controls from that clone.
+  The gate was right; my execution of it was not.
+  Repair (P6 Amendment A, sha 17142363…): the coefficients are vendored to `data/cram_coefficients.json` with their
+  citation and provenance, and the regenerated `cram_coeffs.rs` is byte-identical, confirming the copy is faithful.
+  G1 is now an executable test — `controls/g1_self_contained.py` clones the repository, redirects HOME to an empty
+  directory, and runs every control CI runs, also checking that regenerating derived sources leaves the tree clean.
+  CI gained three steps it should have had: generated-source reproducibility, the release-notes checker, and the
+  self-contained test. The v0.1.0 tag stands — no result changed, only the location of a constants file and the
+  strength of a gate.

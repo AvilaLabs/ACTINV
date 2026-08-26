@@ -33,6 +33,14 @@ jobs:
       - name: CRAM coefficient control (G0 — needs no nuclear data)
         run: python controls/g0_cram_coefficients.py
 
+      - name: Generated sources are reproducible
+        run: |
+          python controls/gen_cram.py
+          git diff --exit-code -- crates/actinv-core/src/cram_coeffs.rs
+
+      - name: Release notes carry every known limitation
+        run: python controls/check_release_notes.py
+
       - name: Fetch the pinned data subset
         run: bash scripts/fetch_ci_data.sh
 
@@ -43,3 +51,6 @@ jobs:
 
       - name: End-to-end spec through both entry points
         run: python controls/ci_end_to_end.py
+
+      - name: Repository is self-contained
+        run: python controls/g1_self_contained.py

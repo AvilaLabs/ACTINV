@@ -1,0 +1,44 @@
+{
+ "clone": "/tmp/actinv-selftest-er6bo7pj/clone",
+ "home_redirected_to": "/tmp/actinv-selftest-er6bo7pj/home",
+ "steps": [
+  {
+   "step": "cargo build",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "unit probe",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "G0 cram coefficients",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "gen_cram is reproducible",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "release notes match roadmap",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  }
+ ],
+ "regeneration_left_tree_clean": true,
+ "diff": "",
+ "pass": true
+}

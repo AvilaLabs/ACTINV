@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+"""P6-G1: the repository must be self-contained. Every control CI runs is executed from a fresh clone with HOME
+redirected to an empty directory, so any dependence on a file outside the clone fails immediately. Nuclear data are the
+one permitted exception and reach the controls only through documented environment variables."""
+import os, sys, json, shutil, subprocess, tempfile
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+STEPS = [("cargo build", ["cargo", "build", "--release", "--quiet", "--workspace"]),
+         ("unit probe", ["./target/release/unit_probe"]),
+         ("G0 cram coefficients", [sys.executable, "controls/g0_cram_coefficients.py"]),
+         ("gen_cram is reproducible", [sys.executable, "controls/gen_cram.py"]),
+         ("release notes match roadmap", [sys.executable, "controls/check_release_notes.py"])]
+tmp = tempfile.mkdtemp(prefix="actinv-selftest-"); clone = os.path.join(tmp, "clone"); fake_home = os.path.join(tmp, "home")
+os.makedirs(fake_home)
+subprocess.run(["git", "clone", "--quiet", ROOT, clone], check=True)
+env = dict(os.environ); env["HOME"] = fake_home; env["PYTHONWARNINGS"] = "ignore"
+env["PATH"] = os.path.expanduser("~/.cargo/bin") + ":" + env.get("PATH", "")
+env["CARGO_HOME"] = os.path.expanduser("~/.cargo"); env["RUSTUP_HOME"] = os.path.expanduser("~/.rustup")
+results = []
+for name, cmd in STEPS:
+    p = subprocess.run(cmd, cwd=clone, env=env, capture_output=True, text=True)
+    err = (p.stderr or "")[-300:]
+    results.append({"step": name, "returncode": p.returncode, "ok": p.returncode == 0,
+                    "outside_clone_reference": ("No such file" in err and fake_home not in err and clone not in err),
+                    "stderr_tail": err if p.returncode else ""})
+# generated sources must be unchanged by regeneration
+diff = subprocess.run(["git", "diff", "--stat"], cwd=clone, capture_output=True, text=True).stdout.strip()
+res = {"clone": clone, "home_redirected_to": fake_home, "steps": results,
+       "regeneration_left_tree_clean": diff == "", "diff": diff,
+       "pass": bool(all(r["ok"] for r in results) and diff == "")}
+json.dump(res, open(os.path.join(ROOT, "results", "g1_self_contained.json"), "w"), indent=1)
+print(json.dumps(res, indent=1))
+shutil.rmtree(tmp, ignore_errors=True)
+sys.exit(0 if res["pass"] else 1)
