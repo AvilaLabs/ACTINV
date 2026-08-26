@@ -1,0 +1,44 @@
+# ACTINV P8 — session close, 2026-08-26
+
+**Protocol:** `protocols/ACTINV-P8_PROTOCOL.md`
+(`bd3111cd4bc527ae60a2d34ea0d06de065f77caf6276eb63fdca78fa290637e3`).
+**Verdict (`controls/check_p8.py`): P8-CONDITIONAL** — all gates pass after the single control repair pass recorded in
+Amendment A (`4e75fc45357390000d2b015ee936b83d3d45e0a3dc1d5acf51bc23f3c547588f`).
+
+| gate | result |
+|---|---|
+| G1 canonical/FISPACT/rebin | PASS — repeat canonical bytes; exact-grid copy is bit-identical; independent split-grid difference and conservation error are both `0.0`; malformed inputs fail closed |
+| G2 OpenMC statepoint | PASS — both filter orders and both supported Cartesian mesh forms agree with independent h5py at `0.0`; 48 MiB unused padding adds no measured peak RSS |
+| G3 MCNP readers | PASS — MESHTAL and MCTAL fields, conversions, errors and totals agree at `0.0`; five planted unsupported premises are named |
+| G4 provenance/interchange | PASS — four importers repeat byte-identically; all hashes recompute and propagate; equivalent physical spectra are exactly equal; mutation and integrity plants fail closed |
+| G5 mesh identity/determinism | PASS — 8/8 cells equal ordinary runs exactly, with eight distinct pruning sizes; one/four-thread cell bytes match; failed-cell output remains atomic |
+| G6 scaling/regression | PASS — four measured multi-chunk rows hold peak RSS within 270,336 bytes; tests and strict Clippy pass; pre-P8 CLI/Python output is unchanged |
+
+P8 delivers strict `actinv-flux-1` interchange, importers for the specified OpenMC statepoint-18, MCNP rectangular
+MESHTAL, MCNP F4:N MCTAL and standard FISPACT-II subsets, conservative equal-lethargy rebinning, and
+`actinv-mesh-result-1` streaming execution. Mesh solves prepare immutable nuclear data once, process bounded chunks
+with Rayon, retain canonical cell order, and bind canonical plus upstream source hashes into the certificate.
+
+The final measured four-worker/four-cell-chunk runs cover 8, 16, 32 and 64 cells: 0.352, 0.354, 0.366 and 0.383 s;
+peak RSS stays between 126.8 and 127.1 MB while output grows from 0.118 to 0.835 MB. The fitted one-million-cell row is
+explicitly extrapolated, not executed: 573.8 s, 12.80 GB output and a 127.1 MB bounded-buffer estimate for this small
+10-target, two-step control configuration. It is sizing evidence, not a general performance guarantee.
+
+**Repair round.** The first G3 control used exact Python float lookup after MeV-to-eV conversion and retained MCNP
+source order for independently parsed total rows. During that same recorded repair pass, G4 accepted too narrow an
+error phrase for its nonfinite JSON plant. Amendment A froze the corrections before rerun. Production parsing,
+physics, fixtures and tolerances did not change.
+
+**Finish-line corrections in touched paths.** Canonical duplicate cell IDs, blank FISPACT identifying titles and
+truncated fixed-width binary library records now fail instead of being accepted or ignored. Resolved output aliases
+cannot replace the canonical input file. CI runs every P8 gate and audits their Python imports; the pre-P8 regression
+baseline is repository-local rather than read from unavailable Git history in a shallow checkout. The exact computed
+`1e-11 uW/g` criterion representation is recorded in that baseline. Generated wheels are ignored rather than
+accidentally committed.
+
+The workspace crates, Python package and lockfiles are version 0.2.0. A local CPython 3.13 wheel was built, installed
+into the isolated control environment and exercised against the CLI; its SHA-256 is
+`60ce0eff2f41b6a9932a1e8aba0b701d8b3a2d101e7cec0321e4fbfeba1c70a7`. Tagging, pushing and publishing remain the
+principal's external acts.
+
+**Next phase:** P9 — Fission & coupled mode, as fixed in `docs/ROADMAP.md`. P9 is not opened and has no protocol hash.

@@ -1,0 +1,36 @@
+{
+  "cross_format_error_exact": true,
+  "cross_format_flux_exact": true,
+  "mctal": {
+    "boundaries_exact": true,
+    "ids_exact": true,
+    "max_error_relative": 0.0,
+    "max_flux_relative": 0.0,
+    "max_total_relative": 0.0,
+    "source_total_check": 0.0
+  },
+  "meshtal": {
+    "boundaries_exact": true,
+    "bounds_exact": true,
+    "indices_exact": true,
+    "max_error_relative": 0.0,
+    "max_flux_relative": 0.0,
+    "max_total_relative": 0.0,
+    "source_total_check": 0.0
+  },
+  "pass": true,
+  "planted_failures": {
+    "dose_multiplier": "unsupported MCNP meshtal response, multiplier or non-COL format",
+    "extra_dimension": "unsupported MCNP mctal u dimension; expected a singleton without total/cumulative bins",
+    "inconsistent_total": "MCNP meshtal Total for cell (1,2,1) differs from parsed energy-bin sum by 0.011235955056179775",
+    "truncation": "truncated or overlong MCNP mctal vals: 39 numbers, expected 40",
+    "wrong_tally_type": "unsupported MCNP tally 5; expected an F4:N cell-flux tally"
+  },
+  "planted_premises_named": {
+    "dose_multiplier": true,
+    "extra_dimension": true,
+    "inconsistent_total": true,
+    "truncation": true,
+    "wrong_tally_type": true
+  }
+}

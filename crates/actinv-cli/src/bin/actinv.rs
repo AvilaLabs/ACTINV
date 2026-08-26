@@ -1,10 +1,13 @@
 //! ACTINV command-line entry point. Run and export commands consume the same result schema
 //! used by the Python binding and validation harness.
 use actinv_core::{
+    flux::{import_fispact, import_mctal, import_meshtal, import_openmc, ImportSummary},
+    mesh::{run_mesh, MeshSpec},
     photon::{export_mcnp, export_openmc, PhotonSourceOut},
     run::run,
     spec::Spec,
 };
+use std::collections::BTreeMap;
 
 fn die(message: impl std::fmt::Display, code: i32) -> ! {
     eprintln!("{message}");
@@ -48,16 +51,135 @@ fn selected_source(result_path: &str, requested_step: &str) -> PhotonSourceOut {
     })
 }
 
+fn valued_options(args: &[String]) -> BTreeMap<&str, &str> {
+    if !args.len().is_multiple_of(2) {
+        die(format!("option '{}' has no value", args.last().unwrap()), 2);
+    }
+    let mut options = BTreeMap::new();
+    for pair in args.chunks(2) {
+        if !pair[0].starts_with("--") {
+            die(format!("expected an option, got '{}'", pair[0]), 2);
+        }
+        if options.insert(pair[0].as_str(), pair[1].as_str()).is_some() {
+            die(format!("duplicate option '{}'", pair[0]), 2);
+        }
+    }
+    options
+}
+
+fn required_option<'a>(options: &'a BTreeMap<&str, &str>, name: &str) -> &'a str {
+    options
+        .get(name)
+        .copied()
+        .unwrap_or_else(|| die(format!("missing required option {name}"), 2))
+}
+
+fn parsed_option<T: std::str::FromStr>(options: &BTreeMap<&str, &str>, name: &str) -> Option<T> {
+    options.get(name).map(|value| {
+        value
+            .parse()
+            .unwrap_or_else(|_| die(format!("invalid value '{}' for {name}", value), 2))
+    })
+}
+
+fn reject_unknown(options: &BTreeMap<&str, &str>, allowed: &[&str]) {
+    if let Some(name) = options.keys().find(|name| !allowed.contains(name)) {
+        die(format!("unknown option {name}"), 2);
+    }
+}
+
+fn import_flux(args: &[String]) -> ImportSummary {
+    if args.len() < 3 {
+        die("import-flux needs FORMAT SOURCE OUT", 2);
+    }
+    let format = args[0].as_str();
+    let source = &args[1];
+    let output = &args[2];
+    let options = valued_options(&args[3..]);
+    match format {
+        "openmc" => {
+            reject_unknown(
+                &options,
+                &[
+                    "--tally",
+                    "--source-rate",
+                    "--energy-floor-eV",
+                    "--window-rows",
+                ],
+            );
+            let tally = required_option(&options, "--tally")
+                .parse()
+                .unwrap_or_else(|_| die("--tally must be a positive integer", 2));
+            let source_rate = required_option(&options, "--source-rate")
+                .parse()
+                .unwrap_or_else(|_| die("--source-rate must be numeric", 2));
+            import_openmc(
+                source,
+                output,
+                tally,
+                source_rate,
+                parsed_option(&options, "--energy-floor-eV"),
+                parsed_option(&options, "--window-rows").unwrap_or(16_384),
+            )
+        }
+        "meshtal" | "mctal" => {
+            reject_unknown(&options, &["--tally", "--source-rate", "--energy-floor-eV"]);
+            let tally = required_option(&options, "--tally")
+                .parse()
+                .unwrap_or_else(|_| die("--tally must be a positive integer", 2));
+            let source_rate = required_option(&options, "--source-rate")
+                .parse()
+                .unwrap_or_else(|_| die("--source-rate must be numeric", 2));
+            let energy_floor = parsed_option(&options, "--energy-floor-eV");
+            if format == "meshtal" {
+                import_meshtal(source, output, tally, source_rate, energy_floor)
+            } else {
+                import_mctal(source, output, tally, source_rate, energy_floor)
+            }
+        }
+        "fispact" => {
+            reject_unknown(&options, &["--groups"]);
+            import_fispact(source, required_option(&options, "--groups"), output)
+        }
+        _ => Err(format!(
+            "unsupported import-flux format '{format}'; expected openmc, meshtal, mctal or fispact"
+        )),
+    }
+    .unwrap_or_else(|error| die(error, 1))
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let usage = "usage: actinv run SPEC.json [OUT.json]\n\
                  actinv validate SPEC.json\n\
+                 actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
+                 actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
+                 actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
+                 actinv mesh SPEC.json OUT.ndjson\n\
                  actinv export-openmc RESULT.json STEP OUT.py\n\
                  actinv export-mcnp RESULT.json STEP OUT.sdef";
     if a.len() < 2 {
         die(usage, 2);
     }
     match a[1].as_str() {
+        "import-flux" => {
+            let summary = import_flux(&a[2..]);
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary).expect("serialise import summary")
+            );
+        }
+        "mesh" => {
+            if a.len() != 4 {
+                die(usage, 2);
+            }
+            let spec = MeshSpec::from_json(&read(&a[2])).unwrap_or_else(|error| die(error, 2));
+            let summary = run_mesh(&spec, &a[3]).unwrap_or_else(|error| die(error, 1));
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary).expect("serialise mesh summary")
+            );
+        }
         "validate" | "run" => {
             if a.len() < 3 {
                 die(usage, 2);

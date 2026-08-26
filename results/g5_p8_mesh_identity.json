@@ -1,0 +1,39 @@
+{
+  "cells": 8,
+  "certificate_hash_bound": true,
+  "chunks": 3,
+  "distinct_pruned_state_counts": 8,
+  "exact_grid_copy_ledgers": true,
+  "failed_cell": {
+    "cell_named": true,
+    "message": "cell cell-4 has nonfinite or negative flux",
+    "no_final_output": true
+  },
+  "ordinary_identity_per_cell": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "pass": true,
+  "per_cell_timing_absent": true,
+  "pruned_states": [
+    1,
+    19,
+    22,
+    26,
+    27,
+    33,
+    39,
+    44
+  ],
+  "thread_determinism": {
+    "cell_bytes_identical": true,
+    "header_bytes_identical": true,
+    "normalized_footer_identical": true
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "bounded_window": {
+    "padded_file_extra_bytes": 50334051,
+    "padded_peak_rss_kib": 5540,
+    "peak_rss_extra_bytes": 0,
+    "small_peak_rss_kib": 5596
+  },
+  "comparisons": {
+    "energy_first_rectilinear": {
+      "all_cell_values": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0
+        ],
+        [
+          5.0,
+          7.0,
+          11.0,
+          13.0
+        ],
+        [
+          17.0,
+          19.0,
+          23.0,
+          29.0
+        ],
+        [
+          31.0,
+          37.0,
+          41.0,
+          43.0
+        ]
+      ],
+      "boundaries_exact": true,
+      "indices_exact": true,
+      "max_error_relative": 0.0,
+      "max_flux_relative": 0.0,
+      "source_sha256_matches": true,
+      "volume_integrated_relative": 0.0
+    },
+    "mesh_first_regular": {
+      "all_cell_values": [
+        [
+          1.0,
+          2.0,
+          3.0,
+          4.0
+        ],
+        [
+          5.0,
+          7.0,
+          11.0,
+          13.0
+        ],
+        [
+          17.0,
+          19.0,
+          23.0,
+          29.0
+        ],
+        [
+          31.0,
+          37.0,
+          41.0,
+          43.0
+        ]
+      ],
+      "boundaries_exact": true,
+      "indices_exact": true,
+      "max_error_relative": 0.0,
+      "max_flux_relative": 0.0,
+      "source_sha256_matches": true,
+      "volume_integrated_relative": 0.0
+    }
+  },
+  "failures": {
+    "filter": {
+      "message": "unsupported OpenMC tally 7: expected exactly MeshFilter and EnergyFilter",
+      "named_premise": true
+    },
+    "mesh_type": {
+      "message": "unsupported OpenMC mesh type 'cylindrical'; expected 3D regular or rectilinear Cartesian mesh",
+      "named_premise": true
+    },
+    "nuclide": {
+      "message": "unsupported OpenMC tally 7 nuclides [\"U235\"]; expected exactly ['total']",
+      "named_premise": true
+    },
+    "score": {
+      "message": "unsupported OpenMC tally 7 scores [\"heating\"]; expected exactly ['flux']",
+      "named_premise": true
+    },
+    "source_rate": {
+      "message": "missing required option --source-rate",
+      "named_premise": true
+    },
+    "version": {
+      "message": "unsupported OpenMC statepoint format version [17, 0]; expected major version 18",
+      "named_premise": true
+    }
+  },
+  "h5py_version": "3.16.0",
+  "pass": true
+}

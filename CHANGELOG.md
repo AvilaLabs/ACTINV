@@ -2,8 +2,17 @@
 
 ## Unreleased
 
+## v0.2.0 — 2026-08-26
+
 **Added**
 
+- Hashed `actinv-flux-1` NDJSON interchange and strict importers for OpenMC statepoint-format-18 mesh flux, traditional
+  MCNP neutron MESHTAL, energy-binned F4:N MCTAL, and standard FISPACT-II `fluxes` files.
+- Conservative equal-flux-per-lethargy rebinning with exact-grid identity and explicit underflow/overflow closure.
+- `actinv-mesh-spec-1` and a bounded, ordered Rayon mesh runner that prepares immutable nuclear data once and invokes
+  the ordinary independently pruned solver for every streamed cell.
+- Independent P8 controls for format values and rejection paths, provenance, mesh identity/thread determinism,
+  bounded HDF5 reads and measured/extrapolated sizing through one million cells.
 - ENDF-6 MF=8/MT=457 discrete and continuous decay-photon parsing, including ENDF interpolation metadata.
 - Per-step evaluated line and FISPACT-24/custom multigroup photon sources with explicit `E_EM` energy normalization,
   missing-spectrum bounds and per-gram/total strengths.
@@ -13,6 +22,12 @@
 
 **Fixed**
 
+- Canonical flux streams now reject duplicate cell IDs as well as malformed ordering/counts, standard FISPACT input
+  rejects blank identifying titles, and mesh-output path aliases cannot replace their canonical input. Import and mesh
+  outputs publish atomically only after a validated footer.
+- Truncated fixed-width activation-library records now fail instead of silently dropping the incomplete tail.
+- Prepared execution removes repeated activation-library/decay-chain parsing from mesh cells without changing any
+  pre-v0.2 ordinary result field.
 - Certificates now compute and verify hashes for the activation library, its index, primary/fallback decay files and
   photon response; declarations are no longer repeated without verification.
 - `atom_fraction` and `atoms_per_g` material bases now follow their documented meanings, including response mass

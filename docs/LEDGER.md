@@ -52,6 +52,18 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 The step source repeats the user-facing consequences as `unrepresented_gamma_power_W_g`,
 `represented_gamma_power_fraction`, `ungrouped_power_W_g` and `dose_response_power_coverage`.
 
+## Mesh rebin accounting
+
+Every `actinv-mesh-result-1` cell carries a separate `rebin` object before its ordinary run result:
+
+- `method` — `copy` for byte-identical boundaries or `equal-flux-per-unit-lethargy` for logarithmic overlap;
+- `source_total`, `destination_total` — compensated input and in-library flux totals;
+- `underflow`, `overflow` — physical flux outside the activation-library energy range, excluded rather than folded;
+- `relative_closure` — relative disagreement of `destination + underflow + overflow` with `source` (bounded to 1e-12).
+
+The mesh footer sums these quantities again in canonical cell order and reports the minimum/maximum independently
+pruned state counts. Import-source total checks remain in the canonical flux footer and its upstream provenance.
+
 ## Assembly diagnostic
 
 `assembly` records the bulk isotope count, matrix triplet counts, activation-library row count, decay-chain size and

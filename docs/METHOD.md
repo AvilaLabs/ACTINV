@@ -51,12 +51,40 @@ semi-infinite-slab screening expression
 
 Elemental mass attenuation coefficients are mixed by initial material mass fraction. The reported
 `contact_gamma_air_dose_proxy_Gy_h` is an air-dose screening proxy: it is not effective dose, a finite-object solution,
-or photon transport. Spatial source distributions and mesh coupling are P8; the OpenMC/MCNP point source is explicitly
-a placeholder for them.
+or photon transport. The OpenMC/MCNP point-source export remains a placeholder; P8 mesh output supplies cell-wise
+activation and geometry metadata but does not infer a distributed photon-transport source.
 
 Response coefficients use log-log interpolation while retaining duplicate absorption-edge energies. If the response
 does not cover a contributing energy or material element, the dose is unavailable and the excluded power/elements are
 ledgered.
+
+## Transport-flux interchange and independent cells (P8)
+
+Canonical neutron values are group integrals `Phi_g` in `n cm^-2 s^-1`. OpenMC tracklength flux tallies are integrated
+over cell volume and normalized per source particle, so an imported group is
+
+`Phi_cell,g = (sum_g / n_realizations) source_rate / V_cell`.
+
+MCNP F4/FMesh values are already divided by volume; their import applies `source_rate` without another volume factor.
+FISPACT standard `fluxes` values are physical inputs and receive no hidden scaling. Source-native total rows/bins are
+checked against compensated group sums to `1e-12` relative and then retained only as provenance diagnostics.
+
+When grids differ, ACTINV assumes the source group has constant flux per unit lethargy, FISPACT-II's default
+`CNVTYPE=0` rule. For source interval `[a,b]`, destination overlap `[c,d]` receives
+
+`Phi_overlap = Phi_source log(d/c) / log(b/a)`.
+
+The overlap is clipped to the source and destination intervals. Contributions below and above the activation-library
+grid are separately accumulated as underflow and overflow. Compensated sums require
+`destination + underflow + overflow = source` to `1e-12` relative; exact boundary arrays bypass arithmetic and copy the
+original values bit for bit.
+
+Mesh mode is an embarrassingly parallel collection of ordinary activation problems, not coupled transport or material
+inference. The activation library, index, decay chain and optional photon response are prepared once as immutable data.
+Each canonical cell is rebinned, pruned and solved through the ordinary core path with one shared material and schedule.
+Rayon parallelizes only a bounded chunk; indexed collection restores input order before streaming results. Therefore
+thread count changes scheduling, not deterministic result records. Self-shielding, spatial interpolation, transport
+feedback and heterogeneous material maps remain outside this method.
 
 **Certificate and ledger.** The core computes SHA-256 for the activation library, its index, both decay files and the
 optional photon response before solving. Declared hashes and the library/index link fail closed. Every run reports

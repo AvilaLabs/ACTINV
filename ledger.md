@@ -533,3 +533,37 @@
 - Dependencies approved before use: production `rayon` 1.12 (MIT OR Apache-2.0), exact-pinned production
   `hdf5-pure` 0.39.0 (MIT), and control-only `h5py` 3.16.0 (BSD-3-Clause). The HDF5 parser must demonstrate reference
   compatibility and bounded streaming; unsupported encodings are errors, never an implicit alternate path.
+
+## 23 — 2026-08-26 — P8 closed: P8-CONDITIONAL; v0.2 milestone complete
+- Protocol `protocols/ACTINV-P8_PROTOCOL.md` remained fixed at
+  `bd3111cd4bc527ae60a2d34ea0d06de065f77caf6276eb63fdca78fa290637e3`. All six gates pass. The checker-derived
+  verdict is **P8-CONDITIONAL** because one independent-control repair pass was required; Amendment A is
+  `4e75fc45357390000d2b015ee936b83d3d45e0a3dc1d5acf51bc23f3c547588f`. It repaired exact float lookup and source-order
+  total matching in the Python MESHTAL control plus an unnecessarily narrow G4 error-message check. Production output,
+  gate fixtures and tolerances did not change.
+- **G1 PASS.** Canonical and FISPACT fields agree exactly, repeat imports are byte-identical, exact-grid rebin copies
+  bit-for-bit, and the independent split-grid difference and conservation error are both zero. Truncation, duplicate
+  cell ID, negative flux and a zero boundary without an explicit floor fail closed.
+- **G2 PASS.** Both supported OpenMC filter orders, regular and rectilinear meshes agree with independent h5py 3.16.0
+  at zero difference for flux, relative error, native index and aggregates. A 48 MiB unused HDF5 payload adds no
+  measured peak RSS; wrong score, nuclide, filter set, mesh type, format version and missing source rate are named.
+- **G3 PASS.** Independent MESHTAL and MCTAL readers agree with Rust at zero difference after energy and source-rate
+  conversion. Inconsistent totals, response multipliers, wrong tally type, extra dimensions and truncation fail with
+  the unsupported premise named.
+- **G4 PASS.** All four importers repeat byte-identically; source, auxiliary and canonical hashes independently
+  recompute and propagate to mesh certificates; equivalent first-cell spectra and totals are exactly equal. Wrong
+  hashes, nonfinite input, changed footer counts and source mutation are hard errors.
+- **G5 PASS.** Eight of eight mesh cells equal separate ordinary runs exactly while selecting eight different pruning
+  sizes (1–44 states). One- and four-thread cell bytes and normalized footers match, per-cell timing is absent, and a
+  planted bad cell names the cell without publishing a final result.
+- **G6 PASS.** Measured 8/16/32/64-cell runs hold peak RSS within 270,336 bytes while output grows from 0.118 to 0.835
+  MB. The fitted 10^6-cell row is explicitly unexecuted (573.8 s, 12.80 GB output, 127.1 MB bounded-buffer estimate for
+  the small control case). Workspace tests, strict Clippy and the repository-local pre-P8 CLI/Python baseline pass;
+  P5 remains PASS and P6/P7 retain their conditional verdicts.
+- Finish-line defects fixed in touched paths: duplicate canonical IDs and blank FISPACT titles now fail; truncated
+  fixed-width binary library records no longer disappear silently; resolved output aliases cannot replace canonical
+  input; CI executes P8 and audits its imports; regression evidence no longer depends on Git history missing from
+  shallow checkouts. Crates and wheel are version 0.2.0. The
+  local CPython 3.13 wheel hash is `60ce0eff2f41b6a9932a1e8aba0b701d8b3a2d101e7cec0321e4fbfeba1c70a7`.
+- P8 closes the v0.2 milestone. P9 — Fission & coupled mode — is next in the roadmap but remains unopened and unhashed.
+  Tagging, pushing and publishing are the principal's external acts.

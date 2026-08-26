@@ -1,0 +1,15 @@
+{
+  "canonical_fispact_exact": true,
+  "canonical_sha256": "d935fcbe2a495d0ed602c29ea6a0f514ccb28deec217a358dd7f9a32cdfcea4c",
+  "exact_rebin_bit_identical": true,
+  "failures": {
+    "duplicate": "Error: \"duplicate canonical cell ID '0'\"",
+    "negative": "Error: \"cell 0 has nonfinite or negative flux\"",
+    "truncated": "Error: \"canonical flux ended before its footer\"",
+    "zero_without_floor": "source energy grid begins at zero; supply an explicit positive --energy-floor-eV"
+  },
+  "pass": true,
+  "repeat_bytes_identical": true,
+  "split_rebin_max_abs_difference": 0.0,
+  "split_rebin_relative_closure": 0.0
+}

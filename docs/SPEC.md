@@ -118,3 +118,91 @@ actinv export-mcnp result.json 2 source.sdef
 
 Both exports use the photon-group centroids and total photons/s. The point at the origin is a placeholder, not a
 spatial activation model. An export fails if custom boundaries omitted any source photons.
+
+## Flux interchange (`actinv-flux-1`)
+
+Transport spectra are canonicalized before activation. The format is newline-delimited JSON: exactly one `header`,
+the declared number of ordered `cell` records, and one closing `footer`. A cell value is integrated neutron flux in
+`n cm^-2 s^-1` for that energy group—not flux density per eV or lethargy. Every ID is unique and every ordinal begins
+at zero and increases by one. The strict reader rejects blank, malformed, missing, duplicate, extra and trailing
+records, invalid totals, nonfinite/negative values and inconsistent geometry.
+
+```bash
+actinv import-flux openmc statepoint.h5 flux.ndjson \
+  --tally 7 --source-rate 1.0e15 --energy-floor-eV 1.0e-5 --window-rows 16384
+actinv import-flux meshtal meshtal flux.ndjson \
+  --tally 24 --source-rate 1.0e15 --energy-floor-eV 1.0e-5
+actinv import-flux mctal mctal flux.ndjson \
+  --tally 4 --source-rate 1.0e15 --energy-floor-eV 1.0e-5
+actinv import-flux fispact fluxes flux.ndjson --groups descending-boundaries.json
+```
+
+The OpenMC and MCNP source rate is mandatory and positive. It converts a per-source-particle tally to physical flux;
+FISPACT `fluxes` values are already absolute and are not rescaled. If the source grid starts at zero, an explicit
+positive `--energy-floor-eV` below the next boundary is required and both the original zero and replacement are kept
+in provenance. Every importer hashes and re-stats its input and publishes the canonical file by sibling temporary-file
+rename only after the footer closes.
+
+Supported subsets are deliberately narrow:
+
+- OpenMC statepoint major 18, one selected `flux`/`total`/tracklength tally with exactly one 3D Cartesian regular or
+  rectilinear `MeshFilter` and one `EnergyFilter`, in either order;
+- MCNP traditional rectangular XYZ neutron FMESH `meshtal` column output with energy rows and optional checked totals;
+- MCNP energy-binned F4:N `mctal` with one cell-ID F dimension, singleton remaining dimensions and optional checked
+  total energy bins;
+- standard FISPACT-II `fluxes`: N descending group values, first-wall loading, then its identifying title, against an
+  explicitly supplied descending group-boundary JSON file.
+
+Other scores, particles, estimators, filters, dimensions, mesh shapes, multipliers, responses, cumulative/time bins or
+file variants produce a named error rather than a guessed interpretation.
+
+## Independent mesh specification (`actinv-mesh-spec-1`)
+
+Mesh mode replaces the ordinary `spectrum` with a mandatory canonical-file path and SHA-256. All cells receive the
+same explicit library, decay data, material, schedule, options and photon configuration and solve independently.
+
+```json
+{
+  "spec": "actinv-mesh-spec-1",
+  "title": "iron activation mesh",
+  "library": {
+    "path": "/data/actinv_tendl2023_709g.npz",
+    "sha256": "64 hexadecimal digits"
+  },
+  "decay": {"primary": "/data/endf-b-viii-0_decay.dat"},
+  "material": {
+    "mass_g": 1.0,
+    "basis": "wt_percent",
+    "composition": {"Fe": 100.0}
+  },
+  "flux": {
+    "path": "flux.ndjson",
+    "sha256": "64 hexadecimal digits"
+  },
+  "schedule": [
+    {"dt": "5 min", "flux": 1.0},
+    {"dt": "1 h", "flux": 0.0}
+  ],
+  "options": {
+    "mode": "auto",
+    "prune": "rate",
+    "bmin_atoms_per_g": 1e-8,
+    "temperature_K": 293.6
+  },
+  "chunk_cells": 64,
+  "threads": 4
+}
+```
+
+`chunk_cells` defaults to 64 and is bounded to 1–65,536. `threads` defaults to 1 and is bounded to 1–256. Execute it
+with `actinv mesh mesh.json mesh-result.ndjson`. Immutable activation/decay/response data are verified, decompressed
+and prepared once. Canonical cells are read a chunk at a time, restored to input order after Rayon execution, and
+written as `actinv-mesh-result-1` header/cell/footer records.
+
+Matching source/library boundaries use a bit-identical copy path. Other positive grids use FISPACT's default equal
+flux per unit lethargy rule. Every cell result includes `source_total`, rebinned `destination_total`, `underflow`,
+`overflow`, closure and method; energy outside the library is never folded into an edge group or renormalized away.
+The ordinary run result is nested without per-cell timing. Only footer `wall_time_s` and `cells_per_s` vary with
+scheduling; header and ordered cell bytes are deterministic across chunk and thread counts. The header certificate
+binds the declared/computed canonical hash and its embedded transport/auxiliary hashes. Any cell or footer failure
+names the failing premise and leaves no final result file.

@@ -1,0 +1,93 @@
+{
+  "changed_footer": {
+    "hard_error": true,
+    "message": "Error: \"canonical footer cell count does not close the header and records\""
+  },
+  "cross_format_first_cell": {
+    "fispact": {
+      "flux": [
+        1.0,
+        2.0,
+        3.0,
+        4.0
+      ],
+      "total": 10.0
+    },
+    "mctal": {
+      "flux": [
+        1.0,
+        2.0,
+        3.0,
+        4.0
+      ],
+      "total": 10.0
+    },
+    "meshtal": {
+      "flux": [
+        1.0,
+        2.0,
+        3.0,
+        4.0
+      ],
+      "total": 10.0
+    },
+    "openmc": {
+      "flux": [
+        1.0,
+        2.0,
+        3.0,
+        4.0
+      ],
+      "total": 10.0
+    }
+  },
+  "cross_format_spectrum_and_total_exact": true,
+  "hash_recomputation": {
+    "fispact": {
+      "auxiliary": true,
+      "canonical": true,
+      "source": true
+    },
+    "mctal": {
+      "auxiliary": true,
+      "canonical": true,
+      "source": true
+    },
+    "meshtal": {
+      "auxiliary": true,
+      "canonical": true,
+      "source": true
+    },
+    "openmc": {
+      "auxiliary": true,
+      "canonical": true,
+      "source": true
+    }
+  },
+  "mesh_certificate_propagation": {
+    "auxiliary_hash": true,
+    "canonical_computed": true,
+    "canonical_declared": true,
+    "upstream_exact": true,
+    "upstream_source_hash": true
+  },
+  "mutated_during_import": {
+    "hard_error": true,
+    "message": "input changed while importing: /tmp/actinv-p8-final/work/g4/changing.h5"
+  },
+  "nonfinite": {
+    "hard_error": true,
+    "message": "Error: \"canonical line 2: expected value at line 1 column 57\""
+  },
+  "pass": true,
+  "repeat_bytes_identical": {
+    "fispact": true,
+    "mctal": true,
+    "meshtal": true,
+    "openmc": true
+  },
+  "wrong_declared_hash": {
+    "hard_error": true,
+    "message": "SHA-256 mismatch for /tmp/actinv-p8-final/work/g4/fispact-a.ndjson: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 118fa5aaa18afd6b2ca92a00abf707d5a0ee675962dc9414586d78413cc18164"
+  }
+}

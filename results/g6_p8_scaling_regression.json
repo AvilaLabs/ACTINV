@@ -1,0 +1,146 @@
+{
+  "bounded_memory": {
+    "criterion_spread_bytes": 33554432,
+    "largest_measured_chunks": 16,
+    "measured_peak_rss_spread_bytes": 270336
+  },
+  "configuration": {
+    "activation_groups": 709,
+    "chunk_cells": 4,
+    "measured_sizes": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "schedule_steps": 2,
+    "threads": 4
+  },
+  "fit": {
+    "assumptions": [
+      "identical 10-target CI library, two-step output detail, four workers and four-cell chunks",
+      "linear per-cell solve and serialization cost fitted only from the four measured rows",
+      "no extrapolated row was executed; filesystem and allocator behavior are assumed unchanged"
+    ],
+    "output_bytes": {
+      "intercept": 15792.565217391213,
+      "slope_per_cell": 12797.297826086964
+    },
+    "peak_rss": "bounded at the maximum measured RSS because input and result buffers contain one fixed-size chunk",
+    "wall_time_s": {
+      "intercept": 0.3465546546521738,
+      "slope_per_cell": 0.0005734056532608707
+    }
+  },
+  "pass": true,
+  "pre_p8_regression": {
+    "cli_equals_python": true,
+    "current_ci_pass": true,
+    "deterministic_fields_equal_pre_p8_baseline": true,
+    "max_abs_deviation_cli_W_per_g": 0.0
+  },
+  "quality": {
+    "strict_clippy": {
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "returncode": 0,
+      "tail": "    Checking actinv-data v0.2.0 (/home/connoravila/Documents/actinv/crates/actinv-data)\n    Checking actinv-core v0.2.0 (/home/connoravila/Documents/actinv/crates/actinv-core)\n    Checking actinv-cli v0.2.0 (/home/connoravila/Documents/actinv/crates/actinv-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.97s\n"
+    },
+    "workspace_tests": {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace"
+      ],
+      "returncode": 0,
+      "tail": "erpolation_moments_match_dense_reference ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n     Running unittests src/bin/cram_probe.rs (target/debug/deps/cram_probe-dc24d0c604ec50b6)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n     Running unittests src/bin/flux_probe.rs (target/debug/deps/flux_probe-c989115c928bcf07)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n     Running unittests src/bin/photon_probe.rs (target/debug/deps/photon_probe-c928ac63c795721a)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n     Running unittests src/bin/unit_probe.rs (target/debug/deps/unit_probe-3dd1147c336c4c51)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n     Running unittests src/lib.rs (target/debug/deps/actinv_data-db15ce49a49ec434)\n\nrunning 3 tests\ntest library::tests::truncated_fixed_width_arrays_fail_closed ... ok\ntest composition::tests::response_mass_fractions_follow_basis ... ok\ntest composition::tests::atom_fraction_and_atoms_per_gram_have_declared_meaning ... ok\n\ntest result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n     Running unittests src/bin/dump.rs (target/debug/deps/dump-50665fc7ab873a33)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_cli\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_core\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_data\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+    }
+  },
+  "retained_verdicts": {
+    "P5": "P5-PASS",
+    "P6": "P6-CONDITIONAL",
+    "P7": "P7-CONDITIONAL"
+  },
+  "rows": [
+    {
+      "cells": 8,
+      "cells_per_s": 22.696395570666766,
+      "chunks": 2,
+      "kind": "measured",
+      "output_bytes": 118169,
+      "peak_rss_bytes": 127016960,
+      "wall_time_s": 0.352478876
+    },
+    {
+      "cells": 16,
+      "cells_per_s": 45.23949744708992,
+      "chunks": 4,
+      "kind": "measured",
+      "output_bytes": 220551,
+      "peak_rss_bytes": 126894080,
+      "wall_time_s": 0.353673248
+    },
+    {
+      "cells": 32,
+      "cells_per_s": 87.51591658128326,
+      "chunks": 8,
+      "kind": "measured",
+      "output_bytes": 425307,
+      "peak_rss_bytes": 126828544,
+      "wall_time_s": 0.365647773
+    },
+    {
+      "cells": 64,
+      "cells_per_s": 167.0026725646444,
+      "chunks": 16,
+      "kind": "measured",
+      "output_bytes": 834819,
+      "peak_rss_bytes": 127098880,
+      "wall_time_s": 0.3832274
+    },
+    {
+      "cells": 1000,
+      "cells_per_s": 1087.0034189502455,
+      "chunks": 250,
+      "kind": "extrapolated (not executed)",
+      "output_bytes": 12813090,
+      "peak_rss_bytes": 127098880,
+      "wall_time_s": 0.9199603079130445
+    },
+    {
+      "cells": 10000,
+      "cells_per_s": 1644.5715228348088,
+      "chunks": 2500,
+      "kind": "extrapolated (not executed)",
+      "output_bytes": 127988771,
+      "peak_rss_bytes": 127098880,
+      "wall_time_s": 6.08061118726088
+    },
+    {
+      "cells": 100000,
+      "cells_per_s": 1733.489209261761,
+      "chunks": 25000,
+      "kind": "extrapolated (not executed)",
+      "output_bytes": 1279745575,
+      "peak_rss_bytes": 127098880,
+      "wall_time_s": 57.68711998073924
+    },
+    {
+      "cells": 1000000,
+      "cells_per_s": 1742.912682868902,
+      "chunks": 250000,
+      "kind": "extrapolated (not executed)",
+      "output_bytes": 12797313619,
+      "peak_rss_bytes": 127098880,
+      "wall_time_s": 573.7522079155228
+    }
+  ]
+}

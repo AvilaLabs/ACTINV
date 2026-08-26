@@ -39,8 +39,13 @@ res = {"data_dir": DATA, "library_targets": len(json.load(open(lib.replace(".npz
        "expected_first_cooling_W_per_g": float(want[1]), "cli_first_cooling_W_per_g": float(got_cli[1]),
        "max_abs_deviation_cli_W_per_g": d_cli, "max_abs_deviation_python_W_per_g": d_py,
        "criterion_abs_W_per_g": ABS_LIMIT, "cli_equals_python": identical,
-       "mode": cli["mode"], "pruned_states": cli["pruned_states"],
-       "pass": bool(d_cli <= ABS_LIMIT and d_py <= ABS_LIMIT and identical and cli["mode"] == exp["mode"])}
+       "mode": cli["mode"], "pruned_states": cli["pruned_states"]}
+baseline = {key: value for key, value in exp["result_baseline"].items() if key != "pass"}
+res["pass"] = bool(
+    d_cli <= ABS_LIMIT and d_py <= ABS_LIMIT and identical
+    and cli["mode"] == exp["mode"] and cli["pruned_states"] == exp["pruned_states"]
+    and all(res.get(key) == value for key, value in baseline.items())
+)
 print(json.dumps(res, indent=1))
 os.makedirs(os.path.join(ROOT, "results"), exist_ok=True)
 json.dump(res, open(os.path.join(ROOT, "results", "ci_end_to_end.json"), "w"), indent=1)

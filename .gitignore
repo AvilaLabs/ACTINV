@@ -6,5 +6,6 @@ __pycache__/
 *.pyc
 /python/build/
 /python/*.egg-info/
+/dist/
 /.venv/
 scratch/

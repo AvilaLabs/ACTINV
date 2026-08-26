@@ -47,8 +47,16 @@ fn read_npy(buf: &[u8]) -> Result<(Vec<usize>, bool, Vec<u8>), String> {
     Ok((shape, is_f8, buf[hstart + hlen..].to_vec()))
 }
 
-fn as_f64(raw: &[u8]) -> Vec<f64> { raw.chunks_exact(8).map(|c| f64::from_le_bytes(c.try_into().unwrap())).collect() }
-fn as_i64(raw: &[u8]) -> Vec<i64> { raw.chunks_exact(8).map(|c| i64::from_le_bytes(c.try_into().unwrap())).collect() }
+fn as_f64(raw: &[u8]) -> Result<Vec<f64>, String> {
+    let (values, remainder) = raw.as_chunks::<8>();
+    if !remainder.is_empty() { return Err("truncated f64 array".into()); }
+    Ok(values.iter().map(|bytes| f64::from_le_bytes(*bytes)).collect())
+}
+fn as_i64(raw: &[u8]) -> Result<Vec<i64>, String> {
+    let (values, remainder) = raw.as_chunks::<8>();
+    if !remainder.is_empty() { return Err("truncated i64 array".into()); }
+    Ok(values.iter().map(|bytes| i64::from_le_bytes(*bytes)).collect())
+}
 
 /// Read a library written by `controls/tendl_build.py` / `eaflib_build.py`.
 pub fn read_npz(path: &str) -> Result<Library, String> {
@@ -64,9 +72,20 @@ pub fn read_npz(path: &str) -> Result<Library, String> {
     let (rshape, _, rraw) = got.remove("rows").ok_or("no rows array")?;
     let (sshape, _, sraw) = got.remove("sig").ok_or("no sig array")?;
     let (_, _, braw) = got.remove("bounds").ok_or("no bounds array")?;
-    let ri = as_i64(&rraw);
+    let ri = as_i64(&rraw)?;
     let ncol = *rshape.get(1).unwrap_or(&5);
     let rows: Vec<Row> = ri.chunks_exact(ncol).map(|c| Row { target: c[0] as usize, mt: c[1] as i32, zap: c[2] as i32, lfs: c[3] as i32, lmf: c[4] as i32 }).collect();
     let ngroups = *sshape.get(1).unwrap_or(&709);
-    Ok(Library { rows, sig: as_f64(&sraw), ngroups, bounds: as_f64(&braw) })
+    Ok(Library { rows, sig: as_f64(&sraw)?, ngroups, bounds: as_f64(&braw)? })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn truncated_fixed_width_arrays_fail_closed() {
+        assert_eq!(as_f64(&[0; 7]).unwrap_err(), "truncated f64 array");
+        assert_eq!(as_i64(&[0; 15]).unwrap_err(), "truncated i64 array");
+    }
 }

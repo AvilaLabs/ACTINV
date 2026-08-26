@@ -6,11 +6,11 @@ decay heat and evaluated decay-photon source over cooling time, with a ledger of
 account for.
 
 Rust core, Python API, code-agnostic validation harness. Avila Labs, Oviedo, Florida.
-Licence: **MIT OR Apache-2.0**. Latest release: **v0.1.0**; P7 photon-source work is complete on the development branch.
+Licence: **MIT OR Apache-2.0**. Current version: **v0.2.0** (tagging and publishing are external acts).
 
 > Research-grade software. Validated against the 132-experiment FNS decay-heat benchmark (see below), but **not**
 > validated for licensing, safety or regulatory decisions. Known limitations are listed in
-> [docs/RELEASE_NOTES_v0.1.md](docs/RELEASE_NOTES_v0.1.md) — the code reports each of them rather than hiding it.
+> [docs/RELEASE_NOTES_v0.2.md](docs/RELEASE_NOTES_v0.2.md) — the code reports each of them rather than hiding it.
 
 ## Validation at a glance
 
@@ -26,6 +26,9 @@ Every number is re-derivable: the harness and all controls ship with the code, a
 P7 photon gates independently parse all 3,821 ENDF/B-VIII.0 decay evaluations (7,113 spectra). Calculated specific
 gamma constants are 0.30565 for Co-60 and 0.07695 for equilibrium Cs-137/Ba-137m, respectively 1.09% and 1.34% from
 the gate references. See [Validation](docs/VALIDATION.md) for the complete gate record and limitations.
+
+P8 imports the supported OpenMC/MCNP/FISPACT flux subsets into a hashed streaming format. Its eight-cell control gives
+exact mesh/single-run identity for all cells and byte-identical cell records at one and four threads.
 
 ## Install
 
@@ -70,8 +73,22 @@ actinv export-openmc out.json 2 source.py
 actinv export-mcnp out.json 2 source.sdef
 ```
 
-The exported point at `(0, 0, 0)` is a spatial placeholder. P7 supplies energy and total strength; P8 will supply
-flux-import and mesh/spatial coupling.
+The ordinary-result exporters still emit a point at `(0, 0, 0)`. P8 mesh results carry source cell indices and bounds,
+but constructing a distributed decay-photon transport source from them remains an explicit user workflow.
+
+## Import transport flux and solve independent cells
+
+```bash
+# OpenMC statepoint-format 18. Other supported FORMAT values are meshtal, mctal and fispact.
+actinv import-flux openmc statepoint.h5 flux.ndjson \
+  --tally 7 --source-rate 1.0e15 --energy-floor-eV 1.0e-5
+
+# mesh.json declares flux.ndjson's SHA-256 and one material/schedule for every cell.
+actinv mesh mesh.json mesh-result.ndjson
+```
+
+Importers require explicit physical normalization and accept only the documented fail-closed subsets. See
+[Specification](docs/SPEC.md) for commands, schemas and an `actinv-mesh-spec-1` example.
 
 The command line, the Python module and the validation harness are **one binary reached three ways** — verified
 identical to 0.0, which is what makes the certificate's solver field meaningful.
@@ -95,7 +112,7 @@ option is never silently ignored.
 
 [Method](docs/METHOD.md) · [Data sources and terms](docs/DATA.md) · [Validation](docs/VALIDATION.md) ·
 [Harness](docs/HARNESS.md) · [Ledger](docs/LEDGER.md) · [Specification](docs/SPEC.md) ·
-[Traps in activation data](docs/DATA_TRAPS.md) · [Roadmap](docs/ROADMAP.md) · [Release notes](docs/RELEASE_NOTES_v0.1.md)
+[Traps in activation data](docs/DATA_TRAPS.md) · [Roadmap](docs/ROADMAP.md) · [Release notes](docs/RELEASE_NOTES_v0.2.md)
 
 ## Contributing
 
