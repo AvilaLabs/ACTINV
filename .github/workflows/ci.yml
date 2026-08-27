@@ -58,6 +58,9 @@ jobs:
       - name: No undeclared dependencies
         run: python controls/check_dependencies.py
 
+      - name: CI result tolerance regression
+        run: python controls/test_ci_result.py
+
       - name: Fetch the pinned data subset
         run: bash scripts/fetch_ci_data.sh
 

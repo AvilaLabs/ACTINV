@@ -13,6 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
+from ci_result import matches_baseline
 from g5_p8_mesh_identity import SCALES, canonical_flux, shared_problem
 from p8_fixtures import BIN, command, ensure_ci_library, sha256, write_json
 
@@ -110,8 +111,7 @@ def main() -> None:
     clippy = quality_command(["clippy", "--workspace", "--all-targets", "--all-features", "--", "-D", "warnings"])
     current_ci = json.loads((RESULTS / "ci_end_to_end.json").read_text())
     baseline_ci = json.loads((ROOT / "controls" / "ci_expected.json").read_text())["result_baseline"]
-    deterministic_current = {key: value for key, value in current_ci.items() if key != "data_dir"}
-    ci_regression_exact = deterministic_current == baseline_ci
+    ci_regression_exact = matches_baseline(current_ci, baseline_ci)
     prior_verdicts = {
         phase: json.loads((RESULTS / f"verdict_{phase.lower()}.json").read_text())["verdict"]
         for phase in ("P5", "P6", "P7")

@@ -10,6 +10,7 @@ STEPS = [("cargo build", ["cargo", "build", "--release", "--quiet", "--workspace
          ("G0 cram coefficients", [sys.executable, "controls/g0_cram_coefficients.py"]),
          ("gen_cram is reproducible", [sys.executable, "controls/gen_cram.py"]),
          ("release notes match roadmap", [sys.executable, "controls/check_release_notes.py"]),
+         ("CI result tolerance regression", [sys.executable, "controls/test_ci_result.py"]),
          ("no undeclared dependencies", [sys.executable, "controls/check_dependencies.py"])]
 tmp = tempfile.mkdtemp(prefix="actinv-selftest-"); clone = os.path.join(tmp, "clone"); fake_home = os.path.join(tmp, "home")
 os.makedirs(fake_home)

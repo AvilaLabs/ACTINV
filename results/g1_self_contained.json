@@ -38,6 +38,13 @@
    "stderr_tail": ""
   },
   {
+   "step": "CI result tolerance regression",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
    "step": "no undeclared dependencies",
    "returncode": 0,
    "ok": true,

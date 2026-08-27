@@ -5,7 +5,8 @@ requires each to be declared in requirements-ci.txt. Constants belong in data/, 
 import os, re, sys, json, ast
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 CI_ENTRY = ["controls/g0_cram_coefficients.py", "controls/gen_cram.py", "controls/check_release_notes.py",
-            "controls/ci_end_to_end.py", "controls/g1_self_contained.py", "controls/tendl_build.py",
+            "controls/ci_end_to_end.py", "controls/test_ci_result.py", "controls/g1_self_contained.py",
+            "controls/tendl_build.py",
             "controls/g1_p8_canonical_rebin.py", "controls/g2_p8_openmc.py", "controls/g3_p8_mcnp.py",
             "controls/g4_p8_provenance.py", "controls/g5_p8_mesh_identity.py",
             "controls/g6_p8_scaling_regression.py", "controls/check_p8.py",
