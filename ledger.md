@@ -791,3 +791,13 @@
   `8f5d7317addac0ae8dd89cea7035bb276fdd79182877df2c51a5fc3053ec688d`. Rustfmt, workspace/all-target/all-feature
   check, strict Clippy, all 45 Rust tests and the undeclared-dependency audit pass. **P10-G1 PASS** under Amendment C;
   P10 remains open only for the complete G7 builds and close documentation.
+
+## 34 — 2026-08-27 — P10 G7 complete-build execution planned
+- The official TENDL-2025 archive page identifies the four frozen s30 archives. HTTP HEAD confirms byte-range resume
+  and exact compressed sizes of 3,517,450,425 (n), 2,352,215,809 (p), 3,063,536,212 (d) and 1,604,280,144 (a)
+  bytes, 10,537,482,590 bytes total. No archive or evaluation will enter Git.
+- `docs/P10_G7_EXECUTION.md` records the standing-rule-7 separation: G1–G6 already settled the minimum-input gates;
+  archive acquisition is independently size/gzip/hash checked; four Fe-56 units are profiled before the full
+  computation; and the five full builds run one at a time under a 4 GiB cap with content-addressed per-target resume.
+  Charged libraries run first, EAF next and the expensive neutron corpus last. Fresh/cached outputs must be
+  byte-identical before regression and close controls begin.
