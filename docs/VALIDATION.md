@@ -150,3 +150,23 @@ The checker verdict is **P11-CONDITIONAL** because Amendments A--E preserve the 
 inputs, exclusions, hashes and resource evidence are in `results/g1_p11_covariance.json` through
 `results/g6_p11_complete.json` and [the P11 session record](../sessions_P11.md). MF=33 bands do not include decay,
 MF=32, MF=40/yield, flux, composition, response-coefficient or model uncertainty and are not licensing safety margins.
+
+## P12 v1.0 hardening controls
+
+P12 adds explicit radiological-response inputs, independently rechecks the embedded natural abundance/mass table,
+and compares one published FNG/ITER cell history before packaging the 1.0 interfaces. External primary data and all
+generated nuclear-data libraries remain outside Git; compact results retain their hashes.
+
+| gate | result |
+|---|---|
+| G1 radiological responses | Clearance, waste, ingestion and inhalation responses agree with an independent dense calculation in all 80 comparisons. CLI, Python, prepared and mesh scientific fields are exact. Thirteen malformed, ambiguous, incomplete or hash-mismatch plants fail without a result. |
+| G2 primary tables | Independent extraction from the pinned Meija et al. and AME2020 primary files reproduces all 289 abundance/mass pairs, all 84 element sums and the generated Rust table byte-for-byte. The production certificate names and hashes both sources. |
+| G4 FNG/ITER cell 620 | Co-58, Tc-99m, Mn-56 and Cr-51 agree at every one of 170 endpoints. The worst relative population difference at or above one million atoms is `2.88e-14`, inside the frozen `1e-4` bound; 120 independently read reaction-rate comparisons differ by at most `3.24e-16` relative. Repeated temporary libraries and scientific results are identical. |
+
+The cell-620 comparison validates activation-history reproduction for the supplied material, one-group data, decay
+chain and schedule. It does not execute or validate neutron/photon transport, shielding geometry, a full shutdown-dose
+model, or a regulatory analysis. Radiological-response controls verify formulas, data handling and provenance, not the
+applicability of a user's table or scenario.
+
+P12 remains open while its remaining reliability, clean-clone release, and closure controls are completed. A technical
+repository verdict does not create a tag, registry publication, GitHub Release, software qualification, or approval.

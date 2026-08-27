@@ -100,7 +100,9 @@ def main() -> None:
         subprocess.check_output([DUMP, "activation-json", SOURCE], text=True)
     )[0]
     tables = [rust["mf3"]["102"], rust["mf9"]["102"][0]["table"]]
-    boundaries = json.loads((ROOT / "data/fispact_709_groups.json").read_text())["boundaries_eV"]
+    boundaries = json.loads(
+        (ROOT / "crates/actinv-data/data/fispact_709_groups.json").read_text()
+    )["boundaries_eV"]
     if boundaries[0] > boundaries[-1]:
         boundaries.reverse()
     low, high = boundaries[arguments.group : arguments.group + 2]

@@ -10,7 +10,14 @@ from g1_collapse import interp_eval  # same interpolation code as P1 (module run
 def _group_boundaries(name="fispact-709"):
     """709-group boundaries, ascending (eV), from the vendored table — no runtime package dependency."""
     import json as _json, os as _os
-    p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "fispact_709_groups.json")
+    p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)),
+        "..",
+        "crates",
+        "actinv-data",
+        "data",
+        "fispact_709_groups.json",
+    )
     b = _json.load(open(p))["boundaries_eV"]
     return b[::-1] if b[0] > b[-1] else b
 

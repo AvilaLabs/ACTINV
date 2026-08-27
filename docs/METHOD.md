@@ -185,8 +185,30 @@ expands a separately named conservative interval. Neither interval is a toleranc
 MF=32, production/MF=40 and yield, incident-flux, material-composition, response-coefficient and model uncertainties
 are excluded and listed in every uncertainty ledger/certificate.
 
+## Radiological response evaluation (P12)
+
+ACTINV evaluates only responses selected from an explicit, hash-pinned `actinv-radiological-table-1` file. For step
+activity `a_i` in Bq/g and a clearance or waste limit `L_i` in Bq/kg, the reported dimensionless sum of fractions is
+
+`I = sum_i(1000 a_i / L_i)`.
+
+For an ingestion or inhalation coefficient `h_i` in Sv/Bq, the reported value is
+
+`D = sum_i(a_i h_i)` in `Sv/g_material_intake`.
+
+ACTINV does not turn that value into a scenario dose: it applies no intake amount, occupancy, frequency, chemical or
+aerosol selection, retention model, or safety factor. Those choices belong to the table and the user's analysis.
+Positive activity without a coefficient is excluded from the numerical sum but is never silent: every result reports
+covered and missing activity, coverage fraction, and the exact missing-nuclide list. Complete-coverage mode converts
+any such omission into an error. Zero total activity has coverage one.
+
+The table is verified and parsed before solving. Prepared and mesh paths share the same immutable parsed table, so
+workers do not reread or duplicate it. The certificate binds the table's declared and computed hashes, title, source,
+edition, jurisdiction, response kind, basis, and coefficient count; the ledger mirrors per-step coverage.
+
 **Certificate and ledger.** The core computes SHA-256 for the activation library, its index, both decay files and the
-optional photon response, every fission-yield evaluation and an optional covariance sidecar/index before solving.
+optional photon response, every fission-yield evaluation, an optional covariance sidecar/index, and an optional
+radiological table before solving.
 Declared hashes and the library/index link
 fail closed. Every run reports composition gaps, explicit-isotope masses, products without evaluated decay data,
 fission selection/balance/leakage, burn-up selection, numerical-floor/negative round-off, photon normalization and

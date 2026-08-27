@@ -930,7 +930,9 @@ def independent_eaf_rows(
         raise ValueError("independent EAF oracle requires a neutron evaluation")
     if evaluation["mf6"] or evaluation["mf9"]:
         raise ValueError("pinned EAF oracle unexpectedly requires MF=6 or nonlinear MF=9")
-    mt_products = json.loads((ROOT / "data" / "mt_products.json").read_text())["table"]
+    mt_products = json.loads(
+        (ROOT / "crates" / "actinv-data" / "data" / "mt_products.json").read_text()
+    )["table"]
     records = []
     for mt in sorted({*map(int, evaluation["mf3"]), *map(int, evaluation["mf10"])}):
         descriptors = evaluation["mf8"].get(str(mt), [])

@@ -55,6 +55,12 @@ jobs:
       - name: Release notes carry every known limitation
         run: python controls/check_release_notes.py
 
+      - name: Prior phase verdict evidence remains green
+        run: python controls/check_prior_verdicts.py
+
+      - name: P12 release metadata and documentation
+        run: python controls/g5_p12_release.py --source-only
+
       - name: No undeclared dependencies
         run: python controls/check_dependencies.py
 
@@ -68,6 +74,13 @@ jobs:
         run: |
           cd python && maturin build --release --out ../dist
           pip install ../dist/*.whl
+          python -c "import actinv; assert actinv.__version__ == '1.0.0'"
+
+      - name: Python binding Rust quality
+        run: |
+          cargo fmt --manifest-path python/Cargo.toml -- --check
+          cargo check --manifest-path python/Cargo.toml --all-targets --all-features
+          cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings
 
       - name: End-to-end spec through both entry points
         run: python controls/ci_end_to_end.py
@@ -95,6 +108,9 @@ jobs:
           python controls/g3_p11_sensitivity.py
           python controls/g4_p11_propagation.py
           python controls/g5_p11_entry_points.py
+
+      - name: P12 data-independent response control
+        run: python controls/g1_p12_radiological.py
 
       - name: Repository is self-contained
         run: python controls/g1_self_contained.py

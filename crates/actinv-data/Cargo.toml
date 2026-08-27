@@ -5,6 +5,9 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
 description = "ACTINV data readers: ENDF-6 decay sublibraries and 709-group activation libraries"
 
 [dependencies]

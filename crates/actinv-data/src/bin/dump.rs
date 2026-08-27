@@ -318,7 +318,7 @@ fn activation_product(arguments: &[String]) {
         lfs
     );
     let mt_products: serde_json::Value =
-        serde_json::from_str(include_str!("../../../../data/mt_products.json"))
+        serde_json::from_str(include_str!("../../data/mt_products.json"))
             .expect("parse MT product table");
 
     for value in &arguments[3..] {

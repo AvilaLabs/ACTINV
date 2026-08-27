@@ -1,7 +1,7 @@
 {
   "address_space_limit_bytes": 2147483648,
   "analytic_tolerance": 2e-12,
-  "binary_sha256": "e3f0abf261d6cad1bf540c734869142fcefc4a63cd981077a4f9d770d4c59f01",
+  "binary_sha256": "56572dee246bbb0a2779b053a53fc4f4536f2bace3e7f180a58e899c322ea492",
   "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
   "certificate_hashes": {
     "alpha_cli": {
@@ -223,7 +223,7 @@
   "pass": true,
   "pre_p10_neutron": {
     "baseline_commit": "e5421a0e30eb94303482bed2c4b9491b773244e6",
-    "current_solver": "actinv-core 0.5.0",
+    "current_solver": "actinv-core 1.0.0",
     "current_tables_provenance": "Meija et al., Isotopic compositions of the elements 2013, Pure Appl. Chem. 88 (2016) 293-306, DOI 10.1515/pac-2015-0503, NRC PDF SHA-256 d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89 (Table 1 column 9 point values; column 6 when column 9 is an interval); AME2020 Huang et al./Wang et al., Chinese Physics C 45 (2021) 030002/030003, mass_1.mas20 SHA-256 e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307",
     "expected_normalized_result_sha256": "0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c",
     "index_sha256": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151",
@@ -251,8 +251,8 @@
     "amendment_b": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
   },
-  "python_extension": "actinv.cpython-312-x86_64-linux-gnu.so",
-  "python_extension_sha256": "de504434551ed89c3bcd96cbe466bd2ed16316dad8f991e1f83e23f5cae83e6f",
+  "python_extension": "actinv.abi3.so",
+  "python_extension_sha256": "c0b2303b50209827a8d9d079ad555bad1d924ec0099a159f393472a81d927ab3",
   "rejections": {
     "charged_fission": {
       "context": "not supported for proton",

@@ -13,7 +13,14 @@ WANT = {"Fe56": [102, 103, 107, 16, 105, 104, 28, 22, 32, 111], "W186": [102], "
 def _group_boundaries(name="fispact-709"):
     """709-group boundaries, ascending (eV), from the vendored table — no runtime package dependency."""
     import json as _json, os as _os
-    p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "fispact_709_groups.json")
+    p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)),
+        "..",
+        "crates",
+        "actinv-data",
+        "data",
+        "fispact_709_groups.json",
+    )
     b = _json.load(open(p))["boundaries_eV"]
     return b[::-1] if b[0] > b[-1] else b
 
@@ -25,7 +32,7 @@ for line in open(ffile):
     try: vals += [float(x) for x in line.split()]
     except ValueError: break
 flux_desc = np.array(vals[:709]); flux_asc = flux_desc[::-1]  # file lists highest-energy group first
-spec = {"source": ffile, "groups": 709, "boundaries_source": "data/fispact_709_groups.json (vendored from pypact, Apache-2.0)", "boundaries_eV_min_max": [float(bounds[0]), float(bounds[-1])],
+spec = {"source": ffile, "groups": 709, "boundaries_source": "crates/actinv-data/data/fispact_709_groups.json (vendored from pypact, Apache-2.0)", "boundaries_eV_min_max": [float(bounds[0]), float(bounds[-1])],
         "file_order": "descending energy (FISPACT-II fluxes format); reversed to ascending for use", "intra_group_shape": "flat in lethargy: phi(E) = phi_g / (E ln(Ehi/Elo))",
         "total_flux_file_units": float(flux_asc.sum()), "nonzero_groups": int((flux_asc > 0).sum()), "flux_ascending": flux_asc.tolist()}
 json.dump(spec, open(os.path.join(RES, "spectrum.json"), "w"), indent=1)

@@ -15,6 +15,17 @@ use actinv_data::{
 };
 use std::collections::BTreeMap;
 
+const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
+                    actinv validate SPEC.json\n\
+                    actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
+                    actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
+                    actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
+                    actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D]\n\
+                    actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
+                    actinv mesh SPEC.json OUT.ndjson\n\
+                    actinv export-openmc RESULT.json STEP OUT.py\n\
+                    actinv export-mcnp RESULT.json STEP OUT.sdef";
+
 fn die(message: impl std::fmt::Display, code: i32) -> ! {
     eprintln!("{message}");
     std::process::exit(code);
@@ -253,20 +264,12 @@ fn build_covariance(args: &[String]) {
 
 fn main() {
     let a: Vec<String> = std::env::args().collect();
-    let usage = "usage: actinv run SPEC.json [OUT.json]\n\
-                 actinv validate SPEC.json\n\
-                 actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
-                 actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
-                 actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
-                 actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D]\n\
-                 actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
-                 actinv mesh SPEC.json OUT.ndjson\n\
-                 actinv export-openmc RESULT.json STEP OUT.py\n\
-                 actinv export-mcnp RESULT.json STEP OUT.sdef";
     if a.len() < 2 {
-        die(usage, 2);
+        die(USAGE, 2);
     }
     match a[1].as_str() {
+        "--version" | "-V" if a.len() == 2 => println!("actinv {}", env!("CARGO_PKG_VERSION")),
+        "--help" | "-h" if a.len() == 2 => println!("{USAGE}"),
         "build-covariance" => build_covariance(&a[2..]),
         "build-library" => build_library(&a[2..]),
         "import-flux" => {
@@ -278,7 +281,7 @@ fn main() {
         }
         "mesh" => {
             if a.len() != 4 {
-                die(usage, 2);
+                die(USAGE, 2);
             }
             let spec = MeshSpec::from_json(&read(&a[2])).unwrap_or_else(|error| die(error, 2));
             let summary = run_mesh(&spec, &a[3]).unwrap_or_else(|error| die(error, 1));
@@ -289,7 +292,7 @@ fn main() {
         }
         "validate" | "run" => {
             if a.len() < 3 {
-                die(usage, 2);
+                die(USAGE, 2);
             }
             let spec = Spec::from_json(&read(&a[2])).unwrap_or_else(|e| die(e, 2));
             if a[1] == "validate" {
@@ -320,7 +323,7 @@ fn main() {
         }
         "export-openmc" | "export-mcnp" => {
             if a.len() != 5 {
-                die(usage, 2);
+                die(USAGE, 2);
             }
             let source = selected_source(&a[2], &a[3]);
             let fragment = if a[1] == "export-openmc" {
@@ -333,6 +336,6 @@ fn main() {
                 .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[4]), 1));
             eprintln!("step {} photon source -> {}", a[3], a[4]);
         }
-        _ => die(usage, 2),
+        _ => die(USAGE, 2),
     }
 }

@@ -14,7 +14,14 @@ from doppler import broaden
 def _group_boundaries(name="fispact-709"):
     """709-group boundaries, ascending (eV), from the vendored table — no runtime package dependency."""
     import json as _json, os as _os
-    p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "data", "fispact_709_groups.json")
+    p = _os.path.join(
+        _os.path.dirname(_os.path.abspath(__file__)),
+        "..",
+        "crates",
+        "actinv-data",
+        "data",
+        "fispact_709_groups.json",
+    )
     b = _json.load(open(p))["boundaries_eV"]
     return b[::-1] if b[0] > b[-1] else b
 
@@ -23,7 +30,14 @@ T_K = 293.6; DENSE = float(os.environ.get("ACTINV_DENSE", "1"))
 PART = {"n": (0, -1), "p": (-1, -1), "d": (-1, -2), "t": (-1, -3), "3He": (-2, -3), "a": (-2, -4), "gamma": (0, 0)}
 def mt_table():
     """Residual (dZ, dA) per MT, from the vendored table (controls/gen_mt_products.py). No runtime package needed."""
-    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "mt_products.json")
+    p = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "..",
+        "crates",
+        "actinv-data",
+        "data",
+        "mt_products.json",
+    )
     return {int(k): tuple(v) for k, v in json.load(open(p))["table"].items()}
 MT_PROD = mt_table()
 def source_fingerprint():
@@ -215,10 +229,17 @@ def main():
     have = sum(1 for f in files if os.path.exists(os.path.join(cache, os.path.basename(f) + ".npz")))
     print(f"fingerprint {FINGERPRINT[:12]}; {have}/{len(files)} targets already cached in {cache}", file=sys.stderr, flush=True)
     t0 = time.time(); targets = []; ROWS = []; SIG = []; nerr = 0
-    with mp.Pool(a.workers, maxtasksperchild=20) as pool:
-        for k, (info, rows, sig) in enumerate(pool.imap(build_one, [(f, i, cache) for i, f in enumerate(files)], chunksize=1)):
-            targets.append(info); ROWS += rows; SIG += sig; nerr += 1 if info.get("error") else 0
+    jobs = [(f, i, cache) for i, f in enumerate(files)]
+    def collect(results):
+        nonlocal nerr
+        for k, (info, rows, sig) in enumerate(results):
+            targets.append(info); ROWS.extend(rows); SIG.extend(sig); nerr += 1 if info.get("error") else 0
             if k % 50 == 0 or info.get("error"): print(f"  {k+1}/{len(files)} {info['file']} {info.get('seconds', 0):.1f}s rows={len(rows)} led={len(info['ledger'])}{' cached' if info.get('cached') else ''}{' ERROR' if info.get('error') else ''}  total {time.time()-t0:.0f}s", file=sys.stderr, flush=True)
+    if a.workers == 1:
+        collect(map(build_one, jobs))
+    else:
+        with mp.Pool(a.workers, maxtasksperchild=20) as pool:
+            collect(pool.imap(build_one, jobs, chunksize=1))
     R = np.array(ROWS, dtype=np.int64); S = np.array(SIG); out = os.path.join(a.out_dir, a.name + ".npz"); np.savez_compressed(out, rows=R, sig=S, bounds=BOUNDS)
     json.dump({"targets": targets, "n_rows": len(ROWS), "n_errors": nerr, "columns": "rows: (target_index, MT, product ZA (-1 loss term, 0 unmapped), LFS, LMF source: 3/9/10, -1 MT arithmetic, -2 leakage)", "groups": 709, "weighting": "flat lethargy", "temperature_K": T_K, "dense_factor": DENSE, "fingerprint": FINGERPRINT, "n_from_cache": sum(1 for t in targets if t.get("cached")), "sha256_npz": hashlib.sha256(open(out, "rb").read()).hexdigest(), "build_seconds": time.time() - t0}, open(os.path.join(a.out_dir, a.name + "_index.json"), "w"), indent=1)
     print(f"targets {len(targets)} rows {len(ROWS)} errors {nerr} {time.time()-t0:.0f}s -> {out}")

@@ -1,147 +1,159 @@
 # ACTINV
 
-**Open, standalone, activation-grade nuclide-inventory solver.** A particle flux spectrum from any source — MCNP, PHITS,
-Serpent, OpenMC, or a measurement — plus a material and an irradiation history gives the nuclide inventory, activity,
-decay heat and evaluated decay-photon source over cooling time. Hash-pinned independent fission yields, explicit
-isotopes/isomers, coupled burn-up and pulsed histories are supported, with a ledger of everything the calculation
-could not account for.
+ACTINV calculates what radioactive nuclides are created when a material is irradiated and how they change while the
+material cools. Give it a material, a particle-flux spectrum, an irradiation schedule, and evaluated nuclear data; it
+returns nuclide inventories, activity, decay heat, photon sources, selected radiological indices, and a record of any
+input data it could not account for.
 
-Rust core, Python API, code-agnostic validation harness. Avila Labs, Oviedo, Florida.
-Licence: **MIT OR Apache-2.0**. Current version: **v0.5.0** (tagging and publishing are external acts).
+It is useful for activation studies, shutdown inventories, source-term preparation, and reproducible comparisons with
+other inventory codes. The numerical core is written in Rust, with both a Python interface and a standalone command.
 
-> Research-grade software. Validated against the 132-experiment FNS decay-heat benchmark (see below), but **not**
-> validated for licensing, safety or regulatory decisions. Known limitations are listed in
-> [docs/RELEASE_NOTES_v0.5.md](docs/RELEASE_NOTES_v0.5.md) — the code reports each of them rather than hiding it.
-
-## Validation at a glance
-
-FNS decay-heat benchmark (IAEA CoNDERC): 73 materials, 132 experiments, D–T irradiation at JAEA.
-
-| | ACTINV / EAF-2010 | ACTINV / TENDL-2023 | FISPACT-II / TENDL-2017 |
-|---|---|---|---|
-| median geometric-mean C/E | 1.024 | 1.035 | 1.009 |
-| within 30 % everywhere | 47 % | 45 % | 52 % |
-
-Every number is re-derivable: the harness and all controls ship with the code, and each run hashes its inputs.
-
-P7 photon gates independently parse all 3,821 ENDF/B-VIII.0 decay evaluations (7,113 spectra). Calculated specific
-gamma constants are 0.30565 for Co-60 and 0.07695 for equilibrium Cs-137/Ba-137m, respectively 1.09% and 1.34% from
-the gate references. See [Validation](docs/VALIDATION.md) for the complete gate record and limitations.
-
-P8 imports the supported OpenMC/MCNP/FISPACT flux subsets into a hashed streaming format. Its eight-cell control gives
-exact mesh/single-run identity for all cells and byte-identical cell records at one and four threads.
-
-P9 reports all 175 finite U-235 thermal decay-heat channel points in the CoNDERC Dickens pulse and Yarnell 20,000 s
-sets. Geometric-mean total C/E is **1.0070** and **0.9845**, respectively. On identical Fe-56(n,p)Mn-56 data and a
-10-pulse history, shutdown inventory differs from ALARA 2.9.2 by at most `4.12e-8`; pulse evolution agrees with OpenMC
-CRAM48 at `3.91e-15` on resolvable populations.
-
-P10 moves production library construction into Rust and completes deterministic TENDL-2025 neutron, proton,
-deuteron and alpha libraries plus EAF-2010: **12,216 targets and 1,849,479 reaction/product rows**, with zero target
-errors, unsupported fallbacks or convergence flags. R-matrix-limited and infinite-dilution unresolved reconstruction,
-arbitrary-temperature neutron broadening and analytic ultra-narrow lines are independently controlled. The P10
-checker verdict is **P10-CONDITIONAL** because its frozen repair history is retained.
-
-P11 adds strict ENDF-6 MF=33 covariance sidecars, CRAM-16/48, exact local sensitivities of heat and activity, and a
-separately labelled **MF=33 nuclear-data band**. The complete 2,850-file TENDL-2025 neutron covariance corpus builds
-fresh/cached byte-identically with 285,023 retained components and no parse error or silent omission. Coverage and
-absent evaluated cross-covariance are explicit; decay, yield, flux, composition, response-coefficient and model
-uncertainties are excluded rather than implied. All six gates pass and the retained repair record makes the verdict
-**P11-CONDITIONAL**. This is not a licensing, safety or v1.0-release claim.
+> ACTINV is research-grade software. Version 1.0 is a technically validated release, not an approval for licensing,
+> safety, waste classification, or regulatory decisions. See [Qualification boundary](docs/QUALIFICATION.md) before
+> using results in a formal analysis chain.
 
 ## Install
 
+After the v1.0 package is published to PyPI, the Python interface installs in one line on Python 3.9 or newer:
+
 ```bash
-cargo install --path crates/actinv-cli                         # the `actinv` command
-cd python && maturin build --release --out ../dist             # build the Python wheel
-pip install ../dist/actinv-*.whl                               # `import actinv`
+pip install actinv
 ```
-Requires a Rust toolchain and Python ≥ 3.9. The binding uses PyO3 0.29 and builds against Python 3.14.
 
-## Get the data
+The published wheels use Python's stable ABI, so users do not need a Rust compiler. Until the maintainer performs the
+separate public-package upload, install the wheel produced by the release workflow:
 
-Nuclear data are never bundled; they are fetched from their public hosts and pinned by SHA-256.
-`scripts/fetch_ci_data.sh` pulls the small subset used by the tests. For real work see
-[docs/DATA.md](docs/DATA.md) for every source and its terms, then build a library directly with the Rust binary:
+```bash
+python -m pip install actinv-1.0.0-*.whl
+```
+
+For the standalone `actinv` command, use the matching executable from the GitHub release assets or build it from a
+source checkout:
+
+```bash
+cargo install --locked --path crates/actinv-cli
+```
+
+ACTINV deliberately does not bundle nuclear data. This keeps the software distribution small and makes the exact
+evaluations used by each calculation explicit. [Data setup](docs/DATA.md) lists supported sources and their hashes.
+
+## First calculation
+
+An ACTINV problem is a JSON file containing paths to an activation library and decay data, a material composition, a
+group flux spectrum, and an irradiation/cooling schedule. Validate it first, then run it:
+
+```bash
+actinv validate problem.json
+actinv run problem.json result.json
+```
+
+The same calculation from Python is:
+
+```python
+from pathlib import Path
+import json
+import actinv
+
+problem = Path("problem.json").read_text(encoding="utf-8")
+print(actinv.validate(problem))
+
+result = json.loads(actinv.run(problem))
+last_step = result["steps"][-1]
+print("decay heat (W/g):", last_step["heat_W_per_g"]["total"])
+print("activity (Bq/g):", sum(last_step["activity_Bq_per_g"].values()))
+print("unaccounted inputs:", result["ledger"])
+```
+
+Start with [the specification guide](docs/SPEC.md), which explains every field and includes complete examples. Unknown
+fields are rejected, so misspelled options do not silently change a calculation.
+
+## Preparing an activation library
+
+The standalone command builds deterministic libraries from supported ENDF-6 evaluations. For example:
 
 ```bash
 actinv build-library /data/TENDL-2025/n /data/tendl2025-n.npz \
   --format tendl --projectile neutron --groups fispact-709 \
   --temperature-K 293.6 --workers 4 --cache /data/actinv-cache
+```
+
+For MF=33 cross-section uncertainty information:
+
+```bash
 actinv build-covariance /data/TENDL-2025/n /data/tendl2025-n.npz \
   /data/tendl2025-n.cov.npz --workers 4 --cache /data/actinv-cov-cache
-python3 scripts/build_photon_response.py /data/nist-air-fe.json --elements Fe  # optional dose response
 ```
 
-## Run
+Every input file is SHA-256 hashed in the result certificate. Generated bulk libraries and raw nuclear-data inputs are
+not stored in this repository.
+
+## Transport-code workflows
+
+ACTINV accepts a spectrum from any source. It also has strict importers for documented subsets of OpenMC statepoints,
+MCNP MESHTAL/MCTAL files, and FISPACT flux files. Normalization must always be stated explicitly:
 
 ```bash
-actinv validate examples/fns_fe_5min.json      # parse and check the specification
-actinv run examples/fns_fe_5min.json out.json  # solve
-```
-
-```python
-import actinv, json
-result = json.loads(actinv.run(open("examples/fns_fe_5min.json").read()))
-print(result["steps"][1]["heat_W_per_g"]["total"])       # decay heat after the first cooling step
-print(result["pathways"][1]["Mn56"])                     # which chains made Mn-56, ranked
-print(result["steps"][1]["photon_source"]["groups"])    # decay-photon multigroup source
-print(result["ledger"])                                  # everything the calculation could not account for
-```
-
-Export a selected one-based step as a transport source:
-
-```bash
-actinv export-openmc out.json 2 source.py
-actinv export-mcnp out.json 2 source.sdef
-```
-
-The ordinary-result exporters still emit a point at `(0, 0, 0)`. P8 mesh results carry source cell indices and bounds,
-but constructing a distributed decay-photon transport source from them remains an explicit user workflow.
-
-## Import transport flux and solve independent cells
-
-```bash
-# OpenMC statepoint-format 18. Other supported FORMAT values are meshtal, mctal and fispact.
 actinv import-flux openmc statepoint.h5 flux.ndjson \
   --tally 7 --source-rate 1.0e15 --energy-floor-eV 1.0e-5
-
-# mesh.json declares flux.ndjson's SHA-256 and one material/schedule for every cell.
 actinv mesh mesh.json mesh-result.ndjson
 ```
 
-Importers require explicit physical normalization and accept only the documented fail-closed subsets. See
-[Specification](docs/SPEC.md) for commands, schemas and an `actinv-mesh-spec-1` example.
+Selected decay-photon steps can be exported as OpenMC or MCNP source fragments:
 
-The command line, the Python module and the validation harness are **one binary reached three ways** — verified
-identical to 0.0, which is what makes the certificate's solver field meaningful.
+```bash
+actinv export-openmc result.json 2 source.py
+actinv export-mcnp result.json 2 source.sdef
+```
 
-## What a specification looks like
+Mesh cells are solved independently. ACTINV does not perform particle transport, spatial coupling, criticality, or
+thermal-hydraulic feedback.
 
-See [docs/SPEC.md](docs/SPEC.md). In short: a library and decay data, a natural-element and/or explicit-nuclide
-material, a group flux spectrum, an irradiation/cooling schedule, optional hash-pinned fission yields and optional
-external photon-response data. Neutron runs may also declare a hash-pinned MF=33 covariance sidecar, selected
-heat/activity responses, confidence level and completeness requirement. Unknown fields are an error — a misspelt
-option is never silently ignored.
+## What the result tells you
 
-## Principles
+Depending on the requested outputs, each time step can contain:
 
-- **Data are never bundled**; every input receives a computed SHA-256 in the run certificate, and declarations fail
-  closed on a mismatch.
-- **Fail closed, report everything.** Missing decay/yield data, unmapped fission products, yield balance/leakage,
-  burn-up selection, pruned nuclides, round-off, and the method's own numerical resolution floor all appear in the
-  ledger — see [docs/LEDGER.md](docs/LEDGER.md).
-- **Protocols are hashed before evidence**, verdicts are derived by checkers, ledgers are append-only.
-- **The validation harness accepts any code's inventories** — see [docs/HARNESS.md](docs/HARNESS.md).
+- nuclide atoms and activity;
+- total and alpha/beta/gamma decay heat;
+- evaluated decay-photon lines or multigroup sources;
+- ranked production pathways;
+- user-selected clearance, waste, ingestion, or inhalation responses;
+- an MF=33 cross-section uncertainty band and numerical-method comparison; and
+- a ledger for missing decay/yield/response data, pruned populations, balance terms, and method resolution.
+
+Radiological coefficients are user-supplied, hash-pinned tables. ACTINV does not choose a jurisdiction, regulation,
+chemical form, aerosol class, or safety margin for you.
+
+## Validation in brief
+
+The repository carries executable controls and compact evidence for every release phase. Highlights include:
+
+- 132 IAEA FNS decay-heat experiments across 73 materials;
+- independent decay-photon, transport-import, fission-yield, pulse-history, and mesh checks;
+- complete deterministic TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 library builds;
+- independent CRAM, sensitivity, MF=33 covariance, and uncertainty-propagation checks; and
+- an independently reproduced FNG/ITER cell-620 activation history at all 170 time points.
+
+Validation establishes behavior for the recorded models, inputs, and acceptance bounds. It does not establish that a
+particular user's material, spectrum, nuclear-data choice, radiological table, or regulatory scenario is suitable.
+See [Validation](docs/VALIDATION.md), [v1.0 release notes](docs/RELEASE_NOTES_v1.0.md), and the
+[qualification boundary](docs/QUALIFICATION.md) for the evidence and complete limitations.
+
+## Design principles
+
+- **Inputs stay attributable.** Nuclear data are not bundled, and calculations record their hashes.
+- **Incomplete information stays visible.** Missing data and approximations appear in the ledger.
+- **Interfaces share one solver.** CLI, Python, prepared, and mesh paths are checked for scientific identity.
+- **Evidence is reproducible.** Protocols are frozen before results; repair records are append-only.
 
 ## Documentation
 
-[Method](docs/METHOD.md) · [Data sources and terms](docs/DATA.md) · [Validation](docs/VALIDATION.md) ·
-[Harness](docs/HARNESS.md) · [Ledger](docs/LEDGER.md) · [Specification](docs/SPEC.md) ·
-[Traps in activation data](docs/DATA_TRAPS.md) · [Roadmap](docs/ROADMAP.md) · [Release notes](docs/RELEASE_NOTES_v0.5.md)
+[Specification](docs/SPEC.md) · [Data sources](docs/DATA.md) · [Method](docs/METHOD.md) ·
+[Validation](docs/VALIDATION.md) · [Qualification boundary](docs/QUALIFICATION.md) ·
+[Ledger](docs/LEDGER.md) · [Harness](docs/HARNESS.md) · [Roadmap](docs/ROADMAP.md) ·
+[v1.0 release notes](docs/RELEASE_NOTES_v1.0.md)
 
-## Contributing
+## Contributing and licence
 
-Dual-licensed MIT OR Apache-2.0, contributions under the Developer Certificate of Origin (`git commit -s`).
-A change to physics or data handling comes with a control that would have caught the bug, and a ledger entry.
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+ACTINV is dual-licensed under MIT or Apache-2.0. Contributions use the Developer Certificate of Origin. Physics or
+data-handling changes need a regression control and an append-only evidence record; see
+[CONTRIBUTING.md](CONTRIBUTING.md).

@@ -594,7 +594,9 @@ def main() -> int:
 
     official = official_boundaries()
     vendored = np.asarray(
-        json.loads((ROOT / "data" / "fispact_709_groups.json").read_text())["boundaries_eV"],
+        json.loads(
+            (ROOT / "crates/actinv-data/data/fispact_709_groups.json").read_text()
+        )["boundaries_eV"],
         dtype=float,
     )
     if vendored[0] > vendored[-1]:

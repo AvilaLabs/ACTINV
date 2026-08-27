@@ -370,7 +370,9 @@ def production_terms(
 
     mt_products = {
         int(mt): tuple(delta)
-        for mt, delta in json.loads((ROOT / "data" / "mt_products.json").read_text())["table"].items()
+        for mt, delta in json.loads(
+            (ROOT / "crates/actinv-data/data/mt_products.json").read_text()
+        )["table"].items()
     }
     target_z, target_a = divmod(evaluation["za"], 1000)
     projectile_z, projectile_a = projectile_za
@@ -625,7 +627,9 @@ def structure_checks(case: dict, evaluation: dict, build: dict) -> dict:
 
     mt_products = {
         int(mt): tuple(delta)
-        for mt, delta in json.loads((ROOT / "data" / "mt_products.json").read_text())["table"].items()
+        for mt, delta in json.loads(
+            (ROOT / "crates/actinv-data/data/mt_products.json").read_text()
+        )["table"].items()
     }
     explicit = None
     target_z, target_a = divmod(evaluation["za"], 1000)
@@ -775,7 +779,9 @@ def main() -> int:
 
     bounds = official_bounds()
     embedded = np.array(
-        json.loads((ROOT / "data" / "fispact_162_groups.json").read_text())["boundaries_eV"],
+        json.loads(
+            (ROOT / "crates/actinv-data/data/fispact_162_groups.json").read_text()
+        )["boundaries_eV"],
         dtype=float,
     )
     if embedded[0] > embedded[-1]:

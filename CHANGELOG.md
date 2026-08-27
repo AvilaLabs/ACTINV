@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+No changes yet.
+
+## v1.0.0 — 2026-08-27
+
 **Added**
 
 - Strict ENDF-6 MF=33 LB=0--6/8/9 parsing and deterministic, checkpointed `actinv-covariance-1` sidecars linked to
@@ -13,6 +17,12 @@
   prepared and mesh entry points.
 - Independent Python/dense/NJOY/OpenMC controls and a complete 2,850-source covariance scan with fresh/cached byte
   identity, bounded memory and zero parsing omissions.
+- Hash-pinned clearance, waste, ingestion and inhalation response tables with explicit scenario metadata, coefficient
+  coverage and identical CLI/Python/prepared/mesh results.
+- Independent primary-source regeneration of all 289 embedded natural-abundance and atomic-mass rows.
+- FNG/ITER cell-620 activation-history reproduction at 170 endpoints from a fully hash-pinned published archive.
+- Stable-ABI Python wheels for Python 3.9+, standalone release binaries, a public artifact workflow and user-facing
+  installation, release and qualification documentation.
 
 **Fixed**
 
@@ -20,6 +30,8 @@
   combined output once instead of rebuilding growing prefixes quadratically.
 - The local CI end-to-end control can load an explicitly built PyO3 extension when no wheel is installed, while still
   preferring and testing the installed package in release CI.
+- CLI and Python package versions now agree at `1.0.0`; `actinv --version` and `actinv --help` are supported and
+  regression-tested.
 
 ## v0.5.0 — 2026-08-27
 

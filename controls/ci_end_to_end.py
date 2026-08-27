@@ -12,13 +12,16 @@ from ci_result import baseline_mismatches
 os.environ["PYTHONWARNINGS"] = "ignore"
 DATA = os.environ.get("ACTINV_CI_DATA", os.path.expanduser("~/actinv-ci-data"))
 OUT = os.environ.get("ACTINV_CI_OUT", tempfile.mkdtemp(prefix="actinv-ci-"))
+WORKERS = int(os.environ.get("ACTINV_CI_WORKERS", "4"))
+if WORKERS < 1:
+    raise ValueError("ACTINV_CI_WORKERS must be a positive integer")
 ABS_LIMIT = 1e-11 * 1e-6      # the P5-G4 criterion, 1e-11 uW/g, expressed in W/g
 exp = json.load(open(os.path.join(ROOT, "controls", "ci_expected.json")))
 # ---- build the small library from the fetched files
 lib = os.path.join(OUT, "ci_fe.npz")
 if not os.path.exists(lib):
     subprocess.run([sys.executable, os.path.join(ROOT, "controls", "tendl_build.py"), os.path.join(DATA, "tendl"), OUT,
-                    "--workers", "4", "--dense", "1", "--name", "ci_fe"], check=True)
+                    "--workers", str(WORKERS), "--dense", "1", "--name", "ci_fe"], check=True)
 # ---- build the spec against the fetched data
 spec = json.load(open(os.path.join(ROOT, "examples", "fns_fe_5min.json")))
 spec["library"]["path"] = lib

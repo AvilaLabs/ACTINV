@@ -154,9 +154,8 @@ struct MtProductJson {
 }
 
 fn mt_products() -> Result<BTreeMap<i32, (i32, i32)>, String> {
-    let raw: MtProductJson =
-        serde_json::from_str(include_str!("../../../data/mt_products.json"))
-            .map_err(|error| format!("invalid vendored MT product table: {error}"))?;
+    let raw: MtProductJson = serde_json::from_str(include_str!("../data/mt_products.json"))
+        .map_err(|error| format!("invalid vendored MT product table: {error}"))?;
     raw.table
         .into_iter()
         .map(|(mt, delta)| {
@@ -180,7 +179,7 @@ pub fn builder_fingerprint() -> String {
     hash.update(include_bytes!("resonance.rs"));
     hash.update(include_bytes!("processing.rs"));
     hash.update(include_bytes!("library.rs"));
-    hash.update(include_bytes!("../../../data/mt_products.json"));
+    hash.update(include_bytes!("../data/mt_products.json"));
     format!("{:x}", hash.finalize())
 }
 

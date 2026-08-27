@@ -6,9 +6,9 @@ time. Every phase ends with a checker-derived verdict, a session file, a manifes
 dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. P12 — v1.0 hardening
-is open under its frozen protocol; G1 configurable radiological responses and G2 primary abundance/mass-table
-re-verification are green. Deterministic parser fuzzing is next, followed by the published FNG/ITER cell-620
-activation step, qualification-boundary documentation and the technical v1.0 release candidate. Public tagging and
+is open under its frozen protocol; G1 configurable radiological responses, G2 primary abundance/mass-table
+re-verification and G4 FNG/ITER cell-620 activation are green. The v1.0 packaging, installation, qualification and
+release-control work is in progress while the remaining input-reliability gate is kept isolated. Public tagging and
 publication remain principal acts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
@@ -150,3 +150,11 @@ part that does not compress: users, issues, and the validation record accumulati
   primary-source table attribution changed its legacy-result hash. A recursive comparison found that provenance leaf
   to be the sole non-timing/path/version difference; the control now requires it to match the embedded-table record
   exactly before mapping only that leaf to the frozen pre-P12 value. A planted attribution change still fails closed.
+- 2026-08-27 — P12 G4 green. The external CC-BY-4.0 FNG/ITER cell-620 archive is transformed reproducibly into
+  temporary ACTINV inputs; four selected histories pass all 170 endpoints and independently read rates pass their
+  frozen bounds. Archive members and generated nuclear data remain outside Git.
+- 2026-08-27 — P12 Amendment B records a pre-publication packaging repair: three compile-time JSON tables moved
+  inside the `actinv-data` crate boundary without changing semantic content. Exact `1.0.0` path-dependency versions,
+  unpacked-crate compilation, stable-ABI wheel checks and licence inclusion now guard the distributable artifacts.
+  User-first installation, release, qualification, specification, method, data and validation documentation is part
+  of the G5 release candidate; no registry upload, tag or GitHub Release is authorized by this work.

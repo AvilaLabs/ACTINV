@@ -462,8 +462,8 @@
   boundaries, and (through `g1_collapse`) `openmc` for an interpolation helper and the MT-product table. Neither is in
   the CI environment. The first repair fixed the *instance* (a path outside the clone); the class is "a control depends
   on something the CI environment does not have", and I did not fix the class.
-  Class repair: (1) the 709-group structure is vendored to `data/fispact_709_groups.json` — verified identical to
-  `pypact.ALL_GROUPS[709]`; (2) the MT-product table to `data/mt_products.json` behind `controls/gen_mt_products.py`;
+  Class repair: (1) the 709-group structure is vendored to `crates/actinv-data/data/fispact_709_groups.json` — verified identical to
+  `pypact.ALL_GROUPS[709]`; (2) the MT-product table to `crates/actinv-data/data/mt_products.json` behind `controls/gen_mt_products.py`;
   (3) `interp_eval` moved from `g1_collapse` to `endf_common`, so the library build imports neither openmc nor any
   control that does; (4) `requirements-ci.txt` declares what CI installs, and **`controls/check_dependencies.py`**
   walks every CI entry point and its repository-local imports and fails on anything undeclared — this control found the
@@ -843,3 +843,24 @@
   subset, self-containment/dependency/release checks and P5--P10 verdicts. `controls/check_p11.py` derives
   **P11-CONDITIONAL**, all six gates green, because Amendments A--E remain hash-pinned. P12 is next but remains
   unopened and unhashed; no tag, publication, complete-uncertainty or licensing-safety claim is made.
+
+## 38 — 2026-08-27 — P12 response, primary-table and FNG activation gates
+- P12 opened under protocol SHA-256 `247e6696…`. G1 adds explicit, hash-pinned clearance, waste, ingestion and
+  inhalation responses with exact CLI/Python/prepared/mesh identity, coefficient coverage and fail-closed table
+  handling. G2 independently re-derives all 289 embedded abundance/mass rows from the Meija et al. and AME2020 primary
+  tables and regenerates the Rust table byte-for-byte.
+- The first post-G2 CI run exposed one intentional provenance leaf in the frozen P10 legacy hash. Amendment A checks
+  the current primary attribution exactly before normalizing only that historical leaf; no scientific output changed.
+- G4 transforms the published FNG/ITER cell-620 research archive into temporary ACTINV inputs, independently checks
+  selected reaction rates and compares four nuclides at all 170 endpoints. All frozen bounds and reproducibility checks
+  pass; archives and generated bulk libraries remain outside Git.
+
+## 39 — 2026-08-27 — P12 release-package boundary repair
+- The first actual `cargo package` verification found that three small compile-time JSON tables lived above the
+  `actinv-data` crate root and were absent from its archive. Amendment B moves those tables into the crate, updates all
+  production/control paths, gives public path dependencies exact `=1.0.0` versions, and requires compilation from the
+  unpacked archives. Numeric/table content and all scientific tolerances are unchanged.
+- The corrected `actinv-data-1.0.0.crate` packages and verifies. The locally assembled core and CLI archives compile
+  against the exact unpacked data/core packages, establishing the pre-publication dependency order without uploading
+  anything. The stable-ABI wheel imports on Python 3.14 as version 1.0.0, carries both licence texts and an SBOM, and
+  its source archive builds successfully from an isolated installation path.

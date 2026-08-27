@@ -559,11 +559,11 @@ struct GroupJson {
 
 impl GroupStructure {
     pub fn fispact_709() -> Result<Self, String> {
-        Self::from_json(include_str!("../../../data/fispact_709_groups.json"))
+        Self::from_json(include_str!("../data/fispact_709_groups.json"))
     }
 
     pub fn fispact_162() -> Result<Self, String> {
-        Self::from_json(include_str!("../../../data/fispact_162_groups.json"))
+        Self::from_json(include_str!("../data/fispact_162_groups.json"))
     }
 
     pub fn from_json(text: &str) -> Result<Self, String> {

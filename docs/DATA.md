@@ -12,6 +12,7 @@ certificate. Terms of use are those of the hosts; check them before redistributi
 | ENDF/B-VIII.0 neutron-induced fission-product yields | NNDC/IAEA ENDF bulk archive | MF=8/MT=454 independent and MT=459 cumulative tables; P9 production uses only MT=454 |
 | JEFF-3.3 radioactive decay data | IAEA-NDS mirror bulk zip | fallback (3,852 materials) |
 | FNS decay-heat benchmark set | IAEA CoNDERC `conderc/fusion/files/fns.zip` | 73 materials, 132 experiments; spectra, measurements, FISPACT-II reference runs |
+| FNG/ITER cell-620 research archive | Zenodo record 10660030, DOI `10.5281/zenodo.10660030` | CC-BY-4.0 campaign-1 activation history and supplied one-group data used by P12 |
 | U-235 fission decay-heat set | IAEA CoNDERC fission archive | Dickens thermal pulse and Yarnell 20,000 s measurements, paired FISPACT-II inputs and reference reports |
 | ALARA 2.9.2 | official [`svalinn/ALARA`](https://github.com/svalinn/ALARA) source | P9 identical-data Fe-56(n,p)Mn-56 pulse comparison; repository `LICENSE` is 3-clause BSD |
 | natural abundances / atomic masses | Meija et al. 2016 (IUPAC/CIAAW) and AME2020 | independently parsed from the primary tables; source hashes below |
@@ -44,6 +45,26 @@ with SHA-256 `e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307`.
 extracts all 289 abundance and mass values directly from those primary files, matches every binary64 value and key,
 checks every element sum within `2e-15`, and reproduces the generated Rust table byte-for-byte. The primary files
 remain external and are not redistributed by ACTINV.
+
+## P12 FNG/ITER activation reference
+
+P12 uses the open research archive accompanying Peterson et al., *Nuclear Fusion* 64 (2024) 056011,
+DOI `10.1088/1741-4326/ad32dd`. The CC-BY-4.0 archive is Zenodo record 10660030 and has SHA-256
+`1c76f42dcbc3e0f488f8035c3f63e4cd4428930f76efc088329be7ec9c6b45ed`.
+
+| archive member | SHA-256 |
+|---|---|
+| `microxs_620.csv` | `fa097a994e8a4ea93267603bd6435972c15d3daa1d89cb37b626e21147637651` |
+| `depletion_results.h5` | `1fcd608a0a8100892b4d24ca7de05d401ab952b904ac3d80c8698de36419d4d5` |
+| `flux_620.npy` | `9f2b3223164adbe5709aa493943af0a1fde3b538654ec28993b32dfe56195828` |
+| `inventory.i` | `c2fdfc04547017823c533e5a48199c5bd49cfb33fe36fb7a984a88c30c20516b` |
+| `fluxes` | `25bc8b50a74147f4cc4637a24e2c6d0d8b24562447abb28e7ba699bc03390fde` |
+| `chain_endfb80_reduced.xml` | `f3f56d3a9ee66bcb691ea0812aad6a3696c00f6272f503de866a495b85c7270e` |
+
+The P12 control derives temporary ACTINV library and decay inputs from those files and checks selected reaction rates
+independently before comparing the supplied histories. The archive, extracted members, and generated nuclear data
+remain outside Git. This is an activation-history comparison for the recorded cell, material, data, and schedule; it
+is not a neutron/photon transport or general shutdown-dose validation.
 
 ## Photon-response input
 

@@ -48,13 +48,21 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
     "confidence_level": 0.95,
     "require_complete": false
   },
+  "radiological": {
+    "table": {
+      "path": "/data/radiological/responses.json",
+      "sha256": "64 hexadecimal digits"
+    },
+    "responses": ["clearance-2026", "worker-ingestion"],
+    "require_complete": false
+  },
   "options": {
     "mode": "auto",
     "prune": "rate",
     "bmin_atoms_per_g": 1e-8,
     "temperature_K": 293.6,
     "cram_order": 16,
-    "outputs": ["inventory", "activity", "heat", "photons", "dose", "pathways", "ledger", "certificate"]
+    "outputs": ["inventory", "activity", "heat", "photons", "dose", "pathways", "radiological", "ledger", "certificate"]
   }
 }
 ```
@@ -73,10 +81,11 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
 | `schedule` | At least one duration/flux-multiplier pair. Accepted duration units: seconds, minutes, hours, days and years. |
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
+| `radiological` | Optional hash-pinned clearance, waste, ingestion, or inhalation response table; omission reads no table. |
 
 The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data,
-every fission-yield evaluation and the photon response. A declaration is a constraint, not a value copied into the
-certificate.
+every fission-yield evaluation, the photon response, covariance sidecar, and radiological table when present. A
+declaration is a constraint, not a value copied into the certificate.
 
 ## Material bases
 
@@ -153,6 +162,44 @@ Coverage is `complete` only when every nonzero-sensitivity row has a valid self-
 cross-reaction terms contribute zero and are counted; they are not invented. These intervals are neither tolerance
 limits nor safety margins, and exclude decay/MF=32, production/MF=40 and yield, flux, composition,
 response-coefficient and model uncertainty.
+
+## Radiological responses
+
+`radiological` is optional. Its table is strict JSON with format `actinv-radiological-table-1`; the declared SHA-256
+is mandatory and is recomputed before the calculation. ACTINV ships no default table and makes no jurisdiction or
+scenario selection. A minimal table is:
+
+```json
+{
+  "format": "actinv-radiological-table-1",
+  "title": "Example only",
+  "source": {
+    "citation": "Issuing authority and publication",
+    "edition": "2026",
+    "url": "https://example.invalid/source",
+    "jurisdiction": "example"
+  },
+  "responses": [
+    {
+      "id": "clearance-2026",
+      "kind": "clearance_index",
+      "basis": "Describe the applicable material and scenario",
+      "coefficients": {"Co60": 100.0, "Mn56": 1000.0}
+    }
+  ]
+}
+```
+
+Response IDs and canonical nuclide keys must be unique. `kind` is `clearance_index`, `waste_index`,
+`ingestion_dose`, or `inhalation_dose`. Clearance/waste coefficients are limits in Bq/kg; ingestion/inhalation
+coefficients are in Sv/Bq. Every coefficient must be finite and positive. An empty `responses` selector chooses every
+table response in table order; otherwise only the named unique IDs are evaluated.
+
+Each step reports the selected value, unit, covered and missing activity, activity-coverage fraction, contributing
+nuclide count, and sorted active nuclides without a coefficient. Missing coefficients are not treated as zero.
+`require_complete: true` rejects the entire calculation when any selected response lacks a coefficient for positive
+activity. The certificate retains the table hash, source metadata, kind, basis, and coefficient count. See the
+[qualification boundary](QUALIFICATION.md) before using a regulatory table.
 
 ## Photon options
 
@@ -280,9 +327,9 @@ file variants produce a named error rather than a guessed interpretation.
 ## Independent mesh specification (`actinv-mesh-spec-1`)
 
 Mesh mode replaces the ordinary `spectrum` with a mandatory canonical-file path and SHA-256. All cells receive the
-same explicit library, decay data, optional fission-yield files, material, schedule, options and photon configuration
-and optional uncertainty configuration, and solve independently. The covariance sidecar is verified and prepared
-once; workers borrow it rather than re-reading or cloning it per cell.
+same explicit library, decay data, optional fission-yield files, material, schedule, options, photon configuration,
+uncertainty configuration, and radiological configuration, and solve independently. Covariance and radiological
+data are verified and prepared once; workers borrow them rather than re-reading or cloning them per cell.
 
 ```json
 {

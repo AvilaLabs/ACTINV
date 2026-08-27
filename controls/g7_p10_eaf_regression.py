@@ -83,7 +83,9 @@ TARGET_SELECTION = os.environ.get("ACTINV_P10_EAF_TARGETS", "").strip()
 RELATIVE_TOLERANCE = 2e-12
 ABSOLUTE_TOLERANCE_B = 1e-14
 SCORE_FLOOR_B = 1e-12
-MT_PRODUCTS = json.loads((ROOT / "data/mt_products.json").read_text())["table"]
+MT_PRODUCTS = json.loads(
+    (ROOT / "crates/actinv-data/data/mt_products.json").read_text()
+)["table"]
 ROUNDOFF_PROBE = ("n_6329_63-EU-152M.dat", (102, -1, -1, 0), 450)
 EXPECTED_MF9_LAW_CENSUS = {
     "MF3_INT_2__MF9_INT_2": 142,

@@ -34,7 +34,7 @@ FE56 = Path(
 )
 NJOY = Path(os.environ.get("ACTINV_P11_NJOY", "/tmp/actinv-njoy2016-79/build/njoy"))
 NJOY_SOURCE = Path(os.environ.get("ACTINV_P11_NJOY_SOURCE", "/tmp/actinv-njoy2016-79"))
-GROUPS = ROOT / "data" / "fispact_709_groups.json"
+GROUPS = ROOT / "crates" / "actinv-data" / "data" / "fispact_709_groups.json"
 EXPECTED = {
     "fe56": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
     "errorr": "4fd380f6a8b8c55ea3282bc5aed0e3755bee9361474423981200aa82800b956d",
