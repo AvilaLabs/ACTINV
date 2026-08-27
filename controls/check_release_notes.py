@@ -17,4 +17,8 @@ missing = [r for r in road if r not in notes]; extra = [r for r in notes if r no
 res = {"roadmap_rows": len(road), "release_note_rows": len(notes),
        "missing_from_release_notes": [r[0][:60] for r in missing], "not_in_roadmap": [r[0][:60] for r in extra],
        "pass": bool(road and not missing and not extra)}
-json.dump(res, open(os.path.join(ROOT, "results", "check_release_notes.json"), "w"), indent=1); print(json.dumps(res, indent=1))
+with open(os.path.join(ROOT, "results", "check_release_notes.json"), "w") as stream:
+    json.dump(res, stream, indent=1)
+    stream.write("\n")
+print(json.dumps(res, indent=1))
+sys.exit(0 if res["pass"] else 1)
