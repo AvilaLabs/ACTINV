@@ -157,19 +157,15 @@ def extract_archive(
             "file_manifest_sha256": file_manifest_hash(files),
             "files": files,
         }
-        manifest_bytes = canonical_json(manifest)
-        manifest["manifest_sha256"] = hashlib.sha256(manifest_bytes).hexdigest()
-        # The self-hash covers the canonical manifest before the self-hash field is added.
-        manifest["manifest_sha256_definition"] = (
-            "SHA256 of this canonical JSON without manifest_sha256 and "
-            "manifest_sha256_definition"
-        )
         temporary_manifest = manifest_path.with_name(
             f".{manifest_path.name}.writing-{os.getpid()}"
         )
         temporary_manifest.write_bytes(canonical_json(manifest))
         os.replace(staging, destination)
         os.replace(temporary_manifest, manifest_path)
+        # A manifest cannot contain its own file hash. Return that hash to the
+        # caller for compact gate evidence without adding it to the file itself.
+        manifest["detailed_manifest_sha256"] = sha256_file(manifest_path)
         return manifest
     except BaseException:
         shutil.rmtree(staging, ignore_errors=True)
