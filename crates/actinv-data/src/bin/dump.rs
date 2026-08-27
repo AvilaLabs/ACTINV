@@ -10,6 +10,8 @@
 //!   dump processed-kernel FILE MT TEMPERATURES_CSV ENERGY_EV [...] -> direct SIGMA1 control
 //!   dump processed-xs FILE MT TEMPERATURE_K [ENERGY_EV ...] -> processed points or 709 groups
 //!   dump library FILE OUT    -> raw row and group arrays for byte comparison
+//!   dump library-target FILE TARGET OUT -> bounded-memory raw target rows, groups and boundaries
+//!   dump library-targets FILE TARGETS_CSV OUT -> one-pass sparse-target raw rows, groups and boundaries
 //!   dump library-target-compare OLD.npz OLD_TARGET NEW.npz NEW_TARGET -> bounded-memory row/group comparison
 use actinv_data::{
     activation, composition, decay, doppler, endf, fission, groups, library, processing, resonance,
@@ -746,6 +748,73 @@ fn main() {
             }
             fs.flush().unwrap();
             println!("{} {}", l.rows.len(), l.ngroups);
+        }
+        "library-target" => {
+            // Stream one target from a potentially multi-gigabyte compressed library. Scientific controls can then
+            // inspect an exhaustive seeded subset without materialising the full group matrix in Python memory.
+            use std::io::Write;
+            let target: usize = a[3].parse().expect("target index");
+            let library = library::read_npz_target(&a[2], target).expect("stream library target");
+            let out = &a[4];
+            let mut rows =
+                std::io::BufWriter::new(std::fs::File::create(format!("{out}.rows")).unwrap());
+            for row in &library.rows {
+                for value in [row.mt as i64, row.zap as i64, row.lfs as i64, row.lmf as i64] {
+                    rows.write_all(&value.to_le_bytes()).unwrap();
+                }
+            }
+            rows.flush().unwrap();
+            let mut sigma =
+                std::io::BufWriter::new(std::fs::File::create(format!("{out}.sig")).unwrap());
+            for value in &library.sig {
+                sigma.write_all(&value.to_le_bytes()).unwrap();
+            }
+            sigma.flush().unwrap();
+            let mut bounds =
+                std::io::BufWriter::new(std::fs::File::create(format!("{out}.bounds")).unwrap());
+            for value in &library.bounds {
+                bounds.write_all(&value.to_le_bytes()).unwrap();
+            }
+            bounds.flush().unwrap();
+            println!("{} {}", library.rows.len(), library.ngroups);
+        }
+        "library-targets" => {
+            use std::io::Write;
+            let targets: std::collections::BTreeSet<usize> = a[3]
+                .split(',')
+                .map(|value| value.parse().expect("target index"))
+                .collect();
+            assert!(!targets.is_empty(), "at least one target is required");
+            let library =
+                library::read_npz_targets(&a[2], &targets).expect("stream library targets");
+            let out = &a[4];
+            let mut rows =
+                std::io::BufWriter::new(std::fs::File::create(format!("{out}.rows")).unwrap());
+            for row in &library.rows {
+                for value in [
+                    row.target as i64,
+                    row.mt as i64,
+                    row.zap as i64,
+                    row.lfs as i64,
+                    row.lmf as i64,
+                ] {
+                    rows.write_all(&value.to_le_bytes()).unwrap();
+                }
+            }
+            rows.flush().unwrap();
+            let mut sigma =
+                std::io::BufWriter::new(std::fs::File::create(format!("{out}.sig")).unwrap());
+            for value in &library.sig {
+                sigma.write_all(&value.to_le_bytes()).unwrap();
+            }
+            sigma.flush().unwrap();
+            let mut bounds =
+                std::io::BufWriter::new(std::fs::File::create(format!("{out}.bounds")).unwrap());
+            for value in &library.bounds {
+                bounds.write_all(&value.to_le_bytes()).unwrap();
+            }
+            bounds.flush().unwrap();
+            println!("{} {}", library.rows.len(), library.ngroups);
         }
         "library-target-compare" => {
             let old_target: usize = a[3].parse().expect("old target index");

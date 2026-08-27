@@ -375,14 +375,21 @@ pub fn read_npz(path: &str) -> Result<Library, String> {
     Ok(library)
 }
 
-/// Stream an NPZ and retain only one target's rows. This is intended for low-memory controls and diagnostics.
-pub fn read_npz_target(path: &str, target: usize) -> Result<Library, String> {
+/// Stream an NPZ and retain only the requested targets' rows. This is intended for low-memory controls and
+/// diagnostics over a sparse subset of a production library.
+pub fn read_npz_targets(
+    path: &str,
+    targets: &std::collections::BTreeSet<usize>,
+) -> Result<Library, String> {
     let mut archive = open_npz(path)?;
     let all_rows = read_rows(&mut archive)?;
-    let selected: Vec<bool> = all_rows.iter().map(|row| row.target == target).collect();
+    let selected: Vec<bool> = all_rows
+        .iter()
+        .map(|row| targets.contains(&row.target))
+        .collect();
     let rows: Vec<Row> = all_rows
         .into_iter()
-        .filter(|row| row.target == target)
+        .filter(|row| targets.contains(&row.target))
         .collect();
 
     let member = archive
@@ -432,6 +439,11 @@ pub fn read_npz_target(path: &str, target: usize) -> Result<Library, String> {
         ngroups,
         bounds,
     })
+}
+
+/// Stream an NPZ and retain only one target's rows.
+pub fn read_npz_target(path: &str, target: usize) -> Result<Library, String> {
+    read_npz_targets(path, &std::collections::BTreeSet::from([target]))
 }
 
 fn write_npy_header(writer: &mut impl Write, dtype: &str, shape: &[usize]) -> Result<(), String> {
@@ -611,6 +623,13 @@ mod tests {
         let selected = read_npz_target(first.to_str().unwrap(), 1).unwrap();
         assert_eq!(selected.rows, vec![library.rows[1]]);
         assert_eq!(selected.sig, vec![3.0, 4.0]);
+        let selected = read_npz_targets(
+            &first.to_string_lossy(),
+            &std::collections::BTreeSet::from([0, 1]),
+        )
+        .unwrap();
+        assert_eq!(selected.rows, library.rows);
+        assert_eq!(selected.sig, library.sig);
         std::fs::remove_file(first).unwrap();
         std::fs::remove_file(second).unwrap();
     }

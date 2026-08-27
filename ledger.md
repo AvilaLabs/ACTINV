@@ -681,3 +681,27 @@
   newline, so successful regeneration is deterministic. The exact CI audit passes all six steps with a clean cloned
   tree. At this checkpoint all 40 Rust tests, workspace/all-target/all-feature check, strict Clippy and rustfmt pass.
   P10 remains open; G4 is the next resonance-processing gate to formalize.
+
+## 29 — 2026-08-26 — P10 G4 temperature and ultra-narrow gate complete
+- The frozen legacy-numerical clause was internally inconsistent with P10's required exact ENDF integration,
+  finite source support and corrected fission-product semantics. Amendment A is append-only and hashed as
+  `e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd`; it retains exhaustive old/new comparison
+  on the mathematical domain the builders genuinely share and routes changed resonance/discontinuity domains to
+  independent truth controls. This documented repair makes an eventual successful P10 close conditional.
+- Exact independent SIGMA1 quadrature covers 0, 293.6, 600 and 900 K. The synthetic 1/v, constant and line cases
+  differ from Rust by at most `2.637e-12`; W-186 capture differs by `4.399e-14`, with exact 0 K identity and three
+  double-energy discontinuities retained in its 150,765-point production table.
+- All 52 treated Fr-226 capture/fission lines were re-parsed and independently integrated in the transformed
+  theta coordinate. Rust direct versus frozen-width closed form is at most `9.885e-7`; Rust versus the independent
+  adaptive integral is at most `1.316e-7`, both inside `1e-6`.
+- Fresh density-1/2/4 builds for Fr-226 and Rb-94 have no negative values or convergence flags. Their worst scored
+  capture/fission change is `8.793e-5`, more than elevenfold inside `1e-3`.
+- A fresh one-worker build of the 38 ordinary seeded targets completed in 645.4 s with 2,224 rows and NPZ hash
+  `80371fbe5a69ec6d6ff15108d2bebd4b304333e117e670e63da2b6757e1803b4`. The bounded reader streamed the full P4
+  library once. All nine row-identity changes are exactly the expected resonance-only Kr-87 capture or negative-ZAP
+  fission-sentinel repairs; 928 unchanged lin-lin rows and 188,327 eligible groups pass the original tolerance. The
+  Y-90m double-point trap agrees with high-precision analytic integration below `4e-16` relative while documenting
+  the old builder's 91.2% error.
+- Three alternating fresh four-worker profiles give Rust medians of 8.658 s and 28,012 KiB versus the Python
+  predecessor's 16.581 s and 105,032 KiB. Every subprocess was capped at 2 GiB. **P10-G4 PASS** under Amendment A;
+  P10 remains open and G5 is next.
