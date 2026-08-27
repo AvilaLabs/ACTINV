@@ -740,3 +740,21 @@
   index temperature mismatch, bad index library hash, bad declared library hash, charged nonzero temperature,
   charged fission yields and unknown projectile all fail without publishing a result. **P10-G6 PASS**; P10 remains
   open, with G1/G2 formalization and the complete G7 builds still required.
+
+## 32 — 2026-08-26 — P10 G2 R-matrix-limited gate complete
+- All six pinned inputs independently re-match: raw FENDL-3.2c W-186 ENDF, its 294 K ACE table, the associated group
+  file and NJOY deck/output, plus the official CCFE-709 boundaries. OpenMC 0.15.3 reads the ACE reference; all nuclear
+  data and generated libraries remain outside Git.
+- A separate MF=2 parser compares 615 RML structure fields with the Rust diagnostic path. The two particle pairs,
+  three spin groups, six channels and 175 resonances (80/47/48) match exactly at the ten-digit ENDF source precision.
+  The 130 differing binary float representations are all one ULP, with no source-decimal mismatch; no background or
+  tabulated phase-shift extension is present.
+- A fresh one-worker W-186 build produces 28 rows with no convergence flag. Against an independent pointwise ACE
+  collapse, all 450 overlapping CCFE-709 groups at or above 1e-6 barn are scored; the worst relative difference is
+  `1.006e-3`, inside `2e-3`. The flat-lethargy integral differs by `1.056e-4`, inside `5e-4`.
+- The negative missing-capture-channel plant exposed a real fail-closed defect: reaction preselection could skip RML
+  reconstruction and silently retain the MF=3 background. RML support is now structurally validated before reaction
+  selection, with a builder-level regression test for that exact path. Reduced-width input, unsupported KRM, a
+  missing eliminated capture channel and a background extension all fail without publishing an output/index pair.
+- Two complete control runs produced byte-identical evidence, SHA-256 `c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690`.
+  **P10-G2 PASS**; P10 remains open, with G1 and the complete G7 builds still required.

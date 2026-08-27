@@ -1071,18 +1071,12 @@ fn rml_reduced_amplitude(
     Ok(width.signum() * (0.5 * width.abs() / penetrability).sqrt())
 }
 
-/// Reconstruct one Reich-Moore R-matrix-limited range at zero Kelvin.
+/// Validate that an R-matrix-limited range uses only the subset implemented by this crate.
 ///
-/// The returned capture term is the unitarity defect from the eliminated photon channel. Explicit fission and
-/// other non-neutron particle pairs are accumulated separately. Coulomb channels, reduced-width input and RML
-/// extensions fail closed until their declared physics is implemented.
-pub fn reconstruct_rmatrix_limited(
-    range: &ResonanceRange,
-    energy: f64,
-) -> Result<CrossSections, String> {
-    if energy <= 0.0 || energy < range.energy_min || energy > range.energy_max {
-        return Ok(CrossSections::default());
-    }
+/// This check is intentionally independent of energy and reaction selection. Callers that might otherwise use an
+/// MF=3 background must not silently skip an unsupported MF=2 representation merely because its malformed channel
+/// declarations make the resonance contribution appear to be absent.
+pub fn validate_rmatrix_limited(range: &ResonanceRange) -> Result<(), String> {
     let RangeData::RMatrixLimited(rml) = &range.data else {
         return Err("range is not R-matrix-limited".into());
     };
@@ -1100,15 +1094,94 @@ pub fn reconstruct_rmatrix_limited(
     if entrance_pair.mass_a <= 0.0 || entrance_pair.mass_b <= 0.0 {
         return Err("RML neutron entrance pair has invalid masses".into());
     }
-    let entrance_lab_to_cm = entrance_pair.mass_b / (entrance_pair.mass_a + entrance_pair.mass_b);
-    let mut result = CrossSections::default();
 
+    for pair in &rml.particle_pairs {
+        if pair.za != 0 && pair.zb != 0 {
+            return Err(format!(
+                "RML Coulomb penetrability for MT={} is not implemented",
+                pair.mt
+            ));
+        }
+    }
     for spin_group in &rml.spin_groups {
         if !spin_group.backgrounds.is_empty() || !spin_group.phase_shifts.is_empty() {
             return Err(
                 "RML background or tabulated phase-shift extension is not implemented".into(),
             );
         }
+        let mut gamma_channels = 0usize;
+        for channel in &spin_group.channels {
+            let pair = rml.particle_pairs.get(channel.pair).ok_or_else(|| {
+                format!(
+                    "RML particle-pair index {} is out of range",
+                    channel.pair + 1
+                )
+            })?;
+            if pair.mt == 102 {
+                gamma_channels += 1;
+            }
+            if pair.penetrability != 0 {
+                if channel.l > 4 {
+                    return Err(format!(
+                        "unsupported orbital angular momentum L={}",
+                        channel.l
+                    ));
+                }
+                if channel.true_radius <= 0.0 || channel.effective_radius <= 0.0 {
+                    return Err(format!(
+                        "RML MT={} needs positive true/effective radii",
+                        pair.mt
+                    ));
+                }
+                if pair.mass_a <= 0.0 || pair.mass_b <= 0.0 {
+                    return Err(format!(
+                        "RML MT={} has invalid particle-pair masses",
+                        pair.mt
+                    ));
+                }
+            }
+        }
+        if gamma_channels != 1 {
+            return Err(format!(
+                "Reich-Moore RML spin group needs exactly one eliminated MT=102 channel, found {gamma_channels}"
+            ));
+        }
+        if spin_group
+            .resonances
+            .iter()
+            .any(|resonance| resonance.widths.len() != spin_group.channels.len())
+        {
+            return Err("RML resonance width count disagrees with its channels".into());
+        }
+    }
+    Ok(())
+}
+
+/// Reconstruct one Reich-Moore R-matrix-limited range at zero Kelvin.
+///
+/// The returned capture term is the unitarity defect from the eliminated photon channel. Explicit fission and
+/// other non-neutron particle pairs are accumulated separately. Coulomb channels, reduced-width input and RML
+/// extensions fail closed until their declared physics is implemented.
+pub fn reconstruct_rmatrix_limited(
+    range: &ResonanceRange,
+    energy: f64,
+) -> Result<CrossSections, String> {
+    if energy <= 0.0 || energy < range.energy_min || energy > range.energy_max {
+        return Ok(CrossSections::default());
+    }
+    let RangeData::RMatrixLimited(rml) = &range.data else {
+        return Err("range is not R-matrix-limited".into());
+    };
+    validate_rmatrix_limited(range)?;
+    let entrance_pair = rml
+        .particle_pairs
+        .iter()
+        .find(|pair| pair.mt == 2)
+        .expect("validated RML neutron entrance pair");
+    let entrance_lab_to_cm = entrance_pair.mass_b / (entrance_pair.mass_a + entrance_pair.mass_b);
+    let mut result = CrossSections::default();
+
+    for spin_group in &rml.spin_groups {
         let gamma_channels: Vec<usize> = spin_group
             .channels
             .iter()
@@ -1117,12 +1190,6 @@ pub fn reconstruct_rmatrix_limited(
                 (rml.particle_pairs[channel.pair].mt == 102).then_some(index)
             })
             .collect();
-        if gamma_channels.len() != 1 {
-            return Err(format!(
-                "Reich-Moore RML spin group needs exactly one eliminated MT=102 channel, found {}",
-                gamma_channels.len()
-            ));
-        }
         let gamma_channel = gamma_channels[0];
         let mut open = Vec::new();
         for (declared, channel) in spin_group.channels.iter().enumerate() {
@@ -1152,9 +1219,6 @@ pub fn reconstruct_rmatrix_limited(
         let size = open.len();
         let mut r_matrix = vec![vec![Complex64::new(0.0, 0.0); size]; size];
         for resonance in &spin_group.resonances {
-            if resonance.widths.len() != spin_group.channels.len() {
-                return Err("RML resonance width count disagrees with its channels".into());
-            }
             let half_capture = 0.5 * resonance.widths[gamma_channel].abs();
             let alpha = Complex64::new(resonance.energy - energy, -half_capture).inv();
             let mut amplitudes = Vec::with_capacity(size);

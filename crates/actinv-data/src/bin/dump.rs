@@ -5,6 +5,7 @@
 //!   dump activation FILE -> strict MF=3/6/8/9/10 evaluation summary
 //!   dump activation-product FILE ZAP LFS ENERGY_EV [...] -> charged residual-production components
 //!   dump resonance FILE -> strict MF=2/MT=151 structure summary
+//!   dump resonance-rml FILE -> canonical line-oriented R-matrix-limited structure
 //!   dump resonance-xs FILE ENERGY_EV [...] -> zero-K resonance-only cross sections
 //!   dump unresolved-probe CASE E D GX GN GG GF MUX MUN MUF LSSF -> synthetic G3 control
 //!   dump doppler-probe TEMPERATURE_K -> synthetic P10 G4 SIGMA1 inputs and outputs
@@ -438,6 +439,111 @@ fn activation_product(arguments: &[String]) {
     }
 }
 
+fn resonance_rml(arguments: &[String]) {
+    assert_eq!(arguments.len(), 1, "resonance-rml needs FILE");
+    let text = std::fs::read_to_string(&arguments[0]).expect("read resonance file");
+    let sections = endf::parse_sections(&text).expect("parse ENDF sections");
+    let mut ranges = 0usize;
+    for section in sections
+        .iter()
+        .filter(|section| section.mf == 2 && section.mt == 151)
+    {
+        let evaluation = resonance::parse_mf2(section).expect("parse MF=2/MT=151");
+        for (isotope_index, isotope) in evaluation.isotopes.iter().enumerate() {
+            for (range_index, range) in isotope.ranges.iter().enumerate() {
+                let resonance::RangeData::RMatrixLimited(data) = &range.data else {
+                    continue;
+                };
+                println!(
+                    "M {isotope_index} {range_index} {:.17e} {:.17e} {} {} {} {} {} {} {} {}",
+                    range.energy_min,
+                    range.energy_max,
+                    range.lru,
+                    range.lrf,
+                    range.naps,
+                    usize::from(range.scattering_radius.is_some()),
+                    usize::from(data.reduced_widths),
+                    data.krm,
+                    data.particle_pairs.len(),
+                    data.spin_groups.len()
+                );
+                for (pair_index, pair) in data.particle_pairs.iter().enumerate() {
+                    println!(
+                        "P {isotope_index} {range_index} {pair_index} {:.17e} {:.17e} {} {} {:.17e} {:.17e} {:.17e} {} {} {} {} {}",
+                        pair.mass_a,
+                        pair.mass_b,
+                        pair.za,
+                        pair.zb,
+                        pair.spin_a,
+                        pair.spin_b,
+                        pair.q_value,
+                        pair.penetrability,
+                        pair.shift,
+                        pair.mt,
+                        pair.parity_a,
+                        pair.parity_b
+                    );
+                }
+                for (group_index, group) in data.spin_groups.iter().enumerate() {
+                    println!(
+                        "G {isotope_index} {range_index} {group_index} {:.17e} {:.17e} {} {} {} {}",
+                        group.spin,
+                        group.parity,
+                        group.channels.len(),
+                        group.resonances.len(),
+                        group.backgrounds.len(),
+                        group.phase_shifts.len()
+                    );
+                    for (channel_index, channel) in group.channels.iter().enumerate() {
+                        println!(
+                            "C {isotope_index} {range_index} {group_index} {channel_index} {} {} {:.17e} {:.17e} {:.17e} {:.17e}",
+                            channel.pair,
+                            channel.l,
+                            channel.spin,
+                            channel.boundary,
+                            channel.effective_radius,
+                            channel.true_radius
+                        );
+                    }
+                    for (resonance_index, value) in group.resonances.iter().enumerate() {
+                        print!(
+                            "V {isotope_index} {range_index} {group_index} {resonance_index} {:.17e} {}",
+                            value.energy,
+                            value.widths.len()
+                        );
+                        for width in &value.widths {
+                            print!(" {width:.17e}");
+                        }
+                        println!();
+                    }
+                    for (extension_index, extension) in group.backgrounds.iter().enumerate() {
+                        println!(
+                            "B {isotope_index} {range_index} {group_index} {extension_index} {} {} {} {} {}",
+                            extension.channel,
+                            extension.law,
+                            extension.real.as_ref().map_or(0, |table| table.x.len()),
+                            extension.imaginary.as_ref().map_or(0, |table| table.x.len()),
+                            extension.parameters.len()
+                        );
+                    }
+                    for (extension_index, extension) in group.phase_shifts.iter().enumerate() {
+                        println!(
+                            "S {isotope_index} {range_index} {group_index} {extension_index} {} {} {} {} {}",
+                            extension.channel,
+                            extension.law,
+                            extension.real.as_ref().map_or(0, |table| table.x.len()),
+                            extension.imaginary.as_ref().map_or(0, |table| table.x.len()),
+                            extension.parameters.len()
+                        );
+                    }
+                }
+                ranges += 1;
+            }
+        }
+    }
+    println!("N {ranges}");
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -638,6 +744,7 @@ fn main() {
             }
         }
         "activation-product" => activation_product(&a[2..]),
+        "resonance-rml" => resonance_rml(&a[2..]),
         "resonance" => {
             let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
             let sections = endf::parse_sections(&text).expect("parse ENDF sections");
@@ -1102,7 +1209,7 @@ fn main() {
         }
         "provenance" => println!("{}", composition::provenance()),
         _ => eprintln!(
-            "usage: dump decay|spectra|spectra-summary|activation|activation-product|fission-yields|fission-effective|library|composition|material|provenance ..."
+            "usage: dump decay|spectra|spectra-summary|activation|activation-product|fission-yields|fission-effective|resonance-rml|library|composition|material|provenance ..."
         ),
     }
 }

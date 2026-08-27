@@ -5,6 +5,7 @@ use crate::activation::{parse_evaluations, Evaluation, Mf6Product, ProductRef, P
 use crate::groups::{GroupStructure, Tabulated};
 use crate::library::{write_npz, Library, Row};
 use crate::processing::{has_resonance_contribution, process_reaction, ProcessedReaction};
+use crate::resonance::{validate_rmatrix_limited, RangeData};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -683,6 +684,14 @@ fn build_evaluation(
             .resonance
             .as_ref()
             .ok_or("MF=2/MT=151 was declared without parsed resonance parameters")?;
+        for isotope in &resonance.isotopes {
+            for range in &isotope.ranges {
+                if matches!(range.data, RangeData::RMatrixLimited(_)) {
+                    validate_rmatrix_limited(range)
+                        .map_err(|error| format!("RML validation: {error}"))?;
+                }
+            }
+        }
         for mt in [18, 102] {
             if has_resonance_contribution(resonance, mt) {
                 // ENDF-6 permits File 3 background cross sections in resonance ranges but does not require them.
@@ -1420,6 +1429,91 @@ mod tests {
         .unwrap_err();
         assert!(
             error.contains("without parsed resonance parameters"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn unsupported_rml_cannot_fall_back_to_mf3() {
+        use crate::resonance::{
+            ParticlePair, RMatrixLimited, RangeData, ResonanceEvaluation, ResonanceIsotope,
+            ResonanceRange, RmlChannel, RmlResonance, SpinGroup,
+        };
+
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf2_sections.insert(151);
+        input.resonance = Some(ResonanceEvaluation {
+            za: 26056,
+            awr: 55.45,
+            isotopes: vec![ResonanceIsotope {
+                zai: 26056,
+                abundance: 1.0,
+                fission_widths: false,
+                ranges: vec![ResonanceRange {
+                    energy_min: 1.0,
+                    energy_max: 4.0,
+                    lru: 1,
+                    lrf: 7,
+                    naps: 1,
+                    scattering_radius: None,
+                    data: RangeData::RMatrixLimited(RMatrixLimited {
+                        reduced_widths: false,
+                        krm: 3,
+                        particle_pairs: vec![ParticlePair {
+                            mass_a: 1.0,
+                            mass_b: 55.0,
+                            za: 0,
+                            zb: 26,
+                            spin_a: 0.5,
+                            spin_b: 0.0,
+                            q_value: 0.0,
+                            penetrability: 1,
+                            shift: 0,
+                            mt: 2,
+                            parity_a: 1,
+                            parity_b: 1,
+                        }],
+                        spin_groups: vec![SpinGroup {
+                            spin: 0.5,
+                            parity: 1.0,
+                            channels: vec![RmlChannel {
+                                pair: 0,
+                                l: 0,
+                                spin: 0.5,
+                                boundary: 0.0,
+                                effective_radius: 0.5,
+                                true_radius: 0.5,
+                            }],
+                            resonances: vec![RmlResonance {
+                                energy: 2.0,
+                                widths: vec![0.4],
+                            }],
+                            backgrounds: Vec::new(),
+                            phase_shifts: Vec::new(),
+                        }],
+                    }),
+                }],
+            }],
+        });
+        let error = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(
+            error.contains("needs exactly one eliminated MT=102 channel"),
             "{error}"
         );
     }

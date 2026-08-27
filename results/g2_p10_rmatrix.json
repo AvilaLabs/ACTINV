@@ -1,0 +1,138 @@
+{
+  "ace": {
+    "atomic_weight_ratio": 184.357,
+    "energy_max_eV": 150000000.0,
+    "energy_min_eV": 9.999999999999999e-06,
+    "energy_points": 36860,
+    "kT_eV": 0.025300000000000003,
+    "name": "W186",
+    "temperature": "294K"
+  },
+  "address_space_limit_bytes": 2147483648,
+  "binary_sha256": "648c647e5c050c54252f907039fc57a9c9c2365d59eeed410422d464c72660a1",
+  "ccfe_709": {
+    "groups_compared_at_or_above_1e-6_b": 450,
+    "groups_overlapping_rml": 450,
+    "maximum_relative": 0.001005531844612443,
+    "official_matches_vendored_and_built_exactly": true,
+    "tolerance": 0.002,
+    "worst_ace_b": 8.33679757796782,
+    "worst_group": 238,
+    "worst_group_bounds_eV": [
+      0.5754399,
+      0.6025596
+    ],
+    "worst_rust_b": 8.328414662521086
+  },
+  "control_sha256": "7df5a61dc28f5a9f0a847c0d40484f8e4ccd6aa81f484e9045c4823343b7d6d3",
+  "dump_sha256": "774043c8a4f77ef60de753934c6b67f6f72a946eba54b5f24254e400ef259ce2",
+  "flat_lethargy_integral": {
+    "ace_b_lethargy": 4260.992518865843,
+    "range_eV": [
+      1e-05,
+      10000.0
+    ],
+    "relative": 0.00010560167282538568,
+    "rust_b_lethargy": 4260.542550927954,
+    "tolerance": 0.0005
+  },
+  "gate": "P10-G2",
+  "generated": {
+    "convergence_flags": 0,
+    "index_sha256": "7d8f6b277f465ea986df4152aa71ef8f929dccb92add110d5af59770af71eda7",
+    "library_sha256": "a42ee271fa6c59a71d49a1c61e5e59cd9358afd164783f12770d2e2888c68d44",
+    "rows": 28,
+    "target_ledger": [
+      "MT102: raw 0 K MF=2+MF=3 reconstructed on 154320 points and processed to 293.6 K on 93814 points",
+      "MT5 aggregate products omitted for a neutron evaluation",
+      "MT18: MF=10 IZAP=-1 total-fission sentinel validated and omitted as an inventory product"
+    ]
+  },
+  "independent_metadata": {
+    "abundance": 1.0,
+    "awr": 184.357,
+    "fission_widths": 0,
+    "isotope_count": 1,
+    "range_count": 2,
+    "za": 74186,
+    "zai": 74186
+  },
+  "input_hashes": {
+    "74W_186": "b11e052d8379b010a6f3dd6d67ae6a2153666bfaa759c17503ad51b919f6d5a4",
+    "74W_186.g": "022eb861b7ebdfec0b5a47fb448889f544f66a2886c6ff4de1891c06980828f0",
+    "74W_186.nji": "be073dcd636ecc4422f5b42310f6bec9db299568d3f8621e176638a7a06413b6",
+    "74W_186.out": "ea9a7838b1e3e33f68708e939617f937b08fe72ead4a774bd66a1f4e2522dca0",
+    "ACTINV-P10_AMENDMENT_A.md": "e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd",
+    "ACTINV-P10_AMENDMENT_B.md": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
+    "ACTINV-P10_PROTOCOL.md": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27",
+    "ebins_709": "31bc68b8b042cf5bddd211508bf3a6315b56d31fdf688263f57f124e972840c4",
+    "n_7443_74-W-186.endf": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+  },
+  "openmc_version": "0.15.3",
+  "pass": true,
+  "rejections": {
+    "background_extension": {
+      "context": "background or tabulated phase-shift extension is not implemented",
+      "final_pair_absent": true,
+      "input_sha256": "59744e18de42eb3bf42250fe40bee67004de0567b0d5d96d44f5ae271ab9cf3b",
+      "returncode_nonzero": true
+    },
+    "missing_capture_channel": {
+      "context": "needs exactly one eliminated MT=102 channel",
+      "final_pair_absent": true,
+      "input_sha256": "1d1447115aebe622cb8f928bfe91c4f5b564322b80efed876325f4a56e0d35dd",
+      "returncode_nonzero": true
+    },
+    "reduced_widths": {
+      "context": "reduced-width amplitudes",
+      "final_pair_absent": true,
+      "input_sha256": "5c032be6cec0403cf84b8429759d046f918c1e7f0a03a4b1e68f5d6562f8adc4",
+      "returncode_nonzero": true
+    },
+    "unsupported_krm": {
+      "context": "unsupported RML KRM=4",
+      "final_pair_absent": true,
+      "input_sha256": "c45da4c1e54f5561ed34f01a7e1ea17a084c1e270b4c421924565699b07cff03",
+      "returncode_nonzero": true
+    }
+  },
+  "structure": {
+    "backgrounds": 0,
+    "channels": 6,
+    "comparison": {
+      "binary_representation_differences": 130,
+      "exact_at_endf_source_precision": true,
+      "fields_compared": 615,
+      "float_fields": 567,
+      "maximum_ulp_distance": 1.0,
+      "mismatch_examples": [],
+      "source_decimal_mismatches": 0
+    },
+    "exact_match": true,
+    "independent_sha256": "ec342fdf017d2e282418a2caec461205657977197192bdb39e8b613ad458c8a9",
+    "particle_pairs": 2,
+    "phase_shifts": 0,
+    "range": {
+      "declared_particle_pairs": 2,
+      "declared_spin_groups": 3,
+      "energy_max_eV": 10000.0,
+      "energy_min_eV": 1e-05,
+      "ifg": 0,
+      "isotope_index": 0,
+      "krm": 3,
+      "lrf": 7,
+      "lru": 1,
+      "naps": 1,
+      "nro": 0,
+      "range_index": 0
+    },
+    "resonances": 175,
+    "resonances_by_spin_group": [
+      80,
+      47,
+      48
+    ],
+    "rust_sha256": "ec342fdf017d2e282418a2caec461205657977197192bdb39e8b613ad458c8a9",
+    "spin_groups": 3
+  }
+}
