@@ -1,0 +1,205 @@
+{
+ "build_evidence": {
+  "file": "g7_p10_builds.json",
+  "pass": true,
+  "sha256": "1647f3129768df84b9e3ea400d257f242e0864f2c542765408f48d5477bb267b"
+ },
+ "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+ "builds": {
+  "alpha": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "index_sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038",
+   "npz_sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915",
+   "pass": true,
+   "rows": 489279,
+   "targets": 2850,
+   "unsupported_ledger_entries": []
+  },
+  "deuteron": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "index_sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707",
+   "npz_sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae",
+   "pass": true,
+   "rows": 548706,
+   "targets": 2850,
+   "unsupported_ledger_entries": []
+  },
+  "eaf": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "index_sha256": "601fc95b3b8e89a180ee2dbd10a25406a2b8a6a97fe5555d483bbba607bf386d",
+   "npz_sha256": "5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2",
+   "pass": true,
+   "rows": 115702,
+   "targets": 816,
+   "unsupported_ledger_entries": []
+  },
+  "neutron": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "index_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "npz_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "pass": true,
+   "rows": 167735,
+   "targets": 2850,
+   "unsupported_ledger_entries": []
+  },
+  "proton": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "index_sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945",
+   "npz_sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790",
+   "pass": true,
+   "rows": 528057,
+   "targets": 2850,
+   "unsupported_ledger_entries": []
+  }
+ },
+ "eaf_regression": {
+  "current_rows_checked": 115702,
+  "file": "g7_p10_eaf_regression.json",
+  "pass": true,
+  "sha256": "f0a097f28a9f913d54ceac66d193db09bcba8b53eda809eb4d9b326da41cd4e3",
+  "targets_checked": 816
+ },
+ "gate": "P10-G7",
+ "pass": true,
+ "regressions": {
+  "documentation": {
+   "README.md": {
+    "missing": [],
+    "pass": true,
+    "required_fragments": [
+     "Current version: **v0.5.0**",
+     "TENDL-2025",
+     "P10-CONDITIONAL"
+    ]
+   },
+   "docs/DATA.md": {
+    "missing": [],
+    "pass": true,
+    "required_fragments": [
+     "P10 activation-library provenance",
+     "no licensed FISPACT-II executable was run"
+    ]
+   },
+   "docs/METHOD.md": {
+    "missing": [],
+    "pass": true,
+    "required_fragments": [
+     "production Rust path in `actinv-data`",
+     "Finite-dilution self-shielding, probability tables and Bondarenko factors"
+    ]
+   },
+   "docs/RELEASE_NOTES_v0.5.md": {
+    "missing": [],
+    "pass": true,
+    "required_fragments": [
+     "The licensed FISPACT executable was not run",
+     "Finite-dilution unresolved self-shielding"
+    ]
+   },
+   "docs/ROADMAP.md": {
+    "missing": [],
+    "pass": true,
+    "required_fragments": [
+     "P10 is closed **P10-CONDITIONAL**",
+     "P11 \u2014 Uncertainty is next, unopened and unhashed"
+    ]
+   }
+  },
+  "evidence": {
+   "check_dependencies": {
+    "file": "check_dependencies.json",
+    "pass": true,
+    "sha256": "869a1991d6eca2ebb59c12518c15274e207f4b9437f1a8c39bceac0f6ed1ef4a"
+   },
+   "check_release_notes": {
+    "file": "check_release_notes.json",
+    "pass": true,
+    "sha256": "3f84d2bebed20e53a67a5d992f59a11a6155432f11754e2cd859acad6c8c6f35"
+   },
+   "ci_end_to_end": {
+    "file": "ci_end_to_end.json",
+    "pass": true,
+    "sha256": "feb3691161a50c9508e9d6326c63b047c10ad0d96da82b10a7f7b2b0ed91aee2"
+   },
+   "g1_self_contained": {
+    "file": "g1_self_contained.json",
+    "pass": true,
+    "sha256": "7632094c62e3309ac8ec54c7e23cabeb6b6bca0bf6da89620589de7ca5d24109"
+   },
+   "g7_p10_co58_linearization": {
+    "file": "g7_p10_co58_linearization.json",
+    "pass": true,
+    "sha256": "324dcc6bc53af9681fba2aa12baada03298cc0a9a8a48f4b4bd81b73930dc800"
+   },
+   "g7_p10_eaf_product": {
+    "file": "g7_p10_eaf_product.json",
+    "pass": true,
+    "sha256": "1cb9a1a6244b12a9fe8e070d0cd087ccca7d084a294fc8ccc7ae03b98a16ba8f"
+   },
+   "g7_p10_hs278_kink": {
+    "file": "g7_p10_hs278_kink.json",
+    "pass": true,
+    "sha256": "1c339591dc1adb50c0f2332df86613db227a813b9ef4f1b7307f40f73a8a2bf3"
+   },
+   "g7_p10_neutron_sources": {
+    "file": "g7_p10_neutron_sources.json",
+    "pass": true,
+    "sha256": "5bf16da2c42a2ce1aabddb5c1a4734bee18e0d50ec1f3f3a8f2b15d51e655c9d"
+   },
+   "g7_p10_quality": {
+    "file": "g7_p10_quality.json",
+    "pass": true,
+    "sha256": "cc92cbcbbb7c9fc6710a16616c44333305caf3280acc81bd61bd0094533a4d46"
+   }
+  },
+  "pass": true,
+  "phase_verdicts": {
+   "verdict_p5": {
+    "actual": "P5-PASS",
+    "expected": "P5-PASS",
+    "file": "verdict_p5.json",
+    "pass": true,
+    "sha256": "958fef70d0396edf38a33c050fa3bef240f8c5d4496ccbff033eacf023ce4e79"
+   },
+   "verdict_p6": {
+    "actual": "P6-CONDITIONAL",
+    "expected": "P6-CONDITIONAL",
+    "file": "verdict_p6.json",
+    "pass": true,
+    "sha256": "03a34a4dcfa5004646e8c24b97d5a3dadde49863539e9035fd89785dad664215"
+   },
+   "verdict_p7": {
+    "actual": "P7-CONDITIONAL",
+    "expected": "P7-CONDITIONAL",
+    "file": "verdict_p7.json",
+    "pass": true,
+    "sha256": "c31aecdc01d884e475892dc257bbdac8132917e5106184fd69fa6873ac7d94a1"
+   },
+   "verdict_p8": {
+    "actual": "P8-CONDITIONAL",
+    "expected": "P8-CONDITIONAL",
+    "file": "verdict_p8.json",
+    "pass": true,
+    "sha256": "8217510459bb11c772d81fe4d486809bda3943b1912d6bf47e464f57eeae365c"
+   },
+   "verdict_p9": {
+    "actual": "P9-CONDITIONAL",
+    "expected": "P9-CONDITIONAL",
+    "file": "verdict_p9.json",
+    "pass": true,
+    "sha256": "bf631926e8bcf1b4fa41119e27fb5380eba9a5884649e5c7314694dc6807c924"
+   }
+  }
+ },
+ "schema": "actinv-p10-g7-complete-1"
+}

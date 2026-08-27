@@ -1,0 +1,33 @@
+{
+ "gates": {
+  "G1 Rust builder/parity/determinism": "PASS \u2014 231816 retained fields; max parser ULP 0; fresh/cached identity=True",
+  "G2 R-matrix-limited W-186": "PASS \u2014 175 resonances; group max 1.006e-03; integral 1.056e-04",
+  "G3 Ag-107 unresolved averages": "PASS \u2014 NJOY group max 1.564e-04; quadrature max 2.051e-11",
+  "G4 temperature/ultra-narrow": "PASS \u2014 52 analytic lines; density max 8.793e-05; flags=0",
+  "G5 charged particles/FISPACT rows": "PASS \u2014 TENDL-2025 point max 4.475e-07; processed-row max 2.253e-03",
+  "G6 runtime projectile contract": "PASS \u2014 entry-point identity=True; analytic max 1.644e-14; legacy neutron=True",
+  "G7 complete builds/provenance/regression": "PASS \u2014 5 libraries/12216 targets; cached identities=True; EAF=True; regressions=True"
+ },
+ "repair_round": true,
+ "amendments": [
+  "ACTINV-P10_AMENDMENT_A.md",
+  "ACTINV-P10_AMENDMENT_B.md",
+  "ACTINV-P10_AMENDMENT_C.md",
+  "ACTINV-P10_AMENDMENT_D.md",
+  "ACTINV-P10_AMENDMENT_E.md",
+  "ACTINV-P10_AMENDMENT_F.md",
+  "ACTINV-P10_AMENDMENT_G.md",
+  "ACTINV-P10_AMENDMENT_H.md",
+  "ACTINV-P10_AMENDMENT_I.md",
+  "ACTINV-P10_AMENDMENT_J.md",
+  "ACTINV-P10_AMENDMENT_K.md",
+  "ACTINV-P10_AMENDMENT_L.md",
+  "ACTINV-P10_AMENDMENT_M.md",
+  "ACTINV-P10_AMENDMENT_N.md",
+  "ACTINV-P10_AMENDMENT_O.md",
+  "ACTINV-P10_AMENDMENT_P.md",
+  "ACTINV-P10_AMENDMENT_Q.md",
+  "ACTINV-P10_AMENDMENT_R.md"
+ ],
+ "verdict": "P10-CONDITIONAL"
+}
