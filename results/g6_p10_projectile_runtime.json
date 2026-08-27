@@ -1,0 +1,306 @@
+{
+  "address_space_limit_bytes": 2147483648,
+  "analytic_tolerance": 2e-12,
+  "binary_sha256": "366458162d1c980d7df5eb66716dbf2960d19edb07cf8758cc5626a67084ce68",
+  "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
+  "certificate_hashes": {
+    "alpha_cli": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "561085bd49ca2227dcf91dd8181a743108af2a2dd3c411d66b0163c53c9b96ae",
+        "recorded": "561085bd49ca2227dcf91dd8181a743108af2a2dd3c411d66b0163c53c9b96ae"
+      }
+    },
+    "alpha_prepared_mesh": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "561085bd49ca2227dcf91dd8181a743108af2a2dd3c411d66b0163c53c9b96ae",
+        "recorded": "561085bd49ca2227dcf91dd8181a743108af2a2dd3c411d66b0163c53c9b96ae"
+      }
+    },
+    "alpha_python": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "561085bd49ca2227dcf91dd8181a743108af2a2dd3c411d66b0163c53c9b96ae",
+        "recorded": "561085bd49ca2227dcf91dd8181a743108af2a2dd3c411d66b0163c53c9b96ae"
+      }
+    },
+    "deuteron_cli": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "30b01da99e6768e0804105d3835485b119f054d09dcc6a897256847a1985cf13",
+        "recorded": "30b01da99e6768e0804105d3835485b119f054d09dcc6a897256847a1985cf13"
+      }
+    },
+    "deuteron_prepared_mesh": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "30b01da99e6768e0804105d3835485b119f054d09dcc6a897256847a1985cf13",
+        "recorded": "30b01da99e6768e0804105d3835485b119f054d09dcc6a897256847a1985cf13"
+      }
+    },
+    "deuteron_python": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "30b01da99e6768e0804105d3835485b119f054d09dcc6a897256847a1985cf13",
+        "recorded": "30b01da99e6768e0804105d3835485b119f054d09dcc6a897256847a1985cf13"
+      }
+    },
+    "legacy_neutron_cli": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151",
+        "recorded": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151"
+      }
+    },
+    "proton_cli": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "4b416243ba13155832d5d0c2dcfa656c7d9c6dac03691cfdbcac62771cd35985",
+        "recorded": "4b416243ba13155832d5d0c2dcfa656c7d9c6dac03691cfdbcac62771cd35985"
+      }
+    },
+    "proton_prepared_mesh": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "4b416243ba13155832d5d0c2dcfa656c7d9c6dac03691cfdbcac62771cd35985",
+        "recorded": "4b416243ba13155832d5d0c2dcfa656c7d9c6dac03691cfdbcac62771cd35985"
+      }
+    },
+    "proton_python": {
+      "decay_primary": {
+        "match": true,
+        "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+        "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+      },
+      "library": {
+        "match": true,
+        "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+        "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+      },
+      "library_index": {
+        "match": true,
+        "recomputed": "4b416243ba13155832d5d0c2dcfa656c7d9c6dac03691cfdbcac62771cd35985",
+        "recorded": "4b416243ba13155832d5d0c2dcfa656c7d9c6dac03691cfdbcac62771cd35985"
+      }
+    }
+  },
+  "control_sha256": "4f7ffcb033ae785908b027741607fd3edaab38cd3f77e4fbf8369acb7e75c5a3",
+  "entry_point_identity": {
+    "alpha": true,
+    "deuteron": true,
+    "proton": true
+  },
+  "entry_points": [
+    "cli",
+    "python",
+    "prepared_mesh"
+  ],
+  "gate": "P10-G6",
+  "max_analytic_relative_error": 1.6439942021424526e-14,
+  "mesh_certificates": {
+    "alpha": {
+      "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
+      "checks": {
+        "canonical_computed": true,
+        "canonical_declared": true,
+        "upstream_path": true,
+        "upstream_source": true
+      },
+      "upstream_source_sha256": "6502cc4ec3e40ac85692bb09feaebca1bceb240b0eb63cb5b137d5880e434467"
+    },
+    "deuteron": {
+      "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
+      "checks": {
+        "canonical_computed": true,
+        "canonical_declared": true,
+        "upstream_path": true,
+        "upstream_source": true
+      },
+      "upstream_source_sha256": "6502cc4ec3e40ac85692bb09feaebca1bceb240b0eb63cb5b137d5880e434467"
+    },
+    "proton": {
+      "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
+      "checks": {
+        "canonical_computed": true,
+        "canonical_declared": true,
+        "upstream_path": true,
+        "upstream_source": true
+      },
+      "upstream_source_sha256": "6502cc4ec3e40ac85692bb09feaebca1bceb240b0eb63cb5b137d5880e434467"
+    }
+  },
+  "pass": true,
+  "pre_p10_neutron": {
+    "baseline_commit": "e5421a0e30eb94303482bed2c4b9491b773244e6",
+    "canonical_result_sha256": "bff6d57eda08cbaabb611e61e480fa384f7c9aadf3ed7717d14aeb9b943bd525",
+    "expected_canonical_result_sha256": "bff6d57eda08cbaabb611e61e480fa384f7c9aadf3ed7717d14aeb9b943bd525",
+    "index_sha256": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151",
+    "legacy_neutron_fluence_schema_unchanged": true,
+    "library_sha256": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+    "no_projectile_in_spec_index_or_result": true,
+    "pass": true,
+    "spec_sha256": "48f33e243d8242b51cc0e2572ad9a176dfd9e723bfed565a536736581ed70504",
+    "timing_field_excluded": "top-level ms only"
+  },
+  "projectiles": [
+    "proton",
+    "deuteron",
+    "alpha"
+  ],
+  "protocol_hashes": {
+    "amendment_a": "e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd",
+    "amendment_b": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
+    "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
+  },
+  "python_extension": "actinv.cpython-312-x86_64-linux-gnu.so",
+  "python_extension_sha256": "3f573affb1a1557a22dfddf69e5b126c33a1c0cccb4ab69148b89ff3aa05769f",
+  "rejections": {
+    "charged_fission": {
+      "context": "not supported for proton",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "charged_temperature": {
+      "context": "temperature_K: 0",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "index_group_boundaries": {
+      "context": "boundaries do not match declared group structure",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "index_group_hash": {
+      "context": "group-boundary hash mismatch",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "index_library_hash": {
+      "context": "activation-library index hash mismatch",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "index_temperature": {
+      "context": "does not match library temperature",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "missing_index_projectile": {
+      "context": "does not match activation-library projectile 'neutron'",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "projectile_mismatch": {
+      "context": "does not match activation-library projectile",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "spec_index_group_mismatch": {
+      "context": "does not match activation-library group structure",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "spec_library_hash": {
+      "context": "SHA-256 mismatch",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    },
+    "unknown_projectile": {
+      "context": "unknown variant",
+      "final_output_absent": true,
+      "returncode_nonzero": true
+    }
+  },
+  "source_sha256": "6502cc4ec3e40ac85692bb09feaebca1bceb240b0eb63cb5b137d5880e434467"
+}

@@ -723,3 +723,20 @@
   verifies noncanonical level remapping, and independently matches the ordinary MT=16 charged-channel residual.
   Wrong projectile, bad NSUB, missing yield, conflicting product identity and malformed LAW plants all fail closed
   without publishing an output/index pair. **P10-G5 PASS** under Amendment B; P10 remains open and G6 is next.
+
+## 31 — 2026-08-26 — P10 G6 runtime projectile gate complete
+- The exact pre-P10 close commit `e5421a0e30eb94303482bed2c4b9491b773244e6` was built in an isolated tree and
+  run on the unchanged P9 synthetic neutron fixture. After excluding only the nondeterministic top-level `ms` field
+  and canonicalizing the control-owned work path, its result hash is `bff6d57e…`; the current neutron result has the
+  same hash. The neutron spec, index, result, ledger and certificate remain free of a serialized projectile field,
+  and the established `fluence_n_cm2` schema is unchanged.
+- Proton, deuteron and alpha each produce identical normalized result fields through the release CLI, a PyO3 wheel
+  built from this checkout, and the mesh path's shared prepared data. Their independent closed two-state analytic
+  parent/product solution differs by at most `1.644e-14`, more than one hundredfold inside `2e-12`; all charged
+  steps carry generic particle fluence and the projectile is present in the result, ledger and certificate.
+- Every library, index and decay hash in all ten produced run certificates independently re-matches its file. The
+  three prepared-mesh headers also re-match both the canonical-flux and upstream-source hashes and identities.
+  Projectile mismatch, missing index projectile, spec/index group mismatch, bad group hash, bad named boundaries,
+  index temperature mismatch, bad index library hash, bad declared library hash, charged nonzero temperature,
+  charged fission yields and unknown projectile all fail without publishing a result. **P10-G6 PASS**; P10 remains
+  open, with G1/G2 formalization and the complete G7 builds still required.
