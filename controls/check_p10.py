@@ -14,6 +14,8 @@ AMENDMENTS = [
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_C.md",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_D.md",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_E.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_F.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_G.md",
 ]
 
 
@@ -46,6 +48,9 @@ def main() -> None:
         if g1
         else 0
     )
+    g1_ulp = (
+        g1["parser_parity"]["totals"]["maximum_ulp_distance"] if g1 else 0.0
+    )
     g1_determinism = g1["determinism_and_cache"] if g1 else {}
     g2_integral = g2["flat_lethargy_integral"] if g2 else {}
     g3_pass = (
@@ -74,7 +79,7 @@ def main() -> None:
             "pending"
             if g1 is None
             else (
-                f"{g1_fields} retained fields; max parser ULP 2; "
+                f"{g1_fields} retained fields; max parser ULP {g1_ulp:g}; "
                 f"fresh/cached identity={g1_determinism.get('byte_identical')}"
             ),
         ),

@@ -100,6 +100,43 @@ impl Tabulated {
         })
     }
 
+    /// Represent this table on one breakpoint-bounded interval as powers of `t=E/low` when its ENDF law permits
+    /// an exact product antiderivative. `None` retains the general adaptive path.
+    fn interval_power_terms(&self, low: f64, high: f64) -> Result<Option<Vec<(f64, f64)>>, String> {
+        let middle = low + 0.5 * (high - low);
+        if middle < self.x[0] || middle > self.x[self.x.len() - 1] {
+            return Ok(Some(vec![(0.0, 0.0)]));
+        }
+        let upper = self.x.partition_point(|point| *point <= middle);
+        let segment = upper.saturating_sub(1).min(self.x.len() - 2);
+        let (x1, x2) = (self.x[segment], self.x[segment + 1]);
+        if x2 <= x1 {
+            return Err("product-collapse interval selected a zero-width TAB1 segment".into());
+        }
+        Ok(match self.law(segment)? {
+            1 => Some(vec![(self.y[segment], 0.0)]),
+            2 => {
+                let slope = (self.y[segment + 1] - self.y[segment]) / (x2 - x1);
+                let value_at_low = self.y[segment] + slope * (low - x1);
+                let scaled_slope = slope * low;
+                Some(vec![
+                    (value_at_low - scaled_slope, 0.0),
+                    (scaled_slope, 1.0),
+                ])
+            }
+            5 => {
+                let y1 = self.y[segment];
+                let y2 = self.y[segment + 1];
+                let log_x_span = ((x2 - x1) / x1).ln_1p();
+                let power = ((y2 - y1) / y1).ln_1p() / log_x_span;
+                let value_at_low = y1 * (power * ((low - x1) / x1).ln_1p()).exp();
+                Some(vec![(value_at_low, power)])
+            }
+            3 | 4 => None,
+            law => return Err(format!("unsupported TAB1 interpolation INT={law}")),
+        })
+    }
+
     /// Evaluate with zero outside the tabulated domain and right-continuous ENDF double-point handling.
     pub fn evaluate(&self, value: f64) -> Result<f64, String> {
         if !value.is_finite() {
@@ -263,6 +300,74 @@ where
     adaptive_simpson(&mut transformed, a, b, whole, tolerance, 24)
 }
 
+/// Direct lethargy integral for products of histogram, lin-lin and log-log factors on one shared-breakpoint
+/// interval. The normalized power representation avoids the non-terminating practical cost of recursively
+/// quadraturing fine EAF MF=3(log-log) × MF=9(lin-lin) tables.
+fn exact_power_product_integral(
+    tables: &[&Tabulated],
+    low: f64,
+    high: f64,
+) -> Result<Option<f64>, String> {
+    let mut terms = vec![(1.0, 0.0)];
+    for table in tables {
+        let Some(factors) = table.interval_power_terms(low, high)? else {
+            return Ok(None);
+        };
+        let mut product = Vec::with_capacity(terms.len() * factors.len());
+        for &(left_coefficient, left_power) in &terms {
+            for &(right_coefficient, right_power) in &factors {
+                let coefficient = left_coefficient * right_coefficient;
+                let power = left_power + right_power;
+                if let Some((existing, _)) =
+                    product
+                        .iter_mut()
+                        .find(|(_, existing_power): &&mut (f64, f64)| {
+                            existing_power.to_bits() == power.to_bits()
+                        })
+                {
+                    *existing += coefficient;
+                } else {
+                    product.push((coefficient, power));
+                }
+            }
+        }
+        terms = product;
+        if terms.len() > 64 {
+            return Ok(None);
+        }
+    }
+
+    let log_ratio = ((high - low) / low).ln_1p();
+    let mut sum = 0.0;
+    let mut correction = 0.0;
+    let mut absolute_sum = 0.0;
+    for (coefficient, power) in terms {
+        let value = coefficient * log_ratio * expm1_over_x(power * log_ratio);
+        if !value.is_finite() {
+            return Ok(None);
+        }
+        absolute_sum += value.abs();
+        let next = sum + value;
+        correction += if sum.abs() >= value.abs() {
+            (sum - next) + value
+        } else {
+            (value - next) + sum
+        };
+        sum = next;
+    }
+    let total = sum + correction;
+    // A power expansion can contain cancelling signed terms even though every source table is nonnegative. Retain
+    // adaptive quadrature when its forward conditioning is not comfortably inside the 2e-12 G1 criterion.
+    if !total.is_finite()
+        || total < 0.0
+        || (absolute_sum > 0.0 && absolute_sum > 4096.0 * total.max(f64::MIN_POSITIVE))
+    {
+        Ok(None)
+    } else {
+        Ok(Some(total))
+    }
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct GroupStructure {
     pub name: String,
@@ -355,19 +460,33 @@ impl GroupStructure {
                 breaks.sort_by(f64::total_cmp);
                 breaks.dedup_by(|left, right| left.to_bits() == right.to_bits());
                 let mut integral = 0.0;
+                let mut correction = 0.0;
                 for interval in breaks.windows(2) {
-                    integral += adaptive_log_integral(
-                        |energy| {
-                            tables.iter().try_fold(1.0, |product, table| {
-                                Ok(product * table.evaluate(energy)?)
-                            })
-                        },
-                        interval[0],
-                        interval[1],
-                        2e-12,
-                    )?;
+                    let value = if let Some(exact) =
+                        exact_power_product_integral(tables, interval[0], interval[1])?
+                    {
+                        exact
+                    } else {
+                        adaptive_log_integral(
+                            |energy| {
+                                tables.iter().try_fold(1.0, |product, table| {
+                                    Ok(product * table.evaluate(energy)?)
+                                })
+                            },
+                            interval[0],
+                            interval[1],
+                            2e-12,
+                        )?
+                    };
+                    let next = integral + value;
+                    correction += if integral.abs() >= value.abs() {
+                        (integral - next) + value
+                    } else {
+                        (value - next) + integral
+                    };
+                    integral = next;
                 }
-                Ok(integral / (group[1] / group[0]).ln())
+                Ok((integral + correction) / (group[1] / group[0]).ln())
             })
             .collect()
     }
@@ -419,5 +538,54 @@ mod tests {
         assert_eq!(table.evaluate(2.0).unwrap(), 4.0);
         let expected = (2.0f64 / 1.0).ln() + 4.0 * (3.0f64 / 2.0).ln();
         assert!((table.lethargy_integral(1.0, 3.0).unwrap() - expected).abs() < 1e-14);
+    }
+
+    #[test]
+    fn power_product_uses_the_exact_lethargy_antiderivative() {
+        let power = table(5, [1.0, 4.0], [1.0, 16.0]);
+        let linear = table(2, [1.0, 4.0], [5.0, 14.0]);
+        let groups = GroupStructure {
+            name: "product-control".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        // sigma(E)=E^2(2+3E), so integral sigma(E)dE/E from 1 to 4 is exactly 78.
+        let actual = groups.collapse_product(&[&power, &linear]).unwrap()[0];
+        let expected = 78.0 / 4.0f64.ln();
+        assert!((actual - expected).abs() <= 2e-15 * expected);
+    }
+
+    #[test]
+    fn power_product_respects_internal_factor_breakpoints() {
+        let power = table(5, [1.0, 4.0], [1.0, 16.0]);
+        let linear = Tabulated {
+            interpolation: vec![(3, 2)],
+            x: vec![1.0, 2.0, 4.0],
+            y: vec![5.0, 8.0, 14.0],
+        };
+        linear.validate().unwrap();
+        let groups = GroupStructure {
+            name: "product-breakpoint-control".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let actual = groups.collapse_product(&[&power, &linear]).unwrap()[0];
+        let expected = 78.0 / 4.0f64.ln();
+        assert!((actual - expected).abs() <= 2e-15 * expected);
+    }
+
+    #[test]
+    fn non_power_product_retains_adaptive_quadrature() {
+        let log_linear = table(3, [1.0, 4.0], [2.0, 8.0]);
+        let linear = table(2, [1.0, 4.0], [5.0, 14.0]);
+        assert!(
+            exact_power_product_integral(&[&log_linear, &linear], 1.0, 4.0)
+                .unwrap()
+                .is_none()
+        );
+        let groups = GroupStructure {
+            name: "product-fallback-control".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let actual = groups.collapse_product(&[&log_linear, &linear]).unwrap()[0];
+        assert!(actual.is_finite() && actual > 0.0);
     }
 }

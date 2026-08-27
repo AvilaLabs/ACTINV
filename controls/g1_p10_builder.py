@@ -114,6 +114,8 @@ PINNED = {
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_C.md": "afa3f1ab58236a36148fe51265cc1d3fe2ae1de31b9b4a9a4a18d0fdd45145de",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_D.md": "5cd79e5ad00ee618b91ddb1b73e795b0cfa4de93c7ebb34c0bce33245e0e5971",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_E.md": "31313e5fb09bd4e969b4cc552beebb7997208197114ceb2b362eabae4de1ffa8",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_F.md": "1746c478a3e31025c0a98446f8567daac67a192eea08b27c76a03503c4a42e49",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_G.md": "390440fa79e3aac05dba6a7de404376f9af89798dba40812703e5dc388e16ac7",
     ROOT / "results" / "g2_p10_rmatrix.json": "c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690",
     ROOT / "results" / "g3_p10_unresolved_njoy.json": "afbdf08dbd0b4545a74b2632b806f21feb374b8ee985e3a5b17aabcf54f4200f",
     ROOT / "results" / "g3_p10_unresolved_quadrature.json": "4290a6c734639bfecc00e8a5fa0923cec6a7d1ff013e92639333e069d204354a",
@@ -752,6 +754,7 @@ def compare_structures(independent, rust) -> dict:
         "maximum_ulp_distance": maximum_ulp,
         "source_decimal_mismatches": len(mismatches),
         "mismatch_examples": mismatches[:10],
+        "exact_binary64": binary_differences == 0,
         "exact_at_endf_source_precision": not mismatches,
     }
 
@@ -1840,6 +1843,7 @@ def run_parser_parity() -> dict:
             **comparison,
             "pass": actual_hash == expected_hash
             and structure_hash(independent) == structure_hash(rust)
+            and comparison["exact_binary64"]
             and comparison["exact_at_endf_source_precision"],
         }
         totals["evaluations"] += len(independent)

@@ -1,0 +1,312 @@
+{
+ "absolute_tolerance_b": 1e-14,
+ "amendment_f_sha256": "1746c478a3e31025c0a98446f8567daac67a192eea08b27c76a03503c4a42e49",
+ "cases": {
+  "n_3037_30-ZN-68.dat": {
+   "builder_fingerprint": "ff321f7407dce6e3666aa4671c4f199a5185c94148d3fba5b3a5f241f9bd05eb",
+   "comparisons": [
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.52334615225528e-15,
+     "maximum_tolerance_fraction": 0.001293601836120736,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.008627551099672432,
+      "group": 509,
+      "identity": [
+       102,
+       30069,
+       0,
+       9
+      ],
+      "independent_b": 0.00862755109967241,
+      "relative": 2.587203672241472e-15,
+      "tolerance_fraction": 0.001293601836120736
+     }
+    },
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.849620469570756e-15,
+     "maximum_tolerance_fraction": 0.0012970066288204812,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.005288285967629064,
+      "group": 289,
+      "identity": [
+       102,
+       30069,
+       1,
+       9
+      ],
+      "independent_b": 0.005288285967629078,
+      "relative": 2.5940132576409623e-15,
+      "tolerance_fraction": 0.0012970066288204812
+     }
+    }
+   ],
+   "completed_below_five_seconds": true,
+   "pass": true,
+   "product_rows": 2,
+   "rows": 130,
+   "source_sha256": "aafaa5b1424883bc1100545d9d577f9aceab987da5f441df8bafc2d0f43666f5"
+  },
+  "n_3043_30-ZN-70.dat": {
+   "builder_fingerprint": "ff321f7407dce6e3666aa4671c4f199a5185c94148d3fba5b3a5f241f9bd05eb",
+   "comparisons": [
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.788737413219127e-15,
+     "maximum_tolerance_fraction": 0.0013348343000639214,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.9296375977604869,
+      "group": 65,
+      "identity": [
+       102,
+       30071,
+       0,
+       9
+      ],
+      "independent_b": 0.9296375977604894,
+      "relative": 2.669668600127843e-15,
+      "tolerance_fraction": 0.0013348343000639214
+     }
+    },
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.555507654776037e-15,
+     "maximum_tolerance_fraction": 0.0012631160939624287,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.09082079714908227,
+      "group": 65,
+      "identity": [
+       102,
+       30071,
+       1,
+       9
+      ],
+      "independent_b": 0.0908207971490825,
+      "relative": 2.5262321879248572e-15,
+      "tolerance_fraction": 0.0012631160939624287
+     }
+    }
+   ],
+   "completed_below_five_seconds": true,
+   "pass": true,
+   "product_rows": 2,
+   "rows": 137,
+   "source_sha256": "68d296300a38cc73bd6b233a7ead07c6c13767ba62c2e4526ff7e574381759b5"
+  },
+  "n_3131_31-GA-71.dat": {
+   "builder_fingerprint": "ff321f7407dce6e3666aa4671c4f199a5185c94148d3fba5b3a5f241f9bd05eb",
+   "comparisons": [
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.631039952051694e-15,
+     "maximum_tolerance_fraction": 0.0012878001766398548,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.13771127114024154,
+      "group": 339,
+      "identity": [
+       102,
+       31072,
+       0,
+       9
+      ],
+      "independent_b": 0.1377112711402419,
+      "relative": 2.57560035327971e-15,
+      "tolerance_fraction": 0.0012878001766398548
+     }
+    },
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.831101105172212e-15,
+     "maximum_tolerance_fraction": 0.001378998298659817,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.020017732986223797,
+      "group": 509,
+      "identity": [
+       102,
+       31072,
+       1,
+       9
+      ],
+      "independent_b": 0.02001773298622374,
+      "relative": 2.7579965973196337e-15,
+      "tolerance_fraction": 0.001378998298659817
+     }
+    }
+   ],
+   "completed_below_five_seconds": true,
+   "pass": true,
+   "product_rows": 2,
+   "rows": 144,
+   "source_sha256": "e08c9a949158c56c14f5baf5378c3746a1440306a38adc4803d29bf704682f66"
+  },
+  "n_3225_32-GE-70.dat": {
+   "builder_fingerprint": "ff321f7407dce6e3666aa4671c4f199a5185c94148d3fba5b3a5f241f9bd05eb",
+   "comparisons": [
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.489030911123996e-15,
+     "maximum_tolerance_fraction": 0.001334289315047541,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 15.525164742943105,
+      "group": 89,
+      "identity": [
+       102,
+       32071,
+       0,
+       9
+      ],
+      "independent_b": 15.525164742943145,
+      "relative": 2.668578630095082e-15,
+      "tolerance_fraction": 0.001334289315047541
+     }
+    },
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.59514395856053e-15,
+     "maximum_tolerance_fraction": 0.0012412941384237076,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.34161245373071136,
+      "group": 207,
+      "identity": [
+       102,
+       32071,
+       1,
+       9
+      ],
+      "independent_b": 0.3416124537307122,
+      "relative": 2.482588276847415e-15,
+      "tolerance_fraction": 0.0012412941384237076
+     }
+    }
+   ],
+   "completed_below_five_seconds": true,
+   "pass": true,
+   "product_rows": 2,
+   "rows": 147,
+   "source_sha256": "02041dacd224a97aab4aae26c32b8ceab501946490581f0ee09465a3ce8d40f5"
+  },
+  "n_3419_34-SE-72.dat": {
+   "builder_fingerprint": "ff321f7407dce6e3666aa4671c4f199a5185c94148d3fba5b3a5f241f9bd05eb",
+   "comparisons": [
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.764099200806566e-15,
+     "maximum_tolerance_fraction": 0.0013943323775805108,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.04427837754954434,
+      "group": 339,
+      "identity": [
+       102,
+       34073,
+       0,
+       9
+      ],
+      "independent_b": 0.044278377549544466,
+      "relative": 2.7886647551610217e-15,
+      "tolerance_fraction": 0.0013943323775805108
+     }
+    },
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.650177085159616e-15,
+     "maximum_tolerance_fraction": 0.0014245165580488754,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.1033149761148068,
+      "group": 339,
+      "identity": [
+       102,
+       34073,
+       1,
+       9
+      ],
+      "independent_b": 0.1033149761148071,
+      "relative": 2.8490331160977507e-15,
+      "tolerance_fraction": 0.0014245165580488754
+     }
+    }
+   ],
+   "completed_below_five_seconds": true,
+   "pass": true,
+   "product_rows": 2,
+   "rows": 134,
+   "source_sha256": "a0b17466726c96e537b4f53cd3f71e0cce87a01765d76a51ba09f4e52cd6b2e8"
+  },
+  "n_3922_39-Y-88.dat": {
+   "builder_fingerprint": "ff321f7407dce6e3666aa4671c4f199a5185c94148d3fba5b3a5f241f9bd05eb",
+   "comparisons": [
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.579489748891088e-15,
+     "maximum_tolerance_fraction": 0.0013124692717283346,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 0.9516702631911242,
+      "group": 269,
+      "identity": [
+       102,
+       39089,
+       0,
+       9
+      ],
+      "independent_b": 0.9516702631911217,
+      "relative": 2.6249385434566692e-15,
+      "tolerance_fraction": 0.0013124692717283346
+     }
+    },
+    {
+     "failure_examples": [],
+     "maximum_relative": 9.624061541498309e-15,
+     "maximum_tolerance_fraction": 0.0013421657144127815,
+     "pass": true,
+     "scored_groups": 675,
+     "worst": {
+      "actual_b": 7.6901020532974815,
+      "group": 339,
+      "identity": [
+       102,
+       39089,
+       1,
+       9
+      ],
+      "independent_b": 7.690102053297502,
+      "relative": 2.684331428825563e-15,
+      "tolerance_fraction": 0.0013421657144127815
+     }
+    }
+   ],
+   "completed_below_five_seconds": true,
+   "pass": true,
+   "product_rows": 2,
+   "rows": 165,
+   "source_sha256": "e0e1c8851b6a3c94de4e309c8ef83c4f74d1c7c17ea272b702ea43c0e663c951"
+  }
+ },
+ "former_timeout_seconds": 5.0,
+ "gate": "P10-G7",
+ "pass": true,
+ "precision_decimal_digits": 80,
+ "relative_tolerance": 2e-12,
+ "schema": "actinv-p10-g7-eaf-product-1"
+}

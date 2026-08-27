@@ -23,14 +23,18 @@ pub fn parse_endf_float(s: &str) -> Result<f64, String> {
             matches!(bytes[index], b'+' | b'-') && !matches!(bytes[index - 1], b'e' | b'E')
         });
         let index = split.ok_or_else(|| format!("invalid ENDF number '{text}'"))?;
-        let (mantissa, exponent) = text.split_at(index);
-        let mantissa = mantissa
+        let normalized_length = text.len() + 1;
+        let mut normalized = [0_u8; 12];
+        if normalized_length > normalized.len() {
+            return Err(format!("invalid ENDF number '{text}'"));
+        }
+        normalized[..index].copy_from_slice(&bytes[..index]);
+        normalized[index] = b'e';
+        normalized[index + 1..normalized_length].copy_from_slice(&bytes[index..]);
+        std::str::from_utf8(&normalized[..normalized_length])
+            .map_err(|_| format!("invalid ENDF number '{text}'"))?
             .parse::<f64>()
-            .map_err(|_| format!("invalid ENDF number '{text}'"))?;
-        let exponent = exponent
-            .parse::<i32>()
-            .map_err(|_| format!("invalid ENDF number '{text}'"))?;
-        mantissa * 10f64.powi(exponent)
+            .map_err(|_| format!("invalid ENDF number '{text}'"))?
     };
     if value.is_finite() {
         Ok(value)
@@ -446,4 +450,37 @@ pub fn read_tab1(lines: &[&str], mut i: usize) -> (Tab1Record, usize) {
     }
     let xy = raw_xy.chunks(2).map(|v| (v[0], v[1])).collect();
     ((c1, c2, l1, l2, ranges, xy), i)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_endf_float;
+
+    #[test]
+    fn exponent_without_e_is_rounded_once() {
+        let parsed = parse_endf_float("4.65000+5").unwrap();
+        let explicit = "4.65000e+5".parse::<f64>().unwrap();
+        let formerly_double_rounded = 4.65_f64 * 10_f64.powi(5);
+        assert_eq!(parsed.to_bits(), explicit.to_bits());
+        assert_ne!(parsed.to_bits(), formerly_double_rounded.to_bits());
+
+        for (endf, normalized) in [
+            ("-1.23456-3", "-1.23456e-3"),
+            (" 1.00000+10", "1.00000e+10"),
+            ("+9.87654-2", "+9.87654e-2"),
+        ] {
+            assert_eq!(
+                parse_endf_float(endf).unwrap().to_bits(),
+                normalized.parse::<f64>().unwrap().to_bits()
+            );
+        }
+    }
+
+    #[test]
+    fn ordinary_blank_and_invalid_fields_retain_their_semantics() {
+        assert_eq!(parse_endf_float(" ").unwrap(), 0.0);
+        assert_eq!(parse_endf_float("1.25e+3").unwrap(), 1250.0);
+        assert!(parse_endf_float("not-a-float").is_err());
+        assert!(parse_endf_float("1.0e999").is_err());
+    }
 }
