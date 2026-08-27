@@ -1,0 +1,426 @@
+{
+  "address_space_limit_bytes": 2147483648,
+  "amendment_a_sha256": "e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd",
+  "amendment_b_sha256": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
+  "archive_size_bytes": 2595437294,
+  "binary_sha256": "366458162d1c980d7df5eb66716dbf2960d19edb07cf8758cc5626a67084ce68",
+  "builds": {
+    "alpha": {
+      "2017": {
+        "index_sha256": "9a6a2b67b55113eefa97eda08f4bde8072c9cd39c01a882f8fa4dfd9a75a5429",
+        "npz_sha256": "2eed83f9ef0ff700f080b12ecf5591c33da79a8f75bb6b51ef620dea27a50fde",
+        "projectile": "alpha",
+        "rows": 164,
+        "temperature_K": 0.0
+      },
+      "2025": {
+        "index_sha256": "c943d364d5dc95d5f0982a34249d4ff146bc0388903ffbdb5f8804916e3f1206",
+        "npz_sha256": "492c0067aa68ec25e49bc56662c8685ee294b504c60f04ed748d2e167776da3f",
+        "projectile": "alpha",
+        "rows": 165,
+        "temperature_K": 0.0
+      }
+    },
+    "deuteron": {
+      "2017": {
+        "index_sha256": "510131d8b83d4c036c897a980b098301be5f6be22f3c2b3443f7c8a3a1cfbc8c",
+        "npz_sha256": "3db6548b14e18e87a2b3a86fdc7921ad5d88d02a07bf272a5f13ff88601417a2",
+        "projectile": "deuteron",
+        "rows": 176,
+        "temperature_K": 0.0
+      },
+      "2025": {
+        "index_sha256": "b3527500988bdadd95eb16631d397b526f58f144ad1c26f5f11b46d0ab682f35",
+        "npz_sha256": "f17f5a0b1c335d2c6b99b69cbf90a3524f1925527ae0dfdbef7bd31b9267574c",
+        "projectile": "deuteron",
+        "rows": 175,
+        "temperature_K": 0.0
+      }
+    },
+    "proton": {
+      "2017": {
+        "index_sha256": "01d7259afa4650bd80479df3601c517648e3a53561ed4d27f8c09b9afa551744",
+        "npz_sha256": "92c757cc57f63e1221788863768507d5c5ca32d3d9e7b867cd3a5ccd5b0116d9",
+        "projectile": "proton",
+        "rows": 167,
+        "temperature_K": 0.0
+      },
+      "2025": {
+        "index_sha256": "53591114a30e8584764bfdfab912c42e1fa3699ba925354f0bd62e16c3820cd4",
+        "npz_sha256": "0b667d71787a3e7c18f2e4dd1966cc749813d4800303bb939c1d735c954c39c6",
+        "projectile": "proton",
+        "rows": 166,
+        "temperature_K": 0.0
+      }
+    }
+  },
+  "control_sha256": "94be0c2d83e91d95341590f0ffe3f6b9a9cfade4ac4884441a05ce34e501c0e8",
+  "dump_sha256": "cad0319c92a89b2f6ebd62d28f69333f25bface1fa85226fb4a60588dee719ef",
+  "gate": "P10-G5",
+  "independent_rate_tolerance": 1e-12,
+  "input_hashes": {
+    "TENDL2017data.tar.bz2": "7f305df2277f71a7d7d6d1e1ebfec8dea9415d813e283990c1fb65804b05bec8",
+    "a_processed_sha256": "f8c60a8983dc568c2e1f356318985c8cad0d1395fb8f80683a0ee064e73c8c30",
+    "a_raw_2017_sha256": "e6a2a93837a279eac7000a97bd4168f9efe91349097c0479f3645e7e8b7bac07",
+    "a_raw_2025_sha256": "ff185f3fdf69b6a64a3e9e9eb3964bd8856262b635d674537076c329069a656e",
+    "a_residual_sha256": "12a4344a8c6b11c3d754a5962ede1d6ce3cebfd1b0556bf0d0ab541224f66709",
+    "d_processed_sha256": "9d136c2caa3f6ae8479321234bb05aaae9a34efefdebe440ab653ababf2df2b0",
+    "d_raw_2017_sha256": "ebb4e2af6ceed337b7355233ddbd29912adb223519fc966b4ea01173acedab9a",
+    "d_raw_2025_sha256": "cd036d5529c71998d20aa10ae7e8b1d9ae1d7045200b29f46163e5b2faf6ab95",
+    "d_residual_sha256": "40f2e3118fded4bba9036911b3b159cdced4341f9b76d5d8619a9b81b5ce3365",
+    "ebins.tar.bz2": "fb612c2df07269389b44e15dc101166e675d53269f4078174999650a68e1b63a",
+    "ebins_162": "4b1ba7ec855aa305b3312cb57d75cbcd6be41b4e67e93070df104bd62b500b0e",
+    "p_processed_sha256": "d21f41bb5d6f6667145511ae89affdf62ad1cc4cc6c2d054c7b74aafa2b66604",
+    "p_raw_2017_sha256": "a817e16d7e5b2bbcc0a8fa4091c9505e4c0364326f26e1727ac72d2c229b6d3a",
+    "p_raw_2025_sha256": "7a505214adb273a2e71fba7ced0ea792dae853875127111af770ee658e01740b",
+    "p_residual_sha256": "7dd9940588e92d80e0120a2fb846010667a5284c1c5feb612bd33b4f9b6e2065"
+  },
+  "official_groups": 162,
+  "pass": true,
+  "point_tolerance": 2e-06,
+  "pointwise_2025": {
+    "alpha": {
+      "max_relative_to_independent": 0.0,
+      "max_relative_to_official": 1.0360144201340798e-07,
+      "pass": true,
+      "rows": [
+        {
+          "energy_MeV": 35.0,
+          "independent_b": 0.027010181318300006,
+          "official_b": 0.027010179999999998,
+          "relative_to_official": 4.8807521571847744e-08,
+          "rust_b": 0.027010181318300006,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.027010181318300006,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 50.0,
+          "independent_b": 0.009070461257480001,
+          "official_b": 0.009070461,
+          "relative_to_official": 2.8386649096778526e-08,
+          "rust_b": 0.009070461257480001,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.009070461257480001,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 100.0,
+          "independent_b": 0.0005374442556799999,
+          "official_b": 0.0005374442,
+          "relative_to_official": 1.0360144201340798e-07,
+          "rust_b": 0.0005374442556799999,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.0005374442556799999,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 200.0,
+          "independent_b": 1.041213958356e-05,
+          "official_b": 1.0412140000000001e-05,
+          "relative_to_official": 3.999562061630156e-08,
+          "rust_b": 1.041213958356e-05,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 1.041213958356e-05,
+            "mf9": 0.0
+          }
+        }
+      ]
+    },
+    "deuteron": {
+      "max_relative_to_independent": 1.705439540814586e-16,
+      "max_relative_to_official": 2.930039700475449e-07,
+      "pass": true,
+      "rows": [
+        {
+          "energy_MeV": 35.0,
+          "independent_b": 0.00520729125664,
+          "official_b": 0.005207291,
+          "relative_to_official": 4.928474083772346e-08,
+          "rust_b": 0.00520729125664,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.00520729125664,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 50.0,
+          "independent_b": 0.00242270646204,
+          "official_b": 0.002422707,
+          "relative_to_official": 2.2204913755455843e-07,
+          "rust_b": 0.00242270646204,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.00242270646204,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 100.0,
+          "independent_b": 0.00073319997576,
+          "official_b": 0.0007331999999999999,
+          "relative_to_official": 3.3060556291303986e-08,
+          "rust_b": 0.0007331999757600001,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.0007331999757600001,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 200.0,
+          "independent_b": 0.000158932953432,
+          "official_b": 0.000158933,
+          "relative_to_official": 2.930039700475449e-07,
+          "rust_b": 0.00015893295343200002,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.00015893295343200002,
+            "mf9": 0.0
+          }
+        }
+      ]
+    },
+    "proton": {
+      "max_relative_to_independent": 1.5938348162445549e-16,
+      "max_relative_to_official": 4.475306341812589e-07,
+      "pass": true,
+      "rows": [
+        {
+          "energy_MeV": 35.0,
+          "independent_b": 0.0220994847333,
+          "official_b": 0.02209949,
+          "relative_to_official": 2.3831771682190943e-07,
+          "rust_b": 0.0220994847333,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.0220994847333,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 50.0,
+          "independent_b": 0.010883960234124,
+          "official_b": 0.01088396,
+          "relative_to_official": 2.151092032675891e-08,
+          "rust_b": 0.010883960234124001,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.010883960234124001,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 100.0,
+          "independent_b": 0.0029666071794796,
+          "official_b": 0.0029666070000000004,
+          "relative_to_official": 6.049995456988054e-08,
+          "rust_b": 0.0029666071794796,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.0029666071794796,
+            "mf9": 0.0
+          }
+        },
+        {
+          "energy_MeV": 200.0,
+          "independent_b": 0.0008428620772066,
+          "official_b": 0.0008428617000000001,
+          "relative_to_official": 4.475306341812589e-07,
+          "rust_b": 0.0008428620772066,
+          "rust_components_b": {
+            "mf10": 0.0,
+            "mf3": 0.0,
+            "mf6": 0.0008428620772066,
+            "mf9": 0.0
+          }
+        }
+      ]
+    }
+  },
+  "processed_2017": {
+    "alpha": {
+      "fixed_spectra": {
+        "flat_30_200_MeV": {
+          "independent_b": 0.0019959854660229867,
+          "processed_b": 0.001993850816875,
+          "relative_rust_independent": 2.8245953654953512e-15,
+          "relative_rust_processed": 0.0010694712884085223,
+          "rust_b": 0.0019959854660229924
+        },
+        "hard_140_MeV": {
+          "independent_b": 8.864049772137282e-05,
+          "processed_b": 8.862481844433613e-05,
+          "relative_rust_independent": 3.0578635058365763e-16,
+          "relative_rust_processed": 0.00017688615745302047,
+          "rust_b": 8.864049772137279e-05
+        },
+        "soft_40_MeV": {
+          "independent_b": 0.004171855056806581,
+          "processed_b": 0.004167062009271775,
+          "relative_rust_independent": 3.1186189099736055e-15,
+          "relative_rust_processed": 0.0011489007814397402,
+          "rust_b": 0.004171855056806594
+        }
+      },
+      "matched_groups": 16,
+      "max_fixed_spectrum_relative_to_independent": 3.1186189099736055e-15,
+      "max_fixed_spectrum_relative_to_processed": 0.0011489007814397402,
+      "max_processed_extrapolation_above_200_MeV_b": 5.9721e-06,
+      "max_row_relative_to_processed": 0.0022531933409041965,
+      "max_rust_above_200_MeV_b": 0.0,
+      "pass": true,
+      "worst_group_eV": [
+        30000000.0,
+        35000000.0
+      ],
+      "worst_group_processed_b": 0.009562253,
+      "worst_group_rust_b": 0.009583847260828341
+    },
+    "deuteron": {
+      "fixed_spectra": {
+        "flat_30_200_MeV": {
+          "independent_b": 0.0018552740379705554,
+          "processed_b": 0.001855601375,
+          "relative_rust_independent": 1.2856563131111753e-15,
+          "relative_rust_processed": 0.00017640482155935455,
+          "rust_b": 0.0018552740379705578
+        },
+        "hard_140_MeV": {
+          "independent_b": 0.00041476827836731134,
+          "processed_b": 0.00041488682591283015,
+          "relative_rust_independent": 2.6139949196533163e-16,
+          "relative_rust_processed": 0.00028573465850137674,
+          "rust_b": 0.00041476827836731123
+        },
+        "soft_40_MeV": {
+          "independent_b": 0.003332595658372041,
+          "processed_b": 0.0033331758645169154,
+          "relative_rust_independent": 1.951995892022131e-15,
+          "relative_rust_processed": 0.0001740700666425186,
+          "rust_b": 0.0033325956583720477
+        }
+      },
+      "matched_groups": 16,
+      "max_fixed_spectrum_relative_to_independent": 1.951995892022131e-15,
+      "max_fixed_spectrum_relative_to_processed": 0.00028573465850137674,
+      "max_processed_extrapolation_above_200_MeV_b": 0.000146646,
+      "max_row_relative_to_processed": 0.00048773964576729516,
+      "max_rust_above_200_MeV_b": 0.0,
+      "pass": true,
+      "worst_group_eV": [
+        180000000.0,
+        200000000.0
+      ],
+      "worst_group_processed_b": 0.000166648,
+      "worst_group_rust_b": 0.00016656671916351218
+    },
+    "proton": {
+      "fixed_spectra": {
+        "flat_30_200_MeV": {
+          "independent_b": 0.007825443540378686,
+          "processed_b": 0.0078341005,
+          "relative_rust_independent": 1.5517413510404048e-15,
+          "relative_rust_processed": 0.0011050355584922363,
+          "rust_b": 0.007825443540378698
+        },
+        "hard_140_MeV": {
+          "independent_b": 0.0017173769977113173,
+          "processed_b": 0.0017186835513055237,
+          "relative_rust_independent": 1.2626257064469587e-16,
+          "relative_rust_processed": 0.0007602060269991026,
+          "rust_b": 0.001717376997711317
+        },
+        "soft_40_MeV": {
+          "independent_b": 0.014068250519250322,
+          "processed_b": 0.014085200879258254,
+          "relative_rust_independent": 1.8496153522462774e-15,
+          "relative_rust_processed": 0.001203416277354364,
+          "rust_b": 0.014068250519250348
+        }
+      },
+      "matched_groups": 26,
+      "max_fixed_spectrum_relative_to_independent": 1.8496153522462774e-15,
+      "max_fixed_spectrum_relative_to_processed": 0.001203416277354364,
+      "max_processed_extrapolation_above_200_MeV_b": 0.000685862,
+      "max_row_relative_to_processed": 0.0020111212129309743,
+      "max_rust_above_200_MeV_b": 0.0,
+      "pass": true,
+      "worst_group_eV": [
+        30000000.0,
+        35000000.0
+      ],
+      "worst_group_processed_b": 0.029209345,
+      "worst_group_rust_b": 0.029150601466654682
+    }
+  },
+  "processed_fixed_spectrum_tolerance": 0.002,
+  "processed_row_tolerance_amended": 0.0025,
+  "protocol_sha256": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27",
+  "rejections": {
+    "bad-nsub": {
+      "context": "unsupported incident-particle NSUB=10030",
+      "final_pair_absent": true,
+      "returncode_nonzero": true
+    },
+    "conflicting-product": {
+      "context": "duplicate product identities",
+      "final_pair_absent": true,
+      "returncode_nonzero": true
+    },
+    "malformed-law": {
+      "context": "unsupported MF=6 LAW=99",
+      "final_pair_absent": true,
+      "returncode_nonzero": true
+    },
+    "missing-yield": {
+      "context": "no matching MF=6 yield",
+      "final_pair_absent": true,
+      "returncode_nonzero": true
+    },
+    "wrong-projectile": {
+      "context": "expected deuteron",
+      "final_pair_absent": true,
+      "returncode_nonzero": true
+    }
+  },
+  "structure": {
+    "emitted_neutron_omitted_and_ledgered": true,
+    "explicit_channel": {
+      "expected_zap": 27055,
+      "mt": 16,
+      "rows": 1
+    },
+    "level_remap": {
+      "built_liso": [
+        1
+      ],
+      "mt": 5,
+      "raw_lfs": [
+        2
+      ],
+      "zap": 21042
+    },
+    "mf6_descriptors_nonfree": 119,
+    "mf6_rows_nonfree": 119
+  }
+}

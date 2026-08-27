@@ -3,6 +3,7 @@
 //!   dump spectra FILE [ZA:LISO ...] -> lossless line-oriented MF=8/MT=457 spectrum records
 //!   dump spectra-summary FILE -> all-file section/spectrum and STYP/LCON counts
 //!   dump activation FILE -> strict MF=3/6/8/9/10 evaluation summary
+//!   dump activation-product FILE ZAP LFS ENERGY_EV [...] -> charged residual-production components
 //!   dump resonance FILE -> strict MF=2/MT=151 structure summary
 //!   dump resonance-xs FILE ENERGY_EV [...] -> zero-K resonance-only cross sections
 //!   dump unresolved-probe CASE E D GX GN GG GF MUX MUN MUF LSSF -> synthetic G3 control
@@ -291,6 +292,152 @@ fn unresolved_probe(arguments: &[String]) {
     }
 }
 
+fn activation_product(arguments: &[String]) {
+    assert!(
+        arguments.len() >= 4,
+        "activation-product needs FILE ZAP LFS and at least one energy"
+    );
+    let evaluations =
+        activation::parse_file(&arguments[0], None).expect("read activation evaluation");
+    assert_eq!(
+        evaluations.len(),
+        1,
+        "activation-product requires exactly one material"
+    );
+    let evaluation = &evaluations[0];
+    let zap: i32 = arguments[1].parse().expect("product ZAP");
+    let lfs: i32 = arguments[2].parse().expect("product LFS");
+    println!(
+        "E {} {} {} {}",
+        evaluation.metadata.projectile.name(),
+        evaluation.metadata.za,
+        zap,
+        lfs
+    );
+    let mt_products: serde_json::Value =
+        serde_json::from_str(include_str!("../../../../data/mt_products.json"))
+            .expect("parse MT product table");
+
+    for value in &arguments[3..] {
+        let energy: f64 = value.parse().expect("incident energy in eV");
+        assert!(
+            energy.is_finite() && energy >= 0.0,
+            "incident energy must be finite and nonnegative"
+        );
+        let mut mf3 = 0.0;
+        let mut mf9 = 0.0;
+        let mut mf10 = 0.0;
+        let mut mf6 = 0.0;
+
+        for (&mt, descriptors) in &evaluation.mf8 {
+            for descriptor in descriptors
+                .iter()
+                .filter(|product| product.zap == zap && product.lfs == lfs)
+            {
+                if descriptor.lmf == 3 {
+                    let reaction = evaluation
+                        .mf3
+                        .get(&mt)
+                        .expect("MF=8/LMF=3 descriptor needs MF=3");
+                    mf3 += reaction.evaluate(energy).expect("evaluate MF=3 product");
+                }
+            }
+        }
+        for (&mt, products) in &evaluation.mf9 {
+            let reaction = evaluation.mf3.get(&mt).expect("MF=9 product needs MF=3");
+            let reaction_value = reaction.evaluate(energy).expect("evaluate MF=3 reaction");
+            for product in products
+                .iter()
+                .filter(|product| product.zap == zap && product.lfs == lfs)
+            {
+                mf9 +=
+                    reaction_value * product.table.evaluate(energy).expect("evaluate MF=9 yield");
+            }
+        }
+        for products in evaluation.mf10.values() {
+            for product in products
+                .iter()
+                .filter(|product| product.zap == zap && product.lfs == lfs)
+            {
+                mf10 += product
+                    .table
+                    .evaluate(energy)
+                    .expect("evaluate MF=10 product");
+            }
+        }
+
+        if let (Some(reaction), Some(yields), Some(descriptors)) = (
+            evaluation.mf3.get(&5),
+            evaluation.mf6.get(&5),
+            evaluation.mf8.get(&5),
+        ) {
+            let reaction_value = reaction.evaluate(energy).expect("evaluate MF=3/MT=5");
+            let mut used = vec![false; yields.len()];
+            for descriptor in descriptors.iter().filter(|product| product.lmf == 6) {
+                let index = yields
+                    .iter()
+                    .enumerate()
+                    .position(|(index, product)| !used[index] && product.zap == descriptor.zap)
+                    .expect("match MF=8/LMF=6 descriptor to MF=6 yield");
+                used[index] = true;
+                if descriptor.zap == zap && descriptor.lfs == lfs {
+                    mf6 += reaction_value
+                        * yields[index]
+                            .yield_table
+                            .evaluate(energy)
+                            .expect("evaluate MF=6 yield");
+                }
+            }
+        }
+
+        for (&mt, reaction) in &evaluation.mf3 {
+            let skipped = matches!(mt, 1 | 2 | 3 | 5 | 19 | 20 | 21 | 27 | 38 | 101 | 444)
+                || mt == 4
+                || (51..=91).contains(&mt)
+                || (201..=207).contains(&mt)
+                || (600..=849).contains(&mt)
+                || mt >= 1000;
+            let has_explicit_product = evaluation
+                .mf8
+                .get(&mt)
+                .is_some_and(|value| !value.is_empty())
+                || evaluation
+                    .mf9
+                    .get(&mt)
+                    .is_some_and(|value| !value.is_empty())
+                || evaluation
+                    .mf10
+                    .get(&mt)
+                    .is_some_and(|value| !value.is_empty());
+            if skipped || has_explicit_product || lfs != 0 {
+                continue;
+            }
+            let Some(delta) = mt_products["table"].get(mt.to_string()) else {
+                continue;
+            };
+            let delta = delta.as_array().expect("MT product offset pair");
+            let delta_z = delta[0].as_i64().expect("MT product Z offset") as i32;
+            let delta_a = delta[1].as_i64().expect("MT product A offset") as i32;
+            let target = (evaluation.metadata.za / 1000, evaluation.metadata.za % 1000);
+            let incident = evaluation.metadata.projectile.za();
+            let product_z = target.0 + delta_z + incident.0;
+            let product_a = target.1 + delta_a + incident.1 - 1;
+            if product_z > 0
+                && product_a > 0
+                && product_a >= product_z
+                && product_z * 1000 + product_a == zap
+            {
+                mf3 += reaction
+                    .evaluate(energy)
+                    .expect("evaluate inferred MF=3 product");
+            }
+        }
+
+        let total = mf3 + mf9 + mf10 + mf6;
+        println!("P {energy:.17e} {mf3:.17e} {mf9:.17e} {mf10:.17e} {mf6:.17e} {total:.17e}");
+    }
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -490,6 +637,7 @@ fn main() {
                 }
             }
         }
+        "activation-product" => activation_product(&a[2..]),
         "resonance" => {
             let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
             let sections = endf::parse_sections(&text).expect("parse ENDF sections");
@@ -954,7 +1102,7 @@ fn main() {
         }
         "provenance" => println!("{}", composition::provenance()),
         _ => eprintln!(
-            "usage: dump decay|spectra|spectra-summary|fission-yields|fission-effective|library|composition|material|provenance ..."
+            "usage: dump decay|spectra|spectra-summary|activation|activation-product|fission-yields|fission-effective|library|composition|material|provenance ..."
         ),
     }
 }

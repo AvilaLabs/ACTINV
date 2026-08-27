@@ -705,3 +705,21 @@
 - Three alternating fresh four-worker profiles give Rust medians of 8.658 s and 28,012 KiB versus the Python
   predecessor's 16.581 s and 105,032 KiB. Every subprocess was capped at 2 GiB. **P10-G4 PASS** under Amendment A;
   P10 remains open and G5 is next.
+
+## 30 — 2026-08-26 — P10 G5 charged-particle gate complete
+- The official 2,595,437,294-byte FISPACT `TENDL2017data.tar.bz2` archive rematches SHA-256 `7f305df2…`; only its
+  Fe-56 proton/deuteron/alpha `gxs-162` records were extracted, and no nuclear-data input or generated library was
+  added to Git. The archive uses `tal2017-*`, not the frozen protocol's mistaken `tal2015-*` names. Amendment B
+  records that path repair and the independently justified processed-row tolerance repair; it is append-only and
+  hashed as `36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23`.
+- At 35, 50, 100 and 200 MeV, all three TENDL-2025 Fe-56 residual-production curves agree with the official residual
+  tables. The worst relative difference is `4.476e-7`, inside `2e-6`; Rust and the separate MF=3/6/8/9/10 parser
+  agree to `1.706e-16` or better at those points.
+- Exact independent flat-lethargy collapse of the pinned TENDL-2017 evaluations agrees with Rust to `3.119e-15`.
+  Against the historical FISPACT rows, the worst group difference is `2.253e-3`, inside Amendment B's `2.5e-3`;
+  the worst of nine fixed-spectrum comparisons is `1.203e-3`, inside the unchanged `2e-3` criterion. ACTINV is
+  exactly zero above the evaluations' 200 MeV support; historical constant extrapolation is recorded, not adopted.
+- The structural control retains all 119 declared non-free MF=6 products, omits and ledgers the emitted neutron,
+  verifies noncanonical level remapping, and independently matches the ordinary MT=16 charged-channel residual.
+  Wrong projectile, bad NSUB, missing yield, conflicting product identity and malformed LAW plants all fail closed
+  without publishing an output/index pair. **P10-G5 PASS** under Amendment B; P10 remains open and G6 is next.
