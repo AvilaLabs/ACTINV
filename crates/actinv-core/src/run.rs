@@ -3,10 +3,11 @@
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
+use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
-    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Projectile, Spec,
-    UncertaintyOptions,
+    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Projectile,
+    RadiologicalOptions, Spec, UncertaintyOptions,
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
@@ -62,6 +63,8 @@ pub struct StepOut {
     pub photon_source: Option<PhotonSourceOut>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub uncertainty: Option<StepUncertainty>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub radiological: Option<RadiologicalStepOut>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -257,6 +260,7 @@ pub struct PreparedRun {
     temperature_K: f64,
     uncertainty_options: Option<UncertaintyOptions>,
     covariance: Option<PreparedCovariance>,
+    radiological: Option<PreparedRadiological>,
 }
 
 struct PreparedCovariance {
@@ -265,6 +269,12 @@ struct PreparedCovariance {
     index_sha256: String,
     index: serde_json::Value,
     library: covariance::CovarianceLibrary,
+}
+
+struct PreparedRadiological {
+    options: RadiologicalOptions,
+    sha256: String,
+    table: PreparedRadiologicalTable,
 }
 
 struct UncertaintyRuntime {
@@ -483,7 +493,7 @@ fn build_step_uncertainty(
 
 impl PreparedRun {
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
-        Self::prepare_inputs_with_uncertainty(
+        Self::prepare_inputs_with_extensions(
             &spec.library,
             &spec.decay,
             &spec.photon,
@@ -491,6 +501,7 @@ impl PreparedRun {
             spec.projectile,
             spec.options.temperature_K,
             spec.uncertainty.as_ref(),
+            spec.radiological.as_ref(),
         )
     }
 
@@ -521,6 +532,29 @@ impl PreparedRun {
         projectile: Projectile,
         temperature_K: f64,
         uncertainty_options: Option<&UncertaintyOptions>,
+    ) -> Result<Self, String> {
+        Self::prepare_inputs_with_extensions(
+            library_ref,
+            decay_ref,
+            photon_options,
+            fission_options,
+            projectile,
+            temperature_K,
+            uncertainty_options,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub fn prepare_inputs_with_extensions(
+        library_ref: &LibraryRef,
+        decay_ref: &DecayRef,
+        photon_options: &PhotonOptions,
+        fission_options: &FissionYieldOptions,
+        projectile: Projectile,
+        temperature_K: f64,
+        uncertainty_options: Option<&UncertaintyOptions>,
+        radiological_options: Option<&RadiologicalOptions>,
     ) -> Result<Self, String> {
         if !temperature_K.is_finite() || temperature_K < 0.0 {
             return Err("temperature_K must be finite and nonnegative".into());
@@ -553,6 +587,23 @@ impl PreparedRun {
                 (Some(PhotonResponse::from_json(&text)?), Some(sha))
             }
             None => (None, None),
+        };
+        let radiological = match radiological_options {
+            Some(options) => {
+                let sha256 = verify_hash(&options.table.path, Some(&options.table.sha256))?;
+                let text = std::fs::read_to_string(&options.table.path).map_err(|error| {
+                    format!(
+                        "cannot read radiological table {}: {error}",
+                        options.table.path
+                    )
+                })?;
+                Some(PreparedRadiological {
+                    options: options.clone(),
+                    sha256,
+                    table: PreparedRadiologicalTable::from_json(&text, &options.responses)?,
+                })
+            }
+            None => None,
         };
         let mut fission_yields = HashMap::new();
         let mut fission_yield_inputs = Vec::with_capacity(fission_options.files.len());
@@ -745,6 +796,7 @@ impl PreparedRun {
             temperature_K,
             uncertainty_options: uncertainty_options.cloned(),
             covariance,
+            radiological,
         })
     }
 
@@ -968,6 +1020,8 @@ impl PreparedRun {
             || spec.projectile != self.projectile
             || (spec.options.temperature_K - self.temperature_K).abs() > 1e-9
             || spec.uncertainty != self.uncertainty_options
+            || spec.radiological.as_ref()
+                != self.radiological.as_ref().map(|prepared| &prepared.options)
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
         }
@@ -1504,6 +1558,16 @@ impl PreparedRun {
                 (None, None) => None,
                 _ => return Err("uncertainty runtime state is inconsistent".into()),
             };
+            let radiological = self
+                .radiological
+                .as_ref()
+                .map(|prepared| {
+                    prepared
+                        .table
+                        .evaluate(&act, prepared.options.require_complete)
+                        .map_err(|error| format!("radiological step {}: {error}", si + 1))
+                })
+                .transpose()?;
             let photon_source = if want_photons {
                 let active_refs: Vec<_> = photon_active
                     .iter()
@@ -1560,6 +1624,7 @@ impl PreparedRun {
                 heat_bound_from_below_floor_W_per_g: heat_below,
                 photon_source,
                 uncertainty,
+                radiological,
             });
         }
         // ---- pathways (trace mode only): give every source its own unit state so one factorisation serves all of them,
@@ -1846,6 +1911,40 @@ impl PreparedRun {
                 serde_json::Value::String(spec.projectile.name().into()),
             );
         }
+        if let Some(prepared) = &self.radiological {
+            let coverage_per_step = steps
+                .iter()
+                .filter_map(|step| {
+                    step.radiological.as_ref().map(|radiological| {
+                        serde_json::json!({
+                            "step": step.step,
+                            "responses": radiological.responses.iter().map(|response| serde_json::json!({
+                                "id": &response.id,
+                                "covered_activity_Bq_per_g": response.covered_activity_Bq_per_g,
+                                "missing_activity_Bq_per_g": response.missing_activity_Bq_per_g,
+                                "activity_coverage_fraction": response.activity_coverage_fraction,
+                                "contributing_nuclide_count": response.contributing_nuclide_count,
+                                "missing_active_nuclides": &response.missing_active_nuclides,
+                            })).collect::<Vec<_>>(),
+                        })
+                    })
+                })
+                .collect::<Vec<_>>();
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "radiological".into(),
+                serde_json::json!({
+                    "table_sha256": &prepared.sha256,
+                    "require_complete": prepared.options.require_complete,
+                    "formula": {
+                        "clearance_index_and_waste_index": "sum(1000 * activity_Bq_per_g / limit_Bq_per_kg)",
+                        "ingestion_dose_and_inhalation_dose": "sum(activity_Bq_per_g * dose_coefficient_Sv_per_Bq)",
+                    },
+                    "scenario_semantics": "the caller selects and hash-pins the regulatory or dose-coefficient table; ACTINV applies no intake mass, occupancy, frequency, retention factor or safety factor",
+                    "missing_coefficient_semantics": "positive activity without a coefficient is excluded from the value, reported exactly, and never treated as a zero coefficient",
+                    "coverage_per_step": coverage_per_step,
+                }),
+            );
+        }
         if let (Some(prepared), Some(options), Some(runtime)) =
             (&self.covariance, &spec.uncertainty, &uncertainty_runtime)
         {
@@ -1937,6 +2036,44 @@ impl PreparedRun {
                     }),
                 );
         }
+        if let Some(prepared) = &self.radiological {
+            let mut metadata = prepared.table.certificate_metadata();
+            let metadata_object = metadata
+                .as_object_mut()
+                .expect("radiological metadata is an object");
+            metadata_object.insert(
+                "require_complete".into(),
+                serde_json::Value::Bool(prepared.options.require_complete),
+            );
+            metadata_object.insert(
+                "scenario_semantics".into(),
+                serde_json::Value::String(
+                    "the caller selects and hash-pins the regulatory or dose-coefficient table; ACTINV applies no intake mass, occupancy, frequency, retention factor or safety factor".into(),
+                ),
+            );
+            metadata_object.insert(
+                "missing_coefficient_semantics".into(),
+                serde_json::Value::String(
+                    "positive activity without a coefficient is excluded from the value, reported exactly, and never treated as a zero coefficient".into(),
+                ),
+            );
+            let certificate_object = certificate
+                .as_object_mut()
+                .expect("certificate is an object");
+            certificate_object.insert("radiological".into(), metadata);
+            certificate_object
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert(
+                    "radiological_table".into(),
+                    serde_json::json!({
+                        "path": &prepared.options.table.path,
+                        "sha256_declared": &prepared.options.table.sha256,
+                        "sha256": &prepared.sha256,
+                    }),
+                );
+        }
         if !spec.projectile.is_neutron() {
             certificate
                 .as_object_mut()
@@ -2000,6 +2137,7 @@ mod projectile_output_tests {
             heat_bound_from_below_floor_W_per_g: 0.0,
             photon_source: None,
             uncertainty: None,
+            radiological: None,
         }
     }
 

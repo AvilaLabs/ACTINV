@@ -1,0 +1,46 @@
+{
+  "format": "actinv-radiological-table-1",
+  "title": "ACTINV P12 synthetic two-nuclide response fixture",
+  "source": {
+    "citation": "ACTINV P12 G1 synthetic control; not a regulatory table",
+    "edition": "1",
+    "url": "https://github.com/connoravila/actinv",
+    "jurisdiction": "validation-only"
+  },
+  "responses": [
+    {
+      "id": "clearance-fixture",
+      "kind": "clearance_index",
+      "basis": "synthetic Mn-56-only clearance limit in Bq/kg",
+      "coefficients": {
+        "Mn56": 4000000.0
+      }
+    },
+    {
+      "id": "waste-fixture",
+      "kind": "waste_index",
+      "basis": "synthetic Mn-56/Mn-57 waste limits in Bq/kg",
+      "coefficients": {
+        "Mn56": 2500000.0,
+        "Mn57": 5000000.0
+      }
+    },
+    {
+      "id": "ingestion-fixture",
+      "kind": "ingestion_dose",
+      "basis": "synthetic ingestion effective-dose coefficients in Sv/Bq",
+      "coefficients": {
+        "Mn56": 2.5e-10,
+        "Mn57": 7.5e-10
+      }
+    },
+    {
+      "id": "inhalation-fixture",
+      "kind": "inhalation_dose",
+      "basis": "synthetic Mn-57-only inhalation effective-dose coefficient in Sv/Bq",
+      "coefficients": {
+        "Mn57": 1.25e-9
+      }
+    }
+  ]
+}

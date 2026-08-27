@@ -27,6 +27,8 @@ pub struct Spec {
     pub fission_yields: FissionYieldOptions,
     #[serde(default)]
     pub uncertainty: Option<UncertaintyOptions>,
+    #[serde(default)]
+    pub radiological: Option<RadiologicalOptions>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -52,6 +54,16 @@ pub struct UncertaintyOptions {
     pub responses: Vec<String>,
     #[serde(default = "confidence_95")]
     pub confidence_level: f64,
+    #[serde(default)]
+    pub require_complete: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RadiologicalOptions {
+    pub table: HashedFileRef,
+    #[serde(default)]
+    pub responses: Vec<String>,
     #[serde(default)]
     pub require_complete: bool,
 }
@@ -315,6 +327,29 @@ impl Spec {
                 return Err("MF=33 uncertainty is supported only for neutron activation".into());
             }
         }
+        if let Some(radiological) = &self.radiological {
+            if radiological.table.path.is_empty()
+                || radiological.table.sha256.len() != 64
+                || !radiological
+                    .table
+                    .sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err("radiological.table requires a path and a 64-hex-digit sha256".into());
+            }
+            let mut selectors = std::collections::HashSet::new();
+            for selector in &radiological.responses {
+                if selector.trim().is_empty() {
+                    return Err("radiological response selectors must be nonempty".into());
+                }
+                if !selectors.insert(selector) {
+                    return Err(format!(
+                        "duplicate radiological response selector '{selector}'"
+                    ));
+                }
+            }
+        }
         if self.decay.primary.is_empty() {
             return Err("decay.primary is empty".into());
         }
@@ -380,7 +415,7 @@ impl Spec {
             for output in outputs {
                 match output.as_str() {
                     "inventory" | "activity" | "heat" | "photons" | "dose" | "pathways"
-                    | "ledger" | "certificate" => {}
+                    | "radiological" | "ledger" | "certificate" => {}
                     value => return Err(format!("unknown options.outputs value '{value}'")),
                 }
             }

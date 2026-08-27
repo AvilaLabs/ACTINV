@@ -1,0 +1,123 @@
+{
+ "gate": "P12-G1",
+ "protocol_sha256": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715",
+ "table_sha256": "65997d2cd7a308dcb452aba392817f6611924c6eaa1012a21ba2c5d705f2f601",
+ "relative_limit": 2e-15,
+ "absolute_limit": 1e-30,
+ "steps": 5,
+ "responses_per_step": 4,
+ "entry_points": {
+  "cli_vs_python": true,
+  "cli_vs_prepared": true,
+  "cli_vs_mesh": true,
+  "labels": [
+   "cli",
+   "python",
+   "prepared",
+   "mesh"
+  ]
+ },
+ "independent_dense_response": {
+  "comparisons": 80,
+  "maximum_relative": 0.0,
+  "maximum_absolute": 0.0,
+  "metadata_exact": true,
+  "pass": true
+ },
+ "certificate": {
+  "declared_hash": true,
+  "computed_hash": true,
+  "path": true,
+  "source": true,
+  "metadata": true,
+  "scenario_semantics": true,
+  "missing_semantics": true
+ },
+ "coverage": {
+  "ledger_matches_result": true,
+  "zero_activity_coverage_one": true,
+  "mixed_missing_reported": true,
+  "full_coverage_present": true
+ },
+ "plants": {
+  "wrong_hash": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "SHA-256 mismatch for <ROOT>/controls/fixtures/p12_radiological_table.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 65997d2cd7a308dcb452aba392817f6611924c6eaa1012a21ba2c5d705f2f601",
+   "pass": true
+  },
+  "unknown_selector": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "unknown radiological response selector 'not-a-response'",
+   "pass": true
+  },
+  "duplicate_selector": {
+   "returncode": 2,
+   "output_published": false,
+   "stderr_tail": "duplicate radiological response selector 'waste-fixture'",
+   "pass": true
+  },
+  "require_complete": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological step 2: radiological response 'clearance-fixture' has no coefficient for positive-activity nuclide(s): Mn57",
+   "pass": true
+  },
+  "unknown_field": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: unknown field `surprise`, expected one of `format`, `title`, `source`, `responses` at line 1 column 971",
+   "pass": true
+  },
+  "unknown_kind": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: unknown variant `external_dose`, expected one of `clearance_index`, `waste_index`, `ingestion_dose`, `inhalation_dose` at line 1 column 351",
+   "pass": true
+  },
+  "duplicate_id": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "duplicate radiological response id 'clearance-fixture'",
+   "pass": true
+  },
+  "empty_metadata": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table source.citation must be nonempty",
+   "pass": true
+  },
+  "nonpositive_coefficient": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: radiological coefficient for 'Mn56' must be finite and strictly positive at line 1 column 442",
+   "pass": true
+  },
+  "malformed_nuclide": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: malformed explicit nuclide key 'MN-56' at line 1 column 449",
+   "pass": true
+  },
+  "empty_coefficients": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: radiological response coefficients must not be empty at line 1 column 431",
+   "pass": true
+  },
+  "duplicate_canonical_nuclide": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: duplicate radiological coefficient for 'Mn56' at line 17 column 7",
+   "pass": true
+  },
+  "nonfinite_coefficient": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "radiological table: number out of range at line 16 column 21",
+   "pass": true
+  }
+ },
+ "pass": true
+}
