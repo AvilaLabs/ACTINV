@@ -1,0 +1,130 @@
+{
+  "external_data_untracked": true,
+  "gate": "P12-G4",
+  "history_comparison": {
+    "nuclides": {
+      "Co58": {
+        "endpoints": 170,
+        "endpoints_at_or_above_1e6_atoms": 170,
+        "endpoints_below_1e6_atoms": 0,
+        "maximum_relative_error_at_or_above_1e6_atoms": 2.8774804027527194e-14,
+        "maximum_scaled_absolute_error_below_1e6_atoms": 0.0,
+        "pass": true
+      },
+      "Cr51": {
+        "endpoints": 170,
+        "endpoints_at_or_above_1e6_atoms": 170,
+        "endpoints_below_1e6_atoms": 0,
+        "maximum_relative_error_at_or_above_1e6_atoms": 1.9645142759930754e-14,
+        "maximum_scaled_absolute_error_below_1e6_atoms": 0.0,
+        "pass": true
+      },
+      "Mn56": {
+        "endpoints": 170,
+        "endpoints_at_or_above_1e6_atoms": 101,
+        "endpoints_below_1e6_atoms": 69,
+        "maximum_relative_error_at_or_above_1e6_atoms": 2.680689418855543e-14,
+        "maximum_scaled_absolute_error_below_1e6_atoms": 1.2832091888036396e-33,
+        "pass": true
+      },
+      "Tc99_m1": {
+        "endpoints": 170,
+        "endpoints_at_or_above_1e6_atoms": 129,
+        "endpoints_below_1e6_atoms": 41,
+        "maximum_relative_error_at_or_above_1e6_atoms": 1.1254172487703119e-14,
+        "maximum_scaled_absolute_error_below_1e6_atoms": 4.303445450256108e-34,
+        "pass": true
+      }
+    },
+    "pass": true,
+    "relative_limit_at_or_above_1e6_atoms": 0.0001,
+    "scaled_absolute_limit_below_1e6_atoms": 1e-18
+  },
+  "independent_reaction_rates": {
+    "comparisons": 120,
+    "formula": "sigma_b * sum(flux_620) * source_rate / volume * 1e-24",
+    "maximum_relative_error": 3.236508739334936e-16,
+    "pass": true,
+    "selected_pairs": [
+      "Fe56 (n,gamma)",
+      "Ni58 (n,p)",
+      "Cr52 (n,2n)"
+    ]
+  },
+  "pass": true,
+  "reference": {
+    "archive": "Zenodo record 10660030, CC-BY-4.0",
+    "archive_doi": "10.5281/zenodo.10660030",
+    "article": "Peterson et al., Nuclear Fusion 64 (2024) 056011",
+    "article_doi": "10.1088/1741-4326/ad32dd",
+    "cell": 620,
+    "final_time_s": 17479919.999999996,
+    "flux_groups": 709,
+    "flux_sum_per_source_particle": 0.028528737714263334,
+    "hashes": {
+      "archive": "1c76f42dcbc3e0f488f8035c3f63e4cd4428930f76efc088329be7ec9c6b45ed",
+      "chain_endfb80_reduced.xml": "f3f56d3a9ee66bcb691ea0812aad6a3696c00f6272f503de866a495b85c7270e",
+      "depletion_results.h5": "1fcd608a0a8100892b4d24ca7de05d401ab952b904ac3d80c8698de36419d4d5",
+      "flux_620.npy": "9f2b3223164adbe5709aa493943af0a1fde3b538654ec28993b32dfe56195828",
+      "fluxes": "25bc8b50a74147f4cc4637a24e2c6d0d8b24562447abb28e7ba699bc03390fde",
+      "inventory.i": "c2fdfc04547017823c533e5a48199c5bd49cfb33fe36fb7a984a88c30c20516b",
+      "microxs_620.csv": "fa097a994e8a4ea93267603bd6435972c15d3daa1d89cb37b626e21147637651",
+      "protocol": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715"
+    },
+    "initial_nuclides": 31,
+    "initial_total_atoms": 1.487841027495856e+25,
+    "intervals": 170,
+    "inventory_i_maximum_relative_rounding": 3.851423872215036e-15,
+    "volume_cm3": 172.60694232400417
+  },
+  "reproducibility": {
+    "normalized_result_sha256": "2f2762251b07c64f668103232ea131a2b2c021371654e63bf62109bca918f215",
+    "pass": true,
+    "repeated_scientific_result_identical": true,
+    "temporary_decay_bytes_identical": true,
+    "temporary_library_bytes_identical": true
+  },
+  "schema": "actinv-p12-g4-result-1",
+  "transformation": {
+    "conservation_mapped_labels": 19,
+    "csv_rows": 137520,
+    "decay_modes": 428,
+    "decay_sha256": "c479eaaa1ca527460a40eaff517964353e101c4da35b8e9ed455c72f7515d8c6",
+    "index_sha256": "861bb68de6530e1da3a8e6a0a8bd908069be5091c02b79a7a04a45700a14546c",
+    "library_rows": 4198,
+    "library_sha256": "fccfd5809df1cd60683a9ce25802b13a24c99071c7dfd2ae3b602c64083cea38",
+    "loss_only_channels": 1466,
+    "loss_rows": 2832,
+    "nonzero_fission_loss_rows": 84,
+    "nonzero_non_fission_rows": 2748,
+    "nonzero_rows": 2832,
+    "nuclides": 494,
+    "product_rows": 1366,
+    "reaction_label_count": 20,
+    "reaction_labels": [
+      "(n,2a)",
+      "(n,2n)",
+      "(n,2na)",
+      "(n,2np)",
+      "(n,2p)",
+      "(n,3He)",
+      "(n,3n)",
+      "(n,3na)",
+      "(n,a)",
+      "(n,d)",
+      "(n,gamma)",
+      "(n,na)",
+      "(n,nd)",
+      "(n,np)",
+      "(n,nt)",
+      "(n,p)",
+      "(n,pa)",
+      "(n,pd)",
+      "(n,t)",
+      "(n,t2a)"
+    ],
+    "stable_nuclides": 150,
+    "targets": 421,
+    "targets_in_reduced_chain": 178
+  }
+}
