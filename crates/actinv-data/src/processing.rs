@@ -3,8 +3,9 @@
 use crate::doppler;
 use crate::groups::{GroupStructure, Tabulated};
 use crate::resonance::{
-    reconstruct_legacy, reconstruct_rmatrix_limited, reconstruct_unresolved, LegacyResonance,
-    RangeData, ResonanceEvaluation, ResonanceRange, K_WAVE,
+    legacy_effective_total_width, reconstruct_legacy, reconstruct_rmatrix_limited,
+    reconstruct_unresolved, LegacyResonance, RangeData, ResonanceEvaluation, ResonanceRange,
+    K_WAVE,
 };
 use rayon::prelude::*;
 use std::collections::BTreeSet;
@@ -239,7 +240,7 @@ fn approximate_resonances(range: &ResonanceRange) -> Vec<(f64, f64)> {
             .flat_map(|group| {
                 group.resonances.iter().map(|resonance| {
                     let width = if range.lrf <= 2 {
-                        resonance.total.abs()
+                        legacy_effective_total_width(group, resonance).abs()
                     } else {
                         resonance.neutron.abs()
                             + resonance.capture.abs()
@@ -479,9 +480,10 @@ fn isolated_line_areas(
     };
     let group = &resolved.groups[group_index];
     let resonance = &group.resonances[resonance_index];
+    let total_width = legacy_effective_total_width(group, resonance);
     let reaction = reaction_width(resonance, mt);
     let wave = K_WAVE * group.awri / (group.awri + 1.0) * resonance.energy.sqrt();
-    if wave <= 0.0 || resonance.total <= 0.0 || resonance.neutron <= 0.0 || reaction <= 0.0 {
+    if wave <= 0.0 || total_width <= 0.0 || resonance.neutron <= 0.0 || reaction <= 0.0 {
         return Err("analytic line has nonpositive energy or width".into());
     }
     let statistical = (2.0 * resonance.spin.abs() + 1.0) / (2.0 * (2.0 * resolved.spin + 1.0));
@@ -489,7 +491,7 @@ fn isolated_line_areas(
         * statistical
         * resonance.neutron
         * reaction
-        / resonance.total;
+        / total_width;
 
     let mut isolated_range = range.clone();
     let RangeData::BreitWigner(isolated) = &mut isolated_range.data else {
@@ -498,8 +500,8 @@ fn isolated_line_areas(
     isolated.groups = vec![group.clone()];
     isolated.groups[0].resonances = vec![resonance.clone()];
 
-    let available_left = (resonance.energy - range.energy_min) / resonance.total;
-    let available_right = (range.energy_max - resonance.energy) / resonance.total;
+    let available_left = (resonance.energy - range.energy_min) / total_width;
+    let available_right = (range.energy_max - resonance.energy) / total_width;
     let integrate = |wing_retention: &WingRetention,
                      integration_low: f64,
                      integration_high: f64,
@@ -512,15 +514,15 @@ fn isolated_line_areas(
         }
         let mut integrand = |theta: f64| {
             let tangent = theta.tan();
-            let energy = (resonance.energy + 0.5 * resonance.total * tangent)
+            let energy = (resonance.energy + 0.5 * total_width * tangent)
                 .clamp(integration_low, integration_high);
-            let jacobian = 0.5 * resonance.total * (1.0 + tangent * tangent);
+            let jacobian = 0.5 * total_width * (1.0 + tangent * tangent);
             let removed_fraction = match wing_retention {
                 WingRetention::SmoothSymmetric {
                     inner_widths,
                     outer_widths,
                 } => {
-                    let distance = (energy - resonance.energy).abs() / resonance.total;
+                    let distance = (energy - resonance.energy).abs() / total_width;
                     1.0 - retained_wing_fraction(distance, *inner_widths, *outer_widths)
                 }
                 WingRetention::RangeEdge { edge_is_upper, .. } => {
@@ -530,7 +532,7 @@ fn isolated_line_areas(
                         energy > resonance.energy
                     };
                     if far_side {
-                        let distance = (energy - resonance.energy).abs() / resonance.total;
+                        let distance = (energy - resonance.energy).abs() / total_width;
                         1.0 - retained_wing_fraction(
                             distance,
                             ULTRA_NARROW_CORE_OUTER_WIDTHS - ULTRA_NARROW_CORE_TAPER_WIDTHS,
@@ -571,8 +573,8 @@ fn isolated_line_areas(
                 continue;
             }
             let inner_widths = outer_widths - ULTRA_NARROW_CORE_TAPER_WIDTHS;
-            let low = resonance.energy - outer_widths * resonance.total;
-            let high = resonance.energy + outer_widths * resonance.total;
+            let low = resonance.energy - outer_widths * total_width;
+            let high = resonance.energy + outer_widths * total_width;
             let theta = (2.0 * outer_widths).atan();
             let retention = WingRetention::SmoothSymmetric {
                 inner_widths,
@@ -602,8 +604,8 @@ fn isolated_line_areas(
     // compare against the exact arctangent integral of the same frozen-width truncated Lorentzian.
     let left = available_left.min(ULTRA_NARROW_CORE_OUTER_WIDTHS) * (1.0 - 1e-12);
     let right = available_right.min(ULTRA_NARROW_CORE_OUTER_WIDTHS) * (1.0 - 1e-12);
-    let low = resonance.energy - left * resonance.total;
-    let high = resonance.energy + right * resonance.total;
+    let low = resonance.energy - left * total_width;
+    let high = resonance.energy + right * total_width;
     let theta_low = (-2.0 * left).atan();
     let theta_high = (2.0 * right).atan();
     let closed_form = full_closed_form * (theta_high - theta_low) / std::f64::consts::PI;
@@ -647,10 +649,11 @@ fn separate_ultra_narrow_lines(
             };
             for (group_index, group) in resolved.groups.iter().enumerate() {
                 for (resonance_index, resonance) in group.resonances.iter().enumerate() {
+                    let total_width = legacy_effective_total_width(group, resonance);
                     let reaction = reaction_width(resonance, mt);
                     if resonance.energy <= range.energy_min
                         || resonance.energy >= range.energy_max
-                        || resonance.total <= 0.0
+                        || total_width <= 0.0
                         || resonance.neutron <= 0.0
                         || reaction <= 0.0
                     {
@@ -662,13 +665,13 @@ fn separate_ultra_narrow_lines(
                         * resonance.energy
                         / evaluation.awr)
                         .sqrt();
-                    let ratio = resonance.total / doppler_width;
+                    let ratio = total_width / doppler_width;
                     if !ratio.is_finite() || ratio > ULTRA_NARROW_RATIO {
                         continue;
                     }
                     let edge_distance_widths = ((resonance.energy - range.energy_min)
                         .min(range.energy_max - resonance.energy))
-                        / resonance.total;
+                        / total_width;
                     let nearest_line_distance_widths = resolved
                         .groups
                         .iter()
@@ -678,8 +681,7 @@ fn separate_ultra_narrow_lines(
                                 move |(other_index, other)| {
                                     (other_group != group_index || other_index != resonance_index)
                                         .then_some(
-                                            (other.energy - resonance.energy).abs()
-                                                / resonance.total,
+                                            (other.energy - resonance.energy).abs() / total_width,
                                         )
                                 },
                             )
@@ -690,7 +692,7 @@ fn separate_ultra_narrow_lines(
                         diagnostics.push(UltraNarrowCandidateDiagnostic {
                             isotope_zai: isotope.zai,
                             energy_ev: resonance.energy,
-                            total_width_ev: resonance.total,
+                            total_width_ev: total_width,
                             width_to_doppler_ratio: ratio,
                             edge_distance_widths,
                             nearest_line_distance_widths,
@@ -705,7 +707,7 @@ fn separate_ultra_narrow_lines(
                         diagnostics.push(UltraNarrowCandidateDiagnostic {
                             isotope_zai: isotope.zai,
                             energy_ev: resonance.energy,
-                            total_width_ev: resonance.total,
+                            total_width_ev: total_width,
                             width_to_doppler_ratio: ratio,
                             edge_distance_widths,
                             nearest_line_distance_widths,
@@ -719,7 +721,7 @@ fn separate_ultra_narrow_lines(
                         diagnostics.push(UltraNarrowCandidateDiagnostic {
                             isotope_zai: isotope.zai,
                             energy_ev: resonance.energy,
-                            total_width_ev: resonance.total,
+                            total_width_ev: total_width,
                             width_to_doppler_ratio: ratio,
                             edge_distance_widths,
                             nearest_line_distance_widths,
@@ -743,7 +745,7 @@ fn separate_ultra_narrow_lines(
                     diagnostics.push(UltraNarrowCandidateDiagnostic {
                         isotope_zai: isotope.zai,
                         energy_ev: resonance.energy,
-                        total_width_ev: resonance.total,
+                        total_width_ev: total_width,
                         width_to_doppler_ratio: ratio,
                         edge_distance_widths,
                         nearest_line_distance_widths,
@@ -767,7 +769,7 @@ fn separate_ultra_narrow_lines(
                     removed.insert((isotope_index, range_index, group_index, resonance_index));
                     lines.push(AnalyticLine {
                         energy_ev: resonance.energy,
-                        total_width_ev: resonance.total,
+                        total_width_ev: total_width,
                         weighted_area_barn_ev: weighted_area,
                         isotope_abundance: isotope.abundance,
                         wing_range,
@@ -779,7 +781,7 @@ fn separate_ultra_narrow_lines(
                         range_min_ev: range.energy_min,
                         range_max_ev: range.energy_max,
                         energy_ev: resonance.energy,
-                        total_width_ev: resonance.total,
+                        total_width_ev: total_width,
                         classification_temperature_k: classification_temperature,
                         doppler_width_ev: doppler_width,
                         width_to_doppler_ratio: ratio,

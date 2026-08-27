@@ -32,6 +32,36 @@ links, special files, empty or duplicate flattened names, wrong projectile names
 counts; the final flat input directory is published only after all 2,850 regular files have streamed successfully.
 Its detailed external manifest records every file hash and defines the compact manifest hash used by G7 evidence.
 
+All four downloads and safe extractions completed. The immutable acquisition identities are:
+
+| projectile | archive SHA-256 | detailed manifest SHA-256 | compact file-manifest SHA-256 |
+|---|---|---|---|
+| neutron | `e547527688506cbe09813364dcefa2aed11f474139bfa129d7cd4ca24fae21fa` | `b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67` | `f38df7c49da6cef8ac3d23c45c81dfb394829eefd38ee4af0db6dde92f0beaa4` |
+| proton | `49340a03b0d9ac86598c6b710c0bc2ec0babd3fa0717a9ff1d75f042fccc5b0b` | `98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef` | `0458a6c20e0b2fbb23934d2672304d210ceef74b0fc2807e9d9271c9aacf6ffd` |
+| deuteron | `34f459aea0b5ac9c40820c88d898618f926ec3b52858a5393e42d57707ec5f1c` | `afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9` | `feaa774185fb215e45c6fdf6bb26670bfeae9e4263386cfcccd4b7abcd3fa47f` |
+| alpha | `25520f6eb42ce024c065f85255277ed169b2f826e9fc24f5d093c99d5c60e018` | `e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf` | `ca8bd5ea75d3cc3590a9f4115d94ec54f2cc110a09275b782ace3d608b1b7c81` |
+
+Each manifest has exactly 2,850 regular files and no link or special entry. The normalized 816-file EAF-2010
+manifest has SHA-256 `87baeeef62650cdf8791bd3f198c906b1e6787eb7017a3ec4b02d4cee88bc15e`.
+
+## Complete-neutron preflight repairs
+
+The first strict neutron pass found the bounded upstream defects frozen in
+[Amendment D](../protocols/ACTINV-P10_AMENDMENT_D.md) and the Reich–Moore cancellation defect frozen in
+[Amendment E](../protocols/ACTINV-P10_AMENDMENT_E.md). The official extraction remains unchanged. The deterministic
+working preparation program has SHA-256 `84a65826e87876bd9bc891bc34897412daf0eae63c092bb88a4b8f654d532190`;
+its external detailed manifest has SHA-256
+`a6d17f996153d2671c0c51bfb6303e2a87a5af03e0696bfb34d668a31dbfb2a2`, and its compact file manifest is
+`b1ea3fe043ec243e2df0a3894206872c2ce18c3b4541c19b35029b3ed3e7b15c`. Exactly 2,849 files are byte-identical;
+only the two frozen Pb-208 fields differ.
+
+`results/g7_p10_neutron_sources.json` independently scans 267,559 Breit–Wigner records, re-hashes all working
+files, checks strict rejection plants, proves two different finite Pb-208 substitutions produce a byte-identical
+50-row activation library, and matches the repaired Reich–Moore capture value to an 80-decimal-digit calculation.
+Its result SHA-256 is `55c55195edb99d40be7a9c92540b678ea6a86c7b11f2a4e9c3870f0b62b69681`.
+The post-repair Rust parse of all 2,850 working evaluations completed in 95.18 s with 13,012 KiB peak RSS and zero
+errors. The strict Rust format/check/Clippy/test checkpoint also passes.
+
 ## Profile before the complete computation
 
 G1 already exercised a four-worker W-186/Ag-107/Fr-226/Rb-94 neutron build under a 1 GiB total address-space cap:

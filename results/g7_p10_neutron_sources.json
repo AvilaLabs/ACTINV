@@ -1,0 +1,121 @@
+{
+  "gate": "P10-G7 neutron source controls",
+  "nonfinite_numeric_fields": [
+    {
+      "field": 6,
+      "file": "n-Pb208.tendl",
+      "line": 781,
+      "mat": 8237,
+      "mf": 3,
+      "mt": 1,
+      "token": "nan"
+    },
+    {
+      "field": 6,
+      "file": "n-Pb208.tendl",
+      "line": 1613,
+      "mat": 8237,
+      "mf": 3,
+      "mt": 3,
+      "token": "nan"
+    }
+  ],
+  "official_file_manifest_sha256": "f38df7c49da6cef8ac3d23c45c81dfb394829eefd38ee4af0db6dde92f0beaa4",
+  "pass": true,
+  "pb208_aggregate_invariance": {
+    "byte_identical": true,
+    "npz_sha256": "bc346105193fab0f52b66c6bd57b7cd05a6faebde6f58f5cb401d5198fc6cc57",
+    "pass": true,
+    "rows": 50,
+    "source_hashes_differ": true
+  },
+  "pins": {
+    "amendment_d": "5cd79e5ad00ee618b91ddb1b73e795b0cfa4de93c7ebb34c0bce33245e0e5971",
+    "amendment_e": "31313e5fb09bd4e969b4cc552beebb7997208197114ceb2b362eabae4de1ffa8",
+    "njoy_reconr": "054ede7a59e1c39cf3e72105d8a0b95a0fb1d8df0882eca6b949e765b62bf5db",
+    "official_manifest": "b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67",
+    "pb208_official": "32249bf71ee52a159ef8f94a4cb85d5c456aba13e1a4c4d9129c2304b6dc4137",
+    "pb208_working": "86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72",
+    "prepare": "84a65826e87876bd9bc891bc34897412daf0eae63c092bb88a4b8f654d532190",
+    "working_manifest": "a6d17f996153d2671c0c51bfb6303e2a87a5af03e0696bfb34d668a31dbfb2a2"
+  },
+  "reich_moore_high_precision": {
+    "decimal80_capture_b": 0.011174250673840012,
+    "energy_eV": 1.0736824345386535e-05,
+    "pass": true,
+    "relative_difference": 0.0,
+    "rust_capture_b": 0.011174250673840012,
+    "spin_sequences": 7
+  },
+  "strict_parser_and_repair": {
+    "accepted_omitted_fission_files": [
+      "n-Bi220.tendl",
+      "n-Fr231.tendl",
+      "n-Ra226.tendl"
+    ],
+    "pass": true,
+    "raw_pb208_failure": "parse activation evaluation: \"n-Pb208.tendl: MAT=8237/MF=3/MT=1: nonfinite ENDF number 'NaN'\"",
+    "repair_is_deterministic": true,
+    "repair_matches_working_file": true,
+    "unrelated_above_failure": "parse activation evaluation: \"<above-width-plant>: MAT=8358/MF=2/MT=151: Breit-Wigner total width 0.01589947 exceeds component sum 0.014909467710000002 without LRX\"",
+    "unrelated_below_failure": "parse activation evaluation: \"<below-width-plant>: MAT=8358/MF=2/MT=151: Breit-Wigner total width 0.01389947 is below component sum 0.014909467710000002 for LRX=0 (GN=0.00001556771, GG=0.014883900000000002, GF=0.00001)\""
+  },
+  "width_scan": {
+    "above_component_sum_without_lrx": {},
+    "below_component_sum": {
+      "n-Bi220.tendl": 100,
+      "n-Fr231.tendl": 99,
+      "n-Ra226.tendl": 66
+    },
+    "exact_omitted_fission_pattern": {
+      "n-Bi220.tendl": 100,
+      "n-Fr231.tendl": 99,
+      "n-Ra226.tendl": 66
+    },
+    "omitted_fission_widths_eV": [
+      1e-05
+    ],
+    "pass": true,
+    "records": 267559
+  },
+  "working_manifest": {
+    "actual_hash_mismatches": [],
+    "byte_identical_files": 2849,
+    "changed": [
+      {
+        "byte_identical": false,
+        "bytes": 4075434,
+        "name": "n-Pb208.tendl",
+        "official_sha256": "32249bf71ee52a159ef8f94a4cb85d5c456aba13e1a4c4d9129c2304b6dc4137",
+        "working_sha256": "86788a14563ecdb844628a6a455864874ba5f5bca9b8142c10a59ea00df87c72"
+      }
+    ],
+    "detailed_sha256": "a6d17f996153d2671c0c51bfb6303e2a87a5af03e0696bfb34d668a31dbfb2a2",
+    "file_manifest_sha256": "b1ea3fe043ec243e2df0a3894206872c2ce18c3b4541c19b35029b3ed3e7b15c",
+    "files": 2850,
+    "pass": true,
+    "preparation_program_sha256": "84a65826e87876bd9bc891bc34897412daf0eae63c092bb88a4b8f654d532190",
+    "repairs": [
+      {
+        "energy_eV": 1000000,
+        "line": 781,
+        "mat": 8237,
+        "mf": 3,
+        "mt": 1,
+        "original_field": "NaN",
+        "replacement_field": "4.925328-7",
+        "rule": "carry forward the immediately preceding finite left-branch value"
+      },
+      {
+        "energy_eV": 1000000,
+        "line": 1613,
+        "mat": 8237,
+        "mf": 3,
+        "mt": 3,
+        "original_field": "NaN",
+        "replacement_field": "4.925328-7",
+        "rule": "carry forward the immediately preceding finite left-branch value"
+      }
+    ]
+  }
+}

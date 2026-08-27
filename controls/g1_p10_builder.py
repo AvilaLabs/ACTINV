@@ -112,6 +112,8 @@ PINNED = {
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_A.md": "e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_B.md": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_C.md": "afa3f1ab58236a36148fe51265cc1d3fe2ae1de31b9b4a9a4a18d0fdd45145de",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_D.md": "5cd79e5ad00ee618b91ddb1b73e795b0cfa4de93c7ebb34c0bce33245e0e5971",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_E.md": "31313e5fb09bd4e969b4cc552beebb7997208197114ceb2b362eabae4de1ffa8",
     ROOT / "results" / "g2_p10_rmatrix.json": "c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690",
     ROOT / "results" / "g3_p10_unresolved_njoy.json": "afbdf08dbd0b4545a74b2632b806f21feb374b8ee985e3a5b17aabcf54f4200f",
     ROOT / "results" / "g3_p10_unresolved_quadrature.json": "4290a6c734639bfecc00e8a5fa0923cec6a7d1ff013e92639333e069d204354a",

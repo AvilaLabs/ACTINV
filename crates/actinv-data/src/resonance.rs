@@ -11,6 +11,7 @@ use std::collections::{BTreeMap, BTreeSet};
 
 pub const K_WAVE: f64 = 2.196_771e-3;
 const NEUTRON_MASS_AMU: f64 = 1.008_664_915_95;
+const BREIT_WIGNER_FIELD_ROUNDING_RELATIVE: f64 = 5e-6;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ResonanceEvaluation {
@@ -68,7 +69,7 @@ pub struct LegacyLGroup {
 pub struct LegacyResonance {
     pub energy: f64,
     pub spin: f64,
-    /// LRF=1/2 total width. Zero for Reich-Moore.
+    /// LRF=1/2 evaluator-reported total width. Zero for Reich-Moore.
     pub total: f64,
     pub neutron: f64,
     pub capture: f64,
@@ -76,6 +77,76 @@ pub struct LegacyResonance {
     pub fission_a: f64,
     /// Reich-Moore signed second fission width.
     pub fission_b: f64,
+}
+
+fn width_rounding_tolerance(left: f64, right: f64) -> f64 {
+    BREIT_WIGNER_FIELD_ROUNDING_RELATIVE * left.abs().max(right.abs()).max(f64::MIN_POSITIVE)
+}
+
+fn omitted_fission_total_fields(lrx: i32, resonance: &LegacyResonance) -> bool {
+    if lrx != 0 || resonance.fission_a <= 0.0 {
+        return false;
+    }
+    let without_fission = resonance.neutron + resonance.capture;
+    let components = without_fission + resonance.fission_a;
+    resonance.total + width_rounding_tolerance(resonance.total, components) < components
+        && (resonance.total - without_fission).abs()
+            <= width_rounding_tolerance(resonance.total, without_fission)
+}
+
+/// Whether this LRF=1/2 record has the narrowly recognized TENDL omitted-fission `GT` pattern.
+pub fn omitted_fission_total_width(group: &LegacyLGroup, resonance: &LegacyResonance) -> bool {
+    omitted_fission_total_fields(group.lrx, resonance)
+}
+
+/// Natural LRF=1/2 width at the resonance energy, following NJOY's component-width reconstruction.
+pub fn legacy_effective_total_width(group: &LegacyLGroup, resonance: &LegacyResonance) -> f64 {
+    let components = resonance.neutron + resonance.capture + resonance.fission_a;
+    if group.lrx == 0 {
+        components
+    } else {
+        resonance.total.max(components)
+    }
+}
+
+pub fn omitted_fission_total_width_count(evaluation: &ResonanceEvaluation) -> usize {
+    evaluation
+        .isotopes
+        .iter()
+        .flat_map(|isotope| &isotope.ranges)
+        .filter_map(|range| match &range.data {
+            RangeData::BreitWigner(resolved) => Some(resolved),
+            _ => None,
+        })
+        .flat_map(|resolved| &resolved.groups)
+        .map(|group| {
+            group
+                .resonances
+                .iter()
+                .filter(|resonance| omitted_fission_total_width(group, resonance))
+                .count()
+        })
+        .sum()
+}
+
+fn validate_breit_wigner_widths(lrx: i32, resonance: &LegacyResonance) -> Result<(), String> {
+    let component_sum = resonance.neutron + resonance.capture + resonance.fission_a;
+    let rounding_tolerance = width_rounding_tolerance(resonance.total, component_sum);
+    if resonance.total + rounding_tolerance < component_sum
+        && !omitted_fission_total_fields(lrx, resonance)
+    {
+        return Err(format!(
+            "Breit-Wigner total width {} is below component sum {component_sum} for LRX={lrx} (GN={}, GG={}, GF={})",
+            resonance.total, resonance.neutron, resonance.capture, resonance.fission_a
+        ));
+    }
+    if lrx == 0 && resonance.total > component_sum + rounding_tolerance {
+        return Err(format!(
+            "Breit-Wigner total width {} exceeds component sum {component_sum} without LRX",
+            resonance.total
+        ));
+    }
+    Ok(())
 }
 
 #[derive(Clone, Debug, PartialEq)]
@@ -255,23 +326,11 @@ fn parse_legacy_resolved(
         for values in record.values.as_chunks::<6>().0 {
             if lrf <= 2 {
                 nonnegative(&values[2..], "Breit-Wigner width")?;
-                let component_sum = values[3] + values[4] + values[5];
                 // ENDF's eleven-column fields normally retain only seven significant digits.  The separately
                 // rounded total and component widths can therefore differ by a few last-place units even when the
-                // evaluator formed a consistent total (Ag-107 and Rb-94 both exercise this).  Keep the check
-                // scale-relative so genuinely inconsistent narrow widths still fail.
-                let rounding_tolerance = 5e-6
-                    * values[2]
-                        .abs()
-                        .max(component_sum.abs())
-                        .max(f64::MIN_POSITIVE);
-                if values[2] + rounding_tolerance < component_sum {
-                    return Err(format!(
-                        "Breit-Wigner total width {} is below component sum {component_sum}",
-                        values[2]
-                    ));
-                }
-                resonances.push(LegacyResonance {
+                // evaluator formed a consistent total (Ag-107 and Rb-94 both exercise this).  Amendment D also
+                // recognizes only the exact TENDL-2025 pattern where GT omitted a positive fission component.
+                let resonance = LegacyResonance {
                     energy: values[0],
                     spin: values[1],
                     total: values[2],
@@ -279,7 +338,9 @@ fn parse_legacy_resolved(
                     capture: values[4],
                     fission_a: values[5],
                     fission_b: 0.0,
-                });
+                };
+                validate_breit_wigner_widths(record.head.l2, &resonance)?;
+                resonances.push(resonance);
             } else {
                 nonnegative(&values[2..4], "Reich-Moore neutron/capture width")?;
                 resonances.push(LegacyResonance {
@@ -1800,17 +1861,26 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
                             Complex64::new(resonance.energy - energy, -0.5 * resonance.capture);
                         k_matrix += 0.5 * neutron / denominator;
                     }
-                    let w = Complex64::new(1.0, 0.0)
-                        / (Complex64::new(1.0, 0.0) - Complex64::i() * k_matrix);
+                    let collision_denominator =
+                        Complex64::new(1.0, 0.0) - Complex64::i() * k_matrix;
+                    let w = Complex64::new(1.0, 0.0) / collision_denominator;
                     let collision = Complex64::from_polar(1.0, -2.0 * phase)
                         * (2.0 * w - Complex64::new(1.0, 0.0));
-                    let total = 2.0 * pi_over_k2 * statistical * (1.0 - collision.re);
                     let elastic = pi_over_k2
                         * statistical
                         * (Complex64::new(1.0, 0.0) - collision).norm_sqr();
+                    // P10 Amendment E: this is algebraically total-elastic, but it evaluates the small absorption
+                    // term directly instead of cancelling two potential-scattering-dominated cross sections.
+                    let capture = 4.0 * pi_over_k2 * statistical * k_matrix.im
+                        / collision_denominator.norm_sqr();
+                    if !capture.is_finite() || capture < 0.0 {
+                        return Err(
+                            "Reich-Moore scalar collision matrix produced invalid capture".into(),
+                        );
+                    }
                     result.elastic +=
                         elastic - 4.0 * pi_over_k2 * statistical * phase.sin().powi(2);
-                    result.capture += total - elastic;
+                    result.capture += capture;
                 }
             } else {
                 let mut amplitude = Complex64::new(0.0, 0.0);
@@ -1823,11 +1893,15 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
                         return Err("zero resonance penetrability".into());
                     }
                     let neutron = resonance.neutron * penetrability / resonance_penetrability;
-                    let competitive = (resonance.total
-                        - resonance.neutron
-                        - resonance.capture
-                        - resonance.fission_a)
-                        .max(0.0);
+                    let competitive = if group.lrx == 0 {
+                        0.0
+                    } else {
+                        (resonance.total
+                            - resonance.neutron
+                            - resonance.capture
+                            - resonance.fission_a)
+                            .max(0.0)
+                    };
                     let total = neutron + resonance.capture + resonance.fission_a + competitive;
                     let shifted_energy = resonance.energy
                         + resonance.neutron * (resonance_shift - shift)
@@ -1868,6 +1942,135 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn breit_wigner_range(reported_total: f64) -> ResonanceRange {
+        ResonanceRange {
+            energy_min: 1.0,
+            energy_max: 100.0,
+            lru: 1,
+            lrf: 2,
+            naps: 1,
+            scattering_radius: None,
+            data: RangeData::BreitWigner(LegacyResolved {
+                spin: 0.5,
+                ap: 0.5,
+                groups: vec![LegacyLGroup {
+                    awri: 100.0,
+                    apl: 0.0,
+                    qx: 0.0,
+                    l: 0,
+                    lrx: 0,
+                    resonances: vec![LegacyResonance {
+                        energy: 10.0,
+                        spin: 0.5,
+                        total: reported_total,
+                        neutron: 0.1,
+                        capture: 0.5,
+                        fission_a: 0.01,
+                        fission_b: 0.0,
+                    }],
+                }],
+            }),
+        }
+    }
+
+    #[test]
+    fn omitted_fission_total_is_narrowly_accepted_and_reconstructed_from_components() {
+        let tendl_record = LegacyResonance {
+            energy: -38.85695,
+            spin: 2.5,
+            total: 0.01489947,
+            neutron: 0.00001556771,
+            capture: 0.01488390,
+            fission_a: 0.00001,
+            fission_b: 0.0,
+        };
+        assert!(omitted_fission_total_fields(0, &tendl_record));
+        validate_breit_wigner_widths(0, &tendl_record).unwrap();
+
+        let omitted = breit_wigner_range(0.6);
+        let RangeData::BreitWigner(resolved) = &omitted.data else {
+            unreachable!();
+        };
+        let group = &resolved.groups[0];
+        let resonance = &group.resonances[0];
+        assert!(omitted_fission_total_width(group, resonance));
+        assert_eq!(legacy_effective_total_width(group, resonance), 0.61);
+        validate_breit_wigner_widths(group.lrx, resonance).unwrap();
+
+        let corrected = breit_wigner_range(0.61);
+        assert_eq!(
+            reconstruct_legacy(&omitted, 10.0).unwrap(),
+            reconstruct_legacy(&corrected, 10.0).unwrap()
+        );
+    }
+
+    #[test]
+    fn unrelated_breit_wigner_total_mismatches_still_fail_closed() {
+        for reported_total in [0.59, 0.7] {
+            let range = breit_wigner_range(reported_total);
+            let RangeData::BreitWigner(resolved) = &range.data else {
+                unreachable!();
+            };
+            let resonance = &resolved.groups[0].resonances[0];
+            assert!(!omitted_fission_total_width(&resolved.groups[0], resonance));
+            assert!(validate_breit_wigner_widths(0, resonance).is_err());
+        }
+    }
+
+    #[test]
+    fn reich_moore_far_tail_capture_avoids_total_elastic_cancellation() {
+        let energy = 1e-5;
+        let group = LegacyLGroup {
+            awri: 100.0,
+            apl: 0.5,
+            qx: 0.0,
+            l: 0,
+            lrx: 0,
+            resonances: vec![LegacyResonance {
+                energy: -1e6,
+                spin: 0.5,
+                total: 0.0,
+                neutron: 1e6,
+                capture: 1e-10,
+                fission_a: 0.0,
+                fission_b: 0.0,
+            }],
+        };
+        let range = ResonanceRange {
+            energy_min: energy,
+            energy_max: 1.0,
+            lru: 1,
+            lrf: 3,
+            naps: 1,
+            scattering_radius: None,
+            data: RangeData::ReichMoore(LegacyResolved {
+                spin: 0.5,
+                ap: 0.5,
+                groups: vec![group.clone()],
+            }),
+        };
+        let actual = reconstruct_legacy(&range, energy).unwrap().capture;
+
+        let wave = K_WAVE * group.awri / (group.awri + 1.0) * energy.sqrt();
+        let resonance_wave = K_WAVE * group.awri / (group.awri + 1.0) * 1e6_f64.sqrt();
+        let neutron = group.resonances[0].neutron * wave / resonance_wave;
+        let denominator = Complex64::new(-1e6 - energy, -0.5e-10);
+        let k_matrix = 0.5 * neutron / denominator;
+        let collision_denominator = Complex64::new(1.0, 0.0) - Complex64::i() * k_matrix;
+        let pi_over_k2 = std::f64::consts::PI / wave.powi(2);
+        let expected = 4.0 * pi_over_k2 * 0.5 * k_matrix.im / collision_denominator.norm_sqr();
+        assert!(actual > 0.0);
+        assert!((actual - expected).abs() <= 2e-14 * expected);
+
+        let w = Complex64::new(1.0, 0.0) / collision_denominator;
+        let collision =
+            Complex64::from_polar(1.0, -2.0 * wave * 0.5) * (2.0 * w - Complex64::new(1.0, 0.0));
+        let total = 2.0 * pi_over_k2 * 0.5 * (1.0 - collision.re);
+        let elastic = pi_over_k2 * 0.5 * (Complex64::new(1.0, 0.0) - collision).norm_sqr();
+        let cancelled = total - elastic;
+        assert!((cancelled - expected).abs() > 1e-3 * expected);
+    }
 
     fn energy_dependent_unresolved_range() -> ResonanceRange {
         ResonanceRange {

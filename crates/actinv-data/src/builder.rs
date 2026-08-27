@@ -5,7 +5,7 @@ use crate::activation::{parse_evaluations, Evaluation, Mf6Product, ProductRef, P
 use crate::groups::{GroupStructure, Tabulated};
 use crate::library::{write_npz, Library, Row};
 use crate::processing::{has_resonance_contribution, process_reaction, ProcessedReaction};
-use crate::resonance::{validate_rmatrix_limited, RangeData};
+use crate::resonance::{omitted_fission_total_width_count, validate_rmatrix_limited, RangeData};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -707,6 +707,12 @@ fn build_evaluation(
             .resonance
             .as_ref()
             .ok_or("MF=2/MT=151 was declared without parsed resonance parameters")?;
+        let omitted_fission_totals = omitted_fission_total_width_count(resonance);
+        if omitted_fission_totals > 0 {
+            ledger.push(format!(
+                "MF=2: {omitted_fission_totals} LRX=0 Breit-Wigner GT fields omit GF; effective total widths reconstructed from GN+GG+GF per P10 Amendment D"
+            ));
+        }
         for isotope in &resonance.isotopes {
             for range in &isotope.ranges {
                 if matches!(range.data, RangeData::RMatrixLimited(_)) {
@@ -1434,6 +1440,51 @@ mod tests {
         assert!(error.contains("ZA=26056/LISO=0"), "{error}");
         assert!(error.contains("first.endf"), "{error}");
         assert!(error.contains("second.endf"), "{error}");
+    }
+
+    #[test]
+    fn aggregate_mt1_and_mt3_values_cannot_change_emitted_rows() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut left = evaluation(Projectile::Neutron);
+        left.mf3.insert(1, table([1.0, 2.0]));
+        left.mf3.insert(3, table([3.0, 4.0]));
+        let mut right = left.clone();
+        right.mf3.insert(1, table([1e100, 1e-100]));
+        right.mf3.insert(3, table([7.0, 8.0]));
+        let settings = EvaluationBuildSettings {
+            groups: &groups,
+            temperature_K: 0.0,
+            grid_density: 1.0,
+        };
+        let products = BTreeMap::from([(102, (0, 1))]);
+        let left = build_evaluation(
+            left,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            settings,
+            &products,
+        )
+        .unwrap();
+        let right = build_evaluation(
+            right,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            settings,
+            &products,
+        )
+        .unwrap();
+        assert_eq!(left.rows.len(), right.rows.len());
+        for (left, right) in left.rows.iter().zip(&right.rows) {
+            assert_eq!(
+                (left.mt, left.zap, left.lfs, left.lmf, &left.sigma),
+                (right.mt, right.zap, right.lfs, right.lmf, &right.sigma)
+            );
+        }
     }
 
     #[test]
