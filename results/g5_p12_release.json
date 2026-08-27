@@ -1,0 +1,109 @@
+{
+ "clean_clone": {
+  "only_expected_control_results_changed": true,
+  "source_was_clean": true
+ },
+ "commands": {
+  "check": true,
+  "clippy": true,
+  "dependency declaration": true,
+  "end_to_end_cli_python": true,
+  "p12_ci_subset": true,
+  "prior verdict evidence": true,
+  "release build": true,
+  "release notes": true,
+  "rustfmt": true,
+  "self_contained_clone": true,
+  "test": true
+ },
+ "crate_packages": {
+  "archives": [
+   "actinv-cli-1.0.0.crate",
+   "actinv-core-1.0.0.crate",
+   "actinv-data-1.0.0.crate"
+  ],
+  "data_crate_verified_by_cargo": true,
+  "dependent_archives_built": true,
+  "dependent_archives_verified_with_local_packaged_dependencies": true,
+  "embedded_release_data": {
+   "fispact_162_groups.json": true,
+   "fispact_709_groups.json": true,
+   "mt_products.json": true
+  },
+  "pass": true
+ },
+ "gate": "P12-G5",
+ "pass": true,
+ "python_package": {
+  "checks": {
+   "sdist_complete": true,
+   "wheel_abi": true,
+   "wheel_import": true,
+   "wheel_license_expression": true,
+   "wheel_licenses": true,
+   "wheel_requires_python": true,
+   "wheel_sbom": true,
+   "wheel_version": true
+  },
+  "pass": true,
+  "source_distribution": "actinv-1.0.0.tar.gz",
+  "wheel": "actinv-1.0.0-cp39-abi3-<platform>.whl"
+ },
+ "schema": "actinv-p12-g5-result-1",
+ "source": {
+  "abi3_py39": true,
+  "ci": {
+   "p12_subset": true,
+   "prior_verdicts": true,
+   "strict_rust_commands": true,
+   "wheel_install": true
+  },
+  "dependency_versions": {
+   "actinv-cli->actinv-core": "=1.0.0",
+   "actinv-cli->actinv-data": "=1.0.0",
+   "actinv-core->actinv-data": "=1.0.0",
+   "actinv-py->actinv-core": "=1.0.0"
+  },
+  "dependency_versions_exact": true,
+  "documentation": {
+   "carried_limitations": true,
+   "input_hashes": true,
+   "one_line_install": true,
+   "public_acts_separate": true,
+   "qualification_boundary": true,
+   "regulatory_selection": true,
+   "release_checklist": true,
+   "research_grade": true,
+   "validation_applicability": true
+  },
+  "embedded_table_hashes": {
+   "fispact_162_groups.json": "09e64a81de6195dad74f7afcabfd27b53013a6873ddeb21d1de5a5553d29ec6a",
+   "fispact_709_groups.json": "78f606ac7ac2f776e0818eb8eae99f350b470c6772715f339b5fe25755ab32e2",
+   "mt_products.json": "31d4e97d773a96e000fff42b834e63fada0aaba55825cac6d334e64dc95b204b"
+  },
+  "embedded_tables_exact": true,
+  "licence_copies_match": true,
+  "pass": true,
+  "release_workflow": {
+   "linux_aarch64": true,
+   "linux_x86_64": true,
+   "macos_aarch64": true,
+   "macos_x86_64": true,
+   "no_publish_command": true,
+   "pinned_maturin": true,
+   "pinned_maturin_action": true,
+   "windows_x86_64": true
+  },
+  "requires_python": ">=3.9",
+  "versions": {
+   "python_cargo": "1.0.0",
+   "python_project": "1.0.0",
+   "workspace": "1.0.0"
+  },
+  "versions_exact": true
+ },
+ "standalone_binary": {
+  "pass": true,
+  "version_output": "actinv 1.0.0"
+ }
+}

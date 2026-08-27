@@ -52,6 +52,9 @@ Nuclear data are not included in either artifact. See [Data sources](DATA.md).
 - The FNG/ITER control compares Co-58, Tc-99m, Mn-56, and Cr-51 at all 170 endpoints. Its worst relative difference on
   populations at or above one million atoms is `2.88e-14`, within the frozen `1e-4` bound. Selected independently read
   reaction rates agree to `3.24e-16` relative.
+- The clean-clone release control builds and verifies all three unpacked Rust archives, the standalone `1.0.0` binary,
+  a Python 3.9 stable-ABI wheel, and the Python source distribution; package metadata, both licence texts, the wheel
+  SBOM, import behavior, strict Rust gates, prior verdicts and CLI/Python end-to-end behavior all pass.
 
 The complete phase evidence and exact hashes are in `results/`, `protocols/`, and the append-only session records.
 

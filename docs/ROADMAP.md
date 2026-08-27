@@ -7,9 +7,9 @@ dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. P12 — v1.0 hardening
 is open under its frozen protocol; G1 configurable radiological responses, G2 primary abundance/mass-table
-re-verification and G4 FNG/ITER cell-620 activation are green. The v1.0 packaging, installation, qualification and
-release-control work is in progress while the remaining input-reliability gate is kept isolated. Public tagging and
-publication remain principal acts.
+re-verification, G4 FNG/ITER cell-620 activation and G5 clean-clone release-candidate verification are green. The
+remaining input-reliability gate is kept isolated before the final checker and reproducibility close. Public tagging
+and publication remain principal acts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -162,3 +162,7 @@ part that does not compress: users, issues, and the validation record accumulati
   The inner build inherited the outer temporary target directory while its probe used its own clone path; explicitly
   rooting `CARGO_TARGET_DIR` in the inner clone resolves the mismatch. The already completed package/interface stages,
   product source and all scientific criteria are unchanged; G5 remains open pending the full rerun.
+- 2026-08-27 — P12 G5 green on the complete rerun. A fresh clone passes the exact Rust gates, prior-evidence and
+  dependency audits, CLI/Python end-to-end comparison and nested self-contained control. Exact unpacked 1.0.0 crate
+  packages compile, the standalone binary reports 1.0.0, and the Python 3.9 stable-ABI wheel and source archive pass
+  import, metadata, licence and content checks. No artifact was uploaded or publicly released.

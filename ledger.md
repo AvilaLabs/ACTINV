@@ -872,3 +872,13 @@
 - This repair changes only temporary build-path ownership and control observability. The complete G5 path must be
   rerun before evidence is recorded; no scientific result, package content, acceptance criterion or public action is
   changed.
+
+## 41 — 2026-08-27 — P12 G5 clean-clone release candidate green
+- The complete repaired G5 run passes from a fresh clone: rustfmt, workspace/all-target/all-feature check, strict
+  Clippy, all tests, release build, dependency/release/prior-evidence checks, CLI/Python end-to-end, the P12 subset and
+  the nested self-contained control. The regenerated clone contains only the explicitly allowed result updates.
+- `actinv --version` reports 1.0.0. The exact data/core/CLI crate archives build after unpacking against local packaged
+  dependencies; the data archive contains all three embedded tables. The `cp39-abi3` wheel imports as 1.0.0, carries
+  both licence texts and a CycloneDX SBOM, and the source distribution contains the required Rust/data/licence files.
+  Evidence is `results/g5_p12_release.json`, SHA-256 `d899dd59843b6c6fdac562dc5777254b942faa6d94394a323ef77b37b0daf5f2`.
+  No tag, registry upload or GitHub Release was created.
