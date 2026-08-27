@@ -365,10 +365,11 @@ fn push_background_thermal_features(
         let right_slope = (background.y[index + 1] - background.y[index]) / right_width;
         let thermal_width =
             (4.0 * doppler::KB_EV_PER_K * temperature_k * background.x[index] / awr).sqrt();
-        let local_scale = background.y[index - 1]
+        let center = background.y[index];
+        let local_scale = center
             .abs()
-            .max(background.y[index].abs())
-            .max(background.y[index + 1].abs())
+            .max((center - left_slope * thermal_width.min(left_width)).abs())
+            .max((center + right_slope * thermal_width.min(right_width)).abs())
             .max(1e-12);
         if (right_slope - left_slope).abs() * thermal_width > LINEARIZATION_TOLERANCE * local_scale
         {
@@ -1534,6 +1535,23 @@ mod tests {
         assert!(grid
             .iter()
             .any(|energy| (*energy - (2.0e7 + width / 8.0)).abs() <= 1e-8));
+    }
+
+    #[test]
+    fn distant_threshold_ordinate_does_not_hide_local_thermal_kink() {
+        let background = Tabulated {
+            interpolation: vec![(3, 2)],
+            x: vec![1.0e5, 2.0e5, 3.0e5],
+            y: vec![1.226274e-9, 1.502061e-9, 2.747336],
+        };
+        let mut grid = Vec::new();
+        push_background_thermal_features(&mut grid, &background, 293.6, 275.7643);
+        let width = (4.0 * doppler::KB_EV_PER_K * 293.6 * 2.0e5 / 275.7643).sqrt();
+        for expected in [2.0e5 - width / 8.0, 2.0e5 + width / 8.0] {
+            assert!(grid
+                .iter()
+                .any(|energy| (*energy - expected).abs() <= 1e-10));
+        }
     }
 
     #[test]

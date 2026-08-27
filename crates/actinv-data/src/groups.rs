@@ -4,6 +4,40 @@ use crate::endf::CheckedTab1Record;
 use serde::Deserialize;
 use sha2::{Digest, Sha256};
 
+const PRODUCT_FALLBACK_RELATIVE_TOLERANCE: f64 = 2e-13;
+const GAUSS_8_POSITIVE_NODES: [f64; 4] = [
+    0.183_434_642_495_649_8,
+    0.525_532_409_916_329,
+    0.796_666_477_413_626_7,
+    0.960_289_856_497_536_3,
+];
+const GAUSS_8_POSITIVE_WEIGHTS: [f64; 4] = [
+    0.362_683_783_378_362,
+    0.313_706_645_877_887_3,
+    0.222_381_034_453_374_48,
+    0.101_228_536_290_376_26,
+];
+const GAUSS_16_POSITIVE_NODES: [f64; 8] = [
+    0.095_012_509_837_637_44,
+    0.281_603_550_779_258_9,
+    0.458_016_777_657_227_4,
+    0.617_876_244_402_643_8,
+    0.755_404_408_355_003,
+    0.865_631_202_387_831_8,
+    0.944_575_023_073_232_6,
+    0.989_400_934_991_649_9,
+];
+const GAUSS_16_POSITIVE_WEIGHTS: [f64; 8] = [
+    0.189_450_610_455_068_5,
+    0.182_603_415_044_923_6,
+    0.169_156_519_395_002_54,
+    0.149_595_988_816_576_73,
+    0.124_628_971_255_533_87,
+    0.095_158_511_682_492_78,
+    0.062_253_523_938_647_89,
+    0.027_152_459_411_754_096,
+];
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct Tabulated {
     /// One-based `(NBT, INT)` pairs.
@@ -133,6 +167,93 @@ impl Tabulated {
                 Some(vec![(value_at_low, power)])
             }
             3 | 4 => None,
+            law => return Err(format!("unsupported TAB1 interpolation INT={law}")),
+        })
+    }
+
+    fn stable_segment_value(&self, segment: usize, value: f64) -> Result<f64, String> {
+        let (x1, x2) = (self.x[segment], self.x[segment + 1]);
+        let (y1, y2) = (self.y[segment], self.y[segment + 1]);
+        if x2 <= x1 {
+            return Err("product-collapse interval selected a zero-width TAB1 segment".into());
+        }
+        let from_left = value - x1 <= x2 - value;
+        Ok(match self.law(segment)? {
+            1 => y1,
+            2 => {
+                if from_left {
+                    y1 + (value - x1) / (x2 - x1) * (y2 - y1)
+                } else {
+                    y2 + (x2 - value) / (x2 - x1) * (y1 - y2)
+                }
+            }
+            3 => {
+                let span = ((x2 - x1) / x1).ln_1p();
+                if from_left {
+                    y1 + ((value - x1) / x1).ln_1p() / span * (y2 - y1)
+                } else {
+                    y2 + ((x2 - value) / value).ln_1p() / span * (y1 - y2)
+                }
+            }
+            4 => {
+                if from_left {
+                    y1 * (((y2 - y1) / y1).ln_1p() * (value - x1) / (x2 - x1)).exp()
+                } else {
+                    y2 * (((y1 - y2) / y2).ln_1p() * (x2 - value) / (x2 - x1)).exp()
+                }
+            }
+            5 => {
+                let span = ((x2 - x1) / x1).ln_1p();
+                if from_left {
+                    y1 * (((y2 - y1) / y1).ln_1p() * ((value - x1) / x1).ln_1p() / span).exp()
+                } else {
+                    y2 * (((y1 - y2) / y2).ln_1p() * ((x2 - value) / value).ln_1p() / span).exp()
+                }
+            }
+            law => return Err(format!("unsupported TAB1 interpolation INT={law}")),
+        })
+    }
+
+    /// Evaluate inside one shared-breakpoint interval directly from its normalized log-energy coordinate. Endpoint
+    /// values come from the source segment selected by the interval midpoint; interpolation between them never
+    /// reconstructs and subtracts nearly equal absolute energies.
+    fn interval_value_at_log_fraction(
+        &self,
+        low: f64,
+        high: f64,
+        fraction: f64,
+    ) -> Result<f64, String> {
+        let middle = low + 0.5 * (high - low);
+        if middle < self.x[0] || middle > self.x[self.x.len() - 1] {
+            return Ok(0.0);
+        }
+        let upper = self.x.partition_point(|point| *point <= middle);
+        let segment = upper.saturating_sub(1).min(self.x.len() - 2);
+        let low_value = self.stable_segment_value(segment, low)?;
+        let high_value = self.stable_segment_value(segment, high)?;
+        let log_span = ((high - low) / low).ln_1p();
+        let energy_fraction = (fraction * log_span).exp_m1() / log_span.exp_m1();
+        let blend = |position: f64| {
+            if position <= 0.5 {
+                low_value + position * (high_value - low_value)
+            } else {
+                high_value + (1.0 - position) * (low_value - high_value)
+            }
+        };
+        let log_blend = |position: f64| {
+            if position <= 0.5 {
+                low_value * (((high_value - low_value) / low_value).ln_1p() * position).exp()
+            } else {
+                high_value
+                    * (((low_value - high_value) / high_value).ln_1p() * (1.0 - position)).exp()
+            }
+        };
+        Ok(match self.law(segment)? {
+            1 => low_value,
+            2 => blend(energy_fraction),
+            3 => blend(fraction),
+            4 => log_blend(energy_fraction),
+            5 => log_blend(fraction),
             law => return Err(format!("unsupported TAB1 interpolation INT={law}")),
         })
     }
@@ -282,22 +403,77 @@ where
     if high <= low {
         return Ok(0.0);
     }
-    let (a, b) = (low.ln(), high.ln());
+    let log_span = ((high - low) / low).ln_1p();
     // A TAB1 may have a double-point discontinuity at either bound. Point values have zero measure, so sample the
     // interior side instead of letting Simpson assign finite weight to the opposite side of the jump.
     let mut transformed = |u: f64| {
-        let interior = if u == a {
-            a.next_up()
-        } else if u == b {
-            b.next_down()
+        let energy = if u == 0.0 {
+            low.next_up()
+        } else if u == log_span {
+            high.next_down()
         } else {
-            u
+            low * u.exp()
         };
-        function(interior.exp())
+        function(energy)
     };
-    let whole = simpson(&mut transformed, a, b)?;
-    let tolerance = relative_tolerance * whole.abs().max((b - a) * 1e-30);
-    adaptive_simpson(&mut transformed, a, b, whole, tolerance, 24)
+    let whole = simpson(&mut transformed, 0.0, log_span)?;
+    let tolerance = relative_tolerance * whole.abs().max(log_span * 1e-30);
+    adaptive_simpson(&mut transformed, 0.0, log_span, whole, tolerance, 24)
+}
+
+fn gauss_legendre_unit_integral<F>(
+    function: &mut F,
+    positive_nodes: &[f64],
+    positive_weights: &[f64],
+) -> Result<f64, String>
+where
+    F: FnMut(f64) -> Result<f64, String>,
+{
+    let mut total = 0.0;
+    let mut correction = 0.0;
+    for (&node, &weight) in positive_nodes.iter().zip(positive_weights) {
+        let left = function(0.5 * (1.0 - node))?;
+        let right = function(0.5 * (1.0 + node))?;
+        let value = weight * (left + right);
+        let next = total + value;
+        correction += if total.abs() >= value.abs() {
+            (total - next) + value
+        } else {
+            (value - next) + total
+        };
+        total = next;
+    }
+    Ok(0.5 * (total + correction))
+}
+
+fn product_fallback_integral(tables: &[&Tabulated], low: f64, high: f64) -> Result<f64, String> {
+    let log_span = ((high - low) / low).ln_1p();
+    let mut integrand = |fraction| {
+        tables.iter().try_fold(1.0, |product, table| {
+            Ok(product * table.interval_value_at_log_fraction(low, high, fraction)?)
+        })
+    };
+    let order_8 = log_span
+        * gauss_legendre_unit_integral(
+            &mut integrand,
+            &GAUSS_8_POSITIVE_NODES,
+            &GAUSS_8_POSITIVE_WEIGHTS,
+        )?;
+    let order_16 = log_span
+        * gauss_legendre_unit_integral(
+            &mut integrand,
+            &GAUSS_16_POSITIVE_NODES,
+            &GAUSS_16_POSITIVE_WEIGHTS,
+        )?;
+    let tolerance = PRODUCT_FALLBACK_RELATIVE_TOLERANCE
+        * order_16.abs().max(((high - low) / low).ln_1p() * 1e-30);
+    if order_16.is_finite() && (order_16 - order_8).abs() <= tolerance {
+        Ok(order_16)
+    } else {
+        let whole = simpson(&mut integrand, 0.0, 1.0)?;
+        let tolerance = PRODUCT_FALLBACK_RELATIVE_TOLERANCE * whole.abs().max(1e-30);
+        Ok(log_span * adaptive_simpson(&mut integrand, 0.0, 1.0, whole, tolerance, 24)?)
+    }
 }
 
 /// Direct lethargy integral for products of histogram, lin-lin and log-log factors on one shared-breakpoint
@@ -467,16 +643,7 @@ impl GroupStructure {
                     {
                         exact
                     } else {
-                        adaptive_log_integral(
-                            |energy| {
-                                tables.iter().try_fold(1.0, |product, table| {
-                                    Ok(product * table.evaluate(energy)?)
-                                })
-                            },
-                            interval[0],
-                            interval[1],
-                            2e-12,
-                        )?
+                        product_fallback_integral(tables, interval[0], interval[1])?
                     };
                     let next = integral + value;
                     correction += if integral.abs() >= value.abs() {
@@ -504,6 +671,42 @@ mod tests {
         }
     }
 
+    fn stable_linline_product_average(
+        first: &Tabulated,
+        second: &Tabulated,
+        low: f64,
+        high: f64,
+    ) -> f64 {
+        let mut total = 0.0;
+        let mut correction = 0.0;
+        for segment in 0..first.x.len() - 1 {
+            let left = first.x[segment];
+            let right = first.x[segment + 1];
+            let ratio = (right - left) / left;
+            let log_ratio = ratio.ln_1p();
+            let integral_t = x_minus_ln_1p(ratio) / ratio;
+            let mut power = ratio;
+            let mut integral_t2 = power / 3.0;
+            for denominator in 4..=14 {
+                power *= -ratio;
+                integral_t2 += power / f64::from(denominator);
+            }
+            let first_delta = first.y[segment + 1] - first.y[segment];
+            let second_delta = second.y[segment + 1] - second.y[segment];
+            let value = first.y[segment] * second.y[segment] * log_ratio
+                + (first.y[segment] * second_delta + second.y[segment] * first_delta) * integral_t
+                + first_delta * second_delta * integral_t2;
+            let next = total + value;
+            correction += if total.abs() >= value.abs() {
+                (total - next) + value
+            } else {
+                (value - next) + total
+            };
+            total = next;
+        }
+        (total + correction) / ((high - low) / low).ln_1p()
+    }
+
     #[test]
     fn official_group_counts_and_order() {
         let g709 = GroupStructure::fispact_709().unwrap();
@@ -512,6 +715,95 @@ mod tests {
         assert_eq!(g162.groups(), 162);
         assert_eq!(g162.boundaries_ev[0], 5.0e3);
         assert_eq!(*g162.boundaries_ev.last().unwrap(), 1.0e9);
+    }
+
+    #[test]
+    fn many_interval_product_fallback_respects_group_tolerance() {
+        let low = 33_113.11;
+        let high = 34_673.69;
+        let intervals = 364usize;
+        let x: Vec<_> = (0..=intervals)
+            .map(|index| low + (high - low) * index as f64 / intervals as f64)
+            .collect();
+        let first = Tabulated {
+            interpolation: vec![(x.len(), 2)],
+            x: x.clone(),
+            y: (0..=intervals)
+                .map(|index| 0.02 + ((37 * index) % 101) as f64 / 100.0)
+                .collect(),
+        };
+        let second = Tabulated {
+            interpolation: vec![(x.len(), 2)],
+            x,
+            y: (0..=intervals)
+                .map(|index| 0.03 + ((61 * index + 17) % 103) as f64 / 100.0)
+                .collect(),
+        };
+        assert!(
+            exact_power_product_integral(&[&first, &second], first.x[0], first.x[1])
+                .unwrap()
+                .is_none()
+        );
+        let groups = GroupStructure {
+            name: "synthetic-product-fallback".into(),
+            boundaries_ev: vec![low, high],
+        };
+        let actual = groups.collapse_product(&[&first, &second]).unwrap()[0];
+        let expected = stable_linline_product_average(&first, &second, low, high);
+        assert!((actual - expected).abs() / expected.abs() <= 2e-12);
+    }
+
+    #[test]
+    fn narrow_log_intervals_use_a_local_coordinate() {
+        let low = 33_113.11;
+        let high = 34_673.69;
+        let intervals = 364usize;
+        let mut actual = 0.0;
+        let mut expected = 0.0;
+        for index in 0..intervals {
+            let left = low + (high - low) * index as f64 / intervals as f64;
+            let right = low + (high - low) * (index + 1) as f64 / intervals as f64;
+            let value = 0.03 + ((61 * index + 17) % 103) as f64 / 100.0;
+            actual += adaptive_log_integral(|_| Ok(value), left, right, 1e-14).unwrap();
+            expected += value * ((right - left) / left).ln_1p();
+        }
+        assert!((actual - expected).abs() / expected.abs() <= 2e-15);
+    }
+
+    #[test]
+    fn narrow_product_fallback_uses_a_normalized_coordinate() {
+        let low = 5_000.0;
+        let high = 5_001.0;
+        let intervals = 1_000usize;
+        let x: Vec<_> = (0..=intervals)
+            .map(|index| low + (high - low) * index as f64 / intervals as f64)
+            .collect();
+        let first = Tabulated {
+            interpolation: vec![(x.len(), 2)],
+            x: x.clone(),
+            y: (0..=intervals)
+                .map(|index| 0.01 + ((37 * index + 11) % 101) as f64 / 100.0)
+                .collect(),
+        };
+        let second = Tabulated {
+            interpolation: vec![(x.len(), 2)],
+            x,
+            y: (0..=intervals)
+                .map(|index| 0.02 + ((61 * index + 29) % 103) as f64 / 100.0)
+                .collect(),
+        };
+        assert!(
+            exact_power_product_integral(&[&first, &second], first.x[0], first.x[1])
+                .unwrap()
+                .is_none()
+        );
+        let groups = GroupStructure {
+            name: "synthetic-narrow-product".into(),
+            boundaries_ev: vec![low, high],
+        };
+        let actual = groups.collapse_product(&[&first, &second]).unwrap()[0];
+        let expected = stable_linline_product_average(&first, &second, low, high);
+        assert!((actual - expected).abs() / expected.abs() <= 2e-12);
     }
 
     #[test]

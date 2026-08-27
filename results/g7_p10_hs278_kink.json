@@ -1,0 +1,44 @@
+{
+ "amendment_h_sha256": "7c2c121ec2007696e824c1aa3ff3b948bf52f79746313b9bc2f6b5661704519a",
+ "certificate": {
+  "output_points": 5843,
+  "output_refinement_passes": 5,
+  "zero_k_points": 15079,
+  "zero_k_refinement_passes": 0
+ },
+ "doppler_width_eV": 8.567230316415516,
+ "expected_source_sha256": "0563c68e7db9705394b64739546d3ef624442a5b1c3370343127722519c7e1bb",
+ "gate": "P10-G7",
+ "independent_sigma1": {
+  "maximum_tolerance_fraction": 0.95462255795341,
+  "pass": true,
+  "relative_tolerance": 0.0002,
+  "samples": 257,
+  "scale_floor_b": 1e-06,
+  "spacing_doppler_widths": 0.0625,
+  "span_doppler_widths": [
+   -8.0,
+   8.0
+  ],
+  "worst": {
+   "energy_eV": 199976.97556852462,
+   "independent_b": 4.326053905124249e-09,
+   "rust_b": 4.516978416714931e-09,
+   "tolerance_fraction": 0.95462255795341
+  }
+ },
+ "isolated_build": {
+  "builder_fingerprint": "2177d11f9423c23dc438537e2faa8652dcca222ca0fc52b99a0d1ec5cfe91956",
+  "pass": true,
+  "returncode": 0,
+  "rows": 43,
+  "stderr_tail": "index -> /tmp/actinv-p10-hs278-fhxky7cw/hs278_index.json\n",
+  "targets": 1
+ },
+ "pass": true,
+ "schema": "actinv-p10-g7-hs278-kink-1",
+ "source_file": "n-Hs278.tendl",
+ "source_sha256": "0563c68e7db9705394b64739546d3ef624442a5b1c3370343127722519c7e1bb",
+ "temperature_K": 293.6,
+ "threshold_eV": 200000.0
+}

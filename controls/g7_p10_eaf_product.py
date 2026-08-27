@@ -26,6 +26,12 @@ ACTINV = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 RESULT = ROOT / "results/g7_p10_eaf_product.json"
 AMENDMENT = ROOT / "protocols/ACTINV-P10_AMENDMENT_F.md"
 AMENDMENT_SHA256 = "1746c478a3e31025c0a98446f8567daac67a192eea08b27c76a03503c4a42e49"
+AMENDMENT_K = ROOT / "protocols/ACTINV-P10_AMENDMENT_K.md"
+AMENDMENT_K_SHA256 = "22a6029aa817206ce52800d943aeadbbd8b9f4e02a9708149f8794860b5733c4"
+AMENDMENT_L = ROOT / "protocols/ACTINV-P10_AMENDMENT_L.md"
+AMENDMENT_L_SHA256 = "d2f27d7fdb1765246bc67bacb1199c15dfe43e373fbb96d8691f355b214b2873"
+AMENDMENT_M = ROOT / "protocols/ACTINV-P10_AMENDMENT_M.md"
+AMENDMENT_M_SHA256 = "cd6f73ff415a8b2a34049912766f0b1c838519ea3f0deff7e7bc856115ad0596"
 RELATIVE_TOLERANCE = Decimal("2e-12")
 ABSOLUTE_TOLERANCE_B = Decimal("1e-14")
 SCORE_FLOOR_B = Decimal("1e-12")
@@ -38,6 +44,8 @@ HOTSPOTS = {
     "n_3225_32-GE-70.dat": "02041dacd224a97aab4aae26c32b8ceab501946490581f0ee09465a3ce8d40f5",
     "n_3419_34-SE-72.dat": "a0b17466726c96e537b4f53cd3f71e0cce87a01765d76a51ba09f4e52cd6b2e8",
     "n_3922_39-Y-88.dat": "e0e1c8851b6a3c94de4e309c8ef83c4f74d1c7c17ea272b702ea43c0e663c951",
+    "n_4225_42-MO-92.dat": "c765eaef9c91985786fa22b8030450b981f5a9e64f68786cd02ee1c39eca60be",
+    "n_7925_79-AU-197.dat": "16107335e57e5d6ad6f42963a4366b212600d57692a1f3c228f4bb96f7c6fab3",
 }
 
 
@@ -277,8 +285,14 @@ def main() -> None:
         "absolute_tolerance_b": float(ABSOLUTE_TOLERANCE_B),
         "former_timeout_seconds": TIMEOUT_SECONDS,
         "amendment_f_sha256": sha256(AMENDMENT),
+        "amendment_k_sha256": sha256(AMENDMENT_K),
+        "amendment_l_sha256": sha256(AMENDMENT_L),
+        "amendment_m_sha256": sha256(AMENDMENT_M),
         "cases": cases,
         "pass": sha256(AMENDMENT) == AMENDMENT_SHA256
+        and sha256(AMENDMENT_K) == AMENDMENT_K_SHA256
+        and sha256(AMENDMENT_L) == AMENDMENT_L_SHA256
+        and sha256(AMENDMENT_M) == AMENDMENT_M_SHA256
         and len(cases) == len(HOTSPOTS)
         and all(case["pass"] for case in cases.values()),
     }

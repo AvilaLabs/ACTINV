@@ -116,6 +116,12 @@ PINNED = {
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_E.md": "31313e5fb09bd4e969b4cc552beebb7997208197114ceb2b362eabae4de1ffa8",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_F.md": "1746c478a3e31025c0a98446f8567daac67a192eea08b27c76a03503c4a42e49",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_G.md": "390440fa79e3aac05dba6a7de404376f9af89798dba40812703e5dc388e16ac7",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_H.md": "7c2c121ec2007696e824c1aa3ff3b948bf52f79746313b9bc2f6b5661704519a",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_I.md": "84d71f4bcdbf28cc40d4f5e58c12d7f8ed3f1dbe5dc869b13a8ca8db54f3a3c5",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_J.md": "df7bdb47f1ff59d3c58b916a3414aa528c0f0278cca6d1adf67142b51c149dd9",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_K.md": "22a6029aa817206ce52800d943aeadbbd8b9f4e02a9708149f8794860b5733c4",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_L.md": "d2f27d7fdb1765246bc67bacb1199c15dfe43e373fbb96d8691f355b214b2873",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_M.md": "cd6f73ff415a8b2a34049912766f0b1c838519ea3f0deff7e7bc856115ad0596",
     ROOT / "results" / "g2_p10_rmatrix.json": "c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690",
     ROOT / "results" / "g3_p10_unresolved_njoy.json": "afbdf08dbd0b4545a74b2632b806f21feb374b8ee985e3a5b17aabcf54f4200f",
     ROOT / "results" / "g3_p10_unresolved_quadrature.json": "4290a6c734639bfecc00e8a5fa0923cec6a7d1ff013e92639333e069d204354a",
@@ -1131,23 +1137,38 @@ def unchanged_group_reasons(table: dict | None, low: float, high: float) -> set[
 
 
 def legacy_linlin_roundoff_bound(table: dict, low: float, high: float) -> float:
-    """Conservative forward-error bound for P2's cancellation-prone a*log(E2/E1)+b*dE sum."""
+    """Conservative P2 primitive bound, including ratio-then-log input rounding."""
     x = table["x"]
     start = bisect.bisect_right(x, low)
     stop = bisect.bisect_left(x, high)
     grid = [low, *x[start:stop], high]
     terms = []
+    intercepts = []
     for a, b in zip(grid[:-1], grid[1:]):
         segment = min(max(bisect.bisect_right(x, a) - 1, 0), len(x) - 2)
         y_a = segment_value(table, segment, a, 2)
         y_b = segment_value(table, segment, b, 2)
         slope = (y_b - y_a) / (b - a)
         intercept = y_a - slope * a
+        intercepts.append(intercept)
         terms.extend((intercept * math.log(b / a), slope * (b - a)))
     operations = 32 * max(len(grid) - 1, 1) + 64
     epsilon = np.finfo(float).eps
     gamma = operations * epsilon / (1.0 - operations * epsilon)
-    return gamma * math.fsum(abs(value) for value in terms) / math.log(high / low)
+    group_log = math.log1p((high - low) / low)
+    log_allowance = 8.0 * epsilon
+    if group_log <= log_allowance:
+        return math.inf
+    absolute_terms = math.fsum(abs(value) for value in terms)
+    numerator_bound = gamma * absolute_terms + log_allowance * math.fsum(
+        abs(value) for value in intercepts
+    )
+    denominator = group_log - log_allowance
+    return numerator_bound / denominator + (
+        (absolute_terms + numerator_bound)
+        * log_allowance
+        / (group_log * denominator)
+    )
 
 
 def compare_legacy_unchanged_domain(

@@ -1,0 +1,2315 @@
+{
+ "absolute_tolerance_b": 1e-14,
+ "amendment_i_sha256": "84d71f4bcdbf28cc40d4f5e58c12d7f8ed3f1dbe5dc869b13a8ca8db54f3a3c5",
+ "amendment_j_sha256": "df7bdb47f1ff59d3c58b916a3414aa528c0f0278cca6d1adf67142b51c149dd9",
+ "amendment_k_sha256": "22a6029aa817206ce52800d943aeadbbd8b9f4e02a9708149f8794860b5733c4",
+ "amendment_l_sha256": "d2f27d7fdb1765246bc67bacb1199c15dfe43e373fbb96d8691f355b214b2873",
+ "amendment_m_sha256": "cd6f73ff415a8b2a34049912766f0b1c838519ea3f0deff7e7bc856115ad0596",
+ "binary64_product_conditioning_diagnostic": {
+  "above_score_floor": 319299,
+  "failure_examples": [
+   {
+    "absolute_b": 2.266221064972651e-13,
+    "file": "n_4225_42-MO-92.dat",
+    "group": 376,
+    "identity": [
+     102,
+     42093,
+     1,
+     9
+    ],
+    "left_b": 0.002808653404283826,
+    "right_b": 0.002808653404057204,
+    "tolerance_b": 1e-14
+   },
+   {
+    "absolute_b": 2.896242273786598e-13,
+    "file": "n_4225_42-MO-92.dat",
+    "group": 377,
+    "identity": [
+     102,
+     42093,
+     1,
+     9
+    ],
+    "left_b": 0.005862395031056147,
+    "right_b": 0.005862395031345771,
+    "tolerance_b": 1.1724790062691541e-14
+   },
+   {
+    "absolute_b": 4.248073247337114e-13,
+    "file": "n_4225_42-MO-92.dat",
+    "group": 413,
+    "identity": [
+     102,
+     42093,
+     1,
+     9
+    ],
+    "left_b": 0.001789649670961842,
+    "right_b": 0.0017896496705370347,
+    "tolerance_b": 1e-14
+   },
+   {
+    "absolute_b": 5.915823386715147e-13,
+    "file": "n_4931_49-IN-115.dat",
+    "group": 413,
+    "identity": [
+     102,
+     49116,
+     1,
+     9
+    ],
+    "left_b": 0.12668591033569485,
+    "right_b": 0.12668591033628643,
+    "tolerance_b": 2.5337182067257287e-13
+   },
+   {
+    "absolute_b": 2.9436175719155244e-13,
+    "file": "n_4931_49-IN-115.dat",
+    "group": 414,
+    "identity": [
+     102,
+     49116,
+     1,
+     9
+    ],
+    "left_b": 0.1124071155128834,
+    "right_b": 0.11240711551258904,
+    "tolerance_b": 2.248142310257668e-13
+   },
+   {
+    "absolute_b": 2.8888003100746573e-13,
+    "file": "n_4931_49-IN-115.dat",
+    "group": 412,
+    "identity": [
+     102,
+     49116,
+     2,
+     9
+    ],
+    "left_b": 0.08921663263773016,
+    "right_b": 0.08921663263801904,
+    "tolerance_b": 1.784332652760381e-13
+   },
+   {
+    "absolute_b": 5.574429806642911e-13,
+    "file": "n_4931_49-IN-115.dat",
+    "group": 413,
+    "identity": [
+     102,
+     49116,
+     2,
+     9
+    ],
+    "left_b": 0.15254465120243,
+    "right_b": 0.15254465120298744,
+    "tolerance_b": 3.050893024059749e-13
+   },
+   {
+    "absolute_b": 3.379770421862993e-13,
+    "file": "n_7843_78-PT-196.dat",
+    "group": 415,
+    "identity": [
+     102,
+     78197,
+     1,
+     9
+    ],
+    "left_b": 0.006992594177781708,
+    "right_b": 0.006992594177443731,
+    "tolerance_b": 1.3985188355563415e-14
+   }
+  ],
+  "maximum_absolute_b": 1.1641532182693481e-10,
+  "maximum_relative": 2.373689843473108e-10,
+  "maximum_tolerance_fraction": 42.48073247337114,
+  "pass": false,
+  "points": 341738,
+  "worst": {
+   "absolute_b": 4.248073247337114e-13,
+   "file": "n_4225_42-MO-92.dat",
+   "group": 413,
+   "identity": [
+    102,
+    42093,
+    1,
+    9
+   ],
+   "left_b": 0.001789649670961842,
+   "relative": 2.373689843473108e-10,
+   "right_b": 0.0017896496705370347,
+   "tolerance_b": 1e-14
+  }
+ },
+ "bounded_extraction": {
+  "batch_size": 32,
+  "full_sigma_arrays_loaded_in_python": false,
+  "pass": true,
+  "peak_materialized_bytes": 62112224
+ },
+ "complete_corpus": true,
+ "current_rows_checked": 115702,
+ "gate": "P10-G7",
+ "high_precision_product_control": {
+  "builder_fingerprints": [
+   "2177d11f9423c23dc438537e2faa8652dcca222ca0fc52b99a0d1ec5cfe91956"
+  ],
+  "matches_current_builder": true,
+  "pass": true,
+  "result_sha256": "5bcdb88404400f8a04f19d5934a001535f5ea9cdd213c8dd241e70b5b4739f20",
+  "rows": 16
+ },
+ "independent_current_collapse": {
+  "above_score_floor": 5905592,
+  "failure_examples": [],
+  "maximum_absolute_b": 6.402842700481415e-10,
+  "maximum_relative": 2.8812347541514937e-13,
+  "maximum_tolerance_fraction": 0.13739088003006533,
+  "pass": true,
+  "points": 82032718,
+  "worst": {
+   "absolute_b": 3.679279103607769e-13,
+   "file": "n_6331_63-EU-153.dat",
+   "group": 636,
+   "identity": [
+    16,
+    63152,
+    0,
+    10
+   ],
+   "left_b": 1.3389822900914599,
+   "relative": 2.7478176006013064e-13,
+   "right_b": 1.3389822900918278,
+   "tolerance_b": 2.6779645801836556e-12
+  }
+ },
+ "inputs": {
+  "current_builder_fingerprint": "2177d11f9423c23dc438537e2faa8652dcca222ca0fc52b99a0d1ec5cfe91956",
+  "current_index_sha256": "853c68189bbcecf2a1a9f3dfb99dc06a2aaa21d9e4ad6f545f95d99e4bd573f7",
+  "current_library_sha256": "5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2",
+  "legacy_index_sha256": "ed36363a726cbe991435f72d2aeb8a794a40b7dc79081ba86c511e14dd9ac4b7",
+  "legacy_library_sha256": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7"
+ },
+ "mf9_high_precision_census": {
+  "files": 230,
+  "law_pairs": {
+   "MF3_INT_2_5__MF9_INT_2": 283,
+   "MF3_INT_2__MF9_INT_2": 142,
+   "MF3_INT_5__MF9_INT_2": 57
+  },
+  "pass": true,
+  "precision_decimal_digits": 80,
+  "rows": 482
+ },
+ "mf9_product_rows_checked": 482,
+ "pass": true,
+ "ratio_log_roundoff_probe": {
+  "bounds_eV": [
+   10000.0,
+   10471.29
+  ],
+  "corrected_bound_b": 3.747300003602584e-09,
+  "current_b": 9.358314942377081,
+  "file": "n_6329_63-EU-152M.dat",
+  "group": 450,
+  "identity": [
+   102,
+   -1,
+   -1,
+   0
+  ],
+  "independent_b": 9.358314942377081,
+  "legacy_b": 9.35831494259656,
+  "observed_legacy_deviation_b": 2.1947954564893735e-10,
+  "pass": true,
+  "pre_amendment_i_bound_b": 5.806132864723021e-13,
+  "source_sha256": "aafe42f259567ed0deb059cb4222c44c82862cd28d90f78a48c97fcae1bff844",
+  "tolerance_b": 1.8716629885193122e-11
+ },
+ "relative_tolerance": 2e-12,
+ "schema": "actinv-p10-g7-eaf-regression-1",
+ "score_floor_b": 1e-12,
+ "structural": {
+  "current_rows": 115702,
+  "enumerated_target_changes": [
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       21044,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_2123_21-SC-44M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 21044
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       27058,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_2723_27-CO-58M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 27058
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       30069,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_3041_30-ZN-69M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 30069
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       39087,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_3920_39-Y-87M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 39087
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       41091,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4120_41-NB-91M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 41091
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       41092,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4123_41-NB-92M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 41092
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       41093,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4126_41-NB-93M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 41093
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       41095,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4132_41-NB-95M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 41095
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       43095,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4314_43-TC-95M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 43095
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       43097,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4320_43-TC-97M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 43097
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       45099,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4514_45-RH-99M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 45099
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       45101,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4520_45-RH-101M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 45101
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       45102,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4523_45-RH-102M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 45102
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       47106,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4723_47-AG-106M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 47106
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       47108,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4729_47-AG-108M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 47108
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       47110,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4735_47-AG-110M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 47110
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       48113,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4847_48-CD-113M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 48113
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       48115,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4853_48-CD-115M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 48115
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       49114,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_4929_49-IN-114M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 49114
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       50117,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5041_50-SN-117M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 50117
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       50119,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5047_50-SN-119M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 50119
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       50121,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5053_50-SN-121M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 50121
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       51120,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5123_51-SB-120M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 51120
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52119,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5223_52-TE-119M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52119
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52121,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5229_52-TE-121M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52121
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52123,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5235_52-TE-123M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52123
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52125,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5241_52-TE-125M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52125
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52127,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5247_52-TE-127M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52127
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52129,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5253_52-TE-129M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52129
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       52131,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5259_52-TE-131M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 52131
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       54129,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5441_54-XE-129M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 54129
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       54131,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5447_54-XE-131M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 54131
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       54133,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5453_54-XE-133M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 54133
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       56133,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5635_56-BA-133M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 56133
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       56135,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5641_56-BA-135M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 56135
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       58137,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_5829_58-CE-137M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 58137
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       61148,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6153_61-PM-148M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 61148
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       63150,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6323_63-EU-150M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 63150
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       63152,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       63152,
+       2,
+       10
+      ],
+      "reason": "decay_isomer_level_remap",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       63152,
+       1,
+       10
+      ],
+      "reason": "decay_isomer_level_remap",
+      "side": "current_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6329_63-EU-152M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 63152
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       65154,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6512_65-TB-154N.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 2,
+    "target_za": 65154
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       65156,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       65156,
+       2,
+       10
+      ],
+      "reason": "decay_isomer_level_remap",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       65156,
+       1,
+       10
+      ],
+      "reason": "decay_isomer_level_remap",
+      "side": "current_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6517_65-TB-156M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 65156
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       65156,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6518_65-TB-156N.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 2,
+    "target_za": 65156
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       67164,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6723_67-HO-164M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 67164
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       67166,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_6729_67-HO-166M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 67166
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       71174,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7123_71-LU-174M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 71174
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       71177,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       71177,
+       2,
+       10
+      ],
+      "reason": "decay_isomer_level_remap",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       71177,
+       1,
+       10
+      ],
+      "reason": "decay_isomer_level_remap",
+      "side": "current_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7132_71-LU-177M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 71177
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       72178,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7239_72-HF-178N.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 2,
+    "target_za": 72178
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       72179,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7242_72-HF-179N.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 2,
+    "target_za": 72179
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       72180,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7244_72-HF-180M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 72180
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       73180,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7326_73-TA-180M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 73180
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       75182,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7517_75-RE-182M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 75182
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       75184,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7523_75-RE-184M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 75184
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       75186,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7529_75-RE-186M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 75186
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       76191,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7647_76-OS-191M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 76191
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       77192,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7730_77-IR-192N.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 2,
+    "target_za": 77192
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       77193,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7732_77-IR-193M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 77193
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       77194,
+       0,
+       10
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7736_77-IR-194N.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 2,
+    "target_za": 77194
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       77196,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7741_77-IR-196M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 77196
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       78193,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7835_78-PT-193M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 78193
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       78195,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7841_78-PT-195M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 78195
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       79198,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7929_79-AU-198M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 79198
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       79200,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_7935_79-AU-200M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 79200
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       80193,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_8017_80-HG-193M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 80193
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       80195,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_8023_80-HG-195M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 80195
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       80197,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_8029_80-HG-197M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 80197
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       83210,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_8329_83-BI-210M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 83210
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       95242,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_9547_95-AM-242M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 95242
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       97248,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_9750_97-BK-248M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 97248
+   },
+   {
+    "changes": [
+     {
+      "identity": [
+       4,
+       -1,
+       -1,
+       0
+      ],
+      "reason": "inelastic_without_metastable_omitted",
+      "side": "legacy_only"
+     },
+     {
+      "identity": [
+       4,
+       99254,
+       0,
+       3
+      ],
+      "reason": "inelastic_ground_state_omitted",
+      "side": "legacy_only"
+     }
+    ],
+    "current_only_vs_independent": [],
+    "file": "n_9915_99-ES-254M.dat",
+    "independent_only": [],
+    "pass": true,
+    "target_liso": 1,
+    "target_za": 99254
+   }
+  ],
+  "legacy_rows": 115831,
+  "pass": true
+ },
+ "targets_checked": 816,
+ "unchanged_legacy_domain": {
+  "above_score_floor": 2787099,
+  "excluded_scored_groups_by_reason": {
+   "inelastic_semantics": 69207,
+   "legacy_roundoff_bound": 186350,
+   "no_single_direct_source": 561122,
+   "no_source_segment": 100428,
+   "non_lin_lin": 1995284,
+   "nonlinear_mf9_product": 311507,
+   "source_edge": 111737,
+   "value_changing_duplicate": 12
+  },
+  "failure_examples": [],
+  "maximum_absolute_b": 3.427267074584961e-07,
+  "maximum_relative": 9.800620030178096e-07,
+  "maximum_tolerance_fraction": 0.046297701225242904,
+  "pass": true,
+  "points": 2787099,
+  "worst": {
+   "absolute_b": 4.62977012252429e-16,
+   "file": "n_9237_92-U-238.dat",
+   "group": 450,
+   "identity": [
+    18,
+    -1,
+    -1,
+    0
+   ],
+   "left_b": 2.199977766286369e-07,
+   "relative": 2.1044622329704207e-09,
+   "right_b": 2.199977761656599e-07,
+   "tolerance_b": 1e-14
+  }
+ }
+}
