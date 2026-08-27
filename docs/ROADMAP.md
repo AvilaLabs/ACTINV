@@ -5,10 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. Strict MF=33
-covariance, exact CRAM-16/48 sensitivities and explicitly scoped uncertainty reporting are complete; the full
-2,850-file TENDL-2025 neutron sidecar is independently re-derived and fresh/cached byte-identical. **P12 — v1.0
-hardening is next** and remains unopened and unhashed until its protocol is frozen.
+**Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. P12 — v1.0 hardening
+is open under its frozen protocol: configurable radiological responses, primary table re-verification, deterministic
+parser fuzzing, the published FNG/ITER cell-620 activation step, qualification-boundary documentation and the
+technical v1.0 release candidate. Public tagging and publication remain principal acts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -137,3 +137,7 @@ part that does not compress: users, issues, and the validation record accumulati
   fresh/cached sidecar and index bytes match under bounded memory. Heat/activity sensitivities, MF=33 bands,
   coverage, excluded sources and CRAM-order bounds are identical through CLI, Python, prepared and mesh paths. P12
   is next but remains unopened and unhashed; no v1.0 tag or publication is claimed.
+- 2026-08-27 — P12 opened under its frozen protocol. The minimum inputs are a two-nuclide response fixture, the
+  289-row Meija/AME2020 primary table controls, a 10,000-case fuzz smoke partition and the published FNG/ITER
+  campaign-1 cell-620 one-group activation record. External ICRP tables and all nuclear data remain hash-pinned and
+  unbundled; the technical release commit does not authorize a tag, registry upload or licensing claim.
