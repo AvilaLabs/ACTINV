@@ -864,3 +864,11 @@
   against the exact unpacked data/core packages, establishing the pre-publication dependency order without uploading
   anything. The stable-ABI wheel imports on Python 3.14 as version 1.0.0, carries both licence texts and an SBOM, and
   its source archive builds successfully from an isolated installation path.
+
+## 40 — 2026-08-27 — P12 nested clean-clone control repair
+- The first complete G5 run passed the outer clean-clone builds and artifact/interface checks, then exposed that the
+  nested self-contained control inherited the outer `CARGO_TARGET_DIR` while its unit probe used the nested clone's
+  default path. Amendment C roots that target directory in the nested clone and adds visible G5 subprocess markers.
+- This repair changes only temporary build-path ownership and control observability. The complete G5 path must be
+  rerun before evidence is recorded; no scientific result, package content, acceptance criterion or public action is
+  changed.

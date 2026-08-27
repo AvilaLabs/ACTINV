@@ -20,6 +20,7 @@ subprocess.run(["git", "clone", "--quiet", ROOT, clone], check=True)
 env = dict(os.environ); env["HOME"] = fake_home; env["PYTHONWARNINGS"] = "ignore"
 env["PATH"] = os.path.expanduser("~/.cargo/bin") + ":" + env.get("PATH", "")
 env["CARGO_HOME"] = os.path.expanduser("~/.cargo"); env["RUSTUP_HOME"] = os.path.expanduser("~/.rustup")
+env["CARGO_TARGET_DIR"] = os.path.join(clone, "target")
 results = []
 for name, cmd in STEPS:
     p = subprocess.run(cmd, cwd=clone, env=env, capture_output=True, text=True)

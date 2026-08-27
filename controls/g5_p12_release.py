@@ -47,6 +47,7 @@ def command(
     timeout: int = 1800,
 ) -> subprocess.CompletedProcess[str]:
     argv = ["prlimit", f"--as={MEMORY_LIMIT}", "--"] + [str(value) for value in arguments]
+    print(f"[P12-G5] {' '.join(argv)}", file=sys.stderr, flush=True)
     result = subprocess.run(
         argv,
         cwd=cwd,

@@ -158,3 +158,7 @@ part that does not compress: users, issues, and the validation record accumulati
   unpacked-crate compilation, stable-ABI wheel checks and licence inclusion now guard the distributable artifacts.
   User-first installation, release, qualification, specification, method, data and validation documentation is part
   of the G5 release candidate; no registry upload, tag or GitHub Release is authorized by this work.
+- 2026-08-27 — P12 Amendment C records a nested clean-clone control-path repair found by the first complete G5 run.
+  The inner build inherited the outer temporary target directory while its probe used its own clone path; explicitly
+  rooting `CARGO_TARGET_DIR` in the inner clone resolves the mismatch. The already completed package/interface stages,
+  product source and all scientific criteria are unchanged; G5 remains open pending the full rerun.
