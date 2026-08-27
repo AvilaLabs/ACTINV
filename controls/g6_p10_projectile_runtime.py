@@ -24,10 +24,16 @@ from p9_fixtures import base_spec, make_fixture, sha256, write_json  # noqa: E40
 BIN = Path(os.environ.get("ACTINV_BIN", ROOT / "target" / "release" / "actinv"))
 WORK = Path(os.environ.get("ACTINV_P10_WORK", "/tmp/actinv-p10")) / "g6"
 RESULT = ROOT / "results" / "g6_p10_projectile_runtime.json"
+TABLES = ROOT / "results" / "tables" / "abundance_mass.json"
 ADDRESS_SPACE_BYTES = 2 * 1024**3
 PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
 PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
     "0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c"
+)
+PRE_P12_TABLES_PROVENANCE = (
+    "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; "
+    "abundances per Meija et al., Pure Appl. Chem. 88 (2016); masses AME2020 via "
+    "openmc mass data)"
 )
 EXPECTED_PROTOCOL_HASHES = {
     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27",
@@ -94,10 +100,26 @@ def scrub_legacy_result(value):
 
 def canonical_result_hash(result: dict) -> str:
     value = copy.deepcopy(result)
-    solver = value.get("certificate", {}).get("solver")
+    certificate = value.get("certificate", {})
+    solver = certificate.get("solver")
     if not isinstance(solver, str) or not solver.startswith("actinv-core "):
         raise AssertionError(f"legacy neutron result has invalid solver identity {solver!r}")
-    value["certificate"]["solver"] = "actinv-core <VERSION>"
+    certificate["solver"] = "actinv-core <VERSION>"
+
+    table_record = json.loads(TABLES.read_text())
+    expected_provenance = table_record.get("source")
+    provenance = certificate.get("tables_provenance")
+    if not isinstance(expected_provenance, str) or not expected_provenance:
+        raise AssertionError(f"{TABLES} has no nonempty source provenance")
+    if provenance != expected_provenance:
+        raise AssertionError(
+            "legacy neutron tables provenance does not match the embedded-table "
+            f"record: {provenance!r}, expected {expected_provenance!r}"
+        )
+    # P12-G2 replaces an indirect OpenMC attribution with the independently verified
+    # Meija/AME2020 primary-source record. Assert the current record above, then map
+    # only that provenance leaf to its frozen pre-P12 value for the P10 legacy hash.
+    certificate["tables_provenance"] = PRE_P12_TABLES_PROVENANCE
     payload = json.dumps(
         scrub_legacy_result(value), sort_keys=True, separators=(",", ":")
     ).encode()
@@ -288,6 +310,15 @@ def main() -> int:
         raise AssertionError(
             f"legacy neutron result changed: {legacy_hash}, expected {PRE_P10_NEUTRON_NORMALIZED_SHA256}"
         )
+    wrong_provenance = copy.deepcopy(neutron)
+    wrong_provenance["certificate"]["tables_provenance"] += " [planted change]"
+    try:
+        canonical_result_hash(wrong_provenance)
+    except AssertionError as error:
+        if "does not match the embedded-table record" not in str(error):
+            raise
+    else:
+        raise AssertionError("planted legacy tables-provenance change was accepted")
     certificate_hashes = {
         "legacy_neutron_cli": checked_certificate(neutron, None, "legacy-neutron-cli")
     }
@@ -495,8 +526,15 @@ def main() -> int:
             "baseline_commit": PRE_P10_COMMIT,
             "normalized_result_sha256": legacy_hash,
             "expected_normalized_result_sha256": PRE_P10_NEUTRON_NORMALIZED_SHA256,
-            "normalized_fields": ["top-level ms", "working path", "certificate.solver semantic version"],
+            "normalized_fields": [
+                "top-level ms",
+                "working path",
+                "certificate.solver semantic version",
+                "certificate.tables_provenance after exact embedded-table-record check",
+            ],
             "current_solver": expected_solver,
+            "current_tables_provenance": neutron["certificate"]["tables_provenance"],
+            "wrong_tables_provenance_rejected": True,
             "spec_sha256": sha256(neutron_spec_path),
             "index_sha256": sha256(legacy_fixture["index"]),
             "library_sha256": sha256(legacy_fixture["library"]),

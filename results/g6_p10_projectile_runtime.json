@@ -1,8 +1,8 @@
 {
   "address_space_limit_bytes": 2147483648,
   "analytic_tolerance": 2e-12,
-  "binary_sha256": "f89c9e3a3110c1913ff75488ba66df5ec53f9103e79e9398e7facc25075defa2",
-  "canonical_flux_sha256": "9934db496027aed69faca8de71604595477022542a58d84cab0f8cab2c3f1abc",
+  "binary_sha256": "e3f0abf261d6cad1bf540c734869142fcefc4a63cd981077a4f9d770d4c59f01",
+  "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
   "certificate_hashes": {
     "alpha_cli": {
       "decay_primary": {
@@ -175,7 +175,7 @@
       }
     }
   },
-  "control_sha256": "da9988321c7e57ba42340c530b8c174a0a96a9ad9b7821e18df2b21292cf01cf",
+  "control_sha256": "f3a8ad417b7890c06b4909bfc3088d20e105845569fa6a45a401a2e7eed02d67",
   "entry_point_identity": {
     "alpha": true,
     "deuteron": true,
@@ -190,7 +190,7 @@
   "max_analytic_relative_error": 1.6439942021424526e-14,
   "mesh_certificates": {
     "alpha": {
-      "canonical_flux_sha256": "9934db496027aed69faca8de71604595477022542a58d84cab0f8cab2c3f1abc",
+      "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
       "checks": {
         "canonical_computed": true,
         "canonical_declared": true,
@@ -200,7 +200,7 @@
       "upstream_source_sha256": "6502cc4ec3e40ac85692bb09feaebca1bceb240b0eb63cb5b137d5880e434467"
     },
     "deuteron": {
-      "canonical_flux_sha256": "9934db496027aed69faca8de71604595477022542a58d84cab0f8cab2c3f1abc",
+      "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
       "checks": {
         "canonical_computed": true,
         "canonical_declared": true,
@@ -210,7 +210,7 @@
       "upstream_source_sha256": "6502cc4ec3e40ac85692bb09feaebca1bceb240b0eb63cb5b137d5880e434467"
     },
     "proton": {
-      "canonical_flux_sha256": "9934db496027aed69faca8de71604595477022542a58d84cab0f8cab2c3f1abc",
+      "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
       "checks": {
         "canonical_computed": true,
         "canonical_declared": true,
@@ -224,6 +224,7 @@
   "pre_p10_neutron": {
     "baseline_commit": "e5421a0e30eb94303482bed2c4b9491b773244e6",
     "current_solver": "actinv-core 0.5.0",
+    "current_tables_provenance": "Meija et al., Isotopic compositions of the elements 2013, Pure Appl. Chem. 88 (2016) 293-306, DOI 10.1515/pac-2015-0503, NRC PDF SHA-256 d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89 (Table 1 column 9 point values; column 6 when column 9 is an interval); AME2020 Huang et al./Wang et al., Chinese Physics C 45 (2021) 030002/030003, mass_1.mas20 SHA-256 e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307",
     "expected_normalized_result_sha256": "0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c",
     "index_sha256": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151",
     "legacy_neutron_fluence_schema_unchanged": true,
@@ -232,11 +233,13 @@
     "normalized_fields": [
       "top-level ms",
       "working path",
-      "certificate.solver semantic version"
+      "certificate.solver semantic version",
+      "certificate.tables_provenance after exact embedded-table-record check"
     ],
     "normalized_result_sha256": "0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c",
     "pass": true,
-    "spec_sha256": "b7827139fbef1571157c9fe39aec61ce30d63b5095f71bd2bede99cd3d18b3d2"
+    "spec_sha256": "48f33e243d8242b51cc0e2572ad9a176dfd9e723bfed565a536736581ed70504",
+    "wrong_tables_provenance_rejected": true
   },
   "projectiles": [
     "proton",
@@ -248,8 +251,8 @@
     "amendment_b": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
   },
-  "python_extension": "actinv.cpython-314-x86_64-linux-gnu.so",
-  "python_extension_sha256": "0f0a471a95f962ab9cb050417e034171844082d41bc3f815fec6bfd9f7577001",
+  "python_extension": "actinv.cpython-312-x86_64-linux-gnu.so",
+  "python_extension_sha256": "de504434551ed89c3bcd96cbe466bd2ed16316dad8f991e1f83e23f5cae83e6f",
   "rejections": {
     "charged_fission": {
       "context": "not supported for proton",

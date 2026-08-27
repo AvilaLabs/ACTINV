@@ -146,3 +146,7 @@ part that does not compress: users, issues, and the validation record accumulati
   inhalation outputs with exact missing-activity coverage through CLI, Python, prepared and mesh paths. Independent
   parsers reproduce all 289 Meija/AME2020 abundance/mass pairs bit-for-bit from primary files and the embedded Rust
   table byte-for-byte; certificate provenance now names and hashes the primary sources. G3 parser fuzzing is next.
+- 2026-08-27 — P12 Amendment A records the first post-G2 CI repair. P10-G6 correctly detected that the required
+  primary-source table attribution changed its legacy-result hash. A recursive comparison found that provenance leaf
+  to be the sole non-timing/path/version difference; the control now requires it to match the embedded-table record
+  exactly before mapping only that leaf to the frozen pre-P12 value. A planted attribution change still fails closed.
