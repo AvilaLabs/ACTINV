@@ -685,9 +685,26 @@ fn build_evaluation(
             .ok_or("MF=2/MT=151 was declared without parsed resonance parameters")?;
         for mt in [18, 102] {
             if has_resonance_contribution(resonance, mt) {
-                let background = evaluation.mf3.get(&mt).ok_or_else(|| {
-                    format!("MF=2 contributes to MT{mt} but MF=3 background is missing")
-                })?;
+                // ENDF-6 permits File 3 background cross sections in resonance ranges but does not require them.
+                // Represent an absent optional background explicitly so resonance-only reactions remain complete.
+                let zero_background = (!evaluation.mf3.contains_key(&mt)).then(|| Tabulated {
+                    interpolation: vec![(2, 2)],
+                    x: vec![
+                        groups.boundaries_ev[0],
+                        groups.boundaries_ev[groups.groups()],
+                    ],
+                    y: vec![0.0, 0.0],
+                });
+                let background = evaluation
+                    .mf3
+                    .get(&mt)
+                    .or(zero_background.as_ref())
+                    .expect("an MF=3 or explicit zero background is present");
+                if zero_background.is_some() {
+                    ledger.push(format!(
+                        "MT{mt}: optional MF=3 resonance background absent; explicit zero background used"
+                    ));
+                }
                 let reaction = process_reaction(
                     resonance,
                     background,
@@ -739,6 +756,7 @@ fn build_evaluation(
     }
     let mut mts: BTreeSet<i32> = evaluation.mf3.keys().copied().collect();
     mts.extend(evaluation.mf10.keys().copied());
+    mts.extend(processed.keys().copied());
     for mt in mts {
         let has_lmf6 = evaluation
             .mf8
@@ -753,21 +771,33 @@ fn build_evaluation(
         let descriptors = evaluation.mf8.get(&mt).map(Vec::as_slice).unwrap_or(&[]);
 
         if inelastic(mt) {
-            let metastable: Vec<_> = evaluation
-                .mf10
-                .get(&mt)
+            let products: Vec<_> = evaluation.mf10.get(&mt).into_iter().flatten().collect();
+            if products.iter().any(|product| product.zap < 0) {
+                return Err(format!("MT{mt}/MF=10 contains an invalid negative product"));
+            }
+            let actual: BTreeSet<_> = products
+                .iter()
+                .map(|product| (product.zap, product.lfs))
+                .collect();
+            if actual.len() != products.len() {
+                return Err(format!(
+                    "MT{mt}/MF=10 contains duplicate product identities"
+                ));
+            }
+            // Inelastic MF=10 commonly tabulates both return to the ground state and production of a metastable
+            // state. Validate the complete declaration before intentionally retaining only transmuting LFS>0 rows.
+            validate_descriptors(descriptors, 10, &actual)?;
+            let metastable: Vec<_> = products
                 .into_iter()
-                .flatten()
                 .filter(|product| product.lfs > 0)
                 .collect();
             if metastable.is_empty() {
                 continue;
             }
-            let actual: BTreeSet<_> = metastable
+            let retained: BTreeSet<_> = metastable
                 .iter()
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            validate_descriptors(descriptors, 10, &actual)?;
             let mut loss = vec![0.0; groups.groups()];
             let mut product_rows = Vec::new();
             for product in metastable {
@@ -791,7 +821,7 @@ fn build_evaluation(
             rows.extend(product_rows);
             ledger.push(format!(
                 "MT{mt}: retained {} metastable inelastic product channel(s)",
-                actual.len()
+                retained.len()
             ));
             continue;
         }
@@ -1392,5 +1422,162 @@ mod tests {
             error.contains("without parsed resonance parameters"),
             "{error}"
         );
+    }
+
+    #[test]
+    fn resonance_only_capture_uses_an_explicit_zero_background() {
+        use crate::resonance::{
+            LegacyLGroup, LegacyResolved, LegacyResonance, RangeData, ResonanceEvaluation,
+            ResonanceIsotope, ResonanceRange,
+        };
+
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf3.clear();
+        input.mf2_sections.insert(151);
+        input.resonance = Some(ResonanceEvaluation {
+            za: 26056,
+            awr: 55.45,
+            isotopes: vec![ResonanceIsotope {
+                zai: 26056,
+                abundance: 1.0,
+                fission_widths: false,
+                ranges: vec![ResonanceRange {
+                    energy_min: 1.0,
+                    energy_max: 4.0,
+                    lru: 1,
+                    lrf: 1,
+                    naps: 1,
+                    scattering_radius: None,
+                    data: RangeData::BreitWigner(LegacyResolved {
+                        spin: 0.0,
+                        ap: 0.5,
+                        groups: vec![LegacyLGroup {
+                            awri: 55.45,
+                            apl: 0.0,
+                            qx: 0.0,
+                            l: 0,
+                            lrx: 0,
+                            resonances: vec![LegacyResonance {
+                                energy: 2.0,
+                                spin: 0.5,
+                                total: 0.2,
+                                neutron: 0.1,
+                                capture: 0.1,
+                                fission_a: 0.0,
+                                fission_b: 0.0,
+                            }],
+                        }],
+                    }),
+                }],
+            }],
+        });
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
+            &BTreeMap::from([(102, (0, 1))]),
+        )
+        .unwrap();
+
+        assert_eq!(built.rows.len(), 2);
+        assert!(built.rows.iter().all(|row| row.mt == 102));
+        assert!(built.rows.iter().all(|row| row.sigma[0] > 0.0));
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|entry| entry.contains("explicit zero background used")));
+    }
+
+    #[test]
+    fn inelastic_descriptors_validate_ground_and_metastable_before_ground_omission() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf3.clear();
+        input.mf8.insert(
+            4,
+            vec![
+                ProductRef {
+                    zap: 26056,
+                    lfs: 0,
+                    lmf: 10,
+                },
+                ProductRef {
+                    zap: 26056,
+                    lfs: 2,
+                    lmf: 10,
+                },
+            ],
+        );
+        input.mf10.insert(
+            4,
+            vec![
+                crate::activation::ProductTable {
+                    zap: 26056,
+                    lfs: 0,
+                    table: table([3.0, 3.0]),
+                },
+                crate::activation::ProductTable {
+                    zap: 26056,
+                    lfs: 2,
+                    table: table([0.25, 0.25]),
+                },
+            ],
+        );
+        let built = build_evaluation(
+            input.clone(),
+            LibraryFormat::Tendl,
+            "n-Fe056m",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        assert_eq!(built.rows.len(), 2);
+        assert_eq!((built.rows[0].mt, built.rows[0].zap), (4, -1));
+        assert_eq!(built.rows[0].sigma, vec![0.25]);
+        assert_eq!(
+            (
+                built.rows[1].mt,
+                built.rows[1].zap,
+                built.rows[1].lfs,
+                built.rows[1].lmf,
+            ),
+            (4, 26056, 1, 10)
+        );
+        assert_eq!(built.rows[1].sigma, vec![0.25]);
+
+        input.mf8.get_mut(&4).unwrap()[0].zap = 25056;
+        let error = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056m",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(error.contains("conflict with MF=10 products"), "{error}");
     }
 }

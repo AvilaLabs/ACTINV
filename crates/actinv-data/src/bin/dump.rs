@@ -6,12 +6,140 @@
 //!   dump resonance FILE -> strict MF=2/MT=151 structure summary
 //!   dump resonance-xs FILE ENERGY_EV [...] -> zero-K resonance-only cross sections
 //!   dump unresolved-probe CASE E D GX GN GG GF MUX MUN MUF LSSF -> synthetic G3 control
+//!   dump doppler-probe TEMPERATURE_K -> synthetic P10 G4 SIGMA1 inputs and outputs
+//!   dump processed-kernel FILE MT TEMPERATURES_CSV ENERGY_EV [...] -> direct SIGMA1 control
 //!   dump processed-xs FILE MT TEMPERATURE_K [ENERGY_EV ...] -> processed points or 709 groups
 //!   dump library FILE OUT    -> raw row and group arrays for byte comparison
 //!   dump library-target-compare OLD.npz OLD_TARGET NEW.npz NEW_TARGET -> bounded-memory row/group comparison
 use actinv_data::{
-    activation, composition, decay, endf, fission, groups, library, processing, resonance,
+    activation, composition, decay, doppler, endf, fission, groups, library, processing, resonance,
 };
+
+fn doppler_probe(arguments: &[String]) {
+    assert_eq!(arguments.len(), 1, "doppler-probe needs a temperature");
+    let temperature: f64 = arguments[0].parse().expect("temperature K");
+    assert!(
+        temperature.is_finite() && temperature >= 0.0,
+        "temperature must be finite and nonnegative"
+    );
+    let cases = [
+        (
+            "one_over_v",
+            vec![100.0, 200.0],
+            vec![1.0, 1.0 / 2.0f64.sqrt()],
+            vec![0.1, 1.0, 10.0, 100.0, 200.0],
+        ),
+        (
+            "constant",
+            vec![1e-12, 1e7],
+            vec![3.0, 3.0],
+            vec![1e-12, 1.0, 100.0, 1e4, 1e7],
+        ),
+        (
+            "synthetic_line",
+            vec![1e-4, 90.0, 99.0, 100.0, 101.0, 110.0, 1e6],
+            vec![0.01, 0.01, 1.0, 10.0, 1.0, 0.01, 0.01],
+            vec![
+                1e-4, 90.0, 97.0, 99.0, 99.5, 100.0, 100.5, 101.0, 103.0, 110.0, 1e6,
+            ],
+        ),
+    ];
+    for (name, energy, sigma, output) in cases {
+        for (&point, &value) in energy.iter().zip(&sigma) {
+            println!("I {name} {point:.17e} {value:.17e}");
+        }
+        let broadened = doppler::broaden(&energy, &sigma, temperature, 55.0, &output)
+            .expect("broaden synthetic control");
+        for (&point, &value) in output.iter().zip(&broadened) {
+            println!("O {name} {point:.17e} {value:.17e}");
+        }
+    }
+}
+
+fn processed_file_reaction(
+    path: &str,
+    mt: i32,
+    temperature: f64,
+) -> (
+    resonance::ResonanceEvaluation,
+    groups::GroupStructure,
+    processing::ProcessedReaction,
+) {
+    let text = std::fs::read_to_string(path).expect("read resonance file");
+    let sections = endf::parse_sections(&text).expect("parse ENDF sections");
+    let resonance_section = sections
+        .iter()
+        .find(|section| section.mf == 2 && section.mt == 151)
+        .expect("find MF=2/MT=151");
+    let evaluation = resonance::parse_mf2(resonance_section).expect("parse MF=2/MT=151");
+    let mf3_section = sections
+        .iter()
+        .find(|section| section.mf == 3 && section.mt == mt)
+        .expect("find MF=3 reaction");
+    let (record, next) = endf::read_tab1_checked(&mf3_section.lines, 1).expect("parse MF=3 TAB1");
+    assert_eq!(next, mf3_section.lines.len(), "consume MF=3 reaction");
+    let background = groups::Tabulated::try_from(record).expect("validate MF=3 TAB1");
+    let group_structure = groups::GroupStructure::fispact_709().expect("709 groups");
+    let processed = processing::process_reaction(
+        &evaluation,
+        &background,
+        &group_structure,
+        mt,
+        temperature,
+        1.0,
+    )
+    .expect("process resonances");
+    (evaluation, group_structure, processed)
+}
+
+fn processed_kernel(arguments: &[String]) {
+    assert!(
+        arguments.len() >= 4,
+        "processed-kernel needs FILE MT TEMPERATURES_CSV and at least one energy"
+    );
+    let mt: i32 = arguments[1].parse().expect("MT");
+    let temperatures: Vec<f64> = arguments[2]
+        .split(',')
+        .map(|value| value.parse().expect("temperature K"))
+        .collect();
+    assert!(
+        temperatures
+            .iter()
+            .all(|value| value.is_finite() && *value >= 0.0),
+        "temperatures must be finite and nonnegative"
+    );
+    let output: Vec<f64> = arguments[3..]
+        .iter()
+        .map(|value| value.parse().expect("energy in eV"))
+        .collect();
+    let (evaluation, _, zero) = processed_file_reaction(&arguments[0], mt, 0.0);
+    assert!(
+        zero.certificate.ultra_narrow_lines.is_empty(),
+        "processed-kernel requires a reaction with no analytic delta lines"
+    );
+    println!(
+        "C {:.17e} {} {}",
+        evaluation.awr,
+        zero.table.x.len(),
+        zero.certificate.zero_k_refinement_passes
+    );
+    for (&energy, &sigma) in zero.table.x.iter().zip(&zero.table.y) {
+        println!("I {energy:.17e} {sigma:.17e}");
+    }
+    for temperature in temperatures {
+        let broadened = doppler::broaden(
+            &zero.table.x,
+            &zero.table.y,
+            temperature,
+            evaluation.awr,
+            &output,
+        )
+        .expect("broaden processed zero-K control table");
+        for (&energy, &sigma) in output.iter().zip(&broadened) {
+            println!("O {temperature:.17e} {energy:.17e} {sigma:.17e}");
+        }
+    }
+}
 
 fn unresolved_probe(arguments: &[String]) {
     assert_eq!(
@@ -486,35 +614,13 @@ fn main() {
             }
         }
         "unresolved-probe" => unresolved_probe(&a[2..]),
+        "doppler-probe" => doppler_probe(&a[2..]),
+        "processed-kernel" => processed_kernel(&a[2..]),
         "processed-xs" => {
-            let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
             let mt: i32 = a[3].parse().expect("MT");
             let temperature: f64 = a[4].parse().expect("temperature K");
-            let sections = endf::parse_sections(&text).expect("parse ENDF sections");
-            let resonance_section = sections
-                .iter()
-                .find(|section| section.mf == 2 && section.mt == 151)
-                .expect("find MF=2/MT=151");
-            let evaluation =
-                resonance::parse_mf2(resonance_section).expect("parse MF=2/MT=151");
-            let mf3_section = sections
-                .iter()
-                .find(|section| section.mf == 3 && section.mt == mt)
-                .expect("find MF=3 reaction");
-            let (record, next) = endf::read_tab1_checked(&mf3_section.lines, 1)
-                .expect("parse MF=3 TAB1");
-            assert_eq!(next, mf3_section.lines.len(), "consume MF=3 reaction");
-            let background = groups::Tabulated::try_from(record).expect("validate MF=3 TAB1");
-            let group_structure = groups::GroupStructure::fispact_709().expect("709 groups");
-            let processed = processing::process_reaction(
-                &evaluation,
-                &background,
-                &group_structure,
-                mt,
-                temperature,
-                1.0,
-            )
-            .expect("process resonances");
+            let (_, group_structure, processed) =
+                processed_file_reaction(&a[2], mt, temperature);
             println!(
                 "C {} {} {} {}",
                 processed.certificate.zero_k_points,
