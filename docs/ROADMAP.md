@@ -6,9 +6,10 @@ time. Every phase ends with a checker-derived verdict, a session file, a manifes
 dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. P12 — v1.0 hardening
-is open under its frozen protocol: configurable radiological responses, primary table re-verification, deterministic
-parser fuzzing, the published FNG/ITER cell-620 activation step, qualification-boundary documentation and the
-technical v1.0 release candidate. Public tagging and publication remain principal acts.
+is open under its frozen protocol; G1 configurable radiological responses and G2 primary abundance/mass-table
+re-verification are green. Deterministic parser fuzzing is next, followed by the published FNG/ITER cell-620
+activation step, qualification-boundary documentation and the technical v1.0 release candidate. Public tagging and
+publication remain principal acts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -141,3 +142,7 @@ part that does not compress: users, issues, and the validation record accumulati
   289-row Meija/AME2020 primary table controls, a 10,000-case fuzz smoke partition and the published FNG/ITER
   campaign-1 cell-620 one-group activation record. External ICRP tables and all nuclear data remain hash-pinned and
   unbundled; the technical release commit does not authorize a tag, registry upload or licensing claim.
+- 2026-08-27 — P12 G1--G2 green. A strict hash-pinned response table now produces clearance, waste, ingestion and
+  inhalation outputs with exact missing-activity coverage through CLI, Python, prepared and mesh paths. Independent
+  parsers reproduce all 289 Meija/AME2020 abundance/mass pairs bit-for-bit from primary files and the embedded Rust
+  table byte-for-byte; certificate provenance now names and hashes the primary sources. G3 parser fuzzing is next.

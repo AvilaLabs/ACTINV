@@ -2,7 +2,7 @@
 //! DO NOT EDIT — regenerate with controls/gen_tables.py. Provenance is carried in `PROVENANCE` and is written
 //! into every run certificate, so a result names the data it used.
 
-pub const PROVENANCE: &str = "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; abundances per Meija et al., Pure Appl. Chem. 88 (2016); masses AME2020 via openmc mass data)";
+pub const PROVENANCE: &str = "Meija et al., Isotopic compositions of the elements 2013, Pure Appl. Chem. 88 (2016) 293-306, DOI 10.1515/pac-2015-0503, NRC PDF SHA-256 d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89 (Table 1 column 9 point values; column 6 when column 9 is an interval); AME2020 Huang et al./Wang et al., Chinese Physics C 45 (2021) 030002/030003, mass_1.mas20 SHA-256 e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307";
 
 /// (element symbol, mass number, isomeric state, natural abundance atom fraction, atomic mass in amu)
 pub const ISOTOPES: &[(&str, i32, i32, f64, f64)] = &[

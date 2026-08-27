@@ -1,0 +1,60 @@
+{
+ "gate": "P12-G2",
+ "protocol_sha256": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715",
+ "inputs": {
+  "meija_pdf": {
+   "sha256": "d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89",
+   "doi": "10.1515/pac-2015-0503",
+   "work": "Isotopic compositions of the elements 2013"
+  },
+  "ame2020_mass_table": {
+   "sha256": "e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307",
+   "papers": [
+    "Chinese Physics C 45 030002",
+    "Chinese Physics C 45 030003"
+   ]
+  }
+ },
+ "extraction": {
+  "pdftotext": "pdftotext version 26.01.0",
+  "extracted_text_sha256": "1fb4081d20fea974c7ba391fec4f3e2aa8400330f373c580dbaeed508ab0d56c",
+  "elements": 84,
+  "selected_columns": {
+   "column_6_interval_fallback": 29,
+   "column_9_point": 260
+  }
+ },
+ "abundance": {
+  "rows": 289,
+  "key_set_exact": true,
+  "binary64_values_exact": true,
+  "elements": 84,
+  "maximum_element_sum_deviation": 0.0,
+  "element_sums_within_limit": true
+ },
+ "mass": {
+  "ame2020_numeric_rows": 2550,
+  "selected_rows": 289,
+  "key_set_exact": true,
+  "binary64_values_exact": true
+ },
+ "regeneration": {
+  "rows_reported": "tables.rs: 289 isotopes",
+  "generated_sha256": "888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f",
+  "tracked_sha256": "888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f",
+  "byte_identical": true
+ },
+ "provenance": {
+  "json_provenance_exact": true,
+  "rust_provenance_exact": true
+ },
+ "certificate": {
+  "exact": true,
+  "names_meija": true,
+  "names_ame2020": true,
+  "contains_meija_sha256": true,
+  "contains_ame2020_sha256": true
+ },
+ "runtime_oracle": "primary Meija PDF and AME2020 fixed-width table only",
+ "pass": true
+}

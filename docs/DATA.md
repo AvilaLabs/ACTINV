@@ -14,7 +14,7 @@ certificate. Terms of use are those of the hosts; check them before redistributi
 | FNS decay-heat benchmark set | IAEA CoNDERC `conderc/fusion/files/fns.zip` | 73 materials, 132 experiments; spectra, measurements, FISPACT-II reference runs |
 | U-235 fission decay-heat set | IAEA CoNDERC fission archive | Dickens thermal pulse and Yarnell 20,000 s measurements, paired FISPACT-II inputs and reference reports |
 | ALARA 2.9.2 | official [`svalinn/ALARA`](https://github.com/svalinn/ALARA) source | P9 identical-data Fe-56(n,p)Mn-56 pulse comparison; repository `LICENSE` is 3-clause BSD |
-| natural abundances / atomic masses | copied from `openmc.data` (MIT) with its citations | independent re-verification pending |
+| natural abundances / atomic masses | Meija et al. 2016 (IUPAC/CIAAW) and AME2020 | independently parsed from the primary tables; source hashes below |
 | FISPACT 709-group boundaries | `pypact` (Apache-2.0) | |
 | decay-photon format | [ENDF-6 Formats Manual](https://www.nndc.bnl.gov/endf-b8.0/endf-manual-viii.0.pdf) | MF=8/MT=457 radiation-spectrum records |
 | dry-air photon response | [NIST table 4](https://physics.nist.gov/PhysRefData/XrayMassCoef/ComTab/air.html) | mass energy-absorption coefficient, 1 keV–20 MeV |
@@ -27,6 +27,23 @@ certificate. Terms of use are those of the hosts; check them before redistributi
 Local layout used by the controls: `~/nuclear-data/{eaf-2010, tendl-eaf-test, fendl-3.2c, endfb-viii.0-decay,
 endfb-viii.0-nfpy, jeff-3.3-decay, conderc-fns, conderc-fission, alara-2.9.2}` with source hashes retained in the
 phase results or `MANIFEST*.sha256` files.
+
+## P12 embedded abundance and mass-table provenance
+
+The 289 natural-isotope rows embedded in `actinv-data` are independently re-derived by
+`controls/g2_p12_primary_tables.py`; OpenMC is no longer the provenance oracle. The abundance source is Meija et al.,
+*Isotopic compositions of the elements 2013*, Pure and Applied Chemistry 88 (2016) 293–306,
+DOI `10.1515/pac-2015-0503`. The [NRC archive copy](https://nrc-publications.canada.ca/eng/view/object/?id=aeb83db7-8cc2-41ad-9847-519b9471bae8)
+has SHA-256 `d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89`. ACTINV uses Table 1's
+representative Column 9 when it is a point value and the best-measurement Column 6 when Column 9 is an interval; the
+naturally occurring Ta-180 row denotes `Ta180m1`.
+
+Ground-state masses come from the fixed-width `mass_1.mas20` file of AME2020 (Huang et al. and Wang et al., Chinese
+Physics C 45 (2021) 030002/030003), obtained from the [Atomic Mass Data Center](https://amdc.impcas.ac.cn/web/masseval.html),
+with SHA-256 `e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307`. The independent control
+extracts all 289 abundance and mass values directly from those primary files, matches every binary64 value and key,
+checks every element sum within `2e-15`, and reproduces the generated Rust table byte-for-byte. The primary files
+remain external and are not redistributed by ACTINV.
 
 ## Photon-response input
 
