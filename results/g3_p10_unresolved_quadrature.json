@@ -1,0 +1,195 @@
+{
+ "schema": "actinv-p10-g3-unresolved-quadrature-1",
+ "inputs": {
+  "resonance_rs_sha256": "fe37819e98d7382ff862ce1dfec1fabaf9bcea3f85ab022d6ada2320e291824a",
+  "dump_rs_sha256": "6a297b8eaaf1e3e4798c16bed67dff023000294a840a614f8a2a37321131e1c5"
+ },
+ "reference": {
+  "method": "independent generalized Gauss-Laguerre chi-square quadrature",
+  "order": 96,
+  "scipy_generated_nodes": true,
+  "njoy_hwang_constants_imported": false,
+  "conditioning": "capture-dominated synthetic cases isolate normalized Hwang moments",
+  "degrees_of_freedom_covered": [
+   1,
+   2,
+   3,
+   4
+  ],
+  "comparison_floor_b": 1e-12
+ },
+ "cases": {
+  "A": {
+   "parameters": {
+    "case": "A",
+    "spacing": 10.0,
+    "competitive": 0.0,
+    "neutron": 7e-05,
+    "capture": 8.0,
+    "fission": 0.0,
+    "competitive_dof": 0,
+    "neutron_dof": 1,
+    "fission_dof": 0
+   },
+   "channels": {
+    "elastic": {
+     "rust_b": 3.141249389523417,
+     "reference_b": 3.141249389532399,
+     "relative": 2.859419054201371e-12
+    },
+    "capture": {
+     "rust_b": 1.048396874683729,
+     "reference_b": 1.0483968746747492,
+     "relative": 8.565389814889613e-12
+    },
+    "fission": {
+     "rust_b": 0.0,
+     "reference_b": 0.0,
+     "relative": 0.0
+    },
+    "competitive": {
+     "rust_b": 0.0,
+     "reference_b": 0.0,
+     "relative": 0.0
+    }
+   },
+   "lssf0_addition": {
+    "2": {
+     "background_b": 3.0,
+     "processed_b": 6.141249389523416,
+     "expected_b": 6.141249389523416,
+     "relative": 0.0
+    },
+    "18": {
+     "background_b": 5.0,
+     "processed_b": 5.0,
+     "expected_b": 5.0,
+     "relative": 0.0
+    },
+    "102": {
+     "background_b": 7.0,
+     "processed_b": 8.048396874683728,
+     "expected_b": 8.048396874683728,
+     "relative": 0.0
+    }
+   }
+  },
+  "B": {
+   "parameters": {
+    "case": "B",
+    "spacing": 10.0,
+    "competitive": 0.0,
+    "neutron": 5e-05,
+    "capture": 1000000.0,
+    "fission": 0.0006,
+    "competitive_dof": 0,
+    "neutron_dof": 2,
+    "fission_dof": 2
+   },
+   "channels": {
+    "elastic": {
+     "rust_b": 3.140650942873769,
+     "reference_b": 3.1406509428521963,
+     "relative": 6.868805842889096e-12
+    },
+    "capture": {
+     "rust_b": 1.4982656747272067,
+     "reference_b": 1.4982656747487817,
+     "relative": 1.4399958833174363e-11
+    },
+    "fission": {
+     "rust_b": 8.989594042914574e-10,
+     "reference_b": 8.989594043098945e-10,
+     "relative": 2.0509415644775042e-11
+    },
+    "competitive": {
+     "rust_b": 0.0,
+     "reference_b": 0.0,
+     "relative": 0.0
+    }
+   },
+   "lssf0_addition": {
+    "2": {
+     "background_b": 3.0,
+     "processed_b": 6.140650942873769,
+     "expected_b": 6.140650942873769,
+     "relative": 0.0
+    },
+    "18": {
+     "background_b": 5.0,
+     "processed_b": 5.000000000898959,
+     "expected_b": 5.000000000898959,
+     "relative": 0.0
+    },
+    "102": {
+     "background_b": 7.0,
+     "processed_b": 8.498265674727207,
+     "expected_b": 8.498265674727207,
+     "relative": 0.0
+    }
+   }
+  },
+  "C": {
+   "parameters": {
+    "case": "C",
+    "spacing": 12.0,
+    "competitive": 0.0004,
+    "neutron": 2.5e-05,
+    "capture": 1000000.0,
+    "fission": 0.0005,
+    "competitive_dof": 2,
+    "neutron_dof": 3,
+    "fission_dof": 4
+   },
+   "channels": {
+    "elastic": {
+     "rust_b": 3.1409126273608923,
+     "reference_b": 3.1409126273608923,
+     "relative": 0.0
+    },
+    "capture": {
+     "rust_b": 0.9364160474302812,
+     "reference_b": 0.9364160474302823,
+     "relative": 1.1856087127851304e-15
+    },
+    "fission": {
+     "rust_b": 4.68208023599096e-10,
+     "reference_b": 4.682080235980882e-10,
+     "relative": 2.1524965998494713e-12
+    },
+    "competitive": {
+     "rust_b": 3.7456641882076083e-10,
+     "reference_b": 3.74566418822287e-10,
+     "relative": 4.074439547888079e-12
+    }
+   },
+   "lssf0_addition": {
+    "2": {
+     "background_b": 3.0,
+     "processed_b": 6.140912627360892,
+     "expected_b": 6.140912627360892,
+     "relative": 0.0
+    },
+    "18": {
+     "background_b": 5.0,
+     "processed_b": 5.000000000468208,
+     "expected_b": 5.000000000468208,
+     "relative": 0.0
+    },
+    "102": {
+     "background_b": 7.0,
+     "processed_b": 7.936416047430281,
+     "expected_b": 7.936416047430281,
+     "relative": 0.0
+    }
+   }
+  }
+ },
+ "maximum_quadrature_relative": 2.0509415644775042e-11,
+ "maximum_lssf0_addition_relative": 0.0,
+ "lssf1": {
+  "maximum_resonance_absolute_b": 0.0,
+  "maximum_background_absolute_b": 0.0
+ },
+ "pass": true
+}

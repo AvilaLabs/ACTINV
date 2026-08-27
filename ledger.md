@@ -661,3 +661,23 @@
 - The repository now states the Rust closed-loop/ownership policy in `AGENTS.md` and `CONTRIBUTING.md`; CI explicitly
   enforces rustfmt, workspace/all-target/all-feature check, strict Clippy and tests. At this checkpoint all 39 Rust
   tests and those local quality gates pass. P10 remains open.
+
+## 28 — 2026-08-26 — P10 G3 unresolved-resonance gate complete
+- The independent case A/B/C control evaluates the Rust unresolved implementation against 96-point generalized
+  Gauss–Laguerre chi-square quadrature without importing NJOY's Hwang constants. It covers width degrees of freedom
+  1, 2, 3 and 4; the worst scored channel differs by `2.051e-11`, inside the frozen `1e-10` criterion. Repeating the
+  reference at order 128 leaves the result stable well inside the criterion. Synthetic LSSF=0 background addition
+  and LSSF=1 non-addition are exact at the printed precision for elastic, fission and capture processing.
+- That control exposed that the published decimal Hwang tables did not close their zeroth and first moments exactly:
+  their probability sum missed by up to `2.4e-4` and a sampled declared width by about `1e-3`. The Rust path now
+  preserves each table's discrete shape while normalizing both moments. A regression test enforces unit probability
+  and the declared mean for every supported degree of freedom; no ownership workaround, unsafe code or architecture
+  change was introduced.
+- The production Ag-107 control was rebuilt after the normalization repair against a fresh source-pinned
+  NJOY2016.79 UNRESR run. Worst one-sided point differences are `1.681e-4` elastic and `1.607e-4` capture; the worst
+  of 59 CCFE-709 capture groups is `1.564e-4`. These remain inside the frozen `2e-4` point and `5e-4` group limits,
+  so both the actual-reference and independent-quadrature portions of **P10-G3 PASS**.
+- The self-contained audit artifact now canonicalizes its disposable clone/home paths and terminates JSON with a
+  newline, so successful regeneration is deterministic. The exact CI audit passes all six steps with a clean cloned
+  tree. At this checkpoint all 40 Rust tests, workspace/all-target/all-feature check, strict Clippy and rustfmt pass.
+  P10 remains open; G4 is the next resonance-processing gate to formalize.

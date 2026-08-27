@@ -1442,11 +1442,27 @@ fn width_samples(width: f64, degrees: i32, label: &str) -> Result<Vec<(f64, f64)
         .ok_or_else(|| {
             format!("unsupported {label} degrees of freedom {degrees}; expected 0..4")
         })?;
+    let weight_sum: f64 = HWANG_WEIGHTS[index].iter().sum();
+    let sampled_mean: f64 = HWANG_POINTS[index]
+        .iter()
+        .zip(HWANG_WEIGHTS[index])
+        .map(|(point, weight)| point * weight)
+        .sum::<f64>()
+        / weight_sum;
+    if !weight_sum.is_finite()
+        || weight_sum <= 0.0
+        || !sampled_mean.is_finite()
+        || sampled_mean <= 0.0
+    {
+        return Err(format!("invalid {label} Hwang quadrature normalization"));
+    }
+    // NJOY publishes the Hwang tables at limited decimal precision. Preserve their discrete shape while restoring
+    // the probability and declared-width first moments that the truncated constants otherwise miss by up to 1e-3.
     Ok(HWANG_POINTS[index]
         .iter()
         .copied()
         .zip(HWANG_WEIGHTS[index].iter().copied())
-        .map(|(point, weight)| (point * width, weight))
+        .map(|(point, weight)| (point * width / sampled_mean, weight / weight_sum))
         .collect())
 }
 
@@ -1959,6 +1975,17 @@ mod tests {
                 20_000.0, 25_000.0, 30_000.0, 31_810.0,
             ]
         );
+    }
+
+    #[test]
+    fn hwang_samples_preserve_probability_and_declared_mean() {
+        for degrees in 1..=4 {
+            let samples = width_samples(0.125, degrees, "test").unwrap();
+            let probability: f64 = samples.iter().map(|(_, weight)| weight).sum();
+            let mean: f64 = samples.iter().map(|(width, weight)| width * weight).sum();
+            assert!((probability - 1.0).abs() <= 4e-16);
+            assert!((mean - 0.125).abs() <= 4e-16);
+        }
     }
 
     #[test]

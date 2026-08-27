@@ -26,10 +26,12 @@ for name, cmd in STEPS:
                     "stderr_tail": err if p.returncode else ""})
 # generated sources must be unchanged by regeneration
 diff = subprocess.run(["git", "diff", "--stat"], cwd=clone, capture_output=True, text=True).stdout.strip()
-res = {"clone": clone, "home_redirected_to": fake_home, "steps": results,
+res = {"clone": "<temporary clone>", "home_redirected_to": "<temporary empty home>", "steps": results,
        "regeneration_left_tree_clean": diff == "", "diff": diff,
        "pass": bool(all(r["ok"] for r in results) and diff == "")}
-json.dump(res, open(os.path.join(ROOT, "results", "g1_self_contained.json"), "w"), indent=1)
+with open(os.path.join(ROOT, "results", "g1_self_contained.json"), "w") as stream:
+    json.dump(res, stream, indent=1)
+    stream.write("\n")
 print(json.dumps(res, indent=1))
 shutil.rmtree(tmp, ignore_errors=True)
 sys.exit(0 if res["pass"] else 1)

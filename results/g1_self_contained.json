@@ -1,6 +1,6 @@
 {
- "clone": "/tmp/actinv-selftest-er6bo7pj/clone",
- "home_redirected_to": "/tmp/actinv-selftest-er6bo7pj/home",
+ "clone": "<temporary clone>",
+ "home_redirected_to": "<temporary empty home>",
  "steps": [
   {
    "step": "cargo build",
@@ -32,6 +32,13 @@
   },
   {
    "step": "release notes match roadmap",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "no undeclared dependencies",
    "returncode": 0,
    "ok": true,
    "outside_clone_reference": false,

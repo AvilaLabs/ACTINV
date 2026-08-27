@@ -5,12 +5,162 @@
 //!   dump activation FILE -> strict MF=3/6/8/9/10 evaluation summary
 //!   dump resonance FILE -> strict MF=2/MT=151 structure summary
 //!   dump resonance-xs FILE ENERGY_EV [...] -> zero-K resonance-only cross sections
+//!   dump unresolved-probe CASE E D GX GN GG GF MUX MUN MUF LSSF -> synthetic G3 control
 //!   dump processed-xs FILE MT TEMPERATURE_K [ENERGY_EV ...] -> processed points or 709 groups
 //!   dump library FILE OUT    -> raw row and group arrays for byte comparison
 //!   dump library-target-compare OLD.npz OLD_TARGET NEW.npz NEW_TARGET -> bounded-memory row/group comparison
 use actinv_data::{
     activation, composition, decay, endf, fission, groups, library, processing, resonance,
 };
+
+fn unresolved_probe(arguments: &[String]) {
+    assert_eq!(
+        arguments.len(),
+        11,
+        "unresolved-probe needs eleven arguments"
+    );
+    let case = match arguments[0].as_str() {
+        "A" => resonance::UnresolvedCase::A,
+        "B" => resonance::UnresolvedCase::B,
+        "C" => resonance::UnresolvedCase::C,
+        value => panic!("unknown unresolved case {value}"),
+    };
+    let parse_float = |index: usize, label: &str| {
+        arguments[index]
+            .parse::<f64>()
+            .unwrap_or_else(|_| panic!("invalid unresolved-probe {label}"))
+    };
+    let parse_dof = |index: usize, label: &str| {
+        arguments[index]
+            .parse::<i32>()
+            .unwrap_or_else(|_| panic!("invalid unresolved-probe {label}"))
+    };
+    let energy = parse_float(1, "energy");
+    let spacing = parse_float(2, "spacing");
+    let competitive = parse_float(3, "competitive width");
+    let neutron = parse_float(4, "neutron width");
+    let capture = parse_float(5, "capture width");
+    let fission = parse_float(6, "fission width");
+    let competitive_dof = parse_dof(7, "competitive degrees of freedom");
+    let neutron_dof = parse_dof(8, "neutron degrees of freedom");
+    let fission_dof = parse_dof(9, "fission degrees of freedom");
+    let lssf = parse_dof(10, "LSSF");
+    assert!(matches!(lssf, 0 | 1), "LSSF must be zero or one");
+    assert!(
+        energy.is_finite() && energy > 0.0,
+        "energy must be positive and finite"
+    );
+    assert!(
+        spacing.is_finite() && spacing > 0.0,
+        "spacing must be positive and finite"
+    );
+    assert!(
+        [competitive, neutron, capture, fission]
+            .into_iter()
+            .all(|width| width.is_finite() && width >= 0.0),
+        "widths must be finite and nonnegative"
+    );
+    assert!(
+        [competitive_dof, neutron_dof, fission_dof]
+            .into_iter()
+            .all(|degrees| (0..=4).contains(&degrees)),
+        "degrees of freedom must be in 0..4"
+    );
+    match case {
+        resonance::UnresolvedCase::A => assert!(
+            competitive == 0.0 && fission == 0.0 && competitive_dof == 0 && fission_dof == 0,
+            "case A cannot declare competitive or fission widths"
+        ),
+        resonance::UnresolvedCase::B => assert!(
+            competitive == 0.0 && competitive_dof == 0,
+            "case B cannot declare a competitive width"
+        ),
+        resonance::UnresolvedCase::C => {}
+    }
+
+    let energy_nodes: Vec<Option<f64>> = if case == resonance::UnresolvedCase::A {
+        vec![None]
+    } else {
+        vec![Some(energy / 2.0), Some(energy), Some(2.0 * energy)]
+    };
+    let points = energy_nodes
+        .into_iter()
+        .map(|point_energy| resonance::UnresolvedPoint {
+            energy: point_energy,
+            spacing,
+            competitive,
+            neutron,
+            capture,
+            fission,
+        })
+        .collect();
+    let range = resonance::ResonanceRange {
+        energy_min: energy / 2.0,
+        energy_max: 2.0 * energy,
+        lru: 2,
+        lrf: if case == resonance::UnresolvedCase::C {
+            2
+        } else {
+            1
+        },
+        naps: 1,
+        scattering_radius: None,
+        data: resonance::RangeData::Unresolved(resonance::Unresolved {
+            spin: 0.5,
+            ap: 0.5,
+            add_to_background: lssf == 0,
+            case,
+            sequences: vec![resonance::UnresolvedSequence {
+                awri: 56.0,
+                l: 0,
+                spin: 0.5,
+                interpolation: 2,
+                competitive_dof,
+                neutron_dof,
+                fission_dof,
+                points,
+            }],
+            interpolation_energies: vec![energy / 2.0, energy, 2.0 * energy],
+        }),
+    };
+    let direct = resonance::reconstruct_unresolved(&range, energy)
+        .expect("reconstruct synthetic unresolved case");
+    println!(
+        "U {} {lssf} {energy:.17e} {:.17e} {:.17e} {:.17e} {:.17e}",
+        arguments[0], direct.elastic, direct.capture, direct.fission, direct.competitive
+    );
+
+    let evaluation = resonance::ResonanceEvaluation {
+        za: 26_056,
+        awr: 56.0,
+        isotopes: vec![resonance::ResonanceIsotope {
+            zai: 26_056,
+            abundance: 1.0,
+            fission_widths: fission > 0.0,
+            ranges: vec![range],
+        }],
+    };
+    let control_groups = groups::GroupStructure {
+        name: "unresolved-probe".into(),
+        boundaries_ev: vec![energy / 2.0, 2.0 * energy],
+    };
+    for (mt, background_value) in [(2, 3.0), (18, 5.0), (102, 7.0)] {
+        let background = groups::Tabulated {
+            interpolation: vec![(2, 2)],
+            x: vec![energy / 2.0, 2.0 * energy],
+            y: vec![background_value, background_value],
+        };
+        let processed =
+            processing::process_reaction(&evaluation, &background, &control_groups, mt, 0.0, 1.0)
+                .expect("process synthetic unresolved case");
+        let value = processed
+            .table
+            .evaluate(energy)
+            .expect("evaluate synthetic processed reaction");
+        println!("P {mt} {background_value:.17e} {value:.17e}");
+    }
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -335,6 +485,7 @@ fn main() {
                 );
             }
         }
+        "unresolved-probe" => unresolved_probe(&a[2..]),
         "processed-xs" => {
             let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
             let mt: i32 = a[3].parse().expect("MT");
