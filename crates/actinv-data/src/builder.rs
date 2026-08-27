@@ -145,6 +145,7 @@ struct CacheIndex {
     projectile: String,
     npz_sha256: String,
     targets: Vec<TargetIndex>,
+    target_float_bits: Vec<[u64; 2]>,
 }
 
 #[derive(Deserialize)]
@@ -229,6 +230,11 @@ fn cache_paths(directory: &Path, key: &str) -> (PathBuf, PathBuf) {
     )
 }
 
+fn restore_target_float_bits(target: &mut TargetIndex, bits: [u64; 2]) {
+    target.awr = f64::from_bits(bits[0]);
+    target.evaluation_temperature_K = f64::from_bits(bits[1]);
+}
+
 fn source_library(source: &BuiltSource, groups: &GroupStructure) -> Library {
     let mut rows = Vec::new();
     let mut sig = Vec::new();
@@ -261,10 +267,11 @@ fn load_checkpoint(
     let (npz_path, index_path) = cache_paths(directory, key);
     let index: CacheIndex =
         serde_json::from_str(&std::fs::read_to_string(index_path).ok()?).ok()?;
-    if index.schema != "actinv-target-checkpoint-1"
+    if index.schema != "actinv-target-checkpoint-2"
         || index.key != key
         || index.source_sha256 != source_sha256
         || sha256_file(&npz_path).ok()? != index.npz_sha256
+        || index.target_float_bits.len() != index.targets.len()
     {
         return None;
     }
@@ -286,7 +293,13 @@ fn load_checkpoint(
     }
     let mut row_offset = 0usize;
     let mut targets = Vec::with_capacity(index.targets.len());
-    for (target_number, target_index) in index.targets.into_iter().enumerate() {
+    for (target_number, (mut target_index, float_bits)) in index
+        .targets
+        .into_iter()
+        .zip(index.target_float_bits)
+        .enumerate()
+    {
+        restore_target_float_bits(&mut target_index, float_bits);
         let end = row_offset.checked_add(target_index.n_rows)?;
         let source_rows = library.rows.get(row_offset..end)?;
         if source_rows.iter().any(|row| row.target != target_number) {
@@ -331,7 +344,7 @@ fn store_checkpoint(
     let library = source_library(source, groups);
     write_npz(&npz_path, &library)?;
     let index = CacheIndex {
-        schema: "actinv-target-checkpoint-1".into(),
+        schema: "actinv-target-checkpoint-2".into(),
         key: key.into(),
         source_sha256: source_sha256.into(),
         format: source.format.name().into(),
@@ -341,6 +354,16 @@ fn store_checkpoint(
             .targets
             .iter()
             .map(|target| target.index.clone())
+            .collect(),
+        target_float_bits: source
+            .targets
+            .iter()
+            .map(|target| {
+                [
+                    target.index.awr.to_bits(),
+                    target.index.evaluation_temperature_K.to_bits(),
+                ]
+            })
             .collect(),
     };
     write_json_atomic(&index_path, &index)
@@ -1179,6 +1202,13 @@ pub fn index_path(output: impl AsRef<Path>) -> Result<PathBuf, String> {
     Ok(output.with_file_name(format!("{stem}_index.json")))
 }
 
+fn duplicate_target_error(previous: &TargetIndex, current: &TargetIndex) -> String {
+    format!(
+        "duplicate target ZA={}/LISO={} in files '{}' and '{}'",
+        current.za, current.liso, previous.file, current.file
+    )
+}
+
 fn write_json_atomic(path: &Path, value: &impl Serialize) -> Result<(), String> {
     use std::sync::atomic::{AtomicU64, Ordering};
     static NEXT_JSON_TEMPORARY: AtomicU64 = AtomicU64::new(0);
@@ -1277,17 +1307,14 @@ pub fn build_library(
     }
 
     let mut targets = Vec::new();
-    let mut seen_targets = BTreeSet::new();
+    let mut seen_targets = BTreeMap::new();
     let mut rows = Vec::new();
     let mut sig = Vec::new();
     for source in sources {
         for target in source.targets {
             let identity = (target.index.za, target.index.liso);
-            if !seen_targets.insert(identity) {
-                return Err(format!(
-                    "duplicate target ZA={}/LISO={} in input",
-                    identity.0, identity.1
-                ));
+            if let Some(previous) = seen_targets.insert(identity, targets.len()) {
+                return Err(duplicate_target_error(&targets[previous], &target.index));
             }
             let target_number = targets.len();
             for row in target.rows {
@@ -1378,6 +1405,57 @@ mod tests {
             mf9: BTreeMap::new(),
             mf10: BTreeMap::new(),
         }
+    }
+
+    fn target_index(file: &str) -> TargetIndex {
+        TargetIndex {
+            file: file.into(),
+            source_sha256: "0".repeat(64),
+            mat: 1,
+            za: 26056,
+            liso: 0,
+            awr: 55.45,
+            evaluation_temperature_K: 0.0,
+            n_mf2: 0,
+            n_mf3: 1,
+            n_mf6: 0,
+            n_mf8: 0,
+            n_mf9: 0,
+            n_mf10: 0,
+            n_rows: 2,
+            ledger: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn duplicate_target_error_names_both_sources() {
+        let error =
+            duplicate_target_error(&target_index("first.endf"), &target_index("second.endf"));
+        assert!(error.contains("ZA=26056/LISO=0"), "{error}");
+        assert!(error.contains("first.endf"), "{error}");
+        assert!(error.contains("second.endf"), "{error}");
+    }
+
+    #[test]
+    fn checkpoint_restores_exact_target_float_bits() {
+        let original = target_index("rb94.endf");
+        let awr = 105.98700000000001_f64;
+        let temperature = -0.0_f64;
+        let mut cached = original;
+        cached.awr = awr;
+        cached.evaluation_temperature_K = temperature;
+        let bits = [
+            cached.awr.to_bits(),
+            cached.evaluation_temperature_K.to_bits(),
+        ];
+        let text = serde_json::to_string(&cached).unwrap();
+        let mut restored: TargetIndex = serde_json::from_str(&text).unwrap();
+        restore_target_float_bits(&mut restored, bits);
+        assert_eq!(restored.awr.to_bits(), awr.to_bits());
+        assert_eq!(
+            restored.evaluation_temperature_K.to_bits(),
+            temperature.to_bits()
+        );
     }
 
     #[test]

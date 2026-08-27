@@ -1,0 +1,946 @@
+{
+ "address_space_limit_bytes": 2147483648,
+ "build_address_space_limit_bytes": 1073741824,
+ "control_sha256": "cc06c2873464e2e2c7951c2003891a6fc7650486ba6a1138302cbc6cc992437d",
+ "determinism_and_cache": {
+  "byte_identical": true,
+  "cache_pairs_after_first_fresh": true,
+  "cached_cache_hits": [
+   4,
+   4
+  ],
+  "fresh_cache_hits": [
+   0,
+   0
+  ],
+  "inputs": {
+   "neutron_ag107": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+   "neutron_fr226": "5a2f9fa9b5f53cdf132444694f2502b12fe4f179ca54c06cde0672228df87e67",
+   "neutron_rb94": "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0",
+   "neutron_w186": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+  },
+  "pass": true,
+  "profile": {
+   "address_space_limit_bytes": 1073741824,
+   "below_two_gib_per_process": true,
+   "maximum_rss_bytes": 78602240,
+   "maximum_rss_kib": 76760,
+   "single_allocation_below_one_gib_proven_by_total_address_space_cap": true,
+   "workers": 4
+  },
+  "runs": {
+   "four_worker_cached": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 4,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "89060ca0d5dbb560d7e27f4eb6bbadb0afca2148a172c1f4c0f43a4397374d6e",
+    "npz_sha256": "efc5130480b8ea295b6d7e49b3536a719b054287754ec6e195032d0d19707ffd",
+    "rows": 131,
+    "targets": 4
+   },
+   "four_worker_fresh": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 0,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "89060ca0d5dbb560d7e27f4eb6bbadb0afca2148a172c1f4c0f43a4397374d6e",
+    "npz_sha256": "efc5130480b8ea295b6d7e49b3536a719b054287754ec6e195032d0d19707ffd",
+    "rows": 131,
+    "targets": 4
+   },
+   "one_worker_cached": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 4,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "89060ca0d5dbb560d7e27f4eb6bbadb0afca2148a172c1f4c0f43a4397374d6e",
+    "npz_sha256": "efc5130480b8ea295b6d7e49b3536a719b054287754ec6e195032d0d19707ffd",
+    "rows": 131,
+    "targets": 4
+   },
+   "one_worker_fresh": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 0,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "89060ca0d5dbb560d7e27f4eb6bbadb0afca2148a172c1f4c0f43a4397374d6e",
+    "npz_sha256": "efc5130480b8ea295b6d7e49b3536a719b054287754ec6e195032d0d19707ffd",
+    "rows": 131,
+    "targets": 4
+   }
+  },
+  "source_invalidation": {
+   "cache_files_after": 10,
+   "cache_files_before": 8,
+   "cache_hits": 3,
+   "index_differs_only_in_source_hash": true,
+   "mutated_sha256": "8668aaac88b67c622fcc90808bf732ffbff053a5cebd0ffdfd32beffd2d17bcc",
+   "npz_unchanged": true,
+   "original_sha256": "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0",
+   "pass": true,
+   "source_hash_changes": [
+    [
+     37094,
+     0,
+     "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0",
+     "8668aaac88b67c622fcc90808bf732ffbff053a5cebd0ffdfd32beffd2d17bcc"
+    ]
+   ]
+  }
+ },
+ "gate": "P10-G1",
+ "generated": "2026-08-27",
+ "inputs": {
+  "files": {
+   "alpha_fe56_2017": {
+    "expected_sha256": "e6a2a93837a279eac7000a97bd4168f9efe91349097c0479f3645e7e8b7bac07",
+    "file": "a-Fe056.tendl2017",
+    "pass": true,
+    "sha256": "e6a2a93837a279eac7000a97bd4168f9efe91349097c0479f3645e7e8b7bac07",
+    "size_bytes": 2283552
+   },
+   "alpha_fe56_2025": {
+    "expected_sha256": "ff185f3fdf69b6a64a3e9e9eb3964bd8856262b635d674537076c329069a656e",
+    "file": "a-Fe056.tendl2025",
+    "pass": true,
+    "sha256": "ff185f3fdf69b6a64a3e9e9eb3964bd8856262b635d674537076c329069a656e",
+    "size_bytes": 2610873
+   },
+   "deuteron_fe56_2017": {
+    "expected_sha256": "ebb4e2af6ceed337b7355233ddbd29912adb223519fc966b4ea01173acedab9a",
+    "file": "d-Fe056.tendl2017",
+    "pass": true,
+    "sha256": "ebb4e2af6ceed337b7355233ddbd29912adb223519fc966b4ea01173acedab9a",
+    "size_bytes": 3461778
+   },
+   "deuteron_fe56_2025": {
+    "expected_sha256": "cd036d5529c71998d20aa10ae7e8b1d9ae1d7045200b29f46163e5b2faf6ab95",
+    "file": "d-Fe056.tendl2025",
+    "pass": true,
+    "sha256": "cd036d5529c71998d20aa10ae7e8b1d9ae1d7045200b29f46163e5b2faf6ab95",
+    "size_bytes": 3864753
+   },
+   "eaf_fe56": {
+    "expected_sha256": "af8e32e7ed025949b65959980d9e2cd5fb6f5ce3c6a7adf2cb4afaac5976d5ab",
+    "file": "n_2631_26-FE-56.dat",
+    "pass": true,
+    "sha256": "af8e32e7ed025949b65959980d9e2cd5fb6f5ce3c6a7adf2cb4afaac5976d5ab",
+    "size_bytes": 1321348
+   },
+   "neutron_ag107": {
+    "expected_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+    "file": "n_4725_47-Ag-107.endf",
+    "pass": true,
+    "sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+    "size_bytes": 2212596
+   },
+   "neutron_fe56": {
+    "expected_sha256": "e4abb3573a1d3745b5953a5754ad87d128342048a31c4221333693c962c8d53a",
+    "file": "n_026-Fe-56_2631.dat",
+    "pass": true,
+    "sha256": "e4abb3573a1d3745b5953a5754ad87d128342048a31c4221333693c962c8d53a",
+    "size_bytes": 3938788
+   },
+   "neutron_fr226": {
+    "expected_sha256": "5a2f9fa9b5f53cdf132444694f2502b12fe4f179ca54c06cde0672228df87e67",
+    "file": "n_087-Fr-226_8767.dat",
+    "pass": true,
+    "sha256": "5a2f9fa9b5f53cdf132444694f2502b12fe4f179ca54c06cde0672228df87e67",
+    "size_bytes": 5299496
+   },
+   "neutron_rb94": {
+    "expected_sha256": "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0",
+    "file": "n_037-Rb-94_3752.dat",
+    "pass": true,
+    "sha256": "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0",
+    "size_bytes": 3029162
+   },
+   "neutron_w186": {
+    "expected_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+    "file": "n_7443_74-W-186.endf",
+    "pass": true,
+    "sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+    "size_bytes": 7970880
+   },
+   "proton_fe56_2017": {
+    "expected_sha256": "a817e16d7e5b2bbcc0a8fa4091c9505e4c0364326f26e1727ac72d2c229b6d3a",
+    "file": "p-Fe056.tendl2017",
+    "pass": true,
+    "sha256": "a817e16d7e5b2bbcc0a8fa4091c9505e4c0364326f26e1727ac72d2c229b6d3a",
+    "size_bytes": 2472201
+   },
+   "proton_fe56_2025": {
+    "expected_sha256": "7a505214adb273a2e71fba7ced0ea792dae853875127111af770ee658e01740b",
+    "file": "p-Fe056.tendl2025",
+    "pass": true,
+    "sha256": "7a505214adb273a2e71fba7ced0ea792dae853875127111af770ee658e01740b",
+    "size_bytes": 2688876
+   }
+  },
+  "legacy_eaf": {
+   "index": {
+    "file": "actinv_eaf2010_709g_index.json",
+    "pass": true,
+    "size_bytes": 111617
+   },
+   "library": {
+    "file": "actinv_eaf2010_709g.npz",
+    "pass": true,
+    "size_bytes": 45602618
+   }
+  },
+  "pass": true,
+  "tools": {
+   "actinv": {
+    "file": "actinv",
+    "pass": true,
+    "sha256": "3859d37c5a9fe7c13b7ebfdf2772e03e3cfa8133a61ca5d1544d4032a85ab8fd"
+   },
+   "dump": {
+    "file": "dump",
+    "pass": true,
+    "sha256": "c4ae8d5ee44e406aefc5ec7d20e7becf27e35ce91e2f05216928ab6fa6cb6dd5"
+   }
+  }
+ },
+ "numerical_parity": {
+  "bounded_materialized_bytes": 1597072,
+  "bounds_identical": true,
+  "build": {
+   "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+   "cache_hits": 0,
+   "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+   "index_sha256": "6cc48427f498027682629b6ef625d611c3bf29a511286dbb7b47199d1712afd2",
+   "npz_sha256": "5ea5f461d4c71471d9ef941e11a6c6ec883f4fa03aea3739122c2e4333e691b6",
+   "rows": 139,
+   "targets": 1
+  },
+  "finite_support": {
+   "groups_checked": 87390,
+   "nonzero_examples": [],
+   "pass": true
+  },
+  "full_legacy_npz_loaded_in_python": false,
+  "independent_exact": {
+   "failure_examples": [],
+   "independent_only": [],
+   "independent_rows": 139,
+   "maximum_absolute_b": 1.247890679678676e-13,
+   "maximum_relative": 2.1369234962061676e-13,
+   "pass": true,
+   "rust_only": [],
+   "rust_rows": 139,
+   "scored_groups": 4494,
+   "worst": {
+    "absolute_b": 1.1466522176206695e-15,
+    "group": 522,
+    "identity": [
+     102,
+     -1,
+     -1,
+     0
+    ],
+    "left_b": 0.008098780558198246,
+    "relative": 1.4158331731311507e-13,
+    "right_b": 0.0080987805581971,
+    "tolerance_b": 1.6197561116396493e-14
+   },
+   "worst_tolerance_fraction": 0.07079165865655754
+  },
+  "legacy_index_sha256": "ed36363a726cbe991435f72d2aeb8a794a40b7dc79081ba86c511e14dd9ac4b7",
+  "legacy_library_sha256": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7",
+  "legacy_target": 99,
+  "pass": true,
+  "reused_seeded_neutron_control": {
+   "pass": true,
+   "result_sha256": "f504ef314b75cacdf15c5fcce35294ce1f5457d308c3509fd91d34295caa3a44",
+   "row_count": 2224,
+   "structural": {
+    "enumerated_changes": [
+     {
+      "file": "n_036-Kr-87_3652.dat",
+      "new_only": [
+       [
+        102,
+        -1,
+        -1,
+        0
+       ],
+       [
+        102,
+        36088,
+        0,
+        -1
+       ]
+      ],
+      "old_only": [],
+      "pass": true
+     },
+     {
+      "file": "n_075-Re-188M_7535.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_076-Os-197_7664.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_077-Ir-201_7755.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_079-Au-180_7874.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_080-Hg-209_8064.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_081-Tl-188M_8081.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_081-Tl-195M_8102.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     },
+     {
+      "file": "n_083-Bi-210_8328.dat",
+      "new_only": [
+       [
+        18,
+        0,
+        0,
+        0
+       ]
+      ],
+      "old_only": [
+       [
+        18,
+        -1,
+        0,
+        10
+       ]
+      ],
+      "pass": true
+     }
+    ],
+    "pass": true
+   },
+   "unchanged_domain": {
+    "eligible_groups": 188327,
+    "eligible_rows": 928,
+    "expected_eligible_groups": 188327,
+    "expected_eligible_rows": 928,
+    "pass": true,
+    "worst": {
+     "absolute_b": 4.225135866176011e-15,
+     "file": "n_075-Re-188M_7535.dat",
+     "group": 617,
+     "legacy_b": 0.0018370681069132951,
+     "mt": 17,
+     "rust_b": 0.00183706810690907,
+     "tolerance_b": 1e-14
+    },
+    "worst_tolerance_fraction": 0.4225135866176011
+   }
+  },
+  "rust_target": 0,
+  "structural": {
+   "enumerated_exceptions": [],
+   "legacy_rows": 139,
+   "new_only": [],
+   "old_only": [],
+   "pass": true,
+   "rust_rows": 139
+  },
+  "terminal_support_proof": {
+   "bounds_eV": [
+    60000000.0,
+    65000000.0
+   ],
+   "group": 675,
+   "identity": [
+    32,
+    -1,
+    -1,
+    0
+   ],
+   "independent_exact_b": 0.0,
+   "legacy_b": 0.009412500886145632,
+   "pass": true,
+   "rust_b": 0.0,
+   "source_endpoint_b": 0.0185772,
+   "source_support_max_eV": 60000000.0
+  },
+  "unchanged_domain": {
+   "common_rows": 139,
+   "common_scored_groups": 4633,
+   "eligible_groups": 3849,
+   "eligible_rows": 130,
+   "excluded_by_reason": {
+    "legacy_roundoff_bound": 156,
+    "no_single_direct_source": 75,
+    "no_source_segment": 132,
+    "non_lin_lin": 402,
+    "source_edge": 151
+   },
+   "excluded_scored_groups": 784,
+   "failure_examples": [],
+   "maximum_absolute_b": 4.973799150320701e-13,
+   "maximum_relative": 2.257393371378417e-12,
+   "pass": true,
+   "scored_groups": 3849,
+   "worst": {
+    "absolute_b": 5.551115123125783e-15,
+    "group": 617,
+    "identity": [
+     28,
+     -1,
+     -1,
+     0
+    ],
+    "left_b": 0.032884055925582134,
+    "relative": 1.6880871190853605e-13,
+    "right_b": 0.03288405592557658,
+    "tolerance_b": 6.576811185116427e-14
+   },
+   "worst_tolerance_fraction": 0.08440435595426803
+  }
+ },
+ "option_invalidation": {
+  "cache_files": 4,
+  "density_2_repeat_byte_identical": true,
+  "different_option_invalidated": true,
+  "pass": true,
+  "physics_unchanged_for_processed_eaf": true,
+  "runs": {
+   "density_1": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 0,
+    "grid_density": 1.0,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "6cc48427f498027682629b6ef625d611c3bf29a511286dbb7b47199d1712afd2",
+    "npz_sha256": "5ea5f461d4c71471d9ef941e11a6c6ec883f4fa03aea3739122c2e4333e691b6",
+    "rows": 139,
+    "targets": 1
+   },
+   "density_2_cached": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 1,
+    "grid_density": 2.0,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "95495034b0f47b6c989938c945b0856767ebd8d4d643c67020846b215146680e",
+    "npz_sha256": "5ea5f461d4c71471d9ef941e11a6c6ec883f4fa03aea3739122c2e4333e691b6",
+    "rows": 139,
+    "targets": 1
+   },
+   "density_2_fresh": {
+    "builder_fingerprint": "7870e117aa9f7624080467438d45a58be22b37f43bd9b2186283fa384f8cc7ec",
+    "cache_hits": 0,
+    "grid_density": 2.0,
+    "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+    "index_sha256": "95495034b0f47b6c989938c945b0856767ebd8d4d643c67020846b215146680e",
+    "npz_sha256": "5ea5f461d4c71471d9ef941e11a6c6ec883f4fa03aea3739122c2e4333e691b6",
+    "rows": 139,
+    "targets": 1
+   }
+  },
+  "same_option_reused": true
+ },
+ "parser_parity": {
+  "inputs": {
+   "alpha_fe56_2017": {
+    "binary_representation_differences": 939,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "e6a2a93837a279eac7000a97bd4168f9efe91349097c0479f3645e7e8b7bac07",
+    "fields_compared": 7042,
+    "float_fields": 5794,
+    "independent_structure_sha256": "5ae194ededdca8c3bfbe16a97bbf37d9d8644eed3d7670dd5fc3f721e900e36e",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "5ae194ededdca8c3bfbe16a97bbf37d9d8644eed3d7670dd5fc3f721e900e36e",
+    "source_decimal_mismatches": 0,
+    "source_file": "a-Fe056.tendl2017",
+    "source_sha256": "e6a2a93837a279eac7000a97bd4168f9efe91349097c0479f3645e7e8b7bac07"
+   },
+   "alpha_fe56_2025": {
+    "binary_representation_differences": 947,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "ff185f3fdf69b6a64a3e9e9eb3964bd8856262b635d674537076c329069a656e",
+    "fields_compared": 7091,
+    "float_fields": 5836,
+    "independent_structure_sha256": "5d47eefd019dc33e076e408e25ac6e6a69596b7918dc2c9b56f83204875098c5",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "5d47eefd019dc33e076e408e25ac6e6a69596b7918dc2c9b56f83204875098c5",
+    "source_decimal_mismatches": 0,
+    "source_file": "a-Fe056.tendl2025",
+    "source_sha256": "ff185f3fdf69b6a64a3e9e9eb3964bd8856262b635d674537076c329069a656e"
+   },
+   "deuteron_fe56_2017": {
+    "binary_representation_differences": 1116,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "ebb4e2af6ceed337b7355233ddbd29912adb223519fc966b4ea01173acedab9a",
+    "fields_compared": 8456,
+    "float_fields": 7112,
+    "independent_structure_sha256": "3bee2622f651df1e925d7e193ce210efc067300808db164fa73de4415669aa5a",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "3bee2622f651df1e925d7e193ce210efc067300808db164fa73de4415669aa5a",
+    "source_decimal_mismatches": 0,
+    "source_file": "d-Fe056.tendl2017",
+    "source_sha256": "ebb4e2af6ceed337b7355233ddbd29912adb223519fc966b4ea01173acedab9a"
+   },
+   "deuteron_fe56_2025": {
+    "binary_representation_differences": 1109,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "cd036d5529c71998d20aa10ae7e8b1d9ae1d7045200b29f46163e5b2faf6ab95",
+    "fields_compared": 8382,
+    "float_fields": 7045,
+    "independent_structure_sha256": "161fa5ad82e7128369273a2d58f2efce53f04e4303928ed6a43c9979386b372e",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "161fa5ad82e7128369273a2d58f2efce53f04e4303928ed6a43c9979386b372e",
+    "source_decimal_mismatches": 0,
+    "source_file": "d-Fe056.tendl2025",
+    "source_sha256": "cd036d5529c71998d20aa10ae7e8b1d9ae1d7045200b29f46163e5b2faf6ab95"
+   },
+   "eaf_fe56": {
+    "binary_representation_differences": 24427,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "af8e32e7ed025949b65959980d9e2cd5fb6f5ce3c6a7adf2cb4afaac5976d5ab",
+    "fields_compared": 89815,
+    "float_fields": 89389,
+    "independent_structure_sha256": "007645adbba5da8f4c5cd75ed6ce0ad8fb09b587a8caccac3ec9edb94dbb1328",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "007645adbba5da8f4c5cd75ed6ce0ad8fb09b587a8caccac3ec9edb94dbb1328",
+    "source_decimal_mismatches": 0,
+    "source_file": "n_2631_26-FE-56.dat",
+    "source_sha256": "af8e32e7ed025949b65959980d9e2cd5fb6f5ce3c6a7adf2cb4afaac5976d5ab"
+   },
+   "neutron_ag107": {
+    "binary_representation_differences": 2509,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+    "fields_compared": 16545,
+    "float_fields": 15624,
+    "independent_structure_sha256": "1254b28d3855bf77a9202e216387abccfac1ca1c50effc6eb8786d198185a6fc",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "1254b28d3855bf77a9202e216387abccfac1ca1c50effc6eb8786d198185a6fc",
+    "source_decimal_mismatches": 0,
+    "source_file": "n_4725_47-Ag-107.endf",
+    "source_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185"
+   },
+   "neutron_fe56": {
+    "binary_representation_differences": 4481,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "e4abb3573a1d3745b5953a5754ad87d128342048a31c4221333693c962c8d53a",
+    "fields_compared": 34001,
+    "float_fields": 32645,
+    "independent_structure_sha256": "96908c8ffb402d4b9aa2381cd5bbb38226dc599aed39c391d45ad7bd04c8fda9",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "96908c8ffb402d4b9aa2381cd5bbb38226dc599aed39c391d45ad7bd04c8fda9",
+    "source_decimal_mismatches": 0,
+    "source_file": "n_026-Fe-56_2631.dat",
+    "source_sha256": "e4abb3573a1d3745b5953a5754ad87d128342048a31c4221333693c962c8d53a"
+   },
+   "neutron_fr226": {
+    "binary_representation_differences": 3068,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "5a2f9fa9b5f53cdf132444694f2502b12fe4f179ca54c06cde0672228df87e67",
+    "fields_compared": 20780,
+    "float_fields": 19422,
+    "independent_structure_sha256": "5b26293eb149d7e6819ca951df52ef629126a24cbc292ae6fc7b9e6805cf4158",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "5b26293eb149d7e6819ca951df52ef629126a24cbc292ae6fc7b9e6805cf4158",
+    "source_decimal_mismatches": 0,
+    "source_file": "n_087-Fr-226_8767.dat",
+    "source_sha256": "5a2f9fa9b5f53cdf132444694f2502b12fe4f179ca54c06cde0672228df87e67"
+   },
+   "neutron_rb94": {
+    "binary_representation_differences": 1900,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0",
+    "fields_compared": 15211,
+    "float_fields": 13833,
+    "independent_structure_sha256": "dd1ab28930a42b58d7ed8f849991753eb0fa5d74ac1c660766906e783e271110",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "dd1ab28930a42b58d7ed8f849991753eb0fa5d74ac1c660766906e783e271110",
+    "source_decimal_mismatches": 0,
+    "source_file": "n_037-Rb-94_3752.dat",
+    "source_sha256": "0e25329d3881b7af74419ae3a78495c01470bf304c9f9ecc03a2a91416b693f0"
+   },
+   "neutron_w186": {
+    "binary_representation_differences": 1331,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+    "fields_compared": 9703,
+    "float_fields": 8870,
+    "independent_structure_sha256": "ca1d3b2c26d80dba0e5304e719d556eafd05951dd196078b3a6c53a4e61accfb",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "ca1d3b2c26d80dba0e5304e719d556eafd05951dd196078b3a6c53a4e61accfb",
+    "source_decimal_mismatches": 0,
+    "source_file": "n_7443_74-W-186.endf",
+    "source_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+   },
+   "proton_fe56_2017": {
+    "binary_representation_differences": 1036,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "a817e16d7e5b2bbcc0a8fa4091c9505e4c0364326f26e1727ac72d2c229b6d3a",
+    "fields_compared": 7451,
+    "float_fields": 6182,
+    "independent_structure_sha256": "7836afe094acd3e055e88651eb925ca2990ad66ad94877601c66a6868f655092",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "7836afe094acd3e055e88651eb925ca2990ad66ad94877601c66a6868f655092",
+    "source_decimal_mismatches": 0,
+    "source_file": "p-Fe056.tendl2017",
+    "source_sha256": "a817e16d7e5b2bbcc0a8fa4091c9505e4c0364326f26e1727ac72d2c229b6d3a"
+   },
+   "proton_fe56_2025": {
+    "binary_representation_differences": 1012,
+    "evaluations": 1,
+    "exact_at_endf_source_precision": true,
+    "expected_source_sha256": "7a505214adb273a2e71fba7ced0ea792dae853875127111af770ee658e01740b",
+    "fields_compared": 7339,
+    "float_fields": 6077,
+    "independent_structure_sha256": "885b1c26bb7e8a126fc31b469dcf71bae77898fd076692dc4a614008cf3f2e1e",
+    "maximum_ulp_distance": 2.0,
+    "mismatch_examples": [],
+    "pass": true,
+    "rust_structure_sha256": "885b1c26bb7e8a126fc31b469dcf71bae77898fd076692dc4a614008cf3f2e1e",
+    "source_decimal_mismatches": 0,
+    "source_file": "p-Fe056.tendl2025",
+    "source_sha256": "7a505214adb273a2e71fba7ced0ea792dae853875127111af770ee658e01740b"
+   }
+  },
+  "pass": true,
+  "totals": {
+   "binary_representation_differences": 43875,
+   "evaluations": 12,
+   "fields_compared": 231816,
+   "float_fields": 217829,
+   "maximum_ulp_distance": 2.0,
+   "pass": true,
+   "source_decimal_mismatches": 0
+  }
+ },
+ "pass": true,
+ "prerequisites": {
+  "files": {
+   "ACTINV-P10_AMENDMENT_A.md": {
+    "expected_sha256": "e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd",
+    "hash_matches": true,
+    "pass": true,
+    "sha256": "e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd"
+   },
+   "ACTINV-P10_AMENDMENT_B.md": {
+    "expected_sha256": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23",
+    "hash_matches": true,
+    "pass": true,
+    "sha256": "36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23"
+   },
+   "ACTINV-P10_AMENDMENT_C.md": {
+    "expected_sha256": "afa3f1ab58236a36148fe51265cc1d3fe2ae1de31b9b4a9a4a18d0fdd45145de",
+    "hash_matches": true,
+    "pass": true,
+    "sha256": "afa3f1ab58236a36148fe51265cc1d3fe2ae1de31b9b4a9a4a18d0fdd45145de"
+   },
+   "ACTINV-P10_PROTOCOL.md": {
+    "expected_sha256": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27",
+    "hash_matches": true,
+    "pass": true,
+    "sha256": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
+   },
+   "g2_p10_rmatrix.json": {
+    "expected_sha256": "c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690",
+    "hash_matches": true,
+    "pass": true,
+    "reported_pass": true,
+    "sha256": "c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690"
+   },
+   "g3_p10_unresolved_njoy.json": {
+    "expected_sha256": "afbdf08dbd0b4545a74b2632b806f21feb374b8ee985e3a5b17aabcf54f4200f",
+    "hash_matches": true,
+    "pass": true,
+    "reported_pass": true,
+    "sha256": "afbdf08dbd0b4545a74b2632b806f21feb374b8ee985e3a5b17aabcf54f4200f"
+   },
+   "g3_p10_unresolved_quadrature.json": {
+    "expected_sha256": "4290a6c734639bfecc00e8a5fa0923cec6a7d1ff013e92639333e069d204354a",
+    "hash_matches": true,
+    "pass": true,
+    "reported_pass": true,
+    "sha256": "4290a6c734639bfecc00e8a5fa0923cec6a7d1ff013e92639333e069d204354a"
+   },
+   "g4_p10_temperature_narrow.json": {
+    "expected_sha256": "f504ef314b75cacdf15c5fcce35294ce1f5457d308c3509fd91d34295caa3a44",
+    "hash_matches": true,
+    "pass": true,
+    "reported_pass": true,
+    "sha256": "f504ef314b75cacdf15c5fcce35294ce1f5457d308c3509fd91d34295caa3a44"
+   },
+   "g5_p10_charged.json": {
+    "expected_sha256": "7e5e48619d029449023efbb242e4b3507e2314d6195a3d358147666ab7860b58",
+    "hash_matches": true,
+    "pass": true,
+    "reported_pass": true,
+    "sha256": "7e5e48619d029449023efbb242e4b3507e2314d6195a3d358147666ab7860b58"
+   }
+  },
+  "pass": true
+ },
+ "rejection_plants": {
+  "count": 10,
+  "pass": true,
+  "passed": 10,
+  "plants": {
+   "duplicate_section": {
+    "expected_context": {
+     "MF=3/MT=102": true,
+     "duplicate MAT=": true,
+     "duplicate_section.dat": true
+    },
+    "message_tail": "\n<WORK>/duplicate_section.dat: line 14953: duplicate MAT=2631/MF=3/MT=102 section\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "duplicate_target": {
+    "expected_context": {
+     "duplicate target ZA=26056/LISO=0": true,
+     "first.dat": true,
+     "second.dat": true
+    },
+    "message_tail": "\nduplicate target ZA=26056/LISO=0 in files 'first.dat' and 'second.dat'\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "invalid_count": {
+    "expected_context": {
+     "MF=3/MT=102": true,
+     "expected NP=99999": true,
+     "invalid_count.dat": true
+    },
+    "message_tail": "\n<WORK>/invalid_count.dat: MAT=2631/MF=3/MT=102: TAB1 interpolation ends at NBT=43235, expected NP=99999\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "invalid_interpolation_law": {
+    "expected_context": {
+     "MF=3/MT=102": true,
+     "invalid_law.dat": true,
+     "unsupported TAB1 interpolation INT=6": true
+    },
+    "message_tail": "\n<WORK>/invalid_law.dat: MAT=2631/MF=3/MT=102: unsupported TAB1 interpolation INT=6\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "invalid_nsub": {
+    "expected_context": {
+     "MF=1/MT=451": true,
+     "invalid_nsub.dat": true,
+     "unsupported incident-particle NSUB=42": true
+    },
+    "message_tail": "\n<WORK>/invalid_nsub.dat: MAT=2631/MF=1/MT=451: unsupported incident-particle NSUB=42\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "invalid_numeric_field": {
+    "expected_context": {
+     "MF=3/MT=102": true,
+     "invalid ENDF number": true,
+     "invalid_numeric.dat": true
+    },
+    "message_tail": "\n<WORK>/invalid_numeric.dat: MAT=2631/MF=3/MT=102: invalid ENDF number 'NOTNUMBER'\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "invalid_tail": {
+    "expected_context": {
+     "MF=3/MT=102": true,
+     "invalid_tail.dat": true,
+     "without SEND": true
+    },
+    "message_tail": "\n<WORK>/invalid_tail.dat: line 539: MF=3/MT=102 section changed to MAT=2631/MF=3/MT=103 without SEND\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "source_mutation": {
+    "expected_context": {
+     "changed during the library build": true,
+     "source_mutation.endf": true
+    },
+    "message_tail": "\nsource <WORK>/source_mutation.endf changed during the library build\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "truncated_record": {
+    "expected_context": {
+     "truncated ENDF record": true,
+     "truncated.dat": true
+    },
+    "message_tail": "\n<WORK>/truncated.dat: line 538: truncated ENDF record: 60 columns\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   },
+   "unsupported_section": {
+    "expected_context": {
+     "unsupported MF=2 sections {152}": true,
+     "unsupported_mf2.dat": true
+    },
+    "message_tail": "\n<WORK>/unsupported_mf2.dat: unsupported MF=2 sections {152}; expected only MT=151\n",
+    "pass": true,
+    "published_final_pair": false,
+    "returncode": 1
+   }
+  }
+ },
+ "schema": "actinv-p10-g1-builder-1"
+}

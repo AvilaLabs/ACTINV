@@ -3,6 +3,7 @@
 //!   dump spectra FILE [ZA:LISO ...] -> lossless line-oriented MF=8/MT=457 spectrum records
 //!   dump spectra-summary FILE -> all-file section/spectrum and STYP/LCON counts
 //!   dump activation FILE -> strict MF=3/6/8/9/10 evaluation summary
+//!   dump activation-json FILE -> canonical JSON for every retained activation/resonance field
 //!   dump activation-product FILE ZAP LFS ENERGY_EV [...] -> charged residual-production components
 //!   dump resonance FILE -> strict MF=2/MT=151 structure summary
 //!   dump resonance-rml FILE -> canonical line-oriented R-matrix-limited structure
@@ -544,6 +545,223 @@ fn resonance_rml(arguments: &[String]) {
     println!("N {ranges}");
 }
 
+fn tabulated_json(table: &groups::Tabulated) -> serde_json::Value {
+    serde_json::json!({
+        "interpolation": &table.interpolation,
+        "x": &table.x,
+        "y": &table.y,
+    })
+}
+
+fn legacy_resolved_json(data: &resonance::LegacyResolved) -> serde_json::Value {
+    serde_json::json!({
+        "spin": data.spin,
+        "ap": data.ap,
+        "groups": data.groups.iter().map(|group| serde_json::json!({
+            "awri": group.awri,
+            "apl": group.apl,
+            "qx": group.qx,
+            "l": group.l,
+            "lrx": group.lrx,
+            "resonances": group.resonances.iter().map(|value| serde_json::json!({
+                "energy": value.energy,
+                "spin": value.spin,
+                "total": value.total,
+                "neutron": value.neutron,
+                "capture": value.capture,
+                "fission_a": value.fission_a,
+                "fission_b": value.fission_b,
+            })).collect::<Vec<_>>(),
+        })).collect::<Vec<_>>(),
+    })
+}
+
+fn rml_extension_json(extension: &resonance::RmlExtension) -> serde_json::Value {
+    serde_json::json!({
+        "channel": extension.channel,
+        "law": extension.law,
+        "real": extension.real.as_ref().map(tabulated_json),
+        "imaginary": extension.imaginary.as_ref().map(tabulated_json),
+        "parameters": &extension.parameters,
+    })
+}
+
+fn rmatrix_json(data: &resonance::RMatrixLimited) -> serde_json::Value {
+    serde_json::json!({
+        "reduced_widths": data.reduced_widths,
+        "krm": data.krm,
+        "particle_pairs": data.particle_pairs.iter().map(|pair| serde_json::json!({
+            "mass_a": pair.mass_a,
+            "mass_b": pair.mass_b,
+            "za": pair.za,
+            "zb": pair.zb,
+            "spin_a": pair.spin_a,
+            "spin_b": pair.spin_b,
+            "q_value": pair.q_value,
+            "penetrability": pair.penetrability,
+            "shift": pair.shift,
+            "mt": pair.mt,
+            "parity_a": pair.parity_a,
+            "parity_b": pair.parity_b,
+        })).collect::<Vec<_>>(),
+        "spin_groups": data.spin_groups.iter().map(|group| serde_json::json!({
+            "spin": group.spin,
+            "parity": group.parity,
+            "channels": group.channels.iter().map(|channel| serde_json::json!({
+                "pair": channel.pair,
+                "l": channel.l,
+                "spin": channel.spin,
+                "boundary": channel.boundary,
+                "effective_radius": channel.effective_radius,
+                "true_radius": channel.true_radius,
+            })).collect::<Vec<_>>(),
+            "resonances": group.resonances.iter().map(|value| serde_json::json!({
+                "energy": value.energy,
+                "widths": &value.widths,
+            })).collect::<Vec<_>>(),
+            "backgrounds": group.backgrounds.iter().map(rml_extension_json).collect::<Vec<_>>(),
+            "phase_shifts": group.phase_shifts.iter().map(rml_extension_json).collect::<Vec<_>>(),
+        })).collect::<Vec<_>>(),
+    })
+}
+
+fn unresolved_json(data: &resonance::Unresolved) -> serde_json::Value {
+    let case = match data.case {
+        resonance::UnresolvedCase::A => "A",
+        resonance::UnresolvedCase::B => "B",
+        resonance::UnresolvedCase::C => "C",
+    };
+    serde_json::json!({
+        "spin": data.spin,
+        "ap": data.ap,
+        "add_to_background": data.add_to_background,
+        "case": case,
+        "sequences": data.sequences.iter().map(|sequence| serde_json::json!({
+            "awri": sequence.awri,
+            "l": sequence.l,
+            "spin": sequence.spin,
+            "interpolation": sequence.interpolation,
+            "competitive_dof": sequence.competitive_dof,
+            "neutron_dof": sequence.neutron_dof,
+            "fission_dof": sequence.fission_dof,
+            "points": sequence.points.iter().map(|point| serde_json::json!({
+                "energy": point.energy,
+                "spacing": point.spacing,
+                "competitive": point.competitive,
+                "neutron": point.neutron,
+                "capture": point.capture,
+                "fission": point.fission,
+            })).collect::<Vec<_>>(),
+        })).collect::<Vec<_>>(),
+        "interpolation_energies": &data.interpolation_energies,
+    })
+}
+
+fn resonance_json(evaluation: &resonance::ResonanceEvaluation) -> serde_json::Value {
+    serde_json::json!({
+        "za": evaluation.za,
+        "awr": evaluation.awr,
+        "isotopes": evaluation.isotopes.iter().map(|isotope| serde_json::json!({
+            "zai": isotope.zai,
+            "abundance": isotope.abundance,
+            "fission_widths": isotope.fission_widths,
+            "ranges": isotope.ranges.iter().map(|range| {
+                let data = match &range.data {
+                    resonance::RangeData::ScatteringOnly { spin, ap } => {
+                        serde_json::json!({"ScatteringOnly": {"spin": spin, "ap": ap}})
+                    }
+                    resonance::RangeData::BreitWigner(data) => {
+                        serde_json::json!({"BreitWigner": legacy_resolved_json(data)})
+                    }
+                    resonance::RangeData::ReichMoore(data) => {
+                        serde_json::json!({"ReichMoore": legacy_resolved_json(data)})
+                    }
+                    resonance::RangeData::RMatrixLimited(data) => {
+                        serde_json::json!({"RMatrixLimited": rmatrix_json(data)})
+                    }
+                    resonance::RangeData::Unresolved(data) => {
+                        serde_json::json!({"Unresolved": unresolved_json(data)})
+                    }
+                };
+                serde_json::json!({
+                    "energy_min": range.energy_min,
+                    "energy_max": range.energy_max,
+                    "lru": range.lru,
+                    "lrf": range.lrf,
+                    "naps": range.naps,
+                    "scattering_radius": range.scattering_radius.as_ref().map(tabulated_json),
+                    "data": data,
+                })
+            }).collect::<Vec<_>>(),
+        })).collect::<Vec<_>>(),
+    })
+}
+
+fn product_tables_json(
+    values: &std::collections::BTreeMap<i32, Vec<activation::ProductTable>>,
+) -> serde_json::Value {
+    serde_json::Value::Object(
+        values
+            .iter()
+            .map(|(mt, products)| {
+                (
+                    mt.to_string(),
+                    serde_json::Value::Array(
+                        products
+                            .iter()
+                            .map(|product| {
+                                serde_json::json!({
+                                    "zap": product.zap,
+                                    "lfs": product.lfs,
+                                    "table": tabulated_json(&product.table),
+                                })
+                            })
+                            .collect(),
+                    ),
+                )
+            })
+            .collect(),
+    )
+}
+
+fn evaluation_json(evaluation: &activation::Evaluation) -> serde_json::Value {
+    let metadata = &evaluation.metadata;
+    serde_json::json!({
+        "metadata": {
+            "mat": metadata.mat,
+            "za": metadata.za,
+            "awr": metadata.awr,
+            "liso": metadata.liso,
+            "awi": metadata.awi,
+            "nsub": metadata.nsub,
+            "projectile": metadata.projectile.name(),
+            "evaluation_temperature_k": metadata.evaluation_temperature_k,
+        },
+        "mf2_sections": evaluation.mf2_sections.iter().copied().collect::<Vec<_>>(),
+        "resonance": evaluation.resonance.as_ref().map(resonance_json),
+        "mf3": serde_json::Value::Object(evaluation.mf3.iter().map(|(mt, table)| {
+            (mt.to_string(), tabulated_json(table))
+        }).collect()),
+        "mf6": serde_json::Value::Object(evaluation.mf6.iter().map(|(mt, products)| {
+            (mt.to_string(), serde_json::Value::Array(products.iter().map(|product| serde_json::json!({
+                "zap": product.zap,
+                "awp": product.awp,
+                "law": product.law,
+                "yield_table": tabulated_json(&product.yield_table),
+            })).collect()))
+        }).collect()),
+        "mf8": serde_json::Value::Object(evaluation.mf8.iter().map(|(mt, products)| {
+            (mt.to_string(), serde_json::Value::Array(products.iter().map(|product| serde_json::json!({
+                "zap": product.zap,
+                "lfs": product.lfs,
+                "lmf": product.lmf,
+            })).collect()))
+        }).collect()),
+        "mf9": product_tables_json(&evaluation.mf9),
+        "mf10": product_tables_json(&evaluation.mf10),
+    })
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     match a[1].as_str() {
@@ -744,6 +962,15 @@ fn main() {
             }
         }
         "activation-product" => activation_product(&a[2..]),
+        "activation-json" => {
+            let evaluations =
+                activation::parse_file(&a[2], None).expect("parse activation evaluation");
+            let values: Vec<_> = evaluations.iter().map(evaluation_json).collect();
+            println!(
+                "{}",
+                serde_json::to_string(&values).expect("serialize activation evaluation")
+            );
+        }
         "resonance-rml" => resonance_rml(&a[2..]),
         "resonance" => {
             let text = std::fs::read_to_string(&a[2]).expect("read resonance file");
@@ -1209,7 +1436,7 @@ fn main() {
         }
         "provenance" => println!("{}", composition::provenance()),
         _ => eprintln!(
-            "usage: dump decay|spectra|spectra-summary|activation|activation-product|fission-yields|fission-effective|resonance-rml|library|composition|material|provenance ..."
+            "usage: dump decay|spectra|spectra-summary|activation|activation-json|activation-product|fission-yields|fission-effective|resonance-rml|library|composition|material|provenance ..."
         ),
     }
 }

@@ -758,3 +758,36 @@
   missing eliminated capture channel and a background extension all fail without publishing an output/index pair.
 - Two complete control runs produced byte-identical evidence, SHA-256 `c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690`.
   **P10-G2 PASS**; P10 remains open, with G1 and the complete G7 builds still required.
+
+## 33 — 2026-08-27 — P10 G1 Rust builder, parity and determinism gate complete
+- The first bounded EAF comparison found 139/139 identical Fe-56 row identities but also exposed domains where the
+  frozen legacy-builder comparison contradicted P10's exact interpolation and finite-support rules. In particular,
+  the old Python library invents `9.412500886145632e-3 b` in the 60–65 MeV MT=32 group after the source ends at
+  exactly 60 MeV; the independent integral and Rust are both exactly zero. Amendment C records the repaired domain
+  and an objective IEEE-754 forward-error exclusion for the old cancellation-prone lin-lin primitive. It is
+  append-only and hashed as `afa3f1ab58236a36148fe51265cc1d3fe2ae1de31b9b4a9a4a18d0fdd45145de`.
+- A separate Python reader agrees with Rust on all 231,816 retained MF=1/2/3/6/8/9/10 fields across the 12 pinned
+  neutron, EAF and charged-particle evaluations. There are zero source-decimal mismatches; binary parsing differs by
+  at most two ULP. The independent exact EAF oracle scores 4,494 groups with a worst tolerance fraction of `0.0708`,
+  verifies 87,390 groups outside direct-table support are exactly zero, and materializes only 1,597,072 bytes of
+  bounded target slices. The accidental exploratory load of the 44 MB compressed full legacy NPZ was killed by the
+  host, changed no repository file, and is not evidence.
+- On the unchanged legacy domain, 3,849 EAF groups in 130 rows pass at a worst tolerance fraction of `0.0844`; all
+  784 excluded scored groups are reason-coded and remain covered by exact controls. The previously recorded seeded
+  neutron control contributes another 928 rows and 188,327 eligible groups, all passing.
+- The determinism campaign builds W-186, Ag-107, Fr-226 and Rb-94 from two fresh checkpoint directories and reuses
+  each with the opposite worker count. All four one/four-worker fresh/cached NPZs and indexes are byte-identical
+  (`efc5130480b8ea295b6d7e49b3536a719b054287754ec6e195032d0d19707ffd` and
+  `89060ca0d5dbb560d7e27f4eb6bbadb0afca2148a172c1f4c0f43a4397374d6e`). A source-only mutation reuses exactly
+  three of four checkpoints and changes only that target's recorded source hash; a grid-density change invalidates
+  only its single-target checkpoint. Peak four-worker RSS is 76,760 KiB under a 1 GiB total address-space cap.
+- That campaign caught a real cache-index defect: Rb-94 AWR could round from the exact binary64 represented by
+  `105.98700000000001` to its adjacent value after a JSON checkpoint round trip, while the physics NPZ stayed
+  identical. Checkpoint schema 2 now stores and restores the exact AWR and evaluation-temperature bits. Duplicate
+  target diagnostics also name both files. Regression tests cover both repairs.
+- Invalid numeric field, count, interpolation law, tail, truncation, duplicate section, duplicate target, NSUB,
+  source mutation and unsupported MF=2 plants all fail with applicable file/MF/MT context and publish no final pair.
+  Evidence is `results/g1_p10_builder.json`, SHA-256
+  `8f5d7317addac0ae8dd89cea7035bb276fdd79182877df2c51a5fc3053ec688d`. Rustfmt, workspace/all-target/all-feature
+  check, strict Clippy, all 45 Rust tests and the undeclared-dependency audit pass. **P10-G1 PASS** under Amendment C;
+  P10 remains open only for the complete G7 builds and close documentation.
