@@ -1,0 +1,400 @@
+{
+ "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+ "builds": {
+  "alpha": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cache": {
+    "directory": "alpha-n-p10",
+    "metadata_files": 2850,
+    "pass": true,
+    "payload_files": 2850,
+    "source_hashes_unique": true,
+    "source_inventory_matches": true,
+    "validation_mismatches": []
+   },
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "group_boundary_sha256": "60d0553a39eea8bf219c3f64a7204c14563bf815fcf8c8a20cdd8f858ab4334c",
+   "index_sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038",
+   "npz_sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915",
+   "pass": true,
+   "profile": {
+    "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+    "index_sha256": "551b22a8f799e963ac62004a18bdd8052362a243518b336d69dc2de95a89f678",
+    "npz_sha256": "fd8e4377f035fb369b8b54118c552cac124d54d56e3b70cb829ae8ea36610d77",
+    "pass": true,
+    "rows": 165,
+    "targets": 1,
+    "time": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/a/a-Fe056.tendl /home/connoravila/nuclear-data/tendl-2025/builds/profiles/alpha.n.p10.npz --format tendl --projectile alpha --groups fispact-162 --temperature-K 0 --workers 1 --cache /home/connoravila/nuclear-data/tendl-2025/cache/profile-alpha-n-p10",
+     "command_matches": true,
+     "elapsed": "0:00.07",
+     "exit_status": 0,
+     "file": "alpha.n.p10.time",
+     "maximum_rss_kib": 9580,
+     "pass": true,
+     "sha256": "3047bb3f9ef8a8a1b06a4d3f241c41bdfb71378cb1c38f2be5118f641405265c",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "provenance": {
+    "archive_sha256": "25520f6eb42ce024c065f85255277ed169b2f826e9fc24f5d093c99d5c60e018",
+    "detailed_manifest_sha256": "e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf",
+    "file_manifest_sha256": "ca8bd5ea75d3cc3590a9f4115d94ec54f2cc110a09275b782ace3d608b1b7c81",
+    "pass": true
+   },
+   "rows": 489279,
+   "source_hash_mismatches": [],
+   "targets": 2850,
+   "times": {
+    "cached": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/a /home/connoravila/nuclear-data/tendl-2025/builds/full/alpha.n.p10.cached.npz --format tendl --projectile alpha --groups fispact-162 --temperature-K 0 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/alpha-n-p10",
+     "command_matches": true,
+     "elapsed": "1:02.43",
+     "exit_status": 0,
+     "file": "alpha.n.p10.cached.time",
+     "maximum_rss_kib": 1303360,
+     "pass": true,
+     "sha256": "2a1e637da1ff65633cdb14b4142bfbb860487309335e57a7f66daf5850b53927",
+     "swaps": 0,
+     "terminated": false
+    },
+    "fresh": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/a /home/connoravila/nuclear-data/tendl-2025/builds/full/alpha.n.p10.npz --format tendl --projectile alpha --groups fispact-162 --temperature-K 0 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/alpha-n-p10",
+     "command_matches": true,
+     "elapsed": "1:39.45",
+     "exit_status": 0,
+     "file": "alpha.n.p10.fresh.time",
+     "maximum_rss_kib": 1649180,
+     "pass": true,
+     "sha256": "8d41f8c2215c97e9ce8a0c705f8a26c98b57784e7e396792daad4aeeccdfe129",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "unsupported_ledger_entries": []
+  },
+  "deuteron": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cache": {
+    "directory": "deuteron-n-p10",
+    "metadata_files": 2850,
+    "pass": true,
+    "payload_files": 2850,
+    "source_hashes_unique": true,
+    "source_inventory_matches": true,
+    "validation_mismatches": []
+   },
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "group_boundary_sha256": "60d0553a39eea8bf219c3f64a7204c14563bf815fcf8c8a20cdd8f858ab4334c",
+   "index_sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707",
+   "npz_sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae",
+   "pass": true,
+   "profile": {
+    "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+    "index_sha256": "1b56b2b47b89c4b3e7fda997c0406191336dcc5e8270314d9924d35dd419bee1",
+    "npz_sha256": "4f5d89b2dab3ea9281b5a9b0c2a849aa5da5e12f259fe3ca5b5e8ddded42906a",
+    "pass": true,
+    "rows": 175,
+    "targets": 1,
+    "time": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/d/d-Fe056.tendl /home/connoravila/nuclear-data/tendl-2025/builds/profiles/deuteron.n.p10.npz --format tendl --projectile deuteron --groups fispact-162 --temperature-K 0 --workers 1 --cache /home/connoravila/nuclear-data/tendl-2025/cache/profile-deuteron-n-p10",
+     "command_matches": true,
+     "elapsed": "0:00.14",
+     "exit_status": 0,
+     "file": "deuteron.n.p10.time",
+     "maximum_rss_kib": 10664,
+     "pass": true,
+     "sha256": "f9890a0c54b266c08972501a2f9a078f9fee8522cfe46ded0c356e43019c2a82",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "provenance": {
+    "archive_sha256": "34f459aea0b5ac9c40820c88d898618f926ec3b52858a5393e42d57707ec5f1c",
+    "detailed_manifest_sha256": "afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9",
+    "file_manifest_sha256": "feaa774185fb215e45c6fdf6bb26670bfeae9e4263386cfcccd4b7abcd3fa47f",
+    "pass": true
+   },
+   "rows": 548706,
+   "source_hash_mismatches": [],
+   "targets": 2850,
+   "times": {
+    "cached": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/d /home/connoravila/nuclear-data/tendl-2025/builds/full/deuteron.n.p10.cached.npz --format tendl --projectile deuteron --groups fispact-162 --temperature-K 0 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/deuteron-n-p10",
+     "command_matches": true,
+     "elapsed": "1:15.48",
+     "exit_status": 0,
+     "file": "deuteron.n.p10.cached.time",
+     "maximum_rss_kib": 1459044,
+     "pass": true,
+     "sha256": "6f8d5fa32ce172badea0ac5174ef796eb9436b886b718907238c8941ecde0d78",
+     "swaps": 0,
+     "terminated": false
+    },
+    "fresh": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/d /home/connoravila/nuclear-data/tendl-2025/builds/full/deuteron.n.p10.npz --format tendl --projectile deuteron --groups fispact-162 --temperature-K 0 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/deuteron-n-p10",
+     "command_matches": true,
+     "elapsed": "2:05.14",
+     "exit_status": 0,
+     "file": "deuteron.n.p10.fresh.time",
+     "maximum_rss_kib": 1845148,
+     "pass": true,
+     "sha256": "3104beac1520279384ec8f961c638e93bb393e8608c39b8d2220c8f8ebdf2a44",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "unsupported_ledger_entries": []
+  },
+  "eaf": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cache": {
+    "directory": "eaf-n-p10",
+    "metadata_files": 816,
+    "pass": true,
+    "payload_files": 816,
+    "source_hashes_unique": true,
+    "source_inventory_matches": true,
+    "validation_mismatches": []
+   },
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+   "index_sha256": "601fc95b3b8e89a180ee2dbd10a25406a2b8a6a97fe5555d483bbba607bf386d",
+   "npz_sha256": "5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2",
+   "pass": true,
+   "profile": {
+    "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+    "index_sha256": "d679bf0c17cb08b4f015dacb2b17c24223e7867f977c3dd8286636a188415e2c",
+    "npz_sha256": "475354d949bb61c62236cf13f027836827a94df50650ce4efd0310a6dcd7e49e",
+    "pass": true,
+    "rows": 139,
+    "targets": 1,
+    "time": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/eaf-2010/files/n_2631_26-FE-56.dat /home/connoravila/nuclear-data/tendl-2025/builds/profiles/eaf.n.p10.npz --format eaf --projectile neutron --groups fispact-709 --temperature-K 293.6 --workers 1 --cache /home/connoravila/nuclear-data/tendl-2025/cache/profile-eaf-n-p10",
+     "command_matches": true,
+     "elapsed": "0:00.19",
+     "exit_status": 0,
+     "file": "eaf.n.p10.time",
+     "maximum_rss_kib": 10260,
+     "pass": true,
+     "sha256": "30d89be966edb51a8b61900906d8e3e05291ea85c5548f5ac108b74a17766060",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "provenance": {
+    "file_manifest_sha256": "87baeeef62650cdf8791bd3f198c906b1e6787eb7017a3ec4b02d4cee88bc15e",
+    "pass": true,
+    "source_manifest_sha256": "5cd73807a39dbc2793bcd87bf0fea23338178d38d80b5848bf6ce2e28d8e0e40"
+   },
+   "rows": 115702,
+   "source_hash_mismatches": [],
+   "targets": 816,
+   "times": {
+    "cached": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/eaf-2010/files /home/connoravila/nuclear-data/tendl-2025/builds/full/eaf.n.p10.cached.npz --format eaf --projectile neutron --groups fispact-709 --temperature-K 293.6 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/eaf-n-p10",
+     "command_matches": true,
+     "elapsed": "0:59.07",
+     "exit_status": 0,
+     "file": "eaf.n.p10.cached.time",
+     "maximum_rss_kib": 1292032,
+     "pass": true,
+     "sha256": "ff65f6dccc083fb4d108667c4492a7a3e4d5ed7346e688e4c82b1ce66493d8e1",
+     "swaps": 0,
+     "terminated": false
+    },
+    "fresh": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/eaf-2010/files /home/connoravila/nuclear-data/tendl-2025/builds/full/eaf.n.p10.npz --format eaf --projectile neutron --groups fispact-709 --temperature-K 293.6 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/eaf-n-p10",
+     "command_matches": true,
+     "elapsed": "1:21.74",
+     "exit_status": 0,
+     "file": "eaf.n.p10.fresh.time",
+     "maximum_rss_kib": 1404044,
+     "pass": true,
+     "sha256": "30cefccfa645dbdb9fcb3f27b6f36bd0d8a7e503ebb2ca08035a28b106101c85",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "unsupported_ledger_entries": []
+  },
+  "neutron": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cache": {
+    "directory": "neutron-n-p10",
+    "metadata_files": 2850,
+    "pass": true,
+    "payload_files": 2850,
+    "source_hashes_unique": true,
+    "source_inventory_matches": true,
+    "validation_mismatches": []
+   },
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "group_boundary_sha256": "a9c2fc80ec0e3a58abb5dea269cd68720429a087e48ea703f1c42b6ba57ab875",
+   "index_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "npz_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "pass": true,
+   "profile": {
+    "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+    "index_sha256": "655426b483a17cc75425059fa2e0ba1fe3894a9d1d9cbe64d65cee79fd314561",
+    "npz_sha256": "5939355f00e90b76a1ccfe267f9e65972bc4e8b055f4432dc10c98bfae446dbf",
+    "pass": true,
+    "rows": 50,
+    "targets": 1,
+    "time": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Fe056.tendl /home/connoravila/nuclear-data/tendl-2025/builds/profiles/neutron.n.p10.npz --format tendl --projectile neutron --groups fispact-709 --temperature-K 293.6 --workers 1 --cache /home/connoravila/nuclear-data/tendl-2025/cache/profile-neutron-n-p10",
+     "command_matches": true,
+     "elapsed": "0:17.39",
+     "exit_status": 0,
+     "file": "neutron.n.p10.time",
+     "maximum_rss_kib": 28828,
+     "pass": true,
+     "sha256": "22c82cee4d28ed3ee497211807b6fbf092afc69bd09b46876946313dd7e45f21",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "provenance": {
+    "archive_sha256": "e547527688506cbe09813364dcefa2aed11f474139bfa129d7cd4ca24fae21fa",
+    "detailed_manifest_sha256": "a6d17f996153d2671c0c51bfb6303e2a87a5af03e0696bfb34d668a31dbfb2a2",
+    "file_manifest_sha256": "b1ea3fe043ec243e2df0a3894206872c2ce18c3b4541c19b35029b3ed3e7b15c",
+    "official_detailed_manifest_sha256": "b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67",
+    "pass": true,
+    "repairs": [
+     {
+      "energy_eV": 1000000,
+      "line": 781,
+      "mat": 8237,
+      "mf": 3,
+      "mt": 1,
+      "original_field": "NaN",
+      "replacement_field": "4.925328-7",
+      "rule": "carry forward the immediately preceding finite left-branch value"
+     },
+     {
+      "energy_eV": 1000000,
+      "line": 1613,
+      "mat": 8237,
+      "mf": 3,
+      "mt": 3,
+      "original_field": "NaN",
+      "replacement_field": "4.925328-7",
+      "rule": "carry forward the immediately preceding finite left-branch value"
+     }
+    ]
+   },
+   "rows": 167735,
+   "source_hash_mismatches": [],
+   "targets": 2850,
+   "times": {
+    "cached": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/n-working /home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10.cached.npz --format tendl --projectile neutron --groups fispact-709 --temperature-K 293.6 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/neutron-n-p10",
+     "command_matches": true,
+     "elapsed": "1:38.63",
+     "exit_status": 0,
+     "file": "neutron.n.p10.cached.time",
+     "maximum_rss_kib": 1886980,
+     "pass": true,
+     "sha256": "1176f6d6c134f6736f7484c2e64348068ab84618d7206e31c0b6e1a6ff25dcc1",
+     "swaps": 0,
+     "terminated": false
+    },
+    "fresh": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/n-working /home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10.npz --format tendl --projectile neutron --groups fispact-709 --temperature-K 293.6 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/neutron-n-p10",
+     "command_matches": true,
+     "elapsed": "2:34:58",
+     "exit_status": 0,
+     "file": "neutron.n.p10.fresh.time",
+     "maximum_rss_kib": 2325904,
+     "pass": true,
+     "sha256": "b062495f8d7278ae1610e320164e53682d480c75c131d00996ccc0c1eab4f72f",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "unsupported_ledger_entries": []
+  },
+  "proton": {
+   "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+   "cache": {
+    "directory": "proton-n-p10",
+    "metadata_files": 2850,
+    "pass": true,
+    "payload_files": 2850,
+    "source_hashes_unique": true,
+    "source_inventory_matches": true,
+    "validation_mismatches": []
+   },
+   "cached_identity": true,
+   "convergence_ledger_entries": [],
+   "group_boundary_sha256": "60d0553a39eea8bf219c3f64a7204c14563bf815fcf8c8a20cdd8f858ab4334c",
+   "index_sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945",
+   "npz_sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790",
+   "pass": true,
+   "profile": {
+    "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+    "index_sha256": "dbe9494b6713f08c5da1b49ccf0e489ca7cce128cc68350b35bbca40d1ddbc87",
+    "npz_sha256": "4d07cfc2e3c76a4573147600d02200f441d9bcb8134e89b9ab2c2c5e0114ed96",
+    "pass": true,
+    "rows": 166,
+    "targets": 1,
+    "time": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/p/p-Fe056.tendl /home/connoravila/nuclear-data/tendl-2025/builds/profiles/proton.n.p10.npz --format tendl --projectile proton --groups fispact-162 --temperature-K 0 --workers 1 --cache /home/connoravila/nuclear-data/tendl-2025/cache/profile-proton-n-p10",
+     "command_matches": true,
+     "elapsed": "0:00.07",
+     "exit_status": 0,
+     "file": "proton.n.p10.time",
+     "maximum_rss_kib": 9636,
+     "pass": true,
+     "sha256": "b21625c56fb39e9751e951d7614cd9fd744bdc7111b9a9f0d8ac84143c47508a",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "provenance": {
+    "archive_sha256": "49340a03b0d9ac86598c6b710c0bc2ec0babd3fa0717a9ff1d75f042fccc5b0b",
+    "detailed_manifest_sha256": "98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef",
+    "file_manifest_sha256": "0458a6c20e0b2fbb23934d2672304d210ceef74b0fc2807e9d9271c9aacf6ffd",
+    "pass": true
+   },
+   "rows": 528057,
+   "source_hash_mismatches": [],
+   "targets": 2850,
+   "times": {
+    "cached": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/p /home/connoravila/nuclear-data/tendl-2025/builds/full/proton.n.p10.cached.npz --format tendl --projectile proton --groups fispact-162 --temperature-K 0 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/proton-n-p10",
+     "command_matches": true,
+     "elapsed": "1:10.26",
+     "exit_status": 0,
+     "file": "proton.n.p10.cached.time",
+     "maximum_rss_kib": 1404844,
+     "pass": true,
+     "sha256": "d6275e5ca3b9b92155ef6a8ac7f85e1380ef3b4dc43217fb126eb3797c8d5c75",
+     "swaps": 0,
+     "terminated": false
+    },
+    "fresh": {
+     "command": "prlimit --as=4294967296 -- target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/p /home/connoravila/nuclear-data/tendl-2025/builds/full/proton.n.p10.npz --format tendl --projectile proton --groups fispact-162 --temperature-K 0 --workers 4 --cache /home/connoravila/nuclear-data/tendl-2025/cache/proton-n-p10",
+     "command_matches": true,
+     "elapsed": "1:53.68",
+     "exit_status": 0,
+     "file": "proton.n.p10.fresh.time",
+     "maximum_rss_kib": 1768056,
+     "pass": true,
+     "sha256": "b63ffb756910b788c25fe0a3ff5d5a88538e0656406e3e1198755083cee966c0",
+     "swaps": 0,
+     "terminated": false
+    }
+   },
+   "unsupported_ledger_entries": []
+  }
+ },
+ "gate": "P10-G7",
+ "pass": true,
+ "schema": "actinv-p10-g7-builds-1"
+}

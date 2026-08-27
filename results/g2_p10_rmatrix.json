@@ -9,7 +9,7 @@
     "temperature": "294K"
   },
   "address_space_limit_bytes": 2147483648,
-  "binary_sha256": "648c647e5c050c54252f907039fc57a9c9c2365d59eeed410422d464c72660a1",
+  "binary_sha256": "6843297acc03e7231c14c3b9ea1e318e7332646f866f1c5e1402f5edb3408819",
   "ccfe_709": {
     "groups_compared_at_or_above_1e-6_b": 450,
     "groups_overlapping_rml": 450,
@@ -25,7 +25,7 @@
     "worst_rust_b": 8.328414662521086
   },
   "control_sha256": "7df5a61dc28f5a9f0a847c0d40484f8e4ccd6aa81f484e9045c4823343b7d6d3",
-  "dump_sha256": "774043c8a4f77ef60de753934c6b67f6f72a946eba54b5f24254e400ef259ce2",
+  "dump_sha256": "cb4173a83169a57407832bcb0c2bd5f9f9ac14da2673409e82570e2b3b868acf",
   "flat_lethargy_integral": {
     "ace_b_lethargy": 4260.992518865843,
     "range_eV": [
@@ -39,8 +39,8 @@
   "gate": "P10-G2",
   "generated": {
     "convergence_flags": 0,
-    "index_sha256": "7d8f6b277f465ea986df4152aa71ef8f929dccb92add110d5af59770af71eda7",
-    "library_sha256": "a42ee271fa6c59a71d49a1c61e5e59cd9358afd164783f12770d2e2888c68d44",
+    "index_sha256": "24cb0145dea787ddcaa1ce4fdaff609a4f8e4c2f5097e1730d38d79736f77ca4",
+    "library_sha256": "91ed6c9b98ba688a7b778c948423ab45683e2aafec68733302dbba68ced1d951",
     "rows": 28,
     "target_ledger": [
       "MT102: raw 0 K MF=2+MF=3 reconstructed on 154320 points and processed to 293.6 K on 93814 points",
@@ -100,11 +100,11 @@
     "backgrounds": 0,
     "channels": 6,
     "comparison": {
-      "binary_representation_differences": 130,
+      "binary_representation_differences": 0,
       "exact_at_endf_source_precision": true,
       "fields_compared": 615,
       "float_fields": 567,
-      "maximum_ulp_distance": 1.0,
+      "maximum_ulp_distance": 0.0,
       "mismatch_examples": [],
       "source_decimal_mismatches": 0
     },

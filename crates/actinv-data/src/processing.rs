@@ -11,7 +11,7 @@ use rayon::prelude::*;
 use std::collections::BTreeSet;
 
 const LINEARIZATION_TOLERANCE: f64 = 2e-4;
-const MAX_LINEARIZATION_PASSES: usize = 16;
+const MAX_LINEARIZATION_PASSES: usize = 20;
 const MAX_GRID_POINTS: usize = 10_000_000;
 const ULTRA_NARROW_RATIO: f64 = 1e-4;
 const ULTRA_NARROW_ZERO_K_REFERENCE_K: f64 = 293.6;
@@ -1520,6 +1520,22 @@ mod tests {
         .unwrap();
         assert_eq!(energy, vec![1.0, 2.0, 2.0, 4.0]);
         assert_eq!(sigma, vec![1.0, 1.0, 0.0, 0.0]);
+    }
+
+    #[test]
+    fn linearization_reaches_a_deep_seeded_kink() {
+        let threshold = 349_525.0 / 524_288.0;
+        let evaluate = |energy: f64| (energy - threshold).max(0.0);
+        let (energy, _, passes) = linearize(
+            vec![0.0, 1.0],
+            vec![evaluate(0.0), evaluate(1.0)],
+            |energies| Ok(energies.iter().map(|&value| evaluate(value)).collect()),
+        )
+        .unwrap();
+        assert_eq!(passes, 19);
+        assert!(energy
+            .iter()
+            .any(|value| value.to_bits() == threshold.to_bits()));
     }
 
     #[test]

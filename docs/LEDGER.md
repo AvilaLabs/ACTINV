@@ -5,6 +5,7 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 
 ## Model and material
 
+- `projectile` — present for proton, deuteron and alpha results; omission is the byte-compatible neutron identity.
 - `mode`, `max_burnup_fraction`, `max_burnup_optical_depth`, `max_burnup_nuclide` — selected trace/coupled
   formulation and the largest initial-nuclide reaction loss over multiplier-weighted exposure used by `auto`.
 - `composition_basis`, `composition_input_total`, `composition_weight_percent_total`,
@@ -86,5 +87,7 @@ total neutron flux. A ledger with entries is not intrinsically a bad result; it 
 machine-readable rather than hidden.
 
 `schedule` records segment count, total multiplier-weighted seconds and physical fluence. The corresponding
-`steps[]` fields are cumulative elapsed `t_s`, current multiplier `flux`, `flux_weighted_time_s` and `fluence_n_cm2`,
-so decay gaps and pulse normalization remain independently auditable.
+`steps[]` fields are cumulative elapsed `t_s`, current multiplier `flux`, `flux_weighted_time_s` and either neutron
+`fluence_n_cm2` or charged-projectile `fluence_particles_cm2`, so decay gaps and pulse normalization remain
+independently auditable. Charged prepared runs, mesh headers/results and certificates repeat the projectile; a
+projectile, group, temperature or source-hash mismatch fails before matrix assembly.

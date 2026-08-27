@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "actinv-cli"
-version = "0.2.0"
+version = "0.5.0"
 dependencies = [
  "actinv-core",
  "actinv-data",
@@ -14,7 +14,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-core"
-version = "0.2.0"
+version = "0.5.0"
 dependencies = [
  "actinv-data",
  "hdf5-pure",
@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-data"
-version = "0.2.0"
+version = "0.5.0"
 dependencies = [
  "libm",
  "num-complex",

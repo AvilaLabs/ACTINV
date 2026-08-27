@@ -1,0 +1,58 @@
+# ACTINV P10 — session close, 2026-08-27
+
+**Protocol:** `protocols/ACTINV-P10_PROTOCOL.md`
+(`74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27`).
+**Verdict (`controls/check_p10.py`): P10-CONDITIONAL** — all seven gates pass; the append-only repair history is
+retained in Amendments A–R and each amendment hash is frozen in `protocols/protocol_hash.txt`.
+
+| gate | result |
+|---|---|
+| G1 strict Rust builder | PASS — 231,816 retained fields across 12 evaluations match at 0 ULP; numerical parity, one/four-worker and fresh/cached identity, source/option checkpoint invalidation, memory bound and ten rejection plants pass |
+| G2 R-matrix-limited W-186 | PASS — 2 particle pairs, 3 spin groups and 175 resonances match exactly; CCFE-709 maximum relative `1.006e-3`; flat-lethargy integral `1.056e-4` |
+| G3 Ag-107 unresolved | PASS — NJOY group capture maximum `1.564e-4`; independent high-order quadrature maximum `2.051e-11`; LSSF background identities pass |
+| G4 temperature/ultra-narrow | PASS — exact/invariant temperature controls, 52 Fr-226 lines, density maximum `8.793e-5`, zero flags, seeded regression and profile pass |
+| G5 charged particles | PASS — TENDL-2025 official-residual maximum `4.476e-7`; amended processed-row maximum `2.253e-3` under `2.5e-3`; fixed spectra remain under `2e-3`; malformed/projectile plants fail closed |
+| G6 runtime projectile contract | PASS — CLI/Python/prepared/mesh identity for p/d/alpha, analytic maximum `1.644e-14`, certificates rematch and omitted-projectile neutron output is unchanged after normalizing only the intentional solver-semver field |
+| G7 complete builds/provenance/regression | PASS — five libraries, 12,216 targets, 1,849,479 rows; fresh/cached byte identity, zero errors/fallbacks/flags; exhaustive EAF, source/precision controls, P5–P9 verdicts, CI subset and exact Rust gates pass |
+
+## Delivered
+
+Production ENDF-6 library construction now lives in `actinv-data` and is exposed as `actinv build-library`. Numeric
+and structural parsing is fallible; source/options/group/fingerprint-addressed checkpoints are atomically published
+and revalidated; canonical output is independent of worker count and cache reuse. Python readers remain independent
+controls rather than production dependencies.
+
+The neutron path adds limited R-matrix reconstruction, infinite-dilution unresolved averages, requested-temperature
+SIGMA1 broadening and certified analytic treatment for isolated ultra-narrow lines. The charged path adds correct
+incident-particle residual arithmetic and MF=6/MT=5 residual yields. Projectile identity and generic fluence now
+survive ordinary, prepared, Python and mesh paths while omitted projectile preserves historical neutron bytes.
+
+The final builder fingerprint is
+`7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43`. Complete external output identities are:
+
+| corpus | targets | rows | output NPZ SHA-256 |
+|---|---:|---:|---|
+| TENDL-2025 neutron | 2,850 | 167,735 | `ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44` |
+| TENDL-2025 proton | 2,850 | 528,057 | `0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790` |
+| TENDL-2025 deuteron | 2,850 | 548,706 | `8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae` |
+| TENDL-2025 alpha | 2,850 | 489,279 | `ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915` |
+| EAF-2010 neutron | 816 | 115,702 | `5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2` |
+
+No raw nuclear data, cache checkpoint or generated bulk library enters the repository. Archive/file-manifest hashes,
+index hashes, resource profiles and resume evidence are in `results/g7_p10_builds.json` and
+`docs/P10_G7_EXECUTION.md`.
+
+## Repair record
+
+The amendments preserve each premise/implementation defect encountered by the frozen gates rather than rewriting the
+protocol. The final corpus passes after strict parsing/product/endpoint/precision repairs, bounded Pb-208 upstream
+numeric normalization, Reich–Moore cancellation handling, EAF binary64 controls, the corpus-bounded Co-58 pass-20
+linearization cap, independent G4 effective-width alignment, forward-compatible/coherent P6 version checking, and
+normalization of the intentionally changed solver-semver certificate field in the legacy neutron comparison.
+No `unsafe`, ownership/concurrency redesign, relaxed production physics tolerance, unbounded allocation, raw data or
+silent fallback was introduced. Amendment B alone changes a validation row tolerance, from `2e-3` to `2.5e-3`, after
+the independently parsed identical source proved the official processed-row rounding difference; fixed-spectrum and
+raw-evaluation tolerances remain unchanged.
+
+The workspace and Python package advance coherently to v0.5.0. This is a technical milestone close, not a crate/wheel
+publication or safety/licensing claim. P11 remains unopened and unhashed.

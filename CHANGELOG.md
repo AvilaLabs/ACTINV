@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v0.5.0 — 2026-08-27
+
 **Added**
 
 - Explicit ground-state/isomer material keys across weight-percent, atom-fraction and literal atoms-per-gram bases,
@@ -12,12 +14,24 @@
   histories, through ordinary and mesh runs.
 - Independent P9 controls against dense exponentials, OpenMC CRAM48, ALARA 2.9.2 and the CoNDERC U-235 Dickens pulse
   and Yarnell 20,000 s decay-heat sets.
+- A strict, deterministic Rust ENDF-6 activation-library builder with content-addressed per-target checkpoints and
+  neutron, proton, deuteron and alpha runtime contracts.
+- R-matrix-limited resolved reconstruction, infinite-dilution `LSSF=0` unresolved averages, arbitrary-temperature
+  SIGMA1 broadening, analytic ultra-narrow lines and charged-particle MF=6 residual production.
+- Complete hash-pinned TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 builds: 12,216 targets and 1,849,479 rows,
+  all fresh/cached byte-identical with zero target errors, silent fallbacks or convergence flags.
+- Independent P10 controls against NJOY2016.79, FENDL ACE, official TENDL residual tables and official processed
+  FISPACT TENDL-2017 rows; no licensed FISPACT executable run is claimed.
 
 **Fixed**
 
 - Automatic trace/coupled selection now uses each initial isotope's reaction-loss optical depth over the complete
   multiplier-weighted schedule; non-unit pulse multipliers and cooling gaps can no longer be miscounted.
 - Scientific-notation durations such as `1e-8 s` no longer treat the exponent marker as a unit suffix.
+- Deep but bounded resonance linearization now admits the corpus-observed pass-19 Co-58 kink while retaining the
+  unchanged error tolerance and ten-million-point safety cap.
+- Rust and independent controls use NJOY component-effective Breit-Wigner widths consistently when evaluator `GT`
+  rounding differs from the component sum.
 
 ## v0.2.0 — 2026-08-26
 

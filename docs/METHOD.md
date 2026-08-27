@@ -1,14 +1,13 @@
 # Method
 
-**Problem.** Nuclide inventory under a neutron flux spectrum and during cooling: dN/dt = A N, A = decay matrix + Σ_reactions
+**Problem.** Nuclide inventory under a particle flux spectrum and during cooling: dN/dt = A N, A = decay matrix + Σ_reactions
 rate matrix, rates = σ̄ φ with σ̄ the spectrum-collapsed cross section per (target, reaction, product, isomer).
 
-**Data.** Activation cross sections: EAF-2010 (816 targets, every channel separate, MF=9/10 isomer branching), parsed by
-our own ENDF-6 reader and pre-collapsed to the FISPACT 709-group structure with flat-lethargy weighting. TENDL-2023
-support (resolved-resonance reconstruction — SLBW, MLBW, Reich-Moore — and SIGMA1 Doppler broadening) is implemented
-in `controls/resonance.py` and `controls/doppler.py`; the R-matrix-limited formalism (LRF=7) and unresolved ranges
-with LSSF=0 are reported as unsupported, never silently approximated. Decay data: ENDF/B-VIII.0 primary, JEFF-3.3
-fallback, source recorded per nuclide.
+**Data.** The production Rust path in `actinv-data` strictly reads ENDF-6 and deterministically builds EAF-2010 and
+TENDL activation libraries. Neutrons use CCFE-709 and a requested temperature; proton, deuteron and alpha use
+CCFE-162 at 0 K. Supported neutron reconstruction includes SLBW, MLBW, Reich–Moore, R-matrix-limited, unresolved
+infinite-dilution averages and SIGMA1 broadening. Independent Python/NJOY/OpenMC readers remain controls, not runtime
+dependencies. Decay data are ENDF/B-VIII.0 primary with a JEFF-3.3 fallback, with source recorded per nuclide.
 
 **Solver.** CRAM-16 (Pusa 2016 coefficients, incomplete-partial-fraction recurrence) with our own sparse complex LU
 (Gilbert–Peierls, partial pivoting, Smith division). Two prunings: reachable-set (exact) and rate-significance (bounded:
@@ -16,6 +15,31 @@ a forward bound on atoms that could reach each nuclide; dropped nuclides and the
 
 **Trace activation.** When burn-up is negligible (recorded per run), the composition is a constant source through a unit
 state and only products are solved — CRAM's absolute round-off is then relative to the product inventory, not the bulk.
+
+## Activation-library construction (P10)
+
+`actinv build-library` accepts one evaluation or a directory ordered by filename bytes. It validates fixed-width
+records, numeric fields, section counts/tails, interpolation laws, projectile metadata and duplicate targets before
+publishing. Each target checkpoint is addressed by the source hash, normalized options, group-boundary hash and Rust
+builder fingerprint; final rows are sorted and the NPZ/index pair is canonical, so worker count and cache reuse do not
+change bytes.
+
+Neutron pointwise data start from the raw 0 K evaluation. Resolved SLBW/MLBW/Reich–Moore and limited R-matrix ranges
+are reconstructed; `LSSF=0` unresolved ranges add infinite-dilution elastic/capture/fission/competitive averages to
+MF=3, while `LSSF=1` retains the already averaged MF=3 values. Requested-temperature SIGMA1 broadening is exact at
+0 K and windowed at positive temperature. Finite-dilution self-shielding, probability tables and Bondarenko factors
+are not implemented or implied.
+
+Positive isolated lines whose natural width is at most `1e-4` of their Doppler width use a separately area-preserving
+analytic kernel. Other lines use adaptive linearization, with a ten-million-point cap and explicit convergence
+certificate. Cross sections are collapsed as
+
+`sigma_g = integral(sigma(E) dE/E) / ln(E_hi/E_lo)`.
+
+For charged-particle s30 evaluations, ordinary MF=3/9/10 production is combined with aggregate MF=6/MT=5 residual
+yields above 30 MeV. The incident projectile participates in residual arithmetic, multiple products/isomers are
+retained, and free emitted neutrons are ledgered rather than inserted as inventory nuclides. Any unsupported law fails
+that target with file/MF/MT context; production never substitutes a Python path or silent MF=3 fallback.
 
 ## Decay photons (P7)
 

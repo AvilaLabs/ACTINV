@@ -1,0 +1,34 @@
+{
+ "gate": "P10-G7 Rust quality",
+ "steps": [
+  {
+   "command": "cargo fmt --all -- --check",
+   "returncode": 0,
+   "stdout_tail": "",
+   "stderr_tail": "",
+   "pass": true
+  },
+  {
+   "command": "cargo check --workspace --all-targets --all-features",
+   "returncode": 0,
+   "stdout_tail": "",
+   "stderr_tail": "    Checking actinv-core v0.5.0 (<ROOT>/crates/actinv-core)\n    Checking actinv-cli v0.5.0 (<ROOT>/crates/actinv-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.15s",
+   "pass": true
+  },
+  {
+   "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "returncode": 0,
+   "stdout_tail": "",
+   "stderr_tail": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.08s",
+   "pass": true
+  },
+  {
+   "command": "cargo test --workspace --all-targets --all-features",
+   "returncode": 0,
+   "stdout_tail": "test builder::tests::inelastic_descriptors_validate_ground_and_metastable_before_ground_omission ... ok\ntest doppler::tests::one_over_v_is_invariant ... ok\ntest doppler::tests::zero_kelvin_is_identity_on_input_grid ... ok\ntest groups::tests::narrow_log_intervals_use_a_local_coordinate ... ok\ntest groups::tests::non_power_product_retains_adaptive_quadrature ... ok\ntest groups::tests::official_group_counts_and_order ... ok\ntest fission::tests::effective_yields_use_union_and_zero_for_absent_endpoint ... ok\ntest groups::tests::power_product_uses_the_exact_lethargy_antiderivative ... ok\ntest groups::tests::double_points_are_right_continuous ... ok\ntest groups::tests::power_product_respects_internal_factor_breakpoints ... ok\ntest processing::tests::distant_threshold_ordinate_does_not_hide_local_thermal_kink ... ok\ntest library::tests::truncated_fixed_width_arrays_fail_closed ... ok\ntest processing::tests::exact_discontinuity_records_both_one_sided_limits ... ok\ntest processing::tests::sharp_background_kink_gets_a_thermal_transition_grid ... ok\ntest processing::tests::linearization_reaches_a_deep_seeded_kink ... ok\ntest groups::tests::interpolation_laws_integrate_in_lethargy ... ok\ntest doppler::tests::high_energy_double_point_step_is_stable_and_monotone ... ok\ntest resonance::tests::hwang_samples_preserve_probability_and_declared_mean ... ok\ntest resonance::tests::omitted_fission_total_is_narrowly_accepted_and_reconstructed_from_components ... ok\ntest resonance::tests::reich_moore_far_tail_capture_avoids_total_elastic_cancellation ... ok\ntest resonance::tests::rml_extensions_and_reduced_widths_fail_closed ... ok\ntest builder::tests::resonance_only_capture_uses_an_explicit_zero_background ... ok\ntest resonance::tests::scalar_rml_capture_matches_breit_wigner_peak ... ok\ntest resonance::tests::unrelated_breit_wigner_total_mismatches_still_fail_closed ... ok\ntest resonance::tests::unresolved_cross_section_mesh_matches_unresr_refinement_rule ... ok\ntest resonance::tests::unresolved_interpolates_averaged_cross_sections_between_parameter_nodes ... ok\ntest library::tests::deterministic_npz_round_trip ... ok\ntest processing::tests::ultra_narrow_zero_k_collapse_preserves_area_and_product_factor ... ok\ntest groups::tests::many_interval_product_fallback_respects_group_tolerance ... ok\ntest groups::tests::narrow_product_fallback_uses_a_normalized_coordinate ... ok\ntest processing::tests::ultra_narrow_finite_temperature_uses_exact_delta_kernel ... ok\ntest processing::tests::ultra_narrow_range_edge_decomposition_is_finite ... ok\n\ntest result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.05s\n\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n",
+   "stderr_tail": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running unittests src/lib.rs (target/debug/deps/actinv_cli-360eb93e426e5da8)\n     Running unittests src/bin/actinv.rs (target/debug/deps/actinv-0fa44667ec0065e5)\n     Running unittests src/lib.rs (target/debug/deps/actinv_core-dd8aaf8085445f62)\n     Running unittests src/bin/cram_probe.rs (target/debug/deps/cram_probe-be8df46b51a8610d)\n     Running unittests src/bin/fission_probe.rs (target/debug/deps/fission_probe-cb2985676b0226fb)\n     Running unittests src/bin/flux_probe.rs (target/debug/deps/flux_probe-413ed746180919b0)\n     Running unittests src/bin/photon_probe.rs (target/debug/deps/photon_probe-f2bcb1d643aeb95e)\n     Running unittests src/bin/unit_probe.rs (target/debug/deps/unit_probe-68b5827609ae91a4)\n     Running unittests src/lib.rs (target/debug/deps/actinv_data-a08a332b15d4620f)\n     Running unittests src/bin/dump.rs (target/debug/deps/dump-6435debca947c526)",
+   "pass": true
+  }
+ ],
+ "pass": true
+}

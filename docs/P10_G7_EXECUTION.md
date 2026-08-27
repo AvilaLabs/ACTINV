@@ -87,3 +87,32 @@ representative unit and identifies whether parsing/collapse or neutron resonance
 An unsupported feature remains a fail-closed target error. It is diagnosed across the corpus before a scoped
 implementation change; any such change gets a regression test and invalidates old builder-fingerprint checkpoints
 by design.
+
+## Final execution record
+
+The final post-Amendment-N builder fingerprint is
+`7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43`. Each fresh/cached pair is byte-identical and
+all cache inventories, source manifests, options, group hashes and index links re-match. Times are `/usr/bin/time -v`
+wall clock under the recorded four-worker, 4 GiB address-space cap; RSS is the fresh-build maximum.
+
+| corpus | targets | rows | fresh / cached | fresh peak RSS KiB | NPZ SHA-256 |
+|---|---:|---:|---:|---:|---|
+| TENDL-2025 neutron | 2,850 | 167,735 | 2:34:58 / 1:38.63 | 2,325,904 | `ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44` |
+| TENDL-2025 proton | 2,850 | 528,057 | 1:53.68 / 1:10.26 | 1,768,056 | `0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790` |
+| TENDL-2025 deuteron | 2,850 | 548,706 | 2:05.14 / 1:15.48 | 1,845,148 | `8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae` |
+| TENDL-2025 alpha | 2,850 | 489,279 | 1:39.45 / 1:02.43 | 1,649,180 | `ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915` |
+| EAF-2010 neutron | 816 | 115,702 | 1:21.74 / 0:59.07 | 1,404,044 | `5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2` |
+
+Total: 12,216 targets and 1,849,479 rows, with zero target errors, unsupported fallback entries, convergence flags or
+swaps. The complete EAF control independently re-collapses all 816 targets and scores 2,787,099 unchanged points.
+
+Amendment N records the corpus-bounded Co-58 linearization-depth repair. Amendment O aligns the independent G4 width
+control with the previously frozen NJOY component-width semantics. Amendment P repairs the historical P6 version
+checker so later coherent semantic versions do not falsely regress P6; Amendment Q makes the separately rooted Rust
+extension crate part of that coherence check. Amendment R normalizes only that intentional solver-semver change in
+G6's legacy-result hash while requiring every other leaf to remain identical. All are hash-pinned in
+`protocols/protocol_hash.txt`; no frozen file was edited after hashing.
+
+The final G1–G7 evidence, P5–P9 verdicts, CI subset, clean-clone regeneration check and exact Rust quality commands are
+assembled by `controls/g7_p10_complete.py`. The checker-derived close is **P10-CONDITIONAL**, completing technical
+v0.5 without claiming finite-dilution self-shielding, a licensed FISPACT executable run, a tag or publication.

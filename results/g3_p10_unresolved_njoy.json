@@ -10,8 +10,8 @@
  "generated": {
   "njoy_input_sha256": "71f51cf8fb288cc3f574582d3412df1a334899a567b1b7d86ae463783bc9530e",
   "njoy_pendf_sha256": "f04147f65915f232d2c3ed638212f5affa3c2a8619a845efe25c214c168ae9b0",
-  "rust_library_sha256": "3a5b5a74cecce310da72d48a09831be56e66b7f8971e3a3703c301da10da8e89",
-  "rust_index_sha256": "8e3c3e1fe2a647e6bec556f4cf41fd58dbe1daa07e7c2009dcb0bb2a7843fbaa"
+  "rust_library_sha256": "5e59169eaeb59fc26d5eb20712f4e93c6124aec09013a0c22370daa27d0ddfc6",
+  "rust_index_sha256": "12b9ed3148a0bf4834962a00461ef0a239e6c5d85554e186558ce5f7562ccbd8"
  },
  "njoy": {
   "version": "2016.79",
@@ -44,7 +44,7 @@
  "rust_resonance_channels": {
   "elastic": {
    "minimum_b": 6.937607709959952,
-   "maximum_b": 7.439298341248595
+   "maximum_b": 7.439298341248594
   },
   "capture": {
    "minimum_b": 0.482898657514328,
@@ -56,7 +56,7 @@
   },
   "competitive": {
    "minimum_b": 0.0,
-   "maximum_b": 8.98077935269522e-19
+   "maximum_b": 8.980779352695221e-19
   }
  },
  "pointwise": {
@@ -70,11 +70,11 @@
   },
   "102": {
    "compared": 22,
-   "max_relative": 0.0001606634480082547,
-   "worst_input_index": 5,
-   "actual": 1.2468176497883916,
+   "max_relative": 0.00016066344800807664,
+   "worst_input_index": 4,
+   "actual": 1.2468176497883918,
    "reference": 1.247018,
-   "worst_energy_ev": 13940.000000000002
+   "worst_energy_ev": 13939.999999999998
   }
  },
  "capture_groups": {

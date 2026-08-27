@@ -122,11 +122,16 @@ PINNED = {
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_K.md": "22a6029aa817206ce52800d943aeadbbd8b9f4e02a9708149f8794860b5733c4",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_L.md": "d2f27d7fdb1765246bc67bacb1199c15dfe43e373fbb96d8691f355b214b2873",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_M.md": "cd6f73ff415a8b2a34049912766f0b1c838519ea3f0deff7e7bc856115ad0596",
-    ROOT / "results" / "g2_p10_rmatrix.json": "c48a81af97baa955aeb2913d138280b2e7301eed5660398dc6a131086028b690",
-    ROOT / "results" / "g3_p10_unresolved_njoy.json": "afbdf08dbd0b4545a74b2632b806f21feb374b8ee985e3a5b17aabcf54f4200f",
-    ROOT / "results" / "g3_p10_unresolved_quadrature.json": "4290a6c734639bfecc00e8a5fa0923cec6a7d1ff013e92639333e069d204354a",
-    ROOT / "results" / "g4_p10_temperature_narrow.json": "f504ef314b75cacdf15c5fcce35294ce1f5457d308c3509fd91d34295caa3a44",
-    ROOT / "results" / "g5_p10_charged.json": "7e5e48619d029449023efbb242e4b3507e2314d6195a3d358147666ab7860b58",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_N.md": "6f33ab8d4adc127440c97f5cb7d1393859e417e51716f198f2645eb8b74a15c3",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_O.md": "7be97e0613739765006026dccb2d03c645aaaba246dad60ef82de0ce95a11223",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_P.md": "48482941dd029660e0176f275cb353e967bf52885b24dbb787284c5d0d7f7480",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_Q.md": "c6b1aea580469409ff7890f99e9b6d68b98f5adcd4d66e2783e2893e7ece65d9",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_R.md": "51f524aba1b36ac6d50606bbd107a474a2a2b6311593c72e230d0bf2dd51dc11",
+    ROOT / "results" / "g2_p10_rmatrix.json": "5e289aa027fc22373704ba820123ac3cf31a95dfe515a8faed7c4bc62983d81f",
+    ROOT / "results" / "g3_p10_unresolved_njoy.json": "4516977dfa48c0f67d30468d4066bd117dc303196d32eff79d8c6e710216850e",
+    ROOT / "results" / "g3_p10_unresolved_quadrature.json": "cf99038cda1d0031f5ccb7e75e3799c8caf2eb518131b28feb8e6073505eabba",
+    ROOT / "results" / "g4_p10_temperature_narrow.json": "c80ce8b6381267c950c9609ee523a3a07ff72b28aebf2785babfdbe46ec6e509",
+    ROOT / "results" / "g5_p10_charged.json": "dc7daf0b45ae028405cbbca6ec977ab8ded11461f2969330ba6ae48bcd704b17",
 }
 
 

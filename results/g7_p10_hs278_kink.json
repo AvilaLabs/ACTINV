@@ -28,11 +28,11 @@
   }
  },
  "isolated_build": {
-  "builder_fingerprint": "2177d11f9423c23dc438537e2faa8652dcca222ca0fc52b99a0d1ec5cfe91956",
+  "builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
   "pass": true,
   "returncode": 0,
   "rows": 43,
-  "stderr_tail": "index -> /tmp/actinv-p10-hs278-fhxky7cw/hs278_index.json\n",
+  "stderr_tail": "index -> /tmp/actinv-p10-hs278-ozyeylod/hs278_index.json\n",
   "targets": 1
  },
  "pass": true,

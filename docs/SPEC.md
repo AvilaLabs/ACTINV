@@ -7,8 +7,9 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
 {
   "spec": "actinv-spec-1",
   "title": "FNS Fe, 5-minute irradiation",
+  "projectile": "neutron",
   "library": {
-    "path": "/data/actinv_tendl2023_709g.npz"
+    "path": "/data/actinv_tendl2025_n_709g.npz"
   },
   "decay": {
     "primary": "/data/endf-b-viii-0_decay.dat",
@@ -52,6 +53,7 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
 
 | field | meaning |
 |---|---|
+| `projectile` | `neutron`, `proton`, `deuteron` or `alpha`; omission preserves the historical neutron default. |
 | `library.path` | ACTINV `.npz` activation library; the adjacent `<stem>_index.json` is also required. |
 | `library.sha256` | Optional declared hash. ACTINV always computes the library hash and fails if a declaration differs. The index's recorded library hash is checked too. |
 | `decay.primary` | ENDF-6 radioactive-decay sublibrary. |
@@ -84,11 +86,13 @@ All three bases apply identically to explicit nuclides: literal atom density for
 `wt_percent`, and an arbitrary atom ratio normalized to one gram for `atom_fraction`. Response-function mixing
 aggregates explicit isotopes back to elemental mass fractions.
 
-## Neutron spectrum
+## Projectile and spectrum
 
-`fispact-709` requires exactly 709 values. `custom` requires one more strictly increasing boundary than flux values;
-those boundaries must match the boundaries stored in the activation library to 1e-12 relative. `total`, when present,
-rescales the group values while preserving shape. The library temperature and `options.temperature_K` must agree.
+Neutrons use `fispact-709` with exactly 709 values. Proton, deuteron and alpha use `fispact-162` with exactly 162
+values and require `options.temperature_K: 0`; charged specs reject fission-yield files. `custom` requires one more
+strictly increasing boundary than flux values. Those boundaries must match the activation library to `1e-12`
+relative. `total`, when present, rescales group values while preserving shape. The spec, library index, group
+structure and temperature must all identify the same projectile/data build before matrix assembly.
 
 ## Fission yields
 
@@ -143,11 +147,31 @@ ledgered. Explicitly requested modes are always honored. `prune` is `rate`, `rea
 controls optional pathway and photon/dose calculations; the core inventory/activity/heat diagnostics remain in each
 result step.
 
-The ordered schedule is the pulse representation: every positive `flux` multiplier scales all base neutron rates,
+The ordered schedule is the pulse representation: every positive `flux` multiplier scales all base projectile rates,
 and zero is an exact decay-only gap. Results are emitted after every segment. Each step records the current multiplier
 as `flux`, cumulative elapsed `t_s`, cumulative multiplier-weighted exposure `flux_weighted_time_s`, and physical
 `fluence_n_cm2` (base total flux times weighted exposure). Scientific notation in a duration, such as `1e-8 s`, is
 accepted as a number rather than mistaken for a unit suffix.
+
+For charged projectiles, steps expose the generic `fluence_particles_cm2` and identify the projectile in the result,
+ledger, certificate and prepared/mesh compatibility records. Neutron results retain their historical bytes and
+`fluence_n_cm2` field when `projectile` is omitted.
+
+## Build an activation library
+
+The production builder is part of the `actinv` binary:
+
+```bash
+actinv build-library INPUT OUTPUT.npz \
+  --format auto --projectile auto --groups fispact-709 \
+  --temperature-K 293.6 --workers 4 --cache /data/actinv-cache
+```
+
+`INPUT` is one ENDF-6 evaluation or a directory. `--format` accepts `auto`, `tendl` or `eaf`; `--projectile` accepts
+`auto`, `neutron`, `proton`, `deuteron` or `alpha`; `--groups` accepts `fispact-709`, `fispact-162` or a custom
+boundary file. Neutron defaults are 709 groups and 293.6 K; charged defaults are 162 groups and 0 K. The adjacent
+`<stem>_index.json` records source hashes, normalized options, group hash, builder fingerprint, target ledgers and the
+final NPZ hash. A content-addressed cache is optional and revalidated before reuse.
 
 When photons are requested (or `outputs` is omitted), `steps[].photon_source` contains:
 
@@ -214,8 +238,9 @@ and solve independently.
 {
   "spec": "actinv-mesh-spec-1",
   "title": "iron activation mesh",
+  "projectile": "neutron",
   "library": {
-    "path": "/data/actinv_tendl2023_709g.npz",
+    "path": "/data/actinv_tendl2025_n_709g.npz",
     "sha256": "64 hexadecimal digits"
   },
   "decay": {"primary": "/data/endf-b-viii-0_decay.dat"},

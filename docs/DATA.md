@@ -90,3 +90,23 @@ uncertainty by cooling time for the protocol's `MeV s^-1 fission^-1` C/E. These 
 OpenMC 0.15.3 independently parses the U-235 yields and supplies CRAM48 for G1/G4. ALARA converts its own official
 FENDL-2 sample text before G5; ACTINV consumes an independently generated library from that same Fe-56(n,p) card.
 Neither code is a production dependency of ACTINV.
+
+## P10 activation-library provenance
+
+P10's complete production artifacts were built externally with Rust builder fingerprint
+`7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43`. Archives, evaluations, caches and generated
+NPZ libraries are not committed. `results/g7_p10_builds.json` re-hashes every archive/file manifest, cache entry and
+final index; the compact identities are:
+
+| corpus | archive/source identity | files | rows | output NPZ SHA-256 |
+|---|---|---:|---:|---|
+| TENDL-2025 neutron | archive `e547527688506cbe09813364dcefa2aed11f474139bfa129d7cd4ca24fae21fa`; deterministic working-file manifest `b1ea3fe043ec243e2df0a3894206872c2ce18c3b4541c19b35029b3ed3e7b15c` | 2,850 | 167,735 | `ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44` |
+| TENDL-2025 proton | `49340a03b0d9ac86598c6b710c0bc2ec0babd3fa0717a9ff1d75f042fccc5b0b` | 2,850 | 528,057 | `0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790` |
+| TENDL-2025 deuteron | `34f459aea0b5ac9c40820c88d898618f926ec3b52858a5393e42d57707ec5f1c` | 2,850 | 548,706 | `8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae` |
+| TENDL-2025 alpha | `25520f6eb42ce024c065f85255277ed169b2f826e9fc24f5d093c99d5c60e018` | 2,850 | 489,279 | `ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915` |
+| EAF-2010 neutron | source manifest `5cd73807a39dbc2793bcd87bf0fea23338178d38d80b5848bf6ce2e28d8e0e40`; flat-file manifest `87baeeef62650cdf8791bd3f198c906b1e6787eb7017a3ec4b02d4cee88bc15e` | 816 | 115,702 | `5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2` |
+
+The neutron working corpus differs from the immutable official extraction only by the two fail-closed Pb-208 numeric
+field repairs frozen in P10 Amendments D/E; all 2,850 official hashes and both substitutions are independently
+recorded. Charged validation reads official processed TENDL-2017 rows, but no licensed FISPACT-II executable was run.
+P10 supplies infinite-dilution unresolved averages only; finite-dilution shielding remains explicitly out of scope.

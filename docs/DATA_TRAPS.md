@@ -75,3 +75,32 @@ guessed.
 
 **ACTINV:** both go to an explicit leakage state with their own ledger categories
 (`fission_no_yields_to_leakage`, `products_unmapped_to_leakage`), reported with their rates at every step.
+
+## 7. Reported total widths can be rounded away from their components
+
+Some LRF=1/2 evaluations print `GT` at lower effective precision than `GN+GG+GF`. Using the rounded total for grid
+placement while a reference processor uses the component sum shifts an ultra-narrow certificate enough to look like a
+physics disagreement.
+
+**ACTINV:** following NJOY semantics, `LRX=0` uses `GN+GG+GF`; other cases use the larger of `GT` and that sum. The
+Fr-226 control independently derives the same width and directly integrates all 52 analytic lines.
+
+## 8. Charged-particle MT=5 production lives in MF=6 yields
+
+Above 30 MeV, TENDL charged-particle s30 evaluations can replace explicit channel production with aggregate MF=3/MT=5
+times MF=6 residual yields. Treating MT=5 as an ordinary one-residual reaction loses products and isomers while still
+producing plausible total loss.
+
+**ACTINV:** it structurally consumes the MF=6 LAW body, multiplies every matching MF=8/LMF=6 residual yield by the
+MT=5 cross section, retains multiple residuals, and fails on missing/conflicting declarations. Official TENDL-2025
+residual tables independently control proton, deuteron and alpha cases.
+
+## 9. A safety iteration cap is not a convergence tolerance
+
+Adaptive linearization can satisfy its unchanged error criterion only after more refinement rounds than a convenient
+default, especially at a deep seeded kink. Raising the tolerance or cloning an ever-larger grid would hide the actual
+failure mode.
+
+**ACTINV:** the TENDL-2025 neutron corpus was scanned before fixing the bound. Co-58 MT=102 was the unique maximum at
+pass index 19, so the cap is 20 while the `2e-4` midpoint tolerance and ten-million-point memory bound remain
+unchanged. A source-independent depth-19 regression and the hash-pinned Co-58 control prevent either bound drifting.

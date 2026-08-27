@@ -22,6 +22,11 @@ AMENDMENTS = [
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_K.md",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_L.md",
     ROOT / "protocols" / "ACTINV-P10_AMENDMENT_M.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_N.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_O.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_P.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_Q.md",
+    ROOT / "protocols" / "ACTINV-P10_AMENDMENT_R.md",
 ]
 
 

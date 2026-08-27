@@ -5,10 +5,9 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-26):** P9 is closed **P9-CONDITIONAL** after the one repair pass recorded in Amendment A; all
-six gates pass. The **v0.2 milestone remains complete** and P9 is the completed first half of v0.5. **P10 — Data
-completeness is open** under protocol hash `74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27`;
-its scope is frozen until the checker-derived close.
+**Current status (2026-08-27):** P10 is closed **P10-CONDITIONAL** with all seven gates passing and the complete
+TENDL-2025 neutron/proton/deuteron/alpha plus EAF-2010 Rust builds recorded. The technical **v0.5 milestone is
+complete**. **P11 — Uncertainty is next, unopened and unhashed**; no P11 scope has been entered in this P10 close.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -61,6 +60,11 @@ Written here so they cannot be forgotten at release. Each must appear in the v0.
 **P9 status update:** the fission-products row is retained verbatim because it records what v0.1 shipped and is checked
 against those release notes. P9 resolves it when a matching hash-pinned NFPY evaluation is supplied; an active parent
 without yields deliberately retains the named leakage guard.
+
+**P10 status update:** the first two rows are also retained verbatim as the checked v0.1 release record. P10 resolves
+them in the current Rust builder: isolated ultra-narrow lines use certified analytic area treatment; limited R-matrix
+and infinite-dilution `LSSF=0` unresolved ranges are reconstructed and independently controlled. Unsupported features
+continue to fail closed rather than use the historical fallback. Finite-dilution self-shielding remains out of scope.
 
 **Total:** ~25–30 working days → at two to three sessions a week, roughly three months to a v1.0 candidate. The
 part that does not compress: users, issues, and the validation record accumulating afterwards.
@@ -117,3 +121,8 @@ part that does not compress: users, issues, and the validation record accumulati
   TENDL-2025 MF6 checks against official residual tables. The public licensed FISPACT executable is not claimed as a
   run. The P4 Rb-94 residual is correctly assigned to the resolved/unresolved boundary splice, while Fr-226 receives
   the analytic ultra-narrow treatment. P10 is frozen until its checker-derived close.
+- 2026-08-27 — P10 closed P10-CONDITIONAL: all seven gates pass after the append-only repair record. The deterministic
+  Rust path completes TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 libraries (12,216 targets, 1,849,479 rows)
+  with fresh/cached byte identity and zero target errors, silent fallbacks or convergence flags. Limited R-matrix,
+  infinite-dilution unresolved averages, arbitrary-temperature broadening, ultra-narrow treatment and charged runtime
+  identity are independently controlled. Technical v0.5 is complete; P11 is next and remains unopened.

@@ -24,7 +24,7 @@
   "pass": true,
   "pb208_aggregate_invariance": {
     "byte_identical": true,
-    "npz_sha256": "bc346105193fab0f52b66c6bd57b7cd05a6faebde6f58f5cb401d5198fc6cc57",
+    "npz_sha256": "c3c135a2432febe78added0329dc5460ffd5765249c383c9f5fd61d918070033",
     "pass": true,
     "rows": 50,
     "source_hashes_differ": true
@@ -43,8 +43,8 @@
     "decimal80_capture_b": 0.011174250673840012,
     "energy_eV": 1.0736824345386535e-05,
     "pass": true,
-    "relative_difference": 0.0,
-    "rust_capture_b": 0.011174250673840012,
+    "relative_difference": 3.1048587088491946e-16,
+    "rust_capture_b": 0.011174250673840008,
     "spin_sequences": 7
   },
   "strict_parser_and_repair": {
@@ -57,8 +57,8 @@
     "raw_pb208_failure": "parse activation evaluation: \"n-Pb208.tendl: MAT=8237/MF=3/MT=1: nonfinite ENDF number 'NaN'\"",
     "repair_is_deterministic": true,
     "repair_matches_working_file": true,
-    "unrelated_above_failure": "parse activation evaluation: \"<above-width-plant>: MAT=8358/MF=2/MT=151: Breit-Wigner total width 0.01589947 exceeds component sum 0.014909467710000002 without LRX\"",
-    "unrelated_below_failure": "parse activation evaluation: \"<below-width-plant>: MAT=8358/MF=2/MT=151: Breit-Wigner total width 0.01389947 is below component sum 0.014909467710000002 for LRX=0 (GN=0.00001556771, GG=0.014883900000000002, GF=0.00001)\""
+    "unrelated_above_failure": "parse activation evaluation: \"<above-width-plant>: MAT=8358/MF=2/MT=151: Breit-Wigner total width 0.01589947 exceeds component sum 0.01490946771 without LRX\"",
+    "unrelated_below_failure": "parse activation evaluation: \"<below-width-plant>: MAT=8358/MF=2/MT=151: Breit-Wigner total width 0.01389947 is below component sum 0.01490946771 for LRX=0 (GN=0.00001556771, GG=0.0148839, GF=0.00001)\""
   },
   "width_scan": {
     "above_component_sum_without_lrx": {},

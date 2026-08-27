@@ -1,8 +1,8 @@
 {
  "schema": "actinv-p10-g3-unresolved-quadrature-1",
  "inputs": {
-  "resonance_rs_sha256": "fe37819e98d7382ff862ce1dfec1fabaf9bcea3f85ab022d6ada2320e291824a",
-  "dump_rs_sha256": "6a297b8eaaf1e3e4798c16bed67dff023000294a840a614f8a2a37321131e1c5"
+  "resonance_rs_sha256": "9db8f87823a0627a6ed889a7a1852f61010d0683b84c89dedbbca914248f826a",
+  "dump_rs_sha256": "be03ebda25ec0704f64745fdca415c4a6aad32b0b0e3a0f4862465f2d36babbc"
  },
  "reference": {
   "method": "independent generalized Gauss-Laguerre chi-square quadrature",

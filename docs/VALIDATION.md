@@ -105,3 +105,23 @@ The checker verdict is **P9-CONDITIONAL**. [Amendment A](../protocols/ACTINV-P9_
 pass: ALARA transcript markers, the FISPACT flux-file trailer, the Dickens pulse ordinate definition, and two
 mechanical Rust 1.98 Clippy findings. No physics implementation, source datum, acceptance tolerance or post-hoc
 accuracy threshold changed.
+
+## P10 data-completeness and Rust-builder controls
+
+P10 validates the production Rust library path from strict parsing through complete external builds. All source data
+and generated libraries remain outside Git; committed results contain their SHA-256 identities and compact evidence.
+
+| gate | result |
+|---|---|
+| G1 Rust builder/parity/determinism | 231,816 retained ENDF fields across 12 evaluations agree with an independent reader at 0 ULP. Fresh/cached and one/four-worker outputs are byte-identical; all ten rejection plants fail without publishing. |
+| G2 R-matrix-limited | FENDL W-186 structure matches independently; CCFE-709 capture and the range integral meet the frozen FENDL/NJOY tolerances, with unsupported-feature plants failing closed. |
+| G3 unresolved averages | Ag-107 infinite-dilution values agree with a fresh NJOY2016.79 UNRESR run and independent high-order quadrature; `LSSF=0` addition and `LSSF=1` non-addition close. |
+| G4 temperature/ultra-narrow | 0/293.6/600/900 K kernel controls pass; 52 Fr-226 analytic lines agree with direct integration, and Fr-226/Rb-94 density convergence is `8.79e-5` with no flags. |
+| G5 charged particles | TENDL-2025 p/d/alpha residual production matches official pointwise tables, and identical TENDL-2017 group rows/rates match official processed FISPACT rows. No FISPACT executable run is claimed. |
+| G6 runtime contract | Proton/deuteron/alpha analytic cases are identical through CLI, Python, prepared and mesh paths; mismatch plants fail before assembly and every legacy omitted-projectile neutron field except the intentional v0.2→v0.5 solver-semver certificate leaf is unchanged. |
+| G7 complete builds/regression | Five fresh/cached byte-identical libraries contain 12,216 targets and 1,849,479 rows with zero errors, silent fallbacks or convergence flags. Full EAF regression, P5–P9 verdicts, CI subset and strict Rust quality gates pass. |
+
+The checker verdict is **P10-CONDITIONAL** because the append-only frozen record contains repair amendments. The final
+builder fingerprint is `7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43`; exact complete-library hashes and resource
+profiles are in `results/g7_p10_builds.json` and [the P10 session record](../sessions_P10.md). This establishes
+infinite-dilution unresolved processing, not finite-dilution self-shielding or probability tables.

@@ -153,11 +153,11 @@
  "gate": "P10-G7",
  "high_precision_product_control": {
   "builder_fingerprints": [
-   "2177d11f9423c23dc438537e2faa8652dcca222ca0fc52b99a0d1ec5cfe91956"
+   "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43"
   ],
   "matches_current_builder": true,
   "pass": true,
-  "result_sha256": "5bcdb88404400f8a04f19d5934a001535f5ea9cdd213c8dd241e70b5b4739f20",
+  "result_sha256": "1cb9a1a6244b12a9fe8e070d0cd087ccca7d084a294fc8ccc7ae03b98a16ba8f",
   "rows": 16
  },
  "independent_current_collapse": {
@@ -185,8 +185,8 @@
   }
  },
  "inputs": {
-  "current_builder_fingerprint": "2177d11f9423c23dc438537e2faa8652dcca222ca0fc52b99a0d1ec5cfe91956",
-  "current_index_sha256": "853c68189bbcecf2a1a9f3dfb99dc06a2aaa21d9e4ad6f545f95d99e4bd573f7",
+  "current_builder_fingerprint": "7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43",
+  "current_index_sha256": "601fc95b3b8e89a180ee2dbd10a25406a2b8a6a97fe5555d483bbba607bf386d",
   "current_library_sha256": "5de78c8efec0501417297175378490beb6d21205308f632948db25171cb9b1a2",
   "legacy_index_sha256": "ed36363a726cbe991435f72d2aeb8a794a40b7dc79081ba86c511e14dd9ac4b7",
   "legacy_library_sha256": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7"

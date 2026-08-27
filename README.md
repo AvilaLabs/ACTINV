@@ -1,17 +1,17 @@
 # ACTINV
 
-**Open, standalone, activation-grade nuclide-inventory solver.** A neutron flux spectrum from any source — MCNP, PHITS,
+**Open, standalone, activation-grade nuclide-inventory solver.** A particle flux spectrum from any source — MCNP, PHITS,
 Serpent, OpenMC, or a measurement — plus a material and an irradiation history gives the nuclide inventory, activity,
 decay heat and evaluated decay-photon source over cooling time. Hash-pinned independent fission yields, explicit
 isotopes/isomers, coupled burn-up and pulsed histories are supported, with a ledger of everything the calculation
 could not account for.
 
 Rust core, Python API, code-agnostic validation harness. Avila Labs, Oviedo, Florida.
-Licence: **MIT OR Apache-2.0**. Current version: **v0.2.0** (tagging and publishing are external acts).
+Licence: **MIT OR Apache-2.0**. Current version: **v0.5.0** (tagging and publishing are external acts).
 
 > Research-grade software. Validated against the 132-experiment FNS decay-heat benchmark (see below), but **not**
 > validated for licensing, safety or regulatory decisions. Known limitations are listed in
-> [docs/RELEASE_NOTES_v0.2.md](docs/RELEASE_NOTES_v0.2.md) — the code reports each of them rather than hiding it.
+> [docs/RELEASE_NOTES_v0.5.md](docs/RELEASE_NOTES_v0.5.md) — the code reports each of them rather than hiding it.
 
 ## Validation at a glance
 
@@ -36,6 +36,12 @@ sets. Geometric-mean total C/E is **1.0070** and **0.9845**, respectively. On id
 10-pulse history, shutdown inventory differs from ALARA 2.9.2 by at most `4.12e-8`; pulse evolution agrees with OpenMC
 CRAM48 at `3.91e-15` on resolvable populations.
 
+P10 moves production library construction into Rust and completes deterministic TENDL-2025 neutron, proton,
+deuteron and alpha libraries plus EAF-2010: **12,216 targets and 1,849,479 reaction/product rows**, with zero target
+errors, unsupported fallbacks or convergence flags. R-matrix-limited and infinite-dilution unresolved reconstruction,
+arbitrary-temperature neutron broadening and analytic ultra-narrow lines are independently controlled. The P10
+checker verdict is **P10-CONDITIONAL** because its frozen repair history is retained.
+
 ## Install
 
 ```bash
@@ -49,10 +55,12 @@ Requires a Rust toolchain and Python ≥ 3.9. The binding uses PyO3 0.29 and bui
 
 Nuclear data are never bundled; they are fetched from their public hosts and pinned by SHA-256.
 `scripts/fetch_ci_data.sh` pulls the small subset used by the tests. For real work see
-[docs/DATA.md](docs/DATA.md) for every source and its terms, then build a library:
+[docs/DATA.md](docs/DATA.md) for every source and its terms, then build a library directly with the Rust binary:
 
 ```bash
-scripts/build_library.sh <endf-files-dir> <out-dir> <name> 1 5     # resumable, memory-capped
+actinv build-library /data/TENDL-2025/n /data/tendl2025-n.npz \
+  --format tendl --projectile neutron --groups fispact-709 \
+  --temperature-K 293.6 --workers 4 --cache /data/actinv-cache
 python3 scripts/build_photon_response.py /data/nist-air-fe.json --elements Fe  # optional dose response
 ```
 
@@ -119,7 +127,7 @@ external photon-response data. Unknown fields are an error — a misspelt option
 
 [Method](docs/METHOD.md) · [Data sources and terms](docs/DATA.md) · [Validation](docs/VALIDATION.md) ·
 [Harness](docs/HARNESS.md) · [Ledger](docs/LEDGER.md) · [Specification](docs/SPEC.md) ·
-[Traps in activation data](docs/DATA_TRAPS.md) · [Roadmap](docs/ROADMAP.md) · [Release notes](docs/RELEASE_NOTES_v0.2.md)
+[Traps in activation data](docs/DATA_TRAPS.md) · [Roadmap](docs/ROADMAP.md) · [Release notes](docs/RELEASE_NOTES_v0.5.md)
 
 ## Contributing
 

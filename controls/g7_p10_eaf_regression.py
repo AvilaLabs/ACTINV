@@ -46,7 +46,7 @@ LEGACY_INDEX = Path(
 CURRENT_LIBRARY = Path(
     os.environ.get(
         "ACTINV_P10_EAF_LIBRARY",
-        "/home/connoravila/nuclear-data/tendl-2025/builds/full/eaf.m.p10.npz",
+        "/home/connoravila/nuclear-data/tendl-2025/builds/full/eaf.n.p10.npz",
     )
 )
 CURRENT_INDEX = Path(

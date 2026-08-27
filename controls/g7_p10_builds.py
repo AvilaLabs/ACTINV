@@ -24,10 +24,10 @@ G162_SHA256 = "60d0553a39eea8bf219c3f64a7204c14563bf815fcf8c8a20cdd8f858ab4334c"
 
 CONFIG = {
     "alpha": {
-        "prefix": "alpha.m.p10",
-        "cache": "alpha-m-p10",
-        "profile": "alpha.m.p10",
-        "profile_cache": "profile-alpha-m-p10",
+        "prefix": "alpha.n.p10",
+        "cache": "alpha-n-p10",
+        "profile": "alpha.n.p10",
+        "profile_cache": "profile-alpha-n-p10",
         "profile_file": "a-Fe056.tendl",
         "source": DATA / "files/a",
         "manifest": DATA / "staging/TENDL-a.manifest.json",
@@ -43,10 +43,10 @@ CONFIG = {
         "targets": 2_850,
     },
     "proton": {
-        "prefix": "proton.m.p10",
-        "cache": "proton-m-p10",
-        "profile": "proton.m.p10",
-        "profile_cache": "profile-proton-m-p10",
+        "prefix": "proton.n.p10",
+        "cache": "proton-n-p10",
+        "profile": "proton.n.p10",
+        "profile_cache": "profile-proton-n-p10",
         "profile_file": "p-Fe056.tendl",
         "source": DATA / "files/p",
         "manifest": DATA / "staging/TENDL-p.manifest.json",
@@ -62,10 +62,10 @@ CONFIG = {
         "targets": 2_850,
     },
     "deuteron": {
-        "prefix": "deuteron.m.p10",
-        "cache": "deuteron-m-p10",
-        "profile": "deuteron.m.p10",
-        "profile_cache": "profile-deuteron-m-p10",
+        "prefix": "deuteron.n.p10",
+        "cache": "deuteron-n-p10",
+        "profile": "deuteron.n.p10",
+        "profile_cache": "profile-deuteron-n-p10",
         "profile_file": "d-Fe056.tendl",
         "source": DATA / "files/d",
         "manifest": DATA / "staging/TENDL-d.manifest.json",
@@ -81,10 +81,10 @@ CONFIG = {
         "targets": 2_850,
     },
     "neutron": {
-        "prefix": "neutron.m.final",
-        "cache": "neutron-m-final",
-        "profile": "neutron.m.p10",
-        "profile_cache": "profile-neutron-m-p10",
+        "prefix": "neutron.n.p10",
+        "cache": "neutron-n-p10",
+        "profile": "neutron.n.p10",
+        "profile_cache": "profile-neutron-n-p10",
         "profile_file": "n-Fe056.tendl",
         "source": DATA / "files/n-working",
         "manifest": DATA / "staging/TENDL-n-working.manifest.json",
@@ -102,10 +102,10 @@ CONFIG = {
         "targets": 2_850,
     },
     "eaf": {
-        "prefix": "eaf.m.p10",
-        "cache": "eaf-m-p10",
-        "profile": "eaf.m.p10",
-        "profile_cache": "profile-eaf-m-p10",
+        "prefix": "eaf.n.p10",
+        "cache": "eaf-n-p10",
+        "profile": "eaf.n.p10",
+        "profile_cache": "profile-eaf-n-p10",
         "profile_file": "n_2631_26-FE-56.dat",
         "source": EAF / "files",
         "file_manifest": DATA / "staging/EAF-2010-flat-files.sha256",
@@ -136,7 +136,7 @@ def index_path(library: Path) -> Path:
 
 def parse_time(path: Path, *, workers: int, address_limit: int) -> dict[str, object]:
     text = path.read_text()
-    elapsed_match = re.search(r"Elapsed \(wall clock\) time .*:\s*(\S+)", text)
+    elapsed_match = re.search(r"Elapsed \(wall clock\) time .*\):\s*(\S+)", text)
     rss_match = re.search(r"Maximum resident set size \(kbytes\):\s*(\d+)", text)
     swaps_match = re.search(r"Swaps:\s*(\d+)", text)
     exit_match = re.search(r"Exit status:\s*(\d+)", text)

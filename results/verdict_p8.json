@@ -1,11 +1,11 @@
 {
  "gates": {
   "G1 canonical/FISPACT/rebin": "PASS \u2014 repeat bytes=True; rebin max 0.0e+00",
-  "G2 OpenMC statepoint": "PASS \u2014 two filter orders at max 0.0e+00; 48 MiB padding added 0 RSS bytes",
+  "G2 OpenMC statepoint": "PASS \u2014 two filter orders at max 0.0e+00; 48 MiB padding added 65536 RSS bytes",
   "G3 MCNP readers": "PASS \u2014 meshtal 0.0e+00, mctal 0.0e+00; five unsupported plants named",
   "G4 provenance/interchange": "PASS \u2014 four repeat identities=True; cross-format exact=True",
   "G5 mesh identity/determinism": "PASS \u2014 8/8 exact ordinary identities, 8 pruning counts",
-  "G6 scaling/regression": "PASS \u2014 RSS spread 270336 bytes; 10^6 row explicitly extrapolated; tests/Clippy pass"
+  "G6 scaling/regression": "PASS \u2014 RSS spread 233472 bytes; 10^6 row explicitly extrapolated; tests/Clippy pass"
  },
  "repair_round": true,
  "amendment": "ACTINV-P8_AMENDMENT_A.md",

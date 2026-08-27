@@ -12,6 +12,7 @@ import resource
 import struct
 import subprocess
 import sys
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "controls"))
@@ -25,8 +26,8 @@ WORK = Path(os.environ.get("ACTINV_P10_WORK", "/tmp/actinv-p10")) / "g6"
 RESULT = ROOT / "results" / "g6_p10_projectile_runtime.json"
 ADDRESS_SPACE_BYTES = 2 * 1024**3
 PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
-PRE_P10_NEUTRON_RESULT_SHA256 = (
-    "bff6d57eda08cbaabb611e61e480fa384f7c9aadf3ed7717d14aeb9b943bd525"
+PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
+    "0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c"
 )
 EXPECTED_PROTOCOL_HASHES = {
     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27",
@@ -92,8 +93,13 @@ def scrub_legacy_result(value):
 
 
 def canonical_result_hash(result: dict) -> str:
+    value = copy.deepcopy(result)
+    solver = value.get("certificate", {}).get("solver")
+    if not isinstance(solver, str) or not solver.startswith("actinv-core "):
+        raise AssertionError(f"legacy neutron result has invalid solver identity {solver!r}")
+    value["certificate"]["solver"] = "actinv-core <VERSION>"
     payload = json.dumps(
-        scrub_legacy_result(result), sort_keys=True, separators=(",", ":")
+        scrub_legacy_result(value), sort_keys=True, separators=(",", ":")
     ).encode()
     return hashlib.sha256(payload).hexdigest()
 
@@ -270,10 +276,17 @@ def main() -> int:
         raise AssertionError("legacy neutron result gained a serialized projectile field")
     if "fluence_n_cm2" not in neutron["steps"][0] or "fluence_particles_cm2" in neutron["steps"][0]:
         raise AssertionError("legacy neutron fluence schema changed")
-    legacy_hash = canonical_result_hash(neutron)
-    if legacy_hash != PRE_P10_NEUTRON_RESULT_SHA256:
+    with (ROOT / "Cargo.toml").open("rb") as stream:
+        workspace_version = tomllib.load(stream)["workspace"]["package"]["version"]
+    expected_solver = f"actinv-core {workspace_version}"
+    if neutron["certificate"].get("solver") != expected_solver:
         raise AssertionError(
-            f"legacy neutron result changed: {legacy_hash}, expected {PRE_P10_NEUTRON_RESULT_SHA256}"
+            f"legacy neutron solver identity {neutron['certificate'].get('solver')!r}, expected {expected_solver!r}"
+        )
+    legacy_hash = canonical_result_hash(neutron)
+    if legacy_hash != PRE_P10_NEUTRON_NORMALIZED_SHA256:
+        raise AssertionError(
+            f"legacy neutron result changed: {legacy_hash}, expected {PRE_P10_NEUTRON_NORMALIZED_SHA256}"
         )
     certificate_hashes = {
         "legacy_neutron_cli": checked_certificate(neutron, None, "legacy-neutron-cli")
@@ -480,15 +493,16 @@ def main() -> int:
         "control_sha256": sha256(Path(__file__)),
         "pre_p10_neutron": {
             "baseline_commit": PRE_P10_COMMIT,
-            "canonical_result_sha256": legacy_hash,
-            "expected_canonical_result_sha256": PRE_P10_NEUTRON_RESULT_SHA256,
-            "timing_field_excluded": "top-level ms only",
+            "normalized_result_sha256": legacy_hash,
+            "expected_normalized_result_sha256": PRE_P10_NEUTRON_NORMALIZED_SHA256,
+            "normalized_fields": ["top-level ms", "working path", "certificate.solver semantic version"],
+            "current_solver": expected_solver,
             "spec_sha256": sha256(neutron_spec_path),
             "index_sha256": sha256(legacy_fixture["index"]),
             "library_sha256": sha256(legacy_fixture["library"]),
             "no_projectile_in_spec_index_or_result": True,
             "legacy_neutron_fluence_schema_unchanged": True,
-            "pass": legacy_hash == PRE_P10_NEUTRON_RESULT_SHA256,
+            "pass": legacy_hash == PRE_P10_NEUTRON_NORMALIZED_SHA256,
         },
         "projectiles": list(analytic_errors),
         "max_analytic_relative_error": max(analytic_errors.values()),

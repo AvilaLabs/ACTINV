@@ -1,0 +1,34 @@
+{
+ "amendment_n_sha256": "6f33ab8d4adc127440c97f5cb7d1393859e417e51716f198f2645eb8b74a15c3",
+ "certificate": {
+  "output_points": 21712,
+  "output_refinement_passes": 0,
+  "zero_k_points": 21712,
+  "zero_k_refinement_passes": 19
+ },
+ "expected_amendment_n_sha256": "6f33ab8d4adc127440c97f5cb7d1393859e417e51716f198f2645eb8b74a15c3",
+ "expected_certificate": {
+  "output_points": 21712,
+  "output_refinement_passes": 0,
+  "zero_k_points": 21712,
+  "zero_k_refinement_passes": 19
+ },
+ "expected_source_sha256": "bbc3f94bb2bb47148feab4825d882c7619a6c431670c11ec5840b9663002d674",
+ "gate": "P10-G7",
+ "pass": true,
+ "probe_returncode": 0,
+ "probe_stderr": "",
+ "recorded_complete_corpus_scan": {
+  "files": 2850,
+  "maximum_refinement_pass_index": 19,
+  "only_reaction_at_or_above_old_limit": "n-Co058.tendl MT102",
+  "reactions": 3303
+ },
+ "sample": {
+  "cross_section_b": 40380.017345938475,
+  "energy_eV": 10.35
+ },
+ "schema": "actinv-p10-g7-co58-linearization-1",
+ "source_file": "n-Co058.tendl",
+ "source_sha256": "bbc3f94bb2bb47148feab4825d882c7619a6c431670c11ec5840b9663002d674"
+}

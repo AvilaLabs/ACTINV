@@ -421,11 +421,18 @@ def retained_fraction(distance: float, inner: float, outer: float) -> float:
     return fraction * fraction * (3.0 - 2.0 * fraction)
 
 
+def effective_total_width(group: dict, index: int) -> float:
+    """Derive the LRF=1/2 natural width frozen by P10 Amendment D."""
+    reported = float(group["GT"][index])
+    components = float(group["GN"][index] + group["GG"][index] + group["GF"][index])
+    return components if int(group["LRX"]) == 0 else max(reported, components)
+
+
 def independent_line_area(
     evaluation: dict, raw_range: dict, group: dict, index: int, mt: int, certificate: dict
 ) -> tuple[float, float]:
     energy = float(group["ER"][index])
-    width = float(group["GT"][index])
+    width = effective_total_width(group, index)
     reaction = float(group["GG"][index] if mt == 102 else group["GF"][index])
     neutron = float(group["GN"][index])
     spin = float(group["AJ"][index])
@@ -452,6 +459,7 @@ def independent_line_area(
         closed = full_closed
 
     one_line = isolated_range(raw_range, group, index)
+    one_line["L"][0]["GT"][0] = width
     available_left = (energy - raw_range["EL"]) / width
     available_right = (raw_range["EH"] - energy) / width
     edge_is_upper = available_right <= available_left
@@ -538,6 +546,8 @@ def ultra_narrow_control() -> dict:
     maximum_rust_direct_closed = 0.0
     maximum_direct_reference = 0.0
     maximum_closed_reference = 0.0
+    maximum_reported_effective_relative = 0.0
+    worst_reported_effective = None
     for mt in (18, 102):
         completed = run_limited([str(DUMP), "ultra-lines", str(FR226), str(mt), "293.6"])
         certificates = parse_ultra_lines(completed["stdout"])
@@ -557,8 +567,9 @@ def ultra_narrow_control() -> dict:
                         ):
                             if reaction_width <= 0.0:
                                 continue
+                            effective_width = effective_total_width(group, index)
                             mismatch = relative(float(energy), certificate["energy_eV"]) + relative(
-                                float(width), certificate["total_width_eV"]
+                                effective_width, certificate["total_width_eV"]
                             )
                             if mismatch <= 1e-10:
                                 matches.append((mismatch, raw_range, group, index))
@@ -567,6 +578,18 @@ def ultra_narrow_control() -> dict:
                     f"cannot match Fr-226 MT{mt} line at {certificate['energy_eV']} eV"
                 )
             _, raw_range, group, index = min(matches, key=lambda item: item[0])
+            reported_width = float(group["GT"][index])
+            effective_width = effective_total_width(group, index)
+            reported_effective_relative = relative(reported_width, effective_width)
+            if reported_effective_relative > maximum_reported_effective_relative:
+                maximum_reported_effective_relative = reported_effective_relative
+                worst_reported_effective = {
+                    "mt": mt,
+                    "energy_eV": certificate["energy_eV"],
+                    "reported_GT_eV": reported_width,
+                    "effective_width_eV": effective_width,
+                    "relative": reported_effective_relative,
+                }
             direct_reference, closed_reference = independent_line_area(
                 evaluation, raw_range, group, index, mt, certificate
             )
@@ -583,6 +606,8 @@ def ultra_narrow_control() -> dict:
             comparisons.append(
                 {
                     **certificate,
+                    "reported_GT_eV": reported_width,
+                    "independent_effective_width_eV": effective_width,
                     "independent_direct_b_eV": direct_reference,
                     "independent_closed_b_eV": closed_reference,
                     "rust_direct_vs_closed_relative": rust_direct_closed,
@@ -598,6 +623,11 @@ def ultra_narrow_control() -> dict:
         "maximum_rust_direct_vs_closed_relative": maximum_rust_direct_closed,
         "maximum_rust_vs_independent_direct_relative": maximum_direct_reference,
         "maximum_rust_vs_independent_closed_relative": maximum_closed_reference,
+        "width_semantics": {
+            "rule": "LRX=0: GN+GG+GF; otherwise max(GT, GN+GG+GF)",
+            "maximum_reported_GT_vs_effective_relative": maximum_reported_effective_relative,
+            "worst": worst_reported_effective,
+        },
         "pass": max(
             maximum_rust_direct_closed,
             maximum_direct_reference,
