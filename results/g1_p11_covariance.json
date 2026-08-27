@@ -1,0 +1,126 @@
+{
+ "pinned_sources": {
+  "n-Fe056.tendl": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+  "n-Ni058.tendl": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+ },
+ "parser_parity": {
+  "n-Fe056.tendl": {
+   "components": 105,
+   "fields_compared": 17396,
+   "maximum_ulp_distance": 0,
+   "structural_mismatches": [],
+   "pass": true
+  },
+  "n-Ni058.tendl": {
+   "components": 104,
+   "fields_compared": 19139,
+   "maximum_ulp_distance": 0,
+   "structural_mismatches": [],
+   "pass": true
+  }
+ },
+ "sidecar_parity": {
+  "components": 209,
+  "fields_compared": 36535,
+  "maximum_ulp_distance": 0,
+  "structural_mismatches": [],
+  "pass": true
+ },
+ "counts": {
+  "n-Fe056.tendl": {
+   "sections": 30,
+   "components": 105,
+   "lb_counts": {
+    "5": 30,
+    "6": 45,
+    "8": 30
+   }
+  },
+  "n-Ni058.tendl": {
+   "sections": 30,
+   "components": 104,
+   "lb_counts": {
+    "5": 30,
+    "6": 44,
+    "8": 30
+   }
+  }
+ },
+ "determinism_and_cache": {
+  "one_vs_four_npz": true,
+  "one_vs_cached_npz": true,
+  "one_vs_four_index": true,
+  "one_vs_cached_index": true,
+  "cached_hits_two": true,
+  "first_stdout": "2 targets, 60 MF=33 sections, 209 components, 0 cache hits, 2 files with MF=33, sha256 4fad6a95b12c808d6e8cb5ba83934db68ec512823d6e9d3892d92464f4340330"
+ },
+ "mutation_isolation": {
+  "cache_hits": 1,
+  "semantic_npz_identical": true
+ },
+ "plants": {
+  "numeric_field": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "list_count": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "energy_order": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "ls_lt": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "unknown_lb": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "nc_component": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "foreign_mat": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "wrong_mf_reference": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "truncation": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "unconsumed_tail": {
+   "returncode": 101,
+   "has_context": true,
+   "pass": true
+  },
+  "duplicate_target": {
+   "returncode": 1,
+   "published_pair": false,
+   "pass": true
+  },
+  "activation_source_hash_mismatch": {
+   "returncode": 1,
+   "published_pair": false,
+   "pass": true
+  }
+ },
+ "peak_child_rss_bytes": 64438272,
+ "allocation_limit_bytes": 1000000000,
+ "pass": true
+}

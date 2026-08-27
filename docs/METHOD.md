@@ -144,8 +144,50 @@ segment is decay-only. Decay remains active in every segment, so replacing separ
 average is generally not equivalent. Elapsed time, multiplier-weighted time and physical fluence are accumulated after
 every boundary.
 
+## MF=33 covariance and local uncertainty (P11)
+
+`actinv-data` strictly parses ENDF-6 MF=33 NI covariance forms LB=0--6, 8 and 9 into a separate
+`actinv-covariance-1` sidecar. NC records, lumped reactions, foreign/cross-sublibrary references, malformed LIST
+dimensions and unknown representations fail with MAT/MF/MT context. Component descriptors, deduplicated energy grids
+and binary64 values are offset-indexed arrays; the adjacent index binds the activation library and index, group
+boundaries, source manifest, per-target identity/inventory, builder fingerprint and sidecar hash. The ordinary path
+does not open or allocate this data when `uncertainty` is omitted.
+
+For covariance collapse, each activation-group integral `Phi_g` is represented as constant flux per unit energy
+inside its group while that group's activation cross section remains constant. Integration uses the union of
+activation and covariance boundaries. Relative components multiply the applicable activation-row cross sections;
+absolute LB=0 is used directly, with product-row/base-row ratios where a File-3 covariance feeds a derived product
+row. LB=8 and LB=9 retain ENDF-102's short-range subgroup-width laws. The resulting one-group matrix is the double
+flux-weighted integral divided by total flux squared. Zero total flux produces zero nominal cross sections and zero
+covariance.
+
+Each activation row is a distinct parameter `(target, MT, ZAP, LFS, LMF)`. Rows with a valid target/MT
+self-covariance are covered; MF=10 rows require MF=40 and are therefore uncovered in P11. A missing cross component
+between covered rows contributes zero as absent evaluated covariance and is counted. No covariance value is projected
+to positive semidefinite form, clipped, decorrelated or otherwise repaired. Both orientations are assembled and
+symmetry is diagnosed before propagation.
+
+CRAM order is selectable as 16 or 48. For a parameter direction `dA`, every incomplete-partial-fraction pole reuses
+the primal factorization and differentiates the selected recurrence exactly:
+
+`M z = y`, `M = dt A - theta I`, `M dz = dy - dt dA z`.
+
+Tangents cross irradiation, pulse and cooling boundaries with the nominal state; a zero-flux segment has exact
+`dA = 0`. Trace sources and coupled depletion use the same row-to-matrix mapping as the nominal solve. Reported
+sensitivities are local derivatives at the fixed mode, prune set, schedule and nominal nuclear data, in response units
+per barn.
+
+For response sensitivity vector `S` and the covered collapsed matrix `C`, the MF=33 variance is `S C S^T`. A
+materially negative result fails. Only a negative residue no larger than
+`128 epsilon sum(abs(S_i C_ij S_j))` is reported and set to zero. The two-sided normal interval uses the requested
+confidence; the selected-versus-alternate CRAM response difference remains a separate numerical-method bound and
+expands a separately named conservative interval. Neither interval is a tolerance limit or safety margin. Decay and
+MF=32, production/MF=40 and yield, incident-flux, material-composition, response-coefficient and model uncertainties
+are excluded and listed in every uncertainty ledger/certificate.
+
 **Certificate and ledger.** The core computes SHA-256 for the activation library, its index, both decay files and the
-optional photon response and every fission-yield evaluation before solving. Declared hashes and the library/index link
+optional photon response, every fission-yield evaluation and an optional covariance sidecar/index before solving.
+Declared hashes and the library/index link
 fail closed. Every run reports composition gaps, explicit-isotope masses, products without evaluated decay data,
 fission selection/balance/leakage, burn-up selection, numerical-floor/negative round-off, photon normalization and
 missing-spectrum bounds, and response coverage.

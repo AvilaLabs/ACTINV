@@ -90,5 +90,11 @@ jobs:
       - name: P10 charged-projectile runtime contract
         run: python controls/g6_p10_projectile_runtime.py
 
+      - name: P11 synthetic uncertainty and entry-point controls
+        run: |
+          python controls/g3_p11_sensitivity.py
+          python controls/g4_p11_propagation.py
+          python controls/g5_p11_entry_points.py
+
       - name: Repository is self-contained
         run: python controls/g1_self_contained.py

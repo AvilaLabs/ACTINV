@@ -39,11 +39,21 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
     "build_up_factor": 2.0,
     "gamma_constant_cutoff_eV": 20000.0
   },
+  "uncertainty": {
+    "covariance": {
+      "path": "/data/actinv_tendl2025_n_709g.cov.npz",
+      "sha256": "64 hexadecimal digits"
+    },
+    "responses": ["heat.total", "heat.alpha", "heat.beta", "heat.gamma", "activity:Mn56"],
+    "confidence_level": 0.95,
+    "require_complete": false
+  },
   "options": {
     "mode": "auto",
     "prune": "rate",
     "bmin_atoms_per_g": 1e-8,
     "temperature_K": 293.6,
+    "cram_order": 16,
     "outputs": ["inventory", "activity", "heat", "photons", "dose", "pathways", "ledger", "certificate"]
   }
 }
@@ -62,6 +72,7 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
 | `spectrum.flux_per_group` | Group-integrated fluxes. `descending: true` reverses the supplied order before use. |
 | `schedule` | At least one duration/flux-multiplier pair. Accepted duration units: seconds, minutes, hours, days and years. |
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations; see below. Empty/omitted preserves the explicit no-yields leakage path. |
+| `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
 
 The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data,
 every fission-yield evaluation and the photon response. A declaration is a constraint, not a value copied into the
@@ -122,6 +133,27 @@ the fission-rate-weighted representative incident energy separately for each par
 requested energy, selected bracket, interpolation weight, clamp decision, product count and effective yield sum.
 Fissioning parents without a matching file remain explicit leakage and never borrow another parent's evaluation.
 
+## MF=33 uncertainty
+
+`uncertainty` is optional and neutron-only. `uncertainty.covariance.path` names an
+`actinv-covariance-1` sidecar and `uncertainty.covariance.sha256` is mandatory. The adjacent
+`<stem>_index.json` must link the exact activation-library/index hashes, neutron projectile, group-boundary hash and
+every target/source identity. ACTINV recomputes and records both sidecar and index hashes before matrix assembly.
+
+`responses` accepts the canonical selectors `heat.total`, `heat.alpha`, `heat.beta`, `heat.gamma`,
+`activity:Nuclide`, and `activity:*`. Selectors must be unique. An empty or omitted list selects all four heat
+components plus every activity reported at that step. `confidence_level` defaults to `0.95` and must be strictly
+between zero and one. `require_complete` defaults to `false`; when true, an active activation row without a valid
+MF=33 self-covariance fails rather than returning a partial band.
+
+Each requested response reports its nominal value, local sensitivity to every active collapsed row in response units
+per barn, MF=33 standard uncertainty, relative standard uncertainty when defined, the requested two-sided normal
+interval, an alternate-CRAM-order difference, and a conservative interval expanded by that numerical-method bound.
+Coverage is `complete` only when every nonzero-sensitivity row has a valid self-covariance. Missing evaluated
+cross-reaction terms contribute zero and are counted; they are not invented. These intervals are neither tolerance
+limits nor safety margins, and exclude decay/MF=32, production/MF=40 and yield, flux, composition,
+response-coefficient and model uncertainty.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon
@@ -140,7 +172,9 @@ curves for every material element to produce the contact-dose proxy.
 
 ## Options and result
 
-`mode` is `auto`, `trace`, or `coupled`. For each initial nuclide, `auto` computes the base-spectrum reaction-loss
+`mode` is `auto`, `trace`, or `coupled`. `cram_order` is `16` (default) or `48`; an uncertainty run evaluates the
+other order as its separately reported numerical-method comparison. For each initial nuclide, `auto` computes the
+base-spectrum reaction-loss
 optical depth `tau = loss_rate * sum(dt * flux_multiplier)` and burn-up fraction `-expm1(-tau)`; it selects `trace`
 only when the largest fraction is strictly below `1e-6`. The controlling nuclide, optical depth and fraction are
 ledgered. Explicitly requested modes are always honored. `prune` is `rate`, `reach`, or `none`. The `outputs` list
@@ -172,6 +206,21 @@ actinv build-library INPUT OUTPUT.npz \
 boundary file. Neutron defaults are 709 groups and 293.6 K; charged defaults are 162 groups and 0 K. The adjacent
 `<stem>_index.json` records source hashes, normalized options, group hash, builder fingerprint, target ledgers and the
 final NPZ hash. A content-addressed cache is optional and revalidated before reuse.
+
+## Build an MF=33 covariance sidecar
+
+```bash
+actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz \
+  --workers 4 --cache /data/actinv-cov-cache
+```
+
+`INPUT` must be the neutron ENDF corpus from which `ACTIVATION.npz` was built. Source hashes, filenames, MAT,
+ZA/LISO target identities and the adjacent activation index must all agree. The builder supports strict MF=33 NI
+forms LB=0--6, 8 and 9; NC components, foreign or cross-sublibrary references, lumped MTL, malformed dimensions and
+unknown forms fail with MAT/MF/MT context. Its separate `<stem>_index.json` records the activation identities, source
+manifest, representation inventory, builder fingerprint and final sidecar hash. Per-source checkpoints are
+content-addressed and revalidated; worker count and cache reuse do not change canonical bytes. Raw evaluations,
+checkpoints and generated sidecars remain external data and must not be committed.
 
 When photons are requested (or `outputs` is omitted), `steps[].photon_source` contains:
 
@@ -232,7 +281,8 @@ file variants produce a named error rather than a guessed interpretation.
 
 Mesh mode replaces the ordinary `spectrum` with a mandatory canonical-file path and SHA-256. All cells receive the
 same explicit library, decay data, optional fission-yield files, material, schedule, options and photon configuration
-and solve independently.
+and optional uncertainty configuration, and solve independently. The covariance sidecar is verified and prepared
+once; workers borrow it rather than re-reading or cloning it per cell.
 
 ```json
 {

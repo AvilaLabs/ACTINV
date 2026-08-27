@@ -125,3 +125,28 @@ The checker verdict is **P10-CONDITIONAL** because the append-only frozen record
 builder fingerprint is `7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43`; exact complete-library hashes and resource
 profiles are in `results/g7_p10_builds.json` and [the P10 session record](../sessions_P10.md). This establishes
 infinite-dilution unresolved processing, not finite-dilution self-shielding or probability tables.
+
+## P11 covariance, sensitivities and uncertainty controls
+
+P11 validates strict MF=33 ingestion, spectrum collapse, exact differentiation of the selected CRAM recurrence and
+first-order response propagation before scanning the complete TENDL-2025 neutron corpus. Python dense/parser controls
+are independent of production Rust; NJOY2016.79 GROUPR/ERRORR and OpenMC 0.15.3 provide external numerical anchors.
+
+| gate | result |
+|---|---|
+| G1 parser/sidecar | Fe-56/Ni-58 retain 209 components and 36,535 numeric fields at zero ULP. One/four-worker and fresh/cached NPZ/index bytes match; one source mutation reuses exactly one checkpoint; all 12 fail-closed plants pass. Peak child RSS is 64,438,272 bytes. |
+| G2 collapse/reference | Synthetic LB=0--6/8/9 worst relative difference is `2.754e-16`; three real Fe-56 spectra agree with the independent collapse at `1.198e-15` worst. The amended group-constant NJOY comparison is `2.7266e-4`, inside `5e-3`. |
+| G3 CRAM/sensitivities | CRAM-16/48 dense controls pass. Across trace/coupled irradiation, pulse and cooling cases, 288 analytic/finite-difference comparisons have `3.013e-11` worst connected relative difference and `7.124e-13` maximum absolute difference; omitted order is byte-identical to explicit CRAM-16 after the frozen normalization. |
+| G4 propagation | Direct, Rust and reported `S C S^T` agree to `2.055e-16` relative or exactly. A fixed-seed, chunked antithetic `2^26` sample differs by `1.943e-4`, inside `1e-3`; cross-term and all negative/nonfinite/dimension edge cases pass. |
+| G5 reports/entry points | CLI, PyO3, prepared and mesh scientific/provenance fields are exact across 24 response records. Five input hashes rematch, every required report field is present, and all ten mismatch/selector/completeness plants fail before publishing. |
+| G6 corpus/regression/docs | An independent raw-source scan reproduces 2,850 files, 84,489 sections and 285,023 components with zero errors or omissions. Current fresh/cached sidecar and index bytes match; peak fresh/cached RSS is 1,121,943,552/933,879,808 bytes with zero swaps. P5--P10 verdicts, CI subset, docs and exact Rust gates pass. |
+
+The complete sidecar covers 105,817 of 127,724 eligible non-MF10 activation rows (82.848%). Another 40,011 MF=10
+rows are explicitly outside MF=33; 21,907 non-MF10 rows lack a self-covariance and remain uncovered. These are corpus
+coverage facts, not fabricated error estimates. The sidecar contains 84,489 LB=5, 116,045 LB=6 and 84,489 LB=8
+components and has SHA-256 `c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde`.
+
+The checker verdict is **P11-CONDITIONAL** because Amendments A--E preserve the aggregation/control repairs. Exact
+inputs, exclusions, hashes and resource evidence are in `results/g1_p11_covariance.json` through
+`results/g6_p11_complete.json` and [the P11 session record](../sessions_P11.md). MF=33 bands do not include decay,
+MF=32, MF=40/yield, flux, composition, response-coefficient or model uncertainty and are not licensing safety margins.

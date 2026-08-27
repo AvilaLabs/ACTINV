@@ -152,6 +152,21 @@ pub struct RateLedger {
     pub burnup_nuclide: Option<(i32, i32)>,
 }
 
+#[derive(Clone, Copy, Debug)]
+pub struct ReactionDerivative {
+    pub library_row: usize,
+    pub row: usize,
+    pub column: usize,
+    /// Matrix derivative with respect to the row's collapsed cross section, in s^-1 barn^-1.
+    pub per_barn_s: f64,
+}
+
+#[derive(Debug)]
+pub struct ReactionAssembly {
+    pub triplets: Vec<(usize, usize, f64)>,
+    pub derivatives: Vec<ReactionDerivative>,
+}
+
 /// Reaction rates per atom (1/s) for every library target under a group flux, as triplets over the chain's indices.
 /// `lib_targets[i]` is the (ZA, LISO) of library target index i.
 pub fn reaction_rates(
@@ -162,11 +177,25 @@ pub fn reaction_rates(
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
 ) -> Vec<(usize, usize, f64)> {
+    reaction_rates_with_derivatives(lib, lib_targets, phi, chain, fission_yields, led).triplets
+}
+
+/// Reaction-rate assembly plus the exact matrix contribution of every activation-library row.
+pub fn reaction_rates_with_derivatives(
+    lib: &Library,
+    lib_targets: &[(i32, i32)],
+    phi: &[f64],
+    chain: &Chain,
+    fission_yields: &HashMap<(i32, i32), EffectiveYields>,
+    led: &mut RateLedger,
+) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
+    let mut derivatives = Vec::new();
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
+    let rate_per_barn = 1e-24 * phi.iter().sum::<f64>();
     for (i, r) in lib.rows.iter().enumerate() {
-        let rate = lib.one_group(i, phi) * 1e-24 * phi.iter().sum::<f64>();
-        if rate == 0.0 {
+        let rate = lib.one_group(i, phi) * rate_per_barn;
+        if rate == 0.0 && rate_per_barn == 0.0 {
             continue;
         }
         let tgt = match lib_targets.get(r.target) {
@@ -183,7 +212,15 @@ pub fn reaction_rates(
             }
         };
         if r.zap == -1 {
-            trip.push((col, col, -rate));
+            if rate != 0.0 {
+                trip.push((col, col, -rate));
+            }
+            derivatives.push(ReactionDerivative {
+                library_row: i,
+                row: col,
+                column: col,
+                per_barn_s: -rate_per_barn,
+            });
             continue;
         } // loss term
         if r.mt == 18 && r.zap == 0 {
@@ -199,48 +236,82 @@ pub fn reaction_rates(
                     match chain.index.get(&product) {
                         Some(&row) => {
                             mapped_yield_sum += yield_value;
-                            trip.push((row, col, product_rate));
+                            if product_rate != 0.0 {
+                                trip.push((row, col, product_rate));
+                            }
+                            derivatives.push(ReactionDerivative {
+                                library_row: i,
+                                row,
+                                column: col,
+                                per_barn_s: yield_value * rate_per_barn,
+                            });
                         }
                         None => {
                             leakage_yield_sum += yield_value;
-                            trip.push((chain.leak, col, product_rate));
-                            led.fission_product_leakage.push(FissionProductLeakage {
-                                parent: parent.clone(),
-                                product: format!("{}_{}", product.0, product.1),
-                                yield_value,
-                                production_rate_per_parent_s: product_rate,
+                            if product_rate != 0.0 {
+                                trip.push((chain.leak, col, product_rate));
+                                led.fission_product_leakage.push(FissionProductLeakage {
+                                    parent: parent.clone(),
+                                    product: format!("{}_{}", product.0, product.1),
+                                    yield_value,
+                                    production_rate_per_parent_s: product_rate,
+                                });
+                            }
+                            derivatives.push(ReactionDerivative {
+                                library_row: i,
+                                row: chain.leak,
+                                column: col,
+                                per_barn_s: yield_value * rate_per_barn,
                             });
                         }
                     }
                 }
-                led.fission_balance.insert(
-                    parent,
-                    FissionBalance {
-                        fission_rate_per_parent_s: rate,
-                        raw_yield_sum: yields.sum,
-                        mapped_yield_sum,
-                        leakage_yield_sum,
-                    },
-                );
+                if rate != 0.0 {
+                    led.fission_balance.insert(
+                        parent,
+                        FissionBalance {
+                            fission_rate_per_parent_s: rate,
+                            raw_yield_sum: yields.sum,
+                            mapped_yield_sum,
+                            leakage_yield_sum,
+                        },
+                    );
+                }
             } else {
-                *led.fission_no_yields.entry(parent).or_insert(0.0) += rate;
-                trip.push((chain.leak, col, rate));
+                if rate != 0.0 {
+                    *led.fission_no_yields.entry(parent).or_insert(0.0) += rate;
+                    trip.push((chain.leak, col, rate));
+                }
+                derivatives.push(ReactionDerivative {
+                    library_row: i,
+                    row: chain.leak,
+                    column: col,
+                    per_barn_s: rate_per_barn,
+                });
             }
             continue;
         }
         if r.lmf == -2 {
             // builder could not map the product
-            *led.products_unmapped
-                .entry(format!("{}_{}_MT{}", tgt.0, tgt.1, r.mt))
-                .or_insert(0.0) += rate;
-            trip.push((chain.leak, col, rate));
+            if rate != 0.0 {
+                *led.products_unmapped
+                    .entry(format!("{}_{}_MT{}", tgt.0, tgt.1, r.mt))
+                    .or_insert(0.0) += rate;
+                trip.push((chain.leak, col, rate));
+            }
+            derivatives.push(ReactionDerivative {
+                library_row: i,
+                row: chain.leak,
+                column: col,
+                per_barn_s: rate_per_barn,
+            });
             continue;
         }
         let row = match chain.index.get(&(r.zap, r.lfs)) {
             Some(&j) => j,
             None => match chain.index.get(&(r.zap, 0)) {
                 Some(&j) => {
-                    if r.lfs != 0 {
+                    if r.lfs != 0 && rate != 0.0 {
                         *led.isomer_fell_back_to_ground
                             .entry(format!("{}_m{}", r.zap, r.lfs))
                             .or_insert(0.0) += rate;
@@ -248,14 +319,27 @@ pub fn reaction_rates(
                     j
                 }
                 None => {
-                    *led.products_no_decay_data
-                        .entry(format!("{}_{}", r.zap, r.lfs))
-                        .or_insert(0.0) += rate;
+                    if rate != 0.0 {
+                        *led.products_no_decay_data
+                            .entry(format!("{}_{}", r.zap, r.lfs))
+                            .or_insert(0.0) += rate;
+                    }
                     chain.leak
                 }
             },
         };
-        trip.push((row, col, rate));
+        if rate != 0.0 {
+            trip.push((row, col, rate));
+        }
+        derivatives.push(ReactionDerivative {
+            library_row: i,
+            row,
+            column: col,
+            per_barn_s: rate_per_barn,
+        });
     }
-    trip
+    ReactionAssembly {
+        triplets: trip,
+        derivatives,
+    }
 }

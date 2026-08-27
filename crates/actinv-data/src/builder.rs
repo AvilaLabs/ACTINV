@@ -369,7 +369,7 @@ fn store_checkpoint(
     write_json_atomic(&index_path, &index)
 }
 
-fn discover_inputs(input: &Path, output: Option<&Path>) -> Result<Vec<PathBuf>, String> {
+pub(crate) fn discover_inputs(input: &Path, output: Option<&Path>) -> Result<Vec<PathBuf>, String> {
     let metadata = std::fs::symlink_metadata(input)
         .map_err(|error| format!("cannot inspect input {}: {error}", input.display()))?;
     if metadata.file_type().is_symlink() {
@@ -1215,7 +1215,7 @@ fn duplicate_target_error(previous: &TargetIndex, current: &TargetIndex) -> Stri
     )
 }
 
-fn write_json_atomic(path: &Path, value: &impl Serialize) -> Result<(), String> {
+pub(crate) fn write_json_atomic(path: &Path, value: &impl Serialize) -> Result<(), String> {
     use std::sync::atomic::{AtomicU64, Ordering};
     static NEXT_JSON_TEMPORARY: AtomicU64 = AtomicU64::new(0);
     let text = serde_json::to_string_pretty(value)

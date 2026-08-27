@@ -96,21 +96,21 @@ impl Library {
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
-enum NpyDtype {
+pub(crate) enum NpyDtype {
     I64,
     F64,
 }
 
 #[derive(Clone, Debug)]
-struct NpyHeader {
-    shape: Vec<usize>,
-    dtype: NpyDtype,
-    elements: usize,
+pub(crate) struct NpyHeader {
+    pub(crate) shape: Vec<usize>,
+    pub(crate) dtype: NpyDtype,
+    pub(crate) elements: usize,
 }
 
 /// Read only an NPY header. Payloads are decoded directly into their final vectors so a large `sig` member never
 /// exists simultaneously as raw bytes and as `f64` values.
-fn read_npy_header(reader: &mut impl Read) -> Result<NpyHeader, String> {
+pub(crate) fn read_npy_header(reader: &mut impl Read) -> Result<NpyHeader, String> {
     let mut preamble = [0u8; 8];
     reader
         .read_exact(&mut preamble)
@@ -193,7 +193,7 @@ fn read_npy_header(reader: &mut impl Read) -> Result<NpyHeader, String> {
     })
 }
 
-fn read_i64(reader: &mut impl Read) -> Result<i64, String> {
+pub(crate) fn read_i64(reader: &mut impl Read) -> Result<i64, String> {
     let mut bytes = [0u8; 8];
     reader
         .read_exact(&mut bytes)
@@ -201,7 +201,7 @@ fn read_i64(reader: &mut impl Read) -> Result<i64, String> {
     Ok(i64::from_le_bytes(bytes))
 }
 
-fn read_f64_values(reader: &mut impl Read, count: usize) -> Result<Vec<f64>, String> {
+pub(crate) fn read_f64_values(reader: &mut impl Read, count: usize) -> Result<Vec<f64>, String> {
     const VALUES_PER_CHUNK: usize = 8192;
     let mut values = Vec::new();
     values
@@ -227,7 +227,7 @@ fn read_f64_values(reader: &mut impl Read, count: usize) -> Result<Vec<f64>, Str
     Ok(values)
 }
 
-fn ensure_eof(reader: &mut impl Read, name: &str) -> Result<(), String> {
+pub(crate) fn ensure_eof(reader: &mut impl Read, name: &str) -> Result<(), String> {
     let mut extra = [0u8; 1];
     if reader
         .read(&mut extra)
@@ -446,7 +446,11 @@ pub fn read_npz_target(path: &str, target: usize) -> Result<Library, String> {
     read_npz_targets(path, &std::collections::BTreeSet::from([target]))
 }
 
-fn write_npy_header(writer: &mut impl Write, dtype: &str, shape: &[usize]) -> Result<(), String> {
+pub(crate) fn write_npy_header(
+    writer: &mut impl Write,
+    dtype: &str,
+    shape: &[usize],
+) -> Result<(), String> {
     let shape_text = if shape.len() == 1 {
         format!("({},)", shape[0])
     } else {
@@ -482,7 +486,7 @@ fn write_npy_header(writer: &mut impl Write, dtype: &str, shape: &[usize]) -> Re
     writer.write_all(b"\n").map_err(|e| e.to_string())
 }
 
-fn temporary_sibling(path: &Path) -> Result<std::path::PathBuf, String> {
+pub(crate) fn temporary_sibling(path: &Path) -> Result<std::path::PathBuf, String> {
     use std::sync::atomic::{AtomicU64, Ordering};
     static NEXT_TEMPORARY: AtomicU64 = AtomicU64::new(0);
     let parent = path.parent().unwrap_or_else(|| Path::new("."));

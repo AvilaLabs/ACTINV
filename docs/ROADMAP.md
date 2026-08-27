@@ -5,9 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-27):** P10 is closed **P10-CONDITIONAL** with all seven gates passing and the complete
-TENDL-2025 neutron/proton/deuteron/alpha plus EAF-2010 Rust builds recorded. The technical **v0.5 milestone is
-complete**. **P11 — Uncertainty is next, unopened and unhashed**; no P11 scope has been entered in this P10 close.
+**Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. Strict MF=33
+covariance, exact CRAM-16/48 sensitivities and explicitly scoped uncertainty reporting are complete; the full
+2,850-file TENDL-2025 neutron sidecar is independently re-derived and fresh/cached byte-identical. **P12 — v1.0
+hardening is next** and remains unopened and unhashed until its protocol is frozen.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -126,3 +127,13 @@ part that does not compress: users, issues, and the validation record accumulati
   with fresh/cached byte identity and zero target errors, silent fallbacks or convergence flags. Limited R-matrix,
   infinite-dilution unresolved averages, arbitrary-temperature broadening, ultra-narrow treatment and charged runtime
   identity are independently controlled. Technical v0.5 is complete; P11 is next and remains unopened.
+- 2026-08-27 — P11 opened under protocol `fb9964d5…`. Its minimum gate uses TENDL-2025 Fe-56/Ni-58 MF=33,
+  synthetic 2×2 covariance networks and NJOY2016.79 ERRORR before the complete 2,850-file scan. The frozen scope
+  includes strict LB=0--6/8/9 processing, a separate deterministic covariance sidecar, exact differentiation of the
+  selected CRAM-16/48 recurrence, MF=33 heat/activity bands and explicit coverage/numerical-method budgets. P12
+  remains unopened.
+- 2026-08-27 — P11 closed P11-CONDITIONAL: all six gates pass after the append-only Amendments A--E. The complete
+  2,850-source scan retains 84,489 sections and 285,023 components with zero errors or silent omissions; current
+  fresh/cached sidecar and index bytes match under bounded memory. Heat/activity sensitivities, MF=33 bands,
+  coverage, excluded sources and CRAM-order bounds are identical through CLI, Python, prepared and mesh paths. P12
+  is next but remains unopened and unhashed; no v1.0 tag or publication is claimed.

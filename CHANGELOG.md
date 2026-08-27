@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+**Added**
+
+- Strict ENDF-6 MF=33 LB=0--6/8/9 parsing and deterministic, checkpointed `actinv-covariance-1` sidecars linked to
+  their activation library, group structure and source manifest.
+- Selectable CRAM-16/48 plus exact differentiation of the selected incomplete-partial-fraction recurrence for local
+  heat/activity sensitivities through irradiation, pulses and cooling.
+- Per-response MF=33 standard uncertainties, normal intervals, separate alternate-CRAM bounds, conservative expanded
+  intervals, complete parameter metadata and explicit covered/uncovered/absent-cross accounting through CLI, PyO3,
+  prepared and mesh entry points.
+- Independent Python/dense/NJOY/OpenMC controls and a complete 2,850-source covariance scan with fresh/cached byte
+  identity, bounded memory and zero parsing omissions.
+
+**Fixed**
+
+- Covariance checkpoint identity is source-local, and full sidecar aggregation retains one grid map and validates the
+  combined output once instead of rebuilding growing prefixes quadratically.
+- The local CI end-to-end control can load an explicitly built PyO3 extension when no wheel is installed, while still
+  preferring and testing the installed package in release CI.
+
 ## v0.5.0 — 2026-08-27
 
 **Added**

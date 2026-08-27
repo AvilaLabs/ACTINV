@@ -8,7 +8,7 @@ use crate::flux::{
 use crate::run::{PreparedRun, RunResult};
 use crate::spec::{
     DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options, PhotonOptions,
-    Projectile, Spec, Spectrum, Step,
+    Projectile, Spec, Spectrum, Step, UncertaintyOptions,
 };
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -49,6 +49,8 @@ pub struct MeshSpec {
     pub photon: PhotonOptions,
     #[serde(default)]
     pub fission_yields: FissionYieldOptions,
+    #[serde(default)]
+    pub uncertainty: Option<UncertaintyOptions>,
     #[serde(default = "default_chunk_cells")]
     pub chunk_cells: usize,
     #[serde(default = "default_threads")]
@@ -110,6 +112,7 @@ impl MeshSpec {
             options: self.options.clone(),
             photon: self.photon.clone(),
             fission_yields: self.fission_yields.clone(),
+            uncertainty: self.uncertainty.clone(),
         }
     }
 }
@@ -370,13 +373,14 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
             spec.projectile.name()
         ));
     }
-    let prepared = PreparedRun::prepare_inputs(
+    let prepared = PreparedRun::prepare_inputs_with_uncertainty(
         &spec.library,
         &spec.decay,
         &spec.photon,
         &spec.fission_yields,
         spec.projectile,
         spec.options.temperature_K,
+        spec.uncertainty.as_ref(),
     )?;
     let activation_boundaries = prepared.library_boundaries_eV().to_vec();
     if activation_boundaries.len() != prepared.library_groups() + 1 {
@@ -524,6 +528,7 @@ mod tests {
             options: Options::default(),
             photon: PhotonOptions::default(),
             fission_yields: FissionYieldOptions::default(),
+            uncertainty: None,
             chunk_cells: 1,
             threads: 1,
         }

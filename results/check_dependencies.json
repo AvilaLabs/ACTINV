@@ -16,7 +16,10 @@
   "controls/check_p8.py",
   "controls/g2_p9_fission_matrix.py",
   "controls/g3_p9_coupled_auto.py",
-  "controls/g6_p10_projectile_runtime.py"
+  "controls/g6_p10_projectile_runtime.py",
+  "controls/g3_p11_sensitivity.py",
+  "controls/g4_p11_propagation.py",
+  "controls/g5_p11_entry_points.py"
  ],
  "declared": [
   "h5py",

@@ -3,6 +3,7 @@
 5-minute spec through both the CLI and the Python module, and checks both against the recorded expected values.
 The iron-only library reproduces the 255-target library on this spec (verified: 2.6e-12) because only iron targets
 contribute to a pure-iron sample."""
+import importlib.util
 import os, sys, json, subprocess, tempfile, numpy as np
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, os.path.join(ROOT, "controls"))
@@ -28,8 +29,19 @@ sp = os.path.join(OUT, "spec.json"); json.dump(spec, open(sp, "w"))
 res_cli = os.path.join(OUT, "cli.json")
 subprocess.run([os.path.join(ROOT, "target", "release", "actinv"), "run", sp, res_cli], check=True)
 cli = json.load(open(res_cli))
-# ---- entry point 2: the Python module
-import actinv
+# ---- entry point 2: the installed module, or the explicitly built local extension
+try:
+    import actinv
+except ModuleNotFoundError:
+    extension = os.environ.get(
+        "ACTINV_PYTHON_LIBRARY",
+        os.path.join(ROOT, "python", "target", "release", "libactinv.so"),
+    )
+    module_spec = importlib.util.spec_from_file_location("actinv", extension)
+    if module_spec is None or module_spec.loader is None:
+        raise RuntimeError(f"cannot load Python extension {extension}")
+    actinv = importlib.util.module_from_spec(module_spec)
+    module_spec.loader.exec_module(actinv)
 py = json.loads(actinv.run(json.dumps(spec)))
 # ---- checks
 want = np.array(exp["heat_W_per_g_per_step"])

@@ -110,3 +110,28 @@ The neutron working corpus differs from the immutable official extraction only b
 field repairs frozen in P10 Amendments D/E; all 2,850 official hashes and both substitutions are independently
 recorded. Charged validation reads official processed TENDL-2017 rows, but no licensed FISPACT-II executable was run.
 P10 supplies infinite-dilution unresolved averages only; finite-dilution shielding remains explicitly out of scope.
+
+## P11 TENDL-2025 MF=33 covariance provenance
+
+P11 uses the same 2,850-file TENDL-2025 neutron working corpus and activation library recorded above. The covariance
+source is ENDF-6 MF=33; the two P10 Pb-208 fail-closed working-file substitutions are retained in source identity but
+do not alter a covariance record. The complete source manifest is
+`34f2048782bd50e4cab69e269826215632675514dd88c2bad1fe70ee92ce1ac4`. An independent Python parser re-hashed and
+parsed every source and reproduced all 84,489 sections and 285,023 components with zero error or omitted target.
+
+| artifact / reference | SHA-256 or identity | role |
+|---|---|---|
+| TENDL-2025 neutron activation library | `ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44` | 167,735 row spectrum library to which covariance is bound |
+| activation index | `8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb` | target/source/group identity |
+| P11 covariance builder fingerprint | `c9825cafd8945f32efda4a00ea081af811b887562ebf07ae33ac05ea1d6846d1` | exact Rust parser/storage/aggregation source identity |
+| complete covariance sidecar | `c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde` | external `actinv-covariance-1` NPZ |
+| complete covariance index | `9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6` | byte-identical fresh/cached index |
+| ENDF-6 Formats Manual used by P11 | `77a0fee413c3b1d5d74a161ed9fe7f77bbcbc58a654304851b7b2b400183d022` | normative MF=33 and LB=0--6/8/9 definitions |
+| NJOY2016.79 | commit `ac5adf5f33d893e42f2eed7fb286b0d51c7580da`; `errorr.f90` `4fd380f6a8b8c55ea3282bc5aed0e3755bee9361474423981200aa82800b956d` | independent Fe-56 GROUPR/ERRORR collapse control |
+| NJOY licence | `08dc30ca5b19bfa904168f5194b646bb13a661e3591c4e2d000e9a514554b76c` | BSD-3-Clause terms for the external control build |
+
+The complete sidecar retains 84,489 LB=5, 116,045 LB=6 and 84,489 LB=8 components. This inventory describes the
+evaluation; support for LB=0--6, 8 and 9 is exercised by synthetic controls even where this TENDL corpus does not use
+each form. Raw evaluations, NJOY tapes, per-source checkpoints and the 227 MiB generated sidecar remain outside Git.
+TENDL and ENDF reference terms remain those of their public hosts; users must check redistribution terms for any data
+they archive. ACTINV's MIT/Apache-2.0 licence applies to the software and controls, not to third-party nuclear data.

@@ -17,7 +17,8 @@
 //!   dump library-targets FILE TARGETS_CSV OUT -> one-pass sparse-target raw rows, groups and boundaries
 //!   dump library-target-compare OLD.npz OLD_TARGET NEW.npz NEW_TARGET -> bounded-memory row/group comparison
 use actinv_data::{
-    activation, composition, decay, doppler, endf, fission, groups, library, processing, resonance,
+    activation, composition, covariance, decay, doppler, endf, fission, groups, library,
+    processing, resonance,
 };
 
 fn doppler_probe(arguments: &[String]) {
@@ -1435,8 +1436,41 @@ fn main() {
             }
         }
         "provenance" => println!("{}", composition::provenance()),
+        "covariance" => {
+            assert_eq!(a.len(), 3, "covariance needs one ENDF file");
+            let text = std::fs::read_to_string(&a[2]).expect("read covariance file");
+            let components = covariance::parse_mf33(&text).expect("parse MF=33 covariance");
+            println!(
+                "{}",
+                serde_json::to_string(&components).expect("serialize covariance components")
+            );
+        }
+        "covariance-collapse" => {
+            assert_eq!(
+                a.len(),
+                6,
+                "covariance-collapse needs COVARIANCE.npz LIBRARY.npz FLUX.json ROWS_CSV"
+            );
+            let covariance = covariance::read_npz(&a[2]).expect("read covariance sidecar");
+            let library = library::read_npz(&a[3]).expect("read activation library");
+            let flux: Vec<f64> = serde_json::from_str(
+                &std::fs::read_to_string(&a[4]).expect("read covariance-collapse flux"),
+            )
+            .expect("parse covariance-collapse flux");
+            let rows: Vec<usize> = a[5]
+                .split(',')
+                .map(|value| value.parse().expect("parse covariance-collapse row"))
+                .collect();
+            let collapsed = covariance
+                .collapse(&library, &flux, &rows)
+                .expect("collapse covariance");
+            println!(
+                "{}",
+                serde_json::to_string(&collapsed).expect("serialize collapsed covariance")
+            );
+        }
         _ => eprintln!(
-            "usage: dump decay|spectra|spectra-summary|activation|activation-json|activation-product|fission-yields|fission-effective|resonance-rml|library|composition|material|provenance ..."
+            "usage: dump decay|spectra|spectra-summary|activation|activation-json|activation-product|covariance|covariance-collapse|fission-yields|fission-effective|resonance-rml|library|composition|material|provenance ..."
         ),
     }
 }

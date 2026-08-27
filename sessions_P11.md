@@ -1,0 +1,65 @@
+# ACTINV P11 — session close, 2026-08-27
+
+**Protocol:** `protocols/ACTINV-P11_PROTOCOL.md`
+(`fb9964d523e9bad8e2175ff24b5ca0e14982d9bfdf46962664a00a10925cc2d4`).
+**Verdict (`controls/check_p11.py`): P11-CONDITIONAL** — all six gates pass; the append-only repair history is
+retained in Amendments A--E and each amendment hash is frozen in `protocols/protocol_hash.txt`.
+
+| gate | result |
+|---|---|
+| G1 strict parser/sidecar | PASS — Fe-56/Ni-58 retain 209 components and 36,535 fields at zero ULP; one/four-worker and fresh/cached artifacts are byte-identical; source mutation reuses only the unaffected checkpoint; 12 rejection plants pass; peak child RSS 64,438,272 bytes |
+| G2 covariance collapse | PASS — synthetic LB=0--6/8/9 worst relative `2.754e-16`; independent real Fe-56 worst `1.198e-15`; fresh NJOY2016.79 GROUPR/ERRORR worst `2.7266e-4` under `5e-3` |
+| G3 CRAM/sensitivities | PASS — CRAM-16/48 dense controls pass; 288 trace/coupled pulse/cooling sensitivity comparisons have worst connected relative `3.013e-11`; default and explicit CRAM-16 legacy results match |
+| G4 propagation | PASS — direct/Rust/reported variance agree to `2.055e-16` or exactly; fixed-seed antithetic `2^26` sampling differs by `1.943e-4` under `1e-3`; cross and failure-edge controls pass |
+| G5 reports/entry points | PASS — 24 response records are scientifically/provenance-identical through CLI, PyO3, prepared and mesh paths; five hashes rematch; ten fail-closed plants pass |
+| G6 corpus/regression/docs | PASS — all 2,850 external files independently re-parse to 84,489 sections/285,023 components with zero errors/omissions; current fresh/cached sidecar and index bytes match; memory, regression, docs and exact Rust gates pass |
+
+## Delivered
+
+`actinv-data` now owns strict MF=33 NI parsing and a separate deterministic `actinv-covariance-1` sidecar built by
+`actinv build-covariance`. It supports LB=0--6/8/9, fails closed on unsupported references/components, binds every
+target/source and activation/group identity, publishes atomically and resumes from revalidated source-local
+checkpoints. No Python or NJOY code enters production.
+
+The core adds selectable CRAM-16/48 and exact tangent differentiation of the selected recurrence while reusing each
+pole's primal LU. Trace/coupled matrices, irradiation, pulses and cooling share the nominal row mapping. Optional
+uncertainty reports expose every active row parameter and local heat/activity sensitivity, spectrum-collapsed MF=33
+variance, normal interval, separate alternate-order numerical bound, expanded conservative interval and complete or
+partial coverage through ordinary, Python, prepared and mesh entry points.
+
+No covariance value is clipped or PSD-repaired. MF=10/MF=40, decay/MF=32, yields, flux, composition,
+response-coefficient and model uncertainties are explicitly excluded. Missing evaluated cross terms are zero and
+counted; missing self terms make rows uncovered. The band is named an **MF=33 nuclear-data band**, not a tolerance,
+safety margin or complete uncertainty claim.
+
+## Complete external artifact
+
+The final builder fingerprint is
+`c9825cafd8945f32efda4a00ea081af811b887562ebf07ae33ac05ea1d6846d1`. Current fresh/cached external outputs are
+byte-identical:
+
+| artifact | SHA-256 |
+|---|---|
+| covariance NPZ | `c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde` |
+| covariance index | `9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6` |
+| source manifest | `34f2048782bd50e4cab69e269826215632675514dd88c2bad1fe70ee92ce1ac4` |
+| independent target inventory | `eafaa9d6c6de27ec8cebe0de4c88dea8be2060adeab6e2856301a6ca2a46b1e3` |
+
+The fresh four-worker build took 1:33.64 with 1,095,648 KiB peak RSS; the 2,850-hit cached build took 66.40 s with
+911,992 KiB peak RSS. Both had zero swaps/major faults. The largest uncompressed NPY member is 427,623,256 bytes.
+Of 127,724 non-MF10 activation rows, 105,817 are covered and 21,907 lack a self-covariance; another 40,011 MF=10
+rows are explicitly outside MF=33. Raw evaluations, cache checkpoints, NJOY tapes and the generated sidecar remain
+outside Git.
+
+## Repair record and close
+
+Amendment A records source-local checkpoint identity, linear aggregation, the correct group-constant NJOY deck and
+conditioning limited to independently disconnected finite-difference residues. Amendment B corrects the control-owned
+mesh footer that claimed a volume integral without cell volumes. Amendment C makes the local CI control load the
+explicitly built PyO3 extension when no wheel is installed. Amendment D removes a random control-owned temporary path
+from committed G5 diagnostic tails, and Amendment E adds the three new CI controls to the dependency audit. No frozen
+physics tolerance was relaxed and no unsafe,
+ownership/concurrency redesign, fabricated covariance or bulk nuclear data entered the repository.
+
+The workspace remains version 0.5.0 while P11 is an unreleased v1.0-milestone checkpoint. This close opens P12; it
+does not tag, publish or claim v1.0.

@@ -55,6 +55,27 @@ counted for inspection only and never appear as production sources.
 - `rate_pruning` — threshold, every dropped nuclide's atom/feed bound, and `removed_heat_W_per_g_bound`. Reachability
   and `none` pruning produce an empty dropped list.
 
+## MF=33 uncertainty accounting
+
+When an `uncertainty` object is present, `ledger.uncertainty` names the method and the **MF=33 nuclear-data band**,
+records the confidence/multiplier, selected and comparison CRAM orders, exact collapse convention, builder/source
+identities and all excluded uncertainty sources. Its coverage diagnostics are:
+
+- `active_parameters`, `covered_parameters`, `uncovered_library_rows` — the pruned matrix rows with local influence,
+  which of them have valid MF=33 self-covariance, and the exact uncovered library-row indices;
+- `absent_cross_parameter_pairs` — pairs of covered parameters for which the evaluation supplies no cross component;
+  they contribute zero evaluated covariance and are counted rather than fabricated;
+- `maximum_covariance_asymmetry_barn2` — the largest assembled orientation difference before propagation.
+
+Every `steps[].uncertainty.responses[]` record contains the nominal value, unit, complete parameter metadata and
+sensitivity, MF=33 standard/relative uncertainty, normal multiplier/interval, separately estimated CRAM-order bound,
+expanded conservative interval, round-off-negative variance removed, and `complete` or `partial` coverage. Coverage
+depends only on nonzero sensitivities for that response. `require_complete` fails before reporting a partial result.
+
+The excluded list is substantive: decay and MF=32 resonance-parameter covariance, MF=40 production/yield covariance,
+fission/product-yield covariance, incident-flux uncertainty, material-composition uncertainty, response-coefficient
+uncertainty and model discrepancy are not included. Neither reported interval is a licensing safety margin.
+
 ## Photon accounting
 
 `photon_spectra` is one entry per result step and contains:

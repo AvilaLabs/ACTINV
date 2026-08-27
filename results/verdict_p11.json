@@ -1,0 +1,18 @@
+{
+ "gates": {
+  "G1 strict MF33 parser/deterministic sidecar": "PASS \u2014 209 components/36535 fields at 0 ULP; 12 plants; peak RSS 64438272 bytes",
+  "G2 covariance collapse/reference": "PASS \u2014 synthetic max 2.754e-16; NJOY max 2.727e-04",
+  "G3 CRAM48/analytic sensitivities": "PASS \u2014 connected sensitivity max 3.013e-11; absolute max 7.124e-13; legacy CRAM16=True",
+  "G4 propagated variance/sampling": "PASS \u2014 67108864 samples; sample relative 1.943e-04; Rust relative 2.055e-16",
+  "G5 reports/certificates/entry points": "PASS \u2014 24 response records; entry identity=True; 10 plants",
+  "G6 complete corpus/regression/docs": "PASS \u2014 2850 files/285023 components; fresh/cached identity=True; covered eligible rows=105817/127724"
+ },
+ "repair_round": true,
+ "amendments": [
+  "ACTINV-P11_AMENDMENT_A.md",
+  "ACTINV-P11_AMENDMENT_B.md",
+  "ACTINV-P11_AMENDMENT_C.md",
+  "ACTINV-P11_AMENDMENT_D.md"
+ ],
+ "verdict": "P11-CONDITIONAL"
+}

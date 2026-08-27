@@ -42,6 +42,13 @@ errors, unsupported fallbacks or convergence flags. R-matrix-limited and infinit
 arbitrary-temperature neutron broadening and analytic ultra-narrow lines are independently controlled. The P10
 checker verdict is **P10-CONDITIONAL** because its frozen repair history is retained.
 
+P11 adds strict ENDF-6 MF=33 covariance sidecars, CRAM-16/48, exact local sensitivities of heat and activity, and a
+separately labelled **MF=33 nuclear-data band**. The complete 2,850-file TENDL-2025 neutron covariance corpus builds
+fresh/cached byte-identically with 285,023 retained components and no parse error or silent omission. Coverage and
+absent evaluated cross-covariance are explicit; decay, yield, flux, composition, response-coefficient and model
+uncertainties are excluded rather than implied. All six gates pass and the retained repair record makes the verdict
+**P11-CONDITIONAL**. This is not a licensing, safety or v1.0-release claim.
+
 ## Install
 
 ```bash
@@ -61,6 +68,8 @@ Nuclear data are never bundled; they are fetched from their public hosts and pin
 actinv build-library /data/TENDL-2025/n /data/tendl2025-n.npz \
   --format tendl --projectile neutron --groups fispact-709 \
   --temperature-K 293.6 --workers 4 --cache /data/actinv-cache
+actinv build-covariance /data/TENDL-2025/n /data/tendl2025-n.npz \
+  /data/tendl2025-n.cov.npz --workers 4 --cache /data/actinv-cov-cache
 python3 scripts/build_photon_response.py /data/nist-air-fe.json --elements Fe  # optional dose response
 ```
 
@@ -111,7 +120,9 @@ identical to 0.0, which is what makes the certificate's solver field meaningful.
 
 See [docs/SPEC.md](docs/SPEC.md). In short: a library and decay data, a natural-element and/or explicit-nuclide
 material, a group flux spectrum, an irradiation/cooling schedule, optional hash-pinned fission yields and optional
-external photon-response data. Unknown fields are an error — a misspelt option is never silently ignored.
+external photon-response data. Neutron runs may also declare a hash-pinned MF=33 covariance sidecar, selected
+heat/activity responses, confidence level and completeness requirement. Unknown fields are an error — a misspelt
+option is never silently ignored.
 
 ## Principles
 

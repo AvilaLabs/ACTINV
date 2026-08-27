@@ -1,13 +1,17 @@
 #![allow(non_snake_case)] // field names are the JSON wire format (Z, A, LISO, heat_W_per_g)
 //! spec -> result. This is the single path the CLI, the Python API and the harness all take (P5 G3).
 use crate::chain::{self, RateLedger};
-use crate::cram::{step as cram_step, Cram};
+use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::sparse::Csc;
 use crate::spec::{
     DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Projectile, Spec,
+    UncertaintyOptions,
 };
-use actinv_data::{composition, decay, fission, groups::GroupStructure, library};
+use crate::uncertainty::{
+    self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
+};
+use actinv_data::{composition, covariance, decay, fission, groups::GroupStructure, library};
 use num_complex::Complex64 as C64;
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, HashMap};
@@ -56,6 +60,8 @@ pub struct StepOut {
     pub heat_bound_from_below_floor_W_per_g: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub photon_source: Option<PhotonSourceOut>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub uncertainty: Option<StepUncertainty>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -164,13 +170,22 @@ fn verify_hash(path: &str, declared: Option<&str>) -> Result<String, String> {
     Ok(computed)
 }
 
-/// CRAM-16 from the generated coefficient table (controls/gen_cram.py); never transcribed by hand.
-fn cram16() -> Cram {
-    use crate::cram_coeffs::{CRAM16_ALPHA, CRAM16_ALPHA0, CRAM16_THETA};
-    Cram {
-        alpha0: CRAM16_ALPHA0,
-        theta: CRAM16_THETA.iter().map(|(r, i)| C64::new(*r, *i)).collect(),
-        alpha: CRAM16_ALPHA.iter().map(|(r, i)| C64::new(*r, *i)).collect(),
+/// CRAM coefficients from the generated table (controls/gen_cram.py); never transcribed by hand.
+fn cram(order: u8) -> Cram {
+    use crate::cram_coeffs::{
+        CRAM16_ALPHA, CRAM16_ALPHA0, CRAM16_THETA, CRAM48_ALPHA, CRAM48_ALPHA0, CRAM48_THETA,
+    };
+    fn from_pairs(alpha0: f64, theta: &[(f64, f64)], alpha: &[(f64, f64)]) -> Cram {
+        Cram {
+            alpha0,
+            theta: theta.iter().map(|(r, i)| C64::new(*r, *i)).collect(),
+            alpha: alpha.iter().map(|(r, i)| C64::new(*r, *i)).collect(),
+        }
+    }
+    match order {
+        16 => from_pairs(CRAM16_ALPHA0, &CRAM16_THETA, &CRAM16_ALPHA),
+        48 => from_pairs(CRAM48_ALPHA0, &CRAM48_THETA, &CRAM48_ALPHA),
+        _ => unreachable!("spec validation accepts only CRAM-16/48"),
     }
 }
 
@@ -240,17 +255,242 @@ pub struct PreparedRun {
     projectile: Projectile,
     library_group_structure: Option<String>,
     temperature_K: f64,
+    uncertainty_options: Option<UncertaintyOptions>,
+    covariance: Option<PreparedCovariance>,
+}
+
+struct PreparedCovariance {
+    sha256: String,
+    index_path: String,
+    index_sha256: String,
+    index: serde_json::Value,
+    library: covariance::CovarianceLibrary,
+}
+
+struct UncertaintyRuntime {
+    parameters: Vec<SensitivityParameter>,
+    directions: Vec<Csc>,
+    tangents: Vec<Vec<f64>>,
+    covered_parameter_positions: Vec<usize>,
+    covariance_barn2: Vec<f64>,
+    uncovered_library_rows: Vec<usize>,
+    absent_cross_parameter_pairs: usize,
+    maximum_covariance_asymmetry_barn2: f64,
+    normal_multiplier: f64,
+    alternate_y: Vec<f64>,
+}
+
+struct ResponseSnapshot {
+    heat: [f64; 4],
+    activity: BTreeMap<String, f64>,
+}
+
+struct ResponseContext<'a> {
+    keep: &'a [usize],
+    positions: &'a [usize],
+    chain: &'a chain::Chain,
+    nuclides: &'a HashMap<(i32, i32), decay::Nuclide>,
+}
+
+fn response_snapshot(
+    state: &[f64],
+    keep: &[usize],
+    chain: &chain::Chain,
+    nuclides: &HashMap<(i32, i32), decay::Nuclide>,
+    bulk_heat_split: (f64, f64, f64),
+    bulk_activity: &BTreeMap<String, f64>,
+) -> ResponseSnapshot {
+    let (mut alpha, mut beta, mut gamma) = bulk_heat_split;
+    let mut activity = bulk_activity.clone();
+    for (subspace, &atoms) in state.iter().enumerate() {
+        let global = keep[subspace];
+        if global == chain.leak || global == chain.unit || atoms <= 0.0 {
+            continue;
+        }
+        let key = chain.keys[global];
+        let Some(nuclide) = nuclides.get(&key) else {
+            continue;
+        };
+        let decay_rate = nuclide.lambda();
+        if decay_rate <= 0.0 {
+            continue;
+        }
+        activity.insert(name_of(key.0, key.1), decay_rate * atoms);
+        alpha += decay_rate * atoms * nuclide.e_heavy() * EV;
+        beta += decay_rate * atoms * nuclide.e_light() * EV;
+        gamma += decay_rate * atoms * nuclide.e_em() * EV;
+    }
+    ResponseSnapshot {
+        heat: [alpha + beta + gamma, alpha, beta, gamma],
+        activity,
+    }
+}
+
+fn selected_responses(options: &UncertaintyOptions, nominal: &ResponseSnapshot) -> Vec<String> {
+    let mut selected = std::collections::BTreeSet::new();
+    if options.responses.is_empty() {
+        for response in ["heat.total", "heat.alpha", "heat.beta", "heat.gamma"] {
+            selected.insert(response.to_owned());
+        }
+        for nuclide in nominal.activity.keys() {
+            selected.insert(format!("activity:{nuclide}"));
+        }
+    } else {
+        for response in &options.responses {
+            if response == "activity:*" {
+                for nuclide in nominal.activity.keys() {
+                    selected.insert(format!("activity:{nuclide}"));
+                }
+            } else {
+                selected.insert(response.clone());
+            }
+        }
+    }
+    selected.into_iter().collect()
+}
+
+fn snapshot_value(snapshot: &ResponseSnapshot, response: &str) -> f64 {
+    match response {
+        "heat.total" => snapshot.heat[0],
+        "heat.alpha" => snapshot.heat[1],
+        "heat.beta" => snapshot.heat[2],
+        "heat.gamma" => snapshot.heat[3],
+        _ => response
+            .strip_prefix("activity:")
+            .and_then(|name| snapshot.activity.get(name))
+            .copied()
+            .unwrap_or(0.0),
+    }
+}
+
+fn tangent_value(
+    tangent: &[f64],
+    response: &str,
+    keep: &[usize],
+    positions: &[usize],
+    chain: &chain::Chain,
+    nuclides: &HashMap<(i32, i32), decay::Nuclide>,
+) -> f64 {
+    if let Some(name) = response.strip_prefix("activity:") {
+        return chain
+            .keys
+            .iter()
+            .position(|key| name_of(key.0, key.1) == name)
+            .and_then(|global| {
+                let subspace = positions[global];
+                (subspace != usize::MAX).then_some((global, subspace))
+            })
+            .map(|(global, subspace)| chain.lambda[global] * tangent[subspace])
+            .unwrap_or(0.0);
+    }
+    let component = match response {
+        "heat.total" => 0,
+        "heat.alpha" => 1,
+        "heat.beta" => 2,
+        "heat.gamma" => 3,
+        _ => unreachable!("validated response selector"),
+    };
+    let mut value = 0.0;
+    for (subspace, derivative) in tangent.iter().enumerate() {
+        let global = keep[subspace];
+        if global == chain.leak || global == chain.unit {
+            continue;
+        }
+        let Some(nuclide) = nuclides.get(&chain.keys[global]) else {
+            continue;
+        };
+        let energy = match component {
+            1 => nuclide.e_heavy(),
+            2 => nuclide.e_light(),
+            3 => nuclide.e_em(),
+            _ => nuclide.e_heavy() + nuclide.e_light() + nuclide.e_em(),
+        };
+        value += nuclide.lambda() * derivative * energy * EV;
+    }
+    value
+}
+
+fn build_step_uncertainty(
+    runtime: &UncertaintyRuntime,
+    options: &UncertaintyOptions,
+    nominal: &ResponseSnapshot,
+    alternate: &ResponseSnapshot,
+    context: &ResponseContext<'_>,
+) -> Result<StepUncertainty, String> {
+    let mut responses = BTreeMap::new();
+    for response in selected_responses(options, nominal) {
+        let values: Vec<f64> = runtime
+            .tangents
+            .iter()
+            .map(|tangent| {
+                tangent_value(
+                    tangent,
+                    &response,
+                    context.keep,
+                    context.positions,
+                    context.chain,
+                    context.nuclides,
+                )
+            })
+            .collect();
+        let covered: Vec<f64> = runtime
+            .covered_parameter_positions
+            .iter()
+            .map(|position| values[*position])
+            .collect();
+        let (variance, residue) =
+            uncertainty_report::propagated_variance(&covered, &runtime.covariance_barn2)?;
+        let response_unit = if response.starts_with("heat.") {
+            "W g^-1"
+        } else {
+            "Bq g^-1"
+        };
+        let sensitivity_unit = format!("{response_unit} barn^-1");
+        let sensitivities = values
+            .into_iter()
+            .zip(&runtime.parameters)
+            .map(|(value, parameter)| SensitivityOut {
+                parameter: parameter.clone(),
+                value,
+                unit: sensitivity_unit.clone(),
+            })
+            .collect();
+        let report = uncertainty_report::response_band(BandInput {
+            nominal: snapshot_value(nominal, &response),
+            alternate: snapshot_value(alternate, &response),
+            unit: response_unit.into(),
+            confidence_level: options.confidence_level,
+            normal_multiplier: runtime.normal_multiplier,
+            variance,
+            negative_variance_roundoff_removed: residue,
+            sensitivities,
+        })?;
+        if options.require_complete && report.coverage != "complete" {
+            return Err(format!(
+                "uncertainty response '{response}' has partial MF=33 coverage"
+            ));
+        }
+        responses.insert(response, report);
+    }
+    Ok(StepUncertainty {
+        method: "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
+        uncovered_library_rows: runtime.uncovered_library_rows.clone(),
+        absent_cross_parameter_pairs: runtime.absent_cross_parameter_pairs,
+        maximum_covariance_asymmetry_barn2: runtime.maximum_covariance_asymmetry_barn2,
+        responses,
+    })
 }
 
 impl PreparedRun {
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
-        Self::prepare_inputs(
+        Self::prepare_inputs_with_uncertainty(
             &spec.library,
             &spec.decay,
             &spec.photon,
             &spec.fission_yields,
             spec.projectile,
             spec.options.temperature_K,
+            spec.uncertainty.as_ref(),
         )
     }
 
@@ -261,6 +501,26 @@ impl PreparedRun {
         fission_options: &FissionYieldOptions,
         projectile: Projectile,
         temperature_K: f64,
+    ) -> Result<Self, String> {
+        Self::prepare_inputs_with_uncertainty(
+            library_ref,
+            decay_ref,
+            photon_options,
+            fission_options,
+            projectile,
+            temperature_K,
+            None,
+        )
+    }
+
+    pub fn prepare_inputs_with_uncertainty(
+        library_ref: &LibraryRef,
+        decay_ref: &DecayRef,
+        photon_options: &PhotonOptions,
+        fission_options: &FissionYieldOptions,
+        projectile: Projectile,
+        temperature_K: f64,
+        uncertainty_options: Option<&UncertaintyOptions>,
     ) -> Result<Self, String> {
         if !temperature_K.is_finite() || temperature_K < 0.0 {
             return Err("temperature_K must be finite and nonnegative".into());
@@ -411,6 +671,17 @@ impl PreparedRun {
                 )
             })
             .collect();
+        let covariance = match uncertainty_options {
+            Some(options) => Some(Self::load_covariance(
+                options,
+                &library_sha,
+                &index_sha,
+                &actual_group_hash,
+                &index,
+                &library_targets,
+            )?),
+            None => None,
+        };
         let mut nuclides =
             decay::parse_file(&decay_ref.primary).map_err(|error| error.to_string())?;
         let mut decay_nuclides_from_fallback = 0usize;
@@ -429,6 +700,19 @@ impl PreparedRun {
             }
         }
         let chain = chain::build(&nuclides);
+        if let Some(options) = uncertainty_options {
+            let known: std::collections::HashSet<_> =
+                nuclides.keys().map(|key| name_of(key.0, key.1)).collect();
+            for selector in &options.responses {
+                if let Some(name) = selector.strip_prefix("activity:") {
+                    if name != "*" && !known.contains(name) {
+                        return Err(format!(
+                            "uncertainty response '{selector}' names a nuclide absent from the decay library"
+                        ));
+                    }
+                }
+            }
+        }
         Ok(Self {
             library_path: library_ref.path.clone(),
             library_sha_declared: library_ref.sha256.clone(),
@@ -459,6 +743,200 @@ impl PreparedRun {
             projectile,
             library_group_structure,
             temperature_K,
+            uncertainty_options: uncertainty_options.cloned(),
+            covariance,
+        })
+    }
+
+    fn load_covariance(
+        options: &UncertaintyOptions,
+        activation_library_sha256: &str,
+        activation_index_sha256: &str,
+        group_boundary_sha256: &str,
+        activation_index: &serde_json::Value,
+        activation_targets: &[(i32, i32)],
+    ) -> Result<PreparedCovariance, String> {
+        let path = &options.covariance.path;
+        let sha256 = verify_hash(path, Some(&options.covariance.sha256))?;
+        let index_path = covariance::index_path(path)?.display().to_string();
+        let index_sha256 = verify_hash(&index_path, None)?;
+        let index: serde_json::Value = serde_json::from_str(
+            &std::fs::read_to_string(&index_path)
+                .map_err(|error| format!("cannot read covariance index {index_path}: {error}"))?,
+        )
+        .map_err(|error| format!("cannot parse covariance index {index_path}: {error}"))?;
+        let string = |name: &str| {
+            index
+                .get(name)
+                .and_then(serde_json::Value::as_str)
+                .ok_or_else(|| format!("covariance index {name} must be a string"))
+        };
+        if string("schema")? != "actinv-covariance-index-1" {
+            return Err("unsupported covariance-index schema".into());
+        }
+        if string("projectile")? != "neutron" {
+            return Err("covariance sidecar is not for neutron activation".into());
+        }
+        for (field, expected) in [
+            ("sha256_npz", sha256.as_str()),
+            ("activation_library_sha256", activation_library_sha256),
+            ("activation_index_sha256", activation_index_sha256),
+            ("group_boundary_sha256", group_boundary_sha256),
+        ] {
+            let recorded = string(field)?;
+            if !recorded.eq_ignore_ascii_case(expected) {
+                return Err(format!(
+                    "covariance index {field} mismatch: records {recorded}, expected {expected}"
+                ));
+            }
+        }
+        let covariance_targets = index
+            .get("targets")
+            .and_then(serde_json::Value::as_array)
+            .ok_or("covariance index targets must be an array")?;
+        let activation_target_values = activation_index
+            .get("targets")
+            .and_then(serde_json::Value::as_array)
+            .ok_or("activation index targets must be an array")?;
+        if covariance_targets.len() != activation_targets.len()
+            || activation_target_values.len() != activation_targets.len()
+        {
+            return Err("covariance and activation target counts differ".into());
+        }
+        for (target, ((covariance_target, activation_target), &(za, liso))) in covariance_targets
+            .iter()
+            .zip(activation_target_values)
+            .zip(activation_targets)
+            .enumerate()
+        {
+            let cov_integer = |name: &str| {
+                covariance_target
+                    .get(name)
+                    .and_then(serde_json::Value::as_i64)
+                    .ok_or_else(|| format!("covariance target {target} {name} must be an integer"))
+            };
+            let activation_integer = |name: &str| {
+                activation_target
+                    .get(name)
+                    .and_then(serde_json::Value::as_i64)
+                    .ok_or_else(|| format!("activation target {target} {name} must be an integer"))
+            };
+            if cov_integer("target")? != target as i64
+                || cov_integer("za")? != i64::from(za)
+                || cov_integer("liso")? != i64::from(liso)
+                || cov_integer("za")? != activation_integer("za")?
+                || cov_integer("liso")? != activation_integer("liso")?
+                || cov_integer("mat")? != activation_integer("mat")?
+            {
+                return Err(format!(
+                    "covariance target {target} identity differs from the activation index"
+                ));
+            }
+            for name in ["file", "source_sha256"] {
+                let covariance_value = covariance_target
+                    .get(name)
+                    .and_then(serde_json::Value::as_str)
+                    .ok_or_else(|| format!("covariance target {target} {name} must be a string"))?;
+                let activation_value = activation_target
+                    .get(name)
+                    .and_then(serde_json::Value::as_str)
+                    .ok_or_else(|| format!("activation target {target} {name} must be a string"))?;
+                if covariance_value != activation_value {
+                    return Err(format!(
+                        "covariance target {target} {name} differs from the activation index"
+                    ));
+                }
+            }
+        }
+        let library = covariance::read_npz(path)?;
+        let component_count = index
+            .get("components")
+            .and_then(serde_json::Value::as_u64)
+            .and_then(|value| usize::try_from(value).ok())
+            .ok_or("covariance index components must be a nonnegative integer")?;
+        if component_count != library.components.len() {
+            return Err(format!(
+                "covariance index records {component_count} components but sidecar contains {}",
+                library.components.len()
+            ));
+        }
+        let mut total_lb_counts: BTreeMap<i32, usize> = BTreeMap::new();
+        let mut target_component_counts = vec![0usize; activation_targets.len()];
+        let mut target_sections = vec![std::collections::BTreeSet::new(); activation_targets.len()];
+        let mut target_lb_counts = vec![BTreeMap::new(); activation_targets.len()];
+        for (component, stored) in library.components.iter().enumerate() {
+            if stored.target >= activation_targets.len() {
+                return Err(format!(
+                    "covariance component {component} has out-of-range target {}",
+                    stored.target
+                ));
+            }
+            target_component_counts[stored.target] += 1;
+            target_sections[stored.target].insert(stored.mt);
+            *target_lb_counts[stored.target]
+                .entry(stored.lb)
+                .or_default() += 1;
+            *total_lb_counts.entry(stored.lb).or_default() += 1;
+        }
+        let parse_lb_counts = |value: &serde_json::Value, context: &str| {
+            let object = value
+                .as_object()
+                .ok_or_else(|| format!("{context} lb_counts must be an object"))?;
+            object
+                .iter()
+                .map(|(key, value)| {
+                    let lb = key
+                        .parse::<i32>()
+                        .map_err(|_| format!("{context} has invalid LB key '{key}'"))?;
+                    let count = value
+                        .as_u64()
+                        .and_then(|count| usize::try_from(count).ok())
+                        .ok_or_else(|| format!("{context} LB={lb} count is invalid"))?;
+                    Ok((lb, count))
+                })
+                .collect::<Result<BTreeMap<_, _>, String>>()
+        };
+        let indexed_lb_counts = parse_lb_counts(
+            index
+                .get("lb_counts")
+                .ok_or("covariance index has no lb_counts")?,
+            "covariance index",
+        )?;
+        if indexed_lb_counts != total_lb_counts {
+            return Err("covariance index LB inventory differs from the sidecar".into());
+        }
+        for (target, value) in covariance_targets.iter().enumerate() {
+            let recorded_components = value
+                .get("components")
+                .and_then(serde_json::Value::as_u64)
+                .and_then(|count| usize::try_from(count).ok())
+                .ok_or_else(|| format!("covariance target {target} components is invalid"))?;
+            let recorded_sections = value
+                .get("mf33_sections")
+                .and_then(serde_json::Value::as_u64)
+                .and_then(|count| usize::try_from(count).ok())
+                .ok_or_else(|| format!("covariance target {target} mf33_sections is invalid"))?;
+            let recorded_lb_counts = parse_lb_counts(
+                value
+                    .get("lb_counts")
+                    .ok_or_else(|| format!("covariance target {target} has no lb_counts"))?,
+                &format!("covariance target {target}"),
+            )?;
+            if recorded_components != target_component_counts[target]
+                || recorded_sections != target_sections[target].len()
+                || recorded_lb_counts != target_lb_counts[target]
+            {
+                return Err(format!(
+                    "covariance target {target} inventory differs from the sidecar"
+                ));
+            }
+        }
+        Ok(PreparedCovariance {
+            sha256,
+            index_path,
+            index_sha256,
+            index,
+            library,
         })
     }
 
@@ -489,6 +967,7 @@ impl PreparedRun {
             || spec.fission_yields != self.fission_options
             || spec.projectile != self.projectile
             || (spec.options.temperature_K - self.temperature_K).abs() > 1e-9
+            || spec.uncertainty != self.uncertainty_options
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
         }
@@ -601,7 +1080,7 @@ impl PreparedRun {
             effective_fission_yields.insert(parent, effective);
         }
         let mut led = RateLedger::default();
-        let react = chain::reaction_rates(
+        let reaction_assembly = chain::reaction_rates_with_derivatives(
             lib,
             lib_targets,
             &phi,
@@ -609,6 +1088,7 @@ impl PreparedRun {
             &effective_fission_yields,
             &mut led,
         );
+        let react = reaction_assembly.triplets;
         // ---- trace formulation: bulk isotopes become constant sources through the unit state
         let mut bulk: HashMap<usize, f64> = HashMap::new();
         let mut absent: Vec<(i32, i32)> = Vec::new();
@@ -650,6 +1130,7 @@ impl PreparedRun {
         let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new(); // (product row fed, rate, bulk nuclide it came from)
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         let mut r_src: Vec<(usize, usize, f64)> = Vec::new();
+        let mut reaction_derivatives = Vec::new();
         let mut bulk_heat = 0.0;
         let mut bulk_heat_split = (0.0, 0.0, 0.0);
         let mut bulk_photon_active: Vec<(String, (i32, i32), f64)> = Vec::new();
@@ -682,6 +1163,21 @@ impl PreparedRun {
                     r_src.push((*r, *c, *v));
                 }
             }
+            for derivative in reaction_assembly.derivatives {
+                if bulk.contains_key(&derivative.column) {
+                    if derivative.row == derivative.column || bulk.contains_key(&derivative.row) {
+                        continue;
+                    }
+                    reaction_derivatives.push(chain::ReactionDerivative {
+                        row: derivative.row,
+                        column: ch.unit,
+                        per_barn_s: derivative.per_barn_s * bulk[&derivative.column],
+                        ..derivative
+                    });
+                } else if !bulk.contains_key(&derivative.row) {
+                    reaction_derivatives.push(derivative);
+                }
+            }
             for (c, nb) in &bulk {
                 let key = ch.keys[*c];
                 if let Some(nu) = nuclides.get(&key) {
@@ -698,6 +1194,7 @@ impl PreparedRun {
         } else {
             d_src = ch.decay.clone();
             r_src = react.clone();
+            reaction_derivatives = reaction_assembly.derivatives;
         }
         // ---- initial vector
         let mut n0 = vec![0.0f64; ch.n];
@@ -735,14 +1232,122 @@ impl PreparedRun {
         };
         let dsub = sub(&d_src);
         let rsub = sub(&r_src);
+        let mut derivative_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
+        for derivative in reaction_derivatives {
+            if derivative.per_barn_s != 0.0
+                && pos[derivative.row] != usize::MAX
+                && pos[derivative.column] != usize::MAX
+            {
+                derivative_sub
+                    .entry(derivative.library_row)
+                    .or_default()
+                    .push((
+                        pos[derivative.row],
+                        pos[derivative.column],
+                        C64::new(derivative.per_barn_s, 0.0),
+                    ));
+            }
+        }
         let mut y = vec![0.0f64; m];
         for (g, v) in n0.iter().enumerate() {
             if *v != 0.0 && pos[g] != usize::MAX {
                 y[pos[g]] = *v;
             }
         }
+        let mut uncertainty_runtime = match (&self.covariance, &spec.uncertainty) {
+            (Some(prepared), Some(options)) => {
+                let active_rows: Vec<usize> = derivative_sub.keys().copied().collect();
+                let collapsed = prepared.library.collapse(lib, &phi, &active_rows)?;
+                let maximum_covariance = collapsed
+                    .covariance_barn2
+                    .iter()
+                    .map(|value| value.abs())
+                    .fold(0.0f64, f64::max);
+                let symmetry_tolerance = 128.0
+                    * f64::EPSILON
+                    * maximum_covariance
+                    * collapsed.row_indices.len().max(1) as f64;
+                if collapsed.maximum_asymmetry_barn2 > symmetry_tolerance {
+                    return Err(format!(
+                        "collapsed covariance is materially asymmetric: {:.17e} barn^2 (bound {:.17e})",
+                        collapsed.maximum_asymmetry_barn2, symmetry_tolerance
+                    ));
+                }
+                for (&row, &cross_section) in
+                    collapsed.row_indices.iter().zip(&collapsed.one_group_barns)
+                {
+                    if cross_section.to_bits() != lib.one_group(row, &phi).to_bits() {
+                        return Err(format!(
+                            "covariance collapse nominal cross section differs at library row {row}"
+                        ));
+                    }
+                }
+                if options.require_complete && !collapsed.uncovered_rows.is_empty() {
+                    return Err(format!(
+                        "require_complete rejected {} active activation rows without MF=33 self-covariance",
+                        collapsed.uncovered_rows.len()
+                    ));
+                }
+                let covered_rows: BTreeMap<usize, usize> = collapsed
+                    .row_indices
+                    .iter()
+                    .enumerate()
+                    .map(|(position, row)| (*row, position))
+                    .collect();
+                let mut parameters = Vec::with_capacity(active_rows.len());
+                let mut directions = Vec::with_capacity(active_rows.len());
+                let mut covered_parameter_positions = Vec::new();
+                for (parameter_position, &row_index) in active_rows.iter().enumerate() {
+                    let row = lib.rows[row_index];
+                    let &(za, liso) = lib_targets.get(row.target).ok_or_else(|| {
+                        format!("activation row {row_index} has an invalid target index")
+                    })?;
+                    let covered = covered_rows.contains_key(&row_index);
+                    if covered {
+                        covered_parameter_positions.push(parameter_position);
+                    }
+                    parameters.push(SensitivityParameter {
+                        library_row: row_index,
+                        target: row.target,
+                        target_nuclide: name_of(za, liso),
+                        target_za: za,
+                        target_liso: liso,
+                        mt: row.mt,
+                        zap: row.zap,
+                        lfs: row.lfs,
+                        lmf: row.lmf,
+                        collapsed_cross_section_b: lib.one_group(row_index, &phi),
+                        covariance_covered: covered,
+                    });
+                    directions.push(Csc::from_triplets(m, &derivative_sub[&row_index]));
+                }
+                Some(UncertaintyRuntime {
+                    tangents: vec![vec![0.0; m]; parameters.len()],
+                    directions,
+                    parameters,
+                    covered_parameter_positions,
+                    covariance_barn2: collapsed.covariance_barn2,
+                    uncovered_library_rows: collapsed.uncovered_rows,
+                    absent_cross_parameter_pairs: collapsed.absent_cross_parameter_pairs,
+                    maximum_covariance_asymmetry_barn2: collapsed.maximum_asymmetry_barn2,
+                    normal_multiplier: uncertainty_report::normal_multiplier(
+                        options.confidence_level,
+                    ),
+                    alternate_y: y.clone(),
+                })
+            }
+            (None, None) => None,
+            _ => return Err("prepared covariance state does not match the run spec".into()),
+        };
         // ---- solve
-        let c = cram16();
+        let c = cram(spec.options.cram_order);
+        let alternate_c = spec.uncertainty.as_ref().map(|_| {
+            cram(if spec.options.cram_order == 16 {
+                48
+            } else {
+                16
+            })
+        });
         let want_photons = spec
             .options
             .outputs
@@ -760,6 +1365,10 @@ impl PreparedRun {
         let mut t_cum = 0.0;
         let mut flux_weighted_time_cum = 0.0;
         let base_flux_total: f64 = phi.iter().sum();
+        let bulk_activity: BTreeMap<String, f64> = bulk_photon_active
+            .iter()
+            .map(|(name, _, activity)| (name.clone(), *activity))
+            .collect();
         for (si, (dt, fl)) in sched.iter().enumerate() {
             let mut trip = dsub.clone();
             if *fl > 0.0 {
@@ -768,8 +1377,28 @@ impl PreparedRun {
                 }
             }
             let a = Csc::from_triplets(m, &trip);
-            let (yy, _) = cram_step(&a, &y, *dt, &c)?;
-            y = yy;
+            if let Some(runtime) = uncertainty_runtime.as_mut() {
+                let tangent_step = step_with_tangents(
+                    &a,
+                    &y,
+                    &runtime.tangents,
+                    &runtime.directions,
+                    *fl,
+                    *dt,
+                    &c,
+                )?;
+                y = tangent_step.state;
+                runtime.tangents = tangent_step.tangents;
+                runtime.alternate_y = cram_step(
+                    &a,
+                    &runtime.alternate_y,
+                    *dt,
+                    alternate_c.as_ref().expect("alternate CRAM is prepared"),
+                )?
+                .0;
+            } else {
+                y = cram_step(&a, &y, *dt, &c)?.0;
+            }
             t_cum += dt;
             flux_weighted_time_cum += dt * fl;
             let mut zeroed = 0.0;
@@ -777,6 +1406,18 @@ impl PreparedRun {
                 if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit {
                     zeroed += -*v;
                     *v = 0.0;
+                    if let Some(runtime) = uncertainty_runtime.as_mut() {
+                        for tangent in &mut runtime.tangents {
+                            tangent[k] = 0.0;
+                        }
+                    }
+                }
+            }
+            if let Some(runtime) = uncertainty_runtime.as_mut() {
+                for (k, value) in runtime.alternate_y.iter_mut().enumerate() {
+                    if *value < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit {
+                        *value = 0.0;
+                    }
                 }
             }
             // ---- numerical floor: CRAM approximates exp(z) with an absolute floor of alpha0, so states whose population
@@ -797,11 +1438,8 @@ impl PreparedRun {
             }
             // ---- outputs
             let mut inv = Vec::new();
-            let mut act = BTreeMap::new();
+            let mut act = bulk_activity.clone();
             let mut photon_active = bulk_photon_active.clone();
-            for (name, _, activity) in &bulk_photon_active {
-                act.insert(name.clone(), *activity);
-            }
             let (mut ha, mut hb, mut hg) = bulk_heat_split;
             for (k, v) in y.iter().enumerate() {
                 let g = keep[k];
@@ -835,6 +1473,36 @@ impl PreparedRun {
                 alpha: ha,
                 beta: hb,
                 gamma: hg,
+            };
+            let uncertainty = match (&uncertainty_runtime, &spec.uncertainty) {
+                (Some(runtime), Some(options)) => {
+                    let nominal = ResponseSnapshot {
+                        heat: [heat.total, heat.alpha, heat.beta, heat.gamma],
+                        activity: act.clone(),
+                    };
+                    let alternate = response_snapshot(
+                        &runtime.alternate_y,
+                        &keep,
+                        ch,
+                        nuclides,
+                        bulk_heat_split,
+                        &bulk_activity,
+                    );
+                    Some(build_step_uncertainty(
+                        runtime,
+                        options,
+                        &nominal,
+                        &alternate,
+                        &ResponseContext {
+                            keep: &keep,
+                            positions: &pos,
+                            chain: ch,
+                            nuclides,
+                        },
+                    )?)
+                }
+                (None, None) => None,
+                _ => return Err("uncertainty runtime state is inconsistent".into()),
             };
             let photon_source = if want_photons {
                 let active_refs: Vec<_> = photon_active
@@ -891,6 +1559,7 @@ impl PreparedRun {
                 atoms_below_floor: atoms_below,
                 heat_bound_from_below_floor_W_per_g: heat_below,
                 photon_source,
+                uncertainty,
             });
         }
         // ---- pathways (trace mode only): give every source its own unit state so one factorisation serves all of them,
@@ -1177,6 +1846,38 @@ impl PreparedRun {
                 serde_json::Value::String(spec.projectile.name().into()),
             );
         }
+        if let (Some(prepared), Some(options), Some(runtime)) =
+            (&self.covariance, &spec.uncertainty, &uncertainty_runtime)
+        {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "uncertainty".into(),
+                serde_json::json!({
+                    "method": "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
+                    "band_name": "MF=33 nuclear-data band",
+                    "confidence_level": options.confidence_level,
+                    "normal_multiplier": runtime.normal_multiplier,
+                    "collapse_convention": "group-integrated flux is uniform in energy within each activation group; activation cross sections are groupwise constant; the union of activation and covariance boundaries is integrated",
+                    "active_parameters": runtime.parameters.len(),
+                    "covered_parameters": runtime.covered_parameter_positions.len(),
+                    "uncovered_library_rows": runtime.uncovered_library_rows,
+                    "absent_cross_parameter_pairs": runtime.absent_cross_parameter_pairs,
+                    "maximum_covariance_asymmetry_barn2": runtime.maximum_covariance_asymmetry_barn2,
+                    "selected_cram_order": spec.options.cram_order,
+                    "comparison_cram_order": if spec.options.cram_order == 16 { 48 } else { 16 },
+                    "excluded_sources": [
+                        "decay data and MF=32 resonance-parameter covariance",
+                        "MF=40 radionuclide-production and yield covariance",
+                        "fission/product-yield covariance",
+                        "incident-flux uncertainty",
+                        "material-composition uncertainty",
+                        "response-coefficient uncertainty",
+                        "model discrepancy"
+                    ],
+                    "covariance_builder_fingerprint": prepared.index.get("builder_fingerprint"),
+                    "covariance_source_manifest_sha256": prepared.index.get("source_manifest_sha256"),
+                }),
+            );
+        }
         let mut certificate = serde_json::json!({
             "solver": concat!("actinv-core ", env!("CARGO_PKG_VERSION")),
             "entry_point": entry_point,
@@ -1193,7 +1894,7 @@ impl PreparedRun {
                 "fission_yields": fission_yield_inputs,
             },
             "tables_provenance": composition::provenance(),
-            "cram": "CRAM-16, incomplete partial fractions (Pusa, NSE 182:297, 2016)",
+            "cram": format!("CRAM-{}, incomplete partial fractions (Pusa, NSE 182:297, 2016)", spec.options.cram_order),
             "mode": mode, "prune": spec.options.prune, "bmin_atoms_per_g": spec.options.bmin_atoms_per_g,
             "material_basis": spec.material.basis,
             "photon": {"group_structure": spec.photon.group_structure, "build_up_factor": spec.photon.build_up_factor,
@@ -1204,6 +1905,38 @@ impl PreparedRun {
                 "selection": fission_yield_selection,
             },
         });
+        if let (Some(prepared), Some(options)) = (&self.covariance, &spec.uncertainty) {
+            let certificate_object = certificate
+                .as_object_mut()
+                .expect("certificate is an object");
+            certificate_object.insert(
+                "uncertainty".into(),
+                serde_json::json!({
+                    "method": "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
+                    "band_name": "MF=33 nuclear-data band",
+                    "confidence_level": options.confidence_level,
+                    "selected_cram_order": spec.options.cram_order,
+                    "comparison_cram_order": if spec.options.cram_order == 16 { 48 } else { 16 },
+                    "collapse_convention": "uniform flux per unit energy inside activation groups, integrated on the union boundary grid",
+                    "excluded_sources": ["decay/MF=32", "production/MF=40 and yields", "flux", "composition", "response coefficients", "model discrepancy"],
+                }),
+            );
+            certificate_object
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert(
+                    "covariance".into(),
+                    serde_json::json!({
+                        "path": options.covariance.path,
+                        "sha256_declared": options.covariance.sha256,
+                        "sha256": prepared.sha256,
+                        "index": {"path": prepared.index_path, "sha256": prepared.index_sha256},
+                        "source_manifest_sha256": prepared.index.get("source_manifest_sha256"),
+                        "builder_fingerprint": prepared.index.get("builder_fingerprint"),
+                    }),
+                );
+        }
         if !spec.projectile.is_neutron() {
             certificate
                 .as_object_mut()
@@ -1266,6 +1999,7 @@ mod projectile_output_tests {
             atoms_below_floor: 0.0,
             heat_bound_from_below_floor_W_per_g: 0.0,
             photon_source: None,
+            uncertainty: None,
         }
     }
 

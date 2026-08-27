@@ -1,0 +1,85 @@
+{
+ "entry_points": {
+  "cli_vs_python": true,
+  "cli_vs_prepared": true,
+  "cli_vs_mesh": true,
+  "labels": [
+   "cli",
+   "python",
+   "prepared",
+   "mesh"
+  ]
+ },
+ "hashes_rederived": {
+  "library": true,
+  "library_index": true,
+  "covariance": true,
+  "covariance_index": true,
+  "decay": true
+ },
+ "response_records": 24,
+ "reports_complete": true,
+ "plants": {
+  "wrong_covariance_hash": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "SHA-256 mismatch for <WORK>/fixture/p11-covariance.npz: declared 0000000000000000000000000000000000000000000000000000000000000000, computed e1e58827e8d16dac6292859adc3233d42d68c295d1cdf316555a76d063b304a7",
+   "pass": true
+  },
+  "projectile_mismatch": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "covariance sidecar is not for neutron activation",
+   "pass": true
+  },
+  "group_mismatch": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "covariance index group_boundary_sha256 mismatch: records 0000000000000000000000000000000000000000000000000000000000000000, expected 21bcff79c12f37bd2d3e4f44fdceb229ac17a699811bc869b570ebb2f63298ab",
+   "pass": true
+  },
+  "target_mismatch": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "covariance target 0 identity differs from the activation index",
+   "pass": true
+  },
+  "source_mismatch": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "covariance target 0 source_sha256 differs from the activation index",
+   "pass": true
+  },
+  "duplicate_selector": {
+   "returncode": 2,
+   "output_published": false,
+   "stderr_tail": "duplicate uncertainty response selector 'heat.total'",
+   "pass": true
+  },
+  "bad_confidence": {
+   "returncode": 2,
+   "output_published": false,
+   "stderr_tail": "uncertainty.confidence_level must be strictly between zero and one",
+   "pass": true
+  },
+  "unknown_nuclide": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "uncertainty response 'activity:NoSuch999' names a nuclide absent from the decay library",
+   "pass": true
+  },
+  "unknown_response": {
+   "returncode": 2,
+   "output_published": false,
+   "stderr_tail": "unknown uncertainty response selector 'dose.total'",
+   "pass": true
+  },
+  "require_complete_uncovered": {
+   "returncode": 1,
+   "output_published": false,
+   "stderr_tail": "require_complete rejected 1 active activation rows without MF=33 self-covariance",
+   "pass": true
+  }
+ },
+ "pass": true
+}

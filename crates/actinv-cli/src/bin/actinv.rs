@@ -10,6 +10,7 @@ use actinv_core::{
 use actinv_data::{
     activation::Projectile,
     builder::{self, BuildOptions, LibraryFormat},
+    covariance::{build_covariance as build_covariance_sidecar, CovarianceBuildOptions},
     groups::GroupStructure,
 };
 use std::collections::BTreeMap;
@@ -219,6 +220,37 @@ fn build_library(args: &[String]) {
     eprintln!("index -> {}", summary.index.display());
 }
 
+fn build_covariance(args: &[String]) {
+    if args.len() < 3 {
+        die(
+            "build-covariance needs INPUT ACTIVATION.npz OUTPUT.cov.npz",
+            2,
+        );
+    }
+    let input = &args[0];
+    let activation = &args[1];
+    let output = &args[2];
+    let options = valued_options(&args[3..]);
+    reject_unknown(&options, &["--workers", "--cache"]);
+    let build_options = CovarianceBuildOptions {
+        workers: parsed_option(&options, "--workers").unwrap_or(1),
+        cache: options.get("--cache").map(std::path::PathBuf::from),
+    };
+    let summary = build_covariance_sidecar(input, activation, output, &build_options)
+        .unwrap_or_else(|error| die(error, 1));
+    println!(
+        "{} targets, {} MF=33 sections, {} components, {} cache hits, {} files with MF=33, sha256 {}",
+        summary.targets,
+        summary.sections,
+        summary.components,
+        summary.cache_hits,
+        summary.files_with_mf33,
+        summary.sha256_npz
+    );
+    eprintln!("sidecar -> {}", summary.output.display());
+    eprintln!("index -> {}", summary.index.display());
+}
+
 fn main() {
     let a: Vec<String> = std::env::args().collect();
     let usage = "usage: actinv run SPEC.json [OUT.json]\n\
@@ -227,6 +259,7 @@ fn main() {
                  actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                  actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
                  actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D]\n\
+                 actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                  actinv mesh SPEC.json OUT.ndjson\n\
                  actinv export-openmc RESULT.json STEP OUT.py\n\
                  actinv export-mcnp RESULT.json STEP OUT.sdef";
@@ -234,6 +267,7 @@ fn main() {
         die(usage, 2);
     }
     match a[1].as_str() {
+        "build-covariance" => build_covariance(&a[2..]),
         "build-library" => build_library(&a[2..]),
         "import-flux" => {
             let summary = import_flux(&a[2..]);

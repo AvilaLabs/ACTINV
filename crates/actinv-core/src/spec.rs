@@ -25,6 +25,8 @@ pub struct Spec {
     pub photon: PhotonOptions,
     #[serde(default)]
     pub fission_yields: FissionYieldOptions,
+    #[serde(default)]
+    pub uncertainty: Option<UncertaintyOptions>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -40,6 +42,22 @@ pub struct LibraryRef {
 pub struct HashedFileRef {
     pub path: String,
     pub sha256: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UncertaintyOptions {
+    pub covariance: HashedFileRef,
+    #[serde(default)]
+    pub responses: Vec<String>,
+    #[serde(default = "confidence_95")]
+    pub confidence_level: f64,
+    #[serde(default)]
+    pub require_complete: bool,
+}
+
+fn confidence_95() -> f64 {
+    0.95
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -166,6 +184,8 @@ pub struct Options {
     pub bmin_atoms_per_g: f64,
     #[serde(default = "t293")]
     pub temperature_K: f64,
+    #[serde(default = "cram16_order")]
+    pub cram_order: u8,
     #[serde(default)]
     pub outputs: Option<Vec<String>>,
 }
@@ -181,6 +201,9 @@ fn bmin() -> f64 {
 fn t293() -> f64 {
     293.6
 }
+fn cram16_order() -> u8 {
+    16
+}
 impl Default for Options {
     fn default() -> Self {
         Self {
@@ -188,6 +211,7 @@ impl Default for Options {
             prune: rate(),
             bmin_atoms_per_g: bmin(),
             temperature_K: t293(),
+            cram_order: cram16_order(),
             outputs: None,
         }
     }
@@ -247,6 +271,50 @@ impl Spec {
                 return Err("library.sha256 must contain 64 hexadecimal digits".into());
             }
         }
+        if let Some(uncertainty) = &self.uncertainty {
+            if uncertainty.covariance.path.is_empty()
+                || uncertainty.covariance.sha256.len() != 64
+                || !uncertainty
+                    .covariance
+                    .sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err(
+                    "uncertainty.covariance requires a path and a 64-hex-digit sha256".into(),
+                );
+            }
+            if !uncertainty.confidence_level.is_finite()
+                || !(0.0..1.0).contains(&uncertainty.confidence_level)
+                || uncertainty.confidence_level == 0.0
+            {
+                return Err(
+                    "uncertainty.confidence_level must be strictly between zero and one".into(),
+                );
+            }
+            let mut selectors = std::collections::HashSet::new();
+            for selector in &uncertainty.responses {
+                let valid = matches!(
+                    selector.as_str(),
+                    "heat.total" | "heat.alpha" | "heat.beta" | "heat.gamma" | "activity:*"
+                ) || selector
+                    .strip_prefix("activity:")
+                    .is_some_and(|nuclide| !nuclide.is_empty() && nuclide != "*");
+                if !valid {
+                    return Err(format!(
+                        "unknown uncertainty response selector '{selector}'"
+                    ));
+                }
+                if !selectors.insert(selector) {
+                    return Err(format!(
+                        "duplicate uncertainty response selector '{selector}'"
+                    ));
+                }
+            }
+            if !self.projectile.is_neutron() {
+                return Err("MF=33 uncertainty is supported only for neutron activation".into());
+            }
+        }
         if self.decay.primary.is_empty() {
             return Err("decay.primary is empty".into());
         }
@@ -292,6 +360,9 @@ impl Spec {
         }
         if !self.options.temperature_K.is_finite() || self.options.temperature_K < 0.0 {
             return Err("options.temperature_K must be finite and nonnegative".into());
+        }
+        if !matches!(self.options.cram_order, 16 | 48) {
+            return Err("options.cram_order must be 16 or 48".into());
         }
         if !self.projectile.is_neutron() && self.options.temperature_K != 0.0 {
             return Err(format!(

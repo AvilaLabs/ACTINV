@@ -801,3 +801,45 @@
   computation; and the five full builds run one at a time under a 4 GiB cap with content-addressed per-target resume.
   Charged libraries run first, EAF next and the expensive neutron corpus last. Fresh/cached outputs must be
   byte-identical before regression and close controls begin.
+
+## 35 — 2026-08-27 — P11 covariance protocol and bounded controls
+- P11 opened under frozen protocol SHA-256 `fb9964d5…`, with Fe-56/Ni-58 plus synthetic networks as the minimum input
+  before any complete corpus pass. Strict Rust MF=33 parsing/storage, spectrum collapse, CRAM-16/48 recurrence
+  differentiation and optional uncertainty reporting were implemented without `unsafe` or an ownership/concurrency
+  redesign. Ordinary runs omit and do not read covariance data.
+- G1 independently compares 209 Fe-56/Ni-58 components and 36,535 fields at zero ULP. One/four-worker and
+  fresh/cached outputs match, a source mutation invalidates only its checkpoint, all 12 plants fail closed, and peak
+  child RSS is 64,438,272 bytes. The first full aggregation exposed whole-index checkpoint invalidation and two
+  quadratic growing-prefix passes; Amendment A freezes the source-local key and linear aggregation repair.
+- G2 exercises every supported LB=0--6/8/9 representation, boundary crossings and zero flux. Synthetic/real Python
+  comparisons pass at `2.754e-16`/`1.198e-15` worst relative. The first pointwise-PENDF ERRORR comparison contradicted
+  the frozen group-constant convention; Amendment A records GROUPR at the same boundaries. The repaired fresh
+  NJOY2016.79 worst difference is `2.7266e-4`, inside the unchanged `5e-3` criterion.
+
+## 36 — 2026-08-27 — P11 sensitivities, propagation and entry points complete
+- G3 passes independent dense CRAM-16/48 cases and 288 analytic/five-point sensitivity comparisons through trace and
+  coupled irradiation, pulses and cooling. Worst connected relative difference is `3.013e-11`. Amendment A retains
+  the graph-proved disconnected-response round-off conditioning; the `1e-4`/`1e-18` criteria are unchanged.
+- G4's direct, Rust and reported `S C S^T` values agree to `2.055e-16` or exactly. A fixed-seed chunked antithetic
+  `2^26` sample differs by `1.943e-4`, under `1e-3`; cross-term, zero/perfect-correlation, negative, nonfinite and
+  dimension controls pass.
+- G5 gives exact scientific/provenance identity across CLI, PyO3, prepared and one-cell mesh results for 24 response
+  records; five input hashes rematch and all ten rejection plants fail before publication. Amendment B records the
+  control-owned footer's removal of an invalid volume integral. Amendment C records local loading of the explicitly
+  built PyO3 extension when no wheel is installed; CI continues to test the installed wheel first. Amendment D
+  normalizes only the control-owned random temporary root in G5 diagnostic evidence. Amendment E makes the dependency
+  audit traverse the same three P11 controls added to CI.
+
+## 37 — 2026-08-27 — P11 complete corpus and conditional close
+- A current-code fresh four-worker covariance build scans all 2,850 TENDL-2025 neutron sources in 1:33.64 with
+  1,095,648 KiB peak RSS, zero swaps/errors and no cache. The 2,850-hit cached build takes 66.40 s with 911,992 KiB.
+  Their NPZ and index are byte-identical at `c19dec86…` and `9691ee5c…`; the largest uncompressed member is
+  427,623,256 bytes.
+- The independent Python scan re-hashes and parses all raw sources and reproduces 84,489 MF=33 sections, 285,023
+  components (84,489 LB=5, 116,045 LB=6, 84,489 LB=8), every target inventory and source manifest with zero error or
+  silent omission. Of 127,724 eligible non-MF10 rows, 105,817 are covered and 21,907 lack self-covariance; 40,011
+  MF=10 rows are explicitly outside MF=33.
+- Exact rustfmt, workspace/all-target/all-feature check, strict Clippy and tests pass, as do Python compilation, the CI
+  subset, self-containment/dependency/release checks and P5--P10 verdicts. `controls/check_p11.py` derives
+  **P11-CONDITIONAL**, all six gates green, because Amendments A--E remain hash-pinned. P12 is next but remains
+  unopened and unhashed; no tag, publication, complete-uncertainty or licensing-safety claim is made.

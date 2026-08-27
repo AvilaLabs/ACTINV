@@ -1,0 +1,121 @@
+{
+ "dense_exponentials": {
+  "orders": {
+   "CRAM-16": {
+    "cases": {
+     "two_state_source": {
+      "maximum_absolute": 6.106226635438361e-16,
+      "maximum_resolvable_relative": 4.7582380447062386e-15,
+      "pass": true
+     },
+     "three_state_chain": {
+      "maximum_absolute": 2.5091040356528538e-14,
+      "maximum_resolvable_relative": 7.131151381222372e-13,
+      "pass": true
+     },
+     "stiff_branch": {
+      "maximum_absolute": 2.220446049250313e-16,
+      "maximum_resolvable_relative": 8.229618754621446e-08,
+      "pass": true
+     }
+    },
+    "pass": true
+   },
+   "CRAM-48": {
+    "cases": {
+     "two_state_source": {
+      "maximum_absolute": 3.3306690738754696e-16,
+      "maximum_resolvable_relative": 4.325670949732944e-16,
+      "pass": true
+     },
+     "three_state_chain": {
+      "maximum_absolute": 2.7755575615628914e-14,
+      "maximum_resolvable_relative": 7.021116470570718e-13,
+      "pass": true
+     },
+     "stiff_branch": {
+      "maximum_absolute": 6.661338147750939e-16,
+      "maximum_resolvable_relative": 1.4046173523496788e-15,
+      "pass": true
+     }
+    },
+    "pass": true
+   }
+  },
+  "pass": true
+ },
+ "sensitivities": {
+  "cases": {
+   "trace-cram16": {
+    "mode": "trace",
+    "pruned_states": 5,
+    "parameter_rows": [
+     1,
+     3
+    ],
+    "comparisons": 48,
+    "maximum_relative": 1.336906774781553e-12,
+    "maximum_absolute": 3.2401858973685194e-13,
+    "conditioned_structural_zeros": 8,
+    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+    "failures": [],
+    "pass": true
+   },
+   "trace-cram48": {
+    "mode": "trace",
+    "pruned_states": 5,
+    "parameter_rows": [
+     1,
+     3
+    ],
+    "comparisons": 48,
+    "maximum_relative": 1.521871518702891e-12,
+    "maximum_absolute": 5.612732500992479e-13,
+    "conditioned_structural_zeros": 8,
+    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+    "failures": [],
+    "pass": true
+   },
+   "coupled-cram16": {
+    "mode": "coupled",
+    "pruned_states": 5,
+    "parameter_rows": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "comparisons": 96,
+    "maximum_relative": 3.013111780522829e-11,
+    "maximum_absolute": 7.12430114901963e-13,
+    "conditioned_structural_zeros": 8,
+    "maximum_raw_structural_zero": 2.3129646346357426e-14,
+    "failures": [],
+    "pass": true
+   },
+   "coupled-cram48": {
+    "mode": "coupled",
+    "pruned_states": 5,
+    "parameter_rows": [
+     0,
+     1,
+     2,
+     3
+    ],
+    "comparisons": 96,
+    "maximum_relative": 2.3126770609383616e-11,
+    "maximum_absolute": 6.328826351875705e-13,
+    "conditioned_structural_zeros": 8,
+    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+    "failures": [],
+    "pass": true
+   }
+  },
+  "maximum_relative": 3.013111780522829e-11,
+  "maximum_absolute": 7.12430114901963e-13,
+  "legacy_default_equals_explicit_cram16": true,
+  "pass": true
+ },
+ "openmc_0_15_3_coefficients": "checked losslessly by controls/g0_cram_coefficients.py",
+ "pass": true
+}

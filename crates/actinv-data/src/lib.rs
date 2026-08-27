@@ -3,6 +3,7 @@
 pub mod activation;
 pub mod builder;
 pub mod composition;
+pub mod covariance;
 pub mod decay;
 pub mod doppler;
 pub mod endf;

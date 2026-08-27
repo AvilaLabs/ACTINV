@@ -1,0 +1,57 @@
+{
+ "samples": 67108864,
+ "rng": "NumPy PCG64 seed 0xA11CE, chunked antithetic normals",
+ "sensitivity": [
+  1.9761960106170905e-13,
+  8.551560222878174e-14
+ ],
+ "covariance_barn2": [
+  [
+   0.0004,
+   0.00015
+  ],
+  [
+   0.00015,
+   0.0009
+  ]
+ ],
+ "direct_variance": 2.727289685071281e-29,
+ "rust_variance": 2.7272896850712803e-29,
+ "reported_variance": 2.727289685071281e-29,
+ "sampled_variance": 2.7278195663975293e-29,
+ "rust_relative": 2.0552249685763653e-16,
+ "reported_relative": 0.0,
+ "sample_relative": 0.00019428861156512933,
+ "without_cross_variance": 2.2203029091611715e-29,
+ "predicted_cross_change": 5.069867759101093e-30,
+ "observed_cross_change": 5.069867759101094e-30,
+ "cross_change_relative": 2.763974389291118e-16,
+ "edge_cases": {
+  "zero": {
+   "variance": 0.0,
+   "negative_roundoff_removed": 0.0
+  },
+  "perfect_correlation": {
+   "variance": 4.248250012801608e-25,
+   "negative_roundoff_removed": 0.0
+  },
+  "roundoff_negative": {
+   "variance": 0.0,
+   "negative_roundoff_removed": 1.1102230246251565e-16
+  },
+  "materially_negative": {
+   "returncode": 1,
+   "stderr": "materially negative propagated response variance -2.00000000000000000e0 (round-off bound 1.70530256582424045e-13)"
+  },
+  "nonfinite": {
+   "returncode": 1,
+   "stderr": "nonfinite sensitivity or covariance component"
+  },
+  "dimension_mismatch": {
+   "returncode": 1,
+   "stderr": "covariance has 3 entries for 2 sensitivities"
+  }
+ },
+ "edge_cases_pass": true,
+ "pass": true
+}

@@ -1,0 +1,223 @@
+{
+ "consistency": {
+  "activation_index_matches": true,
+  "activation_library_matches": true,
+  "builder_fingerprint_matches": true,
+  "group_hash_matches": true,
+  "independent_counts_match_index": true,
+  "independent_target_inventory_matches_index": true,
+  "independent_target_inventory_mismatches": [],
+  "sidecar_hash_matches": true,
+  "source_manifest_matches": true
+ },
+ "coverage": {
+  "activation_rows": 167735,
+  "covered_fraction_of_eligible": 0.8284817262221665,
+  "covered_rows": 105817,
+  "eligible_non_mf10_rows": 127724,
+  "self_covariance_target_mt_pairs": 84489,
+  "uncovered_mf10_rows": 40011,
+  "uncovered_missing_mf33_self_rows": 21907,
+  "uncovered_missing_self_by_lmf": {
+   "-1": 8698,
+   "0": 13209
+  }
+ },
+ "documentation": {
+  "README.md": {
+   "missing": [],
+   "pass": true
+  },
+  "docs/DATA.md": {
+   "missing": [],
+   "pass": true
+  },
+  "docs/LEDGER.md": {
+   "missing": [],
+   "pass": true
+  },
+  "docs/METHOD.md": {
+   "missing": [],
+   "pass": true
+  },
+  "docs/P11_G6_EXECUTION.md": {
+   "missing": [],
+   "pass": true
+  },
+  "docs/SPEC.md": {
+   "missing": [],
+   "pass": true
+  },
+  "docs/VALIDATION.md": {
+   "missing": [],
+   "pass": true
+  }
+ },
+ "expected_counts": {
+  "components": 285023,
+  "files": 2850,
+  "files_with_mf33": 2850,
+  "lb_counts": {
+   "5": 84489,
+   "6": 116045,
+   "8": 84489
+  },
+  "mf33_sections": 84489
+ },
+ "gate": "P11-G6",
+ "identity": {
+  "activation_index_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+  "activation_library_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+  "builder_fingerprint": "c9825cafd8945f32efda4a00ea081af811b887562ebf07ae33ac05ea1d6846d1",
+  "cached_index_sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6",
+  "cached_npz_sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde",
+  "fresh_index_sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6",
+  "fresh_npz_sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde",
+  "index_byte_identical": true,
+  "npz_byte_identical": true
+ },
+ "independent_scan": {
+  "activation_index_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+  "components": 285023,
+  "error_count": 0,
+  "errors": [],
+  "expected_source_manifest_sha256": "34f2048782bd50e4cab69e269826215632675514dd88c2bad1fe70ee92ce1ac4",
+  "files": 2850,
+  "files_with_mf33": 2850,
+  "files_without_mf33": 0,
+  "lb_counts": {
+   "5": 84489,
+   "6": 116045,
+   "8": 84489
+  },
+  "mf33_sections": 84489,
+  "parser_sha256": "987123c0ef5d2641c6b53cf6826b7ee329f988f178bc2599bba17222e455082b",
+  "pass": true,
+  "schema": "actinv-p11-independent-mf33-scan-1",
+  "source_directory": "<EXTERNAL_TENDL_2025_NEUTRON>",
+  "source_manifest_sha256": "34f2048782bd50e4cab69e269826215632675514dd88c2bad1fe70ee92ce1ac4",
+  "target_inventory_sha256": "eafaa9d6c6de27ec8cebe0de4c88dea8be2060adeab6e2856301a6ca2a46b1e3",
+  "targets": 2850
+ },
+ "pass": true,
+ "profiles": {
+  "cached": {
+   "cache_hits": 2850,
+   "command": "target/release/actinv build-covariance n-working neutron.n.p10.npz target/p11-profile.cov.npz --workers 4 --cache target/p11-cov-cache-v2",
+   "elapsed_seconds": 66.4,
+   "exit_status": 0,
+   "major_page_faults": 0,
+   "maximum_rss_bytes": 933879808,
+   "memory_limit_bytes": 4294967296,
+   "swaps": 0,
+   "system_seconds": 8.43,
+   "targets": 2850,
+   "user_seconds": 74.3,
+   "workers": 4
+  },
+  "cached_below_memory_limit": true,
+  "fresh": {
+   "cache_hits": 0,
+   "command": "target/release/actinv build-covariance <EXTERNAL_TENDL_2025_NEUTRON> <EXTERNAL_TENDL_2025_NEUTRON_LIBRARY> target/p11-full-current-fresh.cov.npz --workers 4",
+   "elapsed": "1:33.64",
+   "exit_status": 0,
+   "major_page_faults": 0,
+   "maximum_rss_bytes": 1121943552,
+   "maximum_rss_kib": 1095648,
+   "swaps": 0
+  },
+  "fresh_below_memory_limit": true,
+  "memory_limit_bytes": 2147483648,
+  "zero_swaps": true
+ },
+ "regression": {
+  "evidence": {
+   "check_dependencies.json": {
+    "file": "check_dependencies.json",
+    "pass": true,
+    "sha256": "869a1991d6eca2ebb59c12518c15274e207f4b9437f1a8c39bceac0f6ed1ef4a"
+   },
+   "check_release_notes.json": {
+    "file": "check_release_notes.json",
+    "pass": true,
+    "sha256": "3f84d2bebed20e53a67a5d992f59a11a6155432f11754e2cd859acad6c8c6f35"
+   },
+   "ci_end_to_end.json": {
+    "file": "ci_end_to_end.json",
+    "pass": true,
+    "sha256": "feb3691161a50c9508e9d6326c63b047c10ad0d96da82b10a7f7b2b0ed91aee2"
+   },
+   "g1_self_contained.json": {
+    "file": "g1_self_contained.json",
+    "pass": true,
+    "sha256": "7632094c62e3309ac8ec54c7e23cabeb6b6bca0bf6da89620589de7ca5d24109"
+   },
+   "g6_p11_quality.json": {
+    "file": "g6_p11_quality.json",
+    "pass": true,
+    "sha256": "da94f4fe522e8d352121aa92376fe2e14e6556215eadedf95e71e0c97c1716cb"
+   }
+  },
+  "pass": true,
+  "prior_verdicts": {
+   "verdict_p10.json": {
+    "actual": "P10-CONDITIONAL",
+    "expected": "P10-CONDITIONAL",
+    "pass": true,
+    "sha256": "bd5698a45f22132dbc8aa095186847be2c27bfa635140b8f360a3ee443d29d0d"
+   },
+   "verdict_p5.json": {
+    "actual": "P5-PASS",
+    "expected": "P5-PASS",
+    "pass": true,
+    "sha256": "958fef70d0396edf38a33c050fa3bef240f8c5d4496ccbff033eacf023ce4e79"
+   },
+   "verdict_p6.json": {
+    "actual": "P6-CONDITIONAL",
+    "expected": "P6-CONDITIONAL",
+    "pass": true,
+    "sha256": "03a34a4dcfa5004646e8c24b97d5a3dadde49863539e9035fd89785dad664215"
+   },
+   "verdict_p7.json": {
+    "actual": "P7-CONDITIONAL",
+    "expected": "P7-CONDITIONAL",
+    "pass": true,
+    "sha256": "c31aecdc01d884e475892dc257bbdac8132917e5106184fd69fa6873ac7d94a1"
+   },
+   "verdict_p8.json": {
+    "actual": "P8-CONDITIONAL",
+    "expected": "P8-CONDITIONAL",
+    "pass": true,
+    "sha256": "8217510459bb11c772d81fe4d486809bda3943b1912d6bf47e464f57eeae365c"
+   },
+   "verdict_p9.json": {
+    "actual": "P9-CONDITIONAL",
+    "expected": "P9-CONDITIONAL",
+    "pass": true,
+    "sha256": "bf631926e8bcf1b4fa41119e27fb5380eba9a5884649e5c7314694dc6807c924"
+   }
+  }
+ },
+ "schema": "actinv-p11-g6-complete-1",
+ "sidecar": {
+  "component_counts_match_index": true,
+  "descriptor_shape": [
+   285023,
+   9
+  ],
+  "every_member_below_one_gigabyte": true,
+  "inventory_mismatch_targets": [],
+  "lb_counts": {
+   "5": 84489,
+   "6": 116045,
+   "8": 84489
+  },
+  "maximum_member_uncompressed_bytes": 427623256,
+  "member_uncompressed_bytes": {
+   "components.npy": 20521784,
+   "grid_offsets.npy": 512328,
+   "grid_values.npy": 4805344,
+   "values.npy": 427623256
+  }
+ }
+}

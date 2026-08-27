@@ -10,3 +10,4 @@ pub mod prune;
 pub mod run;
 pub mod sparse;
 pub mod spec;
+pub mod uncertainty;
