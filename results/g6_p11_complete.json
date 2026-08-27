@@ -135,7 +135,7 @@
    "check_dependencies.json": {
     "file": "check_dependencies.json",
     "pass": true,
-    "sha256": "869a1991d6eca2ebb59c12518c15274e207f4b9437f1a8c39bceac0f6ed1ef4a"
+    "sha256": "a187482c7a76caf29ba720f302b00bbe3121effaa3d0e7f84c09bc845c307e36"
    },
    "check_release_notes.json": {
     "file": "check_release_notes.json",
@@ -155,7 +155,7 @@
    "g6_p11_quality.json": {
     "file": "g6_p11_quality.json",
     "pass": true,
-    "sha256": "da94f4fe522e8d352121aa92376fe2e14e6556215eadedf95e71e0c97c1716cb"
+    "sha256": "80986ae7f87c3ca0a73405915d0a757a2535d460e9fb037d62551364230e73f9"
    }
   },
   "pass": true,
