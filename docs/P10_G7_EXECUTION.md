@@ -27,6 +27,11 @@ size-checked, gzip-tested, SHA-256 hashed and extracted independently. Each extr
 2,850 regular s30 evaluations. Archive hashes and deterministic per-file-manifest hashes go into G7 evidence; raw
 evaluations, archives, checkpoints and generated libraries never enter Git.
 
+`scripts/prepare_tendl_2025.py` performs the extraction into a new directory. It rejects absolute/parent paths,
+links, special files, empty or duplicate flattened names, wrong projectile names, wrong archive sizes and wrong file
+counts; the final flat input directory is published only after all 2,850 regular files have streamed successfully.
+Its detailed external manifest records every file hash and defines the compact manifest hash used by G7 evidence.
+
 ## Profile before the complete computation
 
 G1 already exercised a four-worker W-186/Ag-107/Fr-226/Rb-94 neutron build under a 1 GiB total address-space cap:
