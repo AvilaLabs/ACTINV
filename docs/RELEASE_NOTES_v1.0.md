@@ -22,7 +22,15 @@ The standalone command is distributed as a release artifact and can also be buil
 cargo install --locked --path crates/actinv-cli
 ```
 
-Nuclear data are not included in either artifact. See [Data sources](DATA.md).
+Nuclear data are not embedded in either software artifact. The recommended versioned neutron bundle can be installed
+and verified with:
+
+```bash
+actinv data fetch
+actinv data verify
+```
+
+See [Nuclear data](DATA.md) for charged-particle, covariance, offline, and manual-build options.
 
 ## Added since v0.5
 
@@ -38,6 +46,8 @@ Nuclear data are not included in either artifact. See [Data sources](DATA.md).
   source hash and keeping all generated bulk data outside Git.
 - Stable-ABI Python wheels, standalone release binaries, consistent `1.0.0` interface versions, and public-release
   documentation/checklists.
+- A separately versioned, immutable data catalog with verified one-command setup for exact validated TENDL-2025
+  artifacts and official decay archives.
 
 ## Validation summary
 
@@ -82,8 +92,9 @@ The complete phase evidence and exact hashes are in `results/`, `protocols/`, an
 - The 132-experiment FNS result and the FNG/ITER cell-620 result apply to their recorded materials, data, histories,
   and responses. Neither is a general safety or shutdown-dose qualification.
 - Performance measurements and large-mesh extrapolations are fixture-specific sizing evidence, not guarantees.
-- Data inputs and generated bulk libraries are not bundled. Users must retain public provenance, terms, and SHA-256
-  identities for every dataset they select.
+- Data inputs and generated bulk libraries are not embedded in the software package or Git repository. The optional
+  data release retains public provenance, terms, and SHA-256 identities; users remain responsible for the dataset they
+  select.
 
 See [Qualification boundary](QUALIFICATION.md) for responsibilities when ACTINV is placed in a controlled analysis
 chain and [Validation](VALIDATION.md) for detailed evidence.

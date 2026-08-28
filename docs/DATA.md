@@ -1,7 +1,53 @@
-# Data sources, terms, hashes
+# Nuclear data
 
-ACTINV never bundles nuclear data. Each run fetches (or points at) public files and records SHA-256 hashes in its
-certificate. Terms of use are those of the hosts; check them before redistribution.
+## Easiest setup
+
+Install the recommended neutron activation and decay data with:
+
+```bash
+actinv data fetch
+```
+
+This downloads about 139 MiB and installs about 229 MiB under `actinv-data/v1.0.0/`. ACTINV streams each download to a
+temporary file and checks both its byte count and SHA-256 before making it visible. The two decay archives come
+directly from the IAEA; both the downloaded ZIP and the one extracted member are verified. Existing correct files are
+reused, and an incorrect file is left untouched unless you explicitly request a verified replacement with `--force`.
+
+The command ends with a JSON summary and a `problem_fragment` containing the exact library, decay, spectrum, and
+temperature fields for a problem specification. To install somewhere else or check an existing installation:
+
+```bash
+actinv data fetch --output /data/actinv
+actinv data verify --output /data/actinv
+```
+
+Files live in a version directory, so a future catalog cannot overwrite the data used by an older calculation. The
+binary carries an immutable catalog rather than downloading mutable instructions. Inspect available bundles or print
+that catalog byte-for-byte with:
+
+```bash
+actinv data list
+actinv data manifest
+```
+
+The default is `tendl-2025-neutron`. Optional bundles are
+`tendl-2025-neutron-covariance`, `tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after
+`fetch` or `verify`. Shared decay files are reused when multiple bundles use the same output directory.
+
+The generated TENDL-2025 activation libraries and covariance sidecar are separate CC-BY-4.0 release assets. The
+ENDF/B-VIII.0 and JEFF-3.3 decay files remain downloads from their official host. The installed
+`ACTINV-DATA-NOTICE.md` records attribution, source and builder identities, transformations, and terms. ACTINV's
+MIT/Apache-2.0 software licence does not replace a dataset's licence or source terms.
+
+For an offline installation, run `actinv data manifest` on the destination system, acquire the named files through a
+controlled transfer, place them under the printed versioned paths, and run `actinv data verify`. Advanced users can
+instead build libraries from raw evaluations with `actinv build-library` as documented below.
+
+## Sources, terms, and hashes
+
+ACTINV does not put nuclear-data payloads inside the software package or Git repository. Each run points at explicit
+files and records their SHA-256 hashes in its certificate. Terms of use are those of the data providers; check them
+before redistribution.
 
 | data | host | notes |
 |---|---|---|

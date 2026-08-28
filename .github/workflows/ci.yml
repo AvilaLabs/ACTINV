@@ -69,6 +69,13 @@ jobs:
       - name: No undeclared dependencies
         run: python controls/check_dependencies.py
 
+      - name: P13 verified data-distribution contract
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/g1_p13_data_distribution.py
+          python controls/check_p13.py
+
       - name: CI result tolerance regression
         run: python controls/test_ci_result.py
 

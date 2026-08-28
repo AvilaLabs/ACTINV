@@ -1,0 +1,115 @@
+{
+ "asset_count": 12,
+ "catalog_version": "1.0.0",
+ "checks": {
+  "all_payload_identities_match": true,
+  "exact_asset_inventory": true,
+  "inventories_match": true,
+  "official_decay_archives_not_rehosted": true
+ },
+ "gate": "P13-G4",
+ "identities": {
+  "ACTINV-DATA-NOTICE-v1.0.0.md": {
+   "artifact_id": "actinv-data-notice-v1",
+   "bytes": 3538,
+   "expected_bytes": 3538,
+   "expected_sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
+   "pass": true,
+   "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c"
+  },
+  "actinv-data-catalog-v1.0.0.json": {
+   "artifact_id": "embedded-catalog",
+   "bytes": 9664,
+   "expected_bytes": 9664,
+   "expected_sha256": "27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430",
+   "pass": true,
+   "sha256": "27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430"
+  },
+  "tendl-2025-alpha-162g.npz": {
+   "artifact_id": "tendl-2025-alpha-162g",
+   "bytes": 46235710,
+   "expected_bytes": 46235710,
+   "expected_sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915",
+   "pass": true,
+   "sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915"
+  },
+  "tendl-2025-alpha-162g_index.json": {
+   "artifact_id": "tendl-2025-alpha-162g-index",
+   "bytes": 4577708,
+   "expected_bytes": 4577708,
+   "expected_sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038",
+   "pass": true,
+   "sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038"
+  },
+  "tendl-2025-deuteron-162g.npz": {
+   "artifact_id": "tendl-2025-deuteron-162g",
+   "bytes": 76763930,
+   "expected_bytes": 76763930,
+   "expected_sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae",
+   "pass": true,
+   "sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae"
+  },
+  "tendl-2025-deuteron-162g_index.json": {
+   "artifact_id": "tendl-2025-deuteron-162g-index",
+   "bytes": 4809232,
+   "expected_bytes": 4809232,
+   "expected_sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707",
+   "pass": true,
+   "sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707"
+  },
+  "tendl-2025-neutron-709g.cov.npz": {
+   "artifact_id": "tendl-2025-neutron-709g-covariance",
+   "bytes": 237866615,
+   "expected_bytes": 237866615,
+   "expected_sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde",
+   "pass": true,
+   "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "tendl-2025-neutron-709g.cov_index.json": {
+   "artifact_id": "tendl-2025-neutron-709g-covariance-index",
+   "bytes": 976593,
+   "expected_bytes": 976593,
+   "expected_sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6",
+   "pass": true,
+   "sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6"
+  },
+  "tendl-2025-neutron-709g.npz": {
+   "artifact_id": "tendl-2025-neutron-709g",
+   "bytes": 123897743,
+   "expected_bytes": 123897743,
+   "expected_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "pass": true,
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "tendl-2025-neutron-709g_index.json": {
+   "artifact_id": "tendl-2025-neutron-709g-index",
+   "bytes": 2653304,
+   "expected_bytes": 2653304,
+   "expected_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "pass": true,
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  },
+  "tendl-2025-proton-162g.npz": {
+   "artifact_id": "tendl-2025-proton-162g",
+   "bytes": 62751053,
+   "expected_bytes": 62751053,
+   "expected_sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790",
+   "pass": true,
+   "sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790"
+  },
+  "tendl-2025-proton-162g_index.json": {
+   "artifact_id": "tendl-2025-proton-162g-index",
+   "bytes": 4686099,
+   "expected_bytes": 4686099,
+   "expected_sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945",
+   "pass": true,
+   "sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945"
+  }
+ },
+ "pass": true,
+ "schema": "actinv-p13-release-stage-control-1",
+ "sha256sums_sha256": "2528e98ea6ad2fbbfd7b79571774837d0989be31fddbc18e7ebd1e0e7a75b1a3",
+ "sizes_sha256": "a2c12a34b232eb49e1f5de97ed76fe5078178a04d2f4aa587ffc38dbd9c9a6a3",
+ "total_payload_bytes": 565231189,
+ "unexpected_entries": []
+}

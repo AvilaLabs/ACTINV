@@ -30,4 +30,18 @@ earlier payload commit.
 - [ ] Install with `pip install actinv` and `cargo install actinv-cli` from the public registries in clean environments.
 - [ ] Record public URLs, upload identities, artifact hashes, and smoke-test results in an append-only release record.
 
-Publishing must not include raw nuclear-data inputs, generated bulk libraries, credentials, local paths, or caches.
+## Versioned data release
+
+- [ ] Run `controls/g1_p13_data_distribution.py` with the exact release binary.
+- [ ] Stage only the catalog-named TENDL P10/P11 outputs with `scripts/prepare_data_release.py`; do not stage raw
+  evaluations, caches, temporary archives, or EAF-2010.
+- [ ] Run `controls/g4_p13_release_stage.py STAGING_DIRECTORY` and verify every identity against the catalog and prior
+  P10/P11 evidence.
+- [ ] Create the immutable `data-v1.0.0` GitHub release at the green P13 source commit and attach the staged assets,
+  catalog, notice, `SHA256SUMS`, and `SIZES`.
+- [ ] From a clean directory, run `actinv data fetch`, `actinv data verify`, and a documented smoke calculation using
+  the hosted assets. Record the release URL, tag commit, release ID, asset identities, and workflow result.
+
+Software publishing must not include raw nuclear-data inputs, generated bulk libraries, credentials, local paths, or
+caches. The separate data release may contain only the exact processed CC-BY-4.0 files named by the frozen catalog;
+the official decay archives remain hosted by the IAEA and are not rehosted by ACTINV.

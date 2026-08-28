@@ -1,0 +1,144 @@
+{
+ "closed": false,
+ "gates": {
+  "G1": {
+   "checks": {
+    "catalog_version": true,
+    "checks": true,
+    "cli": true,
+    "evidence": true,
+    "inventory": true,
+    "plants": true,
+    "schema": true
+   },
+   "pass": true
+  },
+  "G2": {
+   "focused_rust_tests": {
+    "command": "cargo test -p actinv-cli --all-targets --all-features",
+    "error_tail": "",
+    "pass": true,
+    "returncode": 0
+   },
+   "pass": true
+  },
+  "G3": {
+   "independent_cli": {
+    "list_marks_default": true,
+    "list_names_every_bundle": true,
+    "list_names_release": true,
+    "manifest_byte_identical": true
+   },
+   "pass": true
+  },
+  "G4": {
+   "checks": {
+    "catalog_version": true,
+    "checks": true,
+    "identities": true,
+    "inventory": true,
+    "no_unexpected": true,
+    "schema": true
+   },
+   "pass": true
+  },
+  "G5": {
+   "files": {
+    "CHANGELOG.md": {
+     "missing": [],
+     "pass": true
+    },
+    "README.md": {
+     "missing": [],
+     "pass": true
+    },
+    "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md": {
+     "missing": [],
+     "pass": true
+    },
+    "docs/DATA.md": {
+     "missing": [],
+     "pass": true
+    },
+    "docs/RELEASE_CHECKLIST.md": {
+     "missing": [],
+     "pass": true
+    }
+   },
+   "pass": true
+  },
+  "G6": {
+   "full_commands": [
+    {
+     "command": "cargo fmt --all -- --check",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    },
+    {
+     "command": "cargo check --workspace --all-targets --all-features",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    },
+    {
+     "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    },
+    {
+     "command": "cargo test --workspace --all-targets --all-features",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    },
+    {
+     "command": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    },
+    {
+     "command": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    },
+    {
+     "command": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+     "error_tail": "",
+     "pass": true,
+     "returncode": 0
+    }
+   ],
+   "pass": true,
+   "source_contract": {
+    "checks": {
+     "catalog_identity": true,
+     "no_unsafe": true,
+     "notice_identity": true,
+     "p13_in_ci": true,
+     "pinned_network_dependencies": true,
+     "staging_control": true,
+     "strict_ci_gates": true
+    },
+    "pass": true
+   }
+  }
+ },
+ "pass": true,
+ "protocol": {
+  "actual_sha256": "afbc60cb75411b1f10a558f77f2a512412de2f925bbaccada099ac5fd3c2f92c",
+  "expected_sha256": "afbc60cb75411b1f10a558f77f2a512412de2f925bbaccada099ac5fd3c2f92c",
+  "ledger_entry": true,
+  "pass": true
+ },
+ "release": {
+  "pass": false,
+  "present": false
+ },
+ "schema": "actinv-p13-verdict-1",
+ "source_pass": true,
+ "verdict": "P13-SOURCE-PASS"
+}

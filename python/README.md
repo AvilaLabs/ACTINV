@@ -20,8 +20,9 @@ with open("problem.json", encoding="utf-8") as source:
 print(result["steps"][-1]["heat_W_per_g"]["total"])
 ```
 
-Nuclear-data libraries are deliberately not bundled. Each calculation records hashes for the data selected by the
-user. See the [project README](https://github.com/AvilaLabs/ACTINV#readme) for a quick start, examples, data setup,
-validation evidence, and the qualification boundary.
+Nuclear-data libraries are distributed separately from the Python wheel. Install and verify the recommended versioned
+bundle with the standalone command's `actinv data fetch` and `actinv data verify`; each calculation records hashes for
+the selected files. See the [project README](https://github.com/AvilaLabs/ACTINV#readme) for the quick start, download
+instructions, examples, validation evidence, and qualification boundary.
 
 ACTINV is research-grade software. It is not approved for licensing, safety, or regulatory decisions.

@@ -1,0 +1,254 @@
+{
+  "schema": "actinv-data-catalog-1",
+  "catalog_version": "1.0.0",
+  "default_bundle": "tendl-2025-neutron",
+  "release_url": "https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0",
+  "notice": "ACTINV-DATA-NOTICE-v1.0.0.md",
+  "artifacts": [
+    {
+      "id": "tendl-2025-neutron-709g",
+      "role": "activation-library",
+      "path": "activation/tendl-2025-neutron-709g.npz",
+      "bytes": 123897743,
+      "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g.npz",
+        "bytes": 123897743,
+        "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+      }
+    },
+    {
+      "id": "tendl-2025-neutron-709g-index",
+      "role": "activation-index",
+      "path": "activation/tendl-2025-neutron-709g_index.json",
+      "bytes": 2653304,
+      "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g_index.json",
+        "bytes": 2653304,
+        "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+      }
+    },
+    {
+      "id": "tendl-2025-proton-162g",
+      "role": "activation-library",
+      "path": "activation/tendl-2025-proton-162g.npz",
+      "bytes": 62751053,
+      "sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-proton-162g.npz",
+        "bytes": 62751053,
+        "sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790"
+      }
+    },
+    {
+      "id": "tendl-2025-proton-162g-index",
+      "role": "activation-index",
+      "path": "activation/tendl-2025-proton-162g_index.json",
+      "bytes": 4686099,
+      "sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-proton-162g_index.json",
+        "bytes": 4686099,
+        "sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945"
+      }
+    },
+    {
+      "id": "tendl-2025-deuteron-162g",
+      "role": "activation-library",
+      "path": "activation/tendl-2025-deuteron-162g.npz",
+      "bytes": 76763930,
+      "sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-deuteron-162g.npz",
+        "bytes": 76763930,
+        "sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae"
+      }
+    },
+    {
+      "id": "tendl-2025-deuteron-162g-index",
+      "role": "activation-index",
+      "path": "activation/tendl-2025-deuteron-162g_index.json",
+      "bytes": 4809232,
+      "sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-deuteron-162g_index.json",
+        "bytes": 4809232,
+        "sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707"
+      }
+    },
+    {
+      "id": "tendl-2025-alpha-162g",
+      "role": "activation-library",
+      "path": "activation/tendl-2025-alpha-162g.npz",
+      "bytes": 46235710,
+      "sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-alpha-162g.npz",
+        "bytes": 46235710,
+        "sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915"
+      }
+    },
+    {
+      "id": "tendl-2025-alpha-162g-index",
+      "role": "activation-index",
+      "path": "activation/tendl-2025-alpha-162g_index.json",
+      "bytes": 4577708,
+      "sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-alpha-162g_index.json",
+        "bytes": 4577708,
+        "sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038"
+      }
+    },
+    {
+      "id": "tendl-2025-neutron-709g-covariance",
+      "role": "covariance-sidecar",
+      "path": "uncertainty/tendl-2025-neutron-709g.cov.npz",
+      "bytes": 237866615,
+      "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g.cov.npz",
+        "bytes": 237866615,
+        "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+      }
+    },
+    {
+      "id": "tendl-2025-neutron-709g-covariance-index",
+      "role": "covariance-index",
+      "path": "uncertainty/tendl-2025-neutron-709g.cov_index.json",
+      "bytes": 976593,
+      "sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6",
+      "licence": "CC-BY-4.0",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g.cov_index.json",
+        "bytes": 976593,
+        "sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6"
+      }
+    },
+    {
+      "id": "endfb-viii-0-decay",
+      "role": "decay-primary",
+      "path": "decay/endf-b-viii-0_decay.dat",
+      "bytes": 68313052,
+      "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+      "licence": "official-source-terms",
+      "source": {
+        "url": "https://www-nds.iaea.org/public/download-endf/ENDF-B-VIII.0/_backup-by-NSUB/zip/endf-b-viii-0_decay.sublib.zip",
+        "bytes": 12222963,
+        "sha256": "9f0254ea1314a233d957e507779eb53e6c7fafd17100fd5da23ce80ee80dd8ae",
+        "archive_member": "endf-b-viii-0_decay.dat"
+      }
+    },
+    {
+      "id": "jeff-3-3-decay",
+      "role": "decay-fallback",
+      "path": "decay/jeff-3-3_decay.dat",
+      "bytes": 45718116,
+      "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+      "licence": "official-source-terms",
+      "source": {
+        "url": "https://www-nds.iaea.org/public/download-endf/JEFF-3.3/_backup-by-NSUB/zip/jeff-3-3_decay.sublib.zip",
+        "bytes": 6702975,
+        "sha256": "73d52f142a284e2f463a8afcac5a9422c00de7bbbdee7e33196d825bea5edd6d",
+        "archive_member": "jeff-3-3_decay.dat"
+      }
+    },
+    {
+      "id": "actinv-data-notice-v1",
+      "role": "notice",
+      "path": "ACTINV-DATA-NOTICE.md",
+      "bytes": 3538,
+      "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
+      "licence": "notice",
+      "source": {
+        "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/ACTINV-DATA-NOTICE-v1.0.0.md",
+        "bytes": 3538,
+        "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c"
+      }
+    }
+  ],
+  "bundles": [
+    {
+      "id": "tendl-2025-neutron",
+      "description": "Recommended TENDL-2025 neutron activation data with ENDF/B-VIII.0 and JEFF-3.3 decay data",
+      "projectile": "neutron",
+      "groups": "fispact-709",
+      "temperature_K": 293.6,
+      "artifacts": [
+        "tendl-2025-neutron-709g",
+        "tendl-2025-neutron-709g-index",
+        "endfb-viii-0-decay",
+        "jeff-3-3-decay",
+        "actinv-data-notice-v1"
+      ]
+    },
+    {
+      "id": "tendl-2025-neutron-covariance",
+      "description": "Recommended neutron bundle plus the complete matching TENDL-2025 MF=33 covariance sidecar",
+      "projectile": "neutron",
+      "groups": "fispact-709",
+      "temperature_K": 293.6,
+      "artifacts": [
+        "tendl-2025-neutron-709g",
+        "tendl-2025-neutron-709g-index",
+        "tendl-2025-neutron-709g-covariance",
+        "tendl-2025-neutron-709g-covariance-index",
+        "endfb-viii-0-decay",
+        "jeff-3-3-decay",
+        "actinv-data-notice-v1"
+      ]
+    },
+    {
+      "id": "tendl-2025-proton",
+      "description": "TENDL-2025 proton activation data with ENDF/B-VIII.0 and JEFF-3.3 decay data",
+      "projectile": "proton",
+      "groups": "fispact-162",
+      "temperature_K": 0.0,
+      "artifacts": [
+        "tendl-2025-proton-162g",
+        "tendl-2025-proton-162g-index",
+        "endfb-viii-0-decay",
+        "jeff-3-3-decay",
+        "actinv-data-notice-v1"
+      ]
+    },
+    {
+      "id": "tendl-2025-deuteron",
+      "description": "TENDL-2025 deuteron activation data with ENDF/B-VIII.0 and JEFF-3.3 decay data",
+      "projectile": "deuteron",
+      "groups": "fispact-162",
+      "temperature_K": 0.0,
+      "artifacts": [
+        "tendl-2025-deuteron-162g",
+        "tendl-2025-deuteron-162g-index",
+        "endfb-viii-0-decay",
+        "jeff-3-3-decay",
+        "actinv-data-notice-v1"
+      ]
+    },
+    {
+      "id": "tendl-2025-alpha",
+      "description": "TENDL-2025 alpha activation data with ENDF/B-VIII.0 and JEFF-3.3 decay data",
+      "projectile": "alpha",
+      "groups": "fispact-162",
+      "temperature_K": 0.0,
+      "artifacts": [
+        "tendl-2025-alpha-162g",
+        "tendl-2025-alpha-162g-index",
+        "endfb-viii-0-decay",
+        "jeff-3-3-decay",
+        "actinv-data-notice-v1"
+      ]
+    }
+  ]
+}

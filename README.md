@@ -34,12 +34,20 @@ source checkout:
 cargo install --locked --path crates/actinv-cli
 ```
 
-ACTINV deliberately does not bundle nuclear data. This keeps the software distribution small and makes the exact
-evaluations used by each calculation explicit. [Data setup](docs/DATA.md) lists supported sources and their hashes.
+The software package stays small by keeping nuclear data in a separate, versioned release. Once the standalone command
+is installed, download the recommended neutron data in one command:
+
+```bash
+actinv data fetch
+```
+
+The command downloads about 139 MiB, verifies every file with SHA-256 before installing it under
+`actinv-data/v1.0.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
+release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
 ## First calculation
 
-An ACTINV problem is a JSON file containing paths to an activation library and decay data, a material composition, a
+An ACTINV problem is a JSON file containing the data paths printed by `actinv data fetch`, a material composition, a
 group flux spectrum, and an irradiation/cooling schedule. Validate it first, then run it:
 
 ```bash
@@ -65,7 +73,12 @@ print("unaccounted inputs:", result["ledger"])
 ```
 
 Start with [the specification guide](docs/SPEC.md), which explains every field and includes complete examples. Unknown
-fields are rejected, so misspelled options do not silently change a calculation.
+fields are rejected, so misspelled options do not silently change a calculation. At any time, verify the installed
+data without downloading it again:
+
+```bash
+actinv data verify
+```
 
 ## Preparing an activation library
 
@@ -141,7 +154,8 @@ See [Validation](docs/VALIDATION.md), [v1.0 release notes](docs/RELEASE_NOTES_v1
 
 ## Design principles
 
-- **Inputs stay attributable.** Nuclear data are not bundled, and calculations record their hashes.
+- **Inputs stay attributable.** Nuclear data are distributed separately under their own terms, verified before use,
+  and recorded by hash in every calculation.
 - **Incomplete information stays visible.** Missing data and approximations appear in the ledger.
 - **Interfaces share one solver.** CLI, Python, prepared, and mesh paths are checked for scientific identity.
 - **Evidence is reproducible.** Protocols are frozen before results; repair records are append-only.

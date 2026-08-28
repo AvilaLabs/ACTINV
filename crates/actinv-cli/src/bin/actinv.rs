@@ -1,5 +1,6 @@
 //! ACTINV command-line entry point. Run and export commands consume the same result schema
 //! used by the Python binding and validation harness.
+use actinv_cli::{embedded_catalog, embedded_catalog_json, fetch_bundle, verify_bundle};
 use actinv_core::{
     flux::{import_fispact, import_mctal, import_meshtal, import_openmc, ImportSummary},
     mesh::{run_mesh, MeshSpec},
@@ -17,6 +18,10 @@ use std::collections::BTreeMap;
 
 const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv validate SPEC.json\n\
+                    actinv data list\n\
+                    actinv data fetch [BUNDLE] [--output DIR] [--force]\n\
+                    actinv data verify [BUNDLE] [--output DIR]\n\
+                    actinv data manifest\n\
                     actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
                     actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
@@ -25,6 +30,11 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
+
+const DATA_USAGE: &str = "usage: actinv data list\n\
+                              actinv data fetch [BUNDLE] [--output DIR] [--force]\n\
+                              actinv data verify [BUNDLE] [--output DIR]\n\
+                              actinv data manifest";
 
 fn die(message: impl std::fmt::Display, code: i32) -> ! {
     eprintln!("{message}");
@@ -102,6 +112,103 @@ fn parsed_option<T: std::str::FromStr>(options: &BTreeMap<&str, &str>, name: &st
 fn reject_unknown(options: &BTreeMap<&str, &str>, allowed: &[&str]) {
     if let Some(name) = options.keys().find(|name| !allowed.contains(name)) {
         die(format!("unknown option {name}"), 2);
+    }
+}
+
+fn human_bytes(bytes: u64) -> String {
+    const UNITS: [&str; 5] = ["B", "KiB", "MiB", "GiB", "TiB"];
+    let mut value = bytes as f64;
+    let mut unit = 0;
+    while value >= 1024.0 && unit + 1 < UNITS.len() {
+        value /= 1024.0;
+        unit += 1;
+    }
+    if unit == 0 {
+        format!("{bytes} {}", UNITS[unit])
+    } else {
+        format!("{value:.1} {}", UNITS[unit])
+    }
+}
+
+fn data_command(args: &[String]) {
+    if args.is_empty() {
+        die(DATA_USAGE, 2);
+    }
+    match args[0].as_str() {
+        "--help" | "-h" if args.len() == 1 => println!("{DATA_USAGE}"),
+        "manifest" if args.len() == 1 => print!("{}", embedded_catalog_json()),
+        "list" if args.len() == 1 => {
+            let catalog = embedded_catalog().unwrap_or_else(|error| die(error, 1));
+            println!(
+                "ACTINV data catalog v{} (default: {})",
+                catalog.catalog_version, catalog.default_bundle
+            );
+            for bundle in &catalog.bundles {
+                let bytes = catalog
+                    .source_download_bytes(bundle)
+                    .unwrap_or_else(|error| die(error, 1));
+                let marker = if bundle.id == catalog.default_bundle {
+                    " [default]"
+                } else {
+                    ""
+                };
+                println!(
+                    "  {}{} — {} download — {}",
+                    bundle.id,
+                    marker,
+                    human_bytes(bytes),
+                    bundle.description
+                );
+            }
+            println!("release: {}", catalog.release_url);
+        }
+        "fetch" | "verify" => {
+            let operation = args[0].as_str();
+            let mut bundle = None;
+            let mut output = std::path::PathBuf::from("actinv-data");
+            let mut output_seen = false;
+            let mut force = false;
+            let mut index = 1;
+            while index < args.len() {
+                match args[index].as_str() {
+                    "--output" => {
+                        if output_seen || index + 1 == args.len() {
+                            die("--output must occur once and name a directory", 2);
+                        }
+                        output = std::path::PathBuf::from(&args[index + 1]);
+                        output_seen = true;
+                        index += 2;
+                    }
+                    "--force" if operation == "fetch" => {
+                        if force {
+                            die("duplicate option --force", 2);
+                        }
+                        force = true;
+                        index += 1;
+                    }
+                    value if value.starts_with('-') => {
+                        die(format!("unknown data option {value}"), 2)
+                    }
+                    value => {
+                        if bundle.replace(value).is_some() {
+                            die("data command accepts at most one BUNDLE", 2);
+                        }
+                        index += 1;
+                    }
+                }
+            }
+            let summary = if operation == "fetch" {
+                fetch_bundle(bundle, &output, force)
+            } else {
+                verify_bundle(bundle, &output)
+            }
+            .unwrap_or_else(|error| die(error, 1));
+            println!(
+                "{}",
+                serde_json::to_string_pretty(&summary).expect("serialise data-operation summary")
+            );
+        }
+        _ => die(DATA_USAGE, 2),
     }
 }
 
@@ -272,6 +379,7 @@ fn main() {
         "--help" | "-h" if a.len() == 2 => println!("{USAGE}"),
         "build-covariance" => build_covariance(&a[2..]),
         "build-library" => build_library(&a[2..]),
+        "data" => data_command(&a[2..]),
         "import-flux" => {
             let summary = import_flux(&a[2..]);
             println!(

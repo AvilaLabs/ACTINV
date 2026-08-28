@@ -1,0 +1,49 @@
+{
+ "artifact_count": 13,
+ "bundle_count": 5,
+ "catalog_version": "1.0.0",
+ "checks": {
+  "all_evidence_identities_match": true,
+  "all_planted_mutations_rejected": true,
+  "catalog_valid": true,
+  "cli_contract": true,
+  "no_bulk_data_tracked": true,
+  "notice_identity": true
+ },
+ "cli": {
+  "list_marks_default": true,
+  "list_names_every_bundle": true,
+  "list_names_release": true,
+  "manifest_byte_identical": true
+ },
+ "evidence_identities": {
+  "endfb-viii-0-decay": true,
+  "jeff-3-3-decay": true,
+  "tendl-2025-alpha-162g": true,
+  "tendl-2025-alpha-162g-index": true,
+  "tendl-2025-deuteron-162g": true,
+  "tendl-2025-deuteron-162g-index": true,
+  "tendl-2025-neutron-709g": true,
+  "tendl-2025-neutron-709g-covariance": true,
+  "tendl-2025-neutron-709g-covariance-index": true,
+  "tendl-2025-neutron-709g-index": true,
+  "tendl-2025-proton-162g": true,
+  "tendl-2025-proton-162g-index": true
+ },
+ "forbidden_tracked_files": [],
+ "gate": "P13-G1/G3",
+ "notice": {
+  "bytes_match": true,
+  "sha256_match": true
+ },
+ "pass": true,
+ "planted_rejections": {
+  "direct_identity_mismatch": true,
+  "duplicate_artifact_id": true,
+  "non_adjacent_index": true,
+  "non_https": true,
+  "parent_traversal": true,
+  "unknown_field": true
+ },
+ "schema": "actinv-p13-data-distribution-control-1"
+}

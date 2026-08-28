@@ -5,10 +5,9 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-27):** P12 is closed **P12-CONDITIONAL** with all six gates passing. The technical v1.0
-repository scope is complete: the exact release payload is pushed and its GitHub Actions run is green, while the
-checker-derived evidence and reproducible repository inventory close the audit trail. Public tagging, GitHub Release
-creation and registry publication remain principal acts.
+**Current status (2026-08-28):** P12 is closed **P12-CONDITIONAL** with all six gates passing. The technical v1.0
+physics scope is complete. P13 is open under frozen protocol `afbc60cb…` for verified data distribution and first-run
+setup; it does not change the builder, solver, evaluated values, numerical tolerances or prior validation verdicts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -47,6 +46,7 @@ Each row is one protocol session. Estimates are working days of the principal's 
 | **P10** Data completeness | R-matrix-limited (LRF=7) reconstruction; unresolved range with LSSF=0 (infinite-dilution averages from parameters); Doppler at arbitrary temperature; TENDL-2025 p/d/α activation; ultra-narrow-resonance treatment (the P4 G2c limitation); **`actinv-data`: library building moves to Rust, after which ACTINV is a single binary with an optional Python API**. | LRF=7 vs NJOY on FENDL W-186; URR averages vs NJOY UNRESR on Ag-107; identical-data TENDL-2017 charged values vs official FISPACT-II processed rows plus TENDL-2025 MF6 vs official residual tables | P4 | 4–5 |
 | **P11** Uncertainty | Covariance (MF=33) propagation to collapsed one-group cross sections; sensitivity of heat/activity to each collapsed σ; uncertainty bands in reports and certificates. | propagated variance = sampled variance on a 2×2 case to 1e-3; sensitivities vs finite differences to 1e-4 | P5 | 3 |
 | **P12** v1.0 hardening | Clearance/waste indices (configurable table), ICRP dose coefficients, independent re-verification of abundance/mass tables from a primary source, parser fuzzing, FNG/ITER shutdown-dose activation step with provided fluxes, docs for use in licensing chains, v1.0 release. | all prior controls green in CI; fuzzing finds no crash in 10⁶ cases; FNG activation step vs reference | P7–P11 | 3–4 |
+| **P13** verified distribution | Embedded versioned data catalog; one-command, atomic, SHA-256-verified setup for exact P10/P11 TENDL artifacts and official decay archives; attribution, release staging, quick start and CI controls. No physics changes and no bulk data in Git. | strict manifest and path rejection; direct/archive download fault regressions; staged assets match P10/P11 evidence; required Rust gates and independent control green | P12 | 1 |
 
 ### Known limitations carried into v0.1
 Written here so they cannot be forgotten at release. Each must appear in the v0.1 release notes with its guard.
@@ -178,3 +178,8 @@ part that does not compress: users, issues, and the validation record accumulati
   `33134485488` is green. The closure checker independently re-derives G1--G5, binds that payload and run, and
   reproduces the non-circular source/evidence inventory with Amendment E's exact derived-report exclusions. Technical
   v1.0 is complete; no tag, GitHub Release or registry publication is claimed.
+- 2026-08-28 — P13 opened under protocol
+  `afbc60cb75411b1f10a558f77f2a512412de2f925bbaccada099ac5fd3c2f92c`. It is a distribution-only extension:
+  immutable P10/P11 TENDL artifacts may be released under the CC-BY-4.0 terms recorded in every TENDL-2025 source
+  header, while ENDF/B-VIII.0 and JEFF-3.3 decay archives remain direct official-host downloads. The embedded catalog,
+  atomic fetch/verify path, release staging, attribution and first-run docs are gated without changing scientific code.
