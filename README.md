@@ -60,6 +60,13 @@ The command downloads about 139 MiB, verifies every file with SHA-256 before ins
 `actinv-data/v1.0.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
+If you are working from the source checkout, the included iron example already uses those default paths:
+
+```bash
+actinv validate examples/fns_fe_5min.json
+actinv run examples/fns_fe_5min.json fns_fe_5min_result.json
+```
+
 ### 3. Run a calculation
 
 An ACTINV problem is a JSON file containing the data paths printed by `actinv data fetch`, a material composition, a

@@ -1,12 +1,14 @@
 {
  "spec": "actinv-spec-1",
  "title": "FNS Fe, 5-minute irradiation, 1996 campaign",
+ "projectile": "neutron",
  "library": {
-  "path": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_fns_709g.npz"
+  "path": "actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz",
+  "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
  },
  "decay": {
-  "primary": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
-  "fallback": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat"
+  "primary": "actinv-data/v1.0.0/decay/endf-b-viii-0_decay.dat",
+  "fallback": "actinv-data/v1.0.0/decay/jeff-3-3_decay.dat"
  },
  "material": {
   "mass_g": 1.0,

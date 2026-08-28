@@ -4,6 +4,7 @@
 The iron-only library reproduces the 255-target library on this spec (verified: 2.6e-12) because only iron targets
 contribute to a pure-iron sample."""
 import importlib.util
+import hashlib
 import os, sys, json, subprocess, tempfile, numpy as np
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 sys.path.insert(0, os.path.join(ROOT, "controls"))
@@ -24,7 +25,10 @@ if not os.path.exists(lib):
                     "--workers", str(WORKERS), "--dense", "1", "--name", "ci_fe"], check=True)
 # ---- build the spec against the fetched data
 spec = json.load(open(os.path.join(ROOT, "examples", "fns_fe_5min.json")))
-spec["library"]["path"] = lib
+spec["library"] = {
+    "path": lib,
+    "sha256": hashlib.sha256(open(lib, "rb").read()).hexdigest(),
+}
 spec["decay"]["primary"] = os.path.join(DATA, "decay", "endf-b-viii-0_decay.dat")
 spec["decay"]["fallback"] = ""
 sp = os.path.join(OUT, "spec.json"); json.dump(spec, open(sp, "w"))

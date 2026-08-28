@@ -1,4 +1,4 @@
-e9c285d8cfe0d5e0c009e921a20200370c17b3e99f6d8ad6d1de122fbb2cc473  ./.github/workflows/ci.yml
+9727bb2277aef049d4db19def755b575e9d8c7ae33381286ffaea3b24e389fc1  ./.github/workflows/ci.yml
 f5c97a848033ebe102ae57dbe791df00b027c5b207849aa72fe264eb421c3a8d  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
 e4250920d7ce2f8f7e4c5a012acd659c03f6027ddca57d46a885e9e171104edd  ./.github/workflows/release-artifacts.yml
@@ -9,7 +9,7 @@ c0e0a42e38329ad94a5d9abd3d0e8bf13550980542d87291b43c2e8fe2019a3e  ./Cargo.lock
 e905ead565169b3fe8e073c658081d4cdf697ae86a15a321d03929ca460e7393  ./Cargo.toml
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
-f2f500b845dd9c01560ebc438f5c8e50ea9d63b4bdc92eb092d4cbcab9ca6a86  ./README.md
+8646d90335411d73afd3ea57718a7f8c99e845b712784f823f1451fa1c6ea700  ./README.md
 af488bfa6830983ab64e77c1a31522f3ca07acaa173574aff979acd3de65716a  ./controls/certificate.py
 0ea8b3c292b37f021145703ee52a35ae4bd9ad5f363bdcbe594cc1a81b25b584  ./controls/chain.py
 649073f3897820c9858a4a4b5b2ad66ace5b1f610856ddbe29cc49cc93335313  ./controls/check_dependencies.py
@@ -29,8 +29,9 @@ c7c757364d122fa48335479851e1f0f0f788dc246ab9ea95c502e14a8773946c  ./controls/che
 66e07bd8867e336c594c1db2536bf68186932e70f472f8be564c7c0945333bc0  ./controls/check_p8.py
 3efb681ab3ac54e609104cc84771ee93add45af6a56ead069e49f72da1544b7e  ./controls/check_p9.py
 684b885fe29b6cc0acbd50b2e23d226073a9c29a13dcf9721511bb42a0df541a  ./controls/check_prior_verdicts.py
+51d447b8aaef2b592ec352e027769a57bfee7a24201ab8f216342b1c326c1235  ./controls/check_public_examples.py
 29eda62c1a9a9372f5e714f6ee5bc3c714bb892ac097da55dadb917c0185e1e3  ./controls/check_release_notes.py
-3c2d871488c741b444f0cb35ec81d4f7ee8dc7c8befa82147e53ae8d1b16e551  ./controls/ci_end_to_end.py
+750df971bf0f0600a425e959b6d25fc60d179cdf1dc2e0ca1f142430a56be17f  ./controls/ci_end_to_end.py
 779647af61c42ecc320dd76f530da5966cf74fd9202414eb44867aa888ac6b44  ./controls/ci_expected.json
 ca86db417052addca94b94bbae3166662fc9066315ba25c1e9c901869818fc29  ./controls/ci_result.py
 307ae437ffe46aef94da1ad3a0c4a99adc3c0641d5b6e44e6839c12f9a2a2c44  ./controls/cram_ref.py
@@ -218,7 +219,7 @@ ddc00752f6b251acc87c21acf3440a3a77c7daf5dc5a7a5cfddd4c8af8eb07a0  ./docs/history
 7d618b6b40bf1cab49f2374ad2355d7fb210aaec7de765bd6196d2b86898fd5d  ./docs/history/sessions/P9.md
 1492d8657c887889c59264a098dc1a6e7d4d47b1d51359a15b402cd286a7477d  ./docs/history/sessions/README.md
 32672bb79351e60b4951b064628b5d085839b0feb07a3774513d0c2d39ed1089  ./docs/maintainers/AGENTS.md
-8cc5c2d283de0dfb3696655016c399dc69869957051a141a49dbe80176280a78  ./examples/fns_fe_5min.json
+d48d08319c95128750cdf9e045fe421fb485dff704e684ca74116c98c8e8cfd8  ./examples/fns_fe_5min.json
 5d6babc0ec58211c5acc1f8f9e6c868e3d85c73752bd69759e874eaa27664447  ./ledger.md
 e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd  ./protocols/ACTINV-P10_AMENDMENT_A.md
 36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23  ./protocols/ACTINV-P10_AMENDMENT_B.md
