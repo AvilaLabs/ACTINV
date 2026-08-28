@@ -48,3 +48,12 @@ of `ROADMAP.md` or explicitly left out of v1.0.
 - 2026-08-28 — Feed/removal, reverse calculation and damage observables are confirmed ACTINV capability gaps;
   gamma/triton/helion activation remains parked above. They are demand-led post-v1.0 candidates, not automatic scope
   merely to make the competitive matrix uniformly green.
+- 2026-08-28 — the maintainer cannot justify a FISPACT licence cost. P17 therefore uses analytic/dense/OpenMC solver
+  controls, NJOY processing controls, identical-data ALARA/OpenMC networks and held-out measurements. A blind runner
+  for a future lawfully licensed collaborator is optional; no roadmap gate waits for it.
+- 2026-08-28 — CB1's `1.09 GB` public-example finding is routed first to P14 measurement and safe redundant-work
+  removal, then to P15's versioned prepared artifact and selective loading. P14 may not smuggle in P15's format or
+  architecture changes.
+- 2026-08-28 — physical quantity types and the broader metamorphic suite are routed to P16; open accuracy attribution
+  to P17; only P17-demonstrated repair classes to P18; finite-dilution self-shielding to P19; practical correlated
+  uncertainty to P20; and executed large-scale/streamed mesh evidence to P21. P22 re-scores the complete product.

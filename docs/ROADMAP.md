@@ -1,4 +1,4 @@
-# ACTINV roadmap to v1.0
+# ACTINV roadmap
 
 *Written 2026-08-26 at the principal's request. This file is the only place scope lives. A phase's scope is fixed when
 its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`, not into the phase. One phase open at a
@@ -6,9 +6,9 @@ time. Every phase ends with a checker-derived verdict, a session file, a manifes
 dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-28):** P13 is closed **P13-PASS**, v1.0.0 is publicly released, and the initial post-release
-competitive benchmark is closed **CB1-COMPLETE**. CB1 independently re-derives its scorecard, records every access
-limit, and changes no released physics or numerical implementation. Follow-up work is parked rather than silently
-tuned into the scored result.
+competitive benchmark is closed **CB1-COMPLETE**. The maintainer approved the P14--P22 post-release program and P14
+is the only open phase. P14 profiles and improves the released end-to-end path without changing physics, evaluated
+data, numerical tolerances, public schemas or certificate provenance.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -29,6 +29,10 @@ Out of scope for v1.0 (parked, see PARKING.md): neutron transport of any kind; c
 - **v0.2 — useful in an R2S chain.** Phases P7–P8.
 - **v0.5 — activation-grade on every axis the incumbents cover.** Phases P9–P10.
 - **v1.0 — something a neutronics team can put in a licensing chain.** Phases P11–P12.
+- **post-v1 performance — the complete public workflow is measured, selective and smooth.** Phases P14–P15.
+- **post-v1 assurance — dimensional mistakes fail early and accuracy limitations are attributed openly.** Phases P16–P18.
+- **post-v1 physics and scale — self-shielding, practical uncertainty and large jobs are independently controlled.** Phases P19–P21.
+- **post-v1 scorecard — every improvement and remaining loss is re-measured before release.** Phase P22.
 
 ## Phases
 
@@ -48,6 +52,30 @@ Each row is one protocol session. Estimates are working days of the principal's 
 | **P11** Uncertainty | Covariance (MF=33) propagation to collapsed one-group cross sections; sensitivity of heat/activity to each collapsed σ; uncertainty bands in reports and certificates. | propagated variance = sampled variance on a 2×2 case to 1e-3; sensitivities vs finite differences to 1e-4 | P5 | 3 |
 | **P12** v1.0 hardening | Clearance/waste indices (configurable table), ICRP dose coefficients, independent re-verification of abundance/mass tables from a primary source, parser fuzzing, FNG/ITER shutdown-dose activation step with provided fluxes, docs for use in licensing chains, v1.0 release. | all prior controls green in CI; fuzzing finds no crash in 10⁶ cases; FNG activation step vs reference | P7–P11 | 3–4 |
 | **P13** verified distribution | Embedded versioned data catalog; one-command, atomic, SHA-256-verified setup for exact P10/P11 TENDL artifacts and official decay archives; attribution, release staging, quick start and CI controls. No physics changes and no bulk data in Git. | strict manifest and path rejection; direct/archive download fault regressions; staged assets match P10/P11 evidence; required Rust gates and independent control green | P12 | 1 |
+
+### Post-v1 phases
+
+The post-v1 program does not depend on access to a licensed FISPACT executable. Solver controls use analytic Bateman
+solutions, dense exponentials and OpenMC; processing controls use NJOY or another lawful independent processor;
+identical-data end-to-end controls use ALARA and OpenMC; predictive claims use protocol-frozen measurements. Public
+FISPACT results remain different-data context. A blind public runner may later accept results from a licensed
+collaborator, but no phase gate depends on that optional route.
+
+| phase | scope | gates (controls) | depends on | est. |
+|---|---|---|---|---|
+| **P14** performance anatomy | Attribute wall time, allocations, peak RSS, I/O and copied bytes across the released public path; remove only measured redundant work that requires no data-format, physics or public-interface change. | frozen CB1 baseline and inputs reverified; stage accounting reproducible; scientific result/provenance unchanged; candidate improves one primary resource metric without materially regressing the other; Rust and prior-release gates green | CB1 | 2–3 |
+| **P15** prepared selective data | Add a deterministic schema-versioned prepared artifact, indexed reachable-target loading, compact sparse storage and safe cache reuse; evaluate immutable-array mapping and remove redundant Rust/Python copies. | cache deletion changes performance only; corrupt/stale/cross-version caches fail closed; at least 2× lower public-example peak RSS with a 512 MiB stretch goal; at least 1.5× faster warm path with a one-second stretch goal; provenance and results preserved | P14 | 5–8 |
+| **P16** typed boundaries and metamorphic suite | Introduce zero-cost physical quantity types incrementally at Rust parsing/core boundaries while retaining convenient compatible JSON/Python inputs; broaden relation-based tests for scaling, decay, schedules, rebinning, modes and mesh identity. | incompatible quantities rejected at compile time in fixtures; exactly one documented conversion per boundary; legacy APIs/results remain compatible; release runtime has no material regression; all frozen relations pass | P15 | 4–6 |
+| **P17** open validation and attribution | Freeze new diagnostic and genuinely held-out public evidence before calculation; expand identical-data ALARA/OpenMC networks and NJOY processing controls; separate solver, processor, evaluation, decay/yield and measurement-definition effects. No production physics is changed in this phase. | no post-result exclusions or metric changes; all inputs hashed; independent arithmetic rederives the report; cause ledger names every material mismatch; held-out evidence remains sealed until scoring | P16 | 7–10 plus bounded background compute |
+| **P18** evidence-directed accuracy | Repair only cause classes demonstrated by P17, one narrowly frozen repair session at a time; diagnostic evidence guides work and held-out evidence decides whether changed default behavior ships. | independent control per behavior change; conservation/numerical controls remain green; held-out typical and tail measures do not regress; the already-seen FNS family is reporting evidence, never the acceptance oracle | P17 | discovery-dependent |
+| **P19** finite-dilution self-shielding | Add explicit finite-dilution treatment from lawful open probability-table or independently processed data, while preserving infinite dilution as an explicit mode and recording all model/data choices. Initially opt-in. | infinite-dilution limit reproduces v1.0; dilution and temperature limits are physical; selected rates match an independent open processing path; missing inputs fail visibly; resonance-sensitive held-out cases improve or remain consistent | P17; P18 if opened | 10–15 |
+| **P20** practical uncertainty | Audit P11 covariance coverage; propagate relevant correlations into usable observable bands; compare linear propagation with deterministic correlated sampling; distinguish cross-section, decay, yield and uncovered model uncertainty. | synthetic analytic and sampled controls agree in their shared regime; covariance validity and fixed-seed reproduction pass; partial coverage is explicit through CLI/Python/JSON/certificates; no interval is labeled total uncertainty without total coverage | P16 | 7–10 |
+| **P21** large-scale execution | Reuse prepared networks across compatible mesh cells, group common workloads, stream selectable outputs, bound memory by chunk size and add interruption/checkpoint support; replace extrapolation with an executed large case. | mesh equals independent cell runs; thread-count identity holds; memory excludes total-cell scaling apart from requested output; scaling evidence records hardware/work/output/cache state; no unexecuted million-cell claim | P15 | 5–8 |
+| **P22** public re-score and release | Rerun frozen CB1 against v1.0.0 and the candidate; score P17 held-out evidence; repeat open-code, install, memory, runtime and mesh exercises; publish raw machine-readable evidence, limitations and narrowly supported claims. | checker rederives every table; clean clone and all release gates green; source and data artifacts remain versioned and hash-pinned; any superlative names the exact executed workload and comparator set | P18–P21 | 3–5 |
+
+Triton/helion/gamma activation, feed/removal, reverse calculation, damage observables and an internal transport solver
+remain demand-led candidates rather than automatic post-v1 scope. Performance-only work may ship as a patch release
+when behavior and interfaces are unchanged; additive physics or API work uses a minor release and release candidate.
 
 ### Known limitations carried into v0.1
 Written here so they cannot be forgotten at release. Each must appear in the v0.1 release notes with its guard.
@@ -200,3 +228,7 @@ part that does not compress: users, issues, and the validation record accumulati
   `0.6846`). The report forbids cross-data solver claims, records licensed-executable gaps, first-use/resource costs,
   and all capability losses. Scorecard commit `121b35b01eb8a055b071efe7301d07e112269ad1` passed GitHub Actions run
   `33185710084`; all required Rust gates and the isolated clean-clone/end-to-end/P10 legacy controls also pass locally.
+- 2026-08-28 — the maintainer approved the P14--P22 post-v1 program after CB1. Licensed FISPACT access is explicitly
+  not a dependency: open numerical, processing, end-to-end and measurement controls form the evidence chain, with a
+  future blind collaborator runner optional. P14 opens first and is restricted to measured, no-physics performance
+  anatomy and safe redundant-work removal; prepared formats and selective loading remain P15 scope.
