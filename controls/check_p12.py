@@ -23,7 +23,16 @@ PROTOCOL_HASHES = {
     "protocols/ACTINV-P12_AMENDMENT_B.md": "c4c823c5bb07235df43a9e26c5c4b40e852745fbfb72723612b9867507df0769",
     "protocols/ACTINV-P12_AMENDMENT_C.md": "141a3e7dc70fd3d324930ffb6db328201f69c64bf447f65569650ca042fd559c",
     "protocols/ACTINV-P12_AMENDMENT_D.md": "91084144aa8ead0679bece73375c7880c8b6037ad5647d3bebc28539f30993f4",
+    "protocols/ACTINV-P12_AMENDMENT_E.md": "1f05dab0e0fcd4df7a58afe3bdab2f319a553e796551a1c49d90d34117e1c6f1",
 }
+G3_AMENDMENTS = tuple(
+    f"protocols/ACTINV-P12_AMENDMENT_{letter}.md" for letter in ("A", "B", "C", "D")
+)
+MANIFEST_EXCLUDED = (
+    "MANIFEST.sha256",
+    "results/g6_p12_complete.json",
+    "results/verdict_p12.json",
+)
 GATE_FILES = {
     "G1": "g1_p12_radiological.json",
     "G2": "g2_p12_primary_tables.json",
@@ -95,13 +104,14 @@ def repository_manifest_integrity() -> dict[str, object]:
         check=True,
     ).stdout
     paths = sorted(
-        path for path in inventory.split("\0") if path and path != "MANIFEST.sha256"
+        path for path in inventory.split("\0") if path and path not in MANIFEST_EXCLUDED
     )
     expected = "".join(f"{sha256(ROOT / path)}  ./{path}\n" for path in paths)
     manifest = ROOT / "MANIFEST.sha256"
     actual = manifest.read_text() if manifest.is_file() else ""
     return {
         "entries": len(paths),
+        "excluded": list(MANIFEST_EXCLUDED),
         "byte_identical": actual == expected,
         "pass": actual == expected,
     }
@@ -331,9 +341,7 @@ def evaluate_g3(value: dict[str, object] | None) -> dict[str, object]:
     full = value.get("full")
     reader_hashes = nested(value, "source", "reader_source_sha256")
     expected_amendments = {
-        Path(relative).stem: digest
-        for relative, digest in PROTOCOL_HASHES.items()
-        if "AMENDMENT" in relative
+        Path(relative).stem: PROTOCOL_HASHES[relative] for relative in G3_AMENDMENTS
     }
     regressions = nested(value, "source", "regression_tests")
     checks = {
@@ -584,8 +592,10 @@ def evaluate_g6(value: dict[str, object] | None) -> dict[str, object]:
         and nested(value, "session", "pass") is True
         and all(fragment in session_text for fragment in required_session_fragments),
         "manifest": manifest["pass"] is True
+        and manifest["excluded"] == list(MANIFEST_EXCLUDED)
         and nested(value, "manifest", "entries") == manifest["entries"]
         and nested(value, "manifest", "expected_entries") == manifest["entries"]
+        and nested(value, "manifest", "excluded") == list(MANIFEST_EXCLUDED)
         and nested(value, "manifest", "valid_lines") is True
         and nested(value, "manifest", "duplicates") == []
         and nested(value, "manifest", "self_excluded") is True

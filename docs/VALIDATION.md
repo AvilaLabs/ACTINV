@@ -164,12 +164,14 @@ generated nuclear-data libraries remain outside Git; compact results retain thei
 | G3 input reliability | Two fixed 10,000-case runs have the same deterministic summary. The fixed 1,000,000-case partition covers all eleven public reader families, completes with no process-level failure, and remains below the 1 GiB ceiling. Five pre-run bounds/encoding findings have minimized regression tests and Amendment D records them. |
 | G4 FNG/ITER cell 620 | Co-58, Tc-99m, Mn-56 and Cr-51 agree at every one of 170 endpoints. The worst relative population difference at or above one million atoms is `2.88e-14`, inside the frozen `1e-4` bound; 120 independently read reaction-rate comparisons differ by at most `3.24e-16` relative. Repeated temporary libraries and scientific results are identical. |
 | G5 release candidate | A fresh clone passes exact Rust format/check/strict-Clippy/test gates, prior-verdict and dependency controls, the CLI/Python end-to-end path, and the nested self-contained-clone control. The standalone binary reports `1.0.0`; all three Rust archives compile after unpacking; the Python 3.9 stable-ABI wheel imports as `1.0.0`; and the source archive, licences and SBOM are present. |
+| G6 closure | The independent checker re-derives G1--G5, verifies every protocol and result hash, reproduces the source/evidence inventory with Amendment E's exact three-path derived-report exclusion, and binds release payload `0151dd06…` to its pushed, successful GitHub Actions run. |
 
 The cell-620 comparison validates activation-history reproduction for the supplied material, one-group data, decay
 chain and schedule. It does not execute or validate neutron/photon transport, shielding geometry, a full shutdown-dose
 model, or a regulatory analysis. Radiological-response controls verify formulas, data handling and provenance, not the
 applicability of a user's table or scenario.
 
-P12 remains open only for its independent closure checker, session/manifest regeneration and pushed CI confirmation.
-A technical repository verdict does not create a tag, registry publication, GitHub Release, software qualification,
-or approval.
+The checker verdict is **P12-CONDITIONAL** because Amendments A--E preserve every repair made under the frozen
+protocol. All six gates pass; exact hashes, payload and CI evidence are in `results/g1_p12_radiological.json` through
+`results/g6_p12_complete.json` and [the P12 session record](../sessions_P12.md). This completes the technical v1.0
+repository scope. It does not create a tag, registry publication, GitHub Release, software qualification or approval.

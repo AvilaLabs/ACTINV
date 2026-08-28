@@ -48,7 +48,9 @@ def repository_paths() -> list[str]:
     output = command(
         ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"]
     )
-    paths = sorted(path for path in output.split("\0") if path and path != "MANIFEST.sha256")
+    paths = sorted(
+        path for path in output.split("\0") if path and path not in check_p12.MANIFEST_EXCLUDED
+    )
     if any(Path(path).is_absolute() or ".." in Path(path).parts for path in paths):
         raise RuntimeError("repository inventory contains an unsafe path")
     return paths
@@ -82,9 +84,10 @@ def manifest_evidence() -> dict[str, object]:
     return {
         "entries": len(entries),
         "expected_entries": len(paths),
+        "excluded": list(check_p12.MANIFEST_EXCLUDED),
         "valid_lines": valid_lines,
         "duplicates": duplicates,
-        "self_excluded": "MANIFEST.sha256" not in entries,
+        "self_excluded": all(path not in entries for path in check_p12.MANIFEST_EXCLUDED),
         "exact_inventory": exact_inventory,
         "hashes_match": hashes_match,
         "regeneration_byte_identical": reproduced,

@@ -5,11 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-27):** P11 is closed **P11-CONDITIONAL** with all six gates passing. P12 — v1.0 hardening
-is open under its frozen protocol; G1 configurable radiological responses, G2 primary abundance/mass-table
-re-verification, G4 FNG/ITER cell-620 activation and G5 clean-clone release-candidate verification are green. The
-remaining input-reliability gate is kept isolated before the final checker and reproducibility close. Public tagging
-and publication remain principal acts.
+**Current status (2026-08-27):** P12 is closed **P12-CONDITIONAL** with all six gates passing. The technical v1.0
+repository scope is complete: the exact release payload is pushed and its GitHub Actions run is green, while the
+checker-derived evidence and reproducible repository inventory close the audit trail. Public tagging, GitHub Release
+creation and registry publication remain principal acts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -170,3 +169,12 @@ part that does not compress: users, issues, and the validation record accumulati
   1,000,000-case partition covers all eleven production-reader families with zero process-level failures below the
   1 GiB ceiling. Amendment D records five pre-full-run bounds/encoding findings and their minimized regressions;
   accepted scientific inputs and results are unchanged. G6 closure and pushed CI confirmation remain.
+- 2026-08-27 — P12 Amendment E repairs a closure-control cycle found before G6: the manifest cannot hash reports
+  whose content records whether that same manifest reproduces. The exact exclusion set is frozen to the manifest
+  itself and the G6/verdict derived reports; the closure commit binds all three while every other file remains
+  inventoried. No product or scientific evidence changes.
+- 2026-08-27 — P12 closed P12-CONDITIONAL with all six gates passing. Release payload
+  `0151dd06ee12bc047da34a9e35341d23590a12a9` is pushed to the canonical repository and exact GitHub Actions run
+  `33134485488` is green. The closure checker independently re-derives G1--G5, binds that payload and run, and
+  reproduces the non-circular source/evidence inventory with Amendment E's exact derived-report exclusions. Technical
+  v1.0 is complete; no tag, GitHub Release or registry publication is claimed.

@@ -1,0 +1,184 @@
+{
+ "amendments": [
+  "ACTINV-P12_AMENDMENT_A.md",
+  "ACTINV-P12_AMENDMENT_B.md",
+  "ACTINV-P12_AMENDMENT_C.md",
+  "ACTINV-P12_AMENDMENT_D.md",
+  "ACTINV-P12_AMENDMENT_E.md"
+ ],
+ "gates": {
+  "G1": {
+   "checks": {
+    "entry_points": true,
+    "fixture_hash": true,
+    "identity": true,
+    "metadata": true,
+    "numeric_bounds": true,
+    "partition": true,
+    "rejection_plants": true
+   },
+   "comparisons": 80,
+   "pass": true,
+   "plants": 13,
+   "present": true
+  },
+  "G2": {
+   "checks": {
+    "abundance": true,
+    "identity": true,
+    "masses": true,
+    "oracle": true,
+    "primary_sources": true,
+    "provenance": true,
+    "regeneration": true
+   },
+   "elements": 84,
+   "pass": true,
+   "present": true,
+   "rows": 289
+  },
+  "G3": {
+   "checks": {
+    "container_minimums": true,
+    "full_partition": true,
+    "identity": true,
+    "memory": true,
+    "reader_sources": true,
+    "regressions": true,
+    "repair_record": true,
+    "smoke_partition": true
+   },
+   "full_cases": 1000000,
+   "full_peak_rss_bytes": 4526080,
+   "pass": true,
+   "present": true,
+   "smoke_cases": 10000
+  },
+  "G4": {
+   "checks": {
+    "histories": true,
+    "identity": true,
+    "reaction_rates": true,
+    "reproducibility": true,
+    "sources": true,
+    "transformation": true
+   },
+   "endpoints": 170,
+   "pass": true,
+   "present": true,
+   "reaction_rate_comparisons": 120
+  },
+  "G5": {
+   "checks": {
+    "clean_clone": true,
+    "commands": true,
+    "identity": true,
+    "prior_verdicts": true,
+    "python_package": true,
+    "rust_packages": true,
+    "source_contract": true,
+    "versions": true
+   },
+   "pass": true,
+   "present": true,
+   "prior_verdicts": {
+    "verdict.json": true,
+    "verdict_p10.json": true,
+    "verdict_p11.json": true,
+    "verdict_p2.json": true,
+    "verdict_p3b.json": true,
+    "verdict_p4b.json": true,
+    "verdict_p5.json": true,
+    "verdict_p6.json": true,
+    "verdict_p7.json": true,
+    "verdict_p8.json": true,
+    "verdict_p9.json": true
+   },
+   "versions": {
+    "python_cargo": "1.0.0",
+    "python_project": "1.0.0",
+    "requires_python": ">=3.9",
+    "workspace": "1.0.0"
+   }
+  },
+  "G6": {
+   "checks": {
+    "gate_results": true,
+    "github": true,
+    "identity": true,
+    "manifest": true,
+    "protocols": true,
+    "regeneration": true,
+    "release_commit": true,
+    "release_object": true,
+    "remote": true,
+    "session": true
+   },
+   "github_run_id": 33134485488,
+   "local_manifest": {
+    "byte_identical": true,
+    "entries": 1598,
+    "excluded": [
+     "MANIFEST.sha256",
+     "results/g6_p12_complete.json",
+     "results/verdict_p12.json"
+    ],
+    "pass": true
+   },
+   "local_release_object": {
+    "ancestor_of_head": true,
+    "object_is_commit": true,
+    "pass": true,
+    "tree": "c16fcb93c704d3946aabe43c44ad934c7c553907"
+   },
+   "pass": true,
+   "present": true,
+   "release_commit": "0151dd06ee12bc047da34a9e35341d23590a12a9"
+  }
+ },
+ "missing_gates": [],
+ "protocols": {
+  "files": {
+   "protocols/ACTINV-P12_AMENDMENT_A.md": {
+    "actual_sha256": "21f73ecfa3858bc9967183e0bb090382c6512acd2f5b4e9f25252cf32c67571a",
+    "expected_sha256": "21f73ecfa3858bc9967183e0bb090382c6512acd2f5b4e9f25252cf32c67571a",
+    "ledger_sha256": "21f73ecfa3858bc9967183e0bb090382c6512acd2f5b4e9f25252cf32c67571a",
+    "pass": true
+   },
+   "protocols/ACTINV-P12_AMENDMENT_B.md": {
+    "actual_sha256": "c4c823c5bb07235df43a9e26c5c4b40e852745fbfb72723612b9867507df0769",
+    "expected_sha256": "c4c823c5bb07235df43a9e26c5c4b40e852745fbfb72723612b9867507df0769",
+    "ledger_sha256": "c4c823c5bb07235df43a9e26c5c4b40e852745fbfb72723612b9867507df0769",
+    "pass": true
+   },
+   "protocols/ACTINV-P12_AMENDMENT_C.md": {
+    "actual_sha256": "141a3e7dc70fd3d324930ffb6db328201f69c64bf447f65569650ca042fd559c",
+    "expected_sha256": "141a3e7dc70fd3d324930ffb6db328201f69c64bf447f65569650ca042fd559c",
+    "ledger_sha256": "141a3e7dc70fd3d324930ffb6db328201f69c64bf447f65569650ca042fd559c",
+    "pass": true
+   },
+   "protocols/ACTINV-P12_AMENDMENT_D.md": {
+    "actual_sha256": "91084144aa8ead0679bece73375c7880c8b6037ad5647d3bebc28539f30993f4",
+    "expected_sha256": "91084144aa8ead0679bece73375c7880c8b6037ad5647d3bebc28539f30993f4",
+    "ledger_sha256": "91084144aa8ead0679bece73375c7880c8b6037ad5647d3bebc28539f30993f4",
+    "pass": true
+   },
+   "protocols/ACTINV-P12_AMENDMENT_E.md": {
+    "actual_sha256": "1f05dab0e0fcd4df7a58afe3bdab2f319a553e796551a1c49d90d34117e1c6f1",
+    "expected_sha256": "1f05dab0e0fcd4df7a58afe3bdab2f319a553e796551a1c49d90d34117e1c6f1",
+    "ledger_sha256": "1f05dab0e0fcd4df7a58afe3bdab2f319a553e796551a1c49d90d34117e1c6f1",
+    "pass": true
+   },
+   "protocols/ACTINV-P12_PROTOCOL.md": {
+    "actual_sha256": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715",
+    "expected_sha256": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715",
+    "ledger_sha256": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715",
+    "pass": true
+   }
+  },
+  "pass": true
+ },
+ "repair_round": true,
+ "schema": "actinv-p12-verdict-1",
+ "verdict": "P12-CONDITIONAL"
+}

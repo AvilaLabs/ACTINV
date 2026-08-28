@@ -18,6 +18,12 @@ def main() -> int:
     baseline = check_p12.derive(through_g5=True)
     plants: dict[str, bool] = {}
 
+    plants["manifest_exclusion_scope"] = check_p12.MANIFEST_EXCLUDED == (
+        "MANIFEST.sha256",
+        "results/g6_p12_complete.json",
+        "results/verdict_p12.json",
+    )
+
     g1 = load("G1")
     planted = deepcopy(g1)
     planted["independent_dense_response"]["maximum_relative"] = 1.0
