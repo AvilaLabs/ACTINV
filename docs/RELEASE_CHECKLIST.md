@@ -19,8 +19,9 @@ including subsequent packaging-only release plumbing, not on the earlier technic
   third-party-data notices.
 - [x] Confirm the `actinv` names and maintainer accounts on PyPI/crates.io and use scoped credentials for each initial
   publication.
-- [ ] Add the `publish-crates.yml` trusted publisher to all three crates.io packages as described in the
-  [crates.io release procedure](CRATES_RELEASE.md).
+- [x] Add the `publish-crates.yml` trusted publisher to all three crates.io packages as described in the
+  [crates.io release procedure](CRATES_RELEASE.md), revoke the initial API token, and record the maintainer
+  [configuration attestation](../results/session_v1_crates_trusted_publishing.json).
 - [x] Follow the account and environment setup in [PyPI release procedure](PYPI_RELEASE.md), publish the exact candidate
   to TestPyPI, and smoke-test both `import actinv` and the installed `actinv` command.
 

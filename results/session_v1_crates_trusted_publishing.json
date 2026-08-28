@@ -1,0 +1,38 @@
+{
+ "schema": "actinv-v1-crates-trusted-publishing-session-1",
+ "recorded_at": "2026-08-28T13:48:09Z",
+ "version": "1.0.0",
+ "source": {
+  "publication_record": "results/session_v1_crates_io.json",
+  "workflow_commit": "30ad0771b59c810ad46708d6cf3b41a87f94d91a",
+  "workflow": ".github/workflows/publish-crates.yml"
+ },
+ "maintainer_attestation": {
+  "temporary_api_token_revoked_at_registry": true,
+  "trusted_publishers_configured": [
+   "actinv-data",
+   "actinv-core",
+   "actinv-cli"
+  ],
+  "publisher_identity": {
+   "github_owner": "AvilaLabs",
+   "repository": "ACTINV",
+   "workflow": "publish-crates.yml",
+   "environment": "crates-io"
+  },
+  "pass": true
+ },
+ "github_environment": {
+  "name": "crates-io",
+  "required_maintainer_review": true,
+  "created_at": "2026-08-28T13:07:15Z",
+  "pass": true
+ },
+ "verification": {
+  "workflow_recognized_by_github": true,
+  "static_security_contract": true,
+  "oidc_exchange": "deferred until the next unpublished crate version",
+  "boundary": "A trusted-publishing token cannot be requested safely by republishing immutable version 1.0.0."
+ },
+ "pass": true
+}

@@ -12,15 +12,15 @@ credential was removed after a clean registry-install smoke test.
 
 ## One-time trusted-publisher setup
 
-The repository's `crates-io` GitHub environment requires maintainer approval. Add the same GitHub Actions trusted
-publisher to each package on crates.io using these values:
+The repository's `crates-io` GitHub environment requires maintainer approval. The same GitHub Actions trusted
+publisher is configured for each package on crates.io using these values:
 
 - GitHub owner: `AvilaLabs`
 - Repository: `ACTINV`
 - Workflow: `publish-crates.yml`
 - Environment: `crates-io`
 
-Configure it for [`actinv-data`](https://crates.io/crates/actinv-data),
+The configuration covers [`actinv-data`](https://crates.io/crates/actinv-data),
 [`actinv-core`](https://crates.io/crates/actinv-core), and
 [`actinv-cli`](https://crates.io/crates/actinv-cli). The official authentication action exchanges GitHub's OIDC
 identity for a short-lived token and revokes that token when each job ends; no crates.io token belongs in GitHub
