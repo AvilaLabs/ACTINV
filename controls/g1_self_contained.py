@@ -12,6 +12,8 @@ STEPS = [("cargo build", ["cargo", "build", "--release", "--quiet", "--workspace
          ("release notes match roadmap", [sys.executable, "controls/check_release_notes.py"]),
          ("prior phase verdicts", [sys.executable, "controls/check_prior_verdicts.py"]),
          ("P12 release source", [sys.executable, "controls/g5_p12_release.py", "--source-only"]),
+         ("P12 checker regression", [sys.executable, "controls/test_check_p12.py"]),
+         ("P12 release payload evidence", [sys.executable, "controls/check_p12.py", "--through-g5"]),
          ("P12 bounded input reliability", [sys.executable, "controls/g3_p12_parser_fuzz.py", "--smoke"]),
          ("CI result tolerance regression", [sys.executable, "controls/test_ci_result.py"]),
          ("no undeclared dependencies", [sys.executable, "controls/check_dependencies.py"])]

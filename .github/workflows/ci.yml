@@ -61,6 +61,11 @@ jobs:
       - name: P12 release metadata and documentation
         run: python controls/g5_p12_release.py --source-only
 
+      - name: P12 release payload evidence
+        run: |
+          python controls/test_check_p12.py
+          python controls/check_p12.py --through-g5
+
       - name: No undeclared dependencies
         run: python controls/check_dependencies.py
 

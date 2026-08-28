@@ -23,7 +23,9 @@
   "controls/g5_p11_entry_points.py",
   "controls/g1_p12_radiological.py",
   "controls/g3_p12_parser_fuzz.py",
-  "controls/g5_p12_release.py"
+  "controls/g5_p12_release.py",
+  "controls/check_p12.py",
+  "controls/test_check_p12.py"
  ],
  "declared": [
   "h5py",
