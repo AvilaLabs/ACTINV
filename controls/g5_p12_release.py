@@ -182,7 +182,10 @@ def source_checks(root: Path) -> dict:
                 "cargo test --workspace --all-targets --all-features",
             )
         ),
-        "wheel_install": "pip install ../dist/*.whl" in ci,
+        "wheel_install": "pip install ../dist/*.whl" in ci
+        and "maturin build --release --locked --out ../dist" in ci,
+        "wheel_version_from_local_pyproject": "pathlib.Path('pyproject.toml').read_text()" in ci
+        and "pathlib.Path('python/pyproject.toml').read_text()" not in ci,
         "prior_verdicts": "check_prior_verdicts.py" in ci,
         "p12_radiological_subset": "g1_p12_radiological.py" in ci,
         "p12_input_reliability_subset": "g3_p12_parser_fuzz.py --smoke" in ci,

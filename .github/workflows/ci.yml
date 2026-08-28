@@ -109,10 +109,10 @@ jobs:
       - name: Build the Python module
         run: |
           cd python
-          maturin build --release --out ../dist
+          maturin build --release --locked --out ../dist
           python ../scripts/smoke_python_wheel.py ../dist
           pip install ../dist/*.whl
-          python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('python/pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
+          python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
 
       - name: Python binding Rust quality
         run: |
