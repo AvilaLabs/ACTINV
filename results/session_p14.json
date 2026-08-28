@@ -1,0 +1,43 @@
+{
+ "schema": "actinv-p14-session-1",
+ "date": "2026-08-28",
+ "canonical_repository": "https://github.com/AvilaLabs/ACTINV.git",
+ "protocol_sha256": "0f7f385f09174279384a873755a9584327bf064a0ad6c892ca598e59c1491275",
+ "source_evidence_commit": "8e59e6b800d6aaab4ff7add7fb17d4e0e4e77f38",
+ "closure_control_commit": "7cd58fc6fb728e93c8ab5a50fee4b7b5fc688a1f",
+ "workflow": {
+  "name": "controls",
+  "run_id": 33195930341,
+  "head_sha": "7cd58fc6fb728e93c8ab5a50fee4b7b5fc688a1f",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-08-28T17:42:37Z",
+  "completed_at": "2026-08-28T17:49:37Z",
+  "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33195930341"
+ },
+ "evidence_sha256": {
+  "performance": "52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e",
+  "quality": "db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67",
+  "verdict": "95a08cbf0a7b90046936fa0a96c9c86e0c63a8eb039f0a252a103339e13bb76c"
+ },
+ "measurements": {
+  "warm_median_wall_improvement_percent": 6.548094949260996,
+  "warm_p95_wall_improvement_percent": 7.223317349830882,
+  "peak_rss_improvement_percent": 1.1524909280782536,
+  "frozen_improvement_threshold_percent": 10.0
+ },
+ "checks": {
+  "independent_verdict_rederived": true,
+  "opening_and_candidate_semantics_identical": true,
+  "certificate_inventory_and_ledger_plants_rejected": true,
+  "four_strict_rust_gates": true,
+  "fourteen_local_quality_commands": true,
+  "current_parser_smoke_partition": true,
+  "p12_snapshot_checker_regression": true,
+  "github_controls": true
+ },
+ "phase_pass": false,
+ "closed": true,
+ "verdict": "P14-CLOSED-BELOW-THRESHOLD",
+ "pass": true
+}

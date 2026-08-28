@@ -6,9 +6,9 @@ time. Every phase ends with a checker-derived verdict, a session file, a manifes
 dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-28):** P13 is closed **P13-PASS**, v1.0.0 is publicly released, and the initial post-release
-competitive benchmark is closed **CB1-COMPLETE**. The maintainer approved the P14--P22 post-release program and P14
-is the only open phase. P14 profiles and improves the released end-to-end path without changing physics, evaluated
-data, numerical tolerances, public schemas or certificate provenance.
+competitive benchmark is closed **CB1-COMPLETE**. P14 is closed **P14-CLOSED-BELOW-THRESHOLD**: its candidate exactly
+preserves the normalized result and lowers warm median wall time by 6.55%, but misses the frozen 10% acceptance
+threshold. P15 is next and remains unopened until its prepared/selective-data protocol is frozen and hashed.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -232,3 +232,9 @@ part that does not compress: users, issues, and the validation record accumulati
   not a dependency: open numerical, processing, end-to-end and measurement controls form the evidence chain, with a
   future blind collaborator runner optional. P14 opens first and is restricted to measured, no-physics performance
   anatomy and safe redundant-work removal; prepared formats and selective loading remain P15 scope.
+- 2026-08-28 — P14 closed P14-CLOSED-BELOW-THRESHOLD without relaxing its frozen criterion. The exact-preserving
+  candidate lowers warm median wall time by 6.55%, p95 wall time by 7.22% and peak RSS by 1.15% on the recorded
+  public-example workload, so G1--G3 and G5 pass while the 10% G4 threshold does not. The source/evidence checkpoint
+  is `8e59e6b800d6aaab4ff7add7fb17d4e0e4e77f38`; closure-control checkpoint
+  `7cd58fc6fb728e93c8ab5a50fee4b7b5fc688a1f` passed GitHub Actions run `33195930341`. P15 is next but remains
+  unopened.

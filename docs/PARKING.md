@@ -57,3 +57,7 @@ of `ROADMAP.md` or explicitly left out of v1.0.
 - 2026-08-28 — physical quantity types and the broader metamorphic suite are routed to P16; open accuracy attribution
   to P17; only P17-demonstrated repair classes to P18; finite-dilution self-shielding to P19; practical correlated
   uncertainty to P20; and executed large-scale/streamed mesh evidence to P21. P22 re-scores the complete product.
+- 2026-08-28 — P14 measured activation-library read, deflate decode and validation at a roughly 1.79 s median and
+  identified the fully decoded 951,393,048-byte cross-section array as the main explanation for the roughly 1.08 GB
+  peak RSS. Deterministic prepared storage, target-selective loading, safe cache reuse and mapped immutable arrays
+  remain P15 scope; the below-threshold P14 close does not authorize implementing them retroactively.
