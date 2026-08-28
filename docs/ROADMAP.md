@@ -9,7 +9,8 @@ dated entries in the changelog at the bottom — nothing is edited away.*
 P13 and the initial competitive benchmark are closed **P13-PASS** and **CB1-COMPLETE**. P14 closed honestly below its
 frozen threshold. P15 is closed **P15-PASS**: the prepared warm path preserves the exact normalized result while
 measuring 2.595× faster and 8.326× lower in peak RSS on the frozen public-example workload. The public release record
-is `results/session_v1.0.1_release.json`. No phase is open; P16 is next but remains unfrozen.
+is `results/session_v1.0.1_release.json`; final closeout workflow `33220183178` passed all controls. P16 is the only
+open phase and is bound to its typed-boundary and metamorphic-assurance protocol.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -259,3 +260,8 @@ part that does not compress: users, issues, and the validation record accumulati
   `33218644967` published all three crates from the exact signed tag source. Fresh PyPI and crates.io installs ran the
   same 21-step public calculation with equal normalized results; public GitHub assets passed their downloaded
   `SHA256SUMS`. P16 remains next and unfrozen until its protocol is committed and hashed.
+- 2026-08-28 — v1.0.1 release closeout commit `0624133d3daa5d8440497e06c3d372c8a546a0ed` passed all 34 control
+  steps in GitHub Actions run `33220183178`, including the bounded parser and clean self-contained clone. P16 then
+  opened without changing a public interface or scientific value. Its frozen scope introduces zero-cost physical
+  quantity types behind compatible wire APIs, compile-fail dimensional fixtures, seven analytic/metamorphic relation
+  families, exact release-result identity and explicit 10% median/15% p95 runtime ceilings. P17 remains unopened.
