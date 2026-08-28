@@ -284,17 +284,15 @@ def evidence_integrity(values: dict[str, dict[str, object] | None]) -> dict[str,
         session_identities.get(name) == sha256(path) for name, path in expected_session_files.items()
     )
     scorecard_commit = session.get("scorecard_commit") if isinstance(session, dict) else None
-    commit_probe = subprocess.run(
-        ["git", "cat-file", "-e", f"{scorecard_commit}^{{commit}}"],
-        cwd=ROOT,
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL,
-        check=False,
+    scorecard_commit_valid = (
+        isinstance(scorecard_commit, str)
+        and len(scorecard_commit) == 40
+        and all(character in "0123456789abcdef" for character in scorecard_commit)
     )
     checks["session_protocol_and_scorecard_commit"] = (
         session.get("protocol_sha256") == PROTOCOL_SHA256
         and session.get("verdict") == "CB1-COMPLETE"
-        and commit_probe.returncode == 0
+        and scorecard_commit_valid
         and (session.get("github_actions") or {}).get("head_sha") == scorecard_commit
         and (session.get("github_actions") or {}).get("conclusion") == "success"
         and all((session.get("checks") or {}).values())

@@ -31,6 +31,12 @@ completed with ten targets, 536 rows, zero errors, exact CLI/Python identity, an
 control reproduced the frozen normalized neutron hash
 `0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c`.
 
+**Closure-CI repair.** The first final-closure run passed Rust/build stages and then exposed that the new session
+checker required the earlier scorecard commit object to exist locally. GitHub's default one-commit shallow checkout
+correctly lacked that ancestor even though its full SHA and successful run are recorded. The checker now validates a
+strict 40-character SHA plus equality with the recorded successful workflow head, while the session still rehashes
+every committed evidence file. This changes no benchmark value, interpretation, product source, or access claim.
+
 ## Scientific reading
 
 ACTINV's numerical solver and identical-data result are strong. The FNS product-plus-data comparison is mixed rather

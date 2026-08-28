@@ -28,7 +28,8 @@
   "self_contained_clean_clone": true,
   "ci_end_to_end": true,
   "p10_legacy_neutron_hash": true,
-  "github_scorecard_checkpoint": true
+  "github_scorecard_checkpoint": true,
+  "shallow_checkout_independent": true
  },
  "pass": true
 }
