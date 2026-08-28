@@ -8,7 +8,7 @@ dated entries in the changelog at the bottom — nothing is edited away.*
 **Current status (2026-08-28):** P13 is closed **P13-PASS**, v1.0.0 is publicly released, and the initial post-release
 competitive benchmark is closed **CB1-COMPLETE**. P14 is closed **P14-CLOSED-BELOW-THRESHOLD**: its candidate exactly
 preserves the normalized result and lowers warm median wall time by 6.55%, but misses the frozen 10% acceptance
-threshold. P15 is next and remains unopened until its prepared/selective-data protocol is frozen and hashed.
+threshold. P15 is the only open phase and is bound to its prepared/selective-data protocol.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -238,3 +238,8 @@ part that does not compress: users, issues, and the validation record accumulati
   is `8e59e6b800d6aaab4ff7add7fb17d4e0e4e77f38`; closure-control checkpoint
   `7cd58fc6fb728e93c8ab5a50fee4b7b5fc688a1f` passed GitHub Actions run `33195930341`. P15 is next but remains
   unopened.
+- 2026-08-28 — P15 opened at `5f7289a44c2686505d0e1b40f4b00ef5c8e4a9ab`. It retains every existing result and
+  ledger contribution while replacing dense deflate inflation with deterministic sparse prepared data and a
+  spectrum-bound collapsed artifact. Frozen required gates are at least 1.5x lower warm wall time, 2x lower peak RSS,
+  bounded and visible cold preparation, exact CLI/Python/provenance identity and fail-closed cache reuse. No prepared
+  or bulk artifact enters Git.
