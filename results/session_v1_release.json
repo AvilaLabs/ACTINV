@@ -1,0 +1,173 @@
+{
+ "schema": "actinv-v1-software-release-session-1",
+ "recorded_at": "2026-08-28T12:24:37Z",
+ "version": "1.0.0",
+ "source": {
+  "commit": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+  "tag": "v1.0.0",
+  "tag_object": "29721537298b7d77f711f1791bb1e94e2e0c9b38",
+  "signature": {
+   "format": "ssh",
+   "algorithm": "ED25519",
+   "key_fingerprint": "SHA256:+z/k/acHp1r0Zmu9T/B0KdK5EyPCxvOu6lG0V7YunrU",
+   "local_verification": "good signature"
+  }
+ },
+ "qualification": {
+  "controls_workflow": {
+   "id": 33148629715,
+   "head_sha": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+   "conclusion": "success",
+   "completed_at": "2026-08-28T06:46:08Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33148629715"
+  },
+  "candidate_artifacts_workflow": {
+   "id": 33148650259,
+   "head_sha": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+   "conclusion": "success",
+   "completed_at": "2026-08-28T06:44:37Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33148650259"
+  }
+ },
+ "testpypi": {
+  "url": "https://test.pypi.org/project/actinv/1.0.0/",
+  "publisher": {
+   "method": "GitHub Actions OIDC trusted publishing",
+   "repository": "AvilaLabs/ACTINV",
+   "workflow": "publish-pypi.yml",
+   "environment": "testpypi"
+  },
+  "workflow": {
+   "id": 33169182990,
+   "head_sha": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+   "conclusion": "success",
+   "completed_at": "2026-08-28T12:04:10Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33169182990"
+  },
+  "smoke": {
+   "fresh_environment": true,
+   "import": true,
+   "version": "1.0.0",
+   "console_command": true,
+   "data_catalog": true,
+   "data_manifest": true,
+   "pass": true
+  }
+ },
+ "pypi": {
+  "url": "https://pypi.org/project/actinv/1.0.0/",
+  "publisher": {
+   "method": "GitHub Actions OIDC trusted publishing",
+   "repository": "AvilaLabs/ACTINV",
+   "workflow": "publish-pypi.yml",
+   "environment": "pypi"
+  },
+  "workflow": {
+   "id": 33169853261,
+   "head_sha": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+   "conclusion": "success",
+   "completed_at": "2026-08-28T12:13:32Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33169853261"
+  },
+  "files": {
+   "actinv-1.0.0-cp39-abi3-macosx_10_12_x86_64.whl": {
+    "bytes": 3020754,
+    "sha256": "730d599c1ef56f36e42f07ae16656095c843fbec8ca615bda8e5a57176141522"
+   },
+   "actinv-1.0.0-cp39-abi3-macosx_11_0_arm64.whl": {
+    "bytes": 2851250,
+    "sha256": "ce5a4558a1deecd9985a7c3aee2c5ffc80c700e8f3b1a966ce06990e0d053a50"
+   },
+   "actinv-1.0.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": {
+    "bytes": 2977150,
+    "sha256": "86d2dde39bdf530de3569ca2dc5bc6e1ddb76634a047962ff44f3c14a231b56a"
+   },
+   "actinv-1.0.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": {
+    "bytes": 3196489,
+    "sha256": "dacab7f7adef19b5c5fd364e055f2d90696856789002bddc3843b3752cca1011"
+   },
+   "actinv-1.0.0-cp39-abi3-win_amd64.whl": {
+    "bytes": 3024379,
+    "sha256": "acae96cc50233f5aa5383363e9301e1297ee84875e1e82a3e7a2d668a0f2ae2e"
+   },
+   "actinv-1.0.0.tar.gz": {
+    "bytes": 239419,
+    "sha256": "8259db3a15ef76284d841312beed67e8243240e6bcf2f5708c29c28e340b9393"
+   }
+  },
+  "smoke": {
+   "fresh_environment": true,
+   "python": "3.13.14",
+   "install_command": "pip install --no-deps actinv==1.0.0",
+   "import": true,
+   "version": "1.0.0",
+   "console_command": true,
+   "data_catalog": true,
+   "data_manifest": true,
+   "calculation": {
+    "validated": true,
+    "steps": 21,
+    "mode": "trace",
+    "first_step_heat_W_per_g": 1.2889442213975687e-7,
+    "ledger_entries": 32
+   },
+   "pass": true
+  }
+ },
+ "github_release": {
+  "id": 378463598,
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0",
+  "published_at": "2026-08-28T12:18:15Z",
+  "artifacts_workflow": {
+   "id": 33169853375,
+   "head_sha": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+   "conclusion": "success",
+   "completed_at": "2026-08-28T12:14:37Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33169853375"
+  },
+  "assets": {
+   "actinv-1.0.0-linux-x86_64.tar.gz": {
+    "id": 533763135,
+    "bytes": 3362621,
+    "sha256": "e0057fcb4655386b429ae66334d3b21070c71486de00c1c5ff29a40a7857ebfd"
+   },
+   "actinv-1.0.0-macos-aarch64.tar.gz": {
+    "id": 533763132,
+    "bytes": 3002588,
+    "sha256": "d2280110332d222503c471eb525ebad623fbcc16cca26f8e53dc315c8011549e"
+   },
+   "actinv-1.0.0-macos-x86_64.tar.gz": {
+    "id": 533763134,
+    "bytes": 3197024,
+    "sha256": "cc305d63b858e52033714bc52a6175e96e5f250decd47f6d2c27164f2b9fd5a5"
+   },
+   "actinv-1.0.0-windows-x86_64.zip": {
+    "id": 533763130,
+    "bytes": 2876243,
+    "sha256": "586c56ccbce2fd117430201fb478676ed7278933104a44d132258b2510c47558"
+   },
+   "SHA256SUMS": {
+    "id": 533763133,
+    "bytes": 396,
+    "sha256": "f67ef176afb436ca8ed73f3a27432623b957a7e213953e1751ebf899c94b98b7"
+   }
+  },
+  "download_verification": {
+   "sha256sums": true,
+   "archive_contents": true,
+   "linux_version": "1.0.0",
+   "pass": true
+  }
+ },
+ "crates_io": {
+  "status": "pending",
+  "dependency_order": [
+   "actinv-data",
+   "actinv-core",
+   "actinv-cli"
+  ],
+  "actinv_data_dry_run": true,
+  "reason": "Maintainer crates.io credentials were not configured when this record was created."
+ },
+ "pass": true
+}

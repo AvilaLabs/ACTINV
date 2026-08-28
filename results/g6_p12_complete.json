@@ -34,14 +34,14 @@
  },
  "manifest": {
   "duplicates": [],
-  "entries": 1598,
+  "entries": 1619,
   "exact_inventory": true,
   "excluded": [
    "MANIFEST.sha256",
    "results/g6_p12_complete.json",
    "results/verdict_p12.json"
   ],
-  "expected_entries": 1598,
+  "expected_entries": 1619,
   "hashes_match": true,
   "pass": true,
   "regeneration_byte_identical": true,
@@ -74,10 +74,10 @@
  },
  "schema": "actinv-p12-g6-complete-1",
  "session": {
-  "file": "sessions_P12.md",
+  "file": "docs/history/sessions/P12.md",
   "missing": [],
   "pass": true,
   "required_fragments": 16,
-  "sha256": "449b97e750d037b618ab10e0e0968a6af866261428f7341a5962867b6e267feb"
+  "sha256": "34e5eda5d8a3f6052f4c9a5f212cdd8b0f48bbed5915013f4a498e0440bbe900"
  }
 }

@@ -14,21 +14,15 @@ other inventory codes. The numerical core is written in Rust, with both a Python
 
 ## Install
 
-After the v1.0 package is published to PyPI, both the Python interface and the `actinv` command install in one line on
-Python 3.9 or newer:
+Both the Python interface and the `actinv` command install from PyPI in one line on Python 3.9 or newer:
 
 ```bash
 pip install actinv
 ```
 
-The published wheels use Python's stable ABI, so users do not need a Rust compiler. Until the maintainer performs the
-public-package upload, install the wheel produced by the release workflow:
-
-```bash
-python -m pip install actinv-1.0.0-*.whl
-```
-
-The same command is also available as a standalone GitHub release executable or from a source checkout:
+The published wheels use Python's stable ABI, so users do not need a Rust compiler. Prebuilt standalone executables
+are attached to the [v1.0.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0). Rust users can
+also build the command from a source checkout:
 
 ```bash
 cargo install --locked --path crates/actinv-cli

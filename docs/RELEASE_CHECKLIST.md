@@ -10,27 +10,28 @@ including subsequent packaging-only release plumbing, not on the earlier technic
 
 ## Before publishing
 
-- [ ] Confirm `controls/check_p12.py` reports `P12-CONDITIONAL` or `P12-PASS` on a clean clone.
-- [ ] Confirm the pushed commit's required GitHub Actions run is green.
-- [ ] Run the `release artifacts` workflow for that exact commit and download every artifact.
-- [ ] Verify artifact SHA-256 values and `actinv --version` / `actinv.__version__` are `1.0.0`.
-- [ ] Install a wheel into a new environment and run the documented smoke calculation.
-- [ ] Review [v1.0 release notes](RELEASE_NOTES_v1.0.md), [qualification boundary](QUALIFICATION.md), licences, and
+- [x] Confirm `controls/check_p12.py` reports `P12-CONDITIONAL` or `P12-PASS` on a clean clone.
+- [x] Confirm the pushed commit's required GitHub Actions run is green.
+- [x] Run the `release artifacts` workflow for that exact commit and download every artifact.
+- [x] Verify artifact SHA-256 values and `actinv --version` / `actinv.__version__` are `1.0.0`.
+- [x] Install a wheel into a new environment and run the documented smoke calculation.
+- [x] Review [v1.0 release notes](RELEASE_NOTES_v1.0.md), [qualification boundary](QUALIFICATION.md), licences, and
   third-party-data notices.
 - [ ] Confirm the `actinv` names and maintainer accounts on PyPI/crates.io and configure trusted publishing or scoped
   release credentials.
-- [ ] Follow the account and environment setup in [PyPI release procedure](PYPI_RELEASE.md), publish the exact candidate
+- [x] Follow the account and environment setup in [PyPI release procedure](PYPI_RELEASE.md), publish the exact candidate
   to TestPyPI, and smoke-test both `import actinv` and the installed `actinv` command.
 
 ## Public acts
 
-- [ ] Create the signed `v1.0.0` tag at the final green software-release commit and push it.
-- [ ] Publish the Python wheels and source distribution to PyPI.
+- [x] Create the signed `v1.0.0` tag at the final green software-release commit and push it.
+- [x] Publish the Python wheels and source distribution to PyPI.
 - [ ] Publish Rust crates in dependency order: `actinv-data`, `actinv-core`, then `actinv-cli`.
-- [ ] Create the GitHub Release from the signed tag, attach standalone binaries and `SHA256SUMS`, and paste the v1.0
+- [x] Create the GitHub Release from the signed tag, attach standalone binaries and `SHA256SUMS`, and paste the v1.0
   release notes.
 - [ ] Install with `pip install actinv` and `cargo install actinv-cli` from the public registries in clean environments.
-- [ ] Record public URLs, upload identities, artifact hashes, and smoke-test results in an append-only release record.
+- [x] Record public URLs, upload identities, artifact hashes, and smoke-test results in the append-only
+  [v1.0 software release record](../results/session_v1_release.json).
 
 ## Versioned data release
 

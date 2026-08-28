@@ -4,7 +4,7 @@ ACTINV calculates how a material's nuclide inventory changes during irradiation 
 activities, decay heat, photon sources, selected radiological indices, uncertainty information, and an explicit ledger
 of incomplete input data.
 
-After the v1.0 package is published, installation is one command:
+Installation is one command:
 
 ```bash
 pip install actinv
