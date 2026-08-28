@@ -58,6 +58,9 @@ jobs:
       - name: Prior phase verdict evidence remains green
         run: python controls/check_prior_verdicts.py
 
+      - name: CB1 competitive scorecard remains reproducible
+        run: python controls/check_cb1.py --no-write
+
       - name: P12 release metadata and documentation
         run: python controls/g5_p12_release.py --source-only
 

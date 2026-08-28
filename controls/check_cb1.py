@@ -27,6 +27,7 @@ EVIDENCE = {
     "mesh_performance": "cb1_mesh_performance.json",
     "first_use": "cb1_first_use.json",
     "capabilities": "cb1_capabilities.json",
+    "session": "session_cb1.json",
 }
 
 
@@ -263,6 +264,41 @@ def evidence_integrity(values: dict[str, dict[str, object] | None]) -> dict[str,
             if isinstance(axis, dict) and isinstance(row, dict)
         )
     )
+    session = values["session"] or {}
+    session_identities = session.get("evidence_sha256", {}) if isinstance(session, dict) else {}
+    expected_session_files = {
+        name: RESULTS / EVIDENCE[name]
+        for name in (
+            "access",
+            "numerical",
+            "alara",
+            "fns",
+            "prior_validation",
+            "performance",
+            "mesh_performance",
+            "first_use",
+            "capabilities",
+        )
+    }
+    checks["session_evidence_identities"] = set(session_identities) == set(expected_session_files) and all(
+        session_identities.get(name) == sha256(path) for name, path in expected_session_files.items()
+    )
+    scorecard_commit = session.get("scorecard_commit") if isinstance(session, dict) else None
+    commit_probe = subprocess.run(
+        ["git", "cat-file", "-e", f"{scorecard_commit}^{{commit}}"],
+        cwd=ROOT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+    checks["session_protocol_and_scorecard_commit"] = (
+        session.get("protocol_sha256") == PROTOCOL_SHA256
+        and session.get("verdict") == "CB1-COMPLETE"
+        and commit_probe.returncode == 0
+        and (session.get("github_actions") or {}).get("head_sha") == scorecard_commit
+        and (session.get("github_actions") or {}).get("conclusion") == "success"
+        and all((session.get("checks") or {}).values())
+    )
     performance_checks = repeated_measurement_checks(values["performance"])
     mesh_checks = repeated_measurement_checks(values["mesh_performance"])
     checks["all_performance_statistics_rederived"] = bool(performance_checks) and all(
@@ -323,8 +359,15 @@ def documentation_check(values: dict[str, dict[str, object] | None]) -> dict[str
 
 def run_rust_gates() -> dict[str, object]:
     environment = os.environ.copy()
-    default_cargo = Path.home() / ".rustup" / "toolchains" / "stable-x86_64-unknown-linux-gnu" / "bin" / "cargo"
+    toolchain_bin = (
+        Path.home() / ".rustup" / "toolchains" / "stable-x86_64-unknown-linux-gnu" / "bin"
+    )
+    default_cargo = toolchain_bin / "cargo"
     cargo = environment.get("CARGO", str(default_cargo) if default_cargo.is_file() else "cargo")
+    for variable, executable in (("RUSTC", "rustc"), ("RUSTDOC", "rustdoc")):
+        pinned = toolchain_bin / executable
+        if variable not in environment and pinned.is_file():
+            environment[variable] = str(pinned)
     commands = [
         [cargo, "fmt", "--all", "--", "--check"],
         [cargo, "check", "--workspace", "--all-targets", "--all-features"],
@@ -358,6 +401,8 @@ def run_rust_gates() -> dict[str, object]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--full", action="store_true", help="also run the four required Rust quality gates")
+    parser.add_argument("--no-write", action="store_true", help="check without replacing the committed verdict")
+    parser.add_argument("--verbose", action="store_true", help="print the complete derived record")
     args = parser.parse_args()
     values = {name: load(RESULTS / filename) for name, filename in EVIDENCE.items()}
     protocol = protocol_integrity()
@@ -379,8 +424,23 @@ def main() -> None:
         "verdict": "CB1-COMPLETE" if complete else ("CB1-EVIDENCE-PASS" if evidence_pass else "CB1-FAIL"),
         "pass": complete if args.full else evidence_pass,
     }
-    VERDICT.write_text(json.dumps(output, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(output, indent=1, sort_keys=True))
+    if not args.no_write:
+        VERDICT.write_text(json.dumps(output, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    displayed = (
+        output
+        if args.verbose
+        else {
+            "schema": output["schema"],
+            "protocol": protocol["pass"],
+            "evidence": evidence["pass"],
+            "fns_rederivation": fns["pass"],
+            "documentation": documentation["pass"],
+            "rust_gates": rust["pass"],
+            "verdict": output["verdict"],
+            "pass": output["pass"],
+        }
+    )
+    print(json.dumps(displayed, indent=1, sort_keys=True))
     raise SystemExit(0 if output["pass"] else 1)
 
 

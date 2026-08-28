@@ -5,9 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-28):** P13 is closed **P13-PASS**, and v1.0.0 is publicly released. Post-release competitive
-benchmark CB1 is opening from source commit `19afc18d…`; it freezes fair comparison layers, access labels, metrics,
-and timing rules before producing new results. CB1 does not change the released physics or numerical implementation.
+**Current status (2026-08-28):** P13 is closed **P13-PASS**, v1.0.0 is publicly released, and the initial post-release
+competitive benchmark is closed **CB1-COMPLETE**. CB1 independently re-derives its scorecard, records every access
+limit, and changes no released physics or numerical implementation. Follow-up work is parked rather than silently
+tuned into the scored result.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -192,3 +193,10 @@ part that does not compress: users, issues, and the validation record accumulati
   identical-operator, identical-data, raw-data, and complete product/data comparisons; labels executed, public-reference,
   documented-only, and unavailable evidence; forbids a composite winner score; and freezes numerical, experimental,
   performance, first-use, and capability measures before any new benchmark result is generated.
+- 2026-08-28 — CB1 closed CB1-COMPLETE. ACTINV/OpenMC/dense identical operators agree within `4.18e-15` meaningful
+  relative error; the identical-data ALARA shutdown inventory differs by at most `4.12e-8`. In 2,360 FNS pairs,
+  FISPACT-II 4.0/TENDL-2017 leads ACTINV/TENDL-2025 in median point error (`0.1053` versus `0.1392`) and whole-family
+  30% coverage (`69/132` versus `59/132`), while ACTINV leads the 90th-percentile point error (`0.6637` versus
+  `0.6846`). The report forbids cross-data solver claims, records licensed-executable gaps, first-use/resource costs,
+  and all capability losses. Scorecard commit `121b35b01eb8a055b071efe7301d07e112269ad1` passed GitHub Actions run
+  `33185710084`; all required Rust gates and the isolated clean-clone/end-to-end/P10 legacy controls also pass locally.

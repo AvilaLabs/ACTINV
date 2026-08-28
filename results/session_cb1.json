@@ -1,0 +1,34 @@
+{
+ "schema": "actinv-cb1-session-1",
+ "date": "2026-08-28",
+ "verdict": "CB1-COMPLETE",
+ "protocol_sha256": "627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398",
+ "scorecard_commit": "121b35b01eb8a055b071efe7301d07e112269ad1",
+ "github_actions": {
+  "workflow": "controls",
+  "run_id": 33185710084,
+  "head_sha": "121b35b01eb8a055b071efe7301d07e112269ad1",
+  "conclusion": "success",
+  "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33185710084"
+ },
+ "evidence_sha256": {
+  "access": "5af3350f8f804524d8b6b014df9c1ecfb1d50f6e93ccf4ceda8aae63efbbb962",
+  "numerical": "f848d58581655cb9f99b9d527805003988df40dd64827e13f29779fd39d551e9",
+  "alara": "983521169ed2fa4a4aca56b74f16bb9707ac28469a2a76d44f7f16dc9179a27b",
+  "fns": "392fb77f9e3c163dfdc0b952d2e9823b6c2491026de1def444db42c94f878066",
+  "prior_validation": "6ae7ade7bbe83cb5c6dfe7a39636ad66ccf69ad1a8fd9c81a21a5cf62f508412",
+  "performance": "ec53c1054c575a89c85c7e876729f2a8203106ddb595afd9fdae2829ed1d8ec8",
+  "mesh_performance": "9892d58b9c314b25ba9ea846d148e8bf0761aad4ce5d444bc626e90a6f14c256",
+  "first_use": "e8e1ac7bdaa5ae5db385f852a682d7391c289bcfa4f47ca18e662e628c80e066",
+  "capabilities": "8a938228fc222f5ccd6edd849527f64e626402d1be88a5677553691723800063"
+ },
+ "checks": {
+  "independent_scorecard_rederivation": true,
+  "required_rust_gates": true,
+  "self_contained_clean_clone": true,
+  "ci_end_to_end": true,
+  "p10_legacy_neutron_hash": true,
+  "github_scorecard_checkpoint": true
+ },
+ "pass": true
+}

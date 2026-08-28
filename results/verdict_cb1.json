@@ -1,5 +1,5 @@
 {
- "complete": false,
+ "complete": true,
  "documentation": {
   "checks": {
    "alara_inventory": true,
@@ -45,7 +45,10 @@
    "numerical_split_bound": true,
    "performance_present_and_passed": true,
    "prior_evidence_hashes": true,
-   "prior_validation_present_and_passed": true
+   "prior_validation_present_and_passed": true,
+   "session_evidence_identities": true,
+   "session_present_and_passed": true,
+   "session_protocol_and_scorecard_commit": true
   },
   "mesh_statistic_checks": {
    "four_thread_scaling[0].process_wall_s.mean": true,
@@ -269,9 +272,34 @@
   "pass": true
  },
  "rust_gates": {
-  "executed": false,
-  "pass": null
+  "commands": [
+   {
+    "command": "cargo fmt --all -- --check",
+    "error_tail": "",
+    "pass": true,
+    "returncode": 0
+   },
+   {
+    "command": "cargo check --workspace --all-targets --all-features",
+    "error_tail": "",
+    "pass": true,
+    "returncode": 0
+   },
+   {
+    "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+    "error_tail": "",
+    "pass": true,
+    "returncode": 0
+   },
+   {
+    "command": "cargo test --workspace --all-targets --all-features",
+    "error_tail": "",
+    "pass": true,
+    "returncode": 0
+   }
+  ],
+  "pass": true
  },
  "schema": "actinv-cb1-verdict-1",
- "verdict": "CB1-EVIDENCE-PASS"
+ "verdict": "CB1-COMPLETE"
 }
