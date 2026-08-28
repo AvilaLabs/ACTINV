@@ -21,6 +21,56 @@ use std::sync::{Mutex, OnceLock};
 
 pub const EV: f64 = 1.602176634e-19;
 
+/// P14 control-only timing. The environment switch is intentionally undocumented for users and does not alter the
+/// result wire format. Disabled runs do not call the clock at stage boundaries.
+#[derive(Default)]
+struct RunProfiler {
+    enabled: bool,
+    stages_ms: BTreeMap<&'static str, f64>,
+}
+
+impl RunProfiler {
+    fn from_environment() -> Self {
+        Self {
+            enabled: std::env::var_os("ACTINV_P14_PROFILE").is_some(),
+            stages_ms: BTreeMap::new(),
+        }
+    }
+
+    fn disabled() -> Self {
+        Self::default()
+    }
+
+    fn start(&self) -> Option<std::time::Instant> {
+        self.enabled.then(std::time::Instant::now)
+    }
+
+    fn finish(&mut self, name: &'static str, started: Option<std::time::Instant>) {
+        if let Some(started) = started {
+            self.stages_ms
+                .insert(name, started.elapsed().as_secs_f64() * 1e3);
+        }
+    }
+
+    fn emit(&self, total: std::time::Duration) {
+        if !self.enabled {
+            return;
+        }
+        let total_ms = total.as_secs_f64() * 1e3;
+        let accounted_ms: f64 = self.stages_ms.values().sum();
+        eprintln!(
+            "ACTINV_P14_CORE_PROFILE {}",
+            serde_json::json!({
+                "schema": "actinv-p14-core-profile-1",
+                "stages_ms": self.stages_ms,
+                "accounted_ms": accounted_ms,
+                "total_core_ms": total_ms,
+                "uninstrumented_core_ms": (total_ms - accounted_ms).max(0.0),
+            })
+        );
+    }
+}
+
 #[derive(serde::Serialize)]
 pub struct NuclideOut {
     pub nuclide: String,
@@ -493,7 +543,12 @@ fn build_step_uncertainty(
 
 impl PreparedRun {
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
-        Self::prepare_inputs_with_extensions(
+        let mut profiler = RunProfiler::disabled();
+        Self::prepare_profiled(spec, &mut profiler)
+    }
+
+    fn prepare_profiled(spec: &Spec, profiler: &mut RunProfiler) -> Result<Self, String> {
+        Self::prepare_inputs_with_extensions_profiled(
             &spec.library,
             &spec.decay,
             &spec.photon,
@@ -502,6 +557,7 @@ impl PreparedRun {
             spec.options.temperature_K,
             spec.uncertainty.as_ref(),
             spec.radiological.as_ref(),
+            profiler,
         )
     }
 
@@ -556,6 +612,33 @@ impl PreparedRun {
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
     ) -> Result<Self, String> {
+        let mut profiler = RunProfiler::disabled();
+        Self::prepare_inputs_with_extensions_profiled(
+            library_ref,
+            decay_ref,
+            photon_options,
+            fission_options,
+            projectile,
+            temperature_K,
+            uncertainty_options,
+            radiological_options,
+            &mut profiler,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn prepare_inputs_with_extensions_profiled(
+        library_ref: &LibraryRef,
+        decay_ref: &DecayRef,
+        photon_options: &PhotonOptions,
+        fission_options: &FissionYieldOptions,
+        projectile: Projectile,
+        temperature_K: f64,
+        uncertainty_options: Option<&UncertaintyOptions>,
+        radiological_options: Option<&RadiologicalOptions>,
+        profiler: &mut RunProfiler,
+    ) -> Result<Self, String> {
+        let validation_started = profiler.start();
         if !temperature_K.is_finite() || temperature_K < 0.0 {
             return Err("temperature_K must be finite and nonnegative".into());
         }
@@ -571,6 +654,9 @@ impl PreparedRun {
                 projectile.name()
             ));
         }
+        profiler.finish("prepare_validation", validation_started);
+
+        let hashes_started = profiler.start();
         let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;
         let idx_path = index_path(&library_ref.path);
         let index_sha = verify_hash(&idx_path, None)?;
@@ -579,6 +665,9 @@ impl PreparedRun {
             Some(path) if !path.is_empty() => Some(verify_hash(path, None)?),
             _ => None,
         };
+        profiler.finish("input_hash_verification", hashes_started);
+
+        let extensions_started = profiler.start();
         let (response, response_sha) = match &photon_options.response {
             Some(reference) => {
                 let sha = verify_hash(&reference.path, Some(&reference.sha256))?;
@@ -619,7 +708,20 @@ impl PreparedRun {
             }
             fission_yield_inputs.push((reference.clone(), sha, parent));
         }
-        let library = library::read_npz(&library_ref.path)?;
+        profiler.finish("extension_input_preparation", extensions_started);
+
+        let activation_started = profiler.start();
+        let library = if library_ref.sha256.is_some() {
+            // The complete NPZ matched its declared SHA-256 above, so repeating per-member CRC-32 work would add no
+            // integrity coverage. The verified reader retains all structural and numeric validation.
+            library::read_npz_after_sha256_verification(&library_ref.path)?
+        } else {
+            // Legacy neutron specifications may omit a declared digest; retain ZIP CRC validation for those inputs.
+            library::read_npz(&library_ref.path)?
+        };
+        profiler.finish("activation_read_validation", activation_started);
+
+        let index_started = profiler.start();
         let index: serde_json::Value =
             serde_json::from_str(&std::fs::read_to_string(&idx_path).map_err(|e| e.to_string())?)
                 .map_err(|e| e.to_string())?;
@@ -722,6 +824,9 @@ impl PreparedRun {
                 )
             })
             .collect();
+        profiler.finish("index_read_validation", index_started);
+
+        let covariance_started = profiler.start();
         let covariance = match uncertainty_options {
             Some(options) => Some(Self::load_covariance(
                 options,
@@ -733,8 +838,14 @@ impl PreparedRun {
             )?),
             None => None,
         };
+        profiler.finish("covariance_read_validation", covariance_started);
+
+        let primary_decay_started = profiler.start();
         let mut nuclides =
             decay::parse_file(&decay_ref.primary).map_err(|error| error.to_string())?;
+        profiler.finish("decay_primary_read_parse", primary_decay_started);
+
+        let fallback_decay_started = profiler.start();
         let mut decay_nuclides_from_fallback = 0usize;
         let mut decay_fallback_keys = std::collections::HashSet::new();
         if let Some(fallback) = &decay_ref.fallback {
@@ -750,6 +861,9 @@ impl PreparedRun {
                 }
             }
         }
+        profiler.finish("decay_fallback_read_parse_merge", fallback_decay_started);
+
+        let chain_started = profiler.start();
         let chain = chain::build(&nuclides);
         if let Some(options) = uncertainty_options {
             let known: std::collections::HashSet<_> =
@@ -764,6 +878,7 @@ impl PreparedRun {
                 }
             }
         }
+        profiler.finish("chain_construction", chain_started);
         Ok(Self {
             library_path: library_ref.path.clone(),
             library_sha_declared: library_ref.sha256.clone(),
@@ -1041,15 +1156,18 @@ impl PreparedRun {
     }
 
     pub fn run(&self, spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
-        self.run_started(spec, entry_point, std::time::Instant::now())
+        let mut profiler = RunProfiler::disabled();
+        self.run_started_profiled(spec, entry_point, std::time::Instant::now(), &mut profiler)
     }
 
-    fn run_started(
+    fn run_started_profiled(
         &self,
         spec: &Spec,
         entry_point: &str,
         t0: std::time::Instant,
+        profiler: &mut RunProfiler,
     ) -> Result<RunResult, String> {
+        let network_started = profiler.start();
         self.ensure_compatible(spec)?;
         let library_sha = &self.library_sha;
         let idx_path = &self.index_path;
@@ -1134,14 +1252,28 @@ impl PreparedRun {
             effective_fission_yields.insert(parent, effective);
         }
         let mut led = RateLedger::default();
-        let reaction_assembly = chain::reaction_rates_with_derivatives(
-            lib,
-            lib_targets,
-            &phi,
-            ch,
-            &effective_fission_yields,
-            &mut led,
-        );
+        let reaction_assembly = if spec.uncertainty.is_some() {
+            chain::reaction_rates_with_derivatives(
+                lib,
+                lib_targets,
+                &phi,
+                ch,
+                &effective_fission_yields,
+                &mut led,
+            )
+        } else {
+            chain::ReactionAssembly {
+                triplets: chain::reaction_rates(
+                    lib,
+                    lib_targets,
+                    &phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut led,
+                ),
+                derivatives: Vec::new(),
+            }
+        };
         let react = reaction_assembly.triplets;
         // ---- trace formulation: bulk isotopes become constant sources through the unit state
         let mut bulk: HashMap<usize, f64> = HashMap::new();
@@ -1393,6 +1525,9 @@ impl PreparedRun {
             (None, None) => None,
             _ => return Err("prepared covariance state does not match the run spec".into()),
         };
+        profiler.finish("material_network_preparation", network_started);
+
+        let solve_started = profiler.start();
         // ---- solve
         let c = cram(spec.options.cram_order);
         let alternate_c = spec.uncertainty.as_ref().map(|_| {
@@ -1627,6 +1762,9 @@ impl PreparedRun {
                 radiological,
             });
         }
+        profiler.finish("schedule_solve_diagnostics", solve_started);
+
+        let pathways_started = profiler.start();
         // ---- pathways (trace mode only): give every source its own unit state so one factorisation serves all of them,
         // then each source's contribution is the solve started from that unit state alone. Exact by linearity.
         let want_paths = spec
@@ -1727,6 +1865,9 @@ impl PreparedRun {
                 pathways.push(per);
             }
         }
+        profiler.finish("pathway_decomposition", pathways_started);
+
+        let reporting_started = profiler.start();
         // ---- ledger
         let rate_pruning: Vec<_> = rate_pruned
             .iter()
@@ -2083,6 +2224,7 @@ impl PreparedRun {
                     serde_json::Value::String(spec.projectile.name().into()),
                 );
         }
+        profiler.finish("ledger_certificate_assembly", reporting_started);
         Ok(RunResult {
             spec_title: spec.title.clone(),
             entry_point: entry_point.into(),
@@ -2102,8 +2244,11 @@ impl PreparedRun {
 
 pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
     let started = std::time::Instant::now();
-    let prepared = PreparedRun::prepare(spec)?;
-    prepared.run_started(spec, entry_point, started)
+    let mut profiler = RunProfiler::from_environment();
+    let prepared = PreparedRun::prepare_profiled(spec, &mut profiler)?;
+    let result = prepared.run_started_profiled(spec, entry_point, started, &mut profiler)?;
+    profiler.emit(started.elapsed());
+    Ok(result)
 }
 
 #[cfg(test)]

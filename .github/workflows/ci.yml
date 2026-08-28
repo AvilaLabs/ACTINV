@@ -61,6 +61,9 @@ jobs:
       - name: CB1 competitive scorecard remains reproducible
         run: python controls/check_cb1.py --no-write
 
+      - name: P14 performance close remains reproducible
+        run: python controls/check_p14.py --no-write
+
       - name: P12 release metadata and documentation
         run: python controls/g5_p12_release.py --source-only
 

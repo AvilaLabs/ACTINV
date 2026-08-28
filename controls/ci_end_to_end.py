@@ -36,19 +36,24 @@ sp = os.path.join(OUT, "spec.json"); json.dump(spec, open(sp, "w"))
 res_cli = os.path.join(OUT, "cli.json")
 subprocess.run([os.path.join(ROOT, "target", "release", "actinv"), "run", sp, res_cli], check=True)
 cli = json.load(open(res_cli))
-# ---- entry point 2: the installed module, or the explicitly built local extension
-try:
-    import actinv
-except ModuleNotFoundError:
-    extension = os.environ.get(
-        "ACTINV_PYTHON_LIBRARY",
-        os.path.join(ROOT, "python", "target", "release", "libactinv.so"),
-    )
+# ---- entry point 2: the explicitly requested local extension, or the installed module
+extension = os.environ.get("ACTINV_PYTHON_LIBRARY")
+if extension:
     module_spec = importlib.util.spec_from_file_location("actinv", extension)
     if module_spec is None or module_spec.loader is None:
         raise RuntimeError(f"cannot load Python extension {extension}")
     actinv = importlib.util.module_from_spec(module_spec)
     module_spec.loader.exec_module(actinv)
+else:
+    try:
+        import actinv
+    except ModuleNotFoundError:
+        extension = os.path.join(ROOT, "python", "target", "release", "libactinv.so")
+        module_spec = importlib.util.spec_from_file_location("actinv", extension)
+        if module_spec is None or module_spec.loader is None:
+            raise RuntimeError(f"cannot load Python extension {extension}")
+        actinv = importlib.util.module_from_spec(module_spec)
+        module_spec.loader.exec_module(actinv)
 py = json.loads(actinv.run(json.dumps(spec)))
 # ---- checks
 want = np.array(exp["heat_W_per_g_per_step"])

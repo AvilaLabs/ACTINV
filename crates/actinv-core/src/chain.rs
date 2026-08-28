@@ -121,7 +121,7 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
     }
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, serde::Serialize)]
 pub struct FissionProductLeakage {
     pub parent: String,
     pub product: String,
@@ -129,7 +129,7 @@ pub struct FissionProductLeakage {
     pub production_rate_per_parent_s: f64,
 }
 
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Clone, Debug, PartialEq, serde::Serialize)]
 pub struct FissionBalance {
     pub fission_rate_per_parent_s: f64,
     pub raw_yield_sum: f64,
@@ -137,7 +137,7 @@ pub struct FissionBalance {
     pub leakage_yield_sum: f64,
 }
 
-#[derive(Default, Debug)]
+#[derive(Default, Debug, PartialEq)]
 pub struct RateLedger {
     pub products_no_decay_data: BTreeMap<String, f64>,
     pub fission_no_yields: BTreeMap<String, f64>,
@@ -177,7 +177,7 @@ pub fn reaction_rates(
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
 ) -> Vec<(usize, usize, f64)> {
-    reaction_rates_with_derivatives(lib, lib_targets, phi, chain, fission_yields, led).triplets
+    assemble_reaction_rates(lib, lib_targets, phi, chain, fission_yields, led, false).triplets
 }
 
 /// Reaction-rate assembly plus the exact matrix contribution of every activation-library row.
@@ -189,12 +189,47 @@ pub fn reaction_rates_with_derivatives(
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
 ) -> ReactionAssembly {
+    assemble_reaction_rates(lib, lib_targets, phi, chain, fission_yields, led, true)
+}
+
+fn assemble_reaction_rates(
+    lib: &Library,
+    lib_targets: &[(i32, i32)],
+    phi: &[f64],
+    chain: &Chain,
+    fission_yields: &HashMap<(i32, i32), EffectiveYields>,
+    led: &mut RateLedger,
+    include_derivatives: bool,
+) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
-    let mut derivatives = Vec::new();
+    let mut derivatives = include_derivatives.then(Vec::new);
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
     let rate_per_barn = 1e-24 * phi.iter().sum::<f64>();
+    let mut flux_denominator = 0.0;
+    for flux in &phi[..lib.ngroups] {
+        flux_denominator += *flux;
+    }
+    let first_flux_group = phi[..lib.ngroups]
+        .iter()
+        .position(|flux| *flux != 0.0)
+        .unwrap_or(lib.ngroups);
+    let last_flux_group = phi[..lib.ngroups]
+        .iter()
+        .rposition(|flux| *flux != 0.0)
+        .map(|group| group + 1)
+        .unwrap_or(first_flux_group);
     for (i, r) in lib.rows.iter().enumerate() {
-        let rate = lib.one_group(i, phi) * rate_per_barn;
+        let mut numerator = 0.0;
+        let cross_sections = lib.sigma(i);
+        for group in first_flux_group..last_flux_group {
+            numerator += cross_sections[group] * phi[group];
+        }
+        let collapsed = if flux_denominator > 0.0 {
+            numerator / flux_denominator
+        } else {
+            0.0
+        };
+        let rate = collapsed * rate_per_barn;
         if rate == 0.0 && rate_per_barn == 0.0 {
             continue;
         }
@@ -215,12 +250,14 @@ pub fn reaction_rates_with_derivatives(
             if rate != 0.0 {
                 trip.push((col, col, -rate));
             }
-            derivatives.push(ReactionDerivative {
-                library_row: i,
-                row: col,
-                column: col,
-                per_barn_s: -rate_per_barn,
-            });
+            if let Some(derivatives) = derivatives.as_mut() {
+                derivatives.push(ReactionDerivative {
+                    library_row: i,
+                    row: col,
+                    column: col,
+                    per_barn_s: -rate_per_barn,
+                });
+            }
             continue;
         } // loss term
         if r.mt == 18 && r.zap == 0 {
@@ -239,12 +276,14 @@ pub fn reaction_rates_with_derivatives(
                             if product_rate != 0.0 {
                                 trip.push((row, col, product_rate));
                             }
-                            derivatives.push(ReactionDerivative {
-                                library_row: i,
-                                row,
-                                column: col,
-                                per_barn_s: yield_value * rate_per_barn,
-                            });
+                            if let Some(derivatives) = derivatives.as_mut() {
+                                derivatives.push(ReactionDerivative {
+                                    library_row: i,
+                                    row,
+                                    column: col,
+                                    per_barn_s: yield_value * rate_per_barn,
+                                });
+                            }
                         }
                         None => {
                             leakage_yield_sum += yield_value;
@@ -257,12 +296,14 @@ pub fn reaction_rates_with_derivatives(
                                     production_rate_per_parent_s: product_rate,
                                 });
                             }
-                            derivatives.push(ReactionDerivative {
-                                library_row: i,
-                                row: chain.leak,
-                                column: col,
-                                per_barn_s: yield_value * rate_per_barn,
-                            });
+                            if let Some(derivatives) = derivatives.as_mut() {
+                                derivatives.push(ReactionDerivative {
+                                    library_row: i,
+                                    row: chain.leak,
+                                    column: col,
+                                    per_barn_s: yield_value * rate_per_barn,
+                                });
+                            }
                         }
                     }
                 }
@@ -282,12 +323,14 @@ pub fn reaction_rates_with_derivatives(
                     *led.fission_no_yields.entry(parent).or_insert(0.0) += rate;
                     trip.push((chain.leak, col, rate));
                 }
-                derivatives.push(ReactionDerivative {
-                    library_row: i,
-                    row: chain.leak,
-                    column: col,
-                    per_barn_s: rate_per_barn,
-                });
+                if let Some(derivatives) = derivatives.as_mut() {
+                    derivatives.push(ReactionDerivative {
+                        library_row: i,
+                        row: chain.leak,
+                        column: col,
+                        per_barn_s: rate_per_barn,
+                    });
+                }
             }
             continue;
         }
@@ -299,12 +342,14 @@ pub fn reaction_rates_with_derivatives(
                     .or_insert(0.0) += rate;
                 trip.push((chain.leak, col, rate));
             }
-            derivatives.push(ReactionDerivative {
-                library_row: i,
-                row: chain.leak,
-                column: col,
-                per_barn_s: rate_per_barn,
-            });
+            if let Some(derivatives) = derivatives.as_mut() {
+                derivatives.push(ReactionDerivative {
+                    library_row: i,
+                    row: chain.leak,
+                    column: col,
+                    per_barn_s: rate_per_barn,
+                });
+            }
             continue;
         }
         let row = match chain.index.get(&(r.zap, r.lfs)) {
@@ -331,15 +376,92 @@ pub fn reaction_rates_with_derivatives(
         if rate != 0.0 {
             trip.push((row, col, rate));
         }
-        derivatives.push(ReactionDerivative {
-            library_row: i,
-            row,
-            column: col,
-            per_barn_s: rate_per_barn,
-        });
+        if let Some(derivatives) = derivatives.as_mut() {
+            derivatives.push(ReactionDerivative {
+                library_row: i,
+                row,
+                column: col,
+                per_barn_s: rate_per_barn,
+            });
+        }
     }
     ReactionAssembly {
         triplets: trip,
-        derivatives,
+        derivatives: derivatives.unwrap_or_default(),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use actinv_data::library::Row;
+
+    #[test]
+    fn derivative_free_assembly_preserves_rates_and_ledger() {
+        let library = Library {
+            rows: vec![
+                Row {
+                    target: 0,
+                    mt: 102,
+                    zap: 26_057,
+                    lfs: 0,
+                    lmf: 3,
+                },
+                Row {
+                    target: 0,
+                    mt: 1,
+                    zap: -1,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![9.0, 1.0, 3.0, 8.0, 7.0, 2.0, 4.0, 6.0],
+            ngroups: 4,
+            bounds: vec![1.0, 2.0, 3.0, 4.0, 5.0],
+        };
+        let chain = Chain {
+            index: HashMap::from([((26_056, 0), 0), ((26_057, 0), 1)]),
+            keys: vec![(26_056, 0), (26_057, 0)],
+            lambda: vec![0.0, 0.0],
+            decay: Vec::new(),
+            leak: 2,
+            unit: 3,
+            n: 4,
+            ledger: ChainLedger::default(),
+        };
+        let flux = [0.0, 5.0, 7.0, 0.0];
+        let targets = [(26_056, 0)];
+        let yields = HashMap::new();
+        let mut plain_ledger = RateLedger::default();
+        let plain = reaction_rates(
+            &library,
+            &targets,
+            &flux,
+            &chain,
+            &yields,
+            &mut plain_ledger,
+        );
+        let mut derivative_ledger = RateLedger::default();
+        let with_derivatives = reaction_rates_with_derivatives(
+            &library,
+            &targets,
+            &flux,
+            &chain,
+            &yields,
+            &mut derivative_ledger,
+        );
+
+        assert_eq!(plain, with_derivatives.triplets);
+        assert_eq!(plain_ledger, derivative_ledger);
+        assert_eq!(with_derivatives.derivatives.len(), library.rows.len());
+        let rate_per_barn = 1e-24 * flux.iter().sum::<f64>();
+        assert_eq!(
+            plain[0].2.to_bits(),
+            (library.one_group(0, &flux) * rate_per_barn).to_bits()
+        );
+        assert_eq!(
+            plain[1].2.to_bits(),
+            (-library.one_group(1, &flux) * rate_per_barn).to_bits()
+        );
     }
 }

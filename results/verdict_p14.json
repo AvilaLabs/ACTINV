@@ -1,0 +1,187 @@
+{
+ "closed": true,
+ "gates": {
+  "G1": {
+   "checks": {
+    "binary_identities": true,
+    "candidate_mean": true,
+    "candidate_median": true,
+    "candidate_minimum": true,
+    "candidate_p95": true,
+    "candidate_sample_count": true,
+    "candidate_stdev": true,
+    "environment": true,
+    "input_byte_sum": true,
+    "input_identities": true,
+    "input_inventory": true,
+    "opening_commit": true,
+    "opening_mean": true,
+    "opening_median": true,
+    "opening_minimum": true,
+    "opening_p95": true,
+    "opening_sample_count": true,
+    "opening_stdev": true,
+    "schema": true
+   },
+   "pass": true
+  },
+  "G2": {
+   "checks": {
+    "dominant_stage": true,
+    "finite_values": true,
+    "medians": true,
+    "profile_samples": true,
+    "reconciliation": true,
+    "reported_value_check": true,
+    "sample_counts": true,
+    "stage_set": true
+   },
+   "pass": true
+  },
+  "G3": {
+   "checks": {
+    "compact_identity": true,
+    "normalization": true,
+    "production_identity": true,
+    "three_plants": true
+   },
+   "pass": true
+  },
+  "G4": {
+   "checks": {
+    "both_primary_metrics_not_regressed": true,
+    "frozen_ten_percent_threshold": false,
+    "median_ratio": true,
+    "other_primary_not_regressed_if_threshold_met": false,
+    "p95_not_regressed": true,
+    "p95_ratio": true,
+    "rss_ratio": true
+   },
+   "improvement_percent": {
+    "median_wall": 6.548094949260996,
+    "p95_wall": 7.223317349830882,
+    "peak_rss": 1.1524909280782536
+   },
+   "pass": false,
+   "ratios_candidate_over_opening": {
+    "median_wall": 0.93451905050739,
+    "p95_wall": 0.9277668265016912,
+    "peak_rss": 0.9884750907192175
+   }
+  },
+  "G5": {
+   "checks": {
+    "instrumentation_opt_in": true,
+    "no_unsafe": true,
+    "p14_in_ci": true,
+    "quality_record": true,
+    "regressions_present": true,
+    "session_documents_threshold": true,
+    "verified_crc_boundary": true
+   },
+   "pass": true,
+   "quality": {
+    "commands": [
+     {
+      "command": "cargo fmt --all -- --check",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo check --workspace --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo test --workspace --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_prior_verdicts.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_release_notes.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_dependencies.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_public_examples.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g1_self_contained.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/ci_end_to_end.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g6_p10_projectile_runtime.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     }
+    ],
+    "pass": true,
+    "schema": "actinv-p14-quality-1"
+   }
+  }
+ },
+ "pass": true,
+ "performance_evidence_sha256": "52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e",
+ "phase_pass": false,
+ "protocol": {
+  "actual_sha256": "0f7f385f09174279384a873755a9584327bf064a0ad6c892ca598e59c1491275",
+  "expected_sha256": "0f7f385f09174279384a873755a9584327bf064a0ad6c892ca598e59c1491275",
+  "ledger_entry": true,
+  "pass": true
+ },
+ "quality_evidence_sha256": "db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67",
+ "schema": "actinv-p14-verdict-1",
+ "verdict": "P14-CLOSED-BELOW-THRESHOLD"
+}

@@ -26,7 +26,7 @@ pub struct Library {
 }
 
 impl Library {
-    pub fn validate(&self) -> Result<(), String> {
+    fn validate_structure(&self) -> Result<(), String> {
         if self.ngroups == 0 {
             return Err("activation library has zero energy groups".into());
         }
@@ -62,6 +62,11 @@ impl Library {
                 self.sig.len()
             ));
         }
+        Ok(())
+    }
+
+    pub fn validate(&self) -> Result<(), String> {
+        self.validate_structure()?;
         if self
             .sig
             .iter()
@@ -233,6 +238,44 @@ pub(crate) fn read_f64_values(reader: &mut impl Read, count: usize) -> Result<Ve
     Ok(values)
 }
 
+fn read_nonnegative_f64_values(
+    reader: &mut impl Read,
+    count: usize,
+    name: &str,
+) -> Result<Vec<f64>, String> {
+    const VALUES_PER_CHUNK: usize = 32_768;
+    let mut values = Vec::new();
+    values
+        .try_reserve_exact(count)
+        .map_err(|error| format!("cannot allocate {count} f64 values: {error}"))?;
+    let mut bytes = [0u8; VALUES_PER_CHUNK * 8];
+    while values.len() < count {
+        let chunk_values = (count - values.len()).min(VALUES_PER_CHUNK);
+        let chunk_bytes = chunk_values * 8;
+        reader
+            .read_exact(&mut bytes[..chunk_bytes])
+            .map_err(|error| format!("truncated f64 array: {error}"))?;
+        let start = values.len();
+        values.extend(
+            bytes[..chunk_bytes]
+                .as_chunks::<8>()
+                .0
+                .iter()
+                .map(|encoded| f64::from_le_bytes(*encoded)),
+        );
+        if let Some(position) = values[start..]
+            .iter()
+            .position(|value| !value.is_finite() || *value < 0.0)
+        {
+            return Err(format!(
+                "{name} contains a nonfinite or negative cross section at index {}",
+                start + position
+            ));
+        }
+    }
+    Ok(values)
+}
+
 pub(crate) fn ensure_eof(reader: &mut impl Read, name: &str) -> Result<(), String> {
     let mut extra = [0u8; 1];
     if reader
@@ -291,12 +334,8 @@ fn require_payload_size(header: &NpyHeader, member_size: u64, name: &str) -> Res
     Ok(())
 }
 
-fn read_rows<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<Vec<Row>, String> {
-    let member = archive
-        .by_name("rows.npy")
-        .map_err(|error| error.to_string())?;
-    let member_size = member.size();
-    let mut reader = BufReader::with_capacity(64 * 1024, member);
+fn decode_rows(reader: impl Read, member_size: u64) -> Result<Vec<Row>, String> {
+    let mut reader = BufReader::with_capacity(64 * 1024, reader);
     let header = read_npy_header(&mut reader)?;
     if header.dtype != NpyDtype::I64 || header.shape.len() != 2 || header.shape[1] != 5 {
         return Err(format!(
@@ -333,15 +372,20 @@ fn read_rows<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<Vec<Row
     Ok(rows)
 }
 
-fn read_sig<R: Read + Seek>(
-    archive: &mut zip::ZipArchive<R>,
-    expected_rows: usize,
-) -> Result<(Vec<f64>, usize), String> {
+fn read_rows<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<Vec<Row>, String> {
     let member = archive
-        .by_name("sig.npy")
+        .by_name("rows.npy")
         .map_err(|error| error.to_string())?;
     let member_size = member.size();
-    let mut reader = BufReader::with_capacity(64 * 1024, member);
+    decode_rows(member, member_size)
+}
+
+fn decode_sig(
+    reader: impl Read,
+    member_size: u64,
+    expected_rows: usize,
+) -> Result<(Vec<f64>, usize), String> {
+    let mut reader = BufReader::with_capacity(256 * 1024, reader);
     let header = read_npy_header(&mut reader)?;
     if header.dtype != NpyDtype::F64 || header.shape.len() != 2 || header.shape[0] != expected_rows
     {
@@ -350,20 +394,24 @@ fn read_sig<R: Read + Seek>(
         ));
     }
     require_payload_size(&header, member_size, "sig.npy")?;
-    let values = read_f64_values(&mut reader, header.elements)?;
+    let values = read_nonnegative_f64_values(&mut reader, header.elements, "sig.npy")?;
     ensure_eof(&mut reader, "sig.npy")?;
     Ok((values, header.shape[1]))
 }
 
-fn read_bounds<R: Read + Seek>(
+fn read_sig<R: Read + Seek>(
     archive: &mut zip::ZipArchive<R>,
-    ngroups: usize,
-) -> Result<Vec<f64>, String> {
+    expected_rows: usize,
+) -> Result<(Vec<f64>, usize), String> {
     let member = archive
-        .by_name("bounds.npy")
+        .by_name("sig.npy")
         .map_err(|error| error.to_string())?;
     let member_size = member.size();
-    let mut reader = BufReader::with_capacity(64 * 1024, member);
+    decode_sig(member, member_size, expected_rows)
+}
+
+fn decode_bounds(reader: impl Read, member_size: u64, ngroups: usize) -> Result<Vec<f64>, String> {
+    let mut reader = BufReader::with_capacity(64 * 1024, reader);
     let header = read_npy_header(&mut reader)?;
     let expected_bounds = ngroups
         .checked_add(1)
@@ -378,6 +426,62 @@ fn read_bounds<R: Read + Seek>(
     let values = read_f64_values(&mut reader, header.elements)?;
     ensure_eof(&mut reader, "bounds.npy")?;
     Ok(values)
+}
+
+fn read_bounds<R: Read + Seek>(
+    archive: &mut zip::ZipArchive<R>,
+    ngroups: usize,
+) -> Result<Vec<f64>, String> {
+    let member = archive
+        .by_name("bounds.npy")
+        .map_err(|error| error.to_string())?;
+    let member_size = member.size();
+    decode_bounds(member, member_size, ngroups)
+}
+
+enum Sha256VerifiedMember<'a> {
+    Stored(zip::read::ZipFile<'a>),
+    Deflated(flate2::bufread::DeflateDecoder<BufReader<zip::read::ZipFile<'a>>>),
+}
+
+impl Read for Sha256VerifiedMember<'_> {
+    fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
+        match self {
+            Self::Stored(reader) => reader.read(buffer),
+            Self::Deflated(reader) => reader.read(buffer),
+        }
+    }
+}
+
+fn sha256_verified_member<'a, R: Read + Seek>(
+    archive: &'a mut zip::ZipArchive<R>,
+    name: &str,
+) -> Result<(Sha256VerifiedMember<'a>, u64), String> {
+    let index = archive
+        .file_names()
+        .position(|candidate| candidate == name)
+        .ok_or_else(|| format!("activation library has no {name}"))?;
+    let member = archive
+        .by_index_raw(index)
+        .map_err(|error| error.to_string())?;
+    if member.encrypted() {
+        return Err(format!(
+            "encrypted activation-library member {name} is unsupported"
+        ));
+    }
+    let size = member.size();
+    let reader = match member.compression() {
+        zip::CompressionMethod::Stored => Sha256VerifiedMember::Stored(member),
+        zip::CompressionMethod::Deflated => Sha256VerifiedMember::Deflated(
+            flate2::bufread::DeflateDecoder::new(BufReader::with_capacity(256 * 1024, member)),
+        ),
+        method => {
+            return Err(format!(
+                "unsupported activation-library compression method {method:?} for {name}"
+            ));
+        }
+    };
+    Ok((reader, size))
 }
 
 fn open_npz_reader<R: Read + Seek>(reader: R) -> Result<zip::ZipArchive<R>, String> {
@@ -401,13 +505,43 @@ fn read_archive<R: Read + Seek>(mut archive: zip::ZipArchive<R>) -> Result<Libra
         ngroups,
         bounds,
     };
-    library.validate()?;
+    // Cross sections were checked while they were decoded. Repeating that full-memory scan is
+    // measurable for production libraries, so only the remaining structural invariants are needed here.
+    library.validate_structure()?;
+    Ok(library)
+}
+
+fn read_archive_after_sha256_verification<R: Read + Seek>(
+    mut archive: zip::ZipArchive<R>,
+) -> Result<Library, String> {
+    let (rows_reader, rows_size) = sha256_verified_member(&mut archive, "rows.npy")?;
+    let rows = decode_rows(rows_reader, rows_size)?;
+    let (sig_reader, sig_size) = sha256_verified_member(&mut archive, "sig.npy")?;
+    let (sig, ngroups) = decode_sig(sig_reader, sig_size, rows.len())?;
+    let (bounds_reader, bounds_size) = sha256_verified_member(&mut archive, "bounds.npy")?;
+    let bounds = decode_bounds(bounds_reader, bounds_size, ngroups)?;
+    let library = Library {
+        rows,
+        sig,
+        ngroups,
+        bounds,
+    };
+    library.validate_structure()?;
     Ok(library)
 }
 
 /// Read a library written by ACTINV or the legacy NumPy builders with one final allocation for the cross sections.
 pub fn read_npz(path: &str) -> Result<Library, String> {
     read_archive(open_npz(path)?)
+}
+
+/// Read an NPZ immediately after the caller has matched the complete file against its declared SHA-256.
+///
+/// The cryptographic whole-file check makes each member's CRC-32 pass redundant. This path still validates the NPZ
+/// structure, array shapes, payload lengths, cross-section values and energy boundaries. Callers without a matching
+/// whole-file digest must use [`read_npz`], which retains ZIP CRC validation.
+pub fn read_npz_after_sha256_verification(path: &str) -> Result<Library, String> {
+    read_archive_after_sha256_verification(open_npz(path)?)
 }
 
 /// Read an activation library from an in-memory NPZ buffer.
@@ -463,24 +597,29 @@ pub fn read_npz_targets(
             .read_exact(&mut raw_row)
             .map_err(|error| format!("truncated sig.npy row: {error}"))?;
         if keep {
-            sig.extend(
-                raw_row
-                    .as_chunks::<8>()
-                    .0
-                    .iter()
-                    .map(|bytes| f64::from_le_bytes(*bytes)),
-            );
+            for encoded in raw_row.as_chunks::<8>().0 {
+                let value = f64::from_le_bytes(*encoded);
+                if !value.is_finite() || value < 0.0 {
+                    return Err(format!(
+                        "sig.npy contains a nonfinite or negative cross section at selected index {}",
+                        sig.len()
+                    ));
+                }
+                sig.push(value);
+            }
         }
     }
     ensure_eof(&mut reader, "sig.npy")?;
     drop(reader);
     let bounds = read_bounds(&mut archive, ngroups)?;
-    Ok(Library {
+    let library = Library {
         rows,
         sig,
         ngroups,
         bounds,
-    })
+    };
+    library.validate_structure()?;
+    Ok(library)
 }
 
 /// Stream an NPZ and retain only one target's rows.
@@ -636,6 +775,28 @@ mod tests {
         archive.finish().unwrap().into_inner()
     }
 
+    fn single_cross_section_npz(cross_section: f64) -> Vec<u8> {
+        use zip::write::SimpleFileOptions;
+        use zip::{CompressionMethod, ZipWriter};
+
+        let cursor = std::io::Cursor::new(Vec::new());
+        let mut archive = ZipWriter::new(cursor);
+        let options = SimpleFileOptions::default().compression_method(CompressionMethod::Stored);
+        archive.start_file("rows.npy", options).unwrap();
+        write_npy_header(&mut archive, "<i8", &[1, 5]).unwrap();
+        for value in [0_i64, 102, 26_057, 0, 3] {
+            archive.write_all(&value.to_le_bytes()).unwrap();
+        }
+        archive.start_file("sig.npy", options).unwrap();
+        write_npy_header(&mut archive, "<f8", &[1, 1]).unwrap();
+        archive.write_all(&cross_section.to_le_bytes()).unwrap();
+        archive.start_file("bounds.npy", options).unwrap();
+        write_npy_header(&mut archive, "<f8", &[2]).unwrap();
+        archive.write_all(&1.0f64.to_le_bytes()).unwrap();
+        archive.write_all(&2.0f64.to_le_bytes()).unwrap();
+        archive.finish().unwrap().into_inner()
+    }
+
     #[test]
     fn truncated_fixed_width_arrays_fail_closed() {
         let error = read_i64(&mut std::io::Cursor::new([0; 7])).unwrap_err();
@@ -649,6 +810,17 @@ mod tests {
         let error = read_npz_bytes(&oversized_rows_npz()).unwrap_err();
         assert!(error.contains("declares 80000000000 payload bytes"));
         assert!(error.contains("entire member"));
+    }
+
+    #[test]
+    fn archive_reader_rejects_invalid_cross_sections_during_decode() {
+        for cross_section in [f64::NAN, -1.0] {
+            let error = read_npz_bytes(&single_cross_section_npz(cross_section)).unwrap_err();
+            assert!(
+                error.contains("nonfinite or negative cross section at index 0"),
+                "{error}"
+            );
+        }
     }
 
     #[test]
@@ -696,6 +868,11 @@ mod tests {
         assert_eq!(loaded_from_bytes.rows, library.rows);
         assert_eq!(loaded_from_bytes.sig, library.sig);
         assert_eq!(loaded_from_bytes.bounds, library.bounds);
+        let archive = open_npz_reader(std::io::Cursor::new(&bytes)).unwrap();
+        let loaded_after_sha = read_archive_after_sha256_verification(archive).unwrap();
+        assert_eq!(loaded_after_sha.rows, library.rows);
+        assert_eq!(loaded_after_sha.sig, library.sig);
+        assert_eq!(loaded_after_sha.bounds, library.bounds);
         let selected = read_npz_target(first.to_str().unwrap(), 1).unwrap();
         assert_eq!(selected.rows, vec![library.rows[1]]);
         assert_eq!(selected.sig, vec![3.0, 4.0]);

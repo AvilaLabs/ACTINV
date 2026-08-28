@@ -231,11 +231,10 @@ fn parse_section(mat: i32, lines: &[&str]) -> Result<Nuclide, String> {
 
 /// Parse a decay sublibrary from text. Key: (ZA, LISO).
 pub fn parse_text(text: &str) -> Result<HashMap<(i32, i32), Nuclide>, String> {
-    let lines: Vec<&str> = text.lines().collect();
     let mut out = HashMap::new();
     let mut cur: Option<(i32, i32, i32)> = None;
     let mut buf: Vec<&str> = Vec::new();
-    for line in lines {
+    for line in text.lines() {
         let t = match tail(line) {
             Some(t) => t,
             None => continue,

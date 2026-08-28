@@ -405,7 +405,13 @@ pub fn main_from(a: Vec<String>) {
             if a.len() < 3 {
                 die(USAGE, 2);
             }
+            let profile = std::env::var_os("ACTINV_P14_PROFILE").is_some();
+            let command_started = profile.then(std::time::Instant::now);
+            let spec_started = profile.then(std::time::Instant::now);
             let spec = Spec::from_json(&read(&a[2])).unwrap_or_else(|e| die(e, 2));
+            let spec_read_parse_ms = spec_started
+                .map(|started| started.elapsed().as_secs_f64() * 1e3)
+                .unwrap_or(0.0);
             if a[1] == "validate" {
                 println!(
                     "ok: {} — {} groups, {} steps",
@@ -416,7 +422,12 @@ pub fn main_from(a: Vec<String>) {
                 return;
             }
             let r = run(&spec, "cli").unwrap_or_else(|e| die(e, 1));
+            let serialization_started = profile.then(std::time::Instant::now);
             let js = serde_json::to_string_pretty(&r).expect("serialise result");
+            let serialization_ms = serialization_started
+                .map(|started| started.elapsed().as_secs_f64() * 1e3)
+                .unwrap_or(0.0);
+            let output_started = profile.then(std::time::Instant::now);
             if a.len() > 3 {
                 std::fs::write(&a[3], js)
                     .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[3]), 1));
@@ -430,6 +441,28 @@ pub fn main_from(a: Vec<String>) {
                 );
             } else {
                 println!("{js}");
+            }
+            if profile {
+                let output_write_ms = output_started
+                    .expect("profiled output has a start time")
+                    .elapsed()
+                    .as_secs_f64()
+                    * 1e3;
+                let total_cli_ms = command_started
+                    .expect("profiled command has a start time")
+                    .elapsed()
+                    .as_secs_f64()
+                    * 1e3;
+                eprintln!(
+                    "ACTINV_P14_CLI_PROFILE {}",
+                    serde_json::json!({
+                        "schema": "actinv-p14-cli-profile-1",
+                        "spec_read_parse_ms": spec_read_parse_ms,
+                        "serialization_ms": serialization_ms,
+                        "output_write_ms": output_write_ms,
+                        "total_cli_ms": total_cli_ms,
+                    })
+                );
             }
         }
         "export-openmc" | "export-mcnp" => {

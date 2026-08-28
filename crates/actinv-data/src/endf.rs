@@ -14,14 +14,11 @@ pub fn parse_endf_float(s: &str) -> Result<f64, String> {
     if text.is_empty() {
         return Ok(0.0);
     }
-    let value = if let Ok(value) = text.parse::<f64>() {
-        value
-    } else {
-        let bytes = text.as_bytes();
-        let split = (1..bytes.len()).find(|&index| {
-            matches!(bytes[index], b'+' | b'-') && !matches!(bytes[index - 1], b'e' | b'E')
-        });
-        let index = split.ok_or_else(|| format!("invalid ENDF number '{text}'"))?;
+    let bytes = text.as_bytes();
+    let split = (1..bytes.len()).find(|&index| {
+        matches!(bytes[index], b'+' | b'-') && !matches!(bytes[index - 1], b'e' | b'E')
+    });
+    let value = if let Some(index) = split {
         let normalized_length = text.len() + 1;
         let mut normalized = [0_u8; 12];
         if normalized_length > normalized.len() {
@@ -33,6 +30,9 @@ pub fn parse_endf_float(s: &str) -> Result<f64, String> {
         std::str::from_utf8(&normalized[..normalized_length])
             .map_err(|_| format!("invalid ENDF number '{text}'"))?
             .parse::<f64>()
+            .map_err(|_| format!("invalid ENDF number '{text}'"))?
+    } else {
+        text.parse::<f64>()
             .map_err(|_| format!("invalid ENDF number '{text}'"))?
     };
     if value.is_finite() {
@@ -100,9 +100,36 @@ pub fn tail(line: &str) -> Option<(i32, i32, i32)> {
     if !line.is_ascii() || line.len() < 75 {
         return None;
     }
-    let mat = line[66..70].trim().parse::<i32>().ok()?;
-    let mf = line[70..72].trim().parse::<i32>().ok()?;
-    let mt = line[72..75].trim().parse::<i32>().ok()?;
+    fn integer(field: &[u8]) -> Option<i32> {
+        let start = field.iter().position(|byte| !byte.is_ascii_whitespace())?;
+        let end = field.iter().rposition(|byte| !byte.is_ascii_whitespace())? + 1;
+        let field = &field[start..end];
+        let (negative, digits) = match field.first() {
+            Some(b'-') => (true, &field[1..]),
+            Some(b'+') => (false, &field[1..]),
+            Some(_) => (false, field),
+            None => return None,
+        };
+        if digits.is_empty() {
+            return None;
+        }
+        let mut magnitude = 0_i64;
+        for digit in digits {
+            if !digit.is_ascii_digit() {
+                return None;
+            }
+            magnitude = magnitude
+                .checked_mul(10)?
+                .checked_add(i64::from(digit - b'0'))?;
+        }
+        let value = if negative { -magnitude } else { magnitude };
+        i32::try_from(value).ok()
+    }
+
+    let bytes = line.as_bytes();
+    let mat = integer(&bytes[66..70])?;
+    let mf = integer(&bytes[70..72])?;
+    let mt = integer(&bytes[72..75])?;
     Some((mat, mf, mt))
 }
 

@@ -35,6 +35,7 @@ dependencies = [
 name = "actinv-data"
 version = "1.0.0"
 dependencies = [
+ "flate2",
  "libm",
  "num-complex",
  "rayon",

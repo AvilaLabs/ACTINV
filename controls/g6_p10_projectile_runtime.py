@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -328,11 +329,20 @@ def main() -> int:
     canonical_flux = WORK / "charged-flux.ndjson"
     write_flux(canonical_flux, source, flux)
 
-    try:
-        import actinv
-    except ImportError as error:
-        raise RuntimeError("P10-G6 requires a PyO3 module built from this checkout") from error
-    extension_path = Path(actinv.actinv.__file__)
+    requested_extension = os.environ.get("ACTINV_PYTHON_LIBRARY")
+    if requested_extension:
+        module_spec = importlib.util.spec_from_file_location("actinv", requested_extension)
+        if module_spec is None or module_spec.loader is None:
+            raise RuntimeError(f"cannot load Python extension {requested_extension}")
+        actinv = importlib.util.module_from_spec(module_spec)
+        module_spec.loader.exec_module(actinv)
+    else:
+        try:
+            import actinv
+        except ImportError as error:
+            raise RuntimeError("P10-G6 requires a PyO3 module built from this checkout") from error
+    extension_module = getattr(actinv, "actinv", actinv)
+    extension_path = Path(extension_module.__file__)
 
     analytic_errors: dict[str, float] = {}
     entry_point_identity: dict[str, bool] = {}
