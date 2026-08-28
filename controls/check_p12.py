@@ -12,7 +12,6 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-import tomllib
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -88,6 +87,7 @@ P12_G3_READER_SOURCE_SHA256 = {
         "86aaacb3590c519f944c314aacb081f2f346c042371570f1838c4e80af6aabef"
     ),
 }
+P12_G3_CONTROL_SHA256 = "30da63c7ebdc0697ba43ce3c34a25dfd1e5a9f9d741521fc16ec10dd51d6dac6"
 PRIOR_VERDICTS = {
     "verdict.json": "P1-PASS",
     "verdict_p2.json": "P2-CONDITIONAL",
@@ -365,7 +365,9 @@ def evaluate_g3(value: dict[str, object] | None) -> dict[str, object]:
         "identity": value.get("schema") == "actinv-p12-g3-result-1"
         and value.get("gate") == "P12-G3"
         and value.get("protocol_sha256") == PROTOCOL_HASHES["protocols/ACTINV-P12_PROTOCOL.md"]
-        and value.get("control_sha256") == sha256(ROOT / "controls" / "g3_p12_parser_fuzz.py")
+        # This is immutable P12 snapshot evidence. The live smoke control may
+        # evolve with later package versions and is exercised separately in CI.
+        and value.get("control_sha256") == P12_G3_CONTROL_SHA256
         and value.get("amendment_sha256") == expected_amendments,
         "smoke_partition": nested(smoke, "deterministic", "cases") == 10_000
         and family_partition(smoke, 10_000)
@@ -484,25 +486,18 @@ def evaluate_g4(value: dict[str, object] | None) -> dict[str, object]:
     }
 
 
-def current_versions() -> dict[str, object]:
-    with (ROOT / "Cargo.toml").open("rb") as stream:
-        workspace = tomllib.load(stream)
-    with (ROOT / "python" / "Cargo.toml").open("rb") as stream:
-        python_cargo = tomllib.load(stream)
-    with (ROOT / "python" / "pyproject.toml").open("rb") as stream:
-        pyproject = tomllib.load(stream)
-    return {
-        "workspace": workspace["workspace"]["package"]["version"],
-        "python_cargo": python_cargo["package"]["version"],
-        "python_project": pyproject["project"]["version"],
-        "requires_python": pyproject["project"]["requires-python"],
-    }
-
-
 def evaluate_g5(value: dict[str, object] | None) -> dict[str, object]:
     if value is None:
         return {"present": False, "pass": False}
-    versions = current_versions()
+    # G5 records the immutable v1.0.0 release snapshot. Comparing it with the
+    # current workspace version would make every later patch release rewrite
+    # history instead of verifying it.
+    source_versions = nested(value, "source", "versions")
+    versions = (
+        {**source_versions, "requires_python": nested(value, "source", "requires_python")}
+        if isinstance(source_versions, dict)
+        else {}
+    )
     prior = {
         name: nested(load_json(RESULTS / name), "verdict") == expected
         for name, expected in PRIOR_VERDICTS.items()

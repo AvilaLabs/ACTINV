@@ -22,7 +22,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "g5_p12_release.json"
-VERSION = "1.0.0"
+with (ROOT / "Cargo.toml").open("rb") as stream:
+    VERSION = tomllib.load(stream)["workspace"]["package"]["version"]
 MEMORY_LIMIT = "4294967296"
 CRATES = ("actinv-data", "actinv-core", "actinv-cli")
 EMBEDDED_TABLE_HASHES = {
@@ -80,7 +81,10 @@ def source_checks(root: Path) -> dict:
     py_cargo = read_toml(root / "python" / "Cargo.toml")
     pyproject = read_toml(root / "python" / "pyproject.toml")
     readme = (root / "README.md").read_text()
+    changelog = (root / "CHANGELOG.md").read_text()
     notes = (root / "docs" / "RELEASE_NOTES_v1.0.md").read_text()
+    current_notes_path = root / "docs" / f"RELEASE_NOTES_v{VERSION}.md"
+    current_notes = current_notes_path.read_text() if current_notes_path.is_file() else ""
     qualification = (root / "docs" / "QUALIFICATION.md").read_text()
     checklist = (root / "docs" / "RELEASE_CHECKLIST.md").read_text()
     workflow = (root / ".github" / "workflows" / "release-artifacts.yml").read_text()
@@ -124,8 +128,12 @@ def source_checks(root: Path) -> dict:
         "carried_limitations": "## Carried limitations" in notes,
         "public_acts_separate": "separate maintainer actions" in notes,
         "release_checklist": "## Public acts" in checklist,
+        "current_release_notes": f"# ACTINV v{VERSION}" in current_notes,
+        "current_changelog": f"## v{VERSION}" in changelog,
+        "current_readme_release": f"/releases/tag/v{VERSION}" in readme,
     }
     workflow_checks = {
+        "artifact_version": f'ACTINV_VERSION: "{VERSION}"' in workflow,
         "pinned_maturin_action": "PyO3/maturin-action@e83996d129638aa358a18fbd1dfb82f0b0fb5d3b"
         in workflow,
         "pinned_maturin": "maturin-version: v1.15.0" in workflow,
@@ -222,6 +230,25 @@ def append_standalone_workspace(manifest: Path) -> None:
         stream.write("\n[workspace]\n")
 
 
+def external_lock_packages(lock: dict) -> set[str]:
+    """Return canonical locked-package records, excluding ACTINV workspace crates."""
+    packages = lock.get("package")
+    if not isinstance(packages, list):
+        return set()
+    return {
+        json.dumps(package, sort_keys=True, separators=(",", ":"))
+        for package in packages
+        if isinstance(package, dict) and package.get("name") not in CRATES
+    }
+
+
+def packaged_lock_matches_workspace(workspace_lock: dict, packaged_lock: dict) -> bool:
+    """Prove that standalone resolution did not drift from the workspace lockfile."""
+    workspace_packages = external_lock_packages(workspace_lock)
+    packaged_packages = external_lock_packages(packaged_lock)
+    return bool(packaged_packages) and packaged_packages.issubset(workspace_packages)
+
+
 def package_checks(clone: Path, work: Path, env: dict[str, str]) -> dict:
     package_dir = Path(env["CARGO_TARGET_DIR"]) / "package"
     command(["cargo", "package", "--locked", "--package", "actinv-data"], cwd=clone, env=env)
@@ -260,31 +287,48 @@ def package_checks(clone: Path, work: Path, env: dict[str, str]) -> dict:
     core = unpacked / f"actinv-core-{VERSION}"
     cli = unpacked / f"actinv-cli-{VERSION}"
     for directory in (core, cli):
-        shutil.copy2(clone / "Cargo.lock", directory / "Cargo.lock")
         append_standalone_workspace(directory / "Cargo.toml")
 
     data_patch = f'patch.crates-io.actinv-data.path="{data}"'
     core_patch = f'patch.crates-io.actinv-core.path="{core}"'
-    command(
-        ["cargo", "build", "--locked", "--manifest-path", core / "Cargo.toml", "--config", data_patch],
-        cwd=work,
-        env=env,
-    )
-    command(
-        [
-            "cargo",
-            "build",
-            "--locked",
-            "--manifest-path",
-            cli / "Cargo.toml",
-            "--config",
-            data_patch,
-            "--config",
-            core_patch,
-        ],
-        cwd=work,
-        env=env,
-    )
+    workspace_lock = read_toml(clone / "Cargo.lock")
+    lock_matches: dict[str, bool] = {}
+    for name, directory, patches in (
+        ("actinv-core", core, (data_patch,)),
+        ("actinv-cli", cli, (data_patch, core_patch)),
+    ):
+        manifest = directory / "Cargo.toml"
+        config_args = [argument for patch in patches for argument in ("--config", patch)]
+        command(
+            [
+                "cargo",
+                "generate-lockfile",
+                "--offline",
+                "--manifest-path",
+                manifest,
+                *config_args,
+            ],
+            cwd=work,
+            env=env,
+        )
+        lock_matches[name] = packaged_lock_matches_workspace(
+            workspace_lock, read_toml(directory / "Cargo.lock")
+        )
+        if not lock_matches[name]:
+            raise RuntimeError(f"{name} standalone dependency resolution drifted from Cargo.lock")
+        command(
+            [
+                "cargo",
+                "build",
+                "--locked",
+                "--offline",
+                "--manifest-path",
+                manifest,
+                *config_args,
+            ],
+            cwd=work,
+            env=env,
+        )
     embedded = {
         name: (data / "data" / name).is_file()
         for name in ("mt_products.json", "fispact_709_groups.json", "fispact_162_groups.json")
@@ -294,8 +338,9 @@ def package_checks(clone: Path, work: Path, env: dict[str, str]) -> dict:
         "data_crate_verified_by_cargo": True,
         "dependent_archives_built": True,
         "dependent_archives_verified_with_local_packaged_dependencies": True,
+        "dependent_lockfiles_match_workspace": lock_matches,
         "embedded_release_data": embedded,
-        "pass": all(embedded.values()),
+        "pass": all(embedded.values()) and all(lock_matches.values()),
     }
 
 
@@ -315,7 +360,7 @@ def python_package_checks(
     if len(wheels) != 1:
         raise RuntimeError(f"expected one wheel, found {[path.name for path in wheels]}")
     wheel = wheels[0]
-    if not re.fullmatch(r"actinv-1\.0\.0-cp39-abi3-.+\.whl", wheel.name):
+    if not re.fullmatch(rf"actinv-{re.escape(VERSION)}-cp39-abi3-.+\.whl", wheel.name):
         raise RuntimeError(f"wheel does not carry the expected stable ABI tag: {wheel.name}")
 
     with zipfile.ZipFile(wheel) as archive:
@@ -340,7 +385,7 @@ def python_package_checks(
         [
             sys.executable,
             "-c",
-            "import actinv; assert actinv.__version__ == '1.0.0'; "
+            f"import actinv; assert actinv.__version__ == {VERSION!r}; "
             "assert all(hasattr(actinv, n) for n in ('run','validate','broaden','cram_step')); "
             "import sys; sys.argv=['actinv','--version']; actinv._cli()",
         ],
@@ -362,7 +407,10 @@ def python_package_checks(
         f"{prefix}/crates/actinv-cli/src/command.rs",
         f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json",
         f"{prefix}/crates/actinv-core/Cargo.toml",
+        f"{prefix}/crates/actinv-core/src/run.rs",
         f"{prefix}/crates/actinv-data/Cargo.toml",
+        f"{prefix}/crates/actinv-data/src/library.rs",
+        f"{prefix}/crates/actinv-data/src/prepared.rs",
         f"{prefix}/crates/actinv-data/data/mt_products.json",
         f"{prefix}/LICENSE-MIT",
         f"{prefix}/LICENSE-APACHE",
@@ -381,8 +429,8 @@ def python_package_checks(
         "sdist_complete": required_sdist.issubset(sdist_names),
     }
     return {
-        "wheel": "actinv-1.0.0-cp39-abi3-<platform>.whl",
-        "source_distribution": "actinv-1.0.0.tar.gz",
+        "wheel": f"actinv-{VERSION}-cp39-abi3-<platform>.whl",
+        "source_distribution": f"actinv-{VERSION}.tar.gz",
         "checks": checks,
         "pass": all(checks.values()),
     }
@@ -413,10 +461,13 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="actinv-p12-g5-", dir=work_root) as temporary:
         work = Path(temporary)
         clone = work / "clone"
+        process_tmp = work / "tmp"
+        process_tmp.mkdir()
         env = dict(os.environ)
         env["CARGO_BUILD_JOBS"] = "1"
         env["ACTINV_CI_WORKERS"] = "1"
         env["CARGO_TARGET_DIR"] = str(clone / "target")
+        env["TMPDIR"] = str(process_tmp)
         command(["git", "clone", "--quiet", "--no-hardlinks", ROOT, clone], cwd=work, env=env)
 
         commands = [

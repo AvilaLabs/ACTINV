@@ -13,18 +13,19 @@ import check_python_release_set
 
 class WheelTagTests(unittest.TestCase):
     def make_linux_wheel(self, directory: Path, tags: list[str]) -> Path:
+        version = check_python_release_set.VERSION
         name = (
-            "actinv-1.0.0-cp39-abi3-"
+            f"actinv-{version}-cp39-abi3-"
             "manylinux_2_17_aarch64.manylinux2014_aarch64.whl"
         )
         path = directory / name
-        prefix = "actinv-1.0.0.dist-info"
+        prefix = f"actinv-{version}.dist-info"
         with zipfile.ZipFile(path, "w") as archive:
             archive.writestr(
                 f"{prefix}/METADATA",
                 "Metadata-Version: 2.4\n"
                 "Name: actinv\n"
-                "Version: 1.0.0\n"
+                f"Version: {version}\n"
                 "Requires-Python: >=3.9\n"
                 "License-Expression: MIT OR Apache-2.0\n",
             )

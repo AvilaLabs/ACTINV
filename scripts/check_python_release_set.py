@@ -11,12 +11,17 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import tarfile
+import tomllib
 import zipfile
 
 
-VERSION = "1.0.0"
+ROOT = Path(__file__).resolve().parents[1]
+with (ROOT / "python" / "pyproject.toml").open("rb") as stream:
+    VERSION = tomllib.load(stream)["project"]["version"]
 MAX_PYPI_FILE_BYTES = 100_000_000
-WHEEL_PATTERN = re.compile(r"actinv-1\.0\.0-cp39-abi3-(?P<platform>.+)\.whl")
+WHEEL_PATTERN = re.compile(
+    rf"actinv-{re.escape(VERSION)}-cp39-abi3-(?P<platform>.+)\.whl"
+)
 
 
 def sha256(path: Path) -> str:
@@ -84,7 +89,10 @@ def validate_sdist(path: Path) -> None:
         f"{prefix}/crates/actinv-cli/src/bin/actinv.rs",
         f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json",
         f"{prefix}/crates/actinv-core/Cargo.toml",
+        f"{prefix}/crates/actinv-core/src/run.rs",
         f"{prefix}/crates/actinv-data/Cargo.toml",
+        f"{prefix}/crates/actinv-data/src/library.rs",
+        f"{prefix}/crates/actinv-data/src/prepared.rs",
         f"{prefix}/LICENSE-MIT",
         f"{prefix}/LICENSE-APACHE",
     }

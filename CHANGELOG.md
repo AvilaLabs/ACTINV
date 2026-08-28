@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## v1.0.1 — 2026-08-28
+
 **Added**
 
 - Automatic, deterministic prepared activation-data caches bound to the exact source library, index, schema and flux
@@ -15,6 +17,8 @@
 - On the public FNS iron example and recorded x86-64 host, the warm path's median wall time fell from 3.075 s to
   1.185 s and peak RSS from 1.077 GB to 129 MB, while the normalized result and certificate provenance remained exact.
   These measurements describe that workload, host and warm-cache state rather than a general competitor claim.
+- Release validation now derives the current software version from package metadata and keeps the independently
+  versioned `data-v1.0.0` catalog distinct during wheel smoke tests.
 
 ## v1.0.0 — 2026-08-28
 

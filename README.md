@@ -16,7 +16,7 @@ It is useful for activation studies, shutdown inventories, source-term preparati
 other inventory codes. The numerical core is written in Rust, with both a Python interface and a standalone command.
 
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
-[v1.0.0 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0) ·
+[v1.0.1 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.1) ·
 [v1.0.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0) ·
 [Documentation](#documentation)
 
@@ -43,7 +43,7 @@ cargo install --locked actinv-cli
 ```
 
 Prebuilt standalone executables are also attached to the
-[v1.0.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0).
+[v1.0.1 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.1).
 
 Confirm the installation at any time with `actinv --version` or explore every command with `actinv --help`.
 

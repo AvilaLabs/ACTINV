@@ -8,10 +8,14 @@ import json
 from pathlib import Path
 import subprocess
 import tempfile
+import tomllib
 import venv
 
 
-VERSION = "1.0.0"
+ROOT = Path(__file__).resolve().parents[1]
+with (ROOT / "python" / "pyproject.toml").open("rb") as stream:
+    SOFTWARE_VERSION = tomllib.load(stream)["project"]["version"]
+DATA_CATALOG_VERSION = "1.0.0"
 
 
 def command(arguments: list[str | Path]) -> subprocess.CompletedProcess[str]:
@@ -35,6 +39,10 @@ def main() -> int:
     wheel = wheels[0]
     if not wheel.is_file() or wheel.suffix != ".whl":
         parser.error(f"wheel does not exist: {wheel}")
+    if not wheel.name.startswith(f"actinv-{SOFTWARE_VERSION}-"):
+        parser.error(
+            f"wheel version does not match source {SOFTWARE_VERSION}: {wheel.name}"
+        )
 
     with tempfile.TemporaryDirectory(prefix="actinv-wheel-smoke-") as temporary:
         environment = Path(temporary) / "venv"
@@ -51,7 +59,7 @@ def main() -> int:
             [
                 python,
                 "-c",
-                "import actinv; assert actinv.__version__ == '1.0.0'; "
+                f"import actinv; assert actinv.__version__ == {SOFTWARE_VERSION!r}; "
                 "assert all(hasattr(actinv, name) for name in "
                 "('run', 'validate', 'broaden', 'cram_step'))",
             ]
@@ -62,11 +70,22 @@ def main() -> int:
 
     checks = {
         "import": imported.returncode == 0,
-        "version": version.stdout.strip() == f"actinv {VERSION}",
-        "data_list": "ACTINV data catalog v1.0.0" in listing.stdout,
-        "data_manifest": manifest.get("catalog_version") == VERSION,
+        "version": version.stdout.strip() == f"actinv {SOFTWARE_VERSION}",
+        "data_list": f"ACTINV data catalog v{DATA_CATALOG_VERSION}" in listing.stdout,
+        "data_manifest": manifest.get("catalog_version") == DATA_CATALOG_VERSION,
     }
-    print(json.dumps({"wheel": wheel.name, "checks": checks, "pass": all(checks.values())}, indent=1))
+    print(
+        json.dumps(
+            {
+                "wheel": wheel.name,
+                "software_version": SOFTWARE_VERSION,
+                "data_catalog_version": DATA_CATALOG_VERSION,
+                "checks": checks,
+                "pass": all(checks.values()),
+            },
+            indent=1,
+        )
+    )
     return 0 if all(checks.values()) else 1
 
 

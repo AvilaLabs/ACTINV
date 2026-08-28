@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import tomllib
 from pathlib import Path
 
 
@@ -25,6 +26,8 @@ MEMORY_LIMIT_BYTES = 1_073_741_824
 BUILD_MEMORY_LIMIT_BYTES = 4_294_967_296
 SMOKE_CASES = 10_000
 FULL_CASES = 1_000_000
+with (ROOT / "Cargo.toml").open("rb") as stream:
+    WORKSPACE_VERSION = tomllib.load(stream)["workspace"]["package"]["version"]
 EXPECTED_FAMILIES = {
     "run_spec": 109_000,
     "mesh_spec": 109_000,
@@ -186,7 +189,7 @@ def report_invariants(report: dict, cases: int) -> dict:
         and not report.get("timed_out")
         and not report.get("signalled"),
         "probe_pass": report.get("pass") is True,
-        "version_exact": report.get("probe_version") == "1.0.0",
+        "version_exact": report.get("probe_version") == WORKSPACE_VERSION,
     }
     if cases == FULL_CASES:
         checks["fixed_full_partition_exact"] = family_counts == EXPECTED_FAMILIES

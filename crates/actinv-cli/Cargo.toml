@@ -11,8 +11,8 @@ categories.workspace = true
 description = "ACTINV command-line activation and nuclide-inventory solver"
 
 [dependencies]
-actinv-core = { version = "=1.0.0", path = "../actinv-core" }
-actinv-data = { version = "=1.0.0", path = "../actinv-data" }
+actinv-core = { version = "=1.0.1", path = "../actinv-core" }
+actinv-data = { version = "=1.0.1", path = "../actinv-data" }
 flate2 = { version = "1.1", default-features = false, features = ["rust_backend"] }
 num-complex = "0.4"
 serde = { version = "1", features = ["derive"] }

@@ -112,7 +112,7 @@ jobs:
           maturin build --release --out ../dist
           python ../scripts/smoke_python_wheel.py ../dist
           pip install ../dist/*.whl
-          python -c "import actinv; assert actinv.__version__ == '1.0.0'"
+          python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('python/pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
 
       - name: Python binding Rust quality
         run: |

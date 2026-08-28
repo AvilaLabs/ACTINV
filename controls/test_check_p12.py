@@ -5,8 +5,10 @@ from __future__ import annotations
 
 from copy import deepcopy
 import json
+import tomllib
 
 import check_p12
+import g5_p12_release
 
 
 def load(gate: str) -> dict[str, object]:
@@ -41,6 +43,9 @@ def main() -> int:
     planted = deepcopy(g3)
     planted["source"]["reader_source_sha256"][check_p12.READER_SOURCES[0]] = "0" * 64
     plants["g3_reader_snapshot"] = not check_p12.evaluate_g3(planted)["pass"]
+    planted = deepcopy(g3)
+    planted["control_sha256"] = "0" * 64
+    plants["g3_control_snapshot"] = not check_p12.evaluate_g3(planted)["pass"]
 
     g4 = load("G4")
     planted = deepcopy(g4)
@@ -51,6 +56,23 @@ def main() -> int:
     planted = deepcopy(g5)
     planted["standalone_binary"]["version_output"] = "actinv 0.0.0"
     plants["g5_version"] = not check_p12.evaluate_g5(planted)["pass"]
+    with (check_p12.ROOT / "Cargo.toml").open("rb") as stream:
+        current_version = tomllib.load(stream)["workspace"]["package"]["version"]
+    plants["g5_snapshot_survives_patch_version"] = (
+        current_version != "1.0.0" and check_p12.evaluate_g5(g5)["pass"] is True
+    )
+    workspace_lock = g5_p12_release.read_toml(check_p12.ROOT / "Cargo.lock")
+    plants["g5_workspace_lock_self_match"] = g5_p12_release.packaged_lock_matches_workspace(
+        workspace_lock, workspace_lock
+    )
+    planted_lock = deepcopy(workspace_lock)
+    for package in planted_lock["package"]:
+        if package.get("name") not in g5_p12_release.CRATES and "checksum" in package:
+            package["checksum"] = "0" * 64
+            break
+    plants["g5_packaged_lock_drift"] = not g5_p12_release.packaged_lock_matches_workspace(
+        workspace_lock, planted_lock
+    )
 
     gate_hashes = {
         filename: check_p12.sha256(check_p12.RESULTS / filename)
