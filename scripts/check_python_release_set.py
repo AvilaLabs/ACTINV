@@ -49,7 +49,10 @@ def validate_wheel(path: Path) -> str:
             raise ValueError(f"wheel Python requirement mismatch: {path.name}")
         if metadata["License-Expression"] != "MIT OR Apache-2.0":
             raise ValueError(f"wheel licence expression mismatch: {path.name}")
-        if f"cp39-abi3-{match.group('platform')}" not in (wheel_metadata.get_all("Tag") or []):
+        filename_platforms = match.group("platform").split(".")
+        expected_tags = {f"cp39-abi3-{platform}" for platform in filename_platforms}
+        internal_tags = set(wheel_metadata.get_all("Tag") or [])
+        if internal_tags != expected_tags:
             raise ValueError(f"wheel filename and internal compatibility tag disagree: {path.name}")
         entry_points = configparser.ConfigParser()
         entry_points.read_string(archive.read(f"{prefix}/entry_points.txt").decode())

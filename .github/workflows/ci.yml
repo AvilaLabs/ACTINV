@@ -63,6 +63,7 @@ jobs:
 
       - name: P12 release payload evidence
         run: |
+          python scripts/test_check_python_release_set.py
           python controls/test_check_p12.py
           python controls/check_p12.py --through-g5
 
