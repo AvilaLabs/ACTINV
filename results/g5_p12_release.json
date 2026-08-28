@@ -8,7 +8,8 @@
   "clippy": true,
   "dependency declaration": true,
   "end_to_end_cli_python": true,
-  "p12_ci_subset": true,
+  "p12_input_reliability_ci_subset": true,
+  "p12_radiological_ci_subset": true,
   "prior verdict evidence": true,
   "release build": true,
   "release notes": true,
@@ -53,7 +54,8 @@
  "source": {
   "abi3_py39": true,
   "ci": {
-   "p12_subset": true,
+   "p12_input_reliability_subset": true,
+   "p12_radiological_subset": true,
    "prior_verdicts": true,
    "strict_rust_commands": true,
    "wheel_install": true
