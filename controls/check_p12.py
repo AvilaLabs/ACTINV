@@ -10,6 +10,7 @@ import json
 import math
 from pathlib import Path
 import re
+import subprocess
 import sys
 import tomllib
 
@@ -84,6 +85,68 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def repository_manifest_integrity() -> dict[str, object]:
+    inventory = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
+    ).stdout
+    paths = sorted(
+        path for path in inventory.split("\0") if path and path != "MANIFEST.sha256"
+    )
+    expected = "".join(f"{sha256(ROOT / path)}  ./{path}\n" for path in paths)
+    manifest = ROOT / "MANIFEST.sha256"
+    actual = manifest.read_text() if manifest.is_file() else ""
+    return {
+        "entries": len(paths),
+        "byte_identical": actual == expected,
+        "pass": actual == expected,
+    }
+
+
+def commit_integrity(commit: str) -> dict[str, object]:
+    valid = re.fullmatch(r"[0-9a-f]{40}", commit) is not None
+    if not valid:
+        return {"object_is_commit": False, "ancestor_of_head": False, "tree": None, "pass": False}
+    object_type = subprocess.run(
+        ["git", "cat-file", "-t", commit],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    ancestor = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", commit, "HEAD"],
+        cwd=ROOT,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ).returncode == 0
+    tree = None
+    if object_type.returncode == 0 and object_type.stdout.strip() == "commit":
+        tree_result = subprocess.run(
+            ["git", "rev-parse", f"{commit}^{{tree}}"],
+            cwd=ROOT,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+        )
+        if tree_result.returncode == 0:
+            tree = tree_result.stdout.strip()
+    return {
+        "object_is_commit": object_type.returncode == 0 and object_type.stdout.strip() == "commit",
+        "ancestor_of_head": ancestor,
+        "tree": tree,
+        "pass": object_type.returncode == 0
+        and object_type.stdout.strip() == "commit"
+        and ancestor
+        and isinstance(tree, str)
+        and re.fullmatch(r"[0-9a-f]{40}", tree) is not None,
+    }
+
+
 def load_json(path: Path) -> dict[str, object] | None:
     try:
         value = json.loads(path.read_text())
@@ -117,7 +180,14 @@ def evaluate_safely(
 ) -> dict[str, object]:
     try:
         return function(value)
-    except (KeyError, TypeError, ValueError, StopIteration, OSError) as error:
+    except (
+        KeyError,
+        TypeError,
+        ValueError,
+        StopIteration,
+        OSError,
+        subprocess.SubprocessError,
+    ) as error:
         return {
             "present": value is not None,
             "error": f"{type(error).__name__}: {error}",
@@ -481,23 +551,79 @@ def evaluate_g6(value: dict[str, object] | None) -> dict[str, object]:
         if gate != "G6"
     }
     release_commit = value.get("release_commit")
+    release = commit_integrity(release_commit if isinstance(release_commit, str) else "")
+    manifest = repository_manifest_integrity()
+    session_path = ROOT / "sessions_P12.md"
+    session_text = session_path.read_text() if session_path.is_file() else ""
+    github = value.get("github")
+    run_id = nested(github, "run_id")
+    run_url = nested(github, "url")
+    expected_origin = "https://github.com/AvilaLabs/ACTINV.git"
+    required_session_fragments = [
+        str(release_commit),
+        expected_origin,
+        str(run_id),
+        str(run_url),
+        "P12-CONDITIONAL",
+        *expected_results.values(),
+        *PROTOCOL_HASHES.values(),
+    ]
     checks = {
         "identity": value.get("schema") == "actinv-p12-g6-complete-1"
         and value.get("gate") == "P12-G6",
         "release_commit": isinstance(release_commit, str)
         and re.fullmatch(r"[0-9a-f]{40}", release_commit) is not None,
+        "release_object": release["pass"] is True
+        and nested(value, "remote", "release_tree") == release["tree"],
         "gate_results": value.get("gate_result_sha256") == expected_results,
         "protocols": value.get("protocol_sha256") == PROTOCOL_HASHES,
-        "session": nested(value, "session", "pass") is True,
-        "manifest": nested(value, "manifest", "pass") is True,
-        "remote": nested(value, "remote", "pass") is True,
-        "github": nested(value, "github", "pass") is True,
-        "regeneration": nested(value, "regeneration", "pass") is True,
+        "session": session_path.is_file()
+        and nested(value, "session", "sha256") == sha256(session_path)
+        and nested(value, "session", "required_fragments") == len(required_session_fragments)
+        and nested(value, "session", "missing") == []
+        and nested(value, "session", "pass") is True
+        and all(fragment in session_text for fragment in required_session_fragments),
+        "manifest": manifest["pass"] is True
+        and nested(value, "manifest", "entries") == manifest["entries"]
+        and nested(value, "manifest", "expected_entries") == manifest["entries"]
+        and nested(value, "manifest", "valid_lines") is True
+        and nested(value, "manifest", "duplicates") == []
+        and nested(value, "manifest", "self_excluded") is True
+        and nested(value, "manifest", "exact_inventory") is True
+        and nested(value, "manifest", "hashes_match") is True
+        and nested(value, "manifest", "regeneration_byte_identical") is True
+        and nested(value, "manifest", "pass") is True,
+        "remote": nested(value, "remote", "origin") == expected_origin
+        and nested(value, "remote", "expected_origin") == expected_origin
+        and nested(value, "remote", "release_is_ancestor_of_head") is True
+        and nested(value, "remote", "origin_master_contains_release") is True
+        and nested(value, "remote", "pass") is True,
+        "github": isinstance(run_id, int)
+        and run_id > 0
+        and isinstance(nested(github, "run_attempt"), int)
+        and nested(github, "run_attempt") > 0
+        and nested(github, "name") == "controls"
+        and nested(github, "event") == "push"
+        and nested(github, "status") == "completed"
+        and nested(github, "conclusion") == "success"
+        and nested(github, "head_branch") in ("master", "main")
+        and nested(github, "head_sha") == release_commit
+        and nested(github, "workflow_path") == ".github/workflows/ci.yml"
+        and isinstance(run_url, str)
+        and run_url == f"https://github.com/AvilaLabs/ACTINV/actions/runs/{run_id}"
+        and all_true(nested(github, "checks"))
+        and nested(github, "pass") is True,
+        "regeneration": nested(value, "regeneration", "preclose_rederived") is True
+        and nested(value, "regeneration", "verdict_regeneration_byte_identical") is True
+        and nested(value, "regeneration", "manifest_regeneration_byte_identical") is True
+        and nested(value, "regeneration", "pass") is True,
     }
     return {
         "present": True,
         "release_commit": release_commit,
-        "github_run_id": nested(value, "github", "run_id"),
+        "github_run_id": run_id,
+        "local_release_object": release,
+        "local_manifest": manifest,
         "checks": checks,
         "pass": value.get("pass") is True and all(checks.values()),
     }

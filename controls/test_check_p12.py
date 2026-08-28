@@ -61,9 +61,7 @@ def main() -> int:
         "regeneration": {"pass": True},
         "pass": True,
     }
-    plants["g6_baseline"] = check_p12.evaluate_g6(g6)["pass"] is True
-    g6["gate_result_sha256"] = {**gate_hashes, check_p12.GATE_FILES["G1"]: "0" * 64}
-    plants["g6_result_hash"] = not check_p12.evaluate_g6(g6)["pass"]
+    plants["g6_incomplete_evidence"] = not check_p12.evaluate_g6(g6)["pass"]
 
     result = {
         "baseline_through_g5": baseline["pass"] is True,

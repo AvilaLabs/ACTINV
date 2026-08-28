@@ -147,7 +147,6 @@ def remote_evidence(release_commit: str, repository: str) -> dict[str, object]:
     object_type = command(["git", "cat-file", "-t", release_commit])
     release_tree = command(["git", "rev-parse", f"{release_commit}^{{tree}}"])
     head = command(["git", "rev-parse", "HEAD"])
-    origin_head = command(["git", "rev-parse", "origin/master"])
     contains = subprocess.run(
         ["git", "merge-base", "--is-ancestor", release_commit, "origin/master"],
         cwd=ROOT,
@@ -170,7 +169,6 @@ def remote_evidence(release_commit: str, repository: str) -> dict[str, object]:
     return {
         "origin": origin,
         "expected_origin": expected,
-        "origin_master": origin_head,
         "release_tree": release_tree,
         "release_is_ancestor_of_head": subprocess.run(
             ["git", "merge-base", "--is-ancestor", release_commit, head],

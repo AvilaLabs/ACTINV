@@ -3,6 +3,11 @@
 The P12 checker closes the technical repository release. The maintainer performs the public acts below separately;
 none is automated by the control suite.
 
+P12 uses two commits to avoid a circular claim. The session records the immutable release-payload commit and its
+successful workflow run; the following closure commit adds that attestation, final verdict, and manifest. Run and
+confirm the workflow on the closure commit too. A later public tag belongs on that green closure commit, not on the
+earlier payload commit.
+
 ## Before publishing
 
 - [ ] Confirm `controls/check_p12.py` reports `P12-CONDITIONAL` or `P12-PASS` on a clean clone.
@@ -17,7 +22,7 @@ none is automated by the control suite.
 
 ## Public acts
 
-- [ ] Create the signed `v1.0.0` tag at the verified release commit and push it.
+- [ ] Create the signed `v1.0.0` tag at the final green P12 closure commit and push it.
 - [ ] Publish the Python wheels and source distribution to PyPI.
 - [ ] Publish Rust crates in dependency order: `actinv-data`, `actinv-core`, then `actinv-cli`.
 - [ ] Create the GitHub Release from the signed tag, attach standalone binaries and `SHA256SUMS`, and paste the v1.0
