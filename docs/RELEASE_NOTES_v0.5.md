@@ -40,7 +40,8 @@ re-collapses all 816 targets. P5 remains P5-PASS and P6–P9 retain their checke
 
 P10 closes **P10-CONDITIONAL** because its append-only protocol record includes repair amendments. They document
 fail-closed handling found by the complete corpus and corrections to independent-control premises; the final source,
-data identities, unchanged acceptance tolerances and rerun evidence are pinned in `sessions_P10.md`.
+data identities, unchanged acceptance tolerances and rerun evidence are pinned in
+`docs/history/sessions/P10.md`.
 
 ## Known limitations
 
@@ -57,7 +58,7 @@ data identities, unchanged acceptance tolerances and rerun evidence are pinned i
 
 ## Reproduction
 
-Run the exact Rust commands in `AGENTS.md`, the CI subset in `.github/workflows/ci.yml`, and
+Run the exact Rust commands in `docs/maintainers/AGENTS.md`, the CI subset in `.github/workflows/ci.yml`, and
 `python controls/check_p10.py`. Complete external-library provenance and profiles are in
 `results/g7_p10_builds.json`; nuclear data and generated bulk libraries are deliberately not in Git.
 

@@ -1,4 +1,4 @@
-# ACTINV agent working agreement
+# ACTINV maintainer and agent working agreement
 
 - Keep changes small and scoped. Do not redesign architecture merely to satisfy the borrow checker; explain the
   ownership constraint before making a structural ownership or concurrency change.

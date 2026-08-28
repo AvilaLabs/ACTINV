@@ -27,6 +27,9 @@ Documentation = "https://github.com/AvilaLabs/ACTINV#readme"
 Issues = "https://github.com/AvilaLabs/ACTINV/issues"
 Repository = "https://github.com/AvilaLabs/ACTINV"
 
+[project.scripts]
+actinv = "actinv:_cli"
+
 [tool.maturin]
 bindings = "pyo3"
 strip = true

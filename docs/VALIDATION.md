@@ -99,7 +99,7 @@ CoNDERC aggregate C/E results are:
 The paired FISPACT-II context is UKAEA-R(18)003. ORIGEN values from Gauld's 2019 summary are context rather than a
 same-data code comparison because they use SCALE 6.1.3 with ENDF/B-VII.0 yields and ENDF/B-VII.1 decay. The complete
 point tables, source-unit treatment, archive metadata anomalies and hashes are in
-`results/g6_p9_conderc.json` and [the P9 session record](../sessions_P9.md).
+`results/g6_p9_conderc.json` and [the P9 session record](history/sessions/P9.md).
 
 The checker verdict is **P9-CONDITIONAL**. [Amendment A](../protocols/ACTINV-P9_AMENDMENT_A.md) records the one repair
 pass: ALARA transcript markers, the FISPACT flux-file trailer, the Dickens pulse ordinate definition, and two
@@ -123,7 +123,7 @@ and generated libraries remain outside Git; committed results contain their SHA-
 
 The checker verdict is **P10-CONDITIONAL** because the append-only frozen record contains repair amendments. The final
 builder fingerprint is `7a50ba3441b30b829ae857ed192b2e52554d6c149460475f7735599f29548a43`; exact complete-library hashes and resource
-profiles are in `results/g7_p10_builds.json` and [the P10 session record](../sessions_P10.md). This establishes
+profiles are in `results/g7_p10_builds.json` and [the P10 session record](history/sessions/P10.md). This establishes
 infinite-dilution unresolved processing, not finite-dilution self-shielding or probability tables.
 
 ## P11 covariance, sensitivities and uncertainty controls
@@ -148,7 +148,7 @@ components and has SHA-256 `c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7
 
 The checker verdict is **P11-CONDITIONAL** because Amendments A--E preserve the aggregation/control repairs. Exact
 inputs, exclusions, hashes and resource evidence are in `results/g1_p11_covariance.json` through
-`results/g6_p11_complete.json` and [the P11 session record](../sessions_P11.md). MF=33 bands do not include decay,
+`results/g6_p11_complete.json` and [the P11 session record](history/sessions/P11.md). MF=33 bands do not include decay,
 MF=32, MF=40/yield, flux, composition, response-coefficient or model uncertainty and are not licensing safety margins.
 
 ## P12 v1.0 hardening controls
@@ -173,5 +173,5 @@ applicability of a user's table or scenario.
 
 The checker verdict is **P12-CONDITIONAL** because Amendments A--E preserve every repair made under the frozen
 protocol. All six gates pass; exact hashes, payload and CI evidence are in `results/g1_p12_radiological.json` through
-`results/g6_p12_complete.json` and [the P12 session record](../sessions_P12.md). This completes the technical v1.0
+`results/g6_p12_complete.json` and [the P12 session record](history/sessions/P12.md). This completes the technical v1.0
 repository scope. It does not create a tag, registry publication, GitHub Release, software qualification or approval.

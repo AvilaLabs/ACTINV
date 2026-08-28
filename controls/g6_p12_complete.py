@@ -16,7 +16,7 @@ import check_p12
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "g6_p12_complete.json"
-SESSION = ROOT / "sessions_P12.md"
+SESSION = ROOT / "docs" / "history" / "sessions" / "P12.md"
 MANIFEST = ROOT / "MANIFEST.sha256"
 GATE_FILES = tuple(check_p12.GATE_FILES[gate] for gate in ("G1", "G2", "G3", "G4", "G5"))
 
@@ -120,7 +120,7 @@ def session_evidence(
     *, release_commit: str, repository: str, run: dict[str, object], gate_hashes: dict[str, str]
 ) -> dict[str, object]:
     if not SESSION.is_file():
-        return {"file": "sessions_P12.md", "present": False, "pass": False}
+        return {"file": "docs/history/sessions/P12.md", "present": False, "pass": False}
     text = SESSION.read_text()
     required = {
         "release_commit": release_commit,
@@ -136,7 +136,7 @@ def session_evidence(
     }
     missing = [name for name, fragment in required.items() if fragment not in text]
     return {
-        "file": "sessions_P12.md",
+        "file": "docs/history/sessions/P12.md",
         "sha256": sha256(SESSION),
         "required_fragments": len(required),
         "missing": missing,

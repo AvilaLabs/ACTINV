@@ -5,8 +5,8 @@ none is automated by the control suite.
 
 P12 uses two commits to avoid a circular claim. The session records the immutable release-payload commit and its
 successful workflow run; the following closure commit adds that attestation, final verdict, and manifest. Run and
-confirm the workflow on the closure commit too. A later public tag belongs on that green closure commit, not on the
-earlier payload commit.
+confirm the workflow on the closure commit too. The public software tag belongs on the final green release commit,
+including subsequent packaging-only release plumbing, not on the earlier technical payload commit.
 
 ## Before publishing
 
@@ -19,10 +19,12 @@ earlier payload commit.
   third-party-data notices.
 - [ ] Confirm the `actinv` names and maintainer accounts on PyPI/crates.io and configure trusted publishing or scoped
   release credentials.
+- [ ] Follow the account and environment setup in [PyPI release procedure](PYPI_RELEASE.md), publish the exact candidate
+  to TestPyPI, and smoke-test both `import actinv` and the installed `actinv` command.
 
 ## Public acts
 
-- [ ] Create the signed `v1.0.0` tag at the final green P12 closure commit and push it.
+- [ ] Create the signed `v1.0.0` tag at the final green software-release commit and push it.
 - [ ] Publish the Python wheels and source distribution to PyPI.
 - [ ] Publish Rust crates in dependency order: `actinv-data`, `actinv-core`, then `actinv-cli`.
 - [ ] Create the GitHub Release from the signed tag, attach standalone binaries and `SHA256SUMS`, and paste the v1.0

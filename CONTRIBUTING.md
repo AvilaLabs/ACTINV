@@ -10,6 +10,10 @@ is recorded rather than silently dropped. Contributions are welcome under the sa
 - A change to physics or data handling comes with a control (a test that would have caught the bug) and a ledger entry.
 - Controls live in `controls/`; the Rust core in `crates/`; the Python binding in `python/`.
 
+Maintainer and coding-agent conventions are kept in
+[`docs/maintainers/AGENTS.md`](docs/maintainers/AGENTS.md). Historical phase-session records are archived under
+[`docs/history/sessions/`](docs/history/sessions/README.md); they are evidence, not user-facing setup material.
+
 ## Rust quality and ownership
 
 Keep changes narrow and add regression tests for changed behavior. Do not introduce `unsafe` without maintainer

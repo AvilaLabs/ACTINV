@@ -7,6 +7,17 @@ use actinv_core::{run::run as core_run, spec::Spec};
 use num_complex::Complex64 as C64;
 use pyo3::prelude::*;
 
+/// Console-script bridge. Use Python's `sys.argv`, which omits the interpreter path that appears in process argv.
+#[pyfunction]
+fn _cli(py: Python<'_>) -> PyResult<()> {
+    let args = py
+        .import("sys")?
+        .getattr("argv")?
+        .extract::<Vec<String>>()?;
+    actinv_cli::command::main_from(args);
+    Ok(())
+}
+
 /// cram_step(n, rows, cols, vals, n0, dt, alpha0, theta_re, theta_im, alpha_re, alpha_im) -> list[float]
 #[pyfunction]
 #[allow(clippy::too_many_arguments)]
@@ -77,6 +88,7 @@ fn validate(spec_json: &str) -> PyResult<String> {
 #[pymodule]
 fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
+    m.add_function(wrap_pyfunction!(_cli, m)?)?;
     m.add_function(wrap_pyfunction!(cram_step, m)?)?;
     m.add_function(wrap_pyfunction!(broaden, m)?)?;
     m.add_function(wrap_pyfunction!(run, m)?)?;

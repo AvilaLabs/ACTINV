@@ -561,7 +561,7 @@ def evaluate_g6(value: dict[str, object] | None) -> dict[str, object]:
     release_commit = value.get("release_commit")
     release = commit_integrity(release_commit if isinstance(release_commit, str) else "")
     manifest = repository_manifest_integrity()
-    session_path = ROOT / "sessions_P12.md"
+    session_path = ROOT / "docs" / "history" / "sessions" / "P12.md"
     session_text = session_path.read_text() if session_path.is_file() else ""
     github = value.get("github")
     run_id = nested(github, "run_id")

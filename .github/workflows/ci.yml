@@ -84,7 +84,9 @@ jobs:
 
       - name: Build the Python module
         run: |
-          cd python && maturin build --release --out ../dist
+          cd python
+          maturin build --release --out ../dist
+          python ../scripts/smoke_python_wheel.py ../dist
           pip install ../dist/*.whl
           python -c "import actinv; assert actinv.__version__ == '1.0.0'"
 

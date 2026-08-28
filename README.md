@@ -14,28 +14,28 @@ other inventory codes. The numerical core is written in Rust, with both a Python
 
 ## Install
 
-After the v1.0 package is published to PyPI, the Python interface installs in one line on Python 3.9 or newer:
+After the v1.0 package is published to PyPI, both the Python interface and the `actinv` command install in one line on
+Python 3.9 or newer:
 
 ```bash
 pip install actinv
 ```
 
 The published wheels use Python's stable ABI, so users do not need a Rust compiler. Until the maintainer performs the
-separate public-package upload, install the wheel produced by the release workflow:
+public-package upload, install the wheel produced by the release workflow:
 
 ```bash
 python -m pip install actinv-1.0.0-*.whl
 ```
 
-For the standalone `actinv` command, use the matching executable from the GitHub release assets or build it from a
-source checkout:
+The same command is also available as a standalone GitHub release executable or from a source checkout:
 
 ```bash
 cargo install --locked --path crates/actinv-cli
 ```
 
-The software package stays small by keeping nuclear data in a separate, versioned release. Once the standalone command
-is installed, download the recommended neutron data in one command:
+The software package stays small by keeping nuclear data in a separate, versioned release. Download the recommended
+neutron data in one command:
 
 ```bash
 actinv data fetch

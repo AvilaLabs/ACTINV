@@ -10,6 +10,9 @@ After the v1.0 package is published, installation is one command:
 pip install actinv
 ```
 
+That installation provides both `import actinv` and the `actinv` terminal command. No Rust compiler is needed when a
+wheel is available for the platform.
+
 ```python
 import actinv
 import json
@@ -21,7 +24,7 @@ print(result["steps"][-1]["heat_W_per_g"]["total"])
 ```
 
 Nuclear-data libraries are distributed separately from the Python wheel. Install and verify the recommended versioned
-bundle with the standalone command's `actinv data fetch` and `actinv data verify`; each calculation records hashes for
+bundle with `actinv data fetch` and `actinv data verify`; each calculation records hashes for
 the selected files. See the [project README](https://github.com/AvilaLabs/ACTINV#readme) for the quick start, download
 instructions, examples, validation evidence, and qualification boundary.
 

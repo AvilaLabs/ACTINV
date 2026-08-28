@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import configparser
 import email.parser
 import hashlib
 import json
@@ -83,6 +84,7 @@ def source_checks(root: Path) -> dict:
     qualification = (root / "docs" / "QUALIFICATION.md").read_text()
     checklist = (root / "docs" / "RELEASE_CHECKLIST.md").read_text()
     workflow = (root / ".github" / "workflows" / "release-artifacts.yml").read_text()
+    publish_workflow = (root / ".github" / "workflows" / "publish-pypi.yml").read_text()
     ci = (root / ".github" / "workflows" / "ci.yml").read_text()
 
     versions = {
@@ -100,6 +102,7 @@ def source_checks(root: Path) -> dict:
         "actinv-cli->actinv-data": read_toml(root / "crates/actinv-cli/Cargo.toml")[
             "dependencies"
         ]["actinv-data"]["version"],
+        "actinv-py->actinv-cli": py_cargo["dependencies"]["actinv-cli"]["version"],
         "actinv-py->actinv-core": py_cargo["dependencies"]["actinv-core"]["version"],
     }
     licence_copies_match = all(
@@ -132,6 +135,12 @@ def source_checks(root: Path) -> dict:
         "macos_aarch64": "aarch64-apple-darwin" in workflow,
         "windows_x86_64": "x86_64-pc-windows-msvc" in workflow,
         "no_publish_command": not re.search(r"maturin\s+publish|cargo\s+publish", workflow),
+        "trusted_publisher": "pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33"
+        in publish_workflow,
+        "publisher_oidc_is_job_scoped": publish_workflow.count("id-token: write") == 2
+        and "environment:\n      name: pypi" in publish_workflow
+        and "environment:\n      name: testpypi" in publish_workflow,
+        "publisher_build_is_separate": "needs: assemble" in publish_workflow,
     }
     ci_checks = {
         "strict_rust_commands": all(
@@ -291,6 +300,10 @@ def python_package_checks(
         names = set(archive.namelist())
         metadata_name = f"actinv-{VERSION}.dist-info/METADATA"
         metadata = email.parser.Parser().parsestr(archive.read(metadata_name).decode())
+        entry_points = configparser.ConfigParser()
+        entry_points.read_string(
+            archive.read(f"actinv-{VERSION}.dist-info/entry_points.txt").decode()
+        )
         license_names = {
             f"actinv-{VERSION}.dist-info/licenses/LICENSE-MIT",
             f"actinv-{VERSION}.dist-info/licenses/LICENSE-APACHE",
@@ -306,7 +319,8 @@ def python_package_checks(
             sys.executable,
             "-c",
             "import actinv; assert actinv.__version__ == '1.0.0'; "
-            "assert all(hasattr(actinv, n) for n in ('run','validate','broaden','cram_step'))",
+            "assert all(hasattr(actinv, n) for n in ('run','validate','broaden','cram_step')); "
+            "import sys; sys.argv=['actinv','--version']; actinv._cli()",
         ],
         cwd=work,
         env=import_env,
@@ -322,6 +336,9 @@ def python_package_checks(
     required_sdist = {
         f"{prefix}/python/Cargo.toml",
         f"{prefix}/python/src/lib.rs",
+        f"{prefix}/crates/actinv-cli/Cargo.toml",
+        f"{prefix}/crates/actinv-cli/src/command.rs",
+        f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json",
         f"{prefix}/crates/actinv-core/Cargo.toml",
         f"{prefix}/crates/actinv-data/Cargo.toml",
         f"{prefix}/crates/actinv-data/data/mt_products.json",
@@ -336,6 +353,9 @@ def python_package_checks(
         "wheel_licenses": license_names.issubset(names),
         "wheel_sbom": has_sbom,
         "wheel_import": imported.returncode == 0,
+        "wheel_cli_entry_point": entry_points.get("console_scripts", "actinv", fallback=None)
+        == "actinv:_cli",
+        "wheel_cli_version": imported.stdout.strip() == f"actinv {VERSION}",
         "sdist_complete": required_sdist.issubset(sdist_names),
     }
     return {

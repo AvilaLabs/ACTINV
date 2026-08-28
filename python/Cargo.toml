@@ -11,6 +11,7 @@ name = "actinv"
 crate-type = ["cdylib"]
 
 [dependencies]
+actinv-cli = { version = "=1.0.0", path = "../crates/actinv-cli" }
 actinv-core = { version = "=1.0.0", path = "../crates/actinv-core" }
 serde_json = "1"
 num-complex = "0.4"

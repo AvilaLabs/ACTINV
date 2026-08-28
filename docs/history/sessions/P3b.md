@@ -1,4 +1,4 @@
-# ACTINV P3b — session close, 2026-08-26
+# ACTINV P3b — archived session close, 2026-08-26
 
 **Scope:** G2 of P3 (resolved-resonance reconstruction + Doppler broadening) under its own protocol (90e011a4…).
 **Verdict (controls/check_p3b.py): P3b-PASS** — no repair round.

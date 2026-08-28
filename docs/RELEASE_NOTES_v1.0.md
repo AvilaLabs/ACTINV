@@ -16,7 +16,8 @@ Published Python wheels support Python 3.9 and newer through the stable ABI:
 pip install actinv
 ```
 
-The standalone command is distributed as a release artifact and can also be built with:
+That one installation provides both `import actinv` and the `actinv` command. Native standalone binaries are also
+distributed as GitHub release artifacts, and the command can be built from source with:
 
 ```bash
 cargo install --locked --path crates/actinv-cli
@@ -44,8 +45,8 @@ See [Nuclear data](DATA.md) for charged-particle, covariance, offline, and manua
 - A bounded deterministic input-reliability gate and minimized regression corpus for the supported public interfaces.
 - FNG/ITER cell-620 activation-history reproduction from the published research archive, preserving every supplied
   source hash and keeping all generated bulk data outside Git.
-- Stable-ABI Python wheels, standalone release binaries, consistent `1.0.0` interface versions, and public-release
-  documentation/checklists.
+- Stable-ABI Python wheels that install both the Python API and full command, standalone release binaries, consistent
+  `1.0.0` interface versions, and public-release documentation/checklists.
 - A separately versioned, immutable data catalog with verified one-command setup for exact validated TENDL-2025
   artifacts and official decay archives.
 
@@ -67,7 +68,8 @@ See [Nuclear data](DATA.md) for charged-particle, covariance, offline, and manua
   reaction rates agree to `3.24e-16` relative.
 - The clean-clone release control builds and verifies all three unpacked Rust archives, the standalone `1.0.0` binary,
   a Python 3.9 stable-ABI wheel, and the Python source distribution; package metadata, both licence texts, the wheel
-  SBOM, import behavior, strict Rust gates, prior verdicts and CLI/Python end-to-end behavior all pass.
+  SBOM, installed console command, import behavior, strict Rust gates, prior verdicts and CLI/Python end-to-end
+  behavior all pass.
 
 The complete phase evidence and exact hashes are in `results/`, `protocols/`, and the append-only session records.
 

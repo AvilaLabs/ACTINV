@@ -1,16 +1,6 @@
 # Changelog
 
-## Unreleased
-
-**Added**
-
-- A strict embedded `actinv-data-catalog-1` manifest and `actinv data list/fetch/verify/manifest` commands.
-- Versioned, atomic, SHA-256-verified setup for the exact P10 TENDL-2025 activation libraries, the matching P11
-  neutron covariance sidecar, and official ENDF/B-VIII.0/JEFF-3.3 decay archives.
-- Data attribution, offline/manual setup guidance, release staging, and independent distribution controls without
-  committing nuclear-data payloads to Git.
-
-## v1.0.0 — 2026-08-27
+## v1.0.0 — 2026-08-28
 
 **Added**
 
@@ -31,6 +21,13 @@
 - FNG/ITER cell-620 activation-history reproduction at 170 endpoints from a fully hash-pinned published archive.
 - Stable-ABI Python wheels for Python 3.9+, standalone release binaries, a public artifact workflow and user-facing
   installation, release and qualification documentation.
+- The PyPI wheel installs both `import actinv` and the full `actinv` terminal command through one compiled Rust-backed
+  package, with native wheel smoke tests on Linux, macOS and Windows.
+- A strict embedded `actinv-data-catalog-1` manifest and `actinv data list/fetch/verify/manifest` commands.
+- Versioned, atomic, SHA-256-verified setup for the exact P10 TENDL-2025 activation libraries, the matching P11
+  neutron covariance sidecar, and official ENDF/B-VIII.0/JEFF-3.3 decay archives.
+- Data attribution, offline/manual setup guidance, release staging, and independent distribution controls without
+  committing nuclear-data payloads to Git.
 
 **Fixed**
 

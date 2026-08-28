@@ -1,4 +1,4 @@
-# ACTINV P4b — session close, 2026-08-27
+# ACTINV P4b — archived session close, 2026-08-27
 
 **Protocol:** protocols/ACTINV-P4b_PROTOCOL.md (72b1955c…), hashed before any correction.
 **Verdict (controls/check_p4b.py): P4b-PASS.**
