@@ -1,0 +1,214 @@
+{
+ "ACTINV": {
+  "access": "executed",
+  "artifact_measurement": {
+   "bytes": 3196489,
+   "download_elapsed_s": 0.9224582170000001,
+   "matches_published_release_record": true,
+   "sha256": "dacab7f7adef19b5c5fd364e055f2d90696856789002bddc3843b3752cca1011",
+   "wheel_filename": "actinv-1.0.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+  },
+  "clean_environment": {
+   "actinv_named_installed_bytes": 112443433,
+   "base_python": "Python 3.12.13",
+   "import_probe_s": 0.012683914000000001,
+   "imported_version": "1.0.0",
+   "one_line_pypi_install_s": 0.9453216720000001,
+   "regular_file_byte_delta": 7411306,
+   "venv_creation_s": 2.093587981,
+   "venv_regular_file_bytes_after_install": 112443433,
+   "venv_regular_file_bytes_before_install": 105032127,
+   "version": "actinv 1.0.0",
+   "version_probe_s": 0.020012843000000002
+  },
+  "default_data": {
+   "actual_installed_tree_bytes": 240585753,
+   "all_artifacts_match": true,
+   "artifacts": {
+    "actinv-data-notice-v1": {
+     "bytes": 3538,
+     "matches": true,
+     "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c"
+    },
+    "endfb-viii-0-decay": {
+     "bytes": 68313052,
+     "matches": true,
+     "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+    },
+    "jeff-3-3-decay": {
+     "bytes": 45718116,
+     "matches": true,
+     "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+    },
+    "tendl-2025-neutron-709g": {
+     "bytes": 123897743,
+     "matches": true,
+     "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+    },
+    "tendl-2025-neutron-709g-index": {
+     "bytes": 2653304,
+     "matches": true,
+     "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+    }
+   },
+   "declared_installed_bytes": 240585753,
+   "declared_network_bytes": 145480523,
+   "fetch_elapsed_s": 5.346751425,
+   "verify_elapsed_s": 0.180078968
+  },
+  "diagnostics": {
+   "inconsistent_hash": {
+    "elapsed_s": 0.094852475,
+    "exit_code": 1,
+    "expected_terms": [
+     "SHA-256 mismatch",
+     "tendl-2025-neutron-709g.npz"
+    ],
+    "message_tail": "SHA-256 mismatch for <scratch>/actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz: declared 0000000000000000000000000000000000000000000000000000000000000000, computed ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+    "names_offending_item": true,
+    "nonzero": true
+   },
+   "malformed_input": {
+    "elapsed_s": 0.017962548000000002,
+    "exit_code": 2,
+    "expected_terms": [
+     "unexpected_field",
+     "unknown field"
+    ],
+    "message_tail": "spec: unknown field `unexpected_field`, expected one of `spec`, `title`, `projectile`, `library`, `decay`, `material`, `spectrum`, `schedule`, `options`, `photon`, `fission_yields`, `uncertainty`, `radiological` at line 1 column 7430",
+    "names_offending_item": true,
+    "nonzero": true
+   },
+   "missing_file": {
+    "elapsed_s": 0.018148152,
+    "exit_code": 1,
+    "expected_terms": [
+     "missing-library.npz",
+     "No such file"
+    ],
+    "message_tail": "cannot stat <scratch>/actinv-diagnostics/missing-library.npz: No such file or directory (os error 2)",
+    "names_offending_item": true,
+    "nonzero": true
+   }
+  },
+  "documented_user_commands": [
+   "pip install actinv",
+   "actinv data fetch",
+   "actinv run examples/fns_fe_5min.json result.json"
+  ],
+  "first_result": {
+   "elapsed_s": 2.462432985,
+   "first_cooling_W_per_g": 1.1514084526617243e-07,
+   "mode": "trace",
+   "states_pruned": 47,
+   "states_total": 3873,
+   "steps": 21
+  },
+  "user_command_count_through_first_result": 3
+ },
+ "ALARA": {
+  "access": "executed",
+  "build_command_count_excluding_dependency_install": 4,
+  "build_dependencies": {
+   "cmake_install_s": 2.1841310590000003,
+   "cmake_version": "cmake version 3.31.6",
+   "tools_environment_bytes": 172864680,
+   "tools_venv_creation_s": 1.9723660310000002
+  },
+  "clean_build": {
+   "build_one_job_s": 39.222044942000004,
+   "configure_s": 0.520273781,
+   "install_s": 0.192565444,
+   "installed_tree_bytes": 10068558,
+   "version": "ALARA 2.9.2",
+   "version_probe_s": 0.002199333
+  },
+  "diagnostics": {
+   "inconsistent_data": {
+    "elapsed_s": 0.0017617930000000002,
+    "exit_code": 110,
+    "expected_terms": [
+     "data",
+     "Unable to open",
+     "myElelib"
+    ],
+    "message_tail": "ALARA 2.9.2\nError #110: Unable to open material library: data/sampleMatlib",
+    "names_offending_item": true,
+    "nonzero": true
+   },
+   "malformed_input": {
+    "elapsed_s": 0.0019226310000000002,
+    "exit_code": 100,
+    "expected_terms": [
+     "definitely_not_an_alara_keyword",
+     "Invalid token"
+    ],
+    "message_tail": "ALARA 2.9.2\nError #100: Invalid token in input file: definitely_not_an_alara_keyword",
+    "names_offending_item": true,
+    "nonzero": true
+   },
+   "missing_file": {
+    "elapsed_s": 0.001716251,
+    "exit_code": 102,
+    "expected_terms": [
+     "definitely-missing-input",
+     "Unable to open"
+    ],
+    "message_tail": "ALARA 2.9.2\nError #102: Unable to open main input file: 'definitely-missing-input'.",
+    "names_offending_item": true,
+    "nonzero": true
+   }
+  },
+  "documented_build_commands": [
+   "git clone https://github.com/svalinn/ALARA",
+   "cmake -S ALARA -B build -DCMAKE_INSTALL_PREFIX=install",
+   "cmake --build build",
+   "cmake --install build"
+  ],
+  "first_sample": {
+   "conversion_s": 0.027225694,
+   "conversion_succeeded": true,
+   "note": "official sample data are explicitly truncated and unsuitable for real calculations",
+   "solve_s": 0.319439772,
+   "solve_succeeded": true,
+   "ten_pulses_named": true
+  },
+  "prerequisites": [
+   "C++ compiler",
+   "CMake",
+   "Ninja or Make"
+  ],
+  "source_commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+  "source_tracked_bytes": 22166462
+ },
+ "FISPACT-II": {
+  "access": "not-available",
+  "detail": "no licensed executable was supplied; installation was not executed"
+ },
+ "OpenMC": {
+  "access": "not-applicable",
+  "detail": "CB1 uses an existing OpenMC environment only as a depletion/numerical anchor"
+ },
+ "SCALE/ORIGEN": {
+  "access": "not-available",
+  "detail": "no licensed executable was supplied; installation was not executed"
+ },
+ "checks": {
+  "actinv_data": true,
+  "actinv_diagnostics": true,
+  "actinv_example": true,
+  "actinv_public_artifact": true,
+  "actinv_version": true,
+  "alara_diagnostics": true,
+  "alara_sample": true,
+  "alara_source": true,
+  "alara_version": true
+ },
+ "interpretation": [
+  "times are one run on the recorded CB1 host and include network conditions where applicable",
+  "ACTINV's data step installs production public data; ALARA's official sample is deliberately truncated",
+  "command counts remain separate from diagnostic observations; there is no ease-of-use total"
+ ],
+ "pass": true,
+ "schema": "actinv-cb1-first-use-1"
+}

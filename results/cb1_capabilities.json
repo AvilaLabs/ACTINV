@@ -1,0 +1,1017 @@
+{
+ "axes": [
+  {
+   "axis": "licence_and_access",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_cargo",
+      "actinv_first_use"
+     ],
+     "status": "verified",
+     "summary": "Public source and binaries; MIT OR Apache-2.0 at the user's choice."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "executed",
+     "sources": [
+      "alara_repo"
+     ],
+     "status": "verified",
+     "summary": "Public source under the BSD 3-Clause licence."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_license"
+     ],
+     "status": "verified",
+     "summary": "Controlled research/commercial licensing; no CB1 executable."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "executed",
+     "sources": [
+      "openmc_repo"
+     ],
+     "status": "verified",
+     "summary": "Public source under the MIT/X licence."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "scale_distribution"
+     ],
+     "status": "verified",
+     "summary": "RSICC distribution restrictions apply; no CB1 executable."
+    }
+   },
+   "question": "Can a user lawfully obtain, inspect, and redistribute the software?"
+  },
+  {
+   "axis": "install_path",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_first_use",
+      "actinv_readme"
+     ],
+     "status": "verified",
+     "summary": "PyPI wheel plus one verified data-fetch command; standalone release binaries also exist."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_first_use",
+      "alara_repo"
+     ],
+     "status": "verified",
+     "summary": "Pinned public source configured, built, and installed with CMake in CB1."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_install"
+     ],
+     "status": "verified",
+     "summary": "Precompiled and source-build routes are documented after licensed distribution is obtained."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_install"
+     ],
+     "status": "verified",
+     "summary": "Conda, Docker, and source-build routes are documented; the Python API can be installed with pip from source."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "scale_distribution"
+     ],
+     "status": "verified",
+     "summary": "Distributed installers include executables and data; the complete installation is about 110 GB."
+    }
+   },
+   "question": "Is there a documented route from a clean machine to a first calculation?"
+  },
+  {
+   "axis": "projectiles_and_energy_domain",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_release_notes"
+     ],
+     "status": "partial",
+     "summary": "Neutron, proton, deuteron, and alpha group activation are supported; gamma, triton, and helion are not in v1.0. Energy bounds follow the supplied evaluated library."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "partial",
+     "summary": "The documented primary purpose is neutron-induced activation; the usable energy domain follows the converted group library."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_data",
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "Group libraries are documented for neutron, proton, deuteron, gamma, alpha, triton, and helion projectiles, with library-dependent group ranges."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "partial",
+     "summary": "Depletion is driven by neutron reaction rates and decay; OpenMC's broader transport particle support is not charged-particle activation support."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview",
+      "origen_theory"
+     ],
+     "status": "partial",
+     "summary": "ORIGEN directly documents neutron activation, fission, transmutation, and decay; user-supplied coefficients can extend a matrix but are not a verified charged-particle data pipeline."
+    }
+   },
+   "question": "Which incident-particle activation domains are directly supported?"
+  },
+  {
+   "axis": "finite_dilution_self_shielding",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_method",
+      "actinv_release_notes"
+     ],
+     "status": "partial",
+     "summary": "Resolved resonances and infinite-dilution unresolved averages are processed; finite-dilution probability-table/Bondarenko self-shielding is absent."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "unverified",
+     "summary": "No current official source located by CB1 establishes an in-code finite-dilution treatment."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_shielding",
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "Energy and spatial self-shielding corrections, including probability tables, are documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "verified",
+     "summary": "Continuous-energy transport can apply unresolved-resonance probability tables before depletion reaction rates are formed."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview",
+      "origen_module"
+     ],
+     "status": "verified",
+     "summary": "Self-shielded cross sections can be supplied through COUPLE/xs_update before ORIGEN solves the inventory."
+    }
+   },
+   "question": "Can composition-dependent resonance self-shielding be applied to activation rates?"
+  },
+  {
+   "axis": "irradiation_schedules",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_release_notes"
+     ],
+     "status": "verified",
+     "summary": "Arbitrary piecewise flux and cooling segments, including pulses, use the same solver path."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "executed",
+     "sources": [
+      "alara_intro",
+      "actinv_first_use"
+     ],
+     "status": "verified",
+     "summary": "Hierarchical arbitrary pulse schedules are documented and a ten-pulse case was executed."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "TIME, FLUX, and PULSE controls cover changing irradiation and repeated pulses."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "verified",
+     "summary": "Time steps accept changing source rates and zero-source decay steps through multiple integrators."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_module",
+      "origen_theory"
+     ],
+     "status": "verified",
+     "summary": "Time-dependent irradiation/decay cases and transition-matrix evolution are documented."
+    }
+   },
+   "question": "Can nontrivial irradiation, decay, and pulse histories be represented?"
+  },
+  {
+   "axis": "fission_yields",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_release_notes",
+      "actinv_method"
+     ],
+     "status": "verified",
+     "summary": "Hash-pinned independent yields feed the matrix with explicit mapped and leakage balances."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_repo"
+     ],
+     "status": "unverified",
+     "summary": "CB1 did not locate a sufficiently explicit current official yield statement for the executed 2.9.2 interface."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_data",
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "Neutron, spontaneous, and non-neutron fission-yield libraries plus USEFISSION are documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "verified",
+     "summary": "Depletion chains include fission yields and configurable yield interpolation."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview",
+      "origen_theory"
+     ],
+     "status": "verified",
+     "summary": "Energy-dependent fission-yield resources are folded into the transition matrix."
+    }
+   },
+   "question": "Are fission-product yields represented in inventory evolution?"
+  },
+  {
+   "axis": "covariance_uncertainty",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_release_notes",
+      "actinv_method"
+     ],
+     "status": "partial",
+     "summary": "MF=33 covariance is collapsed and propagated with local heat/activity sensitivities; full multi-source Monte Carlo covariance propagation is not implemented."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "unverified",
+     "summary": "No current official source located by CB1 establishes nuclear-data covariance propagation."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_main",
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "Full-covariance sensitivity and uncertainty propagation, including Monte Carlo methods, is documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "partial",
+     "summary": "Transport tallies carry sampling uncertainty, but CB1 found no documented full nuclear-data covariance propagation through depletion."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_module"
+     ],
+     "status": "partial",
+     "summary": "Direct/adjoint ORIGEN sensitivities are documented; CB1 did not verify full covariance propagation for standalone ORIGEN."
+    }
+   },
+   "question": "Can nuclear-data uncertainty be propagated to activation responses?"
+  },
+  {
+   "axis": "activation_responses",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_release_notes"
+     ],
+     "status": "verified",
+     "summary": "Inventory, activity, alpha/beta/gamma heat, photon sources, pathways, dose proxies, clearance/waste, and ingestion/inhalation responses are available."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro",
+      "alara_support"
+     ],
+     "status": "verified",
+     "summary": "Inventory/activity, decay heat, photon sources, activation trees, waste ratings, and clearance indices are documented."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_main",
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "Inventories, heat, spectra, dose, clearance, pathways, gases, and material-damage observables are documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion",
+      "openmc_tallies"
+     ],
+     "status": "partial",
+     "summary": "Nuclide densities and reaction rates are native; broader transport tallies exist, but a dedicated activation radiological report is not documented."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview"
+     ],
+     "status": "verified",
+     "summary": "Concentrations, activities, decay heat, and alpha/beta/neutron/gamma source spectra are documented."
+    }
+   },
+   "question": "Which user-facing inventory, source, and radiological responses are available?"
+  },
+  {
+   "axis": "transport_coupling",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_release_notes"
+     ],
+     "status": "partial",
+     "summary": "Strict OpenMC/MCNP/FISPACT flux import and OpenMC/MCNP photon export support one-way R2S; ACTINV has no transport solver or feedback loop."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "partial",
+     "summary": "Multi-point activation accepts externally generated fluxes; ALARA is not itself a particle-transport solver."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_main",
+      "fispact_keywords"
+     ],
+     "status": "partial",
+     "summary": "External projectile spectra drive inventory calculations; no transport solver is established by the cited product documentation."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "verified",
+     "summary": "CoupledOperator updates depletion reaction rates with OpenMC transport, while IndependentOperator is also available."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview"
+     ],
+     "status": "verified",
+     "summary": "ORIGEN is coupled inside SCALE TRITON and Polaris sequences and can also run standalone."
+    }
+   },
+   "question": "Can reaction rates be coupled to particle transport rather than supplied only as a fixed spectrum?"
+  },
+  {
+   "axis": "cli_and_programmatic_api",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_cargo"
+     ],
+     "status": "verified",
+     "summary": "Standalone CLI, Python API, and Rust crates share the released core."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "executed",
+     "sources": [
+      "alara_repo",
+      "actinv_first_use"
+     ],
+     "status": "partial",
+     "summary": "A command-line executable was run; CB1 found no documented stable library API."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_main",
+      "fispact_keywords"
+     ],
+     "status": "verified",
+     "summary": "The traditional keyword interface and a beta C/C++/Fortran/Python API are documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "executed",
+     "sources": [
+      "openmc_repo",
+      "openmc_depletion"
+     ],
+     "status": "verified",
+     "summary": "A Python API and executable transport interface are documented; CRAM was exercised through Python in CB1."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_module"
+     ],
+     "status": "partial",
+     "summary": "Structured SCALE module input is documented; CB1 did not verify a public stable language API for ORIGEN."
+    }
+   },
+   "question": "Are stable command-line and programmatic interfaces available?"
+  },
+  {
+   "axis": "determinism_and_provenance",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_release_notes"
+     ],
+     "status": "verified",
+     "summary": "Every input is SHA-256 identified in a result certificate; ledgered omissions and deterministic interface identity are release gates."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_repo"
+     ],
+     "status": "unverified",
+     "summary": "CB1 found no official claim of per-result input hashing or a re-derivable provenance certificate."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_main"
+     ],
+     "status": "unverified",
+     "summary": "JSON output is documented, but CB1 found no official claim of per-input cryptographic provenance certificates."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "unverified",
+     "summary": "CB1 found no official claim of a per-result certificate hashing every depletion input."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_module"
+     ],
+     "status": "unverified",
+     "summary": "CB1 found no official claim of a per-result certificate hashing every ORIGEN input and library."
+    }
+   },
+   "question": "Does a result carry machine-checkable identities for all material inputs?"
+  },
+  {
+   "axis": "spatial_or_mesh_operation",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_mesh",
+      "actinv_readme"
+     ],
+     "status": "verified",
+     "summary": "Independent cells stream through a deterministic parallel mesh path; CB1 measured through 256 cells and labels the million-cell value as an extrapolation."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "verified",
+     "summary": "Multi-point 3-D solutions and several geometry forms are documented."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_keywords"
+     ],
+     "status": "unverified",
+     "summary": "Parallel inventory partitioning is documented, but CB1 did not verify a first-class spatial mesh activation workflow."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion",
+      "openmc_tallies"
+     ],
+     "status": "verified",
+     "summary": "Geometry/material depletion and structured or unstructured mesh tallies are first-class transport workflows."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_theory",
+      "origen_overview"
+     ],
+     "status": "partial",
+     "summary": "Standalone ORIGEN has no spatial dependence; SCALE transport/depletion sequences supply spatially resolved coupling around it."
+    }
+   },
+   "question": "Can many spatial regions be calculated as a first-class workflow?"
+  },
+  {
+   "axis": "continuous_feed_or_removal",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_release_notes"
+     ],
+     "status": "absent",
+     "summary": "The v1.0 public specification has no continuous feed, removal, or inter-material transfer model."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "unverified",
+     "summary": "No current official source located by CB1 establishes continuous feed/removal."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_keywords"
+     ],
+     "status": "unverified",
+     "summary": "No such keyword was established by the current official keyword inventory inspected by CB1."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "verified",
+     "summary": "Integrator transfer rates implement removal, feed, and destination-material transfer."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview",
+      "origen_theory"
+     ],
+     "status": "verified",
+     "summary": "Continuous nuclide feed and chemical removal are explicit standalone ORIGEN features."
+    }
+   },
+   "question": "Can material feeds, removals, or transfers alter the inventory during a run?"
+  },
+  {
+   "axis": "reverse_calculation",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_release_notes"
+     ],
+     "status": "absent",
+     "summary": "No inverse or reverse activation solver is exposed in v1.0."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "verified",
+     "summary": "Reverse calculation mode is an explicitly documented feature."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_keywords"
+     ],
+     "status": "unverified",
+     "summary": "No reverse-calculation interface was established by the current official keyword inventory inspected by CB1."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "unverified",
+     "summary": "No inverse activation workflow was established by the cited depletion guide."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_module"
+     ],
+     "status": "unverified",
+     "summary": "Adjoint sensitivity is not treated here as an inverse inventory workflow; no such workflow was established."
+    }
+   },
+   "question": "Can an inverse/reverse activation calculation be requested directly?"
+  },
+  {
+   "axis": "damage_observables",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_release_notes"
+     ],
+     "status": "absent",
+     "summary": "v1.0 does not calculate DPA, kerma, or PKA spectra."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_intro"
+     ],
+     "status": "unverified",
+     "summary": "No current official source located by CB1 establishes DPA, kerma, or PKA output."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_main",
+      "fispact_keywords",
+      "fispact_data"
+     ],
+     "status": "verified",
+     "summary": "DPA, kerma, displacement energies, and PKA spectra are documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_tallies"
+     ],
+     "status": "verified",
+     "summary": "A damage-energy tally (MT=444) is documented, although it is a transport rather than inventory observable."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_overview"
+     ],
+     "status": "unverified",
+     "summary": "SCALE is broader than ORIGEN, but no standalone ORIGEN damage observable was established by the cited module documentation."
+    }
+   },
+   "question": "Are displacement/damage observables available, beyond activation inventory?"
+  },
+  {
+   "axis": "supported_operating_systems",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_readme",
+      "actinv_first_use"
+     ],
+     "status": "verified",
+     "summary": "Release wheels or binaries cover Linux, macOS, and Windows; Linux was executed in CB1."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "executed",
+     "sources": [
+      "alara_repo",
+      "actinv_first_use"
+     ],
+     "status": "partial",
+     "summary": "Linux was built and executed; public source is portable C++, but CB1 did not verify current packaged Windows/macOS support."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_install"
+     ],
+     "status": "verified",
+     "summary": "Linux/Unix/macOS and Windows installation routes and prebuilt executables are documented."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_install"
+     ],
+     "status": "verified",
+     "summary": "Conda covers Linux/macOS and Docker covers Linux/macOS/Windows; source/WSL routes are documented."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "scale_distribution"
+     ],
+     "status": "verified",
+     "summary": "The current RSICC package lists 64-bit Linux, macOS, and Windows executables."
+    }
+   },
+   "question": "Are supported installation routes documented across common desktop/server systems?"
+  },
+  {
+   "axis": "compile_time_physical_units",
+   "cells": {
+    "ACTINV 1.0.0": {
+     "evidence_access": "executed",
+     "sources": [
+      "actinv_cargo",
+      "actinv_release_notes"
+     ],
+     "status": "absent",
+     "summary": "Physical units are encoded in field/type names and validation rules around f64 values, not zero-cost Rust unit newtypes."
+    },
+    "ALARA 2.9.2": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "alara_support"
+     ],
+     "status": "unverified",
+     "summary": "The guide places some unit consistency responsibility on the user; CB1 did not perform a full source-level type audit."
+    },
+    "FISPACT-II 5.1": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "fispact_keywords"
+     ],
+     "status": "unverified",
+     "summary": "Not established by the official sources inspected for this product-level comparison."
+    },
+    "OpenMC 0.15.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "openmc_depletion"
+     ],
+     "status": "unverified",
+     "summary": "Not established by the official sources inspected for this product-level comparison."
+    },
+    "SCALE/ORIGEN 6.3.3": {
+     "evidence_access": "documented-only",
+     "sources": [
+      "origen_module"
+     ],
+     "status": "unverified",
+     "summary": "Not established by the official sources inspected for this product-level comparison."
+    }
+   },
+   "question": "Are incompatible physical quantities distinct types at the public implementation boundary?"
+  }
+ ],
+ "checks": {
+  "actinv_has_no_physical_quantity_newtypes": true,
+  "actinv_install_commands": true,
+  "actinv_license": true,
+  "actinv_limitations_named": true,
+  "actinv_public_spec_has_no_feed_or_removal": true,
+  "alara_bsd_3_clause_text": true,
+  "alara_source_pin": true,
+  "all_axes_have_all_products": true,
+  "all_sources_are_versioned_dated_and_official": true,
+  "matrix_has_expected_cell_count": true,
+  "unknown_is_not_absent_for_competitors": true
+ },
+ "pass": true,
+ "products": [
+  "ACTINV 1.0.0",
+  "ALARA 2.9.2",
+  "OpenMC 0.15.3",
+  "FISPACT-II 5.1",
+  "SCALE/ORIGEN 6.3.3"
+ ],
+ "retrieved": "2026-08-28",
+ "schema": "actinv-cb1-capabilities-1",
+ "sources": {
+  "actinv_cargo": {
+   "location": "Cargo.toml",
+   "official": true,
+   "product_version": "ACTINV 1.0.0",
+   "retrieved": "2026-08-28",
+   "title": "ACTINV workspace metadata"
+  },
+  "actinv_first_use": {
+   "location": "results/cb1_first_use.json",
+   "official": true,
+   "product_version": "ACTINV 1.0.0",
+   "retrieved": "2026-08-28",
+   "title": "CB1 executed first-use control"
+  },
+  "actinv_mesh": {
+   "location": "results/cb1_mesh_performance.json",
+   "official": true,
+   "product_version": "ACTINV 1.0.0",
+   "retrieved": "2026-08-28",
+   "title": "CB1 executed mesh control"
+  },
+  "actinv_method": {
+   "location": "docs/METHOD.md",
+   "official": true,
+   "product_version": "ACTINV 1.0.0",
+   "retrieved": "2026-08-28",
+   "title": "ACTINV method"
+  },
+  "actinv_readme": {
+   "location": "README.md",
+   "official": true,
+   "product_version": "ACTINV 1.0.0",
+   "retrieved": "2026-08-28",
+   "title": "ACTINV README"
+  },
+  "actinv_release_notes": {
+   "location": "docs/RELEASE_NOTES_v1.0.md",
+   "official": true,
+   "product_version": "ACTINV 1.0.0",
+   "retrieved": "2026-08-28",
+   "title": "ACTINV v1.0 release notes"
+  },
+  "alara_intro": {
+   "official": true,
+   "product_version": "ALARA 2.9.2 documentation",
+   "retrieved": "2026-08-28",
+   "title": "ALARA users' guide introduction",
+   "url": "https://svalinn.github.io/ALARA/usersguide/introtext.html"
+  },
+  "alara_repo": {
+   "official": true,
+   "product_version": "ALARA 2.9.2",
+   "retrieved": "2026-08-28",
+   "title": "ALARA official repository",
+   "url": "https://github.com/svalinn/ALARA"
+  },
+  "alara_support": {
+   "official": true,
+   "product_version": "ALARA 2.9.2 documentation",
+   "retrieved": "2026-08-28",
+   "title": "ALARA support-file guide",
+   "url": "https://svalinn.github.io/ALARA/usersguide/support.html"
+  },
+  "fispact_data": {
+   "official": true,
+   "product_version": "FISPACT-II release 5 data documentation",
+   "retrieved": "2026-08-28",
+   "title": "FISPACT-II nuclear-data downloads",
+   "url": "https://fispact.ukaea.uk/wiki/Nuclear_data_downloads"
+  },
+  "fispact_install": {
+   "official": true,
+   "product_version": "FISPACT-II release 5 documentation",
+   "retrieved": "2026-08-28",
+   "title": "Installing FISPACT-II",
+   "url": "https://fispact.ukaea.uk/wiki/Installing_FISPACT-II"
+  },
+  "fispact_keywords": {
+   "official": true,
+   "product_version": "FISPACT-II 5.0/5.1 documentation",
+   "retrieved": "2026-08-28",
+   "title": "FISPACT-II keywords",
+   "url": "https://fispact.ukaea.uk/wiki/FISPACT-II_keywords"
+  },
+  "fispact_license": {
+   "official": true,
+   "product_version": "FISPACT-II 5.1 project documentation",
+   "retrieved": "2026-08-28",
+   "title": "FISPACT-II user licences",
+   "url": "https://fispact.ukaea.uk/wiki/User_licences"
+  },
+  "fispact_main": {
+   "official": true,
+   "product_version": "FISPACT-II 5.1",
+   "retrieved": "2026-08-28",
+   "title": "FISPACT-II official overview and release history",
+   "url": "https://fispact.ukaea.uk/wiki/Main_Page"
+  },
+  "fispact_shielding": {
+   "official": true,
+   "product_version": "FISPACT-II 5.1 project documentation",
+   "retrieved": "2026-08-28",
+   "title": "FISPACT-II probability-table self-shielding",
+   "url": "https://fispact.ukaea.uk/wiki/Probability_table_self-shielding"
+  },
+  "openmc_depletion": {
+   "official": true,
+   "product_version": "OpenMC 0.15.3 stable documentation",
+   "retrieved": "2026-08-28",
+   "title": "OpenMC depletion and transmutation guide",
+   "url": "https://docs.openmc.org/en/stable/usersguide/depletion.html"
+  },
+  "openmc_install": {
+   "official": true,
+   "product_version": "OpenMC 0.15.3 stable documentation",
+   "retrieved": "2026-08-28",
+   "title": "OpenMC installation guide",
+   "url": "https://docs.openmc.org/en/stable/usersguide/install.html"
+  },
+  "openmc_repo": {
+   "official": true,
+   "product_version": "OpenMC 0.15.3",
+   "retrieved": "2026-08-28",
+   "title": "OpenMC official repository",
+   "url": "https://github.com/openmc-dev/openmc"
+  },
+  "openmc_tallies": {
+   "official": true,
+   "product_version": "OpenMC 0.15 series documentation",
+   "retrieved": "2026-08-28",
+   "title": "OpenMC tally guide",
+   "url": "https://docs.openmc.org/en/v0.15.0/usersguide/tallies.html"
+  },
+  "origen_module": {
+   "official": true,
+   "product_version": "ORIGEN in SCALE 6.3.2 manual",
+   "retrieved": "2026-08-28",
+   "title": "ORIGEN module reference",
+   "url": "https://scale-manual.ornl.gov/6.3.2/origen/origen-module.html"
+  },
+  "origen_overview": {
+   "official": true,
+   "product_version": "ORIGEN in SCALE 6.3.2 manual",
+   "retrieved": "2026-08-28",
+   "title": "ORIGEN overview",
+   "url": "https://scale-manual.ornl.gov/6.3.2/origen/index.html"
+  },
+  "origen_theory": {
+   "official": true,
+   "product_version": "ORIGEN in SCALE 6.3.2 manual",
+   "retrieved": "2026-08-28",
+   "title": "ORIGEN theory",
+   "url": "https://scale-manual.ornl.gov/6.3.2/origen/origen-theory.html"
+  },
+  "scale_distribution": {
+   "official": true,
+   "product_version": "SCALE 6.3.3 (includes ORIGEN)",
+   "retrieved": "2026-08-28",
+   "title": "RSICC SCALE 6.3.3 package record",
+   "url": "https://rsicc.ornl.gov/codes/ccc/ccc8/ccc-860.html"
+  }
+ },
+ "status_definitions": {
+  "absent": "source/executable inspection establishes that the capability is not exposed",
+  "not-applicable": "the axis does not apply to the product's role in CB1",
+  "partial": "a meaningful subset is established, with the missing portion named",
+  "unverified": "CB1 found no sufficient official evidence; this is not evidence of absence",
+  "verified": "the complete named capability or condition is established by the cited evidence"
+ }
+}

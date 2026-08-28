@@ -33,3 +33,18 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   explicitly requires them; ACTINV must not imply them from the P10 implementation.
 - 2026-08-26 — TENDL-2025 also publishes triton, helion and gamma incident-particle sublibraries. The v1.0 roadmap
   names neutron plus proton/deuteron/alpha only, so those three additional projectiles remain post-v1.0 scope.
+- 2026-08-28 — CB1 cannot isolate ACTINV/FISPACT solver differences from the public FNS comparison because the
+  available rows use ACTINV/TENDL-2025 and FISPACT-II 4.0/TENDL-2017. A many-nuclide run on byte-identical processed
+  data is the highest-priority competitive-validation follow-up; it requires lawful FISPACT access or a collaborator.
+- 2026-08-28 — In the fresh 132-experiment FNS family, FISPACT's public result leads ACTINV on median point
+  `abs(ln(C/E))` (`0.1053` versus `0.1392`), median experiment maximum, and all-points-within-30% coverage (`69/132`
+  versus `59/132`). Diagnose reaction/data contributions on held-out evidence; do not tune against the scored family.
+- 2026-08-28 — CB1 measured `1.09 GB` peak RSS for the warm-cache public example while hashing/parsing `237.9 MB` of
+  input data. Evaluate memory mapping, a hash-bound prepared cache, and narrower decay loading without weakening
+  provenance or changing calculated results.
+- 2026-08-28 — Physical quantities at ACTINV's Rust boundaries remain unit-named `f64` values rather than distinct
+  zero-cost domain types. A scoped units design and broader metamorphic relations (linear scaling, schedule splitting,
+  analytic decay, rebin and conservation) are post-CB1 quality work; neither is smuggled into the frozen scorecard.
+- 2026-08-28 — Feed/removal, reverse calculation and damage observables are confirmed ACTINV capability gaps;
+  gamma/triton/helion activation remains parked above. They are demand-led post-v1.0 candidates, not automatic scope
+  merely to make the competitive matrix uniformly green.
