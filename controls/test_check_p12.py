@@ -38,6 +38,9 @@ def main() -> int:
     planted = deepcopy(g3)
     planted["full"]["deterministic"]["cases"] = 999_999
     plants["g3_partition_count"] = not check_p12.evaluate_g3(planted)["pass"]
+    planted = deepcopy(g3)
+    planted["source"]["reader_source_sha256"][check_p12.READER_SOURCES[0]] = "0" * 64
+    plants["g3_reader_snapshot"] = not check_p12.evaluate_g3(planted)["pass"]
 
     g4 = load("G4")
     planted = deepcopy(g4)
