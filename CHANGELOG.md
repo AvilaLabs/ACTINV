@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**Fixed**
+
+- The crates.io trusted-publisher environment now matches the registry's configured `crates.io` OIDC identity. A
+  protected manual recovery path can resume publication from an existing version-matching release tag without moving
+  or reusing that tag.
+
 ## v1.0.1 — 2026-08-28
 
 **Added**

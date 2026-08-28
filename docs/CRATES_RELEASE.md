@@ -12,13 +12,13 @@ credential was removed after a clean registry-install smoke test.
 
 ## One-time trusted-publisher setup
 
-The repository's `crates-io` GitHub environment requires maintainer approval. The same GitHub Actions trusted
+The repository's `crates.io` GitHub environment requires maintainer approval. The same GitHub Actions trusted
 publisher is configured for each package on crates.io using these values:
 
 - GitHub owner: `AvilaLabs`
 - Repository: `ACTINV`
 - Workflow: `publish-crates.yml`
-- Environment: `crates-io`
+- Environment: `crates.io`
 
 The configuration covers [`actinv-data`](https://crates.io/crates/actinv-data),
 [`actinv-core`](https://crates.io/crates/actinv-core), and
@@ -32,7 +32,7 @@ Secrets. See the official [trusted-publishing documentation](https://crates.io/d
    notes.
 2. Run the repository's Rust and release gates and obtain a green commit on the default branch.
 3. Create and push a signed `vX.Y.Z` tag whose version matches `Cargo.toml`.
-4. Approve the `crates-io` environment when the **publish Rust crates** workflow requests it.
+4. Approve the `crates.io` environment when the **publish Rust crates** workflow requests it.
 5. Let the workflow publish the three packages in dependency order. If one job fails after an earlier package was
    published, use GitHub's **Re-run failed jobs** action; the completed package jobs remain complete.
 6. Verify the public result from a clean install root:
@@ -44,3 +44,7 @@ Secrets. See the official [trusted-publishing documentation](https://crates.io/d
 
 Never move or reuse a release tag, and never attempt to overwrite a published version. A broken crates.io version can
 be yanked, but its uploaded source remains part of the permanent registry archive.
+
+If the automatic tag run fails before publication because of release infrastructure, dispatch the same workflow
+manually with the existing `vX.Y.Z` tag. The workflow checks out that tag, requires its version to match the workspace,
+and proves the checked-out commit is the tag target before requesting a short-lived registry credential.

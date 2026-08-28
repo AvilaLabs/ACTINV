@@ -19,12 +19,20 @@ CRATES = ("actinv-data", "actinv-core", "actinv-cli")
 def main() -> int:
     text = WORKFLOW.read_text(encoding="utf-8") if WORKFLOW.is_file() else ""
     checks = {
-        "tag_only": 'tags: ["v*"]' in text
-        and "workflow_dispatch" not in text
+        "tag_or_explicit_recovery": 'tags: ["v*"]' in text
+        and "workflow_dispatch" in text
+        and "release_tag:" in text
+        and "required: true" in text
         and "pull_request" not in text,
         "read_only_default": "permissions:\n  contents: read" in text,
-        "version_bound_to_tag": "GITHUB_REF_NAME" in text
-        and "['workspace']['package']['version']" in text,
+        "version_bound_to_existing_tag": "ACTINV_RELEASE_TAG" in text
+        and "['workspace']['package']['version']" in text
+        and "refs/tags/{tag}" in text
+        and "tagged == head" in text,
+        "checkout_is_release_tag": text.count(
+            "ref: ${{ env.ACTINV_RELEASE_TAG }}"
+        )
+        == len(CRATES) + 1,
         "strict_rust_gates": all(
             command in text
             for command in (
@@ -45,7 +53,7 @@ def main() -> int:
                 "    needs: publish-core",
             )
         ),
-        "protected_environment": text.count("name: crates-io") == len(CRATES),
+        "protected_environment": text.count("name: crates.io") == len(CRATES),
         "oidc_is_job_scoped": text.count("id-token: write") == len(CRATES),
         "official_action_is_immutable": text.count(AUTH_ACTION) == len(CRATES),
         "temporary_token_is_environment_only": text.count(

@@ -4,11 +4,20 @@ name: publish Rust crates
 # own job so a partial registry release can resume with GitHub's "re-run failed
 # jobs" action without trying to overwrite an immutable version.
 on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing signed vX.Y.Z tag to publish or resume
+        required: true
+        type: string
   push:
     tags: ["v*"]
 
 permissions:
   contents: read
+
+env:
+  ACTINV_RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
 
 concurrency:
   group: publish-rust-${{ github.ref }}
@@ -23,13 +32,18 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          ref: ${{ env.ACTINV_RELEASE_TAG }}
       - uses: dtolnay/rust-toolchain@stable
       - name: Require tag and workspace versions to agree
         run: >-
-          python3 -c "import os, pathlib, tomllib;
+          python3 -c "import os, pathlib, re, subprocess, tomllib;
           version=tomllib.loads(pathlib.Path('Cargo.toml').read_text())['workspace']['package']['version'];
-          assert os.environ['GITHUB_REF_NAME'] == f'v{version}',
-          (os.environ['GITHUB_REF_NAME'], version)"
+          tag=os.environ['ACTINV_RELEASE_TAG'];
+          assert re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+', tag), tag;
+          assert tag == f'v{version}', (tag, version);
+          tagged=subprocess.check_output(['git', 'rev-parse', f'refs/tags/{tag}^{{}}'], text=True).strip();
+          head=subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip();
+          assert tagged == head, (tagged, head)"
       - name: Rust quality gates
         run: |
           cargo fmt --all -- --check
@@ -43,7 +57,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment:
-      name: crates-io
+      name: crates.io
       url: https://crates.io/crates/actinv-data
     permissions:
       contents: read
@@ -52,6 +66,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          ref: ${{ env.ACTINV_RELEASE_TAG }}
       - uses: dtolnay/rust-toolchain@stable
       - name: Get short-lived crates.io credential
         id: auth
@@ -67,7 +82,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment:
-      name: crates-io
+      name: crates.io
       url: https://crates.io/crates/actinv-core
     permissions:
       contents: read
@@ -76,6 +91,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          ref: ${{ env.ACTINV_RELEASE_TAG }}
       - uses: dtolnay/rust-toolchain@stable
       - name: Get short-lived crates.io credential
         id: auth
@@ -91,7 +107,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment:
-      name: crates-io
+      name: crates.io
       url: https://crates.io/crates/actinv-cli
     permissions:
       contents: read
@@ -100,6 +116,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           persist-credentials: false
+          ref: ${{ env.ACTINV_RELEASE_TAG }}
       - uses: dtolnay/rust-toolchain@stable
       - name: Get short-lived crates.io credential
         id: auth
