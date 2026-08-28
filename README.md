@@ -94,6 +94,14 @@ print("activity (Bq/g):", sum(last_step["activity_Bq_per_g"].values()))
 print("unaccounted inputs:", result["ledger"])
 ```
 
+On the first run for a library and flux spectrum, ACTINV prepares a verified local calculation cache. That setup is
+automatic; later runs reuse the compact data and need much less memory. The original nuclear-data files and their
+SHA-256 hashes remain the recorded inputs—cache files never replace them in the result certificate.
+
+Deleting the cache is always safe and changes only how long the next preparation takes. ACTINV normally uses your
+platform's standard cache directory. Set `ACTINV_CACHE_DIR` to an absolute path if you want the disposable cache on a
+larger or faster disk, for example `ACTINV_CACHE_DIR=/data/actinv-cache actinv run problem.json result.json`.
+
 Start with [the specification guide](docs/SPEC.md), which explains every field and includes complete examples. Unknown
 fields are rejected, so misspelled options do not silently change a calculation. At any time, verify the installed
 data without downloading it again:

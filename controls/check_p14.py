@@ -337,7 +337,11 @@ def derive_g5(full: bool) -> dict[str, object]:
         "regressions_present": "derivative_free_assembly_preserves_rates_and_ledger" in source
         and "archive_reader_rejects_invalid_cross_sections_during_decode" in source,
         "verified_crc_boundary": "read_npz_after_sha256_verification" in source
-        and "library_ref.sha256.is_some()" in source,
+        and (
+            "library_ref.sha256.is_some()" in source
+            or "let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;"
+            in source
+        ),
         "p14_in_ci": "controls/check_p14.py --no-write" in ci,
         "session_documents_threshold": "P14-CLOSED-BELOW-THRESHOLD" in session
         and "10%" in session,

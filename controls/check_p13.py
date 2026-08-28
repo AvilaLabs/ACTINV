@@ -173,6 +173,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--full", action="store_true", help="rerun every required Rust and Python Rust gate")
     parser.add_argument("--require-release", action="store_true")
+    parser.add_argument("--no-write", action="store_true", help="derive without replacing the verdict")
     args = parser.parse_args()
 
     environment = os.environ.copy()
@@ -220,7 +221,8 @@ def main():
         "verdict": "P13-PASS" if closed else ("P13-SOURCE-PASS" if source_pass else "P13-FAIL"),
         "pass": closed if args.require_release else source_pass,
     }
-    VERDICT.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    if not args.no_write:
+        VERDICT.write_text(json.dumps(result, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=1, sort_keys=True))
     raise SystemExit(0 if result["pass"] else 1)
 

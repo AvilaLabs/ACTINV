@@ -12,7 +12,12 @@ use crate::spec::{
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
 };
-use actinv_data::{composition, covariance, decay, fission, groups::GroupStructure, library};
+use actinv_data::{
+    composition, covariance, decay, fission,
+    groups::GroupStructure,
+    library::{self, ReactionLibrary},
+    prepared as prepared_data,
+};
 use num_complex::Complex64 as C64;
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, HashMap};
@@ -242,39 +247,119 @@ fn cram(order: u8) -> Cram {
     }
 }
 
-fn fission_average_energy_eV(
-    library: &library::Library,
+fn fission_average_energy_eV<L: ReactionLibrary + ?Sized>(
+    library: &L,
     targets: &[(i32, i32)],
     phi: &[f64],
     parent: (i32, i32),
 ) -> Result<Option<f64>, String> {
-    let row_index = library.rows.iter().position(|row| {
+    let row_index = library.rows().iter().position(|row| {
         row.mt == 18 && row.zap == 0 && targets.get(row.target).is_some_and(|key| *key == parent)
     });
     let Some(row_index) = row_index else {
         return Ok(None);
     };
-    let sigma = library.sigma(row_index);
-    let mut numerator = 0.0;
-    let mut denominator = 0.0;
-    for (group, (&cross_section, &flux)) in sigma.iter().zip(phi).enumerate() {
-        let weight = cross_section * flux;
-        if weight == 0.0 {
-            continue;
-        }
-        let low = library.bounds[group];
-        let high = library.bounds[group + 1];
-        if !(low.is_finite() && high.is_finite() && low > 0.0 && high > low) {
-            return Err(format!(
-                "cannot compute spectrum-average fission energy for {}_{}: contributing group [{low}, {high}] eV is not strictly positive",
+    library
+        .fission_average_energy_ev(row_index, phi)
+        .map_err(|error| {
+            format!(
+                "cannot compute spectrum-average fission energy for {}_{}: {error}",
                 parent.0, parent.1
-            ));
+            )
+        })
+}
+
+enum ActivationLibrary {
+    Dense(library::Library),
+    Groupwise(prepared_data::PreparedLibrary),
+    Collapsed(prepared_data::CollapsedLibrary),
+}
+
+fn group_structure_mismatch(requested: Option<&str>, stored: Option<&str>) -> bool {
+    matches!((requested, stored), (Some(requested), Some(stored)) if requested != "custom" && requested != stored)
+}
+
+impl ActivationLibrary {
+    fn dense(&self) -> Option<&library::Library> {
+        match self {
+            Self::Dense(library) => Some(library),
+            Self::Groupwise(_) | Self::Collapsed(_) => None,
         }
-        let representative = (high - low) / (high / low).ln();
-        numerator += weight * representative;
-        denominator += weight;
     }
-    Ok((denominator > 0.0).then_some(numerator / denominator))
+
+    fn validate_flux(&self, phi: &[f64]) -> Result<(), String> {
+        match self {
+            Self::Collapsed(library) => library.validate_flux(phi),
+            Self::Dense(_) | Self::Groupwise(_) => Ok(()),
+        }
+    }
+}
+
+impl ReactionLibrary for ActivationLibrary {
+    fn rows(&self) -> &[library::Row] {
+        match self {
+            Self::Dense(library) => library.rows(),
+            Self::Groupwise(library) => library.rows(),
+            Self::Collapsed(library) => library.rows(),
+        }
+    }
+
+    fn group_count(&self) -> usize {
+        match self {
+            Self::Dense(library) => ReactionLibrary::group_count(library),
+            Self::Groupwise(library) => library.group_count(),
+            Self::Collapsed(library) => library.group_count(),
+        }
+    }
+
+    fn boundaries_ev(&self) -> &[f64] {
+        match self {
+            Self::Dense(library) => library.boundaries_ev(),
+            Self::Groupwise(library) => library.boundaries_ev(),
+            Self::Collapsed(library) => library.boundaries_ev(),
+        }
+    }
+
+    fn collapse_row(
+        &self,
+        row: usize,
+        phi: &[f64],
+        flux_denominator: f64,
+        first_flux_group: usize,
+        last_flux_group: usize,
+    ) -> f64 {
+        match self {
+            Self::Dense(library) => library.collapse_row(
+                row,
+                phi,
+                flux_denominator,
+                first_flux_group,
+                last_flux_group,
+            ),
+            Self::Groupwise(library) => library.collapse_row(
+                row,
+                phi,
+                flux_denominator,
+                first_flux_group,
+                last_flux_group,
+            ),
+            Self::Collapsed(library) => library.collapse_row(
+                row,
+                phi,
+                flux_denominator,
+                first_flux_group,
+                last_flux_group,
+            ),
+        }
+    }
+
+    fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String> {
+        match self {
+            Self::Dense(library) => library.fission_average_energy_ev(row, phi),
+            Self::Groupwise(library) => library.fission_average_energy_ev(row, phi),
+            Self::Collapsed(library) => library.fission_average_energy_ev(row, phi),
+        }
+    }
 }
 
 /// Immutable, verified nuclear data shared by ordinary and mesh solves.
@@ -289,7 +374,7 @@ pub struct PreparedRun {
     index_path: String,
     index_sha: String,
     index: serde_json::Value,
-    library: library::Library,
+    library: ActivationLibrary,
     library_targets: Vec<(i32, i32)>,
     decay_primary: String,
     decay_primary_sha: String,
@@ -548,6 +633,7 @@ impl PreparedRun {
     }
 
     fn prepare_profiled(spec: &Spec, profiler: &mut RunProfiler) -> Result<Self, String> {
+        let flux = spec.flux_ascending();
         Self::prepare_inputs_with_extensions_profiled(
             &spec.library,
             &spec.decay,
@@ -557,6 +643,8 @@ impl PreparedRun {
             spec.options.temperature_K,
             spec.uncertainty.as_ref(),
             spec.radiological.as_ref(),
+            Some(&flux),
+            Some(&spec.spectrum.structure),
             profiler,
         )
     }
@@ -622,6 +710,8 @@ impl PreparedRun {
             temperature_K,
             uncertainty_options,
             radiological_options,
+            None,
+            None,
             &mut profiler,
         )
     }
@@ -636,6 +726,8 @@ impl PreparedRun {
         temperature_K: f64,
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
+        collapse_flux: Option<&[f64]>,
+        collapse_group_structure: Option<&str>,
         profiler: &mut RunProfiler,
     ) -> Result<Self, String> {
         let validation_started = profiler.start();
@@ -710,21 +802,50 @@ impl PreparedRun {
         }
         profiler.finish("extension_input_preparation", extensions_started);
 
-        let activation_started = profiler.start();
-        let library = if library_ref.sha256.is_some() {
-            // The complete NPZ matched its declared SHA-256 above, so repeating per-member CRC-32 work would add no
-            // integrity coverage. The verified reader retains all structural and numeric validation.
-            library::read_npz_after_sha256_verification(&library_ref.path)?
-        } else {
-            // Legacy neutron specifications may omit a declared digest; retain ZIP CRC validation for those inputs.
-            library::read_npz(&library_ref.path)?
-        };
-        profiler.finish("activation_read_validation", activation_started);
-
         let index_started = profiler.start();
         let index: serde_json::Value =
             serde_json::from_str(&std::fs::read_to_string(&idx_path).map_err(|e| e.to_string())?)
                 .map_err(|e| e.to_string())?;
+        let library_group_structure = index
+            .get("groups")
+            .and_then(serde_json::Value::as_str)
+            .map(str::to_owned);
+        if group_structure_mismatch(collapse_group_structure, library_group_structure.as_deref()) {
+            return Err(format!(
+                "spec group structure '{}' does not match activation-library group structure '{}'",
+                collapse_group_structure.unwrap_or_default(),
+                library_group_structure.as_deref().unwrap_or_default()
+            ));
+        }
+        profiler.finish("index_read_validation", index_started);
+
+        let activation_started = profiler.start();
+        let library = if uncertainty_options.is_some() {
+            // Covariance propagation still indexes the original dense rows directly. The complete NPZ matched its
+            // computed (and, when supplied, declared) SHA-256 above, so member CRC work is redundant.
+            ActivationLibrary::Dense(library::read_npz_after_sha256_verification(
+                &library_ref.path,
+            )?)
+        } else if let Some(phi) = collapse_flux {
+            ActivationLibrary::Collapsed(
+                prepared_data::load_or_prepare_collapsed_after_sha256_verification(
+                    &library_ref.path,
+                    &library_sha,
+                    &index_sha,
+                    phi,
+                )?,
+            )
+        } else {
+            ActivationLibrary::Groupwise(
+                prepared_data::load_or_prepare_groupwise_after_sha256_verification(
+                    &library_ref.path,
+                    &library_sha,
+                    &index_sha,
+                )?,
+            )
+        };
+        profiler.finish("activation_read_validation", activation_started);
+
         let index_projectile = match index.get("projectile") {
             None | Some(serde_json::Value::Null) => Projectile::Neutron,
             Some(serde_json::Value::String(value)) => Projectile::parse(value)?,
@@ -751,15 +872,11 @@ impl PreparedRun {
             }
             None => {}
         }
-        let library_group_structure = index
-            .get("groups")
-            .and_then(serde_json::Value::as_str)
-            .map(str::to_owned);
         let actual_group_hash = GroupStructure {
             name: library_group_structure
                 .clone()
                 .unwrap_or_else(|| "custom".into()),
-            boundaries_ev: library.bounds.clone(),
+            boundaries_ev: library.boundaries_ev().to_vec(),
         }
         .hash();
         if let Some(recorded) = index.get("group_boundary_sha256") {
@@ -784,11 +901,11 @@ impl PreparedRun {
                 _ => None,
             };
             if let Some(canonical) = canonical {
-                if canonical.boundaries_ev.len() != library.bounds.len()
+                if canonical.boundaries_ev.len() != library.boundaries_ev().len()
                     || canonical
                         .boundaries_ev
                         .iter()
-                        .zip(&library.bounds)
+                        .zip(library.boundaries_ev())
                         .any(|(expected, stored)| expected.to_bits() != stored.to_bits())
                 {
                     return Err(format!(
@@ -824,8 +941,6 @@ impl PreparedRun {
                 )
             })
             .collect();
-        profiler.finish("index_read_validation", index_started);
-
         let covariance_started = profiler.start();
         let covariance = match uncertainty_options {
             Some(options) => Some(Self::load_covariance(
@@ -1108,11 +1223,11 @@ impl PreparedRun {
     }
 
     pub fn library_boundaries_eV(&self) -> &[f64] {
-        &self.library.bounds
+        self.library.boundaries_ev()
     }
 
     pub fn library_groups(&self) -> usize {
-        self.library.ngroups
+        self.library.group_count()
     }
 
     fn ensure_compatible(&self, spec: &Spec) -> Result<(), String> {
@@ -1140,12 +1255,10 @@ impl PreparedRun {
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
         }
-        if spec.spectrum.structure != "custom"
-            && self
-                .library_group_structure
-                .as_deref()
-                .is_some_and(|structure| structure != spec.spectrum.structure)
-        {
+        if group_structure_mismatch(
+            Some(&spec.spectrum.structure),
+            self.library_group_structure.as_deref(),
+        ) {
             return Err(format!(
                 "spec group structure '{}' does not match activation-library group structure '{}'",
                 spec.spectrum.structure,
@@ -1182,18 +1295,18 @@ impl PreparedRun {
         let nuclides = &self.nuclides;
         let n_fallback = self.decay_nuclides_from_fallback;
         let ch = &self.chain;
-        if lib.ngroups != spec.spectrum.flux_per_group.len() {
+        if lib.group_count() != spec.spectrum.flux_per_group.len() {
             return Err(format!(
                 "spectrum has {} groups but activation library has {}",
                 spec.spectrum.flux_per_group.len(),
-                lib.ngroups
+                lib.group_count()
             ));
         }
         if let Some(boundaries) = &spec.spectrum.boundaries_eV {
-            if boundaries.len() != lib.bounds.len()
+            if boundaries.len() != lib.boundaries_ev().len()
                 || boundaries
                     .iter()
-                    .zip(&lib.bounds)
+                    .zip(lib.boundaries_ev())
                     .any(|(declared, stored)| {
                         (declared - stored).abs()
                             > 1e-12 * declared.abs().max(stored.abs()).max(1.0)
@@ -1222,6 +1335,7 @@ impl PreparedRun {
             BTreeMap::new()
         };
         let phi = spec.flux_ascending();
+        lib.validate_flux(&phi)?;
         let mut effective_fission_yields = HashMap::new();
         let mut fission_yield_selection = Vec::new();
         let mut fission_parents: Vec<_> = self.fission_yields.keys().copied().collect();
@@ -1443,7 +1557,12 @@ impl PreparedRun {
         let mut uncertainty_runtime = match (&self.covariance, &spec.uncertainty) {
             (Some(prepared), Some(options)) => {
                 let active_rows: Vec<usize> = derivative_sub.keys().copied().collect();
-                let collapsed = prepared.library.collapse(lib, &phi, &active_rows)?;
+                let dense_library = lib.dense().ok_or(
+                    "uncertainty propagation requires the verified dense activation library",
+                )?;
+                let collapsed = prepared
+                    .library
+                    .collapse(dense_library, &phi, &active_rows)?;
                 let maximum_covariance = collapsed
                     .covariance_barn2
                     .iter()
@@ -1484,7 +1603,7 @@ impl PreparedRun {
                 let mut directions = Vec::with_capacity(active_rows.len());
                 let mut covered_parameter_positions = Vec::new();
                 for (parameter_position, &row_index) in active_rows.iter().enumerate() {
-                    let row = lib.rows[row_index];
+                    let row = lib.rows()[row_index];
                     let &(za, liso) = lib_targets.get(row.target).ok_or_else(|| {
                         format!("activation row {row_index} has an invalid target index")
                     })?;
@@ -2044,7 +2163,7 @@ impl PreparedRun {
             "photon_spectra": photon_diagnostics,
             "schedule": schedule_ledger,
             "assembly": {"n_bulk_isotopes": bulk.len(), "n_decay_triplets": d_src.len(), "n_reaction_triplets": r_src.len(),
-                         "n_library_rows": lib.rows.len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>()},
+                         "n_library_rows": lib.rows().len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>()},
         });
         if !spec.projectile.is_neutron() {
             ledger.as_object_mut().expect("ledger is an object").insert(
@@ -2253,7 +2372,7 @@ pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
 
 #[cfg(test)]
 mod projectile_output_tests {
-    use super::{Heat, StepOut};
+    use super::{group_structure_mismatch, Heat, StepOut};
     use std::collections::BTreeMap;
 
     fn step(neutron: bool) -> StepOut {
@@ -2295,5 +2414,23 @@ mod projectile_output_tests {
         let charged = serde_json::to_value(step(false)).unwrap();
         assert_eq!(charged["fluence_particles_cm2"], 12.0);
         assert!(charged.get("fluence_n_cm2").is_none());
+    }
+
+    #[test]
+    fn group_structure_comparison_distinguishes_absent_custom_and_mismatch() {
+        assert!(!group_structure_mismatch(None, Some("fispact-709")));
+        assert!(!group_structure_mismatch(Some("fispact-709"), None));
+        assert!(!group_structure_mismatch(
+            Some("fispact-709"),
+            Some("fispact-709")
+        ));
+        assert!(!group_structure_mismatch(
+            Some("custom"),
+            Some("fispact-709")
+        ));
+        assert!(group_structure_mismatch(
+            Some("fispact-709"),
+            Some("fispact-162")
+        ));
     }
 }

@@ -25,6 +25,52 @@ pub struct Library {
     pub bounds: Vec<f64>,
 }
 
+/// Read-only activation cross sections used by the solver.
+///
+/// Implementations may keep the original dense group rows, compact nonzero spans, or exact
+/// spectrum-collapsed values. The solver computes the flux denominator and nonzero flux window
+/// once, then delegates only the per-row numerator work through this interface.
+pub trait ReactionLibrary {
+    fn rows(&self) -> &[Row];
+    fn group_count(&self) -> usize;
+    fn boundaries_ev(&self) -> &[f64];
+
+    fn collapse_row(
+        &self,
+        row: usize,
+        phi: &[f64],
+        flux_denominator: f64,
+        first_flux_group: usize,
+        last_flux_group: usize,
+    ) -> f64;
+
+    fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String>;
+
+    fn one_group(&self, row: usize, phi: &[f64]) -> f64 {
+        let group_count = self.group_count();
+        let mut flux_denominator = 0.0;
+        for flux in &phi[..group_count] {
+            flux_denominator += *flux;
+        }
+        let first_flux_group = phi[..group_count]
+            .iter()
+            .position(|flux| *flux != 0.0)
+            .unwrap_or(group_count);
+        let last_flux_group = phi[..group_count]
+            .iter()
+            .rposition(|flux| *flux != 0.0)
+            .map(|group| group + 1)
+            .unwrap_or(first_flux_group);
+        self.collapse_row(
+            row,
+            phi,
+            flux_denominator,
+            first_flux_group,
+            last_flux_group,
+        )
+    }
+}
+
 impl Library {
     fn validate_structure(&self) -> Result<(), String> {
         if self.ngroups == 0 {
@@ -76,6 +122,73 @@ impl Library {
         }
         Ok(())
     }
+}
+
+impl ReactionLibrary for Library {
+    fn rows(&self) -> &[Row] {
+        &self.rows
+    }
+
+    fn group_count(&self) -> usize {
+        self.ngroups
+    }
+
+    fn boundaries_ev(&self) -> &[f64] {
+        &self.bounds
+    }
+
+    fn collapse_row(
+        &self,
+        row: usize,
+        phi: &[f64],
+        flux_denominator: f64,
+        first_flux_group: usize,
+        last_flux_group: usize,
+    ) -> f64 {
+        let cross_sections = self.sigma(row);
+        let mut numerator = 0.0;
+        for group in first_flux_group..last_flux_group {
+            numerator += cross_sections[group] * phi[group];
+        }
+        if flux_denominator > 0.0 {
+            numerator / flux_denominator
+        } else {
+            0.0
+        }
+    }
+
+    fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String> {
+        fission_average_energy_ev(self.ngroups, &self.bounds, phi, |group| {
+            self.sigma(row)[group]
+        })
+    }
+}
+
+pub(crate) fn fission_average_energy_ev(
+    group_count: usize,
+    boundaries_ev: &[f64],
+    phi: &[f64],
+    cross_section: impl Fn(usize) -> f64,
+) -> Result<Option<f64>, String> {
+    let mut numerator = 0.0;
+    let mut denominator = 0.0;
+    for (group, &flux) in phi.iter().take(group_count).enumerate() {
+        let weight = cross_section(group) * flux;
+        if weight == 0.0 {
+            continue;
+        }
+        let low = boundaries_ev[group];
+        let high = boundaries_ev[group + 1];
+        if !(low.is_finite() && high.is_finite() && low > 0.0 && high > low) {
+            return Err(format!(
+                "contributing activation group [{low}, {high}] eV is not strictly positive"
+            ));
+        }
+        let representative = (high - low) / (high / low).ln();
+        numerator += weight * representative;
+        denominator += weight;
+    }
+    Ok((denominator > 0.0).then_some(numerator / denominator))
 }
 
 impl Library {
@@ -320,7 +433,11 @@ fn validate_members<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<
     Ok(())
 }
 
-fn require_payload_size(header: &NpyHeader, member_size: u64, name: &str) -> Result<(), String> {
+pub(crate) fn require_payload_size(
+    header: &NpyHeader,
+    member_size: u64,
+    name: &str,
+) -> Result<(), String> {
     let payload_bytes = header
         .elements
         .checked_mul(8)
@@ -372,7 +489,9 @@ fn decode_rows(reader: impl Read, member_size: u64) -> Result<Vec<Row>, String> 
     Ok(rows)
 }
 
-fn read_rows<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<Vec<Row>, String> {
+pub(crate) fn read_rows<R: Read + Seek>(
+    archive: &mut zip::ZipArchive<R>,
+) -> Result<Vec<Row>, String> {
     let member = archive
         .by_name("rows.npy")
         .map_err(|error| error.to_string())?;
@@ -428,7 +547,7 @@ fn decode_bounds(reader: impl Read, member_size: u64, ngroups: usize) -> Result<
     Ok(values)
 }
 
-fn read_bounds<R: Read + Seek>(
+pub(crate) fn read_bounds<R: Read + Seek>(
     archive: &mut zip::ZipArchive<R>,
     ngroups: usize,
 ) -> Result<Vec<f64>, String> {
@@ -439,7 +558,7 @@ fn read_bounds<R: Read + Seek>(
     decode_bounds(member, member_size, ngroups)
 }
 
-enum Sha256VerifiedMember<'a> {
+pub(crate) enum Sha256VerifiedMember<'a> {
     Stored(zip::read::ZipFile<'a>),
     Deflated(flate2::bufread::DeflateDecoder<BufReader<zip::read::ZipFile<'a>>>),
 }
@@ -453,7 +572,7 @@ impl Read for Sha256VerifiedMember<'_> {
     }
 }
 
-fn sha256_verified_member<'a, R: Read + Seek>(
+pub(crate) fn sha256_verified_member<'a, R: Read + Seek>(
     archive: &'a mut zip::ZipArchive<R>,
     name: &str,
 ) -> Result<(Sha256VerifiedMember<'a>, u64), String> {
@@ -490,7 +609,7 @@ fn open_npz_reader<R: Read + Seek>(reader: R) -> Result<zip::ZipArchive<R>, Stri
     Ok(archive)
 }
 
-fn open_npz(path: &str) -> Result<zip::ZipArchive<std::fs::File>, String> {
+pub(crate) fn open_npz(path: &str) -> Result<zip::ZipArchive<std::fs::File>, String> {
     let file = std::fs::File::open(path).map_err(|error| error.to_string())?;
     open_npz_reader(file)
 }

@@ -1,0 +1,183 @@
+{
+ "candidate": {
+  "after_deletion": {
+   "inventory": {
+    "bytes": 282382207,
+    "files": [
+     {
+      "bytes": 275493400,
+      "relative_path": "prepared-v1/ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44-8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb/library.actp",
+      "sha256": "6800a17c993710e8ca61aa52c1a24538778e7c4238711507f43fccd7fc0a7745"
+     },
+     {
+      "bytes": 6888807,
+      "relative_path": "prepared-v1/ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44-8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb/spectrum-186dacad850764a6eb3e747ec8ed3467db01a98fb845bb44a993ac094cf7c511.actc",
+      "sha256": "ee362142b91abc8dbd836f3092413e8b4e15572458d530ff0c52d675f8714a2b"
+     }
+    ]
+   },
+   "wall_ms": 5526.980532
+  },
+  "binary": "/home/connoravila/Documents/actinv/target/release/actinv",
+  "binary_sha256": "50f8c0a779ac685c08d93088487cd3c3b5220b2aa9e5f58cf9866874c07986be",
+  "empty_cache": {
+   "inventory": {
+    "bytes": 282382207,
+    "files": [
+     {
+      "bytes": 275493400,
+      "relative_path": "prepared-v1/ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44-8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb/library.actp",
+      "sha256": "6800a17c993710e8ca61aa52c1a24538778e7c4238711507f43fccd7fc0a7745"
+     },
+     {
+      "bytes": 6888807,
+      "relative_path": "prepared-v1/ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44-8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb/spectrum-186dacad850764a6eb3e747ec8ed3467db01a98fb845bb44a993ac094cf7c511.actc",
+      "sha256": "ee362142b91abc8dbd836f3092413e8b4e15572458d530ff0c52d675f8714a2b"
+     }
+    ]
+   },
+   "peak_rss_bytes": 129626112,
+   "wall_ms": 5582.666842
+  },
+  "warm_peak_rss_bytes": 129343488,
+  "warm_wall": {
+   "mean_ms": 1181.4361862,
+   "median_ms": 1185.0096409999999,
+   "minimum_ms": 1139.03469,
+   "p95_ms": 1211.7857295999997,
+   "raw_ms": [
+    1139.03469,
+    1185.0096409999999,
+    1165.598017,
+    1150.581242,
+    1211.399485,
+    1210.948431,
+    1194.049838,
+    1191.13345,
+    1198.621768,
+    1212.6869669999999,
+    1182.1829659999999,
+    1167.8195309999999,
+    1161.183358,
+    1156.454069,
+    1194.83934
+   ],
+   "sample_standard_deviation_ms": 23.463191404608413,
+   "samples": 15
+  }
+ },
+ "comparison": {
+  "alternating_order": true,
+  "comparator_plant_sha256": {
+   "certificate_input_hash": "2ac297bee41f20001007b5c8476e6e5e7af35e725ed0d14c02f19fc05fa3d447",
+   "inventory_value": "07f908d64c563450aa3d0cb7bff053969a2e64ebad2ce50dd5a82f1831374491",
+   "ledger_value": "d643e70b26dc25a27734f54bbe1f935ee570173bd9582fdb6ee8d7a4c9fc2c7f"
+  },
+  "comparator_plants": {
+   "certificate_input_hash": true,
+   "inventory_value": true,
+   "ledger_value": true
+  },
+  "normalized_result_sha256": {
+   "after_deletion": "4c5f85adb967d1b68687afd1cbdda6bb4f4ed157353f1589e5063f360c7c8b49",
+   "candidate": "4c5f85adb967d1b68687afd1cbdda6bb4f4ed157353f1589e5063f360c7c8b49",
+   "opening": "4c5f85adb967d1b68687afd1cbdda6bb4f4ed157353f1589e5063f360c7c8b49"
+  },
+  "ratios": {
+   "median_wall_candidate_over_opening": 0.38538732172398693,
+   "p95_wall_candidate_over_opening": 0.3798766003134839,
+   "peak_rss_candidate_over_opening": 0.12010634534853204
+  },
+  "samples_per_binary": 15,
+  "stretch": {
+   "warm_median_at_most_one_second": false,
+   "warm_peak_rss_at_most_512_mib": true
+  },
+  "thread_environment": {
+   "MKL_NUM_THREADS": "1",
+   "NUMEXPR_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "RAYON_NUM_THREADS": "1"
+  },
+  "warmups_per_binary": 5
+ },
+ "gates": {
+  "comparator_plants_detected": true,
+  "deletion_recreates_identical_cache": true,
+  "empty_peak_rss_at_most_512_mib": true,
+  "empty_wall_at_most_twice_opening_median": true,
+  "input_hashes_exact": true,
+  "normalized_result_exact": true,
+  "opening_commit_exact": true,
+  "warm_median_at_most_two_thirds": true,
+  "warm_p95_at_most_two_thirds": true,
+  "warm_peak_rss_at_most_one_half": true
+ },
+ "host": {
+  "compiler": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-unknown-linux-gnu\nrelease: 1.98.0\nLLVM version: 22.1.8",
+  "logical_cpus": 8,
+  "machine": "x86_64",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+  "processor": ""
+ },
+ "inputs": {
+  "activation_index": {
+   "actual_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "bytes": 2653304,
+   "expected_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10_index.json"
+  },
+  "activation_library": {
+   "actual_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "bytes": 123897743,
+   "expected_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10.npz"
+  },
+  "decay_fallback": {
+   "actual_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "bytes": 45718116,
+   "expected_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "path": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat"
+  },
+  "decay_primary": {
+   "actual_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "bytes": 68313052,
+   "expected_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat"
+  }
+ },
+ "opening": {
+  "binary": "/tmp/actinv-p15-opening.5W7JZ2/target/release/actinv",
+  "binary_sha256": "5f3834ae75dcc4c3d9559b672b2fdcf78055c91ee1a635b883477f2a2b41af42",
+  "commit": "5f7289a44c2686505d0e1b40f4b00ef5c8e4a9ab",
+  "peak_rss_bytes": 1076908032,
+  "wall": {
+   "mean_ms": 3088.8287215333335,
+   "median_ms": 3074.8537229999997,
+   "minimum_ms": 3020.918985,
+   "p95_ms": 3189.945705,
+   "raw_ms": [
+    3032.362544,
+    3020.918985,
+    3033.714798,
+    3165.1780249999997,
+    3074.8537229999997,
+    3062.298895,
+    3052.547272,
+    3186.214263,
+    3143.5941199999997,
+    3198.652403,
+    3049.716304,
+    3086.767875,
+    3078.163919,
+    3065.344309,
+    3082.103388
+   ],
+   "sample_standard_deviation_ms": 57.11601333208498,
+   "samples": 15
+  }
+ },
+ "pass": true,
+ "schema": "actinv-p15-performance-1"
+}

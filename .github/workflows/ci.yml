@@ -44,6 +44,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-ci.txt
 
+      - name: P15 prepared-cache integrity and verdict
+        env:
+          ACTINV_BIN: target/release/actinv
+          ACTINV_CACHE_DIR: /tmp/actinv-p15-ci-cache
+        run: |
+          python controls/g3_p15_cache_integrity.py
+          git diff --exit-code -- results/p15_cache_integrity.json
+          python controls/check_p15.py --no-write
+
       - name: CRAM coefficient control (G0 — needs no nuclear data)
         run: python controls/g0_cram_coefficients.py
 

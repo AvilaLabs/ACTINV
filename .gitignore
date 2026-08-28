@@ -10,3 +10,6 @@ __pycache__/
 /actinv-data/
 /.venv/
 scratch/
+/.actinv-cache/
+*.actp
+*.actc

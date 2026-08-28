@@ -3,7 +3,7 @@
 //! trace formulation of controls/run_fns.py, which the P5-G4 control checks to 1e-12 on 132 experiments.
 use actinv_data::decay::Nuclide;
 use actinv_data::fission::EffectiveYields;
-use actinv_data::library::Library;
+use actinv_data::library::ReactionLibrary;
 use std::collections::{BTreeMap, HashMap};
 
 /// Elementary decay steps by ENDF RTYP digit: (dZ, dA).
@@ -169,8 +169,8 @@ pub struct ReactionAssembly {
 
 /// Reaction rates per atom (1/s) for every library target under a group flux, as triplets over the chain's indices.
 /// `lib_targets[i]` is the (ZA, LISO) of library target index i.
-pub fn reaction_rates(
-    lib: &Library,
+pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
+    lib: &L,
     lib_targets: &[(i32, i32)],
     phi: &[f64],
     chain: &Chain,
@@ -181,8 +181,8 @@ pub fn reaction_rates(
 }
 
 /// Reaction-rate assembly plus the exact matrix contribution of every activation-library row.
-pub fn reaction_rates_with_derivatives(
-    lib: &Library,
+pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
+    lib: &L,
     lib_targets: &[(i32, i32)],
     phi: &[f64],
     chain: &Chain,
@@ -192,8 +192,8 @@ pub fn reaction_rates_with_derivatives(
     assemble_reaction_rates(lib, lib_targets, phi, chain, fission_yields, led, true)
 }
 
-fn assemble_reaction_rates(
-    lib: &Library,
+fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
+    lib: &L,
     lib_targets: &[(i32, i32)],
     phi: &[f64],
     chain: &Chain,
@@ -206,29 +206,22 @@ fn assemble_reaction_rates(
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
     let rate_per_barn = 1e-24 * phi.iter().sum::<f64>();
     let mut flux_denominator = 0.0;
-    for flux in &phi[..lib.ngroups] {
+    let group_count = lib.group_count();
+    for flux in &phi[..group_count] {
         flux_denominator += *flux;
     }
-    let first_flux_group = phi[..lib.ngroups]
+    let first_flux_group = phi[..group_count]
         .iter()
         .position(|flux| *flux != 0.0)
-        .unwrap_or(lib.ngroups);
-    let last_flux_group = phi[..lib.ngroups]
+        .unwrap_or(group_count);
+    let last_flux_group = phi[..group_count]
         .iter()
         .rposition(|flux| *flux != 0.0)
         .map(|group| group + 1)
         .unwrap_or(first_flux_group);
-    for (i, r) in lib.rows.iter().enumerate() {
-        let mut numerator = 0.0;
-        let cross_sections = lib.sigma(i);
-        for group in first_flux_group..last_flux_group {
-            numerator += cross_sections[group] * phi[group];
-        }
-        let collapsed = if flux_denominator > 0.0 {
-            numerator / flux_denominator
-        } else {
-            0.0
-        };
+    for (i, r) in lib.rows().iter().enumerate() {
+        let collapsed =
+            lib.collapse_row(i, phi, flux_denominator, first_flux_group, last_flux_group);
         let rate = collapsed * rate_per_barn;
         if rate == 0.0 && rate_per_barn == 0.0 {
             continue;
@@ -394,7 +387,7 @@ fn assemble_reaction_rates(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use actinv_data::library::Row;
+    use actinv_data::library::{Library, Row};
 
     #[test]
     fn derivative_free_assembly_preserves_rates_and_ledger() {

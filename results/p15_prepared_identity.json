@@ -1,0 +1,109 @@
+{
+ "indexed_selections": {
+  "all": {
+   "allocation_bound": true,
+   "expected_sha256": "9bc736b3d6d6a37e67421be4ebd60cae350f4f78f3aa6d1d64fc8671ad218a25",
+   "groups": 709,
+   "identity": true,
+   "materialized_bytes": 278176904,
+   "selected_payload_bytes": 275493144,
+   "selected_rows": 167735,
+   "selected_values": 33597258,
+   "selection_sha256": "9bc736b3d6d6a37e67421be4ebd60cae350f4f78f3aa6d1d64fc8671ad218a25",
+   "source_rows": 167735
+  },
+  "empty": {
+   "allocation_bound": true,
+   "expected_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "groups": 709,
+   "identity": true,
+   "materialized_bytes": 5680,
+   "selected_payload_bytes": 5680,
+   "selected_rows": 0,
+   "selected_values": 0,
+   "selection_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "source_rows": 167735
+  },
+  "iron": {
+   "allocation_bound": true,
+   "expected_sha256": "2177bbefd7091709828c57b43c84377d34b987fe0ae317c005975e442d1eb5fe",
+   "groups": 709,
+   "identity": true,
+   "materialized_bytes": 698240,
+   "selected_payload_bytes": 684976,
+   "selected_rows": 829,
+   "selected_values": 80767,
+   "selection_sha256": "2177bbefd7091709828c57b43c84377d34b987fe0ae317c005975e442d1eb5fe",
+   "source_rows": 167735
+  },
+  "noncontiguous": {
+   "allocation_bound": true,
+   "expected_sha256": "3d9e63b7467776043f761398c810216bfb7fa639ad0fab06f0e7a0834a8027f0",
+   "groups": 709,
+   "identity": true,
+   "materialized_bytes": 284576,
+   "selected_payload_bytes": 281728,
+   "selected_rows": 178,
+   "selected_values": 33616,
+   "selection_sha256": "3d9e63b7467776043f761398c810216bfb7fa639ad0fab06f0e7a0834a8027f0",
+   "source_rows": 167735
+  }
+ },
+ "inputs": {
+  "activation_index": {
+   "actual_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "bytes": 2653304,
+   "expected_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10_index.json"
+  },
+  "activation_library": {
+   "actual_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "bytes": 123897743,
+   "expected_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10.npz"
+  },
+  "decay_fallback": {
+   "actual_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "bytes": 45718116,
+   "expected_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "path": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat"
+  },
+  "decay_primary": {
+   "actual_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "bytes": 68313052,
+   "expected_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat"
+  }
+ },
+ "pass": true,
+ "preparations": {
+  "collapsed_byte_identical": true,
+  "first_cold_ms": 5495.700656999999,
+  "flux_bit_identity": true,
+  "normalized_result_identical": true,
+  "normalized_result_sha256": {
+   "first": "4c5f85adb967d1b68687afd1cbdda6bb4f4ed157353f1589e5063f360c7c8b49",
+   "second": "4c5f85adb967d1b68687afd1cbdda6bb4f4ed157353f1589e5063f360c7c8b49"
+  },
+  "prepared_byte_identical": true,
+  "second_cold_ms": 5490.780944
+ },
+ "production": {
+  "boundaries": 710,
+  "boundary_bit_mismatches": 0,
+  "collapse_bit_mismatches": 0,
+  "collapsed_bytes": 6888807,
+  "collapsed_row_mismatches": 0,
+  "collapsed_sha256": "ee362142b91abc8dbd836f3092413e8b4e15572458d530ff0c52d675f8714a2b",
+  "dense_sig_bytes": 951392920,
+  "descriptor_or_retained_bit_mismatches": 0,
+  "groups": 709,
+  "nonzero_values": 33597258,
+  "prepared_bytes": 275493400,
+  "prepared_sha256": "6800a17c993710e8ca61aa52c1a24538778e7c4238711507f43fccd7fc0a7745",
+  "prepared_to_dense_fraction": 0.28956847818459697,
+  "retained_values": 33597258,
+  "rows": 167735
+ },
+ "schema": "actinv-p15-prepared-identity-1"
+}

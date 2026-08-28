@@ -1,0 +1,31 @@
+{
+ "cache": [
+  {
+   "bytes": 275493400,
+   "relative_path": "prepared-v1/ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44-8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb/library.actp",
+   "sha256": "6800a17c993710e8ca61aa52c1a24538778e7c4238711507f43fccd7fc0a7745"
+  },
+  {
+   "bytes": 6888807,
+   "relative_path": "prepared-v1/ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44-8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb/spectrum-186dacad850764a6eb3e747ec8ed3467db01a98fb845bb44a993ac094cf7c511.actc",
+   "sha256": "ee362142b91abc8dbd836f3092413e8b4e15572458d530ff0c52d675f8714a2b"
+  }
+ ],
+ "checks": {
+  "certificate_library_source_preserved": true,
+  "entry_points_exact": true,
+  "normalized_result_exact": true,
+  "python_created_no_second_cache": true,
+  "python_overhead_below_192_mib": true,
+  "python_peak_below_512_mib": true
+ },
+ "cli_peak_rss_bytes": 129490944,
+ "normalized_result_sha256": {
+  "cli": "db7056e3f12748f5b33ff65c153dd6aa68e0a05c5a776382d7c95e25c9e991cd",
+  "python": "db7056e3f12748f5b33ff65c153dd6aa68e0a05c5a776382d7c95e25c9e991cd"
+ },
+ "pass": true,
+ "python_minus_cli_peak_rss_bytes": 18399232,
+ "python_peak_rss_bytes": 147890176,
+ "schema": "actinv-p15-interface-identity-1"
+}

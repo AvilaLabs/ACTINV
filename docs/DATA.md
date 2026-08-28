@@ -47,6 +47,30 @@ For an offline installation, run `actinv data manifest` on the destination syste
 controlled transfer, place them under the printed versioned paths, and run `actinv data verify`. Advanced users can
 instead build libraries from raw evaluations with `actinv build-library` as documented below.
 
+## Prepared calculation cache
+
+The downloaded nuclear-data files are the durable, versioned inputs. Separately, ACTINV automatically creates a
+disposable prepared cache the first time it uses an activation library. A compact groupwise artifact supports mesh
+and prepared workflows; the ordinary single-spectrum path also stores an exact spectrum-collapsed artifact. This is
+why the first calculation can take a few seconds longer while later calculations start faster and use less memory.
+
+Every cache artifact is bound to the source-library hash, source-index hash, schema and (where applicable) the exact
+flux bits. ACTINV verifies its internal SHA-256 and layout before use. A corrupt, stale or incompatible final artifact
+fails with an error and is not silently replaced. Temporary files are published atomically, so an interrupted writer
+cannot leave an accepted partial result.
+
+By default the cache follows the operating system's cache-directory convention. Advanced users can choose an
+absolute location with `ACTINV_CACHE_DIR`:
+
+```bash
+ACTINV_CACHE_DIR=/data/actinv-prepared actinv run problem.json result.json
+```
+
+The public iron example creates about 282 MiB of prepared files for its library and spectrum. Other libraries and
+spectra differ. Removing this directory is safe: ACTINV recreates the same verified bytes on demand, and calculation
+results and certificates are unchanged. Do not archive the prepared cache as nuclear-data provenance; retain the
+original source files, declared hashes, problem specification and result certificate instead.
+
 ## Sources, terms, and hashes
 
 ACTINV does not put nuclear-data payloads inside the software package or Git repository. Each run points at explicit

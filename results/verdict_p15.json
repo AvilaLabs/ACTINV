@@ -1,0 +1,314 @@
+{
+ "closed": false,
+ "evidence_sha256": {
+  "cache": "3e3dfb212e5453c488c760d191c3e98f5e9609fdb3cef9ce7b6c447c82edf083",
+  "interfaces": "c7129476489244052e70f482a003fab577ff1a9f2fc3ab2711a6cf615f7a3555",
+  "performance": "141ec1ee3168933b0d52db2c0826bf188f75cebfcc06756d67a8a19837c10498",
+  "prepared": "1e7fa396839eac36470c8d4dc3863141ef6312585c770b37d6e8eb4c447f36f2",
+  "quality": "b0d62dfbf7386d2d9b1d055ca239a80f0eda629ef92f48ad8a50065a040f8cdd"
+ },
+ "gates": {
+  "G1_G2": {
+   "checks": {
+    "all_bits_checked": true,
+    "all_selection": true,
+    "cold_times_visible": true,
+    "deterministic_artifacts": true,
+    "empty_selection": true,
+    "flux_bits": true,
+    "inputs": true,
+    "prepared_fraction_rederived": true,
+    "production_inventory": true,
+    "reported_pass": true,
+    "result_hash_identity": true,
+    "schema": true,
+    "selection_identity": true,
+    "selection_set": true
+   },
+   "pass": true
+  },
+  "G3": {
+   "checks": {
+    "concurrent_publication": true,
+    "deletion_exact": true,
+    "fixture_contract": true,
+    "interrupted_publication": true,
+    "plant_set": true,
+    "plants_fail_closed": true,
+    "reported_pass": true,
+    "schema": true,
+    "warm_exact": true
+   },
+   "pass": true
+  },
+  "G4": {
+   "checks": {
+    "cache_inventory": true,
+    "python_memory_bound": true,
+    "reported_pass": true,
+    "result_hash_identity": true,
+    "rss_arithmetic": true,
+    "schema": true
+   },
+   "pass": true
+  },
+  "G5": {
+   "checks": {
+    "binary_hashes": true,
+    "cache_recreation": true,
+    "candidate_mean": true,
+    "candidate_median": true,
+    "candidate_minimum": true,
+    "candidate_p95": true,
+    "candidate_sample_count": true,
+    "candidate_stdev": true,
+    "comparator_plants": true,
+    "empty_bounds": true,
+    "host": true,
+    "inputs": true,
+    "median_ratio": true,
+    "opening_commit": true,
+    "opening_mean": true,
+    "opening_median": true,
+    "opening_minimum": true,
+    "opening_p95": true,
+    "opening_sample_count": true,
+    "opening_stdev": true,
+    "p95_ratio": true,
+    "reported_pass": true,
+    "result_hash_identity": true,
+    "rss_ratio": true,
+    "sampling": true,
+    "schema": true,
+    "stretch": true
+   },
+   "improvement_factors": {
+    "median_wall": 2.594792157475789,
+    "p95_wall": 2.6324337934339055,
+    "peak_rss": 8.325954778643359
+   },
+   "pass": true,
+   "ratios_candidate_over_opening": {
+    "median_wall": 0.38538732172398693,
+    "p95_wall": 0.3798766003134839,
+    "peak_rss": 0.12010634534853204
+   }
+  },
+  "G6": {
+   "checks": {
+    "evidence_plants": true,
+    "quality_record": true,
+    "schema_parser": true,
+    "source_contract": true
+   },
+   "evidence_plants": {
+    "cache_plant": true,
+    "input_hash": true,
+    "interface_hash": true,
+    "performance_statistic": true,
+    "prepared_count": true
+   },
+   "pass": true,
+   "quality": {
+    "commands": [
+     {
+      "command": "cargo fmt --all -- --check",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo check --workspace --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo test --workspace --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_prior_verdicts.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_release_notes.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_dependencies.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_public_examples.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p12.py --through-g5",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p13.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_cb1.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p14.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g1_self_contained.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/ci_end_to_end.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g3_p12_parser_fuzz.py --smoke",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g6_p10_projectile_runtime.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g5_p8_mesh_identity.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g3_p9_coupled_auto.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g5_p11_entry_points.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g1_p12_radiological.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     }
+    ],
+    "pass": true,
+    "schema": "actinv-p15-quality-1"
+   },
+   "schema_parser": {
+    "checks": {
+     "boundary_bits": true,
+     "dimensions": true,
+     "independent_parse": true,
+     "prepared_binding": true,
+     "result_published": true,
+     "row_identity": true,
+     "source_hashes": true
+    },
+    "collapsed": {
+     "artifact_bytes": 508,
+     "artifact_sha256": "35b71c3724bc4dfcaf510de436b838ce97dac08c6017e3dcbf55b5d9c856e581",
+     "bounds_count": 2,
+     "flux_sha256": "0a797d0da24c9871eede1ece8e15c278c1a4f6692cf557139f0252dd69c16fb6",
+     "groups": 1,
+     "row_count": 4
+    },
+    "pass": true,
+    "prepared": {
+     "artifact_bytes": 464,
+     "artifact_sha256": "bb9aab794761bb2ada1a212675278cd717fcebb2fddc50f155405150224b24f1",
+     "bounds_count": 2,
+     "groups": 1,
+     "row_count": 4,
+     "value_count": 4
+    }
+   },
+   "source_contract": {
+    "checks": {
+     "atomic_publication": true,
+     "ci": true,
+     "indexed_reader": true,
+     "no_unsafe": true,
+     "same_core_path": true,
+     "schemas": true,
+     "source_bound_cache": true,
+     "technical_docs": true,
+     "user_docs": true
+    },
+    "pass": true
+   }
+  }
+ },
+ "pass": true,
+ "protocol": {
+  "actual_sha256": "09da6b3f011f7d837be36a233b6fe13117c90a71df629708df5ac90e1b5b12de",
+  "expected_sha256": "09da6b3f011f7d837be36a233b6fe13117c90a71df629708df5ac90e1b5b12de",
+  "ledger_entry": true,
+  "pass": true
+ },
+ "schema": "actinv-p15-verdict-1",
+ "session": {
+  "pass": false,
+  "present": false
+ },
+ "source_pass": true,
+ "verdict": "P15-SOURCE-PASS"
+}

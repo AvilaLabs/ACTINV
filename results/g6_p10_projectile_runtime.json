@@ -1,7 +1,7 @@
 {
   "address_space_limit_bytes": 2147483648,
   "analytic_tolerance": 2e-12,
-  "binary_sha256": "5f3834ae75dcc4c3d9559b672b2fdcf78055c91ee1a635b883477f2a2b41af42",
+  "binary_sha256": "50f8c0a779ac685c08d93088487cd3c3b5220b2aa9e5f58cf9866874c07986be",
   "canonical_flux_sha256": "eef5381f5663bb8a2f6463332f4ad22114141c02189da54e801ec9a874277161",
   "certificate_hashes": {
     "alpha_cli": {
@@ -252,7 +252,7 @@
     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
   },
   "python_extension": "libactinv.so",
-  "python_extension_sha256": "1144cbbbbbe23d18b742dacd6df4799d674c44d95f7ac454bb8445a9d9810aae",
+  "python_extension_sha256": "44ba0ed79bc8d6151e7cd33bdea8ccbdf3280018fa80e60381adb33ad72859d2",
   "rejections": {
     "charged_fission": {
       "context": "not supported for proton",

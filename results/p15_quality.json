@@ -1,0 +1,144 @@
+{
+ "commands": [
+  {
+   "command": "cargo fmt --all -- --check",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "cargo check --workspace --all-targets --all-features",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "cargo test --workspace --all-targets --all-features",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_prior_verdicts.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_release_notes.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_dependencies.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_public_examples.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_p12.py --through-g5",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_p13.py --no-write",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_cb1.py --no-write",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/check_p14.py --no-write",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g1_self_contained.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/ci_end_to_end.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g3_p12_parser_fuzz.py --smoke",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g6_p10_projectile_runtime.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g5_p8_mesh_identity.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g3_p9_coupled_auto.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g5_p11_entry_points.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  },
+  {
+   "command": "python controls/g1_p12_radiological.py",
+   "error_tail": "",
+   "pass": true,
+   "returncode": 0
+  }
+ ],
+ "pass": true,
+ "schema": "actinv-p15-quality-1"
+}
