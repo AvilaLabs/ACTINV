@@ -131,6 +131,17 @@ def source_checks(root: Path) -> dict:
         "pinned_maturin": "maturin-version: v1.15.0" in workflow,
         "linux_x86_64": "x86_64-unknown-linux-gnu" in workflow,
         "linux_aarch64": "aarch64-unknown-linux-gnu" in workflow,
+        "linux_sdist_precedes_container_wheel": workflow.index(
+            "- name: Build source distribution"
+        )
+        < workflow.index("- name: Build stable-ABI wheel"),
+        "linux_aarch64_ring_cross_flag": all(
+            phrase in workflow
+            for phrase in (
+                'CFLAGS_aarch64_unknown_linux_gnu="-D__ARM_ARCH=8"',
+                "before-script-linux: ${{ matrix.before_script }}",
+            )
+        ),
         "macos_x86_64": "x86_64-apple-darwin" in workflow,
         "macos_aarch64": "aarch64-apple-darwin" in workflow,
         "windows_x86_64": "x86_64-pc-windows-msvc" in workflow,
@@ -141,6 +152,17 @@ def source_checks(root: Path) -> dict:
         and "environment:\n      name: pypi" in publish_workflow
         and "environment:\n      name: testpypi" in publish_workflow,
         "publisher_build_is_separate": "needs: assemble" in publish_workflow,
+        "publisher_linux_build_hardened": publish_workflow.index(
+            "- name: Build source distribution"
+        )
+        < publish_workflow.index("- name: Build stable-ABI wheel")
+        and all(
+            phrase in publish_workflow
+            for phrase in (
+                'CFLAGS_aarch64_unknown_linux_gnu="-D__ARM_ARCH=8"',
+                "before-script-linux: ${{ matrix.before_script }}",
+            )
+        ),
     }
     ci_checks = {
         "strict_rust_commands": all(
