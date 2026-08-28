@@ -1,6 +1,6 @@
 //! ENDF-6 decay sublibrary (MF=8/MT=457): half-lives, modes, mean energies and radiation spectra.
 //! The general fields mirror `controls/endf_decay.py`; P7 adds independently controlled spectrum records.
-use crate::endf::{endf_float, fields, read_list, read_tab1, tail};
+use crate::endf::{read_list_checked, read_tab1_checked, tail, ContRecord};
 use std::collections::HashMap;
 
 #[derive(Clone, Debug)]
@@ -97,38 +97,68 @@ impl Nuclide {
     }
 }
 
-fn parse_section(mat: i32, lines: &[&str]) -> Option<Nuclide> {
-    let f = fields(lines[0]);
-    let za = endf_float(f[0]).round() as i32;
-    let awr = endf_float(f[1]);
-    let liso = f[3].trim().parse::<i32>().unwrap_or(0);
-    let nst = f[4].trim().parse::<i32>().unwrap_or(0);
-    let nsp = f[5].trim().parse::<usize>().unwrap_or(0);
-    let ((t12, dt12, _, _, n2c, _, e), i) = read_list(lines, 1);
-    let ((_, _, _, _, _, ndk, dk), mut i) = read_list(lines, i);
+fn parse_section(mat: i32, lines: &[&str]) -> Result<Nuclide, String> {
+    let head = ContRecord::parse(lines.first().copied().ok_or("empty MF=8/MT=457 section")?)?;
+    if !head.c1.is_finite() || head.c1 <= 0.0 || !head.c2.is_finite() || head.c2 <= 0.0 {
+        return Err(format!("invalid decay HEAD ZA/AWR {}/{}", head.c1, head.c2));
+    }
+    let za = head.c1.round() as i32;
+    if (head.c1 - f64::from(za)).abs() > 1e-8 {
+        return Err(format!("nonintegral decay ZA {}", head.c1));
+    }
+    let nst = i32::try_from(head.n1).map_err(|_| format!("invalid decay NST {}", head.n1))?;
+    let nsp = head.n2;
+    let (energy_record, i) = read_list_checked(lines, 1)?;
+    let (mode_record, mut i) = read_list_checked(lines, i)?;
+    let ndk = mode_record.head.n2;
+    let mode_values = ndk
+        .checked_mul(6)
+        .ok_or("decay-mode field count overflows")?;
+    if mode_values > mode_record.values.len() {
+        return Err(format!(
+            "decay mode LIST contains {} fields for {ndk} modes",
+            mode_record.values.len()
+        ));
+    }
+    if nsp > lines.len().saturating_sub(i) {
+        return Err(format!(
+            "decay HEAD declares {nsp} spectra but only {} records remain",
+            lines.len().saturating_sub(i)
+        ));
+    }
     let modes = (0..ndk)
         .map(|k| Mode {
-            rtyp: dk[6 * k],
-            rfs: dk[6 * k + 1],
-            q: dk[6 * k + 2],
-            dq: dk[6 * k + 3],
-            br: dk[6 * k + 4],
-            dbr: dk[6 * k + 5],
+            rtyp: mode_record.values[6 * k],
+            rfs: mode_record.values[6 * k + 1],
+            q: mode_record.values[6 * k + 2],
+            dq: mode_record.values[6 * k + 3],
+            br: mode_record.values[6 * k + 4],
+            dbr: mode_record.values[6 * k + 5],
         })
         .collect();
     let mut spectra = Vec::with_capacity(nsp);
     for _ in 0..nsp {
-        let ((_, styp, lcon, lcov, _, ner, norm), next) = read_list(lines, i);
+        let (spectrum_record, next) = read_list_checked(lines, i)?;
         i = next;
+        let styp = spectrum_record.head.c2;
+        let lcon = spectrum_record.head.l1;
+        let lcov = spectrum_record.head.l2;
+        let ner = spectrum_record.head.n2;
+        if ner > lines.len().saturating_sub(i) {
+            return Err(format!(
+                "decay spectrum declares {ner} discrete records but only {} remain",
+                lines.len().saturating_sub(i)
+            ));
+        }
         let mut discrete = Vec::with_capacity(ner);
         if lcon != 1 {
             for _ in 0..ner {
-                let ((energy, d_energy, _, _, _, _, v), next) = read_list(lines, i);
+                let (record, next) = read_list_checked(lines, i)?;
                 i = next;
-                let at = |k: usize| *v.get(k).unwrap_or(&0.0);
+                let at = |k: usize| *record.values.get(k).unwrap_or(&0.0);
                 discrete.push(DiscreteRadiation {
-                    energy,
-                    d_energy,
+                    energy: record.head.c1,
+                    d_energy: record.head.c2,
                     rtyp: at(0),
                     transition_type: at(1),
                     intensity: at(2),
@@ -145,26 +175,26 @@ fn parse_section(mat: i32, lines: &[&str]) -> Option<Nuclide> {
             }
         }
         let continuous = if lcon != 0 {
-            let ((rtyp, _, _, _, interpolation, points), next) = read_tab1(lines, i);
+            let (record, next) = read_tab1_checked(lines, i)?;
             i = next;
             Some(ContinuousRadiation {
-                rtyp,
-                interpolation,
-                points,
+                rtyp: record.head.c1,
+                interpolation: record.interpolation,
+                points: record.points,
             })
         } else {
             None
         };
         // Covariance records are structurally consumed but are not used until P11.
         if matches!(lcov, 1 | 3) && lcon != 0 {
-            let (_, next) = read_list(lines, i);
+            let (_, next) = read_list_checked(lines, i)?;
             i = next;
         }
         if matches!(lcov, 2 | 3) {
-            let (_, next) = read_list(lines, i);
+            let (_, next) = read_list_checked(lines, i)?;
             i = next;
         }
-        let at = |k: usize| *norm.get(k).unwrap_or(&0.0);
+        let at = |k: usize| *spectrum_record.values.get(k).unwrap_or(&0.0);
         spectra.push(Spectrum {
             styp,
             lcon,
@@ -179,23 +209,28 @@ fn parse_section(mat: i32, lines: &[&str]) -> Option<Nuclide> {
             continuous,
         });
     }
-    Some(Nuclide {
+    if i != lines.len() {
+        return Err(format!(
+            "MF=8/MT=457 contains {} unconsumed record(s)",
+            lines.len() - i
+        ));
+    }
+    Ok(Nuclide {
         mat,
         za,
-        awr,
-        liso,
+        awr: head.c2,
+        liso: head.l2,
         nst,
-        half_life: t12,
-        d_half_life: dt12,
-        energies: e[..n2c.min(e.len())].to_vec(),
+        half_life: energy_record.head.c1,
+        d_half_life: energy_record.head.c2,
+        energies: energy_record.values,
         modes,
         spectra,
     })
 }
 
-/// Parse a decay sublibrary (single file, many materials). Key: (ZA, LISO).
-pub fn parse_file(path: &str) -> std::io::Result<HashMap<(i32, i32), Nuclide>> {
-    let text = std::fs::read_to_string(path)?;
+/// Parse a decay sublibrary from text. Key: (ZA, LISO).
+pub fn parse_text(text: &str) -> Result<HashMap<(i32, i32), Nuclide>, String> {
     let lines: Vec<&str> = text.lines().collect();
     let mut out = HashMap::new();
     let mut cur: Option<(i32, i32, i32)> = None;
@@ -212,17 +247,69 @@ pub fn parse_file(path: &str) -> std::io::Result<HashMap<(i32, i32), Nuclide>> {
             }
             buf.push(line);
         } else if cur.is_some() && !buf.is_empty() {
-            if let Some(n) = parse_section(cur.unwrap().0, &buf) {
-                out.insert((n.za, n.liso), n);
-            }
+            let n = parse_section(cur.expect("current decay section").0, &buf)?;
+            out.insert((n.za, n.liso), n);
             cur = None;
             buf.clear();
         }
     }
     if let (Some(c), false) = (cur, buf.is_empty()) {
-        if let Some(n) = parse_section(c.0, &buf) {
-            out.insert((n.za, n.liso), n);
-        }
+        let n = parse_section(c.0, &buf)?;
+        out.insert((n.za, n.liso), n);
     }
     Ok(out)
+}
+
+/// Parse a decay sublibrary (single file, many materials). Key: (ZA, LISO).
+pub fn parse_file(path: &str) -> std::io::Result<HashMap<(i32, i32), Nuclide>> {
+    let text = std::fs::read_to_string(path)?;
+    parse_text(&text).map_err(|error| std::io::Error::new(std::io::ErrorKind::InvalidData, error))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_text;
+
+    fn record(values: [&str; 6], mat: i32, mf: i32, mt: i32, sequence: i32) -> String {
+        let data: String = values
+            .into_iter()
+            .map(|value| format!("{value:>11}"))
+            .collect();
+        format!("{data}{mat:>4}{mf:>2}{mt:>3}{sequence:>5}")
+    }
+
+    fn minimal_decay(head: [&str; 6]) -> String {
+        [
+            record(head, 125, 8, 457, 1),
+            record(["1.0", "0", "0", "0", "0", "0"], 125, 8, 457, 2),
+            record(["0", "0", "0", "0", "0", "0"], 125, 8, 457, 3),
+            record(["", "", "", "", "", ""], 125, 8, 0, 99_999),
+        ]
+        .join("\n")
+    }
+
+    #[test]
+    fn parses_minimal_decay_section() {
+        let parsed = parse_text(&minimal_decay(["26056", "55.45", "0", "0", "0", "0"]))
+            .expect("minimal decay section");
+        let nuclide = &parsed[&(26_056, 0)];
+        assert_eq!(nuclide.mat, 125);
+        assert_eq!(nuclide.half_life, 1.0);
+        assert!(nuclide.modes.is_empty());
+        assert!(nuclide.spectra.is_empty());
+    }
+
+    #[test]
+    fn rejects_declared_spectra_before_reserving_memory() {
+        let error = parse_text(&minimal_decay([
+            "26056",
+            "55.45",
+            "0",
+            "0",
+            "0",
+            "2000000000",
+        ]))
+        .unwrap_err();
+        assert!(error.contains("declares 2000000000 spectra"));
+    }
 }

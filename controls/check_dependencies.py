@@ -14,7 +14,7 @@ CI_ENTRY = ["controls/g0_cram_coefficients.py", "controls/gen_cram.py", "control
             "controls/g6_p10_projectile_runtime.py", "controls/check_prior_verdicts.py",
             "controls/g3_p11_sensitivity.py", "controls/g4_p11_propagation.py",
             "controls/g5_p11_entry_points.py", "controls/g1_p12_radiological.py",
-            "controls/g5_p12_release.py"]
+            "controls/g3_p12_parser_fuzz.py", "controls/g5_p12_release.py"]
 STDLIB = set(sys.stdlib_module_names)
 declared = {l.split("==")[0].split(">=")[0].strip().lower() for l in open(os.path.join(ROOT, "requirements-ci.txt"))
             if l.strip() and not l.startswith("#")}

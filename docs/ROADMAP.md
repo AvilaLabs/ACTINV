@@ -166,3 +166,7 @@ part that does not compress: users, issues, and the validation record accumulati
   dependency audits, CLI/Python end-to-end comparison and nested self-contained control. Exact unpacked 1.0.0 crate
   packages compile, the standalone binary reports 1.0.0, and the Python 3.9 stable-ABI wheel and source archive pass
   import, metadata, licence and content checks. No artifact was uploaded or publicly released.
+- 2026-08-27 — P12 G3 green. Two fixed 10,000-case runs have the same deterministic summary and the fixed
+  1,000,000-case partition covers all eleven production-reader families with zero process-level failures below the
+  1 GiB ceiling. Amendment D records five pre-full-run bounds/encoding findings and their minimized regressions;
+  accepted scientific inputs and results are unchanged. G6 closure and pushed CI confirmation remain.

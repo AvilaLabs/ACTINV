@@ -4,6 +4,8 @@ use std::collections::{HashMap, HashSet};
 use std::io::{BufReader, Read, Seek, Write};
 use std::path::Path;
 
+const MAX_ARRAY_BYTES: u64 = 1_000_000_000;
+
 /// One library row: which target, which reaction, which product, from which ENDF file section.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Row {
@@ -28,7 +30,11 @@ impl Library {
         if self.ngroups == 0 {
             return Err("activation library has zero energy groups".into());
         }
-        if self.bounds.len() != self.ngroups + 1 {
+        let expected_bounds = self
+            .ngroups
+            .checked_add(1)
+            .ok_or("activation-library group count overflows")?;
+        if self.bounds.len() != expected_bounds {
             return Err(format!(
                 "activation library has {} boundaries for {} groups",
                 self.bounds.len(),
@@ -240,7 +246,6 @@ pub(crate) fn ensure_eof(reader: &mut impl Read, name: &str) -> Result<(), Strin
 }
 
 fn validate_members<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<(), String> {
-    const MAX_ARRAY_BYTES: u64 = 1_000_000_000;
     let mut names = HashSet::new();
     for index in 0..archive.len() {
         let member = archive.by_index(index).map_err(|error| error.to_string())?;
@@ -272,10 +277,25 @@ fn validate_members<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<
     Ok(())
 }
 
+fn require_payload_size(header: &NpyHeader, member_size: u64, name: &str) -> Result<(), String> {
+    let payload_bytes = header
+        .elements
+        .checked_mul(8)
+        .and_then(|bytes| u64::try_from(bytes).ok())
+        .ok_or_else(|| format!("{name} payload size overflows"))?;
+    if payload_bytes > member_size {
+        return Err(format!(
+            "{name} declares {payload_bytes} payload bytes but its entire member is only {member_size} bytes"
+        ));
+    }
+    Ok(())
+}
+
 fn read_rows<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<Vec<Row>, String> {
     let member = archive
         .by_name("rows.npy")
         .map_err(|error| error.to_string())?;
+    let member_size = member.size();
     let mut reader = BufReader::with_capacity(64 * 1024, member);
     let header = read_npy_header(&mut reader)?;
     if header.dtype != NpyDtype::I64 || header.shape.len() != 2 || header.shape[1] != 5 {
@@ -283,6 +303,7 @@ fn read_rows<R: Read + Seek>(archive: &mut zip::ZipArchive<R>) -> Result<Vec<Row
             "rows must have dtype <i8 and shape (N, 5), got {header:?}"
         ));
     }
+    require_payload_size(&header, member_size, "rows.npy")?;
     let mut rows = Vec::new();
     rows.try_reserve_exact(header.shape[0])
         .map_err(|error| format!("cannot allocate {} rows: {error}", header.shape[0]))?;
@@ -319,6 +340,7 @@ fn read_sig<R: Read + Seek>(
     let member = archive
         .by_name("sig.npy")
         .map_err(|error| error.to_string())?;
+    let member_size = member.size();
     let mut reader = BufReader::with_capacity(64 * 1024, member);
     let header = read_npy_header(&mut reader)?;
     if header.dtype != NpyDtype::F64 || header.shape.len() != 2 || header.shape[0] != expected_rows
@@ -327,6 +349,7 @@ fn read_sig<R: Read + Seek>(
             "sig must have dtype <f8 and shape ({expected_rows}, G), got {header:?}"
         ));
     }
+    require_payload_size(&header, member_size, "sig.npy")?;
     let values = read_f64_values(&mut reader, header.elements)?;
     ensure_eof(&mut reader, "sig.npy")?;
     Ok((values, header.shape[1]))
@@ -339,29 +362,36 @@ fn read_bounds<R: Read + Seek>(
     let member = archive
         .by_name("bounds.npy")
         .map_err(|error| error.to_string())?;
+    let member_size = member.size();
     let mut reader = BufReader::with_capacity(64 * 1024, member);
     let header = read_npy_header(&mut reader)?;
-    if header.dtype != NpyDtype::F64 || header.shape != [ngroups + 1] {
+    let expected_bounds = ngroups
+        .checked_add(1)
+        .ok_or("activation-library group count overflows")?;
+    if header.dtype != NpyDtype::F64 || header.shape != [expected_bounds] {
         return Err(format!(
             "bounds must have dtype <f8 and shape ({},), got {header:?}",
-            ngroups + 1
+            expected_bounds
         ));
     }
+    require_payload_size(&header, member_size, "bounds.npy")?;
     let values = read_f64_values(&mut reader, header.elements)?;
     ensure_eof(&mut reader, "bounds.npy")?;
     Ok(values)
 }
 
-fn open_npz(path: &str) -> Result<zip::ZipArchive<std::fs::File>, String> {
-    let file = std::fs::File::open(path).map_err(|error| error.to_string())?;
-    let mut archive = zip::ZipArchive::new(file).map_err(|error| error.to_string())?;
+fn open_npz_reader<R: Read + Seek>(reader: R) -> Result<zip::ZipArchive<R>, String> {
+    let mut archive = zip::ZipArchive::new(reader).map_err(|error| error.to_string())?;
     validate_members(&mut archive)?;
     Ok(archive)
 }
 
-/// Read a library written by ACTINV or the legacy NumPy builders with one final allocation for the cross sections.
-pub fn read_npz(path: &str) -> Result<Library, String> {
-    let mut archive = open_npz(path)?;
+fn open_npz(path: &str) -> Result<zip::ZipArchive<std::fs::File>, String> {
+    let file = std::fs::File::open(path).map_err(|error| error.to_string())?;
+    open_npz_reader(file)
+}
+
+fn read_archive<R: Read + Seek>(mut archive: zip::ZipArchive<R>) -> Result<Library, String> {
     let rows = read_rows(&mut archive)?;
     let (sig, ngroups) = read_sig(&mut archive, rows.len())?;
     let bounds = read_bounds(&mut archive, ngroups)?;
@@ -373,6 +403,16 @@ pub fn read_npz(path: &str) -> Result<Library, String> {
     };
     library.validate()?;
     Ok(library)
+}
+
+/// Read a library written by ACTINV or the legacy NumPy builders with one final allocation for the cross sections.
+pub fn read_npz(path: &str) -> Result<Library, String> {
+    read_archive(open_npz(path)?)
+}
+
+/// Read an activation library from an in-memory NPZ buffer.
+pub fn read_npz_bytes(bytes: &[u8]) -> Result<Library, String> {
+    read_archive(open_npz_reader(std::io::Cursor::new(bytes))?)
 }
 
 /// Stream an NPZ and retain only the requested targets' rows. This is intended for low-memory controls and
@@ -395,6 +435,7 @@ pub fn read_npz_targets(
     let member = archive
         .by_name("sig.npy")
         .map_err(|error| error.to_string())?;
+    let member_size = member.size();
     let mut reader = BufReader::with_capacity(64 * 1024, member);
     let header = read_npy_header(&mut reader)?;
     if header.dtype != NpyDtype::F64 || header.shape.len() != 2 || header.shape[0] != selected.len()
@@ -404,6 +445,7 @@ pub fn read_npz_targets(
             selected.len()
         ));
     }
+    require_payload_size(&header, member_size, "sig.npy")?;
     let ngroups = header.shape[1];
     let row_bytes = ngroups
         .checked_mul(8)
@@ -576,12 +618,37 @@ pub fn write_npz(path: impl AsRef<Path>, library: &Library) -> Result<(), String
 mod tests {
     use super::*;
 
+    fn oversized_rows_npz() -> Vec<u8> {
+        use zip::write::SimpleFileOptions;
+        use zip::{CompressionMethod, ZipWriter};
+
+        let cursor = std::io::Cursor::new(Vec::new());
+        let mut archive = ZipWriter::new(cursor);
+        let options = SimpleFileOptions::default().compression_method(CompressionMethod::Stored);
+        archive.start_file("rows.npy", options).unwrap();
+        write_npy_header(&mut archive, "<i8", &[2_000_000_000, 5]).unwrap();
+        archive.start_file("sig.npy", options).unwrap();
+        write_npy_header(&mut archive, "<f8", &[0, 1]).unwrap();
+        archive.start_file("bounds.npy", options).unwrap();
+        write_npy_header(&mut archive, "<f8", &[2]).unwrap();
+        archive.write_all(&1.0f64.to_le_bytes()).unwrap();
+        archive.write_all(&2.0f64.to_le_bytes()).unwrap();
+        archive.finish().unwrap().into_inner()
+    }
+
     #[test]
     fn truncated_fixed_width_arrays_fail_closed() {
         let error = read_i64(&mut std::io::Cursor::new([0; 7])).unwrap_err();
         assert!(error.contains("truncated i64 array"), "{error}");
         let error = read_f64_values(&mut std::io::Cursor::new([0; 15]), 2).unwrap_err();
         assert!(error.contains("truncated f64 array"), "{error}");
+    }
+
+    #[test]
+    fn declared_shape_must_fit_inside_the_archive_member() {
+        let error = read_npz_bytes(&oversized_rows_npz()).unwrap_err();
+        assert!(error.contains("declares 80000000000 payload bytes"));
+        assert!(error.contains("entire member"));
     }
 
     #[test]
@@ -624,6 +691,11 @@ mod tests {
         assert_eq!(loaded.rows, library.rows);
         assert_eq!(loaded.sig, library.sig);
         assert_eq!(loaded.bounds, library.bounds);
+        let bytes = std::fs::read(&first).unwrap();
+        let loaded_from_bytes = read_npz_bytes(&bytes).unwrap();
+        assert_eq!(loaded_from_bytes.rows, library.rows);
+        assert_eq!(loaded_from_bytes.sig, library.sig);
+        assert_eq!(loaded_from_bytes.bounds, library.bounds);
         let selected = read_npz_target(first.to_str().unwrap(), 1).unwrap();
         assert_eq!(selected.rows, vec![library.rows[1]]);
         assert_eq!(selected.sig, vec![3.0, 4.0]);

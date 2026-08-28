@@ -161,6 +161,7 @@ generated nuclear-data libraries remain outside Git; compact results retain thei
 |---|---|
 | G1 radiological responses | Clearance, waste, ingestion and inhalation responses agree with an independent dense calculation in all 80 comparisons. CLI, Python, prepared and mesh scientific fields are exact. Thirteen malformed, ambiguous, incomplete or hash-mismatch plants fail without a result. |
 | G2 primary tables | Independent extraction from the pinned Meija et al. and AME2020 primary files reproduces all 289 abundance/mass pairs, all 84 element sums and the generated Rust table byte-for-byte. The production certificate names and hashes both sources. |
+| G3 input reliability | Two fixed 10,000-case runs have the same deterministic summary. The fixed 1,000,000-case partition covers all eleven public reader families, completes with no process-level failure, and remains below the 1 GiB ceiling. Five pre-run bounds/encoding findings have minimized regression tests and Amendment D records them. |
 | G4 FNG/ITER cell 620 | Co-58, Tc-99m, Mn-56 and Cr-51 agree at every one of 170 endpoints. The worst relative population difference at or above one million atoms is `2.88e-14`, inside the frozen `1e-4` bound; 120 independently read reaction-rate comparisons differ by at most `3.24e-16` relative. Repeated temporary libraries and scientific results are identical. |
 | G5 release candidate | A fresh clone passes exact Rust format/check/strict-Clippy/test gates, prior-verdict and dependency controls, the CLI/Python end-to-end path, and the nested self-contained-clone control. The standalone binary reports `1.0.0`; all three Rust archives compile after unpacking; the Python 3.9 stable-ABI wheel imports as `1.0.0`; and the source archive, licences and SBOM are present. |
 
@@ -169,5 +170,6 @@ chain and schedule. It does not execute or validate neutron/photon transport, sh
 model, or a regulatory analysis. Radiological-response controls verify formulas, data handling and provenance, not the
 applicability of a user's table or scenario.
 
-P12 remains open while its isolated input-reliability and final closure controls are completed. A technical repository
-verdict does not create a tag, registry publication, GitHub Release, software qualification, or approval.
+P12 remains open only for its independent closure checker, session/manifest regeneration and pushed CI confirmation.
+A technical repository verdict does not create a tag, registry publication, GitHub Release, software qualification,
+or approval.

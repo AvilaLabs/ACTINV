@@ -145,7 +145,8 @@ def source_checks(root: Path) -> dict:
         ),
         "wheel_install": "pip install ../dist/*.whl" in ci,
         "prior_verdicts": "check_prior_verdicts.py" in ci,
-        "p12_subset": "g1_p12_radiological.py" in ci,
+        "p12_radiological_subset": "g1_p12_radiological.py" in ci,
+        "p12_input_reliability_subset": "g3_p12_parser_fuzz.py --smoke" in ci,
     }
     return {
         "versions": versions,
@@ -410,11 +411,17 @@ def main() -> int:
 
         command([sys.executable, "controls/ci_end_to_end.py"], cwd=clone, env=env)
         command([sys.executable, "controls/g1_p12_radiological.py"], cwd=clone, env=env)
+        command(
+            [sys.executable, "controls/g3_p12_parser_fuzz.py", "--smoke"],
+            cwd=clone,
+            env=env,
+        )
         command([sys.executable, "controls/g1_self_contained.py"], cwd=clone, env=env)
         command_results.update(
             {
                 "end_to_end_cli_python": True,
-                "p12_ci_subset": True,
+                "p12_radiological_ci_subset": True,
+                "p12_input_reliability_ci_subset": True,
                 "self_contained_clone": True,
             }
         )

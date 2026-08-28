@@ -112,5 +112,8 @@ jobs:
       - name: P12 data-independent response control
         run: python controls/g1_p12_radiological.py
 
+      - name: P12 bounded input reliability
+        run: python controls/g3_p12_parser_fuzz.py --smoke
+
       - name: Repository is self-contained
         run: python controls/g1_self_contained.py

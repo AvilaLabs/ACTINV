@@ -1,8 +1,7 @@
 //! ENDF-6 primitives: checked fixed-width records and the exponent-without-`e` number form.
 //!
-//! The tuple-returning helpers at the top are retained for the decay reader's stable API. New production parsers use
-//! the checked records below: malformed numeric fields, truncated payloads and missing SEND records are errors rather
-//! than values silently changed to zero.
+//! The tuple-returning helpers are retained for compatibility. Production parsers use the checked records below:
+//! malformed numeric fields and truncated payloads are errors rather than values silently changed to zero.
 
 use std::collections::HashSet;
 
@@ -67,6 +66,9 @@ pub fn endf_float(s: &str) -> f64 {
 /// The six 11-character data fields of an ENDF record.
 pub fn fields(line: &str) -> [&str; 6] {
     let mut out = [""; 6];
+    if !line.is_ascii() {
+        return out;
+    }
     for (i, o) in out.iter_mut().enumerate() {
         let (a, b) = (i * 11, (i + 1) * 11);
         *o = if line.len() >= b {
@@ -95,7 +97,7 @@ pub fn checked_fields(line: &str) -> Result<[&str; 6], String> {
 
 /// (MAT, MF, MT) from the tail of an ENDF record, if present.
 pub fn tail(line: &str) -> Option<(i32, i32, i32)> {
-    if line.len() < 75 {
+    if !line.is_ascii() || line.len() < 75 {
         return None;
     }
     let mat = line[66..70].trim().parse::<i32>().ok()?;
@@ -170,6 +172,21 @@ fn line_at<'a>(lines: &'a [&'a str], index: usize, kind: &str) -> Result<&'a str
         .ok_or_else(|| format!("truncated ENDF {kind} at record {}", index + 1))
 }
 
+fn require_payload_fields(
+    lines: &[&str],
+    next: usize,
+    fields: usize,
+    kind: &str,
+) -> Result<(), String> {
+    let available = lines.len().saturating_sub(next).saturating_mul(6);
+    if fields > available {
+        return Err(format!(
+            "truncated ENDF {kind}: declares {fields} fields, at most {available} remain"
+        ));
+    }
+    Ok(())
+}
+
 pub fn read_cont_checked(lines: &[&str], index: usize) -> Result<(ContRecord, usize), String> {
     let head = ContRecord::parse(line_at(lines, index, "CONT")?)?;
     Ok((head, index + 1))
@@ -180,6 +197,7 @@ pub fn read_list_checked(
     index: usize,
 ) -> Result<(CheckedListRecord, usize), String> {
     let (head, mut next) = read_cont_checked(lines, index)?;
+    require_payload_fields(lines, next, head.n1, "LIST payload")?;
     let mut values = Vec::with_capacity(head.n1);
     while values.len() < head.n1 {
         let fields = checked_fields(line_at(lines, next, "LIST payload")?)?;
@@ -199,11 +217,21 @@ pub fn read_tab1_checked(
     index: usize,
 ) -> Result<(CheckedTab1Record, usize), String> {
     let (head, mut next) = read_cont_checked(lines, index)?;
-    let mut raw_interpolation = Vec::with_capacity(2 * head.n1);
-    while raw_interpolation.len() < 2 * head.n1 {
+    let interpolation_fields = head
+        .n1
+        .checked_mul(2)
+        .ok_or("TAB1 interpolation field count overflows")?;
+    require_payload_fields(
+        lines,
+        next,
+        interpolation_fields,
+        "TAB1 interpolation payload",
+    )?;
+    let mut raw_interpolation = Vec::with_capacity(interpolation_fields);
+    while raw_interpolation.len() < interpolation_fields {
         let fields = checked_fields(line_at(lines, next, "TAB1 interpolation payload")?)?;
         for field in fields {
-            if raw_interpolation.len() == 2 * head.n1 {
+            if raw_interpolation.len() == interpolation_fields {
                 break;
             }
             raw_interpolation.push(parse_endf_i32(field)?);
@@ -233,11 +261,16 @@ pub fn read_tab1_checked(
         ));
     }
 
-    let mut raw_points = Vec::with_capacity(2 * head.n2);
-    while raw_points.len() < 2 * head.n2 {
+    let point_fields = head
+        .n2
+        .checked_mul(2)
+        .ok_or("TAB1 point field count overflows")?;
+    require_payload_fields(lines, next, point_fields, "TAB1 point payload")?;
+    let mut raw_points = Vec::with_capacity(point_fields);
+    while raw_points.len() < point_fields {
         let fields = checked_fields(line_at(lines, next, "TAB1 point payload")?)?;
         for field in fields {
-            if raw_points.len() == 2 * head.n2 {
+            if raw_points.len() == point_fields {
                 break;
             }
             raw_points.push(parse_endf_float(field)?);
@@ -268,11 +301,21 @@ pub fn read_tab2_checked(
     index: usize,
 ) -> Result<(CheckedTab2Record, usize), String> {
     let (head, mut next) = read_cont_checked(lines, index)?;
-    let mut raw = Vec::with_capacity(2 * head.n1);
-    while raw.len() < 2 * head.n1 {
+    let interpolation_fields = head
+        .n1
+        .checked_mul(2)
+        .ok_or("TAB2 interpolation field count overflows")?;
+    require_payload_fields(
+        lines,
+        next,
+        interpolation_fields,
+        "TAB2 interpolation payload",
+    )?;
+    let mut raw = Vec::with_capacity(interpolation_fields);
+    while raw.len() < interpolation_fields {
         let fields = checked_fields(line_at(lines, next, "TAB2 interpolation payload")?)?;
         for field in fields {
-            if raw.len() == 2 * head.n1 {
+            if raw.len() == interpolation_fields {
                 break;
             }
             raw.push(parse_endf_i32(field)?);
@@ -454,7 +497,17 @@ pub fn read_tab1(lines: &[&str], mut i: usize) -> (Tab1Record, usize) {
 
 #[cfg(test)]
 mod tests {
-    use super::parse_endf_float;
+    use super::{
+        fields, parse_endf_float, read_list_checked, read_tab1_checked, read_tab2_checked, tail,
+    };
+
+    fn record(fields: [&str; 6]) -> String {
+        let data: String = fields
+            .into_iter()
+            .map(|value| format!("{value:>11}"))
+            .collect();
+        format!("{data}{:>4}{:>2}{:>3}{:>5}", 1, 1, 1, 1)
+    }
 
     #[test]
     fn exponent_without_e_is_rounded_once() {
@@ -482,5 +535,30 @@ mod tests {
         assert_eq!(parse_endf_float("1.25e+3").unwrap(), 1250.0);
         assert!(parse_endf_float("not-a-float").is_err());
         assert!(parse_endf_float("1.0e999").is_err());
+    }
+
+    #[test]
+    fn checked_records_reject_counts_larger_than_the_remaining_payload() {
+        let list = record(["0", "0", "0", "0", "2000000000", "0"]);
+        assert!(read_list_checked(&[&list], 0)
+            .unwrap_err()
+            .contains("at most 0 remain"));
+
+        let tab1 = record(["0", "0", "0", "0", "2000000000", "1"]);
+        assert!(read_tab1_checked(&[&tab1], 0)
+            .unwrap_err()
+            .contains("at most 0 remain"));
+
+        let tab2 = record(["0", "0", "0", "0", "2000000000", "1"]);
+        assert!(read_tab2_checked(&[&tab2], 0)
+            .unwrap_err()
+            .contains("at most 0 remain"));
+    }
+
+    #[test]
+    fn fixed_width_helpers_reject_non_ascii_without_slicing_inside_a_codepoint() {
+        let unicode = "é".repeat(40);
+        assert_eq!(tail(&unicode), None);
+        assert_eq!(fields(&unicode), [""; 6]);
     }
 }

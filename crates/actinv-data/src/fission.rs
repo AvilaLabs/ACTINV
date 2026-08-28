@@ -126,11 +126,17 @@ fn list_record(lines: &[&str], index: usize) -> Result<(RawList, usize), String>
     let n_values = parse_usize(header[4], "NPL")?;
     let n_products = parse_usize(header[5], "NFP")?;
     let records = n_values.div_ceil(6);
-    if index + 1 + records > lines.len() {
+    let payload_start = index
+        .checked_add(1)
+        .ok_or("ENDF LIST payload index overflows")?;
+    let payload_end = payload_start
+        .checked_add(records)
+        .ok_or("ENDF LIST payload length overflows")?;
+    if payload_end > lines.len() {
         return Err("truncated ENDF LIST payload".into());
     }
     let mut values = Vec::with_capacity(n_values);
-    for line in &lines[index + 1..index + 1 + records] {
+    for line in &lines[payload_start..payload_end] {
         if line.len() < 66 {
             return Err("truncated ENDF LIST payload record".into());
         }
@@ -151,7 +157,7 @@ fn list_record(lines: &[&str], index: usize) -> Result<(RawList, usize), String>
             n_products,
             values,
         },
-        index + 1 + records,
+        payload_end,
     ))
 }
 
@@ -176,8 +182,16 @@ fn yield_section(lines: &[&str], mt: i32) -> Result<(i32, f64, Vec<YieldTable>),
     if n_energies <= 0 {
         return Err(format!("MF=8/MT={mt} has no incident energies"));
     }
+    let n_energies = usize::try_from(n_energies)
+        .map_err(|_| format!("invalid MF=8/MT={mt} incident-energy count"))?;
+    if n_energies > lines.len().saturating_sub(1) {
+        return Err(format!(
+            "MF=8/MT={mt} declares {n_energies} incident energies but only {} records remain",
+            lines.len().saturating_sub(1)
+        ));
+    }
     let mut index = 1usize;
-    let mut tables = Vec::with_capacity(n_energies as usize);
+    let mut tables = Vec::with_capacity(n_energies);
     let mut seen_energies = HashSet::new();
     for _ in 0..n_energies {
         let (record, next) = list_record(lines, index)?;
@@ -191,10 +205,13 @@ fn yield_section(lines: &[&str], mt: i32) -> Result<(i32, f64, Vec<YieldTable>),
         if !energy.is_finite() || energy < 0.0 {
             return Err(format!("invalid incident energy {energy}"));
         }
-        if n_values != 4 * n_products {
+        let expected_values = n_products
+            .checked_mul(4)
+            .ok_or("fission-yield product field count overflows")?;
+        if n_values != expected_values {
             return Err(format!(
                 "MF=8/MT={mt} LIST has NPL={n_values}, expected 4*NFP={}",
-                4 * n_products
+                expected_values
             ));
         }
         if !seen_energies.insert(energy.to_bits()) {
@@ -253,10 +270,8 @@ fn yield_section(lines: &[&str], mt: i32) -> Result<(i32, f64, Vec<YieldTable>),
     Ok((za, awr, tables))
 }
 
-/// Parse one ENDF fission-yield evaluation.
-pub fn parse_file(path: &str) -> Result<FissionYields, String> {
-    let text = std::fs::read_to_string(path)
-        .map_err(|error| format!("cannot read fission yields {path}: {error}"))?;
+/// Parse one ENDF fission-yield evaluation from text.
+pub fn parse_text(text: &str) -> Result<FissionYields, String> {
     let lines: Vec<&str> = text.lines().collect();
     let independent_lines = section(&lines, 8, 454)?
         .ok_or_else(|| "fission-yield evaluation has no MF=8/MT=454 section".to_string())?;
@@ -298,6 +313,13 @@ pub fn parse_file(path: &str) -> Result<FissionYields, String> {
         independent,
         cumulative,
     })
+}
+
+/// Parse one ENDF fission-yield evaluation.
+pub fn parse_file(path: &str) -> Result<FissionYields, String> {
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read fission yields {path}: {error}"))?;
+    parse_text(&text).map_err(|error| format!("{path}: {error}"))
 }
 
 impl FissionYields {
@@ -357,6 +379,29 @@ impl FissionYields {
 mod tests {
     use super::*;
 
+    fn record(values: [&str; 6], mat: i32, mf: i32, mt: i32, sequence: i32) -> String {
+        let data: String = values
+            .into_iter()
+            .map(|value| format!("{value:>11}"))
+            .collect();
+        format!("{data}{mat:>4}{mf:>2}{mt:>3}{sequence:>5}")
+    }
+
+    fn minimal_evaluation(le: &str, npl: &str, include_payload: bool) -> String {
+        let mut lines = vec![
+            record(["92235", "233", "0", "0", "0", "0"], 9237, 1, 451, 1),
+            record(["0", "0", "0", "0", "0", "0"], 9237, 1, 451, 2),
+            record(["", "", "", "", "", ""], 9237, 1, 0, 99_999),
+            record(["92235", "233", le, "0", "0", "0"], 9237, 8, 454, 1),
+            record(["0.0253", "0", "0", "0", npl, "1"], 9237, 8, 454, 2),
+        ];
+        if include_payload {
+            lines.push(record(["53135", "0", "2", "0.1", "", ""], 9237, 8, 454, 3));
+        }
+        lines.push(record(["", "", "", "", "", ""], 9237, 8, 0, 99_999));
+        lines.join("\n")
+    }
+
     fn table(energy_ev: f64, products: &[(NuclideKey, f64)]) -> YieldTable {
         let products: BTreeMap<_, _> = products
             .iter()
@@ -396,5 +441,25 @@ mod tests {
         assert_eq!(effective.sum, 2.0);
         assert!(yields.effective(0.0).unwrap().clamped);
         assert!(yields.effective(4.0).unwrap().clamped);
+    }
+
+    #[test]
+    fn parses_minimal_independent_yield_evaluation() {
+        let parsed = parse_text(&minimal_evaluation("1", "4", true)).expect("minimal yields");
+        assert_eq!(parsed.parent, (92_235, 0));
+        assert_eq!(parsed.independent.len(), 1);
+        assert_eq!(parsed.independent[0].sum, 2.0);
+    }
+
+    #[test]
+    fn rejects_truncated_declared_payload_before_reserving_memory() {
+        let error = parse_text(&minimal_evaluation("1", "2000000000", false)).unwrap_err();
+        assert!(error.contains("truncated ENDF LIST payload"));
+    }
+
+    #[test]
+    fn rejects_declared_incident_energies_before_reserving_memory() {
+        let error = parse_text(&minimal_evaluation("2000000000", "4", true)).unwrap_err();
+        assert!(error.contains("declares 2000000000 incident energies"));
     }
 }

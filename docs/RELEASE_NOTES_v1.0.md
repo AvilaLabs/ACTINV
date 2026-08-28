@@ -49,6 +49,9 @@ Nuclear data are not included in either artifact. See [Data sources](DATA.md).
   comparisons agree exactly, and incomplete activity coverage remains explicit.
 - The independent primary-table control reproduces 289 abundance/mass rows, all 84 element sums, and the generated
   Rust table byte-for-byte.
+- Repeated 10,000-case input checks produce the same deterministic summary, and the fixed 1,000,000-case partition
+  covers all eleven public reader families with no process-level failure below its 1 GiB ceiling. Five pre-run
+  allocation/order and encoding findings retain focused regression tests.
 - The FNG/ITER control compares Co-58, Tc-99m, Mn-56, and Cr-51 at all 170 endpoints. Its worst relative difference on
   populations at or above one million atoms is `2.88e-14`, within the frozen `1e-4` bound. Selected independently read
   reaction rates agree to `3.24e-16` relative.

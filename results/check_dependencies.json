@@ -22,6 +22,7 @@
   "controls/g4_p11_propagation.py",
   "controls/g5_p11_entry_points.py",
   "controls/g1_p12_radiological.py",
+  "controls/g3_p12_parser_fuzz.py",
   "controls/g5_p12_release.py"
  ],
  "declared": [

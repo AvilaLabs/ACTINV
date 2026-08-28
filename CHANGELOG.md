@@ -20,6 +20,8 @@ No changes yet.
 - Hash-pinned clearance, waste, ingestion and inhalation response tables with explicit scenario metadata, coefficient
   coverage and identical CLI/Python/prepared/mesh results.
 - Independent primary-source regeneration of all 289 embedded natural-abundance and atomic-mass rows.
+- A deterministic one-million-case, eleven-family production-reader reliability gate with a repeated CI partition
+  and a strict 1 GiB process ceiling.
 - FNG/ITER cell-620 activation-history reproduction at 170 endpoints from a fully hash-pinned published archive.
 - Stable-ABI Python wheels for Python 3.9+, standalone release binaries, a public artifact workflow and user-facing
   installation, release and qualification documentation.
@@ -30,6 +32,8 @@ No changes yet.
   combined output once instead of rebuilding growing prefixes quadratically.
 - The local CI end-to-end control can load an explicitly built PyO3 extension when no wheel is installed, while still
   preferring and testing the installed package in release CI.
+- ENDF, decay, fission-yield and activation-library readers now prove declared payload sizes before reserving memory;
+  path and in-memory entry points share the same production implementations.
 - CLI and Python package versions now agree at `1.0.0`; `actinv --version` and `actinv --help` are supported and
   regression-tested.
 

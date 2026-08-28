@@ -130,7 +130,8 @@ The repository carries executable controls and compact evidence for every releas
 - 132 IAEA FNS decay-heat experiments across 73 materials;
 - independent decay-photon, transport-import, fission-yield, pulse-history, and mesh checks;
 - complete deterministic TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 library builds;
-- independent CRAM, sensitivity, MF=33 covariance, and uncertainty-propagation checks; and
+- independent CRAM, sensitivity, MF=33 covariance, and uncertainty-propagation checks;
+- a fixed one-million-case reliability check across all supported public input readers; and
 - an independently reproduced FNG/ITER cell-620 activation history at all 170 time points.
 
 Validation establishes behavior for the recorded models, inputs, and acceptance bounds. It does not establish that a

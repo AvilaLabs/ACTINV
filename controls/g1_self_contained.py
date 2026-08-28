@@ -12,6 +12,7 @@ STEPS = [("cargo build", ["cargo", "build", "--release", "--quiet", "--workspace
          ("release notes match roadmap", [sys.executable, "controls/check_release_notes.py"]),
          ("prior phase verdicts", [sys.executable, "controls/check_prior_verdicts.py"]),
          ("P12 release source", [sys.executable, "controls/g5_p12_release.py", "--source-only"]),
+         ("P12 bounded input reliability", [sys.executable, "controls/g3_p12_parser_fuzz.py", "--smoke"]),
          ("CI result tolerance regression", [sys.executable, "controls/test_ci_result.py"]),
          ("no undeclared dependencies", [sys.executable, "controls/check_dependencies.py"])]
 tmp = tempfile.mkdtemp(prefix="actinv-selftest-"); clone = os.path.join(tmp, "clone"); fake_home = os.path.join(tmp, "home")

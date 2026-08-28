@@ -1,0 +1,315 @@
+{
+ "schema": "actinv-p12-g3-result-1",
+ "gate": "P12-G3",
+ "control_sha256": "30da63c7ebdc0697ba43ce3c34a25dfd1e5a9f9d741521fc16ec10dd51d6dac6",
+ "protocol_sha256": "247e669691d99a5e548734528a069bb49962e6ae356ba14f962abcf2826ed715",
+ "amendment_sha256": {
+  "ACTINV-P12_AMENDMENT_A": "21f73ecfa3858bc9967183e0bb090382c6512acd2f5b4e9f25252cf32c67571a",
+  "ACTINV-P12_AMENDMENT_B": "c4c823c5bb07235df43a9e26c5c4b40e852745fbfb72723612b9867507df0769",
+  "ACTINV-P12_AMENDMENT_C": "141a3e7dc70fd3d324930ffb6db328201f69c64bf447f65569650ca042fd559c",
+  "ACTINV-P12_AMENDMENT_D": "91084144aa8ead0679bece73375c7880c8b6037ad5647d3bebc28539f30993f4"
+ },
+ "memory_limit_bytes": 1073741824,
+ "timeouts_seconds": {
+  "smoke": 120,
+  "full": 300
+ },
+ "smoke": {
+  "deterministic": {
+   "schema": "actinv-p12-reader-outcomes-1",
+   "cases": 10000,
+   "families": [
+    {
+     "family": "run_spec",
+     "cases": 1090,
+     "accepted": 129,
+     "rejected": 961,
+     "panics": 0,
+     "corpus_sha256": "b4231070c327f2dabf7876ac2d4bc920b42254b810832caa16306b860a80f62e"
+    },
+    {
+     "family": "mesh_spec",
+     "cases": 1090,
+     "accepted": 114,
+     "rejected": 976,
+     "panics": 0,
+     "corpus_sha256": "b90304a1fe5afc543953725c477478eef04c294e3aa8b289c82d9741aa403eb3"
+    },
+    {
+     "family": "photon_response",
+     "cases": 1090,
+     "accepted": 100,
+     "rejected": 990,
+     "panics": 0,
+     "corpus_sha256": "2375051e13b6be54b61d840717a4c2198054b7d78d4934083af69bc34dda5521"
+    },
+    {
+     "family": "group_structure",
+     "cases": 1090,
+     "accepted": 133,
+     "rejected": 957,
+     "panics": 0,
+     "corpus_sha256": "1bdc6ca9cbf910237c1b8fb47c38e06e44b1ea0e79acb6312d4666b7cb221676"
+    },
+    {
+     "family": "endf_records_sections",
+     "cases": 1090,
+     "accepted": 101,
+     "rejected": 989,
+     "panics": 0,
+     "corpus_sha256": "3ca7f5300046aa1602944b50f5a9f0907206ee905fe318f7c67c5daf6b1dc95e"
+    },
+    {
+     "family": "activation_evaluation",
+     "cases": 1090,
+     "accepted": 107,
+     "rejected": 983,
+     "panics": 0,
+     "corpus_sha256": "21f2c5510525bd470c4e1118bb4ec588f4f6f586cf570e03c3c3f9cf063a674e"
+    },
+    {
+     "family": "mf33_covariance",
+     "cases": 1090,
+     "accepted": 106,
+     "rejected": 984,
+     "panics": 0,
+     "corpus_sha256": "ab2b6f5e306804101636338fa31b23dd67e4f7018a9612e0357213211e813c39"
+    },
+    {
+     "family": "decay",
+     "cases": 1090,
+     "accepted": 310,
+     "rejected": 780,
+     "panics": 0,
+     "corpus_sha256": "872b416891377fc1c1a1ae3c391901de8179140d1cad5ce0482597b2c4d1e297"
+    },
+    {
+     "family": "fission_yields",
+     "cases": 1080,
+     "accepted": 143,
+     "rejected": 937,
+     "panics": 0,
+     "corpus_sha256": "aacf4cc44a7273444ccfb4764278428d1ed261c24c66784e5d12326a2599a432"
+    },
+    {
+     "family": "activation_library_npz",
+     "cases": 100,
+     "accepted": 5,
+     "rejected": 95,
+     "panics": 0,
+     "corpus_sha256": "1499ce69ca925e4f46d8f528f411139710f661d7888962bfd8d94f51474c75c3"
+    },
+    {
+     "family": "canonical_flux_stream",
+     "cases": 100,
+     "accepted": 12,
+     "rejected": 88,
+     "panics": 0,
+     "corpus_sha256": "1688a7eada711f1e5a9221b65b1eaea7f82283901f85ed2e74c282ee51dd91d9"
+    }
+   ],
+   "operators": {
+    "count_value": 1250,
+    "delete": 1251,
+    "duplicate_span": 1251,
+    "insert": 1250,
+    "invalid_encoding": 1249,
+    "numeric_edge": 1249,
+    "replace_bit": 1251,
+    "truncate": 1249
+   },
+   "outcome_sha256": "dfadb80bc7fcc46d969609afd642d73f08c3c075e4c58240599aba59603a9c2e",
+   "first_panic": null
+  },
+  "first_elapsed_seconds": 0.018495986,
+  "second_elapsed_seconds": 0.018095833,
+  "first_peak_rss_bytes": 4435968,
+  "second_peak_rss_bytes": 4452352,
+  "checks": {
+   "case_count_exact": true,
+   "family_case_sum_exact": true,
+   "every_family_present": true,
+   "family_outcomes_close": true,
+   "zero_panics": true,
+   "no_first_panic": true,
+   "all_operators_present": true,
+   "operator_case_sum_exact": true,
+   "memory_measured": true,
+   "below_memory_limit": true,
+   "completed_without_signal_or_timeout": true,
+   "probe_pass": true,
+   "version_exact": true,
+   "repeat_invariants": true,
+   "deterministic_summary_identical": true
+  },
+  "pass": true
+ },
+ "full": {
+  "gate": "P12-G3",
+  "probe_version": "1.0.0",
+  "partition": "full",
+  "seed_hex": "414354494e565031",
+  "deterministic": {
+   "schema": "actinv-p12-reader-outcomes-1",
+   "cases": 1000000,
+   "families": [
+    {
+     "family": "run_spec",
+     "cases": 109000,
+     "accepted": 14876,
+     "rejected": 94124,
+     "panics": 0,
+     "corpus_sha256": "b4231070c327f2dabf7876ac2d4bc920b42254b810832caa16306b860a80f62e"
+    },
+    {
+     "family": "mesh_spec",
+     "cases": 109000,
+     "accepted": 12482,
+     "rejected": 96518,
+     "panics": 0,
+     "corpus_sha256": "b90304a1fe5afc543953725c477478eef04c294e3aa8b289c82d9741aa403eb3"
+    },
+    {
+     "family": "photon_response",
+     "cases": 109000,
+     "accepted": 8650,
+     "rejected": 100350,
+     "panics": 0,
+     "corpus_sha256": "2375051e13b6be54b61d840717a4c2198054b7d78d4934083af69bc34dda5521"
+    },
+    {
+     "family": "group_structure",
+     "cases": 109000,
+     "accepted": 14805,
+     "rejected": 94195,
+     "panics": 0,
+     "corpus_sha256": "1bdc6ca9cbf910237c1b8fb47c38e06e44b1ea0e79acb6312d4666b7cb221676"
+    },
+    {
+     "family": "endf_records_sections",
+     "cases": 109000,
+     "accepted": 11636,
+     "rejected": 97364,
+     "panics": 0,
+     "corpus_sha256": "3ca7f5300046aa1602944b50f5a9f0907206ee905fe318f7c67c5daf6b1dc95e"
+    },
+    {
+     "family": "activation_evaluation",
+     "cases": 109000,
+     "accepted": 10558,
+     "rejected": 98442,
+     "panics": 0,
+     "corpus_sha256": "21f2c5510525bd470c4e1118bb4ec588f4f6f586cf570e03c3c3f9cf063a674e"
+    },
+    {
+     "family": "mf33_covariance",
+     "cases": 109000,
+     "accepted": 10556,
+     "rejected": 98444,
+     "panics": 0,
+     "corpus_sha256": "ab2b6f5e306804101636338fa31b23dd67e4f7018a9612e0357213211e813c39"
+    },
+    {
+     "family": "decay",
+     "cases": 109000,
+     "accepted": 32071,
+     "rejected": 76929,
+     "panics": 0,
+     "corpus_sha256": "872b416891377fc1c1a1ae3c391901de8179140d1cad5ce0482597b2c4d1e297"
+    },
+    {
+     "family": "fission_yields",
+     "cases": 108000,
+     "accepted": 14863,
+     "rejected": 93137,
+     "panics": 0,
+     "corpus_sha256": "aacf4cc44a7273444ccfb4764278428d1ed261c24c66784e5d12326a2599a432"
+    },
+    {
+     "family": "activation_library_npz",
+     "cases": 10000,
+     "accepted": 655,
+     "rejected": 9345,
+     "panics": 0,
+     "corpus_sha256": "1499ce69ca925e4f46d8f528f411139710f661d7888962bfd8d94f51474c75c3"
+    },
+    {
+     "family": "canonical_flux_stream",
+     "cases": 10000,
+     "accepted": 668,
+     "rejected": 9332,
+     "panics": 0,
+     "corpus_sha256": "1688a7eada711f1e5a9221b65b1eaea7f82283901f85ed2e74c282ee51dd91d9"
+    }
+   ],
+   "operators": {
+    "count_value": 125000,
+    "delete": 125000,
+    "duplicate_span": 125000,
+    "insert": 125000,
+    "invalid_encoding": 125000,
+    "numeric_edge": 125000,
+    "replace_bit": 125000,
+    "truncate": 125000
+   },
+   "outcome_sha256": "321614d5d6de759f4423d203b3603e5800fe7d96f705fffe7a1fa6921eee5a42",
+   "first_panic": null
+  },
+  "elapsed_seconds": 1.5953211729999999,
+  "peak_rss_bytes": 4526080,
+  "pass": true,
+  "exit_code": 0,
+  "timed_out": false,
+  "signalled": false
+ },
+ "full_checks": {
+  "case_count_exact": true,
+  "family_case_sum_exact": true,
+  "every_family_present": true,
+  "family_outcomes_close": true,
+  "zero_panics": true,
+  "no_first_panic": true,
+  "all_operators_present": true,
+  "operator_case_sum_exact": true,
+  "memory_measured": true,
+  "below_memory_limit": true,
+  "completed_without_signal_or_timeout": true,
+  "probe_pass": true,
+  "version_exact": true,
+  "fixed_full_partition_exact": true,
+  "container_minimums": true
+ },
+ "source": {
+  "reader_source_sha256": {
+   "crates/actinv-core/src/bin/parser_fuzz_probe.rs": "520cbeebb16e0cd289992f32dc7e302b3abfb459f5a1faf88946f23e42c53146",
+   "crates/actinv-data/src/endf.rs": "913f75ca2cf48c56e873d8e15843adca3f03ee1057cc0dfd11c14cfb37903db8",
+   "crates/actinv-data/src/decay.rs": "ef42b29c241754c71e8b93498bd5c870a79ca2ebbc2b2a949b54bc89c9c9b0f6",
+   "crates/actinv-data/src/fission.rs": "07be2929547655feee3a54d26d0e54868cc4baddca959b89a461d648b1cd6de6",
+   "crates/actinv-data/src/library.rs": "86aaacb3590c519f944c314aacb081f2f346c042371570f1838c4e80af6aabef"
+  },
+  "regression_tests": {
+   "endf_non_ascii_fixed_width": true,
+   "endf_declared_payload": true,
+   "decay_declared_spectra": true,
+   "fission_declared_energies": true,
+   "npz_declared_shape": true
+  },
+  "all_regressions_present": true,
+  "unsafe_absent": true,
+  "nightly_features_absent": true
+ },
+ "repair_record": {
+  "amendment": "ACTINV-P12_AMENDMENT_D",
+  "pre_full_partition_discoveries": [
+   "endf_non_ascii_fixed_width",
+   "endf_declared_payload",
+   "decay_declared_spectra",
+   "fission_declared_energies",
+   "npz_declared_shape"
+  ],
+  "discovery_count": 5,
+  "full_partition_discoveries": 0,
+  "all_discoveries_have_regressions": true
+ },
+ "pass": true
+}
