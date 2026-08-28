@@ -1,0 +1,61 @@
+{
+ "schema": "actinv-v1-crates-io-release-session-1",
+ "recorded_at": "2026-08-28T13:00:54Z",
+ "version": "1.0.0",
+ "source": {
+  "commit": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+  "tag": "v1.0.0"
+ },
+ "quality_gates": {
+  "cargo_fmt": true,
+  "cargo_check_workspace_all_targets_all_features": true,
+  "cargo_clippy_workspace_all_targets_all_features_deny_warnings": true,
+  "cargo_test_workspace_all_targets_all_features": true,
+  "packaged_rebuilds": true,
+  "pass": true
+ },
+ "packages": {
+  "actinv-data": {
+   "url": "https://crates.io/crates/actinv-data/1.0.0",
+   "published_at": "2026-08-28T12:50:42Z",
+   "bytes": 118970,
+   "sha256": "850cc7a56e6950cb6bbb828ba590f0ef753bad13c6f60a94ac13d3d98cf77807",
+   "yanked": false
+  },
+  "actinv-core": {
+   "url": "https://crates.io/crates/actinv-core/1.0.0",
+   "published_at": "2026-08-28T12:51:32Z",
+   "bytes": 87309,
+   "sha256": "160a0acdb3d822da030c002f786f40692d312c0d9691ee40650f3b9e76831416",
+   "yanked": false
+  },
+  "actinv-cli": {
+   "url": "https://crates.io/crates/actinv-cli/1.0.0",
+   "published_at": "2026-08-28T12:54:46Z",
+   "bytes": 27999,
+   "sha256": "187641b407b246a5bc31783029f5a4ca781605cd847d5587d1c11eec19d1dbc9",
+   "yanked": false
+  }
+ },
+ "smoke": {
+  "fresh_install_root": true,
+  "install_command": "cargo install actinv-cli --version 1.0.0 --locked",
+  "installed_binary": "actinv",
+  "reported_version": "1.0.0",
+  "help": true,
+  "public_archives_match_registry_checksums": true,
+  "pass": true
+ },
+ "credential_hygiene": {
+  "initial_method": "short-lived scoped crates.io API token",
+  "removed_from_local_cargo_storage": true,
+  "registry_revocation_is_separate_maintainer_action": true
+ },
+ "future_publishing": {
+  "method": "GitHub Actions OIDC trusted publishing",
+  "workflow": "publish-crates.yml",
+  "environment": "crates-io",
+  "crate_configuration_required": true
+ },
+ "pass": true
+}

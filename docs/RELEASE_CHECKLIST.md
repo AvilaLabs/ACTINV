@@ -17,8 +17,10 @@ including subsequent packaging-only release plumbing, not on the earlier technic
 - [x] Install a wheel into a new environment and run the documented smoke calculation.
 - [x] Review [v1.0 release notes](RELEASE_NOTES_v1.0.md), [qualification boundary](QUALIFICATION.md), licences, and
   third-party-data notices.
-- [ ] Confirm the `actinv` names and maintainer accounts on PyPI/crates.io and configure trusted publishing or scoped
-  release credentials.
+- [x] Confirm the `actinv` names and maintainer accounts on PyPI/crates.io and use scoped credentials for each initial
+  publication.
+- [ ] Add the `publish-crates.yml` trusted publisher to all three crates.io packages as described in the
+  [crates.io release procedure](CRATES_RELEASE.md).
 - [x] Follow the account and environment setup in [PyPI release procedure](PYPI_RELEASE.md), publish the exact candidate
   to TestPyPI, and smoke-test both `import actinv` and the installed `actinv` command.
 
@@ -26,12 +28,13 @@ including subsequent packaging-only release plumbing, not on the earlier technic
 
 - [x] Create the signed `v1.0.0` tag at the final green software-release commit and push it.
 - [x] Publish the Python wheels and source distribution to PyPI.
-- [ ] Publish Rust crates in dependency order: `actinv-data`, `actinv-core`, then `actinv-cli`.
+- [x] Publish Rust crates in dependency order: `actinv-data`, `actinv-core`, then `actinv-cli`.
 - [x] Create the GitHub Release from the signed tag, attach standalone binaries and `SHA256SUMS`, and paste the v1.0
   release notes.
-- [ ] Install with `pip install actinv` and `cargo install actinv-cli` from the public registries in clean environments.
+- [x] Install with `pip install actinv` and `cargo install actinv-cli` from the public registries in clean environments.
 - [x] Record public URLs, upload identities, artifact hashes, and smoke-test results in the append-only
-  [v1.0 software release record](../results/session_v1_release.json).
+  [v1.0 software release record](../results/session_v1_release.json) and
+  [crates.io publication record](../results/session_v1_crates_io.json).
 
 ## Versioned data release
 

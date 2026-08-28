@@ -52,6 +52,13 @@
    "stderr_tail": ""
   },
   {
+   "step": "crates.io release workflow",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
    "step": "P12 checker regression",
    "returncode": 0,
    "ok": true,

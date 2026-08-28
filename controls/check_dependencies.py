@@ -16,6 +16,7 @@ CI_ENTRY = ["controls/g0_cram_coefficients.py", "controls/gen_cram.py", "control
             "controls/g5_p11_entry_points.py", "controls/g1_p12_radiological.py",
             "controls/g3_p12_parser_fuzz.py", "controls/g5_p12_release.py",
             "controls/check_p12.py", "controls/test_check_p12.py",
+            "scripts/check_crates_release_workflow.py",
             "controls/g1_p13_data_distribution.py", "controls/check_p13.py"]
 STDLIB = set(sys.stdlib_module_names)
 declared = {l.split("==")[0].split(">=")[0].strip().lower() for l in open(os.path.join(ROOT, "requirements-ci.txt"))

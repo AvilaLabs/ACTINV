@@ -21,11 +21,11 @@ pip install actinv
 ```
 
 The published wheels use Python's stable ABI, so users do not need a Rust compiler. Prebuilt standalone executables
-are attached to the [v1.0.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0). Rust users can
-also build the command from a source checkout:
+are attached to the [v1.0.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0). Rust users with
+a current toolchain can install the command directly from crates.io:
 
 ```bash
-cargo install --locked --path crates/actinv-cli
+cargo install --locked actinv-cli
 ```
 
 The software package stays small by keeping nuclear data in a separate, versioned release. Download the recommended

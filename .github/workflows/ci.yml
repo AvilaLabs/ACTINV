@@ -61,6 +61,9 @@ jobs:
       - name: P12 release metadata and documentation
         run: python controls/g5_p12_release.py --source-only
 
+      - name: Rust release workflow contract
+        run: python scripts/check_crates_release_workflow.py
+
       - name: P12 release payload evidence
         run: |
           python scripts/test_check_python_release_set.py

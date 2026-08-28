@@ -26,6 +26,7 @@
   "controls/g5_p12_release.py",
   "controls/check_p12.py",
   "controls/test_check_p12.py",
+  "scripts/check_crates_release_workflow.py",
   "controls/g1_p13_data_distribution.py",
   "controls/check_p13.py"
  ],
