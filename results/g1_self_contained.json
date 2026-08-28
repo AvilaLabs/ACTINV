@@ -38,6 +38,41 @@
    "stderr_tail": ""
   },
   {
+   "step": "prior phase verdicts",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "P12 release source",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "P12 checker regression",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "P12 release payload evidence",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
+   "step": "P12 bounded input reliability",
+   "returncode": 0,
+   "ok": true,
+   "outside_clone_reference": false,
+   "stderr_tail": ""
+  },
+  {
    "step": "CI result tolerance regression",
    "returncode": 0,
    "ok": true,
