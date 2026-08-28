@@ -5,10 +5,11 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-28):** v1.0.0 is publicly released; P13 and the initial competitive benchmark are closed
-**P13-PASS** and **CB1-COMPLETE**. P14 closed honestly below its frozen threshold. P15 is now closed **P15-PASS**:
-the prepared warm path preserves the exact normalized result while measuring 2.595× faster and 8.326× lower in peak
-RSS on the frozen public-example workload. No phase is open; P16 is next but remains unfrozen.
+**Current status (2026-08-28):** v1.0.1 is publicly released on PyPI, crates.io and GitHub from signed tag `v1.0.1`.
+P13 and the initial competitive benchmark are closed **P13-PASS** and **CB1-COMPLETE**. P14 closed honestly below its
+frozen threshold. P15 is closed **P15-PASS**: the prepared warm path preserves the exact normalized result while
+measuring 2.595× faster and 8.326× lower in peak RSS on the frozen public-example workload. The public release record
+is `results/session_v1.0.1_release.json`. No phase is open; P16 is next but remains unfrozen.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -250,3 +251,11 @@ part that does not compress: users, issues, and the validation record accumulati
   exactly; 23 corruption plants fail closed. Source/evidence commit
   `c2c89deab1dcee533414a1e6512d0ff45075c184` passed GitHub Actions run `33207936195`. P16 is next but remains
   unopened and unhashed; no tag or package publication is claimed.
+- 2026-08-28 — v1.0.1 publicly released from signed tag `v1.0.1` at
+  `0332779401363d2f39722efe7a0b7218afcfb270`. Release-candidate controls run `33217018813`, TestPyPI run
+  `33217366561`, production PyPI run `33218184459` and artifact run `33218184465` are green. A pre-upload crates.io
+  OIDC environment-name mismatch was corrected without moving the tag; repair commit
+  `72fa60e3ab90f84d9cab1bd3aa44bdc3dee5c72c` passed controls run `33218612601`, and protected recovery run
+  `33218644967` published all three crates from the exact signed tag source. Fresh PyPI and crates.io installs ran the
+  same 21-step public calculation with equal normalized results; public GitHub assets passed their downloaded
+  `SHA256SUMS`. P16 remains next and unfrozen until its protocol is committed and hashed.
