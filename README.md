@@ -1,32 +1,53 @@
 # ACTINV
 
-ACTINV calculates what radioactive nuclides are created when a material is irradiated and how they change while the
-material cools. Give it a material, a particle-flux spectrum, an irradiation schedule, and evaluated nuclear data; it
-returns nuclide inventories, activity, decay heat, photon sources, selected radiological indices, and a record of any
-input data it could not account for.
+[![CI](https://github.com/AvilaLabs/ACTINV/actions/workflows/ci.yml/badge.svg)](https://github.com/AvilaLabs/ACTINV/actions/workflows/ci.yml)
+[![PyPI](https://img.shields.io/pypi/v/actinv?label=PyPI)](https://pypi.org/project/actinv/)
+[![crates.io](https://img.shields.io/crates/v/actinv-cli?label=crates.io)](https://crates.io/crates/actinv-cli)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#contributing-and-licence)
+
+**Open, reproducible activation and nuclide-inventory calculations from the command line or Python.**
+
+ACTINV answers a practical question: what radioactive nuclides are created when a material is irradiated, and what
+happens to them afterward? Give it a material, particle-flux spectrum, irradiation and cooling schedule, and evaluated
+nuclear data. It returns inventories, activity, decay heat, photon sources, selected radiological responses, and an
+explicit record of anything the supplied data could not account for.
 
 It is useful for activation studies, shutdown inventories, source-term preparation, and reproducible comparisons with
 other inventory codes. The numerical core is written in Rust, with both a Python interface and a standalone command.
+
+[PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
+[v1.0.0 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0) ·
+[v1.0.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0) ·
+[Documentation](#documentation)
 
 > ACTINV is research-grade software. Version 1.0 is a technically validated release, not an approval for licensing,
 > safety, waste classification, or regulatory decisions. See [Qualification boundary](docs/QUALIFICATION.md) before
 > using results in a formal analysis chain.
 
-## Install
+## Quick start
 
-Both the Python interface and the `actinv` command install from PyPI in one line on Python 3.9 or newer:
+### 1. Install ACTINV
+
+For most users, PyPI is the simplest option. One command installs both the Python interface and the `actinv` terminal
+command on Python 3.9 or newer:
 
 ```bash
 pip install actinv
 ```
 
-The published wheels use Python's stable ABI, so users do not need a Rust compiler. Prebuilt standalone executables
-are attached to the [v1.0.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0). Rust users with
-a current toolchain can install the command directly from crates.io:
+Prebuilt wheels are available for supported systems, so this route does not require a Rust compiler. If you already
+use Rust and only want the command-line program, install it directly from crates.io:
 
 ```bash
 cargo install --locked actinv-cli
 ```
+
+Prebuilt standalone executables are also attached to the
+[v1.0.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.0).
+
+Confirm the installation at any time with `actinv --version` or explore every command with `actinv --help`.
+
+### 2. Fetch nuclear data
 
 The software package stays small by keeping nuclear data in a separate, versioned release. Download the recommended
 neutron data in one command:
@@ -39,7 +60,7 @@ The command downloads about 139 MiB, verifies every file with SHA-256 before ins
 `actinv-data/v1.0.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
-## First calculation
+### 3. Run a calculation
 
 An ACTINV problem is a JSON file containing the data paths printed by `actinv data fetch`, a material composition, a
 group flux spectrum, and an irradiation/cooling schedule. Validate it first, then run it:
