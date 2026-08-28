@@ -5,9 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-28):** P12 is closed **P12-CONDITIONAL** with all six gates passing. The technical v1.0
-physics scope is complete. P13 is open under frozen protocol `afbc60cb…` for verified data distribution and first-run
-setup; it does not change the builder, solver, evaluated values, numerical tolerances or prior validation verdicts.
+**Current status (2026-08-28):** P13 is closed **P13-PASS**. The technical v1.0 physics scope remains P12-CONDITIONAL;
+P13 adds the separately versioned, verified `data-v1.0.0` distribution and first-run setup without changing the
+builder, solver, evaluated values, numerical tolerances, or prior validation verdicts. PyPI/crates.io and the software
+`v1.0.0` release remain separate maintainer acts.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -183,3 +184,8 @@ part that does not compress: users, issues, and the validation record accumulati
   immutable P10/P11 TENDL artifacts may be released under the CC-BY-4.0 terms recorded in every TENDL-2025 source
   header, while ENDF/B-VIII.0 and JEFF-3.3 decay archives remain direct official-host downloads. The embedded catalog,
   atomic fetch/verify path, release staging, attribution and first-run docs are gated without changing scientific code.
+- 2026-08-28 — P13 closed P13-PASS. Source commit `cf862ab90c487be5f2668a2f4f383a2d0dec0869` passed GitHub Actions
+  run `33143906452`; release `data-v1.0.0` (GitHub release ID `378273436`) contains exactly the 14 staged assets and
+  server-reported SHA-256 identities recorded in `results/session_p13.json`. A clean public default fetch verified the
+  GitHub assets and both official IAEA archives, then completed the 21-step FNS iron example with all four certificate
+  input hashes matching. No raw evaluation, decay archive, generated payload, cache, or credential entered Git.

@@ -39,6 +39,10 @@ ENDF/B-VIII.0 and JEFF-3.3 decay files remain downloads from their official host
 `ACTINV-DATA-NOTICE.md` records attribution, source and builder identities, transformations, and terms. ACTINV's
 MIT/Apache-2.0 software licence does not replace a dataset's licence or source terms.
 
+Catalog v1.0.0 is published as the immutable
+[`data-v1.0.0` release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0). Its server-reported asset digests,
+source commit, green workflow, and public smoke result are recorded in `results/session_p13.json`.
+
 For an offline installation, run `actinv data manifest` on the destination system, acquire the named files through a
 controlled transfer, place them under the printed versioned paths, and run `actinv data verify`. Advanced users can
 instead build libraries from raw evaluations with `actinv build-library` as documented below.

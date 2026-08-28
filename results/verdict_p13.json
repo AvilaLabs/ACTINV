@@ -1,5 +1,5 @@
 {
- "closed": false,
+ "closed": true,
  "gates": {
   "G1": {
    "checks": {
@@ -135,10 +135,19 @@
   "pass": true
  },
  "release": {
-  "pass": false,
-  "present": false
+  "checks": {
+   "asset_identities": true,
+   "asset_names": true,
+   "release": true,
+   "release_inventories": true,
+   "smoke": true,
+   "source_commit": true,
+   "workflow": true
+  },
+  "pass": true,
+  "present": true
  },
  "schema": "actinv-p13-verdict-1",
  "source_pass": true,
- "verdict": "P13-SOURCE-PASS"
+ "verdict": "P13-PASS"
 }

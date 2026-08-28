@@ -1,0 +1,107 @@
+{
+ "schema": "actinv-p13-release-session-1",
+ "source_commit": "cf862ab90c487be5f2668a2f4f383a2d0dec0869",
+ "workflow": {
+  "id": 33143906452,
+  "head_sha": "cf862ab90c487be5f2668a2f4f383a2d0dec0869",
+  "conclusion": "success",
+  "created_at": "2026-08-28T05:09:24Z",
+  "completed_at": "2026-08-28T05:16:04Z",
+  "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33143906452"
+ },
+ "release": {
+  "id": 378273436,
+  "tag": "data-v1.0.0",
+  "tag_commit": "cf862ab90c487be5f2668a2f4f383a2d0dec0869",
+  "target_commit": "cf862ab90c487be5f2668a2f4f383a2d0dec0869",
+  "published_at": "2026-08-28T05:20:12Z",
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0",
+  "server_digest_algorithm": "sha256",
+  "assets": {
+   "ACTINV-DATA-NOTICE-v1.0.0.md": {
+    "bytes": 3538,
+    "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/ACTINV-DATA-NOTICE-v1.0.0.md"
+   },
+   "SHA256SUMS": {
+    "bytes": 1172,
+    "sha256": "2528e98ea6ad2fbbfd7b79571774837d0989be31fddbc18e7ebd1e0e7a75b1a3",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/SHA256SUMS"
+   },
+   "SIZES": {
+    "bytes": 488,
+    "sha256": "a2c12a34b232eb49e1f5de97ed76fe5078178a04d2f4aa587ffc38dbd9c9a6a3",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/SIZES"
+   },
+   "actinv-data-catalog-v1.0.0.json": {
+    "bytes": 9664,
+    "sha256": "27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/actinv-data-catalog-v1.0.0.json"
+   },
+   "tendl-2025-alpha-162g.npz": {
+    "bytes": 46235710,
+    "sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-alpha-162g.npz"
+   },
+   "tendl-2025-alpha-162g_index.json": {
+    "bytes": 4577708,
+    "sha256": "7a4d1d73cd3aaf790a8f2c15e4fcfb72a6c75d3f5bd75f5f32e543a21d7b4038",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-alpha-162g_index.json"
+   },
+   "tendl-2025-deuteron-162g.npz": {
+    "bytes": 76763930,
+    "sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-deuteron-162g.npz"
+   },
+   "tendl-2025-deuteron-162g_index.json": {
+    "bytes": 4809232,
+    "sha256": "a8889d0f57de203ea8e1f551052adbf24bd718444226fac7bf7c38b6404c6707",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-deuteron-162g_index.json"
+   },
+   "tendl-2025-neutron-709g.cov.npz": {
+    "bytes": 237866615,
+    "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g.cov.npz"
+   },
+   "tendl-2025-neutron-709g.cov_index.json": {
+    "bytes": 976593,
+    "sha256": "9691ee5c4a7e3e89c428f912de712b5f805b29c86cc94a5b23f3c95a5951aea6",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g.cov_index.json"
+   },
+   "tendl-2025-neutron-709g.npz": {
+    "bytes": 123897743,
+    "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g.npz"
+   },
+   "tendl-2025-neutron-709g_index.json": {
+    "bytes": 2653304,
+    "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-neutron-709g_index.json"
+   },
+   "tendl-2025-proton-162g.npz": {
+    "bytes": 62751053,
+    "sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-proton-162g.npz"
+   },
+   "tendl-2025-proton-162g_index.json": {
+    "bytes": 4686099,
+    "sha256": "62892f1539347be1ac903d4bc56556fc8b4da4ee604eb216b12ba6359c411945",
+    "url": "https://github.com/AvilaLabs/ACTINV/releases/download/data-v1.0.0/tendl-2025-proton-162g_index.json"
+   }
+  }
+ },
+ "smoke": {
+  "bundle": "tendl-2025-neutron",
+  "fetch": true,
+  "verify": true,
+  "calculation": true,
+  "downloaded_files": 5,
+  "verified_files": 5,
+  "steps": 21,
+  "mode": "trace",
+  "pruned_states": 47,
+  "first_cooling_W_per_g": 1.1514084526617243e-7,
+  "last_W_per_g": 7.198952897352041e-8,
+  "certificate_hashes_match": true
+ }
+}

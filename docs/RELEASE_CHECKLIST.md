@@ -32,14 +32,14 @@ earlier payload commit.
 
 ## Versioned data release
 
-- [ ] Run `controls/g1_p13_data_distribution.py` with the exact release binary.
-- [ ] Stage only the catalog-named TENDL P10/P11 outputs with `scripts/prepare_data_release.py`; do not stage raw
+- [x] Run `controls/g1_p13_data_distribution.py` with the exact release binary.
+- [x] Stage only the catalog-named TENDL P10/P11 outputs with `scripts/prepare_data_release.py`; do not stage raw
   evaluations, caches, temporary archives, or EAF-2010.
-- [ ] Run `controls/g4_p13_release_stage.py STAGING_DIRECTORY` and verify every identity against the catalog and prior
+- [x] Run `controls/g4_p13_release_stage.py STAGING_DIRECTORY` and verify every identity against the catalog and prior
   P10/P11 evidence.
-- [ ] Create the immutable `data-v1.0.0` GitHub release at the green P13 source commit and attach the staged assets,
+- [x] Create the immutable `data-v1.0.0` GitHub release at the green P13 source commit and attach the staged assets,
   catalog, notice, `SHA256SUMS`, and `SIZES`.
-- [ ] From a clean directory, run `actinv data fetch`, `actinv data verify`, and a documented smoke calculation using
+- [x] From a clean directory, run `actinv data fetch`, `actinv data verify`, and a documented smoke calculation using
   the hosted assets. Record the release URL, tag commit, release ID, asset identities, and workflow result.
 
 Software publishing must not include raw nuclear-data inputs, generated bulk libraries, credentials, local paths, or
