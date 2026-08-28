@@ -6,16 +6,39 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import re
 import subprocess
 import tempfile
-import tomllib
 import venv
 
 
 ROOT = Path(__file__).resolve().parents[1]
-with (ROOT / "python" / "pyproject.toml").open("rb") as stream:
-    SOFTWARE_VERSION = tomllib.load(stream)["project"]["version"]
+VERSION_PATTERN = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?")
 DATA_CATALOG_VERSION = "1.0.0"
+
+
+def project_version(path: Path) -> str:
+    section: str | None = None
+    for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        header = re.fullmatch(r"\[([^][]+)]", stripped)
+        if header:
+            section = header.group(1)
+            continue
+        if section != "project":
+            continue
+        match = re.fullmatch(r'version\s*=\s*"([^"]+)"(?:\s*#.*)?', stripped)
+        if match:
+            version = match.group(1)
+            if VERSION_PATTERN.fullmatch(version) is None:
+                raise ValueError(f"invalid [project] version on line {line_number}: {version!r}")
+            return version
+    raise ValueError(f"{path} has no double-quoted [project] version")
+
+
+SOFTWARE_VERSION = project_version(ROOT / "python" / "pyproject.toml")
 
 
 def command(arguments: list[str | Path]) -> subprocess.CompletedProcess[str]:

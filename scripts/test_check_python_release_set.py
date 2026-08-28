@@ -9,6 +9,7 @@ import zipfile
 from pathlib import Path
 
 import check_python_release_set
+import smoke_python_wheel
 
 
 class WheelTagTests(unittest.TestCase):
@@ -63,6 +64,23 @@ class WheelTagTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(ValueError, "filename and internal compatibility tag"):
                 check_python_release_set.validate_wheel(wheel)
+
+
+class SmokeMetadataTests(unittest.TestCase):
+    def test_project_version_matches_release_validator(self) -> None:
+        pyproject = smoke_python_wheel.ROOT / "python" / "pyproject.toml"
+        self.assertEqual(
+            smoke_python_wheel.project_version(pyproject),
+            check_python_release_set.VERSION,
+        )
+        self.assertNotIn("import tomllib", Path(smoke_python_wheel.__file__).read_text())
+
+    def test_project_version_must_be_in_project_section(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            pyproject = Path(temporary) / "pyproject.toml"
+            pyproject.write_text('[build-system]\nversion = "1.0.1"\n', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "no double-quoted \\[project] version"):
+                smoke_python_wheel.project_version(pyproject)
 
 
 if __name__ == "__main__":
