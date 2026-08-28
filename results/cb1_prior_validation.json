@@ -1,0 +1,144 @@
+{
+ "conderc_fission": {
+  "Dickens U-235 thermal pulse beta": {
+   "geometric_mean_C_over_E": 0.9881751194752889,
+   "maximum_C_over_E": 1.0429766874548783,
+   "maximum_absolute_log_C_over_E": 0.07202671684222962,
+   "minimum_C_over_E": 0.9305060352961713,
+   "points": 32,
+   "rms_experimental_sigma": 0.9248007650911498
+  },
+  "Dickens U-235 thermal pulse gamma": {
+   "geometric_mean_C_over_E": 1.0183072526624362,
+   "maximum_C_over_E": 1.1884347014032668,
+   "maximum_absolute_log_C_over_E": 0.1726370642837258,
+   "minimum_C_over_E": 0.8852429120019653,
+   "points": 32,
+   "rms_experimental_sigma": 2.1688356571203458
+  },
+  "Dickens U-235 thermal pulse total": {
+   "geometric_mean_C_over_E": 1.0069797096711348,
+   "maximum_C_over_E": 1.0691126334126317,
+   "maximum_absolute_log_C_over_E": 0.06682898983461268,
+   "minimum_C_over_E": 0.9554640631830205,
+   "points": 32,
+   "rms_experimental_sigma": 0.9932990607439548
+  },
+  "Yarnell U-235 thermal 20000 s total": {
+   "geometric_mean_C_over_E": 0.9845114169374127,
+   "maximum_C_over_E": 1.0193542121394088,
+   "maximum_absolute_log_C_over_E": 0.08144673428435535,
+   "minimum_C_over_E": 0.9217818079139207,
+   "points": 79,
+   "rms_experimental_sigma": 1.1443714119296065
+  }
+ },
+ "fng_iter": {
+  "history_comparison": {
+   "nuclides": {
+    "Co58": {
+     "endpoints": 170,
+     "endpoints_at_or_above_1e6_atoms": 170,
+     "endpoints_below_1e6_atoms": 0,
+     "maximum_relative_error_at_or_above_1e6_atoms": 2.8774804027527194e-14,
+     "maximum_scaled_absolute_error_below_1e6_atoms": 0.0,
+     "pass": true
+    },
+    "Cr51": {
+     "endpoints": 170,
+     "endpoints_at_or_above_1e6_atoms": 170,
+     "endpoints_below_1e6_atoms": 0,
+     "maximum_relative_error_at_or_above_1e6_atoms": 1.9645142759930754e-14,
+     "maximum_scaled_absolute_error_below_1e6_atoms": 0.0,
+     "pass": true
+    },
+    "Mn56": {
+     "endpoints": 170,
+     "endpoints_at_or_above_1e6_atoms": 101,
+     "endpoints_below_1e6_atoms": 69,
+     "maximum_relative_error_at_or_above_1e6_atoms": 2.680689418855543e-14,
+     "maximum_scaled_absolute_error_below_1e6_atoms": 1.2832091888036396e-33,
+     "pass": true
+    },
+    "Tc99_m1": {
+     "endpoints": 170,
+     "endpoints_at_or_above_1e6_atoms": 129,
+     "endpoints_below_1e6_atoms": 41,
+     "maximum_relative_error_at_or_above_1e6_atoms": 1.1254172487703119e-14,
+     "maximum_scaled_absolute_error_below_1e6_atoms": 4.303445450256108e-34,
+     "pass": true
+    }
+   },
+   "pass": true,
+   "relative_limit_at_or_above_1e6_atoms": 0.0001,
+   "scaled_absolute_limit_below_1e6_atoms": 1e-18
+  },
+  "independent_reaction_rate_comparisons": 120,
+  "independent_reaction_rate_maximum_relative_error": 3.236508739334936e-16,
+  "reference": {
+   "archive": "Zenodo record 10660030, CC-BY-4.0",
+   "campaign": "Peterson et al., Nuclear Fusion 64 (2024) 056011",
+   "cell": 620,
+   "intervals": 170
+  }
+ },
+ "historical_fns": {
+  "ACTINV/EAF-2010": {
+   "experiments_all_points_within_30_percent": 62,
+   "experiments_scored": 132,
+   "fraction_experiments_all_points_within_30_percent": 0.4696969696969697,
+   "median_experiment_geometric_mean_C_over_E": 1.0238196853949915,
+   "median_experiment_maximum_abs_log_C_over_E": 0.2835355817850367,
+   "metric_limit": "historical summary lacks paired-point values; pooled metrics are not reconstructed"
+  },
+  "ACTINV/TENDL-2023": {
+   "experiments_all_points_within_30_percent": 59,
+   "experiments_scored": 132,
+   "fraction_experiments_all_points_within_30_percent": 0.44696969696969696,
+   "median_experiment_geometric_mean_C_over_E": 1.0351075504088592,
+   "median_experiment_maximum_abs_log_C_over_E": 0.31095665449065335,
+   "metric_limit": "historical summary lacks paired-point values; pooled metrics are not reconstructed"
+  }
+ },
+ "limitations": [
+  "these rows are prior evidence, not fresh CB1 executions",
+  "FNS historical files expose experiment summaries but not enough paired values for pooled CB1 metrics",
+  "FNG/ITER is an identical-record implementation check, not an independent activation measurement"
+ ],
+ "pass": true,
+ "provenance": {
+  "conderc_fission": {
+   "access": "prior-evidence",
+   "actual_sha256": "9decf447a3cc622b50278f21280a23c0595040a208965bd7643566a3f9f22ed5",
+   "expected_sha256": "9decf447a3cc622b50278f21280a23c0595040a208965bd7643566a3f9f22ed5",
+   "matches": true,
+   "path": "results/g6_p9_conderc.json",
+   "source_commit": "e5421a0e30eb94303482bed2c4b9491b773244e6"
+  },
+  "fng_iter": {
+   "access": "prior-evidence",
+   "actual_sha256": "2561c1bbf0b537fb68d0602bf1361efe2bfeac9c2b3dba96931cbd320fb43198",
+   "expected_sha256": "2561c1bbf0b537fb68d0602bf1361efe2bfeac9c2b3dba96931cbd320fb43198",
+   "matches": true,
+   "path": "results/g4_p12_fng.json",
+   "source_commit": "68ae82bc53ee64a63c8182fb078aa6ac91eb09f9"
+  },
+  "fns_eaf2010": {
+   "access": "prior-evidence",
+   "actual_sha256": "2ab759a648aa7bc662bbcd5d4d66b775d58452e6b583e9534bb59bc137ed204c",
+   "expected_sha256": "2ab759a648aa7bc662bbcd5d4d66b775d58452e6b583e9534bb59bc137ed204c",
+   "matches": true,
+   "path": "results/fns_summary.json",
+   "source_commit": "1e38b79a83142627174a5a86b81dafa1ed267f8a"
+  },
+  "fns_tendl2023": {
+   "access": "prior-evidence",
+   "actual_sha256": "15a6b827dd0eb105c286fa84f46f633dfb7bbe7ea25effbe14388eb7512cee23",
+   "expected_sha256": "15a6b827dd0eb105c286fa84f46f633dfb7bbe7ea25effbe14388eb7512cee23",
+   "matches": true,
+   "path": "results/fns_tendl_full_summary.json",
+   "source_commit": "d29528e98ffb772061b5ee97db66b3d0ce193dd2"
+  }
+ },
+ "schema": "actinv-cb1-prior-validation-1"
+}

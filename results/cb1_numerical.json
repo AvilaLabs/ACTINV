@@ -1,0 +1,603 @@
+{
+ "access": {
+  "ACTINV": "executed",
+  "ALARA": "not-applicable",
+  "FISPACT-II": "not-available",
+  "OpenMC": "executed",
+  "SCALE/ORIGEN": "not-available",
+  "SciPy dense expm": "executed"
+ },
+ "cases": [
+  {
+   "boundaries": [
+    {
+     "actinv_total_atoms": 9.999999999999997e+19,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 3.2768e-16,
+      "maximum_relative_above_tolerance_crossover": 3.3022938611098423e-16,
+      "maximum_resolvable_relative": 3.3022938611098423e-16,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.6384e-16,
+      "maximum_relative_above_tolerance_crossover": 1.651146930554922e-16,
+      "maximum_resolvable_relative": 4.974063509652592e-16,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1e+20,
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.9152e-16,
+      "maximum_relative_above_tolerance_crossover": 4.953440791664764e-16,
+      "maximum_resolvable_relative": 4.974063509652595e-16,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0000000000000013e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.31072e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3265433904625453e-15,
+      "maximum_resolvable_relative": 1.3265433904625453e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.6384e-16,
+      "maximum_relative_above_tolerance_crossover": 4.2923178665437843e-16,
+      "maximum_resolvable_relative": 4.2923178665437843e-16,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1e+20,
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.14688e-15,
+      "maximum_relative_above_tolerance_crossover": 1.1607254666547271e-15,
+      "maximum_resolvable_relative": 1.1607254666547271e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0000000000000036e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 3.44064e-15,
+      "maximum_relative_above_tolerance_crossover": 3.5022565894837695e-15,
+      "maximum_resolvable_relative": 3.5022565894837695e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.14688e-15,
+      "maximum_relative_above_tolerance_crossover": 1.1674188631612537e-15,
+      "maximum_resolvable_relative": 1.1674188631612537e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1e+20,
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.29376e-15,
+      "maximum_relative_above_tolerance_crossover": 2.334837726322513e-15,
+      "maximum_resolvable_relative": 2.334837726322513e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0000000000000041e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.096e-15,
+      "maximum_relative_above_tolerance_crossover": 4.180834583524121e-15,
+      "maximum_resolvable_relative": 4.180834583524121e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 6.5536e-16,
+      "maximum_relative_above_tolerance_crossover": 7.569745324991374e-16,
+      "maximum_resolvable_relative": 7.569745324991374e-16,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1e+20,
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 3.44064e-15,
+      "maximum_relative_above_tolerance_crossover": 3.5119010501602614e-15,
+      "maximum_resolvable_relative": 3.5119010501602614e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0000000000000038e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 3.76832e-15,
+      "maximum_relative_above_tolerance_crossover": 3.853104853709576e-15,
+      "maximum_resolvable_relative": 3.853104853709576e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 9.8304e-16,
+      "maximum_relative_above_tolerance_crossover": 1.9777957488473053e-15,
+      "maximum_resolvable_relative": 1.9777957488473053e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1e+20,
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.78528e-15,
+      "maximum_relative_above_tolerance_crossover": 3.606568718486276e-15,
+      "maximum_resolvable_relative": 3.606568718486276e-15,
+      "resolvable_components": 2,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    }
+   ],
+   "finite": true,
+   "maximum_conservation_relative": 3.76832e-15,
+   "nonnegative_within_absolute_tolerance": true,
+   "nonzeros_on": 2,
+   "pass": true,
+   "schedule": [
+    {
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "split_merged": {
+    "all_components_within_relative_or_absolute": true,
+    "maximum_absolute_over_initial_norm": 2.12992e-15,
+    "maximum_relative_above_tolerance_crossover": 2.1470276995572582e-15,
+    "maximum_resolvable_relative": 2.1470276995572582e-15,
+    "resolvable_components": 2,
+    "tolerance_crossover_fraction_of_initial_norm": 0.01
+   },
+   "states": 2
+  },
+  {
+   "boundaries": [
+    {
+     "actinv_total_atoms": 1.0024999999999995e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.964201429251895e-16,
+      "maximum_resolvable_relative": 8.805024293238703e-16,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.234413965087282e-18,
+      "maximum_relative_above_tolerance_crossover": 0.0,
+      "maximum_resolvable_relative": 9.12297260596137e-16,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0025e+20,
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.964201429251895e-16,
+      "maximum_resolvable_relative": 1.0426254406813007e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000005e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.985344181851251e-16,
+      "maximum_resolvable_relative": 2.3080585674254287e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 8.171571072319202e-16,
+      "maximum_relative_above_tolerance_crossover": 8.308906969752074e-16,
+      "maximum_resolvable_relative": 8.655219627845345e-16,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0025e+20,
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3294251151603337e-15,
+      "maximum_resolvable_relative": 1.442536604640893e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000008e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 9.805885286783043e-16,
+      "maximum_relative_above_tolerance_crossover": 1.0033837440774255e-15,
+      "maximum_resolvable_relative": 2.355307829030527e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3378449921032307e-15,
+      "maximum_resolvable_relative": 1.7605517829784044e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0024999999999998e+20,
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.2880399002493767e-15,
+      "maximum_relative_above_tolerance_crossover": 2.341228736180659e-15,
+      "maximum_resolvable_relative": 2.467465344698647e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000011e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3415291291982498e-15,
+      "maximum_resolvable_relative": 3.2908858156267347e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
+      "maximum_relative_above_tolerance_crossover": 6.707645645991235e-16,
+      "maximum_resolvable_relative": 1.8397893762567264e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0024999999999998e+20,
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.9611770573566085e-15,
+      "maximum_relative_above_tolerance_crossover": 2.0122936937973748e-15,
+      "maximum_resolvable_relative": 4.405574564907826e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000023e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.2880399002493767e-15,
+      "maximum_relative_above_tolerance_crossover": 2.605626889406709e-15,
+      "maximum_resolvable_relative": 4.2049231942784486e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.6343142144638403e-16,
+      "maximum_relative_above_tolerance_crossover": 2.013438959996092e-15,
+      "maximum_resolvable_relative": 2.013438959996092e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0024999999999998e+20,
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.4514713216957608e-15,
+      "maximum_relative_above_tolerance_crossover": 2.5219962836553856e-15,
+      "maximum_resolvable_relative": 3.656454951546477e-15,
+      "resolvable_components": 8,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    }
+   ],
+   "finite": true,
+   "maximum_conservation_relative": 2.2880399002493767e-15,
+   "nonnegative_within_absolute_tolerance": true,
+   "nonzeros_on": 20,
+   "pass": true,
+   "schedule": [
+    {
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "split_merged": {
+    "all_components_within_relative_or_absolute": true,
+    "maximum_absolute_over_initial_norm": 2.4514713216957608e-15,
+    "maximum_relative_above_tolerance_crossover": 2.4812271689274592e-15,
+    "maximum_resolvable_relative": 2.4812271689274592e-15,
+    "resolvable_components": 8,
+    "tolerance_crossover_fraction_of_initial_norm": 0.01
+   },
+   "states": 8
+  },
+  {
+   "boundaries": [
+    {
+     "actinv_total_atoms": 1.0024999999999995e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.964201429251895e-16,
+      "maximum_resolvable_relative": 1.9404788371476956e-08,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.2768079800498752e-18,
+      "maximum_relative_above_tolerance_crossover": 0.0,
+      "maximum_resolvable_relative": 1.0508627538592793e-15,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0025e+20,
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.964201429251895e-16,
+      "maximum_resolvable_relative": 1.94047876009071e-08,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000005e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.985344181851251e-16,
+      "maximum_resolvable_relative": 1.2745441655325273e-08,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 8.171571072319202e-16,
+      "maximum_relative_above_tolerance_crossover": 8.308906969752074e-16,
+      "maximum_resolvable_relative": 1.939549150096794e-15,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0025e+20,
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3294251151603337e-15,
+      "maximum_resolvable_relative": 1.2745440308280995e-08,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000008e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 9.805885286783043e-16,
+      "maximum_relative_above_tolerance_crossover": 1.0033837440774255e-15,
+      "maximum_resolvable_relative": 1.3139187664424817e-09,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3378449921032307e-15,
+      "maximum_resolvable_relative": 1.6997440104782577e-15,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0024999999999998e+20,
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.2880399002493767e-15,
+      "maximum_relative_above_tolerance_crossover": 2.341228736180659e-15,
+      "maximum_resolvable_relative": 1.3139180653479348e-09,
+      "resolvable_components": 31,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000013e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3415291291982498e-15,
+      "maximum_resolvable_relative": 1.3457804547475351e-09,
+      "resolvable_components": 32,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
+      "maximum_relative_above_tolerance_crossover": 6.707645645991235e-16,
+      "maximum_resolvable_relative": 2.9681477649372614e-15,
+      "resolvable_components": 32,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0025e+20,
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.9611770573566085e-15,
+      "maximum_relative_above_tolerance_crossover": 2.0122936937973748e-15,
+      "maximum_resolvable_relative": 1.3457792495089838e-09,
+      "resolvable_components": 32,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    },
+    {
+     "actinv_total_atoms": 1.0025000000000021e+20,
+     "actinv_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.2880399002493767e-15,
+      "maximum_relative_above_tolerance_crossover": 2.605626889406709e-15,
+      "maximum_resolvable_relative": 8.452357718319526e-06,
+      "resolvable_components": 32,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "actinv_vs_openmc": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 1.6343142144638403e-16,
+      "maximum_relative_above_tolerance_crossover": 2.013438959996092e-15,
+      "maximum_resolvable_relative": 2.3587807202646292e-15,
+      "resolvable_components": 32,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     },
+     "dense_total_atoms": 1.0024999999999998e+20,
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8,
+     "openmc_vs_dense": {
+      "all_components_within_relative_or_absolute": true,
+      "maximum_absolute_over_initial_norm": 2.4514713216957608e-15,
+      "maximum_relative_above_tolerance_crossover": 2.5219962836553856e-15,
+      "maximum_resolvable_relative": 8.452357718640267e-06,
+      "resolvable_components": 32,
+      "tolerance_crossover_fraction_of_initial_norm": 0.01
+     }
+    }
+   ],
+   "finite": true,
+   "maximum_conservation_relative": 2.4514713216957608e-15,
+   "nonnegative_within_absolute_tolerance": true,
+   "nonzeros_on": 92,
+   "pass": true,
+   "schedule": [
+    {
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "split_merged": {
+    "all_components_within_relative_or_absolute": true,
+    "maximum_absolute_over_initial_norm": 2.4514713216957608e-15,
+    "maximum_relative_above_tolerance_crossover": 2.4812271689274592e-15,
+    "maximum_resolvable_relative": 2.4812271689274592e-15,
+    "resolvable_components": 30,
+    "tolerance_crossover_fraction_of_initial_norm": 0.01
+   },
+   "states": 32
+  }
+ ],
+ "implementations": {
+  "actinv_module_sha256": "bf514ab52ce1722ddb631f802d586fe2dbc59a898ae81681e890758b484b54f6",
+  "actinv_version": "1.0.0",
+  "coefficient_document_sha256": "df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23",
+  "dense_solver": "scipy.linalg.expm",
+  "openmc_solver": "openmc.deplete.cram.CRAM48",
+  "openmc_version": "0.15.3"
+ },
+ "pass": true,
+ "schema": "actinv-cb1-numerical-1",
+ "tolerances": {
+  "absolute_fraction_of_initial_1norm": 5e-14,
+  "relative": 5e-12,
+  "resolvable_fraction_of_initial_1norm": 1e-24
+ },
+ "worst": {
+  "absolute_over_initial_norm": 4.096e-15,
+  "relative_above_tolerance_crossover": 4.180834583524121e-15,
+  "resolvable_relative": 8.452357718640267e-06,
+  "split_merged_absolute_over_initial_norm": 2.4514713216957608e-15
+ }
+}

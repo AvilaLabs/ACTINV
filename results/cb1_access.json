@@ -1,0 +1,106 @@
+{
+ "access": {
+  "ACTINV 1.0.0": {
+   "class": "executed",
+   "detail": "standalone CLI and current Rust Python module are present",
+   "executable_sha256": "20f78f42afd2db69d134ced9bbc1139df10328e8e8ebd1f761d50f57250cc452",
+   "python_module_sha256": "bf514ab52ce1722ddb631f802d586fe2dbc59a898ae81681e890758b484b54f6",
+   "version": "actinv 1.0.0"
+  },
+  "ALARA 2.9.2": {
+   "class": "executed",
+   "detail": "official pinned source and locally built executable are present",
+   "executable_sha256": "03ff0e6baa0c6b1cd2f3e7896641426f8f96d950ca5a206d5d2a89ee6d962c07",
+   "source_commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+   "version": "ALARA 2.9.2"
+  },
+  "FISPACT-II": {
+   "class": "published-reference",
+   "detail": "no executable supplied or found; frozen CoNDERC outputs identify FISPACT-II Release 4.0 and TENDL-2017",
+   "fresh_execution": "not-available"
+  },
+  "OpenMC 0.15.3 depletion": {
+   "class": "executed",
+   "detail": "OpenMC CRAM48 is available through the recorded Python environment",
+   "python_sha256": "269c86d9d69d286d2dfdd94999c4d65b885ab62f09f78a596dec584d56877cf4",
+   "versions": {
+    "numpy": "2.5.2",
+    "openmc": "0.15.3",
+    "scipy": "1.18.0"
+   }
+  },
+  "SCALE/ORIGEN": {
+   "class": "not-available",
+   "detail": "no licensed executable or suitable executable-level public result was supplied"
+  }
+ },
+ "checks": {
+  "actinv_1_0_0_executable": true,
+  "alara_2_9_2_pinned": true,
+  "all_external_identities_match": true,
+  "fns_extracted_family_present": true,
+  "openmc_environment_pinned": true,
+  "product_source_unchanged_since_pin": true,
+  "source_pin_exists": true
+ },
+ "execution_head": "ccc8a5cc1463ca6132de6d68aa2e9daa65768a5b",
+ "host": {
+  "affinity_cpus": 8,
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "kernel": "7.0.0-30-generic",
+  "logical_cpus": 8,
+  "machine": "x86_64",
+  "memory_bytes": 32947396608,
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+  "python": "3.14.4",
+  "rustc": "rustc 1.98.0 (88d9e12ae 2026-08-18)\nbinary: rustc\ncommit-hash: 88d9e12ae178fab0fb5cc050a94da85685d449ea\ncommit-date: 2026-08-18\nhost: x86_64-unknown-linux-gnu\nrelease: 1.98.0\nLLVM version: 22.1.8",
+  "thread_environment_at_inventory": {
+   "MKL_NUM_THREADS": "unset",
+   "NUMEXPR_NUM_THREADS": "unset",
+   "OMP_NUM_THREADS": "unset",
+   "OPENBLAS_NUM_THREADS": "unset",
+   "RAYON_NUM_THREADS": "unset"
+  }
+ },
+ "identities": {
+  "activation_index": {
+   "actual_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "bytes": 2653304,
+   "expected_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "matches": true
+  },
+  "activation_library": {
+   "actual_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "bytes": 123897743,
+   "expected_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "matches": true
+  },
+  "decay_fallback": {
+   "actual_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "bytes": 45718116,
+   "expected_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "matches": true
+  },
+  "decay_primary": {
+   "actual_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "bytes": 68313052,
+   "expected_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "matches": true
+  },
+  "fission_archive": {
+   "actual_sha256": "30756fef88c0f3637246bf8ad8ef1fc5397a3f784e5408f2861bc474993e74a5",
+   "bytes": 28440031,
+   "expected_sha256": "30756fef88c0f3637246bf8ad8ef1fc5397a3f784e5408f2861bc474993e74a5",
+   "matches": true
+  },
+  "fns_archive": {
+   "actual_sha256": "ba1dd6cb150a4aa3e0d81461054aec7d415ef19d946aba8b9886b31de218252d",
+   "bytes": 14839792,
+   "expected_sha256": "ba1dd6cb150a4aa3e0d81461054aec7d415ef19d946aba8b9886b31de218252d",
+   "matches": true
+  }
+ },
+ "pass": true,
+ "schema": "actinv-cb1-access-1",
+ "source_pin": "19afc18d1f65d696512d52d848ec0a145e67534e"
+}
