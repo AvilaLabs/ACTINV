@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import struct
 import subprocess
@@ -39,12 +40,35 @@ FIXTURE_SIGMA = np.asarray(
     ],
     dtype="<f8",
 )
+FROZEN_SOLVER_IDENTITY = "actinv-core 1.0.0"
+SOLVER_IDENTITY = re.compile(
+    r"actinv-core [0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?"
+)
+
+
+def normalize_value(value: dict[str, object]) -> dict[str, object]:
+    value.pop("ms", None)
+    certificate = value.get("certificate")
+    if isinstance(certificate, dict):
+        solver = certificate.get("solver")
+        if isinstance(solver, str) and SOLVER_IDENTITY.fullmatch(solver):
+            certificate["solver"] = FROZEN_SOLVER_IDENTITY
+    return value
 
 
 def normalized(path: Path) -> dict[str, object]:
-    value = json.loads(path.read_text(encoding="utf-8"))
-    value.pop("ms", None)
-    return value
+    return normalize_value(json.loads(path.read_text(encoding="utf-8")))
+
+
+def check_version_normalization() -> None:
+    baseline = normalize_value(
+        {"ms": 1.0, "certificate": {"solver": "actinv-core 1.0.0"}, "inventory": []}
+    )
+    patch = normalize_value(
+        {"ms": 2.0, "certificate": {"solver": "actinv-core 1.0.1"}, "inventory": []}
+    )
+    if baseline != patch:
+        raise AssertionError("P15 scientific-result normalization depends on patch version")
 
 
 def canonical_sha256(value: object, ephemeral_root: Path) -> str:
@@ -189,6 +213,7 @@ def append_trailing(data: bytearray) -> bytearray:
 
 
 def main() -> None:
+    check_version_normalization()
     with tempfile.TemporaryDirectory(prefix="actinv-p15-g3-") as directory:
         work = Path(directory)
         spec = fixture(work)

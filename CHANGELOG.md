@@ -20,6 +20,13 @@
 - Release validation now derives the current software version from package metadata and keeps the independently
   versioned `data-v1.0.0` catalog distinct during wheel smoke tests.
 
+**Fixed**
+
+- Patch-version provenance no longer changes the frozen P15 scientific-result hash. Raw result certificates still
+  retain the exact solver version, and the normalized control accepts only the documented solver-semver field.
+- Standalone crate validation now resolves temporary package lockfiles offline, proves their external dependency
+  records are a subset of the workspace lock, and keeps compiler temporary files inside the selected gate work root.
+
 ## v1.0.0 — 2026-08-28
 
 **Added**
