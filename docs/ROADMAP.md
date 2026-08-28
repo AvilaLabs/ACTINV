@@ -5,10 +5,10 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-28):** P13 is closed **P13-PASS**, v1.0.0 is publicly released, and the initial post-release
-competitive benchmark is closed **CB1-COMPLETE**. P14 is closed **P14-CLOSED-BELOW-THRESHOLD**: its candidate exactly
-preserves the normalized result and lowers warm median wall time by 6.55%, but misses the frozen 10% acceptance
-threshold. P15 is the only open phase and is bound to its prepared/selective-data protocol.
+**Current status (2026-08-28):** v1.0.0 is publicly released; P13 and the initial competitive benchmark are closed
+**P13-PASS** and **CB1-COMPLETE**. P14 closed honestly below its frozen threshold. P15 is now closed **P15-PASS**:
+the prepared warm path preserves the exact normalized result while measuring 2.595× faster and 8.326× lower in peak
+RSS on the frozen public-example workload. No phase is open; P16 is next but remains unfrozen.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -243,3 +243,10 @@ part that does not compress: users, issues, and the validation record accumulati
   spectrum-bound collapsed artifact. Frozen required gates are at least 1.5x lower warm wall time, 2x lower peak RSS,
   bounded and visible cold preparation, exact CLI/Python/provenance identity and fail-closed cache reuse. No prepared
   or bulk artifact enters Git.
+- 2026-08-28 — P15 closed P15-PASS without threshold relaxation. On the frozen public example, the exact-preserving
+  warm path moves from 3,074.85 ms to 1,185.01 ms median wall time and from 1,076,908,032 to 129,343,488 bytes peak
+  RSS: 2.595x faster and 8.326x lower. The final one-second warm stretch goal is recorded as missed; every required
+  gate passes. All 167,735 source rows, 710 boundaries, 33,597,258 retained values and 167,735 collapsed values match
+  exactly; 23 corruption plants fail closed. Source/evidence commit
+  `c2c89deab1dcee533414a1e6512d0ff45075c184` passed GitHub Actions run `33207936195`. P16 is next but remains
+  unopened and unhashed; no tag or package publication is claimed.

@@ -1,5 +1,5 @@
 {
- "closed": false,
+ "closed": true,
  "evidence_sha256": {
   "cache": "3e3dfb212e5453c488c760d191c3e98f5e9609fdb3cef9ce7b6c447c82edf083",
   "interfaces": "c7129476489244052e70f482a003fab577ff1a9f2fc3ab2711a6cf615f7a3555",
@@ -306,9 +306,26 @@
  },
  "schema": "actinv-p15-verdict-1",
  "session": {
-  "pass": false,
-  "present": false
+  "checks": {
+   "evidence_hashes": true,
+   "manifest": true,
+   "protocol": true,
+   "reported_pass": true,
+   "schema": true,
+   "source_commit": true,
+   "source_commit_evidence": true,
+   "workflow": true
+  },
+  "pass": true,
+  "present": true,
+  "source_commit_evidence_sha256": {
+   "cache": "3e3dfb212e5453c488c760d191c3e98f5e9609fdb3cef9ce7b6c447c82edf083",
+   "interfaces": "c7129476489244052e70f482a003fab577ff1a9f2fc3ab2711a6cf615f7a3555",
+   "performance": "141ec1ee3168933b0d52db2c0826bf188f75cebfcc06756d67a8a19837c10498",
+   "prepared": "1e7fa396839eac36470c8d4dc3863141ef6312585c770b37d6e8eb4c447f36f2",
+   "quality": "b0d62dfbf7386d2d9b1d055ca239a80f0eda629ef92f48ad8a50065a040f8cdd"
+  }
  },
  "source_pass": true,
- "verdict": "P15-SOURCE-PASS"
+ "verdict": "P15-PASS"
 }

@@ -1,0 +1,61 @@
+{
+ "schema": "actinv-p15-session-1",
+ "date": "2026-08-28",
+ "canonical_repository": "https://github.com/AvilaLabs/ACTINV.git",
+ "protocol_sha256": "09da6b3f011f7d837be36a233b6fe13117c90a71df629708df5ac90e1b5b12de",
+ "source_evidence_commit": "c2c89deab1dcee533414a1e6512d0ff45075c184",
+ "workflow": {
+  "name": "controls",
+  "run_id": 33207936195,
+  "head_sha": "c2c89deab1dcee533414a1e6512d0ff45075c184",
+  "head_branch": "master",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-08-28T20:22:14Z",
+  "completed_at": "2026-08-28T20:29:18Z",
+  "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33207936195"
+ },
+ "evidence_sha256": {
+  "prepared": "1e7fa396839eac36470c8d4dc3863141ef6312585c770b37d6e8eb4c447f36f2",
+  "cache": "3e3dfb212e5453c488c760d191c3e98f5e9609fdb3cef9ce7b6c447c82edf083",
+  "interfaces": "c7129476489244052e70f482a003fab577ff1a9f2fc3ab2711a6cf615f7a3555",
+  "performance": "141ec1ee3168933b0d52db2c0826bf188f75cebfcc06756d67a8a19837c10498",
+  "quality": "b0d62dfbf7386d2d9b1d055ca239a80f0eda629ef92f48ad8a50065a040f8cdd"
+ },
+ "measurements": {
+  "workload": "examples/fns_fe_5min.json with hash-pinned data-v1.0.0 inputs",
+  "warmups_per_binary": 5,
+  "samples_per_binary": 15,
+  "opening_warm_median_ms": 3074.8537229999997,
+  "candidate_warm_median_ms": 1185.0096409999999,
+  "warm_median_speedup_factor": 2.594792157475789,
+  "opening_warm_p95_ms": 3189.945705,
+  "candidate_warm_p95_ms": 1211.7857295999997,
+  "warm_p95_speedup_factor": 2.6324337934339055,
+  "opening_peak_rss_bytes": 1076908032,
+  "candidate_peak_rss_bytes": 129343488,
+  "peak_rss_reduction_factor": 8.325954778643359,
+  "empty_cache_wall_ms": 5582.666842,
+  "empty_cache_peak_rss_bytes": 129626112,
+  "prepared_cache_bytes": 282382207,
+  "prepared_to_dense_fraction": 0.28956847818459697,
+  "warm_median_one_second_stretch": false,
+  "warm_peak_512_mib_stretch": true
+ },
+ "checks": {
+  "all_production_rows_boundaries_and_values_checked": true,
+  "indexed_selections_exact_and_bounded": true,
+  "cache_mutations_fail_closed": true,
+  "cache_recreation_and_concurrency_exact": true,
+  "cli_python_result_and_provenance_exact": true,
+  "four_strict_workspace_rust_gates": true,
+  "python_binding_rust_gates": true,
+  "twenty_three_local_quality_commands": true,
+  "github_controls": true,
+  "no_bulk_or_prepared_data_committed": true,
+  "post_checkpoint_repair_rounds": 0
+ },
+ "verdict": "P15-PASS",
+ "pass": true
+}
