@@ -31,6 +31,10 @@
 - Sealed P18b G0 provenance for all 11,400 source files and a deterministic 245-file official-checker sample before
   reading checker output or new corpus classifications. The independent checker rederives the sample, binds both
   green opening workflows and rejects seven authority, inventory and quarantine mutations.
+- Completed P18b G1 without reading corpus classifications or measurements. An exact 80/120-digit Decimal oracle,
+  the checked Rust parser/interpolator and six unmodified pinned IAEA CHECKR/FIZCON runs agree across all ENDF real
+  forms, interpolation laws, repeated-energy sides, printed-field classes, exact 0.1%/zero-total boundaries,
+  threshold rules and excitation cancellation. Seven independent mutations fail; production behavior is unchanged.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no

@@ -1,0 +1,111 @@
+{
+ "schema": "actinv-p18b-g1-fixtures-1",
+ "field_cases": [
+  {"id": "blank_zero", "field": "           ", "valid": true},
+  {"id": "integer_zero", "field": "          0", "valid": true},
+  {"id": "positive_integer", "field": "    1234567", "valid": true},
+  {"id": "negative_integer", "field": "-0000000001", "valid": true},
+  {"id": "unsigned_decimal", "field": " 1.23456789", "valid": true},
+  {"id": "signed_decimal", "field": "-1.23456789", "valid": true},
+  {"id": "leading_decimal_point", "field": " .123456789", "valid": true},
+  {"id": "positive_exponent", "field": " 1.234567+3", "valid": true},
+  {"id": "negative_exponent", "field": "-1.234567-3", "valid": true},
+  {"id": "explicit_plus", "field": "+1.234567+3", "valid": true},
+  {"id": "two_digit_exponent", "field": " 1.23456+10", "valid": true},
+  {"id": "maximum_positive_exponent", "field": " 1.23456+38", "valid": true},
+  {"id": "maximum_negative_exponent", "field": " 1.23456-38", "valid": true},
+  {"id": "explicit_e", "field": " 1.23456E+3", "valid": true},
+  {"id": "negative_zero", "field": "-0.000000+0", "valid": true},
+  {"id": "malformed_suffix", "field": " 1.2345+3x ", "valid": false},
+  {"id": "multiple_exponents", "field": " 1.2+3-4   ", "valid": false},
+  {"id": "nonfinite", "field": "      1E999", "valid": false}
+ ],
+ "tables": [
+  {
+   "id": "histogram",
+   "x": [" 1.000000+0", " 1.000000+1"],
+   "y": [" 2.000000+0", " 4.000000+0"],
+   "interpolation": [[2, 1]],
+   "queries": [
+    {"id": "inside", "x": " 3.000000+0", "side": "right"},
+    {"id": "below", "x": " 5.000000-1", "side": "right"},
+    {"id": "above", "x": " 2.000000+1", "side": "right"}
+   ]
+  },
+  {
+   "id": "lin_lin",
+   "x": [" 1.000000+0", " 5.000000+0"],
+   "y": [" 2.000000+0", " 1.000000+1"],
+   "interpolation": [[2, 2]],
+   "queries": [{"id": "inside", "x": " 2.500000+0", "side": "right"}]
+  },
+  {
+   "id": "lin_log",
+   "x": [" 1.000000+0", " 1.000000+2"],
+   "y": [" 2.000000+0", " 6.000000+0"],
+   "interpolation": [[2, 3]],
+   "queries": [{"id": "geometric_middle", "x": " 1.000000+1", "side": "right"}]
+  },
+  {
+   "id": "log_lin",
+   "x": [" 1.000000+0", " 3.000000+0"],
+   "y": [" 2.000000+0", " 8.000000+0"],
+   "interpolation": [[2, 4]],
+   "queries": [{"id": "arithmetic_middle", "x": " 2.000000+0", "side": "right"}]
+  },
+  {
+   "id": "log_log",
+   "x": [" 1.000000+0", " 1.000000+2"],
+   "y": [" 2.000000+0", " 1.800000+1"],
+   "interpolation": [[2, 5]],
+   "queries": [{"id": "geometric_middle", "x": " 1.000000+1", "side": "right"}]
+  },
+  {
+   "id": "repeated_energy",
+   "x": [" 1.000000+0", " 2.000000+0", " 2.000000+0", " 4.000000+0"],
+   "y": [" 1.000000+0", " 2.000000+0", " 8.000000+0", " 1.600000+1"],
+   "interpolation": [[4, 2]],
+   "queries": [
+    {"id": "left_limit", "x": " 2.000000+0", "side": "left"},
+    {"id": "right_value", "x": " 2.000000+0", "side": "right"},
+    {"id": "last_point", "x": " 4.000000+0", "side": "right"}
+   ]
+  },
+  {
+   "id": "interpolation_regions",
+   "x": [" 1.000000+0", " 2.000000+0", " 4.000000+0"],
+   "y": [" 1.000000+0", " 2.000000+0", " 8.000000+0"],
+   "interpolation": [[2, 1], [3, 2]],
+   "queries": [
+    {"id": "first_region", "x": " 1.500000+0", "side": "right"},
+    {"id": "second_region", "x": " 3.000000+0", "side": "right"}
+   ]
+  }
+ ],
+ "comparisons": [
+  {"id": "mf9_source_conformant", "mf": 9, "total": " 1.000000+0", "partials": [" 4.000000-1", " 5.000000-1"]},
+  {"id": "mf9_printing_envelope", "mf": 9, "total": " 1.000000+0", "partials": [" 5.000001-1", " 5.000001-1"]},
+  {"id": "mf9_definite_excess", "mf": 9, "total": " 1.000000+0", "partials": [" 5.000010-1", " 5.000010-1"]},
+  {"id": "mf9_inside_standard", "mf": 9, "total": " 1.000000+0", "partials": [" 5.004950-1", " 5.004950-1"]},
+  {"id": "mf9_outside_standard", "mf": 9, "total": " 1.000000+0", "partials": [" 5.005050-1", " 5.005050-1"]},
+  {"id": "mf10_sum_boundary", "mf": 10, "total": " 1.000000+3", "partials": [" 5.005000+2", " 5.005000+2"]},
+  {"id": "mf10_sum_beyond", "mf": 10, "total": " 1.000000+3", "partials": [" 5.005005+2", " 5.005005+2"]},
+  {"id": "mf10_zero_boundary", "mf": 10, "total": " 0.000000+0", "partials": [" 5.000000-4", " 5.000000-4"]},
+  {"id": "mf10_zero_beyond", "mf": 10, "total": " 0.000000+0", "partials": [" 5.000005-4", " 5.000005-4"]},
+  {"id": "mf10_individual_excess", "mf": 10, "total": " 1.000000+0", "partials": [" 1.000100+0", " 0.000000+0"]},
+  {"id": "mf10_negative_partial", "mf": 10, "total": " 1.000000+0", "partials": ["-1.000000-6", " 5.000000-1"]},
+  {"id": "mf10_missing_total", "mf": 10, "total": null, "partials": [" 5.000000-1", " 5.000000-1"]}
+ ],
+ "threshold_cases": [
+  {"id": "negative_q_zero_at_threshold", "q": "-1.000000+6", "threshold": " 1.000000+6", "first_energy": " 1.000000+6", "first_value": " 0.000000+0"},
+  {"id": "negative_q_nonzero_at_threshold", "q": "-1.000000+6", "threshold": " 1.000000+6", "first_energy": " 1.000000+6", "first_value": " 1.000000-8"},
+  {"id": "negative_q_starts_above_threshold", "q": "-1.000000+6", "threshold": " 1.000000+6", "first_energy": " 1.000001+6", "first_value": " 0.000000+0"},
+  {"id": "positive_q_no_threshold_contract", "q": " 1.000000+6", "threshold": " 0.000000+0", "first_energy": " 1.000000-5", "first_value": " 1.000000-8"}
+ ],
+ "excitation_cases": [
+  {"id": "large_q_cancellation_exact", "elfs": " 1.175900+5", "qm": " 6.809191+6", "qi": " 6.691601+6", "catalog": " 1.175900+5"},
+  {"id": "inclusive_one_ev_boundary", "elfs": " 1.175910+5", "qm": " 6.809192+6", "qi": " 6.691601+6", "catalog": " 1.175900+5"},
+  {"id": "one_quantum_outside", "elfs": " 1.175911+5", "qm": " 6.809192+6", "qi": " 6.691601+6", "catalog": " 1.175900+5"},
+  {"id": "mf8_q_conflict", "elfs": " 1.175900+5", "qm": " 6.809193+6", "qi": " 6.691601+6", "catalog": " 1.175900+5"}
+ ]
+}

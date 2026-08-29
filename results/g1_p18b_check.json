@@ -1,0 +1,34 @@
+{
+ "checker_source_sha256": "3e6ba7e15aca7ba97d969d2d8da3b4c7713a17836b0bb1adf41470750bd5fe6d",
+ "checks": {
+  "excitation_boundary": true,
+  "fixed_width_decimal": true,
+  "fresh_rust_probe": true,
+  "frozen_predecessor": true,
+  "interpolation_laws": true,
+  "official_checker_decisions": true,
+  "official_tapes_regenerated": true,
+  "one_sided_repeated_energy": true,
+  "portable_evidence": true,
+  "printed_quantum": true,
+  "source_classes": true,
+  "standard_envelope": true,
+  "threshold_contract": true
+ },
+ "control_sha256": "76c82ea2760666c9ab6187cf650f42e11df92586e23efd7da7d09f8ee516640a",
+ "evidence_sha256": "e258ae73302fce5ef63419e8bc24507e42707d14ca5bb1d4b60a0515197d3adc",
+ "fixture_sha256": "afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b",
+ "gate": "P18b-G1",
+ "mutation_plants": {
+  "boundary": true,
+  "digit": true,
+  "exponent": true,
+  "grid": true,
+  "interpolation": true,
+  "side": true,
+  "tolerance": true
+ },
+ "pass": true,
+ "probe_sha256": "558b6ed1e6c1689196b0fe8b1467bd122a44113869e0754614f286b0d38bb66a",
+ "schema": "actinv-p18b-g1-independent-check-1"
+}

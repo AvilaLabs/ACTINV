@@ -48,6 +48,11 @@ jobs:
       - name: P18b authority, provenance, and quarantine seal
         run: python controls/check_g0_p18b.py --no-write
 
+      - name: P18b decimal and official-checker oracle
+        env:
+          ACTINV_P18B_PROBE: target/release/p18b_oracle_probe
+        run: python controls/check_g1_p18b.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 

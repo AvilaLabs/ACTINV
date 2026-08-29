@@ -23,7 +23,9 @@ v1.1.0 cannot ship from this phase. Source/evidence commit `a460b6e4092d57ff228c
 than converting it into a scientific pass. P18b is open from the green closure under protocol
 `69076fa2656b239addbb15fbb4727caaa2c8ea37b3aa82a141f3a2b0b619eabe`. G0 has frozen provenance for all 11,400
 source files plus the 245-file official-checker sample; no checker output, new corpus classification or measurement
-value was read before that seal.
+value was read before that seal. G1 now fixes the exact-decimal, printed-quantum, interpolation, standard-envelope,
+threshold and excitation-boundary oracle: Rust agrees at zero ULP on the generated interpolation cases, and all six
+pinned IAEA CHECKR/FIZCON decisions agree. Production and the public v1.0.1 artifacts remain unchanged.
 Amendment 1 (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) quarantines five families whose
 dependent rows were accidentally displayed by an incorrect fixed-column redaction before G0. They are diagnostic
 only; the remaining held-out partition stays sealed. It had capped a successful close at P18-CONDITIONAL; the later
@@ -351,3 +353,9 @@ part that does not compress: users, issues, and the validation record accumulati
   selection and all P18 worst/conflict additions from a compact provenance-only manifest, binds opening run
   `33259343493`, and rejects seven mutations. G1 decimal/checker fixtures are authorized; G2 and all measurements are
   not.
+- 2026-08-29 — P18b G1 established the independent numerical oracle before reading a new corpus classification. Its
+  18 fixed-width real cases include all three ENDF-102 Table 17 forms and the ±38 exponent limits; seven tables cover
+  all five interpolation laws and repeated-energy sides. The 80/120-digit classifications are identical, the Rust
+  probe differs by zero ULP on the generated queries, and unmodified pinned IAEA CHECKR/FIZCON agrees on six MF9/10
+  inside/boundary/outside fixtures. The independent checker regenerates every official tape and rejects seven
+  mutations. Production, measurements and v1.0.1 remain unchanged; G2 starts only after this checkpoint is green.
