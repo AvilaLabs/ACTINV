@@ -5,14 +5,16 @@ its protocol is hashed; anything discovered mid-phase goes to `docs/PARKING.md`,
 time. Every phase ends with a checker-derived verdict, a session file, a manifest, a commit. Changes to this roadmap are
 dated entries in the changelog at the bottom — nothing is edited away.*
 
-**Current status (2026-08-28):** v1.0.1 is publicly released on PyPI, crates.io and GitHub from signed tag `v1.0.1`.
+**Current status (2026-08-29):** v1.0.1 is publicly released on PyPI, crates.io and GitHub from signed tag `v1.0.1`.
 P13 and the initial competitive benchmark are closed **P13-PASS** and **CB1-COMPLETE**. P14 closed honestly below its
 frozen threshold. P15 is closed **P15-PASS** with a 2.595× faster and 8.326× lower-RSS prepared warm path. P16 is
 closed **P16-CONDITIONAL**: eleven zero-cost physical quantity types are wired through production boundaries, all
 seven metamorphic relation families and exact release-compatibility controls pass, and the frozen workload is 3.0%
 faster at the median with effectively unchanged memory. The conditional suffix records one CI checkout-history
-repair, not a product or scientific failure. P17 is open under hash `c1e2d2ef…`: production code is frozen while
-same-operator, identical-data, processor, diagnostic and sealed held-out evidence attribute each material mismatch.
+repair, not a product or scientific failure. P17 is closed **P17-FAIL** under its unchanged procedural rule: all
+numerical, identical-data, processor, diagnostic, independent-arithmetic and quality controls pass, but the sole
+post-unseal amendment's EOI, product-alias and infinite-dilution assumptions were falsified. P17 changed no production
+code or released package. P18 is next but remains unopened until the P17 closure commit passes its full workflow.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -281,3 +283,10 @@ part that does not compress: users, issues, and the validation record accumulati
   with production code frozen. Public IAEA IRDFF-II inputs are hash-pinned; Tables 18–20 and FNS are diagnostic,
   while SPR-III Tables 21–23, ACRR Tables 24–25 and high-temperature Maxwellian Table 36 remain numerically sealed
   until the parsers, metrics, attribution taxonomy and independent checker pass at a pushed unseal checkpoint.
+- 2026-08-29 — P17 closed P17-FAIL without altering its protocol or hiding the failed assumptions. G0--G4 and G6--G7
+  pass; all 94 held-out rows are preserved. Twelve supported ACRR threshold responses are all within 10%, and 18 of
+  21 Maxwellian responses are within 30%, but Amendment 1's uniform-EOI, `Ag109g` alias and unshielded-`bare`
+  assumptions require a forbidden second post-unseal repair. The independent checker rejects 18 total diagnostic
+  and held-out evidence plants. Source/evidence commit `0b3a89f5c9953166f1547eb96be56a7bc9d5ff35` passed all 38
+  GitHub Actions steps in run `33231786946`. No production source or package changed; P18 remains unopened until the
+  closure commit is green.

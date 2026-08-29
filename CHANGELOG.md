@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+**Validation**
+
+- Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
+  identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
+  every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no
+  production behavior, public interface, default, package or nuclear-data artifact.
+
 **Fixed**
 
 - The crates.io trusted-publisher environment now matches the registry's configured `crates.io` OIDC identity. A

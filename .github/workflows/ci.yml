@@ -85,6 +85,9 @@ jobs:
       - name: P17 held-out failure evidence and post-failure diagnostics
         run: python controls/check_g5_p17.py --no-write
 
+      - name: P17 formal closure preserves the frozen failure verdict
+        run: python controls/check_p17.py --no-write
+
       - name: P14 performance close remains reproducible
         run: python controls/check_p14.py --no-write
 

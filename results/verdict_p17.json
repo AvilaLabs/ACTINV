@@ -1,0 +1,32 @@
+{
+ "closed": true,
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "cause_ledger_heldout": "93f166ed234a58155c0d4f7e8db0601e6f7965aff046504a6483acbf54ab5f83",
+  "cause_ledger_open": "85743dc9b2b6aaae066453e395a4336c0671520d7d2f4da383e0254a839fa143",
+  "g0_seal": "a2e4ab1655628263cf887e2a5c3bc492b7f9bf22dce19e48481944969111d3c8",
+  "g1_operators": "3e0e56529f4ea498bf657bfb48cea9a74863829a6b94276017f29589a5d238da",
+  "g2_identical_data": "b23b9afdace1a3595cb8b42f02c088ee3889bdc17d6fc0dd605e84b119d30197",
+  "g3_processing": "01b76e2b9ad42aca8d1998069c5550bc6f1c91614f3f2b7a4108f356e1bb62e8",
+  "g4_check": "3c8880b5185d491467ea920a72f80c20555ed274017cc45ce2c4bda50fb8f305",
+  "g4_diagnostics": "c65ad753055923afe77df82a2d532effa1f8c594cdedb7bfbe7344adf747bcaa",
+  "g5_check": "3c0dd832b7c50f6c4dfd36947e225233b48bbe0863a961ebcf8f4ece79cc3f49",
+  "g5_heldout": "5336e04d7feb4e8fa2758bbed4cc79907e5a5b54555912db993cc2284fef954e",
+  "unseal_authorization": "6646ec1466d251cd53e8706f97f0775bb126d8e26e40c2b6f28aa7d2d0c9f491",
+  "unseal_check": "464cac32d139743e8b232ae338c6b688914c4531c45dbfccf4b0837f4e1fbeef"
+ },
+ "failure_class": "frozen post-unseal assumptions falsified; second repair required",
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": false,
+  "G6": true,
+  "G7": true
+ },
+ "phase_success": false,
+ "schema": "actinv-p17-verdict-1",
+ "verdict": "P17-FAIL"
+}
