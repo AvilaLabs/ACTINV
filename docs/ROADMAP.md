@@ -11,7 +11,8 @@ frozen threshold. P15 is closed **P15-PASS** with a 2.595× faster and 8.326× l
 closed **P16-CONDITIONAL**: eleven zero-cost physical quantity types are wired through production boundaries, all
 seven metamorphic relation families and exact release-compatibility controls pass, and the frozen workload is 3.0%
 faster at the median with effectively unchanged memory. The conditional suffix records one CI checkout-history
-repair, not a product or scientific failure. P17 is next and remains unopened.
+repair, not a product or scientific failure. P17 is open under hash `c1e2d2ef…`: production code is frozen while
+same-operator, identical-data, processor, diagnostic and sealed held-out evidence attribute each material mismatch.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -275,3 +276,8 @@ part that does not compress: users, issues, and the validation record accumulati
   repair: the first clean runner lacked the frozen opening commit under a depth-1 checkout; fetching full history
   changed no product source, result, expectation or threshold. P17 is next but remains unopened pending the P16
   closure commit.
+- 2026-08-28 — P16 closure commit `f9e6a5c8faf15f1748f1b2c4683889ea8a631c9d` passed all steps in GitHub Actions
+  run `33224125433`. P17 then opened under protocol `c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f`
+  with production code frozen. Public IAEA IRDFF-II inputs are hash-pinned; Tables 18–20 and FNS are diagnostic,
+  while SPR-III Tables 21–23, ACRR Tables 24–25 and high-temperature Maxwellian Table 36 remain numerically sealed
+  until the parsers, metrics, attribution taxonomy and independent checker pass at a pushed unseal checkpoint.
