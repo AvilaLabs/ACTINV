@@ -1,0 +1,187 @@
+{
+ "amendment_sha256": "8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0",
+ "cases": {
+  "ag116_two_isomers": {
+   "build": {
+    "index_sha256": "b6e23ca4cb7d33f3120284afeca03244bc994adcdd1b2c042d0e57d3e8b1eb12",
+    "npz_sha256": "245c81a2add96203a184052ddde2dbc2be78193e0298f0b84a18e90edb86fe81",
+    "rows": 162,
+    "targets": 3
+   },
+   "catalog_states": [
+    {
+     "decision": "unique_evaluation",
+     "evaluations": [
+      {
+       "elis_eV": 0.0,
+       "file": "n-Ag116.tendl",
+       "lis": 0,
+       "source_sha256": "8a1d0639766f9aee47fc7ceb85a418900e48a7cec0e7abfda51051d6aec074c5"
+      }
+     ],
+     "liso": 0,
+     "representative": {
+      "elis_eV": 0.0,
+      "file": "n-Ag116.tendl",
+      "lis": 0,
+      "source_sha256": "8a1d0639766f9aee47fc7ceb85a418900e48a7cec0e7abfda51051d6aec074c5"
+     },
+     "za": 47116
+    },
+    {
+     "decision": "unique_evaluation",
+     "evaluations": [
+      {
+       "elis_eV": 47900.0,
+       "file": "n-Ag116m.tendl",
+       "lis": 1,
+       "source_sha256": "9b11a9230eb4abaca10c7927dde4843f79eb0f3ba96d9905ee2c50bd43fff77d"
+      }
+     ],
+     "liso": 1,
+     "representative": {
+      "elis_eV": 47900.0,
+      "file": "n-Ag116m.tendl",
+      "lis": 1,
+      "source_sha256": "9b11a9230eb4abaca10c7927dde4843f79eb0f3ba96d9905ee2c50bd43fff77d"
+     },
+     "za": 47116
+    },
+    {
+     "decision": "unique_evaluation",
+     "evaluations": [
+      {
+       "elis_eV": 129800.0,
+       "file": "n-Ag116n.tendl",
+       "lis": 4,
+       "source_sha256": "cb5497a3cb1835adb65e9431e1342d454bd7f0227d7718335ae586c17ccc063a"
+      }
+     ],
+     "liso": 2,
+     "representative": {
+      "elis_eV": 129800.0,
+      "file": "n-Ag116n.tendl",
+      "lis": 4,
+      "source_sha256": "cb5497a3cb1835adb65e9431e1342d454bd7f0227d7718335ae586c17ccc063a"
+     },
+     "za": 47116
+    }
+   ],
+   "file_order_invariant": true,
+   "inputs": {
+    "n-Ag116.tendl": "8a1d0639766f9aee47fc7ceb85a418900e48a7cec0e7abfda51051d6aec074c5",
+    "n-Ag116m.tendl": "9b11a9230eb4abaca10c7927dde4843f79eb0f3ba96d9905ee2c50bd43fff77d",
+    "n-Ag116n.tendl": "cb5497a3cb1835adb65e9431e1342d454bd7f0227d7718335ae586c17ccc063a"
+   },
+   "positive_mapping_count": 6,
+   "raw_to_canonical": [
+    [
+     1,
+     1
+    ],
+    [
+     4,
+     2
+    ]
+   ],
+   "reordered_build": {
+    "index_sha256": "0453a6391c02c4959ceae5cf21ce75fbdb0dbf5522f8e8fa2816caa7a64f3afd",
+    "npz_sha256": "6c5b97fb4c9048af4b68a31111189e2d7775df0200ca8931c7ff856abdb9213c",
+    "rows": 162,
+    "targets": 3
+   }
+  },
+  "p17_ag110_sparse_level": {
+   "build": {
+    "index_sha256": "ab804be941eebc4e6987f376a1bdbfb8149bf1b12c5baac0b8a0169541c18e40",
+    "npz_sha256": "498768dc10c488ee1aece4fabe036a51937e09961494ea2794de746eb839885e",
+    "rows": 222,
+    "targets": 3
+   },
+   "catalog_state": {
+    "decision": "unique_evaluation",
+    "evaluations": [
+     {
+      "elis_eV": 117590.0,
+      "file": "n-Ag110m.tendl",
+      "lis": 2,
+      "source_sha256": "d72de90c2d32247f50fa302f74ad09163491d844818dbf8d3ce19d7c87d536ae"
+     }
+    ],
+    "liso": 1,
+    "representative": {
+     "elis_eV": 117590.0,
+     "file": "n-Ag110m.tendl",
+     "lis": 2,
+     "source_sha256": "d72de90c2d32247f50fa302f74ad09163491d844818dbf8d3ce19d7c87d536ae"
+    },
+    "za": 47110
+   },
+   "file_order_invariant": true,
+   "inputs": {
+    "n-Ag109.tendl": "4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1",
+    "n-Ag110.tendl": "5ce300b78dfaecf83696b0bae37174ea56a49c6f84ffb53b3e8289f2850dd78a",
+    "n-Ag110m.tendl": "d72de90c2d32247f50fa302f74ad09163491d844818dbf8d3ce19d7c87d536ae"
+   },
+   "mapping": {
+    "canonical_liso": 1,
+    "catalog_elis_eV": 117590.0,
+    "catalog_evaluations": 1,
+    "catalog_file": "n-Ag110m.tendl",
+    "catalog_lis": 2,
+    "catalog_source_sha256": "d72de90c2d32247f50fa302f74ad09163491d844818dbf8d3ce19d7c87d536ae",
+    "decision": "catalog_excitation_match",
+    "elfs_eV": 117590.0,
+    "excitation_delta_eV": 0.0,
+    "lmf": 9,
+    "mapping_excitation_eV": 117590.0,
+    "mt": 102,
+    "qi_eV": 6691601.0,
+    "qm_eV": 6809191.0,
+    "qm_minus_qi_eV": 117590.0,
+    "raw_lfs": 2,
+    "tolerance_eV": 1.0,
+    "zap": 47110
+   },
+   "reordered_build": {
+    "index_sha256": "cdaa60136059ac44fe6622acc49780405381af4e6c25ef1d1dec987f219feca0",
+    "npz_sha256": "eb601e603af26ee2c3897f1ce543a5b8b4bcda0a5087cc9cbc3d0e9b86b0c8c7",
+    "rows": 222,
+    "targets": 3
+   }
+  }
+ },
+ "checks": {
+  "cache_schema": "actinv-target-checkpoint-3",
+  "duplicate_agreement_and_conflict_covered": true,
+  "file_order_invariant": true,
+  "generated_endf_fixture_covered": true,
+  "library_index_schema": "actinv-library-index-2",
+  "multiple_isomers_use_catalog_liso": true,
+  "omitted_levels_are_not_rank_compressed": true,
+  "p17_sparse_level_maps_to_m1": true,
+  "source_precision_retained": true,
+  "unsupported_states_are_explicitly_non_emitted": true
+ },
+ "control_source_sha256": "508a022317c6e72c977f2827fa318e3eac07a09157e09acd93d72fcaea3db8d5",
+ "gate": "P18-G1",
+ "implementation_source_sha256": {
+  "activation.rs": "09b630e27a43ace3189a76a9e19df6c25ecc84bca01c38e2ccbf4ac8e5a07a2f",
+  "builder.rs": "28bbcc089d1a3ae93e9266e30f8b46cf299324827f56efdc0d4d3206db7c4b1d",
+  "covariance.rs": "f80c61953e824af5073bb27b853423b943c51c30b15daf089162ddc38fef9306"
+ },
+ "mutation_plants": {
+  "canonical_state": true,
+  "catalog_excitation": true,
+  "q_identity": true,
+  "raw_level": true
+ },
+ "pass": true,
+ "protocol_sha256": "002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09",
+ "rust_builder_tests": {
+  "command": "cargo test -p actinv-data builder::tests -- --quiet",
+  "pass": true,
+  "returncode": 0
+ },
+ "schema": "actinv-p18-g1-state-identity-1"
+}

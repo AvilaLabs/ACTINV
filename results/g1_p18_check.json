@@ -1,0 +1,23 @@
+{
+ "checker_source_sha256": "94deb9d572c7827e701bba4167a29e238fb8c670db97633e85effdaf5255c288",
+ "checks": {
+  "file_order": true,
+  "frozen_inputs": true,
+  "multiple_isomers": true,
+  "physical_identity": true,
+  "portable_evidence": true,
+  "source_precision": true,
+  "sparse_levels": true
+ },
+ "control_sha256": "508a022317c6e72c977f2827fa318e3eac07a09157e09acd93d72fcaea3db8d5",
+ "evidence_sha256": "e7f51a6f23523956c349a634253ff86e0d986c482a5416caa26a3025156bbeb8",
+ "gate": "P18-G1",
+ "mutation_plants": {
+  "canonical_state": true,
+  "catalog_excitation": true,
+  "q_identity": true,
+  "raw_level": true
+ },
+ "pass": true,
+ "schema": "actinv-p18-g1-independent-check-1"
+}

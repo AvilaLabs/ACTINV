@@ -1,7 +1,9 @@
 #![allow(non_snake_case)] // temperature_K is part of the public/canonical wire vocabulary.
 //! Deterministic activation-library assembly from strict ENDF evaluations.
 
-use crate::activation::{parse_evaluations, Evaluation, Mf6Product, ProductRef, Projectile};
+use crate::activation::{
+    parse_evaluations, Evaluation, Mf6Product, ProductRef, ProductTable, Projectile,
+};
 use crate::groups::{GroupStructure, Tabulated};
 use crate::library::{write_npz, Library, Row};
 use crate::processing::{has_resonance_contribution, process_reaction, ProcessedReaction};
@@ -60,6 +62,10 @@ pub struct TargetIndex {
     pub mat: i32,
     pub za: i32,
     pub liso: i32,
+    #[serde(default)]
+    pub lis: i32,
+    #[serde(default)]
+    pub elis_eV: f64,
     pub awr: f64,
     pub evaluation_temperature_K: f64,
     pub n_mf2: usize,
@@ -69,7 +75,31 @@ pub struct TargetIndex {
     pub n_mf9: usize,
     pub n_mf10: usize,
     pub n_rows: usize,
+    #[serde(default)]
+    pub state_mappings: Vec<StateMapping>,
     pub ledger: Vec<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct StateMapping {
+    pub mt: i32,
+    pub zap: i32,
+    pub lmf: i32,
+    pub raw_lfs: i32,
+    pub elfs_eV: Option<f64>,
+    pub qm_eV: Option<f64>,
+    pub qi_eV: Option<f64>,
+    pub qm_minus_qi_eV: Option<f64>,
+    pub mapping_excitation_eV: Option<f64>,
+    pub canonical_liso: Option<i32>,
+    pub catalog_lis: Option<i32>,
+    pub catalog_elis_eV: Option<f64>,
+    pub catalog_file: Option<String>,
+    pub catalog_source_sha256: Option<String>,
+    pub catalog_evaluations: Option<usize>,
+    pub tolerance_eV: Option<f64>,
+    pub excitation_delta_eV: Option<f64>,
+    pub decision: String,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -88,6 +118,7 @@ struct BuildIndex {
     weighting: &'static str,
     builder_fingerprint: String,
     options: CanonicalOptions,
+    state_catalog: Vec<CatalogState>,
     targets: Vec<TargetIndex>,
     n_rows: usize,
     columns: &'static str,
@@ -113,6 +144,15 @@ struct BuiltRow {
     lfs: i32,
     lmf: i32,
     sigma: Vec<f64>,
+    raw_state: Option<RawProductState>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, PartialEq, Serialize)]
+struct RawProductState {
+    raw_lfs: i32,
+    elfs_eV: Option<f64>,
+    qm_eV: Option<f64>,
+    qi_eV: Option<f64>,
 }
 
 #[derive(Clone, Debug)]
@@ -145,7 +185,8 @@ struct CacheIndex {
     projectile: String,
     npz_sha256: String,
     targets: Vec<TargetIndex>,
-    target_float_bits: Vec<[u64; 2]>,
+    target_float_bits: Vec<[u64; 3]>,
+    raw_product_states: Vec<Option<RawProductState>>,
 }
 
 #[derive(Deserialize)]
@@ -229,9 +270,10 @@ fn cache_paths(directory: &Path, key: &str) -> (PathBuf, PathBuf) {
     )
 }
 
-fn restore_target_float_bits(target: &mut TargetIndex, bits: [u64; 2]) {
+fn restore_target_float_bits(target: &mut TargetIndex, bits: [u64; 3]) {
     target.awr = f64::from_bits(bits[0]);
     target.evaluation_temperature_K = f64::from_bits(bits[1]);
+    target.elis_eV = f64::from_bits(bits[2]);
 }
 
 fn source_library(source: &BuiltSource, groups: &GroupStructure) -> Library {
@@ -266,7 +308,7 @@ fn load_checkpoint(
     let (npz_path, index_path) = cache_paths(directory, key);
     let index: CacheIndex =
         serde_json::from_str(&std::fs::read_to_string(index_path).ok()?).ok()?;
-    if index.schema != "actinv-target-checkpoint-2"
+    if index.schema != "actinv-target-checkpoint-3"
         || index.key != key
         || index.source_sha256 != source_sha256
         || sha256_file(&npz_path).ok()? != index.npz_sha256
@@ -282,6 +324,7 @@ fn load_checkpoint(
     let projectile = Projectile::parse(&index.projectile).ok()?;
     let library = crate::library::read_npz(npz_path.to_str()?).ok()?;
     if library.ngroups != groups.groups()
+        || index.raw_product_states.len() != library.rows.len()
         || library
             .bounds
             .iter()
@@ -304,15 +347,18 @@ fn load_checkpoint(
         if source_rows.iter().any(|row| row.target != target_number) {
             return None;
         }
+        let raw_states = index.raw_product_states.get(row_offset..end)?;
         let rows = source_rows
             .iter()
+            .zip(raw_states)
             .enumerate()
-            .map(|(local, row)| BuiltRow {
+            .map(|(local, (row, raw_state))| BuiltRow {
                 mt: row.mt,
                 zap: row.zap,
                 lfs: row.lfs,
                 lmf: row.lmf,
                 sigma: library.sigma(row_offset + local).to_vec(),
+                raw_state: *raw_state,
             })
             .collect();
         targets.push(BuiltTarget {
@@ -343,7 +389,7 @@ fn store_checkpoint(
     let library = source_library(source, groups);
     write_npz(&npz_path, &library)?;
     let index = CacheIndex {
-        schema: "actinv-target-checkpoint-2".into(),
+        schema: "actinv-target-checkpoint-3".into(),
         key: key.into(),
         source_sha256: source_sha256.into(),
         format: source.format.name().into(),
@@ -361,8 +407,14 @@ fn store_checkpoint(
                 [
                     target.index.awr.to_bits(),
                     target.index.evaluation_temperature_K.to_bits(),
+                    target.index.elis_eV.to_bits(),
                 ]
             })
+            .collect(),
+        raw_product_states: source
+            .targets
+            .iter()
+            .flat_map(|target| target.rows.iter().map(|row| row.raw_state))
             .collect(),
     };
     write_json_atomic(&index_path, &index)
@@ -549,19 +601,47 @@ fn inelastic(mt: i32) -> bool {
 }
 
 fn descriptor_set(products: &[ProductRef], lmf: i32) -> Result<BTreeSet<(i32, i32)>, String> {
-    let mut set = BTreeSet::new();
+    let mut declarations = BTreeMap::new();
     for product in products
         .iter()
         .filter(|product| product.lmf == lmf && product.zap >= 0)
     {
-        if !set.insert((product.zap, product.lfs)) {
-            return Err(format!(
-                "duplicate MF=8 product ZAP={}/LFS={}/LMF={lmf}",
-                product.zap, product.lfs
-            ));
+        let identity = (product.zap, product.lfs);
+        if let Some(previous) = declarations.get(&identity) {
+            if *previous != product {
+                return Err(format!(
+                    "conflicting duplicate MF=8 product ZAP={}/LFS={}/LMF={lmf}",
+                    product.zap, product.lfs
+                ));
+            }
+        } else {
+            declarations.insert(identity, product);
         }
     }
-    Ok(set)
+    Ok(declarations.into_keys().collect())
+}
+
+fn unique_product_tables<'a>(
+    products: &'a [ProductTable],
+    label: &str,
+) -> Result<Vec<&'a ProductTable>, String> {
+    let mut positions = BTreeMap::new();
+    let mut unique = Vec::new();
+    for product in products {
+        let identity = (product.zap, product.lfs);
+        if let Some(position) = positions.get(&identity).copied() {
+            if unique[position] != product {
+                return Err(format!(
+                    "{label} contains conflicting duplicate product ZAP={}/LFS={}",
+                    product.zap, product.lfs
+                ));
+            }
+        } else {
+            positions.insert(identity, unique.len());
+            unique.push(product);
+        }
+    }
+    Ok(unique)
 }
 
 fn validate_descriptors(
@@ -576,6 +656,68 @@ fn validate_descriptors(
         ));
     }
     Ok(())
+}
+
+fn excitation_tolerance(left_eV: f64, right_eV: f64) -> f64 {
+    1.0_f64.max(5e-6 * left_eV.abs().max(right_eV.abs()))
+}
+
+impl RawProductState {
+    fn from_descriptor(descriptor: &ProductRef) -> Self {
+        Self {
+            raw_lfs: descriptor.lfs,
+            elfs_eV: Some(descriptor.elfs_ev),
+            qm_eV: None,
+            qi_eV: None,
+        }
+    }
+
+    fn from_table(descriptor: Option<&ProductRef>, table: &ProductTable) -> Result<Self, String> {
+        let state = Self {
+            raw_lfs: table.lfs,
+            elfs_eV: descriptor.map(|value| value.elfs_ev),
+            qm_eV: Some(table.qm_ev),
+            qi_eV: Some(table.qi_ev),
+        };
+        state.excitation_eV()?;
+        Ok(state)
+    }
+
+    fn qm_minus_qi_eV(self) -> Result<Option<f64>, String> {
+        match (self.qm_eV, self.qi_eV) {
+            (Some(qm), Some(qi)) => {
+                let value = qm - qi;
+                if value < -excitation_tolerance(0.0, value) {
+                    return Err(format!(
+                        "LFS={} has negative QM-QI excitation {value:.17e} eV",
+                        self.raw_lfs
+                    ));
+                }
+                Ok(Some(value.max(0.0)))
+            }
+            (None, None) => Ok(None),
+            _ => Err("product state has only one of QM/QI".into()),
+        }
+    }
+
+    fn excitation_eV(self) -> Result<Option<f64>, String> {
+        let q_excitation = self.qm_minus_qi_eV()?;
+        if let (Some(elfs), Some(derived)) = (self.elfs_eV, q_excitation) {
+            if (elfs - derived).abs() > excitation_tolerance(elfs, derived) {
+                return Err(format!(
+                    "LFS={} MF=8 ELFS={elfs:.17e} eV conflicts with QM-QI={derived:.17e} eV",
+                    self.raw_lfs
+                ));
+            }
+        }
+        Ok(self.elfs_eV.or(q_excitation))
+    }
+}
+
+fn descriptor_for(products: &[ProductRef], lmf: i32, zap: i32, lfs: i32) -> Option<&ProductRef> {
+    products
+        .iter()
+        .find(|product| product.lmf == lmf && product.zap == zap && product.lfs == lfs)
 }
 
 type MatchedMf6<'a> = (Vec<(&'a Mf6Product, ProductRef)>, bool);
@@ -633,7 +775,7 @@ fn residual_product(
     (z > 0 && a > 0 && a >= z).then_some(z * 1000 + a)
 }
 
-fn remap_levels(rows: &mut [BuiltRow], ledger: &mut Vec<String>) {
+fn remap_eaf_levels(rows: &mut [BuiltRow], ledger: &mut Vec<String>) {
     let mut levels: BTreeMap<(i32, i32), BTreeSet<i32>> = BTreeMap::new();
     for row in rows.iter().filter(|row| row.lfs > 0) {
         levels.entry((row.mt, row.zap)).or_default().insert(row.lfs);
@@ -659,6 +801,219 @@ fn remap_levels(rows: &mut [BuiltRow], ledger: &mut Vec<String>) {
             "MT{mt}->{zap}: LFS {original:?} remapped to decay isomers {canonical:?}"
         ));
     }
+}
+
+#[derive(Clone, Debug, Serialize)]
+struct CatalogObservation {
+    lis: i32,
+    elis_eV: f64,
+    file: String,
+    source_sha256: String,
+}
+
+#[derive(Clone, Debug, Serialize)]
+struct CatalogState {
+    za: i32,
+    liso: i32,
+    representative: CatalogObservation,
+    evaluations: Vec<CatalogObservation>,
+    decision: &'static str,
+}
+
+type StateCatalog = BTreeMap<i32, Vec<CatalogState>>;
+
+fn build_state_catalog(sources: &[BuiltSource]) -> Result<StateCatalog, String> {
+    let mut observations: BTreeMap<(i32, i32), Vec<CatalogObservation>> = BTreeMap::new();
+    for source in sources {
+        for target in &source.targets {
+            let index = &target.index;
+            if !index.elis_eV.is_finite() || index.elis_eV < 0.0 || index.lis < 0 || index.liso < 0
+            {
+                return Err(format!(
+                    "target ZA={}/LISO={} has invalid LIS={} or ELIS={} eV",
+                    index.za, index.liso, index.lis, index.elis_eV
+                ));
+            }
+            if (index.liso == 0 && index.lis != 0)
+                || (index.liso > 0 && (index.lis == 0 || index.liso > index.lis))
+            {
+                return Err(format!(
+                    "target ZA={}/LISO={} has inconsistent physical LIS={}",
+                    index.za, index.liso, index.lis
+                ));
+            }
+            if index.liso == 0 && index.elis_eV.abs() > excitation_tolerance(0.0, index.elis_eV) {
+                return Err(format!(
+                    "ground target ZA={} has nonzero ELIS={:.17e} eV",
+                    index.za, index.elis_eV
+                ));
+            }
+            observations
+                .entry((index.za, index.liso))
+                .or_default()
+                .push(CatalogObservation {
+                    lis: index.lis,
+                    elis_eV: index.elis_eV,
+                    file: index.file.clone(),
+                    source_sha256: index.source_sha256.clone(),
+                });
+        }
+    }
+
+    let mut catalog: StateCatalog = BTreeMap::new();
+    for ((za, liso), mut evaluations) in observations {
+        evaluations.sort_by(|left, right| {
+            left.elis_eV
+                .total_cmp(&right.elis_eV)
+                .then_with(|| left.lis.cmp(&right.lis))
+                .then_with(|| left.file.cmp(&right.file))
+                .then_with(|| left.source_sha256.cmp(&right.source_sha256))
+        });
+        let low = evaluations
+            .first()
+            .ok_or("state catalog observation group is empty")?;
+        let high = evaluations
+            .last()
+            .ok_or("state catalog observation group is empty")?;
+        if (high.elis_eV - low.elis_eV).abs() > excitation_tolerance(low.elis_eV, high.elis_eV) {
+            return Err(format!(
+                "duplicate target ZA={za}/LISO={liso} has conflicting ELIS values {:.17e} eV in '{}' and {:.17e} eV in '{}'",
+                low.elis_eV, low.file, high.elis_eV, high.file
+            ));
+        }
+        let representative = low.clone();
+        let decision = if evaluations.len() == 1 {
+            "unique_evaluation"
+        } else {
+            "duplicate_evaluations_agree"
+        };
+        catalog.entry(za).or_default().push(CatalogState {
+            za,
+            liso,
+            representative,
+            evaluations,
+            decision,
+        });
+    }
+    for states in catalog.values_mut() {
+        states.sort_by_key(|state| state.liso);
+    }
+    Ok(catalog)
+}
+
+fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Result<(), String> {
+    let mut mappings = Vec::new();
+    for row in &mut target.rows {
+        let Some(raw) = row.raw_state else {
+            continue;
+        };
+        let original_zap = row.zap;
+        let original_lmf = row.lmf;
+        let q_excitation = raw.qm_minus_qi_eV()?;
+        let excitation = raw.excitation_eV()?;
+        let (canonical, catalog_state, decision) = if raw.raw_lfs == 0 {
+            if excitation.is_some_and(|value| value.abs() > excitation_tolerance(0.0, value)) {
+                return Err(format!(
+                    "MT{} product ZAP={} declares ground LFS=0 at excitation {:.17e} eV",
+                    row.mt,
+                    original_zap,
+                    excitation.unwrap_or_default()
+                ));
+            }
+            let ground = catalog
+                .get(&original_zap)
+                .and_then(|states| states.iter().find(|state| state.liso == 0));
+            (Some(0), ground, "ground_lfs0")
+        } else if raw.raw_lfs == 98 {
+            (None, None, "unspecified_lfs98_to_leakage")
+        } else if let Some(excitation_eV) = excitation {
+            let matches: Vec<&CatalogState> = catalog
+                .get(&original_zap)
+                .into_iter()
+                .flatten()
+                .filter(|state| {
+                    state.liso > 0
+                        && (state.representative.elis_eV - excitation_eV).abs()
+                            <= excitation_tolerance(state.representative.elis_eV, excitation_eV)
+                })
+                .collect();
+            match matches.as_slice() {
+                [] => (None, None, "no_catalog_excitation_match_to_leakage"),
+                [state] => (Some(state.liso), Some(*state), "catalog_excitation_match"),
+                _ => {
+                    return Err(format!(
+                        "MT{} product ZAP={}/raw LFS={} at {:.17e} eV matches multiple catalog states {:?}",
+                        row.mt,
+                        original_zap,
+                        raw.raw_lfs,
+                        excitation_eV,
+                        matches
+                            .iter()
+                            .map(|state| {
+                                (
+                                    state.liso,
+                                    state.representative.lis,
+                                    state.representative.elis_eV,
+                                )
+                            })
+                            .collect::<Vec<_>>()
+                    ));
+                }
+            }
+        } else {
+            (None, None, "missing_excitation_to_leakage")
+        };
+
+        if let Some(canonical_liso) = canonical {
+            row.lfs = canonical_liso;
+            if raw.raw_lfs != canonical_liso {
+                target.index.ledger.push(format!(
+                    "MT{}->{}: physical excitation mapped raw LFS {} to LISO {}",
+                    row.mt, original_zap, raw.raw_lfs, canonical_liso
+                ));
+            }
+        } else {
+            row.zap = 0;
+            row.lfs = 0;
+            row.lmf = -3;
+            target.index.ledger.push(format!(
+                "MT{}->{}: raw LFS {} is not an auditable decay isomer ({decision}); production retained as explicit leakage",
+                row.mt, original_zap, raw.raw_lfs
+            ));
+        }
+        mappings.push(StateMapping {
+            mt: row.mt,
+            zap: original_zap,
+            lmf: original_lmf,
+            raw_lfs: raw.raw_lfs,
+            elfs_eV: raw.elfs_eV,
+            qm_eV: raw.qm_eV,
+            qi_eV: raw.qi_eV,
+            qm_minus_qi_eV: q_excitation,
+            mapping_excitation_eV: excitation,
+            canonical_liso: canonical,
+            catalog_lis: catalog_state.map(|state| state.representative.lis),
+            catalog_elis_eV: catalog_state.map(|state| state.representative.elis_eV),
+            catalog_file: catalog_state.map(|state| state.representative.file.clone()),
+            catalog_source_sha256: catalog_state
+                .map(|state| state.representative.source_sha256.clone()),
+            catalog_evaluations: catalog_state.map(|state| state.evaluations.len()),
+            tolerance_eV: excitation.map(|value| {
+                excitation_tolerance(
+                    value,
+                    catalog_state
+                        .map(|state| state.representative.elis_eV)
+                        .unwrap_or(value),
+                )
+            }),
+            excitation_delta_eV: excitation
+                .zip(catalog_state.map(|state| state.representative.elis_eV))
+                .map(|(value, catalog_value)| value - catalog_value),
+            decision: decision.into(),
+        });
+    }
+    target.index.state_mappings = mappings;
+    Ok(())
 }
 
 fn build_evaluation(
@@ -808,7 +1163,10 @@ fn build_evaluation(
         let descriptors = evaluation.mf8.get(&mt).map(Vec::as_slice).unwrap_or(&[]);
 
         if inelastic(mt) {
-            let products: Vec<_> = evaluation.mf10.get(&mt).into_iter().flatten().collect();
+            let products = unique_product_tables(
+                evaluation.mf10.get(&mt).map(Vec::as_slice).unwrap_or(&[]),
+                &format!("MT{mt}/MF=10"),
+            )?;
             if products.iter().any(|product| product.zap < 0) {
                 return Err(format!("MT{mt}/MF=10 contains an invalid negative product"));
             }
@@ -816,11 +1174,6 @@ fn build_evaluation(
                 .iter()
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            if actual.len() != products.len() {
-                return Err(format!(
-                    "MT{mt}/MF=10 contains duplicate product identities"
-                ));
-            }
             // Inelastic MF=10 commonly tabulates both return to the ground state and production of a metastable
             // state. Validate the complete declaration before intentionally retaining only transmuting LFS>0 rows.
             validate_descriptors(descriptors, 10, &actual)?;
@@ -846,6 +1199,10 @@ fn build_evaluation(
                     lfs: product.lfs,
                     lmf: 10,
                     sigma,
+                    raw_state: Some(RawProductState::from_table(
+                        descriptor_for(descriptors, 10, product.zap, product.lfs),
+                        product,
+                    )?),
                 });
             }
             rows.push(BuiltRow {
@@ -854,6 +1211,7 @@ fn build_evaluation(
                 lfs: -1,
                 lmf: 0,
                 sigma: loss,
+                raw_state: None,
             });
             rows.extend(product_rows);
             ledger.push(format!(
@@ -868,10 +1226,11 @@ fn build_evaluation(
         } else if let Some(table) = evaluation.mf3.get(&mt) {
             checked_collapse(groups, table, &format!("MT{mt}/MF=3"))?
         } else {
-            let products = evaluation
+            let declared_products = evaluation
                 .mf10
                 .get(&mt)
                 .ok_or_else(|| format!("MT{mt} has neither MF=3 nor MF=10 data"))?;
+            let products = unique_product_tables(declared_products, &format!("MT{mt}/MF=10"))?;
             if let Some(total_fission) = products.iter().find(|product| product.zap == -1) {
                 checked_collapse(
                     groups,
@@ -895,10 +1254,12 @@ fn build_evaluation(
             lfs: -1,
             lmf: 0,
             sigma: total.clone(),
+            raw_state: None,
         });
         let mut done = HashSet::new();
 
-        if let Some(products) = evaluation.mf10.get(&mt) {
+        if let Some(declared_products) = evaluation.mf10.get(&mt) {
+            let products = unique_product_tables(declared_products, &format!("MT{mt}/MF=10"))?;
             let total_fission = products.iter().filter(|product| product.zap == -1).count();
             if total_fission > 1 || (total_fission == 1 && mt != 18) {
                 return Err(format!(
@@ -916,11 +1277,6 @@ fn build_evaluation(
                 .filter(|product| product.zap >= 0)
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            if actual.len() + total_fission != products.len() {
-                return Err(format!(
-                    "MT{mt}/MF=10 contains duplicate product identities"
-                ));
-            }
             validate_descriptors(descriptors, 10, &actual)?;
             for product in products.iter().filter(|product| product.zap >= 0) {
                 if !done.insert((product.zap, product.lfs)) {
@@ -935,11 +1291,16 @@ fn build_evaluation(
                     lfs: product.lfs,
                     lmf: 10,
                     sigma: checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?,
+                    raw_state: Some(RawProductState::from_table(
+                        descriptor_for(descriptors, 10, product.zap, product.lfs),
+                        product,
+                    )?),
                 });
             }
         }
 
-        if let Some(products) = evaluation.mf9.get(&mt) {
+        if let Some(declared_products) = evaluation.mf9.get(&mt) {
+            let products = unique_product_tables(declared_products, &format!("MT{mt}/MF=9"))?;
             let reaction = evaluation
                 .mf3
                 .get(&mt)
@@ -948,9 +1309,6 @@ fn build_evaluation(
                 .iter()
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            if actual.len() != products.len() {
-                return Err(format!("MT{mt}/MF=9 contains duplicate product identities"));
-            }
             validate_descriptors(descriptors, 9, &actual)?;
             for product in products {
                 if !done.insert((product.zap, product.lfs)) {
@@ -977,6 +1335,10 @@ fn build_evaluation(
                     lfs: product.lfs,
                     lmf: 9,
                     sigma,
+                    raw_state: Some(RawProductState::from_table(
+                        descriptor_for(descriptors, 9, product.zap, product.lfs),
+                        product,
+                    )?),
                 });
             }
         }
@@ -994,6 +1356,7 @@ fn build_evaluation(
                 lfs: descriptor.lfs,
                 lmf: 3,
                 sigma: total.clone(),
+                raw_state: Some(RawProductState::from_descriptor(descriptor)),
             });
         }
 
@@ -1029,6 +1392,7 @@ fn build_evaluation(
                         &[reaction, &product.yield_table],
                         &format!("MT{mt}/MF=3*MF=6"),
                     )?,
+                    raw_state: Some(RawProductState::from_descriptor(&descriptor)),
                 });
             }
         }
@@ -1041,6 +1405,7 @@ fn build_evaluation(
                     lfs: 0,
                     lmf: 0,
                     sigma: total,
+                    raw_state: None,
                 });
             } else if let Some(delta) = products_by_mt.get(&mt) {
                 if let Some(zap) = residual_product(metadata.za, metadata.projectile, *delta) {
@@ -1050,6 +1415,7 @@ fn build_evaluation(
                         lfs: 0,
                         lmf: -1,
                         sigma: total,
+                        raw_state: None,
                     });
                 } else {
                     rows.push(BuiltRow {
@@ -1058,6 +1424,7 @@ fn build_evaluation(
                         lfs: 0,
                         lmf: -2,
                         sigma: total,
+                        raw_state: None,
                     });
                     ledger.push(format!(
                         "MT{mt}: residual arithmetic is not a bound nuclide"
@@ -1070,19 +1437,24 @@ fn build_evaluation(
                     lfs: 0,
                     lmf: -2,
                     sigma: total,
+                    raw_state: None,
                 });
                 ledger.push(format!("MT{mt}: product is unmapped leakage"));
             }
         }
     }
 
-    remap_levels(&mut rows, &mut ledger);
+    if format == LibraryFormat::Eaf {
+        remap_eaf_levels(&mut rows, &mut ledger);
+    }
     let index = TargetIndex {
         file: file.into(),
         source_sha256: source_sha256.into(),
         mat: metadata.mat,
         za: metadata.za,
         liso: metadata.liso,
+        lis: metadata.lis,
+        elis_eV: metadata.elis_ev,
         awr: metadata.awr,
         evaluation_temperature_K: metadata.evaluation_temperature_k,
         n_mf2: evaluation.mf2_sections.len(),
@@ -1092,6 +1464,7 @@ fn build_evaluation(
         n_mf9: evaluation.mf9.len(),
         n_mf10: evaluation.mf10.len(),
         n_rows: rows.len(),
+        state_mappings: Vec::new(),
         ledger,
     };
     Ok(BuiltTarget { index, rows })
@@ -1275,7 +1648,7 @@ pub fn build_library(
         .num_threads(options.workers)
         .build()
         .map_err(|error| format!("cannot create builder worker pool: {error}"))?;
-    let sources: Vec<BuiltSource> = pool.install(|| {
+    let mut sources: Vec<BuiltSource> = pool.install(|| {
         files
             .par_iter()
             .map(|path| build_source(path, options, &products_by_mt))
@@ -1292,6 +1665,17 @@ pub fn build_library(
     if sources.iter().any(|source| source.format != format) {
         return Err("input directory contains mixed TENDL/EAF evaluations".into());
     }
+    let state_catalog = if format == LibraryFormat::Tendl {
+        let catalog = build_state_catalog(&sources)?;
+        for source in &mut sources {
+            for target in &mut source.targets {
+                map_product_states(target, &catalog)?;
+            }
+        }
+        Some(catalog)
+    } else {
+        None
+    };
     let cache_hits = sources.iter().filter(|source| source.from_cache).count();
     if projectile != Projectile::Neutron && options.temperature_K != 0.0 {
         return Err(format!("{} libraries require 0 K", projectile.name()));
@@ -1346,7 +1730,11 @@ pub fn build_library(
     let npz_hash = sha256_file(output)?;
     let fingerprint = builder_fingerprint();
     let index = BuildIndex {
-        schema: "actinv-library-index-1",
+        schema: if format == LibraryFormat::Tendl {
+            "actinv-library-index-2"
+        } else {
+            "actinv-library-index-1"
+        },
         format: format.name().into(),
         projectile: projectile.name().into(),
         temperature_K: options.temperature_K,
@@ -1357,6 +1745,11 @@ pub fn build_library(
         options: CanonicalOptions {
             grid_density: options.grid_density,
         },
+        state_catalog: state_catalog
+            .into_iter()
+            .flat_map(BTreeMap::into_values)
+            .flatten()
+            .collect(),
         targets,
         n_rows: library.rows.len(),
         columns: "rows: (target, MT, ZAP, LFS, LMF)",
@@ -1396,6 +1789,8 @@ mod tests {
                 mat: 1,
                 za: 26056,
                 awr: 55.45,
+                elis_ev: 0.0,
+                lis: 0,
                 liso: 0,
                 awi: f64::from(projectile.za().1),
                 nsub: projectile.nsub(),
@@ -1419,6 +1814,8 @@ mod tests {
             mat: 1,
             za: 26056,
             liso: 0,
+            lis: 0,
+            elis_eV: 0.0,
             awr: 55.45,
             evaluation_temperature_K: 0.0,
             n_mf2: 0,
@@ -1428,8 +1825,158 @@ mod tests {
             n_mf9: 0,
             n_mf10: 0,
             n_rows: 2,
+            state_mappings: Vec::new(),
             ledger: Vec::new(),
         }
+    }
+
+    fn state_row(mt: i32, zap: i32, raw_lfs: i32, excitation_eV: Option<f64>) -> BuiltRow {
+        BuiltRow {
+            mt,
+            zap,
+            lfs: raw_lfs,
+            lmf: 10,
+            sigma: vec![0.25, 0.5],
+            raw_state: Some(RawProductState {
+                raw_lfs,
+                elfs_eV: excitation_eV,
+                qm_eV: excitation_eV.map(|value| value + 1_000_000.0),
+                qi_eV: excitation_eV.map(|_| 1_000_000.0),
+            }),
+        }
+    }
+
+    fn state_target(
+        file: &str,
+        za: i32,
+        liso: i32,
+        lis: i32,
+        elis_eV: f64,
+        rows: Vec<BuiltRow>,
+    ) -> BuiltTarget {
+        let mut index = target_index(file);
+        index.za = za;
+        index.liso = liso;
+        index.lis = lis;
+        index.elis_eV = elis_eV;
+        index.n_rows = rows.len();
+        BuiltTarget { index, rows }
+    }
+
+    fn fixture_record(values: [&str; 6], mat: i32, mf: i32, mt: i32, sequence: i32) -> String {
+        let data: String = values
+            .into_iter()
+            .map(|value| format!("{value:>11}"))
+            .collect();
+        format!("{data}{mat:>4}{mf:>2}{mt:>3}{sequence:>5}")
+    }
+
+    fn fixture_send(mat: i32, mf: i32) -> String {
+        fixture_record(["", "", "", "", "", ""], mat, mf, 0, 99_999)
+    }
+
+    fn fixture_header(za: i32, mat: i32, elis: &str, lis: i32, liso: i32) -> Vec<String> {
+        vec![
+            fixture_record(
+                [&za.to_string(), "55.45", "0", "0", "0", "0"],
+                mat,
+                1,
+                451,
+                1,
+            ),
+            fixture_record(
+                [elis, "0", &lis.to_string(), &liso.to_string(), "0", "0"],
+                mat,
+                1,
+                451,
+                2,
+            ),
+            fixture_record(["1", "4", "1", "0", "10", "2025"], mat, 1, 451, 3),
+            fixture_record(["0", "0", "0", "0", "0", "0"], mat, 1, 451, 4),
+            fixture_send(mat, 1),
+        ]
+    }
+
+    fn fixture_tab1(
+        mat: i32,
+        mf: i32,
+        mt: i32,
+        sequence: i32,
+        head: [&str; 4],
+        value: &str,
+    ) -> Vec<String> {
+        vec![
+            fixture_record(
+                [head[0], head[1], head[2], head[3], "1", "2"],
+                mat,
+                mf,
+                mt,
+                sequence,
+            ),
+            fixture_record(["2", "2", "", "", "", ""], mat, mf, mt, sequence + 1),
+            fixture_record(["1", value, "4", value, "", ""], mat, mf, mt, sequence + 2),
+        ]
+    }
+
+    fn fixture_product_tape() -> String {
+        let mat = 2759;
+        let mut lines = fixture_header(27059, mat, "0", 0, 0);
+        lines.push(fixture_record(
+            ["27059", "58.9", "0", "0", "0", "0"],
+            mat,
+            3,
+            102,
+            1,
+        ));
+        lines.extend(fixture_tab1(mat, 3, 102, 2, ["0", "0", "0", "0"], "2"));
+        lines.push(fixture_send(mat, 3));
+        lines.push(fixture_record(
+            ["27059", "58.9", "0", "0", "2", "1"],
+            mat,
+            8,
+            102,
+            1,
+        ));
+        lines.push(fixture_record(
+            ["26056", "0", "10", "0", "0", "0"],
+            mat,
+            8,
+            102,
+            2,
+        ));
+        lines.push(fixture_record(
+            ["26056", "250000", "10", "5", "0", "0"],
+            mat,
+            8,
+            102,
+            3,
+        ));
+        lines.push(fixture_send(mat, 8));
+        lines.push(fixture_record(
+            ["27059", "58.9", "0", "0", "2", "0"],
+            mat,
+            10,
+            102,
+            1,
+        ));
+        lines.extend(fixture_tab1(
+            mat,
+            10,
+            102,
+            2,
+            ["1000000", "1000000", "26056", "0"],
+            "0.5",
+        ));
+        lines.extend(fixture_tab1(
+            mat,
+            10,
+            102,
+            5,
+            ["1000000", "750000", "26056", "5"],
+            "0.25",
+        ));
+        lines.push(fixture_send(mat, 10));
+        format!("{}\n", lines.join("\n"))
     }
 
     #[test]
@@ -1439,6 +1986,84 @@ mod tests {
         assert!(error.contains("ZA=26056/LISO=0"), "{error}");
         assert!(error.contains("first.endf"), "{error}");
         assert!(error.contains("second.endf"), "{error}");
+    }
+
+    #[test]
+    fn generated_endf_fixture_builds_a_v2_physical_state_index() {
+        use std::sync::atomic::{AtomicU64, Ordering};
+
+        static NEXT_FIXTURE: AtomicU64 = AtomicU64::new(0);
+        let fixture = std::env::temp_dir().join(format!(
+            "actinv-p18-state-fixture-{}-{}-{}",
+            std::process::id(),
+            NEXT_FIXTURE.fetch_add(1, Ordering::Relaxed),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir(&fixture).unwrap();
+        let input = fixture.join("input");
+        std::fs::create_dir(&input).unwrap();
+        let ground = fixture_header(26056, 2631, "0", 0, 0);
+        let isomer = fixture_header(26056, 2632, "250000", 2, 1);
+        std::fs::write(
+            input.join("a-ground.endf"),
+            format!("{}\n", ground.join("\n")),
+        )
+        .unwrap();
+        std::fs::write(
+            input.join("b-isomer.endf"),
+            format!("{}\n", isomer.join("\n")),
+        )
+        .unwrap();
+        std::fs::write(input.join("c-source.endf"), fixture_product_tape()).unwrap();
+
+        let output = fixture.join("candidate.npz");
+        let summary = build_library(
+            &input,
+            &output,
+            &BuildOptions {
+                format: LibraryFormat::Tendl,
+                projectile: Some(Projectile::Neutron),
+                groups: GroupStructure {
+                    name: "p18-fixture".into(),
+                    boundaries_ev: vec![1.0, 4.0],
+                },
+                temperature_K: 0.0,
+                workers: 1,
+                cache: None,
+                grid_density: 1.0,
+            },
+        )
+        .unwrap();
+        let index: serde_json::Value =
+            serde_json::from_str(&std::fs::read_to_string(&summary.index).unwrap()).unwrap();
+        assert_eq!(index["schema"], "actinv-library-index-2");
+        let mapping = index["targets"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|target| target["za"] == 27059)
+            .unwrap()["state_mappings"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|mapping| mapping["raw_lfs"] == 5)
+            .unwrap();
+        assert_eq!(mapping["canonical_liso"], 1);
+        assert_eq!(mapping["catalog_lis"], 2);
+        assert_eq!(mapping["catalog_elis_eV"], 250_000.0);
+        assert_eq!(mapping["decision"], "catalog_excitation_match");
+
+        let library = crate::library::read_npz(output.to_str().unwrap()).unwrap();
+        let row_number = library
+            .rows
+            .iter()
+            .position(|row| (row.mt, row.zap, row.lfs, row.lmf) == (102, 26056, 1, 10))
+            .unwrap();
+        assert_eq!(library.sigma(row_number), &[0.25]);
+        std::fs::remove_dir_all(fixture).unwrap();
     }
 
     #[test]
@@ -1491,12 +2116,15 @@ mod tests {
         let original = target_index("rb94.endf");
         let awr = 105.98700000000001_f64;
         let temperature = -0.0_f64;
+        let excitation = 123_456.789_012_345_67_f64;
         let mut cached = original;
         cached.awr = awr;
         cached.evaluation_temperature_K = temperature;
+        cached.elis_eV = excitation;
         let bits = [
             cached.awr.to_bits(),
             cached.evaluation_temperature_K.to_bits(),
+            cached.elis_eV.to_bits(),
         ];
         let text = serde_json::to_string(&cached).unwrap();
         let mut restored: TargetIndex = serde_json::from_str(&text).unwrap();
@@ -1506,6 +2134,7 @@ mod tests {
             restored.evaluation_temperature_K.to_bits(),
             temperature.to_bits()
         );
+        assert_eq!(restored.elis_eV.to_bits(), excitation.to_bits());
     }
 
     #[test]
@@ -1734,11 +2363,13 @@ mod tests {
             vec![
                 ProductRef {
                     zap: 26056,
+                    elfs_ev: 0.0,
                     lfs: 0,
                     lmf: 10,
                 },
                 ProductRef {
                     zap: 26056,
+                    elfs_ev: 250_000.0,
                     lfs: 2,
                     lmf: 10,
                 },
@@ -1749,11 +2380,15 @@ mod tests {
             vec![
                 crate::activation::ProductTable {
                     zap: 26056,
+                    qm_ev: 1_000_000.0,
+                    qi_ev: 1_000_000.0,
                     lfs: 0,
                     table: table([3.0, 3.0]),
                 },
                 crate::activation::ProductTable {
                     zap: 26056,
+                    qm_ev: 1_000_000.0,
+                    qi_ev: 750_000.0,
                     lfs: 2,
                     table: table([0.25, 0.25]),
                 },
@@ -1782,7 +2417,7 @@ mod tests {
                 built.rows[1].lfs,
                 built.rows[1].lmf,
             ),
-            (4, 26056, 1, 10)
+            (4, 26056, 2, 10)
         );
         assert_eq!(built.rows[1].sigma, vec![0.25]);
 
@@ -1801,5 +2436,326 @@ mod tests {
         )
         .unwrap_err();
         assert!(error.contains("conflict with MF=10 products"), "{error}");
+    }
+
+    #[test]
+    fn physical_state_mapping_uses_excitation_and_catalog_liso() {
+        let mut sources = vec![BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![
+                state_target(
+                    "n-Fe056.endf",
+                    26056,
+                    0,
+                    0,
+                    0.0,
+                    vec![state_row(4, 26056, 5, Some(250_000.0))],
+                ),
+                state_target("n-Fe056m.endf", 26056, 1, 2, 250_000.0, Vec::new()),
+            ],
+            from_cache: false,
+        }];
+        let catalog = build_state_catalog(&sources).unwrap();
+        let row_before = sources[0].targets[0].rows[0].sigma.clone();
+        map_product_states(&mut sources[0].targets[0], &catalog).unwrap();
+
+        let target = &sources[0].targets[0];
+        assert_eq!(target.rows[0].lfs, 1);
+        assert_eq!(target.rows[0].sigma, row_before);
+        assert_eq!(target.index.state_mappings.len(), 1);
+        let mapping = &target.index.state_mappings[0];
+        assert_eq!(mapping.raw_lfs, 5);
+        assert_eq!(mapping.canonical_liso, Some(1));
+        assert_eq!(mapping.catalog_lis, Some(2));
+        assert_eq!(mapping.catalog_elis_eV, Some(250_000.0));
+        assert_eq!(mapping.catalog_file.as_deref(), Some("n-Fe056m.endf"));
+        let expected_source = "0".repeat(64);
+        assert_eq!(
+            mapping.catalog_source_sha256.as_deref(),
+            Some(expected_source.as_str())
+        );
+        assert_eq!(mapping.catalog_evaluations, Some(1));
+        assert_eq!(mapping.excitation_delta_eV, Some(0.0));
+        assert_eq!(mapping.decision, "catalog_excitation_match");
+    }
+
+    #[test]
+    fn distinct_isomers_map_by_physics_without_rank_compression() {
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![
+                state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new()),
+                state_target("m1.endf", 26056, 1, 2, 250_000.0, Vec::new()),
+                state_target("m2.endf", 26056, 2, 5, 750_000.0, Vec::new()),
+            ],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(16, 26056, 8, Some(750_000.0)),
+                state_row(102, 26056, 4, Some(250_000.0)),
+            ],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!(target.rows[0].lfs, 2);
+        assert_eq!(target.rows[1].lfs, 1);
+    }
+
+    #[test]
+    fn state_mapping_is_independent_of_reaction_and_row_order() {
+        let catalog_source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![
+                state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new()),
+                state_target("isomer.endf", 26056, 1, 3, 250_000.0, Vec::new()),
+            ],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[catalog_source]).unwrap();
+        let mut forward = state_target(
+            "forward.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(4, 26056, 2, Some(250_000.0)),
+                state_row(102, 26056, 9, Some(250_000.0)),
+            ],
+        );
+        let mut reverse = state_target(
+            "reverse.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 26056, 9, Some(250_000.0)),
+                state_row(4, 26056, 2, Some(250_000.0)),
+            ],
+        );
+
+        map_product_states(&mut forward, &catalog).unwrap();
+        map_product_states(&mut reverse, &catalog).unwrap();
+        let mut forward_identity: Vec<_> = forward
+            .rows
+            .iter()
+            .map(|row| (row.mt, row.zap, row.lfs, row.lmf, row.sigma.clone()))
+            .collect();
+        let mut reverse_identity: Vec<_> = reverse
+            .rows
+            .iter()
+            .map(|row| (row.mt, row.zap, row.lfs, row.lmf, row.sigma.clone()))
+            .collect();
+        forward_identity.sort_by_key(|row| row.0);
+        reverse_identity.sort_by_key(|row| row.0);
+        assert_eq!(forward_identity, reverse_identity);
+        assert!(forward_identity.iter().all(|row| row.2 == 1));
+    }
+
+    #[test]
+    fn unmapped_state_becomes_explicit_leakage_without_changing_strength() {
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![
+                state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new()),
+                state_target("isomer.endf", 26056, 1, 2, 250_000.0, Vec::new()),
+            ],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(102, 26056, 3, Some(400_000.0))],
+        );
+        let before: f64 = target.rows[0].sigma.iter().sum();
+        map_product_states(&mut target, &catalog).unwrap();
+
+        let row = &target.rows[0];
+        assert_eq!((row.zap, row.lfs, row.lmf), (0, 0, -3));
+        assert_eq!(row.sigma.iter().sum::<f64>().to_bits(), before.to_bits());
+        assert_eq!(
+            target.index.state_mappings[0].decision,
+            "no_catalog_excitation_match_to_leakage"
+        );
+    }
+
+    #[test]
+    fn ambiguous_catalog_and_conflicting_excitation_fail_closed() {
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![
+                state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new()),
+                state_target("m1.endf", 26056, 1, 1, 250_000.0, Vec::new()),
+                state_target("m2.endf", 26056, 2, 2, 250_000.5, Vec::new()),
+            ],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(102, 26056, 4, Some(250_000.25))],
+        );
+        let error = map_product_states(&mut target, &catalog).unwrap_err();
+        assert!(error.contains("matches multiple catalog states"), "{error}");
+
+        let conflict = RawProductState {
+            raw_lfs: 1,
+            elfs_eV: Some(250_000.0),
+            qm_eV: Some(1_000_000.0),
+            qi_eV: Some(600_000.0),
+        };
+        let error = conflict.excitation_eV().unwrap_err();
+        assert!(error.contains("conflicts with QM-QI"), "{error}");
+    }
+
+    #[test]
+    fn duplicate_catalog_agreement_is_order_independent_and_conflict_fails() {
+        let low = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("low.endf", 26056, 1, 2, 250_000.0, Vec::new())],
+            from_cache: false,
+        };
+        let high = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target(
+                "high.endf",
+                26056,
+                1,
+                2,
+                250_000.5,
+                Vec::new(),
+            )],
+            from_cache: false,
+        };
+        let forward = build_state_catalog(&[low.clone(), high.clone()]).unwrap();
+        let reverse = build_state_catalog(&[high.clone(), low.clone()]).unwrap();
+        let forward_state = &forward[&26056][0];
+        let reverse_state = &reverse[&26056][0];
+        assert_eq!(forward_state.representative.elis_eV, 250_000.0);
+        assert_eq!(forward_state.representative.file, "low.endf");
+        assert_eq!(forward_state.evaluations.len(), 2);
+        assert_eq!(forward_state.decision, "duplicate_evaluations_agree");
+        assert_eq!(
+            (
+                forward_state.representative.elis_eV,
+                &forward_state.representative.file,
+            ),
+            (
+                reverse_state.representative.elis_eV,
+                &reverse_state.representative.file,
+            )
+        );
+
+        let mut conflicting = high;
+        conflicting.targets[0].index.elis_eV = 250_010.0;
+        let error = build_state_catalog(&[low, conflicting]).unwrap_err();
+        assert!(error.contains("conflicting ELIS values"), "{error}");
+    }
+
+    #[test]
+    fn duplicate_product_declarations_require_exact_agreement() {
+        let product = ProductTable {
+            zap: 26056,
+            qm_ev: 1_000_000.0,
+            qi_ev: 750_000.0,
+            lfs: 2,
+            table: table([0.25, 0.5]),
+        };
+        let products = vec![product.clone(), product.clone()];
+        let unique = unique_product_tables(&products, "MT102/MF=10").unwrap();
+        assert_eq!(unique, vec![&product]);
+
+        let mut conflict = product.clone();
+        conflict.qi_ev = 749_999.0;
+        let error = unique_product_tables(&[product, conflict], "MT102/MF=10").unwrap_err();
+        assert!(error.contains("conflicting duplicate product"), "{error}");
+
+        let descriptor = ProductRef {
+            zap: 26056,
+            elfs_ev: 250_000.0,
+            lfs: 2,
+            lmf: 10,
+        };
+        assert_eq!(
+            descriptor_set(&[descriptor, descriptor], 10).unwrap(),
+            BTreeSet::from([(26056, 2)])
+        );
+        let conflicting_descriptor = ProductRef {
+            elfs_ev: 250_002.0,
+            ..descriptor
+        };
+        let error = descriptor_set(&[descriptor, conflicting_descriptor], 10).unwrap_err();
+        assert!(error.contains("conflicting duplicate MF=8"), "{error}");
+    }
+
+    #[test]
+    fn unsupported_state_metadata_is_explicit_and_tolerance_is_inclusive() {
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(4, 26056, 0, Some(0.0)),
+                state_row(16, 26056, 98, Some(250_000.0)),
+                state_row(102, 26056, 2, None),
+            ],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!((target.rows[0].zap, target.rows[0].lfs), (26056, 0));
+        assert_eq!((target.rows[1].zap, target.rows[1].lmf), (0, -3));
+        assert_eq!((target.rows[2].zap, target.rows[2].lmf), (0, -3));
+        assert_eq!(
+            target.index.state_mappings[1].decision,
+            "unspecified_lfs98_to_leakage"
+        );
+        assert_eq!(
+            target.index.state_mappings[2].decision,
+            "missing_excitation_to_leakage"
+        );
+
+        let boundary = RawProductState {
+            raw_lfs: 1,
+            elfs_eV: Some(200_000.0),
+            qm_eV: Some(1_200_001.0),
+            qi_eV: Some(1_000_000.0),
+        };
+        assert_eq!(boundary.excitation_eV().unwrap(), Some(200_000.0));
+        let outside = RawProductState {
+            qm_eV: Some(1_200_002.0),
+            ..boundary
+        };
+        let error = outside.excitation_eV().unwrap_err();
+        assert!(error.contains("conflicts with QM-QI"), "{error}");
     }
 }

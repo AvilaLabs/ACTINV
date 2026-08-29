@@ -314,3 +314,9 @@ part that does not compress: users, issues, and the validation record accumulati
   hashes match 10.5 GB of raw TENDL archives plus manifests, released activation/decay data, the ENDF manual, paper
   and supplement. An independent checker rederives every ID and partition and rejects four evidence mutations. The
   apparent 963rd reaction was the preamble word `Reference:`, leaving the publication's 962 families exact.
+- 2026-08-29 — P18 G1 replaced per-reaction level-rank compression with evaluated physical identity. The production
+  parser retains `LIS`/`LISO`/`ELIS`, `LFS`/`ELFS` and `QM`/`QI`; the v2 index records every catalog source, tolerance
+  and decision. Hash-pinned TENDL Ag-109/110 maps sparse raw level 2 to Ag-110m (`LISO=1`), while Ag-116 raw levels 1
+  and 4 map to `m1` and `m2` across multiple target states. Generated fixtures cover ambiguity, missing metadata,
+  duplicates and ordering, and the independent checker rejects four mapping mutations. G2 is the next gate; no
+  diagnostic or held-out ratio was used and no package release is yet authorized.

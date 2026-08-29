@@ -1318,8 +1318,10 @@ pub fn build_covariance(
         })?,
     )
     .map_err(|error| format!("cannot parse activation index: {error}"))?;
-    if activation_index.schema != "actinv-library-index-1"
-        || activation_index.projectile != "neutron"
+    if !matches!(
+        activation_index.schema.as_str(),
+        "actinv-library-index-1" | "actinv-library-index-2"
+    ) || activation_index.projectile != "neutron"
         || activation_index.sha256_npz != activation_library_sha256
     {
         return Err("activation library/index identity is inconsistent or not neutron".into());

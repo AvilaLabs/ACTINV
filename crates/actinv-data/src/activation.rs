@@ -97,6 +97,11 @@ pub struct TargetMetadata {
     pub mat: i32,
     pub za: i32,
     pub awr: f64,
+    /// Excitation energy of the evaluated target state (ENDF `ELIS`, eV).
+    pub elis_ev: f64,
+    /// Physical level number of the evaluated target state (ENDF `LIS`).
+    pub lis: i32,
+    /// Isomeric ordinal of the evaluated target state (ENDF `LISO`).
     pub liso: i32,
     pub awi: f64,
     pub nsub: usize,
@@ -105,9 +110,11 @@ pub struct TargetMetadata {
     pub evaluation_temperature_k: f64,
 }
 
-#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct ProductRef {
     pub zap: i32,
+    /// Physical excitation energy declared by MF=8 (ENDF `ELFS`, eV).
+    pub elfs_ev: f64,
     pub lfs: i32,
     pub lmf: i32,
 }
@@ -115,6 +122,10 @@ pub struct ProductRef {
 #[derive(Clone, Debug, PartialEq)]
 pub struct ProductTable {
     pub zap: i32,
+    /// Mass-difference Q value from the MF=9/10 TAB1 head (eV).
+    pub qm_ev: f64,
+    /// State-specific reaction Q value from the MF=9/10 TAB1 head (eV).
+    pub qi_ev: f64,
     pub lfs: i32,
     pub table: Tabulated,
 }
@@ -181,6 +192,12 @@ fn metadata(section: &Section<'_>) -> Result<TargetMetadata, String> {
     if target.l2 < 0 {
         return Err(format!("invalid target LISO={}", target.l2));
     }
+    if target.l1 < 0 {
+        return Err(format!("invalid target LIS={}", target.l1));
+    }
+    if !target.c1.is_finite() || target.c1 < 0.0 {
+        return Err(format!("invalid target ELIS={} eV", target.c1));
+    }
     let projectile = Projectile::from_nsub(incident.n1)?;
     projectile.validate_awi(incident.c1)?;
     if !processing.c1.is_finite() || processing.c1 < 0.0 {
@@ -193,6 +210,8 @@ fn metadata(section: &Section<'_>) -> Result<TargetMetadata, String> {
         mat: section.mat,
         za,
         awr: head.c2,
+        elis_ev: target.c1,
+        lis: target.l1,
         liso: target.l2,
         awi: incident.c1,
         nsub: incident.n1,
@@ -241,6 +260,9 @@ fn parse_mf8(section: &Section<'_>) -> Result<Vec<ProductRef>, String> {
         if product_head.l2 < 0 {
             return Err(format!("invalid MF=8 LFS={}", product_head.l2));
         }
+        if !product_head.c2.is_finite() || product_head.c2 < 0.0 {
+            return Err(format!("invalid MF=8 ELFS={} eV", product_head.c2));
+        }
         if !matches!(product_head.l1, 3 | 6 | 9 | 10) {
             return Err(format!("unsupported MF=8 LMF={}", product_head.l1));
         }
@@ -251,6 +273,7 @@ fn parse_mf8(section: &Section<'_>) -> Result<Vec<ProductRef>, String> {
         }
         products.push(ProductRef {
             zap,
+            elfs_ev: product_head.c2,
             lfs: product_head.l2,
             lmf: product_head.l1,
         });
@@ -282,9 +305,17 @@ fn parse_mf9_or_10(section: &Section<'_>) -> Result<Vec<ProductTable>, String> {
         if zap == -1 && (section.mf != 10 || section.mt != 18 || lfs != 0) {
             return Err("IZAP=-1 is valid only for the MF=10/MT=18 total-fission sentinel".into());
         }
+        let qm_ev = record.head.c1;
+        let qi_ev = record.head.c2;
         let table = Tabulated::try_from(record)?;
         validate_incident_table(&table, "product TAB1", true)?;
-        products.push(ProductTable { zap, lfs, table });
+        products.push(ProductTable {
+            zap,
+            qm_ev,
+            qi_ev,
+            lfs,
+            table,
+        });
     }
     if next != section.lines.len() {
         return Err(format!(
@@ -505,7 +536,7 @@ mod tests {
     fn basic_tape(extra: &[String]) -> String {
         let mut lines = vec![
             record(["26056", "55.45", "0", "0", "0", "0"], 2631, 1, 451, 1),
-            record(["0", "0", "0", "0", "0", "0"], 2631, 1, 451, 2),
+            record(["123.5", "0", "2", "1", "0", "0"], 2631, 1, 451, 2),
             record(["0.999", "2e8", "1", "0", "10010", "2025"], 2631, 1, 451, 3),
             record(["0", "0", "0", "0", "0", "0"], 2631, 1, 451, 4),
             send(2631, 1),
@@ -547,7 +578,13 @@ mod tests {
             102,
             1,
         ));
-        extra.push(record(["26057", "0", "3", "0", "0", "0"], 2631, 8, 102, 2));
+        extra.push(record(
+            ["26057", "123.5", "3", "1", "0", "0"],
+            2631,
+            8,
+            102,
+            2,
+        ));
         extra.push(send(2631, 8));
 
         for mf in [9, 10] {
@@ -558,7 +595,7 @@ mod tests {
                 102,
                 1,
             ));
-            extra.extend(tab1(2631, mf, 102, ["0", "0", "26057", "0"]));
+            extra.extend(tab1(2631, mf, 102, ["1000", "876.5", "26057", "1"]));
             extra.push(send(2631, mf));
         }
 
@@ -576,11 +613,17 @@ mod tests {
         assert_eq!(evaluations.len(), 1);
         let evaluation = &evaluations[0];
         assert_eq!(evaluation.metadata.za, 26056);
+        assert_eq!(evaluation.metadata.elis_ev, 123.5);
+        assert_eq!(evaluation.metadata.lis, 2);
+        assert_eq!(evaluation.metadata.liso, 1);
         assert_eq!(evaluation.metadata.projectile, Projectile::Proton);
         assert_eq!(evaluation.mf3.len(), 1);
         assert_eq!(evaluation.mf6[&5][0].zap, 26057);
         assert_eq!(evaluation.mf8[&102][0].lmf, 3);
+        assert_eq!(evaluation.mf8[&102][0].elfs_ev, 123.5);
         assert_eq!(evaluation.mf9[&102][0].zap, 26057);
+        assert_eq!(evaluation.mf9[&102][0].qm_ev, 1000.0);
+        assert_eq!(evaluation.mf9[&102][0].qi_ev, 876.5);
         assert_eq!(evaluation.mf10[&102][0].zap, 26057);
     }
 

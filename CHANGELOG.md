@@ -13,6 +13,10 @@
 - Sealed 962 public isomeric-ratio reaction families at family granularity before calculation, leaving 180 families
   and 1,945 rows genuinely held out. The committed metadata contains no dependent measurement, and an independent
   checker rederives the split and rejects identity, partition, quarantine and value-leak plants.
+- Completed P18 G1 physical product-state identity: TENDL builds now retain ENDF target and product excitation
+  metadata, map raw levels only through evaluated `LISO`, serialize the complete decision provenance in a v2 index,
+  and account unsupported states explicitly. Real Ag-110 and two-isomer Ag-116 cases plus generated fixtures pass an
+  independent mutation-tested checker; held-out measurements remain sealed.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no
@@ -20,6 +24,8 @@
 
 **Fixed**
 
+- Removed heuristic per-reaction excited-level rank compression from new TENDL library builds. In particular, the
+  sparse Ag-110 raw level 2 now maps by its 117.59 keV physical identity to decay isomer `m1`.
 - The crates.io trusted-publisher environment now matches the registry's configured `crates.io` OIDC identity. A
   protected manual recovery path can resume publication from an existing version-matching release tag without moving
   or reusing that tag.
