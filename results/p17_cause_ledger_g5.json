@@ -1,0 +1,75 @@
+{
+ "amendment_sha256": "e78c84d9f80c9bc6b7f0e79050206991515d283f43deeabd32f42c325f53581e",
+ "append_only": true,
+ "entries": [
+  {
+   "confidence": "bounded",
+   "controlled_substitution": "TENDL-2025 to current IRDFF-II pointwise branch response",
+   "entry_sha256": "da3d685a6f93069b973a5ff422af1c7d52decafa6cfa70f4dac4b9de3152344f",
+   "evidence": [
+    "p17-h3-t36-r013-In113gm#heldout_evidence.post_failure_mapping",
+    "p17-h3-t36-r013-In113gm#calculations.irdff_ii_current_archive_post_failure_diagnostic",
+    "Current IRDFF-II branch fold also disagrees materially while its total In-113 capture is near the measurement."
+   ],
+   "mismatch_key": "p17-h3-t36-r013-In113gm::actinv_tendl2025_post_failure_diagnostic",
+   "primary_cause": "evaluation",
+   "secondary_causes": [
+    "measurement-definition"
+   ],
+   "sequence": 1,
+   "signed_log_change": -0.00692005221838869
+  },
+  {
+   "confidence": "bounded",
+   "controlled_substitution": "TENDL-2025 to current IRDFF-II pointwise branch response",
+   "entry_sha256": "bc40e489a5d2cea5b080b5eb457de8415353433b188b6e751b79fecb5df08959",
+   "evidence": [
+    "p17-h3-t36-r015-In113gg#heldout_evidence.post_failure_mapping",
+    "p17-h3-t36-r015-In113gg#calculations.irdff_ii_current_archive_post_failure_diagnostic",
+    "Current IRDFF-II branch fold also disagrees materially while its total In-113 capture is near the measurement."
+   ],
+   "mismatch_key": "p17-h3-t36-r015-In113gg::actinv_tendl2025_post_failure_diagnostic",
+   "primary_cause": "evaluation",
+   "secondary_causes": [
+    "measurement-definition"
+   ],
+   "sequence": 2,
+   "signed_log_change": 0.3718798268780947
+  },
+  {
+   "confidence": "unresolved",
+   "controlled_substitution": "TENDL-2025 to current IRDFF-II pointwise response",
+   "entry_sha256": "96203d5db960835fb9decf3d47395336db01055c35dc72ca741b193e08caaced",
+   "evidence": [
+    "p17-h3-t36-r020-Ag109g#calculations.irdff_ii_current_archive_post_failure_diagnostic",
+    "The primary paper explicitly leaves the Ag-109 evaluation-versus-experiment cause unresolved."
+   ],
+   "mismatch_key": "p17-h3-t36-r020-Ag109g::actinv_tendl2025_post_failure_diagnostic",
+   "primary_cause": "unresolved",
+   "secondary_causes": [
+    "evaluation",
+    "measurement-definition"
+   ],
+   "sequence": 3,
+   "signed_log_change": 0.0020896489055221503
+  }
+ ],
+ "entries_sha256": "5ad4eef33253a379d173b16e31fdf945d6009ab7adde0740940cfe9c8b6cf7b0",
+ "predecessor": {
+  "path": "results/p17_cause_ledger.json",
+  "sha256": "85743dc9b2b6aaae066453e395a4336c0671520d7d2f4da383e0254a839fa143"
+ },
+ "protocol_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+ "schema": "actinv-p17-cause-ledger-segment-1",
+ "scope": "post-P17-failure diagnostic mismatches; not accepted G5 evidence",
+ "taxonomy": [
+  "solver",
+  "chain-construction",
+  "processor",
+  "evaluation",
+  "decay-yield",
+  "measurement-definition",
+  "unsupported-model",
+  "unresolved"
+ ]
+}

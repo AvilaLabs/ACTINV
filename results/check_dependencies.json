@@ -20,6 +20,7 @@
   "controls/check_prior_verdicts.py",
   "controls/check_g4_p17.py",
   "controls/check_p17_unseal.py",
+  "controls/check_g5_p17.py",
   "controls/g3_p11_sensitivity.py",
   "controls/g4_p11_propagation.py",
   "controls/g5_p11_entry_points.py",

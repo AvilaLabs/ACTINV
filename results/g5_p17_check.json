@@ -1,0 +1,29 @@
+{
+ "checker_source_sha256": "c6dbabda1143262837bdd2df6f98b334b380a52985811be9725dcd2efadc8309",
+ "ledger_sha256": "93f166ed234a58155c0d4f7e8db0601e6f7965aff046504a6483acbf54ab5f83",
+ "mutation_plants": {
+  "cause_removal": true,
+  "failure_flip": true,
+  "family": true,
+  "hash": true,
+  "inclusion": true,
+  "metric": true,
+  "row_identity": true,
+  "source_anomaly": true,
+  "unit": true,
+  "value": true
+ },
+ "pass": true,
+ "result_sha256": "5336e04d7feb4e8fa2758bbed4cc79907e5a5b54555912db993cc2284fef954e",
+ "schema": "actinv-p17-heldout-check-1",
+ "summary": {
+  "families": {
+   "H1_SPR_III_table_23": 40,
+   "H2_ACRR_table_25": 33,
+   "H3_Maxwellian_table_36": 21
+  },
+  "production_mismatches": 3,
+  "rows": 94,
+  "verdict": "P17-FAIL"
+ }
+}
