@@ -396,10 +396,10 @@ fn insert_unique<T>(map: &mut BTreeMap<i32, T>, mt: i32, value: T, mf: i32) -> R
     }
 }
 
-/// Parse all material evaluations in an ENDF tape.
-pub fn parse_evaluations(
+fn parse_evaluations_with_scope(
     text: &str,
     expected_projectile: Option<Projectile>,
+    state_audit_only: bool,
 ) -> Result<Vec<Evaluation>, String> {
     let sections = parse_sections(text)?;
     let mut by_mat: BTreeMap<i32, Vec<&Section<'_>>> = BTreeMap::new();
@@ -440,7 +440,7 @@ pub fn parse_evaluations(
         for section in material_sections {
             let context = format!("MAT={mat}/MF={}/MT={}", section.mf, section.mt);
             match (section.mf, section.mt) {
-                (2, 151) => {
+                (2, 151) if !state_audit_only => {
                     if evaluation.resonance.is_some() {
                         return Err(format!("{context}: duplicate resonance evaluation"));
                     }
@@ -458,7 +458,7 @@ pub fn parse_evaluations(
                     evaluation.mf2_sections.insert(151);
                     evaluation.resonance = Some(parsed);
                 }
-                (2, mt) => {
+                (2, mt) if !state_audit_only => {
                     evaluation.mf2_sections.insert(mt);
                 }
                 (3, mt) => insert_unique(
@@ -467,7 +467,7 @@ pub fn parse_evaluations(
                     parse_mf3(section).map_err(|error| format!("{context}: {error}"))?,
                     3,
                 )?,
-                (6, mt) => insert_unique(
+                (6, mt) if !state_audit_only => insert_unique(
                     &mut evaluation.mf6,
                     mt,
                     parse_mf6(section).map_err(|error| format!("{context}: {error}"))?,
@@ -479,7 +479,10 @@ pub fn parse_evaluations(
                     parse_mf8(section).map_err(|error| format!("{context}: {error}"))?,
                     8,
                 )?,
-                (8, 454 | 459) if evaluation.metadata.projectile != Projectile::Neutron => {
+                (8, 454 | 459)
+                    if !state_audit_only
+                        && evaluation.metadata.projectile != Projectile::Neutron =>
+                {
                     return Err(format!(
                         "{context}: fission-yield sections are unsupported for {} evaluations",
                         evaluation.metadata.projectile.name()
@@ -505,6 +508,23 @@ pub fn parse_evaluations(
     Ok(evaluations)
 }
 
+/// Parse all material evaluations in an ENDF tape.
+pub fn parse_evaluations(
+    text: &str,
+    expected_projectile: Option<Projectile>,
+) -> Result<Vec<Evaluation>, String> {
+    parse_evaluations_with_scope(text, expected_projectile, false)
+}
+
+/// Parse only the strict target, reaction-total and product-state sections needed by a bounded corpus audit.
+/// Unrelated MF=2/6 and fission-yield payloads are not interpreted by this entry point.
+pub fn parse_state_audit_evaluations(
+    text: &str,
+    expected_projectile: Option<Projectile>,
+) -> Result<Vec<Evaluation>, String> {
+    parse_evaluations_with_scope(text, expected_projectile, true)
+}
+
 /// Read and parse all material evaluations in one ENDF file.
 pub fn parse_file(
     path: impl AsRef<Path>,
@@ -514,6 +534,18 @@ pub fn parse_file(
     let text = std::fs::read_to_string(path)
         .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
     parse_evaluations(&text, expected_projectile)
+        .map_err(|error| format!("{}: {error}", path.display()))
+}
+
+/// Read one ENDF file and parse only its bounded product-state audit surface.
+pub fn parse_state_audit_file(
+    path: impl AsRef<Path>,
+    expected_projectile: Option<Projectile>,
+) -> Result<Vec<Evaluation>, String> {
+    let path = path.as_ref();
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read {}: {error}", path.display()))?;
+    parse_state_audit_evaluations(&text, expected_projectile)
         .map_err(|error| format!("{}: {error}", path.display()))
 }
 
@@ -609,7 +641,8 @@ mod tests {
         extra.extend(tab1(2631, 6, 5, ["26057", "56.4", "0", "0"]));
         extra.push(send(2631, 6));
 
-        let evaluations = parse_evaluations(&basic_tape(&extra), Some(Projectile::Proton)).unwrap();
+        let tape = basic_tape(&extra);
+        let evaluations = parse_evaluations(&tape, Some(Projectile::Proton)).unwrap();
         assert_eq!(evaluations.len(), 1);
         let evaluation = &evaluations[0];
         assert_eq!(evaluation.metadata.za, 26056);
@@ -625,6 +658,17 @@ mod tests {
         assert_eq!(evaluation.mf9[&102][0].qm_ev, 1000.0);
         assert_eq!(evaluation.mf9[&102][0].qi_ev, 876.5);
         assert_eq!(evaluation.mf10[&102][0].zap, 26057);
+
+        let audit = parse_state_audit_evaluations(&tape, Some(Projectile::Proton)).unwrap();
+        assert_eq!(audit.len(), 1);
+        assert_eq!(audit[0].metadata, evaluation.metadata);
+        assert_eq!(audit[0].mf3, evaluation.mf3);
+        assert_eq!(audit[0].mf8, evaluation.mf8);
+        assert_eq!(audit[0].mf9, evaluation.mf9);
+        assert_eq!(audit[0].mf10, evaluation.mf10);
+        assert!(audit[0].mf2_sections.is_empty());
+        assert!(audit[0].resonance.is_none());
+        assert!(audit[0].mf6.is_empty());
     }
 
     #[test]

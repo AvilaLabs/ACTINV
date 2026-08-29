@@ -274,6 +274,20 @@ impl Tabulated {
         self.segment_value(segment, value)
     }
 
+    /// Evaluate the limit approaching a breakpoint from lower energy, with zero below the tabulated domain.
+    /// This complements [`Self::evaluate`]'s right-continuous handling when a repeated ENDF abscissa declares a
+    /// discontinuity.
+    pub fn evaluate_left_limit(&self, value: f64) -> Result<f64, String> {
+        if !value.is_finite() {
+            return Err("cannot evaluate TAB1 left limit at a nonfinite value".into());
+        }
+        if value <= self.x[0] || value > self.x[self.x.len() - 1] {
+            return Ok(0.0);
+        }
+        let lower = self.x.partition_point(|point| *point < value);
+        self.segment_value(lower - 1, value)
+    }
+
     /// Integral of sigma(E) dE/E on a positive subinterval. Interpolation discontinuities are exact breakpoints.
     pub fn lethargy_integral(&self, low: f64, high: f64) -> Result<f64, String> {
         if !low.is_finite() || !high.is_finite() || low <= 0.0 || high < low {
@@ -828,6 +842,9 @@ mod tests {
         };
         table.validate().unwrap();
         assert_eq!(table.evaluate(2.0).unwrap(), 4.0);
+        assert_eq!(table.evaluate_left_limit(2.0).unwrap(), 1.0);
+        assert_eq!(table.evaluate_left_limit(1.0).unwrap(), 0.0);
+        assert_eq!(table.evaluate_left_limit(2.5).unwrap(), 4.0);
         let expected = (2.0f64 / 1.0).ln() + 4.0 * (3.0f64 / 2.0).ln();
         assert!((table.lethargy_integral(1.0, 3.0).unwrap() - expected).abs() < 1e-14);
     }

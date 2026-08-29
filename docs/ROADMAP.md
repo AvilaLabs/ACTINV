@@ -14,13 +14,15 @@ faster at the median with effectively unchanged memory. The conditional suffix r
 repair, not a product or scientific failure. P17 is closed **P17-FAIL** under its unchanged procedural rule: all
 numerical, identical-data, processor, diagnostic, independent-arithmetic and quality controls pass, but the sole
 post-unseal amendment's EOI, product-alias and infinite-dilution assumptions were falsified. P17 changed no production
-code or released package. The P17 closure commit passed all 39 workflow steps. P18 is open under protocol
+code or released package. The P17 closure commit passed all 39 workflow steps. P18 is terminally failing under protocol
 `002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09`: it replaces heuristic product-state ranking
-and silent isomer-to-ground fallback with auditable ENDF identity and fail-loud accounting, then uses family-level
-held-out isomeric-ratio evidence to decide whether the changed default and a v1.1.0 release may ship.
+with auditable ENDF identity, but its complete G2 scan finds the frozen state-partial conservation and mapping rules
+violated across the four TENDL corpora. No diagnostic or held-out ratio was read, G3 onward is not authorized, and
+v1.1.0 cannot ship from this phase. Formal P18-FAIL closure follows the green G2 evidence checkpoint.
 Amendment 1 (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) quarantines five families whose
 dependent rows were accidentally displayed by an incorrect fixed-column redaction before G0. They are diagnostic
-only; the remaining held-out partition stays sealed. P18 can therefore close at best P18-CONDITIONAL.
+only; the remaining held-out partition stays sealed. It had capped a successful close at P18-CONDITIONAL; the later
+G2 threshold failure now requires P18-FAIL.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -320,3 +322,10 @@ part that does not compress: users, issues, and the validation record accumulati
   and 4 map to `m1` and `m2` across multiple target states. Generated fixtures cover ambiguity, missing metadata,
   duplicates and ordering, and the independent checker rejects four mapping mutations. G2 is the next gate; no
   diagnostic or held-out ratio was used and no package release is yet authorized.
+- 2026-08-29 — P18 G2 completed a bounded one-file-at-a-time audit of all 11,400 frozen neutron, proton, deuteron and
+  alpha TENDL evaluations. All 1,810,499 MF=8/9/10 declarations are accounted, all four 2,850-state catalogs are
+  file-order invariant, and there are no missing totals, descriptor omissions or conflicting duplicates. The frozen
+  conservation rule nevertheless finds 2,128,813 neutron, 175,883 proton, 264,272 deuteron and 78,647 alpha
+  comparison violations; 143 MF8-versus-Q excitation conflicts also remain explicit. The checker verifies the
+  truthful failure and rejects seven mutations without reading a diagnostic or held-out measurement. G2 therefore
+  fails, G3 onward is not authorized and P18 must close P18-FAIL without a v1.1.0 release.

@@ -51,6 +51,9 @@ jobs:
       - name: P18 physical product-state identity evidence
         run: python controls/check_g1_p18.py --no-write
 
+      - name: P18 complete corpus audit preserves the frozen G2 failure
+        run: python controls/check_g2_p18.py --no-write
+
       - name: P16 typed-boundary control and independent verdict
         run: |
           python controls/g1_p16_quantities.py --no-write

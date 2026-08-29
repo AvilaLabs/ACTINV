@@ -644,6 +644,198 @@ fn unique_product_tables<'a>(
     Ok(unique)
 }
 
+const POINTWISE_PARTIAL_ABS_TOLERANCE_B: f64 = 1e-12;
+const COLLAPSED_PARTIAL_ABS_TOLERANCE_B: f64 = 1e-14;
+const PARTIAL_REL_TOLERANCE: f64 = 5e-10;
+
+fn state_partial_tolerance(total: f64, peak_total: f64, absolute: f64) -> f64 {
+    absolute.max(PARTIAL_REL_TOLERANCE * total.max(peak_total))
+}
+
+fn validate_state_partial_value(
+    mt: i32,
+    context: std::fmt::Arguments<'_>,
+    identity: std::fmt::Arguments<'_>,
+    partial: f64,
+    total: f64,
+    peak_total: f64,
+    absolute_tolerance: f64,
+) -> Result<(), String> {
+    if !partial.is_finite() || partial < 0.0 {
+        return Err(format!(
+            "MT{mt}/MF=10 {context} {identity} is nonfinite or negative ({partial:.17e} barn)"
+        ));
+    }
+    if !total.is_finite() || total < 0.0 {
+        return Err(format!(
+            "MT{mt}/MF=3 {context} total is nonfinite or negative ({total:.17e} barn)"
+        ));
+    }
+    let tolerance = state_partial_tolerance(total, peak_total, absolute_tolerance);
+    if partial > total + tolerance {
+        return Err(format!(
+            "MT{mt}/MF=10 {context} {identity} {partial:.17e} barn exceeds MF=3 total {total:.17e} barn plus tolerance {tolerance:.17e} barn"
+        ));
+    }
+    Ok(())
+}
+
+fn validate_pointwise_state_partials(
+    mt: i32,
+    total: &Tabulated,
+    products: &[&ProductTable],
+) -> Result<(), String> {
+    if total
+        .y
+        .iter()
+        .any(|value| !value.is_finite() || *value < 0.0)
+    {
+        return Err(format!(
+            "MT{mt}/MF=3 total contains a nonfinite or negative cross section"
+        ));
+    }
+    let state_products: Vec<_> = products
+        .iter()
+        .copied()
+        .filter(|product| product.zap >= 0)
+        .collect();
+    if state_products.is_empty() {
+        return Ok(());
+    }
+    let peak_total = total.y.iter().copied().fold(0.0, f64::max);
+    let mut energies = Vec::with_capacity(
+        total.x.len()
+            + state_products
+                .iter()
+                .map(|product| product.table.x.len())
+                .sum::<usize>(),
+    );
+    energies.extend(total.x.iter().copied());
+    for product in &state_products {
+        energies.extend(product.table.x.iter().copied());
+    }
+    energies.sort_by(f64::total_cmp);
+    energies.dedup_by(|left, right| *left == *right);
+    let product_zaps: BTreeSet<_> = state_products.iter().map(|product| product.zap).collect();
+
+    for energy in energies {
+        for (side, left_limit) in [("right", false), ("left", true)] {
+            let evaluate = |table: &Tabulated| {
+                if left_limit {
+                    table.evaluate_left_limit(energy)
+                } else {
+                    table.evaluate(energy)
+                }
+            };
+            let total_value = evaluate(total)?;
+            for product in &state_products {
+                validate_state_partial_value(
+                    mt,
+                    format_args!("pointwise {side} at {energy:.17e} eV"),
+                    format_args!("ZAP={}/LFS={} partial", product.zap, product.lfs),
+                    evaluate(&product.table)?,
+                    total_value,
+                    peak_total,
+                    POINTWISE_PARTIAL_ABS_TOLERANCE_B,
+                )?;
+            }
+            for zap in &product_zaps {
+                let mut sum = 0.0;
+                for product in state_products.iter().filter(|product| product.zap == *zap) {
+                    sum += evaluate(&product.table)?;
+                }
+                validate_state_partial_value(
+                    mt,
+                    format_args!("pointwise {side} at {energy:.17e} eV"),
+                    format_args!("ZAP={zap} mutually-exclusive state sum"),
+                    sum,
+                    total_value,
+                    peak_total,
+                    POINTWISE_PARTIAL_ABS_TOLERANCE_B,
+                )?;
+            }
+        }
+    }
+    Ok(())
+}
+
+fn collapse_mf10_products<'a>(
+    groups: &GroupStructure,
+    mt: i32,
+    products: &[&'a ProductTable],
+) -> Result<Vec<(&'a ProductTable, Vec<f64>)>, String> {
+    products
+        .iter()
+        .map(|product| {
+            Ok((
+                *product,
+                checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?,
+            ))
+        })
+        .collect()
+}
+
+fn validate_collapsed_state_partials(
+    mt: i32,
+    total: &[f64],
+    products: &[(&ProductTable, Vec<f64>)],
+) -> Result<(), String> {
+    if total.iter().any(|value| !value.is_finite() || *value < 0.0) {
+        return Err(format!(
+            "MT{mt}/MF=3 collapsed total contains a nonfinite or negative cross section"
+        ));
+    }
+    let state_products: Vec<_> = products
+        .iter()
+        .filter(|(product, _)| product.zap >= 0)
+        .collect();
+    let product_zaps: BTreeSet<_> = state_products
+        .iter()
+        .map(|(product, _)| product.zap)
+        .collect();
+    let peak_total = total.iter().copied().fold(0.0, f64::max);
+    for (product, partial) in &state_products {
+        if partial.len() != total.len() {
+            return Err(format!(
+                "MT{mt}/MF=10 collapsed ZAP={}/LFS={} group count differs from MF=3",
+                product.zap, product.lfs
+            ));
+        }
+        for (group, (&partial_value, &total_value)) in partial.iter().zip(total).enumerate() {
+            validate_state_partial_value(
+                mt,
+                format_args!("collapsed group {group}"),
+                format_args!("ZAP={}/LFS={} partial", product.zap, product.lfs),
+                partial_value,
+                total_value,
+                peak_total,
+                COLLAPSED_PARTIAL_ABS_TOLERANCE_B,
+            )?;
+        }
+    }
+    for zap in product_zaps {
+        for (group, &total_value) in total.iter().enumerate() {
+            let mut sum = 0.0;
+            for (_, partial) in state_products
+                .iter()
+                .filter(|(product, _)| product.zap == zap)
+            {
+                sum += partial[group];
+            }
+            validate_state_partial_value(
+                mt,
+                format_args!("collapsed group {group}"),
+                format_args!("ZAP={zap} mutually-exclusive state sum"),
+                sum,
+                total_value,
+                peak_total,
+                COLLAPSED_PARTIAL_ABS_TOLERANCE_B,
+            )?;
+        }
+    }
+    Ok(())
+}
+
 fn validate_descriptors(
     products: &[ProductRef],
     lmf: i32,
@@ -1150,6 +1342,35 @@ fn build_evaluation(
     mts.extend(evaluation.mf10.keys().copied());
     mts.extend(processed.keys().copied());
     for mt in mts {
+        // TENDL declarations are audited even when the reaction is later omitted. EAF keeps its established
+        // skip-before-product-validation behavior and initializes these rows only after the skip decision.
+        let mut mf10_products = if format == LibraryFormat::Tendl {
+            unique_product_tables(
+                evaluation.mf10.get(&mt).map(Vec::as_slice).unwrap_or(&[]),
+                &format!("MT{mt}/MF=10"),
+            )?
+        } else {
+            Vec::new()
+        };
+        let mut collapsed_mf10 = if mf10_products.is_empty() {
+            Vec::new()
+        } else {
+            collapse_mf10_products(groups, mt, &mf10_products)?
+        };
+        if !mf10_products.is_empty() {
+            let raw_total = evaluation.mf3.get(&mt).ok_or_else(|| {
+                format!(
+                    "MT{mt}/MF=10 state partials have no matching MF=3 total; conservation is unproven"
+                )
+            })?;
+            validate_pointwise_state_partials(mt, raw_total, &mf10_products)?;
+            // The frozen conservation rule compares the two raw evaluated
+            // sections before and after the same group-collapse operation.
+            // Resonance reconstruction may still supply the runtime total
+            // below, but it is not substituted into this data-integrity test.
+            let collapsed_total = checked_collapse(groups, raw_total, &format!("MT{mt}/MF=3"))?;
+            validate_collapsed_state_partials(mt, &collapsed_total, &collapsed_mf10)?;
+        }
         let has_lmf6 = evaluation
             .mf8
             .get(&mt)
@@ -1160,38 +1381,40 @@ fn build_evaluation(
             }
             continue;
         }
-        let descriptors = evaluation.mf8.get(&mt).map(Vec::as_slice).unwrap_or(&[]);
-
-        if inelastic(mt) {
-            let products = unique_product_tables(
+        if format != LibraryFormat::Tendl {
+            mf10_products = unique_product_tables(
                 evaluation.mf10.get(&mt).map(Vec::as_slice).unwrap_or(&[]),
                 &format!("MT{mt}/MF=10"),
             )?;
-            if products.iter().any(|product| product.zap < 0) {
+            collapsed_mf10 = collapse_mf10_products(groups, mt, &mf10_products)?;
+        }
+        let descriptors = evaluation.mf8.get(&mt).map(Vec::as_slice).unwrap_or(&[]);
+
+        if inelastic(mt) {
+            if mf10_products.iter().any(|product| product.zap < 0) {
                 return Err(format!("MT{mt}/MF=10 contains an invalid negative product"));
             }
-            let actual: BTreeSet<_> = products
+            let actual: BTreeSet<_> = mf10_products
                 .iter()
                 .map(|product| (product.zap, product.lfs))
                 .collect();
             // Inelastic MF=10 commonly tabulates both return to the ground state and production of a metastable
             // state. Validate the complete declaration before intentionally retaining only transmuting LFS>0 rows.
             validate_descriptors(descriptors, 10, &actual)?;
-            let metastable: Vec<_> = products
-                .into_iter()
-                .filter(|product| product.lfs > 0)
-                .collect();
-            if metastable.is_empty() {
-                continue;
-            }
-            let retained: BTreeSet<_> = metastable
+            let retained: BTreeSet<_> = mf10_products
                 .iter()
+                .filter(|product| product.lfs > 0)
                 .map(|product| (product.zap, product.lfs))
                 .collect();
+            if retained.is_empty() {
+                continue;
+            }
             let mut loss = vec![0.0; groups.groups()];
             let mut product_rows = Vec::new();
-            for product in metastable {
-                let sigma = checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?;
+            for (product, sigma) in collapsed_mf10
+                .into_iter()
+                .filter(|(product, _)| product.lfs > 0)
+            {
                 sum_groups(&mut loss, &sigma)?;
                 product_rows.push(BuiltRow {
                     mt,
@@ -1226,24 +1449,21 @@ fn build_evaluation(
         } else if let Some(table) = evaluation.mf3.get(&mt) {
             checked_collapse(groups, table, &format!("MT{mt}/MF=3"))?
         } else {
-            let declared_products = evaluation
-                .mf10
-                .get(&mt)
-                .ok_or_else(|| format!("MT{mt} has neither MF=3 nor MF=10 data"))?;
-            let products = unique_product_tables(declared_products, &format!("MT{mt}/MF=10"))?;
-            if let Some(total_fission) = products.iter().find(|product| product.zap == -1) {
-                checked_collapse(
-                    groups,
-                    &total_fission.table,
-                    &format!("MT{mt}/MF=10 total-fission sentinel"),
-                )?
+            if !evaluation.mf10.contains_key(&mt) {
+                return Err(format!("MT{mt} has neither MF=3 nor MF=10 data"));
+            }
+            if let Some((_, total_fission)) = collapsed_mf10
+                .iter_mut()
+                .find(|(product, _)| product.zap == -1)
+            {
+                std::mem::take(total_fission)
             } else {
                 let mut total = vec![0.0; groups.groups()];
-                for product in products.iter().filter(|product| product.zap >= 0) {
-                    sum_groups(
-                        &mut total,
-                        &checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?,
-                    )?;
+                for (_, partial) in collapsed_mf10
+                    .iter()
+                    .filter(|(product, _)| product.zap >= 0)
+                {
+                    sum_groups(&mut total, partial)?;
                 }
                 total
             }
@@ -1258,9 +1478,11 @@ fn build_evaluation(
         });
         let mut done = HashSet::new();
 
-        if let Some(declared_products) = evaluation.mf10.get(&mt) {
-            let products = unique_product_tables(declared_products, &format!("MT{mt}/MF=10"))?;
-            let total_fission = products.iter().filter(|product| product.zap == -1).count();
+        if evaluation.mf10.contains_key(&mt) {
+            let total_fission = mf10_products
+                .iter()
+                .filter(|product| product.zap == -1)
+                .count();
             if total_fission > 1 || (total_fission == 1 && mt != 18) {
                 return Err(format!(
                     "MT{mt}/MF=10 contains an invalid total-fission sentinel"
@@ -1272,13 +1494,16 @@ fn build_evaluation(
                         .into(),
                 );
             }
-            let actual: BTreeSet<_> = products
+            let actual: BTreeSet<_> = mf10_products
                 .iter()
                 .filter(|product| product.zap >= 0)
                 .map(|product| (product.zap, product.lfs))
                 .collect();
             validate_descriptors(descriptors, 10, &actual)?;
-            for product in products.iter().filter(|product| product.zap >= 0) {
+            for (product, sigma) in collapsed_mf10
+                .into_iter()
+                .filter(|(product, _)| product.zap >= 0)
+            {
                 if !done.insert((product.zap, product.lfs)) {
                     return Err(format!(
                         "MT{mt} product ZAP={}/LFS={} has conflicting definitions",
@@ -1290,7 +1515,7 @@ fn build_evaluation(
                     zap: product.zap,
                     lfs: product.lfs,
                     lmf: 10,
-                    sigma: checked_collapse(groups, &product.table, &format!("MT{mt}/MF=10"))?,
+                    sigma,
                     raw_state: Some(RawProductState::from_table(
                         descriptor_for(descriptors, 10, product.zap, product.lfs),
                         product,
@@ -1780,6 +2005,16 @@ mod tests {
             interpolation: vec![(2, 2)],
             x: vec![1.0, 4.0],
             y: y.to_vec(),
+        }
+    }
+
+    fn state_product(zap: i32, lfs: i32, table: Tabulated) -> ProductTable {
+        ProductTable {
+            zap,
+            qm_ev: 1_000_000.0,
+            qi_ev: 1_000_000.0 - f64::from(lfs) * 100_000.0,
+            lfs,
+            table,
         }
     }
 
@@ -2394,6 +2629,24 @@ mod tests {
                 },
             ],
         );
+        let missing_total = build_evaluation(
+            input.clone(),
+            LibraryFormat::Tendl,
+            "n-Fe056m",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(
+            missing_total.contains("no matching MF=3 total; conservation is unproven"),
+            "{missing_total}"
+        );
+        input.mf3.insert(4, table([4.0, 4.0]));
         let built = build_evaluation(
             input.clone(),
             LibraryFormat::Tendl,
@@ -2436,6 +2689,78 @@ mod tests {
         )
         .unwrap_err();
         assert!(error.contains("conflict with MF=10 products"), "{error}");
+    }
+
+    #[test]
+    fn pointwise_state_partial_conservation_checks_union_grid_and_state_sum() {
+        let total = table([1.0, 1.0]);
+        let excess = state_product(
+            26056,
+            1,
+            Tabulated {
+                interpolation: vec![(3, 2)],
+                x: vec![1.0, 2.0, 4.0],
+                y: vec![0.5, 1.1, 0.5],
+            },
+        );
+        let error = validate_pointwise_state_partials(102, &total, &[&excess]).unwrap_err();
+        assert!(
+            error.contains("pointwise right at 2.00000000000000000e0 eV"),
+            "{error}"
+        );
+        assert!(error.contains("ZAP=26056/LFS=1 partial"), "{error}");
+
+        let ground = state_product(26056, 0, table([0.6, 0.6]));
+        let isomer = state_product(26056, 1, table([0.5, 0.5]));
+        let error =
+            validate_pointwise_state_partials(102, &total, &[&ground, &isomer]).unwrap_err();
+        assert!(
+            error.contains("ZAP=26056 mutually-exclusive state sum"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn pointwise_state_partial_conservation_checks_left_side_of_double_points() {
+        let total = Tabulated {
+            interpolation: vec![(4, 2)],
+            x: vec![1.0, 2.0, 2.0, 4.0],
+            y: vec![2.0, 0.5, 2.0, 2.0],
+        };
+        let partial = state_product(
+            26056,
+            1,
+            Tabulated {
+                interpolation: vec![(4, 2)],
+                x: vec![1.0, 2.0, 2.0, 4.0],
+                y: vec![1.0, 1.0, 1.0, 1.0],
+            },
+        );
+        let error = validate_pointwise_state_partials(102, &total, &[&partial]).unwrap_err();
+        assert!(
+            error.contains("pointwise left at 2.00000000000000000e0 eV"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn collapsed_state_partial_uses_the_stricter_frozen_tolerance() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let total = table([0.0, 0.0]);
+        let partial = state_product(26056, 1, table([5e-13, 5e-13]));
+        validate_pointwise_state_partials(102, &total, &[&partial]).unwrap();
+        let collapsed_total = checked_collapse(&groups, &total, "total").unwrap();
+        let collapsed_products = collapse_mf10_products(&groups, 102, &[&partial]).unwrap();
+        let error = validate_collapsed_state_partials(102, &collapsed_total, &collapsed_products)
+            .unwrap_err();
+        assert!(error.contains("collapsed group 0"), "{error}");
+        assert!(
+            error.contains("plus tolerance 9.99999999999999999e-15 barn"),
+            "{error}"
+        );
     }
 
     #[test]

@@ -17,6 +17,10 @@
   metadata, map raw levels only through evaluated `LISO`, serialize the complete decision provenance in a v2 index,
   and account unsupported states explicitly. Real Ag-110 and two-isomer Ag-116 cases plus generated fixtures pass an
   independent mutation-tested checker; held-out measurements remain sealed.
+- Completed the bounded P18 G2 audit of all 11,400 frozen TENDL evaluations and 1,810,499 MF=8/9/10 declarations.
+  Catalog order, inventory, duplicate and total-availability checks pass, but the unchanged state-partial rule finds
+  2,647,615 comparison violations and 143 MF8-versus-Q identity conflicts. G2 therefore fails, no held-out value is
+  unsealed, and the unreleased P18 candidate cannot authorize v1.1.0.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no

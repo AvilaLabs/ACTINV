@@ -1,0 +1,30 @@
+{
+ "audit_complete": true,
+ "changed_identities_sha256": "606347ce4d12788451be3a4a3765bfa5305613631eb37ea5de30d163546e083e",
+ "checker_source_sha256": "3893c048c8915550772fe923de222184a9d08ded24552162070aa873b92f5721",
+ "checks": {
+  "catalog_and_file_order_invariance": true,
+  "changed_identity_artifact": true,
+  "complete_four_corpus_inventory": true,
+  "declaration_and_comparison_accounting": true,
+  "failure_arithmetic": true,
+  "frozen_sources_and_thresholds": true,
+  "measurement_quarantine": true,
+  "truthful_g2_failure": true
+ },
+ "evidence_sha256": "e20fba865c36131f27bce7ac110957336c55d9c8455e79a8ddac0edde66df9cb",
+ "gate": "P18-G2",
+ "mutation_plants": {
+  "artifact_hash": true,
+  "changed_identity": true,
+  "decision_count": true,
+  "declaration_count": true,
+  "excitation_conflict": true,
+  "threshold": true,
+  "violation_count": true
+ },
+ "pass": true,
+ "schema": "actinv-p18-g2-independent-check-1",
+ "scientific_gate_pass": false,
+ "verdict": "P18-G2-FAIL"
+}
