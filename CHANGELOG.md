@@ -24,6 +24,9 @@
 
 **Fixed**
 
+- Scoped P16's historical borrow-workaround assertion to its frozen, already-passed source-evidence commit. Later
+  phases may add legitimate owned values without being misclassified as changes to P16's typed-unit implementation;
+  current typed boundaries and the repository-wide `unsafe` prohibition remain live checks.
 - Removed heuristic per-reaction excited-level rank compression from new TENDL library builds. In particular, the
   sparse Ag-110 raw level 2 now maps by its 117.59 keV physical identity to decay isomer `m1`.
 - The crates.io trusted-publisher environment now matches the registry's configured `crates.io` OIDC identity. A

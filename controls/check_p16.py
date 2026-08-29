@@ -24,6 +24,7 @@ AMENDMENTS = {
     "protocols/ACTINV-P16_AMENDMENT_A.md": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
 }
 OPENING_COMMIT = "0332779401363d2f39722efe7a0b7218afcfb270"
+SOURCE_EVIDENCE_COMMIT = "ede20289ff63951e61db536e2e36dffa5809bd62"
 QUANTITIES = RESULTS / "g1_p16_quantities.json"
 METAMORPHIC = RESULTS / "g2_p16_metamorphic.json"
 COMPATIBILITY = RESULTS / "g3_p16_compatibility.json"
@@ -265,13 +266,24 @@ def source_contract() -> dict[str, object]:
         in source_files["crates/actinv-core/src/chain.rs"],
     }
     source_diff = subprocess.run(
-        ["git", "diff", "--unified=0", OPENING_COMMIT, "--", "crates"],
+        [
+            "git",
+            "diff",
+            "--unified=0",
+            OPENING_COMMIT,
+            SOURCE_EVIDENCE_COMMIT,
+            "--",
+            "crates",
+        ],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         check=False,
     )
+    # This assertion belongs to P16's frozen implementation delta.  Scanning
+    # OPENING_COMMIT..HEAD would silently broaden the historical gate to every
+    # later phase and reject legitimate owned values unrelated to typed units.
     workaround_pattern = re.compile(
         r"\b(?:Arc|Mutex|RefCell|UnsafeCell)\b|\bCell\s*<|\.clone\s*\("
     )
@@ -282,6 +294,7 @@ def source_contract() -> dict[str, object]:
         and not line.startswith("+++")
         and workaround_pattern.search(line[1:])
     ]
+    session = load(SESSION)
     checks = {
         "layouts": all(layouts.values()),
         "documented_types": all(documented.values()),
@@ -294,6 +307,8 @@ def source_contract() -> dict[str, object]:
         and barn_occurrences[0]["path"] == "crates/actinv-core/src/quantity.rs",
         "production_wiring": all(wiring.values()),
         "no_unsafe": not unsafe_blocks,
+        "frozen_workaround_diff_endpoint": session is not None
+        and session.get("source_evidence_commit") == SOURCE_EVIDENCE_COMMIT,
         "no_new_clone_or_shared_mutability_workaround": source_diff.returncode == 0
         and not new_workaround_lines,
     }
