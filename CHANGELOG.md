@@ -10,6 +10,9 @@
 - Recorded P18's sole procedural amendment after an incorrect fixed-column redaction exposed five early source
   families. Those families are permanently diagnostic; the remaining held-out partition, product behavior and all
   acceptance thresholds are unchanged.
+- Sealed 962 public isomeric-ratio reaction families at family granularity before calculation, leaving 180 families
+  and 1,945 rows genuinely held out. The committed metadata contains no dependent measurement, and an independent
+  checker rederives the split and rejects identity, partition, quarantine and value-leak plants.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no

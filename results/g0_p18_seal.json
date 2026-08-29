@@ -1,0 +1,258 @@
+{
+ "amendment_sha256": "8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0",
+ "checker_source_sha256": "5223f06c13c1936125a17090ed0a408c638d8c0b12849216458e05302ec33a2b",
+ "checks": {
+  "dependent_fields_absent": true,
+  "disclosure_quarantine_exact": true,
+  "mutation_plants": true,
+  "partition_complete_and_disjoint": true,
+  "provenance": true,
+  "published_structure_reconciled": true
+ },
+ "control_source_sha256": "00d0c2233b879e60b4bd1e4008b15301cbc67ed0864c912ab8bbb01e65ebefb1",
+ "gate": "P18-G0",
+ "mutation_plants": {
+  "dependent_span_not_emitted": true,
+  "duplicate_or_malformed_family_rejected": true,
+  "leading_space_D_recognized": true,
+  "preamble_R_not_a_family": true,
+  "reordered_partition_counts_identical": true
+ },
+ "partition": {
+  "family_counts": {
+   "diagnostic": 561,
+   "heldout": 180,
+   "ineligible": 221
+  },
+  "forced_diagnostic_counts": {
+   "amendment_1_disclosed_lines_1_140": 5,
+   "p17_exposed_target_product_pair": 9,
+   "paper_case_study": 2
+  },
+  "row_counts": {
+   "diagnostic": 6600,
+   "heldout": 1945,
+   "ineligible": 3768
+  },
+  "seed": "ACTINV-P18-HOLDOUT-v1",
+  "strata": {
+   "alpha": {
+    "diagnostic_families": 89,
+    "heldout_families": 29,
+    "ranked_pool_families": 118
+   },
+   "deuteron": {
+    "diagnostic_families": 63,
+    "heldout_families": 20,
+    "ranked_pool_families": 83
+   },
+   "neutron": {
+    "diagnostic_families": 128,
+    "heldout_families": 42,
+    "ranked_pool_families": 170
+   },
+   "proton": {
+    "diagnostic_families": 267,
+    "heldout_families": 89,
+    "ranked_pool_families": 356
+   }
+  }
+ },
+ "pass": true,
+ "protocol_sha256": "002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09",
+ "schema": "actinv-p18-g0-seal-control-1",
+ "seal_families": 962,
+ "seal_rows": 12313,
+ "seal_sha256": "3c4de15c94fbc39de279fda6a33e68e27dad89626f57172055df90113e81e94b",
+ "source": {
+  "amendment": {
+   "bytes": 3199,
+   "expected_sha256": "8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0",
+   "pass": true,
+   "sha256": "8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0"
+  },
+  "catalog_decay_hashes": {
+   "endfb_viii_0": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "jeff_3_3": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_payloads": {
+   "endfb_viii_0": {
+    "bytes": 68313052,
+    "expected_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+    "pass": true,
+    "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+   },
+   "jeff_3_3": {
+    "bytes": 45718116,
+    "expected_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+    "pass": true,
+    "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+   }
+  },
+  "endf_manual": {
+   "bytes": 2940583,
+   "expected_sha256": "77a0fee413c3b1d5d74a161ed9fe7f77bbcbc58a654304851b7b2b400183d022",
+   "pass": true,
+   "sha256": "77a0fee413c3b1d5d74a161ed9fe7f77bbcbc58a654304851b7b2b400183d022"
+  },
+  "opening_commit": "7a2d1f47b62155c0f7a22a4e0b9ec5d6e6730bc8",
+  "opening_is_ancestor": true,
+  "p13_release_stage_evidence_sha256": "8a5b3cc4b91a760851a53ca93619364d3079c1adb65cbe744829fd488924ece5",
+  "p13_release_stage_pass": true,
+  "p17_closure_workflow": {
+   "conclusion": "success",
+   "databaseId": 33232228355,
+   "headSha": "7a2d1f47b62155c0f7a22a4e0b9ec5d6e6730bc8",
+   "status": "completed",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33232228355"
+  },
+  "p17_heldout_evidence_sha256": "5336e04d7feb4e8fa2758bbed4cc79907e5a5b54555912db993cc2284fef954e",
+  "paper": {
+   "bytes": 185820,
+   "expected_sha256": "6cf1833e268b77177c647cc5504f08731e34ead00c8756b26bf0230a5b32b431",
+   "pass": true,
+   "sha256": "6cf1833e268b77177c647cc5504f08731e34ead00c8756b26bf0230a5b32b431"
+  },
+  "production_paths_changed_since_opening": [],
+  "protocol": {
+   "bytes": 22021,
+   "expected_sha256": "002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09",
+   "pass": true,
+   "sha256": "002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09"
+  },
+  "raw_archives": {
+   "alpha": {
+    "bytes": 1604280144,
+    "expected_sha256": "25520f6eb42ce024c065f85255277ed169b2f826e9fc24f5d093c99d5c60e018",
+    "pass": true,
+    "sha256": "25520f6eb42ce024c065f85255277ed169b2f826e9fc24f5d093c99d5c60e018"
+   },
+   "deuteron": {
+    "bytes": 3063536212,
+    "expected_sha256": "34f459aea0b5ac9c40820c88d898618f926ec3b52858a5393e42d57707ec5f1c",
+    "pass": true,
+    "sha256": "34f459aea0b5ac9c40820c88d898618f926ec3b52858a5393e42d57707ec5f1c"
+   },
+   "neutron": {
+    "bytes": 3517450425,
+    "expected_sha256": "e547527688506cbe09813364dcefa2aed11f474139bfa129d7cd4ca24fae21fa",
+    "pass": true,
+    "sha256": "e547527688506cbe09813364dcefa2aed11f474139bfa129d7cd4ca24fae21fa"
+   },
+   "proton": {
+    "bytes": 2352215809,
+    "expected_sha256": "49340a03b0d9ac86598c6b710c0bc2ec0babd3fa0717a9ff1d75f042fccc5b0b",
+    "pass": true,
+    "sha256": "49340a03b0d9ac86598c6b710c0bc2ec0babd3fa0717a9ff1d75f042fccc5b0b"
+   }
+  },
+  "released_libraries": {
+   "alpha": {
+    "bytes": 46235710,
+    "expected_sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915",
+    "pass": true,
+    "sha256": "ead1141bfe07ec1a02055af014f8db0a49effe2fd60c29d181a505f7c6d10915"
+   },
+   "deuteron": {
+    "bytes": 76763930,
+    "expected_sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae",
+    "pass": true,
+    "sha256": "8050988981518cd63ac0c2ad76c6756370b154ea9f5a6d6435aa5f132b9d99ae"
+   },
+   "neutron": {
+    "bytes": 123897743,
+    "expected_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+    "pass": true,
+    "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+   },
+   "proton": {
+    "bytes": 62751053,
+    "expected_sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790",
+    "pass": true,
+    "sha256": "0da7a35b37fd3b305ac2166ec092cdfb78123e76f8647d8808915e2c708d9790"
+   }
+  },
+  "staging_manifests": {
+   "alpha": {
+    "bytes": 542695,
+    "expected_sha256": "e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf",
+    "pass": true,
+    "sha256": "e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf"
+   },
+   "deuteron": {
+    "bytes": 542751,
+    "expected_sha256": "afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9",
+    "pass": true,
+    "sha256": "afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9"
+   },
+   "neutron": {
+    "bytes": 542749,
+    "expected_sha256": "b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67",
+    "pass": true,
+    "sha256": "b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67"
+   },
+   "proton": {
+    "bytes": 542746,
+    "expected_sha256": "98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef",
+    "pass": true,
+    "sha256": "98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef"
+   }
+  },
+  "supplement": {
+   "bytes": 2065687,
+   "expected_sha256": "945e66f8904bb972662f5178e94e22a08ecb8006eefe1c2d9fbda66fe599763d",
+   "pass": true,
+   "sha256": "945e66f8904bb972662f5178e94e22a08ecb8006eefe1c2d9fbda66fe599763d"
+  },
+  "target_manifest_second_parse": {
+   "alpha": {
+    "bytes": 542695,
+    "expected_sha256": "e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf",
+    "pass": true,
+    "sha256": "e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf"
+   },
+   "deuteron": {
+    "bytes": 542751,
+    "expected_sha256": "afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9",
+    "pass": true,
+    "sha256": "afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9"
+   },
+   "neutron": {
+    "bytes": 542749,
+    "expected_sha256": "b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67",
+    "pass": true,
+    "sha256": "b578ab395c6c71d7727dfb0513e88effd96692862664a6279802638531239b67"
+   },
+   "proton": {
+    "bytes": 542746,
+    "expected_sha256": "98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef",
+    "pass": true,
+    "sha256": "98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef"
+   }
+  }
+ },
+ "structure": {
+  "delimiters": 963,
+  "header_discrepancy_resolution": "the sole pre-delimiter column-20 R is prose 'Reference:', not a reaction record",
+  "measurement_type_counts": {
+   "G+M": 6133,
+   "G+T": 68,
+   "G/M": 798,
+   "G/T": 90,
+   "M+T": 2151,
+   "M/G": 2453,
+   "M/T": 620
+  },
+  "naive_global_column20_R_count": 963,
+  "physical_lines": 15256,
+  "post_delimiter_marker_counts": {
+   "D": 12313,
+   "H": 962,
+   "R": 962
+  },
+  "preamble_column20_R_records": 1,
+  "published_family_count": 962,
+  "resolved_data_row_count": 12313,
+  "resolved_family_count": 962
+ }
+}

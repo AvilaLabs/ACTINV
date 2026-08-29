@@ -1,0 +1,30 @@
+{
+ "checks": {
+  "independent_seal": true,
+  "mutation_plants": true,
+  "result": true
+ },
+ "errors": [],
+ "gate": "P18-G0",
+ "mutation_plants": {
+  "dependent_field_rejected": true,
+  "partition_change_rejected": true,
+  "quarantine_change_rejected": true,
+  "row_identity_change_rejected": true
+ },
+ "pass": true,
+ "result_checks": {
+  "control_files": true,
+  "gate_pass": true,
+  "production_unchanged": true,
+  "protocol_files": true,
+  "protocol_log": true,
+  "provenance_identities": true,
+  "schema": true,
+  "seal_counts": true,
+  "seal_hash": true,
+  "workflow": true
+ },
+ "schema": "actinv-p18-g0-independent-check-1",
+ "seal_sha256": "3c4de15c94fbc39de279fda6a33e68e27dad89626f57172055df90113e81e94b"
+}

@@ -308,3 +308,9 @@ part that does not compress: users, issues, and the validation record accumulati
   neutron families are now permanently diagnostic before partitioning; no remaining family, rule, threshold or
   held-out value changed. This consumes P18's sole repair round and caps an otherwise successful verdict at
   P18-CONDITIONAL.
+- 2026-08-29 — P18 G0 sealed all 962 reaction families and 12,313 source rows without emitting a dependent value.
+  Canonical seal `3c4de15c94fbc39de279fda6a33e68e27dad89626f57172055df90113e81e94b` assigns 561 families diagnostic,
+  180 genuinely held out and 221 structurally ineligible; the held-out partition contains 1,945 unread rows. Fresh
+  hashes match 10.5 GB of raw TENDL archives plus manifests, released activation/decay data, the ENDF manual, paper
+  and supplement. An independent checker rederives every ID and partition and rejects four evidence mutations. The
+  apparent 963rd reaction was the preamble word `Reference:`, leaving the publication's 962 families exact.
