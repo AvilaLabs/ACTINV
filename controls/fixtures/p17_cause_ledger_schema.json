@@ -1,0 +1,81 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://avilalabs.org/actinv/schemas/p17-cause-ledger-1.json",
+ "title": "ACTINV P17 append-only material-mismatch cause ledger",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema",
+  "protocol_sha256",
+  "append_only",
+  "taxonomy",
+  "entries",
+  "entries_sha256"
+ ],
+ "properties": {
+  "schema": {"const": "actinv-p17-cause-ledger-1"},
+  "protocol_sha256": {"$ref": "#/$defs/sha256"},
+  "append_only": {"const": true},
+  "taxonomy": {
+   "type": "array",
+   "prefixItems": [
+    {"const": "solver"},
+    {"const": "chain-construction"},
+    {"const": "processor"},
+    {"const": "evaluation"},
+    {"const": "decay-yield"},
+    {"const": "measurement-definition"},
+    {"const": "unsupported-model"},
+    {"const": "unresolved"}
+   ],
+   "items": false
+  },
+  "entries": {"type": "array", "items": {"$ref": "#/$defs/entry"}},
+  "entries_sha256": {"$ref": "#/$defs/sha256"}
+ },
+ "$defs": {
+  "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+  "cause": {
+   "enum": [
+    "solver",
+    "chain-construction",
+    "processor",
+    "evaluation",
+    "decay-yield",
+    "measurement-definition",
+    "unsupported-model",
+    "unresolved"
+   ]
+  },
+  "entry": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "sequence",
+    "mismatch_key",
+    "primary_cause",
+    "secondary_causes",
+    "controlled_substitution",
+    "signed_log_change",
+    "evidence",
+    "confidence",
+    "entry_sha256"
+   ],
+   "properties": {
+    "sequence": {"type": "integer", "minimum": 1},
+    "mismatch_key": {"type": "string", "pattern": "^.+::.+$"},
+    "primary_cause": {"$ref": "#/$defs/cause"},
+    "secondary_causes": {
+     "type": "array",
+     "items": {"$ref": "#/$defs/cause"},
+     "uniqueItems": true
+    },
+    "controlled_substitution": {"type": "string", "minLength": 1},
+    "signed_log_change": {"type": "number"},
+    "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1},
+    "confidence": {"enum": ["demonstrated", "bounded", "unresolved"]},
+    "entry_sha256": {"$ref": "#/$defs/sha256"}
+   }
+  }
+ }
+}

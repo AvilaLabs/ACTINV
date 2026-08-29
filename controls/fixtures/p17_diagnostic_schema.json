@@ -1,0 +1,215 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://avilalabs.org/actinv/schemas/p17-diagnostic-1.json",
+ "title": "ACTINV P17 open diagnostic evidence",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "schema",
+  "protocol_sha256",
+  "opening_source_commit",
+  "control_source_sha256",
+  "scoring_source_sha256",
+  "irdff_source_sha256",
+  "checker_source_sha256",
+  "schema_identities",
+  "global_input_identities",
+  "prior_layer_evidence",
+  "variant_definitions",
+  "input_sets",
+  "controlled_substitutions",
+  "source_diagnostics",
+  "established_fns_identity",
+  "row_counts",
+  "rows",
+  "family_metrics",
+  "material_mismatches",
+  "cause_ledger",
+  "checks",
+  "pass",
+  "evidence_sha256"
+ ],
+ "properties": {
+  "schema": {"const": "actinv-p17-diagnostic-1"},
+  "protocol_sha256": {"$ref": "#/$defs/sha256"},
+  "opening_source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+  "control_source_sha256": {"$ref": "#/$defs/sha256"},
+  "scoring_source_sha256": {"$ref": "#/$defs/sha256"},
+  "irdff_source_sha256": {"$ref": "#/$defs/sha256"},
+  "checker_source_sha256": {"$ref": "#/$defs/sha256"},
+  "schema_identities": {
+   "type": "object",
+   "additionalProperties": {"$ref": "#/$defs/sha256"},
+   "required": ["diagnostic", "cause_ledger"]
+  },
+  "global_input_identities": {
+   "type": "object",
+   "additionalProperties": {"$ref": "#/$defs/sha256"},
+   "minProperties": 6
+  },
+  "prior_layer_evidence": {"type": "object"},
+  "variant_definitions": {"type": "object", "minProperties": 4},
+  "input_sets": {
+   "type": "object",
+   "additionalProperties": {"$ref": "#/$defs/input_set"},
+   "minProperties": 1
+  },
+  "controlled_substitutions": {"type": "object"},
+  "source_diagnostics": {"type": "object"},
+  "established_fns_identity": {"type": "object"},
+  "row_counts": {"type": "object"},
+  "rows": {"type": "array", "items": {"$ref": "#/$defs/row"}, "minItems": 1},
+  "family_metrics": {
+   "type": "object",
+   "additionalProperties": {
+    "type": "object",
+    "additionalProperties": {"$ref": "#/$defs/metrics"}
+   }
+  },
+  "material_mismatches": {"type": "object"},
+  "cause_ledger": {"type": "object"},
+  "checks": {"type": "object", "additionalProperties": {"type": "boolean"}},
+  "pass": {"type": "boolean"},
+  "evidence_sha256": {"$ref": "#/$defs/sha256"}
+ },
+ "$defs": {
+  "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+  "input_set": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": ["input_hashes", "identical_input_roles", "changed_input_roles"],
+   "properties": {
+    "input_hashes": {
+     "type": "object",
+     "additionalProperties": {"$ref": "#/$defs/sha256"},
+     "minProperties": 1
+    },
+    "identical_input_roles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "changed_input_roles": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+   }
+  },
+  "calculation": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "status",
+    "reason",
+    "value",
+    "ratio_C_over_E",
+    "signed_log_C_over_E",
+    "material_mismatch",
+    "input_set_id",
+    "interpretation"
+   ],
+   "properties": {
+    "status": {"enum": ["scored", "unscored", "context"]},
+    "reason": {
+     "enum": [
+      "scored",
+      "nonpositive_calculated_value",
+      "nonfinite_calculated_value",
+      "variant_target_unavailable",
+      "variant_reaction_unavailable",
+      "different_data_context",
+      "not_applicable"
+     ]
+    },
+    "value": {"type": ["number", "null"]},
+    "ratio_C_over_E": {"type": ["number", "null"]},
+    "signed_log_C_over_E": {"type": ["number", "null"]},
+    "material_mismatch": {"type": "boolean"},
+    "input_set_id": {"type": "string", "minLength": 1},
+    "interpretation": {"type": "string", "minLength": 1}
+   }
+  },
+  "row": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "row_id",
+    "family",
+    "source_id",
+    "source_record",
+    "source_record_sha256",
+    "observable",
+    "unit",
+    "experimental",
+    "inclusion",
+    "calculations"
+   ],
+   "properties": {
+    "row_id": {"type": "string", "minLength": 1},
+    "family": {"type": "string", "minLength": 1},
+    "source_id": {"type": "string", "minLength": 1},
+    "source_record": {"type": "object"},
+    "source_record_sha256": {"$ref": "#/$defs/sha256"},
+    "observable": {"enum": ["spectrum-averaged cross section", "decay heat"]},
+    "unit": {"enum": ["mb", "uW/g"]},
+    "experimental": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": ["value", "uncertainty", "uncertainty_unit"],
+     "properties": {
+      "value": {"type": ["number", "null"]},
+      "uncertainty": {"type": ["number", "null"], "minimum": 0},
+      "uncertainty_unit": {"enum": ["percent", "uW/g"]}
+     }
+    },
+    "inclusion": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": ["status", "reason"],
+     "properties": {
+      "status": {"enum": ["scored", "unscored"]},
+      "reason": {
+       "enum": [
+        "scored",
+        "nonpositive_experimental_value",
+        "nonfinite_experimental_value",
+        "nonpositive_measurement_time",
+        "no_cooling_step_within_2_percent",
+        "non_neutron_incident_particle",
+        "unmapped_target_reaction_product",
+        "insufficient_spectrum_or_history",
+        "unsupported_self_shielding"
+       ]
+      }
+     }
+    },
+    "calculations": {
+     "type": "object",
+     "additionalProperties": {"$ref": "#/$defs/calculation"},
+     "minProperties": 1
+    }
+   }
+  },
+  "metrics": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "scored_rows",
+    "unscored_rows",
+    "unscored_reasons",
+    "geometric_mean_C_over_E",
+    "median_abs_log_C_over_E",
+    "p90_abs_log_C_over_E",
+    "maximum_abs_log_C_over_E",
+    "fraction_within_10_percent",
+    "fraction_within_20_percent",
+    "fraction_within_30_percent"
+   ],
+   "properties": {
+    "scored_rows": {"type": "integer", "minimum": 0},
+    "unscored_rows": {"type": "integer", "minimum": 0},
+    "unscored_reasons": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 1}},
+    "geometric_mean_C_over_E": {"type": ["number", "null"]},
+    "median_abs_log_C_over_E": {"type": ["number", "null"]},
+    "p90_abs_log_C_over_E": {"type": ["number", "null"]},
+    "maximum_abs_log_C_over_E": {"type": ["number", "null"]},
+    "fraction_within_10_percent": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "fraction_within_20_percent": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "fraction_within_30_percent": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+   }
+  }
+ }
+}

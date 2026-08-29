@@ -1,0 +1,31 @@
+{
+ "cause_ledger_sha256": "85743dc9b2b6aaae066453e395a4336c0671520d7d2f4da383e0254a839fa143",
+ "checker_source_sha256": "55281f95a69d4d4f8c95438704ed1262582d9075b86d4fe6462bbf5373939c87",
+ "checks": {
+  "all_eight_mutation_plants_caught": true,
+  "independent_validation": true
+ },
+ "diagnostic_sha256": "c65ad753055923afe77df82a2d532effa1f8c594cdedb7bfbe7344adf747bcaa",
+ "mutation_plants": {
+  "cause_removal": true,
+  "family_assignment": true,
+  "hash": true,
+  "inclusion_reason": true,
+  "metric": true,
+  "row_identity": true,
+  "unit": true,
+  "value": true
+ },
+ "pass": true,
+ "protocol_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+ "schema": "actinv-p17-g4-check-1",
+ "schema_identities": {
+  "cause_ledger": "b4642cf8a83322977e6ee5f0f5bf2e6188bb1c8d34b8da3dcbd88b602d106476",
+  "diagnostic": "eaf119980cd4fdbbe4b09ffb1f482f15165db764c24eefbb445cd748916b5c13"
+ },
+ "summary": {
+  "families": 135,
+  "mismatches": 1325,
+  "rows": 2531
+ }
+}

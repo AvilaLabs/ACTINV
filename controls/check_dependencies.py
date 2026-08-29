@@ -12,6 +12,7 @@ CI_ENTRY = ["controls/g0_cram_coefficients.py", "controls/gen_cram.py", "control
             "controls/g6_p8_scaling_regression.py", "controls/check_p8.py",
             "controls/g2_p9_fission_matrix.py", "controls/g3_p9_coupled_auto.py",
             "controls/g6_p10_projectile_runtime.py", "controls/check_prior_verdicts.py",
+            "controls/check_g4_p17.py",
             "controls/g3_p11_sensitivity.py", "controls/g4_p11_propagation.py",
             "controls/g5_p11_entry_points.py", "controls/g1_p12_radiological.py",
             "controls/g3_p12_parser_fuzz.py", "controls/g5_p12_release.py",
