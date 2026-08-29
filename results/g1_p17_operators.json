@@ -1,0 +1,661 @@
+{
+ "cases": [
+  {
+   "boundaries": [
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.29376e-15,
+       "maximum_relative_above_tolerance_crossover": 2.2994449819003415e-15,
+       "maximum_resolvable_relative": 2.2994449819003415e-15,
+       "resolvable_components": 2
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.2768e-16,
+       "maximum_relative_above_tolerance_crossover": 3.284921402714767e-16,
+       "maximum_resolvable_relative": 3.284921402714767e-16,
+       "resolvable_components": 2
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.96608e-15,
+       "maximum_relative_above_tolerance_crossover": 1.970952841628864e-15,
+       "maximum_resolvable_relative": 1.970952841628864e-15,
+       "resolvable_components": 2
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0000000000000023e+20,
+      "dense": 1e+20,
+      "openmc": 1.000000000000002e+20
+     },
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.62144e-15,
+       "maximum_relative_above_tolerance_crossover": 2.62792384880337e-15,
+       "maximum_resolvable_relative": 2.62792384880337e-15,
+       "resolvable_components": 2
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.6384e-16,
+       "maximum_relative_above_tolerance_crossover": 1.6424524055021014e-16,
+       "maximum_resolvable_relative": 2.593939671079434e-16,
+       "resolvable_components": 2
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.78528e-15,
+       "maximum_relative_above_tolerance_crossover": 2.79216908935358e-15,
+       "maximum_resolvable_relative": 2.79216908935358e-15,
+       "resolvable_components": 2
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0000000000000026e+20,
+      "dense": 1e+20,
+      "openmc": 1.0000000000000028e+20
+     },
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.14688e-15,
+       "maximum_relative_above_tolerance_crossover": 1.1504484728486681e-15,
+       "maximum_resolvable_relative": 2.8886357705009932e-15,
+       "resolvable_components": 2
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 8.192e-16,
+       "maximum_relative_above_tolerance_crossover": 8.217489091776184e-16,
+       "maximum_resolvable_relative": 1.0316556323217814e-15,
+       "resolvable_components": 2
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.96608e-15,
+       "maximum_relative_above_tolerance_crossover": 1.9721973820262883e-15,
+       "maximum_resolvable_relative": 1.9721973820262883e-15,
+       "resolvable_components": 2
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0000000000000011e+20,
+      "dense": 1e+20,
+      "openmc": 1.000000000000002e+20
+     },
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.2768e-16,
+       "maximum_relative_above_tolerance_crossover": 3.286982145556757e-16,
+       "maximum_resolvable_relative": 4.338676931107798e-15,
+       "resolvable_components": 2
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.29376e-15,
+       "maximum_relative_above_tolerance_crossover": 2.3008875018897252e-15,
+       "maximum_resolvable_relative": 2.3008875018897252e-15,
+       "resolvable_components": 2
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.96608e-15,
+       "maximum_relative_above_tolerance_crossover": 1.972189287334054e-15,
+       "maximum_resolvable_relative": 2.8924512874051983e-15,
+       "resolvable_components": 2
+      }
+     },
+     "conserved_measure": {
+      "actinv": 9.999999999999997e+19,
+      "dense": 1e+20,
+      "openmc": 1.000000000000002e+20
+     },
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.2768e-16,
+       "maximum_relative_above_tolerance_crossover": 3.2902871120301833e-16,
+       "maximum_resolvable_relative": 3.5910598340618516e-15,
+       "resolvable_components": 2
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.12992e-15,
+       "maximum_relative_above_tolerance_crossover": 2.138686622819614e-15,
+       "maximum_resolvable_relative": 2.138686622819614e-15,
+       "resolvable_components": 2
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.4576e-15,
+       "maximum_relative_above_tolerance_crossover": 2.4677153340226375e-15,
+       "maximum_resolvable_relative": 2.6542616164804994e-15,
+       "resolvable_components": 2
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0000000000000003e+20,
+      "dense": 1e+20,
+      "openmc": 1.0000000000000025e+20
+     },
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "conservation_measure": "atoms",
+   "features": [
+    "capture-chain",
+    "decay-chain"
+   ],
+   "finite": true,
+   "maximum_conservation_relative": 2.4576e-15,
+   "name": "capture_decay_2",
+   "nonnegative_within_absolute_tolerance": true,
+   "operator_sha256_by_boundary": [
+    "83504e2851d5e11a6626d77602c088068aab66fd07ff22de8ce928f19f8192f6",
+    "008de64028d6e551b14e0c1d2af795ac66adb6cb1b24d16dc3167af8e48cddab",
+    "1c50811249b25a8976d2d5bf2d9fe8ee4075c48b484429165878a9651c97233d",
+    "008de64028d6e551b14e0c1d2af795ac66adb6cb1b24d16dc3167af8e48cddab",
+    "c50c36642dfb4cccaed0c5bc0a997996811228ce5a9ea0f375f891b6b7002ce0"
+   ],
+   "pass": true,
+   "schedule": [
+    {
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "split_merged": {
+    "all_components_within_relative_or_absolute": true,
+    "maximum_absolute_over_initial_norm": 1.6384e-16,
+    "maximum_relative_above_tolerance_crossover": 1.6413330016535473e-16,
+    "maximum_resolvable_relative": 2.3279718504805653e-15,
+    "resolvable_components": 2
+   },
+   "states": 2
+  },
+  {
+   "boundaries": [
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.4514713216957608e-15,
+       "maximum_relative_above_tolerance_crossover": 2.4663769796705474e-15,
+       "maximum_resolvable_relative": 2.567994941523972e-15,
+       "resolvable_components": 8
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.7977456359102245e-15,
+       "maximum_relative_above_tolerance_crossover": 1.8086764517584e-15,
+       "maximum_resolvable_relative": 2.4860744358795517e-15,
+       "resolvable_components": 8
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
+       "maximum_relative_above_tolerance_crossover": 6.577005279121459e-16,
+       "maximum_resolvable_relative": 2.9029508034618816e-15,
+       "resolvable_components": 8
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0025000000000023e+20,
+      "dense": 1.0024999999999998e+20,
+      "openmc": 1.0025000000000005e+20
+     },
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.595491271820449e-15,
+       "maximum_relative_above_tolerance_crossover": 3.6173529035168024e-15,
+       "maximum_resolvable_relative": 4.2107666276308395e-15,
+       "resolvable_components": 8
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.7783341645885285e-15,
+       "maximum_relative_above_tolerance_crossover": 2.795227243626618e-15,
+       "maximum_resolvable_relative": 3.4451726953343203e-15,
+       "resolvable_components": 8
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 8.171571072319202e-16,
+       "maximum_relative_above_tolerance_crossover": 8.221256598901825e-16,
+       "maximum_resolvable_relative": 2.1158524257156694e-15,
+       "resolvable_components": 8
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0025000000000034e+20,
+      "dense": 1.0024999999999998e+20,
+      "openmc": 1.0025000000000007e+20
+     },
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.2686284289276808e-15,
+       "maximum_relative_above_tolerance_crossover": 3.291548380459102e-15,
+       "maximum_resolvable_relative": 4.558974925954284e-15,
+       "resolvable_components": 8
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.7783341645885285e-15,
+       "maximum_relative_above_tolerance_crossover": 2.797816123390235e-15,
+       "maximum_resolvable_relative": 4.558974925954284e-15,
+       "resolvable_components": 8
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+       "maximum_relative_above_tolerance_crossover": 4.937322570688653e-16,
+       "maximum_resolvable_relative": 2.8011053482703723e-15,
+       "resolvable_components": 8
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0025000000000033e+20,
+      "dense": 1.0025e+20,
+      "openmc": 1.0025000000000005e+20
+     },
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 4.5760798004987534e-15,
+       "maximum_relative_above_tolerance_crossover": 4.608167732642743e-15,
+       "maximum_resolvable_relative": 5.7726550505286665e-15,
+       "resolvable_components": 8
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.922354114713217e-15,
+       "maximum_relative_above_tolerance_crossover": 3.94985805655092e-15,
+       "maximum_resolvable_relative": 4.557359250417363e-15,
+       "resolvable_components": 8
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
+       "maximum_relative_above_tolerance_crossover": 6.583096760918204e-16,
+       "maximum_resolvable_relative": 2.1554075889017432e-15,
+       "resolvable_components": 8
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.0025000000000046e+20,
+      "dense": 1.0025e+20,
+      "openmc": 1.0025000000000007e+20
+     },
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 5.229805486284289e-15,
+       "maximum_relative_above_tolerance_crossover": 5.274114065921791e-15,
+       "maximum_resolvable_relative": 6.439517711991761e-15,
+       "resolvable_components": 8
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 4.085785536159601e-15,
+       "maximum_relative_above_tolerance_crossover": 4.1204016140013946e-15,
+       "maximum_resolvable_relative": 4.254681345423119e-15,
+       "resolvable_components": 8
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.1440199501246883e-15,
+       "maximum_relative_above_tolerance_crossover": 1.1537124519203917e-15,
+       "maximum_resolvable_relative": 2.3870078860245525e-15,
+       "resolvable_components": 8
+      }
+     },
+     "conserved_measure": {
+      "actinv": 1.002500000000005e+20,
+      "dense": 1.0024999999999998e+20,
+      "openmc": 1.002500000000001e+20
+     },
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "conservation_measure": "atoms",
+   "features": [
+    "capture-chain",
+    "competing-reactions",
+    "decay-chain",
+    "metastable-branch"
+   ],
+   "finite": true,
+   "maximum_conservation_relative": 5.066374064837905e-15,
+   "name": "branch_isomer_8",
+   "nonnegative_within_absolute_tolerance": true,
+   "operator_sha256_by_boundary": [
+    "9db44e49e16b1e493cbd2d5610285eaaff0863d94c5c55f88af836a9fa796edd",
+    "e31d33ec1134cab6d6e71b2af4949e7789250c419fe899aa6af04ca40df575ee",
+    "3576e6b16531d9806e7376795aebf9213f5568bdd8bd64cc65f0585d3c848df3",
+    "e31d33ec1134cab6d6e71b2af4949e7789250c419fe899aa6af04ca40df575ee",
+    "1d61e1f4da8f267997ec0f3a1a33821be811c43da7e5097dcb2929bd6a0de16a"
+   ],
+   "pass": true,
+   "schedule": [
+    {
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "split_merged": {
+    "all_components_within_relative_or_absolute": true,
+    "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+    "maximum_relative_above_tolerance_crossover": 1.3141007672787551e-15,
+    "maximum_resolvable_relative": 1.9920946421238218e-15,
+    "resolvable_components": 8
+   },
+   "states": 8
+  },
+  {
+   "boundaries": [
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.4e-19,
+       "maximum_relative_above_tolerance_crossover": 0.0,
+       "maximum_resolvable_relative": 3.269903919220159e-05,
+       "resolvable_components": 19
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 4.9152e-16,
+       "maximum_relative_above_tolerance_crossover": 4.917943446950513e-16,
+       "maximum_resolvable_relative": 1.1294256457983115e-15,
+       "resolvable_components": 19
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 4.9152e-16,
+       "maximum_relative_above_tolerance_crossover": 4.917943446950516e-16,
+       "maximum_resolvable_relative": 3.269903919220159e-05,
+       "resolvable_components": 19
+      }
+     },
+     "conserved_measure": {
+      "actinv": 2.36e+22,
+      "dense": 2.36e+22,
+      "openmc": 2.360000000000001e+22
+     },
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 9.8304e-16,
+       "maximum_relative_above_tolerance_crossover": 9.835886893901031e-16,
+       "maximum_resolvable_relative": 1.3558889510016406e-05,
+       "resolvable_components": 19
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.31072e-15,
+       "maximum_relative_above_tolerance_crossover": 1.3114515858534711e-15,
+       "maximum_resolvable_relative": 1.993839314262674e-15,
+       "resolvable_components": 19
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 3.2768e-16,
+       "maximum_relative_above_tolerance_crossover": 3.278628964633677e-16,
+       "maximum_resolvable_relative": 1.3558889508371031e-05,
+       "resolvable_components": 19
+      }
+     },
+     "conserved_measure": {
+      "actinv": 2.360000000000002e+22,
+      "dense": 2.36e+22,
+      "openmc": 2.359999999999999e+22
+     },
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.96608e-15,
+       "maximum_relative_above_tolerance_crossover": 1.9674624434348268e-15,
+       "maximum_resolvable_relative": 1.0361414566556606e-06,
+       "resolvable_components": 19
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 9.8304e-16,
+       "maximum_relative_above_tolerance_crossover": 9.837312217174124e-16,
+       "maximum_resolvable_relative": 1.9167913736501902e-15,
+       "resolvable_components": 19
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 9.8304e-16,
+       "maximum_relative_above_tolerance_crossover": 9.837312217174134e-16,
+       "maximum_resolvable_relative": 1.0361414579606047e-06,
+       "resolvable_components": 19
+      }
+     },
+     "conserved_measure": {
+      "actinv": 2.360000000000004e+22,
+      "dense": 2.3599999999999996e+22,
+      "openmc": 2.360000000000002e+22
+     },
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.96608e-15,
+       "maximum_relative_above_tolerance_crossover": 1.9674624434348268e-15,
+       "maximum_resolvable_relative": 0.0007428240861644513,
+       "resolvable_components": 21
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 9.8304e-16,
+       "maximum_relative_above_tolerance_crossover": 9.837312217174124e-16,
+       "maximum_resolvable_relative": 3.258699838285964e-15,
+       "resolvable_components": 21
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 9.8304e-16,
+       "maximum_relative_above_tolerance_crossover": 9.837312217174134e-16,
+       "maximum_resolvable_relative": 0.0007428240861640355,
+       "resolvable_components": 21
+      }
+     },
+     "conserved_measure": {
+      "actinv": 2.360000000000004e+22,
+      "dense": 2.3599999999999996e+22,
+      "openmc": 2.360000000000002e+22
+     },
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "comparisons": {
+      "actinv_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 2.4576e-15,
+       "maximum_relative_above_tolerance_crossover": 2.459885893152783e-15,
+       "maximum_resolvable_relative": 0.0003585971815848255,
+       "resolvable_components": 21
+      },
+      "actinv_vs_openmc": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 1.6384e-15,
+       "maximum_relative_above_tolerance_crossover": 1.6399239287685206e-15,
+       "maximum_resolvable_relative": 2.0393543998466564e-15,
+       "resolvable_components": 21
+      },
+      "openmc_vs_dense": {
+       "all_components_within_relative_or_absolute": true,
+       "maximum_absolute_over_initial_norm": 8.192e-16,
+       "maximum_relative_above_tolerance_crossover": 8.19961964384261e-16,
+       "maximum_resolvable_relative": 0.0003585971815844237,
+       "resolvable_components": 21
+      }
+     },
+     "conserved_measure": {
+      "actinv": 2.3600000000000055e+22,
+      "dense": 2.3599999999999996e+22,
+      "openmc": 2.3600000000000017e+22
+     },
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "conservation_measure": "mass_number",
+   "features": [
+    "decay-chain",
+    "binary-fission-yield"
+   ],
+   "finite": true,
+   "maximum_conservation_relative": 2.310421694915254e-15,
+   "name": "binary_fission_32",
+   "nonnegative_within_absolute_tolerance": true,
+   "operator_sha256_by_boundary": [
+    "4ddcc238581c30eafb86b3cd910590629a42708af9a331b2a916090868944828",
+    "4b7cfba501193e48e0d36dfdfe4e6e0a980b4b4d063c584cae6bdf8716a30091",
+    "1f53bd3c86a9439a7d8e98124a7dcb34d58de69e8617a932be7504f316519be4",
+    "4b7cfba501193e48e0d36dfdfe4e6e0a980b4b4d063c584cae6bdf8716a30091",
+    "276f625da2d1e7a767c1a1ef3beee8bfde87cec46ac15467444b459426a3de9d"
+   ],
+   "pass": true,
+   "schedule": [
+    {
+     "duration_s": 31.0,
+     "flux_multiplier": 1.0
+    },
+    {
+     "duration_s": 17.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 23.0,
+     "flux_multiplier": 0.35
+    },
+    {
+     "duration_s": 11.0,
+     "flux_multiplier": 0.0
+    },
+    {
+     "duration_s": 7.0,
+     "flux_multiplier": 1.8
+    }
+   ],
+   "split_merged": {
+    "all_components_within_relative_or_absolute": true,
+    "maximum_absolute_over_initial_norm": 3.2768e-16,
+    "maximum_relative_above_tolerance_crossover": 3.2781214721508815e-16,
+    "maximum_resolvable_relative": 1.979203406989178e-15,
+    "resolvable_components": 19
+   },
+   "states": 32
+  }
+ ],
+ "implementations": {
+  "actinv_module_sha256": "a5be3011ce63e3ff62748de47cefa7c1f6e163657a55b1531cece2928ec95400",
+  "actinv_version": "1.0.1",
+  "coefficient_document_sha256": "df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23",
+  "dense_solver": "scipy.linalg.expm",
+  "openmc_solver": "openmc.deplete.cram.CRAM48",
+  "openmc_version": "0.15.3"
+ },
+ "pass": true,
+ "schema": "actinv-p17-operators-1",
+ "tolerances": {
+  "absolute_fraction_of_initial_1norm": 5e-14,
+  "relative": 5e-12,
+  "resolvable_fraction_of_initial_1norm": 1e-24
+ },
+ "worst": {
+  "absolute_over_initial_norm": 5.229805486284289e-15,
+  "conservation_relative": 5.066374064837905e-15,
+  "relative_above_tolerance_crossover": 5.274114065921791e-15,
+  "resolvable_relative": 0.0007428240861644513,
+  "split_merged_absolute_over_initial_norm": 1.3074513715710722e-15
+ }
+}

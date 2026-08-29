@@ -1,0 +1,1193 @@
+{
+  "actinv": {
+    "certificate": {
+      "decay_fallback_sha256": "d4f0c29491f5f1eadf06c6c8c854e0a0843581175f46fb3fb40b0068a89172ef",
+      "decay_primary_sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940",
+      "library_index_sha256": "b022dfb191e6932ffb9d917e6bdecc39928b00f016455e16e2b11268eefbc952",
+      "library_sha256": "8583b6207c26f43f9bcdf58b061132591fc6f7f89408996af9a8bb7a79638da4",
+      "material_basis": "atoms_per_g",
+      "mode": "coupled",
+      "prune": "none",
+      "solver": "actinv-core 1.0.1"
+    },
+    "decay_nuclides_from_fallback": 9,
+    "mode": "coupled",
+    "products_no_evaluated_decay_data": {},
+    "products_unmapped_to_leakage": {},
+    "pruned_states": 266,
+    "total_states": 266
+  },
+  "actinv_cram48_dense_pass": true,
+  "actinv_cram48_openmc_pass": true,
+  "alara_run": {
+    "activation_subset_bytes": 28678,
+    "activation_subset_sha256": "61075c09254488a529d87cf091d64404aa9418837145e99b821e0a06e874eabe",
+    "conversion_input_sha256": "5a9d5cf5c99a7170d2efad20ee190ea9c26d0357f26c50618bf634a88efa59d4",
+    "conversion_returncode": 0,
+    "four_pulses": true,
+    "generated_element_library_sha256": "f2ad7defb58f43057f4b55d61c6e10c172b6ac93345ddf677ffdd0fefeaed493",
+    "number_density_rows": 20,
+    "omitted_symbol_rows": 21,
+    "resolved_symbol_rows": 20,
+    "run_input_sha256": "07721ba035c4c1ebf130620c11fbda332b02500adde8e6893117b2faee3318cb",
+    "run_returncode": 0,
+    "transcript_sha256": "5a65ee31fcfdc3bb6fd3efd68910e8097e9d99f49a16fd0f99c8d28883b88261",
+    "two_hour_delay": true
+  },
+  "comparisons": {
+    "Co58": {
+      "actinv": 524466886234268.2,
+      "actinv_alara_relative": 5.936975864801609e-06,
+      "actinv_cram48": 524466886234285.75,
+      "actinv_cram48_dense": {
+        "absolute": 0.8125,
+        "left": 524466886234285.75,
+        "relative": 1.5491921822439808e-15,
+        "right": 524466886234286.56,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.8125,
+        "left": 524466886234285.75,
+        "relative": 1.5491921822439831e-15,
+        "right": 524466886234284.94,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 18.375,
+        "left": 524466886234268.2,
+        "relative": 3.5035577044594644e-14,
+        "right": 524466886234286.56,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 524470000000000.0,
+      "alara_label": "co-58",
+      "dense": 524466886234286.56,
+      "key": [
+        27058,
+        0
+      ],
+      "openmc": 524466886234284.94,
+      "openmc_dense": {
+        "absolute": 1.625,
+        "left": 524466886234284.94,
+        "relative": 3.0983843644879615e-15,
+        "right": 524466886234286.56,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Co58m1": {
+      "actinv": 162157973594428.5,
+      "actinv_alara_relative": 1.249633430870745e-05,
+      "actinv_cram48": 162157973594428.44,
+      "actinv_cram48_dense": {
+        "absolute": 0.125,
+        "left": 162157973594428.44,
+        "relative": 7.708532440879907e-16,
+        "right": 162157973594428.56,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.09375,
+        "left": 162157973594428.44,
+        "relative": 5.781399330659935e-16,
+        "right": 162157973594428.34,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 0.0625,
+        "left": 162157973594428.5,
+        "relative": 3.8542662204399535e-16,
+        "right": 162157973594428.56,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 162160000000000.0,
+      "alara_label": "co-58m",
+      "dense": 162157973594428.56,
+      "key": [
+        27058,
+        1
+      ],
+      "openmc": 162157973594428.34,
+      "openmc_dense": {
+        "absolute": 0.21875,
+        "left": 162157973594428.34,
+        "relative": 1.3489931771539838e-15,
+        "right": 162157973594428.56,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Co59": {
+      "actinv": 2.49905363168559e+19,
+      "actinv_alara_relative": 1.8554005205949664e-05,
+      "actinv_cram48": 2.499053631685594e+19,
+      "actinv_cram48_dense": {
+        "absolute": 114688.0,
+        "left": 2.499053631685594e+19,
+        "relative": 4.5892572510596244e-15,
+        "right": 2.4990536316855824e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 122880.0,
+        "left": 2.499053631685594e+19,
+        "relative": 4.917061340421026e-15,
+        "right": 2.4990536316855816e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 73728.0,
+        "left": 2.49905363168559e+19,
+        "relative": 2.9502368042526207e-15,
+        "right": 2.4990536316855824e+19,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 2.4991e+19,
+      "alara_label": "co-59",
+      "dense": 2.4990536316855824e+19,
+      "key": [
+        27059,
+        0
+      ],
+      "openmc": 2.4990536316855816e+19,
+      "openmc_dense": {
+        "absolute": 8192.0,
+        "left": 2.4990536316855816e+19,
+        "relative": 3.2780408936140327e-16,
+        "right": 2.4990536316855824e+19,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Co60": {
+      "actinv": 9168147166737538.0,
+      "actinv_alara_relative": 5.1446313720969824e-06,
+      "actinv_cram48": 9168147166737822.0,
+      "actinv_cram48_dense": {
+        "absolute": 40.0,
+        "left": 9168147166737822.0,
+        "relative": 4.362931710468241e-15,
+        "right": 9168147166737782.0,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 10.0,
+        "left": 9168147166737822.0,
+        "relative": 1.090732927617059e-15,
+        "right": 9168147166737832.0,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 244.0,
+        "left": 9168147166737538.0,
+        "relative": 2.6613883433856384e-14,
+        "right": 9168147166737782.0,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 9168100000000000.0,
+      "alara_label": "co-60",
+      "dense": 9168147166737782.0,
+      "key": [
+        27060,
+        0
+      ],
+      "openmc": 9168147166737832.0,
+      "openmc_dense": {
+        "absolute": 50.0,
+        "left": 9168147166737832.0,
+        "relative": 5.4536646380852945e-15,
+        "right": 9168147166737782.0,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Co60m1": {
+      "actinv": 54295513534278.07,
+      "actinv_alara_relative": 8.959513075174737e-06,
+      "actinv_cram48": 54295513534278.17,
+      "actinv_cram48_dense": {
+        "absolute": 0.1875,
+        "left": 54295513534278.17,
+        "relative": 3.4533240003637938e-15,
+        "right": 54295513534277.984,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.2578125,
+        "left": 54295513534278.17,
+        "relative": 4.7483205005002164e-15,
+        "right": 54295513534277.914,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 0.0859375,
+        "left": 54295513534278.07,
+        "relative": 1.5827735001667418e-15,
+        "right": 54295513534277.984,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 54296000000000.0,
+      "alara_label": "co-60m",
+      "dense": 54295513534277.984,
+      "key": [
+        27060,
+        1
+      ],
+      "openmc": 54295513534277.914,
+      "openmc_dense": {
+        "absolute": 0.0703125,
+        "left": 54295513534277.914,
+        "relative": 1.2949965001364272e-15,
+        "right": 54295513534277.984,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Co61": {
+      "actinv": 15804315200.776121,
+      "actinv_alara_relative": 1.994396923352051e-05,
+      "actinv_cram48": 15804315200.776648,
+      "actinv_cram48_dense": {
+        "absolute": 7.05718994140625e-05,
+        "left": 15804315200.776648,
+        "relative": 4.4653563610648876e-15,
+        "right": 15804315200.776577,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 1.9073486328125e-05,
+        "left": 15804315200.776648,
+        "relative": 1.2068530705580762e-15,
+        "right": 15804315200.776667,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 0.0004558563232421875,
+        "left": 15804315200.776121,
+        "relative": 2.8843788386338185e-14,
+        "right": 15804315200.776577,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 15804000000.0,
+      "alara_label": "co-61",
+      "dense": 15804315200.776577,
+      "key": [
+        27061,
+        0
+      ],
+      "openmc": 15804315200.776667,
+      "openmc_dense": {
+        "absolute": 8.96453857421875e-05,
+        "left": 15804315200.776667,
+        "relative": 5.672209431622958e-15,
+        "right": 15804315200.776577,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Fe56": {
+      "actinv": 2.499929339657379e+19,
+      "actinv_alara_relative": 1.1736194665022758e-05,
+      "actinv_cram48": 2.499929339657379e+19,
+      "actinv_cram48_dense": {
+        "absolute": 4096.0,
+        "left": 2.499929339657379e+19,
+        "relative": 1.6384463092710313e-16,
+        "right": 2.4999293396573794e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 57344.0,
+        "left": 2.499929339657379e+19,
+        "relative": 2.2938248329794442e-15,
+        "right": 2.4999293396573733e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 4096.0,
+        "left": 2.499929339657379e+19,
+        "relative": 1.6384463092710313e-16,
+        "right": 2.4999293396573794e+19,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 2.4999e+19,
+      "alara_label": "fe-56",
+      "dense": 2.4999293396573794e+19,
+      "key": [
+        26056,
+        0
+      ],
+      "openmc": 2.4999293396573733e+19,
+      "openmc_dense": {
+        "absolute": 61440.0,
+        "left": 2.4999293396573733e+19,
+        "relative": 2.457669463906547e-15,
+        "right": 2.4999293396573794e+19,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Fe57": {
+      "actinv": 650140155091021.4,
+      "actinv_alara_relative": 2.385501343987695e-07,
+      "actinv_cram48": 650140155091038.9,
+      "actinv_cram48_dense": {
+        "absolute": 0.75,
+        "left": 650140155091038.9,
+        "relative": 1.1535974114611902e-15,
+        "right": 650140155091039.6,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.625,
+        "left": 650140155091038.9,
+        "relative": 9.613311762176586e-16,
+        "right": 650140155091039.5,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 18.25,
+        "left": 650140155091021.4,
+        "relative": 2.8070870345555627e-14,
+        "right": 650140155091039.6,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 650140000000000.0,
+      "alara_label": "fe-57",
+      "dense": 650140155091039.6,
+      "key": [
+        26057,
+        0
+      ],
+      "openmc": 650140155091039.5,
+      "openmc_dense": {
+        "absolute": 0.125,
+        "left": 650140155091039.5,
+        "relative": 1.922662352435317e-16,
+        "right": 650140155091039.6,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Fe58": {
+      "actinv": 2913909126814.6865,
+      "actinv_alara_relative": 3.1321548783164467e-06,
+      "actinv_cram48": 2913909126815.8286,
+      "actinv_cram48_dense": {
+        "absolute": 0.0,
+        "left": 2913909126815.8286,
+        "relative": 0.0,
+        "right": 2913909126815.8286,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.0009765625,
+        "left": 2913909126815.8286,
+        "relative": 3.351382824580866e-16,
+        "right": 2913909126815.8296,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 1.14208984375,
+        "left": 2913909126814.6865,
+        "relative": 3.919442213347324e-13,
+        "right": 2913909126815.8286,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 2913900000000.0,
+      "alara_label": "fe-58",
+      "dense": 2913909126815.8286,
+      "key": [
+        26058,
+        0
+      ],
+      "openmc": 2913909126815.8296,
+      "openmc_dense": {
+        "absolute": 0.0009765625,
+        "left": 2913909126815.8296,
+        "relative": 3.351382824580866e-16,
+        "right": 2913909126815.8286,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Fe59": {
+      "actinv": 225774206006948.28,
+      "actinv_alara_relative": 1.8629262494900806e-05,
+      "actinv_cram48": 225774206006954.22,
+      "actinv_cram48_dense": {
+        "absolute": 0.65625,
+        "left": 225774206006954.22,
+        "relative": 2.9066650774968793e-15,
+        "right": 225774206006953.56,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.90625,
+        "left": 225774206006954.22,
+        "relative": 4.013966059400452e-15,
+        "right": 225774206006953.3,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 5.28125,
+        "left": 225774206006948.28,
+        "relative": 2.339173324271305e-14,
+        "right": 225774206006953.56,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 225770000000000.0,
+      "alara_label": "fe-59",
+      "dense": 225774206006953.56,
+      "key": [
+        26059,
+        0
+      ],
+      "openmc": 225774206006953.3,
+      "openmc_dense": {
+        "absolute": 0.25,
+        "left": 225774206006953.3,
+        "relative": 1.1073009819035763e-15,
+        "right": 225774206006953.56,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Mg24": {
+      "actinv": 60588510660790.27,
+      "actinv_alara_relative": 8.076370458772425e-06,
+      "actinv_cram48": 60588510660794.0,
+      "actinv_cram48_dense": {
+        "absolute": 1772.015625,
+        "left": 60588510660794.0,
+        "relative": 2.9246726907031355e-11,
+        "right": 60588510659021.984,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.0546875,
+        "left": 60588510660794.0,
+        "relative": 9.026051210627881e-16,
+        "right": 60588510660793.945,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 1768.2890625,
+        "left": 60588510660790.27,
+        "relative": 2.918522081521216e-11,
+        "right": 60588510659021.984,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 60589000000000.0,
+      "alara_label": "mg-24",
+      "dense": 60588510659021.984,
+      "key": [
+        12024,
+        0
+      ],
+      "openmc": 60588510660793.945,
+      "openmc_dense": {
+        "absolute": 1771.9609375,
+        "left": 60588510660793.945,
+        "relative": 2.924582430191032e-11,
+        "right": 60588510659021.984,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Mn56": {
+      "actinv": 56455330099624.71,
+      "actinv_alara_relative": 5.8470940499049855e-06,
+      "actinv_cram48": 56455330099624.73,
+      "actinv_cram48_dense": {
+        "absolute": 0.0390625,
+        "left": 56455330099624.73,
+        "relative": 6.919187246105511e-16,
+        "right": 56455330099624.69,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.109375,
+        "left": 56455330099624.73,
+        "relative": 1.937372428909543e-15,
+        "right": 56455330099624.62,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 0.0234375,
+        "left": 56455330099624.71,
+        "relative": 4.151512347663308e-16,
+        "right": 56455330099624.69,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 56455000000000.0,
+      "alara_label": "mn-56",
+      "dense": 56455330099624.69,
+      "key": [
+        25056,
+        0
+      ],
+      "openmc": 56455330099624.62,
+      "openmc_dense": {
+        "absolute": 0.0703125,
+        "left": 56455330099624.62,
+        "relative": 1.2454537042989928e-15,
+        "right": 56455330099624.69,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Na23": {
+      "actinv": 2.4999867357053493e+19,
+      "actinv_alara_relative": 5.30571786027008e-06,
+      "actinv_cram48": 2.4999867357053624e+19,
+      "actinv_cram48_dense": {
+        "absolute": 262144.0,
+        "left": 2.4999867357053624e+19,
+        "relative": 1.0485815634779128e-14,
+        "right": 2.4999867357053886e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 73728.0,
+        "left": 2.4999867357053624e+19,
+        "relative": 2.9491356472816607e-15,
+        "right": 2.499986735705355e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 393216.0,
+        "left": 2.4999867357053493e+19,
+        "relative": 1.5728723452168693e-14,
+        "right": 2.4999867357053886e+19,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 2.5e+19,
+      "alara_label": "na-23",
+      "dense": 2.4999867357053886e+19,
+      "key": [
+        11023,
+        0
+      ],
+      "openmc": 2.499986735705355e+19,
+      "openmc_dense": {
+        "absolute": 335872.0,
+        "left": 2.499986735705355e+19,
+        "relative": 1.3434951282060758e-14,
+        "right": 2.4999867357053886e+19,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Na24": {
+      "actinv": 71998196117988.1,
+      "actinv_alara_relative": 2.7239291908419314e-06,
+      "actinv_cram48": 71998196117988.42,
+      "actinv_cram48_dense": {
+        "absolute": 3347.265625,
+        "left": 71998196117988.42,
+        "relative": 4.649096512799577e-11,
+        "right": 71998196114641.16,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.078125,
+        "left": 71998196117988.42,
+        "relative": 1.0850966303651714e-15,
+        "right": 71998196117988.34,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 3346.9375,
+        "left": 71998196117988.1,
+        "relative": 4.648640772214845e-11,
+        "right": 71998196114641.16,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 71998000000000.0,
+      "alara_label": "na-24",
+      "dense": 71998196114641.16,
+      "key": [
+        11024,
+        0
+      ],
+      "openmc": 71998196117988.34,
+      "openmc_dense": {
+        "absolute": 3347.1875,
+        "left": 71998196117988.34,
+        "relative": 4.6489880031365456e-11,
+        "right": 71998196114641.16,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Na24m1": {
+      "actinv": 33633751.464745305,
+      "actinv_alara_relative": 7.389405205878618e-06,
+      "actinv_cram48": 33633751.46474549,
+      "actinv_cram48_dense": {
+        "absolute": 0.0015788599848747253,
+        "left": 33633751.46474549,
+        "relative": 4.694272616391508e-11,
+        "right": 33633751.46316663,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 9.685754776000977e-08,
+        "left": 33633751.46474549,
+        "relative": 2.879772357880884e-15,
+        "right": 33633751.464745395,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 0.0015786737203598022,
+        "left": 33633751.464745305,
+        "relative": 4.693718814015019e-11,
+        "right": 33633751.46316663,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 33634000.0,
+      "alara_label": "na-24m",
+      "dense": 33633751.46316663,
+      "key": [
+        11024,
+        1
+      ],
+      "openmc": 33633751.464745395,
+      "openmc_dense": {
+        "absolute": 0.0015787631273269653,
+        "left": 33633751.464745395,
+        "relative": 4.693984639155733e-11,
+        "right": 33633751.46316663,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": false
+    },
+    "Ne23": {
+      "actinv": 56206063369.84507,
+      "actinv_alara_relative": 1.1274556741841415e-06,
+      "actinv_cram48": 56206063501.37219,
+      "actinv_cram48_dense": {
+        "absolute": 36.00731658935547,
+        "left": 56206063501.37219,
+        "relative": 6.406304648692645e-10,
+        "right": 56206063465.364876,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 36.008094787597656,
+        "left": 56206063501.37219,
+        "relative": 6.406443103192695e-10,
+        "right": 56206063465.3641,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 95.51980590820312,
+        "left": 56206063369.84507,
+        "relative": 1.6994573186407912e-09,
+        "right": 56206063465.364876,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 56206000000.0,
+      "alara_label": "ne-23",
+      "dense": 56206063465.364876,
+      "key": [
+        10023,
+        0
+      ],
+      "openmc": 56206063465.3641,
+      "openmc_dense": {
+        "absolute": 0.0007781982421875,
+        "left": 56206063465.3641,
+        "relative": 1.3845450013894655e-14,
+        "right": 56206063465.364876,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Ni58": {
+      "actinv": 2.4998173014581953e+19,
+      "actinv_alara_relative": 6.921089067252595e-06,
+      "actinv_cram48": 2.4998173014581895e+19,
+      "actinv_cram48_dense": {
+        "absolute": 65536.0,
+        "left": 2.4998173014581895e+19,
+        "relative": 2.6216315873072593e-15,
+        "right": 2.499817301458196e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 65536.0,
+        "left": 2.4998173014581895e+19,
+        "relative": 2.621631587307266e-15,
+        "right": 2.499817301458183e+19,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 8192.0,
+        "left": 2.4998173014581953e+19,
+        "relative": 3.277039484134074e-16,
+        "right": 2.499817301458196e+19,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 2.4998e+19,
+      "alara_label": "ni-58",
+      "dense": 2.499817301458196e+19,
+      "key": [
+        28058,
+        0
+      ],
+      "openmc": 2.499817301458183e+19,
+      "openmc_dense": {
+        "absolute": 131072.0,
+        "left": 2.499817301458183e+19,
+        "relative": 5.2432631746145185e-15,
+        "right": 2.499817301458196e+19,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Ni59": {
+      "actinv": 1136998367838723.8,
+      "actinv_alara_relative": 1.4354980441952506e-06,
+      "actinv_cram48": 1136998367838754.5,
+      "actinv_cram48_dense": {
+        "absolute": 0.0,
+        "left": 1136998367838754.5,
+        "relative": 0.0,
+        "right": 1136998367838754.5,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.75,
+        "left": 1136998367838754.5,
+        "relative": 6.596315537599453e-16,
+        "right": 1136998367838755.2,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 30.75,
+        "left": 1136998367838723.8,
+        "relative": 2.7044893704157777e-14,
+        "right": 1136998367838754.5,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 1137000000000000.0,
+      "alara_label": "ni-59",
+      "dense": 1136998367838754.5,
+      "key": [
+        28059,
+        0
+      ],
+      "openmc": 1136998367838755.2,
+      "openmc_dense": {
+        "absolute": 0.75,
+        "left": 1136998367838755.2,
+        "relative": 6.596315537599453e-16,
+        "right": 1136998367838754.5,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Ni60": {
+      "actinv": 15831390234862.457,
+      "actinv_alara_relative": 3.851472571645836e-05,
+      "actinv_cram48": 15831390234863.566,
+      "actinv_cram48_dense": {
+        "absolute": 0.017578125,
+        "left": 15831390234863.566,
+        "relative": 1.1103336307944586e-15,
+        "right": 15831390234863.549,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 0.001953125,
+        "left": 15831390234863.566,
+        "relative": 1.233704034216065e-16,
+        "right": 15831390234863.568,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 1.091796875,
+        "left": 15831390234862.457,
+        "relative": 6.896405551267811e-14,
+        "right": 15831390234863.549,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 15832000000000.0,
+      "alara_label": "ni-60",
+      "dense": 15831390234863.549,
+      "key": [
+        28060,
+        0
+      ],
+      "openmc": 15831390234863.568,
+      "openmc_dense": {
+        "absolute": 0.01953125,
+        "left": 15831390234863.568,
+        "relative": 1.233704034216065e-15,
+        "right": 15831390234863.549,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    },
+    "Ni61": {
+      "actinv": 75285628020.19574,
+      "actinv_alara_relative": 0.00042980402831010187,
+      "actinv_cram48": 75285628020.22758,
+      "actinv_cram48_dense": {
+        "absolute": 0.0002288818359375,
+        "left": 75285628020.22758,
+        "relative": 3.0401796724868194e-15,
+        "right": 75285628020.22736,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_cram48_openmc": {
+        "absolute": 4.57763671875e-05,
+        "left": 75285628020.22758,
+        "relative": 6.080359344973635e-16,
+        "right": 75285628020.22763,
+        "within_g1_or_tolerance": true
+      },
+      "actinv_dense": {
+        "absolute": 0.0316162109375,
+        "left": 75285628020.19574,
+        "relative": 4.1995015209284725e-13,
+        "right": 75285628020.22736,
+        "within_g1_or_tolerance": true
+      },
+      "alara": 75318000000.0,
+      "alara_label": "ni-61",
+      "dense": 75285628020.22736,
+      "key": [
+        28061,
+        0
+      ],
+      "openmc": 75285628020.22763,
+      "openmc_dense": {
+        "absolute": 0.000274658203125,
+        "left": 75285628020.22763,
+        "relative": 3.648215606984181e-15,
+        "right": 75285628020.22736,
+        "within_g1_or_tolerance": true
+      },
+      "reportable": true
+    }
+  },
+  "features": {
+    "capture_chain": true,
+    "competing_products": true,
+    "initial_target_families": [
+      "Na23",
+      "Fe56",
+      "Co59",
+      "Ni58"
+    ],
+    "isomer_branches": [
+      [
+        11024,
+        1
+      ],
+      [
+        27060,
+        1
+      ],
+      [
+        27058,
+        1
+      ]
+    ],
+    "radioactive_decay": true,
+    "reachable_decay_nuclides": 20,
+    "reportable_shutdown_nuclides": 19,
+    "selected_product_records": 14,
+    "target_family_count": 4
+  },
+  "maximum_actinv_alara_relative_reportable": 0.00042980402831010187,
+  "maximum_actinv_cli_dense_relative_reportable": 1.6994573186407912e-09,
+  "maximum_rate_relative": 0.0,
+  "openmc": {
+    "chain_nuclides": 20,
+    "chain_reactions": [
+      "(n,gamma)",
+      "(n,p)"
+    ],
+    "chain_sha256": "e4549f07eedd48a2509998223f7505461a34e2894994a0692eacde006d5e9d63",
+    "depletion_results_note": "HDF5 container bytes are not canonical; scalar rows are recorded above",
+    "final_time_s": 108000.0,
+    "microxs_sha256": "f1e4f2c991fb9ad77e09453bf5b64036da245a25b276948fa3e886ed68bfd9c2",
+    "microxs_shape": [
+      7,
+      2,
+      1
+    ],
+    "source_hashes": {
+      "chain.py": "0f716c2862142d53576d219146bb9fdc1e322f5ee27e4b978a8ccd0a29b8c84e",
+      "independent_operator.py": "ed260adc3b7b1438b0a1e7c488aa83a03e112c26d1e562a4892032960edab87f",
+      "integrators.py": "50ca6a592dcb65c438735f9aa17d059e42c4fdeaa22bd0898db44f49a21389b6",
+      "microxs.py": "9d1fa3ca97fccf41d7134421265fc335f97a279256edd668b78beb0fcb11fd59"
+    },
+    "version": "0.15.3"
+  },
+  "openmc_dense_pass": true,
+  "pass": true,
+  "protocol_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+  "provenance": {
+    "actinv_binary_sha256": "f9c937734762930399ec39088f89af1a2d648e7b583297329f9b1d43f8dc4e98",
+    "actinv_index_sha256": "b022dfb191e6932ffb9d917e6bdecc39928b00f016455e16e2b11268eefbc952",
+    "actinv_library_sha256": "8583b6207c26f43f9bcdf58b061132591fc6f7f89408996af9a8bb7a79638da4",
+    "activation_subset_sha256": "61075c09254488a529d87cf091d64404aa9418837145e99b821e0a06e874eabe",
+    "alara_binary_sha256": "03ff0e6baa0c6b1cd2f3e7896641426f8f96d950ca5a206d5d2a89ee6d962c07",
+    "alara_commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+    "alara_version": "ALARA 2.9.2",
+    "flux_sha256": "0f8608db645988b6569f5c2398de1619af449fa12f0b6368953d4f5797a090d9",
+    "official_hashes": {
+      "activation_sha256": "f45ced4d5676c993f6b6dd562d5e312e897eabb959dc6ebba56bbeaecde22312",
+      "decay_sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940",
+      "element_sha256": "bdfcfdb255d89b4988be9fab4279c36fb9615709ee6a738e963591db6146c290"
+    },
+    "stable_adapter_keys": [
+      [
+        11023,
+        0
+      ],
+      [
+        12024,
+        0
+      ],
+      [
+        26056,
+        0
+      ],
+      [
+        26057,
+        0
+      ],
+      [
+        26058,
+        0
+      ],
+      [
+        27059,
+        0
+      ],
+      [
+        28058,
+        0
+      ],
+      [
+        28060,
+        0
+      ],
+      [
+        28061,
+        0
+      ]
+    ],
+    "stable_adapter_sha256": "d4f0c29491f5f1eadf06c6c8c854e0a0843581175f46fb3fb40b0068a89172ef"
+  },
+  "rates": [
+    {
+      "actinv_order_per_s": 1.52180345e-11,
+      "alara_order_per_s": 1.52180345e-11,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 11024,
+      "product_state": 0,
+      "record_sha256": "014ccd763f9e7e5ca3dc2eb9376a1eec08bcdc1b9cb6cc740286b58b5eecafa7",
+      "relative": 0.0,
+      "target": 11023
+    },
+    {
+      "actinv_order_per_s": 4.61648786e-11,
+      "alara_order_per_s": 4.61648786e-11,
+      "declared_groups": 175,
+      "eaf_code": 1021,
+      "mt": 102,
+      "product": 11024,
+      "product_state": 1,
+      "record_sha256": "94f03255caa0fe53f834dd16434ed8fd2210536b35080f2a38785b976b510f15",
+      "relative": 0.0,
+      "target": 11023
+    },
+    {
+      "actinv_order_per_s": 4.1891699999999996e-11,
+      "alara_order_per_s": 4.1891699999999996e-11,
+      "declared_groups": 36,
+      "eaf_code": 1030,
+      "mt": 103,
+      "product": 10023,
+      "product_state": 0,
+      "record_sha256": "995df23ea1e50fb25b193a20420ebb9451eb819d35702be009d0d9825d84293c",
+      "relative": 0.0,
+      "target": 11023
+    },
+    {
+      "actinv_order_per_s": 3.00998922e-10,
+      "alara_order_per_s": 3.00998922e-10,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 26057,
+      "product_state": 0,
+      "record_sha256": "93966344aa01352b362ce1f8be38a344d0e475c624b629bd04c8460957131c97",
+      "relative": 0.0,
+      "target": 26056
+    },
+    {
+      "actinv_order_per_s": 1.860873e-10,
+      "alara_order_per_s": 1.860873e-10,
+      "declared_groups": 40,
+      "eaf_code": 1030,
+      "mt": 103,
+      "product": 25056,
+      "product_state": 0,
+      "record_sha256": "84ea99b2e805570d2697bd5f1104bbd222edf6fc5bf10a8d33840a186ed8c9a7",
+      "relative": 0.0,
+      "target": 26056
+    },
+    {
+      "actinv_order_per_s": 2.82736742e-10,
+      "alara_order_per_s": 2.82736742e-10,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 26058,
+      "product_state": 0,
+      "record_sha256": "42ff9db8c94efc7618878a0b3a37bda7a8a809f5015df86fe0727d0006f36c1b",
+      "relative": 0.0,
+      "target": 26057
+    },
+    {
+      "actinv_order_per_s": 1.880364782e-09,
+      "alara_order_per_s": 1.880364782e-09,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 27060,
+      "product_state": 0,
+      "record_sha256": "2d94ff4f69eace644e74771b57341fbad3d600fedce969e7ab7b334073a148f9",
+      "relative": 0.0,
+      "target": 27059
+    },
+    {
+      "actinv_order_per_s": 2.3972546679999998e-09,
+      "alara_order_per_s": 2.3972546679999998e-09,
+      "declared_groups": 175,
+      "eaf_code": 1021,
+      "mt": 102,
+      "product": 27060,
+      "product_state": 1,
+      "record_sha256": "084137f1deb6a7de6f32f7f379f02fbbccef0dd91f87e786de0488ca470ef871",
+      "relative": 0.0,
+      "target": 27059
+    },
+    {
+      "actinv_order_per_s": 1.055658e-10,
+      "alara_order_per_s": 1.055658e-10,
+      "declared_groups": 56,
+      "eaf_code": 1030,
+      "mt": 103,
+      "product": 26059,
+      "product_state": 0,
+      "record_sha256": "54eb525b3d65faa15ea81913517148b061757fdac825210ec4c4f6855ab2c80c",
+      "relative": 0.0,
+      "target": 27059
+    },
+    {
+      "actinv_order_per_s": 2.31208433e-10,
+      "alara_order_per_s": 2.31208433e-10,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 27061,
+      "product_state": 0,
+      "record_sha256": "e44ba87021aef4b77add00f9bdf2c8a504c5c02a0a20c13310e8ec57c826f007",
+      "relative": 0.0,
+      "target": 27060
+    },
+    {
+      "actinv_order_per_s": 5.266185899999999e-10,
+      "alara_order_per_s": 5.266185899999999e-10,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 28059,
+      "product_state": 0,
+      "record_sha256": "d907e9f2a2d30d1b09e035f782691891004922e770e12acfc35c53e907d89212",
+      "relative": 0.0,
+      "target": 28058
+    },
+    {
+      "actinv_order_per_s": 1.29811300117068e-10,
+      "alara_order_per_s": 1.29811300117068e-10,
+      "declared_groups": 175,
+      "eaf_code": 1030,
+      "mt": 103,
+      "product": 27058,
+      "product_state": 0,
+      "record_sha256": "27d1ab1fc1a78ba9c3750662b7076b229b45fbfeeafcc70be8b5243ef8588690",
+      "relative": 0.0,
+      "target": 28058
+    },
+    {
+      "actinv_order_per_s": 1.8942760007307432e-10,
+      "alara_order_per_s": 1.8942760007307432e-10,
+      "declared_groups": 175,
+      "eaf_code": 1031,
+      "mt": 103,
+      "product": 27058,
+      "product_state": 1,
+      "record_sha256": "8f7812340b23cfee46e0424cae2ede8b59f5401be3fe4e29604efb5be84162aa",
+      "relative": 0.0,
+      "target": 28058
+    },
+    {
+      "actinv_order_per_s": 9.286512329999999e-09,
+      "alara_order_per_s": 9.286512329999999e-09,
+      "declared_groups": 175,
+      "eaf_code": 1020,
+      "mt": 102,
+      "product": 28060,
+      "product_state": 0,
+      "record_sha256": "a32a8ee1d3857ffcde66016f4fb945945857828a619ef0f93923e4c3ad198658",
+      "relative": 0.0,
+      "target": 28059
+    }
+  ],
+  "reportable_names": [
+    "Ne23",
+    "Na23",
+    "Na24",
+    "Mg24",
+    "Mn56",
+    "Fe56",
+    "Fe57",
+    "Fe58",
+    "Fe59",
+    "Co58",
+    "Co58m1",
+    "Co59",
+    "Co60",
+    "Co60m1",
+    "Co61",
+    "Ni58",
+    "Ni59",
+    "Ni60",
+    "Ni61"
+  ],
+  "schedule": {
+    "actinv_flux_weighted_time_s": 86400.0,
+    "actinv_time_s": 108000.0,
+    "expected_flux_weighted_time_s": 86400.0,
+    "expected_time_s": 108000.0,
+    "gaps": 3,
+    "pulses": 4,
+    "segments": 7,
+    "total_flux_n_cm2_s": 3150000000000000.0
+  },
+  "schema": "actinv-p17-g2-identical-data-1"
+}

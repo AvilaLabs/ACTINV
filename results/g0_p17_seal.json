@@ -1,0 +1,304 @@
+{
+ "irdff": {
+  "files": {
+   "benchmark_field_list": {
+    "actual_pdf_pages": 1,
+    "actual_sha256": "93926f4a9937ef1314ebbaa29a11a638ad9d1b3abad08596b0db57ee6bc9c304",
+    "bytes": 102405,
+    "expected_bytes": 102405,
+    "expected_pdf_pages": 1,
+    "expected_sha256": "93926f4a9937ef1314ebbaa29a11a638ad9d1b3abad08596b0db57ee6bc9c304",
+    "filename": "NeutronBenchmarkFields-IRDFF-II.pdf",
+    "pass": true,
+    "pdf_pages_match": true,
+    "size_matches": true,
+    "url": "https://www-nds.iaea.org/IRDFF/NeutronBenchmarkFields-IRDFF-II.pdf"
+   },
+   "decay": {
+    "actual_sha256": "397f599ef6389ac84931faa31a8e1f7a1bf3ba684b4a22e92d628d4271699bd7",
+    "archive": {
+     "duplicates_absent": true,
+     "expected_members": [
+      "IRDFF-II_dd.endf"
+     ],
+     "first_corrupt_member": null,
+     "members": [
+      "IRDFF-II_dd.endf"
+     ],
+     "pass": true,
+     "safe_paths": true
+    },
+    "bytes": 301693,
+    "expected_bytes": 301693,
+    "expected_sha256": "397f599ef6389ac84931faa31a8e1f7a1bf3ba684b4a22e92d628d4271699bd7",
+    "filename": "IRDFF-II_dd_ENDF.zip",
+    "pass": true,
+    "size_matches": true,
+    "url": "https://www-nds.iaea.org/IRDFF/IRDFF-II_dd_ENDF.zip"
+   },
+   "group_725": {
+    "actual_sha256": "6ec2b33c0f67bed46d46be062a24ccedaa5ffea9bbba919958da4b1349f48c85",
+    "archive": {
+     "duplicates_absent": true,
+     "expected_members": [
+      "IRDFF-II.g725"
+     ],
+     "first_corrupt_member": null,
+     "members": [
+      "IRDFF-II.g725"
+     ],
+     "pass": true,
+     "safe_paths": true
+    },
+    "bytes": 4068081,
+    "expected_bytes": 4068081,
+    "expected_sha256": "6ec2b33c0f67bed46d46be062a24ccedaa5ffea9bbba919958da4b1349f48c85",
+    "filename": "IRDFF-II_g725.zip",
+    "pass": true,
+    "size_matches": true,
+    "url": "https://www-nds.iaea.org/IRDFF/IRDFF-II_g725.zip"
+   },
+   "pointwise": {
+    "actual_sha256": "225b25787f6d9b54a9c28ebf075ccc715f69358be181fed27d5cc315cf8744db",
+    "archive": {
+     "duplicates_absent": true,
+     "expected_members": [
+      "IRDFF-II.endf"
+     ],
+     "first_corrupt_member": null,
+     "members": [
+      "IRDFF-II.endf"
+     ],
+     "pass": true,
+     "safe_paths": true
+    },
+    "bytes": 33372016,
+    "expected_bytes": 33372016,
+    "expected_sha256": "225b25787f6d9b54a9c28ebf075ccc715f69358be181fed27d5cc315cf8744db",
+    "filename": "IRDFF-II_ENDF.zip",
+    "pass": true,
+    "size_matches": true,
+    "url": "https://www-nds.iaea.org/IRDFF/IRDFF-II_ENDF.zip"
+   },
+   "primary_reference": {
+    "actual_pdf_pages": 110,
+    "actual_sha256": "ba2cd81b9a829368bb4d7a37de26842439ad437b0424586dcbd41074d7552d5f",
+    "bytes": 21804821,
+    "expected_bytes": 21804821,
+    "expected_pdf_pages": 110,
+    "expected_sha256": "ba2cd81b9a829368bb4d7a37de26842439ad437b0424586dcbd41074d7552d5f",
+    "filename": "IRDFF-II_primary_1909.03336.pdf",
+    "pass": true,
+    "pdf_pages_match": true,
+    "size_matches": true,
+    "url": "https://arxiv.org/pdf/1909.03336"
+   },
+   "spectra": {
+    "actual_sha256": "544c06ec741672c729ee9f2e716935a616bc44f3296001a1394d8760ff817e52",
+    "archive": {
+     "duplicates_absent": true,
+     "expected_members": [
+      "IRDFF-II_sp.g"
+     ],
+     "first_corrupt_member": null,
+     "members": [
+      "IRDFF-II_sp.g"
+     ],
+     "pass": true,
+     "safe_paths": true
+    },
+    "bytes": 368054,
+    "expected_bytes": 368054,
+    "expected_sha256": "544c06ec741672c729ee9f2e716935a616bc44f3296001a1394d8760ff817e52",
+    "filename": "IRDFF-II_sp_g.zip",
+    "pass": true,
+    "size_matches": true,
+    "url": "https://www-nds.iaea.org/IRDFF/IRDFF-II_sp_g.zip"
+   }
+  },
+  "pass": true
+ },
+ "partition": {
+  "diagnostic_tables": [
+   18,
+   19,
+   20
+  ],
+  "held_out_families": {
+   "H1": {
+    "family": "SPR-III EOI activities",
+    "tables": [
+     21,
+     22,
+     23
+    ]
+   },
+   "H2": {
+    "family": "ACRR EOI activities",
+    "tables": [
+     24,
+     25
+    ]
+   },
+   "H3": {
+    "family": "high-temperature Maxwellian SACS",
+    "tables": [
+     36
+    ]
+   }
+  },
+  "numeric_held_out_rows_inspected": false,
+  "partitions_disjoint": true,
+  "pass": true,
+  "selection_basis": "primary-reference metadata and table captions only",
+  "state": "sealed",
+  "tracked_p17_results": [],
+  "unexpected_pre_unseal_results": [],
+  "unseal_authorized": false
+ },
+ "pass": true,
+ "processing_controls": {
+  "alara_files": {
+   "activation": {
+    "actual_sha256": "f45ced4d5676c993f6b6dd562d5e312e897eabb959dc6ebba56bbeaecde22312",
+    "bytes": 1113225,
+    "expected_sha256": "f45ced4d5676c993f6b6dd562d5e312e897eabb959dc6ebba56bbeaecde22312",
+    "filename": "truncated_fendlg-2.0_175_for_samples_only",
+    "pass": true
+   },
+   "decay": {
+    "actual_sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940",
+    "bytes": 2058429,
+    "expected_sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940",
+    "filename": "truncated_fendld-2.0_for_samples_only",
+    "pass": true
+   },
+   "element": {
+    "actual_sha256": "bdfcfdb255d89b4988be9fab4279c36fb9615709ee6a738e963591db6146c290",
+    "bytes": 23994,
+    "expected_sha256": "bdfcfdb255d89b4988be9fab4279c36fb9615709ee6a738e963591db6146c290",
+    "filename": "myElelib",
+    "pass": true
+   }
+  },
+  "fendl": {
+   "Ag107": {
+    "actual_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+    "bytes": 2212596,
+    "expected_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+    "filename": "n_4725_47-Ag-107.endf",
+    "pass": true
+   },
+   "Au197": {
+    "actual_sha256": "fb7897fdde04b68b79cfc2a44e90a7c3aba77397815a5be342648af013f39f6d",
+    "bytes": 7170039,
+    "expected_sha256": "fb7897fdde04b68b79cfc2a44e90a7c3aba77397815a5be342648af013f39f6d",
+    "filename": "n_7925_79-Au-197.endf",
+    "pass": true
+   },
+   "Co59": {
+    "actual_sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d",
+    "bytes": 5631444,
+    "expected_sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d",
+    "filename": "n_2725_27-Co-59.endf",
+    "pass": true
+   },
+   "Fe56": {
+    "actual_sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e",
+    "bytes": 18643933,
+    "expected_sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e",
+    "filename": "n_2631_26-Fe-56.endf",
+    "pass": true
+   },
+   "Ni58": {
+    "actual_sha256": "312f5a069dbda4e0abd662a258710ea332dd749191a9bad2a0c70567644af4f4",
+    "bytes": 17188280,
+    "expected_sha256": "312f5a069dbda4e0abd662a258710ea332dd749191a9bad2a0c70567644af4f4",
+    "filename": "n_2825_28-Ni-58.endf",
+    "pass": true
+   },
+   "W186": {
+    "actual_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+    "bytes": 7970880,
+    "expected_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+    "filename": "n_7443_74-W-186.endf",
+    "pass": true
+   }
+  },
+  "njoy_sources": {
+   "broadr": {
+    "actual_sha256": "b2dc071a0f63975cfe702f84441539cfaecbdeb7dfd74c5be70578b72184744e",
+    "bytes": 55633,
+    "expected_sha256": "b2dc071a0f63975cfe702f84441539cfaecbdeb7dfd74c5be70578b72184744e",
+    "filename": "broadr.f90",
+    "pass": true
+   },
+   "groupr": {
+    "actual_sha256": "0b7b7237f897071552b81a59eb0c3bcccae36aa3dbc585a4d55f0e103e9f6d31",
+    "bytes": 475322,
+    "expected_sha256": "0b7b7237f897071552b81a59eb0c3bcccae36aa3dbc585a4d55f0e103e9f6d31",
+    "filename": "groupr.f90",
+    "pass": true
+   },
+   "license": {
+    "actual_sha256": "08dc30ca5b19bfa904168f5194b646bb13a661e3591c4e2d000e9a514554b76c",
+    "bytes": 2289,
+    "expected_sha256": "08dc30ca5b19bfa904168f5194b646bb13a661e3591c4e2d000e9a514554b76c",
+    "filename": "LICENSE",
+    "pass": true
+   },
+   "reconr": {
+    "actual_sha256": "054ede7a59e1c39cf3e72105d8a0b95a0fb1d8df0882eca6b949e765b62bf5db",
+    "bytes": 161475,
+    "expected_sha256": "054ede7a59e1c39cf3e72105d8a0b95a0fb1d8df0882eca6b949e765b62bf5db",
+    "filename": "reconr.f90",
+    "pass": true
+   },
+   "unresr": {
+    "actual_sha256": "57a3a975566d45a8f2d0db67fed121b908e50039d9aafb25ea27f628c745d650",
+    "bytes": 44019,
+    "expected_sha256": "57a3a975566d45a8f2d0db67fed121b908e50039d9aafb25ea27f628c745d650",
+    "filename": "unresr.f90",
+    "pass": true
+   }
+  },
+  "pass": true,
+  "versions": {
+   "actinv": {
+    "binary_sha256": "f9c937734762930399ec39088f89af1a2d648e7b583297329f9b1d43f8dc4e98",
+    "version": "actinv 1.0.1"
+   },
+   "alara": {
+    "binary_sha256": "03ff0e6baa0c6b1cd2f3e7896641426f8f96d950ca5a206d5d2a89ee6d962c07",
+    "source_commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+    "version": "ALARA 2.9.2"
+   },
+   "njoy": {
+    "banner_present": true,
+    "binary_sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30",
+    "cmake": "cmake version 4.2.3",
+    "compiler": "GNU Fortran (Ubuntu 15.2.0-16ubuntu1) 15.2.0",
+    "source_commit": "ac5adf5f33d893e42f2eed7fb286b0d51c7580da"
+   },
+   "numpy": "2.5.2",
+   "openmc": "0.15.3",
+   "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+   "python": "3.12.13",
+   "scipy": "1.18.0"
+  }
+ },
+ "schema": "actinv-p17-seal-1",
+ "source": {
+  "opening_commit": "f9e6a5c8faf15f1748f1b2c4683889ea8a631c9d",
+  "opening_is_ancestor": true,
+  "pass": true,
+  "production_paths_changed_since_opening": [],
+  "protocol": {
+   "actual_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+   "expected_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+   "ledger_entry": true
+  },
+  "release_commit": "0332779401363d2f39722efe7a0b7218afcfb270",
+  "release_tag_commit": "0332779401363d2f39722efe7a0b7218afcfb270"
+ }
+}
