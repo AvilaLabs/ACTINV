@@ -21,6 +21,9 @@
   Catalog order, inventory, duplicate and total-availability checks pass, but the unchanged state-partial rule finds
   2,647,615 comparison violations and 143 MF8-versus-Q identity conflicts. G2 therefore fails, no held-out value is
   unsealed, and the unreleased P18 candidate cannot authorize v1.1.0.
+- Closed P18 with the checker-derived `P18-FAIL` verdict after its exact source/evidence checkpoint passed all 42
+  substantive CI steps. G3--G7 were not authorized, v1.0.1 remains the public release, and the unfinished evaluated
+  precision/domain work moves to a separately frozen P18b successor rather than weakening the observed gate.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no

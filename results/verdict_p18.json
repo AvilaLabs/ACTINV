@@ -1,0 +1,32 @@
+{
+ "closed": true,
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "family_seal": "fb2fd35b02aa4d9629d9740d638b7650f97e8ba9d8c4dcd70ee238c31c45dfed",
+  "g0_check": "8ea0b916657dbd5becba9116e3c1d11a17eb2cb0138e77d7fd0b49bb56df8f59",
+  "g0_seal": "e419e8eeb506c28440744e8a3ceb6922f1d066b8d673f534ce0567dc59f82af3",
+  "g1_check": "5fc277fb1dfe91e9f97a8d49efece5bbb13c04128e1043a91fe839c2371b4ebc",
+  "g1_identity": "e7f51a6f23523956c349a634253ff86e0d986c482a5416caa26a3025156bbeb8",
+  "g2_audit": "e20fba865c36131f27bce7ac110957336c55d9c8455e79a8ddac0edde66df9cb",
+  "g2_changed_identities": "606347ce4d12788451be3a4a3765bfa5305613631eb37ea5de30d163546e083e",
+  "g2_check": "edf0164abca1e1740902d0acdc076da43018a512e8d67b6efd40f787a822e35f"
+ },
+ "failure_class": "frozen state-partial conservation and excitation-consistency thresholds failed",
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": false,
+  "G3": "NOT_AUTHORIZED",
+  "G4": "NOT_AUTHORIZED",
+  "G5": "NOT_AUTHORIZED",
+  "G6": "NOT_AUTHORIZED",
+  "G7": "NOT_AUTHORIZED"
+ },
+ "heldout_values_unsealed": false,
+ "phase_success": false,
+ "schema": "actinv-p18-verdict-1",
+ "source_evidence_commit": "a460b6e4092d57ff228c6fb04ec41a12f575dd25",
+ "v1.1.0_authorized": false,
+ "verdict": "P18-FAIL",
+ "workflow_run_id": 33257767713
+}

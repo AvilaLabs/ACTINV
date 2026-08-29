@@ -14,11 +14,13 @@ faster at the median with effectively unchanged memory. The conditional suffix r
 repair, not a product or scientific failure. P17 is closed **P17-FAIL** under its unchanged procedural rule: all
 numerical, identical-data, processor, diagnostic, independent-arithmetic and quality controls pass, but the sole
 post-unseal amendment's EOI, product-alias and infinite-dilution assumptions were falsified. P17 changed no production
-code or released package. The P17 closure commit passed all 39 workflow steps. P18 is terminally failing under protocol
+code or released package. The P17 closure commit passed all 39 workflow steps. P18 is closed **P18-FAIL** under protocol
 `002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09`: it replaces heuristic product-state ranking
 with auditable ENDF identity, but its complete G2 scan finds the frozen state-partial conservation and mapping rules
 violated across the four TENDL corpora. No diagnostic or held-out ratio was read, G3 onward is not authorized, and
-v1.1.0 cannot ship from this phase. Formal P18-FAIL closure follows the green G2 evidence checkpoint.
+v1.1.0 cannot ship from this phase. Source/evidence commit `a460b6e4092d57ff228c6fb04ec41a12f575dd25` passed all
+42 substantive steps in GitHub Actions run `33257767713`; that green workflow validates the failure record rather
+than converting it into a scientific pass. P18b is next but remains unopened pending its separately hashed protocol.
 Amendment 1 (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) quarantines five families whose
 dependent rows were accidentally displayed by an incorrect fixed-column redaction before G0. They are diagnostic
 only; the remaining held-out partition stays sealed. It had capped a successful close at P18-CONDITIONAL; the later
@@ -82,6 +84,7 @@ collaborator, but no phase gate depends on that optional route.
 | **P16** typed boundaries and metamorphic suite | Introduce zero-cost physical quantity types incrementally at Rust parsing/core boundaries while retaining convenient compatible JSON/Python inputs; broaden relation-based tests for scaling, decay, schedules, rebinning, modes and mesh identity. | incompatible quantities rejected at compile time in fixtures; exactly one documented conversion per boundary; legacy APIs/results remain compatible; release runtime has no material regression; all frozen relations pass | P15 | 4–6 |
 | **P17** open validation and attribution | Freeze new diagnostic and genuinely held-out public evidence before calculation; expand identical-data ALARA/OpenMC networks and NJOY processing controls; separate solver, processor, evaluation, decay/yield and measurement-definition effects. No production physics is changed in this phase. | no post-result exclusions or metric changes; all inputs hashed; independent arithmetic rederives the report; cause ledger names every material mismatch; held-out evidence remains sealed until scoring | P16 | 7–10 plus bounded background compute |
 | **P18** evidence-directed accuracy | Repair only cause classes demonstrated by P17, one narrowly frozen repair session at a time; diagnostic evidence guides work and held-out evidence decides whether changed default behavior ships. | independent control per behavior change; conservation/numerical controls remain green; held-out typical and tail measures do not regress; the already-seen FNS family is reporting evidence, never the acceptance oracle | P17 | discovery-dependent |
+| **P18b** evaluated state semantics | Resolve the P18 G2 failure without using measurement values: distinguish ENDF decimal precision, threshold-domain interpolation and true state-sum inconsistency; freeze a lawful fail/repair/account policy before revising the candidate. | independent decimal/reference extraction; complete four-corpus classification reproduces P18 counts; synthetic boundary and gross-excess plants; no changed default until the successor's own conservation and compatibility gates pass | P18 | 3--5 |
 | **P19** finite-dilution self-shielding | Add explicit finite-dilution treatment from lawful open probability-table or independently processed data, while preserving infinite dilution as an explicit mode and recording all model/data choices. Initially opt-in. | infinite-dilution limit reproduces v1.0; dilution and temperature limits are physical; selected rates match an independent open processing path; missing inputs fail visibly; resonance-sensitive held-out cases improve or remain consistent | P17; P18 if opened | 10–15 |
 | **P20** practical uncertainty | Audit P11 covariance coverage; propagate relevant correlations into usable observable bands; compare linear propagation with deterministic correlated sampling; distinguish cross-section, decay, yield and uncovered model uncertainty. | synthetic analytic and sampled controls agree in their shared regime; covariance validity and fixed-seed reproduction pass; partial coverage is explicit through CLI/Python/JSON/certificates; no interval is labeled total uncertainty without total coverage | P16 | 7–10 |
 | **P21** large-scale execution | Reuse prepared networks across compatible mesh cells, group common workloads, stream selectable outputs, bound memory by chunk size and add interruption/checkpoint support; replace extrapolation with an executed large case. | mesh equals independent cell runs; thread-count identity holds; memory excludes total-cell scaling apart from requested output; scaling evidence records hardware/work/output/cache state; no unexecuted million-cell claim | P15 | 5–8 |
@@ -329,3 +332,9 @@ part that does not compress: users, issues, and the validation record accumulati
   comparison violations; 143 MF8-versus-Q excitation conflicts also remain explicit. The checker verifies the
   truthful failure and rejects seven mutations without reading a diagnostic or held-out measurement. G2 therefore
   fails, G3 onward is not authorized and P18 must close P18-FAIL without a v1.1.0 release.
+- 2026-08-29 — P18 closed P18-FAIL with its complete G2 failure intact. Source/evidence commit
+  `a460b6e4092d57ff228c6fb04ec41a12f575dd25` passed all 42 substantive controls in GitHub Actions run
+  `33257767713`; the closure checker binds that run, every G0--G2 artifact, the unchanged package version and the
+  absence of G3--G7/unseal/release evidence, and rejects seven closure mutations. Public v1.0.1 is unchanged. P18b is
+  planned as a new pre-evidence successor for evaluated decimal precision, threshold-domain interpolation and true
+  state-sum classification; it remains unopened and P19's finite-dilution scope remains separate.
