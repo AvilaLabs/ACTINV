@@ -18,6 +18,9 @@ code or released package. The P17 closure commit passed all 39 workflow steps. P
 `002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09`: it replaces heuristic product-state ranking
 and silent isomer-to-ground fallback with auditable ENDF identity and fail-loud accounting, then uses family-level
 held-out isomeric-ratio evidence to decide whether the changed default and a v1.1.0 release may ship.
+Amendment 1 (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) quarantines five families whose
+dependent rows were accidentally displayed by an incorrect fixed-column redaction before G0. They are diagnostic
+only; the remaining held-out partition stays sealed. P18 can therefore close at best P18-CONDITIONAL.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -299,3 +302,9 @@ part that does not compress: users, issues, and the validation record accumulati
   catalog, state-partial conservation, fail-loud missing-isomer handling, exact unaffected compatibility, bounded
   performance and family-level diagnostic/held-out evidence from the hash-pinned Rodrigo et al. compilation. A
   successful candidate authorizes v1.1.0; after release closeout P19 opens and begins immediately.
+- 2026-08-29 — P18 Amendment 1
+  (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) records an attempted redaction that
+  checked column 1 instead of the supplement's fixed column 20 and displayed lines 1--140. Two gamma and three
+  neutron families are now permanently diagnostic before partitioning; no remaining family, rule, threshold or
+  held-out value changed. This consumes P18's sole repair round and caps an otherwise successful verdict at
+  P18-CONDITIONAL.

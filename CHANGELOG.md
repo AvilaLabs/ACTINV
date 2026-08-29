@@ -7,6 +7,9 @@
 - Opened the evidence-directed P18 state-identity phase under a pre-evidence hash. It freezes physical ENDF product
   mapping, state-partial conservation, fail-loud missing-isomer handling and a family-level held-out public
   isomeric-ratio score before any production behavior changes.
+- Recorded P18's sole procedural amendment after an incorrect fixed-column redaction exposed five early source
+  families. Those families are permanently diagnostic; the remaining held-out partition, product behavior and all
+  acceptance thresholds are unchanged.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no
