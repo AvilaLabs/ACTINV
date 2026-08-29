@@ -24,6 +24,10 @@
 - Closed P18 with the checker-derived `P18-FAIL` verdict after its exact source/evidence checkpoint passed all 42
   substantive CI steps. G3--G7 were not authorized, v1.0.1 remains the public release, and the unfinished evaluated
   precision/domain work moves to a separately frozen P18b successor rather than weakening the observed gate.
+- Opened P18b after the green P18 closure to separate strict ENDF source conformance, the pinned IAEA FIZCON 0.1%
+  compatibility convention and exact groupwise runtime conservation. Its pre-evidence protocol permits only a
+  ratio-preserving bounded reconciliation and fails closed beyond that independent ceiling; held-out values remain
+  sealed and v1.0.1 is unchanged.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no
