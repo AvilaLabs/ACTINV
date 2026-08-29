@@ -20,8 +20,10 @@ with auditable ENDF identity, but its complete G2 scan finds the frozen state-pa
 violated across the four TENDL corpora. No diagnostic or held-out ratio was read, G3 onward is not authorized, and
 v1.1.0 cannot ship from this phase. Source/evidence commit `a460b6e4092d57ff228c6fb04ec41a12f575dd25` passed all
 42 substantive steps in GitHub Actions run `33257767713`; that green workflow validates the failure record rather
-than converting it into a scientific pass. P18b is now open from the green closure under its separately frozen
-protocol; no new corpus classification or measurement value was read before that protocol was committed.
+than converting it into a scientific pass. P18b is open from the green closure under protocol
+`69076fa2656b239addbb15fbb4727caaa2c8ea37b3aa82a141f3a2b0b619eabe`. G0 has frozen provenance for all 11,400
+source files plus the 245-file official-checker sample; no checker output, new corpus classification or measurement
+value was read before that seal.
 Amendment 1 (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) quarantines five families whose
 dependent rows were accidentally displayed by an incorrect fixed-column redaction before G0. They are diagnostic
 only; the remaining held-out partition stays sealed. It had capped a successful close at P18-CONDITIONAL; the later
@@ -344,3 +346,8 @@ part that does not compress: users, issues, and the validation record accumulati
   `c2a6718bd831b5c8a6e975beb1946954b1d73c40`, separated strict source quality from runtime conservation, froze the
   official `0.001` compatibility ceiling, allowed only common-factor ratio-preserving reconciliation inside that
   ceiling, and required larger excesses to fail closed. Diagnostic and held-out measurements remain unread.
+- 2026-08-29 — P18b G0 sealed all 11,400 external source file identities and the deterministic 245-file IAEA-checker
+  sample before any checker output or new per-file result was read. The independent checker reconstructs the hash
+  selection and all P18 worst/conflict additions from a compact provenance-only manifest, binds opening run
+  `33259343493`, and rejects seven mutations. G1 decimal/checker fixtures are authorized; G2 and all measurements are
+  not.

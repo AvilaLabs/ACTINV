@@ -28,6 +28,9 @@
   compatibility convention and exact groupwise runtime conservation. Its pre-evidence protocol permits only a
   ratio-preserving bounded reconciliation and fails closed beyond that independent ceiling; held-out values remain
   sealed and v1.0.1 is unchanged.
+- Sealed P18b G0 provenance for all 11,400 source files and a deterministic 245-file official-checker sample before
+  reading checker output or new corpus classifications. The independent checker rederives the sample, binds both
+  green opening workflows and rejects seven authority, inventory and quarantine mutations.
 - Closed the post-release P17 open-validation phase with its frozen `P17-FAIL` verdict intact. Same-operator,
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no

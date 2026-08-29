@@ -1,0 +1,25 @@
+{
+ "checks": {
+  "complete_record": true,
+  "mutation_plants": true,
+  "protocol_and_authorities": true,
+  "quarantine": true,
+  "sample": true,
+  "source_binding": true,
+  "source_manifest": true,
+  "workflows_and_p18_evidence": true
+ },
+ "errors": [],
+ "gate": "P18b-G0",
+ "mutation_plants": {
+  "conflict_reason": true,
+  "dependent_field": true,
+  "manifest": true,
+  "protocol": true,
+  "quarantine": true,
+  "sample": true,
+  "workflow": true
+ },
+ "pass": true,
+ "schema": "actinv-p18b-g0-independent-check-1"
+}

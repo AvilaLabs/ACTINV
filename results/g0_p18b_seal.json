@@ -1,0 +1,2325 @@
+{
+ "base_commit": "d3456890cf0c4b9221ebf17f6630ef8b4fe768cc",
+ "checker_source_sha256": "991a8e7227f604e196fa4116ec6807adc4bd7f98759aa742d52d0871d7d7533f",
+ "checks": {
+  "diagnostic_values_quarantined": true,
+  "heldout_values_quarantined": true,
+  "manual_and_iaea_authorities": true,
+  "new_checkpoint_classification_quarantined": true,
+  "p18_closure_and_evidence": true,
+  "protocol_and_hash_log": true,
+  "sample_frozen_without_output": true,
+  "source_inventory": true
+ },
+ "control_source_sha256": "77eddd3f718d8cfec93139e671f758034df77fd6ccb620753107a0d096779b5d",
+ "gate": "P18b-G0",
+ "iaea_utility_codes": {
+  "checker_output_read": false,
+  "commit": "c2a6718bd831b5c8a6e975beb1946954b1d73c40",
+  "files": {
+   "LICENSE.MIT": {
+    "bytes": 1145,
+    "sha256": "f9d773e3ae7e2b9136e8e14b6cdfeac38044595b7a5f1dcdb5cdb6614565cb87"
+   },
+   "README.md": {
+    "bytes": 893,
+    "sha256": "b31bb9034edc43ad3ef623eebc154361fad7131a56e4cc087ab52760843423fe"
+   },
+   "checkr/checkr.f": {
+    "bytes": 211322,
+    "sha256": "739169c525663a3a80d62f8047243b6d3a0d2b36e05cf95a7336ae58363d684e"
+   },
+   "fizcon/fizcon.f": {
+    "bytes": 351060,
+    "sha256": "15eac8dbcc1f1c0b8825d9e2a487d7e26f4717ccacad373f226a01c721e7527e"
+   }
+  },
+  "repository": "https://github.com/IAEA-NDS/ENDF-utility-codes.git"
+ },
+ "manual": {
+  "bytes": 2940583,
+  "sha256": "77a0fee413c3b1d5d74a161ed9fe7f77bbcbc58a654304851b7b2b400183d022"
+ },
+ "official_checker_sample": {
+  "checker_output_read": false,
+  "counts": {
+   "alpha": 70,
+   "deuteron": 51,
+   "neutron": 54,
+   "proton": 70
+  },
+  "fixture_policy": "all generated P18b-G1 fixtures",
+  "rows": [
+   {
+    "file": "a-Ac232.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "00466bf9d7901cb3846da158a1314243042b28d0c85a9e890a81107199891aee",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "49c1caca2ac6fb9505e31a70665a3cad91baee39cd02dff79d549a9265976ced"
+   },
+   {
+    "file": "a-Ag108m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0038cc17cb2e274590f5adc8f0a5525653f68ca5ce918177fcf70c09576bb7f8",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "8369898e22b92418db5c882e6d452f4f80d7c1659029ad9fac0b45c8c74b602e"
+   },
+   {
+    "file": "a-Ag109m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "c05450a25edf598a7d08dafd9e519b9be34bae08186db11ad8852f59737e6df1",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "28aa08b0e8bd6d22ff529ed8645ab78b8207f262d08bfd7ff56c386d0b93e495"
+   },
+   {
+    "file": "a-Ag118m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "2d4504b704e69217152ae91b87f85d5a568953224f819accf0b7f71d53f07b55",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "66959e6c55354378a2786a989dd19e37d34890708de014851ee92fde57823395"
+   },
+   {
+    "file": "a-As072.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "6dac660984a57ef4fecf52bdaf189d2ff11bdffe729475e16478dc1aec92f086",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "b7afd8d1251ac2a806f11beca91ccb8437d2e63d3168b7ea12b912ccd814570f"
+   },
+   {
+    "file": "a-Bi197.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "29972679891c2714bdda8d9b5dc95e1c03561fc9aa1767ec8a5f5bf03a962bbc",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "e2547f421a44d3d192c46a901f39864eb6c88352f34f201e5734ff27d11495c6"
+   },
+   {
+    "file": "a-Bi208.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "018d95113f7278e10d0c483625f4b51c73af8aeef3e7602fb477d53c6d11f270",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "93c4614101ea236e6e72e5ddab2fb3db5476cc974f825d6dc86dc3c15f393809"
+   },
+   {
+    "file": "a-Bi211.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "9051d4dc4be28d7c95bb058c04c97fc2a75b14dfe06b69b885edfc1243654e3d",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3ea23579cdfa710a518c626cc0e896f3e95a22091486ab82a64cd2fb810b8c30"
+   },
+   {
+    "file": "a-Bi214.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "00422e057308cad8ffde03a4f2a81d59d5630c4fb26c85d11eae31609eab67c1",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "65b9c4ac2b3e859899e039f6fe27cf959b94f50ac42c36bddbf5c036c7fc9b60"
+   },
+   {
+    "file": "a-Br073.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "c9d3c0e0e968d0a7208e7728004229a66a566285cb471846b76dfe7f486e1a6e",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "792c53a8bc6210fdcd03d72b3cef157d8ad387d74a8c0dc342f4119b14aed20d"
+   },
+   {
+    "file": "a-Br082m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "d3ae257ac43f13c590ef39fb38f030c7dd95e07f5fb41861ce08e39e3fc3f36d",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "b51146b185d8c77f2cd99446907aad2542551aa0eeca4ac2170538b77b02945b"
+   },
+   {
+    "file": "a-Ce130.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "f51b95455913b782eb5f8f5484621e3498ed59c52b0861b1585b80ead5255b33",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6028e255170223215fb78390f16569141dece0ae21fc0d5ddd21b1ca3867d2b5"
+   },
+   {
+    "file": "a-Ce146.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0083fcb2beca74c42332f0dd8fb4bdebe64fea8bbb6159d6574e42cb806bf62e",
+    "reasons": [
+     "hash_sample",
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "d804c4cb986617dd3c83d2a9325f55e5aa72fa1e8cc56c9d463191a1098bb464"
+   },
+   {
+    "file": "a-Cf252.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "41ab0c409cee290c001a8051adc9e1e65093ed864922cf3569c9350590907844",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "20895fdb1e30270b537df9b33f1bfd6c78b3c5244cae2a3d5a001a72591f7bc5"
+   },
+   {
+    "file": "a-Cr049.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "ac0dcf78ea0ea13be0792e6fbbc87e186e78c26ae15ee32f8a93b8cf3b80f682",
+    "reasons": [
+     "p18_worst"
+    ],
+    "source_sha256": "45dca310113ade1628e2bda2ef555c0fe58df78e1422de30ac6c76965f05751d"
+   },
+   {
+    "file": "a-Cs118.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "00e1b9f22995641ea21aa5936fd70e005839ccf182ffd66acc2b6bbbe587abfe",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "1b03d4eb9d0d559826531132d56fcd749f6d839a9a93b5e158d3e362f3274b59"
+   },
+   {
+    "file": "a-Er160.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0186da86f6dd6c92ec51a0828e9f08b6d79aaca1bd17933281183e039100b112",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3fa59669bd8dc5371c8c8cd1a083e514e4dbac7de92b277678e7576dd2bce9a6"
+   },
+   {
+    "file": "a-Er167.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "16495bcda38cd89a13d5077d6332bfe38b0ade32ff6554cc196a5dffdd0b0d7c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "7b846bf924d715655ee931abd4d0333b6b41af6c35b5767c96c6a2e2efb4d1d9"
+   },
+   {
+    "file": "a-Er167m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "1a537d59ad59d411e88fa5ac576deb640ee534f3a0cf0e05f21963c75da2f023",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "a258c6fcbe6a96b1e60f307399d898eaa8c6f9146c492bd01955c7a6bb9c9b6f"
+   },
+   {
+    "file": "a-Eu146.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0091e466cd4a71e6e3b5c0526720ca32715ae1fc6aa8f0b6619efdc745270f29",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "38cdfbf6a16c69eb138204373670edae1f18fb3a9b09e61efaee7f671c33b311"
+   },
+   {
+    "file": "a-Fr212.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "01a6742cf0a3b3cdce572ecd61483f7c2bfa84219f5c370ff02121a03dba5644",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "89011ff4b44e6fe98a8338640569dd3f7c569de2cf357798855f4cadf662ac2e"
+   },
+   {
+    "file": "a-Ge081m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "686bcf9384bb76bb28de0eb682c1196029b93b830f30532b9377082c75d48167",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3a21c6cdcc25eea6c5d2e5e4cdd92ff8f1c6ef8da77fabd42c8502569b0f0c54"
+   },
+   {
+    "file": "a-Hg187.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "17d88b3d2d266c9b3e6641683a51463423386929898a327be23c740f75969161",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "300a095f0203bcb5faa63d1cfd7ac618896d1145c0c79c00417226bf1d3c3cea"
+   },
+   {
+    "file": "a-Hg190.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "b05fe5a856d34a34d7a494b65311d55db219caea629de502a41b3c1de9705e20",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2fc4aaa7206b8eed0331545fe10db0659d2643c84f2b147d4ebac105dd46df72"
+   },
+   {
+    "file": "a-Ho160n.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "42f85a276c24edeafd7328d7ad3d69937e5b3fcecade0888bc0993f2b9748650",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "e08bb4573b67bfe6735d966f92e4c12fe82a037dba2b24b001a22592166c1b45"
+   },
+   {
+    "file": "a-In115.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "f233cc31fd7c345ceb0dcf6e800ad06cae6ef590f84a99e4cc4cd9815efc0226",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8983c935e25dcc54e08f98fa35b75c337b432a67ca5126ff75280c3621d6ebab"
+   },
+   {
+    "file": "a-Ir171m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0105695a89e4887044aa56fcdb8714c9c0eddcc7084a4cd0864809088fb1ac7b",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "5adf2722828f75bbf0c759bd9427951aa13a818ab718770628ff63402c523b45"
+   },
+   {
+    "file": "a-Kr074.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "ec03f7448189ecdc1b1a89b072dc142fa902c0ed97efb294dfc41bd45dbb337b",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "441b0c8cf0a4025571a7a827278a7532cebfae402d3fad42c06439ffec5010dd"
+   },
+   {
+    "file": "a-La124m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "f84c1593433d2e90609e45b878b0d6a5e2753079af56c90413cb00999380a481",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "728b2dad1dcbb718d65e088fc25d816c54d391aa4ef821dbda5c865b3f98e108"
+   },
+   {
+    "file": "a-La145.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "6874991804a7f786b129447228118386a3b91b1f0e1acffb0f5e07fa7b06be0a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "7db5c14f1f362bd0d2ed417995ee07223c088835410cf95bb0f62d7dbdf01f15"
+   },
+   {
+    "file": "a-Lu184.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0018e75e19d0744f893854d5c86edc41ad4edaaccbceb78aae61cc1eb76592bb",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "bf1d04488604c693fdd65cd57351e4b6c65b3f93802bc96594e66595d7265163"
+   },
+   {
+    "file": "a-Md258.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "002ea5dd5126a09d3cbd4456d64112726c2fd1653b2fa38a552811eda792b0a3",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "0a5c89c4c628a1259c68ce3402bb615d4c90e11dab148a83bb83dc350772d522"
+   },
+   {
+    "file": "a-Nb093m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "001ef8e540369107533fd7e004b1e3f2bad6e0b8fd923ad95ea014f2a2db1446",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "e25aa523c9dcd3121a42a36eb112226e0e13bfdbc38fef59dd07b4288f55843d"
+   },
+   {
+    "file": "a-Nb101.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "dbb104b3a5db5c4d2f5557a56dd17a527fe13cf3e33e838545392eff55482fb2",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "16b9657b1246ab6bbaaab3889877742c8a9e0f17d355b52a44ee39bf7d576ca2"
+   },
+   {
+    "file": "a-Os185.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "845489ecdacdd28be6f7aca00b32d65903b3e062d3aa38095823c99c987cca88",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "16f831ee9255be154d5b38b3fac6c0ef159153b4d9ab686b08783ec6b5a46c95"
+   },
+   {
+    "file": "a-Pd095m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "753c43ebb71acab5ad0c6f6685e9695c532bbd0a689ad701ce15075e08ecee2c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "0f3b088658bfd99c6cf3cf49a513d17aefadcf00f87d5175a20b63bf5cf2e6a9"
+   },
+   {
+    "file": "a-Pd115.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "4940fe95e187d84d0696b8d673d52ced44485569d712410eff764e7286db848a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "0fd0c1c7e9883db359fc50d4c6ee27d4355ccffdcfb09eb1f6d61ab8bb8f7e68"
+   },
+   {
+    "file": "a-Pd116.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "b923097b9cb0c7f8e9043389f93deb0b10ae31c44301f3218a8f4400eeec9784",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "737e5fe8a6524d122c5103c928ed58542cc01453755665667833eee2746431f8"
+   },
+   {
+    "file": "a-Po200.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "a1c2a231c2cdfa8ed9441758beb523d178cef48f045f8dd30bc26b46c0ff85b0",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8c07a1ef8251ee9ce163822778319157caf91ea9aa6c4672a61e5c5a1f264948"
+   },
+   {
+    "file": "a-Pt182.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "4adc4669309ae761721862c59838c594a20b25f652a014c1932025e83125ed54",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "f1c2e7b39287a156c57d0349a8af92941859f1f6b19da84a93a9310376c89009"
+   },
+   {
+    "file": "a-Pt187.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0fe7cb6fbb64796782cba7431e6148551019b2980dce078801dae42ba4ba9f02",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "f64ace5abf5fc5c62ba2cfec458683f8cc5527304d533a1988dd1e4a9034134a"
+   },
+   {
+    "file": "a-Pt194.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "fbb3012a5f55fa3737176d6d1f4253b5c6a46f182a1b13b34197309b4f20ddc5",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "0ba2ea5e321c7dce055c0775db373d5b5d079eb1f22203c9909107f6814afd05"
+   },
+   {
+    "file": "a-Pu234.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "2e27208ecb10d300f87400e41f7cde116ff06e90077bcc2941e3b213e424610c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "92359131d15d586680cdc0cb03d2993f58a5d45816c6ac6ec0209f82ea0ceab7"
+   },
+   {
+    "file": "a-Ra212.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0130be882ef58f19dc710682871eab78fa44f06cf878d23a74673008138ef061",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "27c83eccd6d5b09fab72a3c3b92ecb00b0806171ea3ac86b7924997c77290a4e"
+   },
+   {
+    "file": "a-Rb082.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "001655501e257a836bd691054076ceca976450dd93f5430ecdc94b47a67a97df",
+    "reasons": [
+     "hash_sample",
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "1dec6de0e8e314fec03422fdd3732d76ea4daf8e52f98350de822d7f9048e6b4"
+   },
+   {
+    "file": "a-Re171.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "01572dd6ca7e3bea0fa8ce225b0d9360d7b2a7d15607deb6450743a3e1a6863e",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "e79f5dcf7d0967dd1178f3cc0948b76cf55cac0e5edb9f665730d59838605b47"
+   },
+   {
+    "file": "a-Rh110.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "8f9f70fabd2cb9583d3e5396a48a1e1afde3c17292dad7d159f3c1094bf48b2f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "ccfda44f415f3d4cfa4b5c46e26b56950ad1e61dace6fa7caf55c390b7644066"
+   },
+   {
+    "file": "a-Rh112m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "999574c329ce6746ec46e487fdb322ff2572418ed0e7f569d6d30bad0c2bde24",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "26482cf102247ac92e176a6f38a3575e768a9aa45995c101d8e4416787ebbe0b"
+   },
+   {
+    "file": "a-S030.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "000a2afe847222d70b3180206b123b74d15d49bd8c4298f34a78d1c99346b053",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "2e0ad77f136710f87692a9177b3febde922b8ac8aefe5d81f9c7b6851a0be669"
+   },
+   {
+    "file": "a-Sb128m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "683b233ecfa5b69c1723d46d7ab9bf0ca312fd889fe21f9efcf950658051b234",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "617af1d8ea1bf2c11db98528181724ac7cb084854a26263222c3ff11334cdb87"
+   },
+   {
+    "file": "a-Sb130.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "015f1b6d5916b5efa234ff0b795f9a130503106efc5e56af56d0da0a37f85406",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "28714ed833039a756052c596b865f4938aab37adbf8e54049bb84cff1ccf1e24"
+   },
+   {
+    "file": "a-Se071.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "af20e5682386402c1852e3bbf9ad9c7d4f916d340a01416daf652e96fe49f30e",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "99201e4ecfe1adc5e326887604c29825126571c45d3058b6714ccaf3116f929c"
+   },
+   {
+    "file": "a-Se081.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "1150c37158644b1331c2810ecdeac2a74ce02f031db9ab4223a6a99cb68d7138",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3f7595d9994aca7c1424a2a1ff830bd1cf1dad9e6b1a08dd10c7e5358b2d70d0"
+   },
+   {
+    "file": "a-Se083.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "abcccab543a5d8ff04a0e3f571973c330b67a19feec448cffca6894c06e897a8",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "c39889cbb5f41f5406bfa442c3c7616b421388ef0425b642c5b5eaaa9a4ca950"
+   },
+   {
+    "file": "a-Se083m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "80c6f7290841cf2a6e2084e3f25c55344ff0cfdb425eb0c9005efa8c9679ce89",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "16a69adbc2b3031aa1937bc59aacb951373d2c30f836f61dfdd3f3eb07f000d8"
+   },
+   {
+    "file": "a-Si031.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "00d84cc60c0cfaede00f5a2904b1d24bdccac8fbba03a7f458c832ce11507dd8",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "61d2ed1699a3a60c3c00b97825942fdd3a9391a77e964f5bcc39cc1b490b4f47"
+   },
+   {
+    "file": "a-Sr082.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "8966a93781f19d588c82c96040b6d534a03573793e283b9ba16c4a383dcc1b6d",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6e924774ca118de3e3d98fda4d6fce0de07e53fba855a6a7848c62459ebd2325"
+   },
+   {
+    "file": "a-Sr087m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "01555f172bed5cc628b58667edf47d082ba9cb977b98869ccbceb8c8e37c7c36",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "6abf56adacdf1287ffe8ffeea48de3049f034ac926019961cb6b9da4c59f0acd"
+   },
+   {
+    "file": "a-Tb144.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "09b9405bf92f41dfd69ef333aa27a06f921da5e77d26ccdaa034a89420ab6366",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2e75e26215fe3c924a6e6b505acf05912eff669fbca37335bf936bef0076394b"
+   },
+   {
+    "file": "a-Tb158m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "8f9f7488c7a449129c20708c18e7c23c09ed390c5ad444cbdeb24dac57a21175",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8d5fec406873fe6d172dfdf9449ae9d081df59eb282298e750fa43dd28612f8c"
+   },
+   {
+    "file": "a-Tc087.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "51685b685dca6826f59670c03c6a2b5a6bcf1426a2a393ee74707062a69a406f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "58e949a0da1763d644565d0d7e1bc79e5e4c52f4c7f42493b4e9fc0e16315751"
+   },
+   {
+    "file": "a-Tc094m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "9a095d9fd571f5b4e9b2f43784ca40b84f137808593b0eb62363f41bceaf3352",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6563af1d148fffb2a54e750601b4a8750499e21c87b3e19309388d351483e954"
+   },
+   {
+    "file": "a-Tl189m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "011a86827b92c2f344e30487612e8809f704e13a7af6ac2bac4d690587cee032",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ed829d8653977b14424c27d2c71707af44608cac2e2b1d82daa1b7261a67f24c"
+   },
+   {
+    "file": "a-Tl190.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "eaaf9c68b9bd459c4916eedbe582c6cfd1e703ae4af9744c5fc6fdf39a102d6c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "cc547d0939f5e506920648617c3d7b242f4e381fbc408cf856b2dabddacd894e"
+   },
+   {
+    "file": "a-Tl198.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "d65f3653f1e2d9949b50c07e1d792395e0df7599c58e871883510e642c090fc5",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "f3610f995274b57e14ea353aec5f797bf0c023a51e5acae21417f0a004f08f55"
+   },
+   {
+    "file": "a-Tm150.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "0125d5fccc1715fca8f0a09d8193154653b3afb4d80738129b98a985fab27621",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "e118e35c8004a0e1082a94927a7e743e35ecae613f826ddf6ac9ec536c6b6475"
+   },
+   {
+    "file": "a-V054.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "002549b20170e85c476e767ba7573b610fb4f4d51e90bdb4870069c602155da9",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "fe4af7a1e5fcd2d317309a9d512ab7d527695ac76949b5662ae62be494b88d77"
+   },
+   {
+    "file": "a-Xe131m.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "01a57bd3c833e458ccb86ac74f0ac61b86e0dcff6a2cc5afd72983b13f9043ae",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "4692e8574ff6d67c0c2531acd850537196b729ee8c128004a1367ade1ba1bfeb"
+   },
+   {
+    "file": "a-Yb174.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "93921e2fcde554465a337f7b3329cbee8c4f643ad6573577b19605a77c9c242b",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3aacbc025cf2da43b9ee7c460a7d049a272ca954dbd7ffdeb3e22490deeacc01"
+   },
+   {
+    "file": "a-Zn075.tendl",
+    "projectile": "alpha",
+    "rank_sha256": "013d868bf25f1f60a985040beb1bf46ec8b1dc4580c21889b9d6cf45b64b9dee",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "326c02eb8fe560c07d2820f2c35241447972ecfcc128a68e1d798d2b589bece8"
+   },
+   {
+    "file": "d-Ag109m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0781c11a8a85e6c365be350399638d1bbdf06fd63ad6aca164d1654239043f48",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2bcb0e260d9af1367b411351c208bcfd1b722dd5df864b99fc33a988b1cc7a9d"
+   },
+   {
+    "file": "d-Al025.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "00295d4522ec6fff0d98c6afba9e16832313d0bb3535420205a3eb922e097043",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3fa255b298930d82f60005deb92677ac361387c340817eaa24a12e83c8b9e2f8"
+   },
+   {
+    "file": "d-At228.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0102b51fde51f53a20a62396e97bd3e1041a8a32478f72b868599a7531370532",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "88195fce6208ddc954c1c4d8ab7658f384fb3a4b49794bf30cbaf6aae575b8c1"
+   },
+   {
+    "file": "d-Au200.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "013639e782f94c616a4d3a648f4d5d42810bdd05a5494715f7bfc422b5d09391",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ab40f1c5ef0a880cd0845e38dfdab37d639c4a047cfb7ebc3c835db1ae930860"
+   },
+   {
+    "file": "d-Br082m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0d78f2f4f50ef2ee7a62d7b2c14919a2faa648e2dd80d44d2f87d0b4dc80d112",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "af1d89afd174cf068ce3df377f796ec9558f39008c7f3fd7c926ce126304e3c5"
+   },
+   {
+    "file": "d-Br084.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "02a9c93c84d324266fd540e1a4dcf9f7077d463a914b895221bf27bf3478b913",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "c59b640218cda30ab66daa20f061a7e78d9db9c2c8d2d1ae0bf29091067d55c2"
+   },
+   {
+    "file": "d-Ce150.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "019043260f11b41fd09462c3e9fc7f90079f9ec2c7a7344ed12c16971bb8b7cd",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3361d5d8cab14e77b8eb38c50b8ad209fad34aeb099f464c28525eb2aa53b59f"
+   },
+   {
+    "file": "d-Co055.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "1c933bec1e792ea3d5f720d89105ede6eca9262951cb8ebf101acedea7add136",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6b71566b1634be53c02884597d698f1b12a2798fe077aff7bd49f26bede97be3"
+   },
+   {
+    "file": "d-Co056.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "00f0716a10d27a6c95443da722c4c72abd1c30e831113c071bb2ac8e467a6f14",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "71736dbc9ef81b08c94a7a825455d916ca61f1453d0ad7e76a38e3434a9948c9"
+   },
+   {
+    "file": "d-Cs118m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "9a86fcb56f431ac7e22ac06b987d4767f9fc4b8daf34a16a05e7e15ff71d07f0",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "b06c4784e180cd1e9e8757652c60f755ddbabbc351d9de19f4ced9922063e96f"
+   },
+   {
+    "file": "d-Ds284.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "01570006c16ed371ffcc73ce5a66f5b2222745c864ca9299e9e3d0e90f70a663",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "acd39a0d12f7e639e4d470201231464c460d5223fe2efbc0d9381559f45edfa1"
+   },
+   {
+    "file": "d-Er149m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "8724287108424275dca126cf4a070fc1218fdc4c506933149cbe417c7295465d",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "9bdcd47eed02d6c85a51cd9934ffcfc76952c4de9d109e1dfa6376c7adf578b3"
+   },
+   {
+    "file": "d-Ga075.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "581ca13a1ec195b4b3c92d29ea98576c6a756a64c567f79ee0df972111989b36",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "a2daf663fd6f9c8543ba12f1d68fc2d5400269ece3906011b4b67bb168678c9b"
+   },
+   {
+    "file": "d-Gd148.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "5dc975739ebe4412e6a4cadb53713e099de90ad3a05b68de16a7b063ae83aee7",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "95e2475ee333b6f422f7c5485a578959afe354bc7b17f31ba4f6cc8738a6fa8a"
+   },
+   {
+    "file": "d-Ge078.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "01f74207289a200d52ae2c5749663a2c27db4bfb5304d83daef2f5d71e59b313",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ede9ca3f0e00ec865199bbb7b6e285c98d5edfd91a64405fed0507047a98cab6"
+   },
+   {
+    "file": "d-Hg193.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "a8b26878a9c6de762787e88b4c7193163eb971941fce4dd4e4bbcb54c7ca99d9",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "ee0ac78dbfa30d0476837e505a6709617e1075814907c1aca48dda3e5901949b"
+   },
+   {
+    "file": "d-Hg211.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "00cfcc56b8f400779d3e1baeff0f2b410bddd84308148b962f7525aaff9b5c54",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "fd3e2b2e4f766ceee2f328d69f1c3cf5be50344f4bed9a0c627f490dd0f184cf"
+   },
+   {
+    "file": "d-Ho160n.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "d921226fd5d6a926095c8142039572ee7911dd3371e4330f7d87d4443f1a4f82",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "c08e2a41e92fd18a4673a2ef3f2693a5eaa0e1a4b3fd4c6e0ffeecccd333aa0b"
+   },
+   {
+    "file": "d-Ho171.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "00069d779d5c6826e64d17424135a4f98352324cc5c04d24c994a005aa67eaa9",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "e5cb1da1bf0675035af278209b97f0c9eca043bf0d3ee7da64e996db469c025d"
+   },
+   {
+    "file": "d-Ho175.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0033cd748279ec1c953a5c93909a51d8764b4ed052cc2932fa284a2d737b84e0",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "eea976b75f3c5f24424ede73b68c83ba5ab0df2380ea483d156a7a3726de7b0e"
+   },
+   {
+    "file": "d-I124.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "00dd2319bcc15695635b63f22a782c6043ea72a69756542efeb28c2505b8fc2b",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "b36f0b624ed56ca8cc8183892be51511b36a940d0da4cc9788ff0214a34738d7"
+   },
+   {
+    "file": "d-In115.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "989d6e8348dc83fa660fb9b0f3d0213825444a67ec9d7852e789e933af5f16e8",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "16fbeaeca4ea75d88861eef7e1e59db58ea07cc0d795741b42b02862b80a4682"
+   },
+   {
+    "file": "d-In120n.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "75d7d884be8d4404ca91d1823a450893f7f7ef8c822bee2fe22b9282de3a6638",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "4d807b9d3c218f4a4ccc3d1f8af9b8100f3ff22acb9edcc3c6bd4c01bea8243a"
+   },
+   {
+    "file": "d-In122.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "68b84b389f2745ed499e5bf2dda6701cc4f490b19e6725cbac3554d4092c3c9e",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "460874e7a40215802fd3e7c204bf87aed52552d93c504505cc9c0a39ad154897"
+   },
+   {
+    "file": "d-Ir193.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "cc2f2a0460ba1818f3230c910696b357260818067527a64432113cec2dab8da2",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2eb4659136c1ec7167f2cb3fb980ca110fbbbb87348d6ec80dd4de8dd0d19f7e"
+   },
+   {
+    "file": "d-Lu176.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "6ec38d5c74452cf7a312930990d0666d3cdc7327dadbcf93f0991d2a6784b12a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8c493b4cc35e12c8de49629a96a8f5df533bd5b3e1990f090d065c7a40ff5ac0"
+   },
+   {
+    "file": "d-Mo091m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "76c62368d0067b567781204757abce2bfa500d5b2fb61d27e57b22ca8ac2a24c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "9aef923c7bac1fa911ece1a1f14cd167b7dfe78d1120d3b63fb0c5a65c3dcc6d"
+   },
+   {
+    "file": "d-Mo092.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "8292c8e7c229f572fd27064e738104a367c8887ac996ca611b75029de6df433a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "4a5a7f4a07159bd7d3f5706f0f1a7a00292740343200e6a1f7cd1060274b415f"
+   },
+   {
+    "file": "d-Nd131.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "002edfc4acaeba666eb70324bf902a1297c3da63425aa92a5081a1e99c3b1b36",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "6855cdf8c2dc6f77c7d44d764fb18b062d3055167fc086b3e257c627b00d6085"
+   },
+   {
+    "file": "d-Nh285.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "01d498e99dce4a33eb01e694bae7221975cde4da6dedc01b22e5c0af7ab67a4e",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "62816cf42ae5979a38e45f0167acd4048d19ef4b76bf053ff79fdc389ff148c2"
+   },
+   {
+    "file": "d-Ni065.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "022d472a4f992cb46945a70bae2b41b306e134bd43a1954a611dbad1295a6b73",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3cbd0ce9f56ddde26db7f0ee1210bea6970be4c84cd97870c875042737eff82e"
+   },
+   {
+    "file": "d-Pb199.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "ac72d0337e4a21c21fe3b972c0d4e6e67f58e6c1b55d12d0b39435600e9052c2",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "a12c7e5d78a6eb5785ab3d71ef029de5bede3836abdf2e9c944436db9626fdd3"
+   },
+   {
+    "file": "d-Pd103.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "e3e2927ea99cb6a91627e0e412d2ae6a8853f55cb1edfe43a1c8e583544946d7",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "65515c2fc03919b2234bb46d5d0a800e961ef02d0d8dc67ab67cfba81f74969b"
+   },
+   {
+    "file": "d-Pt187.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "586fe0386f5ed83ac6812f5d15b6b7e515e581a30d864cc50a681ef6aaee5459",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "f1f4dc5726a33cded2aa0d5297a26e2879b89a1b510ebfb64f91b69d4abb9cf1"
+   },
+   {
+    "file": "d-Rf255.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "2c29cb30517739fb9503158050ac22996d8098856abab71fef3d26fbd3fc4f98",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "e8c07796d13ed7624a58c34557c209a20d39472b374b80d33e97199c08699367"
+   },
+   {
+    "file": "d-Rn205m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0168e940b0b1e96f18dfb4d303f5a241b310232fe19c1464fe45084cd4a8ab66",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "1c818877593f13e14efa06eb6f925dc8e6a33ee769d4bef7643ffe9c8a5279d8"
+   },
+   {
+    "file": "d-Ru111.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "00c73de5ce1fde7532c9a1fa09f3df4650b51f917267f8e036d63c796d1bd65a",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ad8a8a623a54fa0bb24606b2933b71294cc1106bc7dc4b5fe772f7d39e6a7028"
+   },
+   {
+    "file": "d-Sb118m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0075a7504656ab3ae7ecf87c258a94a92774d2553142801a795f71df0a8c5500",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "9572831a5da9a3c275fe6a12e77d6064cfda21684e9b995ae7335b0eed79d9b1"
+   },
+   {
+    "file": "d-Se081.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "68f9533a7cc6c9a040c58bdafd82ddd5e11364b2ccac50729ebd602494d69b62",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "26359f64dd7ce1dd27af374c30e79460b505cc533c25c4f0b81bbf77f31d4876"
+   },
+   {
+    "file": "d-Tc089.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "cf9912b6fc4918ac3edfef923e56c484b6d978f9335d369ad50864e0acb67cc8",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "ac81117a1af6c3fc223e735787bf825d7233a104bf048f0f482b53302ac854eb"
+   },
+   {
+    "file": "d-Tc104.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "1c8aeb22ef5a21938e936e4a35c51065ea408608909069be76ddd5f54806f81e",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "57764cdd43f2d6d714a6f515735e1c99c7639d1f6e249c40eb34437812922153"
+   },
+   {
+    "file": "d-Tl184.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "02313e8013fd332e38fe93e6336e399af49a2e9f66a1ff2e0d68a4619818ea8f",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ee034cc71e92d2b780d02d80aa2179819b601ab742efba3a7c11b2afec292f33"
+   },
+   {
+    "file": "d-Tl198.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "f77c9ba204253dbec21cce7a2874973c45cc42376946498db10349649721da4a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "5c06b598c64b09fcfa5a7af588e9e036de3f6107e53091338faf0d8b8d308456"
+   },
+   {
+    "file": "d-Tl213.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0121cceee0cbd73722cff2b5d0627ab83c875355683258994090e6c02b184b8c",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "e3c67fe063050f1cef061c6cee5defe1d30a826a7acef8411b7f72929e03656c"
+   },
+   {
+    "file": "d-Tm161.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "01c09c356643437bea1a15f696b6f80fb9dd9e69de912187e0ad3dbdb9ee853d",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "d02e74daf8d4ad2d15cc1a3d9df9f3f4306eac79484e007072b1c8469c9b458f"
+   },
+   {
+    "file": "d-W196.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "01bb30a6cbb5bdbe2d57226f5d08a6849daacb15437aa26dc8cac49e2d4ead15",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "6ea43cbf09b26b15504645521ff0e93f8b18ca332484e66ad2b887aa59ddbf37"
+   },
+   {
+    "file": "d-Xe127m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "01e1cfc480f83f311923a16d0f2f824df0535a0fa2dd2e2492df0c50da685c39",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "63cc9bf0c51c5466d1868e1fbe86c4429eeab8df174624cd25abd1d6696c2946"
+   },
+   {
+    "file": "d-Xe140.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "0205f8b119ff8fb9a6740089ae149d7d87a929682baa63a2e2188d2df89a8e5c",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "516a7d0c76bf648f1092a2aab8e253cc0b6d5ea018421707aa012244920cee6c"
+   },
+   {
+    "file": "d-Yb169m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "029c344432456eaac0b97477e4e5e4e42b11208603662a5864a3057337389195",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "31c57e8c1c3e50a9c7410d08fdfe9491784849e9938cad6477474cb88ebc03fc"
+   },
+   {
+    "file": "d-Yb176m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "e468bd4e39343f8d27400742442673f18f6f853e060437fd3697a1b8c51fb964",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "50799b1a2f1a654dcc5a024043b034d8b41ca436bc14f52eaf0a17fb26994620"
+   },
+   {
+    "file": "d-Zr087m.tendl",
+    "projectile": "deuteron",
+    "rank_sha256": "cdf1ec0019e2223d115494e663310c6d3e27f8fae5aff18f5c10a5521d6516f6",
+    "reasons": [
+     "p18_worst"
+    ],
+    "source_sha256": "18488caec22a1ce8dcc83b5299a6f02913cd0edf1903fdf24df3c0ed6b8f0a60"
+   },
+   {
+    "file": "n-Ac225.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "011c705449c09f466924090475aed0c370044f88c7d82a364b026723b05c7de8",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "9d10c61a5c28c5773cc6bc0b1a4d56f991353375656eb65237294c860425a4af"
+   },
+   {
+    "file": "n-Ag109m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "1a491a017cb9f7be390da7b854fc969efdf0ca9024e2f55d5898eb08cd433f2c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "aea9b5815a8d23913d16d7fc517a0ecec783176c809e18fe10647eef8932fda2"
+   },
+   {
+    "file": "n-As076.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "de8fc5a6aaff2d3aed4c199b71925a46ab710b0220d41ac9b342248d7cda3b77",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "fb6a10fe87d9ff8d4918192ed9816192fab0fda3f4612794ea70dbf11fffa078"
+   },
+   {
+    "file": "n-Bi192m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "015c67d9d37a6e61b5c185dc8a376cdcae7eb02c5811967bca11f6abd8139b83",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "98bfd34cf0d77ac9242d53d5811d8d9de0460c531dc57d860d67d75f34d4ceb0"
+   },
+   {
+    "file": "n-Bi198m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "01a847adf2604a7b06a430ff15253c333743946da6b17db3ba5e5f3f8580f3a4",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "b68f5b1a5c651fd1d6b9339327685e3ec5476a9131fb852ead861b494254c462"
+   },
+   {
+    "file": "n-Bk249.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "018b4ec25f2049d4883e9f12452d030b6ca82d38d388491289ae0b3cd41fd794",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3a9b1a6a568ea9e1a1e391abc253361c972359dc31fb8ef53dafc8a21ac1e27a"
+   },
+   {
+    "file": "n-Cd111.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "aab06e21ebf5f04ea3a795cc84cbb35ff34f8affdda4a685bc78491ec24bff1b",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "01522cf7ff0e03ebe5a2c4a8702e4931935c2925bff535e2b52eb588f1b66290"
+   },
+   {
+    "file": "n-Ce130.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "262fae5b4984cb1755b367e90d05c486da4b33f315b7062505fc0065a36f8a49",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "b8ec7f1d9c55811a038da6d80647f1f3ea671862f4ba3cce233fd3988055457d"
+   },
+   {
+    "file": "n-Cr050.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "02199ecff8b7473515f26925c632c5d2d2d4609ca202b26a967bd90ee6f4ecb7",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "c47fcb95e74ea385758208cafa921fac23a000b8b634eecdebecbd8bc8c6114d"
+   },
+   {
+    "file": "n-Cs133.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "eb627d439580feb64f4c6706f885c22d3d31564dcfa2e3fea34d94030bfa7fba",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "17578947b816672aa471c1a207a0c76b599439325ad6461481d5d526387a8ec5"
+   },
+   {
+    "file": "n-Dy144.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "283ecb53d9aa1ca6198330b8272c48ede4c614425e5211cbfe6abb7ff1b877ac",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8dc6cb21d7b3a1b2369a9e044ff9de2d7cabaf61517e33eb4ffd5dd386af0142"
+   },
+   {
+    "file": "n-Er146.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "56e50545870e3a316456937717d7da0d801bcbdb795fab008f257ef59a8a0bfc",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "744729819f099dddf3f8a0e540c424f4eac06d0fa89d40f87d92e0bc5d44fd56"
+   },
+   {
+    "file": "n-Ga074m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "009c726aa36156ab54ba4b59d1d2ad9fdbea49dc4f1024fe59025ad94b7cf73c",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "fe02e037f5fd5d84473da08139d5213ece3de55968735f02ba2c63ea71f27877"
+   },
+   {
+    "file": "n-Gd143.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "01abc87a6e78259927baa36a9ef9ffec657f063a7df3d2deae7f53bf35ef1517",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "1738398d43a8b5172067f7b58762fd1e7271366f0ecb3b20de511392bb57eb6f"
+   },
+   {
+    "file": "n-Ge075.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "973677c735d1f6fbfd3fabd8caea9f52b0c6b080a0289764443c5d4e903ace49",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "075a8a7e65a38265938e664ef0bc8cdf3b3eb59c2fb45503eb94da8637eb1099"
+   },
+   {
+    "file": "n-Ho160n.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "d7553570e0817bf6c930ef775ceaa2ceac0f52d9a6ae2c0c5ea2c282d42cef57",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "4aaa26b870e85a3b965b21856c021f48db2fbb5117a1ecef8616d152a2e043b5"
+   },
+   {
+    "file": "n-Ho169.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "002554d5780fd6e7c3c4226a8608a55139d469b3149a4ea5228fedb1b2cc20d7",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "052d7eccb1efae328d2df81339264d070e473e1dfa3c30fab185f34d4f71a55a"
+   },
+   {
+    "file": "n-In104m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "018a1fdc8d340c653c042c8e4d5fe9132b001fd50e4467ac1cd83fbfb6795815",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3766bd4d4d47426716841b0ae80b74aad026347ba04ebb298c2fe6f38ad07999"
+   },
+   {
+    "file": "n-In111.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "021048f9798f8a3ea7818e120d4bed617d286bc258730dffdeb4952a1a3d8456",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "904425c23192542b7d59edf546d7cf089e792a5869bae1a05f544bc2ae00f483"
+   },
+   {
+    "file": "n-In115.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "353ed388da2310f8963819fc92e62fb8774bc82c16d2c503e165183fd196b7ec",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "01cc8771ebd391e4a660849af473938ef066c4d1b54e996e9400cf6bb24aa1a6"
+   },
+   {
+    "file": "n-K045.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "0002195cc6f1d012bb3127ce12d5a468e3fd7de0661baa9acf846789e43f35cb",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "1262f7e5a9da3431e26e8223f9f58ff969ba3fe67b3d2e8a16f88bdbb30c889d"
+   },
+   {
+    "file": "n-Kr074.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "8fa1925a979d38876bf2a8536bc0ce44bccdb00e4c552e363c0a487b17782d6f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "130838af5d0e04b8ac40ed75df625816ab801e124ac5ddcb3207452dbcc74b6d"
+   },
+   {
+    "file": "n-Lu160m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "007cbe98cb1ba99ea1f00ca6b73d19364f1c1de0459ff209eba456858cd838b6",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "57bf0ba261950a6e15998d2a02e298338cd27d0fc612fe8458b9a8768de9ceaa"
+   },
+   {
+    "file": "n-Mn056.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "00df669c836b77d24d8243cf7067700af69438cd01865fae625f3d081dd1b877",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "cb34e9236f5a1642e5ebf62cb4d0fefcf76cf60aad4dc0255bb1c31502d59d77"
+   },
+   {
+    "file": "n-Nb085m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "92f88a822f442b964622bb9aaddbc3e20ec8b638fb9e83ec9ecd0d5be46b0812",
+    "reasons": [
+     "p18_worst"
+    ],
+    "source_sha256": "a857e71c5dca69b41f99c30eaa06a8e57ec8d788b4a75d78bc3fa7e64fd3446f"
+   },
+   {
+    "file": "n-Nd141.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "ba287c75e9fc35cb70ef5ba7f69da592bd530d22a34a3c7034fa9115de8c48c3",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "4413bc405c94b65bbab0bc38c86477e01677b90686eb2a75d5bfd0ec5095d392"
+   },
+   {
+    "file": "n-Os174.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "01ad0e5ce96c53056085bb9aa2bb48bf5201a185dbad2babe70627328c278eed",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "1d08d90fda1a411b9c6ecd3b7a6d66a11683845d5b89298639a8ca8c05eb5374"
+   },
+   {
+    "file": "n-Pd107.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "a5f57eb80b4dd5dd7608048322aabe1fe92d167e7123b8f1c00586c9d8fbaee1",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "762a0ef87a892edcc4bba7cf54f78dfd8c7ca750db9f54f664539e61bac19247"
+   },
+   {
+    "file": "n-Po202.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "df8e0b4df83bdf93c109c55db10e8f15c97218b30ff7174755a1906d28b5cd20",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3dad380fe5f1a1835ea1fabd7cfd8b8f8bda41760ca3a3d8f411d3c635774aa6"
+   },
+   {
+    "file": "n-Pr142m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "083e84200c0bb4d1f52e4bdc5f55733a015f1c470745a90226ac1ebb65fc5ade",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6a54b3a74c2b2f0ab84adf5803046369e8ac177d9d9007292451f2dc9061b8bf"
+   },
+   {
+    "file": "n-Pt186.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "0005702df2f4f42481ae0c2cd4e7a977801634ac91a9283ba584462a2f43fce3",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "9f3b375c7f87ab531eadecfc5827184da64cd04524e55b254a43ca2ffe1a6982"
+   },
+   {
+    "file": "n-Pt187.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "2127464d01c71872fc7480570d97600dfeddb2231d8ae501bd1f89ec6dffea66",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "24e2e9d9299bacbda7b355178831c4204af3028f8a92570316e88a999dd94391"
+   },
+   {
+    "file": "n-Rb079.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "e1776972cbfa84b5b652d484ef55f0c1803eb0c07984a1558ec18ba2bcb1024a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8d6e0a8a9e5fb535890fe6f1a97c20eed57e17a4a7046f76a896ae46ab75e892"
+   },
+   {
+    "file": "n-Sb127.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "0b15e6e30170c8e7971c4c0d28d751a581ef2506767b1b39580a38605c215577",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "cfe348ef31d3e175f99d200355bde45787bda8db1f93e29613602566f4ace28a"
+   },
+   {
+    "file": "n-Se081.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "71d4ee6462811e42df6ad0eed7e4c73a927434a1d6c09855a61367a05067025e",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "08ac3b752028cb4b2648632ced211f1cdf7a32bc8087329595a95612ce3f0e5e"
+   },
+   {
+    "file": "n-Sm134.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "012044c8f3b9c1a86936a104b161102cb0b1c75bc1b94bc928ca74e01dcfffa1",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "d89e51cc638f6cb45f2473a81e26e7d92bf9a9e9e8496457c5c71cb52aeeb9f4"
+   },
+   {
+    "file": "n-Sm137.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "66a303b2da732217f5af0142554e9ffda3c2d053d4f9d34705b24416d8fe3df6",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "70230c1addc5b903393e645a7cf1df3299c72a99cb1df663a489112e24baf7f1"
+   },
+   {
+    "file": "n-Sn118.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "1853e8f75f8239fd5801ec55d3f182160e469b5113671a2b758cc49eee486bf7",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "5a3c554c99bd1bdefcc17ab46e5f20541e5efac7117b89d5561f8d0556c64766"
+   },
+   {
+    "file": "n-Sn121m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "002b37e82581e7ddc61a08c5d90bb8cc6a9f488a19a6d3383145b4d23e92962f",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ff89c5e4058b5cf4e6675d3b09017b95afc997c2d1d495213befbc087e8b79da"
+   },
+   {
+    "file": "n-Sn125m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "00c8d400b24d6ee95e257bed82fc080115059c990475da17ffaf30d7708d7a86",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "fab024a4b60b1053c223bc784e751664c6a997aac82be0229d7c0d337ac07b84"
+   },
+   {
+    "file": "n-Tb144.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "1079c1fe69d45e9e0d163a1a32af78f93958ccd418760baf9e3ecac8c9a5add5",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "0cbb80bd40ceb39a00507248bf3b3d832d953a10cd43061fd7fdbb69274e5b7b"
+   },
+   {
+    "file": "n-Tb144m.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "fc2e4bb6aaa5cf2ef224fbb8f73d4c9579729b47d011059a95cfa74ce94bba75",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "d411fdd5086ac58159924b6b83fef2056f22eb12a6285e1618c81d7ee64f92be"
+   },
+   {
+    "file": "n-Tb171.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "00b8b0c3ceb65d19817e9c6c098ea246b52cb3ca25d927d15dcf99b61efa00a6",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "0adac59cd86b7a6c677a9ede519f2feeb39eb5918fba2fac52644ccc1512e497"
+   },
+   {
+    "file": "n-Tc096.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "0020d175572c11547a6c3baa2b9c74150f6520f02a3efbdd1e7ca560c11db26f",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "c9de0bb105ddbffecf62ea63c2c2fe0112a28781973c57c8f0098cd4fbf7da11"
+   },
+   {
+    "file": "n-Tc102.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "e638805812771691818dde7418c6f42df3a037843ad9b8075e7fd177e058658a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2f0f5496b984d1169dd4d92e809af1a3fcd7050f0c622dd72b02bef78d21259a"
+   },
+   {
+    "file": "n-Tl198.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "d554797d1a3ca4ffcf00344bdeb44d4c870366f484604f707bc601885585151c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "109db1b62305ff807a7a8270cb068402ac481512fc026e3aa175892b5f581a25"
+   },
+   {
+    "file": "n-Tm153.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "014be854d5582a289134c3f045218e66686810bc4867fd60473550a64f6227a2",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "7c51ce09a989db59bb2f2adf5cda20dad5ccfc3e85e39642079367474491f874"
+   },
+   {
+    "file": "n-U227.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "01bd6995adcf4ffdfd1250f2fd515ccb91f60a35b17f3e8ba7ba484bbda77fde",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ac52c9c9aaf0d699541fb4f181f7593ef13145859a8b5f9ef2ff81c2a10b063f"
+   },
+   {
+    "file": "n-Xe123.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "7f518aea276967334eac9056914d5d08194c0fb63f613ae58d3a46bdc5600be8",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "532b53bac55ae603630e801b205462e630011fb4f6df2b0259016fc448c25946"
+   },
+   {
+    "file": "n-Xe126.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "021ab5ad8f076b5e13eb2a876f7b15ec520c26cb6a51bdd263f4d7a9de199180",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "f8eafd5d4734bbfc7f449aa9bd38f8fc8ae4f5a85cb1b38f9ba615a673a38beb"
+   },
+   {
+    "file": "n-Xe130.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "6a7d605e143826e3d5555723f3c36df8a96f169ac74d118d1b0110033badd2fd",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8c57bfc9d5e88d800468373840c2955a3512a6c7ccfcec778683e8891fcd755a"
+   },
+   {
+    "file": "n-Zr080.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "0073e3602739302ef2978f5e20ee769ba47db601952fa53eac03da5192ea5b44",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "798a9bc8505621f820ab1eefd9864890e6ea6793f0fd1eb2f635242d0102c997"
+   },
+   {
+    "file": "n-Zr086.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "8f90b0a155acb0e8e94f66b151a9c372bce5d047afc338e0f70de39212d963f9",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8787d1e17fad873b08d9016c55beac6f9963b00b4579d0cb41041e331e809b97"
+   },
+   {
+    "file": "n-Zr098.tendl",
+    "projectile": "neutron",
+    "rank_sha256": "01626d230d2ac4a16427e8b4eb3dd94d54192a7acb5d39269e529a4803758cc9",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "4d7f529f25de4d2f7bcedcb9e9209ddf3762fcd8bb0774836398916adb0639ed"
+   },
+   {
+    "file": "p-Ag108.tendl",
+    "projectile": "proton",
+    "rank_sha256": "019e3d65445c6a01deb67454d7b93894fe3005e4dc3e9b01940b795780eaec5f",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "b0f1939e6d3e1342e3c7db1298471ee556d51b877fc4ff83f02d3d20fabdc321"
+   },
+   {
+    "file": "p-Ag109m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "8fe722b9ccaa6cc07dc59cc1d39f4c6f7823ef433d3c195ce32b806a3bd19006",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8d72c8e577eab21f9722bb453cd4f7cc99ab6243c79fa90154c37b383ba111b3"
+   },
+   {
+    "file": "p-As076.tendl",
+    "projectile": "proton",
+    "rank_sha256": "6da6148914ca02e9dfc6226a46e399b064bbfc92049b75eacdd7a46c113bac39",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "5acc30b0e17e142a22bede61caf8c7db28b6080ae940f4938e5fd5c9e7d49737"
+   },
+   {
+    "file": "p-At200m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "c0896e87d8cfdab21c78cafade2f4b037ee612ecbce04138558a265ce3e20af9",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "09e692a8aea216b738f94e7cf2b904d1372b75e26d2d8550ee0aaf641285a4f9"
+   },
+   {
+    "file": "p-Au188.tendl",
+    "projectile": "proton",
+    "rank_sha256": "a2ce41964e0d5f258f081ef56e8b8ec310d8e138245d81394edd6c13bd0484bd",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "7d8fa0457e4dcf6efae2425d9ac2820302e1acb5b4e96f1951df16b8a5c23c62"
+   },
+   {
+    "file": "p-Bi194.tendl",
+    "projectile": "proton",
+    "rank_sha256": "22e57f943955bd2875296f438597948fba1d4d68957cbc10e470f4290a4c4b55",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6d1283c05b86843a0f121d1fc9392cd6113a48701bd3472dc5bc4a6e6c59bec3"
+   },
+   {
+    "file": "p-Bi194n.tendl",
+    "projectile": "proton",
+    "rank_sha256": "5b3cd35aeda96f0d778a746bee74e88e94c34467da687669c0e5df543bfa670f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "215670a6d08a3725ff631ff70cc861d42a3f41693144694d8f10f26c518554b1"
+   },
+   {
+    "file": "p-Br072.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01ef69ce892623b9c4c3cbf99e5c91aba4aa020627ead31b791b2520ee3453e2",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "4a88d549cdb4bf9b6716b06dad69daa7599f8116b2991ceb79bbba906e4c1bf4"
+   },
+   {
+    "file": "p-Br082m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "00b361d5ef276caac6aa104fba494f149ee258b0e00c53b18641f1d8b8776bd8",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "9b507da3f8ee0a4e2fe0404bc0920c4cd02c787f65f62a6e7c7d7160211b73d8"
+   },
+   {
+    "file": "p-Cd111.tendl",
+    "projectile": "proton",
+    "rank_sha256": "5e66f5ce7c94a5a887fea9d32f11de02416e01375ec69b802680f399b2397fc2",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2d557c8c70a623c6498e4712ce920532cb4642106f4292f4a45a0d00c644e031"
+   },
+   {
+    "file": "p-Cd123.tendl",
+    "projectile": "proton",
+    "rank_sha256": "9831ae5b8072128eccff9a05e4ed41d83fda1af637febbfb1a8293b50c6871d9",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "d7eadefb4360561d23918c8316e9dc4e4f0fc2aca3ca64e41e11a413627fba37"
+   },
+   {
+    "file": "p-Ce130.tendl",
+    "projectile": "proton",
+    "rank_sha256": "7b842bb62806c55d1ed72c26784705c926ccd7d16245ab280d08d6992029aa20",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "7bdcd32af479c7d9a5fbf7c91e961a76c305abcc8f94d9cc3563e79681273851"
+   },
+   {
+    "file": "p-Cf243.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01a508c4ec5adbc3989e1a12956d90a0692a3abee0344b5a61a8cd7489bb5059",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "6e648bbdca37a4319d0b51962b9290400538eccb50a934098ce24274c8baabc0"
+   },
+   {
+    "file": "p-Cm233.tendl",
+    "projectile": "proton",
+    "rank_sha256": "0021e190bc5940505b2786bfdab46f46fbf4247e3c653cfcbc5933b578517316",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "2e9c295474a6769a15fa458f7379f917bb767e15c4babe97bed05e93a26d925d"
+   },
+   {
+    "file": "p-Cm251.tendl",
+    "projectile": "proton",
+    "rank_sha256": "016850cfa9c22c6198f2daa26cb00fbf9beedf16580cde0153da2617cc51c081",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "8e09fd54028f888b2bf553e3123f7e5dfbfa3eed1c06584c604408258d4ec2b9"
+   },
+   {
+    "file": "p-Cu067.tendl",
+    "projectile": "proton",
+    "rank_sha256": "002827749b329f8d81dbda218ce8cc936acf620206cee63258b33876957ffc22",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "0847e35990569f3371bc48a2e9121e786272a95a358ff020665ca67ee22e0385"
+   },
+   {
+    "file": "p-Cu074.tendl",
+    "projectile": "proton",
+    "rank_sha256": "0247ef8564a0281f6d3424e0de801a2cdd444dcaf33457031650fbc0a49dd855",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ea0b1466de26eca4a579ef0f4d4eba3084ec915f4f7ef6a36f6d5189c21cd7d2"
+   },
+   {
+    "file": "p-Db261.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01753aeb23563eb84c55aa283992debfa2a643ae3c73374b5642758d8af2093f",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "4df9177a64e9a82d8ae5465ac7c183af012dff92dd594405a73642e1a28f65b0"
+   },
+   {
+    "file": "p-Dy150.tendl",
+    "projectile": "proton",
+    "rank_sha256": "75c497ea3040e435a68e2bd8ea3fe70f2eb9b94a15a6308a8d829ee228db049c",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "98a2f5a95bb6ee81788ff8f90df53442ca7922e0db93bf79309d233a883d8c62"
+   },
+   {
+    "file": "p-Es253.tendl",
+    "projectile": "proton",
+    "rank_sha256": "1ca80600e5a92d2ef8fe511dc39b450e5dc2ab09eea2816df2b4cecb348eaba1",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "b4e5dd80ca3c338bc0e7a68291ebbc1707ed1d9290ea7f3b8891e5ad88ba96cc"
+   },
+   {
+    "file": "p-Eu142m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "5835594c4ba391fb1c58d6ce05b26e0521eb2f958f707f748a2ae765539ed992",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "452874b5eeb664260c1cdbb1b73b131c875eafec2144c4234e444f2aee970aab"
+   },
+   {
+    "file": "p-Eu144.tendl",
+    "projectile": "proton",
+    "rank_sha256": "aca97e55af3ef4289b8bb5da29876a70cd4081689a8a6196f95843839d0c1307",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3d66a5ba500375fe49b7bfd631d873a6c1d4fa20bba9a7291f1f6ffc265161bd"
+   },
+   {
+    "file": "p-Fe052.tendl",
+    "projectile": "proton",
+    "rank_sha256": "2a8fc144ad2484cc49e826f102201f1e8deb8d2764794c9226186d873345ae49",
+    "reasons": [
+     "p18_worst"
+    ],
+    "source_sha256": "15cd4df492c2aa1ed217d43af399fc78a1cee42aef96914ad2e7705994fef0ca"
+   },
+   {
+    "file": "p-Gd164.tendl",
+    "projectile": "proton",
+    "rank_sha256": "cbc91fbf6706008e2ee690f4e5808e26ad8e31958acecd8b6e804677453679e4",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "770779cf22a2814282f15eb6929f9227cf7196df6313c5acbfd8fe6958baa9bc"
+   },
+   {
+    "file": "p-Ge066.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01babf32ae0b20428773d4f16ff8d5ac915bf41078668f6507357c899d07046b",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "3100657a05b8aa9a65fe8e04884001fb0191b30f74c2403538a6e228dbf548b0"
+   },
+   {
+    "file": "p-Ho158.tendl",
+    "projectile": "proton",
+    "rank_sha256": "0023ba946f09406cfe565c36ccb3d707f4bcf613e3e02cba6b80d694cf74bb63",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "c3da82cc9c68fc90a2adb49d1dd62b2187becc8f8a46f0b0bc1b536b36df985f"
+   },
+   {
+    "file": "p-Ho160n.tendl",
+    "projectile": "proton",
+    "rank_sha256": "b38320cf7b673a61151523d7959c5eb05ce81a3c1e6664bf742e3b484bd2eab1",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "b366eaa1280b4847d233b57008cc7e12b41f93705dca89a14a8ada0f655dd24c"
+   },
+   {
+    "file": "p-Ho165.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01be1a4b36ea3ac3ac903d6b4ed1b3d69473bf0c42028e830f550ac573b34524",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "e532f74d5aebdd6466ba13b28b5318378b85dd8061a11fd7540738ac453c7c2d"
+   },
+   {
+    "file": "p-Hs266m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "1ccff46e5bbb0219b377ba72749216845d14659e9fb4fb8c7e9da2d4a68b0fc0",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "f040acd0809ff39bbf4a9ac707fe86a952206680b8b13d7a39161ee836941b15"
+   },
+   {
+    "file": "p-In115.tendl",
+    "projectile": "proton",
+    "rank_sha256": "6eaace9639f5780566bc04659ab75132cee76d3fe1297d69ba54e6275b055962",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "cfcf73c72d1fc8904d06ecdb41893a25ba3b167de94bd4b4951624c1d5d71fc0"
+   },
+   {
+    "file": "p-In123.tendl",
+    "projectile": "proton",
+    "rank_sha256": "cfdb66ec47ca6528c03ec0ea031fe82ada860b7eaff031af1f1d259dd3368b57",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "907c932319896407483c477dbeee253c75a99a52bad4b5a1ab4b4f85f52e998c"
+   },
+   {
+    "file": "p-Ir183.tendl",
+    "projectile": "proton",
+    "rank_sha256": "0045172210ca695fb30cc1ee18a9329f6defe386a2fdff7a92d266c3051f6743",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "0434c35e48244d5d7fa7559ff22322e7e46e4e258b01bc1206e268f8d42bce76"
+   },
+   {
+    "file": "p-K044.tendl",
+    "projectile": "proton",
+    "rank_sha256": "017f44311e83a3fd26ebbf8ac03ba117b4023eecd5aabb84c696db945c4f20a7",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "10875e65d6088049999a2c5fa3d7040bbdf0a83aeb734e569250caf32639ce74"
+   },
+   {
+    "file": "p-Kr074.tendl",
+    "projectile": "proton",
+    "rank_sha256": "59c86d48359f30fcfe70bce847b844ecb98ba30db8bc99dd7e66766628c50f8b",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3b4803fc731027dc74cb5e3e3bdaa605b7a2838a2118f0c9dddeb6660e3b71ef"
+   },
+   {
+    "file": "p-Kr079m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "059d624e90bce9f02e9807d47236c44e48121d4655538535e2e2a08462e5c93f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "652ebfbc3ee65fd68da04338ef4dc6435179801d0fc20b50d218c7dfeda797e5"
+   },
+   {
+    "file": "p-Kr083.tendl",
+    "projectile": "proton",
+    "rank_sha256": "98c6ccf4d5dd3375d08ca1655195c76cc116b58589f728fd0296240d7465f053",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "957e0ee425d96b89692d6f81fcd58bdafaf220e92ef3d651582b5f813356c7ac"
+   },
+   {
+    "file": "p-La131.tendl",
+    "projectile": "proton",
+    "rank_sha256": "7b98863fd433ba3faf07ac65306131b66a682a502553e79ff11f21d7c9274b2a",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "db4a1f15ee474516f34b8ef0afb0907efd8c2f31583dfef5d06c5f66b164f0bf"
+   },
+   {
+    "file": "p-Lu162.tendl",
+    "projectile": "proton",
+    "rank_sha256": "7529f980793e8ab3476182431effd51d0f3eab2caa4b3c1ea421b1513209f2b9",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "4f7546340129720f60d9e91a36ed7444a4f2b33b195df227c0858a02a161f536"
+   },
+   {
+    "file": "p-Lu173.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01238484f63a68433a308715472966381bda9e1241af27d62b8e0aebcc22f1c2",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "6585de23657a253d13a6d280c795f3fd89470d0bae4e2c31083869bd251ed23c"
+   },
+   {
+    "file": "p-Lu182.tendl",
+    "projectile": "proton",
+    "rank_sha256": "919ee4c0eee1d9a0727a0fbe7ab8189faf99a190b7c7b2f0010c1fa69c437cea",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "83c3f480393d18773fd03d152d5453b5275a8c20ffc7d0298359afe1c06a3c41"
+   },
+   {
+    "file": "p-Md260.tendl",
+    "projectile": "proton",
+    "rank_sha256": "00697a9f439b326f93d2d92f88a3a198fbc3e370ffc5310b5694f1a33de7c6f6",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "8713c0accb87e27c264d6d634685e39f05553ddc3474ea8215ef6f73838dd3ec"
+   },
+   {
+    "file": "p-Mo104.tendl",
+    "projectile": "proton",
+    "rank_sha256": "2d3cf7dd5874c856c6daae940e275a5d240bbeb2fdc9631be56323cdc32581ce",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "9abd04f683be5856701c603075160e5f544bd9e9b1f45f4c406215a7b7039592"
+   },
+   {
+    "file": "p-Nd141.tendl",
+    "projectile": "proton",
+    "rank_sha256": "6b466d5c87b4af6e64ad0a904e56ce11e0d46bbd5e83b02569a8ddd16bbaa252",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "020a97a8c20b8d078b71a95cbd52991bf7aeae3ecbfb5da7d39e531ad17b04c0"
+   },
+   {
+    "file": "p-Nd157.tendl",
+    "projectile": "proton",
+    "rank_sha256": "015fd6772398825fdb0396698aa947fd80cdad78eb3748390052755877c7848d",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "b240dbdd48ca52e435aa71c973b917627e901d1a49569fd6d15d5a5475d7e358"
+   },
+   {
+    "file": "p-O018.tendl",
+    "projectile": "proton",
+    "rank_sha256": "020daaac4e0d9bb39b5fc0bc1e378395fdf978737a376cdeadc4959f7c59adfa",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "b3a23bb924813c48a1497f114c0e3c75ef1f2f5464cc3fac41f0f620b746aa13"
+   },
+   {
+    "file": "p-Os192.tendl",
+    "projectile": "proton",
+    "rank_sha256": "c58adb5d5680439e089a289897b36e53098c33c1583628b4d80f27470c4acf69",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "8c4a427fb7c9ab82037ef44a87b9e19efb876cf9c9a1e1169bf5c1e4bbf3f8f2"
+   },
+   {
+    "file": "p-Pb199.tendl",
+    "projectile": "proton",
+    "rank_sha256": "0251c06018d0442f75360ad5737d5335cd235f245abda833d11c2b9849c08109",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "ae914b76d4771c6795b0ba94e965f42349a22fa616b6f333201483d7433c65fb"
+   },
+   {
+    "file": "p-Pd107.tendl",
+    "projectile": "proton",
+    "rank_sha256": "f8819bc4409008101000740a5e61b08afd505cf1f1bbbdc31fc507f9c6e77d4f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "24172f35b1c6c2bfbd7148ce4eefed30fde733cc5dd4b8a205d65bb161f61cba"
+   },
+   {
+    "file": "p-Pd111m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "f720e0518b495867dc4c86368f29018565d40a5f7480764affca172beaf42fbc",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "89e4f6858913cf681a4f78e1e1a5a2419a872d2174c7dfc118f4f3b0bf2bc761"
+   },
+   {
+    "file": "p-Pm154.tendl",
+    "projectile": "proton",
+    "rank_sha256": "014f9ac3d8d5348cda20e67d1f4017cca33954e4916a4d0c099d9efce93ee443",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "47822e0538eadd6cff98e46f4235734c072ddb72bbcb9ec26f2729cb95b1ab87"
+   },
+   {
+    "file": "p-Po199.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01c034bceaa80078f015cf6e064a9a0948da05585fbc4a1b491e59bb4d4d9b72",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "b64f40506bcdd6df07f6c16c1916c52a85395d4a343580af73cf0414fda26b26"
+   },
+   {
+    "file": "p-Pt187.tendl",
+    "projectile": "proton",
+    "rank_sha256": "fdffc6e2614711e1833c14864e94e392cd6d6df3be03782307154b1da9ec9de8",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "6f2f951a0f499ec16b8d275e14cc0eed0067f4d03c976bb62060fd78dab8c37a"
+   },
+   {
+    "file": "p-Pu233.tendl",
+    "projectile": "proton",
+    "rank_sha256": "019b17c1bff20bf6ce5d24e521c526cde2a44b283b79a4ea7ad243e179bd6a8f",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "2b2b93e08fb393c77fbb12ebf202f9f3221f66f1052d6da5b9cdaf531d0d014b"
+   },
+   {
+    "file": "p-Rb079.tendl",
+    "projectile": "proton",
+    "rank_sha256": "bd606cee29ece9c01399fb5d4fbbbb3f24e96439aa6beb8f2c27a529b9c84431",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "2ee7916202e1c1563cfc3cc083914550d6435c5a83174771bb68be97e9a2f768"
+   },
+   {
+    "file": "p-Rn204.tendl",
+    "projectile": "proton",
+    "rank_sha256": "01f58034633182f6434c3a67b0b13ec8544c99bc1238650c87f0b9d69421f6a0",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "8d344f6e429065e8ce2c4fd52e587cb355446da945158b44cddc13ef18dfc625"
+   },
+   {
+    "file": "p-Sb127.tendl",
+    "projectile": "proton",
+    "rank_sha256": "2bcad64aa1aa47d9cb6d15ea3a083c2aa5c385bdc1cf089b5eb180befff8d5c0",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "3f370e20e734a261229214e614ab7eb783fa43f84db802faa416dffc67606a12"
+   },
+   {
+    "file": "p-Se081.tendl",
+    "projectile": "proton",
+    "rank_sha256": "b540126be1648a679cd3fca069dd45c6a998ebfd90df6a8892fbd9ec062df992",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "4e8d9d436184a50204bfd061cf8679d29a3c4d5caeb81f8b9999648b7d40b795"
+   },
+   {
+    "file": "p-Sm137.tendl",
+    "projectile": "proton",
+    "rank_sha256": "6d89da75e44baf78b8406500b96cf9a6eab82093d8afbb0f48bfd1eb4b33e556",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "ea0b9d0352f0583b29590ffcfc8489fbd6305c9cc3f61322ffa11c52093b6697"
+   },
+   {
+    "file": "p-Sn111.tendl",
+    "projectile": "proton",
+    "rank_sha256": "4431d8e0d7d109d1dba8dac7128e3cc1e215fb0fa2def8c684879edc1927e7ad",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "da756528e7c17bf375f7098ea12bf9e061b7c16db66a1edcbca32e15ba817f72"
+   },
+   {
+    "file": "p-Sn118.tendl",
+    "projectile": "proton",
+    "rank_sha256": "7ad16c03efa20e368566c9c1cfb584b8b8188bbadc1373b45066c691f62f5a1d",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "40eff893e9d08ca8af88745ac5e981c65c281b1bcd52f7a8bd8cb551866b85f0"
+   },
+   {
+    "file": "p-Sn130m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "57685a6a4083ad7785525bf5f47ea6efd3bd46b884dcf7e878ef42d3529894ca",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "a27c367330bde95ca0631989e69523342573296bfa8d14a98ae7faccae98c99e"
+   },
+   {
+    "file": "p-Te129m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "c438ab7e73b3d9aa543eb766ab27659801dabbbdbb656c00219de101c6b27843",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "a243adf9bfdef6b02bce7a7dd7132a3cabf69994234793b907cf6bfd9979bd3c"
+   },
+   {
+    "file": "p-Te131m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "a52026321ff926226aa4a202093df7da209f2a144ede05f41c419477585f29bb",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "1d4bd70c55475df4d843976a6676b837b9d840b48894edbcc171afb8cd82f649"
+   },
+   {
+    "file": "p-Tl188.tendl",
+    "projectile": "proton",
+    "rank_sha256": "9d8e542b489c9f81351dd5439ecaaba26a3e4a22b9f25576049d3a49b2f19a4f",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "fde21622c1392fcb60c3cf178e21de90bc4d849e1972a3db0acbd48758757579"
+   },
+   {
+    "file": "p-Tl194m.tendl",
+    "projectile": "proton",
+    "rank_sha256": "d267817e0b9e8ac6cff671d6d45961857a3a60820c93f477bab883c0b4ce672d",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "d053d5264f8f7d6ae0242d0c144cfea1e913a49bca8ee30d8187a2fde9fe9189"
+   },
+   {
+    "file": "p-Tl198.tendl",
+    "projectile": "proton",
+    "rank_sha256": "afb18265a626fba0b5267882d62602ed3930ee8609a25a1b532471c335786614",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "700229ea6b1d593dda95cda182b7eb9130697627c6d3a5b9811dd0bec845eb90"
+   },
+   {
+    "file": "p-Tm157.tendl",
+    "projectile": "proton",
+    "rank_sha256": "002d2136905d2b59e2d8078cbca4190a430eaf631e2ed1a288cb84c73783c0ae",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "965951057b7d92f5d32a15619a7feec4bd951804da4ba139f0eaed754cedcd11"
+   },
+   {
+    "file": "p-Xe123.tendl",
+    "projectile": "proton",
+    "rank_sha256": "88c67bef50d7eaee54dcdd9986f58bf3604ff043bb9341b6c1333b96469f90e6",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "cada5b9e65eb75ff12b3f24bf328400a5780daf98fdf63c6e2138da1330ed606"
+   },
+   {
+    "file": "p-Xe133.tendl",
+    "projectile": "proton",
+    "rank_sha256": "ee59a6a43c6a95d2793b957585b821205ee7bdb0dbf851e5f2a1a5d5f8708d22",
+    "reasons": [
+     "p18_excitation_conflict"
+    ],
+    "source_sha256": "a086c2f28bb6262e4057165cd88d81a5f58becac7f79f7b5ba8f2c29c6cefa06"
+   },
+   {
+    "file": "p-Yb173.tendl",
+    "projectile": "proton",
+    "rank_sha256": "00e49f0c72ed221d269e637d2736b5803a0ecface05a40f4fdbf6ffc36bb99db",
+    "reasons": [
+     "hash_sample"
+    ],
+    "source_sha256": "f939f9398f2dc330e2030eea4d7b7dc4e3a0346142cdb8ba47de5e15f9dffbd8"
+   }
+  ],
+  "seed": "ACTINV-P18b-IAEA-SAMPLE-v1",
+  "selection": "25 lowest SHA-256 ranks per projectile plus all P18 worst/conflict files",
+  "sha256": "248387f23afdc30e1beb4ab3ac0348653b5675d049063f0a0c3134e9c1abb055"
+ },
+ "opening_commit": "bf540efc3cd9525d17f69a525ab6732c648bfe93",
+ "p18_evidence_sha256": {
+  "audit": "e20fba865c36131f27bce7ac110957336c55d9c8455e79a8ddac0edde66df9cb",
+  "changed_identities": "606347ce4d12788451be3a4a3765bfa5305613631eb37ea5de30d163546e083e",
+  "family_seal": "fb2fd35b02aa4d9629d9740d638b7650f97e8ba9d8c4dcd70ee238c31c45dfed",
+  "g0": "e419e8eeb506c28440744e8a3ceb6922f1d066b8d673f534ce0567dc59f82af3",
+  "session": "c782d5f27a88286e44aa019c0d645fd665811204d9158fbff63bdbedb6de8f54",
+  "verdict": "e9dbea1e2e5ade98cb14afa7f73b2eb9dd82da183364a75ea8d36dade1eb8863"
+ },
+ "pass": true,
+ "protocol_sha256": "69076fa2656b239addbb15fbb4727caaa2c8ea37b3aa82a141f3a2b0b619eabe",
+ "quarantine": {
+  "new_checkpoint_classification_read": false,
+  "official_checker_output_read": false,
+  "rodrigo_diagnostic_values_read": false,
+  "rodrigo_heldout_values_read": false
+ },
+ "schema": "actinv-p18b-g0-seal-1",
+ "source_manifest": {
+  "artifact": "results/p18b_source_manifest.json.gz",
+  "artifact_sha256": "ca593eb38a125883f09502fc3083153e64aff21ec22f19f1348daf1fd328fe7d",
+  "canonical_bytes": 1720690,
+  "canonical_sha256": "d5be79122efe4cde4f4aed2219fe64524476fcb0aa4231fd3ab0d582cf09fe4c",
+  "compressed_bytes": 564612,
+  "external_manifest_sha256": {
+   "alpha": "e3aaf11e60c46b43361796c2c297bab4fb714fe57ab26a315594f2b4799dfdbf",
+   "deuteron": "afb52c55b2a1babca998cc3d8af0f7004c64f85d160e3c5aabf16a05839355d9",
+   "neutron": "a6d17f996153d2671c0c51bfb6303e2a87a5af03e0696bfb34d668a31dbfb2a2",
+   "proton": "98a8bd55784c326b8696de91f494111326378e776a975a512e59806a8c9ec2ef"
+  },
+  "files": 11400
+ },
+ "workflows": {
+  "p18_closure": {
+   "conclusion": "success",
+   "createdAt": "2026-08-29T14:49:26Z",
+   "event": "push",
+   "headBranch": "master",
+   "headSha": "d3456890cf0c4b9221ebf17f6630ef8b4fe768cc",
+   "job_conclusion": "success",
+   "job_id": 99116546827,
+   "status": "completed",
+   "substantive_steps": 43,
+   "updatedAt": "2026-08-29T14:57:56Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33258605964"
+  },
+  "p18b_opening": {
+   "conclusion": "success",
+   "createdAt": "2026-08-29T15:06:33Z",
+   "event": "push",
+   "headBranch": "master",
+   "headSha": "bf540efc3cd9525d17f69a525ab6732c648bfe93",
+   "job_conclusion": "success",
+   "job_id": 99118481014,
+   "status": "completed",
+   "substantive_steps": 43,
+   "updatedAt": "2026-08-29T15:13:51Z",
+   "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33259343493"
+  }
+ }
+}
