@@ -20,6 +20,9 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 PROTOCOL = ROOT / "protocols/ACTINV-P16_PROTOCOL.md"
 PROTOCOL_SHA256 = "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19"
+AMENDMENTS = {
+    "protocols/ACTINV-P16_AMENDMENT_A.md": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
+}
 OPENING_COMMIT = "0332779401363d2f39722efe7a0b7218afcfb270"
 QUANTITIES = RESULTS / "g1_p16_quantities.json"
 METAMORPHIC = RESULTS / "g2_p16_metamorphic.json"
@@ -166,11 +169,26 @@ def protocol_check() -> dict[str, object]:
         ledger = (ROOT / "protocols/protocol_hash.txt").read_text(encoding="utf-8").splitlines()
     except OSError:
         ledger = []
+    amendments = {
+        relative: {
+            "expected_sha256": expected,
+            "actual_sha256": sha256(ROOT / relative) if (ROOT / relative).is_file() else None,
+            "ledger_entry": f"{expected}  {relative}" in ledger,
+        }
+        for relative, expected in AMENDMENTS.items()
+    }
+    for row in amendments.values():
+        row["pass"] = (
+            row["actual_sha256"] == row["expected_sha256"] and row["ledger_entry"]
+        )
     return {
         "expected_sha256": PROTOCOL_SHA256,
         "actual_sha256": actual,
         "ledger_entry": expected_line in ledger,
-        "pass": actual == PROTOCOL_SHA256 and expected_line in ledger,
+        "amendments": amendments,
+        "pass": actual == PROTOCOL_SHA256
+        and expected_line in ledger
+        and all(row["pass"] for row in amendments.values()),
     }
 
 
@@ -362,6 +380,16 @@ def derive_quantities(value: dict[str, Any] | None) -> dict[str, object]:
         and protocol.get("expected_sha256") == PROTOCOL_SHA256
         and protocol.get("actual_sha256") == PROTOCOL_SHA256
         and protocol.get("logged") is True
+        and protocol.get("amendments")
+        == {
+            relative: {
+                "expected_sha256": expected,
+                "actual_sha256": expected,
+                "logged": True,
+                "pass": True,
+            }
+            for relative, expected in AMENDMENTS.items()
+        }
         and protocol.get("pass") is True,
         "source_hash": value.get("quantity_source_sha256")
         == sha256(ROOT / "crates/actinv-core/src/quantity.rs"),
@@ -1178,7 +1206,8 @@ def session_check(evidence_hashes: dict[str, str | None]) -> dict[str, object]:
         "evidence_hashes": value.get("evidence_sha256") == evidence_hashes,
         "source_commit_evidence": commit_hashes == evidence_hashes,
         "manifest": manifest_reproduces(),
-        "reported_pass": value.get("pass") is True and value.get("verdict") == "P16-PASS",
+        "reported_pass": value.get("pass") is True
+        and value.get("verdict") == "P16-CONDITIONAL",
     }
     return {
         "present": True,
@@ -1222,7 +1251,13 @@ def main() -> None:
     }
     session = session_check(evidence_hashes)
     closed = source_pass and session["pass"]
-    verdict = "P16-PASS" if closed else "P16-SOURCE-PASS" if source_pass else "P16-FAIL"
+    verdict = (
+        "P16-CONDITIONAL"
+        if closed
+        else "P16-SOURCE-CONDITIONAL"
+        if source_pass
+        else "P16-FAIL"
+    )
     output = {
         "schema": "actinv-p16-verdict-1",
         "protocol": protocol,

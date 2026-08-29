@@ -5,7 +5,7 @@
   "metamorphic": "e057752910df53ece075ff2ce0bdd22276af789ec35559a74707aee851c7c0b4",
   "performance": "38074056e4af4159cfd8791a5cf103e3f07cf215029b24164c535e5fdec6e2f9",
   "quality": "4e34f51908992a01526ceea90f1428767279f44e6a87ae1cd6a71871f8e59fb6",
-  "quantities": "ffbb9161bec4eab0af6fd85ecea723d4080814df7d93a5d1edb7dd9f14c5e207"
+  "quantities": "b0888cfc0cebf335c82d47bee56b0554ff35ae469e8a248f8c7e64150b1c6791"
  },
  "gates": {
   "G1_G2": {
@@ -364,6 +364,14 @@
  "pass": true,
  "protocol": {
   "actual_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+  "amendments": {
+   "protocols/ACTINV-P16_AMENDMENT_A.md": {
+    "actual_sha256": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
+    "expected_sha256": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
+    "ledger_entry": true,
+    "pass": true
+   }
+  },
   "expected_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
   "ledger_entry": true,
   "pass": true
@@ -374,5 +382,5 @@
   "present": false
  },
  "source_pass": true,
- "verdict": "P16-SOURCE-PASS"
+ "verdict": "P16-SOURCE-CONDITIONAL"
 }

@@ -16,6 +16,9 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "g1_p16_quantities.json"
 PROTOCOL = ROOT / "protocols" / "ACTINV-P16_PROTOCOL.md"
 PROTOCOL_SHA256 = "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19"
+AMENDMENTS = {
+    "protocols/ACTINV-P16_AMENDMENT_A.md": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
+}
 OPENING_COMMIT = "0332779401363d2f39722efe7a0b7218afcfb270"
 CARGO = Path(os.environ.get("CARGO", Path.home() / ".cargo" / "bin" / "cargo"))
 QUANTITY_SOURCE = ROOT / "crates" / "actinv-core" / "src" / "quantity.rs"
@@ -288,8 +291,22 @@ def main() -> int:
         "expected_sha256": PROTOCOL_SHA256,
         "actual_sha256": protocol_actual,
         "logged": f"{PROTOCOL_SHA256}  protocols/ACTINV-P16_PROTOCOL.md" in hash_log,
+        "amendments": {
+            relative: {
+                "expected_sha256": expected,
+                "actual_sha256": sha256(ROOT / relative),
+                "logged": f"{expected}  {relative}" in hash_log,
+            }
+            for relative, expected in AMENDMENTS.items()
+        },
     }
-    protocol["pass"] = protocol_actual == PROTOCOL_SHA256 and protocol["logged"]
+    for row in protocol["amendments"].values():
+        row["pass"] = row["actual_sha256"] == row["expected_sha256"] and row["logged"]
+    protocol["pass"] = (
+        protocol_actual == PROTOCOL_SHA256
+        and protocol["logged"]
+        and all(row["pass"] for row in protocol["amendments"].values())
+    )
     compiler = command([CARGO, "--version"])
     source = source_contract()
     manifests = manifest_identity()

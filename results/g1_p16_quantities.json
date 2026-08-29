@@ -140,6 +140,14 @@
  "pass": true,
  "protocol": {
   "actual_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+  "amendments": {
+   "protocols/ACTINV-P16_AMENDMENT_A.md": {
+    "actual_sha256": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
+    "expected_sha256": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
+    "logged": true,
+    "pass": true
+   }
+  },
   "expected_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
   "logged": true,
   "pass": true,
@@ -158,8 +166,8 @@
    "quantity_tests": {
     "pass": true,
     "returncode": 0,
-    "stderr_sha256": "2b06ef1f69fcc296b680acf621067ff39c74686957aad82a24c01ef215e1ca98",
-    "stdout_sha256": "09a53a70c7aa8685f4165ca3f84ae092d5b55dd773038f771b0c727c444a53c2"
+    "stderr_sha256": "55b555e0927d8b93752a92aed459f5c2a23af742156d5cefdbcb9253ce6d21a2",
+    "stdout_sha256": "b6492c8f83169f4cddc566f793e1cbd401b1605c58e2cdbfb80a7e75a474bea7"
    }
   },
   "pass": true
