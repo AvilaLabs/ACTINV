@@ -14,7 +14,10 @@ faster at the median with effectively unchanged memory. The conditional suffix r
 repair, not a product or scientific failure. P17 is closed **P17-FAIL** under its unchanged procedural rule: all
 numerical, identical-data, processor, diagnostic, independent-arithmetic and quality controls pass, but the sole
 post-unseal amendment's EOI, product-alias and infinite-dilution assumptions were falsified. P17 changed no production
-code or released package. P18 is next but remains unopened until the P17 closure commit passes its full workflow.
+code or released package. The P17 closure commit passed all 39 workflow steps. P18 is open under protocol
+`002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09`: it replaces heuristic product-state ranking
+and silent isomer-to-ground fallback with auditable ENDF identity and fail-loud accounting, then uses family-level
+held-out isomeric-ratio evidence to decide whether the changed default and a v1.1.0 release may ship.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -290,3 +293,9 @@ part that does not compress: users, issues, and the validation record accumulati
   and held-out evidence plants. Source/evidence commit `0b3a89f5c9953166f1547eb96be56a7bc9d5ff35` passed all 38
   GitHub Actions steps in run `33231786946`. No production source or package changed; P18 remains unopened until the
   closure commit is green.
+- 2026-08-29 — P17 closure commit `7a2d1f47b62155c0f7a22a4e0b9ec5d6e6730bc8` passed all 39 steps in GitHub
+  Actions run `33232228355`. P18 opened under protocol
+  `002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09`. It freezes a physical ENDF product-state
+  catalog, state-partial conservation, fail-loud missing-isomer handling, exact unaffected compatibility, bounded
+  performance and family-level diagnostic/held-out evidence from the hash-pinned Rodrigo et al. compilation. A
+  successful candidate authorizes v1.1.0; after release closeout P19 opens and begins immediately.
