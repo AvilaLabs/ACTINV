@@ -1,0 +1,919 @@
+{
+ "configuration": {
+  "group_relative_tolerance": 0.02,
+  "group_weight": "1/E within each group",
+  "groups": "FISPACT-709 ascending-energy boundaries",
+  "non_negligible_cutoff": "max(1e-12 barn, 1e-8 * reference_peak)",
+  "one_group_relative_tolerance": 0.005,
+  "reconstruction_relative_tolerance": 0.0002,
+  "spectrum_definitions": {
+   "fission_like": "Watt exp(-E/0.988 MeV) sinh(sqrt(2.249 E/MeV))",
+   "fusion_like": "Gaussian mean 14.1 MeV, sigma 0.25 MeV",
+   "one_over_e": "1/E",
+   "thermal": "E * exp(-E / 0.0253 eV)"
+  },
+  "spectrum_energy_max_ev": 20000000.0,
+  "temperature_K": 293.6
+ },
+ "coverage": {
+  "capture_reactions": 6,
+  "representative_profile_passed_before_expansion": true,
+  "resolved_lrf": [
+   2,
+   3,
+   7
+  ],
+  "spectra": [
+   "thermal",
+   "one_over_e",
+   "fission_like",
+   "fusion_like"
+  ],
+  "targets": 6,
+  "threshold_reactions": 6,
+  "unresolved_lssf": [
+   0,
+   1
+  ]
+ },
+ "pass": true,
+ "protocol_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+ "provenance": {
+  "actinv": {
+   "binary_sha256": "f9c937734762930399ec39088f89af1a2d648e7b583297329f9b1d43f8dc4e98",
+   "linearization_tolerance_declaration": "const LINEARIZATION_TOLERANCE: f64 = 2e-4;",
+   "processing_source_sha256": "cfd69fb67e9e9dc9a6fc2d18204e9d135c4c0e9fb5121014ef1af42978ec68f2",
+   "version": "actinv 1.0.1"
+  },
+  "evaluations": {
+   "Ag107": {
+    "bytes": 2212596,
+    "filename": "n_4725_47-Ag-107.endf",
+    "sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185"
+   },
+   "Au197": {
+    "bytes": 7170039,
+    "filename": "n_7925_79-Au-197.endf",
+    "sha256": "fb7897fdde04b68b79cfc2a44e90a7c3aba77397815a5be342648af013f39f6d"
+   },
+   "Co59": {
+    "bytes": 5631444,
+    "filename": "n_2725_27-Co-59.endf",
+    "sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d"
+   },
+   "Fe56": {
+    "bytes": 18643933,
+    "filename": "n_2631_26-Fe-56.endf",
+    "sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e"
+   },
+   "Ni58": {
+    "bytes": 17188280,
+    "filename": "n_2825_28-Ni-58.endf",
+    "sha256": "312f5a069dbda4e0abd662a258710ea332dd749191a9bad2a0c70567644af4f4"
+   },
+   "W186": {
+    "bytes": 7970880,
+    "filename": "n_7443_74-W-186.endf",
+    "sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+   }
+  },
+  "njoy": {
+   "binary_sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30",
+   "commit": "ac5adf5f33d893e42f2eed7fb286b0d51c7580da",
+   "source_hashes": {
+    "broadr": "b2dc071a0f63975cfe702f84441539cfaecbdeb7dfd74c5be70578b72184744e",
+    "groupr": "0b7b7237f897071552b81a59eb0c3bcccae36aa3dbc585a4d55f0e103e9f6d31",
+    "license": "08dc30ca5b19bfa904168f5194b646bb13a661e3591c4e2d000e9a514554b76c",
+    "reconr": "054ede7a59e1c39cf3e72105d8a0b95a0fb1d8df0882eca6b949e765b62bf5db",
+    "unresr": "57a3a975566d45a8f2d0db67fed121b908e50039d9aafb25ea27f628c745d650"
+   },
+   "version": "2016.79"
+  }
+ },
+ "schema": "actinv-p17-g3-processing-1",
+ "summary": {
+  "group_pass": true,
+  "group_relative_p50": 7.033584152678707e-06,
+  "group_relative_p90": 7.123271709046192e-05,
+  "group_relative_p99": 0.000146216504942787,
+  "maximum_group_high_ev": 11400000.0,
+  "maximum_group_index": 606,
+  "maximum_group_low_ev": 11200000.0,
+  "maximum_group_mt": 16,
+  "maximum_group_relative": 0.01850378810849364,
+  "maximum_group_target": "Fe56",
+  "maximum_one_group_mt": 102,
+  "maximum_one_group_relative": 1.9954046184685917e-05,
+  "maximum_one_group_spectrum": "fusion_like",
+  "maximum_one_group_target": "Au197",
+  "one_group_pass": true
+ },
+ "targets": [
+  {
+   "actinv": {
+    "completed": true,
+    "groups": 709,
+    "library_sha256": "059f3eab3cef0b0d4a14ebea525fb256221bc1ff80f442da1de1fba34d8c7a5b",
+    "rows": 6
+   },
+   "all_compared_arrays_sha256": "7fad51914f01bc6cc43d3bf267275dae6ce23bd98bd025a6359ea88b18115286",
+   "mat": 2631,
+   "name": "Fe56",
+   "njoy": {
+    "deck_sha256": "c3dba14a4f328c8900e35dd379312ddcae2375ec140e5a555291ed5b9978fa7f",
+    "fresh_run": true,
+    "pendf_bytes": 31858596,
+    "pendf_sha256": "a90da9274b5566e1e86b5da2d0d14379620fa950f09b269fc9d4a2c2fb0519e7"
+   },
+   "pass": true,
+   "reactions": [
+    {
+     "compact_arrays_sha256": "8d78ac033492377c4c62b78bd8b39813badd7ea2e59f5dc71825f6a333857b6e",
+     "group_comparison": {
+      "groups_below_cutoff": 31,
+      "groups_compared": 678,
+      "groups_total": 709,
+      "maximum_relative": 0.00017671547946399051,
+      "non_negligible_cutoff_b": 1.2811891600145965e-06,
+      "pass": true,
+      "reference_peak_b": 128.11891600145964,
+      "relative_p50": 1.1293415934061497e-05,
+      "relative_p90": 8.838973253659251e-05,
+      "relative_p99": 0.0001274489963477575,
+      "worst_actinv_b": 0.017635348234579885,
+      "worst_group": 379,
+      "worst_group_high_ev": 398.1072,
+      "worst_group_low_ev": 380.1894,
+      "worst_njoy_b": 0.017638465224419028
+     },
+     "kind": "capture",
+     "mt": 102,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 1e-05,
+      "points": 137534,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 2.2834862290757805,
+       "njoy_b": 2.2834773883624315,
+       "pass": true,
+       "relative": 3.871601003802994e-06,
+       "spectrum": "thermal"
+      },
+      {
+       "actinv_b": 9.158095244052358,
+       "njoy_b": 9.158060003728941,
+       "pass": true,
+       "relative": 3.848011849931183e-06,
+       "spectrum": "one_over_e"
+      },
+      {
+       "actinv_b": 0.0028556600357608707,
+       "njoy_b": 0.0028556039817566946,
+       "pass": true,
+       "relative": 1.9629474021696235e-05,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.0007945735729185174,
+       "njoy_b": 0.0007945737196674129,
+       "pass": true,
+       "relative": 1.8468883609740962e-07,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    },
+    {
+     "compact_arrays_sha256": "111dcffd9095c83e1c5d34d0673aa6cd5ff00a704eca6432f9694f086f82b124",
+     "group_comparison": {
+      "groups_below_cutoff": 629,
+      "groups_compared": 80,
+      "groups_total": 709,
+      "maximum_relative": 0.01850378810849364,
+      "non_negligible_cutoff_b": 6.3315707917893165e-09,
+      "pass": true,
+      "reference_peak_b": 0.6331570791789316,
+      "relative_p50": 0.0,
+      "relative_p90": 1.2522985342404714e-08,
+      "relative_p99": 0.003889461892191088,
+      "worst_actinv_b": 1.3715077442372693e-08,
+      "worst_group": 606,
+      "worst_group_high_ev": 11400000.0,
+      "worst_group_low_ev": 11200000.0,
+      "worst_njoy_b": 1.3465907149784432e-08
+     },
+     "kind": "threshold",
+     "mt": 16,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 11398920.0,
+      "points": 59,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 6.730612149052388e-05,
+       "njoy_b": 6.7306120538118e-05,
+       "pass": true,
+       "relative": 1.415036063818929e-08,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.4290904997920575,
+       "njoy_b": 0.4290904997920575,
+       "pass": true,
+       "relative": 0.0,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "representative_profile": {
+    "address_space_ceiling_bytes": 12884901888,
+    "authorized_expansion": true,
+    "completed_within_address_space_ceiling": true,
+    "completed_within_wall_time_ceiling": true,
+    "profiled_before_expansion": true,
+    "wall_time_ceiling_s": 300.0
+   },
+   "resolved_lrf": [
+    3
+   ],
+   "threshold_mt": 16,
+   "unresolved": null,
+   "za": 26056
+  },
+  {
+   "actinv": {
+    "completed": true,
+    "groups": 709,
+    "library_sha256": "5e59169eaeb59fc26d5eb20712f4e93c6124aec09013a0c22370daa27d0ddfc6",
+    "rows": 14
+   },
+   "all_compared_arrays_sha256": "c2fa38a8a005d5e1d15caa6726e316ec75e256572e718be13043df41f8341667",
+   "mat": 4725,
+   "name": "Ag107",
+   "njoy": {
+    "deck_sha256": "adbe10b339e0de8b27a5f04d4de48cc7a68943e6e6fa71e1bf8d84459848a15f",
+    "fresh_run": true,
+    "pendf_bytes": 35494443,
+    "pendf_sha256": "e2f5b9a7be5d60a456fa5a386c880f8f52b1f5a58b30daa3b5fbcca2aa6e2d2f"
+   },
+   "pass": true,
+   "reactions": [
+    {
+     "compact_arrays_sha256": "1977d8a46d51e0e68d2ba9069f6154432a9388c9ee4f0f5c91c0a4024056764d",
+     "group_comparison": {
+      "groups_below_cutoff": 59,
+      "groups_compared": 650,
+      "groups_total": 709,
+      "maximum_relative": 0.012116038619177824,
+      "non_negligible_cutoff_b": 1.876213636350612e-05,
+      "pass": true,
+      "reference_peak_b": 1876.213636350612,
+      "relative_p50": 8.590070852340671e-06,
+      "relative_p90": 0.00010096286255829223,
+      "relative_p99": 0.00015643049671568894,
+      "worst_actinv_b": 1.2881708926668398,
+      "worst_group": 440,
+      "worst_group_high_ev": 6606.934,
+      "worst_group_low_ev": 6309.573,
+      "worst_njoy_b": 1.2727502020660413
+     },
+     "kind": "capture",
+     "mt": 102,
+     "njoy_curve": {
+      "energy_max_ev": 200000000.0,
+      "energy_min_ev": 1e-05,
+      "points": 164358,
+      "source": "NJOY BROADR MF=3 plus infinite-dilution UNRESR MF=2/MT=152"
+     },
+     "one_group": [
+      {
+       "actinv_b": 33.2624402849781,
+       "njoy_b": 33.26230784840901,
+       "pass": true,
+       "relative": 3.981580884065366e-06,
+       "spectrum": "thermal"
+      },
+      {
+       "actinv_b": 137.2838154781798,
+       "njoy_b": 137.28312201661527,
+       "pass": true,
+       "relative": 5.051324258591869e-06,
+       "spectrum": "one_over_e"
+      },
+      {
+       "actinv_b": 0.10765244517779131,
+       "njoy_b": 0.10765272788319705,
+       "pass": true,
+       "relative": 2.626086781979024e-06,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 7.771248684721802e-05,
+       "njoy_b": 7.771251015548264e-05,
+       "pass": true,
+       "relative": 2.9992937525123074e-07,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    },
+    {
+     "compact_arrays_sha256": "0f7cbe6b7172cf75a912f7c4b7837a66c4a43497a07c18e56e0b70459b6b2d0b",
+     "group_comparison": {
+      "groups_below_cutoff": 609,
+      "groups_compared": 100,
+      "groups_total": 709,
+      "maximum_relative": 2.48196265894283e-05,
+      "non_negligible_cutoff_b": 5.3657160550966415e-11,
+      "pass": true,
+      "reference_peak_b": 0.005365716055096641,
+      "relative_p50": 1.7726332841299274e-16,
+      "relative_p90": 6.804682346489662e-08,
+      "relative_p99": 6.152325990266508e-07,
+      "worst_actinv_b": 0.0047231563150177056,
+      "worst_group": 649,
+      "worst_group_high_ev": 20000000.0,
+      "worst_group_low_ev": 19800000.0,
+      "worst_njoy_b": 0.004723039090951101
+     },
+     "kind": "threshold",
+     "mt": 107,
+     "njoy_curve": {
+      "energy_max_ev": 200000000.0,
+      "energy_min_ev": 1000000.0,
+      "points": 234,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 1.6878000293041294e-05,
+       "njoy_b": 1.6878000095797532e-05,
+       "pass": true,
+       "relative": 1.1686441540753147e-08,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.004289246236577779,
+       "njoy_b": 0.004289246236577779,
+       "pass": true,
+       "relative": 0.0,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "resolved_lrf": [
+    2
+   ],
+   "threshold_mt": 107,
+   "unresolved": {
+    "dilution_b": 10000000000.0,
+    "energy_max_ev": 99999.9,
+    "energy_min_ev": 6500.001,
+    "interpretation": "UNRESR replaces MF=3 in the LSSF=0 interval",
+    "lssf": 0,
+    "mf3_vs_unresr_capture_max_relative": 0.0,
+    "table_points": 21,
+    "temperature_K": 293.6
+   },
+   "za": 47107
+  },
+  {
+   "actinv": {
+    "completed": true,
+    "groups": 709,
+    "library_sha256": "91ed6c9b98ba688a7b778c948423ab45683e2aafec68733302dbba68ced1d951",
+    "rows": 28
+   },
+   "all_compared_arrays_sha256": "9c5de3efbe945c03e9d1466dbe998c2a25a70258cf2971777cfb4746b2cd505b",
+   "mat": 7443,
+   "name": "W186",
+   "njoy": {
+    "deck_sha256": "ef30f52a04a4310f61c4a7834ae3eedb5d33761d9a5e45a701a5847d1e18219a",
+    "fresh_run": true,
+    "pendf_bytes": 8606412,
+    "pendf_sha256": "44dae3ea4532cc2a8b69adf893805710cec0e35cfa40fc37de3893bfac6695a5"
+   },
+   "pass": true,
+   "reactions": [
+    {
+     "compact_arrays_sha256": "55e3228cdca03e39e1faea3e2d27c7fd8a5991856b182e7ac1337facd79b8fc6",
+     "group_comparison": {
+      "groups_below_cutoff": 48,
+      "groups_compared": 661,
+      "groups_total": 709,
+      "maximum_relative": 0.001438824465438331,
+      "non_negligible_cutoff_b": 6.620396423930424e-05,
+      "pass": true,
+      "reference_peak_b": 6620.396423930423,
+      "relative_p50": 5.199053513401247e-06,
+      "relative_p90": 4.811542748903882e-05,
+      "relative_p99": 0.00011415199112024478,
+      "worst_actinv_b": 0.30247284303333966,
+      "worst_group": 450,
+      "worst_group_high_ev": 10471.29,
+      "worst_group_low_ev": 10000.0,
+      "worst_njoy_b": 0.3029086754463654
+     },
+     "kind": "capture",
+     "mt": 102,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 1e-05,
+      "points": 104764,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 33.619908061392216,
+       "njoy_b": 33.61977717472251,
+       "pass": true,
+       "relative": 3.89314506840749e-06,
+       "spectrum": "thermal"
+      },
+      {
+       "actinv_b": 150.44236926876934,
+       "njoy_b": 150.4409496543608,
+       "pass": true,
+       "relative": 9.436356336549366e-06,
+       "spectrum": "one_over_e"
+      },
+      {
+       "actinv_b": 0.03348786691785165,
+       "njoy_b": 0.03348786462132523,
+       "pass": true,
+       "relative": 6.857786960888108e-08,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.001365325073366482,
+       "njoy_b": 0.0013653251761030672,
+       "pass": true,
+       "relative": 7.524697184186125e-08,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    },
+    {
+     "compact_arrays_sha256": "cc49d3d32695b8d107a6e308bf59ea40e51d233df7a7579f546d38c0d137d911",
+     "group_comparison": {
+      "groups_below_cutoff": 615,
+      "groups_compared": 94,
+      "groups_total": 709,
+      "maximum_relative": 0.0005183682871515697,
+      "non_negligible_cutoff_b": 2.0669824188642006e-08,
+      "pass": true,
+      "reference_peak_b": 2.0669824188642005,
+      "relative_p50": 0.0,
+      "relative_p90": 3.794752538233331e-08,
+      "relative_p99": 4.0765144375725344e-05,
+      "worst_actinv_b": 2.436982263085908e-05,
+      "worst_group": 592,
+      "worst_group_high_ev": 7244360.0,
+      "worst_group_low_ev": 6918310.0,
+      "worst_njoy_b": 2.4357196632560844e-05
+     },
+     "kind": "threshold",
+     "mt": 16,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 7233023.0,
+      "points": 68,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 0.008059676504711089,
+       "njoy_b": 0.008059676122286464,
+       "pass": true,
+       "relative": 4.744913060413698e-08,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 2.0264165195154344,
+       "njoy_b": 2.026416519210549,
+       "pass": true,
+       "relative": 1.5045547020039546e-10,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "resolved_lrf": [
+    7
+   ],
+   "threshold_mt": 16,
+   "unresolved": {
+    "dilution_b": 10000000000.0,
+    "energy_max_ev": 99999.9,
+    "energy_min_ev": 10000.01,
+    "interpretation": "MF=3 is authoritative in the LSSF=1 interval",
+    "lssf": 1,
+    "mf3_vs_unresr_capture_max_relative": 0.0421627482080832,
+    "table_points": 21,
+    "temperature_K": 293.6
+   },
+   "za": 74186
+  },
+  {
+   "actinv": {
+    "completed": true,
+    "groups": 709,
+    "library_sha256": "f26264a22e29473057ce8a99ef1363a66a12e8da29f911be58f61aa8099e1aeb",
+    "rows": 12
+   },
+   "all_compared_arrays_sha256": "c2ef37aeb17100db33a8f1153831e6531f5d23a51651f75a0eec0916accbc1f4",
+   "mat": 7925,
+   "name": "Au197",
+   "njoy": {
+    "deck_sha256": "6d2738e58ff2cb13fe961c2e41bb32a01814f152f0474333ec6ae87f608225e1",
+    "fresh_run": true,
+    "pendf_bytes": 15191712,
+    "pendf_sha256": "1741302c1888c11e58db9b7644d6d2ffeb9a279a19d4091e04a89d08e5932e5e"
+   },
+   "pass": true,
+   "reactions": [
+    {
+     "compact_arrays_sha256": "60f4c8c54a5a9ff5535793f7a5a40341747357bcd4ba2feb3463650ef239bfa0",
+     "group_comparison": {
+      "groups_below_cutoff": 68,
+      "groups_compared": 641,
+      "groups_total": 709,
+      "maximum_relative": 0.0075803061294216914,
+      "non_negligible_cutoff_b": 0.00019801621455269754,
+      "pass": true,
+      "reference_peak_b": 19801.621455269753,
+      "relative_p50": 2.1150562087648923e-05,
+      "relative_p90": 7.271563794322854e-05,
+      "relative_p99": 0.00012000366560361679,
+      "worst_actinv_b": 0.5398673988760614,
+      "worst_group": 434,
+      "worst_group_high_ev": 5011.872,
+      "worst_group_low_ev": 4786.301,
+      "worst_njoy_b": 0.5439910173189949
+     },
+     "kind": "capture",
+     "mt": 102,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 1e-05,
+      "points": 125208,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 87.88976013288136,
+       "njoy_b": 87.8894551921022,
+       "pass": true,
+       "relative": 3.4695946003170365e-06,
+       "spectrum": "thermal"
+      },
+      {
+       "actinv_b": 401.25478047241245,
+       "njoy_b": 401.252036631734,
+       "pass": true,
+       "relative": 6.8381975117425955e-06,
+       "spectrum": "one_over_e"
+      },
+      {
+       "actinv_b": 0.07672025011789957,
+       "njoy_b": 0.07671938962962915,
+       "pass": true,
+       "relative": 1.1216046876410418e-05,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.0012785583295352042,
+       "njoy_b": 0.0012785328176323125,
+       "pass": true,
+       "relative": 1.9954046184685917e-05,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    },
+    {
+     "compact_arrays_sha256": "74eedda30a547db2a54bcbb5a412f15d74b78240e532f9844a95c50b9d93fae2",
+     "group_comparison": {
+      "groups_below_cutoff": 637,
+      "groups_compared": 72,
+      "groups_total": 709,
+      "maximum_relative": 4.690300718560028e-06,
+      "non_negligible_cutoff_b": 3.0218231318211024e-11,
+      "pass": true,
+      "reference_peak_b": 0.0030218231318211025,
+      "relative_p50": 2.2639211690841327e-16,
+      "relative_p90": 4.3353819859871364e-08,
+      "relative_p99": 1.5234131313695217e-06,
+      "worst_actinv_b": 0.0025730604834253517,
+      "worst_group": 659,
+      "worst_group_high_ev": 30000000.0,
+      "worst_group_low_ev": 29000000.0,
+      "worst_njoy_b": 0.0025730484150545217
+     },
+     "kind": "threshold",
+     "mt": 107,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 4999.999,
+      "points": 1049,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 4.704289386217783e-07,
+       "njoy_b": 4.704289395840027e-07,
+       "pass": true,
+       "relative": 2.0454192288290124e-09,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.00027984195731068485,
+       "njoy_b": 0.0002798419573106848,
+       "pass": true,
+       "relative": 1.9371687199889878e-16,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "resolved_lrf": [
+    2
+   ],
+   "threshold_mt": 107,
+   "unresolved": null,
+   "za": 79197
+  },
+  {
+   "actinv": {
+    "completed": true,
+    "groups": 709,
+    "library_sha256": "cb65c932e97d08fc7434b117e63e99587c2998bf02e5077a133c962dcd7d0dd6",
+    "rows": 28
+   },
+   "all_compared_arrays_sha256": "b72e44bee8f5a88c48e0eb523c7f229223408b0c7245ce9ec1f4ede83b5815cc",
+   "mat": 2725,
+   "name": "Co59",
+   "njoy": {
+    "deck_sha256": "8800536e135d1bc18aa433a4a482ea6b44260ccbdbf23ba411077f4480c0e9fb",
+    "fresh_run": true,
+    "pendf_bytes": 8927820,
+    "pendf_sha256": "b8f86626d6b1f67facc10c08f8c9a50e3305fcef64b48b0c7529e6b7925123b5"
+   },
+   "pass": true,
+   "reactions": [
+    {
+     "compact_arrays_sha256": "5d7a4c386cf67af091685a24887db69a4693d039672830b93fa6a3f97a5915ae",
+     "group_comparison": {
+      "groups_below_cutoff": 59,
+      "groups_compared": 650,
+      "groups_total": 709,
+      "maximum_relative": 0.00023417222966057544,
+      "non_negligible_cutoff_b": 1.847820230932882e-05,
+      "pass": true,
+      "reference_peak_b": 1847.820230932882,
+      "relative_p50": 7.767623959707047e-06,
+      "relative_p90": 6.999947358420904e-05,
+      "relative_p99": 0.00013367767299926888,
+      "worst_actinv_b": 0.0002524388564974144,
+      "worst_group": 649,
+      "worst_group_high_ev": 20000000.0,
+      "worst_group_low_ev": 19800000.0,
+      "worst_njoy_b": 0.0002524979845134327
+     },
+     "kind": "capture",
+     "mt": 102,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 1e-05,
+      "points": 71273,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 32.94956321287148,
+       "njoy_b": 32.949438907416834,
+       "pass": true,
+       "relative": 3.772612183081205e-06,
+       "spectrum": "thermal"
+      },
+      {
+       "actinv_b": 134.0747097824937,
+       "njoy_b": 134.07411622069586,
+       "pass": true,
+       "relative": 4.427116990018163e-06,
+       "spectrum": "one_over_e"
+      },
+      {
+       "actinv_b": 0.004968930373722386,
+       "njoy_b": 0.004968914398325955,
+       "pass": true,
+       "relative": 3.2150677492959225e-06,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.0008887431668634347,
+       "njoy_b": 0.0008887443629613385,
+       "pass": true,
+       "relative": 1.3458289623210553e-06,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    },
+    {
+     "compact_arrays_sha256": "450aaf17ba5b6fd7d02e7c2a440a28e2fad8236c413f7e5e58cb3619da932419",
+     "group_comparison": {
+      "groups_below_cutoff": 617,
+      "groups_compared": 92,
+      "groups_total": 709,
+      "maximum_relative": 2.4715686427597735e-05,
+      "non_negligible_cutoff_b": 5.218235448162659e-10,
+      "pass": true,
+      "reference_peak_b": 0.052182354481626586,
+      "relative_p50": 1.6922180041040295e-16,
+      "relative_p90": 1.3682654049203264e-08,
+      "relative_p99": 2.268943607652396e-06,
+      "worst_actinv_b": 0.031200335010630926,
+      "worst_group": 649,
+      "worst_group_high_ev": 20000000.0,
+      "worst_group_low_ev": 19800000.0,
+      "worst_njoy_b": 0.031199563891993094
+     },
+     "kind": "threshold",
+     "mt": 103,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 1500000.0,
+      "points": 1316,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 0.001434386700017006,
+       "njoy_b": 0.0014343866966763114,
+       "pass": true,
+       "relative": 2.329005478275069e-09,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.04991758666835332,
+       "njoy_b": 0.04991758666835332,
+       "pass": true,
+       "relative": 0.0,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "resolved_lrf": [
+    3
+   ],
+   "threshold_mt": 103,
+   "unresolved": null,
+   "za": 27059
+  },
+  {
+   "actinv": {
+    "completed": true,
+    "groups": 709,
+    "library_sha256": "1e0b05d22f86aab60038f0704449bc11c063e01f752ae69fc72babf6be8d6ea4",
+    "rows": 16
+   },
+   "all_compared_arrays_sha256": "34477d689335478d69d17a0f290fbe2e2054dec52b79dda36ab16ec99943653c",
+   "mat": 2825,
+   "name": "Ni58",
+   "njoy": {
+    "deck_sha256": "61e652b9c663aaae80076b68046e14f56fbe127ec874404b50b3a0ea3555d620",
+    "fresh_run": true,
+    "pendf_bytes": 28323594,
+    "pendf_sha256": "4af1f7be5de3b6567c43ea8cc2307040c9c7a8c803d9677fe5c1472e99b5a46e"
+   },
+   "pass": true,
+   "reactions": [
+    {
+     "compact_arrays_sha256": "cc3d1aa0ee9201aabf81d98dbcc1998641ed565c6b380fe7bdaad25231634956",
+     "group_comparison": {
+      "groups_below_cutoff": 59,
+      "groups_compared": 650,
+      "groups_total": 709,
+      "maximum_relative": 0.00024775388195386115,
+      "non_negligible_cutoff_b": 2.1008560544968946e-06,
+      "pass": true,
+      "reference_peak_b": 210.08560544968947,
+      "relative_p50": 1.6118000377920406e-05,
+      "relative_p90": 7.931455164781599e-05,
+      "relative_p99": 0.00012838990851024603,
+      "worst_actinv_b": 0.008150440544622018,
+      "worst_group": 545,
+      "worst_group_high_ev": 831763.8,
+      "worst_group_low_ev": 794328.2,
+      "worst_njoy_b": 0.00815246034832079
+     },
+     "kind": "capture",
+     "mt": 102,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 1e-05,
+      "points": 208175,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 3.7444558674361783,
+       "njoy_b": 3.7444891788124135,
+       "pass": true,
+       "relative": 8.896106957305957e-06,
+       "spectrum": "thermal"
+      },
+      {
+       "actinv_b": 15.00994830169811,
+       "njoy_b": 15.010070967741301,
+       "pass": true,
+       "relative": 8.17224938210286e-06,
+       "spectrum": "one_over_e"
+      },
+      {
+       "actinv_b": 0.0058801604632475885,
+       "njoy_b": 0.005880083392761241,
+       "pass": true,
+       "relative": 1.3107039679387765e-05,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.00047819751647332247,
+       "njoy_b": 0.00047819761867281835,
+       "pass": true,
+       "relative": 2.1371811964640143e-07,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    },
+    {
+     "compact_arrays_sha256": "0adecd0c54c94f2ba1df23dd93e17428cfe788fc1b2534a04100aeabc631e42b",
+     "group_comparison": {
+      "groups_below_cutoff": 592,
+      "groups_compared": 117,
+      "groups_total": 709,
+      "maximum_relative": 0.0004806004269030947,
+      "non_negligible_cutoff_b": 6.278033357103939e-09,
+      "pass": true,
+      "reference_peak_b": 0.6278033357103938,
+      "relative_p50": 1.093811118339028e-08,
+      "relative_p90": 4.7524256957628416e-08,
+      "relative_p99": 1.571637737753755e-07,
+      "worst_actinv_b": 9.703190010247901e-08,
+      "worst_group": 534,
+      "worst_group_high_ev": 501187.2,
+      "worst_group_low_ev": 478630.1,
+      "worst_njoy_b": 9.707855609798284e-08
+     },
+     "kind": "threshold",
+     "mt": 103,
+     "njoy_curve": {
+      "energy_max_ev": 150000000.0,
+      "energy_min_ev": 499884.1,
+      "points": 68686,
+      "source": "NJOY BROADR MF=3"
+     },
+     "one_group": [
+      {
+       "actinv_b": 0.10664565208872548,
+       "njoy_b": 0.10664565217465852,
+       "pass": true,
+       "relative": 8.057809831955456e-10,
+       "spectrum": "fission_like"
+      },
+      {
+       "actinv_b": 0.36372616763079857,
+       "njoy_b": 0.3637261765188594,
+       "pass": true,
+       "relative": 2.4436131949414753e-08,
+       "spectrum": "fusion_like"
+      }
+     ],
+     "pass": true
+    }
+   ],
+   "resolved_lrf": [
+    3
+   ],
+   "threshold_mt": 103,
+   "unresolved": null,
+   "za": 28058
+  }
+ ]
+}
