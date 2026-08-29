@@ -1,0 +1,25 @@
+{
+ "authorization_sha256": "6646ec1466d251cd53e8706f97f0775bb126d8e26e40c2b6f28aa7d2d0c9f491",
+ "checker_source_sha256": "d7736ed6fe554d3cda4b9465204ce5d44efa6217292213da7139077100a46660",
+ "checkpoint": "7c4c39bfb8b5de12dff644cd1b635dc9010f3d28",
+ "checks": {
+  "all_three_families_authorized": true,
+  "authorization_checkpoint_matches": true,
+  "authorization_fields_exact": true,
+  "authorization_verdict": true,
+  "checkpoint_evidence_hashes_match": true,
+  "checkpoint_evidence_present": true,
+  "checkpoint_exists": true,
+  "checkpoint_is_ancestor": true,
+  "checkpoint_pushed_to_origin": true,
+  "checkpoint_subject_matches": true,
+  "no_held_out_result_at_checkpoint": true,
+  "no_numeric_row_read_before_authorization": true,
+  "protocol_bound": true,
+  "successful_clean_workflow_bound": true
+ },
+ "pass": true,
+ "protocol_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+ "schema": "actinv-p17-unseal-check-1",
+ "workflow_database_id": 33229661931
+}

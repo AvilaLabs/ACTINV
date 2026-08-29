@@ -195,6 +195,7 @@ PRE_UNSEAL_ALLOWED_RESULTS = {
     "results/g4_p17_diagnostics.json",
     "results/p17_cause_ledger.json",
     "results/p17_unseal_authorization.json",
+    "results/p17_unseal_check.json",
 }
 
 

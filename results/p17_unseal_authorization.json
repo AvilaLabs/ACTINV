@@ -1,0 +1,38 @@
+{
+ "schema": "actinv-p17-unseal-authorization-1",
+ "protocol_sha256": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+ "checkpoint": {
+  "commit": "7c4c39bfb8b5de12dff644cd1b635dc9010f3d28",
+  "subject": "Establish P17 diagnostic unseal checkpoint",
+  "pushed_to": "https://github.com/AvilaLabs/ACTINV.git"
+ },
+ "workflow": {
+  "database_id": 33229661931,
+  "name": "controls",
+  "event": "push",
+  "head_sha": "7c4c39bfb8b5de12dff644cd1b635dc9010f3d28",
+  "created_at": "2026-08-29T02:43:39Z",
+  "completed_at": "2026-08-29T02:50:05Z",
+  "status": "completed",
+  "conclusion": "success",
+  "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33229661931"
+ },
+ "evidence": {
+  "g1_operators": "3e0e56529f4ea498bf657bfb48cea9a74863829a6b94276017f29589a5d238da",
+  "g2_identical_data": "b23b9afdace1a3595cb8b42f02c088ee3889bdc17d6fc0dd605e84b119d30197",
+  "g3_processing": "01b76e2b9ad42aca8d1998069c5550bc6f1c91614f3f2b7a4108f356e1bb62e8",
+  "g4_diagnostics": "c65ad753055923afe77df82a2d532effa1f8c594cdedb7bfbe7344adf747bcaa",
+  "g4_independent_check": "3c8880b5185d491467ea920a72f80c20555ed274017cc45ce2c4bda50fb8f305",
+  "cause_ledger": "85743dc9b2b6aaae066453e395a4336c0671520d7d2f4da383e0254a839fa143",
+  "diagnostic_schema": "eaf119980cd4fdbbe4b09ffb1f482f15165db764c24eefbb445cd748916b5c13",
+  "cause_ledger_schema": "b4642cf8a83322977e6ee5f0f5bf2e6188bb1c8d34b8da3dcbd88b602d106476"
+ },
+ "held_out_families_authorized": {
+  "H1": "SPR-III operations, foil composition, and EOI activities",
+  "H2": "ACRR operations and EOI activities",
+  "H3": "high-temperature Maxwellian spectrum-averaged cross sections"
+ },
+ "numeric_held_out_rows_read_before_authorization": false,
+ "authorized": true,
+ "pass": true
+}
