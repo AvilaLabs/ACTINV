@@ -1,0 +1,146 @@
+{
+ "binaries": {
+  "candidate": {
+   "bytes": 9272312,
+   "path": "/home/connoravila/Documents/actinv/target/release/actinv",
+   "sha256": "f9c937734762930399ec39088f89af1a2d648e7b583297329f9b1d43f8dc4e98"
+  },
+  "release": {
+   "bytes": 9278696,
+   "path": "/home/connoravila/Documents/actinv/target/p16-opening-target/release/actinv",
+   "sha256": "ee77318256b74bd789ee07288e28e22ede7c37bc76648877c57d49bad2f0bf98"
+  }
+ },
+ "checks": {
+  "comparator_plant_rejected": true,
+  "median": true,
+  "normalized_result_exact": true,
+  "p95": true,
+  "peak_rss": true,
+  "samples": true
+ },
+ "cold_cache_ms": {
+  "candidate": 3952.8495049999997,
+  "release": 4009.5177999999996
+ },
+ "gate": "P16-G5",
+ "host": {
+  "machine": "x86_64",
+  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+  "processor": "",
+  "python": "3.12.13",
+  "thread_environment": {
+   "MKL_NUM_THREADS": "1",
+   "NUMEXPR_NUM_THREADS": "1",
+   "OMP_NUM_THREADS": "1",
+   "OPENBLAS_NUM_THREADS": "1",
+   "RAYON_NUM_THREADS": "1"
+  }
+ },
+ "inputs": {
+  "activation_index": {
+   "actual_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "bytes": 2653304,
+   "expected_sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10_index.json"
+  },
+  "activation_library": {
+   "actual_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "bytes": 123897743,
+   "expected_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10.npz"
+  },
+  "decay_fallback": {
+   "actual_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "bytes": 45718116,
+   "expected_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+   "path": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat"
+  },
+  "decay_primary": {
+   "actual_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "bytes": 68313052,
+   "expected_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "path": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat"
+  }
+ },
+ "limits": {
+  "effective_rss_ceiling_bytes": 145850368,
+  "median_ratio": 1.1,
+  "p95_ratio": 1.15,
+  "rss_absolute_allowance_bytes": 16777216,
+  "rss_ratio": 1.1
+ },
+ "normalized_result_sha256": "dedfe531fbf074b3b82277511396fb4ecb0092e27e0daa32b48ddd05b6157804",
+ "pass": true,
+ "peak_rss_bytes": {
+  "candidate": 129089536,
+  "release": 129073152
+ },
+ "ratios": {
+  "candidate_over_release_median": 0.970514098902999,
+  "candidate_over_release_p95": 0.9758719070110186,
+  "candidate_over_release_peak_rss": 1.0001269357705
+ },
+ "release_commit": "0332779401363d2f39722efe7a0b7218afcfb270",
+ "resolved_signed_tag_commit": "0332779401363d2f39722efe7a0b7218afcfb270",
+ "rss_measurement_wall_ms": {
+  "candidate": 740.467841,
+  "release": 777.95931
+ },
+ "samples_per_binary": 15,
+ "schema": "actinv-p16-performance-1",
+ "warm": {
+  "candidate": {
+   "mean_ms": 747.0903467999999,
+   "median_ms": 745.204111,
+   "minimum_ms": 730.06594,
+   "p95_ms": 769.9835631,
+   "raw_ms": [
+    730.565033,
+    744.098309,
+    766.556334,
+    749.948535,
+    743.664058,
+    730.06594,
+    732.697589,
+    730.233119,
+    745.204111,
+    748.465863,
+    736.4572479999999,
+    753.176427,
+    752.792071,
+    768.135984,
+    774.294581
+   ],
+   "sample_standard_deviation_ms": 14.225408924280847,
+   "samples": 15
+  },
+  "release": {
+   "mean_ms": 769.0458136666667,
+   "median_ms": 767.844704,
+   "minimum_ms": 751.178497,
+   "p95_ms": 789.0211385,
+   "raw_ms": [
+    755.122589,
+    776.714169,
+    774.905635,
+    753.259514,
+    758.297067,
+    757.4931379999999,
+    767.844704,
+    764.043,
+    772.372531,
+    780.720278,
+    751.178497,
+    764.7032449999999,
+    786.883013,
+    778.139727,
+    794.010098
+   ],
+   "sample_standard_deviation_ms": 12.876375948844775,
+   "samples": 15
+  }
+ },
+ "warmups_per_binary": 5,
+ "workload": "examples/fns_fe_5min.json with exact data-v1.0.0 paths"
+}

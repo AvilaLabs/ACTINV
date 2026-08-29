@@ -204,4 +204,35 @@ mod tests {
             assert!((*analytic - finite).abs() / scale < 2.0e-9);
         }
     }
+
+    #[test]
+    fn decay_semigroup_matches_analytic_parent_and_daughter() {
+        let coefficients = cram16();
+        let decay_constant = std::f64::consts::LN_2 / 100.0;
+        let generator = Csc::from_triplets(
+            2,
+            &[
+                (0, 0, C64::new(-decay_constant, 0.0)),
+                (1, 0, C64::new(decay_constant, 0.0)),
+            ],
+        );
+        let initial = [1.0e20, 0.0];
+        let unsplit = step(&generator, &initial, 300.0, &coefficients)
+            .expect("unsplit decay")
+            .0;
+        let first = step(&generator, &initial, 100.0, &coefficients)
+            .expect("first decay partition")
+            .0;
+        let split = step(&generator, &first, 200.0, &coefficients)
+            .expect("second decay partition")
+            .0;
+        let expected_parent = initial[0] * (-decay_constant * 300.0).exp();
+        let expected_daughter = initial[0] - expected_parent;
+        for (actual, expected) in unsplit.iter().zip([expected_parent, expected_daughter]) {
+            assert!((actual - expected).abs() / expected < 5.0e-11);
+        }
+        for (one, partitioned) in unsplit.iter().zip(split) {
+            assert!((one - partitioned).abs() / one.abs().max(1.0) < 5.0e-11);
+        }
+    }
 }

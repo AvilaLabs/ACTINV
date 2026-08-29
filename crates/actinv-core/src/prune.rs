@@ -1,5 +1,32 @@
 //! Reachable-set and rate-significance pruning, with the bound on what rate pruning removed.
+use crate::quantity::AtomsPerGram;
+use crate::spec::PhysicalStep;
 use std::collections::VecDeque;
+
+trait ScheduleValue {
+    fn duration_seconds(&self) -> f64;
+    fn flux_multiplier(&self) -> f64;
+}
+
+impl ScheduleValue for (f64, f64) {
+    fn duration_seconds(&self) -> f64 {
+        self.0
+    }
+
+    fn flux_multiplier(&self) -> f64 {
+        self.1
+    }
+}
+
+impl ScheduleValue for PhysicalStep {
+    fn duration_seconds(&self) -> f64 {
+        self.duration().get()
+    }
+
+    fn flux_multiplier(&self) -> f64 {
+        self.multiplier().get()
+    }
+}
 
 /// Returns (kept indices, dropped (index, atom bound, feed bound)).
 pub fn reachable(
@@ -11,8 +38,35 @@ pub fn reachable(
     rate_mode: bool,
     bmin: f64,
 ) -> (Vec<usize>, Vec<(usize, f64, f64)>) {
-    let t_total: f64 = sched.iter().map(|(d, _)| d).sum();
-    let phi_max = sched.iter().map(|(_, f)| *f).fold(0.0, f64::max);
+    reachable_values(n, decay, react, n0, sched, rate_mode, bmin)
+}
+
+pub(crate) fn reachable_physical(
+    n: usize,
+    decay: &[(usize, usize, f64)],
+    react: &[(usize, usize, f64)],
+    n0: &[f64],
+    sched: &[PhysicalStep],
+    rate_mode: bool,
+    bmin: AtomsPerGram,
+) -> (Vec<usize>, Vec<(usize, f64, f64)>) {
+    reachable_values(n, decay, react, n0, sched, rate_mode, bmin.get())
+}
+
+fn reachable_values<S: ScheduleValue>(
+    n: usize,
+    decay: &[(usize, usize, f64)],
+    react: &[(usize, usize, f64)],
+    n0: &[f64],
+    sched: &[S],
+    rate_mode: bool,
+    bmin: f64,
+) -> (Vec<usize>, Vec<(usize, f64, f64)>) {
+    let t_total: f64 = sched.iter().map(ScheduleValue::duration_seconds).sum();
+    let phi_max = sched
+        .iter()
+        .map(ScheduleValue::flux_multiplier)
+        .fold(0.0, f64::max);
     let mut lam = vec![0.0f64; n];
     for (i, j, v) in decay {
         if i == j {

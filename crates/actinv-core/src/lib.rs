@@ -7,6 +7,7 @@ pub mod flux;
 pub mod mesh;
 pub mod photon;
 pub mod prune;
+pub mod quantity;
 pub mod radiological;
 pub mod run;
 pub mod sparse;

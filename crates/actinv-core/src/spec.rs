@@ -1,6 +1,10 @@
 #![allow(non_snake_case)] // field names are the JSON wire format (boundaries_eV, temperature_K)
 //! `actinv-spec-1`: the one problem description the CLI, the Python API and the harness all consume.
 //! Unknown fields are an error (`deny_unknown_fields`) — a misspelt option must never be silently ignored.
+use crate::quantity::{
+    AtomsPerGram, ElectronVolts, EnergyBoundaries, FluxMultiplier, Grams, GroupFluxes, Kelvin,
+    Seconds,
+};
 pub use actinv_data::activation::Projectile;
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
@@ -227,6 +231,34 @@ impl Default for Options {
             outputs: None,
         }
     }
+}
+
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct PhysicalStep {
+    duration: Seconds,
+    multiplier: FluxMultiplier,
+}
+
+impl PhysicalStep {
+    pub(crate) const fn duration(self) -> Seconds {
+        self.duration
+    }
+
+    pub(crate) const fn multiplier(self) -> FluxMultiplier {
+        self.multiplier
+    }
+}
+
+#[derive(Debug, Clone)]
+pub(crate) struct PhysicalInputs {
+    pub(crate) mass: Grams,
+    pub(crate) temperature: Kelvin,
+    pub(crate) bmin: AtomsPerGram,
+    pub(crate) flux: GroupFluxes,
+    pub(crate) schedule: Vec<PhysicalStep>,
+    pub(crate) photon_boundaries: EnergyBoundaries,
+    pub(crate) gamma_cutoff: ElectronVolts,
+    pub(crate) fixed_fission_energy: Option<ElectronVolts>,
 }
 
 /// Parse a duration like "5 min" (also "5min", "300", "1 y"). Seconds when no unit is given.
@@ -567,6 +599,56 @@ impl Spec {
         }
         Ok(())
     }
+
+    pub(crate) fn physical_inputs(&self) -> Result<PhysicalInputs, String> {
+        let mass = Grams::new(self.material.mass_g)
+            .map_err(|_| "material.mass_g must be positive".to_string())?;
+        let temperature = Kelvin::new(self.options.temperature_K)
+            .map_err(|_| "options.temperature_K must be finite and nonnegative".to_string())?;
+        let bmin = AtomsPerGram::new(self.options.bmin_atoms_per_g)
+            .map_err(|_| "options.bmin_atoms_per_g must be finite and nonnegative".to_string())?;
+        let flux = GroupFluxes::new(self.flux_ascending())
+            .map_err(|_| "group fluxes must be finite and nonnegative".to_string())?;
+        let schedule = self
+            .schedule
+            .iter()
+            .map(|step| {
+                let parsed = parse_duration(&step.dt)?;
+                let duration =
+                    Seconds::new(parsed).map_err(|_| format!("negative duration '{}'", step.dt))?;
+                let multiplier = FluxMultiplier::new(step.flux)
+                    .map_err(|_| "flux multiplier must be finite and nonnegative".to_string())?;
+                Ok(PhysicalStep {
+                    duration,
+                    multiplier,
+                })
+            })
+            .collect::<Result<Vec<_>, String>>()?;
+        let photon_boundaries = EnergyBoundaries::new(self.photon_boundaries()).map_err(|_| {
+            "photon.group_boundaries_eV must be finite, nonnegative and strictly increasing"
+                .to_string()
+        })?;
+        let gamma_cutoff = ElectronVolts::new(self.photon.gamma_constant_cutoff_eV)
+            .map_err(|_| "photon.gamma_constant_cutoff_eV must be nonnegative".to_string())?;
+        let fixed_fission_energy = self
+            .fission_yields
+            .fixed_energy_eV
+            .map(ElectronVolts::new)
+            .transpose()
+            .map_err(|_| {
+                "fission_yields.fixed_energy_eV must be finite and nonnegative".to_string()
+            })?;
+        Ok(PhysicalInputs {
+            mass,
+            temperature,
+            bmin,
+            flux,
+            schedule,
+            photon_boundaries,
+            gamma_cutoff,
+            fixed_fission_energy,
+        })
+    }
     /// Group fluxes in ascending-energy order, scaled to `total` when given.
     pub fn flux_ascending(&self) -> Vec<f64> {
         let mut f = self.spectrum.flux_per_group.clone();
@@ -629,6 +711,21 @@ mod duration_tests {
             "unknown time unit 'ms' in '2.5E+3ms'"
         );
         assert_eq!(parse_duration("3e2").unwrap(), 300.0);
+    }
+
+    #[test]
+    fn equivalent_duration_spellings_share_the_physical_boundary() {
+        let spellings = ["300 s", "300s", "5 min", "5min", "0.08333333333333333 h"];
+        for spelling in spellings {
+            let seconds = parse_duration(spelling).unwrap();
+            assert!((seconds - 300.0).abs() <= f64::EPSILON * 300.0);
+        }
+
+        let mut value = minimal_spec();
+        for invalid in ["-1 s", "nan s", "inf s", "1 fortnight"] {
+            value["schedule"][0]["dt"] = serde_json::Value::String(invalid.into());
+            assert!(Spec::from_json(&value.to_string()).is_err(), "{invalid}");
+        }
     }
 
     #[test]

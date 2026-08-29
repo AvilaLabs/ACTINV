@@ -44,6 +44,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements-ci.txt
 
+      - name: P16 typed-boundary control and independent verdict
+        run: |
+          python controls/g1_p16_quantities.py --no-write
+          python controls/check_p16.py --no-write
+
       - name: P15 prepared-cache integrity and verdict
         env:
           ACTINV_BIN: target/release/actinv

@@ -1,0 +1,225 @@
+{
+ "cargo": "cargo 1.98.0 (797e8a9bc 2026-08-05)",
+ "consumer_fixtures": {
+  "compile_fail": {
+   "fail_cross_section_rate.rs": {
+    "diagnostic_codes": [
+     "E0308"
+    ],
+    "diagnostic_sha256": "5b3b595b9a92cfbaa348a25cbcb9b97ff0c5fb6967a827756777a8c2f5013cf3",
+    "expected_types": [
+     "RatePerBarnSecond",
+     "Seconds"
+    ],
+    "expected_types_named": true,
+    "pass": true,
+    "returncode": 101
+   },
+   "fail_energy_rate.rs": {
+    "diagnostic_codes": [
+     "E0308"
+    ],
+    "diagnostic_sha256": "1639e896ccc65335f6950d3fea76030bee222dddebc310e3e7bc23f7ca29d4a0",
+    "expected_types": [
+     "RatePerSecond",
+     "ElectronVolts"
+    ],
+    "expected_types_named": true,
+    "pass": true,
+    "returncode": 101
+   },
+   "fail_flux_multiplier.rs": {
+    "diagnostic_codes": [
+     "E0308"
+    ],
+    "diagnostic_sha256": "5be92eacd4c98987e5a7e79551f9e65211892f9ce755b366c5212fe1e2e4a93d",
+    "expected_types": [
+     "ParticleFlux",
+     "FluxMultiplier"
+    ],
+    "expected_types_named": true,
+    "pass": true,
+    "returncode": 101
+   },
+   "fail_grams_atoms.rs": {
+    "diagnostic_codes": [
+     "E0308"
+    ],
+    "diagnostic_sha256": "75f74590a235ddbdb37e302cbadaf0337a52b351ee0817a1ae80f41a87b031e2",
+    "expected_types": [
+     "AtomsPerGram",
+     "Grams"
+    ],
+    "expected_types_named": true,
+    "pass": true,
+    "returncode": 101
+   },
+   "fail_mass_temperature.rs": {
+    "diagnostic_codes": [
+     "E0308"
+    ],
+    "diagnostic_sha256": "f610ed8ac0013c0612145e14b98212345b0f4b7ff1fa56e6ddee2d6a081b07bd",
+    "expected_types": [
+     "Grams",
+     "Kelvin"
+    ],
+    "expected_types_named": true,
+    "pass": true,
+    "returncode": 101
+   },
+   "fail_time_energy.rs": {
+    "diagnostic_codes": [
+     "E0308"
+    ],
+    "diagnostic_sha256": "bd9959c99a8c7cfdbf5033515b14508b32cd1a8b4525c99bbe17894ee1ec6e01",
+    "expected_types": [
+     "Seconds",
+     "ElectronVolts"
+    ],
+    "expected_types_named": true,
+    "pass": true,
+    "returncode": 101
+   }
+  },
+  "legacy": {
+   "pass": true,
+   "returncode": 0,
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "pass": true,
+  "positive": {
+   "pass": true,
+   "returncode": 0,
+   "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "stdout": "p16-quantity-pass"
+  }
+ },
+ "dependency_manifests": {
+  "files": [
+   {
+    "current_sha256": "8d517b30e9c9b1abb2919a7f5a246fea14d4b471b595a9beb97cfa50874c748a",
+    "equal": true,
+    "opening_sha256": "8d517b30e9c9b1abb2919a7f5a246fea14d4b471b595a9beb97cfa50874c748a",
+    "path": "Cargo.lock"
+   },
+   {
+    "current_sha256": "80de6117caf528f6ab40b1453d529838f43335dae145669796620849343a0c1a",
+    "equal": true,
+    "opening_sha256": "80de6117caf528f6ab40b1453d529838f43335dae145669796620849343a0c1a",
+    "path": "Cargo.toml"
+   },
+   {
+    "current_sha256": "c101c7625ea72032e01549d95fd0cfb6d06a0bb77f9f59946ff25af9a83c1031",
+    "equal": true,
+    "opening_sha256": "c101c7625ea72032e01549d95fd0cfb6d06a0bb77f9f59946ff25af9a83c1031",
+    "path": "crates/actinv-cli/Cargo.toml"
+   },
+   {
+    "current_sha256": "1c4ebe6ec262a10550854254a07b7b4da8f64914d44c4faa63888c0c87586f7a",
+    "equal": true,
+    "opening_sha256": "1c4ebe6ec262a10550854254a07b7b4da8f64914d44c4faa63888c0c87586f7a",
+    "path": "crates/actinv-core/Cargo.toml"
+   },
+   {
+    "current_sha256": "487cf2ae7cdb95dfae57aacc2bfd28ac0f71e7b59e06a4104bc11304c33973de",
+    "equal": true,
+    "opening_sha256": "487cf2ae7cdb95dfae57aacc2bfd28ac0f71e7b59e06a4104bc11304c33973de",
+    "path": "crates/actinv-data/Cargo.toml"
+   },
+   {
+    "current_sha256": "8dbf95ef2f9ce140a1806fa5f1eac3a896761dcc856844307e71b142f5bbbf0b",
+    "equal": true,
+    "opening_sha256": "8dbf95ef2f9ce140a1806fa5f1eac3a896761dcc856844307e71b142f5bbbf0b",
+    "path": "python/Cargo.toml"
+   }
+  ],
+  "pass": true
+ },
+ "gate": "P16-G1-G2",
+ "opening_commit": "0332779401363d2f39722efe7a0b7218afcfb270",
+ "pass": true,
+ "protocol": {
+  "actual_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+  "expected_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+  "logged": true,
+  "pass": true,
+  "path": "protocols/ACTINV-P16_PROTOCOL.md"
+ },
+ "quantity_document_sha256": "348ff7eb3a53adef7a431191bf429ab6dc3be291ac80978795d270abe627330a",
+ "quantity_source_sha256": "ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9",
+ "rust_checks": {
+  "commands": {
+   "doctests": {
+    "pass": true,
+    "returncode": 0,
+    "stderr_sha256": "3987dffa94482417e0b7358fae19e344a215c818bb563ee1611cdd216e42dd76",
+    "stdout_sha256": "26ab4c44451a94250e0a30faae511080da5a57ffb5de298eeace670fb93d90db"
+   },
+   "quantity_tests": {
+    "pass": true,
+    "returncode": 0,
+    "stderr_sha256": "2b06ef1f69fcc296b680acf621067ff39c74686957aad82a24c01ef215e1ca98",
+    "stdout_sha256": "09a53a70c7aa8685f4165ca3f84ae092d5b55dd773038f771b0c727c444a53c2"
+   }
+  },
+  "pass": true
+ },
+ "schema": "actinv-p16-quantities-1",
+ "source_contract": {
+  "barn_factor_occurrences": [
+   {
+    "line": 16,
+    "path": "crates/actinv-core/src/quantity.rs"
+   }
+  ],
+  "blanket_scalar_conversion_absent": true,
+  "documented": {
+   "AtomsPerGram": true,
+   "CrossSectionBarns": true,
+   "ElectronVolts": true,
+   "FluxMultiplier": true,
+   "Grams": true,
+   "Kelvin": true,
+   "ParticleFluence": true,
+   "ParticleFlux": true,
+   "RatePerBarnSecond": true,
+   "RatePerSecond": true,
+   "Seconds": true
+  },
+  "pass": true,
+  "repr_transparent_private_f64": {
+   "AtomsPerGram": true,
+   "CrossSectionBarns": true,
+   "ElectronVolts": true,
+   "FluxMultiplier": true,
+   "Grams": true,
+   "Kelvin": true,
+   "ParticleFluence": true,
+   "ParticleFlux": true,
+   "RatePerBarnSecond": true,
+   "RatePerSecond": true,
+   "Seconds": true
+  },
+  "scalar_types": [
+   "Seconds",
+   "ElectronVolts",
+   "Kelvin",
+   "Grams",
+   "AtomsPerGram",
+   "ParticleFlux",
+   "FluxMultiplier",
+   "ParticleFluence",
+   "CrossSectionBarns",
+   "RatePerBarnSecond",
+   "RatePerSecond"
+  ],
+  "unsafe_blocks": [],
+  "wiring": {
+   "shared_prepare": true,
+   "spec_view": true,
+   "typed_cross_section": true,
+   "typed_prune": true,
+   "typed_rate": true
+  }
+ }
+}

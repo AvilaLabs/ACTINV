@@ -1,0 +1,251 @@
+{
+ "cases": {
+  "charged_proton": {
+   "candidate_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "candidate_sha256": {
+    "cli": "6d5d2ba865a28c0d4920792cd91c17503c128f44a71f680f6c60c2172dc2180f",
+    "prepared": "6d5d2ba865a28c0d4920792cd91c17503c128f44a71f680f6c60c2172dc2180f",
+    "python": "6d5d2ba865a28c0d4920792cd91c17503c128f44a71f680f6c60c2172dc2180f"
+   },
+   "pass": true,
+   "release_candidate_exact": true,
+   "release_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "release_sha256": {
+    "cli": "6d5d2ba865a28c0d4920792cd91c17503c128f44a71f680f6c60c2172dc2180f",
+    "prepared": "6d5d2ba865a28c0d4920792cd91c17503c128f44a71f680f6c60c2172dc2180f",
+    "python": "6d5d2ba865a28c0d4920792cd91c17503c128f44a71f680f6c60c2172dc2180f"
+   }
+  },
+  "coupled": {
+   "candidate_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "candidate_sha256": {
+    "cli": "6ae9504df9b66f0ce3dbf707c274e56aef069fe3a0a45bb91dc0e36f1d738cc7",
+    "prepared": "6ae9504df9b66f0ce3dbf707c274e56aef069fe3a0a45bb91dc0e36f1d738cc7",
+    "python": "6ae9504df9b66f0ce3dbf707c274e56aef069fe3a0a45bb91dc0e36f1d738cc7"
+   },
+   "pass": true,
+   "release_candidate_exact": true,
+   "release_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "release_sha256": {
+    "cli": "6ae9504df9b66f0ce3dbf707c274e56aef069fe3a0a45bb91dc0e36f1d738cc7",
+    "prepared": "6ae9504df9b66f0ce3dbf707c274e56aef069fe3a0a45bb91dc0e36f1d738cc7",
+    "python": "6ae9504df9b66f0ce3dbf707c274e56aef069fe3a0a45bb91dc0e36f1d738cc7"
+   }
+  },
+  "radiological": {
+   "candidate_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "candidate_sha256": {
+    "cli": "71ba7ab3e9b7630f2d97a5879a0784dfc8df91fdb93c101b7a32ebfd305198e4",
+    "prepared": "71ba7ab3e9b7630f2d97a5879a0784dfc8df91fdb93c101b7a32ebfd305198e4",
+    "python": "71ba7ab3e9b7630f2d97a5879a0784dfc8df91fdb93c101b7a32ebfd305198e4"
+   },
+   "pass": true,
+   "release_candidate_exact": true,
+   "release_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "release_sha256": {
+    "cli": "71ba7ab3e9b7630f2d97a5879a0784dfc8df91fdb93c101b7a32ebfd305198e4",
+    "prepared": "71ba7ab3e9b7630f2d97a5879a0784dfc8df91fdb93c101b7a32ebfd305198e4",
+    "python": "71ba7ab3e9b7630f2d97a5879a0784dfc8df91fdb93c101b7a32ebfd305198e4"
+   }
+  },
+  "trace": {
+   "candidate_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "candidate_sha256": {
+    "cli": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65",
+    "prepared": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65",
+    "python": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65"
+   },
+   "pass": true,
+   "release_candidate_exact": true,
+   "release_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "release_sha256": {
+    "cli": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65",
+    "prepared": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65",
+    "python": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65"
+   }
+  },
+  "uncertainty": {
+   "candidate_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "candidate_sha256": {
+    "cli": "2f1cbb4d6b3354642f0edf19812a62a24a6a217f0816fd0eff16fa5768af68d6",
+    "prepared": "2f1cbb4d6b3354642f0edf19812a62a24a6a217f0816fd0eff16fa5768af68d6",
+    "python": "2f1cbb4d6b3354642f0edf19812a62a24a6a217f0816fd0eff16fa5768af68d6"
+   },
+   "pass": true,
+   "release_candidate_exact": true,
+   "release_entry_points": {
+    "cli_prepared": true,
+    "cli_python": true
+   },
+   "release_sha256": {
+    "cli": "2f1cbb4d6b3354642f0edf19812a62a24a6a217f0816fd0eff16fa5768af68d6",
+    "prepared": "2f1cbb4d6b3354642f0edf19812a62a24a6a217f0816fd0eff16fa5768af68d6",
+    "python": "2f1cbb4d6b3354642f0edf19812a62a24a6a217f0816fd0eff16fa5768af68d6"
+   }
+  }
+ },
+ "comparator_plant_rejected": true,
+ "executables": {
+  "candidate": {
+   "bytes": 9272312,
+   "path": "/home/connoravila/Documents/actinv/target/release/actinv",
+   "sha256": "f9c937734762930399ec39088f89af1a2d648e7b583297329f9b1d43f8dc4e98"
+  },
+  "prepared_candidate": {
+   "bytes": 2604880,
+   "path": "/home/connoravila/Documents/actinv/target/release/prepared_probe",
+   "sha256": "28fb48d33a30f984e7fecf507228fedaa781baade395fd1762b1d3947918c849"
+  },
+  "prepared_release": {
+   "bytes": 2599224,
+   "path": "/home/connoravila/Documents/actinv/target/p16-opening-target/release/prepared_probe",
+   "sha256": "69ccef51378da347cd96bdd263fc2946bb48ce06469a018ab15ce1fa768d1550"
+  },
+  "python_candidate": {
+   "bytes": 9513408,
+   "path": "/home/connoravila/Documents/actinv/python/target/release/libactinv.so",
+   "sha256": "a5be3011ce63e3ff62748de47cefa7c1f6e163657a55b1531cece2928ec95400"
+  },
+  "python_release": {
+   "bytes": 9519624,
+   "path": "/home/connoravila/Documents/actinv/target/p16-opening-python-target/release/libactinv.so",
+   "sha256": "e51d7df6584fe22ed9b98f22624028f025355fe53ebf4ca6a9849cc3deb2b587"
+  },
+  "release": {
+   "bytes": 9278696,
+   "path": "/home/connoravila/Documents/actinv/target/p16-opening-target/release/actinv",
+   "sha256": "ee77318256b74bd789ee07288e28e22ede7c37bc76648877c57d49bad2f0bf98"
+  }
+ },
+ "gate": "P16-G4",
+ "mesh": {
+  "candidate_sha256": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65",
+  "pass": true,
+  "release_candidate_exact": true,
+  "release_sha256": "cf6625d8c8ec8a1682c05fa169c04c8a0e2b5afe34252bb616bfa35ae5f46a65"
+ },
+ "pass": true,
+ "rejected_input_corpus": {
+  "cases": {
+   "gamma_cutoff": {
+    "binaries": {
+     "candidate": {
+      "context_present": true,
+      "message": "photon.gamma_constant_cutoff_eV must be nonnegative",
+      "no_output": true,
+      "returncode": 2
+     },
+     "release": {
+      "context_present": true,
+      "message": "photon.gamma_constant_cutoff_eV must be nonnegative",
+      "no_output": true,
+      "returncode": 2
+     }
+    },
+    "exact_rejection_parity": true,
+    "pass": true
+   },
+   "group_flux": {
+    "binaries": {
+     "candidate": {
+      "context_present": true,
+      "message": "group fluxes must be finite and nonnegative",
+      "no_output": true,
+      "returncode": 2
+     },
+     "release": {
+      "context_present": true,
+      "message": "group fluxes must be finite and nonnegative",
+      "no_output": true,
+      "returncode": 2
+     }
+    },
+    "exact_rejection_parity": true,
+    "pass": true
+   },
+   "mass": {
+    "binaries": {
+     "candidate": {
+      "context_present": true,
+      "message": "material.mass_g must be positive",
+      "no_output": true,
+      "returncode": 2
+     },
+     "release": {
+      "context_present": true,
+      "message": "material.mass_g must be positive",
+      "no_output": true,
+      "returncode": 2
+     }
+    },
+    "exact_rejection_parity": true,
+    "pass": true
+   },
+   "temperature": {
+    "binaries": {
+     "candidate": {
+      "context_present": true,
+      "message": "options.temperature_K must be finite and nonnegative",
+      "no_output": true,
+      "returncode": 2
+     },
+     "release": {
+      "context_present": true,
+      "message": "options.temperature_K must be finite and nonnegative",
+      "no_output": true,
+      "returncode": 2
+     }
+    },
+    "exact_rejection_parity": true,
+    "pass": true
+   },
+   "threshold": {
+    "binaries": {
+     "candidate": {
+      "context_present": true,
+      "message": "options.bmin_atoms_per_g must be finite and nonnegative",
+      "no_output": true,
+      "returncode": 2
+     },
+     "release": {
+      "context_present": true,
+      "message": "options.bmin_atoms_per_g must be finite and nonnegative",
+      "no_output": true,
+      "returncode": 2
+     }
+    },
+    "exact_rejection_parity": true,
+    "pass": true
+   }
+  },
+  "pass": true
+ },
+ "schema": "actinv-p16-compatibility-1"
+}

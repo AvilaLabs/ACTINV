@@ -1,0 +1,378 @@
+{
+ "closed": false,
+ "evidence_sha256": {
+  "compatibility": "439276e48684b00c686b72ab749719d5e4fa0161d9c423bf45da69e009311c6e",
+  "metamorphic": "e057752910df53ece075ff2ce0bdd22276af789ec35559a74707aee851c7c0b4",
+  "performance": "38074056e4af4159cfd8791a5cf103e3f07cf215029b24164c535e5fdec6e2f9",
+  "quality": "4e34f51908992a01526ceea90f1428767279f44e6a87ae1cd6a71871f8e59fb6",
+  "quantities": "ffbb9161bec4eab0af6fd85ecea723d4080814df7d93a5d1edb7dd9f14c5e207"
+ },
+ "gates": {
+  "G1_G2": {
+   "checks": {
+    "compile_failures": true,
+    "compiler_recorded": true,
+    "dependency_identity": true,
+    "document_hash": true,
+    "evidence_source_contract": true,
+    "fixture_summary": true,
+    "independent_source_contract": true,
+    "legacy_consumer": true,
+    "opening_commit": true,
+    "positive_consumer": true,
+    "protocol": true,
+    "reported_pass": true,
+    "rust_checks": true,
+    "schema": true,
+    "source_hash": true
+   },
+   "pass": true,
+   "source_contract": {
+    "barn_factor_occurrences": [
+     {
+      "line": 16,
+      "path": "crates/actinv-core/src/quantity.rs"
+     }
+    ],
+    "checks": {
+     "documented_boundaries": true,
+     "documented_types": true,
+     "layouts": true,
+     "no_blanket_scalar_conversion": true,
+     "no_new_clone_or_shared_mutability_workaround": true,
+     "no_unsafe": true,
+     "one_barn_conversion": true,
+     "production_wiring": true
+    },
+    "documented": {
+     "AtomsPerGram": true,
+     "CrossSectionBarns": true,
+     "ElectronVolts": true,
+     "FluxMultiplier": true,
+     "Grams": true,
+     "Kelvin": true,
+     "ParticleFluence": true,
+     "ParticleFlux": true,
+     "RatePerBarnSecond": true,
+     "RatePerSecond": true,
+     "Seconds": true
+    },
+    "layouts": {
+     "AtomsPerGram": true,
+     "CrossSectionBarns": true,
+     "ElectronVolts": true,
+     "FluxMultiplier": true,
+     "Grams": true,
+     "Kelvin": true,
+     "ParticleFluence": true,
+     "ParticleFlux": true,
+     "RatePerBarnSecond": true,
+     "RatePerSecond": true,
+     "Seconds": true
+    },
+    "new_workaround_lines": [],
+    "pass": true,
+    "unsafe_blocks": [],
+    "wiring": {
+     "shared_prepare": true,
+     "spec_view": true,
+     "typed_cross_section": true,
+     "typed_prune": true,
+     "typed_rate": true
+    }
+   }
+  },
+  "G3": {
+   "checks": {
+    "binary_set": true,
+    "candidate_relations": true,
+    "fixture_hashes": true,
+    "limits": true,
+    "not_loosened": true,
+    "release_relations": true,
+    "reported_pass": true,
+    "run_set": true,
+    "schema": true
+   },
+   "pass": true,
+   "runs": {
+    "candidate": {
+     "checks": {
+      "analytic_decay": true,
+      "duration_spellings": true,
+      "mesh_rebin": true,
+      "mode_limit": true,
+      "plants": true,
+      "relation_set": true,
+      "reported_pass": true,
+      "scaling": true,
+      "schedule_splitting": true
+     },
+     "pass": true
+    },
+    "release": {
+     "checks": {
+      "analytic_decay": true,
+      "duration_spellings": true,
+      "mesh_rebin": true,
+      "mode_limit": true,
+      "plants": true,
+      "relation_set": true,
+      "reported_pass": true,
+      "scaling": true,
+      "schedule_splitting": true
+     },
+     "pass": true
+    }
+   }
+  },
+  "G4": {
+   "checks": {
+    "cases": true,
+    "comparator_plant": true,
+    "executables": true,
+    "mesh": true,
+    "rejected_inputs": true,
+    "reported_pass": true,
+    "schema": true
+   },
+   "pass": true
+  },
+  "G5": {
+   "checks": {
+    "binaries": true,
+    "cold_and_rss_visible": true,
+    "comparator_plant": true,
+    "exact_result": true,
+    "inputs": true,
+    "limits": true,
+    "ratios": true,
+    "release_commit": true,
+    "reported_checks": true,
+    "reported_pass": true,
+    "sample_contract": true,
+    "schema": true,
+    "statistics": true,
+    "thread_environment": true,
+    "thresholds": true
+   },
+   "pass": true,
+   "rederived": {
+    "effective_rss_ceiling_bytes": 145850368,
+    "statistics": {
+     "candidate": {
+      "mean_ms": 747.0903467999999,
+      "median_ms": 745.204111,
+      "minimum_ms": 730.06594,
+      "p95_ms": 769.9835631,
+      "sample_standard_deviation_ms": 14.225408924280847
+     },
+     "release": {
+      "mean_ms": 769.0458136666667,
+      "median_ms": 767.844704,
+      "minimum_ms": 751.178497,
+      "p95_ms": 789.0211385,
+      "sample_standard_deviation_ms": 12.876375948844775
+     }
+    }
+   }
+  },
+  "G6": {
+   "checks": {
+    "evidence_plants": true,
+    "quality_record": true,
+    "source_contract": true
+   },
+   "evidence_plants": {
+    "analytic_value": true,
+    "compatibility_hash": true,
+    "compile_result": true,
+    "mesh_identity": true,
+    "performance_input": true,
+    "performance_statistic": true,
+    "quantity_source_hash": true,
+    "rejection_result": true
+   },
+   "pass": true,
+   "quality": {
+    "commands": [
+     {
+      "command": "cargo fmt --all -- --check",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo check --workspace --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo test --workspace --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo test -p actinv-core --doc --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo fmt --manifest-path python/Cargo.toml -- --check",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "cargo test --manifest-path python/Cargo.toml --all-targets --all-features",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g1_p16_quantities.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_prior_verdicts.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_release_notes.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_dependencies.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_public_examples.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p12.py --through-g5",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p13.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_cb1.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p14.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/check_p15.py --no-write",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g1_self_contained.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/ci_end_to_end.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g3_p12_parser_fuzz.py --smoke",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g5_p8_mesh_identity.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g3_p9_coupled_auto.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     },
+     {
+      "command": "python controls/g6_p10_projectile_runtime.py",
+      "error_tail": "",
+      "pass": true,
+      "returncode": 0
+     }
+    ],
+    "pass": true,
+    "schema": "actinv-p16-quality-1"
+   },
+   "source_contract": {
+    "checks": {
+     "p16_ci_checker": true,
+     "p16_ci_control": true,
+     "protocol_control": true,
+     "quantity_document": true
+    },
+    "pass": true
+   }
+  }
+ },
+ "pass": true,
+ "protocol": {
+  "actual_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+  "expected_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+  "ledger_entry": true,
+  "pass": true
+ },
+ "schema": "actinv-p16-verdict-1",
+ "session": {
+  "pass": false,
+  "present": false
+ },
+ "source_pass": true,
+ "verdict": "P16-SOURCE-PASS"
+}

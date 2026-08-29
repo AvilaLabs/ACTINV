@@ -2332,6 +2332,36 @@ mod tests {
     }
 
     #[test]
+    fn rebin_scales_linearly_after_group_refinement() {
+        let split = 2.0_f64.sqrt();
+        let source_boundaries = [1.0, split, 2.0, 2.0 * split, 4.0];
+        let destination_boundaries = [1.0, 2.0, 4.0];
+        let source_flux = [1.5, 1.5, 2.5, 2.5];
+        let doubled_flux = source_flux.map(|value| value * 2.0);
+        let base = rebin_equal_lethargy(&source_boundaries, &source_flux, &destination_boundaries)
+            .unwrap();
+        let doubled =
+            rebin_equal_lethargy(&source_boundaries, &doubled_flux, &destination_boundaries)
+                .unwrap();
+        assert!(base.relative_closure <= 1.0e-12);
+        assert!(doubled.relative_closure <= 1.0e-12);
+        for (value, scaled) in base
+            .flux_per_group
+            .iter()
+            .chain([&base.underflow, &base.overflow])
+            .zip(
+                doubled
+                    .flux_per_group
+                    .iter()
+                    .chain([&doubled.underflow, &doubled.overflow]),
+            )
+        {
+            let relative = (scaled - 2.0 * value).abs() / scaled.abs().max(1.0e-300);
+            assert!(relative <= 5.0e-15);
+        }
+    }
+
+    #[test]
     fn meshtal_restores_i_fastest_canonical_order() {
         let text = r#" Mesh Tally Number        24
  neutron  mesh tally.

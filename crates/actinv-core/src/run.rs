@@ -3,11 +3,12 @@
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
+use crate::quantity::{Kelvin, Seconds};
 use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
-    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, Projectile,
-    RadiologicalOptions, Spec, UncertaintyOptions,
+    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, PhysicalInputs,
+    Projectile, RadiologicalOptions, Spec, UncertaintyOptions,
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
@@ -392,7 +393,7 @@ pub struct PreparedRun {
     fission_yield_inputs: Vec<(HashedFileRef, String, (i32, i32))>,
     projectile: Projectile,
     library_group_structure: Option<String>,
-    temperature_K: f64,
+    temperature_K: Kelvin,
     uncertainty_options: Option<UncertaintyOptions>,
     covariance: Option<PreparedCovariance>,
     radiological: Option<PreparedRadiological>,
@@ -629,21 +630,25 @@ fn build_step_uncertainty(
 impl PreparedRun {
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
-        Self::prepare_profiled(spec, &mut profiler)
+        let physical = spec.physical_inputs()?;
+        Self::prepare_profiled(spec, &physical, &mut profiler)
     }
 
-    fn prepare_profiled(spec: &Spec, profiler: &mut RunProfiler) -> Result<Self, String> {
-        let flux = spec.flux_ascending();
+    fn prepare_profiled(
+        spec: &Spec,
+        physical: &PhysicalInputs,
+        profiler: &mut RunProfiler,
+    ) -> Result<Self, String> {
         Self::prepare_inputs_with_extensions_profiled(
             &spec.library,
             &spec.decay,
             &spec.photon,
             &spec.fission_yields,
             spec.projectile,
-            spec.options.temperature_K,
+            physical.temperature,
             spec.uncertainty.as_ref(),
             spec.radiological.as_ref(),
-            Some(&flux),
+            Some(physical.flux.values()),
             Some(&spec.spectrum.structure),
             profiler,
         )
@@ -701,6 +706,8 @@ impl PreparedRun {
         radiological_options: Option<&RadiologicalOptions>,
     ) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
+        let temperature_K = Kelvin::new(temperature_K)
+            .map_err(|_| "temperature_K must be finite and nonnegative".to_string())?;
         Self::prepare_inputs_with_extensions_profiled(
             library_ref,
             decay_ref,
@@ -723,7 +730,7 @@ impl PreparedRun {
         photon_options: &PhotonOptions,
         fission_options: &FissionYieldOptions,
         projectile: Projectile,
-        temperature_K: f64,
+        temperature_K: Kelvin,
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
         collapse_flux: Option<&[f64]>,
@@ -731,10 +738,7 @@ impl PreparedRun {
         profiler: &mut RunProfiler,
     ) -> Result<Self, String> {
         let validation_started = profiler.start();
-        if !temperature_K.is_finite() || temperature_K < 0.0 {
-            return Err("temperature_K must be finite and nonnegative".into());
-        }
-        if !projectile.is_neutron() && temperature_K != 0.0 {
+        if !projectile.is_neutron() && temperature_K.get() != 0.0 {
             return Err(format!(
                 "{} prepared runs require temperature_K: 0",
                 projectile.name()
@@ -919,9 +923,10 @@ impl PreparedRun {
                 let temperature = value
                     .as_f64()
                     .ok_or("activation-library temperature_K must be numeric")?;
-                if (temperature - temperature_K).abs() > 1e-9 {
+                if (temperature - temperature_K.get()).abs() > 1e-9 {
                     return Err(format!(
-                        "requested temperature {temperature_K} K does not match library temperature {temperature} K"
+                        "requested temperature {} K does not match library temperature {temperature} K",
+                        temperature_K.get()
                     ));
                 }
             }
@@ -1230,7 +1235,7 @@ impl PreparedRun {
         self.library.group_count()
     }
 
-    fn ensure_compatible(&self, spec: &Spec) -> Result<(), String> {
+    fn ensure_compatible(&self, spec: &Spec, physical: &PhysicalInputs) -> Result<(), String> {
         if spec.library.path != self.library_path
             || spec.library.sha256 != self.library_sha_declared
             || spec.decay.primary != self.decay_primary
@@ -1248,7 +1253,7 @@ impl PreparedRun {
                     .map(|value| (&value.path, &value.sha256))
             || spec.fission_yields != self.fission_options
             || spec.projectile != self.projectile
-            || (spec.options.temperature_K - self.temperature_K).abs() > 1e-9
+            || (physical.temperature.get() - self.temperature_K.get()).abs() > 1e-9
             || spec.uncertainty != self.uncertainty_options
             || spec.radiological.as_ref()
                 != self.radiological.as_ref().map(|prepared| &prepared.options)
@@ -1270,18 +1275,26 @@ impl PreparedRun {
 
     pub fn run(&self, spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         let mut profiler = RunProfiler::disabled();
-        self.run_started_profiled(spec, entry_point, std::time::Instant::now(), &mut profiler)
+        let physical = spec.physical_inputs()?;
+        self.run_started_profiled(
+            spec,
+            &physical,
+            entry_point,
+            std::time::Instant::now(),
+            &mut profiler,
+        )
     }
 
     fn run_started_profiled(
         &self,
         spec: &Spec,
+        physical: &PhysicalInputs,
         entry_point: &str,
         t0: std::time::Instant,
         profiler: &mut RunProfiler,
     ) -> Result<RunResult, String> {
         let network_started = profiler.start();
-        self.ensure_compatible(spec)?;
+        self.ensure_compatible(spec, physical)?;
         let library_sha = &self.library_sha;
         let idx_path = &self.index_path;
         let index_sha = &self.index_sha;
@@ -1334,16 +1347,16 @@ impl PreparedRun {
         } else {
             BTreeMap::new()
         };
-        let phi = spec.flux_ascending();
-        lib.validate_flux(&phi)?;
+        let phi = physical.flux.values();
+        lib.validate_flux(phi)?;
         let mut effective_fission_yields = HashMap::new();
         let mut fission_yield_selection = Vec::new();
         let mut fission_parents: Vec<_> = self.fission_yields.keys().copied().collect();
         fission_parents.sort_unstable();
         for parent in fission_parents {
             let requested_energy = match spec.fission_yields.energy.as_str() {
-                "fixed" => spec.fission_yields.fixed_energy_eV,
-                "spectrum_average" => fission_average_energy_eV(lib, lib_targets, &phi, parent)?,
+                "fixed" => physical.fixed_fission_energy.map(|energy| energy.get()),
+                "spectrum_average" => fission_average_energy_eV(lib, lib_targets, phi, parent)?,
                 _ => None, // validated before preparation
             };
             let Some(requested_energy) = requested_energy else {
@@ -1370,7 +1383,7 @@ impl PreparedRun {
             chain::reaction_rates_with_derivatives(
                 lib,
                 lib_targets,
-                &phi,
+                phi,
                 ch,
                 &effective_fission_yields,
                 &mut led,
@@ -1380,7 +1393,7 @@ impl PreparedRun {
                 triplets: chain::reaction_rates(
                     lib,
                     lib_targets,
-                    &phi,
+                    phi,
                     ch,
                     &effective_fission_yields,
                     &mut led,
@@ -1400,8 +1413,11 @@ impl PreparedRun {
                 None => absent.push((*za, *liso)),
             }
         }
-        let sched = spec.schedule_seconds();
-        let flux_weighted_time_s: f64 = sched.iter().map(|(duration, flux)| duration * flux).sum();
+        let sched = &physical.schedule;
+        let flux_weighted_time_s: f64 = sched
+            .iter()
+            .map(|step| (step.duration() * step.multiplier()).get())
+            .sum();
         let mut burnup_optical_depth: HashMap<usize, f64> = HashMap::new();
         for (r, c, v) in &react {
             if *r == *c && *v < 0.0 && bulk.contains_key(c) {
@@ -1509,14 +1525,14 @@ impl PreparedRun {
         let (keep, rate_pruned): (Vec<usize>, Vec<(usize, f64, f64)>) =
             match spec.options.prune.as_str() {
                 "none" => ((0..ch.n).collect(), Vec::new()),
-                p => crate::prune::reachable(
+                p => crate::prune::reachable_physical(
                     ch.n,
                     &d_src,
                     &r_src,
                     &n0,
-                    &sched,
+                    sched,
                     p == "rate",
-                    spec.options.bmin_atoms_per_g,
+                    physical.bmin,
                 ),
             };
         let mut pos = vec![usize::MAX; ch.n];
@@ -1562,7 +1578,7 @@ impl PreparedRun {
                 )?;
                 let collapsed = prepared
                     .library
-                    .collapse(dense_library, &phi, &active_rows)?;
+                    .collapse(dense_library, phi, &active_rows)?;
                 let maximum_covariance = collapsed
                     .covariance_barn2
                     .iter()
@@ -1581,7 +1597,7 @@ impl PreparedRun {
                 for (&row, &cross_section) in
                     collapsed.row_indices.iter().zip(&collapsed.one_group_barns)
                 {
-                    if cross_section.to_bits() != lib.one_group(row, &phi).to_bits() {
+                    if cross_section.to_bits() != lib.one_group(row, phi).to_bits() {
                         return Err(format!(
                             "covariance collapse nominal cross section differs at library row {row}"
                         ));
@@ -1621,7 +1637,7 @@ impl PreparedRun {
                         zap: row.zap,
                         lfs: row.lfs,
                         lmf: row.lmf,
-                        collapsed_cross_section_b: lib.one_group(row_index, &phi),
+                        collapsed_cross_section_b: lib.one_group(row_index, phi),
                         covariance_covered: covered,
                     });
                     directions.push(Csc::from_triplets(m, &derivative_sub[&row_index]));
@@ -1661,7 +1677,7 @@ impl PreparedRun {
             .outputs
             .as_ref()
             .is_none_or(|o| o.iter().any(|x| x == "photons" || x == "dose"));
-        let photon_boundaries = spec.photon_boundaries();
+        let photon_boundaries = physical.photon_boundaries.values();
         let material_response_complete = cdiag.unknown.is_empty()
             && response.as_ref().is_some_and(|r| {
                 material_mass_fractions
@@ -1670,18 +1686,20 @@ impl PreparedRun {
             });
         let mut photon_diagnostics: Vec<PhotonDiagnostics> = Vec::new();
         let mut steps = Vec::new();
-        let mut t_cum = 0.0;
-        let mut flux_weighted_time_cum = 0.0;
-        let base_flux_total: f64 = phi.iter().sum();
+        let mut t_cum = Seconds::new(0.0).expect("zero seconds is valid");
+        let mut flux_weighted_time_cum = Seconds::new(0.0).expect("zero seconds is valid");
+        let base_flux_total = physical.flux.total();
         let bulk_activity: BTreeMap<String, f64> = bulk_photon_active
             .iter()
             .map(|(name, _, activity)| (name.clone(), *activity))
             .collect();
-        for (si, (dt, fl)) in sched.iter().enumerate() {
+        for (si, schedule_step) in sched.iter().enumerate() {
+            let dt = schedule_step.duration();
+            let fl = schedule_step.multiplier();
             let mut trip = dsub.clone();
-            if *fl > 0.0 {
+            if fl.get() > 0.0 {
                 for (i, j, v) in rsub.iter() {
-                    trip.push((*i, *j, v * C64::new(*fl, 0.0)));
+                    trip.push((*i, *j, v * C64::new(fl.get(), 0.0)));
                 }
             }
             let a = Csc::from_triplets(m, &trip);
@@ -1691,8 +1709,8 @@ impl PreparedRun {
                     &y,
                     &runtime.tangents,
                     &runtime.directions,
-                    *fl,
-                    *dt,
+                    fl.get(),
+                    dt.get(),
                     &c,
                 )?;
                 y = tangent_step.state;
@@ -1700,12 +1718,12 @@ impl PreparedRun {
                 runtime.alternate_y = cram_step(
                     &a,
                     &runtime.alternate_y,
-                    *dt,
+                    dt.get(),
                     alternate_c.as_ref().expect("alternate CRAM is prepared"),
                 )?
                 .0;
             } else {
-                y = cram_step(&a, &y, *dt, &c)?.0;
+                y = cram_step(&a, &y, dt.get(), &c)?.0;
             }
             t_cum += dt;
             flux_weighted_time_cum += dt * fl;
@@ -1831,14 +1849,14 @@ impl PreparedRun {
                     .collect();
                 let (source, diagnostics) = photon::source_for_step(
                     &active_refs,
-                    &photon_boundaries,
+                    photon_boundaries,
                     &spec.photon.group_structure,
-                    spec.material.mass_g,
+                    physical.mass.get(),
                     response.as_ref(),
                     &material_mass_fractions,
                     material_response_complete,
                     spec.photon.build_up_factor,
-                    spec.photon.gamma_constant_cutoff_eV,
+                    physical.gamma_cutoff.get(),
                 )?;
                 photon_diagnostics.push(diagnostics);
                 Some(source)
@@ -1847,15 +1865,15 @@ impl PreparedRun {
             };
             steps.push(StepOut {
                 step: si + 1,
-                t_s: t_cum,
-                flux: *fl,
-                flux_weighted_time_s: flux_weighted_time_cum,
+                t_s: t_cum.get(),
+                flux: fl.get(),
+                flux_weighted_time_s: flux_weighted_time_cum.get(),
                 fluence_n_cm2: spec
                     .projectile
                     .is_neutron()
-                    .then_some(base_flux_total * flux_weighted_time_cum),
+                    .then_some((base_flux_total * flux_weighted_time_cum).get()),
                 fluence_particles_cm2: (!spec.projectile.is_neutron())
-                    .then_some(base_flux_total * flux_weighted_time_cum),
+                    .then_some((base_flux_total * flux_weighted_time_cum).get()),
                 inventory: inv,
                 activity_Bq_per_g: act,
                 heat_W_per_g: heat,
@@ -1918,13 +1936,15 @@ impl PreparedRun {
                     v
                 })
                 .collect();
-            let mut t_acc = 0.0;
-            for (dt, fl) in sched.iter() {
+            let mut t_acc = Seconds::new(0.0).expect("zero seconds is valid");
+            for schedule_step in sched {
+                let dt = schedule_step.duration();
+                let fl = schedule_step.multiplier();
                 let mut trip = ptrip.clone();
-                if *fl > 0.0 {
+                if fl.get() > 0.0 {
                     for (i, j, v) in rsub.iter() {
                         if *i != pos[ch.unit] && *j != pos[ch.unit] {
-                            trip.push((*i, *j, v * C64::new(*fl, 0.0)));
+                            trip.push((*i, *j, v * C64::new(fl.get(), 0.0)));
                         }
                     }
                 } else {
@@ -1932,8 +1952,8 @@ impl PreparedRun {
                     trip.retain(|(_, j, _)| *j < m);
                 }
                 let a = Csc::from_triplets(mp, &trip);
-                cols = crate::cram::step_multi(&a, &cols, *dt, &c)?;
-                if *fl <= 0.0 {
+                cols = crate::cram::step_multi(&a, &cols, dt.get(), &c)?;
+                if fl.get() <= 0.0 {
                     for col in cols.iter_mut() {
                         for k in 0..ns {
                             col[m + k] = 0.0;
@@ -2112,13 +2132,13 @@ impl PreparedRun {
             serde_json::json!({
                 "segments": sched.len(),
                 "flux_weighted_time_s": flux_weighted_time_s,
-                "fluence_n_cm2": base_flux_total * flux_weighted_time_s,
+                "fluence_n_cm2": base_flux_total.get() * flux_weighted_time_s,
             })
         } else {
             serde_json::json!({
                 "segments": sched.len(),
                 "flux_weighted_time_s": flux_weighted_time_s,
-                "fluence_particles_cm2": base_flux_total * flux_weighted_time_s,
+                "fluence_particles_cm2": base_flux_total.get() * flux_weighted_time_s,
             })
         };
         let mut ledger = serde_json::json!({
@@ -2364,8 +2384,10 @@ impl PreparedRun {
 pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
     let started = std::time::Instant::now();
     let mut profiler = RunProfiler::from_environment();
-    let prepared = PreparedRun::prepare_profiled(spec, &mut profiler)?;
-    let result = prepared.run_started_profiled(spec, entry_point, started, &mut profiler)?;
+    let physical = spec.physical_inputs()?;
+    let prepared = PreparedRun::prepare_profiled(spec, &physical, &mut profiler)?;
+    let result =
+        prepared.run_started_profiled(spec, &physical, entry_point, started, &mut profiler)?;
     profiler.emit(started.elapsed());
     Ok(result)
 }

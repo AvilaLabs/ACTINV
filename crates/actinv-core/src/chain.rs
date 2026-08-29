@@ -1,6 +1,7 @@
 //! Transmutation network: decay matrix from the decay sublibraries, reaction columns from the activation library,
 //! and the trace formulation (constant bulk as a source through a unit state). Mirrors controls/chain.py and the
 //! trace formulation of controls/run_fns.py, which the P5-G4 control checks to 1e-12 on 132 experiments.
+use crate::quantity::{CrossSectionBarns, ParticleFlux, RatePerBarnSecond};
 use actinv_data::decay::Nuclide;
 use actinv_data::fission::EffectiveYields;
 use actinv_data::library::ReactionLibrary;
@@ -204,7 +205,8 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
     let mut derivatives = include_derivatives.then(Vec::new);
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
-    let rate_per_barn = 1e-24 * phi.iter().sum::<f64>();
+    let rate_per_barn = RatePerBarnSecond::from_particle_flux(ParticleFlux::sum_groups(phi));
+    let rate_per_barn_s = rate_per_barn.get();
     let mut flux_denominator = 0.0;
     let group_count = lib.group_count();
     for flux in &phi[..group_count] {
@@ -222,8 +224,8 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     for (i, r) in lib.rows().iter().enumerate() {
         let collapsed =
             lib.collapse_row(i, phi, flux_denominator, first_flux_group, last_flux_group);
-        let rate = collapsed * rate_per_barn;
-        if rate == 0.0 && rate_per_barn == 0.0 {
+        let rate = (CrossSectionBarns::from_collapsed_kernel(collapsed) * rate_per_barn).get();
+        if rate == 0.0 && rate_per_barn_s == 0.0 {
             continue;
         }
         let tgt = match lib_targets.get(r.target) {
@@ -248,7 +250,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                     library_row: i,
                     row: col,
                     column: col,
-                    per_barn_s: -rate_per_barn,
+                    per_barn_s: -rate_per_barn_s,
                 });
             }
             continue;
@@ -274,7 +276,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                                     library_row: i,
                                     row,
                                     column: col,
-                                    per_barn_s: yield_value * rate_per_barn,
+                                    per_barn_s: yield_value * rate_per_barn_s,
                                 });
                             }
                         }
@@ -294,7 +296,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                                     library_row: i,
                                     row: chain.leak,
                                     column: col,
-                                    per_barn_s: yield_value * rate_per_barn,
+                                    per_barn_s: yield_value * rate_per_barn_s,
                                 });
                             }
                         }
@@ -321,7 +323,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                         library_row: i,
                         row: chain.leak,
                         column: col,
-                        per_barn_s: rate_per_barn,
+                        per_barn_s: rate_per_barn_s,
                     });
                 }
             }
@@ -340,7 +342,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                     library_row: i,
                     row: chain.leak,
                     column: col,
-                    per_barn_s: rate_per_barn,
+                    per_barn_s: rate_per_barn_s,
                 });
             }
             continue;
@@ -374,7 +376,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                 library_row: i,
                 row,
                 column: col,
-                per_barn_s: rate_per_barn,
+                per_barn_s: rate_per_barn_s,
             });
         }
     }
@@ -447,7 +449,8 @@ mod tests {
         assert_eq!(plain, with_derivatives.triplets);
         assert_eq!(plain_ledger, derivative_ledger);
         assert_eq!(with_derivatives.derivatives.len(), library.rows.len());
-        let rate_per_barn = 1e-24 * flux.iter().sum::<f64>();
+        let rate_per_barn =
+            RatePerBarnSecond::from_particle_flux(ParticleFlux::sum_groups(&flux)).get();
         assert_eq!(
             plain[0].2.to_bits(),
             (library.one_group(0, &flux) * rate_per_barn).to_bits()
