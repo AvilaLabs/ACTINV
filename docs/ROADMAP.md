@@ -7,10 +7,11 @@ dated entries in the changelog at the bottom — nothing is edited away.*
 
 **Current status (2026-08-28):** v1.0.1 is publicly released on PyPI, crates.io and GitHub from signed tag `v1.0.1`.
 P13 and the initial competitive benchmark are closed **P13-PASS** and **CB1-COMPLETE**. P14 closed honestly below its
-frozen threshold. P15 is closed **P15-PASS**: the prepared warm path preserves the exact normalized result while
-measuring 2.595× faster and 8.326× lower in peak RSS on the frozen public-example workload. The public release record
-is `results/session_v1.0.1_release.json`; final closeout workflow `33220183178` passed all controls. P16 is the only
-open phase and is bound to its typed-boundary and metamorphic-assurance protocol.
+frozen threshold. P15 is closed **P15-PASS** with a 2.595× faster and 8.326× lower-RSS prepared warm path. P16 is
+closed **P16-CONDITIONAL**: eleven zero-cost physical quantity types are wired through production boundaries, all
+seven metamorphic relation families and exact release-compatibility controls pass, and the frozen workload is 3.0%
+faster at the median with effectively unchanged memory. The conditional suffix records one CI checkout-history
+repair, not a product or scientific failure. P17 is next and remains unopened.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -265,3 +266,12 @@ part that does not compress: users, issues, and the validation record accumulati
   opened without changing a public interface or scientific value. Its frozen scope introduces zero-cost physical
   quantity types behind compatible wire APIs, compile-fail dimensional fixtures, seven analytic/metamorphic relation
   families, exact release-result identity and explicit 10% median/15% p95 runtime ceilings. P17 remains unopened.
+- 2026-08-28 — P16 closed P16-CONDITIONAL with every frozen type, scientific, compatibility, runtime, memory and
+  quality gate passing. Eleven zero-cost scalar types now guard the validated spec/core boundary; six incompatible
+  consumer fixtures fail for the intended type errors; all seven metamorphic relation families pass; candidate,
+  signed v1.0.1, CLI, prepared and Python normalized results remain exact. On the frozen public workload, candidate
+  median and p95 are 2.95% and 2.41% lower with peak RSS 0.013% higher. Source/evidence commit
+  `ede20289ff63951e61db536e2e36dffa5809bd62` passed GitHub Actions run `33223472844`. Amendment A records the sole
+  repair: the first clean runner lacked the frozen opening commit under a depth-1 checkout; fetching full history
+  changed no product source, result, expectation or threshold. P17 is next but remains unopened pending the P16
+  closure commit.

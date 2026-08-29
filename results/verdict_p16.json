@@ -1,5 +1,5 @@
 {
- "closed": false,
+ "closed": true,
  "evidence_sha256": {
   "compatibility": "439276e48684b00c686b72ab749719d5e4fa0161d9c423bf45da69e009311c6e",
   "metamorphic": "e057752910df53ece075ff2ce0bdd22276af789ec35559a74707aee851c7c0b4",
@@ -378,9 +378,26 @@
  },
  "schema": "actinv-p16-verdict-1",
  "session": {
-  "pass": false,
-  "present": false
+  "checks": {
+   "evidence_hashes": true,
+   "manifest": true,
+   "protocol": true,
+   "reported_pass": true,
+   "schema": true,
+   "source_commit": true,
+   "source_commit_evidence": true,
+   "workflow": true
+  },
+  "pass": true,
+  "present": true,
+  "source_commit_evidence_sha256": {
+   "compatibility": "439276e48684b00c686b72ab749719d5e4fa0161d9c423bf45da69e009311c6e",
+   "metamorphic": "e057752910df53ece075ff2ce0bdd22276af789ec35559a74707aee851c7c0b4",
+   "performance": "38074056e4af4159cfd8791a5cf103e3f07cf215029b24164c535e5fdec6e2f9",
+   "quality": "4e34f51908992a01526ceea90f1428767279f44e6a87ae1cd6a71871f8e59fb6",
+   "quantities": "b0888cfc0cebf335c82d47bee56b0554ff35ae469e8a248f8c7e64150b1c6791"
+  }
  },
  "source_pass": true,
- "verdict": "P16-SOURCE-CONDITIONAL"
+ "verdict": "P16-CONDITIONAL"
 }

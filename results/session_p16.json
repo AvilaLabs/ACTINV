@@ -1,0 +1,65 @@
+{
+ "schema": "actinv-p16-session-1",
+ "date": "2026-08-28",
+ "canonical_repository": "https://github.com/AvilaLabs/ACTINV.git",
+ "protocol_sha256": "58d9debbb3e8892ab0ad0bf3642cba5fc1afa31ffbc1079cd26095c5d0e2ce19",
+ "amendment_sha256": {
+  "ACTINV-P16_AMENDMENT_A.md": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21"
+ },
+ "source_evidence_commit": "ede20289ff63951e61db536e2e36dffa5809bd62",
+ "workflow": {
+  "name": "controls",
+  "run_id": 33223472844,
+  "head_sha": "ede20289ff63951e61db536e2e36dffa5809bd62",
+  "head_branch": "master",
+  "event": "push",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-08-29T00:25:13Z",
+  "completed_at": "2026-08-29T00:32:54Z",
+  "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/33223472844"
+ },
+ "evidence_sha256": {
+  "quantities": "b0888cfc0cebf335c82d47bee56b0554ff35ae469e8a248f8c7e64150b1c6791",
+  "metamorphic": "e057752910df53ece075ff2ce0bdd22276af789ec35559a74707aee851c7c0b4",
+  "compatibility": "439276e48684b00c686b72ab749719d5e4fa0161d9c423bf45da69e009311c6e",
+  "performance": "38074056e4af4159cfd8791a5cf103e3f07cf215029b24164c535e5fdec6e2f9",
+  "quality": "4e34f51908992a01526ceea90f1428767279f44e6a87ae1cd6a71871f8e59fb6"
+ },
+ "measurements": {
+  "workload": "examples/fns_fe_5min.json with hash-pinned data-v1.0.0 inputs",
+  "warmups_per_binary": 5,
+  "samples_per_binary": 15,
+  "release_warm_median_ms": 767.844704,
+  "candidate_warm_median_ms": 745.204111,
+  "candidate_over_release_median": 0.970514098902999,
+  "release_warm_p95_ms": 789.0211385,
+  "candidate_warm_p95_ms": 769.9835631,
+  "candidate_over_release_p95": 0.9758719070110186,
+  "release_peak_rss_bytes": 129073152,
+  "candidate_peak_rss_bytes": 129089536,
+  "candidate_over_release_peak_rss": 1.0001269357705
+ },
+ "checks": {
+  "eleven_zero_cost_scalar_types": true,
+  "six_incompatible_consumers_rejected": true,
+  "legacy_and_positive_consumers_compile": true,
+  "single_barn_conversion_site": true,
+  "seven_metamorphic_relation_families": true,
+  "release_candidate_and_entry_points_exact": true,
+  "performance_and_memory_within_frozen_ceilings": true,
+  "twenty_five_local_quality_commands": true,
+  "github_controls": true,
+  "no_bulk_data_or_generated_library_committed": true,
+  "post_checkpoint_repair_rounds": 1
+ },
+ "repair": {
+  "failed_run_id": 33223231861,
+  "failed_head_sha": "740f435a5569e56c3ca3d27a9e302113aff612f5",
+  "classification": "CI checkout did not contain the frozen opening commit",
+  "product_or_scientific_failure": false,
+  "repair": "checkout full history without changing any comparison or threshold"
+ },
+ "verdict": "P16-CONDITIONAL",
+ "pass": true
+}
