@@ -910,3 +910,16 @@
   current source/consumer/quantity checks still run. This does not certify today's dependency graph as unchanged.
 - Regression coverage checks exact stored inventory equality, altered and missing evidence, and unavailable history.
   Desktop CI now also runs on direct default-branch pushes. The tracked-file checksum manifest is refreshed.
+
+## 44 — 2026-09-08 — Desktop preview packaging
+- Packaging protocol `protocols/desktop-packaging-v1.md` was frozen before package verification, SHA-256
+  `0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b`.
+- Desktop version `0.1.0-preview.1` uses the existing solver/library/Python version `1.0.1`. Candidate release tag
+  `desktop-v0.1.0-preview.1` does not match the registry publishers' `v*` trigger. No historical verdict changes.
+- Added pinned cargo-packager 0.11.8 configuration for Windows NSIS/portable, macOS Intel/ARM app/DMG, and Linux
+  AppImage distribution; official Avila Labs icons; Windows resource metadata and console-free release launch.
+- Opt-in packaged-binary checks use the existing temporary P11 synthetic fixture to exercise the desktop model's
+  opening, saving, path validation, solver, and exports. Platform evidence distinguishes this from actual rendering
+  and manual dialog/download-warning interaction. Fixtures and generated bulk data remain outside version control.
+- Candidate workflows produce package hashes, source identity, and verification reports; they never publish or tag.
+  Preview packages have no trusted publisher signature, as authorized by the maintainer. macOS uses ad-hoc signing.

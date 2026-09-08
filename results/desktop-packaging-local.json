@@ -1,0 +1,23 @@
+{
+  "protocol_sha256": "0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b",
+  "desktop_version": "0.1.0-preview.1",
+  "platform": "local Linux x86_64 native Wayland",
+  "rust_gates": {
+    "fmt": true,
+    "check": true,
+    "clippy": true,
+    "tests": true
+  },
+  "packaged_model": true,
+  "native_rendering": true,
+  "captures": 21,
+  "appimage_sha256": "d44772d946ffff80e0626ca01dc5971fd73631c2c100eb7f210ca7ed65873215",
+  "embedded_executable_sha256": "00509c9b72932276feb5414af5c1d6c38d7200f44a2b656f2e98cf0785ec8d13",
+  "linux_menu_install": "passed in temporary XDG_DATA_HOME containing spaces",
+  "host_integration": "APPIMAGELAUNCHER_DISABLE=1 bypasses local AppImageLauncher interception during automation only",
+  "limitations": [
+    "Local candidate built before the packaging checkpoint commit; CI produces release candidates from committed sources.",
+    "Native file-picker clicking and OS download-warning flows not automated.",
+    "Windows and macOS results are recorded by CI separately."
+  ]
+}

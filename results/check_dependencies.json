@@ -1,5 +1,8 @@
 {
  "ci_entry_points": [
+  "scripts/desktop_smoke.py",
+  "scripts/package_desktop.py",
+  "scripts/verify_desktop_package.py",
   "controls/test_p16_dependency_history.py",
   "controls/check_desktop.py",
   "controls/g0_cram_coefficients.py",

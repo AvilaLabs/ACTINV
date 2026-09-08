@@ -13,3 +13,4 @@ scratch/
 /.actinv-cache/
 *.actp
 *.actc
+packaging/node_modules/

@@ -1,0 +1,40 @@
+{
+  "name": "actinv-desktop",
+  "productName": "ACTINV",
+  "version": "0.1.0-preview.1",
+  "identifier": "com.avilalabs.actinv",
+  "publisher": "Avila Labs",
+  "authors": [
+    "Avila Labs"
+  ],
+  "description": "Activation and nuclide-inventory desktop",
+  "category": "Education",
+  "homepage": "https://github.com/AvilaLabs/ACTINV",
+  "licenseFile": "../LICENSE-MIT",
+  "binariesDir": "../target/release",
+  "binaries": [
+    {
+      "path": "actinv-gui",
+      "main": true
+    }
+  ],
+  "outDir": "../target/desktop-packages",
+  "icons": [
+    "../crates/actinv-gui/assets/avila-labs-logo.png",
+    "actinv.ico"
+  ],
+  "resources": [
+    "../LICENSE-MIT",
+    "../LICENSE-APACHE",
+    "../docs/DESKTOP.md",
+    "../docs/DESKTOP_INSTALL.md"
+  ],
+  "macos": {
+    "minimumSystemVersion": "12.0",
+    "signingIdentity": "-"
+  },
+  "nsis": {
+    "installMode": "currentUser",
+    "installerIcon": "actinv.ico"
+  }
+}

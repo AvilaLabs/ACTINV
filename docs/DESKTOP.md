@@ -26,7 +26,9 @@ With Rust 1.95 or newer:
 cargo run --release -p actinv-gui
 ```
 
-GitHub Actions **desktop builds** produces downloadable Linux, macOS (Apple Silicon), and Windows artifacts for GUI pull requests or manual runs. These are build artifacts, not signed installers.
+GitHub Actions **desktop builds** produces candidate Linux AppImages, macOS disk images (Apple Silicon and Intel),
+and Windows installer/portable downloads on default-branch pushes, GUI pull requests, or manual runs. These are
+unsigned preview candidates; macOS bundles use an ad-hoc signature without notarization.
 
 Linux needs a working Wayland or X11 desktop and graphics driver. The app uses eframe's OpenGL backend and native file dialogs. Building the GUI is optional; `cargo install actinv-cli` continues to install only the CLI.
 
@@ -69,3 +71,8 @@ Local implementation evidence is recorded in [scientific parity](../results/desk
 [desktop verification](../results/desktop-ui-verification-v1.json). The latter records 126 passing workspace tests,
 release-build and native visual checks, and hashes for 21 captured pages/tour steps. macOS and Windows builds are
 configured in Actions; their runtime behavior has not been verified locally.
+## Clickable preview packages
+
+See [Desktop installation](DESKTOP_INSTALL.md) for Windows installers and portable
+downloads, macOS application bundles, and Linux AppImages. Desktop preview version
+0.1.0-preview.1 is separate from solver version 1.0.1.

@@ -6,14 +6,14 @@ on:
     branches: [master, main]
   pull_request:
     paths:
-      - 'crates/actinv-gui/**'
-      - 'crates/actinv-core/**'
-      - 'crates/actinv-data/**'
-      - 'crates/actinv-cli/**'
+      - 'crates/**'
       - 'Cargo.toml'
       - 'Cargo.lock'
+      - 'packaging/**'
+      - 'scripts/*desktop*'
       - '.github/workflows/desktop.yml'
 
+# Candidate downloads only. This workflow never creates tags or publishes releases.
 permissions:
   contents: read
 
@@ -21,34 +21,60 @@ jobs:
   desktop:
     name: Desktop / ${{ matrix.label }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 35
     strategy:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-24.04
+          - os: ubuntu-22.04
             label: linux-x86_64
-            binary: target/release/actinv-gui
           - os: macos-15
             label: macos-aarch64
-            binary: target/release/actinv-gui
+          - os: macos-15-intel
+            label: macos-x86_64
           - os: windows-latest
             label: windows-x86_64
-            binary: target/release/actinv-gui.exe
+    env:
+      MACOSX_DEPLOYMENT_TARGET: '12.0'
+      CARGO_PACKAGER_VERSION: '0.11.8'
     steps:
       - uses: actions/checkout@v7
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
-      - name: Linux desktop dependencies
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Linux desktop and package dependencies
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev libegl1-mesa-dev libfuse2 patchelf file desktop-file-utils xvfb
+      - name: Windows portable runtime
+        if: runner.os == 'Windows'
+        shell: bash
+        run: echo 'RUSTFLAGS=-C target-feature=+crt-static' >> "$GITHUB_ENV"
       - name: Build desktop
         run: cargo build --locked --release -p actinv-gui
+      - name: Install pinned packaging tool
+        run: cargo install cargo-packager --version 0.11.8 --locked
+      - name: Build candidate packages
+        run: python scripts/package_desktop.py --label ${{ matrix.label }}
+      - name: Install synthetic control dependencies
+        run: python -m pip install numpy==2.2.6
+      - name: Test packaged AppImage in a graphical session
+        if: runner.os == 'Linux'
+        env:
+          LIBGL_ALWAYS_SOFTWARE: '1'
+        run: xvfb-run -a python scripts/verify_desktop_package.py --label ${{ matrix.label }}
+      - name: Test installed and portable native packages
+        if: runner.os != 'Linux'
+        run: python scripts/verify_desktop_package.py --label ${{ matrix.label }}
       - uses: actions/upload-artifact@v4
         with:
           name: actinv-desktop-${{ matrix.label }}
-          path: |
-            ${{ matrix.binary }}
-            docs/DESKTOP.md
-            LICENSE-APACHE
-            LICENSE-MIT
+          path: dist/desktop/${{ matrix.label }}/*
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: desktop-verification-${{ matrix.label }}
+          path: target/package-verification/${{ matrix.label }}/
+          if-no-files-found: warn

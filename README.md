@@ -127,8 +127,11 @@ cargo run --release -p actinv-gui
 
 This launches a native application window. After building, the executable is `target/release/actinv-gui`
 (`actinv-gui.exe` on Windows). Desktop builds are checked on Windows, macOS Apple Silicon, and Linux;
-installers and macOS application bundles are not yet included in the published v1.0.1 release. PyPI and
+desktop preview installers and application bundles are prepared separately from the published v1.0.1 release. PyPI and
 `cargo install actinv-cli` install the command-line interface, not the desktop.
+
+For clickable Windows, macOS, and Linux packages, see the [desktop installation guide](docs/DESKTOP_INSTALL.md).
+It covers candidate downloads, first-launch notices for this unsigned preview, data setup, and verification.
 
 ### Build an irradiation and cooling schedule
 
