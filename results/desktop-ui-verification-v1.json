@@ -1,0 +1,56 @@
+{
+  "protocol_sha256": "08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f",
+  "platform": "Linux x86_64, native Wayland / eframe OpenGL",
+  "rust": "1.95.0",
+  "gui_source_sha256": "b5103c166910dc510ff40db37845049e294cbdbfce12dff11e0a57ddaa88ff8f",
+  "checks": {
+    "fmt": true,
+    "workspace_check_all_targets_all_features": true,
+    "workspace_clippy_deny_warnings": true,
+    "workspace_tests": true,
+    "scientific_parity_and_json_csv_export": true,
+    "native_release_launch": true
+  },
+  "workspace_passing_tests": 126,
+  "integration_control": "The one ignored fixture-dependent test passed separately through controls/check_desktop.py.",
+  "isolation": "Rust gates ran on a tracked-source snapshot plus this change; unrelated untracked user files were excluded. GUI source files were byte-compared with the tested snapshot.",
+  "visual_review": {
+    "pages": 8,
+    "walkthrough_steps": 13,
+    "headless_minimum_size": [
+      900,
+      640
+    ],
+    "native_capture_size": [
+      1920,
+      1280
+    ],
+    "reviewed": "Branding, input controls, bounded schedule scrolling, tables, spectra/empty states, pathway diagram, evidence inspector, and spotlight/callout layers. Repaired unsupported unit glyphs and highlight borders crossing callout text."
+  },
+  "screenshots_sha256": {
+    "00.png": "3a947593a3cbe5566e62e41a5b4f11894bd47ac7943d8545d4b4c893fe1f7c2c",
+    "01.png": "4b74d762ccb52945c44cf64fb0b99c03fa3a9e474c4ead8e31bedc6c66bcab11",
+    "02.png": "08780ea5784b5b0451cbf86ba83246a876bf3bd904787176fc8aa20b96392bf1",
+    "03.png": "a795504f4f8cb6bef9cd50c9c9667008c67fa2e5147e18e69a0bf643528f72a4",
+    "04.png": "d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b",
+    "05.png": "c82b476dc74fbcea2d7ed8bf8f82af3d9c5a072c3828cd15ae97966cfbb757d0",
+    "06.png": "983ac3a4eadb28ed3956be37857a0985198d9fe011583e9a9e877a68d3825239",
+    "07.png": "193505c80dd511f8aba568f6c866e6a50f6004703b92a0c736a3a6593b83575e",
+    "08.png": "78114a88780a843fb47f79507c41391b64b3e72637fc62719004f7cb306973d6",
+    "09.png": "398b7fd0e738333717ebaca791951b2c68bc2817cca4de9dae59273e97b8211c",
+    "10.png": "5e8ffa8b101e8f8370eaed46b4847ce6ae71a8d8c92b6639b8064c10de166d4e",
+    "11.png": "5430360e7b2f9f74f1192094ccf5fce1bb1f58c42ae28756c6214fd5c115dd61",
+    "12.png": "e35a2545784a9bd546e854614fea64419d5f6bdbd6ddda464f5e98d38cbb961b",
+    "13.png": "52caeb7f503149af744588a5e15dea54327c362aa8ad99fef0c885ee950b079a",
+    "14.png": "92743ec3c009c77c31d8615304d31e24eec8d5cc90d1e91776a2955dfdd8360c",
+    "15.png": "476f7b04abdc4e0349d1babb69748ec86caf5c724fa731eed7fc497de00d0de7",
+    "16.png": "7586264e914145c4f5a4fc814fd7b4437c727a39843be71db97bfb10c83ae451",
+    "17.png": "8a811b4756d383bf181e539dfbd05d524b5e72156bbff53e56ed78bb24fd66f6",
+    "18.png": "ec3bd0cef8a41664ec5092fc48239cf05023a6b83b9883d7c1a3e9337d0ae68c",
+    "19.png": "b19c545c8f4660db6d1f6affc350bf5983f8c0f44993740c81b54785cbe6cc84",
+    "20.png": "50dfcf83772466824f5ecad55dc5d3603570c7bff8d98b8f8972bbcd82662cd4"
+  },
+  "release_binary_sha256": "9f8c26e6660c1ef8d0511b3d7581af9ee708c68fcd7df5e22b2908dda6d29780",
+  "cross_platform": "Linux verified locally. macOS and Windows artifact builds are configured in GitHub Actions; not locally executed.",
+  "pass": true
+}

@@ -882,3 +882,31 @@
   both licence texts and a CycloneDX SBOM, and the source distribution contains the required Rust/data/licence files.
   Evidence is `results/g5_p12_release.json`, SHA-256 `d899dd59843b6c6fdac562dc5777254b942faa6d94394a323ef77b37b0daf5f2`.
   No tag, registry upload or GitHub Release was created.
+
+## 42 — 2026-09-08 — Native desktop interface and scientific identity control
+- Added an optional egui desktop that edits the existing specification, invokes the existing solver on a worker,
+  and preserves full result JSON, ledger, and certificate. Relative input references use an explicit base folder.
+- Protocol `protocols/desktop-interface-v1.md` was frozen before integration evidence, SHA-256
+  `08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f`. The existing P11 synthetic fixture passes exact
+  CLI/desktop comparison for steps, pathways, ledger, mode, state counts, and certificates excluding interface labels.
+  Evidence: `results/desktop-interface-v1.json`; generated nuclear inputs remain outside Git.
+- The first JSON export/reload control exposed float-parser round-trip differences. The desktop enables serde_json's
+  float_roundtrip feature; the repaired exact export and cross-interface comparison pass. No solver equations changed.
+- A pre-existing current-toolchain Clippy diagnostic in the activation-index hash check was repaired by moving its
+  condition to a match guard while retaining the successful-string case and all error branches.
+- Final desktop evidence: `results/desktop-ui-verification-v1.json` records 126 passing workspace tests and all four
+  Rust quality gates from the isolated source snapshot. The separate fixture control also passes JSON and CSV export
+  identity. Native Linux release rendering was inspected across eight pages and thirteen walkthrough steps; GUI input
+  tests cover minimum-size rendering, tour navigation, and Escape dismissal. Cross-platform runtime checks are not
+  claimed. Omitted specification fields are materialized using the core's defaults before widgets edit them.
+
+## 43 — 2026-09-08 — Desktop merge CI and historical dependency scope
+- The desktop builds passed on Linux, macOS ARM, and Windows. Full CI exposed a stale tracked-file manifest and
+  a P16 dependency probe that compared the present workspace against the historical opening, including the new GUI.
+- Repair protocol: `protocols/desktop-historical-checks-v1.md`, SHA-256
+  `f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936`, frozen before the checker edits.
+  Both P16 dependency checkers now compare opening bytes to the recorded P16 source-evidence commit, matching the
+  existing fixed endpoint used by P16's source-difference check. Historical evidence and verdicts remain intact;
+  current source/consumer/quantity checks still run. This does not certify today's dependency graph as unchanged.
+- Regression coverage checks exact stored inventory equality, altered and missing evidence, and unavailable history.
+  Desktop CI now also runs on direct default-branch pushes. The tracked-file checksum manifest is refreshed.

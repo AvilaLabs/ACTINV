@@ -1,0 +1,54 @@
+name: desktop builds
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+  pull_request:
+    paths:
+      - 'crates/actinv-gui/**'
+      - 'crates/actinv-core/**'
+      - 'crates/actinv-data/**'
+      - 'crates/actinv-cli/**'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - '.github/workflows/desktop.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  desktop:
+    name: Desktop / ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-24.04
+            label: linux-x86_64
+            binary: target/release/actinv-gui
+          - os: macos-15
+            label: macos-aarch64
+            binary: target/release/actinv-gui
+          - os: windows-latest
+            label: windows-x86_64
+            binary: target/release/actinv-gui.exe
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
+      - name: Linux desktop dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+      - name: Build desktop
+        run: cargo build --locked --release -p actinv-gui
+      - uses: actions/upload-artifact@v4
+        with:
+          name: actinv-desktop-${{ matrix.label }}
+          path: |
+            ${{ matrix.binary }}
+            docs/DESKTOP.md
+            LICENSE-APACHE
+            LICENSE-MIT
+          if-no-files-found: error

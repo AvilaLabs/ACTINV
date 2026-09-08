@@ -1,0 +1,15 @@
+{
+  "protocol_sha256": "08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f",
+  "fixture": "existing P11 synthetic trace CRAM-16 with photons and pathways",
+  "checks": {
+    "steps": true,
+    "pathways": true,
+    "ledger": true,
+    "mode": true,
+    "total_states": true,
+    "pruned_states": true,
+    "certificate": true,
+    "csv": true
+  },
+  "pass": true
+}

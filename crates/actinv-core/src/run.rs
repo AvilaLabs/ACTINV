@@ -863,13 +863,14 @@ impl PreparedRun {
             ));
         }
         match index.get("sha256_npz") {
-            Some(serde_json::Value::String(recorded)) => {
-                if !library_sha.eq_ignore_ascii_case(recorded) {
-                    return Err(format!(
-                        "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
-                    ));
-                }
+            Some(serde_json::Value::String(recorded))
+                if !library_sha.eq_ignore_ascii_case(recorded) =>
+            {
+                return Err(format!(
+                    "activation-library index hash mismatch: index records {recorded}, computed {library_sha}"
+                ));
             }
+            Some(serde_json::Value::String(_)) => {}
             Some(_) => return Err("activation-library index sha256_npz must be a string".into()),
             None if !projectile.is_neutron() => {
                 return Err("charged activation-library index has no sha256_npz".into());

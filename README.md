@@ -5,7 +5,7 @@
 [![crates.io](https://img.shields.io/crates/v/actinv-cli?label=crates.io)](https://crates.io/crates/actinv-cli)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#contributing-and-licence)
 
-**Open, reproducible activation and nuclide-inventory calculations from the command line or Python.**
+**Open, reproducible activation and nuclide-inventory calculations with a native desktop, command line, and Python.**
 
 ACTINV answers a practical question: what radioactive nuclides are created when a material is irradiated, and what
 happens to them afterward? Give it a material, particle-flux spectrum, irradiation and cooling schedule, and evaluated
@@ -13,12 +13,15 @@ nuclear data. It returns inventories, activity, decay heat, photon sources, sele
 explicit record of anything the supplied data could not account for.
 
 It is useful for activation studies, shutdown inventories, source-term preparation, and reproducible comparisons with
-other inventory codes. The numerical core is written in Rust, with both a Python interface and a standalone command.
+other inventory codes. The numerical core is written in Rust and shared by the desktop, Python interface, and
+standalone command.
 
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
 [v1.0.1 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.1) ·
 [v1.0.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0) ·
 [Documentation](#documentation)
+
+[Explore the desktop interface ↓](#desktop-interface)
 
 > ACTINV is research-grade software. Version 1.0 is a technically validated release, not an approval for licensing,
 > safety, waste classification, or regulatory decisions. See [Qualification boundary](docs/QUALIFICATION.md) before
@@ -109,6 +112,46 @@ data without downloading it again:
 ```bash
 actinv data verify
 ```
+
+## Desktop interface
+
+The optional native egui desktop supports problem editing, verified data downloads, background calculations,
+interactive results and comparisons, photon spectra, production pathways, and JSON/CSV export. The **Help** button
+provides guided walkthroughs that dim the workspace and highlight the relevant controls.
+
+From a source checkout with Rust installed:
+
+```bash
+cargo run --release -p actinv-gui
+```
+
+This launches a native application window. After building, the executable is `target/release/actinv-gui`
+(`actinv-gui.exe` on Windows). Desktop builds are checked on Windows, macOS Apple Silicon, and Linux;
+installers and macOS application bundles are not yet included in the published v1.0.1 release. PyPI and
+`cargo install actinv-cli` install the command-line interface, not the desktop.
+
+### Build an irradiation and cooling schedule
+
+Edit durations with familiar units, reorder segments, and inspect their relative lengths in the timeline.
+
+![ACTINV schedule editor with irradiation and cooling rows and a proportional timeline](docs/images/desktop/schedule.png)
+
+### Explore results through linked plots and tables
+
+Select a time and nuclide, switch between activity, heat, and inventory, add a comparison, and export JSON or CSV.
+This capture uses the small synthetic P11 control fixture to demonstrate the interface.
+
+![ACTINV results page showing activity over time, a computed-step selector, and a nuclide inventory table](docs/images/desktop/results.png)
+
+### Learn in place with guided Help
+
+The walkthrough highlights the actual controls, dims the surrounding workspace, and explains each step.
+Use **Back**, **Next**, or **Exit tour** at any point; **F1** opens Help and **Escape** closes the walkthrough.
+
+![ACTINV Help walkthrough highlighting the schedule editor with a step-by-step explanation](docs/images/desktop/walkthrough.png)
+
+See [Desktop guide](docs/DESKTOP.md) for setup, walkthroughs, and verification. The desktop uses the same solver as
+the CLI and Python API, with Avila Labs branding and the full result ledger and certificate.
 
 ## Preparing an activation library
 
