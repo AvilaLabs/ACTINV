@@ -7,6 +7,22 @@
 
 **Open, reproducible activation and nuclide-inventory calculations with a native desktop, command line, and Python.**
 
+## Install the desktop
+
+[![Download Windows installer](https://img.shields.io/badge/Windows-Download_installer-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-windows-x86_64-setup.exe)
+[![Download macOS Apple Silicon app](https://img.shields.io/badge/macOS-Apple_Silicon-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-macos-aarch64.dmg)
+[![Download macOS Intel app](https://img.shields.io/badge/macOS-Intel-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-macos-x86_64.dmg)
+[![Download Linux AppImage](https://img.shields.io/badge/Linux-Download_AppImage-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-linux-x86_64.AppImage)
+
+Click your platform to download directly—no Rust or Python needed. **Windows:** open the installer, then launch
+ACTINV from Start. **macOS:** open the disk image and drag ACTINV to Applications. **Linux:** allow the AppImage
+to run in its file properties, then double-click it. Windows and Linux downloads are for x86_64 computers.
+
+Desktop **0.1.0-preview.1** is unsigned. See [first-launch help and installation details](docs/DESKTOP_INSTALL.md)
+if your system shows a security notice, or for an optional Linux application-menu shortcut.
+
+## About ACTINV
+
 ACTINV answers a practical question: what radioactive nuclides are created when a material is irradiated, and what
 happens to them afterward? Give it a material, particle-flux spectrum, irradiation and cooling schedule, and evaluated
 nuclear data. It returns inventories, activity, decay heat, photon sources, selected radiological responses, and an
@@ -32,7 +48,7 @@ standalone command.
 
 ### 1. Install ACTINV
 
-For most users, PyPI is the simplest option. One command installs both the Python interface and the `actinv` terminal
+For command-line and Python use, one command installs both the Python interface and the `actinv` terminal
 command on Python 3.9 or newer:
 
 ```bash
