@@ -110,6 +110,19 @@ data without downloading it again:
 actinv data verify
 ```
 
+## Desktop interface
+
+The optional native egui desktop supports problem editing, verified data downloads, background calculations,
+interactive results and comparisons, photon spectra, production pathways, and JSON/CSV export. The **Help** button
+provides guided walkthroughs that dim the workspace and highlight the relevant controls.
+
+```bash
+cargo run --release -p actinv-gui
+```
+
+See [Desktop guide](docs/DESKTOP.md) for setup, walkthroughs, and verification. The desktop uses the same solver as
+the CLI and Python API, with Avila Labs branding and the full result ledger and certificate.
+
 ## Preparing an activation library
 
 The standalone command builds deterministic libraries from supported ENDF-6 evaluations. For example:

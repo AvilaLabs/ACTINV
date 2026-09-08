@@ -882,3 +882,15 @@
   both licence texts and a CycloneDX SBOM, and the source distribution contains the required Rust/data/licence files.
   Evidence is `results/g5_p12_release.json`, SHA-256 `d899dd59843b6c6fdac562dc5777254b942faa6d94394a323ef77b37b0daf5f2`.
   No tag, registry upload or GitHub Release was created.
+
+## 42 — 2026-09-08 — Native desktop interface and scientific identity control
+- Added an optional egui desktop that edits the existing specification, invokes the existing solver on a worker,
+  and preserves full result JSON, ledger, and certificate. Relative input references use an explicit base folder.
+- Protocol `protocols/desktop-interface-v1.md` was frozen before integration evidence, SHA-256
+  `08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f`. The existing P11 synthetic fixture passes exact
+  CLI/desktop comparison for steps, pathways, ledger, mode, state counts, and certificates excluding interface labels.
+  Evidence: `results/desktop-interface-v1.json`; generated nuclear inputs remain outside Git.
+- The first JSON export/reload control exposed float-parser round-trip differences. The desktop enables serde_json's
+  float_roundtrip feature; the repaired exact export and cross-interface comparison pass. No solver equations changed.
+- A pre-existing current-toolchain Clippy diagnostic in the activation-index hash check was repaired by moving its
+  condition to a match guard while retaining the successful-string case and all error branches.
