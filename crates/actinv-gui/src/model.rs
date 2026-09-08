@@ -7,8 +7,10 @@ pub const EXAMPLE: &str = include_str!("../../../examples/fns_fe_5min.json");
 pub fn decode_problem(text: &str) -> Result<Value, String> {
     // Deserialize the entire schema, including unknown-field rejection, without
     // requiring an unfinished editor document to be scientifically valid yet.
-    serde_json::from_str::<Spec>(text).map_err(|e| e.to_string())?;
-    serde_json::from_str(text).map_err(|e| e.to_string())
+    let spec = serde_json::from_str::<Spec>(text).map_err(|e| e.to_string())?;
+    // Materialize the solver's defaults before passing fields to mutable widgets.
+    // Indexing an absent Value field mutably would otherwise insert JSON null.
+    serde_json::to_value(spec).map_err(|e| e.to_string())
 }
 
 pub fn resolve_inputs(document: &Value, base: &Path) -> Result<Spec, String> {
@@ -156,6 +158,31 @@ fn finite_nonnegative(v: &Value) -> bool {
     v.as_f64().is_some_and(|n| n.is_finite() && n >= 0.)
 }
 
+pub fn inventory_csv(result: &ResultDocument, index: usize) -> Result<String, String> {
+    let step = result
+        .steps()
+        .get(index)
+        .ok_or("Selected result step does not exist")?;
+    let mut csv = String::from("step,time_s,nuclide,atoms_per_g,activity_Bq_per_g\n");
+    for row in step["inventory"]
+        .as_array()
+        .ok_or("Result inventory is missing")?
+    {
+        let name = row["nuclide"]
+            .as_str()
+            .ok_or("Result nuclide name is missing")?;
+        csv.push_str(&format!(
+            "{},{},\"{}\",{},{}\n",
+            index + 1,
+            number(&step["t_s"]),
+            name.replace('"', "\"\""),
+            number(&row["atoms_per_g"]),
+            number(&step["activity_Bq_per_g"][name])
+        ));
+    }
+    Ok(csv)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -166,17 +193,37 @@ mod tests {
             serde_json::json!({"response":{"path":"response.json","sha256":"a".repeat(64)}});
         doc["title"] = "Edited".into();
         assert_eq!(
-            decode_problem(&doc.to_string()).unwrap()["photon"],
-            doc["photon"]
+            decode_problem(&doc.to_string()).unwrap()["photon"]["response"],
+            doc["photon"]["response"]
         );
         doc["typo"] = true.into();
         assert!(decode_problem(&doc.to_string()).is_err());
     }
     #[test]
+    fn omitted_optional_fields_use_solver_defaults_in_the_editor() {
+        let mut document: Value = serde_json::from_str(EXAMPLE).unwrap();
+        document.as_object_mut().unwrap().remove("title");
+        document.as_object_mut().unwrap().remove("options");
+        document["material"]
+            .as_object_mut()
+            .unwrap()
+            .remove("mass_g");
+        document["material"]
+            .as_object_mut()
+            .unwrap()
+            .remove("basis");
+        let loaded = decode_problem(&document.to_string()).unwrap();
+        assert_eq!(loaded["title"], "");
+        assert_eq!(loaded["material"]["mass_g"], 1.);
+        assert_eq!(loaded["material"]["basis"], "wt_percent");
+        assert_eq!(loaded["options"]["temperature_K"], 293.6);
+        assert!(Spec::from_json(&loaded.to_string()).is_ok());
+    }
+    #[test]
     fn paths_resolve_without_mutating_saved_document() {
         let doc = decode_problem(EXAMPLE).unwrap();
         let spec = resolve_inputs(&doc, Path::new("/project")).unwrap();
-        assert!(spec.library.path.starts_with("/project/"));
+        assert!(Path::new(&spec.library.path).starts_with(Path::new("/project")));
         assert!(doc["library"]["path"]
             .as_str()
             .unwrap()
@@ -197,13 +244,22 @@ mod tests {
         doc["fission_yields"] = serde_json::json!({"files":[reference]});
         let original = doc.clone();
         let spec = resolve_inputs(&doc, Path::new("/project")).unwrap();
-        assert_eq!(spec.photon.response.unwrap().path, "/project/extra.json");
+        assert_eq!(
+            spec.photon.response.unwrap().path,
+            Path::new("/project").join("extra.json").to_string_lossy()
+        );
         assert_eq!(
             spec.uncertainty.unwrap().covariance.path,
-            "/project/extra.json"
+            Path::new("/project").join("extra.json").to_string_lossy()
         );
-        assert_eq!(spec.radiological.unwrap().table.path, "/project/extra.json");
-        assert_eq!(spec.fission_yields.files[0].path, "/project/extra.json");
+        assert_eq!(
+            spec.radiological.unwrap().table.path,
+            Path::new("/project").join("extra.json").to_string_lossy()
+        );
+        assert_eq!(
+            spec.fission_yields.files[0].path,
+            Path::new("/project").join("extra.json").to_string_lossy()
+        );
         assert_eq!(spec.fission_yields.files[0].sha256, "a".repeat(64));
         assert_eq!(doc, original);
     }
@@ -233,6 +289,11 @@ mod integration_control {
         let result = solve(spec).unwrap();
         let result = ResultDocument::parse(result, "control".into()).unwrap();
         write_json(Path::new(&output), &result.value).unwrap();
+        std::fs::write(
+            Path::new(&output).with_extension("csv"),
+            inventory_csv(&result, 0).unwrap(),
+        )
+        .unwrap();
         let reloaded: Value =
             serde_json::from_str(&std::fs::read_to_string(output).unwrap()).unwrap();
         assert_eq!(result.value, reloaded);

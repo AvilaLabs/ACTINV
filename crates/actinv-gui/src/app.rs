@@ -47,6 +47,7 @@ pub struct Desktop {
     metric: usize,
     selected: String,
     filter: String,
+    ledger_filter: String,
     descending: bool,
     reset_plot: bool,
     isotope: String,
@@ -61,6 +62,7 @@ pub struct Desktop {
     allow_close: bool,
     downloaded: Option<Value>,
     scene_view: egui::Rect,
+    pathway_node: String,
     capture: Option<crate::capture::Capture>,
 }
 #[derive(Clone, Copy)]
@@ -102,11 +104,11 @@ impl Desktop {
             base:model::working_directory(), page:0,
             status:"Start with the iron example, or open your own problem. Choose your installed nuclear data below.".into(),
             error:false, logo, result:None, comparison:None, job:None,
-            step:0, metric:0, selected:String::new(), filter:String::new(),
+            step:0, metric:0, selected:String::new(), filter:String::new(), ledger_filter:String::new(),
             descending:true, reset_plot:false, isotope:String::new(), amount:0.,
             raw:String::new(), raw_dirty:false, tour:Tour::default(), help:false,
             pending:None, undo:vec![], redo:vec![], allow_close:false,
-            downloaded:None, scene_view:egui::Rect::ZERO, capture:crate::capture::Capture::from_env(),
+            downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(),
         }
     }
     fn dirty(&self) -> bool {
@@ -283,20 +285,8 @@ impl Desktop {
             .save_file()
         {
             let r = if csv {
-                let step = &result.steps()[self.step];
-                let mut s = String::from("nuclide,atoms_per_g,activity_Bq_per_g\n");
-                if let Some(rows) = step["inventory"].as_array() {
-                    for row in rows {
-                        let name = row["nuclide"].as_str().unwrap_or("");
-                        s.push_str(&format!(
-                            "\"{}\",{},{}\n",
-                            name.replace('"', "\"\""),
-                            model::number(&row["atoms_per_g"]),
-                            model::number(&step["activity_Bq_per_g"][name])
-                        ));
-                    }
-                }
-                std::fs::write(path, s).map_err(|e| e.to_string())
+                model::inventory_csv(result, self.step)
+                    .and_then(|csv| std::fs::write(path, csv).map_err(|e| e.to_string()))
             } else {
                 model::write_json(&path, &result.value)
             };
@@ -413,7 +403,8 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             }
             ui.collapsing("Need the standard nuclear data?",|ui|{ui.label("Run this once in a terminal, then select the downloaded files above:");ui.code("actinv data fetch");ui.label("The standard download includes neutron activation and decay data. Data are versioned separately from the application.");});
         });
-        self.tour.mark("inputs", response.response.rect);
+        self.tour
+            .mark("inputs", response.response.rect.intersect(ui.clip_rect()));
         ui.add_space(16.);
         ui.horizontal(|ui| {
             ui.label("Projectile");
@@ -535,7 +526,8 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 }
             });
         });
-        self.tour.mark("material", group.response.rect);
+        self.tour
+            .mark("material", group.response.rect.intersect(ui.clip_rect()));
         ui.add_space(20.);
         if ui.button("Continue to irradiation & cooling >").clicked() {
             self.page = 2;
@@ -669,7 +661,8 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 ));
             }
         });
-        self.tour.mark("schedule", r.response.rect);
+        self.tour
+            .mark("schedule", r.response.rect.intersect(ui.clip_rect()));
         ui.add_space(16.);
         if ui.button("Continue to spectrum >").clicked() {
             self.page = 3;
@@ -683,15 +676,16 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
         );
         let r=ui.scope(|ui|{
             ui.horizontal(|ui|{ui.label("Group structure");text_field(ui,&mut self.document["spectrum"]["structure"]);});
-            let mut normalized=self.document["spectrum"]["total"].is_number();if ui.checkbox(&mut normalized,"Normalize group values to a total flux (particles cm⁻² s⁻¹)").changed(){if normalized{self.document["spectrum"]["total"]=json!(1e12);}else{self.document["spectrum"].as_object_mut().unwrap().remove("total");}}
-            if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles cm⁻² s⁻¹).");}
+            let mut normalized=self.document["spectrum"]["total"].is_number();if ui.checkbox(&mut normalized,"Normalize group values to a total flux (particles / cm^2 / s)").changed(){if normalized{self.document["spectrum"]["total"]=json!(1e12);}else{self.document["spectrum"].as_object_mut().unwrap().remove("total");}}
+            if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles / cm^2 / s).");}
             let mut descending=self.document["spectrum"]["descending"].as_bool().unwrap_or(false);if ui.checkbox(&mut descending,"Input groups are highest-energy first").changed(){self.document["spectrum"]["descending"]=descending.into();}
             let points:Vec<[f64;2]>=self.document["spectrum"]["flux_per_group"].as_array().map(|a|a.iter().enumerate().map(|(i,v)|[i as f64+1.,model::number(v)]).collect()).unwrap_or_default();
-            Plot::new("incident").height(260.).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm² / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(BLUE)));
+            Plot::new("incident").height(260.).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(BLUE)));
             ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
         });
-        self.tour.mark("spectrum", r.response.rect);
+        self.tour
+            .mark("spectrum", r.response.rect.intersect(ui.clip_rect()));
     }
     fn results(&mut self, ui: &mut egui::Ui) {
         heading(
@@ -952,7 +946,8 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                     });
                 });
         });
-        self.tour.mark("inventory", table.response.rect);
+        self.tour
+            .mark("inventory", table.response.rect.intersect(ui.clip_rect()));
     }
     fn details(&mut self, ui: &mut egui::Ui) {
         heading(
@@ -966,29 +961,41 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             ui.heading("Decay photon source");
             if step["photon_source"].is_null(){ui.label("No photon source was requested. Add \"photons\" to options.outputs in Advanced JSON, then run again.");}else{
                 if let Some(groups)=step["photon_source"]["groups"].as_array(){
+                    if groups.iter().any(|g|model::number(&g["photons_s_g"])>0.) {
                     let bars:Vec<_>=groups.iter().map(|g|egui_plot::Bar::new(model::number(&g["centroid_eV"])/1e6,model::number(&g["photons_s_g"])).width((model::number(&g["high_eV"])-model::number(&g["low_eV"]))/1e6)).collect();
                     Plot::new("photon-groups").height(230.).x_axis_label("Photon energy (MeV)").y_axis_label("Photons / s / g per group").show(ui,|p|p.bar_chart(egui_plot::BarChart::new("Decay photons",bars).color(BLUE)));
+                }
+                    else {ui.label("No grouped photon emission is recorded at this step. Review the photon source details and ledger for missing evaluated spectra or unrepresented emission.");}
                 }
                 json_tree(ui,"Photon source",&step["photon_source"]);
             }
             ui.separator();ui.heading("Production pathways");
             if let Some(pathways)=result.value["pathways"].as_array().and_then(|p|p.get(self.step)).and_then(Value::as_object){
                 if pathways.is_empty(){ui.label("No production pathways were recorded for this step. Pathway decomposition is available in trace mode.");}
+                if !pathways.contains_key(&self.selected){self.selected=pathways.keys().next().cloned().unwrap_or_default();self.scene_view=egui::Rect::ZERO;}
                 egui::ComboBox::from_id_salt("pathway-isotope").selected_text(if self.selected.is_empty(){"Choose a nuclide"}else{&self.selected}).show_ui(ui,|ui|{for key in pathways.keys(){ui.selectable_value(&mut self.selected,key.clone(),key);}});
                 if let Some(paths)=pathways.get(&self.selected).and_then(Value::as_array){
                     ui.horizontal(|ui|{ui.label("Drag to pan; scroll to zoom.");if ui.small_button("Fit pathways").clicked(){self.scene_view=egui::Rect::ZERO;}});
                     ui.allocate_ui(Vec2::new(ui.available_width(),240.),|ui|{
                         egui::Scene::new().zoom_range(0.2..=2.).show(ui,&mut self.scene_view,|ui|{
                     let (rect,_)=ui.allocate_exact_size(Vec2::new(700.,(paths.len().min(12) as f32*52.).max(70.)),egui::Sense::hover());
-                    for (i,path) in paths.iter().take(12).enumerate(){let y=rect.top()+26.+i as f32*52.;let names=[path["from"].as_str().unwrap_or("?"),path["first_product"].as_str().unwrap_or("?"),&self.selected];let xs=[rect.left()+65.,rect.center().x,rect.right()-65.];for j in 0..2{ui.painter().arrow(egui::pos2(xs[j]+47.,y),Vec2::new(xs[j+1]-xs[j]-98.,0.),egui::Stroke::new(1.5,BLUE));}for (x,name) in xs.into_iter().zip(names){let node=egui::Rect::from_center_size(egui::pos2(x,y),Vec2::new(95.,32.));ui.painter().rect_filled(node,5.,Color32::from_rgb(229,226,250));ui.painter().text(node.center(),egui::Align2::CENTER_CENTER,name,egui::FontId::proportional(14.),BLUE);}ui.painter().text(egui::pos2(rect.center().x,y+20.),egui::Align2::CENTER_TOP,format!("{:.2}% of product atoms",100.*model::number(&path["fraction"])),egui::FontId::proportional(10.),Color32::DARK_GRAY);}
+                    for (i,path) in paths.iter().take(12).enumerate(){
+                        draw_pathway(ui,rect,i,path,&self.selected,&mut self.pathway_node);
+                    }
                         });
                     });
+                    if !self.pathway_node.is_empty(){
+                        let atom=step["inventory"].as_array().and_then(|rows|rows.iter().find(|r|r["nuclide"].as_str()==Some(&self.pathway_node))).and_then(|r|r["atoms_per_g"].as_f64());
+                        ui.group(|ui|{ui.strong(format!("{} at step {}",self.pathway_node,self.step+1));if let Some(atoms)=atom{ui.label(format!("{atoms:.6e} atoms/g"));}else{ui.label("No inventory entry was recorded for this node at this step.");}
+if let Some(activity)=step["activity_Bq_per_g"][&self.pathway_node].as_f64(){ui.label(format!("{activity:.6e} Bq/g"));}});
+                    }
                     ui.label("Source > first product > selected nuclide. Intermediate chain members are not enumerated in this result format. Diagram shows up to 12 ranked contributions.");json_tree(ui,"All contributions",&Value::Array(paths.clone()));
                 }
             }else{ui.label("No pathway output is present.");}
             for key in ["uncertainty","radiological"]{if !step[key].is_null(){json_tree(ui,key,&step[key]);}}
         });
-        self.tour.mark("details", r.response.rect);
+        self.tour
+            .mark("details", r.response.rect.intersect(ui.clip_rect()));
     }
     fn ledger(&mut self, ui: &mut egui::Ui) {
         heading(
@@ -998,13 +1005,21 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
         );
         let r = ui.scope(|ui| {
             if let Some(result) = &self.result {
-                json_tree(ui, "Ledger", &result.value["ledger"]);
-                json_tree(ui, "Certificate", &result.value["certificate"]);
+                ui.add(egui::TextEdit::singleline(&mut self.ledger_filter).hint_text("Filter evidence by field or value…").desired_width(360.));
+                if self.ledger_filter.is_empty(){
+                    json_tree(ui, "Ledger", &result.value["ledger"]);
+                    json_tree(ui, "Certificate", &result.value["certificate"]);
+                }else{
+                    let query=self.ledger_filter.to_lowercase();let mut found=false;
+                    for section in ["ledger","certificate"]{ui.heading(section);if let Some(entries)=result.value[section].as_object(){for (key,value) in entries{if key.to_lowercase().contains(&query)||value.to_string().to_lowercase().contains(&query){found=true;json_tree(ui,key,value);}}}}
+                    if !found{ui.label("No matching evidence fields. Try a nuclide name, a file hash, or a category such as decay.");}
+                }
             } else {
                 ui.label("Run a calculation or open a result to inspect its evidence.");
             }
         });
-        self.tour.mark("ledger", r.response.rect);
+        self.tour
+            .mark("ledger", r.response.rect.intersect(ui.clip_rect()));
     }
     fn advanced(&mut self, ui: &mut egui::Ui) {
         heading(ui,"Advanced specification","Edit every ACTINV option. Apply checks the schema; Validate checks the scientific inputs.");
@@ -1195,6 +1210,80 @@ impl Desktop {
         }
     }
 }
+fn draw_pathway(
+    ui: &mut egui::Ui,
+    rect: egui::Rect,
+    index: usize,
+    path: &Value,
+    selected: &str,
+    inspected: &mut String,
+) {
+    let source = path["from"].as_str().unwrap_or("?");
+    let first = path["first_product"].as_str().unwrap_or("?");
+    let names = if first == selected {
+        vec![source, selected]
+    } else {
+        vec![source, first, selected]
+    };
+    let y = rect.top() + 26. + index as f32 * 52.;
+    let xs: Vec<_> = (0..names.len())
+        .map(|i| rect.left() + 65. + (rect.width() - 130.) * i as f32 / (names.len() - 1) as f32)
+        .collect();
+    for i in 0..names.len() - 1 {
+        let from = egui::pos2(xs[i] + 47., y);
+        let to = egui::pos2(xs[i + 1] - 50., y);
+        ui.painter()
+            .line_segment([from, to], egui::Stroke::new(1.5, BLUE));
+        ui.painter().add(egui::Shape::convex_polygon(
+            vec![to, to + Vec2::new(-9., -5.), to + Vec2::new(-9., 5.)],
+            BLUE,
+            egui::Stroke::NONE,
+        ));
+        if i == 1 {
+            ui.painter().text(
+                egui::pos2((from.x + to.x) / 2., y - 12.),
+                egui::Align2::CENTER_CENTER,
+                "via chain",
+                egui::FontId::proportional(10.),
+                Color32::DARK_GRAY,
+            );
+        }
+    }
+    for (i, (x, name)) in xs.into_iter().zip(names).enumerate() {
+        let node = egui::Rect::from_center_size(egui::pos2(x, y), Vec2::new(95., 32.));
+        if ui
+            .interact(
+                node,
+                egui::Id::new(("pathway-node", index, i)),
+                egui::Sense::click(),
+            )
+            .on_hover_text("Click to inspect this nuclide at the selected step")
+            .clicked()
+        {
+            *inspected = name.into();
+        }
+        ui.painter()
+            .rect_filled(node, 5., Color32::from_rgb(229, 226, 250));
+        ui.painter().text(
+            node.center(),
+            egui::Align2::CENTER_CENTER,
+            name,
+            egui::FontId::proportional(14.),
+            BLUE,
+        );
+    }
+    ui.painter().text(
+        egui::pos2(rect.center().x, y + 20.),
+        egui::Align2::CENTER_TOP,
+        format!(
+            "{:.2}% of product atoms",
+            100. * model::number(&path["fraction"])
+        ),
+        egui::FontId::proportional(10.),
+        Color32::DARK_GRAY,
+    );
+}
+
 fn heading(ui: &mut egui::Ui, title: &str, subtitle: &str) {
     ui.heading(RichText::new(title).size(27.));
     ui.label(RichText::new(subtitle).color(Color32::from_rgb(85, 93, 112)));
@@ -1245,36 +1334,45 @@ fn path_field(ui: &mut egui::Ui, label: &str, value: &mut Value) {
 fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
     match value {
         Value::Object(map) => {
-            egui::CollapsingHeader::new(format!("{label} · {} entries", map.len()))
-                .id_salt(label)
-                .default_open(label == "Ledger")
-                .show(ui, |ui| {
-                    for (k, v) in map {
-                        json_tree(ui, k, v);
-                    }
-                });
+            egui::CollapsingHeader::new(format!(
+                "{} · {} entries",
+                label.replace('_', " "),
+                map.len()
+            ))
+            .id_salt(label)
+            .default_open(label == "Ledger")
+            .show(ui, |ui| {
+                for (k, v) in map {
+                    json_tree(ui, k, v);
+                }
+            });
         }
         Value::Array(items) => {
-            egui::CollapsingHeader::new(format!("{label} · {} items", items.len()))
-                .id_salt(label)
-                .show(ui, |ui| {
-                    egui::ScrollArea::vertical().max_height(260.).show_rows(
-                        ui,
-                        24.,
-                        items.len(),
-                        |ui, range| {
-                            for i in range {
-                                ui.horizontal_wrapped(|ui| {
-                                    ui.monospace(format!("[{i}] {}", items[i]));
-                                });
-                            }
-                        },
-                    );
-                });
+            egui::CollapsingHeader::new(format!(
+                "{} · {} items",
+                label.replace('_', " "),
+                items.len()
+            ))
+            .id_salt(label)
+            .show(ui, |ui| {
+                egui::ScrollArea::vertical().max_height(260.).show_rows(
+                    ui,
+                    24.,
+                    items.len(),
+                    |ui, range| {
+                        for i in range {
+                            ui.horizontal_wrapped(|ui| {
+                                ui.monospace(format!("[{i}] {}", items[i]));
+                            });
+                        }
+                    },
+                );
+            });
         }
         _ => {
             ui.horizontal_wrapped(|ui| {
-                ui.strong(label);
+                ui.strong(label.replace('_', " "))
+                    .on_hover_text(format!("Result field: {label}"));
                 ui.label(value.to_string());
             });
         }

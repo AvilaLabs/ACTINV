@@ -67,6 +67,7 @@ impl Tour {
         for (i, rect) in rects.into_iter().enumerate() {
             egui::Area::new(Id::new(("tour-shade", i)))
                 .order(Order::Foreground)
+                .fade_in(false)
                 .fixed_pos(rect.min)
                 .show(ctx, |ui| {
                     let (r, _) = ui.allocate_exact_size(
@@ -77,7 +78,7 @@ impl Tour {
                         .rect_filled(r, 0., Color32::from_black_alpha(155));
                 });
         }
-        ctx.layer_painter(egui::LayerId::new(Order::Tooltip, Id::new("tour-ring")))
+        ctx.layer_painter(egui::LayerId::new(Order::Foreground, Id::new("tour-card")))
             .rect_stroke(
                 hole,
                 5.,
@@ -93,6 +94,7 @@ impl Tour {
         ctx.move_to_top(egui::LayerId::new(Order::Foreground, Id::new("tour-card")));
         egui::Area::new(Id::new("tour-card"))
             .order(Order::Foreground)
+            .fade_in(false)
             .fixed_pos(egui::pos2(x, y))
             .show(ctx, |ui| {
                 egui::Frame::popup(ui.style())

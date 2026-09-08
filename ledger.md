@@ -894,3 +894,8 @@
   float_roundtrip feature; the repaired exact export and cross-interface comparison pass. No solver equations changed.
 - A pre-existing current-toolchain Clippy diagnostic in the activation-index hash check was repaired by moving its
   condition to a match guard while retaining the successful-string case and all error branches.
+- Final desktop evidence: `results/desktop-ui-verification-v1.json` records 126 passing workspace tests and all four
+  Rust quality gates from the isolated source snapshot. The separate fixture control also passes JSON and CSV export
+  identity. Native Linux release rendering was inspected across eight pages and thirteen walkthrough steps; GUI input
+  tests cover minimum-size rendering, tour navigation, and Escape dismissal. Cross-platform runtime checks are not
+  claimed. Omitted specification fields are materialized using the core's defaults before widgets edit them.

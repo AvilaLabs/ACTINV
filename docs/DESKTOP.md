@@ -26,6 +26,8 @@ With Rust 1.95 or newer:
 cargo run --release -p actinv-gui
 ```
 
+GitHub Actions **desktop builds** produces downloadable Linux, macOS (Apple Silicon), and Windows artifacts for GUI pull requests or manual runs. These are build artifacts, not signed installers.
+
 Linux needs a working Wayland or X11 desktop and graphics driver. The app uses eframe's OpenGL backend and native file dialogs. Building the GUI is optional; `cargo install actinv-cli` continues to install only the CLI.
 
 ## A first calculation
@@ -62,3 +64,8 @@ python3 controls/check_desktop.py
 The independent control requires NumPy (as do the existing P11 fixtures). It generates temporary nuclear data and compares the desktop worker against the CLI, including scientific arrays, the ledger, and input certificates.
 
 For native visual checks, set `ACTINV_GUI_CAPTURE_DIR` to a temporary directory when launching the GUI. Optionally set `ACTINV_GUI_CAPTURE_RESULT` to a real ACTINV result JSON. This opt-in harness captures eight pages and all thirteen setup/result tour steps, then closes. It never loads a fixture in ordinary use.
+
+Local implementation evidence is recorded in [scientific parity](../results/desktop-interface-v1.json) and
+[desktop verification](../results/desktop-ui-verification-v1.json). The latter records 126 passing workspace tests,
+release-build and native visual checks, and hashes for 21 captured pages/tour steps. macOS and Windows builds are
+configured in Actions; their runtime behavior has not been verified locally.
