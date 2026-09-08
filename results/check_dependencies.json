@@ -1,5 +1,6 @@
 {
  "ci_entry_points": [
+  "scripts/test_package_desktop.py",
   "scripts/desktop_smoke.py",
   "scripts/package_desktop.py",
   "scripts/verify_desktop_package.py",

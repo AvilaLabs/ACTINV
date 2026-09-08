@@ -17,6 +17,7 @@ other inventory codes. The numerical core is written in Rust and shared by the d
 standalone command.
 
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
+[Desktop preview downloads — Windows, macOS, Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1) ·
 [v1.0.1 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.1) ·
 [v1.0.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0) ·
 [Documentation](#documentation)

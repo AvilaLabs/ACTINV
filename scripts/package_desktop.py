@@ -8,6 +8,7 @@ from pathlib import Path
 import platform
 import shutil
 import subprocess
+import tempfile
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,20 +22,23 @@ def main():
     config = json.loads((ROOT / "packaging/desktop.json").read_text())
     system = platform.system()
     formats = {"Linux": "appimage", "Darwin": "app,dmg", "Windows": "nsis"}[system]
-    raw = ROOT / "target/desktop-packages"
     release = ROOT / "dist/desktop" / args.label
-    if release.exists() or raw.exists():
+    if release.exists():
         raise SystemExit("Package output exists; choose a fresh checkout or remove only prior generated package output.")
     environment = dict(os.environ, APPIMAGE_EXTRACT_AND_RUN="1", NO_STRIP="1")
-    subprocess.run([args.packager, "--config", "packaging/desktop.json", "--formats", formats],
-                   cwd=ROOT, env=environment, check=True)
-    release.mkdir(parents=True)
     stem = f"ACTINV-Desktop-{config['version']}-{args.label}"
     extension = {"Linux": ".AppImage", "Darwin": ".dmg", "Windows": ".exe"}[system]
-    files = list(raw.glob("*" + extension))
-    assert len(files) == 1, files
     suffix = "-setup" if system == "Windows" else ""
-    shutil.copy2(files[0], release / (stem + suffix + extension))
+    # Rust's cache can restore target/desktop-packages from an older run.
+    # Build in fresh staging outside that cache, retaining the final-output guard.
+    with tempfile.TemporaryDirectory(prefix="actinv-packaging-") as directory:
+        raw = Path(directory)
+        subprocess.run([args.packager, "--config", "packaging/desktop.json", "--formats", formats,
+                        "--out-dir", str(raw)], cwd=ROOT, env=environment, check=True)
+        files = list(raw.glob("*" + extension))
+        assert len(files) == 1, files
+        release.mkdir(parents=True)
+        shutil.copy2(files[0], release / (stem + suffix + extension))
     if system == "Linux":
         shutil.copy2(ROOT / "packaging/install-linux.sh", release / "install-linux.sh")
         shutil.copy2(ROOT / "crates/actinv-gui/assets/avila-labs-logo.png", release / "actinv.png")

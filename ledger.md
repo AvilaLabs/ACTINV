@@ -938,3 +938,13 @@
   installation/model checks passed, while native rendering remains unverified due to the runner's OpenGL limit.
 - Public release: https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1.
   Publication wording and the attached installation guide/checksum list were updated without changing binaries.
+
+## 46 — 2026-09-08 — Repeatable packaging with a restored Rust cache
+- The post-publication documentation commit's desktop jobs failed because Rust cache restoration included
+  `target/desktop-packages`, which the packager correctly refused to overwrite. Scientific CI remained green.
+- Package staging now uses a fresh temporary directory outside the Rust cache and cleans it afterward. Existing
+  final downloads are still protected from overwriting. Regression coverage plants stale cached output, verifies
+  that only newly built bytes are copied, checks staging cleanup, and checks final-output preservation.
+- The published desktop preview and its binaries remain unchanged. Anonymous GitHub API access confirms the
+  published prerelease and all 13 assets. Added a prominent desktop download link near the top of the README;
+  GitHub's latest-stable shortcut continues to identify the separately versioned stable CLI/Python release.
