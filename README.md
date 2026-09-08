@@ -130,8 +130,8 @@ This launches a native application window. After building, the executable is `ta
 desktop preview installers and application bundles are prepared separately from the published v1.0.1 release. PyPI and
 `cargo install actinv-cli` install the command-line interface, not the desktop.
 
-For clickable Windows, macOS, and Linux packages, see the [desktop installation guide](docs/DESKTOP_INSTALL.md).
-It covers candidate downloads, first-launch notices for this unsigned preview, data setup, and verification.
+Download the [unsigned desktop preview for Windows, macOS, and Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1).
+The [desktop installation guide](docs/DESKTOP_INSTALL.md) covers first-launch notices, data setup, and verification.
 
 ### Build an irradiation and cooling schedule
 

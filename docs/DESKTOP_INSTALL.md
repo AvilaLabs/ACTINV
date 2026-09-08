@@ -2,10 +2,9 @@
 
 Desktop **0.1.0-preview.1** uses solver **1.0.1**. Desktop packaging has its own
 version and `desktop-v…` tags; it does not change the scientific release verdicts.
-The candidate is not published yet. Maintainers can download candidate packages
-from successful [desktop builds](https://github.com/AvilaLabs/ACTINV/actions/workflows/desktop.yml).
-Public downloads will appear on [GitHub Releases](https://github.com/AvilaLabs/ACTINV/releases)
-after review. The older v1.0.1 release does not contain the desktop.
+Download the [unsigned desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1).
+The older v1.0.1 release does not contain the desktop. Development candidates remain
+available from successful [desktop builds](https://github.com/AvilaLabs/ACTINV/actions/workflows/desktop.yml).
 
 ## Choose a download
 

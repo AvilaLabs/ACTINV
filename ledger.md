@@ -928,3 +928,13 @@
   reserves 8 MiB stacks for Windows startup and solver workers; package smoke uses the same worker stack size.
   AppImages include libxkbcommon/X11, and the disposable macOS mount explicitly accepts the bundled MIT licence.
   Solver equations, fixture values, and numerical tolerances are unchanged.
+
+## 45 — 2026-09-08 — Desktop preview publication
+- Published maintainer-approved unsigned desktop preview `desktop-v0.1.0-preview.1` from tested source
+  `13939596046fa001395e4eeb581d5b5983286f71`. Solver/library/Python version remains 1.0.1.
+- Release includes Windows installer/portable, macOS Intel/Apple Silicon DMGs, Linux AppImage/menu helper,
+  checksums, installation instructions, and build/verification reports. Scientific CI run `34259529768` and
+  all four package jobs in run `34259529921` passed. Linux and both Macs rendered all 21 captures; Windows
+  installation/model checks passed, while native rendering remains unverified due to the runner's OpenGL limit.
+- Public release: https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1.
+  Publication wording and the attached installation guide/checksum list were updated without changing binaries.
