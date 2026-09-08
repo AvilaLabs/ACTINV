@@ -193,9 +193,9 @@ def protocol_check() -> dict[str, object]:
     }
 
 
-def opening_file(relative: str) -> bytes | None:
+def opening_file(relative: str, commit: str = OPENING_COMMIT) -> bytes | None:
     completed = subprocess.run(
-        ["git", "show", f"{OPENING_COMMIT}:{relative}"],
+        ["git", "show", f"{commit}:{relative}"],
         cwd=ROOT,
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
@@ -335,10 +335,12 @@ def dependency_contract(value: object) -> bool:
         return False
     for relative in DEPENDENCY_MANIFESTS:
         opening = opening_file(relative)
-        path = ROOT / relative
-        if opening is None or not path.is_file():
+        # Verify the historical evidence at its recorded endpoint. Current
+        # workspace additions are covered by today's quality/dependency gates.
+        candidate = opening_file(relative, SOURCE_EVIDENCE_COMMIT)
+        if opening is None or candidate is None:
             return False
-        current_hash = sha256(path)
+        current_hash = sha256_bytes(candidate)
         opening_hash = sha256_bytes(opening)
         row = by_path[relative]
         if not (

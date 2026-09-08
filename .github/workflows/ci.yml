@@ -73,6 +73,7 @@ jobs:
 
       - name: P16 typed-boundary control and independent verdict
         run: |
+          python controls/test_p16_dependency_history.py
           python controls/g1_p16_quantities.py --no-write
           python controls/check_p16.py --no-write
 

@@ -4,7 +4,7 @@ have. Scans every Python file CI executes (and everything they import from the r
 requires each to be declared in requirements-ci.txt. Constants belong in data/, not in an installed package."""
 import os, re, sys, json, ast
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-CI_ENTRY = ["controls/check_desktop.py", "controls/g0_cram_coefficients.py", "controls/gen_cram.py", "controls/check_release_notes.py",
+CI_ENTRY = ["controls/test_p16_dependency_history.py", "controls/check_desktop.py", "controls/g0_cram_coefficients.py", "controls/gen_cram.py", "controls/check_release_notes.py",
             "controls/ci_end_to_end.py", "controls/test_ci_result.py", "controls/g1_self_contained.py",
             "controls/tendl_build.py",
             "controls/g1_p8_canonical_rebin.py", "controls/g2_p8_openmc.py", "controls/g3_p8_mcnp.py",

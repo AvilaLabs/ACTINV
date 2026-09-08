@@ -20,6 +20,7 @@ AMENDMENTS = {
     "protocols/ACTINV-P16_AMENDMENT_A.md": "12903283e78171ddd64b07964945f935a45e09879ae701dcadbe4ea51ed99f21",
 }
 OPENING_COMMIT = "0332779401363d2f39722efe7a0b7218afcfb270"
+SOURCE_EVIDENCE_COMMIT = "ede20289ff63951e61db536e2e36dffa5809bd62"
 CARGO = Path(os.environ.get("CARGO", Path.home() / ".cargo" / "bin" / "cargo"))
 QUANTITY_SOURCE = ROOT / "crates" / "actinv-core" / "src" / "quantity.rs"
 QUANTITY_DOC = ROOT / "docs" / "QUANTITIES.md"
@@ -90,21 +91,24 @@ def command(arguments: list[str | Path], **kwargs) -> subprocess.CompletedProces
     )
 
 
-def committed(path: str) -> bytes:
-    result = command(["git", "show", f"{OPENING_COMMIT}:{path}"])
+def committed(path: str, commit: str = OPENING_COMMIT) -> bytes:
+    result = command(["git", "show", f"{commit}:{path}"])
     if result.returncode:
         raise RuntimeError(result.stderr)
     return result.stdout.encode()
 
 
 def manifest_identity() -> dict[str, object]:
-    paths = command(["git", "ls-files", "Cargo.toml", "*/Cargo.toml", "*/*/Cargo.toml", "Cargo.lock"])
+    # P16's no-dependency-change claim belongs to its frozen implementation,
+    # just like the independent checker's source-difference assertion.
+    paths = command(["git", "ls-tree", "-r", "--name-only", SOURCE_EVIDENCE_COMMIT])
     if paths.returncode:
         raise RuntimeError(paths.stderr)
-    selected = sorted(path for path in paths.stdout.splitlines() if path)
+    selected = sorted(path for path in paths.stdout.splitlines()
+                      if path == "Cargo.lock" or Path(path).name == "Cargo.toml")
     rows = []
     for relative in selected:
-        current = (ROOT / relative).read_bytes()
+        current = committed(relative, SOURCE_EVIDENCE_COMMIT)
         opening = committed(relative)
         rows.append(
             {

@@ -899,3 +899,14 @@
   identity. Native Linux release rendering was inspected across eight pages and thirteen walkthrough steps; GUI input
   tests cover minimum-size rendering, tour navigation, and Escape dismissal. Cross-platform runtime checks are not
   claimed. Omitted specification fields are materialized using the core's defaults before widgets edit them.
+
+## 43 — 2026-09-08 — Desktop merge CI and historical dependency scope
+- The desktop builds passed on Linux, macOS ARM, and Windows. Full CI exposed a stale tracked-file manifest and
+  a P16 dependency probe that compared the present workspace against the historical opening, including the new GUI.
+- Repair protocol: `protocols/desktop-historical-checks-v1.md`, SHA-256
+  `f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936`, frozen before the checker edits.
+  Both P16 dependency checkers now compare opening bytes to the recorded P16 source-evidence commit, matching the
+  existing fixed endpoint used by P16's source-difference check. Historical evidence and verdicts remain intact;
+  current source/consumer/quantity checks still run. This does not certify today's dependency graph as unchanged.
+- Regression coverage checks exact stored inventory equality, altered and missing evidence, and unavailable history.
+  Desktop CI now also runs on direct default-branch pushes. The tracked-file checksum manifest is refreshed.
