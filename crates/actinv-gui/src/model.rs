@@ -3,6 +3,8 @@ use serde_json::Value;
 use std::path::{Path, PathBuf};
 
 pub const EXAMPLE: &str = include_str!("../../../examples/fns_fe_5min.json");
+// Windows' small default stacks are insufficient for the solver's data readers.
+pub const SOLVER_STACK_BYTES: usize = 8 * 1024 * 1024;
 
 pub fn decode_problem(text: &str) -> Result<Value, String> {
     // Deserialize the entire schema, including unknown-field rejection, without

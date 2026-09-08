@@ -9,6 +9,7 @@
   ],
   "description": "Activation and nuclide-inventory desktop",
   "category": "Education",
+  "appimage": { "libs": ["libxkbcommon.so.0", "libxkbcommon-x11.so.0"] },
   "homepage": "https://github.com/AvilaLabs/ACTINV",
   "licenseFile": "../LICENSE-MIT",
   "binariesDir": "../target/release",

@@ -2,6 +2,7 @@ fn main() {
     println!("cargo:rerun-if-changed=../../packaging/actinv.ico");
     println!("cargo:rerun-if-changed=../../packaging/windows.rc");
     if std::env::var("CARGO_CFG_TARGET_OS").as_deref() == Ok("windows") {
+        println!("cargo:rustc-link-arg=/STACK:8388608");
         embed_resource::compile("../../packaging/windows.rc", embed_resource::NONE)
             .manifest_required()
             .expect("Windows application resources");

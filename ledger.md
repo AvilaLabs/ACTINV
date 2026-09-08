@@ -923,3 +923,8 @@
   and manual dialog/download-warning interaction. Fixtures and generated bulk data remain outside version control.
 - Candidate workflows produce package hashes, source identity, and verification reports; they never publish or tag.
   Preview packages have no trusted publisher signature, as authorized by the maintainer. macOS uses ad-hoc signing.
+- First cross-platform package execution exposed Windows main-stack exhaustion, a missing dynamically loaded X11
+  keyboard library on Linux, and the macOS disk image licence prompt in unattended mounting. The desktop now
+  reserves 8 MiB stacks for Windows startup and solver workers; package smoke uses the same worker stack size.
+  AppImages include libxkbcommon/X11, and the disposable macOS mount explicitly accepts the bundled MIT licence.
+  Solver equations, fixture values, and numerical tolerances are unchanged.

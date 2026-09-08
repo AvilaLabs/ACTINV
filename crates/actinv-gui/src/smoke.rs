@@ -10,7 +10,7 @@ pub fn from_env() -> Result<(), String> {
     let output = PathBuf::from(
         std::env::var_os("ACTINV_GUI_SMOKE_OUT").ok_or("smoke output directory required")?,
     );
-    let run = || -> Result<(), Box<dyn std::error::Error>> {
+    let run = move || -> Result<(), Box<dyn std::error::Error>> {
         std::fs::create_dir_all(&output)?;
         let document = model::decode_problem(&std::fs::read_to_string(&spec_path)?)?;
         model::write_json(&output.join("saved-problem.json"), &document)?;
@@ -38,5 +38,11 @@ pub fn from_env() -> Result<(), String> {
         )?;
         Ok(())
     };
-    run().map_err(|error| error.to_string())
+    std::thread::Builder::new()
+        .name("packaged-model-check".into())
+        .stack_size(model::SOLVER_STACK_BYTES)
+        .spawn(move || run().map_err(|error| error.to_string()))
+        .map_err(|error| error.to_string())?
+        .join()
+        .map_err(|_| "packaged model worker panicked".to_owned())?
 }

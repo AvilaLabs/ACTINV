@@ -42,7 +42,7 @@ def main():
             assert not (install / "actinv-gui.exe").exists(), "uninstaller left executable"
         elif system == "Darwin":
             mount = work / "mounted"
-            subprocess.run(["hdiutil", "attach", str(next(release.glob("*.dmg"))), "-readonly", "-nobrowse", "-mountpoint", str(mount)], check=True)
+            subprocess.run(["hdiutil", "attach", str(next(release.glob("*.dmg"))), "-readonly", "-nobrowse", "-mountpoint", str(mount)], input=b"Y\n", check=True)
             try:
                 source = next(mount.glob("*.app"))
                 installed = work / source.name

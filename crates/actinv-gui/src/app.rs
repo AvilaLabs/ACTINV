@@ -230,11 +230,18 @@ impl Desktop {
             Ok(spec) => {
                 let (tx, rx) = mpsc::channel();
                 let ctx = ctx.clone();
-                std::thread::spawn(move || {
-                    let result = model::solve(spec).map(JobOutput::Calculation);
-                    let _ = tx.send(result);
-                    ctx.request_repaint();
-                });
+                if let Err(error) = std::thread::Builder::new()
+                    .name("actinv-solver".into())
+                    .stack_size(model::SOLVER_STACK_BYTES)
+                    .spawn(move || {
+                        let result = model::solve(spec).map(JobOutput::Calculation);
+                        let _ = tx.send(result);
+                        ctx.request_repaint();
+                    })
+                {
+                    self.report(Err(format!("Could not start calculation: {error}")));
+                    return;
+                }
                 self.job = Some((rx, Instant::now()));
                 self.report(Ok(
                     "Preparing data and solving… The first preparation can take longer.".into(),

@@ -1,5 +1,5 @@
 b608b7427f3be788da644c70ba9b1408cc840eba6c48f53037f4464cbcde269b  ./.github/workflows/ci.yml
-5b78edafb471ec4f8af38600156c9d6806ac56bf4e755a54166b6c178b73516c  ./.github/workflows/desktop.yml
+255b793b49c54d854eae49d0f075bcf62163e7c327687c15e1f47c81fe5a67e4  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
 133f9418393ba985919f09409534fbf4206a9d2834181f6938150aed7ae27d80  ./.github/workflows/release-artifacts.yml
@@ -250,12 +250,12 @@ cfd69fb67e9e9dc9a6fc2d18204e9d135c4c0e9fb5121014ef1af42978ec68f2  ./crates/actin
 888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f  ./crates/actinv-data/src/tables.rs
 6c360638ca4aa7610f3d8088b3112f3b9322979cc25c98e285b69573873a8209  ./crates/actinv-gui/Cargo.toml
 aec3b5ca3c83eddd977c8a37e7fac382f902f2f0ecabb2e3aec4f5550f98f01c  ./crates/actinv-gui/assets/avila-labs-logo.png
-91d6ea704e471f04cd82754890e3689f1a7b974f2bba56c9cd4b7223162e5064  ./crates/actinv-gui/build.rs
-3a00f59bc917ab273439c3c8dbff05bf9468965c76d8d82b0847cbbcfdcec9f8  ./crates/actinv-gui/src/app.rs
+ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6  ./crates/actinv-gui/build.rs
+56dfe4122f7f6c683acb375f0d84a1918abcb5533a8ded41d0b822cb21b44a73  ./crates/actinv-gui/src/app.rs
 b5bfdb71a16a36b954d52770c8ce0258f961c89d41ee9f8a3a95c7dae30dfc9e  ./crates/actinv-gui/src/capture.rs
 5f1c858cd49c941ae496a534a01b33700c602fd1422a6cc19d887476fffcd835  ./crates/actinv-gui/src/main.rs
-c0843bdc6e69738b4461ca3c551b9b5ba4174c43b587ff310b92902f2dfcbff0  ./crates/actinv-gui/src/model.rs
-8c30b80bcf1d30770574edc5ec9b91a6c4d55be0eb860d2be62999f34bad9635  ./crates/actinv-gui/src/smoke.rs
+e49ef09bc2783d91eabd2a59c3db7b88f782df72334ac6f912379ff7a3089786  ./crates/actinv-gui/src/model.rs
+5b5184f630b20203a3e0faed97726df78c84b9d2d0e0e2275fa632827a443d11  ./crates/actinv-gui/src/smoke.rs
 be053e4a662a44976fc3cb84c3534c4bd5e6d0331c6c87dcbd3d6649f393c321  ./crates/actinv-gui/src/tour.rs
 df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23  ./data/cram_coefficients.json
 684f6786ccbcdcfa8ddd0322ae332290ed868c8ab70dfd4479724637bd9fd2a6  ./docs/COMPETITIVE_BENCHMARK.md
@@ -319,9 +319,9 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
 d48d08319c95128750cdf9e045fe421fb485dff704e684ca74116c98c8e8cfd8  ./examples/fns_fe_5min.json
-cee77b5a8acad71180b2400df249293bc377342dbc758ea3e5b294a425173330  ./ledger.md
+a024641abed6c29027c7aec4d1d3e15af85b7d0010113b96ad37cad71e4a7a08  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
-02824b70855bab1d18ec54a6290458a03b1523ee970c20a05896ac0453567242  ./packaging/desktop.json
+2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
 db1f86bcc1f0cd14f5f16b2cc155e6dff5d8b8ed2cd74bcb1f18d5c15dc96440  ./packaging/windows.rc
 627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398  ./protocols/ACTINV-CB1_PROTOCOL.md
@@ -1803,4 +1803,4 @@ ad96143e4f21b9473f04090134765e9c2a111879fad25af984892b8aab14422c  ./scripts/fetc
 84a65826e87876bd9bc891bc34897412daf0eae63c092bb88a4b8f654d532190  ./scripts/prepare_tendl_2025_neutron_working.py
 4076cdd95286aaae0ad1fb69c6b04f7d088b64e497d392bf602731da9c75c86e  ./scripts/smoke_python_wheel.py
 68df21c67c3a6d2fc229a020fab7eebe140361ec79de669d7d9d7c41c50e212b  ./scripts/test_check_python_release_set.py
-fd88fb1f42aac1f242679c94215fcb63c7bf76f83b6ab1a715ba2c2fcb7d0f54  ./scripts/verify_desktop_package.py
+f8e39cb6b77496ae59ba55946c3fadaa26d3e115b6a74876bdea3a2fa75bc267  ./scripts/verify_desktop_package.py
