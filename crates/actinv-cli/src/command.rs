@@ -28,6 +28,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
                     actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D]\n\
+                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
@@ -340,6 +341,58 @@ fn build_library(args: &[String]) {
     eprintln!("index -> {}", summary.index.display());
 }
 
+fn build_damage(args: &[String]) {
+    if args.len() < 2 {
+        die("build-damage needs EVALUATION_DIR OUT.json", 2);
+    }
+    let input = &args[0];
+    let output = &args[1];
+    let options = valued_options(&args[2..]);
+    reject_unknown(
+        &options,
+        &["--projectile", "--groups", "--temperature-K", "--cache"],
+    );
+    let projectile_value = options.get("--projectile").copied().unwrap_or("auto");
+    let requested_projectile = if projectile_value == "auto" {
+        None
+    } else {
+        Some(Projectile::parse(projectile_value).unwrap_or_else(|error| die(error, 2)))
+    };
+    let detected_projectile = requested_projectile.unwrap_or_else(|| {
+        builder::inspect_projectile(input).unwrap_or_else(|error| die(error, 2))
+    });
+    let groups = match options.get("--groups").copied() {
+        Some("fispact-709") => GroupStructure::fispact_709(),
+        Some("fispact-162") => GroupStructure::fispact_162(),
+        Some(path) => GroupStructure::from_json(&read(path)),
+        None if detected_projectile == Projectile::Neutron => GroupStructure::fispact_709(),
+        None => GroupStructure::fispact_162(),
+    }
+    .unwrap_or_else(|error| die(error, 2));
+    let default_temperature = if detected_projectile == Projectile::Neutron {
+        293.6
+    } else {
+        0.0
+    };
+    let build_options = builder::DamageBuildOptions {
+        projectile: requested_projectile,
+        groups,
+        temperature_K: parsed_option(&options, "--temperature-K").unwrap_or(default_temperature),
+        cache: options.get("--cache").map(std::path::PathBuf::from),
+    };
+    let summary = builder::build_damage(input, output, &build_options)
+        .unwrap_or_else(|error| die(error, 1));
+    println!(
+        "{} damage targets, {} evaluations without MT=444, {} cache hits, {} {}, sha256 {}",
+        summary.targets,
+        summary.uncovered_evaluations,
+        summary.cache_hits,
+        summary.projectile.name(),
+        summary.output.display(),
+        summary.sha256
+    );
+}
+
 fn build_covariance(args: &[String]) {
     if args.len() < 3 {
         die(
@@ -438,6 +491,7 @@ pub fn main_from(a: Vec<String>) {
         "--version" | "-V" if a.len() == 2 => println!("actinv {}", env!("CARGO_PKG_VERSION")),
         "--help" | "-h" if a.len() == 2 => println!("{USAGE}"),
         "build-covariance" => build_covariance(&a[2..]),
+        "build-damage" => build_damage(&a[2..]),
         "build-library" => build_library(&a[2..]),
         "data" => data_command(&a[2..]),
         "import-flux" => {

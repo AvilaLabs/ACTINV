@@ -365,3 +365,12 @@ part that does not compress: users, issues, and the validation record accumulati
   and green, G2 controls staged but uncommitted since 2026-08-29 — and the one-phase-at-a-time rule is relaxed for
   this ordering by explicit direction; P18b's gates, seals and staged controls are unchanged and nothing in P23
   reads or depends on P18b evidence. P19–P22 remain scheduled behind it.
+- 2026-09-10 — P23 G3 lands damage observables: `actinv build-damage` collapses ENDF-6 MF=3/MT=444
+  damage-energy sections through the build-library pipeline into a hash-pinned `actinv-damage-table-1`, and a
+  spec `damage` section folds those rows over the composition-resolved target inventories to NRT dpa per element
+  and in aggregate. Coverage is honest: nuclides without a row are named, `require_complete` fails closed, and the
+  certificate carries the table hash and provenance. Amendment A records that no local evaluation store carries
+  MT=444 — the control battery therefore qualifies the builder on a persisted synthetic ENDF mini-corpus with an
+  independent re-collapse, and separately verifies that a real TENDL-2025 subset yields an honest zero-coverage
+  table. Users must source `heatr`-processed or equivalent damage-energy evaluations until a distributed MT=444
+  library is available.

@@ -7,8 +7,8 @@ use crate::flux::{
 };
 use crate::run::{PreparedRun, RunResult};
 use crate::spec::{
-    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options, PhotonOptions,
-    Projectile, RadiologicalOptions, Spec, Spectrum, Step, UncertaintyOptions,
+    DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options,
+    PhotonOptions, Projectile, RadiologicalOptions, Spec, Spectrum, Step, UncertaintyOptions,
 };
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -53,6 +53,8 @@ pub struct MeshSpec {
     pub uncertainty: Option<UncertaintyOptions>,
     #[serde(default)]
     pub radiological: Option<RadiologicalOptions>,
+    #[serde(default)]
+    pub damage: Option<DamageOptions>,
     #[serde(default = "default_chunk_cells")]
     pub chunk_cells: usize,
     #[serde(default = "default_threads")]
@@ -116,6 +118,7 @@ impl MeshSpec {
             fission_yields: self.fission_yields.clone(),
             uncertainty: self.uncertainty.clone(),
             radiological: self.radiological.clone(),
+            damage: self.damage.clone(),
         }
     }
 }
@@ -385,6 +388,7 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
         spec.options.temperature_K,
         spec.uncertainty.as_ref(),
         spec.radiological.as_ref(),
+        spec.damage.as_ref(),
     )?;
     let activation_boundaries = prepared.library_boundaries_eV().to_vec();
     if activation_boundaries.len() != prepared.library_groups() + 1 {
@@ -536,6 +540,7 @@ mod tests {
             fission_yields: FissionYieldOptions::default(),
             uncertainty: None,
             radiological: None,
+            damage: None,
             chunk_cells: 1,
             threads: 1,
         }

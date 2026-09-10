@@ -1,0 +1,194 @@
+{
+ "schema": "actinv-p23-g3-damage-1",
+ "gate": "G3",
+ "phase": "P23",
+ "binary": "/home/connoravila/Documents/actinv/target/release/actinv",
+ "tolerance": 1e-09,
+ "checks": {
+  "table_runs": true,
+  "constant_row_closed_form": true,
+  "nuclide_row_three_group_fold": true,
+  "partial_nuclide_coverage_honest": true,
+  "element_row_covers_nuclide_remainder": true,
+  "uncovered_targets_named": true,
+  "require_complete_fails_closed": true,
+  "missing_displacement_energy_named": true,
+  "nuclide_displacement_key_rejected": true,
+  "fed_reservoir_atoms_displace": true,
+  "coupled_mode_damage_block": true,
+  "noncanonical_target_rejected": true,
+  "negative_row_rejected": true,
+  "sha_mismatch_rejected": true,
+  "outputs_token_requires_section": true,
+  "build_damage_runs": true,
+  "build_damage_recollapse": true,
+  "build_damage_provenance": true,
+  "tendl_2025_uncovered_honest": true,
+  "mesh_single_cell_damage_parity": true,
+  "python_damage_parity": true,
+  "no_damage_identity": true
+ },
+ "details": {
+  "table_runs": {
+   "stderr": ""
+  },
+  "constant_row_closed_form": {
+   "energy_rate": [
+    24069090525.417324,
+    24069090525.41732
+   ],
+   "dpa_rate": [
+    2.232e-14,
+    2.2319999999999993e-14
+   ],
+   "dpa": [
+    6.696e-12,
+    6.695999999999998e-12
+   ]
+  },
+  "nuclide_row_three_group_fold": {
+   "energy_rate": [
+    114652637904.88106,
+    114652637904.88106
+   ],
+   "err": ""
+  },
+  "partial_nuclide_coverage_honest": {
+   "uncovered": [
+    "Fe54",
+    "Fe57",
+    "Fe58"
+   ],
+   "fraction": 0.91754
+  },
+  "element_row_covers_nuclide_remainder": {
+   "energy_rate": [
+    1218403772.7697916,
+    1218403772.7697918
+   ],
+   "err": ""
+  },
+  "uncovered_targets_named": {
+   "uncovered": [
+    "Co59"
+   ]
+  },
+  "require_complete_fails_closed": {
+   "code": 1,
+   "stderr": "damage: material targets lack table coverage: Co59"
+  },
+  "missing_displacement_energy_named": {
+   "code": 1,
+   "stderr": "damage: covered element 'Fe' has no positive displacement_energy_eV"
+  },
+  "nuclide_displacement_key_rejected": {
+   "code": 2,
+   "stderr": "damage.displacement_energy_eV key 'Fe56' is not an element symbol"
+  },
+  "fed_reservoir_atoms_displace": {
+   "atoms": 1.1083642708520014e+22,
+   "expected": 1.1083642708520306e+22
+  },
+  "coupled_mode_damage_block": {
+   "err": "",
+   "dpa_rate": 2.2320000000000003e-14
+  },
+  "noncanonical_target_rejected": {
+   "code": 1,
+   "stderr": "damage table target 'fe56' is not canonical; use 'Fe56'"
+  },
+  "negative_row_rejected": {
+   "code": 1,
+   "stderr": "damage target 'Fe' contains a nonfinite or negative cross section"
+  },
+  "sha_mismatch_rejected": {
+   "code": 1,
+   "stderr": "SHA-256 mismatch for /tmp/p23-g3-5t519cvw/negative.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed 4b33db5e8c024c297ef8d6ad8c414088d8ffcd07790cf0ba3c5ca93f5772d8f7"
+  },
+  "outputs_token_requires_section": {
+   "code": 2,
+   "stderr": "options.outputs 'damage' requires a damage section"
+  },
+  "build_damage_runs": "",
+  "build_damage_recollapse": {
+   "max_relative_diff": {
+    "Fe56": 2.938050262147345e-16,
+    "Ni58": 1.2543962887628223e-13
+   }
+  },
+  "build_damage_provenance": {
+   "uncovered": [
+    "Co59"
+   ],
+   "files": [
+    {
+     "path": "n-Co059.tendl",
+     "sha256": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45"
+    },
+    {
+     "path": "n-Fe056.tendl",
+     "sha256": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84"
+    },
+    {
+     "path": "n-Ni058.tendl",
+     "sha256": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b"
+    }
+   ]
+  },
+  "tendl_2025_uncovered_honest": {
+   "stderr": "",
+   "files": [
+    "n-Fe056.tendl",
+    "n-Co059.tendl",
+    "n-Ni058.tendl"
+   ],
+   "uncovered": [
+    "Co59",
+    "Fe56",
+    "Ni58"
+   ],
+   "expected": [
+    "Co59",
+    "Fe56",
+    "Ni58"
+   ]
+  },
+  "mesh_single_cell_damage_parity": {
+   "stderr": "",
+   "equal": true
+  },
+  "python_damage_parity": {},
+  "no_damage_identity": {
+   "stderr": "21 steps, 47 of 3873 states, 674.9 ms -> /tmp/p23-g3-5t519cvw/identity_out.json\n",
+   "observed": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+   "baseline": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62"
+  }
+ },
+ "evidence": {
+  "corpus": {
+   "n-Fe056.tendl": {
+    "sha256": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84"
+   },
+   "n-Ni058.tendl": {
+    "sha256": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b"
+   },
+   "n-Co059.tendl": {
+    "sha256": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45"
+   }
+  },
+  "tables": {
+   "constant_fe": {
+    "sha256": "87d3b104251e2582e812535fea3e4dcc656bf52237d90ca15a3859e0ca146e30",
+    "sigma_barn_eV": 200.0,
+    "ed_eV": 40.0
+   }
+  },
+  "built_table_sha256": "315cf070942632ea213794b6866d48eda446d2839bc86806532df07d4f180a14",
+  "tendl_subset": {
+   "n-Fe056.tendl": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+   "n-Co059.tendl": "00b705eec124c460f6f85f0ce22aaa216a75b26190dfde7c1fdc5430a85358b5",
+   "n-Ni058.tendl": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+  }
+ },
+ "pass": true
+}

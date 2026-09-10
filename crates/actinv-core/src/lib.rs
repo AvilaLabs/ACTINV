@@ -2,6 +2,7 @@
 pub mod chain;
 pub mod cram;
 pub mod cram_coeffs;
+pub mod damage;
 pub mod doppler;
 pub mod flux;
 pub mod mesh;

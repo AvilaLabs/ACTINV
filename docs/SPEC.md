@@ -56,13 +56,21 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
     "responses": ["clearance-2026", "worker-ingestion"],
     "require_complete": false
   },
+  "damage": {
+    "table": {
+      "path": "/data/damage/tendl-2025-neutron-709g_damage.json",
+      "sha256": "64 hexadecimal digits"
+    },
+    "displacement_energy_eV": {"Fe": 40.0, "Cr": 40.0},
+    "require_complete": false
+  },
   "options": {
     "mode": "auto",
     "prune": "rate",
     "bmin_atoms_per_g": 1e-8,
     "temperature_K": 293.6,
     "cram_order": 16,
-    "outputs": ["inventory", "activity", "heat", "photons", "dose", "pathways", "radiological", "ledger", "certificate"]
+    "outputs": ["inventory", "activity", "heat", "photons", "dose", "pathways", "radiological", "damage", "ledger", "certificate"]
   }
 }
 ```
@@ -82,6 +90,7 @@ hashes are errors; paths are literal filesystem paths (shell `~` expansion is no
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
 | `radiological` | Optional hash-pinned clearance, waste, ingestion, or inhalation response table; omission reads no table. |
+| `damage` | Optional hash-pinned `actinv-damage-table-1` damage-energy table plus per-element displacement energies; required when `outputs` contains `damage`. |
 
 The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data,
 every fission-yield evaluation, the photon response, covariance sidecar, and radiological table when present. A
@@ -201,6 +210,34 @@ nuclide count, and sorted active nuclides without a coefficient. Missing coeffic
 activity. The certificate retains the table hash, source metadata, kind, basis, and coefficient count. See the
 [qualification boundary](QUALIFICATION.md) before using a regulatory table.
 
+## Damage observables (dpa)
+
+`damage` is optional and is required when `options.outputs` contains `"damage"`. Its table is strict JSON with
+format `actinv-damage-table-1`; the declared SHA-256 is mandatory and is recomputed before the calculation. The
+table's `projectile` must match the problem projectile, and its `boundaries_eV` must be the activation library's
+boundaries exactly — `actinv build-damage` produces tables collapsed onto the same group structure.
+
+A table row is a per-group damage-energy production cross section in barn·eV, keyed by a canonical explicit nuclide
+(`Fe56`, `Ta180m1`) or a canonical element symbol (`Fe`); an element row covers every material nuclide of that
+element without its own row. Rows must be nonnegative, finite, and exactly `boundaries - 1` in length. Target keys
+are validated against the canonical naming rules — `fe56` is an error, not a synonym.
+
+`displacement_energy_eV` maps canonical element symbols to positive displacement energies; every covered element
+must have one, and a nuclide key there is an error. `require_complete: true` rejects the run when any material
+composition nuclide lacks a row. Uncovered nuclides are otherwise named in the ledger's
+`damage.uncovered_targets` and reduce `covered_atom_fraction`; they are never treated as zero data.
+
+Each step reports `damage`: total `damage_energy_eV_per_g_s`, material `dpa_rate_per_s`, cumulative `dpa`, the
+covered-atom fraction, and a per-element block of `atoms_per_g`, `damage_energy_eV_per_g_s`, `dpa_rate_per_s`,
+`dpa`. The displacement model is NRT: `dpa_rate = 0.8 * damage_energy_per_atom_per_s / (2 * E_d)`; the material
+rate is the covered-atom-weighted mean of the element rates. Damage targets are the material's
+composition-resolved nuclides — transmutation products are not counted, and in coupled mode the evolved target
+inventories are used. The ledger records the table hash, covered elements, displacement energies, uncovered
+targets, model, and units; the certificate records the table's provenance and the computed input hash.
+
+Damage-energy production comes from ENDF-6 MF=3/MT=444 sections. TENDL-2025 and EAF-2010 as distributed do not
+carry MT=444; build tables from `heatr`-processed or equivalent damage-energy evaluations.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon
@@ -265,6 +302,20 @@ actinv build-library INPUT OUTPUT.npz \
 boundary file. Neutron defaults are 709 groups and 293.6 K; charged defaults are 162 groups and 0 K. The adjacent
 `<stem>_index.json` records source hashes, normalized options, group hash, builder fingerprint, target ledgers and the
 final NPZ hash. A content-addressed cache is optional and revalidated before reuse.
+
+## Build a damage-energy table
+
+```bash
+actinv build-damage INPUT OUTPUT.json \
+  --projectile auto --groups fispact-709 --temperature-K 293.6 --cache /data/actinv-damage-cache
+```
+
+`INPUT` is one ENDF-6 evaluation or a directory. Every MF=3/MT=444 damage-energy production section is collapsed
+through the same parser, temperature check, and lethargy integration as `build-library`; `--projectile`, `--groups`,
+`--temperature-K`, and `--cache` share that command's semantics. The result is a strict `actinv-damage-table-1`
+document: group-structure label and boundaries, per-file SHA-256 provenance, a `targets` map of canonical nuclide
+rows, and an `uncovered` list naming every evaluation without MT=444 — absent sections are reported, never
+zero-filled. The output file's SHA-256 is printed on success for pinning into `damage.table`.
 
 ## Build an MF=33 covariance sidecar
 

@@ -1996,6 +1996,240 @@ pub fn build_library(
     })
 }
 
+// ---- damage tables (P23 G3): collapse every MF=3/MT=444 section in an evaluation
+// directory into an actinv-damage-table-1. The parse, temperature check and lethargy
+// collapse are the same code paths build-library uses for non-resonance MF=3 sections;
+// evaluations lacking MT=444 are named in `uncovered`, never fabricated or zero-filled.
+
+#[derive(Clone, Debug)]
+pub struct DamageBuildOptions {
+    pub projectile: Option<Projectile>,
+    pub groups: GroupStructure,
+    pub temperature_K: f64,
+    pub cache: Option<PathBuf>,
+}
+
+#[derive(Debug)]
+pub struct DamageBuildSummary {
+    pub targets: usize,
+    pub uncovered_evaluations: usize,
+    pub cache_hits: usize,
+    pub projectile: Projectile,
+    pub output: PathBuf,
+    pub sha256: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct DamageCacheEntry {
+    targets: BTreeMap<String, Vec<f64>>,
+    uncovered: Vec<String>,
+}
+
+fn damage_nuclide_name(za: i32, liso: i32) -> String {
+    let symbol = crate::composition::symbol_of(za / 1000);
+    if liso > 0 {
+        format!("{symbol}{}m{liso}", za % 1000)
+    } else {
+        format!("{symbol}{}", za % 1000)
+    }
+}
+
+fn damage_cache_key(source_sha256: &str, options: &DamageBuildOptions) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(b"ACTINV-DAMAGE-BUILD-v1\0");
+    hasher.update(source_sha256.as_bytes());
+    hasher.update(options.temperature_K.to_bits().to_le_bytes());
+    hasher.update(options.groups.hash().as_bytes());
+    format!("{:x}", hasher.finalize())
+}
+
+fn build_damage_source(
+    path: &Path,
+    options: &DamageBuildOptions,
+    projectile: Projectile,
+) -> Result<(DamageCacheEntry, Vec<(String, String)>, bool), String> {
+    let before = sha256_file(path)?;
+    let filename = path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
+        .to_owned();
+    if let Some(cache) = &options.cache {
+        let key = damage_cache_key(&before, options);
+        let checkpoint = cache.join(format!("{key}.json"));
+        if checkpoint.exists() {
+            let entry: DamageCacheEntry = serde_json::from_str(
+                &std::fs::read_to_string(&checkpoint).map_err(|error| {
+                    format!("cannot read damage checkpoint {}: {error}", checkpoint.display())
+                })?,
+            )
+            .map_err(|error| {
+                format!("cannot parse damage checkpoint {}: {error}", checkpoint.display())
+            })?;
+            if sha256_file(path)? != before {
+                return Err(format!(
+                    "source {} changed while its damage checkpoint was validated",
+                    path.display()
+                ));
+            }
+            return Ok((entry, vec![(filename, before)], true));
+        }
+    }
+    let text = std::fs::read_to_string(path)
+        .map_err(|error| format!("cannot read {} as ENDF text: {error}", path.display()))?;
+    let evaluations = parse_evaluations(&text, Some(projectile))
+        .map_err(|error| format!("{}: {error}", path.display()))?;
+    let mut entry = DamageCacheEntry {
+        targets: BTreeMap::new(),
+        uncovered: Vec::new(),
+    };
+    for evaluation in &evaluations {
+        let metadata = &evaluation.metadata;
+        if metadata.projectile != projectile {
+            return Err(format!(
+                "{} contains a {} evaluation inside a {} directory",
+                path.display(),
+                metadata.projectile.name(),
+                projectile.name()
+            ));
+        }
+        let name = damage_nuclide_name(metadata.za, metadata.liso);
+        let Some(section) = evaluation.mf3.get(&444) else {
+            entry.uncovered.push(name);
+            continue;
+        };
+        // MT=444 is a smooth pointwise section; like every non-resonance MF=3 section it is
+        // used at its declared evaluation temperature.
+        if metadata.evaluation_temperature_k.to_bits() != options.temperature_K.to_bits() {
+            return Err(format!(
+                "{}: {} evaluation is at {} K but {} K was requested",
+                path.display(),
+                name,
+                metadata.evaluation_temperature_k,
+                options.temperature_K
+            ));
+        }
+        let collapsed = options
+            .groups
+            .collapse(section)
+            .map_err(|error| format!("{} {name} MT=444: {error}", path.display()))?;
+        if collapsed
+            .iter()
+            .any(|value| !value.is_finite() || *value < 0.0)
+        {
+            return Err(format!(
+                "{} {name} MT=444 collapsed to a nonfinite or negative group value",
+                path.display()
+            ));
+        }
+        if entry.targets.insert(name.clone(), collapsed).is_some() {
+            return Err(format!(
+                "{} declares two MT=444 sections for {name}",
+                path.display()
+            ));
+        }
+    }
+    if let Some(cache) = &options.cache {
+        let key = damage_cache_key(&before, options);
+        let checkpoint = cache.join(format!("{key}.json"));
+        write_json_atomic(&checkpoint, &entry)?;
+    }
+    Ok((entry, vec![(filename, before)], false))
+}
+
+/// Build and atomically publish an `actinv-damage-table-1` from an evaluation directory.
+pub fn build_damage(
+    input: impl AsRef<Path>,
+    output: impl AsRef<Path>,
+    options: &DamageBuildOptions,
+) -> Result<DamageBuildSummary, String> {
+    let input = input.as_ref();
+    let output = output.as_ref();
+    let files = discover_inputs(input, Some(output))?;
+    if let Some(cache) = &options.cache {
+        if input.is_dir() && cache.starts_with(input) {
+            return Err("damage checkpoint cache must be outside the input directory".into());
+        }
+        std::fs::create_dir_all(cache).map_err(|error| {
+            format!("cannot create damage checkpoint cache {}: {error}", cache.display())
+        })?;
+    }
+    let projectile = match options.projectile {
+        Some(projectile) => projectile,
+        None => inspect_projectile(input)?,
+    };
+    if !projectile.is_neutron() && options.temperature_K != 0.0 {
+        return Err(format!("{} damage tables require 0 K", projectile.name()));
+    }
+    if options.groups.name.starts_with("fispact-") {
+        let expected = if projectile.is_neutron() { 709 } else { 162 };
+        if options.groups.groups() != expected {
+            return Err(format!(
+                "{} damage tables require fispact-{expected}, got {}",
+                projectile.name(),
+                options.groups.name
+            ));
+        }
+    }
+    let mut targets: BTreeMap<String, Vec<f64>> = BTreeMap::new();
+    let mut target_files: BTreeMap<String, String> = BTreeMap::new();
+    let mut provenance = Vec::new();
+    let mut uncovered = Vec::new();
+    let mut cache_hits = 0usize;
+    for path in &files {
+        let (entry, file_provenance, hit) = build_damage_source(path, options, projectile)
+            .map_err(|error| format!("{}: {error}", path.display()))?;
+        cache_hits += usize::from(hit);
+        provenance.extend(file_provenance);
+        for (name, row) in entry.targets {
+            if let Some(previous) = target_files.get(&name) {
+                return Err(format!(
+                    "duplicate damage target {name} in '{}' and '{}'",
+                    previous,
+                    path.display()
+                ));
+            }
+            target_files.insert(name.clone(), path.display().to_string());
+            targets.insert(name, row);
+        }
+        uncovered.extend(entry.uncovered);
+    }
+    let input_label = input
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("evaluations")
+        .to_owned();
+    let table = serde_json::json!({
+        "format": "actinv-damage-table-1",
+        "source": {
+            "citation": "ENDF-6 MF=3/MT=444 damage-energy production sections collapsed by actinv build-damage",
+            "edition": input_label,
+            "url": input.display().to_string(),
+        },
+        "projectile": projectile.name(),
+        "group_structure": options.groups.name,
+        "boundaries_eV": options.groups.boundaries_ev,
+        "units": "damage_energy_barn_eV_per_group",
+        "temperature_K": options.temperature_K,
+        "files": provenance
+            .iter()
+            .map(|(path, sha256)| serde_json::json!({"path": path, "sha256": sha256}))
+            .collect::<Vec<_>>(),
+        "uncovered": uncovered,
+        "targets": targets,
+    });
+    write_json_atomic(output, &table)?;
+    let sha256 = sha256_file(output)?;
+    Ok(DamageBuildSummary {
+        targets: table["targets"].as_object().map(|m| m.len()).unwrap_or(0),
+        uncovered_evaluations: uncovered.len(),
+        cache_hits,
+        projectile,
+        output: output.to_path_buf(),
+        sha256,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

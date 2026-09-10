@@ -3,12 +3,13 @@
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
+use crate::damage::{DamageStepOut, PreparedDamageTable};
 use crate::quantity::{Kelvin, Seconds};
 use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
-    DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions, PhysicalInputs,
-    Projectile, RadiologicalOptions, Spec, UncertaintyOptions,
+    DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions,
+    PhysicalInputs, Projectile, RadiologicalOptions, Spec, UncertaintyOptions,
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
@@ -125,6 +126,9 @@ pub struct StepOut {
     pub uncertainty: Option<StepUncertainty>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub radiological: Option<RadiologicalStepOut>,
+    /// NRT damage observables; present only when the spec carries a `damage` section.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub damage: Option<DamageStepOut>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -401,6 +405,13 @@ pub struct PreparedRun {
     uncertainty_options: Option<UncertaintyOptions>,
     covariance: Option<PreparedCovariance>,
     radiological: Option<PreparedRadiological>,
+    damage: Option<PreparedDamage>,
+}
+
+struct PreparedDamage {
+    options: crate::spec::DamageOptions,
+    sha256: String,
+    table: crate::damage::PreparedDamageTable,
 }
 
 struct PreparedCovariance {
@@ -654,6 +665,7 @@ impl PreparedRun {
             physical.temperature,
             spec.uncertainty.as_ref(),
             spec.radiological.as_ref(),
+            spec.damage.as_ref(),
             Some(physical.flux.values()),
             Some(&spec.spectrum.structure),
             profiler,
@@ -697,6 +709,7 @@ impl PreparedRun {
             temperature_K,
             uncertainty_options,
             None,
+            None,
         )
     }
 
@@ -710,6 +723,7 @@ impl PreparedRun {
         temperature_K: f64,
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
+        damage_options: Option<&DamageOptions>,
     ) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
         let temperature_K = Kelvin::new(temperature_K)
@@ -723,6 +737,7 @@ impl PreparedRun {
             temperature_K,
             uncertainty_options,
             radiological_options,
+            damage_options,
             None,
             None,
             &mut profiler,
@@ -739,6 +754,7 @@ impl PreparedRun {
         temperature_K: Kelvin,
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
+        damage_options: Option<&DamageOptions>,
         collapse_flux: Option<&[f64]>,
         collapse_group_structure: Option<&str>,
         profiler: &mut RunProfiler,
@@ -792,6 +808,20 @@ impl PreparedRun {
                     options: options.clone(),
                     sha256,
                     table: PreparedRadiologicalTable::from_json(&text, &options.responses)?,
+                })
+            }
+            None => None,
+        };
+        let damage = match damage_options {
+            Some(options) => {
+                let sha256 = verify_hash(&options.table.path, Some(&options.table.sha256))?;
+                let text = std::fs::read_to_string(&options.table.path).map_err(|error| {
+                    format!("cannot read damage table {}: {error}", options.table.path)
+                })?;
+                Some(PreparedDamage {
+                    options: options.clone(),
+                    sha256,
+                    table: PreparedDamageTable::from_json(&text, projectile.name())?,
                 })
             }
             None => None,
@@ -1039,6 +1069,7 @@ impl PreparedRun {
             uncertainty_options: uncertainty_options.cloned(),
             covariance,
             radiological,
+            damage,
         })
     }
 
@@ -1264,6 +1295,8 @@ impl PreparedRun {
             || spec.uncertainty != self.uncertainty_options
             || spec.radiological.as_ref()
                 != self.radiological.as_ref().map(|prepared| &prepared.options)
+            || spec.damage.as_ref()
+                != self.damage.as_ref().map(|prepared| &prepared.options)
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
         }
@@ -1532,6 +1565,24 @@ impl PreparedRun {
             }
             step_removal.push(edges);
         }
+        // ---- damage (P23): coverage is fixed once the material and table are both known;
+        // the per-step fold uses each step's target inventories (reservoir or evolved).
+        let damage_plan = match &self.damage {
+            Some(prepared) => {
+                if prepared.table.boundaries_eV() != lib.boundaries_ev() {
+                    return Err(
+                        "damage table boundaries_eV do not match the activation library boundaries"
+                            .into(),
+                    );
+                }
+                Some(prepared.table.plan(
+                    &bulk_inv,
+                    &prepared.options.displacement_energy_eV,
+                    prepared.options.require_complete,
+                )?)
+            }
+            None => None,
+        };
         let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new(); // (product row fed, rate, bulk nuclide it came from)
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         let mut r_src: Vec<(usize, usize, f64)> = Vec::new();
@@ -1803,6 +1854,8 @@ impl PreparedRun {
             });
         let mut photon_diagnostics: Vec<PhotonDiagnostics> = Vec::new();
         let mut steps = Vec::new();
+        let mut damage_cumulative: f64 = 0.0;
+        let mut damage_cumulative_elements: BTreeMap<String, f64> = BTreeMap::new();
         let mut t_cum = Seconds::new(0.0).expect("zero seconds is valid");
         let mut flux_weighted_time_cum = Seconds::new(0.0).expect("zero seconds is valid");
         let base_flux_total = physical.flux.total();
@@ -1965,6 +2018,37 @@ impl PreparedRun {
                         .map_err(|error| format!("radiological step {}: {error}", si + 1))
                 })
                 .transpose()?;
+            let damage = match (&self.damage, &damage_plan) {
+                (Some(prepared), Some(plan)) => {
+                    // composition-resolved target atoms: the constant reservoir in trace mode
+                    // (plus any explicitly fed tracked population), evolved states in coupled mode
+                    let mut atoms = bulk_inv.clone();
+                    for (&key, target_atoms) in atoms.iter_mut() {
+                        match ch.index.get(&key) {
+                            Some(&g) if pos[g] != usize::MAX => {
+                                if mode == "coupled" {
+                                    *target_atoms = y[pos[g]];
+                                } else if tracked_reservoir.contains(&g) {
+                                    *target_atoms += y[pos[g]];
+                                }
+                            }
+                            _ => {}
+                        }
+                    }
+                    let mut out = prepared.table.fold(plan, &atoms, phi, fl.get());
+                    damage_cumulative += out.dpa_rate_per_s * dt.get();
+                    out.dpa = damage_cumulative;
+                    for (name, element) in out.elements.iter_mut() {
+                        let cumulative = damage_cumulative_elements
+                            .entry(name.clone())
+                            .or_default();
+                        *cumulative += element.dpa_rate_per_s * dt.get();
+                        element.dpa = *cumulative;
+                    }
+                    Some(out)
+                }
+                _ => None,
+            };
             let photon_source = if want_photons {
                 let active_refs: Vec<_> = photon_active
                     .iter()
@@ -2029,6 +2113,7 @@ impl PreparedRun {
                 photon_source,
                 uncertainty,
                 radiological,
+                damage,
             });
         }
         profiler.finish("schedule_solve_diagnostics", solve_started);
@@ -2409,6 +2494,28 @@ impl PreparedRun {
                 }),
             );
         }
+        if let (Some(prepared), Some(plan)) = (&self.damage, &damage_plan) {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "damage".into(),
+                serde_json::json!({
+                    "table_sha256": &prepared.sha256,
+                    "require_complete": prepared.options.require_complete,
+                    "displacement_energy_eV": prepared.options.displacement_energy_eV,
+                    "covered_elements": plan
+                        .covered_elements
+                        .keys()
+                        .map(|z| composition::symbol_of(*z).to_string())
+                        .collect::<Vec<_>>(),
+                    "uncovered_targets": &plan.uncovered_targets,
+                    "model": "NRT: dpa_rate_per_s = 0.8 * damage_energy_eV_per_s_per_atom / (2 * E_d); damage targets are the material's composition-resolved nuclides; transmutation products are not damage targets",
+                    "units": {
+                        "damage_energy_eV_per_g_s": "eV per gram per second",
+                        "dpa_rate_per_s": "displacements per atom per second",
+                        "dpa": "dimensionless NRT displacements per atom",
+                    },
+                }),
+            );
+        }
         if let (Some(prepared), Some(options), Some(runtime)) =
             (&self.covariance, &spec.uncertainty, &uncertainty_runtime)
         {
@@ -2538,6 +2645,37 @@ impl PreparedRun {
                     }),
                 );
         }
+        if let Some(prepared) = &self.damage {
+            let mut metadata = prepared.table.certificate_metadata();
+            let metadata_object = metadata
+                .as_object_mut()
+                .expect("damage metadata is an object");
+            metadata_object.insert(
+                "require_complete".into(),
+                serde_json::Value::Bool(prepared.options.require_complete),
+            );
+            metadata_object.insert(
+                "displacement_energy_eV".into(),
+                serde_json::to_value(&prepared.options.displacement_energy_eV)
+                    .expect("displacement energies serialize"),
+            );
+            let certificate_object = certificate
+                .as_object_mut()
+                .expect("certificate is an object");
+            certificate_object.insert("damage".into(), metadata);
+            certificate_object
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert(
+                    "damage_table".into(),
+                    serde_json::json!({
+                        "path": &prepared.options.table.path,
+                        "sha256_declared": &prepared.options.table.sha256,
+                        "sha256": &prepared.sha256,
+                    }),
+                );
+        }
         if !spec.projectile.is_neutron() {
             certificate
                 .as_object_mut()
@@ -2609,6 +2747,7 @@ mod projectile_output_tests {
             photon_source: None,
             uncertainty: None,
             radiological: None,
+            damage: None,
         }
     }
 

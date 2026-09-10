@@ -33,6 +33,8 @@ pub struct Spec {
     pub uncertainty: Option<UncertaintyOptions>,
     #[serde(default)]
     pub radiological: Option<RadiologicalOptions>,
+    #[serde(default)]
+    pub damage: Option<DamageOptions>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -68,6 +70,18 @@ pub struct RadiologicalOptions {
     pub table: HashedFileRef,
     #[serde(default)]
     pub responses: Vec<String>,
+    #[serde(default)]
+    pub require_complete: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DamageOptions {
+    pub table: HashedFileRef,
+    /// Per-element displacement energies in eV, keyed by canonical element symbol ("Fe").
+    /// Mandatory for every element the table covers in the material.
+    #[serde(default)]
+    pub displacement_energy_eV: BTreeMap<String, f64>,
     #[serde(default)]
     pub require_complete: bool,
 }
@@ -399,6 +413,39 @@ impl Spec {
                 }
             }
         }
+        if let Some(damage) = &self.damage {
+            if damage.table.path.is_empty()
+                || damage.table.sha256.len() != 64
+                || !damage
+                    .table
+                    .sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err("damage.table requires a path and a 64-hex-digit sha256".into());
+            }
+            for (key, value) in &damage.displacement_energy_eV {
+                match actinv_data::composition::material_key(key) {
+                    Ok(actinv_data::composition::MaterialKey::Element(symbol))
+                        if *key == symbol => {}
+                    Ok(_) => {
+                        return Err(format!(
+                            "damage.displacement_energy_eV key '{key}' is not an element symbol"
+                        ));
+                    }
+                    Err(error) => {
+                        return Err(format!(
+                            "damage.displacement_energy_eV key '{key}': {error}"
+                        ));
+                    }
+                }
+                if !value.is_finite() || *value <= 0.0 {
+                    return Err(format!(
+                        "damage.displacement_energy_eV for '{key}' must be finite and positive"
+                    ));
+                }
+            }
+        }
         if self.decay.primary.is_empty() {
             return Err("decay.primary is empty".into());
         }
@@ -496,9 +543,12 @@ impl Spec {
             for output in outputs {
                 match output.as_str() {
                     "inventory" | "activity" | "heat" | "photons" | "dose" | "pathways"
-                    | "radiological" | "ledger" | "certificate" => {}
+                    | "radiological" | "damage" | "ledger" | "certificate" => {}
                     value => return Err(format!("unknown options.outputs value '{value}'")),
                 }
+            }
+            if outputs.iter().any(|o| o == "damage") && self.damage.is_none() {
+                return Err("options.outputs 'damage' requires a damage section".into());
             }
         }
         if self.spectrum.structure == "custom" {

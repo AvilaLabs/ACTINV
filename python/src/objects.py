@@ -65,7 +65,7 @@ def _paths(value, base=None):
     refs = [(value.get("library", {}), "path"), (value.get("decay", {}), "primary"),
             (value.get("decay", {}), "fallback")]
     for section, field in (("photon", "response"), ("uncertainty", "covariance"),
-                           ("radiological", "table")):
+                           ("radiological", "table"), ("damage", "table")):
         refs.append(((value.get(section) or {}).get(field) or {}, "path"))
     refs.extend((ref, "path") for ref in (value.get("fission_yields") or {}).get("files", []))
     for ref, key in refs:
