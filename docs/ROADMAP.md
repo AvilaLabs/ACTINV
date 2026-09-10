@@ -374,3 +374,12 @@ part that does not compress: users, issues, and the validation record accumulati
   independent re-collapse, and separately verifies that a real TENDL-2025 subset yields an honest zero-coverage
   table. Users must source `heatr`-processed or equivalent damage-energy evaluations until a distributed MT=444
   library is available.
+- 2026-09-10 — P23 closes with `P23-PASS` (session `results/session_p23.json`, verdict `results/verdict_p23.json`,
+  independent closure `results/p23_closure_check.json`): feed/removal, linear-regime reverse calculation, and NRT
+  damage observables are delivered with all gate batteries green and the frozen identity intact. Same day, a
+  usability pass landed outside the phase: problem files can reference installed data symbolically as
+  `catalog:<artifact-id>` (resolved against `$ACTINV_DATA_DIR` or `./actinv-data`, hash-filled from the embedded
+  catalog, conflicting hashes rejected), `actinv new` emits catalog references by default, and the examples
+  gallery grew to pulsed, feed/removal, damage, reverse, and two-cell mesh walkthroughs indexed by
+  `examples/README.md`. Next capability work: P18b completion or P19 finite-dilution self-shielding, whichever
+  the maintainer directs.
