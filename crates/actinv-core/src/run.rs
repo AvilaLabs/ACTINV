@@ -106,6 +106,10 @@ pub struct StepOut {
     pub activity_Bq_per_g: BTreeMap<String, f64>,
     pub heat_W_per_g: Heat,
     pub leakage_atoms_per_g: f64,
+    /// Atoms accumulated in the dedicated first-order removal sink; present only when a
+    /// schedule step declares `removal`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub removed_atoms_per_g: Option<f64>,
     pub negative_atoms_zeroed: f64,
     pub total_atoms_per_g: f64,
     pub n_states_populated: usize,
@@ -453,7 +457,9 @@ fn response_snapshot(
         if global == chain.leak || global == chain.unit || atoms <= 0.0 {
             continue;
         }
-        let key = chain.keys[global];
+        let Some(&key) = chain.keys.get(global) else {
+            continue;
+        };
         let Some(nuclide) = nuclides.get(&key) else {
             continue;
         };
@@ -542,7 +548,7 @@ fn tangent_value(
         if global == chain.leak || global == chain.unit {
             continue;
         }
-        let Some(nuclide) = nuclides.get(&chain.keys[global]) else {
+        let Some(nuclide) = chain.keys.get(global).and_then(|key| nuclides.get(key)) else {
             continue;
         };
         let energy = match component {
@@ -1444,6 +1450,88 @@ impl PreparedRun {
             m => m,
         }
         .to_string();
+        // ---- feed/removal (P23): per-step boundary sources and first-order sinks.
+        // Feed becomes a unit-state source edge, exactly like a constant bulk production term.
+        // Removal becomes a first-order edge into the dedicated `removed` sink plus a diagonal
+        // loss. Reservoir nuclides in trace mode are exempt from removal: the trace formulation
+        // defines them as undepleted constants, and the ledger names every exemption.
+        let has_feed = sched.iter().any(|step| !step.feed.is_empty());
+        let has_removal = sched.iter().any(|step| !step.removal.is_empty());
+        let removed = has_removal.then_some(ch.n);
+        let n_total = ch.n + usize::from(has_removal);
+        let mut step_feed: Vec<Vec<(usize, usize, f64)>> = Vec::with_capacity(sched.len());
+        let mut feed_states: std::collections::HashSet<usize> = Default::default();
+        for (si, step) in sched.iter().enumerate() {
+            let mut edges = Vec::with_capacity(step.feed.len());
+            for &(key, rate) in step.feed.iter() {
+                let state = ch.index.get(&key).copied().ok_or_else(|| {
+                    format!(
+                        "schedule step {} feeds {}_{} which is absent from the decay chain",
+                        si + 1,
+                        key.0,
+                        key.1
+                    )
+                })?;
+                feed_states.insert(state);
+                edges.push((state, ch.unit, rate));
+            }
+            step_feed.push(edges);
+        }
+        // Reservoir nuclides that are explicitly fed carry their fed population in a real tracked
+        // state while the constant reservoir keeps producing through the unit source.
+        let tracked_reservoir: std::collections::HashSet<usize> = feed_states
+            .iter()
+            .copied()
+            .filter(|state| bulk.contains_key(state))
+            .collect();
+        let mut step_removal: Vec<Vec<(usize, usize, f64)>> = Vec::with_capacity(sched.len());
+        let mut removal_reservoir_exempt: Vec<String> = Vec::new();
+        for (si, step) in sched.iter().enumerate() {
+            let mut edges = Vec::new();
+            for (selector, rate) in &step.removal {
+                let targets: Vec<usize> = match selector {
+                    crate::spec::RemovalSelector::Nuclide(za, liso) => {
+                        vec![ch.index.get(&(*za, *liso)).copied().ok_or_else(|| {
+                            format!(
+                                "schedule step {} removes {}_{} which is absent from the decay chain",
+                                si + 1,
+                                za,
+                                liso
+                            )
+                        })?]
+                    }
+                    crate::spec::RemovalSelector::Element(z) => ch
+                        .keys
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, key)| key.0 / 1000 == *z)
+                        .map(|(index, _)| index)
+                        .collect(),
+                };
+                if targets.is_empty() {
+                    return Err(format!(
+                        "schedule step {} removal selects no chain nuclides",
+                        si + 1
+                    ));
+                }
+                for target in targets {
+                    if mode == "trace"
+                        && bulk.contains_key(&target)
+                        && !feed_states.contains(&target)
+                    {
+                        let name = name_of(ch.keys[target].0, ch.keys[target].1);
+                        if !removal_reservoir_exempt.contains(&name) {
+                            removal_reservoir_exempt.push(name);
+                        }
+                        continue;
+                    }
+                    let sink = removed.expect("removal implies the sink state exists");
+                    edges.push((sink, target, *rate));
+                    edges.push((target, target, -*rate));
+                }
+            }
+            step_removal.push(edges);
+        }
         let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new(); // (product row fed, rate, bulk nuclide it came from)
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         let mut r_src: Vec<(usize, usize, f64)> = Vec::new();
@@ -1457,6 +1545,11 @@ impl PreparedRun {
                     if r != c && !bulk.contains_key(r) {
                         d_src.push((*r, ch.unit, v * bulk[c]));
                     }
+                    // a fed reservoir nuclide's tracked population decays and produces normally;
+                    // production into other reservoir rows stays absorbed by the reservoir
+                    if tracked_reservoir.contains(c) && (r == c || !bulk.contains_key(r)) {
+                        d_src.push((*r, *c, *v));
+                    }
                 } else if !bulk.contains_key(r) {
                     d_src.push((*r, *c, *v));
                 }
@@ -1464,6 +1557,9 @@ impl PreparedRun {
             for (r, c, v) in &react {
                 if bulk.contains_key(c) {
                     if r == c {
+                        if tracked_reservoir.contains(c) {
+                            r_src.push((*r, *c, *v));
+                        }
                         continue;
                     }
                     if bulk.contains_key(r) {
@@ -1474,6 +1570,9 @@ impl PreparedRun {
                         ));
                         continue;
                     }
+                    if tracked_reservoir.contains(c) {
+                        r_src.push((*r, *c, *v));
+                    }
                     r_src.push((*r, ch.unit, v * bulk[c]));
                     sources.push((*r, v * bulk[c], ch.keys[*c]));
                 } else if !bulk.contains_key(r) {
@@ -1482,6 +1581,12 @@ impl PreparedRun {
             }
             for derivative in reaction_assembly.derivatives {
                 if bulk.contains_key(&derivative.column) {
+                    if tracked_reservoir.contains(&derivative.column)
+                        && (derivative.row == derivative.column
+                            || !bulk.contains_key(&derivative.row))
+                    {
+                        reaction_derivatives.push(derivative);
+                    }
                     if derivative.row == derivative.column || bulk.contains_key(&derivative.row) {
                         continue;
                     }
@@ -1514,29 +1619,40 @@ impl PreparedRun {
             reaction_derivatives = reaction_assembly.derivatives;
         }
         // ---- initial vector
-        let mut n0 = vec![0.0f64; ch.n];
+        let mut n0 = vec![0.0f64; n_total];
         if mode == "trace" {
             n0[ch.unit] = 1.0;
         } else {
             for (c, v) in &bulk {
                 n0[*c] = *v;
             }
+            if has_feed {
+                n0[ch.unit] = 1.0;
+            }
         }
         // ---- prune
+        // Feed and removal edges join the reachability graph so fed nuclides and the removed
+        // sink are kept; removal diagonals accumulate into the bound estimate's loss rates.
         let (keep, rate_pruned): (Vec<usize>, Vec<(usize, f64, f64)>) =
             match spec.options.prune.as_str() {
-                "none" => ((0..ch.n).collect(), Vec::new()),
-                p => crate::prune::reachable_physical(
-                    ch.n,
-                    &d_src,
-                    &r_src,
-                    &n0,
-                    sched,
-                    p == "rate",
-                    physical.bmin,
-                ),
+                "none" => ((0..n_total).collect(), Vec::new()),
+                p => {
+                    let mut graph = d_src.clone();
+                    for edges in step_feed.iter().chain(step_removal.iter()) {
+                        graph.extend_from_slice(edges);
+                    }
+                    crate::prune::reachable_physical(
+                        n_total,
+                        &graph,
+                        &r_src,
+                        &n0,
+                        sched,
+                        p == "rate",
+                        physical.bmin,
+                    )
+                }
             };
-        let mut pos = vec![usize::MAX; ch.n];
+        let mut pos = vec![usize::MAX; n_total];
         for (k, g) in keep.iter().enumerate() {
             pos[*g] = k;
         }
@@ -1703,6 +1819,14 @@ impl PreparedRun {
                     trip.push((*i, *j, v * C64::new(fl.get(), 0.0)));
                 }
             }
+            // feed/removal terms apply during the declaring step and are not flux-scaled
+            for edges in [&step_feed[si], &step_removal[si]] {
+                for &(i, j, v) in edges {
+                    if pos[i] != usize::MAX && pos[j] != usize::MAX {
+                        trip.push((pos[i], pos[j], C64::new(v, 0.0)));
+                    }
+                }
+            }
             let a = Csc::from_triplets(m, &trip);
             if let Some(runtime) = uncertainty_runtime.as_mut() {
                 let tangent_step = step_with_tangents(
@@ -1730,7 +1854,7 @@ impl PreparedRun {
             flux_weighted_time_cum += dt * fl;
             let mut zeroed = 0.0;
             for (k, v) in y.iter_mut().enumerate() {
-                if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit {
+                if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed {
                     zeroed += -*v;
                     *v = 0.0;
                     if let Some(runtime) = uncertainty_runtime.as_mut() {
@@ -1742,7 +1866,7 @@ impl PreparedRun {
             }
             if let Some(runtime) = uncertainty_runtime.as_mut() {
                 for (k, value) in runtime.alternate_y.iter_mut().enumerate() {
-                    if *value < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit {
+                    if *value < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed {
                         *value = 0.0;
                     }
                 }
@@ -1754,7 +1878,7 @@ impl PreparedRun {
             let (mut n_below, mut atoms_below, mut heat_below) = (0usize, 0.0, 0.0);
             for (k, v) in y.iter().enumerate() {
                 let g = keep[k];
-                if g == ch.leak || g == ch.unit || *v <= 0.0 || *v >= floor {
+                if g == ch.leak || g == ch.unit || Some(g) == removed || *v <= 0.0 || *v >= floor {
                     continue;
                 }
                 n_below += 1;
@@ -1770,7 +1894,7 @@ impl PreparedRun {
             let (mut ha, mut hb, mut hg) = bulk_heat_split;
             for (k, v) in y.iter().enumerate() {
                 let g = keep[k];
-                if g == ch.leak || g == ch.unit || *v <= 0.0 {
+                if g == ch.leak || g == ch.unit || Some(g) == removed || *v <= 0.0 {
                     continue;
                 }
                 let key = ch.keys[g];
@@ -1888,6 +2012,13 @@ impl PreparedRun {
                         }
                     })
                     .unwrap_or(0.0),
+                removed_atoms_per_g: removed.map(|sink| {
+                    if pos[sink] != usize::MAX {
+                        y.get(pos[sink]).copied().unwrap_or(0.0)
+                    } else {
+                        0.0
+                    }
+                }),
                 negative_atoms_zeroed: zeroed,
                 total_atoms_per_g: y.iter().sum(),
                 n_states_populated: y.iter().filter(|v| **v > 0.0).count(),
@@ -1912,7 +2043,11 @@ impl PreparedRun {
             .is_none_or(|o| o.iter().any(|x| x == "pathways"));
         let mut pathways: Vec<BTreeMap<String, Vec<Pathway>>> = Vec::new();
         let mut closure = 0.0f64;
-        if mode == "trace" && want_paths && !sources.is_empty() {
+        // Feed/removal boundary sources and sinks are not production chains: when a schedule
+        // declares them, pathway attribution is suppressed rather than silently mis-attributed.
+        let pathways_suppressed =
+            want_paths && mode == "trace" && (has_feed || has_removal);
+        if mode == "trace" && want_paths && !sources.is_empty() && !pathways_suppressed {
             let mut agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
             for (row, rate, from) in &sources {
                 if pos[*row] != usize::MAX {
@@ -1972,7 +2107,7 @@ impl PreparedRun {
                             continue;
                         }
                         let g = keep[idx];
-                        if g == ch.leak || g == ch.unit {
+                        if g == ch.leak || g == ch.unit || Some(g) == removed {
                             continue;
                         }
                         per.entry(name_of(ch.keys[g].0, ch.keys[g].1))
@@ -2190,6 +2325,54 @@ impl PreparedRun {
             ledger.as_object_mut().expect("ledger is an object").insert(
                 "projectile".into(),
                 serde_json::Value::String(spec.projectile.name().into()),
+            );
+        }
+        if has_feed || has_removal {
+            let mut fed_atoms_per_g: BTreeMap<String, f64> = BTreeMap::new();
+            for step in sched.iter() {
+                for ((za, liso), rate) in &step.feed {
+                    *fed_atoms_per_g
+                        .entry(name_of(*za, *liso))
+                        .or_insert(0.0) += rate * step.duration().get();
+                }
+            }
+            let removal_declared: Vec<_> = sched
+                .iter()
+                .enumerate()
+                .flat_map(|(si, step)| {
+                    step.removal.iter().map(move |(selector, rate)| {
+                        let selected = match selector {
+                            crate::spec::RemovalSelector::Nuclide(za, liso) => {
+                                vec![name_of(*za, *liso)]
+                            }
+                            crate::spec::RemovalSelector::Element(z) => ch
+                                .keys
+                                .iter()
+                                .filter(|key| key.0 / 1000 == *z)
+                                .map(|key| name_of(key.0, key.1))
+                                .collect(),
+                        };
+                        serde_json::json!({
+                            "step": si + 1,
+                            "rate_per_s": rate,
+                            "selected_states": selected,
+                        })
+                    })
+                })
+                .collect();
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "feed_removal".into(),
+                serde_json::json!({
+                    "feed_atoms_per_g_total": fed_atoms_per_g,
+                    "removal_declared": removal_declared,
+                    "removal_reservoir_exempt": removal_reservoir_exempt,
+                    "removed_atoms_per_g_final": steps
+                        .last()
+                        .and_then(|step| step.removed_atoms_per_g),
+                    "pathways_suppressed": pathways_suppressed.then_some(
+                        "feed/removal declared; pathway attribution covers production chains only"
+                    ),
+                }),
             );
         }
         if let Some(prepared) = &self.radiological {
@@ -2415,6 +2598,7 @@ mod projectile_output_tests {
                 gamma: 0.0,
             },
             leakage_atoms_per_g: 0.0,
+            removed_atoms_per_g: None,
             negative_atoms_zeroed: 0.0,
             total_atoms_per_g: 0.0,
             n_states_populated: 0,

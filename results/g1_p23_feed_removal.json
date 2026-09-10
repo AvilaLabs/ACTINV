@@ -1,0 +1,75 @@
+{
+ "binary": "/home/connoravila/Documents/actinv/target/release/actinv",
+ "checks": {
+  "dense_expm_agrees_feed": true,
+  "element_removal_dense_agrees": true,
+  "empty_maps_byte_identical": true,
+  "empty_maps_omit_sink_field": true,
+  "exempt_sink_matches_dense": true,
+  "feed_daughter_matches_analytic": true,
+  "feed_decaying_matches_analytic": true,
+  "feed_element_key_rejected": true,
+  "feed_split_invariant": true,
+  "feed_stable_matches_analytic": true,
+  "feed_unknown_nuclide_rejected": true,
+  "irradiated_feed_conserves_fed_atoms": true,
+  "nan_feed_rejected": true,
+  "negative_removal_rejected": true,
+  "removal_absent_nuclide_rejected": true,
+  "removal_conserves_atoms": true,
+  "removal_daughter_matches": true,
+  "removal_sink_matches": true,
+  "removal_state_matches": true,
+  "reservoir_exempt_ledgered": true
+ },
+ "details": {
+  "case_element": {
+   "computed": {
+    "Co60": 9.30129148849484e+16,
+    "Ni60": 5951966653527476.0,
+    "removed": 1035118461521333.5
+   },
+   "dense": {
+    "Co60": 9.301291488494928e+16,
+    "Ni60": 5951966653529274.0,
+    "removed": 1035118461521412.5
+   }
+  },
+  "case_feed": {
+   "analytic": {
+    "Co60": 8.178118833426055e+19,
+    "Fe56": 100000000000000.0,
+    "Ni60": 1.8218811665739448e+19
+   },
+   "computed": {
+    "Co60": 8.178118833426047e+19,
+    "Fe56": 99999999999997.27,
+    "Ni60": 1.8218811665736714e+19
+   }
+  },
+  "case_irradiated": {
+   "expected": 300000000000.0,
+   "fed_minus_unfed": 299999999999.98663
+  },
+  "case_removal": {
+   "analytic": {
+    "Co60": 867908093587884.5,
+    "Ni60": 38852394494398.4,
+    "removed": 93239511917717.14
+   },
+   "computed": {
+    "Co60": 867908093587885.0,
+    "Ni60": 38852394494398.42,
+    "removed": 93239511917717.23
+   }
+  },
+  "dense_feed": {
+   "Co60": 8.178118833426052e+19,
+   "Fe56": 99999999999999.98,
+   "Ni60": 1.8218811665739436e+19
+  }
+ },
+ "pass": true,
+ "schema": "actinv-p23-g1-feed-removal-1",
+ "tolerance": 1e-09
+}

@@ -234,6 +234,18 @@ as `flux`, cumulative elapsed `t_s`, cumulative multiplier-weighted exposure `fl
 `fluence_n_cm2` (base total flux times weighted exposure). Scientific notation in a duration, such as `1e-8 s`, is
 accepted as a number rather than mistaken for a unit suffix.
 
+Any step may also declare optional `feed` and `removal` maps. `feed` entries are explicit nuclides
+(`Co60`, `Ta180m1`) with constant rates in atoms s⁻¹ g⁻¹, applied during the declaring step regardless of the
+multiplier — a feed on a zero-flux cooling step still delivers atoms. `removal` entries are nuclides or element
+symbols with first-order rates in s⁻¹; an element applies its rate to every tracked isotope and isomer of that
+element, and a nuclide key removes only that state. Removed atoms accumulate in a dedicated sink reported as
+`removed_atoms_per_g`, present only when a step declares removal. In trace mode the constant-reservoir material
+nuclides are exempt from removal — the trace formulation holds them undepleted — unless the same nuclide is also
+fed, in which case the fed atoms are carried in a real state and are removable. Every exempted reservoir nuclide
+is named in the ledger under `feed_removal.removal_reservoir_exempt`, along with the per-nuclide totals fed and
+the declared removals. Pathway attribution covers production chains only and is suppressed when a schedule
+declares feed or removal.
+
 For charged projectiles, steps expose the generic `fluence_particles_cm2` and identify the projectile in the result,
 ledger, certificate and prepared/mesh compatibility records. Neutron results retain their historical bytes and
 `fluence_n_cm2` field when `projectile` is omitted.

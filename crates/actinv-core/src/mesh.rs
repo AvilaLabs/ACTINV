@@ -528,6 +528,8 @@ mod tests {
             schedule: vec![Step {
                 dt: "1 s".into(),
                 flux: 1.0,
+                feed: None,
+                removal: None,
             }],
             options: Options::default(),
             photon: PhotonOptions::default(),

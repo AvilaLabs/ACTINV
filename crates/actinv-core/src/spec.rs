@@ -187,6 +187,12 @@ pub struct Step {
     pub dt: String,
     /// multiplier on the spectrum's total during this step; 0 is cooling
     pub flux: f64,
+    /// optional constant feed during this step: explicit nuclide key -> atoms s^-1 g^-1 of material
+    #[serde(default)]
+    pub feed: Option<BTreeMap<String, f64>>,
+    /// optional first-order removal during this step: nuclide or element key -> s^-1
+    #[serde(default)]
+    pub removal: Option<BTreeMap<String, f64>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -233,18 +239,29 @@ impl Default for Options {
     }
 }
 
+/// Which tracked states a schedule removal key selects: one nuclide or every state of an element.
 #[derive(Debug, Clone, Copy)]
+pub(crate) enum RemovalSelector {
+    Nuclide(i32, i32),
+    Element(i32),
+}
+
+#[derive(Debug, Clone)]
 pub(crate) struct PhysicalStep {
     duration: Seconds,
     multiplier: FluxMultiplier,
+    /// ((ZA, LISO), atoms s^-1 g^-1) constant feed during this step
+    pub(crate) feed: Vec<((i32, i32), f64)>,
+    /// (selector, s^-1) first-order removal during this step
+    pub(crate) removal: Vec<(RemovalSelector, f64)>,
 }
 
 impl PhysicalStep {
-    pub(crate) const fn duration(self) -> Seconds {
+    pub(crate) const fn duration(&self) -> Seconds {
         self.duration
     }
 
-    pub(crate) const fn multiplier(self) -> FluxMultiplier {
+    pub(crate) const fn multiplier(&self) -> FluxMultiplier {
         self.multiplier
     }
 }
@@ -412,6 +429,38 @@ impl Spec {
             }
             if !st.flux.is_finite() || st.flux < 0.0 {
                 return Err("flux multiplier must be finite and nonnegative".into());
+            }
+            if let Some(feed) = &st.feed {
+                for (key, rate) in feed {
+                    match actinv_data::composition::material_key(key) {
+                        Ok(actinv_data::composition::MaterialKey::Nuclide { .. }) => {}
+                        Ok(actinv_data::composition::MaterialKey::Element(_)) => {
+                            return Err(format!(
+                                "schedule feed key '{key}' must name an explicit nuclide"
+                            ));
+                        }
+                        Err(error) => {
+                            return Err(format!("schedule feed key '{key}': {error}"));
+                        }
+                    }
+                    if !rate.is_finite() || *rate < 0.0 {
+                        return Err(format!(
+                            "schedule feed rate for '{key}' must be finite and nonnegative"
+                        ));
+                    }
+                }
+            }
+            if let Some(removal) = &st.removal {
+                for (key, rate) in removal {
+                    if let Err(error) = actinv_data::composition::material_key(key) {
+                        return Err(format!("schedule removal key '{key}': {error}"));
+                    }
+                    if !rate.is_finite() || *rate < 0.0 {
+                        return Err(format!(
+                            "schedule removal rate for '{key}' must be finite and nonnegative"
+                        ));
+                    }
+                }
             }
         }
         match self.options.mode.as_str() {
@@ -618,9 +667,46 @@ impl Spec {
                     Seconds::new(parsed).map_err(|_| format!("negative duration '{}'", step.dt))?;
                 let multiplier = FluxMultiplier::new(step.flux)
                     .map_err(|_| "flux multiplier must be finite and nonnegative".to_string())?;
+                let feed = step
+                    .feed
+                    .iter()
+                    .flatten()
+                    .map(|(key, rate)| {
+                        match actinv_data::composition::material_key(key) {
+                            Ok(actinv_data::composition::MaterialKey::Nuclide {
+                                za, liso, ..
+                            }) => Ok(((za, liso), *rate)),
+                            Ok(actinv_data::composition::MaterialKey::Element(_)) => Err(
+                                format!("schedule feed key '{key}' must name an explicit nuclide"),
+                            ),
+                            Err(error) => Err(format!("schedule feed key '{key}': {error}")),
+                        }
+                    })
+                    .collect::<Result<Vec<_>, String>>()?;
+                let removal = step
+                    .removal
+                    .iter()
+                    .flatten()
+                    .map(|(key, rate)| {
+                        match actinv_data::composition::material_key(key) {
+                            Ok(actinv_data::composition::MaterialKey::Nuclide {
+                                za, liso, ..
+                            }) => Ok((RemovalSelector::Nuclide(za, liso), *rate)),
+                            Ok(actinv_data::composition::MaterialKey::Element(symbol)) => {
+                                let z = actinv_data::composition::z_of(&symbol).ok_or_else(|| {
+                                    format!("unknown element symbol in removal key '{key}'")
+                                })?;
+                                Ok((RemovalSelector::Element(z), *rate))
+                            }
+                            Err(error) => Err(format!("schedule removal key '{key}': {error}")),
+                        }
+                    })
+                    .collect::<Result<Vec<_>, String>>()?;
                 Ok(PhysicalStep {
                     duration,
                     multiplier,
+                    feed,
+                    removal,
                 })
             })
             .collect::<Result<Vec<_>, String>>()?;
@@ -755,5 +841,47 @@ mod duration_tests {
         assert!(Spec::from_json(&value.to_string())
             .unwrap_err()
             .contains("not supported for proton"));
+    }
+
+    #[test]
+    fn feed_and_removal_are_optional_and_validated() {
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert!(spec.schedule[0].feed.is_none() && spec.schedule[0].removal.is_none());
+
+        let mut value = minimal_spec();
+        value["schedule"][0]["feed"] = serde_json::json!({"Co60": 1e10, "Ta180m": 2.0});
+        value["schedule"][0]["removal"] = serde_json::json!({"Co60": 1e-9, "Ni": 1e-8});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let feed = spec.schedule[0].feed.as_ref().unwrap();
+        assert_eq!(feed.len(), 2);
+        assert!(spec.schedule[0].removal.as_ref().unwrap().contains_key("Ni"));
+    }
+
+    #[test]
+    fn feed_requires_explicit_nuclides() {
+        let mut value = minimal_spec();
+        value["schedule"][0]["feed"] = serde_json::json!({"Fe": 1.0});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("must name an explicit nuclide"));
+        value["schedule"][0]["feed"] = serde_json::json!({"Xx99": 1.0});
+        assert!(Spec::from_json(&value.to_string()).is_err());
+        value["schedule"][0]["feed"] = serde_json::json!({"Co60": -1.0});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("finite and nonnegative"));
+        value["schedule"][0]["feed"] = serde_json::json!({"Co60": null});
+        assert!(Spec::from_json(&value.to_string()).is_err());
+    }
+
+    #[test]
+    fn removal_rates_are_finite_and_nonnegative() {
+        let mut value = minimal_spec();
+        value["schedule"][0]["removal"] = serde_json::json!({"Co60": -1e-9});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("finite and nonnegative"));
+        value["schedule"][0]["removal"] = serde_json::json!({"Co60": "1e-9"});
+        assert!(Spec::from_json(&value.to_string()).is_err());
     }
 }

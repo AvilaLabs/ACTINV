@@ -70,7 +70,7 @@ fn reachable_values<S: ScheduleValue>(
     let mut lam = vec![0.0f64; n];
     for (i, j, v) in decay {
         if i == j {
-            lam[*j] = -v;
+            lam[*j] -= v; // accumulate: first-order removal adds a parallel diagonal term
         }
     }
     let mut succ: Vec<Vec<(usize, f64, bool)>> = vec![Vec::new(); n];

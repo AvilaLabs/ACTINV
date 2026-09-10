@@ -24,12 +24,39 @@ class Spectrum(dict):
 
 class Schedule(list):
     """Ordered duration/multiplier segments. Methods return self for chaining."""
-    def irradiate(self, duration, multiplier=1.0):
-        self.append({"dt": str(duration), "flux": multiplier})
+    def irradiate(self, duration, multiplier=1.0, *, feed=None, removal=None):
+        step = {"dt": str(duration), "flux": multiplier}
+        self._terms(step, feed, removal)
+        self.append(step)
         return self
 
-    def cool(self, duration):
-        self.append({"dt": str(duration), "flux": 0.0})
+    def cool(self, duration, *, feed=None, removal=None):
+        step = {"dt": str(duration), "flux": 0.0}
+        self._terms(step, feed, removal)
+        self.append(step)
+        return self
+
+    @staticmethod
+    def _terms(step, feed, removal):
+        if feed:
+            step["feed"] = {str(k): float(v) for k, v in dict(feed).items()}
+        if removal:
+            step["removal"] = {str(k): float(v) for k, v in dict(removal).items()}
+
+    def feed(self, rates):
+        """Constant feed on the last segment: nuclide -> atoms s^-1 g^-1."""
+        if not self:
+            raise ValueError("feed requires an existing segment")
+        self[-1].setdefault("feed", {}).update(
+            {str(k): float(v) for k, v in dict(rates).items()})
+        return self
+
+    def remove(self, rates):
+        """First-order removal on the last segment: nuclide or element -> s^-1."""
+        if not self:
+            raise ValueError("removal requires an existing segment")
+        self[-1].setdefault("removal", {}).update(
+            {str(k): float(v) for k, v in dict(rates).items()})
         return self
 
 
