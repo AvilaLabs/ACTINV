@@ -24,6 +24,9 @@ jobs:
       - name: Check tracked-file manifest before building
         run: python3 scripts/refresh_manifest.py
 
+      - name: Preflight orchestration regression
+        run: python3 scripts/test_preflight.py
+
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
 

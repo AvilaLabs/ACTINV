@@ -271,6 +271,8 @@ evidence and complete limitations.
 [Harness](docs/HARNESS.md) · [Roadmap](docs/ROADMAP.md) ·
 [v1.0 release notes](docs/RELEASE_NOTES_v1.0.md)
 
+Maintainers can run the bounded release preflight described in [docs/PREFLIGHT.md](docs/PREFLIGHT.md).
+
 ## Contributing and licence
 
 ACTINV is dual-licensed under MIT or Apache-2.0. Contributions use the Developer Certificate of Origin. Physics or

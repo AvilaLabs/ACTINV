@@ -65,7 +65,7 @@ the problem for upstream source provenance; single-material result certificates 
 3. Check **Input base**: relative data paths are interpreted relative to this folder. Opening a JSON sets it to that JSON's directory. Repository examples often need the repository root instead. Saving to a different directory resolves input references so their meaning is preserved.
 4. Edit **Material**, **Irradiation & cooling**, and **Spectrum**. The composition basis names match the core schema. A zero schedule multiplier means cooling. Reorder rows by their handle or Up/Down buttons.
 5. Choose optional outputs under **Calculation options & requested outputs**. Advanced JSON exposes the complete schema, including covariance and radiological tables. Apply or discard JSON edits before continuing in the structured editors.
-6. Click **Validate**, then **Run**. Validation checks the specification and file locations; the solver checks hashes and evaluated data when running. Background work shows elapsed time; it does not invent a completion percentage.
+6. Click **Validate**, then **Run**. Validation checks the specification and file locations; the solver checks hashes and evaluated data when running. Background work shows truthful preparing/solving stages and elapsed time; it does not invent a completion percentage. **Cancel calculation** terminates the isolated solver process; no partial output is published, and the previous result/problem remain unchanged. Every calculation run uses a private prepared-data cache, so each run pays its own preparation cost and cancellation cannot strand a shared cache lock. Data download and transport import show their actual download/verification or reading/checking stages and intentionally do not offer cancellation.
 7. In **Results**, choose a metric and computed step, or click the plot to select the nearest step. Filter and select a nuclide to follow its activity/inventory. Heat is always whole-material heat. Add a comparison to overlay a second result on physical time.
 8. Inspect **Spectra & pathways** and **Ledger & certificate**, then export full JSON or the selected inventory as CSV.
 
@@ -77,9 +77,14 @@ Results retain the complete solver JSON. Optional missing outputs are explained 
 
 The pan-and-zoom pathway diagrams show the recorded source, first product, and selected nuclide, with ranked contributions. The result schema does not enumerate intermediate chain members. Photon plots show per-group source strength, not spectral density. Comparison values use each result's own normalization; the desktop does not rescale them.
 
-The first release focuses on single-material runs and result inspection. Mesh execution, transport-flux import, library construction, and transport-source export remain available through the CLI. Layout docking, extra OS windows, logarithmic plot axes, and cooperative cancellation are not implemented in this release. Closing during a run requires an explicit decision and stops that process.
+The first release focuses on single-material runs and result inspection. Mesh execution, transport-flux import, library construction, and transport-source export remain available through the CLI. Layout docking and extra OS windows remain future enhancements. Closing during a run requires an explicit decision and stops that process.
 
 ## Reproduce verification
+
+The desktop worker accepts result JSON up to 256 MiB and diagnostics up to
+1 MiB. Exceeding either limit reports an error without replacing the previous
+result. Packaged smoke checks exercise worker/direct-solver parity, cancellation,
+and private-cache cleanup using the application binary, never a test executable.
 
 ```sh
 cargo fmt --all -- --check

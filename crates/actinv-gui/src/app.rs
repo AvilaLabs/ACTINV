@@ -30,6 +30,26 @@ enum JobOutput {
     Spectrum(crate::transport::Preview),
 }
 type JobResult = Result<JobOutput, String>;
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum JobKind {
+    Calculation,
+    Data,
+    Transport,
+}
+struct Job {
+    rx: Option<Receiver<JobResult>>,
+    handle: Option<crate::worker::Handle>,
+    started: Instant,
+    kind: JobKind,
+    cancelled: bool,
+}
+impl Drop for Job {
+    fn drop(&mut self) {
+        if let Some(handle) = &self.handle {
+            handle.request_cancel();
+        }
+    }
+}
 
 pub struct Desktop {
     document: Value,
@@ -43,7 +63,7 @@ pub struct Desktop {
     logo: egui::TextureHandle,
     result: Option<ResultDocument>,
     comparison: Option<ResultDocument>,
-    job: Option<(Receiver<JobResult>, Instant)>,
+    job: Option<Job>,
     step: usize,
     metric: usize,
     selected: String,
@@ -87,6 +107,13 @@ enum Pending {
     Close,
 }
 impl Desktop {
+    fn stop_calculation_for_close(&mut self) {
+        if let Some(job) = &self.job {
+            if let Some(handle) = &job.handle {
+                handle.request_cancel();
+            }
+        }
+    }
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
         let mut app = Self::from_context(&cc.egui_ctx);
         if let Some(storage) = cc.storage {
@@ -268,7 +295,7 @@ impl Desktop {
         model::check_files(&spec)?;
         Ok(spec)
     }
-    fn run(&mut self, ctx: &egui::Context) {
+    fn run(&mut self, _ctx: &egui::Context) {
         if self.result_unsaved {
             self.result_guard = Some(ResultAction::Run);
             return;
@@ -276,23 +303,30 @@ impl Desktop {
         match self.validate() {
             Err(e) => self.report(Err(e)),
             Ok(spec) => {
-                let (tx, rx) = mpsc::channel();
-                let ctx = ctx.clone();
-                if let Err(error) = std::thread::Builder::new()
-                    .name("actinv-solver".into())
-                    .stack_size(model::SOLVER_STACK_BYTES)
-                    .spawn(move || {
-                        let result = model::solve(spec).map(JobOutput::Calculation);
-                        let _ = tx.send(result);
-                        ctx.request_repaint();
-                    })
-                {
-                    self.report(Err(format!("Could not start calculation: {error}")));
-                    return;
-                }
-                self.job = Some((rx, Instant::now()));
+                let cache = std::env::temp_dir().join(format!(
+                    "actinv-gui-calc-{}-{}",
+                    std::process::id(),
+                    std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap_or_default()
+                        .as_nanos()
+                ));
+                let handle = match crate::worker::spawn(spec, cache.clone()) {
+                    Ok(h) => h,
+                    Err(error) => {
+                        self.report(Err(error));
+                        return;
+                    }
+                };
+                self.job = Some(Job {
+                    rx: None,
+                    handle: Some(handle),
+                    started: Instant::now(),
+                    kind: JobKind::Calculation,
+                    cancelled: false,
+                });
                 self.report(Ok(
-                    "Preparing data and solving… The first preparation can take longer.".into(),
+                    "Preparing isolated calculation workspace, then solving… Every run prepares a private cache and may take longer.".into(),
                 ));
             }
         }
@@ -445,7 +479,7 @@ if self.job.is_some(){ui.spinner();}});
                 if self.result_unsaved { self.result_guard = Some(ResultAction::Tutorial); }
                 else { self.result = Some(model::tutorial_result()); self.step = 0; self.selected.clear(); self.comparison = None; self.page = 4; self.reset_plot = true; self.tour.start(true); }
             }
-            ui.label("Standard data: about 139 MiB download, 229 MiB installed. First-run cache: about 282 MiB for the iron example.");
+            ui.label("Standard data: about 139 MiB download, 229 MiB installed. Each calculation run uses a private cache (about 282 MiB for the iron example).");
         });
         ui.label("Calculation title");
         text_field(ui, &mut self.document["title"]);
@@ -468,7 +502,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 if let Some(folder)=rfd::FileDialog::new().set_title("Choose the parent folder for actinv-data").pick_folder() {
                     let (tx,rx)=mpsc::channel();let ctx=ui.ctx().clone();
                     std::thread::spawn(move||{let output=actinv_cli::fetch_bundle(None,folder.join("actinv-data"),false).map(|s|JobOutput::Data(s.problem_fragment));let _=tx.send(output);ctx.request_repaint();});
-                    self.job=Some((rx,Instant::now()));self.status="Downloading and verifying standard neutron data… Files are checked before installation; existing verified files are reused.".into();self.error=false;
+                    self.job=Some(Job{rx:Some(rx),handle:None,started:Instant::now(),kind:JobKind::Data,cancelled:false});self.status="Downloading and verifying standard neutron data… Files are checked before installation; cancellation is unavailable while files are being verified.".into();self.error=false;
                 }
             }
             if let Some(fragment)=&self.downloaded {
@@ -808,7 +842,13 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 let _ = tx.send(crate::transport::run(request).map(JobOutput::Spectrum));
                 ctx.request_repaint();
             });
-            self.job = Some((rx, Instant::now()));
+            self.job = Some(Job {
+                rx: Some(rx),
+                handle: None,
+                started: Instant::now(),
+                kind: JobKind::Transport,
+                cancelled: false,
+            });
             self.report(Ok(
                 "Reading transport data and checking the complete stream…".into(),
             ));
@@ -1266,49 +1306,69 @@ impl eframe::App for Desktop {
         // eframe restores its own context memory after app construction.
         // Our explicit appearance preference remains authoritative after restoration.
         self.apply_theme(ctx);
-        let result = self.job.as_ref().and_then(|(rx, _)| match rx.try_recv() {
-            Ok(v) => Some(v),
-            Err(mpsc::TryRecvError::Disconnected) => Some(Err(
-                "The calculation worker stopped unexpectedly. Check the terminal output.".into(),
-            )),
-            Err(mpsc::TryRecvError::Empty) => None,
+        let result = self.job.as_ref().and_then(|job| {
+            let received = if let Some(handle) = &job.handle {
+                handle.rx.try_recv().map(|v| v.map(JobOutput::Calculation))
+            } else {
+                job.rx
+                    .as_ref()
+                    .expect("non-calculation job receiver")
+                    .try_recv()
+            };
+            match received {
+                Ok(v) => Some(v),
+                Err(mpsc::TryRecvError::Disconnected) => Some(Err(
+                    "The calculation worker stopped unexpectedly. Check the terminal output."
+                        .into(),
+                )),
+                Err(mpsc::TryRecvError::Empty) => None,
+            }
         });
         if let Some(result) = result {
+            let cancelled = self.job.as_ref().is_some_and(|job| job.cancelled);
             self.job = None;
-            match result {
-                Ok(JobOutput::Spectrum(preview)) => {
-                    self.imported = Some(preview);
-                    self.page = 3;
-                    self.report(Ok(
-                        "Transport spectrum ready. Review the preview and apply explicitly.".into(),
-                    ));
-                }
-                Ok(JobOutput::Data(fragment)) => {
-                    self.downloaded = Some(fragment);
-                    self.page = 0;
-                    self.report(Ok(
+            if cancelled {
+                self.report(Ok(
+                    "Calculation cancelled; the previous result and current problem were kept."
+                        .into(),
+                ));
+            } else {
+                match result {
+                    Ok(JobOutput::Spectrum(preview)) => {
+                        self.imported = Some(preview);
+                        self.page = 3;
+                        self.report(Ok(
+                            "Transport spectrum ready. Review the preview and apply explicitly."
+                                .into(),
+                        ));
+                    }
+                    Ok(JobOutput::Data(fragment)) => {
+                        self.downloaded = Some(fragment);
+                        self.page = 0;
+                        self.report(Ok(
                         "Data downloaded and verified. Use the installed paths below when ready."
                             .into(),
                     ));
-                }
-                Ok(JobOutput::Calculation(v)) => {
-                    match ResultDocument::parse(v, "Completed calculation".into()) {
-                        Ok(r) => {
-                            self.result = Some(r);
-                            self.result_unsaved = true;
-                            self.step = 0;
-                            self.selected.clear();
-                            self.reset_plot = true;
-                            self.page = 4;
-                            self.report(Ok(
+                    }
+                    Ok(JobOutput::Calculation(v)) => {
+                        match ResultDocument::parse(v, "Completed calculation".into()) {
+                            Ok(r) => {
+                                self.result = Some(r);
+                                self.result_unsaved = true;
+                                self.step = 0;
+                                self.selected.clear();
+                                self.reset_plot = true;
+                                self.page = 4;
+                                self.report(Ok(
                                 "Calculation complete. Explore the results and review the ledger."
                                     .into(),
                             ));
+                            }
+                            Err(e) => self.report(Err(e)),
                         }
-                        Err(e) => self.report(Err(e)),
                     }
+                    Err(e) => self.report(Err(e)),
                 }
-                Err(e) => self.report(Err(e)),
             }
         }
         if self.job.is_some() {
@@ -1356,9 +1416,30 @@ impl Desktop {
             .show(ui, |ui| {
                 egui::ScrollArea::vertical().show(ui, |ui| {
                     ui.horizontal_wrapped(|ui| {
-                        if let Some((_, start)) = &self.job {
+                        if let Some(job) = &self.job {
                             ui.spinner();
-                            ui.label(format!("Running · {:.0}s", start.elapsed().as_secs_f64()));
+                            let stage = match job.kind {
+                                JobKind::Calculation => "Preparing / solving",
+                                JobKind::Data => "Downloading / verifying",
+                                JobKind::Transport => "Reading / checking transport",
+                            };
+                            ui.label(format!(
+                                "{stage} · {:.0}s",
+                                job.started.elapsed().as_secs_f64()
+                            ));
+                            if job.kind == JobKind::Calculation
+                                && ui.button("Cancel calculation").clicked()
+                            {
+                                if let Some(handle) = &job.handle {
+                                    handle.request_cancel();
+                                }
+                                if let Some(job) = &mut self.job {
+                                    job.cancelled = true;
+                                }
+                                self.status =
+                                    "Cancellation requested; stopping the isolated worker…".into();
+                                self.error = false;
+                            }
                         }
                         ui.colored_label(
                             if self.error {
@@ -1401,10 +1482,10 @@ impl Desktop {
         });
         }
         if let Some(pending) = self.pending {
-            egui::Modal::new(egui::Id::new("unsaved")).show(&ctx,|ui|{ui.heading("Keep your work?");ui.label(if self.job.is_some(){"A calculation is still running. Closing the application will stop it."}else{"Your problem has unsaved changes. Save them before continuing, or explicitly discard them."});ui.horizontal(|ui|{
+            egui::Modal::new(egui::Id::new("unsaved")).show(&ctx,|ui|{ui.heading("Keep your work?");ui.label(if self.job.is_some(){"Background work is still running. Closing the application will interrupt it."}else{"Your problem has unsaved changes. Save them before continuing, or explicitly discard them."});ui.horizontal(|ui|{
             if ui.button("Cancel").clicked(){self.pending=None;}
-            if ui.button("Discard and continue").clicked(){self.pending=None;if matches!(pending,Pending::Close){self.allow_close=true;ctx.send_viewport_cmd(egui::ViewportCommand::Close);}else{self.perform(pending);}}
-            if ui.button("Save and continue").clicked()&&self.save_problem(){self.pending=None;if matches!(pending,Pending::Close){self.allow_close=true;ctx.send_viewport_cmd(egui::ViewportCommand::Close);}else{self.perform(pending);}}
+            if ui.button("Discard and continue").clicked(){self.pending=None;if matches!(pending,Pending::Close){self.stop_calculation_for_close();self.allow_close=true;ctx.send_viewport_cmd(egui::ViewportCommand::Close);}else{self.perform(pending);}}
+            if ui.button("Save and continue").clicked()&&self.save_problem(){self.pending=None;if matches!(pending,Pending::Close){self.stop_calculation_for_close();self.allow_close=true;ctx.send_viewport_cmd(egui::ViewportCommand::Close);}else{self.perform(pending);}}
         });});
         }
         self.tour.show(&ctx);
