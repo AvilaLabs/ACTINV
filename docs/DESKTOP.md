@@ -34,6 +34,18 @@ Linux needs a working Wayland or X11 desktop and graphics driver. The app uses e
 
 ## A first calculation
 
+For an immediate introduction without a download, choose **Try offline results tutorial** in Overview & data.
+It displays a clearly labeled fictional one-hour decay example; it is teaching data, not an evaluated calculation.
+Use the iron problem and verified nuclear data for a real solver run.
+
+The material editor uses readable composition basis names and flags weight totals other than 100% without changing
+them. Spectrum accepts pasted numeric vectors and one-column CSV/text files (optional `flux` header), with explicit
+normalization and energy ordering. Count, sign and finite-value checks run before replacing existing values.
+
+Results offer logarithmic time (zero-time points are omitted from that plot only). A newly computed result is marked
+unsaved until full JSON export; closing or replacing it prompts to export or explicitly discard it. Saving a problem
+or CSV is not equivalent to saving the complete result.
+
 1. Open **Overview & data**. Keep the bundled iron example or choose **Open problem**.
 2. Choose installed activation and decay files, or use **Download standard neutron data**. Downloads run in the background through the existing verified data installer. Apply the installed paths explicitly when the download completes.
 3. Check **Input base**: relative data paths are interpreted relative to this folder. Opening a JSON sets it to that JSON's directory. Repository examples often need the repository root instead. Saving to a different directory resolves input references so their meaning is preserved.

@@ -64,6 +64,17 @@ pub struct Desktop {
     scene_view: egui::Rect,
     pathway_node: String,
     capture: Option<crate::capture::Capture>,
+    result_unsaved: bool,
+    result_guard: Option<ResultAction>,
+    spectrum_text: String,
+    log_time: bool,
+}
+#[derive(Clone, Copy)]
+enum ResultAction {
+    Run,
+    Open,
+    Tutorial,
+    Close,
 }
 #[derive(Clone, Copy)]
 enum Pending {
@@ -109,6 +120,7 @@ impl Desktop {
             raw:String::new(), raw_dirty:false, tour:Tour::default(), help:false,
             pending:None, undo:vec![], redo:vec![], allow_close:false,
             downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(),
+            result_unsaved:false, result_guard:None, spectrum_text:String::new(), log_time:false,
         }
     }
     fn dirty(&self) -> bool {
@@ -225,6 +237,10 @@ impl Desktop {
         Ok(spec)
     }
     fn run(&mut self, ctx: &egui::Context) {
+        if self.result_unsaved {
+            self.result_guard = Some(ResultAction::Run);
+            return;
+        }
         match self.validate() {
             Err(e) => self.report(Err(e)),
             Ok(spec) => {
@@ -250,6 +266,10 @@ impl Desktop {
         }
     }
     fn open_result(&mut self, compare: bool) {
+        if !compare && self.result_unsaved {
+            self.result_guard = Some(ResultAction::Open);
+            return;
+        }
         if let Some(path) = rfd::FileDialog::new()
             .add_filter("ACTINV result", &["json"])
             .pick_file()
@@ -272,6 +292,7 @@ impl Desktop {
                         self.comparison = Some(r);
                     } else {
                         self.result = Some(r);
+                        self.result_unsaved = false;
                         self.step = 0;
                         self.selected.clear();
                     }
@@ -297,6 +318,9 @@ impl Desktop {
             } else {
                 model::write_json(&path, &result.value)
             };
+            if r.is_ok() && !csv {
+                self.result_unsaved = false;
+            }
             self.report(r.map(|()| "Export saved.".into()));
         }
     }
@@ -378,6 +402,15 @@ if self.job.is_some(){ui.spinner();}});
             "Choose your evaluated data, then define the material and irradiation history.",
         );
         ui.label("Calculation title");
+        ui.group(|ui| {
+            ui.strong("Welcome to ACTINV");
+            ui.label("Explore a small teaching result offline, or use the complete iron problem below for your first real calculation.");
+            if ui.button("Try offline results tutorial").clicked() {
+                if self.result_unsaved { self.result_guard = Some(ResultAction::Tutorial); }
+                else { self.result = Some(model::tutorial_result()); self.step = 0; self.selected.clear(); self.comparison = None; self.page = 4; self.reset_plot = true; self.tour.start(true); }
+            }
+            ui.label("Standard data: about 139 MiB download, 229 MiB installed. First-run cache: about 282 MiB for the iron example.");
+        });
         text_field(ui, &mut self.document["title"]);
         ui.add_space(12.);
         let response=egui::Frame::group(ui.style()).inner_margin(16.).show(ui,|ui| {
@@ -398,7 +431,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 if let Some(folder)=rfd::FileDialog::new().set_title("Choose the parent folder for actinv-data").pick_folder() {
                     let (tx,rx)=mpsc::channel();let ctx=ui.ctx().clone();
                     std::thread::spawn(move||{let output=actinv_cli::fetch_bundle(None,folder.join("actinv-data"),false).map(|s|JobOutput::Data(s.problem_fragment));let _=tx.send(output);ctx.request_repaint();});
-                    self.job=Some((rx,Instant::now()));self.status="Downloading and verifying standard neutron data… Detailed progress is available in the terminal.".into();self.error=false;
+                    self.job=Some((rx,Instant::now()));self.status="Downloading and verifying standard neutron data… Files are checked before installation; existing verified files are reused.".into();self.error=false;
                 }
             }
             if let Some(fragment)=&self.downloaded {
@@ -456,10 +489,10 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                     .unwrap_or("wt_percent")
                     .to_owned();
                 egui::ComboBox::from_id_salt("basis")
-                    .selected_text(&basis)
+                    .selected_text(basis_label(&basis))
                     .show_ui(ui, |ui| {
                         for b in ["wt_percent", "atom_fraction", "atoms_per_g"] {
-                            if ui.selectable_label(b == basis, b).clicked() {
+                            if ui.selectable_label(b == basis, basis_label(b)).clicked() {
                                 self.document["material"]["basis"] = b.into();
                             }
                         }
@@ -505,6 +538,9 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 }
                 let total: f64 = composition.values().map(model::number).sum();
                 ui.label(format!("Composition total: {total:.6}"));
+                if self.document["material"]["basis"].as_str() == Some("wt_percent") && (total - 100.).abs() > 1e-6 {
+                    ui.colored_label(Color32::from_rgb(160,40,35), "Weight percentages do not total 100%. Values are used as entered; ACTINV does not silently normalize them.");
+                }
             }
             ui.horizontal(|ui| {
                 ui.add(
@@ -513,7 +549,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                         .desired_width(150.),
                 );
                 ui.add(egui::DragValue::new(&mut self.amount).speed(0.1));
-                if ui.button("Add isotope").clicked() {
+                if ui.button("Add element / isotope").clicked() {
                     let key = self.isotope.trim();
                     if key.is_empty() {
                         self.report(Err("Enter an element or isotope name.".into()));
@@ -690,6 +726,22 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             Plot::new("incident").height(260.).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(BLUE)));
             ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
+            ui.collapsing("Import or paste group values", |ui| {
+                ui.label("Paste one flux column from a spreadsheet, or open a one-column CSV/text file. Optional header: flux. Set normalization and energy order above explicitly.");
+                if ui.button("Open CSV / text").clicked() {
+                    if let Some(path) = rfd::FileDialog::new().add_filter("Spectrum", &["csv","txt"]).pick_file() {
+                        match std::fs::read_to_string(path) { Ok(s) => self.spectrum_text = s, Err(e) => self.report(Err(e.to_string())) }
+                    }
+                }
+                ui.add(egui::TextEdit::multiline(&mut self.spectrum_text).desired_rows(5).hint_text("flux\n1.2e10\n3.4e9\n…"));
+                if ui.button("Check and apply group values").clicked() {
+                    let count = self.document["spectrum"]["flux_per_group"].as_array().map_or(0, Vec::len);
+                    match model::parse_group_values(&self.spectrum_text,count) {
+                        Ok(values) => { self.document["spectrum"]["flux_per_group"] = json!(values); self.report(Ok(format!("Imported {count} group values. Review normalization and energy order before running."))); },
+                        Err(e) => self.report(Err(e)),
+                    }
+                }
+            });
         });
         self.tour
             .mark("spectrum", r.response.rect.intersect(ui.clip_rect()));
@@ -737,6 +789,13 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             return;
         };
         ui.label(RichText::new(&result.label).strong());
+        if self.result_unsaved {
+            ui.colored_label(
+                BLUE,
+                "Unsaved result — Export JSON preserves every step and its evidence.",
+            );
+        }
+        ui.label("Results describe the inputs at the time of the calculation. Editing the problem does not update this result.");
         if let Some(title) = result.value["spec_title"].as_str() {
             ui.label(title);
         }
@@ -758,6 +817,12 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
         });
         ui.horizontal(|ui| {
             ui.label("Computed step");
+            if ui
+                .checkbox(&mut self.log_time, "Logarithmic time")
+                .changed()
+            {
+                self.reset_plot = true;
+            }
             ui.add(
                 egui::Slider::new(&mut self.step, 0..=result.steps().len() - 1)
                     .custom_formatter(|v, _| format!("{}", v as usize + 1)),
@@ -774,19 +839,29 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 }
             }
         });
+        let log_time = self.log_time;
+        let plot_time = |t: f64| if log_time { t.log10() } else { t };
+        if log_time {
+            ui.label("Time axis shows log10(seconds); zero-time points are omitted. Tables and exports retain physical time.");
+        }
         let primary: Vec<[f64; 2]> = result
             .steps()
             .iter()
+            .filter(|s| !log_time || model::number(&s["t_s"]) > 0.)
             .map(|s| {
                 [
-                    model::number(&s["t_s"]),
+                    plot_time(model::number(&s["t_s"])),
                     model::metric(s, self.metric, &self.selected),
                 ]
             })
             .collect();
         let mut plot = Plot::new("history")
             .height(240.)
-            .x_axis_label("Time (s)")
+            .x_axis_label(if log_time {
+                "log10(Time / s)"
+            } else {
+                "Time (s)"
+            })
             .legend(egui_plot::Legend::default());
         if self.reset_plot {
             plot = plot.reset();
@@ -801,9 +876,14 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             result
                 .steps()
                 .iter()
+                .filter(|s| !log_time || model::number(&s["t_s"]) > 0.)
                 .map(|s| {
                     let b = &s["uncertainty"]["responses"][key]["normal_interval"];
-                    Some((s["t_s"].as_f64()?, b[0].as_f64()?, b[1].as_f64()?))
+                    Some((
+                        plot_time(s["t_s"].as_f64()?),
+                        b[0].as_f64()?,
+                        b[1].as_f64()?,
+                    ))
                 })
                 .collect::<Option<Vec<_>>>()
         });
@@ -837,9 +917,10 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 let points: Vec<[f64; 2]> = other
                     .steps()
                     .iter()
+                    .filter(|s| !log_time || model::number(&s["t_s"]) > 0.)
                     .map(|s| {
                         [
-                            model::number(&s["t_s"]),
+                            plot_time(model::number(&s["t_s"])),
                             model::metric(s, self.metric, &self.selected),
                         ]
                     })
@@ -850,13 +931,15 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                         .style(egui_plot::LineStyle::dashed_dense()),
                 );
             }
-            p.vline(
-                egui_plot::VLine::new(
-                    "Selected step",
-                    model::number(&result.steps()[self.step]["t_s"]),
-                )
-                .color(Color32::GRAY),
-            );
+            if !log_time || model::number(&result.steps()[self.step]["t_s"]) > 0. {
+                p.vline(
+                    egui_plot::VLine::new(
+                        "Selected step",
+                        plot_time(model::number(&result.steps()[self.step]["t_s"])),
+                    )
+                    .color(Color32::GRAY),
+                );
+            }
             if p.response().clicked() {
                 p.pointer_coordinate().map(|c| c.x)
             } else {
@@ -869,10 +952,11 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 .steps()
                 .iter()
                 .enumerate()
+                .filter(|(_, s)| !log_time || model::number(&s["t_s"]) > 0.)
                 .min_by(|(_, a), (_, b)| {
-                    (model::number(&a["t_s"]) - time)
+                    (plot_time(model::number(&a["t_s"])) - time)
                         .abs()
-                        .total_cmp(&(model::number(&b["t_s"]) - time).abs())
+                        .total_cmp(&(plot_time(model::number(&b["t_s"])) - time).abs())
                 })
                 .map(|(i, _)| i)
                 .unwrap_or(0);
@@ -1109,6 +1193,7 @@ impl eframe::App for Desktop {
                     match ResultDocument::parse(v, "Completed calculation".into()) {
                         Ok(r) => {
                             self.result = Some(r);
+                            self.result_unsaved = true;
                             self.step = 0;
                             self.selected.clear();
                             self.reset_plot = true;
@@ -1137,10 +1222,14 @@ impl Desktop {
         let ctx = ui.ctx().clone();
         if ctx.input(|i| i.viewport().close_requested())
             && !self.allow_close
-            && (self.dirty() || self.job.is_some())
+            && (self.dirty() || self.job.is_some() || self.result_unsaved)
         {
             ctx.send_viewport_cmd(egui::ViewportCommand::CancelClose);
-            self.pending = Some(Pending::Close);
+            if self.result_unsaved {
+                self.result_guard = Some(ResultAction::Close);
+            } else {
+                self.pending = Some(Pending::Close);
+            }
         }
         if ctx.input_mut(|i| i.consume_key(egui::Modifiers::COMMAND, egui::Key::S)) {
             self.save_problem();
@@ -1212,9 +1301,37 @@ impl Desktop {
         });});
         }
         self.tour.show(&ctx);
+        if let Some(action) = self.result_guard {
+            egui::Modal::new(egui::Id::new("unsaved-result")).show(&ctx, |ui| {
+                ui.heading("Keep your calculation result?");
+                ui.label("Export the complete result as JSON before replacing it or closing ACTINV. Saving the problem or an inventory CSV does not save the full result.");
+                ui.horizontal(|ui| {
+                    if ui.button("Cancel").clicked() { self.result_guard = None; }
+                    if ui.button("Export result JSON").clicked() { self.export(false); }
+                    if ui.button(if self.result_unsaved { "Discard result and continue" } else { "Continue" }).clicked() {
+                        self.result_unsaved = false;
+                        self.result_guard = None;
+                        match action {
+                            ResultAction::Run => self.run(&ctx),
+                            ResultAction::Open => self.open_result(false),
+                            ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=4; self.reset_plot=true; self.tour.start(true); },
+                            ResultAction::Close => { if self.dirty() || self.job.is_some() { self.pending = Some(Pending::Close); } else { self.allow_close=true; ctx.send_viewport_cmd(egui::ViewportCommand::Close); } },
+                        }
+                    }
+                });
+            });
+        }
         if let Some(capture) = &mut self.capture {
             capture.finish(&ctx);
         }
+    }
+}
+fn basis_label(basis: &str) -> &str {
+    match basis {
+        "wt_percent" => "Weight percent (%)",
+        "atom_fraction" => "Atomic ratios",
+        "atoms_per_g" => "Atoms per gram",
+        _ => basis,
     }
 }
 fn draw_pathway(

@@ -1,6 +1,7 @@
 //! Command-line support that does not belong to the scientific solver.
 
 pub mod command;
+pub mod workflow;
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};

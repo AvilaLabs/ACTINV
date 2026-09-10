@@ -17,51 +17,61 @@ pub fn decode_problem(text: &str) -> Result<Value, String> {
 
 pub fn resolve_inputs(document: &Value, base: &Path) -> Result<Spec, String> {
     let mut spec = Spec::from_json(&document.to_string())?;
-    let resolve = |path: &mut String| {
-        if !path.is_empty() && Path::new(path).is_relative() {
-            *path = base.join(&*path).to_string_lossy().into_owned();
-        }
-    };
-    resolve(&mut spec.library.path);
-    resolve(&mut spec.decay.primary);
-    if let Some(path) = &mut spec.decay.fallback {
-        resolve(path);
-    }
-    if let Some(reference) = &mut spec.photon.response {
-        resolve(&mut reference.path);
-    }
-    if let Some(options) = &mut spec.uncertainty {
-        resolve(&mut options.covariance.path);
-    }
-    if let Some(options) = &mut spec.radiological {
-        resolve(&mut options.table.path);
-    }
-    for reference in &mut spec.fission_yields.files {
-        resolve(&mut reference.path);
-    }
+    actinv_cli::workflow::resolve_inputs(&mut spec, base);
     Ok(spec)
 }
 
 pub fn check_files(spec: &Spec) -> Result<(), String> {
-    let mut paths = vec![spec.library.path.as_str(), spec.decay.primary.as_str()];
-    paths.extend(spec.decay.fallback.as_deref());
-    paths.extend(spec.photon.response.as_ref().map(|r| r.path.as_str()));
-    paths.extend(
-        spec.uncertainty
-            .as_ref()
-            .map(|r| r.covariance.path.as_str()),
-    );
-    paths.extend(spec.radiological.as_ref().map(|r| r.table.path.as_str()));
-    paths.extend(spec.fission_yields.files.iter().map(|r| r.path.as_str()));
-    let missing: Vec<_> = paths
-        .into_iter()
-        .filter(|p| !p.is_empty() && !Path::new(p).is_file())
-        .collect();
-    if missing.is_empty() {
-        Ok(())
-    } else {
-        Err(format!("Input files not found:\n{}\n\nChoose installed files in Setup. To download the standard data, run `actinv data fetch` in your terminal and choose that folder as the input base.", missing.join("\n")))
+    actinv_cli::workflow::check_files(spec, false)
+}
+
+/// Offline teaching data, deliberately separate from the scientific solver and inputs.
+pub fn tutorial_result() -> ResultDocument {
+    let lambda = std::f64::consts::LN_2 / 3600.;
+    let steps: Vec<Value> = [0., 900., 1800., 3600., 7200., 14400., 28800.].into_iter().enumerate().map(|(i,t)| {
+        let atoms = 1e6 * (-lambda * t).exp();
+        serde_json::json!({"step":i+1,"t_s":t,"inventory":[{"nuclide":"Example","atoms_per_g":atoms}],"activity_Bq_per_g":{"Example":lambda*atoms},"heat_W_per_g":{"total":0.}})
+    }).collect();
+    ResultDocument::parse(serde_json::json!({"spec_title":"Teaching example: fictional one-hour half-life; no heat model","steps":steps,"ledger":{"teaching_only":"Analytic exponential decay of 1,000,000 atoms/g. Example is fictional; this is not evaluated nuclear data or a solver calculation."},"certificate":{"source":"Built-in offline tutorial; N(t)=N(0)*exp(-ln(2)*t/3600)."}}),"OFFLINE TUTORIAL · fictional nuclide".into()).expect("valid teaching result")
+}
+
+/// A pasted vector, or a one-column CSV with an optional `flux` header.
+pub fn parse_group_values(text: &str, count: usize) -> Result<Vec<f64>, String> {
+    let mut values = Vec::new();
+    for (i, token) in text
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .enumerate()
+    {
+        if i == 0
+            && matches!(
+                token.to_ascii_lowercase().as_str(),
+                "flux" | "flux_per_group"
+            )
+        {
+            continue;
+        }
+        let v: f64 = token.parse().map_err(|_| {
+            format!(
+                "Value {} ('{token}') is not a number. Paste only one flux column.",
+                values.len() + 1
+            )
+        })?;
+        if !v.is_finite() || v < 0. {
+            return Err(format!(
+                "Group {} must be finite and nonnegative.",
+                values.len() + 1
+            ));
+        }
+        values.push(v);
     }
+    if values.len() != count {
+        return Err(format!("Expected {count} group values, found {}. Check the group structure and selected column.", values.len()));
+    }
+    if !values.iter().any(|v| *v > 0.) {
+        return Err("The spectrum must contain a positive group value.".into());
+    }
+    Ok(values)
 }
 
 pub struct ResultDocument {
@@ -188,6 +198,27 @@ pub fn inventory_csv(result: &ResultDocument, index: usize) -> Result<String, St
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn pasted_spectra_reject_bad_counts_negative_and_multiple_columns() {
+        assert_eq!(
+            parse_group_values("flux\n1e3\n2e3", 2).unwrap(),
+            vec![1000., 2000.]
+        );
+        assert!(parse_group_values("1,2\n3,4", 2).is_err());
+        assert!(parse_group_values("1,-2", 2).is_err());
+        assert!(parse_group_values("NaN,2", 2).is_err());
+        assert!(parse_group_values("0,0", 2).is_err());
+    }
+    #[test]
+    fn tutorial_halves_inventory_in_one_hour_and_is_explicitly_labelled() {
+        let result = tutorial_result();
+        assert!((metric(&result.steps()[3], 2, "") - 500_000.).abs() < 1e-8);
+        assert!(result.label.contains("TUTORIAL"));
+        assert!(result.value["ledger"]["teaching_only"]
+            .as_str()
+            .unwrap()
+            .contains("fictional"));
+    }
     #[test]
     fn editor_preserves_optional_fields_and_rejects_unknowns() {
         let mut doc = decode_problem(EXAMPLE).unwrap();

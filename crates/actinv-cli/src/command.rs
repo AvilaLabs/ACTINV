@@ -17,6 +17,8 @@ use actinv_data::{
 use std::collections::BTreeMap;
 
 const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
+                    actinv new OUT.json [--data-dir DIR]\n\
+                    actinv doctor [SPEC.json]\n\
                     actinv validate SPEC.json\n\
                     actinv data list\n\
                     actinv data fetch [BUNDLE] [--output DIR] [--force]\n\
@@ -377,7 +379,62 @@ pub fn main_from(a: Vec<String>) {
     if a.len() < 2 {
         die(USAGE, 2);
     }
+    if a.len() == 3 && matches!(a[2].as_str(), "--help" | "-h") {
+        match a[1].as_str() {
+            "run" => println!("usage: actinv run SPEC.json [OUT.json]\nRelative input paths use the current working directory. The solver verifies data and hashes.\nOmit OUT.json to write full JSON to stdout."),
+            "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check schema and readable input files, including library indexes.\n--schema checks only the specification. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
+            "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nData defaults to ./actinv-data; references are saved as absolute paths.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
+            "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
+            _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
+        }
+        return;
+    }
     match a[1].as_str() {
+        "new" => {
+            if a.len() != 3 && !(a.len() == 5 && a[3] == "--data-dir") {
+                die("usage: actinv new OUT.json [--data-dir DIR]", 2);
+            }
+            let root = a.get(4).map(String::as_str).unwrap_or("actinv-data");
+            let spec = crate::workflow::new_example(std::path::Path::new(root))
+                .unwrap_or_else(|e| die(e, 2));
+            let mut file = std::fs::OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&a[2])
+                .unwrap_or_else(|e| {
+                    die(
+                        format!("Cannot create {}: {e}; choose a new filename", a[2]),
+                        2,
+                    )
+                });
+            use std::io::Write;
+            writeln!(
+                file,
+                "{}",
+                serde_json::to_string_pretty(&spec).expect("example serialization")
+            )
+            .unwrap_or_else(|e| die(e, 1));
+            println!("Created {} with the complete FNS iron spectrum.\nReview material and schedule, then validate and run.\nInstall data if needed: actinv data fetch --output {root}", a[2]);
+        }
+        "doctor" => {
+            if a.len() > 3 {
+                die("usage: actinv doctor [SPEC.json]", 2);
+            }
+            println!(
+                "ACTINV {}\nWorking directory: {}\nCache override: {}",
+                env!("CARGO_PKG_VERSION"),
+                std::env::current_dir().unwrap_or_default().display(),
+                std::env::var("ACTINV_CACHE_DIR").unwrap_or_else(|_| "platform default".into())
+            );
+            let spec = if let Some(path) = a.get(2) {
+                Spec::from_json(&read(path))
+            } else {
+                crate::workflow::new_example(std::path::Path::new("actinv-data"))
+            }
+            .unwrap_or_else(|e| die(e, 2));
+            crate::workflow::check_files(&spec, false).unwrap_or_else(|e| die(e, 1));
+            println!("Input files are readable. Run `actinv validate SPEC.json --hashes` to check declared hashes.");
+        }
         "--version" | "-V" if a.len() == 2 => println!("actinv {}", env!("CARGO_PKG_VERSION")),
         "--help" | "-h" if a.len() == 2 => println!("{USAGE}"),
         "build-covariance" => build_covariance(&a[2..]),
@@ -413,13 +470,27 @@ pub fn main_from(a: Vec<String>) {
                 .map(|started| started.elapsed().as_secs_f64() * 1e3)
                 .unwrap_or(0.0);
             if a[1] == "validate" {
+                let level = a.get(3).map(String::as_str).unwrap_or("--files");
+                if a.len() > 4 || !matches!(level, "--schema" | "--files" | "--hashes") {
+                    die(
+                        "usage: actinv validate SPEC.json [--schema|--files|--hashes]",
+                        2,
+                    );
+                }
+                if level != "--schema" {
+                    crate::workflow::check_files(&spec, level == "--hashes")
+                        .unwrap_or_else(|e| die(e, 1));
+                }
                 println!(
-                    "ok: {} — {} groups, {} steps",
+                    "ok ({level}): {} — {} groups, {} steps",
                     spec.spec,
                     spec.spectrum.flux_per_group.len(),
                     spec.schedule.len()
                 );
                 return;
+            }
+            if a.len() > 4 {
+                die("usage: actinv run SPEC.json [OUT.json]", 2);
             }
             let r = run(&spec, "cli").unwrap_or_else(|e| die(e, 1));
             let serialization_started = profile.then(std::time::Instant::now);
