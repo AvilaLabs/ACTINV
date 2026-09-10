@@ -116,3 +116,8 @@ def solve(problem):
 
 
 run_json = run
+
+# Maturin's top-level package re-exports the extension using __all__. PyO3
+# registers native functions there, but dynamically defined classes need exports too.
+__all__ = ["__version__", "_cli", "cram_step", "broaden", "run", "run_json",
+           "validate", "Material", "Spectrum", "Schedule", "Problem", "Result", "solve"]
