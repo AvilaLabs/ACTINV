@@ -29,3 +29,24 @@ the selected files. See the [project README](https://github.com/AvilaLabs/ACTINV
 instructions, examples, validation evidence, and qualification boundary.
 
 ACTINV is research-grade software. It is not approved for licensing, safety, or regulatory decisions.
+
+## Object interface
+
+```python
+from pathlib import Path
+from actinv import Problem, Material, Schedule, solve
+
+problem = Problem.example(data_dir=Path("actinv-data"))
+problem["material"] = Material({"Fe": 100}, mass_g=10)
+problem["schedule"] = Schedule().irradiate("5 min").cool("1 h")
+problem.save("iron.json")
+result = solve(problem)  # Also accepts Path("iron.json") or a plain dictionary.
+print(result.heat())      # (seconds, W/g)
+print(result.activity())  # (seconds, total Bq/g)
+result.save("iron-result.json")
+```
+
+`Problem.from_file(path)` resolves data references against the problem's directory; supply `base=` for older
+repository-relative files. Plain mappings use the current working directory. `Spectrum(values, structure=…,
+total=…, descending=…)` provides explicit spectrum construction. Complete result fields remain accessible by key.
+Existing `run(json_text)` still returns JSON text; `run_json` is an explicit alias. `solve` returns `Result`.

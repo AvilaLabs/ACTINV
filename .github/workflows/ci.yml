@@ -161,6 +161,7 @@ jobs:
           python ../scripts/smoke_python_wheel.py ../dist
           pip install ../dist/*.whl
           python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
+          python ../scripts/test_python_objects.py
 
       - name: Python binding Rust quality
         run: |

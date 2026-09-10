@@ -98,7 +98,7 @@ impl Tour {
             .fixed_pos(egui::pos2(x, y))
             .show(ctx, |ui| {
                 egui::Frame::popup(ui.style())
-                    .fill(Color32::WHITE)
+                    .fill(ui.visuals().window_fill())
                     .inner_margin(18.)
                     .show(ui, |ui| {
                         ui.set_width(350.);

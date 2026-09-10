@@ -46,6 +46,20 @@ Results offer logarithmic time (zero-time points are omitted from that plot only
 unsaved until full JSON export; closing or replacing it prompts to export or explicitly discard it. Saving a problem
 or CSV is not equivalent to saving the complete result.
 
+The top-right appearance menu offers **Light**, **Dark**, and **System**, remembered across launches.
+The existing light layout is retained; dark mode uses lighter plot and text accents. Help includes an interface-size control.
+
+Expand **Spectrum by physical energy** to view group-integrated flux against logarithmic energy, with the configured
+ordering and total normalization applied. In Results, **Which nuclides dominate activity?** shows the ten largest
+contributors at the selected step; select a nuclide to follow its history. These views derive from existing inputs/results,
+not additional physics approximations.
+
+Overview also provides structured optional uncertainty, radiological, photon-response and fission-yield inputs.
+Spectrum can import OpenMC, MCNP MESHTAL/MCTAL, FISPACT fluxes or canonical NDJSON through the existing readers.
+Choose a single cell, explicitly supply transport source normalization, and review before applying. Group conversion
+requires explicit permission and rejects loss outside the destination energy range. Retain the exported NDJSON alongside
+the problem for upstream source provenance; single-material result certificates do not embed that transport provenance.
+
 1. Open **Overview & data**. Keep the bundled iron example or choose **Open problem**.
 2. Choose installed activation and decay files, or use **Download standard neutron data**. Downloads run in the background through the existing verified data installer. Apply the installed paths explicitly when the download completes.
 3. Check **Input base**: relative data paths are interpreted relative to this folder. Opening a JSON sets it to that JSON's directory. Repository examples often need the repository root instead. Saving to a different directory resolves input references so their meaning is preserved.

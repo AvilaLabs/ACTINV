@@ -27,6 +27,7 @@ const PAGES: [&str; 8] = [
 enum JobOutput {
     Calculation(Value),
     Data(Value),
+    Spectrum(crate::transport::Preview),
 }
 type JobResult = Result<JobOutput, String>;
 
@@ -68,6 +69,9 @@ pub struct Desktop {
     result_guard: Option<ResultAction>,
     spectrum_text: String,
     log_time: bool,
+    theme: String,
+    transport: crate::transport::Import,
+    imported: Option<crate::transport::Preview>,
 }
 #[derive(Clone, Copy)]
 enum ResultAction {
@@ -84,7 +88,25 @@ enum Pending {
 }
 impl Desktop {
     pub fn new(cc: &eframe::CreationContext<'_>) -> Self {
-        Self::from_context(&cc.egui_ctx)
+        let mut app = Self::from_context(&cc.egui_ctx);
+        if let Some(storage) = cc.storage {
+            app.theme =
+                eframe::get_value(storage, "actinv-theme").unwrap_or_else(|| "Light".into());
+        }
+        if std::env::var_os("ACTINV_GUI_CAPTURE_DIR").is_some() {
+            if let Ok(theme) = std::env::var("ACTINV_GUI_CAPTURE_THEME") {
+                app.theme = theme;
+            }
+        }
+        app.apply_theme(&cc.egui_ctx);
+        app
+    }
+    fn apply_theme(&self, ctx: &egui::Context) {
+        ctx.set_theme(match self.theme.as_str() {
+            "Dark" => egui::ThemePreference::Dark,
+            "System" => egui::ThemePreference::System,
+            _ => egui::ThemePreference::Light,
+        });
     }
     fn from_context(ctx: &egui::Context) -> Self {
         let mut visuals = egui::Visuals::light();
@@ -92,7 +114,15 @@ impl Desktop {
         visuals.selection.stroke = egui::Stroke::new(1., Color32::WHITE);
         visuals.hyperlink_color = BLUE;
         visuals.panel_fill = Color32::from_rgb(247, 248, 252);
-        ctx.set_visuals(visuals);
+        ctx.set_visuals_of(egui::Theme::Light, visuals);
+        ctx.style_mut_of(egui::Theme::Dark, |s| {
+            s.visuals = egui::Visuals::dark();
+            s.visuals.selection.bg_fill = BLUE;
+            s.visuals.selection.stroke = egui::Stroke::new(1., Color32::WHITE);
+            s.visuals.hyperlink_color = Color32::from_rgb(165, 178, 255);
+            s.spacing.item_spacing = Vec2::new(10., 9.);
+            s.spacing.button_padding = Vec2::new(12., 7.);
+        });
         ctx.style_mut_of(egui::Theme::Light, |s| {
             s.spacing.item_spacing = Vec2::new(10., 9.);
             s.spacing.button_padding = Vec2::new(12., 7.);
@@ -121,6 +151,8 @@ impl Desktop {
             pending:None, undo:vec![], redo:vec![], allow_close:false,
             downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(),
             result_unsaved:false, result_guard:None, spectrum_text:String::new(), log_time:false,
+            theme:"Light".into(),
+            transport:crate::transport::Import::default(), imported:None,
         }
     }
     fn dirty(&self) -> bool {
@@ -325,32 +357,37 @@ impl Desktop {
         }
     }
     fn toolbar(&mut self, ui: &mut egui::Ui) {
+        let accent = crate::visuals::accent(ui);
         egui::Panel::top("toolbar").show(ui,|ui| {
             ui.horizontal(|ui| {
                 ui.image((self.logo.id(),Vec2::splat(44.)));
-                ui.vertical(|ui|{ui.label(RichText::new("ACTINV").size(24.).strong());ui.label(RichText::new("AVILA LABS  /  ACTIVATION & INVENTORY").size(10.).color(BLUE));});
+                ui.vertical(|ui|{ui.label(RichText::new("ACTINV").size(24.).strong());ui.label(RichText::new("AVILA LABS  /  ACTIVATION & INVENTORY").size(10.).color(accent));});
                 ui.separator();
                 let open=ui.button("Open problem").on_hover_text("Load an ACTINV specification (Ctrl+O)");self.tour.mark("open",open.rect);if open.clicked(){self.request(Pending::Open);}
                 if ui.button(if self.dirty(){"Save •"}else{"Save"}).on_hover_text("Save problem (Ctrl+S)").clicked(){self.save_problem();}
                 let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.report(r);}
                 let run=ui.add_enabled(self.job.is_none(),egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));self.tour.mark("run",run.rect);if run.clicked(){self.run(ui.ctx());}
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{if ui.button("? Help").clicked(){self.help=true;}
+                let before = self.theme.clone();
+                egui::ComboBox::from_id_salt("appearance").selected_text(&self.theme).width(80.).show_ui(ui,|ui| { for choice in ["Light","Dark","System"] { ui.selectable_value(&mut self.theme,choice.into(),choice); } });
+                if before != self.theme { self.apply_theme(ui.ctx()); }
 if self.job.is_some(){ui.spinner();}});
             });
         });
     }
     fn navigation(&mut self, ui: &mut egui::Ui) {
+        let accent = crate::visuals::accent(ui);
         egui::Panel::left("navigation")
             .default_size(205.)
             .min_size(165.)
             .resizable(true)
             .show(ui, |ui| {
                 ui.add_space(16.);
-                ui.label(RichText::new("CALCULATION").small().color(BLUE));
+                ui.label(RichText::new("CALCULATION").small().color(accent));
                 for (i, label) in PAGES.iter().enumerate() {
                     if i == 4 {
                         ui.add_space(18.);
-                        ui.label(RichText::new("EXPLORE").small().color(BLUE));
+                        ui.label(RichText::new("EXPLORE").small().color(accent));
                     }
                     if i == 7 {
                         ui.add_space(18.);
@@ -401,7 +438,6 @@ if self.job.is_some(){ui.spinner();}});
             "Set up a calculation",
             "Choose your evaluated data, then define the material and irradiation history.",
         );
-        ui.label("Calculation title");
         ui.group(|ui| {
             ui.strong("Welcome to ACTINV");
             ui.label("Explore a small teaching result offline, or use the complete iron problem below for your first real calculation.");
@@ -411,6 +447,7 @@ if self.job.is_some(){ui.spinner();}});
             }
             ui.label("Standard data: about 139 MiB download, 229 MiB installed. First-run cache: about 282 MiB for the iron example.");
         });
+        ui.label("Calculation title");
         text_field(ui, &mut self.document["title"]);
         ui.add_space(12.);
         let response=egui::Frame::group(ui.style()).inner_margin(16.).show(ui,|ui| {
@@ -476,6 +513,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
         if ui.button("Continue to material >").clicked() {
             self.page = 1;
         }
+        crate::options::show(ui, &mut self.document);
     }
     fn material(&mut self, ui: &mut egui::Ui) {
         heading(ui,"Define the material","Use element symbols for natural composition, or individual isotope names for enrichment.");
@@ -539,7 +577,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 let total: f64 = composition.values().map(model::number).sum();
                 ui.label(format!("Composition total: {total:.6}"));
                 if self.document["material"]["basis"].as_str() == Some("wt_percent") && (total - 100.).abs() > 1e-6 {
-                    ui.colored_label(Color32::from_rgb(160,40,35), "Weight percentages do not total 100%. Values are used as entered; ACTINV does not silently normalize them.");
+                    ui.colored_label(ui.visuals().error_fg_color, "Weight percentages do not total 100%. Values are used as entered; ACTINV does not silently normalize them.");
                 }
             }
             ui.horizontal(|ui| {
@@ -712,6 +750,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
         }
     }
     fn spectrum(&mut self, ui: &mut egui::Ui) {
+        let accent = crate::visuals::accent(ui);
         heading(
             ui,
             "Incident spectrum",
@@ -723,7 +762,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles / cm^2 / s).");}
             let mut descending=self.document["spectrum"]["descending"].as_bool().unwrap_or(false);if ui.checkbox(&mut descending,"Input groups are highest-energy first").changed(){self.document["spectrum"]["descending"]=descending.into();}
             let points:Vec<[f64;2]>=self.document["spectrum"]["flux_per_group"].as_array().map(|a|a.iter().enumerate().map(|(i,v)|[i as f64+1.,model::number(v)]).collect()).unwrap_or_default();
-            Plot::new("incident").height(260.).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(BLUE)));
+            Plot::new("incident").height(260.).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
             ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
             ui.collapsing("Import or paste group values", |ui| {
@@ -735,7 +774,11 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 }
                 ui.add(egui::TextEdit::multiline(&mut self.spectrum_text).desired_rows(5).hint_text("flux\n1.2e10\n3.4e9\n…"));
                 if ui.button("Check and apply group values").clicked() {
-                    let count = self.document["spectrum"]["flux_per_group"].as_array().map_or(0, Vec::len);
+                    let count = match self.document["spectrum"]["structure"].as_str() {
+                        Some("fispact-709") => 709,
+                        Some("fispact-162") => 162,
+                        _ => self.document["spectrum"]["boundaries_eV"].as_array().map_or(0, |v| v.len().saturating_sub(1)),
+                    };
                     match model::parse_group_values(&self.spectrum_text,count) {
                         Ok(values) => { self.document["spectrum"]["flux_per_group"] = json!(values); self.report(Ok(format!("Imported {count} group values. Review normalization and energy order before running."))); },
                         Err(e) => self.report(Err(e)),
@@ -743,10 +786,45 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 }
             });
         });
+        if self.document["spectrum"]["structure"].as_str() == Some("custom") {
+            crate::options::boundaries(
+                ui,
+                &mut self.document["spectrum"]["boundaries_eV"],
+                "incident-boundaries",
+            );
+        }
+        egui::CollapsingHeader::new("Spectrum by physical energy")
+            .open(self.capture.as_ref().map(|_| true))
+            .show(ui, |ui| crate::visuals::spectrum(ui, &self.document));
+        let request = ui
+            .add_enabled_ui(self.job.is_none(), |ui| {
+                self.transport.show(ui, &self.document)
+            })
+            .inner;
+        if let Some(request) = request {
+            let (tx, rx) = mpsc::channel();
+            let ctx = ui.ctx().clone();
+            std::thread::spawn(move || {
+                let _ = tx.send(crate::transport::run(request).map(JobOutput::Spectrum));
+                ctx.request_repaint();
+            });
+            self.job = Some((rx, Instant::now()));
+            self.report(Ok(
+                "Reading transport data and checking the complete stream…".into(),
+            ));
+        }
+        if let Some(preview) = &self.imported {
+            ui.label(&preview.description);
+            if ui.button("Apply imported absolute spectrum").clicked() {
+                self.document["spectrum"] = preview.spectrum.clone();
+                self.imported = None;
+            }
+        }
         self.tour
             .mark("spectrum", r.response.rect.intersect(ui.clip_rect()));
     }
     fn results(&mut self, ui: &mut egui::Ui) {
+        let accent = crate::visuals::accent(ui);
         heading(
             ui,
             "Explore the inventory",
@@ -897,7 +975,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 let upper: Vec<_> = band.iter().map(|b| b.2).collect();
                 p.add(
                     egui_plot::FilledArea::new("MF=33 normal interval", &xs, &lower, &upper)
-                        .fill_color(Color32::from_rgba_unmultiplied(24, 0, 173, 35)),
+                        .fill_color(accent.gamma_multiply(0.2)),
                 );
             }
 
@@ -910,7 +988,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                     },
                     primary,
                 )
-                .color(BLUE)
+                .color(accent)
                 .width(2.),
             );
             if let Some(other) = &self.comparison {
@@ -962,6 +1040,11 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 .unwrap_or(0);
         }
         let step = &result.steps()[self.step];
+        egui::CollapsingHeader::new("Which nuclides dominate activity?")
+            .open(self.capture.as_ref().map(|_| true))
+            .show(ui, |ui| {
+                crate::visuals::contributors(ui, step, &mut self.selected)
+            });
         ui.horizontal(|ui| {
             ui.label(format!("Activity  {:.4e} Bq/g", model::metric(step, 0, "")));
             ui.separator();
@@ -1041,6 +1124,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             .mark("inventory", table.response.rect.intersect(ui.clip_rect()));
     }
     fn details(&mut self, ui: &mut egui::Ui) {
+        let accent = crate::visuals::accent(ui);
         heading(
             ui,
             "Spectra & production pathways",
@@ -1054,7 +1138,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 if let Some(groups)=step["photon_source"]["groups"].as_array(){
                     if groups.iter().any(|g|model::number(&g["photons_s_g"])>0.) {
                     let bars:Vec<_>=groups.iter().map(|g|egui_plot::Bar::new(model::number(&g["centroid_eV"])/1e6,model::number(&g["photons_s_g"])).width((model::number(&g["high_eV"])-model::number(&g["low_eV"]))/1e6)).collect();
-                    Plot::new("photon-groups").height(230.).x_axis_label("Photon energy (MeV)").y_axis_label("Photons / s / g per group").show(ui,|p|p.bar_chart(egui_plot::BarChart::new("Decay photons",bars).color(BLUE)));
+                    Plot::new("photon-groups").height(230.).x_axis_label("Photon energy (MeV)").y_axis_label("Photons / s / g per group").show(ui,|p|p.bar_chart(egui_plot::BarChart::new("Decay photons",bars).color(accent)));
                 }
                     else {ui.label("No grouped photon emission is recorded at this step. Review the photon source details and ledger for missing evaluated spectra or unrepresented emission.");}
                 }
@@ -1170,7 +1254,18 @@ if let Some(activity)=step["activity_Bq_per_g"][&self.pathway_node].as_f64(){ui.
     }
 }
 impl eframe::App for Desktop {
+    fn persist_egui_memory(&self) -> bool {
+        self.capture.is_none()
+    }
+    fn save(&mut self, storage: &mut dyn eframe::Storage) {
+        if self.capture.is_none() {
+            eframe::set_value(storage, "actinv-theme", &self.theme);
+        }
+    }
     fn logic(&mut self, ctx: &egui::Context, _: &mut eframe::Frame) {
+        // eframe restores its own context memory after app construction.
+        // Our explicit appearance preference remains authoritative after restoration.
+        self.apply_theme(ctx);
         let result = self.job.as_ref().and_then(|(rx, _)| match rx.try_recv() {
             Ok(v) => Some(v),
             Err(mpsc::TryRecvError::Disconnected) => Some(Err(
@@ -1181,6 +1276,13 @@ impl eframe::App for Desktop {
         if let Some(result) = result {
             self.job = None;
             match result {
+                Ok(JobOutput::Spectrum(preview)) => {
+                    self.imported = Some(preview);
+                    self.page = 3;
+                    self.report(Ok(
+                        "Transport spectrum ready. Review the preview and apply explicitly.".into(),
+                    ));
+                }
                 Ok(JobOutput::Data(fragment)) => {
                     self.downloaded = Some(fragment);
                     self.page = 0;
@@ -1260,9 +1362,13 @@ impl Desktop {
                         }
                         ui.colored_label(
                             if self.error {
-                                Color32::from_rgb(160, 40, 35)
+                                if ui.visuals().dark_mode {
+                                    Color32::from_rgb(255, 145, 135)
+                                } else {
+                                    Color32::from_rgb(160, 40, 35)
+                                }
                             } else {
-                                Color32::from_rgb(60, 70, 90)
+                                ui.visuals().text_color()
                             },
                             &self.status,
                         );
@@ -1288,6 +1394,7 @@ impl Desktop {
         if self.help {
             egui::Window::new("Help & walkthroughs").collapsible(false).resizable(false).default_width(430.).show(&ctx,|ui|{
             ui.heading("Let’s walk through ACTINV");ui.label("Guides highlight real controls while dimming the surrounding workspace. You can use the highlighted control, or press Next to keep exploring. Escape exits a tour.");
+            ui.horizontal(|ui| { ui.label("Interface size"); let mut zoom=ctx.zoom_factor(); if ui.add(egui::Slider::new(&mut zoom,0.8..=2.).text("Scale")).changed() { ctx.set_zoom_factor(zoom); } });
             if ui.button("Start: create and run a calculation").clicked(){self.help=false;self.tour.start(false);}
             if ui.button("Start: understand and export results").clicked(){self.help=false;self.tour.start(true);}
             ui.separator();ui.label("Shortcuts: Ctrl/Cmd+O opens a problem; Ctrl/Cmd+S saves; F1 opens Help.");ui.hyperlink_to("ACTINV specification guide","https://github.com/AvilaLabs/ACTINV/blob/master/docs/SPEC.md");ui.hyperlink_to("Data setup","https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md");ui.hyperlink_to("Qualification and limitations","https://github.com/AvilaLabs/ACTINV/blob/master/docs/QUALIFICATION.md");if ui.button("Close help").clicked(){self.help=false;}
@@ -1410,7 +1517,12 @@ fn draw_pathway(
 
 fn heading(ui: &mut egui::Ui, title: &str, subtitle: &str) {
     ui.heading(RichText::new(title).size(27.));
-    ui.label(RichText::new(subtitle).color(Color32::from_rgb(85, 93, 112)));
+    let color = if ui.visuals().dark_mode {
+        Color32::from_rgb(175, 184, 205)
+    } else {
+        Color32::from_rgb(85, 93, 112)
+    };
+    ui.label(RichText::new(subtitle).color(color));
     ui.add_space(16.);
 }
 fn text_field(ui: &mut egui::Ui, value: &mut Value) {
@@ -1506,6 +1618,38 @@ fn json_tree(ui: &mut egui::Ui, label: &str, value: &Value) {
 #[cfg(test)]
 mod ui_tests {
     use super::*;
+    #[test]
+    fn scientific_views_and_optional_editors_render_in_both_themes_without_mutating_inputs() {
+        for theme in [egui::ThemePreference::Light, egui::ThemePreference::Dark] {
+            let ctx = egui::Context::default();
+            let app = Desktop::from_context(&ctx);
+            ctx.set_theme(theme);
+            ctx.memory_mut(|m| m.set_everything_is_visible(true));
+            let mut doc = app.document.clone();
+            let before = doc.clone();
+            let result = model::tutorial_result();
+            let mut selected = String::new();
+            let mut output = ctx.run_ui(Default::default(), |ui| {
+                crate::options::show(ui, &mut doc);
+                crate::visuals::spectrum(ui, &doc);
+                crate::visuals::contributors(ui, &result.steps()[0], &mut selected);
+            });
+            output.textures_delta.clear();
+            assert_eq!(
+                doc, before,
+                "Opening optional editors must not change scientific defaults"
+            );
+            assert!(selected.is_empty());
+        }
+    }
+    #[test]
+    fn startup_with_a_restored_dark_preference_keeps_theme_styles_distinct() {
+        let ctx = egui::Context::default();
+        ctx.set_theme(egui::ThemePreference::Dark);
+        let _app = Desktop::from_context(&ctx);
+        assert!(ctx.style_of(egui::Theme::Dark).visuals.dark_mode);
+        assert!(!ctx.style_of(egui::Theme::Light).visuals.dark_mode);
+    }
     #[test]
     fn every_page_and_setup_walkthrough_renders_at_minimum_size() {
         let ctx = egui::Context::default();

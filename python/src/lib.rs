@@ -93,5 +93,17 @@ fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(broaden, m)?)?;
     m.add_function(wrap_pyfunction!(run, m)?)?;
     m.add_function(wrap_pyfunction!(validate, m)?)?;
+    m.add_function(wrap_pyfunction!(_example_json, m)?)?;
+    let code =
+        std::ffi::CString::new(include_str!("objects.py")).expect("Python source has no NUL");
+    m.py().run(&code, Some(&m.dict()), None)?;
     Ok(())
+}
+
+#[pyfunction]
+fn _example_json(data_dir: &str) -> PyResult<String> {
+    let spec = actinv_cli::workflow::new_example(std::path::Path::new(data_dir))
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+    serde_json::to_string(&spec)
+        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }

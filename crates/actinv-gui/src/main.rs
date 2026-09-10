@@ -3,8 +3,11 @@
 mod app;
 mod capture;
 mod model;
+mod options;
 mod smoke;
 mod tour;
+mod transport;
+mod visuals;
 
 fn main() -> eframe::Result {
     smoke::from_env().expect("opt-in packaged desktop model smoke test");
