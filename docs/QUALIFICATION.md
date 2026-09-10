@@ -76,6 +76,15 @@ Re-running the same executable and inputs is useful but is not an independent ve
 - FNS validation measures decay heat for its recorded materials and histories. The FNG/ITER control validates the
   supplied cell-620 activation history and selected nuclides, not full shutdown-dose transport or a licensing model.
 - Recorded speed and memory measurements describe their fixtures and hardware; they are not performance guarantees.
+- P23 feed/removal is a schedule-level constant source and first-order sink; it is not a coupled flowsheet, mass
+  conservation is reported rather than enforced across geometries, and pathway attribution does not track fed
+  material.
+- Reverse calculation (`actinv reverse`) is limited to the linear trace regime: it recovers an absolute flux
+  multiplier or per-irradiation-step multipliers under exact superposition. It refuses coupled mode, underdetermined
+  systems, and absent nuclides by name; it does not unfold spectrum shape, transport, or covariance.
+- Damage observables implement only the NRT displacement model over hash-pinned damage-energy tables. Kinchin–Pease,
+  athermal recombination, damage functions, and damage covariance are not implemented; targets are the declared
+  material composition, not transmutation products.
 
 ## Release verdicts
 

@@ -1,0 +1,33 @@
+{
+ "amendment": "Amendment A (MT=444 absent from every local evaluation store) is documented and bounded: the builder is qualified on a persisted synthetic ENDF corpus with independent re-collapse, and honest zero coverage is verified on real TENDL-2025 files.",
+ "closed": true,
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "g0_baseline": "3a30a0e84933a27fc98ef82fe9bfbbdbce05b4a8674cbf0b34494de3f6369484",
+  "g0_check": "ce4f748caa4804da335457932852732030a93a56648ed7cfd56899b4fe2a974d",
+  "g1_battery": "e97db45a123999488c257ab40b3cb0232ad1f5fe68fdb36c38d624280d135ed0",
+  "g1_check": "422c546c00284f8bd148eb6bfd7404884fc0a48ba20e54850a7f5490603b09e0",
+  "g2_battery": "3a5f53b9431a503296975c0be3b82557591a0149829385f625eeb0a234a174f8",
+  "g2_check": "21f2751a98c010c59abcc8b199313fa79ed3ccbe2ca21838722a5307cecf009a",
+  "g3_battery": "944801ecd33e82a726d67f475d3f0d738c7c851d8df98f70daf05e9d754150ed",
+  "g3_built_table": "315cf070942632ea213794b6866d48eda446d2839bc86806532df07d4f180a14",
+  "g3_check": "66bed7f0165c2c1c0913a098f49e29e82d402610a73d9a82a1c2c54b1cdd745d",
+  "g3_corpus_n-Co059.tendl": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45",
+  "g3_corpus_n-Fe056.tendl": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84",
+  "g3_corpus_n-Ni058.tendl": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b",
+  "g4_compat": "27a088825a8ed489ab4d80b178a79557d7d368d44f60a6a58b9a179137c820f6"
+ },
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true
+ },
+ "phase_success": true,
+ "schema": "actinv-p23-verdict-1",
+ "scope_note": "P23-PASS covers schedule feed/removal, linear-regime reverse estimation, and NRT damage observables. It does not claim licensed-code feature parity, nonlinear inversion, pathway attribution of fed inventory, or displacement models beyond NRT.",
+ "v_next_minor_release_candidate": true,
+ "verdict": "P23-PASS"
+}

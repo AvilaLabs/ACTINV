@@ -1,0 +1,23 @@
+{
+ "format": "actinv-reverse-input-1",
+ "measurements": [
+  {
+   "step": "last",
+   "nuclide": "Mn56",
+   "activity_Bq_per_g": 92688.94235555886,
+   "sigma_Bq_per_g": 926.8894235555886
+  },
+  {
+   "step": "last",
+   "nuclide": "Fe55",
+   "activity_Bq_per_g": 37.825668476170264,
+   "sigma_Bq_per_g": 0.37825668476170266
+  },
+  {
+   "step": "last",
+   "nuclide": "Mn54",
+   "activity_Bq_per_g": 5.798636483245069,
+   "sigma_Bq_per_g": 0.05798636483245069
+  }
+ ]
+}

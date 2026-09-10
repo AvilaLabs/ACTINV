@@ -34,3 +34,9 @@ top-level runs create one `PhysicalInputs` value and share it between data prepa
 The single barn conversion is `RatePerBarnSecond::from_particle_flux`. Do not repeat the numerical conversion factor
 in a caller. New dimensional boundaries belong in this inventory, their compile-pass/fail fixtures and the P16
 checker before production use.
+
+P23 added `schedule[].feed` (atoms s⁻¹ g⁻¹), `schedule[].removal` (s⁻¹), the `actinv-reverse-1` measurement inputs
+(Bq g⁻¹) and multiplier estimates (dimensionless), and the `damage` outputs `damage_energy_eV_per_g_s` (eV g⁻¹ s⁻¹),
+`dpa_rate_per_s` (s⁻¹) and cumulative `dpa` (dimensionless). These remain raw `f64` values at the wire boundary and
+inside the fold — they are outside the P16 compile-time claim — with the documented units stated in the result
+ledger under `damage.units` and in [SPEC.md](SPEC.md).

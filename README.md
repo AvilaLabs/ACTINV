@@ -197,6 +197,13 @@ actinv build-covariance /data/TENDL-2025/n /data/tendl2025-n.npz \
   /data/tendl2025-n.cov.npz --workers 4 --cache /data/actinv-cov-cache
 ```
 
+For damage-energy (dpa) tables from ENDF-6 evaluations carrying MF=3/MT=444:
+
+```bash
+actinv build-damage /data/damage-evaluations /data/damage-709g.json \
+  --projectile neutron --groups fispact-709 --cache /data/actinv-damage-cache
+```
+
 Every input file is SHA-256 hashed in the result certificate. Generated bulk libraries and raw nuclear-data inputs are
 not stored in this repository.
 
@@ -230,8 +237,23 @@ Depending on the requested outputs, each time step can contain:
 - evaluated decay-photon lines or multigroup sources;
 - ranked production pathways;
 - user-selected clearance, waste, ingestion, or inhalation responses;
+- NRT damage observables (damage-energy rate, per-element and aggregate dpa) from a hash-pinned
+  `actinv-damage-table-1` produced by `actinv build-damage`;
 - an MF=33 cross-section uncertainty band and numerical-method comparison; and
-- a ledger for missing decay/yield/response data, pruned populations, balance terms, and method resolution.
+- a ledger for missing decay/yield/response/damage data, pruned populations, balance terms, and method resolution.
+
+Schedule steps may also declare continuous `feed` (atoms s⁻¹ g⁻¹ per nuclide) and first-order `removal` (s⁻¹ per
+nuclide or element) — for flowing systems, coolant purification, or irradiated-target feed — with removed atoms
+accounted in a dedicated sink.
+
+`actinv reverse` inverts a schedule against measured activities: scalar mode recovers a common flux multiplier by
+weighted least squares; `--segments` recovers per-irradiation-step multipliers by non-negative least squares. Both
+are linear-regime methods with named refusals outside it:
+
+```bash
+actinv reverse problem.json measurements.json estimate.json
+actinv reverse problem.json measurements.json estimate.json --segments
+```
 
 Radiological coefficients are user-supplied, hash-pinned tables. ACTINV does not choose a jurisdiction, regulation,
 chemical form, aerosol class, or safety margin for you.

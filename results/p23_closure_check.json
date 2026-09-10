@@ -1,9 +1,9 @@
 {
+ "amendment_sha256": "d03ac16b27f2e60d87259a2392796713347c789f8e4981b69ac0f644d7397766",
  "failures": [],
  "head_commit": "b19e8ff2e52165f0d8ddf4dbc3efbdeb377e8724",
  "opening_commit": "325f20704ead9bda1dd5eac3523a1d7b574c3537",
  "pass": true,
  "protocol_sha256": "fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5",
- "schema": "actinv-p23-g1-check-1",
- "verdicts_checked": 20
+ "schema": "actinv-p23-closure-1"
 }

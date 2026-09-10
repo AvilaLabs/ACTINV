@@ -1,0 +1,53 @@
+{
+ "schema": "actinv-p23-g4-compat-1",
+ "protocol_sha256": "fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5",
+ "workload": "examples/fns_fe_5min.json",
+ "identity": {
+  "baseline_sha256": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+  "candidate_normalized_sha256": "ecdc989f927cc59e290da3fa4a1172a9d8f6785889c7e767e929b39ca935ba93",
+  "note": "abs-P23-feature output reproduces the G0 battery hash under the battery's absolute-path spec serialization; relative-path provenance in certificate.inputs changes the hash legitimately",
+  "identical_on_battery_spec": true
+ },
+ "performance": {
+  "parent_commit": "3fe17b35f874cfb8f54bad7e105c62037884cfac",
+  "parent_release_wall_s": [
+   0.71,
+   0.7,
+   0.69
+  ],
+  "candidate_release_wall_s": [
+   0.73,
+   0.72,
+   0.72
+  ],
+  "wall_ratio_max": 1.058,
+  "parent_peak_rss_kb": [
+   125860,
+   125824,
+   125608
+  ],
+  "candidate_peak_rss_kb": [
+   126232,
+   126260,
+   126276
+  ],
+  "rss_ratio_max": 1.0053,
+  "bound": 1.05,
+  "pass": false
+ },
+ "docs": [
+  "docs/SPEC.md",
+  "docs/METHOD.md",
+  "docs/QUANTITIES.md",
+  "docs/QUALIFICATION.md",
+  "README.md",
+  "python/README.md"
+ ],
+ "examples": [
+  "examples/feed_removal_demo.json",
+  "examples/damage_demo.json",
+  "examples/damage_table_demo.json",
+  "examples/reverse_demo_problem.json",
+  "examples/reverse_demo_measurements.json"
+ ]
+}

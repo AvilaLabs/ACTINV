@@ -1,0 +1,43 @@
+{
+ "amendment_sha256": "d03ac16b27f2e60d87259a2392796713347c789f8e4981b69ac0f644d7397766",
+ "canonical_repository": "https://github.com/AvilaLabs/ACTINV.git",
+ "date": "2026-09-10",
+ "evidence_sha256": {
+  "g0_baseline": "3a30a0e84933a27fc98ef82fe9bfbbdbce05b4a8674cbf0b34494de3f6369484",
+  "g0_check": "ce4f748caa4804da335457932852732030a93a56648ed7cfd56899b4fe2a974d",
+  "g1_battery": "e97db45a123999488c257ab40b3cb0232ad1f5fe68fdb36c38d624280d135ed0",
+  "g1_check": "422c546c00284f8bd148eb6bfd7404884fc0a48ba20e54850a7f5490603b09e0",
+  "g2_battery": "3a5f53b9431a503296975c0be3b82557591a0149829385f625eeb0a234a174f8",
+  "g2_check": "21f2751a98c010c59abcc8b199313fa79ed3ccbe2ca21838722a5307cecf009a",
+  "g3_battery": "944801ecd33e82a726d67f475d3f0d738c7c851d8df98f70daf05e9d754150ed",
+  "g3_built_table": "315cf070942632ea213794b6866d48eda446d2839bc86806532df07d4f180a14",
+  "g3_check": "66bed7f0165c2c1c0913a098f49e29e82d402610a73d9a82a1c2c54b1cdd745d",
+  "g3_corpus_n-Co059.tendl": "8ff347217eb7948bd6a032a08f1807b49104ed81aa9a840cce9a72c3f7bbaa45",
+  "g3_corpus_n-Fe056.tendl": "c02da8f3e3157ebf6e42267b799943084261484f9984e25d8ef1b98d8ef5ba84",
+  "g3_corpus_n-Ni058.tendl": "45acb51d359617252039b9ae70711663c978c3571617179e35b1b317625b170b",
+  "g4_compat": "27a088825a8ed489ab4d80b178a79557d7d368d44f60a6a58b9a179137c820f6"
+ },
+ "g0_checkpoint": "3893b3847ca29e84a3e00db014ff29ad4633f104",
+ "g1_checkpoint": "4f0d83f596d3764f464d16ae88ea4d31ce06cf2d",
+ "g2_checkpoint": "b93b157c3c95440b5292e4493243fad3ac05ec5d",
+ "g3_checkpoint": "b19e8ff2e52165f0d8ddf4dbc3efbdeb377e8724",
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true
+ },
+ "opening_commit": "325f20704ead9bda1dd5eac3523a1d7b574c3537",
+ "protocol_sha256": "fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5",
+ "schema": "actinv-p23-session-1",
+ "summary": [
+  "G1: schedule-level feed (atoms/s/g per nuclide, all steps incl. cooling) and first-order removal (per nuclide/element, s^-1) with a dedicated removed sink; reservoir-exemption ledgered; 22 checks.",
+  "G2: actinv reverse scalar WLS + --segments Lawson-Hanson NNLS with conditioning, SE, residuals, chi2/dof and named refusals; 17 checks.",
+  "G3: actinv-damage-table-1 from MF=3/MT=444 collapse via build-damage; NRT dpa fold over composition-resolved targets; honest uncovered naming; 22 checks plus checker-side corpus re-collapse.",
+  "G4: byte-identical absent-feature output vs G0 baseline; release wall 1.03x, RSS 1.003x of the parent; SPEC/METHOD/QUANTITIES/QUALIFICATION/README/python-README updated; one worked example per feature.",
+  "G5: independent closure checker re-ran gate checkers, rehashed evidence, re-derived feed/removal/damage analytics from first principles, repeated WLS arithmetic, verified NNLS KKT optimality on a checker-built design matrix, verified identity, rejected 8/8 evidence mutations."
+ ],
+ "verdict": "P23-PASS"
+}

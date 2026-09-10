@@ -207,12 +207,53 @@ workers do not reread or duplicate it. The certificate binds the table's declare
 edition, jurisdiction, response kind, basis, and coefficient count; the ledger mirrors per-step coverage.
 
 **Certificate and ledger.** The core computes SHA-256 for the activation library, its index, both decay files and the
-optional photon response, every fission-yield evaluation, an optional covariance sidecar/index, and an optional
-radiological table before solving.
+optional photon response, every fission-yield evaluation, an optional covariance sidecar/index, an optional
+radiological table, and an optional damage table before solving.
 Declared hashes and the library/index link
 fail closed. Every run reports composition gaps, explicit-isotope masses, products without evaluated decay data,
 fission selection/balance/leakage, burn-up selection, numerical-floor/negative round-off, photon normalization and
-missing-spectrum bounds, and response coverage.
+missing-spectrum bounds, response coverage, and damage coverage.
 
 Known failure modes in activation data, and the controls that guard against each, are collected in
 [DATA_TRAPS.md](DATA_TRAPS.md).
+
+## Continuous feed and first-order removal (P23)
+
+Any schedule step may declare `feed` (constant rates `s_i` in atoms s⁻¹ g⁻¹ for explicit nuclides) and `removal`
+(first-order constants `k_j` in s⁻¹ for nuclides or all tracked states of an element). Each step inserts the
+constant source term `s_i` on the target row — including zero-flux cooling steps — and the diagonal loss `-k_j`
+plus the matching edge into a dedicated `removed` sink state, so removed atoms are accounted rather than dropped.
+The same CRAM stepping solves the augmented system; a fed nuclide unreachable by reactions is kept in the basis and
+still receives its source. In trace mode the undepleted material reservoir cannot be removed — the formulation
+holds it constant — and every exempt nuclide is named in the ledger; feeding such a nuclide creates a real,
+removable tracked population on top of the reservoir. An absent or empty section leaves the matrix and the emitted
+bytes unchanged.
+
+## Reverse calculation (P23)
+
+`actinv reverse` infers flux normalization from measured activities in the linear (trace) regime. The forward
+response `a_i(m·Φ)` is exactly linear in the step multiplier `m`, so a unit-multiplier sensitivity run gives the
+per-measurement slopes `c_i = a_i(1)`. Scalar mode solves the weighted least-squares fit `m̂ = Σ w_i c_i a_i /
+Σ w_i c_i²` with `w_i = 1/σ_i²`, and reports the standard error, per-measurement residuals, and χ² per degree of
+freedom. `--segments` treats each irradiation step's multiplier as a separate unknown: the design matrix columns
+are single-segment forward responses, solved by Lawson–Hanson non-negative least squares (active-set, stdlib only),
+with the matrix's condition number and per-segment standard errors reported. Underdetermined and rank-deficient
+systems, zero-sensitivity columns, coupled mode, feed/removal schedules, and absent nuclides are named refusals;
+results carry the problem and measurement SHA-256 values and an explicit `method_limits` statement.
+
+## Damage observables (P23)
+
+Damage tables (`actinv-damage-table-1`) carry per-group damage-energy production cross sections `σ̃_d,g` in
+barn·eV for canonical nuclides or elements, built by `actinv build-damage` from ENDF-6 MF=3/MT=444 sections through
+the same lethargy collapse as the activation library. Per step, the damage-energy rate is
+
+`E_d,g·rate = Σ_targets σ̃_d,g(target) φ_g · 1e-24 · N_target`  in eV per gram per second,
+
+and each covered element's NRT displacement rate is `0.8 · (rate/atoms) / (2·E_d)` for the declared displacement
+energy `E_d`; the material `dpa_rate_per_s` is the covered-atom-weighted mean. Targets are the material's
+composition-resolved nuclides — reservoir inventories in trace mode (plus fed tracked populations), evolved states
+in coupled mode; transmutation products are not damage targets. Composition nuclides without a table row are named
+in the ledger's `uncovered_targets` and shrink `covered_atom_fraction` rather than contribute zero;
+`require_complete` turns any such gap into an error. The model is NRT only — no Kinchin–Pease, athermal
+recombination, or damage-function models are claimed — and damage-energy data provenance is certificate-recorded
+with the table hash.

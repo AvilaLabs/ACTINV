@@ -1,8 +1,8 @@
 # ACTINV for Python
 
 ACTINV calculates how a material's nuclide inventory changes during irradiation and cooling. It reports inventories,
-activities, decay heat, photon sources, selected radiological indices, uncertainty information, and an explicit ledger
-of incomplete input data.
+activities, decay heat, photon sources, selected radiological indices, NRT damage observables (dpa), uncertainty
+information, and an explicit ledger of incomplete input data.
 
 Installation is one command:
 
@@ -50,3 +50,14 @@ result.save("iron-result.json")
 repository-relative files. Plain mappings use the current working directory. `Spectrum(values, structure=…,
 total=…, descending=…)` provides explicit spectrum construction. Complete result fields remain accessible by key.
 Existing `run(json_text)` still returns JSON text; `run_json` is an explicit alias. `solve` returns `Result`.
+
+Schedule steps may carry continuous feed and first-order removal:
+
+```python
+problem["schedule"] = Schedule().irradiate("5 min", feed={"Co60": 1e12}, removal={"Mn56": 1e-3}).cool("1 h")
+```
+
+`actinv.reverse(problem, measurements, segments=False)` — or `actinv-reverse` on the command line — recovers a flux
+multiplier (or per-segment multipliers) from measured activities in the linear regime. Damage observables are
+requested with `options.outputs` containing `"damage"` plus a `damage` section pinning an
+`actinv-damage-table-1` file and per-element displacement energies.
