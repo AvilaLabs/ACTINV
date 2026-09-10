@@ -3,6 +3,14 @@
 One JSON document drives the CLI, Python API and validation harness. Unknown fields, non-finite numbers and invalid
 hashes are errors; paths are literal filesystem paths (shell `~` expansion is not performed inside JSON).
 
+Any `path` field or decay `primary`/`fallback` string may instead carry a symbolic reference
+`catalog:<artifact-id>` naming an artifact in the embedded data catalog (`actinv data list` prints the IDs, e.g.
+`catalog:tendl-2025-neutron-709g`). The reference resolves to `<data-root>/v<catalog-version>/<artifact path>`,
+where the data root is `$ACTINV_DATA_DIR` when set and `./actinv-data` otherwise. An omitted or null `sha256` is
+filled from the catalog declaration; a declared hash that disagrees with the catalog is an error, as is a reference
+to an artifact that is not installed. This keeps problem files portable between machines while remaining
+hash-pinned — `actinv new` emits catalog references by default.
+
 ```json
 {
   "spec": "actinv-spec-1",

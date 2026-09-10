@@ -436,7 +436,7 @@ pub fn main_from(a: Vec<String>) {
         match a[1].as_str() {
             "run" => println!("usage: actinv run SPEC.json [OUT.json]\nRelative input paths use the current working directory. The solver verifies data and hashes.\nOmit OUT.json to write full JSON to stdout."),
             "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check the specification without requiring downloaded data.\n--files also checks readable input files and library indexes. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
-            "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nData defaults to ./actinv-data; references are saved as absolute paths.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
+            "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nReferences default to portable catalog IDs resolved against ./actinv-data or $ACTINV_DATA_DIR; --data-dir saves absolute paths instead.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
             "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
             _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
         }
@@ -480,7 +480,9 @@ pub fn main_from(a: Vec<String>) {
                 std::env::var("ACTINV_CACHE_DIR").unwrap_or_else(|_| "platform default".into())
             );
             let spec = if let Some(path) = a.get(2) {
-                Spec::from_json(&read(path))
+                Spec::from_json(
+                    &crate::resolve_catalog_json(&read(path)).unwrap_or_else(|e| die(e, 2)),
+                )
             } else {
                 crate::workflow::new_example(std::path::Path::new("actinv-data"))
             }
@@ -511,7 +513,8 @@ pub fn main_from(a: Vec<String>) {
                 die("usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]", 2);
             }
             let segments = a[2..].iter().any(|arg| arg == "--segments");
-            let problem_text = read(problem);
+            let problem_text =
+                crate::resolve_catalog_json(&read(problem)).unwrap_or_else(|e| die(e, 2));
             let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
             let measurements_text = read(measurements);
             let result = actinv_core::reverse::solve(
@@ -535,7 +538,10 @@ pub fn main_from(a: Vec<String>) {
             if a.len() != 4 {
                 die(USAGE, 2);
             }
-            let spec = MeshSpec::from_json(&read(&a[2])).unwrap_or_else(|error| die(error, 2));
+            let spec = MeshSpec::from_json(
+                &crate::resolve_catalog_json(&read(&a[2])).unwrap_or_else(|e| die(e, 2)),
+            )
+            .unwrap_or_else(|error| die(error, 2));
             let summary = run_mesh(&spec, &a[3]).unwrap_or_else(|error| die(error, 1));
             println!(
                 "{}",
@@ -549,7 +555,10 @@ pub fn main_from(a: Vec<String>) {
             let profile = std::env::var_os("ACTINV_P14_PROFILE").is_some();
             let command_started = profile.then(std::time::Instant::now);
             let spec_started = profile.then(std::time::Instant::now);
-            let spec = Spec::from_json(&read(&a[2])).unwrap_or_else(|e| die(e, 2));
+            let spec = Spec::from_json(
+                &crate::resolve_catalog_json(&read(&a[2])).unwrap_or_else(|e| die(e, 2)),
+            )
+            .unwrap_or_else(|e| die(e, 2));
             let spec_read_parse_ms = spec_started
                 .map(|started| started.elapsed().as_secs_f64() * 1e3)
                 .unwrap_or(0.0);

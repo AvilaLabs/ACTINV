@@ -34,6 +34,12 @@ The default is `tendl-2025-neutron`. Optional bundles are
 `tendl-2025-neutron-covariance`, `tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after
 `fetch` or `verify`. Shared decay files are reused when multiple bundles use the same output directory.
 
+Installed artifacts can be referenced symbolically from problem files: `"path": "catalog:<artifact-id>"` (and the
+decay `primary`/`fallback` strings) resolve against the embedded catalog under `<data-root>/v<catalog-version>/`.
+The data root is `$ACTINV_DATA_DIR` when set, else `./actinv-data`; an artifact that is not installed, or a declared
+hash that conflicts with the catalog, is an error. `actinv new` emits these references so problem files stay
+portable while remaining hash-pinned.
+
 The generated TENDL-2025 activation libraries and covariance sidecar are separate CC-BY-4.0 release assets. The
 ENDF/B-VIII.0 and JEFF-3.3 decay files remain downloads from their official host. The installed
 `ACTINV-DATA-NOTICE.md` records attribution, source and builder identities, transformations, and terms. ACTINV's

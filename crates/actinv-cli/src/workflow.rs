@@ -100,8 +100,31 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
 }
 
 /// Generate a complete editable example, with references valid from any working directory.
+/// The default data root emits portable `catalog:` references resolved against the
+/// installed data bundle at run time; an explicit `--data-dir` keeps absolute paths.
 pub fn new_example(data_root: &Path) -> Result<Spec, String> {
     let mut spec = Spec::from_json(IRON_EXAMPLE)?;
+    if data_root == Path::new("actinv-data") {
+        let catalog = crate::embedded_catalog()?;
+        let to_catalog = |path: &mut String| -> Result<(), String> {
+            let relative = path
+                .strip_prefix(&format!("actinv-data/v{}/", catalog.catalog_version))
+                .unwrap_or(path);
+            let artifact = catalog
+                .artifacts
+                .iter()
+                .find(|a| a.path == relative)
+                .ok_or_else(|| format!("example data path '{path}' is not in the catalog"))?;
+            *path = format!("catalog:{}", artifact.id);
+            Ok(())
+        };
+        to_catalog(&mut spec.library.path)?;
+        to_catalog(&mut spec.decay.primary)?;
+        if let Some(p) = &mut spec.decay.fallback {
+            to_catalog(p)?;
+        }
+        return Ok(spec);
+    }
     let root: PathBuf = if data_root.is_absolute() {
         data_root.into()
     } else {
@@ -132,6 +155,13 @@ mod tests {
         assert_eq!(s.spectrum.flux_per_group.len(), 709);
         assert!(s.library.path.starts_with("/example-data/"));
         assert_eq!(s.schedule.len(), 21);
+        let portable = new_example(Path::new("actinv-data")).unwrap();
+        assert_eq!(portable.library.path, "catalog:tendl-2025-neutron-709g");
+        assert_eq!(portable.decay.primary, "catalog:endfb-viii-0-decay");
+        assert_eq!(
+            portable.decay.fallback.as_deref(),
+            Some("catalog:jeff-3-3-decay")
+        );
     }
     #[test]
     fn missing_files_include_sidecars_and_recovery() {

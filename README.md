@@ -80,6 +80,10 @@ The command downloads about 139 MiB, verifies every file with SHA-256 before ins
 `actinv-data/v1.0.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
+Problem files may also use portable symbolic references — `"path": "catalog:tendl-2025-neutron-709g"` resolves the
+installed artifact by ID and fills its declared hash from the embedded catalog. `actinv new` emits these by default;
+set `ACTINV_DATA_DIR` if your data lives somewhere other than `./actinv-data`.
+
 If you are working from the source checkout, the included iron example already uses those default paths:
 
 ```bash

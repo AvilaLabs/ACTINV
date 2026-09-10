@@ -68,7 +68,9 @@ fn broaden(e: Vec<f64>, sig: Vec<f64>, t_k: f64, awr: f64, eout: Vec<f64>) -> Py
 /// The same core function the `actinv` CLI and the harness call: one binary, three entry points (P5 G3).
 #[pyfunction]
 fn run(spec_json: &str) -> PyResult<String> {
-    let spec = Spec::from_json(spec_json).map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let resolved = actinv_cli::resolve_catalog_json(spec_json)
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let spec = Spec::from_json(&resolved).map_err(pyo3::exceptions::PyValueError::new_err)?;
     let r = core_run(&spec, "python").map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
     serde_json::to_string(&r).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
@@ -77,8 +79,10 @@ fn run(spec_json: &str) -> PyResult<String> {
 /// Flux estimation from measured activities in the linear regime.
 #[pyfunction]
 fn reverse(problem_json: &str, measurements_json: &str, segments: bool) -> PyResult<String> {
-    let spec = Spec::from_json(problem_json).map_err(pyo3::exceptions::PyValueError::new_err)?;
-    let result = actinv_core::reverse::solve(&spec, problem_json, measurements_json, segments)
+    let resolved = actinv_cli::resolve_catalog_json(problem_json)
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let spec = Spec::from_json(&resolved).map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let result = actinv_core::reverse::solve(&spec, &resolved, measurements_json, segments)
         .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
     serde_json::to_string(&result).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
@@ -86,7 +90,9 @@ fn reverse(problem_json: &str, measurements_json: &str, segments: bool) -> PyRes
 /// validate(spec_json: str) -> str — parse and validate without solving.
 #[pyfunction]
 fn validate(spec_json: &str) -> PyResult<String> {
-    let s = Spec::from_json(spec_json).map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let resolved = actinv_cli::resolve_catalog_json(spec_json)
+        .map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let s = Spec::from_json(&resolved).map_err(pyo3::exceptions::PyValueError::new_err)?;
     Ok(format!(
         "{} — {} groups, {} steps",
         s.spec,

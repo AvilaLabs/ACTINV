@@ -386,6 +386,111 @@ pub fn embedded_catalog() -> Result<DataCatalog, String> {
     DataCatalog::parse(CATALOG_JSON)
 }
 
+/// Installed-data root for symbolic references: `$ACTINV_DATA_DIR`, else the
+/// `actinv-data` directory under the current working directory.
+pub fn data_root() -> Result<std::path::PathBuf, String> {
+    let root = match std::env::var_os("ACTINV_DATA_DIR") {
+        Some(value) if !value.is_empty() => std::path::PathBuf::from(value),
+        _ => std::path::PathBuf::from("actinv-data"),
+    };
+    if root.is_absolute() {
+        Ok(root)
+    } else {
+        std::env::current_dir()
+            .map_err(|error| format!("cannot resolve data root: {error}"))
+            .map(|cwd| cwd.join(root))
+    }
+}
+
+/// Rewrite `"path": "catalog:<artifact-id>"` references inside a problem JSON
+/// document into absolute paths under the installed data root. A missing
+/// `sha256` is filled from the embedded catalog; a conflicting one is an
+/// error. Every other value passes through unchanged. Returns the rewritten
+/// JSON text so downstream parsers keep their existing strictness.
+pub fn resolve_catalog_json(text: &str) -> Result<String, String> {
+    let catalog = embedded_catalog()?;
+    let mut value: serde_json::Value =
+        serde_json::from_str(text).map_err(|error| format!("invalid problem JSON: {error}"))?;
+    let root = data_root()?.join(format!("v{}", catalog.catalog_version));
+    let mut resolved = 0usize;
+    resolve_catalog_value(&mut value, &catalog, &root, &mut resolved)?;
+    serde_json::to_string(&value).map_err(|error| format!("cannot re-encode problem JSON: {error}"))
+}
+
+fn resolve_catalog_value(
+    value: &mut serde_json::Value,
+    catalog: &DataCatalog,
+    root: &std::path::Path,
+    resolved: &mut usize,
+) -> Result<(), String> {
+    match value {
+        serde_json::Value::Object(map) => {
+            if let Some(serde_json::Value::String(path)) = map.get("path") {
+                if let Some(id) = path.strip_prefix("catalog:") {
+                    let artifact = catalog.artifact(id)?;
+                    let target = root.join(&artifact.path);
+                    if !target.is_file() {
+                        return Err(format!(
+                            "catalog artifact '{id}' is not installed at {} — run `actinv data fetch` or set ACTINV_DATA_DIR",
+                            target.display()
+                        ));
+                    }
+                    match map.get("sha256") {
+                        Some(serde_json::Value::String(declared)) if *declared != artifact.sha256 => {
+                            return Err(format!(
+                                "catalog:{id} declared sha256 conflicts with the embedded catalog"
+                            ));
+                        }
+                        None | Some(serde_json::Value::Null) => {
+                            map.insert(
+                                "sha256".into(),
+                                serde_json::Value::String(artifact.sha256.clone()),
+                            );
+                        }
+                        _ => {}
+                    }
+                    map.insert(
+                        "path".into(),
+                        serde_json::Value::String(target.display().to_string()),
+                    );
+                    *resolved += 1;
+                }
+            }
+            // decay.primary / decay.fallback are bare path strings, not {path} objects
+            for key in ["primary", "fallback"] {
+                if let Some(serde_json::Value::String(text)) = map.get(key) {
+                    if let Some(id) = text.strip_prefix("catalog:") {
+                        let artifact = catalog.artifact(id)?;
+                        let target = root.join(&artifact.path);
+                        if !target.is_file() {
+                            return Err(format!(
+                                "catalog artifact '{id}' is not installed at {} — run `actinv data fetch` or set ACTINV_DATA_DIR",
+                                target.display()
+                            ));
+                        }
+                        map.insert(
+                            key.into(),
+                            serde_json::Value::String(target.display().to_string()),
+                        );
+                        *resolved += 1;
+                    }
+                }
+            }
+            for child in map.values_mut() {
+                resolve_catalog_value(child, catalog, root, resolved)?;
+            }
+            Ok(())
+        }
+        serde_json::Value::Array(items) => {
+            for item in items {
+                resolve_catalog_value(item, catalog, root, resolved)?;
+            }
+            Ok(())
+        }
+        _ => Ok(()),
+    }
+}
+
 struct Download {
     reader: Box<dyn Read>,
     content_length: Option<u64>,

@@ -1,0 +1,36 @@
+{
+ "spec": "actinv-mesh-spec-1",
+ "title": "Mesh demonstration: two-cell Fe activation",
+ "projectile": "neutron",
+ "library": {
+  "path": "catalog:tendl-2025-neutron-709g",
+  "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+ },
+ "decay": {
+  "primary": "catalog:endfb-viii-0-decay",
+  "fallback": "catalog:jeff-3-3-decay"
+ },
+ "material": {
+  "mass_g": 1.0,
+  "basis": "wt_percent",
+  "composition": {
+   "FE": 100.0
+  }
+ },
+ "schedule": [
+  {
+   "dt": "300 s",
+   "flux": 1.0
+  }
+ ],
+ "options": {
+  "mode": "auto",
+  "prune": "rate",
+  "bmin_atoms_per_g": 1e-08,
+  "temperature_K": 293.6
+ },
+ "flux": {
+  "path": "examples/mesh_flux.ndjson",
+  "sha256": "56b3290f9fb4fceeb4433f8e11bdf2f60f6685774fb7af1110c1f612d47a4161"
+ }
+}
