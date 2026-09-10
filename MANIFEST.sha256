@@ -307,7 +307,7 @@ a535a3613f3e05acf780e61ec46fdec9be355bd0c08b3bb1b88b7406bff3d8a2  ./docs/RELEASE
 f0a32b0cdc308b42b1a3f2b9c30ffed929ca93e8bc5a4fbdb3287d7912b597d9  ./docs/RELEASE_NOTES_v0.5.md
 9cf927585ae9f4252e6febdb3e9fa396065f72ba1bf53956f38f6a82ecda3dbf  ./docs/RELEASE_NOTES_v1.0.1.md
 8f8962192e59bb1f8d5ccdd4faff88966715eac9773b1f6a457e64f1ddfba59a  ./docs/RELEASE_NOTES_v1.0.md
-4eab6ab7cd83c059e17cc6625bf3ba150dd1cdfe0ba7dc3bb9ebe289db516a93  ./docs/ROADMAP.md
+6b6c94f685d543798a2b4e8b4a29c18ab28c09aa6088743c695b6af239bb07be  ./docs/ROADMAP.md
 07bf266688caeca5d077a6e24b3185b0ffb7cb0eec58d27f9fca64be95f78eeb  ./docs/SPEC.md
 48fbacb01114259ac935417298e87d328968728a7f4fe35b9b5ce9ff547a70e9  ./docs/VALIDATION.md
 ca743f17ff81ce8a825c02aad7d04a158c3e44794f7ad22d50ee5bfe45b32493  ./docs/history/P23.md
@@ -1791,7 +1791,7 @@ ca593eb38a125883f09502fc3083153e64aff21ec22f19f1348daf1fd328fe7d  ./results/p18b
 635a6ba635c677f8e483307f5e5189bfe5a01218cd5d4e8995424361f6772a12  ./results/p1_chain2.log
 32d0d3fbd8ef0f590e04331201d2a63be2b307794e3dc695c9c63318b1f0d22a  ./results/p1_chain3.log
 40033b975b59bebfd3b32d792814e1573455718d5567343da4986b118dfd92e6  ./results/p1_chain4.log
-2e2c170cfc15678b198934e20dabd8be867011a6bba5e28711169e3a4bcc6f60  ./results/p23_closure_check.json
+5ffd2f4e3781df77d23b7497e144a8bc89800219f942ef0843dea350d918687c  ./results/p23_closure_check.json
 52e063380d6d486ca38375c04013e13f394aa0964149a18bbe23b25e709e947e  ./results/p2_g4_run.log
 68a3a3ecf028930067145d68fdc5c0a4bcedc0a6c3627a35a244bdc9c1bdc7ed  ./results/p3_g2_controls.log
 e0a14216567ef84856146180077e946fed0bcaefa9de25715c3752a88f936e69  ./results/p3_g3_run_p1.log
