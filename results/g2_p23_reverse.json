@@ -1,0 +1,50 @@
+{
+ "binary": "/home/connoravila/Documents/actinv/target/release/actinv",
+ "checks": {
+  "absent_nuclide_rejected": true,
+  "coupled_mode_rejected": true,
+  "duplicate_measurement_rejected": true,
+  "feed_schedule_rejected": true,
+  "inconsistent_reports_chi_square": true,
+  "multi_nuclide_multi_step_recovers": true,
+  "nonpositive_sigma_rejected": true,
+  "python_reverse_parity": true,
+  "scalar_identity_hashes": true,
+  "scalar_recovers_known_multiplier": true,
+  "scalar_reports_residuals": true,
+  "segments_recover_known_multipliers": true,
+  "segments_report_condition_number": true,
+  "segments_report_se": true,
+  "underdetermined_segments_rejected": true,
+  "zero_column_segment_rejected": true,
+  "zero_sensitivity_rejected": true
+ },
+ "details": {
+  "multi": {
+   "chi_square": 1.0092793174693985e-22,
+   "dof": 5,
+   "estimate": 1.499999999999613,
+   "truth": 1.5
+  },
+  "scalar": {
+   "estimate": 1.4999999999995843,
+   "nuclide": "Mn56",
+   "truth": 1.5
+  },
+  "segments": {
+   "condition_number": 51.82052778232323,
+   "recovered": {
+    "1": 1.2999999999988197,
+    "3": 0.700000000000599
+   },
+   "truths": [
+    1.3,
+    0.7
+   ]
+  },
+  "zero_sensitivity_nuclide": "Ti46"
+ },
+ "pass": true,
+ "schema": "actinv-p23-g2-reverse-1",
+ "tolerance": 1e-12
+}

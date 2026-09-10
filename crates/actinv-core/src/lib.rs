@@ -9,6 +9,7 @@ pub mod photon;
 pub mod prune;
 pub mod quantity;
 pub mod radiological;
+pub mod reverse;
 pub mod run;
 pub mod sparse;
 pub mod spec;

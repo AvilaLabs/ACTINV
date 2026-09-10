@@ -447,6 +447,36 @@ pub fn main_from(a: Vec<String>) {
                 serde_json::to_string_pretty(&summary).expect("serialise import summary")
             );
         }
+        "reverse" => {
+            let mut args = a[2..].iter().filter(|arg| arg.as_str() != "--segments");
+            let (Some(problem), Some(measurements)) = (args.next(), args.next()) else {
+                die("usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]", 2);
+            };
+            let out = args.next();
+            if args.next().is_some() {
+                die("usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]", 2);
+            }
+            let segments = a[2..].iter().any(|arg| arg == "--segments");
+            let problem_text = read(problem);
+            let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
+            let measurements_text = read(measurements);
+            let result = actinv_core::reverse::solve(
+                &spec,
+                &problem_text,
+                &measurements_text,
+                segments,
+            )
+            .unwrap_or_else(|e| die(e, 1));
+            let text = serde_json::to_string_pretty(&result).expect("serialise reverse result");
+            match out {
+                Some(path) => {
+                    std::fs::write(path, format!("{text}\n"))
+                        .unwrap_or_else(|e| die(format!("Cannot write {path}: {e}"), 1));
+                    println!("wrote {path}");
+                }
+                None => println!("{text}"),
+            }
+        }
         "mesh" => {
             if a.len() != 4 {
                 die(USAGE, 2);

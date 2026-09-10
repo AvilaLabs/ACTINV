@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Independent checker for the P23 G1 feed/removal gate.
+"""Independent checker for the P23 G2 reverse-calculation gate.
 
 Imports no ACTINV production, audit or scoring module. Verifies the frozen
 protocol hash, the opening-commit ancestry, the prior verdict record, and the
-feed/removal battery evidence produced by controls/p23_feed_removal.py. With
+reverse battery evidence produced by controls/p23_reverse.py. With
 ``--self-test`` it mutates a copy of the evidence and proves rejection.
 """
 from __future__ import annotations
@@ -20,35 +20,30 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/ACTINV-P23_PROTOCOL.md"
-EVIDENCE = ROOT / "results/g1_p23_feed_removal.json"
-OUTPUT = ROOT / "results/g1_p23_check.json"
+EVIDENCE = ROOT / "results/g2_p23_reverse.json"
+OUTPUT = ROOT / "results/g2_p23_check.json"
 
 PROTOCOL_SHA256 = "fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5"
 OPENING_COMMIT = "325f20704ead9bda1dd5eac3523a1d7b574c3537"
 
 EXPECTED_CHECKS = {
-    "feed_decaying_matches_analytic",
-    "feed_stable_matches_analytic",
-    "feed_daughter_matches_analytic",
-    "dense_expm_agrees_feed",
-    "removal_state_matches",
-    "removal_sink_matches",
-    "removal_daughter_matches",
-    "removal_conserves_atoms",
-    "element_removal_dense_agrees",
-    "reservoir_exempt_ledgered",
-    "exempt_sink_matches_dense",
-    "irradiated_feed_conserves_fed_atoms",
-    "feed_split_invariant",
-    "empty_maps_byte_identical",
-    "empty_maps_omit_sink_field",
-    "feed_element_key_rejected",
-    "feed_unknown_nuclide_rejected",
-    "removal_absent_nuclide_rejected",
-    "negative_removal_rejected",
-    "nan_feed_rejected",
-    "python_surface_agrees",
-    "mesh_surface_agrees",
+    "scalar_recovers_known_multiplier",
+    "scalar_identity_hashes",
+    "scalar_reports_residuals",
+    "multi_nuclide_multi_step_recovers",
+    "segments_recover_known_multipliers",
+    "segments_report_condition_number",
+    "segments_report_se",
+    "inconsistent_reports_chi_square",
+    "underdetermined_segments_rejected",
+    "coupled_mode_rejected",
+    "absent_nuclide_rejected",
+    "zero_sensitivity_rejected",
+    "feed_schedule_rejected",
+    "duplicate_measurement_rejected",
+    "nonpositive_sigma_rejected",
+    "zero_column_segment_rejected",
+    "python_reverse_parity",
 }
 
 EXPECTED_VERDICTS = {
@@ -93,8 +88,8 @@ def git(*args: str) -> str:
 
 
 def check_evidence(evidence: dict, failures: list[str]) -> None:
-    if evidence.get("schema") != "actinv-p23-g1-feed-removal-1":
-        failures.append("evidence schema is not actinv-p23-g1-feed-removal-1")
+    if evidence.get("schema") != "actinv-p23-g2-reverse-1":
+        failures.append("evidence schema is not actinv-p23-g2-reverse-1")
     checks = evidence.get("checks")
     if not isinstance(checks, dict):
         failures.append("evidence has no checks map")
@@ -107,16 +102,14 @@ def check_evidence(evidence: dict, failures: list[str]) -> None:
     for name, value in checks.items():
         if value is not True:
             failures.append(f"check {name} is {value!r}, expected true")
-    # Re-derive the recorded pass flag; a mutation that keeps the flag while
-    # dropping a check is rejected here.
     if evidence.get("pass") != (set(checks) == EXPECTED_CHECKS and all(checks.values())):
         failures.append("recorded pass flag inconsistent with the check map")
     tolerance = evidence.get("tolerance")
-    if not isinstance(tolerance, (int, float)) or tolerance > 1e-8:
-        failures.append(f"comparison tolerance {tolerance!r} looser than 1e-8")
+    if not isinstance(tolerance, (int, float)) or tolerance > 1e-11:
+        failures.append(f"recovery tolerance {tolerance!r} looser than 1e-11")
     details = evidence.get("details")
-    if not isinstance(details, dict) or "case_feed" not in details or "case_removal" not in details:
-        failures.append("evidence lacks the feed and removal detail blocks")
+    if not isinstance(details, dict) or "scalar" not in details or "segments" not in details:
+        failures.append("evidence lacks the scalar and segments detail blocks")
 
 
 def run_checks() -> dict:
@@ -144,11 +137,11 @@ def run_checks() -> dict:
         if verdict != expected:
             failures.append(f"{name} verdict {verdict!r} != expected {expected!r}")
     if not EVIDENCE.exists():
-        failures.append("feed/removal battery evidence is missing")
+        failures.append("reverse battery evidence is missing")
     else:
         check_evidence(json.loads(EVIDENCE.read_text(encoding="utf-8")), failures)
     return {
-        "schema": "actinv-p23-g1-check-1",
+        "schema": "actinv-p23-g2-check-1",
         "protocol_sha256": observed_protocol,
         "head_commit": head,
         "opening_commit": OPENING_COMMIT,
@@ -161,20 +154,22 @@ def run_checks() -> dict:
 def self_test() -> None:
     evidence = json.loads(EVIDENCE.read_text(encoding="utf-8"))
     mutations = {
-        "check_flip": lambda v: v["checks"].__setitem__("feed_decaying_matches_analytic", False),
-        "check_drop": lambda v: v["checks"].pop("removal_sink_matches"),
+        "check_flip": lambda v: v["checks"].__setitem__(
+            "scalar_recovers_known_multiplier", False
+        ),
+        "check_drop": lambda v: v["checks"].pop("python_reverse_parity"),
         "pass_flag_flip": lambda v: (
-            v["checks"].__setitem__("feed_stable_matches_analytic", False),
+            v["checks"].__setitem__("segments_recover_known_multipliers", False),
             v.__setitem__("pass", True),
         ),
-        "schema_rename": lambda v: v.__setitem__("schema", "actinv-p23-g1-feed-removal-0"),
-        "tolerance_loosen": lambda v: v.__setitem__("tolerance", 1e-3),
+        "schema_rename": lambda v: v.__setitem__("schema", "actinv-p23-g2-reverse-0"),
+        "tolerance_loosen": lambda v: v.__setitem__("tolerance", 1e-6),
     }
     rejected = []
     for name, mutate in mutations.items():
         candidate = copy.deepcopy(evidence)
         mutate(candidate)
-        with tempfile.TemporaryDirectory(prefix="actinv-p23-g1-selftest-") as directory:
+        with tempfile.TemporaryDirectory(prefix="actinv-p23-g2-selftest-") as directory:
             planted = Path(directory) / "planted.json"
             planted.write_text(json.dumps(candidate), encoding="utf-8")
             failures: list[str] = []

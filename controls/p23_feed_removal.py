@@ -10,6 +10,7 @@ far tighter, so this bound is conservative.
 from __future__ import annotations
 
 import hashlib
+import importlib.util
 import json
 import math
 import os
@@ -105,6 +106,14 @@ def lambda_of(entry: dict) -> float:
     if entry["stable"]:
         return 0.0
     return math.log(2.0) / entry["half_life_s"]
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def run_actinv(spec: dict, work: Path, env: dict[str, str], name: str) -> dict:
@@ -387,6 +396,91 @@ def main() -> None:
         b.pop("ms")
         checks["empty_maps_byte_identical"] = a == b
         checks["empty_maps_omit_sink_field"] = "removed_atoms_per_g" not in b["steps"][0]
+
+        # ---- CLI, Python and mesh surfaces agree exactly on a feed/removal spec
+        surface_spec = base_spec("p23-g1 surfaces")
+        surface_spec["schedule"] = [
+            {"dt": "1e6 s", "flux": 0.0, "feed": {"Co60": 3.0e9}},
+            {"dt": "1e6 s", "flux": 0.0, "removal": {"Co60": 2.0e-9}},
+        ]
+        cli = run_actinv(surface_spec, work, env, "case_surfaces")
+        # Python extension: build the same schedule through the object API
+        py_lib = Path(
+            os.environ.get(
+                "ACTINV_PYTHON_LIBRARY", ROOT / "python/target/release/libactinv.so"
+            )
+        )
+        module_spec = importlib.util.spec_from_file_location("actinv", py_lib)
+        module = importlib.util.module_from_spec(module_spec)
+        module_spec.loader.exec_module(module)
+        problem = module.Problem(json.loads(json.dumps(surface_spec)))
+        problem["schedule"] = module.Schedule()
+        problem["schedule"].cool("1e6 s", feed={"Co60": 3.0e9})
+        problem["schedule"].cool("1e6 s").remove({"Co60": 2.0e-9})
+        py_result = json.loads(module.run(problem.to_json()))
+        # The mesh surface: one cell fed by a canonical flux import of the zero spectrum
+        fluxes = work / "fluxes"
+        values = surface_spec["spectrum"]["flux_per_group"]
+        fluxes.write_text(
+            "\n".join(
+                " ".join(str(v) for v in values[i : i + 6])
+                for i in range(0, len(values), 6)
+            )
+            + "\n0.5\np23 g1 cell\n",
+            encoding="utf-8",
+        )
+        canonical_flux = work / "flux.ndjson"
+        completed = subprocess.run(
+            [str(ACTINV), "import-flux", "fispact", str(fluxes), str(canonical_flux),
+             "--groups", str(ROOT / "crates/actinv-data/data/fispact_709_groups.json")],
+            cwd=ROOT, env=env, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120, check=False,
+        )
+        if completed.returncode:
+            raise RuntimeError(f"import-flux failed: {completed.stderr[-4000:]}")
+        mesh_specification = {
+            k: v for k, v in surface_spec.items() if k != "spectrum"
+        }
+        mesh_specification["spec"] = "actinv-mesh-spec-1"
+        mesh_specification["flux"] = {
+            "path": str(canonical_flux),
+            "sha256": sha256_file(canonical_flux),
+        }
+        mesh_spec_path = work / "mesh.json"
+        mesh_spec_path.write_text(
+            json.dumps(mesh_specification, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        mesh_out = work / "mesh_result.ndjson"
+        completed = subprocess.run(
+            [str(ACTINV), "mesh", str(mesh_spec_path), str(mesh_out)],
+            cwd=ROOT, env=env, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=600, check=False,
+        )
+        if completed.returncode:
+            raise RuntimeError(f"actinv mesh failed: {completed.stderr[-4000:]}")
+        cells = [
+            json.loads(line)["result"]
+            for line in mesh_out.read_text(encoding="utf-8").splitlines()
+            if json.loads(line).get("record") == "cell"
+        ]
+        if len(cells) != 1:
+            raise RuntimeError("expected one mesh cell result")
+
+        def step_fields(result: dict):
+            return [
+                {
+                    "inventory": sorted(
+                        (n["nuclide"], n["atoms_per_g"])
+                        for n in step["inventory"]
+                    ),
+                    "removed": step.get("removed_atoms_per_g"),
+                    "activity": step["activity_Bq_per_g"],
+                }
+                for step in result["steps"]
+            ]
+
+        checks["python_surface_agrees"] = step_fields(cli) == step_fields(py_result)
+        checks["mesh_surface_agrees"] = step_fields(cli) == step_fields(cells[0])
 
         # ---- named refusals
         def expect_error(spec: dict, needle: str, name: str) -> bool:

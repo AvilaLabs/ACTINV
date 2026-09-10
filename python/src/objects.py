@@ -143,8 +143,26 @@ def solve(problem):
 
 
 run_json = run
+reverse_json = reverse
+
+
+def reverse(problem, measurements, *, segments=False):
+    """Estimate flux multipliers from measured activities (trace regime).
+
+    `measurements` is a mapping or a path to an actinv-reverse-input-1 file.
+    With segments=True each irradiation step gets an independent multiplier.
+    """
+    if isinstance(problem, (_os.PathLike, str)):
+        problem = Problem.from_file(problem)
+    elif not isinstance(problem, Problem):
+        problem = Problem(problem)
+    if isinstance(measurements, (_os.PathLike, str)):
+        measurements = _json.loads(_Path(measurements).read_text(encoding="utf-8"))
+    return Result(_json.loads(reverse_json(
+        problem.to_json(), _json.dumps(measurements, allow_nan=False), segments)))
 
 # Maturin's top-level package re-exports the extension using __all__. PyO3
 # registers native functions there, but dynamically defined classes need exports too.
 __all__ = ["__version__", "_cli", "cram_step", "broaden", "run", "run_json",
-           "validate", "Material", "Spectrum", "Schedule", "Problem", "Result", "solve"]
+           "reverse", "reverse_json", "validate", "Material", "Spectrum",
+           "Schedule", "Problem", "Result", "solve"]

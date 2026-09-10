@@ -73,6 +73,16 @@ fn run(spec_json: &str) -> PyResult<String> {
     serde_json::to_string(&r).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
 
+/// reverse(problem_json: str, measurements_json: str, segments: bool) -> str
+/// Flux estimation from measured activities in the linear regime.
+#[pyfunction]
+fn reverse(problem_json: &str, measurements_json: &str, segments: bool) -> PyResult<String> {
+    let spec = Spec::from_json(problem_json).map_err(pyo3::exceptions::PyValueError::new_err)?;
+    let result = actinv_core::reverse::solve(&spec, problem_json, measurements_json, segments)
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+    serde_json::to_string(&result).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
+}
+
 /// validate(spec_json: str) -> str — parse and validate without solving.
 #[pyfunction]
 fn validate(spec_json: &str) -> PyResult<String> {
@@ -92,6 +102,7 @@ fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(cram_step, m)?)?;
     m.add_function(wrap_pyfunction!(broaden, m)?)?;
     m.add_function(wrap_pyfunction!(run, m)?)?;
+    m.add_function(wrap_pyfunction!(reverse, m)?)?;
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(_example_json, m)?)?;
     let code =
