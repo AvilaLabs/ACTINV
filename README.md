@@ -100,8 +100,8 @@ actinv run problem.json result.json
 
 `actinv new` creates the complete FNS iron example, including its spectrum, without overwriting an existing file.
 Use `--data-dir /path/to/actinv-data` if you installed data elsewhere. Edit its material and history for your study.
-`validate` checks the specification and readable inputs (including library indexes); `--schema` checks only the
-specification and `--hashes` also checks declared hashes. Evaluated-data compatibility is checked during a run.
+`validate` checks the specification without requiring downloaded data. Add `--files` to check readable inputs
+(including library indexes), or `--hashes` to also check declared hashes. Evaluated-data compatibility is checked during a run.
 Use `actinv doctor problem.json` to diagnose setup and `actinv COMMAND --help` for command help.
 
 The same calculation from Python is:

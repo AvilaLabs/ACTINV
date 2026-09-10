@@ -382,7 +382,7 @@ pub fn main_from(a: Vec<String>) {
     if a.len() == 3 && matches!(a[2].as_str(), "--help" | "-h") {
         match a[1].as_str() {
             "run" => println!("usage: actinv run SPEC.json [OUT.json]\nRelative input paths use the current working directory. The solver verifies data and hashes.\nOmit OUT.json to write full JSON to stdout."),
-            "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check schema and readable input files, including library indexes.\n--schema checks only the specification. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
+            "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check the specification without requiring downloaded data.\n--files also checks readable input files and library indexes. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
             "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nData defaults to ./actinv-data; references are saved as absolute paths.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
             "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
             _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
@@ -470,7 +470,7 @@ pub fn main_from(a: Vec<String>) {
                 .map(|started| started.elapsed().as_secs_f64() * 1e3)
                 .unwrap_or(0.0);
             if a[1] == "validate" {
-                let level = a.get(3).map(String::as_str).unwrap_or("--files");
+                let level = a.get(3).map(String::as_str).unwrap_or("--schema");
                 if a.len() > 4 || !matches!(level, "--schema" | "--files" | "--hashes") {
                     die(
                         "usage: actinv validate SPEC.json [--schema|--files|--hashes]",
