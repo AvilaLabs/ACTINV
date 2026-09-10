@@ -359,3 +359,9 @@ part that does not compress: users, issues, and the validation record accumulati
   probe differs by zero ULP on the generated queries, and unmodified pinned IAEA CHECKR/FIZCON agrees on six MF9/10
   inside/boundary/outside fixtures. The independent checker regenerates every official tape and rejects seven
   mutations. Production, measurements and v1.0.1 remain unchanged; G2 starts only after this checkpoint is green.
+- 2026-09-10 — the maintainer directed closing the CB1 demand-led capability gaps now rather than after the
+  post-v1 sequence: P23 (continuous feed/removal, reverse calculation, damage observables) opens under frozen
+  protocol `fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5`. P18b remains open — G0/G1 committed
+  and green, G2 controls staged but uncommitted since 2026-08-29 — and the one-phase-at-a-time rule is relaxed for
+  this ordering by explicit direction; P18b's gates, seals and staged controls are unchanged and nothing in P23
+  reads or depends on P18b evidence. P19–P22 remain scheduled behind it.
