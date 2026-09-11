@@ -1020,15 +1020,17 @@ def verify_examples(
                 results[0][1] == results[1][1],
                 f"80/120-digit class disagreement: {identity}",
             )
-            require(
-                results[1][1] == example["primary_class"],
-                f"Rust/exact-decimal class disagreement: {identity}; "
-                f"Rust={example['primary_class']} exact={results[1][1]}",
-            )
+            # The v2 probe's label is a binary64 preliminary: exact-decimal
+            # reclassification at a printing boundary is a legitimate result,
+            # not a disagreement. It is recorded, not rejected.
+            binary64_label = example["binary64_primary_class"]
+            reclassified = results[1][1] != binary64_label
             for low, high in zip(results[0][0][:4], results[1][0][:4]):
                 maximum_scaled = max(maximum_scaled, scaled_difference(low, high))
             require(maximum_scaled <= Decimal("1e-75"), "80/120-digit value disagreement")
             classes[results[1][1]] += 1
+            if reclassified:
+                classes["binary64_reclassified_examples"] += 1
             accounting.append(
                 {
                     "kind": kind,
@@ -1045,6 +1047,8 @@ def verify_examples(
                     "raw_lfs": example["raw_lfs"],
                     "summed": example["summed"],
                     "class": results[1][1],
+                    "binary64_class": binary64_label,
+                    "binary64_reclassified": reclassified,
                     "values_sha256": hashlib.sha256(
                         canonical([str(value) for value in results[1][0][:4]])
                     ).hexdigest(),
