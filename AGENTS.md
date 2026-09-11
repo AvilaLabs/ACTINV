@@ -25,3 +25,9 @@ memory on 2026-09-10. These rules apply to all agents working in this checkout:
 
 These are local workstation protections, not replacements for CI or scientific
 qualification. Never claim that an unexecuted check passed.
+
+# Commit policy
+
+Strict no-AI-authorship: commits carry plain messages only — never add
+"Generated with", "Co-Authored-By", or any agent/tool attribution trailers,
+names, or links. Author and committer stay the repo owner's identity.
