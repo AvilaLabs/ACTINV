@@ -4,8 +4,7 @@
 
 - `protocols/ACTINV-P19_PROTOCOL.md`
 - sha256 `8ee3d561fec513b3038fcbabfc8b57a6cce25e36c992f2af311afb6740acce16`
-- Opening commit `d463d57db4bcd87715eaf0d2082d07a71ec36424` (post-rewrite; the
-  rewritten history removed Devin attribution trailers — content unchanged)
+- Opening commit `d463d57db4bcd87715eaf0d2082d07a71ec36424`
 
 ## Scope
 
