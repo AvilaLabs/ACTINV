@@ -1,0 +1,35 @@
+{
+ "materials": {
+  "Ag107": {
+   "cells": 420,
+   "deep_sigma0_max": 0.5982759476593561,
+   "factor_cells": 378,
+   "factor_max_relative_deviation": 0.6535321020486429,
+   "factor_rms_relative_deviation": 0.0726296524905746,
+   "inf_sigma0_max": 0.6561181734051268,
+   "max_relative_deviation": 0.6561181734051268,
+   "rms_relative_deviation": 0.1477017883951965
+  },
+  "Fe56": {
+   "cells": 300,
+   "deep_sigma0_max": 1.5487223089670314,
+   "factor_cells": 270,
+   "factor_max_relative_deviation": 0.6524163281996089,
+   "factor_rms_relative_deviation": 0.10464760279946517,
+   "inf_sigma0_max": 1.5766558955138337,
+   "max_relative_deviation": 1.5766558955138337,
+   "rms_relative_deviation": 0.719377898068139
+  },
+  "W186": {
+   "cells": 300,
+   "deep_sigma0_max": 1.5622830370480292,
+   "factor_cells": 270,
+   "factor_max_relative_deviation": 1.4550212521783294,
+   "factor_rms_relative_deviation": 0.24130563658306262,
+   "inf_sigma0_max": 0.511006122550671,
+   "max_relative_deviation": 1.5622830370480292,
+   "rms_relative_deviation": 0.26301931356990554
+  }
+ },
+ "schema": "avila.actinv/p19-fendl-sanity/v1"
+}

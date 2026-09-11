@@ -6,13 +6,15 @@
     "compare-script",
     "purr-result",
     "shield-table",
-    "tolerances"
+    "tolerances",
+    "groupr-result"
   ],
   "arguments": [
     { "kind": "input_path", "input_slot": "compare-script" },
     { "kind": "input_path", "input_slot": "purr-result" },
     { "kind": "input_path", "input_slot": "shield-table" },
     { "kind": "input_path", "input_slot": "tolerances" },
+    { "kind": "input_path", "input_slot": "groupr-result" },
     { "kind": "output_path", "output_id": "comparison" }
   ],
   "outputs": [
@@ -29,11 +31,19 @@
     { "model": "exact", "output_slot": "dev-nb93", "output_id": "comparison", "pointer": "/materials/Nb-93/max_relative_deviation", "unit": "1" },
     { "model": "exact", "output_slot": "dev-u238", "output_id": "comparison", "pointer": "/materials/U-238/max_relative_deviation", "unit": "1" },
     { "model": "exact", "output_slot": "dev-fe056", "output_id": "comparison", "pointer": "/materials/Fe-56/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "group-dev-w186", "output_id": "comparison", "pointer": "/materials/W-186/group_comparison/rate_channel_full_coverage_max", "unit": "1" },
+    { "model": "exact", "output_slot": "group-dev-ag107", "output_id": "comparison", "pointer": "/materials/Ag-107/group_comparison/rate_channel_full_coverage_max", "unit": "1" },
+    { "model": "exact", "output_slot": "group-dev-ta181", "output_id": "comparison", "pointer": "/materials/Ta-181/group_comparison/rate_channel_full_coverage_max", "unit": "1" },
+    { "model": "exact", "output_slot": "group-dev-nb93", "output_id": "comparison", "pointer": "/materials/Nb-93/group_comparison/rate_channel_full_coverage_max", "unit": "1" },
+    { "model": "exact", "output_slot": "group-dev-u238", "output_id": "comparison", "pointer": "/materials/U-238/group_comparison/rate_channel_full_coverage_max", "unit": "1" },
+    { "model": "exact", "output_slot": "group-dev-fe056", "output_id": "comparison", "pointer": "/materials/Fe-56/group_comparison/rate_channel_full_coverage_max", "unit": "1" },
     { "model": "exact", "output_slot": "infinite-dilution-dev", "output_id": "comparison", "pointer": "/infinite_dilution_max_dev", "unit": "1" },
     { "model": "categorical", "output_slot": "all-covered", "output_id": "comparison", "pointer": "/all_covered", "allowed_values": ["covered"] }
   ],
   "timeout_ms": 300000,
   "limitations": [
-    "The comparator owns only arithmetic deviation computation; the scientific choice of which (sigma0, T, MT) cells enter the metric is fixed by the frozen tolerances input and the comparison script."
+    "The comparator owns only arithmetic deviation computation; the scientific choice of which (sigma0, T, MT) cells enter the metric is fixed by the frozen tolerances input and the comparison script.",
+    "Group deviations are gated on fully-covered groups on the rate channels (capture, fission); total and elastic carry the GROUPR (sigma_pot+sigma0)/(sigma_t+sigma0) weight convention whose dip amplification differs from the artifact's and are reported, not gated.",
+    "Partially-covered edge groups whose uncovered sliver sits inside a resolved range carry the declared resolved-region non-claim and are reported, not gated."
   ]
 }

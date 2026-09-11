@@ -1,0 +1,17 @@
+{
+ "schema": "actinv-p19-g3-rates-1",
+ "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+ "checks": {
+  "ta181_heldout_deep_rate_moves": true,
+  "sigma0_inf_reproduces_baseline": true,
+  "mesh_parity_rate_ratio": true
+ },
+ "details": {
+  "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+  "ta182_ratio_sigma0_0.1": 0.8360764698883714,
+  "w187_ratio_spec_surface": 0.7232523287566518,
+  "w187_ratio_mesh_surface": 0.7232523287566518
+ },
+ "wall_seconds": 10.1,
+ "pass": true
+}

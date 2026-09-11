@@ -1,239 +1,524 @@
 {
-  "schema_version": "avila.core/case-package/v0.1-draft",
-  "case_id": "case-p19.actinv-self-shielding",
-  "title": "ACTINV P19 finite-dilution self-shielding oracle campaign",
-  "documents": [
+ "schema_version": "avila.core/case-package/v0.1-draft",
+ "case_id": "case-p19.actinv-self-shielding",
+ "title": "ACTINV P19 finite-dilution self-shielding oracle campaign",
+ "documents": [
+  {
+   "document_id": "case-p19-contract",
+   "role": "contract",
+   "path": "contract.json",
+   "sha256": "sha256:716c5ed9993cee5cd145049baf772ed299ad804cd1546485955f1eef9536a56d"
+  },
+  {
+   "document_id": "case-p19-registry",
+   "role": "registry",
+   "path": "registry.json",
+   "sha256": "sha256:5dc2ede74f700e5cda41911e03e816df187624b97fd1477aabb68f3a040d4a31"
+  },
+  {
+   "document_id": "case-p19-claims",
+   "role": "claims",
+   "path": "claims.json",
+   "sha256": "sha256:4c6fb52fa52eb61e48c2355a481147c1b2199147d0bd90b25bf6854c74bb7a40"
+  },
+  {
+   "document_id": "avila-labs.actinv/njoy-purr-extract@1",
+   "role": "external_checker_adapter",
+   "path": "adapter_purr.json",
+   "sha256": "sha256:89e8b2bf6b5ca09fdc150585daa6940ea32c5793aa2385fcc145215ac6e6528f"
+  },
+  {
+   "document_id": "avila-labs.actinv/build-shield-table@1",
+   "role": "external_checker_adapter",
+   "path": "adapter_shield.json",
+   "sha256": "sha256:196e28a1ca96e7ea9ab584b62e8159c669c51a43f1d063f897c98c3817e92aa1"
+  },
+  {
+   "document_id": "avila-labs.actinv/shield-compare@1",
+   "role": "external_checker_adapter",
+   "path": "adapter_compare.json",
+   "sha256": "sha256:ff2ba5308356519d81a9a620f6da590484c407d2adde032071637f532f66d2e6"
+  },
+  {
+   "document_id": "case-p19-njoy-purr-receipt",
+   "role": "execution_receipt",
+   "path": "receipts/njoy-purr.json",
+   "sha256": "sha256:8275c45ffa4138410ec0946b4d65adb5ff80c57e3905fc97dfc15fdfac870e35",
+   "step_id": "njoy-purr"
+  },
+  {
+   "document_id": "case-p19-expected-campaign",
+   "role": "expected_campaign_report",
+   "path": "campaign-report.json",
+   "sha256": "sha256:1eb4aeb0e44d5efc03e30dbd92d39dbe3bfe4760cbab20d8d55645ecd9bac076"
+  },
+  {
+   "document_id": "avila-labs.actinv/njoy-groupr-extract@1",
+   "role": "external_checker_adapter",
+   "path": "adapter_groupr.json",
+   "sha256": "sha256:33dfaca7227a99e330e293e8471a98e8275fa3c058d4cc28ddb704f29ee710c1"
+  }
+ ],
+ "artifacts": [
+  {
+   "artifact_id": "purr-driver",
+   "evidence_ids": [
+    "input:purr-driver"
+   ],
+   "path": "tools/njoy_purr_extract.py",
+   "sha256": "sha256:176d6d6048b7a5617fbc4cc0956ed9cd94f704a4c961f3c7eaa3e8a9a3e9012b",
+   "source_root": "p19-case"
+  },
+  {
+   "artifact_id": "materials-manifest",
+   "evidence_ids": [
+    "input:materials-manifest"
+   ],
+   "path": "inputs/materials.json",
+   "sha256": "sha256:49ef22e992d312e892137dddf92a308d82c14e3965a0004bd16269fe380c6d86",
+   "source_root": "p19-case"
+  },
+  {
+   "artifact_id": "eval-w186",
+   "evidence_ids": [
+    "input:eval-w186"
+   ],
+   "source_root": "nuclear-data",
+   "path": "tendl-2025/files/n/n-W186.tendl",
+   "sha256": "sha256:ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083"
+  },
+  {
+   "artifact_id": "eval-ag107",
+   "evidence_ids": [
+    "input:eval-ag107"
+   ],
+   "source_root": "nuclear-data",
+   "path": "tendl-2025/files/n/n-Ag107.tendl",
+   "sha256": "sha256:63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647"
+  },
+  {
+   "artifact_id": "eval-ta181",
+   "evidence_ids": [
+    "input:eval-ta181"
+   ],
+   "source_root": "nuclear-data",
+   "path": "tendl-2025/files/n/n-Ta181.tendl",
+   "sha256": "sha256:c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608"
+  },
+  {
+   "artifact_id": "eval-nb93",
+   "evidence_ids": [
+    "input:eval-nb93"
+   ],
+   "source_root": "nuclear-data",
+   "path": "tendl-2025/files/n/n-Nb093.tendl",
+   "sha256": "sha256:e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109"
+  },
+  {
+   "artifact_id": "eval-u238",
+   "evidence_ids": [
+    "input:eval-u238"
+   ],
+   "source_root": "nuclear-data",
+   "path": "tendl-2025/files/n/n-U238.tendl",
+   "sha256": "sha256:394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c"
+  },
+  {
+   "artifact_id": "eval-fe056",
+   "evidence_ids": [
+    "input:eval-fe056"
+   ],
+   "source_root": "nuclear-data",
+   "path": "tendl-2025/files/n/n-Fe056.tendl",
+   "sha256": "sha256:f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+  },
+  {
+   "artifact_id": "group-structure",
+   "evidence_ids": [
+    "input:group-structure"
+   ],
+   "path": "crates/actinv-data/data/fispact_709_groups.json",
+   "sha256": "sha256:ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+   "source_root": "actinv-repo"
+  },
+  {
+   "artifact_id": "expected-purr-table",
+   "evidence_ids": [
+    "p19-purr-status",
+    "p19-purr-row-count"
+   ],
+   "source_root": "p19-case",
+   "path": "expected/purr_mt152.json",
+   "sha256": "sha256:d78f6110ee5e90d4ab6cb347285d0c3ee629750bf420923685da39bad1005c9c"
+  },
+  {
+   "artifact_id": "njoy-executable",
+   "evidence_ids": [
+    "input:njoy-executable"
+   ],
+   "source_root": "nuclear-data",
+   "path": "njoy2016.79-build/njoy",
+   "sha256": "sha256:57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+  },
+  {
+   "artifact_id": "groupr-driver",
+   "evidence_ids": [
+    "input:groupr-driver"
+   ],
+   "path": "tools/njoy_groupr_extract.py",
+   "source_root": "p19-case",
+   "sha256": "sha256:d1c7cc7554c73b898857c7dcd3997297a35b0ae1b2218331446940148aef2b54"
+  },
+  {
+   "artifact_id": "shield-driver",
+   "evidence_ids": [
+    "input:shield-driver"
+   ],
+   "path": "tools/actinv_shield_build.py",
+   "source_root": "p19-case",
+   "sha256": "sha256:f1556dd6e465f889ebe3597f5243039dbe9ecbc93772f721e80dd3fb974d3265"
+  },
+  {
+   "artifact_id": "compare-script",
+   "evidence_ids": [
+    "input:compare-script"
+   ],
+   "path": "tools/shield_compare.py",
+   "source_root": "p19-case",
+   "sha256": "sha256:411d8f20449fc31023e6862f79e8675e3d46cf26e51783d7fc1599afecde0e8e"
+  },
+  {
+   "artifact_id": "fendl-sanity-tool",
+   "evidence_ids": [],
+   "path": "tools/fendl_sanity.py",
+   "source_root": "p19-case",
+   "sha256": "sha256:d1bc7f108fc49d89af2b4d099c3fc483b73bb39f8b88dce95467d197a379ccd6"
+  },
+  {
+   "artifact_id": "fendl-groups",
+   "evidence_ids": [],
+   "path": "inputs/fendl_211_groups.json",
+   "source_root": "p19-case",
+   "sha256": "sha256:bd2689a9d09c47ace97f82e4f3333d9a61f81951200ba352c175ad93eee85178"
+  },
+  {
+   "artifact_id": "tolerances",
+   "evidence_ids": [
+    "input:tolerances"
+   ],
+   "path": "inputs/tolerances.json",
+   "source_root": "p19-case",
+   "sha256": "sha256:70078970a2f4bd184df2523a9f5839ee2cb4ad4e9fe0c7bdf33830576de3f6a3"
+  },
+  {
+   "artifact_id": "actinv-executable",
+   "evidence_ids": [
+    "input:actinv-executable"
+   ],
+   "path": "target/release/actinv",
+   "source_root": "repo",
+   "sha256": "sha256:cc6dff94fa51de73f9db3cf7f937638e5c005e6536904b03b390d74c79f7a842"
+  },
+  {
+   "artifact_id": "groupr-result",
+   "evidence_ids": [],
+   "path": "results/g3_p19_groupr_gendf.json",
+   "source_root": "repo",
+   "sha256": "sha256:f3e3edca47ca9565bafd13d3b745265766ac699bcc73efe2f868ba9fc41b76ee"
+  },
+  {
+   "artifact_id": "shield-table",
+   "evidence_ids": [],
+   "path": "results/g1_p19_shield_artifact.json",
+   "source_root": "repo",
+   "sha256": "sha256:b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384"
+  },
+  {
+   "artifact_id": "comparison",
+   "evidence_ids": [],
+   "path": "results/g3_p19_compare.json",
+   "source_root": "repo",
+   "sha256": "sha256:546c1e247808f621a0efa9463ae832c88bb4c66b7821d00cbc94d2ff2a2bb00b"
+  },
+  {
+   "artifact_id": "limits",
+   "evidence_ids": [],
+   "path": "results/g3_p19_limits.json",
+   "source_root": "repo",
+   "sha256": "sha256:7f1522378f73de6d7f9658d02b2f8e0b114d5676ac863c6ce9457fc3b083c75f"
+  },
+  {
+   "artifact_id": "rates",
+   "evidence_ids": [],
+   "path": "results/g3_p19_rates.json",
+   "source_root": "repo",
+   "sha256": "sha256:786efc538685248e7c066e12df8b9033e02379df8216f4175d240271eb043c79"
+  },
+  {
+   "artifact_id": "fendl-sanity",
+   "evidence_ids": [],
+   "path": "results/g3_p19_fendl_sanity.json",
+   "source_root": "repo",
+   "sha256": "sha256:85d59c05bb300257c8342cd9a29132184c9d2673133602e06bfa7dce24a2f147"
+  }
+ ],
+ "capabilities": [
+  {
+   "capability_id": "python3",
+   "package_id": "org.python/cpython@3.14.4",
+   "executable_sha256": "sha256:52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41"
+  },
+  {
+   "capability_id": "njoy",
+   "package_id": "org.njoy/njoy2016.79@local-build",
+   "executable_sha256": "sha256:57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+  },
+  {
+   "capability_id": "actinv",
+   "package_id": "avila-labs.actinv/actinv@1.0.1-p19-candidate",
+   "executable_sha256": "sha256:cc6dff94fa51de73f9db3cf7f937638e5c005e6536904b03b390d74c79f7a842"
+  }
+ ],
+ "executions": [
+  {
+   "step_id": "njoy-purr",
+   "adapter": "avila-labs.actinv/njoy-purr-extract@1",
+   "capability_id": "python3",
+   "inputs": [
     {
-      "document_id": "case-p19-contract",
-      "role": "contract",
-      "path": "contract.json",
-      "sha256": "sha256:becd620902923c0d3fc0fa0dc4b7882e89f6e6237c0fb5dc76221ff53bc0fb0c"
+     "input_slot": "driver-script",
+     "workspace_path": "tools/njoy_purr_extract.py"
     },
     {
-      "document_id": "case-p19-registry",
-      "role": "registry",
-      "path": "registry.json",
-      "sha256": "sha256:3d90215a2334c03adb8976b47522214bde99a1f684b27fa2fc5dbe816596e264"
+     "input_slot": "materials-manifest",
+     "workspace_path": "inputs/materials.json"
     },
     {
-      "document_id": "case-p19-claims",
-      "role": "claims",
-      "path": "claims.json",
-      "sha256": "sha256:4c6fb52fa52eb61e48c2355a481147c1b2199147d0bd90b25bf6854c74bb7a40"
+     "input_slot": "njoy-executable",
+     "workspace_path": "tools/njoy"
     },
     {
-      "document_id": "avila-labs.actinv/njoy-purr-extract@1",
-      "role": "external_checker_adapter",
-      "path": "adapter_purr.json",
-      "sha256": "sha256:89e8b2bf6b5ca09fdc150585daa6940ea32c5793aa2385fcc145215ac6e6528f"
+     "input_slot": "group-structure",
+     "workspace_path": "inputs/fispact_709_groups.json"
     },
     {
-      "document_id": "avila-labs.actinv/build-shield-table@1",
-      "role": "external_checker_adapter",
-      "path": "adapter_shield.json",
-      "sha256": "sha256:1f47b6e1df9d0810b49e025fad5b5340688fc886bc15e3cf752f07ae3df3c958"
+     "input_slot": "eval-w186",
+     "workspace_path": "evals/n-W186.tendl"
     },
     {
-      "document_id": "avila-labs.actinv/shield-compare@1",
-      "role": "external_checker_adapter",
-      "path": "adapter_compare.json",
-      "sha256": "sha256:731cd2a95039904c5fb252786841ebbcdc083fc03ba6848957bc20bfe0c19ec1"
+     "input_slot": "eval-ag107",
+     "workspace_path": "evals/n-Ag107.tendl"
     },
     {
-      "document_id": "case-p19-njoy-purr-receipt",
-      "role": "execution_receipt",
-      "path": "receipts/njoy-purr.json",
-      "sha256": "sha256:8275c45ffa4138410ec0946b4d65adb5ff80c57e3905fc97dfc15fdfac870e35",
-      "step_id": "njoy-purr"
+     "input_slot": "eval-ta181",
+     "workspace_path": "evals/n-Ta181.tendl"
     },
     {
-      "document_id": "case-p19-expected-campaign",
-      "role": "expected_campaign_report",
-      "path": "campaign-report.json",
-      "sha256": "sha256:1eb4aeb0e44d5efc03e30dbd92d39dbe3bfe4760cbab20d8d55645ecd9bac076"
+     "input_slot": "eval-nb93",
+     "workspace_path": "evals/n-Nb093.tendl"
+    },
+    {
+     "input_slot": "eval-u238",
+     "workspace_path": "evals/n-U238.tendl"
+    },
+    {
+     "input_slot": "eval-fe056",
+     "workspace_path": "evals/n-Fe056.tendl"
     }
-  ],
-  "artifacts": [
+   ],
+   "outputs": [
     {
-      "artifact_id": "purr-driver",
-      "evidence_ids": [
-        "input:purr-driver"
-      ],
-      "path": "tools/njoy_purr_extract.py",
-      "sha256": "sha256:176d6d6048b7a5617fbc4cc0956ed9cd94f704a4c961f3c7eaa3e8a9a3e9012b",
-      "source_root": "p19-case"
+     "output_slot": "purr-row-count",
+     "claim_id": "p19-purr-row-count"
     },
     {
-      "artifact_id": "materials-manifest",
-      "evidence_ids": [
-        "input:materials-manifest"
-      ],
-      "path": "inputs/materials.json",
-      "sha256": "sha256:49ef22e992d312e892137dddf92a308d82c14e3965a0004bd16269fe380c6d86",
-      "source_root": "p19-case"
-    },
-    {
-      "artifact_id": "eval-w186",
-      "evidence_ids": [
-        "input:eval-w186"
-      ],
-      "source_root": "nuclear-data",
-      "path": "tendl-2025/files/n/n-W186.tendl",
-      "sha256": "sha256:ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083"
-    },
-    {
-      "artifact_id": "eval-ag107",
-      "evidence_ids": [
-        "input:eval-ag107"
-      ],
-      "source_root": "nuclear-data",
-      "path": "tendl-2025/files/n/n-Ag107.tendl",
-      "sha256": "sha256:63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647"
-    },
-    {
-      "artifact_id": "eval-ta181",
-      "evidence_ids": [
-        "input:eval-ta181"
-      ],
-      "source_root": "nuclear-data",
-      "path": "tendl-2025/files/n/n-Ta181.tendl",
-      "sha256": "sha256:c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608"
-    },
-    {
-      "artifact_id": "eval-nb93",
-      "evidence_ids": [
-        "input:eval-nb93"
-      ],
-      "source_root": "nuclear-data",
-      "path": "tendl-2025/files/n/n-Nb093.tendl",
-      "sha256": "sha256:e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109"
-    },
-    {
-      "artifact_id": "eval-u238",
-      "evidence_ids": [
-        "input:eval-u238"
-      ],
-      "source_root": "nuclear-data",
-      "path": "tendl-2025/files/n/n-U238.tendl",
-      "sha256": "sha256:394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c"
-    },
-    {
-      "artifact_id": "eval-fe056",
-      "evidence_ids": [
-        "input:eval-fe056"
-      ],
-      "source_root": "nuclear-data",
-      "path": "tendl-2025/files/n/n-Fe056.tendl",
-      "sha256": "sha256:f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
-    },
-    {
-      "artifact_id": "group-structure",
-      "evidence_ids": [
-        "input:group-structure"
-      ],
-      "path": "crates/actinv-data/data/fispact_709_groups.json",
-      "sha256": "sha256:ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
-      "source_root": "actinv-repo"
-    },
-    {
-      "artifact_id": "expected-purr-table",
-      "evidence_ids": [
-        "p19-purr-status",
-        "p19-purr-row-count"
-      ],
-      "source_root": "p19-case",
-      "path": "expected/purr_mt152.json",
-      "sha256": "sha256:d78f6110ee5e90d4ab6cb347285d0c3ee629750bf420923685da39bad1005c9c"
-    },
-    {
-      "artifact_id": "njoy-executable",
-      "evidence_ids": [
-        "input:njoy-executable"
-      ],
-      "source_root": "nuclear-data",
-      "path": "njoy2016.79-build/njoy",
-      "sha256": "sha256:57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     "output_slot": "purr-status",
+     "claim_id": "p19-purr-status"
     }
-  ],
-  "capabilities": [
+   ]
+  },
+  {
+   "step_id": "njoy-groupr",
+   "adapter": "avila-labs.actinv/njoy-groupr-extract@1",
+   "capability_id": "python3",
+   "inputs": [
     {
-      "capability_id": "python3",
-      "package_id": "org.python/cpython@3.14.4",
-      "executable_sha256": "sha256:52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41"
+     "input_slot": "driver-script",
+     "workspace_path": "tools/njoy_groupr_extract.py"
     },
     {
-      "capability_id": "njoy",
-      "package_id": "org.njoy/njoy2016.79@local-build",
-      "executable_sha256": "sha256:57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+     "input_slot": "materials-manifest",
+     "workspace_path": "inputs/materials.json"
     },
     {
-      "capability_id": "actinv",
-      "package_id": "avila-labs.actinv/actinv@1.0.1-p19-candidate",
-      "executable_sha256": "sha256:6a23bef3abc7de77781cdaaf444770274f8d3c6b35d6956cac4ee2c2c3072a53"
-    }
-  ],
-  "executions": [
+     "input_slot": "njoy-executable",
+     "workspace_path": "tools/njoy"
+    },
     {
-      "step_id": "njoy-purr",
-      "adapter": "avila-labs.actinv/njoy-purr-extract@1",
-      "capability_id": "python3",
-      "inputs": [
-        {
-          "input_slot": "driver-script",
-          "workspace_path": "tools/njoy_purr_extract.py"
-        },
-        {
-          "input_slot": "materials-manifest",
-          "workspace_path": "inputs/materials.json"
-        },
-        {
-          "input_slot": "njoy-executable",
-          "workspace_path": "tools/njoy"
-        },
-        {
-          "input_slot": "group-structure",
-          "workspace_path": "inputs/fispact_709_groups.json"
-        },
-        {
-          "input_slot": "eval-w186",
-          "workspace_path": "evals/n-W186.tendl"
-        },
-        {
-          "input_slot": "eval-ag107",
-          "workspace_path": "evals/n-Ag107.tendl"
-        },
-        {
-          "input_slot": "eval-ta181",
-          "workspace_path": "evals/n-Ta181.tendl"
-        },
-        {
-          "input_slot": "eval-nb93",
-          "workspace_path": "evals/n-Nb093.tendl"
-        },
-        {
-          "input_slot": "eval-u238",
-          "workspace_path": "evals/n-U238.tendl"
-        },
-        {
-          "input_slot": "eval-fe056",
-          "workspace_path": "evals/n-Fe056.tendl"
-        }
-      ],
-      "outputs": [
-        {
-          "output_slot": "purr-row-count",
-          "claim_id": "p19-purr-row-count"
-        },
-        {
-          "output_slot": "purr-status",
-          "claim_id": "p19-purr-status"
-        }
-      ]
+     "input_slot": "group-structure",
+     "workspace_path": "inputs/fispact_709_groups.json"
+    },
+    {
+     "input_slot": "eval-w186",
+     "workspace_path": "evals/n-W186.tendl"
+    },
+    {
+     "input_slot": "eval-ag107",
+     "workspace_path": "evals/n-Ag107.tendl"
+    },
+    {
+     "input_slot": "eval-ta181",
+     "workspace_path": "evals/n-Ta181.tendl"
+    },
+    {
+     "input_slot": "eval-nb93",
+     "workspace_path": "evals/n-Nb093.tendl"
+    },
+    {
+     "input_slot": "eval-u238",
+     "workspace_path": "evals/n-U238.tendl"
+    },
+    {
+     "input_slot": "eval-fe056",
+     "workspace_path": "evals/n-Fe056.tendl"
     }
-  ],
-  "limitations": [
-    "This case is the development feedback loop for P19, not a release qualification: requirement verdicts measure agreement between ACTINV's deterministic processor and the NJOY oracle on the frozen test set.",
-    "NJOY2016.79 is an oracle, not a production dependency; its Monte Carlo output carries sampling noise absorbed by the declared tolerances.",
-    "Unresolved-region (MF=2 LRU=2) shielding only; resolved-region pointwise shielding, probability-table transport, and subgroup methods are outside the question."
-  ]
+   ],
+   "outputs": [
+    {
+     "output_slot": "gendf-table"
+    }
+   ]
+  },
+  {
+   "step_id": "actinv-shield",
+   "adapter": "avila-labs.actinv/build-shield-table@1",
+   "capability_id": "python3",
+   "inputs": [
+    {
+     "input_slot": "driver-script",
+     "workspace_path": "tools/actinv_shield_build.py"
+    },
+    {
+     "input_slot": "materials-manifest",
+     "workspace_path": "inputs/materials.json"
+    },
+    {
+     "input_slot": "actinv-executable",
+     "workspace_path": "tools/actinv"
+    },
+    {
+     "input_slot": "group-structure",
+     "workspace_path": "inputs/fispact_709_groups.json"
+    },
+    {
+     "input_slot": "eval-w186",
+     "workspace_path": "evals/n-W186.tendl"
+    },
+    {
+     "input_slot": "eval-ag107",
+     "workspace_path": "evals/n-Ag107.tendl"
+    },
+    {
+     "input_slot": "eval-ta181",
+     "workspace_path": "evals/n-Ta181.tendl"
+    },
+    {
+     "input_slot": "eval-nb93",
+     "workspace_path": "evals/n-Nb093.tendl"
+    },
+    {
+     "input_slot": "eval-u238",
+     "workspace_path": "evals/n-U238.tendl"
+    },
+    {
+     "input_slot": "eval-fe056",
+     "workspace_path": "evals/n-Fe056.tendl"
+    }
+   ],
+   "outputs": [
+    {
+     "output_slot": "table-format"
+    }
+   ]
+  },
+  {
+   "step_id": "shield-compare",
+   "adapter": "avila-labs.actinv/shield-compare@1",
+   "capability_id": "python3",
+   "inputs": [
+    {
+     "input_slot": "compare-script",
+     "workspace_path": "tools/shield_compare.py"
+    },
+    {
+     "input_slot": "purr-result",
+     "workspace_path": "expected/purr_mt152.json"
+    },
+    {
+     "input_slot": "shield-table",
+     "workspace_path": "outputs/shield_table.json"
+    },
+    {
+     "input_slot": "tolerances",
+     "workspace_path": "inputs/tolerances.json"
+    },
+    {
+     "input_slot": "groupr-result",
+     "workspace_path": "outputs/gendf_table.json"
+    }
+   ],
+   "outputs": [
+    {
+     "output_slot": "dev-w186"
+    },
+    {
+     "output_slot": "dev-ag107"
+    },
+    {
+     "output_slot": "dev-ta181"
+    },
+    {
+     "output_slot": "dev-nb93"
+    },
+    {
+     "output_slot": "dev-u238"
+    },
+    {
+     "output_slot": "dev-fe056"
+    },
+    {
+     "output_slot": "group-dev-w186"
+    },
+    {
+     "output_slot": "group-dev-ag107"
+    },
+    {
+     "output_slot": "group-dev-ta181"
+    },
+    {
+     "output_slot": "group-dev-nb93"
+    },
+    {
+     "output_slot": "group-dev-u238"
+    },
+    {
+     "output_slot": "group-dev-fe056"
+    },
+    {
+     "output_slot": "infinite-dilution-dev"
+    },
+    {
+     "output_slot": "all-covered"
+    }
+   ]
+  }
+ ],
+ "limitations": [
+  "This case is the development feedback loop for P19, not a release qualification: requirement verdicts measure agreement between ACTINV's deterministic processor and the NJOY oracle on the frozen test set.",
+  "NJOY2016.79 is an oracle, not a production dependency; its Monte Carlo output carries sampling noise absorbed by the declared tolerances.",
+  "Unresolved-region (MF=2 LRU=2) shielding only; resolved-region pointwise shielding, probability-table transport, and subgroup methods are outside the question.",
+  "The group qualification metric gates the rate channels (capture, fission) on fully-covered groups; total and elastic carry NJOY GROUPR's (sigma_pot+sigma0)/(sigma_t+sigma0) weight convention whose pointwise dip amplification differs from the artifact's binned convention \u2014 systematic mid-sigma0 excursions up to ~50% there are a documented method difference, not an implementation defect.",
+  "The sigma0=inf absolute cross-section column (inf_xs_max) exposes a real convention difference \u2014 the artifact's unshielded collapse uses ladder-statistics averages while GROUPR collapses the pointwise file (up to ~2x on Fe-56, U-238, Nb-93). The runtime does not consume that column: it scales the library's own unshielded xs by the factor.",
+  "The FENDL-3.2c sanity leg is coarse-only: a different evaluation version processed with iwt=11 weighting; it bounds gross error, not the qualification tolerance."
+ ]
 }

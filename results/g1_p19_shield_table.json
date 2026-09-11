@@ -1,8 +1,8 @@
 {
  "schema": "actinv-p19-g1-shield-1",
- "builder": "6 shielding targets, 0 evaluations without unresolved data, 6 cache hits, neutron /home/connoravila/Documents/actinv/target/p19_g1_stage/shield.json, sha256 e3ed6cc308db64f51ff42357407cdd0ec52a969755ef61ebe26ae653c24dd3be",
- "wall_seconds": 0.2,
- "artifact_sha256": "e3ed6cc308db64f51ff42357407cdd0ec52a969755ef61ebe26ae653c24dd3be",
+ "builder": "6 shielding targets, 0 evaluations without unresolved data, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p19_g1_stage/shield.json, sha256 b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+ "wall_seconds": 692.29,
+ "artifact_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
  "eval_sha256": {
   "W-186": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
   "Ag-107": "63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647",

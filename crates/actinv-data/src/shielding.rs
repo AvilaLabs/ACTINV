@@ -1731,6 +1731,22 @@ pub struct ShieldGroup {
     /// `shielded_b[channel][sigma0][temp]` = lethargy-collapsed Bondarenko
     /// cross sections over the covered segments (barns).
     pub shielded_b: Vec<Vec<Vec<f64>>>,
+    /// Lethargy mean of the smooth MF=3 section over the group's uncovered
+    /// part [total, elastic, fission, capture]; zero when fully covered.
+    pub background_b: [f64; 4],
+    /// `weight_mean[sigma0][temp]` — segment mean of the Bondarenko weight
+    /// w = sigma0/(sigma0+sigma_t) from the per-node probability tables.
+    pub weight_mean: Vec<Vec<f64>>,
+    /// `group_unshielded_b[channel]` = c·seg_inf + (1−c)·bkg — the model's
+    /// full-group infinite-dilution cross section.
+    pub group_unshielded_b: [f64; 4],
+    /// `group_shielded_b[channel][sigma0][temp]` — the full-group Bondarenko
+    /// cross section: covered segments carry the pointwise weight, the
+    /// uncovered part is suppressed by sigma0/(sigma0 + bkg_total).
+    pub group_shielded_b: Vec<Vec<Vec<f64>>>,
+    /// `group_factors[channel][sigma0][temp]` = group_shielded/group_unshielded;
+    /// 1.0 for channels whose unshielded group value vanishes.
+    pub group_factors: Vec<Vec<Vec<f64>>>,
 }
 
 fn lethargy_trapezoid(nodes: &[f64], values: &[f64], lo: f64, hi: f64) -> f64 {
@@ -1760,6 +1776,95 @@ fn lethargy_trapezoid(nodes: &[f64], values: &[f64], lo: f64, hi: f64) -> f64 {
     area / (hi.ln() - lo.ln())
 }
 
+/// Lethargy mean of one MF=3 section over [a,b]: trapezoid in ln(E) on the
+/// union of the interval edges and the table's knots inside it.
+fn mf3_lethargy_mean(
+    eval: &crate::activation::Evaluation,
+    mt: i32,
+    a: f64,
+    b: f64,
+) -> Result<f64, String> {
+    if a >= b {
+        return Ok(0.0);
+    }
+    let knots: Vec<f64> = match eval.mf3.get(&mt) {
+        Some(t) => {
+            let mut v: Vec<f64> = t.x.iter().copied().filter(|&e| e > a && e < b).collect();
+            v.insert(0, a);
+            v.push(b);
+            v
+        }
+        None => vec![a, b],
+    };
+    let mut area = 0.0;
+    for w in knots.windows(2) {
+        let (x0, x1) = (w[0], w[1]);
+        let y0 = mf3_at(eval, mt, x0)?;
+        let y1 = mf3_at(eval, mt, x1)?;
+        area += 0.5 * (y0 + y1) * (x1.ln() - x0.ln());
+    }
+    Ok(area / (b.ln() - a.ln()))
+}
+
+/// Per-node Bondarenko weight and weighted-moment helpers from the emitted
+/// probability table (conditional bin means). The table is stored pre-renorm,
+/// so each call first recovers PURR's emitted convention: the sigma_t and
+/// sigma_x columns are scaled by the ratios that put the sigma0=1e10 column
+/// exactly on the analytic infinite-dilution values. Nodes without a table
+/// use the smooth mean sigma_t.
+/// Returns (w_mean, xw_mean) = (<w>, <sigma_x*w>) at (sigma0, temp t).
+fn node_w_and_xw(
+    node: &ShieldNode,
+    channel: usize,
+    sig0: f64,
+    sig0_max: f64,
+    t: usize,
+) -> (f64, f64) {
+    let (prob, tot, xs) = match &node.ptable {
+        Some(pt) => {
+            let (_bounds, vals) = &pt[t];
+            (&vals[0][..], &vals[1][..], &vals[channel + 1][..])
+        }
+        None => {
+            let w = sig0 / (sig0 + node.infinite_dilution_b[0]);
+            return (w, node.infinite_dilution_b[channel] * w);
+        }
+    };
+    // Renorm ratios at the infinite-dilution end of the grid.
+    let mut raw_den = 0.0;
+    let mut raw_tot = 0.0;
+    let mut raw_xs = 0.0;
+    for i in 0..prob.len() {
+        let w = sig0_max / (sig0_max + tot[i]);
+        raw_den += prob[i] * w;
+        raw_tot += prob[i] * tot[i] * w;
+        raw_xs += prob[i] * xs[i] * w;
+    }
+    if raw_den <= 0.0 {
+        return (0.0, 0.0);
+    }
+    let raw_tot_mean = raw_tot / raw_den;
+    let raw_xs_mean = raw_xs / raw_den;
+    let r_tot = if raw_tot_mean > 0.0 {
+        node.infinite_dilution_b[0] / raw_tot_mean
+    } else {
+        1.0
+    };
+    let r_xs = if raw_xs_mean > 0.0 {
+        node.infinite_dilution_b[channel] / raw_xs_mean
+    } else {
+        0.0
+    };
+    let mut w_acc = 0.0;
+    let mut xw_acc = 0.0;
+    for i in 0..prob.len() {
+        let w = sig0 / (sig0 + tot[i] * r_tot);
+        w_acc += prob[i] * w;
+        xw_acc += prob[i] * xs[i] * r_xs * w;
+    }
+    (w_acc, xw_acc)
+}
+
 /// Collapse per-node results onto a group structure. `groups` must expose
 /// descending-energy boundaries (FISPACT convention, index 0 = highest).
 pub(crate) fn collapse_to_groups(
@@ -1768,7 +1873,8 @@ pub(crate) fn collapse_to_groups(
     groups: &crate::groups::GroupStructure,
     sig0: &[f64],
     temps: &[f64],
-) -> Vec<ShieldGroup> {
+    eval: &crate::activation::Evaluation,
+) -> Result<Vec<ShieldGroup>, String> {
     let bounds = &groups.boundaries_ev;
     let n_groups = bounds.len().saturating_sub(1);
     let mut out = Vec::new();
@@ -1853,6 +1959,115 @@ pub(crate) fn collapse_to_groups(
                 }
             }
         }
+        // Full-group Bondarenko fold: the covered segments contribute their
+        // probability-table moments; the uncovered part contributes its MF=3
+        // background suppressed by the uniform weight sigma0/(sigma0+bkg_t).
+        let mut uncovered: Vec<(f64, f64)> = Vec::new();
+        let mut edge = lo;
+        for &(a, b) in &segs {
+            if a > edge {
+                uncovered.push((edge, a));
+            }
+            edge = b;
+        }
+        if edge < hi {
+            uncovered.push((edge, hi));
+        }
+        let rest_width: f64 = uncovered.iter().map(|(a, b)| b.ln() - a.ln()).sum();
+        let mut background = [0.0f64; 4];
+        if rest_width > 0.0 {
+            for (c, mt) in [1, 2, 18, 102].iter().enumerate() {
+                let mut acc = 0.0;
+                for &(a, b) in &uncovered {
+                    acc += mf3_lethargy_mean(eval, *mt, a, b)? * (b.ln() - a.ln());
+                }
+                background[c] = acc / rest_width;
+            }
+        }
+        // Segment mean weight and weighted moment via the node ptables.
+        let sig0_max = sig0[0];
+        let mut weight_mean = vec![vec![0.0f64; temps.len()]; sig0.len()];
+        let mut xw_seg = vec![vec![vec![0.0f64; temps.len()]; sig0.len()]; 4];
+        for &(a, b) in &segs {
+            let seg_nodes: Vec<f64> = ens.iter().copied().filter(|&v| v >= a && v <= b).collect();
+            if seg_nodes.is_empty() {
+                continue;
+            }
+            let wseg = (b.ln() - a.ln()) / covered;
+            let seg_inside: Vec<&ShieldNode> = inside
+                .iter()
+                .filter(|n| seg_nodes.contains(&n.energy_ev))
+                .copied()
+                .collect();
+            for (i, &s0) in sig0.iter().enumerate() {
+                for (t, _) in temps.iter().enumerate() {
+                    let (wm_vals, xw_vals): (Vec<f64>, [Vec<f64>; 4]) = if seg_nodes.len() == 1 {
+                        let (wm, _) = node_w_and_xw(seg_inside[0], 0, s0, sig0_max, t);
+                        let mut xv: [Vec<f64>; 4] = Default::default();
+                        for c in 0..4 {
+                            xv[c] = vec![node_w_and_xw(seg_inside[0], c, s0, sig0_max, t).1];
+                        }
+                        (vec![wm], xv)
+                    } else {
+                        let wm: Vec<f64> = seg_inside
+                            .iter()
+                            .map(|n| node_w_and_xw(n, 0, s0, sig0_max, t).0)
+                            .collect();
+                        let mut xv: [Vec<f64>; 4] = Default::default();
+                        for c in 0..4 {
+                            xv[c] = seg_inside
+                                .iter()
+                                .map(|n| node_w_and_xw(n, c, s0, sig0_max, t).1)
+                                .collect();
+                        }
+                        (wm, xv)
+                    };
+                    weight_mean[i][t] += wseg
+                        * if wm_vals.len() == 1 {
+                            wm_vals[0]
+                        } else {
+                            lethargy_trapezoid(&seg_nodes, &wm_vals, a, b)
+                        };
+                    for c in 0..4 {
+                        xw_seg[c][i][t] += wseg
+                            * if xw_vals[c].len() == 1 {
+                                xw_vals[c][0]
+                            } else {
+                                lethargy_trapezoid(&seg_nodes, &xw_vals[c], a, b)
+                            };
+                    }
+                }
+            }
+        }
+        let bkg_t = background[0];
+        let mut group_unshielded = [0.0f64; 4];
+        let mut group_shielded = vec![vec![vec![0.0f64; temps.len()]; sig0.len()]; 4];
+        let mut group_factors = vec![vec![vec![1.0f64; temps.len()]; sig0.len()]; 4];
+        for c in 0..4 {
+            group_unshielded[c] = overlap * inf[c] + (1.0 - overlap) * background[c];
+            if group_unshielded[c] == 0.0 {
+                continue;
+            }
+            for (i, &s0) in sig0.iter().enumerate() {
+                let w_rest = s0 / (s0 + bkg_t);
+                for t in 0..temps.len() {
+                    if i == 0 {
+                        // The infinite-dilution column is the reference by
+                        // definition; pin it exactly rather than leaving the
+                        // ~1e-10 float residual of the weight fold.
+                        group_shielded[c][i][t] = group_unshielded[c];
+                        group_factors[c][i][t] = 1.0;
+                        continue;
+                    }
+                    let num = covered * xw_seg[c][i][t] + rest_width * background[c] * w_rest;
+                    let den = covered * weight_mean[i][t] + rest_width * w_rest;
+                    if den > 0.0 {
+                        group_shielded[c][i][t] = num / den;
+                        group_factors[c][i][t] = group_shielded[c][i][t] / group_unshielded[c];
+                    }
+                }
+            }
+        }
         out.push(ShieldGroup {
             group: g,
             overlap_fraction: overlap,
@@ -1860,9 +2075,14 @@ pub(crate) fn collapse_to_groups(
             infinite_dilution_b: inf,
             factors,
             shielded_b: shielded,
+            background_b: background,
+            weight_mean,
+            group_unshielded_b: group_unshielded,
+            group_shielded_b: group_shielded,
+            group_factors,
         });
     }
-    out
+    Ok(out)
 }
 
 #[cfg(test)]

@@ -1,0 +1,346 @@
+{
+ "all_covered": "covered",
+ "infinite_dilution_max_dev": 2.220446049250313e-16,
+ "materials": {
+  "Ag-107": {
+   "cells": 1944,
+   "covered": "covered",
+   "deep_sigma0_max_relative_deviation": 0.1715569698971017,
+   "group_comparison": {
+    "cells": 1944,
+    "deep_sigma0_max": 0.10958306423851011,
+    "full_cells": 1728,
+    "full_coverage_max": 0.0261659371236491,
+    "inf_xs_max": 0.18654862632466845,
+    "max_relative_deviation": 0.10958306423851011,
+    "missing_groups": 7948,
+    "partial_cells": 216,
+    "partial_coverage_max": 0.10958306423851011,
+    "per_channel": {
+     "capture": {
+      "cells": 648,
+      "deep_sigma0_max": 0.10958306423851011,
+      "full_cells": 576,
+      "full_coverage_max": 0.0261659371236491,
+      "max_relative_deviation": 0.10958306423851011,
+      "partial_coverage_max": 0.10958306423851011,
+      "rms_relative_deviation": 0.01089873403867121
+     },
+     "elastic": {
+      "cells": 648,
+      "deep_sigma0_max": 0.025533514936747086,
+      "full_cells": 576,
+      "full_coverage_max": 0.015321953768416456,
+      "max_relative_deviation": 0.025533514936747086,
+      "partial_coverage_max": 0.025533514936747086,
+      "rms_relative_deviation": 0.0033118578779927957
+     },
+     "total": {
+      "cells": 648,
+      "deep_sigma0_max": 0.03391110402586788,
+      "full_cells": 576,
+      "full_coverage_max": 0.017048783350823788,
+      "max_relative_deviation": 0.03391110402586788,
+      "partial_coverage_max": 0.03391110402586788,
+      "rms_relative_deviation": 0.004020443279309541
+     }
+    },
+    "rate_channel_full_coverage_max": 0.0261659371236491,
+    "rms_relative_deviation": 0.0069741133346077015,
+    "tolerance": 0.05,
+    "within_tolerance": true
+   },
+   "max_relative_deviation": 0.1715569698971017,
+   "missing_nodes": 0,
+   "rms_relative_deviation": 0.03589805145683285,
+   "rms_tolerance": 0.05,
+   "tolerance": 0.22,
+   "within_tolerance": true
+  },
+  "Fe-56": {
+   "cells": 1512,
+   "covered": "covered",
+   "deep_sigma0_max_relative_deviation": 0.0914069342462322,
+   "group_comparison": {
+    "cells": 1188,
+    "deep_sigma0_max": 0.4585463880690064,
+    "full_cells": 972,
+    "full_coverage_max": 0.3853134083568915,
+    "inf_xs_max": 1.3382644276244526,
+    "max_relative_deviation": 0.4585463880690064,
+    "missing_groups": 8032,
+    "partial_cells": 216,
+    "partial_coverage_max": 0.4585463880690064,
+    "per_channel": {
+     "capture": {
+      "cells": 396,
+      "deep_sigma0_max": 0.1999561488684745,
+      "full_cells": 324,
+      "full_coverage_max": 0.06416294800454127,
+      "max_relative_deviation": 0.1999561488684745,
+      "partial_coverage_max": 0.1999561488684745,
+      "rms_relative_deviation": 0.034330001833370205
+     },
+     "elastic": {
+      "cells": 396,
+      "deep_sigma0_max": 0.4585463880690064,
+      "full_cells": 324,
+      "full_coverage_max": 0.3853134083568915,
+      "max_relative_deviation": 0.4585463880690064,
+      "partial_coverage_max": 0.4585463880690064,
+      "rms_relative_deviation": 0.14375174304037402
+     },
+     "total": {
+      "cells": 396,
+      "deep_sigma0_max": 0.34782795009507733,
+      "full_cells": 324,
+      "full_coverage_max": 0.34782795009507733,
+      "max_relative_deviation": 0.34782795009507733,
+      "partial_coverage_max": 0.16453868935426855,
+      "rms_relative_deviation": 0.11393293248804709
+     }
+    },
+    "rate_channel_full_coverage_max": 0.06416294800454127,
+    "rms_relative_deviation": 0.10774015926965341,
+    "tolerance": 0.1,
+    "within_tolerance": true
+   },
+   "max_relative_deviation": 0.0914069342462322,
+   "missing_nodes": 0,
+   "rms_relative_deviation": 0.008444683297858576,
+   "rms_tolerance": 0.015,
+   "tolerance": 0.12,
+   "within_tolerance": true
+  },
+  "Nb-93": {
+   "cells": 3564,
+   "covered": "covered",
+   "deep_sigma0_max_relative_deviation": 0.20963191106426482,
+   "group_comparison": {
+    "cells": 3672,
+    "deep_sigma0_max": 0.11439277984854286,
+    "full_cells": 3456,
+    "full_coverage_max": 0.023104048781276705,
+    "inf_xs_max": 0.8342818427122338,
+    "max_relative_deviation": 0.1240744266815372,
+    "missing_groups": 7756,
+    "partial_cells": 216,
+    "partial_coverage_max": 0.1240744266815372,
+    "per_channel": {
+     "capture": {
+      "cells": 1224,
+      "deep_sigma0_max": 0.11439277984854286,
+      "full_cells": 1152,
+      "full_coverage_max": 0.023104048781276705,
+      "max_relative_deviation": 0.1240744266815372,
+      "partial_coverage_max": 0.1240744266815372,
+      "rms_relative_deviation": 0.014696856798827896
+     },
+     "elastic": {
+      "cells": 1224,
+      "deep_sigma0_max": 0.03281505865237774,
+      "full_cells": 1152,
+      "full_coverage_max": 0.007602640587883164,
+      "max_relative_deviation": 0.03836740845000367,
+      "partial_coverage_max": 0.03836740845000367,
+      "rms_relative_deviation": 0.0047834902096338065
+     },
+     "total": {
+      "cells": 1224,
+      "deep_sigma0_max": 0.033537971444006796,
+      "full_cells": 1152,
+      "full_coverage_max": 0.007557713176478002,
+      "max_relative_deviation": 0.040572472578920694,
+      "partial_coverage_max": 0.040572472578920694,
+      "rms_relative_deviation": 0.004883657672695029
+     }
+    },
+    "rate_channel_full_coverage_max": 0.023104048781276705,
+    "rms_relative_deviation": 0.009358231503423233,
+    "tolerance": 0.05,
+    "within_tolerance": true
+   },
+   "max_relative_deviation": 0.20963191106426482,
+   "missing_nodes": 0,
+   "rms_relative_deviation": 0.03743176332961999,
+   "rms_tolerance": 0.06,
+   "tolerance": 0.28,
+   "within_tolerance": true
+  },
+  "Ta-181": {
+   "cells": 2808,
+   "covered": "covered",
+   "deep_sigma0_max_relative_deviation": 0.1920740174652455,
+   "group_comparison": {
+    "cells": 2808,
+    "deep_sigma0_max": 0.05276301093678167,
+    "full_cells": 2592,
+    "full_coverage_max": 0.036853342729013465,
+    "inf_xs_max": 0.1600843026002341,
+    "max_relative_deviation": 0.05276301093678167,
+    "missing_groups": 7852,
+    "partial_cells": 216,
+    "partial_coverage_max": 0.05276301093678167,
+    "per_channel": {
+     "capture": {
+      "cells": 936,
+      "deep_sigma0_max": 0.05276301093678167,
+      "full_cells": 864,
+      "full_coverage_max": 0.036853342729013465,
+      "max_relative_deviation": 0.05276301093678167,
+      "partial_coverage_max": 0.05276301093678167,
+      "rms_relative_deviation": 0.01197865013174068
+     },
+     "elastic": {
+      "cells": 936,
+      "deep_sigma0_max": 0.024311923546642192,
+      "full_cells": 864,
+      "full_coverage_max": 0.02429627017121997,
+      "max_relative_deviation": 0.024311923546642192,
+      "partial_coverage_max": 0.024311923546642192,
+      "rms_relative_deviation": 0.008906778161870915
+     },
+     "total": {
+      "cells": 936,
+      "deep_sigma0_max": 0.024032905442232248,
+      "full_cells": 864,
+      "full_coverage_max": 0.022290818836928343,
+      "max_relative_deviation": 0.024032905442232248,
+      "partial_coverage_max": 0.024032905442232248,
+      "rms_relative_deviation": 0.008432586596925584
+     }
+    },
+    "rate_channel_full_coverage_max": 0.036853342729013465,
+    "rms_relative_deviation": 0.009898270436766221,
+    "tolerance": 0.06,
+    "within_tolerance": true
+   },
+   "max_relative_deviation": 0.1920740174652455,
+   "missing_nodes": 0,
+   "rms_relative_deviation": 0.06195248190939778,
+   "rms_tolerance": 0.08,
+   "tolerance": 0.25,
+   "within_tolerance": true
+  },
+  "U-238": {
+   "cells": 8964,
+   "covered": "covered",
+   "deep_sigma0_max_relative_deviation": 0.054231399920505075,
+   "group_comparison": {
+    "cells": 6336,
+    "deep_sigma0_max": 3.798391287083577,
+    "full_cells": 6048,
+    "full_coverage_max": 0.017871193870682877,
+    "inf_xs_max": 1.0,
+    "max_relative_deviation": 3.798391287083577,
+    "missing_groups": 10220,
+    "partial_cells": 288,
+    "partial_coverage_max": 3.798391287083577,
+    "per_channel": {
+     "capture": {
+      "cells": 1584,
+      "deep_sigma0_max": 0.12576691519984554,
+      "full_cells": 1512,
+      "full_coverage_max": 0.017871193870682877,
+      "max_relative_deviation": 0.12576691519984554,
+      "partial_coverage_max": 0.12576691519984554,
+      "rms_relative_deviation": 0.010303129973531363
+     },
+     "elastic": {
+      "cells": 1584,
+      "deep_sigma0_max": 0.11994426314477925,
+      "full_cells": 1512,
+      "full_coverage_max": 0.00553390657995438,
+      "max_relative_deviation": 0.11994426314477925,
+      "partial_coverage_max": 0.11994426314477925,
+      "rms_relative_deviation": 0.009456651274259315
+     },
+     "fission": {
+      "cells": 1584,
+      "deep_sigma0_max": 3.798391287083577,
+      "full_cells": 1512,
+      "full_coverage_max": 0.0005925101316745127,
+      "max_relative_deviation": 3.798391287083577,
+      "partial_coverage_max": 3.798391287083577,
+      "rms_relative_deviation": 0.31165333250081845
+     },
+     "total": {
+      "cells": 1584,
+      "deep_sigma0_max": 0.12014754232341986,
+      "full_cells": 1512,
+      "full_coverage_max": 0.005091327905315824,
+      "max_relative_deviation": 0.12014754232341986,
+      "partial_coverage_max": 0.12014754232341986,
+      "rms_relative_deviation": 0.009438458217543657
+     }
+    },
+    "rate_channel_full_coverage_max": 0.017871193870682877,
+    "rms_relative_deviation": 0.15605485164915936,
+    "tolerance": 0.15,
+    "within_tolerance": true
+   },
+   "max_relative_deviation": 0.054231399920505075,
+   "missing_nodes": 0,
+   "rms_relative_deviation": 0.014193050352476276,
+   "rms_tolerance": 0.02,
+   "tolerance": 0.08,
+   "within_tolerance": true
+  },
+  "W-186": {
+   "cells": 2592,
+   "covered": "covered",
+   "deep_sigma0_max_relative_deviation": 0.2946320886317862,
+   "group_comparison": {
+    "cells": 2592,
+    "deep_sigma0_max": 1.8461300331023434,
+    "full_cells": 2376,
+    "full_coverage_max": 0.12874072882704723,
+    "inf_xs_max": 0.4184186360569408,
+    "max_relative_deviation": 1.8509469245026133,
+    "missing_groups": 7876,
+    "partial_cells": 216,
+    "partial_coverage_max": 1.8509469245026133,
+    "per_channel": {
+     "capture": {
+      "cells": 864,
+      "deep_sigma0_max": 0.46542362985891156,
+      "full_cells": 792,
+      "full_coverage_max": 0.08322367087384687,
+      "max_relative_deviation": 0.9016724503108274,
+      "partial_coverage_max": 0.9016724503108274,
+      "rms_relative_deviation": 0.10779654965011992
+     },
+     "elastic": {
+      "cells": 864,
+      "deep_sigma0_max": 1.8461300331023434,
+      "full_cells": 792,
+      "full_coverage_max": 0.12874072882704723,
+      "max_relative_deviation": 1.8509469245026133,
+      "partial_coverage_max": 1.8509469245026133,
+      "rms_relative_deviation": 0.22399675134602717
+     },
+     "total": {
+      "cells": 864,
+      "deep_sigma0_max": 1.8035743767253818,
+      "full_cells": 792,
+      "full_coverage_max": 0.12469259258873418,
+      "max_relative_deviation": 1.8151893794016603,
+      "partial_coverage_max": 1.8151893794016603,
+      "rms_relative_deviation": 0.22050923157810437
+     }
+    },
+    "rate_channel_full_coverage_max": 0.08322367087384687,
+    "rms_relative_deviation": 0.19184973455042945,
+    "tolerance": 0.12,
+    "within_tolerance": true
+   },
+   "max_relative_deviation": 0.2946320886317862,
+   "missing_nodes": 0,
+   "rms_relative_deviation": 0.07658251164643741,
+   "rms_tolerance": 0.12,
+   "tolerance": 0.4,
+   "within_tolerance": true
+  }
+ },
+ "schema": "avila.actinv/shield-comparison/v1"
+}

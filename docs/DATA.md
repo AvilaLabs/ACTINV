@@ -227,7 +227,10 @@ final index; the compact identities are:
 The neutron working corpus differs from the immutable official extraction only by the two fail-closed Pb-208 numeric
 field repairs frozen in P10 Amendments D/E; all 2,850 official hashes and both substitutions are independently
 recorded. Charged validation reads official processed TENDL-2017 rows, but no licensed FISPACT-II executable was run.
-P10 supplies infinite-dilution unresolved averages only; finite-dilution shielding remains explicitly out of scope.
+P10 supplies infinite-dilution unresolved averages only. Finite-dilution shielding for unresolved (MF=2 LRU=2)
+ranges is supplied by the optional `actinv-shield-table-1` artifact built by `actinv build-shielding` (P19); see
+[METHOD.md](METHOD.md) and [SPEC.md](SPEC.md) for the model and limits — resolved-region pointwise shielding and
+probability-table transport remain explicitly out of scope.
 
 ## P11 TENDL-2025 MF=33 covariance provenance
 

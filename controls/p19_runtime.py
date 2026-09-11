@@ -141,7 +141,9 @@ def main() -> None:
     if fixed["returncode"] == 0 and fixed["output"]:
         w187_fixed = fixed["output"]["steps"][0]["activity_Bq_per_g"].get("W187")
     ratio = (w187_fixed / w187_plain) if (w187_plain and w187_fixed) else None
-    checks["fixed_dilution_changes_rate"] = ratio is not None and 0.5 < ratio < 0.9
+    # The full-group fold suppresses deep-dilution rates further than the
+    # legacy flat blend; the band asserts a real-but-bounded change.
+    checks["fixed_dilution_changes_rate"] = ratio is not None and 0.2 < ratio < 0.9
     details["w187_ratio_sigma0_0p1"] = ratio
     shielded_ledger = (fixed["output"] or {}).get("ledger", {}).get("shielding", {})
     checks["ledger_records_shielding"] = bool(

@@ -37,6 +37,18 @@ struct WireGroup {
     infinite_dilution_b: Vec<f64>,
     factors: BTreeMap<String, Vec<Vec<f64>>>,
     shielded_b: BTreeMap<String, Vec<Vec<f64>>>,
+    #[serde(default)]
+    background_b: Option<Vec<f64>>,
+    #[serde(default)]
+    weight_mean: Option<Vec<Vec<f64>>>,
+    #[serde(default)]
+    group_unshielded_b: Option<Vec<f64>>,
+    #[serde(default)]
+    group_shielded_b: Option<BTreeMap<String, Vec<Vec<f64>>>>,
+    /// Full-group Bondarenko factor per channel; when present it is the
+    /// applied scale, superseding the flat `(1-c)+c*f` lethargy blend.
+    #[serde(default)]
+    group_factors: Option<BTreeMap<String, Vec<Vec<f64>>>>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -75,7 +87,9 @@ type GroupScales = BTreeMap<usize, f64>;
 struct PreparedNuclide {
     sigma_p_b: f64,
     sigma0_eff_b: f64,
-    /// channel -> (group -> scale s_g = (1-c_g) + c_g*f_g); absent groups are 1.
+    /// channel -> (group -> applied scale: the full-group Bondarenko factor
+    /// when the table carries `group_factors`, else (1-c_g) + c_g*f_g);
+    /// absent groups are 1.
     scales: [GroupScales; 4],
 }
 
@@ -209,14 +223,22 @@ impl PreparedShieldTable {
                             gi = g.group
                         )
                     })?;
-                    if rows.len() != nsig
-                        || rows.iter().any(|r| r.len() != ntemp)
-                        || rows.iter().flatten().any(|v| !v.is_finite() || *v < 0.0)
-                    {
-                        return Err(format!(
-                            "shield table nuclide '{raw}' group {gi} '{channel}' factors are not {nsig}x{ntemp} finite nonnegative",
-                            gi = g.group
-                        ));
+                    let mut grids = vec![rows];
+                    if let Some(gf) = &g.group_factors {
+                        if let Some(rows) = gf.get(channel) {
+                            grids.push(rows);
+                        }
+                    }
+                    for rows in grids {
+                        if rows.len() != nsig
+                            || rows.iter().any(|r| r.len() != ntemp)
+                            || rows.iter().flatten().any(|v| !v.is_finite() || *v < 0.0)
+                        {
+                            return Err(format!(
+                                "shield table nuclide '{raw}' group {gi} '{channel}' factors are not {nsig}x{ntemp} finite nonnegative",
+                                gi = g.group
+                            ));
+                        }
                     }
                 }
                 if g.sigma_p_b.is_finite() && g.sigma_p_b > 0.0 {
@@ -355,13 +377,25 @@ impl PreparedShieldTable {
             for g in &nuc.groups {
                 let mut row = [0.0f64; 4];
                 for (c, channel) in CHANNELS.iter().enumerate() {
-                    let f = self.factor_at(
-                        &g.factors[*channel],
-                        sigma0.clamp(grid_floor, f64::INFINITY),
-                        temperature_K,
-                    );
+                    let s0 = sigma0.clamp(grid_floor, f64::INFINITY);
+                    // Prefer the full-group Bondarenko factor (probability-
+                    // table weight over the covered segments plus the smooth
+                    // background's own suppression); the flat lethargy blend
+                    // remains the fallback for tables predating it.
+                    let (f, scale) = match g.group_factors.as_ref().and_then(|gf| gf.get(*channel))
+                    {
+                        Some(gf) => {
+                            let gfac = self.factor_at(gf, s0, temperature_K);
+                            let seg = self.factor_at(&g.factors[*channel], s0, temperature_K);
+                            (seg, gfac)
+                        }
+                        None => {
+                            let f = self.factor_at(&g.factors[*channel], s0, temperature_K);
+                            (f, (1.0 - g.overlap_fraction) + g.overlap_fraction * f)
+                        }
+                    };
                     row[c] = f;
-                    scales[c].insert(g.group, (1.0 - g.overlap_fraction) + g.overlap_fraction * f);
+                    scales[c].insert(g.group, scale);
                 }
                 rows.insert(g.group, row);
             }
@@ -519,6 +553,31 @@ mod tests {
         // f = 0.8 at the sqrt midpoint -> scale = 0.5 + 0.5*0.8 = 0.9.
         let scale = plan.row_scales(74186, 0, 102).unwrap()[&1];
         assert!((scale - 0.9).abs() < 1e-9, "scale {scale}");
+    }
+
+    #[test]
+    fn group_factors_supersede_the_flat_blend() {
+        // With group_factors present, the applied scale is the full-group
+        // Bondarenko factor directly, not (1-c)+c*f.
+        let mut doc: serde_json::Value =
+            serde_json::from_str(&table_json(uniform_factors(0.5))).unwrap();
+        let group = &mut doc["nuclides"]["W186"]["groups"][0];
+        let gfac = uniform_factors(0.2);
+        group["group_factors"] = gfac;
+        group["background_b"] = serde_json::json!([15.0, 14.0, 0.0, 0.3]);
+        group["weight_mean"] = serde_json::json!(vec![vec![0.1; 4]; 6]);
+        group["group_unshielded_b"] = serde_json::json!([10.0, 9.0, 0.0, 1.0]);
+        group["group_shielded_b"] = uniform_factors(0.5);
+        let table = PreparedShieldTable::from_json(&doc.to_string()).unwrap();
+        let atoms = BTreeMap::from([((74186, 0), 1.0e22)]);
+        let plan = table
+            .plan(&atoms, "composition", None, 293.6, false)
+            .unwrap();
+        // capture: group_factor 0.2 applies directly (flat blend gave 0.75).
+        let scale = plan.row_scales(74186, 0, 102).unwrap()[&1];
+        assert!((scale - 0.2).abs() < 1e-12, "scale {scale}");
+        // The ledger still records the segment factor 0.5.
+        assert!((plan.applied["W186"][&1][3] - 0.5).abs() < 1e-12);
     }
 
     #[test]

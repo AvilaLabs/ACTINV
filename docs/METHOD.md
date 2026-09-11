@@ -27,8 +27,15 @@ change bytes.
 Neutron pointwise data start from the raw 0 K evaluation. Resolved SLBW/MLBW/Reich–Moore and limited R-matrix ranges
 are reconstructed; `LSSF=0` unresolved ranges add infinite-dilution elastic/capture/fission/competitive averages to
 MF=3, while `LSSF=1` retains the already averaged MF=3 values. Requested-temperature SIGMA1 broadening is exact at
-0 K and windowed at positive temperature. Finite-dilution self-shielding, probability tables and Bondarenko factors
-are not implemented or implied.
+0 K and windowed at positive temperature. Finite-dilution self-shielding is supplied by the optional
+`self_shielding` spec section: `actinv build-shielding` emits `actinv-shield-table-1` artifacts whose
+unresolved-range (MF=2 LRU=2) resonance ladders feed a deterministic stratified-quantile PURR-equivalent
+pipeline (no RNG; bytes reproduce) producing Bondarenko factors on a frozen sigma0 x temperature grid. At
+runtime each library group applies a full-group Bondarenko fold — the unresolved-range segment carries its
+probability-table weight and the uncovered part is suppressed by `sigma0/(sigma0+background)` — rather than a
+flat lethargy blend. The method claims unresolved-range shielding only: resolved-region pointwise suppression,
+heterogeneous/escape effects, and probability-table transport are explicitly out of scope and named in the
+run's method limits.
 
 Positive isolated lines whose natural width is at most `1e-4` of their Doppler width use a separately area-preserving
 analytic kernel. Other lines use adaptive linearization, with a ten-million-point cap and explicit convergence

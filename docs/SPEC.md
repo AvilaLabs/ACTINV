@@ -246,6 +246,31 @@ targets, model, and units; the certificate records the table's provenance and th
 Damage-energy production comes from ENDF-6 MF=3/MT=444 sections. TENDL-2025 and EAF-2010 as distributed do not
 carry MT=444; build tables from `heatr`-processed or equivalent damage-energy evaluations.
 
+## Self-shielding
+
+`self_shielding` is optional; omission preserves the ordinary unshielded path byte-for-byte. Its `table` names a
+hash-pinned `actinv-shield-table-1` artifact — the declared SHA-256 is recomputed before the calculation and a
+mismatch is an error. Build tables with `actinv build-shielding EVAL_DIR OUT.json`; the table's group boundaries
+must equal the activation library's exactly.
+
+`dilution` selects the background dilution each covered nuclide sees: `"composition"` derives
+`sigma0_i = sum_j(n_j * sigma_p,j) / n_i` from the declared material (table potential cross sections where the
+nuclide is covered, an analytic channel-radius estimate elsewhere, named as estimates in the ledger);
+`"fixed"` applies the validated positive `sigma0_b` to every covered nuclide. Factors interpolate in
+`ln(sigma0) x sqrt(T)` and clamp at the grid ends.
+
+Each covered group applies a full-group Bondarenko fold, not a flat lethargy blend: the unresolved-range segment
+carries its probability-table weight mean `w = sigma0/(sigma0+sigma_t)` and weighted moment `sigma_x*w`, and the
+uncovered part is suppressed by `sigma0/(sigma0+sigma_t,background)` over the smooth MF=3 background. The emitted
+`group_factors` are the applied scale; `factors` remains the covered-segment factor for reporting, and tables
+without `group_factors` fall back to the flat `(1-c)+c*f` blend.
+
+Material nuclides absent from the table are named `shielding_uncovered` and their rates are untouched;
+`require_shielding_complete: true` fails the run instead. The section rejects combination with `uncertainty`
+and any sha256 or boundary mismatch. The ledger and certificate record the table hash, dilution mode, effective
+sigma0 per nuclide, applied factors, and method limits — including that resolved-region pointwise shielding is
+not applied, damage observables are not shielded, and uncertainty propagation does not combine.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon

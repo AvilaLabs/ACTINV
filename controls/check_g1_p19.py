@@ -546,6 +546,31 @@ def check_rederivation(art, failures):
                 failures.append(f"group {g['group']} {name} inf factor != 1")
                 return
 
+    # Full-group fold arithmetic: group_factor * group_unshielded ==
+    # group_shielded, and at sigma0=inf every group_factor is 1. (The
+    # group factor is the ratio of lethargy-collapsed moments, which need
+    # not equal the mean-of-node-ratios `factors` column even at c=1.)
+    for g in w186["groups"]:
+        if "group_factors" not in g:
+            continue
+        for ci, name in enumerate(names):
+            gu = g["group_unshielded_b"][ci]
+            if gu == 0.0:
+                continue
+            for si in range(len(SIGMA0_B)):
+                for t in range(len(TEMPERATURES_K)):
+                    gf = g["group_factors"][name][si][t]
+                    gs = g["group_shielded_b"][name][si][t]
+                    if abs(gs - gf * gu) > 1e-9 * max(1.0, abs(gs)):
+                        failures.append(
+                            f"group {g['group']} {name} group_factor*unshielded "
+                            f"!= group_shielded")
+                        return
+                    if si == 0 and abs(gf - 1.0) > 1e-6:
+                        failures.append(
+                            f"group {g['group']} {name} group_factor(inf) != 1")
+                        return
+
 
 def run_checks():
     failures = []

@@ -2787,7 +2787,7 @@ impl PreparedRun {
                     "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
                     "method_limits": [
                         "unresolved-resonance region only; resolved-region pointwise shielding is not applied",
-                        "factors apply to collapsed group rates, blended by the unresolved-range overlap fraction",
+                        "factors apply to collapsed group rates via the full-group Bondarenko fold: covered segments carry the probability-table weight, the uncovered part is suppressed by sigma0/(sigma0+background total)",
                         "damage-energy observables are not shielded",
                         "composition dilution uses the declared material, not evolved inventories",
                         "sigma_p for composition members absent from the table is the analytic channel-radius estimate",

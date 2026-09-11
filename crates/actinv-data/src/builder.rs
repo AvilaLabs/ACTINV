@@ -2272,7 +2272,7 @@ struct ShieldingCacheEntry {
 
 fn shielding_cache_key(source_sha256: &str, options: &ShieldingBuildOptions) -> String {
     let mut hasher = Sha256::new();
-    hasher.update(b"ACTINV-SHIELDING-BUILD-v1\0");
+    hasher.update(b"ACTINV-SHIELDING-BUILD-v4\0");
     hasher.update(source_sha256.as_bytes());
     hasher.update(options.groups.hash().as_bytes());
     format!("{:x}", hasher.finalize())
@@ -2311,7 +2311,8 @@ fn shielding_nuclide_entry(
         groups,
         &crate::shielding::SIGMA0_B,
         &crate::shielding::TEMPERATURES_K,
-    );
+        evaluation,
+    )?;
     let channel_names = ["total", "elastic", "fission", "capture"];
     let node_rows: Vec<serde_json::Value> = nodes
         .iter()
@@ -2382,6 +2383,27 @@ fn shielding_nuclide_entry(
                         .iter()
                         .enumerate()
                         .map(|(c, name)| (name.to_string(), serde_json::json!(row.shielded_b[c])))
+                        .collect(),
+                ),
+                "background_b": row.background_b,
+                "weight_mean": row.weight_mean,
+                "group_unshielded_b": row.group_unshielded_b,
+                "group_shielded_b": serde_json::Value::Object(
+                    channel_names
+                        .iter()
+                        .enumerate()
+                        .map(|(c, name)| {
+                            (name.to_string(), serde_json::json!(row.group_shielded_b[c]))
+                        })
+                        .collect(),
+                ),
+                "group_factors": serde_json::Value::Object(
+                    channel_names
+                        .iter()
+                        .enumerate()
+                        .map(|(c, name)| {
+                            (name.to_string(), serde_json::json!(row.group_factors[c]))
+                        })
                         .collect(),
                 ),
             })

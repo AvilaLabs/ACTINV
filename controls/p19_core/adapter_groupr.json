@@ -1,0 +1,46 @@
+{
+  "schema_version": "avila.core/external-checker-adapter/v0.1-draft",
+  "adapter_id": "avila-labs.actinv/njoy-groupr-extract@1",
+  "capability_type": { "id": "actinv.p19-njoy-groupr-extract", "major": 1 },
+  "input_slots": [
+    "driver-script",
+    "materials-manifest",
+    "njoy-executable",
+    "group-structure",
+    "eval-w186",
+    "eval-ag107",
+    "eval-ta181",
+    "eval-nb93",
+    "eval-u238",
+    "eval-fe056"
+  ],
+  "arguments": [
+    { "kind": "input_path", "input_slot": "driver-script" },
+    { "kind": "input_path", "input_slot": "materials-manifest" },
+    { "kind": "input_path", "input_slot": "njoy-executable" },
+    { "kind": "input_path", "input_slot": "eval-w186" },
+    { "kind": "input_path", "input_slot": "eval-ag107" },
+    { "kind": "input_path", "input_slot": "eval-ta181" },
+    { "kind": "input_path", "input_slot": "eval-nb93" },
+    { "kind": "input_path", "input_slot": "eval-u238" },
+    { "kind": "input_path", "input_slot": "eval-fe056" },
+    { "kind": "input_path", "input_slot": "group-structure" },
+    { "kind": "output_path", "output_id": "gendf-table" }
+  ],
+  "outputs": [
+    {
+      "output_id": "gendf-table",
+      "workspace_path": "outputs/groupr_gendf.json",
+      "media_type": "application/vnd.avila.actinv.groupr-gendf+json"
+    }
+  ],
+  "claims": [
+    { "model": "exact", "output_slot": "gendf-material-count", "output_id": "gendf-table", "pointer": "/material_count", "unit": "1" },
+    { "model": "exact", "output_slot": "gendf-group-count", "output_id": "gendf-table", "pointer": "/group_count", "unit": "1" }
+  ],
+  "timeout_ms": 7200000,
+  "limitations": [
+    "The NJOY binary is an input artifact verified by digest; GROUPR is the independent group-constant oracle. Its iwt=3 lethargy weighting matches ACTINV's collapse convention; FENDL's iwt=11 weighting is a separate sanity reference, not the same quantity.",
+    "GROUPR group constants carry resolved-resonance suppression in the pointwise weight wherever the PENDF contains it; partially covered groups whose uncovered part lies in a resolved range therefore include a contribution ACTINV does not claim."
+  ]
+}

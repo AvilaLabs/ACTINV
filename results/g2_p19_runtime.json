@@ -1,6 +1,6 @@
 {
  "schema": "actinv-p19-g2-runtime-1",
- "table_sha256": "e3ed6cc308db64f51ff42357407cdd0ec52a969755ef61ebe26ae653c24dd3be",
+ "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
  "checks": {
   "absent_deterministic": true,
   "fixed_dilution_changes_rate": true,
@@ -15,8 +15,8 @@
   "mesh_surface_accepts_section": true
  },
  "details": {
-  "table_sha256": "e3ed6cc308db64f51ff42357407cdd0ec52a969755ef61ebe26ae653c24dd3be",
-  "w187_ratio_sigma0_0p1": 0.7277427232990805,
+  "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+  "w187_ratio_sigma0_0p1": 0.7232523287566518,
   "composition_sigma0_eff_b": {
    "Fe56": 0.3293539208082381,
    "W186": 83.06580674408474

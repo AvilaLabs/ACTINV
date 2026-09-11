@@ -3,8 +3,9 @@
   "adapter_id": "avila-labs.actinv/build-shield-table@1",
   "capability_type": { "id": "actinv.p19-build-shield-table", "major": 1 },
   "input_slots": [
-    "actinv-executable",
+    "driver-script",
     "materials-manifest",
+    "actinv-executable",
     "group-structure",
     "eval-w186",
     "eval-ag107",
@@ -14,17 +15,16 @@
     "eval-fe056"
   ],
   "arguments": [
-    { "kind": "literal", "value": "build-shielding" },
+    { "kind": "input_path", "input_slot": "driver-script" },
     { "kind": "input_path", "input_slot": "materials-manifest" },
+    { "kind": "input_path", "input_slot": "actinv-executable" },
     { "kind": "input_path", "input_slot": "eval-w186" },
     { "kind": "input_path", "input_slot": "eval-ag107" },
     { "kind": "input_path", "input_slot": "eval-ta181" },
     { "kind": "input_path", "input_slot": "eval-nb93" },
     { "kind": "input_path", "input_slot": "eval-u238" },
     { "kind": "input_path", "input_slot": "eval-fe056" },
-    { "kind": "literal", "value": "--groups" },
     { "kind": "input_path", "input_slot": "group-structure" },
-    { "kind": "literal", "value": "-o" },
     { "kind": "output_path", "output_id": "shield-table" }
   ],
   "outputs": [
@@ -35,8 +35,7 @@
     }
   ],
   "claims": [
-    { "model": "categorical", "output_slot": "table-schema", "output_id": "shield-table", "pointer": "/schema", "allowed_values": ["actinv-shield-table-1"] },
-    { "model": "exact", "output_slot": "covered-count", "output_id": "shield-table", "pointer": "/covered_count", "unit": "1" }
+    { "model": "categorical", "output_slot": "table-format", "output_id": "shield-table", "pointer": "/format", "allowed_values": ["actinv-shield-table-1"] }
   ],
   "timeout_ms": 3600000,
   "limitations": [

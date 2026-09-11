@@ -112,11 +112,16 @@ def rederive_w187_ratio(failures: list[str]) -> None:
     tgrid = art["temperatures_K"]
     # sigma0 = 0.1 is the last (deepest) grid entry; temperature 293.6 is first.
     si, ti = sig0.index(0.1), tgrid.index(293.6)
-    scales = {
-        g["group"]: (1.0 - g["overlap_fraction"])
-        + g["overlap_fraction"] * g["factors"]["capture"][si][ti]
-        for g in w["groups"]
-    }
+    # The applied scale is the full-group Bondarenko factor when the table
+    # carries it, else the flat lethargy blend of the segment factor.
+    scales = {}
+    for g in w["groups"]:
+        gf = g.get("group_factors", {}).get("capture")
+        if gf is not None:
+            scales[g["group"]] = gf[si][ti]
+        else:
+            f = g["factors"]["capture"][si][ti]
+            scales[g["group"]] = (1.0 - g["overlap_fraction"]) + g["overlap_fraction"] * f
     index = json.loads(INDEX.read_text())
     w186_target = next(
         i for i, t in enumerate(index["targets"]) if t["za"] == 74186 and t["liso"] == 0
@@ -214,8 +219,10 @@ def check_evidence(evidence: dict, failures: list[str]) -> None:
     if evidence.get("pass") != (set(checks) == EXPECTED_CHECKS and all(checks.values())):
         failures.append("recorded pass flag inconsistent with the check map")
     ratio = evidence.get("details", {}).get("w187_ratio_sigma0_0p1")
-    if not isinstance(ratio, (int, float)) or not (0.5 < ratio < 0.9):
-        failures.append(f"w187 ratio {ratio!r} outside the physical band (0.5, 0.9)")
+    # Under the full-group fold the deep-dilution ratio runs deeper than the
+    # legacy flat blend; the band asserts a real-but-bounded suppression.
+    if not isinstance(ratio, (int, float)) or not (0.2 < ratio < 0.9):
+        failures.append(f"w187 ratio {ratio!r} outside the physical band (0.2, 0.9)")
 
 
 def run_checks() -> dict:

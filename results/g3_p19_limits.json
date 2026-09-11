@@ -1,0 +1,169 @@
+{
+ "artifact_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+ "legs": {
+  "analytic_limits": {
+   "bounded_rise_pass": true,
+   "inf_limit_pass": true,
+   "nonnegative_pass": true,
+   "per_material": {
+    "Ag107": {
+     "cells": 4320,
+     "inf_column_max_dev": 2.220446049250313e-16,
+     "negative_cells": 0,
+     "sigma0_max_rise": 0.0
+    },
+    "Fe56": {
+     "cells": 2640,
+     "inf_column_max_dev": 4.440892098500626e-16,
+     "negative_cells": 0,
+     "sigma0_max_rise": 0.0
+    },
+    "Nb93": {
+     "cells": 8160,
+     "inf_column_max_dev": 2.220446049250313e-16,
+     "negative_cells": 0,
+     "sigma0_max_rise": 0.0
+    },
+    "Ta181": {
+     "cells": 6240,
+     "inf_column_max_dev": 0.0,
+     "negative_cells": 0,
+     "sigma0_max_rise": 0.0
+    },
+    "U238": {
+     "cells": 10560,
+     "inf_column_max_dev": 3.3306690738754696e-16,
+     "negative_cells": 0,
+     "sigma0_max_rise": 0.0
+    },
+    "W186": {
+     "cells": 5760,
+     "inf_column_max_dev": 0.0,
+     "negative_cells": 0,
+     "sigma0_max_rise": 0.0
+    }
+   }
+  },
+  "fendl_sanity": {
+   "materials": {
+    "Ag107": {
+     "cells": 420,
+     "deep_sigma0_max": 0.5982759476593561,
+     "factor_cells": 378,
+     "factor_max_relative_deviation": 0.6535321020486429,
+     "factor_rms_relative_deviation": 0.0726296524905746,
+     "inf_sigma0_max": 0.6561181734051268,
+     "max_relative_deviation": 0.6561181734051268,
+     "rms_relative_deviation": 0.1477017883951965
+    },
+    "Fe56": {
+     "cells": 300,
+     "deep_sigma0_max": 1.5487223089670314,
+     "factor_cells": 270,
+     "factor_max_relative_deviation": 0.6524163281996089,
+     "factor_rms_relative_deviation": 0.10464760279946517,
+     "inf_sigma0_max": 1.5766558955138337,
+     "max_relative_deviation": 1.5766558955138337,
+     "rms_relative_deviation": 0.719377898068139
+    },
+    "W186": {
+     "cells": 300,
+     "deep_sigma0_max": 1.5622830370480292,
+     "factor_cells": 270,
+     "factor_max_relative_deviation": 1.4550212521783294,
+     "factor_rms_relative_deviation": 0.24130563658306262,
+     "inf_sigma0_max": 0.511006122550671,
+     "max_relative_deviation": 1.5622830370480292,
+     "rms_relative_deviation": 0.26301931356990554
+    }
+   },
+   "note": "coarse sanity only: FENDL-3.2c is a different evaluation version processed with iwt=11 weighting; the factor rows isolate the shielding shape from the unshielded convention difference",
+   "result_path": "results/g3_p19_fendl_sanity.json"
+  },
+  "oracle_compare": {
+   "all_covered": "covered",
+   "infinite_dilution_max_dev": 2.220446049250313e-16,
+   "per_material": {
+    "Ag-107": {
+     "group_full_coverage_max": 0.0261659371236491,
+     "group_rate_full_max": 0.0261659371236491,
+     "group_within_tolerance": true,
+     "node_max": 0.1715569698971017,
+     "node_rms": 0.03589805145683285,
+     "node_within_tolerance": true
+    },
+    "Fe-56": {
+     "group_full_coverage_max": 0.3853134083568915,
+     "group_rate_full_max": 0.06416294800454127,
+     "group_within_tolerance": true,
+     "node_max": 0.0914069342462322,
+     "node_rms": 0.008444683297858576,
+     "node_within_tolerance": true
+    },
+    "Nb-93": {
+     "group_full_coverage_max": 0.023104048781276705,
+     "group_rate_full_max": 0.023104048781276705,
+     "group_within_tolerance": true,
+     "node_max": 0.20963191106426482,
+     "node_rms": 0.03743176332961999,
+     "node_within_tolerance": true
+    },
+    "Ta-181": {
+     "group_full_coverage_max": 0.036853342729013465,
+     "group_rate_full_max": 0.036853342729013465,
+     "group_within_tolerance": true,
+     "node_max": 0.1920740174652455,
+     "node_rms": 0.06195248190939778,
+     "node_within_tolerance": true
+    },
+    "U-238": {
+     "group_full_coverage_max": 0.017871193870682877,
+     "group_rate_full_max": 0.017871193870682877,
+     "group_within_tolerance": true,
+     "node_max": 0.054231399920505075,
+     "node_rms": 0.014193050352476276,
+     "node_within_tolerance": true
+    },
+    "W-186": {
+     "group_full_coverage_max": 0.12874072882704723,
+     "group_rate_full_max": 0.08322367087384687,
+     "group_within_tolerance": true,
+     "node_max": 0.2946320886317862,
+     "node_rms": 0.07658251164643741,
+     "node_within_tolerance": true
+    }
+   },
+   "result_path": "results/g3_p19_compare.json"
+  },
+  "uncovered": {
+   "covered": [
+    "Ag107",
+    "Fe56",
+    "Nb93",
+    "Ta181",
+    "U238",
+    "W186"
+   ],
+   "declared_uncovered": []
+  }
+ },
+ "schema": "avila.actinv/p19-g3-limits/v1",
+ "sigma0_b": [
+  10000000000.0,
+  100000.0,
+  10000.0,
+  1000.0,
+  100.0,
+  10.0,
+  3.0,
+  1.0,
+  0.3,
+  0.1
+ ],
+ "temperatures_K": [
+  293.6,
+  600.0,
+  900.0,
+  1200.0
+ ]
+}

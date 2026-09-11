@@ -188,7 +188,7 @@ for every cell is in [`results/cb1_capabilities.json`](../results/cb1_capabiliti
 | licence/access model established | V | V | V | V | V |
 | install path established | V | V | V | V | V |
 | projectiles and energy domain | P | P | P | V | P |
-| finite-dilution self-shielding | P | ? | V | V | V |
+| finite-dilution self-shielding | V* | ? | V | V | V |
 | irradiation schedules | V | V | V | V | V |
 | fission yields | V | ? | V | V | V |
 | covariance/uncertainty | P | ? | P | V | P |
@@ -202,6 +202,11 @@ for every cell is in [`results/cb1_capabilities.json`](../results/cb1_capabiliti
 | damage observables | A | ? | V | V | ? |
 | documented operating-system routes | V | P | V | V | V |
 | compile-time physical unit types | A | ? | ? | ? | ? |
+
+`V*` on finite-dilution self-shielding means unresolved-range Bondarenko shielding only
+(`self_shielding` on `actinv-spec-1`/`actinv-mesh-spec-1`, tables built by `actinv build-shielding`):
+resolved-region pointwise shielding, heterogeneous escape corrections, and probability-table transport
+remain outside scope and are named in the run's method limits.
 
 Important distinctions behind the compact table:
 
@@ -249,8 +254,9 @@ Priorities are evidence-driven; none was implemented before this initial scoreca
 2. **Diagnose the FNS accuracy losses without tuning to the test set.** Rank reactions/nuclides behind the gap in
    median point error and whole-experiment coverage, then validate candidate data or processing changes on independent
    held-out families.
-3. **Add finite-dilution self-shielding where the intended users need it.** This is the largest activation-physics
-   capability gap versus FISPACT and SCALE/OpenMC workflows.
+3. **Extend self-shielding coverage.** Unresolved-range Bondarenko shielding shipped in P19 (see the capability
+   table note); the remaining gaps versus FISPACT's probability-table method are resolved-region pointwise
+   shielding and heterogenous escape corrections.
 4. **Reduce data-load memory and repeated parsing.** The `1.09 GB` public-example peak is acceptable on this host but
    too high for an otherwise lightweight tool. Memory mapping, a prepared immutable cache, or narrower decay loading
    should be evaluated without weakening hash verification.
