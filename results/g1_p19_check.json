@@ -1,7 +1,7 @@
 {
  "schema": "actinv-p19-g1-check-1",
  "protocol_sha256": "8ee3d561fec513b3038fcbabfc8b57a6cce25e36c992f2af311afb6740acce16",
- "head_commit": "18d063944928eb80b1e15a56e4a6b59af5a5bb5c",
+ "head_commit": "b95052b5ff00d1509bcaf5308d8cdeca57b3d10f",
  "failures": [],
  "pass": true
 }

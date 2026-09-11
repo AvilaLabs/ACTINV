@@ -1,9 +1,9 @@
 {
- "failures": [],
- "head_commit": "18d063944928eb80b1e15a56e4a6b59af5a5bb5c",
- "opening_commit": "d463d57db4bcd87715eaf0d2082d07a71ec36424",
- "pass": true,
- "protocol_sha256": "8ee3d561fec513b3038fcbabfc8b57a6cce25e36c992f2af311afb6740acce16",
- "schema": "actinv-p19-g0-check-1",
- "verdicts_checked": 21
+  "failures": [],
+  "head_commit": "b95052b5ff00d1509bcaf5308d8cdeca57b3d10f",
+  "opening_commit": "d463d57db4bcd87715eaf0d2082d07a71ec36424",
+  "pass": true,
+  "protocol_sha256": "8ee3d561fec513b3038fcbabfc8b57a6cce25e36c992f2af311afb6740acce16",
+  "schema": "actinv-p19-g0-check-1",
+  "verdicts_checked": 21
 }
