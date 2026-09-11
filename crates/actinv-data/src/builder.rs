@@ -2043,11 +2043,13 @@ fn damage_cache_key(source_sha256: &str, options: &DamageBuildOptions) -> String
     format!("{:x}", hasher.finalize())
 }
 
+type DamageSource = Result<(DamageCacheEntry, Vec<(String, String)>, bool), String>;
+
 fn build_damage_source(
     path: &Path,
     options: &DamageBuildOptions,
     projectile: Projectile,
-) -> Result<(DamageCacheEntry, Vec<(String, String)>, bool), String> {
+) -> DamageSource {
     let before = sha256_file(path)?;
     let filename = path
         .file_name()

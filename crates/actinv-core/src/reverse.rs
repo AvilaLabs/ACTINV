@@ -107,6 +107,7 @@ fn parse_measurements(text: &str, n_steps: usize) -> Result<Vec<Measurement>, St
 }
 
 /// Solve `A x = b` (dense, square) by Gaussian elimination with partial pivoting.
+#[allow(clippy::needless_range_loop)]
 fn dense_solve(a: &[Vec<f64>], b: &[f64]) -> Result<Vec<f64>, String> {
     let n = a.len();
     let mut m: Vec<Vec<f64>> = a
@@ -238,6 +239,7 @@ fn nnls(a: &[Vec<f64>], b: &[f64]) -> Result<Vec<f64>, String> {
 }
 
 /// Eigenvalues of a dense symmetric matrix by the cyclic Jacobi method.
+#[allow(clippy::needless_range_loop)]
 fn jacobi_eigenvalues(matrix: &[Vec<f64>]) -> Vec<f64> {
     let n = matrix.len();
     let mut a: Vec<Vec<f64>> = matrix.to_vec();
@@ -304,6 +306,7 @@ fn invert(matrix: &[Vec<f64>]) -> Result<Vec<Vec<f64>>, String> {
 /// `problem_json`/`measurements_json` are the literal caller-supplied texts; their SHA-256 values are
 /// recorded in the result's `sensitivity` identity block. `spec` must already be parsed and have its
 /// relative paths resolved by the caller.
+#[allow(clippy::needless_range_loop)]
 pub fn solve(
     spec: &Spec,
     problem_json: &str,
