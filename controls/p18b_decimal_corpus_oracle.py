@@ -437,9 +437,13 @@ def classify_exact(
     partial, total, partial_low, total_high, contract = values
     if contract is not None:
         return contract
-    if partial > total and partial_low > total_high:
+    excess_difference = subresolution(partial - total, partial, total)
+    envelope_difference = subresolution(
+        partial_low - total_high, partial_low, total_high
+    )
+    if excess_difference > 0 and envelope_difference > 0:
         return "definite_source_excess"
-    if partial > total:
+    if excess_difference > 0:
         return "printing_envelope_excess"
     if p18_violation:
         return "binary_only_excess"
@@ -454,6 +458,22 @@ PRIMARY_CODE = {
     "binary_only_excess": 5,
     "source_conformant": 6,
 }
+
+# ENDF-6 real fields carry at most 11 significant decimal digits, so the
+# finest relative difference a printed source can express is about 1e-11.
+# A difference at or below SUBRESOLUTION_BOUND relative to its operands is
+# therefore not a source property: it is residue from evaluating the stable
+# combination integrals (transcendental ln() terms) at finite precision and
+# its sign flips arbitrarily between working precisions. Collapsing it to
+# exactly zero keeps the classification identical at 80, 120, or any higher
+# precision, and cannot mask a real excess — a genuine printed separation is
+# at least ~1e-11 relative, twenty orders above the bound.
+SUBRESOLUTION_BOUND = Decimal("1e-30")
+
+
+def subresolution(difference: Decimal, left: Decimal, right: Decimal) -> Decimal:
+    scale = max(Decimal(1), abs(left), abs(right))
+    return Decimal(0) if abs(difference) <= SUBRESOLUTION_BOUND * scale else difference
 
 
 class FrozenFlags:
@@ -688,13 +708,21 @@ def audit_exact_source_section(
                     product_lows[index] = total_low * lower if mf == 9 else lower
                 source.observe(
                     excess_difference=(
-                        product_values[index] - total_value
+                        subresolution(
+                            product_values[index] - total_value,
+                            product_values[index],
+                            total_value,
+                        )
                         if contract is None
                         else None
                     ),
                     total=total_value if contract is None else None,
                     envelope_difference=(
-                        product_lows[index] - total_high
+                        subresolution(
+                            product_lows[index] - total_high,
+                            product_lows[index],
+                            total_high,
+                        )
                         if contract is None
                         else None
                     ),
@@ -716,11 +744,17 @@ def audit_exact_source_section(
                 )
                 source.observe(
                     excess_difference=(
-                        partial - total_value if partial is not None else None
+                        subresolution(partial - total_value, partial, total_value)
+                        if partial is not None
+                        else None
                     ),
                     total=total_value if contract is None else None,
                     envelope_difference=(
-                        partial_low - total_high if partial_low is not None else None
+                        subresolution(
+                            partial_low - total_high, partial_low, total_high
+                        )
+                        if partial_low is not None
+                        else None
                     ),
                     contract=contract,
                 )
@@ -764,6 +798,12 @@ def audit_exact_source_section(
                         (Decimal(-1), (total,), "upper"),
                     )
                     envelope_difference = collapse_combination(lower_terms, low, high)
+                excess_difference = subresolution(
+                    excess_difference, partial, total_values[group]
+                )
+                envelope_difference = subresolution(
+                    envelope_difference, partial_low, total_highs[group]
+                )
             source.observe(
                 excess_difference=excess_difference,
                 total=total_values[group] if contract is None else None,
@@ -819,6 +859,12 @@ def audit_exact_source_section(
                         for index in selected
                     ) + ((Decimal(-1), (total,), "upper"),)
                     envelope_difference = collapse_combination(lower_terms, low, high)
+                excess_difference = subresolution(
+                    excess_difference, partial, total_values[group]
+                )
+                envelope_difference = subresolution(
+                    envelope_difference, partial_low, total_highs[group]
+                )
             source.observe(
                 excess_difference=excess_difference,
                 total=total_values[group] if contract is None else None,
@@ -855,11 +901,15 @@ def audit_exact_fraction_section(
                     lows[index] = table_value(product.table, energy, side, "lower")
                 fractions.observe(
                     excess_difference=(
-                        values[index] - 1 if contract is None else None
+                        subresolution(values[index] - 1, values[index], Decimal(1))
+                        if contract is None
+                        else None
                     ),
                     total=Decimal(1) if contract is None else None,
                     envelope_difference=(
-                        lows[index] - 1 if contract is None else None
+                        subresolution(lows[index] - 1, lows[index], Decimal(1))
+                        if contract is None
+                        else None
                     ),
                     contract=contract,
                 )
@@ -878,10 +928,16 @@ def audit_exact_fraction_section(
                     else None
                 )
                 fractions.observe(
-                    excess_difference=partial - 1 if partial is not None else None,
+                    excess_difference=(
+                        subresolution(partial - 1, partial, Decimal(1))
+                        if partial is not None
+                        else None
+                    ),
                     total=Decimal(1) if contract is None else None,
                     envelope_difference=(
-                        partial_low - 1 if partial_low is not None else None
+                        subresolution(partial_low - 1, partial_low, Decimal(1))
+                        if partial_low is not None
+                        else None
                     ),
                     contract=contract,
                 )
@@ -1152,6 +1208,7 @@ def corpus_audit(
                         "probe_checkpoint_sha256": _sha256_file(probe_checkpoint),
                         "group_boundaries_sha256": _sha256_file(group_path),
                         "precision_digits": [80, 120],
+                        "subresolution_bound": str(SUBRESOLUTION_BOUND),
                     },
                     sort_keys=True,
                     separators=(",", ":"),
