@@ -383,3 +383,7 @@ part that does not compress: users, issues, and the validation record accumulati
   gallery grew to pulsed, feed/removal, damage, reverse, and two-cell mesh walkthroughs indexed by
   `examples/README.md`. Next capability work: P18b completion or P19 finite-dilution self-shielding, whichever
   the maintainer directs.
+- 2026-09-10 — P19 opens under frozen protocol: finite-dilution self-shielding via independently processed
+  Bondarenko factors (deterministic PURR-equivalent from ENDF-6 MF=2 LRU=2 blocks), with NJOY2016.79 as the
+  independent processing oracle and the oracle-comparison campaign run as an Avila Core case. Opt-in
+  `self_shielding` spec section; absent section preserves byte identity. P18b stays open and dormant.
