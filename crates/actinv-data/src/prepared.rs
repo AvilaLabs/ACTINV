@@ -128,6 +128,10 @@ impl ReactionLibrary for PreparedLibrary {
         }
     }
 
+    fn row_cross_section(&self, row: usize, group: usize) -> f64 {
+        self.cross_section(row, group)
+    }
+
     fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String> {
         library::fission_average_energy_ev(self.group_count, &self.boundaries_ev, phi, |group| {
             self.cross_section(row, group)
@@ -204,6 +208,12 @@ impl ReactionLibrary for CollapsedLibrary {
         _last_flux_group: usize,
     ) -> f64 {
         self.one_group_barns[row]
+    }
+
+    fn row_cross_section(&self, _row: usize, _group: usize) -> f64 {
+        unreachable!(
+            "collapsed activation libraries carry no per-group data; self-shielding requires a groupwise library"
+        )
     }
 
     fn fission_average_energy_ev(&self, row: usize, _phi: &[f64]) -> Result<Option<f64>, String> {

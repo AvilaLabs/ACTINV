@@ -68,7 +68,15 @@ fn main() {
 
     let chain = chain::build(&nuclides);
     let mut ledger = RateLedger::default();
-    let triplets = chain::reaction_rates(&library, &targets, &flux, &chain, &selected, &mut ledger);
+    let triplets = chain::reaction_rates(
+        &library,
+        &targets,
+        &flux,
+        &chain,
+        &selected,
+        &mut ledger,
+        None,
+    );
     let triplets: Vec<_> = triplets
         .iter()
         .map(|(row, column, value)| {

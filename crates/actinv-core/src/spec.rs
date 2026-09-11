@@ -35,6 +35,8 @@ pub struct Spec {
     pub radiological: Option<RadiologicalOptions>,
     #[serde(default)]
     pub damage: Option<DamageOptions>,
+    #[serde(default)]
+    pub self_shielding: Option<SelfShieldingOptions>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -84,6 +86,30 @@ pub struct DamageOptions {
     pub displacement_energy_eV: BTreeMap<String, f64>,
     #[serde(default)]
     pub require_complete: bool,
+}
+
+/// Finite-dilution self-shielding (P19): a hash-pinned `actinv-shield-table-1`
+/// supplies per-(nuclide, group, channel) Bondarenko factors on the frozen
+/// sigma0 x temperature grid. At run time the covered nuclide's effective
+/// dilution selects the factor; each group's unresolved-range overlap fraction
+/// blends it in. Missing coverage is named in the ledger, never silently
+/// treated as factor one.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SelfShieldingOptions {
+    pub table: HashedFileRef,
+    /// "composition" (default) computes per-nuclide sigma0 from the material
+    /// composition; "fixed" applies `sigma0_b` to every covered nuclide.
+    #[serde(default = "dilution_composition")]
+    pub dilution: String,
+    /// Required positive sigma0 in barns for dilution "fixed"; must be null
+    /// (or absent) for "composition".
+    #[serde(default)]
+    pub sigma0_b: Option<f64>,
+}
+
+fn dilution_composition() -> String {
+    "composition".into()
 }
 
 fn confidence_95() -> f64 {
@@ -224,6 +250,11 @@ pub struct Options {
     pub cram_order: u8,
     #[serde(default)]
     pub outputs: Option<Vec<String>>,
+    /// Fail closed when a material nuclide lacks shielding-table coverage
+    /// (P19). Default false: uncovered nuclides are named in the ledger and
+    /// their rates pass through unmodified.
+    #[serde(default)]
+    pub require_shielding_complete: bool,
 }
 fn auto() -> String {
     "auto".into()
@@ -249,6 +280,7 @@ impl Default for Options {
             temperature_K: t293(),
             cram_order: cram16_order(),
             outputs: None,
+            require_shielding_complete: false,
         }
     }
 }
@@ -549,6 +581,34 @@ impl Spec {
             }
             if outputs.iter().any(|o| o == "damage") && self.damage.is_none() {
                 return Err("options.outputs 'damage' requires a damage section".into());
+            }
+        }
+        if let Some(shielding) = &self.self_shielding {
+            match shielding.dilution.as_str() {
+                "composition" => {
+                    if shielding.sigma0_b.is_some() {
+                        return Err(
+                            "self_shielding dilution 'composition' takes sigma0_b: null".into()
+                        );
+                    }
+                }
+                "fixed" => match shielding.sigma0_b {
+                    Some(value) if value.is_finite() && value > 0.0 => {}
+                    _ => {
+                        return Err(
+                            "self_shielding dilution 'fixed' requires a positive finite sigma0_b"
+                                .into(),
+                        );
+                    }
+                },
+                value => {
+                    return Err(format!("unknown self_shielding.dilution '{value}'"));
+                }
+            }
+            if self.uncertainty.is_some() {
+                return Err(
+                    "self_shielding cannot be combined with uncertainty propagation".into(),
+                );
             }
         }
         if self.spectrum.structure == "custom" {
@@ -938,5 +998,51 @@ mod duration_tests {
             .contains("finite and nonnegative"));
         value["schedule"][0]["removal"] = serde_json::json!({"Co60": "1e-9"});
         assert!(Spec::from_json(&value.to_string()).is_err());
+    }
+
+    #[test]
+    fn self_shielding_dilution_modes_are_validated() {
+        let table = || serde_json::json!({"path": "t.json", "sha256": "0".repeat(64)});
+        let mut value = minimal_spec();
+        value["self_shielding"] = serde_json::json!({"table": table(), "dilution": "fixed"});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("positive finite sigma0_b"));
+
+        value["self_shielding"]["sigma0_b"] = serde_json::json!(-0.5);
+        assert!(Spec::from_json(&value.to_string()).is_err());
+
+        value["self_shielding"]["sigma0_b"] = serde_json::json!(0.1);
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+
+        value["self_shielding"]["dilution"] = serde_json::json!("composition");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("sigma0_b: null"));
+
+        value["self_shielding"]["sigma0_b"] = serde_json::Value::Null;
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(spec.self_shielding.unwrap().dilution, "composition");
+
+        value["self_shielding"]["dilution"] = serde_json::json!("bogus");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("unknown self_shielding.dilution"));
+    }
+
+    #[test]
+    fn self_shielding_rejects_uncertainty_combination() {
+        let mut value = minimal_spec();
+        value["self_shielding"] = serde_json::json!({
+            "table": {"path": "t.json", "sha256": "0".repeat(64)},
+            "dilution": "fixed",
+            "sigma0_b": 0.1,
+        });
+        value["uncertainty"] = serde_json::json!({
+            "covariance": {"path": "c.npy", "sha256": "0".repeat(64)}
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("cannot be combined with uncertainty"));
     }
 }

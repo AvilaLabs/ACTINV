@@ -1,0 +1,27 @@
+{
+ "schema": "actinv-p19-g2-runtime-1",
+ "table_sha256": "e3ed6cc308db64f51ff42357407cdd0ec52a969755ef61ebe26ae653c24dd3be",
+ "checks": {
+  "absent_deterministic": true,
+  "fixed_dilution_changes_rate": true,
+  "ledger_records_shielding": true,
+  "certificate_records_shielding": true,
+  "composition_dilution_computes_sigma0": true,
+  "uncovered_named": true,
+  "require_complete_fails_closed": true,
+  "uncertainty_combination_rejected": true,
+  "sha_mismatch_rejected": true,
+  "boundary_mismatch_rejected": true,
+  "mesh_surface_accepts_section": true
+ },
+ "details": {
+  "table_sha256": "e3ed6cc308db64f51ff42357407cdd0ec52a969755ef61ebe26ae653c24dd3be",
+  "w187_ratio_sigma0_0p1": 0.7277427232990805,
+  "composition_sigma0_eff_b": {
+   "Fe56": 0.3293539208082381,
+   "W186": 83.06580674408474
+  }
+ },
+ "wall_seconds": 11.64,
+ "pass": true
+}

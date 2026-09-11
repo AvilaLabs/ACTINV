@@ -12,6 +12,7 @@ pub mod quantity;
 pub mod radiological;
 pub mod reverse;
 pub mod run;
+pub mod shielding;
 pub mod sparse;
 pub mod spec;
 pub mod uncertainty;

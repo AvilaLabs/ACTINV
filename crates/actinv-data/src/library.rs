@@ -46,6 +46,38 @@ pub trait ReactionLibrary {
 
     fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String>;
 
+    /// The raw groupwise cross section for `row` at `group`, in barns. Only
+    /// group-resolved implementations support this; it exists so the P19
+    /// shielding fold can scale sigma_g inside the flux collapse.
+    fn row_cross_section(&self, row: usize, group: usize) -> f64;
+
+    /// The flux collapse with a per-group multiplicative scale applied to
+    /// sigma_g first — used by the self-shielding fold.
+    fn collapse_row_scaled(
+        &self,
+        row: usize,
+        phi: &[f64],
+        flux_denominator: f64,
+        first_flux_group: usize,
+        last_flux_group: usize,
+        scale: &dyn Fn(usize) -> f64,
+    ) -> f64 {
+        let mut numerator = 0.0;
+        for (group, &flux) in phi
+            .iter()
+            .enumerate()
+            .take(last_flux_group)
+            .skip(first_flux_group)
+        {
+            numerator += self.row_cross_section(row, group) * scale(group) * flux;
+        }
+        if flux_denominator > 0.0 {
+            numerator / flux_denominator
+        } else {
+            0.0
+        }
+    }
+
     fn one_group(&self, row: usize, phi: &[f64]) -> f64 {
         let group_count = self.group_count();
         let mut flux_denominator = 0.0;
@@ -155,6 +187,10 @@ impl ReactionLibrary for Library {
         } else {
             0.0
         }
+    }
+
+    fn row_cross_section(&self, row: usize, group: usize) -> f64 {
+        self.sigma(row)[group]
     }
 
     fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String> {

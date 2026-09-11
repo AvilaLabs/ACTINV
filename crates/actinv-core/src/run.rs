@@ -9,7 +9,8 @@ use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions,
-    PhysicalInputs, Projectile, RadiologicalOptions, Spec, UncertaintyOptions,
+    PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec,
+    UncertaintyOptions,
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
@@ -362,6 +363,14 @@ impl ReactionLibrary for ActivationLibrary {
         }
     }
 
+    fn row_cross_section(&self, row: usize, group: usize) -> f64 {
+        match self {
+            Self::Dense(library) => library.row_cross_section(row, group),
+            Self::Groupwise(library) => library.row_cross_section(row, group),
+            Self::Collapsed(library) => library.row_cross_section(row, group),
+        }
+    }
+
     fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String> {
         match self {
             Self::Dense(library) => library.fission_average_energy_ev(row, phi),
@@ -406,12 +415,19 @@ pub struct PreparedRun {
     covariance: Option<PreparedCovariance>,
     radiological: Option<PreparedRadiological>,
     damage: Option<PreparedDamage>,
+    shielding: Option<PreparedShielding>,
 }
 
 struct PreparedDamage {
     options: crate::spec::DamageOptions,
     sha256: String,
     table: crate::damage::PreparedDamageTable,
+}
+
+struct PreparedShielding {
+    options: crate::spec::SelfShieldingOptions,
+    sha256: String,
+    table: crate::shielding::PreparedShieldTable,
 }
 
 struct PreparedCovariance {
@@ -666,6 +682,7 @@ impl PreparedRun {
             spec.uncertainty.as_ref(),
             spec.radiological.as_ref(),
             spec.damage.as_ref(),
+            spec.self_shielding.as_ref(),
             Some(physical.flux.values()),
             Some(&spec.spectrum.structure),
             profiler,
@@ -710,6 +727,7 @@ impl PreparedRun {
             uncertainty_options,
             None,
             None,
+            None,
         )
     }
 
@@ -724,6 +742,7 @@ impl PreparedRun {
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
         damage_options: Option<&DamageOptions>,
+        shielding_options: Option<&SelfShieldingOptions>,
     ) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
         let temperature_K = Kelvin::new(temperature_K)
@@ -738,6 +757,7 @@ impl PreparedRun {
             uncertainty_options,
             radiological_options,
             damage_options,
+            shielding_options,
             None,
             None,
             &mut profiler,
@@ -755,6 +775,7 @@ impl PreparedRun {
         uncertainty_options: Option<&UncertaintyOptions>,
         radiological_options: Option<&RadiologicalOptions>,
         damage_options: Option<&DamageOptions>,
+        shielding_options: Option<&SelfShieldingOptions>,
         collapse_flux: Option<&[f64]>,
         collapse_group_structure: Option<&str>,
         profiler: &mut RunProfiler,
@@ -826,6 +847,29 @@ impl PreparedRun {
             }
             None => None,
         };
+        let shielding = match shielding_options {
+            Some(options) => {
+                if !projectile.is_neutron() {
+                    return Err(format!(
+                        "self_shielding is neutron-only; {} specs cannot declare it",
+                        projectile.name()
+                    ));
+                }
+                let sha256 = verify_hash(&options.table.path, Some(&options.table.sha256))?;
+                let text = std::fs::read_to_string(&options.table.path).map_err(|error| {
+                    format!(
+                        "cannot read self-shielding table {}: {error}",
+                        options.table.path
+                    )
+                })?;
+                Some(PreparedShielding {
+                    options: options.clone(),
+                    sha256,
+                    table: crate::shielding::PreparedShieldTable::from_json(&text)?,
+                })
+            }
+            None => None,
+        };
         let mut fission_yields = HashMap::new();
         let mut fission_yield_inputs = Vec::with_capacity(fission_options.files.len());
         for reference in &fission_options.files {
@@ -866,7 +910,10 @@ impl PreparedRun {
             ActivationLibrary::Dense(library::read_npz_after_sha256_verification(
                 &library_ref.path,
             )?)
-        } else if let Some(phi) = collapse_flux {
+        } else if let Some(phi) = collapse_flux.filter(|_| shielding.is_none()) {
+            // Self-shielding scales each library row's sigma per group inside
+            // the unresolved ranges, which requires the groupwise data; the
+            // spectrum-collapsed artifact keeps only one value per row.
             ActivationLibrary::Collapsed(
                 prepared_data::load_or_prepare_collapsed_after_sha256_verification(
                     &library_ref.path,
@@ -1070,6 +1117,7 @@ impl PreparedRun {
             covariance,
             radiological,
             damage,
+            shielding,
         })
     }
 
@@ -1296,6 +1344,8 @@ impl PreparedRun {
             || spec.radiological.as_ref()
                 != self.radiological.as_ref().map(|prepared| &prepared.options)
             || spec.damage.as_ref() != self.damage.as_ref().map(|prepared| &prepared.options)
+            || spec.self_shielding.as_ref()
+                != self.shielding.as_ref().map(|prepared| &prepared.options)
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
         }
@@ -1388,6 +1438,27 @@ impl PreparedRun {
         };
         let phi = physical.flux.values();
         lib.validate_flux(phi)?;
+        // ---- self-shielding (P19): the plan is fixed once per run — effective
+        // dilution comes from the declared material composition, not evolved
+        // inventories, and the spec temperature selects the table row.
+        let shield_plan = match &self.shielding {
+            Some(prepared) => {
+                if prepared.table.boundaries_eV() != lib.boundaries_ev() {
+                    return Err(
+                        "self-shielding table boundaries_eV do not match the activation library boundaries"
+                            .into(),
+                    );
+                }
+                Some(prepared.table.plan(
+                    &bulk_inv,
+                    &prepared.options.dilution,
+                    prepared.options.sigma0_b,
+                    self.temperature_K.get(),
+                    spec.options.require_shielding_complete,
+                )?)
+            }
+            None => None,
+        };
         let mut effective_fission_yields = HashMap::new();
         let mut fission_yield_selection = Vec::new();
         let mut fission_parents: Vec<_> = self.fission_yields.keys().copied().collect();
@@ -1426,6 +1497,7 @@ impl PreparedRun {
                 ch,
                 &effective_fission_yields,
                 &mut led,
+                shield_plan.as_ref(),
             )
         } else {
             chain::ReactionAssembly {
@@ -1436,6 +1508,7 @@ impl PreparedRun {
                     ch,
                     &effective_fission_yields,
                     &mut led,
+                    shield_plan.as_ref(),
                 ),
                 derivatives: Vec::new(),
             }
@@ -2517,6 +2590,24 @@ impl PreparedRun {
                 }),
             );
         }
+        if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "shielding".into(),
+                serde_json::json!({
+                    "table_sha256": &prepared.sha256,
+                    "dilution": plan.dilution,
+                    "sigma0_fixed_b": plan.sigma0_fixed_b,
+                    "require_complete": spec.options.require_shielding_complete,
+                    "sigma0_eff_b": plan.sigma0_eff_b,
+                    "applied_factors": plan.applied,
+                    "shielding_uncovered": &plan.uncovered_targets,
+                    "sigma_p_estimated": &plan.sigma_p_estimated,
+                    "channels": crate::shielding::CHANNELS,
+                    "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+                    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+                }),
+            );
+        }
         if let (Some(prepared), Some(options), Some(runtime)) =
             (&self.covariance, &spec.uncertainty, &uncertainty_runtime)
         {
@@ -2670,6 +2761,46 @@ impl PreparedRun {
                 .expect("certificate inputs is an object")
                 .insert(
                     "damage_table".into(),
+                    serde_json::json!({
+                        "path": &prepared.options.table.path,
+                        "sha256_declared": &prepared.options.table.sha256,
+                        "sha256": &prepared.sha256,
+                    }),
+                );
+        }
+        if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
+            let certificate_object = certificate
+                .as_object_mut()
+                .expect("certificate is an object");
+            certificate_object.insert(
+                "shielding".into(),
+                serde_json::json!({
+                    "format": "actinv-shield-table-1",
+                    "table_sha256": prepared.sha256,
+                    "dilution": plan.dilution,
+                    "sigma0_fixed_b": plan.sigma0_fixed_b,
+                    "temperature_K": self.temperature_K.get(),
+                    "sigma0_eff_b": plan.sigma0_eff_b,
+                    "applied_factors": plan.applied,
+                    "shielding_uncovered": plan.uncovered_targets,
+                    "sigma_p_estimated": plan.sigma_p_estimated,
+                    "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+                    "method_limits": [
+                        "unresolved-resonance region only; resolved-region pointwise shielding is not applied",
+                        "factors apply to collapsed group rates, blended by the unresolved-range overlap fraction",
+                        "damage-energy observables are not shielded",
+                        "composition dilution uses the declared material, not evolved inventories",
+                        "sigma_p for composition members absent from the table is the analytic channel-radius estimate",
+                        "cannot be combined with uncertainty propagation",
+                    ],
+                }),
+            );
+            certificate_object
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert(
+                    "shielding_table".into(),
                     serde_json::json!({
                         "path": &prepared.options.table.path,
                         "sha256_declared": &prepared.options.table.sha256,

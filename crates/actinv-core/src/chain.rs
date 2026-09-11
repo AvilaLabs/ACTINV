@@ -177,8 +177,19 @@ pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
     chain: &Chain,
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
+    shield: Option<&crate::shielding::ShieldPlan>,
 ) -> Vec<(usize, usize, f64)> {
-    assemble_reaction_rates(lib, lib_targets, phi, chain, fission_yields, led, false).triplets
+    assemble_reaction_rates(
+        lib,
+        lib_targets,
+        phi,
+        chain,
+        fission_yields,
+        led,
+        false,
+        shield,
+    )
+    .triplets
 }
 
 /// Reaction-rate assembly plus the exact matrix contribution of every activation-library row.
@@ -189,10 +200,21 @@ pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
     chain: &Chain,
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
+    shield: Option<&crate::shielding::ShieldPlan>,
 ) -> ReactionAssembly {
-    assemble_reaction_rates(lib, lib_targets, phi, chain, fission_yields, led, true)
+    assemble_reaction_rates(
+        lib,
+        lib_targets,
+        phi,
+        chain,
+        fission_yields,
+        led,
+        true,
+        shield,
+    )
 }
 
+#[allow(clippy::too_many_arguments)]
 fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     lib: &L,
     lib_targets: &[(i32, i32)],
@@ -201,6 +223,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
     include_derivatives: bool,
+    shield: Option<&crate::shielding::ShieldPlan>,
 ) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
     let mut derivatives = include_derivatives.then(Vec::new);
@@ -222,8 +245,21 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
         .map(|group| group + 1)
         .unwrap_or(first_flux_group);
     for (i, r) in lib.rows().iter().enumerate() {
-        let collapsed =
-            lib.collapse_row(i, phi, flux_denominator, first_flux_group, last_flux_group);
+        let shielded_target = lib_targets.get(r.target).copied();
+        let scale = shield.and_then(|plan| {
+            shielded_target.and_then(|(za, liso)| plan.row_scales(za, liso, r.mt))
+        });
+        let collapsed = match scale {
+            Some(scales) => lib.collapse_row_scaled(
+                i,
+                phi,
+                flux_denominator,
+                first_flux_group,
+                last_flux_group,
+                &|group| scales.get(&group).copied().unwrap_or(1.0),
+            ),
+            None => lib.collapse_row(i, phi, flux_denominator, first_flux_group, last_flux_group),
+        };
         let rate = (CrossSectionBarns::from_collapsed_kernel(collapsed) * rate_per_barn).get();
         if rate == 0.0 && rate_per_barn_s == 0.0 {
             continue;
@@ -435,6 +471,7 @@ mod tests {
             &chain,
             &yields,
             &mut plain_ledger,
+            None,
         );
         let mut derivative_ledger = RateLedger::default();
         let with_derivatives = reaction_rates_with_derivatives(
@@ -444,6 +481,7 @@ mod tests {
             &chain,
             &yields,
             &mut derivative_ledger,
+            None,
         );
 
         assert_eq!(plain, with_derivatives.triplets);

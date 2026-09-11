@@ -1,0 +1,7 @@
+{
+ "failures": [],
+ "head_commit": "8b92bfec76eda4834a815888411465ae2ad0c07a",
+ "pass": true,
+ "protocol_sha256": "8ee3d561fec513b3038fcbabfc8b57a6cce25e36c992f2af311afb6740acce16",
+ "schema": "actinv-p19-g2-check-1"
+}
