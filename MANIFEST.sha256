@@ -208,8 +208,8 @@ c101c7625ea72032e01549d95fd0cfb6d06a0bb77f9f59946ff25af9a83c1031  ./crates/actin
 27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430  ./crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json
 d48d08319c95128750cdf9e045fe421fb485dff704e684ca74116c98c8e8cfd8  ./crates/actinv-cli/data/iron-example.json
 8c89d478267a19681077016f5055c6e3c8db84a5ee77dbcdfd39ed04c70d3b90  ./crates/actinv-cli/src/bin/actinv.rs
-d51920e2101b1953b7c0dba3127f36cf74a8535e8fef7f84296fd51c179c310c  ./crates/actinv-cli/src/command.rs
-8c21f91cd54113721dc3ff638966a21b2822173dea30c92d8d41eccb7b2f9595  ./crates/actinv-cli/src/lib.rs
+4414500b510804394582d60c32d31dd3ae206e930f37ff842ec5f45028807b5b  ./crates/actinv-cli/src/command.rs
+4d39fe1fa365d15c1fd82734d0e089460ea29b5b9e1078c34eb5d39e6220fc10  ./crates/actinv-cli/src/lib.rs
 962e83471c2f6e217c97e9d418034a30d097b5e63562f1d059e8e87b2887dff4  ./crates/actinv-cli/src/workflow.rs
 f8738d5159847d9bc7319b6c4417656a6c3c1992b373ebe975b775ac1608bfb5  ./crates/actinv-cli/tests/data_command.rs
 4ce61a0b0447bf63bef9d89403c16e0bfaa281c68c96340aaac82b572f5b69ee  ./crates/actinv-cli/tests/validation.rs
@@ -226,7 +226,7 @@ a95e9328bfe93b23db3134930b2a0a8cedfcd0e076f6784bd5bc403151b93798  ./crates/actin
 a91bead8c1ad91f7829d567c22bb33382cb65f467d74ea87f5c6cdd188ad0ca4  ./crates/actinv-core/src/chain.rs
 978850c91f1a0ec6d239c634cb17d004ff89b0df304bbbb17f4b439796ab12ec  ./crates/actinv-core/src/cram.rs
 ad87f5e6af18c6b4c4a0bb79d93d6530d7e45ae521e8521080f6106ca3b847a9  ./crates/actinv-core/src/cram_coeffs.rs
-86e7aa994ec8a18f57ff77c5eb5ce447b498a5a88ca66bf3d6adcb456a8d3929  ./crates/actinv-core/src/damage.rs
+38e12d76769b190d051d2cbc4959ef19831eb64eedd70d2d8a4c537da165da27  ./crates/actinv-core/src/damage.rs
 8775e52ff1d8f9e56f4d45fd0ffc2a56f22e365a4d2786b2ec95a21b9d5f898c  ./crates/actinv-core/src/doppler.rs
 3e99649be0b5347b397a77ad424a128f9171ff631167e0c3e0424858543c98d9  ./crates/actinv-core/src/flux.rs
 bf80a62e9f211488f065514722601d2cca389c1bcbec29eaa027e7d3ebc5f730  ./crates/actinv-core/src/lib.rs
@@ -235,10 +235,10 @@ bf80a62e9f211488f065514722601d2cca389c1bcbec29eaa027e7d3ebc5f730  ./crates/actin
 f243c865a425bb35b5f71978148a422a52945bd1d06b857369c3ea7f26a74435  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
-2ea6f6e0f928f4e461b95e5aa0d17efa0fd49e3cb7bc0736bf311299d9cc8bf0  ./crates/actinv-core/src/reverse.rs
-0967e90b19727a16106399a5e9c63e46af97108b046856c34ba81cb1fe8a0501  ./crates/actinv-core/src/run.rs
+a8c39db5703993720c420a94302ad292d7bfa24574f7fbf7b7527c60fa3dbe75  ./crates/actinv-core/src/reverse.rs
+b9cd850fa98495fa0d822072b4e96140e33f178f6f0e1516ec72ebf5414b0efc  ./crates/actinv-core/src/run.rs
 f30fd389cf8230940ae91ced43aad23ae8695285cd80f2e1fa5536f6bac79023  ./crates/actinv-core/src/sparse.rs
-d76b0f0a13af0b98e7e202538c09bde82252e469bb7d9131f43702730d34b2a5  ./crates/actinv-core/src/spec.rs
+341b5ffadfeb1446b94a72378e91d1c63acda6ae1d1434c7033685898580144a  ./crates/actinv-core/src/spec.rs
 9e694d025e4d7ec8d052148b15f3b18fd4f8c9b526f86673333b13a0542a4824  ./crates/actinv-core/src/uncertainty.rs
 487cf2ae7cdb95dfae57aacc2bfd28ac0f71e7b59e06a4104bc11304c33973de  ./crates/actinv-data/Cargo.toml
 840a0b2702f922f925cf3fb6418ddc6fdebefe253818f24bf6d9bf11c9c55cde  ./crates/actinv-data/data/fispact_162_groups.json
@@ -249,7 +249,7 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 4f7afb6c2b4e388596f235f05d63555d03d573d18061e17463c863cdda0aa9e8  ./crates/actinv-data/src/bin/p18_corpus_probe.rs
 558b6ed1e6c1689196b0fe8b1467bd122a44113869e0754614f286b0d38bb66a  ./crates/actinv-data/src/bin/p18b_oracle_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
-2614d4bc3af9eb753eaa1c18b68f3c0691d0a4d83e27b58ecdfdd152fd88f1ec  ./crates/actinv-data/src/builder.rs
+d79f9fa4548e1a9441bc17f3d7a1d04ee139ad05237cfdcaf9b4f7f96ccddf24  ./crates/actinv-data/src/builder.rs
 8fa3ccc2d59fb244e8a15495b36e5b3d710700769550d861c7531c24722ec0ea  ./crates/actinv-data/src/composition.rs
 f80c61953e824af5073bb27b853423b943c51c30b15daf089162ddc38fef9306  ./crates/actinv-data/src/covariance.rs
 988d1908c06f081a923adb072c3c186975109dbb1e3c22f18b76ba44f67179a1  ./crates/actinv-data/src/decay.rs
@@ -435,7 +435,7 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICEN
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./python/LICENSE-MIT
 05d8af7d93bb64ccd9da89f74b7161d6b4e7a3e1af53fbc971aebd84ac3ed74c  ./python/README.md
 451c32f1a1b410a699c6e85dfb76bcf970ee0a1f3fb0c2260fe0d7b49cb6cb53  ./python/pyproject.toml
-d9c488521407ba865d0b7bebf1f142f75cb13b8532bbe85364b39b1d34e11fe0  ./python/src/lib.rs
+078e8f8b0ad4c02a10a59a8822675e6576abbfbf5c8ceb68550d877f459c2849  ./python/src/lib.rs
 c995e61b39b1b03de075f30dcf5736c083e4588d3463b6ae291542a222e898ad  ./python/src/objects.py
 50cdcf69035b4c5ab9c47856cf71c86d5375f82712c36cfdb638f66f7bed2b69  ./requirements-ci.txt
 0aea13e7a4a250b0c60000674e7086d0b7afe67d05025e7c8746a237628a55e9  ./results/FNS_LIBRARIES.md
