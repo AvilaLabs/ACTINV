@@ -519,6 +519,7 @@
   "Unresolved-region (MF=2 LRU=2) shielding only; resolved-region pointwise shielding, probability-table transport, and subgroup methods are outside the question.",
   "The group qualification metric gates the rate channels (capture, fission) on fully-covered groups; total and elastic carry NJOY GROUPR's (sigma_pot+sigma0)/(sigma_t+sigma0) weight convention whose pointwise dip amplification differs from the artifact's binned convention \u2014 systematic mid-sigma0 excursions up to ~50% there are a documented method difference, not an implementation defect.",
   "The sigma0=inf absolute cross-section column (inf_xs_max) exposes a real convention difference \u2014 the artifact's unshielded collapse uses ladder-statistics averages while GROUPR collapses the pointwise file (up to ~2x on Fe-56, U-238, Nb-93). The runtime does not consume that column: it scales the library's own unshielded xs by the factor.",
-  "The FENDL-3.2c sanity leg is coarse-only: a different evaluation version processed with iwt=11 weighting; it bounds gross error, not the qualification tolerance."
+  "The FENDL-3.2c sanity leg is coarse-only: a different evaluation version processed with iwt=11 weighting; it bounds gross error, not the qualification tolerance.",
+  "Partially-covered groups whose uncovered sliver sits inside a resolved range carry the declared resolved-region non-claim: they are reported in the comparison, never gated."
  ]
 }

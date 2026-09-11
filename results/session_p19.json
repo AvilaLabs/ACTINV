@@ -1,0 +1,42 @@
+{
+ "canonical_repository": "https://github.com/AvilaLabs/ACTINV.git",
+ "date": "2026-09-11",
+ "evidence_sha256": {
+  "g0_baseline": "0d26fa623c333a333efde3c00a73e1f764752ac5a988060ea29aaa4dd7fd9fd5",
+  "g0_check": "fe87baa0850e9d4b11f0674fd98226df74aee3d114409c0bd79bc134d5df0891",
+  "g1_artifact": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+  "g1_check": "cd2bf65e558b44e9ac8088ef46c175b996d7469b96bd54847f13601b5f616348",
+  "g1_record": "6058cf72d58ff3ba452a157b486f04c3a7bb0e378115da114f871205b625eb60",
+  "g2_check": "15998313680e9b0b6bc649b2b885ba0cebe06a9f4509b265b8986f654633cc56",
+  "g2_runtime": "91bf3ec9e7785c3d1272644b638175b4d48e64c76269045e531ce095f5cafd60",
+  "g3_check": "24860402c88c8292ee7820ff42c36ffb017e20630fe849d6542cfd3ca17a4631",
+  "g3_compare": "546c1e247808f621a0efa9463ae832c88bb4c66b7821d00cbc94d2ff2a2bb00b",
+  "g3_fendl_sanity": "85d59c05bb300257c8342cd9a29132184c9d2673133602e06bfa7dce24a2f147",
+  "g3_gendf_tape_Ag-107": "f85cd902607a8a50a5e9bcd8c06d922d0487f5357ff341d08fbedfafa42ac315",
+  "g3_gendf_tape_Fe-56": "fe9ad5c5252013822bd73fd9402c6899432057d2faea5ab96cf3d946b10195ab",
+  "g3_gendf_tape_Nb-93": "788efd2fbc6ec22eea7e66b725dc6fb71e2a585a624de16333a6f41a5bdd2620",
+  "g3_gendf_tape_Ta-181": "70bd680f88d6af94efde576ffe17cf410ee70504c3c5101ec8375b173a120ac9",
+  "g3_gendf_tape_U-238": "90a451879dda53ba89cffee164a8c840db39ff31926fa5557054ab02a8f267e3",
+  "g3_gendf_tape_W-186": "cd0d3f9c510b4d1dd382b6f2a1a6daf878e0165e62e86b39699eda8d081ab3ac",
+  "g3_groupr_gendf": "f3e3edca47ca9565bafd13d3b745265766ac699bcc73efe2f868ba9fc41b76ee",
+  "g3_limits": "7f1522378f73de6d7f9658d02b2f8e0b114d5676ac863c6ce9457fc3b083c75f",
+  "g3_rates": "786efc538685248e7c066e12df8b9033e02379df8216f4175d240271eb043c79",
+  "g4_perf": "47754734eb74e4550b2a596d72bdc3edfa2548b7cd85c70d0d95d2163a7c13f8",
+  "g5_check": "736edcc8bb97d8eff8665c2858be8efa32e8835e78b42f37f3e89420c561b7bf"
+ },
+ "g0_checkpoint": "7cfb547dbf46e6a7dd86360e78100d63d8d2225f",
+ "g1_checkpoint": "8b92bfec76eda4834a815888411465ae2ad0c07a",
+ "g2_checkpoint": "8fe97632adb84b6176ecdb668bd61eecff58b68a",
+ "g3_checkpoint": "d0bf31cce268f645b3a2a42a0fbc9e8d133651c3",
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true
+ },
+ "head_commit": "b16ead21a437e7803e67922b13ee0a29f0fa1ede",
+ "schema": "actinv-p19-session-1",
+ "verdict_sha256": "99e70780c5121cb2f1dd6198317ea9b2fff2a4e3f20a9a5bf077b073a370517e"
+}

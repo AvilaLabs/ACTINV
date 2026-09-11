@@ -271,6 +271,10 @@ and any sha256 or boundary mismatch. The ledger and certificate record the table
 sigma0 per nuclide, applied factors, and method limits — including that resolved-region pointwise shielding is
 not applied, damage observables are not shielded, and uncertainty propagation does not combine.
 
+A runnable walkthrough lives at `examples/shielding_demo.json`: pure W-186 under a 4–25 keV custom spectrum at
+fixed `sigma0_b = 0.1` — the ledger names every applied factor and W-187 activity lands ~28% below the
+unshielded solve of the same problem.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon

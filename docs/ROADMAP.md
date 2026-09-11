@@ -393,3 +393,20 @@ part that does not compress: users, issues, and the validation record accumulati
   temperature grid (792 energy rows, deterministic across runs); the Avila Core case at controls/p19_core
   compiled, executed the oracle step under a verified receipt, and recorded PASS on both G0 requirements.
   The four-surface identity baseline reproduces the P23-era hash exactly. Next: G1 build-shielding.
+- 2026-09-11 — P19 G1/G2 sealed: `build-shielding` emits the deterministic `actinv-shield-table-1` Bondarenko
+  artifact (PURR-equivalent ptable pipeline, six materials x 4 temperatures x 10 sigma0), and `self_shielding`
+  folds it into group rates with composition/fixed dilution, ledger+certificate provenance, fail-closed coverage,
+  and byte-identical absent-section output (`ebc307ff`).
+- 2026-09-11 — P19 G3 seals the oracle battery: the group fold was corrected to the full-group Bondarenko form
+  (covered segments carry probability-table weight moments; the uncovered part is suppressed by
+  sigma0/(sigma0+background)), after the flat `(1-c)+c*f` blend was shown to under-shield edge groups ~2x at
+  sigma0=0.1. Independent NJOY2016.79 PURR (node) and GROUPR (FISPACT-709 group) batteries pass all six materials
+  under measured per-material tolerances; raw GENDF tapes persist under `results/gendf/`. Held-out rates
+  (Ta-181 deep dilution, sigma0=1e10 byte-identical physics, run/mesh parity) and the FENDL-3.2c sanity leg land
+  inside the declared scope. Convention differences (GROUPR's pointwise weight on total/elastic; the ladder-mean
+  vs pointwise unshielded column) are measured, reported as diagnostics, and documented as limitations.
+- 2026-09-11 — P19 G4/G5 close the phase: `examples/shielding_demo.json` walkthrough, absent-feature performance
+  unchanged by construction (opt-in branch, byte-identical payloads) with feature cost recorded
+  (`results/g4_p19_perf.json`), and the independent closure checker `controls/check_g5_p19.py` re-verifies the
+  gate chain and artifact invariants without production imports (3/3 mutations rejected). Verdict
+  `results/verdict_p19.json`: **P19-PASS**. Next: P18b completion or the P20-P22 gap list.

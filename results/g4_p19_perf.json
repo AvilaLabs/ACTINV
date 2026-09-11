@@ -1,0 +1,29 @@
+{
+ "schema": "actinv-p19-g4-perf-1",
+ "repeat": 3,
+ "note": "absent-feature runs keep the collapsed-library path; the shielded run's one-time groupwise NPZ load is the recorded feature cost and dominates on this small demo problem",
+ "plain_solve_seconds": [
+  0.821,
+  0.798,
+  0.82
+ ],
+ "shielded_solve_seconds": [
+  1.565,
+  1.52,
+  1.545
+ ],
+ "fns_solve_seconds": [
+  0.855,
+  0.834,
+  0.835
+ ],
+ "shielded_over_plain_solve": 1.8835,
+ "table_build_seconds": 692.29,
+ "bound": 1.05,
+ "checks": {
+  "absent_feature_solve_stable": true,
+  "shielded_not_faster_than_absent": true,
+  "table_build_recorded": true
+ },
+ "pass": true
+}
