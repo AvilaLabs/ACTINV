@@ -401,6 +401,10 @@ def aggregate_projectile(projectile: str, p18: dict[str, Any]) -> dict[str, Any]
         decimal_header.get("precision_digits") == [80, 120],
         f"{projectile} decimal precision digits",
     )
+    require(
+        decimal_header.get("subresolution_bound") == "1E-30",
+        f"{projectile} decimal sub-resolution bound",
+    )
 
     source_counts: Counter[str] = Counter()
     fraction_counts: Counter[str] = Counter()
