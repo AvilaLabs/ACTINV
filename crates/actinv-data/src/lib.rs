@@ -13,4 +13,5 @@ pub mod library;
 pub mod prepared;
 pub mod processing;
 pub mod resonance;
+pub mod shielding;
 pub mod tables;

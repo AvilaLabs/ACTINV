@@ -29,6 +29,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
                     actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D]\n\
                     actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--cache DIR]\n\
+                    actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
@@ -393,6 +394,49 @@ fn build_damage(args: &[String]) {
     );
 }
 
+fn build_shielding(args: &[String]) {
+    if args.len() < 2 {
+        die("build-shielding needs EVALUATION_DIR OUT.json", 2);
+    }
+    let input = &args[0];
+    let output = &args[1];
+    let options = valued_options(&args[2..]);
+    reject_unknown(&options, &["--projectile", "--groups", "--cache"]);
+    let projectile_value = options.get("--projectile").copied().unwrap_or("auto");
+    let requested_projectile = if projectile_value == "auto" {
+        None
+    } else {
+        Some(Projectile::parse(projectile_value).unwrap_or_else(|error| die(error, 2)))
+    };
+    let detected_projectile = requested_projectile.unwrap_or_else(|| {
+        builder::inspect_projectile(input).unwrap_or_else(|error| die(error, 2))
+    });
+    let groups = match options.get("--groups").copied() {
+        Some("fispact-709") => GroupStructure::fispact_709(),
+        Some("fispact-162") => GroupStructure::fispact_162(),
+        Some(path) => GroupStructure::from_json(&read(path)),
+        None if detected_projectile == Projectile::Neutron => GroupStructure::fispact_709(),
+        None => GroupStructure::fispact_162(),
+    }
+    .unwrap_or_else(|error| die(error, 2));
+    let build_options = builder::ShieldingBuildOptions {
+        projectile: requested_projectile,
+        groups,
+        cache: options.get("--cache").map(std::path::PathBuf::from),
+    };
+    let summary = builder::build_shielding(input, output, &build_options)
+        .unwrap_or_else(|error| die(error, 1));
+    println!(
+        "{} shielding targets, {} evaluations without unresolved data, {} cache hits, {} {}, sha256 {}",
+        summary.targets,
+        summary.uncovered_evaluations,
+        summary.cache_hits,
+        summary.projectile.name(),
+        summary.output.display(),
+        summary.sha256
+    );
+}
+
 fn build_covariance(args: &[String]) {
     if args.len() < 3 {
         die(
@@ -495,6 +539,7 @@ pub fn main_from(a: Vec<String>) {
         "build-covariance" => build_covariance(&a[2..]),
         "build-damage" => build_damage(&a[2..]),
         "build-library" => build_library(&a[2..]),
+        "build-shielding" => build_shielding(&a[2..]),
         "data" => data_command(&a[2..]),
         "import-flux" => {
             let summary = import_flux(&a[2..]);

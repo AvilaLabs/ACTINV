@@ -2240,6 +2240,334 @@ pub fn build_damage(
     })
 }
 
+// ---------------------------------------------------------------------------
+// P19 shielding-table builder: ENDF-6 MF=2 LRU=2 unresolved-resonance
+// statistics -> deterministic Bondarenko factor table (actinv-shield-table-1).
+// The pipeline is a deterministic port of NJOY2016 PURR (stratified quantiles
+// instead of RNG); see crates/actinv-data/src/shielding.rs.
+// ---------------------------------------------------------------------------
+
+#[derive(Clone, Debug)]
+pub struct ShieldingBuildOptions {
+    pub projectile: Option<Projectile>,
+    pub groups: GroupStructure,
+    pub cache: Option<PathBuf>,
+}
+
+#[derive(Debug)]
+pub struct ShieldingBuildSummary {
+    pub targets: usize,
+    pub uncovered_evaluations: usize,
+    pub cache_hits: usize,
+    pub projectile: Projectile,
+    pub output: PathBuf,
+    pub sha256: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct ShieldingCacheEntry {
+    nuclides: BTreeMap<String, serde_json::Value>,
+    uncovered: Vec<String>,
+}
+
+fn shielding_cache_key(source_sha256: &str, options: &ShieldingBuildOptions) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(b"ACTINV-SHIELDING-BUILD-v1\0");
+    hasher.update(source_sha256.as_bytes());
+    hasher.update(options.groups.hash().as_bytes());
+    format!("{:x}", hasher.finalize())
+}
+
+fn shielding_nuclide_entry(
+    evaluation: &crate::activation::Evaluation,
+    groups: &GroupStructure,
+) -> Result<Option<serde_json::Value>, String> {
+    let Some(resonance) = &evaluation.resonance else {
+        return Ok(None);
+    };
+    let mut ranges: Vec<(f64, f64)> = Vec::new();
+    for isotope in &resonance.isotopes {
+        for range in &isotope.ranges {
+            if matches!(range.data, crate::resonance::RangeData::Unresolved(_)) {
+                ranges.push((range.energy_min, range.energy_max));
+            }
+        }
+    }
+    if ranges.is_empty() {
+        return Ok(None);
+    }
+    let nodes = crate::shielding::shield_evaluation(
+        evaluation,
+        &crate::shielding::SIGMA0_B,
+        &crate::shielding::TEMPERATURES_K,
+        crate::shielding::NLADR,
+    )?;
+    if nodes.is_empty() {
+        return Ok(None);
+    }
+    let collapsed = crate::shielding::collapse_to_groups(
+        &nodes,
+        &ranges,
+        groups,
+        &crate::shielding::SIGMA0_B,
+        &crate::shielding::TEMPERATURES_K,
+    );
+    let channel_names = ["total", "elastic", "fission", "capture"];
+    let node_rows: Vec<serde_json::Value> = nodes
+        .iter()
+        .map(|node| {
+            let bondarenko = node.sigf.as_ref().map(|sigf| {
+                serde_json::Value::Object(
+                    channel_names
+                        .iter()
+                        .enumerate()
+                        .map(|(c, name)| (name.to_string(), serde_json::json!(sigf[c])))
+                        .collect(),
+                )
+            });
+            let ptable = node.ptable.as_ref().map(|pt| {
+                pt.iter()
+                    .map(|(bounds, vals)| {
+                        serde_json::json!({
+                            "bounds_b": bounds,
+                            "prob": vals[0],
+                            "total_b": vals[1],
+                            "elastic_b": vals[2],
+                            "fission_b": vals[3],
+                            "capture_b": vals[4],
+                        })
+                    })
+                    .collect::<Vec<_>>()
+            });
+            serde_json::json!({
+                "energy_ev": node.energy_ev,
+                "ptable": ptable,
+                "covered": node.covered,
+                "sigma_p_b": node.sigma_p_b,
+                "infinite_dilution_b": node.infinite_dilution_b,
+                "bondarenko_b": bondarenko,
+                "direct_b": node.sigf_direct.as_ref().map(|sigf| {
+                    serde_json::Value::Object(
+                        channel_names
+                            .iter()
+                            .enumerate()
+                            .map(|(c, name)| (name.to_string(), serde_json::json!(sigf[c])))
+                            .collect(),
+                    )
+                }),
+                "ladder_sigma_percent": node.ladder_sigma_percent,
+                "mean_unshielded_b": node.mean_unshielded,
+                "ladders": node.ladder_count,
+                "resonances_per_ladder": node.resonances_per_ladder,
+            })
+        })
+        .collect();
+    let group_rows: Vec<serde_json::Value> = collapsed
+        .iter()
+        .map(|row| {
+            serde_json::json!({
+                "group": row.group,
+                "overlap_fraction": row.overlap_fraction,
+                "sigma_p_b": row.sigma_p_b,
+                "infinite_dilution_b": row.infinite_dilution_b,
+                "factors": serde_json::Value::Object(
+                    channel_names
+                        .iter()
+                        .enumerate()
+                        .map(|(c, name)| (name.to_string(), serde_json::json!(row.factors[c])))
+                        .collect(),
+                ),
+                "shielded_b": serde_json::Value::Object(
+                    channel_names
+                        .iter()
+                        .enumerate()
+                        .map(|(c, name)| (name.to_string(), serde_json::json!(row.shielded_b[c])))
+                        .collect(),
+                ),
+            })
+        })
+        .collect();
+    Ok(Some(serde_json::json!({
+        "za": evaluation.metadata.za,
+        "liso": evaluation.metadata.liso,
+        "unresolved_ranges_ev": ranges,
+        "nodes": node_rows,
+        "groups": group_rows,
+    })))
+}
+
+/// Build and atomically publish an `actinv-shield-table-1` from an evaluation
+/// directory. Evaluations without MF=2 LRU=2 unresolved blocks are named in
+/// `uncovered` — never fabricated.
+pub fn build_shielding(
+    input: impl AsRef<Path>,
+    output: impl AsRef<Path>,
+    options: &ShieldingBuildOptions,
+) -> Result<ShieldingBuildSummary, String> {
+    let input = input.as_ref();
+    let output = output.as_ref();
+    let files = discover_inputs(input, Some(output))?;
+    if let Some(cache) = &options.cache {
+        if input.is_dir() && cache.starts_with(input) {
+            return Err("shielding checkpoint cache must be outside the input directory".into());
+        }
+        std::fs::create_dir_all(cache).map_err(|error| {
+            format!(
+                "cannot create shielding checkpoint cache {}: {error}",
+                cache.display()
+            )
+        })?;
+    }
+    let projectile = match options.projectile {
+        Some(projectile) => projectile,
+        None => inspect_projectile(input)?,
+    };
+    if !projectile.is_neutron() {
+        return Err(format!(
+            "{} shielding tables require neutron evaluations",
+            projectile.name()
+        ));
+    }
+    let mut nuclides: BTreeMap<String, serde_json::Value> = BTreeMap::new();
+    let mut nuclide_files: BTreeMap<String, String> = BTreeMap::new();
+    let mut provenance = Vec::new();
+    let mut uncovered = Vec::new();
+    let mut cache_hits = 0usize;
+    for path in &files {
+        let before = sha256_file(path)?;
+        let filename = path
+            .file_name()
+            .and_then(|name| name.to_str())
+            .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
+            .to_owned();
+        if let Some(cache) = &options.cache {
+            let key = shielding_cache_key(&before, options);
+            let checkpoint = cache.join(format!("{key}.json"));
+            if checkpoint.exists() {
+                let entry: ShieldingCacheEntry = serde_json::from_str(
+                    &std::fs::read_to_string(&checkpoint).map_err(|error| {
+                        format!(
+                            "cannot read shielding checkpoint {}: {error}",
+                            checkpoint.display()
+                        )
+                    })?,
+                )
+                .map_err(|error| {
+                    format!(
+                        "cannot parse shielding checkpoint {}: {error}",
+                        checkpoint.display()
+                    )
+                })?;
+                if sha256_file(path)? != before {
+                    return Err(format!(
+                        "source {} changed while its shielding checkpoint was validated",
+                        path.display()
+                    ));
+                }
+                cache_hits += 1;
+                provenance.push((filename.clone(), before));
+                for (name, row) in entry.nuclides {
+                    nuclide_files.insert(name.clone(), filename.clone());
+                    nuclides.insert(name, row);
+                }
+                uncovered.extend(entry.uncovered);
+                continue;
+            }
+        }
+        let text = std::fs::read_to_string(path)
+            .map_err(|error| format!("cannot read {} as ENDF text: {error}", path.display()))?;
+        let evaluations = parse_evaluations(&text, Some(projectile))
+            .map_err(|error| format!("{}: {error}", path.display()))?;
+        let mut entry = ShieldingCacheEntry {
+            nuclides: BTreeMap::new(),
+            uncovered: Vec::new(),
+        };
+        for evaluation in &evaluations {
+            if evaluation.metadata.projectile != projectile {
+                return Err(format!(
+                    "{} contains a {} evaluation inside a {} directory",
+                    path.display(),
+                    evaluation.metadata.projectile.name(),
+                    projectile.name()
+                ));
+            }
+            let name = damage_nuclide_name(evaluation.metadata.za, evaluation.metadata.liso);
+            match shielding_nuclide_entry(evaluation, &options.groups)? {
+                Some(row) => {
+                    if nuclides.contains_key(&name) || entry.nuclides.contains_key(&name) {
+                        return Err(format!(
+                            "duplicate shielding target {name} in '{}'",
+                            path.display()
+                        ));
+                    }
+                    entry.nuclides.insert(name.clone(), row);
+                }
+                None => entry.uncovered.push(name),
+            }
+        }
+        if let Some(cache) = &options.cache {
+            let key = shielding_cache_key(&before, options);
+            let checkpoint = cache.join(format!("{key}.json"));
+            write_json_atomic(&checkpoint, &entry)?;
+        }
+        provenance.push((filename, before));
+        for (name, row) in entry.nuclides {
+            nuclide_files.insert(name.clone(), path.display().to_string());
+            nuclides.insert(name, row);
+        }
+        uncovered.extend(entry.uncovered);
+    }
+    let _ = &nuclide_files;
+    let input_label = input
+        .file_name()
+        .and_then(|name| name.to_str())
+        .unwrap_or("evaluations")
+        .to_owned();
+    let table = serde_json::json!({
+        "format": "actinv-shield-table-1",
+        "generator": "actinv build-shielding (deterministic PURR-equivalent)",
+        "source": {
+            "citation": "ENDF-6 MF=2 LRU=2 unresolved-resonance statistics processed by actinv build-shielding",
+            "edition": input_label,
+            "url": input.display().to_string(),
+        },
+        "method": {
+            "pipeline": "ENDF-6 MF=2 LRU=2 -> unresx ladder parameters -> deterministic stratified-quantile ladders -> zoned Voigt accumulation -> probability-table Bondarenko moments -> infinite-dilution renorm (PURR MT=152 convention)",
+            "sampling": "stratified quantile grid, deterministic permutation, no RNG",
+            "nladr": crate::shielding::NLADR,
+            "nstrat": crate::shielding::NSTRAT,
+            "strat_step": crate::shielding::STRAT_STEP,
+            "ngrid": crate::shielding::NGRID,
+            "nbin": crate::shielding::NBIN,
+            "nermax": crate::shielding::NERMAX,
+            "tref_K": crate::shielding::TREF_K,
+            "reference": "NJOY2016.79 purr.f90: rdf2un/rdf3un/unresx/unfac2/gnrx/ladr2/unrest/uw2/uwtab2",
+        },
+        "sigma0_b": crate::shielding::SIGMA0_B,
+        "temperatures_K": crate::shielding::TEMPERATURES_K,
+        "group_structure": {
+            "name": options.groups.name,
+            "boundaries_eV": options.groups.boundaries_ev,
+        },
+        "files": provenance
+            .iter()
+            .map(|(path, sha256)| serde_json::json!({"path": path, "sha256": sha256}))
+            .collect::<Vec<_>>(),
+        "uncovered": uncovered,
+        "nuclides": nuclides,
+    });
+    write_json_atomic(output, &table)?;
+    let sha256 = sha256_file(output)?;
+    Ok(ShieldingBuildSummary {
+        targets: table["nuclides"].as_object().map(|m| m.len()).unwrap_or(0),
+        uncovered_evaluations: table["uncovered"].as_array().map(|v| v.len()).unwrap_or(0),
+        cache_hits,
+        projectile,
+        output: output.to_path_buf(),
+        sha256,
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

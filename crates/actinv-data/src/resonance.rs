@@ -938,11 +938,15 @@ fn phase_shift(l: i32, rho: f64) -> Result<f64, String> {
     })
 }
 
-fn channel_radius(awri: f64) -> f64 {
+pub(crate) fn channel_radius(awri: f64) -> f64 {
     0.123 * (awri * NEUTRON_MASS_AMU).cbrt() + 0.08
 }
 
-fn scattering_radius(range: &ResonanceRange, fallback: f64, energy: f64) -> Result<f64, String> {
+pub(crate) fn scattering_radius(
+    range: &ResonanceRange,
+    fallback: f64,
+    energy: f64,
+) -> Result<f64, String> {
     match &range.scattering_radius {
         Some(table) => table.evaluate(energy),
         None => Ok(fallback),
@@ -1505,7 +1509,7 @@ fn interpolate_parameter(
     })
 }
 
-fn unresolved_point_at(
+pub(crate) fn unresolved_point_at(
     sequence: &UnresolvedSequence,
     energy: f64,
 ) -> Result<UnresolvedPoint, String> {
