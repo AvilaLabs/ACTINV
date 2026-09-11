@@ -1,0 +1,24 @@
+{
+  "schema": "actinv-session-record-1",
+  "phase": "P19",
+  "gate": "G0",
+  "summary": [
+    "Opened P19 under frozen protocol 8ee3d561 (opening commit d463d57, post history-rewrite).",
+    "Recorded the unresolved-resonance coverage inventory over TENDL-2025: 2715/2850 neutron files carry MF=2 LRU=2 blocks; all six test-set materials covered (all LRF=2 SLBW); Mn-55 and Pb-208 confirmed absent for the honest-absence legs.",
+    "Demonstrated oracle feasibility: local NJOY2016.79 ran reconr+broadr+purr on TENDL-2025 W-186 producing MF=2 MT=152 Bondarenko tables and MT=153 probability tables; W-186 total sigma drops from 24.97 b at sigma0=1e10 to 2.45 b at sigma0=0.1. Probe PENDF preserved.",
+    "Authored the Avila Core case at controls/p19_core with three package-declared external-checker adapters (njoy-purr-extract, build-shield-table, shield-compare); at G0 only the oracle step is in the contract workflow. The package compiles under avila-core run --plan.",
+    "Recorded the four-surface identity baseline (CLI cold/warm, Python, mesh) at the G0 head."
+  ],
+  "g0_requirements": {
+    "protocol_frozen": true,
+    "identity_baseline": "results/g0_p19_identity_baseline.json",
+    "oracle_feasibility": "results/p19_oracle_inventory.json",
+    "coverage_inventory": "results/p19_lru2_inventory.json",
+    "core_package_compiles": "results/p19_core_plan.json"
+  },
+  "deferred": [
+    "actinv-shield and shield-compare Core steps enter the contract workflow at the gates where their artifacts exist (G1/G3); each revision is recorded in the campaign lineage.",
+    "FENDL-3.2c GENDF magnitude sanity and NJOY GROUPR comparisons are G3 legs.",
+    "Resolved-resonance pointwise shielding remains out of scope per the frozen protocol."
+  ]
+}

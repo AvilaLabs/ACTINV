@@ -1,0 +1,33 @@
+{
+ "coverage": "results/p19_lru2_inventory.json",
+ "fendl": {
+  "files": [
+   "74W_186.g",
+   "47Ag107.g",
+   "26Fe056.g"
+  ],
+  "role": "independent-source GENDF dilution-block magnitude sanity check",
+  "root": "/home/connoravila/nuclear-data/fendl-3.2c/group"
+ },
+ "njoy": {
+  "license": "BSD-3-Clause (LANL open distribution)",
+  "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+  "role": "independent processing oracle only; never invoked by the production path",
+  "source": "/home/connoravila/nuclear-data/njoy2016.79",
+  "version": "2016.79"
+ },
+ "njoy_purr_mt152": true,
+ "njoy_sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30",
+ "probe": {
+  "deck": "reconr + broadr(293.6K) + purr(10 sigma0 points)",
+  "deck_sha256": "d877adfbeb473446574dc46055c4c60f6763e48f77c5ba90ec7a44d8029ac231",
+  "evaluation": "tendl-2025/files/n/n-W186.tendl",
+  "material": "W-186",
+  "observed": "MF=2 MT=152 Bondarenko and MT=153 probability-table records present; sigma0-dependent cross sections over the declared grid",
+  "pendf": "results/p19_w186_probe_pendf.tape23"
+ },
+ "schema": "actinv-p19-oracle-inventory-1",
+ "sigma0_response_note": "W-186 total cross section falls from 24.97 b at sigma0=1e10 to 2.45 b at sigma0=0.1 (approximately 10x dilution response)",
+ "sigma0_response_observed": 10.2,
+ "w186_pendf_sha256": "6b573f2b8b7d3157ea5926f3cb07ac91c0b498659c138ec475622bcfe0533a0a"
+}

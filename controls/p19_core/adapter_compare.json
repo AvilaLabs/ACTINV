@@ -1,0 +1,39 @@
+{
+  "schema_version": "avila.core/external-checker-adapter/v0.1-draft",
+  "adapter_id": "avila-labs.actinv/shield-compare@1",
+  "capability_type": { "id": "actinv.p19-shield-compare", "major": 1 },
+  "input_slots": [
+    "compare-script",
+    "purr-result",
+    "shield-table",
+    "tolerances"
+  ],
+  "arguments": [
+    { "kind": "input_path", "input_slot": "compare-script" },
+    { "kind": "input_path", "input_slot": "purr-result" },
+    { "kind": "input_path", "input_slot": "shield-table" },
+    { "kind": "input_path", "input_slot": "tolerances" },
+    { "kind": "output_path", "output_id": "comparison" }
+  ],
+  "outputs": [
+    {
+      "output_id": "comparison",
+      "workspace_path": "outputs/comparison.json",
+      "media_type": "application/vnd.avila.actinv.shield-comparison+json"
+    }
+  ],
+  "claims": [
+    { "model": "exact", "output_slot": "dev-w186", "output_id": "comparison", "pointer": "/materials/W-186/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "dev-ag107", "output_id": "comparison", "pointer": "/materials/Ag-107/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "dev-ta181", "output_id": "comparison", "pointer": "/materials/Ta-181/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "dev-nb93", "output_id": "comparison", "pointer": "/materials/Nb-93/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "dev-u238", "output_id": "comparison", "pointer": "/materials/U-238/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "dev-fe056", "output_id": "comparison", "pointer": "/materials/Fe-56/max_relative_deviation", "unit": "1" },
+    { "model": "exact", "output_slot": "infinite-dilution-dev", "output_id": "comparison", "pointer": "/infinite_dilution_max_dev", "unit": "1" },
+    { "model": "categorical", "output_slot": "all-covered", "output_id": "comparison", "pointer": "/all_covered", "allowed_values": ["covered"] }
+  ],
+  "timeout_ms": 300000,
+  "limitations": [
+    "The comparator owns only arithmetic deviation computation; the scientific choice of which (sigma0, T, MT) cells enter the metric is fixed by the frozen tolerances input and the comparison script."
+  ]
+}

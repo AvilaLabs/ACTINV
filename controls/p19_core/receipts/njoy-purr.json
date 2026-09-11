@@ -1,0 +1,164 @@
+{
+  "schema_version": "avila.core/execution-receipt/v0.1-draft",
+  "case_id": "case-p19.actinv-self-shielding",
+  "compiled_snapshot_sha256": "sha256:17432e781cab6a7f8c930e63666b40c346b03d90fd9e5df3bfeaed6c2d8362fc",
+  "step_id": "njoy-purr",
+  "capability_type": {
+    "id": "actinv.p19-njoy-purr-extract",
+    "major": 1
+  },
+  "adapter": "avila-labs.actinv/njoy-purr-extract@1",
+  "capability": {
+    "capability_id": "python3",
+    "package_id": "org.python/cpython@3.14.4",
+    "executable_sha256": "sha256:52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41"
+  },
+  "parameters": {},
+  "inputs": [
+    {
+      "input_slot": "driver-script",
+      "evidence_id": "input:purr-driver",
+      "workspace_path": "tools/njoy_purr_extract.py",
+      "media_type": "text/x-python",
+      "sha256": "sha256:176d6d6048b7a5617fbc4cc0956ed9cd94f704a4c961f3c7eaa3e8a9a3e9012b",
+      "bytes": 8493
+    },
+    {
+      "input_slot": "eval-ag107",
+      "evidence_id": "input:eval-ag107",
+      "workspace_path": "evals/n-Ag107.tendl",
+      "media_type": "text/plain",
+      "sha256": "sha256:63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647",
+      "bytes": 4956957
+    },
+    {
+      "input_slot": "eval-fe056",
+      "evidence_id": "input:eval-fe056",
+      "workspace_path": "evals/n-Fe056.tendl",
+      "media_type": "text/plain",
+      "sha256": "sha256:f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+      "bytes": 4358610
+    },
+    {
+      "input_slot": "eval-nb93",
+      "evidence_id": "input:eval-nb93",
+      "workspace_path": "evals/n-Nb093.tendl",
+      "media_type": "text/plain",
+      "sha256": "sha256:e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109",
+      "bytes": 4897017
+    },
+    {
+      "input_slot": "eval-ta181",
+      "evidence_id": "input:eval-ta181",
+      "workspace_path": "evals/n-Ta181.tendl",
+      "media_type": "text/plain",
+      "sha256": "sha256:c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608",
+      "bytes": 5146416
+    },
+    {
+      "input_slot": "eval-u238",
+      "evidence_id": "input:eval-u238",
+      "workspace_path": "evals/n-U238.tendl",
+      "media_type": "text/plain",
+      "sha256": "sha256:394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c",
+      "bytes": 5249772
+    },
+    {
+      "input_slot": "eval-w186",
+      "evidence_id": "input:eval-w186",
+      "workspace_path": "evals/n-W186.tendl",
+      "media_type": "text/plain",
+      "sha256": "sha256:ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
+      "bytes": 4233789
+    },
+    {
+      "input_slot": "group-structure",
+      "evidence_id": "input:group-structure",
+      "workspace_path": "inputs/fispact_709_groups.json",
+      "media_type": "application/json",
+      "sha256": "sha256:ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f",
+      "bytes": 9850
+    },
+    {
+      "input_slot": "materials-manifest",
+      "evidence_id": "input:materials-manifest",
+      "workspace_path": "inputs/materials.json",
+      "media_type": "application/json",
+      "sha256": "sha256:49ef22e992d312e892137dddf92a308d82c14e3965a0004bd16269fe380c6d86",
+      "bytes": 381
+    },
+    {
+      "input_slot": "njoy-executable",
+      "evidence_id": "input:njoy-executable",
+      "workspace_path": "tools/njoy",
+      "media_type": "application/x-executable",
+      "sha256": "sha256:57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30",
+      "bytes": 3711696
+    }
+  ],
+  "invocation": {
+    "program": "python3",
+    "arguments": [
+      "tools/njoy_purr_extract.py",
+      "inputs/materials.json",
+      "tools/njoy",
+      "evals/n-W186.tendl",
+      "evals/n-Ag107.tendl",
+      "evals/n-Ta181.tendl",
+      "evals/n-Nb093.tendl",
+      "evals/n-U238.tendl",
+      "evals/n-Fe056.tendl",
+      "inputs/fispact_709_groups.json",
+      "outputs/purr_mt152.json"
+    ],
+    "working_directory": ".",
+    "adapter_sha256": "sha256:89e8b2bf6b5ca09fdc150585daa6940ea32c5793aa2385fcc145215ac6e6528f",
+    "environment": {},
+    "timeout_ms": 3600000
+  },
+  "invocation_sha256": "sha256:d558ab2ed64a54c5b6e27279dbceec0f731870c998a04e713c598f7669cdd8f4",
+  "process": {
+    "started_at": "2026-09-11T02:41:51.379Z",
+    "finished_at": "2026-09-11T02:59:19.555Z",
+    "duration_ms": 1048175,
+    "exit_status": 0,
+    "timed_out": false
+  },
+  "logs": [
+    {
+      "stream": "stdout",
+      "workspace_path": "logs/stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "stream": "stderr",
+      "workspace_path": "logs/stderr.log",
+      "sha256": "sha256:06b8ae84602022582b6268dbb5191892f62241c9b5edd913c43920ea50cd9479",
+      "bytes": 292
+    }
+  ],
+  "outputs": [
+    {
+      "output_id": "purr-table",
+      "workspace_path": "outputs/purr_mt152.json",
+      "media_type": "application/vnd.avila.actinv.purr-mt152+json",
+      "state": "collected",
+      "sha256": "sha256:d78f6110ee5e90d4ab6cb347285d0c3ee629750bf420923685da39bad1005c9c",
+      "bytes": 1011603
+    }
+  ],
+  "runner": {
+    "runner": "avila.core/cli-rust@0.1.0",
+    "os": "linux",
+    "arch": "x86_64"
+  },
+  "status": "completed",
+  "limitations": [
+    "Exit status and output digests are process evidence, not scientific success.",
+    "The executable digest identifies the bytes that ran; it does not qualify the method.",
+    "No sandbox or resource accounting was applied beyond a cleared environment, a working directory confined to the workspace, and terminating the child's Unix process group or Windows Job Object on timeout; nothing here is signed.",
+    "The NJOY binary is an input artifact verified by digest; Core records that the pinned interpreter ran the pinned script over the pinned bytes. NJOY's Monte Carlo ladders are the independent processing oracle and are not deterministic by construction; the receipt does not claim NJOY output identity across attempts."
+  ],
+  "notice": "An execution receipt is process evidence: it binds the exact capability, staged input bytes, invocation, process outcome, logs, and produced output bytes of one step. It does not establish scientific correctness, qualification, practical suitability, or regulatory suitability."
+}

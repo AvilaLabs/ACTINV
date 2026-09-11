@@ -1,0 +1,166 @@
+{
+  "schema_version": "avila.core/campaign-report/v0.2-draft",
+  "semantic_profile": "avila.core/semantic/0.2-draft",
+  "status": "evaluated",
+  "compiled_snapshot_sha256": "sha256:17432e781cab6a7f8c930e63666b40c346b03d90fd9e5df3bfeaed6c2d8362fc",
+  "claims_sha256": "sha256:008696188d6375fa3280460dada1d538ee496a8bfb56b3fae3595452f734c401",
+  "admissions": [
+    {
+      "evidence_id": "input:eval-ag107",
+      "source": {
+        "source": "contract_input",
+        "input_id": "eval-ag107"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:eval-fe056",
+      "source": {
+        "source": "contract_input",
+        "input_id": "eval-fe056"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:eval-nb93",
+      "source": {
+        "source": "contract_input",
+        "input_id": "eval-nb93"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:eval-ta181",
+      "source": {
+        "source": "contract_input",
+        "input_id": "eval-ta181"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:eval-u238",
+      "source": {
+        "source": "contract_input",
+        "input_id": "eval-u238"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:eval-w186",
+      "source": {
+        "source": "contract_input",
+        "input_id": "eval-w186"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:group-structure",
+      "source": {
+        "source": "contract_input",
+        "input_id": "group-structure"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:materials-manifest",
+      "source": {
+        "source": "contract_input",
+        "input_id": "materials-manifest"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:njoy-executable",
+      "source": {
+        "source": "contract_input",
+        "input_id": "njoy-executable"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "input:purr-driver",
+      "source": {
+        "source": "contract_input",
+        "input_id": "purr-driver"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "p19-purr-row-count",
+      "source": {
+        "source": "step_output",
+        "step_id": "njoy-purr",
+        "output_slot": "purr-row-count"
+      },
+      "state": "admitted"
+    },
+    {
+      "evidence_id": "p19-purr-status",
+      "source": {
+        "source": "step_output",
+        "step_id": "njoy-purr",
+        "output_slot": "purr-status"
+      },
+      "state": "admitted"
+    }
+  ],
+  "verdicts": [
+    {
+      "requirement_id": "P19-C0-STATUS",
+      "statement": "The oracle extraction reports status complete (all six materials at the full grid).",
+      "metric": {
+        "source": "step_output",
+        "step_id": "njoy-purr",
+        "output_slot": "purr-status"
+      },
+      "evidence_ids": [
+        "p19-purr-status"
+      ],
+      "verdict": {
+        "status": "pass",
+        "rule": "categorical.equals.match",
+        "numbers_present": false,
+        "observed_category": "complete",
+        "accepted_categories": [
+          "complete"
+        ]
+      },
+      "boundary": {
+        "semantic_profile": "avila.core/semantic/0.2-draft",
+        "compiler": "avila.core/compiler-rust@0.1.0",
+        "evaluator": "avila.core/kernel-rust@0.1.0",
+        "compiled_snapshot_sha256": "sha256:17432e781cab6a7f8c930e63666b40c346b03d90fd9e5df3bfeaed6c2d8362fc",
+        "claims_sha256": "sha256:008696188d6375fa3280460dada1d538ee496a8bfb56b3fae3595452f734c401"
+      }
+    },
+    {
+      "requirement_id": "P19-R0-ORACLE-COMPLETE",
+      "statement": "The NJOY PURR oracle produces complete MT=152 Bondarenko rows (declared sigma0 x temperature grid) for every test-set material.",
+      "metric": {
+        "source": "step_output",
+        "step_id": "njoy-purr",
+        "output_slot": "purr-row-count"
+      },
+      "evidence_ids": [
+        "p19-purr-row-count"
+      ],
+      "verdict": {
+        "status": "pass",
+        "rule": "nominal.ge.within",
+        "canonical_unit": "1",
+        "limit_canonical": "240",
+        "nominal_canonical": "792",
+        "basis_visible": "nominal"
+      },
+      "boundary": {
+        "semantic_profile": "avila.core/semantic/0.2-draft",
+        "compiler": "avila.core/compiler-rust@0.1.0",
+        "evaluator": "avila.core/kernel-rust@0.1.0",
+        "compiled_snapshot_sha256": "sha256:17432e781cab6a7f8c930e63666b40c346b03d90fd9e5df3bfeaed6c2d8362fc",
+        "claims_sha256": "sha256:008696188d6375fa3280460dada1d538ee496a8bfb56b3fae3595452f734c401"
+      }
+    }
+  ],
+  "campaign_sha256": "sha256:a0a15be900f8dfd5dd2d487e520b547fad3557013084e55a4d1accaaf626e068",
+  "notice": "Campaign evaluation admits claims under the executable type-level subset of the draft admission rules and derives verdicts from admitted claims under the draft profile. Artifact bytes, execution receipts, package identities, signatures, qualification, policy snapshots, and invalidation are not checked. Optional practical review controls presentation outside this evaluator and cannot alter a technical verdict. No verdict here is scientific truth, certification, or regulatory approval."
+}

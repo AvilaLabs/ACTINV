@@ -1,0 +1,254 @@
+{
+  "schema_version": "avila.core/evidence-contract/v0.2-draft",
+  "semantic_profile": "avila.core/semantic/0.2-draft",
+  "contract_id": "case-p19.actinv-self-shielding",
+  "revision": 1,
+  "status": "draft",
+  "question": "On the frozen TENDL-2025 test set {W-186, Ag-107, Ta-181, Nb-93, U-238, Fe-56}, does NJOY2016.79 PURR produce complete MT=152 Bondarenko cross-section data over the declared sigma0 x temperature grid? Later revisions add the ACTINV shield-table build and the oracle-comparison requirements once the production capability exists.",
+  "assumptions": [
+    "The six ENDF-6 evaluation files are the frozen TENDL-2025 test set; Core verifies byte identity by digest and does not qualify the evaluation physics.",
+    "NJOY2016.79 is an independent processing oracle executed through a pinned interpreter driver; its Monte Carlo ladders are stochastic, so oracle rows carry sampling noise that the declared tolerance must absorb. ACTINV's production path never invokes NJOY.",
+    "ACTINV's shield table is produced by the deterministic stratified-quantile PURR-equivalent processor in actinv build-shielding; the table artifact is verified by digest.",
+    "The comparison covers unresolved-range (MF=2 LRU=2) Bondarenko factors for the declared sigma0 x temperature grid only. Resolved-resonance pointwise shielding and probability-table transport are outside the question.",
+    "This contract is an internal development feedback case, not a release qualification."
+  ],
+  "execution_policy": {
+    "permit_nominal_basis": true
+  },
+  "inputs": [
+    {
+      "input_id": "njoy-executable",
+      "role": {
+        "id": "njoy.executable",
+        "major": 1
+      },
+      "media_type": "application/x-executable",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "purr-driver",
+      "role": {
+        "id": "actinv.p19-driver-script",
+        "major": 1
+      },
+      "media_type": "text/x-python",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "materials-manifest",
+      "role": {
+        "id": "actinv.p19-materials",
+        "major": 1
+      },
+      "media_type": "application/json",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "group-structure",
+      "role": {
+        "id": "actinv.group-structure",
+        "major": 1
+      },
+      "media_type": "application/json",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "eval-w186",
+      "role": {
+        "id": "actinv.endf-evaluation",
+        "major": 1
+      },
+      "media_type": "text/plain",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "eval-ag107",
+      "role": {
+        "id": "actinv.endf-evaluation",
+        "major": 1
+      },
+      "media_type": "text/plain",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "eval-ta181",
+      "role": {
+        "id": "actinv.endf-evaluation",
+        "major": 1
+      },
+      "media_type": "text/plain",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "eval-nb93",
+      "role": {
+        "id": "actinv.endf-evaluation",
+        "major": 1
+      },
+      "media_type": "text/plain",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "eval-u238",
+      "role": {
+        "id": "actinv.endf-evaluation",
+        "major": 1
+      },
+      "media_type": "text/plain",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    },
+    {
+      "input_id": "eval-fe056",
+      "role": {
+        "id": "actinv.endf-evaluation",
+        "major": 1
+      },
+      "media_type": "text/plain",
+      "claim_model": {
+        "model": "unquantified"
+      }
+    }
+  ],
+  "workflow": [
+    {
+      "step_id": "njoy-purr",
+      "capability_type": {
+        "id": "actinv.p19-njoy-purr-extract",
+        "major": 1
+      },
+      "bindings": [
+        {
+          "input_slot": "driver-script",
+          "source": {
+            "source": "contract_input",
+            "input_id": "purr-driver"
+          }
+        },
+        {
+          "input_slot": "materials-manifest",
+          "source": {
+            "source": "contract_input",
+            "input_id": "materials-manifest"
+          }
+        },
+        {
+          "input_slot": "njoy-executable",
+          "source": {
+            "source": "contract_input",
+            "input_id": "njoy-executable"
+          }
+        },
+        {
+          "input_slot": "group-structure",
+          "source": {
+            "source": "contract_input",
+            "input_id": "group-structure"
+          }
+        },
+        {
+          "input_slot": "eval-w186",
+          "source": {
+            "source": "contract_input",
+            "input_id": "eval-w186"
+          }
+        },
+        {
+          "input_slot": "eval-ag107",
+          "source": {
+            "source": "contract_input",
+            "input_id": "eval-ag107"
+          }
+        },
+        {
+          "input_slot": "eval-ta181",
+          "source": {
+            "source": "contract_input",
+            "input_id": "eval-ta181"
+          }
+        },
+        {
+          "input_slot": "eval-nb93",
+          "source": {
+            "source": "contract_input",
+            "input_id": "eval-nb93"
+          }
+        },
+        {
+          "input_slot": "eval-u238",
+          "source": {
+            "source": "contract_input",
+            "input_id": "eval-u238"
+          }
+        },
+        {
+          "input_slot": "eval-fe056",
+          "source": {
+            "source": "contract_input",
+            "input_id": "eval-fe056"
+          }
+        }
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "P19-R0-ORACLE-COMPLETE",
+      "statement": "The NJOY PURR oracle produces complete MT=152 Bondarenko rows (declared sigma0 x temperature grid) for every test-set material.",
+      "purpose": {
+        "id": "avila-labs.actinv.p19-oracle-feasibility",
+        "major": 1
+      },
+      "metric": {
+        "source": "step_output",
+        "step_id": "njoy-purr",
+        "output_slot": "purr-row-count"
+      },
+      "comparison": "greater_than_or_equal",
+      "limit": {
+        "kind": "core.ratio",
+        "value": "240",
+        "unit": "1"
+      },
+      "basis": {
+        "kind": "nominal"
+      }
+    }
+  ],
+  "categorical_requirements": [
+    {
+      "requirement_id": "P19-C0-STATUS",
+      "statement": "The oracle extraction reports status complete (all six materials at the full grid).",
+      "purpose": {
+        "id": "avila-labs.actinv.p19-oracle-feasibility",
+        "major": 1
+      },
+      "metric": {
+        "source": "step_output",
+        "step_id": "njoy-purr",
+        "output_slot": "purr-status"
+      },
+      "predicate": {
+        "operator": "equals",
+        "value": "complete"
+      }
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "claims": [
+    {
+      "artifact": {
+        "media_type": "application/vnd.avila.actinv.purr-mt152+json",
+        "sha256": "sha256:d78f6110ee5e90d4ab6cb347285d0c3ee629750bf420923685da39bad1005c9c"
+      },
+      "claim": {
+        "model": "exact",
+        "nominal": {
+          "unit": "1",
+          "value": "792"
+        }
+      },
+      "claim_id": "p19-purr-row-count",
+      "output_slot": "purr-row-count",
+      "producer": {
+        "package_id": "org.python/cpython@3.14.4",
+        "sha256": "sha256:52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41"
+      },
+      "step_id": "njoy-purr"
+    },
+    {
+      "artifact": {
+        "media_type": "application/vnd.avila.actinv.purr-mt152+json",
+        "sha256": "sha256:d78f6110ee5e90d4ab6cb347285d0c3ee629750bf420923685da39bad1005c9c"
+      },
+      "claim": {
+        "model": "unquantified",
+        "value": "complete"
+      },
+      "claim_id": "p19-purr-status",
+      "output_slot": "purr-status",
+      "producer": {
+        "package_id": "org.python/cpython@3.14.4",
+        "sha256": "sha256:52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41"
+      },
+      "step_id": "njoy-purr"
+    }
+  ],
+  "compiled_snapshot_sha256": "sha256:17432e781cab6a7f8c930e63666b40c346b03d90fd9e5df3bfeaed6c2d8362fc",
+  "inputs": [
+    {
+      "artifact": {
+        "media_type": "text/plain",
+        "sha256": "sha256:63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647"
+      },
+      "input_id": "eval-ag107"
+    },
+    {
+      "artifact": {
+        "media_type": "text/plain",
+        "sha256": "sha256:f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+      },
+      "input_id": "eval-fe056"
+    },
+    {
+      "artifact": {
+        "media_type": "text/plain",
+        "sha256": "sha256:e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109"
+      },
+      "input_id": "eval-nb93"
+    },
+    {
+      "artifact": {
+        "media_type": "text/plain",
+        "sha256": "sha256:c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608"
+      },
+      "input_id": "eval-ta181"
+    },
+    {
+      "artifact": {
+        "media_type": "text/plain",
+        "sha256": "sha256:394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c"
+      },
+      "input_id": "eval-u238"
+    },
+    {
+      "artifact": {
+        "media_type": "text/plain",
+        "sha256": "sha256:ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083"
+      },
+      "input_id": "eval-w186"
+    },
+    {
+      "artifact": {
+        "media_type": "application/json",
+        "sha256": "sha256:ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f"
+      },
+      "input_id": "group-structure"
+    },
+    {
+      "artifact": {
+        "media_type": "application/json",
+        "sha256": "sha256:49ef22e992d312e892137dddf92a308d82c14e3965a0004bd16269fe380c6d86"
+      },
+      "input_id": "materials-manifest"
+    },
+    {
+      "artifact": {
+        "media_type": "application/x-executable",
+        "sha256": "sha256:57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+      },
+      "input_id": "njoy-executable"
+    },
+    {
+      "artifact": {
+        "media_type": "text/x-python",
+        "sha256": "sha256:176d6d6048b7a5617fbc4cc0956ed9cd94f704a4c961f3c7eaa3e8a9a3e9012b"
+      },
+      "input_id": "purr-driver"
+    }
+  ],
+  "schema_version": "avila.core/evidence-claims/v0.2-draft",
+  "semantic_profile": "avila.core/semantic/0.2-draft"
+}

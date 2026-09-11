@@ -1,0 +1,20 @@
+{
+ "cli_cold_eq_warm": true,
+ "cli_eq_python": true,
+ "inputs": {
+  "decay_fallback": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/decay/jeff-3-3_decay.dat",
+  "decay_primary": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/decay/endf-b-viii-0_decay.dat",
+  "library_path": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz",
+  "library_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+  "mesh_flux_sha256": "6b0be947f71746b9990041ef03cd558304a9a205998c5e2e3b7f14c573fe4bab",
+  "spec_sha256": "c609f7991a9f19379a2dc596b165a82717166cc3091dc142d2bfbf8e1fc68c5c"
+ },
+ "normalized_result_sha256": {
+  "cli_cold": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+  "cli_warm": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+  "mesh_cell": "2fcef4f547aed4b9bc9755277a5c3aa7f5d2bea7bc6c8e59a84ba56cef16e86f",
+  "python": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62"
+ },
+ "note": "Normalized results strip timing and entry-point fields only.",
+ "schema": "actinv-p19-g0-baseline-1"
+}

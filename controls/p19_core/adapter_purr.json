@@ -1,0 +1,45 @@
+{
+  "schema_version": "avila.core/external-checker-adapter/v0.1-draft",
+  "adapter_id": "avila-labs.actinv/njoy-purr-extract@1",
+  "capability_type": { "id": "actinv.p19-njoy-purr-extract", "major": 1 },
+  "input_slots": [
+    "driver-script",
+    "materials-manifest",
+    "njoy-executable",
+    "group-structure",
+    "eval-w186",
+    "eval-ag107",
+    "eval-ta181",
+    "eval-nb93",
+    "eval-u238",
+    "eval-fe056"
+  ],
+  "arguments": [
+    { "kind": "input_path", "input_slot": "driver-script" },
+    { "kind": "input_path", "input_slot": "materials-manifest" },
+    { "kind": "input_path", "input_slot": "njoy-executable" },
+    { "kind": "input_path", "input_slot": "eval-w186" },
+    { "kind": "input_path", "input_slot": "eval-ag107" },
+    { "kind": "input_path", "input_slot": "eval-ta181" },
+    { "kind": "input_path", "input_slot": "eval-nb93" },
+    { "kind": "input_path", "input_slot": "eval-u238" },
+    { "kind": "input_path", "input_slot": "eval-fe056" },
+    { "kind": "input_path", "input_slot": "group-structure" },
+    { "kind": "output_path", "output_id": "purr-table" }
+  ],
+  "outputs": [
+    {
+      "output_id": "purr-table",
+      "workspace_path": "outputs/purr_mt152.json",
+      "media_type": "application/vnd.avila.actinv.purr-mt152+json"
+    }
+  ],
+  "claims": [
+    { "model": "exact", "output_slot": "purr-row-count", "output_id": "purr-table", "pointer": "/row_count", "unit": "1" },
+    { "model": "categorical", "output_slot": "purr-status", "output_id": "purr-table", "pointer": "/status", "allowed_values": ["complete", "partial"] }
+  ],
+  "timeout_ms": 3600000,
+  "limitations": [
+    "The NJOY binary is an input artifact verified by digest; Core records that the pinned interpreter ran the pinned script over the pinned bytes. NJOY's Monte Carlo ladders are the independent processing oracle and are not deterministic by construction; the receipt does not claim NJOY output identity across attempts."
+  ]
+}

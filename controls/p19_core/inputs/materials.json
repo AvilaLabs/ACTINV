@@ -1,0 +1,11 @@
+{
+  "schema": "avila.actinv/p19-materials/v1",
+  "materials": [
+    {"material": "W-186", "file": "n-W186.tendl"},
+    {"material": "Ag-107", "file": "n-Ag107.tendl"},
+    {"material": "Ta-181", "file": "n-Ta181.tendl"},
+    {"material": "Nb-93", "file": "n-Nb093.tendl"},
+    {"material": "U-238", "file": "n-U238.tendl"},
+    {"material": "Fe-56", "file": "n-Fe056.tendl"}
+  ]
+}

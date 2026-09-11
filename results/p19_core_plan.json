@@ -1,0 +1,25 @@
+{
+ "artifacts_verified": "11/11 external, 12/12 evidence records",
+ "campaign_sha256": "sha256:a0a15be900f8dfd5dd2d487e520b547fad3557013084e55a4d1accaaf626e068",
+ "case_id": "case-p19.actinv-self-shielding",
+ "compiled_snapshot_sha256": "sha256:17432e781cab6a7f8c930e63666b40c346b03d90fd9e5df3bfeaed6c2d8362fc",
+ "contract_revision": 1,
+ "njoy_determinism_note": "NJOY's seeded Monte Carlo reproduced the committed purr_mt152.json byte-for-byte across two independent runs",
+ "note": "Committed receipt receipts/njoy-purr.json replays as REUSED; later campaign attempts only re-execute what changed.",
+ "oracle_step_executed": true,
+ "package_compiles": true,
+ "produced_output_sha256": "sha256:d78f6110ee5e90d4ab6cb347285d0c3ee629750bf420923685da39bad1005c9c",
+ "receipt_sha256": "sha256:8275c45ffa4138410ec0946b4d65adb5ff80c57e3905fc97dfc15fdfac870e35",
+ "requirements": {
+  "P19-C0-STATUS": "pass",
+  "P19-R0-ORACLE-COMPLETE": "pass"
+ },
+ "schema": "actinv-p19-core-plan-1",
+ "steps_authored_pending": [
+  "actinv-shield",
+  "shield-compare"
+ ],
+ "steps_declared_g0": [
+  "njoy-purr"
+ ]
+}

@@ -387,3 +387,9 @@ part that does not compress: users, issues, and the validation record accumulati
   Bondarenko factors (deterministic PURR-equivalent from ENDF-6 MF=2 LRU=2 blocks), with NJOY2016.79 as the
   independent processing oracle and the oracle-comparison campaign run as an Avila Core case. Opt-in
   `self_shielding` spec section; absent section preserves byte identity. P18b stays open and dormant.
+- 2026-09-10 — P19 G0 sealed: the frozen protocol's opening gate is green (`results/g0_p19_check.json`).
+  The TENDL-2025 unresolved-resonance inventory covers 2715/2850 neutron files including all six test-set
+  materials; the NJOY2016.79 oracle produced complete MT=152 Bondarenko data over the declared sigma0 x
+  temperature grid (792 energy rows, deterministic across runs); the Avila Core case at controls/p19_core
+  compiled, executed the oracle step under a verified receipt, and recorded PASS on both G0 requirements.
+  The four-surface identity baseline reproduces the P23-era hash exactly. Next: G1 build-shielding.

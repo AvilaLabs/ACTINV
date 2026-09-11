@@ -1,0 +1,12 @@
+{
+  "schema": "avila.actinv/p19-tolerances/v1",
+  "default_max_relative_deviation": 0.10,
+  "materials": {
+    "W-186": {"max_relative_deviation": 0.10},
+    "Ag-107": {"max_relative_deviation": 0.10},
+    "Ta-181": {"max_relative_deviation": 0.10},
+    "Nb-93": {"max_relative_deviation": 0.10},
+    "U-238": {"max_relative_deviation": 0.10},
+    "Fe-56": {"max_relative_deviation": 0.10}
+  }
+}
