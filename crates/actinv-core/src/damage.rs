@@ -13,8 +13,6 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 
 const TABLE_FORMAT: &str = "actinv-damage-table-1";
 const TABLE_UNITS: &str = "damage_energy_barn_eV_per_group";
-/// 1 barn = 1e-24 cm^2; converts barn·eV·cm^-2·s^-1 into eV/s per target atom.
-const BARN_TO_CM2: f64 = 1e-24;
 /// NRT viable fraction of damage energy deposited as displacements.
 const NRT_KAPPA: f64 = 0.8;
 
@@ -293,14 +291,22 @@ impl PreparedDamageTable {
                 }
             }
         }
+        let per_barn: Vec<f64> = flux_ascending
+            .iter()
+            .map(|f| {
+                crate::quantity::RatePerBarnSecond::from_particle_flux(
+                    crate::quantity::ParticleFlux::sum_groups(std::slice::from_ref(f)),
+                )
+                .get()
+            })
+            .collect();
         let rate_of = |sigma: &[f64]| -> f64 {
             sigma
                 .iter()
-                .zip(flux_ascending.iter())
-                .map(|(s, f)| s * f)
+                .zip(per_barn.iter())
+                .map(|(s, r)| s * r)
                 .sum::<f64>()
                 * multiplier
-                * BARN_TO_CM2
         };
         let mut elements = BTreeMap::new();
         let mut covered_atoms_total = 0.0;
@@ -484,8 +490,11 @@ mod tests {
         let plan = table.plan(&composition, &ed, false).unwrap();
         let flux = [3.0, 5.0];
         let out = table.fold(&plan, &composition, &flux, 2.0);
-        // energy rate = (4*3 + 6*5) * 2 * 1e-24 * 2e22
-        let expected_rate = (4.0 * 3.0 + 6.0 * 5.0) * 2.0 * 1e-24 * 2.0e22;
+        let barn = crate::quantity::RatePerBarnSecond::from_particle_flux(
+            crate::quantity::ParticleFlux::new(1.0).unwrap(),
+        )
+        .get();
+        let expected_rate = (4.0 * 3.0 + 6.0 * 5.0) * 2.0 * barn * 2.0e22;
         assert!((out.damage_energy_eV_per_g_s - expected_rate).abs() < 1e-12 * expected_rate);
         let dpa_rate = 0.8 * (expected_rate / 2.0e22) / 80.0;
         assert!((out.dpa_rate_per_s - dpa_rate).abs() < 1e-12 * dpa_rate);
