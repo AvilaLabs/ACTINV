@@ -62,11 +62,12 @@ fn parse_measurements(text: &str, n_steps: usize) -> Result<Vec<Measurement>, St
     for m in &file.measurements {
         let step = match &m.step {
             serde_json::Value::String(s) if s == "last" => n_steps,
-            serde_json::Value::Number(n) => n
-                .as_u64()
-                .filter(|v| *v >= 1 && *v <= n_steps as u64)
-                .ok_or_else(|| format!("reverse: step {n} is outside the schedule"))?
-                as usize,
+            serde_json::Value::Number(n) => {
+                n.as_u64()
+                    .filter(|v| *v >= 1 && *v <= n_steps as u64)
+                    .ok_or_else(|| format!("reverse: step {n} is outside the schedule"))?
+                    as usize
+            }
             other => {
                 return Err(format!(
                     "reverse: step must be a 1-based index or \"last\", not {other}"
@@ -108,11 +109,16 @@ fn parse_measurements(text: &str, n_steps: usize) -> Result<Vec<Measurement>, St
 /// Solve `A x = b` (dense, square) by Gaussian elimination with partial pivoting.
 fn dense_solve(a: &[Vec<f64>], b: &[f64]) -> Result<Vec<f64>, String> {
     let n = a.len();
-    let mut m: Vec<Vec<f64>> = a.iter().cloned().zip(b.iter()).map(|(r, &bi)| {
-        let mut row = r;
-        row.push(bi);
-        row
-    }).collect();
+    let mut m: Vec<Vec<f64>> = a
+        .iter()
+        .cloned()
+        .zip(b.iter())
+        .map(|(r, &bi)| {
+            let mut row = r;
+            row.push(bi);
+            row
+        })
+        .collect();
     for col in 0..n {
         let mut pivot = col;
         for row in col + 1..n {
@@ -288,7 +294,9 @@ fn invert(matrix: &[Vec<f64>]) -> Result<Vec<Vec<f64>>, String> {
         inv.push(dense_solve(matrix, &unit)?);
     }
     // inv holds columns; transpose to rows
-    Ok((0..n).map(|r| (0..n).map(|c| inv[c][r]).collect()).collect())
+    Ok((0..n)
+        .map(|r| (0..n).map(|c| inv[c][r]).collect())
+        .collect())
 }
 
 /// Reverse-calculate flux multipliers from measured activities.
@@ -332,9 +340,7 @@ pub fn solve(
     let sensitivity_run = |active: Option<usize>| -> Result<run::RunResult, String> {
         let mut unit = spec.clone();
         for (i, step) in unit.schedule.iter_mut().enumerate() {
-            step.flux = if step.flux > 0.0
-                && active.is_none_or(|only| only == i)
-            {
+            step.flux = if step.flux > 0.0 && active.is_none_or(|only| only == i) {
                 1.0
             } else {
                 0.0

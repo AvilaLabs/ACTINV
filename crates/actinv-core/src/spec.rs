@@ -721,36 +721,37 @@ impl Spec {
                     .feed
                     .iter()
                     .flatten()
-                    .map(|(key, rate)| {
-                        match actinv_data::composition::material_key(key) {
+                    .map(
+                        |(key, rate)| match actinv_data::composition::material_key(key) {
                             Ok(actinv_data::composition::MaterialKey::Nuclide {
                                 za, liso, ..
                             }) => Ok(((za, liso), *rate)),
-                            Ok(actinv_data::composition::MaterialKey::Element(_)) => Err(
-                                format!("schedule feed key '{key}' must name an explicit nuclide"),
-                            ),
+                            Ok(actinv_data::composition::MaterialKey::Element(_)) => Err(format!(
+                                "schedule feed key '{key}' must name an explicit nuclide"
+                            )),
                             Err(error) => Err(format!("schedule feed key '{key}': {error}")),
-                        }
-                    })
+                        },
+                    )
                     .collect::<Result<Vec<_>, String>>()?;
                 let removal = step
                     .removal
                     .iter()
                     .flatten()
-                    .map(|(key, rate)| {
-                        match actinv_data::composition::material_key(key) {
+                    .map(
+                        |(key, rate)| match actinv_data::composition::material_key(key) {
                             Ok(actinv_data::composition::MaterialKey::Nuclide {
                                 za, liso, ..
                             }) => Ok((RemovalSelector::Nuclide(za, liso), *rate)),
                             Ok(actinv_data::composition::MaterialKey::Element(symbol)) => {
-                                let z = actinv_data::composition::z_of(&symbol).ok_or_else(|| {
-                                    format!("unknown element symbol in removal key '{key}'")
-                                })?;
+                                let z =
+                                    actinv_data::composition::z_of(&symbol).ok_or_else(|| {
+                                        format!("unknown element symbol in removal key '{key}'")
+                                    })?;
                                 Ok((RemovalSelector::Element(z), *rate))
                             }
                             Err(error) => Err(format!("schedule removal key '{key}': {error}")),
-                        }
-                    })
+                        },
+                    )
                     .collect::<Result<Vec<_>, String>>()?;
                 Ok(PhysicalStep {
                     duration,
@@ -904,7 +905,11 @@ mod duration_tests {
         let spec = Spec::from_json(&value.to_string()).unwrap();
         let feed = spec.schedule[0].feed.as_ref().unwrap();
         assert_eq!(feed.len(), 2);
-        assert!(spec.schedule[0].removal.as_ref().unwrap().contains_key("Ni"));
+        assert!(spec.schedule[0]
+            .removal
+            .as_ref()
+            .unwrap()
+            .contains_key("Ni"));
     }
 
     #[test]

@@ -106,10 +106,13 @@ pub struct DamagePlan {
 
 impl PreparedDamageTable {
     pub fn from_json(text: &str, spec_projectile: &str) -> Result<Self, String> {
-        let table: TableWire = serde_json::from_str(text)
-            .map_err(|error| format!("damage table: {error}"))?;
+        let table: TableWire =
+            serde_json::from_str(text).map_err(|error| format!("damage table: {error}"))?;
         if table.format != TABLE_FORMAT {
-            return Err(format!("unsupported damage table format '{}'", table.format));
+            return Err(format!(
+                "unsupported damage table format '{}'",
+                table.format
+            ));
         }
         if table.units != TABLE_UNITS {
             return Err(format!("unsupported damage table units '{}'", table.units));
@@ -141,7 +144,9 @@ impl PreparedDamageTable {
                 .windows(2)
                 .any(|pair| pair[1] <= pair[0])
         {
-            return Err("damage table boundaries_eV must be positive and strictly ascending".into());
+            return Err(
+                "damage table boundaries_eV must be positive and strictly ascending".into(),
+            );
         }
         let mut canonical_keys = BTreeSet::new();
         let mut targets = BTreeMap::new();
@@ -150,7 +155,10 @@ impl PreparedDamageTable {
                 .map_err(|error| format!("damage table target '{raw}': {error}"))?
             {
                 MaterialKey::Nuclide {
-                    canonical, za, liso, ..
+                    canonical,
+                    za,
+                    liso,
+                    ..
                 } => (canonical, TargetSelector::Nuclide(za, liso)),
                 MaterialKey::Element(symbol) => {
                     let z = composition::z_of(&symbol)
@@ -178,7 +186,13 @@ impl PreparedDamageTable {
                     "damage target '{canonical}' contains a nonfinite or negative cross section"
                 ));
             }
-            targets.insert(canonical, TargetRow { selector, sigma: sigma.clone() });
+            targets.insert(
+                canonical,
+                TargetRow {
+                    selector,
+                    sigma: sigma.clone(),
+                },
+            );
         }
         Ok(Self {
             source: table.source,
@@ -326,9 +340,7 @@ impl PreparedDamageTable {
         let dpa_rate = if covered_atoms_total > 0.0 {
             elements
                 .values()
-                .map(|element| {
-                    element.dpa_rate_per_s * element.atoms_per_g / covered_atoms_total
-                })
+                .map(|element| element.dpa_rate_per_s * element.atoms_per_g / covered_atoms_total)
                 .sum()
         } else {
             0.0
@@ -417,10 +429,8 @@ mod tests {
 
     #[test]
     fn boundaries_strictly_ascending_positive() {
-        let mut wire: serde_json::Value = serde_json::from_str(&table_json(
-            serde_json::json!({"Fe56": [1.0, 1.0]}),
-        ))
-        .unwrap();
+        let mut wire: serde_json::Value =
+            serde_json::from_str(&table_json(serde_json::json!({"Fe56": [1.0, 1.0]}))).unwrap();
         wire["boundaries_eV"] = serde_json::json!([1.0, 1.0, 2.0]);
         assert!(PreparedDamageTable::from_json(&wire.to_string(), "neutron").is_err());
         wire["boundaries_eV"] = serde_json::json!([-1.0, 1.0, 2.0]);

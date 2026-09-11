@@ -2058,14 +2058,19 @@ fn build_damage_source(
         let key = damage_cache_key(&before, options);
         let checkpoint = cache.join(format!("{key}.json"));
         if checkpoint.exists() {
-            let entry: DamageCacheEntry = serde_json::from_str(
-                &std::fs::read_to_string(&checkpoint).map_err(|error| {
-                    format!("cannot read damage checkpoint {}: {error}", checkpoint.display())
-                })?,
-            )
-            .map_err(|error| {
-                format!("cannot parse damage checkpoint {}: {error}", checkpoint.display())
-            })?;
+            let entry: DamageCacheEntry =
+                serde_json::from_str(&std::fs::read_to_string(&checkpoint).map_err(|error| {
+                    format!(
+                        "cannot read damage checkpoint {}: {error}",
+                        checkpoint.display()
+                    )
+                })?)
+                .map_err(|error| {
+                    format!(
+                        "cannot parse damage checkpoint {}: {error}",
+                        checkpoint.display()
+                    )
+                })?;
             if sha256_file(path)? != before {
                 return Err(format!(
                     "source {} changed while its damage checkpoint was validated",
@@ -2151,7 +2156,10 @@ pub fn build_damage(
             return Err("damage checkpoint cache must be outside the input directory".into());
         }
         std::fs::create_dir_all(cache).map_err(|error| {
-            format!("cannot create damage checkpoint cache {}: {error}", cache.display())
+            format!(
+                "cannot create damage checkpoint cache {}: {error}",
+                cache.display()
+            )
         })?;
     }
     let projectile = match options.projectile {

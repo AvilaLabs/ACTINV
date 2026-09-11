@@ -2,8 +2,8 @@
 //! spec -> result. This is the single path the CLI, the Python API and the harness all take (P5 G3).
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
-use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::damage::{DamageStepOut, PreparedDamageTable};
+use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::quantity::{Kelvin, Seconds};
 use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
@@ -1295,8 +1295,7 @@ impl PreparedRun {
             || spec.uncertainty != self.uncertainty_options
             || spec.radiological.as_ref()
                 != self.radiological.as_ref().map(|prepared| &prepared.options)
-            || spec.damage.as_ref()
-                != self.damage.as_ref().map(|prepared| &prepared.options)
+            || spec.damage.as_ref() != self.damage.as_ref().map(|prepared| &prepared.options)
         {
             return Err("run spec nuclear-data inputs do not match the prepared data".into());
         }
@@ -1907,7 +1906,8 @@ impl PreparedRun {
             flux_weighted_time_cum += dt * fl;
             let mut zeroed = 0.0;
             for (k, v) in y.iter_mut().enumerate() {
-                if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed {
+                if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed
+                {
                     zeroed += -*v;
                     *v = 0.0;
                     if let Some(runtime) = uncertainty_runtime.as_mut() {
@@ -1919,7 +1919,11 @@ impl PreparedRun {
             }
             if let Some(runtime) = uncertainty_runtime.as_mut() {
                 for (k, value) in runtime.alternate_y.iter_mut().enumerate() {
-                    if *value < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed {
+                    if *value < 0.0
+                        && keep[k] != ch.leak
+                        && keep[k] != ch.unit
+                        && Some(keep[k]) != removed
+                    {
                         *value = 0.0;
                     }
                 }
@@ -2039,9 +2043,8 @@ impl PreparedRun {
                     damage_cumulative += out.dpa_rate_per_s * dt.get();
                     out.dpa = damage_cumulative;
                     for (name, element) in out.elements.iter_mut() {
-                        let cumulative = damage_cumulative_elements
-                            .entry(name.clone())
-                            .or_default();
+                        let cumulative =
+                            damage_cumulative_elements.entry(name.clone()).or_default();
                         *cumulative += element.dpa_rate_per_s * dt.get();
                         element.dpa = *cumulative;
                     }
@@ -2130,8 +2133,7 @@ impl PreparedRun {
         let mut closure = 0.0f64;
         // Feed/removal boundary sources and sinks are not production chains: when a schedule
         // declares them, pathway attribution is suppressed rather than silently mis-attributed.
-        let pathways_suppressed =
-            want_paths && mode == "trace" && (has_feed || has_removal);
+        let pathways_suppressed = want_paths && mode == "trace" && (has_feed || has_removal);
         if mode == "trace" && want_paths && !sources.is_empty() && !pathways_suppressed {
             let mut agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
             for (row, rate, from) in &sources {
@@ -2416,9 +2418,8 @@ impl PreparedRun {
             let mut fed_atoms_per_g: BTreeMap<String, f64> = BTreeMap::new();
             for step in sched.iter() {
                 for ((za, liso), rate) in &step.feed {
-                    *fed_atoms_per_g
-                        .entry(name_of(*za, *liso))
-                        .or_insert(0.0) += rate * step.duration().get();
+                    *fed_atoms_per_g.entry(name_of(*za, *liso)).or_insert(0.0) +=
+                        rate * step.duration().get();
                 }
             }
             let removal_declared: Vec<_> = sched

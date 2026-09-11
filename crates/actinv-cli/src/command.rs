@@ -380,8 +380,8 @@ fn build_damage(args: &[String]) {
         temperature_K: parsed_option(&options, "--temperature-K").unwrap_or(default_temperature),
         cache: options.get("--cache").map(std::path::PathBuf::from),
     };
-    let summary = builder::build_damage(input, output, &build_options)
-        .unwrap_or_else(|error| die(error, 1));
+    let summary =
+        builder::build_damage(input, output, &build_options).unwrap_or_else(|error| die(error, 1));
     println!(
         "{} damage targets, {} evaluations without MT=444, {} cache hits, {} {}, sha256 {}",
         summary.targets,
@@ -506,24 +506,26 @@ pub fn main_from(a: Vec<String>) {
         "reverse" => {
             let mut args = a[2..].iter().filter(|arg| arg.as_str() != "--segments");
             let (Some(problem), Some(measurements)) = (args.next(), args.next()) else {
-                die("usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]", 2);
+                die(
+                    "usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]",
+                    2,
+                );
             };
             let out = args.next();
             if args.next().is_some() {
-                die("usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]", 2);
+                die(
+                    "usage: actinv reverse PROBLEM.json MEASUREMENTS.json [OUT.json] [--segments]",
+                    2,
+                );
             }
             let segments = a[2..].iter().any(|arg| arg == "--segments");
             let problem_text =
                 crate::resolve_catalog_json(&read(problem)).unwrap_or_else(|e| die(e, 2));
             let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
             let measurements_text = read(measurements);
-            let result = actinv_core::reverse::solve(
-                &spec,
-                &problem_text,
-                &measurements_text,
-                segments,
-            )
-            .unwrap_or_else(|e| die(e, 1));
+            let result =
+                actinv_core::reverse::solve(&spec, &problem_text, &measurements_text, segments)
+                    .unwrap_or_else(|e| die(e, 1));
             let text = serde_json::to_string_pretty(&result).expect("serialise reverse result");
             match out {
                 Some(path) => {

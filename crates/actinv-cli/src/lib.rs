@@ -436,7 +436,9 @@ fn resolve_catalog_value(
                         ));
                     }
                     match map.get("sha256") {
-                        Some(serde_json::Value::String(declared)) if *declared != artifact.sha256 => {
+                        Some(serde_json::Value::String(declared))
+                            if *declared != artifact.sha256 =>
+                        {
                             return Err(format!(
                                 "catalog:{id} declared sha256 conflicts with the embedded catalog"
                             ));

@@ -84,7 +84,8 @@ fn reverse(problem_json: &str, measurements_json: &str, segments: bool) -> PyRes
     let spec = Spec::from_json(&resolved).map_err(pyo3::exceptions::PyValueError::new_err)?;
     let result = actinv_core::reverse::solve(&spec, &resolved, measurements_json, segments)
         .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
-    serde_json::to_string(&result).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
+    serde_json::to_string(&result)
+        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
 
 /// validate(spec_json: str) -> str — parse and validate without solving.
