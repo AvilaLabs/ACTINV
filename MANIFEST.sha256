@@ -1,4 +1,4 @@
-b119cd262203870a01bf802742af4529dd5de9763a39dc9d6e80dcb9bdb54cc2  ./.github/workflows/ci.yml
+8e30d904dac7c737b33a23621cc8c2ed1ed4117bb1643cb3ce5ab3662570f2eb  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml

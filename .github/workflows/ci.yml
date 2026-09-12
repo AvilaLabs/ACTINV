@@ -21,6 +21,21 @@ jobs:
       - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
 
+      - name: Reject AI attribution trailers in commit messages
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="origin/${{ github.base_ref }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          range="$base..HEAD"
+          git rev-parse --verify "$base" >/dev/null 2>&1 || range="HEAD~30"
+          if git log --format=%B "$range" | grep -nE 'Generated with|Co-Authored-By|devin-ai-integration|devin\.ai'; then
+            echo "::error::commit message contains a banned AI attribution trailer" >&2
+            exit 1
+          fi
+          echo "commit messages in $range are clean"
+
       - name: Check tracked-file manifest before building
         run: python3 scripts/refresh_manifest.py
 
