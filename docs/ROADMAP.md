@@ -460,3 +460,24 @@ part that does not compress: users, issues, and the validation record accumulati
   median ratio 0.998, p95 1.022, RSS 1.015. The independent checker `controls/check_g4_p18b.py` re-derives
   every scored row's arithmetic, all metrics and the bootstrap plus an independent NPZ row-filter spot-check,
   and rejects 4/4 mutations. A green workflow on this commit is the sole G5 held-out unseal authorization.
+
+- 2026-09-13 — P18b G5 executes the one-time held-out decision and **fails the frozen stratum gate**
+  (`results/verdict_p18b.json`: **P18b-FAIL**). The green controls run `34696870664` on commit `0150b87`
+  authorized unseal; held-out values were then read through the unchanged frozen scorer. A first
+  execution scored only 128 of 1,859 eligible rows because diagnostic staging had never included the
+  held-out families' target files — a staging defect, not a physics result — and is preserved as
+  `results/g5_p18b_heldout_run1_coverage_limited.json` and cited inside the final report. Candidate
+  artifacts were rebuilt over all sealed targets and products (296 of 686 staged files constructed;
+  the newly staged deuteron evaluations all failed closed) and re-scored through the same unchanged
+  code. Final outcome on 180 held-out families / 1,859 eligible rows: the overall gate **passes**
+  (candidate median |ln C/M| 0.194 vs 0.222 ceiling, p90 0.962 vs 1.259, coverage improved, benefit
+  satisfied via +10.4% median improvement and 6,912 provable rank-artifact identity corrections with
+  zero provably-valid violations), but the frozen rule additionally requires every populated
+  projectile stratum to pass. Neutron passes; proton fails median and within-30% coverage
+  (0.291 vs 0.266 ceiling, 50.0% vs 55.2%); alpha fails p90 (1.189 vs 1.126); deuteron has zero
+  candidate-scored rows of 143 eligible because 86% of its corpus failed closed under genuine
+  TENDL-2025 state-partial defects. The result is therefore a coverage/stratum-qualification
+  failure, not a scoring error: the identity repair is measurably beneficial overall but cannot be
+  released while construction coverage leaves strata undemonstrated. G6 release artifacts are not
+  authorized; v1.0.1 remains the public release. A permitted append-only repair amendment could
+  reopen a corrected phase without weakening these frozen thresholds.

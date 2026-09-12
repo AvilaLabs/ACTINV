@@ -1,0 +1,55 @@
+{
+ "closed": true,
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "g0_check": "5f15c85a3460648514ee24e39954c8a0f9e10c274fac04074a3b5e552129551d",
+  "g1_check": "650c17c22f88c0218c99444d2c75a2abdc902e2c4dda5ddc757e56ec9fa40d0d",
+  "g2_check": "fb05923e1ab9535ffef61da4029cd07ddbfc0fecd3211f2ae98f8d2fffe9735d",
+  "g3_check": "da34b2a66159e9d3f5e326418fec3a59cf31eb612c1de17cf5d79e4d3bad887b",
+  "g4_build_report": "65b7a062cb954ac0aac3e27fb92428cdb660a541e152e2adf89a554b52edfc99",
+  "g4_diagnostics": "2506def240099dcc87a091210f17d8a04b408a2292c38b551c5cec889935a42f",
+  "g5_heldout": "3cf4c369c1d1b95cca33f436948d49d71740789638c354988d253dcc697d51ad",
+  "g5_run1_coverage_limited": "a0d6412e78f163f7cd272957306110efe83da2519cac5ff1c8a43fa597ab9bf8",
+  "p16_performance": "fec0d31710c7fd8babac2f6d5baa1704274fcf5e5deca7337e27f953a30f8a1b"
+ },
+ "failure_class": "held-out stratum nonregression gate failed: proton median and within-30pct regressed, alpha p90 regressed, and deuteron plus alpha strata had insufficient candidate coverage to demonstrate nonregression under genuine TENDL-2025 state-partial source defects",
+ "g5_detail": {
+  "benefit_satisfied": true,
+  "identity_corrections_rank_artifact": 6912,
+  "mapping_rule4_pass": true,
+  "overall_candidate_median_abs_ln": 0.19427327539643097,
+  "overall_candidate_p90_abs_ln": 0.9624776831681298,
+  "overall_pass": true,
+  "prior_coverage_limited_execution": "run 1 scored only 128 of 1859 eligible rows because diagnostic staging omitted held-out target files; report preserved at results/g5_p18b_heldout_run1_coverage_limited.json and cited inside the final report",
+  "strata_pass": false,
+  "stratum_failures": {
+   "alpha": [
+    "p90_abs_ln"
+   ],
+   "deuteron": [
+    "zero candidate-scored rows of 143 eligible"
+   ],
+   "proton": [
+    "median_abs_ln",
+    "within_30pct"
+   ]
+  }
+ },
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": false,
+  "G6": "NOT_AUTHORIZED",
+  "G7": "NOT_AUTHORIZED"
+ },
+ "heldout_values_unsealed": true,
+ "phase_success": false,
+ "schema": "actinv-p18-verdict-1",
+ "source_evidence_commit": "0150b87ae5da8944d5d11aba04ef69d3afe97117",
+ "v1.1.0_authorized": false,
+ "verdict": "P18b-FAIL",
+ "workflow_run_id": 34696870664
+}

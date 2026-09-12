@@ -39,6 +39,15 @@
   identical-data, processing, provenance, independent-arithmetic and quality controls pass; all 94 held-out rows and
   every unsupported case remain visible. The failure records three falsified benchmark assumptions and changes no
   production behavior, public interface, default, package or nuclear-data artifact.
+- Completed P18b G2--G4. The complete four-corpus classification reproduced P18's defect counts under the separated
+  conformance model; runtime conservation enforcement with fail-closed quarantine replaced the retired stress gate;
+  and the diagnostic scoring leg, compatibility/performance leg and independent checker all passed, authorizing the
+  one-time held-out unseal.
+- Closed P18b with a `P18b-FAIL` verdict at G5. On the 180 held-out families the candidate's overall metrics pass
+  with 6,912 provable rank-artifact identity corrections, but the frozen per-stratum gate fails: proton regresses on
+  median and within-30% coverage, alpha regresses on p90, and deuteron has zero candidate-scored rows because
+  genuine TENDL-2025 state-partial defects fail closed at construction. The coverage-limited first execution is
+  preserved in the record; G6 release artifacts are not authorized and v1.0.1 remains the public release.
 
 **Fixed**
 
