@@ -15,3 +15,10 @@ Each file is a complete `actinv-spec-1` problem (or its companion data); run any
 
 `damage_demo.json`, `mesh_demo.json`, and specs from `actinv new` use portable `catalog:` references resolved
 against `./actinv-data` or `$ACTINV_DATA_DIR` — see the *data references* paragraph in `docs/SPEC.md`.
+
+No runnable `uncertainty` example ships here: the MF=33 covariance sidecar is a user-built artifact
+(`actinv build-covariance RAW_TENDL_DIR ACTIVATION.npz OUT.cov.npz`), and its `<stem>_index.json` must hash-match the
+exact activation library it pairs with. The spec surface — `covariance`, `channels` (`decay_constants`,
+`fission_yields`), `confidence_level`, `require_complete` — is documented under *MF=33 uncertainty* in
+`docs/SPEC.md`, and `controls/g4_p20_channels.py` is an executable end-to-end demonstration on both synthetic and
+real-data legs.

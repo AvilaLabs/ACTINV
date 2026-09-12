@@ -1,4 +1,4 @@
-8392f205cfb9f087668a12f0a8c06e78b9a7c5c354a7afc71f0149f510a4e768  ./.github/workflows/ci.yml
+8bfc44995cbf2cc840b48ebc829bfc2a2a71540e445cdc2ece6f473ff8352f2a  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -47,6 +47,7 @@ dd6eb70c733bf7bad124415448a1d3d67e40d0906b1b7239cb3c55696e27cc1f  ./controls/che
 6fa2f28dd48afa6a323c9b7514362ce56ce86ddcefaecb3c858747bbc62152c0  ./controls/check_g3_p23.py
 55281f95a69d4d4f8c95438704ed1262582d9075b86d4fe6462bbf5373939c87  ./controls/check_g4_p17.py
 8b0a9789ce555d439967f2c97af0e899fb9ae9e3d11325774a391fac7064cd34  ./controls/check_g4_p18b.py
+a30b6b282b4b5b37fc70c33b47de70ec8ecb38047ea9743edb8b324025430d7b  ./controls/check_g4_p20.py
 c6dbabda1143262837bdd2df6f98b334b380a52985811be9725dcd2efadc8309  ./controls/check_g5_p17.py
 bf9363af2fe35a111c286528f855c510ad86b2dc773ecc1a111c9e2e47eb8303  ./controls/check_g5_p19.py
 883072667893fc52158302cb63baba050c7ca9ad1c0513972ba773f7579b5c07  ./controls/check_p1.py
@@ -164,6 +165,7 @@ acf216f5131ba8eaa42a00f568845fb9a73f27c86c7850debf41f5c716b29fab  ./controls/g4_
 cbc024c855f87c333cad64b87b3989af09d3814ed420a78f1aa37ca6143ce2e2  ./controls/g4_p15_interfaces.py
 d413d1d1f79fb2f20f710d0cb41eee6bbd3b9b7a671d8dd0216ed13c5dc6a050  ./controls/g4_p17_diagnostics.py
 4475a223b942cebfffd9a2e029e0aa235ab535ab928b81d26cb318b3eb3db0a6  ./controls/g4_p18b_diagnostics.py
+328ad5be832cf8887a2103ad3c59a09cfe58495d3d9adcf13f5008b9316a8176  ./controls/g4_p20_channels.py
 eab47ce2e666222f58c9940433a9ac3bb4f3b5f336a42cdabe96d9d2f637fd85  ./controls/g4_p7_dose.py
 33924eb079d926b1cff61a6c657acd83543a87a39f63a75709602c4c8ffb0545  ./controls/g4_p8_provenance.py
 8489c9f424882fe2713dfb3e066ead67017774e1ca37268b292d5f584c87c080  ./controls/g4_p9_pulses_openmc.py
@@ -1826,6 +1828,8 @@ b0a6b600c25a7006ae74f7cf86f08aedc18f642b75db03c9061cb1d4c9d10383  ./results/g4_p
 c65ad753055923afe77df82a2d532effa1f8c594cdedb7bfbe7344adf747bcaa  ./results/g4_p17_diagnostics.json
 2506def240099dcc87a091210f17d8a04b408a2292c38b551c5cec889935a42f  ./results/g4_p18b_diagnostics.json
 47754734eb74e4550b2a596d72bdc3edfa2548b7cd85c70d0d95d2163a7c13f8  ./results/g4_p19_perf.json
+7695ea8ddcd0831202df7e3d21930ffc12fc6d1c70ce95cbfe6bd99d6a437255  ./results/g4_p20_channels.json
+29a03dc3e7391ea4cd930ed7e8d6b749ae12b5b0c42129a40f2b9b468a09aa2b  ./results/g4_p20_check.json
 27a088825a8ed489ab4d80b178a79557d7d368d44f60a6a58b9a179137c820f6  ./results/g4_p23_compat.json
 21d2764ad8d6362d98af11a21cb684c23d914d15ad502168f3ec7e87e53fb029  ./results/g4_p7_dose.json
 a712fc8e9e69a38386bcb348f8fae3731b2f891642fb38778930ed33818060a9  ./results/g4_p8_provenance.json

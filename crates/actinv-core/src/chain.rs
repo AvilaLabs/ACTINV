@@ -162,10 +162,27 @@ pub struct ReactionDerivative {
     pub per_barn_s: f64,
 }
 
+#[derive(Clone, Copy, Debug)]
+pub struct YieldDerivative {
+    /// Fission parent (ZA, LISO) whose independent yield is differentiated.
+    pub parent: (i32, i32),
+    /// Fission product (ZA, state) the yield feeds; the destination row may be
+    /// the chain's leak state when the product is absent from the decay library.
+    pub product: (i32, i32),
+    pub row: usize,
+    pub column: usize,
+    /// Matrix derivative with respect to the independent yield, in s^-1.
+    /// Equals the parent's total fission rate for that library row.
+    pub per_yield_s: f64,
+}
+
 #[derive(Debug)]
 pub struct ReactionAssembly {
     pub triplets: Vec<(usize, usize, f64)>,
     pub derivatives: Vec<ReactionDerivative>,
+    /// Per-(parent, product) independent-yield matrix directions, populated
+    /// under the same flag as `derivatives`.
+    pub yield_derivatives: Vec<YieldDerivative>,
 }
 
 /// Reaction rates per atom (1/s) for every library target under a group flux, as triplets over the chain's indices.
@@ -227,6 +244,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
 ) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
     let mut derivatives = include_derivatives.then(Vec::new);
+    let mut yield_derivatives = include_derivatives.then(Vec::new);
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
     let rate_per_barn = RatePerBarnSecond::from_particle_flux(ParticleFlux::sum_groups(phi));
     let rate_per_barn_s = rate_per_barn.get();
@@ -315,6 +333,17 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                                     per_barn_s: yield_value * rate_per_barn_s,
                                 });
                             }
+                            if let Some(yield_derivatives) = yield_derivatives.as_mut() {
+                                if product_rate != 0.0 {
+                                    yield_derivatives.push(YieldDerivative {
+                                        parent: tgt,
+                                        product,
+                                        row,
+                                        column: col,
+                                        per_yield_s: rate,
+                                    });
+                                }
+                            }
                         }
                         None => {
                             leakage_yield_sum += yield_value;
@@ -334,6 +363,17 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                                     column: col,
                                     per_barn_s: yield_value * rate_per_barn_s,
                                 });
+                            }
+                            if let Some(yield_derivatives) = yield_derivatives.as_mut() {
+                                if product_rate != 0.0 {
+                                    yield_derivatives.push(YieldDerivative {
+                                        parent: tgt,
+                                        product,
+                                        row: chain.leak,
+                                        column: col,
+                                        per_yield_s: rate,
+                                    });
+                                }
                             }
                         }
                     }
@@ -419,6 +459,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     ReactionAssembly {
         triplets: trip,
         derivatives: derivatives.unwrap_or_default(),
+        yield_derivatives: yield_derivatives.unwrap_or_default(),
     }
 }
 

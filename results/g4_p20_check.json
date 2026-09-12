@@ -1,0 +1,6 @@
+{
+  "checker": "check_g4_p20",
+  "report": "/home/connoravila/Documents/actinv/results/g4_p20_channels.json",
+  "report_sha256": "7695ea8ddcd0831202df7e3d21930ffc12fc6d1c70ce95cbfe6bd99d6a437255",
+  "verdict": "PASS"
+}

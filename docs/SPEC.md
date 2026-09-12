@@ -54,6 +54,7 @@ hash-pinned — `actinv new` emits catalog references by default.
     },
     "responses": ["heat.total", "heat.alpha", "heat.beta", "heat.gamma", "activity:Mn56"],
     "confidence_level": 0.95,
+    "channels": ["decay_constants", "fission_yields"],
     "require_complete": false
   },
   "radiological": {
@@ -170,15 +171,29 @@ every target/source identity. ACTINV recomputes and records both sidecar and ind
 `activity:Nuclide`, and `activity:*`. Selectors must be unique. An empty or omitted list selects all four heat
 components plus every activity reported at that step. `confidence_level` defaults to `0.95` and must be strictly
 between zero and one. `require_complete` defaults to `false`; when true, an active activation row without a valid
-MF=33 self-covariance fails rather than returning a partial band.
+MF=33 self-covariance — or a nonzero-sensitivity parameter in any requested channel without uncertainty data —
+fails rather than returning a partial band.
+
+`channels` is optional and accepts `"cross_section_mf33"` (the implicit default), `"decay_constants"` and
+`"fission_yields"`. When omitted, only the MF=33 cross-section channel is evaluated and the channel fields are
+absent from the output. `decay_constants` propagates
+each radioactive chain member's decay-constant uncertainty `sigma_lambda = lambda * dT_half/T_half` read from the
+pinned decay file's MF=8/MT=457 record. `fission_yields` propagates each populated fission edge's independent-yield
+`DY` read from the pinned MF=8/MT=454 file at the requested yield energy. Both channels are diagonal — the
+evaluations carry no correlation data — and each reports its own sensitivity list, standard uncertainty and
+coverage. A nuclide or product with no declared uncertainty is named in `uncovered_decay_constants` /
+`uncovered_yield_products`.
 
 Each requested response reports its nominal value, local sensitivity to every active collapsed row in response units
 per barn, MF=33 standard uncertainty, relative standard uncertainty when defined, the requested two-sided normal
 interval, an alternate-CRAM-order difference, and a conservative interval expanded by that numerical-method bound.
-Coverage is `complete` only when every nonzero-sensitivity row has a valid self-covariance. Missing evaluated
-cross-reaction terms contribute zero and are counted; they are not invented. These intervals are neither tolerance
-limits nor safety margins, and exclude decay/MF=32, production/MF=40 and yield, flux, composition,
-response-coefficient and model uncertainty.
+When extra channels are requested the record adds per-channel sensitivity lists, per-channel standard uncertainties
+and a `combined_standard_uncertainty` equal to the root-sum-of-squares across channels, plus a `channels` report
+naming each channel's coverage. Coverage is `complete` only when every nonzero-sensitivity parameter in every
+requested channel has evaluated uncertainty data. Missing evaluated cross-reaction terms contribute zero and are
+counted; they are not invented. These intervals are neither tolerance limits nor safety margins, and exclude
+MF=32 resonance-parameter and MF=40 production covariance, decay-yield and cross-channel correlation, incident-flux,
+material-composition, response-coefficient and model uncertainty — the `uncovered_remainder` channel names these.
 
 ## Radiological responses
 

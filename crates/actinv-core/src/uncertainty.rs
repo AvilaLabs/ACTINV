@@ -27,6 +27,47 @@ pub struct SensitivityParameter {
     pub covariance_excluded: bool,
 }
 
+/// A decay-constant uncertainty parameter (P20 G4): one radioactive nuclide's
+/// `lambda = ln2 / T_half`, propagated as a diagonal (uncorrelated) variance.
+#[derive(Clone, Debug, Serialize)]
+pub struct DecayParameter {
+    pub nuclide: String,
+    #[serde(rename = "ZA")]
+    pub za: i32,
+    #[serde(rename = "LISO")]
+    pub liso: i32,
+    /// Decay constant in s^-1.
+    pub lambda_s: f64,
+    /// Standard uncertainty of `lambda` in s^-1, `lambda * dThalf/Thalf` from
+    /// the MF=8/MT=457 LIST field; zero marks a file carrying no such field.
+    pub standard_uncertainty_s: f64,
+    /// Whether the evaluated decay file provides a half-life uncertainty.
+    pub covered: bool,
+}
+
+/// A fission-yield uncertainty parameter (P20 G4): one (parent, product)
+/// independent yield at the case's incident energy, diagonal variance.
+#[derive(Clone, Debug, Serialize)]
+pub struct YieldParameter {
+    pub parent_nuclide: String,
+    #[serde(rename = "parent_ZA")]
+    pub parent_za: i32,
+    #[serde(rename = "parent_LISO")]
+    pub parent_liso: i32,
+    pub product_nuclide: String,
+    #[serde(rename = "product_ZA")]
+    pub product_za: i32,
+    #[serde(rename = "product_LISO")]
+    pub product_liso: i32,
+    /// Effective independent yield at the case's incident energy.
+    pub yield_value: f64,
+    /// Interpolated independent-yield standard uncertainty from the MF=8/MT=454
+    /// `DY` field; zero marks an entry carrying no uncertainty data.
+    pub standard_uncertainty: f64,
+    /// Whether the yield evaluation provides an uncertainty for this entry.
+    pub covered: bool,
+}
+
 /// Per-channel uncertainty breakdown for one response band.
 #[derive(Debug, Serialize)]
 pub struct ChannelReport {
@@ -54,6 +95,22 @@ pub struct SensitivityOut {
 }
 
 #[derive(Debug, Serialize)]
+pub struct DecaySensitivityOut {
+    pub parameter: DecayParameter,
+    /// Response derivative with respect to the decay constant.
+    pub value: f64,
+    pub unit: String,
+}
+
+#[derive(Debug, Serialize)]
+pub struct YieldSensitivityOut {
+    pub parameter: YieldParameter,
+    /// Response derivative with respect to the independent yield.
+    pub value: f64,
+    pub unit: String,
+}
+
+#[derive(Debug, Serialize)]
 pub struct ResponseUncertainty {
     pub nominal: f64,
     pub unit: String,
@@ -71,6 +128,15 @@ pub struct ResponseUncertainty {
     pub total_parameters: usize,
     /// Per-channel breakdown; every band names the channels it does not cover.
     pub channels: Vec<ChannelReport>,
+    /// Standard uncertainty over every propagated channel, emitted only when a
+    /// channel beyond `cross_section_mf33` was requested. `normal_interval` and
+    /// `conservative_interval` are built on this combined variance in that case.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub combined_standard_uncertainty: Option<f64>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub decay_sensitivities: Vec<DecaySensitivityOut>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub yield_sensitivities: Vec<YieldSensitivityOut>,
     pub sensitivities: Vec<SensitivityOut>,
 }
 
@@ -81,7 +147,26 @@ pub struct StepUncertainty {
     pub absent_cross_parameter_pairs: usize,
     pub maximum_covariance_asymmetry_barn2: f64,
     pub excluded_blocks: Vec<actinv_data::covariance::ExcludedBlock>,
+    /// Kept radioactive nuclides whose decay file carries no half-life
+    /// uncertainty; present only when the `decay_constants` channel runs.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub uncovered_decay_constants: Vec<String>,
+    /// Active (parent, product) yield edges whose evaluation carries no `DY`
+    /// uncertainty; present only when the `fission_yields` channel runs.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub uncovered_yield_products: Vec<String>,
     pub responses: BTreeMap<String, ResponseUncertainty>,
+}
+
+/// One non-MF=33 channel's propagation result for a response band.
+pub struct ChannelData<S> {
+    /// Channel variance (diagonal: sum of (sensitivity * sigma)^2).
+    pub variance: f64,
+    /// Sensitivity-bearing parameters with a file-provided uncertainty.
+    pub covered_parameters: usize,
+    /// Sensitivity-bearing parameters in the channel.
+    pub total_parameters: usize,
+    pub sensitivities: Vec<S>,
 }
 
 pub struct BandInput {
@@ -93,6 +178,11 @@ pub struct BandInput {
     pub variance: f64,
     pub negative_variance_roundoff_removed: f64,
     pub sensitivities: Vec<SensitivityOut>,
+    /// `Some` when the `decay_constants` channel was requested; `None`
+    /// preserves the G2 output shape exactly.
+    pub decay_channel: Option<ChannelData<DecaySensitivityOut>>,
+    /// `Some` when the `fission_yields` channel was requested.
+    pub fission_yield_channel: Option<ChannelData<YieldSensitivityOut>>,
 }
 
 pub fn propagated_variance(
@@ -152,15 +242,42 @@ pub fn normal_multiplier(confidence_level: f64) -> f64 {
     0.5 * (low + high)
 }
 
+fn channel_coverage(covered: usize, total: usize) -> &'static str {
+    if covered == total {
+        "complete"
+    } else {
+        "partial"
+    }
+}
+
 pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
+    let extra_channels = input.decay_channel.is_some() || input.fission_yield_channel.is_some();
     if !input.nominal.is_finite()
         || !input.alternate.is_finite()
         || !input.variance.is_finite()
         || input.variance < 0.0
+        || input
+            .decay_channel
+            .as_ref()
+            .is_some_and(|channel| !channel.variance.is_finite() || channel.variance < 0.0)
+        || input
+            .fission_yield_channel
+            .as_ref()
+            .is_some_and(|channel| !channel.variance.is_finite() || channel.variance < 0.0)
     {
         return Err("nonfinite response value or invalid propagated variance".into());
     }
-    let standard_uncertainty = input.variance.sqrt();
+    let mf33_uncertainty = input.variance.sqrt();
+    let combined_variance = input.variance
+        + input
+            .decay_channel
+            .as_ref()
+            .map_or(0.0, |channel| channel.variance)
+        + input
+            .fission_yield_channel
+            .as_ref()
+            .map_or(0.0, |channel| channel.variance);
+    let standard_uncertainty = combined_variance.sqrt();
     let half_width = input.normal_multiplier * standard_uncertainty;
     let cram_order_bound = (input.alternate - input.nominal).abs();
     let normal_interval = [input.nominal - half_width, input.nominal + half_width];
@@ -187,7 +304,17 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         .iter()
         .filter(|record| record.value != 0.0)
         .count();
-    let channel_coverage = if covered_parameters == total_parameters {
+    let mf33_coverage = channel_coverage(covered_parameters, total_parameters);
+    let decay_coverage = input.decay_channel.as_ref().map(|channel| {
+        channel_coverage(channel.covered_parameters, channel.total_parameters)
+    });
+    let yield_coverage = input.fission_yield_channel.as_ref().map(|channel| {
+        channel_coverage(channel.covered_parameters, channel.total_parameters)
+    });
+    let band_complete = mf33_coverage == "complete"
+        && decay_coverage.is_none_or(|coverage| coverage == "complete")
+        && yield_coverage.is_none_or(|coverage| coverage == "complete");
+    let channel_coverage = if band_complete {
         "complete"
     } else {
         "partial"
@@ -196,29 +323,59 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         ChannelReport {
             channel: "cross_section_mf33",
             status: "propagated",
-            standard_uncertainty: Some(standard_uncertainty),
-            coverage: Some(channel_coverage.into()),
+            standard_uncertainty: Some(mf33_uncertainty),
+            coverage: Some(mf33_coverage.into()),
             covered_parameters: Some(covered_parameters),
             total_parameters: Some(total_parameters),
             note: None,
         },
-        ChannelReport {
-            channel: "decay_constants",
-            status: "not_evaluated",
-            standard_uncertainty: None,
-            coverage: None,
-            covered_parameters: None,
-            total_parameters: None,
-            note: Some("MF=8/MT=457 half-life uncertainties are not propagated by this band"),
+        match &input.decay_channel {
+            Some(channel) => ChannelReport {
+                channel: "decay_constants",
+                status: "propagated",
+                standard_uncertainty: Some(channel.variance.sqrt()),
+                coverage: Some(decay_coverage.unwrap_or("partial").into()),
+                covered_parameters: Some(channel.covered_parameters),
+                total_parameters: Some(channel.total_parameters),
+                note: Some(
+                    "MF=8/MT=457 half-life uncertainties propagated as diagonal variances; the evaluations carry no correlation data",
+                ),
+            },
+            None => ChannelReport {
+                channel: "decay_constants",
+                status: "not_evaluated",
+                standard_uncertainty: None,
+                coverage: None,
+                covered_parameters: None,
+                total_parameters: None,
+                note: Some(
+                    "MF=8/MT=457 half-life uncertainties are not propagated by this band",
+                ),
+            },
         },
-        ChannelReport {
-            channel: "fission_yields",
-            status: "not_evaluated",
-            standard_uncertainty: None,
-            coverage: None,
-            covered_parameters: None,
-            total_parameters: None,
-            note: Some("MF=8/MT=454 independent-yield uncertainties are not propagated by this band"),
+        match &input.fission_yield_channel {
+            Some(channel) => ChannelReport {
+                channel: "fission_yields",
+                status: "propagated",
+                standard_uncertainty: Some(channel.variance.sqrt()),
+                coverage: Some(yield_coverage.unwrap_or("partial").into()),
+                covered_parameters: Some(channel.covered_parameters),
+                total_parameters: Some(channel.total_parameters),
+                note: Some(
+                    "MF=8/MT=454 independent-yield uncertainties propagated as diagonal variances; the evaluations carry no correlation data",
+                ),
+            },
+            None => ChannelReport {
+                channel: "fission_yields",
+                status: "not_evaluated",
+                standard_uncertainty: None,
+                coverage: None,
+                covered_parameters: None,
+                total_parameters: None,
+                note: Some(
+                    "MF=8/MT=454 independent-yield uncertainties are not propagated by this band",
+                ),
+            },
         },
         ChannelReport {
             channel: "uncovered_remainder",
@@ -235,7 +392,7 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
     Ok(ResponseUncertainty {
         nominal: input.nominal,
         unit: input.unit,
-        mf33_standard_uncertainty: standard_uncertainty,
+        mf33_standard_uncertainty: mf33_uncertainty,
         relative_standard_uncertainty: (input.nominal != 0.0)
             .then_some(standard_uncertainty / input.nominal.abs()),
         confidence_level: input.confidence_level,
@@ -248,6 +405,15 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         covered_parameters,
         total_parameters,
         channels,
+        combined_standard_uncertainty: extra_channels.then_some(standard_uncertainty),
+        decay_sensitivities: input
+            .decay_channel
+            .map(|channel| channel.sensitivities)
+            .unwrap_or_default(),
+        yield_sensitivities: input
+            .fission_yield_channel
+            .map(|channel| channel.sensitivities)
+            .unwrap_or_default(),
         sensitivities: input.sensitivities,
     })
 }

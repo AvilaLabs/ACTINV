@@ -65,16 +65,27 @@ identities and all excluded uncertainty sources. Its coverage diagnostics are:
   which of them have valid MF=33 self-covariance, and the exact uncovered library-row indices;
 - `absent_cross_parameter_pairs` — pairs of covered parameters for which the evaluation supplies no cross component;
   they contribute zero evaluated covariance and are counted rather than fabricated;
-- `maximum_covariance_asymmetry_barn2` — the largest assembled orientation difference before propagation.
+- `maximum_covariance_asymmetry_barn2` — the largest assembled orientation difference before propagation;
+- `excluded_blocks` — each collapsed `(target, MT, MT1)` block rejected as defective (asymmetric beyond the frozen
+  `1e-9`-relative bound, or non-positive-semidefinite symmetric part), with its measured defect; excluded blocks
+  contribute zero and count against coverage.
 
 Every `steps[].uncertainty.responses[]` record contains the nominal value, unit, complete parameter metadata and
 sensitivity, MF=33 standard/relative uncertainty, normal multiplier/interval, separately estimated CRAM-order bound,
 expanded conservative interval, round-off-negative variance removed, and `complete` or `partial` coverage. Coverage
 depends only on nonzero sensitivities for that response. `require_complete` fails before reporting a partial result.
 
-The excluded list is substantive: decay and MF=32 resonance-parameter covariance, MF=40 production/yield covariance,
-fission/product-yield covariance, incident-flux uncertainty, material-composition uncertainty, response-coefficient
-uncertainty and model discrepancy are not included. Neither reported interval is a licensing safety margin.
+When `uncertainty.channels` requests `decay_constants` and/or `fission_yields`, each response additionally reports
+per-channel sensitivity lists (`decay_sensitivities`, `yield_sensitivities`) with full parameter metadata and
+declared standard uncertainty, a `channels` report of each channel's own coverage, and
+`combined_standard_uncertainty` — the independent root-sum-of-squares across channels. The step record names
+`uncovered_decay_constants` and `uncovered_yield_products` (parameters with no declared uncertainty). Requested
+channels extend `require_complete`; `uncovered_remainder` is always named and never propagated.
+
+The excluded list is substantive: MF=32 resonance-parameter covariance, MF=40 production covariance, decay-yield
+and cross-channel correlation, incident-flux uncertainty, material-composition uncertainty, response-coefficient
+uncertainty and model discrepancy are not included. Decay-constant and independent-yield uncertainties are included
+only when their channels are requested. Neither reported interval is a licensing safety margin.
 
 ## Photon accounting
 

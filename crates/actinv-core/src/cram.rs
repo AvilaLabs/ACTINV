@@ -38,13 +38,15 @@ pub fn step(a: &Csc, n0: &[f64], dt: f64, c: &Cram) -> Result<(Vec<f64>, usize),
 }
 
 /// Apply one CRAM step and differentiate that same recurrence for independent matrix directions.
-/// `tangents[p]` is `d n0 / d p`, and `directions[p]` is `d A / d p`.
+/// `tangents[p]` is `d n0 / d p`, `directions[p]` is `d A / d p` before the
+/// schedule's flux multiplier, and `direction_scales[p]` is the multiplier each
+/// direction carries this step (flux-scaled reaction directions, unscaled decay).
 pub fn step_with_tangents(
     a: &Csc,
     n0: &[f64],
     tangents: &[Vec<f64>],
     directions: &[Csc],
-    direction_scale: f64,
+    direction_scales: &[f64],
     dt: f64,
     c: &Cram,
 ) -> Result<TangentStep, String> {
@@ -55,11 +57,12 @@ pub fn step_with_tangents(
             n0.len()
         ));
     }
-    if tangents.len() != directions.len() {
+    if tangents.len() != directions.len() || direction_scales.len() != directions.len() {
         return Err(format!(
-            "CRAM has {} tangent states but {} matrix directions",
+            "CRAM has {} tangent states, {} matrix directions and {} direction scales",
             tangents.len(),
-            directions.len()
+            directions.len(),
+            direction_scales.len()
         ));
     }
     if tangents.iter().any(|value| value.len() != n) || directions.iter().any(|value| value.n != n)
@@ -76,7 +79,11 @@ pub fn step_with_tangents(
         max_fill = max_fill.max(lower + upper);
         let right_hand_side: Vec<C64> = y.iter().map(|value| C64::new(*value, 0.0)).collect();
         let z = factor.solve(&right_hand_side);
-        for (tangent, direction) in dy.iter_mut().zip(directions) {
+        for ((tangent, direction), &direction_scale) in dy
+            .iter_mut()
+            .zip(directions)
+            .zip(direction_scales)
+        {
             let mut rhs: Vec<C64> = tangent.iter().map(|value| C64::new(*value, 0.0)).collect();
             for (column, solution) in z.iter().enumerate() {
                 for entry in direction.colptr[column]..direction.colptr[column + 1] {
@@ -180,7 +187,7 @@ mod tests {
             &initial,
             &[vec![0.0; 2]],
             &[direction],
-            1.0,
+            &[1.0],
             duration,
             &coefficients,
         )

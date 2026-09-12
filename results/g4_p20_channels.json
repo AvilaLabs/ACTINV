@@ -1,0 +1,249 @@
+{
+  "legs": {
+    "performance": {
+      "fns_decay_channel_added_parameters": 34,
+      "fns_decay_channel_added_seconds": 0.14043827699999945,
+      "note": "channel cost is the per-pole tangent solve times the parameter count; the yield channel dominates at 1016 real MF=8/MT=454 products. Absent channels allocate nothing (the absent-feature path is byte-identical by construction).",
+      "pass": true,
+      "timings_seconds": {
+        "fns_decay_channel": [
+          9.071459255,
+          8.893957681
+        ],
+        "fns_mf33_only": [
+          8.865838581,
+          8.818701801
+        ],
+        "u235_plain": [
+          0.219806209,
+          0.215600364
+        ],
+        "u235_yield_channel": [
+          2.146498717,
+          2.123733544
+        ]
+      },
+      "u235_yield_channel_added_parameters": 1016,
+      "u235_yield_channel_added_seconds": 1.9174128440000002,
+      "work": "/home/connoravila/Documents/actinv/target/p20-g4/perf"
+    },
+    "real_decay": {
+      "combined_standard_uncertainty": 83580.03058532531,
+      "decay_channel_report": {
+        "channel": "decay_constants",
+        "coverage": "complete",
+        "covered_parameters": 34,
+        "note": "MF=8/MT=457 half-life uncertainties propagated as diagonal variances; the evaluations carry no correlation data",
+        "standard_uncertainty": 8.805995626849162,
+        "status": "propagated",
+        "total_parameters": 34
+      },
+      "decay_parameter": {
+        "LISO": 0,
+        "ZA": 25056,
+        "covered": true,
+        "lambda_s": 7.46600812318716e-05,
+        "nuclide": "Mn56",
+        "standard_uncertainty_s": 2.8950359157730657e-09
+      },
+      "delta_relative": 0.001,
+      "finite_difference": 3030600815.138454,
+      "mf33_standard_uncertainty": 83580.03012142527,
+      "n_decay_parameters": 34,
+      "pass": true,
+      "relative_error": 0.003667662581358977,
+      "reported_sensitivity": 3041756953.2976522,
+      "source_files": {
+        "covariance": {
+          "path": "/home/connoravila/Documents/actinv/target/p11-full-v2-repro.cov.npz",
+          "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+        },
+        "decay": {
+          "path": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/decay/endf-b-viii-0_decay.dat",
+          "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+        }
+      },
+      "uncovered_decay_count": 0,
+      "work": "/home/connoravila/Documents/actinv/target/p20-g4/real-decay"
+    },
+    "real_yield": {
+      "combined_standard_uncertainty": 9.486682291500111,
+      "compensation_product": {
+        "liso": 0,
+        "za": 52134
+      },
+      "delta_relative": 0.05,
+      "finite_difference": 4379.779973134716,
+      "finite_difference_response": "activity:Kr92",
+      "n_decay_parameters": 2,
+      "n_yield_parameters": 1016,
+      "pass": true,
+      "relative_error": 5.9098162047910405e-05,
+      "reported_sensitivity": 4380.038825378994,
+      "source_files": {
+        "fission_yields": {
+          "fixed_energy_ev": 500000.0,
+          "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+          "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+        },
+        "library": {
+          "path": "actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz",
+          "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+        }
+      },
+      "uncovered_yield_count": 0,
+      "work": "/home/connoravila/Documents/actinv/target/p20-g4/real-yield",
+      "yield_channel_report": {
+        "channel": "fission_yields",
+        "coverage": "complete",
+        "covered_parameters": 2,
+        "note": "MF=8/MT=454 independent-yield uncertainties propagated as diagonal variances; the evaluations carry no correlation data",
+        "standard_uncertainty": 9.486682291500111,
+        "status": "propagated",
+        "total_parameters": 2
+      },
+      "yield_parameter": {
+        "covered": true,
+        "parent_LISO": 0,
+        "parent_ZA": 92235,
+        "parent_nuclide": "U235",
+        "product_LISO": 0,
+        "product_ZA": 36092,
+        "product_nuclide": "Kr92",
+        "standard_uncertainty": 0.00216589,
+        "yield_value": 0.0135368
+      }
+    },
+    "synthetic": {
+      "analytic": {
+        "activity_Kr92": 2.928932188134524e+19,
+        "activity_Xe140": 1.909243016955426e+19,
+        "dActivity_Kr92_dLambda": 3.535533905932738e+21,
+        "dActivity_Kr92_dYield": 5.8578643762690484e+20,
+        "dActivity_Xe140_dLambda": 5.045378491522287e+21,
+        "dActivity_Xe140_dYield": 3.18207169492571e+20,
+        "dHeatGamma_dLambda_Kr": 849682471.920028,
+        "dHeatGamma_dLambda_Xe": 1616717505.7606351,
+        "decay_sigma_activity_Xe140": 1.7485949381282317e+17,
+        "xs_sigma_activity_Xe140": 1.909243016955426e+18,
+        "yield_sigma_activity_Xe140": 9.54621508477713e+17
+      },
+      "channels_absent_clean": true,
+      "checks": [
+        {
+          "expected": 5.045378491522287e+21,
+          "name": "decay_tangent_Xe140",
+          "relative_error": 1.662632053094791e-15,
+          "reported": 5.045378491522279e+21
+        },
+        {
+          "expected": 3.535533905932738e+21,
+          "name": "decay_tangent_Kr92_uncovered",
+          "relative_error": 5.931641601515717e-16,
+          "reported": 3.53553390593274e+21
+        },
+        {
+          "expected": 3.18207169492571e+20,
+          "name": "yield_tangent_Xe140",
+          "relative_error": 2.0595387622631812e-16,
+          "reported": 3.182071694925709e+20
+        },
+        {
+          "expected": 5.8578643762690484e+20,
+          "name": "yield_tangent_Kr92_uncovered",
+          "relative_error": 1.2306464501302575e-15,
+          "reported": 5.857864376269041e+20
+        },
+        {
+          "expected": 1616717505.7606351,
+          "name": "decay_tangent_heat_gamma_Xe140",
+          "relative_error": 1.6221784948653114e-15,
+          "reported": 1616717505.7606325
+        },
+        {
+          "expected": 849682471.920028,
+          "name": "decay_tangent_heat_gamma_Kr92",
+          "relative_error": 7.01493166508448e-16,
+          "reported": 849682471.9200286
+        },
+        {
+          "expected": 1.909243016955426e+18,
+          "name": "mf33_channel_sigma_activity_Xe140",
+          "relative_error": 2.68169109669685e-16,
+          "reported": 1.9092430169554266e+18
+        },
+        {
+          "expected": 1.7485949381282317e+17,
+          "name": "decay_channel_sigma_activity_Xe140",
+          "relative_error": 1.4640326036516667e-15,
+          "reported": 1.748594938128229e+17
+        },
+        {
+          "expected": 9.54621508477713e+17,
+          "name": "yield_channel_sigma_activity_Xe140",
+          "relative_error": 2.6816910966968505e-16,
+          "reported": 9.546215084777128e+17
+        },
+        {
+          "expected": 2.1417485764715238e+18,
+          "name": "combined_sigma_activity_Xe140",
+          "relative_error": 1.1952850246397895e-16,
+          "reported": 2.141748576471524e+18
+        }
+      ],
+      "combined_standard_uncertainty": 2.141748576471524e+18,
+      "decay_channel_report": {
+        "channel": "decay_constants",
+        "coverage": "complete",
+        "covered_parameters": 1,
+        "note": "MF=8/MT=457 half-life uncertainties propagated as diagonal variances; the evaluations carry no correlation data",
+        "standard_uncertainty": 1.748594938128229e+17,
+        "status": "propagated",
+        "total_parameters": 1
+      },
+      "interval_consistent": true,
+      "mf33_channel_report": {
+        "channel": "cross_section_mf33",
+        "coverage": "complete",
+        "covered_parameters": 1,
+        "standard_uncertainty": 1.9092430169554266e+18,
+        "status": "propagated",
+        "total_parameters": 1
+      },
+      "n_decay_parameters": 2,
+      "n_yield_parameters": 3,
+      "normal_interval": [
+        1.5569567255526926e+19,
+        2.2615293083581604e+19
+      ],
+      "pass": true,
+      "remainder_channel_report": {
+        "channel": "uncovered_remainder",
+        "note": "incident-flux, material-composition, response-coefficient and model-discrepancy terms are named uncovered",
+        "status": "not_evaluated"
+      },
+      "require_complete_rejected": true,
+      "uncovered_decay_constants": [
+        "Kr92"
+      ],
+      "uncovered_yield_products": [
+        "U235 -> Kr92"
+      ],
+      "work": "/home/connoravila/Documents/actinv/target/p20-g4/synthetic",
+      "worst_relative_error": 1.662632053094791e-15,
+      "yield_channel_report": {
+        "channel": "fission_yields",
+        "coverage": "complete",
+        "covered_parameters": 1,
+        "note": "MF=8/MT=454 independent-yield uncertainties propagated as diagonal variances; the evaluations carry no correlation data",
+        "standard_uncertainty": 9.546215084777128e+17,
+        "status": "propagated",
+        "total_parameters": 1
+      }
+    }
+  },
+  "pass": true,
+  "protocol": "ACTINV-P20",
+  "protocol_sha256": "76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335",
+  "schema": "actinv-p20-g4-channels-1"
+}

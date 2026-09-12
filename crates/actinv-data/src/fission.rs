@@ -36,6 +36,11 @@ pub struct EffectiveYields {
     pub upper_weight: f64,
     pub clamped: bool,
     pub products: BTreeMap<NuclideKey, f64>,
+    /// Per-product standard uncertainties propagated through the same linear
+    /// interpolation as `products`, treating the two endpoint evaluations as
+    /// independent: sigma = hypot((1-w)*sigma_lo, w*sigma_hi). A product absent
+    /// from an endpoint contributes a zero term, mirroring its zero value.
+    pub uncertainties: BTreeMap<NuclideKey, f64>,
     pub sum: f64,
 }
 
@@ -355,11 +360,25 @@ impl FissionYields {
         keys.sort_unstable();
         keys.dedup();
         let products: BTreeMap<_, _> = keys
-            .into_iter()
-            .map(|key| {
+            .iter()
+            .map(|&key| {
                 let low = lower.products.get(&key).map_or(0.0, |value| value.value);
                 let high = upper.products.get(&key).map_or(0.0, |value| value.value);
                 (key, low * (1.0 - weight) + high * weight)
+            })
+            .collect();
+        let uncertainties: BTreeMap<_, _> = keys
+            .into_iter()
+            .map(|key| {
+                let low = lower
+                    .products
+                    .get(&key)
+                    .map_or(0.0, |value| value.uncertainty);
+                let high = upper
+                    .products
+                    .get(&key)
+                    .map_or(0.0, |value| value.uncertainty);
+                (key, ((1.0 - weight) * low).hypot(weight * high))
             })
             .collect();
         let sum: f64 = products.values().sum();
@@ -370,6 +389,7 @@ impl FissionYields {
             upper_weight: weight,
             clamped,
             products,
+            uncertainties,
             sum,
         })
     }

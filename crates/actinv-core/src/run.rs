@@ -13,7 +13,8 @@ use crate::spec::{
     UncertaintyOptions,
 };
 use crate::uncertainty::{
-    self as uncertainty_report, BandInput, SensitivityOut, SensitivityParameter, StepUncertainty,
+    self as uncertainty_report, BandInput, ChannelData, DecayParameter, DecaySensitivityOut,
+    SensitivityOut, SensitivityParameter, StepUncertainty, YieldParameter, YieldSensitivityOut,
 };
 use actinv_data::{
     composition, covariance, decay, fission,
@@ -446,7 +447,18 @@ struct PreparedRadiological {
 
 struct UncertaintyRuntime {
     parameters: Vec<SensitivityParameter>,
+    /// Decay-constant channel parameters; their tangents follow `parameters`.
+    decay_parameters: Vec<DecayParameter>,
+    /// Fission-yield channel parameters; their tangents follow the decay block.
+    yield_parameters: Vec<YieldParameter>,
     directions: Vec<Csc>,
+    /// Per-direction flux scaling: reaction and fission-yield directions carry
+    /// the schedule multiplier; decay-constant directions are unscaled.
+    flux_scaled: Vec<bool>,
+    /// Whether the spec's `uncertainty.channels` requested each channel —
+    /// needed to emit a `propagated` channel report even with zero parameters.
+    decay_channel_requested: bool,
+    yield_channel_requested: bool,
     tangents: Vec<Vec<f64>>,
     covered_parameter_positions: Vec<usize>,
     covariance_barn2: Vec<f64>,
@@ -626,8 +638,97 @@ fn build_step_uncertainty(
             "Bq g^-1"
         };
         let sensitivity_unit = format!("{response_unit} barn^-1");
+        let xs_count = runtime.parameters.len();
+        let decay_count = runtime.decay_parameters.len();
+        let decay_channel = if decay_count > 0 || runtime.decay_channel_requested {
+            let sensitivity_unit = format!("{response_unit} s");
+            let activity_name = response.strip_prefix("activity:");
+            let mut sensitivities = Vec::with_capacity(decay_count);
+            let mut channel_variance = 0.0;
+            let mut covered = 0usize;
+            let mut total = 0usize;
+            for (index, parameter) in runtime.decay_parameters.iter().enumerate() {
+                let mut value = values[xs_count + index];
+                // The response itself depends on lambda: activity X = lambda_X * n_X
+                // carries the direct term n_X when X is the differentiated nuclide,
+                // and each heat component carries n_X * E_X.
+                let atoms = nominal
+                    .activity
+                    .get(parameter.nuclide.as_str())
+                    .copied()
+                    .unwrap_or(0.0)
+                    / parameter.lambda_s;
+                if activity_name == Some(parameter.nuclide.as_str()) {
+                    value += atoms;
+                } else if let Some(component) = response.strip_prefix("heat.") {
+                    let energy = context
+                        .nuclides
+                        .get(&(parameter.za, parameter.liso))
+                        .map(|nuclide| match component {
+                            "alpha" => nuclide.e_heavy(),
+                            "beta" => nuclide.e_light(),
+                            "gamma" => nuclide.e_em(),
+                            _ => nuclide.e_heavy() + nuclide.e_light() + nuclide.e_em(),
+                        })
+                        .unwrap_or(0.0);
+                    value += atoms * energy * EV;
+                }
+                if value != 0.0 {
+                    total += 1;
+                    if parameter.covered {
+                        covered += 1;
+                        channel_variance += (value * parameter.standard_uncertainty_s).powi(2);
+                    }
+                }
+                sensitivities.push(DecaySensitivityOut {
+                    parameter: parameter.clone(),
+                    value,
+                    unit: sensitivity_unit.clone(),
+                });
+            }
+            Some(ChannelData {
+                variance: channel_variance,
+                covered_parameters: covered,
+                total_parameters: total,
+                sensitivities,
+            })
+        } else {
+            None
+        };
+        let yield_channel = if !runtime.yield_parameters.is_empty()
+            || runtime.yield_channel_requested
+        {
+            let mut sensitivities = Vec::with_capacity(runtime.yield_parameters.len());
+            let mut channel_variance = 0.0;
+            let mut covered = 0usize;
+            let mut total = 0usize;
+            for (index, parameter) in runtime.yield_parameters.iter().enumerate() {
+                let value = values[xs_count + decay_count + index];
+                if value != 0.0 {
+                    total += 1;
+                    if parameter.covered {
+                        covered += 1;
+                        channel_variance += (value * parameter.standard_uncertainty).powi(2);
+                    }
+                }
+                sensitivities.push(YieldSensitivityOut {
+                    parameter: parameter.clone(),
+                    value,
+                    unit: response_unit.into(),
+                });
+            }
+            Some(ChannelData {
+                variance: channel_variance,
+                covered_parameters: covered,
+                total_parameters: total,
+                sensitivities,
+            })
+        } else {
+            None
+        };
         let sensitivities = values
             .into_iter()
+            .take(xs_count)
             .zip(&runtime.parameters)
             .map(|(value, parameter)| SensitivityOut {
                 parameter: parameter.clone(),
@@ -644,10 +745,12 @@ fn build_step_uncertainty(
             variance,
             negative_variance_roundoff_removed: residue,
             sensitivities,
+            decay_channel,
+            fission_yield_channel: yield_channel,
         })?;
         if options.require_complete && report.coverage != "complete" {
             return Err(format!(
-                "uncertainty response '{response}' has partial MF=33 coverage"
+                "uncertainty response '{response}' has partial coverage in a requested channel"
             ));
         }
         responses.insert(response, report);
@@ -658,6 +761,20 @@ fn build_step_uncertainty(
         absent_cross_parameter_pairs: runtime.absent_cross_parameter_pairs,
         maximum_covariance_asymmetry_barn2: runtime.maximum_covariance_asymmetry_barn2,
         excluded_blocks: runtime.excluded_blocks.clone(),
+        uncovered_decay_constants: runtime
+            .decay_parameters
+            .iter()
+            .filter(|parameter| !parameter.covered)
+            .map(|parameter| parameter.nuclide.clone())
+            .collect(),
+        uncovered_yield_products: runtime
+            .yield_parameters
+            .iter()
+            .filter(|parameter| !parameter.covered)
+            .map(|parameter| {
+                format!("{} -> {}", parameter.parent_nuclide, parameter.product_nuclide)
+            })
+            .collect(),
         responses,
     })
 }
@@ -1503,6 +1620,7 @@ impl PreparedRun {
             )
         } else {
             chain::ReactionAssembly {
+                yield_derivatives: Vec::new(),
                 triplets: chain::reaction_rates(
                     lib,
                     lib_targets,
@@ -1661,22 +1779,35 @@ impl PreparedRun {
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         let mut r_src: Vec<(usize, usize, f64)> = Vec::new();
         let mut reaction_derivatives = Vec::new();
+        // (decaying parent state, matrix row, matrix column, d(value)/d lambda_parent)
+        let mut decay_derivatives: Vec<(usize, usize, usize, f64)> = Vec::new();
+        let mut yield_derivatives = Vec::new();
         let mut bulk_heat = 0.0;
         let mut bulk_heat_split = (0.0, 0.0, 0.0);
         let mut bulk_photon_active: Vec<(String, (i32, i32), f64)> = Vec::new();
         if mode == "trace" {
             for (r, c, v) in &ch.decay {
+                let lambda_c = ch.lambda[*c];
                 if bulk.contains_key(c) {
                     if r != c && !bulk.contains_key(r) {
                         d_src.push((*r, ch.unit, v * bulk[c]));
+                        if lambda_c > 0.0 {
+                            decay_derivatives.push((*c, *r, ch.unit, v * bulk[c] / lambda_c));
+                        }
                     }
                     // a fed reservoir nuclide's tracked population decays and produces normally;
                     // production into other reservoir rows stays absorbed by the reservoir
                     if tracked_reservoir.contains(c) && (r == c || !bulk.contains_key(r)) {
                         d_src.push((*r, *c, *v));
+                        if lambda_c > 0.0 {
+                            decay_derivatives.push((*c, *r, *c, v / lambda_c));
+                        }
                     }
                 } else if !bulk.contains_key(r) {
                     d_src.push((*r, *c, *v));
+                    if lambda_c > 0.0 {
+                        decay_derivatives.push((*c, *r, *c, v / lambda_c));
+                    }
                 }
             }
             for (r, c, v) in &react {
@@ -1725,6 +1856,29 @@ impl PreparedRun {
                     reaction_derivatives.push(derivative);
                 }
             }
+            // Fission-yield directions ride the same trace-form remap as the
+            // reaction directions their product edges belong to.
+            for derivative in reaction_assembly.yield_derivatives {
+                if bulk.contains_key(&derivative.column) {
+                    if tracked_reservoir.contains(&derivative.column)
+                        && (derivative.row == derivative.column
+                            || !bulk.contains_key(&derivative.row))
+                    {
+                        yield_derivatives.push(derivative);
+                    }
+                    if derivative.row == derivative.column || bulk.contains_key(&derivative.row) {
+                        continue;
+                    }
+                    yield_derivatives.push(chain::YieldDerivative {
+                        row: derivative.row,
+                        column: ch.unit,
+                        per_yield_s: derivative.per_yield_s * bulk[&derivative.column],
+                        ..derivative
+                    });
+                } else if !bulk.contains_key(&derivative.row) {
+                    yield_derivatives.push(derivative);
+                }
+            }
             for (c, nb) in &bulk {
                 let key = ch.keys[*c];
                 if let Some(nu) = nuclides.get(&key) {
@@ -1739,9 +1893,16 @@ impl PreparedRun {
             }
             bulk_heat = bulk_heat_split.0 + bulk_heat_split.1 + bulk_heat_split.2;
         } else {
+            for (r, c, v) in &ch.decay {
+                let lambda_c = ch.lambda[*c];
+                if lambda_c > 0.0 {
+                    decay_derivatives.push((*c, *r, *c, v / lambda_c));
+                }
+            }
             d_src = ch.decay.clone();
             r_src = react.clone();
             reaction_derivatives = reaction_assembly.derivatives;
+            yield_derivatives = reaction_assembly.yield_derivatives;
         }
         // ---- initial vector
         let mut n0 = vec![0.0f64; n_total];
@@ -1803,6 +1964,41 @@ impl PreparedRun {
                         pos[derivative.row],
                         pos[derivative.column],
                         C64::new(derivative.per_barn_s, 0.0),
+                    ));
+            }
+        }
+        // Decay-constant directions, grouped by the decaying parent's global
+        // chain state; only edges inside the kept subspace survive.
+        let mut decay_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
+        for (parent, row, column, per_lambda_s) in decay_derivatives {
+            if per_lambda_s != 0.0 && pos[row] != usize::MAX && pos[column] != usize::MAX {
+                decay_sub
+                    .entry(parent)
+                    .or_default()
+                    .push((pos[row], pos[column], C64::new(per_lambda_s, 0.0)));
+            }
+        }
+        // Independent-yield directions, keyed by (parent ZA, parent LISO,
+        // product ZA, product state).
+        let mut yield_sub: BTreeMap<(i32, i32, i32, i32), Vec<(usize, usize, C64)>> =
+            BTreeMap::new();
+        for derivative in yield_derivatives {
+            if derivative.per_yield_s != 0.0
+                && pos[derivative.row] != usize::MAX
+                && pos[derivative.column] != usize::MAX
+            {
+                yield_sub
+                    .entry((
+                        derivative.parent.0,
+                        derivative.parent.1,
+                        derivative.product.0,
+                        derivative.product.1,
+                    ))
+                    .or_default()
+                    .push((
+                        pos[derivative.row],
+                        pos[derivative.column],
+                        C64::new(derivative.per_yield_s, 0.0),
                     ));
             }
         }
@@ -1877,10 +2073,79 @@ impl PreparedRun {
                     });
                     directions.push(Csc::from_triplets(m, &derivative_sub[&row_index]));
                 }
+                let mut flux_scaled = vec![true; parameters.len()];
+                let mut decay_parameters = Vec::new();
+                let mut yield_parameters = Vec::new();
+                let decay_channel_requested =
+                    options.channels.iter().any(|name| name == "decay_constants");
+                let yield_channel_requested =
+                    options.channels.iter().any(|name| name == "fission_yields");
+                if decay_channel_requested {
+                    for (&parent, triplets) in &decay_sub {
+                        let &(za, liso) = ch.keys.get(parent).ok_or_else(|| {
+                            format!("decay parameter {parent} is outside the chain index")
+                        })?;
+                        let lambda = ch.lambda[parent];
+                        let relative = nuclides
+                            .get(&(za, liso))
+                            .filter(|nuclide| nuclide.half_life > 0.0)
+                            .map_or(0.0, |nuclide| {
+                                nuclide.d_half_life / nuclide.half_life
+                            });
+                        decay_parameters.push(DecayParameter {
+                            nuclide: name_of(za, liso),
+                            za,
+                            liso,
+                            lambda_s: lambda,
+                            standard_uncertainty_s: lambda * relative,
+                            covered: relative > 0.0,
+                        });
+                        directions.push(Csc::from_triplets(m, triplets));
+                        flux_scaled.push(false);
+                    }
+                }
+                if yield_channel_requested {
+                    for (&(parent_za, parent_liso, product_za, product_liso), triplets) in
+                        &yield_sub
+                    {
+                        let effective = effective_fission_yields.get(&(parent_za, parent_liso));
+                        let yield_value = effective
+                            .and_then(|yields| yields.products.get(&(product_za, product_liso)))
+                            .copied()
+                            .unwrap_or(0.0);
+                        let standard_uncertainty = effective
+                            .and_then(|yields| {
+                                yields.uncertainties.get(&(product_za, product_liso))
+                            })
+                            .copied()
+                            .unwrap_or(0.0);
+                        yield_parameters.push(YieldParameter {
+                            parent_nuclide: name_of(parent_za, parent_liso),
+                            parent_za,
+                            parent_liso,
+                            product_nuclide: name_of(product_za, product_liso),
+                            product_za,
+                            product_liso,
+                            yield_value,
+                            standard_uncertainty,
+                            covered: standard_uncertainty > 0.0,
+                        });
+                        directions.push(Csc::from_triplets(m, triplets));
+                        flux_scaled.push(true);
+                    }
+                }
                 Some(UncertaintyRuntime {
-                    tangents: vec![vec![0.0; m]; parameters.len()],
+                    tangents: vec![
+                        vec![0.0; m];
+                        parameters.len() + decay_parameters.len() + yield_parameters.len()
+                    ],
                     directions,
+                    flux_scaled,
+                    decay_channel_requested,
+                    yield_channel_requested,
                     parameters,
+                    decay_parameters,
+                    yield_parameters,
                     covered_parameter_positions,
                     covariance_barn2: collapsed.covariance_barn2,
                     uncovered_library_rows: collapsed.uncovered_rows,
@@ -1950,12 +2215,17 @@ impl PreparedRun {
             }
             let a = Csc::from_triplets(m, &trip);
             if let Some(runtime) = uncertainty_runtime.as_mut() {
+                let direction_scales: Vec<f64> = runtime
+                    .flux_scaled
+                    .iter()
+                    .map(|&scaled| if scaled { fl.get() } else { 1.0 })
+                    .collect();
                 let tangent_step = step_with_tangents(
                     &a,
                     &y,
                     &runtime.tangents,
                     &runtime.directions,
-                    fl.get(),
+                    &direction_scales,
                     dt.get(),
                     &c,
                 )?;

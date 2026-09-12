@@ -60,6 +60,12 @@ pub struct UncertaintyOptions {
     pub covariance: HashedFileRef,
     #[serde(default)]
     pub responses: Vec<String>,
+    /// Uncertainty channels propagated into the band. Absent or empty selects
+    /// `cross_section_mf33` only (the P11/G2 behavior); `decay_constants` and
+    /// `fission_yields` add first-order MF=8/MT=457 half-life and MF=8/MT=454
+    /// independent-yield channels, each reported with its own coverage.
+    #[serde(default)]
+    pub channels: Vec<String>,
     #[serde(default = "confidence_95")]
     pub confidence_level: f64,
     #[serde(default)]
@@ -400,6 +406,24 @@ impl Spec {
                 );
             }
             let mut selectors = std::collections::HashSet::new();
+            let mut seen_channels = std::collections::HashSet::new();
+            for channel in &uncertainty.channels {
+                match channel.as_str() {
+                    "cross_section_mf33" | "decay_constants" | "fission_yields" => {}
+                    "uncovered_remainder" => {
+                        return Err(
+                            "uncertainty.channels cannot request uncovered_remainder; it is always named, never propagated"
+                                .into(),
+                        );
+                    }
+                    other => {
+                        return Err(format!("unknown uncertainty channel '{other}'"));
+                    }
+                }
+                if !seen_channels.insert(channel.as_str()) {
+                    return Err(format!("duplicate uncertainty channel '{channel}'"));
+                }
+            }
             for selector in &uncertainty.responses {
                 let valid = matches!(
                     selector.as_str(),

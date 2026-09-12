@@ -172,7 +172,10 @@ Each activation row is a distinct parameter `(target, MT, ZAP, LFS, LMF)`. Rows 
 self-covariance are covered; MF=10 rows require MF=40 and are therefore uncovered in P11. A missing cross component
 between covered rows contributes zero as absent evaluated covariance and is counted. No covariance value is projected
 to positive semidefinite form, clipped, decorrelated or otherwise repaired. Both orientations are assembled and
-symmetry is diagnosed before propagation.
+symmetry is diagnosed before propagation. A collapsed block whose assembled asymmetry exceeds `1e-9` times its
+largest-magnitude entry, or whose symmetric part's minimum eigenvalue falls below `-1e-10` times its maximum, is
+defective: the block is excluded, contributes zero, and is named with its reason and measured defect in
+`excluded_blocks`.
 
 CRAM order is selectable as 16 or 48. For a parameter direction `dA`, every incomplete-partial-fraction pole reuses
 the primal factorization and differentiates the selected recurrence exactly:
@@ -188,9 +191,21 @@ For response sensitivity vector `S` and the covered collapsed matrix `C`, the MF
 materially negative result fails. Only a negative residue no larger than
 `128 epsilon sum(abs(S_i C_ij S_j))` is reported and set to zero. The two-sided normal interval uses the requested
 confidence; the selected-versus-alternate CRAM response difference remains a separate numerical-method bound and
-expands a separately named conservative interval. Neither interval is a tolerance limit or safety margin. Decay and
-MF=32, production/MF=40 and yield, incident-flux, material-composition, response-coefficient and model uncertainties
-are excluded and listed in every uncertainty ledger/certificate.
+expands a separately named conservative interval. Neither interval is a tolerance limit or safety margin.
+
+Two further uncertainty channels are available on request (P20). `decay_constants` differentiates the network in
+each radioactive chain member's decay constant `lambda = ln2/T_half`; the relative standard uncertainty is the
+MF=8/MT=457 half-life ratio `dT_half/T_half`, and differentiating an activity or heat response adds the direct term
+(`n_X` for `activity:X`, `n_X * E_X` per heat component) because the response itself depends on `lambda`.
+`fission_yields` differentiates each populated fission edge in its independent yield, with standard uncertainty `DY`
+read from the pinned MF=8/MT=454 file at the requested yield energy; the direction is the parent's fission rate at
+that product edge and shares the reaction-channel trace/coupled remap. Both channels are diagonal — neither
+evaluation carries correlation data — and each parameter without declared uncertainty is named in
+`uncovered_decay_constants` / `uncovered_yield_products`. Channel variances sum as independent terms into
+`combined_standard_uncertainty`; `require_complete` extends to every requested channel. MF=32 resonance-parameter and
+MF=40 production covariance, decay-yield and cross-channel correlation, incident-flux, material-composition,
+response-coefficient and model uncertainties remain excluded; every response names that remainder under the
+`uncovered_remainder` channel, which is never propagated.
 
 ## Radiological response evaluation (P12)
 
