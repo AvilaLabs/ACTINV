@@ -79,6 +79,9 @@ jobs:
       - name: P18b formal closure preserves the frozen failure verdict
         run: python controls/check_p18b.py --no-write
 
+      - name: P20 opening gate — protocol, verdicts, identity baseline, MF=33 census
+        run: python controls/check_g0_p20.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 

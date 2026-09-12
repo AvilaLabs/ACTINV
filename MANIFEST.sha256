@@ -1,4 +1,4 @@
-10c0aa677a5edcde7af1b94ebfabc5e74d82bdc3b1abcb2d9a263389f2f601df  ./.github/workflows/ci.yml
+594d1360a15e51e007453c8848aacb802bb244ce8bab03418ae8951f4f33f56c  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -29,6 +29,7 @@ af488bfa6830983ab64e77c1a31522f3ca07acaa173574aff979acd3de65716a  ./controls/cer
 5223f06c13c1936125a17090ed0a408c638d8c0b12849216458e05302ec33a2b  ./controls/check_g0_p18.py
 991a8e7227f604e196fa4116ec6807adc4bd7f98759aa742d52d0871d7d7533f  ./controls/check_g0_p18b.py
 2cab751710d11b67e15b08388a3ebe71b5d572bef04fff388f29f64456a1b3ae  ./controls/check_g0_p19.py
+1aa30f577d64294ecc1fb320be9ab2bf1b2f652c2abf4f6030fa2acae9ca5802  ./controls/check_g0_p20.py
 cea7ebe169e8bed9e8af3412686f429611e846625686dc0aa9eee5a83a5b89d4  ./controls/check_g0_p23.py
 94deb9d572c7827e701bba4167a29e238fb8c670db97633e85effdaf5255c288  ./controls/check_g1_p18.py
 3e6ba7e15aca7ba97d969d2d8da3b4c7713a17836b0bb1adf41470750bd5fe6d  ./controls/check_g1_p18b.py
@@ -100,6 +101,8 @@ b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns
 00d0c2233b879e60b4bd1e4008b15301cbc67ed0864c912ab8bbb01e65ebefb1  ./controls/g0_p18_seal.py
 77eddd3f718d8cfec93139e671f758034df77fd6ccb620753107a0d096779b5d  ./controls/g0_p18b_seal.py
 6c053b65071c03754e4e3163a7e982602355a46e346b23a39a1925ca4a7ca407  ./controls/g0_p19_battery.py
+8b77c0a0f0902f4e8856ddfd4e8455b4a4baf69ed78766b607db19ac7372449a  ./controls/g0_p20_battery.py
+90c28632052b3640183b89f0f315a33bfa54a94fabfa0652122e9ba7728996b3  ./controls/g0_p20_census.py
 fffdf65468839ce4d1c77384cd2d4602417972d8f26f8bf79bedff2db8fa5178  ./controls/g0_p23_battery.py
 33dc5c0ada5ce8b84c0fe563516492c7a74362e2bfcbb313e8d55b92117fe176  ./controls/g1_collapse.py
 0062fd7e6a1cd39648c0669b225a3b06d9c4bb2a5c6924a3b4aa037ef24103f0  ./controls/g1_decay_fallback_control.py
@@ -292,6 +295,7 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 4f7afb6c2b4e388596f235f05d63555d03d573d18061e17463c863cdda0aa9e8  ./crates/actinv-data/src/bin/p18_corpus_probe.rs
 8dcf50a0b11631db0877e30be9397750b0b4c64eb3435ad601b2f753939effef  ./crates/actinv-data/src/bin/p18b_corpus_probe.rs
 558b6ed1e6c1689196b0fe8b1467bd122a44113869e0754614f286b0d38bb66a  ./crates/actinv-data/src/bin/p18b_oracle_probe.rs
+f274b0484b17ffb28e701076d830367858cc67110739e1026e5a894286d216d7  ./crates/actinv-data/src/bin/p20_corpus_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
 2305c8138ec587e1c771811c0da9705b4b835471ca64decf4532b634e5860528  ./crates/actinv-data/src/builder.rs
 8fa3ccc2d59fb244e8a15495b36e5b3d710700769550d861c7531c24722ec0ea  ./crates/actinv-data/src/composition.rs
@@ -447,6 +451,7 @@ c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f  ./protocols/AC
 910ea78986a98755c859569092d2284dc60f3e4548afeeb661aecf33e76c3d7a  ./protocols/ACTINV-P1_AMENDMENT_A.md
 d69c2d19002e8418169cfa385428b80789e96a4e8eaaf9f75b8dcbee72cfef34  ./protocols/ACTINV-P1_AMENDMENT_B.md
 c2234d077bc0a5bb2639cad217ae17ea674966cb7c7bd962284e1691d55388b4  ./protocols/ACTINV-P1_PROTOCOL.md
+76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335  ./protocols/ACTINV-P20_PROTOCOL.md
 d03ac16b27f2e60d87259a2392796713347c789f8e4981b69ac0f644d7397766  ./protocols/ACTINV-P23_AMENDMENT_A.md
 fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5  ./protocols/ACTINV-P23_PROTOCOL.md
 3e91d74d9942177800cd14fcba3778c7c00363c7b42227b823d1aa6900da20d6  ./protocols/ACTINV-P2_AMENDMENT_A.md
@@ -1717,6 +1722,9 @@ e419e8eeb506c28440744e8a3ceb6922f1d066b8d673f534ce0567dc59f82af3  ./results/g0_p
 99648da5dc4d4209e2607ea16ca9d4e34127c64ce7430f9194c48370562271ad  ./results/g0_p18b_seal.json
 fe87baa0850e9d4b11f0674fd98226df74aee3d114409c0bd79bc134d5df0891  ./results/g0_p19_check.json
 0d26fa623c333a333efde3c00a73e1f764752ac5a988060ea29aaa4dd7fd9fd5  ./results/g0_p19_identity_baseline.json
+87d7757a31b482175c1947ead015cf8f98a31b11e2d26e933455d8bb68d2eb2e  ./results/g0_p20_check.json
+e24498d5da8da71c4e347c5d43265922de654f5ff1e6c5b8d15ea73903629bcc  ./results/g0_p20_identity_baseline.json
+1a3ce52b11557b5972f03db326b693f2e25060850180816bc87bd088750d6f4a  ./results/g0_p20_mf33_census.json.gz
 9f45a98f4c3dbe675fd4d96f758d418d1e11fddab5b3fb0510495b0b1d517fe7  ./results/g0_p23_check.json
 3a30a0e84933a27fc98ef82fe9bfbbdbce05b4a8674cbf0b34494de3f6369484  ./results/g0_p23_identity_baseline.json
 80a643c7e0d4e23ed8b0594ded18e82157d4ac6b2bde32ca4ad0bcc1ee10aea3  ./results/g1_collapse.json
