@@ -410,3 +410,15 @@ part that does not compress: users, issues, and the validation record accumulati
   (`results/g4_p19_perf.json`), and the independent closure checker `controls/check_g5_p19.py` re-verifies the
   gate chain and artifact invariants without production imports (3/3 mutations rejected). Verdict
   `results/verdict_p19.json`: **P19-PASS**. Next: P18b completion or the P20-P22 gap list.
+- 2026-09-12 — P18b G2 completes the complete four-corpus classification. A schema-v2 Rust probe and the
+  independent 80/120-digit decimal oracle audited all 11,400 evaluations (84.5M source comparisons plus 24.2M
+  runtime group comparisons): every frozen P18 inventory and violation count is reproduced exactly
+  (2,128,813 / 175,883 / 264,272 / 78,647 for neutron/proton/deuteron/alpha), 35,033 binary64 preliminary
+  labels are corrected by the authoritative exact-decimal classes, and the runtime comparator counts bound the
+  G3 reconciliation envelope (793,520 / 173,579 / 282,975 / 73,230 standard-compatible vs
+  1,769,831 / 140,423 / 339,399 / 54,580 outside-standard group excesses). A deterministic sub-resolution bound
+  (1e-30 relative, twenty orders below the finest printed ENDF difference) resolves true-zero differences whose
+  stable-integral residues flip sign across precisions; the bound is pinned in the emitted checkpoint header.
+  The pinned CHECKR/FIZCON sample explains all 245 official runs. Evidence `results/g2_p18b_corpus_classification.json`,
+  independent checker `controls/check_g2_p18b.py` replays all four checkpoints and rejects 3/3 mutations
+  (`results/g2_p18b_check.json`). Measurements and held-out values remain unread; G3 is authorized.
