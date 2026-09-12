@@ -103,6 +103,9 @@ jobs:
       - name: P20 defect exclusion — absent-section identity and named reasons
         run: python controls/check_g2_p20.py --no-write
 
+      - name: P20 correlated sampling oracle — quantiles, variance, floor gating
+        run: python controls/check_g3_p20.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 
