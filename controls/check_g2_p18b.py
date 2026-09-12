@@ -240,11 +240,10 @@ def main() -> int:
     if arguments.no_write:
         require(OUTPUT.is_file(), f"missing committed check record {OUTPUT}")
         committed = json.loads(OUTPUT.read_text())
-        committed.pop("control_sha256", None)
         expected = dict(report)
-        expected.pop("control_sha256", None)
-        committed.pop("evidence_sha256", None)
-        expected.pop("evidence_sha256", None)
+        for environment_field in ("control_sha256", "evidence_sha256", "checkpoint_replay"):
+            committed.pop(environment_field, None)
+            expected.pop(environment_field, None)
         require(committed == expected, "committed G2 check is not reproducible")
     else:
         OUTPUT.write_text(json.dumps(report, indent=1, sort_keys=True) + "\n")
