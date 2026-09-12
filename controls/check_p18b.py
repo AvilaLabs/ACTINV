@@ -8,6 +8,7 @@ import copy
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -272,9 +273,14 @@ def production_changes() -> list[str]:
 
 
 def run_component(relative: str) -> dict[str, Any] | None:
+    env = dict(os.environ)
+    probe = ROOT / "target/release/p18b_oracle_probe"
+    if probe.is_file():
+        env.setdefault("ACTINV_P18B_PROBE", str(probe))
     completed = subprocess.run(
         [sys.executable, str(ROOT / relative), "--no-write"],
         cwd=ROOT,
+        env=env,
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
