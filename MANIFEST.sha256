@@ -1,4 +1,4 @@
-8bfc44995cbf2cc840b48ebc829bfc2a2a71540e445cdc2ece6f473ff8352f2a  ./.github/workflows/ci.yml
+749c457cf851eaad159af0c7a368bbc281f15b3262e0aeda2d48c0e56234ac77  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -63,6 +63,7 @@ d7736ed6fe554d3cda4b9465204ce5d44efa6217292213da7139077100a46660  ./controls/che
 8aa354c7337d9f38b05b9341deeac24aaa2eae8a1f8af8651f32ab76c7da2c97  ./controls/check_p18.py
 f33260c080eeb9f4fb36ff0cb189cee2bb3806e072a8a5288b6bc94e3e69cd9e  ./controls/check_p18b.py
 c96232e9ab1e0928f047fe681a7c375fe67862d5e817ed54b3ec29b869c69a1e  ./controls/check_p2.py
+bb1319add2bd11f2221679075024e44093a91b3525b0162389b6852480db2d1d  ./controls/check_p20.py
 cd82885036f46445b1b50d15d45f45b94bfa07cb523760af661459f6eac54768  ./controls/check_p23.py
 169a7ae01d60fcda18e876a368b8bf42f018fa678a993038695c2631910b95ba  ./controls/check_p3.py
 7878caac6aab1762b7db82c3ac95e3f03c7974b83377978bdb104ebe46fb5105  ./controls/check_p3b.py
@@ -365,7 +366,7 @@ a535a3613f3e05acf780e61ec46fdec9be355bd0c08b3bb1b88b7406bff3d8a2  ./docs/RELEASE
 f0a32b0cdc308b42b1a3f2b9c30ffed929ca93e8bc5a4fbdb3287d7912b597d9  ./docs/RELEASE_NOTES_v0.5.md
 9cf927585ae9f4252e6febdb3e9fa396065f72ba1bf53956f38f6a82ecda3dbf  ./docs/RELEASE_NOTES_v1.0.1.md
 8f8962192e59bb1f8d5ccdd4faff88966715eac9773b1f6a457e64f1ddfba59a  ./docs/RELEASE_NOTES_v1.0.md
-d13eac3e90b01b7df8e8e82ff31d16a4acf07560ac5f6033b7da2c15e8dc3580  ./docs/ROADMAP.md
+0af8593ec7391106c6f85dd8cd21ba13d98b7b8bf491e23f5a367e2b2dd317a5  ./docs/ROADMAP.md
 f3556c6c1d0cab95d9f55566b2ab7cb57573b429f60cee4f13adf2cb0c07d1f4  ./docs/SPEC.md
 48fbacb01114259ac935417298e87d328968728a7f4fe35b9b5ce9ff547a70e9  ./docs/VALIDATION.md
 ca743f17ff81ce8a825c02aad7d04a158c3e44794f7ad22d50ee5bfe45b32493  ./docs/history/P23.md
@@ -1895,6 +1896,7 @@ ff534099e9c544e69a52774383a0f5eef037e92ff55722bede40ee02bafb3a19  ./results/p19_
 635a6ba635c677f8e483307f5e5189bfe5a01218cd5d4e8995424361f6772a12  ./results/p1_chain2.log
 32d0d3fbd8ef0f590e04331201d2a63be2b307794e3dc695c9c63318b1f0d22a  ./results/p1_chain3.log
 40033b975b59bebfd3b32d792814e1573455718d5567343da4986b118dfd92e6  ./results/p1_chain4.log
+edba6db1b41d0f0049fc237348cf0d95aea04d6e345ca017f3c0183e94f37b08  ./results/p20_closure_check.json
 5ffd2f4e3781df77d23b7497e144a8bc89800219f942ef0843dea350d918687c  ./results/p23_closure_check.json
 52e063380d6d486ca38375c04013e13f394aa0964149a18bbe23b25e709e947e  ./results/p2_g4_run.log
 68a3a3ecf028930067145d68fdc5c0a4bcedc0a6c3627a35a244bdc9c1bdc7ed  ./results/p3_g2_controls.log
@@ -1935,6 +1937,7 @@ e9dbea1e2e5ade98cb14afa7f73b2eb9dd82da183364a75ea8d36dade1eb8863  ./results/verd
 cb37a4cb83bcec54e2041377a4b1cd3cd4cebd5d44291563af1d4cf4403fbb62  ./results/verdict_p18b.json
 99e70780c5121cb2f1dd6198317ea9b2fff2a4e3f20a9a5bf077b073a370517e  ./results/verdict_p19.json
 df446b6a2431a2c986be694ba357b4814717a53dac3002031a294a4b93eef8bb  ./results/verdict_p2.json
+9966a518fbc438d7daee8f43218a0ba6ea08e8d04f1f4c6cd5072bac5c083241  ./results/verdict_p20.json
 a714b92e4817c76ec32aa6577ca77fe2ef76e29f4fac541174a18c948ad737b5  ./results/verdict_p23.json
 b6edcebd83940c4e9a3fdc88b57afc7ac211cc2a6c8d0d6c75eaff101df3f0dd  ./results/verdict_p3.json
 9bebe96502ceac9c120f215bf15721adf6541c3b7ddeec20d7245076ae56d727  ./results/verdict_p3b.json

@@ -1,0 +1,31 @@
+{
+ "closed": true,
+ "closure_check_sha256": "edba6db1b41d0f0049fc237348cf0d95aea04d6e345ca017f3c0183e94f37b08",
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "g0_baseline": "e24498d5da8da71c4e347c5d43265922de654f5ff1e6c5b8d15ea73903629bcc",
+  "g0_census": "1a3ce52b11557b5972f03db326b693f2e25060850180816bc87bd088750d6f4a",
+  "g0_check": "bc03037049bac5e518b17bd5293bd1d7061f3c352a141329561ee47fdf5db78b",
+  "g1_check": "5453811c5b70076440283c3a82d34081ed76e712daaf2ade164eb2350ff56447",
+  "g2_battery": "aec2797179aa8a8f3c0561b8c5590b08dfad5e966201b0634d37301750ee70da",
+  "g2_check": "4ccfacdcbefad4540800b1b03ae412d312fa238625c4947d52603136bf6d9283",
+  "g3_battery": "be712e3018545b4d88e35b37f232feb61890973f4ce605501365ea996565697b",
+  "g4_battery": "7695ea8ddcd0831202df7e3d21930ffc12fc6d1c70ce95cbfe6bd99d6a437255",
+  "g4_check": "29a03dc3e7391ea4cd930ed7e8d6b749ae12b5b0c42129a40f2b9b468a09aa2b"
+ },
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true
+ },
+ "head_commit": "04699c913b10e32294501e02d3454308ec29c542",
+ "opening_commit": "2b7f87309d6bc3a87c33d76d9838d7c4aa33d59a",
+ "phase_success": true,
+ "protocol_sha256": "76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335",
+ "schema": "actinv-p20-verdict-1",
+ "scope_note": "P20-PASS covers first-order propagation of collapsed ENDF-6 MF=33 covariance plus optional diagonal decay-constant (MF=8/MT=457) and independent-yield (MF=8/MT=454) channels, defective-block exclusion with named reasons, and a deterministic correlated-sampling oracle that agrees with the linear band in the shared regime. It does not claim MF=32/34/35 or MF=40 covariance, cross-channel correlation, incident-flux or composition uncertainty, model discrepancy, or any tolerance limit; the uncovered remainder is always named.",
+ "verdict": "P20-PASS"
+}

@@ -109,6 +109,9 @@ jobs:
       - name: P20 decay/yield channels — FD agreement, channel sums, coverage
         run: python controls/check_g4_p20.py --no-write
 
+      - name: P20 closure — re-run all gates, re-derive arithmetic, verdict
+        run: python controls/check_p20.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 

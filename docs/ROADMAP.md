@@ -481,3 +481,26 @@ part that does not compress: users, issues, and the validation record accumulati
   released while construction coverage leaves strata undemonstrated. G6 release artifacts are not
   authorized; v1.0.1 remains the public release. A permitted append-only repair amendment could
   reopen a corrected phase without weakening these frozen thresholds.
+
+- 2026-09-12 — P20 closes with `P20-PASS` (verdict `results/verdict_p20.json`, independent closure
+  `results/p20_closure_check.json`) under frozen protocol `76c2ca2f`. G0 sealed the opening gate: a
+  complete TENDL-2025 MF=33 census (`results/g0_p20_mf33_census.json.gz`) inventories 285,023
+  components across 200,534 blocks (LB5/LB8 paired short-range + relative, LB6 multi-column) with
+  zero parse failures, reproduced independently by `controls/check_g1_p20.py`, and the four-surface
+  identity baseline is intact. G2 classifies defective blocks — asymmetric sections, non-positive
+  eigenvalues, singular weights — and excludes them with named reasons per response
+  (`controls/g2_p20_defects.py`), adding per-channel band reporting. G3 delivers the deterministic
+  correlated-sampling oracle (`controls/g3_p20_sampling.py`): nine midpoint-normal quantiles, 192
+  perturbed solves on the richest FNS target's eigenbasis, every resolvable comparison inside 5% of
+  the linear band, with solver-floor gating so sub-CRAM-noise comparisons are evidence rather than
+  gates (checker `controls/check_g3_p20.py`, 6/6 mutations rejected). G4 adds the decay-constant
+  (MF=8/MT=457) and independent-yield (MF=8/MT=454) channels: synthetic tangents machine-exact,
+  real Mn56 half-life finite-difference agreement 3.7e-3, real Kr92 yield agreement 5.9e-5 with a
+  sum-to-two-preserving compensated perturbation, channel cost measured (+0.14 s for 34 decay
+  parameters, +1.92 s for 1,016 yield parameters) (`controls/g4_p20_channels.py`, checker
+  `controls/check_g4_p20.py`, 8/8 mutations rejected). The closure checker `controls/check_p20.py`
+  re-runs all five gate checkers, re-derives census aggregates, sampling variance and channel
+  arithmetic, re-walks the pinned MF=8 records, re-asserts all 23 prior verdicts including
+  P18b-FAIL, and rejects 5/5 evidence mutations. Scope is honest: no MF=32/34/35/40 covariance,
+  no cross-channel correlation, no flux or composition uncertainty, no tolerance limits; the
+  uncovered remainder is always named.
