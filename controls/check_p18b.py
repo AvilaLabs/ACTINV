@@ -7,6 +7,7 @@ import argparse
 import copy
 import hashlib
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -292,16 +293,120 @@ def run_component(relative: str) -> dict[str, Any] | None:
     return value if isinstance(value, dict) else None
 
 
+SEAL = ROOT / "results/p18_family_seal.json"
+
+
+def calculated_ratio(kind: str, sigma_g: float, sigma_m: float, sigma_t: float):
+    """Independent re-derivation of the frozen printed-form IR ratio."""
+    if kind in {"G+M", "M/G", "G/M"}:
+        total = sigma_g + sigma_m
+    elif kind in {"M+T", "G+T", "M/T", "G/T"}:
+        total = sigma_t
+    else:
+        return None
+    if total <= 0.0 or not math.isfinite(total):
+        return None
+    return sigma_m / total
+
+
+def g5_evaluate(report: dict) -> list[str]:
+    """Independently re-derive the held-out report's arithmetic and gate
+    verdicts without importing the frozen scorer modules."""
+    failures = []
+    checks = report.get("checks", {})
+    if report.get("schema") != "actinv-g5-p18b-heldout-1":
+        failures.append("schema")
+    if checks.get("protocol_hash") is not True:
+        failures.append("protocol hash")
+    if checks.get("supplement_hash") is not True:
+        failures.append("supplement hash")
+    if report.get("quarantine", {}).get("heldout_values_read") is not True:
+        failures.append("heldout read flag")
+    seal = load(SEAL) or {}
+    sealed = {
+        row["row_id"]
+        for fam in seal.get("families", [])
+        if fam.get("partition") == "heldout"
+        for row in fam.get("rows", [])
+    }
+    ledger = report.get("ledger", [])
+    if {e["row_id"] for e in ledger} != sealed:
+        failures.append("heldout ledger coverage")
+    for entry in ledger:
+        for label in ("baseline", "candidate"):
+            block = entry.get(label) or {}
+            if block.get("status") != "scored":
+                continue
+            calc = calculated_ratio(
+                entry["measurement_type"],
+                block["sigma_g"],
+                block["sigma_m"],
+                block["sigma_t"],
+            )
+            if calc is None:
+                continue
+            measured = entry["measured"]
+            cm = calc / measured if measured != 0 else float("inf")
+            if not math.isclose(cm, block["cm"], rel_tol=1e-12, abs_tol=0.0):
+                failures.append(f"{entry['row_id']}/{label}: cm")
+            if block["ln_cm"] is not None and math.isfinite(block["ln_cm"]):
+                if not math.isclose(
+                    math.log(cm), block["ln_cm"], rel_tol=1e-12, abs_tol=0.0
+                ):
+                    failures.append(f"{entry['row_id']}/{label}: ln_cm")
+    gates = report.get("gates", {})
+    if not isinstance(gates.get("pass"), bool):
+        failures.append("gate result missing")
+        return failures
+
+    def nonreg_ok(base: dict, cand: dict):
+        if not base.get("rows") or not cand.get("rows"):
+            return None
+        med = (
+            cand["median_abs_ln"] <= base["median_abs_ln"] + 0.005
+            and cand["median_abs_ln"] <= 1.01 * base["median_abs_ln"]
+        )
+        p90 = (
+            cand["p90_abs_ln"] <= base["p90_abs_ln"] + 0.01
+            and cand["p90_abs_ln"] <= 1.01 * base["p90_abs_ln"]
+        )
+        cov = all(
+            cand[k] >= base[k] - 0.01
+            for k in ("within_10pct", "within_20pct", "within_30pct")
+        )
+        return med and p90 and cov
+
+    want_strata = True
+    for blk in report.get("per_projectile", {}).values():
+        if blk["eligible_rows"] < 10:
+            continue
+        if nonreg_ok(blk["baseline"], blk["candidate"]) is not True:
+            want_strata = False
+    want_overall = (
+        nonreg_ok(report["overall"]["baseline"], report["overall"]["candidate"])
+        is True
+    )
+    want_pass = bool(
+        want_strata
+        and want_overall
+        and gates.get("mapping_rule4_pass")
+        and gates.get("benefit", {}).get("satisfied")
+    )
+    if gates.get("strata_pass") != want_strata:
+        failures.append("strata_pass inconsistent with recorded metrics")
+    if gates.get("overall_pass") != want_overall:
+        failures.append("overall_pass inconsistent with recorded metrics")
+    if gates.get("pass") != want_pass:
+        failures.append("gate pass inconsistent with strata/overall/mapping/benefit")
+    return failures
+
+
 def g5_internal_consistency() -> dict[str, Any]:
     """Re-derive the held-out gate verdict from the committed report."""
-    try:
-        import g5_p18b_heldout as g5  # noqa: PLC0415
-    except ImportError:
-        return {"pass": False, "reason": "g5 module unavailable"}
     report = load(ROOT / EVIDENCE_PATHS["g5_heldout"])
     if report is None:
         return {"pass": False, "reason": "g5 report unreadable"}
-    failures = g5.evaluate(report)
+    failures = g5_evaluate(report)
     gates = report.get("gates", {})
     return {
         "evaluate_failures": failures,
@@ -323,16 +428,35 @@ def g5_internal_consistency() -> dict[str, Any]:
 
 
 def g5_self_test() -> bool:
-    completed = subprocess.run(
-        [sys.executable, str(CONTROLS / "g5_p18b_heldout.py"), "--self-test"],
-        cwd=ROOT,
-        text=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        timeout=300,
-        check=False,
-    )
-    return completed.returncode == 0 and "4/4" in completed.stdout
+    """Plant mutations on the committed held-out report and require the
+    independent evaluator to reject every one."""
+    report = load(ROOT / EVIDENCE_PATHS["g5_heldout"])
+    if report is None:
+        return False
+
+    def mut_ledger(rep):
+        rep["ledger"] = rep["ledger"][:-1]
+
+    def mut_gate(rep):
+        rep["gates"]["pass"] = not rep["gates"]["pass"]
+
+    def mut_row(rep):
+        entry = next(
+            x for x in rep["ledger"]
+            if (x.get("baseline") or {}).get("status") == "scored"
+        )
+        entry["baseline"]["cm"] += 0.5
+
+    def mut_flag(rep):
+        rep["quarantine"]["heldout_values_read"] = False
+
+    rejected = 0
+    for mutation in (mut_ledger, mut_gate, mut_row, mut_flag):
+        planted = copy.deepcopy(report)
+        mutation(planted)
+        if g5_evaluate(planted):
+            rejected += 1
+    return rejected == 4
 
 
 def component_checks() -> dict[str, bool]:
