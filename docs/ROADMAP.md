@@ -441,3 +441,22 @@ part that does not compress: users, issues, and the validation record accumulati
   re-checks emitted-row closure on the real corpus build, verifies the diagnostic context contract, and
   rejects 3/3 mutations (`results/g3_p18b_check.json`). Measurements and held-out values remain unread; G4 is
   authorized.
+
+- 2026-09-12 — P18b G4 completes the diagnostic scoring leg and unseal authorization package. The scorer
+  `controls/g4_p18b_diagnostics.py` reads the frozen Rodrigo supplement once, reproduces every seal row id,
+  resolves all seven printed ratio forms against MF3-collapsed inelastic totals and MF9/MF10 state partials,
+  and applies the frozen eligibility predicates — with predicate 4 evaluated against the corpus-wide evaluated
+  target-header catalog (the deterministic evaluation-wide residual-state catalog), so a row is ineligible only
+  when no evaluated isomer exists, while candidate rows whose anchoring evaluation was quarantined are reported
+  `build_failed_g3` rather than silently scored through leakage-routed partials. Candidate diagnostic
+  libraries were built per-file under the released parameters with G3 fail-closed quarantine: 259 of 672 staged
+  evaluations constructed (85/200 neutron, 84/197 proton, 10/72 deuteron, 80/118 alpha); every quarantine is
+  ledgered with its source diagnostic. Of 6,600 diagnostic ledger rows, 6,134 are eligible: the v1.0.1 baseline
+  scores 4,212 rows (median |ln C/M| 0.175, p90 0.851, within-30% 65.3%) and the candidate 966 rows with 926
+  family-paired; the paired bootstrap reports median |ln| change +0.0007 (p95 +0.003) and p90 change +0.007
+  (p95 +0.032). The dominant candidate outcome is `build_failed_g3` (4,602 rows) — honest construction
+  coverage under genuine TENDL-2025 state-partial defects, concentrated in deuteron (62/72 files). The
+  compatibility/performance leg is unchanged: normalized results bit-identical to the signed v1.0.1 binary,
+  median ratio 0.998, p95 1.022, RSS 1.015. The independent checker `controls/check_g4_p18b.py` re-derives
+  every scored row's arithmetic, all metrics and the bootstrap plus an independent NPZ row-filter spot-check,
+  and rejects 4/4 mutations. A green workflow on this commit is the sole G5 held-out unseal authorization.

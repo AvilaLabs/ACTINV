@@ -1,14 +1,14 @@
 {
  "binaries": {
   "candidate": {
-   "bytes": 9272312,
+   "bytes": 10328632,
    "path": "/home/connoravila/Documents/actinv/target/release/actinv",
-   "sha256": "f9c937734762930399ec39088f89af1a2d648e7b583297329f9b1d43f8dc4e98"
+   "sha256": "b30cbfc9fd779fc6386ea083569798f4cd89ffcf61c651647b8be468c6c6e095"
   },
   "release": {
-   "bytes": 9278696,
-   "path": "/home/connoravila/Documents/actinv/target/p16-opening-target/release/actinv",
-   "sha256": "ee77318256b74bd789ee07288e28e22ede7c37bc76648877c57d49bad2f0bf98"
+   "bytes": 9264544,
+   "path": "/home/connoravila/Documents/actinv/target/release-v1.0.1.0RVGVj/raw/actinv-1.0.1-linux-x86_64/target/x86_64-unknown-linux-gnu/release/actinv",
+   "sha256": "b6e236e3b34449402686c6320e9dfe7dec6679db5fa78e6b505c674146a896d1"
   }
  },
  "checks": {
@@ -20,15 +20,15 @@
   "samples": true
  },
  "cold_cache_ms": {
-  "candidate": 3952.8495049999997,
-  "release": 4009.5177999999996
+  "candidate": 798.9934599999999,
+  "release": 872.4129939999999
  },
  "gate": "P16-G5",
  "host": {
   "machine": "x86_64",
-  "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.43",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
   "processor": "",
-  "python": "3.12.13",
+  "python": "3.14.4",
   "thread_environment": {
    "MKL_NUM_THREADS": "1",
    "NUMEXPR_NUM_THREADS": "1",
@@ -64,7 +64,7 @@
   }
  },
  "limits": {
-  "effective_rss_ceiling_bytes": 145850368,
+  "effective_rss_ceiling_bytes": 145465344,
   "median_ratio": 1.1,
   "p95_ratio": 1.15,
   "rss_absolute_allowance_bytes": 16777216,
@@ -73,71 +73,71 @@
  "normalized_result_sha256": "dedfe531fbf074b3b82277511396fb4ecb0092e27e0daa32b48ddd05b6157804",
  "pass": true,
  "peak_rss_bytes": {
-  "candidate": 129089536,
-  "release": 129073152
+  "candidate": 130650112,
+  "release": 128688128
  },
  "ratios": {
-  "candidate_over_release_median": 0.970514098902999,
-  "candidate_over_release_p95": 0.9758719070110186,
-  "candidate_over_release_peak_rss": 1.0001269357705
+  "candidate_over_release_median": 0.9978926424371731,
+  "candidate_over_release_p95": 1.0218683730514204,
+  "candidate_over_release_peak_rss": 1.0152460373034566
  },
  "release_commit": "0332779401363d2f39722efe7a0b7218afcfb270",
  "resolved_signed_tag_commit": "0332779401363d2f39722efe7a0b7218afcfb270",
  "rss_measurement_wall_ms": {
-  "candidate": 740.467841,
-  "release": 777.95931
+  "candidate": 794.87334,
+  "release": 790.165638
  },
  "samples_per_binary": 15,
  "schema": "actinv-p16-performance-1",
  "warm": {
   "candidate": {
-   "mean_ms": 747.0903467999999,
-   "median_ms": 745.204111,
-   "minimum_ms": 730.06594,
-   "p95_ms": 769.9835631,
+   "mean_ms": 790.5588313999999,
+   "median_ms": 787.236378,
+   "minimum_ms": 776.90666,
+   "p95_ms": 820.7100177,
    "raw_ms": [
-    730.565033,
-    744.098309,
-    766.556334,
-    749.948535,
-    743.664058,
-    730.06594,
-    732.697589,
-    730.233119,
-    745.204111,
-    748.465863,
-    736.4572479999999,
-    753.176427,
-    752.792071,
-    768.135984,
-    774.294581
+    816.231639,
+    787.2671439999999,
+    831.1595679999999,
+    780.27482,
+    796.783546,
+    780.9810229999999,
+    776.90666,
+    787.236378,
+    789.53652,
+    779.163365,
+    790.113614,
+    780.4176739999999,
+    786.9568939999999,
+    782.1349859999999,
+    793.2186399999999
    ],
-   "sample_standard_deviation_ms": 14.225408924280847,
+   "sample_standard_deviation_ms": 14.825084192087477,
    "samples": 15
   },
   "release": {
-   "mean_ms": 769.0458136666667,
-   "median_ms": 767.844704,
-   "minimum_ms": 751.178497,
-   "p95_ms": 789.0211385,
+   "mean_ms": 791.1020601333333,
+   "median_ms": 788.89887,
+   "minimum_ms": 777.2208029999999,
+   "p95_ms": 803.1465102,
    "raw_ms": [
-    755.122589,
-    776.714169,
-    774.905635,
-    753.259514,
-    758.297067,
-    757.4931379999999,
-    767.844704,
-    764.043,
-    772.372531,
-    780.720278,
-    751.178497,
-    764.7032449999999,
-    786.883013,
-    778.139727,
-    794.010098
+    814.6886099999999,
+    777.2208029999999,
+    798.199896,
+    795.137699,
+    788.592951,
+    788.89887,
+    781.30116,
+    796.253064,
+    785.40692,
+    792.527567,
+    785.921193,
+    791.685617,
+    796.1497009999999,
+    787.774675,
+    786.772176
    ],
-   "sample_standard_deviation_ms": 12.876375948844775,
+   "sample_standard_deviation_ms": 8.727489941553763,
    "samples": 15
   }
  },
