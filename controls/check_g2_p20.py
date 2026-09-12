@@ -26,7 +26,7 @@ G1_CHECK = ROOT / "results/g1_p20_check.json"
 OUTPUT = ROOT / "results/g2_p20_check.json"
 
 PROTOCOL_SHA256 = "76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335"
-OPENING_COMMIT = "31d4dc3dda8588d1a2075cb1dceb809ace9c98b7"
+OPENING_COMMIT = "2b7f87309d6bc3a87c33d76d9838d7c4aa33d59a"
 EXPECTED_REASONS = {"asymmetric_block", "non_positive_semidefinite"}
 
 

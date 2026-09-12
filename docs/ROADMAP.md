@@ -462,7 +462,7 @@ part that does not compress: users, issues, and the validation record accumulati
   and rejects 4/4 mutations. A green workflow on this commit is the sole G5 held-out unseal authorization.
 
 - 2026-09-13 — P18b G5 executes the one-time held-out decision and **fails the frozen stratum gate**
-  (`results/verdict_p18b.json`: **P18b-FAIL**). The green controls run `34696870664` on commit `0150b87`
+  (`results/verdict_p18b.json`: **P18b-FAIL**). The green controls run `34696870664` on commit `976e260`
   authorized unseal; held-out values were then read through the unchanged frozen scorer. A first
   execution scored only 128 of 1,859 eligible rows because diagnostic staging had never included the
   held-out families' target files — a staging defect, not a physics result — and is preserved as
