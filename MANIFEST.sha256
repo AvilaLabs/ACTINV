@@ -1,4 +1,4 @@
-5696da68e2524bfbd6a066371212582cc4ce044f8537538f9d2c46c211af655b  ./.github/workflows/ci.yml
+6cda8e2b0976144b8527879c593b260fd7370b0f05012610cfe45ff1214f222a  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -38,6 +38,7 @@ cea7ebe169e8bed9e8af3412686f429611e846625686dc0aa9eee5a83a5b89d4  ./controls/che
 140df768d4256af6980644a248428efe287c0af17996dc5fe62485d17edb45e8  ./controls/check_g2_p18b.py
 020394fd542252655346d753874c7d5ad928ac1272346f49302bddbfe2b867d3  ./controls/check_g2_p19.py
 f6df5a84d2b17fbe5ca5c686732d79ebf6e4ae73eb24b3e7a008f7bfe80d18f3  ./controls/check_g2_p23.py
+a88ad454fc31958e0598204cd6a5c0e3ebc57878a4db4a2a929846cf2259ad83  ./controls/check_g3_p18b.py
 a88cb2a3124e80ad0313cb45ac79ae9bcb45ef80e953d132d2874d0fea25665f  ./controls/check_g3_p19.py
 6fa2f28dd48afa6a323c9b7514362ce56ce86ddcefaecb3c858747bbc62152c0  ./controls/check_g3_p23.py
 55281f95a69d4d4f8c95438704ed1262582d9075b86d4fe6462bbf5373939c87  ./controls/check_g4_p17.py
@@ -244,7 +245,7 @@ b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/tes
 27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430  ./crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json
 d48d08319c95128750cdf9e045fe421fb485dff704e684ca74116c98c8e8cfd8  ./crates/actinv-cli/data/iron-example.json
 8c89d478267a19681077016f5055c6e3c8db84a5ee77dbcdfd39ed04c70d3b90  ./crates/actinv-cli/src/bin/actinv.rs
-72662824a9b1616b5f33a9bdac877e730a56883a3ab135da7d1a1c76b919a839  ./crates/actinv-cli/src/command.rs
+95c31d17c2d9c276feffb2a413824ef7a9ce102bd5cf622c6ea5a15824a8a6dd  ./crates/actinv-cli/src/command.rs
 4d39fe1fa365d15c1fd82734d0e089460ea29b5b9e1078c34eb5d39e6220fc10  ./crates/actinv-cli/src/lib.rs
 962e83471c2f6e217c97e9d418034a30d097b5e63562f1d059e8e87b2887dff4  ./crates/actinv-cli/src/workflow.rs
 f8738d5159847d9bc7319b6c4417656a6c3c1992b373ebe975b775ac1608bfb5  ./crates/actinv-cli/tests/data_command.rs
@@ -287,7 +288,7 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 8dcf50a0b11631db0877e30be9397750b0b4c64eb3435ad601b2f753939effef  ./crates/actinv-data/src/bin/p18b_corpus_probe.rs
 558b6ed1e6c1689196b0fe8b1467bd122a44113869e0754614f286b0d38bb66a  ./crates/actinv-data/src/bin/p18b_oracle_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
-d049098046c76566c2f7c0382b38e711ec37f4d159c6ce1f941b9b604e76e811  ./crates/actinv-data/src/builder.rs
+2305c8138ec587e1c771811c0da9705b4b835471ca64decf4532b634e5860528  ./crates/actinv-data/src/builder.rs
 8fa3ccc2d59fb244e8a15495b36e5b3d710700769550d861c7531c24722ec0ea  ./crates/actinv-data/src/composition.rs
 f80c61953e824af5073bb27b853423b943c51c30b15daf089162ddc38fef9306  ./crates/actinv-data/src/covariance.rs
 988d1908c06f081a923adb072c3c186975109dbb1e3c22f18b76ba44f67179a1  ./crates/actinv-data/src/decay.rs
@@ -347,7 +348,7 @@ a535a3613f3e05acf780e61ec46fdec9be355bd0c08b3bb1b88b7406bff3d8a2  ./docs/RELEASE
 f0a32b0cdc308b42b1a3f2b9c30ffed929ca93e8bc5a4fbdb3287d7912b597d9  ./docs/RELEASE_NOTES_v0.5.md
 9cf927585ae9f4252e6febdb3e9fa396065f72ba1bf53956f38f6a82ecda3dbf  ./docs/RELEASE_NOTES_v1.0.1.md
 8f8962192e59bb1f8d5ccdd4faff88966715eac9773b1f6a457e64f1ddfba59a  ./docs/RELEASE_NOTES_v1.0.md
-c52510b6ba6c3b37bf3d64f0825736fa6e53987b9c50abe34f5457f043639d99  ./docs/ROADMAP.md
+e446bff9ea6152dbc063a4407f0ae48d868656959df8200ee49aa1ba1ae16194  ./docs/ROADMAP.md
 fe330fbaeadd6c46951e664af5baf4196394dd7ca0afcbd432a274d8c14004c8  ./docs/SPEC.md
 48fbacb01114259ac935417298e87d328968728a7f4fe35b9b5ce9ff547a70e9  ./docs/VALIDATION.md
 ca743f17ff81ce8a825c02aad7d04a158c3e44794f7ad22d50ee5bfe45b32493  ./docs/history/P23.md
@@ -1776,6 +1777,7 @@ b524c8592b53df4bd477e8f8c55c2e1cf9fab88b5989ed329eebae0ce125496f  ./results/g3_p
 01f3579d1ea4affa87d66dd29f011b94c4c09d2714a1fe6cd7caf0f4e38213c5  ./results/g3_p12_parser_fuzz.json
 439276e48684b00c686b72ab749719d5e4fa0161d9c423bf45da69e009311c6e  ./results/g3_p16_compatibility.json
 01b76e2b9ad42aca8d1998069c5550bc6f1c91614f3f2b7a4108f356e1bb62e8  ./results/g3_p17_processing.json
+da34b2a66159e9d3f5e326418fec3a59cf31eb612c1de17cf5d79e4d3bad887b  ./results/g3_p18b_check.json
 24860402c88c8292ee7820ff42c36ffb017e20630fe849d6542cfd3ca17a4631  ./results/g3_p19_check.json
 546c1e247808f621a0efa9463ae832c88bb4c66b7821d00cbc94d2ff2a2bb00b  ./results/g3_p19_compare.json
 85d59c05bb300257c8342cd9a29132184c9d2673133602e06bfa7dce24a2f147  ./results/g3_p19_fendl_sanity.json

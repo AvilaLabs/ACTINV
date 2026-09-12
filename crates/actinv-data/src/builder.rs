@@ -53,6 +53,9 @@ pub struct BuildOptions {
     pub workers: usize,
     pub cache: Option<PathBuf>,
     pub grid_density: f64,
+    /// Reject every emitted state sum above the runtime total instead of
+    /// reconciling sums inside the frozen standard envelope.
+    pub strict_states: bool,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -166,6 +169,7 @@ struct EvaluationBuildSettings<'a> {
     groups: &'a GroupStructure,
     temperature_K: f64,
     grid_density: f64,
+    strict_states: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -258,6 +262,7 @@ fn checkpoint_key(source_sha256: &str, options: &BuildOptions) -> String {
     );
     hash.update(options.temperature_K.to_bits().to_le_bytes());
     hash.update(options.grid_density.to_bits().to_le_bytes());
+    hash.update([u8::from(options.strict_states)]);
     hash.update(options.groups.hash().as_bytes());
     hash.update(builder_fingerprint().as_bytes());
     format!("{:x}", hash.finalize())
@@ -652,7 +657,45 @@ fn state_partial_tolerance(total: f64, peak_total: f64, absolute: f64) -> f64 {
     absolute.max(PARTIAL_REL_TOLERANCE * total.max(peak_total))
 }
 
-fn validate_state_partial_value(
+/// The frozen P18b standard envelope: an emitted mutually-exclusive state sum
+/// may exceed the runtime total by at most this relative amount and remain
+/// eligible for common-factor reconciliation.
+const STANDARD_ENVELOPE_REL: f64 = 0.001;
+/// For an exactly-zero runtime total, standard compatibility is this absolute
+/// state-sum bound in barns.
+const STANDARD_ZERO_TOTAL_ABS_B: f64 = 0.001;
+
+/// Raw-section audit counters for the retired P18 stress gate. Excesses beyond
+/// the stress tolerance are reported as source diagnostics; nonfinite or
+/// negative values remain hard errors.
+#[derive(Default)]
+struct SourcePartialAudit {
+    partial_excesses: usize,
+    sum_excesses: usize,
+    max_relative_excess: f64,
+}
+
+impl SourcePartialAudit {
+    fn observe(&mut self, is_sum: bool, partial: f64, total: f64) {
+        if is_sum {
+            self.sum_excesses += 1;
+        } else {
+            self.partial_excesses += 1;
+        }
+        self.max_relative_excess = self.max_relative_excess.max(if total > 0.0 {
+            (partial - total) / total
+        } else {
+            f64::INFINITY
+        });
+    }
+    fn excesses(&self) -> usize {
+        self.partial_excesses + self.sum_excesses
+    }
+}
+
+/// Returns `Ok(true)` when the value exceeds the retired P18 stress tolerance.
+/// Nonfinite or negative data remains an error.
+fn classify_state_partial_value(
     mt: i32,
     context: std::fmt::Arguments<'_>,
     identity: std::fmt::Arguments<'_>,
@@ -660,7 +703,7 @@ fn validate_state_partial_value(
     total: f64,
     peak_total: f64,
     absolute_tolerance: f64,
-) -> Result<(), String> {
+) -> Result<bool, String> {
     if !partial.is_finite() || partial < 0.0 {
         return Err(format!(
             "MT{mt}/MF=10 {context} {identity} is nonfinite or negative ({partial:.17e} barn)"
@@ -671,20 +714,14 @@ fn validate_state_partial_value(
             "MT{mt}/MF=3 {context} total is nonfinite or negative ({total:.17e} barn)"
         ));
     }
-    let tolerance = state_partial_tolerance(total, peak_total, absolute_tolerance);
-    if partial > total + tolerance {
-        return Err(format!(
-            "MT{mt}/MF=10 {context} {identity} {partial:.17e} barn exceeds MF=3 total {total:.17e} barn plus tolerance {tolerance:.17e} barn"
-        ));
-    }
-    Ok(())
+    Ok(partial > total + state_partial_tolerance(total, peak_total, absolute_tolerance))
 }
 
-fn validate_pointwise_state_partials(
+fn audit_pointwise_state_partials(
     mt: i32,
     total: &Tabulated,
     products: &[&ProductTable],
-) -> Result<(), String> {
+) -> Result<SourcePartialAudit, String> {
     if total
         .y
         .iter()
@@ -700,7 +737,7 @@ fn validate_pointwise_state_partials(
         .filter(|product| product.zap >= 0)
         .collect();
     if state_products.is_empty() {
-        return Ok(());
+        return Ok(SourcePartialAudit::default());
     }
     let peak_total = total.y.iter().copied().fold(0.0, f64::max);
     let mut energies = Vec::with_capacity(
@@ -718,6 +755,7 @@ fn validate_pointwise_state_partials(
     energies.dedup_by(|left, right| *left == *right);
     let product_zaps: BTreeSet<_> = state_products.iter().map(|product| product.zap).collect();
 
+    let mut audit = SourcePartialAudit::default();
     for energy in energies {
         for (side, left_limit) in [("right", false), ("left", true)] {
             let evaluate = |table: &Tabulated| {
@@ -729,22 +767,25 @@ fn validate_pointwise_state_partials(
             };
             let total_value = evaluate(total)?;
             for product in &state_products {
-                validate_state_partial_value(
+                let partial_value = evaluate(&product.table)?;
+                if classify_state_partial_value(
                     mt,
                     format_args!("pointwise {side} at {energy:.17e} eV"),
                     format_args!("ZAP={}/LFS={} partial", product.zap, product.lfs),
-                    evaluate(&product.table)?,
+                    partial_value,
                     total_value,
                     peak_total,
                     POINTWISE_PARTIAL_ABS_TOLERANCE_B,
-                )?;
+                )? {
+                    audit.observe(false, partial_value, total_value);
+                }
             }
             for zap in &product_zaps {
                 let mut sum = 0.0;
                 for product in state_products.iter().filter(|product| product.zap == *zap) {
                     sum += evaluate(&product.table)?;
                 }
-                validate_state_partial_value(
+                if classify_state_partial_value(
                     mt,
                     format_args!("pointwise {side} at {energy:.17e} eV"),
                     format_args!("ZAP={zap} mutually-exclusive state sum"),
@@ -752,11 +793,13 @@ fn validate_pointwise_state_partials(
                     total_value,
                     peak_total,
                     POINTWISE_PARTIAL_ABS_TOLERANCE_B,
-                )?;
+                )? {
+                    audit.observe(true, sum, total_value);
+                }
             }
         }
     }
-    Ok(())
+    Ok(audit)
 }
 
 fn collapse_mf10_products<'a>(
@@ -775,11 +818,11 @@ fn collapse_mf10_products<'a>(
         .collect()
 }
 
-fn validate_collapsed_state_partials(
+fn audit_collapsed_state_partials(
     mt: i32,
     total: &[f64],
     products: &[(&ProductTable, Vec<f64>)],
-) -> Result<(), String> {
+) -> Result<SourcePartialAudit, String> {
     if total.iter().any(|value| !value.is_finite() || *value < 0.0) {
         return Err(format!(
             "MT{mt}/MF=3 collapsed total contains a nonfinite or negative cross section"
@@ -794,6 +837,7 @@ fn validate_collapsed_state_partials(
         .map(|(product, _)| product.zap)
         .collect();
     let peak_total = total.iter().copied().fold(0.0, f64::max);
+    let mut audit = SourcePartialAudit::default();
     for (product, partial) in &state_products {
         if partial.len() != total.len() {
             return Err(format!(
@@ -802,7 +846,7 @@ fn validate_collapsed_state_partials(
             ));
         }
         for (group, (&partial_value, &total_value)) in partial.iter().zip(total).enumerate() {
-            validate_state_partial_value(
+            if classify_state_partial_value(
                 mt,
                 format_args!("collapsed group {group}"),
                 format_args!("ZAP={}/LFS={} partial", product.zap, product.lfs),
@@ -810,7 +854,9 @@ fn validate_collapsed_state_partials(
                 total_value,
                 peak_total,
                 COLLAPSED_PARTIAL_ABS_TOLERANCE_B,
-            )?;
+            )? {
+                audit.observe(false, partial_value, total_value);
+            }
         }
     }
     for zap in product_zaps {
@@ -822,7 +868,7 @@ fn validate_collapsed_state_partials(
             {
                 sum += partial[group];
             }
-            validate_state_partial_value(
+            if classify_state_partial_value(
                 mt,
                 format_args!("collapsed group {group}"),
                 format_args!("ZAP={zap} mutually-exclusive state sum"),
@@ -830,10 +876,118 @@ fn validate_collapsed_state_partials(
                 total_value,
                 peak_total,
                 COLLAPSED_PARTIAL_ABS_TOLERANCE_B,
-            )?;
+            )? {
+                audit.observe(true, sum, total_value);
+            }
         }
     }
-    Ok(())
+    Ok(audit)
+}
+
+/// Report for one emitted mutually-exclusive (MT, ZAP) state vector compared
+/// group-by-group against the runtime total.
+#[derive(Debug, Default)]
+struct RuntimeReconciliation {
+    checked: usize,
+    scaled: usize,
+    min_scale: f64,
+    max_relative_excess: f64,
+    ulp_corrections: u64,
+}
+
+/// Applies the frozen P18b runtime rule to one emitted (MT, ZAP, MF) state
+/// vector: sums at or below the runtime total stay byte-for-byte unchanged;
+/// excesses inside the standard envelope are scaled by the common factor T/S
+/// with at most a one-ULP downward correction on the largest row; anything
+/// further fails construction closed. `strict_states` rejects every excess.
+#[allow(clippy::too_many_arguments)]
+fn reconcile_emitted_states(
+    mt: i32,
+    lmf: i32,
+    zap: i32,
+    states: &mut [&mut Vec<f64>],
+    total: &[f64],
+    strict_states: bool,
+    mat: i32,
+    za: i32,
+    source_sha256: &str,
+) -> Result<RuntimeReconciliation, String> {
+    let mut report = RuntimeReconciliation {
+        min_scale: f64::INFINITY,
+        ..Default::default()
+    };
+    for (group, &comparator) in total.iter().enumerate() {
+        if !comparator.is_finite() || comparator < 0.0 {
+            return Err(format!(
+                "MT{mt}/MF={lmf} runtime total group {group} is nonfinite or negative ({comparator:.17e} barn)"
+            ));
+        }
+        let mut sum = 0.0;
+        for state in states.iter() {
+            let value = state[group];
+            if !value.is_finite() || value < 0.0 {
+                return Err(format!(
+                    "MT{mt}/MF={lmf} ZAP={zap} group {group} emitted state value is nonfinite or negative ({value:.17e} barn)"
+                ));
+            }
+            sum += value;
+        }
+        report.checked += 1;
+        if sum <= comparator {
+            continue;
+        }
+        let compatible = if comparator > 0.0 {
+            sum - comparator <= STANDARD_ENVELOPE_REL * comparator
+        } else {
+            sum <= STANDARD_ZERO_TOTAL_ABS_B
+        };
+        let relative_excess = if comparator > 0.0 {
+            (sum - comparator) / comparator
+        } else {
+            f64::INFINITY
+        };
+        if strict_states || !compatible {
+            let rule = if strict_states {
+                "the strict state-conservation option rejects every emitted sum above the runtime total"
+            } else {
+                "outside the frozen 0.001 standard envelope"
+            };
+            return Err(format!(
+                "MT{mt}/MF={lmf} ZAP={zap} group {group}: emitted state sum {sum:.17e} barn exceeds runtime total {comparator:.17e} barn by relative excess {relative_excess:.6e} ({rule}); MAT={mat} ZA={za} source_sha256={source_sha256}; construction fails closed and no state row is emitted, scaled or relabeled"
+            ));
+        }
+        let scale = comparator / sum;
+        for state in states.iter_mut() {
+            state[group] *= scale;
+        }
+        let mut corrected: f64 = states.iter().map(|state| state[group]).sum();
+        let mut steps = 0_u64;
+        while corrected > comparator {
+            let mut largest = 0_usize;
+            for (index, state) in states.iter().enumerate() {
+                if state[group] > states[largest][group] {
+                    largest = index;
+                }
+            }
+            let value = states[largest][group];
+            if value <= 0.0 {
+                break;
+            }
+            states[largest][group] = f64::from_bits(value.to_bits() - 1);
+            steps += 1;
+            if steps > 4096 {
+                return Err(format!(
+                    "MT{mt}/MF={lmf} ZAP={zap} group {group}: state-sum closure did not converge within 4096 one-ULP corrections"
+                ));
+            }
+            corrected = states.iter().map(|state| state[group]).sum();
+        }
+        report.scaled += 1;
+        report.ulp_corrections += steps;
+        report.min_scale = report.min_scale.min(scale);
+        report.max_relative_excess = report.max_relative_excess.max(relative_excess);
+    }
+    Ok(report)
 }
 
 fn validate_descriptors(
@@ -1220,6 +1374,7 @@ fn build_evaluation(
         groups,
         temperature_K,
         grid_density,
+        strict_states,
     } = settings;
     let metadata = &evaluation.metadata;
     let mut ledger = Vec::new();
@@ -1358,18 +1513,38 @@ fn build_evaluation(
             collapse_mf10_products(groups, mt, &mf10_products)?
         };
         if !mf10_products.is_empty() {
-            let raw_total = evaluation.mf3.get(&mt).ok_or_else(|| {
-                format!(
-                    "MT{mt}/MF=10 state partials have no matching MF=3 total; conservation is unproven"
-                )
-            })?;
-            validate_pointwise_state_partials(mt, raw_total, &mf10_products)?;
-            // The frozen conservation rule compares the two raw evaluated
-            // sections before and after the same group-collapse operation.
-            // Resonance reconstruction may still supply the runtime total
-            // below, but it is not substituted into this data-integrity test.
-            let collapsed_total = checked_collapse(groups, raw_total, &format!("MT{mt}/MF=3"))?;
-            validate_collapsed_state_partials(mt, &collapsed_total, &collapsed_mf10)?;
+            if let Some(raw_total) = evaluation.mf3.get(&mt) {
+                // The retired P18 stress gate is retained as a raw-source
+                // diagnostic: the two evaluated sections are compared pointwise and
+                // collapsed, but excesses are recorded rather than rejected. The
+                // runtime gate below applies the frozen P18b envelope to emitted
+                // rows against the processed runtime total.
+                let pointwise_audit =
+                    audit_pointwise_state_partials(mt, raw_total, &mf10_products)?;
+                let collapsed_total = checked_collapse(groups, raw_total, &format!("MT{mt}/MF=3"))?;
+                let collapsed_audit =
+                    audit_collapsed_state_partials(mt, &collapsed_total, &collapsed_mf10)?;
+                let excesses = pointwise_audit.excesses() + collapsed_audit.excesses();
+                if excesses > 0 {
+                    ledger.push(format!(
+                    "MT{mt}: raw MF=10-vs-MF=3 audit recorded {excesses} excess(es) beyond the retired P18 stress tolerance ({} pointwise, {} collapsed; max relative excess {:.6e}); kept as source diagnostics",
+                    pointwise_audit.excesses(),
+                    collapsed_audit.excesses(),
+                    pointwise_audit
+                        .max_relative_excess
+                        .max(collapsed_audit.max_relative_excess)
+                ));
+                }
+            } else if mt == 18 && mf10_products.iter().any(|product| product.zap == -1) {
+                ledger.push(
+                    "MT18: no MF=3 total; the MF=10 IZAP=-1 total-fission sentinel supplies the permitted runtime comparator"
+                        .into(),
+                );
+            } else {
+                return Err(format!(
+                    "MT{mt}/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven"
+                ));
+            }
         }
         let has_lmf6 = evaluation
             .mf8
@@ -1500,6 +1675,35 @@ fn build_evaluation(
                 .map(|product| (product.zap, product.lfs))
                 .collect();
             validate_descriptors(descriptors, 10, &actual)?;
+            let mut vectors: BTreeMap<i32, Vec<&mut Vec<f64>>> = BTreeMap::new();
+            for (product, sigma) in collapsed_mf10.iter_mut() {
+                if product.zap >= 0 {
+                    vectors.entry(product.zap).or_default().push(sigma);
+                }
+            }
+            for (zap, mut states) in vectors {
+                let report = reconcile_emitted_states(
+                    mt,
+                    10,
+                    zap,
+                    states.as_mut_slice(),
+                    &total,
+                    strict_states,
+                    metadata.mat,
+                    metadata.za,
+                    source_sha256,
+                )?;
+                if report.scaled > 0 {
+                    ledger.push(format!(
+                        "MT{mt}/MF=10 ZAP={zap}: emitted state sum exceeded the runtime total in {} of {} group(s); scaled by the common factor T/S under the frozen standard envelope (min scale {:.6e}, max relative excess {:.6e}, {} one-ULP closure correction(s))",
+                        report.scaled,
+                        report.checked,
+                        report.min_scale,
+                        report.max_relative_excess,
+                        report.ulp_corrections
+                    ));
+                }
+            }
             for (product, sigma) in collapsed_mf10
                 .into_iter()
                 .filter(|(product, _)| product.zap >= 0)
@@ -1535,6 +1739,7 @@ fn build_evaluation(
                 .map(|product| (product.zap, product.lfs))
                 .collect();
             validate_descriptors(descriptors, 9, &actual)?;
+            let mut collapsed_mf9: Vec<(&ProductTable, Vec<f64>)> = Vec::new();
             for product in products {
                 if !done.insert((product.zap, product.lfs)) {
                     return Err(format!(
@@ -1554,6 +1759,36 @@ fn build_evaluation(
                         &format!("MT{mt}/MF=3*MF=9"),
                     )?
                 };
+                collapsed_mf9.push((product, sigma));
+            }
+            let mut vectors: BTreeMap<i32, Vec<&mut Vec<f64>>> = BTreeMap::new();
+            for (product, sigma) in collapsed_mf9.iter_mut() {
+                vectors.entry(product.zap).or_default().push(sigma);
+            }
+            for (zap, mut states) in vectors {
+                let report = reconcile_emitted_states(
+                    mt,
+                    9,
+                    zap,
+                    states.as_mut_slice(),
+                    &total,
+                    strict_states,
+                    metadata.mat,
+                    metadata.za,
+                    source_sha256,
+                )?;
+                if report.scaled > 0 {
+                    ledger.push(format!(
+                        "MT{mt}/MF=9 ZAP={zap}: emitted production sum exceeded the runtime total in {} of {} group(s); scaled by the common factor T/S under the frozen standard envelope (min scale {:.6e}, max relative excess {:.6e}, {} one-ULP closure correction(s))",
+                        report.scaled,
+                        report.checked,
+                        report.min_scale,
+                        report.max_relative_excess,
+                        report.ulp_corrections
+                    ));
+                }
+            }
+            for (product, sigma) in collapsed_mf9 {
                 rows.push(BuiltRow {
                     mt,
                     zap: product.zap,
@@ -1768,6 +2003,7 @@ fn build_source(
                     groups: &options.groups,
                     temperature_K: options.temperature_K,
                     grid_density: options.grid_density,
+                    strict_states: options.strict_states,
                 },
                 products_by_mt,
             )
@@ -2863,6 +3099,7 @@ mod tests {
                 workers: 1,
                 cache: None,
                 grid_density: 1.0,
+                strict_states: false,
             },
         )
         .unwrap();
@@ -2911,6 +3148,7 @@ mod tests {
             groups: &groups,
             temperature_K: 0.0,
             grid_density: 1.0,
+            strict_states: false,
         };
         let products = BTreeMap::from([(102, (0, 1))]);
         let left = build_evaluation(
@@ -2982,6 +3220,7 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &products,
         )
@@ -3009,6 +3248,7 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &BTreeMap::new(),
         )
@@ -3094,6 +3334,7 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &BTreeMap::new(),
         )
@@ -3164,6 +3405,7 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &BTreeMap::from([(102, (0, 1))]),
         )
@@ -3232,12 +3474,15 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &BTreeMap::new(),
         )
         .unwrap_err();
         assert!(
-            missing_total.contains("no matching MF=3 total; conservation is unproven"),
+            missing_total.contains(
+                "no matching MF=3 total or total-fission sentinel; conservation is unproven"
+            ),
             "{missing_total}"
         );
         input.mf3.insert(4, table([4.0, 4.0]));
@@ -3250,6 +3495,7 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &BTreeMap::new(),
         )
@@ -3278,6 +3524,7 @@ mod tests {
                 groups: &groups,
                 temperature_K: 0.0,
                 grid_density: 1.0,
+                strict_states: false,
             },
             &BTreeMap::new(),
         )
@@ -3286,7 +3533,7 @@ mod tests {
     }
 
     #[test]
-    fn pointwise_state_partial_conservation_checks_union_grid_and_state_sum() {
+    fn pointwise_state_partial_audit_counts_union_grid_and_state_sum() {
         let total = table([1.0, 1.0]);
         let excess = state_product(
             26056,
@@ -3297,25 +3544,22 @@ mod tests {
                 y: vec![0.5, 1.1, 0.5],
             },
         );
-        let error = validate_pointwise_state_partials(102, &total, &[&excess]).unwrap_err();
-        assert!(
-            error.contains("pointwise right at 2.00000000000000000e0 eV"),
-            "{error}"
-        );
-        assert!(error.contains("ZAP=26056/LFS=1 partial"), "{error}");
+        let audit = audit_pointwise_state_partials(102, &total, &[&excess]).unwrap();
+        assert_eq!(audit.partial_excesses, 2);
+        assert_eq!(audit.sum_excesses, 2);
+        assert!(audit.max_relative_excess > 0.0);
 
         let ground = state_product(26056, 0, table([0.6, 0.6]));
         let isomer = state_product(26056, 1, table([0.5, 0.5]));
-        let error =
-            validate_pointwise_state_partials(102, &total, &[&ground, &isomer]).unwrap_err();
-        assert!(
-            error.contains("ZAP=26056 mutually-exclusive state sum"),
-            "{error}"
-        );
+        let audit = audit_pointwise_state_partials(102, &total, &[&ground, &isomer]).unwrap();
+        assert_eq!(audit.partial_excesses, 0);
+        // The left limit at the leftmost union abscissa is zero for every
+        // table, so only three (energy, side) comparisons carry the 1.1 b sum.
+        assert_eq!(audit.sum_excesses, 3);
     }
 
     #[test]
-    fn pointwise_state_partial_conservation_checks_left_side_of_double_points() {
+    fn pointwise_state_partial_audit_checks_left_side_of_double_points() {
         let total = Tabulated {
             interpolation: vec![(4, 2)],
             x: vec![1.0, 2.0, 2.0, 4.0],
@@ -3330,31 +3574,326 @@ mod tests {
                 y: vec![1.0, 1.0, 1.0, 1.0],
             },
         );
-        let error = validate_pointwise_state_partials(102, &total, &[&partial]).unwrap_err();
-        assert!(
-            error.contains("pointwise left at 2.00000000000000000e0 eV"),
-            "{error}"
-        );
+        let audit = audit_pointwise_state_partials(102, &total, &[&partial]).unwrap();
+        assert_eq!(audit.partial_excesses, 1);
+        assert_eq!(audit.sum_excesses, 1);
     }
 
     #[test]
-    fn collapsed_state_partial_uses_the_stricter_frozen_tolerance() {
+    fn collapsed_state_partial_audit_uses_the_stricter_frozen_tolerance() {
         let groups = GroupStructure {
             name: "custom".into(),
             boundaries_ev: vec![1.0, 4.0],
         };
         let total = table([0.0, 0.0]);
         let partial = state_product(26056, 1, table([5e-13, 5e-13]));
-        validate_pointwise_state_partials(102, &total, &[&partial]).unwrap();
+        let pointwise = audit_pointwise_state_partials(102, &total, &[&partial]).unwrap();
+        assert_eq!(pointwise.excesses(), 0);
         let collapsed_total = checked_collapse(&groups, &total, "total").unwrap();
         let collapsed_products = collapse_mf10_products(&groups, 102, &[&partial]).unwrap();
-        let error = validate_collapsed_state_partials(102, &collapsed_total, &collapsed_products)
-            .unwrap_err();
-        assert!(error.contains("collapsed group 0"), "{error}");
+        let audit =
+            audit_collapsed_state_partials(102, &collapsed_total, &collapsed_products).unwrap();
+        assert_eq!(audit.partial_excesses, 1);
+        assert_eq!(audit.sum_excesses, 1);
+        assert_eq!(audit.max_relative_excess, f64::INFINITY);
+    }
+
+    #[test]
+    fn runtime_reconciliation_leaves_conformant_sums_byte_identical() {
+        let total = vec![1.0, 2.0];
+        let mut ground = vec![0.6, 0.4];
+        let mut isomer = vec![0.3, 0.0];
+        let report = reconcile_emitted_states(
+            102,
+            10,
+            26056,
+            &mut [&mut ground, &mut isomer],
+            &total,
+            false,
+            2631,
+            26000,
+            &"f".repeat(64),
+        )
+        .unwrap();
+        assert_eq!(report.checked, 2);
+        assert_eq!(report.scaled, 0);
+        assert_eq!(ground, vec![0.6, 0.4]);
+        assert_eq!(isomer, vec![0.3, 0.0]);
+    }
+
+    #[test]
+    fn runtime_reconciliation_scales_inside_envelope_preserving_ratios_and_zero() {
+        let total = vec![1.0, 4.0];
+        let mut ground = vec![0.6005, 0.0];
+        let mut isomer = vec![0.4, 2.0];
+        let report = reconcile_emitted_states(
+            102,
+            10,
+            26056,
+            &mut [&mut ground, &mut isomer],
+            &total,
+            false,
+            2631,
+            26000,
+            &"f".repeat(64),
+        )
+        .unwrap();
+        assert_eq!(report.scaled, 1);
+        assert_eq!(report.checked, 2);
+        let sum: f64 = ground[0] + isomer[0];
+        assert!(sum <= 1.0, "reconciled sum {sum} exceeds the runtime total");
         assert!(
-            error.contains("plus tolerance 9.99999999999999999e-15 barn"),
-            "{error}"
+            (ground[0] / isomer[0] - 0.6005 / 0.4).abs() < 1e-15,
+            "common-factor scaling must preserve state ratios: {ground:?} {isomer:?}"
         );
+        assert_eq!(ground[1], 0.0);
+        assert_eq!(isomer[1], 2.0);
+        assert!((0.6005 * report.min_scale - ground[0]).abs() < 1e-16);
+    }
+
+    #[test]
+    fn runtime_reconciliation_fails_closed_outside_the_standard_envelope() {
+        let total = vec![1.0];
+        let mut ground = vec![0.7];
+        let mut isomer = vec![0.302];
+        let error = reconcile_emitted_states(
+            16,
+            10,
+            85197,
+            &mut [&mut ground, &mut isomer],
+            &total,
+            false,
+            8533,
+            85000,
+            &"a".repeat(64),
+        )
+        .unwrap_err();
+        for required in [
+            "MT16/MF=10 ZAP=85197 group 0",
+            "emitted state sum 1.002",
+            "runtime total 1.00000000000000000e0",
+            "outside the frozen 0.001 standard envelope",
+            "MAT=8533",
+            "ZA=85000",
+            "source_sha256=",
+            "fails closed",
+        ] {
+            assert!(error.contains(required), "{error} missing '{required}'");
+        }
+        assert_eq!(ground, vec![0.7], "failed rows must not be scaled");
+        assert_eq!(isomer, vec![0.302]);
+    }
+
+    #[test]
+    fn runtime_reconciliation_zero_total_uses_the_absolute_bound() {
+        let total = vec![0.0];
+        let mut ground = vec![0.0006];
+        let mut isomer = vec![0.0003];
+        let report = reconcile_emitted_states(
+            102,
+            10,
+            26056,
+            &mut [&mut ground, &mut isomer],
+            &total,
+            false,
+            2631,
+            26000,
+            &"f".repeat(64),
+        )
+        .unwrap();
+        assert_eq!(report.scaled, 1);
+        assert_eq!(ground, vec![0.0]);
+        assert_eq!(isomer, vec![0.0]);
+
+        let mut excess = vec![0.002];
+        let error = reconcile_emitted_states(
+            102,
+            10,
+            26056,
+            &mut [&mut excess],
+            &total,
+            false,
+            2631,
+            26000,
+            &"f".repeat(64),
+        )
+        .unwrap_err();
+        assert!(error.contains("outside the frozen 0.001"), "{error}");
+    }
+
+    #[test]
+    fn runtime_reconciliation_strict_option_rejects_every_excess() {
+        let total = vec![1.0];
+        let mut ground = vec![0.6005];
+        let mut isomer = vec![0.4];
+        let error = reconcile_emitted_states(
+            102,
+            10,
+            26056,
+            &mut [&mut ground, &mut isomer],
+            &total,
+            true,
+            2631,
+            26000,
+            &"f".repeat(64),
+        )
+        .unwrap_err();
+        assert!(error.contains("strict state-conservation"), "{error}");
+        assert_eq!(ground, vec![0.6005]);
+    }
+
+    #[test]
+    fn emitted_mf10_states_reconcile_inside_the_envelope_and_audit_stays_diagnostic() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf10.insert(
+            102,
+            vec![
+                state_product(26057, 0, table([1.2, 1.2])),
+                state_product(26057, 1, table([0.801, 0.801])),
+            ],
+        );
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let scale = 2.0 / 2.001;
+        assert_eq!(built.rows[0].sigma, vec![2.0], "loss row must not change");
+        assert!(
+            (built.rows[1].sigma[0] - 1.2 * scale).abs() < 1e-15,
+            "{:?}",
+            built.rows[1].sigma
+        );
+        assert!((built.rows[2].sigma[0] - 0.801 * scale).abs() < 1e-15);
+        let sum: f64 = built.rows[1].sigma[0] + built.rows[2].sigma[0];
+        assert!(sum <= 2.0, "reconciled sum {sum} exceeds the runtime total");
+        assert!(
+            built
+                .index
+                .ledger
+                .iter()
+                .any(|line| line.contains("ZAP=26057")
+                    && line.contains("scaled by the common factor"))
+        );
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|line| line.contains("raw MF=10-vs-MF=3 audit") && line.contains("diagnostics")));
+    }
+
+    #[test]
+    fn emitted_mf10_states_fail_closed_outside_the_envelope() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf10.insert(
+            102,
+            vec![
+                state_product(26057, 0, table([1.2, 1.2])),
+                state_product(26057, 1, table([0.81, 0.81])),
+            ],
+        );
+        let error = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(error.contains("MT102/MF=10 ZAP=26057 group 0"), "{error}");
+        assert!(error.contains("fails closed"), "{error}");
+    }
+
+    #[test]
+    fn emitted_mf9_production_reconciles_against_the_runtime_total() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf9.insert(
+            102,
+            vec![
+                state_product(26057, 0, table([0.6, 0.6])),
+                state_product(26057, 1, table([0.4005, 0.4005])),
+            ],
+        );
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let scale = 2.0 / 2.001;
+        assert!(
+            (built.rows[1].sigma[0] - 1.2 * scale).abs() < 1e-15,
+            "{:?}",
+            built.rows[1].sigma
+        );
+        assert!((built.rows[2].sigma[0] - 0.801 * scale).abs() < 1e-15);
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|line| line.contains("MF=9 ZAP=26057") && line.contains("scaled")));
+    }
+
+    #[test]
+    fn strict_states_option_rejects_an_envelope_compatible_excess() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Neutron);
+        input
+            .mf10
+            .insert(102, vec![state_product(26057, 0, table([2.001, 2.001]))]);
+        let error = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: true,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(error.contains("strict state-conservation"), "{error}");
     }
 
     #[test]

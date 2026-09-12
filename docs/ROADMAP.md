@@ -422,3 +422,22 @@ part that does not compress: users, issues, and the validation record accumulati
   The pinned CHECKR/FIZCON sample explains all 245 official runs. Evidence `results/g2_p18b_corpus_classification.json`,
   independent checker `controls/check_g2_p18b.py` replays all four checkpoints and rejects 3/3 mutations
   (`results/g2_p18b_check.json`). Measurements and held-out values remain unread; G3 is authorized.
+- 2026-09-12 — P18b G3 replaces the retired P18 stress gate with runtime conservation enforcement. The raw
+  pointwise/collapsed MF10-vs-MF3 validators become non-fatal source diagnostics whose counts ride the target
+  ledger; the fatal gate moves after processing to `reconcile_emitted_states`, which compares each emitted
+  `(MT, ZAP)` state vector group-by-group against the runtime total row (processed MF2+MF3 where resonance
+  reconstruction applies, collapsed MF3 otherwise, the MF10/MT18 `IZAP=-1` fission sentinel where the manual
+  supplies that representation). Conformant sums stay byte-identical; sums inside the frozen 0.001 standard
+  envelope scale by the common factor T/S with at most a bounded one-ULP downward closure correction; anything
+  outside fails construction closed with MT/MF/ZAP/group, both sums, relative excess, MAT, ZA and
+  `source_sha256` in the diagnostic. MF=9 collapsed production rows obey the same rule. A `--strict-states`
+  option rejects every positive excess and is hashed into build checkpoint keys; legacy v1.0.1 libraries stay
+  readable because readers never gated on the builder fingerprint. Real fixtures exercise every branch:
+  n-At198 fails closed on the genuine MT16 defect (13.39 barns of emitted states against a 3.6e-6 barn
+  runtime total), n-Ag112 reconciles 624 group excesses including processed-resonance MF9 production and real
+  one-ULP corrections, p-Ac223 builds through the sentinel comparator, p-Ag096 fails closed outside the
+  envelope, and strict mode rejects a 1.3e-16 relative excess. The independent checker
+  `controls/check_g3_p18b.py` re-derives every emitted fixture value through its own lethargy collapse,
+  re-checks emitted-row closure on the real corpus build, verifies the diagnostic context contract, and
+  rejects 3/3 mutations (`results/g3_p18b_check.json`). Measurements and held-out values remain unread; G4 is
+  authorized.

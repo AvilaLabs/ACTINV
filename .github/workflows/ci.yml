@@ -65,6 +65,14 @@ jobs:
           ACTINV_P18B_PROBE: target/release/p18b_oracle_probe
         run: python controls/check_g1_p18b.py --no-write
 
+      - name: P18b corpus classification evidence integrity
+        run: python controls/check_g2_p18b.py --no-write
+
+      - name: P18b conservative-builder runtime reconciliation
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: python controls/check_g3_p18b.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 

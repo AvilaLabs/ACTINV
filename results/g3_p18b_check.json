@@ -1,0 +1,52 @@
+{
+  "schema": "actinv-p18b-g3-check-1",
+  "protocol_sha256": "69076fa2656b239addbb15fbb4727caaa2c8ea37b3aa82a141f3a2b0b619eabe",
+  "g2_report_sha256": "cfeb4fa2a1b3a5fb465f61299285d0633c43948fd5142e22ba1649dcaa8b38d6",
+  "g2_check_sha256": "9f0115c429e4e95833c356081229ff20a62bb9863b7c1bd9f21c6821cdc904f9",
+  "g2_audit_complete": true,
+  "g2_check_pass": true,
+  "binary": "/home/connoravila/Documents/actinv/target/debug/actinv",
+  "binary_sha256": "c3484443ddfdba054be788a25e22b9772db72e94cd6714e5e9ec746853ca337a",
+  "generated": {
+    "envelope_reconcile": {
+      "pass": true,
+      "closure_failures": []
+    },
+    "conformant_byte_identical": {
+      "pass": true
+    },
+    "outside_envelope_fail_closed": {
+      "pass": true
+    },
+    "strict_rejects_excess": {
+      "pass": true
+    },
+    "zero_total_absolute_bound": {
+      "pass": true
+    },
+    "mf9_reconcile": {
+      "pass": true
+    },
+    "fission_sentinel_comparator": {
+      "pass": true
+    },
+    "missing_total_still_fails": {
+      "pass": true
+    }
+  },
+  "corpus": {
+    "at198_fail_closed": {
+      "pass": true
+    },
+    "ag112_reconciled_closure": {
+      "pass": true,
+      "closure_failures": [],
+      "rows": 68
+    },
+    "ac223_sentinel": {
+      "pass": true
+    }
+  },
+  "failures": [],
+  "pass": true
+}
