@@ -1,0 +1,13 @@
+{
+ "checkpoint_replay": [
+  "neutron",
+  "proton",
+  "deuteron",
+  "alpha"
+ ],
+ "control_sha256": "140df768d4256af6980644a248428efe287c0af17996dc5fe62485d17edb45e8",
+ "evidence_sha256": "cfeb4fa2a1b3a5fb465f61299285d0633c43948fd5142e22ba1649dcaa8b38d6",
+ "failures": [],
+ "pass": true,
+ "schema": "actinv-p18b-g2-check-1"
+}
