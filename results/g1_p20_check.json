@@ -1,0 +1,8 @@
+{
+ "failures": [],
+ "head_commit": "750461b23a56ac17f48a5dc8e4ec00dc46cc62c9",
+ "independent_files_rechecked": 99,
+ "pass": true,
+ "protocol_sha256": "76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335",
+ "schema": "actinv-p20-g1-check-1"
+}
