@@ -22,6 +22,28 @@ pub struct SensitivityParameter {
     pub lmf: i32,
     pub collapsed_cross_section_b: f64,
     pub covariance_covered: bool,
+    /// The parameter's self block was excluded under the frozen
+    /// asymmetry/PSD defect rules; it contributes nothing to the variance.
+    pub covariance_excluded: bool,
+}
+
+/// Per-channel uncertainty breakdown for one response band.
+#[derive(Debug, Serialize)]
+pub struct ChannelReport {
+    pub channel: &'static str,
+    /// `propagated` (variance carried into the band) or `not_evaluated`
+    /// (named as uncovered by this band).
+    pub status: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub standard_uncertainty: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub coverage: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub covered_parameters: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub total_parameters: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub note: Option<&'static str>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -47,6 +69,8 @@ pub struct ResponseUncertainty {
     pub coverage: String,
     pub covered_parameters: usize,
     pub total_parameters: usize,
+    /// Per-channel breakdown; every band names the channels it does not cover.
+    pub channels: Vec<ChannelReport>,
     pub sensitivities: Vec<SensitivityOut>,
 }
 
@@ -56,6 +80,7 @@ pub struct StepUncertainty {
     pub uncovered_library_rows: Vec<usize>,
     pub absent_cross_parameter_pairs: usize,
     pub maximum_covariance_asymmetry_barn2: f64,
+    pub excluded_blocks: Vec<actinv_data::covariance::ExcludedBlock>,
     pub responses: BTreeMap<String, ResponseUncertainty>,
 }
 
@@ -151,13 +176,62 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
     let covered_parameters = input
         .sensitivities
         .iter()
-        .filter(|record| record.parameter.covariance_covered && record.value != 0.0)
+        .filter(|record| {
+            record.parameter.covariance_covered
+                && !record.parameter.covariance_excluded
+                && record.value != 0.0
+        })
         .count();
     let total_parameters = input
         .sensitivities
         .iter()
         .filter(|record| record.value != 0.0)
         .count();
+    let channel_coverage = if covered_parameters == total_parameters {
+        "complete"
+    } else {
+        "partial"
+    };
+    let channels = vec![
+        ChannelReport {
+            channel: "cross_section_mf33",
+            status: "propagated",
+            standard_uncertainty: Some(standard_uncertainty),
+            coverage: Some(channel_coverage.into()),
+            covered_parameters: Some(covered_parameters),
+            total_parameters: Some(total_parameters),
+            note: None,
+        },
+        ChannelReport {
+            channel: "decay_constants",
+            status: "not_evaluated",
+            standard_uncertainty: None,
+            coverage: None,
+            covered_parameters: None,
+            total_parameters: None,
+            note: Some("MF=8/MT=457 half-life uncertainties are not propagated by this band"),
+        },
+        ChannelReport {
+            channel: "fission_yields",
+            status: "not_evaluated",
+            standard_uncertainty: None,
+            coverage: None,
+            covered_parameters: None,
+            total_parameters: None,
+            note: Some("MF=8/MT=454 independent-yield uncertainties are not propagated by this band"),
+        },
+        ChannelReport {
+            channel: "uncovered_remainder",
+            status: "not_evaluated",
+            standard_uncertainty: None,
+            coverage: None,
+            covered_parameters: None,
+            total_parameters: None,
+            note: Some(
+                "incident-flux, material-composition, response-coefficient and model-discrepancy terms are named uncovered",
+            ),
+        },
+    ];
     Ok(ResponseUncertainty {
         nominal: input.nominal,
         unit: input.unit,
@@ -170,13 +244,10 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         cram_order_bound,
         conservative_interval,
         negative_variance_roundoff_removed: input.negative_variance_roundoff_removed,
-        coverage: if covered_parameters == total_parameters {
-            "complete".into()
-        } else {
-            "partial".into()
-        },
+        coverage: channel_coverage.into(),
         covered_parameters,
         total_parameters,
+        channels,
         sensitivities: input.sensitivities,
     })
 }

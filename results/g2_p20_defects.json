@@ -1,0 +1,64 @@
+{
+ "absent_section_byte_identity": {
+  "byte_identical": true,
+  "expected_sha256": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+  "observed_sha256": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+  "spec_sha256": "c609f7991a9f19379a2dc596b165a82717166cc3091dc142d2bfbf8e1fc68c5c"
+ },
+ "binary_sha256": "256a9664bbff8f77b042d75a441b8ce41be2722bf1c80aa5157a7d4c24e2c01e",
+ "checks": {
+  "absent_section_byte_identity": true,
+  "clean_reference": true,
+  "defect_cases_excluded": true
+ },
+ "clean_corpus_reference": {
+  "bands_identical": true,
+  "excluded_blocks": [],
+  "g0_result_sha256": "e11613b96e69644b747829b605396484ead66e494173ff6105069cdee0325662",
+  "g2_result_sha256": "62da8d6c216f784159a31e34e2074bcd033a240b8ee76b862ddfeb570eb43c24",
+  "no_exclusions": true,
+  "numeric_mismatches": [],
+  "status": "compared"
+ },
+ "defect_cases": {
+  "asymmetric_block": {
+   "excluded_block": {
+    "measured_defect": 4.614554262177599e-07,
+    "mt": 102,
+    "mt1": 102,
+    "reason": "asymmetric_block",
+    "target": 1389
+   },
+   "excluded_library_rows": [
+    81674,
+    81675,
+    81676
+   ],
+   "result_sha256": "c650de2c2e1e67968662b9cf7b8fd6891e018e8f4043509698ce947848442477",
+   "sidecar_sha256": "dc643de7abbd8879c738f45f2a6149f7e18fa1f59d103d3772c65d061e1f8cc7",
+   "spec_sha256": "1d13733b5b93739525cd0834edc6a195d6fd4bf23e04a78e83960c67cbf1b4a1",
+   "uncovered_library_rows": 1995
+  },
+  "non_positive_semidefinite": {
+   "excluded_block": {
+    "measured_defect": -1.0940025455020899e-07,
+    "mt": 102,
+    "mt1": 102,
+    "reason": "non_positive_semidefinite",
+    "target": 1389
+   },
+   "excluded_library_rows": [
+    81674,
+    81675,
+    81676
+   ],
+   "result_sha256": "0e5ffb75981bdc67fd9ccbeaa29b6af6f86614e50e3af9d7ec770fcc5dd3bdd0",
+   "sidecar_sha256": "d8dbf07e1b5fa8233fdab079475e49f405517efc2444cfce07db4fc9fc9d1c53",
+   "spec_sha256": "456ebe31c7787d976c553aafa5e323634b90ea2b49142d54e8622e332d758b34",
+   "uncovered_library_rows": 1995
+  }
+ },
+ "pass": true,
+ "protocol_sha256": "76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335",
+ "schema": "actinv-p20-g2-defects-1"
+}

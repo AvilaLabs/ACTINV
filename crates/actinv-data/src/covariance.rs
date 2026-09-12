@@ -77,6 +77,19 @@ pub struct CovarianceLibrary {
     pub values: Vec<f64>,
 }
 
+/// One collapsed covariance block excluded from propagation under the frozen
+/// P20 defect rules. `mt == mt1` marks a self block; `mt < mt1` a cross block.
+#[derive(Clone, Debug, PartialEq, Serialize)]
+pub struct ExcludedBlock {
+    pub target: usize,
+    pub mt: i32,
+    pub mt1: i32,
+    pub reason: &'static str,
+    /// `max|B_ij - B_ji|` for `asymmetric_block`; symmetric-part minimum
+    /// eigenvalue for `non_positive_semidefinite`.
+    pub measured_defect: f64,
+}
+
 #[derive(Clone, Debug, PartialEq, Serialize)]
 pub struct CollapsedCovariance {
     /// Activation-library row index for each matrix parameter.
@@ -86,7 +99,9 @@ pub struct CollapsedCovariance {
     pub covariance_barn2: Vec<f64>,
     pub uncovered_rows: Vec<usize>,
     pub absent_cross_parameter_pairs: usize,
+    /// Measured before block exclusions are applied.
     pub maximum_asymmetry_barn2: f64,
+    pub excluded_blocks: Vec<ExcludedBlock>,
 }
 
 #[derive(Clone, Debug)]
@@ -247,6 +262,73 @@ fn diagonal(values: &[f64]) -> Vec<f64> {
         matrix[index * values.len() + index] = *value;
     }
     matrix
+}
+
+/// Cyclic Jacobi sweep on a symmetric row-major matrix; returns the extreme
+/// eigenvalues (min, max) of the diagonalized limit. Block sizes here are the
+/// per-(target, MT) parameter counts — small by construction.
+fn symmetric_eigen_extremes(symmetric: &[f64], size: usize) -> (f64, f64) {
+    if size == 0 {
+        return (0.0, 0.0);
+    }
+    let mut a = symmetric.to_vec();
+    let scale = (0..size)
+        .map(|i| a[i * size + i].abs())
+        .fold(0.0f64, f64::max)
+        .max(f64::MIN_POSITIVE);
+    for _ in 0..100 {
+        let mut off = 0.0f64;
+        for i in 0..size {
+            for j in (i + 1)..size {
+                off += a[i * size + j] * a[i * size + j];
+            }
+        }
+        if off <= 1e-28 * scale * scale {
+            break;
+        }
+        for p in 0..size {
+            for q in (p + 1)..size {
+                let apq = a[p * size + q];
+                if apq == 0.0 {
+                    continue;
+                }
+                let app = a[p * size + p];
+                let aqq = a[q * size + q];
+                let theta = (aqq - app) / (2.0 * apq);
+                let t = if theta >= 0.0 {
+                    1.0 / (theta + (1.0 + theta * theta).sqrt())
+                } else {
+                    -1.0 / (-theta + (1.0 + theta * theta).sqrt())
+                };
+                let c = 1.0 / (1.0 + t * t).sqrt();
+                let s = t * c;
+                for k in 0..size {
+                    if k == p || k == q {
+                        continue;
+                    }
+                    let akp = a[k * size + p];
+                    let akq = a[k * size + q];
+                    a[k * size + p] = c * akp - s * akq;
+                    a[p * size + k] = a[k * size + p];
+                    a[k * size + q] = s * akp + c * akq;
+                    a[q * size + k] = a[k * size + q];
+                }
+                let app_new = c * c * app - 2.0 * s * c * apq + s * s * aqq;
+                let aqq_new = s * s * app + 2.0 * s * c * apq + c * c * aqq;
+                a[p * size + p] = app_new;
+                a[q * size + q] = aqq_new;
+                a[p * size + q] = 0.0;
+                a[q * size + p] = 0.0;
+            }
+        }
+    }
+    let mut lo = f64::INFINITY;
+    let mut hi = f64::NEG_INFINITY;
+    for i in 0..size {
+        lo = lo.min(a[i * size + i]);
+        hi = hi.max(a[i * size + i]);
+    }
+    (lo, hi)
 }
 
 fn interval(grid: &[f64], energy: f64) -> Option<usize> {
@@ -884,6 +966,7 @@ impl CovarianceLibrary {
                 uncovered_rows,
                 absent_cross_parameter_pairs: size * size.saturating_sub(1) / 2,
                 maximum_asymmetry_barn2: 0.0,
+                excluded_blocks: Vec::new(),
             });
         }
         let base_rows = Self::base_rows(library);
@@ -1007,6 +1090,90 @@ impl CovarianceLibrary {
                 }
             }
         }
+        // Frozen P20 defect rules, applied per (target, MT, MT1) block of the
+        // assembled matrix. A self block is the principal submatrix over one
+        // (target, MT) parameter set; a cross block is the symmetric joint
+        // block over two such sets, and only its cross terms are its own
+        // contribution. Every block is diagnosed on the unmodified assembled
+        // matrix, so a defective self block cascades into any joint block
+        // that contains it. Excluded blocks contribute nothing.
+        let mut by_target: BTreeMap<usize, Vec<i32>> = BTreeMap::new();
+        for &(target, mt) in by_key.keys() {
+            by_target.entry(target).or_default().push(mt);
+        }
+        let mut excluded_blocks = Vec::new();
+        for (&target, mts) in &by_target {
+            for (a_index, &mt_a) in mts.iter().enumerate() {
+                for &mt_b in &mts[a_index..] {
+                    let is_self = mt_a == mt_b;
+                    if !is_self && !represented_pairs.contains(&(target, mt_a, mt_b)) {
+                        continue;
+                    }
+                    let mut joint = by_key[&(target, mt_a)].clone();
+                    if !is_self {
+                        joint.extend_from_slice(&by_key[&(target, mt_b)]);
+                    }
+                    joint.sort_unstable();
+                    let n = joint.len();
+                    let mut max_asymmetry = 0.0f64;
+                    let mut max_entry = 0.0f64;
+                    let mut symmetric = vec![0.0f64; n * n];
+                    for (i, &pi) in joint.iter().enumerate() {
+                        for (j, &pj) in joint.iter().enumerate() {
+                            let bij = covariance_barn2[pi * size + pj];
+                            let bji = covariance_barn2[pj * size + pi];
+                            max_asymmetry = max_asymmetry.max((bij - bji).abs());
+                            max_entry = max_entry.max(bij.abs());
+                            symmetric[i * n + j] = 0.5 * (bij + bji);
+                        }
+                    }
+                    if max_asymmetry > 1e-9 * max_entry && max_asymmetry > 0.0 {
+                        excluded_blocks.push(ExcludedBlock {
+                            target,
+                            mt: mt_a,
+                            mt1: mt_b,
+                            reason: "asymmetric_block",
+                            measured_defect: max_asymmetry,
+                        });
+                        continue;
+                    }
+                    let (lambda_min, lambda_max) = symmetric_eigen_extremes(&symmetric, n);
+                    if (lambda_max > 0.0 && lambda_min < -1e-10 * lambda_max)
+                        || (lambda_max <= 0.0 && lambda_min < -1e-30)
+                    {
+                        excluded_blocks.push(ExcludedBlock {
+                            target,
+                            mt: mt_a,
+                            mt1: mt_b,
+                            reason: "non_positive_semidefinite",
+                            measured_defect: lambda_min,
+                        });
+                    }
+                }
+            }
+        }
+        // Apply exclusions after every block has been diagnosed on the
+        // unmodified assembled matrix. A self-block exclusion zeroes the whole
+        // principal submatrix; a cross-block exclusion zeroes only the cross
+        // terms — the self terms are the self blocks' own contributions.
+        for block in &excluded_blocks {
+            let left_params = &by_key[&(block.target, block.mt)];
+            if block.mt == block.mt1 {
+                for &pi in left_params {
+                    for &pj in left_params {
+                        covariance_barn2[pi * size + pj] = 0.0;
+                    }
+                }
+            } else {
+                let right_params = &by_key[&(block.target, block.mt1)];
+                for &pi in left_params {
+                    for &pj in right_params {
+                        covariance_barn2[pi * size + pj] = 0.0;
+                        covariance_barn2[pj * size + pi] = 0.0;
+                    }
+                }
+            }
+        }
         Ok(CollapsedCovariance {
             row_indices,
             one_group_barns,
@@ -1014,6 +1181,7 @@ impl CovarianceLibrary {
             uncovered_rows,
             absent_cross_parameter_pairs,
             maximum_asymmetry_barn2,
+            excluded_blocks,
         })
     }
 }

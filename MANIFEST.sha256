@@ -1,4 +1,4 @@
-c522bfc58142b5556124f689dee495e2670040cb38302375a89d0eac62b83459  ./.github/workflows/ci.yml
+b119cd262203870a01bf802742af4529dd5de9763a39dc9d6e80dcb9bdb54cc2  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -39,6 +39,7 @@ cea7ebe169e8bed9e8af3412686f429611e846625686dc0aa9eee5a83a5b89d4  ./controls/che
 3893c048c8915550772fe923de222184a9d08ded24552162070aa873b92f5721  ./controls/check_g2_p18.py
 7b7a55970109897c5b9235688415edea8e16c46e6c784da0b52aabc7a4c35111  ./controls/check_g2_p18b.py
 020394fd542252655346d753874c7d5ad928ac1272346f49302bddbfe2b867d3  ./controls/check_g2_p19.py
+e0ee1de2b5ae9da25f00f1081fb4f140ced33dc47313d5fce87014dcd20d7cf6  ./controls/check_g2_p20.py
 f6df5a84d2b17fbe5ca5c686732d79ebf6e4ae73eb24b3e7a008f7bfe80d18f3  ./controls/check_g2_p23.py
 ff427b8d6bdc7e422dab202a4dc29ad0e169dc18a72bbe1b52ccbff94d0ef759  ./controls/check_g3_p18b.py
 a88cb2a3124e80ad0313cb45ac79ae9bcb45ef80e953d132d2874d0fea25665f  ./controls/check_g3_p19.py
@@ -132,6 +133,7 @@ a44bcd6b449968cc4392f037a8a039ac2f1cd6ef86ca35bc8d383c8988d6bfe4  ./controls/g2_
 9c612170ae0bc2d2cc07baa18f130d342ac3289b026aca2c8a5dd7fc0ca88a7f  ./controls/g2_p17_identical_data.py
 81c636b400636ed7a784c806e28fa02a4a1b5d8960a8b5f27eaabc38946dc390  ./controls/g2_p18_corpus_audit.py
 a3f25c1a84b033eeaa99fccaa012a1780c913909488f8df72842cf9ce317d112  ./controls/g2_p18b_corpus_classification.py
+c625bc065ee5bba93ff011681911d4175b8e64b0646815e34b5d7dc037a3bec6  ./controls/g2_p20_defects.py
 16a650fa76f16026194e40f8d23d13ce6c5d237d48a2baec10dab565b72daad4  ./controls/g2_p7_source_conservation.py
 e22c5777913fd45e2099f51cebc5b0b4f7524f12e81695eef77f5803918022d7  ./controls/g2_p8_openmc.py
 20d50dbd769cc808bf6d276e6881c540c809af85d0429d35fde62175f3d58c7c  ./controls/g2_p9_fission_matrix.py
@@ -282,11 +284,11 @@ f243c865a425bb35b5f71978148a422a52945bd1d06b857369c3ea7f26a74435  ./crates/actin
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
 a8c39db5703993720c420a94302ad292d7bfa24574f7fbf7b7527c60fa3dbe75  ./crates/actinv-core/src/reverse.rs
-cd67a35f660dfda2321708409e44c9fd31425ce01c34aa7ade9112fab5fa6aeb  ./crates/actinv-core/src/run.rs
+3c56bdb4a6b0209367ebe9483ad4418d71b9064373e53ee00c2493ad0a8ca4d4  ./crates/actinv-core/src/run.rs
 1fa018359901471d8a90bc445c688c0f7875e69c25996e71f8d9aa5ed60209a6  ./crates/actinv-core/src/shielding.rs
 f30fd389cf8230940ae91ced43aad23ae8695285cd80f2e1fa5536f6bac79023  ./crates/actinv-core/src/sparse.rs
 9f47159f0f2548848fa2189e3028735ba453716945e01bfddb9eda98a293f77e  ./crates/actinv-core/src/spec.rs
-9e694d025e4d7ec8d052148b15f3b18fd4f8c9b526f86673333b13a0542a4824  ./crates/actinv-core/src/uncertainty.rs
+1f766fb0b38ee6573f1803b57e440203742802dc3d8215420a31f5f27d200e86  ./crates/actinv-core/src/uncertainty.rs
 774da35ec0814cefc18070df7c17c8fcad183b543213d1b24b8cb1f29fe50e41  ./crates/actinv-data/Cargo.toml
 840a0b2702f922f925cf3fb6418ddc6fdebefe253818f24bf6d9bf11c9c55cde  ./crates/actinv-data/data/fispact_162_groups.json
 ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f  ./crates/actinv-data/data/fispact_709_groups.json
@@ -300,7 +302,7 @@ f274b0484b17ffb28e701076d830367858cc67110739e1026e5a894286d216d7  ./crates/actin
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
 2305c8138ec587e1c771811c0da9705b4b835471ca64decf4532b634e5860528  ./crates/actinv-data/src/builder.rs
 8fa3ccc2d59fb244e8a15495b36e5b3d710700769550d861c7531c24722ec0ea  ./crates/actinv-data/src/composition.rs
-f80c61953e824af5073bb27b853423b943c51c30b15daf089162ddc38fef9306  ./crates/actinv-data/src/covariance.rs
+c07501c08a05fda9de51cc8d6e0d9ffc1b3d481ab13f4b03af59e9ed1ea4c2e1  ./crates/actinv-data/src/covariance.rs
 988d1908c06f081a923adb072c3c186975109dbb1e3c22f18b76ba44f67179a1  ./crates/actinv-data/src/decay.rs
 8c9a0ef4a16ea5a54f14f087e9c66a258e7f1d9bee51f49b891318b958e89588  ./crates/actinv-data/src/doppler.rs
 ebd727f6a4fa2bde6bc32da34e72c4af4f1f12f50dea381a112b16db6c26b6c7  ./crates/actinv-data/src/endf.rs
@@ -1767,6 +1769,8 @@ fb05923e1ab9535ffef61da4029cd07ddbfc0fecd3211f2ae98f8d2fffe9735d  ./results/g2_p
 cfeb4fa2a1b3a5fb465f61299285d0633c43948fd5142e22ba1649dcaa8b38d6  ./results/g2_p18b_corpus_classification.json
 15998313680e9b0b6bc649b2b885ba0cebe06a9f4509b265b8986f654633cc56  ./results/g2_p19_check.json
 91bf3ec9e7785c3d1272644b638175b4d48e64c76269045e531ce095f5cafd60  ./results/g2_p19_runtime.json
+bf3e7a605349d434432959f48dd3843dafb0d00da3d3957ee75c2c3ca503cd3c  ./results/g2_p20_check.json
+aec2797179aa8a8f3c0561b8c5590b08dfad5e966201b0634d37301750ee70da  ./results/g2_p20_defects.json
 2ea14cfadac8497f8a3b4cbe63e0711df266e25c4c83c0eded7bb56fb6802872  ./results/g2_p23_check.json
 3a5f53b9431a503296975c0be3b82557591a0149829385f625eeb0a234a174f8  ./results/g2_p23_reverse.json
 40ca739689728a73db7f7c1a45772dadb62dbad159a53bb559d6b3784f319258  ./results/g2_p7_source_conservation.json

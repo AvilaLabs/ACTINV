@@ -453,6 +453,7 @@ struct UncertaintyRuntime {
     uncovered_library_rows: Vec<usize>,
     absent_cross_parameter_pairs: usize,
     maximum_covariance_asymmetry_barn2: f64,
+    excluded_blocks: Vec<covariance::ExcludedBlock>,
     normal_multiplier: f64,
     alternate_y: Vec<f64>,
 }
@@ -656,6 +657,7 @@ fn build_step_uncertainty(
         uncovered_library_rows: runtime.uncovered_library_rows.clone(),
         absent_cross_parameter_pairs: runtime.absent_cross_parameter_pairs,
         maximum_covariance_asymmetry_barn2: runtime.maximum_covariance_asymmetry_barn2,
+        excluded_blocks: runtime.excluded_blocks.clone(),
         responses,
     })
 }
@@ -1819,21 +1821,6 @@ impl PreparedRun {
                 let collapsed = prepared
                     .library
                     .collapse(dense_library, phi, &active_rows)?;
-                let maximum_covariance = collapsed
-                    .covariance_barn2
-                    .iter()
-                    .map(|value| value.abs())
-                    .fold(0.0f64, f64::max);
-                let symmetry_tolerance = 128.0
-                    * f64::EPSILON
-                    * maximum_covariance
-                    * collapsed.row_indices.len().max(1) as f64;
-                if collapsed.maximum_asymmetry_barn2 > symmetry_tolerance {
-                    return Err(format!(
-                        "collapsed covariance is materially asymmetric: {:.17e} barn^2 (bound {:.17e})",
-                        collapsed.maximum_asymmetry_barn2, symmetry_tolerance
-                    ));
-                }
                 for (&row, &cross_section) in
                     collapsed.row_indices.iter().zip(&collapsed.one_group_barns)
                 {
@@ -1855,6 +1842,12 @@ impl PreparedRun {
                     .enumerate()
                     .map(|(position, row)| (*row, position))
                     .collect();
+                let excluded_self: std::collections::BTreeSet<(usize, i32)> = collapsed
+                    .excluded_blocks
+                    .iter()
+                    .filter(|block| block.mt == block.mt1)
+                    .map(|block| (block.target, block.mt))
+                    .collect();
                 let mut parameters = Vec::with_capacity(active_rows.len());
                 let mut directions = Vec::with_capacity(active_rows.len());
                 let mut covered_parameter_positions = Vec::new();
@@ -1864,6 +1857,7 @@ impl PreparedRun {
                         format!("activation row {row_index} has an invalid target index")
                     })?;
                     let covered = covered_rows.contains_key(&row_index);
+                    let excluded = covered && excluded_self.contains(&(row.target, row.mt));
                     if covered {
                         covered_parameter_positions.push(parameter_position);
                     }
@@ -1879,6 +1873,7 @@ impl PreparedRun {
                         lmf: row.lmf,
                         collapsed_cross_section_b: lib.one_group(row_index, phi),
                         covariance_covered: covered,
+                        covariance_excluded: excluded,
                     });
                     directions.push(Csc::from_triplets(m, &derivative_sub[&row_index]));
                 }
@@ -1891,6 +1886,7 @@ impl PreparedRun {
                     uncovered_library_rows: collapsed.uncovered_rows,
                     absent_cross_parameter_pairs: collapsed.absent_cross_parameter_pairs,
                     maximum_covariance_asymmetry_barn2: collapsed.maximum_asymmetry_barn2,
+                    excluded_blocks: collapsed.excluded_blocks,
                     normal_multiplier: uncertainty_report::normal_multiplier(
                         options.confidence_level,
                     ),
@@ -2624,6 +2620,7 @@ impl PreparedRun {
                     "uncovered_library_rows": runtime.uncovered_library_rows,
                     "absent_cross_parameter_pairs": runtime.absent_cross_parameter_pairs,
                     "maximum_covariance_asymmetry_barn2": runtime.maximum_covariance_asymmetry_barn2,
+                    "excluded_blocks": runtime.excluded_blocks,
                     "selected_cram_order": spec.options.cram_order,
                     "comparison_cram_order": if spec.options.cram_order == 16 { 48 } else { 16 },
                     "excluded_sources": [
