@@ -51,6 +51,7 @@ REPAIR_TOKENS = (
     "floor_reconciled",
     "interp_artifact_reconciled",
     "missing_total_self_comparator",
+    "sentinel supplies the permitted runtime comparator",
     "elfs_qm_qi_conflict_resolved",
 )
 REPAIRABLE_CLASSES = {
@@ -183,8 +184,8 @@ def main() -> int:
     record.update({
         "schema": "actinv-p25-g4-repairs-1",
         "gate": "P25-G4",
-        "projectiles": {},
     })
+    record.setdefault("projectiles", {})
     projs = sys.argv[1:] or list(PARAMS)
     for projectile in projs:
         result = build_projectile(projectile, jobs)
@@ -195,25 +196,54 @@ def main() -> int:
         OUT.write_text(json.dumps(record, indent=1, sort_keys=True) + "\n")
 
     # class-application verification: every file repaired must carry a
-    # demonstrated repairable class; every repaired diagnostic must be
-    # consistent with the file's G2 final class.
+    # demonstrated repairable class — except a genuine-class file whose
+    # construction blocker was repairable and whose genuine defect stays
+    # visible as a ledgered source diagnostic (never reconciled).
     verdict = {}
     for projectile, res in record["projectiles"].items():
         files = traces["files"][projectile]
         repaired = [n for n in files if n not in res["failures"]]
         still_failed = set(res["failures"])
+        idx = json.loads(Path(res["index"]).read_text())
+        ledgers = {t["file"]: t.get("ledger", [])
+                   for t in idx.get("targets", [])}
         mismatches = []
+        diagnosed_genuine = []
         for name in repaired:
             cls = files[name]["final_class"]
-            if cls not in REPAIRABLE_CLASSES:
+            if cls in REPAIRABLE_CLASSES:
+                continue
+            kinds = files[name]["all_excesses"]["kinds"]
+            mts = {int(m) for m in re.findall(
+                r"MT(\d+)/ZAP", " ".join(
+                    files[name]["all_excesses"].get("detail", [])))}
+            led = ledgers.get(name, [])
+            if mts and any(f"MT{mt}:" in ln and "audit recorded" in ln
+                           for mt in mts for ln in led):
+                diagnosed_genuine.append(name)
+            else:
                 mismatches.append((name, cls))
+        token_kinds = {
+            "floor_reconciled": {"floor", "interp", "no_mf3_total"},
+            "interp_artifact_reconciled": {"interp"},
+            "missing_total_self_comparator": {"no_mf3_total"},
+            "sentinel supplies the permitted runtime comparator":
+                {"no_mf3_total"},
+        }
         for token, names in res["repair_diagnostics"].items():
+            allowed = token_kinds.get(token)
+            if allowed is None:
+                continue
             for name in names:
-                cls = files.get(name, {}).get("final_class")
-                if cls in GENUINE:
-                    mismatches.append((name, token, cls))
+                if name not in files:
+                    continue  # previously-built file: new rows may fire
+                kinds = set(files[name]["all_excesses"]["kinds"])
+                if not kinds & allowed:
+                    mismatches.append((name, token, sorted(kinds)))
         verdict[projectile] = {
             "repaired_quarantined": len(repaired),
+            "built_with_ledgered_source_diagnostics":
+                sorted(diagnosed_genuine),
             "still_quarantined": sorted(still_failed),
             "still_quarantined_classes": dict(Counter(
                 files[n]["final_class"] for n in still_failed

@@ -1,0 +1,7 @@
+{
+ "schema": "actinv-p25-g4-check-1",
+ "gate": "P25-G4",
+ "pass": true,
+ "failures": [],
+ "failure_count": 0
+}

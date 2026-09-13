@@ -872,7 +872,11 @@ fn declared_consistent_zaps(
             let consistent = if total_value > 0.0 {
                 sum - total_value <= STANDARD_ENVELOPE_REL * total_value
             } else {
-                sum <= STANDARD_ZERO_TOTAL_ABS_B
+                // the mechanism gate must agree with the decimal
+                // discriminator: a declared ordinate carrying more than
+                // floor-magnitude strength where the total is zero is a
+                // zero-total source defect, not an interpolation artifact
+                sum <= FLOOR_EXCESS_ABS_B
             };
             if !consistent {
                 continue 'zap;

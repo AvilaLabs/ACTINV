@@ -28,6 +28,7 @@ Self-test: planted mutations are rejected.
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -53,8 +54,23 @@ TOKEN_KINDS = {
     "floor_reconciled": {"floor", "interp", "no_mf3_total"},
     "interp_artifact_reconciled": {"interp"},
     "missing_total_self_comparator": {"no_mf3_total"},
+    "sentinel supplies the permitted runtime comparator":
+        {"no_mf3_total"},
 }
 INTERP_ENVELOPE = 0.03
+
+
+def load_index_ledgers(report: dict) -> dict:
+    """(projectile, filename) -> ledger lines from the emitted index."""
+    out = {}
+    for proj, res in report.get("projectiles", {}).items():
+        idx_path = Path(res.get("index", ""))
+        if not idx_path.is_file():
+            continue
+        idx = json.loads(idx_path.read_text())
+        for t in idx.get("targets", []):
+            out[(proj, t["file"])] = t.get("ledger", [])
+    return out
 
 
 def _fresh(path: Path) -> dict:
@@ -69,11 +85,14 @@ def _first_hit_class(rec: dict) -> str:
 
 
 def check(report: dict, failures: list[str],
-          fresh_cache: dict | None = None) -> dict:
+          fresh_cache: dict | None = None,
+          index_ledgers: dict | None = None) -> dict:
     if report.get("schema") != "actinv-p25-g4-repairs-1":
         failures.append("schema")
     g2files = json.loads(G2.read_text())["files"]
     fresh_cache = fresh_cache if fresh_cache is not None else {}
+    if index_ledgers is None:
+        index_ledgers = load_index_ledgers(report)
     for proj, res in report.get("projectiles", {}).items():
         files = g2files.get(proj, {})
         failed = set(res.get("failures", {}))
@@ -103,8 +122,22 @@ def check(report: dict, failures: list[str],
                     f"!= recorded {stored}")
             repaired = name not in failed
             if repaired and cls not in REPAIRABLE:
-                failures.append(
-                    f"{proj}/{name}: repaired despite class {cls}")
+                # a genuine-class source may build only when its
+                # construction-blocking defect was a proven repairable
+                # mechanism AND the genuine defect stays visible as a
+                # ledgered source diagnostic in the emitted index —
+                # never reconciled, never silent
+                mts = {int(m) for m in re.findall(
+                    r"MT(\d+)/ZAP", " ".join(
+                        fresh.get("detail", [])))}
+                led = index_ledgers.get((proj, name), [])
+                diagnosed = any(
+                    f"MT{mt}:" in line and "audit recorded" in line
+                    for mt in mts for line in led)
+                if not diagnosed:
+                    failures.append(
+                        f"{proj}/{name}: built despite {cls} without "
+                        f"a ledgered source diagnostic")
             if not repaired:
                 msg = res["failures"][name]
                 legit = []
@@ -133,6 +166,11 @@ def check(report: dict, failures: list[str],
             if allowed is None:
                 continue  # identity repairs carry no decimal signature
             for name in names:
+                if name in failed:
+                    failures.append(
+                        f"{proj}/{name}: {token} ledgered on a "
+                        f"still-failed file")
+                    continue
                 if name not in files:
                     continue  # previously-built file: new rows may fire
                 key = (proj, name)
