@@ -784,9 +784,23 @@ def evaluate_family(family: dict, artifact: dict, decay_states: dict,
         return None, err or "unparsed_channel"
     mts, _ = select_mt_set(mts_named, is_x, product_za, state_sig, loss_sig,
                            residual_mts, inelastic_totals)
+    # P25: which emission model produced this artifact. Pre-repair artifacts
+    # lack the declaration and always take the legacy inelastic
+    # reconstruction; p25-amendment-b charged-particle artifacts emit every
+    # declared state for MT=4/51-91 (neutron-emission channels to a different
+    # residual), so the normal product branch scores them; neutron files keep
+    # the excitation model under either builder.
+    index = artifact["index"]
+    charged_product_emission = (
+        index.get("emission_model") == "p25-amendment-b"
+        and index.get("projectile") != "neutron"
+    )
     # for 'x' families, inelastic channels produce the target nuclide itself;
-    # include them only when the family product is the target
-    if is_x and product_za == target_za and inelastic_totals:
+    # include them only when the family product is the target — and only under
+    # the legacy/neutron excitation model (charged product emission never
+    # produces the target nuclide from an inelastic-classified MT)
+    if is_x and product_za == target_za and inelastic_totals \
+            and not charged_product_emission:
         mts |= set(INELASTIC_MTS) & set(inelastic_totals)
     # leakage on family channels
     leaked_mts = set(leak_sig) & mts
@@ -809,7 +823,7 @@ def evaluate_family(family: dict, artifact: dict, decay_states: dict,
         missing_total = False
         for mt in mts:
             parts = state_sig.get(mt, {})
-            if mt in INELASTIC_MTS:
+            if mt in INELASTIC_MTS and not charged_product_emission:
                 # the emitted model carries only isomer partials; their sum
                 # is the loss row, and the channel total comes from MF=3
                 total = (inelastic_totals or {}).get(mt)

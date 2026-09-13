@@ -120,6 +120,10 @@ struct BuildIndex {
     group_boundary_sha256: String,
     weighting: &'static str,
     builder_fingerprint: String,
+    /// P25: declares which emission rules produced the rows. Absent in
+    /// pre-repair artifacts; the scorer uses it to select the matching
+    /// inelastic reconstruction.
+    emission_model: &'static str,
     options: CanonicalOptions,
     state_catalog: Vec<CatalogState>,
     targets: Vec<TargetIndex>,
@@ -601,8 +605,15 @@ fn skip_mt(mt: i32, projectile: Projectile, has_mf6: bool) -> bool {
         || mt >= 1000
 }
 
-fn inelastic(mt: i32) -> bool {
-    mt == 4 || (51..=91).contains(&mt)
+/// Inelastic excitation semantics (MT=4 and discrete levels 51–91) apply only
+/// to neutron evaluations: there the residual is the target nuclide itself.
+/// For charged-particle evaluations these MTs are neutron-emission channels
+/// whose residual is a different nuclide (corpus-wide MF=8 evidence: every
+/// charged-particle declaration names a different-residual ZAP, every neutron
+/// declaration the same residual). Charged files therefore take the normal
+/// product path, which emits and reconciles every declared state.
+fn inelastic(mt: i32, projectile: Projectile) -> bool {
+    projectile == Projectile::Neutron && (mt == 4 || (51..=91).contains(&mt))
 }
 
 fn descriptor_set(products: &[ProductRef], lmf: i32) -> Result<BTreeSet<(i32, i32)>, String> {
@@ -664,6 +675,20 @@ const STANDARD_ENVELOPE_REL: f64 = 0.001;
 /// For an exactly-zero runtime total, standard compatibility is this absolute
 /// state-sum bound in barns.
 const STANDARD_ZERO_TOTAL_ABS_B: f64 = 0.001;
+/// P25 Amendment B: an emitted-sum excess below this absolute bound in barns
+/// is physically weightless and is accepted as `floor_reconciled` without
+/// scaling (TENDL prints 1e-20 barn as an effectively-zero floor; observed
+/// artifacts carry absolute excesses near that value).
+const FLOOR_EXCESS_ABS_B: f64 = 1e-15;
+/// P25 Amendment B: the secondary reconciliation envelope, applied only to a
+/// ZAP whose MF=10 state sum is proven consistent with the MF=3 total at every
+/// declared product gridpoint — i.e. a demonstrated grid-density interpolation
+/// artifact, never a declared-value contradiction.
+const INTERP_ARTIFACT_ENVELOPE_REL: f64 = 0.03;
+/// P25 Amendment B: an MF=8 ELFS that conflicts with the QM-QI-derived
+/// excitation by at most this many eV resolves to the evaluated ELFS
+/// (`elfs_qm_qi_conflict_resolved`); a larger conflict fails closed.
+const ELFS_PRECEDENCE_BOUND_EV: f64 = 1.0e3;
 
 /// Raw-section audit counters for the retired P18 stress gate. Excesses beyond
 /// the stress tolerance are reported as source diagnostics; nonfinite or
@@ -802,6 +827,62 @@ fn audit_pointwise_state_partials(
     Ok(audit)
 }
 
+/// P25 Amendment B mechanism gate for the interpolation-artifact envelope:
+/// returns the ZAPs whose MF=10 mutually-exclusive state sum is consistent
+/// with the MF=3 total at *every* declared product gridpoint (the frozen
+/// standard envelope, or the zero-total absolute bound where the total is
+/// zero). For such a ZAP a collapsed group excess can only arise between
+/// declared points — the discriminator that separates grid-density artifacts
+/// from declared-value inconsistencies. Any failure excludes the ZAP; it is
+/// not itself a construction error.
+fn declared_consistent_zaps(
+    mt: i32,
+    total: &Tabulated,
+    products: &[&ProductTable],
+) -> Result<BTreeSet<i32>, String> {
+    let state_products: Vec<_> = products
+        .iter()
+        .copied()
+        .filter(|product| product.zap >= 0)
+        .collect();
+    let zaps: BTreeSet<i32> = state_products.iter().map(|product| product.zap).collect();
+    let mut qualified = BTreeSet::new();
+    'zap: for zap in zaps {
+        let members: Vec<_> = state_products
+            .iter()
+            .filter(|product| product.zap == zap)
+            .collect();
+        let mut gridpoints: Vec<f64> = members
+            .iter()
+            .flat_map(|product| product.table.x.iter().copied())
+            .collect();
+        gridpoints.sort_by(f64::total_cmp);
+        gridpoints.dedup();
+        for energy in gridpoints {
+            let total_value = total.evaluate(energy)?;
+            let mut sum = 0.0;
+            for product in &members {
+                sum += product.table.evaluate(energy)?;
+            }
+            if !sum.is_finite() || sum < 0.0 || !total_value.is_finite() || total_value < 0.0 {
+                return Err(format!(
+                    "MT{mt} declared-gridpoint consistency evaluation produced a nonfinite or negative value at {energy:.17e} eV"
+                ));
+            }
+            let consistent = if total_value > 0.0 {
+                sum - total_value <= STANDARD_ENVELOPE_REL * total_value
+            } else {
+                sum <= STANDARD_ZERO_TOTAL_ABS_B
+            };
+            if !consistent {
+                continue 'zap;
+            }
+        }
+        qualified.insert(zap);
+    }
+    Ok(qualified)
+}
+
 fn collapse_mf10_products<'a>(
     groups: &GroupStructure,
     mt: i32,
@@ -890,6 +971,8 @@ fn audit_collapsed_state_partials(
 struct RuntimeReconciliation {
     checked: usize,
     scaled: usize,
+    floor_reconciled: usize,
+    interp_reconciled: usize,
     min_scale: f64,
     max_relative_excess: f64,
     ulp_corrections: u64,
@@ -900,6 +983,12 @@ struct RuntimeReconciliation {
 /// excesses inside the standard envelope are scaled by the common factor T/S
 /// with at most a one-ULP downward correction on the largest row; anything
 /// further fails construction closed. `strict_states` rejects every excess.
+///
+/// P25 Amendment B adds two mechanism-gated relaxations, in order: an excess
+/// below `FLOOR_EXCESS_ABS_B` barn is accepted unchanged as `floor_reconciled`
+/// (physically weightless), and an `interp_qualified` ZAP — proven consistent
+/// at every declared product gridpoint — reconciles under the 0.03
+/// interpolation-artifact envelope (`interp_artifact_reconciled`).
 #[allow(clippy::too_many_arguments)]
 fn reconcile_emitted_states(
     mt: i32,
@@ -908,6 +997,7 @@ fn reconcile_emitted_states(
     states: &mut [&mut Vec<f64>],
     total: &[f64],
     strict_states: bool,
+    interp_qualified: bool,
     mat: i32,
     za: i32,
     source_sha256: &str,
@@ -936,10 +1026,24 @@ fn reconcile_emitted_states(
         if sum <= comparator {
             continue;
         }
-        let compatible = if comparator > 0.0 {
+        if !strict_states && sum - comparator <= FLOOR_EXCESS_ABS_B {
+            report.floor_reconciled += 1;
+            continue;
+        }
+        let standard_ok = if comparator > 0.0 {
             sum - comparator <= STANDARD_ENVELOPE_REL * comparator
         } else {
             sum <= STANDARD_ZERO_TOTAL_ABS_B
+        };
+        let envelope = if interp_qualified {
+            INTERP_ARTIFACT_ENVELOPE_REL
+        } else {
+            STANDARD_ENVELOPE_REL
+        };
+        let compatible = if comparator > 0.0 {
+            sum - comparator <= envelope * comparator
+        } else {
+            standard_ok
         };
         let relative_excess = if comparator > 0.0 {
             (sum - comparator) / comparator
@@ -949,12 +1053,17 @@ fn reconcile_emitted_states(
         if strict_states || !compatible {
             let rule = if strict_states {
                 "the strict state-conservation option rejects every emitted sum above the runtime total"
+            } else if interp_qualified {
+                "outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope"
             } else {
                 "outside the frozen 0.001 standard envelope"
             };
             return Err(format!(
                 "MT{mt}/MF={lmf} ZAP={zap} group {group}: emitted state sum {sum:.17e} barn exceeds runtime total {comparator:.17e} barn by relative excess {relative_excess:.6e} ({rule}); MAT={mat} ZA={za} source_sha256={source_sha256}; construction fails closed and no state row is emitted, scaled or relabeled"
             ));
+        }
+        if !standard_ok {
+            report.interp_reconciled += 1;
         }
         let scale = comparator / sum;
         for state in states.iter_mut() {
@@ -1046,17 +1155,43 @@ impl RawProductState {
         }
     }
 
+    /// P25 Amendment B: when MF=8 ELFS and the QM-QI-derived excitation
+    /// disagree beyond the consistency tolerance but by at most
+    /// `ELFS_PRECEDENCE_BOUND_EV`, the evaluated ELFS is authoritative; the
+    /// conflict is ledgered by the caller as `elfs_qm_qi_conflict_resolved`.
+    /// A conflict beyond the bound remains a construction failure.
     fn excitation_eV(self) -> Result<Option<f64>, String> {
         let q_excitation = self.qm_minus_qi_eV()?;
-        if let (Some(elfs), Some(derived)) = (self.elfs_eV, q_excitation) {
-            if (elfs - derived).abs() > excitation_tolerance(elfs, derived) {
+        if let Some(delta) = self.elfs_qm_qi_delta_eV() {
+            if delta > ELFS_PRECEDENCE_BOUND_EV {
                 return Err(format!(
-                    "LFS={} MF=8 ELFS={elfs:.17e} eV conflicts with QM-QI={derived:.17e} eV",
-                    self.raw_lfs
+                    "LFS={} MF=8 ELFS={:.17e} eV conflicts with QM-QI={:.17e} eV beyond the {:.0e} eV precedence bound",
+                    self.raw_lfs,
+                    self.elfs_eV.unwrap_or_default(),
+                    q_excitation.unwrap_or_default(),
+                    ELFS_PRECEDENCE_BOUND_EV
                 ));
             }
         }
         Ok(self.elfs_eV.or(q_excitation))
+    }
+
+    /// The absolute |ELFS − (QM−QI)| delta when both exist, or None. A delta
+    /// inside `excitation_tolerance` is ordinary rounding and is not a
+    /// conflict; anything larger must be resolved or fail.
+    fn elfs_qm_qi_delta_eV(self) -> Option<f64> {
+        let elfs = self.elfs_eV?;
+        let derived = self.qm_minus_qi_eV().ok().flatten()?;
+        Some((elfs - derived).abs())
+    }
+
+    /// Some(delta) only for a genuine conflict — beyond the consistency
+    /// tolerance — so callers can ledger `elfs_qm_qi_conflict_resolved`.
+    fn elfs_qm_qi_conflict_eV(self) -> Option<f64> {
+        let elfs = self.elfs_eV?;
+        let derived = self.qm_minus_qi_eV().ok().flatten()?;
+        let delta = (elfs - derived).abs();
+        (delta > excitation_tolerance(elfs, derived)).then_some(delta)
     }
 }
 
@@ -1540,6 +1675,14 @@ fn build_evaluation(
                     "MT18: no MF=3 total; the MF=10 IZAP=-1 total-fission sentinel supplies the permitted runtime comparator"
                         .into(),
                 );
+            } else if mt == 18 {
+                // P25 Amendment B: fission partials without an MF=3 total or
+                // sentinel use their own MF=10 sum as the runtime comparator —
+                // internal completeness, not an independently anchored total.
+                ledger.push(
+                    "MT18: no MF=3 total or total-fission sentinel; the MF=10 partial sum supplies the runtime comparator (missing_total_self_comparator: conservation is internal completeness, not anchored to an independent total)"
+                        .into(),
+                );
             } else {
                 return Err(format!(
                     "MT{mt}/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven"
@@ -1565,7 +1708,7 @@ fn build_evaluation(
         }
         let descriptors = evaluation.mf8.get(&mt).map(Vec::as_slice).unwrap_or(&[]);
 
-        if inelastic(mt) {
+        if inelastic(mt, metadata.projectile) {
             if mf10_products.iter().any(|product| product.zap < 0) {
                 return Err(format!("MT{mt}/MF=10 contains an invalid negative product"));
             }
@@ -1591,16 +1734,23 @@ fn build_evaluation(
                 .filter(|(product, _)| product.lfs > 0)
             {
                 sum_groups(&mut loss, &sigma)?;
+                let raw_state = RawProductState::from_table(
+                    descriptor_for(descriptors, 10, product.zap, product.lfs),
+                    product,
+                )?;
+                if let Some(delta) = raw_state.elfs_qm_qi_conflict_eV() {
+                    ledger.push(format!(
+                        "MT{mt} ZAP={}/LFS={}: MF=8 ELFS conflicts with QM-QI by {delta:.6e} eV within the 1 keV precedence bound; resolved to the evaluated ELFS (elfs_qm_qi_conflict_resolved)",
+                        product.zap, product.lfs
+                    ));
+                }
                 product_rows.push(BuiltRow {
                     mt,
                     zap: product.zap,
                     lfs: product.lfs,
                     lmf: 10,
                     sigma,
-                    raw_state: Some(RawProductState::from_table(
-                        descriptor_for(descriptors, 10, product.zap, product.lfs),
-                        product,
-                    )?),
+                    raw_state: Some(raw_state),
                 });
             }
             rows.push(BuiltRow {
@@ -1675,6 +1825,16 @@ fn build_evaluation(
                 .map(|product| (product.zap, product.lfs))
                 .collect();
             validate_descriptors(descriptors, 10, &actual)?;
+            // Amendment B mechanism gate: the secondary envelope is available
+            // only to a ZAP whose declared product gridpoints are all
+            // consistent with the raw MF=3 total — proven grid-density
+            // interpolation artifacts, never declared-value contradictions.
+            let interp_zaps: BTreeSet<i32> = match evaluation.mf3.get(&mt) {
+                Some(raw_total) if !processed.contains_key(&mt) => {
+                    declared_consistent_zaps(mt, raw_total, &mf10_products)?
+                }
+                _ => BTreeSet::new(),
+            };
             let mut vectors: BTreeMap<i32, Vec<&mut Vec<f64>>> = BTreeMap::new();
             for (product, sigma) in collapsed_mf10.iter_mut() {
                 if product.zap >= 0 {
@@ -1689,13 +1849,28 @@ fn build_evaluation(
                     states.as_mut_slice(),
                     &total,
                     strict_states,
+                    interp_zaps.contains(&zap),
                     metadata.mat,
                     metadata.za,
                     source_sha256,
                 )?;
+                if report.floor_reconciled > 0 {
+                    ledger.push(format!(
+                        "MT{mt}/MF=10 ZAP={zap}: emitted state sum exceeded the runtime total by a physically weightless amount in {} of {} group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+                        report.floor_reconciled,
+                        report.checked
+                    ));
+                }
+                if report.interp_reconciled > 0 {
+                    ledger.push(format!(
+                        "MT{mt}/MF=10 ZAP={zap}: emitted state sum exceeded the runtime total beyond the standard envelope in {} of {} group(s); scaled by the common factor T/S under the mechanism-gated 0.03 interpolation-artifact envelope (interp_artifact_reconciled; declared product gridpoints all consistent with MF=3)",
+                        report.interp_reconciled,
+                        report.checked
+                    ));
+                }
                 if report.scaled > 0 {
                     ledger.push(format!(
-                        "MT{mt}/MF=10 ZAP={zap}: emitted state sum exceeded the runtime total in {} of {} group(s); scaled by the common factor T/S under the frozen standard envelope (min scale {:.6e}, max relative excess {:.6e}, {} one-ULP closure correction(s))",
+                        "MT{mt}/MF=10 ZAP={zap}: emitted state sum exceeded the runtime total in {} of {} group(s); scaled by the common factor T/S (min scale {:.6e}, max relative excess {:.6e}, {} one-ULP closure correction(s))",
                         report.scaled,
                         report.checked,
                         report.min_scale,
@@ -1714,16 +1889,23 @@ fn build_evaluation(
                         product.zap, product.lfs
                     ));
                 }
+                let raw_state = RawProductState::from_table(
+                    descriptor_for(descriptors, 10, product.zap, product.lfs),
+                    product,
+                )?;
+                if let Some(delta) = raw_state.elfs_qm_qi_conflict_eV() {
+                    ledger.push(format!(
+                        "MT{mt} ZAP={}/LFS={}: MF=8 ELFS conflicts with QM-QI by {delta:.6e} eV within the 1 keV precedence bound; resolved to the evaluated ELFS (elfs_qm_qi_conflict_resolved)",
+                        product.zap, product.lfs
+                    ));
+                }
                 rows.push(BuiltRow {
                     mt,
                     zap: product.zap,
                     lfs: product.lfs,
                     lmf: 10,
                     sigma,
-                    raw_state: Some(RawProductState::from_table(
-                        descriptor_for(descriptors, 10, product.zap, product.lfs),
-                        product,
-                    )?),
+                    raw_state: Some(raw_state),
                 });
             }
         }
@@ -1773,10 +1955,18 @@ fn build_evaluation(
                     states.as_mut_slice(),
                     &total,
                     strict_states,
+                    false,
                     metadata.mat,
                     metadata.za,
                     source_sha256,
                 )?;
+                if report.floor_reconciled > 0 {
+                    ledger.push(format!(
+                        "MT{mt}/MF=9 ZAP={zap}: emitted production sum exceeded the runtime total by a physically weightless amount in {} of {} group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+                        report.floor_reconciled,
+                        report.checked
+                    ));
+                }
                 if report.scaled > 0 {
                     ledger.push(format!(
                         "MT{mt}/MF=9 ZAP={zap}: emitted production sum exceeded the runtime total in {} of {} group(s); scaled by the common factor T/S under the frozen standard envelope (min scale {:.6e}, max relative excess {:.6e}, {} one-ULP closure correction(s))",
@@ -1789,16 +1979,23 @@ fn build_evaluation(
                 }
             }
             for (product, sigma) in collapsed_mf9 {
+                let raw_state = RawProductState::from_table(
+                    descriptor_for(descriptors, 9, product.zap, product.lfs),
+                    product,
+                )?;
+                if let Some(delta) = raw_state.elfs_qm_qi_conflict_eV() {
+                    ledger.push(format!(
+                        "MT{mt} ZAP={}/LFS={}: MF=8 ELFS conflicts with QM-QI by {delta:.6e} eV within the 1 keV precedence bound; resolved to the evaluated ELFS (elfs_qm_qi_conflict_resolved)",
+                        product.zap, product.lfs
+                    ));
+                }
                 rows.push(BuiltRow {
                     mt,
                     zap: product.zap,
                     lfs: product.lfs,
                     lmf: 9,
                     sigma,
-                    raw_state: Some(RawProductState::from_table(
-                        descriptor_for(descriptors, 9, product.zap, product.lfs),
-                        product,
-                    )?),
+                    raw_state: Some(raw_state),
                 });
             }
         }
@@ -2203,6 +2400,7 @@ pub fn build_library(
         group_boundary_sha256: options.groups.hash(),
         weighting: "flat-lethargy",
         builder_fingerprint: fingerprint.clone(),
+        emission_model: "p25-amendment-b",
         options: CanonicalOptions {
             grid_density: options.grid_density,
         },
@@ -3610,6 +3808,7 @@ mod tests {
             &mut [&mut ground, &mut isomer],
             &total,
             false,
+            false,
             2631,
             26000,
             &"f".repeat(64),
@@ -3632,6 +3831,7 @@ mod tests {
             26056,
             &mut [&mut ground, &mut isomer],
             &total,
+            false,
             false,
             2631,
             26000,
@@ -3662,6 +3862,7 @@ mod tests {
             85197,
             &mut [&mut ground, &mut isomer],
             &total,
+            false,
             false,
             8533,
             85000,
@@ -3696,6 +3897,7 @@ mod tests {
             &mut [&mut ground, &mut isomer],
             &total,
             false,
+            false,
             2631,
             26000,
             &"f".repeat(64),
@@ -3712,6 +3914,7 @@ mod tests {
             26056,
             &mut [&mut excess],
             &total,
+            false,
             false,
             2631,
             26000,
@@ -3733,6 +3936,7 @@ mod tests {
             &mut [&mut ground, &mut isomer],
             &total,
             true,
+            false,
             2631,
             26000,
             &"f".repeat(64),
@@ -4209,11 +4413,20 @@ mod tests {
             qi_eV: Some(1_000_000.0),
         };
         assert_eq!(boundary.excitation_eV().unwrap(), Some(200_000.0));
-        let outside = RawProductState {
+        // P25 Amendment B: a 2 eV conflict is inside the 1 keV precedence
+        // bound and resolves to the evaluated ELFS; beyond the bound fails.
+        let within_bound = RawProductState {
             qm_eV: Some(1_200_002.0),
+            ..boundary
+        };
+        assert_eq!(within_bound.excitation_eV().unwrap(), Some(200_000.0));
+        assert_eq!(within_bound.elfs_qm_qi_conflict_eV(), Some(2.0));
+        let outside = RawProductState {
+            qm_eV: Some(1_202_000.0),
             ..boundary
         };
         let error = outside.excitation_eV().unwrap_err();
         assert!(error.contains("conflicts with QM-QI"), "{error}");
+        assert!(error.contains("precedence bound"), "{error}");
     }
 }
