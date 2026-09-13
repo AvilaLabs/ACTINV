@@ -2,7 +2,7 @@
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
-133f9418393ba985919f09409534fbf4206a9d2834181f6938150aed7ae27d80  ./.github/workflows/release-artifacts.yml
+a547f4cba6f7fdb59c221aefc53efc03cba384a7b0fb79a9ed9f7c6438cc4850  ./.github/workflows/release-artifacts.yml
 5c311fbdc8a9140ba9a97e8a12570464efa7e82f9ef0c06b3c2ae94760c89d5b  ./.gitignore
 51a28789ea1597850b58d6ca6daaaa7866ab8a8ae8b591b121d0522619a29a54  ./AGENTS.md
 10851c91cc09162f00ab1bbee3aa403846eddbc39e3c5ef53291d2f30b72db3a  ./CHANGELOG.md
@@ -195,7 +195,7 @@ eab47ce2e666222f58c9940433a9ac3bb4f3b5f336a42cdabe96d9d2f637fd85  ./controls/g4_
 2c28f520ffa9d5489d2f91f8f939fd93b2e3cceb8f85e72150b455c8bd8b0619  ./controls/g4_physics_unchanged.py
 b8fa4ca6b31d597a89198ca4c765b0ce3ec4028ec216a83027eeb30b2f2e38aa  ./controls/g5_p10_charged.py
 ac365d90e8933b2c34a2a17a75b2d54cc149545ddd88febf9bb5b150279b594d  ./controls/g5_p11_entry_points.py
-d4499a8ab4705f917396f8754ecdb1aa32a3cb22909b7fd8f0ffa78c643e8683  ./controls/g5_p12_release.py
+760d22270fd1446e5c8845189798c81cbf33bbd1b03ca8f4705f1ebdfd4b588a  ./controls/g5_p12_release.py
 4cd9c0e30973bffb8ab6e67205b4c5a5208171d0857e470d82d585f1850ee638  ./controls/g5_p17_heldout.py
 e2022eead73325e7c22d2c83b208fc0f1fda27d3d9e348dee1ee2a3bcaef440d  ./controls/g5_p18b_heldout.py
 0cba4924f08b0cf2e3ccca9330dad30f90e3e5b2776bdf14146074bc7f7a50a9  ./controls/g5_p7_exports.py

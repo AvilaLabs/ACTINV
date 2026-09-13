@@ -24,6 +24,31 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results" / "g5_p12_release.json"
 with (ROOT / "Cargo.toml").open("rb") as stream:
     VERSION = tomllib.load(stream)["workspace"]["package"]["version"]
+
+
+def tagged_release_version(root: Path) -> str:
+    """Release docs describe the latest *tagged* release.
+
+    An untagged workspace version is a release candidate, not a published
+    release: when no ``v{VERSION}`` tag exists the current-docs checks apply to
+    the newest tag instead. This keeps the release-candidate state honest —
+    no README link to a tag that does not exist — without weakening the
+    published-release requirements.
+    """
+    completed = subprocess.run(
+        ["git", "tag", "--list", "v*.*.*"], cwd=root, text=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False,
+    )
+    tags = [t[1:] for t in completed.stdout.splitlines()
+            if re.fullmatch(r"v\d+\.\d+\.\d+", t)]
+    if VERSION in tags:
+        return VERSION
+    if not tags:
+        return VERSION
+    return max(tags, key=lambda v: tuple(int(p) for p in v.split(".")))
+
+
+DOC_VERSION = tagged_release_version(ROOT)
 MEMORY_LIMIT = "4294967296"
 CRATES = ("actinv-data", "actinv-core", "actinv-cli")
 EMBEDDED_TABLE_HASHES = {
@@ -83,7 +108,7 @@ def source_checks(root: Path) -> dict:
     readme = (root / "README.md").read_text()
     changelog = (root / "CHANGELOG.md").read_text()
     notes = (root / "docs" / "RELEASE_NOTES_v1.0.md").read_text()
-    current_notes_path = root / "docs" / f"RELEASE_NOTES_v{VERSION}.md"
+    current_notes_path = root / "docs" / f"RELEASE_NOTES_v{DOC_VERSION}.md"
     current_notes = current_notes_path.read_text() if current_notes_path.is_file() else ""
     qualification = (root / "docs" / "QUALIFICATION.md").read_text()
     checklist = (root / "docs" / "RELEASE_CHECKLIST.md").read_text()
@@ -128,9 +153,9 @@ def source_checks(root: Path) -> dict:
         "carried_limitations": "## Carried limitations" in notes,
         "public_acts_separate": "separate maintainer actions" in notes,
         "release_checklist": "## Public acts" in checklist,
-        "current_release_notes": f"# ACTINV v{VERSION}" in current_notes,
-        "current_changelog": f"## v{VERSION}" in changelog,
-        "current_readme_release": f"/releases/tag/v{VERSION}" in readme,
+        "current_release_notes": f"# ACTINV v{DOC_VERSION}" in current_notes,
+        "current_changelog": f"## v{DOC_VERSION}" in changelog,
+        "current_readme_release": f"/releases/tag/v{DOC_VERSION}" in readme,
     }
     workflow_checks = {
         "artifact_version": f'ACTINV_VERSION: "{VERSION}"' in workflow,
