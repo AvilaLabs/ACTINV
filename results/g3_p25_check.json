@@ -1,0 +1,8 @@
+{
+  "schema": "actinv-p25-g3-check-1",
+  "pass": true,
+  "failures": [],
+  "protocol_sha256": "ccd9bd98e513609532ed3a9871ce455be81828651e8ecf623d2a253a9f9fb552",
+  "amendment_b_sha256": "ab1f1ad6126fff277a274290ac1bdd2a79ee2be3077c087474834187cc4e4417",
+  "diagnosis_sha256": "e696466a9cbc950cb1cb966574fd555f8a3a0c36673a3573c0af329b78b98264"
+}

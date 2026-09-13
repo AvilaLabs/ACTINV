@@ -131,8 +131,104 @@ def final_class(kinds: list[str]) -> str:
     return "no_excess_found"
 
 
+def catalog_cascade(census: dict) -> dict:
+    """For every ``construction_failed:staged_built`` family, find which
+    corpus evaluations declare the needed (product ZA, LISO) in their
+    MF=1 target headers and whether each is built, quarantined or absent.
+    These rows are secondary casualties of the quarantine set: the
+    family's own file built, but the catalog-populating metastable
+    evaluation failed, so the emitted isomer can never be matched."""
+    heldout = json.loads(
+        (ROOT / "results/g5_p18b_heldout.json").read_text())
+    out: dict[str, dict] = {}
+    for row in heldout["ledger"]:
+        proj = row["projectile"]
+        cand = row.get("candidate") or {}
+        if cand.get("status") != "build_failed_g3":
+            continue
+        fid = row["family_id"]
+        proj_out = out.setdefault(proj, {})
+        if fid in proj_out:
+            continue
+        fname = family_target_file(proj, fid)
+        if not fname or not (FAILED_DIR / f"inputs-{proj}" / fname).exists():
+            continue  # not a staged_built casualty
+        prod = fid.split("|")[2]
+        pz, pa = (int(x) for x in prod.split("-"))
+        pza = pz * 1000 + pa
+        liso_d = row.get("isomer_liso")
+        suppliers = []
+        # which corpus files declare (pza, liso_d) in their MF=1 header?
+        sym = SYMBOLS[pz - 1] if pz - 1 < len(SYMBOLS) else None
+        if sym:
+            for cand_name in (
+                f"{CODE[proj]}-{sym}{pa:03d}m.tendl",
+                f"{CODE[proj]}-{sym}{pa:03d}n.tendl",
+                f"{CODE[proj]}-{sym}{pa:03d}.tendl",
+            ):
+                if not (CORPUS_DIR[proj] / cand_name).exists():
+                    continue
+                # declare check via header parse
+                lines = (CORPUS_DIR[proj] / cand_name).read_text(
+                    "ascii", "replace").splitlines()[:8]
+                numeric = []
+                for line in lines:
+                    try:
+                        float(re.sub(r"(?<=\d)([+-])(\d+)$", r"e\1\2",
+                                     line[0:11].strip()))
+                        numeric.append(line)
+                    except (ValueError, IndexError):
+                        continue
+                    if len(numeric) == 2:
+                        break
+                if len(numeric) == 2:
+                    za = int(round(float(re.sub(
+                        r"(?<=\d)([+-])(\d+)$", r"e\1\2",
+                        numeric[0][0:11].strip()))))
+                    liso = int(float(re.sub(
+                        r"(?<=\d)([+-])(\d+)$", r"e\1\2",
+                        numeric[1][33:44].strip())))
+                    if za == pza and liso == liso_d:
+                        if (FAILED_DIR / f"failed-{proj}" / cand_name).exists():
+                            st = "quarantined"
+                        elif (FAILED_DIR / f"inputs-{proj}" / cand_name).exists():
+                            st = "built"
+                        else:
+                            st = "never_staged"
+                        suppliers.append({"file": cand_name, "status": st})
+        proj_out[fid] = {
+            "file": fname, "needed": [pza, liso_d],
+            "corpus_suppliers": suppliers,
+        }
+    return out
+
+
+SYMBOLS = (
+    "H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn "
+    "Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce "
+    "Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn "
+    "Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl "
+    "Mc Lv Ts Og"
+).split()
+CODE = {"neutron": "n", "proton": "p", "deuteron": "d", "alpha": "a"}
+CORPUS_DIR = {
+    "neutron": DATA / "n-working", "proton": DATA / "p",
+    "deuteron": DATA / "d", "alpha": DATA / "a",
+}
+
+
+def family_target_file(projectile: str, family_id: str) -> str | None:
+    try:
+        target = family_id.split("|")[1]
+        zt, at = int(target.split("-")[0]), int(target.split("-")[1])
+        return f"{CODE[projectile]}-{SYMBOLS[zt - 1]}{at:03d}.tendl"
+    except (IndexError, ValueError):
+        return None
+
+
 def main() -> None:
     census = json.loads(CENSUS.read_text())
+    cascade = catalog_cascade(census)
     out: dict[str, dict] = {}
     for proj in ("neutron", "proton", "deuteron", "alpha"):
         proj_out: dict[str, dict] = {}
@@ -153,9 +249,25 @@ def main() -> None:
         out[proj] = proj_out
 
     counts = {
-        p: dict(Counter(v["final_class"] for v in files.items()))
+        p: dict(Counter(v["final_class"] for v in files.values()))
         for p, files in out.items()
     }
+    # Representative traces: up to 3 files per (class, projectile) cell,
+    # each carrying the source-side excess evidence (declared ordinates,
+    # evaluation energies) joined to the builder's first-hit group values.
+    traces: dict[str, dict[str, list]] = {}
+    for p, files in out.items():
+        by_class: dict[str, list] = defaultdict(list)
+        for name, rec in files.items():
+            by_class[rec["final_class"]].append((name, rec))
+        traces[p] = {
+            cls: [
+                {"file": name, **{k: rec[k] for k in
+                                 ("first_hit", "all_excesses")}}
+                for name, rec in sorted(members)[:3]
+            ]
+            for cls, members in by_class.items()
+        }
     record = {
         "schema": "actinv-p25-traces-1",
         "gate": "P25-G2",
@@ -168,10 +280,24 @@ def main() -> None:
         "final_class_counts": counts,
         "files": out,
         "inelastic_adjudication": census.get("inelastic_residual_scan"),
+        "representative_traces": traces,
+        "declaration_mismatches": sum(
+            1 for v in census.get("declaration_scan", {}).values()
+            if v.get("mf10_not_in_mf8")),
+        "catalog_cascade": cascade,
+        "catalog_cascade_rollup": {
+            p: dict(Counter(
+                s["status"] for fam in fams.values()
+                for s in fam["corpus_suppliers"]
+            )) for p, fams in cascade.items()
+        },
         "pass": None,
     }
     RESULT.write_text(json.dumps(record, indent=1, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps(counts, indent=2))
+    print(json.dumps({
+        "final_class_counts": counts,
+        "catalog_cascade_rollup": record["catalog_cascade_rollup"],
+    }, indent=2))
 
 
 if __name__ == "__main__":
