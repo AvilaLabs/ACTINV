@@ -1,0 +1,32 @@
+{
+ "closed": true,
+ "closure_check_sha256": "09b401d2fd1fdcebb2c76d095c73a16868a3437058315230a22c9979a1da88cb",
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "g0_baseline": "7deb31f7bc7c5062eb48f67f1d025350945824ec8ab55d9df131113c77d417ad",
+  "g0_check": "bdb5b75a6f6d512bd8baf199a36e61405e3405b2f5b4b3e565e19623f7db96d4",
+  "g1_check": "d7f51cf95ee64e95c7790c480fc5406ddeef6215323897e843f80377e37b6035",
+  "g1_report": "3078fee0bccfe808c51e6480e16d380c7b833274c312ee2c8f7533334af00f17",
+  "g2_check": "76cbd41096a5967219725bbbe72e57da0b1a8e0670a8fc1ccb3ed3a8aaf1d8c8",
+  "g2_report": "ff870dac702e4a7d8fc91b427fa444ab08bb744b0ff4572ebe7fae2aab8fce61",
+  "g3_check": "9f0d74c08cfbd8d1aba766f12bef4e38c3a87d924942d9a1ea276ee34692aa7d",
+  "g3_report": "c47efa3b51175c29c4d43f3e04a6be1e3ef8e9889a04852b9f75fa3297a517a4",
+  "g4_check": "0cce5871bcb7b6f95ea361213b8a67f36a7be8da694a861fc3c3db940f87ac50",
+  "g4_surfaces": "578ec5e6acbbe8c4f7a4f7c7eeb55c967ff8f0af078df57bb07e55db4df34f14"
+ },
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true
+ },
+ "head_commit": "0fc314fc7385cb59cc68682e1da27d76053b0e18",
+ "opening_commit": "871c96505567bb0f16447eef816d3b2b966b7f62",
+ "phase_success": true,
+ "protocol_sha256": "d14710f456bd7940fef905aafd880a4bdb760674482bbf0fe92dea15bcc56414",
+ "schema": "actinv-p21-verdict-1",
+ "scope_note": "P21-PASS covers signature-keyed workload grouping with bit-identical results, selectable per-cell result fields, a post-hoc peak-RSS guard, and checkpoint/resume whose output is byte-identical to an uninterrupted run modulo footer timing. The executed scale evidence is a 20,000-cell run on the pinned TENDL-2025 709-group library under the recorded hardware and cgroup limits. It does not claim distributed or cluster execution, million-cell performance (not executed), a stable checkpoint interchange format, or a pre-emptive memory bound.",
+ "verdict": "P21-PASS"
+}

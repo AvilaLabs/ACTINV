@@ -1,0 +1,8 @@
+{
+ "failures": [],
+ "head_commit": "0fc314fc7385cb59cc68682e1da27d76053b0e18",
+ "opening_commit": "871c96505567bb0f16447eef816d3b2b966b7f62",
+ "pass": true,
+ "protocol_sha256": "d14710f456bd7940fef905aafd880a4bdb760674482bbf0fe92dea15bcc56414",
+ "schema": "actinv-p21-closure-1"
+}
