@@ -233,3 +233,10 @@ First release. ACTINV computes nuclide inventories, activity and decay heat from
 **Known limitations** — see `docs/RELEASE_NOTES_v0.1.md`; each is reported by the code rather than hidden.
 
 **Not included** — neutron transport, criticality, fission yields, decay-photon transport, covariance uncertainty.
+
+**Fixed**
+
+- Scoped the P18 and P18b release-boundary checks to their actual frozen guarantee — no tagged or
+  published 1.1.0 release may exist — rather than the workspace version string. The workspace may carry
+  the 1.1.0 release-candidate version only while the green P22 release-candidate record stands and no
+  `v1.1*` tag does; P18-FAIL and P18b-FAIL remain unchanged.

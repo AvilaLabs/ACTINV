@@ -222,12 +222,24 @@ def release_boundary() -> dict[str, Any]:
     python = tomllib.loads((ROOT / "python/pyproject.toml").read_text())
     version = cargo["workspace"]["package"]["version"]
     tags = git_output(["tag", "--list", "v1.1*"])
+    # P22 authorized assembling a 1.1.0 release *candidate* on additive P19–P23
+    # evidence while P18-FAIL blocks only its own artifacts. The boundary is
+    # therefore: workspace may carry 1.1.0 solely when the P22 release-candidate
+    # record exists and passes — and no v1.1* tag may exist in either case,
+    # because tagging/publishing remains a separate maintainer action.
+    rc_record = ROOT / "results/g4_p22_release_candidate.json"
+    p22_rc_ok = (
+        rc_record.exists()
+        and json.loads(rc_record.read_text(encoding="utf-8")).get("pass") is True
+    )
+    version_allowed = version == "1.0.1" or (version == "1.1.0" and p22_rc_ok)
     return {
         "cargo_version": version,
         "python_version": python["project"]["version"],
+        "p22_rc_authorized": p22_rc_ok,
         "v1_1_tags": [] if not tags else tags.splitlines(),
-        "pass": version == "1.0.1"
-        and python["project"]["version"] == "1.0.1"
+        "pass": version_allowed
+        and python["project"]["version"] == version
         and not tags,
     }
 

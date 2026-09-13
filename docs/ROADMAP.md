@@ -94,6 +94,8 @@ collaborator, but no phase gate depends on that optional route.
 | **P20** practical uncertainty | Audit P11 covariance coverage; propagate relevant correlations into usable observable bands; compare linear propagation with deterministic correlated sampling; distinguish cross-section, decay, yield and uncovered model uncertainty. | synthetic analytic and sampled controls agree in their shared regime; covariance validity and fixed-seed reproduction pass; partial coverage is explicit through CLI/Python/JSON/certificates; no interval is labeled total uncertainty without total coverage | P16 | 7–10 |
 | **P21** large-scale execution | Reuse prepared networks across compatible mesh cells, group common workloads, stream selectable outputs, bound memory by chunk size and add interruption/checkpoint support; replace extrapolation with an executed large case. | mesh equals independent cell runs; thread-count identity holds; memory excludes total-cell scaling apart from requested output; scaling evidence records hardware/work/output/cache state; no unexecuted million-cell claim | P15 | 5–8 |
 | **P22** public re-score and release | Rerun frozen CB1 against v1.0.0 and the candidate; score P17 held-out evidence; repeat open-code, install, memory, runtime and mesh exercises; publish raw machine-readable evidence, limitations and narrowly supported claims. | checker rederives every table; clean clone and all release gates green; source and data artifacts remain versioned and hash-pinned; any superlative names the exact executed workload and comparator set | P18–P21 | 3–5 |
+| **P24** corrected benchmark re-validation | Re-derive the P17 measurement definitions that its post-unseal amendment falsified — per-case end-of-irradiation times, evaluated isomer aliases, and shielded-versus-bare treatment — seal a fresh genuinely-unread held-out partition, and re-score through unchanged scoring code. The consumed P17 partition stays public diagnostic evidence; no production physics changes. | corrected definitions are hash-pinned from source documents before any new calculation; the new partition is sealed before scoring; every falsified P17 assumption has a named corrected definition; unchanged scorer re-derives the report; failures stay visible | P17 | 5–8 |
+| **P25** isomeric coverage repair | Resolve P18b's stratum failure without weakening its frozen thresholds: repair the TENDL-2025 state-partial construction defects that fail closed so the deuteron stratum produces candidate-scored rows, and re-establish proton/alpha coverage — or execute the permitted append-only repair amendment to reopen a corrected phase. | every populated projectile stratum is scored under the unchanged frozen gates; construction repairs are ratio-preserving and independently verified; held-out metrics reproduce under unchanged scoring; the P18b record is amended, not rewritten | P18b | 5–8 |
 
 Triton/helion/gamma activation, feed/removal, reverse calculation, damage observables and an internal transport solver
 remain demand-led candidates rather than automatic post-v1 scope. Performance-only work may ship as a patch release
@@ -555,3 +557,13 @@ part that does not compress: users, issues, and the validation record accumulati
   `controls/check_p22.py` re-runs every gate checker, re-derives the CB1 comparisons and held-out
   metrics, recomputes the release decision, re-asserts all 25 prior verdicts, verifies the manifest,
   and rejects planted mutations.
+
+- 2026-09-13 — P22 closes with `P22-PASS` (verdict `results/verdict_p22.json`, closure
+  `results/p22_closure_check.json`) under frozen protocol `86f8509f` plus Amendment A (the recorded
+  correction to the G4 identity gate: `certificate.solver` is the documented solver-semver leaf, so the
+  gate is two-stage — pre-bump artifact reproduces the baseline exactly, rebuilt artifacts match under
+  solver-semver normalization). The maintainer directed that the 1.1.0 release **remain untagged and
+  unpublished** pending repair of the two standing failures: P24 re-validates the corrected benchmark
+  definitions P17's amendment falsified, and P25 repairs the isomeric coverage gap P18b's stratum gate
+  exposed. The P18/P18b closure checkers' release boundary is scoped accordingly: the workspace may
+  carry the 1.1.0 candidate version only while the green P22 RC record exists and no `v1.1*` tag does.
