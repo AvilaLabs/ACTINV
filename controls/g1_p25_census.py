@@ -53,16 +53,12 @@ PARAMS = {
 CODE = {"neutron": "n", "proton": "p", "deuteron": "d", "alpha": "a"}
 
 SYMBOLS = (
-    "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg",
-    "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr",
-    "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br",
-    "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd",
-    "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La",
-    "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er",
-    "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au",
-    "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th",
-    "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm",
-)
+    "H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn "
+    "Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce "
+    "Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn "
+    "Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl "
+    "Mc Lv Ts Og"
+).split()
 
 # Absolute excess at or below this magnitude has no physical weight for
 # any held-out measurement (the observed floor-value artifact is
@@ -172,6 +168,64 @@ def mf10_tabulated(path: Path) -> dict[int, set[tuple[int, int]]]:
     return out
 
 
+INELASTIC_MTS = {4, *range(51, 92)}
+DATA = Path("/home/connoravila/nuclear-data/tendl-2025/files")
+CORPUS_DIR = {
+    "neutron": DATA / "n-working", "proton": DATA / "p",
+    "deuteron": DATA / "d", "alpha": DATA / "a",
+}
+
+
+def target_za(filename: str) -> int | None:
+    m = re.match(r"[npda]-([A-Z][a-z]?)(\d+)([mn]?)", filename)
+    if not m or m.group(1) not in SYMBOLS:
+        return None
+    return (SYMBOLS.index(m.group(1)) + 1) * 1000 + int(m.group(2))
+
+
+def inelastic_residual_scan() -> dict:
+    """Corpus-wide: for every MF=8 declaration at an MT the builder's
+    `inelastic()` treats as same-residual (4, 51-91), does the declared
+    product ZAP equal the target ZA?  A different ZAP means the MT is
+    a particle-emission channel to another nuclide, and same-residual
+    handling would be a processing bug."""
+    out: dict[str, dict] = {}
+    for projectile, cdir in CORPUS_DIR.items():
+        same = diff = 0
+        diff_examples, same_examples = [], []
+        mts_seen: set[int] = set()
+        for source in sorted(cdir.glob("*.tendl")):
+            tgt = target_za(source.name)
+            if tgt is None:
+                continue
+            decl = mf8_declared(source)
+            inel = {mt: s for mt, s in decl.items() if mt in INELASTIC_MTS}
+            if not inel:
+                continue
+            mts_seen |= set(inel)
+            zaps = {zp for states in inel.values() for zp, _ in states}
+            if zaps == {tgt}:
+                same += 1
+                if len(same_examples) < 5:
+                    same_examples.append(source.name)
+            else:
+                diff += 1
+                if len(diff_examples) < 5:
+                    diff_examples.append({
+                        "file": source.name, "target_za": tgt,
+                        "declared_zaps": sorted(zaps),
+                        "mts": sorted(inel),
+                    })
+        out[projectile] = {
+            "files_with_inelastic_mt_mf8": same + diff,
+            "same_residual": same, "different_residual": diff,
+            "inelastic_mts_present": sorted(mts_seen),
+            "same_examples": same_examples,
+            "different_examples": diff_examples,
+        }
+    return out
+
+
 def classify_failure(message: str) -> dict:
     m = CONSERVATION_RE.search(message)
     if m:
@@ -192,6 +246,11 @@ def classify_failure(message: str) -> dict:
         }
     if "conflicting duplicate MF=8" in message:
         return {"class": "state_catalog_mapping"}
+    if "conflicts with QM-QI" in message:
+        # MF=8 ELFS disagrees with the Q-value-implied excitation —
+        # the LFS→ELFS identity chain is internally inconsistent in the
+        # source evaluation (P18's MF8-vs-Q conflict class).
+        return {"class": "state_catalog_conflict"}
     if "invalid negative product" in message:
         return {"class": "genuine_source_inconsistency"}
     if "nonfinite or negative" in message:
@@ -252,6 +311,22 @@ def rederive_failures(projectile: str) -> dict:
     return prior
 
 
+def staging_status(projectile: str, filename: str | None) -> str:
+    """Why a construction-failed row's file has no build: quarantined
+    (staged, failed, moved to failed-*), never staged (in the corpus but
+    absent from both inputs-* and failed-* — the P18b staging omission),
+    or absent from the sealed corpus entirely."""
+    if filename is None:
+        return "unmappable_family"
+    if (FAILED_DIR / f"failed-{projectile}" / filename).exists():
+        return "quarantined"
+    if (FAILED_DIR / f"inputs-{projectile}" / filename).exists():
+        return "staged_built"  # staged and not quarantined — should not happen for a failed row
+    if (CORPUS_DIR[projectile] / filename).exists():
+        return "never_staged"
+    return "no_source_evaluation"
+
+
 def row_outcome(row: dict) -> tuple[str, str | None]:
     """One named outcome per ledger row — nothing may silently drop."""
     if row["status"] != "eligible":
@@ -266,7 +341,7 @@ def row_outcome(row: dict) -> tuple[str, str | None]:
         return "scored", None
     if status == "build_failed_g3":
         fname = family_target_file(row["projectile"], row["family_id"])
-        return "construction_failed:build_failed_g3", fname
+        return f"construction_failed:{staging_status(row['projectile'], fname)}", fname
     if status is None:
         return "construction_failed:unbuilt", None
     return f"undefined_ratio:{status}", None
@@ -322,11 +397,17 @@ def main() -> None:
                 "mf10_not_in_mf8": mismatches,
             }
 
+    # ---- corpus-wide inelastic-residual identity scan -----------------
+    inelastic_scan = inelastic_residual_scan()
+
     # ---- taxonomy rollup ----------------------------------------------
+    # Reclassify from stored messages at assembly so classifier fixes do
+    # not require re-running builds (the cached entries persist).
     class_counts: dict[str, dict[str, int]] = {}
     for projectile, files in failures.items():
         counts: dict[str, int] = {}
         for name, entry in files.items():
+            entry.update(classify_failure(entry["message"]))
             counts[entry.get("class", "unclassified")] = (
                 counts.get(entry.get("class", "unclassified"), 0) + 1
             )
@@ -344,9 +425,11 @@ def main() -> None:
         },
         "failure_class_counts": class_counts,
         "declaration_scan": declaration_scan,
+        "inelastic_residual_scan": inelastic_scan,
         "taxonomy": {
             "classes": [
                 "processing_bug", "state_catalog_mapping",
+                "state_catalog_conflict",
                 "tiny_absolute_discrepancy", "genuine_source_inconsistency",
                 "conservation_excess_untraced", "zero_prediction_scored",
                 "eligibility", "unclassified",
@@ -361,6 +444,10 @@ def main() -> None:
         "row_outcomes": outcomes,
         "failure_class_counts": class_counts,
         "quarantined_files": {p: len(f) for p, f in failures.items()},
+        "inelastic_residual_scan": {
+            p: {k: v[k] for k in ("same_residual", "different_residual")}
+            for p, v in inelastic_scan.items()
+        },
     }, indent=2))
 
 

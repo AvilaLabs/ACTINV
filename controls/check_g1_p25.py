@@ -44,16 +44,12 @@ PROTOCOL_SHA256 = "ccd9bd98e513609532ed3a9871ce455be81828651e8ecf623d2a253a9f9fb
 AMENDMENT_A_SHA256 = "214992c3709803b4991926251622731cf47071903fd255d51c03ceec17b483e8"
 
 SYMBOLS = (
-    "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg",
-    "Al", "Si", "P", "S", "Cl", "Ar", "K", "Ca", "Sc", "Ti", "V", "Cr",
-    "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br",
-    "Kr", "Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd",
-    "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe", "Cs", "Ba", "La",
-    "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er",
-    "Tm", "Yb", "Lu", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au",
-    "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn", "Fr", "Ra", "Ac", "Th",
-    "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm",
-)
+    "H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn "
+    "Ga Ge As Se Br Kr Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce "
+    "Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn "
+    "Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl "
+    "Mc Lv Ts Og"
+).split()
 CODE = {"neutron": "n", "proton": "p", "deuteron": "d", "alpha": "a"}
 
 
@@ -74,6 +70,29 @@ def family_target_file(projectile: str, family_id: str) -> str | None:
         return None
 
 
+WORK = ROOT / "target/g4-p18b"
+DATA = Path("/home/connoravila/nuclear-data/tendl-2025/files")
+CORPUS_DIR = {
+    "neutron": DATA / "n-working", "proton": DATA / "p",
+    "deuteron": DATA / "d", "alpha": DATA / "a",
+}
+
+
+def staging_class(projectile: str, filename: str | None) -> str:
+    """Independent staging classification: quarantined files sit in
+    failed-*, built files remain in inputs-*, corpus members in neither
+    were never staged."""
+    if filename is None:
+        return "unmappable_family"
+    if (WORK / f"failed-{projectile}" / filename).exists():
+        return "quarantined"
+    if (WORK / f"inputs-{projectile}" / filename).exists():
+        return "staged_built"
+    if (CORPUS_DIR[projectile] / filename).exists():
+        return "never_staged"
+    return "no_source_evaluation"
+
+
 def independent_outcome(row: dict) -> str:
     """Own re-derivation of the row outcome — not the control's."""
     if row["status"] != "eligible":
@@ -87,7 +106,8 @@ def independent_outcome(row: dict) -> str:
             return "zero_prediction_scored"
         return "scored"
     if status == "build_failed_g3":
-        return "construction_failed:build_failed_g3"
+        fname = family_target_file(row["projectile"], row["family_id"])
+        return f"construction_failed:{staging_class(row['projectile'], fname)}"
     if status is None:
         return "construction_failed:unbuilt"
     return f"undefined_ratio:{status}"
@@ -107,10 +127,22 @@ def check_report(report: dict, failures: list[str]) -> None:
         expect.setdefault(proj, {})[outcome] = (
             expect.setdefault(proj, {}).get(outcome, 0) + 1
         )
-        if outcome == "construction_failed:build_failed_g3":
+        if outcome == "construction_failed:quarantined":
             fname = family_target_file(proj, row["family_id"])
             if fname:
                 need_files[proj].add(fname)
+        if outcome == "construction_failed:never_staged":
+            fname = family_target_file(proj, row["family_id"])
+            if not fname or not (CORPUS_DIR[proj] / fname).exists():
+                failures.append(
+                    f"{proj}: never-staged row {row['row_id']} lacks a corpus file"
+                )
+            elif (WORK / f"inputs-{proj}" / fname).exists() or (
+                WORK / f"failed-{proj}" / fname
+            ).exists():
+                failures.append(
+                    f"{proj}: never-staged row {row['row_id']}'s file was staged"
+                )
         if outcome == "zero_prediction_scored":
             zero += 1
     if report.get("row_outcomes") != expect:
@@ -167,8 +199,24 @@ def check_report(report: dict, failures: list[str]) -> None:
             if name not in scan:
                 failures.append(f"declaration scan misses {name}")
 
+    # Corpus-wide inelastic-residual adjudication: every MF=8 declaration
+    # at an inelastic-classified MT must be accounted same- vs
+    # different-residual.  The frozen finding: charged-particle MT=4 is
+    # never same-residual; neutron MT=4 always is.
+    inel = report.get("inelastic_residual_scan") or {}
+    for proj in CODE:
+        entry = inel.get(proj) or {}
+        if "same_residual" not in entry or "different_residual" not in entry:
+            failures.append(f"{proj}: inelastic residual scan missing")
+    if (inel.get("neutron") or {}).get("different_residual"):
+        failures.append("neutron MF=8 inelastic declarations name a different residual")
+    for proj in ("proton", "deuteron", "alpha"):
+        if (inel.get(proj) or {}).get("same_residual"):
+            failures.append(f"{proj}: MF=8 MT=4 declares the target residual")
+
     taxonomy = report.get("taxonomy") or {}
     for cls in ("processing_bug", "state_catalog_mapping",
+                "state_catalog_conflict",
                 "tiny_absolute_discrepancy", "genuine_source_inconsistency",
                 "zero_prediction_scored"):
         if cls not in (taxonomy.get("classes") or []):
@@ -209,6 +257,9 @@ def self_test() -> None:
             "tiny_absolute_discrepancy", 0
         ),
         "scan_gap": lambda r: r["declaration_scan"].pop(some_file, None),
+        "inelastic_lie": lambda r: r["inelastic_residual_scan"]["neutron"].__setitem__(
+            "different_residual", 7
+        ),
     }
     rejected = []
     for name, mutate in mutations.items():
