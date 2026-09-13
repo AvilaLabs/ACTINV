@@ -77,9 +77,13 @@ def excitation_tolerance(left: float, right: float) -> float:
     return max(1.0, 5e-6 * max(abs(left), abs(right)))
 
 
-def score_heldout() -> dict:
+def score_heldout(work=None, report=None) -> dict:
     """Mirror of g4.score_diagnostics() restricted to the held-out
-    partition; every scoring call goes through the unchanged module."""
+    partition; every scoring call goes through the unchanged module.
+    ``work``/``report`` default to the sealed P18b workspace; the P25
+    acceptance scorer passes its own candidate workspace."""
+    work = Path(work) if work is not None else g4.WORK
+    report_path = Path(report) if report is not None else work / "build_report.json"
     families, src_hash = g4.parse_supplement(g4.SUPPLEMENT)
     seal = json.loads(g4.SEAL.read_text())
     seal_map = {f["family_id"]: f for f in seal["families"]}
@@ -91,8 +95,8 @@ def score_heldout() -> dict:
         npz, _ = g4.BASELINE_LIBRARIES[proj]
         artifacts[("baseline", proj)] = g4.load_artifact(
             npz, npz.with_name(npz.stem + "_index.json"))
-        cand_npz = g4.WORK / f"candidate-{proj}.npz"
-        cand = g4.load_artifact(cand_npz, g4.WORK / f"candidate-{proj}_index.json")
+        cand_npz = work / f"candidate-{proj}.npz"
+        cand = g4.load_artifact(cand_npz, work / f"candidate-{proj}_index.json")
         if cand is not None:
             cand["lfs_map"] = g4.candidate_lfs_map(cand["index"])
         artifacts[("candidate", proj)] = cand
@@ -100,7 +104,6 @@ def score_heldout() -> dict:
     corpus_cats = {p: g4.corpus_catalog(p) for p in g4.BASELINE_LIBRARIES}
 
     quarantined: dict[str, set] = defaultdict(set)
-    report_path = g4.WORK / "build_report.json"
     if report_path.is_file():
         for rec in json.loads(report_path.read_text()):
             quarantined[rec["projectile"]] = set(rec.get("quarantined", {}))
@@ -310,7 +313,7 @@ def score_heldout() -> dict:
     }
 
 
-def mapping_gate() -> dict:
+def mapping_gate(work=None, report=None) -> dict:
     """G5 rule 4: mappings changed from a valid baseline state.
 
     A baseline assignment is provably valid when the corpus catalog carries
@@ -331,13 +334,21 @@ def mapping_gate() -> dict:
     corpus_set = {p: set(cats[p]) for p in cats}
 
     import os
-    br = json.loads((g4.WORK / "build_report.json").read_text())
+    work = Path(work) if work is not None else g4.WORK
+    report_path = Path(report) if report is not None else work / "build_report.json"
+    br = json.loads(report_path.read_text())
     quar = {e["projectile"]: set(e["quarantined"]) for e in br}
-    staged = {p: set(os.listdir(g4.WORK / f"inputs-{p}")) for p in quar}
-    built = {p: staged[p] - quar[p] for p in quar}
+    built = {
+        e["projectile"]: (
+            set(e["built_names"]) if e.get("built_names") is not None
+            else set(os.listdir(work / f"inputs-{e['projectile']}"))
+            - quar[e["projectile"]]
+        )
+        for e in br
+    }
     cand_idx = {
-        p: (json.loads((g4.WORK / f"candidate-{p}_index.json").read_text())
-            if (g4.WORK / f"candidate-{p}_index.json").is_file() else None)
+        p: (json.loads((work / f"candidate-{p}_index.json").read_text())
+            if (work / f"candidate-{p}_index.json").is_file() else None)
         for p in quar
     }
     # (file, mt, zap, raw_lfs) -> mapping record per projectile

@@ -135,6 +135,22 @@ def build_projectile(projectile: str, jobs: int) -> dict:
         raise RuntimeError(
             f"{projectile}: aggregate build failed:\n{completed.stdout[-3000:]}")
 
+    # P18b-shaped build report so the frozen scorers can consume the new
+    # workspace unchanged; built_names records the exact shipped set.
+    br_path = WORK / "build_report.json"
+    br = json.loads(br_path.read_text()) if br_path.exists() else []
+    br = [e for e in br if e.get("projectile") != projectile]
+    br.append({
+        "projectile": projectile,
+        "built_files": len(list(pass_dir.glob("*.tendl"))),
+        "built_names": sorted(p.name for p in pass_dir.glob("*.tendl")),
+        "quarantined": failures,
+        "output": str(output),
+        "output_sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
+        "index": str(output.with_name(f"{output.stem}_index.json")),
+    })
+    br_path.write_text(json.dumps(br, indent=1) + "\n")
+
     index = json.loads(
         output.with_name(f"{output.stem}_index.json").read_text())
     repair_files: dict[str, set] = {t: set() for t in REPAIR_TOKENS}
@@ -160,6 +176,7 @@ def build_projectile(projectile: str, jobs: int) -> dict:
 
 def main() -> int:
     jobs = int(os.environ.get("G4_BUILD_JOBS", "2"))
+    (ROOT / "target/preflight-tmp").mkdir(parents=True, exist_ok=True)
     traces = json.loads(
         (ROOT / "results/g2_p25_traces.json").read_text())
     record = json.loads(OUT.read_text()) if OUT.exists() else {}
