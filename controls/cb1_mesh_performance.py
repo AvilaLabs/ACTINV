@@ -227,6 +227,12 @@ def main() -> None:
             "wall_time_s": million_wall,
             "cells_per_s": 1_000_000 / million_wall,
             "output_bytes": million_output,
+            "superseded_by": (
+                "results/g3_p21_executed.json: an executed 20,000-cell mesh run on the "
+                "pinned TENDL-2025 709-group library with the full hardware, memory and "
+                "hash record (P21); the million-cell row below remains an unexecuted "
+                "linear extrapolation and is not quoted as a benchmark"
+            ),
             "peak_rss_bytes_assumed_bounded_at_measured_max": max(
                 row["peak_rss_bytes"] for row in [*rows, one_thread]
             ),

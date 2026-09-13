@@ -504,3 +504,27 @@ part that does not compress: users, issues, and the validation record accumulati
   P18b-FAIL, and rejects 5/5 evidence mutations. Scope is honest: no MF=32/34/35/40 covariance,
   no cross-channel correlation, no flux or composition uncertainty, no tolerance limits; the
   uncovered remainder is always named.
+
+- 2026-09-12 — P21 closes with `P21-PASS` (verdict `results/verdict_p21.json`, independent closure
+  `results/p21_closure_check.json`) under frozen protocol `871c9650`. G0 re-ran the four-surface identity battery
+  (CLI cold/warm, Python extension, one-cell mesh: unchanged normalized hashes) and recorded the baseline mesh
+  profile on the pinned TENDL-2025 709-group library. G1 adds signature-keyed workload grouping (SHA-256 of the
+  rebinned f64 flux bytes; memo bounded by 256 entries and 512 MiB), `cell_result_fields` selection, and the
+  post-hoc `memory_limit_bytes` guard: grouped and ungrouped runs emit bit-identical cell records with the header
+  differing only in `spec_fingerprint_sha256`, reuse recounts exactly from the recorded signatures, and the guard
+  fails loudly carrying observed and configured bytes (`controls/g1_p21_scaling.py`, checker
+  `controls/check_g1_p21.py`, 7/7 mutations rejected). G2 delivers checkpoint/resume: the output file is its own
+  checkpoint — a validated header fingerprint plus complete in-order cell records stand, a torn tail is truncated,
+  only unfinished cells re-solve, and the result is byte-identical to an uninterrupted run modulo footer timing
+  (`controls/g2_p21_resume.py`, checker `controls/check_g2_p21.py`, 7/7 mutations rejected). G3 executed a real
+  20,000-cell case on the pinned library: 2,943 s wall at 6.80 cells/s, 402 MB peak RSS, 219 MB output; peak RSS
+  stayed flat within 0.27 MB across 1,000/5,000/20,000 cells while the chunk 16→256 leg moved peak RSS by 1.59 GB,
+  and the repeated-spectrum grouping leg served 975/1,000 cells from reuse at 197.8 cells/s vs 6.9 ungrouped
+  (`controls/g3_p21_executed.py`, checker `controls/check_g3_p21.py`, 7/7 mutations rejected). G4 re-proved
+  absent-option identity on the post-change binaries across all four surfaces and superseded the CB1 million-cell
+  extrapolation with the executed record in `docs/COMPETITIVE_BENCHMARK.md` (checker `controls/check_g4_p21.py`).
+  The closure checker `controls/check_p21.py` re-runs all five gate checkers, recounts reuse from signatures,
+  re-verifies resumed-vs-reference line digests, recomputes both memory gates, re-asserts all 24 prior verdicts
+  including P18b-FAIL, and rejects 5/5 evidence mutations. Scope is honest: no distributed or cluster execution, no
+  million-cell claim (not executed), checkpoints resume the same spec only (not an interchange format), and the
+  memory guard is post-hoc — it cannot pre-empt a single oversized allocation.

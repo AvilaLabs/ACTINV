@@ -111,6 +111,9 @@ Every `actinv-mesh-result-1` cell carries a separate `rebin` object before its o
 
 The mesh footer sums these quantities again in canonical cell order and reports the minimum/maximum independently
 pruned state counts. Import-source total checks remain in the canonical flux footer and its upstream provenance.
+The footer also records `cells_served_from_reuse`: cells whose byte-identical rebinned flux shared an earlier cell's
+solve instead of re-executing. Reuse is a scheduling record only — the emitted cell bytes are identical with or
+without grouping, and a resumed run reproduces the same count.
 
 ## Assembly diagnostic
 

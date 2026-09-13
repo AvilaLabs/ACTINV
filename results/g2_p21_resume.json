@@ -1,0 +1,99 @@
+{
+  "canonical_flux_sha256": "87f7c0d8274db24f4bf22588f5cf65742ebca2c2bfe773db7fa3fdf18b77dfd8",
+  "cells": 12,
+  "complete_run_noop": {
+    "bytes_unchanged": true,
+    "summary": {
+      "activation_groups": 709,
+      "canonical_flux_sha256": "87f7c0d8274db24f4bf22588f5cf65742ebca2c2bfe773db7fa3fdf18b77dfd8",
+      "cells": 12,
+      "cells_per_s": 0.0,
+      "output": "/home/connoravila/Documents/actinv/target/preflight-tmp/actinv-p21-g2-42n73atx/g2/interrupted.ndjson",
+      "output_bytes": 195578,
+      "source_groups": 709,
+      "wall_time_s": 0.467093795
+    },
+    "summary_reports_done": true
+  },
+  "fresh_run_atomic_replace": true,
+  "pass": true,
+  "prefix_cells": 5,
+  "rejections": {
+    "corrupt_mid_record": {
+      "message": "mesh output contains a corrupt record at completed cell 3",
+      "named": true
+    },
+    "fingerprint_mismatch": {
+      "message": "mesh output header does not match this spec's fingerprint; refusing to resume",
+      "named": true
+    },
+    "out_of_order_ordinal": {
+      "message": "mesh output cell ordinal out of order at completed cell 2",
+      "named": true
+    }
+  },
+  "resume_identity": {
+    "cell_records_byte_identical": true,
+    "footer_identical_modulo_timing": true,
+    "footer_reference_normalized": {
+      "cell_count": 12,
+      "cells_served_from_reuse": 10,
+      "destination_flux_sum_over_cells": 574409647.4671923,
+      "max_pruned_states": 38,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 38,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 574409647.4671923,
+      "underflow_sum_over_cells": 0.0
+    },
+    "footer_resumed_normalized": {
+      "cell_count": 12,
+      "cells_served_from_reuse": 10,
+      "destination_flux_sum_over_cells": 574409647.4671923,
+      "max_pruned_states": 38,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 38,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 574409647.4671923,
+      "underflow_sum_over_cells": 0.0
+    },
+    "header_byte_identical": true,
+    "line_count_equal": true,
+    "reference_line_sha256": [
+      "0f07389c3814f37947d5c4e28da9ddc9374e174c777c9b276dc38299af2c6ff1",
+      "cd9bbbf56e51d09515eb27e86f595c6544a734e2c97bb500f22e2d4bf6bc8b57",
+      "dc4a029f2010f4e3e30892289f6d366259b4b52b8b55d7b2e0894a2cb9fbb50a",
+      "17609e42421e19752b0db21aa1c273c7f783675efab27dcbada5ca0c555cbc13",
+      "06de7b99def5545afb0ef9ca6e7412621f33c1058764ace268bcb113282df043",
+      "4d3e12a6b950f4cfabd0acbf8c5216167e6c7203fc5bf8e6cbc215b80ebdec82",
+      "eddd60f7fa9de335b90c8bf71b5bf4c1d1e558ac0498a158a36b1d2314e0b7a8",
+      "d105b15a8399487b8d2b71414b76d10029f8120980f1053edfa2a4503928a093",
+      "c7cc3590e9b4928773be19aa0286095b2d478d6c16e6b3c87be3b4aa37205f1d",
+      "0cf7c7bd6a72653d1d38c798b91218ce5ebb68f1938a41843a52d98d2b25500f",
+      "44d8876fb7a9e8e90f7f35060af3d91d3d5136acd31e20b95d808aa588997b60",
+      "5e412bf58b73f89f065dcb728a248f5b3792bacb8633f85b37bd2654f7118f76",
+      "c34ba3d441026df3ec0098b0bf2bcf7e070c954c792efafa58df2b5959bc597a",
+      "f73f0647c564d7849c2af71770f5db31180a2024c7587798785cba655cd0ecba"
+    ],
+    "resumed_line_sha256": [
+      "0f07389c3814f37947d5c4e28da9ddc9374e174c777c9b276dc38299af2c6ff1",
+      "cd9bbbf56e51d09515eb27e86f595c6544a734e2c97bb500f22e2d4bf6bc8b57",
+      "dc4a029f2010f4e3e30892289f6d366259b4b52b8b55d7b2e0894a2cb9fbb50a",
+      "17609e42421e19752b0db21aa1c273c7f783675efab27dcbada5ca0c555cbc13",
+      "06de7b99def5545afb0ef9ca6e7412621f33c1058764ace268bcb113282df043",
+      "4d3e12a6b950f4cfabd0acbf8c5216167e6c7203fc5bf8e6cbc215b80ebdec82",
+      "eddd60f7fa9de335b90c8bf71b5bf4c1d1e558ac0498a158a36b1d2314e0b7a8",
+      "d105b15a8399487b8d2b71414b76d10029f8120980f1053edfa2a4503928a093",
+      "c7cc3590e9b4928773be19aa0286095b2d478d6c16e6b3c87be3b4aa37205f1d",
+      "0cf7c7bd6a72653d1d38c798b91218ce5ebb68f1938a41843a52d98d2b25500f",
+      "44d8876fb7a9e8e90f7f35060af3d91d3d5136acd31e20b95d808aa588997b60",
+      "5e412bf58b73f89f065dcb728a248f5b3792bacb8633f85b37bd2654f7118f76",
+      "c34ba3d441026df3ec0098b0bf2bcf7e070c954c792efafa58df2b5959bc597a",
+      "d65262dbffbdda18b553c6acbd216ebefa4f430d85bd22731aae549e94658bcc"
+    ],
+    "reuse_count_preserved": true
+  },
+  "resumed_output_bytes": 195578
+}

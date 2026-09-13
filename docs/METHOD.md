@@ -114,8 +114,19 @@ Mesh mode is an embarrassingly parallel collection of ordinary activation proble
 inference. The activation library, index, decay chain and optional photon response are prepared once as immutable data.
 Each canonical cell is rebinned, pruned and solved through the ordinary core path with one shared material and schedule.
 Rayon parallelizes only a bounded chunk; indexed collection restores input order before streaming results. Therefore
-thread count changes scheduling, not deterministic result records. Self-shielding, spatial interpolation, transport
-feedback and heterogeneous material maps remain outside this method.
+thread count changes scheduling, not deterministic result records. Cells whose rebinned activation-group flux vectors
+are identical share one solve: a per-run memo keyed by the SHA-256 of the f64 little-endian flux bytes (bounded to 256
+distinct workloads and 512 MiB of memoized result bytes, so its footprint is independent of cell count) emits the
+memoized result bytes under each cell's own ordinal and rebin ledger, so grouped output
+is bit-identical to ungrouped output apart from the footer's `cells_served_from_reuse` count and timing. Per-cell
+result fields are selectable (`cell_result_fields`), an optional peak-RSS guard (`memory_limit_bytes`) aborts the run
+after a completed chunk if the observed high-water mark exceeds the limit, and `resume` mode treats the NDJSON output
+as its own checkpoint: a validated header (binding the canonical flux hash and a spec fingerprint) plus complete
+in-order cell records stand, a torn tail is truncated, and only unfinished cells are re-solved, producing output
+identical to an uninterrupted run modulo footer timing. Peak memory is bounded by chunk size and requested output,
+not by total cell count; the P21 qualification case is an executed 20,000-cell run with the full hardware record in
+`results/g3_p21_executed.json`. Self-shielding, spatial interpolation, transport feedback and heterogeneous material
+maps remain outside this method.
 
 ## Fission yields, coupled burn-up and pulses (P9)
 

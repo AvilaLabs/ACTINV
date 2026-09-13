@@ -1,0 +1,233 @@
+{
+ "actinv_binary_sha256": "07b23cf15e9e86f82e6e64a8295192785d68f1ecebd7d582c5970a3a41c269d9",
+ "executed_case": {
+  "cell_result_fields": [
+   "spec_title",
+   "mode",
+   "pruned_states",
+   "total_states",
+   "steps",
+   "pathway_closure",
+   "certificate"
+  ],
+  "cells": 20000,
+  "decay": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/decay/endf-b-viii-0_decay.dat",
+  "decay_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "distinct_spectra": true,
+  "library": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz",
+  "library_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+  "material": "Fe 100 wt%, 1.0 g",
+  "options_outputs": [
+   "inventory",
+   "heat",
+   "ledger",
+   "certificate"
+  ],
+  "result": {
+   "canonical_flux_bytes": 213227674,
+   "canonical_flux_sha256": "aeebf272e87292a25d4401bb9b6e8925317f08d2738d81ae65cf0f7a485b89fd",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 20000,
+   "cells_per_s": 6.7961005409841,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 64,
+   "output_bytes": 218938904,
+   "output_records": 20002,
+   "output_sha256": "e709ed07dfb4d382e3da13ea24b33cd227fa3c146e455068be5c7c4396422bb9",
+   "peak_rss_bytes": 402456576,
+   "threads": 2,
+   "wall_time_s": 2942.864055555
+  },
+  "schedule": "300 s irradiation + 60 s decay (two steps)"
+ },
+ "grouping": {
+  "cells": 1000,
+  "distinct_spectra": 25,
+  "rate_grouped": 197.75290447897552,
+  "rate_ungrouped": 6.9435459666176955,
+  "reuse_expected": 975,
+  "reuse_grouped": 975
+ },
+ "hardware": {
+  "actinv": "actinv 1.0.1",
+  "cgroup": {
+   "cpu.max": null,
+   "memory.max": null,
+   "memory.swap.max": null,
+   "pids.max": null
+  },
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "kernel": "7.0.0-31-generic",
+  "logical_cpus": 8,
+  "mem_total_bytes": 32947380224,
+  "platform": "linux",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)"
+ },
+ "head_commit": "6a9521c9dae6f6a1c1e9bbcdaef42f48451f0bbb",
+ "legs": {
+  "chunk_16": {
+   "canonical_flux_bytes": 10660294,
+   "canonical_flux_sha256": "b9216f91651b0d166c0a9267fc3fdf952151348a3fb08932fdf7616401173e78",
+   "cell_result_fields": null,
+   "cells": 1000,
+   "cells_per_s": 3.7399520992574224,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 16,
+   "output_bytes": 5827491255,
+   "output_records": 1002,
+   "output_sha256": "661edcc77f7d07db30a130a23de4d289560e1722a2501fcb90a41508ac21ee4b",
+   "peak_rss_bytes": 1214668800,
+   "threads": 2,
+   "wall_time_s": 267.383103703
+  },
+  "chunk_256": {
+   "canonical_flux_bytes": 10660294,
+   "canonical_flux_sha256": "b9216f91651b0d166c0a9267fc3fdf952151348a3fb08932fdf7616401173e78",
+   "cell_result_fields": null,
+   "cells": 1000,
+   "cells_per_s": 3.8372932087399607,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 256,
+   "output_bytes": 5827491255,
+   "output_records": 1002,
+   "output_sha256": "64b9b9872630ac848de09f0159fdb32c3bd2f26231b3fb68d2529870d1df3450",
+   "peak_rss_bytes": 2809298944,
+   "threads": 2,
+   "wall_time_s": 260.600362183
+  },
+  "group_off": {
+   "canonical_flux_bytes": 10657673,
+   "canonical_flux_sha256": "c006ac06361db76e110572967eee9ae6b311e1b90bd6551ccc2616ea996e3a5a",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 1000,
+   "cells_per_s": 6.9435459666176955,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 64,
+   "output_bytes": 10771459,
+   "output_records": 1002,
+   "output_sha256": "56f9979b308ac4f1bd5bb82ec5af35a50e9a4b0216b2b19da1096009de64ba6e",
+   "peak_rss_bytes": 402210816,
+   "threads": 2,
+   "wall_time_s": 144.018633247
+  },
+  "group_on": {
+   "canonical_flux_bytes": 10657673,
+   "canonical_flux_sha256": "c006ac06361db76e110572967eee9ae6b311e1b90bd6551ccc2616ea996e3a5a",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 1000,
+   "cells_per_s": 197.75290447897552,
+   "cells_served_from_reuse": 975,
+   "chunk_cells": 64,
+   "output_bytes": 10771458,
+   "output_records": 1002,
+   "output_sha256": "af6530d1b9fa3c650293cbbd1d7370b10c6558e8074c25d804064ca94ec9c513",
+   "peak_rss_bytes": 402231296,
+   "threads": 2,
+   "wall_time_s": 5.05681574
+  },
+  "size_1000": {
+   "canonical_flux_bytes": 10660294,
+   "canonical_flux_sha256": "b9216f91651b0d166c0a9267fc3fdf952151348a3fb08932fdf7616401173e78",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 1000,
+   "cells_per_s": 5.146260535084368,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 64,
+   "output_bytes": 10949959,
+   "output_records": 1002,
+   "output_sha256": "e691809c3afdb7030b1bdd6de49d2830718e7a0a90f36f90cb9a29247b5e2037",
+   "peak_rss_bytes": 402251776,
+   "threads": 2,
+   "wall_time_s": 194.315851905
+  },
+  "size_20000": {
+   "canonical_flux_bytes": 213227674,
+   "canonical_flux_sha256": "aeebf272e87292a25d4401bb9b6e8925317f08d2738d81ae65cf0f7a485b89fd",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 20000,
+   "cells_per_s": 6.7961005409841,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 64,
+   "output_bytes": 218938904,
+   "output_records": 20002,
+   "output_sha256": "e709ed07dfb4d382e3da13ea24b33cd227fa3c146e455068be5c7c4396422bb9",
+   "peak_rss_bytes": 402456576,
+   "threads": 2,
+   "wall_time_s": 2942.864055555
+  },
+  "size_5000": {
+   "canonical_flux_bytes": 53293604,
+   "canonical_flux_sha256": "416da51c180398aef8cc9950003cdc47fdaf3a02d12fe559e58e01d1a6f1e22a",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 5000,
+   "cells_per_s": 6.2634571581662595,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 64,
+   "output_bytes": 54721539,
+   "output_records": 5002,
+   "output_sha256": "46b5b02ca52ef893c64d5ad680c21d29828c08ba46dfa335033f189d85ce7d37",
+   "peak_rss_bytes": 402178048,
+   "threads": 2,
+   "wall_time_s": 798.281184614
+  }
+ },
+ "memory_gates": {
+  "cell_count_flat": true,
+  "cell_count_span_bytes": 278528,
+  "cell_count_span_limit_bytes": 67108864,
+  "chunk_delta_bytes": 1594630144,
+  "chunk_delta_limit_bytes": 33554432,
+  "chunk_tracked": true
+ },
+ "note": "Executed evidence only: every leg ran end-to-end under the recorded environment. No extrapolated cell counts are claimed.",
+ "pass": true,
+ "schema": "actinv-p21-g3-executed-1"
+}

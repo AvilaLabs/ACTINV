@@ -164,6 +164,13 @@ Four threads were `1.43x` faster than one at 256 cells. A linear fit projects on
 and `13.6 GB` of output, but **that run was not executed**. Filesystem, serialization, allocator, and long-run scaling
 could invalidate the extrapolation; it must never be quoted as a measured million-cell benchmark.
 
+The million-cell extrapolation above is superseded by executed evidence: under P21, a `20,000`-cell mesh case ran
+end-to-end on the pinned TENDL-2025 709-group library (2 threads, chunk size 64, reduced per-cell field selection)
+in `2,943 s` at `6.80 cells/s` with `402 MB` peak RSS and `219 MB` of output; per-cell peak RSS stayed flat within
+`0.27 MB` across 1,000 / 5,000 / 20,000 cells, and increasing `chunk_cells` 16 to 256 raised peak RSS by `1.59 GB`,
+demonstrating the chunk-buffered term. `results/g3_p21_executed.json` carries the full hardware, hash, and timing
+record. The million-cell figure remains unexecuted and unquoted as a benchmark.
+
 ## First use and diagnostics
 
 | exercise | ACTINV | ALARA |

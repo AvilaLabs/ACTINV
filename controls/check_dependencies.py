@@ -21,7 +21,11 @@ CI_ENTRY = ["scripts/test_package_desktop.py", "scripts/desktop_smoke.py", "scri
             "controls/g3_p12_parser_fuzz.py", "controls/g5_p12_release.py",
             "controls/check_p12.py", "controls/test_check_p12.py",
             "scripts/check_crates_release_workflow.py",
-            "controls/g1_p13_data_distribution.py", "controls/check_p13.py"]
+            "controls/g1_p13_data_distribution.py", "controls/check_p13.py",
+            "controls/g1_p21_scaling.py", "controls/g2_p21_resume.py",
+            "controls/check_g0_p21.py", "controls/check_g1_p21.py",
+            "controls/check_g2_p21.py", "controls/check_g3_p21.py",
+            "controls/check_g4_p21.py", "controls/check_p21.py"]
 STDLIB = set(sys.stdlib_module_names)
 declared = {l.split("==")[0].split(">=")[0].strip().lower() for l in open(os.path.join(ROOT, "requirements-ci.txt"))
             if l.strip() and not l.startswith("#")}

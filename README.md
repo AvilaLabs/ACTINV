@@ -230,7 +230,11 @@ actinv export-mcnp result.json 2 source.sdef
 ```
 
 Mesh cells are solved independently. ACTINV does not perform particle transport, spatial coupling, criticality, or
-thermal-hydraulic feedback.
+thermal-hydraulic feedback. The mesh spec (`docs/SPEC.md`) supports `group_workloads` (identical rebinned spectra
+share one solve, recorded as `cells_served_from_reuse`), `cell_result_fields` (selectable per-cell output),
+`memory_limit_bytes` (a post-hoc peak-RSS guard), and `resume` (the output file is its own checkpoint; an
+interrupted run resumes after its last complete cell record byte-identically). The executed scale evidence is a
+20,000-cell run on the pinned TENDL-2025 library, recorded in `results/g3_p21_executed.json`.
 
 ## What the result tells you
 

@@ -476,7 +476,11 @@ data are verified and prepared once; workers borrow them rather than re-reading 
     "temperature_K": 293.6
   },
   "chunk_cells": 64,
-  "threads": 4
+  "threads": 4,
+  "group_workloads": true,
+  "cell_result_fields": ["steps", "pruned_states", "total_states", "certificate"],
+  "memory_limit_bytes": 4000000000,
+  "resume": false
 }
 ```
 
@@ -484,6 +488,24 @@ data are verified and prepared once; workers borrow them rather than re-reading 
 with `actinv mesh mesh.json mesh-result.ndjson`. Immutable activation/decay/response data are verified, decompressed
 and prepared once. Canonical cells are read a chunk at a time, restored to input order after Rayon execution, and
 written as `actinv-mesh-result-1` header/cell/footer records.
+
+`group_workloads` defaults to true: cells whose rebinned activation-group flux vectors are byte-identical share one
+solved result (keyed by the SHA-256 of the f64 little-endian group bytes, memo bounded to 256 distinct workloads and
+512 MiB of memoized result bytes).
+Reuse changes only scheduling — every cell record is bit-identical to a `group_workloads: false` run, and the
+footer records the count as `cells_served_from_reuse`. `cell_result_fields` keeps only the named top-level
+`RunResult` fields in each cell record; absent means the complete record, and an unknown name is rejected at
+validation. `memory_limit_bytes` is a post-hoc guard: after each completed chunk the process peak RSS
+(`/proc/self/status` `VmHWM`) is compared to the limit and the run aborts with a named error carrying both numbers.
+
+`resume: true` makes the output file itself the checkpoint. The run writes directly (not via atomic rename); on
+start it validates any existing file: the header must equal byte-for-byte the header a fresh run would emit —
+including the `spec_fingerprint_sha256` field, the canonical-JSON SHA-256 of the spec with `resume`, `threads`,
+`chunk_cells` and `memory_limit_bytes` removed. Complete in-order cell records stand; a torn final line is
+truncated; a mid-file corrupt or out-of-order record is a named error; a file whose footer is already present
+returns its summary without re-solving. Only unfinished cells are re-executed, and a completed resume is
+byte-identical to an uninterrupted run except the footer's timing fields. A resumed run reproduces the
+uninterrupted `cells_served_from_reuse` count because completed prefix cells seed the grouping memo.
 
 Matching source/library boundaries use a bit-identical copy path. Other positive grids use FISPACT's default equal
 flux per unit lethargy rule. Every cell result includes `source_total`, rebinned `destination_total`, `underflow`,

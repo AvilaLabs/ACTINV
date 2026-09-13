@@ -24,6 +24,9 @@ const MESH_RESULT_SCHEMA: &str = "actinv-mesh-result-1";
 const MAX_CHUNK_CELLS: usize = 65_536;
 const MAX_THREADS: usize = 256;
 const GROUPING_CACHE_CAP: usize = 256;
+/// The memo is bounded by payload bytes as well as entry count so its
+/// footprint stays bounded independently of cell count and record size.
+const GROUPING_CACHE_BYTES: usize = 512 << 20;
 
 fn default_chunk_cells() -> usize {
     64
@@ -614,9 +617,11 @@ fn write_mesh_body(
 ) -> Result<(f64, f64), String> {
     let mut totals = MeshTotals::default();
     let mut cells_reused = 0u64;
-    // Signature memo: at most GROUPING_CACHE_CAP distinct results, so memory
-    // stays bounded independently of cell count.
+    // Signature memo: at most GROUPING_CACHE_CAP distinct results and
+    // GROUPING_CACHE_BYTES of payload, so memory stays bounded independently
+    // of cell count and per-record size.
     let mut memo: HashMap<[u8; 32], String> = HashMap::new();
+    let mut memo_bytes = 0usize;
     loop {
         let input_cells = stream.read_chunk(spec.chunk_cells)?;
         if input_cells.is_empty() {
@@ -684,10 +689,11 @@ fn write_mesh_body(
                         .as_mut()
                         .map(|(file, offsets)| (&mut **file, *offsets))
                         .ok_or("resumable prefix reader unavailable")?;
-                    memo.insert(
-                        signature,
-                        read_prefix_result(file, offsets, cell.ordinal)?,
-                    );
+                    let text = read_prefix_result(file, offsets, cell.ordinal)?;
+                    if memo_bytes + text.len() <= GROUPING_CACHE_BYTES {
+                        memo_bytes += text.len();
+                        memo.insert(signature, text);
+                    }
                 }
                 pending.insert(signature, Pending::Prefix(cell.ordinal));
                 continue;
@@ -709,15 +715,16 @@ fn write_mesh_body(
                 })
                 .collect()
         });
-        for (position, &index) in to_solve.iter().enumerate() {
-            let text = match &solved[position] {
-                Ok(text) => text.clone(),
-                Err(error) => return Err(error.clone()),
-            };
-            resolved[index] = Some(text.clone());
-            if spec.group_workloads && memo.len() < GROUPING_CACHE_CAP {
-                memo.entry(signatures[index]).or_insert(text);
+        for (result, &index) in solved.into_iter().zip(to_solve.iter()) {
+            let text = result?;
+            if spec.group_workloads
+                && memo.len() < GROUPING_CACHE_CAP
+                && memo_bytes + text.len() <= GROUPING_CACHE_BYTES
+            {
+                memo_bytes += text.len();
+                memo.insert(signatures[index], text.clone());
             }
+            resolved[index] = Some(text);
         }
         for (index, first) in deferred {
             resolved[index] = resolved[first].clone();

@@ -112,6 +112,24 @@ jobs:
       - name: P20 closure — re-run all gates, re-derive arithmetic, verdict
         run: python controls/check_p20.py --no-write
 
+      - name: P21 opening gate — protocol, verdicts, identity baseline, profile
+        run: python controls/check_g0_p21.py --no-write
+
+      - name: P21 grouping/selection/guard — digests, reuse recount, named errors
+        run: python controls/check_g1_p21.py --no-write
+
+      - name: P21 resume/checkpoint — line-digest identity, rejections
+        run: python controls/check_g2_p21.py --no-write
+
+      - name: P21 executed scale — memory gates, hardware record, reuse recount
+        run: python controls/check_g3_p21.py --no-write
+
+      - name: P21 docs/performance — supersede and claims record
+        run: python controls/check_g4_p21.py --no-write
+
+      - name: P21 closure — re-run all gates, re-derive arithmetic, verdict
+        run: python controls/check_p21.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 
@@ -231,6 +249,11 @@ jobs:
           python controls/g5_p8_mesh_identity.py
           python controls/g6_p8_scaling_regression.py
           python controls/check_p8.py
+
+      - name: P21 grouping and resume runtime controls
+        run: |
+          python controls/g1_p21_scaling.py
+          python controls/g2_p21_resume.py
 
       - name: P9 deterministic fission and coupled-mode subset
         run: |

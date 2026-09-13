@@ -1,0 +1,9 @@
+{
+ "failures": [],
+ "head_commit": "6a9521c9dae6f6a1c1e9bbcdaef42f48451f0bbb",
+ "opening_commit": "871c96505567bb0f16447eef816d3b2b966b7f62",
+ "pass": true,
+ "protocol_sha256": "d14710f456bd7940fef905aafd880a4bdb760674482bbf0fe92dea15bcc56414",
+ "schema": "actinv-p21-g0-check-1",
+ "verdicts_checked": 24
+}
