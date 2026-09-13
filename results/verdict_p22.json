@@ -1,0 +1,44 @@
+{
+ "closed": true,
+ "closure_check_sha256": "a243706b0fb7d404acea3537707a5b2dba7f77bedc8374e700789e52042f6f10",
+ "closure_record_valid": true,
+ "evidence_sha256": {
+  "g0_check": "afc92dac51147e309189c249b30617f4ec69939c753b2acb09edca4ee7e92923",
+  "g0_seals": "d7c3168066d554ec5408624806f679dbc27cd27839c9e71e3ea6927f295ac786",
+  "g1_alara": "983521169ed2fa4a4aca56b74f16bb9707ac28469a2a76d44f7f16dc9179a27b",
+  "g1_battery": "1cee5dcb4dd907e861e52ccd86472b5677cdf97c41569d60ec0ae33b8d7b38aa",
+  "g1_check": "0003ccce0b45d3691a022642fa3783d6c63bfbf22ba79869ae6d1e38e25c766d",
+  "g1_fns": "fec728761b14477728ece967c13e84a777d433800c93f88d62d02edbc19ed8d2",
+  "g1_numerical": "c1de2b8ae46de906d929513d28a96c0fbe80d5b4dcce3d12e3ee3e3a7a0374b4",
+  "g2_check": "d6fe43c25e49cfc77c6c73360d2cf909dccdfce17481e855b083b312e055540a",
+  "g2_exercises": "ba7dac78076f7494c465ff871a082b6959e70f87613d7354adc93e2143613218",
+  "g2_first_use": "b6b637cfd277c823ecbbc8bb9551ce2fb92c26db47bceaaec6c9dfcb1c143f97",
+  "g2_performance": "58a91969cbbcbcfcb672f2f42c1d54d7f26d0f622d171e1c5a058c597e136b96",
+  "g3_check": "d84f3f4d8cf5a940fc90b205db940baea2484df5dec79e13d0ddc91179669ab3",
+  "g3_heldout": "f3773b4fc1096ed07aa110ce95a965b00c6a3b9907378341def4ee08b9228883",
+  "g4_check": "fa713867b2e3a9d2cc73b047f16f3136d582d23cea27d304125c297fe2d8f5d8",
+  "g4_release": "3fa11adee19334f94ebc3d3d607fa3b63efd63918113c697bc9d80db316cfa40"
+ },
+ "gates": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": true,
+  "G4": true,
+  "G5": true
+ },
+ "head_commit": "f45f7fbf340c2ab26294c1ddc9992c0143dc2f8c",
+ "opening_commit": "c4a361f0e1c1929e508decdd33848a789dcd9ef0",
+ "phase_success": true,
+ "protocol_sha256": "86f8509f58780a82923fcfdd9996db0e557a1eba845f553a0835b64f8a3cf971",
+ "release_criteria": {
+  "all_prior_verdicts_present": true,
+  "four_surface_identity_holds": true,
+  "g1_g2_g3_checks_green": true,
+  "rc_artifacts_built_and_identity_proved": true
+ },
+ "release_decision": true,
+ "schema": "actinv-p22-verdict-1",
+ "scope_note": "P22-PASS covers the public re-score: the frozen CB1 numerical, ALARA and FNS batteries reproduced their sealed metrics on the candidate; the install/memory/runtime/mesh exercises re-ran; the sealed P17 held-out partition was re-scored once through unchanged code and remains FAIL; and the release candidate was assembled with the version bump proved solver-inert. A ready decision authorizes nothing by itself: the version tag, GitHub release and PyPI upload remain separate maintainer actions. P18b-FAIL stands and blocks its own artifacts only. No 'best overall' claim is made; million-cell mesh scale remains unexecuted.",
+ "verdict": "P22-PASS"
+}
