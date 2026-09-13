@@ -1,0 +1,232 @@
+{
+ "hardware": {
+  "actinv": "actinv 1.0.1",
+  "cgroup": {
+   "cpu.max": null,
+   "memory.max": null,
+   "memory.swap.max": null,
+   "pids.max": null
+  },
+  "cpu_model": "Intel(R) Core(TM) i3-N305",
+  "kernel": "7.0.0-31-generic",
+  "logical_cpus": 8,
+  "mem_total_bytes": 32947380224,
+  "platform": "linux",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)"
+ },
+ "legs": {
+  "clean_clone": {
+   "binary_bytes": 10607864,
+   "binary_sha256": "07b23cf15e9e86f82e6e64a8295192785d68f1ecebd7d582c5970a3a41c269d9",
+   "commit": "c4a361f0e1c1929e508decdd33848a789dcd9ef0",
+   "pass": true,
+   "source": "target/p22-g2/src-head",
+   "target_dir": "target/p22-g2/target-head",
+   "version_returncode": 0,
+   "version_stdout": "actinv 1.0.1"
+  },
+  "first_use": {
+   "actinv_install_seconds": null,
+   "checks": {
+    "actinv_data": true,
+    "actinv_diagnostics": true,
+    "actinv_example": true,
+    "actinv_public_artifact": true,
+    "actinv_version": true,
+    "alara_diagnostics": true,
+    "alara_sample": true,
+    "alara_source": true,
+    "alara_version": true
+   },
+   "pass": true,
+   "run": {
+    "env": {},
+    "module": "controls/cb1_first_use.py",
+    "module_sha256": "6608f4a850c562b3962676f39776b589beeb08ca7c58a568a5b38089d8ba8447",
+    "out": "results/p22_g2_first_use.json",
+    "returncode": 0,
+    "written": true
+   },
+   "sealed_checks": {
+    "actinv_data": true,
+    "actinv_diagnostics": true,
+    "actinv_example": true,
+    "actinv_public_artifact": true,
+    "actinv_version": true,
+    "alara_diagnostics": true,
+    "alara_sample": true,
+    "alara_source": true,
+    "alara_version": true
+   }
+  },
+  "mesh_1k": {
+   "canonical_flux_bytes": 10660296,
+   "canonical_flux_sha256": "d9aa61f58c8171b583901b74cc00f33287f7deb2e37d78469dd5210167207274",
+   "cell_result_fields": [
+    "spec_title",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathway_closure",
+    "certificate"
+   ],
+   "cells": 1000,
+   "cells_per_s": 8.732744271701106,
+   "cells_served_from_reuse": 0,
+   "chunk_cells": 64,
+   "closed_footer": true,
+   "output_bytes": 10949963,
+   "output_records": 1002,
+   "output_sha256": "c8d3e5185bbbef628764e6ab1aeb67fe6188991ee0335d9c8af20f965ce6c5da",
+   "pass": true,
+   "peak_rss_bytes": 402141184,
+   "rss_bound_bytes": 502814720,
+   "rss_within_bound": true,
+   "threads": 2,
+   "wall_time_s": 114.511540575
+  },
+  "performance": {
+   "candidate_implementations": {
+    "actinv_binary_sha256": "f87d4f3ad1d918e546725a4664f376221a0ad6fd2b4cf09a5243a9494a548688",
+    "actinv_python_module_sha256": "09ab15d80be2928cc3859e2d68691617f831b37290e5c6c16c25130ce692df42",
+    "actinv_version": "1.0.1",
+    "alara_source_commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+    "alara_version": "2.9.2",
+    "openmc_version": "0.15.3"
+   },
+   "comparisons": {
+    "actinv_process_startup": {
+     "median_ms": {
+      "candidate": 1.2947009999999999,
+      "ratio": 0.5622687027376215,
+      "sealed": 2.3026375,
+      "within_band": true
+     },
+     "peak_rss_bytes": {
+      "candidate": 3571712,
+      "ratio": 0.9488574537540805,
+      "sealed": 3764224,
+      "within_band": true
+     }
+    },
+    "actinv_public_example_warm_cache": {
+     "median_ms": {
+      "candidate": 2273.1915089999998,
+      "ratio": 1.045438451070324,
+      "sealed": 2174.3905695,
+      "within_band": true
+     },
+     "peak_rss_bytes": {
+      "candidate": 1091440640,
+      "ratio": 1.0004392749335456,
+      "sealed": 1090961408,
+      "within_band": true
+     }
+    },
+    "identical_data_standalone.actinv_1_0_0_full_diagnostics": {
+     "median_ms": {
+      "candidate": 535.7331194999999,
+      "ratio": 1.0256407311329456,
+      "sealed": 522.3399414999999,
+      "within_band": true
+     },
+     "peak_rss_bytes": {
+      "candidate": 126398464,
+      "ratio": 1.0000648151148848,
+      "sealed": 126390272,
+      "within_band": true
+     }
+    },
+    "identical_data_standalone.alara_2_9_2_number_density": {
+     "median_ms": {
+      "candidate": 2.0435594999999998,
+      "ratio": 0.6118722821542846,
+      "sealed": 3.3398465,
+      "within_band": true
+     },
+     "peak_rss_bytes": {
+      "candidate": 5320704,
+      "ratio": 1.003088803088803,
+      "sealed": 5304320,
+      "within_band": true
+     }
+    }
+   },
+   "kernel_medians_informational": {
+    "states=1024": {
+     "actinv_pyo3_cram48": {
+      "candidate_median_ms": 6.747339875,
+      "sealed_median_ms": 5.6611514
+     },
+     "openmc_python_cram48": {
+      "candidate_median_ms": 17.61534275,
+      "sealed_median_ms": 16.038736749999998
+     }
+    },
+    "states=2": {
+     "actinv_pyo3_cram48": {
+      "candidate_median_ms": 0.018698588972431075,
+      "sealed_median_ms": 0.015450751088534106
+     },
+     "openmc_python_cram48": {
+      "candidate_median_ms": 3.085847388888889,
+      "sealed_median_ms": 2.886250611111111
+     }
+    },
+    "states=256": {
+     "actinv_pyo3_cram48": {
+      "candidate_median_ms": 1.3897580555555555,
+      "sealed_median_ms": 1.224453568181818
+     },
+     "openmc_python_cram48": {
+      "candidate_median_ms": 5.8566226,
+      "sealed_median_ms": 4.852575666666667
+     }
+    },
+    "states=32": {
+     "actinv_pyo3_cram48": {
+      "candidate_median_ms": 0.17787875531914893,
+      "sealed_median_ms": 0.15759366774193548
+     },
+     "openmc_python_cram48": {
+      "candidate_median_ms": 3.4101672499999998,
+      "sealed_median_ms": 3.1958933125
+     }
+    }
+   },
+   "pass": true,
+   "run": {
+    "env": {
+     "ACTINV_BIN": "/home/connoravila/Documents/actinv/target/p22-g2/target-v1.0.0/release/actinv",
+     "MKL_NUM_THREADS": "1",
+     "NUMEXPR_NUM_THREADS": "1",
+     "OMP_NUM_THREADS": "1",
+     "OPENBLAS_NUM_THREADS": "1",
+     "RAYON_NUM_THREADS": "1",
+     "TMPDIR": "/tmp"
+    },
+    "module": "controls/cb1_performance.py",
+    "module_sha256": "e7d581b05e0251d6f7e77ce25197a4d267b7a2b9fd2c20e4d475a99688fbf29f",
+    "out": "results/p22_g2_performance.json",
+    "returncode": 0,
+    "written": true
+   }
+  },
+  "v100_build": {
+   "binary_bytes": 8761864,
+   "binary_sha256": "f87d4f3ad1d918e546725a4664f376221a0ad6fd2b4cf09a5243a9494a548688",
+   "commit": "fe6b1669e5f71c968afe5647dd46fab9cf151145",
+   "pass": true,
+   "source": "target/p22-g2/src-v1.0.0",
+   "target_dir": "target/p22-g2/target-v1.0.0",
+   "version_returncode": 0,
+   "version_stdout": "actinv 1.0.0"
+  }
+ },
+ "mesh_rss_bound_bytes": 502814720,
+ "pass": true,
+ "perf_median_band": 2.0,
+ "perf_rss_band": 1.25,
+ "schema": "actinv-p22-g2-exercises-1"
+}

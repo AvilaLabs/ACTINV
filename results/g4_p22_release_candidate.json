@@ -1,0 +1,174 @@
+{
+ "artifacts": {
+  "cargo_lock_sha256": "3e721befeb2481e98fdee35e79a42bcb00bd6b924f54c0a4870c8ee19826579f",
+  "cli_binary": {
+   "bytes": 10607920,
+   "path": "target/release/actinv",
+   "sha256": "10dd9f1d78d6a8baec62ac18d4ca34a55cfa842346d8502671b19593277c51ee",
+   "version_returncode": 0,
+   "version_stdout": "actinv 1.1.0"
+  },
+  "python_lock_sha256": "8f75c2d69b5a670022798295a27069919b65fb807fd8481336201ab463506123",
+  "python_module": {
+   "bytes": 8995688,
+   "path": "python/target/release/libactinv.so",
+   "sha256": "fbff7b73ebf301d1f865f1a92a8d3c4fe4222a84e41488eb97a2e3a90aa1aec9"
+  },
+  "wheel": {
+   "artifacts": [
+    {
+     "bytes": 3825626,
+     "name": "actinv-1.1.0-cp39-abi3-manylinux_2_35_x86_64.whl",
+     "sha256": "e42819e54d58865efff3c9b80fbf2e393e59dd9cdde007bab2b85bc1a35a936f"
+    }
+   ],
+   "maturin_returncode": 0
+  }
+ },
+ "decision": {
+  "criteria": {
+   "all_prior_verdicts_present": true,
+   "four_surface_identity_holds": true,
+   "g1_g2_g3_checks_green": true,
+   "rc_artifacts_built_and_identity_proved": true
+  },
+  "note": "a ready decision authorizes nothing by itself: the version tag, GitHub release and PyPI upload remain separate maintainer actions; P18b-FAIL stands and blocks its own artifacts only",
+  "release_ready": true
+ },
+ "four_surface_identity": {
+  "amendment": "protocols/ACTINV-P22_AMENDMENT_A.md",
+  "baseline_record": "results/g0_p21_identity_baseline.json",
+  "expected_sha256": {
+   "cli_cold": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+   "cli_warm": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+   "mesh_cell": "2fcef4f547aed4b9bc9755277a5c3aa7f5d2bea7bc6c8e59a84ba56cef16e86f",
+   "python": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62"
+  },
+  "pass": true,
+  "per_surface_match": {
+   "cli_cold": true,
+   "cli_warm": true,
+   "mesh_cell": true,
+   "python": true
+  },
+  "post_bump": {
+   "binary": "target/release/actinv",
+   "pass": true,
+   "per_surface_normalized_match": {
+    "cli_cold": true,
+    "cli_warm": true,
+    "mesh_cell": true,
+    "python": true
+   },
+   "pre_bump_solver_normalized_sha256": {
+    "cli_cold": "142caf9f421f0cee72ec10db1dad37d2b45a1a6f3bc8d180e6febf69640bc83b",
+    "cli_warm": "142caf9f421f0cee72ec10db1dad37d2b45a1a6f3bc8d180e6febf69640bc83b",
+    "mesh_cell": "e68bd349489c4c3442143ff9fde51bde97d5159e1f0e48f7cbd7fcb3581a1dec",
+    "python": "142caf9f421f0cee72ec10db1dad37d2b45a1a6f3bc8d180e6febf69640bc83b"
+   },
+   "python_module": "python/target/release/libactinv.so",
+   "raw_sha256": {
+    "cli_cold": "03e65e71685e932b0f62b662ec42e02723e4f526e9c4ee5d26ec6a5ef1a0c9ee",
+    "cli_warm": "03e65e71685e932b0f62b662ec42e02723e4f526e9c4ee5d26ec6a5ef1a0c9ee",
+    "mesh_cell": "7af9862e3bc37bbf1575c110429198eb7c47ef681dd324a8c4dda352f6594597",
+    "python": "03e65e71685e932b0f62b662ec42e02723e4f526e9c4ee5d26ec6a5ef1a0c9ee"
+   },
+   "solver_normalized_sha256": {
+    "cli_cold": "142caf9f421f0cee72ec10db1dad37d2b45a1a6f3bc8d180e6febf69640bc83b",
+    "cli_warm": "142caf9f421f0cee72ec10db1dad37d2b45a1a6f3bc8d180e6febf69640bc83b",
+    "mesh_cell": "e68bd349489c4c3442143ff9fde51bde97d5159e1f0e48f7cbd7fcb3581a1dec",
+    "python": "142caf9f421f0cee72ec10db1dad37d2b45a1a6f3bc8d180e6febf69640bc83b"
+   }
+  },
+  "pre_bump": {
+   "binary": "/home/connoravila/Documents/actinv/target/p22-g2/target-head/release/actinv",
+   "binary_sha256": "07b23cf15e9e86f82e6e64a8295192785d68f1ecebd7d582c5970a3a41c269d9",
+   "observed_sha256": {
+    "cli_cold": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+    "cli_warm": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62",
+    "mesh_cell": "2fcef4f547aed4b9bc9755277a5c3aa7f5d2bea7bc6c8e59a84ba56cef16e86f",
+    "python": "ebc307ff845ebabb6d7300c3a65439fb8a1b22bd988362486218610c373b3e62"
+   },
+   "pass": true,
+   "per_surface_exact": {
+    "cli_cold": true,
+    "cli_warm": true,
+    "mesh_cell": true,
+    "python": true
+   },
+   "python_module": "/home/connoravila/Documents/actinv/target/p22-g2/src-head/python/target/release/libactinv.so",
+   "python_module_sha256": "fddab63cff869b0c34d64e87b783d5fd92959277d9ddcd76b8b5a0b71d962c3a"
+  }
+ },
+ "gate_checks": {
+  "g1": true,
+  "g2": true,
+  "g3": true
+ },
+ "pass": true,
+ "prior_verdicts_present": {
+  "verdict_cb1.json": true,
+  "verdict_p10.json": true,
+  "verdict_p11.json": true,
+  "verdict_p12.json": true,
+  "verdict_p13.json": true,
+  "verdict_p14.json": true,
+  "verdict_p15.json": true,
+  "verdict_p16.json": true,
+  "verdict_p17.json": true,
+  "verdict_p18.json": true,
+  "verdict_p18b.json": true,
+  "verdict_p19.json": true,
+  "verdict_p2.json": true,
+  "verdict_p20.json": true,
+  "verdict_p21.json": true,
+  "verdict_p23.json": true,
+  "verdict_p3.json": true,
+  "verdict_p3b.json": true,
+  "verdict_p4.json": true,
+  "verdict_p4b.json": true,
+  "verdict_p5.json": true,
+  "verdict_p6.json": true,
+  "verdict_p7.json": true,
+  "verdict_p8.json": true,
+  "verdict_p9.json": true
+ },
+ "schema": "actinv-p22-g4-release-1",
+ "version_bump": {
+  "files": {
+   "Cargo.toml": {
+    "after_sha256": "b71b1e7a1b4063c072edbd1316adab28e68f22f16dcecd9f5cba0b962bebba12",
+    "before_sha256": "b71b1e7a1b4063c072edbd1316adab28e68f22f16dcecd9f5cba0b962bebba12",
+    "changed": false
+   },
+   "crates/actinv-cli/Cargo.toml": {
+    "after_sha256": "a2e5924e260b1fb7542db0e44e459bb5ea740ec6214c1cffa4834efc1f0ad914",
+    "before_sha256": "a2e5924e260b1fb7542db0e44e459bb5ea740ec6214c1cffa4834efc1f0ad914",
+    "changed": false
+   },
+   "crates/actinv-core/Cargo.toml": {
+    "after_sha256": "d69411c3a33f5552a7f8f55263c795a00768bf3d962de22990f74ac9bd611cc7",
+    "before_sha256": "d69411c3a33f5552a7f8f55263c795a00768bf3d962de22990f74ac9bd611cc7",
+    "changed": false
+   },
+   "crates/actinv-gui/Cargo.toml": {
+    "after_sha256": "ada26f11bb886e41ea26feed3d95201d9732abdfd165ea1d8e217ae1f9c63967",
+    "before_sha256": "ada26f11bb886e41ea26feed3d95201d9732abdfd165ea1d8e217ae1f9c63967",
+    "changed": false
+   },
+   "python/Cargo.toml": {
+    "after_sha256": "32422d0e2749d60c09ebf3020835de7716b441c3b38e2ee5f81d7897c3acae7f",
+    "before_sha256": "32422d0e2749d60c09ebf3020835de7716b441c3b38e2ee5f81d7897c3acae7f",
+    "changed": false
+   },
+   "python/pyproject.toml": {
+    "after_sha256": "5c975af767c053dd3562d0d52f576c7e6e2d48d85ef56ff1aa3febfe74041431",
+    "before_sha256": "5c975af767c053dd3562d0d52f576c7e6e2d48d85ef56ff1aa3febfe74041431",
+    "changed": false
+   }
+  },
+  "from": "1.0.1",
+  "measured_evidence_bound_to": "results/g0_p22_seals.json candidate digests",
+  "to": "1.1.0"
+ }
+}

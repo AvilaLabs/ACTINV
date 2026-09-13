@@ -4,7 +4,7 @@ members = ["crates/actinv-core", "crates/actinv-data", "crates/actinv-cli", "cra
 exclude = ["python", "target"]
 
 [workspace.package]
-version = "1.0.1"
+version = "1.1.0"
 edition = "2021"
 authors = ["Connor Avila <Connoravila@gmail.com>"]
 description = "ACTINV — open, standalone, activation-grade nuclide-inventory solver"

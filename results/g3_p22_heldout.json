@@ -1,0 +1,736 @@
+{
+ "failures": [],
+ "family_metric_comparisons": {
+  "H1_SPR_III_table_23": {
+   "actinv_tendl2025_post_failure_diagnostic": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 0,
+      "sealed": 0
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "unsupported_self_shielding": 40
+      },
+      "sealed": {
+       "unsupported_self_shielding": 40
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 40,
+      "sealed": 40
+     }
+    },
+    "match": true
+   },
+   "irdff_ii_current_archive_post_failure_diagnostic": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 0,
+      "sealed": 0
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "unsupported_self_shielding": 40
+      },
+      "sealed": {
+       "unsupported_self_shielding": 40
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 40,
+      "sealed": 40
+     }
+    },
+    "match": true
+   },
+   "irdff_ii_published_context": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": null,
+      "sealed": null
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 0,
+      "sealed": 0
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "unsupported_self_shielding": 40
+      },
+      "sealed": {
+       "unsupported_self_shielding": 40
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 40,
+      "sealed": 40
+     }
+    },
+    "match": true
+   }
+  },
+  "H2_ACRR_table_25": {
+   "actinv_tendl2025_post_failure_diagnostic": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": 1.0136460889704537,
+      "sealed": 1.0136460889704537
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.09007306224155501,
+      "sealed": 0.09007306224155501
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.03544012633336513,
+      "sealed": 0.03544012633336513
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.08285747371186777,
+      "sealed": 0.08285747371186777
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 12,
+      "sealed": 12
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "not_applicable": 1,
+       "unsupported_self_shielding": 20
+      },
+      "sealed": {
+       "not_applicable": 1,
+       "unsupported_self_shielding": 20
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 21,
+      "sealed": 21
+     }
+    },
+    "match": true
+   },
+   "irdff_ii_current_archive_post_failure_diagnostic": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": 0.9166666666666666,
+      "sealed": 0.9166666666666666
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": 1.0114668007033147,
+      "sealed": 1.0114668007033147
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.09925328202636743,
+      "sealed": 0.09925328202636743
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.033307132979809556,
+      "sealed": 0.033307132979809556
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.0786789842749972,
+      "sealed": 0.0786789842749972
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 12,
+      "sealed": 12
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "not_applicable": 1,
+       "unsupported_self_shielding": 20
+      },
+      "sealed": {
+       "not_applicable": 1,
+       "unsupported_self_shielding": 20
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 21,
+      "sealed": 21
+     }
+    },
+    "match": true
+   },
+   "irdff_ii_published_context": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": 0.8333333333333334,
+      "sealed": 0.8333333333333334
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": 1.0,
+      "sealed": 1.0
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": 1.016442888697028,
+      "sealed": 1.016442888697028
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.11126469405471955,
+      "sealed": 0.11126469405471955
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.048833439291590605,
+      "sealed": 0.048833439291590605
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.10250393080570905,
+      "sealed": 0.10250393080570905
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 12,
+      "sealed": 12
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "different_data_context": 1,
+       "unsupported_self_shielding": 20
+      },
+      "sealed": {
+       "different_data_context": 1,
+       "unsupported_self_shielding": 20
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 21,
+      "sealed": 21
+     }
+    },
+    "match": true
+   }
+  },
+  "H3_Maxwellian_table_36": {
+   "actinv_tendl2025_post_failure_diagnostic": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": 0.6190476190476191,
+      "sealed": 0.6190476190476191
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": 0.7619047619047619,
+      "sealed": 0.7619047619047619
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": 0.8571428571428571,
+      "sealed": 0.8571428571428571
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": 1.0388077269447697,
+      "sealed": 1.0388077269447697
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 1.5383163212138524,
+      "sealed": 1.5383163212138524
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.07326115955613494,
+      "sealed": 0.07326115955613494
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.34831505892567,
+      "sealed": 0.34831505892567
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 21,
+      "sealed": 21
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {},
+      "sealed": {}
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 0,
+      "sealed": 0
+     }
+    },
+    "match": true
+   },
+   "irdff_ii_current_archive_post_failure_diagnostic": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": 0.5714285714285714,
+      "sealed": 0.5714285714285714
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": 0.7619047619047619,
+      "sealed": 0.7619047619047619
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": 0.8571428571428571,
+      "sealed": 0.8571428571428571
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": 1.0518986477898948,
+      "sealed": 1.0518986477898948
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 1.5131910149413208,
+      "sealed": 1.5131910149413208
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.06734534194517416,
+      "sealed": 0.06734534194517416
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.35040470783119215,
+      "sealed": 0.35040470783119215
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 21,
+      "sealed": 21
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {},
+      "sealed": {}
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 0,
+      "sealed": 0
+     }
+    },
+    "match": true
+   },
+   "irdff_ii_published_context": {
+    "fields": {
+     "fraction_within_10_percent": {
+      "match": true,
+      "reproduced": 0.65,
+      "sealed": 0.65
+     },
+     "fraction_within_20_percent": {
+      "match": true,
+      "reproduced": 0.85,
+      "sealed": 0.85
+     },
+     "fraction_within_30_percent": {
+      "match": true,
+      "reproduced": 0.95,
+      "sealed": 0.95
+     },
+     "geometric_mean_C_over_E": {
+      "match": true,
+      "reproduced": 1.0369270338010617,
+      "sealed": 1.0369270338010617
+     },
+     "maximum_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.3503976139528139,
+      "sealed": 0.3503976139528139
+     },
+     "median_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.05412681154464935,
+      "sealed": 0.05412681154464935
+     },
+     "p90_abs_log_C_over_E": {
+      "match": true,
+      "reproduced": 0.23660990237891122,
+      "sealed": 0.23660990237891122
+     },
+     "scored_rows": {
+      "match": true,
+      "reproduced": 20,
+      "sealed": 20
+     },
+     "unscored_reasons": {
+      "match": true,
+      "reproduced": {
+       "different_data_context": 1
+      },
+      "sealed": {
+       "different_data_context": 1
+      }
+     },
+     "unscored_rows": {
+      "match": true,
+      "reproduced": 1,
+      "sealed": 1
+     }
+    },
+    "match": true
+   }
+  }
+ },
+ "note": "held-out families remain FAIL under P17's frozen gates; this re-score changes no metric, exclusion or threshold",
+ "pass": true,
+ "relative_tolerance": 1e-12,
+ "reproduced_family_metrics": {
+  "H1_SPR_III_table_23": {
+   "actinv_tendl2025_post_failure_diagnostic": {
+    "fraction_within_10_percent": null,
+    "fraction_within_20_percent": null,
+    "fraction_within_30_percent": null,
+    "geometric_mean_C_over_E": null,
+    "maximum_abs_log_C_over_E": null,
+    "median_abs_log_C_over_E": null,
+    "p90_abs_log_C_over_E": null,
+    "scored_rows": 0,
+    "unscored_reasons": {
+     "unsupported_self_shielding": 40
+    },
+    "unscored_rows": 40
+   },
+   "irdff_ii_current_archive_post_failure_diagnostic": {
+    "fraction_within_10_percent": null,
+    "fraction_within_20_percent": null,
+    "fraction_within_30_percent": null,
+    "geometric_mean_C_over_E": null,
+    "maximum_abs_log_C_over_E": null,
+    "median_abs_log_C_over_E": null,
+    "p90_abs_log_C_over_E": null,
+    "scored_rows": 0,
+    "unscored_reasons": {
+     "unsupported_self_shielding": 40
+    },
+    "unscored_rows": 40
+   },
+   "irdff_ii_published_context": {
+    "fraction_within_10_percent": null,
+    "fraction_within_20_percent": null,
+    "fraction_within_30_percent": null,
+    "geometric_mean_C_over_E": null,
+    "maximum_abs_log_C_over_E": null,
+    "median_abs_log_C_over_E": null,
+    "p90_abs_log_C_over_E": null,
+    "scored_rows": 0,
+    "unscored_reasons": {
+     "unsupported_self_shielding": 40
+    },
+    "unscored_rows": 40
+   }
+  },
+  "H2_ACRR_table_25": {
+   "actinv_tendl2025_post_failure_diagnostic": {
+    "fraction_within_10_percent": 1.0,
+    "fraction_within_20_percent": 1.0,
+    "fraction_within_30_percent": 1.0,
+    "geometric_mean_C_over_E": 1.0136460889704537,
+    "maximum_abs_log_C_over_E": 0.09007306224155501,
+    "median_abs_log_C_over_E": 0.03544012633336513,
+    "p90_abs_log_C_over_E": 0.08285747371186777,
+    "scored_rows": 12,
+    "unscored_reasons": {
+     "not_applicable": 1,
+     "unsupported_self_shielding": 20
+    },
+    "unscored_rows": 21
+   },
+   "irdff_ii_current_archive_post_failure_diagnostic": {
+    "fraction_within_10_percent": 0.9166666666666666,
+    "fraction_within_20_percent": 1.0,
+    "fraction_within_30_percent": 1.0,
+    "geometric_mean_C_over_E": 1.0114668007033147,
+    "maximum_abs_log_C_over_E": 0.09925328202636743,
+    "median_abs_log_C_over_E": 0.033307132979809556,
+    "p90_abs_log_C_over_E": 0.0786789842749972,
+    "scored_rows": 12,
+    "unscored_reasons": {
+     "not_applicable": 1,
+     "unsupported_self_shielding": 20
+    },
+    "unscored_rows": 21
+   },
+   "irdff_ii_published_context": {
+    "fraction_within_10_percent": 0.8333333333333334,
+    "fraction_within_20_percent": 1.0,
+    "fraction_within_30_percent": 1.0,
+    "geometric_mean_C_over_E": 1.016442888697028,
+    "maximum_abs_log_C_over_E": 0.11126469405471955,
+    "median_abs_log_C_over_E": 0.048833439291590605,
+    "p90_abs_log_C_over_E": 0.10250393080570905,
+    "scored_rows": 12,
+    "unscored_reasons": {
+     "different_data_context": 1,
+     "unsupported_self_shielding": 20
+    },
+    "unscored_rows": 21
+   }
+  },
+  "H3_Maxwellian_table_36": {
+   "actinv_tendl2025_post_failure_diagnostic": {
+    "fraction_within_10_percent": 0.6190476190476191,
+    "fraction_within_20_percent": 0.7619047619047619,
+    "fraction_within_30_percent": 0.8571428571428571,
+    "geometric_mean_C_over_E": 1.0388077269447697,
+    "maximum_abs_log_C_over_E": 1.5383163212138524,
+    "median_abs_log_C_over_E": 0.07326115955613494,
+    "p90_abs_log_C_over_E": 0.34831505892567,
+    "scored_rows": 21,
+    "unscored_reasons": {},
+    "unscored_rows": 0
+   },
+   "irdff_ii_current_archive_post_failure_diagnostic": {
+    "fraction_within_10_percent": 0.5714285714285714,
+    "fraction_within_20_percent": 0.7619047619047619,
+    "fraction_within_30_percent": 0.8571428571428571,
+    "geometric_mean_C_over_E": 1.0518986477898948,
+    "maximum_abs_log_C_over_E": 1.5131910149413208,
+    "median_abs_log_C_over_E": 0.06734534194517416,
+    "p90_abs_log_C_over_E": 0.35040470783119215,
+    "scored_rows": 21,
+    "unscored_reasons": {},
+    "unscored_rows": 0
+   },
+   "irdff_ii_published_context": {
+    "fraction_within_10_percent": 0.65,
+    "fraction_within_20_percent": 0.85,
+    "fraction_within_30_percent": 0.95,
+    "geometric_mean_C_over_E": 1.0369270338010617,
+    "maximum_abs_log_C_over_E": 0.3503976139528139,
+    "median_abs_log_C_over_E": 0.05412681154464935,
+    "p90_abs_log_C_over_E": 0.23660990237891122,
+    "scored_rows": 20,
+    "unscored_reasons": {
+     "different_data_context": 1
+    },
+    "unscored_rows": 1
+   }
+  }
+ },
+ "row_counts": {
+  "per_family": {
+   "H1": 40,
+   "H2": 33,
+   "H3": 21
+  },
+  "rows_scored_once": 94,
+  "sealed": {
+   "H1": 40,
+   "H2": 33,
+   "H3": 21,
+   "post_failure_production_material_mismatches": 3,
+   "source_total": 94
+  }
+ },
+ "schema": "actinv-p22-g3-heldout-1",
+ "sealed_evidence_sha256": "f03ae41777eede3ea40255ff1bd6f427f03d5b4995b0b13c5a08a2591d85757c",
+ "sealed_failure_reason": "The committed Amendment 1 assumptions fail held-out EOI and self-shielding arithmetic; a second post-unseal mapping/measurement repair would be required.",
+ "sealed_pass": false,
+ "sealed_record": "results/g5_p17_heldout.json",
+ "sealed_verdict": "P17-FAIL",
+ "source_checks": {
+  "amendment_sha256": {
+   "expected": "e78c84d9f80c9bc6b7f0e79050206991515d283f43deeabd32f42c325f53581e",
+   "match": true,
+   "observed": "e78c84d9f80c9bc6b7f0e79050206991515d283f43deeabd32f42c325f53581e",
+   "path": "protocols/ACTINV-P17_AMENDMENT_1.md"
+  },
+  "checker_source_sha256": {
+   "expected": "c6dbabda1143262837bdd2df6f98b334b380a52985811be9725dcd2efadc8309",
+   "match": true,
+   "observed": "c6dbabda1143262837bdd2df6f98b334b380a52985811be9725dcd2efadc8309",
+   "path": "controls/check_g5_p17.py"
+  },
+  "control_source_sha256": {
+   "expected": "4cd9c0e30973bffb8ab6e67205b4c5a5208171d0857e470d82d585f1850ee638",
+   "match": true,
+   "observed": "4cd9c0e30973bffb8ab6e67205b4c5a5208171d0857e470d82d585f1850ee638",
+   "path": "controls/g5_p17_heldout.py"
+  },
+  "helper_source_sha256": {
+   "expected": "e8a793c886abf9ece4681a775474b4146908045f693100c42c72558ac586c757",
+   "match": true,
+   "observed": "e8a793c886abf9ece4681a775474b4146908045f693100c42c72558ac586c757",
+   "path": "controls/p17_heldout.py"
+  },
+  "protocol_sha256": {
+   "expected": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+   "match": true,
+   "observed": "c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f",
+   "path": "protocols/ACTINV-P17_PROTOCOL.md"
+  },
+  "scoring_source_sha256": {
+   "expected": "ba31fbcb583894d8328b3bc7cf9a8bb531ad3b13675e5c91f2146a0ea54800a4",
+   "match": true,
+   "observed": "ba31fbcb583894d8328b3bc7cf9a8bb531ad3b13675e5c91f2146a0ea54800a4",
+   "path": "controls/p17_scoring.py"
+  }
+ },
+ "verdict_preserved": "P17-FAIL"
+}

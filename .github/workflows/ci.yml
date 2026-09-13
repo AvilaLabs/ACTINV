@@ -130,6 +130,24 @@ jobs:
       - name: P21 closure — re-run all gates, re-derive arithmetic, verdict
         run: python controls/check_p21.py --no-write
 
+      - name: P22 opening gate — protocol, verdicts, CB1 seals, executed-evidence binding
+        run: python controls/check_g0_p22.py --no-write
+
+      - name: P22 CB1 re-score — numerical/ALARA/FNS comparisons reproduced
+        run: python controls/check_g1_p22.py --no-write
+
+      - name: P22 exercises — install, released-binary performance, clean clone, mesh
+        run: python controls/check_g2_p22.py --no-write
+
+      - name: P22 held-out — sealed P17 metrics reproduced, failure preserved
+        run: python controls/check_g3_p22.py --no-write
+
+      - name: P22 release candidate — scorecard tokens, artifacts, amended identity gate
+        run: python controls/check_g4_p22.py --no-write
+
+      - name: P22 closure — re-run all gates, re-derive arithmetic, verdict
+        run: python controls/check_p22.py --no-write
+
       - name: P18 metadata-only evidence seal
         run: python controls/check_g0_p18.py --no-write
 

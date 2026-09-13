@@ -528,3 +528,30 @@ part that does not compress: users, issues, and the validation record accumulati
   including P18b-FAIL, and rejects 5/5 evidence mutations. Scope is honest: no distributed or cluster execution, no
   million-cell claim (not executed), checkpoints resume the same spec only (not an interchange format), and the
   memory guard is post-hoc — it cannot pre-empt a single oversized allocation.
+
+- 2026-09-13 — P22 re-scores the post-improvement candidate under frozen protocol `86f8509f` and
+  Amendment A (the frozen G4 premise "the version string is absent from normalized results" was
+  falsified on observation — `certificate.solver` is the documented solver-semver leaf, so the gate
+  became strictly stronger: the hash-pinned pre-bump 1.0.1 artifact must reproduce the G0 baseline
+  exactly AND the rebuilt 1.1.0 artifacts must match it under solver-semver normalization). G0 sealed
+  25 prior verdicts and 9 CB1 digests and bound the P21 executed 20,000-cell evidence to the
+  candidate. G1 re-ran the frozen CB1 battery against the candidate: worst-vs-SciPy 4.0960e-15,
+  identical-input ALARA agreement exact on collapsed rate/timeline and <=4.12e-8 on shutdown
+  inventory, FNS pooled geometric-mean C/E 1.0313 with 59/132 experiments wholly within 30% — every
+  sealed metric reproduced, integer counts exact (`controls/g1_p22_battery.py`, checker
+  `controls/check_g1_p22.py`, 6/6 mutations rejected). G2 re-exercised the released 1.0.0 binary for
+  the frozen performance path (startup 1.29 ms, example 2.27 s at 1.09 GB, kernel ratios 165x/19x/
+  4.2x/2.6x at 2/32/256/1024 states), re-verified `pip install actinv==1.0.0` first-use end-to-end
+  (~8.2 s to first result; ALARA 2.9.2 source to passing sample ~37 s), built a clean clone of HEAD,
+  and re-ran a fresh 1,000-cell mesh at 8.7 cells/s with 402.1 MB peak RSS inside the P21 bound
+  (`controls/g2_p22_exercises.py`, checker 7/7 mutations). G3 re-scored the sealed P17 held-out
+  partition (94 rows) once through unchanged scoring code — all family metrics reproduce within
+  1e-12 and `P17-FAIL` stands, as does `P18b-FAIL` (`controls/g3_p22_heldout.py`, checker 6/6
+  mutations). G4 updated `docs/COMPETITIVE_BENCHMARK.md` (P22 candidate re-score section, scoped
+  P19/P21/P23 capability cells, every remaining loss preserved), bumped the workspace to 1.1.0,
+  rebuilt the CLI binary/Python extension/wheel, and proved the bump solver-inert under the amended
+  gate (`controls/g4_p22_release.py`, checker 7/7 mutations); `release_ready` is recorded but
+  tagging, GitHub release and PyPI upload remain separate maintainer actions. The closure checker
+  `controls/check_p22.py` re-runs every gate checker, re-derives the CB1 comparisons and held-out
+  metrics, recomputes the release decision, re-asserts all 25 prior verdicts, verifies the manifest,
+  and rejects planted mutations.

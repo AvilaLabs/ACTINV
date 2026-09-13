@@ -204,9 +204,9 @@ for every cell is in [`results/cb1_capabilities.json`](../results/cb1_capabiliti
 | CLI and programmatic API | V | P | V | V | P |
 | deterministic input provenance | V | ? | ? | ? | ? |
 | spatial/mesh operation | V | V | V | ? | P |
-| continuous feed/removal | A | ? | V | ? | V |
-| reverse calculation | A | V | ? | ? | ? |
-| damage observables | A | ? | V | V | ? |
+| continuous feed/removal | V** | ? | V | ? | V |
+| reverse calculation | V** | V | ? | ? | ? |
+| damage observables | V** | ? | V | V | ? |
 | documented operating-system routes | V | P | V | V | V |
 | compile-time physical unit types | A | ? | ? | ? | ? |
 
@@ -214,6 +214,15 @@ for every cell is in [`results/cb1_capabilities.json`](../results/cb1_capabiliti
 (`self_shielding` on `actinv-spec-1`/`actinv-mesh-spec-1`, tables built by `actinv build-shielding`):
 resolved-region pointwise shielding, heterogeneous escape corrections, and probability-table transport
 remain outside scope and are named in the run's method limits.
+
+`V**` marks the scoped P23 surfaces: schedule-driven feed/removal (constant-rate feed and first-order
+removal terms on `actinv-spec-1` schedule steps), linear-regime reverse estimation (`actinv reverse`
+recovers the flux normalization or segment multipliers from measured activities under the trace/linear
+regime, weighted least squares), and damage observables (a hash-pinned `actinv-damage-table-1` folds
+TENDL damage-energy cross sections into damage energy and NRT-dpa). They do not claim pathway
+attribution of fed inventory (pathway output is suppressed with a named ledger reason), nonlinear
+inversion, or displacement models beyond NRT; the exact scope and non-claims are in
+`results/verdict_p23.json`.
 
 Important distinctions behind the compact table:
 
@@ -293,3 +302,35 @@ The main limits are:
 - no executed million-cell run.
 
 CB1 is a reproducible first scorecard, not the end of competitive validation.
+
+## P22 candidate re-score
+
+P22 re-ran the frozen CB1 battery against the post-improvement candidate (1.0.1 lineage; release-candidate
+artifacts are produced by `controls/g4_p22_release.py` only after G1–G3 pass). Evidence:
+`results/g1_p22_battery.json`, `results/g2_p22_exercises.json`, `results/g3_p22_heldout.json`; frozen
+protocol `protocols/ACTINV-P22_PROTOCOL.md`.
+
+- **Numerical/ALARA/FNS** — the frozen battery reproduces the sealed CB1 values: worst-vs-SciPy
+  `4.0960e-15`, crossover `4.1808e-15`, resolvable worst `8.4524e-06`; identical-input agreement
+  with ALARA 2.9.2 is exact (0.0 relative) on collapsed reaction rate and the timeline, and
+  ≤4.12e-8 on shutdown inventory, with identical input hashes; FNS pooled geometric-mean C/E
+  `1.0313`, median |log C/E| `0.1392`, 59/132 experiments wholly within 30%.
+- **First use** — `pip install actinv==1.0.0` → first result in ~8.2 s end-to-end on the timing host
+  (0.92 s install, 5.1 s data fetch, 2.3 s first solve); ALARA 2.9.2 source → passing sample in ~37 s.
+- **Performance** — kernel ratios at the Python boundary vs `openmc.deplete.cram.CRAM48`: 165× / 19× /
+  4.2× / 2.6× at 2/32/256/1024 states; startup 1.29 ms; public example median 2.27 s at 1.09 GB peak
+  RSS; identical-data standalone ACTINV 535.7 ms vs ALARA 2.04 ms (different outputs — not a
+  like-for-like row).
+- **Mesh** — the 1,000-cell TENDL-2025 exercise re-ran at 8.7 cells/s with 402.1 MB peak RSS (within
+  the P21 flat-memory bound); the executed 20,000-cell case and grouping/chunk evidence stand in
+  `results/g3_p21_executed.json`.
+- **Held-out** — the P17 sealed partition (94 rows, H1/H2/H3) was re-scored once through unchanged
+  scoring code (source hashes pinned): all family metrics reproduce the sealed values within 1e-12
+  and the stratum failure outcome is preserved — **P17-FAIL stands**. P18b's held-out scoring likewise
+  remains **P18b-FAIL**; P22 changes no threshold, eligibility rule, exclusion, or metric.
+
+Remaining known losses (unchanged by this re-score): ALARA's 262× standalone speed advantage on the
+identical-data chain (different output volumes), the ~1.1 GB whole-product RSS on the public example,
+FISPACT-II's FNS experiment coverage where ACTINV trails on C/E tails, transport coupling,
+probability-table self-shielding, and every licensed-suite capability marked `?`/`V` in the table
+above that ACTINV does not hold.

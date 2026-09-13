@@ -1,0 +1,186 @@
+{
+ "candidate": {
+  "actinv_binary_sha256": "07b23cf15e9e86f82e6e64a8295192785d68f1ecebd7d582c5970a3a41c269d9",
+  "actinv_version": "actinv 1.0.1",
+  "cgroup": {
+   "cpu.max": null,
+   "memory.max": null,
+   "memory.swap.max": null,
+   "pids.max": null,
+   "self_cgroup": "0::/user.slice/user-1000.slice/user@1000.service/app.slice/app-ghostty-surface-transient-449486.scope"
+  },
+  "head_commit": "c4a361f0e1c1929e508decdd33848a789dcd9ef0",
+  "kernel": "7.0.0-31-generic",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.43",
+  "python_module_sha256": "09ab15d80be2928cc3859e2d68691617f831b37290e5c6c16c25130ce692df42",
+  "rustc": "rustc 1.95.0 (59807616e 2026-04-14)"
+ },
+ "cb1_evidence_seals": {
+  "access": {
+   "expected_sha256": "5af3350f8f804524d8b6b014df9c1ecfb1d50f6e93ccf4ceda8aae63efbbb962",
+   "file": "results/cb1_access.json",
+   "matches": true,
+   "observed_sha256": "5af3350f8f804524d8b6b014df9c1ecfb1d50f6e93ccf4ceda8aae63efbbb962"
+  },
+  "alara": {
+   "expected_sha256": "983521169ed2fa4a4aca56b74f16bb9707ac28469a2a76d44f7f16dc9179a27b",
+   "file": "results/cb1_alara.json",
+   "matches": true,
+   "observed_sha256": "983521169ed2fa4a4aca56b74f16bb9707ac28469a2a76d44f7f16dc9179a27b"
+  },
+  "capabilities": {
+   "expected_sha256": "8a938228fc222f5ccd6edd849527f64e626402d1be88a5677553691723800063",
+   "file": "results/cb1_capabilities.json",
+   "matches": true,
+   "observed_sha256": "8a938228fc222f5ccd6edd849527f64e626402d1be88a5677553691723800063"
+  },
+  "first_use": {
+   "expected_sha256": "e8e1ac7bdaa5ae5db385f852a682d7391c289bcfa4f47ca18e662e628c80e066",
+   "file": "results/cb1_first_use.json",
+   "matches": true,
+   "observed_sha256": "e8e1ac7bdaa5ae5db385f852a682d7391c289bcfa4f47ca18e662e628c80e066"
+  },
+  "fns": {
+   "expected_sha256": "392fb77f9e3c163dfdc0b952d2e9823b6c2491026de1def444db42c94f878066",
+   "file": "results/cb1_fns.json",
+   "matches": true,
+   "observed_sha256": "392fb77f9e3c163dfdc0b952d2e9823b6c2491026de1def444db42c94f878066"
+  },
+  "mesh_performance": {
+   "expected_sha256": "9892d58b9c314b25ba9ea846d148e8bf0761aad4ce5d444bc626e90a6f14c256",
+   "file": "results/cb1_mesh_performance.json",
+   "matches": true,
+   "observed_sha256": "9892d58b9c314b25ba9ea846d148e8bf0761aad4ce5d444bc626e90a6f14c256"
+  },
+  "numerical": {
+   "expected_sha256": "f848d58581655cb9f99b9d527805003988df40dd64827e13f29779fd39d551e9",
+   "file": "results/cb1_numerical.json",
+   "matches": true,
+   "observed_sha256": "f848d58581655cb9f99b9d527805003988df40dd64827e13f29779fd39d551e9"
+  },
+  "performance": {
+   "expected_sha256": "ec53c1054c575a89c85c7e876729f2a8203106ddb595afd9fdae2829ed1d8ec8",
+   "file": "results/cb1_performance.json",
+   "matches": true,
+   "observed_sha256": "ec53c1054c575a89c85c7e876729f2a8203106ddb595afd9fdae2829ed1d8ec8"
+  },
+  "prior_validation": {
+   "expected_sha256": "6ae7ade7bbe83cb5c6dfe7a39636ad66ccf69ad1a8fd9c81a21a5cf62f508412",
+   "file": "results/cb1_prior_validation.json",
+   "matches": true,
+   "observed_sha256": "6ae7ade7bbe83cb5c6dfe7a39636ad66ccf69ad1a8fd9c81a21a5cf62f508412"
+  }
+ },
+ "executed_scale_link": {
+  "candidate_binary_sha256": "07b23cf15e9e86f82e6e64a8295192785d68f1ecebd7d582c5970a3a41c269d9",
+  "cells": 20000,
+  "matches": true,
+  "record": "results/g3_p21_executed.json",
+  "recorded_binary_sha256": "07b23cf15e9e86f82e6e64a8295192785d68f1ecebd7d582c5970a3a41c269d9"
+ },
+ "pass": true,
+ "protocol_sha256": "86f8509f58780a82923fcfdd9996db0e557a1eba845f553a0835b64f8a3cf971",
+ "schema": "actinv-p22-seals-1",
+ "verdicts": {
+  "verdict_cb1.json": {
+   "expected": "CB1-COMPLETE",
+   "observed": "CB1-COMPLETE"
+  },
+  "verdict_p10.json": {
+   "expected": "P10-CONDITIONAL",
+   "observed": "P10-CONDITIONAL"
+  },
+  "verdict_p11.json": {
+   "expected": "P11-CONDITIONAL",
+   "observed": "P11-CONDITIONAL"
+  },
+  "verdict_p12.json": {
+   "expected": "P12-CONDITIONAL",
+   "observed": "P12-CONDITIONAL"
+  },
+  "verdict_p13.json": {
+   "expected": "P13-PASS",
+   "observed": "P13-PASS"
+  },
+  "verdict_p14.json": {
+   "expected": "P14-CLOSED-BELOW-THRESHOLD",
+   "observed": "P14-CLOSED-BELOW-THRESHOLD"
+  },
+  "verdict_p15.json": {
+   "expected": "P15-PASS",
+   "observed": "P15-PASS"
+  },
+  "verdict_p16.json": {
+   "expected": "P16-CONDITIONAL",
+   "observed": "P16-CONDITIONAL"
+  },
+  "verdict_p17.json": {
+   "expected": "P17-FAIL",
+   "observed": "P17-FAIL"
+  },
+  "verdict_p18.json": {
+   "expected": "P18-FAIL",
+   "observed": "P18-FAIL"
+  },
+  "verdict_p18b.json": {
+   "expected": "P18b-FAIL",
+   "observed": "P18b-FAIL"
+  },
+  "verdict_p19.json": {
+   "expected": "P19-PASS",
+   "observed": "P19-PASS"
+  },
+  "verdict_p2.json": {
+   "expected": "P2-CONDITIONAL",
+   "observed": "P2-CONDITIONAL"
+  },
+  "verdict_p20.json": {
+   "expected": "P20-PASS",
+   "observed": "P20-PASS"
+  },
+  "verdict_p21.json": {
+   "expected": "P21-PASS",
+   "observed": "P21-PASS"
+  },
+  "verdict_p23.json": {
+   "expected": "P23-PASS",
+   "observed": "P23-PASS"
+  },
+  "verdict_p3.json": {
+   "expected": "P3-FAIL",
+   "observed": "P3-FAIL"
+  },
+  "verdict_p3b.json": {
+   "expected": "P3b-PASS",
+   "observed": "P3b-PASS"
+  },
+  "verdict_p4.json": {
+   "expected": "P4-FAIL",
+   "observed": "P4-FAIL"
+  },
+  "verdict_p4b.json": {
+   "expected": "P4b-PASS",
+   "observed": "P4b-PASS"
+  },
+  "verdict_p5.json": {
+   "expected": "P5-PASS",
+   "observed": "P5-PASS"
+  },
+  "verdict_p6.json": {
+   "expected": "P6-CONDITIONAL",
+   "observed": "P6-CONDITIONAL"
+  },
+  "verdict_p7.json": {
+   "expected": "P7-CONDITIONAL",
+   "observed": "P7-CONDITIONAL"
+  },
+  "verdict_p8.json": {
+   "expected": "P8-CONDITIONAL",
+   "observed": "P8-CONDITIONAL"
+  },
+  "verdict_p9.json": {
+   "expected": "P9-CONDITIONAL",
+   "observed": "P9-CONDITIONAL"
+  }
+ }
+}

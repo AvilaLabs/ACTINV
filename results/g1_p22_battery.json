@@ -1,0 +1,154 @@
+{
+ "legs": {
+  "alara": {
+   "all_within_band": true,
+   "candidate_record": "results/p22_g1_alara.json",
+   "comparisons": {
+    "worst_actinv_vs_analytic_relative": {
+     "candidate": 2.9372886614762014e-14,
+     "relative_delta": 0.0,
+     "sealed": 2.9372886614762014e-14,
+     "within_band": true
+    },
+    "worst_alara_vs_analytic_relative": {
+     "candidate": 4.114585897277638e-08,
+     "relative_delta": 0.0,
+     "sealed": 4.114585897277638e-08,
+     "within_band": true
+    }
+   },
+   "counts_exact": true,
+   "identical_inputs_equal": true,
+   "pass": true,
+   "sealed_record": "results/cb1_alara.json"
+  },
+  "fns": {
+   "all_within_band": true,
+   "candidate_pass": true,
+   "candidate_record": "results/p22_g1_fns.json",
+   "comparisons": {
+    "experiments_all_points_within_30_percent": {
+     "candidate": 59,
+     "exact": true,
+     "sealed": 59
+    },
+    "experiments_scored": {
+     "candidate": 132,
+     "exact": true,
+     "sealed": 132
+    },
+    "experiments_total": {
+     "candidate": 132,
+     "exact": true,
+     "sealed": 132
+    },
+    "median_experiment_maximum_abs_log_C_over_E": {
+     "candidate": 0.29474574014783184,
+     "relative_delta": 0.0,
+     "sealed": 0.29474574014783184,
+     "within_band": true
+    },
+    "median_pooled_abs_log_C_over_E": {
+     "candidate": 0.13919895085415387,
+     "relative_delta": 0.0,
+     "sealed": 0.13919895085415387,
+     "within_band": true
+    },
+    "p90_pooled_abs_log_C_over_E": {
+     "candidate": 0.6637466455118501,
+     "relative_delta": 0.0,
+     "sealed": 0.6637466455118501,
+     "within_band": true
+    },
+    "points_scored": {
+     "candidate": 2360,
+     "exact": true,
+     "sealed": 2360
+    },
+    "pooled_geometric_mean_C_over_E": {
+     "candidate": 1.031337200165535,
+     "relative_delta": 0.0,
+     "sealed": 1.031337200165535,
+     "within_band": true
+    },
+    "positive_sigma_points": {
+     "candidate": 2360,
+     "exact": true,
+     "sealed": 2360
+    }
+   },
+   "counts_exact": true,
+   "pass": true,
+   "sealed_record": "results/cb1_fns.json"
+  },
+  "numerical": {
+   "all_within_band": true,
+   "candidate_pass": true,
+   "candidate_record": "results/p22_g1_numerical.json",
+   "comparisons": {
+    "absolute_over_initial_norm": {
+     "candidate": 4.096e-15,
+     "relative_delta": 0.0,
+     "sealed": 4.096e-15,
+     "within_band": true
+    },
+    "relative_above_tolerance_crossover": {
+     "candidate": 4.180834583524121e-15,
+     "relative_delta": 0.0,
+     "sealed": 4.180834583524121e-15,
+     "within_band": true
+    },
+    "resolvable_relative": {
+     "candidate": 8.452357718640267e-06,
+     "relative_delta": 0.0,
+     "sealed": 8.452357718640267e-06,
+     "within_band": true
+    },
+    "split_merged_absolute_over_initial_norm": {
+     "candidate": 2.4514713216957608e-15,
+     "relative_delta": 0.0,
+     "sealed": 2.4514713216957608e-15,
+     "within_band": true
+    }
+   },
+   "counts_exact": true,
+   "no_larger": true,
+   "pass": true,
+   "sealed_record": "results/cb1_numerical.json"
+  }
+ },
+ "pass": true,
+ "relative_band": 1e-06,
+ "runs": {
+  "alara": {
+   "env": {
+    "CMAKE_POLICY_VERSION_MINIMUM": "3.5",
+    "TMPDIR": "/tmp"
+   },
+   "module": "controls/cb1_alara.py",
+   "module_sha256": "65ae7b51ba71069f4c5628edb99521cca1c9c8095e5a551fcb76889120862f6f",
+   "out": "results/p22_g1_alara.json",
+   "returncode": 0,
+   "written": true
+  },
+  "fns": {
+   "env": {
+    "ACTINV_CB1_FNS_WORK": "/home/connoravila/Documents/actinv/target/p22-g1/fns"
+   },
+   "module": "controls/cb1_fns.py",
+   "module_sha256": "94dafbf3bc64b4351077332fa2b232bef3e7f3b9d87b2b98f2858c9914ea1740",
+   "out": "results/p22_g1_fns.json",
+   "returncode": 0,
+   "written": true
+  },
+  "numerical": {
+   "env": {},
+   "module": "controls/cb1_numerical.py",
+   "module_sha256": "14246d1f3f06f1072abe092a8670c37ebc6435b8ec6b63e23b744d96c4164f3d",
+   "out": "results/p22_g1_numerical.json",
+   "returncode": 0,
+   "written": true
+  }
+ },
+ "schema": "actinv-p22-g1-battery-1"
+}

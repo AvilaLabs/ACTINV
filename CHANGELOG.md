@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+**Added**
+
+- Finite-dilution self-shielding: `self_shielding` on `actinv-spec-1`/`actinv-mesh-spec-1` applies
+  unresolved-range Bondarenko shielding from hash-pinned `actinv-shield-table-1` tables built by
+  `actinv build-shielding`. Infinite dilution remains the explicit default; resolved-region pointwise
+  shielding, escape corrections and probability-table transport remain out of scope.
+- Schedule-driven feed and removal on `actinv-spec-1` steps (constant feed rates, first-order removal
+  constants), a `removed` sink state, and named-ledger reporting rather than silent omission.
+- `actinv reverse` / `actinv.reverse`: linear-regime flux estimation — recovers the flux normalization
+  or segment multipliers from measured activities by weighted least squares, with residuals,
+  chi-square and explicit method limits.
+- Damage observables: a `damage` spec section folds hash-pinned `actinv-damage-table-1` tables (built
+  by `actinv build-damage` from TENDL MF=3/MT=444) into damage-energy and NRT-dpa outputs.
+- Practical uncertainty channels: propagated response bands now carry a per-channel breakdown across
+  cross-section (MF=33), decay-constant (MF=8/MT=457) and independent fission-yield (MF=8/MT=454)
+  uncertainty plus a named uncovered remainder; malformed covariance blocks are excluded with named
+  reasons rather than silently clipped or symmetrized.
+- Mesh scaling surface: signature-keyed workload grouping (reuse across cells sharing an identical
+  rebinned flux), `cell_result_fields` selection, the post-hoc `memory_limit_bytes` guard, and
+  output-as-checkpoint resume — a resumed run is byte-identical to an uninterrupted run modulo footer
+  timing.
+
 **Validation**
 
 - Opened the evidence-directed P18 state-identity phase under a pre-evidence hash. It freezes physical ENDF product

@@ -1,0 +1,86 @@
+{
+ "access": {
+  "ACTINV": "executed",
+  "ALARA": "executed",
+  "FISPACT-II": "not-available",
+  "OpenMC": "not-applicable",
+  "SCALE/ORIGEN": "not-available"
+ },
+ "analytic": {
+  "Fe56": {
+   "actinv_relative": 1.6653345465518414e-15,
+   "alara_relative": 5.7730799030153435e-09,
+   "reference": 0.9999999942269201
+  },
+  "Mn56": {
+   "actinv_relative": 2.9372886614762014e-14,
+   "alara_relative": 4.114585897277638e-08,
+   "reference": 5.77308004478349e-09
+  }
+ },
+ "identical_inputs": {
+  "activation_subset_sha256": "d1dfe38bf722dc19c40dd1a1e07e44f51041ab4c69b79b1a67b0653df837c421",
+  "cross_section_barns": 0.0578494,
+  "flux_n_cm2_s": 1e+16,
+  "groups": 175,
+  "official_input_hashes": {
+   "activation_sha256": "f45ced4d5676c993f6b6dd562d5e312e897eabb959dc6ebba56bbeaecde22312",
+   "decay_sha256": "810f3b8ca46dd55b965e37b84c9793057a7ee53aa2a194a2fcb1ff0d1b681940",
+   "element_sha256": "bdfcfdb255d89b4988be9fab4279c36fb9615709ee6a738e963591db6146c290",
+   "fallback_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+   "sample1_sha256": "f5eced7f053d74c31d59ddb9314ea92b160b0f55f2c81c51ffe4a5a2a9f90f65",
+   "sample3_sha256": "ba12dc9dcf05952eafd3490273dc954eeb207b1df76bd2fcd1d8097402dd9787"
+  },
+  "timeline": {
+   "actinv_fluence_n_cm2": 1e+17,
+   "actinv_flux_weighted_time_s": 10.0,
+   "actinv_time_s": 55.0,
+   "expected_fluence_n_cm2": 1e+17,
+   "expected_flux_weighted_time_s": 10.0,
+   "expected_time_s": 55.0,
+   "gaps": 9,
+   "pulses": 10,
+   "segments": 19,
+   "worst_relative": 0.0
+  }
+ },
+ "implementations": {
+  "actinv_version": "1.0.0",
+  "alara_source_commit": "faa5b330460fe865e38fc788f1b792ea33d13d1b",
+  "alara_version": "ALARA 2.9.2"
+ },
+ "maximum_inventory_relative_above_1e-10_initial": 4.1145888345661785e-08,
+ "pass": true,
+ "reaction_rate": {
+  "actinv_ascending_order_per_s": 5.78494e-10,
+  "alara_eaf_order_per_s": 5.78494e-10,
+  "relative_difference": 0.0
+ },
+ "rerun": {
+  "official_reference_conversion_and_run": true,
+  "source_control": "controls/g5_p9_alara.py",
+  "source_control_sha256": "6cb001296311a76869ba1b7e2230d79272d4cbfe82bedefd1a5c64fe4857ce73",
+  "subprocess_returncode": 0
+ },
+ "schema": "actinv-cb1-alara-1",
+ "shutdown_inventory": {
+  "Fe56": {
+   "above_1e-10_initial": true,
+   "actinv_fraction_of_initial": 0.9999999942269218,
+   "alara_fraction_of_initial": 1.0,
+   "relative_difference": 5.7730782376808065e-09
+  },
+  "Mn56": {
+   "above_1e-10_initial": true,
+   "actinv_fraction_of_initial": 5.773080044783321e-09,
+   "alara_fraction_of_initial": 5.773080282321837e-09,
+   "relative_difference": 4.1145888345661785e-08
+  }
+ },
+ "tolerances": {
+  "collapsed_rate_relative": 1e-12,
+  "inventory_relative": 0.0005
+ },
+ "worst_actinv_vs_analytic_relative": 2.9372886614762014e-14,
+ "worst_alara_vs_analytic_relative": 4.114585897277638e-08
+}
