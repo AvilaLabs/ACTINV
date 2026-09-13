@@ -9,7 +9,8 @@ use sha2::{Digest, Sha256};
 use std::path::PathBuf;
 
 fn sha256_file(path: &std::path::Path) -> Result<String, String> {
-    let bytes = std::fs::read(path).map_err(|error| format!("cannot read {}: {error}", path.display()))?;
+    let bytes =
+        std::fs::read(path).map_err(|error| format!("cannot read {}: {error}", path.display()))?;
     Ok(format!("{:x}", Sha256::digest(&bytes)))
 }
 
@@ -53,6 +54,9 @@ fn main() -> Result<(), String> {
         "covariance_sha256": sha256_file(&covariance_path)?,
         "collapsed": collapsed,
     });
-    println!("{}", serde_json::to_string(&out).map_err(|error| error.to_string())?);
+    println!(
+        "{}",
+        serde_json::to_string(&out).map_err(|error| error.to_string())?
+    );
     Ok(())
 }

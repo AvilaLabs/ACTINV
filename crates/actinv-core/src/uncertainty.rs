@@ -305,20 +305,18 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         .filter(|record| record.value != 0.0)
         .count();
     let mf33_coverage = channel_coverage(covered_parameters, total_parameters);
-    let decay_coverage = input.decay_channel.as_ref().map(|channel| {
-        channel_coverage(channel.covered_parameters, channel.total_parameters)
-    });
-    let yield_coverage = input.fission_yield_channel.as_ref().map(|channel| {
-        channel_coverage(channel.covered_parameters, channel.total_parameters)
-    });
+    let decay_coverage = input
+        .decay_channel
+        .as_ref()
+        .map(|channel| channel_coverage(channel.covered_parameters, channel.total_parameters));
+    let yield_coverage = input
+        .fission_yield_channel
+        .as_ref()
+        .map(|channel| channel_coverage(channel.covered_parameters, channel.total_parameters));
     let band_complete = mf33_coverage == "complete"
         && decay_coverage.is_none_or(|coverage| coverage == "complete")
         && yield_coverage.is_none_or(|coverage| coverage == "complete");
-    let channel_coverage = if band_complete {
-        "complete"
-    } else {
-        "partial"
-    };
+    let channel_coverage = if band_complete { "complete" } else { "partial" };
     let channels = vec![
         ChannelReport {
             channel: "cross_section_mf33",

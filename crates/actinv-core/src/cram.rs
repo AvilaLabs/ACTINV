@@ -79,10 +79,8 @@ pub fn step_with_tangents(
         max_fill = max_fill.max(lower + upper);
         let right_hand_side: Vec<C64> = y.iter().map(|value| C64::new(*value, 0.0)).collect();
         let z = factor.solve(&right_hand_side);
-        for ((tangent, direction), &direction_scale) in dy
-            .iter_mut()
-            .zip(directions)
-            .zip(direction_scales)
+        for ((tangent, direction), &direction_scale) in
+            dy.iter_mut().zip(directions).zip(direction_scales)
         {
             let mut rhs: Vec<C64> = tangent.iter().map(|value| C64::new(*value, 0.0)).collect();
             for (column, solution) in z.iter().enumerate() {

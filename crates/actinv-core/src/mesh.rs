@@ -160,8 +160,7 @@ impl MeshSpec {
     /// guard do not change emitted records, so they are excluded: a resumed
     /// run may legitimately carry different values for them.
     pub fn fingerprint_sha256(&self) -> Result<String, String> {
-        let mut value =
-            serde_json::to_value(self).map_err(|error| error.to_string())?;
+        let mut value = serde_json::to_value(self).map_err(|error| error.to_string())?;
         let object = value
             .as_object_mut()
             .ok_or("mesh spec did not serialize as an object")?;
@@ -428,7 +427,11 @@ fn solve_result(
     serde_json::to_string(&result).map_err(|error| format!("cell '{cell_id}': {error}"))
 }
 
-fn cell_record(cell: &FluxCell, rebinned: &RebinResult, result: serde_json::Value) -> MeshCellRecord {
+fn cell_record(
+    cell: &FluxCell,
+    rebinned: &RebinResult,
+    result: serde_json::Value,
+) -> MeshCellRecord {
     MeshCellRecord {
         record: "cell",
         ordinal: cell.ordinal,
@@ -488,8 +491,7 @@ fn resume_scan(output: &Path, expected_header: &[u8]) -> Result<Option<ResumePre
         + 1;
     if content[..header_end] != *expected_header {
         return Err(
-            "mesh output header does not match this spec's fingerprint; refusing to resume"
-                .into(),
+            "mesh output header does not match this spec's fingerprint; refusing to resume".into(),
         );
     }
     let mut offset = header_end;
@@ -582,8 +584,8 @@ fn read_prefix_result(
             Err(error) => return Err(error.to_string()),
         }
     }
-    let value: serde_json::Value = serde_json::from_slice(&line)
-        .map_err(|error| format!("prefix cell {ordinal}: {error}"))?;
+    let value: serde_json::Value =
+        serde_json::from_slice(&line).map_err(|error| format!("prefix cell {ordinal}: {error}"))?;
     let result = value
         .get("result")
         .ok_or_else(|| format!("prefix cell {ordinal} has no result field"))?;
@@ -631,12 +633,8 @@ fn write_mesh_body(
             input_cells
                 .par_iter()
                 .map(|cell| {
-                    rebin_equal_lethargy(
-                        source_groups,
-                        &cell.flux_per_group,
-                        activation_boundaries,
-                    )
-                    .map_err(|error| format!("cell '{}': {error}", cell.id))
+                    rebin_equal_lethargy(source_groups, &cell.flux_per_group, activation_boundaries)
+                        .map_err(|error| format!("cell '{}': {error}", cell.id))
                 })
                 .collect::<Result<_, String>>()
         })?;
@@ -666,8 +664,7 @@ fn write_mesh_body(
                                     .as_mut()
                                     .map(|(file, offsets)| (&mut **file, *offsets))
                                     .ok_or("resumable prefix reader unavailable")?;
-                                resolved[index] =
-                                    Some(read_prefix_result(file, offsets, ordinal)?);
+                                resolved[index] = Some(read_prefix_result(file, offsets, ordinal)?);
                             }
                         }
                     }
@@ -926,6 +923,7 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
             .read(true)
             .write(true)
             .create(true)
+            .truncate(false)
             .open(output)
             .map_err(|error| format!("cannot open {}: {error}", output.display()))?;
         // A separate open (not try_clone) is required: cloned handles share

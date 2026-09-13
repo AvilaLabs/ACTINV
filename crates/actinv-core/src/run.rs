@@ -695,37 +695,36 @@ fn build_step_uncertainty(
         } else {
             None
         };
-        let yield_channel = if !runtime.yield_parameters.is_empty()
-            || runtime.yield_channel_requested
-        {
-            let mut sensitivities = Vec::with_capacity(runtime.yield_parameters.len());
-            let mut channel_variance = 0.0;
-            let mut covered = 0usize;
-            let mut total = 0usize;
-            for (index, parameter) in runtime.yield_parameters.iter().enumerate() {
-                let value = values[xs_count + decay_count + index];
-                if value != 0.0 {
-                    total += 1;
-                    if parameter.covered {
-                        covered += 1;
-                        channel_variance += (value * parameter.standard_uncertainty).powi(2);
+        let yield_channel =
+            if !runtime.yield_parameters.is_empty() || runtime.yield_channel_requested {
+                let mut sensitivities = Vec::with_capacity(runtime.yield_parameters.len());
+                let mut channel_variance = 0.0;
+                let mut covered = 0usize;
+                let mut total = 0usize;
+                for (index, parameter) in runtime.yield_parameters.iter().enumerate() {
+                    let value = values[xs_count + decay_count + index];
+                    if value != 0.0 {
+                        total += 1;
+                        if parameter.covered {
+                            covered += 1;
+                            channel_variance += (value * parameter.standard_uncertainty).powi(2);
+                        }
                     }
+                    sensitivities.push(YieldSensitivityOut {
+                        parameter: parameter.clone(),
+                        value,
+                        unit: response_unit.into(),
+                    });
                 }
-                sensitivities.push(YieldSensitivityOut {
-                    parameter: parameter.clone(),
-                    value,
-                    unit: response_unit.into(),
-                });
-            }
-            Some(ChannelData {
-                variance: channel_variance,
-                covered_parameters: covered,
-                total_parameters: total,
-                sensitivities,
-            })
-        } else {
-            None
-        };
+                Some(ChannelData {
+                    variance: channel_variance,
+                    covered_parameters: covered,
+                    total_parameters: total,
+                    sensitivities,
+                })
+            } else {
+                None
+            };
         let sensitivities = values
             .into_iter()
             .take(xs_count)
@@ -772,7 +771,10 @@ fn build_step_uncertainty(
             .iter()
             .filter(|parameter| !parameter.covered)
             .map(|parameter| {
-                format!("{} -> {}", parameter.parent_nuclide, parameter.product_nuclide)
+                format!(
+                    "{} -> {}",
+                    parameter.parent_nuclide, parameter.product_nuclide
+                )
             })
             .collect(),
         responses,
@@ -1972,16 +1974,17 @@ impl PreparedRun {
         let mut decay_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
         for (parent, row, column, per_lambda_s) in decay_derivatives {
             if per_lambda_s != 0.0 && pos[row] != usize::MAX && pos[column] != usize::MAX {
-                decay_sub
-                    .entry(parent)
-                    .or_default()
-                    .push((pos[row], pos[column], C64::new(per_lambda_s, 0.0)));
+                decay_sub.entry(parent).or_default().push((
+                    pos[row],
+                    pos[column],
+                    C64::new(per_lambda_s, 0.0),
+                ));
             }
         }
         // Independent-yield directions, keyed by (parent ZA, parent LISO,
         // product ZA, product state).
-        let mut yield_sub: BTreeMap<(i32, i32, i32, i32), Vec<(usize, usize, C64)>> =
-            BTreeMap::new();
+        type YieldTangents = BTreeMap<(i32, i32, i32, i32), Vec<(usize, usize, C64)>>;
+        let mut yield_sub: YieldTangents = BTreeMap::new();
         for derivative in yield_derivatives {
             if derivative.per_yield_s != 0.0
                 && pos[derivative.row] != usize::MAX
@@ -2076,8 +2079,10 @@ impl PreparedRun {
                 let mut flux_scaled = vec![true; parameters.len()];
                 let mut decay_parameters = Vec::new();
                 let mut yield_parameters = Vec::new();
-                let decay_channel_requested =
-                    options.channels.iter().any(|name| name == "decay_constants");
+                let decay_channel_requested = options
+                    .channels
+                    .iter()
+                    .any(|name| name == "decay_constants");
                 let yield_channel_requested =
                     options.channels.iter().any(|name| name == "fission_yields");
                 if decay_channel_requested {
@@ -2089,9 +2094,7 @@ impl PreparedRun {
                         let relative = nuclides
                             .get(&(za, liso))
                             .filter(|nuclide| nuclide.half_life > 0.0)
-                            .map_or(0.0, |nuclide| {
-                                nuclide.d_half_life / nuclide.half_life
-                            });
+                            .map_or(0.0, |nuclide| nuclide.d_half_life / nuclide.half_life);
                         decay_parameters.push(DecayParameter {
                             nuclide: name_of(za, liso),
                             za,
@@ -2137,7 +2140,9 @@ impl PreparedRun {
                 Some(UncertaintyRuntime {
                     tangents: vec![
                         vec![0.0; m];
-                        parameters.len() + decay_parameters.len() + yield_parameters.len()
+                        parameters.len()
+                            + decay_parameters.len()
+                            + yield_parameters.len()
                     ],
                     directions,
                     flux_scaled,
