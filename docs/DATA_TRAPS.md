@@ -134,11 +134,12 @@ ledgered `floor_reconciled`; anything above it is evaluated on mechanism.
 ## 12. Emitted partials can contradict the declared total — genuinely
 
 Beyond conventions, TENDL-2025 contains declared-value contradictions no downstream repair can absorb. In the
-quarantined population: 50 evaluations exceed the MF=3 total *at declared product gridpoints* (`d-Y089` MT=104,
-relative excess 1.2×10⁵; `n-Fe053m` carries a stray ~10⁵ b ordinate), and 45 declare a zero or near-zero total
-alongside partials carrying group-level barns (`d-Y091m`: states 1.1×10⁻¹¹ b vs total 4.7×10⁻¹⁷ b). A further
-25 neutron files looked like grid-density interpolation artifacts, but their worst excesses run 0.11×–18.6× the
-total — every one beyond the 0.03 proven-mechanism envelope, so zero were reconcilable.
+quarantined population, 62 evaluations carry barn-scale contradictions — `n-Fe053m` declares 1.08×10⁵ b of
+Fe-52 production under an MT=16 total of exactly zero at 7.79 MeV, `n-Zr088` 70 b, `n-Y088` 26 b,
+`n-Lu174m` 9.5 b at 0.4 eV — while 23 carry only micro-to-femtobarn inconsistencies (10⁻⁶–10⁻¹⁵ b; formally
+contradictory, probably grid-generation artifacts) and 10 show between-gridpoint relative excesses. A further
+25 neutron files looked like grid-density interpolation artifacts, but their worst excesses run 0.11×–18.6×
+the total — every one beyond the 0.03 proven-mechanism envelope, so zero were reconcilable.
 
 **ACTINV:** the exact-decimal oracle classifies each file per (MT, ZAP) into floor / interpolation-artifact /
 missing-total / genuine classes; genuine-source files fail closed and their residual defects are carried in the
