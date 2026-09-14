@@ -1,0 +1,1949 @@
+{
+ "artifact": {
+  "index": "/home/connoravila/Documents/actinv/target/p24-g0/candidate-neutron_index.json",
+  "index_npz_sha256": "747dbbff26eb44d3ec78ec8f9badc54b14d5352c20d8cf3c53721c01aef0e5de",
+  "index_sha256": "dc541a59b406c323f02518d8d5479ebbad74aaacb6a3bed0650d5b4232514d6f",
+  "index_targets": [
+   11023,
+   12024,
+   13027,
+   14028,
+   14029,
+   15031,
+   16032,
+   22046,
+   22048,
+   23051,
+   26054,
+   26056,
+   26058,
+   27059,
+   28060,
+   29065,
+   30064,
+   30067,
+   30068,
+   33075,
+   39089,
+   40090,
+   45103,
+   49115,
+   74186,
+   82204,
+   90232,
+   92235,
+   92238,
+   94239,
+   95241
+  ],
+  "n_rows": 1691,
+  "npz": "/home/connoravila/Documents/actinv/target/p24-g0/candidate-neutron.npz",
+  "npz_sha256": "747dbbff26eb44d3ec78ec8f9badc54b14d5352c20d8cf3c53721c01aef0e5de"
+ },
+ "construction_failed_names": [
+  "n-Sc045.tendl",
+  "n-Ti047.tendl",
+  "n-Ni058.tendl",
+  "n-Cu063.tendl",
+  "n-Nb093.tendl",
+  "n-Mo092.tendl",
+  "n-Ag109.tendl",
+  "n-In113.tendl",
+  "n-I127.tendl",
+  "n-La139.tendl",
+  "n-Pr141.tendl",
+  "n-Ta181.tendl",
+  "n-Au197.tendl",
+  "n-Hg199.tendl",
+  "n-Bi209.tendl",
+  "n-Np237.tendl"
+ ],
+ "counts": {
+  "built": 31,
+  "construction_failed": 16,
+  "elemental_targets": 14,
+  "isotopic_targets": 47,
+  "staged": 31
+ },
+ "directory_build": {
+  "command": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "build-library",
+   "/home/connoravila/Documents/actinv/target/p24-g0/input-n",
+   "/home/connoravila/Documents/actinv/target/p24-g0/candidate-neutron.npz",
+   "--format",
+   "tendl",
+   "--projectile",
+   "neutron",
+   "--groups",
+   "fispact-709",
+   "--temperature-K",
+   "293.6",
+   "--workers",
+   "2",
+   "--cache",
+   "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+  ],
+  "elapsed_s": 1.047,
+  "exit_status": 0,
+  "stderr_tail": [
+   "index -> /home/connoravila/Documents/actinv/target/p24-g0/candidate-neutron_index.json"
+  ],
+  "stdout_tail": [
+   "31 targets, 1691 rows, 31 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/candidate-neutron.npz, sha256 747dbbff26eb44d3ec78ec8f9badc54b14d5352c20d8cf3c53721c01aef0e5de"
+  ]
+ },
+ "irdff_catalog": {
+  "elemental_count": 14,
+  "isotopic_count": 47,
+  "targets": {
+   "11-23": [
+    1125
+   ],
+   "12-0": [
+    1200
+   ],
+   "12-24": [
+    1225
+   ],
+   "13-27": [
+    1325
+   ],
+   "14-0": [
+    1400
+   ],
+   "14-28": [
+    1425
+   ],
+   "14-29": [
+    1428
+   ],
+   "15-31": [
+    1525
+   ],
+   "16-0": [
+    1600
+   ],
+   "16-32": [
+    1625
+   ],
+   "21-45": [
+    2125
+   ],
+   "22-0": [
+    2200
+   ],
+   "22-46": [
+    2225
+   ],
+   "22-47": [
+    2228
+   ],
+   "22-48": [
+    2231
+   ],
+   "23-51": [
+    2328
+   ],
+   "24-0": [
+    2400
+   ],
+   "26-0": [
+    2600
+   ],
+   "26-54": [
+    2625
+   ],
+   "26-56": [
+    2631
+   ],
+   "26-58": [
+    2637
+   ],
+   "27-59": [
+    2725
+   ],
+   "28-0": [
+    2800
+   ],
+   "28-58": [
+    2825
+   ],
+   "28-60": [
+    2831
+   ],
+   "29-0": [
+    2900
+   ],
+   "29-63": [
+    2925
+   ],
+   "29-65": [
+    2931
+   ],
+   "30-0": [
+    3000
+   ],
+   "30-64": [
+    3025
+   ],
+   "30-67": [
+    3034
+   ],
+   "30-68": [
+    3037
+   ],
+   "33-75": [
+    3325
+   ],
+   "39-89": [
+    3925
+   ],
+   "40-0": [
+    4000
+   ],
+   "40-90": [
+    4025
+   ],
+   "41-93": [
+    4125
+   ],
+   "42-0": [
+    4200
+   ],
+   "42-92": [
+    4225
+   ],
+   "45-103": [
+    4525
+   ],
+   "47-109": [
+    4731
+   ],
+   "48-0": [
+    4800
+   ],
+   "49-0": [
+    4900
+   ],
+   "49-113": [
+    4925
+   ],
+   "49-115": [
+    4931
+   ],
+   "53-127": [
+    5325
+   ],
+   "57-139": [
+    5728
+   ],
+   "59-141": [
+    5925
+   ],
+   "64-0": [
+    6400
+   ],
+   "73-181": [
+    7328
+   ],
+   "74-186": [
+    7443
+   ],
+   "79-197": [
+    7925
+   ],
+   "80-199": [
+    8034
+   ],
+   "82-204": [
+    8225
+   ],
+   "83-209": [
+    8325
+   ],
+   "90-232": [
+    9040
+   ],
+   "92-235": [
+    9228
+   ],
+   "92-238": [
+    9237
+   ],
+   "93-237": [
+    9346
+   ],
+   "94-239": [
+    9437
+   ],
+   "95-241": [
+    9543
+   ]
+  }
+ },
+ "pass": true,
+ "per_file": [
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Na023.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Na023.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.389,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Na023.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 54 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Na023.tendl.npz, sha256 f0e76395717e424d3d3c9cd144805ff5b965309894d55c51363c968863422199"
+    ]
+   },
+   "bytes": 3626532,
+   "name": "n-Na023.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "f0e76395717e424d3d3c9cd144805ff5b965309894d55c51363c968863422199",
+   "source_sha256": "e04dd79f8288d6af0e3033ffa8d1afe7d9a010d3a01815fec3ac9324cf4df2c1",
+   "target_za": 11023
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Mg024.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Mg024.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 5.805,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Mg024.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 48 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Mg024.tendl.npz, sha256 3edf4df351b8447ea20eb4f7e0ff65084c1308b89a00d004f5f1a5152e57d6ca"
+    ]
+   },
+   "bytes": 3199986,
+   "name": "n-Mg024.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "3edf4df351b8447ea20eb4f7e0ff65084c1308b89a00d004f5f1a5152e57d6ca",
+   "source_sha256": "18db7eb841c6a5b70caba22b541c9e341a56b66f2fc63ac6d7df68237eeaaa8c",
+   "target_za": 12024
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Al027.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Al027.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.344,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Al027.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 53 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Al027.tendl.npz, sha256 cd4265da83f8862a6defcbb9aa72e6537b67b71263922252b6de0dcb6dc924f6"
+    ]
+   },
+   "bytes": 3872529,
+   "name": "n-Al027.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "cd4265da83f8862a6defcbb9aa72e6537b67b71263922252b6de0dcb6dc924f6",
+   "source_sha256": "61afaf01ac4fca5b5d43bfcedaffaa66b5f36dddb9c1c657b4b0a21ea63d2ffd",
+   "target_za": 13027
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Si028.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Si028.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.636,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Si028.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 51 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Si028.tendl.npz, sha256 45358f74d809483639201aef5dfbdbc0fce1c27178aa367a51a8d2f817d2a919"
+    ]
+   },
+   "bytes": 3483324,
+   "name": "n-Si028.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "45358f74d809483639201aef5dfbdbc0fce1c27178aa367a51a8d2f817d2a919",
+   "source_sha256": "8bc9da61e97236efc62b565c4cfc66358bbfa9a1ac20e835351092e0759dd916",
+   "target_za": 14028
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Si029.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Si029.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 5.607,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Si029.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 51 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Si029.tendl.npz, sha256 f263050d6177e835110c78fca0b89d7ed5f46a9b6c2064b31aa426c67ef0a26e"
+    ]
+   },
+   "bytes": 3598263,
+   "name": "n-Si029.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "f263050d6177e835110c78fca0b89d7ed5f46a9b6c2064b31aa426c67ef0a26e",
+   "source_sha256": "70e937785430d605e8f7f120ac0f7acaf93ca1079af5e18ee74f9985850f61d9",
+   "target_za": 14029
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-P031.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-P031.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 5.667,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-P031.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 53 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-P031.tendl.npz, sha256 1d0037e837e563a9b7671a0dbdc65cbb830978b4568d8a049a13e5aa355f9fd8"
+    ]
+   },
+   "bytes": 3789828,
+   "name": "n-P031.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "1d0037e837e563a9b7671a0dbdc65cbb830978b4568d8a049a13e5aa355f9fd8",
+   "source_sha256": "dea829f8cdca567853de969bd29987eb22a4f945dcac3e0282d59182a13369cb",
+   "target_za": 15031
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-S032.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-S032.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.789,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-S032.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 48 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-S032.tendl.npz, sha256 a22497883dbad0ece8ec521abba555807f0a5a3a37babe4c8acf57ff3f06d150"
+    ]
+   },
+   "bytes": 3701700,
+   "name": "n-S032.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "a22497883dbad0ece8ec521abba555807f0a5a3a37babe4c8acf57ff3f06d150",
+   "source_sha256": "972e2556d3fc3f4fe1f636da067fb54f1175f1f8ffad7057da08678b11b12ef4",
+   "target_za": 16032
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Sc045.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Sc045.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 8.418,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Sc045.tendl: MT16/MF=10 ZAP=21044 group 607: emitted state sum 7.79778188527892584e-3 barn exceeds runtime total 1.46468365577001232e-5 barn by relative excess 5.313868e2 (outside the frozen 0.001 standard envelope); MAT=2125 ZA=21045 source_sha256=f2e1f19faf6fa3421dfd0ae6f0d7b02c134e83a7f7d6e38eca43593f1d97c259; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4254282,
+   "name": "n-Sc045.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "f2e1f19faf6fa3421dfd0ae6f0d7b02c134e83a7f7d6e38eca43593f1d97c259",
+   "target_za": 21045
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ti046.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti046.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 5.817,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti046.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 56 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti046.tendl.npz, sha256 dce7f84a5252e1ae08d8c7d3e7fbf34b91221633cea544473b75b0c38d10421e"
+    ]
+   },
+   "bytes": 3902823,
+   "name": "n-Ti046.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "dce7f84a5252e1ae08d8c7d3e7fbf34b91221633cea544473b75b0c38d10421e",
+   "source_sha256": "1d13b51964e795ddf7088eb434c609c5bdf9880d5bd135e1a34c90a447c1fad6",
+   "target_za": 22046
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ti047.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti047.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 5.491,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ti047.tendl: MT105/MF=10 ZAP=21045 group 604: emitted state sum 2.44946511214459378e-5 barn exceeds runtime total 8.96807784261776972e-19 barn by relative excess 2.731316e13 (outside the frozen 0.001 standard envelope); MAT=2228 ZA=22047 source_sha256=bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4146552,
+   "name": "n-Ti047.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c",
+   "target_za": 22047
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ti048.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti048.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 8.629,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti048.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 52 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ti048.tendl.npz, sha256 045831eb112eb1ca65ab338f90e9ada8982046b8f0be93d00300f30fbd341788"
+    ]
+   },
+   "bytes": 3627423,
+   "name": "n-Ti048.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "045831eb112eb1ca65ab338f90e9ada8982046b8f0be93d00300f30fbd341788",
+   "source_sha256": "020118c02ce142b87e72b393dd48e41641b42abaedac290572b45be5018b1b7b",
+   "target_za": 22048
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-V051.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-V051.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.781,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-V051.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 52 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-V051.tendl.npz, sha256 eece07268282b4ad9f1dcd50f522e8c3bf0c12adbe731c27555a779c78363b15"
+    ]
+   },
+   "bytes": 4081266,
+   "name": "n-V051.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "eece07268282b4ad9f1dcd50f522e8c3bf0c12adbe731c27555a779c78363b15",
+   "source_sha256": "33d5d1b46c8f3efe21e852d6741ec575d7a08464eb58b636eb37a4ebb9598823",
+   "target_za": 23051
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Fe054.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe054.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 13.217,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe054.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 52 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe054.tendl.npz, sha256 aa5921bd74c89979db701c6d1b9b6cbf3a719eed4fed93c4c1275d817d5ef546"
+    ]
+   },
+   "bytes": 4050891,
+   "name": "n-Fe054.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "aa5921bd74c89979db701c6d1b9b6cbf3a719eed4fed93c4c1275d817d5ef546",
+   "source_sha256": "a762b65e8feca5003fcf18ee21cf78afc229db5fb00754f71eb7e94f412e6c98",
+   "target_za": 26054
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Fe056.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe056.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 11.384,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe056.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 50 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe056.tendl.npz, sha256 5939355f00e90b76a1ccfe267f9e65972bc4e8b055f4432dc10c98bfae446dbf"
+    ]
+   },
+   "bytes": 4358610,
+   "name": "n-Fe056.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "5939355f00e90b76a1ccfe267f9e65972bc4e8b055f4432dc10c98bfae446dbf",
+   "source_sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+   "target_za": 26056
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Fe058.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe058.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 13.497,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe058.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 55 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Fe058.tendl.npz, sha256 36758e0abc541fbf1f139f81979e5856181740efd526602faa72052499771695"
+    ]
+   },
+   "bytes": 3617703,
+   "name": "n-Fe058.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "36758e0abc541fbf1f139f81979e5856181740efd526602faa72052499771695",
+   "source_sha256": "6dea00c16f4263ab4c41f4fe355a8edec463e5be621e01726e9dbdeaf5d80060",
+   "target_za": 26058
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Co059.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Co059.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 10.677,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Co059.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 55 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Co059.tendl.npz, sha256 dea99d0c559298a87e3931b1e34f7eebcb759837564029d69dc1baaacb1302da"
+    ]
+   },
+   "bytes": 4493070,
+   "name": "n-Co059.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "dea99d0c559298a87e3931b1e34f7eebcb759837564029d69dc1baaacb1302da",
+   "source_sha256": "00b705eec124c460f6f85f0ce22aaa216a75b26190dfde7c1fdc5430a85358b5",
+   "target_za": 27059
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ni058.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ni058.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 19.969,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4718412,
+   "name": "n-Ni058.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+   "target_za": 28058
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ni060.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ni060.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 18.993,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ni060.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 54 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ni060.tendl.npz, sha256 5eedd3dfc5ce725030654559118194d22be8d63ee7498a8af9800e702300b55c"
+    ]
+   },
+   "bytes": 4159026,
+   "name": "n-Ni060.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "5eedd3dfc5ce725030654559118194d22be8d63ee7498a8af9800e702300b55c",
+   "source_sha256": "0876c90c41785b03998a18d62166f053bb220342e153533a2d7068154c88e2c8",
+   "target_za": 28060
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Cu063.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Cu063.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 30.187,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Cu063.tendl: MT107/MF=10 ZAP=27060 group 2: emitted state sum 2.95505013986414196e-13 barn exceeds runtime total 2.82965412672169316e-13 barn by relative excess 4.431496e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2925 ZA=29063 source_sha256=2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 5247909,
+   "name": "n-Cu063.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7",
+   "target_za": 29063
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Cu065.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Cu065.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 22.73,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Cu065.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 60 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Cu065.tendl.npz, sha256 2ddc7912ecc3df55569ccc9d353161516facfb42022f5eb4dc1c366ecca4daa5"
+    ]
+   },
+   "bytes": 4687065,
+   "name": "n-Cu065.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "2ddc7912ecc3df55569ccc9d353161516facfb42022f5eb4dc1c366ecca4daa5",
+   "source_sha256": "8320d80c1e60c2385b6af4939b86a53541aedd8a2019897477bf2aee148c32b3",
+   "target_za": 29065
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Zn064.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn064.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 12.57,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn064.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 55 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn064.tendl.npz, sha256 584d5378f99fc781a10bccba0d2b4313c5d1191b9e14be129d01153450869163"
+    ]
+   },
+   "bytes": 4515993,
+   "name": "n-Zn064.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "584d5378f99fc781a10bccba0d2b4313c5d1191b9e14be129d01153450869163",
+   "source_sha256": "08c5090dad3545d4a8e2948e099ccf5d6f61011b883ba0dab157adcf4aa63257",
+   "target_za": 30064
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Zn067.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn067.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 15.622,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn067.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 58 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn067.tendl.npz, sha256 c067c051815b835651a007fa266a8f8944f9477e0a797acadc7c52a84e33ac64"
+    ]
+   },
+   "bytes": 4546935,
+   "name": "n-Zn067.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "c067c051815b835651a007fa266a8f8944f9477e0a797acadc7c52a84e33ac64",
+   "source_sha256": "4e8c39a2d0907865b1f81a7d5c9fe3ad24f1d432da002e719136b9e9809226f2",
+   "target_za": 30067
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Zn068.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn068.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 11.225,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn068.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 59 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zn068.tendl.npz, sha256 eda57bdffed0a249ce5ac2a80292e840bf8577e424e84880e5cbb1edcc10299a"
+    ]
+   },
+   "bytes": 3989817,
+   "name": "n-Zn068.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "eda57bdffed0a249ce5ac2a80292e840bf8577e424e84880e5cbb1edcc10299a",
+   "source_sha256": "ecbe50644dd15a9fc7c1e07eda05c127987e016f006f202de78dec5738a8781a",
+   "target_za": 30068
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-As075.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-As075.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 14.063,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-As075.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 64 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-As075.tendl.npz, sha256 e0aa24f439fb378debb5879d6f9235c64e2b725a8b94702a9528cb89a417ce0d"
+    ]
+   },
+   "bytes": 4476465,
+   "name": "n-As075.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "e0aa24f439fb378debb5879d6f9235c64e2b725a8b94702a9528cb89a417ce0d",
+   "source_sha256": "0e4b0d3594ad7e425f7ec03f6e8cbe668a0e8886d7f0d0001bf303bceafab084",
+   "target_za": 33075
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Y089.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Y089.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 9.016,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Y089.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 63 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Y089.tendl.npz, sha256 2254a1e477fef10f81eafd1e3d3e7cd25e3886cf25e686534ed4c924d03d9be2"
+    ]
+   },
+   "bytes": 4100220,
+   "name": "n-Y089.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "2254a1e477fef10f81eafd1e3d3e7cd25e3886cf25e686534ed4c924d03d9be2",
+   "source_sha256": "c1bf5c373011200d8573e7109f65bd0ab8f2dc39f5d28eabf539e18b8fbc12d0",
+   "target_za": 39089
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Zr090.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zr090.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 7.725,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zr090.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 59 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Zr090.tendl.npz, sha256 5c2b418dda830d2980e7e441794f389040079e75badc56a31741cf4a09613edb"
+    ]
+   },
+   "bytes": 3892374,
+   "name": "n-Zr090.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "5c2b418dda830d2980e7e441794f389040079e75badc56a31741cf4a09613edb",
+   "source_sha256": "1b1cc2ed9a78732df8f63e3bb7b2e9721ec02d993bfb3e7ff0e971f3784db5ef",
+   "target_za": 40090
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Nb093.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Nb093.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 13.578,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Nb093.tendl: MT107/MF=10 ZAP=39090 group 0: emitted state sum 2.15580121314199693e-5 barn exceeds runtime total 2.13734660230461791e-5 barn by relative excess 8.634356e-3 (outside the frozen 0.001 standard envelope); MAT=4125 ZA=41093 source_sha256=e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4897017,
+   "name": "n-Nb093.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109",
+   "target_za": 41093
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Mo092.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Mo092.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.472,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Mo092.tendl: MT107/MF=10 ZAP=40089 group 2: emitted state sum 5.96675409832993218e-11 barn exceeds runtime total 5.70875023473348768e-11 barn by relative excess 4.519446e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4225 ZA=42092 source_sha256=63b63c190bdbc0dbd8d7e5ded14fdbb0bc0e83e6b38fa6fdf7dc3182a0232fa3; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4199688,
+   "name": "n-Mo092.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "63b63c190bdbc0dbd8d7e5ded14fdbb0bc0e83e6b38fa6fdf7dc3182a0232fa3",
+   "target_za": 42092
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Rh103.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Rh103.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 17.853,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Rh103.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 66 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Rh103.tendl.npz, sha256 97492c6149ecd7e022e12a023dc1ff9e7c18c618e5a931c9c5da0ad7cd320725"
+    ]
+   },
+   "bytes": 4857408,
+   "name": "n-Rh103.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "97492c6149ecd7e022e12a023dc1ff9e7c18c618e5a931c9c5da0ad7cd320725",
+   "source_sha256": "ed3306e249fb9836744168ce2ae926056f7b70131c53da55a0cdd17106c6d445",
+   "target_za": 45103
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ag109.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ag109.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 34.844,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ag109.tendl: MT107/MF=10 ZAP=45106 group 2: emitted state sum 3.72330387903921534e-13 barn exceeds runtime total 3.55775970138380673e-13 barn by relative excess 4.653045e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4731 ZA=47109 source_sha256=4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4776975,
+   "name": "n-Ag109.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1",
+   "target_za": 47109
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-In113.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-In113.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.765,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-In113.tendl: MT107/MF=10 ZAP=47110 group 2: emitted state sum 7.99925140186454757e-13 barn exceeds runtime total 7.63216503908985825e-13 barn by relative excess 4.809728e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4925 ZA=49113 source_sha256=2955459e59a0e78406a8aa7036e1fa53325f1942e937c1d3a070b3db2656de58; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4799088,
+   "name": "n-In113.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "2955459e59a0e78406a8aa7036e1fa53325f1942e937c1d3a070b3db2656de58",
+   "target_za": 49113
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-In115.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-In115.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 17.857,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-In115.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 75 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-In115.tendl.npz, sha256 99f225a9cf9cb8b4cb430b122d02414014162f6126d869c9224b5cd9c113b4a1"
+    ]
+   },
+   "bytes": 4660821,
+   "name": "n-In115.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "99f225a9cf9cb8b4cb430b122d02414014162f6126d869c9224b5cd9c113b4a1",
+   "source_sha256": "01cc8771ebd391e4a660849af473938ef066c4d1b54e996e9400cf6bb24aa1a6",
+   "target_za": 49115
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-I127.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-I127.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 24.298,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-I127.tendl: MT107/MF=10 ZAP=51124 group 2: emitted state sum 9.74542975667618145e-12 barn exceeds runtime total 9.30869259975930122e-12 barn by relative excess 4.691713e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5325 ZA=53127 source_sha256=85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4863645,
+   "name": "n-I127.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195",
+   "target_za": 53127
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-La139.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-La139.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 12.671,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-La139.tendl: MT107/MF=10 ZAP=55136 group 2: emitted state sum 2.75793948538408361e-10 barn exceeds runtime total 2.63653664597836733e-10 barn by relative excess 4.604633e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5728 ZA=57139 source_sha256=5fcf9b9d66dbe67849d666d7c25331c50800af2a44010b1ebe07ad7af1849507; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4550256,
+   "name": "n-La139.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "5fcf9b9d66dbe67849d666d7c25331c50800af2a44010b1ebe07ad7af1849507",
+   "target_za": 57139
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Pr141.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pr141.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 12.082,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Pr141.tendl: MT32/MF=10 ZAP=58139 group 611: emitted state sum 8.80534856544105587e-7 barn exceeds runtime total 4.60797855200252608e-19 barn by relative excess 1.910892e12 (outside the frozen 0.001 standard envelope); MAT=5925 ZA=59141 source_sha256=0c857548650baae7ae029becf09879c87c4293ea946483b935fab286ca1ec7a9; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4677507,
+   "name": "n-Pr141.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "0c857548650baae7ae029becf09879c87c4293ea946483b935fab286ca1ec7a9",
+   "target_za": 59141
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ta181.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Ta181.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 56.244,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Ta181.tendl: MT107/MF=10 ZAP=71178 group 0: emitted state sum 5.56899173124603136e-5 barn exceeds runtime total 4.97208049712292795e-5 barn by relative excess 1.200526e-1 (outside the frozen 0.001 standard envelope); MAT=7328 ZA=73181 source_sha256=c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 5146416,
+   "name": "n-Ta181.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608",
+   "target_za": 73181
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-W186.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-W186.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 7.286,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-W186.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 54 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-W186.tendl.npz, sha256 c302b720f9576c9d73ffa611749c0b648844fd55febb1f15df26eb73073b07b1"
+    ]
+   },
+   "bytes": 4233789,
+   "name": "n-W186.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "c302b720f9576c9d73ffa611749c0b648844fd55febb1f15df26eb73073b07b1",
+   "source_sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
+   "target_za": 74186
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Au197.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Au197.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 9.333,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Au197.tendl: MT107/MF=10 ZAP=77194 group 0: emitted state sum 7.28182400976838577e-11 barn exceeds runtime total 7.21833535909389992e-11 barn by relative excess 8.795470e-3 (outside the frozen 0.001 standard envelope); MAT=7925 ZA=79197 source_sha256=c5c4ab2190037ece28d458f629c6b67133a0092421747c6f83a71426dfd1b1a9; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4789854,
+   "name": "n-Au197.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "c5c4ab2190037ece28d458f629c6b67133a0092421747c6f83a71426dfd1b1a9",
+   "target_za": 79197
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Hg199.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Hg199.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 7.031,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Hg199.tendl: MT32/MF=10 ZAP=79197 group 608: emitted state sum 2.63212016715553109e-6 barn exceeds runtime total 4.76167213451381601e-21 barn by relative excess 5.527722e14 (outside the frozen 0.001 standard envelope); MAT=8034 ZA=80199 source_sha256=b5cf2ff0dfdf8d7dd94a99b7bac061069544e7f7ff1492705ae4652c840851c4; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4487886,
+   "name": "n-Hg199.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "b5cf2ff0dfdf8d7dd94a99b7bac061069544e7f7ff1492705ae4652c840851c4",
+   "target_za": 80199
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Pb204.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pb204.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 14.806,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pb204.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 58 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pb204.tendl.npz, sha256 d4deba51abb5e2802b7df19e9269175d2000a324f1c012ce8d520f74af016124"
+    ]
+   },
+   "bytes": 4489425,
+   "name": "n-Pb204.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "d4deba51abb5e2802b7df19e9269175d2000a324f1c012ce8d520f74af016124",
+   "source_sha256": "ad81f73cec3fb7cf7212cffc77ff71a55c8ebb160c7e2444f9ddfbd1e894d883",
+   "target_za": 82204
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Bi209.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Bi209.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 6.622,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Bi209.tendl: MT107/MF=10 ZAP=81206 group 2: emitted state sum 1.50368583176540114e-5 barn exceeds runtime total 1.43918356110769941e-5 barn by relative excess 4.481865e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=8325 ZA=83209 source_sha256=4c808433011e10cb29f67d19070e3e3c9243e1d5999e36f5694fb29d2262222a; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 4791960,
+   "name": "n-Bi209.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "4c808433011e10cb29f67d19070e3e3c9243e1d5999e36f5694fb29d2262222a",
+   "target_za": 83209
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Th232.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Th232.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 19.87,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Th232.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 44 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Th232.tendl.npz, sha256 ec46702b5a3264a4644005928a5851b9efb8b49174c3701cad12cfbb0e06a062"
+    ]
+   },
+   "bytes": 5260545,
+   "name": "n-Th232.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "ec46702b5a3264a4644005928a5851b9efb8b49174c3701cad12cfbb0e06a062",
+   "source_sha256": "e9e166086f436dfa9d97de2717c21f5ce9acfb74c28c98bb61a574c33ecaef9a",
+   "target_za": 90232
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-U235.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-U235.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 568.033,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-U235.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 48 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-U235.tendl.npz, sha256 9e7abd66a3efef7b9e135354d2b258415e5bec7f0a75378f13477463d354d558"
+    ]
+   },
+   "bytes": 5735934,
+   "name": "n-U235.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "9e7abd66a3efef7b9e135354d2b258415e5bec7f0a75378f13477463d354d558",
+   "source_sha256": "271f8db9bd84f19c010e6d6a20d80616cc404727c9096968977a61a50565b403",
+   "target_za": 92235
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-U238.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-U238.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 708.866,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-U238.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 41 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-U238.tendl.npz, sha256 5273a66f9532acdcca14e6b4c0122e2f8df960f621b69ff0103b423cb9cd32b1"
+    ]
+   },
+   "bytes": 5249772,
+   "name": "n-U238.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "5273a66f9532acdcca14e6b4c0122e2f8df960f621b69ff0103b423cb9cd32b1",
+   "source_sha256": "394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c",
+   "target_za": 92238
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Np237.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Np237.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 93.555,
+    "exit_status": 1,
+    "stderr_tail": [
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Np237.tendl: MT107/MF=10 ZAP=91234 group 2: emitted state sum 5.04346029710018722e-9 barn exceeds runtime total 4.80928947911636700e-9 barn by relative excess 4.869135e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=9346 ZA=93237 source_sha256=f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118; construction fails closed and no state row is emitted, scaled or relabeled"
+    ],
+    "stdout_tail": []
+   },
+   "bytes": 5715684,
+   "name": "n-Np237.tendl",
+   "outcome": "construction_failed",
+   "reason": "build-library exit 1",
+   "source_sha256": "f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118",
+   "target_za": 93237
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Pu239.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pu239.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 86.045,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pu239.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 47 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Pu239.tendl.npz, sha256 664fe2f062e41da89221ef38940b2b114df16449ad66b18e79f55ec4e3a1b059"
+    ]
+   },
+   "bytes": 5019732,
+   "name": "n-Pu239.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "664fe2f062e41da89221ef38940b2b114df16449ad66b18e79f55ec4e3a1b059",
+   "source_sha256": "a42579eddb6957680df79fac3b629a2af0d713c8a1b7ef861ec1583a1f1c4193",
+   "target_za": 94239
+  },
+  {
+   "build": {
+    "command": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "build-library",
+     "/home/connoravila/nuclear-data/tendl-2025/files/n-working/n-Am241.tendl",
+     "/home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Am241.tendl.npz",
+     "--format",
+     "tendl",
+     "--projectile",
+     "neutron",
+     "--groups",
+     "fispact-709",
+     "--temperature-K",
+     "293.6",
+     "--workers",
+     "2",
+     "--cache",
+     "/home/connoravila/Documents/actinv/target/p24-g0/cache-n"
+    ],
+    "elapsed_s": 18.771,
+    "exit_status": 0,
+    "stderr_tail": [
+     "index -> /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Am241.tendl_index.json"
+    ],
+    "stdout_tail": [
+     "1 targets, 56 rows, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p24-g0/per-target/n-Am241.tendl.npz, sha256 4ad44d962d082bf5acebc177fa5aada9c0533591b96f6364ba2a8dbae8aa45a7"
+    ]
+   },
+   "bytes": 5470416,
+   "name": "n-Am241.tendl",
+   "outcome": "built",
+   "per_target_npz_sha256": "4ad44d962d082bf5acebc177fa5aada9c0533591b96f6364ba2a8dbae8aa45a7",
+   "source_sha256": "8adbd4d8185ca8778574800f223e735cb9a921883ac2e677390d9a962e12a554",
+   "target_za": 95241
+  }
+ ],
+ "schema": "actinv-p24-candidate-build-1"
+}
