@@ -83,8 +83,9 @@ The source corpus is identical to P17's and is rehashed at G0 rather than re-dow
 - Benchmark-field list PDF `NeutronBenchmarkFields-IRDFF-II.pdf`, SHA-256
   `93926f4a9937ef1314ebbaa29a11a638ad9d1b3abad08596b0db57ee6bc9c304`.
 - P17 protocol SHA-256 `c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f`,
-  Amendment 1 SHA-256 `8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`, and the
-  P17 seal/verdict records listed at G0.
+  Amendment 1 SHA-256 `e78c84d9f80c9bc6b7f0e79050206991515d283f43deeabd32f42c325f53581e` (the digest
+  `check_p17.py` pins and the file has always carried; it was absent from `protocol_hash.txt` and is
+  added at opening), and the P17 seal/verdict records listed at G0.
 - Signed release comparator v1.0.1 at `0332779401363d2f39722efe7a0b7218afcfb270`; its shipped
   TENDL-2025 709-group neutron NPZ `ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44`
   and index `8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb`.
