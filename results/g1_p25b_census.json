@@ -1,0 +1,2040 @@
+{
+ "dosimetry_critical": {
+  "eaf_2010": {
+   "ok": 6,
+   "total": 6
+  },
+  "fendl_32c": {
+   "ok": 4,
+   "total": 6
+  },
+  "tendl_2023": {
+   "ok": 6,
+   "total": 6
+  }
+ },
+ "histograms": {
+  "eaf_2010": {
+   "ok": 47
+  },
+  "fendl_32c": {
+   "construction_error": 5,
+   "corpus_incomplete": 8,
+   "ok": 34
+  },
+  "tendl_2023": {
+   "construction_error": 6,
+   "ok": 41
+  }
+ },
+ "ledger": [
+  {
+   "candidate_files": [
+    "n_011-Na-23_1125.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_011-Na-23_1125.dat",
+   "file_sha256": "4201e67b07f34a3a75d0a3f57972503d63c6a94b8f5f52e0d10fbc77e6281ecd",
+   "seconds": 6.799,
+   "target": "Na-23",
+   "za": 11023
+  },
+  {
+   "candidate_files": [
+    "n_012-Mg-24_1225.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_012-Mg-24_1225.dat",
+   "file_sha256": "82d88b7a54464e6dcf6f7ee7ec18fed382a87a86bf1dc98489c6e9b74770b897",
+   "seconds": 6.556,
+   "target": "Mg-24",
+   "za": 12024
+  },
+  {
+   "candidate_files": [
+    "n_013-Al-27_1325.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_013-Al-27_1325.dat",
+   "file_sha256": "4d6b48d9c124e3a09bdbc6143870707c0f29af6df762d3264afa376ccc13c374",
+   "seconds": 6.918,
+   "target": "Al-27",
+   "za": 13027
+  },
+  {
+   "candidate_files": [
+    "n_014-Si-28_1425.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_014-Si-28_1425.dat",
+   "file_sha256": "92cbc68a789429e99e804c55f4053ad3229da94d40bf5f456208371bad7f35c9",
+   "seconds": 7.595,
+   "target": "Si-28",
+   "za": 14028
+  },
+  {
+   "candidate_files": [
+    "n_014-Si-29_1428.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_014-Si-29_1428.dat",
+   "file_sha256": "edc3ee96aa2a15e8f0cfb6817fa5ee35e13fec7581b1898eeca8b6720604af0b",
+   "seconds": 5.925,
+   "target": "Si-29",
+   "za": 14029
+  },
+  {
+   "candidate_files": [
+    "n_015-P-31_1525.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_015-P-31_1525.dat",
+   "file_sha256": "ec2b6b4fa4e7e8f950455bb9ae2748e74a7866609b40c979b77a553b943e405e",
+   "seconds": 6.232,
+   "target": "P-31",
+   "za": 15031
+  },
+  {
+   "candidate_files": [
+    "n_016-S-32_1625.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_016-S-32_1625.dat",
+   "file_sha256": "32a736dcf7fb4808af0be1892a7ad5c1399169a68cdf7d73ca2128f16e701898",
+   "seconds": 8.646,
+   "target": "S-32",
+   "za": 16032
+  },
+  {
+   "candidate_files": [
+    "n_021-Sc-45_2125.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_021-Sc-45_2125.dat",
+   "file_sha256": "6dbfd2a4e6b1d63883c53d0c5fa511aeddbf60cc862e180a47e77df30230332d",
+   "seconds": 13.358,
+   "target": "Sc-45",
+   "za": 21045
+  },
+  {
+   "candidate_files": [
+    "n_022-Ti-46_2225.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_022-Ti-46_2225.dat",
+   "file_sha256": "6904a477630bc28a06e8c450f707ab3a750893d795183fae7a34a765627d1d92",
+   "seconds": 7.511,
+   "target": "Ti-46",
+   "za": 22046
+  },
+  {
+   "candidate_files": [
+    "n_022-Ti-47_2228.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_022-Ti-47_2228.dat",
+   "file_sha256": "b395c2042af17b172c9d284dbbe27a028f857df16cd09f29dc5159c3225749e0",
+   "seconds": 6.68,
+   "target": "Ti-47",
+   "za": 22047
+  },
+  {
+   "candidate_files": [
+    "n_022-Ti-48_2231.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_022-Ti-48_2231.dat",
+   "file_sha256": "72a436c2e0d9a2b26ea064eeb8aa5ce1e0764c542bc33c544fdd61ee6fd2f554",
+   "seconds": 12.609,
+   "target": "Ti-48",
+   "za": 22048
+  },
+  {
+   "candidate_files": [
+    "n_023-V-51_2328.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_023-V-51_2328.dat",
+   "file_sha256": "12850b11460ecd4d46f6a884d24e769d4355faceb6e29a70206b71f807cc4ea2",
+   "seconds": 9.715,
+   "target": "V-51",
+   "za": 23051
+  },
+  {
+   "candidate_files": [
+    "n_026-Fe-54_2625.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_026-Fe-54_2625.dat",
+   "file_sha256": "39406cfae13b13a51a26d7de5f2afdc4389fd4c1e0bedf30f7ae227c3c4c35b6",
+   "seconds": 31.357,
+   "target": "Fe-54",
+   "za": 26054
+  },
+  {
+   "candidate_files": [
+    "n_026-Fe-56_2631.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_026-Fe-56_2631.dat",
+   "file_sha256": "e4abb3573a1d3745b5953a5754ad87d128342048a31c4221333693c962c8d53a",
+   "seconds": 18.827,
+   "target": "Fe-56",
+   "za": 26056
+  },
+  {
+   "candidate_files": [
+    "n_026-Fe-58_2637.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_026-Fe-58_2637.dat",
+   "file_sha256": "b7c14376bd6cfb61a90caf7d886b9ec612204f1591a2308ab6903ab09bed26b6",
+   "seconds": 23.098,
+   "target": "Fe-58",
+   "za": 26058
+  },
+  {
+   "candidate_files": [
+    "n_027-Co-59_2725.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_027-Co-59_2725.dat",
+   "file_sha256": "4750f5f4fb58ec802ccbc1680486dae35f13eb022fcda2fb7415f1254aa9ba0a",
+   "seconds": 17.523,
+   "target": "Co-59",
+   "za": 27059
+  },
+  {
+   "candidate_files": [
+    "n_028-Ni-58_2825.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_028-Ni-58_2825.dat",
+   "file_sha256": "8fccb85c6841fd28415e10c7a162625aa7234d639838b1dd086ffacee88c1c07",
+   "seconds": 34.899,
+   "target": "Ni-58",
+   "za": 28058
+  },
+  {
+   "candidate_files": [
+    "n_028-Ni-60_2831.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_028-Ni-60_2831.dat",
+   "file_sha256": "ccba9c12a46ca0c42ac7c1ee478ccf89947a87f934a088a3b96730eba2ca2fbf",
+   "seconds": 30.774,
+   "target": "Ni-60",
+   "za": 28060
+  },
+  {
+   "candidate_files": [
+    "n_029-Cu-63_2925.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_029-Cu-63_2925.dat",
+   "file_sha256": "7bc0b2feb915d62582c2d647cf2bfe8dd4b15cb1ef9085e7fbaee9793fb232ea",
+   "seconds": 71.716,
+   "target": "Cu-63",
+   "za": 29063
+  },
+  {
+   "candidate_files": [
+    "n_029-Cu-65_2931.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_029-Cu-65_2931.dat",
+   "file_sha256": "650dbe4bb1b255ed3aacf3af4cf01adf0af707494bdedaf9edaeeaef908db2d9",
+   "seconds": 38.485,
+   "target": "Cu-65",
+   "za": 29065
+  },
+  {
+   "candidate_files": [
+    "n_030-Zn-64_3025.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_030-Zn-64_3025.dat",
+   "file_sha256": "8f2ac4df9ecf1b3c86b13fb2f0ab1e6bfd6ad88fb460f8a12cf529f6358da0ac",
+   "seconds": 19.041,
+   "target": "Zn-64",
+   "za": 30064
+  },
+  {
+   "candidate_files": [
+    "n_030-Zn-67_3034.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_030-Zn-67_3034.dat",
+   "file_sha256": "7e2633e72900bd4d1bd830c117b92a1c6bcbb880a1913b681f8d6873aa4a33db",
+   "seconds": 22.429,
+   "target": "Zn-67",
+   "za": 30067
+  },
+  {
+   "candidate_files": [
+    "n_030-Zn-68_3037.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_030-Zn-68_3037.dat",
+   "file_sha256": "6e78d58064ddf8a0cb786c83c11ab56436662ffaa0b6cb84fb2eab68186a8e00",
+   "seconds": 15.686,
+   "target": "Zn-68",
+   "za": 30068
+  },
+  {
+   "candidate_files": [
+    "n_033-As-75_3325.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_033-As-75_3325.dat",
+   "file_sha256": "8f5ef4ef90e192610585d662a80075177f1e51d0331c519c332fe9050c604724",
+   "seconds": 23.396,
+   "target": "As-75",
+   "za": 33075
+  },
+  {
+   "candidate_files": [
+    "n_039-Y-89_3925.dat",
+    "n_039-Y-89M_3926.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_039-Y-89_3925.dat",
+   "file_sha256": "e1778e0e0e11f717e48c17468b75789e2def38314a5c7c2522af209cf741cbf3",
+   "seconds": 13.127,
+   "target": "Y-89",
+   "za": 39089
+  },
+  {
+   "candidate_files": [
+    "n_040-Zr-90_4025.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_040-Zr-90_4025.dat",
+   "file_sha256": "4403c6aeacb4389a21b7056c1602c84acf4a5c1698a80007943c59787da814d7",
+   "seconds": 14.501,
+   "target": "Zr-90",
+   "za": 40090
+  },
+  {
+   "candidate_files": [
+    "n_041-Nb-93_4125.dat",
+    "n_041-Nb-93M_4126.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_041-Nb-93_4125.dat",
+   "file_sha256": "8e14edd0ec3319516493212a3234d95348327ae121cf5111bf5d329d43f18afc",
+   "seconds": 35.113,
+   "target": "Nb-93",
+   "za": 41093
+  },
+  {
+   "candidate_files": [
+    "n_042-Mo-92_4225.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_042-Mo-92_4225.dat",
+   "file_sha256": "82501512876b9efe2e529871f1d0860e5a660a38ae2cfca49558c097c55d9052",
+   "seconds": 9.778,
+   "target": "Mo-92",
+   "za": 42092
+  },
+  {
+   "candidate_files": [
+    "n_045-Rh-103_4525.dat",
+    "n_045-Rh-103M_4526.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_045-Rh-103_4525.dat",
+   "file_sha256": "0d16c8218d1d30481358630e0f3c0044391e2b90c210776aaf219f8621f74557",
+   "seconds": 37.639,
+   "target": "Rh-103",
+   "za": 45103
+  },
+  {
+   "candidate_files": [
+    "n_047-Ag-109_4731.dat",
+    "n_047-Ag-109M_4732.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_047-Ag-109_4731.dat",
+   "file_sha256": "e2fbadcc61a79264af1d23f3984cd74d489b3005064d4eacfff5c82bdfb393b9",
+   "seconds": 70.571,
+   "target": "Ag-109",
+   "za": 47109
+  },
+  {
+   "candidate_files": [
+    "n_049-In-113_4925.dat",
+    "n_049-In-113M_4926.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_049-In-113_4925.dat",
+   "file_sha256": "6bc0c1bb5612f0e45dfd30fc0bafd470de4f72ea5ebe3c27b8849765dba0bcea",
+   "seconds": 10.627,
+   "target": "In-113",
+   "za": 49113
+  },
+  {
+   "candidate_files": [
+    "n_049-In-115_4931.dat",
+    "n_049-In-115M_4932.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_049-In-115_4931.dat",
+   "file_sha256": "f426aa197b67bb67a0c3d027531a9df65956ec235ac3bfb556e79704768dccee",
+   "seconds": 36.767,
+   "target": "In-115",
+   "za": 49115
+  },
+  {
+   "candidate_files": [
+    "n_053-I-127_5325.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_053-I-127_5325.dat",
+   "file_sha256": "6a2a6e67e66b26840eb4a7f7fbaacc33649bb8ba06943614f613196c2ab24299",
+   "seconds": 48.393,
+   "target": "I-127",
+   "za": 53127
+  },
+  {
+   "candidate_files": [
+    "n_057-La-139_5728.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_057-La-139_5728.dat",
+   "file_sha256": "8067701ce35d6ad9b4b1cc3e0267c486e35b8535744f4050a036fb3041a332e7",
+   "seconds": 18.726,
+   "target": "La-139",
+   "za": 57139
+  },
+  {
+   "candidate_files": [
+    "n_059-Pr-141_5925.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_059-Pr-141_5925.dat",
+   "file_sha256": "3af63181d7ce845306a87917cb7ff6b8ed417d2962e9a8ec550e4fbd7684d2dc",
+   "seconds": 18.881,
+   "target": "Pr-141",
+   "za": 59141
+  },
+  {
+   "candidate_files": [
+    "n_073-Ta-181_7328.dat"
+   ],
+   "class": "construction_error",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": "timeout",
+   "file": "n_073-Ta-181_7328.dat",
+   "file_sha256": "07176e8580f62b9308fc4f4c7e6bebc9e9ef23b201b0528eb3b38c8e4f9459f6",
+   "message": "timeout 90.0s",
+   "seconds": 90.096,
+   "target": "Ta-181",
+   "za": 73181
+  },
+  {
+   "candidate_files": [
+    "n_074-W-186_7443.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_074-W-186_7443.dat",
+   "file_sha256": "76c490051bcf93c69aca906d9ffb5d38087b1db99bda9d136b0a0c9ab4d560b8",
+   "seconds": 9.167,
+   "target": "W-186",
+   "za": 74186
+  },
+  {
+   "candidate_files": [
+    "n_079-Au-197_7925.dat",
+    "n_079-Au-197M_7926.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_079-Au-197_7925.dat",
+   "file_sha256": "803daf9150b490812492bd52e37afbd56927d9310e7efbaa40d8437f8b6657a7",
+   "seconds": 13.507,
+   "target": "Au-197",
+   "za": 79197
+  },
+  {
+   "candidate_files": [
+    "n_080-Hg-199_8034.dat",
+    "n_080-Hg-199M_8035.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_080-Hg-199_8034.dat",
+   "file_sha256": "4df70fd666bbcbce0fdf58d6c35795e6fb14b97cc20d97387e12ac3fedfa5ada",
+   "seconds": 12.08,
+   "target": "Hg-199",
+   "za": 80199
+  },
+  {
+   "candidate_files": [
+    "n_082-Pb-204_8225.dat",
+    "n_082-Pb-204M_8226.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_082-Pb-204_8225.dat",
+   "file_sha256": "6a0394056b19556073f1df7583a9d8feda5f9fe290cb6cd1456a389bcf67ad41",
+   "seconds": 30.913,
+   "target": "Pb-204",
+   "za": 82204
+  },
+  {
+   "candidate_files": [
+    "n_083-Bi-209_8325.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_083-Bi-209_8325.dat",
+   "file_sha256": "12a5270f1323bdd23ce1e8a3c7333c3ad9215f5cc80ad5ed7bfcae889c4ee8d6",
+   "seconds": 11.212,
+   "target": "Bi-209",
+   "za": 83209
+  },
+  {
+   "candidate_files": [
+    "n_090-Th-232_9040.dat"
+   ],
+   "class": "construction_error",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": "timeout",
+   "file": "n_090-Th-232_9040.dat",
+   "file_sha256": "22018d070e8a7e044d88add79cbeb151eb7fb70800f9dee7b2001421a3c4fc9a",
+   "message": "timeout 90.0s",
+   "seconds": 90.102,
+   "target": "Th-232",
+   "za": 90232
+  },
+  {
+   "candidate_files": [
+    "n_092-U-235_9228.dat",
+    "n_092-U-235M_9229.dat"
+   ],
+   "class": "construction_error",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 2,
+   "file": "n_092-U-235_9228.dat",
+   "file_sha256": "4253aef9386c53c4011eaefffbcc3b161f7ff20f97586d084de20331ab2c9fa5",
+   "message": "/home/connoravila/nuclear-data/tendl-2023/files/n_092-U-235_9228.dat: MAT=9228/MF=6/MT=18: unsupported MF=6 LAW=-5",
+   "seconds": 0.111,
+   "target": "U-235",
+   "za": 92235
+  },
+  {
+   "candidate_files": [
+    "n_092-U-238_9237.dat"
+   ],
+   "class": "construction_error",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 2,
+   "file": "n_092-U-238_9237.dat",
+   "file_sha256": "5004e24d82976d446419c4be7ff7feee7ec78c0530a6002333adf186a562fac9",
+   "message": "/home/connoravila/nuclear-data/tendl-2023/files/n_092-U-238_9237.dat: MAT=9237/MF=6/MT=18: unsupported MF=6 LAW=-5",
+   "seconds": 0.078,
+   "target": "U-238",
+   "za": 92238
+  },
+  {
+   "candidate_files": [
+    "n_093-Np-237_9346.dat"
+   ],
+   "class": "construction_error",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": "timeout",
+   "file": "n_093-Np-237_9346.dat",
+   "file_sha256": "6203b67409ec7564f38afdacc0be5b7624dda6bfdb376930c9e50144c61eab39",
+   "message": "timeout 90.0s",
+   "seconds": 90.086,
+   "target": "Np-237",
+   "za": 93237
+  },
+  {
+   "candidate_files": [
+    "n_094-Pu-239_9437.dat"
+   ],
+   "class": "construction_error",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 2,
+   "file": "n_094-Pu-239_9437.dat",
+   "file_sha256": "e2bd403d29ff04c5ddd98ef184ef9fbdd6b564e1a077f8d0395f2903df2e65ca",
+   "message": "/home/connoravila/nuclear-data/tendl-2023/files/n_094-Pu-239_9437.dat: MAT=9437/MF=6/MT=18: unsupported MF=6 LAW=-5",
+   "seconds": 0.057,
+   "target": "Pu-239",
+   "za": 94239
+  },
+  {
+   "candidate_files": [
+    "n_095-Am-241_9543.dat"
+   ],
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_095-Am-241_9543.dat",
+   "file_sha256": "aed3d52b5ae817d70e9ad513f5c44b1f1bc73aee20a6552937b95eab92fe231a",
+   "seconds": 35.17,
+   "target": "Am-241",
+   "za": 95241
+  },
+  {
+   "candidate_files": [
+    "n_1125_11-Na-23.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1125_11-Na-23.endf",
+   "file_sha256": "91acf64eb1cdfb60f179aef6f82d8b2ca1423b6d4b116ba15cae66a9e7b62556",
+   "seconds": 6.185,
+   "target": "Na-23",
+   "za": 11023
+  },
+  {
+   "candidate_files": [
+    "n_1225_12-Mg-24.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1225_12-Mg-24.endf",
+   "file_sha256": "597035c4a0bc1c2519e6022bbfe636921e37317d1f2f0d0f0f6cc10a86c45e72",
+   "seconds": 6.002,
+   "target": "Mg-24",
+   "za": 12024
+  },
+  {
+   "candidate_files": [
+    "n_1325_13-Al-27.endf"
+   ],
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 1,
+   "file": "n_1325_13-Al-27.endf",
+   "file_sha256": "88f5a5a138e395ecb2da13016be59f23f088064d3247fc030450195a84f457ce",
+   "message": "/home/connoravila/nuclear-data/fendl-3.2c/endf/n_1325_13-Al-27.endf: MF=8/LMF=9 products {(13026, 0), (13026, 1)} conflict with MF=9 products {(0, 0), (0, 1)}",
+   "seconds": 6.17,
+   "target": "Al-27",
+   "za": 13027
+  },
+  {
+   "candidate_files": [
+    "n_1425_14-Si-28.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1425_14-Si-28.endf",
+   "file_sha256": "b392e6a463776a662521b5447a5b059954785d19b0815d854d78e6bb71d0ee9d",
+   "seconds": 6.995,
+   "target": "Si-28",
+   "za": 14028
+  },
+  {
+   "candidate_files": [
+    "n_1428_14-Si-29.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1428_14-Si-29.endf",
+   "file_sha256": "b94f6eeb1772e6f44f8a017ad9ab153b0bf720935660b1f8cfc0f0be12cfe61a",
+   "seconds": 5.557,
+   "target": "Si-29",
+   "za": 14029
+  },
+  {
+   "candidate_files": [
+    "n_1525_15-P-31.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1525_15-P-31.endf",
+   "file_sha256": "58fe9bcb97a3d36e90a04b0a573d1c24cb102ed2ca151d28d7fe734108aef0a7",
+   "seconds": 6.161,
+   "target": "P-31",
+   "za": 15031
+  },
+  {
+   "candidate_files": [
+    "n_1625_16-S-32.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1625_16-S-32.endf",
+   "file_sha256": "81ce349df21f7905e9c16ea93cbacca4f5419697e5bfd25b699079bae6807d15",
+   "seconds": 9.467,
+   "target": "S-32",
+   "za": 16032
+  },
+  {
+   "candidate_files": [
+    "n_2125_21-Sc-45.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2125_21-Sc-45.endf",
+   "file_sha256": "759c566f61c9aae205b1a7a31bbe02a3368202d16082daa261c88e1448a305f6",
+   "seconds": 11.464,
+   "target": "Sc-45",
+   "za": 21045
+  },
+  {
+   "candidate_files": [
+    "n_2225_22-Ti-46.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2225_22-Ti-46.endf",
+   "file_sha256": "3e63238474013a85a5fa97f19099c4e824bada8385d6fd696dea81f9a079dd06",
+   "seconds": 8.222,
+   "target": "Ti-46",
+   "za": 22046
+  },
+  {
+   "candidate_files": [
+    "n_2228_22-Ti-47.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2228_22-Ti-47.endf",
+   "file_sha256": "4434c2f81599c9f62c6fd81e41111c964ddca5a173e5953f8f0e5dbb57855319",
+   "seconds": 5.702,
+   "target": "Ti-47",
+   "za": 22047
+  },
+  {
+   "candidate_files": [
+    "n_2231_22-Ti-48.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2231_22-Ti-48.endf",
+   "file_sha256": "9f3f696e6535a9723a89ffc820dd601943f1e3aa537562dbef10cc2dcd06cfcb",
+   "seconds": 12.495,
+   "target": "Ti-48",
+   "za": 22048
+  },
+  {
+   "candidate_files": [
+    "n_2328_23-V-51.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2328_23-V-51.endf",
+   "file_sha256": "bbb1bf70cc71f5b50420a0aa5f4c9c178c267d42e9a229cca9e671401766ec36",
+   "seconds": 7.719,
+   "target": "V-51",
+   "za": 23051
+  },
+  {
+   "candidate_files": [
+    "n_2625_26-Fe-54.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2625_26-Fe-54.endf",
+   "file_sha256": "78f862ea205c3655a9347db105005f0fdac71394c79073c482a1e1f48fdb8da9",
+   "seconds": 32.005,
+   "target": "Fe-54",
+   "za": 26054
+  },
+  {
+   "candidate_files": [
+    "n_2631_26-Fe-56.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2631_26-Fe-56.endf",
+   "file_sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e",
+   "seconds": 18.418,
+   "target": "Fe-56",
+   "za": 26056
+  },
+  {
+   "candidate_files": [
+    "n_2637_26-Fe-58.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2637_26-Fe-58.endf",
+   "file_sha256": "c5379fc72eb20c5fdaeeb350d77f6e9d0f1cb9267f55de89d650f01951ec2b01",
+   "seconds": 24.213,
+   "target": "Fe-58",
+   "za": 26058
+  },
+  {
+   "candidate_files": [
+    "n_2725_27-Co-59.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2725_27-Co-59.endf",
+   "file_sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d",
+   "seconds": 11.863,
+   "target": "Co-59",
+   "za": 27059
+  },
+  {
+   "candidate_files": [
+    "n_2825_28-Ni-58.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_2825_28-Ni-58.endf",
+   "file_sha256": "312f5a069dbda4e0abd662a258710ea332dd749191a9bad2a0c70567644af4f4",
+   "seconds": 33.115,
+   "target": "Ni-58",
+   "za": 28058
+  },
+  {
+   "candidate_files": [
+    "n_2831_28-Ni-60.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2831_28-Ni-60.endf",
+   "file_sha256": "737d6f0c25932acef9d04b564e140c1402486b26d4b6fd267ecd5bddfc15b8b9",
+   "seconds": 31.05,
+   "target": "Ni-60",
+   "za": 28060
+  },
+  {
+   "candidate_files": [
+    "n_2925_29-Cu-63.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2925_29-Cu-63.endf",
+   "file_sha256": "85f55164e5164482e6896f6dc589fc6d5a5f1269a8bd6992993f0274560555bf",
+   "seconds": 17.121,
+   "target": "Cu-63",
+   "za": 29063
+  },
+  {
+   "candidate_files": [
+    "n_2931_29-Cu-65.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2931_29-Cu-65.endf",
+   "file_sha256": "4b1f1a3cdfefa4c71a95f762d3a27ae96864055158faaf73d7c4d7427ab0df59",
+   "seconds": 14.211,
+   "target": "Cu-65",
+   "za": 29065
+  },
+  {
+   "candidate_files": [
+    "n_3025_30-Zn-64.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3025_30-Zn-64.endf",
+   "file_sha256": "9021c5dabb4ef3f623ee47bb97325e14b0273f224d41f86fa6818e5637d4bd33",
+   "seconds": 29.571,
+   "target": "Zn-64",
+   "za": 30064
+  },
+  {
+   "candidate_files": [
+    "n_3034_30-Zn-67.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3034_30-Zn-67.endf",
+   "file_sha256": "27bf5c7492f7e0af6c6905d5c7ad16f975721149f48266b0f36f08313b5688ec",
+   "seconds": 30.092,
+   "target": "Zn-67",
+   "za": 30067
+  },
+  {
+   "candidate_files": [
+    "n_3037_30-Zn-68.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3037_30-Zn-68.endf",
+   "file_sha256": "7aa95791863a365cc8534e8ba913384de8941b7e6a55ecbc4da40f6b0daeefd9",
+   "seconds": 16.08,
+   "target": "Zn-68",
+   "za": 30068
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "note": "no file for target",
+   "target": "As-75",
+   "za": 33075
+  },
+  {
+   "candidate_files": [
+    "n_3925_39-Y-89.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3925_39-Y-89.endf",
+   "file_sha256": "271dd41f415cc675bf5a552f24c55b4c6f83f3f1834015f7f1564cb55f303a02",
+   "seconds": 7.843,
+   "target": "Y-89",
+   "za": 39089
+  },
+  {
+   "candidate_files": [
+    "n_4025_40-Zr-90.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_4025_40-Zr-90.endf",
+   "file_sha256": "a3b9c3fa792743682845d37b5d5a0ee24a507ef429b93bed3c752cab4f489686",
+   "seconds": 11.875,
+   "target": "Zr-90",
+   "za": 40090
+  },
+  {
+   "candidate_files": [
+    "n_4125_41-Nb-93.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_4125_41-Nb-93.endf",
+   "file_sha256": "5d8f3877f45254c9a8e96a0968e996b5b19706001bb1f84bc090e8fa6650103b",
+   "seconds": 22.492,
+   "target": "Nb-93",
+   "za": 41093
+  },
+  {
+   "candidate_files": [
+    "n_4225_42-Mo-92.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_4225_42-Mo-92.endf",
+   "file_sha256": "5c616deed4906f6c4fd28d0871a1af439c3ab1f8e5ea3027d8b8393ed341e9af",
+   "seconds": 11.476,
+   "target": "Mo-92",
+   "za": 42092
+  },
+  {
+   "candidate_files": [
+    "n_4525_45-Rh-103.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_4525_45-Rh-103.endf",
+   "file_sha256": "d9b7b9a961209a07fe2174a8a22ad258cea306ef788e7ab56a44685d444feb21",
+   "seconds": 35.223,
+   "target": "Rh-103",
+   "za": 45103
+  },
+  {
+   "candidate_files": [
+    "n_4731_47-Ag-109.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_4731_47-Ag-109.endf",
+   "file_sha256": "e64c40bbb5471fba92effe234819fcdb8fd26ef7556c72433dd8847aa36ce4a8",
+   "seconds": 45.454,
+   "target": "Ag-109",
+   "za": 47109
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": true,
+   "note": "no file for target",
+   "target": "In-113",
+   "za": 49113
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": true,
+   "note": "no file for target",
+   "target": "In-115",
+   "za": 49115
+  },
+  {
+   "candidate_files": [
+    "n_5325_53-I-127.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_5325_53-I-127.endf",
+   "file_sha256": "03016353267ec141ee75e27374f994b67fe29be630d1eaa896a7ac89922ad3a6",
+   "seconds": 43.269,
+   "target": "I-127",
+   "za": 53127
+  },
+  {
+   "candidate_files": [
+    "n_5728_57-La-139.endf"
+   ],
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 1,
+   "file": "n_5728_57-La-139.endf",
+   "file_sha256": "78889efd56885faf5d0111cd299356bd95b70606dd910393bb0dcf7bba46dbc5",
+   "message": "/home/connoravila/nuclear-data/fendl-3.2c/endf/n_5728_57-La-139.endf: MT102 resonance processing: unresolved log-log interpolation needs positive coordinates",
+   "seconds": 0.522,
+   "target": "La-139",
+   "za": 57139
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "note": "no file for target",
+   "target": "Pr-141",
+   "za": 59141
+  },
+  {
+   "candidate_files": [
+    "n_7328_73-Ta-181.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_7328_73-Ta-181.endf",
+   "file_sha256": "de8ae794bdc218814bf6e1e30b62bd9418f2344b9138134f12cbe351ff4c42ee",
+   "seconds": 65.183,
+   "target": "Ta-181",
+   "za": 73181
+  },
+  {
+   "candidate_files": [
+    "n_7443_74-W-186.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_7443_74-W-186.endf",
+   "file_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+   "seconds": 20.607,
+   "target": "W-186",
+   "za": 74186
+  },
+  {
+   "candidate_files": [
+    "n_7925_79-Au-197.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_7925_79-Au-197.endf",
+   "file_sha256": "fb7897fdde04b68b79cfc2a44e90a7c3aba77397815a5be342648af013f39f6d",
+   "seconds": 26.595,
+   "target": "Au-197",
+   "za": 79197
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "note": "no file for target",
+   "target": "Hg-199",
+   "za": 80199
+  },
+  {
+   "candidate_files": [
+    "n_8225_82-Pb-204.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_8225_82-Pb-204.endf",
+   "file_sha256": "ca70f48efbbeee1f209cada5a7081e7206ed7e907b4614699e1d6b6d97996ec9",
+   "seconds": 8.055,
+   "target": "Pb-204",
+   "za": 82204
+  },
+  {
+   "candidate_files": [
+    "n_8325_83-Bi-209.endf"
+   ],
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_8325_83-Bi-209.endf",
+   "file_sha256": "9b05e99cd6b172b21b38eaf73157cf2a9f53ddf9de1f7233a5f744abce69e6ce",
+   "seconds": 7.725,
+   "target": "Bi-209",
+   "za": 83209
+  },
+  {
+   "candidate_files": [
+    "n_9040_90-Th-232.endf"
+   ],
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": "timeout",
+   "file": "n_9040_90-Th-232.endf",
+   "file_sha256": "a48314b0c4d13bec0c1420b36dd9de66e39e1b0d2c2ae18033d99cbd8b639c1e",
+   "message": "timeout 90.0s",
+   "seconds": 90.078,
+   "target": "Th-232",
+   "za": 90232
+  },
+  {
+   "candidate_files": [
+    "n_9228_92-U-235.endf"
+   ],
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": "timeout",
+   "file": "n_9228_92-U-235.endf",
+   "file_sha256": "28f0dea8177a5cee2c90768f9bac4716faa87a7c12700e1fbe1f30c2669ae763",
+   "message": "timeout 90.0s",
+   "seconds": 90.1,
+   "target": "U-235",
+   "za": 92235
+  },
+  {
+   "candidate_files": [
+    "n_9237_92-U-238.endf"
+   ],
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "exit": "timeout",
+   "file": "n_9237_92-U-238.endf",
+   "file_sha256": "5d8d0aa3b3b12ef2c0d3b88d939f76d3aad279c07a4d18a8cacf91c0115ee4df",
+   "message": "timeout 90.0s",
+   "seconds": 90.085,
+   "target": "U-238",
+   "za": 92238
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "note": "no file for target",
+   "target": "Np-237",
+   "za": 93237
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "note": "no file for target",
+   "target": "Pu-239",
+   "za": 94239
+  },
+  {
+   "candidate_files": [],
+   "class": "corpus_incomplete",
+   "corpus": "fendl_32c",
+   "dosimetry_critical": false,
+   "note": "no file for target",
+   "target": "Am-241",
+   "za": 95241
+  },
+  {
+   "candidate_files": [
+    "n_1125_11-NA-23.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1125_11-NA-23.dat",
+   "file_sha256": "1fb6ea838fdb118650f04b96faec7323f165d52af49bea1ec4fabb5b81b24e17",
+   "seconds": 0.1,
+   "target": "Na-23",
+   "za": 11023
+  },
+  {
+   "candidate_files": [
+    "n_1225_12-MG-24.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1225_12-MG-24.dat",
+   "file_sha256": "b0c2be06ad8aeb82f9b2e86a9afc70163c8391f5d5cc2c77370d7b90c5908e51",
+   "seconds": 0.082,
+   "target": "Mg-24",
+   "za": 12024
+  },
+  {
+   "candidate_files": [
+    "n_1325_13-AL-27.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1325_13-AL-27.dat",
+   "file_sha256": "35894ffd9d0af452a9a44f9d88fbb7c1d4810c239e31854f19bace1ad52a648c",
+   "seconds": 0.096,
+   "target": "Al-27",
+   "za": 13027
+  },
+  {
+   "candidate_files": [
+    "n_1425_14-SI-28.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1425_14-SI-28.dat",
+   "file_sha256": "8447953e20ddd0a5c8db55900a2755d6c3aaef48442f95981246101c36cd3624",
+   "seconds": 0.091,
+   "target": "Si-28",
+   "za": 14028
+  },
+  {
+   "candidate_files": [
+    "n_1428_14-SI-29.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1428_14-SI-29.dat",
+   "file_sha256": "675a722fc754ddf4571933d19d937520f5256a5c4b6ba45d0bc730ec37e011b2",
+   "seconds": 0.088,
+   "target": "Si-29",
+   "za": 14029
+  },
+  {
+   "candidate_files": [
+    "n_1525_15-P-31.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1525_15-P-31.dat",
+   "file_sha256": "f4586595b59ad6ed453b8ec2823789453d1720e5f00e063e39b12ea8ae3a14af",
+   "seconds": 0.092,
+   "target": "P-31",
+   "za": 15031
+  },
+  {
+   "candidate_files": [
+    "n_1625_16-S-32.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_1625_16-S-32.dat",
+   "file_sha256": "5448d89ddb10a3241eb6cd66215712576ee458d2813e7a27492972c3d2ced623",
+   "seconds": 0.121,
+   "target": "S-32",
+   "za": 16032
+  },
+  {
+   "candidate_files": [
+    "n_2125_21-SC-45.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2125_21-SC-45.dat",
+   "file_sha256": "24b06ea81b05a3fc09551c25a3e3b762477ef5a18474f640d2fef5322e6f67c5",
+   "seconds": 0.246,
+   "target": "Sc-45",
+   "za": 21045
+  },
+  {
+   "candidate_files": [
+    "n_2225_22-TI-46.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2225_22-TI-46.dat",
+   "file_sha256": "de540bd8cbdd302375777e8e4285f661665848adc0423b76d4bae9d6bc6f3a45",
+   "seconds": 0.103,
+   "target": "Ti-46",
+   "za": 22046
+  },
+  {
+   "candidate_files": [
+    "n_2228_22-TI-47.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2228_22-TI-47.dat",
+   "file_sha256": "07b653dc8b4ec860c22235360c2bb954bff362f40fd663211ab2b3f3b844e4ad",
+   "seconds": 0.114,
+   "target": "Ti-47",
+   "za": 22047
+  },
+  {
+   "candidate_files": [
+    "n_2231_22-TI-48.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2231_22-TI-48.dat",
+   "file_sha256": "fa9c2172ea2e86eecfb12ac0634d343b3df1b177a02651d35a97a3cddbb7ea58",
+   "seconds": 0.102,
+   "target": "Ti-48",
+   "za": 22048
+  },
+  {
+   "candidate_files": [
+    "n_2328_23-V-51.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2328_23-V-51.dat",
+   "file_sha256": "08463d56dcf6b2ff6bc06d7344b428c3174959234f579180f7b52b5967f8e824",
+   "seconds": 0.093,
+   "target": "V-51",
+   "za": 23051
+  },
+  {
+   "candidate_files": [
+    "n_2625_26-FE-54.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2625_26-FE-54.dat",
+   "file_sha256": "3107dbcc9ed5665c35ed48ac9e5626ada29ddcba51ebf1052b5ff1a95ea0c34d",
+   "seconds": 0.13,
+   "target": "Fe-54",
+   "za": 26054
+  },
+  {
+   "candidate_files": [
+    "n_2631_26-FE-56.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2631_26-FE-56.dat",
+   "file_sha256": "af8e32e7ed025949b65959980d9e2cd5fb6f5ce3c6a7adf2cb4afaac5976d5ab",
+   "seconds": 0.137,
+   "target": "Fe-56",
+   "za": 26056
+  },
+  {
+   "candidate_files": [
+    "n_2637_26-FE-58.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2637_26-FE-58.dat",
+   "file_sha256": "4ca1ce52f56ef98d1730702069b22022fa3954d9459152790ee539524b25a333",
+   "seconds": 0.102,
+   "target": "Fe-58",
+   "za": 26058
+  },
+  {
+   "candidate_files": [
+    "n_2725_27-CO-59.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2725_27-CO-59.dat",
+   "file_sha256": "236eb6913f11d7cc6666379f29fbe01439794c342451b77495c790cec5c3f249",
+   "seconds": 0.161,
+   "target": "Co-59",
+   "za": 27059
+  },
+  {
+   "candidate_files": [
+    "n_2825_28-NI-58.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_2825_28-NI-58.dat",
+   "file_sha256": "011b8916320c057783b5121f8aab59c2bea92426162c56a458990926be2bb527",
+   "seconds": 0.333,
+   "target": "Ni-58",
+   "za": 28058
+  },
+  {
+   "candidate_files": [
+    "n_2831_28-NI-60.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2831_28-NI-60.dat",
+   "file_sha256": "653f4bff4e88829c03e1aa8b92c4b83045e5a45d8390557def0f48cfb4c11476",
+   "seconds": 0.118,
+   "target": "Ni-60",
+   "za": 28060
+  },
+  {
+   "candidate_files": [
+    "n_2925_29-CU-63.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2925_29-CU-63.dat",
+   "file_sha256": "94a251153d13836041aa3dd04d017e8094a2241cc66de54bf2541217fa7a83ab",
+   "seconds": 0.205,
+   "target": "Cu-63",
+   "za": 29063
+  },
+  {
+   "candidate_files": [
+    "n_2931_29-CU-65.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_2931_29-CU-65.dat",
+   "file_sha256": "05cd0c4c4209583da71d0b0c0ab9ccea8ed27b47feb72ade06adb7e9f127151c",
+   "seconds": 0.132,
+   "target": "Cu-65",
+   "za": 29065
+  },
+  {
+   "candidate_files": [
+    "n_3025_30-ZN-64.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3025_30-ZN-64.dat",
+   "file_sha256": "b53d43b67ceb7d3cfb48ffbad51e05ca8283a16d86c4e0f8bdcea2ad59618e5b",
+   "seconds": 0.144,
+   "target": "Zn-64",
+   "za": 30064
+  },
+  {
+   "candidate_files": [
+    "n_3034_30-ZN-67.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3034_30-ZN-67.dat",
+   "file_sha256": "db9bf07530357049d892476ca1200a92c677192aacf1ad08bd4be6df913d944a",
+   "seconds": 0.109,
+   "target": "Zn-67",
+   "za": 30067
+  },
+  {
+   "candidate_files": [
+    "n_3037_30-ZN-68.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3037_30-ZN-68.dat",
+   "file_sha256": "aafaa5b1424883bc1100545d9d577f9aceab987da5f441df8bafc2d0f43666f5",
+   "seconds": 0.109,
+   "target": "Zn-68",
+   "za": 30068
+  },
+  {
+   "candidate_files": [
+    "n_3325_33-AS-75.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3325_33-AS-75.dat",
+   "file_sha256": "92cd2126c0fcacb4731764fbca13d00943a65fb9f69e48f690b934ea31d1ab0b",
+   "seconds": 0.137,
+   "target": "As-75",
+   "za": 33075
+  },
+  {
+   "candidate_files": [
+    "n_3925_39-Y-89.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_3925_39-Y-89.dat",
+   "file_sha256": "06accf24ef4684ee4946fd261e1823b5174900fbfd9d02a0d1e4ddbbdb9fd91d",
+   "seconds": 0.114,
+   "target": "Y-89",
+   "za": 39089
+  },
+  {
+   "candidate_files": [
+    "n_4025_40-ZR-90.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_4025_40-ZR-90.dat",
+   "file_sha256": "8a845cc92b6ea6d5b110729677852159f5591789d66a3e388315ab7ad91e3819",
+   "seconds": 0.125,
+   "target": "Zr-90",
+   "za": 40090
+  },
+  {
+   "candidate_files": [
+    "n_4125_41-NB-93.dat",
+    "n_4126_41-NB-93M.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_4125_41-NB-93.dat",
+   "file_sha256": "695f51ac41feff8b7271b349791a29f2fbd4af9de5beda8633b8ffcdeefbb6a7",
+   "seconds": 0.338,
+   "target": "Nb-93",
+   "za": 41093
+  },
+  {
+   "candidate_files": [
+    "n_4225_42-MO-92.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_4225_42-MO-92.dat",
+   "file_sha256": "c765eaef9c91985786fa22b8030450b981f5a9e64f68786cd02ee1c39eca60be",
+   "seconds": 0.195,
+   "target": "Mo-92",
+   "za": 42092
+  },
+  {
+   "candidate_files": [
+    "n_4525_45-RH-103.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_4525_45-RH-103.dat",
+   "file_sha256": "111cb4f2877dd1d1adffb9b9b634161015fe78158953d4bf7a00c52ca6f32e04",
+   "seconds": 0.206,
+   "target": "Rh-103",
+   "za": 45103
+  },
+  {
+   "candidate_files": [
+    "n_4731_47-AG-109.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_4731_47-AG-109.dat",
+   "file_sha256": "39a463750e7e11412e5517fe9be69b2bacb4d17130d87c549fa22de41cd62879",
+   "seconds": 0.614,
+   "target": "Ag-109",
+   "za": 47109
+  },
+  {
+   "candidate_files": [
+    "n_4925_49-IN-113.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_4925_49-IN-113.dat",
+   "file_sha256": "b35366d90519557064bc2491ee37a284ad116de03608d7504e1933bf6652a21c",
+   "seconds": 0.152,
+   "target": "In-113",
+   "za": 49113
+  },
+  {
+   "candidate_files": [
+    "n_4931_49-IN-115.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_4931_49-IN-115.dat",
+   "file_sha256": "0cecba037dff1d62a0674f79e6777810e2483e58d2b6052ab1be46ce54b9120c",
+   "seconds": 0.313,
+   "target": "In-115",
+   "za": 49115
+  },
+  {
+   "candidate_files": [
+    "n_5325_53-I-127.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_5325_53-I-127.dat",
+   "file_sha256": "268ad8ba79221993e6eaba702484db4020836385fa303f49f1542d659c78e616",
+   "seconds": 0.293,
+   "target": "I-127",
+   "za": 53127
+  },
+  {
+   "candidate_files": [
+    "n_5728_57-LA-139.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_5728_57-LA-139.dat",
+   "file_sha256": "f149c1a8149bbc43c17b65bae90e4fb7aa9f331bf5693940147bd1b62e721c33",
+   "seconds": 0.209,
+   "target": "La-139",
+   "za": 57139
+  },
+  {
+   "candidate_files": [
+    "n_5925_59-PR-141.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_5925_59-PR-141.dat",
+   "file_sha256": "e2d295d4a8e99fbde067ae2fd7a023c4d15e3eb567287baf74f8c18541c093e5",
+   "seconds": 0.265,
+   "target": "Pr-141",
+   "za": 59141
+  },
+  {
+   "candidate_files": [
+    "n_7328_73-TA-181.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_7328_73-TA-181.dat",
+   "file_sha256": "d22949556fa64a30765ea78c120997704cdcef768fcd14bbbc9e2bf29e7e085a",
+   "seconds": 0.194,
+   "target": "Ta-181",
+   "za": 73181
+  },
+  {
+   "candidate_files": [
+    "n_7443_74-W-186.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_7443_74-W-186.dat",
+   "file_sha256": "6c7cd806526b4c753168e17a34f005a5f30f3e258ea654d64307c18c75b7f584",
+   "seconds": 0.125,
+   "target": "W-186",
+   "za": 74186
+  },
+  {
+   "candidate_files": [
+    "n_7925_79-AU-197.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": true,
+   "exit": 0,
+   "file": "n_7925_79-AU-197.dat",
+   "file_sha256": "16107335e57e5d6ad6f42963a4366b212600d57692a1f3c228f4bb96f7c6fab3",
+   "seconds": 1.075,
+   "target": "Au-197",
+   "za": 79197
+  },
+  {
+   "candidate_files": [
+    "n_8034_80-HG-199.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_8034_80-HG-199.dat",
+   "file_sha256": "eb9b649ccccaf3ba7f8334c6f39dbe6914445b7d31acd897b35ec5bc259c2ce9",
+   "seconds": 0.132,
+   "target": "Hg-199",
+   "za": 80199
+  },
+  {
+   "candidate_files": [
+    "n_8225_82-PB-204.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_8225_82-PB-204.dat",
+   "file_sha256": "fdae4b012f8e92730c1370ed895e65db470c95c639a7d0a26653d1efbaca42c0",
+   "seconds": 0.139,
+   "target": "Pb-204",
+   "za": 82204
+  },
+  {
+   "candidate_files": [
+    "n_8325_83-BI-209.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_8325_83-BI-209.dat",
+   "file_sha256": "25062b1084244f4f325cd7a17f0832e74c7371647be7dd4acc2710577ffda445",
+   "seconds": 0.242,
+   "target": "Bi-209",
+   "za": 83209
+  },
+  {
+   "candidate_files": [
+    "n_9040_90-TH-232.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_9040_90-TH-232.dat",
+   "file_sha256": "23a619fe878985d2b8c364e0a62a89a6938ed1a3fb65236b139043d87651dabd",
+   "seconds": 0.173,
+   "target": "Th-232",
+   "za": 90232
+  },
+  {
+   "candidate_files": [
+    "n_9228_92-U-235.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_9228_92-U-235.dat",
+   "file_sha256": "3189270d5ec478b4beb9c5680af8b7b8de7dc6bbf76d34146dc1205ed4e551e2",
+   "seconds": 0.253,
+   "target": "U-235",
+   "za": 92235
+  },
+  {
+   "candidate_files": [
+    "n_9237_92-U-238.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_9237_92-U-238.dat",
+   "file_sha256": "e02b8bfed12618aefae338c061ad5b6cea0c08eb3e8067feedf01939f83bdc37",
+   "seconds": 0.396,
+   "target": "U-238",
+   "za": 92238
+  },
+  {
+   "candidate_files": [
+    "n_9346_93-NP-237.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_9346_93-NP-237.dat",
+   "file_sha256": "07656a3423c4ec0e620a3c2f474c83f37aa7b49c049c0e21f850e20aa7d6d83d",
+   "seconds": 0.147,
+   "target": "Np-237",
+   "za": 93237
+  },
+  {
+   "candidate_files": [
+    "n_9437_94-PU-239.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_9437_94-PU-239.dat",
+   "file_sha256": "af80800beaa0dc44db90fe0f6267604c3094bf0465c738c534443a5c10c39f4a",
+   "seconds": 0.226,
+   "target": "Pu-239",
+   "za": 94239
+  },
+  {
+   "candidate_files": [
+    "n_9543_95-AM-241.dat"
+   ],
+   "class": "ok",
+   "corpus": "eaf_2010",
+   "dosimetry_critical": false,
+   "exit": 0,
+   "file": "n_9543_95-AM-241.dat",
+   "file_sha256": "c20743db47575b252af5a68093167f1eea548ad552e1bb6423b8fb636cb1de8a",
+   "seconds": 0.157,
+   "target": "Am-241",
+   "za": 95241
+  }
+ ],
+ "pointwise_archive_sha256": "225b25787f6d9b54a9c28ebf075ccc715f69358be181fed27d5cc315cf8744db",
+ "schema": "actinv-p25b-g1-census-1",
+ "target_count": 47,
+ "targets": [
+  "Na-23",
+  "Mg-24",
+  "Al-27",
+  "Si-28",
+  "Si-29",
+  "P-31",
+  "S-32",
+  "Sc-45",
+  "Ti-46",
+  "Ti-47",
+  "Ti-48",
+  "V-51",
+  "Fe-54",
+  "Fe-56",
+  "Fe-58",
+  "Co-59",
+  "Ni-58",
+  "Ni-60",
+  "Cu-63",
+  "Cu-65",
+  "Zn-64",
+  "Zn-67",
+  "Zn-68",
+  "As-75",
+  "Y-89",
+  "Zr-90",
+  "Nb-93",
+  "Mo-92",
+  "Rh-103",
+  "Ag-109",
+  "In-113",
+  "In-115",
+  "I-127",
+  "La-139",
+  "Pr-141",
+  "Ta-181",
+  "W-186",
+  "Au-197",
+  "Hg-199",
+  "Pb-204",
+  "Bi-209",
+  "Th-232",
+  "U-235",
+  "U-238",
+  "Np-237",
+  "Pu-239",
+  "Am-241"
+ ]
+}
