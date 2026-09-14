@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -56,13 +57,19 @@ EXPECTED_VERDICTS = {
 
 COMPARATOR_PROBES = {
     "fispact": {"executables": ["fispact", "fispact-II", "fispact2"],
-                "python_modules": []},
-    "openmc": {"executables": ["openmc"], "python_modules": ["openmc"]},
-    "alara": {"executables": ["alara", "ALARA"], "python_modules": []},
+                "python_modules": [], "known_paths": []},
+    "openmc": {"executables": ["openmc"], "python_modules": ["openmc"],
+               "known_paths": []},
+    "alara": {"executables": ["alara", "ALARA"], "python_modules": [],
+              "known_paths": [Path.home() / "nuclear-data" / "alara-2.9.2-build"
+                              / "src" / "alara"]},
     "scale_origen": {"executables": ["scale", "origen", "origen-rs"],
-                     "python_modules": []},
-    "njoy": {"executables": ["njoy", "njoy2016"], "python_modules": []},
-    "actinv_v101": {"executables": ["actinv"], "python_modules": ["actinv"]},
+                     "python_modules": [], "known_paths": []},
+    "njoy": {"executables": ["njoy", "njoy2016"], "python_modules": [],
+             "known_paths": [Path.home() / "nuclear-data" / "njoy2016.79-build"
+                             / "njoy"]},
+    "actinv_v101": {"executables": ["actinv"], "python_modules": ["actinv"],
+                    "known_paths": [ROOT / "target" / "release" / "actinv"]},
 }
 CORE_CANDIDATES = [
     Path.home() / "Documents" / "Avila-Labs" / "avila-core",
@@ -89,6 +96,8 @@ def comparator_census() -> dict:
     out = {}
     for name, probe in COMPARATOR_PROBES.items():
         found = [e for e in probe["executables"] if shutil.which(e)]
+        local = [str(p) for p in probe["known_paths"]
+                 if p.is_file() and os.access(p, os.X_OK)]
         mods = []
         for mod in probe["python_modules"]:
             r = subprocess.run(
@@ -96,9 +105,9 @@ def comparator_census() -> dict:
                 capture_output=True)
             if r.returncode == 0:
                 mods.append(mod)
-        status = "executable" if (found or mods) else "not_available"
-        out[name] = {"executables": found, "python_modules": mods,
-                     "status": status}
+        status = "executable" if (found or mods or local) else "not_available"
+        out[name] = {"executables": found, "local_executables": local,
+                     "python_modules": mods, "status": status}
     return out
 
 

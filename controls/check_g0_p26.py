@@ -13,6 +13,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -70,22 +71,27 @@ def sha256(path: Path) -> str:
 def census() -> dict:
     out = {}
     probes = {
-        "fispact": ["fispact", "fispact-II", "fispact2"],
-        "openmc": ["openmc"],
-        "alara": ["alara", "ALARA"],
-        "scale_origen": ["scale", "origen", "origen-rs"],
-        "njoy": ["njoy", "njoy2016"],
-        "actinv_v101": ["actinv"],
+        "fispact": (["fispact", "fispact-II", "fispact2"], []),
+        "openmc": (["openmc"], []),
+        "alara": (["alara", "ALARA"],
+                  [Path.home() / "nuclear-data" / "alara-2.9.2-build"
+                   / "src" / "alara"]),
+        "scale_origen": (["scale", "origen", "origen-rs"], []),
+        "njoy": (["njoy", "njoy2016"],
+                 [Path.home() / "nuclear-data" / "njoy2016.79-build"
+                  / "njoy"]),
+        "actinv_v101": (["actinv"],
+                        [REPO / "target" / "release" / "actinv"]),
     }
-    for name, exes in probes.items():
-        found = [e for e in exes if shutil.which(e)]
+    for name, (exes, known) in probes.items():
+        found = [e for e in exes if shutil.which(e)] + [
+            str(p) for p in known if p.is_file() and os.access(p, os.X_OK)]
         out[name] = "executable" if found else "not_available"
     for mod in ("openmc", "actinv"):
         r = subprocess.run([sys.executable, "-c", f"import {mod}"],
                            capture_output=True)
         if r.returncode == 0:
-            out.setdefault("openmc" if mod == "openmc" else "actinv_v101",
-                           "executable")
+            out["openmc" if mod == "openmc" else "actinv_v101"] = "executable"
     return out
 
 

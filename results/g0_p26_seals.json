@@ -4,31 +4,43 @@
    "executables": [
     "actinv"
    ],
+   "local_executables": [
+    "/home/connoravila/Documents/actinv/target/release/actinv"
+   ],
    "python_modules": [],
    "status": "executable"
   },
   "alara": {
    "executables": [],
+   "local_executables": [
+    "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara"
+   ],
    "python_modules": [],
-   "status": "not_available"
+   "status": "executable"
   },
   "fispact": {
    "executables": [],
+   "local_executables": [],
    "python_modules": [],
    "status": "not_available"
   },
   "njoy": {
    "executables": [],
+   "local_executables": [
+    "/home/connoravila/nuclear-data/njoy2016.79-build/njoy"
+   ],
    "python_modules": [],
-   "status": "not_available"
+   "status": "executable"
   },
   "openmc": {
    "executables": [],
+   "local_executables": [],
    "python_modules": [],
    "status": "not_available"
   },
   "scale_origen": {
    "executables": [],
+   "local_executables": [],
    "python_modules": [],
    "status": "not_available"
   }
@@ -82,5 +94,5 @@
  "protocol_sha256": "0dd9be843e4e195d3f3ebb9a9084f233af3d0eedf5045bbb48d77d665f5d1e06",
  "release_hold": "The 1.1.0 release hold stands unchanged; P26 produces feasibility evidence, not a release.",
  "schema": "actinv-p26-g0-seal-1",
- "seal_commit": "3ae2f2656f6e6e56ad401378d9f5c6a96f1cf80d"
+ "seal_commit": "edd0c04dd04bf27d40a1e756f635769c79593cfd"
 }
