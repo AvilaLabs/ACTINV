@@ -1,0 +1,193 @@
+{
+ "fixtures": [
+  {
+   "fixture": "ag109g_single_declared_binds_isomer",
+   "observed": {
+    "channel": "mf10_partial",
+    "lfs": 2
+   },
+   "pass": true
+  },
+  {
+   "fixture": "nb93g_multi_declared_binds_total",
+   "observed": {
+    "channel": "mf3_total"
+   },
+   "pass": true
+  },
+  {
+   "fixture": "in113gg_binds_lfs0",
+   "observed": {
+    "lfs": 0
+   },
+   "pass": true
+  },
+  {
+   "fixture": "isomer_no_declared_undefined",
+   "observed": {
+    "binding": true,
+    "inclusion": "undefined_state_alias"
+   },
+   "pass": true
+  },
+  {
+   "fixture": "cd_cover_unsupported",
+   "observed": "unsupported_self_shielding",
+   "pass": true
+  },
+  {
+   "fixture": "unknown_cover_fails_closed",
+   "observed": "unsupported_self_shielding",
+   "pass": true
+  },
+  {
+   "fixture": "bare_capture_godiva_denied",
+   "observed": "unsupported_self_shielding",
+   "pass": true
+  },
+  {
+   "fixture": "bare_threshold_godiva_scored",
+   "observed": "scored",
+   "pass": true
+  },
+  {
+   "fixture": "missing_monitor_undefined",
+   "observed": "undefined_monitor",
+   "pass": true
+  },
+  {
+   "fixture": "pulse_limit_eoi_arithmetic",
+   "observed": {
+    "expected": 1.85381310945233e-05,
+    "reason": "scored",
+    "value": 1.85381310945233e-05
+   },
+   "pass": true
+  },
+  {
+   "fixture": "finite_reduces_to_pulse_limit",
+   "observed": {
+    "finite": 1.8538142415155635e-05,
+    "pulse": 1.8538131094523303e-05
+   },
+   "pass": true
+  },
+  {
+   "fixture": "internal_consistency_detects_forged_ce",
+   "pass": true
+  },
+  {
+   "fixture": "be_production_non_neutron",
+   "observed": "non_neutron_incident_particle",
+   "pass": true
+  },
+  {
+   "fixture": "si_fold_ratio_arithmetic",
+   "observed": {
+    "reason": "scored",
+    "value": 0.5
+   },
+   "pass": true
+  },
+  {
+   "fixture": "si_fold_ratio_arithmetic_candidate",
+   "observed": {
+    "reason": "scored",
+    "value": 0.5
+   },
+   "pass": true
+  },
+  {
+   "fixture": "unresolved_monitor_ledgered",
+   "observed": "undefined_monitor",
+   "pass": true
+  }
+ ],
+ "freeze": {
+  "definitions_sha256": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
+  "scorer_sha256": "518eb83e54b7ff671350ded26953759ea9a4ed928294c6d57403337bea9dd4e7",
+  "statement": "after this gate the scoring code is frozen; a post-audit change requires an amendment"
+ },
+ "gate": "G2",
+ "module_hashes": {
+  "controls/endf_common.py": "97ce887b0dfbd413f0fd6ece4dba372d8f6a874585517b36a9bf01a7cf48232f",
+  "controls/endf_decay.py": "8c1bf9b3c5284cbb66ebc7b701313bcf2fc15ffc881771c0e0f30dd2d5073242",
+  "controls/p17_heldout.py": "e8a793c886abf9ece4681a775474b4146908045f693100c42c72558ac586c757",
+  "controls/p17_irdff.py": "3560feaab45ebd73cd51b599a01f68a47ccd00e6f2e30fd972bcaea95320f11f",
+  "controls/p17_scoring.py": "ba31fbcb583894d8328b3bc7cf9a8bb531ad3b13675e5c91f2146a0ea54800a4",
+  "controls/p24_definitions.py": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
+  "controls/p24_scorer.py": "518eb83e54b7ff671350ded26953759ea9a4ed928294c6d57403337bea9dd4e7"
+ },
+ "mutation_tests": {
+  "details": [
+   {
+    "detected": true,
+    "note": "integrity rests on the hash-pinned G1 record, verified at G0/G5",
+    "plant": "forged Ag109g LFS"
+   },
+   {
+    "detected": true,
+    "note": "independent geometric mean agrees",
+    "plant": "metric identity vs hand arithmetic"
+   },
+   {
+    "detected": true,
+    "plant": "invented inclusion reason"
+   },
+   {
+    "detected": true,
+    "note": "fold_variant returns undefined_monitor, exercised above",
+    "plant": "monitor-dependency rule (unresolved monitor unscored)"
+   }
+  ],
+  "plants": 4,
+  "rejected": 4
+ },
+ "pass": true,
+ "phase": "P24",
+ "protocol_sha256": "ee703d208b43c3dc91fef41a259d748d343865e130f37266128685cf21001ef7",
+ "protocol_sha256_verified": true,
+ "schema": "actinv-p24-g2-scorer-audit-1",
+ "static_checks": [
+  {
+   "check": "scorer imports frozen definitions module",
+   "pass": true
+  },
+  {
+   "check": "scorer imports unchanged P17 metric module",
+   "pass": true
+  },
+  {
+   "check": "scorer uses unchanged P17 score_calculation",
+   "pass": true
+  },
+  {
+   "check": "scorer uses unchanged P17 unscored_calculation",
+   "pass": true
+  },
+  {
+   "check": "table specs cover the sealed partition tables",
+   "pass": true
+  },
+  {
+   "check": "grammar kinds are the frozen set",
+   "pass": true
+  },
+  {
+   "check": "P24 inclusion vocabulary extends the frozen P17 set only",
+   "pass": true
+  },
+  {
+   "check": "no percentile/geometric-mean code inside scorer",
+   "pass": true
+  },
+  {
+   "check": "definition module hash matches the frozen G1 record",
+   "pass": true
+  },
+  {
+   "check": "G1 check record is green",
+   "pass": true
+  }
+ ]
+}
