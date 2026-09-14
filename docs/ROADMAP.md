@@ -973,3 +973,22 @@ those risks concrete before the implementation sequence is committed.
   (`docs/P25_TENDL2025_DEFECT_REPORT.md`, qualified by absolute magnitude in `docs/DATA_TRAPS.md` traps
   10–15). P17-FAIL, P18-FAIL and P18b-FAIL remain visible and unamended; the v1.1.0 release hold stands;
   P24's corrected-definition re-validation retains its order and is the next scheduled phase.
+
+- 2026-09-17 — **P25b closes P25-FAIL analog `P25b-FAIL`** (`results/verdict_p25b.json`,
+  `results/g5_p25b_accounting.json`, independent checker `results/g5_p25b_check.json` green,
+  6/6 planted mutations rejected, gate ordering verified by git ancestry). Three hash-pinned
+  alternate neutron evaluations were qualified against the frozen machinery: TENDL-2023,
+  FENDL-3.2c and EAF-2010. Under the v1.0.1 builder all three met their Amendment-1 coverage
+  floors (47/44/35 IRDFF isotopic targets); under the 1.1.0 release-candidate builder — whose
+  added state-catalog and emitted-state validation is the stricter, release-relevant
+  instrument — all three fall below floor (37/34/31) and no candidate survives nonregression:
+  TENDL-2023 passes the IRDFF partition on 21 comparable rows but fails the isomeric
+  partition (median |ln C/E| 0.250 vs baseline 0.162 over 253 paired rows); EAF-2010 and
+  FENDL-3.2c fail IRDFF nonregression and cannot express isomeric identity at all (the EAF
+  format path emits no `state_catalog`; FENDL ships none of the 32 required product-isomer
+  anchor files). Decisive findings: TENDL-2023 carries the same TALYS emitted-sum>total
+  defect class as TENDL-2025 (upstream-confirmed, fixed in the next TENDL release);
+  EAF-2010 carries negative MF=8 ELFS excitation energies the 1.1.0 builder correctly
+  rejects. ACTINV 1.1.0 stays data-blocked; the recorded paths are the corrected upstream
+  TENDL release, or a new phase for EAF state-catalog emission under explicit isomeric
+  limitations. All scoring was retrospective; no blind evidence exists or was claimed.

@@ -1,0 +1,38 @@
+{
+ "accounting_sha256": "b5c7ccb7994cf1211ea8e1639aae9a59da18c0eec7ef9d9c5436ad68de0f17ad",
+ "coverage_floors": {
+  "eaf_2010": {
+   "floor": 47,
+   "floor_met_v101": true,
+   "floor_met_v110": false,
+   "v101_post_repair_ok": 47,
+   "v110_irdff_ok": 37
+  },
+  "fendl_32c": {
+   "floor": 34,
+   "floor_met_v101": true,
+   "floor_met_v110": false,
+   "v101_post_repair_ok": 35,
+   "v110_irdff_ok": 31
+  },
+  "tendl_2023": {
+   "floor": 41,
+   "floor_met_v101": true,
+   "floor_met_v110": false,
+   "v101_post_repair_ok": 44,
+   "v110_irdff_ok": 34
+  }
+ },
+ "failures": [],
+ "mutations_rejected": [
+  "verdict flip rejected",
+  "qualified flip rejected",
+  "coverage inflation rejected",
+  "floor flag flip rejected",
+  "outcome rewrite rejected",
+  "blind-evidence claim rejected"
+ ],
+ "pass": true,
+ "schema": "actinv-p25b-g5-check-1",
+ "verdict_sha256": "403c3c4f18a06c1be84addff536736067fd7c964ab980c9d3e1fc9193456b7a9"
+}

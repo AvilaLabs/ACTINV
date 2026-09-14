@@ -1,0 +1,129 @@
+{
+ "accounting_sha256": "b5c7ccb7994cf1211ea8e1639aae9a59da18c0eec7ef9d9c5436ad68de0f17ad",
+ "amendment_1_sha256": "16c7167d180e19d616f927df7029a6c64dd16227cb1f610b6ddbef5d7b918312",
+ "blind_evidence": false,
+ "builder_version_confound": "G1 census and Amendment-1 floors were measured with the v1.0.1 builder; the release-relevant union census used the 1.1.0 release candidate, whose added state validation (state_catalog, ELIS/ELFS checks, emitted-state sums) is stricter. Floors met under v1.0.1, unmet under 1.1.0 for all three candidates; the verdict fails under either reading because no candidate passes nonregression.",
+ "evidence_label": "all scoring retrospective; every benchmark partition is consumed evidence",
+ "evidence_sha256": {
+  "g0_p25b_check.json": "c62302c1826a02d49b4dcfecc864ea034a7c8fbe83b6dc5f37ce8e132f6e3db1",
+  "g0_p25b_seals.json": "a9c33b7b0319cb738e5e187244ea3e74ace6ad972abc6ca6cf5bf5bbf0bf22ce",
+  "g1_p25b_census.json": "346fc54ddbe606d24d0acca1663e2039a376bcb95732faaa6592fa91ccc7a64b",
+  "g1_p25b_check.json": "0d50081080f35e32d417bc86a3a4c6b0f47f3053692e1bac3978064ae24e0c40",
+  "g2_p25b_check.json": "da0e67aa720ce3e724b2d2d2258d9543fd5fa9b9841350f0aac2b077c5154d4f",
+  "g2_p25b_traces.json": "dca38f361439ab56876f2a87506bd20aeca63218bbb618f1783fc7641371f3a5",
+  "g3_p25b_check.json": "438b4454a34db5f299e81a106bf794178c58ac196544d265ced91fca080f8ea7",
+  "g3_p25b_proposal.json": "ad7198d2dd22a220d45f64eb7fecab7778b33907d69572808117abb93ea48d37",
+  "g4_p25b_build.json": "80aafa24ccfc4471c6367a362a9cc81c9fdf10328c714014380b850e89b1a644",
+  "g4_p25b_isomer.json": "b4d564623a073f33dd3c56f9d77112400d6fdd73bb3b7109940fb9cf14990607",
+  "g4_p25b_rebind.json": "82622d5afc3ec8624a62cdaf0d8b20d4075681d1aef7123385c78e79254043c5",
+  "g4_p25b_score.json": "e2cae95e62c4c0979a7dba0a9517fddf8f934bf281397e1359bc3a1810e54d7d",
+  "g4_p25b_union.json": "49f54b83abb8206581b3ba838fa06406b798715e92f0f316f326a4e2a8dca24c",
+  "g4_p25b_union_check.json": "1ec896cfe77455d5c9688605f277f190bf6de3a80c6de4a58e04d41517e60960",
+  "g4_p25b_union_irdff_score.json": "9c63410841f411a1ba67fd20a427efeb9030e36ad64dae151341ac4bc0ad367d"
+ },
+ "headline": "no alternate evaluation survives construction qualification with nonregressing comparable-case accuracy under the release-candidate builder",
+ "key_findings": [
+  "TENDL-2023 carries the same TALYS emitted-sum>total defect class as TENDL-2025 (19 union files) plus unsupported MF=6 LAW=-5 fission files; it passes IRDFF nonregression on 21 comparable rows but fails the isomeric partition (median |ln C/E| 0.250 vs baseline 0.162, 253 paired rows).",
+  "EAF-2010's format path emits no state_catalog under the 1.1.0 builder and 12 files carry negative MF=8 ELFS excitation energies: the isomeric partition is unscored by builder capability and IRDFF nonregression fails (0.156 vs 0.055 on 24 comparable rows).",
+  "FENDL-3.2c lacks isomer-target files for all 32 needed product states and 23 union targets are corpus_incomplete; IRDFF nonregression fails (0.096 vs 0.040 on 16 rows).",
+  "Upstream confirmed the TENDL-2025 defect root cause (unflushed TALYS channelsout.f90 array); the fix lands in the next TENDL release, which post-dates every candidate evaluated here."
+ ],
+ "per_corpus": {
+  "eaf_2010": {
+   "coverage": {
+    "dosimetry_critical_ok_v110": "3/6",
+    "floor": 47,
+    "floor_met_v101": true,
+    "floor_met_v110": false,
+    "v101_post_repair_ok": 47,
+    "v110_union_ok": 37
+   },
+   "nonregression": {
+    "comparable_irdff": 24,
+    "irdff": {
+     "coverage_ok": false,
+     "median_ok": false,
+     "p90_ok": false
+    },
+    "isomeric": {
+     "coverage_ok": null,
+     "median_ok": null,
+     "p90_ok": null,
+     "unscored_candidate": true
+    },
+    "paired_isomeric": 0
+   },
+   "qualified": false,
+   "reasons": [
+    "coverage floor unmet (1.1.0 builder)",
+    "IRDFF comparable-case nonregression failed",
+    "isomeric partition unscored (builder/corpus capability)"
+   ]
+  },
+  "fendl_32c": {
+   "coverage": {
+    "dosimetry_critical_ok_v110": "4/6",
+    "floor": 34,
+    "floor_met_v101": true,
+    "floor_met_v110": false,
+    "v101_post_repair_ok": 35,
+    "v110_union_ok": 31
+   },
+   "nonregression": {
+    "comparable_irdff": 16,
+    "irdff": {
+     "coverage_ok": false,
+     "median_ok": false,
+     "p90_ok": false
+    },
+    "isomeric": {
+     "coverage_ok": null,
+     "median_ok": null,
+     "p90_ok": null,
+     "unscored_candidate": true
+    },
+    "paired_isomeric": 0
+   },
+   "qualified": false,
+   "reasons": [
+    "coverage floor unmet (1.1.0 builder)",
+    "IRDFF comparable-case nonregression failed",
+    "isomeric partition unscored (builder/corpus capability)"
+   ]
+  },
+  "tendl_2023": {
+   "coverage": {
+    "dosimetry_critical_ok_v110": "2/6",
+    "floor": 41,
+    "floor_met_v101": true,
+    "floor_met_v110": false,
+    "v101_post_repair_ok": 44,
+    "v110_union_ok": 34
+   },
+   "nonregression": {
+    "comparable_irdff": 21,
+    "irdff": {
+     "coverage_ok": true,
+     "median_ok": true,
+     "p90_ok": true
+    },
+    "isomeric": {
+     "coverage_ok": false,
+     "median_ok": false,
+     "p90_ok": false
+    },
+    "paired_isomeric": 253
+   },
+   "qualified": false,
+   "reasons": [
+    "coverage floor unmet (1.1.0 builder)",
+    "isomeric comparable-case nonregression failed"
+   ]
+  }
+ },
+ "prior_verdict_failures": [],
+ "protocol_sha256": "3eec3c26db02e4aae0081818df5d1c2effee52f299e7a36e155d4437b08e71be",
+ "release_consequence": "ACTINV 1.1.0 remains blocked on neutron data: no qualified alternate candidate exists. Options recorded: wait for the corrected TENDL release; or a new phase adding state-catalog emission for the EAF format plus bounded ELFS adjudication, which could revisit EAF-2010's construction coverage under explicit isomeric-identity limitations.",
+ "schema": "actinv-p25b-verdict-1",
+ "verdict": "P25b-FAIL"
+}
