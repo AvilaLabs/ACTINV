@@ -94,11 +94,19 @@ def p25_gates(scored: dict, accounting: dict, mapping: dict,
     p18_gates = g5.gates(scored, mapping)
 
     # ---- gate 3: Amendment B coverage floors ------------------------
+    # "scored" is the frozen status convention (the sealed record's
+    # candidate_scored and the G3 projections count status == "scored",
+    # including zero_prediction_scored rows — cm = 0 is a defined C/M).
+    scored_per = defaultdict(int)
+    for r in scored["ledger"]:
+        if r["status"] == "eligible" and \
+                (r.get("candidate") or {}).get("status") == "scored":
+            scored_per[r["projectile"]] += 1
     floor_rows = {}
     floors_ok = True
     for proj, (share, rows) in FLOORS.items():
         blk = scored["per_proj"].get(proj, {})
-        cand_rows = blk.get("candidate", {}).get("rows", 0)
+        cand_rows = scored_per[proj]
         eligible = blk.get("eligible_rows", 0)
         got_share = cand_rows / eligible if eligible else 0.0
         ok = cand_rows >= rows and got_share >= share
@@ -106,17 +114,14 @@ def p25_gates(scored: dict, accounting: dict, mapping: dict,
         floor_rows[proj] = {
             "eligible_rows": eligible,
             "candidate_scored": cand_rows,
+            "metric_rows": blk.get("candidate", {}).get("rows", 0),
             "floor_share": share, "floor_rows": rows,
             "scored_share": got_share,
             "pass": ok,
         }
 
     # ---- gate 4: no empty stratum ------------------------------------
-    strata_nonempty = {
-        proj: (scored["per_proj"].get(proj, {})
-               .get("candidate", {}).get("rows", 0) >= 10)
-        for proj in FLOORS
-    }
+    strata_nonempty = {proj: scored_per[proj] >= 10 for proj in FLOORS}
     no_empty = all(strata_nonempty.values())
 
     # ---- gate 1: complete outcome accounting --------------------------
@@ -164,7 +169,9 @@ def evaluate(report: dict) -> list[str]:
     if len(eligible) != report["counts"].get("eligible_rows"):
         f.append("eligible count")
 
-    # recompute per-stratum scored counts and floor checks
+    # recompute per-stratum scored counts and floor checks — "scored" is
+    # the frozen status convention (includes zero_prediction_scored rows:
+    # cm = 0 is a defined C/M)
     per = defaultdict(int)
     for r in eligible:
         blk = r.get("candidate") or {}
@@ -186,6 +193,10 @@ def evaluate(report: dict) -> list[str]:
     if report["gates"]["outcome_accounting"] != (
             report["gates"]["unnamed_outcomes"] == []):
         f.append("outcome_accounting")
+    hr = report.get("historical_rerun", {})
+    if report["gates"]["historical_reproducibility"] != (
+            hr.get("reproduces_sealed") is True and hr.get("diffs") == []):
+        f.append("historical_reproducibility")
     want = (report["gates"]["outcome_accounting"]
             and report["gates"]["paired_nonregression"]["strata_pass"]
             and report["gates"]["paired_nonregression"]["overall_pass"]
@@ -217,16 +228,28 @@ def main() -> int:
             e["candidate"]["status"] = "build_failed_g3"
         def mut_hist(r):
             r["counts"]["eligible_rows"] = 0
-        for mutation in (mut_floor, mut_pass, mut_row, mut_hist):
+        def mut_hist_flag(r):
+            r["gates"]["historical_reproducibility"] = \
+                not r["gates"]["historical_reproducibility"]
+        for mutation in (mut_floor, mut_pass, mut_row, mut_hist,
+                         mut_hist_flag):
             m = copy.deepcopy(rep)
             mutation(m)
             if evaluate(m):
                 rejected += 1
-        print(f"self-test rejected {rejected}/4 mutations")
-        return 0 if rejected == 4 else 1
+        print(f"self-test rejected {rejected}/5 mutations")
+        return 0 if rejected == 5 else 1
 
     # gate 5 first: the unchanged P18b scorer over the P18b artifacts
-    # must reproduce the sealed record exactly (float equality).
+    # must reproduce the sealed record exactly (float equality; two
+    # NaNs in the same position count as reproduced — a stratum with
+    # zero scored rows emits NaN metrics on both sides).
+    def same(a, b) -> bool:
+        if a == b:
+            return True
+        return (isinstance(a, float) and isinstance(b, float)
+                and math.isnan(a) and math.isnan(b))
+
     hist = g5.score_heldout()
     sealed = json.loads(P18B_RECORD.read_text())
     hist_ok = True
@@ -235,19 +258,19 @@ def main() -> int:
         got = hist["per_proj"].get(proj, {})
         for label in ("baseline", "candidate"):
             for k, v in blk[label].items():
-                if got.get(label, {}).get(k) != v:
+                if not same(got.get(label, {}).get(k), v):
                     hist_ok = False
                     hist_diffs.append(f"{proj}/{label}/{k}")
-        if got.get("eligible_rows") != blk["eligible_rows"]:
+        if not same(got.get("eligible_rows"), blk["eligible_rows"]):
             hist_ok = False
             hist_diffs.append(f"{proj}/eligible_rows")
     for label in ("baseline", "candidate"):
         for k, v in sealed["overall"][label].items():
-            if hist["overall"][label].get(k) != v:
+            if not same(hist["overall"][label].get(k), v):
                 hist_ok = False
                 hist_diffs.append(f"overall/{label}/{k}")
-    if hist["stats"].get("eligible_rows") != sealed["counts"].get(
-            "eligible_rows"):
+    if not same(hist["stats"].get("eligible_rows"),
+                sealed["counts"].get("eligible_rows")):
         hist_ok = False
         hist_diffs.append("counts/eligible_rows")
 
@@ -275,8 +298,8 @@ def main() -> int:
         rec["candidate_outcome"] = name
         if name is None or name.startswith("undefined_ratio:None"):
             unnamed.append(rec["row_id"])
-        outcomes.setdefault(rec["projectile"], {})[name] = (
-            outcomes[rec["projectile"]].get(name, 0) + 1)
+        proj_out = outcomes.setdefault(rec["projectile"], {})
+        proj_out[name] = proj_out.get(name, 0) + 1
 
     accounting = {
         "eligible_rows": sum(

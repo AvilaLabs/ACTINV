@@ -1,0 +1,27 @@
+{
+ "schema": "actinv-p25-verdict-1",
+ "phase": "P25",
+ "verdict": "P25-FAIL",
+ "failures": [
+  "coverage floors fail: {'neutron': False, 'proton': False, 'deuteron': False, 'alpha': False}",
+  "neutron: nonregression recompute fails",
+  "proton: nonregression recompute fails",
+  "deuteron: nonregression recompute fails",
+  "overall nonregression recompute fails"
+ ],
+ "failure_count": 5,
+ "evidence_sha256": {
+  "census": "729f7c8459dd2a1f10101199af7b9b62f3096d8bc6725066e09ad29fdc7fb7e2",
+  "traces": "30322ff86d90a35cc804204e017c7f289f496fa1975209c6e595067aa88230b3",
+  "g3check": "55ad31e0a10f2e8de867d6e191cf40d1b4c894cfed793abfc0d1fbe4f13628a0",
+  "g4rep": "92b60f553137f83d149e592ce657485affb1176dcec2905dc54a0729f2e2d1b4",
+  "g4check": "1a86aa231426f65466e18e270c9c9e8392ecf94200e6a1dfedd83e0fbedb703d",
+  "g5acc": "3bce0dfaaf70f1157d3c2085f39763feab73d01908211c25ec68e00ea92be8c8",
+  "g5p18b": "3cf4c369c1d1b95cca33f436948d49d71740789638c354988d253dcc697d51ad"
+ },
+ "protocol_sha256": "ccd9bd98e513609532ed3a9871ce455be81828651e8ecf623d2a253a9f9fb552",
+ "amendment_a_sha256": "214992c3709803b4991926251622731cf47071903fd255d51c03ceec17b483e8",
+ "amendment_b_sha256": "ab1f1ad6126fff277a274290ac1bdd2a79ee2be3077c087474834187cc4e4417",
+ "qualification_label": "P25 qualification rests on engineering evidence and retrospective scoring of the sealed P18b held-out population; no sufficiently independent unread isomeric measurement set exists.",
+ "release_note": "P25-PASS does not by itself authorize release; the 1.1.0 publication decision remains the maintainer's and P24 may still be required before tagging."
+}

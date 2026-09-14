@@ -15,6 +15,7 @@ import copy
 import hashlib
 import json
 import math
+import re
 import subprocess
 import sys
 from collections import Counter, defaultdict
@@ -77,6 +78,26 @@ NAMED_PREFIXES = (
     "scored", "zero_prediction_scored", "construction_failed:",
     "undefined_ratio:", "eligibility:",
 )
+TOKEN_KINDS = {
+    "floor_reconciled": {"floor"},
+    "interp_artifact_reconciled": {"interp"},
+    "missing_total_self_comparator": {"no_mf3_total"},
+    "sentinel supplies the permitted runtime comparator":
+        {"no_mf3_total"},
+}
+
+
+def load_index_ledgers(g4rep: dict) -> dict:
+    """(projectile, filename) -> ledger lines from the emitted index."""
+    out = {}
+    for proj, res in g4rep.get("projectiles", {}).items():
+        idx_path = Path(res.get("index", ""))
+        if not idx_path.is_file():
+            continue
+        idx = json.loads(idx_path.read_text())
+        for t in idx.get("targets", []):
+            out[(proj, t["file"])] = t.get("ledger", [])
+    return out
 
 
 def sha256(path: Path) -> str:
@@ -145,31 +166,44 @@ def evaluate(records: dict, failures: list[str]) -> None:
         failures.append(f"eligible recompute {eligible_tot} != {ELIGIBLE}")
 
     # ---- G4: repairs applied by defect class only -----------------------
+    index_ledgers = load_index_ledgers(g4rep)
     for proj, res in g4rep.get("projectiles", {}).items():
         files = traces["files"].get(proj, {})
         failed = set(res.get("failures", {}))
         for name, rec in files.items():
             cls = rec["final_class"]
             if name not in failed and cls not in REPAIRABLE:
-                failures.append(f"{proj}/{name}: built despite {cls}")
+                # a genuine-class source may build only when the genuine
+                # defect stays visible as a ledgered source diagnostic in
+                # the emitted index — never reconciled, never silent
+                mts = {int(m) for m in re.findall(
+                    r"MT(\d+)/ZAP", " ".join(
+                        rec["all_excesses"].get("detail", [])))}
+                led = index_ledgers.get((proj, name), [])
+                diagnosed = any(
+                    f"MT{mt}:" in line and "audit recorded" in line
+                    for mt in mts for line in led)
+                if not diagnosed:
+                    failures.append(
+                        f"{proj}/{name}: built despite {cls} without "
+                        f"a ledgered source diagnostic")
         for token, names in res.get("repair_diagnostics", {}).items():
-            if token == "interp_artifact_reconciled":
-                for name in names:
-                    if name in files and "interp" not in \
-                            files[name]["all_excesses"]["kinds"]:
-                        failures.append(
-                            f"{proj}/{name}: interp token without mechanism")
-            if token == "missing_total_self_comparator":
-                for name in names:
-                    if name in files and "no_mf3_total" not in \
-                            files[name]["all_excesses"]["kinds"]:
-                        failures.append(
-                            f"{proj}/{name}: missing-total token without mechanism")
-            if token == "floor_reconciled":
-                for name in names:
-                    if name in files and files[name]["final_class"] in GENUINE:
-                        failures.append(
-                            f"{proj}/{name}: floor token on genuine defect")
+            allowed = TOKEN_KINDS.get(token)
+            if allowed is None:
+                continue  # identity repairs carry no decimal signature
+            for name in names:
+                if name in failed:
+                    failures.append(
+                        f"{proj}/{name}: {token} ledgered on a "
+                        f"still-failed file")
+                    continue
+                if name not in files:
+                    continue  # previously-built file: token may still fire
+                kinds = set(files[name]["all_excesses"]["kinds"])
+                if not kinds & allowed:
+                    failures.append(
+                        f"{proj}/{name}: {token} without a proven "
+                        f"{sorted(allowed)} mechanism")
 
     # ---- G5: acceptance arithmetic -------------------------------------
     if g5acc.get("schema") != "actinv-p25-g5-acceptance-1":
@@ -201,12 +235,30 @@ def evaluate(records: dict, failures: list[str]) -> None:
     no_empty = all(per[p] >= 10 for p in FLOORS)
     if not no_empty:
         failures.append("empty stratum present")
-    # nonregression recompute
+    # nonregression recompute — recorded per-stratum verdicts must equal
+    # the independent recompute in both directions
     pp = g5acc.get("per_projectile", {})
+    rec_strata = (g5acc.get("gates", {})
+                  .get("paired_nonregression", {}).get("strata", {}))
     for proj, blk in pp.items():
         if blk.get("eligible_rows", 0) < 10:
             continue
-        if nonreg_ok(blk["baseline"], blk["candidate"]) is not True:
+        b, c = blk["baseline"], blk["candidate"]
+        recomputed = {
+            "median_ok": (c["median_abs_ln"] <= b["median_abs_ln"] + 0.005
+                          and c["median_abs_ln"] <= 1.01 * b["median_abs_ln"]),
+            "p90_ok": (c["p90_abs_ln"] <= b["p90_abs_ln"] + 0.01
+                       and c["p90_abs_ln"] <= 1.01 * b["p90_abs_ln"]),
+            "coverage_ok": all(
+                c[k] >= b[k] - 0.01
+                for k in ("within_10pct", "within_20pct", "within_30pct")),
+        }
+        rec = rec_strata.get(proj, {})
+        for k, want in recomputed.items():
+            if rec.get(k) != want:
+                failures.append(
+                    f"{proj}: recorded {k} != recompute")
+        if nonreg_ok(b, c) is not True:
             failures.append(f"{proj}: nonregression recompute fails")
     if nonreg_ok(g5acc["overall"]["baseline"],
                  g5acc["overall"]["candidate"]) is not True:
@@ -251,7 +303,7 @@ def gate_ordering(failures: list[str]) -> None:
     log = subprocess.run(
         ["git", "log", "--format=%H %s", "-30"], cwd=ROOT, text=True,
         capture_output=True).stdout.splitlines()
-    g3 = next((l.split()[0] for l in log if "P25 G3" in l), None)
+    g3 = next((l.split()[0] for l in log if "Amendment B" in l), None)
     g4 = next((l.split()[0] for l in log if "P25 G4" in l), None)
     if not g3 or not g4:
         failures.append("cannot locate G3/G4 commits for ordering")
