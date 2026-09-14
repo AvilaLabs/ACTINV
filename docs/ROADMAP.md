@@ -251,7 +251,7 @@ defaults must have a qualified scope. Protocol qualification populations and acc
 maintained checks and cannot be relaxed through an ordinary study setting. Every release records family/version,
 instantiated contract identity and checker identity. Updating a release never rewrites past studies or verdicts.
 
-**P26 replan entry (2026-09-17).** P26 closed `P26-FAIL`: the workload derivation, comparison
+**P26 replan entry (2026-09-14).** P26 closed `P26-FAIL`: the workload derivation, comparison
 contract and measurement machinery all hold, but the drafted ambition could not be established —
 the 10x headroom leg is unmeasurable on this workstation (ALARA's only local library covers none of
 the contract elements; FISPACT-II, SCALE/ORIGEN and OpenMC are unavailable) and the measured
@@ -974,7 +974,7 @@ those risks concrete before the implementation sequence is committed.
   10–15). P17-FAIL, P18-FAIL and P18b-FAIL remain visible and unamended; the v1.1.0 release hold stands;
   P24's corrected-definition re-validation retains its order and is the next scheduled phase.
 
-- 2026-09-17 — **P25b closes P25-FAIL analog `P25b-FAIL`** (`results/verdict_p25b.json`,
+- 2026-09-14 — **P25b closes P25-FAIL analog `P25b-FAIL`** (`results/verdict_p25b.json`,
   `results/g5_p25b_accounting.json`, independent checker `results/g5_p25b_check.json` green,
   6/6 planted mutations rejected, gate ordering verified by git ancestry). Three hash-pinned
   alternate neutron evaluations were qualified against the frozen machinery: TENDL-2023,
