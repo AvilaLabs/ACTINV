@@ -1,0 +1,6860 @@
+{
+ "campaign_ledger": "results/g3_p26_campaign_ledger.jsonl",
+ "campaign_records": 2001,
+ "context": {
+  "cache_state_note": "cold_process = fresh process with OS page cache as-is; warm_process = immediate repeat with binary and data in page cache",
+  "cpu": "Intel(R) Core(TM) i3-N305",
+  "executables": {
+   "actinv_candidate": {
+    "path": "/home/connoravila/Documents/actinv/target/release/actinv",
+    "sha256": "b82d76a6d294866ba6dc2366a92f4f12f850148495d184e8abe6cc805d6e92a6"
+   },
+   "actinv_v1_0_1": {
+    "path": "/home/connoravila/.local/bin/actinv",
+    "sha256": "91ecd4c3e04d36c67780a36fecbf336e174517fba77db0ae1a03ac0a6b9e9687"
+   },
+   "alara_2_9_2": {
+    "path": "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara",
+    "sha256": "7ef1d6324a611976bd19e24abf1472a1e0ca07d33e9b8760ae1c0673247877b0"
+   },
+   "venv_python": {
+    "path": "/home/connoravila/.local/share/pipx/venvs/actinv/bin/python",
+    "sha256": "52e0a13e60a981d8c4b6478be2ba5176f69da07948a056bf49cf6f077e30cb41"
+   }
+  },
+  "host": "connoravila",
+  "kernel": "7.0.0-31-generic",
+  "machine": "x86_64",
+  "mem": "32175176 kB",
+  "python": "3.14.4",
+  "resource_limits": {
+   "CPUQuota": "200%",
+   "MemoryMax": "6G",
+   "MemorySwapMax": 0,
+   "TasksMax": 128,
+   "enforced_by": "systemd-run --user --scope (caller)",
+   "jobs_at_once": 1
+  },
+  "tmpdir": "/home/connoravila/Documents/actinv/target/preflight-tmp/p26"
+ },
+ "contract_sha256": "91afc42bda7a15909209f4e2b4e07329c2a0607a5e288888fa9d337936192630",
+ "coverage": {
+  "contract_sha256": "91afc42bda7a15909209f4e2b4e07329c2a0607a5e288888fa9d337936192630",
+  "per_comparator": {
+   "actinv_candidate": {
+    "W-CAMPAIGN": "expressible_by_same_spec_schema; per-case runs in campaign ledger",
+    "W-MATCMP": {
+     "fe__fns_709__cont_2y": "ok",
+     "fe__fns_709__pulse_5min": "ok",
+     "fe__irdff_sp_mat9861_709__cont_2y": "ok",
+     "fe__irdff_sp_mat9861_709__pulse_5min": "ok",
+     "fe_co100wppm__fns_709__cont_2y": "ok",
+     "fe_co100wppm__fns_709__pulse_5min": "ok",
+     "fe_co100wppm__irdff_sp_mat9861_709__cont_2y": "ok",
+     "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "ok",
+     "fe_nb100wppm__fns_709__cont_2y": "ok",
+     "fe_nb100wppm__fns_709__pulse_5min": "ok",
+     "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y": "ok",
+     "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min": "ok",
+     "w__fns_709__cont_2y": "ok",
+     "w__fns_709__pulse_5min": "ok",
+     "w__irdff_sp_mat9861_709__cont_2y": "ok",
+     "w__irdff_sp_mat9861_709__pulse_5min": "ok"
+    },
+    "W-R2S": "ok"
+   },
+   "actinv_v1_0_1": {
+    "W-CAMPAIGN": "expressible_by_same_spec_schema; per-case runs in campaign ledger",
+    "W-MATCMP": {
+     "fe__fns_709__cont_2y": "ok",
+     "fe__fns_709__pulse_5min": "ok",
+     "fe__irdff_sp_mat9861_709__cont_2y": "ok",
+     "fe__irdff_sp_mat9861_709__pulse_5min": "ok",
+     "fe_co100wppm__fns_709__cont_2y": "ok",
+     "fe_co100wppm__fns_709__pulse_5min": "ok",
+     "fe_co100wppm__irdff_sp_mat9861_709__cont_2y": "ok",
+     "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "ok",
+     "fe_nb100wppm__fns_709__cont_2y": "ok",
+     "fe_nb100wppm__fns_709__pulse_5min": "ok",
+     "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y": "ok",
+     "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min": "ok",
+     "w__fns_709__cont_2y": "ok",
+     "w__fns_709__pulse_5min": "ok",
+     "w__irdff_sp_mat9861_709__cont_2y": "ok",
+     "w__irdff_sp_mat9861_709__pulse_5min": "ok"
+    },
+    "W-R2S": "ok"
+   },
+   "alara_2_9_2": {
+    "W-CAMPAIGN": "contract_gap (truncated library lacks all contract elements)",
+    "W-MATCMP": {
+     "fe__fns_709__cont_2y": "contract_gap",
+     "fe__fns_709__pulse_5min": "contract_gap",
+     "fe__irdff_sp_mat9861_709__cont_2y": "contract_gap",
+     "fe__irdff_sp_mat9861_709__pulse_5min": "contract_gap",
+     "fe_co100wppm__fns_709__cont_2y": "contract_gap",
+     "fe_co100wppm__fns_709__pulse_5min": "contract_gap",
+     "fe_co100wppm__irdff_sp_mat9861_709__cont_2y": "contract_gap",
+     "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "contract_gap",
+     "fe_nb100wppm__fns_709__cont_2y": "contract_gap",
+     "fe_nb100wppm__fns_709__pulse_5min": "contract_gap",
+     "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y": "contract_gap",
+     "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min": "contract_gap",
+     "w__fns_709__cont_2y": "contract_gap",
+     "w__fns_709__pulse_5min": "contract_gap",
+     "w__irdff_sp_mat9861_709__cont_2y": "contract_gap",
+     "w__irdff_sp_mat9861_709__pulse_5min": "contract_gap"
+    },
+    "W-R2S": "contract_gap (no distributed-source handoff executed)",
+    "probe": {
+     "contract_element_coverage": {
+      "AG": false,
+      "CO": true,
+      "CR": true,
+      "CU": true,
+      "FE": true,
+      "MN": true,
+      "MO": false,
+      "NB": false,
+      "NI": true,
+      "TA": false,
+      "V": true,
+      "W": false
+     },
+     "coverage": "contract_gap",
+     "sample_run": {
+      "conversion_returncode": 0,
+      "conversion_wall_s": 0.027394903998356313,
+      "run_returncode": 0,
+      "run_wall_s": 0.3229341339902021,
+      "stderr_tail": ""
+     },
+     "truncated_library_parent_count": 131,
+     "truncated_library_parents": [
+      10010,
+      10020,
+      10030,
+      20030,
+      30060,
+      30070,
+      40070,
+      40090,
+      40100,
+      50100,
+      50110,
+      60120,
+      60130,
+      60140,
+      70140,
+      70150,
+      80160,
+      80170,
+      80180,
+      90190,
+      100200,
+      100210,
+      100220,
+      110220,
+      110230,
+      110240,
+      120240,
+      120250,
+      120260,
+      120280,
+      130260,
+      130270,
+      140280,
+      140290,
+      140300,
+      140310,
+      140320,
+      150310,
+      150320,
+      150330,
+      160320,
+      160330,
+      160340,
+      160350,
+      160360,
+      170350,
+      170360,
+      170370,
+      180360,
+      180370,
+      180380,
+      180390,
+      180400,
+      180410,
+      180420,
+      190390,
+      190400,
+      190410,
+      190420,
+      190430,
+      200400,
+      200410,
+      200420,
+      200430,
+      200440,
+      200450,
+      200460,
+      200470,
+      200480,
+      210441,
+      210450,
+      210460,
+      210470,
+      210480,
+      220440,
+      220450,
+      220460,
+      220470,
+      220480,
+      220490,
+      220500,
+      230480,
+      230490,
+      230500,
+      230510,
+      240480,
+      240500,
+      240510,
+      240520,
+      240530,
+      240540,
+      250520,
+      250530,
+      250540,
+      250550,
+      260540,
+      260550,
+      260560,
+      260570,
+      260580,
+      260590,
+      260600,
+      270550,
+      270560,
+      270570,
+      270580,
+      270581,
+      270590,
+      270600,
+      280560,
+      280570,
+      280580,
+      280590,
+      280600,
+      280610,
+      280620,
+      280630,
+      280640,
+      280660,
+      290630,
+      290640,
+      290650,
+      290670,
+      300640,
+      300650,
+      300660,
+      300670,
+      300680,
+      300691,
+      300700,
+      300720
+     ]
+    }
+   },
+   "fispact_ii": {
+    "W-CAMPAIGN": "comparator_unavailable",
+    "W-MATCMP": "comparator_unavailable",
+    "W-R2S": "comparator_unavailable"
+   },
+   "njoy_2016_79": {
+    "W-CAMPAIGN": "not_applicable",
+    "W-MATCMP": "not_applicable",
+    "W-R2S": "not_applicable",
+    "note": "data-processing comparator only; no equivalent-output leg in contract"
+   },
+   "openmc": {
+    "W-CAMPAIGN": "comparator_unavailable",
+    "W-MATCMP": "comparator_unavailable",
+    "W-R2S": "comparator_unavailable"
+   },
+   "scale_origen": {
+    "W-CAMPAIGN": "comparator_unavailable",
+    "W-MATCMP": "comparator_unavailable",
+    "W-R2S": "comparator_unavailable"
+   }
+  }
+ },
+ "protocol_sha256": "0dd9be843e4e195d3f3ebb9a9084f233af3d0eedf5045bbb48d77d665f5d1e06",
+ "schema": "actinv-p26-g3-headroom-1",
+ "spectra_sha256": {
+  "fns_709": "4d778604ef12fbf8caf5de982b75cc3ec5c42415aa1e21348c6d52f5020a7ff4",
+  "irdff_sp_mat9861_709": "39aafb8cb633d88e65ab616bc3cc1c8a75d6862f7c77d04101e1a13e59d8b171"
+ },
+ "stages_run": [
+  "campaign",
+  "fast"
+ ],
+ "timings": {
+  "W-MATCMP": {
+   "actinv_candidate": [
+    {
+     "cache_state": "cold_process",
+     "case": "fe__fns_709__pulse_5min",
+     "output_sha256": "741a426f30319bb66adb4239de2c327cee2ef93aa5d8921ad2de5f8e6263dc73",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.186925734982583e-12,
+         "gamma": 3.0516277759018705e-11,
+         "total": 3.370320349400129e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60m1",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 412.2532818400043
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1401715804546087e-12,
+         "gamma": 3.004555590258235e-11,
+         "total": 3.318572748303696e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Mn59"
+        ],
+        "total_activity_bq_per_g": 409.606571268643
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.0570435755820633e-12,
+         "gamma": 1.9146903010305e-11,
+         "total": 2.1203946585887063e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 347.3606515956913
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4216183558236282e-13,
+         "gamma": 1.5487565912758428e-13,
+         "total": 2.970374947099471e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 196.5662099619118
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3603713913023906e-14,
+         "gamma": 5.3162436129438356e-15,
+         "total": 1.8919957525967743e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Cr55",
+         "Co60",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 20.21345852187561
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7109029790153727
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__fns_709__pulse_5min",
+     "output_sha256": "b4c2472cd947f231d454f36195a83e39a5dad292cf31721515c129b1daa49ad2",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.186925734982583e-12,
+         "gamma": 3.0516277759018705e-11,
+         "total": 3.370320349400129e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60m1",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 412.2532818400043
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1401715804546087e-12,
+         "gamma": 3.004555590258235e-11,
+         "total": 3.318572748303696e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Mn59"
+        ],
+        "total_activity_bq_per_g": 409.606571268643
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.0570435755820633e-12,
+         "gamma": 1.9146903010305e-11,
+         "total": 2.1203946585887063e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 347.3606515956913
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4216183558236282e-13,
+         "gamma": 1.5487565912758428e-13,
+         "total": 2.970374947099471e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 196.5662099619118
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3603713913023906e-14,
+         "gamma": 5.3162436129438356e-15,
+         "total": 1.8919957525967743e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Cr55",
+         "Co60",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 20.21345852187561
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.674410074017942
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe__fns_709__cont_2y",
+     "output_sha256": "7f3beff33495a41267070bd65be56d698730612d7e1c532a2f0f24684ba99640",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.400195241792793e-08,
+         "gamma": 5.743439451824887e-07,
+         "total": 6.583458976004166e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn56",
+         "Co60m1",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 44608448.85932884
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293883381952771e-08,
+         "gamma": 5.652568146552338e-07,
+         "total": 6.481956484747615e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Cr57",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 44532448.304711975
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.241573720180234e-08,
+         "gamma": 3.635592810691648e-07,
+         "total": 4.2597501827096715e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 42647700.51739906
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1967240218574057e-08,
+         "gamma": 1.0439244826331096e-08,
+         "total": 3.240648504490515e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32368128.7944645
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245825747118689e-09,
+         "gamma": 8.83210288995235e-10,
+         "total": 3.129036036113924e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Cr56",
+         "Mn56",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 3336695.802621306
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.6708089410094544
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__fns_709__cont_2y",
+     "output_sha256": "66826b1fda108669791dd1b0ca505d31fd015ba39eacdf06408ceca6af684ddd",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.400195241792793e-08,
+         "gamma": 5.743439451824887e-07,
+         "total": 6.583458976004166e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn56",
+         "Co60m1",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 44608448.85932884
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293883381952771e-08,
+         "gamma": 5.652568146552338e-07,
+         "total": 6.481956484747615e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Cr57",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 44532448.304711975
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.241573720180234e-08,
+         "gamma": 3.635592810691648e-07,
+         "total": 4.2597501827096715e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 42647700.51739906
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1967240218574057e-08,
+         "gamma": 1.0439244826331096e-08,
+         "total": 3.240648504490515e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32368128.7944645
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245825747118689e-09,
+         "gamma": 8.83210288995235e-10,
+         "total": 3.129036036113924e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Cr56",
+         "Mn56",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 3336695.802621306
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7063091570162214
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "026c13b9ab95bc567e04ae86d558d04c7227639c8758b41289643be62f59e575",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.894220012926496e-20,
+         "gamma": 8.886508607632292e-20,
+         "total": 1.4780728620558788e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Cr55",
+         "Mn58"
+        ],
+        "total_activity_bq_per_g": 4.1216615242310893e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800619260168999e-23,
+         "gamma": 1.9477054041104552e-22,
+         "total": 2.627767330127355e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002549994335769e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2926558177992227e-25,
+         "gamma": 5.324360156669794e-23,
+         "total": 5.357286714847787e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.3639884752343485e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3218453792228747e-25,
+         "gamma": 2.5041935869992632e-23,
+         "total": 2.517412040791492e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.9654580996742512e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.511388114210715e-28,
+         "gamma": 1.7226937204439612e-26,
+         "total": 1.7978076015860684e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "Ti51"
+        ],
+        "total_activity_bq_per_g": 1.116398256311282e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7377078259596601
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "81b9ae7ec81dd35b699d06e8fd79ac2ced1cd268f81ed85d435288b9452c1513",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.894220012926496e-20,
+         "gamma": 8.886508607632292e-20,
+         "total": 1.4780728620558788e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Cr55",
+         "Mn58"
+        ],
+        "total_activity_bq_per_g": 4.1216615242310893e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800619260168999e-23,
+         "gamma": 1.9477054041104552e-22,
+         "total": 2.627767330127355e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002549994335769e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2926558177992227e-25,
+         "gamma": 5.324360156669794e-23,
+         "total": 5.357286714847787e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.3639884752343485e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3218453792228747e-25,
+         "gamma": 2.5041935869992632e-23,
+         "total": 2.517412040791492e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.9654580996742512e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.511388114210715e-28,
+         "gamma": 1.7226937204439612e-26,
+         "total": 1.7978076015860684e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "Ti51"
+        ],
+        "total_activity_bq_per_g": 1.116398256311282e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7236651529674418
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "8031ade7e7e43d341b1d0dd4c9c1bbba991c9764e58725a1b16d02d2667ec0eb",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9830845008160617e-18,
+         "gamma": 9.811843341558931e-18,
+         "total": 1.1794927842374993e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.116902065684314e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.529500373364224e-20,
+         "gamma": 5.868630896617208e-18,
+         "total": 5.9039259003508496e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.6458907527298226e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.975437396678716e-20,
+         "gamma": 5.4916121415952636e-18,
+         "total": 5.521366515562051e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.329677355327585e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4127777310878677e-20,
+         "gamma": 2.6052419545107193e-18,
+         "total": 2.6193697318215978e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 2.1032233463705014e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.1880469099355527e-22,
+         "gamma": 1.8081187344501486e-21,
+         "total": 1.9269234254437037e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "V54"
+        ],
+        "total_activity_bq_per_g": 1.7656023960248192e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7326294020167552
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "bda7b3ebaaa085c99b31babb6592f63f2ff21ee920077eea9ce88159c1e6c2e1",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9830845008160617e-18,
+         "gamma": 9.811843341558931e-18,
+         "total": 1.1794927842374993e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.116902065684314e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.529500373364224e-20,
+         "gamma": 5.868630896617208e-18,
+         "total": 5.9039259003508496e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.6458907527298226e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.975437396678716e-20,
+         "gamma": 5.4916121415952636e-18,
+         "total": 5.521366515562051e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.329677355327585e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4127777310878677e-20,
+         "gamma": 2.6052419545107193e-18,
+         "total": 2.6193697318215978e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 2.1032233463705014e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.1880469099355527e-22,
+         "gamma": 1.8081187344501486e-21,
+         "total": 1.9269234254437037e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "V54"
+        ],
+        "total_activity_bq_per_g": 1.7656023960248192e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7269932489725761
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__fns_709__pulse_5min",
+     "output_sha256": "6788a64903e7c5721338be91bb59553cc368cedddcf9291d2d2f8051b381d25d",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8670825311953616e-09,
+         "gamma": 2.500897029482878e-10,
+         "total": 2.1171722341436495e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Co60m1",
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 206567.8653121557
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1942800560370513e-12,
+         "gamma": 3.145070159126132e-11,
+         "total": 3.464498164729837e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 413.0758063463265
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1106951110552873e-12,
+         "gamma": 2.0538512976195117e-11,
+         "total": 2.2649208087250406e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 350.79965302659787
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8988566943188693e-13,
+         "gamma": 1.3900543621352406e-12,
+         "total": 1.5799400315671275e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 199.6256092841718
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.8231994814792525e-14,
+         "gamma": 3.8384914387930547e-13,
+         "total": 4.12081138694098e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn54",
+         "Cr55",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 21.155034241228993
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.731063143000938
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__fns_709__pulse_5min",
+     "output_sha256": "e00b56267fbbc84404c06bba1403b8a602ac387a2ebfe9bd1e21225ae6a22c10",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8670825311953616e-09,
+         "gamma": 2.500897029482878e-10,
+         "total": 2.1171722341436495e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Co60m1",
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 206567.8653121557
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1942800560370513e-12,
+         "gamma": 3.145070159126132e-11,
+         "total": 3.464498164729837e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 413.0758063463265
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1106951110552873e-12,
+         "gamma": 2.0538512976195117e-11,
+         "total": 2.2649208087250406e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 350.79965302659787
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8988566943188693e-13,
+         "gamma": 1.3900543621352406e-12,
+         "total": 1.5799400315671275e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 199.6256092841718
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.8231994814792525e-14,
+         "gamma": 3.8384914387930547e-13,
+         "total": 4.12081138694098e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn54",
+         "Cr55",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 21.155034241228993
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7340748139540665
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__fns_709__cont_2y",
+     "output_sha256": "0f337933f5de6d427a56b282ce058749c66b8ddde43a0b71db7693e196a48c02",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.0067085332047248e-07,
+         "gamma": 8.354713905555678e-07,
+         "total": 9.361422438760403e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60m1",
+         "Co60",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 45984390.266111374
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 9.299120448976295e-08,
+         "gamma": 8.25517300872102e-07,
+         "total": 9.18508505361865e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 45176905.1678082
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.236335427781586e-08,
+         "gamma": 6.211331511272009e-07,
+         "total": 6.934965054050168e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Mn58m1"
+        ],
+        "total_activity_bq_per_g": 43285586.05032589
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.079014197647065e-08,
+         "gamma": 2.387817498638096e-07,
+         "total": 2.6957189184028027e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr56",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 32934100.26640464
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 4.9501147651104075e-09,
+         "gamma": 7.086051713125126e-08,
+         "total": 7.581063189636167e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn56",
+         "Cr56",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 3510799.8061387623
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.719281479017809
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__fns_709__cont_2y",
+     "output_sha256": "4ff2923dfaed250c2f620a98a362566b69af2199724fc9e558768948dda5e94c",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.0067085332047248e-07,
+         "gamma": 8.354713905555678e-07,
+         "total": 9.361422438760403e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60m1",
+         "Co60",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 45984390.266111374
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 9.299120448976295e-08,
+         "gamma": 8.25517300872102e-07,
+         "total": 9.18508505361865e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 45176905.1678082
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.236335427781586e-08,
+         "gamma": 6.211331511272009e-07,
+         "total": 6.934965054050168e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Mn58m1"
+        ],
+        "total_activity_bq_per_g": 43285586.05032589
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.079014197647065e-08,
+         "gamma": 2.387817498638096e-07,
+         "total": 2.6957189184028027e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr56",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 32934100.26640464
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 4.9501147651104075e-09,
+         "gamma": 7.086051713125126e-08,
+         "total": 7.581063189636167e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn56",
+         "Cr56",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 3510799.8061387623
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7112535610212944
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "5332a974866ef2c045f9da01d3d34335102e4c7ae5f047ac1000596f0ec59b3f",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.89439503201764e-20,
+         "gamma": 8.885839610132e-20,
+         "total": 1.4780234642149638e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Co60m1",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.1290254507344333e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800340315049513e-23,
+         "gamma": 1.9477555052436289e-22,
+         "total": 2.62778953674858e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002851357989009e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.3050780688866242e-25,
+         "gamma": 5.325372981497705e-23,
+         "total": 5.358423762186571e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Co58"
+        ],
+        "total_activity_bq_per_g": 4.3643148212200746e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3226406477022368e-25,
+         "gamma": 2.504174173351549e-23,
+         "total": 2.5174005798285715e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 1.9653232890424308e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.769540313349308e-28,
+         "gamma": 1.7895111786386248e-26,
+         "total": 1.8672065817721178e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "Co57"
+        ],
+        "total_activity_bq_per_g": 1.1179565168966078e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.718934136966709
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "cceb08be006a5ff366654418319899815f77cfdc37ac66b21181c9748f2ba114",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.89439503201764e-20,
+         "gamma": 8.885839610132e-20,
+         "total": 1.4780234642149638e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Co60m1",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.1290254507344333e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800340315049513e-23,
+         "gamma": 1.9477555052436289e-22,
+         "total": 2.62778953674858e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002851357989009e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.3050780688866242e-25,
+         "gamma": 5.325372981497705e-23,
+         "total": 5.358423762186571e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Co58"
+        ],
+        "total_activity_bq_per_g": 4.3643148212200746e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3226406477022368e-25,
+         "gamma": 2.504174173351549e-23,
+         "total": 2.5174005798285715e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 1.9653232890424308e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.769540313349308e-28,
+         "gamma": 1.7895111786386248e-26,
+         "total": 1.8672065817721178e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "Co57"
+        ],
+        "total_activity_bq_per_g": 1.1179565168966078e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7098211949924007
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "ee7612de290b132a63d1af67a4926149180910191c11c757083e9051e7bb6c27",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829952585230987e-18,
+         "gamma": 9.811786839788751e-18,
+         "total": 1.179478209831185e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.11694635652423e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.534433991895864e-20,
+         "gamma": 5.868898718227778e-18,
+         "total": 5.9042430581467366e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.645759845907042e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.979146618029391e-20,
+         "gamma": 5.491777206387494e-18,
+         "total": 5.521568672567788e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 4.329499345263429e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4142160639251274e-20,
+         "gamma": 2.6053885538491386e-18,
+         "total": 2.61953071448839e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1031155490436098e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.2357946805569963e-22,
+         "gamma": 1.9317898928324113e-21,
+         "total": 2.055369360888111e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "V49"
+        ],
+        "total_activity_bq_per_g": 1.7685131815435533e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7841539660003036
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "a9ad19297a03fb2bf6fceb530632b73d79441aeb70d57b5bea141d5f2ab24a9a",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829952585230987e-18,
+         "gamma": 9.811786839788751e-18,
+         "total": 1.179478209831185e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.11694635652423e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.534433991895864e-20,
+         "gamma": 5.868898718227778e-18,
+         "total": 5.9042430581467366e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.645759845907042e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.979146618029391e-20,
+         "gamma": 5.491777206387494e-18,
+         "total": 5.521568672567788e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 4.329499345263429e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4142160639251274e-20,
+         "gamma": 2.6053885538491386e-18,
+         "total": 2.61953071448839e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1031155490436098e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.2357946805569963e-22,
+         "gamma": 1.9317898928324113e-21,
+         "total": 2.055369360888111e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "V49"
+        ],
+        "total_activity_bq_per_g": 1.7685131815435533e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7722630880307406
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__fns_709__pulse_5min",
+     "output_sha256": "cc4c620e66798745af7198325d15610064984616a2a934d60b2e4793b8e8cd4a",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.923177605080341e-11,
+         "gamma": 4.942071561564749e-11,
+         "total": 1.0865249166645089e-10
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Nb94m1",
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Y90m1"
+        ],
+        "total_activity_bq_per_g": 10422.826658976104
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.139873295188438e-12,
+         "gamma": 3.004255587427697e-11,
+         "total": 3.3182429169465405e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Nb94",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 409.56573030824296
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.056838419969985e-12,
+         "gamma": 1.9144992830816967e-11,
+         "total": 2.1201831250786953e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Y90"
+        ],
+        "total_activity_bq_per_g": 347.325933503742
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4214816003438485e-13,
+         "gamma": 1.5486468217316182e-13,
+         "total": 2.9701284220754665e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 196.54657125880513
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3602894005761026e-14,
+         "gamma": 5.320221214621395e-15,
+         "total": 1.892311522038242e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Nb94",
+         "Nb93m1",
+         "Mn54",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 20.21145508716854
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7795115160406567
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__fns_709__pulse_5min",
+     "output_sha256": "2366c5dd90fb950162a7c5718839096f28c145ab93af301fc8b758246dbd4daf",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.923177605080341e-11,
+         "gamma": 4.942071561564749e-11,
+         "total": 1.0865249166645089e-10
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Nb94m1",
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Y90m1"
+        ],
+        "total_activity_bq_per_g": 10422.826658976104
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.139873295188438e-12,
+         "gamma": 3.004255587427697e-11,
+         "total": 3.3182429169465405e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Nb94",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 409.56573030824296
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.056838419969985e-12,
+         "gamma": 1.9144992830816967e-11,
+         "total": 2.1201831250786953e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Y90"
+        ],
+        "total_activity_bq_per_g": 347.325933503742
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4214816003438485e-13,
+         "gamma": 1.5486468217316182e-13,
+         "total": 2.9701284220754665e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 196.54657125880513
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3602894005761026e-14,
+         "gamma": 5.320221214621395e-15,
+         "total": 1.892311522038242e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Nb94",
+         "Nb93m1",
+         "Mn54",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 20.21145508716854
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7207027309923433
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__fns_709__cont_2y",
+     "output_sha256": "6093f31ca1c44f00267b948c30a778056203b082fadf53b4ed94153a2c6a1e60",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.412558174958681e-08,
+         "gamma": 5.743323904860127e-07,
+         "total": 6.584579722355995e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94m1",
+         "Mn56",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 44627550.57182004
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293057935183933e-08,
+         "gamma": 5.652017559579133e-07,
+         "total": 6.481323353097526e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 44528002.352806225
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.240719284354886e-08,
+         "gamma": 3.635211624157298e-07,
+         "total": 4.2592835525927866e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Nb95"
+        ],
+        "total_activity_bq_per_g": 42643421.25355033
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1965186609393326e-08,
+         "gamma": 1.0439186217632916e-08,
+         "total": 3.2404372827026244e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32364896.008672
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245727588549229e-09,
+         "gamma": 8.840850149487541e-10,
+         "total": 3.1298126034979834e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Nb94",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 3336366.0056037228
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7386110559455119
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__fns_709__cont_2y",
+     "output_sha256": "eecc8fe8519436f9fa8b1b88752db780de303b0abe787f4e5f84a3517ed019c9",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.412558174958681e-08,
+         "gamma": 5.743323904860127e-07,
+         "total": 6.584579722355995e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94m1",
+         "Mn56",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 44627550.57182004
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293057935183933e-08,
+         "gamma": 5.652017559579133e-07,
+         "total": 6.481323353097526e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 44528002.352806225
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.240719284354886e-08,
+         "gamma": 3.635211624157298e-07,
+         "total": 4.2592835525927866e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Nb95"
+        ],
+        "total_activity_bq_per_g": 42643421.25355033
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1965186609393326e-08,
+         "gamma": 1.0439186217632916e-08,
+         "total": 3.2404372827026244e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32364896.008672
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245727588549229e-09,
+         "gamma": 8.840850149487541e-10,
+         "total": 3.1298126034979834e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Nb94",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 3336366.0056037228
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7655909080058336
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "dfd1b43c5d6df922589d7641e996b14412419ffcd2b9bdef93b43b4f86d88a17",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.895655424510491e-20,
+         "gamma": 8.88631714332765e-20,
+         "total": 1.478197256783814e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Nb94m1",
+         "Fe53",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.157413061597474e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800559701277164e-23,
+         "gamma": 1.9476908766469877e-22,
+         "total": 2.627746846774704e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.0026447223833806e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2942083880971486e-25,
+         "gamma": 5.324074271985852e-23,
+         "total": 5.357016355866824e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.3640954499886856e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.323335289675836e-25,
+         "gamma": 2.5039444661883212e-23,
+         "total": 2.5171778190850796e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 1.9656318290298828e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.613239863336067e-28,
+         "gamma": 1.723445166206731e-26,
+         "total": 1.809577564840092e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.1414461405532765e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7490419980022125
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "7558d2330ba9c1e395360bd967fada150f60ae5cc9b917ba79ce10c80e08bb65",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.895655424510491e-20,
+         "gamma": 8.88631714332765e-20,
+         "total": 1.478197256783814e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Nb94m1",
+         "Fe53",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.157413061597474e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800559701277164e-23,
+         "gamma": 1.9476908766469877e-22,
+         "total": 2.627746846774704e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.0026447223833806e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2942083880971486e-25,
+         "gamma": 5.324074271985852e-23,
+         "total": 5.357016355866824e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.3640954499886856e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.323335289675836e-25,
+         "gamma": 2.5039444661883212e-23,
+         "total": 2.5171778190850796e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 1.9656318290298828e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.613239863336067e-28,
+         "gamma": 1.723445166206731e-26,
+         "total": 1.809577564840092e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.1414461405532765e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.8257016919669695
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "ff599692ce81f49b5249dbec0d04a9571d8d0bb2e3b9ee54164447552959e99a",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829769622261195e-18,
+         "gamma": 9.810963768870577e-18,
+         "total": 1.1793940731096697e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.117979515437047e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.5332643096271267e-20,
+         "gamma": 5.868121715480625e-18,
+         "total": 5.903454358576896e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.646257468063482e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.9785465076230264e-20,
+         "gamma": 5.491076045176056e-18,
+         "total": 5.520861510252286e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.33002702315264e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4159045160252615e-20,
+         "gamma": 2.6049840576639242e-18,
+         "total": 2.6191431028241768e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1037590007976387e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4100772653429923e-22,
+         "gamma": 1.809810235863555e-21,
+         "total": 1.950817962397854e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.8161138455592672e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.8208428850048222
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "fb84a1eaeb80c78eec77c2d815b99e3281f6411b57236affd71066adc89322cc",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829769622261195e-18,
+         "gamma": 9.810963768870577e-18,
+         "total": 1.1793940731096697e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.117979515437047e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.5332643096271267e-20,
+         "gamma": 5.868121715480625e-18,
+         "total": 5.903454358576896e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.646257468063482e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.9785465076230264e-20,
+         "gamma": 5.491076045176056e-18,
+         "total": 5.520861510252286e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.33002702315264e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4159045160252615e-20,
+         "gamma": 2.6049840576639242e-18,
+         "total": 2.6191431028241768e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1037590007976387e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4100772653429923e-22,
+         "gamma": 1.809810235863555e-21,
+         "total": 1.950817962397854e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.8161138455592672e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.8279763929895125
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__fns_709__pulse_5min",
+     "output_sha256": "e25b11aa98a1ea4ba73445286adf1b5343f47fab91884adcf99993bc0c5025a1",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 5.860188617127863e-07,
+         "gamma": 7.784841444625577e-07,
+         "total": 1.3645030061753849e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W187",
+         "W185m1",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 17648419.446792983
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.3768546811969527e-07,
+         "gamma": 2.736577164568125e-07,
+         "total": 4.113431845765486e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "W188",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 3143216.7605936755
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 6.35458446991165e-11,
+         "gamma": 7.454864535958511e-13,
+         "total": 6.42913311935597e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W187",
+         "Re188",
+         "W188"
+        ],
+        "total_activity_bq_per_g": 3226.973790185609
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.9052021791775224e-12,
+         "gamma": 1.0711845346513916e-13,
+         "total": 3.012320673490008e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Re187"
+        ],
+        "total_activity_bq_per_g": 157.70015209103997
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3354545640815547e-22,
+         "gamma": 7.347945135916675e-22,
+         "total": 4.1815686444264536e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W186",
+         "W181",
+         "W180",
+         "W185"
+        ],
+        "total_activity_bq_per_g": 6.776359941888703e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7840394109953195
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__fns_709__pulse_5min",
+     "output_sha256": "68e0d16658520ba5a75a5f7402a9fc81c8ad1b526a7e1093c53a4b76103fc103",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 5.860188617127863e-07,
+         "gamma": 7.784841444625577e-07,
+         "total": 1.3645030061753849e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W187",
+         "W185m1",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 17648419.446792983
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.3768546811969527e-07,
+         "gamma": 2.736577164568125e-07,
+         "total": 4.113431845765486e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "W188",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 3143216.7605936755
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 6.35458446991165e-11,
+         "gamma": 7.454864535958511e-13,
+         "total": 6.42913311935597e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W187",
+         "Re188",
+         "W188"
+        ],
+        "total_activity_bq_per_g": 3226.973790185609
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.9052021791775224e-12,
+         "gamma": 1.0711845346513916e-13,
+         "total": 3.012320673490008e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Re187"
+        ],
+        "total_activity_bq_per_g": 157.70015209103997
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3354545640815547e-22,
+         "gamma": 7.347945135916675e-22,
+         "total": 4.1815686444264536e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W186",
+         "W181",
+         "W180",
+         "W185"
+        ],
+        "total_activity_bq_per_g": 6.776359941888703e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7847528170095757
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__fns_709__cont_2y",
+     "output_sha256": "b1399d48775a8c1c81f8aeec1edd1b42f6e99cb0a9f53327789c56d07e4c060d",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848597453382525e-20,
+         "beta": 0.00011750892826148814,
+         "gamma": 0.00022792434235711668,
+         "total": 0.00034543327061860486
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W183m1",
+         "W181",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 2758166750.884901
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848617824903617e-20,
+         "beta": 5.986952826832989e-05,
+         "gamma": 0.00011386685692994288,
+         "total": 0.00017373638519827282
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "Re188",
+         "Re186"
+        ],
+        "total_activity_bq_per_g": 1439374914.0608184
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848716789563543e-20,
+         "beta": 1.984243782543494e-06,
+         "gamma": 3.6544826555831204e-08,
+         "total": 2.0207886090993657e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 102596149.77616856
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717235928123e-20,
+         "beta": 9.107018237007243e-08,
+         "gamma": 5.297983161258825e-09,
+         "total": 9.63681655313721e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 5212113.001146459
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717236611305e-20,
+         "beta": 1.24753746264132e-16,
+         "gamma": 2.1238728716736712e-16,
+         "total": 3.371818821487357e-16
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W181",
+         "Re186",
+         "Re186m1",
+         "Hf184m1"
+        ],
+        "total_activity_bq_per_g": 0.09122495204677572
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7660211570328102
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__fns_709__cont_2y",
+     "output_sha256": "797208cc92e9b2f712b957fa30f585c779d93f834397491aa8f279da6e4ec755",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848597453382525e-20,
+         "beta": 0.00011750892826148814,
+         "gamma": 0.00022792434235711668,
+         "total": 0.00034543327061860486
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W183m1",
+         "W181",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 2758166750.884901
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848617824903617e-20,
+         "beta": 5.986952826832989e-05,
+         "gamma": 0.00011386685692994288,
+         "total": 0.00017373638519827282
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "Re188",
+         "Re186"
+        ],
+        "total_activity_bq_per_g": 1439374914.0608184
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848716789563543e-20,
+         "beta": 1.984243782543494e-06,
+         "gamma": 3.6544826555831204e-08,
+         "total": 2.0207886090993657e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 102596149.77616856
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717235928123e-20,
+         "beta": 9.107018237007243e-08,
+         "gamma": 5.297983161258825e-09,
+         "total": 9.63681655313721e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 5212113.001146459
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717236611305e-20,
+         "beta": 1.24753746264132e-16,
+         "gamma": 2.1238728716736712e-16,
+         "total": 3.371818821487357e-16
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W181",
+         "Re186",
+         "Re186m1",
+         "Hf184m1"
+        ],
+        "total_activity_bq_per_g": 0.09122495204677572
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7825111749698408
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "0ffabf7e7a987c5d72a1562cabf95e196d718e2316f6a904fe174b7e6a303543",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3768617981014306e-18,
+         "gamma": 1.6619476584084809e-18,
+         "total": 4.079656802984176e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185m1",
+         "W186",
+         "W187",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 8.726030584414938e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2610152043659932e-21,
+         "gamma": 2.4359613929311418e-21,
+         "total": 4.454432307156184e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W187",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 1.9825883682296235e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.806888680610013e-23,
+         "gamma": 8.053643349523065e-25,
+         "total": 4.087622072540576e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6988852498220118e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2960854192751382e-24,
+         "gamma": 1.1858393362151477e-25,
+         "total": 4.084876114361761e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.684787771865498e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 3.978061844479366e-27,
+         "gamma": 2.231220349684938e-26,
+         "total": 4.084737276453005e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Hf182",
+         "Ta182",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6839918865395318e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.8457444740342908
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "581c0c161f870b95042feb1a39bfe45aeeb040f929ee1336bd90b7e015b5bc16",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3768617981014306e-18,
+         "gamma": 1.6619476584084809e-18,
+         "total": 4.079656802984176e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185m1",
+         "W186",
+         "W187",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 8.726030584414938e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2610152043659932e-21,
+         "gamma": 2.4359613929311418e-21,
+         "total": 4.454432307156184e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W187",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 1.9825883682296235e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.806888680610013e-23,
+         "gamma": 8.053643349523065e-25,
+         "total": 4.087622072540576e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6988852498220118e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2960854192751382e-24,
+         "gamma": 1.1858393362151477e-25,
+         "total": 4.084876114361761e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.684787771865498e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 3.978061844479366e-27,
+         "gamma": 2.231220349684938e-26,
+         "total": 4.084737276453005e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Hf182",
+         "Ta182",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6839918865395318e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.8547884389990941
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "2a2936d2d01abaa3b92d4c1fd85dacbfa7f09e1e6132823f414b75f29a402618",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.5817917683802514e-18,
+         "gamma": 3.735833630108206e-18,
+         "total": 8.358472744962722e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185",
+         "W187",
+         "W185m1",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 0.00017496491523636632
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.6563527362146059e-18,
+         "gamma": 1.059755705671948e-18,
+         "total": 2.7569557883608187e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W187",
+         "W181",
+         "W186",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 7.45764665531397e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 8.786158628269572e-19,
+         "gamma": 3.963217034849071e-20,
+         "total": 9.590953796497125e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 4.878335693750956e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.0954590683218925e-20,
+         "gamma": 5.8106805208774945e-21,
+         "total": 8.761261767836113e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 2.9812646377554345e-06
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.6848033306382996e-25,
+         "gamma": 1.013393521710869e-24,
+         "total": 4.0848628348119484e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Ta179",
+         "Hf182",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 1.686288603901444e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.7923624980030581
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "d08ea95040aad35a2994114b07f354ee92a8c3829e3bf09e0c85481760c934a1",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.5817917683802514e-18,
+         "gamma": 3.735833630108206e-18,
+         "total": 8.358472744962722e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185",
+         "W187",
+         "W185m1",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 0.00017496491523636632
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.6563527362146059e-18,
+         "gamma": 1.059755705671948e-18,
+         "total": 2.7569557883608187e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W187",
+         "W181",
+         "W186",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 7.45764665531397e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 8.786158628269572e-19,
+         "gamma": 3.963217034849071e-20,
+         "total": 9.590953796497125e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 4.878335693750956e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.0954590683218925e-20,
+         "gamma": 5.8106805208774945e-21,
+         "total": 8.761261767836113e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 2.9812646377554345e-06
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.6848033306382996e-25,
+         "gamma": 1.013393521710869e-24,
+         "total": 4.0848628348119484e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Ta179",
+         "Hf182",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 1.686288603901444e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_candidate",
+     "wall_s": 0.8497101810062304
+    }
+   ],
+   "actinv_v1_0_1": [
+    {
+     "cache_state": "cold_process",
+     "case": "fe__fns_709__pulse_5min",
+     "output_sha256": "1b8460443e7591042348de86cb44f8bdaebff107baf164c8bce45e601f83c8c5",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.186925734982583e-12,
+         "gamma": 3.0516277759018705e-11,
+         "total": 3.370320349400129e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60m1",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 412.2532818400043
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1401715804546087e-12,
+         "gamma": 3.004555590258235e-11,
+         "total": 3.318572748303696e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Mn59"
+        ],
+        "total_activity_bq_per_g": 409.606571268643
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.0570435755820633e-12,
+         "gamma": 1.9146903010305e-11,
+         "total": 2.1203946585887063e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 347.3606515956913
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4216183558236282e-13,
+         "gamma": 1.5487565912758428e-13,
+         "total": 2.970374947099471e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 196.5662099619118
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3603713913023906e-14,
+         "gamma": 5.3162436129438356e-15,
+         "total": 1.8919957525967743e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Cr55",
+         "Co60",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 20.21345852187561
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7337988219805993
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__fns_709__pulse_5min",
+     "output_sha256": "ab7dec4f530c9d24d0b489a45dc427c6a7d63811da9152e98112c4cdbbd669b3",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.186925734982583e-12,
+         "gamma": 3.0516277759018705e-11,
+         "total": 3.370320349400129e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60m1",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 412.2532818400043
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1401715804546087e-12,
+         "gamma": 3.004555590258235e-11,
+         "total": 3.318572748303696e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Mn59"
+        ],
+        "total_activity_bq_per_g": 409.606571268643
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.0570435755820633e-12,
+         "gamma": 1.9146903010305e-11,
+         "total": 2.1203946585887063e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Cr51",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 347.3606515956913
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4216183558236282e-13,
+         "gamma": 1.5487565912758428e-13,
+         "total": 2.970374947099471e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn54",
+         "Co60",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 196.5662099619118
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3603713913023906e-14,
+         "gamma": 5.3162436129438356e-15,
+         "total": 1.8919957525967743e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Cr55",
+         "Co60",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 20.21345852187561
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.6984495610231534
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe__fns_709__cont_2y",
+     "output_sha256": "f7f42b04d796ccfece7d8c4ace8669eb6da62586330880ee2b93ac81e67efcbe",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.400195241792793e-08,
+         "gamma": 5.743439451824887e-07,
+         "total": 6.583458976004166e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn56",
+         "Co60m1",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 44608448.85932884
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293883381952771e-08,
+         "gamma": 5.652568146552338e-07,
+         "total": 6.481956484747615e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Cr57",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 44532448.304711975
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.241573720180234e-08,
+         "gamma": 3.635592810691648e-07,
+         "total": 4.2597501827096715e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 42647700.51739906
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1967240218574057e-08,
+         "gamma": 1.0439244826331096e-08,
+         "total": 3.240648504490515e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32368128.7944645
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245825747118689e-09,
+         "gamma": 8.83210288995235e-10,
+         "total": 3.129036036113924e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Cr56",
+         "Mn56",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 3336695.802621306
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7368031239602715
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__fns_709__cont_2y",
+     "output_sha256": "2e3d271096f1ba5d443d9c8c04af4d5c5a1806a26f0837ba48d728cdb4c699c5",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.400195241792793e-08,
+         "gamma": 5.743439451824887e-07,
+         "total": 6.583458976004166e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Mn56",
+         "Co60m1",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 44608448.85932884
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293883381952771e-08,
+         "gamma": 5.652568146552338e-07,
+         "total": 6.481956484747615e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Cr57",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 44532448.304711975
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.241573720180234e-08,
+         "gamma": 3.635592810691648e-07,
+         "total": 4.2597501827096715e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 42647700.51739906
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1967240218574057e-08,
+         "gamma": 1.0439244826331096e-08,
+         "total": 3.240648504490515e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32368128.7944645
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245825747118689e-09,
+         "gamma": 8.83210288995235e-10,
+         "total": 3.129036036113924e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Cr56",
+         "Mn56",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 3336695.802621306
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7120682600070722
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "4647088fc29ba4b95b34f7dae5d58e2646fb3c6798c40e8bab310872e4c0f990",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.894220012926495e-20,
+         "gamma": 8.886508607632292e-20,
+         "total": 1.4780728620558786e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Cr55",
+         "Mn58"
+        ],
+        "total_activity_bq_per_g": 4.121661524231089e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800619260168999e-23,
+         "gamma": 1.9477054041104552e-22,
+         "total": 2.627767330127355e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002549994335769e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2926558177992227e-25,
+         "gamma": 5.324360156669794e-23,
+         "total": 5.357286714847787e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.3639884752343485e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3218453792228747e-25,
+         "gamma": 2.5041935869992632e-23,
+         "total": 2.517412040791492e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.9654580996742512e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.511388114210715e-28,
+         "gamma": 1.7226937204439612e-26,
+         "total": 1.7978076015860684e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "Ti51"
+        ],
+        "total_activity_bq_per_g": 1.116398256311282e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7200691340258345
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "dff2f9f346b346e6b8e2243f517722fe35d0d4e54dd76c810cc5d8c3890d5149",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.894220012926495e-20,
+         "gamma": 8.886508607632292e-20,
+         "total": 1.4780728620558786e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Cr55",
+         "Mn58"
+        ],
+        "total_activity_bq_per_g": 4.121661524231089e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800619260168999e-23,
+         "gamma": 1.9477054041104552e-22,
+         "total": 2.627767330127355e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002549994335769e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2926558177992227e-25,
+         "gamma": 5.324360156669794e-23,
+         "total": 5.357286714847787e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.3639884752343485e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3218453792228747e-25,
+         "gamma": 2.5041935869992632e-23,
+         "total": 2.517412040791492e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.9654580996742512e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.511388114210715e-28,
+         "gamma": 1.7226937204439612e-26,
+         "total": 1.7978076015860684e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "Ti51"
+        ],
+        "total_activity_bq_per_g": 1.116398256311282e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.712771171994973
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "d13e53ccc1b7dfcd13cd78dd29b4d278ea5e544e9de9662fa9ee8d1d06e57599",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9830845008160617e-18,
+         "gamma": 9.811843341558931e-18,
+         "total": 1.1794927842374993e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.116902065684314e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.529500373364224e-20,
+         "gamma": 5.868630896617208e-18,
+         "total": 5.9039259003508496e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.6458907527298226e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.975437396678716e-20,
+         "gamma": 5.4916121415952636e-18,
+         "total": 5.521366515562051e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.329677355327585e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4127777310878677e-20,
+         "gamma": 2.6052419545107193e-18,
+         "total": 2.6193697318215978e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 2.1032233463705014e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.1880469099355527e-22,
+         "gamma": 1.8081187344501486e-21,
+         "total": 1.9269234254437037e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "V54"
+        ],
+        "total_activity_bq_per_g": 1.7656023960248192e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7090129369753413
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "be73d7fbab6c1217f8b596016dd82d0300c075fa89283af9ba3317b4a616ec87",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9830845008160617e-18,
+         "gamma": 9.811843341558931e-18,
+         "total": 1.1794927842374993e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.116902065684314e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.529500373364224e-20,
+         "gamma": 5.868630896617208e-18,
+         "total": 5.9039259003508496e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.6458907527298226e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.975437396678716e-20,
+         "gamma": 5.4916121415952636e-18,
+         "total": 5.521366515562051e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn52"
+        ],
+        "total_activity_bq_per_g": 4.329677355327585e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4127777310878677e-20,
+         "gamma": 2.6052419545107193e-18,
+         "total": 2.6193697318215978e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 2.1032233463705014e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.1880469099355527e-22,
+         "gamma": 1.8081187344501486e-21,
+         "total": 1.9269234254437037e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Mn53",
+         "V49",
+         "V54"
+        ],
+        "total_activity_bq_per_g": 1.7656023960248192e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7064400090021081
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__fns_709__pulse_5min",
+     "output_sha256": "8862aba6aa0d9cacd7a23ae20b5fd7349094af4072c887d2d2de0a4c7d7a6791",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8670825311953616e-09,
+         "gamma": 2.500897029482878e-10,
+         "total": 2.1171722341436495e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Co60m1",
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 206567.8653121557
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1942800560370513e-12,
+         "gamma": 3.145070159126132e-11,
+         "total": 3.464498164729837e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 413.0758063463265
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1106951110552873e-12,
+         "gamma": 2.0538512976195117e-11,
+         "total": 2.2649208087250406e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 350.79965302659787
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8988566943188693e-13,
+         "gamma": 1.3900543621352406e-12,
+         "total": 1.5799400315671275e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 199.6256092841718
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.8231994814792525e-14,
+         "gamma": 3.8384914387930547e-13,
+         "total": 4.12081138694098e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn54",
+         "Cr55",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 21.155034241228993
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7099646819988266
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__fns_709__pulse_5min",
+     "output_sha256": "db6d1a0f13342777ee64ce4f9fbb03f68f0c5b7f7bb8d0dd190f61d4a720cc57",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8670825311953616e-09,
+         "gamma": 2.500897029482878e-10,
+         "total": 2.1171722341436495e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Co60m1",
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 206567.8653121557
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.1942800560370513e-12,
+         "gamma": 3.145070159126132e-11,
+         "total": 3.464498164729837e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Co61"
+        ],
+        "total_activity_bq_per_g": 413.0758063463265
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1106951110552873e-12,
+         "gamma": 2.0538512976195117e-11,
+         "total": 2.2649208087250406e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 350.79965302659787
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.8988566943188693e-13,
+         "gamma": 1.3900543621352406e-12,
+         "total": 1.5799400315671275e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Mn54",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 199.6256092841718
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.8231994814792525e-14,
+         "gamma": 3.8384914387930547e-13,
+         "total": 4.12081138694098e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn54",
+         "Cr55",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 21.155034241228993
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7116487879538909
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__fns_709__cont_2y",
+     "output_sha256": "ad3efac9313e81dd7791130757608122391dd8a0a464f97cc4542e58430cf1f4",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.0067085332047248e-07,
+         "gamma": 8.354713905555678e-07,
+         "total": 9.361422438760403e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60m1",
+         "Co60",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 45984390.266111374
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 9.299120448976295e-08,
+         "gamma": 8.25517300872102e-07,
+         "total": 9.18508505361865e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 45176905.1678082
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.236335427781586e-08,
+         "gamma": 6.211331511272009e-07,
+         "total": 6.934965054050168e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Mn58m1"
+        ],
+        "total_activity_bq_per_g": 43285586.05032589
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.079014197647065e-08,
+         "gamma": 2.387817498638096e-07,
+         "total": 2.6957189184028027e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr56",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 32934100.26640464
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 4.9501147651104075e-09,
+         "gamma": 7.086051713125126e-08,
+         "total": 7.581063189636167e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn56",
+         "Cr56",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 3510799.8061387623
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.721192917029839
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__fns_709__cont_2y",
+     "output_sha256": "00381593914da07dbe1467218ab86656367187296eaa192b290b464cb30b3f91",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.0067085332047248e-07,
+         "gamma": 8.354713905555678e-07,
+         "total": 9.361422438760403e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60m1",
+         "Co60",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 45984390.266111374
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 9.299120448976295e-08,
+         "gamma": 8.25517300872102e-07,
+         "total": 9.18508505361865e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 45176905.1678082
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.236335427781586e-08,
+         "gamma": 6.211331511272009e-07,
+         "total": 6.934965054050168e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn54",
+         "Mn58m1"
+        ],
+        "total_activity_bq_per_g": 43285586.05032589
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.079014197647065e-08,
+         "gamma": 2.387817498638096e-07,
+         "total": 2.6957189184028027e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr56",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 32934100.26640464
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 4.9501147651104075e-09,
+         "gamma": 7.086051713125126e-08,
+         "total": 7.581063189636167e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Mn56",
+         "Cr56",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 3510799.8061387623
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7001126229879446
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "fabfa619fe97bd2be56bcae8b988ff031a2771b1567a086e955b988fa6d662bd",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.89439503201764e-20,
+         "gamma": 8.885839610132e-20,
+         "total": 1.4780234642149638e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Co60m1",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.1290254507344333e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800340315049513e-23,
+         "gamma": 1.9477555052436289e-22,
+         "total": 2.62778953674858e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002851357989009e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.3050780688866242e-25,
+         "gamma": 5.325372981497705e-23,
+         "total": 5.358423762186571e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Co58"
+        ],
+        "total_activity_bq_per_g": 4.3643148212200746e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3226406477022368e-25,
+         "gamma": 2.504174173351549e-23,
+         "total": 2.5174005798285715e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 1.9653232890424308e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.769540313349308e-28,
+         "gamma": 1.7895111786386248e-26,
+         "total": 1.8672065817721178e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "Co57"
+        ],
+        "total_activity_bq_per_g": 1.1179565168966078e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7357878889888525
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "ab2c5305d37241b3acb6933d0b96cfd7554a9d99017e4ce93c312570d3ef1667",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.89439503201764e-20,
+         "gamma": 8.885839610132e-20,
+         "total": 1.4780234642149638e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Fe53",
+         "Co60m1",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.1290254507344333e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800340315049513e-23,
+         "gamma": 1.9477555052436289e-22,
+         "total": 2.62778953674858e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.002851357989009e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.3050780688866242e-25,
+         "gamma": 5.325372981497705e-23,
+         "total": 5.358423762186571e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Co58"
+        ],
+        "total_activity_bq_per_g": 4.3643148212200746e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3226406477022368e-25,
+         "gamma": 2.504174173351549e-23,
+         "total": 2.5174005798285715e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Fe59",
+         "Cr51",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 1.9653232890424308e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 7.769540313349308e-28,
+         "gamma": 1.7895111786386248e-26,
+         "total": 1.8672065817721178e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "Co57"
+        ],
+        "total_activity_bq_per_g": 1.1179565168966078e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7695097650284879
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "6b77fc5367c95da18cd53fb44a74e1ec0c8bafe920846db3be6af45998446d84",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829952585230987e-18,
+         "gamma": 9.811786839788751e-18,
+         "total": 1.179478209831185e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.11694635652423e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.534433991895864e-20,
+         "gamma": 5.868898718227778e-18,
+         "total": 5.9042430581467366e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.645759845907042e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.979146618029391e-20,
+         "gamma": 5.491777206387494e-18,
+         "total": 5.521568672567788e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 4.329499345263429e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4142160639251274e-20,
+         "gamma": 2.6053885538491386e-18,
+         "total": 2.61953071448839e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1031155490436098e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.2357946805569963e-22,
+         "gamma": 1.9317898928324113e-21,
+         "total": 2.055369360888111e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "V49"
+        ],
+        "total_activity_bq_per_g": 1.7685131815435533e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7686692840070464
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_co100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "80207d12fc8ce7003802bd6b4ab73f87e7fa2604d4c563fa7cab1afb02e8d156",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829952585230987e-18,
+         "gamma": 9.811786839788751e-18,
+         "total": 1.179478209831185e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.11694635652423e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.534433991895864e-20,
+         "gamma": 5.868898718227778e-18,
+         "total": 5.9042430581467366e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.645759845907042e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.979146618029391e-20,
+         "gamma": 5.491777206387494e-18,
+         "total": 5.521568672567788e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Co60"
+        ],
+        "total_activity_bq_per_g": 4.329499345263429e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4142160639251274e-20,
+         "gamma": 2.6053885538491386e-18,
+         "total": 2.61953071448839e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Co60",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1031155490436098e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.2357946805569963e-22,
+         "gamma": 1.9317898928324113e-21,
+         "total": 2.055369360888111e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Co60",
+         "Mn53",
+         "V49"
+        ],
+        "total_activity_bq_per_g": 1.7685131815435533e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.8134862960432656
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__fns_709__pulse_5min",
+     "output_sha256": "39c655d319e9026a49a38586ac9e49a9ea1da4d8b826f470138fa8160ac84c71",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.923177605080341e-11,
+         "gamma": 4.942071561564749e-11,
+         "total": 1.0865249166645089e-10
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Nb94m1",
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Y90m1"
+        ],
+        "total_activity_bq_per_g": 10422.826658976104
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.139873295188438e-12,
+         "gamma": 3.004255587427697e-11,
+         "total": 3.3182429169465405e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Nb94",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 409.56573030824296
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.056838419969985e-12,
+         "gamma": 1.9144992830816967e-11,
+         "total": 2.1201831250786953e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Y90"
+        ],
+        "total_activity_bq_per_g": 347.325933503742
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4214816003438485e-13,
+         "gamma": 1.5486468217316182e-13,
+         "total": 2.9701284220754665e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 196.54657125880513
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3602894005761026e-14,
+         "gamma": 5.320221214621395e-15,
+         "total": 1.892311522038242e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Nb94",
+         "Nb93m1",
+         "Mn54",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 20.21145508716854
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7616416969685815
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__fns_709__pulse_5min",
+     "output_sha256": "aa5964a703e9e896c9c0d8ad1e1829deef7ea1bf73057b38ab586f0c290b6d4a",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.923177605080341e-11,
+         "gamma": 4.942071561564749e-11,
+         "total": 1.0865249166645089e-10
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Nb94m1",
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Y90m1"
+        ],
+        "total_activity_bq_per_g": 10422.826658976104
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.139873295188438e-12,
+         "gamma": 3.004255587427697e-11,
+         "total": 3.3182429169465405e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Y90",
+         "Nb94",
+         "Mn54"
+        ],
+        "total_activity_bq_per_g": 409.56573030824296
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.056838419969985e-12,
+         "gamma": 1.9144992830816967e-11,
+         "total": 2.1201831250786953e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Y90"
+        ],
+        "total_activity_bq_per_g": 347.325933503742
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4214816003438485e-13,
+         "gamma": 1.5486468217316182e-13,
+         "total": 2.9701284220754665e-13
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94",
+         "Mn54",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 196.54657125880513
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.3602894005761026e-14,
+         "gamma": 5.320221214621395e-15,
+         "total": 1.892311522038242e-14
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Nb94",
+         "Nb93m1",
+         "Mn54",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 20.21145508716854
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7424148769932799
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__fns_709__cont_2y",
+     "output_sha256": "3170924d63ecd77329904b36a416eb2d227cc9606b463354684a9c37e7a7024d",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.412558174958681e-08,
+         "gamma": 5.743323904860127e-07,
+         "total": 6.584579722355995e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94m1",
+         "Mn56",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 44627550.57182004
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293057935183933e-08,
+         "gamma": 5.652017559579133e-07,
+         "total": 6.481323353097526e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 44528002.352806225
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.240719284354886e-08,
+         "gamma": 3.635211624157298e-07,
+         "total": 4.2592835525927866e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Nb95"
+        ],
+        "total_activity_bq_per_g": 42643421.25355033
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1965186609393326e-08,
+         "gamma": 1.0439186217632916e-08,
+         "total": 3.2404372827026244e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32364896.008672
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245727588549229e-09,
+         "gamma": 8.840850149487541e-10,
+         "total": 3.1298126034979834e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Nb94",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 3336366.0056037228
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7043789849849418
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__fns_709__cont_2y",
+     "output_sha256": "afe058144cddb6e9b93291a0be302f089ced89db8158e95f8580727cec6f55c3",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.412558174958681e-08,
+         "gamma": 5.743323904860127e-07,
+         "total": 6.584579722355995e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Nb94m1",
+         "Mn56",
+         "Co60m1"
+        ],
+        "total_activity_bq_per_g": 44627550.57182004
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.293057935183933e-08,
+         "gamma": 5.652017559579133e-07,
+         "total": 6.481323353097526e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Mn57",
+         "Cr57"
+        ],
+        "total_activity_bq_per_g": 44528002.352806225
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.240719284354886e-08,
+         "gamma": 3.635211624157298e-07,
+         "total": 4.2592835525927866e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Nb95"
+        ],
+        "total_activity_bq_per_g": 42643421.25355033
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.1965186609393326e-08,
+         "gamma": 1.0439186217632916e-08,
+         "total": 3.2404372827026244e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Fe59",
+         "Co60",
+         "Nb94",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 32364896.008672
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.245727588549229e-09,
+         "gamma": 8.840850149487541e-10,
+         "total": 3.1298126034979834e-09
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Co60",
+         "Nb94",
+         "Mn56",
+         "Cr56"
+        ],
+        "total_activity_bq_per_g": 3336366.0056037228
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7244862939696759
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "c0c87eed2f6795cdb7c3891a11d3862aaa91664960ebe4bf3073264b9f83be3f",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.895655424510491e-20,
+         "gamma": 8.88631714332765e-20,
+         "total": 1.478197256783814e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Nb94m1",
+         "Fe53",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.1574130615974736e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800559701277164e-23,
+         "gamma": 1.9476908766469877e-22,
+         "total": 2.627746846774704e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.0026447223833806e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2942083880971486e-25,
+         "gamma": 5.324074271985852e-23,
+         "total": 5.357016355866824e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.3640954499886856e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.323335289675836e-25,
+         "gamma": 2.5039444661883212e-23,
+         "total": 2.5171778190850796e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 1.9656318290298828e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.613239863336067e-28,
+         "gamma": 1.723445166206731e-26,
+         "total": 1.809577564840092e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.1414461405532765e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7355158069985919
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "44f3c9271933cb6749bf0672a5fd251de8d12bc89f2340bfe999f43e0211f956",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 5.895655424510491e-20,
+         "gamma": 8.88631714332765e-20,
+         "total": 1.478197256783814e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn57",
+         "Nb94m1",
+         "Fe53",
+         "Cr55"
+        ],
+        "total_activity_bq_per_g": 4.1574130615974736e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 6.800559701277164e-23,
+         "gamma": 1.9476908766469877e-22,
+         "total": 2.627746846774704e-22
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "Mn56",
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59"
+        ],
+        "total_activity_bq_per_g": 1.0026447223833806e-09
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.2942083880971486e-25,
+         "gamma": 5.324074271985852e-23,
+         "total": 5.357016355866824e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Cr51",
+         "Fe55",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.3640954499886856e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.323335289675836e-25,
+         "gamma": 2.5039444661883212e-23,
+         "total": 2.5171778190850796e-23
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 1.9656318290298828e-10
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 8.613239863336067e-28,
+         "gamma": 1.723445166206731e-26,
+         "total": 1.809577564840092e-26
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.1414461405532765e-12
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7337410300388001
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "0b11e6481625e763b629c32778dc6a848740ebc94fe0bea20fe97e3475e616d4",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829769622261195e-18,
+         "gamma": 9.810963768870577e-18,
+         "total": 1.1793940731096697e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.117979515437047e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.5332643096271267e-20,
+         "gamma": 5.868121715480625e-18,
+         "total": 5.903454358576896e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.646257468063482e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.9785465076230264e-20,
+         "gamma": 5.491076045176056e-18,
+         "total": 5.520861510252286e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.33002702315264e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4159045160252615e-20,
+         "gamma": 2.6049840576639242e-18,
+         "total": 2.6191431028241768e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1037590007976387e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4100772653429923e-22,
+         "gamma": 1.809810235863555e-21,
+         "total": 1.950817962397854e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.8161138455592672e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7611371889943257
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "fe_nb100wppm__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "0a510903fa29b39c957e4e046d384c360ad53009a4ce4c80c57b2d49aea4bfa7",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.9829769622261195e-18,
+         "gamma": 9.810963768870577e-18,
+         "total": 1.1793940731096697e-17
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Mn56",
+         "Fe55",
+         "Cr51",
+         "Mn57"
+        ],
+        "total_activity_bq_per_g": 6.117979515437047e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 3.5332643096271267e-20,
+         "gamma": 5.868121715480625e-18,
+         "total": 5.903454358576896e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Mn56"
+        ],
+        "total_activity_bq_per_g": 4.646257468063482e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 2.9785465076230264e-20,
+         "gamma": 5.491076045176056e-18,
+         "total": 5.520861510252286e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Cr51",
+         "Fe59",
+         "Nb93m1"
+        ],
+        "total_activity_bq_per_g": 4.33002702315264e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4159045160252615e-20,
+         "gamma": 2.6049840576639242e-18,
+         "total": 2.6191431028241768e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "Mn54",
+         "Fe55",
+         "Nb93m1",
+         "Fe59",
+         "Cr51"
+        ],
+        "total_activity_bq_per_g": 2.1037590007976387e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 0.0,
+         "beta": 1.4100772653429923e-22,
+         "gamma": 1.809810235863555e-21,
+         "total": 1.950817962397854e-21
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Fe55",
+         "Mn54",
+         "Nb93m1",
+         "Nb94",
+         "Mn53"
+        ],
+        "total_activity_bq_per_g": 1.8161138455592672e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7458100949879736
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__fns_709__pulse_5min",
+     "output_sha256": "e35e075088c011f1c50bbcc927b9c359142663d184417874fc1eec7a06d55e32",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 5.860188617127863e-07,
+         "gamma": 7.784841444625577e-07,
+         "total": 1.3645030061753849e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W187",
+         "W185m1",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 17648419.446792983
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.3768546811969527e-07,
+         "gamma": 2.736577164568125e-07,
+         "total": 4.113431845765486e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "W188",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 3143216.7605936755
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 6.35458446991165e-11,
+         "gamma": 7.454864535958511e-13,
+         "total": 6.42913311935597e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W187",
+         "Re188",
+         "W188"
+        ],
+        "total_activity_bq_per_g": 3226.973790185609
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.9052021791775224e-12,
+         "gamma": 1.0711845346513916e-13,
+         "total": 3.012320673490008e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Re187"
+        ],
+        "total_activity_bq_per_g": 157.70015209103997
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3354545640815547e-22,
+         "gamma": 7.347945135916675e-22,
+         "total": 4.1815686444264536e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W186",
+         "W181",
+         "W180",
+         "W185"
+        ],
+        "total_activity_bq_per_g": 6.776359941888703e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7767509130062535
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__fns_709__pulse_5min",
+     "output_sha256": "61b454b06d360e3730241b1f14935e323292e2bcf13e95de7bfaa03f0e43e80e",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 5.860188617127863e-07,
+         "gamma": 7.784841444625577e-07,
+         "total": 1.3645030061753849e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W187",
+         "W185m1",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 17648419.446792983
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.3768546811969527e-07,
+         "gamma": 2.736577164568125e-07,
+         "total": 4.113431845765486e-07
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "W188",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 3143216.7605936755
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 6.35458446991165e-11,
+         "gamma": 7.454864535958511e-13,
+         "total": 6.42913311935597e-11
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W187",
+         "Re188",
+         "W188"
+        ],
+        "total_activity_bq_per_g": 3226.973790185609
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.9052021791775224e-12,
+         "gamma": 1.0711845346513916e-13,
+         "total": 3.012320673490008e-12
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Re187"
+        ],
+        "total_activity_bq_per_g": 157.70015209103997
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3354545640815547e-22,
+         "gamma": 7.347945135916675e-22,
+         "total": 4.1815686444264536e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W186",
+         "W181",
+         "W180",
+         "W185"
+        ],
+        "total_activity_bq_per_g": 6.776359941888703e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7596171559998766
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__fns_709__cont_2y",
+     "output_sha256": "ca0dd6d66962a1aba29ea00d3abce7280b6e93772926c615e51d6a1f545b7670",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848597453382525e-20,
+         "beta": 0.00011750892826148814,
+         "gamma": 0.00022792434235711668,
+         "total": 0.00034543327061860486
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W183m1",
+         "W181",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 2758166750.884901
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848617824903617e-20,
+         "beta": 5.986952826832989e-05,
+         "gamma": 0.00011386685692994288,
+         "total": 0.00017373638519827282
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "Re188",
+         "Re186"
+        ],
+        "total_activity_bq_per_g": 1439374914.0608184
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848716789563543e-20,
+         "beta": 1.984243782543494e-06,
+         "gamma": 3.6544826555831204e-08,
+         "total": 2.0207886090993657e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 102596149.77616856
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717235928123e-20,
+         "beta": 9.107018237007243e-08,
+         "gamma": 5.297983161258825e-09,
+         "total": 9.63681655313721e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 5212113.001146459
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717236611305e-20,
+         "beta": 1.24753746264132e-16,
+         "gamma": 2.1238728716736712e-16,
+         "total": 3.371818821487357e-16
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W181",
+         "Re186",
+         "Re186m1",
+         "Hf184m1"
+        ],
+        "total_activity_bq_per_g": 0.09122495204677572
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7244633120135404
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__fns_709__cont_2y",
+     "output_sha256": "50de6d5cda6abd1370a92a6542668d8313a231392fd6dbe158ad2a79b0466e2c",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848597453382525e-20,
+         "beta": 0.00011750892826148814,
+         "gamma": 0.00022792434235711668,
+         "total": 0.00034543327061860486
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W183m1",
+         "W181",
+         "Re188"
+        ],
+        "total_activity_bq_per_g": 2758166750.884901
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848617824903617e-20,
+         "beta": 5.986952826832989e-05,
+         "gamma": 0.00011386685692994288,
+         "total": 0.00017373638519827282
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W187",
+         "W185",
+         "W181",
+         "Re188",
+         "Re186"
+        ],
+        "total_activity_bq_per_g": 1439374914.0608184
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848716789563543e-20,
+         "beta": 1.984243782543494e-06,
+         "gamma": 3.6544826555831204e-08,
+         "total": 2.0207886090993657e-06
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 102596149.77616856
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717235928123e-20,
+         "beta": 9.107018237007243e-08,
+         "gamma": 5.297983161258825e-09,
+         "total": 9.63681655313721e-08
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "Re188",
+         "W188",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 5212113.001146459
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.0848717236611305e-20,
+         "beta": 1.24753746264132e-16,
+         "gamma": 2.1238728716736712e-16,
+         "total": 3.371818821487357e-16
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "Re187",
+         "W181",
+         "Re186",
+         "Re186m1",
+         "Hf184m1"
+        ],
+        "total_activity_bq_per_g": 0.09122495204677572
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7439318340038881
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "9d1e9e30016381c555dc00ea7fc25b00332ab550d29b338d017671ef22e0d4b9",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3768617981014306e-18,
+         "gamma": 1.6619476584084809e-18,
+         "total": 4.079656802984176e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185m1",
+         "W186",
+         "W187",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 8.726030584414938e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2610152043659932e-21,
+         "gamma": 2.4359613929311418e-21,
+         "total": 4.454432307156184e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W187",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 1.9825883682296235e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.806888680610013e-23,
+         "gamma": 8.053643349523065e-25,
+         "total": 4.087622072540576e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6988852498220118e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2960854192751382e-24,
+         "gamma": 1.1858393362151477e-25,
+         "total": 4.084876114361761e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.684787771865498e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 3.978061844479366e-27,
+         "gamma": 2.231220349684938e-26,
+         "total": 4.084737276453005e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Hf182",
+         "Ta182",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6839918865395318e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7926492900005542
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__irdff_sp_mat9861_709__pulse_5min",
+     "output_sha256": "ea02f95112e622b1bbee9dad40190a100e7188835c19fb02c6d6c13f79b99bb4",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.3768617981014306e-18,
+         "gamma": 1.6619476584084809e-18,
+         "total": 4.079656802984176e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 300.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185m1",
+         "W186",
+         "W187",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 8.726030584414938e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2610152043659932e-21,
+         "gamma": 2.4359613929311418e-21,
+         "total": 4.454432307156184e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 86700.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W187",
+         "W185",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 1.9825883682296235e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.806888680610013e-23,
+         "gamma": 8.053643349523065e-25,
+         "total": 4.087622072540576e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 2592300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6988852498220118e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.2960854192751382e-24,
+         "gamma": 1.1858393362151477e-25,
+         "total": 4.084876114361761e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 31536300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "W185",
+         "W181",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.684787771865498e-07
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 3.978061844479366e-27,
+         "gamma": 2.231220349684938e-26,
+         "total": 4.084737276453005e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 315360300.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Hf182",
+         "Ta182",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 1.6839918865395318e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.8418975839740597
+    },
+    {
+     "cache_state": "cold_process",
+     "case": "w__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "9a7736fc063a969821d2e9e0f125b3cb4fda5c2ebd2295083e51937bae34b463",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.581791768380251e-18,
+         "gamma": 3.735833630108205e-18,
+         "total": 8.35847274496272e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185",
+         "W187",
+         "W185m1",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 0.00017496491523636632
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.6563527362146059e-18,
+         "gamma": 1.059755705671948e-18,
+         "total": 2.7569557883608187e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W187",
+         "W181",
+         "W186",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 7.45764665531397e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 8.786158628269572e-19,
+         "gamma": 3.963217034849071e-20,
+         "total": 9.590953796497125e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 4.878335693750956e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.0954590683218925e-20,
+         "gamma": 5.8106805208774945e-21,
+         "total": 8.761261767836113e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 2.9812646377554345e-06
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.6848033306382996e-25,
+         "gamma": 1.013393521710869e-24,
+         "total": 4.0848628348119484e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Ta179",
+         "Hf182",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 1.686288603901444e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7758984829997644
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "w__irdff_sp_mat9861_709__cont_2y",
+     "output_sha256": "e129cf88ad2bb9fbb4015a5a9d213059418d1c564d5c12f85254b14a57bd4d01",
+     "response": {
+      "per_step": [
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.581791768380251e-18,
+         "gamma": 3.735833630108205e-18,
+         "total": 8.35847274496272e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63072000.0,
+        "top5_nuclides_by_activity": [
+         "W183m1",
+         "W185",
+         "W187",
+         "W185m1",
+         "W181"
+        ],
+        "total_activity_bq_per_g": 0.00017496491523636632
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 1.6563527362146059e-18,
+         "gamma": 1.059755705671948e-18,
+         "total": 2.7569557883608187e-18
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 63158400.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W187",
+         "W181",
+         "W186",
+         "W180"
+        ],
+        "total_activity_bq_per_g": 7.45764665531397e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 8.786158628269572e-19,
+         "gamma": 3.963217034849071e-20,
+         "total": 9.590953796497125e-19
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 65664000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 4.878335693750956e-05
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 4.0954590683218925e-20,
+         "gamma": 5.8106805208774945e-21,
+         "total": 8.761261767836113e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 94608000.0,
+        "top5_nuclides_by_activity": [
+         "W185",
+         "W181",
+         "W186",
+         "W180",
+         "Ta179"
+        ],
+        "total_activity_bq_per_g": 2.9812646377554345e-06
+       },
+       {
+        "decay_heat_w_per_g": {
+         "alpha": 4.084734647426471e-20,
+         "beta": 2.6848033306382996e-25,
+         "gamma": 1.013393521710869e-24,
+         "total": 4.0848628348119484e-20
+        },
+        "photon_source_total_per_g": 0,
+        "t_s": 378432000.0,
+        "top5_nuclides_by_activity": [
+         "W186",
+         "W180",
+         "Ta179",
+         "Hf182",
+         "Ta182"
+        ],
+        "total_activity_bq_per_g": 1.686288603901444e-07
+       }
+      ]
+     },
+     "returncode": 0,
+     "tool": "actinv_v1_0_1",
+     "wall_s": 0.7619267800473608
+    }
+   ]
+  },
+  "W-R2S": {
+   "actinv_candidate": [
+    {
+     "cache_state": "cold_process",
+     "case": "mesh_demo_3cell",
+     "output_sha256": "8551a5b702390ed3ef9d938be46b837a72ac48f6d10cd5fd7e235310d1c5d248",
+     "returncode": 0,
+     "stderr_tail": "",
+     "tool": "actinv_candidate",
+     "wall_s": 2.658817063027527
+    },
+    {
+     "cache_state": "warm_process",
+     "case": "mesh_demo_3cell",
+     "output_sha256": "e3c57c077d1af058f767d4802cf1160639c580ac2fe8dd8792aa552d0161a266",
+     "returncode": 0,
+     "stderr_tail": "",
+     "tool": "actinv_candidate",
+     "wall_s": 1.9193516499944963
+    }
+   ],
+   "comparators": "comparator_unavailable (predeclared)"
+  }
+ }
+}

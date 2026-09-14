@@ -1,0 +1,23 @@
+{
+ "campaign_aggregates": {
+  "amortization_ratio_median": 1.3291043855114215,
+  "batched_inprocess": {
+   "median_s": 0.5571453544835094,
+   "n": 1000,
+   "total_s": 563.3739905312541
+  },
+  "per_invocation": {
+   "median_s": 0.740504334011348,
+   "n": 1000,
+   "total_s": 751.0223203885253
+  }
+ },
+ "failures": [],
+ "mutation_self_test": {
+  "planted": 6,
+  "rejected": 6
+ },
+ "pass": true,
+ "protocol_sha256": "0dd9be843e4e195d3f3ebb9a9084f233af3d0eedf5045bbb48d77d665f5d1e06",
+ "schema": "actinv-p26-g3-check-1"
+}

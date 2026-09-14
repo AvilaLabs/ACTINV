@@ -1,0 +1,32 @@
+{
+ "interpretation_tasks": [
+  {
+   "id": "T1",
+   "task": "identify the nuclides dominating each requested response at each cooling time"
+  },
+  {
+   "id": "T2",
+   "task": "determine whether the material ranking survives the declared impurity uncertainty"
+  },
+  {
+   "id": "T3",
+   "task": "identify which nuclear-data channels control the dominant nuclides"
+  },
+  {
+   "id": "T4",
+   "task": "package inputs, data identities and outputs so a colleague reproduces the result"
+  },
+  {
+   "id": "T5",
+   "task": "hand a distributed photon source to an external transport code and verify normalization"
+  }
+ ],
+ "note": "no practitioner study is recorded; this decomposition supports design only and cannot qualify the 50% hands-on target",
+ "partition": "diagnostic",
+ "rubric": {
+  "completion": "all required artifacts produced",
+  "consequential_error": "a wrong conclusion that survives the participant's own checks",
+  "timeout_s": 3600
+ },
+ "schema": "actinv-p26-g3-tasks-1"
+}
