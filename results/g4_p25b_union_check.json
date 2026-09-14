@@ -1,0 +1,46 @@
+{
+ "coverage_floors": {
+  "eaf_2010": {
+   "floor": 47,
+   "floor_met_v101": true,
+   "floor_met_v110": false,
+   "v101_irdff_ok": 47,
+   "v110_irdff_ok": 37
+  },
+  "fendl_32c": {
+   "floor": 34,
+   "floor_met_v101": true,
+   "floor_met_v110": false,
+   "v101_irdff_ok": 35,
+   "v110_irdff_ok": 31
+  },
+  "tendl_2023": {
+   "floor": 41,
+   "floor_met_v101": true,
+   "floor_met_v110": false,
+   "v101_irdff_ok": 44,
+   "v110_irdff_ok": 34
+  }
+ },
+ "failures": [],
+ "irdff_score_sha256": "9c63410841f411a1ba67fd20a427efeb9030e36ad64dae151341ac4bc0ad367d",
+ "mutations_rejected": [
+  "surviving_targets tamper rejected",
+  "paired_rows tamper rejected",
+  "nonreg tamper rejected",
+  "class tamper rejected",
+  "population tamper rejected",
+  "floor tamper rejected"
+ ],
+ "pass": true,
+ "replayed_builds": [
+  "eaf_2010:n_1525_15-P-31.dat",
+  "eaf_2010:n_5728_57-LA-139.dat",
+  "fendl_32c:n_1425_14-Si-28.endf",
+  "fendl_32c:n_2328_23-V-51.endf",
+  "tendl_2023:n_022-Ti-47_2228.dat",
+  "tendl_2023:n_037-Rb-87_3731.dat"
+ ],
+ "schema": "actinv-p25b-g4-check-1",
+ "union_record_sha256": "49f54b83abb8206581b3ba838fa06406b798715e92f0f316f326a4e2a8dca24c"
+}

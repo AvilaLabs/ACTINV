@@ -1,0 +1,72 @@
+{
+ "bound_s": 600.0,
+ "rows": [
+  {
+   "bound_s": 600.0,
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "exit": 0,
+   "file": "n_073-Ta-181_7328.dat",
+   "file_sha256": "07176e8580f62b9308fc4f4c7e6bebc9e9ef23b201b0528eb3b38c8e4f9459f6",
+   "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4/rebind_index.json",
+   "seconds": 110.053,
+   "target": "Ta-181"
+  },
+  {
+   "bound_s": 600.0,
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "exit": 0,
+   "file": "n_090-Th-232_9040.dat",
+   "file_sha256": "22018d070e8a7e044d88add79cbeb151eb7fb70800f9dee7b2001421a3c4fc9a",
+   "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4/rebind_index.json",
+   "seconds": 163.48,
+   "target": "Th-232"
+  },
+  {
+   "bound_s": 600.0,
+   "class": "ok",
+   "corpus": "tendl_2023",
+   "exit": 0,
+   "file": "n_093-Np-237_9346.dat",
+   "file_sha256": "6203b67409ec7564f38afdacc0be5b7624dda6bfdb376930c9e50144c61eab39",
+   "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4/rebind_index.json",
+   "seconds": 166.095,
+   "target": "Np-237"
+  },
+  {
+   "bound_s": 600.0,
+   "class": "ok",
+   "corpus": "fendl_32c",
+   "exit": 0,
+   "file": "n_9040_90-Th-232.endf",
+   "file_sha256": "a48314b0c4d13bec0c1420b36dd9de66e39e1b0d2c2ae18033d99cbd8b639c1e",
+   "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4/rebind_index.json",
+   "seconds": 134.469,
+   "target": "Th-232"
+  },
+  {
+   "bound_s": 600.0,
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "exit": "timeout",
+   "file": "n_9228_92-U-235.endf",
+   "file_sha256": "28f0dea8177a5cee2c90768f9bac4716faa87a7c12700e1fbe1f30c2669ae763",
+   "message": "timeout 600.0s",
+   "seconds": 600.03,
+   "target": "U-235"
+  },
+  {
+   "bound_s": 600.0,
+   "class": "construction_error",
+   "corpus": "fendl_32c",
+   "exit": "timeout",
+   "file": "n_9237_92-U-238.endf",
+   "file_sha256": "5d8d0aa3b3b12ef2c0d3b88d939f76d3aad279c07a4d18a8cacf91c0115ee4df",
+   "message": "timeout 600.0s",
+   "seconds": 600.109,
+   "target": "U-238"
+  }
+ ],
+ "schema": "actinv-p25b-g4-rebind-1"
+}

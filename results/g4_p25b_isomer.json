@@ -1,0 +1,1385 @@
+{
+ "corpora": {
+  "eaf_2010": {
+   "construction": [
+    {
+     "candidate_files": [
+      "n_2837_28-NI-62.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_2837_28-NI-62.dat",
+     "file_sha256": "4a9e7523984cb1495d4098797f10cd5921b89c01052e1a1dd679240c8b295b42",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.125,
+     "za": 28062
+    },
+    {
+     "candidate_files": [
+      "n_3325_33-AS-75.dat"
+     ],
+     "class": "ok",
+     "file": "n_3325_33-AS-75.dat",
+     "reused_g1": true,
+     "za": 33075
+    },
+    {
+     "candidate_files": [
+      "n_3443_34-SE-80.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3443_34-SE-80.dat",
+     "file_sha256": "100b309b20b0462ca1edb191f8486e6f2f2c08e28e20e2d43bf9c55f0e0064d7",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.113,
+     "za": 34080
+    },
+    {
+     "candidate_files": [
+      "n_3531_35-BR-81.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3531_35-BR-81.dat",
+     "file_sha256": "8802269a6594596e068f00c2a2aa381d1fa73177950a99d28f4817b86c8e72ec",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.145,
+     "za": 35081
+    },
+    {
+     "candidate_files": [
+      "n_3725_37-RB-85.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3725_37-RB-85.dat",
+     "file_sha256": "f374fa2260066531d237e1cad5900397a9969cfb1aa0f8244140db6a5120094b",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.182,
+     "za": 37085
+    },
+    {
+     "candidate_files": [
+      "n_3731_37-RB-87.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3731_37-RB-87.dat",
+     "file_sha256": "e891fa12e909c3475914d2f50352fcf0b75a11828003ca8451a083d13f6775b9",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.117,
+     "za": 37087
+    },
+    {
+     "candidate_files": [
+      "n_3825_38-SR-84.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3825_38-SR-84.dat",
+     "file_sha256": "62c35a26076aba9d961e05d9c055b6c71caf977a3965adc594d44ba344dd613b",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.152,
+     "za": 38084
+    },
+    {
+     "candidate_files": [
+      "n_3922_39-Y-88.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3922_39-Y-88.dat",
+     "file_sha256": "e0e1c8851b6a3c94de4e309c8ef83c4f74d1c7c17ea272b702ea43c0e663c951",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.135,
+     "za": 39088
+    },
+    {
+     "candidate_files": [
+      "n_3925_39-Y-89.dat"
+     ],
+     "class": "ok",
+     "file": "n_3925_39-Y-89.dat",
+     "reused_g1": true,
+     "za": 39089
+    },
+    {
+     "candidate_files": [
+      "n_4019_40-ZR-88.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4019_40-ZR-88.dat",
+     "file_sha256": "c9dcadc882d05682ff76b4d9b80c9bce3e40a6c70b7a55ecf56c60a9bde5c4f1",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.145,
+     "za": 40088
+    },
+    {
+     "candidate_files": [
+      "n_4028_40-ZR-91.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4028_40-ZR-91.dat",
+     "file_sha256": "283156e317bb1694e1a2203f47c84cd63cb7ea301444450205f29bcad9f52e02",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.162,
+     "za": 40091
+    },
+    {
+     "candidate_files": [
+      "n_4031_40-ZR-92.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4031_40-ZR-92.dat",
+     "file_sha256": "1580da74dfc12e249ec9a9afe91395787817d36cecaa62644409fb81e4da977d",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.134,
+     "za": 40092
+    },
+    {
+     "candidate_files": [
+      "n_4237_42-MO-96.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4237_42-MO-96.dat",
+     "file_sha256": "ca8e2091e7254633adfec51f4e392286002f7faf9a502d3d0f56b3d3d434b81a",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.142,
+     "za": 42096
+    },
+    {
+     "candidate_files": [
+      "n_4240_42-MO-97.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4240_42-MO-97.dat",
+     "file_sha256": "88cfb34a128959dbfbf9a0a753804ae63e7ede957d8432d6814955c0046ccf71",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.165,
+     "za": 42097
+    },
+    {
+     "candidate_files": [
+      "n_4525_45-RH-103.dat"
+     ],
+     "class": "ok",
+     "file": "n_4525_45-RH-103.dat",
+     "reused_g1": true,
+     "za": 45103
+    },
+    {
+     "candidate_files": [
+      "n_4634_46-PD-105.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4634_46-PD-105.dat",
+     "file_sha256": "343f6ffefa8765e0dcef0c5adf1fefc43f9c95ede7981e488b391c187ff111d3",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.18,
+     "za": 46105
+    },
+    {
+     "candidate_files": [
+      "n_4731_47-AG-109.dat"
+     ],
+     "class": "ok",
+     "file": "n_4731_47-AG-109.dat",
+     "reused_g1": true,
+     "za": 47109
+    },
+    {
+     "candidate_files": [
+      "n_4849_48-CD-114.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4849_48-CD-114.dat",
+     "file_sha256": "aa047b74e18cffb7b4720bae437df952bea5e08dc2f20b9a3e3c8b070fc2686e",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.157,
+     "za": 48114
+    },
+    {
+     "candidate_files": [
+      "n_4855_48-CD-116.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4855_48-CD-116.dat",
+     "file_sha256": "d02a87cf3093fbe98710ba05d26c14c7b8eee00daed22de3e72a277db2fa3e94",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.136,
+     "za": 48116
+    },
+    {
+     "candidate_files": [
+      "n_4925_49-IN-113.dat"
+     ],
+     "class": "ok",
+     "file": "n_4925_49-IN-113.dat",
+     "reused_g1": true,
+     "za": 49113
+    },
+    {
+     "candidate_files": [
+      "n_4931_49-IN-115.dat"
+     ],
+     "class": "ok",
+     "file": "n_4931_49-IN-115.dat",
+     "reused_g1": true,
+     "za": 49115
+    },
+    {
+     "candidate_files": [
+      "n_5031_50-SN-114.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_5031_50-SN-114.dat",
+     "file_sha256": "dbed7d03f680e5c7235ad24f5856587b1e0ec9656774055370c67d490c43c82f",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.146,
+     "za": 50114
+    },
+    {
+     "candidate_files": [
+      "n_5046_50-SN-119.dat",
+      "n_5047_50-SN-119M.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_5046_50-SN-119.dat",
+     "file_sha256": "917a617f9b275a47ee231162a34927fd08c5963d43f5ebf56aea9e50d96c84ad",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.134,
+     "za": 50119
+    },
+    {
+     "candidate_files": [
+      "n_5249_52-TE-128.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_5249_52-TE-128.dat",
+     "file_sha256": "26dbd34e7ff7c47837ba150908ca984d538491d846d4375b357ed129f57ebd73",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.161,
+     "za": 52128
+    },
+    {
+     "candidate_files": [
+      "n_6025_60-ND-142.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_6025_60-ND-142.dat",
+     "file_sha256": "0dbfd4ea1080d4a75e2de6e81a44eccab7d965485f8fdc73ce2afe184ca616f5",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.147,
+     "za": 60142
+    },
+    {
+     "candidate_files": [
+      "n_6031_60-ND-144.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_6031_60-ND-144.dat",
+     "file_sha256": "5e1c6bf7d61270efae35eb605a517c30ca1196c086d890dbf7f76f3e0d06f82a",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.132,
+     "za": 60144
+    },
+    {
+     "candidate_files": [
+      "n_6325_63-EU-151.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_6325_63-EU-151.dat",
+     "file_sha256": "c0ab5e171f914172abfabfedeae1cb2a9b94608d4977058885566c0231ec082f",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.142,
+     "za": 63151
+    },
+    {
+     "candidate_files": [
+      "n_6725_67-HO-165.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_6725_67-HO-165.dat",
+     "file_sha256": "2a467426620dc4626fd2f5fdf272d7787c4eca220e0f52d51c20c67d6ccb7bdf",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.131,
+     "za": 67165
+    },
+    {
+     "candidate_files": [
+      "n_7125_71-LU-175.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7125_71-LU-175.dat",
+     "file_sha256": "2cb72e67a34012a355610e764db11c542b9ba51e3322e5b9027ce2ef25e32937",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.141,
+     "za": 71175
+    },
+    {
+     "candidate_files": [
+      "n_7425_74-W-180.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7425_74-W-180.dat",
+     "file_sha256": "8b1e6b953479172420b26ae4bef31a2193360d3da04f8c19e8fc82ba1d10804c",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.132,
+     "za": 74180
+    },
+    {
+     "candidate_files": [
+      "n_7525_75-RE-185.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7525_75-RE-185.dat",
+     "file_sha256": "b48aecb13dc7d7eadbe86438911b9385e3e7dd5aef2232f6a578665096e1010f",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.149,
+     "za": 75185
+    },
+    {
+     "candidate_files": [
+      "n_7643_76-OS-190.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7643_76-OS-190.dat",
+     "file_sha256": "a309235041b73b448e47868dd3dacf39a006bcf055e7df73370b97ad3346ec62",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.116,
+     "za": 76190
+    },
+    {
+     "candidate_files": [
+      "n_7837_78-PT-194.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7837_78-PT-194.dat",
+     "file_sha256": "c2241a39d8112fe6f00b966e0dd2a9b673b1fa9baf75bc85e00e0b54fe034e87",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.14,
+     "za": 78194
+    },
+    {
+     "candidate_files": [
+      "n_7849_78-PT-198.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7849_78-PT-198.dat",
+     "file_sha256": "9b6c5dd32754a46f83f58fe497208de630ef180defeafc28ea17d2f16b0d369e",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.12,
+     "za": 78198
+    },
+    {
+     "candidate_files": [
+      "n_7925_79-AU-197.dat"
+     ],
+     "class": "ok",
+     "file": "n_7925_79-AU-197.dat",
+     "reused_g1": true,
+     "za": 79197
+    },
+    {
+     "candidate_files": [
+      "n_8031_80-HG-198.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_8031_80-HG-198.dat",
+     "file_sha256": "efd04a8f4298a064a9aca9aa84d1c57d4b31b9734f8d711a7c08d2471ba8d07c",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.153,
+     "za": 80198
+    },
+    {
+     "candidate_files": [
+      "n_8037_80-HG-200.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_8037_80-HG-200.dat",
+     "file_sha256": "b0ea175ccdaa2eb9f6380982f13756f373ace2b670750c6ba61d4a9eca461e27",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 0.147,
+     "za": 80200
+    }
+   ],
+   "heldout_artifact": {
+    "build_exit": 0,
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/heldout_eaf_2010_index.json",
+    "npz_sha256": "0003945d11ff90d377d79f73977424a9242d3d1f7c9288b2e945935c7a058a37",
+    "seconds": 6.834,
+    "staged_files": 37
+   },
+   "heldout_score": {
+    "baseline_metrics": {
+     "rows": 0
+    },
+    "candidate_metrics": {
+     "rows": 0
+    },
+    "candidate_status_histogram": {
+     "build_failed_g3": 469,
+     "library_absent": 1390,
+     "unevaluated": 86
+    },
+    "comparable_rows": 0,
+    "eligible_rows": 1859,
+    "nonregression": {
+     "coverage_ok": null,
+     "median_ok": null,
+     "p90_ok": null
+    },
+    "overall": {
+     "baseline": {
+      "geomean_cm": 1.1650835219642883,
+      "max_abs_ln": 7.047286698657881,
+      "median_abs_ln": 0.21670578696281273,
+      "p90_abs_ln": 1.2493010867264902,
+      "rows": 1286,
+      "within_10pct": 0.24183514774494558,
+      "within_20pct": 0.4712286158631415,
+      "within_30pct": 0.609642301710731
+     },
+     "candidate": {
+      "geomean_cm": NaN,
+      "max_abs_ln": NaN,
+      "median_abs_ln": NaN,
+      "p90_abs_ln": NaN,
+      "rows": 0,
+      "within_10pct": NaN,
+      "within_20pct": NaN,
+      "within_30pct": NaN
+     },
+     "eligible_rows": 1859
+    },
+    "paired_bootstrap": {
+     "families": 0,
+     "median_abs_ln_change": {
+      "mean": NaN,
+      "p05": NaN,
+      "p95": NaN
+     },
+     "p90_abs_ln_change": {
+      "mean": NaN,
+      "p05": NaN,
+      "p95": NaN
+     },
+     "replicates": 10000
+    },
+    "paired_row_count": 0,
+    "scored_row_ids": []
+   },
+   "surviving_targets": 37
+  },
+  "fendl_32c": {
+   "construction": [
+    {
+     "candidate_files": [
+      "n_2837_28-Ni-62.endf"
+     ],
+     "class": "construction_error",
+     "exit": 1,
+     "file": "n_2837_28-Ni-62.endf",
+     "file_sha256": "56f030009ca12a84450ebbcd210041f9b04d5a183e2daf21123235bb5bfa5250",
+     "message": "/home/connoravila/nuclear-data/fendl-3.2c/endf/n_2837_28-Ni-62.endf: MAT=2837/MF=2/MT=151: Breit-Wigner total width 1.882601 is below component sum 1882.6008 for LRX=0 (GN=1880, GG=2.6008, GF=0)",
+     "seconds": 0.028,
+     "za": 28062
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 33075
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 34080
+    },
+    {
+     "candidate_files": [
+      "n_3531_35-Br-81.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_3531_35-Br-81.endf",
+     "file_sha256": "54a12a9779b007e74d8ba4b778944269fc846f4f19a48c27bcde73d4eac35944",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 31.779,
+     "za": 35081
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 37085
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 37087
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 38084
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 39088
+    },
+    {
+     "candidate_files": [
+      "n_3925_39-Y-89.endf"
+     ],
+     "class": "ok",
+     "file": "n_3925_39-Y-89.endf",
+     "reused_g1": true,
+     "za": 39089
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 40088
+    },
+    {
+     "candidate_files": [
+      "n_4028_40-Zr-91.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4028_40-Zr-91.endf",
+     "file_sha256": "fa0c41d65b44b2cdd5886d4979fa5d019de7dcf69aa15a9d7a0fbf0812880b01",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 24.179,
+     "za": 40091
+    },
+    {
+     "candidate_files": [
+      "n_4031_40-Zr-92.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4031_40-Zr-92.endf",
+     "file_sha256": "df431bf4a46216d0ed439b2b1ab19d9e82faca84bc84f46fcb1ac05a0ca5f978",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 11.211,
+     "za": 40092
+    },
+    {
+     "candidate_files": [
+      "n_4237_42-Mo-96.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4237_42-Mo-96.endf",
+     "file_sha256": "ab5dfef806a2faf63a291c666c3933716bd54162fd2bd1325be4746a2046ea88",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 14.561,
+     "za": 42096
+    },
+    {
+     "candidate_files": [
+      "n_4240_42-Mo-97.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4240_42-Mo-97.endf",
+     "file_sha256": "e210cb02f4853fa58994632c39bdbfb56a56771c78a4083f71e192a9deaedfb2",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 14.044,
+     "za": 42097
+    },
+    {
+     "candidate_files": [
+      "n_4525_45-Rh-103.endf"
+     ],
+     "class": "ok",
+     "file": "n_4525_45-Rh-103.endf",
+     "reused_g1": true,
+     "za": 45103
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 46105
+    },
+    {
+     "candidate_files": [
+      "n_4731_47-Ag-109.endf"
+     ],
+     "class": "ok",
+     "file": "n_4731_47-Ag-109.endf",
+     "reused_g1": true,
+     "za": 47109
+    },
+    {
+     "candidate_files": [
+      "n_4849_48-Cd-114.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4849_48-Cd-114.endf",
+     "file_sha256": "1b7bc513ffc1ec07ce6110e107a8f0e82287bc8764a1134bb36d24162c032232",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 20.277,
+     "za": 48114
+    },
+    {
+     "candidate_files": [
+      "n_4855_48-Cd-116.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_4855_48-Cd-116.endf",
+     "file_sha256": "8351087d1f5d8ff341f56160740ab8ab14bef11f57c0a4b291be2ed86d809a13",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 16.31,
+     "za": 48116
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 49113
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 49115
+    },
+    {
+     "candidate_files": [
+      "n_5031_50-Sn-114.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_5031_50-Sn-114.endf",
+     "file_sha256": "d08df8d023636b3229d923ba1354511ce19b1f70b85bb44bfdd8ba0a8a134e83",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 8.459,
+     "za": 50114
+    },
+    {
+     "candidate_files": [
+      "n_5046_50-Sn-119.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_5046_50-Sn-119.endf",
+     "file_sha256": "025bbf72bae2b51cbce2b1e951e08038d18fb7ce92cd350ef7c8ab9d9eed33b2",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 8.693,
+     "za": 50119
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 52128
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 60142
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 60144
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 63151
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 67165
+    },
+    {
+     "candidate_files": [
+      "n_7125_71-Lu-175.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7125_71-Lu-175.endf",
+     "file_sha256": "3414d51011a1d21a6f38709770d5d49872ea6a37983298deedbf9b169c6fc9a7",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 18.103,
+     "za": 71175
+    },
+    {
+     "candidate_files": [
+      "n_7425_74-W-180.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7425_74-W-180.endf",
+     "file_sha256": "5c3925bc53ed1188b40029a8c1693b37607a107486ec10e3a26d037fb79d3eb1",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 6.088,
+     "za": 74180
+    },
+    {
+     "candidate_files": [
+      "n_7525_75-Re-185.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7525_75-Re-185.endf",
+     "file_sha256": "21a240910d3aa4a253827da265e4dc2b27bccd1746614e4cb6b54aac1e7c3a46",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 88.794,
+     "za": 75185
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 76190
+    },
+    {
+     "candidate_files": [
+      "n_7837_78-Pt-194.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7837_78-Pt-194.endf",
+     "file_sha256": "353efe11508985cc828f47c0b8f2e187f51f4fdada6154a99112d54448a33ca9",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 5.185,
+     "za": 78194
+    },
+    {
+     "candidate_files": [
+      "n_7849_78-Pt-198.endf"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_7849_78-Pt-198.endf",
+     "file_sha256": "efde94d2b5ef6fd594d8d36c94b51404bb63ed7db7b880d39f31149788e6495e",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 5.217,
+     "za": 78198
+    },
+    {
+     "candidate_files": [
+      "n_7925_79-Au-197.endf"
+     ],
+     "class": "ok",
+     "file": "n_7925_79-Au-197.endf",
+     "reused_g1": true,
+     "za": 79197
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 80198
+    },
+    {
+     "candidate_files": [],
+     "class": "corpus_incomplete",
+     "za": 80200
+    }
+   ],
+   "heldout_artifact": {
+    "build_exit": 0,
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/heldout_fendl_32c_index.json",
+    "npz_sha256": "fef703d9ad1d7b67b92861c89ffd75c64ad59f8667d636a2469a289bcc99c1cd",
+    "seconds": 209.39,
+    "staged_files": 18
+   },
+   "heldout_score": {
+    "baseline_metrics": {
+     "rows": 0
+    },
+    "candidate_metrics": {
+     "rows": 0
+    },
+    "candidate_status_histogram": {
+     "build_failed_g3": 291,
+     "library_absent": 1390,
+     "target_absent": 178,
+     "unevaluated": 86
+    },
+    "comparable_rows": 0,
+    "eligible_rows": 1859,
+    "nonregression": {
+     "coverage_ok": null,
+     "median_ok": null,
+     "p90_ok": null
+    },
+    "overall": {
+     "baseline": {
+      "geomean_cm": 1.1650835219642883,
+      "max_abs_ln": 7.047286698657881,
+      "median_abs_ln": 0.21670578696281273,
+      "p90_abs_ln": 1.2493010867264902,
+      "rows": 1286,
+      "within_10pct": 0.24183514774494558,
+      "within_20pct": 0.4712286158631415,
+      "within_30pct": 0.609642301710731
+     },
+     "candidate": {
+      "geomean_cm": NaN,
+      "max_abs_ln": NaN,
+      "median_abs_ln": NaN,
+      "p90_abs_ln": NaN,
+      "rows": 0,
+      "within_10pct": NaN,
+      "within_20pct": NaN,
+      "within_30pct": NaN
+     },
+     "eligible_rows": 1859
+    },
+    "paired_bootstrap": {
+     "families": 0,
+     "median_abs_ln_change": {
+      "mean": NaN,
+      "p05": NaN,
+      "p95": NaN
+     },
+     "p90_abs_ln_change": {
+      "mean": NaN,
+      "p05": NaN,
+      "p95": NaN
+     },
+     "replicates": 10000
+    },
+    "paired_row_count": 0,
+    "scored_row_ids": []
+   },
+   "surviving_targets": 18
+  },
+  "tendl_2023": {
+   "construction": [
+    {
+     "candidate_files": [
+      "n_028-Ni-62_2837.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_028-Ni-62_2837.dat",
+     "file_sha256": "80e71d03bb81cceda1a7080ae984490b0f5841302b453c3fa2744d74a714192b",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 9.144,
+     "za": 28062
+    },
+    {
+     "candidate_files": [
+      "n_033-As-75_3325.dat"
+     ],
+     "class": "ok",
+     "file": "n_033-As-75_3325.dat",
+     "reused_g1": true,
+     "za": 33075
+    },
+    {
+     "candidate_files": [
+      "n_034-Se-80_3443.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_034-Se-80_3443.dat",
+     "file_sha256": "216202bb547370151c6aea5cd65cd74cbef67301b2acd1a16ce42ad99e020cb6",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 5.242,
+     "za": 34080
+    },
+    {
+     "candidate_files": [
+      "n_035-Br-81_3531.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_035-Br-81_3531.dat",
+     "file_sha256": "b1202bd97e8393231d10f15353020274b899b849ed05fb6297df0b41c95d99e2",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 20.809,
+     "za": 35081
+    },
+    {
+     "candidate_files": [
+      "n_037-Rb-85_3725.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_037-Rb-85_3725.dat",
+     "file_sha256": "f40c8989a12c7eae326eb097520d55c9701597887fe40e31281eea6fe76cfe44",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 25.579,
+     "za": 37085
+    },
+    {
+     "candidate_files": [
+      "n_037-Rb-87_3731.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_037-Rb-87_3731.dat",
+     "file_sha256": "2476fd6b910f8990d72596db992e5154e93e660d5cdecf29b6f017526493c9df",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 15.142,
+     "za": 37087
+    },
+    {
+     "candidate_files": [
+      "n_038-Sr-84_3825.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_038-Sr-84_3825.dat",
+     "file_sha256": "7012b697588f12159a8a6abebcaac4f2d7be9d2a61ef4474bee5dfef7aad7cb1",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 10.104,
+     "za": 38084
+    },
+    {
+     "candidate_files": [
+      "n_039-Y-88_3922.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_039-Y-88_3922.dat",
+     "file_sha256": "4c626679da30e457fdf32d926a94a7b7bb5b286be62f7d028fddf5204856dfd1",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 4.759,
+     "za": 39088
+    },
+    {
+     "candidate_files": [
+      "n_039-Y-89_3925.dat",
+      "n_039-Y-89M_3926.dat"
+     ],
+     "class": "ok",
+     "file": "n_039-Y-89_3925.dat",
+     "reused_g1": true,
+     "za": 39089
+    },
+    {
+     "candidate_files": [
+      "n_040-Zr-88_4019.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_040-Zr-88_4019.dat",
+     "file_sha256": "0f4ba227fc9e272ebcb2c8b7d18a156f8be78e1c4d8c28069f39b75637094c11",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 10.523,
+     "za": 40088
+    },
+    {
+     "candidate_files": [
+      "n_040-Zr-91_4028.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_040-Zr-91_4028.dat",
+     "file_sha256": "ed8d33a5f0fc8229c3a25c76905e885e8096aa9895f779b7c3537e02381b2a6f",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 12.555,
+     "za": 40091
+    },
+    {
+     "candidate_files": [
+      "n_040-Zr-92_4031.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_040-Zr-92_4031.dat",
+     "file_sha256": "70e5c859b4a7088f4e981bced704b7540d63404e60bca8a6c467cf2676257262",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 9.354,
+     "za": 40092
+    },
+    {
+     "candidate_files": [
+      "n_042-Mo-96_4237.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_042-Mo-96_4237.dat",
+     "file_sha256": "cce8e67bbe9e8421b5d62fdff15a0704f97363444c6cc96ed96dd115549424d4",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 11.42,
+     "za": 42096
+    },
+    {
+     "candidate_files": [
+      "n_042-Mo-97_4240.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_042-Mo-97_4240.dat",
+     "file_sha256": "9b26239e01e9d670e4539b38a42a142413444dfc5880e3743d739273c8f2adb5",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 9.802,
+     "za": 42097
+    },
+    {
+     "candidate_files": [
+      "n_045-Rh-103_4525.dat",
+      "n_045-Rh-103M_4526.dat"
+     ],
+     "class": "ok",
+     "file": "n_045-Rh-103_4525.dat",
+     "reused_g1": true,
+     "za": 45103
+    },
+    {
+     "candidate_files": [
+      "n_046-Pd-105_4634.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_046-Pd-105_4634.dat",
+     "file_sha256": "e85af62b976d84812ca02bcbeb8b204ae2dfc2345c369a243e804e6d4a9e4832",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 26.46,
+     "za": 46105
+    },
+    {
+     "candidate_files": [
+      "n_047-Ag-109_4731.dat",
+      "n_047-Ag-109M_4732.dat"
+     ],
+     "class": "ok",
+     "file": "n_047-Ag-109_4731.dat",
+     "reused_g1": true,
+     "za": 47109
+    },
+    {
+     "candidate_files": [
+      "n_048-Cd-114_4849.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_048-Cd-114_4849.dat",
+     "file_sha256": "468175321ae6ffd51a239343c9e72267e055250895600e73d9c252a1e2045140",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 14.727,
+     "za": 48114
+    },
+    {
+     "candidate_files": [
+      "n_048-Cd-116_4855.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_048-Cd-116_4855.dat",
+     "file_sha256": "a4adeb788a749b6f70fe1ca979fe45016b9b9e5e4f419fed3c23b0beb3062afe",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 11.094,
+     "za": 48116
+    },
+    {
+     "candidate_files": [
+      "n_049-In-113_4925.dat",
+      "n_049-In-113M_4926.dat"
+     ],
+     "class": "ok",
+     "file": "n_049-In-113_4925.dat",
+     "reused_g1": true,
+     "za": 49113
+    },
+    {
+     "candidate_files": [
+      "n_049-In-115_4931.dat",
+      "n_049-In-115M_4932.dat"
+     ],
+     "class": "ok",
+     "file": "n_049-In-115_4931.dat",
+     "reused_g1": true,
+     "za": 49115
+    },
+    {
+     "candidate_files": [
+      "n_050-Sn-114_5031.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_050-Sn-114_5031.dat",
+     "file_sha256": "96a2a7cb0e0870aeba96eb528e35c0e99cdebe690e20ab027ec6649a62098008",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 17.88,
+     "za": 50114
+    },
+    {
+     "candidate_files": [
+      "n_050-Sn-119_5046.dat",
+      "n_050-Sn-119M_5047.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_050-Sn-119_5046.dat",
+     "file_sha256": "fb44dfe1bcf449dcf6fde5fe89cfc61d777184311569f2ec5a553665cf9e8736",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 6.207,
+     "za": 50119
+    },
+    {
+     "candidate_files": [
+      "n_052-Te-128_5249.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_052-Te-128_5249.dat",
+     "file_sha256": "06d950412b1108d471cf4460e9860c037d2d3261257ee442f3cfa141f03bae70",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 8.489,
+     "za": 52128
+    },
+    {
+     "candidate_files": [
+      "n_060-Nd-142_6025.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_060-Nd-142_6025.dat",
+     "file_sha256": "dd0eef07dd14543ede41a012ad9166911be65001a77db24e9c01360d22f1eb57",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 12.411,
+     "za": 60142
+    },
+    {
+     "candidate_files": [
+      "n_060-Nd-144_6031.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_060-Nd-144_6031.dat",
+     "file_sha256": "d866ead6fb8283cd5382bd8cd93d2367b7ede35c26f0c1bbd4222d3e432ff767",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 9.174,
+     "za": 60144
+    },
+    {
+     "candidate_files": [
+      "n_063-Eu-151_6325.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_063-Eu-151_6325.dat",
+     "file_sha256": "f30ad385f7d0ebffc5a40ef5410e46ac47736d8432113d49a93613821e0ba4aa",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 12.952,
+     "za": 63151
+    },
+    {
+     "candidate_files": [
+      "n_067-Ho-165_6725.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_067-Ho-165_6725.dat",
+     "file_sha256": "f754e2b4db1abd4bccd65b374af8f1169f0d238dfeca96daccf1d3a372b5541b",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 27.171,
+     "za": 67165
+    },
+    {
+     "candidate_files": [
+      "n_071-Lu-175_7125.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_071-Lu-175_7125.dat",
+     "file_sha256": "d6032bf21ab6f5b2f63624c30be52b8a0f84c8da23c3cfce5647acb6b5226a66",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 57.781,
+     "za": 71175
+    },
+    {
+     "candidate_files": [
+      "n_074-W-180_7425.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_074-W-180_7425.dat",
+     "file_sha256": "02288cfb4e21f13f667ae1a6ae850096e53e4844ad1eeb2503f392df58e47ad8",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 7.725,
+     "za": 74180
+    },
+    {
+     "candidate_files": [
+      "n_075-Re-185_7525.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_075-Re-185_7525.dat",
+     "file_sha256": "4a50658777a06b7fb9ecdb2ab4e0b6ca44a81a8d43db66a4eb8efdedc414fb1e",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 84.374,
+     "za": 75185
+    },
+    {
+     "candidate_files": [
+      "n_076-Os-190_7643.dat",
+      "n_076-Os-190M_7644.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_076-Os-190_7643.dat",
+     "file_sha256": "a78e805fc1e7d5f6e6ce7909c675e5e826d6d0afe8b768fce5a1ce2ff138c12c",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 18.565,
+     "za": 76190
+    },
+    {
+     "candidate_files": [
+      "n_078-Pt-194_7837.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_078-Pt-194_7837.dat",
+     "file_sha256": "868190a6c9ab1a5fbe58610f72a4d839864f7ae378db45f47b2d5d3d60055f1f",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 7.314,
+     "za": 78194
+    },
+    {
+     "candidate_files": [
+      "n_078-Pt-198_7849.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_078-Pt-198_7849.dat",
+     "file_sha256": "0665ff69978c3c7c6f9b6821f0c58b35bbd418c363937f2863ba24e893b48060",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 17.644,
+     "za": 78198
+    },
+    {
+     "candidate_files": [
+      "n_079-Au-197_7925.dat",
+      "n_079-Au-197M_7926.dat"
+     ],
+     "class": "ok",
+     "file": "n_079-Au-197_7925.dat",
+     "reused_g1": true,
+     "za": 79197
+    },
+    {
+     "candidate_files": [
+      "n_080-Hg-198_8031.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_080-Hg-198_8031.dat",
+     "file_sha256": "6a97b2ce10a6b751432613a8805dd120081f08caf1d8b39671209e1588c198c2",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 5.469,
+     "za": 80198
+    },
+    {
+     "candidate_files": [
+      "n_080-Hg-200_8037.dat"
+     ],
+     "class": "ok",
+     "exit": 0,
+     "file": "n_080-Hg-200_8037.dat",
+     "file_sha256": "261340b9c0bb4fede46c21c7d4aec675d3f4d509d7cc87b1c11e6226af238866",
+     "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/one_index.json",
+     "seconds": 9.088,
+     "za": 80200
+    }
+   ],
+   "heldout_artifact": {
+    "build_exit": 0,
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25b-g4-isomer/heldout_tendl_2023_index.json",
+    "npz_sha256": "9c0ec108a14131c8a2d0cb447dc84bb2e99900c3eb3776ace7b6301bc69e6507",
+    "seconds": 469.148,
+    "staged_files": 37
+   },
+   "heldout_score": {
+    "baseline_metrics": {
+     "rows": 0
+    },
+    "candidate_metrics": {
+     "rows": 0
+    },
+    "candidate_status_histogram": {
+     "build_failed_g3": 469,
+     "library_absent": 1390,
+     "unevaluated": 86
+    },
+    "comparable_rows": 0,
+    "eligible_rows": 1859,
+    "nonregression": {
+     "coverage_ok": null,
+     "median_ok": null,
+     "p90_ok": null
+    },
+    "overall": {
+     "baseline": {
+      "geomean_cm": 1.1650835219642883,
+      "max_abs_ln": 7.047286698657881,
+      "median_abs_ln": 0.21670578696281273,
+      "p90_abs_ln": 1.2493010867264902,
+      "rows": 1286,
+      "within_10pct": 0.24183514774494558,
+      "within_20pct": 0.4712286158631415,
+      "within_30pct": 0.609642301710731
+     },
+     "candidate": {
+      "geomean_cm": NaN,
+      "max_abs_ln": NaN,
+      "median_abs_ln": NaN,
+      "p90_abs_ln": NaN,
+      "rows": 0,
+      "within_10pct": NaN,
+      "within_20pct": NaN,
+      "within_30pct": NaN
+     },
+     "eligible_rows": 1859
+    },
+    "paired_bootstrap": {
+     "families": 0,
+     "median_abs_ln_change": {
+      "mean": NaN,
+      "p05": NaN,
+      "p95": NaN
+     },
+     "p90_abs_ln_change": {
+      "mean": NaN,
+      "p05": NaN,
+      "p95": NaN
+     },
+     "replicates": 10000
+    },
+    "paired_row_count": 0,
+    "scored_row_ids": []
+   },
+   "surviving_targets": 37
+  }
+ },
+ "g1_census_sha256": "346fc54ddbe606d24d0acca1663e2039a376bcb95732faaa6592fa91ccc7a64b",
+ "g4_rebind_sha256": "82622d5afc3ec8624a62cdaf0d8b20d4075681d1aef7123385c78e79254043c5",
+ "isomeric_row_count": 493,
+ "isomeric_target_count": 37,
+ "retrospective": true,
+ "schema": "actinv-p25b-g4-isomer-1"
+}
