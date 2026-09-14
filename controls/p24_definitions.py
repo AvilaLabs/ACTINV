@@ -104,6 +104,38 @@ def eoi_spectral_index_pulse(
     return float(activity_ratio) * lam_m / lam_a
 
 
+def eoi_spectral_index_finite(
+    activity_ratio: float,
+    product_half_life_s: float | None,
+    monitor_half_life_s: float,
+    irradiation_s: float,
+    *,
+    is_fission: bool = False,
+) -> float:
+    """EOI spectral index for a finite uniform-power irradiation.
+
+    With activity at EOI ``A = R * (1 - exp(-lambda t))`` the spectral
+    index ``R_product / R_monitor`` is
+    ``ratio * sat_m(t) / sat_product(t)`` for a radioactive product and
+    ``ratio * sat_m(t) / t`` for a fission-counted numerator (counts
+    accumulate linearly).  Applied only where the source's operation
+    record states a finite duration — the consumed-partition evidence
+    shows the publication's renormalized convention is the pulse limit,
+    so the finite branch is used only for rows whose operation record
+    explicitly gives a non-pulse history.
+    """
+    lam_m = math.log(2.0) / float(monitor_half_life_s)
+    t = float(irradiation_s)
+    sat_m = -math.expm1(-lam_m * t)
+    if is_fission:
+        return float(activity_ratio) * sat_m / t
+    if product_half_life_s is None or float(product_half_life_s) <= 0.0:
+        raise ValueError("finite-history EOI requires a positive product half-life")
+    lam_a = math.log(2.0) / float(product_half_life_s)
+    sat_a = -math.expm1(-lam_a * t)
+    return float(activity_ratio) * sat_m / sat_a
+
+
 # ---------------------------------------------------------------------------
 # D2 -- evaluated-state alias grammar
 # ---------------------------------------------------------------------------

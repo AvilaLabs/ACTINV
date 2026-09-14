@@ -8280,7 +8280,7 @@
  "fresh_partition_values_read": false,
  "frozen_definition_module": {
   "path": "controls/p24_definitions.py",
-  "sha256": "d140fe6fbffdfe864aed63dff74e440f385b5be1d4fe44df144e05b5934a5aa3"
+  "sha256": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624"
  },
  "gate": "G1",
  "phase": "P24",
