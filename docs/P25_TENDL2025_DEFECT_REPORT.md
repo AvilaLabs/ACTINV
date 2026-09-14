@@ -344,3 +344,16 @@ Two points matter beyond the count:
    zero-total MT4 with ~0.1 b partials respectively) and La-139 as a grid-density artifact. The
    candidate inconsistency classes therefore extend beyond the originally censused files; the totals above should not
    be read as a complete corpus-wide defect count.
+
+## Upstream response
+
+2026-09-14 — A. Koning (TENDL maintainer, private correspondence) confirmed the defect class and
+identified a root cause consistent with the census evidence: a TALYS work array in
+`channelsout.f90` was not flushed between channels, so the thermal `(n,p)` cross section (MF=3
+MT=103) was written into the ground-state `(n,2n)` production records — matching the observed
+barn-scale sub-threshold partials and zero-total-with-partials contradictions. The maintainer
+states the defect is fixed in TALYS and is expected to be corrected in the next TENDL release. As an
+interim manual action the maintainer suggests zeroing the contaminated leading energy points of
+the affected sections; any such repaired file set is a distinct evaluation identity and would
+require its own qualification run (the protocol evidence model does not allow a repaired variant
+to inherit this report's or P25's partitions).
