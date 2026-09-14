@@ -104,3 +104,74 @@ failure mode.
 **ACTINV:** the TENDL-2025 neutron corpus was scanned before fixing the bound. Co-58 MT=102 was the unique maximum at
 pass index 19, so the cap is 20 while the `2e-4` midpoint tolerance and ten-million-point memory bound remain
 unchanged. A source-independent depth-19 regression and the hash-pinned Co-58 control prevent either bound drifting.
+
+## 10. Charged-particle MT=4 is a transmutation channel, not same-nuclide inelastic
+
+In neutron evaluations MT=4 is (n,n′) on the same nuclide — all 1,081 TENDL-2025 neutron files with an MF=8
+MT=4 section declare the target's own ZAP. In charged-particle evaluations the same MT=4 carries *neutron
+emission*: every one of the 2,156 TENDL-2025 proton, deuteron and alpha files with the section declares a
+different-residual ZAP (712 alpha, 757 deuteron, 687 proton). `181Ta(α,n)184Re` lists its Re-184 states under
+MT=4. A pipeline that applies the neutron convention — residual = target — credits the channel's production to
+the wrong nuclide. The failure is silent: totals still look plausible, and the measured product (Re-184) simply
+scores zero.
+
+**ACTINV:** the builder dispatches on the declared product ZAP per projectile — charged-particle inelastic emits
+the residual's states and a channel-total loss row; rebuilt artifacts declare `emission_model` so the scorer can
+tell the two models apart. Corpus-wide adjudication is hash-pinned in `results/g2_p25_traces.json`
+(`inelastic_adjudication`).
+
+## 11. The 10⁻²⁰-barn floor convention fakes conservation violations
+
+TENDL prints `1e-20` barn as an effectively-zero floor for both MF=3 totals and MF=10 state partials. A file can
+declare two co-equal `1e-20` states under a `1e-20` total — a 100% relative excess with zero physical weight
+(`d-Ag104m`). A conservation audit that compares emitted sums to declared totals in purely relative terms reads
+this as a violation. 395 of the 397 P18b-quarantined evaluations carry a floor-kind excess; 227 fail *only* on
+it — the dominant quarantine cause was a printing convention, not broken physics.
+
+**ACTINV:** emitted-sum excesses below the absolute floor bound (`1e-15` b) are accepted without scaling and
+ledgered `floor_reconciled`; anything above it is evaluated on mechanism.
+
+## 12. Emitted partials can contradict the declared total — genuinely
+
+Beyond conventions, TENDL-2025 contains declared-value contradictions no downstream repair can absorb. In the
+quarantined population: 50 evaluations exceed the MF=3 total *at declared product gridpoints* (`d-Y089` MT=104,
+relative excess 1.2×10⁵; `n-Fe053m` carries a stray ~10⁵ b ordinate), and 45 declare a zero or near-zero total
+alongside partials carrying group-level barns (`d-Y091m`: states 1.1×10⁻¹¹ b vs total 4.7×10⁻¹⁷ b). A further
+25 neutron files looked like grid-density interpolation artifacts, but their worst excesses run 0.11×–18.6× the
+total — every one beyond the 0.03 proven-mechanism envelope, so zero were reconcilable.
+
+**ACTINV:** the exact-decimal oracle classifies each file per (MT, ZAP) into floor / interpolation-artifact /
+missing-total / genuine classes; genuine-source files fail closed and their residual defects are carried in the
+emitted index as audit-ledgered source diagnostics, never silently reconciled. Classification is hash-pinned in
+`results/g1_p25_census.json` and `results/g2_p25_traces.json`.
+
+## 13. MT=18 fission partials ship without an MF=3 total
+
+50 quarantined evaluations (7 alpha, 17 deuteron, 9 neutron, 17 proton) carry MF=10 fission partials under MT=18
+with no MF=3/MT=18 total section — a conservation audit expecting the comparator finds nothing. The permitted
+comparator is the `IZAP=-1` total-fission sentinel where present, else partial-sum self-consistency.
+
+**ACTINV:** the builder resolves the comparator from the sentinel and ledgers `sentinel supplies the permitted
+runtime comparator` (79 evaluations) or `missing_total_self_comparator`; a file with neither fails closed.
+
+## 14. MF=8 declares a product state twice — ELFS and QM−QI can disagree
+
+MF=8 identifies an emitted state by both `ELFS` (the evaluated excitation energy) and `QM`−`QI` (the excitation
+implied by the evaluation's level-scheme bookkeeping). The two declarations can conflict: 14 evaluations in the
+P25 corpora carry a bounded ELFS-vs-QM−QI disagreement beyond rounding tolerance. Picking either silently
+relocates the state.
+
+**ACTINV:** within a 1 keV bound the evaluated ELFS is authoritative and the resolution is ledgered
+`elfs_qm_qi_conflict_resolved`; a larger conflict fails closed as a state-identity defect.
+
+## 15. Quarantining a metastable-target evaluation silently breaks downstream families
+
+The isomeric-state catalog is populated from each evaluation's own MF=1 header — including *metastable-target*
+evaluations such as `n-Ge075m.tendl`. When such a file fails construction, every family needing its declared
+states loses catalog identity: the product is emitted (ZAP and excitation present) but no catalog state matches,
+so otherwise-healthy evaluations score `build_failed`. In P25, 35 quarantined metastable-target evaluations
+cascaded into 38 staged-built families holding 434 ledger rows — secondary casualties of another file's defect.
+
+**ACTINV:** the census maps each staged-built family to the catalog-supplier file it needs
+(`catalog_cascade` in `results/g2_p25_traces.json`), so cascade losses are named rather than lumped with
+construction failures of the family's own file.
