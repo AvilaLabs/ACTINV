@@ -1,0 +1,10 @@
+{
+ "failures": [],
+ "files_live_reclassified": 81,
+ "mutation_self_test": {
+  "planted": 6,
+  "rejected": 6
+ },
+ "pass": true,
+ "schema": "actinv-p25c-g1-check-1"
+}
