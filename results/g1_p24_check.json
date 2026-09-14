@@ -1,0 +1,16 @@
+{
+ "failures": [],
+ "independent_reconstruction": {
+  "rows_reconstructed": 73,
+  "rows_within_printed_uncertainty": 72,
+  "worst_residual": 0.035814795834574614,
+  "worst_row": "p17-h1-t23-r027-Al27p-Cd"
+ },
+ "mutation_self_test": {
+  "planted": 5,
+  "rejected": 5
+ },
+ "pass": true,
+ "protocol_sha256": "ee703d208b43c3dc91fef41a259d748d343865e130f37266128685cf21001ef7",
+ "schema": "actinv-p24-g1-check-1"
+}
