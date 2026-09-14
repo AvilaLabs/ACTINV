@@ -50,8 +50,8 @@ def check_record(record: dict, live_scorer_hash: str | None = None) -> list[str]
         local.append("audit record pass is false")
     if not all(c.get("pass") for c in record.get("static_checks", [])):
         local.append("a static check failed")
-    if len(record.get("fixtures", [])) != 16:
-        local.append("fixture count is not the frozen 16")
+    if len(record.get("fixtures", [])) != 19:
+        local.append("fixture count is not the frozen 19")
     if not all(f.get("pass") for f in record.get("fixtures", [])):
         local.append("a fixture failed")
     mt = record.get("mutation_tests", {})

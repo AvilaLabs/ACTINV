@@ -73,6 +73,11 @@
    "pass": true
   },
   {
+   "fixture": "monitor_row_not_predictive",
+   "observed": "monitor_identity_not_predictive",
+   "pass": true
+  },
+  {
    "fixture": "internal_consistency_detects_forged_ce",
    "pass": true
   },
@@ -101,11 +106,27 @@
    "fixture": "unresolved_monitor_ledgered",
    "observed": "undefined_monitor",
    "pass": true
+  },
+  {
+   "fixture": "cover_precedes_binding",
+   "observed": {
+    "bare": "unmapped_target_reaction_product",
+    "covered": "unsupported_self_shielding"
+   },
+   "pass": true
+  },
+  {
+   "fixture": "composite_foil_binds",
+   "observed": {
+    "components": 4,
+    "kind": "composite_fission_foil"
+   },
+   "pass": true
   }
  ],
  "freeze": {
   "definitions_sha256": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
-  "scorer_sha256": "518eb83e54b7ff671350ded26953759ea9a4ed928294c6d57403337bea9dd4e7",
+  "scorer_sha256": "64e8a844c041aab722c333428f745e07ac0495f69df52d4b9bc3b329e19083b9",
   "statement": "after this gate the scoring code is frozen; a post-audit change requires an amendment"
  },
  "gate": "G2",
@@ -116,7 +137,7 @@
   "controls/p17_irdff.py": "3560feaab45ebd73cd51b599a01f68a47ccd00e6f2e30fd972bcaea95320f11f",
   "controls/p17_scoring.py": "ba31fbcb583894d8328b3bc7cf9a8bb531ad3b13675e5c91f2146a0ea54800a4",
   "controls/p24_definitions.py": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
-  "controls/p24_scorer.py": "518eb83e54b7ff671350ded26953759ea9a4ed928294c6d57403337bea9dd4e7"
+  "controls/p24_scorer.py": "64e8a844c041aab722c333428f745e07ac0495f69df52d4b9bc3b329e19083b9"
  },
  "mutation_tests": {
   "details": [

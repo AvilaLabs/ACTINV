@@ -181,8 +181,22 @@ def fixture_results() -> list[dict]:
         "observed": {"finite": finite, "pulse": pulse},
     })
 
-    # 12. monitor-dependency: monitor row itself not predictive
-    # (monitor identity is context, not a scored row)
+    # 12. monitor row itself is ledgered monitor_identity_not_predictive;
+    # a non-monitor row is unaffected
+    mon_row = {"label": "Ni58p-bare", "reaction_label": "Ni58p",
+               "measured_EOI_per_atom": 5e-19}
+    other_row = {"label": "Al27p-bare", "reaction_label": "Al27p",
+                 "measured_EOI_per_atom": 1e-19}
+    results.append({
+        "fixture": "monitor_row_not_predictive",
+        "pass": (
+            p24_scorer.monitor_self_reason(mon_row, mon_row, "eoi_si")
+            == "monitor_identity_not_predictive"
+            and p24_scorer.monitor_self_reason(other_row, mon_row, "eoi_si") is None
+            and p24_scorer.monitor_self_reason(mon_row, mon_row, "si_direct") is None
+        ),
+        "observed": p24_scorer.monitor_self_reason(mon_row, mon_row, "eoi_si"),
+    })
 
     # 13. internal consistency failure on forged CE
     bad = {"measured_si": 1.0, "published_calculated_si": 2.0, "published_C_over_E": 9.9}
@@ -225,6 +239,29 @@ def fixture_results() -> list[dict]:
     results.append({
         "fixture": "unresolved_monitor_ledgered",
         "pass": r == "undefined_monitor", "observed": r,
+    })
+
+    # 17. covered row with an unbindable label still ledgers the cover
+    # outcome (cover precedes binding)
+    incl = p24_scorer.inclusion_predicate(
+        {"cover": "Cd"}, spec_si, None)
+    incl_bare = p24_scorer.inclusion_predicate(
+        {"cover": "bare"}, spec_si, None)
+    results.append({
+        "fixture": "cover_precedes_binding",
+        "pass": incl == "unsupported_self_shielding"
+        and incl_bare == "unmapped_target_reaction_product",
+        "observed": {"covered": incl, "bare": incl_bare},
+    })
+
+    # 18. composite fission foil binds through the frozen foil table
+    cb = p24_scorer.row_binding("rmleu", ctx["alias_index"])
+    results.append({
+        "fixture": "composite_foil_binds",
+        "pass": cb.get("kind") == "composite_fission_foil"
+        and len(cb.get("components", [])) == 4
+        and cb.get("is_fission") is True,
+        "observed": {"kind": cb.get("kind"), "components": len(cb.get("components", []))},
     })
 
     return results

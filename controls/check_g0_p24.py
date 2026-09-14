@@ -153,11 +153,25 @@ PRE_UNSEAL_ALLOWED_RESULTS = {
     "results/g0_p24_candidate_build.json",
     "results/g0_p24_seals.json",
     "results/g0_p24_check.json",
+    "results/g1_p24_definitions.json",
+    "results/g1_p24_check.json",
+    "results/g2_p24_scorer_audit.json",
+    "results/g2_p24_check.json",
+    "results/g3_p24_diagnostic.json",
+    "results/g3_p24_check.json",
 }
 PRE_UNSEAL_ALLOWED_CONTROLS = {
     "controls/g0_p24_candidate_build.py",
     "controls/g0_p24_seal.py",
     "controls/check_g0_p24.py",
+    "controls/p24_definitions.py",
+    "controls/g1_p24_definitions.py",
+    "controls/check_g1_p24.py",
+    "controls/p24_scorer.py",
+    "controls/g2_p24_scorer_audit.py",
+    "controls/check_g2_p24.py",
+    "controls/g3_p24_diagnostic.py",
+    "controls/check_g3_p24.py",
 }
 TABLE_MAP_PATTERN = re.compile(
     r"(?:TABLE_PAGES|EXPECTED_ROWS|TABLE_SPECTRUM_MAT|FIELD_SPECTRUM_MAT)"
@@ -191,7 +205,8 @@ def is_hex64(value: object) -> bool:
 
 
 def endf_float(field: str) -> float:
-    return float(re.sub(r"([+-])(\d+)$", r"e\1\2", field.strip()))
+    # ENDF-6 exponents may be space-padded inside the field ("2.50550+ 4")
+    return float(re.sub(r"([+-])\s*(\d+)$", r"e\1\2", field.strip()))
 
 
 def irdff_isotopic_targets() -> set[int]:

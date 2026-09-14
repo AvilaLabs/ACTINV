@@ -422,6 +422,12 @@ def inclusion_predicate(row: dict, spec: dict, binding: dict | None) -> str:
     """The frozen inclusion predicate, evaluated before any folding."""
     if spec["kind"] == "be_production":
         return "non_neutron_incident_particle"
+    from p24_definitions import cover_outcome, RESONANCE_STRUCTURED_MT
+    # cover is the outermost physical gate: a covered row is unsupported
+    # regardless of whether its label could be bound
+    reason = cover_outcome(row.get("cover", "bare"))
+    if reason is not None:
+        return reason
     if spec["kind"] in {"sigma0", "resonance_integral"}:
         # element-aggregate observables are outside the isotopic scope
         # unless the row prints an explicit reaction label
@@ -432,11 +438,6 @@ def inclusion_predicate(row: dict, spec: dict, binding: dict | None) -> str:
         return "unmapped_target_reaction_product"
     if binding.get("unbound"):
         return "undefined_state_alias"
-    from p24_definitions import cover_outcome, RESONANCE_STRUCTURED_MT
-    cover = row.get("cover", "bare")
-    reason = cover_outcome(cover)
-    if reason is not None:
-        return reason
     if spec["kind"] in {"si_direct", "sacs_or_si", "eoi_si"}:
         # dilute validity precedes monitor resolution: physical support
         # is the more fundamental predicate
@@ -515,6 +516,14 @@ def find_monitor_row(rows: list[dict]) -> dict | None:
     return None
 
 
+def monitor_self_reason(row: dict, monitor_row: dict | None, kind: str) -> str | None:
+    """The monitor row's own ratio is 1.0 by construction — it carries no
+    predictive information and is ledgered, never scored."""
+    if kind == "eoi_si" and monitor_row is not None and row is monitor_row:
+        return "monitor_identity_not_predictive"
+    return None
+
+
 def internal_consistency(row: dict) -> bool:
     """Where a table prints measured, calculated and C/E together, the
     printed C/E must equal calc/meas within the printed rounding."""
@@ -551,7 +560,8 @@ def score_fresh_partition(definitions_record: dict, *, context) -> dict:
                 binding = row_binding(reaction, alias_index)
             except ValueError:
                 pass
-            reason = inclusion_predicate(row, spec, binding)
+            reason = monitor_self_reason(row, monitor_row, spec["kind"]) \
+                or inclusion_predicate(row, spec, binding)
             if not internal_consistency(row):
                 reason = "internal_consistency_failure"
             exp, exp_reason = experimental_value(row, spec, binding or {}, monitor_row, decay_by_id)

@@ -1,0 +1,54 @@
+{
+ "failures": [],
+ "independent_rescore": {
+  "candidate_unavailable_monitor_targets": [
+   28058
+  ],
+  "candidate_unavailable_numerator_targets": [
+   21045,
+   22047,
+   28058,
+   29063,
+   41093,
+   47109,
+   49113,
+   57139,
+   73181,
+   79197
+  ],
+  "construction_failed_targets": [
+   21045,
+   22047,
+   28058,
+   29063,
+   41093,
+   42092,
+   47109,
+   49113,
+   53127,
+   57139,
+   59141,
+   69169,
+   73181,
+   79197,
+   80199,
+   83209,
+   93237
+  ],
+  "maxwellian_rows_reparsed": 21,
+  "reason_mismatches": 0,
+  "si_rows_reparsed": 73,
+  "si_rows_scored": 20,
+  "worst_pulse_residual": {
+   "residual": 0.002823041459231961,
+   "row": "IRDFF-II:Table-25:row-028"
+  }
+ },
+ "mutation_self_test": {
+  "planted": 5,
+  "rejected": 5
+ },
+ "pass": true,
+ "protocol_sha256": "ee703d208b43c3dc91fef41a259d748d343865e130f37266128685cf21001ef7",
+ "schema": "actinv-p24-g3-check-1"
+}

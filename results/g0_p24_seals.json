@@ -6,16 +6,16 @@
   "baseline_matches_v101": true,
   "baseline_npz_sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
   "candidate_build_record_pass": true,
-  "candidate_build_record_sha256": "bf14fbc17938a69c976cd7a6afddae8acd7895b8a288815aaf4422d96e13e20b",
+  "candidate_build_record_sha256": "151791d0462ce621f9ff02414aa8d429c24a2eb07238e901866aa6651071cc94",
   "candidate_counts": {
-   "built": 31,
-   "construction_failed": 16,
+   "built": 32,
+   "construction_failed": 17,
    "elemental_targets": 14,
-   "isotopic_targets": 47,
-   "staged": 31
+   "isotopic_targets": 49,
+   "staged": 32
   },
-  "candidate_index_sha256": "dc541a59b406c323f02518d8d5479ebbad74aaacb6a3bed0650d5b4232514d6f",
-  "candidate_npz_sha256": "747dbbff26eb44d3ec78ec8f9badc54b14d5352c20d8cf3c53721c01aef0e5de",
+  "candidate_index_sha256": "74e68d9164cd2675b24692e7fd3d93726218bcb5a58f1e2a23953161641b6920",
+  "candidate_npz_sha256": "e569d14ba17305456c4a55295a327e4bc485fa18f04655fc9745f32da59cbfbf",
   "pass": true
  },
  "irdff": {

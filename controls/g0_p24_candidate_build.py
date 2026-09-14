@@ -76,7 +76,9 @@ def sha256(path: Path) -> str:
 
 
 def endf_float(field: str) -> float:
-    return float(re.sub(r"([+-])(\d+)$", r"e\1\2", field.strip()))
+    # ENDF-6 exponents may be space-padded inside the field ("2.50550+ 4");
+    # the repair must allow whitespace between the sign and the digits.
+    return float(re.sub(r"([+-])\s*(\d+)$", r"e\1\2", field.strip()))
 
 
 def irdff_targets() -> dict[str, object]:
