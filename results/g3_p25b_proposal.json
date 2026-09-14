@@ -1,0 +1,93 @@
+{
+ "g1_census_sha256": "346fc54ddbe606d24d0acca1663e2039a376bcb95732faaa6592fa91ccc7a64b",
+ "g2_traces_sha256": "dca38f361439ab56876f2a87506bd20aeca63218bbb618f1783fc7641371f3a5",
+ "non_repair_classes": {
+  "builder_capability": "mf6_law_-5 fission law is feature work, not a bounded repair; rows stay construction_failed:capability",
+  "builder_interp": "log-log interpolation on non-positive values is a builder limitation; the file's data carries no oracle defect (floor artifact only)",
+  "format_misdetect_marker": "files are outside the eligible population; recorded format_unsupported permanently",
+  "genuine_source_inconsistency": "data defects are never repaired mid-phase",
+  "product_state_conflict": "MF=8/MF=9 conflict is a source-data inconsistency; no data repair is permitted",
+  "unclassified_build_failure": "no demonstrated mechanism to repair"
+ },
+ "proposals": {
+  "eaf_2010": {
+   "coverage_floor": 47,
+   "non_repaired": [],
+   "pre_repair_ok": 47,
+   "projected_post_repair_ok": 47,
+   "repairable_rows": [],
+   "target_count": 47
+  },
+  "fendl_32c": {
+   "coverage_floor": 34,
+   "non_repaired": [
+    {
+     "adjudication": "product_state_conflict:mf8_mf9:no_excess_found",
+     "non_repair_reason": "MF=8/MF=9 conflict is a source-data inconsistency; no data repair is permitted",
+     "target": "Al-27"
+    },
+    {
+     "adjudication": "builder_interp:floor_artifact_only",
+     "non_repair_reason": "log-log interpolation on non-positive values is a builder limitation; the file's data carries no oracle defect (floor artifact only)",
+     "target": "La-139"
+    }
+   ],
+   "pre_repair_ok": 34,
+   "projected_post_repair_ok": 37,
+   "repairable_rows": [
+    "Th-232",
+    "U-235",
+    "U-238"
+   ],
+   "target_count": 47
+  },
+  "tendl_2023": {
+   "coverage_floor": 41,
+   "non_repaired": [
+    {
+     "adjudication": "builder_capability:mf6_law_-5:oracle_error",
+     "non_repair_reason": "mf6_law_-5 fission law is feature work, not a bounded repair; rows stay construction_failed:capability",
+     "target": "U-235"
+    },
+    {
+     "adjudication": "builder_capability:mf6_law_-5:oracle_error",
+     "non_repair_reason": "mf6_law_-5 fission law is feature work, not a bounded repair; rows stay construction_failed:capability",
+     "target": "U-238"
+    },
+    {
+     "adjudication": "builder_capability:mf6_law_-5:no_excess_found",
+     "non_repair_reason": "mf6_law_-5 fission law is feature work, not a bounded repair; rows stay construction_failed:capability",
+     "target": "Pu-239"
+    }
+   ],
+   "pre_repair_ok": 41,
+   "projected_post_repair_ok": 44,
+   "repairable_rows": [
+    "Ta-181",
+    "Th-232",
+    "Np-237"
+   ],
+   "target_count": 47
+  }
+ },
+ "repair_classes": {
+  "R3_bound_revision": {
+   "rows": {
+    "eaf_2010": [],
+    "fendl_32c": [
+     "Th-232",
+     "U-235",
+     "U-238"
+    ],
+    "tendl_2023": [
+     "Ta-181",
+     "Th-232",
+     "Np-237"
+    ]
+   },
+   "scope": "re-run the six bound_limited_timeout rows at 600 s; no code, data or definition change"
+  }
+ },
+ "revised_bound_s": 600.0,
+ "schema": "actinv-p25b-g3-proposal-1"
+}
