@@ -1,0 +1,341 @@
+{
+ "candidates": [
+  {
+   "citations": [
+    {
+     "anchor": "FNG/ITER activation comparison",
+     "class": "executed_evidence",
+     "file": "docs/history/sessions/P12.md",
+     "lines": [
+      53,
+      56
+     ]
+    },
+    {
+     "anchor": "132 FNS experiments",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_BENCHMARK.md",
+     "lines": [
+      17,
+      20
+     ]
+    },
+    {
+     "anchor": "impurity-sensitive material comparison",
+     "class": "documented_record",
+     "file": "docs/ROADMAP.md",
+     "lines": [
+      148,
+      153
+     ]
+    },
+    {
+     "anchor": "impurity-sensitive alloys",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      82,
+      86
+     ]
+    }
+   ],
+   "definition": "Compare candidate materials (including low-impurity variants) under a specified neutron spectrum and irradiation/cooling schedule; report activity, decay heat and photon production at selected cooling times; identify the nuclides and pathways that control the conclusion; test whether the conclusion survives declared composition and nuclear-data choices; package the result for independent reproduction.",
+   "disposition": "flagship",
+   "executed_citations": 1,
+   "id": "W-MATCMP",
+   "rank": 2,
+   "rationale": "The maintainer's recorded proposal designates this workload as the flagship, and its executed-evidence base is a completed fusion-material activation comparison (P12's scoped FNG/ITER work) plus the executed 132-experiment FNS benchmark \u2014 the domain in which consequential material-comparison decisions are already documented.",
+   "score": 5,
+   "title": "Impurity-sensitive material comparison under a specified spectrum and history"
+  },
+  {
+   "citations": [
+    {
+     "anchor": "distinct_spectra",
+     "class": "executed_evidence",
+     "file": "results/g3_p21_executed.json",
+     "lines": [
+      13,
+      16
+     ]
+    },
+    {
+     "anchor": "1,000 material/history variants",
+     "class": "documented_record",
+     "file": "docs/ROADMAP.md",
+     "lines": [
+      282,
+      284
+     ]
+    },
+    {
+     "anchor": "repeated material/history variants",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      83,
+      85
+     ]
+    },
+    {
+     "anchor": "Sampler",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      37,
+      37
+     ]
+    }
+   ],
+   "definition": "Execute a bounded campaign of material-composition and irradiation-history variants over a common spectrum family, with per-variant ledgers and aggregated responses; the draft's candidate scale is 1,000 variants, against an executed 20,000 distinct-spectrum precedent at mesh scale.",
+   "disposition": "selected_second_campaign",
+   "executed_citations": 1,
+   "id": "W-CAMPAIGN",
+   "rank": 1,
+   "rationale": "The recorded proposal calls for two campaign workloads beside the spatial handoff, and P21's executed 20,000-cell run is direct project history that many-variant execution is a real workload class. It is the flagship's variant axis generalized into a campaign; it is not itself the flagship because its recorded evidence is an execution capability, not a consequential decision.",
+   "score": 5,
+   "title": "Repeated material/history variant campaign"
+  },
+  {
+   "citations": [
+    {
+     "anchor": "Open, reproducible activation and R2S",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_BENCHMARK.md",
+     "lines": [
+      250,
+      255
+     ]
+    },
+    {
+     "anchor": "distributed transport source",
+     "class": "documented_record",
+     "file": "docs/QUALIFICATION.md",
+     "lines": [
+      60,
+      62
+     ]
+    },
+    {
+     "anchor": "flux-to-photon handoff",
+     "class": "documented_record",
+     "file": "docs/ROADMAP.md",
+     "lines": [
+      152,
+      153
+     ]
+    },
+    {
+     "anchor": "R2S path",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      140,
+      141
+     ]
+    },
+    {
+     "anchor": "R2SManager",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      40,
+      40
+     ]
+    }
+   ],
+   "definition": "Take a spatially distributed neutron flux from an external transport code, produce per-cell inventories and a distributed decay-photon source, and hand that source back for photon transport \u2014 the open R2S workflow where ACTINV's reproducible, inspectable position is recorded as strongest.",
+   "disposition": "selected_spatial_handoff",
+   "executed_citations": 0,
+   "id": "W-R2S",
+   "rank": 3,
+   "rationale": "The recorded proposal designates one spatial handoff beside the two campaign workloads; the benchmark record identifies open reproducible R2S as ACTINV's strongest position, and QUALIFICATION records the concrete gap (users must construct the distributed source). It is distinct in kind from the campaign workloads and is the natural second workload for the draft's 3x headroom leg.",
+   "score": 5,
+   "title": "Spatial neutron-flux to decay-photon-source handoff"
+  },
+  {
+   "citations": [
+    {
+     "anchor": "shutdown source terms",
+     "class": "documented_record",
+     "file": "docs/ROADMAP.md",
+     "lines": [
+      155,
+      156
+     ]
+    },
+    {
+     "anchor": "shutdown inventory",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_BENCHMARK.md",
+     "lines": [
+      16,
+      16
+     ]
+    },
+    {
+     "anchor": "clearance",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      41,
+      41
+     ]
+    }
+   ],
+   "definition": "Produce post-shutdown activity, decay heat and photon source terms at required cooling times for safety and waste classification questions.",
+   "disposition": "rejected",
+   "executed_citations": 0,
+   "id": "W-SDTR",
+   "rank": 5,
+   "rationale": "Subsumed: the flagship's recorded definition already carries activity, decay heat and photon production at selected cooling times. Its distinct remainder \u2014 waste clearance classification \u2014 rests on a documented competitor capability, not on recorded demand evidence for ACTINV.",
+   "score": 3,
+   "title": "Shutdown source term and decay heat at cooling times"
+  },
+  {
+   "citations": [
+    {
+     "anchor": "bound_reaction_labels",
+     "class": "executed_evidence",
+     "file": "results/g4_p24_fresh.json",
+     "lines": [
+      1,
+      40
+     ]
+    },
+    {
+     "anchor": "held-out",
+     "class": "documented_record",
+     "file": "docs/P17_HELDOUT_VALIDATION.md",
+     "lines": [
+      1,
+      30
+     ]
+    }
+   ],
+   "definition": "Fold activation cross sections over measured or simulated fields for dosimetry and spectrum-characterization observables (SACS, spectral indices, cover-ratio rates).",
+   "disposition": "rejected",
+   "executed_citations": 1,
+   "id": "W-DOSIMETRY",
+   "rank": 4,
+   "rationale": "The recorded evidence is a validation corpus, not an analyst-decision workload: the IRDFF-II partitions are fully consumed, so no unspent blind measurement population exists to qualify a dosimetry claim. Folding itself is already exercised inside the selected workloads' evidence path.",
+   "score": 3,
+   "title": "Activation dosimetry and spectrum-index folding"
+  },
+  {
+   "citations": [
+    {
+     "anchor": "self_shielding",
+     "class": "documented_record",
+     "file": "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md",
+     "lines": [
+      69,
+      69
+     ]
+    },
+    {
+     "anchor": "uncertainty",
+     "class": "documented_record",
+     "file": "protocols/ACTINV-P20_PROTOCOL.md",
+     "lines": [
+      9,
+      11
+     ]
+    }
+   ],
+   "definition": "Propagate declared nuclear-data and input uncertainties through activation responses, including regimes where self-shielding is required.",
+   "disposition": "rejected",
+   "executed_citations": 0,
+   "id": "W-UNC",
+   "rank": 6,
+   "rationale": "The recorded evidence is a capability boundary (shielded activation with uncertainty is rejected by validation), i.e. a gap inside the flagship's uncertainty axis \u2014 not a standalone workload. Its requirement is carried into W-MATCMP's definition rather than ranked separately.",
+   "score": 2,
+   "title": "Uncertainty-aware shielded activation"
+  }
+ ],
+ "evidence_class_rule": {
+  "documented_record": {
+   "path_prefixes": [],
+   "weight": 1
+  },
+  "executed_evidence": {
+   "path_prefixes": [
+    "results/",
+    "docs/history/"
+   ],
+   "weight": 2
+  }
+ },
+ "flagship": "W-MATCMP",
+ "proposal_designations": {
+  "flagship": {
+   "candidate": "W-MATCMP",
+   "citation": {
+    "anchor": "proposed flagship",
+    "class": "documented_record",
+    "file": "docs/ROADMAP.md",
+    "lines": [
+     148,
+     148
+    ]
+   }
+  },
+  "second_campaign": {
+   "candidate": "W-CAMPAIGN",
+   "citation": {
+    "anchor": "two campaign workloads",
+    "class": "documented_record",
+    "file": "docs/ROADMAP.md",
+    "lines": [
+     282,
+     282
+    ]
+   }
+  },
+  "spatial_handoff": {
+   "candidate": "W-R2S",
+   "citation": {
+    "anchor": "one spatial handoff",
+    "class": "documented_record",
+    "file": "docs/ROADMAP.md",
+    "lines": [
+     282,
+     282
+    ]
+   }
+  }
+ },
+ "protocol_commit": "3ae2f2656f6e6e56ad401378d9f5c6a96f1cf80d",
+ "protocol_sha256": "0dd9be843e4e195d3f3ebb9a9084f233af3d0eedf5045bbb48d77d665f5d1e06",
+ "ranked_ids": [
+  "W-CAMPAIGN",
+  "W-MATCMP",
+  "W-R2S",
+  "W-DOSIMETRY",
+  "W-SDTR",
+  "W-UNC"
+ ],
+ "recorded_sources": {
+  "docs/COMPETITIVE_BENCHMARK.md": "140ca230c2eba0d42e758cfc78f328a5ef359a7f2c2c12c640b7631ffea47b8c",
+  "docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md": "41be4b6467589dd756982c665e2439f7754e4ecdba2e8ed1bb904c0ecf5fea3f",
+  "docs/P17_HELDOUT_VALIDATION.md": "316db5397b96b408e307701fe388972866300c62ccf48052f221d29f4c430936",
+  "docs/QUALIFICATION.md": "dc8e588438dc80314187b49901596cc6bf622d3f570425be46b7e2994a0b5886",
+  "docs/ROADMAP.md": "dcb14b5150553848da349a1c9a833429080661d12805f177b1c6a383a62ca5ec",
+  "docs/history/sessions/P12.md": "34e5eda5d8a3f6052f4c9a5f212cdd8b0f48bbed5915013f4a498e0440bbe900",
+  "protocols/ACTINV-P20_PROTOCOL.md": "76c2ca2f646f85ea8c4a26f9ed5b2c1b3c49cfb3312a9122e546db4b53164335",
+  "results/g3_p21_executed.json": "c47efa3b51175c29c4d43f3e04a6be1e3ef8e9889a04852b9f75fa3297a517a4",
+  "results/g4_p24_fresh.json": "9d02b432c6544bf8161bbc86ee272200b7f0cf908e9bfee5617700e479e16797"
+ },
+ "schema": "actinv-p26-g1-workloads-1",
+ "selected": {
+  "flagship": "W-MATCMP",
+  "second_campaign": "W-CAMPAIGN",
+  "spatial_handoff": "W-R2S"
+ },
+ "selection_rule": "Rank by descending citation-weight score; the flagship is the proposal-designated candidate inside the top score cohort, else the lowest id in that cohort; the proposal-designated spatial handoff and second campaign are selected regardless of rank; all other candidates are rejected with recorded rationale.",
+ "user_evidence_limitations": [
+  "No practitioner interviews or user studies are recorded in this repository. The roadmap draft's proposed examination of five to eight practitioners (docs/ROADMAP.md lines 275-280) is unexecuted maintainer work requiring separate authorization; demand and usability conclusions remain unestablished by design.",
+  "Workload ranks therefore rest on executed repository evidence (benchmarks, phase records) and recorded maintainer documents (the draft proposal, the competitive research note, capability-boundary docs). A documented comparator capability evidences that a workload exists in the ecosystem, not that users need it from ACTINV.",
+  "The draft's 50% hands-on-time reduction target has no recorded baseline; it remains undetermined until maintainer-collected evidence exists, per the protocol's undetermined-is-a-phase-failure rule for feasibility judgments."
+ ]
+}
