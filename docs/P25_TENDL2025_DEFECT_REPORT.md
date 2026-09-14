@@ -1,4 +1,11 @@
-# TENDL-2025 defect and convention-hazard report
+# TENDL-2025 source inconsistencies and processing findings
+
+Submission review: 2026-09-14. The primary external report is
+[four reproducible threshold inconsistencies](TENDL2025_THRESHOLD_SUBMISSION.md),
+with exact energies, source hashes, raw records, and a standalone reproducer.
+Those four explicit contradictions are independently reproduced. The broader
+census below retains historical P25 classifications for case-by-case adjudication;
+it is not a count of independently confirmed evaluator defects.
 
 Findings from ACTINV phase P25 — the construction-coverage census of the held-out isomeric-scoring
 population. Every quarantined evaluation was re-derived independently by an exact-decimal oracle that
@@ -12,40 +19,53 @@ hash-pinned in the repository:
 - `results/g5_p25_acceptance.json` — acceptance scoring under the frozen gates
 - `results/verdict_p25.json` — `P25-FAIL`; evidence sha256 digests included
 
-## What is a defect here — and confidence by magnitude
+## Evidence strength and magnitude accounting
 
-A *genuine source inconsistency* is a contradiction among the file's own declared values: emitted state
-partials exceeding the declared channel total at a declared gridpoint, or group-level partial cross
-sections under a declared zero total. Confidence follows absolute magnitude:
+A contradiction at matching explicit ordinates is stronger evidence than an
+interpolated excess or a processor's rejection. Magnitude alone does not establish
+a defect or application impact. Fe-53m MT=16 explicitly declares 107582 b for
+its ground-state product and 0 b total at exactly 7791974 eV (not 7.79 MeV).
 
-- **Barn-scale contradictions (62 evaluations: excess ≥ 10⁻⁶ b) are unambiguous.** A file whose MF=10
-  declares 1.08×10⁵ b of product under an MF=3 total of exactly zero at the same declared energy
-  (`n-Fe053m`, MT=16 @ 7.79 MeV) contradicts itself under any reading of the format.
-- **Micro-to-femtobarn inconsistencies (23 evaluations: 10⁻⁶–10⁻¹⁵ b) are formally contradictory but
-  probably grid-generation artifacts** — the MF=3 and MF=10 tables use different grids, so a partial
-  interpolated between its own sparse points can sit above a declared zero total. Reported for
-  completeness; they may reflect intended generation behavior rather than evaluation error.
-- **Class C (25 evaluations)** show excesses between declared gridpoints beyond any mechanism-consistent
-  envelope (worst relative excess 0.11–18.6); flagged for adjudication, not asserted as defects.
+The historical A/B tables contain 95 evaluations: 62 have listed absolute values
+at least 1e-6 b (one microbarn), 23 have listed values above 1e-15 b and below
+1e-6 b, and 10 have missing absolute values. These are counts of populated cells,
+not a complete severity assessment. The omitted Eu-151 MT=107 example has a
+checked excess of 0.00008306688 b at 0.00001 eV: states sum to 0.00052762348 b
+against 0.0004445566 b total. This is not asserted to be its whole-file maximum.
 
-*Convention hazards* are constructs that look like violations to a naive audit but are consistent within
-TENDL's own semantics: the 1e-20 barn printing floor, charged-particle MT=4 carrying a different-residual
-product, and fission partials whose comparator is the `IZAP=-1` sentinel rather than MF=3/MT=18. These are
-reported for downstream consumers, not as defects the evaluator must fix.
+The P25 discriminator uses the union of MF=3/MF=10 grids and labels an energy a
+product gridpoint when any product has it; other values there may be interpolated.
+It also returns zero outside a table's domain. Its `gridpoint` and `zero_total`
+labels do not alone prove that all quantities are explicit ordinates. Additional
+cases need threshold/domain, interpolation, and printed-precision checks.
+
+Class C (25 evaluations) exceeds the discriminator's 0.1% relative envelope
+between product gridpoints. This is an ACTINV audit threshold, not a universal
+ENDF tolerance. These cases are submitted for adjudication.
+
+Processing findings include the observed 1e-20 b floor, standard charged-particle
+MT=4 residual semantics, and missing fission comparators. ACTINV's floor-aware,
+sentinel, and partial-sum handling are implementation decisions, not blanket
+evaluator endorsements. A partial sum alone does not independently establish
+total-channel conservation. These are separate from the four primary defects.
 
 ## Scale and disposition
 
 | class | evaluations | ACTINV disposition |
 |---|---:|---|
-| A. gridpoint contradictions | 50 (27 barn-scale) | fail closed; residual defects audit-ledgered |
-| B. zero-total with partials | 45 (35 barn-scale) | fail closed; audit-ledgered where sub-group |
+| A. historical gridpoint-excess class | 50 (27 listed values ≥ 1 microbarn; 10 missing) | fail closed; residual findings audit-ledgered |
+| B. historical zero-total class | 45 (35 listed values ≥ 1 microbarn) | fail closed; audit-ledgered where sub-group |
 | C. interp-looking, beyond envelope | 25 | fail closed; adjudication requested |
 | D. missing MF=3 comparator (MT=18 fission) | 50 | sentinel/partial-sum comparator, ledgered |
 | E. ELFS vs QM−QI conflict | 14 bounded, 2 beyond bound | ELFS precedence within 1 keV; else fail closed |
 | floor convention (1e-20 b) | 395 files carry it; 227 failed on it alone | floor-aware reconciliation, ledgered |
 | charged-particle MT=4 different-residual | 2,156 | projectile-aware dispatch; artifact-declared `emission_model` |
 
-## Convention hazard: charged-particle MT=4
+## ACTINV processing correction: charged-particle MT=4
+
+MT=4 is the standard (projectile,n) channel. A changed residual for a charged
+projectile is expected; this was an ACTINV bug, not a TENDL defect. See the
+[ENDF reaction definitions](https://serpent.vtt.fi/docs/extra/endf_reactions.html).
 
 Every charged-particle evaluation with an MF=8/MT=4 section declares a *different-residual* product ZAP
 (712 alpha + 757 deuteron + 687 proton files); all 1,081 neutron files declare same-nuclide. MT=4 in a
@@ -59,12 +79,16 @@ TENDL prints `1e-20` barn as an effectively-zero floor on both MF=3 totals and M
 floor states under a floor total produce up to 100% relative "excess" with no physical weight. A purely
 relative conservation audit reads these as violations; 227 quarantined evaluations failed on nothing else.
 
-## Per-file defect tables
+## Historical finding tables (not independently revalidated in full)
 
-Tables are sorted by maximum absolute excess. Relative excess alone is misleading: a femtobarn partial
-under a declared zero total produces an infinite relative figure.
+Legacy absolute columns and abbreviated detail strings are retained for traceability;
+their maxima have not been independently recomputed in this submission review.
+Missing values mean unknown, not zero. Details may be truncated and may describe
+a different energy or mechanism than the row's class or maximum. Use the primary
+submission for complete examples. Relative excess alone is misleading when a
+positive partial is compared with zero total.
 
-### A. Emitted partials exceed the declared total at declared gridpoints (50 evaluations)
+### A. Historical product-gridpoint excess classification (50 evaluations)
 
 | projectile | evaluation | worst rel. excess | max abs. excess (b) | decimal-oracle detail |
 |---|---|---|---|---|
@@ -119,7 +143,7 @@ under a declared zero total produces an infinite relative figure.
 | neutron | `n-Tc095m.tendl` | 2.241e+02 | — | MT4/ZAP43095 @ 3.0066e+05 eV (between gridpoints): rel 7.140e-03; MT4/ZAP43095 @ 5.9420e+05 eV (between gridpoints): rel 1.474e-01; MT4/ZAP43095 @ 6.1410e+05 eV (between gridpoints |
 | neutron | `n-Zr089m.tendl` | 3.696e+15 | — | MT4/ZAP40089 @ 5.1284e+05 eV (between gridpoints): rel 2.379e-01; MT4/ZAP40089 @ 8.7321e+05 eV (between gridpoints): rel 2.683e-02; MT4/ZAP40089 @ 9.3445e+05 eV (between gridpoints |
 
-### B. Zero or near-zero declared total with group-level partials (45 evaluations)
+### B. Historical zero-total-with-partials classification (45 evaluations)
 
 | projectile | evaluation | worst rel. excess | max abs. excess (b) | decimal-oracle detail |
 |---|---|---|---|---|
@@ -169,7 +193,7 @@ under a declared zero total produces an infinite relative figure.
 | alpha | `a-Lu174m.tendl` | n/a | 4.442e-15 | MT103/ZAP72177 @ 1.2000e+07 eV: total 0, states 4.442e-15 b |
 | proton | `p-Sr087.tendl` | n/a | 1.751e-15 | MT103/ZAP38087 @ 3.9303e+05 eV: total 0, states 1.751e-15 b |
 
-### C. Apparent interpolation artifacts exceeding the mechanism envelope (adjudication requested) (25 evaluations)
+### C. Apparent interpolation artifacts exceeding the audit envelope (25 evaluations; adjudication requested)
 
 | projectile | evaluation | worst rel. excess | max abs. excess (b) | decimal-oracle detail |
 |---|---|---|---|---|
@@ -275,6 +299,13 @@ under a declared zero total produces an infinite relative figure.
 
 ## Addendum — P24 candidate build over the IRDFF-II dosimetry target set
 
+Interpretation: 17/49 is the recorded ACTINV target-file construction failure
+count, not 17 experimentally disproven dosimetry reactions and not an IRDFF-II
+defect count. Whole-file rejection can remove otherwise usable channels. The
+legacy table below mixes first-hit messages with final file classifications;
+its short descriptions do not independently establish each claimed mechanism.
+P25-FAIL is ACTINV's qualification verdict, not a verdict on the entire library.
+
 P24's bounded candidate build (`results/g0_p24_candidate_build.json`, sealed at G0) exercised an
 independent target population: the 49 isotopic targets the IRDFF-II reaction catalog requires for
 the fresh benchmark partition. The current production builder failed closed on **17 of 49 isotopic
@@ -311,5 +342,5 @@ Two points matter beyond the count:
    La-139 were outside the P25 census; re-running the same exact-decimal oracle on them classifies
    Tm-169 and Hg-199 as new genuine source inconsistencies (a declared-gridpoint MT107 excess and a
    zero-total MT4 with ~0.1 b partials respectively) and La-139 as a grid-density artifact. The
-   defect classes therefore extend beyond the originally censused files; the totals above should not
+   candidate inconsistency classes therefore extend beyond the originally censused files; the totals above should not
    be read as a complete corpus-wide defect count.
