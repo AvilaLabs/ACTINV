@@ -1,0 +1,291 @@
+{
+ "adjudication_histogram": {
+  "bound_limited_timeout": 6,
+  "builder_capability": 3,
+  "builder_interp": 1,
+  "format_misdetect_marker": 3,
+  "product_state_conflict": 1
+ },
+ "format_coverage": {
+  "eaf_2010": {
+   "mf10_files": 46,
+   "mf9_files": 17,
+   "no_emitted_state_records": 0,
+   "resolved": 47
+  },
+  "fendl_32c": {
+   "mf10_files": 9,
+   "mf9_files": 6,
+   "no_emitted_state_records": 28,
+   "resolved": 39
+  },
+  "tendl_2023": {
+   "mf10_files": 40,
+   "mf9_files": 13,
+   "no_emitted_state_records": 7,
+   "resolved": 47
+  }
+ },
+ "g1_census_sha256": "346fc54ddbe606d24d0acca1663e2039a376bcb95732faaa6592fa91ccc7a64b",
+ "isomer_convention_note": "EAF-2010 files declare emitted states through MF=10 records on the same ENDF line grammar; isomer conventions per file are builder-normalized at construction, not source-consistent across evaluations.",
+ "quarantined_count": 11,
+ "schema": "actinv-p25b-g2-traces-1",
+ "stray_marker_files": [
+  "n_0131_1-H-3.endf",
+  "n_0228_2-He-4.endf",
+  "n_0831_8-O-18.endf"
+ ],
+ "traces": [
+  {
+   "adjudication": "bound_limited_timeout:missing_total_or_grid_contract",
+   "corpus": "tendl_2023",
+   "file": "n_073-Ta-181_7328.dat",
+   "file_sha256": "07176e8580f62b9308fc4f4c7e6bebc9e9ef23b201b0528eb3b38c8e4f9459f6",
+   "g1_class": "construction_error",
+   "g1_message": "timeout 90.0s",
+   "oracle": {
+    "detail": [
+     "MT18: MF=10 states with no MF=3 total",
+     "MT107/ZAP71178 @ 1.4982e-05 eV (between gridpoints): rel 2.238e-01",
+     "MT107/ZAP71178 @ 1.8338e-05 eV (between gridpoints): rel 3.537e-01",
+     "MT107/ZAP71178 @ 2.2445e-05 eV (between gridpoints): rel 4.975e-01",
+     "MT107/ZAP71178 @ 2.7473e-05 eV (between gridpoints): rel 6.564e-01",
+     "MT107/ZAP71178 @ 3.3627e-05 eV (between gridpoints): rel 8.321e-01",
+     "MT107/ZAP71178 @ 4.1160e-05 eV (between gridpoints): rel 1.026e+00",
+     "MT107/ZAP71178 @ 5.0379e-05 eV (between gridpoints): rel 1.241e+00",
+     "MT107/ZAP71178 @ 6.1664e-05 eV (between gridpoints): rel 1.478e+00",
+     "MT107/ZAP71178 @ 7.5477e-05 eV (between gridpoints): rel 1.740e+00"
+    ],
+    "kinds": [
+     "floor",
+     "interp",
+     "no_mf3_total"
+    ],
+    "worst_relative_excess": 18.510213015364183
+   },
+   "target": "Ta-181"
+  },
+  {
+   "adjudication": "bound_limited_timeout:no_excess_found",
+   "corpus": "tendl_2023",
+   "file": "n_090-Th-232_9040.dat",
+   "file_sha256": "22018d070e8a7e044d88add79cbeb151eb7fb70800f9dee7b2001421a3c4fc9a",
+   "g1_class": "construction_error",
+   "g1_message": "timeout 90.0s",
+   "oracle": {
+    "detail": [],
+    "kinds": [],
+    "worst_relative_excess": 0.0
+   },
+   "target": "Th-232"
+  },
+  {
+   "adjudication": "builder_capability:mf6_law_-5:oracle_error",
+   "corpus": "tendl_2023",
+   "file": "n_092-U-235_9228.dat",
+   "file_sha256": "4253aef9386c53c4011eaefffbcc3b161f7ff20f97586d084de20331ab2c9fa5",
+   "g1_class": "construction_error",
+   "g1_message": "/home/connoravila/nuclear-data/tendl-2023/files/n_092-U-235_9228.dat: MAT=9228/MF=6/MT=18: unsupported MF=6 LAW=-5",
+   "oracle": {
+    "detail": [
+     "oracle error: P18b corpus oracle expects lin-lin"
+    ],
+    "kinds": [
+     "oracle_error"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": "U-235"
+  },
+  {
+   "adjudication": "builder_capability:mf6_law_-5:oracle_error",
+   "corpus": "tendl_2023",
+   "file": "n_092-U-238_9237.dat",
+   "file_sha256": "5004e24d82976d446419c4be7ff7feee7ec78c0530a6002333adf186a562fac9",
+   "g1_class": "construction_error",
+   "g1_message": "/home/connoravila/nuclear-data/tendl-2023/files/n_092-U-238_9237.dat: MAT=9237/MF=6/MT=18: unsupported MF=6 LAW=-5",
+   "oracle": {
+    "detail": [
+     "oracle error: P18b corpus oracle expects lin-lin"
+    ],
+    "kinds": [
+     "oracle_error"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": "U-238"
+  },
+  {
+   "adjudication": "bound_limited_timeout:grid_density_interpolation_artifact",
+   "corpus": "tendl_2023",
+   "file": "n_093-Np-237_9346.dat",
+   "file_sha256": "6203b67409ec7564f38afdacc0be5b7624dda6bfdb376930c9e50144c61eab39",
+   "g1_class": "construction_error",
+   "g1_message": "timeout 90.0s",
+   "oracle": {
+    "detail": [
+     "MT107/ZAP91234 @ 6.7128e-01 eV (between gridpoints): rel 2.271e-02",
+     "MT107/ZAP91234 @ 8.0308e-01 eV (between gridpoints): rel 2.951e-02",
+     "MT107/ZAP91234 @ 1.1494e+00 eV (between gridpoints): rel 6.055e-02",
+     "MT107/ZAP91234 @ 1.3750e+00 eV (between gridpoints): rel 1.407e-01",
+     "MT107/ZAP91234 @ 1.6450e+00 eV (between gridpoints): rel 2.222e-01",
+     "MT107/ZAP91234 @ 1.9680e+00 eV (between gridpoints): rel 3.033e-01",
+     "MT107/ZAP91234 @ 2.3544e+00 eV (between gridpoints): rel 3.812e-01",
+     "MT107/ZAP91234 @ 2.8166e+00 eV (between gridpoints): rel 4.525e-01",
+     "MT107/ZAP91234 @ 3.3696e+00 eV (between gridpoints): rel 5.121e-01",
+     "MT107/ZAP91234 @ 4.0312e+00 eV (between gridpoints): rel 5.532e-01"
+    ],
+    "kinds": [
+     "floor",
+     "interp"
+    ],
+    "worst_relative_excess": 0.5804498422100174
+   },
+   "target": "Np-237"
+  },
+  {
+   "adjudication": "builder_capability:mf6_law_-5:no_excess_found",
+   "corpus": "tendl_2023",
+   "file": "n_094-Pu-239_9437.dat",
+   "file_sha256": "e2bd403d29ff04c5ddd98ef184ef9fbdd6b564e1a077f8d0395f2903df2e65ca",
+   "g1_class": "construction_error",
+   "g1_message": "/home/connoravila/nuclear-data/tendl-2023/files/n_094-Pu-239_9437.dat: MAT=9437/MF=6/MT=18: unsupported MF=6 LAW=-5",
+   "oracle": {
+    "detail": [],
+    "kinds": [],
+    "worst_relative_excess": 0.0
+   },
+   "target": "Pu-239"
+  },
+  {
+   "adjudication": "product_state_conflict:mf8_mf9:no_excess_found",
+   "corpus": "fendl_32c",
+   "file": "n_1325_13-Al-27.endf",
+   "file_sha256": "88f5a5a138e395ecb2da13016be59f23f088064d3247fc030450195a84f457ce",
+   "g1_class": "construction_error",
+   "g1_message": "/home/connoravila/nuclear-data/fendl-3.2c/endf/n_1325_13-Al-27.endf: MF=8/LMF=9 products {(13026, 0), (13026, 1)} conflict with MF=9 products {(0, 0), (0, 1)}",
+   "oracle": {
+    "detail": [],
+    "kinds": [],
+    "worst_relative_excess": 0.0
+   },
+   "target": "Al-27"
+  },
+  {
+   "adjudication": "builder_interp:floor_artifact_only",
+   "corpus": "fendl_32c",
+   "file": "n_5728_57-La-139.endf",
+   "file_sha256": "78889efd56885faf5d0111cd299356bd95b70606dd910393bb0dcf7bba46dbc5",
+   "g1_class": "construction_error",
+   "g1_message": "/home/connoravila/nuclear-data/fendl-3.2c/endf/n_5728_57-La-139.endf: MT102 resonance processing: unresolved log-log interpolation needs positive coordinates",
+   "oracle": {
+    "detail": [],
+    "kinds": [
+     "floor"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": "La-139"
+  },
+  {
+   "adjudication": "bound_limited_timeout:no_excess_found",
+   "corpus": "fendl_32c",
+   "file": "n_9040_90-Th-232.endf",
+   "file_sha256": "a48314b0c4d13bec0c1420b36dd9de66e39e1b0d2c2ae18033d99cbd8b639c1e",
+   "g1_class": "construction_error",
+   "g1_message": "timeout 90.0s",
+   "oracle": {
+    "detail": [],
+    "kinds": [],
+    "worst_relative_excess": 0.0
+   },
+   "target": "Th-232"
+  },
+  {
+   "adjudication": "bound_limited_timeout:oracle_error",
+   "corpus": "fendl_32c",
+   "file": "n_9228_92-U-235.endf",
+   "file_sha256": "28f0dea8177a5cee2c90768f9bac4716faa87a7c12700e1fbe1f30c2669ae763",
+   "g1_class": "construction_error",
+   "g1_message": "timeout 90.0s",
+   "oracle": {
+    "detail": [
+     "oracle error: record 1 has malformed identifiers"
+    ],
+    "kinds": [
+     "oracle_error"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": "U-235"
+  },
+  {
+   "adjudication": "bound_limited_timeout:oracle_error",
+   "corpus": "fendl_32c",
+   "file": "n_9237_92-U-238.endf",
+   "file_sha256": "5d8d0aa3b3b12ef2c0d3b88d939f76d3aad279c07a4d18a8cacf91c0115ee4df",
+   "g1_class": "construction_error",
+   "g1_message": "timeout 90.0s",
+   "oracle": {
+    "detail": [
+     "oracle error: record 1 has malformed identifiers"
+    ],
+    "kinds": [
+     "oracle_error"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": "U-238"
+  },
+  {
+   "adjudication": "format_misdetect_marker:oracle_error",
+   "corpus": "fendl_32c",
+   "file": "n_0131_1-H-3.endf",
+   "file_sha256": "0e46ba1ae56a4c12558656acd2ce3262b012acb6c7ae4645412da29dcf4389ab",
+   "g1_class": "not_in_target_set",
+   "g1_message": "stray EAF-2010 marker text in FENDL file",
+   "oracle": {
+    "detail": [
+     "oracle error: P18b corpus oracle expects lin-lin"
+    ],
+    "kinds": [
+     "oracle_error"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": null
+  },
+  {
+   "adjudication": "format_misdetect_marker:oracle_error",
+   "corpus": "fendl_32c",
+   "file": "n_0228_2-He-4.endf",
+   "file_sha256": "e0bb4bacd4ed60ceb5e5916bf836a3647523bf7aaed732e3ff0a42197136381e",
+   "g1_class": "not_in_target_set",
+   "g1_message": "stray EAF-2010 marker text in FENDL file",
+   "oracle": {
+    "detail": [
+     "oracle error: P18b corpus oracle expects lin-lin"
+    ],
+    "kinds": [
+     "oracle_error"
+    ],
+    "worst_relative_excess": 0.0
+   },
+   "target": null
+  },
+  {
+   "adjudication": "format_misdetect_marker:no_excess_found",
+   "corpus": "fendl_32c",
+   "file": "n_0831_8-O-18.endf",
+   "file_sha256": "46c20f8626666be2c94dfe5982e76a0bd22265004bfe68ddb6224027697c4d19",
+   "g1_class": "not_in_target_set",
+   "g1_message": "stray EAF-2010 marker text in FENDL file",
+   "oracle": {
+    "detail": [],
+    "kinds": [],
+    "worst_relative_excess": 0.0
+   },
+   "target": null
+  }
+ ]
+}
