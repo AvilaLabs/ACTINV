@@ -1,0 +1,857 @@
+{
+ "elapsed_s": 29.388,
+ "gate": "P25c-G0",
+ "head": "c4f6b4daaad542e9c160d427cedf8fc25019a5e5",
+ "license": {
+  "corpus": "TENDL-2025",
+  "custodian": "PSI \u2014 A.J. Koning, D. Rochman",
+  "derivative_policy": "derived corpus permitted with attribution; must be labeled as an Avila Labs remediation derivative, never presented as an upstream TENDL release; citation of Rochman et al. Nucl. Phys. A 1053 (2025) 122951 and Koning et al. Nucl. Data Sheets 155 (2019) 1 required",
+  "note": "NEA Data Bank mirror asserts OECD copyright; the pinned source corpus derives from the PSI distribution, not the NEA mirror.",
+  "terms": "no explicit license; openly distributed; citation requested",
+  "terms_url": "https://tendl.web.psi.ch/ and https://tendl.imperial.ac.uk/tendl_2025/tendl2025.html",
+  "verified_at": "2026-09-14"
+ },
+ "opening_commit": "c4f6b4daaad542e9c160d427cedf8fc25019a5e5",
+ "pass": true,
+ "prior_docs_sha256": {
+  "DATA_LIMITATIONS.md": "ec5ca00824d39b6e84008188337527f2c16095e3e8536d5ff1f86c8ceb45c9d3",
+  "DATA_RELEASE_NOTES_v1.0.0.md": "93998970b73a23d2b737e76b8d493e014cbc3e48f39828840b331d2c12ddb95f",
+  "P25_TENDL2025_DEFECT_REPORT.md": "b4f7aeb6cd813e85662883b2db93ceeddfff785e2d860cf390e9b1f16f844f1e"
+ },
+ "prior_evidence_sha256": {
+  "g1_p25_census.json": "729f7c8459dd2a1f10101199af7b9b62f3096d8bc6725066e09ad29fdc7fb7e2",
+  "g2_p25_traces.json": "30322ff86d90a35cc804204e017c7f289f496fa1975209c6e595067aa88230b3",
+  "g4_p25_repairs.json": "92b60f553137f83d149e592ce657485affb1176dcec2905dc54a0729f2e2d1b4",
+  "g4_p25b_union.json": "49f54b83abb8206581b3ba838fa06406b798715e92f0f316f326a4e2a8dca24c",
+  "g4_p25b_union_irdff_score.json": "9c63410841f411a1ba67fd20a427efeb9030e36ad64dae151341ac4bc0ad367d",
+  "g5_p25_acceptance.json": "3bce0dfaaf70f1157d3c2085f39763feab73d01908211c25ec68e00ea92be8c8",
+  "g5_p25b_accounting.json": "b5c7ccb7994cf1211ea8e1639aae9a59da18c0eec7ef9d9c5436ad68de0f17ad"
+ },
+ "prior_verdicts": {
+  "verdict_cb1.json": {
+   "ok": true,
+   "sha256": "56a4299cd850f20d3d2dcd3ee91f293895a5cf787df179501e8792368a39e938",
+   "verdict": "CB1-COMPLETE"
+  },
+  "verdict_p10.json": {
+   "ok": true,
+   "sha256": "bd5698a45f22132dbc8aa095186847be2c27bfa635140b8f360a3ee443d29d0d",
+   "verdict": "P10-CONDITIONAL"
+  },
+  "verdict_p11.json": {
+   "ok": true,
+   "sha256": "484658adf7f8e8c6b111f7e5a83909a3038aa982cbf88ae844e1bc94be11f24b",
+   "verdict": "P11-CONDITIONAL"
+  },
+  "verdict_p12.json": {
+   "ok": true,
+   "sha256": "8020482814196aeecc584369d8c54b351c2edd051553f2ae30cbcc808125f616",
+   "verdict": "P12-CONDITIONAL"
+  },
+  "verdict_p13.json": {
+   "ok": true,
+   "sha256": "e734dec45a34b001acef1081bd193ddc011ef2d54f53f4aed29abf616573ae29",
+   "verdict": "P13-PASS"
+  },
+  "verdict_p14.json": {
+   "ok": true,
+   "sha256": "95a08cbf0a7b90046936fa0a96c9c86e0c63a8eb039f0a252a103339e13bb76c",
+   "verdict": "P14-CLOSED-BELOW-THRESHOLD"
+  },
+  "verdict_p15.json": {
+   "ok": true,
+   "sha256": "662428fdc0c4ca4ddaec57557b776b80d078754857d5a47482a8867742282f3d",
+   "verdict": "P15-PASS"
+  },
+  "verdict_p16.json": {
+   "ok": true,
+   "sha256": "fb1f9f5f582ce507d395b14533cf3ed1daa45933cac8c9464d25830a5fb2f442",
+   "verdict": "P16-CONDITIONAL"
+  },
+  "verdict_p17.json": {
+   "ok": true,
+   "sha256": "cdd2ae98479c1540e692f9b159748796dacd720c043e9c5d9b9266f43bb87ad7",
+   "verdict": "P17-FAIL"
+  },
+  "verdict_p18.json": {
+   "ok": true,
+   "sha256": "e9dbea1e2e5ade98cb14afa7f73b2eb9dd82da183364a75ea8d36dade1eb8863",
+   "verdict": "P18-FAIL"
+  },
+  "verdict_p18b.json": {
+   "ok": true,
+   "sha256": "cb37a4cb83bcec54e2041377a4b1cd3cd4cebd5d44291563af1d4cf4403fbb62",
+   "verdict": "P18b-FAIL"
+  },
+  "verdict_p19.json": {
+   "ok": true,
+   "sha256": "99e70780c5121cb2f1dd6198317ea9b2fff2a4e3f20a9a5bf077b073a370517e",
+   "verdict": "P19-PASS"
+  },
+  "verdict_p2.json": {
+   "ok": true,
+   "sha256": "df446b6a2431a2c986be694ba357b4814717a53dac3002031a294a4b93eef8bb",
+   "verdict": "P2-CONDITIONAL"
+  },
+  "verdict_p20.json": {
+   "ok": true,
+   "sha256": "9966a518fbc438d7daee8f43218a0ba6ea08e8d04f1f4c6cd5072bac5c083241",
+   "verdict": "P20-PASS"
+  },
+  "verdict_p21.json": {
+   "ok": true,
+   "sha256": "540cb7af7d6c6996d2a6da8a2a5eab10383368f336b8049ccc5559e528e34a6b",
+   "verdict": "P21-PASS"
+  },
+  "verdict_p22.json": {
+   "ok": true,
+   "sha256": "7a1684b12916d14f4d18d6dbb20dd797ff706a6f3b0acc985e26ea75dfe8ad3a",
+   "verdict": "P22-PASS"
+  },
+  "verdict_p23.json": {
+   "ok": true,
+   "sha256": "a714b92e4817c76ec32aa6577ca77fe2ef76e29f4fac541174a18c948ad737b5",
+   "verdict": "P23-PASS"
+  },
+  "verdict_p24.json": {
+   "ok": true,
+   "sha256": "b170fe570c909375f55fde8efd8158c072e14c14623f1e3c4912f88ef4d8c92d",
+   "verdict": "P24-CONDITIONAL"
+  },
+  "verdict_p25.json": {
+   "ok": true,
+   "sha256": "80f9739f76380de6e08599e33f895eb97152bbe8d97d7644c9fd413370b97568",
+   "verdict": "P25-FAIL"
+  },
+  "verdict_p25b.json": {
+   "ok": true,
+   "sha256": "403c3c4f18a06c1be84addff536736067fd7c964ab980c9d3e1fc9193456b7a9",
+   "verdict": "P25b-FAIL"
+  },
+  "verdict_p26.json": {
+   "ok": true,
+   "sha256": "12e77b7ef70084cd27fc24126a86e10b179c7e34096fd5e87c6e635d7da595da",
+   "verdict": "P26-FAIL"
+  },
+  "verdict_p3.json": {
+   "ok": true,
+   "sha256": "b6edcebd83940c4e9a3fdc88b57afc7ac211cc2a6c8d0d6c75eaff101df3f0dd",
+   "verdict": "P3-FAIL"
+  },
+  "verdict_p3b.json": {
+   "ok": true,
+   "sha256": "9bebe96502ceac9c120f215bf15721adf6541c3b7ddeec20d7245076ae56d727",
+   "verdict": "P3b-PASS"
+  },
+  "verdict_p4.json": {
+   "ok": true,
+   "sha256": "5e0a650dee4575141708e82e0763f31065260c805df1437edad89be18b588028",
+   "verdict": "P4-FAIL"
+  },
+  "verdict_p4b.json": {
+   "ok": true,
+   "sha256": "e72b03c382e3bfed6a4d80e033d0ff75dcf1bd6c9ce04f458fb270a1c1cf5042",
+   "verdict": "P4b-PASS"
+  },
+  "verdict_p5.json": {
+   "ok": true,
+   "sha256": "958fef70d0396edf38a33c050fa3bef240f8c5d4496ccbff033eacf023ce4e79",
+   "verdict": "P5-PASS"
+  },
+  "verdict_p6.json": {
+   "ok": true,
+   "sha256": "03a34a4dcfa5004646e8c24b97d5a3dadde49863539e9035fd89785dad664215",
+   "verdict": "P6-CONDITIONAL"
+  },
+  "verdict_p7.json": {
+   "ok": true,
+   "sha256": "c31aecdc01d884e475892dc257bbdac8132917e5106184fd69fa6873ac7d94a1",
+   "verdict": "P7-CONDITIONAL"
+  },
+  "verdict_p8.json": {
+   "ok": true,
+   "sha256": "8217510459bb11c772d81fe4d486809bda3943b1912d6bf47e464f57eeae365c",
+   "verdict": "P8-CONDITIONAL"
+  },
+  "verdict_p9.json": {
+   "ok": true,
+   "sha256": "bf631926e8bcf1b4fa41119e27fb5380eba9a5884649e5c7314694dc6807c924",
+   "verdict": "P9-CONDITIONAL"
+  }
+ },
+ "prior_verdicts_ok": true,
+ "problems": [],
+ "protocol_sha256": "7e42d73c759ee5ad663d65fee71b512e1904fac1e1dacc617dc32dc95edbfa05",
+ "protocol_sha256_expected": "7e42d73c759ee5ad663d65fee71b512e1904fac1e1dacc617dc32dc95edbfa05",
+ "release_state": {
+  "data_v1_1_tags": [],
+  "patched_corpus_path": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n",
+  "patched_corpus_preexists": false,
+  "shipped_artifact_count": 11,
+  "shipped_catalog_manifest": "/home/connoravila/Documents/actinv/crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json",
+  "shipped_catalog_manifest_sha256": "27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430"
+ },
+ "schema": "actinv-p25c-g0-seals-1",
+ "sealed_population": {
+  "class": "conservation_excess_untraced",
+  "count": 81,
+  "files": {
+   "n-Ag104m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "377a00f068378377ebd09d0c23867ec940fa4db8b2573a09b9462795301db28b",
+    "relative_excess": 826.8885,
+    "sha_matches_census": true,
+    "source_sha256": "377a00f068378377ebd09d0c23867ec940fa4db8b2573a09b9462795301db28b"
+   },
+   "n-Ag106m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "b124563eb03bae5e200fd09092e3a535232b0dac06c754611d356d6b5fe5d15d",
+    "relative_excess": 589.4882,
+    "sha_matches_census": true,
+    "source_sha256": "b124563eb03bae5e200fd09092e3a535232b0dac06c754611d356d6b5fe5d15d"
+   },
+   "n-Ag107.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647",
+    "relative_excess": 0.008586385,
+    "sha_matches_census": true,
+    "source_sha256": "63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647"
+   },
+   "n-Ag107m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "2d366c85563743a8ecac57e4f48119667d8f2ea4bd5557e418f8a2ac56aba37b",
+    "relative_excess": 0.009070331,
+    "sha_matches_census": true,
+    "source_sha256": "2d366c85563743a8ecac57e4f48119667d8f2ea4bd5557e418f8a2ac56aba37b"
+   },
+   "n-Ag108m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "031ec9b490e6a73d7e891b0d422aaeb7135a1a50583c5067af2723af6dca56b3",
+    "relative_excess": 1.239444,
+    "sha_matches_census": true,
+    "source_sha256": "031ec9b490e6a73d7e891b0d422aaeb7135a1a50583c5067af2723af6dca56b3"
+   },
+   "n-Ag109.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1",
+    "relative_excess": 0.008586509,
+    "sha_matches_census": true,
+    "source_sha256": "4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1"
+   },
+   "n-Ag110m.tendl": {
+    "census_lmf": 9,
+    "census_mt": 102,
+    "census_source_sha256": "d72de90c2d32247f50fa302f74ad09163491d844818dbf8d3ce19d7c87d536ae",
+    "relative_excess": 0.9404586,
+    "sha_matches_census": true,
+    "source_sha256": "d72de90c2d32247f50fa302f74ad09163491d844818dbf8d3ce19d7c87d536ae"
+   },
+   "n-Am243.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "a72ba10d03a61c4a273176bed3b472555d4e7708815df79e6124c392b2101af8",
+    "relative_excess": 0.008901156,
+    "sha_matches_census": true,
+    "source_sha256": "a72ba10d03a61c4a273176bed3b472555d4e7708815df79e6124c392b2101af8"
+   },
+   "n-Ba132.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "e95956058ea9b952ccaccb2735480f162bbf7e28cbf3040fd4e72dc108566e35",
+    "relative_excess": 0.00880527,
+    "sha_matches_census": true,
+    "source_sha256": "e95956058ea9b952ccaccb2735480f162bbf7e28cbf3040fd4e72dc108566e35"
+   },
+   "n-Ba134.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "6187cf76cc1ee714b979bf14e5d70e8bd0c667cbcc90dae0c7f7fab43999ccc1",
+    "relative_excess": 0.008492345,
+    "sha_matches_census": true,
+    "source_sha256": "6187cf76cc1ee714b979bf14e5d70e8bd0c667cbcc90dae0c7f7fab43999ccc1"
+   },
+   "n-Ba137m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "36960c4491d01eab99eea1d760c73f89146637467f79d2fed7d087e95826dcf9",
+    "relative_excess": 0.008901064,
+    "sha_matches_census": true,
+    "source_sha256": "36960c4491d01eab99eea1d760c73f89146637467f79d2fed7d087e95826dcf9"
+   },
+   "n-Bi209.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "4c808433011e10cb29f67d19070e3e3c9243e1d5999e36f5694fb29d2262222a",
+    "relative_excess": 0.008281646,
+    "sha_matches_census": true,
+    "source_sha256": "4c808433011e10cb29f67d19070e3e3c9243e1d5999e36f5694fb29d2262222a"
+   },
+   "n-Br079.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "69a87dd9612ee4b2b667bc4a7d8d731e50c261f9667ec15aeac617ec5ebfa2bf",
+    "relative_excess": 0.008586225,
+    "sha_matches_census": true,
+    "source_sha256": "69a87dd9612ee4b2b667bc4a7d8d731e50c261f9667ec15aeac617ec5ebfa2bf"
+   },
+   "n-Br080m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "978c010a92a047fb2ab9e04e53268e9ee22cb1f55c27ac3c35e7fb56fa33e6c8",
+    "relative_excess": 304.4714,
+    "sha_matches_census": true,
+    "source_sha256": "978c010a92a047fb2ab9e04e53268e9ee22cb1f55c27ac3c35e7fb56fa33e6c8"
+   },
+   "n-Cd106.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "1e7a867b8ca800354c8938ed3e76b149799e6f20a1eda5362388b89c4872362d",
+    "relative_excess": 5557886000.0,
+    "sha_matches_census": true,
+    "source_sha256": "1e7a867b8ca800354c8938ed3e76b149799e6f20a1eda5362388b89c4872362d"
+   },
+   "n-Ce138.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "c4a24e16324d525ae7140c4b1d1c9266fe47faf0a4d6dc7cb2c0116e4fd24dec",
+    "relative_excess": 0.008805605,
+    "sha_matches_census": true,
+    "source_sha256": "c4a24e16324d525ae7140c4b1d1c9266fe47faf0a4d6dc7cb2c0116e4fd24dec"
+   },
+   "n-Ce139m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "00fc4cabb0398c060fd24db4e7f375a92990717cacc6c9aa5fd720cb161f6557",
+    "relative_excess": 0.008972621,
+    "sha_matches_census": true,
+    "source_sha256": "00fc4cabb0398c060fd24db4e7f375a92990717cacc6c9aa5fd720cb161f6557"
+   },
+   "n-Ce140.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "285cbf91ff2bb653dfbd8371808fb6383d3854427c07f71f9928425e962084fa",
+    "relative_excess": 0.008139826,
+    "sha_matches_census": true,
+    "source_sha256": "285cbf91ff2bb653dfbd8371808fb6383d3854427c07f71f9928425e962084fa"
+   },
+   "n-Cl035.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "c0ac6b92bad9851493b10a42bd81700eb3a7bbe8915b2627d2ce6454d3d08adf",
+    "relative_excess": 145988.4,
+    "sha_matches_census": true,
+    "source_sha256": "c0ac6b92bad9851493b10a42bd81700eb3a7bbe8915b2627d2ce6454d3d08adf"
+   },
+   "n-Cs134m.tendl": {
+    "census_lmf": 9,
+    "census_mt": 102,
+    "census_source_sha256": "6c0caa638e0c1b9bb3cd6b3248d6d33c6a098bc35b532dad1bf781e7a6c847ad",
+    "relative_excess": 0.3115864,
+    "sha_matches_census": true,
+    "source_sha256": "6c0caa638e0c1b9bb3cd6b3248d6d33c6a098bc35b532dad1bf781e7a6c847ad"
+   },
+   "n-Cu063.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7",
+    "relative_excess": 0.008191793,
+    "sha_matches_census": true,
+    "source_sha256": "2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7"
+   },
+   "n-Er168.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "4d41e247910dd019f78cc1567a9102711b84454a5eff401d6a2ecc8542e60f3f",
+    "relative_excess": 0.688481,
+    "sha_matches_census": true,
+    "source_sha256": "4d41e247910dd019f78cc1567a9102711b84454a5eff401d6a2ecc8542e60f3f"
+   },
+   "n-Eu151.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "a2f29609885a6df6e0245ec9d4aa70c6e30ca4e2863662913ea96684e683218f",
+    "relative_excess": 0.1976862,
+    "sha_matches_census": true,
+    "source_sha256": "a2f29609885a6df6e0245ec9d4aa70c6e30ca4e2863662913ea96684e683218f"
+   },
+   "n-Fe053m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "7d3a58320465837055b854a5a61860584f9b0bc8bd2f8d264a659a1ef2aa095b",
+    "relative_excess": 1163394000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "7d3a58320465837055b854a5a61860584f9b0bc8bd2f8d264a659a1ef2aa095b"
+   },
+   "n-Ge075m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "1a4de8cb0808463209e6539827230b329060a555419a125c28aba6d30b63e6b1",
+    "relative_excess": 9578267.0,
+    "sha_matches_census": true,
+    "source_sha256": "1a4de8cb0808463209e6539827230b329060a555419a125c28aba6d30b63e6b1"
+   },
+   "n-Hg195m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "41f2668e8440e3a9cffc581591bc6308e61c887294c507b44e35d5fff7cd8ab8",
+    "relative_excess": 5880757000000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "41f2668e8440e3a9cffc581591bc6308e61c887294c507b44e35d5fff7cd8ab8"
+   },
+   "n-Hg198.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "3f49fdf1fdc64bc213b663835183f7a15345746a400accd555a5cab606d7da32",
+    "relative_excess": 0.008975753,
+    "sha_matches_census": true,
+    "source_sha256": "3f49fdf1fdc64bc213b663835183f7a15345746a400accd555a5cab606d7da32"
+   },
+   "n-I127.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195",
+    "relative_excess": 0.008654474,
+    "sha_matches_census": true,
+    "source_sha256": "85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195"
+   },
+   "n-In110m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "daa968d2a1b11929cf9a645e5b4eefd7886fd644113229cc6fd1139ecbf9b81e",
+    "relative_excess": 1646.346,
+    "sha_matches_census": true,
+    "source_sha256": "daa968d2a1b11929cf9a645e5b4eefd7886fd644113229cc6fd1139ecbf9b81e"
+   },
+   "n-In112m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "637caf1ca6a9a77e9b10e73582e98fd153f8389012ed2e7cff58e891f32fcf79",
+    "relative_excess": 634.0071,
+    "sha_matches_census": true,
+    "source_sha256": "637caf1ca6a9a77e9b10e73582e98fd153f8389012ed2e7cff58e891f32fcf79"
+   },
+   "n-In114m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "81eebdba8b6cfaf461007f6feb2b88895a2600fd47515694619778cfecef5725",
+    "relative_excess": 0.005478704,
+    "sha_matches_census": true,
+    "source_sha256": "81eebdba8b6cfaf461007f6feb2b88895a2600fd47515694619778cfecef5725"
+   },
+   "n-Ir193.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "56dfdac586b5b4f236b6b6b522f6533a7e3dcc25b0155fad98d6db5a256680ad",
+    "relative_excess": 0.008972933,
+    "sha_matches_census": true,
+    "source_sha256": "56dfdac586b5b4f236b6b6b522f6533a7e3dcc25b0155fad98d6db5a256680ad"
+   },
+   "n-Ir193m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "a7398d1285c4e4eccff9798bdecdfd5a96672987ccf1889b79ae600656f453fa",
+    "relative_excess": 0.009127414,
+    "sha_matches_census": true,
+    "source_sha256": "a7398d1285c4e4eccff9798bdecdfd5a96672987ccf1889b79ae600656f453fa"
+   },
+   "n-K039.tendl": {
+    "census_lmf": 10,
+    "census_mt": 111,
+    "census_source_sha256": "be4a2edf7126548f504e63d3d41f0e5d06c400815e2e44d015c1a1d0ed6af412",
+    "relative_excess": 1.138686e+20,
+    "sha_matches_census": true,
+    "source_sha256": "be4a2edf7126548f504e63d3d41f0e5d06c400815e2e44d015c1a1d0ed6af412"
+   },
+   "n-Kr079m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "54b12e253ec1bb4e0223fe52459f6d516ee85e1f29666cb8398c23bcee4a1b61",
+    "relative_excess": 0.009226462,
+    "sha_matches_census": true,
+    "source_sha256": "54b12e253ec1bb4e0223fe52459f6d516ee85e1f29666cb8398c23bcee4a1b61"
+   },
+   "n-Kr080.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "79ea3acc3583c21bab2ca74867f33e773744f5fccfb86df3eea60566dd3549b4",
+    "relative_excess": 0.00897228,
+    "sha_matches_census": true,
+    "source_sha256": "79ea3acc3583c21bab2ca74867f33e773744f5fccfb86df3eea60566dd3549b4"
+   },
+   "n-Lu178m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "25d5f18d76c432a6da10c49f444464c5a461a287405190e73481cec89d9135e4",
+    "relative_excess": 29918930000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "25d5f18d76c432a6da10c49f444464c5a461a287405190e73481cec89d9135e4"
+   },
+   "n-Mo091m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "6a3e40135a1f998cf2caf60dea959a7395ba5e904e1ba13525fa23ca9948232a",
+    "relative_excess": 0.009244742,
+    "sha_matches_census": true,
+    "source_sha256": "6a3e40135a1f998cf2caf60dea959a7395ba5e904e1ba13525fa23ca9948232a"
+   },
+   "n-Mo095.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "f41df5d2fd097dd2f366b662d3d2f5078a1700df9cbb2c8d4be9f33d48fd8013",
+    "relative_excess": 85388980000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "f41df5d2fd097dd2f366b662d3d2f5078a1700df9cbb2c8d4be9f33d48fd8013"
+   },
+   "n-Mo096.tendl": {
+    "census_lmf": 10,
+    "census_mt": 105,
+    "census_source_sha256": "3282fad66340cb5a8be6118a0848ef2a265d00cf08e9bd55cb5a55f6492242a3",
+    "relative_excess": 7421615000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "3282fad66340cb5a8be6118a0848ef2a265d00cf08e9bd55cb5a55f6492242a3"
+   },
+   "n-Mo097.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "f5e923f5601877c4bd324689d88c99923e14414a31292f74a38541e1c18c3a9b",
+    "relative_excess": 69684770000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "f5e923f5601877c4bd324689d88c99923e14414a31292f74a38541e1c18c3a9b"
+   },
+   "n-Nb091m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "1116151a8cc1e09de83f8d8c1d800462b975dc39fff0e8ead408b4a3b6cae059",
+    "relative_excess": 288.8476,
+    "sha_matches_census": true,
+    "source_sha256": "1116151a8cc1e09de83f8d8c1d800462b975dc39fff0e8ead408b4a3b6cae059"
+   },
+   "n-Nb093.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109",
+    "relative_excess": 0.008634356,
+    "sha_matches_census": true,
+    "source_sha256": "e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109"
+   },
+   "n-Nd142.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "837ce373339699ee4569361ab00e4607f588c90870784b7a194553d591b6aa6c",
+    "relative_excess": 0.008439828,
+    "sha_matches_census": true,
+    "source_sha256": "837ce373339699ee4569361ab00e4607f588c90870784b7a194553d591b6aa6c"
+   },
+   "n-Ni058.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+    "relative_excess": 0.008000057,
+    "sha_matches_census": true,
+    "source_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916"
+   },
+   "n-Np237.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118",
+    "relative_excess": 0.008970144,
+    "sha_matches_census": true,
+    "source_sha256": "f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118"
+   },
+   "n-Pd102.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "02ab55505a18a579715b3ada8da9826ac603309fdb7d892f7e9484faf4f98ddf",
+    "relative_excess": 249065300000.0,
+    "sha_matches_census": true,
+    "source_sha256": "02ab55505a18a579715b3ada8da9826ac603309fdb7d892f7e9484faf4f98ddf"
+   },
+   "n-Pd104.tendl": {
+    "census_lmf": 10,
+    "census_mt": 105,
+    "census_source_sha256": "57e3d6c56c67fe935bf3114d42ca2ab0ceb6afe66f9767d53cbf75667bc6577c",
+    "relative_excess": 158953400000.0,
+    "sha_matches_census": true,
+    "source_sha256": "57e3d6c56c67fe935bf3114d42ca2ab0ceb6afe66f9767d53cbf75667bc6577c"
+   },
+   "n-Pd105.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "27c4e2f2e50be58e0a8067647a0a2b3e67791fe0bcff52c75c3ef7b85f134353",
+    "relative_excess": 626718100000.0,
+    "sha_matches_census": true,
+    "source_sha256": "27c4e2f2e50be58e0a8067647a0a2b3e67791fe0bcff52c75c3ef7b85f134353"
+   },
+   "n-Pr141.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "0c857548650baae7ae029becf09879c87c4293ea946483b935fab286ca1ec7a9",
+    "relative_excess": 1910892000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "0c857548650baae7ae029becf09879c87c4293ea946483b935fab286ca1ec7a9"
+   },
+   "n-Pt194.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "dfe0c59af7b9cf0f88d4965212082f9af7963a3e276ac9f5ecb20270e8e7e5ce",
+    "relative_excess": 0.9231628,
+    "sha_matches_census": true,
+    "source_sha256": "dfe0c59af7b9cf0f88d4965212082f9af7963a3e276ac9f5ecb20270e8e7e5ce"
+   },
+   "n-Re187.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "a64e049607e0a61f762f504147a3b4206f2a9724466afc8614afc7ceedda7ece",
+    "relative_excess": 25186490000.0,
+    "sha_matches_census": true,
+    "source_sha256": "a64e049607e0a61f762f504147a3b4206f2a9724466afc8614afc7ceedda7ece"
+   },
+   "n-Rh101m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 106,
+    "census_source_sha256": "e20f199f6dfa64aa4624c12bcc9a60023282183c3dd0e07028b88d94bd6dd2d4",
+    "relative_excess": 1295661000000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "e20f199f6dfa64aa4624c12bcc9a60023282183c3dd0e07028b88d94bd6dd2d4"
+   },
+   "n-Rh102m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "9f479484216e1d3cf8432d4f10d3e8d9b799508cd85de55522fa83c96ee5a7ba",
+    "relative_excess": 0.0803941,
+    "sha_matches_census": true,
+    "source_sha256": "9f479484216e1d3cf8432d4f10d3e8d9b799508cd85de55522fa83c96ee5a7ba"
+   },
+   "n-Rh104m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "801696cfbdeb0b7a901e337a0bcf0c9ed00b25eeef9a8630e0b8b97dc0b00f0a",
+    "relative_excess": 0.002635874,
+    "sha_matches_census": true,
+    "source_sha256": "801696cfbdeb0b7a901e337a0bcf0c9ed00b25eeef9a8630e0b8b97dc0b00f0a"
+   },
+   "n-Sb120m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "d67397748f1d76e87ba68fb46a7465e19c05cb9b13aa1d3cc7a5522d6ed570c2",
+    "relative_excess": 0.009226483,
+    "sha_matches_census": true,
+    "source_sha256": "d67397748f1d76e87ba68fb46a7465e19c05cb9b13aa1d3cc7a5522d6ed570c2"
+   },
+   "n-Sb122m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "9c070bbd3b776d7352a5cc84e306977ede39d65be26eaec9fe6951774bc8e5e8",
+    "relative_excess": 0.009127195,
+    "sha_matches_census": true,
+    "source_sha256": "9c070bbd3b776d7352a5cc84e306977ede39d65be26eaec9fe6951774bc8e5e8"
+   },
+   "n-Sc045.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "f2e1f19faf6fa3421dfd0ae6f0d7b02c134e83a7f7d6e38eca43593f1d97c259",
+    "relative_excess": 531.3868,
+    "sha_matches_census": true,
+    "source_sha256": "f2e1f19faf6fa3421dfd0ae6f0d7b02c134e83a7f7d6e38eca43593f1d97c259"
+   },
+   "n-Sc046m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "b4b0292c9a8d97b7f198d8e376a3df67cbc8f32e22d34281f67be70d570bffa3",
+    "relative_excess": 21860.16,
+    "sha_matches_census": true,
+    "source_sha256": "b4b0292c9a8d97b7f198d8e376a3df67cbc8f32e22d34281f67be70d570bffa3"
+   },
+   "n-Sm144.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "e3dc9531db7539629352db2e6c99c9d30ade6786f895a506963035384733bf6b",
+    "relative_excess": 0.008493662,
+    "sha_matches_census": true,
+    "source_sha256": "e3dc9531db7539629352db2e6c99c9d30ade6786f895a506963035384733bf6b"
+   },
+   "n-Sn112.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "dfce32f20136145e9c8ca439f7aad08e2b65ad4639808d0f3bf9db69612eb38e",
+    "relative_excess": 9748425000.0,
+    "sha_matches_census": true,
+    "source_sha256": "dfce32f20136145e9c8ca439f7aad08e2b65ad4639808d0f3bf9db69612eb38e"
+   },
+   "n-Sn114.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "e439bcac556a7a99a0bf83f348d409e5c43100ab7ba3ea327ca544a9823e0fbe",
+    "relative_excess": 0.008657955,
+    "sha_matches_census": true,
+    "source_sha256": "e439bcac556a7a99a0bf83f348d409e5c43100ab7ba3ea327ca544a9823e0fbe"
+   },
+   "n-Sn117.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "12e8f7566b7849fecdbc01c6c148748cad6b4fb768e6241b1c1ac8d7c83f800e",
+    "relative_excess": 7004867.0,
+    "sha_matches_census": true,
+    "source_sha256": "12e8f7566b7849fecdbc01c6c148748cad6b4fb768e6241b1c1ac8d7c83f800e"
+   },
+   "n-Sr084.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "1d591ba9e2f0b7e942849f33979e6fb907a03dea968e5940949a9878951dd5f2",
+    "relative_excess": 0.0086559,
+    "sha_matches_census": true,
+    "source_sha256": "1d591ba9e2f0b7e942849f33979e6fb907a03dea968e5940949a9878951dd5f2"
+   },
+   "n-Tc095m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "176fbdda2e4bc4ca6f80dadb5b82a923ca74b0c732ce6b4e5b36b9800e9ab865",
+    "relative_excess": 164.0706,
+    "sha_matches_census": true,
+    "source_sha256": "176fbdda2e4bc4ca6f80dadb5b82a923ca74b0c732ce6b4e5b36b9800e9ab865"
+   },
+   "n-Tc096m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "9d96bfb8bc18cf97bc87f5c05cec718f72ca4abd7b4f190f59ee48f81622701f",
+    "relative_excess": 4656.877,
+    "sha_matches_census": true,
+    "source_sha256": "9d96bfb8bc18cf97bc87f5c05cec718f72ca4abd7b4f190f59ee48f81622701f"
+   },
+   "n-Te119m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 106,
+    "census_source_sha256": "3ebb0a21280766649a005725e1658c935ca6beb797382334f22f8e7057555bc8",
+    "relative_excess": 8.686901e+20,
+    "sha_matches_census": true,
+    "source_sha256": "3ebb0a21280766649a005725e1658c935ca6beb797382334f22f8e7057555bc8"
+   },
+   "n-Te120.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "94ed9dae8cb0b5bd843783e80e10245bdd5fa3d6595620926c4c9811ec2d0523",
+    "relative_excess": 0.008900866,
+    "sha_matches_census": true,
+    "source_sha256": "94ed9dae8cb0b5bd843783e80e10245bdd5fa3d6595620926c4c9811ec2d0523"
+   },
+   "n-Te122.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "6959addd51e0d290f186b1b223b3db21bff0ca3f52a3908ad7dec2f3710c514c",
+    "relative_excess": 0.008439724,
+    "sha_matches_census": true,
+    "source_sha256": "6959addd51e0d290f186b1b223b3db21bff0ca3f52a3908ad7dec2f3710c514c"
+   },
+   "n-Ti047.tendl": {
+    "census_lmf": 10,
+    "census_mt": 105,
+    "census_source_sha256": "bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c",
+    "relative_excess": 27313160000000.0,
+    "sha_matches_census": true,
+    "source_sha256": "bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c"
+   },
+   "n-W185m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "684c26fa6ab807afe25fb7c4d9b4d7780ddb11b1486cc5a06261d04398cc8568",
+    "relative_excess": 0.009226461,
+    "sha_matches_census": true,
+    "source_sha256": "684c26fa6ab807afe25fb7c4d9b4d7780ddb11b1486cc5a06261d04398cc8568"
+   },
+   "n-Xe126.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "f8eafd5d4734bbfc7f449aa9bd38f8fc8ae4f5a85cb1b38f9ba615a673a38beb",
+    "relative_excess": 0.008656016,
+    "sha_matches_census": true,
+    "source_sha256": "f8eafd5d4734bbfc7f449aa9bd38f8fc8ae4f5a85cb1b38f9ba615a673a38beb"
+   },
+   "n-Xe128.tendl": {
+    "census_lmf": 10,
+    "census_mt": 107,
+    "census_source_sha256": "dec5868f0319b4e335d6de39488cb26ab22d219adae8bd6c596dcc201f575bb6",
+    "relative_excess": 0.008585497,
+    "sha_matches_census": true,
+    "source_sha256": "dec5868f0319b4e335d6de39488cb26ab22d219adae8bd6c596dcc201f575bb6"
+   },
+   "n-Xe133m.tendl": {
+    "census_lmf": 9,
+    "census_mt": 102,
+    "census_source_sha256": "5f506bb3c68bdef23c7bdf1fb23a8525614aead80cbbd13aa9bbdbd641ea05f6",
+    "relative_excess": 0.2055417,
+    "sha_matches_census": true,
+    "source_sha256": "5f506bb3c68bdef23c7bdf1fb23a8525614aead80cbbd13aa9bbdbd641ea05f6"
+   },
+   "n-Y087m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "3157c9d8da3cf4f009f89c428fb96529132e890a7f897535b8c71bb3fc8127e3",
+    "relative_excess": 0.009226284,
+    "sha_matches_census": true,
+    "source_sha256": "3157c9d8da3cf4f009f89c428fb96529132e890a7f897535b8c71bb3fc8127e3"
+   },
+   "n-Y088.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "f6c69655d0991faddb90e8b1a620b9ccd4d0e68a56ce73f3ae52955295cfaedc",
+    "relative_excess": 8854.413,
+    "sha_matches_census": true,
+    "source_sha256": "f6c69655d0991faddb90e8b1a620b9ccd4d0e68a56ce73f3ae52955295cfaedc"
+   },
+   "n-Y090m.tendl": {
+    "census_lmf": 9,
+    "census_mt": 102,
+    "census_source_sha256": "7b0c9d3d3f05aafc7cf40d90b3b6ff6e27f1828ec8e5ef333134215da8f49a22",
+    "relative_excess": 0.9489552,
+    "sha_matches_census": true,
+    "source_sha256": "7b0c9d3d3f05aafc7cf40d90b3b6ff6e27f1828ec8e5ef333134215da8f49a22"
+   },
+   "n-Zr088.tendl": {
+    "census_lmf": 10,
+    "census_mt": 16,
+    "census_source_sha256": "148382919d34670d07f3ae3c121b06e05f8d1c8b763c6fba30a9401edfeb40a3",
+    "relative_excess": 320.5877,
+    "sha_matches_census": true,
+    "source_sha256": "148382919d34670d07f3ae3c121b06e05f8d1c8b763c6fba30a9401edfeb40a3"
+   },
+   "n-Zr089m.tendl": {
+    "census_lmf": 10,
+    "census_mt": 103,
+    "census_source_sha256": "1139997321d87e2176b49e2a49cfe1caeb42a2ce5345b7584be78378fe75bc0c",
+    "relative_excess": 0.009226593,
+    "sha_matches_census": true,
+    "source_sha256": "1139997321d87e2176b49e2a49cfe1caeb42a2ce5345b7584be78378fe75bc0c"
+   },
+   "n-Zr091.tendl": {
+    "census_lmf": 10,
+    "census_mt": 32,
+    "census_source_sha256": "d3058532b38800f6a82fd2e158dd87ba9ff1201ce7bb28b4aab710e2ced36fd7",
+    "relative_excess": 1.091448e+16,
+    "sha_matches_census": true,
+    "source_sha256": "d3058532b38800f6a82fd2e158dd87ba9ff1201ce7bb28b4aab710e2ced36fd7"
+   },
+   "n-Zr092.tendl": {
+    "census_lmf": 10,
+    "census_mt": 105,
+    "census_source_sha256": "7f44d3af81cb6f1ad1571c16c6a136481dc786075112df0ae0ed5460d5114f3e",
+    "relative_excess": 6100737000.0,
+    "sha_matches_census": true,
+    "source_sha256": "7f44d3af81cb6f1ad1571c16c6a136481dc786075112df0ae0ed5460d5114f3e"
+   }
+  },
+  "population_sha256": "a6b0a09411ea55f98ecb5f3bfcae2e0dfb8a8a34fd4c31b55314314f7f3b1bfd",
+  "source": "results/g1_p25_census.json:file_failures.neutron"
+ },
+ "source_corpus": {
+  "file_count": 2850,
+  "manifest_file": "/home/connoravila/Documents/actinv/results/g0_p25c_manifest_tendl_2025_n.txt",
+  "manifest_sha256": "f38df7c49da6cef8ac3d23c45c81dfb394829eefd38ee4af0db6dde92f0beaa4",
+  "root": "/home/connoravila/nuclear-data/tendl-2025/files/n"
+ }
+}

@@ -1,0 +1,10 @@
+{
+ "failures": [],
+ "mutation_self_test": {
+  "planted": 7,
+  "rejected": 7
+ },
+ "pass": true,
+ "protocol_sha256": "7e42d73c759ee5ad663d65fee71b512e1904fac1e1dacc617dc32dc95edbfa05",
+ "schema": "actinv-p25c-g0-check-1"
+}
