@@ -251,6 +251,19 @@ defaults must have a qualified scope. Protocol qualification populations and acc
 maintained checks and cannot be relaxed through an ordinary study setting. Every release records family/version,
 instantiated contract identity and checker identity. Updating a release never rewrites past studies or verdicts.
 
+**P26 replan entry (2026-09-17).** P26 closed `P26-FAIL`: the workload derivation, comparison
+contract and measurement machinery all hold, but the drafted ambition could not be established —
+the 10x headroom leg is unmeasurable on this workstation (ALARA's only local library covers none of
+the contract elements; FISPACT-II, SCALE/ORIGEN and OpenMC are unavailable) and the measured
+in-process amortization on the executed 1,000-case campaign is 1.33x, not 10x. Undetermined targets
+are a phase failure mode under the frozen protocol. Replan before any extension phase opens:
+(a) give the comparator leg a real dataset — the on-disk FENDL-3.2c ENDF corpus is ALARA-convertible
+and would make at least part of the contract population executable by ALARA; (b) re-scope the
+headroom ambition to mechanisms with measured support — shared prepared-network loading is a P31
+candidate, not a 10x claim; (c) the 50% hands-on target needs the maintainer's practitioner study
+before it can be anything but undetermined; (d) the R2S handoff needs a lawful transport comparator
+(collaborator OpenMC/PyNE or local install) to be measurable. No P27+ phase opens on this record.
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

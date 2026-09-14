@@ -1,0 +1,57 @@
+{
+ "amendments_used": [
+  "protocols/ACTINV-P26_AMENDMENT_1.md"
+ ],
+ "evidence_sha256": {
+  "g1_check": "851df67799fdfd30d5b6707bbed710d43ca1fd511c6a82eeffb84f49a31be091",
+  "g1_workloads": "4f635d03ac1a9281b182642a950b4f646bad68aa29672b690f79279af1504a6a",
+  "g2_check": "6eff4bfbcaea4cbcc4764144201f81b97ec1c4955974801ede7f3fdd21d5a589",
+  "g2_contract": "91afc42bda7a15909209f4e2b4e07329c2a0607a5e288888fa9d337936192630",
+  "g3_check": "85e483ac87aad2a90509bf3f39b381f1d1e7d6ce75197b215fa825a49536ea84",
+  "g3_coverage": "44570b2dc2d325427308f09051a67f0cbf9be9863c26a41cda19a7d2e7a152ed",
+  "g3_headroom": "414d6504069f56917cc92cf6354eb2557e13ebca009ddaae351bf99bc6bfb40f",
+  "g3_ledger": "537852f6d3d9c3c0a038a597113940006b2473086739bc12132855b8d4833d6a",
+  "g3_tasks": "e28811c38061a553f0cd3addc82babaa723d16a15cd35831de166581bfc65578"
+ },
+ "feasibility": {
+  "faster_scientific_understanding": {
+   "evidence": "No practitioner study is recorded; the task decomposition was published as diagnostic-only. The 50% hands-on target has no baseline and cannot be judged in this phase.",
+   "status": "undetermined"
+  },
+  "investigations_previously_too_expensive": {
+   "evidence": "Measured in-process amortization on the 1000-case W-CAMPAIGN grid is 1.329x (median 0.557s vs 0.741s per case), far short of the drafted 10x. The comparator leg is unmeasurable on this workstation: ALARA's only library covers zero contract elements (contract_gap on all 1016 cases); FISPACT-II, SCALE/ORIGEN and OpenMC are unavailable. A deeper amortization route (shared prepared-network load) was outside P26's prototype budget.",
+   "measured": {
+    "amortization_ratio_median": 1.3291043855114215,
+    "batched_median_s": 0.5571453544835094,
+    "campaign_cases": 2000,
+    "per_invocation_median_s": 0.740504334011348
+   },
+   "status": "undetermined"
+  },
+  "reliable_assisted_work": {
+   "evidence": "Depends on P27 contract families that do not exist yet; no evidence either way was produced.",
+   "status": "undetermined"
+  },
+  "reproduction_and_interoperability": {
+   "evidence": "Hash-pinned provenance and the certificate/ledger path are demonstrated (feasible component); the spatial handoff leg has no executable comparator and no transport validation was run.",
+   "status": "undetermined"
+  },
+  "useful_predictive_results": {
+   "evidence": "P24-CONDITIONAL demonstrates independent controls and explicit coverage accounting on a qualified domain; P25-FAIL bounds the breadth. Predictive superiority remains unmeasured by design (no predeclared measurement comparison was run).",
+   "status": "feasible"
+  }
+ },
+ "flagship": "W-MATCMP",
+ "opening_commit": "3ae2f2656f6e6e56ad401378d9f5c6a96f1cf80d",
+ "phase": "P26",
+ "protocol_sha256": "0dd9be843e4e195d3f3ebb9a9084f233af3d0eedf5045bbb48d77d665f5d1e06",
+ "release_hold": "unchanged \u2014 the 1.1.0 decision remains the maintainer's",
+ "schema": "actinv-p26-verdict-1",
+ "selected": {
+  "flagship": "W-MATCMP",
+  "second_campaign": "W-CAMPAIGN",
+  "spatial_handoff": "W-R2S"
+ },
+ "verdict": "P26-FAIL",
+ "verdict_rule": "P26-FAIL: three draft targets undetermined and the headroom ambition not supported by measured evidence (1.33x amortization; comparator leg unmeasurable). Amendment 1 used the single repair round."
+}
