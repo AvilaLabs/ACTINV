@@ -123,6 +123,359 @@ continue to fail closed rather than use the historical fallback. Finite-dilution
 **Total:** ~25–30 working days → at two to three sessions a week, roughly three months to a v1.0 candidate. The
 part that does not compress: users, issues, and the validation record accumulating afterwards.
 
+## Draft next-evolution extension — P26–P35 (2026-09-13)
+
+**Status: requested draft; every phase below is unopened and unhashed.** This section is the canonical proposed
+scope for the next evolution of ACTINV. It supersedes the advisory E0–E5 phase proposal in
+[the competitive research note](COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md), while retaining that note as source
+research. It does not change a frozen protocol, prior verdict, evidence record or release authorization. P25 is
+the active phase at drafting; its repairs, P24's corrected-definition qualification and the current release hold
+retain their existing order and authority. Extension execution begins only after those obligations have a recorded
+disposition. Research and drafting may proceed meanwhile. Draft phase numbers and dependencies may be revised by
+a dated entry before their protocols freeze; this document does not open ten concurrent phases.
+
+The drafting baseline is ACTINV commit `5049129`; ongoing P25 changes are not assumed complete. The Core interface
+review used source `3e6dd8f0eb15509143c4f8e472ee6b899880dc2e`. Both identities must be refreshed and pinned at the
+relevant phase opening. No new benchmark, user study, solver job or AI evaluation was executed to write this draft.
+
+### Intended product outcome
+
+**An analyst can complete an activation investigation, understand what controls its conclusions, test the
+important alternatives and give a colleague a reproducible result with substantially less effort and waiting.**
+Leadership must be demonstrated on complete tasks within a declared activation domain. Feature counts, a fast
+CRAM kernel, fluent explanations and phase completion do not establish that outcome.
+
+The proposed flagship is an impurity-sensitive material comparison under a specified neutron spectrum and
+irradiation/cooling history. It follows activity, decay heat and photon production at selected cooling times;
+explains the important nuclides and pathways; tests whether conclusions survive the declared composition, flux
+and nuclear-data uncertainties; and packages the evidence for independent reproduction. Shielding is included
+where the chosen physical regime requires it. An associated spatial case exercises the flux-to-photon handoff
+through an external transport code. These are candidate workloads for P26 to validate against actual needs.
+
+The candidate users are activation analysts comparing materials and histories, researchers preparing shutdown
+source terms, and developers embedding inventories in larger workflows. Early evidence of these needs comes from
+application studies and public user discussions, predominantly in fusion. It does not establish representative
+demand for AI, automatic error budgets or any particular speed target. P26 must test those priorities against
+recent difficult projects before substantial architecture work.
+
+| Outcome | Draft target and evidence required |
+|---|---|
+| Useful predictive results | Independently controlled calculations with explicit material/projectile/energy/response coverage; no comparable-case regression beyond frozen tolerances and no hidden coverage loss. Predictive superiority requires separate, predeclared measurement comparisons on an adequately covered domain. |
+| Investigations previously too expensive | A real user-derived campaign completes within a hardware, elapsed-time and output budget fixed before optimization. Research ambition: at least 10x lower complete campaign wall time on the primary workload and 3x on a second distinct workload against the fastest accessible equivalent-output comparator. P26 must establish plausible headroom. |
+| Faster scientific understanding | At least 50% lower median hands-on time on the selected interpretation/comparison/handoff tasks, with no lower observed completion rate and no increase in consequential errors under the frozen evaluation. Predeclare timeout/failure scoring; report all participants, spread and evidence limits. A small study cannot establish a population-wide error-rate guarantee. |
+| Reliable assisted work | Every shipped assistant action maps to a maintained contract family and a supported combination; accepted numerical assertions and technical verdicts come from computed evidence. No seeded critical contract-bypass or false-verdict case may be accepted in the frozen battery. Ordinary-language task success is measured separately. |
+| Reproduction and interoperability | Another supported installation can regenerate required results and verify their identities/declared numerical equivalence without the original AI session. At least one spatial source handoff is validated through external photon transport. |
+
+The numbers above are proposed design targets, not measurements or frozen acceptance thresholds. P26 must record
+whether the ambition is feasible and valuable. If it is not, close with that finding and propose an explicit
+revision before opening dependent phases. A missed leadership target cannot silently become a pass by relabeling
+it a stretch goal. A scientifically qualified, useful release and a competitive-lead claim have separate verdicts.
+
+### Architecture and scope boundaries
+
+ACTINV owns the scientific calculations, diagnostics and study operations. A versioned study definition records
+inputs, variable axes, requested responses, numerical criteria, uncertainty assumptions and required cases. CLI,
+Python, desktop and AI use the same validation and study construction path. Study support is a thin layer over
+the existing engine and interfaces, not a general project-management platform or a UI rewrite.
+
+Avila Core is an optional, version-pinned external evidence and execution integration. Standard ACTINV calculations
+remain usable offline without Core, an AI model or a service account. The supported AI execution feature requires
+Core and qualified ACTINV adapters. Core binds the instantiated question, tools, data and outputs, admits claims,
+and derives requirement verdicts; ACTINV and independent controls establish the scientific meaning of its outputs.
+Core's current MCP interface exposes recorded-result queries, not solver execution. A controlled invocation of its
+runner is a distinct integration deliverable. Packaging and distribution compatibility must be resolved in P27
+before choosing an embedding or bundling strategy; no new dependency is authorized inside P25.
+
+The application constructs contracts deterministically from maintained releases. The analyst supplies study facts
+and meaningful choices, such as cooling times and the response of interest. Documented defaults may supply a setting
+only within their justified applicability. The assistant can propose a supported template and allowed values; it
+cannot author new evidence rules, change comparators or tolerances to obtain a pass, replace a checker, or remove
+cases from an accepted campaign. A consequential change creates a new identified study revision. Execution can
+proceed within an explicitly accepted study and resource budget without asking again for every individual case.
+
+Contracts are more than prose. Each release includes the template, parameter schema, compatibility rules, pinned
+registry and adapters, executable checkers, required evidence, qualification references and negative controls.
+Core does not interpret the scientific truth of question/assumption text. The expected population, tolerances,
+claim types and completeness tests must therefore be executable. Review of a template does not by itself qualify
+the calculation method or its data. In particular, P18b-style denominator loss needs a direct population check.
+
+The assistant remains optional and model-independent at the tool boundary. It may explain evidence and suggest
+follow-ups; the application renders authoritative values, verdicts and qualification status independently of the
+generated prose. Its available actions cannot bypass the trusted template/adapter identities or the accepted
+study. Files, diagnostics and retrieved text remain data rather than execution instructions. Hosted inference
+requires an explicit data-sharing setting; local model support is evaluated for the chosen tasks, not promised
+to have the same capabilities. A saved study, its results and verification must remain usable without inference.
+
+**AI delivery decision (maintainer, 2026-09-13): users connect their own AI provider account.** The built-in
+assistant connects directly from ACTINV to a supported provider's API using customer-supplied credentials;
+the provider runs the model and bills the customer directly. ACTINV supplies the interface, study context and
+controlled tools. ACTINV calculations and Core execution/checks remain local. The default assistant requires
+internet access and provider API access, but no local model download or GPU for language-model inference.
+An optional user-managed local model endpoint may be evaluated separately; it is never an installation requirement.
+
+Avila will not operate an AI backend, request proxy, model-hosting infrastructure, account/billing service or
+managed AI subscription for this extension. AI setup and operation must have no runtime dependency on an
+Avila-hosted service. This is a fixed delivery constraint for P33–P35, not a choice left for implementation.
+Persisted credentials belong in the operating system's credential store; session-only entry is an alternative.
+Credentials must never enter study specifications, contracts, execution receipts, logs or exported bundles.
+Users explicitly control the study context sent to their provider. Missing credentials, connectivity or provider
+quota may make assistance unavailable; ordinary local calculations, saved results and verification remain usable.
+
+Within this extension: deeper qualified activation, response-specific numerical control, practical uncertainty,
+efficient campaigns, complete source handoffs, portable evidence and narrowly scoped AI assistance. Additional
+projectiles, an internal transport solver, criticality, thermal-hydraulics, general fuel-cycle flowsheets,
+multi-tenant services, cluster orchestration and unrestricted autonomous research remain outside this draft.
+Existing charged-particle support and documented limitations must be preserved and tested; the flagship's neutron
+focus does not authorize silently dropping another supported population. MCNP or other integrations require a
+concrete need and lawful validation route. AI-generated nuclear data and replacement of the qualified solver by a
+learned predictor are outside scope. Any later surrogate would need its own evidence-directed scope and controls.
+
+### Maintained contract families
+
+The goal is complete coverage of the officially supported assisted workflows through parameterized families.
+There is no contract per alloy or spectrum. Supported compositions of families are explicit in a compatibility
+matrix: independently qualifying two features does not qualify their combination. All interfaces check the same
+matrix, and an unsupported request returns a specific limitation rather than an improvised contract.
+
+| Family | Fixed obligations | Per-study values and boundaries |
+|---|---|---|
+| **ACT-STUDY-01: activation and cooling** | Identify every input and required case/output; validate units, normalization, data applicability and completion; expose missing channels and numerical limitations. A completion verdict is not a prediction-accuracy verdict. | Material, supplied spectrum, irradiation/cooling history, data selection, supported physics options and requested responses. |
+| **ACT-COMPARE-01: controlled comparison** | Declare permitted changes and common reference conditions; preserve the eligible population, zero predictions, failures and undefined metrics; check comparable outputs and predeclared decision rules. | Candidate materials/histories/libraries, response and times, permitted variation axes, justified comparison criterion. |
+| **ACT-ROBUST-01: sensitivity and uncertainty** | Enforce parameter constraints, declared correlations, consistent physics perturbations, complete sample accounting and convergence checks; preserve covered and uncovered uncertainty separately. Sampled stability is not a whole-domain proof. | Input ranges or justified distributions, covariance sources, selected responses, sampling plan, supported local or nonlinear method and any ranking criterion. |
+| **ACT-REFINE-01: numerical refinement** | Execute the declared refinement and response-comparison procedure; distinguish a proved bound from an estimator or unresolved contribution; fail to establish the requested criterion when evidence is insufficient. | Responses and times, absolute/relative numerical tolerances, refinement limits and work budget within the supported method envelope. |
+| **ACT-SOURCE-01: spatial photon handoff** | Verify material/cell mapping, volumes, units, flux normalization, photon totals/energy and spatial distribution; preserve transport and inventory provenance. No dose claim from an unexecuted transport stage. | Supported mesh/cell representation, imported flux/material mapping, cooling times, source representation and external transport configuration. |
+
+Input identity, reproducibility, changed-study lineage and portable evidence are common obligations. Thresholds
+that express a user's scientific question are visible study settings fixed before candidate evaluation; numerical
+defaults must have a qualified scope. Protocol qualification populations and acceptance thresholds belong to the
+maintained checks and cannot be relaxed through an ordinary study setting. Every release records family/version,
+instantiated contract identity and checker identity. Updating a release never rewrites past studies or verdicts.
+
+### Phase sequence and acceptance gates
+
+The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
+controls and updates the support matrix and contract evidence for capabilities it actually qualifies. The rows
+below are bounded planning scopes; the detailed protocol, minimum gate input, tolerances, resource envelope,
+independent checker and stop rule must be frozen before each phase executes. No calendar commitment is made here:
+P26 supplies estimates based on measured bottlenecks, method feasibility, evidence access and user availability.
+
+| Phase | Deliverable | Entry dependency | Decisive gate |
+|---|---|---|---|
+| **P26 — user workloads and feasibility** | User-derived flagship, current competitive baseline, evidence partitions and bounded method prototypes. | Recorded P25/P24 and release-hold disposition. | A consequential user problem, complete comparison contract and a credible technical route to the proposed advantage; otherwise explicit replan. |
+| **P27 — shared studies and Core contracts** | Versioned study model, deterministic template construction, supported operations and initial Core adapters. | P26. | Every initially supported action has a tested contract/adapter; mutated populations, policies, identities and evidence cannot obtain an accepted result. |
+| **P28 — qualified physics combinations** | The processing and shielding regimes needed by the selected studies, with a complete applicability map. | P27. | Independent rate and response controls across the declared regime and its boundaries, with missing coverage counted. |
+| **P29 — response-specific numerical control** | Requested numerical criteria on selected outputs, refinement and explicit error accounting. | P28. | Bounds/estimators meet their stated claims on independent and difficult controls; unresolved error cannot masquerade as satisfied accuracy. |
+| **P30 — uncertainty and scientific explanation** | Consistent nuclear/input uncertainty, sensitivities, pathways and controlled result comparisons. | P29. | Independent local/nonlinear controls, complete coverage/sample accounting and evidence-backed attribution in the supported combinations. |
+| **P31 — efficient complete campaigns** | Reusable work, streaming and resumable execution across realistic variations, including uncertainty costs. | P30. | Frozen complete-workload speed/resource targets at qualified accuracy, including distinct inputs and failure recovery. |
+| **P32 — spatial handoff and portable studies** | External-transport source integration and reproducible studies across CLI, Python and desktop. | P31. | Source conservation/spatial controls, an executed open R2S chain and independent handoff/reproduction tasks. |
+| **P33 — assisted setup and interpretation** | Optional evidence-linked explanations and validated study drafts, using a direct connection to the user's own AI provider account. | P32. | Correct task completion, credential handling and provider-failure recovery; no Avila-hosted service dependency; official values/verdicts stay independent of narration. |
+| **P34 — bounded assisted investigations** | AI-initiated execution and follow-ups through the maintained contracts and Core runner. | P33. | Accepted task intent, bounded execution, immutable rules, complete evidence and recovery hold under repeated and adversarial evaluations. |
+| **P35 — independent product qualification** | Exact-candidate scientific, competitive, user and assisted-workflow qualification; release recommendation. | P34 and every shipped combination's controls. | Independent verdicts on scientific fitness, workflow benefit, AI reliability and competitive claims, with all prior failures preserved. |
+
+**P26 — define the work users need and test the difficult ideas.** Examine recent projects with a proposed five
+to eight practitioners across the candidate user groups, using existing work products where they can lawfully be
+shared. Record preparation, computation, debugging, interpretation and handoff time; identify studies abandoned or
+simplified and the practical reason. Seek repeat use of an actual case as adoption evidence. Outreach requires
+separate authorization; drafting this roadmap does not contact anyone. When participants are unavailable, label
+public studies/internal exercises as proxies and keep demand and usability conclusions unestablished.
+
+Freeze two campaign workloads and one spatial handoff, required output/evidence parity, resource limits, comparator
+versions and baseline configuration before optimization. Candidate scales are 1,000 material/history variants and
+the existing 20,000 distinct-spectrum case; validate the scales rather than treating them as demand evidence.
+Match physical assumptions, uncertainty scope and requested numerical accuracy across the timed paths; a capability
+mismatch is reported as such and cannot become a speed ratio. Enable each comparator's appropriate reusable path.
+Profile complete preparation, processing, solve, uncertainty and output costs. Test the smallest useful prototypes
+for response error control and reuse across genuinely changing inputs. Declare a compute budget and a go/no-go
+criterion for each prototype; promote a method only when it has independent numerical support and a useful cost
+case. This is permission for bounded feasibility work, not unrestricted engine redesign.
+
+Select separate development and final-evaluation tasks. Secure and seal suitable new measurement populations
+before their values are examined; if none are available, plan an honestly retrospective/engineering qualification.
+Opening deliverables are a workload manifest, user-evidence summary, combination matrix, baseline report, evidence
+access plan and revised per-phase estimates. A missing comparator is unmeasured, not an assumed win. No required
+development gate depends on obtaining a FISPACT/SCALE licence; optional lawful collaborators can widen claims later.
+
+**P27 — make study construction and contracts a shared product capability.** Deliver the study schema and
+deterministic generator, with initial executable ACT-STUDY-01 and ACT-COMPARE-01 paths limited to already qualified
+operations. Define the interfaces and obligations for the remaining families, leaving unsupported combinations
+explicitly unavailable until their delivering phase qualifies them. The maintained package, not generated model
+text, supplies workflow topology, evidence extraction, population accounting and verdict logic. Structured settings
+and inputs remain editable through the ordinary interfaces; users do not author Core JSON.
+
+Pin the Core semantic profile and supported version range, define an external-process interchange and failure
+contract, and qualify a minimum calculation/comparison end to end. Distinguish recorded attestations, current
+artifact verification, reused execution and fresh execution. Make qualification policy explicit: Core's default
+display of an unqualified-evidence warning is insufficient for an ACTINV result advertised as qualified. Test
+incorrect units, changed data/executables, missing/duplicate cases, zero/undefined metrics, forged or stale evidence,
+missing qualification, altered limits and unexpected schema fields. Independent checks must exercise substantive
+metric/coverage semantics, not only reproduce a hash or validate JSON. Establish template migration and revocation
+behavior without editing historical evidence. ACTINV's base calculation path stays independent of this integration.
+
+**P28 — qualify the combinations the investigation needs.** Starting from P25's recorded disposition, identify
+remaining method and coverage limitations that prevent the chosen studies. Qualify consistent rates, product
+identity, production/loss accounting and shielding within the selected regimes. Add resolved or unresolved
+treatment only where the workload requires it and an independent processing route exists. Check composition,
+temperature, dilution, spectrum and supported data combinations at regime boundaries as well as ordinary cases.
+Geometry-dependent transport remains an external input responsibility; a dilution approximation cannot claim to
+replace it. Freeze the intended validation population before construction so unsupported cases cannot disappear.
+
+Minimum gates include independent source-to-rate traces, analytic limits, an independently processed reference,
+and complete inventory/response comparisons for the selected cases. Update family applicability and ledger
+categories across all interfaces. Separate processing correctness from experimental prediction. If required
+coverage cannot be established, record the gap and revise unopened scope; do not qualify a narrower easy subset
+under the original broad claim.
+
+**P29 — control numerical error in the response the user asked for.** Deliver numerical criteria for selected
+activity, heat and photon responses at specified times. Account for solver, pruning, collapse/processing and
+other relevant approximations individually; distinguish rigorously bounded, empirically estimated and unresolved
+contributions. Demonstrate how combined error is justified, rather than adding unrelated estimates as though they
+were a proved bound. Use absolute criteria near zero and declared relative criteria elsewhere. Missing support
+must produce an unmet or unestablished criterion, with an exact/full calculation fallback where supported.
+
+Adaptive refinement may spend work where the response requires it and must stop at a declared resource limit.
+Reference controls include analytic chains, independent dense/high-accuracy solves, stiff/long histories,
+near-zero outputs, and independent processing/refinement cases. A two-resolution agreement alone does not prove
+convergence or a whole-pipeline error bound. Qualify ACT-REFINE-01 only for the demonstrated envelope. Computational
+error, nuclear/input uncertainty and predictive discrepancy remain separate in every report. This phase cannot
+promise a user-selected total physical accuracy that the data cannot support.
+
+**P30 — make uncertainty and explanation work together.** Deliver a supported nonlinear sampling path alongside
+local sensitivities, including the nuclear-data channels available to the selected studies and user-supplied flux
+normalization/spectral and composition/impurity uncertainty where justified. Preserve positivity, composition sums,
+correlations and schedule constraints; document independence assumptions when correlations are unavailable.
+Recompute shielding and rates consistently when perturbed inputs affect them. Local methods require an explicit
+applicability check against nonlinear controls; a fixed seed supplies repeatability, not convergence evidence.
+
+Report sampling error, covered uncertainty, missing covariance and model remainder separately, with every sample
+and failure accounted. Ranking claims name whether they concern nominal values, supplied distributions or a proved
+domain bound. A spread across data evaluations is a sensitivity result unless a statistical interpretation is
+justified. Build response-linked pathway/contribution views and controlled comparisons with explicit interactions
+and unexplained remainder; sensitivities do not automatically prove causation. Independent analytic/finite-
+difference and sampled controls check the numbers and interpretation. Qualify ACT-ROBUST-01 and the corresponding
+comparison combinations; no LLM is needed to produce the underlying explanations or diagnostics.
+
+**P31 — make the full investigation affordable.** Optimize measured work across changed compositions, histories
+and distinct spectra: preparation, rate construction, network assembly, sensitivity/uncertainty execution and
+output. Candidate mechanisms include reusable operator structure, batched responses and qualified response-aware
+reduction. Select mechanisms from P26 evidence; no algorithm is mandatory merely because it is sophisticated.
+Approximate reuse must carry the P29 error checks and revert to a supported full calculation when it cannot satisfy
+them. Exact-repeat cache hits alone do not establish the primary advantage.
+
+Measure elapsed time to all required results and evidence, including Core/checker overhead, preparation amortization,
+sampling and output. Report cold and warm states and realistic distinct-input workloads; give competitors their
+documented caches and suitable APIs. Include memory and artifact size at fixed output parity. Existing P21
+checkpointing is a starting point; exercise cancellation during all expensive stages, termination/reaping, resume
+after torn output, cache identity changes and resource exhaustion. The OS resource boundary must enforce limits;
+a post-hoc memory counter is not an allocation limit. The frozen competitive target and scientific equivalence have
+separate checker results, both including failed cases.
+
+**P32 — deliver source handoffs and studies another person can use.** Qualify at least one open OpenMC workflow
+from supplied neutron flux/material mapping through ACTINV activation to a spatial decay-photon source and external
+photon transport. Compare with the pinned native OpenMC R2S path where outputs and data permit. Check cell IDs,
+volumes, source normalization, spectra, cooling-time separation and spatial sampling independently; a point at the
+origin cannot satisfy a distributed source contract. Account for transport statistical error separately and keep
+source validation distinct from an unqualified dose prediction.
+
+Package the study definition, template release, data/tool identities, results, diagnostics and verification route
+into a portable record. Resolve bulky/licensed inputs by lawful references and hashes. Expose setup, requested
+outputs, comparisons, limitations and reproduction through the existing CLI/Python/desktop using shared operations.
+A new installation must reproduce a supplied study, diagnose a planted normalization/mapping error, and explain a
+controlled change. Test missing data, relocation, changed versions, interrupted export and Core-unavailable basic
+use. Qualify ACT-SOURCE-01 and complete all non-AI families needed by the flagship. The product should already be
+useful and testable with AI disabled.
+
+**P33 — assist setup and interpretation from evidence.** Introduce optional assistance for investigating recorded
+results, finding documentation and preparing study drafts. Tools return structured outputs, units, applicable
+limitations and source identities. Numerical answers are selected/computed by trusted tools; generated explanation
+links to that evidence and marks hypotheses. The model cannot manufacture a pathway contribution or claim that a
+saved receipt freshly verifies current files. A draft exposes material assumptions and unresolved inputs before
+execution; matching a template's schema does not prove that the intended scientific question was understood.
+
+Deliver provider/model selection and customer API credential setup inside ACTINV under the delivery decision
+above. Show usage and bounded request/token budgets, provide cancellation and bounded retries, and identify which
+study context is shared. Verify direct provider access, credential redaction, missing/invalid credentials, quota
+and rate-limit responses, timeouts and outages. The assistant must preserve local studies and remain optional
+through these failures. Qualify installation and operation without an Avila-hosted AI service or a local model.
+
+This phase grants no autonomous solver execution. Evaluate unseen natural-language tasks, ambiguous normalization,
+incompatible options, missing data, contradictory records and misleading instructions inside imported text.
+Include a strong conventional UI/documentation baseline. Measure task correctness, unsupported factual claims,
+hands-on time, model latency/cost and repeated-trial variability for each pinned supported model/configuration.
+Use deterministic grading for numerical/record assertions and independent domain assessment for intent and
+interpretation; an LLM judge alone cannot establish correctness. Freeze development/evaluation partitions before
+tuning prompts or tool descriptions. A provider/model change triggers the relevant evaluation again.
+
+**P34 — conduct bounded investigations through Core.** Enable the assistant to instantiate and execute only
+qualified study operations within the selected contract families. The user accepts a concrete study scope and
+resource budget; a trusted dispatcher binds the template, inputs, permitted variations and execution policy.
+Core runs the bound capabilities and the application renders its authoritative report. The AI has no write
+authority over trusted templates, checker executables, qualification records, receipts or technical verdicts.
+Use process and file permissions to enforce that separation; conversational instructions and MCP path checks
+alone are not an OS isolation boundary.
+
+Follow-up actions may vary only accepted axes and must preserve attempt lineage. A new scientific question or
+weakened criterion requires an explicit study revision; depleted budgets, unsupported requests and unresolved
+inputs return a specific incomplete state. Test duplicate requests, idempotency, interruption/cancellation,
+partial failures, retry exhaustion, invalid parameters, changed evidence and attempted contract bypass. Retain
+all attempts, including failed samples, while avoiding duplicate solver work through verified reuse. Final
+free-text conclusions must be checked against the structured result and cannot override its qualification limits.
+Compare a contracted assistant with an ordinary tool-using assistant and with non-AI ACTINV on the frozen tasks;
+measure whether Core actually reduces erroneous accepted claims and unnecessary execution. No statistical claim
+of zero AI error follows from a finite passing battery.
+
+**P35 — qualify the exact product and decide which claims it earns.** Re-run the frozen scientific, numerical,
+uncertainty, source-handoff, performance, reproduction and AI task batteries on exact candidate artifacts, data,
+Core/template versions and supported model configurations. Use new eligible measurements only according to their
+sealed protocol; preserve P17/P18/P18b failures and consumed partitions as historical/diagnostic evidence. Report
+common-case results and whole eligible-population coverage together, by family/projectile and important regime.
+Publish disagreements rather than attributing them to a competitor without matched-data/source evidence.
+
+Independent checkers derive numerical results, completeness and technical verdicts. Human task evaluation records
+participant background, task assignment/order, failures, hands-on and elapsed time, and observed errors under
+predeclared severity definitions. Unavailable user/comparator evidence remains unmeasured. A scientific release
+recommendation can be positive while usability, AI reliability or leadership remains unestablished; the release
+must then exclude the unsupported feature/claim and retain the missed gate. A failed phase still follows the
+standing successor rule; a required scientific or AI gate cannot be waived to ship its affected feature. Check
+final installation, supported-platform reproduction and ordinary operation without
+AI/Core. Produce a release recommendation and explicit claim/limitation matrix; tagging, publishing and external
+communications retain their existing authorization requirements.
+
+### Evidence, resource and completion rules for this extension
+
+1. Pin and report actual executable/module/data identities for every measured leg. P22's process performance leg
+   deliberately used v1.0.0 while its Python kernel leg used the candidate; it is historical evidence, not the
+   baseline measurement of this extension's prepared candidate. Add new records and leave CB1/P22 unchanged.
+2. Freeze eligible populations, required outputs, metrics, comparison rules and failure accounting before scoring.
+   Positive measurements with zero predictions, failed construction, missing samples and undefined ratios never
+   disappear through finite-only filtering. Report family counts beside row counts.
+3. Distinguish numerical equivalence, processor correctness, data coverage, experimental accuracy, user task
+   performance and AI reliability. A green result in one category does not establish another. Treat identical-data
+   and each-tool-with-its-data comparisons as separate experiments.
+4. Bind contract/checker qualification to the intended output and domain. Core integrity verifies identified
+   evidence under stated rules; it cannot repair an incorrect physical premise. Template selection, parameter
+   binding and whether the study answers the user's intent are separate evaluation obligations.
+5. Count all time relevant to the claimed benefit. Inventory campaign speed cannot stand in for whole R2S speed;
+   report external transport, hands-on work and model/network latency separately and in complete task totals.
+   No extrapolated million-cell or universal competitor claim. Separate feasibility data from final comparisons.
+6. Apply the current [local safety rules](../AGENTS.md): only the coordinating agent runs builds, executable tests,
+   benchmarks or solver jobs, one job at a time inside the enforced systemd cgroup. Stop if enforcement fails;
+   use disk-backed `target/preflight-tmp` for temporary build work, profile the minimum gate case first, and make
+   long work resumable. Historical `ulimit` guidance alone does not replace those protections.
+7. Every delivering phase updates the machine-readable family/combination matrix, user-visible limitations,
+   independent controls and qualification references. No shipped assistant action relies on a template that exists
+   only as a draft. A family has meaningful positive, negative and boundary tests, including attempted evidence
+   weakening. Composing supported families requires explicit combination evidence.
+8. The final extension has four separately reported outcomes: scientific qualification, user-workflow benefit,
+   assisted-workflow reliability and competitive leadership. Its defining demonstration is the complete flagship
+   investigation, with and without AI, on a case selected before implementation optimization.
+
+Planning milestones are therefore P26 (established need and feasible mechanism), P27–P30 (scientific investigation
+and contract foundation), P31–P32 (efficient, portable non-AI product), P33–P34 (qualified assistance), and P35
+(independent product decision). Useful earlier capabilities may have separate qualified release candidates; this
+does not confer a later phase's verdict or authorize publication. Uncertainty in estimates is concentrated in the
+P28 physics envelope, P29 numerical bounds, P30 covariance coverage and P31 performance headroom; P26 must make
+those risks concrete before the implementation sequence is committed.
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
@@ -575,3 +928,35 @@ part that does not compress: users, issues, and the validation record accumulati
   P25 was rewritten accordingly: it is a new protocol (not a P18b amendment, which only authorizes
   otherwise-passing closures) whose first milestone is a bounded cause diagnosis, with acceptance gates
   that count coverage, zero predictions and construction failures explicitly.
+
+- 2026-09-13 — at the maintainer's request, draft the next-evolution extension P26–P35: validate complete user
+  investigations and competitive headroom; deliver shared studies and predefined Avila Core contract families,
+  qualified physics combinations, response-specific numerical control, practical uncertainty and explanation,
+  efficient campaigns, spatial handoffs and portable evidence; then qualify optional AI setup/interpretation and
+  bounded execution through Core before an independent product decision. The extension is unopened/unhashed;
+  P25/P24 obligations and the current release hold retain their existing authority. The advisory E0–E5 proposal
+  is superseded as a phase plan, with its research retained. No scientific evidence or prior verdict is changed.
+
+- 2026-09-13 — the maintainer fixes AI delivery to customer-supplied provider API credentials, with direct
+  ACTINV-to-provider requests and provider-to-customer billing. Avila hosts no AI backend, proxy, model or
+  account/billing service. P33 now explicitly delivers credential setup, usage controls and provider-failure
+  handling; P33–P35 inherit the no-hosting constraint. Local language-model inference is optional, and ordinary
+  ACTINV/Core calculation and verification remain local and independent of provider availability.
+
+- 2026-09-14 — **P25 closes P25-FAIL** (`results/verdict_p25.json`, independent G6 checker
+  `controls/check_g6_p25.py`). The phase executed its full G0–G6 protocol: a 397-file quarantine census
+  (`results/g1_p25_census.json`), decimal-oracle mechanism classification (`results/g2_p25_traces.json`),
+  a diagnosis with coverage floors frozen before repaired scoring (Amendment B), and bounded repairs that
+  legitimately recovered 287 of 397 quarantined files (neutron 40, proton 129, deuteron 73, alpha 45) —
+  including the projectile-aware fix for the charged-particle MT=4 same-residual defect behind the
+  `181Ta(α,n)184Re` wrong-nuclide rows. G5 then failed honestly under the frozen gates: all four
+  Amendment-B coverage floors miss (n 162/188, p 358/417, d 70/72, a 288/304 status-scored rows) and
+  stratum nonregression fails, while outcome accounting, the no-empty-stratum rule and byte-exact
+  historical reproducibility pass. The failure is structural, not a repair miss: the ~110 still-quarantined
+  files are genuine TENDL-2025 source inconsistencies that correctly fail closed, all 485 candidate
+  `zero_denominator` rows are also zero on the baseline library, and the composition-controlled paired
+  bootstrap shows ~zero per-row change (median Δ ≈ 2e-8) — the proton aggregate breach is population
+  composition, not physics. The census produced a hash-pinned per-file defect catalog of TENDL-2025
+  (`docs/P25_TENDL2025_DEFECT_REPORT.md`, qualified by absolute magnitude in `docs/DATA_TRAPS.md` traps
+  10–15). P17-FAIL, P18-FAIL and P18b-FAIL remain visible and unamended; the v1.1.0 release hold stands;
+  P24's corrected-definition re-validation retains its order and is the next scheduled phase.

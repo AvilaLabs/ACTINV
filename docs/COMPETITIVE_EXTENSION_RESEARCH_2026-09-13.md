@@ -6,6 +6,12 @@ Local observations began at commit `77dfaef8c1cb4067c8cc8e1b7c4a686123161ea7`; P
 shared checkout. Its future results are not assumed here. The planning assumption is balanced emphasis on scientific
 confidence, campaign performance and analyst workflow.
 
+**2026-09-13 planning update.** The maintainer subsequently requested a concrete next-evolution draft, including
+predefined Core contracts and optional AI assistance. The canonical proposed scope is now
+[ROADMAP.md, P26–P35](ROADMAP.md#draft-next-evolution-extension--p26p35-2026-09-13). The E0–E5 proposal below is
+retained as the earlier advisory plan, not a second active phase sequence. Its capability research remains useful;
+its targets and priorities are superseded by the dated roadmap draft. No new phase is opened by either document.
+
 **Recommendation.** Plan another extension, with explicit competitive outcomes. Complete P25 and the required
 P24/release qualification on their own terms. Use the research below to design a successor around a small set of
 complete studies that ACTINV should handle exceptionally well. Research and proposal preparation can proceed during
@@ -185,3 +191,32 @@ repairing existing charged-particle support.
 The first concrete planning deliverable should be E0's short competitive contract, with a complete combination
 matrix and three reproducible workload definitions. This research supports that investment. It does not yet support
 a fixed completion date, a promise to outperform inaccessible executables, or a new public superiority claim.
+
+**Additional evidence for the next-evolution draft (2026-09-13)**
+
+User need remains a hypothesis to test, rather than a consequence of competitor feature lists. A UKAEA study
+combines OpenMC, FISPACT-II and XSUN to investigate fusion-steel activation and whether nuclear-data uncertainty
+affects waste-management conclusions. Historical OpenMC user discussions describe practical shutdown-source
+handoff problems, and a January 2026 report describes difficulties preserving separate photon results across
+time steps. These support investigating uncertainty, integration and result integrity; they do not establish
+representative demand or the present status of a reported defect.
+[UKAEA study](https://scientific-publications.ukaea.uk/papers/nuclear-data-uncertainty-propagation-and-implications-for-radioactive-waste-management-of-fusion-steels/),
+[shutdown-dose workflow discussion](https://openmc.discourse.group/t/shutdown-dose-rate-calculations/2289),
+[2026 result-persistence report](https://openmc.discourse.group/t/issues-with-r2s-data-persistence-photon-tallies/6207).
+
+LLaMP and MCP-SIM provide research precedents for language models using scientific data and simulation tools.
+Their tested domains and tasks do not qualify activation assistance or demonstrate ACTINV user demand. The draft
+therefore measures assisted task performance and errors separately from deterministic solver/contract tests.
+[LLaMP](https://aclanthology.org/2025.emnlp-main.1280/),
+[MCP-SIM](https://www.nature.com/articles/s44387-025-00057-z).
+
+Core source `3e6dd8f0eb15509143c4f8e472ee6b899880dc2e` supplies typed parameter/domain checks, controlled execution,
+evidence admission and four-state verdicts. Its question and assumption prose is not interpreted; ACTINV must
+provide the actual population, metric and scientific checkers. Recorded-result queries do not freshly verify
+referenced artifacts, and the current MCP interface does not execute solvers. Core's pre-alpha status and the
+qualification of each ACTINV adapter remain explicit integration considerations. Existing P19 use supplies an
+integration precedent, not automatic qualification of the proposed study families.
+[Core parameter semantics](https://github.com/AvilaLabs/Avila-Core/blob/3e6dd8f0eb15509143c4f8e472ee6b899880dc2e/docs/architecture/SEMANTIC_COMPILER.md),
+[contract schema](https://github.com/AvilaLabs/Avila-Core/blob/3e6dd8f0eb15509143c4f8e472ee6b899880dc2e/schemas/evidence-contract.v0.2-draft.schema.json),
+[query boundaries](https://github.com/AvilaLabs/Avila-Core/blob/3e6dd8f0eb15509143c4f8e472ee6b899880dc2e/docs/product/CORE_TOOLS.md),
+[P19 contract](../controls/p19_core/contract.json).
