@@ -1,0 +1,86 @@
+{
+ "comparator_census": {
+  "actinv_v101": {
+   "executables": [
+    "actinv"
+   ],
+   "python_modules": [],
+   "status": "executable"
+  },
+  "alara": {
+   "executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  },
+  "fispact": {
+   "executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  },
+  "njoy": {
+   "executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  },
+  "openmc": {
+   "executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  },
+  "scale_origen": {
+   "executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  }
+ },
+ "core": {
+  "consequence": "No maintainer checkout of Avila Core exists on this workstation; P26 G0 records the unavailability.  Core is an optional integration and P26's feasibility work does not consume it; the identity must be pinned before any P27 adapter work.",
+  "head": null,
+  "path": null,
+  "status": "unavailable"
+ },
+ "failures": [],
+ "gate": "G0",
+ "opening_commit": "3ae2f2656f6e6e56ad401378d9f5c6a96f1cf80d",
+ "pass": true,
+ "phase": "P26",
+ "prior_verdicts": {
+  "verdict_cb1.json": "CB1-COMPLETE",
+  "verdict_p10.json": "P10-CONDITIONAL",
+  "verdict_p11.json": "P11-CONDITIONAL",
+  "verdict_p12.json": "P12-CONDITIONAL",
+  "verdict_p13.json": "P13-PASS",
+  "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+  "verdict_p15.json": "P15-PASS",
+  "verdict_p16.json": "P16-CONDITIONAL",
+  "verdict_p17.json": "P17-FAIL",
+  "verdict_p18.json": "P18-FAIL",
+  "verdict_p18b.json": "P18b-FAIL",
+  "verdict_p19.json": "P19-PASS",
+  "verdict_p2.json": "P2-CONDITIONAL",
+  "verdict_p20.json": "P20-PASS",
+  "verdict_p21.json": "P21-PASS",
+  "verdict_p22.json": "P22-PASS",
+  "verdict_p23.json": "P23-PASS",
+  "verdict_p24.json": "P24-CONDITIONAL",
+  "verdict_p25.json": "P25-FAIL",
+  "verdict_p3.json": "P3-FAIL",
+  "verdict_p3b.json": "P3b-PASS",
+  "verdict_p4.json": "P4-FAIL",
+  "verdict_p4b.json": "P4b-PASS",
+  "verdict_p5.json": "P5-PASS",
+  "verdict_p6.json": "P6-CONDITIONAL",
+  "verdict_p7.json": "P7-CONDITIONAL",
+  "verdict_p8.json": "P8-CONDITIONAL",
+  "verdict_p9.json": "P9-CONDITIONAL"
+ },
+ "production_path": {
+  "clean": true,
+  "production_references_to_prototypes": [],
+  "prototype_files": []
+ },
+ "protocol_sha256": "0dd9be843e4e195d3f3ebb9a9084f233af3d0eedf5045bbb48d77d665f5d1e06",
+ "release_hold": "The 1.1.0 release hold stands unchanged; P26 produces feasibility evidence, not a release.",
+ "schema": "actinv-p26-g0-seal-1",
+ "seal_commit": "3ae2f2656f6e6e56ad401378d9f5c6a96f1cf80d"
+}
