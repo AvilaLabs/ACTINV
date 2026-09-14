@@ -1,0 +1,10 @@
+{
+ "failures": [],
+ "mutation_self_test": {
+  "planted": 6,
+  "rejected": 6
+ },
+ "pass": true,
+ "replayed_files": 28,
+ "schema": "actinv-p25c-g2-check-1"
+}
