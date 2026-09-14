@@ -272,3 +272,44 @@ under a declared zero total produces an infinite relative figure.
 | proton | `p-Sn130m.tendl` |
 | proton | `p-Te129m.tendl` |
 | proton | `p-Te131m.tendl` |
+
+## Addendum — P24 candidate build over the IRDFF-II dosimetry target set
+
+P24's bounded candidate build (`results/g0_p24_candidate_build.json`, sealed at G0) exercised an
+independent target population: the 49 isotopic targets the IRDFF-II reaction catalog requires for
+the fresh benchmark partition. The current production builder failed closed on **17 of 49 isotopic
+targets** — every failure is the same conservation-rejection class (emitted MF=10 state sum exceeds
+the file's declared MF=3 total); none was a silent skip. Cross-classified against the P25 oracle:
+
+| evaluation | P25 census class (or P24 oracle run) | first defect |
+|---|---|---|
+| `n-Sc045.tendl` | genuine gridpoint excess | MT4/ZAP21045: total 0, states 3.6e-07 b |
+| `n-Ti047.tendl` | genuine gridpoint excess | MT105/ZAP21045: total 0, states 2.0e-04 b |
+| `n-Ni058.tendl` | grid-density artifact | MT103/ZAP27058: between-gridpoint rel 0.29 — the monitor channel |
+| `n-Cu063.tendl` | grid-density artifact | MT107/ZAP27060: between-gridpoint rel 0.27 |
+| `n-Nb093.tendl` | genuine gridpoint excess | MT4/ZAP41093: between-gridpoint rel 0.07+ |
+| `n-Mo092.tendl` | grid-density artifact | MT107/ZAP40089: between-gridpoint rel 0.25 |
+| `n-Ag109.tendl` | genuine zero-total-with-partials | MT4/ZAP47109: total 0, states 3.4e-08 b |
+| `n-In113.tendl` | grid-density artifact | MT4/ZAP49113: between-gridpoint rel 0.05 |
+| `n-I127.tendl` | grid-density artifact | MT107/ZAP51124: between-gridpoint rel 0.22 |
+| `n-La139.tendl` | grid-density artifact (P24 oracle run; outside P25 census) | MT107/ZAP55136: between-gridpoint rel 0.24–0.70 |
+| `n-Pr141.tendl` | genuine gridpoint excess | MT32/ZAP58139: total 0, states 1.5e-06 b |
+| `n-Tm169.tendl` | genuine gridpoint excess (P24 oracle run; outside P25 census) | MT107/ZAP67166: declared-gridpoint rel 4.3e-02 |
+| `n-Ta181.tendl` | genuine gridpoint excess | MT18: MF=10 fission states with no MF=3 total |
+| `n-Au197.tendl` | genuine gridpoint excess | MT4/ZAP79197: total 0, states 7.0e-02 b |
+| `n-Hg199.tendl` | genuine gridpoint excess (P24 oracle run; outside P25 census) | MT4/ZAP80199: total 0, states 9.9e-02 b |
+| `n-Bi209.tendl` | missing MF=3 comparator | MT18: MF=10 fission states with no MF=3 total |
+| `n-Np237.tendl` | grid-density artifact | MT107/ZAP91234: between-gridpoint rel 0.20 |
+
+Two points matter beyond the count:
+
+1. **The failures sit on the dosimetry-critical isotopes themselves.** Ni-58 (the Ni-58(n,p) monitor
+   reaction the IRDFF-II benchmark normalizes against), Au-197, Ag-109, Nb-93 and In-113 all fail
+   closed. A candidate artifact built this way cannot score the monitor row — the P24 fresh
+   partition recorded exactly that as ledgered `variant_target_unavailable` outcomes.
+2. **The census population and the dosimetry population overlap only partially.** Tm-169, Hg-199 and
+   La-139 were outside the P25 census; re-running the same exact-decimal oracle on them classifies
+   Tm-169 and Hg-199 as new genuine source inconsistencies (a declared-gridpoint MT107 excess and a
+   zero-total MT4 with ~0.1 b partials respectively) and La-139 as a grid-density artifact. The
+   defect classes therefore extend beyond the originally censused files; the totals above should not
+   be read as a complete corpus-wide defect count.
