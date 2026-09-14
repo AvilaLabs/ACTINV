@@ -1,0 +1,54 @@
+{
+ "append_only": true,
+ "entries": [
+  {
+   "confidence": "demonstrated",
+   "controlled_substitution": "none \u2014 frozen output stands; the produced C/E is preserved verbatim and the cause is annotated, not repaired",
+   "entry_sha256": "ea69a26d1c466df71b265d66e036899f533cb4cd7068a6fad6471054285ee102",
+   "evidence": [
+    "p24-F-THERMAL-I0-t35-r012#source_record.source_line",
+    "p24-F-THERMAL-I0-t35-r012#calculations.baseline",
+    "p24-F-THERMAL-I0-t35-r012#source_record.numeric_tokens",
+    "The frozen grammar bound the printed uncertainty-percent token (1.8) as the measured value while the printed barn-scale value (1550.0) sits within the 30% band of the calculated 1542."
+   ],
+   "mismatch_key": "p24-F-THERMAL-I0-t35-r012::baseline",
+   "primary_cause": "measurement-definition",
+   "secondary_causes": [],
+   "sequence": 1,
+   "signed_log_change": 0.0
+  },
+  {
+   "confidence": "demonstrated",
+   "controlled_substitution": "none \u2014 frozen output stands; the produced C/E is preserved verbatim and the cause is annotated, not repaired",
+   "entry_sha256": "1346209372cecac5c670986c8f842a12dcb23e5d30e186595a2cd42a5cfa5441",
+   "evidence": [
+    "p24-F-THERMAL-I0-t35-r012#source_record.source_line",
+    "p24-F-THERMAL-I0-t35-r012#calculations.official",
+    "p24-F-THERMAL-I0-t35-r012#source_record.numeric_tokens",
+    "The frozen grammar bound the printed uncertainty-percent token (1.8) as the measured value while the printed barn-scale value (1550.0) sits within the 30% band of the calculated 1542."
+   ],
+   "mismatch_key": "p24-F-THERMAL-I0-t35-r012::official",
+   "primary_cause": "measurement-definition",
+   "secondary_causes": [],
+   "sequence": 2,
+   "signed_log_change": 0.0
+  }
+ ],
+ "input_ledger": {
+  "path": "results/g4_p24_row_ledger.json",
+  "sha256": "bdcaef8a7a2f1f2df53909033e1d6608752a7a93196fdb111c8abfb5a57d7e1b"
+ },
+ "protocol_sha256": "ee703d208b43c3dc91fef41a259d748d343865e130f37266128685cf21001ef7",
+ "schema": "actinv-p24-cause-ledger-segment-1",
+ "scope": "P24 G4 authorized-read material mismatches",
+ "taxonomy": [
+  "solver",
+  "chain-construction",
+  "processor",
+  "evaluation",
+  "decay-yield",
+  "measurement-definition",
+  "unsupported-model",
+  "unresolved"
+ ]
+}

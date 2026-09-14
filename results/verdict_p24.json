@@ -1,0 +1,27 @@
+{
+ "schema": "actinv-p24-verdict-1",
+ "phase": "P24",
+ "verdict": "P24-CONDITIONAL",
+ "failures": [],
+ "failure_count": 0,
+ "evidence_sha256": {
+  "g0_seals": "fa45c0b73bce146412f376d8992aa2aa08bfc003f9734fdb5d3c69955b47ac26",
+  "g0_check": "f1fe26f81c79e47d68f6130b7c171574bf66cfb9f01da6eb8a8703814cfd082d",
+  "g0_build": "151791d0462ce621f9ff02414aa8d429c24a2eb07238e901866aa6651071cc94",
+  "g1_definitions": "745cfd70046f2dfbe9d5b4be5543646ea12247dd68ca6be002e4680cf1ad5ac8",
+  "g1_check": "3d39e770bf4016239b1356a0ee519eed1348d74f09a563e2015b0217418ad97c",
+  "g2_audit": "2f38b1a890c7d453daa443f17bc85d38bec58fb4a7e26c3e8239e45499ae4352",
+  "g2_check": "228cbca4c2d64578d84e4c802a536c2a8e615939dc9089610b93c55ab58bea36",
+  "g3_diagnostic": "7fb3fcff5f9656b6f7deee2df8a9e8812480d741134e02ad24fb2a02dce9fa12",
+  "g3_check": "b6d5a4573a82390701c49ee240cea9ff7a9e38ccc8d1d262ed78551f507df5d3",
+  "unseal_authorization": "ca12e5dcdccca4545a402a4e7498ab17ebc3a109c04ec10896b5c25417529346",
+  "g4_fresh": "9d02b432c6544bf8161bbc86ee272200b7f0cf908e9bfee5617700e479e16797",
+  "g4_ledger": "bdcaef8a7a2f1f2df53909033e1d6608752a7a93196fdb111c8abfb5a57d7e1b",
+  "g4_check": "a4b7ccb50b9f2aa82b2a814cd4c4d7013ddb94f5d5c1b1d63585985172d75694",
+  "cause_ledger": "036f8cd2b63d3c17124b175e5bbb9af3d3975667996a76a12af18f0439665a43"
+ },
+ "protocol_sha256": "ee703d208b43c3dc91fef41a259d748d343865e130f37266128685cf21001ef7",
+ "amendment_1_sha256": "b10d45827279b732f69b6b8b56766398315bd3eb6e10c03f8f51cded168b6249",
+ "conditional_basis": "One append-only repair round (Amendment 1, R1-R5) was used for mechanical input/scoring-path defects and report completeness; no definition, mapping, metric or exclusion changed after the authorized read and no scored value was produced before it.",
+ "release_note": "P24-CONDITIONAL does not certify TENDL-2025, assert an accuracy figure, or lift the 1.1.0 release hold; the release decision remains the maintainer's and consumes this report beside the P25-FAIL record."
+}

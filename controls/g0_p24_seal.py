@@ -182,6 +182,9 @@ PRE_UNSEAL_ALLOWED_RESULTS = {
     "results/g2_p24_check.json",
     "results/g3_p24_diagnostic.json",
     "results/g3_p24_check.json",
+    "results/g4_p24_fresh.json",
+    "results/g4_p24_row_ledger.json",
+    "results/g4_p24_check.json",
 }
 PRE_UNSEAL_ALLOWED_CONTROLS = {
     "controls/g0_p24_candidate_build.py",
@@ -195,6 +198,8 @@ PRE_UNSEAL_ALLOWED_CONTROLS = {
     "controls/check_g2_p24.py",
     "controls/g3_p24_diagnostic.py",
     "controls/check_g3_p24.py",
+    "controls/g4_p24_fresh.py",
+    "controls/check_g4_p24.py",
 }
 TABLE_MAP_PATTERN = re.compile(
     r"(?:TABLE_PAGES|EXPECTED_ROWS|TABLE_SPECTRUM_MAT|FIELD_SPECTRUM_MAT)"

@@ -2,11 +2,17 @@
 import re
 import numpy as np
 _F = re.compile(r"^\s*([+-]?\d*\.?\d*)([+-]\d+)\s*$")
+_FS = re.compile(r"([+-])\s+(\d+)$")
 def endf_float(s):
     s = s.strip()
     if not s: return 0.0
     try: return float(s)
     except ValueError:
+        # some evaluations pad between the exponent sign and its digits
+        # ("-8.03362+ 6"); normalize that form before the legacy path
+        s2 = _FS.sub(r"\1\2", s)
+        if s2 != s:
+            return endf_float(s2)
         m = _F.match(s)
         if m: return float(m.group(1) + "e" + m.group(2))
         raise ValueError(repr(s))

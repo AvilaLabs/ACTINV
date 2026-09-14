@@ -49,7 +49,8 @@ def fixture_context() -> dict:
 
     defs = json.loads(DEFS_RECORD.read_text())
     alias_index = p24_scorer.load_alias_index(defs)
-    spectra = {(9101,): object()}
+    spectra = {9101: object(), 9041: object(), 9042: object(),
+               9004: object(), 9104: object(), 9106: object()}
     calls = {"fold_response": [], "production_response": []}
 
     def fold_response(binding, spectrum):
@@ -60,6 +61,12 @@ def fixture_context() -> dict:
         calls["production_response"].append(binding.get("source_label"))
         return (3.0 if binding.get("source_label") != "Ni58p" else 6.0), [[2]], "scored"
 
+    def thermal_response(binding, kind):
+        return (7.0 if kind == "sigma0" else 11.0), [[3]], "scored"
+
+    def production_thermal(lib, binding, kind):
+        return (9.0 if kind == "sigma0" else 13.0), [[4]], "scored"
+
     return {
         "alias_index": alias_index,
         "decay_by_id": {(27058, 0): {"half_life": MONITOR_HL, "mat": 2722},
@@ -67,6 +74,8 @@ def fixture_context() -> dict:
         "spectra": spectra,
         "fold_response": fold_response,
         "production_response": production_response,
+        "thermal_response": thermal_response,
+        "production_thermal": production_thermal,
         "libraries": {"official": None, "candidate": object()},
         "monitor_bindings": {},
         "input_set_ids": {"official": "ctx-official", "candidate": "ctx-candidate"},
@@ -262,6 +271,93 @@ def fixture_results() -> list[dict]:
         and len(cb.get("components", [])) == 4
         and cb.get("is_fission") is True,
         "observed": {"kind": cb.get("kind"), "components": len(cb.get("components", []))},
+    })
+
+    # 19. row-level spectrum resolution: single MAT, field-resolved
+    # multi-MAT, and unresolved multi-MAT
+    spec_multi = {"kind": "si_direct", "field": "PMF multi-assembly",
+                  "spectrum_mats": (9104, 9106, 9107)}
+    results.append({
+        "fixture": "row_spectrum_mat_resolution",
+        "pass": (
+            p24_scorer.row_spectrum_mat({}, spec_si) == 9101
+            and p24_scorer.row_spectrum_mat(
+                {"field_label": "Jezebel"}, spec_multi) == 9104
+            and p24_scorer.row_spectrum_mat(
+                {"field_label": "Nope"}, spec_multi) is None
+            and p24_scorer.row_spectrum_mat({}, spec_multi) is None
+        ),
+    })
+
+    # 20. sacs_or_si: a SACS row direct-folds and scales b -> mb; an SI
+    # row folds against its label monitor
+    spec33 = {"kind": "sacs_or_si", "field": "legacy reactor fields",
+              "spectrum_mats": (9004, 9005, 9007)}
+    val, keys, r = p24_scorer.fold_variant(
+        "official", None,
+        {"field_label": "ISNF", "monitor_label": None, "measured_unit": "mb"},
+        spec33, b, ctx)
+    results.append({
+        "fixture": "sacs_direct_fold_mb_scale",
+        "pass": r == "scored" and abs(val - 2000.0) < 1e-9,
+        "observed": {"value": val, "reason": r},
+    })
+    val, keys, r = p24_scorer.fold_variant(
+        "official", None,
+        {"field_label": "ISNF", "monitor_label": "Ni58p"},
+        spec33, b, ctx)
+    results.append({
+        "fixture": "t33_si_fold_ratio",
+        "pass": r == "scored" and abs(val - 0.5) < 1e-15,
+        "observed": {"value": val, "reason": r},
+    })
+
+    # 21. rate_ratio row folds filtered/unfiltered spectra
+    spec27 = {"kind": "rate_ratio", "field": "TRIGA-JSI filtered channels",
+              "spectrum_mats": (9041, 9042, 9043, 9044)}
+    val, keys, r = p24_scorer.fold_variant(
+        "official", None, {"spectrum_pair": (9042, 9041)}, spec27, b, ctx)
+    results.append({
+        "fixture": "rate_ratio_fold_pair",
+        "pass": r == "scored" and abs(val - 1.0) < 1e-15,
+        "observed": {"value": val, "reason": r},
+    })
+    val, keys, r = p24_scorer.fold_variant(
+        "official", None, {}, spec27, b, ctx)
+    results.append({
+        "fixture": "rate_ratio_missing_pair_ledgered",
+        "pass": r == "insufficient_spectrum_or_history", "observed": r,
+    })
+
+    # 22. sigma0/resonance_integral route to the thermal responses
+    spec34 = {"kind": "sigma0", "field": "thermal Maxwellian", "spectrum_mats": ()}
+    spec35 = {"kind": "resonance_integral", "field": "epithermal", "spectrum_mats": ()}
+    v34, k34, r34 = p24_scorer.fold_variant("official", None, {}, spec34, b, ctx)
+    v35, k35, r35 = p24_scorer.fold_variant("candidate", object(), {}, spec35, b, ctx)
+    results.append({
+        "fixture": "thermal_observable_dispatch",
+        "pass": r34 == "scored" and v34 == 7.0 and r35 == "scored" and v35 == 13.0,
+        "observed": {"sigma0": [v34, r34], "i0": [v35, r35]},
+    })
+
+    # 23. degraded grammar rows land on internal_consistency_failure
+    bad = {"grammar_failure": "sacs_or_si grammar", "numeric_tokens": [1.0]}
+    val, reason = p24_scorer.experimental_value(bad, spec33, {}, None, ctx["decay_by_id"])
+    results.append({
+        "fixture": "grammar_failure_ledgered",
+        "pass": reason == "internal_consistency_failure" and val is None,
+        "observed": reason,
+    })
+
+    # 24. residual sweep claims every unclaimed numeric line
+    text = "Hdr\nFoo1g 1.0 2.0 3.0 4.0 5.0 6.0 7.0\nnoise 8.0 9.0\n"
+    rows = p24_scorer.parse_si_direct(99, text)
+    p24_scorer._residual_rows(99, text, rows)
+    results.append({
+        "fixture": "residual_sweep_claims_uncovered_numeric",
+        "pass": len(rows) == 2
+        and rows[-1].get("grammar_failure") == "unclaimed numeric line",
+        "observed": len(rows),
     })
 
     return results

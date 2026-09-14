@@ -213,7 +213,7 @@
  },
  "module_hashes": {
   "controls/p24_definitions.py": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
-  "controls/p24_scorer.py": "64e8a844c041aab722c333428f745e07ac0495f69df52d4b9bc3b329e19083b9"
+  "controls/p24_scorer.py": "a5a30827def4faba83b11cfda34ca1b9a9e1402904f1f85502be411df3beb5c5"
  },
  "pass": true,
  "phase": "P24",

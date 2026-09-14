@@ -122,22 +122,79 @@
     "kind": "composite_fission_foil"
    },
    "pass": true
+  },
+  {
+   "fixture": "row_spectrum_mat_resolution",
+   "pass": true
+  },
+  {
+   "fixture": "sacs_direct_fold_mb_scale",
+   "observed": {
+    "reason": "scored",
+    "value": 2000.0
+   },
+   "pass": true
+  },
+  {
+   "fixture": "t33_si_fold_ratio",
+   "observed": {
+    "reason": "scored",
+    "value": 0.5
+   },
+   "pass": true
+  },
+  {
+   "fixture": "rate_ratio_fold_pair",
+   "observed": {
+    "reason": "scored",
+    "value": 1.0
+   },
+   "pass": true
+  },
+  {
+   "fixture": "rate_ratio_missing_pair_ledgered",
+   "observed": "insufficient_spectrum_or_history",
+   "pass": true
+  },
+  {
+   "fixture": "thermal_observable_dispatch",
+   "observed": {
+    "i0": [
+     13.0,
+     "scored"
+    ],
+    "sigma0": [
+     7.0,
+     "scored"
+    ]
+   },
+   "pass": true
+  },
+  {
+   "fixture": "grammar_failure_ledgered",
+   "observed": "internal_consistency_failure",
+   "pass": true
+  },
+  {
+   "fixture": "residual_sweep_claims_uncovered_numeric",
+   "observed": 2,
+   "pass": true
   }
  ],
  "freeze": {
   "definitions_sha256": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
-  "scorer_sha256": "64e8a844c041aab722c333428f745e07ac0495f69df52d4b9bc3b329e19083b9",
+  "scorer_sha256": "a5a30827def4faba83b11cfda34ca1b9a9e1402904f1f85502be411df3beb5c5",
   "statement": "after this gate the scoring code is frozen; a post-audit change requires an amendment"
  },
  "gate": "G2",
  "module_hashes": {
-  "controls/endf_common.py": "97ce887b0dfbd413f0fd6ece4dba372d8f6a874585517b36a9bf01a7cf48232f",
+  "controls/endf_common.py": "ab77bf6ae5e7c06ae24d3f5b9ba2cbbac45f8b71eb14489b37f83d81916e9742",
   "controls/endf_decay.py": "8c1bf9b3c5284cbb66ebc7b701313bcf2fc15ffc881771c0e0f30dd2d5073242",
   "controls/p17_heldout.py": "e8a793c886abf9ece4681a775474b4146908045f693100c42c72558ac586c757",
   "controls/p17_irdff.py": "3560feaab45ebd73cd51b599a01f68a47ccd00e6f2e30fd972bcaea95320f11f",
   "controls/p17_scoring.py": "ba31fbcb583894d8328b3bc7cf9a8bb531ad3b13675e5c91f2146a0ea54800a4",
   "controls/p24_definitions.py": "24929981f30df4fbc95a8ee42ae90e81552eb3ec7855bae247b487a749fa9624",
-  "controls/p24_scorer.py": "64e8a844c041aab722c333428f745e07ac0495f69df52d4b9bc3b329e19083b9"
+  "controls/p24_scorer.py": "a5a30827def4faba83b11cfda34ca1b9a9e1402904f1f85502be411df3beb5c5"
  },
  "mutation_tests": {
   "details": [
