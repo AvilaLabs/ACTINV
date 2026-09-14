@@ -1,5 +1,5 @@
 {
- "contract_sha256": "f311788383c5728308a996ef734ff0f50cef62e75ba6bc9a3cdf952237ee6eaf",
+ "contract_sha256": "91afc42bda7a15909209f4e2b4e07329c2a0607a5e288888fa9d337936192630",
  "failures": [],
  "mutation_self_test": {
   "planted": 7,

@@ -59,10 +59,18 @@ def main() -> int:
                        "json_path": "/spec/spectrum/flux_per_group"},
             "groups": 709,
         },
-        "irdff_sp_mat9861": {
+        "irdff_sp_mat9861_709": {
             "source": {"archive": str(IRDFF_SP), "archive_sha256": sha256_file(IRDFF_SP),
                        "member": "IRDFF-II_sp.g", "mat": 9861},
-            "groups": 44,
+            "derivation": {
+                "rule": "overlap-conserving histogram collapse onto the fispact-709 "
+                        "boundaries carried as 'bounds' in the pinned NPZ",
+                "boundary_source": {"file": "actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz",
+                                    "sha256": sha256_file(ROOT / "actinv-data/v1.0.0/activation/tendl-2025-neutron-709g.npz"),
+                                    "array": "bounds"},
+                "amendment": "ACTINV-P26_AMENDMENT_1.md R1",
+            },
+            "groups": 709,
         },
     }
 

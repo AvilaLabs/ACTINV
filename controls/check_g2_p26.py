@@ -86,12 +86,17 @@ def check_record(rec: dict) -> list[str]:
         f.append("matcmp_case_count_field")
     if {c.get("material") for c in cases} - set(mats) or {c.get("spectrum") for c in cases} - set(specs):
         f.append("matcmp_case_members")
-    for sp in specs.values():
+    for name, sp in specs.items():
         src = sp.get("source", {})
         if "file" in src and sha256_file(ROOT / src["file"]) != src.get("sha256"):
             f.append(f"spectrum_pin:{src['file']}")
         if "archive" in src and sha256_file(Path(src["archive"])) != src.get("archive_sha256"):
             f.append(f"spectrum_pin:{src['archive']}")
+        deriv = sp.get("derivation", {})
+        bsrc = deriv.get("boundary_source", {})
+        if deriv and ("file" not in bsrc
+                      or sha256_file(ROOT / bsrc["file"]) != bsrc.get("sha256")):
+            f.append(f"spectrum_derivation_pin:{name}")
 
     camp = w.get("W-CAMPAIGN", {}).get("eligible_population", {})
     cc = camp.get("cases", [])
