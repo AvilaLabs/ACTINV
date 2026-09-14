@@ -70,6 +70,14 @@
   median and within-30% coverage, alpha regresses on p90, and deuteron has zero candidate-scored rows because
   genuine TENDL-2025 state-partial defects fail closed at construction. The coverage-limited first execution is
   preserved in the record; G6 release artifacts are not authorized and v1.0.1 remains the public release.
+- Closed P25b with a `P25b-FAIL` verdict after upstream confirmed the TENDL-2025 defect root cause (an unflushed
+  TALYS `channelsout.f90` array leaking thermal (n,p) cross sections into (n,2n) ground-state records; fix lands in
+  the next TENDL release). Three hash-pinned alternates — TENDL-2023, FENDL-3.2c and EAF-2010 — were qualified
+  against the frozen machinery: all met their frozen coverage floors under the v1.0.1 builder but miss them under
+  the release-candidate builder's stricter state validation, and none survives comparable-case nonregression.
+  TENDL-2023 carries the same emitted-sum>total defect class; EAF-2010 cannot express isomeric identity under the
+  current builder. All scoring was retrospective. Added `docs/DATA_LIMITATIONS.md` as the release-facing disclosure
+  for the shipped data artifacts.
 
 **Fixed**
 

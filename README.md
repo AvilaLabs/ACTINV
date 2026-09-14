@@ -279,7 +279,9 @@ The repository carries executable controls and compact evidence for every releas
 
 Validation establishes behavior for the recorded models, inputs, and acceptance bounds. It does not establish that a
 particular user's material, spectrum, nuclear-data choice, radiological table, or regulatory scenario is suitable.
-See the [competitive benchmark](docs/COMPETITIVE_BENCHMARK.md), [Validation](docs/VALIDATION.md),
+The shipped TENDL-2025 evaluations carry documented upstream defects affecting 17 IRDFF-II benchmark targets —
+see [known data limitations](docs/DATA_LIMITATIONS.md). See the
+[competitive benchmark](docs/COMPETITIVE_BENCHMARK.md), [Validation](docs/VALIDATION.md),
 [P17 held-out validation](docs/P17_HELDOUT_VALIDATION.md),
 [v1.0 release notes](docs/RELEASE_NOTES_v1.0.md), and the [qualification boundary](docs/QUALIFICATION.md) for the
 evidence and complete limitations.
@@ -296,6 +298,7 @@ evidence and complete limitations.
 
 [Specification](docs/SPEC.md) · [Data sources](docs/DATA.md) · [Method](docs/METHOD.md) ·
 [Validation](docs/VALIDATION.md) · [Qualification boundary](docs/QUALIFICATION.md) ·
+[Known data limitations](docs/DATA_LIMITATIONS.md) ·
 [Competitive benchmark](docs/COMPETITIVE_BENCHMARK.md) · [Ledger](docs/LEDGER.md) ·
 [P17 held-out validation](docs/P17_HELDOUT_VALIDATION.md) ·
 [Harness](docs/HARNESS.md) · [Roadmap](docs/ROADMAP.md) ·
