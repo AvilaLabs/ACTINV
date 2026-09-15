@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 env:
-  ACTINV_VERSION: "1.1.0"
+  ACTINV_VERSION: "1.1.1"
 
 jobs:
   linux-wheels:

@@ -94,3 +94,36 @@ of `ROADMAP.md` or explicitly left out of v1.0.
 - 2026-09-14 — contact-photon screening should support clearly named absorbed-air and configurable effective-dose
   response modes with pinned coefficient provenance and the same model-limit warnings as the existing contact proxy;
   no screening approximation may be presented as transported dose. Route to P28/P32 as appropriate.
+
+## Feature backlog — consolidated 2026-09-15
+
+The maintainer asked for the remaining feature set in one place. Earlier entries above stay append-only; this
+section is the current consolidated backlog. Several originally parked items have since shipped: fission yields and
+actinide fission (P9), explicit isotope/isomer material keys (P9 composition keys), R-matrix-limited LRF=7 and
+unresolved LSSF=0 reconstruction (P10), prepared artifacts, selective loading and mapped arrays (P15), unit-safe
+quantity types and the broader metamorphic suite (P16), finite-dilution self-shielding (P19), practical correlated
+uncertainty (P20), streamed mesh execution (P21), and feed/removal, reverse calculation and damage observables
+(P23). What remains, including the 2026-09-14 entries above (standalone material definitions, continuous-energy
+collapse, geometry-aware self-shielding, nonlinear uncertainty propagation, reaction introspection, decay-photon
+tally-to-dose, browser/WebAssembly delivery and dose-response modes, each already routed there):
+
+1. **Additional projectile sublibraries** — triton, helion and gamma TENDL sublibraries (parked 2026-08-26).
+   Routed to P28's physics-envelope qualification; no P26+ phase opens it before then.
+2. **External schema interoperability** — versioned intake adapters that detect common handoff formats and convert
+   into the strict `actinv-spec-1` canonical schema with a conversion receipt (2026-09-15 HYPERION intake note in
+   `docs/ROADMAP.md`). Routed to P27.
+3. **Spatial/R2S handoff** — external-transport source integration and an executed open R2S chain against OpenMC.
+   Routed to P32.
+4. **FNS C/E gap diagnosis** — the 132-experiment family still trails FISPACT on median `abs(ln(C/E))`
+   (0.1392 vs 0.1053) and 30% coverage (59/132 vs 69/132). Diagnose on held-out evidence only; routed to P24,
+   which is the next scheduled phase.
+5. **Blind many-nuclide FISPACT comparison** — needs lawfully licensed FISPACT access or a collaborator; optional
+   runner design stays recorded, no gate waits for it. Routed to P35's competitive qualification.
+6. **Missing EAF-2010 decay products** — 18 products (W-193, Re-195, Os-197…201, Ir-200…202, Pt-203, Au-206,
+   U-243…245, Np-245/246, Am-250) have no evaluated decay data in ENDF/B-VIII.0 or JEFF-3.3. No known library
+   supplies them; stays out unless one appears.
+7. **Remaining TENDL-2025 defect classes** — the 46 non-signature defect files and 5 unrecovered
+   dosimetry-critical targets (Ni-58, Nb-93, Ag-109, In-113, Au-197) documented in `docs/DATA_LIMITATIONS.md`.
+   Remediation waits on corrected upstream TENDL; a further repair phase would need its own protocol.
+8. **AI-assisted setup and bounded investigations** — provider-credential setup, validated study drafts,
+   AI-initiated runs through Core contracts. Routed to P33–P34 under the no-hosting constraint.

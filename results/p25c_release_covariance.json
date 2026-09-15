@@ -1,0 +1,36 @@
+{
+ "activation_npz_sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d",
+ "artifact": {
+  "activation_library_sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d",
+  "components": 168747,
+  "files": 1679,
+  "files_with_mf33": 1679,
+  "index": "/home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov_index.json",
+  "index_sha256": "e44204833129d057054076f4cab401da6a7000a394f7f2989754aa074fb442aa",
+  "mf33_sections": 48346,
+  "npz": "/home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov.npz",
+  "npz_sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+ },
+ "failed_files": 0,
+ "failure_ledger": {},
+ "rounds": [
+  {
+   "exit": 0,
+   "failed_so_far": 0,
+   "message": "sidecar -> /home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov.npz\nindex -> /home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov_index.json\n1636 targets, 47036 MF=33 sections, 164551 components, 0 cache hits, 1636 files with MF=33, sha256 5bcc409d2b48af6d27e102b521b7fb6e9196af85ccefaacd5567f27fafeaac45",
+   "round": 1,
+   "seconds": 139.587,
+   "staged": 1636
+  },
+  {
+   "exit": 0,
+   "failed_so_far": 0,
+   "message": "sidecar -> /home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov.npz\nindex -> /home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov_index.json\n1679 targets, 48346 MF=33 sections, 168747 components, 53 cache hits, 1679 files with MF=33, sha256 18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a",
+   "round": 2,
+   "seconds": 140.633,
+   "staged": 1679
+  }
+ ],
+ "schema": "actinv-p25c-release-covariance-1",
+ "staged_files": 1679
+}

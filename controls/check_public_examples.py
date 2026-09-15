@@ -13,7 +13,7 @@ from pathlib import Path, PureWindowsPath
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples"
-CATALOG = ROOT / "crates" / "actinv-cli" / "data" / "actinv-data-catalog-v1.0.0.json"
+CATALOG = ROOT / "crates" / "actinv-cli" / "data" / "actinv-data-catalog-v1.1.0.json"
 PATH_KEYS = {"path", "primary", "fallback"}
 
 

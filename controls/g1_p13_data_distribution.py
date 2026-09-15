@@ -15,11 +15,13 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[1]
-CATALOG_PATH = ROOT / "crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json"
-NOTICE_PATH = ROOT / "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md"
+CATALOG_PATH = ROOT / "crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json"
+NOTICE_PATH = ROOT / "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.1.0.md"
 RESULT_PATH = ROOT / "results/g1_p13_data_distribution.json"
 P10_PATH = ROOT / "results/g7_p10_builds.json"
 P11_PATH = ROOT / "results/g6_p11_complete.json"
+P25C_BUILD_PATH = ROOT / "results/p25c_release_build.json"
+P25C_COV_PATH = ROOT / "results/p25c_release_covariance.json"
 FNS_PATH = ROOT / "results/fns_certificate.json"
 
 TOP_KEYS = {
@@ -101,8 +103,8 @@ def expected_covariance_index_path(sidecar_path):
 
 def validate_catalog(catalog):
     require_exact_keys(catalog, TOP_KEYS, "catalog")
-    if catalog["schema"] != "actinv-data-catalog-1" or catalog["catalog_version"] != "1.0.0":
-        raise ValueError("catalog schema/version is not frozen P13 v1.0.0")
+    if catalog["schema"] != "actinv-data-catalog-1" or catalog["catalog_version"] != "1.1.0":
+        raise ValueError("catalog schema/version is not the frozen v1.1.0 contract")
     require_https(catalog["release_url"], "release")
     require_path(catalog["notice"], "notice", one_name=True)
 
@@ -170,7 +172,8 @@ def validate_catalog(catalog):
                     != by_role["covariance-index"]["path"]):
                 raise ValueError(f"bundle {identifier!r} covariance pair is invalid")
         referenced.update(ids)
-    if catalog["default_bundle"] != "tendl-2025-neutron" or catalog["default_bundle"] not in bundles:
+    if catalog["default_bundle"] != "tendl-2025-patched-neutron" \
+            or catalog["default_bundle"] not in bundles:
         raise ValueError("default bundle differs")
     if referenced != set(artifacts):
         raise ValueError("catalog has an unreferenced artifact")
@@ -204,6 +207,13 @@ def evidence_identities():
     identities["tendl-2025-neutron-709g-covariance-index"] = identity["fresh_index_sha256"]
     identities["endfb-viii-0-decay"] = fns["inputs"]["decay_endfb80"]["sha256"]
     identities["jeff-3-3-decay"] = fns["inputs"]["decay_jeff33"]["sha256"]
+    patched = load_json(P25C_BUILD_PATH)["artifact"]
+    patched_cov = load_json(P25C_COV_PATH)["artifact"]
+    identities["tendl-2025-patched-neutron-709g"] = patched["npz_sha256"]
+    identities["tendl-2025-patched-neutron-709g-index"] = patched["index_sha256"]
+    identities["tendl-2025-patched-neutron-709g-covariance"] = patched_cov["npz_sha256"]
+    identities["tendl-2025-patched-neutron-709g-covariance-index"] = \
+        patched_cov["index_sha256"]
     return identities
 
 
@@ -269,7 +279,7 @@ def main():
         artifact_id: artifacts[artifact_id]["sha256"] == sha256
         for artifact_id, sha256 in sorted(expected.items())
     }
-    notice = artifacts["actinv-data-notice-v1"]
+    notice = artifacts["actinv-data-notice-v1-1"]
     notice_check = {
         "bytes_match": NOTICE_PATH.stat().st_size == notice["bytes"],
         "sha256_match": hash_file(NOTICE_PATH) == notice["sha256"],

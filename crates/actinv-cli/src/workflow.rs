@@ -156,7 +156,10 @@ mod tests {
         assert!(s.library.path.starts_with("/example-data/"));
         assert_eq!(s.schedule.len(), 21);
         let portable = new_example(Path::new("actinv-data")).unwrap();
-        assert_eq!(portable.library.path, "catalog:tendl-2025-neutron-709g");
+        assert_eq!(
+            portable.library.path,
+            "catalog:tendl-2025-patched-neutron-709g"
+        );
         assert_eq!(portable.decay.primary, "catalog:endfb-viii-0-decay");
         assert_eq!(
             portable.decay.fallback.as_deref(),

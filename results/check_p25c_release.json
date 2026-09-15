@@ -1,0 +1,7 @@
+{
+ "frozen_failures": [],
+ "mutations_missed": [],
+ "mutations_rejected": 4,
+ "pass": true,
+ "schema": "actinv-p25c-release-check-1"
+}

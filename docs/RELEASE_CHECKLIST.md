@@ -52,3 +52,18 @@ including subsequent packaging-only release plumbing, not on the earlier technic
 Software publishing must not include raw nuclear-data inputs, generated bulk libraries, credentials, local paths, or
 caches. The separate data release may contain only the exact processed CC-BY-4.0 files named by the frozen catalog;
 the official decay archives remain hosted by the IAEA and are not rehosted by ACTINV.
+
+## data-v1.1.0 (derived-corpus release)
+
+- [ ] Build the full patched-corpus neutron artifact with `controls/p25c_release_build.py` (bounded, resumable
+  iterate-and-evict; the complete failure ledger lands in `results/p25c_release_build.json`).
+- [ ] Rebuild the matching MF=33 covariance sidecar with `controls/p25c_release_covariance.py`; the sidecar index is
+  bound to the patched activation artifact by `activation_library_sha256`.
+- [ ] Stage assets and generate the v1.1.0 catalog with `controls/p25c_release_stage.py`; verify with
+  `controls/check_p25c_release.py`.
+- [ ] Create the immutable `data-v1.1.0` GitHub release at the release commit and attach the staged assets, catalog,
+  notice, `SHA256SUMS`, and `SIZES`.
+- [ ] From a clean directory, run `actinv data fetch`, `actinv data verify`, and a documented smoke calculation using
+  the hosted assets. Record the release URL, tag commit, release ID, and asset identities.
+- [ ] Tag the v1.1.1 software release (the embedded catalog requires it) and publish through the normal tag
+  workflows.

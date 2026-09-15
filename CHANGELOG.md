@@ -1,6 +1,30 @@
 # Changelog
 
-## 1.1.0 — 2026-09-14
+## v1.1.1 — 2026-09-15
+
+**Data**
+
+- Embedded data catalog v1.1.0: adds the `tendl-2025-patched` neutron activation library and its matching
+  rebuilt MF=33 covariance sidecar — an Avila Labs remediation derivative of TENDL-2025 that zeroes the 44
+  upstream-confirmed leaked leading ordinates across the 28 confirmed-signature files. Not an official TENDL
+  release; scope and remaining defect classes are disclosed in `docs/DATA_LIMITATIONS.md`.
+- `tendl-2025-patched-neutron` is the new default data bundle; `tendl-2025-patched-neutron-covariance` adds the
+  sidecar. The legacy `tendl-2025-neutron` bundles are superseded but preserved for byte-compatible reproduction;
+  all v1.0.0 artifact IDs resolve to exactly the same bytes.
+- `actinv new` now emits `catalog:tendl-2025-patched-neutron-709g` references; data installs under
+  `actinv-data/v1.1.0/`.
+
+**Fixed**
+
+- CRAM linear solves now use iterative refinement (`Lu::solve_refined`) with compensated residual
+  evaluation: row pivoting can mix a tiny state with a large background, so a small normwise residual
+  alone is insufficient. Refinement is bounded at five iterations (the LAPACK GERFS cap) with stagnation
+  stop, and any non-finite solution, residual or correction is a hard error rather than silent data.
+- The certificate's `numerical_floor` note now states plainly that `alpha0 * max(N)` is the legacy CRAM
+  asymptotic scale, not a bound on total numerical or solve error; below-scale populations remain reported,
+  never removed.
+
+## v1.1.0 — 2026-09-14
 
 **Added**
 

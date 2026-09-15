@@ -11,7 +11,7 @@ use std::io::{BufReader, Read, Write};
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicU64, Ordering};
 
-const CATALOG_JSON: &str = include_str!("../data/actinv-data-catalog-v1.0.0.json");
+const CATALOG_JSON: &str = include_str!("../data/actinv-data-catalog-v1.1.0.json");
 const MAX_ARTIFACT_BYTES: u64 = 2_000_000_000;
 const COPY_BUFFER_BYTES: usize = 64 * 1024;
 const PROGRESS_INTERVAL_BYTES: u64 = 16 * 1024 * 1024;
@@ -1238,8 +1238,8 @@ mod tests {
     #[test]
     fn embedded_catalog_is_strict_and_matches_release_evidence() {
         let catalog = embedded_catalog().unwrap();
-        assert_eq!(catalog.default_bundle, "tendl-2025-neutron");
-        assert_eq!(catalog.bundles.len(), 5);
+        assert_eq!(catalog.default_bundle, "tendl-2025-patched-neutron");
+        assert_eq!(catalog.bundles.len(), 7);
         assert_eq!(
             catalog.artifact("tendl-2025-neutron-709g").unwrap().sha256,
             "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"

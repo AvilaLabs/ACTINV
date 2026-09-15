@@ -12,9 +12,9 @@ fn lists_embedded_data_bundles() {
         .expect("run actinv data list");
     assert!(output.status.success());
     let stdout = String::from_utf8_lossy(&output.stdout);
-    assert!(stdout.contains("ACTINV data catalog v1.0.0"));
-    assert!(stdout.contains("tendl-2025-neutron [default]"));
-    assert!(stdout.contains("tendl-2025-neutron-covariance"));
+    assert!(stdout.contains("ACTINV data catalog v1.1.0"));
+    assert!(stdout.contains("tendl-2025-patched-neutron [default]"));
+    assert!(stdout.contains("tendl-2025-patched-neutron-covariance"));
     assert!(output.stderr.is_empty());
 }
 
@@ -28,8 +28,8 @@ fn prints_the_strict_embedded_manifest() {
     let manifest: serde_json::Value =
         serde_json::from_slice(&output.stdout).expect("manifest is JSON");
     assert_eq!(manifest["schema"], "actinv-data-catalog-1");
-    assert_eq!(manifest["catalog_version"], "1.0.0");
-    assert_eq!(manifest["default_bundle"], "tendl-2025-neutron");
+    assert_eq!(manifest["catalog_version"], "1.1.0");
+    assert_eq!(manifest["default_bundle"], "tendl-2025-patched-neutron");
     assert!(output.stderr.is_empty());
 }
 

@@ -34,8 +34,8 @@ standalone command.
 
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
 [Desktop preview downloads — Windows, macOS, Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1) ·
-[v1.0.1 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.1) ·
-[v1.0.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0) ·
+[v1.1.0 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.1.0) ·
+[v1.1.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) ·
 [Documentation](#documentation)
 
 [Explore the desktop interface ↓](#desktop-interface)
@@ -63,7 +63,7 @@ cargo install --locked actinv-cli
 ```
 
 Prebuilt standalone executables are also attached to the
-[v1.0.1 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.0.1).
+[v1.1.0 GitHub Release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.1.0).
 
 Confirm the installation at any time with `actinv --version` or explore every command with `actinv --help`.
 
@@ -77,10 +77,10 @@ actinv data fetch
 ```
 
 The command downloads about 139 MiB, verifies every file with SHA-256 before installing it under
-`actinv-data/v1.0.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
+`actinv-data/v1.1.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
-Problem files may also use portable symbolic references — `"path": "catalog:tendl-2025-neutron-709g"` resolves the
+Problem files may also use portable symbolic references — `"path": "catalog:tendl-2025-patched-neutron-709g"` resolves the
 installed artifact by ID and fills its declared hash from the embedded catalog. `actinv new` emits these by default;
 set `ACTINV_DATA_DIR` if your data lives somewhere other than `./actinv-data`.
 
@@ -155,7 +155,7 @@ cargo run --release -p actinv-gui
 
 This launches a native application window. After building, the executable is `target/release/actinv-gui`
 (`actinv-gui.exe` on Windows). Desktop builds are checked on Windows, macOS Apple Silicon, and Linux;
-desktop preview installers and application bundles are prepared separately from the published v1.0.1 release. PyPI and
+desktop preview installers and application bundles are prepared separately from the published v1.1.0 release. PyPI and
 `cargo install actinv-cli` install the command-line interface, not the desktop.
 
 Download the [unsigned desktop preview for Windows, macOS, and Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1).

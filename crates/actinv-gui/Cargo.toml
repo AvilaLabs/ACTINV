@@ -8,9 +8,9 @@ repository.workspace = true
 description = "ACTINV native scientific desktop"
 
 [dependencies]
-actinv-data = { path = "../actinv-data", version = "=1.1.0" }
-actinv-cli = { path = "../actinv-cli", version = "=1.1.0" }
-actinv-core = { path = "../actinv-core", version = "=1.1.0" }
+actinv-data = { path = "../actinv-data", version = "=1.1.1" }
+actinv-cli = { path = "../actinv-cli", version = "=1.1.1" }
+actinv-core = { path = "../actinv-core", version = "=1.1.1" }
 eframe = { version = "=0.36.1", default-features = false, features = ["default_fonts", "glow", "x11", "wayland", "persistence"] }
 egui_extras = { version = "=0.36.1", features = ["syntect"] }
 egui_plot = "=0.37.0"

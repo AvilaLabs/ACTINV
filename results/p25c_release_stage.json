@@ -1,0 +1,58 @@
+{
+ "activation": {
+  "catalog_liso_values": [
+   0,
+   1,
+   2
+  ],
+  "index": "/home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g_index.json",
+  "index_sha256": "18efc9b85655b736022360e85bebde3f816ec54ff0603e507a8ee9e2c9414982",
+  "index_targets": 1679,
+  "n_rows": 87075,
+  "npz": "/home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.npz",
+  "npz_sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+ },
+ "activation_failures": 1172,
+ "assets": {
+  "ACTINV-DATA-NOTICE-v1.1.0.md": {
+   "bytes": 5734,
+   "sha256": "132bacccc3fe16703455cc69efc68feaf811eea4415dc653336638c70f903136"
+  },
+  "actinv-data-catalog-v1.1.0.json": {
+   "bytes": 13776,
+   "sha256": "25638bddfd6bb183c51720e53254a6529b15a63cadae2202174c662f0cea3314"
+  },
+  "tendl-2025-patched-neutron-709g.cov.npz": {
+   "bytes": 136447685,
+   "sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+  },
+  "tendl-2025-patched-neutron-709g.cov_index.json": {
+   "bytes": 575266,
+   "sha256": "e44204833129d057054076f4cab401da6a7000a394f7f2989754aa074fb442aa"
+  },
+  "tendl-2025-patched-neutron-709g.npz": {
+   "bytes": 48417198,
+   "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+  },
+  "tendl-2025-patched-neutron-709g_index.json": {
+   "bytes": 15300945,
+   "sha256": "18efc9b85655b736022360e85bebde3f816ec54ff0603e507a8ee9e2c9414982"
+  }
+ },
+ "catalog_sha256": "25638bddfd6bb183c51720e53254a6529b15a63cadae2202174c662f0cea3314",
+ "covariance": {
+  "activation_library_sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d",
+  "components": 168747,
+  "files": 1679,
+  "files_with_mf33": 1679,
+  "index": "/home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov_index.json",
+  "index_sha256": "e44204833129d057054076f4cab401da6a7000a394f7f2989754aa074fb442aa",
+  "mf33_sections": 48346,
+  "npz": "/home/connoravila/Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.cov.npz",
+  "npz_sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+ },
+ "covariance_failures": 0,
+ "notice_sha256": "132bacccc3fe16703455cc69efc68feaf811eea4415dc653336638c70f903136",
+ "release_tag": "data-v1.1.0",
+ "schema": "actinv-p25c-release-stage-1"
+}

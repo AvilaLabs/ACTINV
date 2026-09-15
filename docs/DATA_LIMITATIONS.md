@@ -1,17 +1,23 @@
 # Known data limitations — shipped nuclear-data artifacts
 
-This document is the disclosure for the activation data ACTINV 1.1.0 ships
-with. It is generated from phase-P25/P25b evidence; every claim below is
-backed by a hash-pinned record in `results/` and an independently run
-checker. It is a statement about the *data*, not about the ACTINV engine.
+This document is the disclosure for the activation data ACTINV 1.1.1
+ships with. It is generated from phase-P25/P25b/P25c evidence; every
+claim below is backed by a hash-pinned record in `results/` and an
+independently run checker. It is a statement about the *data*, not
+about the ACTINV engine.
 
 ## What ships
 
-`actinv data fetch` installs the `data-v1.0.0` release:
-`actinv-data/v1.0.0/activation/tendl-2025-{neutron-709g,proton-162g,
-deuteron-162g,alpha-162g}.npz` plus per-artifact index files carrying
-source SHA-256 digests. All four artifacts derive from **TENDL-2025**
-evaluations, hash-pinned at build time.
+`actinv data fetch` installs the `data-v1.1.0` release. The default
+bundle is `tendl-2025-patched-neutron`:
+`actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz`
+plus its index, with proton-162g, deuteron-162g and alpha-162g
+alternatives carried unchanged from `data-v1.0.0`. Every artifact
+index carries per-target source SHA-256 digests. The patched neutron
+artifact derives from the **`tendl-2025-patched` corpus** described
+below — a TENDL-2025 derivative, not an official TENDL release. The
+unpatched v1.0.0 artifacts remain fetchable for byte-compatible
+reproduction of earlier work.
 
 ## The confirmed upstream defect
 
@@ -108,10 +114,32 @@ TENDL-2025, **not an official TENDL release**. Its exact scope:
   comparable-case nonregression gates on both partitions
   (`results/verdict_p25c.json`). All scoring is retrospective; no blind
   evidence exists.
-- **Release status:** P25c-PASS qualifies the corpus as a *candidate*
-  for a separately labeled data release. Publishing it as a
-  `data-v1.1.x` artifact is a maintainer decision and must carry this
-  scope verbatim; the shipped `data-v1.0.0` artifacts are unchanged.
+- **Release status:** P25c-PASS qualified the corpus as a candidate for
+  a separately labeled data release, and the maintainer directed
+  publication. It ships as `data-v1.1.0` under the
+  `tendl-2025-patched-*` artifact IDs, labeled as an Avila Labs
+  remediation derivative — never as an official TENDL release. The
+  unpatched `data-v1.0.0` artifacts remain unchanged and fetchable under
+  their original IDs for byte-compatible reproduction.
+- **Carried repairs:** the sealed corpus equals the official archive
+  outside the 44 ordinates, so it retains the official Pb-208 `NaN`
+  fields the strict builder fails closed on. The released artifact
+  instead builds the P10-pinned working-corpus `n-Pb208.tendl` — the
+  exact bytes the v1.0.0 artifact used — so the shipped source set
+  equals the working corpus plus the P25c patch. This is recorded in
+  `results/p25c_release_build.json` (`carried_repairs`).
+- **Full-corpus exclusions:** the release build applies the frozen
+  1.1.0 strict construction to every corpus file and evicts each
+  failure with its named defect class in the ledger — **1,172 ledgered
+  exclusions** (one, the raw Pb-208 `NaN` file, superseded by the
+  carried P10 repair described above), leaving **1,679 targets /
+  87,075 rows** in the shipped artifact. Files excluded this way — a
+  superset of the flagged subsets above, since the earlier censuses
+  covered flagged files only — are absent from the shipped artifact.
+  Of the 17 defect-bearing IRDFF-II targets listed above, only the
+  patch-recovered Sc-45 remains; the other 16 fail closed and are
+  absent. Counts: `results/p25c_release_build.json`,
+  `results/check_p25c_release.json`.
 
 ## Remediation path
 

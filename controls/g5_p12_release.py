@@ -433,7 +433,7 @@ def python_package_checks(
         f"{prefix}/python/src/lib.rs",
         f"{prefix}/crates/actinv-cli/Cargo.toml",
         f"{prefix}/crates/actinv-cli/src/command.rs",
-        f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json",
+        f"{prefix}/crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json",
         f"{prefix}/crates/actinv-core/Cargo.toml",
         f"{prefix}/crates/actinv-core/src/run.rs",
         f"{prefix}/crates/actinv-data/Cargo.toml",

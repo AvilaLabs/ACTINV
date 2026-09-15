@@ -8,7 +8,7 @@ Install the recommended neutron activation and decay data with:
 actinv data fetch
 ```
 
-This downloads about 139 MiB and installs about 229 MiB under `actinv-data/v1.0.0/`. ACTINV streams each download to a
+This downloads about 139 MiB and installs about 229 MiB under `actinv-data/v1.1.0/`. ACTINV streams each download to a
 temporary file and checks both its byte count and SHA-256 before making it visible. The two decay archives come
 directly from the IAEA; both the downloaded ZIP and the one extracted member are verified. Existing correct files are
 reused, and an incorrect file is left untouched unless you explicitly request a verified replacement with `--force`.
@@ -30,9 +30,13 @@ actinv data list
 actinv data manifest
 ```
 
-The default is `tendl-2025-neutron`. Optional bundles are
-`tendl-2025-neutron-covariance`, `tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after
-`fetch` or `verify`. Shared decay files are reused when multiple bundles use the same output directory.
+The default is `tendl-2025-patched-neutron`, the P25c-qualified Avila Labs remediation derivative of the
+TENDL-2025 neutron sublibrary (44 leaked leading ordinates zeroed across 28 confirmed-signature files; not an
+official TENDL release — see `DATA_LIMITATIONS.md`). The superseded unpatched `tendl-2025-neutron` and
+`tendl-2025-neutron-covariance` bundles remain available for byte-compatible reproduction of earlier work.
+Optional bundles are `tendl-2025-patched-neutron-covariance`, `tendl-2025-proton`, `tendl-2025-deuteron`, and
+`tendl-2025-alpha`; pass one after `fetch` or `verify`. Shared decay files are reused when multiple bundles use
+the same output directory.
 
 Installed artifacts can be referenced symbolically from problem files: `"path": "catalog:<artifact-id>"` (and the
 decay `primary`/`fallback` strings) resolve against the embedded catalog under `<data-root>/v<catalog-version>/`.
@@ -40,14 +44,17 @@ The data root is `$ACTINV_DATA_DIR` when set, else `./actinv-data`; an artifact 
 hash that conflicts with the catalog, is an error. `actinv new` emits these references so problem files stay
 portable while remaining hash-pinned.
 
-The generated TENDL-2025 activation libraries and covariance sidecar are separate CC-BY-4.0 release assets. The
-ENDF/B-VIII.0 and JEFF-3.3 decay files remain downloads from their official host. The installed
-`ACTINV-DATA-NOTICE.md` records attribution, source and builder identities, transformations, and terms. ACTINV's
-MIT/Apache-2.0 software licence does not replace a dataset's licence or source terms.
+The generated TENDL-2025 activation libraries, covariance sidecars, and the `tendl-2025-patched` derivative are
+separate CC-BY-4.0 release assets. The ENDF/B-VIII.0 and JEFF-3.3 decay files remain downloads from their official
+host. The installed `ACTINV-DATA-NOTICE.md` records attribution, source and builder identities, transformations,
+the patch scope, and terms. ACTINV's MIT/Apache-2.0 software licence does not replace a dataset's licence or
+source terms.
 
-Catalog v1.0.0 is published as the immutable
-[`data-v1.0.0` release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0). Its server-reported asset digests,
-source commit, green workflow, and public smoke result are recorded in `results/session_p13.json`.
+Catalog v1.1.0 is published as the immutable
+[`data-v1.1.0` release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0); catalog v1.0.0 remains at
+[`data-v1.0.0`](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.0.0). The v1.0.0 server-reported asset
+digests, source commit, green workflow, and public smoke result are recorded in `results/session_p13.json`; the
+v1.1.0 release evidence is recorded in `results/p25c_release_stage.json` and the staged-checker record.
 
 For an offline installation, run `actinv data manifest` on the destination system, acquire the named files through a
 controlled transfer, place them under the printed versioned paths, and run `actinv data verify`. Advanced users can
