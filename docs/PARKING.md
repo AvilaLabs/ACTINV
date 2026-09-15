@@ -61,3 +61,36 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   identified the fully decoded 951,393,048-byte cross-section array as the main explanation for the roughly 1.08 GB
   peak RSS. Deterministic prepared storage, target-selective loading, safe cache reuse and mapped immutable arrays
   remain P15 scope; the below-threshold P14 close does not authorize implementing them retroactively.
+- 2026-09-14 — standalone material construction should accept provenance-pinned named material definitions and
+  explicit user definitions through natural elements/isotopes, enrichment, chemical formulas, mixtures, absolute
+  atom densities, density and volume. Named catalog entries must expand to explicit composition/density in the run
+  record rather than becoming opaque aliases. Route into the P27/P28 replan after P26's recorded disposition.
+- 2026-09-14 — add an optional direct pointwise/continuous-energy activation-collapse path against the supplied
+  spectrum, alongside the existing deterministic multigroup-library path. Preserve the current reproducible grouped
+  route; qualify the direct path on independently processed data and expose the data/profile identity and applicable
+  temperature. Named qualified data profiles may select cross sections, reaction topology/branching, decay and
+  fission-yield sources without hiding their exact versions or hashes. Route to P28.
+- 2026-09-14 — unresolved-range Bondarenko self-shielding does not cover a geometry-aware resolved-resonance flux
+  depression. Add a qualified option that takes explicit mean chord or supported lump shape/dimensions, never guesses
+  geometry, treats mixture total/elastic scattering consistently, records what was and was not shielded, and warns
+  when an unshielded run contains resonance absorbers for which the omitted correction may matter. Route to P28.
+- 2026-09-14 — make nonlinear uncertainty propagation a shipped analysis path rather than only a verification oracle:
+  fixed or convergence-controlled replica solves, MF=33 activation-cross-section covariance plus user-supplied
+  per-bin flux-spectrum uncertainty, complete sample/failure accounting, coverage diagnostics, and per-replica
+  recomputation of nonlinear derived outputs such as contact-photon screening and line spectra. Preserve P20's local
+  bands as the efficient linear path and route the nonlinear feature to P30.
+- 2026-09-14 — expose analysis-grade reaction introspection needed to explain a result without private internals:
+  per-step reaction rates, group-resolved rate contributions, flux-weighted isomeric branching and weighted
+  production routes, all tied to the same data identities and ledger. Existing pathway output satisfies part of this;
+  only missing surfaces should be added. Route to P30.
+- 2026-09-14 — add schedule-aware time correction of externally transported decay-photon tallies into shutdown dose
+  responses, including mixed irradiation spectra, selected cooling steps, per-nuclide contributions and propagation
+  of tally statistical variance. Keep this distinct from ACTINV's existing source export and from claiming dose
+  without an executed transport stage. Route to P32.
+- 2026-09-14 — qualify a zero-install browser/WebAssembly route for the supported standalone calculation subset using
+  the same scientific Rust core and locally executed solves. Nuclear-data bytes may be fetched by the host but no
+  problem or result should require upload to an Avila service; browser/native scientific identity and explicit
+  unsupported-feature reporting are required. Route to P32.
+- 2026-09-14 — contact-photon screening should support clearly named absorbed-air and configurable effective-dose
+  response modes with pinned coefficient provenance and the same model-limit warnings as the existing contact proxy;
+  no screening approximation may be presented as transported dose. Route to P28/P32 as appropriate.
