@@ -514,3 +514,19 @@ The ordinary run result is nested without per-cell timing. Only footer `wall_tim
 scheduling; header and ordered cell bytes are deterministic across chunk and thread counts. The header certificate
 binds the declared/computed canonical hash and its embedded transport/auxiliary hashes. Any cell or footer failure
 names the failing premise and leaves no final result file.
+
+### Numerical floor diagnostic
+
+`numerical_floor_atoms_per_g` retains its existing serialized name and value
+`alpha0 * max(N)` for compatibility. It is a CRAM asymptotic diagnostic scale,
+**not a bound on total numerical error**, factorization/solve roundoff or each
+reported population's accuracy. `heat_bound_from_below_floor_W_per_g` is the
+computed heat subtotal of the reported below-scale populations, not a bound on
+all numerical dose or heat error. The ledger marks
+`numerical_floor.is_total_numerical_error_bound = false` explicitly.
+
+CRAM shifted-system solves use bounded iterative refinement against the original
+matrix, with compensated residual accumulation and fused-product error terms.
+This applies to scalar, batched and tangent solves; it does not replace physical
+inputs, filter small positive populations or establish a universal forward-error
+bound. Independent numerical checks remain necessary for the claimed domain.

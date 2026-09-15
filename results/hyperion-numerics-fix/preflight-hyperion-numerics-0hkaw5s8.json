@@ -1,0 +1,106 @@
+{
+  "snapshot_base_commit": "ecbf028a6755d4e862dc221c1fd14400a357ed2d",
+  "patch_sha256": {
+    "crates/actinv-core/src/sparse.rs": "aa57e61f0dc4eec19a1cd179990dcb9335894ca8ee03560a749274f29ffcaf55",
+    "crates/actinv-core/src/cram.rs": "79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba",
+    "crates/actinv-core/src/run.rs": "dd754e19526731bf52f9c7acc9a11b2e3756d796af6ba39b09f8006044cd44d4"
+  },
+  "snapshot": "target/preflight-tmp/hyperion-numerics-0hkaw5s8/snapshot",
+  "scope": "Tracked HEAD plus only three numerical Rust files; unrelated worktree edits/untracked files excluded.",
+  "cgroup": {
+    "memory.max": "6442450944",
+    "memory.swap.max": "0",
+    "pids.max": "128",
+    "cpu.max": "200000 100000"
+  },
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--offline",
+        "--locked",
+        "--release",
+        "-p",
+        "actinv-cli",
+        "--bin",
+        "actinv",
+        "-p",
+        "actinv-core",
+        "--bin",
+        "cram_probe"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 147.2986075199442,
+      "log": "target/preflight-tmp/hyperion-numerics-0hkaw5s8/build.log",
+      "log_sha256": "0f1efe0703636abf996f80a8984f7c51f4d6b070fb06ee8b3fef11382a357301"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 1.4709667949937284,
+      "log": "target/preflight-tmp/hyperion-numerics-0hkaw5s8/fmt.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--offline",
+        "--locked"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 299.94139617402107,
+      "log": "target/preflight-tmp/hyperion-numerics-0hkaw5s8/check.log",
+      "log_sha256": "f5d3ab8b68422927a997ea57163275d345d366a275ff60a1ab3d32f24c66b465"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--offline",
+        "--locked",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 41.3652590099955,
+      "log": "target/preflight-tmp/hyperion-numerics-0hkaw5s8/clippy.log",
+      "log_sha256": "831f6aa5c5a0afb3aaf8009f7adcf928bdde2fff1707ca4061b1e8b32577e08d"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--offline",
+        "--locked"
+      ],
+      "status": "pass",
+      "exit_code": 0,
+      "wall_s": 542.7879244800424,
+      "log": "target/preflight-tmp/hyperion-numerics-0hkaw5s8/test.log",
+      "log_sha256": "13131ec6d35336e0b46c77d03fe173131f9112cfff21f52c605ebad09d0b3eb1"
+    }
+  ],
+  "all_passed": true
+}

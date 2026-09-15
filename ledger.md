@@ -948,3 +948,70 @@
 - The published desktop preview and its binaries remain unchanged. Anonymous GitHub API access confirms the
   published prerelease and all 13 assets. Added a prominent desktop download link near the top of the README;
   GitHub's latest-stable shortcut continues to identify the separately versioned stable CLI/Python release.
+
+## 51. HYPERION numerical repair — 2026-09-15
+
+- Froze `HYPERION-NUMERICS-2026-09-15.md` (SHA-256
+  `df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914`)
+  before new diagnostic executions/production changes. User explicitly requested
+  repairing ACTINV. Historical failing rows, thresholds and archives retained.
+- Reproduced absent-parent contamination with an analytical two-state decay
+  chain and large stable background. The pre-fix Rust regression failed; the
+  separate Python copy of custom LU reproduced contamination and identified
+  row exchanges. SciPy/OpenMC preserved the invariant; permutation and
+  refinement diagnostics localized subtractive cancellation in the shifted
+  linear solve. Row equilibration alone did not reliably repair the fixture.
+- Added bounded iterative residual refinement with compensated accumulation and
+  fused-product error terms. Preserved factorization/pivot policy; applied the
+  refined solve to scalar, multi-RHS and tangent CRAM paths. Finite-value checks
+  return errors. No input tuning, population filtering or acceptance relaxation.
+  Corrected numerical-floor wording: alpha0*max(N) is not a total numerical-error
+  bound. Serialized legacy values retained with an explicit false-bound flag.
+- New tests cover CRAM16/48, stiffness 1e-6 through 1e12, backgrounds 1 through
+  1e24, both parent orders, all three solve paths, populated Bateman chains in
+  six permutations, and complex pivoting/componentwise backward error. All 52
+  core tests pass after the repair; pre-fix failure log preserved.
+- A current-worktree release build failed on an unrelated unavailable catalog
+  include. Left release edits untouched. Built and checked tracked commit
+  `ecbf028a6755d4e862dc221c1fd14400a357ed2d` plus only the three numerical Rust
+  files in a disk snapshot. Formatting, workspace/all-target/all-feature check,
+  Clippy with warnings denied, and tests all pass. 182 tests passed, none failed;
+  one existing generated-fixture desktop test was ignored and not executed.
+  Snapshot/patch/log hashes are in the preflight receipt; this is not a claim
+  that the concurrent dirty release worktree was tested or released.
+- Candidate SHA-256
+  `7e306fe8174f36758bbc98fb28d05fea04d6c38a5b958e08835d8445ef61500f`.
+  Executed 27 fresh cases: all 15 updated recipes, ten prior shared-spectrum
+  fast/thermal cases, and two joint-composition cases, with unchanged inputs.
+  Historical controls now pass 9,410/9,410 updated, 19,507/19,507 prior and
+  3,768/3,768 joint rows: all 98+167+29 known failures resolved.
+- Updated supplied inventories pass 9,284/9,284 scored values. All three Ta-182
+  exceptions now agree to about 1e-15 relative. Maximum scored inventory
+  difference overall: 1.11726948e-6 relative. All 120 combined-index and 40
+  contact-dose CSV checks pass the unchanged tolerances.
+- Fresh independent raw-matrix/SciPy controls for 17 N50/joint cases pass all
+  32,395 meaningful inventory and 408 Table-1/photon-source/dose comparisons.
+  Maximum independent dose difference: 3.64905253e-10 relative. Lower fresh
+  population count reflects removed numerical artifacts, not dropped historical
+  checks: all 32,685 historical rows were separately rechecked. Shared CRAM48
+  approximation remains explicit; no universal forward-error guarantee.
+- Verified every job's cgroup: 6 GiB, zero swap, 128 tasks, two CPUs; sequential
+  builds/solves, finite waits and owned-child reaping, disk-backed TMPDIR. Other
+  tasks left untouched. Scientific campaign body: 91.946 s with prepared data
+  and shared-workstation contention, not an isolated speed comparison.
+- Evidence: `results/hyperion-numerics-fix/`, fresh raw cases under
+  `target/hyperion-numerics-fixed/`, and `docs/HYPERION_NUMERICAL_REPAIR.md`.
+  All four previous handoff archive hashes rechecked unchanged. Numerical
+  agreement does not qualify nuclear data, class-label logic, access/disposal
+  decisions or a 3-D dose model. No external message, push, commit or release.
+- Local handoff: `deliverables/hyperion-numerics-fixed/`, with a visually checked
+  two-page report, Ta-182 before/after CSV and 1,433,208-byte evidence ZIP. All
+  29 manifested files verified by SHA-256 and ZIP CRC. ZIP SHA-256:
+  `fd262efc7ae9cfd50253e255264e839a3ece2d34bf0ff64b39105d808bad2202`.
+- Subsequent user authorization: publish the numerical source fix. Prepared an
+  isolated commit on public master 8146073; its only change from the verified
+  base is `docs/PARKING.md`. The three numerical source hashes exactly match the
+  completed preflight and 27-case campaign. Publication includes the fix, tests,
+  numerical documentation, frozen protocol and summary receipts, not nuclear
+  data, bulk run artifacts, email drafts or handoff attachments. No new release
+  artifact or additional test execution is claimed by this publication step.

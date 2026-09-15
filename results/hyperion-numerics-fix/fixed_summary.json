@@ -1,0 +1,52 @@
+{
+  "cases_executed": 27,
+  "historical_groups": {
+    "updated": {
+      "checks": 9410,
+      "previous_failures": 98,
+      "remaining_failures": 0
+    },
+    "prior": {
+      "checks": 19507,
+      "previous_failures": 167,
+      "remaining_failures": 0
+    },
+    "joint": {
+      "checks": 3768,
+      "previous_failures": 29,
+      "remaining_failures": 0
+    }
+  },
+  "updated_reference_checks": 9284,
+  "updated_reference_failures": 0,
+  "updated_reference_max_relative_difference": 1.1172694836551493e-06,
+  "updated_index_checks": 120,
+  "updated_index_failures": 0,
+  "updated_dose_checks": 40,
+  "updated_dose_failures": 0,
+  "fresh_matrix_checks": 32395,
+  "fresh_matrix_failures": 0,
+  "fresh_endpoint_checks": 408,
+  "fresh_endpoint_failures": 0,
+  "max_independent_dose_relative_difference": 3.6490525260612436e-10,
+  "binary_sha256": "7e306fe8174f36758bbc98fb28d05fea04d6c38a5b958e08835d8445ef61500f",
+  "raw_decay_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "cgroup": {
+    "memory.max": "6442450944",
+    "memory.swap.max": "0",
+    "pids.max": "128",
+    "cpu.max": "200000 100000"
+  },
+  "campaign_body_wall_s": 91.94638852099888,
+  "source_hashes": {
+    "controls/hyperion_numerics_verify.py": "3390fcecb8868c937be627e8efffa78d550b09cad52637c02fc82b0c31b731f0",
+    "controls/chain.py": "0ea8b3c292b37f021145703ee52a35ae4bd9ad5f363bdcbe594cc1a81b25b584",
+    "controls/hyperion_intake.py": "be11f0af7d90d28e6608a01c2c59b46631c13ebeabb374eb6193d64bfe3cb3e2",
+    "controls/hyperion_value.py": "9c10f391dc0c56f10044dda7254d3c983c28bcbfc074c7bd4d23dbabb236b472",
+    "controls/hyperion_endf.py": "09fd39077935d2f660c900bc3ae014b0a477aa466ed12f030043bd83df0a8886",
+    "controls/hyperion_endf_report.py": "5007942503b9cda9c4df266be87d14df86c93101089934e8affdd51b7ff066d1",
+    "crates/actinv-core/src/sparse.rs": "aa57e61f0dc4eec19a1cd179990dcb9335894ca8ee03560a749274f29ffcaf55",
+    "crates/actinv-core/src/cram.rs": "79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba",
+    "crates/actinv-core/src/run.rs": "dd754e19526731bf52f9c7acc9a11b2e3756d796af6ba39b09f8006044cd44d4"
+  }
+}

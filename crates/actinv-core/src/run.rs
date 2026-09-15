@@ -116,8 +116,9 @@ pub struct StepOut {
     pub negative_atoms_zeroed: f64,
     pub total_atoms_per_g: f64,
     pub n_states_populated: usize,
-    /// CRAM's approximation floors at alpha0, so any population below alpha0 * max(N) is indistinguishable from zero
-    /// by this method. Reported, never silently removed.
+    /// Legacy CRAM asymptotic scale alpha0 * max(N), not a bound on total numerical
+    /// error: floating-point factorization/solve errors can exceed this scale.
+    /// Below-scale populations are reported, never silently removed.
     pub numerical_floor_atoms_per_g: f64,
     pub n_states_below_floor: usize,
     pub atoms_below_floor: f64,
@@ -2272,8 +2273,8 @@ impl PreparedRun {
                     }
                 }
             }
-            // ---- numerical floor: CRAM approximates exp(z) with an absolute floor of alpha0, so states whose population
-            // is below alpha0 * max(N) carry no information. They are reported with a bound on the heat they could add.
+            // Legacy CRAM asymptotic scale only, not a bound on matrix/solve roundoff.
+            // Below-scale populations and their heat subtotal are reported, not removed.
             let nmax = y.iter().cloned().fold(0.0f64, f64::max);
             let floor = c.alpha0 * nmax;
             let (mut n_below, mut atoms_below, mut heat_below) = (0usize, 0.0, 0.0);
@@ -2742,7 +2743,8 @@ impl PreparedRun {
             "library_target_limitations": library_target_limitations,
             "numerical_floor": {
                 "alpha0": c.alpha0,
-                "note": "CRAM's absolute error floors at alpha0; populations below alpha0 * max(N) are indistinguishable from zero and are reported, not removed",
+                "note": "Legacy alpha0 * max(N) CRAM asymptotic scale, not a bound on total numerical error or floating-point solve error; below-scale populations and their heat subtotal are reported, not removed",
+                "is_total_numerical_error_bound": false,
                 "worst_heat_bound_fraction": steps.iter().map(|s| if s.heat_W_per_g.total > 0.0 { s.heat_bound_from_below_floor_W_per_g / s.heat_W_per_g.total } else { 0.0 }).fold(0.0f64, f64::max),
                 "max_states_below_floor": steps.iter().map(|s| s.n_states_below_floor).max().unwrap_or(0),
             },

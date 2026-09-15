@@ -26,7 +26,7 @@ pub fn step(a: &Csc, n0: &[f64], dt: f64, c: &Cram) -> Result<(Vec<f64>, usize),
         let (ln, un) = f.nnz();
         max_fill = max_fill.max(ln + un);
         let b: Vec<C64> = y.iter().map(|v| C64::new(*v, 0.0)).collect();
-        let z = f.solve(&b);
+        let z = f.solve_refined(&m, &b)?;
         for i in 0..n {
             y[i] += 2.0 * (al * z[i]).re;
         }
@@ -78,7 +78,7 @@ pub fn step_with_tangents(
         let (lower, upper) = factor.nnz();
         max_fill = max_fill.max(lower + upper);
         let right_hand_side: Vec<C64> = y.iter().map(|value| C64::new(*value, 0.0)).collect();
-        let z = factor.solve(&right_hand_side);
+        let z = factor.solve_refined(&matrix, &right_hand_side)?;
         for ((tangent, direction), &direction_scale) in
             dy.iter_mut().zip(directions).zip(direction_scales)
         {
@@ -89,7 +89,7 @@ pub fn step_with_tangents(
                         direction.vals[entry] * solution * dt * direction_scale;
                 }
             }
-            let dz = factor.solve(&rhs);
+            let dz = factor.solve_refined(&matrix, &rhs)?;
             for (value, derivative) in tangent.iter_mut().zip(dz) {
                 *value += 2.0 * (*alpha * derivative).re;
             }
@@ -124,7 +124,7 @@ pub fn step_multi(a: &Csc, cols: &[Vec<f64>], dt: f64, c: &Cram) -> Result<Vec<V
         let f = lu(&m)?;
         for y in ys.iter_mut() {
             let b: Vec<C64> = y.iter().map(|v| C64::new(*v, 0.0)).collect();
-            let z = f.solve(&b);
+            let z = f.solve_refined(&m, &b)?;
             for i in 0..n {
                 y[i] += 2.0 * (al * z[i]).re;
             }
@@ -140,8 +140,10 @@ pub fn step_multi(a: &Csc, cols: &[Vec<f64>], dt: f64, c: &Cram) -> Result<Vec<V
 
 #[cfg(test)]
 mod tests {
-    use super::{step, step_with_tangents, Cram};
-    use crate::cram_coeffs::{CRAM16_ALPHA, CRAM16_ALPHA0, CRAM16_THETA};
+    use super::{step, step_multi, step_with_tangents, Cram};
+    use crate::cram_coeffs::{
+        CRAM16_ALPHA, CRAM16_ALPHA0, CRAM16_THETA, CRAM48_ALPHA, CRAM48_ALPHA0, CRAM48_THETA,
+    };
     use crate::sparse::Csc;
     use num_complex::Complex64 as C64;
 
@@ -168,6 +170,107 @@ mod tests {
                 (1, 1, C64::new(-0.05, 0.0)),
             ],
         )
+    }
+
+    fn cram48() -> Cram {
+        Cram {
+            alpha0: CRAM48_ALPHA0,
+            theta: CRAM48_THETA.iter().map(|&(r, i)| C64::new(r, i)).collect(),
+            alpha: CRAM48_ALPHA.iter().map(|&(r, i)| C64::new(r, i)).collect(),
+        }
+    }
+
+    #[test]
+    fn stable_background_cannot_create_absent_radioactive_parent() {
+        for coefficients in [cram16(), cram48()] {
+            for (parent, daughter) in [(0, 1), (1, 0)] {
+                let generator = Csc::from_triplets(
+                    2,
+                    &[
+                        (parent, parent, C64::new(-1.0, 0.0)),
+                        (daughter, parent, C64::new(1.0, 0.0)),
+                    ],
+                );
+                for dt in [1.0e-6, 1.0, 100.0, 1.0e4, 1.0e8, 1.0e12] {
+                    for background in [1.0, 1.0e12, 1.0e21, 1.0e24] {
+                        let mut initial = vec![0.0; 2];
+                        initial[daughter] = background;
+                        let scalar = step(&generator, &initial, dt, &coefficients).unwrap().0;
+                        let multi = step_multi(
+                            &generator,
+                            std::slice::from_ref(&initial),
+                            dt,
+                            &coefficients,
+                        )
+                        .unwrap();
+                        let tangent = step_with_tangents(
+                            &generator,
+                            &initial,
+                            &[vec![0.0; 2]],
+                            std::slice::from_ref(&generator),
+                            &[1.0],
+                            dt,
+                            &coefficients,
+                        )
+                        .unwrap();
+                        for state in [&scalar, &multi[0], &tangent.state] {
+                            assert!(state[parent].abs() <= 1.0e-6,
+                                "absent parent = {}, dt = {dt}, background = {background}, parent index = {parent}, poles = {}",
+                                state[parent], coefficients.theta.len());
+                            assert!((state[daughter] - background).abs() / background <= 1.0e-12);
+                        }
+                        assert!(tangent.tangents[0].iter().all(|v| v.abs() <= 1.0e-6));
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn trace_daughter_matches_bateman_despite_large_stable_background() {
+        let slow = 1.0e-14;
+        let fast = 1.0;
+        for order in [
+            [0, 1, 2],
+            [0, 2, 1],
+            [1, 0, 2],
+            [1, 2, 0],
+            [2, 0, 1],
+            [2, 1, 0],
+        ] {
+            let [parent, daughter, stable] = order;
+            let generator = Csc::from_triplets(
+                3,
+                &[
+                    (parent, parent, C64::new(-slow, 0.0)),
+                    (daughter, parent, C64::new(slow, 0.0)),
+                    (daughter, daughter, C64::new(-fast, 0.0)),
+                    (stable, daughter, C64::new(fast, 0.0)),
+                ],
+            );
+            for coefficients in [cram16(), cram48()] {
+                for dt in [1.0, 100.0, 1.0e6, 1.0e12] {
+                    let mut initial = vec![0.0; 3];
+                    initial[parent] = 1.0e18;
+                    initial[stable] = 1.0e24;
+                    let result = step(&generator, &initial, dt, &coefficients).unwrap().0;
+                    let expected_parent = initial[parent] * (-slow * dt).exp();
+                    let expected_daughter = initial[parent] * slow / (fast - slow)
+                        * ((-slow * dt).exp() - (-fast * dt).exp());
+                    assert!((result[parent] - expected_parent).abs() / expected_parent <= 1.0e-10);
+                    assert!(
+                        (result[daughter] - expected_daughter).abs() / expected_daughter <= 1.0e-10,
+                        "daughter {}, expected {expected_daughter}, order {order:?}, dt {dt}",
+                        result[daughter]
+                    );
+                    assert!(
+                        (result.iter().sum::<f64>() - initial.iter().sum::<f64>()).abs()
+                            / initial.iter().sum::<f64>()
+                            <= 1.0e-12
+                    );
+                }
+            }
+        }
     }
 
     #[test]

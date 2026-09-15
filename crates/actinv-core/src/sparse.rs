@@ -277,7 +277,144 @@ impl Lu {
         }
         x
     }
+
+    /// Solve and refine against the original matrix, reusing this factorization.
+    ///
+    /// A small normwise residual is insufficient when row pivoting mixes a tiny
+    /// state with a large background. Compute every residual component with
+    /// compensated sums and fused-product error terms, then solve for the
+    /// correction. No component is discarded based on its population or sign.
+    /// Five iterations bound the work (the same cap used by LAPACK GERFS);
+    /// stagnation stops earlier. This is not a forward-error/conditioning bound.
+    pub fn solve_refined(&self, a: &Csc, b: &[C64]) -> Result<Vec<C64>, String> {
+        if a.n != self.n || b.len() != self.n {
+            return Err("refined solve matrix/right-hand-side dimension mismatch".into());
+        }
+        let finite = |v: &C64| v.re.is_finite() && v.im.is_finite();
+        if !b.iter().all(finite) {
+            return Err("refined solve has a non-finite right-hand side".into());
+        }
+        let mut x = self.solve(b);
+        if !x.iter().all(finite) {
+            return Err("non-finite linear solution".into());
+        }
+        for _ in 0..5 {
+            let mut residual = b.to_vec();
+            let mut tail = vec![C64::new(0.0, 0.0); self.n];
+            for (column, value) in x.iter().enumerate() {
+                for entry in a.colptr[column]..a.colptr[column + 1] {
+                    let row = a.rowidx[entry];
+                    let coefficient = a.vals[entry];
+                    let (sum, error) = (&mut residual[row], &mut tail[row]);
+                    add_product(&mut sum.re, &mut error.re, -coefficient.re, value.re);
+                    add_product(&mut sum.re, &mut error.re, coefficient.im, value.im);
+                    add_product(&mut sum.im, &mut error.im, -coefficient.re, value.im);
+                    add_product(&mut sum.im, &mut error.im, -coefficient.im, value.re);
+                }
+            }
+            for (value, error) in residual.iter_mut().zip(tail) {
+                *value += error;
+            }
+            if !residual.iter().all(finite) {
+                return Err("non-finite linear residual".into());
+            }
+            let correction = self.solve(&residual);
+            if !correction.iter().all(finite) {
+                return Err("non-finite linear refinement correction".into());
+            }
+            let mut changed = false;
+            for (value, delta) in x.iter_mut().zip(correction) {
+                let corrected = *value + delta;
+                changed |= corrected != *value;
+                *value = corrected;
+            }
+            if !x.iter().all(finite) {
+                return Err("non-finite refined linear solution".into());
+            }
+            if !changed {
+                break;
+            }
+        }
+        Ok(x)
+    }
     pub fn nnz(&self) -> (usize, usize) {
         (self.li.len(), self.ui.len())
+    }
+}
+
+/// Neumaier accumulation plus the error-free product remainder (when finite).
+fn add_product(sum: &mut f64, tail: &mut f64, left: f64, right: f64) {
+    let product = left * right;
+    let updated = *sum + product;
+    *tail += if sum.abs() >= product.abs() {
+        (*sum - updated) + product
+    } else {
+        (product - updated) + *sum
+    };
+    *tail += left.mul_add(right, -product);
+    *sum = updated;
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{lu, Csc};
+    use num_complex::Complex64 as C64;
+
+    #[test]
+    fn refinement_preserves_zero_component_next_to_large_background() {
+        let matrix = Csc::from_triplets(
+            2,
+            &[
+                (0, 0, C64::new(-90.0, -20.0)),
+                (1, 0, C64::new(100.0, 0.0)),
+                (1, 1, C64::new(10.0, -20.0)),
+            ],
+        );
+        let factor = lu(&matrix).unwrap();
+        assert_eq!(factor.pinv, vec![1, 0]);
+        let rhs = [C64::new(0.0, 0.0), C64::new(1.0e24, 0.0)];
+        let result = factor.solve_refined(&matrix, &rhs).unwrap();
+        assert!(result[0].norm() <= 1.0e-6);
+        let expected = super::cdiv(rhs[1], C64::new(10.0, -20.0));
+        assert!((result[1] - expected).norm() / expected.norm() <= 1.0e-12);
+    }
+
+    #[test]
+    fn refinement_supports_complex_system_requiring_pivoting() {
+        let matrix = Csc::from_triplets(
+            2,
+            &[
+                (1, 0, C64::new(3.0, -2.0)),
+                (0, 1, C64::new(2.0, 1.0)),
+                (1, 1, C64::new(1.0, 0.5)),
+            ],
+        );
+        let expected = [C64::new(1.0, -3.0), C64::new(2.0, 0.25)];
+        let rhs = [
+            C64::new(2.0, 1.0) * expected[1],
+            C64::new(3.0, -2.0) * expected[0] + C64::new(1.0, 0.5) * expected[1],
+        ];
+        let factor = lu(&matrix).unwrap();
+        assert_eq!(factor.pinv, vec![1, 0]);
+        let actual = factor.solve_refined(&matrix, &rhs).unwrap();
+        for (a, b) in actual.iter().zip(expected) {
+            assert!((*a - b).norm() / b.norm() <= 1.0e-12);
+        }
+        let mut residual = rhs;
+        let mut scale = rhs.map(|v| v.norm());
+        for (column, value) in actual.iter().enumerate() {
+            for entry in matrix.colptr[column]..matrix.colptr[column + 1] {
+                let row = matrix.rowidx[entry];
+                residual[row] -= matrix.vals[entry] * value;
+                scale[row] += matrix.vals[entry].norm() * value.norm();
+            }
+        }
+        for (r, denominator) in residual.iter().zip(scale) {
+            assert!(r.norm() / denominator <= 1.0e-12);
+        }
+        assert!(factor.solve_refined(&matrix, &rhs[..1]).is_err());
+        assert!(factor
+            .solve_refined(&matrix, &[C64::new(f64::NAN, 0.0); 2])
+            .is_err());
     }
 }
