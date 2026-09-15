@@ -1,0 +1,14 @@
+{
+ "failures": [],
+ "mutation_self_test": {
+  "planted": 6,
+  "rejected": 6
+ },
+ "pass": true,
+ "replayed_builds": [
+  "n-S032.tendl:0",
+  "n-Mg024.tendl:0"
+ ],
+ "schema": "actinv-p25c-g4-check-1",
+ "staged_files_verified": 87
+}
