@@ -992,3 +992,23 @@ those risks concrete before the implementation sequence is committed.
   rejects. ACTINV 1.1.0 stays data-blocked; the recorded paths are the corrected upstream
   TENDL release, or a new phase for EAF state-catalog emission under explicit isomeric
   limitations. All scoring was retrospective; no blind evidence exists or was claimed.
+
+- 2026-09-14 — **P25c closes `P25c-PASS`** (`results/verdict_p25c.json`,
+  `results/g5_p25c_accounting.json`, independent checker `results/g5_p25c_check.json`
+  green, 7/7 planted mutations rejected, gate ordering verified by git ancestry). The
+  phase produced `tendl-2025-patched`, a clearly labeled derived corpus that mechanically
+  zeroes the 44 enumerated leaked leading ordinates across the 28 confirmed-signature
+  files while copying all 2,822 other files byte-for-byte; G2 replay verified surgical
+  integrity. The post-patch census shows zero residual leak-signature hits and recovered
+  three union targets (n-Sc045, n-Y088, n-Br080m) with zero regressions; coverage moved
+  IRDFF 29→30, union 43→45, anchors 41→42. The union+anchor artifact builds clean (87
+  targets, `state_catalog` liso {0,1}) and passes all frozen nonregression gates on both
+  partitions (IRDFF 17 comparable rows; isomeric 162 paired of 469 eligible neutron
+  rows). The honest boundary is equally clear: the five dosimetry-critical targets
+  (Ni-58, Nb-93, Ag-109, In-113, Au-197) remain unrecovered — their blockers are
+  non-signature defect classes, not the confirmed leak — and 46 non-signature
+  conservation-excess files plus 7 self-channel-only files stay ledgered and unpatched.
+  The verdict qualifies the derived corpus as a *candidate* for a separately labeled
+  data release; publishing it as a `data-v1.1.x` artifact remains the maintainer's
+  decision and must carry the defect scope verbatim. All scoring was retrospective; no
+  blind evidence exists or was claimed.

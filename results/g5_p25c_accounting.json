@@ -1,0 +1,125 @@
+{
+ "all_floors_met": true,
+ "artifact": {
+  "build_exit": 0,
+  "catalog_liso_values": [
+   0,
+   1
+  ],
+  "index_sha256": "0d4d1032c1901e1623fc166acb474249888d6251f689591ad7c81492756d7a5d",
+  "index_targets": 87,
+  "npz_sha256": "d48f6495ead6a3f63e5c293472ac79bc0cb7e7606a046c5d811c1177a8caa4de",
+  "staged_files": 87
+ },
+ "coverage": {
+  "anchors": {
+   "patched": 42,
+   "source": 41,
+   "total": 62
+  },
+  "dosimetry_critical_recovered": 0,
+  "dosimetry_critical_unrecovered": [
+   "Ni-58",
+   "Nb-93",
+   "Ag-109",
+   "In-113",
+   "Au-197"
+  ],
+  "irdff": {
+   "patched": 30,
+   "source": 29,
+   "total": 47
+  },
+  "newly_broken_files": [],
+  "recovered_files": [
+   "n-Br080m.tendl",
+   "n-Sc045.tendl",
+   "n-Y088.tendl"
+  ],
+  "union": {
+   "patched": 45,
+   "source": 43,
+   "total": 77
+  }
+ },
+ "defect_census": {
+  "copied_verbatim": 2822,
+  "ordinate_edits": 44,
+  "patched_files": 28,
+  "post_rescan_kinds_histogram": {
+   "clean": 1,
+   "floor": 1,
+   "floor+gridpoint+interp": 4,
+   "floor+gridpoint+interp+no_mf3_total": 1,
+   "floor+gridpoint+interp+no_mf3_total+zero_total": 2,
+   "floor+gridpoint+interp+zero_total": 10,
+   "floor+gridpoint+no_mf3_total+zero_total": 1,
+   "floor+gridpoint+zero_total": 13,
+   "floor+interp": 22,
+   "floor+interp+no_mf3_total": 2,
+   "floor+interp+no_mf3_total+zero_total": 2,
+   "floor+interp+zero_total": 21,
+   "interp+zero_total": 1
+  },
+  "pre_patch_classes": {
+   "confirmed_leak_signature": 28,
+   "conservation_excess_non_signature": 46,
+   "self_channel_only": 7
+  },
+  "residual_signature_hits": 0,
+  "sealed_files": 81
+ },
+ "floors": {
+  "F1_no_regression": {
+   "met": true,
+   "newly_broken": []
+  },
+  "F2_non_inferiority": {
+   "anchors": 42,
+   "irdff": 30,
+   "met": true,
+   "union": 45
+  },
+  "F3_material_recovery": {
+   "met": true,
+   "recovered": [
+    "n-Br080m.tendl",
+    "n-Sc045.tendl",
+    "n-Y088.tendl"
+   ]
+  },
+  "F4_leak_clearance": {
+   "met": true,
+   "residual": []
+  },
+  "F5_artifact_coverage": {
+   "index_targets": 87,
+   "met": true,
+   "staged": 87
+  }
+ },
+ "nonregression_all_ok": true,
+ "schema": "actinv-p25c-g5-accounting-1",
+ "scoring": {
+  "irdff_partition": {
+   "candidate_scored": 17,
+   "comparable_rows": 17,
+   "nonregression": {
+    "coverage_ok": true,
+    "median_ok": true,
+    "p90_ok": true
+   },
+   "rows": 460
+  },
+  "isomeric_partition": {
+   "candidate_scored_rows": 162,
+   "eligible_rows": 469,
+   "nonreg": {
+    "coverage_ok": true,
+    "median_ok": true,
+    "p90_ok": true
+   },
+   "paired_rows": 162
+  }
+ }
+}

@@ -1,0 +1,41 @@
+{
+ "accounting_sha256": "47fda035f58a3bfc2e7e75cbfa32c7b8a08190c87f0838487d7b67b97afcaae2",
+ "amendment_1": "frozen coverage floors F1-F5, protocols/ACTINV-P25c_PROTOCOL.md",
+ "blind_evidence": false,
+ "evidence_label": "all scoring retrospective; every benchmark partition is consumed evidence",
+ "evidence_sha256": {
+  "g0_p25c_check.json": "44e40c8cc6ddc4d02d42a1f0bf0c08552ca888b46aed047cff6aa8eba8dc8c46",
+  "g0_p25c_manifest_tendl_2025_n.txt": "f38df7c49da6cef8ac3d23c45c81dfb394829eefd38ee4af0db6dde92f0beaa4",
+  "g0_p25c_seals.json": "c66f27d17108ed32e225464982b8e0e306b6245b0e8e36ece2affeae83077eab",
+  "g1_p25c_check.json": "f7b9911ed03ac334457cb789d149be8a88d1ec4442fd02b4642d9efe7a42f772",
+  "g1_p25c_signature.json": "98d0a2912d79fb87cc740b79783270a57d389025f69cc8679934fd490450f33d",
+  "g2_p25c_check.json": "32a2b3ed8ef9100504ecf2a1581fcd45241b930d682b40cc47d1626fb9df74d5",
+  "g2_p25c_patch.json": "b67b166145e78c71605f3f9f1278b84fad28186289076d5f38983882673093dd",
+  "g2_p25c_patched_manifest.sha256": "ccfa2e395e536e78cb6fd46be83f988c5a55d1f1e62d0016f412b0043edb8a8d",
+  "g3_p25c_census.json": "79939329e30fde55a4a9aaf0d931dec3286e70c9a99b19c21cbabb449f880bcd",
+  "g3_p25c_check.json": "0aa20940237fbaf15ba19b150f3a26fa0d24b20bc3982b5836a3d72822069c9a",
+  "g4_p25c_build.json": "2a2eb5d64c1f0ab2690f9c8a4892f8e0b3b13d5b44f8e56adcf76981ccc917b5",
+  "g4_p25c_check.json": "bd93f6116b083b7383a5d9361094383fda7d5f19d059aa35976dd11cb868f0dc",
+  "g4_p25c_irdff_score.json": "22e19d3df9e62f3a6f65b694ff90f18be16d1c493e4cf04de9a32804675bcce8",
+  "g4_p25c_score.json": "9957bc94624f74888792f860a7ef4b369379520b884a9128e3a1c1167dd143be"
+ },
+ "headline": "surgical remediation verified: the derived tendl-2025-patched corpus clears the confirmed leak signature in all 28 files, recovers 3 union targets with zero regressions, and passes every frozen coverage and nonregression gate",
+ "key_findings": [
+  "the patch zeroed exactly 44 enumerated leading ordinates across 28 files; independent replay verified surgical integrity and all 2,822 other files byte-identical",
+  "post-patch census: zero residual leak-signature hits; residual non-signature defect classes re-ledgered, not cleared",
+  "coverage delta: IRDFF 29->30, union 43->45, anchors 41->42; recovered files n-Sc045, n-Y088, n-Br080m",
+  "dosimetry-critical set unrecovered: Ni-58, Nb-93, Ag-109, In-113, Au-197 still fail closed on non-signature defect classes -- the confirmed leak was not their blocker",
+  "nonregression vs shipped baseline passes on both partitions (IRDFF 17 comparable; isomeric 162 paired of 469 eligible); note the baseline shares the defect on patched rows, so nonregression bounds harm, it does not prove the corrected values right -- correctness rests on the enumerated patch semantics and upstream confirmation",
+  "46 non-signature conservation-excess files and 7 self-channel-only files remain unpatched and ledgered"
+ ],
+ "limitations": [
+  "derived corpus is an Avila Labs remediation of TENDL-2025, not an official TENDL release",
+  "patch addresses only the upstream-confirmed leading-ordinate leak; 53 sealed files carry other defect classes",
+  "no blind evidence exists; all scoring is retrospective",
+  "isomeric identity remains qualified only to the extent the state catalog now expresses liso {0,1} product states; P18/P18b isomeric-identity verdicts remain FAIL"
+ ],
+ "protocol_sha256": "2187b8fc4270e3d114bd63421845292d56730c183e9f29eb1df94641b63a2443",
+ "release_consequence": "the patched corpus is a qualified derived candidate for a separately labeled data release; publishing it as data-v1.1.x remains the maintainer's decision and should carry the defect scope and dosimetry-critical limitations verbatim",
+ "schema": "actinv-p25c-verdict-1",
+ "verdict": "P25c-PASS"
+}

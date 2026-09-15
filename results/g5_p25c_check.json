@@ -1,0 +1,21 @@
+{
+ "accounting_sha256": "47fda035f58a3bfc2e7e75cbfa32c7b8a08190c87f0838487d7b67b97afcaae2",
+ "failures": [],
+ "mutations_rejected": [
+  "verdict flip rejected",
+  "blind-evidence claim rejected",
+  "coverage inflation rejected",
+  "floor flag flip rejected",
+  "residual count tamper rejected",
+  "nonreg flag flip rejected",
+  "evidence hash tamper rejected"
+ ],
+ "pass": true,
+ "replayed_patches": [
+  "n-Ag110m.tendl",
+  "n-Zr088.tendl"
+ ],
+ "residual_signature_files": [],
+ "schema": "actinv-p25c-g5-check-1",
+ "verdict_sha256": "363a1d779c0a2b6ed30aadfacba3e3469898109a7a70dd817f37f2f0516ff61d"
+}
