@@ -1,0 +1,79 @@
+{
+ "data_release": {
+  "asset_count": 8,
+  "assets": {
+   "ACTINV-DATA-NOTICE-v1.1.0.md": {
+    "bytes": 5734,
+    "sha256": "132bacccc3fe16703455cc69efc68feaf811eea4415dc653336638c70f903136"
+   },
+   "SHA256SUMS": {
+    "bytes": 623,
+    "sha256": "dbbb646561e5f67ad6f72101671340c2ce98e8baa3cd916bfde1a283696c3d65"
+   },
+   "SIZES": {
+    "bytes": 279,
+    "sha256": "d365c60cb84e0b3f38348d5d428968a6b2907bdd705aa6e6a38084d5fb12e938"
+   },
+   "actinv-data-catalog-v1.1.0.json": {
+    "bytes": 13776,
+    "sha256": "25638bddfd6bb183c51720e53254a6529b15a63cadae2202174c662f0cea3314"
+   },
+   "tendl-2025-patched-neutron-709g.cov.npz": {
+    "bytes": 136447685,
+    "sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+   },
+   "tendl-2025-patched-neutron-709g.cov_index.json": {
+    "bytes": 575266,
+    "sha256": "e44204833129d057054076f4cab401da6a7000a394f7f2989754aa074fb442aa"
+   },
+   "tendl-2025-patched-neutron-709g.npz": {
+    "bytes": 48417198,
+    "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+   },
+   "tendl-2025-patched-neutron-709g_index.json": {
+    "bytes": 15300945,
+    "sha256": "18efc9b85655b736022360e85bebde3f816ec54ff0603e507a8ee9e2c9414982"
+   }
+  },
+  "mismatched_assets": [],
+  "release_id": 389528222,
+  "server_reported_digests_match_staged": true,
+  "tag": "data-v1.1.0",
+  "tag_commit": "4611b11cbc9812026aeb24f14a05c421a0523b5c",
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0"
+ },
+ "hosted_smoke": {
+  "data_fetch_verify": "target/preflight-tmp/fetch-smoke \u2014 all 5 bundle files hash-verified against live release",
+  "run": "21 steps, 45/3873 states populated, FNS iron example against hosted patched bundle"
+ },
+ "schema": "actinv-p25c-release-publish-1",
+ "software_release": {
+  "artifact_workflow_run": 35033304325,
+  "assets": {
+   "SHA256SUMS": {
+    "bytes": 396,
+    "sha256": "fb7e5a14c8a3070840e9485f7bf537f5d77f5486ac00cd0c2bea3bdb927a01cf"
+   },
+   "actinv-1.1.1-linux-x86_64.tar.gz": {
+    "bytes": 3975106,
+    "sha256": "81771f22b57d2cfaea31c461f4e302ff8bd9a4dd196ab3827da3677876fac06e"
+   },
+   "actinv-1.1.1-macos-aarch64.tar.gz": {
+    "bytes": 3550036,
+    "sha256": "8e813c3667c6833a0a5c9257840f6ca5a5db4c128a046ad967a1a593df0523ca"
+   },
+   "actinv-1.1.1-macos-x86_64.tar.gz": {
+    "bytes": 3781798,
+    "sha256": "08f3a6b115f7f921f314e919bc6d62df45869b94701aecb127025d5085006c19"
+   },
+   "actinv-1.1.1-windows-x86_64.zip": {
+    "bytes": 3451607,
+    "sha256": "3f07bf60f05756e3eb86666e591437838a6206c9da39555e31a306e33fb8b3dd"
+   }
+  },
+  "release_id": 389533332,
+  "tag": "v1.1.1",
+  "tag_commit": "4611b11cbc9812026aeb24f14a05c421a0523b5c",
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.1.1"
+ }
+}
