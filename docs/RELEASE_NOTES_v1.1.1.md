@@ -1,8 +1,9 @@
 # ACTINV v1.1.1 — release notes
 
-ACTINV 1.1.1 is a data-catalog patch release. The solver, schemas, solver order, public interfaces, and physics are
-unchanged from 1.1.0. The embedded data catalog advances to v1.1.0 so that `actinv data fetch` installs the
-`tendl-2025-patched` remediation derivative qualified in P25c (`data-v1.1.0` release).
+ACTINV 1.1.1 is a data-catalog patch release with one solver hardening fix. Schemas, solver order, public
+interfaces and physics are unchanged from 1.1.0. The embedded data catalog advances to v1.1.0 so that
+`actinv data fetch` installs the `tendl-2025-patched` remediation derivative qualified in P25c (`data-v1.1.0`
+release).
 
 Upgrade the Python package with:
 
@@ -30,11 +31,16 @@ cargo install --locked --force actinv-cli --version 1.1.1
 - All v1.0.0 artifact IDs resolve to exactly the same bytes: the proton, deuteron, alpha and decay assets are
   unchanged, and the superseded `tendl-2025-neutron` bundles remain fetchable for byte-compatible reproduction of
   earlier work.
+- CRAM linear solves now apply bounded iterative refinement (`Lu::solve_refined`) with compensated residual
+  evaluation; the run certificate's `numerical_floor` note no longer claims a total numerical-error bound. Results
+  are unchanged on previously green cases; the fix removes a trace-inventory precision loss in shifted solves.
 
 ## Qualification boundary
 
 The patched corpus passed the frozen P25c construction, coverage, surgical-integrity, leak-clearance and
-retrospective nonregression gates — retrospective evidence of internal consistency, not blind validation. Five
-dosimetry-critical targets (Ni-58, Nb-93, Ag-109, In-113, Au-197) still fail closed under other, non-signature
-defect classes, and 46 files carry other conservation-defect patterns. ACTINV and the data remain research-grade;
-`docs/DATA_LIMITATIONS.md` and `docs/QUALIFICATION.md` still apply.
+retrospective nonregression gates — retrospective evidence of internal consistency, not blind validation. The
+shipped patched artifact holds 1,679 targets / 87,075 rows: the full-corpus strict build ledgered 1,172
+source-file exclusions across all defect classes. Five dosimetry-critical targets (Ni-58, Nb-93, Ag-109, In-113,
+Au-197) still fail closed under non-signature defect classes, and 16 of the 17 previously defect-bearing IRDFF-II
+targets are absent. ACTINV and the data remain research-grade; `docs/DATA_LIMITATIONS.md` and
+`docs/QUALIFICATION.md` still apply.

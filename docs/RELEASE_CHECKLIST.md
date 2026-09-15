@@ -55,15 +55,15 @@ the official decay archives remain hosted by the IAEA and are not rehosted by AC
 
 ## data-v1.1.0 (derived-corpus release)
 
-- [ ] Build the full patched-corpus neutron artifact with `controls/p25c_release_build.py` (bounded, resumable
+- [x] Build the full patched-corpus neutron artifact with `controls/p25c_release_build.py` (bounded, resumable
   iterate-and-evict; the complete failure ledger lands in `results/p25c_release_build.json`).
-- [ ] Rebuild the matching MF=33 covariance sidecar with `controls/p25c_release_covariance.py`; the sidecar index is
+- [x] Rebuild the matching MF=33 covariance sidecar with `controls/p25c_release_covariance.py`; the sidecar index is
   bound to the patched activation artifact by `activation_library_sha256`.
-- [ ] Stage assets and generate the v1.1.0 catalog with `controls/p25c_release_stage.py`; verify with
+- [x] Stage assets and generate the v1.1.0 catalog with `controls/p25c_release_stage.py`; verify with
   `controls/check_p25c_release.py`.
-- [ ] Create the immutable `data-v1.1.0` GitHub release at the release commit and attach the staged assets, catalog,
+- [x] Create the immutable `data-v1.1.0` GitHub release at the release commit and attach the staged assets, catalog,
   notice, `SHA256SUMS`, and `SIZES`.
-- [ ] From a clean directory, run `actinv data fetch`, `actinv data verify`, and a documented smoke calculation using
+- [x] From a clean directory, run `actinv data fetch`, `actinv data verify`, and a documented smoke calculation using
   the hosted assets. Record the release URL, tag commit, release ID, and asset identities.
-- [ ] Tag the v1.1.1 software release (the embedded catalog requires it) and publish through the normal tag
+- [x] Tag the v1.1.1 software release (the embedded catalog requires it) and publish through the normal tag
   workflows.
