@@ -1,0 +1,11 @@
+{
+ "failures": [],
+ "files_live_verified": 278,
+ "mutation_self_test": {
+  "planted": 8,
+  "rejected": 8
+ },
+ "pass": true,
+ "residual_signature_files": [],
+ "schema": "actinv-p25c-g3-check-1"
+}

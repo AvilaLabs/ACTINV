@@ -1,0 +1,3623 @@
+{
+ "builder": "/home/connoravila/Documents/actinv/target/release/actinv",
+ "builder_version": "actinv 1.1.0",
+ "builds": {
+  "patched": {
+   "n-Ag109.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ag109.tendl: MT107/MF=10 ZAP=45106 group 2: emitted state sum 3.72330387903921534e-13 barn exceeds runtime total 3.55775970138380673e-13 barn by relative excess 4.653045e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4731 ZA=47109 source_sha256=4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 93.758
+   },
+   "n-Ag109m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "aea9b5815a8d23913d16d7fc517a0ecec783176c809e18fe10647eef8932fda2",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ag109m.tendl: MT107/MF=10 ZAP=45106 group 2: emitted state sum 8.09802372707959062e-14 barn exceeds runtime total 7.71549722409585535e-14 barn by relative excess 4.957898e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4732 ZA=47109 source_sha256=aea9b5815a8d23913d16d7fc517a0ecec783176c809e18fe10647eef8932fda2; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 9.825
+   },
+   "n-Al027.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "61afaf01ac4fca5b5d43bfcedaffaa66b5f36dddb9c1c657b4b0a21ea63d2ffd",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 6.561
+   },
+   "n-Am241.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8adbd4d8185ca8778574800f223e735cb9a921883ac2e677390d9a962e12a554",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 42.209
+   },
+   "n-As075.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0e4b0d3594ad7e425f7ec03f6e8cbe668a0e8886d7f0d0001bf303bceafab084",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 26.737
+   },
+   "n-Au197.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c5c4ab2190037ece28d458f629c6b67133a0092421747c6f83a71426dfd1b1a9",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Au197.tendl: MT107/MF=10 ZAP=77194 group 0: emitted state sum 7.28182400976838577e-11 barn exceeds runtime total 7.21833535909389992e-11 barn by relative excess 8.795470e-3 (outside the frozen 0.001 standard envelope); MAT=7925 ZA=79197 source_sha256=c5c4ab2190037ece28d458f629c6b67133a0092421747c6f83a71426dfd1b1a9; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 18.459
+   },
+   "n-Au200.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c025f117e3d40adada5f9e21cd4e87caf2170bf858ac669574a8041ecad1a9ea",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Au200.tendl: MT107/MF=10 ZAP=77197 group 2: emitted state sum 7.45005739478211458e-13 barn exceeds runtime total 7.10405828606301900e-13 barn by relative excess 4.870443e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7934 ZA=79200 source_sha256=c025f117e3d40adada5f9e21cd4e87caf2170bf858ac669574a8041ecad1a9ea; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 3.987
+   },
+   "n-Au200m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c1f6bfc8c8ffc55bf77a96003131bccbb2a89238061911fd9b4db4aa2f71ccd3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Au200m.tendl: MT107/MF=10 ZAP=77197 group 2: emitted state sum 2.09479785491532802e-12 barn exceeds runtime total 1.99117610959675173e-12 barn by relative excess 5.204047e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7935 ZA=79200 source_sha256=c1f6bfc8c8ffc55bf77a96003131bccbb2a89238061911fd9b4db4aa2f71ccd3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 4.302
+   },
+   "n-Bi209.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "b1e5491f50e38e2a0b0adc3dc785ceb2368d7493302199efa4cdf037c3871278",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Bi209.tendl: MT107/MF=10 ZAP=81206 group 2: emitted state sum 1.50368583176540012e-5 barn exceeds runtime total 1.43918356110769941e-5 barn by relative excess 4.481865e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=8325 ZA=83209 source_sha256=b1e5491f50e38e2a0b0adc3dc785ceb2368d7493302199efa4cdf037c3871278; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 7.965
+   },
+   "n-Br080.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c1f460b1126a341e6bd24429d7b616ca4f1a17e9c35f5c6139e7fdeb3737473b",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Br080.tendl: MT16/MF=10 ZAP=35079 group 595: emitted state sum 7.83575790412670448e-1 barn exceeds runtime total 1.96044938531481118e-2 barn by relative excess 3.896919e1 (outside the frozen 0.001 standard envelope); MAT=3528 ZA=35080 source_sha256=c1f460b1126a341e6bd24429d7b616ca4f1a17e9c35f5c6139e7fdeb3737473b; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 5.918
+   },
+   "n-Br080m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "bd925fc96c0332ba6dacb2c3628897da2cc69a781dbdc11b758544ff448f71b1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 6.963
+   },
+   "n-Br081.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "fede6544c73bf35d9071ef1a6731302c285019e7d6d97737917a406f4335a298",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 26.455
+   },
+   "n-Cd114.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "902e5405db2ee439dfd2d954e86d78aa5378d6748d790423d82ecafee0f6f7c2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 19.183
+   },
+   "n-Cd115.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a33aaca4bed87e695891e2f75ccd823114b7c303d3fb1fa4a2e6609977d93797",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.756
+   },
+   "n-Cd115m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "2228c65990fd852d1ee10c5b30c545d83251140a0735bf48b003a1a89bf4e2fa",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 9.805
+   },
+   "n-Cd116.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a44a5da905bd07257be8a44aa161a75c2310b134579fa9d54599a53ec870d458",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 14.225
+   },
+   "n-Ce139.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "7b7a159793284feaccfaa249ecf6157d67040db30957d1fbd9473658a9c7ea3a",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ce139.tendl: MT107/MF=10 ZAP=56136 group 2: emitted state sum 9.12291457674100324e-3 barn exceeds runtime total 8.69922441548977993e-3 barn by relative excess 4.870436e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5834 ZA=58139 source_sha256=7b7a159793284feaccfaa249ecf6157d67040db30957d1fbd9473658a9c7ea3a; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 7.999
+   },
+   "n-Ce139m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "00fc4cabb0398c060fd24db4e7f375a92990717cacc6c9aa5fd720cb161f6557",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ce139m.tendl: MT107/MF=10 ZAP=56136 group 2: emitted state sum 1.78782469670225592e-3 barn exceeds runtime total 1.70479354732234784e-3 barn by relative excess 4.870452e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5835 ZA=58139 source_sha256=00fc4cabb0398c060fd24db4e7f375a92990717cacc6c9aa5fd720cb161f6557; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 6.144
+   },
+   "n-Co059.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "00b705eec124c460f6f85f0ce22aaa216a75b26190dfde7c1fdc5430a85358b5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 22.181
+   },
+   "n-Co062.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f9ab15dd15c9d8a2216885b52a43ea7d87d0cd51159c84d891021b2cc89f05ba",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 9.411
+   },
+   "n-Co062m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "90650a6145343e8313067e265ab5991a8414ef215d1069e03d95adc2504b8441",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 7.739
+   },
+   "n-Cu063.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Cu063.tendl: MT107/MF=10 ZAP=27060 group 2: emitted state sum 2.95505013986414196e-13 barn exceeds runtime total 2.82965412672169316e-13 barn by relative excess 4.431496e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2925 ZA=29063 source_sha256=2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 64.253
+   },
+   "n-Cu065.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8320d80c1e60c2385b6af4939b86a53541aedd8a2019897477bf2aee148c32b3",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 46.661
+   },
+   "n-Eu150.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "25078866cabb802a5a9aa9bad11acf46352f2b8d026d5e8c2cce42220f353dc9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.784
+   },
+   "n-Eu150m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1cd1391eb38cdd943d9ffedf719dad64a61dedce678ad1e28909d1af3f06bcbc",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 9.89
+   },
+   "n-Eu151.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "38803c7d683ef687378a0ae45701bbdd4eb3522db41cf4ed50b2dedef55856d6",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Eu151.tendl: MT107/MF=10 ZAP=61148 group 0: emitted state sum 5.27618698477680306e-4 barn exceeds runtime total 4.40531650913692711e-4 barn by relative excess 1.976862e-1 (outside the frozen 0.001 standard envelope); MAT=6325 ZA=63151 source_sha256=38803c7d683ef687378a0ae45701bbdd4eb3522db41cf4ed50b2dedef55856d6; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 16.061
+   },
+   "n-Fe054.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a762b65e8feca5003fcf18ee21cf78afc229db5fb00754f71eb7e94f412e6c98",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 27.408
+   },
+   "n-Fe056.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 23.101
+   },
+   "n-Fe058.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "6dea00c16f4263ab4c41f4fe355a8edec463e5be621e01726e9dbdeaf5d80060",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 32.074
+   },
+   "n-Ge075.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "075a8a7e65a38265938e664ef0bc8cdf3b3eb59c2fb45503eb94da8637eb1099",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.824
+   },
+   "n-Ge075m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "1a4de8cb0808463209e6539827230b329060a555419a125c28aba6d30b63e6b1",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ge075m.tendl: MT32/MF=10 ZAP=31073 group 626: emitted state sum 3.83731536780145997e-14 barn exceeds runtime total 4.00627268471594144e-21 barn by relative excess 9.578267e6 (outside the frozen 0.001 standard envelope); MAT=3241 ZA=32075 source_sha256=1a4de8cb0808463209e6539827230b329060a555419a125c28aba6d30b63e6b1; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 5.415
+   },
+   "n-Hg197.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "476bae16deb52bd30c8312bada67d0a720ef2b4b37a05839ece45940653276d4",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Hg197.tendl: MT32/MF=10 ZAP=79195 group 605: emitted state sum 4.68608072055112205e-7 barn exceeds runtime total 2.03463412455724954e-22 barn by relative excess 2.303156e15 (outside the frozen 0.001 standard envelope); MAT=8028 ZA=80197 source_sha256=476bae16deb52bd30c8312bada67d0a720ef2b4b37a05839ece45940653276d4; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 4.338
+   },
+   "n-Hg197m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "05f06d73ee1e18f1744f21f07e72ff85be54a718b12e7ff3fdaeb85cfc851a42",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Hg197m.tendl: MT32/MF=10 ZAP=79195 group 604: emitted state sum 5.70654978100997823e-7 barn exceeds runtime total 8.09737059556680830e-20 barn by relative excess 7.047411e12 (outside the frozen 0.001 standard envelope); MAT=8029 ZA=80197 source_sha256=05f06d73ee1e18f1744f21f07e72ff85be54a718b12e7ff3fdaeb85cfc851a42; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 4.898
+   },
+   "n-Hg198.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "3f49fdf1fdc64bc213b663835183f7a15345746a400accd555a5cab606d7da32",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Hg198.tendl: MT107/MF=10 ZAP=78195 group 2: emitted state sum 2.10527725892594916e-11 barn exceeds runtime total 2.00749656058209204e-11 barn by relative excess 4.870778e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=8031 ZA=80198 source_sha256=3f49fdf1fdc64bc213b663835183f7a15345746a400accd555a5cab606d7da32; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 5.426
+   },
+   "n-Hg199.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "b5cf2ff0dfdf8d7dd94a99b7bac061069544e7f7ff1492705ae4652c840851c4",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Hg199.tendl: MT32/MF=10 ZAP=79197 group 608: emitted state sum 2.63212016715553109e-6 barn exceeds runtime total 4.76167213451381601e-21 barn by relative excess 5.527722e14 (outside the frozen 0.001 standard envelope); MAT=8034 ZA=80199 source_sha256=b5cf2ff0dfdf8d7dd94a99b7bac061069544e7f7ff1492705ae4652c840851c4; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 13.654
+   },
+   "n-Hg200.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "dec35023df21d5927e5d8327aa92f0ab15fb79251abf51d03c170e95a238a445",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Hg200.tendl: MT107/MF=10 ZAP=78197 group 2: emitted state sum 2.52090168780979658e-14 barn exceeds runtime total 2.41002011235409043e-14 barn by relative excess 4.600857e-2 (outside the frozen 0.001 standard envelope); MAT=8037 ZA=80200 source_sha256=dec35023df21d5927e5d8327aa92f0ab15fb79251abf51d03c170e95a238a445; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 8.618
+   },
+   "n-Ho164.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "dbf0c7e3b766c077447cf15e6a37716e5b783fc344deb6b3b741d47c70a32424",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 9.794
+   },
+   "n-Ho164m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1eafc5c360dcf081eed3038165f7c63ee0deecde0b76bb97e0c6debb215d0f53",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 8.177
+   },
+   "n-Ho165.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "229f71f4ce0e0044429dffacc39f37008a750daf68d32c50164836887479bf27",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 32.992
+   },
+   "n-I127.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-I127.tendl: MT107/MF=10 ZAP=51124 group 2: emitted state sum 9.74542975667618145e-12 barn exceeds runtime total 9.30869259975930122e-12 barn by relative excess 4.691713e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5325 ZA=53127 source_sha256=85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 58.391
+   },
+   "n-In113.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "2955459e59a0e78406a8aa7036e1fa53325f1942e937c1d3a070b3db2656de58",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-In113.tendl: MT107/MF=10 ZAP=47110 group 2: emitted state sum 7.99925140186454757e-13 barn exceeds runtime total 7.63216503908985825e-13 barn by relative excess 4.809728e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4925 ZA=49113 source_sha256=2955459e59a0e78406a8aa7036e1fa53325f1942e937c1d3a070b3db2656de58; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 11.969
+   },
+   "n-In114.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "e3b705f700338dd8c9fc02fc56204149cd0a2d2908e4b8274920490566339238",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-In114.tendl: MT16/MF=10 ZAP=49113 group 593: emitted state sum 1.58920858599464546e-2 barn exceeds runtime total 1.43492136028978041e-2 barn by relative excess 1.075231e-1 (outside the frozen 0.001 standard envelope); MAT=4928 ZA=49114 source_sha256=e3b705f700338dd8c9fc02fc56204149cd0a2d2908e4b8274920490566339238; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 8.814
+   },
+   "n-In114m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "148828a92fb0ec298697bf9b53897e0d7773d98b2bdc1c47846f4b4abbe80bd5",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-In114m.tendl: MT107/MF=10 ZAP=47111 group 2: emitted state sum 4.96252772757530798e-7 barn exceeds runtime total 4.72559011335874137e-7 barn by relative excess 5.013926e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4929 ZA=49114 source_sha256=148828a92fb0ec298697bf9b53897e0d7773d98b2bdc1c47846f4b4abbe80bd5; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 7.749
+   },
+   "n-In115.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "01cc8771ebd391e4a660849af473938ef066c4d1b54e996e9400cf6bb24aa1a6",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 41.529
+   },
+   "n-In119.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "b24eae16c5487b8b7060fb3b43737db15a377640d21573b8cd5cce07ba314f15",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.778
+   },
+   "n-In119m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f96948c77bd72e413678ad2558ab3a783067248ee0728c11a5642e58fec28173",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 5.129
+   },
+   "n-La139.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "5fcf9b9d66dbe67849d666d7c25331c50800af2a44010b1ebe07ad7af1849507",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-La139.tendl: MT107/MF=10 ZAP=55136 group 2: emitted state sum 2.75793948538408361e-10 barn exceeds runtime total 2.63653664597836733e-10 barn by relative excess 4.604633e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5728 ZA=57139 source_sha256=5fcf9b9d66dbe67849d666d7c25331c50800af2a44010b1ebe07ad7af1849507; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 23.736
+   },
+   "n-Lu175.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "eb3c00a8417d671f63f7428279d5039f26c77cbb8dc06c236235173967fbeaf5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 57.575
+   },
+   "n-Lu176.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "da22add9ed3747e8bce8314e04b615bfb7a7d63a8d17d785bf14aecbe7a43f51",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 22.724
+   },
+   "n-Lu176m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "2cb9c62d60ffcb4aa20fc77babbf1f4d70855fe5df667b573aaccfc6ddb2fe8d",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Lu176m.tendl: MT103/MF=10 ZAP=70176 group 2: emitted state sum 3.33454217881445382e-13 barn exceeds runtime total 3.17702607917420258e-13 barn by relative excess 4.957973e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7129 ZA=71176 source_sha256=2cb9c62d60ffcb4aa20fc77babbf1f4d70855fe5df667b573aaccfc6ddb2fe8d; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 6.595
+   },
+   "n-Mg024.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "18db7eb841c6a5b70caba22b541c9e341a56b66f2fc63ac6d7df68237eeaaa8c",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 6.087
+   },
+   "n-Mo092.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "63b63c190bdbc0dbd8d7e5ded14fdbb0bc0e83e6b38fa6fdf7dc3182a0232fa3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Mo092.tendl: MT107/MF=10 ZAP=40089 group 2: emitted state sum 5.96675409832993218e-11 barn exceeds runtime total 5.70875023473348768e-11 barn by relative excess 4.519446e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4225 ZA=42092 source_sha256=63b63c190bdbc0dbd8d7e5ded14fdbb0bc0e83e6b38fa6fdf7dc3182a0232fa3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 10.827
+   },
+   "n-Mo096.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "3282fad66340cb5a8be6118a0848ef2a265d00cf08e9bd55cb5a55f6492242a3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Mo096.tendl: MT105/MF=10 ZAP=41094 group 598: emitted state sum 3.37694571983147598e-9 barn exceeds runtime total 4.55014947322511004e-22 barn by relative excess 7.421615e12 (outside the frozen 0.001 standard envelope); MAT=4237 ZA=42096 source_sha256=3282fad66340cb5a8be6118a0848ef2a265d00cf08e9bd55cb5a55f6492242a3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 13.505
+   },
+   "n-Mo097.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "f5e923f5601877c4bd324689d88c99923e14414a31292f74a38541e1c18c3a9b",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Mo097.tendl: MT32/MF=10 ZAP=41095 group 620: emitted state sum 1.48289355308254975e-5 barn exceeds runtime total 2.12800225448699838e-19 barn by relative excess 6.968477e13 (outside the frozen 0.001 standard envelope); MAT=4240 ZA=42097 source_sha256=f5e923f5601877c4bd324689d88c99923e14414a31292f74a38541e1c18c3a9b; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 12.217
+   },
+   "n-Na023.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e04dd79f8288d6af0e3033ffa8d1afe7d9a010d3a01815fec3ac9324cf4df2c1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 6.334
+   },
+   "n-Nb093.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "d7d8d946bf634bb5edc3c92f8dce4e72f40fe5f26ffa1b6c17330d7764f7954c",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Nb093.tendl: MT107/MF=10 ZAP=39090 group 0: emitted state sum 2.15580121314199693e-5 barn exceeds runtime total 2.13734660230461791e-5 barn by relative excess 8.634356e-3 (outside the frozen 0.001 standard envelope); MAT=4125 ZA=41093 source_sha256=d7d8d946bf634bb5edc3c92f8dce4e72f40fe5f26ffa1b6c17330d7764f7954c; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 29.597
+   },
+   "n-Nb095.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4a26e6c3091aa38f066218d8c47e07d1240e566be57efacff2db1c7f20f94cff",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 5.86
+   },
+   "n-Nb095m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "5e8793877dd5eaa1893d2b9ba412602ece45c2fd4963efd572fea37b32f309b9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 5.135
+   },
+   "n-Nb097.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0bdbddf86e393c9769aec0a93dad4ea521a62bc044ba2b56a22784adb22f022a",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 11.321
+   },
+   "n-Nb097m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "de335a80e7c85e22072d8ec7440903e8d29322186c1efad96f3c9cf3b1767a66",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 5.321
+   },
+   "n-Nd141.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4413bc405c94b65bbab0bc38c86477e01677b90686eb2a75d5bfd0ec5095d392",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 4.743
+   },
+   "n-Nd141m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "eccfa244f75b3ad88600493aac9e54f362bff6f3fb7a0cebd82bf6fda5495cbc",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 4.944
+   },
+   "n-Nd142.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "837ce373339699ee4569361ab00e4607f588c90870784b7a194553d591b6aa6c",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Nd142.tendl: MT107/MF=10 ZAP=58139 group 2: emitted state sum 2.70749311653991736e-5 barn exceeds runtime total 2.58915354317730087e-5 barn by relative excess 4.570589e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=6025 ZA=60142 source_sha256=837ce373339699ee4569361ab00e4607f588c90870784b7a194553d591b6aa6c; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 15.061
+   },
+   "n-Nd144.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "738258b540e9d2c90686eff844bf9ce6a88e3c80c8f797f6d55752274fc23dc2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 10.97
+   },
+   "n-Ni058.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 43.337
+   },
+   "n-Ni060.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0876c90c41785b03998a18d62166f053bb220342e153533a2d7068154c88e2c8",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 37.091
+   },
+   "n-Ni062.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "09068d35ab0283c71703f3e7e8f81ce4fdf1785cef22aa11e50c0b6db04f0f58",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 9.719
+   },
+   "n-Np237.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Np237.tendl: MT107/MF=10 ZAP=91234 group 2: emitted state sum 5.04346029710018722e-9 barn exceeds runtime total 4.80928947911636700e-9 barn by relative excess 4.869135e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=9346 ZA=93237 source_sha256=f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 220.641
+   },
+   "n-Os190.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "56d98eb946054e354710d669d4cc809f85a7dd3a4a41207f1096597a5ab43d92",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 18.53
+   },
+   "n-Os191.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "aa5710159f2ac33bbae3b80e3b58c363e7427e6a624d0279de5361f1c88d3147",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 4.775
+   },
+   "n-Os191m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "32e81c6678a0d964f41dbe3ea41b1567539aebdf4d0640bf9ac66be1c56318b5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 4.94
+   },
+   "n-P031.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "dea829f8cdca567853de969bd29987eb22a4f945dcac3e0282d59182a13369cb",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 5.879
+   },
+   "n-Pb204.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ad81f73cec3fb7cf7212cffc77ff71a55c8ebb160c7e2444f9ddfbd1e894d883",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 22.101
+   },
+   "n-Pd105.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "27c4e2f2e50be58e0a8067647a0a2b3e67791fe0bcff52c75c3ef7b85f134353",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Pd105.tendl: MT32/MF=10 ZAP=45103 group 618: emitted state sum 1.75395775261341435e-5 barn exceeds runtime total 2.79863923630903509e-17 barn by relative excess 6.267181e11 (outside the frozen 0.001 standard envelope); MAT=4634 ZA=46105 source_sha256=27c4e2f2e50be58e0a8067647a0a2b3e67791fe0bcff52c75c3ef7b85f134353; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 32.86
+   },
+   "n-Pr141.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "562780c1c05adbb3d1622826d2a2ea81458fdc2cfa0c9b0dea03ff5967088d09",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Pr141.tendl: MT32/MF=10 ZAP=58139 group 611: emitted state sum 8.80534856544105587e-7 barn exceeds runtime total 4.60797855200252608e-19 barn by relative excess 1.910892e12 (outside the frozen 0.001 standard envelope); MAT=5925 ZA=59141 source_sha256=562780c1c05adbb3d1622826d2a2ea81458fdc2cfa0c9b0dea03ff5967088d09; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 22.912
+   },
+   "n-Pr144.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "74d910d6c0ed86f31b05ffbdee3b68c3d0518525b4cf3d149c54f3ded2bf2808",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.087
+   },
+   "n-Pr144m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "78cc406d68562607b71a3a1c2b8b24c6deaf6115604718ad736565fb7d52bf33",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 4.986
+   },
+   "n-Pt194.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "dfe0c59af7b9cf0f88d4965212082f9af7963a3e276ac9f5ecb20270e8e7e5ce",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Pt194.tendl: MT107/MF=10 ZAP=76191 group 0: emitted state sum 4.79104858132311628e-4 barn exceeds runtime total 2.49123406925728051e-4 barn by relative excess 9.231628e-1 (outside the frozen 0.001 standard envelope); MAT=7837 ZA=78194 source_sha256=dfe0c59af7b9cf0f88d4965212082f9af7963a3e276ac9f5ecb20270e8e7e5ce; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 6.702
+   },
+   "n-Pt198.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "09776ec8a9e7861a800032ea567ba990ea256e20b8e0a5a41a8a7e76d4e00b29",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 17.115
+   },
+   "n-Pt199.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "979774fa893a1f1e8d3c56d951cf2c89699a552203fb050c3cc3667c68424a36",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 3.546
+   },
+   "n-Pt199m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3449a81ec83fd3835dafecbb6687d6100f98cdb833c5d30d38001c4c42e4bfc5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 4.271
+   },
+   "n-Pu239.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a42579eddb6957680df79fac3b629a2af0d713c8a1b7ef861ec1583a1f1c4193",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 204.197
+   },
+   "n-Rb084.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "03b19b0ba9a7fd0af911e164bf2e3914ed32fd9a4466ca2e50cf645d720c5d9c",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.05
+   },
+   "n-Rb084m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "9618d2ef8446f9a36256d37d5a207023029325be1785997d3f73b09d80d1a40f",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 5.962
+   },
+   "n-Rb085.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e4dd4045aae2e66e1d506669610f1b1eb6c077389e3cd0e961510784104567ab",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 31.579
+   },
+   "n-Rb086.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e72b9997023753678b7fb7e206bc5d90b1a745bc378510a2e46494bf1486c9d9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.641
+   },
+   "n-Rb086m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8c22275b33d95f8a2d11d786d45d7c34040a758239f212090658054bdfbcf2b9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 5.464
+   },
+   "n-Rb087.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ca6c7fe657bed8dabdd2a8743339293c2ca5d5f5d16d199762377b857e16e389",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 18.142
+   },
+   "n-Re184.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "009b2eeb0bfb1ebd09d52627359386739ab0cf7dfc93b4a6e00b3e368ff15032",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.797
+   },
+   "n-Re184m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0dc1a36f3a5149c5fd936286fe8c1175db0ee74bc13b39a83da991053cd05d2f",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 7.647
+   },
+   "n-Re185.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "333c9b819b9df4b639e7121f525054e880523a28007df450b4146f94b9010a68",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Re185.tendl: MT107/MF=10 ZAP=73182 group 2: emitted state sum 5.53692447684213682e-6 barn exceeds runtime total 5.28452435467732483e-6 barn by relative excess 4.776213e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7525 ZA=75185 source_sha256=333c9b819b9df4b639e7121f525054e880523a28007df450b4146f94b9010a68; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 74.918
+   },
+   "n-Rh101.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "da25dc80035c5b7f3d1cff84002a2789cb7aa613b4669c68e700de64c08bcf07",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Rh101.tendl: MT16/MF=10 ZAP=45100 group 599: emitted state sum 8.73714387661475860e-7 barn exceeds runtime total 3.38107470181848268e-7 barn by relative excess 1.584132e0 (outside the frozen 0.001 standard envelope); MAT=4519 ZA=45101 source_sha256=da25dc80035c5b7f3d1cff84002a2789cb7aa613b4669c68e700de64c08bcf07; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 9.832
+   },
+   "n-Rh101m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c50fe1e692e5b351cc6c387531a081db7c4d5435504f06d4167c35eb4045b969",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Rh101m.tendl: MT106/MF=10 ZAP=43099 group 591: emitted state sum 1.36437183650029421e-6 barn exceeds runtime total 1.05303155543200327e-21 barn by relative excess 1.295661e15 (outside the frozen 0.001 standard envelope); MAT=4520 ZA=45101 source_sha256=c50fe1e692e5b351cc6c387531a081db7c4d5435504f06d4167c35eb4045b969; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 7.148
+   },
+   "n-Rh102.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "57751b5631420c1de3bac3d847457427cc40f88f0e8d7f77a9d46b8bd4836de8",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Rh102.tendl: MT16/MF=10 ZAP=45101 group 593: emitted state sum 6.61096670353576887e-1 barn exceeds runtime total 1.34737462703135905e-4 barn by relative excess 4.905554e3 (outside the frozen 0.001 standard envelope); MAT=4522 ZA=45102 source_sha256=57751b5631420c1de3bac3d847457427cc40f88f0e8d7f77a9d46b8bd4836de8; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 7.229
+   },
+   "n-Rh102m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "de88a16d16b033ef67e1241d0531933b2dac6ef43e84622d7738f90080e0c671",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Rh102m.tendl: MT107/MF=10 ZAP=43099 group 2: emitted state sum 3.57160314891070193e-3 barn exceeds runtime total 3.40288991458792458e-3 barn by relative excess 4.957940e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4523 ZA=45102 source_sha256=de88a16d16b033ef67e1241d0531933b2dac6ef43e84622d7738f90080e0c671; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 7.416
+   },
+   "n-Rh103.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ed3306e249fb9836744168ce2ae926056f7b70131c53da55a0cdd17106c6d445",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 42.984
+   },
+   "n-Rh103m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "42fe2b073d94a0554c55017e7bb89bbde6df669095eff5f8c07c2a1cbbbad4de",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 6.373
+   },
+   "n-Rh105.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "881cc4cb36b7ef876d01162469a8e852ec257166b372ef80447d395a1a4bede3",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.331
+   },
+   "n-Rh105m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4e55d77a1c8583472ffabe068db5aff355fe477e5b05b13ae735bde90177f4c6",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 8.463
+   },
+   "n-S032.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "972e2556d3fc3f4fe1f636da067fb54f1175f1f8ffad7057da08678b11b12ef4",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 8.072
+   },
+   "n-Sb128.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3442023e18d739a3819cd44f8570a5fe0cc055a359053804c08be738b61fee9b",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 4.952
+   },
+   "n-Sb128m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3a12c000ca047156c957ba2fc612ca1fec34b0278f212a2883cfb36bc3083e17",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 5.004
+   },
+   "n-Sc045.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "2bf1453303d18310df0350bc9710c330a3ca4bc0ee94b2d71a1371214ea02f8c",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 12.358
+   },
+   "n-Se080.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "84c70abad660cea45bdf1c3b4225535d9fee7e6790437fc4a8759b7a4dc4ab36",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 5.869
+   },
+   "n-Se081.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "08ac3b752028cb4b2648632ced211f1cdf7a32bc8087329595a95612ce3f0e5e",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.486
+   },
+   "n-Se081m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1b776078e4e1cd7aa245ec3e9fdc52de8040dc719b8552bbf07ecdc23be1a8e1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 6.211
+   },
+   "n-Si028.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8bc9da61e97236efc62b565c4cfc66358bbfa9a1ac20e835351092e0759dd916",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 6.947
+   },
+   "n-Si029.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "70e937785430d605e8f7f120ac0f7acaf93ca1079af5e18ee74f9985850f61d9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 5.58
+   },
+   "n-Sn114.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "e439bcac556a7a99a0bf83f348d409e5c43100ab7ba3ea327ca544a9823e0fbe",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Sn114.tendl: MT107/MF=10 ZAP=48111 group 0: emitted state sum 2.58241340698640328e-11 barn exceeds runtime total 2.56024690345191205e-11 barn by relative excess 8.657955e-3 (outside the frozen 0.001 standard envelope); MAT=5031 ZA=50114 source_sha256=e439bcac556a7a99a0bf83f348d409e5c43100ab7ba3ea327ca544a9823e0fbe; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 21.256
+   },
+   "n-Sn119.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "5e65e399fa6bf474b0507be9e409b9abd9265fde9de2bbbf0977410cbc32aa18",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 7.618
+   },
+   "n-Sr084.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "1d591ba9e2f0b7e942849f33979e6fb907a03dea968e5940949a9878951dd5f2",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Sr084.tendl: MT107/MF=10 ZAP=36081 group 2: emitted state sum 1.79192618957757729e-13 barn exceeds runtime total 1.71161990428860036e-13 barn by relative excess 4.691829e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=3825 ZA=38084 source_sha256=1d591ba9e2f0b7e942849f33979e6fb907a03dea968e5940949a9878951dd5f2; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 12.418
+   },
+   "n-Ta181.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ta181.tendl: MT107/MF=10 ZAP=71178 group 0: emitted state sum 5.56899173124603136e-5 barn exceeds runtime total 4.97208049712292795e-5 barn by relative excess 1.200526e-1 (outside the frozen 0.001 standard envelope); MAT=7328 ZA=73181 source_sha256=c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 121.022
+   },
+   "n-Te128.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "b962dcf6c758349742e9bdb9df4ae73824f1c111a3bd5b3625a44ec3af0df935",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 11.223
+   },
+   "n-Th232.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e9e166086f436dfa9d97de2717c21f5ce9acfb74c28c98bb61a574c33ecaef9a",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 31.615
+   },
+   "n-Ti046.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1d13b51964e795ddf7088eb434c609c5bdf9880d5bd135e1a34c90a447c1fad6",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 6.864
+   },
+   "n-Ti047.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Ti047.tendl: MT105/MF=10 ZAP=21045 group 604: emitted state sum 2.44946511214459378e-5 barn exceeds runtime total 8.96807784261776972e-19 barn by relative excess 2.731316e13 (outside the frozen 0.001 standard envelope); MAT=2228 ZA=22047 source_sha256=bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 6.178
+   },
+   "n-Ti048.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "020118c02ce142b87e72b393dd48e41641b42abaedac290572b45be5018b1b7b",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 13.66
+   },
+   "n-U235.tendl": {
+    "class": "construction_error",
+    "exit": "timeout",
+    "file_sha256": "271f8db9bd84f19c010e6d6a20d80616cc404727c9096968977a61a50565b403",
+    "message": "timeout 300.0s",
+    "role": "irdff",
+    "seconds": 300.111
+   },
+   "n-U238.tendl": {
+    "class": "construction_error",
+    "exit": "timeout",
+    "file_sha256": "394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c",
+    "message": "timeout 300.0s",
+    "role": "irdff",
+    "seconds": 300.117
+   },
+   "n-V051.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "33d5d1b46c8f3efe21e852d6741ec575d7a08464eb58b636eb37a4ebb9598823",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 10.707
+   },
+   "n-W179.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f049a374be8c088fdcd00e9ed3ccd91a47ded03fb9b3f556c7e5ff55fb994bc1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 7.776
+   },
+   "n-W179m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8581d2697ea107cb5d236ce487cb2f806ca608abf95efd85b08e406508e5ba27",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 7.774
+   },
+   "n-W180.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "d6148cfd371ab6ec5f6ff42fa996a7cfe77d66321cd7356ab049a9390f740971",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-W180.tendl: MT107/MF=10 ZAP=72177 group 2: emitted state sum 3.11166172756608954e-5 barn exceeds runtime total 2.96559213157796214e-5 barn by relative excess 4.925478e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7425 ZA=74180 source_sha256=d6148cfd371ab6ec5f6ff42fa996a7cfe77d66321cd7356ab049a9390f740971; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 9.613
+   },
+   "n-W186.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 12.548
+   },
+   "n-Y087.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "10e4c6857a7105f7240349df66135352b22b0453b869008ebb51aca8409077eb",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Y087.tendl: MT103/MF=10 ZAP=38087 group 2: emitted state sum 2.00850252919883872e1 barn exceeds runtime total 1.91362567262193579e1 barn by relative excess 4.957963e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=3919 ZA=39087 source_sha256=10e4c6857a7105f7240349df66135352b22b0453b869008ebb51aca8409077eb; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 5.253
+   },
+   "n-Y087m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "3157c9d8da3cf4f009f89c428fb96529132e890a7f897535b8c71bb3fc8127e3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Y087m.tendl: MT103/MF=10 ZAP=38087 group 2: emitted state sum 1.01308587746457661e2 barn exceeds runtime total 9.64716088292820615e1 barn by relative excess 5.013889e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=3920 ZA=39087 source_sha256=3157c9d8da3cf4f009f89c428fb96529132e890a7f897535b8c71bb3fc8127e3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 5.231
+   },
+   "n-Y088.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "404c1836723f7fbe539c86c3d05284f5fceeca9b8087805476735b62d4b984ea",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "isomeric",
+    "seconds": 6.047
+   },
+   "n-Y089.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "c1bf5c373011200d8573e7109f65bd0ab8f2dc39f5d28eabf539e18b8fbc12d0",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 16.302
+   },
+   "n-Y090.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "9ec5805280048a6b5f26f1132bb11466d789b6660085e4f4a946b3a8357e8d65",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Y090.tendl: MT102/MF=9 ZAP=39091 group 0: emitted state sum 4.31107162829971685e2 barn exceeds runtime total 3.23552952287404594e2 barn by relative excess 3.324161e-1 (outside the frozen 0.001 standard envelope); MAT=3928 ZA=39090 source_sha256=9ec5805280048a6b5f26f1132bb11466d789b6660085e4f4a946b3a8357e8d65; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 9.386
+   },
+   "n-Y090m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "179a50b8885a4c0a21314e0d1cae2b6079868212a3f636d4ed00f9d9ca1c3642",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Y090m.tendl: MT102/MF=9 ZAP=39091 group 0: emitted state sum 2.44295176396357056e4 barn exceeds runtime total 1.25346737778455354e4 barn by relative excess 9.489552e-1 (outside the frozen 0.001 standard envelope); MAT=3929 ZA=39090 source_sha256=179a50b8885a4c0a21314e0d1cae2b6079868212a3f636d4ed00f9d9ca1c3642; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 5.402
+   },
+   "n-Y091.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "9e04c2a78ac42785cfe2ae3a60c9f18b1e59e0c9986b7ab90db8e76e7842df70",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.006
+   },
+   "n-Y091m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3a21d5c386004ac40866bb93c2696326f5eb1c800d75ced680c4d9b4d69af2b2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "anchor",
+    "seconds": 6.378
+   },
+   "n-Zn064.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "08c5090dad3545d4a8e2948e099ccf5d6f61011b883ba0dab157adcf4aa63257",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 22.398
+   },
+   "n-Zn067.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4e8c39a2d0907865b1f81a7d5c9fe3ad24f1d432da002e719136b9e9809226f2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 27.472
+   },
+   "n-Zn068.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ecbe50644dd15a9fc7c1e07eda05c127987e016f006f202de78dec5738a8781a",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 18.429
+   },
+   "n-Zr088.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "7ad0b5462bd550ba064dda84bcb8b1c1451f67400c529b166424fc80a5e7cf22",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Zr088.tendl: MT102/MF=9 ZAP=40089 group 0: emitted state sum 7.69749470907387584e7 barn exceeds runtime total 4.16692161319382042e7 barn by relative excess 8.472857e-1 (outside the frozen 0.001 standard envelope); MAT=4019 ZA=40088 source_sha256=7ad0b5462bd550ba064dda84bcb8b1c1451f67400c529b166424fc80a5e7cf22; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 13.969
+   },
+   "n-Zr090.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1b1cc2ed9a78732df8f63e3bb7b2e9721ec02d993bfb3e7ff0e971f3784db5ef",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-patched_index.json",
+    "role": "irdff",
+    "seconds": 13.126
+   },
+   "n-Zr091.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "d3058532b38800f6a82fd2e158dd87ba9ff1201ce7bb28b4aab710e2ced36fd7",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Zr091.tendl: MT32/MF=10 ZAP=39089 group 617: emitted state sum 4.31816225196621044e-3 barn exceeds runtime total 3.95636187822927455e-19 barn by relative excess 1.091448e16 (outside the frozen 0.001 standard envelope); MAT=4028 ZA=40091 source_sha256=d3058532b38800f6a82fd2e158dd87ba9ff1201ce7bb28b4aab710e2ced36fd7; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 15.036
+   },
+   "n-Zr092.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "7f44d3af81cb6f1ad1571c16c6a136481dc786075112df0ae0ed5460d5114f3e",
+    "message": "/home/connoravila/nuclear-data/tendl-2025-patched/files/n/n-Zr092.tendl: MT105/MF=10 ZAP=39090 group 597: emitted state sum 9.61321604795108252e-11 barn exceeds runtime total 1.57574675547528245e-20 barn by relative excess 6.100737e9 (outside the frozen 0.001 standard envelope); MAT=4031 ZA=40092 source_sha256=7f44d3af81cb6f1ad1571c16c6a136481dc786075112df0ae0ed5460d5114f3e; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 11.197
+   }
+  },
+  "source": {
+   "n-Ag109.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ag109.tendl: MT107/MF=10 ZAP=45106 group 2: emitted state sum 3.72330387903921534e-13 barn exceeds runtime total 3.55775970138380673e-13 barn by relative excess 4.653045e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4731 ZA=47109 source_sha256=4d26695b8961386b96bfdc2898b3499fe4a6120e40d0cbd3081544eda2818ca1; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 78.767
+   },
+   "n-Ag109m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "aea9b5815a8d23913d16d7fc517a0ecec783176c809e18fe10647eef8932fda2",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ag109m.tendl: MT107/MF=10 ZAP=45106 group 2: emitted state sum 8.09802372707959062e-14 barn exceeds runtime total 7.71549722409585535e-14 barn by relative excess 4.957898e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4732 ZA=47109 source_sha256=aea9b5815a8d23913d16d7fc517a0ecec783176c809e18fe10647eef8932fda2; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 10.943
+   },
+   "n-Al027.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "61afaf01ac4fca5b5d43bfcedaffaa66b5f36dddb9c1c657b4b0a21ea63d2ffd",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 6.292
+   },
+   "n-Am241.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8adbd4d8185ca8778574800f223e735cb9a921883ac2e677390d9a962e12a554",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 47.698
+   },
+   "n-As075.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0e4b0d3594ad7e425f7ec03f6e8cbe668a0e8886d7f0d0001bf303bceafab084",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 20.935
+   },
+   "n-Au197.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c5c4ab2190037ece28d458f629c6b67133a0092421747c6f83a71426dfd1b1a9",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Au197.tendl: MT107/MF=10 ZAP=77194 group 0: emitted state sum 7.28182400976838577e-11 barn exceeds runtime total 7.21833535909389992e-11 barn by relative excess 8.795470e-3 (outside the frozen 0.001 standard envelope); MAT=7925 ZA=79197 source_sha256=c5c4ab2190037ece28d458f629c6b67133a0092421747c6f83a71426dfd1b1a9; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 15.718
+   },
+   "n-Au200.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c025f117e3d40adada5f9e21cd4e87caf2170bf858ac669574a8041ecad1a9ea",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Au200.tendl: MT107/MF=10 ZAP=77197 group 2: emitted state sum 7.45005739478211458e-13 barn exceeds runtime total 7.10405828606301900e-13 barn by relative excess 4.870443e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7934 ZA=79200 source_sha256=c025f117e3d40adada5f9e21cd4e87caf2170bf858ac669574a8041ecad1a9ea; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 5.321
+   },
+   "n-Au200m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c1f6bfc8c8ffc55bf77a96003131bccbb2a89238061911fd9b4db4aa2f71ccd3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Au200m.tendl: MT107/MF=10 ZAP=77197 group 2: emitted state sum 2.09479785491532802e-12 barn exceeds runtime total 1.99117610959675173e-12 barn by relative excess 5.204047e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7935 ZA=79200 source_sha256=c1f6bfc8c8ffc55bf77a96003131bccbb2a89238061911fd9b4db4aa2f71ccd3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 4.793
+   },
+   "n-Bi209.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "4c808433011e10cb29f67d19070e3e3c9243e1d5999e36f5694fb29d2262222a",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Bi209.tendl: MT107/MF=10 ZAP=81206 group 2: emitted state sum 1.50368583176540114e-5 barn exceeds runtime total 1.43918356110769941e-5 barn by relative excess 4.481865e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=8325 ZA=83209 source_sha256=4c808433011e10cb29f67d19070e3e3c9243e1d5999e36f5694fb29d2262222a; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 9.374
+   },
+   "n-Br080.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c1f460b1126a341e6bd24429d7b616ca4f1a17e9c35f5c6139e7fdeb3737473b",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Br080.tendl: MT16/MF=10 ZAP=35079 group 595: emitted state sum 7.83575790412670448e-1 barn exceeds runtime total 1.96044938531481118e-2 barn by relative excess 3.896919e1 (outside the frozen 0.001 standard envelope); MAT=3528 ZA=35080 source_sha256=c1f460b1126a341e6bd24429d7b616ca4f1a17e9c35f5c6139e7fdeb3737473b; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 6.263
+   },
+   "n-Br080m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "978c010a92a047fb2ab9e04e53268e9ee22cb1f55c27ac3c35e7fb56fa33e6c8",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Br080m.tendl: MT16/MF=10 ZAP=35079 group 594: emitted state sum 4.02635845659669346e-3 barn exceeds runtime total 1.31808019203037234e-5 barn by relative excess 3.044714e2 (outside the frozen 0.001 standard envelope); MAT=3529 ZA=35080 source_sha256=978c010a92a047fb2ab9e04e53268e9ee22cb1f55c27ac3c35e7fb56fa33e6c8; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 8.015
+   },
+   "n-Br081.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "fede6544c73bf35d9071ef1a6731302c285019e7d6d97737917a406f4335a298",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 20.412
+   },
+   "n-Cd114.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "902e5405db2ee439dfd2d954e86d78aa5378d6748d790423d82ecafee0f6f7c2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 17.784
+   },
+   "n-Cd115.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a33aaca4bed87e695891e2f75ccd823114b7c303d3fb1fa4a2e6609977d93797",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.864
+   },
+   "n-Cd115m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "2228c65990fd852d1ee10c5b30c545d83251140a0735bf48b003a1a89bf4e2fa",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 10.338
+   },
+   "n-Cd116.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a44a5da905bd07257be8a44aa161a75c2310b134579fa9d54599a53ec870d458",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 13.507
+   },
+   "n-Ce139.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "7b7a159793284feaccfaa249ecf6157d67040db30957d1fbd9473658a9c7ea3a",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ce139.tendl: MT107/MF=10 ZAP=56136 group 2: emitted state sum 9.12291457674100324e-3 barn exceeds runtime total 8.69922441548977993e-3 barn by relative excess 4.870436e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5834 ZA=58139 source_sha256=7b7a159793284feaccfaa249ecf6157d67040db30957d1fbd9473658a9c7ea3a; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 8.954
+   },
+   "n-Ce139m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "00fc4cabb0398c060fd24db4e7f375a92990717cacc6c9aa5fd720cb161f6557",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ce139m.tendl: MT107/MF=10 ZAP=56136 group 2: emitted state sum 1.78782469670225592e-3 barn exceeds runtime total 1.70479354732234784e-3 barn by relative excess 4.870452e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5835 ZA=58139 source_sha256=00fc4cabb0398c060fd24db4e7f375a92990717cacc6c9aa5fd720cb161f6557; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 6.782
+   },
+   "n-Co059.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "00b705eec124c460f6f85f0ce22aaa216a75b26190dfde7c1fdc5430a85358b5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 16.062
+   },
+   "n-Co062.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f9ab15dd15c9d8a2216885b52a43ea7d87d0cd51159c84d891021b2cc89f05ba",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 10.562
+   },
+   "n-Co062m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "90650a6145343e8313067e265ab5991a8414ef215d1069e03d95adc2504b8441",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 8.756
+   },
+   "n-Cu063.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Cu063.tendl: MT107/MF=10 ZAP=27060 group 2: emitted state sum 2.95505013986414196e-13 barn exceeds runtime total 2.82965412672169316e-13 barn by relative excess 4.431496e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2925 ZA=29063 source_sha256=2cc049892a78cff58777e4be1e07c86f58f9fb5ee0f0f4814e8ef9c939759dd7; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 49.223
+   },
+   "n-Cu065.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8320d80c1e60c2385b6af4939b86a53541aedd8a2019897477bf2aee148c32b3",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 35.856
+   },
+   "n-Eu150.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "25078866cabb802a5a9aa9bad11acf46352f2b8d026d5e8c2cce42220f353dc9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 9.571
+   },
+   "n-Eu150m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1cd1391eb38cdd943d9ffedf719dad64a61dedce678ad1e28909d1af3f06bcbc",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 11.05
+   },
+   "n-Eu151.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "a2f29609885a6df6e0245ec9d4aa70c6e30ca4e2863662913ea96684e683218f",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Eu151.tendl: MT107/MF=10 ZAP=61148 group 0: emitted state sum 5.27618698477680306e-4 barn exceeds runtime total 4.40531650913692711e-4 barn by relative excess 1.976862e-1 (outside the frozen 0.001 standard envelope); MAT=6325 ZA=63151 source_sha256=a2f29609885a6df6e0245ec9d4aa70c6e30ca4e2863662913ea96684e683218f; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 15.021
+   },
+   "n-Fe054.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a762b65e8feca5003fcf18ee21cf78afc229db5fb00754f71eb7e94f412e6c98",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 21.094
+   },
+   "n-Fe056.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 17.081
+   },
+   "n-Fe058.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "6dea00c16f4263ab4c41f4fe355a8edec463e5be621e01726e9dbdeaf5d80060",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 22.426
+   },
+   "n-Ge075.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "075a8a7e65a38265938e664ef0bc8cdf3b3eb59c2fb45503eb94da8637eb1099",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 9.58
+   },
+   "n-Ge075m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "1a4de8cb0808463209e6539827230b329060a555419a125c28aba6d30b63e6b1",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ge075m.tendl: MT32/MF=10 ZAP=31073 group 626: emitted state sum 3.83731536780145997e-14 barn exceeds runtime total 4.00627268471594144e-21 barn by relative excess 9.578267e6 (outside the frozen 0.001 standard envelope); MAT=3241 ZA=32075 source_sha256=1a4de8cb0808463209e6539827230b329060a555419a125c28aba6d30b63e6b1; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 6.015
+   },
+   "n-Hg197.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "476bae16deb52bd30c8312bada67d0a720ef2b4b37a05839ece45940653276d4",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Hg197.tendl: MT32/MF=10 ZAP=79195 group 605: emitted state sum 4.68608072055112205e-7 barn exceeds runtime total 2.03463412455724954e-22 barn by relative excess 2.303156e15 (outside the frozen 0.001 standard envelope); MAT=8028 ZA=80197 source_sha256=476bae16deb52bd30c8312bada67d0a720ef2b4b37a05839ece45940653276d4; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 5.831
+   },
+   "n-Hg197m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "05f06d73ee1e18f1744f21f07e72ff85be54a718b12e7ff3fdaeb85cfc851a42",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Hg197m.tendl: MT32/MF=10 ZAP=79195 group 604: emitted state sum 5.70654978100997823e-7 barn exceeds runtime total 8.09737059556680830e-20 barn by relative excess 7.047411e12 (outside the frozen 0.001 standard envelope); MAT=8029 ZA=80197 source_sha256=05f06d73ee1e18f1744f21f07e72ff85be54a718b12e7ff3fdaeb85cfc851a42; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 5.582
+   },
+   "n-Hg198.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "3f49fdf1fdc64bc213b663835183f7a15345746a400accd555a5cab606d7da32",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Hg198.tendl: MT107/MF=10 ZAP=78195 group 2: emitted state sum 2.10527725892594916e-11 barn exceeds runtime total 2.00749656058209204e-11 barn by relative excess 4.870778e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=8031 ZA=80198 source_sha256=3f49fdf1fdc64bc213b663835183f7a15345746a400accd555a5cab606d7da32; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 4.566
+   },
+   "n-Hg199.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "b5cf2ff0dfdf8d7dd94a99b7bac061069544e7f7ff1492705ae4652c840851c4",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Hg199.tendl: MT32/MF=10 ZAP=79197 group 608: emitted state sum 2.63212016715553109e-6 barn exceeds runtime total 4.76167213451381601e-21 barn by relative excess 5.527722e14 (outside the frozen 0.001 standard envelope); MAT=8034 ZA=80199 source_sha256=b5cf2ff0dfdf8d7dd94a99b7bac061069544e7f7ff1492705ae4652c840851c4; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 11.898
+   },
+   "n-Hg200.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "dec35023df21d5927e5d8327aa92f0ab15fb79251abf51d03c170e95a238a445",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Hg200.tendl: MT107/MF=10 ZAP=78197 group 2: emitted state sum 2.52090168780979658e-14 barn exceeds runtime total 2.41002011235409043e-14 barn by relative excess 4.600857e-2 (outside the frozen 0.001 standard envelope); MAT=8037 ZA=80200 source_sha256=dec35023df21d5927e5d8327aa92f0ab15fb79251abf51d03c170e95a238a445; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 7.996
+   },
+   "n-Ho164.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "dbf0c7e3b766c077447cf15e6a37716e5b783fc344deb6b3b741d47c70a32424",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 10.597
+   },
+   "n-Ho164m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1eafc5c360dcf081eed3038165f7c63ee0deecde0b76bb97e0c6debb215d0f53",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 9.259
+   },
+   "n-Ho165.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "229f71f4ce0e0044429dffacc39f37008a750daf68d32c50164836887479bf27",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 32.923
+   },
+   "n-I127.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-I127.tendl: MT107/MF=10 ZAP=51124 group 2: emitted state sum 9.74542975667618145e-12 barn exceeds runtime total 9.30869259975930122e-12 barn by relative excess 4.691713e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5325 ZA=53127 source_sha256=85ba1441155341d814ae88a08d5b0e6de752386fe6b7780eecbb206dc72d5195; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 54.572
+   },
+   "n-In113.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "2955459e59a0e78406a8aa7036e1fa53325f1942e937c1d3a070b3db2656de58",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-In113.tendl: MT107/MF=10 ZAP=47110 group 2: emitted state sum 7.99925140186454757e-13 barn exceeds runtime total 7.63216503908985825e-13 barn by relative excess 4.809728e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4925 ZA=49113 source_sha256=2955459e59a0e78406a8aa7036e1fa53325f1942e937c1d3a070b3db2656de58; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 11.39
+   },
+   "n-In114.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "e3b705f700338dd8c9fc02fc56204149cd0a2d2908e4b8274920490566339238",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-In114.tendl: MT16/MF=10 ZAP=49113 group 593: emitted state sum 1.58920858599464546e-2 barn exceeds runtime total 1.43492136028978041e-2 barn by relative excess 1.075231e-1 (outside the frozen 0.001 standard envelope); MAT=4928 ZA=49114 source_sha256=e3b705f700338dd8c9fc02fc56204149cd0a2d2908e4b8274920490566339238; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 9.629
+   },
+   "n-In114m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "81eebdba8b6cfaf461007f6feb2b88895a2600fd47515694619778cfecef5725",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-In114m.tendl: MT16/MF=10 ZAP=49113 group 592: emitted state sum 1.12238898269138485e-3 barn exceeds runtime total 1.11627325219450756e-3 barn by relative excess 5.478704e-3 (outside the frozen 0.001 standard envelope); MAT=4929 ZA=49114 source_sha256=81eebdba8b6cfaf461007f6feb2b88895a2600fd47515694619778cfecef5725; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 8.568
+   },
+   "n-In115.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "01cc8771ebd391e4a660849af473938ef066c4d1b54e996e9400cf6bb24aa1a6",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 40.043
+   },
+   "n-In119.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "b24eae16c5487b8b7060fb3b43737db15a377640d21573b8cd5cce07ba314f15",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 9.296
+   },
+   "n-In119m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f96948c77bd72e413678ad2558ab3a783067248ee0728c11a5642e58fec28173",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.713
+   },
+   "n-La139.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "5fcf9b9d66dbe67849d666d7c25331c50800af2a44010b1ebe07ad7af1849507",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-La139.tendl: MT107/MF=10 ZAP=55136 group 2: emitted state sum 2.75793948538408361e-10 barn exceeds runtime total 2.63653664597836733e-10 barn by relative excess 4.604633e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=5728 ZA=57139 source_sha256=5fcf9b9d66dbe67849d666d7c25331c50800af2a44010b1ebe07ad7af1849507; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 22.216
+   },
+   "n-Lu175.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "eb3c00a8417d671f63f7428279d5039f26c77cbb8dc06c236235173967fbeaf5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 65.395
+   },
+   "n-Lu176.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "da22add9ed3747e8bce8314e04b615bfb7a7d63a8d17d785bf14aecbe7a43f51",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 23.572
+   },
+   "n-Lu176m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "2cb9c62d60ffcb4aa20fc77babbf1f4d70855fe5df667b573aaccfc6ddb2fe8d",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Lu176m.tendl: MT103/MF=10 ZAP=70176 group 2: emitted state sum 3.33454217881445382e-13 barn exceeds runtime total 3.17702607917420258e-13 barn by relative excess 4.957973e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7129 ZA=71176 source_sha256=2cb9c62d60ffcb4aa20fc77babbf1f4d70855fe5df667b573aaccfc6ddb2fe8d; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 7.328
+   },
+   "n-Mg024.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "18db7eb841c6a5b70caba22b541c9e341a56b66f2fc63ac6d7df68237eeaaa8c",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 5.967
+   },
+   "n-Mo092.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "63b63c190bdbc0dbd8d7e5ded14fdbb0bc0e83e6b38fa6fdf7dc3182a0232fa3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Mo092.tendl: MT107/MF=10 ZAP=40089 group 2: emitted state sum 5.96675409832993218e-11 barn exceeds runtime total 5.70875023473348768e-11 barn by relative excess 4.519446e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=4225 ZA=42092 source_sha256=63b63c190bdbc0dbd8d7e5ded14fdbb0bc0e83e6b38fa6fdf7dc3182a0232fa3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 10.386
+   },
+   "n-Mo096.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "3282fad66340cb5a8be6118a0848ef2a265d00cf08e9bd55cb5a55f6492242a3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Mo096.tendl: MT105/MF=10 ZAP=41094 group 598: emitted state sum 3.37694571983147598e-9 barn exceeds runtime total 4.55014947322511004e-22 barn by relative excess 7.421615e12 (outside the frozen 0.001 standard envelope); MAT=4237 ZA=42096 source_sha256=3282fad66340cb5a8be6118a0848ef2a265d00cf08e9bd55cb5a55f6492242a3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 13.057
+   },
+   "n-Mo097.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "f5e923f5601877c4bd324689d88c99923e14414a31292f74a38541e1c18c3a9b",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Mo097.tendl: MT32/MF=10 ZAP=41095 group 620: emitted state sum 1.48289355308254975e-5 barn exceeds runtime total 2.12800225448699838e-19 barn by relative excess 6.968477e13 (outside the frozen 0.001 standard envelope); MAT=4240 ZA=42097 source_sha256=f5e923f5601877c4bd324689d88c99923e14414a31292f74a38541e1c18c3a9b; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 11.494
+   },
+   "n-Na023.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e04dd79f8288d6af0e3033ffa8d1afe7d9a010d3a01815fec3ac9324cf4df2c1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 6.422
+   },
+   "n-Nb093.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Nb093.tendl: MT107/MF=10 ZAP=39090 group 0: emitted state sum 2.15580121314199693e-5 barn exceeds runtime total 2.13734660230461791e-5 barn by relative excess 8.634356e-3 (outside the frozen 0.001 standard envelope); MAT=4125 ZA=41093 source_sha256=e1c60d5159a335856fca5e520c9850bbbdafc53caa92edee46e5b4e1ab2fd109; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 27.852
+   },
+   "n-Nb095.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4a26e6c3091aa38f066218d8c47e07d1240e566be57efacff2db1c7f20f94cff",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.184
+   },
+   "n-Nb095m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "5e8793877dd5eaa1893d2b9ba412602ece45c2fd4963efd572fea37b32f309b9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.874
+   },
+   "n-Nb097.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0bdbddf86e393c9769aec0a93dad4ea521a62bc044ba2b56a22784adb22f022a",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 12.229
+   },
+   "n-Nb097m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "de335a80e7c85e22072d8ec7440903e8d29322186c1efad96f3c9cf3b1767a66",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.807
+   },
+   "n-Nd141.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4413bc405c94b65bbab0bc38c86477e01677b90686eb2a75d5bfd0ec5095d392",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 5.273
+   },
+   "n-Nd141m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "eccfa244f75b3ad88600493aac9e54f362bff6f3fb7a0cebd82bf6fda5495cbc",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.81
+   },
+   "n-Nd142.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "837ce373339699ee4569361ab00e4607f588c90870784b7a194553d591b6aa6c",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Nd142.tendl: MT107/MF=10 ZAP=58139 group 2: emitted state sum 2.70749311653991736e-5 barn exceeds runtime total 2.58915354317730087e-5 barn by relative excess 4.570589e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=6025 ZA=60142 source_sha256=837ce373339699ee4569361ab00e4607f588c90870784b7a194553d591b6aa6c; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 13.794
+   },
+   "n-Nd144.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "738258b540e9d2c90686eff844bf9ce6a88e3c80c8f797f6d55752274fc23dc2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 10.248
+   },
+   "n-Ni058.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ni058.tendl: MT103/MF=10 ZAP=27058 group 2: emitted state sum 7.35056110388422194e-7 barn exceeds runtime total 7.04588661376139325e-7 barn by relative excess 4.324147e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2825 ZA=28058 source_sha256=26c8ae72a203187fae84f9a11c3997086cd70153386e04cf204b4122ab368916; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 32.503
+   },
+   "n-Ni060.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0876c90c41785b03998a18d62166f053bb220342e153533a2d7068154c88e2c8",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 28.607
+   },
+   "n-Ni062.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "09068d35ab0283c71703f3e7e8f81ce4fdf1785cef22aa11e50c0b6db04f0f58",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 7.766
+   },
+   "n-Np237.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Np237.tendl: MT107/MF=10 ZAP=91234 group 2: emitted state sum 5.04346029710018722e-9 barn exceeds runtime total 4.80928947911636700e-9 barn by relative excess 4.869135e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=9346 ZA=93237 source_sha256=f16e1e8c54ac8523d56e1bb41f2472c68e668b8f85e83018969be23c044e7118; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 220.768
+   },
+   "n-Os190.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "56d98eb946054e354710d669d4cc809f85a7dd3a4a41207f1096597a5ab43d92",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 15.339
+   },
+   "n-Os191.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "aa5710159f2ac33bbae3b80e3b58c363e7427e6a624d0279de5361f1c88d3147",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.522
+   },
+   "n-Os191m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "32e81c6678a0d964f41dbe3ea41b1567539aebdf4d0640bf9ac66be1c56318b5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.621
+   },
+   "n-P031.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "dea829f8cdca567853de969bd29987eb22a4f945dcac3e0282d59182a13369cb",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 5.783
+   },
+   "n-Pb204.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ad81f73cec3fb7cf7212cffc77ff71a55c8ebb160c7e2444f9ddfbd1e894d883",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 26.23
+   },
+   "n-Pd105.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "27c4e2f2e50be58e0a8067647a0a2b3e67791fe0bcff52c75c3ef7b85f134353",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Pd105.tendl: MT32/MF=10 ZAP=45103 group 618: emitted state sum 1.75395775261341435e-5 barn exceeds runtime total 2.79863923630903509e-17 barn by relative excess 6.267181e11 (outside the frozen 0.001 standard envelope); MAT=4634 ZA=46105 source_sha256=27c4e2f2e50be58e0a8067647a0a2b3e67791fe0bcff52c75c3ef7b85f134353; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 29.99
+   },
+   "n-Pr141.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "0c857548650baae7ae029becf09879c87c4293ea946483b935fab286ca1ec7a9",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Pr141.tendl: MT32/MF=10 ZAP=58139 group 611: emitted state sum 8.80534856544105587e-7 barn exceeds runtime total 4.60797855200252608e-19 barn by relative excess 1.910892e12 (outside the frozen 0.001 standard envelope); MAT=5925 ZA=59141 source_sha256=0c857548650baae7ae029becf09879c87c4293ea946483b935fab286ca1ec7a9; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 21.746
+   },
+   "n-Pr144.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "74d910d6c0ed86f31b05ffbdee3b68c3d0518525b4cf3d149c54f3ded2bf2808",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.801
+   },
+   "n-Pr144m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "78cc406d68562607b71a3a1c2b8b24c6deaf6115604718ad736565fb7d52bf33",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.455
+   },
+   "n-Pt194.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "dfe0c59af7b9cf0f88d4965212082f9af7963a3e276ac9f5ecb20270e8e7e5ce",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Pt194.tendl: MT107/MF=10 ZAP=76191 group 0: emitted state sum 4.79104858132311628e-4 barn exceeds runtime total 2.49123406925728051e-4 barn by relative excess 9.231628e-1 (outside the frozen 0.001 standard envelope); MAT=7837 ZA=78194 source_sha256=dfe0c59af7b9cf0f88d4965212082f9af7963a3e276ac9f5ecb20270e8e7e5ce; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 5.825
+   },
+   "n-Pt198.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "09776ec8a9e7861a800032ea567ba990ea256e20b8e0a5a41a8a7e76d4e00b29",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 14.679
+   },
+   "n-Pt199.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "979774fa893a1f1e8d3c56d951cf2c89699a552203fb050c3cc3667c68424a36",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 4.875
+   },
+   "n-Pt199m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3449a81ec83fd3835dafecbb6687d6100f98cdb833c5d30d38001c4c42e4bfc5",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 4.792
+   },
+   "n-Pu239.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "a42579eddb6957680df79fac3b629a2af0d713c8a1b7ef861ec1583a1f1c4193",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 222.052
+   },
+   "n-Rb084.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "03b19b0ba9a7fd0af911e164bf2e3914ed32fd9a4466ca2e50cf645d720c5d9c",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.749
+   },
+   "n-Rb084m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "9618d2ef8446f9a36256d37d5a207023029325be1785997d3f73b09d80d1a40f",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 6.894
+   },
+   "n-Rb085.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e4dd4045aae2e66e1d506669610f1b1eb6c077389e3cd0e961510784104567ab",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 25.297
+   },
+   "n-Rb086.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e72b9997023753678b7fb7e206bc5d90b1a745bc378510a2e46494bf1486c9d9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 9.554
+   },
+   "n-Rb086m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8c22275b33d95f8a2d11d786d45d7c34040a758239f212090658054bdfbcf2b9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.888
+   },
+   "n-Rb087.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ca6c7fe657bed8dabdd2a8743339293c2ca5d5f5d16d199762377b857e16e389",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 14.095
+   },
+   "n-Re184.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "009b2eeb0bfb1ebd09d52627359386739ab0cf7dfc93b4a6e00b3e368ff15032",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 7.765
+   },
+   "n-Re184m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "0dc1a36f3a5149c5fd936286fe8c1175db0ee74bc13b39a83da991053cd05d2f",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 8.811
+   },
+   "n-Re185.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "333c9b819b9df4b639e7121f525054e880523a28007df450b4146f94b9010a68",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Re185.tendl: MT107/MF=10 ZAP=73182 group 2: emitted state sum 5.53692447684213682e-6 barn exceeds runtime total 5.28452435467732483e-6 barn by relative excess 4.776213e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7525 ZA=75185 source_sha256=333c9b819b9df4b639e7121f525054e880523a28007df450b4146f94b9010a68; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 80.077
+   },
+   "n-Rh101.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "da25dc80035c5b7f3d1cff84002a2789cb7aa613b4669c68e700de64c08bcf07",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Rh101.tendl: MT16/MF=10 ZAP=45100 group 599: emitted state sum 8.73714387661475860e-7 barn exceeds runtime total 3.38107470181848268e-7 barn by relative excess 1.584132e0 (outside the frozen 0.001 standard envelope); MAT=4519 ZA=45101 source_sha256=da25dc80035c5b7f3d1cff84002a2789cb7aa613b4669c68e700de64c08bcf07; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 11.003
+   },
+   "n-Rh101m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "e20f199f6dfa64aa4624c12bcc9a60023282183c3dd0e07028b88d94bd6dd2d4",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Rh101m.tendl: MT106/MF=10 ZAP=43099 group 591: emitted state sum 1.36437183650029421e-6 barn exceeds runtime total 1.05303155543200327e-21 barn by relative excess 1.295661e15 (outside the frozen 0.001 standard envelope); MAT=4520 ZA=45101 source_sha256=e20f199f6dfa64aa4624c12bcc9a60023282183c3dd0e07028b88d94bd6dd2d4; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 8.05
+   },
+   "n-Rh102.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "57751b5631420c1de3bac3d847457427cc40f88f0e8d7f77a9d46b8bd4836de8",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Rh102.tendl: MT16/MF=10 ZAP=45101 group 593: emitted state sum 6.61096670353576887e-1 barn exceeds runtime total 1.34737462703135905e-4 barn by relative excess 4.905554e3 (outside the frozen 0.001 standard envelope); MAT=4522 ZA=45102 source_sha256=57751b5631420c1de3bac3d847457427cc40f88f0e8d7f77a9d46b8bd4836de8; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 8.07
+   },
+   "n-Rh102m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "9f479484216e1d3cf8432d4f10d3e8d9b799508cd85de55522fa83c96ee5a7ba",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Rh102m.tendl: MT16/MF=10 ZAP=45101 group 593: emitted state sum 1.23405403493168412e-3 barn exceeds runtime total 1.14222581810667330e-3 barn by relative excess 8.039410e-2 (outside the frozen 0.001 standard envelope); MAT=4523 ZA=45102 source_sha256=9f479484216e1d3cf8432d4f10d3e8d9b799508cd85de55522fa83c96ee5a7ba; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 8.226
+   },
+   "n-Rh103.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ed3306e249fb9836744168ce2ae926056f7b70131c53da55a0cdd17106c6d445",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 40.168
+   },
+   "n-Rh103m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "42fe2b073d94a0554c55017e7bb89bbde6df669095eff5f8c07c2a1cbbbad4de",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 6.951
+   },
+   "n-Rh105.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "881cc4cb36b7ef876d01162469a8e852ec257166b372ef80447d395a1a4bede3",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 7.212
+   },
+   "n-Rh105m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4e55d77a1c8583472ffabe068db5aff355fe477e5b05b13ae735bde90177f4c6",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 9.545
+   },
+   "n-S032.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "972e2556d3fc3f4fe1f636da067fb54f1175f1f8ffad7057da08678b11b12ef4",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 7.927
+   },
+   "n-Sb128.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3442023e18d739a3819cd44f8570a5fe0cc055a359053804c08be738b61fee9b",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 5.341
+   },
+   "n-Sb128m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3a12c000ca047156c957ba2fc612ca1fec34b0278f212a2883cfb36bc3083e17",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 5.763
+   },
+   "n-Sc045.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "f2e1f19faf6fa3421dfd0ae6f0d7b02c134e83a7f7d6e38eca43593f1d97c259",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Sc045.tendl: MT16/MF=10 ZAP=21044 group 607: emitted state sum 7.79778188527892584e-3 barn exceeds runtime total 1.46468365577001232e-5 barn by relative excess 5.313868e2 (outside the frozen 0.001 standard envelope); MAT=2125 ZA=21045 source_sha256=f2e1f19faf6fa3421dfd0ae6f0d7b02c134e83a7f7d6e38eca43593f1d97c259; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 11.597
+   },
+   "n-Se080.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "84c70abad660cea45bdf1c3b4225535d9fee7e6790437fc4a8759b7a4dc4ab36",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 4.689
+   },
+   "n-Se081.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "08ac3b752028cb4b2648632ced211f1cdf7a32bc8087329595a95612ce3f0e5e",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.873
+   },
+   "n-Se081m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1b776078e4e1cd7aa245ec3e9fdc52de8040dc719b8552bbf07ecdc23be1a8e1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 7.0
+   },
+   "n-Si028.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8bc9da61e97236efc62b565c4cfc66358bbfa9a1ac20e835351092e0759dd916",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 6.889
+   },
+   "n-Si029.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "70e937785430d605e8f7f120ac0f7acaf93ca1079af5e18ee74f9985850f61d9",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 5.434
+   },
+   "n-Sn114.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "e439bcac556a7a99a0bf83f348d409e5c43100ab7ba3ea327ca544a9823e0fbe",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Sn114.tendl: MT107/MF=10 ZAP=48111 group 0: emitted state sum 2.58241340698640328e-11 barn exceeds runtime total 2.56024690345191205e-11 barn by relative excess 8.657955e-3 (outside the frozen 0.001 standard envelope); MAT=5031 ZA=50114 source_sha256=e439bcac556a7a99a0bf83f348d409e5c43100ab7ba3ea327ca544a9823e0fbe; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 20.53
+   },
+   "n-Sn119.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "5e65e399fa6bf474b0507be9e409b9abd9265fde9de2bbbf0977410cbc32aa18",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 7.136
+   },
+   "n-Sr084.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "1d591ba9e2f0b7e942849f33979e6fb907a03dea968e5940949a9878951dd5f2",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Sr084.tendl: MT107/MF=10 ZAP=36081 group 2: emitted state sum 1.79192618957757729e-13 barn exceeds runtime total 1.71161990428860036e-13 barn by relative excess 4.691829e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=3825 ZA=38084 source_sha256=1d591ba9e2f0b7e942849f33979e6fb907a03dea968e5940949a9878951dd5f2; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 9.502
+   },
+   "n-Ta181.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ta181.tendl: MT107/MF=10 ZAP=71178 group 0: emitted state sum 5.56899173124603136e-5 barn exceeds runtime total 4.97208049712292795e-5 barn by relative excess 1.200526e-1 (outside the frozen 0.001 standard envelope); MAT=7328 ZA=73181 source_sha256=c17851bc0cee49949145b4218291430ce372b0dfc05fb1096b6566efa6701608; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 110.356
+   },
+   "n-Te128.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "b962dcf6c758349742e9bdb9df4ae73824f1c111a3bd5b3625a44ec3af0df935",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "isomeric",
+    "seconds": 9.983
+   },
+   "n-Th232.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "e9e166086f436dfa9d97de2717c21f5ce9acfb74c28c98bb61a574c33ecaef9a",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 38.324
+   },
+   "n-Ti046.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1d13b51964e795ddf7088eb434c609c5bdf9880d5bd135e1a34c90a447c1fad6",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 6.54
+   },
+   "n-Ti047.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Ti047.tendl: MT105/MF=10 ZAP=21045 group 604: emitted state sum 2.44946511214459378e-5 barn exceeds runtime total 8.96807784261776972e-19 barn by relative excess 2.731316e13 (outside the frozen 0.001 standard envelope); MAT=2228 ZA=22047 source_sha256=bc087e3f4a6575e8c0a5642f16ad4625c0b9e813b24bd1c193d48e8a7522972c; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "irdff",
+    "seconds": 5.806
+   },
+   "n-Ti048.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "020118c02ce142b87e72b393dd48e41641b42abaedac290572b45be5018b1b7b",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 11.691
+   },
+   "n-U235.tendl": {
+    "class": "construction_error",
+    "exit": "timeout",
+    "file_sha256": "271f8db9bd84f19c010e6d6a20d80616cc404727c9096968977a61a50565b403",
+    "message": "timeout 300.0s",
+    "role": "irdff",
+    "seconds": 300.105
+   },
+   "n-U238.tendl": {
+    "class": "construction_error",
+    "exit": "timeout",
+    "file_sha256": "394db1fd2fac14b7f7bd8003c32613d72dc261015f3ff271e615fabf52870f2c",
+    "message": "timeout 300.0s",
+    "role": "irdff",
+    "seconds": 300.106
+   },
+   "n-V051.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "33d5d1b46c8f3efe21e852d6741ec575d7a08464eb58b636eb37a4ebb9598823",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 8.488
+   },
+   "n-W179.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "f049a374be8c088fdcd00e9ed3ccd91a47ded03fb9b3f556c7e5ff55fb994bc1",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 8.672
+   },
+   "n-W179m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "8581d2697ea107cb5d236ce487cb2f806ca608abf95efd85b08e406508e5ba27",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 8.527
+   },
+   "n-W180.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "d6148cfd371ab6ec5f6ff42fa996a7cfe77d66321cd7356ab049a9390f740971",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-W180.tendl: MT107/MF=10 ZAP=72177 group 2: emitted state sum 3.11166172756608954e-5 barn exceeds runtime total 2.96559213157796214e-5 barn by relative excess 4.925478e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=7425 ZA=74180 source_sha256=d6148cfd371ab6ec5f6ff42fa996a7cfe77d66321cd7356ab049a9390f740971; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 8.558
+   },
+   "n-W186.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 10.935
+   },
+   "n-Y087.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "10e4c6857a7105f7240349df66135352b22b0453b869008ebb51aca8409077eb",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Y087.tendl: MT103/MF=10 ZAP=38087 group 2: emitted state sum 2.00850252919883872e1 barn exceeds runtime total 1.91362567262193579e1 barn by relative excess 4.957963e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=3919 ZA=39087 source_sha256=10e4c6857a7105f7240349df66135352b22b0453b869008ebb51aca8409077eb; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 5.894
+   },
+   "n-Y087m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "3157c9d8da3cf4f009f89c428fb96529132e890a7f897535b8c71bb3fc8127e3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Y087m.tendl: MT103/MF=10 ZAP=38087 group 2: emitted state sum 1.01308587746457661e2 barn exceeds runtime total 9.64716088292820615e1 barn by relative excess 5.013889e-2 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=3920 ZA=39087 source_sha256=3157c9d8da3cf4f009f89c428fb96529132e890a7f897535b8c71bb3fc8127e3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 5.915
+   },
+   "n-Y088.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "f6c69655d0991faddb90e8b1a620b9ccd4d0e68a56ce73f3ae52955295cfaedc",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Y088.tendl: MT16/MF=10 ZAP=39087 group 598: emitted state sum 1.21668241305993652e0 barn exceeds runtime total 1.37394197505467757e-4 barn by relative excess 8.854413e3 (outside the frozen 0.001 standard envelope); MAT=3922 ZA=39088 source_sha256=f6c69655d0991faddb90e8b1a620b9ccd4d0e68a56ce73f3ae52955295cfaedc; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 4.528
+   },
+   "n-Y089.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "c1bf5c373011200d8573e7109f65bd0ab8f2dc39f5d28eabf539e18b8fbc12d0",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 11.628
+   },
+   "n-Y090.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "9ec5805280048a6b5f26f1132bb11466d789b6660085e4f4a946b3a8357e8d65",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Y090.tendl: MT102/MF=9 ZAP=39091 group 0: emitted state sum 4.31107162829971685e2 barn exceeds runtime total 3.23552952287404594e2 barn by relative excess 3.324161e-1 (outside the frozen 0.001 standard envelope); MAT=3928 ZA=39090 source_sha256=9ec5805280048a6b5f26f1132bb11466d789b6660085e4f4a946b3a8357e8d65; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor_ground",
+    "seconds": 10.269
+   },
+   "n-Y090m.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "7b0c9d3d3f05aafc7cf40d90b3b6ff6e27f1828ec8e5ef333134215da8f49a22",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Y090m.tendl: MT102/MF=9 ZAP=39091 group 0: emitted state sum 2.44295176396357056e4 barn exceeds runtime total 1.25346737778455354e4 barn by relative excess 9.489552e-1 (outside the frozen 0.001 standard envelope); MAT=3929 ZA=39090 source_sha256=7b0c9d3d3f05aafc7cf40d90b3b6ff6e27f1828ec8e5ef333134215da8f49a22; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "anchor",
+    "seconds": 6.28
+   },
+   "n-Y091.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "9e04c2a78ac42785cfe2ae3a60c9f18b1e59e0c9986b7ab90db8e76e7842df70",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor_ground",
+    "seconds": 6.801
+   },
+   "n-Y091m.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "3a21d5c386004ac40866bb93c2696326f5eb1c800d75ced680c4d9b4d69af2b2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "anchor",
+    "seconds": 6.909
+   },
+   "n-Zn064.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "08c5090dad3545d4a8e2948e099ccf5d6f61011b883ba0dab157adcf4aa63257",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 17.606
+   },
+   "n-Zn067.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "4e8c39a2d0907865b1f81a7d5c9fe3ad24f1d432da002e719136b9e9809226f2",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 21.964
+   },
+   "n-Zn068.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "ecbe50644dd15a9fc7c1e07eda05c127987e016f006f202de78dec5738a8781a",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 14.89
+   },
+   "n-Zr088.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "148382919d34670d07f3ae3c121b06e05f8d1c8b763c6fba30a9401edfeb40a3",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Zr088.tendl: MT16/MF=10 ZAP=40087 group 612: emitted state sum 9.18106789939765910e-1 barn exceeds runtime total 2.85491912181932072e-3 barn by relative excess 3.205877e2 (outside the frozen 0.001 standard envelope); MAT=4019 ZA=40088 source_sha256=148382919d34670d07f3ae3c121b06e05f8d1c8b763c6fba30a9401edfeb40a3; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 11.085
+   },
+   "n-Zr090.tendl": {
+    "class": "ok",
+    "exit": 0,
+    "file_sha256": "1b1cc2ed9a78732df8f63e3bb7b2e9721ec02d993bfb3e7ff0e971f3784db5ef",
+    "message": "index -> /home/connoravila/Documents/actinv/target/p25c-g3/scratch-source_index.json",
+    "role": "irdff",
+    "seconds": 10.126
+   },
+   "n-Zr091.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "d3058532b38800f6a82fd2e158dd87ba9ff1201ce7bb28b4aab710e2ced36fd7",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Zr091.tendl: MT32/MF=10 ZAP=39089 group 617: emitted state sum 4.31816225196621044e-3 barn exceeds runtime total 3.95636187822927455e-19 barn by relative excess 1.091448e16 (outside the frozen 0.001 standard envelope); MAT=4028 ZA=40091 source_sha256=d3058532b38800f6a82fd2e158dd87ba9ff1201ce7bb28b4aab710e2ced36fd7; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 12.454
+   },
+   "n-Zr092.tendl": {
+    "class": "construction_error",
+    "exit": 1,
+    "file_sha256": "7f44d3af81cb6f1ad1571c16c6a136481dc786075112df0ae0ed5460d5114f3e",
+    "message": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Zr092.tendl: MT105/MF=10 ZAP=39090 group 597: emitted state sum 9.61321604795108252e-11 barn exceeds runtime total 1.57574675547528245e-20 barn by relative excess 6.100737e9 (outside the frozen 0.001 standard envelope); MAT=4031 ZA=40092 source_sha256=7f44d3af81cb6f1ad1571c16c6a136481dc786075112df0ae0ed5460d5114f3e; construction fails closed and no state row is emitted, scaled or relabeled",
+    "role": "isomeric",
+    "seconds": 10.344
+   }
+  }
+ },
+ "coverage": {
+  "anchors_total": 62,
+  "irdff_total": 47,
+  "patched": {
+   "anchors_built": 42,
+   "corpus_incomplete": [],
+   "irdff_built": 30,
+   "union_built": 45
+  },
+  "source": {
+   "anchors_built": 41,
+   "corpus_incomplete": [],
+   "irdff_built": 29,
+   "union_built": 43
+  },
+  "union_total": 77
+ },
+ "elapsed_s": 6181.586,
+ "gate": "P25c-G3",
+ "jobs": [
+  {
+   "file": "n-Na023.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Mg024.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Al027.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Si028.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Si029.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-P031.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-S032.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Sc045.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Ti046.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Ti047.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Ti048.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-V051.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Fe054.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Fe056.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Fe058.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Co059.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Ni058.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Ni060.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Ni062.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Cu063.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Cu065.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Zn064.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Zn067.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Zn068.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-As075.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Se080.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Br081.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Rb085.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Rb087.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Sr084.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Y088.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Y089.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Zr088.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Zr090.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Zr091.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Zr092.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Nb093.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Mo092.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Mo096.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Mo097.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Rh103.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Pd105.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Ag109.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Cd114.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Cd116.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-In113.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-In115.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Sn114.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Sn119.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Te128.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-I127.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-La139.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Pr141.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Nd142.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Nd144.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Eu151.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Ho165.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Lu175.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Ta181.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-W180.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-W186.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Re185.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Os190.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Pt194.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Pt198.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Au197.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Hg198.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Hg199.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Hg200.tendl",
+   "role": "isomeric"
+  },
+  {
+   "file": "n-Pb204.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Bi209.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Th232.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-U235.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-U238.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Np237.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Pu239.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Am241.tendl",
+   "role": "irdff"
+  },
+  {
+   "file": "n-Co062m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Ge075m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Se081m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Br080m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Rb084m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Rb086m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Y087m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Y090m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Y091m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Nb095m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Nb097m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Rh101m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Rh102m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Rh103m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Rh105m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Ag109m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Cd115m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-In114m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-In119m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Sb128m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Ce139m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Pr144m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Nd141m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Eu150m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Ho164m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Lu176m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-W179m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Re184m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Os191m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Pt199m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Au200m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Hg197m.tendl",
+   "role": "anchor"
+  },
+  {
+   "file": "n-Co062.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Ge075.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Se081.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Br080.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Rb084.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Rb086.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Y087.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Y090.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Y091.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Nb095.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Nb097.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Rh101.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Rh102.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Rh105.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Cd115.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-In114.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-In119.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Sb128.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Ce139.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Pr144.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Nd141.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Eu150.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Ho164.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Lu176.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-W179.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Re184.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Os191.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Pt199.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Au200.tendl",
+   "role": "anchor_ground"
+  },
+  {
+   "file": "n-Hg197.tendl",
+   "role": "anchor_ground"
+  }
+ ],
+ "newly_broken_files": [],
+ "patch_sha256": "b67b166145e78c71605f3f9f1278b84fad28186289076d5f38983882673093dd",
+ "per_file_bound_s": 300.0,
+ "recovered_files": [
+  "n-Br080m.tendl",
+  "n-Sc045.tendl",
+  "n-Y088.tendl"
+ ],
+ "rescan": {
+  "n-Ag104m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.555228687014413",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Ag106m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "108.20416673052445",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Ag107.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.511922387808088",
+   "pre_class": "self_channel_only"
+  },
+  "n-Ag107m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.549898538177246",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ag108m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "261.28583120768104",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Ag109.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.511969988371508",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ag110m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "1.0731019938724375",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Am243.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.537181047408893",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ba132.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.530953544833793",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ba134.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.491170485026746",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ba137m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.537147065677953",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Bi209.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "no_mf3_total"
+   ],
+   "post_worst_relative_excess": "18.518543339083855",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Br079.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "6559589.158361366",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Br080m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "1.7404924388588734",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Cd106.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "42729077661.538315",
+   "pre_class": "self_channel_only"
+  },
+  "n-Ce138.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.530957941327266",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ce139m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.54532869462052",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ce140.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.563098449847185",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Cl035.tendl": {
+   "patched": true,
+   "post_kinds": [],
+   "post_worst_relative_excess": "0.0",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Cs134m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.56196151354976",
+   "pre_class": "self_channel_only"
+  },
+  "n-Cu063.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.471405241450523",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Er168.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp"
+   ],
+   "post_worst_relative_excess": "3193.199282083755",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Eu151.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp"
+   ],
+   "post_worst_relative_excess": "22.20918664850398",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Fe053m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "0.7904465201976846",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Ge075m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "698113825.1796845",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Hg195m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "no_mf3_total",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "1622643434219872.5",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Hg198.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "no_mf3_total"
+   ],
+   "post_worst_relative_excess": "18.545320397857452",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-I127.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.51017845274611",
+   "pre_class": "self_channel_only"
+  },
+  "n-In110m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "278.4333606517572",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-In112m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.56191975139655",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-In114m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.561924170910714",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Ir193.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "no_mf3_total",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.54532683488298",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ir193m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "no_mf3_total",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.55528316947223",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-K039.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "3.2990053318013204e+16",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Kr079m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "2.722342125933252e+19",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Kr080.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.54524244181972",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Lu178m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "610880604512.0363",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Mo091m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.550762498088805",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Mo095.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "27433285927176.082",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Mo096.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "13652257652383.578",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Mo097.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "19329681009497.965",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Nb091m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "2335015338.4379697",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Nb093.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.553487538382733",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Nd142.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.56260806191501",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ni058.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.54182866538122",
+   "pre_class": "self_channel_only"
+  },
+  "n-Np237.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.540410142430712",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Pd102.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "226618215146.88458",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Pd104.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "244389995861.144",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Pd105.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "1184426598888.6243",
+   "pre_class": "self_channel_only"
+  },
+  "n-Pr141.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "87337572421.13576",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Pt194.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "no_mf3_total"
+   ],
+   "post_worst_relative_excess": "4306.670086437779",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Re187.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "no_mf3_total",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "10651071899.420023",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Rh101m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "275393912289634.3",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Rh102m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.55523172083545",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Rh104m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "1.1458282894297027",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Sb120m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "320.10460067621267",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Sb122m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "143.8056388364925",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Sc045.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "0.25775381264597974",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Sc046m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "1.475805768754908",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Sm144.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.491185714076448",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Sn112.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "11021785703.14377",
+   "pre_class": "self_channel_only"
+  },
+  "n-Sn114.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.51019589239929",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Sn117.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "710136.1531430291",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Sr084.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.510222079185645",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Tc095m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.56300688615947",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Tc096m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.555240454560913",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Te119m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "6.9513569019122565e+19",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Te120.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.537147602696134",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Te122.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.562624534021747",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Ti047.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "27379657586205.266",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-W185m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "no_mf3_total",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.56190495618994",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Xe126.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.510200549102688",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Xe128.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.51196018364955",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Xe133m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "0.21918613557780556",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Y087m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "18.56193109523513",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Y088.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor"
+   ],
+   "post_worst_relative_excess": "0.0",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Y090m.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "0.539909935736917",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Zr088.tendl": {
+   "patched": true,
+   "post_kinds": [
+    "floor",
+    "interp"
+   ],
+   "post_worst_relative_excess": "18.51019871364721",
+   "pre_class": "confirmed_leak_signature"
+  },
+  "n-Zr089m.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "interp",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "3695700455482606.5",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Zr091.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "91618510256482.1",
+   "pre_class": "conservation_excess_non_signature"
+  },
+  "n-Zr092.tendl": {
+   "patched": false,
+   "post_kinds": [
+    "floor",
+    "gridpoint",
+    "zero_total"
+   ],
+   "post_worst_relative_excess": "308831031.4991138",
+   "pre_class": "conservation_excess_non_signature"
+  }
+ },
+ "schema": "actinv-p25c-g3-census-1",
+ "seals_sha256": "c66f27d17108ed32e225464982b8e0e306b6245b0e8e36ece2affeae83077eab",
+ "signature_sha256": "98d0a2912d79fb87cc740b79783270a57d389025f69cc8679934fd490450f33d"
+}

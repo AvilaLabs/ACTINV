@@ -175,6 +175,43 @@ gate ordering, re-verifies all prior verdicts verbatim and rejects planted
 mutations. Verdict to `results/verdict_p25c.json`; manifest regenerated once
 at closure.
 
+## Amendment 1 — G3 measured census and frozen floors (2026-09-14)
+
+G3 measured post-patch construction coverage under the shipped 1.1.0 builder
+(`target/release/actinv`, per-file bound 300 s, FISPACT-709 groups, 293.6 K)
+over 139 deduplicated files: 77 union-target files (47 IRDFF-II targets ∪
+37 isomeric-row targets) and 62 product-state isomer/ground anchor files.
+
+Measured coverage (patched vs byte-identical source):
+
+| set          | source | patched | recovered |
+|--------------|--------|---------|-----------|
+| IRDFF-II     | 29/47  | 30/47   | n-Sc045   |
+| union        | 43/77  | 45/77   | +n-Br080m, n-Y088 |
+| anchors      | 41/62  | 42/62   |           |
+
+All three recoveries are `confirmed_leak_signature` files; zero files
+regressed. The post-patch oracle rescan shows the leaked-ordinate signature
+cleared in all 28 patched files; residual non-signature defect classes
+(`floor`, `interp`, `gridpoint`, `zero_total`, `no_mf3_total`) remain
+ledgered, not cleared. Published limitation: the patch recovers none of the
+five dosimetry-critical targets still failing on non-signature classes
+(Ni-58, Nb-93, Ag-109, In-113, Au-197).
+
+Frozen floors for G4/G5:
+
+- **F1 — no regression.** `newly_broken_files` is empty.
+- **F2 — non-inferiority.** Patched-corpus coverage ≥ source coverage on
+  every measured set (IRDFF ≥ 29, union ≥ 43, anchors ≥ 41).
+- **F3 — material recovery.** ≥ 1 union-set file builds solely because of
+  the patch (measured 3).
+- **F4 — leak clearance.** Zero `confirmed_leak_signature` hits when the
+  frozen signature census is re-run over the patched corpus
+  (checker-verified live at G3).
+- **F5 — artifact coverage.** The G4 union artifact must contain every
+  union-set file that built in G3 (45); any G3-building file absent from
+  the artifact is an artifact-build defect counted against the gate.
+
 ## Closure interpretation
 
 `P25c-PASS` means the patched corpus is a surgically-remediated, re-censused
