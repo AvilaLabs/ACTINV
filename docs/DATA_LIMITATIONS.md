@@ -24,9 +24,10 @@ Upstream (A. Koning) confirmed the root cause: an array in the TALYS
 cross section to be written into the ground-state (n,2n) record. The fix
 is committed upstream and lands in the **next TENDL release** — every
 evaluation ACTINV can currently ship predates it. Upstream's suggested
-manual remediation (zeroing the contaminated leading energy points)
-produces a modified evaluation that would require its own qualification
-phase; it has not been applied to the shipped artifact.
+manual remediation (zeroing the contaminated leading energy points) has
+been applied to a **separately labeled derived corpus** under phase P25c
+— never to the shipped artifact. See "Derived corpus `tendl-2025-patched`"
+below for its exact scope and remaining limitations.
 
 Full evidence: `docs/P25_TENDL2025_DEFECT_REPORT.md` (with the standalone
 reproducer submitted upstream) and `results/verdict_p25.json`.
@@ -80,12 +81,48 @@ against the same machinery (`results/verdict_p25b.json`):
 | EAF-2010 | 37/47 (floor 47) | fails IRDFF (0.156 vs 0.055, 24 rows) | not qualified — also cannot express isomeric identity (no `state_catalog` for EAF format; negative MF=8 ELFS) |
 | FENDL-3.2c | 31/47 (floor 34) | fails IRDFF (0.096 vs 0.040, 16 rows) | not qualified — incomplete corpus, no isomer anchors |
 
+## Derived corpus `tendl-2025-patched` (phase P25c, `P25c-PASS`)
+
+Phase P25c produced a derived neutron corpus under
+`~/nuclear-data/tendl-2025-patched/` — an Avila Labs remediation of
+TENDL-2025, **not an official TENDL release**. Its exact scope:
+
+- **Patched:** the 28 confirmed-signature files only; exactly the 44
+  enumerated leaked leading ordinates zeroed, nothing else moved
+  (independent replay verified every edit and all 2,822 other files
+  byte-identical). Provenance: `results/g1_p25c_signature.json`,
+  `results/g2_p25c_patch.json`, `results/g2_p25c_patched_manifest.sha256`.
+- **What it recovers:** three union benchmark targets (Sc-45, Y-88,
+  Br-80m) now build under the 1.1.0 builder; union coverage 43→45/77,
+  IRDFF 29→30/47, anchors 41→42/62; zero regressions
+  (`results/g3_p25c_census.json`).
+- **What it does not recover:** the five dosimetry-critical targets
+  (Ni-58, Nb-93, Ag-109, In-113, Au-197) still fail closed — their
+  blockers are *non-signature* defect classes (e.g. Ag-109's MT=107
+  conservation-excess residuals, Ni-58's MT=103 self-channel excess),
+  which the patch deliberately does not touch.
+- **Still ledgered, unpatched:** 46 non-signature conservation-excess
+  files and 7 self-channel-only files.
+- **Qualification:** the union+anchor artifact (87 targets,
+  `state_catalog` liso {0,1}) passes all frozen coverage and
+  comparable-case nonregression gates on both partitions
+  (`results/verdict_p25c.json`). All scoring is retrospective; no blind
+  evidence exists.
+- **Release status:** P25c-PASS qualifies the corpus as a *candidate*
+  for a separately labeled data release. Publishing it as a
+  `data-v1.1.x` artifact is a maintainer decision and must carry this
+  scope verbatim; the shipped `data-v1.0.0` artifacts are unchanged.
+
 ## Remediation path
 
 1. **Corrected TENDL release** — the upstream fix is committed; when it
    ships, the P25 qualification machinery re-runs unchanged on the new
-   evaluation. This is the preferred path.
-2. **EAF route** — would require builder feature work (state-catalog
+   evaluation. This remains the preferred path.
+2. **Derived corpus release** — `tendl-2025-patched` is a qualified
+   candidate (P25c-PASS) for a clearly labeled derived data artifact,
+   carrying the defect scope above. Bounded, documented, and fully in
+   our control.
+3. **EAF route** — would require builder feature work (state-catalog
    emission for the EAF format) plus bounded adjudication of its
    negative-ELFS convention, and even then isomeric coverage is partial
    and its IRDFF accuracy regresses. Recorded, not recommended as the
