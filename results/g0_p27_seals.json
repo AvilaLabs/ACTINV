@@ -1,0 +1,217 @@
+{
+ "adversarial_battery": [
+  "incorrect_units",
+  "changed_data",
+  "changed_executable",
+  "missing_case",
+  "duplicate_case",
+  "zero_metric",
+  "forged_evidence",
+  "stale_evidence",
+  "missing_qualification",
+  "altered_limits",
+  "unexpected_schema_field",
+  "revoked_template"
+ ],
+ "core_interchange": {
+  "all_schema_digests": {
+   "assessment.v0.1-draft.schema.json": "d8eb1da6ca85d7504819d9d82b35473d03e33c3d8d8a0119e5beb0c3549ef564",
+   "attempt-comparison.v0.1-draft.schema.json": "f7e4abc56471b525580056c4296aefcbd497256c07b2f2f8e9834c318ffced80",
+   "attempt-lineage.v0.1-draft.schema.json": "70a5201362a21fdacca38fcc327ffb839fc4ab0423c804e7f778e7e9fb9b1458",
+   "campaign-report.v0.2-draft.schema.json": "3bdf27362e8af541297da7e3b061565427ac77447c0e7278c3a03c5530fc7189",
+   "capability-probe.v0.1-draft.schema.json": "c77c0523dad36bc5054e7845d4cd5699252d6c8d277b173e038128804c184aa7",
+   "case-package.v0.1-draft.schema.json": "d4fe74b9bbadf0de65cf34d79d909ce568da508625a3b82b860d23f8251c1bd5",
+   "compile-report.v0.2-draft.schema.json": "946effc8ae7e13d7230aa154541e8eec0fd7e36cb82650f0495d12b710042837",
+   "contract-amendment.v0.1-draft.schema.json": "02024dfc57407dfe63188837743e32be8692d5a90ce2ef3f842bf79a06cdc106",
+   "design-revision.v0.1-draft.schema.json": "002c2ebe6b1fd9bbe3db2ee7659bd700fbb2bb994d9d5e959dba7f0e6470d1c5",
+   "evidence-claims.v0.2-draft.schema.json": "3c47c50d48d40b21b6491f04ad5692686d3dbdf3d146c2e4769541a98a0a63c5",
+   "evidence-contract.v0.2-draft.schema.json": "e5cf8f36a37b4316e0730f05d954ca3f038b81755b5387035209df5cb5225d5f",
+   "execution-receipt.v0.1-draft.schema.json": "0b6f7c2c26f83aacc79f6def1f235d2160e0c25d3f7dc5a92acb2062428bce3a",
+   "external-checker-adapter.v0.1-draft.schema.json": "e12d0c5678f1f41ba2a756c8841b8820088b0a371238f1bb22948e8a3ee91107",
+   "log-record.v0.1-draft.schema.json": "cd76e42d36a377a79d17a9401500f9aad00f566cd819bdb03e5ca42ada33a0ae",
+   "named-reference.v0.1-draft.schema.json": "381882af0de49e4c946c0e864b9b02962a1a10c4f42ef9f3074a7d59c1c6b6a3",
+   "qualification.v0.1-draft.schema.json": "1a115c8054e40c0e0705f9bb35eb0fb53127ac625c87e511adbc4ae41b3eec05",
+   "registry-snapshot.v0.2-draft.schema.json": "7c9f4edf9164ece68065998e6d6e30147f62383f6bc98848124fd4a4edf4ba6c",
+   "requirement-set.v0.1-draft.schema.json": "c9991d46943645946135aa3ac310ec64223a227f17b0d6b61558f4e3310fa0af",
+   "signature.v0.1-draft.schema.json": "36c98828ef1c03ac3c186ec6e082dc49ff44beb3814b2751e04c498b183c1345",
+   "staged-review-record.v0.1-draft.schema.json": "1558e7dcbf919db096fdd577bb97cc5e9b396a34d0d7285833bd99cd7e57270d",
+   "trust-root.v0.1-draft.schema.json": "3fbf8b6474c3f2c04d15ed2cef1bd190a7b86c78618cb71d79008880273a0593"
+  },
+  "consumed_schemas": {
+   "campaign-report.v0.2-draft.schema.json": "3bdf27362e8af541297da7e3b061565427ac77447c0e7278c3a03c5530fc7189",
+   "case-package.v0.1-draft.schema.json": "d4fe74b9bbadf0de65cf34d79d909ce568da508625a3b82b860d23f8251c1bd5",
+   "contract-amendment.v0.1-draft.schema.json": "02024dfc57407dfe63188837743e32be8692d5a90ce2ef3f842bf79a06cdc106",
+   "evidence-claims.v0.2-draft.schema.json": "3c47c50d48d40b21b6491f04ad5692686d3dbdf3d146c2e4769541a98a0a63c5",
+   "execution-receipt.v0.1-draft.schema.json": "0b6f7c2c26f83aacc79f6def1f235d2160e0c25d3f7dc5a92acb2062428bce3a",
+   "qualification.v0.1-draft.schema.json": "1a115c8054e40c0e0705f9bb35eb0fb53127ac625c87e511adbc4ae41b3eec05",
+   "registry-snapshot.v0.2-draft.schema.json": "7c9f4edf9164ece68065998e6d6e30147f62383f6bc98848124fd4a4edf4ba6c"
+  },
+  "semantic_profile": "avila.core/semantic/0.2-draft",
+  "supported_range": {
+   "checkout_head": "844daa2790e57598071da071f7e33b3597ad089d",
+   "workspace_version": "0.1.0"
+  }
+ },
+ "evidence_partitions": {
+  "diagnostic": {
+   "consumers": [
+    "probes, iteration"
+   ],
+   "consumption": "unlimited within P27"
+  },
+  "p27_qualifying": {
+   "consumers": [
+    "P27 G4 verdict"
+   ],
+   "consumption": "once, at G4",
+   "sealed_at": "G0"
+  }
+ },
+ "failures": [],
+ "gate": "G0",
+ "identity_pins": {
+  "actinv": {
+   "path": "/home/connoravila/Documents/actinv/target/release/actinv",
+   "sha256": "07616138cf8a248b8a1e5634005c529b66c400941f5523bfdded9f26963388d1"
+  },
+  "avila_core": {
+   "checkout_head": "844daa2790e57598071da071f7e33b3597ad089d",
+   "path": "/home/connoravila/Documents/Avila-Labs/project-north-star/target/release/avila-core",
+   "sha256": "149682655436458259eba9b5a1d6de9d4dd6e9f7773ea96aa3cc33490d1d2746",
+   "workspace_version": "0.1.0"
+  }
+ },
+ "open_obligations_carried": {
+  "c_practitioner_study": "unestablished - maintainer-side",
+  "d_transport_comparator": "unmeasurable - inherited by P32"
+ },
+ "opening_commit": "2a6b298c0c9f7ca7a8390acbdd0ff906ce5ce4d6",
+ "pass": true,
+ "phase": "P27",
+ "prior_verdicts": {
+  "verdict_cb1.json": "CB1-COMPLETE",
+  "verdict_p10.json": "P10-CONDITIONAL",
+  "verdict_p11.json": "P11-CONDITIONAL",
+  "verdict_p12.json": "P12-CONDITIONAL",
+  "verdict_p13.json": "P13-PASS",
+  "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+  "verdict_p15.json": "P15-PASS",
+  "verdict_p16.json": "P16-CONDITIONAL",
+  "verdict_p17.json": "P17-FAIL",
+  "verdict_p18.json": "P18-FAIL",
+  "verdict_p18b.json": "P18b-FAIL",
+  "verdict_p19.json": "P19-PASS",
+  "verdict_p2.json": "P2-CONDITIONAL",
+  "verdict_p20.json": "P20-PASS",
+  "verdict_p21.json": "P21-PASS",
+  "verdict_p22.json": "P22-PASS",
+  "verdict_p23.json": "P23-PASS",
+  "verdict_p24.json": "P24-CONDITIONAL",
+  "verdict_p25.json": "P25-FAIL",
+  "verdict_p25b.json": "P25b-FAIL",
+  "verdict_p25c.json": "P25c-PASS",
+  "verdict_p26.json": "P26-FAIL",
+  "verdict_p26b.json": "P26b-CONDITIONAL",
+  "verdict_p3.json": "P3-FAIL",
+  "verdict_p3b.json": "P3b-PASS",
+  "verdict_p4.json": "P4-FAIL",
+  "verdict_p4b.json": "P4b-PASS",
+  "verdict_p5.json": "P5-PASS",
+  "verdict_p6.json": "P6-CONDITIONAL",
+  "verdict_p7.json": "P7-CONDITIONAL",
+  "verdict_p8.json": "P8-CONDITIONAL",
+  "verdict_p9.json": "P9-CONDITIONAL"
+ },
+ "protocol_sha256": "70fef47884e59d70655737346fd1a84c2e415fce50cce0fed9c06b216a7fa73e",
+ "qualified_operations": {
+  "act-compare-01": {
+   "decision_vocabulary": [
+    "within_rel",
+    "max_rel",
+    "min_rel",
+    "ratio_band",
+    "rank_equal"
+   ],
+   "requires": [
+    "declared variation axes",
+    "predeclared decision rule",
+    "eligible-population accounting"
+   ],
+   "status": "qualified_at_p27"
+  },
+  "act-refine-01": {
+   "delivering_phase": "P29",
+   "error": "family_not_qualified",
+   "status": "unqualified"
+  },
+  "act-robust-01": {
+   "delivering_phase": "P30",
+   "error": "family_not_qualified",
+   "status": "unqualified"
+  },
+  "act-source-01": {
+   "delivering_phase": "P32",
+   "error": "family_not_qualified",
+   "status": "unqualified"
+  },
+  "act-study-01": {
+   "excluded": [
+    "uncertainty",
+    "radiological",
+    "damage",
+    "self_shielding"
+   ],
+   "operations": {
+    "activation": {
+     "data": "hash-pinned artifact + named decay refs",
+     "projectile": "neutron",
+     "responses": [
+      "total_activity_bq_per_g",
+      "decay_heat_w_per_g",
+      "photon_source_per_group",
+      "inventory_per_nuclide",
+      "total_atoms_per_g"
+     ],
+     "spectrum_structures": [
+      "fispact-709"
+     ]
+    }
+   },
+   "status": "qualified_at_p27"
+  }
+ },
+ "recorded_at_utc": "2026-09-16T22:48:32Z",
+ "schema": "actinv-p27-g0-seals-1",
+ "seal_commit": "2a6b298c0c9f7ca7a8390acbdd0ff906ce5ce4d6",
+ "smoke_population": {
+  "cooling_times_s": [
+   0.0,
+   86400.0
+  ],
+  "expected_cases": 8,
+  "materials": {
+   "fe": {
+    "Fe": 100.0
+   },
+   "fe_co100wppm": {
+    "Co": 0.01,
+    "Fe": 99.99
+   }
+  },
+  "responses": [
+   "total_activity_bq_per_g",
+   "decay_heat_w_per_g",
+   "photon_source_per_group",
+   "inventory_per_nuclide",
+   "total_atoms_per_g"
+  ],
+  "schedules_s": {
+   "cont_1d": 86400.0,
+   "pulse_5min": 300.0
+  },
+  "spectra": [
+   "fns_709",
+   "irdff_sp_mat9861_709"
+  ]
+ }
+}
