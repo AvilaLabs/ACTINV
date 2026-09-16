@@ -1,0 +1,58 @@
+{
+ "amendments_used": [],
+ "comparator_leg": {
+  "contract": "results/g2_p26b_leg_contract.json",
+  "identical_data": {
+   "arms": ["actinv_fendl32c_709", "alara_fendl32c_709"],
+   "contract_gap": 1016,
+   "executed": 0,
+   "result": "total executability gap. Every one of the 1,016 contract cases requires at least one ACTINV-rejected parent (Fe-57 in every Fe-matrix case; all five W isotopes in W cases). ALARA accepts all 36 FENDL-3.2c evaluations that ACTINV refuses for 12. The asymmetry is the measured result: under identical data inputs the two tools cannot share a single contract case on this workstation's validated ACTINV artifact."
+  },
+  "product_plus_data": {
+   "arms": ["actinv_shipped_tendl2025", "alara_fendl32c_709"],
+   "contract_gap": 608,
+   "executed": 408,
+   "executed_with_failures": 0,
+   "result": "408 cases executed cleanly on both tools (zero arm failures; per-case artifacts, digests and re-formed metrics verified by check_g2_p26b). Response distributions are recorded in results/g2_p26b_leg.json; differences are FENDL-3.2c-vs-TENDL-2025 data effects and are reported, never a solver verdict."
+  },
+  "isotope_identity": "ALARA 2.9.2's symbol() display defect renders text rows anonymous; identity was recovered from alara.dmp KZAs aligned by sorted-KZA order and half-life, then validated element-wise by activity == lambda*N (max rel err ~1e-4 at print precision) across all 408 cases.",
+  "normalization": "IRDFF collapse preserves shape (raw sum ~= 1); it is normalized to the fns_709 total flux so one truncation tolerance (1e-15) resolves equivalent chain depth across spectra; recorded in the frozen contract.",
+  "diagnostic_probe": "ACTINV ran the fe__fns_709__pulse_5min case on the G1 FENDL artifact to completion with Fe-57 silently absent - recorded in the diagnostic partition; not a leg measurement."
+ },
+ "evidence_sha256": {
+  "g0_check": "8425bb893383e80368e448cbbb13866ae14eb00a8f0e7267915ba3eaf333518c",
+  "g0_seals": "b42c9e0f1c714c50327bba827d0660b76df8cc0a8c30e7b2264a5a3faefebd5e",
+  "g1_check": "c68d9dc67c475b85d97ea28ad25680f240d775360ea0bcf402a0a5050318ed39",
+  "g1_conversion": "6eee257eff4d36aa9333f1d5717338ab07e476b79b698b599456d7f4e960eba1",
+  "g2_check": "fc899c722a7f8c0ae1026e2900b752ec51ea9a8c0f31bdf0856f93773d509992",
+  "g2_leg": "13d9878013e5bd27776cbb135a5ac16ccae1c00bc895ae9b14107b292bc1d82e",
+  "g2_leg_contract": "57836a56293f488e3dfb19d101f8e3ad71bf6b36ef42b42b2f6fa2964ad174fb",
+  "g2_leg_ledger": "c1548a0dacef809e78b0b41fc96277d58eb83aeb11610ee5e94e6c835b0dfc58"
+ },
+ "flagship": "W-MATCMP",
+ "opening_commit": "79b069ddaadc104b4d6d2131311b64202894b2d8",
+ "phase": "P26b",
+ "protocol_sha256": "a1c433c842824c97637f5673a68c26b388dac1f8a237c009417ccb8d10d55327",
+ "release_hold": "unchanged - no release decision is made or implied by this record",
+ "replan_disposition": {
+  "a_comparator_dataset": "executed - FENDL-3.2c converted for ALARA (36/36 accepted) and built for ACTINV (24/36 accepted, 12 rejected across five named validation classes); the comparator leg ran with measured outputs.",
+  "b_headroom_rescope": "recorded in the roadmap draft section - the P26 10x ambition is unsupported by measurement (1.33x in-process amortization); shared prepared-network loading is deferred to P31 as a candidate mechanism.",
+  "c_practitioner_study": "unestablished - the maintainer's practitioner study is not executable here; the 50% hands-on target remains undetermined and is not claimed.",
+  "d_transport_comparator": "unmeasurable - no lawful transport comparator exists on this workstation (OpenMC/PyNE absent); the R2S handoff stays closed and is inherited by P32."
+ },
+ "schema": "actinv-p26b-verdict-1",
+ "selected": {
+  "flagship": "W-MATCMP",
+  "second_campaign": "W-CAMPAIGN",
+  "spatial_handoff": "W-R2S (unmeasurable - no transport comparator)"
+ },
+ "terms_for_p27": [
+  "P27 may open on this record's terms: the comparator-leg evidence is measured and partitioned, not asserted",
+  "the identical_data leg stays closed - no ACTINV-on-FENDL comparison exists because ACTINV's validated FENDL artifact rejects the parents every case requires",
+  "the headroom claim proceeds only as the re-scoped ambition (measured amortization mechanisms); the 10x draft target is not carried forward",
+  "items (c) and (d) remain open obligations - the hands-on study and the transport comparator are recorded, not waived",
+  "no release, product, superiority or usability claim follows from P26b evidence"
+ ],
+ "verdict": "P26b-CONDITIONAL",
+ "verdict_rule": "P26b-CONDITIONAL: the comparator leg executed on the declared subset with measured outputs (408/408 executable product_plus_data cases, zero arm failures) and the replan is fully dispositioned, but subset executability is partial - identical_data executes 0/1016 and product_plus_data executes 408/1016 - so what opened (the product_plus_data comparison and the executability asymmetry measurement) and what did not (any identical_data comparison; replan items c and d) is stated explicitly. No repair amendment was used."
+}

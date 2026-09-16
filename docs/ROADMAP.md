@@ -264,6 +264,24 @@ candidate, not a 10x claim; (c) the 50% hands-on target needs the maintainer's p
 before it can be anything but undetermined; (d) the R2S handoff needs a lawful transport comparator
 (collaborator OpenMC/PyNE or local install) to be measurable. No P27+ phase opens on this record.
 
+**P26b replan-execution entry (2026-09-16).** P26b closed `P26b-CONDITIONAL`. Replan item (a)
+executed: the on-disk FENDL-3.2c corpus was converted for ALARA (all 36 contract nuclides
+accepted) and built for ACTINV (24/36 accepted; 12 rejected across five named validation
+classes, including all five W isotopes and all four Cr isotopes — a systematic FENDL-vs-TENDL
+encoding difference, not sporadic noise). The comparator leg then executed:
+`identical_data` is a total contract_gap (1,016/1,016 — every case needs an ACTINV-rejected
+parent), so the executability asymmetry is itself the measured result; `product_plus_data`
+executed all 408 executable cases cleanly (ACTINV shipped v1.1.0-patched artifact vs ALARA
+FENDL-3.2c), with per-case artifacts, digests and independently re-formed metrics verified.
+Response differences are data effects and are reported, never a solver verdict. Item (b) is
+dispositioned here: the headroom ambition is re-scoped to mechanisms with measured support —
+the 10x draft target is not carried forward; shared prepared-network loading remains a P31
+candidate on the measured 1.33x amortization. Item (c) remains unestablished (the
+practitioner study is the maintainer's; the 50% hands-on target is undetermined and not
+claimed). Item (d) remains unmeasurable (no lawful transport comparator on this workstation;
+the R2S handoff stays closed and is inherited by P32). P27 may open only on these recorded
+terms.
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
