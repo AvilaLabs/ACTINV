@@ -75,5 +75,41 @@
   "tag": "v1.1.1",
   "tag_commit": "4611b11cbc9812026aeb24f14a05c421a0523b5c",
   "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.1.1"
+ },
+ "software_release_v1_1_2": {
+  "artifact_workflow_run": 35048111956,
+  "assets": {
+   "SHA256SUMS": {
+    "bytes": 396,
+    "sha256": "ad15f081a8035fe7f4c3b5b1e99aa0cbb6db58975b0ed0b4947128eea4e4daa0"
+   },
+   "actinv-1.1.2-linux-x86_64.tar.gz": {
+    "bytes": 3977823,
+    "sha256": "ce108fd37254b4ee93f94ea17bab8e0a9e498b1b6fe1d16e01f16cb68a2fadf0"
+   },
+   "actinv-1.1.2-macos-aarch64.tar.gz": {
+    "bytes": 3549845,
+    "sha256": "98465121aefcf8f5efae202456290cb8e9939fdfc11b662028c002f8ab7f64e4"
+   },
+   "actinv-1.1.2-macos-x86_64.tar.gz": {
+    "bytes": 3784522,
+    "sha256": "57ff0372cda603cc4c23baa5f200793c1ea7bd30dbedba995f91d82fd05b3dc8"
+   },
+   "actinv-1.1.2-windows-x86_64.zip": {
+    "bytes": 3450353,
+    "sha256": "41c90e5166474cf5f5a9f640fc12e0693854f88daa350936d3e3348c9a953be7"
+   }
+  },
+  "crates_workflow_run": 35048112011,
+  "hosted_assets_reverified": true,
+  "published_versions": {
+   "crates_io": "1.1.2",
+   "pypi": "1.1.2"
+  },
+  "pypi_workflow_run": 35048111959,
+  "release_id": 389604290,
+  "tag": "v1.1.2",
+  "tag_commit": "4626c89174f19ff9eda3881fecbb524791c9045e",
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.1.2"
  }
 }

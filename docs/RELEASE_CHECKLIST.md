@@ -77,7 +77,7 @@ fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a chec
 - [x] Bump the workspace, `python` and inter-crate versions to 1.1.2; refresh `MANIFEST.sha256`.
 - [x] Tag `v1.1.2` at the release commit and push; the tag workflows publish release artifacts, crates.io and
   PyPI.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
   land at 1.1.2.
-- [ ] Attach the packaged platform archives and `SHA256SUMS` to the `v1.1.2` GitHub release; record the
-  release URL, tag commit, release ID, and asset identities.
+- [x] Attach the packaged platform archives and `SHA256SUMS` to the `v1.1.2` GitHub release; record the
+  release URL, tag commit, release ID, and asset identities in `results/p25c_release_publish.json`.
