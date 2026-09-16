@@ -1,0 +1,499 @@
+{
+ "actinv_build": {
+  "cmd": [
+   "/home/connoravila/Documents/actinv/target/release/actinv",
+   "build-library",
+   "/home/connoravila/nuclear-data/p26b-work/fendl-subset",
+   "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709.npz",
+   "--format",
+   "tendl",
+   "--groups",
+   "fispact-709",
+   "--workers",
+   "2"
+  ],
+  "returncode": 0,
+  "stderr_tail": "index -> /home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709_index.json\n",
+  "stdout_tail": "24 targets, 481 rows, 0 cache hits, neutron /home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709.npz, sha256 18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0\n",
+  "wall_s": 333.056
+ },
+ "artifacts": {
+  "actinv_build_iterations_log": {
+   "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_build_iterations.log",
+   "sha256": "f351875aa80596cffcbee2d452f923f670a722b7ae1dab44175ad48bd41a51ba"
+  },
+  "actinv_npz": {
+   "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709.npz",
+   "sha256": "18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0"
+  },
+  "actinv_rejected_probes_log": {
+   "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_rejected_probes.log",
+   "sha256": "ec9b089f4f96000f1ebde0576ca06ecff827932a9b2c17e7574b17b0ab8c77fd"
+  },
+  "alara_lib": {
+   ".gam": {
+    "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709.gam",
+    "sha256": "05f7525683e9510126db51e2c5da81a2d92cb5a370972ffe653aa01d4c7a7cee"
+   },
+   ".gdx": {
+    "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709.gdx",
+    "sha256": "4a7a908be6406bc54fcda1ac1e1f5d6e42ec79a311567e3550c9967588b6b36f"
+   },
+   ".idx": {
+    "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709.idx",
+    "sha256": "c2f979f47b769ab1e1c9ac07c1f0e069b70e30c9671d4a3f11803881199ce905"
+   },
+   ".lib": {
+    "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709.lib",
+    "sha256": "45c2cae8e23429277d68f591365d9b13063e0233befd9fc1a318187ac87001e6"
+   }
+  },
+  "decay_compiled": {
+   "path": "/home/connoravila/nuclear-data/p26b-work/decay_ukdd2020_work_compiled",
+   "sha256": "c7c3846408510f589799521d995f88e0bde620926dd19949caed8293941c75ff"
+  },
+  "dsv": {
+   "path": "/home/connoravila/nuclear-data/alara-2.9.2/tools/ALARAJOYWrapper/cumulative_gendf_data.dsv",
+   "sha256": "2f1614b807999814e5e55e470d0fe830680fd2d84362c86528e0c1db40a97221"
+  },
+  "quarantined_dir": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides"
+ },
+ "convert_lib": {
+  "cmd": [
+   "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara",
+   "/home/connoravila/nuclear-data/p26b-work/g1-run/convert_lib.in"
+  ],
+  "returncode": 0,
+  "stderr_tail": "",
+  "stdout_tail": "ALARA 2.9.2\n",
+  "wall_s": 0.383
+ },
+ "coverage": {
+  "actinv_target_zas": 24,
+  "alara_idx_entries": 4036,
+  "converted": 36,
+  "declared_nuclides": [
+   "Ag-107",
+   "Ag-109",
+   "Co-59",
+   "Cr-50",
+   "Cr-52",
+   "Cr-53",
+   "Cr-54",
+   "Cu-63",
+   "Cu-65",
+   "Fe-54",
+   "Fe-56",
+   "Fe-57",
+   "Fe-58",
+   "Mn-55",
+   "Mo-100",
+   "Mo-92",
+   "Mo-94",
+   "Mo-95",
+   "Mo-96",
+   "Mo-97",
+   "Mo-98",
+   "Nb-93",
+   "Ni-58",
+   "Ni-60",
+   "Ni-61",
+   "Ni-62",
+   "Ni-64",
+   "Ta-180m",
+   "Ta-181",
+   "V-50",
+   "V-51",
+   "W-180",
+   "W-182",
+   "W-183",
+   "W-184",
+   "W-186"
+  ],
+  "dsv_parent_kzas": 36,
+  "in_alara_only": [
+   "Cr-50",
+   "Cr-52",
+   "Cr-53",
+   "Cr-54",
+   "Fe-57",
+   "Mn-55",
+   "Ni-62",
+   "W-180",
+   "W-182",
+   "W-183",
+   "W-184",
+   "W-186"
+  ],
+  "in_both_libraries": 24,
+  "note": "ALARA accepted all 36 FENDL evaluations; ACTINV fail-closed on 12. identical_data-leg cases needing a rejected nuclide report contract_gap at G2 \u2014 the executability asymmetry is the measured G1 result."
+ },
+ "fail_closed_smokes": {
+  "actinv_absent_nuclide": {
+   "cmd": [
+    "/home/connoravila/Documents/actinv/target/release/actinv",
+    "run",
+    "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide.json",
+    "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide.out.json"
+   ],
+   "decay_only_control": {
+    "cmd": [
+     "/home/connoravila/Documents/actinv/target/release/actinv",
+     "run",
+     "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide_decay.json",
+     "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide_decay.out.json"
+    ],
+    "returncode": 0,
+    "stderr_tail": "1 steps, 2 of 3823 states, 508.9 ms -> /home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide_decay.out.json\n",
+    "stdout_tail": "",
+    "wall_s": 0.519
+   },
+   "decay_only_output": "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide_decay.out.json",
+   "fail_closed": true,
+   "irradiated_output": "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide.out.json",
+   "returncode": 0,
+   "stderr_tail": "1 steps, 2 of 3823 states, 658.5 ms -> /home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_nuclide.out.json\n",
+   "stdout_tail": "",
+   "wall_s": 0.676
+  },
+  "alara_absent_element": {
+   "cmd": [
+    "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara",
+    "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_element.in"
+   ],
+   "fail_closed": true,
+   "output": "/home/connoravila/nuclear-data/p26b-work/g1-run/smoke_absent_element.out",
+   "returncode": 0,
+   "stderr_tail": "Warning #440: ALARA now requires a binary dump file.  Openning the default file 'alara.dmp'\n",
+   "stdout_tail": "ALARA 2.9.2\ntop_schedule 's':\n\tpulse_entry: 1 s pulse_history pulse_once delay 0 s\npulse_history: 'pulse_once':\n\t num_pulsing_levels: 1\n\t num_pulses_per_level: [1]\n\t delay_seconds_per_level: [0]\n\nZone output requested:\n\tResponse Units: Bq /cm3\n\tSpecific Activity [Bq/cm3]\n\n\n*** Specific Activity [Bq/cm3] ***\n\nZone #1: z1\n\tRelative Volume: 0\n\tContaining mixture: m\n\nTotal (All constituents) \n\tCOMPACTED\n\tVolume Fraction: 1\tRelative Volume: 0\nSpecific Activity [Bq/cm3]\nisotope  t_1/2(s)   pre-irrad   shutdown         1 s   \n======================================\n======================================\ntotal   0           0.0000e+00  0.0000e+00  0.0000e+00  \n\nTotals for all zones.\nSpecific Activity [Bq/cm3]\nzone\t shutdown         1 s   \n======================================\n1\t0.0000e+00  0.0000e+00  \tz1 (m)\n======================================\n\n\n\n\n\n",
+   "wall_s": 0.009
+  }
+ },
+ "ledger": {
+  "Ag-107": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ag107.tendl",
+   "endf_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ag-109": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ag109.tendl",
+   "endf_sha256": "e64c40bbb5471fba92effe234819fcdb8fd26ef7556c72433dd8847aa36ce4a8",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Co-59": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Co59.tendl",
+   "endf_sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Cr-50": {
+   "actinv_rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Cr50.tendl",
+   "endf_sha256": "2805b0e7bdad41e05bd6895cd6c1a3601c9615d9b534e39013a0e92f167b976b",
+   "failure_class": "actinv_mf10_partials_conservation_unproven",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Cr-52": {
+   "actinv_rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Cr52.tendl",
+   "endf_sha256": "684632c08504c935c1b3da0c8a98a5c1cba2255e341eaa4775feddcb196065d2",
+   "failure_class": "actinv_mf10_partials_conservation_unproven",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Cr-53": {
+   "actinv_rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Cr53.tendl",
+   "endf_sha256": "e3826d1294b3739f320f5d3a6b55c0e06aada04a4b59d265239e8298b8f9ac75",
+   "failure_class": "actinv_mf10_partials_conservation_unproven",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Cr-54": {
+   "actinv_rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Cr54.tendl",
+   "endf_sha256": "93df3576170d02ada06008591b3eebbff241f8ff90182840a9df94c32cbc7664",
+   "failure_class": "actinv_mf10_partials_conservation_unproven",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Cu-63": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Cu63.tendl",
+   "endf_sha256": "85f55164e5164482e6896f6dc589fc6d5a5f1269a8bd6992993f0274560555bf",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Cu-65": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Cu65.tendl",
+   "endf_sha256": "4b1f1a3cdfefa4c71a95f762d3a27ae96864055158faaf73d7c4d7427ab0df59",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Fe-54": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Fe54.tendl",
+   "endf_sha256": "78f862ea205c3655a9347db105005f0fdac71394c79073c482a1e1f48fdb8da9",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Fe-56": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Fe56.tendl",
+   "endf_sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Fe-57": {
+   "actinv_rejection": "MAT=2634/MF=2/MT=151: invalid RML particle pair for MT=2",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Fe57.tendl",
+   "endf_sha256": "8a3e5566979b1324b13bf2822f712203b791a37b6d81e60f1f2fcd39b91ddeed",
+   "failure_class": "actinv_rml_invalid_particle_pair",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Fe-58": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Fe58.tendl",
+   "endf_sha256": "c5379fc72eb20c5fdaeeb350d77f6e9d0f1cb9267f55de89d650f01951ec2b01",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mn-55": {
+   "actinv_rejection": "MT30/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Mn55.tendl",
+   "endf_sha256": "d9d3564dd2043fb4f8e249d42f7995922860bce8bef5e9c272848aa5332587c7",
+   "failure_class": "actinv_mf10_partials_conservation_unproven",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-100": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo100.tendl",
+   "endf_sha256": "81abf5b9f6926118317f066811cf59bb49a5d648fd65d99b779370150e93bc8f",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-92": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo92.tendl",
+   "endf_sha256": "5c616deed4906f6c4fd28d0871a1af439c3ab1f8e5ea3027d8b8393ed341e9af",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-94": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo94.tendl",
+   "endf_sha256": "04ab22ada7a1b98ed8d52af8e3023c70b306c90d2ae3080de3566efd865b4dfd",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-95": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo95.tendl",
+   "endf_sha256": "88f6b5f5c115168dc88c1c5fad5640a40045a8182048ae9139b75d0cab6d148f",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-96": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo96.tendl",
+   "endf_sha256": "ab5dfef806a2faf63a291c666c3933716bd54162fd2bd1325be4746a2046ea88",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-97": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo97.tendl",
+   "endf_sha256": "e210cb02f4853fa58994632c39bdbfb56a56771c78a4083f71e192a9deaedfb2",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Mo-98": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Mo98.tendl",
+   "endf_sha256": "7df7feaa8eb6f7ae08a345d6cde5626c69b696cdb0f1156e0f9efefc1fbb366b",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Nb-93": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Nb93.tendl",
+   "endf_sha256": "5d8f3877f45254c9a8e96a0968e996b5b19706001bb1f84bc090e8fa6650103b",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ni-58": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ni58.tendl",
+   "endf_sha256": "312f5a069dbda4e0abd662a258710ea332dd749191a9bad2a0c70567644af4f4",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ni-60": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ni60.tendl",
+   "endf_sha256": "737d6f0c25932acef9d04b564e140c1402486b26d4b6fd267ecd5bddfc15b8b9",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ni-61": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ni61.tendl",
+   "endf_sha256": "1bcb3cd5c6e946dca8bceb90f28c8435961966083d78c63c367a8ccd652c6549",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ni-62": {
+   "actinv_rejection": "MAT=2837/MF=2/MT=151: Breit-Wigner total width 1.882601 is below component sum 1882.6008 for LRX=0 (GN=1880, GG=2.6008, GF=0)",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/Ni62.tendl",
+   "endf_sha256": "56f030009ca12a84450ebbcd210041f9b04d5a183e2daf21123235bb5bfa5250",
+   "failure_class": "actinv_resonance_width_below_component_sum",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ni-64": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ni64.tendl",
+   "endf_sha256": "a9bc250ccfaa391cb8d02bbd6436a169acb0abb5ec1c6af96589e60afbf9087b",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ta-180m": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ta180m.tendl",
+   "endf_sha256": "7f5e733b152687c22ff39448bd7f5744a39a98b9ae88b6ee45b49175ad23a6ee",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "Ta-181": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/Ta181.tendl",
+   "endf_sha256": "de8ae794bdc218814bf6e1e30b62bd9418f2344b9138134f12cbe351ff4c42ee",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "V-50": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/V50.tendl",
+   "endf_sha256": "58810ac2b600cfa46327e3e9c8602a92d40f1f8f861d11be05a667a432e4a109",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "V-51": {
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/fendl-subset/V51.tendl",
+   "endf_sha256": "bbb1bf70cc71f5b50420a0aa5f4c9c178c267d42e9a229cca9e671401766ec36",
+   "failure_class": null,
+   "in_actinv_lib": true,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "W-180": {
+   "actinv_rejection": "MT44/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/W180.tendl",
+   "endf_sha256": "5c3925bc53ed1188b40029a8c1693b37607a107486ec10e3a26d037fb79d3eb1",
+   "failure_class": "actinv_mf10_partials_conservation_unproven",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "W-182": {
+   "actinv_rejection": "MAT=7431/MF=2/MT=151: MF=2 ZA/AWR 74182/180.3852 disagree with MF=1 74182/180.385",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/W182.tendl",
+   "endf_sha256": "c3dc8fca21cf66eb681ce40553b839c532bf3180a76ea5faff68496b504a3a4d",
+   "failure_class": "actinv_mf1_mf2_za_awr_mismatch",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "W-183": {
+   "actinv_rejection": "MAT=7434/MF=2/MT=151: invalid RML particle pair for MT=2",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/W183.tendl",
+   "endf_sha256": "a250d937b3f0f69eddd85613878a5ed0fa851cb200a30373cf28c87fc1f0ce83",
+   "failure_class": "actinv_rml_invalid_particle_pair",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "W-184": {
+   "actinv_rejection": "MAT=7437/MF=2/MT=151: MF=2 ZA/AWR 74184/182.37 disagree with MF=1 74184/182.371",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/W184.tendl",
+   "endf_sha256": "a550106ce756908041fbaa0d55f1d9ea595e4901908ab39e8be35fd117c9fc90",
+   "failure_class": "actinv_mf1_mf2_za_awr_mismatch",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  },
+  "W-186": {
+   "actinv_rejection": "MT16/MF=10 ZAP=74185 group 593: emitted state sum 2.89953383139147612e-2 barn exceeds runtime total 2.88750691166942478e-2 barn by relative excess 4.165157e-3 (outside the frozen 0.001 standard envelope); MAT=7443 ZA=74186 source_sha256=bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744; construction fails closed and no state row is emitted, scaled or relabeled",
+   "endf_path": "/home/connoravila/nuclear-data/p26b-work/failed-nuclides/W186.tendl",
+   "endf_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+   "failure_class": "actinv_mf10_state_sum_exceeds_total",
+   "in_actinv_lib": false,
+   "in_alara_lib": true,
+   "wrapper": "converted"
+  }
+ },
+ "pass": true,
+ "schema": "actinv-p26b-g1-conversion-1",
+ "started": "2026-09-16T17:54:50.074405+00:00",
+ "wrapper": {
+  "environment_notes": [
+   "TMPDIR set to disk-backed p26b-work/tmp: tmpfs /tmp has a per-user quota (usrquota mount) which truncated gfortran scratch files -> NJOY util.f90:282 EOF",
+   "decay input = pre-compiled UKDD-2020 single file (decay_ukdd2020_work_compiled); the uncompiled tree was copied to a working dir because the wrapper renames/formats files in place",
+   ".DS_Store (macOS Finder metadata) shipped inside the UKDD-2020 tarball caused UnicodeDecodeError in the wrapper's decay-dir scan; removed from the working copy only \u2014 pinned source tree untouched"
+  ],
+  "invocation": [
+   "/home/connoravila/nuclear-data/alarajoy-venv/bin/python",
+   "/home/connoravila/nuclear-data/alara-2.9.2/tools/ALARAJOYWrapper/preprocess_fendl3.py",
+   "-f",
+   "/home/connoravila/nuclear-data/p26b-work/fendl-subset",
+   "-d",
+   "/home/connoravila/nuclear-data/p26b-work/decay_ukdd2020_work_compiled",
+   "ukdd",
+   "-g",
+   "/home/connoravila/nuclear-data/p26b-work/fispact709_bounds.txt",
+   "-r"
+  ],
+  "log": "/home/connoravila/nuclear-data/p26b-work/g1-run/wrapper.log",
+  "log_sha256": "27bb04e1958e0e6cdb28855f1c1d4177e40cdb739be7b5df9c28ede1a031b482",
+  "returncode": 0
+ }
+}
