@@ -9,8 +9,8 @@
       "pass": true
      },
      "three_state_chain": {
-      "maximum_absolute": 2.5091040356528538e-14,
-      "maximum_resolvable_relative": 7.131151381222372e-13,
+      "maximum_absolute": 8.881784197001252e-16,
+      "maximum_resolvable_relative": 1.0447759193194732e-14,
       "pass": true
      },
      "stiff_branch": {
@@ -29,8 +29,8 @@
       "pass": true
      },
      "three_state_chain": {
-      "maximum_absolute": 2.7755575615628914e-14,
-      "maximum_resolvable_relative": 7.021116470570718e-13,
+      "maximum_absolute": 2.220446049250313e-15,
+      "maximum_resolvable_relative": 1.7085968183621206e-15,
       "pass": true
      },
      "stiff_branch": {
@@ -54,10 +54,10 @@
      3
     ],
     "comparisons": 48,
-    "maximum_relative": 1.336906774781553e-12,
-    "maximum_absolute": 3.2401858973685194e-13,
+    "maximum_relative": 1.1237224675783594e-12,
+    "maximum_absolute": 1.7824630660356888e-13,
     "conditioned_structural_zeros": 8,
-    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+    "maximum_raw_structural_zero": 2.3129646346357426e-14,
     "failures": [],
     "pass": true
    },
@@ -69,10 +69,10 @@
      3
     ],
     "comparisons": 48,
-    "maximum_relative": 1.521871518702891e-12,
-    "maximum_absolute": 5.612732500992479e-13,
+    "maximum_relative": 1.435895642053006e-12,
+    "maximum_absolute": 1.9667600881234648e-13,
     "conditioned_structural_zeros": 8,
-    "maximum_raw_structural_zero": 1.7347234759768068e-14,
+    "maximum_raw_structural_zero": 3.4694469519536136e-14,
     "failures": [],
     "pass": true
    },
@@ -86,8 +86,8 @@
      3
     ],
     "comparisons": 96,
-    "maximum_relative": 3.013111780522829e-11,
-    "maximum_absolute": 7.12430114901963e-13,
+    "maximum_relative": 1.9209388048892125e-11,
+    "maximum_absolute": 2.614158889358009e-13,
     "conditioned_structural_zeros": 8,
     "maximum_raw_structural_zero": 2.3129646346357426e-14,
     "failures": [],
@@ -103,16 +103,16 @@
      3
     ],
     "comparisons": 96,
-    "maximum_relative": 2.3126770609383616e-11,
-    "maximum_absolute": 6.328826351875705e-13,
+    "maximum_relative": 2.1168646224192025e-11,
+    "maximum_absolute": 8.837930387528559e-13,
     "conditioned_structural_zeros": 8,
     "maximum_raw_structural_zero": 1.7347234759768068e-14,
     "failures": [],
     "pass": true
    }
   },
-  "maximum_relative": 3.013111780522829e-11,
-  "maximum_absolute": 7.12430114901963e-13,
+  "maximum_relative": 2.1168646224192025e-11,
+  "maximum_absolute": 8.837930387528559e-13,
   "legacy_default_equals_explicit_cram16": true,
   "pass": true
  },

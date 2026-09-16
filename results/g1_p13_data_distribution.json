@@ -1,7 +1,7 @@
 {
- "artifact_count": 13,
- "bundle_count": 5,
- "catalog_version": "1.0.0",
+ "artifact_count": 18,
+ "bundle_count": 7,
+ "catalog_version": "1.1.0",
  "checks": {
   "all_evidence_identities_match": true,
   "all_planted_mutations_rejected": true,
@@ -27,6 +27,10 @@
   "tendl-2025-neutron-709g-covariance": true,
   "tendl-2025-neutron-709g-covariance-index": true,
   "tendl-2025-neutron-709g-index": true,
+  "tendl-2025-patched-neutron-709g": true,
+  "tendl-2025-patched-neutron-709g-covariance": true,
+  "tendl-2025-patched-neutron-709g-covariance-index": true,
+  "tendl-2025-patched-neutron-709g-index": true,
   "tendl-2025-proton-162g": true,
   "tendl-2025-proton-162g-index": true
  },

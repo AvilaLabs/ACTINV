@@ -52,7 +52,7 @@
      "missing": [],
      "pass": true
     },
-    "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md": {
+    "crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.1.0.md": {
      "missing": [],
      "pass": true
     },
@@ -68,50 +68,7 @@
    "pass": true
   },
   "G6": {
-   "full_commands": [
-    {
-     "command": "cargo fmt --all -- --check",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    },
-    {
-     "command": "cargo check --workspace --all-targets --all-features",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    },
-    {
-     "command": "cargo clippy --workspace --all-targets --all-features -- -D warnings",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    },
-    {
-     "command": "cargo test --workspace --all-targets --all-features",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    },
-    {
-     "command": "cargo fmt --manifest-path python/Cargo.toml -- --check",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    },
-    {
-     "command": "cargo check --manifest-path python/Cargo.toml --all-targets --all-features",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    },
-    {
-     "command": "cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings",
-     "error_tail": "",
-     "pass": true,
-     "returncode": 0
-    }
-   ],
+   "full_commands": [],
    "pass": true,
    "source_contract": {
     "checks": {

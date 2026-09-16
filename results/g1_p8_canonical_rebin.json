@@ -1,6 +1,6 @@
 {
   "canonical_fispact_exact": true,
-  "canonical_sha256": "893ec00f303318594303eb7d02318ffff9072166f7df29438f41b7e650301c7a",
+  "canonical_sha256": "01d56ef834cc33e5a6fa16803e61d416a743ad3ca119d5051821d0cb8329e607",
   "exact_rebin_bit_identical": true,
   "failures": {
     "duplicate": "Error: \"duplicate canonical cell ID '0'\"",

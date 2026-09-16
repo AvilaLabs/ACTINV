@@ -1,9 +1,9 @@
 {
   "bounded_window": {
     "padded_file_extra_bytes": 50334051,
-    "padded_peak_rss_kib": 6264,
-    "peak_rss_extra_bytes": 65536,
-    "small_peak_rss_kib": 6200
+    "padded_peak_rss_kib": 6328,
+    "peak_rss_extra_bytes": 0,
+    "small_peak_rss_kib": 6628
   },
   "comparisons": {
     "energy_first_rectilinear": {

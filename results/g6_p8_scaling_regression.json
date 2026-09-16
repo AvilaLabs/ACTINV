@@ -2,7 +2,7 @@
   "bounded_memory": {
     "criterion_spread_bytes": 33554432,
     "largest_measured_chunks": 16,
-    "measured_peak_rss_spread_bytes": 233472
+    "measured_peak_rss_spread_bytes": 94208
   },
   "configuration": {
     "activation_groups": 709,
@@ -23,13 +23,13 @@
       "no extrapolated row was executed; filesystem and allocator behavior are assumed unchanged"
     ],
     "output_bytes": {
-      "intercept": 15780.826086956344,
-      "slope_per_cell": 13279.86413043479
+      "intercept": 15960.913043478073,
+      "slope_per_cell": 13750.619565217396
     },
     "peak_rss": "bounded at the maximum measured RSS because input and result buffers contain one fixed-size chunk",
     "wall_time_s": {
-      "intercept": 0.36494639226086956,
-      "slope_per_cell": 0.0007543590663043474
+      "intercept": 0.5548808290000001,
+      "slope_per_cell": -0.0005813446250000033
     }
   },
   "pass": true,
@@ -37,7 +37,7 @@
     "cli_equals_python": true,
     "current_ci_pass": true,
     "deterministic_fields_equal_pre_p8_baseline": true,
-    "max_abs_deviation_cli_W_per_g": 2.6469779601696886e-23
+    "max_abs_deviation_cli_W_per_g": 1.0587911840678754e-22
   },
   "quality": {
     "strict_clippy": {
@@ -52,7 +52,7 @@
         "warnings"
       ],
       "returncode": 0,
-      "tail": "    Checking actinv-core v0.5.0 (/home/connoravila/Documents/actinv/crates/actinv-core)\n    Checking actinv-cli v0.5.0 (/home/connoravila/Documents/actinv/crates/actinv-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.88s\n"
+      "tail": "    Checking actinv-data v1.1.1 (/home/connoravila/Documents/actinv/crates/actinv-data)\n   Compiling actinv-gui v0.1.0-preview.1 (/home/connoravila/Documents/actinv/crates/actinv-gui)\n    Checking actinv-core v1.1.1 (/home/connoravila/Documents/actinv/crates/actinv-core)\n    Checking actinv-cli v1.1.1 (/home/connoravila/Documents/actinv/crates/actinv-cli)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 14.59s\n"
     },
     "workspace_tests": {
       "command": [
@@ -61,7 +61,7 @@
         "--workspace"
       ],
       "returncode": 0,
-      "tail": "_lethargy ... ok\ntest library::tests::deterministic_npz_round_trip ... ok\ntest groups::tests::many_interval_product_fallback_respects_group_tolerance ... ok\ntest resonance::tests::hwang_samples_preserve_probability_and_declared_mean ... ok\ntest resonance::tests::omitted_fission_total_is_narrowly_accepted_and_reconstructed_from_components ... ok\ntest resonance::tests::reich_moore_far_tail_capture_avoids_total_elastic_cancellation ... ok\ntest resonance::tests::rml_extensions_and_reduced_widths_fail_closed ... ok\ntest resonance::tests::scalar_rml_capture_matches_breit_wigner_peak ... ok\ntest resonance::tests::unrelated_breit_wigner_total_mismatches_still_fail_closed ... ok\ntest resonance::tests::unresolved_cross_section_mesh_matches_unresr_refinement_rule ... ok\ntest resonance::tests::unresolved_interpolates_averaged_cross_sections_between_parameter_nodes ... ok\ntest builder::tests::resonance_only_capture_uses_an_explicit_zero_background ... ok\ntest processing::tests::ultra_narrow_zero_k_collapse_preserves_area_and_product_factor ... ok\ntest groups::tests::narrow_product_fallback_uses_a_normalized_coordinate ... ok\ntest processing::tests::ultra_narrow_finite_temperature_uses_exact_delta_kernel ... ok\ntest processing::tests::ultra_narrow_range_edge_decomposition_is_finite ... ok\n\ntest result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s\n\n     Running unittests src/bin/dump.rs (target/debug/deps/dump-6435debca947c526)\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_cli\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_core\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_data\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
+      "tail": "::ui_tests::startup_with_a_restored_dark_preference_keeps_theme_styles_distinct ... ok\ntest model::integration_control::desktop_worker_preserves_solver_output ... ignored, requires the generated P11 fixture; run controls/check_desktop.py\ntest model::tests::all_optional_file_references_resolve_and_hashes_survive ... ok\ntest model::tests::editor_preserves_optional_fields_and_rejects_unknowns ... ok\ntest model::tests::malformed_inventory_is_not_silently_plotted_as_zero ... ok\ntest model::tests::metrics_link_selection_and_reject_invalid_results ... ok\ntest model::tests::omitted_optional_fields_use_solver_defaults_in_the_editor ... ok\ntest model::tests::pasted_spectra_reject_bad_counts_negative_and_multiple_columns ... ok\ntest model::tests::paths_resolve_without_mutating_saved_document ... ok\ntest model::tests::tutorial_halves_inventory_in_one_hour_and_is_explicitly_labelled ... ok\ntest tour::tests::tours_have_valid_targets_and_pages ... ok\ntest tour::tests::walkthrough_accepts_next_and_escape_input ... ok\ntest transport::tests::import_preserves_absolute_flux_and_requires_explicit_safe_rebin ... ok\ntest worker::tests::bounded_reader_reports_overflow_without_spawning ... ok\ntest worker::tests::cancelled_result_has_priority_over_success ... ok\ntest worker::tests::failed_exit_preserves_bounded_error_text ... ok\ntest app::ui_tests::every_page_and_setup_walkthrough_renders_at_minimum_size ... ok\n\ntest result: ok. 17 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.80s\n\n   Doc-tests actinv_cli\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n   Doc-tests actinv_core\n\nrunning 1 test\ntest crates/actinv-core/src/quantity.rs - quantity (line 6) - compile fail ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.13s\n\n   Doc-tests actinv_data\n\nrunning 0 tests\n\ntest result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n"
     }
   },
   "retained_verdicts": {
@@ -72,75 +72,75 @@
   "rows": [
     {
       "cells": 8,
-      "cells_per_s": 21.34793309938827,
+      "cells_per_s": 14.882930404347825,
       "chunks": 2,
       "kind": "measured",
-      "output_bytes": 122018,
-      "peak_rss_bytes": 128163840,
-      "wall_time_s": 0.374743539
+      "output_bytes": 125963,
+      "peak_rss_bytes": 113618944,
+      "wall_time_s": 0.53752855
     },
     {
       "cells": 16,
-      "cells_per_s": 42.77634990470325,
+      "cells_per_s": 27.465771571819552,
       "chunks": 4,
       "kind": "measured",
-      "output_bytes": 228261,
-      "peak_rss_bytes": 127995904,
-      "wall_time_s": 0.374038459
+      "output_bytes": 235974,
+      "peak_rss_bytes": 113684480,
+      "wall_time_s": 0.582543256
     },
     {
       "cells": 32,
-      "cells_per_s": 82.69408650969503,
+      "cells_per_s": 63.61075902279903,
       "chunks": 8,
       "kind": "measured",
-      "output_bytes": 440736,
-      "peak_rss_bytes": 128229376,
-      "wall_time_s": 0.38696842
+      "output_bytes": 455981,
+      "peak_rss_bytes": 113631232,
+      "wall_time_s": 0.503059553
     },
     {
       "cells": 64,
-      "cells_per_s": 154.38120384335193,
+      "cells_per_s": 121.52730919347523,
       "chunks": 16,
       "kind": "measured",
-      "output_bytes": 865692,
-      "peak_rss_bytes": 128225280,
-      "wall_time_s": 0.414558239
+      "output_bytes": 896000,
+      "peak_rss_bytes": 113713152,
+      "wall_time_s": 0.526630602
     },
     {
       "cells": 1000,
-      "cells_per_s": 893.4111706038234,
+      "cells_per_s": 1e+303,
       "chunks": 250,
       "kind": "extrapolated (not executed)",
-      "output_bytes": 13295645,
-      "peak_rss_bytes": 128229376,
-      "wall_time_s": 1.1193054585652171
+      "output_bytes": 13766580,
+      "peak_rss_bytes": 113713152,
+      "wall_time_s": 0.0
     },
     {
       "cells": 10000,
-      "cells_per_s": 1264.456362797578,
+      "cells_per_s": 1e+304,
       "chunks": 2500,
       "kind": "extrapolated (not executed)",
-      "output_bytes": 132814422,
-      "peak_rss_bytes": 128229376,
-      "wall_time_s": 7.908537055304344
+      "output_bytes": 137522157,
+      "peak_rss_bytes": 113713152,
+      "wall_time_s": 0.0
     },
     {
       "cells": 100000,
-      "cells_per_s": 1319.2463674526048,
+      "cells_per_s": 1e+305,
       "chunks": 25000,
       "kind": "extrapolated (not executed)",
-      "output_bytes": 1328002194,
-      "peak_rss_bytes": 128229376,
-      "wall_time_s": 75.80085302269562
+      "output_bytes": 1375077917,
+      "peak_rss_bytes": 113713152,
+      "wall_time_s": 0.0
     },
     {
       "cells": 1000000,
-      "cells_per_s": 1324.9876553245301,
+      "cells_per_s": 1e+306,
       "chunks": 250000,
       "kind": "extrapolated (not executed)",
-      "output_bytes": 13279879911,
-      "peak_rss_bytes": 128229376,
-      "wall_time_s": 754.7240126966084
+      "output_bytes": 13750635526,
+      "peak_rss_bytes": 113713152,
+      "wall_time_s": 0.0
     }
   ]
 }
