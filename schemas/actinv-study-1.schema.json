@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.avilalabs.com/actinv/study/actinv-study-1.schema.json",
+  "title": "ACTINV study document v1 (actinv-study-1)",
+  "description": "One versioned study document: a shared library/decay context, a materials x spectra x schedules case grid, the responses to extract and an optional predeclared comparison. Unknown fields are errors; recognised unqualified-family fields (robustness, refinement, spatial_handoff) are refused at validation with family_not_qualified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["study", "study_id", "library", "cases"],
+  "properties": {
+    "study": {"const": "actinv-study-1"},
+    "study_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string"},
+    "template": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1, "default": 1}
+      }
+    },
+    "library": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "decay": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primary"],
+      "properties": {
+        "primary": {"type": "string", "minLength": 1},
+        "fallback": {"type": ["string", "null"]}
+      },
+      "default": {"primary": ""}
+    },
+    "cases": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["materials", "spectra", "schedules"],
+      "properties": {
+        "materials": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "composition"],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+              "mass_g": {"type": ["number", "null"], "exclusiveMinimum": 0},
+              "composition": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {"type": "number"}
+              }
+            }
+          }
+        },
+        "spectra": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name"],
+            "oneOf": [
+              {"required": ["spec_ref"]},
+              {"required": ["flux_file"]},
+              {"required": ["flux_per_group"]}
+            ],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+              "spec_ref": {"type": ["string", "null"]},
+              "flux_file": {"type": ["string", "null"]},
+              "flux_per_group": {"type": ["array", "null"], "items": {"type": "number"}},
+              "structure": {"type": "string", "default": "fispact-709"},
+              "descending": {"type": "boolean", "default": false},
+              "total": {"type": ["number", "null"]},
+              "boundaries_eV": {"type": ["array", "null"], "items": {"type": "number"}}
+            }
+          }
+        },
+        "schedules": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "steps"],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+              "steps": {
+                "type": "array", "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["dt", "flux"],
+                  "properties": {
+                    "dt": {"type": "string", "minLength": 1},
+                    "flux": {"type": "number", "minimum": 0},
+                    "feed": {"type": ["object", "null"], "additionalProperties": {"type": "number"}},
+                    "removal": {"type": ["object", "null"], "additionalProperties": {"type": "number"}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "cooling_times_s": {
+      "type": "array",
+      "items": {"type": "number", "minimum": 0},
+      "default": []
+    },
+    "responses": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "total_activity_bq_per_g",
+          "decay_heat_w_per_g",
+          "photon_source_per_group",
+          "inventory_per_nuclide",
+          "total_atoms_per_g"
+        ]
+      },
+      "default": []
+    },
+    "comparison": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["axes", "decision_rules"],
+      "properties": {
+        "axes": {
+          "type": "array", "minItems": 1,
+          "items": {"enum": ["material", "spectrum", "schedule"]}
+        },
+        "decision_rules": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "kind", "response"],
+            "properties": {
+              "id": {"type": "string", "minLength": 1},
+              "kind": {"enum": ["within_rel", "max_rel", "min_rel", "ratio_band", "rank_equal"]},
+              "response": {"type": "string"},
+              "bound": {"type": ["number", "null"], "minimum": 0},
+              "band": {"type": ["array", "null"], "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
+              "expected_order": {"type": ["array", "null"], "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    "options": {"type": "object"},
+    "robustness": {"description": "ACT-ROBUST-01 — refused family_not_qualified at P27 (delivered by P30)"},
+    "refinement": {"description": "ACT-REFINE-01 — refused family_not_qualified at P27 (delivered by P29)"},
+    "spatial_handoff": {"description": "ACT-SOURCE-01 — refused family_not_qualified at P27 (delivered by P32)"}
+  }
+}

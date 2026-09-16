@@ -15,4 +15,5 @@ pub mod run;
 pub mod shielding;
 pub mod sparse;
 pub mod spec;
+pub mod study;
 pub mod uncertainty;

@@ -7,6 +7,7 @@ use actinv_core::{
     photon::{export_mcnp, export_openmc, PhotonSourceOut},
     run::run,
     spec::Spec,
+    study::{self, Study},
 };
 use actinv_data::{
     activation::Projectile,
@@ -32,6 +33,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
+                    actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
 
@@ -131,6 +133,71 @@ fn human_bytes(bytes: u64) -> String {
         format!("{bytes} {}", UNITS[unit])
     } else {
         format!("{value:.1} {}", UNITS[unit])
+    }
+}
+
+fn study_command(args: &[String]) {
+    const STUDY_USAGE: &str = "usage: actinv study validate STUDY.json\n\
+                              actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n\
+                              actinv study run STUDY.json [OUTDIR] [--revocations FILE]";
+    if args.is_empty() {
+        die(STUDY_USAGE, 2);
+    }
+    let sub = args[0].as_str();
+    if !matches!(sub, "validate" | "build" | "run") || args.len() < 2 {
+        die(STUDY_USAGE, 2);
+    }
+    let outdir_arg = args
+        .get(2)
+        .filter(|s| !s.starts_with("--"))
+        .map(String::as_str);
+    let opt_start = if outdir_arg.is_some() { 3 } else { 2 };
+    let options = valued_options(&args[opt_start..]);
+    reject_unknown(&options, &["--revocations"]);
+    let study_path = std::path::Path::new(&args[1]);
+    let revocations = options.get("--revocations").map(std::path::PathBuf::from);
+    // schema/scope validation never touches the filesystem; catalog
+    // resolution (which requires installed artifacts) applies to build/run
+    let text = &read(&args[1]);
+    let study = if sub == "validate" {
+        Study::from_json(text)
+    } else {
+        Study::from_json(&crate::resolve_catalog_json(text).unwrap_or_else(|e| die(e, 2)))
+    }
+    .unwrap_or_else(|e| die(e, 2));
+    match sub {
+        "validate" => println!(
+            "ok: {} — {} cases, {} responses",
+            study.study_id,
+            study.case_ids().len(),
+            study.responses.len()
+        ),
+        "build" | "run" => {
+            let outdir = study::outdir_for(study_path, outdir_arg);
+            let result = if sub == "build" {
+                study::build(&study, study_path, &outdir, revocations.as_deref())
+            } else {
+                study::execute(&study, study_path, &outdir, revocations.as_deref())
+            }
+            .unwrap_or_else(|e| die(e, 1));
+            let n = result["cases"]
+                .as_array()
+                .map(Vec::len)
+                .or_else(|| result["n_cases"].as_u64().map(|n| n as usize))
+                .or_else(|| {
+                    result["population"]["declared"]
+                        .as_u64()
+                        .map(|n| n as usize)
+                })
+                .unwrap_or(0);
+            println!(
+                "ok: {} — {} cases -> {}",
+                study.study_id,
+                n,
+                outdir.display()
+            );
+        }
+        _ => die(STUDY_USAGE, 2),
     }
 }
 
@@ -484,6 +551,7 @@ pub fn main_from(a: Vec<String>) {
             "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check the specification without requiring downloaded data.\n--files also checks readable input files and library indexes. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
             "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nReferences default to portable catalog IDs resolved against ./actinv-data or $ACTINV_DATA_DIR; --data-dir saves absolute paths instead.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
             "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
+            "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
             _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
         }
         return;
@@ -596,6 +664,9 @@ pub fn main_from(a: Vec<String>) {
                 "{}",
                 serde_json::to_string_pretty(&summary).expect("serialise mesh summary")
             );
+        }
+        "study" => {
+            study_command(&a[2..]);
         }
         "validate" | "run" => {
             if a.len() < 3 {
