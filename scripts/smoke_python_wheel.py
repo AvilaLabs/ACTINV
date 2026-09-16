@@ -14,7 +14,7 @@ import venv
 
 ROOT = Path(__file__).resolve().parents[1]
 VERSION_PATTERN = re.compile(r"[0-9]+\.[0-9]+\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?")
-DATA_CATALOG_VERSION = "1.0.0"
+DATA_CATALOG_VERSION = "1.1.0"
 
 
 def project_version(path: Path) -> str:
