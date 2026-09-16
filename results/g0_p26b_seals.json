@@ -1,0 +1,290 @@
+{
+ "comparator_census": {
+  "actinv": {
+   "executables": [
+    "actinv"
+   ],
+   "local_executables": [
+    "/home/connoravila/Documents/actinv/target/release/actinv"
+   ],
+   "python_modules": [],
+   "status": "executable"
+  },
+  "alara": {
+   "executables": [],
+   "local_executables": [
+    "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara"
+   ],
+   "python_modules": [],
+   "status": "executable"
+  },
+  "fispact": {
+   "executables": [],
+   "local_executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  },
+  "njoy": {
+   "executables": [],
+   "local_executables": [
+    "/home/connoravila/nuclear-data/njoy2016.79-build/njoy"
+   ],
+   "python_modules": [],
+   "status": "executable"
+  },
+  "openmc": {
+   "executables": [],
+   "local_executables": [],
+   "note": "absent \u2014 replan item (d) stays unmeasurable, inherited by P32",
+   "python_modules": [],
+   "status": "not_available"
+  },
+  "scale_origen": {
+   "executables": [],
+   "local_executables": [],
+   "python_modules": [],
+   "status": "not_available"
+  }
+ },
+ "executable_subset": {
+  "contract_elements": {
+   "base": {
+    "FE": [
+     "Fe-54",
+     "Fe-56",
+     "Fe-57",
+     "Fe-58"
+    ],
+    "W": [
+     "W-180",
+     "W-182",
+     "W-183",
+     "W-184",
+     "W-186"
+    ]
+   },
+   "impurity": {
+    "AG": [
+     "Ag-107",
+     "Ag-109"
+    ],
+    "CO": [
+     "Co-59"
+    ],
+    "CR": [
+     "Cr-50",
+     "Cr-52",
+     "Cr-53",
+     "Cr-54"
+    ],
+    "CU": [
+     "Cu-63",
+     "Cu-65"
+    ],
+    "MN": [
+     "Mn-55"
+    ],
+    "MO": [
+     "Mo-92",
+     "Mo-94",
+     "Mo-95",
+     "Mo-96",
+     "Mo-97",
+     "Mo-98",
+     "Mo-100"
+    ],
+    "NB": [
+     "Nb-93"
+    ],
+    "NI": [
+     "Ni-58",
+     "Ni-60",
+     "Ni-61",
+     "Ni-62",
+     "Ni-64"
+    ],
+    "TA": [
+     "Ta-180m",
+     "Ta-181"
+    ],
+    "V": [
+     "V-50",
+     "V-51"
+    ]
+   }
+  },
+  "fendl_files_missing": {},
+  "frozen_at": "G0, before any conversion or measurement",
+  "nuclide_count": 36,
+  "nuclides": [
+   "Ag-107",
+   "Ag-109",
+   "Co-59",
+   "Cr-50",
+   "Cr-52",
+   "Cr-53",
+   "Cr-54",
+   "Cu-63",
+   "Cu-65",
+   "Fe-54",
+   "Fe-56",
+   "Fe-57",
+   "Fe-58",
+   "Mn-55",
+   "Mo-100",
+   "Mo-92",
+   "Mo-94",
+   "Mo-95",
+   "Mo-96",
+   "Mo-97",
+   "Mo-98",
+   "Nb-93",
+   "Ni-58",
+   "Ni-60",
+   "Ni-61",
+   "Ni-62",
+   "Ni-64",
+   "Ta-180m",
+   "Ta-181",
+   "V-50",
+   "V-51",
+   "W-180",
+   "W-182",
+   "W-183",
+   "W-184",
+   "W-186"
+  ],
+  "subset_rule": "A contract case is in the executable subset iff every natural-element isotope of its material is present in the converted ALARA library.  With the declared 36-nuclide set fully converted, the expected subset is the complete eligible population: all 1000 W-CAMPAIGN cases plus all 16 W-MATCMP cases (1016 total).  W-R2S is excluded by protocol (no transport comparator)."
+ },
+ "failures": [],
+ "gate": "G0",
+ "identity_pins": {
+  "actinv_binary_sha256": "07616138cf8a248b8a1e5634005c529b66c400941f5523bfdded9f26963388d1",
+  "actinv_head": "79b069ddaadc104b4d6d2131311b64202894b2d8",
+  "alara": {
+   "path": "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara",
+   "sha256": "7ef1d6324a611976bd19e24abf1472a1e0ca07d33e9b8760ae1c0673247877b0",
+   "version": "2.9.2"
+  },
+  "avila_core": {
+   "binary_sha256": "793ab1be71e4f69f22994172db6cdea8e77a7dd5cf9f846cb3cc7c459f1ad382",
+   "head": "528029348b7f5e3186b8b2a374ba8e748711d1c1",
+   "note": "Another session is actively editing this checkout; the pin records the commit identity and the dirty state at seal time.  The binary hash identifies the runner actually used.",
+   "path": "/home/connoravila/Documents/Avila-Labs/project-north-star",
+   "semantic_profile": "avila.core/semantic/0.2-draft",
+   "status": "pinned",
+   "working_tree_state": "clean"
+  },
+  "fendl_3_2c": {
+   "endf_file_count": 192,
+   "endf_manifest_sha256": "8c0066985528ffc84bc72d3d5d59dfabcffaf313e0dea72ab732401df5df737f",
+   "manifest_sha256": "141d64bbe9036f90cb37f9543b7975c4144878e4cba1cd44b26fc6d3bf2f4a04",
+   "path": "/home/connoravila/nuclear-data/fendl-3.2c",
+   "sample_ok": true,
+   "sample_rederivation": {
+    "endf/n_2631_26-Fe-56.endf": {
+     "manifest_sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e",
+     "match": true,
+     "sha256": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e"
+    },
+    "endf/n_2725_27-Co-59.endf": {
+     "manifest_sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d",
+     "match": true,
+     "sha256": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d"
+    },
+    "endf/n_2831_28-Ni-60.endf": {
+     "manifest_sha256": "737d6f0c25932acef9d04b564e140c1402486b26d4b6fd267ecd5bddfc15b8b9",
+     "match": true,
+     "sha256": "737d6f0c25932acef9d04b564e140c1402486b26d4b6fd267ecd5bddfc15b8b9"
+    },
+    "endf/n_4237_42-Mo-96.endf": {
+     "manifest_sha256": "ab5dfef806a2faf63a291c666c3933716bd54162fd2bd1325be4746a2046ea88",
+     "match": true,
+     "sha256": "ab5dfef806a2faf63a291c666c3933716bd54162fd2bd1325be4746a2046ea88"
+    },
+    "endf/n_4725_47-Ag-107.endf": {
+     "manifest_sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+     "match": true,
+     "sha256": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185"
+    },
+    "endf/n_7443_74-W-186.endf": {
+     "manifest_sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744",
+     "match": true,
+     "sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+    }
+   }
+  },
+  "njoy": {
+   "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+   "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30",
+   "version": "2016.79"
+  },
+  "ukdd_2020": {
+   "index_sha256": "f4534e193999756957a6346db7770ff6b58f8676a7ad5c6b75bc31fe62109f1e",
+   "nuclide_file_count": 4036,
+   "path": "/home/connoravila/nuclear-data/ukdd-2020",
+   "retrieved": "2026-09-16T03:27:40.745053+00:00",
+   "source_url": "https://www.oecd-nea.org/dbdata/fispact/decay2020.tar.bz2",
+   "status": "pinned",
+   "tarball_sha256": "f2ff9501f6d279c964c029f9958ddd545453398401b11edb68307c3858b1e3ba",
+   "tree_sha256": "f166b6ed6cffc7f3ab4242ecd0fd101afea1ca137109cf712fd932759cdc2058"
+  }
+ },
+ "opening_commit": "79b069ddaadc104b4d6d2131311b64202894b2d8",
+ "partition": {
+  "diagnostic": {
+   "consumption": "unlimited within P26b"
+  },
+  "p26b_qualifying": {
+   "consumers": [
+    "P26b verdict gate only"
+   ],
+   "consumption": "once, at G3",
+   "contents": "comparator-leg outputs and wall times measured under the frozen subset"
+  }
+ },
+ "pass": true,
+ "phase": "P26b",
+ "prior_verdicts": {
+  "verdict_cb1.json": "CB1-COMPLETE",
+  "verdict_p10.json": "P10-CONDITIONAL",
+  "verdict_p11.json": "P11-CONDITIONAL",
+  "verdict_p12.json": "P12-CONDITIONAL",
+  "verdict_p13.json": "P13-PASS",
+  "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+  "verdict_p15.json": "P15-PASS",
+  "verdict_p16.json": "P16-CONDITIONAL",
+  "verdict_p17.json": "P17-FAIL",
+  "verdict_p18.json": "P18-FAIL",
+  "verdict_p18b.json": "P18b-FAIL",
+  "verdict_p19.json": "P19-PASS",
+  "verdict_p2.json": "P2-CONDITIONAL",
+  "verdict_p20.json": "P20-PASS",
+  "verdict_p21.json": "P21-PASS",
+  "verdict_p22.json": "P22-PASS",
+  "verdict_p23.json": "P23-PASS",
+  "verdict_p24.json": "P24-CONDITIONAL",
+  "verdict_p25.json": "P25-FAIL",
+  "verdict_p25b.json": "P25b-FAIL",
+  "verdict_p25c.json": "P25c-PASS",
+  "verdict_p26.json": "P26-FAIL",
+  "verdict_p3.json": "P3-FAIL",
+  "verdict_p3b.json": "P3b-PASS",
+  "verdict_p4.json": "P4-FAIL",
+  "verdict_p4b.json": "P4b-PASS",
+  "verdict_p5.json": "P5-PASS",
+  "verdict_p6.json": "P6-CONDITIONAL",
+  "verdict_p7.json": "P7-CONDITIONAL",
+  "verdict_p8.json": "P8-CONDITIONAL",
+  "verdict_p9.json": "P9-CONDITIONAL"
+ },
+ "protocol_sha256": "a1c433c842824c97637f5673a68c26b388dac1f8a237c009417ccb8d10d55327",
+ "replan_disposition": {
+  "a_comparator_dataset": "executable \u2014 FENDL-3.2c + ALARAJOY + NJOY + UKDD-2020 all pinned",
+  "b_headroom_rescope": "deferred to G3 roadmap entry",
+  "c_practitioner_study": "unestablished \u2014 maintainer's, not executable here",
+  "d_transport_comparator": "unmeasurable \u2014 OpenMC absent, inherited by P32"
+ },
+ "schema": "actinv-p26b-g0-seal-1",
+ "seal_commit": "79b069ddaadc104b4d6d2131311b64202894b2d8"
+}
