@@ -28,8 +28,10 @@ RESULT = ROOT / "results" / "g6_p10_projectile_runtime.json"
 TABLES = ROOT / "results" / "tables" / "abundance_mass.json"
 ADDRESS_SPACE_BYTES = 2 * 1024**3
 PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
+# Re-seated from 0ed6be99... after the reviewed CRAM solve-refinement fix
+# (35d5448) legitimately changed the normalized neutron result.
 PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
-    "0ed6be999d63820556d91ad73ab73fa7980f9b37dca8fcc00dd4c351f7cd1b1c"
+    "a80fed9578efd6af61cc48a08144a383093ef6aa955fd07abc360cea2fa61307"
 )
 PRE_P12_TABLES_PROVENANCE = (
     "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; "
