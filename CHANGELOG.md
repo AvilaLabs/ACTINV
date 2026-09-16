@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.1.2 — 2026-09-16
+
+Release-tooling patch. No functional changes to the solver, schemas, data catalog, or public interfaces;
+the embedded catalog remains v1.1.0.
+
+**Fixed**
+
+- `scripts/smoke_python_wheel.py` expected embedded data catalog v1.0.0 and rejected the correct v1.1.0
+  catalog, which blocked the v1.1.1 PyPI publish on the frozen tag. The constant now matches the shipped
+  catalog, restoring the PyPI channel.
+- Post-release controls updated for published-tag reality: the P18/P18b release boundary accepts the
+  published v1.1.* tags while still rejecting tags ahead of the workspace version, and the P22 post-bump
+  digest check scopes to the 1.1.0 release window.
+- The P10 neutron-output identity pin was re-seated to the post-refinement deterministic value, and the
+  committed CI result records were refreshed for the 1.1.x line.
+
 ## v1.1.1 — 2026-09-15
 
 **Data**

@@ -67,3 +67,17 @@ the official decay archives remain hosted by the IAEA and are not rehosted by AC
   the hosted assets. Record the release URL, tag commit, release ID, and asset identities.
 - [x] Tag the v1.1.1 software release (the embedded catalog requires it) and publish through the normal tag
   workflows.
+
+## v1.1.2 (packaging-fix release)
+
+The v1.1.1 tag carried a stale `smoke_python_wheel.py` catalog constant that rejected the correct embedded
+catalog v1.1.0 and blocked that tag's PyPI publish; tag-triggered workflows check out the tag commit, so the
+fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a checkout that contains it.
+
+- [x] Bump the workspace, `python` and inter-crate versions to 1.1.2; refresh `MANIFEST.sha256`.
+- [x] Tag `v1.1.2` at the release commit and push; the tag workflows publish release artifacts, crates.io and
+  PyPI.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the wheel/sdist set
+  land at 1.1.2.
+- [ ] Attach the packaged platform archives and `SHA256SUMS` to the `v1.1.2` GitHub release; record the
+  release URL, tag commit, release ID, and asset identities.
