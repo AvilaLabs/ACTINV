@@ -29,6 +29,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import tomllib
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -122,9 +123,14 @@ def check_report(report: dict, failures: list[str]) -> None:
         failures.append("version bump is not 1.0.1 -> 1.1.0")
     if set(bump.get("files") or {}) != BUMP_FILES:
         failures.append("version bump file set differs from the declared six")
+    # The recorded post-bump digests pin the files at RC assembly time. A
+    # later release legitimately rewrites them (1.1.0 -> 1.1.1), so the live
+    # comparison only holds while the workspace still carries that version.
+    cargo = tomllib.loads((ROOT / "Cargo.toml").read_text())
+    still_at_bump = cargo["workspace"]["package"]["version"] == bump.get("to")
     for rel, entry in (bump.get("files") or {}).items():
         path = ROOT / rel
-        if path.exists() and entry.get("after_sha256") != sha256(path):
+        if still_at_bump and path.exists() and entry.get("after_sha256") != sha256(path):
             failures.append(f"{rel} post-bump digest differs from the file on disk")
 
     artifacts = report.get("artifacts") or {}

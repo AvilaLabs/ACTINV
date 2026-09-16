@@ -501,24 +501,52 @@ def release_boundary() -> dict[str, Any]:
     version = cargo["workspace"]["package"]["version"]
     tags = git_output(["tag", "--list", "v1.1*"])
     # P22 authorized assembling a 1.1.0 release *candidate* on additive P19–P23
-    # evidence while P18b-FAIL blocks only its own artifacts. The boundary is
-    # therefore: workspace may carry 1.1.0 solely when the P22 release-candidate
-    # record exists and passes — and no v1.1* tag may exist in either case,
-    # because tagging/publishing remains a separate maintainer action.
+    # evidence while P18b-FAIL blocks only its own artifacts. Published v1.1.*
+    # tags now legitimately exist, so the boundary is: the workspace may carry
+    # 1.0.1, the P22-authorized 1.1.0 candidate, or the newest published tag —
+    # and no v1.1* tag may name a version ahead of the workspace, because a
+    # tag publishes the workspace's stated version.
     rc_record = ROOT / "results/g4_p22_release_candidate.json"
     p22_rc_ok = (
         rc_record.exists()
         and json.loads(rc_record.read_text(encoding="utf-8")).get("pass") is True
     )
-    version_allowed = version == "1.0.1" or (version == "1.1.0" and p22_rc_ok)
+    tag_list = [] if not tags else tags.splitlines()
+    workspace = tuple(int(p) for p in version.split("."))
+
+    def ver(text: str) -> tuple[int, ...] | None:
+        parts = text.removeprefix("v").split(".")
+        if not all(p.isdigit() for p in parts):
+            return None
+        return tuple(int(p) for p in parts)
+
+    parsed = {t: ver(t) for t in tag_list}
+    published = [
+        t for t in tag_list
+        if parsed[t] is not None and parsed[t] <= workspace
+    ]
+    latest_published = max(published, key=lambda t: parsed[t], default=None)
+    version_allowed = (
+        version == "1.0.1"
+        or (version == "1.1.0" and p22_rc_ok)
+        or (latest_published is not None
+            and version == latest_published.removeprefix("v"))
+    )
+    # A nonstandard tag matching v1.1* violates the release convention and a
+    # tag naming a newer version than the workspace is always ahead of it.
+    tags_ahead = [
+        t for t in tag_list
+        if parsed[t] is None or parsed[t] > workspace
+    ]
     return {
         "cargo_version": version,
         "python_version": python["project"]["version"],
         "p22_rc_authorized": p22_rc_ok,
-        "v1_1_tags": [] if not tags else tags.splitlines(),
+        "v1_1_tags": tag_list,
+        "tags_ahead_of_workspace": tags_ahead,
         "pass": version_allowed
         and python["project"]["version"] == version
-        and not tags,
+        and not tags_ahead,
     }
 
 
