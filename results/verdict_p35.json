@@ -1,0 +1,150 @@
+{
+ "basis": "all gates green; every phase closure checker re-verified evidence-chain integrity on the candidate tree; the reproduction leg reproduced the frozen smoke population bit-consistently across fresh runs. CONDITIONAL because P32-P34 are blocked on external dependencies (no OpenMC installation, no user AI provider account, no human evaluators) \u2014 their families are shipped as blocked in the matrix, not omitted. The release recommendation excludes spatial handoff, all AI-assisted capability, experimental validation and competitive claims.",
+ "candidate": {
+  "binary_sha256": "2fd44f1b258561d378db14c3e30008b63e063b6f1157d07f7f40922c2f3e7d9c",
+  "commit": "df814f23886678036cb59b08abfdf46438a1a1cc"
+ },
+ "claim_limitation_matrix": {
+  "activation_solver": {
+   "claims": [
+    "activation solves reproduce on the pinned data artifact set",
+    "study expansion, execution and Core interchange are machine-verified (P27-PASS)"
+   ],
+   "limitations": [
+    "computed results are correct evaluations of the declared inputs \u2014 not experimental validation"
+   ],
+   "status": "conditional",
+   "verdict": "P26b-CONDITIONAL"
+  },
+  "ai_assisted_setup": {
+   "claims": [],
+   "limitations": [
+    "requires the user's own AI provider account \u2014 not available to the evaluation"
+   ],
+   "status": "blocked",
+   "verdict": "P33-BLOCKED"
+  },
+  "ai_bounded_investigation": {
+   "claims": [],
+   "limitations": [
+    "inherits P33's blocker; Core-dispatched assistant evaluation not possible"
+   ],
+   "status": "blocked",
+   "verdict": "P34-BLOCKED"
+  },
+  "efficient_campaigns": {
+   "claims": [
+    "prepared nuclear data is shared across compatible cases and samples; per-case-prepared baselines are bit-identical",
+    "campaigns stream per-case evidence and resume with digest-verified skips"
+   ],
+   "limitations": [
+    "reuse is exact preparation sharing \u2014 no solver-result caching or approximate reuse",
+    "measured speedup is local to the frozen workload \u2014 not a competitive claim"
+   ],
+   "status": "conditional",
+   "verdict": "P31-CONDITIONAL"
+  },
+  "numerical_control": {
+   "claims": [
+    "declared numerical criteria re-check against references and escalate the solver ladder until satisfied or exhausted"
+   ],
+   "limitations": [
+    "criteria cover computational error only \u2014 not nuclear-data uncertainty or predictive discrepancy"
+   ],
+   "status": "conditional",
+   "verdict": "P29-CONDITIONAL"
+  },
+  "product_qualification": {
+   "claims": [
+    "this phase"
+   ],
+   "limitations": [],
+   "status": "conditional",
+   "verdict": null
+  },
+  "qualification_combinations": {
+   "claims": [
+    "qualified combinations are enumerable and unsupported projectile/coverage combinations fail closed (P28)"
+   ],
+   "limitations": [
+    "projectile coverage floors failed for non-neutron legs",
+    "dosimetry-critical evaluations are absent from the artifact",
+    "no blind experimental validation"
+   ],
+   "status": "conditional",
+   "verdict": "P28-CONDITIONAL"
+  },
+  "spatial_handoff": {
+   "claims": [],
+   "limitations": [
+    "no executed R2S chain \u2014 OpenMC is not installed and no supplied R2S dataset exists"
+   ],
+   "status": "blocked",
+   "verdict": "P32-BLOCKED"
+  },
+  "uncertainty": {
+   "claims": [
+    "nonlinear uncertainty sampling with correlated MF=33 covariance draws, flux normalization and composition perturbations is reproducible and ledgered"
+   ],
+   "limitations": [
+    "MF=33 coverage is partial; uncovered rows are named",
+    "a nonzero covariance ridge was required",
+    "nonpositive draws were clamped and counted",
+    "sample spread is a sensitivity, not a confidence interval or domain bound"
+   ],
+   "status": "conditional",
+   "verdict": "P30-CONDITIONAL"
+  }
+ },
+ "evidence_sha256": {
+  "g0_check": "94ebcf3f23845a5a4192882894e7f0db47dab7b157e9489ee8c11e63e584bdea",
+  "g0_seals": "a056d40ddfb76902f164e5a0c08761a657921803964e5922d8d05c5376813031",
+  "g1_battery": "5acc93799c4277c9c0d3ef5443c7f81a0f7ce2f7e67c1a3e4dfa417d2112e67d",
+  "g2_check": "a6958b3ca6ffea41d7ad2d073b5a67472b87322438315d38d38b4777d734c12d",
+  "g2_matrix": "f4175eb48d1adc1efb53e8e97cf7ee4b194fd079af4c4cd988e042149fea1baf",
+  "g3_check": "70c123a269e78f7c6a8341d172f456418691ef38d193fee33d23721c1130bb36",
+  "g3_conformance": "6983a74ae36b06735f332153da12c69f38b16e8f3734f2cd9c455c335a5db2ee"
+ },
+ "g0_amendments": [
+  {
+   "date": "2026-09-17",
+   "reason": "the committed catalog-reference study requires an installed actinv-data bundle; no bundle is installed and `actinv data fetch` needs network access. Replaced with the frozen P31 smoke study using explicit path+sha256 references \u2014 artifact identity verification and fresh-execution determinism are preserved; cross-install delivery is out of scope.",
+   "scope": "reproduction leg study"
+  },
+  {
+   "date": "2026-09-17",
+   "reason": "G0-G3 checkers pin phase-time binary/schema identities; the candidate binary was legitimately rebuilt in P30/P31 and the pinned Core checkout's schemas evolved upstream, so those checkers flag evolution rather than tampering. The battery re-verifies evidence-chain integrity via each phase's G4 closure checker, which derives the verdict from on-disk digests \u2014 a forged or missing artifact still fails.",
+   "scope": "battery composition"
+  }
+ ],
+ "opening_commit": "df814f23886678036cb59b08abfdf46438a1a1cc",
+ "phase": "P35",
+ "protocol_sha256": "e2caadc0e8e03c554cc04963b5c7ec05eda2ebf10c8081c62de408877393710a",
+ "release_recommendation": {
+  "authorization": "tagging, publishing and external communications retain their existing authorization requirements",
+  "missed_gates": [
+   "P32",
+   "P33",
+   "P34"
+  ],
+  "must_not_claim": [
+   "spatial/R2S source handoff (P32 blocked \u2014 no executed chain)",
+   "any AI-assisted capability (P33/P34 blocked \u2014 no provider access, no human evaluation)",
+   "experimental or predictive validation",
+   "competitive/performance claims beyond the locally measured preparation amortization",
+   "unqualified coverage of W, Cr, Mn, Ni identical-data legs or non-neutron projectile floors"
+  ],
+  "recommendation": "conditional_release",
+  "ship": [
+   "activation solves over the pinned neutron-data artifact set (P26b/P27 envelope)",
+   "study expansion, qualified-combination gating, numerical criteria, nonlinear uncertainty sampling and resumable campaign execution \u2014 each under its recorded conditions"
+  ]
+ },
+ "unmeasured": [
+  "R2S chain execution and source-handoff controls (P32)",
+  "AI provider access, credential handling and unseen-task evaluation (P33/P34)",
+  "human task evaluation under predeclared severity definitions",
+  "cross-installation data delivery via actinv data fetch (network)"
+ ],
+ "verdict": "P35-CONDITIONAL"
+}

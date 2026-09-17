@@ -265,7 +265,7 @@ pub struct Options {
     /// reaction rates, keyed by activation-library row index (P30
     /// nonlinear sampling). Absent = unperturbed. The applied factors are
     /// named in the run ledger.
-    #[serde(default)]
+    #[serde(default, skip_serializing_if = "Option::is_none")]
     pub rate_scale: Option<BTreeMap<String, f64>>,
 }
 fn auto() -> String {

@@ -399,6 +399,32 @@ sharing only — no solver-result caching, approximate reuse or cross-hardware
 headroom claim (`results/verdict_p31.json`, `docs/STUDY.md`,
 `controls/check_g{0,1,2,3,4}_p31.py`).
 
+**P32–P34 dispositions (2026-09-17).** P32 is `P32-BLOCKED`: its decisive
+gate requires an executed open R2S chain and the pinned native OpenMC path —
+no OpenMC installation or module exists on this machine and no supplied R2S
+dataset is present. P33 is `P33-BLOCKED`: it requires a direct connection to
+the user's own AI provider account plus independent human evaluators, neither
+available to the agent. P34 is `P34-BLOCKED`, inheriting P33's blocker. Per
+the completion rules these legs are unmeasured — no substitute evidence was
+fabricated and no family was silently dropped (`results/verdict_p32.json`,
+`results/verdict_p33.json`, `results/verdict_p34.json`).
+
+**P35 execution entry (2026-09-17).** P35 closed `P35-CONDITIONAL`: the claim/
+limitation matrix was derived from the on-disk verdict files and the release
+recommendation scoped to what is actually qualified. All six phase closure
+checkers (P26b–P31) re-verified evidence-chain integrity on the candidate
+tree; the reproduction leg re-executed the frozen smoke population into fresh
+directories with semantically identical outputs and runtime-verified data
+digests. All four controls pass (matrix consistency, battery completeness,
+reproduction identity, blocked families named) and all four negative controls
+fail closed (upgraded verdict, omitted family, forged reproduction,
+unsupported claim). The verdict is CONDITIONAL: the release recommendation is
+`conditional_release` — ship the activation/study/uncertainty/campaign
+envelope under its recorded conditions, and explicitly do not claim spatial
+handoff, AI-assisted capability, experimental validation or competitive
+results beyond the locally measured preparation amortization
+(`results/verdict_p35.json`, `controls/check_g{0,1,2,3,4}_p35.py`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

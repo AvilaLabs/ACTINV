@@ -1,0 +1,32 @@
+{
+  "all_rejected": true,
+  "gate": "G3",
+  "phase": "P35",
+  "probes": {
+    "forged_reproduction": {
+      "failures": [
+        "reproduction runs diverged"
+      ],
+      "rejected": true
+    },
+    "omitted_family": {
+      "failures": [
+        "matrix family drift: {'spatial_handoff'}"
+      ],
+      "rejected": true
+    },
+    "unsupported_claim": {
+      "failures": [
+        "ship claims blocked family spatial_handoff: spatial source handoff to R2S chains"
+      ],
+      "rejected": true
+    },
+    "upgraded_verdict": {
+      "failures": [
+        "uncertainty: matrix conditional != verdict-derived qualified",
+        "uncertainty: verdict digest mismatch"
+      ],
+      "rejected": true
+    }
+  }
+}

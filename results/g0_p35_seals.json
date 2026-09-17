@@ -1,0 +1,133 @@
+{
+  "amendments": [
+    {
+      "date": "2026-09-17",
+      "reason": "the committed catalog-reference study requires an installed actinv-data bundle; no bundle is installed and `actinv data fetch` needs network access. Replaced with the frozen P31 smoke study using explicit path+sha256 references \u2014 artifact identity verification and fresh-execution determinism are preserved; cross-install delivery is out of scope.",
+      "scope": "reproduction leg study"
+    },
+    {
+      "date": "2026-09-17",
+      "reason": "G0-G3 checkers pin phase-time binary/schema identities; the candidate binary was legitimately rebuilt in P30/P31 and the pinned Core checkout's schemas evolved upstream, so those checkers flag evolution rather than tampering. The battery re-verifies evidence-chain integrity via each phase's G4 closure checker, which derives the verdict from on-disk digests \u2014 a forged or missing artifact still fails.",
+      "scope": "battery composition"
+    }
+  ],
+  "battery": {
+    "checker_sha256": {
+      "controls/check_g4_p26b.py": "3c2a540f7bbd490d3d0bad5db9a8677d1ff8ed9f406d51cc75bd80c8d87bbda7",
+      "controls/check_g4_p27.py": "a0527d61349c8b9f915db739b4916f12df2e6b4d0414f8c532aa3d88e2d2e161",
+      "controls/check_g4_p28.py": "554b6ed4b19e20db474f288a3dd850679642368f597ea5f66dfee261ad4929f5",
+      "controls/check_g4_p29.py": "66ee9924029ab5c95a51c326c88ef88ee54894651972c43beaf9d3a6f1b49a43",
+      "controls/check_g4_p30.py": "1698daafcb7887b4ff4f60ab714d4787fa1b6861e68306cecd42f0a823a248d6",
+      "controls/check_g4_p31.py": "cf1e95e6469f36d4bd1fefa64cfedf93e46a68d936ade67330e72f0eb832649c"
+    },
+    "checkers": [
+      "controls/check_g4_p26b.py",
+      "controls/check_g4_p27.py",
+      "controls/check_g4_p28.py",
+      "controls/check_g4_p29.py",
+      "controls/check_g4_p30.py",
+      "controls/check_g4_p31.py"
+    ],
+    "required": "each closure checker must report pass and planted==rejected",
+    "scope": "closure checkers re-verify each phase's evidence-chain integrity and derive the verdict from on-disk digests; the G0-G3 gate checkers pin phase-time artifact identities (binary, Core tree, schemas) that have legitimately evolved and were executed and sealed at their phases"
+  },
+  "candidate": {
+    "binary_sha256": "2fd44f1b258561d378db14c3e30008b63e063b6f1157d07f7f40922c2f3e7d9c",
+    "commit": "df814f23886678036cb59b08abfdf46438a1a1cc"
+  },
+  "controls": [
+    "matrix_consistency",
+    "battery_complete",
+    "reproduction_identity",
+    "blocked_families_named"
+  ],
+  "matrix": {
+    "families": [
+      "activation_solver",
+      "qualification_combinations",
+      "numerical_control",
+      "uncertainty",
+      "efficient_campaigns",
+      "spatial_handoff",
+      "ai_assisted_setup",
+      "ai_bounded_investigation",
+      "product_qualification"
+    ],
+    "rule": "a family may not claim more than its phase verdict; blocked/unmeasured families name their blocker",
+    "statuses": [
+      "qualified",
+      "conditional",
+      "unmeasured",
+      "blocked"
+    ]
+  },
+  "negative_controls": [
+    "upgraded_verdict",
+    "omitted_family",
+    "forged_reproduction",
+    "unsupported_claim"
+  ],
+  "opening_commit": "df814f23886678036cb59b08abfdf46438a1a1cc",
+  "phase": "P35",
+  "prior_verdicts": {
+    "verdict_p10.json": "bd5698a45f22132dbc8aa095186847be2c27bfa635140b8f360a3ee443d29d0d",
+    "verdict_p11.json": "484658adf7f8e8c6b111f7e5a83909a3038aa982cbf88ae844e1bc94be11f24b",
+    "verdict_p12.json": "8020482814196aeecc584369d8c54b351c2edd051553f2ae30cbcc808125f616",
+    "verdict_p13.json": "8ab5b2d84719ac3485684a947c24ec4bedc3914ec471234f74dffef893bd12a6",
+    "verdict_p14.json": "95a08cbf0a7b90046936fa0a96c9c86e0c63a8eb039f0a252a103339e13bb76c",
+    "verdict_p15.json": "662428fdc0c4ca4ddaec57557b776b80d078754857d5a47482a8867742282f3d",
+    "verdict_p16.json": "fb1f9f5f582ce507d395b14533cf3ed1daa45933cac8c9464d25830a5fb2f442",
+    "verdict_p17.json": "cdd2ae98479c1540e692f9b159748796dacd720c043e9c5d9b9266f43bb87ad7",
+    "verdict_p18.json": "e9dbea1e2e5ade98cb14afa7f73b2eb9dd82da183364a75ea8d36dade1eb8863",
+    "verdict_p18b.json": "cb37a4cb83bcec54e2041377a4b1cd3cd4cebd5d44291563af1d4cf4403fbb62",
+    "verdict_p19.json": "99e70780c5121cb2f1dd6198317ea9b2fff2a4e3f20a9a5bf077b073a370517e",
+    "verdict_p2.json": "df446b6a2431a2c986be694ba357b4814717a53dac3002031a294a4b93eef8bb",
+    "verdict_p20.json": "9966a518fbc438d7daee8f43218a0ba6ea08e8d04f1f4c6cd5072bac5c083241",
+    "verdict_p21.json": "540cb7af7d6c6996d2a6da8a2a5eab10383368f336b8049ccc5559e528e34a6b",
+    "verdict_p22.json": "7a1684b12916d14f4d18d6dbb20dd797ff706a6f3b0acc985e26ea75dfe8ad3a",
+    "verdict_p23.json": "a714b92e4817c76ec32aa6577ca77fe2ef76e29f4fac541174a18c948ad737b5",
+    "verdict_p24.json": "b170fe570c909375f55fde8efd8158c072e14c14623f1e3c4912f88ef4d8c92d",
+    "verdict_p25.json": "80f9739f76380de6e08599e33f895eb97152bbe8d97d7644c9fd413370b97568",
+    "verdict_p25b.json": "403c3c4f18a06c1be84addff536736067fd7c964ab980c9d3e1fc9193456b7a9",
+    "verdict_p25c.json": "363a1d779c0a2b6ed30aadfacba3e3469898109a7a70dd817f37f2f0516ff61d",
+    "verdict_p26.json": "12e77b7ef70084cd27fc24126a86e10b179c7e34096fd5e87c6e635d7da595da",
+    "verdict_p26b.json": "e55e74636b6d7b4f11e8ae52d14fd2e05ea60ae270ba8baeec1675e815f34d83",
+    "verdict_p27.json": "abd4b6f3bca7574c5cdbdfbbed0fc535a232356c3b584928101599d9dba5b6c7",
+    "verdict_p28.json": "bc6fc126d7e8ba91d88707275a04c053578c59618b50fc8861dbf1bd46f1a0b2",
+    "verdict_p29.json": "bf4d2165eae703a278a53ddd900345b94fcf66ac4169b47d82121072ac5e408d",
+    "verdict_p3.json": "b6edcebd83940c4e9a3fdc88b57afc7ac211cc2a6c8d0d6c75eaff101df3f0dd",
+    "verdict_p30.json": "3fd9b4b6630fdb2c96591ab222cecaf20527331d67110e02e66b3361af132da0",
+    "verdict_p31.json": "9203d04840a7a5a47efa6ffa4ebdb4399d99698f19372f32b0f3e5b32acf1464",
+    "verdict_p32.json": "181854bfcd27b71314bbe5223b20f12fd26f15ac5f7f23885469d5a7553fe2f4",
+    "verdict_p33.json": "d3698802af08aa06c29821d9fadd62949e9a29657e49bd4682978be51d9824c1",
+    "verdict_p34.json": "b45b00b6bdd7eff88a87b8d569316760e038d462a684fd446843e5f7cfca957c",
+    "verdict_p3b.json": "9bebe96502ceac9c120f215bf15721adf6541c3b7ddeec20d7245076ae56d727",
+    "verdict_p4.json": "5e0a650dee4575141708e82e0763f31065260c805df1437edad89be18b588028",
+    "verdict_p4b.json": "e72b03c382e3bfed6a4d80e033d0ff75dcf1bd6c9ce04f458fb270a1c1cf5042",
+    "verdict_p5.json": "958fef70d0396edf38a33c050fa3bef240f8c5d4496ccbff033eacf023ce4e79",
+    "verdict_p6.json": "03a34a4dcfa5004646e8c24b97d5a3dadde49863539e9035fd89785dad664215",
+    "verdict_p7.json": "c31aecdc01d884e475892dc257bbdac8132917e5106184fd69fa6873ac7d94a1",
+    "verdict_p8.json": "810beebff8e08b9a959d579a16d7d50d6533ab1f184469450f403cf3a7a443bf",
+    "verdict_p9.json": "bf631926e8bcf1b4fa41119e27fb5380eba9a5884649e5c7314694dc6807c924"
+  },
+  "protocol": "protocols/ACTINV-P35_PROTOCOL.md",
+  "protocol_sha256": "e2caadc0e8e03c554cc04963b5c7ec05eda2ebf10c8081c62de408877393710a",
+  "reproduction": {
+    "require": "semantic output digests identical across fresh runs; declared data digests verified at prepare time",
+    "runs": 2,
+    "study_source": "frozen P31 smoke population (explicit path+sha256 refs)",
+    "volatile_fields": [
+      "ms",
+      "wall_s",
+      "elapsed_ms"
+    ]
+  },
+  "resource_limits": {
+    "cpu_quota_pct": 200,
+    "enforced_by": "systemd --user scope (OS cgroup)",
+    "memory_max_bytes": "6G",
+    "swap": 0,
+    "tasks": 128,
+    "tmpdir": "target/preflight-tmp (disk)"
+  }
+}

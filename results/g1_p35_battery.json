@@ -1,0 +1,73 @@
+{
+  "battery": {
+    "controls/check_g4_p26b.py": {
+      "exit": 0,
+      "failures": [],
+      "mutations": "6/6",
+      "pass": true
+    },
+    "controls/check_g4_p27.py": {
+      "exit": 0,
+      "failures": [],
+      "mutations": "6/6",
+      "pass": true
+    },
+    "controls/check_g4_p28.py": {
+      "exit": 0,
+      "failures": [],
+      "mutations": "6/6",
+      "pass": true
+    },
+    "controls/check_g4_p29.py": {
+      "exit": 0,
+      "failures": [],
+      "mutations": "6/6",
+      "pass": true
+    },
+    "controls/check_g4_p30.py": {
+      "exit": 0,
+      "failures": [],
+      "mutations": "5/5",
+      "pass": true
+    },
+    "controls/check_g4_p31.py": {
+      "exit": 0,
+      "failures": [],
+      "mutations": "5/5",
+      "pass": true
+    }
+  },
+  "gate": "G1",
+  "phase": "P35",
+  "reproduction": {
+    "identical": true,
+    "run_1": {
+      "digests": {
+        "fe__fns_709__cont_1d": "9262c74d948c82fe4daff00f933a06ef80d6b7fa8d393cc8d77c843b6845477e",
+        "fe__fns_709__pulse_5min": "e40028b868a65d87f39851a90ed23369abfd7d321d81f0e01fcbd901f1d602e9",
+        "fe__irdff_sp_mat9861_709__cont_1d": "8970c6ddc34c4933c91b8368a93fa7f3fe36a6963c331ce7eac3866638236ec5",
+        "fe__irdff_sp_mat9861_709__pulse_5min": "96cb9e14c300949cca9fa3432e38acbe1afc1d706c6063a0b0246f9bea5d0922",
+        "fe_co100wppm__fns_709__cont_1d": "9fa24cabb3f24a984cab3c716a417fc01ffa9de8aec59a76739d69782c4b6123",
+        "fe_co100wppm__fns_709__pulse_5min": "2a3d1432d68aa3da9a3fd8045fdf150714568370e07bffa48e9b784c68484511",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": "d6f3ce1f36664c4b188d68f1be3f1f0c3639372d3496e743c39e158d33130b44",
+        "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "e521136c8212a559e108bede62b4ed76a83917ea3e171a2c2086084415e5b0a9"
+      },
+      "executed": 8,
+      "exit": 0
+    },
+    "run_2": {
+      "digests": {
+        "fe__fns_709__cont_1d": "9262c74d948c82fe4daff00f933a06ef80d6b7fa8d393cc8d77c843b6845477e",
+        "fe__fns_709__pulse_5min": "e40028b868a65d87f39851a90ed23369abfd7d321d81f0e01fcbd901f1d602e9",
+        "fe__irdff_sp_mat9861_709__cont_1d": "8970c6ddc34c4933c91b8368a93fa7f3fe36a6963c331ce7eac3866638236ec5",
+        "fe__irdff_sp_mat9861_709__pulse_5min": "96cb9e14c300949cca9fa3432e38acbe1afc1d706c6063a0b0246f9bea5d0922",
+        "fe_co100wppm__fns_709__cont_1d": "9fa24cabb3f24a984cab3c716a417fc01ffa9de8aec59a76739d69782c4b6123",
+        "fe_co100wppm__fns_709__pulse_5min": "2a3d1432d68aa3da9a3fd8045fdf150714568370e07bffa48e9b784c68484511",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": "d6f3ce1f36664c4b188d68f1be3f1f0c3639372d3496e743c39e158d33130b44",
+        "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "e521136c8212a559e108bede62b4ed76a83917ea3e171a2c2086084415e5b0a9"
+      },
+      "executed": 8,
+      "exit": 0
+    }
+  }
+}
