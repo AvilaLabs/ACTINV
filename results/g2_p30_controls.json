@@ -1,0 +1,44 @@
+{
+  "controls": {
+    "composition_sum": {
+      "interpretation": "perturbed wt_percent compositions renormalize to the declared total with nonnegative weights",
+      "status": "pass"
+    },
+    "coverage_accounting": {
+      "cases": {
+        "fe__fns_709__pulse_5min": {
+          "applied": 81,
+          "correlated": true,
+          "covered": 166,
+          "uncovered": 45
+        },
+        "fe_co100wppm__fns_709__pulse_5min": {
+          "applied": 107,
+          "correlated": true,
+          "covered": 210,
+          "uncovered": 56
+        }
+      },
+      "interpretation": "applied factors <= covered rows; uncovered rows named by index (zero-uncertainty rows are not claimed covered)",
+      "status": "pass"
+    },
+    "flux_linear": {
+      "interpretation": "response linear in flux normalization: sample = nominal x factor within 1e-6",
+      "max_rel_dev": 2.362926314954847e-13,
+      "n_probes": 16,
+      "status": "pass"
+    },
+    "seed_reproducibility": {
+      "interpretation": "fixed seed reproduces per-sample outputs; not convergence evidence",
+      "status": "pass"
+    },
+    "zero_variance": {
+      "interpretation": "zero declared std -> zero spread, samples identical to nominal",
+      "max_abs_dev": 0.0,
+      "status": "pass"
+    }
+  },
+  "gate": "G2",
+  "pass": true,
+  "phase": "P30"
+}

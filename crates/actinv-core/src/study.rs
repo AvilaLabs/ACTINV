@@ -304,7 +304,13 @@ impl Study {
                     ));
                 }
             }
-            if ch.cross_section_mf33 && rb.covariance.is_none() {
+            if ch.cross_section_mf33
+                && rb
+                    .covariance
+                    .as_ref()
+                    .map(|c| c.sha256.is_none())
+                    .unwrap_or(true)
+            {
                 return Err("robustness.channels.cross_section_mf33 requires \
                      robustness.covariance {path, sha256}"
                     .into());
@@ -1490,13 +1496,12 @@ mod tests {
 
     #[test]
     fn unqualified_families_are_named() {
-        for (field, phase) in [("spatial_handoff", "P32")] {
-            let mut v = study_json();
-            v[field] = json!({});
-            let e = Study::from_json(&v.to_string()).unwrap_err();
-            assert!(e.contains("family_not_qualified"), "{e}");
-            assert!(e.contains(phase), "{e}");
-        }
+        let (field, phase) = ("spatial_handoff", "P32");
+        let mut v = study_json();
+        v[field] = json!({});
+        let e = Study::from_json(&v.to_string()).unwrap_err();
+        assert!(e.contains("family_not_qualified"), "{e}");
+        assert!(e.contains(phase), "{e}");
     }
 
     #[test]
@@ -1932,7 +1937,6 @@ fn evaluate_robustness_inner(
         None
     };
 
-    let mut rng = Rng(rb.seed ^ 0x9E37_79B9_7F4A_7C15);
     let nominal_vals = response_times(nominal_out, &rb.responses);
     let mut samples_out: Vec<Value> = Vec::new();
     let mut n_failed = 0usize;
@@ -1941,89 +1945,116 @@ fn evaluate_robustness_inner(
     let mut n_applied_rows = 0usize;
     let mut sample_digests = Vec::new();
 
-    for i in 0..n {
-        let mut sspec = spec.clone();
-        // flux normalization draw
-        let flux_factor = if rb.channels.flux_rel_std > 0.0 {
-            (1.0 + rng.normal() * rb.channels.flux_rel_std).max(0.0)
-        } else {
-            1.0
-        };
-        // composition draws
-        let comp_factors: BTreeMap<String, f64> = rb
-            .channels
-            .composition_rel_std
-            .iter()
-            .map(|(k, s)| (k.clone(), 1.0 + rng.normal() * s))
-            .collect();
-        // cross-section draws: correlated Cholesky or diagonal fallback
-        let mut rate_factors: Vec<(usize, f64)> = Vec::new();
-        if let Some(ctx) = &cov_ctx {
-            if let Some(l) = &xs_chol {
-                let m = ctx.rows.len();
-                let z: Vec<f64> = (0..m).map(|_| rng.normal()).collect();
-                for (i2, &row) in ctx.rows.iter().enumerate() {
-                    let mut delta = 0.0;
-                    for (j, &zv) in z.iter().enumerate().take(i2 + 1) {
-                        delta += l[i2 * m + j] * zv;
-                    }
-                    let s0 = ctx.sigma0[i2];
-                    let perturbed = s0 + delta;
-                    if perturbed <= 0.0 {
-                        n_clamped_xs += 1;
-                    }
-                    if s0 > 0.0 {
-                        rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
+    let mut draw_samples = |channels: &RobustChannels,
+                            prefix: &str,
+                            seed_tag: u64,
+                            keep_outs: bool,
+                            outs: &mut Vec<Value>|
+     -> usize {
+        let mut rng = Rng(rb.seed ^ seed_tag);
+        let mut failed = 0usize;
+        for i in 0..n {
+            let mut sspec = spec.clone();
+            // flux normalization draw
+            let flux_factor = if channels.flux_rel_std > 0.0 {
+                (1.0 + rng.normal() * channels.flux_rel_std).max(0.0)
+            } else {
+                1.0
+            };
+            // composition draws
+            let comp_factors: BTreeMap<String, f64> = channels
+                .composition_rel_std
+                .iter()
+                .map(|(k, s)| (k.clone(), 1.0 + rng.normal() * s))
+                .collect();
+            // cross-section draws: correlated Cholesky or diagonal
+            // fallback (only when the channel is enabled)
+            let mut rate_factors: Vec<(usize, f64)> = Vec::new();
+            if channels.cross_section_mf33 {
+                if let Some(ctx) = &cov_ctx {
+                    if let Some(l) = &xs_chol {
+                        let m = ctx.rows.len();
+                        let z: Vec<f64> = (0..m).map(|_| rng.normal()).collect();
+                        for (i2, &row) in ctx.rows.iter().enumerate() {
+                            let mut delta = 0.0;
+                            for (j, &zv) in z.iter().enumerate().take(i2 + 1) {
+                                delta += l[i2 * m + j] * zv;
+                            }
+                            let s0 = ctx.sigma0[i2];
+                            let perturbed = s0 + delta;
+                            if perturbed <= 0.0 {
+                                n_clamped_xs += 1;
+                            }
+                            if s0 > 0.0 {
+                                rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
+                            }
+                        }
+                    } else if let Some(diag) = &xs_diag {
+                        for (i2, &row) in ctx.rows.iter().enumerate() {
+                            let s0 = ctx.sigma0[i2];
+                            let perturbed = s0 + rng.normal() * diag[i2];
+                            if perturbed <= 0.0 {
+                                n_clamped_xs += 1;
+                            }
+                            if s0 > 0.0 {
+                                rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
+                            }
+                        }
                     }
                 }
-            } else if let Some(diag) = &xs_diag {
-                for (i2, &row) in ctx.rows.iter().enumerate() {
-                    let s0 = ctx.sigma0[i2];
-                    let perturbed = s0 + rng.normal() * diag[i2];
-                    if perturbed <= 0.0 {
-                        n_clamped_xs += 1;
+            }
+            n_applied_rows = n_applied_rows.max(rate_factors.len());
+            n_clamped_comp += perturb_spec(&mut sspec, &rate_factors, flux_factor, &comp_factors);
+            let spath = cdir.join(format!("{prefix}{i}.json"));
+            let stext =
+                serde_json::to_string_pretty(&serde_json::to_value(&sspec).unwrap_or_default())
+                    .unwrap_or_default();
+            let _ = fs::write(&spath, format!("{stext}\n"));
+            match run(&sspec, "study") {
+                Ok(rr) => {
+                    let ov = serde_json::to_value(&rr).unwrap_or_default();
+                    let opath = cdir.join(format!("{prefix}{i}.out.json"));
+                    let _ = fs::write(
+                        &opath,
+                        format!(
+                            "{}\n",
+                            serde_json::to_string_pretty(&ov).unwrap_or_default()
+                        ),
+                    );
+                    if keep_outs {
+                        sample_digests.push(json!({
+                            "sample": i,
+                            "spec_sha256": file_sha256(&spath).ok(),
+                            "out_sha256": file_sha256(&opath).ok(),
+                            "flux_factor": flux_factor,
+                        }));
+                        outs.push(ov);
+                    } else {
+                        outs.push(ov);
                     }
-                    if s0 > 0.0 {
-                        rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
+                }
+                Err(e) => {
+                    failed += 1;
+                    n_failed += 1;
+                    if keep_outs {
+                        sample_digests.push(json!({
+                            "sample": i,
+                            "spec_sha256": file_sha256(&spath).ok(),
+                            "failed": e,
+                        }));
                     }
                 }
             }
         }
-        n_applied_rows = n_applied_rows.max(rate_factors.len());
-        n_clamped_comp += perturb_spec(&mut sspec, &rate_factors, flux_factor, &comp_factors);
-        let spath = cdir.join(format!("rob_{i}.json"));
-        let stext = serde_json::to_string_pretty(&serde_json::to_value(&sspec).unwrap_or_default())
-            .unwrap_or_default();
-        let _ = fs::write(&spath, format!("{stext}\n"));
-        match run(&sspec, "study") {
-            Ok(rr) => {
-                let ov = serde_json::to_value(&rr).unwrap_or_default();
-                let opath = cdir.join(format!("rob_{i}.out.json"));
-                let _ = fs::write(
-                    &opath,
-                    format!(
-                        "{}\n",
-                        serde_json::to_string_pretty(&ov).unwrap_or_default()
-                    ),
-                );
-                sample_digests.push(json!({
-                    "sample": i,
-                    "spec_sha256": file_sha256(&spath).ok(),
-                    "out_sha256": file_sha256(&opath).ok(),
-                    "flux_factor": flux_factor,
-                }));
-                samples_out.push(ov);
-            }
-            Err(e) => {
-                n_failed += 1;
-                sample_digests.push(json!({
-                    "sample": i,
-                    "spec_sha256": file_sha256(&spath).ok(),
-                    "failed": e,
-                }));
-            }
-        }
-    }
+        failed
+    };
+    draw_samples(
+        &rb.channels,
+        "rob_",
+        0x9E37_79B9_7F4A_7C15,
+        true,
+        &mut samples_out,
+    );
 
     // per-response statistics across samples
     let mut response_stats = serde_json::Map::new();
@@ -2067,11 +2098,253 @@ fn evaluate_robustness_inner(
         }
     }
 
+    // --- local-vs-nonlinear applicability check ---------------------
+    // First-order MF=33 propagation on the nominal spec, compared with
+    // the sampled std. For decay heat the `heat.total` selector gives an
+    // exact first-order band; for total activity the per-nuclide bands
+    // are combined by root-sum-square, which neglects cross-nuclide
+    // covariance — that is recorded, not hidden.
+    let mut local_vs_nonlinear: Value = Value::Null;
+    if rb.channels.cross_section_mf33 && !truncated {
+        if let Some(cov_ref) = &rb.covariance {
+            let mut uspec = spec.clone();
+            uspec.options.rate_scale = None;
+            uspec.uncertainty = Some(crate::spec::UncertaintyOptions {
+                covariance: crate::spec::HashedFileRef {
+                    path: cov_ref.path.clone(),
+                    sha256: cov_ref.sha256.clone().unwrap_or_default(),
+                },
+                responses: vec!["activity:*".to_string(), "heat.total".to_string()],
+                channels: vec!["cross_section_mf33".to_string()],
+                confidence_level: 0.95,
+                require_complete: false,
+            });
+            match run(&uspec, "study") {
+                Ok(urr) => {
+                    let uv = serde_json::to_value(&urr).unwrap_or_default();
+                    let mut comparisons = Map::new();
+                    for response in &rb.responses {
+                        let mut per_time = Map::new();
+                        for (time_s, tkey, _) in &nominal_vals[response] {
+                            let lfo = first_order_std(&uv, response, *time_s);
+                            let sampled = response_stats
+                                .get(response)
+                                .and_then(|m| m.get(tkey))
+                                .and_then(|v| v.get("std"))
+                                .and_then(Value::as_f64);
+                            if let (Some(l), Some(smp)) = (lfo, sampled) {
+                                per_time.insert(
+                                    tkey.clone(),
+                                    json!({
+                                        "first_order_std": l,
+                                        "sampled_std": smp,
+                                        "sampled_over_first_order":
+                                            if l > 0.0 { smp / l } else {
+                                                f64::NAN
+                                            },
+                                    }),
+                                );
+                            }
+                        }
+                        comparisons.insert(response.clone(), Value::Object(per_time));
+                    }
+                    local_vs_nonlinear = json!({
+                        "method": "first-order local propagation (P11) vs nonlinear sample spread",
+                        "comparisons": comparisons,
+                        "total_activity_approximation":
+                            "per-nuclide first-order bands combined by root-sum-square; cross-nuclide covariance neglected",
+                    });
+                }
+                Err(e) => {
+                    local_vs_nonlinear = json!({
+                        "status": "failed",
+                        "error": e,
+                    });
+                }
+            }
+        }
+    }
+
+    // --- channel attribution ----------------------------------------
+    // Each enabled channel is sampled alone with the same count and a
+    // stream-tagged seed; variance fractions and the unexplained
+    // interaction remainder are reported per (response, time).
+    let mut attribution = Map::new();
+    {
+        let isolations: Vec<(&str, RobustChannels)> = [
+            (
+                "cross_section_mf33",
+                RobustChannels {
+                    cross_section_mf33: rb.channels.cross_section_mf33,
+                    ..Default::default()
+                },
+            ),
+            (
+                "flux",
+                RobustChannels {
+                    flux_rel_std: rb.channels.flux_rel_std,
+                    ..Default::default()
+                },
+            ),
+            (
+                "composition",
+                RobustChannels {
+                    composition_rel_std: rb.channels.composition_rel_std.clone(),
+                    ..Default::default()
+                },
+            ),
+        ]
+        .into_iter()
+        .filter(|(_, c)| {
+            c.cross_section_mf33 || c.flux_rel_std > 0.0 || !c.composition_rel_std.is_empty()
+        })
+        .collect();
+        let mut channel_var: Map<String, Value> = Map::new();
+        for (tag, chan) in &isolations {
+            let mut outs = Vec::new();
+            draw_samples(
+                chan,
+                &format!("attr_{tag}_"),
+                match *tag {
+                    "cross_section_mf33" => 0xA5A5_0000_0000_0001,
+                    "flux" => 0xA5A5_0000_0000_0002,
+                    _ => 0xA5A5_0000_0000_0003,
+                },
+                false,
+                &mut outs,
+            );
+            let mut vars = Map::new();
+            for response in &rb.responses {
+                let mut per_time = Map::new();
+                for (time_s, tkey, _) in &nominal_vals[response] {
+                    let vals: Vec<f64> = outs
+                        .iter()
+                        .filter_map(|o| {
+                            response_at(o, response, *time_s).and_then(|v| {
+                                v.as_f64().or_else(|| {
+                                    v.as_array()
+                                        .map(|a| a.iter().filter_map(|x| x.as_f64()).sum())
+                                })
+                            })
+                        })
+                        .collect();
+                    let m = vals.len();
+                    if m > 1 {
+                        let mean = vals.iter().sum::<f64>() / m as f64;
+                        let var =
+                            vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (m - 1) as f64;
+                        per_time.insert(tkey.clone(), json!(var));
+                    }
+                }
+                vars.insert(response.clone(), Value::Object(per_time));
+            }
+            channel_var.insert(tag.to_string(), Value::Object(vars));
+        }
+        for response in &rb.responses {
+            let mut per_time = Map::new();
+            for (_, tkey, _) in &nominal_vals[response] {
+                let total = response_stats
+                    .get(response)
+                    .and_then(|m| m.get(tkey))
+                    .and_then(|v| v.get("std"))
+                    .and_then(Value::as_f64)
+                    .map(|x| x.powi(2));
+                let mut parts = Map::new();
+                let mut sum = 0.0;
+                for (tag, _) in &isolations {
+                    let v = channel_var
+                        .get(*tag)
+                        .and_then(|m| m.get(response))
+                        .and_then(|m| m.get(tkey))
+                        .and_then(Value::as_f64)
+                        .unwrap_or(0.0);
+                    parts.insert(tag.to_string(), json!(v));
+                    sum += v;
+                }
+                per_time.insert(
+                    tkey.clone(),
+                    json!({
+                        "total_variance": total,
+                        "channel_variances": parts,
+                        "unexplained_remainder":
+                            total.map(|t| t - sum),
+                    }),
+                );
+            }
+            attribution.insert(response.clone(), Value::Object(per_time));
+        }
+    }
+
+    // --- pathway view -------------------------------------------------
+    // For each declared response and cooling time: the dominant
+    // contributing nuclides and their first production legs, plus the
+    // run-level pathway-closure remainder. No pathway is fabricated;
+    // only what the nominal run attributed is shown.
+    let mut pathway_view = Map::new();
+    {
+        let steps = nominal_out["steps"].as_array().cloned().unwrap_or_default();
+        let irr_end = steps
+            .iter()
+            .filter(|st| st["flux"].as_f64().unwrap_or(0.0) > 0.0)
+            .filter_map(|st| st["t_s"].as_f64())
+            .next_back()
+            .unwrap_or(0.0);
+        let closure = nominal_out["pathway_closure"].as_f64();
+        for response in &rb.responses {
+            let mut per_time = Map::new();
+            for (time_s, tkey, _) in &nominal_vals[response] {
+                let step = steps.iter().find(|st| {
+                    (st["t_s"].as_f64().unwrap_or(f64::NAN) - irr_end - time_s).abs()
+                        < 1e-6 * time_s.abs().max(1.0)
+                });
+                if let Some(st) = step {
+                    let mut top: Vec<(&String, f64)> = st["activity_Bq_per_g"]
+                        .as_object()
+                        .map(|m| {
+                            m.iter()
+                                .map(|(k, v)| (k, v.as_f64().unwrap_or(0.0)))
+                                .collect()
+                        })
+                        .unwrap_or_default();
+                    top.sort_by(|a, b| b.1.total_cmp(&a.1));
+                    let legs: Vec<Value> = top
+                        .iter()
+                        .take(3)
+                        .filter(|(_n, a)| *a > 0.0)
+                        .map(|(n, a)| {
+                            let legs = nominal_out["pathways"]
+                                .as_array()
+                                .and_then(|p| p.iter().find_map(|e| e.get(*n)))
+                                .cloned()
+                                .unwrap_or(Value::Null);
+                            json!({
+                                "nuclide": n,
+                                "activity_share": a,
+                                "production_legs": legs,
+                            })
+                        })
+                        .collect();
+                    per_time.insert(
+                        tkey.clone(),
+                        json!({
+                            "dominant_nuclides": legs,
+                            "pathway_closure_unattributed": closure,
+                        }),
+                    );
+                }
+            }
+            pathway_view.insert(response.clone(), Value::Object(per_time));
+        }
+    }
+
     let (covered_rows, uncovered_rows) = cov_ctx
         .as_ref()
         .map(|c| (c.rows.len(), c.uncovered.clone()))
         .unwrap_or_default();
     Ok(json!({
+        "local_vs_nonlinear": local_vs_nonlinear,
+        "channel_attribution": attribution,
+        "pathway_view": pathway_view,
         "status": "executed",
         "samples": n,
         "samples_declared": rb.samples,
@@ -2105,6 +2378,41 @@ fn evaluate_robustness_inner(
         "sample_artifacts": sample_digests,
         "semantics": "sample spread is a sensitivity over the declared input distributions — not a domain bound or an evaluation comparison; sampling error, covered uncertainty, missing covariance and failures are reported separately",
     }))
+}
+
+/// First-order MF=33 standard uncertainty for a declared robustness
+/// response at cooling time `time_s`, from a run whose `uncertainty`
+/// block propagated `heat.total` and `activity:*`. `decay_heat_w_per_g`
+/// maps to `heat.total`; `total_activity_bq_per_g` is the
+/// root-sum-square over per-nuclide activity bands (cross-nuclide
+/// covariance neglected — recorded upstream).
+fn first_order_std(uv: &Value, response: &str, time_s: f64) -> Option<f64> {
+    let steps = uv["steps"].as_array()?;
+    let irr_end = steps
+        .iter()
+        .filter(|st| st["flux"].as_f64().unwrap_or(0.0) > 0.0)
+        .filter_map(|st| st["t_s"].as_f64())
+        .next_back()
+        .unwrap_or(0.0);
+    let step = steps.iter().find(|st| {
+        (st["t_s"].as_f64().unwrap_or(f64::NAN) - irr_end - time_s).abs()
+            < 1e-6 * time_s.abs().max(1.0)
+    })?;
+    let responses = &step["uncertainty"]["responses"];
+    match response {
+        "decay_heat_w_per_g" => responses["heat.total"]["mf33_standard_uncertainty"].as_f64(),
+        "total_activity_bq_per_g" => {
+            let rss2: f64 = responses
+                .as_object()?
+                .iter()
+                .filter(|(k, _)| k.starts_with("activity:"))
+                .filter_map(|(_, v)| v["mf33_standard_uncertainty"].as_f64())
+                .map(|x| x.powi(2))
+                .sum();
+            Some(rss2.sqrt())
+        }
+        _ => None,
+    }
 }
 
 /// nominal response values as (time_s, tkey, value) triples

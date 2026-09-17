@@ -1,0 +1,61 @@
+{
+ "basis": "all four gates green with machine checkers; closure is CONDITIONAL because MF=33 covariance coverage is partial (uncovered active rows carry no declared uncertainty), the collapsed covariance required a nonzero diagonal ridge for correlated sampling, a substantial fraction of draws were clamped nonpositive, and the local-vs-nonlinear total-activity comparison rests on a root-sum-square approximation; sample spread is a sensitivity over declared input distributions, not a bound, not a rigorous confidence interval, and not an evaluation comparison; no blind experimental validation was performed",
+ "evidence_sha256": {
+  "g0_check": "c0ab27d1eda4fd2395fc32da43c7df6baa10bea38807545b8ff713559f313003",
+  "g0_seals": "40eec8fa930d24fa25d8c44b7a3bd7bb4a8691c7ca7ec7c8a343fa1f77b3ac78",
+  "g1_check": "71589ea1c5144ef0dad0f9de27166859b980da6417d77d5b6e22899cf06b55ed",
+  "g1_sampling": "9981f34b7e570c43b1c962e3fc9c8975a6092ac418d01f7de17a7af8f4721ac1",
+  "g2_check": "91953e85d7af25b9e24622f57f58fb50d7a13d721b7becdc4da1f259c7a9166c",
+  "g2_controls": "b038b059de9fe71a9f8172186095560fff1372bd048a5cef9b55f985d09f7751",
+  "g3_check": "f6c1a506073785c90be0fff9f219c0409dce2016fd5a6c521fa6618a752013e0",
+  "g3_conformance": "f63b6efbc15da9e51450b49fa7dcb9f92f34b25eb01fcb77db90d9732e7e9e41"
+ },
+ "g0_amendments": [],
+ "measured": {
+  "conformance": {
+   "missing_covariance": "rejected naming robustness.covariance",
+   "negative_std": "rejected naming flux_rel_std",
+   "rate_scale_ledger": "out-of-range row and nonpositive factor rejected at run time; ledger names applied count",
+   "unknown_channel": "rejected: unknown field at parse",
+   "zero_samples": "rejected: robustness.samples must be >= 2"
+  },
+  "controls": {
+   "composition_sum": "perturbed wt_percent compositions renormalize exactly",
+   "coverage_accounting": "applied factor rows <= covered rows; uncovered named by index",
+   "flux_linear": "sampled response = nominal x flux factor within 1e-6",
+   "seed_reproducibility": "fixed seed reproduces per-sample content digests",
+   "zero_variance": "zero declared std -> zero spread, std exactly 0"
+  },
+  "coverage": {
+   "fe__fns_709__pulse_5min": {
+    "covariance_ridge_barn2": 8.156527767934263e-08,
+    "covered_rows": 166,
+    "n_clamped_nonpositive_draws": 1780,
+    "uncovered_rows": 45
+   },
+   "fe_co100wppm__fns_709__pulse_5min": {
+    "covariance_ridge_barn2": 6.636197148117489e-08,
+    "covered_rows": 210,
+    "n_clamped_nonpositive_draws": 2247,
+    "uncovered_rows": 56
+   }
+  },
+  "explanation_views": {
+   "channel_attribution": "per-channel isolated variances plus unexplained interaction remainder per (response,time)",
+   "local_vs_nonlinear": "first-order (P11) vs sampled std per (response,time); sampled/first-order ratios 0.76-0.84 on the qualification cases (clamp truncation)",
+   "pathway_view": "dominant nuclides per (response,time) with production legs and pathway_closure unattributed remainder"
+  },
+  "inherited_limitations": "P28 map limits stand: dosimetry-critical evaluations missing, limited isomeric identity, no blind experimental validation; sample spread is not a bound",
+  "population": {
+   "cases": 2,
+   "correlated": true,
+   "failed_samples": 0,
+   "samples_per_case": 16
+  }
+ },
+ "opening_commit": "a1beef818083f5e2c6fe07f1422d9661498e29a5",
+ "phase": "P30",
+ "protocol_sha256": "94acc435b887d6dcf576f061ab13294279cd37bba8999db17b346ea528af90a3",
+ "qualified_family": "ACT-ROBUST-01",
+ "verdict": "P30-CONDITIONAL"
+}

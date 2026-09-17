@@ -1,0 +1,31 @@
+{
+  "gate": "G3",
+  "pass": true,
+  "phase": "P30",
+  "probes": {
+    "missing_covariance": {
+      "reason": "robustness.channels.cross_section_mf33 requires robustness.covariance {path, sha256}",
+      "rejected": true
+    },
+    "negative_std": {
+      "reason": "robustness.channels.flux_rel_std must be finite and nonnegative",
+      "rejected": true
+    },
+    "rate_scale_ledger": {
+      "ledger_names_applied": true,
+      "reason": {
+        "nonpositive": true,
+        "out_of_range": true
+      },
+      "rejected": true
+    },
+    "unknown_channel": {
+      "reason": "study parse: unknown field `bogus_channel`, expected one of `cross_section_mf33`, `flux_rel_std`, `composition_rel_std` at line 1 column 1104",
+      "rejected": true
+    },
+    "zero_samples": {
+      "reason": "robustness.samples must be >= 2",
+      "rejected": true
+    }
+  }
+}

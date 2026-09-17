@@ -344,6 +344,34 @@ closure rule; computational error is controlled within the demonstrated envelope
 and no physical-accuracy or convergence claim follows (`results/verdict_p29.json`,
 `docs/STUDY.md`, `controls/check_g{0,1,2,3,4}_p29.py`).
 
+**P30 execution entry (2026-09-17).** P30 closed `P30-CONDITIONAL`: the ACT-ROBUST-01
+family runs a declared number of perturbed solves per case alongside the nominal solve —
+correlated MF=33 collapsed-covariance draws (Cholesky with a diagonal-ridge ladder),
+flux-normalization draws and element weight-percent draws renormalized to the declared
+total — with per-(response, time) sample statistics, per-sample spec/output artifacts,
+and separate accounting for sampling error, covered rows, uncovered rows, failed
+samples, clamping and covariance regularization. On the frozen two-case qualification
+population all 32 samples executed with zero failures under correlated sampling
+(coverage 166/211 active rows Fe, 210/266 Fe+Co; ridge ~7-8e-8 barn^2 of mean
+diagonal). Explanation views are delivered with the sample record: a
+local-vs-nonlinear check compares the sampled spread with P11 first-order propagation
+(sampled/first-order 0.76-0.84 on the population, the deficit being measured clamp
+truncation), channel attribution reports isolated per-channel variances plus the
+unexplained interaction remainder, and a pathway view names the dominant nuclides and
+their production legs per cooling time with the unattributed closure. All five frozen
+controls pass (flux linearity to 1e-6, exact zero-variance reproduction, fixed-seed
+content determinism, coverage accounting, composition-sum preservation) and all five
+negative controls fail closed with named errors; invalid `rate_scale` rows are
+rejected at run time and the ledger names the applied count. The verdict is
+CONDITIONAL: MF=33 coverage is partial (uncovered active rows carry no declared
+uncertainty), a nonzero covariance ridge was required, hundreds of draws were clamped
+nonpositive and are reported rather than hidden, the total-activity local comparison
+uses a root-sum-square approximation over per-nuclide bands, and a sample spread is a
+sensitivity over the declared input distributions — not a domain bound, not a
+rigorous confidence interval, not an evaluation comparison; no blind experimental
+validation was performed (`results/verdict_p30.json`, `docs/STUDY.md`,
+`controls/check_g{0,1,2,3,4}_p30.py`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
