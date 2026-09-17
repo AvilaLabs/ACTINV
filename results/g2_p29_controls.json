@@ -1,0 +1,57 @@
+{
+  "controls": [
+    {
+      "expected": 1579525144716.2139,
+      "id": "impulse_decay_mn56",
+      "observed": 1579525144716.2288,
+      "rel_err": 9.428516016233272e-15,
+      "spec_sha256": "19cee271af8cd26da159a8ff8dbb8e10559ec5d42bb0511c854707281ccc810d",
+      "status": "executed"
+    },
+    {
+      "holds": {
+        "long": {
+          "Mo99": 777131883043684.5,
+          "Tc99m": 62891711452469.484,
+          "spec_sha256": "9b397deb2d02b3b6074fb53f053d4a2eb3bfcae370d551db5176dd56fe72984e"
+        },
+        "short": {
+          "Mo99": 989548945392303.8,
+          "Tc99m": 8674032782390.958,
+          "spec_sha256": "06d919f23005ea49c24b9da3f5b635e3a73e5ea4ce7b200941e2912ec92163cd"
+        }
+      },
+      "id": "chain_mo99_tc99m",
+      "status": "executed"
+    },
+    {
+      "id": "stiff_1y_declared",
+      "n_populated": 65,
+      "spec_sha256": "eb7c99991ae9ada8a9056121763c65feb292929d89dc657a9a56d1477c02335a",
+      "status": "executed",
+      "total_activity": 79.89826886736303
+    },
+    {
+      "id": "stiff_1y_reference",
+      "n_populated": 684,
+      "spec_sha256": "d378c768a5ed40a7cb3e853f6ccaca9e9f64379344f2aba834e19d90b690e701",
+      "status": "executed",
+      "total_activity": 79.89826886728888
+    },
+    {
+      "id": "fe__fns_709__pulse_5min__near_zero_activity",
+      "spec_sha256": "afd816c36a1d68980fed59cde9b49561e3427a87c48d74efb7534da86b2f95b6",
+      "status": "executed",
+      "total_activity": 0
+    }
+  ],
+  "gate": "G2",
+  "half_lives_used_s": {
+    "Mn56": 9284.04,
+    "Mo99": 237513.6,
+    "Tc99m": 21624.12
+  },
+  "partition": "p29_qualifying",
+  "phase": "P29",
+  "schema": "actinv-p29-g2-1"
+}
