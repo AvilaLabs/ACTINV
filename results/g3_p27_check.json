@@ -1,0 +1,11 @@
+{
+  "battery": {
+    "planted": 12,
+    "rejected": 12
+  },
+  "failures": [],
+  "gate": "G3",
+  "pass": true,
+  "phase": "P27",
+  "receipts_replayed": 8
+}

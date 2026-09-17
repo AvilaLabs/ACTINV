@@ -216,6 +216,18 @@ impl Study {
                         schedules"
                 .into());
         }
+        for (label, names) in [
+            ("material", self.cases.materials.iter().map(|x| x.name.as_str()).collect::<Vec<_>>()),
+            ("spectrum", self.cases.spectra.iter().map(|x| x.name.as_str()).collect()),
+            ("schedule", self.cases.schedules.iter().map(|x| x.name.as_str()).collect()),
+        ] {
+            let mut seen = std::collections::HashSet::new();
+            for n in names {
+                if !seen.insert(n) {
+                    return Err(format!("duplicate_{label} '{n}'"));
+                }
+            }
+        }
         for m in &self.cases.materials {
             check_name("material", &m.name)?;
             if m.composition.is_empty() {
@@ -1089,6 +1101,17 @@ mod tests {
         v["cases"]["spectra"][0]["flux_file"] = json!("x.flux");
         let e = Study::from_json(&v.to_string()).unwrap_err();
         assert!(e.contains("exactly one"));
+    }
+
+    #[test]
+    fn duplicate_axis_names_are_refused() {
+        for axis in ["materials", "spectra", "schedules"] {
+            let mut v = study_json();
+            let dup = v["cases"][axis][0].clone();
+            v["cases"][axis].as_array_mut().unwrap().push(dup);
+            let e = Study::from_json(&v.to_string()).unwrap_err();
+            assert!(e.contains("duplicate_"), "{axis}: {e}");
+        }
     }
 
     #[test]

@@ -2,21 +2,21 @@
   "gate": "G2",
   "notes": "Two-phase emit: first run produces canonical claims; finalize-claims commits them; second run verifies end-to-end.",
   "package_dir": "/home/connoravila/nuclear-data/p27-work/interchange/pkg",
-  "package_sha256": "71e231e7d37cb0184ebda85a61589738f4caeb3c2bd625433c89727b8092fae2",
+  "package_sha256": "433a982ce29c2d4895054e15635232b55679a341e9fa18109b5e68dcef93217d",
   "phase": "P27",
   "receipts": {
-    "fe__fns_709__cont_1d": "2f6d4fa4a8949a318de777ac31d69b9eb7f97c4ca33a85437cbddbcda316d624",
-    "fe__fns_709__pulse_5min": "f0d14c97db04110f4cfe1e32c8f1caa9bc0c7d2edd3e46dafe43e0fc5825f83d",
-    "fe__irdff_sp_mat9861_709__cont_1d": "ccaea8f9a027f4f63a6f306e8e60e2d889e9565710c7660d6f4b69fc217a1586",
-    "fe__irdff_sp_mat9861_709__pulse_5min": "f9fd17468147e7477e17ba1d09659158d2e799a507e3e931ec7b4feabed59778",
-    "fe_co100wppm__fns_709__cont_1d": "5dbb01d30176ea91bdbe545bdbb76d74679e6ac01812365d32c35e9a1977a4da",
-    "fe_co100wppm__fns_709__pulse_5min": "27a5782a8ab6992b863852305a4d3c59dd2ebe550d0c12f81a879b6a498d682e",
-    "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": "f829992a761496326364b0ffbfc5ee9eefcb3f50192b02bdd291b7db99a87e95",
-    "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "02d99dbef4390713eb6b0db4825f45077a5e83972647b734ceec06be3f0acf5e"
+    "fe__fns_709__cont_1d": "4c864912543eb4e8e96d8d0956f4489002457a8458eab22a928002eb292b253b",
+    "fe__fns_709__pulse_5min": "eb84f067e9c836b5798521e0ec6fac06042f6770bbbf960e9ec26b8b6aea6c03",
+    "fe__irdff_sp_mat9861_709__cont_1d": "617052907ad2227d988c863523f50c7642240d2dcf366b9af2ce86b4d0cf5476",
+    "fe__irdff_sp_mat9861_709__pulse_5min": "6c7748732df60591d3d86d6402200c7e942318c777beec5e0c9caf5316a3f77e",
+    "fe_co100wppm__fns_709__cont_1d": "f8b09f2d80e6c878f07d72191cce5aa14d91dc91e6651356c47c6988de182857",
+    "fe_co100wppm__fns_709__pulse_5min": "345026706acf57f926f60e1afdff46e24321c9e646be17b7aff98e71093cc194",
+    "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": "1bec7259fb7d7b27e5c2448ff3c538ec46e4b5469963e6f16de7920a3cdbc66a",
+    "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "f2244ff0631c738c0eb887b844be07d433819ab62382e8e9050b152f18c3d54b"
   },
   "run_report": {
     "path": "/home/connoravila/nuclear-data/p27-work/interchange/core_run2.json",
-    "sha256": "819d0feb25d52aeeffb79b6f88de2859148da4ac3a43a3ced788d769bd687005",
+    "sha256": "b7a7c0a6bd2f64cd5117f7041dcb640392b1a67090c23916063b7b5797ab5540",
     "stages": {
       "bindings": "verified",
       "campaign": "evaluated",
