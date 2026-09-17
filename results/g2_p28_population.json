@@ -1,0 +1,3944 @@
+{
+  "applicability_map": {
+    "axes": {
+      "elements": {
+        "Ac": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "Ag": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [
+            47109
+          ],
+          "n_targets": 18,
+          "status": "gap"
+        },
+        "Al": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 7,
+          "status": "qualified"
+        },
+        "Am": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 20,
+          "status": "qualified"
+        },
+        "Ar": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "As": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 18,
+          "status": "qualified"
+        },
+        "At": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 11,
+          "status": "qualified"
+        },
+        "Au": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [
+            79197
+          ],
+          "n_targets": 17,
+          "status": "gap"
+        },
+        "B": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 2,
+          "status": "qualified"
+        },
+        "Ba": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 16,
+          "status": "qualified"
+        },
+        "Be": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 4,
+          "status": "qualified"
+        },
+        "Bh": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 15,
+          "status": "qualified"
+        },
+        "Bi": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 20,
+          "status": "qualified"
+        },
+        "Bk": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Br": {
+          "defect_ledger_files": [
+            {
+              "file": "n-Br080m.tendl",
+              "patched": true,
+              "post_kinds": [
+                "floor",
+                "interp",
+                "zero_total"
+              ],
+              "pre_class": "confirmed_leak_signature"
+            }
+          ],
+          "dosimetry_missing_za": [],
+          "n_targets": 20,
+          "status": "qualified_with_ledger"
+        },
+        "C": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 6,
+          "status": "qualified"
+        },
+        "Ca": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "Cd": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "Ce": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Cf": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "Cl": {
+          "defect_ledger_files": [
+            {
+              "file": "n-Cl035.tendl",
+              "patched": true,
+              "post_kinds": [],
+              "pre_class": "confirmed_leak_signature"
+            }
+          ],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified_with_ledger"
+        },
+        "Cm": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 18,
+          "status": "qualified"
+        },
+        "Cn": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 2,
+          "status": "qualified"
+        },
+        "Co": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "Cr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "Cs": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "Cu": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 18,
+          "status": "qualified"
+        },
+        "Db": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 9,
+          "status": "qualified"
+        },
+        "Ds": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 4,
+          "status": "qualified"
+        },
+        "Dy": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 18,
+          "status": "qualified"
+        },
+        "Er": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 15,
+          "status": "qualified"
+        },
+        "Es": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 21,
+          "status": "qualified"
+        },
+        "Eu": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 26,
+          "status": "qualified"
+        },
+        "F": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 7,
+          "status": "qualified"
+        },
+        "Fe": {
+          "defect_ledger_files": [
+            {
+              "file": "n-Fe053m.tendl",
+              "patched": true,
+              "post_kinds": [
+                "floor",
+                "interp"
+              ],
+              "pre_class": "confirmed_leak_signature"
+            }
+          ],
+          "dosimetry_missing_za": [],
+          "n_targets": 13,
+          "status": "qualified_with_ledger"
+        },
+        "Fl": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 1,
+          "status": "qualified"
+        },
+        "Fm": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 13,
+          "status": "qualified"
+        },
+        "Fr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 15,
+          "status": "qualified"
+        },
+        "Ga": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 21,
+          "status": "qualified"
+        },
+        "Gd": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 21,
+          "status": "qualified"
+        },
+        "Ge": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 22,
+          "status": "qualified"
+        },
+        "Hf": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 16,
+          "status": "qualified"
+        },
+        "Hg": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Ho": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 27,
+          "status": "qualified"
+        },
+        "Hs": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 9,
+          "status": "qualified"
+        },
+        "I": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 18,
+          "status": "qualified"
+        },
+        "In": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [
+            49113
+          ],
+          "n_targets": 27,
+          "status": "gap"
+        },
+        "Ir": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 23,
+          "status": "qualified"
+        },
+        "K": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 11,
+          "status": "qualified"
+        },
+        "Kr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 16,
+          "status": "qualified"
+        },
+        "La": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 13,
+          "status": "qualified"
+        },
+        "Li": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 2,
+          "status": "qualified"
+        },
+        "Lr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 9,
+          "status": "qualified"
+        },
+        "Lu": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "Mc": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 1,
+          "status": "qualified"
+        },
+        "Md": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 16,
+          "status": "qualified"
+        },
+        "Mg": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 8,
+          "status": "qualified"
+        },
+        "Mn": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 11,
+          "status": "qualified"
+        },
+        "Mo": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 10,
+          "status": "qualified"
+        },
+        "Mt": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 4,
+          "status": "qualified"
+        },
+        "N": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 5,
+          "status": "qualified"
+        },
+        "Na": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 6,
+          "status": "qualified"
+        },
+        "Nb": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [
+            41093
+          ],
+          "n_targets": 15,
+          "status": "gap"
+        },
+        "Nd": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 23,
+          "status": "qualified"
+        },
+        "Ne": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 6,
+          "status": "qualified"
+        },
+        "Nh": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 6,
+          "status": "qualified"
+        },
+        "Ni": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [
+            28058
+          ],
+          "n_targets": 17,
+          "status": "gap"
+        },
+        "No": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 6,
+          "status": "qualified"
+        },
+        "Np": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 18,
+          "status": "qualified"
+        },
+        "O": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 9,
+          "status": "qualified"
+        },
+        "Os": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 33,
+          "status": "qualified"
+        },
+        "P": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 8,
+          "status": "qualified"
+        },
+        "Pa": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "Pb": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 22,
+          "status": "qualified"
+        },
+        "Pd": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 16,
+          "status": "qualified"
+        },
+        "Pm": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 22,
+          "status": "qualified"
+        },
+        "Po": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 13,
+          "status": "qualified"
+        },
+        "Pr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 20,
+          "status": "qualified"
+        },
+        "Pt": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 25,
+          "status": "qualified"
+        },
+        "Pu": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 20,
+          "status": "qualified"
+        },
+        "Ra": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Rb": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 14,
+          "status": "qualified"
+        },
+        "Re": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 26,
+          "status": "qualified"
+        },
+        "Rf": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 9,
+          "status": "qualified"
+        },
+        "Rg": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 4,
+          "status": "qualified"
+        },
+        "Rh": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Rn": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 13,
+          "status": "qualified"
+        },
+        "Ru": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "S": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 13,
+          "status": "qualified"
+        },
+        "Sb": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Sc": {
+          "defect_ledger_files": [
+            {
+              "file": "n-Sc045.tendl",
+              "patched": true,
+              "post_kinds": [
+                "interp",
+                "zero_total"
+              ],
+              "pre_class": "confirmed_leak_signature"
+            },
+            {
+              "file": "n-Sc046m.tendl",
+              "patched": true,
+              "post_kinds": [
+                "floor",
+                "interp",
+                "zero_total"
+              ],
+              "pre_class": "confirmed_leak_signature"
+            }
+          ],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified_with_ledger"
+        },
+        "Se": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 26,
+          "status": "qualified"
+        },
+        "Sg": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 8,
+          "status": "qualified"
+        },
+        "Si": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 8,
+          "status": "qualified"
+        },
+        "Sm": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 24,
+          "status": "qualified"
+        },
+        "Sn": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 27,
+          "status": "qualified"
+        },
+        "Sr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "Ta": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "Tb": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 19,
+          "status": "qualified"
+        },
+        "Tc": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 8,
+          "status": "qualified"
+        },
+        "Te": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 25,
+          "status": "qualified"
+        },
+        "Th": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 16,
+          "status": "qualified"
+        },
+        "Ti": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 9,
+          "status": "qualified"
+        },
+        "Tl": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 20,
+          "status": "qualified"
+        },
+        "Tm": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        },
+        "U": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified"
+        },
+        "V": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 7,
+          "status": "qualified"
+        },
+        "W": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 23,
+          "status": "qualified"
+        },
+        "Xe": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 24,
+          "status": "qualified"
+        },
+        "Y": {
+          "defect_ledger_files": [
+            {
+              "file": "n-Y088.tendl",
+              "patched": true,
+              "post_kinds": [
+                "floor"
+              ],
+              "pre_class": "confirmed_leak_signature"
+            }
+          ],
+          "dosimetry_missing_za": [],
+          "n_targets": 17,
+          "status": "qualified_with_ledger"
+        },
+        "Yb": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 23,
+          "status": "qualified"
+        },
+        "Zn": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 22,
+          "status": "qualified"
+        },
+        "Zr": {
+          "defect_ledger_files": [],
+          "dosimetry_missing_za": [],
+          "n_targets": 12,
+          "status": "qualified"
+        }
+      },
+      "group_structure": {
+        "fispact-709": {
+          "status": "qualified"
+        },
+        "other": {
+          "reason": "no artifact; structure mismatch",
+          "status": "excluded"
+        }
+      },
+      "projectile": {
+        "alpha": {
+          "reason": "P25 coverage floor fail; no artifact",
+          "status": "excluded"
+        },
+        "deuteron": {
+          "reason": "P25 coverage floor fail; no artifact",
+          "status": "excluded"
+        },
+        "neutron": {
+          "status": "qualified"
+        },
+        "proton": {
+          "reason": "P25 coverage floor fail; no artifact",
+          "status": "excluded"
+        }
+      },
+      "responses": {
+        "qualified": [
+          "total_activity_bq_per_g",
+          "decay_heat_w_per_g",
+          "photon_source_per_group",
+          "inventory_per_nuclide",
+          "total_atoms_per_g"
+        ]
+      },
+      "shielding": {
+        "finite_dilution": {
+          "covered": [
+            "Ag107",
+            "Fe56",
+            "Nb93",
+            "Ta181",
+            "U238",
+            "W186"
+          ],
+          "status": "qualified_on_covered",
+          "uncovered": "all other nuclides -> ledger-named passthrough or require_shielding_complete fail-closed"
+        },
+        "infinite_dilution": {
+          "status": "qualified"
+        }
+      },
+      "temperature_K": {
+        "measured_boundary": {
+          "0.0": "contract_gap: requested temperature 0 K does not match library temperature 293.6 K",
+          "1200.0": "contract_gap: requested temperature 1200 K does not match library temperature 293.6 K"
+        },
+        "note": "the patched artifact is single-temperature; any options.temperature_K != 293.6 fails closed",
+        "qualified": [
+          293.6
+        ]
+      }
+    },
+    "element_counts": {
+      "gap": 5,
+      "qualified": 103,
+      "qualified_with_ledger": 5
+    },
+    "n_elements": 113
+  },
+  "boundary_cases": [
+    {
+      "error": "requested temperature 0 K does not match library temperature 293.6 K\n",
+      "id": "fe__fns_709__pulse_5min__T0K",
+      "kind": "temperature_boundary",
+      "spec_sha256": "a450833337e08ef07ef0515687361c38ad8a329abb6bae70500894587641cac0",
+      "status": "gap"
+    },
+    {
+      "error": "requested temperature 1200 K does not match library temperature 293.6 K\n",
+      "id": "fe__fns_709__pulse_5min__T1200K",
+      "kind": "temperature_boundary",
+      "spec_sha256": "c7748785bbe6e24bfd71404bff4f783ef783f6efdcb31ede851bff8170e6576e",
+      "status": "gap"
+    },
+    {
+      "id": "fe__fns_709__pulse_5min__dilute_0p1b",
+      "kind": "dilution_boundary",
+      "ledger_flags": {
+        "composition_elements_unknown": [],
+        "composition_isotopes_absent_from_decay_library": [],
+        "isomer_state_absent_from_decay_library_used_ground": {
+          "101246_m1": 8.727705282786377e-32,
+          "28071_m1": 2.0583957063209603e-15,
+          "31080_m1": 6.829499341501621e-15,
+          "49127_m2": 4.914184898287703e-16,
+          "61156_m1": 1.162091157968146e-15,
+          "61161_m1": 8.19187803066162e-16,
+          "63160_m1": 4.459588143743174e-15,
+          "69177_m1": 2.5078955668177058e-14,
+          "73188_m1": 2.0459105917155218e-14,
+          "75192_m1": 2.34574125628982e-14,
+          "75194_m1": 1.7271729859202426e-15,
+          "75194_m2": 1.0897177475084151e-16,
+          "76195_m1": 3.655787669346494e-16,
+          "79205_m1": 2.135523142622914e-15,
+          "83214_m1": 1.0566909600725567e-16,
+          "83216_m1": 2.6451152811327236e-14,
+          "87224_m1": 8.73921063876131e-15,
+          "94244_m1": 9.12612261480961e-17,
+          "95236_m1": 1.9218277782049734e-15
+        },
+        "library_target_limitations": [
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200154 points and processed to 293.6 K on 124159 points",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16: raw MF=10-vs-MF=3 audit recorded 13 excess(es) beyond the retired P18 stress tolerance (8 pointwise, 5 collapsed; max relative excess 2.218717e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16/MF=10 ZAP=26053: emitted state sum exceeded the runtime total in 5 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.145427e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 5 excess(es) beyond the retired P18 stress tolerance (3 pointwise, 2 collapsed; max relative excess 2.500998e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 3 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.346474e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 2 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 15 excess(es) beyond the retired P18 stress tolerance (4 pointwise, 11 collapsed; max relative excess 2.806777e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 7 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 11 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.771003e-7, 2 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16->26053: physical excitation mapped raw LFS 22 to LISO 1",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 177465 points and processed to 293.6 K on 127247 points",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 96676 points and processed to 293.6 K on 53452 points",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200575 points and processed to 293.6 K on 111131 points",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 38 excess(es) beyond the retired P18 stress tolerance (23 pointwise, 15 collapsed; max relative excess 3.996704e-7); kept as source diagnostics",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total by a physically weightless amount in 5 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total in 17 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 3.731892e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe58"
+          }
+        ]
+      },
+      "out_sha256": "aac2ade163394eb9b9ae12bd2efcd2beb12e0b730bac07531425e131bbab1ffa",
+      "responses": {
+        "total_activity_bq_per_g": 378373.9111847608,
+        "total_atoms_per_g": 20641357974.3971
+      },
+      "spec_sha256": "116d3bd8adf2af52503ac04dbf5a0b64a7b813b12e40179e0bdd53460679db78",
+      "status": "executed"
+    },
+    {
+      "id": "fe__fns_709__pulse_5min__dilute_1e10b",
+      "kind": "dilution_boundary",
+      "ledger_flags": {
+        "composition_elements_unknown": [],
+        "composition_isotopes_absent_from_decay_library": [],
+        "isomer_state_absent_from_decay_library_used_ground": {
+          "101246_m1": 8.727705282786377e-32,
+          "28071_m1": 2.0583957063209603e-15,
+          "31080_m1": 6.829499341501621e-15,
+          "49127_m2": 4.914184898287703e-16,
+          "61156_m1": 1.162091157968146e-15,
+          "61161_m1": 8.19187803066162e-16,
+          "63160_m1": 4.459588143743174e-15,
+          "69177_m1": 2.5078955668177058e-14,
+          "73188_m1": 2.0459105917155218e-14,
+          "75192_m1": 2.34574125628982e-14,
+          "75194_m1": 1.7271729859202426e-15,
+          "75194_m2": 1.0897177475084151e-16,
+          "76195_m1": 3.655787669346494e-16,
+          "79205_m1": 2.135523142622914e-15,
+          "83214_m1": 1.0566909600725567e-16,
+          "83216_m1": 2.6451152811327236e-14,
+          "87224_m1": 8.73921063876131e-15,
+          "94244_m1": 9.12612261480961e-17,
+          "95236_m1": 1.9218277782049734e-15
+        },
+        "library_target_limitations": [
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200154 points and processed to 293.6 K on 124159 points",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16: raw MF=10-vs-MF=3 audit recorded 13 excess(es) beyond the retired P18 stress tolerance (8 pointwise, 5 collapsed; max relative excess 2.218717e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16/MF=10 ZAP=26053: emitted state sum exceeded the runtime total in 5 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.145427e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 5 excess(es) beyond the retired P18 stress tolerance (3 pointwise, 2 collapsed; max relative excess 2.500998e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 3 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.346474e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 2 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 15 excess(es) beyond the retired P18 stress tolerance (4 pointwise, 11 collapsed; max relative excess 2.806777e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 7 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 11 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.771003e-7, 2 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16->26053: physical excitation mapped raw LFS 22 to LISO 1",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 177465 points and processed to 293.6 K on 127247 points",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 96676 points and processed to 293.6 K on 53452 points",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200575 points and processed to 293.6 K on 111131 points",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 38 excess(es) beyond the retired P18 stress tolerance (23 pointwise, 15 collapsed; max relative excess 3.996704e-7); kept as source diagnostics",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total by a physically weightless amount in 5 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total in 17 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 3.731892e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe58"
+          }
+        ]
+      },
+      "out_sha256": "c15198438ddf8e457f6c8bc7fd78bb24896531bfb950c0db7d74ccb881b98557",
+      "responses": {
+        "total_activity_bq_per_g": 378373.9111847608,
+        "total_atoms_per_g": 20641357974.3971
+      },
+      "spec_sha256": "dc6cb66af6a5cba8a4278678ec825a70cbf1e8da7ba3cce37d44b2bbf221d19a",
+      "status": "executed"
+    },
+    {
+      "id": "fe__single_group_g354__pulse_5min",
+      "kind": "spectrum_boundary",
+      "ledger_flags": {
+        "composition_elements_unknown": [],
+        "composition_isotopes_absent_from_decay_library": [],
+        "isomer_state_absent_from_decay_library_used_ground": {
+          "28071_m1": 2.6382422386648398e-27,
+          "31080_m1": 2.5755265764523924e-26,
+          "49127_m2": 2.377902042381651e-25,
+          "61156_m1": 2.324989536246577e-25,
+          "61161_m1": 1.0000000000000001e-44,
+          "63160_m1": 6.86345622671118e-24,
+          "69177_m1": 3.268198381751772e-26,
+          "73188_m1": 2.1267195593626704e-26,
+          "75192_m1": 8.261628234945577e-24,
+          "75194_m1": 4.149390328036468e-25,
+          "75194_m2": 1.733025780319524e-26,
+          "76195_m1": 8.508501334280992e-27,
+          "79205_m1": 2.48419145649101e-26,
+          "83214_m1": 2.1868583187288337e-28,
+          "83216_m1": 2.0714114199053236e-25,
+          "87224_m1": 1.6790645135474957e-24,
+          "94244_m1": 6.003338163155331e-29,
+          "95236_m1": 1.4223579441352723e-30
+        },
+        "library_target_limitations": [
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200154 points and processed to 293.6 K on 124159 points",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16: raw MF=10-vs-MF=3 audit recorded 13 excess(es) beyond the retired P18 stress tolerance (8 pointwise, 5 collapsed; max relative excess 2.218717e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16/MF=10 ZAP=26053: emitted state sum exceeded the runtime total in 5 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.145427e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 5 excess(es) beyond the retired P18 stress tolerance (3 pointwise, 2 collapsed; max relative excess 2.500998e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 3 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.346474e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 2 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 15 excess(es) beyond the retired P18 stress tolerance (4 pointwise, 11 collapsed; max relative excess 2.806777e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 7 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 11 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.771003e-7, 2 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16->26053: physical excitation mapped raw LFS 22 to LISO 1",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 177465 points and processed to 293.6 K on 127247 points",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 96676 points and processed to 293.6 K on 53452 points",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200575 points and processed to 293.6 K on 111131 points",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 38 excess(es) beyond the retired P18 stress tolerance (23 pointwise, 15 collapsed; max relative excess 3.996704e-7); kept as source diagnostics",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total by a physically weightless amount in 5 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total in 17 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 3.731892e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe58"
+          }
+        ]
+      },
+      "out_sha256": "952ff690ffcee1362a608d1758dbe2c8225af800f07382b0b246bdfae1a334c7",
+      "responses": {
+        "total_activity_bq_per_g": 7.93447912970865e-11,
+        "total_atoms_per_g": 1.0063740516236221
+      },
+      "spec_sha256": "4f617cc132030f228db39cc76e157ef1c847e9646ae0d356b0265ce7e6e161e2",
+      "status": "executed"
+    },
+    {
+      "id": "fe__fns_709__zero_flux",
+      "kind": "schedule_boundary",
+      "ledger_flags": {
+        "composition_elements_unknown": [],
+        "composition_isotopes_absent_from_decay_library": [],
+        "isomer_state_absent_from_decay_library_used_ground": {
+          "101246_m1": 8.727705282786377e-32,
+          "28071_m1": 2.0583957063209603e-15,
+          "31080_m1": 6.829499341501621e-15,
+          "49127_m2": 4.914184898287703e-16,
+          "61156_m1": 1.162091157968146e-15,
+          "61161_m1": 8.19187803066162e-16,
+          "63160_m1": 4.459588143743174e-15,
+          "69177_m1": 2.5078955668177058e-14,
+          "73188_m1": 2.0459105917155218e-14,
+          "75192_m1": 2.34574125628982e-14,
+          "75194_m1": 1.7271729859202426e-15,
+          "75194_m2": 1.0897177475084151e-16,
+          "76195_m1": 3.655787669346494e-16,
+          "79205_m1": 2.135523142622914e-15,
+          "83214_m1": 1.0566909600725567e-16,
+          "83216_m1": 2.6451152811327236e-14,
+          "87224_m1": 8.73921063876131e-15,
+          "94244_m1": 9.12612261480961e-17,
+          "95236_m1": 1.9218277782049734e-15
+        },
+        "library_target_limitations": [
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200154 points and processed to 293.6 K on 124159 points",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16: raw MF=10-vs-MF=3 audit recorded 13 excess(es) beyond the retired P18 stress tolerance (8 pointwise, 5 collapsed; max relative excess 2.218717e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16/MF=10 ZAP=26053: emitted state sum exceeded the runtime total in 5 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.145427e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 5 excess(es) beyond the retired P18 stress tolerance (3 pointwise, 2 collapsed; max relative excess 2.500998e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 3 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 1.346474e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 2 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 15 excess(es) beyond the retired P18 stress tolerance (4 pointwise, 11 collapsed; max relative excess 2.806777e-7); kept as source diagnostics",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total by a physically weightless amount in 7 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=25052: emitted state sum exceeded the runtime total in 11 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.771003e-7, 2 one-ULP closure correction(s))",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT16->26053: physical excitation mapped raw LFS 22 to LISO 1",
+            "nuclide": "Fe54"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 177465 points and processed to 293.6 K on 127247 points",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe56"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 96676 points and processed to 293.6 K on 53452 points",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe57"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 200575 points and processed to 293.6 K on 111131 points",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 38 excess(es) beyond the retired P18 stress tolerance (23 pointwise, 15 collapsed; max relative excess 3.996704e-7); kept as source diagnostics",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total by a physically weightless amount in 5 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Fe58"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=25058: emitted state sum exceeded the runtime total in 17 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 3.731892e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Fe58"
+          }
+        ]
+      },
+      "out_sha256": "a6173958762779944b64d5736ea9b6b3d5cd74b8d3ff35c988abea853968fccd",
+      "responses": {
+        "total_activity_bq_per_g": 0,
+        "total_atoms_per_g": 1.0000000000000002
+      },
+      "spec_sha256": "887cf9e6d6151733174786155000a5339bf39331abc6fffcbaa526b5472ef0af",
+      "status": "executed"
+    },
+    {
+      "id": "ni__fns_709__pulse_5min",
+      "kind": "coverage_boundary",
+      "ledger_flags": {
+        "composition_elements_unknown": [],
+        "composition_isotopes_absent_from_decay_library": [],
+        "isomer_state_absent_from_decay_library_used_ground": {
+          "101246_m1": 8.727705282786377e-32,
+          "28071_m1": 2.0583957063209603e-15,
+          "31080_m1": 6.829499341501621e-15,
+          "49127_m2": 4.914184898287703e-16,
+          "61156_m1": 1.162091157968146e-15,
+          "61161_m1": 8.19187803066162e-16,
+          "63160_m1": 4.459588143743174e-15,
+          "69177_m1": 2.5078955668177058e-14,
+          "73188_m1": 2.0459105917155218e-14,
+          "75192_m1": 2.34574125628982e-14,
+          "75194_m1": 1.7271729859202426e-15,
+          "75194_m2": 1.0897177475084151e-16,
+          "76195_m1": 3.655787669346494e-16,
+          "79205_m1": 2.135523142622914e-15,
+          "83214_m1": 1.0566909600725567e-16,
+          "83216_m1": 2.6451152811327236e-14,
+          "87224_m1": 8.73921063876131e-15,
+          "94244_m1": 9.12612261480961e-17,
+          "95236_m1": 1.9218277782049734e-15
+        },
+        "library_target_limitations": [
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 275266 points and processed to 293.6 K on 197641 points",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 9 excess(es) beyond the retired P18 stress tolerance (5 pointwise, 4 collapsed; max relative excess 3.651634e-7); kept as source diagnostics",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=27058: emitted state sum exceeded the runtime total in 9 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 2.065271e-7, 3 one-ULP closure correction(s))",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT41: raw MF=10-vs-MF=3 audit recorded 10 excess(es) beyond the retired P18 stress tolerance (6 pointwise, 4 collapsed; max relative excess 4.725223e-7); kept as source diagnostics",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=27058: emitted state sum exceeded the runtime total in 5 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 3.872966e-7, 2 one-ULP closure correction(s))",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 63 excess(es) beyond the retired P18 stress tolerance (30 pointwise, 33 collapsed; max relative excess 4.639874e-7); kept as source diagnostics",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=27060: emitted state sum exceeded the runtime total in 40 of 709 group(s); scaled by the common factor T/S (min scale 9.999997e-1, max relative excess 3.359865e-7, 4 one-ULP closure correction(s))",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 25 excess(es) beyond the retired P18 stress tolerance (8 pointwise, 17 collapsed; max relative excess 4.740123e-7); kept as source diagnostics",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=27058: emitted state sum exceeded the runtime total by a physically weightless amount in 9 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=27058: emitted state sum exceeded the runtime total in 22 of 709 group(s); scaled by the common factor T/S (min scale 9.999995e-1, max relative excess 4.642673e-7, 5 one-ULP closure correction(s))",
+            "nuclide": "Ni60"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 54677 points and processed to 293.6 K on 36561 points",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT11: raw MF=10-vs-MF=3 audit recorded 3 excess(es) beyond the retired P18 stress tolerance (1 pointwise, 2 collapsed; max relative excess 1.702400e-7); kept as source diagnostics",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT11/MF=10 ZAP=27058: emitted state sum exceeded the runtime total in 2 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.702400e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT28: raw MF=10-vs-MF=3 audit recorded 33 excess(es) beyond the retired P18 stress tolerance (16 pointwise, 17 collapsed; max relative excess 2.737229e-7); kept as source diagnostics",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT28/MF=10 ZAP=27060: emitted state sum exceeded the runtime total in 18 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.755170e-7, 6 one-ULP closure correction(s))",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT33: raw MF=10-vs-MF=3 audit recorded 8 excess(es) beyond the retired P18 stress tolerance (4 pointwise, 4 collapsed; max relative excess 4.289765e-7); kept as source diagnostics",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT33/MF=10 ZAP=27058: emitted state sum exceeded the runtime total in 4 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 3.943460e-7, 0 one-ULP closure correction(s))",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT104: raw MF=10-vs-MF=3 audit recorded 36 excess(es) beyond the retired P18 stress tolerance (12 pointwise, 24 collapsed; max relative excess 3.731662e-7); kept as source diagnostics",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT104/MF=10 ZAP=27060: emitted state sum exceeded the runtime total by a physically weightless amount in 6 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT104/MF=10 ZAP=27060: emitted state sum exceeded the runtime total in 24 of 709 group(s); scaled by the common factor T/S (min scale 9.999997e-1, max relative excess 2.938892e-7, 4 one-ULP closure correction(s))",
+            "nuclide": "Ni61"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 71578 points and processed to 293.6 K on 47456 points",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 6 excess(es) beyond the retired P18 stress tolerance (5 pointwise, 1 collapsed; max relative excess 1.773180e-7); kept as source diagnostics",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=27060: emitted state sum exceeded the runtime total by a physically weightless amount in 2 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=27060: emitted state sum exceeded the runtime total in 3 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 8.338937e-8, 0 one-ULP closure correction(s))",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT41: raw MF=10-vs-MF=3 audit recorded 7 excess(es) beyond the retired P18 stress tolerance (4 pointwise, 3 collapsed; max relative excess 4.526840e-7); kept as source diagnostics",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=27060: emitted state sum exceeded the runtime total in 4 of 709 group(s); scaled by the common factor T/S (min scale 9.999997e-1, max relative excess 3.090458e-7, 0 one-ULP closure correction(s))",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 29 excess(es) beyond the retired P18 stress tolerance (12 pointwise, 17 collapsed; max relative excess 4.443461e-7); kept as source diagnostics",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=27062: emitted state sum exceeded the runtime total by a physically weightless amount in 9 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=27062: emitted state sum exceeded the runtime total in 21 of 709 group(s); scaled by the common factor T/S (min scale 9.999996e-1, max relative excess 4.332244e-7, 2 one-ULP closure correction(s))",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 4 excess(es) beyond the retired P18 stress tolerance (2 pointwise, 2 collapsed; max relative excess 2.049812e-7); kept as source diagnostics",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=27060: emitted state sum exceeded the runtime total by a physically weightless amount in 6 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=27060: emitted state sum exceeded the runtime total in 12 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.621790e-7, 4 one-ULP closure correction(s))",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT112/MF=10 ZAP=25058: emitted state sum exceeded the runtime total by a physically weightless amount in 10 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni62"
+          },
+          {
+            "limitation": "MT102: raw 0 K MF=2+MF=3 reconstructed on 48026 points and processed to 293.6 K on 30435 points",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT5 aggregate products omitted for a neutron evaluation",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT32: raw MF=10-vs-MF=3 audit recorded 4 excess(es) beyond the retired P18 stress tolerance (2 pointwise, 2 collapsed; max relative excess 8.455344e-8); kept as source diagnostics",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=27062: emitted state sum exceeded the runtime total by a physically weightless amount in 1 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT32/MF=10 ZAP=27062: emitted state sum exceeded the runtime total in 2 of 709 group(s); scaled by the common factor T/S (min scale 9.999999e-1, max relative excess 7.878923e-8, 0 one-ULP closure correction(s))",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT41: raw MF=10-vs-MF=3 audit recorded 9 excess(es) beyond the retired P18 stress tolerance (5 pointwise, 4 collapsed; max relative excess 3.404470e-7); kept as source diagnostics",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT41/MF=10 ZAP=27062: emitted state sum exceeded the runtime total in 5 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 2.111823e-7, 1 one-ULP closure correction(s))",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT103: raw MF=10-vs-MF=3 audit recorded 58 excess(es) beyond the retired P18 stress tolerance (26 pointwise, 32 collapsed; max relative excess 5.592302e-7); kept as source diagnostics",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT103/MF=10 ZAP=27064: emitted state sum exceeded the runtime total in 36 of 709 group(s); scaled by the common factor T/S (min scale 9.999995e-1, max relative excess 4.943824e-7, 4 one-ULP closure correction(s))",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT105: raw MF=10-vs-MF=3 audit recorded 15 excess(es) beyond the retired P18 stress tolerance (6 pointwise, 9 collapsed; max relative excess 2.630335e-7); kept as source diagnostics",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=27062: emitted state sum exceeded the runtime total by a physically weightless amount in 1 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT105/MF=10 ZAP=27062: emitted state sum exceeded the runtime total in 9 of 709 group(s); scaled by the common factor T/S (min scale 9.999998e-1, max relative excess 1.673221e-7, 3 one-ULP closure correction(s))",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT112/MF=10 ZAP=25060: emitted state sum exceeded the runtime total by a physically weightless amount in 2 of 709 group(s); accepted unchanged as floor_reconciled (absolute excess below 1e-15 barn)",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT112/MF=10 ZAP=25060: emitted state sum exceeded the runtime total in 1 of 709 group(s); scaled by the common factor T/S (min scale 9.999997e-1, max relative excess 3.030694e-7, 0 one-ULP closure correction(s))",
+            "nuclide": "Ni64"
+          },
+          {
+            "limitation": "MT103->27064: raw LFS 1 is not an auditable decay isomer (no_catalog_excitation_match_to_leakage); production retained as explicit leakage",
+            "nuclide": "Ni64"
+          }
+        ]
+      },
+      "out_sha256": "4a5981dba6f9b1108e8d993a152ca7a4763acb4757e9c70cec8f32e1624404b8",
+      "responses": {
+        "total_activity_bq_per_g": 702618.7198932383,
+        "total_atoms_per_g": 6586469661.916862
+      },
+      "silent_coverage_absence": [
+        "Ni-58"
+      ],
+      "spec_sha256": "0f5ca18a17fee661760b7a508749a59c1e5407ed80899af50d052eb9b1056ed8",
+      "status": "executed"
+    },
+    {
+      "error": "proton specs require options.temperature_K: 0\n",
+      "id": "fe__fns_709__pulse_5min__proton",
+      "kind": "projectile_boundary",
+      "spec_sha256": "5303d229ea6eb621ca526e29e73f6c1d01248f75f6548c5849385bb32c638fdf",
+      "status": "gap"
+    }
+  ],
+  "gate": "G2",
+  "independent_reference": {
+    "cases": {
+      "fe__fns_709__cont_2y": {
+        "arms": {
+          "actinv": {
+            "result": {
+              "artifacts": {
+                "out_json_sha256": "2c99ce284d833fde30046adcfea54dbcce1a4ee92d7588de80d377e48ad86e51"
+              },
+              "ms": 854.789555,
+              "n_states_populated_final": 69,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 4.471428414160227e-06,
+                  "photon_source_per_group_24": [
+                    4983136.656924527,
+                    12264.474699920576,
+                    0.0014203458975548375,
+                    0.003163845929946472,
+                    19147.245004913093,
+                    265.64932682562653,
+                    91348.28658331711,
+                    146392.47570381724,
+                    6954.883681880548,
+                    11771685.937279986,
+                    4487.739351093086,
+                    14073.014116482691,
+                    1356.7327430220896,
+                    2821867.9087702725,
+                    1487857.8828824204,
+                    204373.1093944751,
+                    17486.21784894632,
+                    1.9995411887995167,
+                    3.812514849663009e-19,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 3692270373446438.5,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 15619523.635044482,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 10374891.664786225,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 1509053.4663074338,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 573106.2345151178,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 120748.15785714706,
+                      "nuclide": "Mn57"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 28288616.60682677,
+                  "total_atoms_per_g": 3692270373446438.5
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 2.0601474973299584e-07,
+                  "photon_source_per_group_24": [
+                    4764040.5313115595,
+                    4.550361345414629e-13,
+                    3.2074541990802584e-16,
+                    1.374905836051938e-15,
+                    12.929759887236763,
+                    5.218660597436895e-05,
+                    26810.808461607092,
+                    0.04874221761911986,
+                    0.062342394163323434,
+                    1411424.0519726598,
+                    177.8695466288639,
+                    136.07463335137948,
+                    0.18577210294708865,
+                    2.4066484563238448e-05,
+                    1.8540401083599714e-06,
+                    7.672157478742423e-14,
+                    5.514168355175665e-15,
+                    3.3046106129983866e-32,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 3692131396420719.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 15298791.371534744,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 1411770.404200902,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 270533.8305473685,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 314.81315340038446,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 1.517774711381984,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 16981412.007450506,
+                  "total_atoms_per_g": 3692131396420719.0
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 1.0165620327695026e-07,
+                  "photon_source_per_group_24": [
+                    3616855.661771237,
+                    1.9361372460868922e-13,
+                    6.027014110193063e-32,
+                    1.3749052533296253e-15,
+                    0.08543588084399568,
+                    8.454717183660583e-18,
+                    6.139852519970126,
+                    0.003758058740949939,
+                    3.3483808405448868e-15,
+                    670637.7155275102,
+                    0.9630885082936018,
+                    0.7363793057387732,
+                    0.0010057024798175516,
+                    2.7169363049380658e-08,
+                    6.4914410112304606e-12,
+                    1.0818997433011996e-14,
+                    4.612460542319883e-28,
+                    7.155133754253528e-35,
+                    6.335424820979151e-44,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 3692131396419536.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 12134951.892731268,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 670802.3166838657,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 61.906596465731695,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 1.7045798397048897,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 1.5177744505949222,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 12805819.339080652,
+                  "total_atoms_per_g": 3692131396419536.0
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 1.2324428913766103e-09,
+                  "photon_source_per_group_24": [
+                    355646.2046302681,
+                    4.444832772525065e-17,
+                    0.0,
+                    1.374899539185106e-15,
+                    0.0016016976811283874,
+                    1.9409984161733816e-21,
+                    1.2434627739520384e-11,
+                    2.545610353929368e-06,
+                    9.406200020268273e-17,
+                    454.4617252050875,
+                    1.6552904679735768e-07,
+                    1.657488681620071e-07,
+                    4.559217340520747e-16,
+                    3.058297681387916e-22,
+                    1.9893330372437777e-12,
+                    3.3155542637215543e-15,
+                    9.634194713055622e-28,
+                    8.679176641067052e-44,
+                    8.725032535623578e-45,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 3692131396419490.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 1251326.172393796,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 454.57326818297145,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 1.5177718933271551,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 7.145120439819381e-07,
+                      "nuclide": "V49"
+                    },
+                    {
+                      "activity_bq_per_g": 1.657777048226769e-07,
+                      "nuclide": "Co60"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 1251782.2634347526,
+                  "total_atoms_per_g": 3692131396419490.0
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 2.2730668536935817e-07,
+                  "photon_source_per_group_24": [
+                    4941422.462992977,
+                    3.090181571867777e-12,
+                    8.905198049156859e-09,
+                    5.467605026980005e-15,
+                    20.30323142570276,
+                    0.0019009636136707927,
+                    55392.76648939676,
+                    1.4944902740991908,
+                    2.2709011378978814,
+                    1521540.3772788278,
+                    285.93421188738944,
+                    232.61522071998434,
+                    0.2929881278736445,
+                    4455.612091253821,
+                    2349.3223576462638,
+                    322.26220931259115,
+                    27.543778573725742,
+                    2.8028252979998637e-16,
+                    1.7935194343758588e-35,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 3692131615914618.5,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 15608725.002406409,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 1505705.1718179677,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 558943.6344904113,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 16387.402258441307,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 494.5973276642862,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 17690259.833059482,
+                  "total_atoms_per_g": 3692131615914618.5
+                }
+              }
+            }
+          },
+          "alara": {
+            "result": {
+              "artifacts": {
+                "dump_sha256": "26b9817a63e8b587c1bf78d34efefea2d56c253a2ad34d6082d1a428184c6131",
+                "photsrc_sha256": "a0bab12052b1ba1aaf42bb7fa86d22b506593ca223833ca17b8ead4bd064f483",
+                "stdout_sha256": "adc0523cd9d477502081cf8d5960aa9a87597264f7229b02110b98c3ef3c8cb0"
+              },
+              "identity_crossval": {
+                "max_rel_err": 8.508099251688e-05,
+                "n_checked": 74
+              },
+              "n_dump_isotopes": 47,
+              "n_isotopes_number_density": 47,
+              "n_isotopes_specific_activity": 30,
+              "n_isotopes_total_heat": 30,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 4.4455e-06,
+                  "photon_source_per_group_24": [
+                    6265300.0,
+                    11921.3,
+                    480.18,
+                    1089.04,
+                    17909.0,
+                    274.217,
+                    33430.7,
+                    140646.0,
+                    6575.09,
+                    11812100.0,
+                    4733.25,
+                    18311.7,
+                    1320.03,
+                    2797260.0,
+                    1476070.0,
+                    207423.0,
+                    17734.3,
+                    5.12427,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 5258300694871258.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 20697000.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 10390000.0,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 1529600.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 112890.0,
+                      "nuclide": "Mn57"
+                    },
+                    {
+                      "activity_bq_per_g": 70345.0,
+                      "nuclide": "Fe53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 32837000.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 2.1084e-07,
+                  "photon_source_per_group_24": [
+                    6086560.0,
+                    0.0,
+                    0.0,
+                    2.29245e-06,
+                    16.8403,
+                    0.0,
+                    417.249,
+                    0.0163628,
+                    2.8616e-21,
+                    1430720.0,
+                    244.382,
+                    186.952,
+                    0.25515,
+                    8.59061e-07,
+                    9.86038e-10,
+                    2.92195e-13,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 5258250559897244.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 20273000.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 1431100.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 4206.6,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 432.46,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 96.414,
+                      "nuclide": "Z1-3"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 21708000.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 1.06e-07,
+                  "photon_source_per_group_24": [
+                    4712360.0,
+                    0.0,
+                    0.0,
+                    2.29245e-06,
+                    0.111939,
+                    0.0,
+                    0.10188,
+                    0.00775612,
+                    2.8616e-21,
+                    680031.0,
+                    1.32309,
+                    1.01217,
+                    0.00138137,
+                    3.24089e-08,
+                    1.11928e-09,
+                    5.14257e-13,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 5258172566211320.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 16084000.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 680200.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 91.569,
+                      "nuclide": "Z1-3"
+                    },
+                    {
+                      "activity_bq_per_g": 2.3413,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 0.96349,
+                      "nuclide": "Cr51"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 16764000.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 1.5691e-09,
+                  "photon_source_per_group_24": [
+                    469323.0,
+                    0.0,
+                    0.0,
+                    2.29244e-06,
+                    0.00216138,
+                    0.0,
+                    6.43396e-09,
+                    5.27194e-06,
+                    2.8616e-21,
+                    462.336,
+                    8.56574e-05,
+                    8.60414e-05,
+                    1.39756e-20,
+                    3.5747e-22,
+                    1.84015e-09,
+                    1.71572e-12,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 5258201558931025.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 1662600.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 462.45,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 55.229,
+                      "nuclide": "Z1-3"
+                    },
+                    {
+                      "activity_bq_per_g": 0.026481,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0001126,
+                      "nuclide": "Fe60"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 1663100.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 2.3065e-07,
+                  "photon_source_per_group_24": [
+                    6227590.0,
+                    0.0,
+                    0.0,
+                    2.29245e-06,
+                    26.4433,
+                    0.0,
+                    861.397,
+                    0.0174638,
+                    2.8616e-21,
+                    1542090.0,
+                    390.511,
+                    309.634,
+                    0.400866,
+                    4413.4,
+                    2329.75,
+                    326.821,
+                    27.8914,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 5258241783237433.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 20683000.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 1526200.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 16407.0,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 8690.4,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 679.43,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 22235000.0,
+                  "total_atoms_per_g": 1.0779e+22
+                }
+              },
+              "times_s": [
+                0.0,
+                86400.0,
+                2592000.0,
+                31536000.0,
+                315360000.0
+              ],
+              "unresolved_isotopes": []
+            }
+          }
+        }
+      },
+      "fe__fns_709__pulse_5min": {
+        "arms": {
+          "actinv": {
+            "result": {
+              "artifacts": {
+                "out_json_sha256": "db985ba5c0653359aceee823dfe789a6873bf02aaf2ae8e4956087c868b55129"
+              },
+              "ms": 840.1865469999999,
+              "n_states_populated_final": 58,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 1.291495500480139e-07,
+                  "photon_source_per_group_24": [
+                    30346.916024048984,
+                    11190.073384331674,
+                    0.0006151878482652352,
+                    0.0013390210236002662,
+                    17451.047395210215,
+                    242.37463730684976,
+                    13417.05821790058,
+                    50079.130143359216,
+                    6344.448667883733,
+                    232307.65903239153,
+                    184.97760417680416,
+                    3628.462923075014,
+                    1026.3921281571413,
+                    63440.58732101991,
+                    33242.491201050194,
+                    4727.677125589922,
+                    414.83555851162805,
+                    1.9163236622427804,
+                    5.3047504729893555e-30,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 20653384994.915344,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 229794.0025901287,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 110170.2910645752,
+                      "nuclide": "Mn57"
+                    },
+                    {
+                      "activity_bq_per_g": 24965.350859732076,
+                      "nuclide": "Fe53"
+                    },
+                    {
+                      "activity_bq_per_g": 4982.067528915046,
+                      "nuclide": "Mn58"
+                    },
+                    {
+                      "activity_bq_per_g": 4355.268922007832,
+                      "nuclide": "Mn58m1"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 378594.37685369945,
+                  "total_atoms_per_g": 20653384994.915344
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 2.055104659527184e-12,
+                  "photon_source_per_group_24": [
+                    35.100946173109584,
+                    2.070565853121986e-28,
+                    7.341589001761057e-27,
+                    1.939168494430997e-25,
+                    0.0006984269911639552,
+                    2.245996452589602e-08,
+                    2.3292876951856147,
+                    1.7633182189217995e-05,
+                    2.6830791832974995e-05,
+                    13.566609337647048,
+                    0.009620938693253697,
+                    0.007388578300504874,
+                    1.0060512057916741e-05,
+                    1.0047898623754664e-08,
+                    7.979302096611419e-10,
+                    1.4289630623896706e-15,
+                    1.2213359507603923e-16,
+                    3.0615718860323494e-32,
+                    1.132013484075711e-53,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 17561509133.538303,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 92.67626356370923,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 23.503919565339164,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 13.56991019458051,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.017028167123682988,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 2.9552581513836322e-05,
+                      "nuclide": "Mn52"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 129.76715826258317,
+                  "total_atoms_per_g": 17561509133.538303
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 9.367910462532328e-13,
+                  "photon_source_per_group_24": [
+                    22.51186684642626,
+                    2.2549942235490543e-33,
+                    1.379651031817325e-42,
+                    1.9391676725572467e-25,
+                    3.875137394008909e-06,
+                    2.1254747662008888e-30,
+                    0.0005332680610436309,
+                    3.610733954169696e-08,
+                    4.43044548286817e-22,
+                    6.446156928673299,
+                    5.209319463339357e-05,
+                    3.98305488170372e-05,
+                    5.439820324549279e-08,
+                    5.123412948341812e-23,
+                    1.3602234531533834e-26,
+                    6.632724594339338e-30,
+                    1.088331872352173e-31,
+                    6.223337761888645e-48,
+                    1.224467384453326e-55,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 17561509133.538303,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 73.5105128654928,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 6.447739071898867,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.005378431455136249,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 9.220031016061155e-05,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 7.219247690255983e-06,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 79.96372978840468,
+                  "total_atoms_per_g": 17561509133.538303
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 7.683314660757748e-15,
+                  "photon_source_per_group_24": [
+                    2.1548226073285752,
+                    4.111506757440534e-37,
+                    0.0,
+                    1.9391596133224004e-25,
+                    9.702685188700079e-09,
+                    1.866819325806796e-40,
+                    1.1284495829256521e-19,
+                    2.446835816250671e-11,
+                    4.430445478012209e-22,
+                    0.00436827743346672,
+                    9.906934595892802e-21,
+                    7.597114808346412e-21,
+                    2.1739961978780283e-21,
+                    5.760290476863756e-37,
+                    1.1962545906558377e-27,
+                    1.881157109326703e-30,
+                    5.294346237596131e-43,
+                    1.1381440021939202e-55,
+                    1.13814398902909e-56,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 17561509133.5383,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 7.580221949604977,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.004369349582442494,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 7.21923552669017e-06,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 2.5648935293427154e-17,
+                      "nuclide": "V49"
+                    },
+                    {
+                      "activity_bq_per_g": 1.1381931172084185e-18,
+                      "nuclide": "Cr51"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 7.584598518422946,
+                  "total_atoms_per_g": 17561509133.5383
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 1.490285669023957e-10,
+                  "photon_source_per_group_24": [
+                    41.601265745013556,
+                    2.3724235514997262e-12,
+                    1.24858190651798e-19,
+                    2.6676197889618686e-19,
+                    0.0010972208447481042,
+                    8.18132875501745e-07,
+                    4.812475392107735,
+                    0.000639624088551688,
+                    0.0009773457789940012,
+                    373.3341651780953,
+                    0.1586615475935302,
+                    0.37160148206119664,
+                    1.629001983034157e-05,
+                    98.68756011249629,
+                    52.03525880448693,
+                    7.137802048573375,
+                    0.6100685511601186,
+                    2.6861674774989226e-16,
+                    2.490515769606088e-46,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 17566370706.139027,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 362.9654052847327,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 94.5537642213993,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 48.56089975897009,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 14.472809389038312,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.026752649511067646,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 520.5807150133596,
+                  "total_atoms_per_g": 17566370706.139027
+                }
+              }
+            }
+          },
+          "alara": {
+            "result": {
+              "artifacts": {
+                "dump_sha256": "7cdba849d85267c429dd2c79cffc9e494e07bbb33beb2d9e51e3a03a5db14fb8",
+                "photsrc_sha256": "271b9ae9368da063538c0b4a4f7532164518a85e965d74ec86feb300be3d0eae",
+                "stdout_sha256": "9e2dd9f579a5c9821a76089d220fb15d12ea938878d39f2560e1e63e4057302a"
+              },
+              "identity_crossval": {
+                "max_rel_err": 3.9363279133522654e-05,
+                "n_checked": 47
+              },
+              "n_dump_isotopes": 35,
+              "n_isotopes_number_density": 35,
+              "n_isotopes_specific_activity": 19,
+              "n_isotopes_total_heat": 19,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 1.2994e-07,
+                  "photon_source_per_group_24": [
+                    28613.8,
+                    10874.7,
+                    212.256,
+                    516.541,
+                    16312.1,
+                    252.411,
+                    12622.9,
+                    49228.2,
+                    6003.98,
+                    239113.0,
+                    270.177,
+                    7806.17,
+                    1005.85,
+                    64109.2,
+                    33143.6,
+                    4898.43,
+                    442.665,
+                    4.96512,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 28106164214.4462,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 230120.0,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 102980.0,
+                      "nuclide": "Mn57"
+                    },
+                    {
+                      "activity_bq_per_g": 23532.0,
+                      "nuclide": "Fe53"
+                    },
+                    {
+                      "activity_bq_per_g": 10561.0,
+                      "nuclide": "Mn58"
+                    },
+                    {
+                      "activity_bq_per_g": 8394.0,
+                      "nuclide": "Cr55"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 378020.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 1.9666e-12,
+                  "photon_source_per_group_24": [
+                    38.2335,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.000909644,
+                    0.0,
+                    0.0362066,
+                    1.5677e-07,
+                    0.0,
+                    13.7484,
+                    0.0132189,
+                    0.0101124,
+                    1.38013e-05,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 25010487564.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 122.78,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 13.752,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.36543,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.023392,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 0.00048286,
+                      "nuclide": "Z1-3"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 136.92,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 9.6684e-13,
+                  "photon_source_per_group_24": [
+                    29.1547,
+                    0.0,
+                    0.0,
+                    0.0,
+                    5.05052e-06,
+                    0.0,
+                    8.63428e-06,
+                    7.45141e-08,
+                    0.0,
+                    6.53471,
+                    7.15661e-05,
+                    5.47478e-05,
+                    7.47195e-08,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 25009160550.410004,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 97.41,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 6.5363,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.00045859,
+                      "nuclide": "Z1-3"
+                    },
+                    {
+                      "activity_bq_per_g": 0.00012664,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 8.3699e-05,
+                      "nuclide": "Cr51"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 103.95,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 9.7238e-15,
+                  "photon_source_per_group_24": [
+                    2.84275,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.30899e-08,
+                    0.0,
+                    2.11638e-29,
+                    5.06602e-11,
+                    0.0,
+                    0.00444278,
+                    4.24855e-27,
+                    3.25013e-27,
+                    4.43575e-30,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 25007253486.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 10.069,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0044439,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0002766,
+                      "nuclide": "Z1-3"
+                    },
+                    {
+                      "activity_bq_per_g": 1.2596e-07,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 5.3558e-10,
+                      "nuclide": "Fe60"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 10.074,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 1.477e-10,
+                  "photon_source_per_group_24": [
+                    39.2915,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.00142905,
+                    0.0,
+                    0.074767,
+                    1.67196e-07,
+                    0.0,
+                    373.893,
+                    0.166132,
+                    0.368395,
+                    2.16833e-05,
+                    97.7572,
+                    51.6042,
+                    7.23912,
+                    0.617796,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 25014700826.0,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 363.41,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 125.26,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 14.666,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.75494,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.036751,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 504.13,
+                  "total_atoms_per_g": 1.0779e+22
+                }
+              },
+              "times_s": [
+                0.0,
+                86400.0,
+                2592000.0,
+                31536000.0,
+                315360000.0
+              ],
+              "unresolved_isotopes": []
+            }
+          }
+        }
+      },
+      "fe__irdff_sp_mat9861_709__cont_2y": {
+        "arms": {
+          "actinv": {
+            "result": {
+              "artifacts": {
+                "out_json_sha256": "3020f21a5eaf25c53986ab2db7bed7970d20f20c995b2b9ed55c830348db9cd8"
+              },
+              "ms": 862.7224,
+              "n_states_populated_final": 56,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 1.3170368155898045e-07,
+                  "photon_source_per_group_24": [
+                    131650.99770676607,
+                    109.16939698850273,
+                    5.359091605599284e-05,
+                    0.00011883050679440231,
+                    198.31636957213215,
+                    2.3646238105398685,
+                    818.698241606623,
+                    56.86018867200802,
+                    61.757205649920664,
+                    648655.5506211289,
+                    451.3205088239018,
+                    462.3435765865579,
+                    8.49611046012603,
+                    44071.817131078365,
+                    23236.85220323324,
+                    3187.602260491251,
+                    272.45442526716954,
+                    0.0016050192596834432,
+                    4.457427321161061e-20,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 44408611692310.445,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 488514.1473491014,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 162083.6587825637,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 22772.072432848945,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 7843.5442105199,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 1074.811918428312,
+                      "nuclide": "Mn57"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 683021.1508801475,
+                  "total_atoms_per_g": 44408611692310.445
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 6.165228834901377e-08,
+                  "photon_source_per_group_24": [
+                    122331.10470716262,
+                    1.979915135995817e-12,
+                    2.0971350126575574e-19,
+                    1.5396594410042696e-15,
+                    17.587908035046883,
+                    8.599255231757644e-07,
+                    368.1560632726452,
+                    0.003231567100386173,
+                    0.0010272715558395846,
+                    456909.31532039127,
+                    242.31636839117206,
+                    185.27676438270302,
+                    0.25303886231684897,
+                    3.852944114511295e-07,
+                    3.055282982809486e-08,
+                    5.7348486159542755e-15,
+                    8.614611226936202e-17,
+                    2.561469313856945e-35,
+                    1.389020986774173e-48,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 44406440604758.055,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 457021.4579265257,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 22304.46929034283,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 3702.5318039658405,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 428.8783666485388,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0011314808216916006,
+                      "nuclide": "Mn52"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 483457.33957441815,
+                  "total_atoms_per_g": 44406440604758.055
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 2.924821917548296e-08,
+                  "photon_source_per_group_24": [
+                    59740.80601993882,
+                    8.424381928889295e-13,
+                    3.940271017460843e-35,
+                    1.5396587884549201e-15,
+                    0.09525356100693991,
+                    3.6787694012617e-17,
+                    0.09065088896537953,
+                    0.001216061577586317,
+                    1.4164323543454882e-14,
+                    217100.33414532684,
+                    1.3120406692944213,
+                    1.003188667456605,
+                    0.0013700953477308422,
+                    2.2301592446366606e-11,
+                    2.513922883530813e-12,
+                    4.1898705759501446e-15,
+                    2.852808844754517e-38,
+                    8.456728540313284e-49,
+                    2.2756647214774298e-49,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 44406440604757.086,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 217153.6191997723,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 17691.83298589291,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 2.3221946401486293,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 0.8472550062440992,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0008609628309206535,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 234848.62259254453,
+                  "total_atoms_per_g": 44406440604757.086
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 2.1516274703824297e-11,
+                  "photon_source_per_group_24": [
+                    555.4149120591139,
+                    1.934010828296975e-16,
+                    1.7589932800346087e-40,
+                    1.5396523895901205e-15,
+                    2.335152882663374e-06,
+                    8.445462142095378e-21,
+                    4.815073906037551e-12,
+                    8.240706504430515e-07,
+                    4.312851518276682e-18,
+                    147.11936134020118,
+                    6.410442863315569e-08,
+                    6.418955892107167e-08,
+                    5.441524195129269e-18,
+                    2.507381578800019e-25,
+                    7.704092901775815e-13,
+                    1.284014589604427e-15,
+                    5.674936539935048e-51,
+                    1.1014377733670414e-66,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 44406440604757.03,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 1824.3379824297701,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 147.15547028130177,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0008609613803016267,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 9.68075017320879e-08,
+                      "nuclide": "V49"
+                    },
+                    {
+                      "activity_bq_per_g": 6.420072624146788e-08,
+                      "nuclide": "Co60"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 1971.4943138334606,
+                  "total_atoms_per_g": 44406440604757.03
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 6.592399562412623e-08,
+                  "photon_source_per_group_24": [
+                    131019.87820053635,
+                    2.1550724495471217e-12,
+                    7.583526133288263e-12,
+                    1.6591340420262222e-15,
+                    27.632042956571656,
+                    3.132387341911134e-05,
+                    760.0277360324314,
+                    0.027247693197873717,
+                    0.03741966710969079,
+                    487563.7871477131,
+                    380.80019890221536,
+                    291.38139883293286,
+                    0.3975633820754364,
+                    69.60862251410732,
+                    36.70272194762315,
+                    5.0346008095087535,
+                    0.4303077643431243,
+                    2.6391286812132067e-10,
+                    2.0782655816615405e-36,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 44406444033836.016,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 487430.2300034838,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 22756.328851267604,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 7649.714563009712,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 673.80314877635,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 256.01521460238627,
+                      "nuclide": "Mn56"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 518766.134085635,
+                  "total_atoms_per_g": 44406444033836.016
+                }
+              }
+            }
+          },
+          "alara": {
+            "result": {
+              "artifacts": {
+                "dump_sha256": "aa667bd0296964b2e44c0f6c75c103cdae2b5d45e22e6147c57b79e3592be678",
+                "photsrc_sha256": "f06ab6fba7ddb032cc44f586e477041f13c2bfcb24da168fc64b264f6327785d",
+                "stdout_sha256": "28ac5a7ad545b28ec6d5d23c2ceafe22d6408bf26a60afffd46b3ed28394fc61"
+              },
+              "identity_crossval": {
+                "max_rel_err": 3.5019677875424783e-05,
+                "n_checked": 52
+              },
+              "n_dump_isotopes": 37,
+              "n_isotopes_number_density": 37,
+              "n_isotopes_specific_activity": 20,
+              "n_isotopes_total_heat": 20,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 1.319e-07,
+                  "photon_source_per_group_24": [
+                    133123.0,
+                    208.541,
+                    37.3082,
+                    81.9234,
+                    355.128,
+                    6.74839,
+                    691.284,
+                    87.5959,
+                    127.016,
+                    652279.0,
+                    681.925,
+                    650.583,
+                    18.5507,
+                    43489.9,
+                    22958.3,
+                    3221.27,
+                    274.882,
+                    0.399387,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 97520487017623.16,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 492580.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 161630.0,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 20125.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 6316.1,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 1974.8,
+                      "nuclide": "Mn57"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 684720.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 6.2118e-08,
+                  "photon_source_per_group_24": [
+                    123596.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    26.5117,
+                    0.0,
+                    296.813,
+                    0.0052536,
+                    0.0,
+                    460727.0,
+                    385.333,
+                    294.778,
+                    0.402312,
+                    0.0,
+                    4.33223e-12,
+                    7.22038e-15,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 97519337636525.2,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 460840.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 19712.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 2981.7,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 681.88,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 0.27242,
+                      "nuclide": "Z1-3"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 484220.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 2.9456e-08,
+                  "photon_source_per_group_24": [
+                    60195.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.143553,
+                    0.0,
+                    0.0779354,
+                    0.00249708,
+                    0.0,
+                    218987.0,
+                    2.08616,
+                    1.59591,
+                    0.00217809,
+                    0.0,
+                    3.83999e-12,
+                    6.39999e-15,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 97519203664925.2,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 219040.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 15639.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 3.6917,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 0.68295,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.25873,
+                      "nuclide": "Z1-3"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 234690.0,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 2.1481e-11,
+                  "photon_source_per_group_24": [
+                    494.149,
+                    0.0,
+                    0.0,
+                    0.0,
+                    2.10159e-06,
+                    0.0,
+                    7.35472e-12,
+                    1.6977e-06,
+                    0.0,
+                    148.884,
+                    9.79159e-08,
+                    9.80459e-08,
+                    1.29708e-25,
+                    0.0,
+                    1.17676e-12,
+                    1.96126e-15,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 97519185933525.2,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 1616.6,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 148.92,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.15605,
+                      "nuclide": "Z1-3"
+                    },
+                    {
+                      "activity_bq_per_g": 9.8325e-06,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 5.6636e-06,
+                      "nuclide": "Fe60"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 1765.7,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 6.644e-08,
+                  "photon_source_per_group_24": [
+                    132233.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    41.6524,
+                    0.0,
+                    612.24,
+                    0.00560299,
+                    0.0,
+                    491621.0,
+                    605.498,
+                    463.374,
+                    0.632071,
+                    68.6583,
+                    36.2434,
+                    5.08429,
+                    0.4339,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 97519356851025.2,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 491490.0,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 20111.0,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 6160.0,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 1071.3,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 255.24,
+                      "nuclide": "Mn56"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 519090.0,
+                  "total_atoms_per_g": 1.0779e+22
+                }
+              },
+              "times_s": [
+                0.0,
+                86400.0,
+                2592000.0,
+                31536000.0,
+                315360000.0
+              ],
+              "unresolved_isotopes": []
+            }
+          }
+        }
+      },
+      "fe__irdff_sp_mat9861_709__pulse_5min": {
+        "arms": {
+          "actinv": {
+            "result": {
+              "artifacts": {
+                "out_json_sha256": "e265aeeda2b18752111371c0625a1a685ae227bb874c116bdc538b46405b9d14"
+              },
+              "ms": 892.664633,
+              "n_states_populated_final": 57,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 1.650435180010146e-09,
+                  "photon_source_per_group_24": [
+                    269.5546404114708,
+                    99.60586111186714,
+                    2.3683619280658814e-05,
+                    5.1764627867428236e-05,
+                    155.33748792137013,
+                    2.157443907440166,
+                    29.755093816614437,
+                    22.788546351901715,
+                    56.30307289838295,
+                    3562.6357042066006,
+                    1.9330756589097704,
+                    9.438195578740498,
+                    7.313652599608299,
+                    978.3961837347507,
+                    514.8932652242843,
+                    70.73502399367119,
+                    6.052692382612583,
+                    0.001536849997048563,
+                    4.895286821513866e-31,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 259423614.0956298,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 3589.9992095998437,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 980.6554732516137,
+                      "nuclide": "Mn57"
+                    },
+                    {
+                      "activity_bq_per_g": 8.657533770832504,
+                      "nuclide": "Fe53"
+                    },
+                    {
+                      "activity_bq_per_g": 8.340129375050292,
+                      "nuclide": "Cr55"
+                    },
+                    {
+                      "activity_bq_per_g": 5.555309257728941,
+                      "nuclide": "Mn58"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 4602.300302444113,
+                  "total_atoms_per_g": 259423614.0956298
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 5.982015293061897e-13,
+                  "photon_source_per_group_24": [
+                    1.218452063045026,
+                    1.585533671135624e-27,
+                    7.1858966850140264e-31,
+                    2.171537228513006e-25,
+                    0.0009513242703165857,
+                    3.700929749494498e-10,
+                    0.03194482337539968,
+                    3.1390579921154133e-07,
+                    4.421150157323756e-07,
+                    4.391819777066637,
+                    0.013106833353476696,
+                    0.010022041724575407,
+                    1.368701024927818e-05,
+                    1.6556821850170318e-10,
+                    1.314820264535635e-11,
+                    2.2324239138265356e-17,
+                    1.9080546272019483e-18,
+                    2.45490357074627e-35,
+                    2.0203238555244618e-57,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 211217850.21948224,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 4.392897227589785,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.32167516861693435,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.13511488017826426,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.02319792589972103,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 4.869643848849966e-07,
+                      "nuclide": "Mn52"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 4.872885695149808,
+                  "total_atoms_per_g": 211217850.21948224
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 2.810974683362686e-13,
+                  "photon_source_per_group_24": [
+                    0.5563783495378297,
+                    6.7384875045406365e-28,
+                    5.386722763125707e-56,
+                    2.1715362882120713e-25,
+                    5.1511540934229356e-06,
+                    2.9425709210224155e-32,
+                    7.656432581123824e-06,
+                    1.16887900873285e-08,
+                    5.048275863617405e-24,
+                    2.086771724685905,
+                    7.096794741369879e-05,
+                    5.426221819950067e-05,
+                    7.410812207802178e-08,
+                    4.2055022035190557e-26,
+                    1.4144965943081154e-27,
+                    2.319981759469313e-30,
+                    3.350351070405965e-32,
+                    4.990146745578866e-51,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 211217850.21948224,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 2.0872839014423894,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.10717268646502917,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.00012560693981341156,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 7.360933313339525e-05,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 4.0951433550694804e-09,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 2.194655809168864,
+                  "total_atoms_per_g": 211217850.21948224
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 2.0074551053735245e-16,
+                  "photon_source_per_group_24": [
+                    0.0034963463013325167,
+                    1.5469749265439541e-31,
+                    2.4184275740561416e-45,
+                    2.1715272632467875e-25,
+                    1.4145770409348056e-11,
+                    1.04603396820534e-33,
+                    1.6118610944038665e-21,
+                    7.920979667107695e-12,
+                    5.048264481585822e-24,
+                    0.0014141135461959618,
+                    1.3409913979327322e-20,
+                    1.0263064501067645e-20,
+                    3.8614869215256525e-23,
+                    1.1327804464982112e-33,
+                    5.729412560959514e-28,
+                    8.290654569382208e-31,
+                    2.13198998061767e-45,
+                    2.8431891943768024e-58,
+                    7.698282431732845e-59,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 211217850.21948224,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 0.011051381886381835,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0014144606258888785,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 4.095136455244476e-09,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 9.003416298472219e-13,
+                      "nuclide": "V49"
+                    },
+                    {
+                      "activity_bq_per_g": 2.36611163565886e-20,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 0.012465846608307511,
+                  "total_atoms_per_g": 211217850.21948224
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 2.934198819686568e-12,
+                  "photon_source_per_group_24": [
+                    1.371495927230126,
+                    2.1117581873286506e-14,
+                    4.7068224762190374e-21,
+                    9.397153064949386e-18,
+                    0.0014946794629601898,
+                    1.3481043275757127e-08,
+                    0.06596759428698984,
+                    1.0785969816678503e-05,
+                    1.6104546010703654e-05,
+                    10.290471295968208,
+                    0.022834490658436853,
+                    0.021370553906337075,
+                    2.151142946278471e-05,
+                    1.5417646198053936,
+                    0.8129304331221773,
+                    0.11151162969032867,
+                    0.009530908540342291,
+                    1.835785566768988e-12,
+                    2.282416584066064e-47,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 211293801.03457558,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 5.670494024486759,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 4.685186808821562,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.6646055597123699,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.13785213205532143,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.0364458474286295,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 11.194602263033671,
+                  "total_atoms_per_g": 211293801.03457558
+                }
+              }
+            }
+          },
+          "alara": {
+            "result": {
+              "artifacts": {
+                "dump_sha256": "f1df39ff9d8b819a1502d28956f117ecd1d3c2852c19e5ad021a8f959cbe17ea",
+                "photsrc_sha256": "6d8faf9b96fbb9ba451a5986a0b086a320d09f6da3a5d3ce7c040dc019c81b39",
+                "stdout_sha256": "a2c0571bc56b610fb2ddfbb409dea019169ac94532f8a66cd611b2a7fadaab77"
+              },
+              "identity_crossval": {
+                "max_rel_err": 4.229635875562996e-05,
+                "n_checked": 34
+              },
+              "n_dump_isotopes": 29,
+              "n_isotopes_number_density": 29,
+              "n_isotopes_specific_activity": 14,
+              "n_isotopes_total_heat": 14,
+              "per_time": {
+                "0": {
+                  "cooling_s": 0.0,
+                  "decay_heat_w_per_g": 1.9832e-09,
+                  "photon_source_per_group_24": [
+                    502.734,
+                    190.192,
+                    16.4915,
+                    37.4428,
+                    285.297,
+                    6.36608,
+                    51.7002,
+                    50.8757,
+                    117.007,
+                    3576.05,
+                    3.68201,
+                    21.2749,
+                    16.4132,
+                    971.145,
+                    513.996,
+                    72.5774,
+                    6.15026,
+                    0.39681,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 512028259.215,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 3578.8,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 1801.1,
+                      "nuclide": "Mn57"
+                    },
+                    {
+                      "activity_bq_per_g": 362.66,
+                      "nuclide": "Cr55"
+                    },
+                    {
+                      "activity_bq_per_g": 195.67,
+                      "nuclide": "Mn58m1"
+                    },
+                    {
+                      "activity_bq_per_g": 42.735,
+                      "nuclide": "Mn59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 6074.2,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "2.592e+06": {
+                  "cooling_s": 2592000.0,
+                  "decay_heat_w_per_g": 6.0454e-13,
+                  "photon_source_per_group_24": [
+                    1.22007,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.00143404,
+                    0.0,
+                    0.0257213,
+                    5.04841e-08,
+                    0.0,
+                    4.42733,
+                    0.020843,
+                    0.0159449,
+                    2.17614e-05,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 463850169.18,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 4.4284,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.25902,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.11938,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.036884,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 4.6768e-11,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 4.8437,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+07": {
+                  "cooling_s": 31536000.0,
+                  "decay_heat_w_per_g": 2.8304e-13,
+                  "photon_source_per_group_24": [
+                    0.562769,
+                    0.0,
+                    0.0,
+                    0.0,
+                    7.76392e-06,
+                    0.0,
+                    6.42962e-06,
+                    2.39955e-08,
+                    0.0,
+                    2.10434,
+                    0.000112843,
+                    8.63243e-05,
+                    1.17815e-07,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 463845841.55,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 2.1049,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.094715,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.00019969,
+                      "nuclide": "Fe59"
+                    },
+                    {
+                      "activity_bq_per_g": 5.9328e-05,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 4.6768e-11,
+                      "nuclide": "Mn53"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 2.1998,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "3.1536e+08": {
+                  "cooling_s": 315360000.0,
+                  "decay_heat_w_per_g": 2.0122e-16,
+                  "photon_source_per_group_24": [
+                    0.00312744,
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.27278e-11,
+                    0.0,
+                    3.34458e-29,
+                    1.63139e-11,
+                    0.0,
+                    0.00143069,
+                    6.7141e-27,
+                    5.13627e-27,
+                    7.00995e-30,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 463852827.18,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 0.0097906,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.001431,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 4.6768e-11,
+                      "nuclide": "Mn53"
+                    },
+                    {
+                      "activity_bq_per_g": 1.1881e-26,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 0.011222,
+                  "total_atoms_per_g": 1.0779e+22
+                },
+                "86400": {
+                  "cooling_s": 86400.0,
+                  "decay_heat_w_per_g": 2.9153e-12,
+                  "photon_source_per_group_24": [
+                    1.3588,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.00225302,
+                    0.0,
+                    0.0530866,
+                    5.38416e-08,
+                    0.0,
+                    10.3102,
+                    0.0350078,
+                    0.0305348,
+                    3.41894e-05,
+                    1.52079,
+                    0.802794,
+                    0.112617,
+                    0.00961092,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "product_atoms_per_g": 463925072.5799999,
+                  "top5_nuclides_by_activity": [
+                    {
+                      "activity_bq_per_g": 5.6535,
+                      "nuclide": "Mn56"
+                    },
+                    {
+                      "activity_bq_per_g": 4.7229,
+                      "nuclide": "Mn54"
+                    },
+                    {
+                      "activity_bq_per_g": 0.53512,
+                      "nuclide": "Cr51"
+                    },
+                    {
+                      "activity_bq_per_g": 0.1218,
+                      "nuclide": "Fe55"
+                    },
+                    {
+                      "activity_bq_per_g": 0.057948,
+                      "nuclide": "Fe59"
+                    }
+                  ],
+                  "total_activity_bq_per_g": 11.091,
+                  "total_atoms_per_g": 1.0779e+22
+                }
+              },
+              "times_s": [
+                0.0,
+                86400.0,
+                2592000.0,
+                31536000.0,
+                315360000.0
+              ],
+              "unresolved_isotopes": []
+            }
+          }
+        }
+      }
+    },
+    "source": "P26b g2_p26b_leg_ledger.jsonl product_plus_data rows (ALARA/FENDL-3.2c vs ACTINV/TENDL-2025-patched)"
+  },
+  "partition": "p28_qualifying",
+  "phase": "P28",
+  "schema": "actinv-p28-g2-1",
+  "smoke_study": {
+    "population": {
+      "contract_gap": 0,
+      "declared": 8,
+      "executed": 8,
+      "failed": 0,
+      "undefined_response_instances": 0
+    },
+    "returncode": 0,
+    "verdict": "complete"
+  }
+}
