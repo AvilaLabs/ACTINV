@@ -1,0 +1,69 @@
+{
+  "baseline_binary": {
+    "note": "baseline-recorded: P31 rebuilds the binary; data artifacts stay pinned",
+    "path": "target/release/actinv",
+    "sha256": "5cd169ac0df453b85c9ffc4a9c025ca6b9e405aecab0a55efc5c4267b7a9cff2"
+  },
+  "gate": "G0",
+  "identities": {
+    "activation_library": {
+      "path": "target/p25c-release/tendl-2025-patched-neutron-709g.npz",
+      "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+    },
+    "covariance_sidecar": {
+      "path": "target/p25c-release/tendl-2025-patched-neutron-709g.cov.npz",
+      "sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+    }
+  },
+  "opening_commit": "1fb7b8830e21e6da5ff3b59fa4b787193dfa9f14",
+  "phase": "P31",
+  "prior_verdicts": {
+    "verdict_p27.json": "P27-PASS",
+    "verdict_p28.json": "P28-CONDITIONAL",
+    "verdict_p29.json": "P29-CONDITIONAL",
+    "verdict_p30.json": "P30-CONDITIONAL"
+  },
+  "protocol_sha256": "0d82ae1a56beb39f5e44e0127f98fd55f3f7cf39a95ab41c10abfb243250caea",
+  "tolerances": {
+    "analytic_rel": 1e-06,
+    "reuse_equality": "bit-identical (tolerance unused)"
+  },
+  "validation_population": {
+    "controls": [
+      "reuse_correctness",
+      "resume_torn",
+      "resume_corrupt",
+      "resume_stale_spec",
+      "distinct_signatures",
+      "interrupted_run"
+    ],
+    "negative_controls": [
+      "spec_mismatch_accepted",
+      "corrupt_record_swallowed",
+      "phantom_resume",
+      "option_drift",
+      "directory_pollution"
+    ],
+    "robustness_cases": [
+      "fe__fns_709__pulse_5min",
+      "fe_co100wppm__fns_709__pulse_5min"
+    ],
+    "robustness_samples": 4,
+    "seed_hex": "0x5EED31",
+    "targets": {
+      "resume_outputs_identical": true,
+      "resume_skips_verify": true,
+      "smoke_prepared_runs": 1
+    },
+    "workload_cases": [
+      "fe__fns_709__pulse_5min",
+      "fe__fns_709__cont_1d",
+      "fe__irdff_sp_mat9861_709__pulse_5min",
+      "fe__irdff_sp_mat9861_709__cont_1d",
+      "fe_co100wppm__fns_709__pulse_5min",
+      "fe_co100wppm__fns_709__cont_1d",
+      "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+      "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
+    ]
+  }
+}
