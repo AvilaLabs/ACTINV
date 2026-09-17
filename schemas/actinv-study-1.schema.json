@@ -5,103 +5,254 @@
   "description": "One versioned study document: a shared library/decay context, a materials x spectra x schedules case grid, the responses to extract and an optional predeclared comparison. Unknown fields are errors; recognised unqualified-family fields (robustness, refinement, spatial_handoff) are refused at validation with family_not_qualified.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["study", "study_id", "library", "cases"],
+  "required": [
+    "study",
+    "study_id",
+    "library",
+    "cases"
+  ],
   "properties": {
-    "study": {"const": "actinv-study-1"},
-    "study_id": {"type": "string", "minLength": 1},
-    "title": {"type": "string"},
+    "study": {
+      "const": "actinv-study-1"
+    },
+    "study_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string"
+    },
     "template": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id"],
+      "required": [
+        "id"
+      ],
       "properties": {
-        "id": {"type": "string", "minLength": 1},
-        "version": {"type": "integer", "minimum": 1, "default": 1}
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        }
       }
     },
     "library": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path"],
+      "required": [
+        "path"
+      ],
       "properties": {
-        "path": {"type": "string", "minLength": 1},
-        "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        }
       }
     },
     "decay": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["primary"],
+      "required": [
+        "primary"
+      ],
       "properties": {
-        "primary": {"type": "string", "minLength": 1},
-        "fallback": {"type": ["string", "null"]}
+        "primary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fallback": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
       },
-      "default": {"primary": ""}
+      "default": {
+        "primary": ""
+      }
     },
     "cases": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["materials", "spectra", "schedules"],
+      "required": [
+        "materials",
+        "spectra",
+        "schedules"
+      ],
       "properties": {
         "materials": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["name", "composition"],
+            "required": [
+              "name",
+              "composition"
+            ],
             "properties": {
-              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
-              "mass_g": {"type": ["number", "null"], "exclusiveMinimum": 0},
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.-]+$"
+              },
+              "mass_g": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "exclusiveMinimum": 0
+              },
               "composition": {
                 "type": "object",
                 "minProperties": 1,
-                "additionalProperties": {"type": "number"}
+                "additionalProperties": {
+                  "type": "number"
+                }
               }
             }
           }
         },
         "spectra": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["name"],
+            "required": [
+              "name"
+            ],
             "oneOf": [
-              {"required": ["spec_ref"]},
-              {"required": ["flux_file"]},
-              {"required": ["flux_per_group"]}
+              {
+                "required": [
+                  "spec_ref"
+                ]
+              },
+              {
+                "required": [
+                  "flux_file"
+                ]
+              },
+              {
+                "required": [
+                  "flux_per_group"
+                ]
+              }
             ],
             "properties": {
-              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
-              "spec_ref": {"type": ["string", "null"]},
-              "flux_file": {"type": ["string", "null"]},
-              "flux_per_group": {"type": ["array", "null"], "items": {"type": "number"}},
-              "structure": {"type": "string", "default": "fispact-709"},
-              "descending": {"type": "boolean", "default": false},
-              "total": {"type": ["number", "null"]},
-              "boundaries_eV": {"type": ["array", "null"], "items": {"type": "number"}}
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.-]+$"
+              },
+              "spec_ref": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flux_file": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "flux_per_group": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "number"
+                }
+              },
+              "structure": {
+                "type": "string",
+                "default": "fispact-709"
+              },
+              "descending": {
+                "type": "boolean",
+                "default": false
+              },
+              "total": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "boundaries_eV": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "number"
+                }
+              }
             }
           }
         },
         "schedules": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["name", "steps"],
+            "required": [
+              "name",
+              "steps"
+            ],
             "properties": {
-              "name": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_.-]+$"
+              },
               "steps": {
-                "type": "array", "minItems": 1,
+                "type": "array",
+                "minItems": 1,
                 "items": {
                   "type": "object",
                   "additionalProperties": false,
-                  "required": ["dt", "flux"],
+                  "required": [
+                    "dt",
+                    "flux"
+                  ],
                   "properties": {
-                    "dt": {"type": "string", "minLength": 1},
-                    "flux": {"type": "number", "minimum": 0},
-                    "feed": {"type": ["object", "null"], "additionalProperties": {"type": "number"}},
-                    "removal": {"type": ["object", "null"], "additionalProperties": {"type": "number"}}
+                    "dt": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "flux": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "feed": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    },
+                    "removal": {
+                      "type": [
+                        "object",
+                        "null"
+                      ],
+                      "additionalProperties": {
+                        "type": "number"
+                      }
+                    }
                   }
                 }
               }
@@ -112,7 +263,10 @@
     },
     "cooling_times_s": {
       "type": "array",
-      "items": {"type": "number", "minimum": 0},
+      "items": {
+        "type": "number",
+        "minimum": 0
+      },
       "default": []
     },
     "responses": {
@@ -129,55 +283,226 @@
       "default": []
     },
     "comparison": {
-      "type": ["object", "null"],
+      "type": [
+        "object",
+        "null"
+      ],
       "additionalProperties": false,
-      "required": ["axes", "decision_rules"],
+      "required": [
+        "axes",
+        "decision_rules"
+      ],
       "properties": {
         "axes": {
-          "type": "array", "minItems": 1,
-          "items": {"enum": ["material", "spectrum", "schedule"]}
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "material",
+              "spectrum",
+              "schedule"
+            ]
+          }
         },
         "decision_rules": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "kind", "response"],
+            "required": [
+              "id",
+              "kind",
+              "response"
+            ],
             "properties": {
-              "id": {"type": "string", "minLength": 1},
-              "kind": {"enum": ["within_rel", "max_rel", "min_rel", "ratio_band", "rank_equal"]},
-              "response": {"type": "string"},
-              "bound": {"type": ["number", "null"], "minimum": 0},
-              "band": {"type": ["array", "null"], "minItems": 2, "maxItems": 2, "items": {"type": "number"}},
-              "expected_order": {"type": ["array", "null"], "items": {"type": "string"}}
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "kind": {
+                "enum": [
+                  "within_rel",
+                  "max_rel",
+                  "min_rel",
+                  "ratio_band",
+                  "rank_equal"
+                ]
+              },
+              "response": {
+                "type": "string"
+              },
+              "bound": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "band": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              },
+              "expected_order": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "string"
+                }
+              }
             }
           }
         }
       }
     },
-    "options": {"type": "object"},
-    "robustness": {"description": "ACT-ROBUST-01 — refused family_not_qualified at P27 (delivered by P30)"},
-    "refinement": {
-      "description": "ACT-REFINE-01 (qualified by P29): per-(response, time) numerical criteria discharged against a reference solve",
-      "type": "object", "additionalProperties": false,
-      "required": ["criteria"],
+    "options": {
+      "type": "object"
+    },
+    "robustness": {
+      "description": "ACT-ROBUST-01 (qualified by P30): nonlinear input sampling \u2014 correlated MF=33 cross-section draws plus flux and composition channels, per-response sample statistics",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "samples",
+        "seed",
+        "responses"
+      ],
       "properties": {
-        "criteria": {
-          "type": "array", "minItems": 1,
-          "items": {
-            "type": "object", "additionalProperties": false,
-            "required": ["response", "time_s"],
-            "properties": {
-              "response": {"type": "string", "enum": ["total_activity_bq_per_g", "decay_heat_w_per_g", "photon_source_per_group", "inventory_per_nuclide", "total_atoms_per_g"]},
-              "time_s": {"type": "number", "minimum": 0},
-              "rel": {"type": ["number", "null"], "minimum": 0},
-              "abs": {"type": ["number", "null"], "minimum": 0}
+        "samples": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "channels": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "cross_section_mf33": {
+              "type": "boolean"
+            },
+            "flux_rel_std": {
+              "type": "number",
+              "minimum": 0
+            },
+            "composition_rel_std": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number",
+                "minimum": 0
+              }
             }
           }
         },
-        "resource_limit_runs": {"type": "integer", "minimum": 0, "default": 4}
+        "covariance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path"
+          ],
+          "properties": {
+            "path": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string"
+            }
+          },
+          "description": "required when channels.cross_section_mf33 is true"
+        },
+        "responses": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "total_activity_bq_per_g",
+              "decay_heat_w_per_g",
+              "photon_source_per_group",
+              "inventory_per_nuclide",
+              "total_atoms_per_g"
+            ]
+          }
+        },
+        "resource_limit_runs": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
       }
     },
-    "spatial_handoff": {"description": "ACT-SOURCE-01 — refused family_not_qualified at P27 (delivered by P32)"}
+    "refinement": {
+      "description": "ACT-REFINE-01 (qualified by P29): per-(response, time) numerical criteria discharged against a reference solve",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criteria"
+      ],
+      "properties": {
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "response",
+              "time_s"
+            ],
+            "properties": {
+              "response": {
+                "type": "string",
+                "enum": [
+                  "total_activity_bq_per_g",
+                  "decay_heat_w_per_g",
+                  "photon_source_per_group",
+                  "inventory_per_nuclide",
+                  "total_atoms_per_g"
+                ]
+              },
+              "time_s": {
+                "type": "number",
+                "minimum": 0
+              },
+              "rel": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "abs": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "resource_limit_runs": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 4
+        }
+      }
+    },
+    "spatial_handoff": {
+      "description": "ACT-SOURCE-01 \u2014 refused family_not_qualified at P27 (delivered by P32)"
+    }
   }
 }

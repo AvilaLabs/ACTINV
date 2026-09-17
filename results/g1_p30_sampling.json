@@ -1,0 +1,22 @@
+{
+  "cases": {
+    "fe__fns_709__pulse_5min": {
+      "correlated": true,
+      "covered_rows": 166,
+      "n_failed": 0,
+      "samples": 16,
+      "status": "executed"
+    },
+    "fe_co100wppm__fns_709__pulse_5min": {
+      "correlated": true,
+      "covered_rows": 210,
+      "n_failed": 0,
+      "samples": 16,
+      "status": "executed"
+    }
+  },
+  "gate": "G1",
+  "phase": "P30",
+  "record_path": "/home/connoravila/nuclear-data/p30-work/g1/run/study_record.json",
+  "study_sha256": "616ef894231bb85383ff36321c281df51484ece2234c32491edc91dd7ff0d247"
+}

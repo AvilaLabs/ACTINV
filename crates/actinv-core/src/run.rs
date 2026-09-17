@@ -1611,6 +1611,27 @@ impl PreparedRun {
             effective_fission_yields.insert(parent, effective);
         }
         let mut led = RateLedger::default();
+        let rate_scales: Option<std::collections::HashMap<usize, f64>> = spec
+            .options
+            .rate_scale
+            .as_ref()
+            .map(|m| {
+                m.iter()
+                    .map(|(k, v)| {
+                        let row = k
+                            .parse::<usize>()
+                            .map_err(|_| format!("rate_scale key '{k}' is not a row index"))?;
+                        if !v.is_finite() || *v <= 0.0 {
+                            return Err(format!("rate_scale['{k}'] must be finite and positive"));
+                        }
+                        if row >= lib.rows().len() {
+                            return Err(format!("rate_scale row {row} out of range"));
+                        }
+                        Ok((row, *v))
+                    })
+                    .collect()
+            })
+            .transpose()?;
         let reaction_assembly = if spec.uncertainty.is_some() {
             chain::reaction_rates_with_derivatives(
                 lib,
@@ -1620,6 +1641,7 @@ impl PreparedRun {
                 &effective_fission_yields,
                 &mut led,
                 shield_plan.as_ref(),
+                rate_scales.as_ref(),
             )
         } else {
             chain::ReactionAssembly {
@@ -1632,6 +1654,7 @@ impl PreparedRun {
                     &effective_fission_yields,
                     &mut led,
                     shield_plan.as_ref(),
+                    rate_scales.as_ref(),
                 ),
                 derivatives: Vec::new(),
             }
@@ -2752,7 +2775,8 @@ impl PreparedRun {
             "photon_spectra": photon_diagnostics,
             "schedule": schedule_ledger,
             "assembly": {"n_bulk_isotopes": bulk.len(), "n_decay_triplets": d_src.len(), "n_reaction_triplets": r_src.len(),
-                         "n_library_rows": lib.rows().len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>()},
+                         "n_library_rows": lib.rows().len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>(),
+                         "rate_scale": spec.options.rate_scale.as_ref().map(|m| m.len()).unwrap_or(0)},
         });
         if !spec.projectile.is_neutron() {
             ledger.as_object_mut().expect("ledger is an object").insert(

@@ -261,6 +261,12 @@ pub struct Options {
     /// their rates pass through unmodified.
     #[serde(default)]
     pub require_shielding_complete: bool,
+    /// Optional per-library-row multiplicative perturbation of collapsed
+    /// reaction rates, keyed by activation-library row index (P30
+    /// nonlinear sampling). Absent = unperturbed. The applied factors are
+    /// named in the run ledger.
+    #[serde(default)]
+    pub rate_scale: Option<BTreeMap<String, f64>>,
 }
 fn auto() -> String {
     "auto".into()
@@ -287,6 +293,7 @@ impl Default for Options {
             cram_order: cram16_order(),
             outputs: None,
             require_shielding_complete: false,
+            rate_scale: None,
         }
     }
 }
@@ -582,6 +589,20 @@ impl Spec {
         }
         if !matches!(self.options.cram_order, 16 | 48) {
             return Err("options.cram_order must be 16 or 48".into());
+        }
+        if let Some(scales) = &self.options.rate_scale {
+            for (key, factor) in scales {
+                if key.parse::<usize>().is_err() {
+                    return Err(format!(
+                        "options.rate_scale key '{key}' is not a library row index"
+                    ));
+                }
+                if !factor.is_finite() || *factor <= 0.0 {
+                    return Err(format!(
+                        "options.rate_scale['{key}'] must be finite and positive"
+                    ));
+                }
+            }
         }
         if !self.projectile.is_neutron() && self.options.temperature_K != 0.0 {
             return Err(format!(

@@ -47,10 +47,7 @@ pub const RULE_KINDS: &[&str] = &[
     "rank_equal",
 ];
 
-const UNQUALIFIED_FAMILIES: &[(&str, &str, &str)] = &[
-    ("robustness", "ACT-ROBUST-01", "P30"),
-    ("spatial_handoff", "ACT-SOURCE-01", "P32"),
-];
+const UNQUALIFIED_FAMILIES: &[(&str, &str, &str)] = &[("spatial_handoff", "ACT-SOURCE-01", "P32")];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -79,12 +76,54 @@ pub struct Study {
     /// error accounting.
     #[serde(default)]
     pub refinement: Option<Refinement>,
+    /// ACT-ROBUST-01 (qualified by P30): nonlinear input sampling against
+    /// the nominal case — correlated MF=33 cross-section draws, flux
+    /// normalization and composition channels.
+    #[serde(default)]
+    pub robustness: Option<Robustness>,
     // Families not yet qualified: accepted by the schema, refused at
     // validation with `family_not_qualified` naming the delivering phase.
     #[serde(default)]
-    pub robustness: Option<Value>,
-    #[serde(default)]
     pub spatial_handoff: Option<Value>,
+}
+
+/// Sampling channels for ACT-ROBUST-01.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RobustChannels {
+    /// correlated draws on the spectrum-collapsed MF=33 covariance over
+    /// active library rows (requires `robustness.covariance`).
+    #[serde(default)]
+    pub cross_section_mf33: bool,
+    /// relative std of a normal draw on the total flux normalization,
+    /// applied to every schedule step.
+    #[serde(default)]
+    pub flux_rel_std: f64,
+    /// per-element relative stds on the wt_percent composition; draws are
+    /// renormalized to the declared total, negative draws clamp at zero
+    /// and are counted.
+    #[serde(default)]
+    pub composition_rel_std: BTreeMap<String, f64>,
+}
+
+/// ACT-ROBUST-01 block: sample count, seed, channels, responses.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Robustness {
+    /// number of perturbed solves per case (>= 2)
+    pub samples: u32,
+    /// fixed PRNG seed; repeatability only, not convergence evidence
+    pub seed: u64,
+    #[serde(default)]
+    pub channels: RobustChannels,
+    /// covariance sidecar {path, sha256} for cross_section_mf33
+    #[serde(default)]
+    pub covariance: Option<LibraryRef>,
+    /// qualified responses collected from every sample
+    pub responses: Vec<String>,
+    /// optional cap on total perturbed runs per case
+    #[serde(default)]
+    pub resource_limit_runs: Option<u32>,
 }
 
 /// One user-declared numerical criterion on a response at a cooling time.
@@ -228,9 +267,6 @@ impl Study {
                 self.study
             ));
         }
-        if self.robustness.is_some() {
-            return Err(family_err("robustness"));
-        }
         if self.spatial_handoff.is_some() {
             return Err(family_err("spatial_handoff"));
         }
@@ -238,6 +274,47 @@ impl Study {
             if rf.criteria.is_empty() {
                 return Err("refinement.criteria must be non-empty".into());
             }
+        }
+        if let Some(rb) = &self.robustness {
+            if rb.samples < 2 {
+                return Err("robustness.samples must be >= 2".into());
+            }
+            if rb.responses.is_empty() {
+                return Err("robustness.responses must be non-empty".into());
+            }
+            for response in &rb.responses {
+                if !QUALIFIED_RESPONSES.contains(&response.as_str()) {
+                    return Err(format!(
+                        "robustness response '{response}' is not qualified \
+                         (family_not_qualified)"
+                    ));
+                }
+            }
+            let ch = &rb.channels;
+            if !ch.flux_rel_std.is_finite() || ch.flux_rel_std < 0.0 {
+                return Err("robustness.channels.flux_rel_std must be finite and \
+                     nonnegative"
+                    .into());
+            }
+            for (element, std) in &ch.composition_rel_std {
+                if !std.is_finite() || *std < 0.0 {
+                    return Err(format!(
+                        "robustness composition std for '{element}' must be \
+                         finite and nonnegative"
+                    ));
+                }
+            }
+            if ch.cross_section_mf33 && rb.covariance.is_none() {
+                return Err("robustness.channels.cross_section_mf33 requires \
+                     robustness.covariance {path, sha256}"
+                    .into());
+            }
+            if !ch.cross_section_mf33 && ch.flux_rel_std == 0.0 && ch.composition_rel_std.is_empty()
+            {
+                return Err("robustness enables no channel".into());
+            }
+        }
+        if let Some(rf) = &self.refinement {
             for c in &rf.criteria {
                 if !QUALIFIED_RESPONSES.contains(&c.response.as_str()) {
                     return Err(format!(
@@ -743,6 +820,9 @@ pub fn execute(
                 if let Some(rf) = &study.refinement {
                     let rr2 = evaluate_refinement(rf, &spec, &outv, &cdir);
                     rec["refinement"] = rr2;
+                }
+                if let Some(rb) = &study.robustness {
+                    rec["robustness"] = evaluate_robustness(rb, &spec, &outv, base, &cdir);
                 }
                 rec
             }
@@ -1410,7 +1490,7 @@ mod tests {
 
     #[test]
     fn unqualified_families_are_named() {
-        for (field, phase) in [("robustness", "P30"), ("spatial_handoff", "P32")] {
+        for (field, phase) in [("spatial_handoff", "P32")] {
             let mut v = study_json();
             v[field] = json!({});
             let e = Study::from_json(&v.to_string()).unwrap_err();
@@ -1576,5 +1656,612 @@ mod tests {
     fn canonical_json_is_key_stable() {
         let a = canonical_json(&json!({"b": 1, "a": [2.0, {"z": null}]}));
         assert_eq!(a, r#"{"a":[2.0,{"z":null}],"b":1}"#);
+    }
+}
+
+// ---- ACT-ROBUST-01: nonlinear input sampling (P30) ----
+
+/// Deterministic PRNG (xorshift64* + Box-Muller). Fixed seed gives
+/// repeatability, not convergence evidence.
+struct Rng(u64);
+
+impl Rng {
+    fn next_u64(&mut self) -> u64 {
+        let mut x = self.0;
+        x ^= x >> 12;
+        x ^= x << 25;
+        x ^= x >> 27;
+        self.0 = x;
+        x.wrapping_mul(0x2545_F491_4F6C_DD1D)
+    }
+    fn uniform(&mut self) -> f64 {
+        (self.next_u64() >> 11) as f64 * (1.0 / (1u64 << 53) as f64)
+    }
+    fn normal(&mut self) -> f64 {
+        let u1 = self.uniform().max(1e-300);
+        let u2 = self.uniform();
+        (-2.0 * u1.ln()).sqrt() * (2.0 * std::f64::consts::PI * u2).cos()
+    }
+}
+
+/// Lower-triangular Cholesky factor of a row-major symmetric matrix, or
+/// None when not positive-semidefinite.
+fn cholesky(a: &[f64], n: usize) -> Option<Vec<f64>> {
+    let mut l = vec![0.0f64; n * n];
+    for i in 0..n {
+        for j in 0..=i {
+            let mut sum = a[i * n + j];
+            for k in 0..j {
+                sum -= l[i * n + k] * l[j * n + k];
+            }
+            if i == j {
+                // measured covariance collapses are often only
+                // numerically semi-definite: tolerate small negative
+                // diagonal residuals relative to the diagonal scale
+                if sum < 0.0 && sum < -1e-10 * a[i * n + i].abs().max(1e-300) {
+                    return None;
+                }
+                l[i * n + i] = sum.max(0.0).sqrt();
+            } else if l[j * n + j] > 0.0 {
+                l[i * n + j] = sum / l[j * n + j];
+            }
+        }
+    }
+    Some(l)
+}
+
+fn resolve_path(base: &Path, p: &str) -> PathBuf {
+    let path = Path::new(p);
+    if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        base.join(path)
+    }
+}
+
+/// sha256 of a file, hex.
+fn file_sha256(path: &Path) -> Result<String, String> {
+    use sha2::Digest;
+    let mut h = sha2::Sha256::new();
+    let mut f = fs::File::open(path).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    std::io::copy(&mut f, &mut h).map_err(|e| format!("cannot read {}: {e}", path.display()))?;
+    Ok(format!("{:x}", h.finalize()))
+}
+
+/// Perturb `spec` per the drawn factors: rate_scale entries, total flux
+/// normalization, wt_percent composition renormalized to its declared
+/// total. Returns (clamped_composition_draws, applied_rate_scales).
+fn perturb_spec(
+    spec: &mut Spec,
+    rate_factors: &[(usize, f64)],
+    flux_factor: f64,
+    comp_factors: &BTreeMap<String, f64>,
+) -> usize {
+    if !rate_factors.is_empty() {
+        spec.options.rate_scale = Some(
+            rate_factors
+                .iter()
+                .map(|(row, f)| (row.to_string(), *f))
+                .collect(),
+        );
+    }
+    if let Some(total) = &mut spec.spectrum.total {
+        *total *= flux_factor;
+    } else {
+        for g in &mut spec.spectrum.flux_per_group {
+            *g *= flux_factor;
+        }
+    }
+    let mut clamps = 0;
+    if !comp_factors.is_empty() {
+        let total: f64 = spec.material.composition.values().sum();
+        for (key, value) in spec.material.composition.iter_mut() {
+            if let Some(f) = comp_factors.get(key) {
+                if *f <= 0.0 {
+                    clamps += 1;
+                }
+                *value = (*value * f).max(0.0);
+            }
+        }
+        let perturbed: f64 = spec.material.composition.values().sum();
+        if perturbed > 0.0 {
+            for value in spec.material.composition.values_mut() {
+                *value *= total / perturbed;
+            }
+        }
+    }
+    clamps
+}
+
+/// Collapsed-covariance context for one case.
+struct CovCtx {
+    rows: Vec<usize>,
+    sigma0: Vec<f64>,
+    cov: Vec<f64>,
+    uncovered: Vec<usize>,
+}
+
+/// Evaluate ACT-ROBUST-01 for one case: nominal + `samples` perturbed
+/// solves, per-response sample statistics and coverage accounting.
+fn evaluate_robustness(
+    rb: &Robustness,
+    spec: &Spec,
+    nominal_out: &Value,
+    base: &Path,
+    cdir: &Path,
+) -> Value {
+    match evaluate_robustness_inner(rb, spec, nominal_out, base, cdir) {
+        Ok(v) => v,
+        Err(e) => json!({"status": "gap", "error": e}),
+    }
+}
+
+fn evaluate_robustness_inner(
+    rb: &Robustness,
+    spec: &Spec,
+    nominal_out: &Value,
+    base: &Path,
+    cdir: &Path,
+) -> Result<Value, String> {
+    use actinv_data::{composition, covariance, decay, library};
+
+    let physical = spec.physical_inputs()?;
+    let phi = physical.flux.values();
+
+    // resolve the covariance collapse over rows active for this material
+    let mut cov_ctx: Option<CovCtx> = None;
+    if rb.channels.cross_section_mf33 {
+        let cref = rb
+            .covariance
+            .as_ref()
+            .ok_or("cross_section_mf33 requires robustness.covariance")?;
+        let cov_path = resolve_path(base, &cref.path);
+        if let Some(want) = &cref.sha256 {
+            let got = file_sha256(&cov_path)?;
+            if got != *want {
+                return Err(format!(
+                    "covariance sha256 mismatch: declared {want}, got {got}"
+                ));
+            }
+        }
+        let cov = covariance::read_npz(cov_path.to_str().ok_or("covariance path not utf-8")?)?;
+        let lib_path = resolve_path(base, &spec.library.path);
+        let lib = library::read_npz_after_sha256_verification(
+            lib_path.to_str().ok_or("library path not utf-8")?,
+        )?;
+        let index_path = {
+            let p = lib_path.display().to_string();
+            let stem = p.strip_suffix(".npz").unwrap_or(&p);
+            PathBuf::from(format!("{stem}_index.json"))
+        };
+        let index: Value = serde_json::from_str(
+            &fs::read_to_string(&index_path)
+                .map_err(|e| format!("cannot read {index_path:?}: {e}"))?,
+        )
+        .map_err(|e| format!("cannot parse {index_path:?}: {e}"))?;
+        let lib_targets: Vec<(i32, i32)> = index["targets"]
+            .as_array()
+            .ok_or("library index has no targets")?
+            .iter()
+            .map(|t| {
+                (
+                    t["za"].as_i64().unwrap_or(0) as i32,
+                    t["liso"].as_i64().unwrap_or(0) as i32,
+                )
+            })
+            .collect();
+        let mut nuclides = decay::parse_file(&spec.decay.primary).map_err(|e| e.to_string())?;
+        if let Some(fallback) = &spec.decay.fallback {
+            if !fallback.is_empty() {
+                for (k, v) in decay::parse_file(fallback).map_err(|e| e.to_string())? {
+                    nuclides.entry(k).or_insert(v);
+                }
+            }
+        }
+        let (isotopes, _) = composition::material_atoms_per_gram(
+            &spec.material.composition,
+            &spec.material.basis,
+            &nuclides,
+        )?;
+        let isotope_set: std::collections::HashSet<(i32, i32)> = isotopes.keys().copied().collect();
+        let active_rows: Vec<usize> = lib
+            .rows
+            .iter()
+            .enumerate()
+            .filter(|(_, r)| {
+                lib_targets
+                    .get(r.target)
+                    .map(|t| isotope_set.contains(t))
+                    .unwrap_or(false)
+            })
+            .map(|(i, _)| i)
+            .collect();
+        let collapsed = cov.collapse(&lib, phi, &active_rows)?;
+        cov_ctx = Some(CovCtx {
+            rows: collapsed.row_indices,
+            sigma0: collapsed.one_group_barns,
+            cov: collapsed.covariance_barn2,
+            uncovered: collapsed.uncovered_rows,
+        });
+    }
+
+    let n = rb
+        .resource_limit_runs
+        .map(|m| m.min(rb.samples))
+        .unwrap_or(rb.samples);
+    let truncated = n < rb.samples;
+
+    // precompute the xs Cholesky factor once per case; if the collapsed
+    // matrix is not numerically PSD, retry with increasing diagonal
+    // ridge, then fall back to independent diagonal draws
+    let m_diag_mean = cov_ctx.as_ref().map(|c| {
+        let m = c.rows.len();
+        if m == 0 {
+            0.0
+        } else {
+            (0..m).map(|i| c.cov[i * m + i].max(0.0)).sum::<f64>() / m as f64
+        }
+    });
+    let (xs_chol, xs_ridge) = cov_ctx
+        .as_ref()
+        .map(|c| {
+            let m = c.rows.len();
+            let mean = m_diag_mean.unwrap_or(0.0);
+            for k in [0.0, 1e-12, 1e-9, 1e-6, 1e-4, 1e-2] {
+                let ridge = k * mean;
+                let mut loaded = c.cov.clone();
+                if ridge > 0.0 {
+                    for i in 0..m {
+                        loaded[i * m + i] += ridge;
+                    }
+                }
+                if let Some(l) = cholesky(&loaded, m) {
+                    return (Some(l), ridge);
+                }
+            }
+            (None, f64::NAN)
+        })
+        .unwrap_or((None, f64::NAN));
+    let xs_correlated = xs_chol.is_some();
+    let xs_diag: Option<Vec<f64>> = if xs_chol.is_none() {
+        cov_ctx.as_ref().map(|c| {
+            let m = c.sigma0.len();
+            (0..m).map(|i| c.cov[i * m + i].max(0.0).sqrt()).collect()
+        })
+    } else {
+        None
+    };
+
+    let mut rng = Rng(rb.seed ^ 0x9E37_79B9_7F4A_7C15);
+    let nominal_vals = response_times(nominal_out, &rb.responses);
+    let mut samples_out: Vec<Value> = Vec::new();
+    let mut n_failed = 0usize;
+    let mut n_clamped_comp = 0usize;
+    let mut n_clamped_xs = 0usize;
+    let mut n_applied_rows = 0usize;
+    let mut sample_digests = Vec::new();
+
+    for i in 0..n {
+        let mut sspec = spec.clone();
+        // flux normalization draw
+        let flux_factor = if rb.channels.flux_rel_std > 0.0 {
+            (1.0 + rng.normal() * rb.channels.flux_rel_std).max(0.0)
+        } else {
+            1.0
+        };
+        // composition draws
+        let comp_factors: BTreeMap<String, f64> = rb
+            .channels
+            .composition_rel_std
+            .iter()
+            .map(|(k, s)| (k.clone(), 1.0 + rng.normal() * s))
+            .collect();
+        // cross-section draws: correlated Cholesky or diagonal fallback
+        let mut rate_factors: Vec<(usize, f64)> = Vec::new();
+        if let Some(ctx) = &cov_ctx {
+            if let Some(l) = &xs_chol {
+                let m = ctx.rows.len();
+                let z: Vec<f64> = (0..m).map(|_| rng.normal()).collect();
+                for (i2, &row) in ctx.rows.iter().enumerate() {
+                    let mut delta = 0.0;
+                    for (j, &zv) in z.iter().enumerate().take(i2 + 1) {
+                        delta += l[i2 * m + j] * zv;
+                    }
+                    let s0 = ctx.sigma0[i2];
+                    let perturbed = s0 + delta;
+                    if perturbed <= 0.0 {
+                        n_clamped_xs += 1;
+                    }
+                    if s0 > 0.0 {
+                        rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
+                    }
+                }
+            } else if let Some(diag) = &xs_diag {
+                for (i2, &row) in ctx.rows.iter().enumerate() {
+                    let s0 = ctx.sigma0[i2];
+                    let perturbed = s0 + rng.normal() * diag[i2];
+                    if perturbed <= 0.0 {
+                        n_clamped_xs += 1;
+                    }
+                    if s0 > 0.0 {
+                        rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
+                    }
+                }
+            }
+        }
+        n_applied_rows = n_applied_rows.max(rate_factors.len());
+        n_clamped_comp += perturb_spec(&mut sspec, &rate_factors, flux_factor, &comp_factors);
+        let spath = cdir.join(format!("rob_{i}.json"));
+        let stext = serde_json::to_string_pretty(&serde_json::to_value(&sspec).unwrap_or_default())
+            .unwrap_or_default();
+        let _ = fs::write(&spath, format!("{stext}\n"));
+        match run(&sspec, "study") {
+            Ok(rr) => {
+                let ov = serde_json::to_value(&rr).unwrap_or_default();
+                let opath = cdir.join(format!("rob_{i}.out.json"));
+                let _ = fs::write(
+                    &opath,
+                    format!(
+                        "{}\n",
+                        serde_json::to_string_pretty(&ov).unwrap_or_default()
+                    ),
+                );
+                sample_digests.push(json!({
+                    "sample": i,
+                    "spec_sha256": file_sha256(&spath).ok(),
+                    "out_sha256": file_sha256(&opath).ok(),
+                    "flux_factor": flux_factor,
+                }));
+                samples_out.push(ov);
+            }
+            Err(e) => {
+                n_failed += 1;
+                sample_digests.push(json!({
+                    "sample": i,
+                    "spec_sha256": file_sha256(&spath).ok(),
+                    "failed": e,
+                }));
+            }
+        }
+    }
+
+    // per-response statistics across samples
+    let mut response_stats = serde_json::Map::new();
+    for response in &rb.responses {
+        for (time_s, tkey, nominal_v) in &nominal_vals[response] {
+            let vals: Vec<f64> = samples_out
+                .iter()
+                .filter_map(|o| {
+                    response_at(o, response, *time_s).and_then(|v| {
+                        v.as_f64().or_else(|| {
+                            v.as_array()
+                                .map(|a| a.iter().filter_map(|x| x.as_f64()).sum())
+                        })
+                    })
+                })
+                .collect();
+            let m = vals.len();
+            let (mean, std) = if m > 0 {
+                let mean = vals.iter().sum::<f64>() / m as f64;
+                let var =
+                    vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (m - 1).max(1) as f64;
+                (mean, var.sqrt())
+            } else {
+                (f64::NAN, f64::NAN)
+            };
+            let half = 1.96 * std / (m.max(1) as f64).sqrt();
+            let stat = json!({
+                "nominal": nominal_v,
+                "n_samples": m,
+                "mean": mean,
+                "std": std,
+                "ci95_half_width": half,
+                "sampling_error_std": std / (m.max(1) as f64).sqrt(),
+            });
+            let entry = response_stats
+                .entry(response.clone())
+                .or_insert_with(|| json!({}));
+            if let Value::Object(map) = entry {
+                map.insert(tkey.clone(), stat);
+            }
+        }
+    }
+
+    let (covered_rows, uncovered_rows) = cov_ctx
+        .as_ref()
+        .map(|c| (c.rows.len(), c.uncovered.clone()))
+        .unwrap_or_default();
+    Ok(json!({
+        "status": "executed",
+        "samples": n,
+        "samples_declared": rb.samples,
+        "seed": rb.seed,
+        "truncated_by_resource_limit": truncated,
+        "n_failed_samples": n_failed,
+        "channels": {
+            "cross_section_mf33": {
+                "enabled": rb.channels.cross_section_mf33,
+                "correlated": xs_correlated,
+                "covariance_ridge_barn2": if xs_ridge.is_nan() {
+                    Value::Null
+                } else {
+                    json!(xs_ridge)
+                },
+                "independence_assumption": if xs_correlated {
+                    Value::Null
+                } else {
+                    json!("diagonal fallback: collapsed covariance not positive-semidefinite or channel off")
+                },
+                "covered_rows": covered_rows,
+                "n_applied_rows": n_applied_rows,
+                "uncovered_rows": uncovered_rows,
+                "n_clamped_nonpositive_draws": n_clamped_xs,
+            },
+            "flux_rel_std": rb.channels.flux_rel_std,
+            "composition_rel_std": rb.channels.composition_rel_std,
+            "n_composition_clamps": n_clamped_comp,
+        },
+        "responses": response_stats,
+        "sample_artifacts": sample_digests,
+        "semantics": "sample spread is a sensitivity over the declared input distributions — not a domain bound or an evaluation comparison; sampling error, covered uncertainty, missing covariance and failures are reported separately",
+    }))
+}
+
+/// nominal response values as (time_s, tkey, value) triples
+fn response_times(
+    nominal_out: &Value,
+    responses: &[String],
+) -> BTreeMap<String, Vec<(f64, String, f64)>> {
+    let mut out = BTreeMap::new();
+    for r in responses {
+        let (per_time, _) = extract_per_time(nominal_out, std::slice::from_ref(r));
+        let mut m = Vec::new();
+        for (tk, entry) in per_time {
+            if let Some(v) = entry.get(r.as_str()) {
+                let scalar = v.as_f64().or_else(|| {
+                    v.as_array()
+                        .map(|a| a.iter().filter_map(|x| x.as_f64()).sum())
+                });
+                let time_s: f64 = tk.parse().unwrap_or(f64::NAN);
+                if let Some(s) = scalar {
+                    m.push((time_s, tk, s));
+                }
+            }
+        }
+        out.insert(r.clone(), m);
+    }
+    out
+}
+
+#[cfg(test)]
+mod robustness_tests {
+    use super::*;
+
+    fn base_study() -> Value {
+        json!({
+            "study": "actinv-study-1",
+            "study_id": "t",
+            "library": {"path": "lib.npz"},
+            "decay": {"primary": "d.dat"},
+            "cases": {
+                "materials": [{"name": "a", "composition": {"Fe": 100.0}}],
+                "spectra": [{"name": "s", "flux_per_group": [1.0]}],
+                "schedules": [{"name": "p", "steps": [{"dt": "5 s", "flux": 1.0}]}]
+            },
+            "responses": ["total_activity_bq_per_g"],
+            "robustness": {
+                "samples": 4,
+                "seed": 7,
+                "channels": {"flux_rel_std": 0.05},
+                "responses": ["total_activity_bq_per_g"]
+            }
+        })
+    }
+
+    #[test]
+    fn robustness_validation() {
+        let s: Study = serde_json::from_value(base_study()).unwrap();
+        s.validate().unwrap();
+
+        let mut v = base_study();
+        v["robustness"]["samples"] = json!(1);
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("samples"));
+
+        let mut v = base_study();
+        v["robustness"]["channels"]["flux_rel_std"] = json!(-0.5);
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("flux_rel_std"));
+
+        let mut v = base_study();
+        v["robustness"]["channels"]["bogus"] = json!(true);
+        assert!(serde_json::from_value::<Study>(v).is_err());
+
+        let mut v = base_study();
+        v["robustness"]["channels"]["cross_section_mf33"] = json!(true);
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("covariance"));
+
+        let mut v = base_study();
+        v["robustness"]["channels"] = json!({});
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("no channel"));
+
+        let mut v = base_study();
+        v["robustness"]["responses"] = json!(["bogus_response"]);
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("family_not_qualified"));
+    }
+
+    #[test]
+    fn rng_deterministic() {
+        let mut a = Rng(42);
+        let mut b = Rng(42);
+        for _ in 0..32 {
+            assert_eq!(a.next_u64(), b.next_u64());
+        }
+        let mut c = Rng(43);
+        assert_ne!(c.next_u64(), Rng(42).next_u64());
+    }
+
+    #[test]
+    fn cholesky_psd_and_defect() {
+        // SPD
+        let a = [4.0, 2.0, 2.0, 3.0];
+        let l = cholesky(&a, 2).unwrap();
+        let mut rec = [0.0; 4];
+        for i in 0..2 {
+            for j in 0..2 {
+                for k in 0..2 {
+                    rec[i * 2 + j] += l[i * 2 + k] * l[j * 2 + k];
+                }
+            }
+        }
+        for i in 0..4 {
+            assert!((rec[i] - a[i]).abs() < 1e-12);
+        }
+        // strongly non-PSD
+        assert!(cholesky(&[1.0, 2.0, 2.0, 1.0], 2).is_none());
+        // numerically semi-definite (zero eigenvalue) tolerated
+        assert!(cholesky(&[1.0, 1.0, 1.0, 1.0], 2).is_some());
+    }
+
+    fn min_spec() -> Spec {
+        serde_json::from_value(json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "lib.npz"},
+            "decay": {"primary": "d.dat"},
+            "material": {"mass_g": 1.0, "basis": "wt_percent",
+                         "composition": {"Fe": 99.0, "Co": 1.0}},
+            "spectrum": {"structure": "fispact_709",
+                         "flux_per_group": [1.0], "descending": false},
+            "schedule": [{"dt": "5 s", "flux": 1.0}]
+        }))
+        .unwrap()
+    }
+
+    #[test]
+    fn perturb_spec_preserves_composition_sum() {
+        let mut spec = min_spec();
+        let comp = BTreeMap::from([("Fe".to_string(), 1.1), ("Co".to_string(), -0.5)]);
+        let clamps = perturb_spec(&mut spec, &[], 1.0, &comp);
+        let total: f64 = spec.material.composition.values().sum();
+        assert!((total - 100.0).abs() < 1e-9);
+        assert_eq!(clamps, 1);
+        assert!(spec.material.composition.values().all(|v| *v >= 0.0));
+    }
+
+    #[test]
+    fn rate_scale_spec_validation() {
+        let mut spec = min_spec();
+        spec.options.rate_scale = Some(BTreeMap::from([("not_a_row".into(), 1.0)]));
+        assert!(spec.validate().is_err());
+        spec.options.rate_scale = Some(BTreeMap::from([("7".into(), 0.0)]));
+        assert!(spec.validate().is_err());
+        spec.options.rate_scale = Some(BTreeMap::from([("7".into(), 1.5)]));
+        // remaining fields fail spec validation for unrelated reasons;
+        // ensure the rate_scale check itself accepts a positive factor
+        let err = spec.validate().unwrap_err();
+        assert!(!err.contains("rate_scale"), "{err}");
     }
 }

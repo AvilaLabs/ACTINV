@@ -105,3 +105,38 @@ and `population_pruning_and_mode` are empirically estimated (CRAM order and prun
 `processing_collapse` is bounded at the P25c/P28 measured tolerances. Computational error,
 nuclear/input uncertainty and predictive discrepancy remain separate: these criteria cover the
 first only.
+
+## `robustness` — ACT-ROBUST-01 (qualified by P30)
+
+A `robustness` block runs `samples` perturbed solves per case alongside the nominal solve, with a
+fixed `seed` (repeatability only — not convergence evidence):
+
+```json
+"robustness": {
+  "samples": 16,
+  "seed": 6191152,
+  "channels": {
+    "cross_section_mf33": true,
+    "flux_rel_std": 0.05,
+    "composition_rel_std": {"Co": 0.20}
+  },
+  "covariance": {"path": "...", "sha256": "..."},
+  "responses": ["total_activity_bq_per_g"]
+}
+```
+
+Channels: `cross_section_mf33` draws correlated perturbations of the spectrum-collapsed
+cross-section covariance over the active library rows (Cholesky of the collapsed matrix with a
+diagonal-ridge ladder; if the matrix is not PSD even under the ladder the draw falls back to
+independent diagonal terms and the record says so under `independence_assumption`);
+`flux_rel_std` perturbs the total flux normalization; `composition_rel_std` perturbs named
+element weight percents, then renormalizes to the declared total. Nonpositive draws are clamped
+and counted; composition sums are preserved; correlations are preserved when the collapsed
+covariance admits a factor. Per-sample specs and outputs are persisted under each case directory
+(`rob_<i>.json`, `rob_<i>.out.json`).
+
+The record reports per-response `mean`/`std`/`ci95_half_width`/`sampling_error_std`, the
+`covered_rows`/`uncovered_rows` split (MF=33 coverage only — uncovered rows are named by row
+index, never silently zero-uncertainty), failed-sample counts, and `truncated_by_resource_limit`.
+A sample spread is a sensitivity over the declared input distributions — it is not a domain
+bound, a rigorous confidence interval, or an evaluation comparison.

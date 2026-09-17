@@ -187,6 +187,7 @@ pub struct ReactionAssembly {
 
 /// Reaction rates per atom (1/s) for every library target under a group flux, as triplets over the chain's indices.
 /// `lib_targets[i]` is the (ZA, LISO) of library target index i.
+#[allow(clippy::too_many_arguments)]
 pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
     lib: &L,
     lib_targets: &[(i32, i32)],
@@ -195,6 +196,7 @@ pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
     shield: Option<&crate::shielding::ShieldPlan>,
+    rate_scale: Option<&HashMap<usize, f64>>,
 ) -> Vec<(usize, usize, f64)> {
     assemble_reaction_rates(
         lib,
@@ -205,11 +207,13 @@ pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
         led,
         false,
         shield,
+        rate_scale,
     )
     .triplets
 }
 
 /// Reaction-rate assembly plus the exact matrix contribution of every activation-library row.
+#[allow(clippy::too_many_arguments)]
 pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
     lib: &L,
     lib_targets: &[(i32, i32)],
@@ -218,6 +222,7 @@ pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
     fission_yields: &HashMap<(i32, i32), EffectiveYields>,
     led: &mut RateLedger,
     shield: Option<&crate::shielding::ShieldPlan>,
+    rate_scale: Option<&HashMap<usize, f64>>,
 ) -> ReactionAssembly {
     assemble_reaction_rates(
         lib,
@@ -228,6 +233,7 @@ pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
         led,
         true,
         shield,
+        rate_scale,
     )
 }
 
@@ -241,6 +247,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     led: &mut RateLedger,
     include_derivatives: bool,
     shield: Option<&crate::shielding::ShieldPlan>,
+    rate_scale: Option<&HashMap<usize, f64>>,
 ) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
     let mut derivatives = include_derivatives.then(Vec::new);
@@ -278,7 +285,10 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
             ),
             None => lib.collapse_row(i, phi, flux_denominator, first_flux_group, last_flux_group),
         };
-        let rate = (CrossSectionBarns::from_collapsed_kernel(collapsed) * rate_per_barn).get();
+        let mut rate = (CrossSectionBarns::from_collapsed_kernel(collapsed) * rate_per_barn).get();
+        if let Some(factor) = rate_scale.and_then(|m| m.get(&i)) {
+            rate *= factor;
+        }
         if rate == 0.0 && rate_per_barn_s == 0.0 {
             continue;
         }
@@ -513,6 +523,7 @@ mod tests {
             &yields,
             &mut plain_ledger,
             None,
+            None,
         );
         let mut derivative_ledger = RateLedger::default();
         let with_derivatives = reaction_rates_with_derivatives(
@@ -522,6 +533,7 @@ mod tests {
             &chain,
             &yields,
             &mut derivative_ledger,
+            None,
             None,
         );
 
