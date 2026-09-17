@@ -1,0 +1,40 @@
+{
+  "gate": "G2",
+  "notes": "Two-phase emit: first run produces canonical claims; finalize-claims commits them; second run verifies end-to-end.",
+  "package_dir": "/home/connoravila/nuclear-data/p27-work/interchange/pkg",
+  "package_sha256": "71e231e7d37cb0184ebda85a61589738f4caeb3c2bd625433c89727b8092fae2",
+  "phase": "P27",
+  "receipts": {
+    "fe__fns_709__cont_1d": "2f6d4fa4a8949a318de777ac31d69b9eb7f97c4ca33a85437cbddbcda316d624",
+    "fe__fns_709__pulse_5min": "f0d14c97db04110f4cfe1e32c8f1caa9bc0c7d2edd3e46dafe43e0fc5825f83d",
+    "fe__irdff_sp_mat9861_709__cont_1d": "ccaea8f9a027f4f63a6f306e8e60e2d889e9565710c7660d6f4b69fc217a1586",
+    "fe__irdff_sp_mat9861_709__pulse_5min": "f9fd17468147e7477e17ba1d09659158d2e799a507e3e931ec7b4feabed59778",
+    "fe_co100wppm__fns_709__cont_1d": "5dbb01d30176ea91bdbe545bdbb76d74679e6ac01812365d32c35e9a1977a4da",
+    "fe_co100wppm__fns_709__pulse_5min": "27a5782a8ab6992b863852305a4d3c59dd2ebe550d0c12f81a879b6a498d682e",
+    "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": "f829992a761496326364b0ffbfc5ee9eefcb3f50192b02bdd291b7db99a87e95",
+    "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "02d99dbef4390713eb6b0db4825f45077a5e83972647b734ceec06be3f0acf5e"
+  },
+  "run_report": {
+    "path": "/home/connoravila/nuclear-data/p27-work/interchange/core_run2.json",
+    "sha256": "819d0feb25d52aeeffb79b6f88de2859148da4ac3a43a3ced788d769bd687005",
+    "stages": {
+      "bindings": "verified",
+      "campaign": "evaluated",
+      "compile": "compiled",
+      "execution": "executed",
+      "integrity": "complete"
+    },
+    "status": "evaluated",
+    "verdicts": {
+      "fe__fns_709__cont_1d-executed": "pass",
+      "fe__fns_709__pulse_5min-executed": "pass",
+      "fe__irdff_sp_mat9861_709__cont_1d-executed": "pass",
+      "fe__irdff_sp_mat9861_709__pulse_5min-executed": "pass",
+      "fe_co100wppm__fns_709__cont_1d-executed": "pass",
+      "fe_co100wppm__fns_709__pulse_5min-executed": "pass",
+      "fe_co100wppm__irdff_sp_mat9861_709__cont_1d-executed": "pass",
+      "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min-executed": "pass"
+    }
+  },
+  "semantic_profile": "avila.core/semantic/0.2-draft"
+}

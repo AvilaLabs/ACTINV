@@ -1,35 +1,35 @@
 {
   "case_outputs": {
     "fe__fns_709__cont_1d": {
-      "out_sha256": "54de4c19638e1b49b8d0e71c1ceb84214794b680e4401a8411dc75528fc4baae",
+      "out_sha256": "61b92e79608c92513517a212228569f107741a3521808fa79136ef315fc95e5d",
       "status": "executed"
     },
     "fe__fns_709__pulse_5min": {
-      "out_sha256": "efe160c11305f141776507f57dc1d7015da04125e51944fce7e219292e137c20",
+      "out_sha256": "fde782c93092b2e0970d75ff36d36b0a7b929e15331fd377f4bab60c30a701c0",
       "status": "executed"
     },
-    "fe__irdff_709__cont_1d": {
-      "out_sha256": "aebdface6353ef74a3e15e51503778bc2371e003136d1065ff55f18ba52b44e8",
+    "fe__irdff_sp_mat9861_709__cont_1d": {
+      "out_sha256": "58005ea839205760dca2bd5ca82a99523d14cc4e9fb7ac1839d74e297e84ed26",
       "status": "executed"
     },
-    "fe__irdff_709__pulse_5min": {
-      "out_sha256": "126bd154edbeb0db584106bf6c078eef91ba1532aa6d471a022d5c5f4b3b1069",
+    "fe__irdff_sp_mat9861_709__pulse_5min": {
+      "out_sha256": "b4100fda3bf55e28d8e2840f7af08a85a9f84ce80a9fa144409254d072076631",
       "status": "executed"
     },
     "fe_co100wppm__fns_709__cont_1d": {
-      "out_sha256": "7a04f7920093a356fbf8bf589103b3d6b9cffaf41b0d1426b26937fbc16ff83c",
+      "out_sha256": "bc6a09009545508521619c854001145577371f4acc4a1aa320b007700c5c71ca",
       "status": "executed"
     },
     "fe_co100wppm__fns_709__pulse_5min": {
-      "out_sha256": "82e7b1aba6d38cba087512932a4820f43b3f5de3881f9740724ec6595fcf35e9",
+      "out_sha256": "ea22de38c1f21419f2ad5bad519a8010ee3b8a963f96f7c62d302f623d171968",
       "status": "executed"
     },
-    "fe_co100wppm__irdff_709__cont_1d": {
-      "out_sha256": "ebb29271a84aa99c6de9faf9beee5184a3869ffeb7fd28846ea6ce526b8c9bcc",
+    "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": {
+      "out_sha256": "4293a424fbcfc629343289822253d318b4a383aa6cc979d43e4ac4ee04c6d738",
       "status": "executed"
     },
-    "fe_co100wppm__irdff_709__pulse_5min": {
-      "out_sha256": "c08f760df0a5595cacf591dc5689df36bc68d0259393f9acd23a97b43dcf9484",
+    "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": {
+      "out_sha256": "7377f48450fc702d4600726e86cdcd19984619094d0eecf6683bc74d38703976",
       "status": "executed"
     }
   },
@@ -43,16 +43,16 @@
     "case_ids": [
       "fe__fns_709__pulse_5min",
       "fe__fns_709__cont_1d",
-      "fe__irdff_709__pulse_5min",
-      "fe__irdff_709__cont_1d",
+      "fe__irdff_sp_mat9861_709__pulse_5min",
+      "fe__irdff_sp_mat9861_709__cont_1d",
       "fe_co100wppm__fns_709__pulse_5min",
       "fe_co100wppm__fns_709__cont_1d",
-      "fe_co100wppm__irdff_709__pulse_5min",
-      "fe_co100wppm__irdff_709__cont_1d"
+      "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+      "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
     ],
     "n_cases": 8
   },
-  "manifest_sha256": "89a366dc5a8c0e2da15f92e43dc131fac11961ec47ae9e33b2eed6199db7fdd3",
+  "manifest_sha256": "2c69788db79ccbaf25754aa30f32f4c93436ec5d53bb06d23939f9427146a4f2",
   "phase": "P27",
   "record": {
     "comparison_verdicts": {
@@ -75,9 +75,9 @@
     },
     "verdict": "complete"
   },
-  "record_sha256": "d933183dfda87e7faa1d89661df9401c900069d58d5dceb21ad41e91e30b0be9",
+  "record_sha256": "db69f23fb6ba85f9430faab75aefcafb29fdeb5f16c8e78355ed871344159ecd",
   "study_doc": {
     "path": "/home/connoravila/nuclear-data/p27-work/study/smoke_study.json",
-    "sha256": "6cc9b517978e97362882a99ccae97bc00ef0a53245058915258367a154e17935"
+    "sha256": "5d6476268ac28a6297ddde72706f1384349f6a7453fb77cee468beb3d8955755"
   }
 }
