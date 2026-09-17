@@ -1,0 +1,34 @@
+{
+  "gate": "G3",
+  "partition": "p29_qualifying",
+  "phase": "P29",
+  "probes": [
+    {
+      "criteria_verdicts": [
+        "unestablished"
+      ],
+      "id": "unproducible_response",
+      "spec_sha256": "b9c651d10d0973ac133e7a075a25f3244a8da977af4a615b5b05ed943fe287d2",
+      "status": "executed"
+    },
+    {
+      "criteria_verdicts": [
+        "unmet"
+      ],
+      "escalation_runs": [
+        0
+      ],
+      "id": "resource_limit_exhaustion",
+      "runs_used": 3,
+      "spec_sha256": "59920f404fa6a27a997c241eda24f3e6ba0acae091f28e0c4194c2007ba267fb",
+      "status": "executed"
+    },
+    {
+      "error": "refinement criterion response 'dose_rate_msv_h' is not qualified (family_not_qualified)",
+      "id": "envelope_violating_criterion",
+      "spec_sha256": "12e85f244fc914fea5d9eafe6948b22c4411ce3ce43a130be6a3ac05d3afa0b8",
+      "status": "gap"
+    }
+  ],
+  "schema": "actinv-p29-g3-1"
+}
