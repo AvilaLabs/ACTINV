@@ -1,0 +1,68 @@
+{
+ "basis": "all four gates green with machine checkers; closure is CONDITIONAL because two G0 amendments were used (the prepared-run signature had to include the spectrum \u2014 the collapsed activation library is flux-bound \u2014 and the robustness-workload prepared-run target was corrected after measuring signature sharing across cases); the measured speedup is a local preparation-amortization fact on the frozen workload only, not a competitive or cross-hardware claim; resume skips are verified by artifact digests, not trusted on record contents alone",
+ "evidence_sha256": {
+  "g0_check": "f36b831d4fd008dfc4d75f32c9844509824e61dbe8f8c64c21eb88359072a9ad",
+  "g0_seals": "c3e75ead7a5ef673f3c34337c23630a20efad56b3ec9e506637429fe9e56a9d0",
+  "g1_campaign": "1b4c22744b852fed7d3eb2372459acfea12d385c97972b32206e9f3488028cb2",
+  "g1_check": "3a0cbb2f198a450bf7bfa22ad93fd4cc80ae4249d63f07c78a1b596c8f25a65b",
+  "g2_check": "96028eab65f136ccb3774844047dd881d475a224c21ca1fbbd9023416f903a83",
+  "g2_controls": "81bdac72a9bbcaa9eb1143f86544e85eda1e4f375ad8a7a316e2fbddafc6665a",
+  "g3_check": "18c9964fab7e28ab0e13e4058c132f15997da2d088016cd1ac25f4419a70b031",
+  "g3_conformance": "33285e68fc788e3e5b97f1ff59a5c242954438f665ebb77d4d984876a0f5a918"
+ },
+ "g0_amendments": [
+  "prepared-run signature includes the spectrum: the collapsed activation library inside PreparedRun is flux-bound (validate_flux fails closed on a foreign spectrum). smoke target 1 -> 2 prepared runs; robustness workload 2 signatures/case -> 4 total.",
+  "robustness workload target 4 -> 2 prepared runs: both cases share the fns_709 spectrum, so the nominal signature is shared across cases and the uncertainty (local-check) signature is shared \u2014 material is a runtime input, not part of the prepared identity."
+ ],
+ "measured": {
+  "cold": {
+   "executed": 8,
+   "prepared_runs": 2,
+   "verdict": "complete",
+   "wall_s": 2.6050202030455694
+  },
+  "controls": {
+   "distinct_signatures": "pass",
+   "interrupted_run": "pass",
+   "resume_corrupt": "pass",
+   "resume_stale_spec": "pass",
+   "resume_torn": "pass",
+   "reuse_correctness": "pass"
+  },
+  "limitations": [
+   "no cross-case solver-result caching or approximate reuse \u2014 reuse is exact preparation sharing only",
+   "no competitive/comparator speed claim (no comparator software)",
+   "prepare cost measurement is wall-clock on the frozen workload",
+   "interrupted-run control kills at the first completed case; deeper mid-case interruption falls back to case re-execution"
+  ],
+  "negative_controls": {
+   "corrupt_record_swallowed": true,
+   "directory_pollution": true,
+   "option_drift": true,
+   "phantom_resume": true,
+   "spec_mismatch_accepted": true
+  },
+  "resume_outputs_identical": true,
+  "resumed_case_count": 8,
+  "reuse_boundary": "reuse identity = library, decay, photon response, fission yields, projectile, spectrum (structure, boundaries, descending, flux_per_group), temperature, uncertainty, radiological, damage, self-shielding; material, schedule and rate_scale are runtime inputs",
+  "robustness_workload": {
+   "executed": 2,
+   "prepared_runs": 2,
+   "wall_s": 26.47722026705742
+  },
+  "warm_resume": {
+   "prepared_runs": 0,
+   "verdict": "complete",
+   "wall_s": 0.06874272308778018
+  }
+ },
+ "opening_commit": "1fb7b8830e21e6da5ff3b59fa4b787193dfa9f14",
+ "phase": "P31",
+ "protocol_sha256": "5237a3fe55be67eeb54585817edd6729d30801f04c0b8711188d0906fbdcda0b",
+ "qualified_mechanisms": [
+  "shared PreparedRun reuse across compatible specs",
+  "streaming per-case study_record writes",
+  "digest-verified resume of completed cases"
+ ],
+ "verdict": "P31-CONDITIONAL"
+}

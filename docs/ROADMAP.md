@@ -372,6 +372,33 @@ rigorous confidence interval, not an evaluation comparison; no blind experimenta
 validation was performed (`results/verdict_p30.json`, `docs/STUDY.md`,
 `controls/check_g{0,1,2,3,4}_p30.py`).
 
+**P31 execution entry (2026-09-17).** P31 closed `P31-CONDITIONAL`: the study
+executor now shares a `PreparedRun` context across every case and robustness
+sample whose spec carries the same data-and-option signature (library, decay,
+photon response, fission yields, projectile, spectrum shape, temperature and
+the uncertainty/radiological/damage/self-shielding options); material,
+schedule and `rate_scale` are runtime inputs. The collapsed activation library
+is flux-bound, so each spectrum is its own signature — the sealed smoke
+population of 8 cases uses exactly 2 prepared runs, and the robustness
+workload 2 (one nominal + one local-check signature shared across both cases).
+Per-case-prepared baseline runs produce bit-identical results (modulo volatile
+timing), so reuse changes preparation cost only. The study record is streamed
+after every case (`status: partial` until complete) and `study run` resumes
+into an existing output directory: a case is skipped only when its recorded
+spec digest, output digest and every sample artifact re-verify byte-for-byte;
+skipped cases are listed under `resumed_cases`. Warm resume of the frozen
+workload measured 0.069 s vs 2.6 s cold (~38x, local measurement on the frozen
+workload — not a competitive claim). All six controls pass: reuse
+correctness, torn/corrupt/stale-spec resume, distinct-signature accounting and
+kill-resume completion; all five negative controls fail closed (declared-hash
+mismatch, torn record, phantom record entry, option drift, directory
+pollution). The verdict is CONDITIONAL: two G0 amendments were used (the
+signature had to include the spectrum; the robustness prepared-run target was
+corrected after measuring signature sharing), and reuse is exact preparation
+sharing only — no solver-result caching, approximate reuse or cross-hardware
+headroom claim (`results/verdict_p31.json`, `docs/STUDY.md`,
+`controls/check_g{0,1,2,3,4}_p31.py`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
