@@ -1,9 +1,14 @@
 {
-  "amendments": [],
+  "amendments": [
+    {
+      "id": 1,
+      "note": "criteria_cases initially named the 1 d schedule 'pulse_1d'; the P27 frozen study names it 'cont_1d'. Renamed to the real case ids before any P29 run."
+    }
+  ],
   "identities": {
     "actinv_binary": {
       "path": "target/release/actinv",
-      "sha256": "70504feca9296624cf729608400f680cc2684159f572e2f937453db5b79581bc"
+      "sha256": "9b82f51db644b6eb316421b3f7493710e94e4eab9433348dc2af91278bf9cd59"
     },
     "actinv_version": "actinv 1.1.2",
     "activation_index": {
@@ -66,7 +71,7 @@
     "verdict_p9.json": "P9-CONDITIONAL"
   },
   "protocol_sha256": "33e8f389edfd01c2c2b7200682e2b36da216ece406428ca484c009115d21c600",
-  "recorded_at_utc": "2026-09-17T02:12:43Z",
+  "recorded_at_utc": "2026-09-17T02:26:38Z",
   "schema": "actinv-p29-g0-seals-1",
   "tolerances": {
     "abs_scale_atoms_per_g": 1e-06,
@@ -99,13 +104,13 @@
     ],
     "criteria_cases": [
       "fe__fns_709__pulse_5min",
-      "fe__fns_709__pulse_1d",
+      "fe__fns_709__cont_1d",
       "fe__irdff_sp_mat9861_709__pulse_5min",
-      "fe__irdff_sp_mat9861_709__pulse_1d",
+      "fe__irdff_sp_mat9861_709__cont_1d",
       "fe_co100wppm__fns_709__pulse_5min",
-      "fe_co100wppm__fns_709__pulse_1d",
+      "fe_co100wppm__fns_709__cont_1d",
       "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
-      "fe_co100wppm__irdff_sp_mat9861_709__pulse_1d"
+      "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
     ],
     "criteria_responses": [
       "total_activity_bq_per_g",

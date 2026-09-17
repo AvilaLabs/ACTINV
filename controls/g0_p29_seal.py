@@ -45,13 +45,13 @@ for f in sorted(os.listdir(os.path.join(ROOT, "results"))):
 POPULATION = {
     "criteria_cases": [
         "fe__fns_709__pulse_5min",
-        "fe__fns_709__pulse_1d",
+        "fe__fns_709__cont_1d",
         "fe__irdff_sp_mat9861_709__pulse_5min",
-        "fe__irdff_sp_mat9861_709__pulse_1d",
+        "fe__irdff_sp_mat9861_709__cont_1d",
         "fe_co100wppm__fns_709__pulse_5min",
-        "fe_co100wppm__fns_709__pulse_1d",
+        "fe_co100wppm__fns_709__cont_1d",
         "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
-        "fe_co100wppm__irdff_sp_mat9861_709__pulse_1d",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d",
     ],
     "criteria_responses": [
         "total_activity_bq_per_g",
@@ -141,7 +141,12 @@ seals = {
         "rule": "outputs under p29_qualifying are consumed once, by the "
                 "verdict gate; iteration uses p29_diagnostic",
     },
-    "amendments": [],
+    "amendments": [{
+        "id": 1,
+        "note": "criteria_cases initially named the 1 d schedule "
+                "'pulse_1d'; the P27 frozen study names it 'cont_1d'. "
+                "Renamed to the real case ids before any P29 run.",
+    }],
 }
 
 json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)
