@@ -1,4 +1,8 @@
 {
+  "amendments": [
+    "prepared-run signature includes the spectrum: the collapsed activation library inside PreparedRun is flux-bound (validate_flux fails closed on a foreign spectrum). smoke target 1 -> 2 prepared runs; robustness workload 2 signatures/case -> 4 total.",
+    "robustness workload target 4 -> 2 prepared runs: both cases share the fns_709 spectrum, so the nominal signature is shared across cases and the uncertainty (local-check) signature is shared \u2014 material is a runtime input, not part of the prepared identity."
+  ],
   "baseline_binary": {
     "note": "baseline-recorded: P31 rebuilds the binary; data artifacts stay pinned",
     "path": "target/release/actinv",
@@ -23,7 +27,7 @@
     "verdict_p29.json": "P29-CONDITIONAL",
     "verdict_p30.json": "P30-CONDITIONAL"
   },
-  "protocol_sha256": "0d82ae1a56beb39f5e44e0127f98fd55f3f7cf39a95ab41c10abfb243250caea",
+  "protocol_sha256": "5237a3fe55be67eeb54585817edd6729d30801f04c0b8711188d0906fbdcda0b",
   "tolerances": {
     "analytic_rel": 1e-06,
     "reuse_equality": "bit-identical (tolerance unused)"
@@ -53,7 +57,8 @@
     "targets": {
       "resume_outputs_identical": true,
       "resume_skips_verify": true,
-      "smoke_prepared_runs": 1
+      "robustness_prepared_runs": 2,
+      "smoke_prepared_runs": 2
     },
     "workload_cases": [
       "fe__fns_709__pulse_5min",

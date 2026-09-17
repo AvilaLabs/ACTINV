@@ -1,0 +1,45 @@
+{
+  "gate": "G1",
+  "measured": {
+    "cold": {
+      "executed": 8,
+      "prepared_runs": 2,
+      "verdict": "complete",
+      "wall_s": 2.6050202030455694
+    },
+    "resume_digests_identical": true,
+    "robustness_workload": {
+      "executed": 2,
+      "prepared_runs": 2,
+      "wall_s": 26.47722026705742
+    },
+    "warm_resume": {
+      "prepared_runs": 0,
+      "resumed_cases": [
+        "fe__fns_709__pulse_5min",
+        "fe__fns_709__cont_1d",
+        "fe__irdff_sp_mat9861_709__pulse_5min",
+        "fe__irdff_sp_mat9861_709__cont_1d",
+        "fe_co100wppm__fns_709__pulse_5min",
+        "fe_co100wppm__fns_709__cont_1d",
+        "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
+      ],
+      "verdict": "complete",
+      "wall_s": 0.06874272308778018
+    }
+  },
+  "phase": "P31",
+  "record_path": "/home/connoravila/nuclear-data/p31-work/g1/smoke_cold/study_record.json",
+  "robust_record_path": "/home/connoravila/nuclear-data/p31-work/g1/robust/study_record.json",
+  "workload": [
+    "fe__fns_709__pulse_5min",
+    "fe__fns_709__cont_1d",
+    "fe__irdff_sp_mat9861_709__pulse_5min",
+    "fe__irdff_sp_mat9861_709__cont_1d",
+    "fe_co100wppm__fns_709__pulse_5min",
+    "fe_co100wppm__fns_709__cont_1d",
+    "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+    "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
+  ]
+}

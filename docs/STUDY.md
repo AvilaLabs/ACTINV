@@ -138,5 +138,25 @@ covariance admits a factor. Per-sample specs and outputs are persisted under eac
 The record reports per-response `mean`/`std`/`ci95_half_width`/`sampling_error_std`, the
 `covered_rows`/`uncovered_rows` split (MF=33 coverage only — uncovered rows are named by row
 index, never silently zero-uncertainty), failed-sample counts, and `truncated_by_resource_limit`.
+`local_vs_nonlinear` compares the sampled spread against the P11 first-order propagation per
+(response, time); `channel_attribution` reports isolated per-channel variances plus the
+unexplained interaction remainder; `pathway_view` names the dominant nuclides and their
+production legs per cooling time with the unattributed `pathway_closure` remainder.
+
+## Execution efficiency (P31)
+
+The runner shares prepared nuclear data across cases and samples whose specs carry the same
+data-and-option signature (library, decay, photon response, fission yields, projectile,
+spectrum shape, temperature, uncertainty/radiological/damage/self-shielding options). The
+collapsed activation library is flux-bound, so two spectra are two signatures; material
+composition, schedules and `rate_scale` are runtime inputs and share one prepared run. The
+record reports `prepared_runs` (contexts constructed) and `prepare_wall_s`.
+
+The record is written after every case (`status: "partial"` until the campaign completes), and
+`study run` into an existing output directory resumes: a case is skipped only when its recorded
+spec digest, output digest and every robustness sample artifact re-verify byte-for-byte against
+the files on disk — skipped cases are listed under `resumed_cases` with `evidence_kind:
+"resumed"`. A torn record, deleted artifact, corrupted output or edited study re-executes the
+affected cases; nothing is trusted on the strength of a record entry alone.
 A sample spread is a sensitivity over the declared input distributions — it is not a domain
 bound, a rigorous confidence interval, or an evaluation comparison.

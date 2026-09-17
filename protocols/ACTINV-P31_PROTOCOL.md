@@ -11,8 +11,9 @@ replaces, or fail closed.
 
 - Shared preparation: `PreparedRun` instances are keyed by the
   data-and-option signature they verify against (`library`, `decay`,
-  `photon`, `fission_yields`, `projectile`, temperature, `uncertainty`,
-  `radiological`, `damage`, `self_shielding`) and reused across cases
+  `photon`, `fission_yields`, `projectile`, `spectrum`, temperature,
+  `uncertainty`, `radiological`, `damage`, `self_shielding`) and reused
+  across cases
   and robustness samples whose specs are compatible. A spec that does
   not verify against the prepared context prepares its own — never
   silently reuses.
@@ -51,9 +52,10 @@ samples 4) exercises shared preparation across sample solves.
 Targets, frozen at seal:
 
 - `prepared_runs` == number of distinct data-and-option signatures in
-  the campaign (exactly 1 for the smoke population; the robustness
-  workload admits 1 nominal-signature + 1 uncertainty-signature per
-  case for the local check = 2 per case, 4 total).
+  the campaign (2 for the smoke population — one per spectrum; the
+  collapsed activation library is flux-bound so spectra are separate
+  signatures; the robustness workload admits 1 nominal-signature + 1
+  uncertainty-signature per case for the local check = 4 total).
 - Resumed run writes `resumed_cases` naming each skipped case; every
   skipped case's artifacts verify against the record.
 - Results equivalence: every resumed/skipped case's `out_sha256` is

@@ -13,7 +13,7 @@
 //! recognised fields that fail `family_not_qualified` at validation; they are
 //! never silently ignored. Records on this path are `unqualified`: the study
 //! layer certifies completion and accounting, not scientific qualification.
-use crate::run::run;
+use crate::run::{run, PreparedRun, RunResult};
 use crate::spec::{parse_duration, DecayRef, LibraryRef, Material, Options, Spec, Spectrum, Step};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
@@ -794,6 +794,25 @@ pub fn execute(
     let cases_dir = outdir.join("cases");
     fs::create_dir_all(&cases_dir).map_err(|e| format!("create {cases_dir:?}: {e}"))?;
 
+    // Resume state: a prior record is authority only where its per-case
+    // digests re-verify against the artifacts on disk.
+    let prior_record: Option<Value> = fs::read_to_string(outdir.join("study_record.json"))
+        .ok()
+        .and_then(|t| serde_json::from_str(&t).ok());
+    let prior_cases: Map<String, Value> = prior_record
+        .as_ref()
+        .and_then(|r| r["cases"].as_array().cloned())
+        .unwrap_or_default()
+        .into_iter()
+        .filter_map(|c| c["case_id"].as_str().map(|id| (id.to_string(), c.clone())))
+        .collect();
+
+    let mut prep = PreparedCache::default();
+    let mut resumed_cases: Vec<String> = Vec::new();
+    let record_path = outdir.join("study_record.json");
+    let study_sha = manifest["study_sha256"].clone();
+    let manifest_sha = sha256_path(&outdir.join("manifest.json")).ok();
+
     let mut per_case = Vec::new();
     let (mut n_executed, mut n_failed, mut n_gap, mut n_undef) = (0usize, 0usize, 0usize, 0usize);
     for cent in manifest["cases"].as_array().cloned().unwrap_or_default() {
@@ -801,9 +820,41 @@ pub fn execute(
         let cdir = cases_dir.join(&id);
         let _ = fs::create_dir_all(&cdir);
         let started = Instant::now();
+        // resume: reuse a prior case record only when the recorded
+        // spec/out digests re-verify against the current artifacts
+        if let Some(prev) = prior_cases.get(&id) {
+            if case_resumable(prev, &cent, &cdir) {
+                let mut rec = prev.clone();
+                rec["evidence_kind"] = json!("resumed");
+                resumed_cases.push(id.clone());
+                match prev["status"].as_str() {
+                    Some("executed") => {
+                        n_executed += 1;
+                        n_undef += prev["undefined_responses"]
+                            .as_array()
+                            .map(|u| u.len())
+                            .unwrap_or(0);
+                    }
+                    Some("contract_gap") => n_gap += 1,
+                    _ => n_failed += 1,
+                }
+                rec["wall_s"] = json!(started.elapsed().as_secs_f64());
+                per_case.push(rec);
+                write_partial_record(
+                    &record_path,
+                    study,
+                    &study_sha,
+                    &manifest_sha,
+                    &per_case,
+                    &resumed_cases,
+                    prep.count,
+                );
+                continue;
+            }
+        }
         let rec = match study
             .case_spec(&id, base)
-            .and_then(|spec| run(&spec, "study").map(|rr| (spec, rr)))
+            .and_then(|spec| prep.run_prepared(&spec).map(|rr| (spec, rr)))
         {
             Ok((spec, rr)) => {
                 let outv = serde_json::to_value(&rr).map_err(|e| format!("serialise {id}: {e}"))?;
@@ -828,7 +879,8 @@ pub fn execute(
                     rec["refinement"] = rr2;
                 }
                 if let Some(rb) = &study.robustness {
-                    rec["robustness"] = evaluate_robustness(rb, &spec, &outv, base, &cdir);
+                    rec["robustness"] =
+                        evaluate_robustness(rb, &spec, &outv, base, &cdir, &mut prep);
                 }
                 rec
             }
@@ -854,6 +906,15 @@ pub fn execute(
             }
         };
         per_case.push(rec);
+        write_partial_record(
+            &record_path,
+            study,
+            &study_sha,
+            &manifest_sha,
+            &per_case,
+            &resumed_cases,
+            prep.count,
+        );
     }
 
     let comparison = study
@@ -881,6 +942,7 @@ pub fn execute(
                 .and_then(|p| sha256_path(&p).ok()),
             "entry_point": "study",
         },
+        "status": "complete",
         "population": {
             "declared": population,
             "executed": n_executed,
@@ -889,6 +951,9 @@ pub fn execute(
             "undefined_response_instances": n_undef,
         },
         "cases": per_case,
+        "resumed_cases": resumed_cases,
+        "prepared_runs": prep.count,
+        "prepare_wall_s": prep.wall_s,
         "comparison": comparison,
         "qualification": "unqualified",
         "verdict": verdict,
@@ -1794,8 +1859,9 @@ fn evaluate_robustness(
     nominal_out: &Value,
     base: &Path,
     cdir: &Path,
+    prep: &mut PreparedCache,
 ) -> Value {
-    match evaluate_robustness_inner(rb, spec, nominal_out, base, cdir) {
+    match evaluate_robustness_inner(rb, spec, nominal_out, base, cdir, prep) {
         Ok(v) => v,
         Err(e) => json!({"status": "gap", "error": e}),
     }
@@ -1807,6 +1873,7 @@ fn evaluate_robustness_inner(
     nominal_out: &Value,
     base: &Path,
     cdir: &Path,
+    prep: &mut PreparedCache,
 ) -> Result<Value, String> {
     use actinv_data::{composition, covariance, decay, library};
 
@@ -2010,7 +2077,7 @@ fn evaluate_robustness_inner(
                 serde_json::to_string_pretty(&serde_json::to_value(&sspec).unwrap_or_default())
                     .unwrap_or_default();
             let _ = fs::write(&spath, format!("{stext}\n"));
-            match run(&sspec, "study") {
+            match prep.run_prepared(&sspec) {
                 Ok(rr) => {
                     let ov = serde_json::to_value(&rr).unwrap_or_default();
                     let opath = cdir.join(format!("{prefix}{i}.out.json"));
@@ -2094,73 +2161,6 @@ fn evaluate_robustness_inner(
                 .or_insert_with(|| json!({}));
             if let Value::Object(map) = entry {
                 map.insert(tkey.clone(), stat);
-            }
-        }
-    }
-
-    // --- local-vs-nonlinear applicability check ---------------------
-    // First-order MF=33 propagation on the nominal spec, compared with
-    // the sampled std. For decay heat the `heat.total` selector gives an
-    // exact first-order band; for total activity the per-nuclide bands
-    // are combined by root-sum-square, which neglects cross-nuclide
-    // covariance — that is recorded, not hidden.
-    let mut local_vs_nonlinear: Value = Value::Null;
-    if rb.channels.cross_section_mf33 && !truncated {
-        if let Some(cov_ref) = &rb.covariance {
-            let mut uspec = spec.clone();
-            uspec.options.rate_scale = None;
-            uspec.uncertainty = Some(crate::spec::UncertaintyOptions {
-                covariance: crate::spec::HashedFileRef {
-                    path: cov_ref.path.clone(),
-                    sha256: cov_ref.sha256.clone().unwrap_or_default(),
-                },
-                responses: vec!["activity:*".to_string(), "heat.total".to_string()],
-                channels: vec!["cross_section_mf33".to_string()],
-                confidence_level: 0.95,
-                require_complete: false,
-            });
-            match run(&uspec, "study") {
-                Ok(urr) => {
-                    let uv = serde_json::to_value(&urr).unwrap_or_default();
-                    let mut comparisons = Map::new();
-                    for response in &rb.responses {
-                        let mut per_time = Map::new();
-                        for (time_s, tkey, _) in &nominal_vals[response] {
-                            let lfo = first_order_std(&uv, response, *time_s);
-                            let sampled = response_stats
-                                .get(response)
-                                .and_then(|m| m.get(tkey))
-                                .and_then(|v| v.get("std"))
-                                .and_then(Value::as_f64);
-                            if let (Some(l), Some(smp)) = (lfo, sampled) {
-                                per_time.insert(
-                                    tkey.clone(),
-                                    json!({
-                                        "first_order_std": l,
-                                        "sampled_std": smp,
-                                        "sampled_over_first_order":
-                                            if l > 0.0 { smp / l } else {
-                                                f64::NAN
-                                            },
-                                    }),
-                                );
-                            }
-                        }
-                        comparisons.insert(response.clone(), Value::Object(per_time));
-                    }
-                    local_vs_nonlinear = json!({
-                        "method": "first-order local propagation (P11) vs nonlinear sample spread",
-                        "comparisons": comparisons,
-                        "total_activity_approximation":
-                            "per-nuclide first-order bands combined by root-sum-square; cross-nuclide covariance neglected",
-                    });
-                }
-                Err(e) => {
-                    local_vs_nonlinear = json!({
-                        "status": "failed",
-                        "error": e,
-                    });
-                }
             }
         }
     }
@@ -2337,6 +2337,73 @@ fn evaluate_robustness_inner(
         }
     }
 
+    // --- local-vs-nonlinear applicability check ---------------------
+    // First-order MF=33 propagation on the nominal spec, compared with
+    // the sampled std. For decay heat the `heat.total` selector gives an
+    // exact first-order band; for total activity the per-nuclide bands
+    // are combined by root-sum-square, which neglects cross-nuclide
+    // covariance — that is recorded, not hidden.
+    let mut local_vs_nonlinear: Value = Value::Null;
+    if rb.channels.cross_section_mf33 && !truncated {
+        if let Some(cov_ref) = &rb.covariance {
+            let mut uspec = spec.clone();
+            uspec.options.rate_scale = None;
+            uspec.uncertainty = Some(crate::spec::UncertaintyOptions {
+                covariance: crate::spec::HashedFileRef {
+                    path: cov_ref.path.clone(),
+                    sha256: cov_ref.sha256.clone().unwrap_or_default(),
+                },
+                responses: vec!["activity:*".to_string(), "heat.total".to_string()],
+                channels: vec!["cross_section_mf33".to_string()],
+                confidence_level: 0.95,
+                require_complete: false,
+            });
+            match prep.run_prepared(&uspec) {
+                Ok(urr) => {
+                    let uv = serde_json::to_value(&urr).unwrap_or_default();
+                    let mut comparisons = Map::new();
+                    for response in &rb.responses {
+                        let mut per_time = Map::new();
+                        for (time_s, tkey, _) in &nominal_vals[response] {
+                            let lfo = first_order_std(&uv, response, *time_s);
+                            let sampled = response_stats
+                                .get(response)
+                                .and_then(|m| m.get(tkey))
+                                .and_then(|v| v.get("std"))
+                                .and_then(Value::as_f64);
+                            if let (Some(l), Some(smp)) = (lfo, sampled) {
+                                per_time.insert(
+                                    tkey.clone(),
+                                    json!({
+                                        "first_order_std": l,
+                                        "sampled_std": smp,
+                                        "sampled_over_first_order":
+                                            if l > 0.0 { smp / l } else {
+                                                f64::NAN
+                                            },
+                                    }),
+                                );
+                            }
+                        }
+                        comparisons.insert(response.clone(), Value::Object(per_time));
+                    }
+                    local_vs_nonlinear = json!({
+                        "method": "first-order local propagation (P11) vs nonlinear sample spread",
+                        "comparisons": comparisons,
+                        "total_activity_approximation":
+                            "per-nuclide first-order bands combined by root-sum-square; cross-nuclide covariance neglected",
+                    });
+                }
+                Err(e) => {
+                    local_vs_nonlinear = json!({
+                        "status": "failed",
+                        "error": e,
+                    });
+                }
+            }
+        }
+    }
+
     let (covered_rows, uncovered_rows) = cov_ctx
         .as_ref()
         .map(|c| (c.rows.len(), c.uncovered.clone()))
@@ -2413,6 +2480,136 @@ fn first_order_std(uv: &Value, response: &str, time_s: f64) -> Option<f64> {
         }
         _ => None,
     }
+}
+
+/// Prepared-run cache: contexts keyed by data-and-option signature,
+/// with construction accounting. `ACTINV_STUDY_NO_REUSE` bypasses the
+/// cache entirely (per-run prepare) for equivalence verification.
+#[derive(Default)]
+struct PreparedCache {
+    map: std::collections::HashMap<String, PreparedRun>,
+    count: usize,
+    wall_s: f64,
+}
+
+impl PreparedCache {
+    fn run_prepared(&mut self, spec: &Spec) -> Result<RunResult, String> {
+        let no_reuse = std::env::var_os("ACTINV_STUDY_NO_REUSE").is_some();
+        let sig = if no_reuse {
+            String::new()
+        } else {
+            prepared_signature(spec)
+        };
+        if no_reuse || !self.map.contains_key(&sig) {
+            let t0 = Instant::now();
+            let p = PreparedRun::prepare(spec)?;
+            self.wall_s += t0.elapsed().as_secs_f64();
+            self.count += 1;
+            if no_reuse {
+                return p.run(spec, "study");
+            }
+            self.map.insert(sig.clone(), p);
+        }
+        self.map[&sig].run(spec, "study")
+    }
+}
+
+/// Data-and-option signature of a spec for `PreparedRun` reuse: the
+/// fields `ensure_compatible` verifies, plus the spectrum — the
+/// collapsed activation library inside a prepared run is bound to the
+/// flux vector (`validate_flux` fails closed on a different spectrum),
+/// so spectrum is part of the reuse identity.
+fn prepared_signature(spec: &Spec) -> String {
+    canonical_json(&json!({
+        "library": spec.library,
+        "decay": spec.decay,
+        "photon_response": spec.photon.response,
+        "fission_yields": spec.fission_yields,
+        "projectile": spec.projectile,
+        // collapse-relevant spectrum fields only: `total` is a
+        // normalization scalar that leaves the collapsed library
+        // bit-identical, so flux-normalization perturbations share
+        // the prepared run
+        "spectrum_structure": spec.spectrum.structure,
+        "spectrum_boundaries": spec.spectrum.boundaries_eV,
+        "spectrum_descending": spec.spectrum.descending,
+        "spectrum_flux_per_group": spec.spectrum.flux_per_group,
+        "temperature_K": spec.options.temperature_K,
+        "uncertainty": spec.uncertainty,
+        "radiological": spec.radiological,
+        "damage": spec.damage,
+        "self_shielding": spec.self_shielding,
+    }))
+}
+
+/// A prior case record is resumable only when every recorded artifact
+/// digest re-verifies against the files on disk: spec identity, nominal
+/// output, and every robustness sample artifact.
+fn case_resumable(prev: &Value, cent: &Value, cdir: &Path) -> bool {
+    if prev["status"].as_str() != Some("executed") {
+        return false;
+    }
+    if prev["spec_sha256"] != cent["spec_sha256"] {
+        return false;
+    }
+    let out_path = cdir.join("out.json");
+    match (prev["out_sha256"].as_str(), sha256_path(&out_path).ok()) {
+        (Some(a), Some(b)) if a == b => {}
+        _ => return false,
+    }
+    if let Some(arts) = prev["robustness"]["sample_artifacts"].as_array() {
+        for a in arts {
+            let i = a["sample"].as_u64().unwrap_or(0);
+            let sp = cdir.join(format!("rob_{i}.json"));
+            match (a["spec_sha256"].as_str(), sha256_path(&sp).ok()) {
+                (Some(x), Some(y)) if x == y => {}
+                _ => return false,
+            }
+            if a.get("failed").is_none() {
+                let op = cdir.join(format!("rob_{i}.out.json"));
+                match (a["out_sha256"].as_str(), sha256_path(&op).ok()) {
+                    (Some(x), Some(y)) if x == y => {}
+                    _ => return false,
+                }
+            }
+        }
+    }
+    true
+}
+
+/// Write the in-flight record after every case so an interrupted run
+/// leaves a resumable, honest partial record.
+fn write_partial_record(
+    path: &Path,
+    study: &Study,
+    study_sha: &Value,
+    manifest_sha: &Option<String>,
+    per_case: &[Value],
+    resumed_cases: &[String],
+    prepared_count: usize,
+) {
+    let n_exec = per_case
+        .iter()
+        .filter(|c| c["status"] == "executed")
+        .count();
+    let record = json!({
+        "schema": RECORD_SCHEMA,
+        "study_id": study.study_id,
+        "study_sha256": study_sha,
+        "manifest_sha256": manifest_sha,
+        "status": "partial",
+        "cases_completed": per_case.len(),
+        "cases_declared": study.case_ids().len(),
+        "cases_executed_so_far": n_exec,
+        "resumed_cases": resumed_cases,
+        "prepared_runs": prepared_count,
+        "cases": per_case,
+        "qualification": "unqualified",
+    });
+    let _ = fs::write(
+        path,
+        serde_json::to_string_pretty(&record).unwrap_or_default() + "\n",
+    );
 }
 
 /// nominal response values as (time_s, tkey, value) triples
@@ -2557,6 +2754,75 @@ mod robustness_tests {
         assert!((total - 100.0).abs() < 1e-9);
         assert_eq!(clamps, 1);
         assert!(spec.material.composition.values().all(|v| *v >= 0.0));
+    }
+
+    #[test]
+    fn prepared_signature_tracks_compatible_fields() {
+        let mut spec = min_spec();
+        let sig0 = prepared_signature(&spec);
+        // material and schedule are runtime inputs — same signature
+        spec.material.composition.insert("Ni".into(), 1.0);
+        spec.schedule[0].flux = 2.0;
+        assert_eq!(prepared_signature(&spec), sig0);
+        // a different flux vector is a different collapse — different
+        // signature
+        spec.spectrum.flux_per_group = vec![2.0];
+        assert_ne!(prepared_signature(&spec), sig0);
+        // normalization scalar alone does not change the collapse
+        let mut spec2 = min_spec();
+        spec2.spectrum.total = Some(5.0);
+        assert_eq!(prepared_signature(&spec2), sig0);
+        // uncertainty options form their own signature
+        spec2.uncertainty = Some(crate::spec::UncertaintyOptions {
+            covariance: crate::spec::HashedFileRef {
+                path: "c.npz".into(),
+                sha256: "ab".repeat(32),
+            },
+            responses: vec![],
+            channels: vec![],
+            confidence_level: 0.95,
+            require_complete: false,
+        });
+        assert_ne!(prepared_signature(&spec2), sig0);
+    }
+
+    #[test]
+    fn case_resumable_requires_matching_digests() {
+        let dir = std::env::temp_dir().join(format!(
+            "actinv-p31-resume-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .map(|d| d.as_nanos())
+                .unwrap_or(0)
+        ));
+        std::fs::create_dir_all(&dir).unwrap();
+        let out = dir.join("out.json");
+        std::fs::write(&out, "{}").unwrap();
+        let out_sha = {
+            let mut h = sha2::Sha256::new();
+            use sha2::Digest;
+            h.update(b"{}");
+            format!("{:x}", h.finalize())
+        };
+        let cent = json!({"case_id": "c", "spec_sha256": "spec1"});
+        let prev = json!({
+            "case_id": "c", "status": "executed",
+            "spec_sha256": "spec1", "out_sha256": out_sha,
+        });
+        assert!(case_resumable(&prev, &cent, &dir));
+        // wrong status
+        let mut p2 = prev.clone();
+        p2["status"] = json!("failed");
+        assert!(!case_resumable(&p2, &cent, &dir));
+        // spec drift
+        let mut c2 = cent.clone();
+        c2["spec_sha256"] = json!("other");
+        assert!(!case_resumable(&prev, &c2, &dir));
+        // missing artifact
+        std::fs::remove_file(&out).unwrap();
+        assert!(!case_resumable(&prev, &cent, &dir));
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]

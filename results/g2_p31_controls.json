@@ -1,0 +1,61 @@
+{
+  "controls": {
+    "distinct_signatures": {
+      "prepared_runs": 2,
+      "status": "pass"
+    },
+    "interrupted_run": {
+      "partial_cases_completed": 1,
+      "resumed": [
+        "fe__fns_709__pulse_5min"
+      ],
+      "status": "pass"
+    },
+    "resume_corrupt": {
+      "resumed": [
+        "fe__fns_709__pulse_5min",
+        "fe__fns_709__cont_1d",
+        "fe__irdff_sp_mat9861_709__pulse_5min",
+        "fe_co100wppm__fns_709__pulse_5min",
+        "fe_co100wppm__fns_709__cont_1d",
+        "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
+      ],
+      "status": "pass"
+    },
+    "resume_stale_spec": {
+      "re_executed": [
+        "fe__fns_709__cont_1d",
+        "fe__irdff_sp_mat9861_709__cont_1d",
+        "fe_co100wppm__fns_709__cont_1d",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d"
+      ],
+      "resumed": [
+        "fe__fns_709__pulse_5min",
+        "fe__irdff_sp_mat9861_709__pulse_5min",
+        "fe_co100wppm__fns_709__pulse_5min",
+        "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min"
+      ],
+      "status": "pass"
+    },
+    "resume_torn": {
+      "resumed": [
+        "fe__fns_709__cont_1d",
+        "fe__fns_709__pulse_5min",
+        "fe__irdff_sp_mat9861_709__pulse_5min",
+        "fe_co100wppm__fns_709__cont_1d",
+        "fe_co100wppm__fns_709__pulse_5min",
+        "fe_co100wppm__irdff_sp_mat9861_709__cont_1d",
+        "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min"
+      ],
+      "status": "pass"
+    },
+    "reuse_correctness": {
+      "digests_identical": true,
+      "prepared_runs": 8,
+      "status": "pass"
+    }
+  },
+  "gate": "G2",
+  "phase": "P31"
+}

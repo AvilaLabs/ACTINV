@@ -1,0 +1,29 @@
+{
+  "all_rejected": true,
+  "gate": "G3",
+  "phase": "P31",
+  "probes": {
+    "corrupt_record_swallowed": {
+      "detail": "torn record discarded, all cases re-executed",
+      "rejected": true
+    },
+    "directory_pollution": {
+      "detail": "foreign case dir ignored; manifest unchanged",
+      "rejected": true
+    },
+    "option_drift": {
+      "rejected": true,
+      "resumed": [
+        "fe__fns_709__pulse_5min"
+      ]
+    },
+    "phantom_resume": {
+      "detail": "record claim without artifacts re-executed",
+      "rejected": true
+    },
+    "spec_mismatch_accepted": {
+      "rejected": true,
+      "stderr": "n-709g.npz: declared 0000000000000000000000000000000000000000000000000000000000000000, computed fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+    }
+  }
+}
