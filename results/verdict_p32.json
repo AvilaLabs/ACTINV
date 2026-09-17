@@ -1,0 +1,12 @@
+{
+ "basis": "the decisive gate requires external resources that are not present on this machine and cannot be fabricated locally; per the completion rules, unavailable comparator/user/external evidence remains unmeasured and nothing was silently substituted",
+ "blockers": [
+  "no OpenMC installation or module on this machine \u2014 the decisive gate requires an executed open R2S chain and comparison against the pinned native OpenMC path",
+  "no supplied R2S dataset (spatial flux/material mapping and external photon transport results) is present in the workspace",
+  "external photon transport tooling is not installed"
+ ],
+ "phase": "P32",
+ "unblocks_when": "the named external resources become available; the phase then opens with its own protocol and frozen gate evidence",
+ "unmeasured": true,
+ "verdict": "P32-BLOCKED"
+}

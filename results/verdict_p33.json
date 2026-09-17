@@ -1,0 +1,11 @@
+{
+ "basis": "the decisive gate requires external resources that are not present on this machine and cannot be fabricated locally; per the completion rules, unavailable comparator/user/external evidence remains unmeasured and nothing was silently substituted",
+ "blockers": [
+  "requires a direct connection to the user's own AI provider account \u2014 no provider credentials are available to the agent",
+  "the evaluation battery requires unseen-task grading including independent domain assessment by a human evaluator"
+ ],
+ "phase": "P33",
+ "unblocks_when": "the named external resources become available; the phase then opens with its own protocol and frozen gate evidence",
+ "unmeasured": true,
+ "verdict": "P33-BLOCKED"
+}

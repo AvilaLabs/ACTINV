@@ -1,0 +1,11 @@
+{
+ "basis": "the decisive gate requires external resources that are not present on this machine and cannot be fabricated locally; per the completion rules, unavailable comparator/user/external evidence remains unmeasured and nothing was silently substituted",
+ "blockers": [
+  "inherits P33's blocker: no AI provider account or model endpoint",
+  "Core-dispatched assistant evaluation requires the P33-qualified assistant surface, which is not qualified"
+ ],
+ "phase": "P34",
+ "unblocks_when": "the named external resources become available; the phase then opens with its own protocol and frozen gate evidence",
+ "unmeasured": true,
+ "verdict": "P34-BLOCKED"
+}
