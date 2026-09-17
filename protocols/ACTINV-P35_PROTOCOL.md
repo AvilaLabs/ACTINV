@@ -17,11 +17,14 @@ are named as such.
   P30, P31 is re-executed; each must pass with its mutation self-test
   intact. A checker that cannot locate its evidence reports a named
   failure, not a pass.
-- Reproduction leg: `examples/study_fe_smoke.json` — the committed
-  catalog-reference study — executed twice into fresh output
-  directories; the two runs must produce semantically identical
-  results (volatile timing fields excluded) and each must verify
-  against the embedded catalog's pinned data identities.
+- Reproduction leg: the frozen P31 smoke study (explicit path+sha256
+  data references, verification enforced at prepare time) executed
+  twice into fresh output directories; the two runs must produce
+  semantically identical results (volatile timing fields excluded) and
+  every referenced data artifact must verify against its declared
+  digest. Cross-install data delivery via `actinv data fetch` requires
+  network access and is out of scope here; artifact identity and
+  relocation within the installation are what this leg measures.
 - Claim/limitation matrix: every roadmap capability family is assigned
   exactly one of `qualified`, `conditional`, `unmeasured` or
   `blocked`, with the evidence digest or blocker named. No family may
@@ -43,8 +46,9 @@ are named as such.
 
 - Gate checkers: `check_g{0,1,2,3,4}_p{27,28,29,30,31}.py` — all must
   report `pass: true` and `planted == rejected`.
-- Reproduction study: `examples/study_fe_smoke.json`, two fresh runs,
-  semantic digest equality per case.
+- Reproduction study: the frozen P31 smoke study, two fresh runs,
+  semantic digest equality per case; every declared artifact digest
+  verified at run time.
 
 ## Controls (G2)
 
