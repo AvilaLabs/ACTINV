@@ -1,0 +1,113 @@
+{
+ "basis": "all four gates green with machine checkers; closure is CONDITIONAL because one G0 amendment was used (schedule-name repair) and a newly measured trace-mode defect limits the qualified envelope \u2014 radioactive initial composition under auto/trace mode is treated as an undepleted constant source and is not qualified; solver and population components are empirically estimated, not rigorously bounded; no physical-accuracy or convergence claim follows",
+ "evidence_sha256": {
+  "g0_check": "7d13da4e7ee07852837c0ef5c998b728c8f71d7f40084c1720a4b0a6cf640964",
+  "g0_seals": "f1e7c928ba0eac6b86f1cfffd2642294037e75d4039fefe2ea1a38a0481d058b",
+  "g1_check": "3ffe9e63f5c8156f11e035da13368ef516e3c5028a058c51abdbaa0ae10f27b9",
+  "g1_refinement": "9d9f204a16ec79ceeba6a02bf9caa4680d858d1d63830350f73ac00577a5d991",
+  "g2_check": "04c0062f85d481257b59c62f21512ae13125a2190f324875bdc2173c0f7eb3e9",
+  "g2_controls": "dc74439c723c75485ac282d3613f141ef5f12631286e3c0ce084e848d109e570",
+  "g3_check": "8921c09e5c20a0c0a903f90cd9004170536ae03018ebae79d2574349914dfd9f",
+  "g3_conformance": "a2d28132d499bcdf278ff46850a31676b8c0dffb77b7bb9ebd8c1bfac07fe94d"
+ },
+ "g0_amendments": [
+  "criteria_cases initially named the 1 d schedule 'pulse_1d'; the P27 frozen study names it 'cont_1d'. Renamed to the real case ids before any P29 run."
+ ],
+ "measured": {
+  "analytic_controls": {
+   "chain_mo99_tc99m": "inferred Mo-99->Tc-99m branch 0.8789 at 3600 s hold; long-hold (86400 s) daughter predicted within tolerance",
+   "impulse_decay_mn56": "rel err 9.4e-15 vs ENDF/B-VIII.0 t12 9284.04 s (coupled mode, feed decays correctly)",
+   "near_zero": "zero-flux case reports total activity exactly 0.0",
+   "stiff_1y": "Fe FNS 5 min + 1 y cooling: declared-vs-reference activity rel diff 4e-13; reference populates 684 states vs declared 65"
+  },
+  "conformance": {
+   "envelope_violating_criterion": "unqualified response refused at validation naming family_not_qualified",
+   "resource_limit_exhaustion": "unattainable bound with resource_limit_runs 0 recorded unmet with zero escalations",
+   "unproducible_response": "criterion at a time the case never emits recorded unestablished, not a silent pass"
+  },
+  "criteria_population": {
+   "cases": 8,
+   "criteria": 48,
+   "escalation_runs_total": 120,
+   "inventory_tail_note": "declared default pruning drops nuclides present in the reference solve (rel diff 1.0 on inventory_per_nuclide); criteria satisfied only after escalating to prune none",
+   "satisfied": 48,
+   "unestablished": 0,
+   "unmet": 0
+  },
+  "discovered_limitation": {
+   "description": "under mode auto/trace the initial composition is a constant reservoir: a radioactive feed nuclide (e.g. Mn-56) produces daughters at rate lambda*N without depleting; over a 86400 s hold the daughter is overproduced ~6.45x and mass is not conserved",
+   "evidence": "impulse_decay_mn56 under mode auto reported undepleted activity and Fe-56 6.45e15 atoms/g from a 1e15 feed; mode coupled reproduces the analytic value at 9.4e-15",
+   "id": "trace_mode_radioactive_feed",
+   "qualified_envelope": "criteria and controls are qualified under the P29 reference path (coupled); radioactive initial composition under auto/trace is unqualified and recorded here"
+  },
+  "error_components": {
+   "population_pruning_and_mode": "empirically_estimated (declared vs no-prune/coupled variant), reaches 1.0 on inventory tail",
+   "processing_collapse": "bounded at the P25c/P28 measured tolerance 1e-6; not a rigorous bound",
+   "solver_time_integration": "empirically_estimated (CRAM-16 vs CRAM-48 variant), max observed ~1e-12 on scalar responses"
+  }
+ },
+ "notes": "no release, superiority, demand, or regulatory claim follows; the criteria qualify computational error only within the demonstrated envelope",
+ "opening_commit": "820adcadf294316654361cf5f4b5189429f35fac",
+ "phase": "P29",
+ "prior_verdicts": {
+  "verdict_p10.json": "P10-CONDITIONAL",
+  "verdict_p11.json": "P11-CONDITIONAL",
+  "verdict_p12.json": "P12-CONDITIONAL",
+  "verdict_p13.json": "P13-PASS",
+  "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+  "verdict_p15.json": "P15-PASS",
+  "verdict_p16.json": "P16-CONDITIONAL",
+  "verdict_p17.json": "P17-FAIL",
+  "verdict_p18.json": "P18-FAIL",
+  "verdict_p18b.json": "P18b-FAIL",
+  "verdict_p19.json": "P19-PASS",
+  "verdict_p2.json": "P2-CONDITIONAL",
+  "verdict_p20.json": "P20-PASS",
+  "verdict_p21.json": "P21-PASS",
+  "verdict_p22.json": "P22-PASS",
+  "verdict_p23.json": "P23-PASS",
+  "verdict_p24.json": "P24-CONDITIONAL",
+  "verdict_p25.json": "P25-FAIL",
+  "verdict_p25b.json": "P25b-FAIL",
+  "verdict_p25c.json": "P25c-PASS",
+  "verdict_p26.json": "P26-FAIL",
+  "verdict_p26b.json": "P26b-CONDITIONAL",
+  "verdict_p27.json": "P27-PASS",
+  "verdict_p28.json": "P28-CONDITIONAL",
+  "verdict_p3.json": "P3-FAIL",
+  "verdict_p3b.json": "P3b-PASS",
+  "verdict_p4.json": "P4-FAIL",
+  "verdict_p4b.json": "P4b-PASS",
+  "verdict_p5.json": "P5-PASS",
+  "verdict_p6.json": "P6-CONDITIONAL",
+  "verdict_p7.json": "P7-CONDITIONAL",
+  "verdict_p8.json": "P8-CONDITIONAL",
+  "verdict_p9.json": "P9-CONDITIONAL"
+ },
+ "protocol": "protocols/ACTINV-P29_PROTOCOL.md",
+ "protocol_sha256": "33e8f389edfd01c2c2b7200682e2b36da216ece406428ca484c009115d21c600",
+ "qualified_regime": {
+  "exclusions": [
+   "radioactive initial composition under auto/trace mode (undepleted-reservoir defect, recorded)",
+   "any total physical-accuracy or convergence claim",
+   "nuclear-data and model discrepancy \u2014 separate error class, not covered by these criteria"
+  ],
+  "mechanism": "ACT-REFINE-01 per-(response,time) criteria on the five qualified responses",
+  "population": "8-case P27 smoke population, Fe and Fe+100wppm-Co over FNS and IRDFF spectra",
+  "reference_settings": {
+   "bmin_atoms_per_g": 0.0,
+   "cram_order": 48,
+   "mode": "coupled",
+   "prune": "none"
+  },
+  "responses": [
+   "total_activity_bq_per_g",
+   "decay_heat_w_per_g",
+   "photon_source_per_group",
+   "inventory_per_nuclide",
+   "total_atoms_per_g"
+  ]
+ },
+ "schema": "actinv-verdict-1",
+ "verdict": "P29-CONDITIONAL"
+}

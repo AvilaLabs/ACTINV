@@ -320,6 +320,30 @@ geometry-dependent transport is unchanged and remains external
 (`results/verdict_p28.json`, `docs/APPLICABILITY.md`,
 `controls/check_g{0,1,2,3,4}_p28.py`).
 
+**P29 execution entry (2026-09-17).** P29 closed `P29-CONDITIONAL`: the ACT-REFINE-01
+family now accepts per-(response, time) criteria (`rel`/`abs` bounds, absolute-only near
+zero) discharged against a reference solve at `prune: none`, `bmin: 0`, `cram_order: 48`,
+`mode: coupled`, with per-component error accounting (solver and population components
+empirically estimated from CRAM/pruning variants; processing collapse bounded at the
+P25c/P28 measured 1e-6 tolerance) and a finite escalation ladder inside a declared
+`resource_limit_runs`. All 48 frozen criteria on the 8-case population recorded
+`satisfied` — the inventory tail only after escalating to reference settings, which is
+the measured evidence that default pruning drops nuclides the reference retains.
+Analytic controls: Mn-56 impulse decay matches the ENDF/B-VIII.0 half-life to 9.4e-15;
+the Mo-99 -> Tc-99m -> Tc-99 chain recovers the tabulated branch (0.879) from a short
+hold and independently predicts the one-day daughter within tolerance; the stiff
+1 y cooling case agrees declared-vs-reference to 4e-13; the zero-flux case reports
+exactly zero. Conformance: a criterion at a non-emitted time is `unestablished`, an
+unattainable bound under `resource_limit_runs: 0` is `unmet` with zero escalations,
+and an unqualified response is refused at validation. One amendment was used
+(schedule-name repair) and one limitation was discovered: under `auto`/`trace` a
+radioactive feed nuclide is an undepleted constant source — over a 1 d hold the
+daughter is overproduced ~6.45x and mass is not conserved; radioactive initial
+composition is qualified only under `coupled`. The verdict is CONDITIONAL per the
+closure rule; computational error is controlled within the demonstrated envelope only,
+and no physical-accuracy or convergence claim follows (`results/verdict_p29.json`,
+`docs/STUDY.md`, `controls/check_g{0,1,2,3,4}_p29.py`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
