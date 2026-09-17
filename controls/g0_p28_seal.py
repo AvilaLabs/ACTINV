@@ -38,7 +38,10 @@ seals = {
         text=True).stdout.strip(),
     "protocol_sha256": sh(os.path.join(
         ROOT, "protocols", "ACTINV-P28_PROTOCOL.md")),
-    "opening_commit": git("rev-parse", "HEAD"),
+    # the opening commit is the commit that registered this protocol
+    "opening_commit": git("log", "--diff-filter=A", "-1",
+                          "--format=%H", "--",
+                          "protocols/ACTINV-P28_PROTOCOL.md"),
     "prior_verdicts": PRIOR,
     "identities": {
         "actinv_binary": {
@@ -154,7 +157,7 @@ seals = {
         },
         "rate_traces": {
             "parents": ["Fe56", "Fe54", "Co59"],
-            "channels": {"Fe56": ["n,gamma -> Fe57"],
+            "channels": {"Fe56": ["n,p -> Mn56"],
                          "Fe54": ["n,p -> Mn54"],
                          "Co59": ["n,gamma -> Co60m1", "n,gamma -> Co60"]},
             "method": "single-group unit-flux probe per group: "
@@ -176,6 +179,17 @@ seals = {
                            "consumption": "once, at G3",
                            "sealed_at": "G0"},
     },
+    "amendments": [
+        {"n": 1, "scope": "rate_traces.channels.Fe56",
+         "was": ["n,gamma -> Fe57"],
+         "is": ["n,p -> Mn56"],
+         "rationale": "Fe-57 is a natural-iron constituent held in the "
+                      "constant bulk reservoir; produced Fe-57 merges into "
+                      "it and is not a distinguishable inventory state. "
+                      "Fe-56(n,p)->Mn-56 is the dominant observable channel "
+                      "(radioactive daughter, absent from the material). "
+                      "Amended before any gate consumed the seal."},
+    ],
 }
 
 json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)

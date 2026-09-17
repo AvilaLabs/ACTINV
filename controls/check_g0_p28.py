@@ -31,8 +31,9 @@ def check(s, fs):
                                    "ACTINV-P28_PROTOCOL.md"))
                    != s["protocol_sha256"]):
         fs.append("protocol digest mismatch")
-    if s["opening_commit"] != "5492b96"[:7] and \
-            s["opening_commit"] != git("rev-parse", "5492b96^{commit}"):
+    expected_open = git("log", "--diff-filter=A", "-1", "--format=%H",
+                        "--", "protocols/ACTINV-P28_PROTOCOL.md")
+    if s["opening_commit"] != expected_open:
         fs.append("opening_commit does not resolve to the P28 opening")
     try:
         git("merge-base", "--is-ancestor", s["opening_commit"], "HEAD")

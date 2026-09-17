@@ -1,4 +1,17 @@
 {
+  "amendments": [
+    {
+      "is": [
+        "n,p -> Mn56"
+      ],
+      "n": 1,
+      "rationale": "Fe-57 is a natural-iron constituent held in the constant bulk reservoir; produced Fe-57 merges into it and is not a distinguishable inventory state. Fe-56(n,p)->Mn-56 is the dominant observable channel (radioactive daughter, absent from the material). Amended before any gate consumed the seal.",
+      "scope": "rate_traces.channels.Fe56",
+      "was": [
+        "n,gamma -> Fe57"
+      ]
+    }
+  ],
   "evidence_partitions": {
     "diagnostic": {
       "consumers": [
@@ -92,7 +105,7 @@
     "verdict_p9.json": "P9-CONDITIONAL"
   },
   "protocol_sha256": "a1dbd13102ba88abe18facbf811c07beba8a3daf90a4fec8d1dec1e2a49dffdf",
-  "recorded_at_utc": "2026-09-17T00:36:05Z",
+  "recorded_at_utc": "2026-09-17T00:42:49Z",
   "schema": "actinv-p28-g0-seals-1",
   "selected_regime": {
     "data": "tendl-2025-patched-neutron-709g.npz (v1.1.0 derived)",
@@ -212,7 +225,7 @@
           "n,p -> Mn54"
         ],
         "Fe56": [
-          "n,gamma -> Fe57"
+          "n,p -> Mn56"
         ]
       },
       "groups": 709,
