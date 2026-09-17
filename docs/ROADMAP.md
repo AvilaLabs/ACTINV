@@ -300,6 +300,26 @@ that battery (duplicate axis names colliding case ids) is now refused at validat
 regression test. G1/G2/G3 checkers and the G4 closure checker all pass with all planted
 mutations rejected (`results/verdict_p27.json`, `controls/check_g{1,2,3,4}_p27.py`).
 
+**P28 execution entry (2026-09-17).** P28 closed `P28-CONDITIONAL` on the neutron /
+fispact-709 / 293.6 K regime of the patched TENDL-2025 artifact. All four source-to-rate
+traces recover every library group within tolerance (709 single-group unit-flux probes
+per channel; Fe56->Mn56 max rel 3.7e-9, Fe54->Mn54 1.3e-12, Co59->Co60 9.7e-8,
+Co59->Co60m1 5.5e-8; the artifact stores columns ascending, reversed against the spec's
+descending listing). Analytic limits pass: zero flux produces exactly zero; the Mn-56
+one-day decay ratio matches the ENDF/B-VIII.0 tabulated half-life to 2e-14; the
+production/loss closure residual is exactly zero. Boundary cases measured the envelope:
+temperatures other than 293.6 K and the proton projectile fail closed with named errors;
+an uncovered shield-table nuclide under `require_shielding_complete` fails closed, and
+as passthrough is ledgered by name; a mutated table digest is refused. The
+applicability map covers all 113 artifact elements: 103 qualified, 5 qualified with P25c
+ledger defects, 5 with dosimetry-critical parents absent (Ag, Au, In, Nb, Ni). One silent
+run-ledger coverage absence is recorded: natural nickel executes without Ni-58 with no
+ledger entry naming it (the map carries the named record). The verdict stays CONDITIONAL
+because frozen boundary combinations landed in contract_gap and coverage gaps remain;
+geometry-dependent transport is unchanged and remains external
+(`results/verdict_p28.json`, `docs/APPLICABILITY.md`,
+`controls/check_g{0,1,2,3,4}_p28.py`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

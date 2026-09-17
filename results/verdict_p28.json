@@ -1,0 +1,141 @@
+{
+ "basis": "all four gates green with machine checkers; gap-recorded frozen combinations (temperature boundary x2, proton) and five element coverage gaps keep the closure CONDITIONAL; one silent run-ledger coverage absence (Ni-58) recorded",
+ "evidence_sha256": {
+  "g0_check": "782b2c8670070b0b48d327a0eef3c615001212ba8d867f0f74326943bb2caf65",
+  "g0_seals": "a77bbe6ebd7db354b2d9e46cb1cf04b52aa05aeaed47ecdf30d8e0ef8931f57d",
+  "g1_check": "d8f8689e28b6da3b92ee72540aa5f8b0e4dbd3e1938bc9388c82eea4a0667ab4",
+  "g1_rates": "f85dac11c5550eb5b23286d2c8d4ae95d90c6e69f22d0800882a5a87aeaa3adf",
+  "g2_check": "7d28e80dd7ac4e14e97037f32da191bf0c90d9d21f45f63027dc3b935b141c24",
+  "g2_population": "ead1ec82c64683e1ab2a273bec93a909ada61552f03b6c6f62656a4b6c09b67a",
+  "g3_check": "68345eca51c7457f5f7bede15df827faf0d9e801c4283711be06ef2b2d3aea2e",
+  "g3_conformance": "fee8729233d70e280fb73e5bb322330bc4e027f38f4a43b2a6340de519015170"
+ },
+ "g0_amendments": [
+  "Fe56 trace channel n,gamma->Fe57 replaced by n,p->Mn56 (Fe57 unobservable in bulk reservoir)"
+ ],
+ "measured": {
+  "analytic_limits": {
+   "production_loss_closure": "pathway_closure residual 0.0",
+   "pure_decay": "Mn-56 1 d hold ratio rel err 2e-14 vs ENDF t12 9284.04 s",
+   "zero_flux": "exactly zero production"
+  },
+  "applicability_map": {
+   "elements": 113,
+   "gap": 5,
+   "gap_elements": [
+    "Ag",
+    "Au",
+    "In",
+    "Nb",
+    "Ni"
+   ],
+   "qualified": 103,
+   "qualified_with_ledger": 5
+  },
+  "boundary_cases": {
+   "executed": 5,
+   "gap": 3,
+   "gap_cases": {
+    "fe__fns_709__pulse_5min__T0K": "temperature 0 K != artifact 293.6 K",
+    "fe__fns_709__pulse_5min__T1200K": "temperature 1200 K != 293.6 K",
+    "fe__fns_709__pulse_5min__proton": "projectile unsupported"
+   }
+  },
+  "conformance": {
+   "fail_closed_named": [
+    "proton",
+    "deuteron",
+    "alpha",
+    "structure_mismatch",
+    "temperature_mismatch",
+    "shield_uncovered_required",
+    "shield_table_bad_hash"
+   ],
+   "ledger_named_uncovered": {
+    "shield_uncovered_passthrough": [
+     "Co59"
+    ]
+   }
+  },
+  "rate_traces": {
+   "channels": [
+    "Fe56->Mn56",
+    "Fe54->Mn54",
+    "Co59->Co60",
+    "Co59->Co60m1"
+   ],
+   "column_order": "reversed",
+   "groups_each": 709,
+   "max_rel": {
+    "Co59->Co60": 9.69e-08,
+    "Co59->Co60m1": 5.52e-08,
+    "Fe54->Mn54": 1.31e-12,
+    "Fe56->Mn56": 3.73e-09
+   },
+   "method": "single-group unit-flux probes; sigma_g = N_d/(N_parent phi t) at 1e-4 s; decay bias < 6e-8 for Mn-56",
+   "mismatches": 0
+  },
+  "silent_coverage_absence": {
+   "ni__fns_709__pulse_5min": [
+    "Ni-58"
+   ]
+  }
+ },
+ "notes": "no release, superiority, demand, or regulatory claim follows; geometry-dependent transport remains external",
+ "opening_commit": "5492b96484c8f17d09a1ff5c445034fa78de2c03",
+ "phase": "P28",
+ "prior_verdicts": {
+  "verdict_p10.json": "P10-CONDITIONAL",
+  "verdict_p11.json": "P11-CONDITIONAL",
+  "verdict_p12.json": "P12-CONDITIONAL",
+  "verdict_p13.json": "P13-PASS",
+  "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+  "verdict_p15.json": "P15-PASS",
+  "verdict_p16.json": "P16-CONDITIONAL",
+  "verdict_p17.json": "P17-FAIL",
+  "verdict_p18.json": "P18-FAIL",
+  "verdict_p18b.json": "P18b-FAIL",
+  "verdict_p19.json": "P19-PASS",
+  "verdict_p2.json": "P2-CONDITIONAL",
+  "verdict_p20.json": "P20-PASS",
+  "verdict_p21.json": "P21-PASS",
+  "verdict_p22.json": "P22-PASS",
+  "verdict_p23.json": "P23-PASS",
+  "verdict_p24.json": "P24-CONDITIONAL",
+  "verdict_p25.json": "P25-FAIL",
+  "verdict_p25b.json": "P25b-FAIL",
+  "verdict_p25c.json": "P25c-PASS",
+  "verdict_p26.json": "P26-FAIL",
+  "verdict_p26b.json": "P26b-CONDITIONAL",
+  "verdict_p27.json": "P27-PASS",
+  "verdict_p3.json": "P3-FAIL",
+  "verdict_p3b.json": "P3b-PASS",
+  "verdict_p4.json": "P4-FAIL",
+  "verdict_p4b.json": "P4b-PASS",
+  "verdict_p5.json": "P5-PASS",
+  "verdict_p6.json": "P6-CONDITIONAL",
+  "verdict_p7.json": "P7-CONDITIONAL",
+  "verdict_p8.json": "P8-CONDITIONAL",
+  "verdict_p9.json": "P9-CONDITIONAL"
+ },
+ "protocol": "protocols/ACTINV-P28_PROTOCOL.md",
+ "protocol_sha256": "a1dbd13102ba88abe18facbf811c07beba8a3daf90a4fec8d1dec1e2a49dffdf",
+ "qualified_regime": {
+  "elements": "103 qualified + 5 qualified-with-ledger; Ag/Au/In/Nb/Ni dosimetry-critical parents absent",
+  "group_structure": "fispact-709",
+  "projectile": "neutron",
+  "responses": [
+   "total_activity_bq_per_g",
+   "decay_heat_w_per_g",
+   "photon_source_per_group",
+   "inventory_per_nuclide",
+   "total_atoms_per_g"
+  ],
+  "shielding": "infinite dilution everywhere; finite dilution only on Ag107 Fe56 Nb93 Ta181 U238 W186",
+  "temperature_K": [
+   293.6
+  ]
+ },
+ "schema": "actinv-verdict-1",
+ "verdict": "P28-CONDITIONAL"
+}
