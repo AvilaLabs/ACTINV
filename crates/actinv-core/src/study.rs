@@ -217,9 +217,26 @@ impl Study {
                 .into());
         }
         for (label, names) in [
-            ("material", self.cases.materials.iter().map(|x| x.name.as_str()).collect::<Vec<_>>()),
-            ("spectrum", self.cases.spectra.iter().map(|x| x.name.as_str()).collect()),
-            ("schedule", self.cases.schedules.iter().map(|x| x.name.as_str()).collect()),
+            (
+                "material",
+                self.cases
+                    .materials
+                    .iter()
+                    .map(|x| x.name.as_str())
+                    .collect::<Vec<_>>(),
+            ),
+            (
+                "spectrum",
+                self.cases.spectra.iter().map(|x| x.name.as_str()).collect(),
+            ),
+            (
+                "schedule",
+                self.cases
+                    .schedules
+                    .iter()
+                    .map(|x| x.name.as_str())
+                    .collect(),
+            ),
         ] {
             let mut seen = std::collections::HashSet::new();
             for n in names {
