@@ -1,0 +1,78 @@
+{
+  "gate": "G3",
+  "partition": "p28_qualifying",
+  "phase": "P28",
+  "probes": [
+    {
+      "error": "proton specs require options.temperature_K: 0",
+      "id": "proton",
+      "spec_sha256": "1308a5273c12632db18fcdd481233a3b0640486d2419e499b9d5ccdb64087fba",
+      "status": "gap"
+    },
+    {
+      "error": "deuteron specs require options.temperature_K: 0",
+      "id": "deuteron",
+      "spec_sha256": "3b6797f3f7ab707e5d19232baa4b77b743ee814dc6f190031b2601df64de7010",
+      "status": "gap"
+    },
+    {
+      "error": "alpha specs require options.temperature_K: 0",
+      "id": "alpha",
+      "spec_sha256": "4c0244ec5137b3e975cb30ce0c7d70f5420de596a6a88d66f7c1a29ac1df51a8",
+      "status": "gap"
+    },
+    {
+      "error": "unknown spectrum.structure 'xmas-172'",
+      "id": "structure_mismatch",
+      "spec_sha256": "d35043a5db44212190f3dccf179824969c1e26fa964c9df106f7a9722176e4dc",
+      "status": "gap"
+    },
+    {
+      "error": "requested temperature 600 K does not match library temperature 293.6 K",
+      "id": "temperature_mismatch",
+      "spec_sha256": "c126a6ea71941ab003c025c93dbf1bff4ed29e3c1653b707ee3482905d0790f8",
+      "status": "gap"
+    },
+    {
+      "id": "shield_uncovered_passthrough",
+      "out_sha256": "50c1431389b964527911233c45018ed079fc7776a4b23d2788e0f109dfba7d42",
+      "shielding_ledger": {
+        "applied_factors": {},
+        "channel_map": "mt 2 -> elastic; mt 18/19 -> fission; mt 102 -> capture; all other reactions take the total factor",
+        "channels": [
+          "total",
+          "elastic",
+          "fission",
+          "capture"
+        ],
+        "dilution": "fixed",
+        "model": "Bondarenko: sigma_eff_g = sigma_g * ((1 - c_g) + c_g * f(sigma0_eff, T)); factors interpolate in ln(sigma0) and sqrt(T); outside unresolved ranges f = 1",
+        "require_complete": false,
+        "shielding_uncovered": [
+          "Co59"
+        ],
+        "sigma0_eff_b": {},
+        "sigma0_fixed_b": 0.1,
+        "sigma_p_estimated": [
+          "Co59"
+        ],
+        "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384"
+      },
+      "spec_sha256": "56ed08a16697ed742c1c4d2001ee2f60fe3eb5174db99ef0d38454cc46eacc34",
+      "status": "executed"
+    },
+    {
+      "error": "self_shielding: material nuclides lack table coverage: Co59",
+      "id": "shield_uncovered_required",
+      "spec_sha256": "9be7f03b8a52ad253b95917f95f3710fb61fe9d8560b368b605329239cce6d70",
+      "status": "gap"
+    },
+    {
+      "error": "SHA-256 mismatch for /home/connoravila/Documents/actinv/results/g1_p19_shield_artifact.json: declared 0000000000000000000000000000000000000000000000000000000000000000, computed b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+      "id": "shield_table_bad_hash",
+      "spec_sha256": "76cadefb5752b5014d548b63733701e809064591e4ede87293aa4c28158eb2e2",
+      "status": "gap"
+    }
+  ],
+  "schema": "actinv-p28-g3-1"
+}
