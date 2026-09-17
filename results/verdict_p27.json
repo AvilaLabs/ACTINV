@@ -1,0 +1,39 @@
+{
+  "amendments_used": 0,
+  "evidence_sha256": {
+    "g0_check": "a36c47dd3f570bd5c2a7df6478abdf518bafad3fa602b3b2cee4b31c95096872",
+    "g0_seals": "930d875d5b2a846d8c0a93fba616f4366292c45cfd1becfac2865f67f1728354",
+    "g1_check": "3851290e1df42b1db4374250d5c9d855db77c8a55a5bf2f13e83ead14ab5fed4",
+    "g1_study_record": "4a6cedfeb515fb84d426c7edc2a5add14b6c7b913cef46cee535006e5e2f94fb",
+    "g2_check": "dd639c3aa99e8b3c13fab7232e25f7c08de9decd4f8acde78772f2ee9f2005fe",
+    "g2_interchange": "55f5a2e5b88c385e72d34058d57fdc1c7ce43c01f7c6db68f0dee24abba6b8c4",
+    "g3_battery": "02af2ed1d7e81511d561b1a43fe606bfdab8aac21608c91a97f7deb88b7ce38d",
+    "g3_check": "b5463f5a5a314d399ff2c7d01f0e0ab7fa931e2dc9563eb7a6a3f2a151178312"
+  },
+  "flagship": "ACT-STUDY-01 / ACT-COMPARE-01 on the frozen 8-case smoke population",
+  "gates": {
+    "G0": "sealed; identities, scope, smoke population and adversarial battery frozen",
+    "G1": "actinv-study-1 schema, deterministic expansion, validate/build/run, comparison rules, family gating, revocation; 8/8 smoke executed; independent checker: 0 failures, 6/6 mutations rejected, byte-identical rebuild",
+    "G2": "Core package (contract/registry/adapter/claims) compiles and executes end-to-end under avila.core/semantic/0.2-draft: integrity complete, compile compiled, execution executed, bindings verified, campaign evaluated; all 8 categorical requirements pass; checker: 0 failures, 7/7 mutations rejected",
+    "G3": "12/12 frozen adversarial classes rejected through real machinery; checker replays all 8 receipts and both forgery probes: 0 failures"
+  },
+  "opening_commit": "2a6b298c0c9f7ca7a8390acbdd0ff906ce5ce4d6",
+  "phase": "P27",
+  "protocol_sha256": "70fef47884e59d70655737346fd1a84c2e415fce50cce0fed9c06b216a7fa73e",
+  "qualification_boundary": {
+    "note": "Core 'evaluated' is contract evaluation under a DRAFT semantic profile \u2014 byte-integrity, staged execution and claim binding, not scientific qualification, certification or regulatory acceptance. The studied families remain exactly the P0-P27 qualified set; uncertainty, radiological, damage and self-shielding families stay excluded.",
+    "qualified_operations": [
+      "ACT-STUDY-01",
+      "ACT-COMPARE-01"
+    ],
+    "still_unqualified": [
+      "ACT-REFINE-01 (P29)",
+      "ACT-ROBUST-01 (P30)",
+      "ACT-SOURCE-01 (P32)"
+    ]
+  },
+  "release_hold": "unchanged - no release decision is made or implied by this record",
+  "schema": "actinv-p27-verdict-1",
+  "verdict": "P27-PASS",
+  "verdict_rule": "P27-PASS: all four gates closed with machine-verifiable evidence and every frozen adversarial class rejected by the real machinery. No comparator, qualification, regulatory or product claim is made; the verdict attests only that the study layer and Core interchange contract behave as the protocol requires on the frozen smoke population."
+}

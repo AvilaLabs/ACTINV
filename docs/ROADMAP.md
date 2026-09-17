@@ -282,6 +282,24 @@ claimed). Item (d) remains unmeasurable (no lawful transport comparator on this 
 the R2S handoff stays closed and is inherited by P32). P27 may open only on these recorded
 terms.
 
+**P27 execution entry (2026-09-16).** P27 closed `P27-PASS`. The shared-study layer is
+delivered and executed: versioned `actinv-study-1` schema with deterministic Cartesian
+expansion (byte-stable manifests, stable `material__spectrum__schedule` case ids),
+`actinv study validate|build|run`, explicit population accounting, predeclared comparison
+rules, family gating that names unqualified fields (`robustness`, `refinement`,
+`spatial_handoff` refuse `family_not_qualified` with the delivering phase), and template
+revocation. The Core interchange is real and end-to-end: a generated case package
+(contract, registry snapshot, external-checker adapter, claims) compiles and executes under
+`avila.core/semantic/0.2-draft` — all 8 frozen smoke cases ran in staged workspaces with
+digest-bound specs, staged data and a package-pinned step runner; every categorical
+requirement passed, bindings verified, campaign evaluated. Core `evaluated` is contract
+evaluation under a DRAFT profile — staged execution and evidence binding, not scientific
+qualification or regulatory acceptance. The frozen 12-class adversarial battery was
+executed against the real machinery and every class was rejected; a real defect found in
+that battery (duplicate axis names colliding case ids) is now refused at validation with a
+regression test. G1/G2/G3 checkers and the G4 closure checker all pass with all planted
+mutations rejected (`results/verdict_p27.json`, `controls/check_g{1,2,3,4}_p27.py`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
