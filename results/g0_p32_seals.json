@@ -1,0 +1,105 @@
+{
+ "activation": {
+  "cooling_steps": [
+   2,
+   3
+  ],
+  "groups": "fispact-709",
+  "projectile": "neutron",
+  "schedule": [
+   {
+    "dt": "300 s",
+    "flux": 1.0
+   },
+   {
+    "dt": "86400 s",
+    "flux": 0.0
+   },
+   {
+    "dt": "86400 s",
+    "flux": 0.0
+   }
+  ]
+ },
+ "activation_data": {
+  "decay_fallback": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat",
+  "decay_primary": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+  "library": "/home/connoravila/nuclear-data/../Documents/actinv/target/p25c-release/tendl-2025-patched-neutron-709g.npz",
+  "library_sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+ },
+ "amendments": [
+  {
+   "date": "2026-09-17",
+   "reason": "import-flux accepts only mesh+energy tallies and the mesh spec's material.mass_g is fixed per cell; a voxelized cube with every voxel wholly material makes the per-cell mass rho*V exact and gives the depletion leg identical cell identities. Shells with partial-fill voxels would encode a mass-model approximation P32 must not silently carry.",
+   "scope": "model geometry"
+  },
+  {
+   "date": "2026-09-17",
+   "reason": "actinv step ids are 1-based; the irradiation step is 1 and the two cooling steps are 2 and 3. The original [1,2] would have exported an irradiation-end source as a 'cooling' source.",
+   "scope": "cooling step indices"
+  }
+ ],
+ "candidate": {
+  "binary": "target/release/actinv",
+  "binary_sha256": "8bab857ac5294e70711e06eb4c3516712bb5eae15105757fb9c4874594b5cde5"
+ },
+ "controls": [
+  "cell_identity",
+  "normalization",
+  "distributed_source",
+  "cooling_separation",
+  "depletion_comparison"
+ ],
+ "depletion_data": {
+  "chain": "openmc.deplete.Chain built locally from pinned files",
+  "decay_dir": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk",
+  "nfpy_dir": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy"
+ },
+ "model": {
+  "batches": 10,
+  "density_g_cm3": 7.87,
+  "geometry": "4x4x4 cm Fe cube voxelized into 64 material cells (1 cm^3 voxels), overlaid by a regular 4x4x4 mesh",
+  "material": "Fe 100 wt%",
+  "particles": 50000,
+  "photon_batches": 10,
+  "photon_particles": 20000,
+  "source": {
+   "energy_eV": 14100000.0,
+   "strength_n_per_s": 1000000000.0,
+   "type": "isotropic point at cube center"
+  },
+  "voxel_cm3": 1.0,
+  "voxels": 64
+ },
+ "negative_controls": [
+  "planted_normalization",
+  "planted_mapping",
+  "interrupted_export",
+  "missing_data",
+  "point_source"
+ ],
+ "opening_commit": "d2c2c527d0319eca2cc58df6cd6b2a57d0874807",
+ "openmc": {
+  "build": "dagmc_mpi_openmpi_py313ha0fa856_102",
+  "env_prefix": "/home/connoravila/.local/share/mamba/envs/openmc",
+  "exe_sha256": "d939af8f885800c8727e687e628c2802138674e7f3b108371ef813a606939f51",
+  "version": "0.15.3"
+ },
+ "phase": "P32",
+ "prior_verdicts": {
+  "verdict_p32.json": "P32-BLOCKED"
+ },
+ "protocol_sha256": "4d022423b8bb696bef6634b9134d6e39959945d7929a96ce5c079fed23741dc9",
+ "schema": "actinv-p32-g0-seal-1",
+ "target_family": "ACT-SOURCE-01",
+ "tolerances": {
+  "flux_total": "tally mean precision",
+  "photon_integral_rel": 1e-06,
+  "volumes_rel": 1e-12
+ },
+ "transport_data": {
+  "cross_sections_sha256": "2789cb61537a56a14b555ca97f439ed14896bd6db9bfe6460e066db3c96843db",
+  "cross_sections_xml": "/home/connoravila/nuclear-data/endfb-vii.1-hdf5/cross_sections.xml",
+  "library": "ENDF/B-VII.1 HDF5 (local)"
+ }
+}

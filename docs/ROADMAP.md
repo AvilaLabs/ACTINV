@@ -399,15 +399,22 @@ sharing only — no solver-result caching, approximate reuse or cross-hardware
 headroom claim (`results/verdict_p31.json`, `docs/STUDY.md`,
 `controls/check_g{0,1,2,3,4}_p31.py`).
 
-**P32–P34 dispositions (2026-09-17).** P32 is `P32-BLOCKED`: its decisive
-gate requires an executed open R2S chain and the pinned native OpenMC path —
-no OpenMC installation or module exists on this machine and no supplied R2S
-dataset is present. P33 is `P33-BLOCKED`: it requires a direct connection to
-the user's own AI provider account plus independent human evaluators, neither
-available to the agent. P34 is `P34-BLOCKED`, inheriting P33's blocker. Per
-the completion rules these legs are unmeasured — no substitute evidence was
-fabricated and no family was silently dropped (`results/verdict_p32.json`,
-`results/verdict_p33.json`, `results/verdict_p34.json`).
+**P32–P34 dispositions (2026-09-17).** P32 closed `P32-CONDITIONAL`: OpenMC
+0.15.3 was installed (conda-forge) and the full chain executed on the frozen
+voxelized-Fe study — neutron transport with a 4×4×4-mesh × 709-group flux
+tally, `actinv import-flux openmc`, a 64-cell mesh activation, the new
+`actinv export-openmc-mesh` distributed source (one `openmc.stats.Box`
+`IndependentSource` per voxel per cooling step), executed OpenMC photon
+transport for both cooling steps, and an `openmc.deplete` comparison leg
+(median relative deviation 2.1e-7 across 704 cell–nuclide pairs). Conditions:
+self-produced geometry only (no external benchmark), the photon leg is a flux
+proxy not a qualified dose prediction, and tally statistical error is not
+propagated into the comparison (`results/verdict_p32.json`,
+`controls/check_g{0,1,2,3,4}_p32.py`). P33 remains `P33-BLOCKED`: it requires
+a direct connection to the user's own AI provider account plus independent
+human evaluators, neither available to the agent. P34 is `P34-BLOCKED`,
+inheriting P33's blocker (`results/verdict_p33.json`,
+`results/verdict_p34.json`).
 
 **P35 execution entry (2026-09-17).** P35 closed `P35-CONDITIONAL`: the claim/
 limitation matrix was derived from the on-disk verdict files and the release

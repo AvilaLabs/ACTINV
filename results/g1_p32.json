@@ -1,0 +1,48 @@
+{
+ "artifacts": {
+  "depletion_results": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/neutron/depletion_results.h5",
+   "sha256": "ac6267cdb8333792ed273f7db722f357061ee7297636e3060a29d4dc69d6dd19"
+  },
+  "flux_ndjson": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/flux.ndjson",
+   "sha256": "7067a8050c6cacb310036b1943f52e4cfb46a294795f666b60f88a9a9dfad8d6"
+  },
+  "mesh_result": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/mesh_result.ndjson",
+   "sha256": "6ece4d7b93fd03dec71bac02bcda50fb58bfda2a5aeaee1fe1d21432c4d9d3be"
+  },
+  "mesh_spec": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/mesh_spec.json",
+   "sha256": "fcc4afed125333fd0d67c82ea521fd373fe7cb6e57c67c68f5056462291e33b1"
+  },
+  "statepoint": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/neutron/statepoint.10.h5",
+   "sha256": "489a3baf4153563b0cd9f7cf78c1cd055383be1ffe99bd4c6c40a2123c8dbd39"
+  }
+ },
+ "chain_executed": true,
+ "gate": "G1",
+ "phase": "P32",
+ "photon_statepoints": {
+  "2": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/photon_step2/statepoint.10.h5",
+   "sha256": "4ffb17677f904339cc07b688256b84968b8da89b46be8b19261ef8f4d99bba99"
+  },
+  "3": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/photon_step3/statepoint.10.h5",
+   "sha256": "de109c00cce70c5764c005a145eae35fcc4ed74c247e56810f45e368063cdf85"
+  }
+ },
+ "schema": "actinv-p32-g1-1",
+ "sources": {
+  "2": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/source_step2.py",
+   "sha256": "ccf68aeae95925ab10ac7f9df4072ba8527dcc26d3bca8141261b13f2b979de2"
+  },
+  "3": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/source_step3.py",
+   "sha256": "78ed5dba5dcacf2310ec20398826ddfc281a1de24cc25da099ccf6249a02d490"
+  }
+ }
+}

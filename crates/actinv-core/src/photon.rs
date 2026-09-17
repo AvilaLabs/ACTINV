@@ -800,6 +800,127 @@ source = openmc.IndependentSource(\n\
     ))
 }
 
+/// One mesh cell's contribution to a spatial photon source.
+#[derive(Clone, Debug, Serialize)]
+pub struct MeshPhotonCell {
+    pub id: String,
+    pub bounds_cm: [[f64; 2]; 3],
+    pub volume_cm3: f64,
+    pub strength_photons_s: f64,
+    pub energy_eV: Vec<f64>,
+    pub weight: Vec<f64>,
+}
+
+/// Build one cell's spatial-source fragment from its step photon source.
+/// `Ok(None)` means the cell emits no photons in the export group
+/// structure and contributes no source entry; other failures are hard
+/// errors — the contract never silently drops a non-empty cell.
+pub fn mesh_cell_from_source(
+    id: String,
+    bounds_cm: [[f64; 2]; 3],
+    volume_cm3: f64,
+    source: &PhotonSourceOut,
+) -> Result<Option<MeshPhotonCell>, String> {
+    if !(volume_cm3.is_finite() && volume_cm3 > 0.0) {
+        return Err(format!("cell '{id}': non-positive volume"));
+    }
+    let mut energy = Vec::new();
+    let mut weight = Vec::new();
+    for g in &source.groups {
+        if g.photons_s > 0.0 && g.centroid_eV > 0.0 {
+            energy.push(g.centroid_eV);
+            weight.push(g.photons_s);
+        }
+    }
+    let total: f64 = weight.iter().sum();
+    if total <= 0.0 {
+        return Ok(None);
+    }
+    let omitted = (source.total_photons_s - total).abs();
+    if omitted > 1e-12 * source.total_photons_s.abs().max(1.0) {
+        return Err(format!(
+            "cell '{id}': group structure omits {:.17e} photons/s; export would not conserve source strength",
+            source.total_photons_s - total
+        ));
+    }
+    for p in &mut weight {
+        *p /= total;
+    }
+    Ok(Some(MeshPhotonCell {
+        id,
+        bounds_cm,
+        volume_cm3,
+        strength_photons_s: total,
+        energy_eV: energy,
+        weight,
+    }))
+}
+
+/// Serialize one cell's source fragment: uniform-in-bounds spatial
+/// distribution, line/groups energy distribution, strength in photons/s.
+fn mesh_cell_fragment(cell: &MeshPhotonCell) -> Result<String, String> {
+    let [x, y, z] = cell.bounds_cm;
+    if !(x[0] < x[1] && y[0] < y[1] && z[0] < z[1]) {
+        return Err(format!("cell '{}': degenerate bounds", cell.id));
+    }
+    if cell.energy_eV.is_empty() || cell.weight.is_empty() {
+        return Err(format!("cell '{}': empty energy distribution", cell.id));
+    }
+    if !(cell.strength_photons_s.is_finite() && cell.strength_photons_s > 0.0) {
+        return Err(format!("cell '{}': non-positive strength", cell.id));
+    }
+    let es = cell
+        .energy_eV
+        .iter()
+        .map(|v| format!("{v:.17e}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let ps = cell
+        .weight
+        .iter()
+        .map(|v| format!("{v:.17e}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    Ok(format!(
+        "sources.append(openmc.IndependentSource(\n    \
+         space=openmc.stats.Box([{x0:.17e}, {y0:.17e}, {z0:.17e}], \
+         [{x1:.17e}, {y1:.17e}, {z1:.17e}]),\n    \
+         energy=openmc.stats.Discrete([{es}], [{ps}]),\n    \
+         particle=\"photon\", strength={s:.17e}))  # cell {id}\n",
+        x0 = x[0],
+        y0 = y[0],
+        z0 = z[0],
+        x1 = x[1],
+        y1 = y[1],
+        z1 = z[1],
+        s = cell.strength_photons_s,
+        id = cell.id,
+    ))
+}
+
+/// Emit a complete OpenMC spatial-source module: `sources` is a list of
+/// per-cell IndependentSources whose `strength` fields carry absolute
+/// photons/s (OpenMC normalizes the mixture); the absolute total is
+/// recorded as TOTAL_PHOTONS_S.
+pub fn export_openmc_mesh(cells: &[MeshPhotonCell]) -> Result<String, String> {
+    if cells.is_empty() {
+        return Err("mesh result has no photon-bearing cells to export".into());
+    }
+    let total: f64 = cells.iter().map(|c| c.strength_photons_s).sum();
+    if !(total.is_finite() && total > 0.0) {
+        return Err("mesh photon source total is zero".into());
+    }
+    let mut out = String::from(
+        "# ACTINV spatial decay-photon source (actinv-export-openmc-mesh-1)\n\
+         import openmc\n\nsources = []\n",
+    );
+    for cell in cells {
+        out.push_str(&mesh_cell_fragment(cell)?);
+    }
+    out.push_str(&format!("TOTAL_PHOTONS_S = {total:.17e}\n"));
+    Ok(out)
+}
+
 fn wrap_mcnp(prefix: &str, values: &[String]) -> String {
     let mut out = String::new();
     let mut line = prefix.to_string();
@@ -864,6 +985,124 @@ mod tests {
             }
             assert!((n - nr).abs() / nr < 2e-11, "law {law}: {n} {nr}");
             assert!((e - er).abs() / er < 2e-11, "law {law}: {e} {er}");
+        }
+    }
+
+    mod mesh_export {
+        use super::super::{
+            export_openmc_mesh, mesh_cell_from_source, MeshPhotonCell, PhotonGroupOut,
+            PhotonSourceOut,
+        };
+
+        fn source(groups: Vec<(f64, f64)>, total: f64) -> PhotonSourceOut {
+            let groups = groups
+                .into_iter()
+                .map(|(centroid_eV, photons_s)| PhotonGroupOut {
+                    low_eV: centroid_eV * 0.9,
+                    high_eV: centroid_eV * 1.1,
+                    centroid_eV,
+                    photons_s_g: photons_s,
+                    photons_s,
+                    power_W_g: 0.0,
+                    power_W: 0.0,
+                })
+                .collect::<Vec<_>>();
+            PhotonSourceOut {
+                group_structure: "test".into(),
+                boundaries_eV: vec![1.0, 2.0],
+                lines: Vec::new(),
+                groups,
+                by_nuclide: Vec::new(),
+                grouped_photons_s_g: total,
+                grouped_photons_s: total,
+                total_photons_s_g: total,
+                total_photons_s: total,
+                source_power_W_g: 0.0,
+                source_power_W: 0.0,
+                ungrouped_power_W_g: 0.0,
+                unrepresented_gamma_power_W_g: 0.0,
+                represented_gamma_power_fraction: 1.0,
+                contact_gamma_air_dose_proxy_Gy_h: None,
+                dose_response_power_coverage: None,
+            }
+        }
+
+        fn bounds() -> [[f64; 2]; 3] {
+            [[0.0, 1.0], [0.0, 1.0], [0.0, 1.0]]
+        }
+
+        #[test]
+        fn normalizes_weights_and_conserves_strength() {
+            let s = source(vec![(1e6, 3.0), (2e6, 1.0)], 4.0);
+            let cell = mesh_cell_from_source("c".into(), bounds(), 1.0, &s)
+                .unwrap()
+                .unwrap();
+            assert!((cell.strength_photons_s - 4.0).abs() < 1e-15);
+            assert_eq!(cell.energy_eV, vec![1e6, 2e6]);
+            let wsum: f64 = cell.weight.iter().sum();
+            assert!((wsum - 1.0).abs() < 1e-15);
+            assert!((cell.weight[0] - 0.75).abs() < 1e-15);
+        }
+
+        #[test]
+        fn zero_photon_cell_returns_none() {
+            let s = source(vec![], 0.0);
+            assert!(mesh_cell_from_source("c".into(), bounds(), 1.0, &s)
+                .unwrap()
+                .is_none());
+        }
+
+        #[test]
+        fn rejects_non_positive_volume() {
+            let s = source(vec![(1e6, 1.0)], 1.0);
+            assert!(mesh_cell_from_source("c".into(), bounds(), 0.0, &s)
+                .unwrap_err()
+                .contains("volume"));
+            assert!(mesh_cell_from_source("c".into(), bounds(), -1.0, &s)
+                .unwrap_err()
+                .contains("volume"));
+        }
+
+        #[test]
+        fn rejects_omitted_photon_strength() {
+            // total claims 10 photons/s but groups only carry 4
+            let s = source(vec![(1e6, 3.0), (2e6, 1.0)], 10.0);
+            assert!(mesh_cell_from_source("c".into(), bounds(), 1.0, &s)
+                .unwrap_err()
+                .contains("conserv"));
+        }
+
+        #[test]
+        fn rejects_degenerate_bounds_and_empty_cells() {
+            let cell = MeshPhotonCell {
+                id: "c".into(),
+                bounds_cm: [[1.0, 1.0], [0.0, 1.0], [0.0, 1.0]],
+                volume_cm3: 1.0,
+                strength_photons_s: 1.0,
+                energy_eV: vec![1e6],
+                weight: vec![1.0],
+            };
+            assert!(export_openmc_mesh(&[cell])
+                .unwrap_err()
+                .contains("degenerate bounds"));
+            assert!(export_openmc_mesh(&[]).unwrap_err().contains("no photon"));
+        }
+
+        #[test]
+        fn emits_box_per_cell_with_absolute_total() {
+            let cell = MeshPhotonCell {
+                id: "1,1,1".into(),
+                bounds_cm: [[-2.0, -1.0], [-2.0, -1.0], [-2.0, -1.0]],
+                volume_cm3: 1.0,
+                strength_photons_s: 5.0,
+                energy_eV: vec![1e6],
+                weight: vec![1.0],
+            };
+            let out = export_openmc_mesh(&[cell]).unwrap();
+            assert!(out.contains("openmc.stats.Box([-2.0"));
+            assert!(out.contains("# cell 1,1,1"));
+            assert!(out.contains("TOTAL_PHOTONS_S = 5.00000000000000000e0"));
+            assert!(out.contains("particle=\"photon\""));
         }
     }
 }

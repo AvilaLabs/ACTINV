@@ -1,12 +1,50 @@
 {
- "basis": "the decisive gate requires external resources that are not present on this machine and cannot be fabricated locally; per the completion rules, unavailable comparator/user/external evidence remains unmeasured and nothing was silently substituted",
- "blockers": [
-  "no OpenMC installation or module on this machine \u2014 the decisive gate requires an executed open R2S chain and comparison against the pinned native OpenMC path",
-  "no supplied R2S dataset (spatial flux/material mapping and external photon transport results) is present in the workspace",
-  "external photon transport tooling is not installed"
+ "basis": "all four gates green with machine checkers; the chain executed end-to-end on the frozen voxelized-Fe study: OpenMC 0.15.3 neutron transport (mesh x 709-group flux tally) -> actinv import-flux -> 64-cell mesh activation with photon output -> export-openmc-mesh spatial sources (one IndependentSource per voxel, Box-bounded) -> executed OpenMC photon transport for both cooling steps -> openmc.deplete comparison leg",
+ "conditions": [
+  "single self-produced geometry: the chain is a qualification of the handoff mechanics, not an external benchmark or validation",
+  "the photon leg is a flux-proxy tally (mesh photon flux + void-detector flux), not a qualified dose prediction",
+  "the comparison leg used openmc.deplete with TENDL-2025 neutron-branch files + ENDF/B-VIII.0 decay vs ACTINV's pinned TENDL-2025 activation library; median relative deviation over 704 cell-nuclide pairs is 2.14e-7 (max 3.96e-7 in the top-50 by atoms) - solver/flux-noise level, not an experimental claim",
+  "neutron tally statistical error is recorded in the statepoint but not propagated into the activation comparison",
+  "MCNP SDEF remains point-at-origin (documented placeholder); only the OpenMC path is spatial"
  ],
+ "date": "2026-09-17",
+ "evidence_sha256": {
+  "g0_check": "2c41511f0c2ab49688a0460f110fb9ded17e6abcf60dddf8d0ddf28f4fddda5a",
+  "g0_seals": "fdc1eceaee142256168a230d831ce2c90d47fd746578b67021878019b2bff814",
+  "g1_chain": "91db968022094d8f63e0005df29fa7f13fd5f6e817b4c980fa44474cda131a91",
+  "g1_check": "30296befb17df8580cbfc6b5a7bdd7443c1c7f76ea4a4b32d41924d741612cac",
+  "g2_check": "df83681a86b004fb4b0d738d9c3795a881ea3163f9600643ab5ff4962594cb9a",
+  "g2_controls": "69a472e2bb7b3c4b61d7db914ae263173a5c79b894f204edf629003ba660cf72",
+  "g3_check": "5841ae7c1b45e14c84e0ef9204988238ac3d3540a1232846bad6347b872890c1",
+  "g3_controls": "0b387ddd367cda102e9546b6a037d29595867cb0e78df0d7364cbcf00c383131"
+ },
+ "g0_amendments": [
+  "voxelized cube replaces spherical shells (mesh spec carries a fixed mass_g per cell; equal 1 cm3 voxels keep the depletion-leg cell identities aligned)",
+  "cooling step indices [1,2] -> [2,3]: actinv step ids are 1-based, irradiation is step 1"
+ ],
+ "measured": {
+  "cells": 64,
+  "comparison": {
+   "max_rel_top50": 3.9621799401042455e-07,
+   "median_rel": 2.1382332902264452e-07,
+   "n": 704
+  },
+  "cooling_steps": [
+   2,
+   3
+  ],
+  "occupied_voxels": 64,
+  "sampled_sites": 256000,
+  "sites_inside_bounds": 256000,
+  "step2_total_photons_s": 1066592035983.1464,
+  "step3_total_photons_s": 102066565330.3793
+ },
+ "openmc": {
+  "env_prefix": "/home/connoravila/.local/share/mamba/envs/openmc",
+  "version": "0.15.3",
+  "xs": "ENDF/B-VII.1 hdf5"
+ },
  "phase": "P32",
- "unblocks_when": "the named external resources become available; the phase then opens with its own protocol and frozen gate evidence",
- "unmeasured": true,
- "verdict": "P32-BLOCKED"
+ "protocol_sha256": "4d022423b8bb696bef6634b9134d6e39959945d7929a96ce5c079fed23741dc9",
+ "verdict": "P32-CONDITIONAL"
 }

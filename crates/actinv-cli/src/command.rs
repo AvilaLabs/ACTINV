@@ -4,7 +4,10 @@ use crate::{embedded_catalog, embedded_catalog_json, fetch_bundle, verify_bundle
 use actinv_core::{
     flux::{import_fispact, import_mctal, import_meshtal, import_openmc, ImportSummary},
     mesh::{run_mesh, MeshSpec},
-    photon::{export_mcnp, export_openmc, PhotonSourceOut},
+    photon::{
+        export_mcnp, export_openmc, export_openmc_mesh, mesh_cell_from_source, MeshPhotonCell,
+        PhotonSourceOut,
+    },
     run::run,
     spec::Spec,
     study::{self, Study},
@@ -35,6 +38,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
+                    actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
 
 const DATA_USAGE: &str = "usage: actinv data list\n\
@@ -82,6 +86,80 @@ fn selected_source(result_path: &str, requested_step: &str) -> PhotonSourceOut {
             2,
         )
     })
+}
+
+/// Stream an `actinv-mesh-result-1` file and collect every cell's
+/// step-`step` photon source into a spatial-source fragment. Cells
+/// without photons in the export group structure contribute no entry;
+/// missing bounds, a missing step, or an unrequested photon source are
+/// hard errors — the spatial contract never silently drops geometry.
+fn collect_mesh_photon_cells(path: &str, step: usize) -> Vec<MeshPhotonCell> {
+    let file = std::fs::File::open(path)
+        .unwrap_or_else(|e| die(format!("cannot open mesh result {path}: {e}"), 2));
+    let reader = std::io::BufReader::new(file);
+    let mut cells = Vec::new();
+    let mut seen_header = false;
+    for (line_no, line) in std::io::BufRead::lines(reader).enumerate() {
+        let line = line
+            .unwrap_or_else(|e| die(format!("cannot read {path} line {}: {e}", line_no + 1), 2));
+        if line.trim().is_empty() {
+            continue;
+        }
+        let record: serde_json::Value = serde_json::from_str(&line)
+            .unwrap_or_else(|e| die(format!("cannot parse {path} line {}: {e}", line_no + 1), 2));
+        match record["record"].as_str() {
+            Some("header") => {
+                if record["schema"].as_str() != Some("actinv-mesh-result-1") {
+                    die(format!("{path} is not an actinv-mesh-result-1 file"), 2);
+                }
+                seen_header = true;
+            }
+            Some("cell") => {
+                if !seen_header {
+                    die(format!("{path} cell record precedes its header"), 2);
+                }
+                let id = record["id"].as_str().unwrap_or("?").to_string();
+                let bounds: [[f64; 2]; 3] = serde_json::from_value(record["bounds_cm"].clone())
+                    .unwrap_or_else(|_| {
+                        die(
+                            format!("cell '{id}' has no bounds_cm; cannot place its source"),
+                            1,
+                        )
+                    });
+                let volume: f64 = serde_json::from_value(record["volume_cm3"].clone())
+                    .unwrap_or_else(|_| die(format!("cell '{id}' has no volume_cm3"), 1));
+                let steps = record["result"]["steps"]
+                    .as_array()
+                    .unwrap_or_else(|| die(format!("cell '{id}' result has no steps"), 1));
+                let selected = steps
+                    .iter()
+                    .find(|v| v["step"].as_u64() == Some(step as u64))
+                    .unwrap_or_else(|| die(format!("cell '{id}' has no step {step}"), 1));
+                let source: PhotonSourceOut = serde_json::from_value(
+                    selected.get("photon_source").cloned().unwrap_or_else(|| {
+                        die(
+                            format!(
+                                "cell '{id}' step {step} has no photon_source; \
+                                         request photons in the mesh spec"
+                            ),
+                            1,
+                        )
+                    }),
+                )
+                .unwrap_or_else(|e| die(format!("cell '{id}' step {step} photon_source: {e}"), 1));
+                if let Some(cell) =
+                    mesh_cell_from_source(id, bounds, volume, &source).unwrap_or_else(|e| die(e, 1))
+                {
+                    cells.push(cell);
+                }
+            }
+            _ => {}
+        }
+    }
+    if !seen_header {
+        die(format!("{path} has no actinv-mesh-result-1 header"), 2);
+    }
+    cells
 }
 
 fn valued_options(args: &[String]) -> BTreeMap<&str, &str> {
@@ -763,6 +841,24 @@ pub fn main_from(a: Vec<String>) {
             std::fs::write(&a[4], fragment)
                 .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[4]), 1));
             eprintln!("step {} photon source -> {}", a[3], a[4]);
+        }
+        "export-openmc-mesh" => {
+            if a.len() != 5 {
+                die(USAGE, 2);
+            }
+            let step: usize = a[3].parse().unwrap_or_else(|_| {
+                die("export-openmc-mesh step must be a non-negative integer", 2)
+            });
+            let cells = collect_mesh_photon_cells(&a[2], step);
+            let fragment = export_openmc_mesh(&cells).unwrap_or_else(|e| die(e, 1));
+            std::fs::write(&a[4], fragment)
+                .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[4]), 1));
+            eprintln!(
+                "step {} spatial photon source: {} cells -> {}",
+                step,
+                cells.len(),
+                a[4]
+            );
         }
         _ => die(USAGE, 2),
     }

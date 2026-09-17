@@ -1,0 +1,55 @@
+{
+ "controls": {
+  "degenerate_bounds": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1': degenerate bounds\n"
+  },
+  "missing_bounds": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1' has no bounds_cm; cannot place its source\n"
+  },
+  "missing_step": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1' has no step 2\n"
+  },
+  "negative_volume": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1': non-positive volume\n"
+  },
+  "no_photon_source": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1' step 1 has no photon_source; request photons in the mesh spec\n"
+  },
+  "omitted_photon_strength": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1': group structure omits 1.00000000000000000e6 photons/s; export would not conserve source strength\n"
+  },
+  "wrong_schema": {
+   "exit": 2,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "/home/connoravila/Documents/actinv/target/preflight-tmp/tmp9j10c9_7.ndjson is not an actinv-mesh-result-1 file\n"
+  },
+  "zero_volume": {
+   "exit": 1,
+   "fail_closed": true,
+   "named_reason": true,
+   "stderr": "cell '1,1,1': non-positive volume\n"
+  }
+ },
+ "gate": "G3",
+ "phase": "P32",
+ "schema": "actinv-p32-g3-1"
+}

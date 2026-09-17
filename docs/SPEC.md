@@ -402,6 +402,13 @@ actinv export-mcnp result.json 2 source.sdef
 Both exports use the photon-group centroids and total photons/s. The point at the origin is a placeholder, not a
 spatial activation model. An export fails if custom boundaries omitted any source photons.
 
+For mesh results, `actinv export-openmc-mesh mesh_result.ndjson STEP source.py` writes a distributed spatial
+source: one `openmc.IndependentSource` per mesh cell, sampled uniformly inside the cell's recorded `bounds_cm`
+(`openmc.stats.Box`), with a discrete photon-energy distribution taken from the cell's exported group centroids and
+probabilities, and the cell's absolute photon rate as `strength`. The fragment ends with `TOTAL_PHOTONS_S`, the
+absolute sum over all cells. Cells whose photon source is zero contribute no entry; a cell with photons but missing
+geometry, a missing step, an unrequested photon output, or an inconsistent group total fails the export closed.
+
 ## Flux interchange (`actinv-flux-1`)
 
 Transport spectra are canonicalized before activation. The format is newline-delimited JSON: exactly one `header`,
