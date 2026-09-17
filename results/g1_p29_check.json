@@ -1,0 +1,10 @@
+{
+  "failures": [],
+  "gate": "G1",
+  "mutation_self_test": {
+    "planted": 5,
+    "rejected": 5
+  },
+  "pass": true,
+  "phase": "P29"
+}

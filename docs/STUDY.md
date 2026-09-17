@@ -6,9 +6,10 @@ materials × spectra × schedules grid. `actinv study build` expands it determin
 solver path as `actinv run` and writes `study_record.json`. Users author the study document; they
 never author case specs or Core JSON by hand.
 
-Unknown fields are errors. The fields `robustness`, `refinement` and `spatial_handoff` are
-recognised and refused with `family_not_qualified` (delivered by P30, P29 and P32 respectively);
-they are never silently ignored.
+Unknown fields are errors. The fields `robustness` and `spatial_handoff` are
+recognised and refused with `family_not_qualified` (delivered by P30 and P32
+respectively); they are never silently ignored. `refinement` is the ACT-REFINE-01
+family, qualified by P29 within the demonstrated envelope below.
 
 ```json
 {
@@ -76,3 +77,31 @@ they are never silently ignored.
   (`template_revoked`); historical records are never edited.
 - **Limits** — the population cap is 1024 cases (`study_too_large`). The response vocabulary is the
   five qualified responses above; anything else is `family_not_qualified`.
+
+## `refinement` — ACT-REFINE-01 (qualified by P29)
+
+A `refinement` block declares per-(response, time) numerical criteria. Each criterion-bearing
+case is re-solved at reference settings (`prune: none`, `bmin_atoms_per_g: 0`, `cram_order: 48`,
+`mode: coupled`), the declared-vs-reference difference is compared against the declared bound,
+and the error is decomposed per component:
+
+```json
+"refinement": {
+  "criteria": [
+    {"response": "total_activity_bq_per_g", "time_s": 0.0, "rel": 1e-6},
+    {"response": "decay_heat_w_per_g", "time_s": 0.0, "rel": 1e-6, "abs": 1e-12}
+  ],
+  "resource_limit_runs": 4
+}
+```
+
+Criterion verdicts: `satisfied`, `unmet`, `unestablished`. Near zero (`|reference| < 1e-6`)
+the `abs` bound applies and a rel-only criterion is `unestablished` — never a silent pass. When
+a criterion is unmet the runner escalates the declared spec one ladder step at a time
+(`bmin → 0`, `prune → none`, `cram_order → 48`, `mode → coupled`), re-checking against the same
+reference, until satisfied or `resource_limit_runs` is exhausted — then `unmet` with
+`resource_limit_reached`. Error components are reported individually: `solver_time_integration`
+and `population_pruning_and_mode` are empirically estimated (CRAM order and pruning variants);
+`processing_collapse` is bounded at the P25c/P28 measured tolerances. Computational error,
+nuclear/input uncertainty and predictive discrepancy remain separate: these criteria cover the
+first only.

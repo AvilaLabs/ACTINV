@@ -1,0 +1,1608 @@
+{
+  "cases": [
+    {
+      "case_id": "fe__fns_709__pulse_5min",
+      "cram48_variant_sha256": "d7efae1346c026a4f238ddf92d8f5316d97d805b4cb41b30bc9d0d820d9d3330",
+      "out_sha256": "c94635177be31d9f9f301b16333e210713dead986e098f936704094180349912",
+      "reference_sha256": "ee231d52807fab70685591a2a612f3e8f11640c93edd572822af10444d7d9a4d",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.2463820965992167e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0460871706831245e-14
+              },
+              "total_empirical": {
+                "estimate": 1.2359212248923984e-12
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 1.2359212248923984e-12,
+            "observed_rel_diff": 1.2359212248923984e-12,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 9.931365684960981e-13
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 3.2776784438814044e-14
+              },
+              "total_empirical": {
+                "estimate": 1.0259133529348796e-12
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 1.0259133529348796e-12,
+            "observed_rel_diff": 1.0259133529348796e-12,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.1582574193255522e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.2509508246965065e-14
+              },
+              "total_empirical": {
+                "estimate": 1.1457479110786014e-12
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.1457479110786014e-12,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 9.253882038039687e-13
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 2.5859497818227264e-14
+              },
+              "total_empirical": {
+                "estimate": 9.512477016221722e-13
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 9.512477016221722e-13,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 2.98122771952413e-10
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 19,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "5f4233d33b9c3a6c8275fd92b7ecce4e044c55fa0d5c0a881916223e7e535920",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe__fns_709__cont_1d",
+      "cram48_variant_sha256": "645828af52e21283ba658ce4c06334d8e52cb6eea26be25615e86d7115a3f7ac",
+      "out_sha256": "0dd52ba731fdb635b6e4b7240baa64ddec6da28422c861751737ee7d577f0c4c",
+      "reference_sha256": "566ce9ecf281553f9267db205b2099c53f2c60fd296b04b356909f7f7368fbb3",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.9017256783161357e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.755648744013697e-16
+              },
+              "total_empirical": {
+                "estimate": 3.901723922667392e-10
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.901723922667392e-10,
+            "observed_rel_diff": 3.901723922667392e-10,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.3518897987513503e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.4189635124528937e-14
+              },
+              "total_empirical": {
+                "estimate": 3.3517479024001527e-10
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.3517479024001527e-10,
+            "observed_rel_diff": 3.3517479024001527e-10,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.8817741481222184e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 0.0
+              },
+              "total_empirical": {
+                "estimate": 3.8817741481222184e-10
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.8817741481222184e-10,
+            "observed_rel_diff": 3.8817741481222184e-10,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.880643538920737e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 6.024128472812671e-15
+              },
+              "total_empirical": {
+                "estimate": 3.8807037802054415e-10
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 3.8807037802054415e-10,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 9.80743470281409e-11
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 15,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "a6f4a67a7c7ba9a019d340104c0f01ff417462c6de944b3c2ae59d77c1e5304c",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe__irdff_sp_mat9861_709__pulse_5min",
+      "cram48_variant_sha256": "e7d6255325bb553cf9e30fc5a845133f50cf85ca61519fc0d684c771271215cb",
+      "out_sha256": "2c3210fbcbde81313d4bdb53f26bc04a9bdf522d980bc8172bf9fad1582a9833",
+      "reference_sha256": "1decbab661e3ee776bf562d06f2c9b377392087f123d09f7d2b2738725edcd04",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 4.644009318625311e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.2647514740086542e-14
+              },
+              "total_empirical": {
+                "estimate": 5.908760792633906e-14
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 5.908760792633906e-14,
+            "observed_rel_diff": 5.908760792633906e-14,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 7.949856150569074e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.586797634844124e-15
+              },
+              "total_empirical": {
+                "estimate": 8.108535914053473e-14
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 8.108535914053473e-14,
+            "observed_rel_diff": 8.108535914053473e-14,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.2302928163699284e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.440919516194087e-14
+              },
+              "total_empirical": {
+                "estimate": 3.671212332563983e-14
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 3.671212332563983e-14,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.812945744215658e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 2.615377947295932e-15
+              },
+              "total_empirical": {
+                "estimate": 4.074483538945241e-14
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 4.074483538945241e-14,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 2.972344655963166e-10
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 19,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "1b0c254731bc1d453272dbe7bfd39f4c71409dec9095672b2f949a2204050a77",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe__irdff_sp_mat9861_709__cont_1d",
+      "cram48_variant_sha256": "9a44e80998dfc45e14f872fbb61e2166a30220e031f680dc5ee75e45af88545d",
+      "out_sha256": "fe00be25e7848385a76ee762ac6450e51630828f844ea0422fe0913cb6682cf1",
+      "reference_sha256": "a77f6a846691e31aef4c80009c1f7962644ca46c5843225e31ee080dd44be1a8",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.295996444673071e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 3.5374723745059254e-16
+              },
+              "total_empirical": {
+                "estimate": 2.2956426974356214e-12
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 2.2956426974356214e-12,
+            "observed_rel_diff": 2.2956426974356214e-12,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.888588444422322e-11
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.9990522110159972e-14
+              },
+              "total_empirical": {
+                "estimate": 3.886589392211383e-11
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.886589392211383e-11,
+            "observed_rel_diff": 3.886589392211383e-11,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.357784348524965e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 0.0
+              },
+              "total_empirical": {
+                "estimate": 2.357784348524965e-12
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 2.357784348524965e-12,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.9603363090016304e-11
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.3280281705078394e-14
+              },
+              "total_empirical": {
+                "estimate": 2.959008280831162e-11
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 2.959008280831162e-11,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 6.85297968541498e-11
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 19,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "96da99d7cff4cb31aa45caf333d075cefe9c5f17916e22cc08bee67c99643272",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe_co100wppm__fns_709__pulse_5min",
+      "cram48_variant_sha256": "ebf1bf06c5012e8d66ed108ce5ed7f50a6d0f7ee543b5b20c6b05b189d159079",
+      "out_sha256": "86f9a44a3c658df2d384c5efa84f09b5eff27eee5a14e5e9449236471648c1f2",
+      "reference_sha256": "e04dc6ae5a2b0f4fefedd30724718c3d2530621a195967ad562b52a61b8b0d08",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.2464818556449647e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 9.998928867940603e-15
+              },
+              "total_empirical": {
+                "estimate": 1.2364829267770365e-12
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 1.2364829267770365e-12,
+            "observed_rel_diff": 1.2364829267770365e-12,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 9.977220957164564e-13
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 3.244976460482732e-14
+              },
+              "total_empirical": {
+                "estimate": 1.0301718603212514e-12
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 1.0301718603212514e-12,
+            "observed_rel_diff": 1.0301718603212514e-12,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.157935015116657e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.1895187898825028e-14
+              },
+              "total_empirical": {
+                "estimate": 1.1460398272178456e-12
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.1460398272178456e-12,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 9.261013048495382e-13
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 2.5676843971099315e-14
+              },
+              "total_empirical": {
+                "estimate": 9.517781488206137e-13
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 9.517781488206137e-13,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 3.251348286251887e-11
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 19,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "d2accecb8589936ae73902466f27e9df32abca363e865f3228438477364385bd",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe_co100wppm__fns_709__cont_1d",
+      "cram48_variant_sha256": "9c19fac91a63ddd2422ce6663f98b87d12f592474a55ec9244e66c29a7285d3a",
+      "out_sha256": "ba539e74ed96773e9e4c7675fa564820c127a100910c1a28949af5e5bfc483c9",
+      "reference_sha256": "08c2fcd54c5a9869c922f6a5be640c8898d94a9cee8d9e74536ed20f9d9d767f",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.9023280954875314e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 0.0
+              },
+              "total_empirical": {
+                "estimate": 3.9023280954875314e-10
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.9023280954875314e-10,
+            "observed_rel_diff": 3.9023280954875314e-10,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.3739553128681234e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.4254822796559606e-14
+              },
+              "total_empirical": {
+                "estimate": 3.373812764640206e-10
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.373812764640206e-10,
+            "observed_rel_diff": 3.373812764640206e-10,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.8818013918207905e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 0.0
+              },
+              "total_empirical": {
+                "estimate": 3.8818013918207905e-10
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.8818013918207905e-10,
+            "observed_rel_diff": 3.8818013918207905e-10,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.881592095273269e-10
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 6.692132244300018e-15
+              },
+              "total_empirical": {
+                "estimate": 3.881659016595686e-10
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 3.881659016595686e-10,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 7.9188463131402e-12
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 15,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "0f0a3607041c285e2c2b299069ebd900728b40f9c28df56f729405e6d09f203d",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+      "cram48_variant_sha256": "3e48128b865ce4bb4cbefbba57fe2cf8ff508eaa44ff5d05ad73ebbfe8a57f4f",
+      "out_sha256": "5ca96576c2c4f24bb49976e177795978b57d56cbc2178a6d712c0c64ccee727c",
+      "reference_sha256": "fe78203baa6417006127d5e6d3682b5ca8e81abee90504228d388081a4eb4e34",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 4.576547449812373e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.2230428529671557e-14
+              },
+              "total_empirical": {
+                "estimate": 5.799590302779473e-14
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 5.799590302779473e-14,
+            "observed_rel_diff": 5.799590302779473e-14,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 8.042646412279041e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 6.345283165506143e-16
+              },
+              "total_empirical": {
+                "estimate": 8.106099243934098e-14
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 8.106099243934098e-14,
+            "observed_rel_diff": 8.106099243934098e-14,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.1677165877957312e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.3908470592215686e-14
+              },
+              "total_empirical": {
+                "estimate": 3.558563647017269e-14
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 3.558563647017269e-14,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.978093891409934e-14
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.651803691934918e-15
+              },
+              "total_empirical": {
+                "estimate": 4.143274260603419e-14
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 4.143274260603419e-14,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 3.2387119945669603e-11
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 19,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "e046768faf5f0c1baa0566aebbbaeeb20494e61c023f538e8f3424f772354888",
+      "status": "executed"
+    },
+    {
+      "case_id": "fe_co100wppm__irdff_sp_mat9861_709__cont_1d",
+      "cram48_variant_sha256": "2ba7329cdf6ed40c03cdaad477474c93ac72a402cf8dc0a357c936f2d0edd368",
+      "out_sha256": "aac1ffe0a23aafd7efc097646ae1af7820c11b0e29e14b08d6b2a066c4ec8bda",
+      "reference_sha256": "d6e811063f02ba6560c7a792b6d74fe8e86173a4fae689453e4aa93f30a2cbf2",
+      "refinement": {
+        "criteria": [
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.296961666245659e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.768526075027455e-16
+              },
+              "total_empirical": {
+                "estimate": 2.2967848136381563e-12
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 2.2967848136381563e-12,
+            "observed_rel_diff": 2.2967848136381563e-12,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 3.8870314254098624e-11
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.9613964939500926e-14
+              },
+              "total_empirical": {
+                "estimate": 3.885070028915989e-11
+              }
+            },
+            "escalation_runs": 0,
+            "initial_rel_diff": 3.885070028915989e-11,
+            "observed_rel_diff": 3.885070028915989e-11,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "total_activity_bq_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.357768324422066e-12
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 0.0
+              },
+              "total_empirical": {
+                "estimate": 2.357768324422066e-12
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 2.357768324422066e-12,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 2.959513695376968e-11
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.273958690011245e-14
+              },
+              "total_empirical": {
+                "estimate": 2.958239736686995e-11
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 2.958239736686995e-11,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "decay_heat_w_per_g",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 7.918575667612965e-12
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 0.0,
+            "verdict": "satisfied"
+          },
+          {
+            "abs": 1e-24,
+            "components": {
+              "population_pruning_and_mode": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "processing_collapse": {
+                "basis": "P25c/P28 measured tolerances",
+                "bound": 1e-06,
+                "class": "bounded"
+              },
+              "solver_time_integration": {
+                "class": "empirically_estimated",
+                "estimate": 1.0
+              },
+              "total_empirical": {
+                "estimate": 1.0
+              }
+            },
+            "escalation_runs": 4,
+            "initial_rel_diff": 1.0,
+            "observed_rel_diff": 0.0,
+            "reference_error": null,
+            "rel": 1e-06,
+            "resource_limit_reached": false,
+            "response": "inventory_per_nuclide",
+            "time_s": 86400.0,
+            "verdict": "satisfied"
+          }
+        ],
+        "runs_used": 19,
+        "satisfied": 6,
+        "unestablished": 0,
+        "unmet": 0,
+        "verdict": "satisfied"
+      },
+      "spec_sha256": "b84b035e32ede560ac1fcfed185ebbcc564d1a7d8e0be7155e467518c9f9512a",
+      "status": "executed"
+    }
+  ],
+  "component_classes": {
+    "population_pruning_and_mode": "empirically_estimated",
+    "processing_collapse": "bounded",
+    "solver_time_integration": "empirically_estimated"
+  },
+  "criteria_verdicts": {
+    "fe__fns_709__cont_1d": "satisfied",
+    "fe__fns_709__pulse_5min": "satisfied",
+    "fe__irdff_sp_mat9861_709__cont_1d": "satisfied",
+    "fe__irdff_sp_mat9861_709__pulse_5min": "satisfied",
+    "fe_co100wppm__fns_709__cont_1d": "satisfied",
+    "fe_co100wppm__fns_709__pulse_5min": "satisfied",
+    "fe_co100wppm__irdff_sp_mat9861_709__cont_1d": "satisfied",
+    "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min": "satisfied"
+  },
+  "gate": "G1",
+  "manifest_sha256": "221353029290b790e71d706c15d61b69088ca91a9ae707e7139ae0cc9d13c6b6",
+  "partition": "p29_qualifying",
+  "phase": "P29",
+  "population": {
+    "contract_gap": 0,
+    "declared": 8,
+    "executed": 8,
+    "failed": 0,
+    "undefined_response_instances": 0
+  },
+  "schema": "actinv-p29-g1-1",
+  "study_sha256": "bb0d21069b61d9832adc8305163aa5f2d922bde4489f387a9b1d42323d9cb94f"
+}

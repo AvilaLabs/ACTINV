@@ -49,7 +49,6 @@ pub const RULE_KINDS: &[&str] = &[
 
 const UNQUALIFIED_FAMILIES: &[(&str, &str, &str)] = &[
     ("robustness", "ACT-ROBUST-01", "P30"),
-    ("refinement", "ACT-REFINE-01", "P29"),
     ("spatial_handoff", "ACT-SOURCE-01", "P32"),
 ];
 
@@ -75,14 +74,47 @@ pub struct Study {
     pub comparison: Option<Comparison>,
     #[serde(default)]
     pub options: Options,
+    /// ACT-REFINE-01 (qualified by P29): per-(response, time) numerical
+    /// criteria discharged against a reference solve with per-component
+    /// error accounting.
+    #[serde(default)]
+    pub refinement: Option<Refinement>,
     // Families not yet qualified: accepted by the schema, refused at
     // validation with `family_not_qualified` naming the delivering phase.
     #[serde(default)]
     pub robustness: Option<Value>,
     #[serde(default)]
-    pub refinement: Option<Value>,
-    #[serde(default)]
     pub spatial_handoff: Option<Value>,
+}
+
+/// One user-declared numerical criterion on a response at a cooling time.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Criterion {
+    /// one of QUALIFIED_RESPONSES
+    pub response: String,
+    /// cooling time (s) the criterion applies to; 0 = shutdown
+    pub time_s: f64,
+    /// relative bound; applied when |reference| >= abs scale
+    #[serde(default)]
+    pub rel: Option<f64>,
+    /// absolute bound; applied when |reference| < abs scale
+    #[serde(default)]
+    pub abs: Option<f64>,
+}
+
+/// ACT-REFINE-01 block: criteria + a declared escalation resource limit.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Refinement {
+    pub criteria: Vec<Criterion>,
+    /// maximum escalation ladder steps per case (P29 resource limit)
+    #[serde(default = "default_resource_limit")]
+    pub resource_limit_runs: u32,
+}
+
+fn default_resource_limit() -> u32 {
+    4
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -199,11 +231,45 @@ impl Study {
         if self.robustness.is_some() {
             return Err(family_err("robustness"));
         }
-        if self.refinement.is_some() {
-            return Err(family_err("refinement"));
-        }
         if self.spatial_handoff.is_some() {
             return Err(family_err("spatial_handoff"));
+        }
+        if let Some(rf) = &self.refinement {
+            if rf.criteria.is_empty() {
+                return Err("refinement.criteria must be non-empty".into());
+            }
+            for c in &rf.criteria {
+                if !QUALIFIED_RESPONSES.contains(&c.response.as_str()) {
+                    return Err(format!(
+                        "refinement criterion response '{}' is not \
+                         qualified (family_not_qualified)",
+                        c.response
+                    ));
+                }
+                if !c.time_s.is_finite() || c.time_s < 0.0 {
+                    return Err(format!(
+                        "refinement criterion time_s {} must be finite \
+                         >= 0",
+                        c.time_s
+                    ));
+                }
+                if c.rel.is_none() && c.abs.is_none() {
+                    return Err(format!(
+                        "refinement criterion {}@{} requires rel or abs",
+                        c.response, c.time_s
+                    ));
+                }
+                for (kind, b) in [("rel", c.rel), ("abs", c.abs)] {
+                    if let Some(b) = b {
+                        if !(b.is_finite() && b >= 0.0) {
+                            return Err(format!(
+                                "refinement criterion {kind} bound must \
+                                 be finite >= 0"
+                            ));
+                        }
+                    }
+                }
+            }
         }
         if self.study_id.is_empty() {
             return Err("study_id must be non-empty".into());
@@ -656,7 +722,7 @@ pub fn execute(
             .case_spec(&id, base)
             .and_then(|spec| run(&spec, "study").map(|rr| (spec, rr)))
         {
-            Ok((_spec, rr)) => {
+            Ok((spec, rr)) => {
                 let outv = serde_json::to_value(&rr).map_err(|e| format!("serialise {id}: {e}"))?;
                 let out_path = cdir.join("out.json");
                 let out_text = serde_json::to_string_pretty(&outv).unwrap_or_default();
@@ -664,7 +730,7 @@ pub fn execute(
                 let (per_time, undef) = extract_per_time(&outv, &study.responses);
                 n_executed += 1;
                 n_undef += undef.len();
-                json!({
+                let mut rec = json!({
                     "case_id": id,
                     "status": "executed",
                     "evidence_kind": "fresh",
@@ -673,7 +739,12 @@ pub fn execute(
                     "wall_s": started.elapsed().as_secs_f64(),
                     "per_time": per_time,
                     "undefined_responses": undef,
-                })
+                });
+                if let Some(rf) = &study.refinement {
+                    let rr2 = evaluate_refinement(rf, &spec, &outv, &cdir);
+                    rec["refinement"] = rr2;
+                }
+                rec
             }
             Err(e) => {
                 let gap = e.contains("family_not_qualified")
@@ -744,7 +815,247 @@ pub fn execute(
     Ok(record)
 }
 
-/// Time key: fixed-format seconds so manifest/record keys are stable.
+/// Absolute scale below which a criterion applies its `abs` bound
+/// (atoms/Bq/W per gram). Matches the P29 G0 seal.
+const ABS_SCALE: f64 = 1e-6;
+
+/// Elementwise max relative difference between two response values;
+/// scalars compare directly, arrays compare pairwise over the union of
+/// positions (a missing element counts as 0).
+fn max_rel_diff(a: &Value, b: &Value) -> Option<f64> {
+    match (a, b) {
+        (Value::Number(x), Value::Number(y)) => {
+            let (x, y) = (x.as_f64()?, y.as_f64()?);
+            if x == 0.0 && y == 0.0 {
+                Some(0.0)
+            } else {
+                Some((x - y).abs() / x.abs().max(y.abs()))
+            }
+        }
+        (Value::Array(x), Value::Array(y)) => {
+            let n = x.len().max(y.len());
+            let mut m = 0.0f64;
+            for i in 0..n {
+                let xa = x
+                    .get(i)
+                    .and_then(|v| v.get("atoms_per_g"))
+                    .and_then(Value::as_f64)
+                    .or_else(|| x.get(i).and_then(Value::as_f64))
+                    .unwrap_or(0.0);
+                let xb = y
+                    .get(i)
+                    .and_then(|v| v.get("atoms_per_g"))
+                    .and_then(Value::as_f64)
+                    .or_else(|| y.get(i).and_then(Value::as_f64))
+                    .unwrap_or(0.0);
+                if xa == 0.0 && xb == 0.0 {
+                    continue;
+                }
+                m = m.max((xa - xb).abs() / xa.abs().max(xb.abs()));
+            }
+            Some(m)
+        }
+        _ => None,
+    }
+}
+
+/// Response value at a cooling time, extracted from a run output Value.
+fn response_at(outv: &Value, response: &str, time_s: f64) -> Option<Value> {
+    let (per_time, _) = extract_per_time(outv, &[response.to_string()]);
+    per_time
+        .get(&tkey(time_s))
+        .and_then(|m| m.get(response))
+        .cloned()
+}
+
+/// ACT-REFINE-01 discharge: re-solve the case at reference settings
+/// (prune none, bmin 0, cram 48, coupled), isolate the solver and pruning
+/// components with two intermediate variants, then evaluate each
+/// criterion. Escalation strengthens the declared spec one ladder step at
+/// a time until the criterion is satisfied or `resource_limit_runs` is
+/// exhausted.
+fn evaluate_refinement(rf: &Refinement, spec: &Spec, declared_out: &Value, cdir: &Path) -> Value {
+    let mut variant_specs: Vec<(&str, Spec)> = Vec::new();
+    let mut v_solver = spec.clone();
+    v_solver.options.cram_order = 48;
+    variant_specs.push(("cram48_variant", v_solver));
+    let mut v_ref = spec.clone();
+    v_ref.options.prune = "none".into();
+    v_ref.options.bmin_atoms_per_g = 0.0;
+    v_ref.options.cram_order = 48;
+    v_ref.options.mode = "coupled".into();
+    variant_specs.push(("reference", v_ref));
+
+    let mut outs: Vec<(String, Value)> = Vec::new();
+    let mut runs_used = 1u32; // the declared run
+    let mut reference_err = None;
+    for (label, vs) in &variant_specs {
+        match run(vs, "study") {
+            Ok(rr) => {
+                let outv = serde_json::to_value(&rr).unwrap_or_default();
+                let _ = fs::write(
+                    cdir.join(format!("ref_{label}.json")),
+                    serde_json::to_string_pretty(&outv).unwrap_or_default(),
+                );
+                outs.push((label.to_string(), outv));
+            }
+            Err(e) => {
+                if *label == "reference" {
+                    reference_err = Some(e.clone());
+                }
+            }
+        }
+        runs_used += 1;
+    }
+    let solver_out = outs.iter().find(|(l, _)| l == "cram48_variant");
+    let reference_out = outs.iter().find(|(l, _)| l == "reference");
+
+    // Escalation ladder applied to the declared spec when a criterion is
+    // unmet: [+bmin 0, +prune none, +cram 48, +mode coupled].
+    type Ladder = Vec<(&'static str, Box<dyn Fn(&mut Spec)>)>;
+    let ladder: Ladder = vec![
+        (
+            "bmin0",
+            Box::new(|s: &mut Spec| s.options.bmin_atoms_per_g = 0.0),
+        ),
+        (
+            "prune_none",
+            Box::new(|s: &mut Spec| s.options.prune = "none".into()),
+        ),
+        ("cram48", Box::new(|s: &mut Spec| s.options.cram_order = 48)),
+        (
+            "coupled",
+            Box::new(|s: &mut Spec| s.options.mode = "coupled".into()),
+        ),
+    ];
+
+    let mut criteria = Vec::new();
+    for c in &rf.criteria {
+        let declared_v = response_at(declared_out, &c.response, c.time_s);
+        let (mut best_diff, mut verdict, mut esc_runs) = (f64::INFINITY, "unestablished", 0u32);
+        let mut initial_diff = f64::INFINITY;
+        let mut components = json!({});
+        if reference_err.is_none() {
+            if let (Some(dv), Some(rv)) = (&declared_v, reference_out.map(|(_, o)| o)) {
+                let r_ref = response_at(rv, &c.response, c.time_s);
+                if let Some(rv_) = r_ref {
+                    if let Some(d) = max_rel_diff(dv, &rv_) {
+                        best_diff = d;
+                        initial_diff = d;
+                        verdict = criterion_status(&rv_, d, c);
+                        // per-component empirical estimates
+                        if let Some((_, sv)) = solver_out {
+                            if let Some(sv_) = response_at(sv, &c.response, c.time_s) {
+                                if let Some(ds) = max_rel_diff(dv, &sv_) {
+                                    components["solver_time_integration"] = json!({"estimate": ds,
+                                               "class": "empirically_estimated"});
+                                }
+                                if let Some(dp) = max_rel_diff(&sv_, &rv_) {
+                                    components["population_pruning_and_mode"] = json!({"estimate": dp,
+                                               "class": "empirically_estimated"});
+                                }
+                            }
+                        }
+                        components["processing_collapse"] = json!({
+                            "bound": 1e-6,
+                            "class": "bounded",
+                            "basis": "P25c/P28 measured tolerances"});
+                        components["total_empirical"] = json!({"estimate": d});
+                    }
+                    // escalate while unmet, within the resource limit
+                    let mut esc_spec = spec.clone();
+                    while verdict == "unmet"
+                        && esc_runs < rf.resource_limit_runs
+                        && (esc_runs as usize) < ladder.len()
+                    {
+                        ladder[esc_runs as usize].1(&mut esc_spec);
+                        esc_runs += 1;
+                        runs_used += 1;
+                        match run(&esc_spec, "study") {
+                            Ok(rr) => {
+                                let ov = serde_json::to_value(&rr).unwrap_or_default();
+                                let _ = fs::write(
+                                    cdir.join(format!(
+                                        "esc_{}_{}_{}.json",
+                                        c.response,
+                                        tkey(c.time_s),
+                                        esc_runs
+                                    )),
+                                    serde_json::to_string_pretty(&ov).unwrap_or_default(),
+                                );
+                                if let (Some(ea), Some(rb)) = (
+                                    response_at(&ov, &c.response, c.time_s),
+                                    response_at(rv, &c.response, c.time_s),
+                                ) {
+                                    if let Some(d) = max_rel_diff(&ea, &rb) {
+                                        best_diff = d;
+                                        verdict = criterion_status(&rb, d, c);
+                                    }
+                                }
+                            }
+                            Err(_) => break,
+                        }
+                    }
+                }
+            }
+        }
+        criteria.push(json!({
+            "response": c.response,
+            "time_s": c.time_s,
+            "rel": c.rel, "abs": c.abs,
+            "initial_rel_diff": (initial_diff.is_finite())
+                .then_some(initial_diff),
+            "observed_rel_diff": (best_diff.is_finite()).then_some(best_diff),
+            "verdict": verdict,
+            "escalation_runs": esc_runs,
+            "resource_limit_reached": verdict == "unmet"
+                && esc_runs >= rf.resource_limit_runs,
+            "components": components,
+            "reference_error": reference_err,
+        }));
+    }
+    let n_sat = criteria
+        .iter()
+        .filter(|c| c["verdict"] == "satisfied")
+        .count();
+    let n_unmet = criteria.iter().filter(|c| c["verdict"] == "unmet").count();
+    let n_unest = criteria
+        .iter()
+        .filter(|c| c["verdict"] == "unestablished")
+        .count();
+    json!({
+        "criteria": criteria,
+        "runs_used": runs_used,
+        "satisfied": n_sat, "unmet": n_unmet, "unestablished": n_unest,
+        "verdict": if n_unest > 0 { "unestablished" }
+                   else if n_unmet > 0 { "unmet" }
+                   else { "satisfied" },
+    })
+}
+
+/// A criterion verdict: `abs` applies when |reference| < ABS_SCALE and is
+/// declared; `rel` applies otherwise. If no applicable bound exists the
+/// criterion is `unestablished`, never a silent pass.
+fn criterion_status(reference: &Value, diff: f64, c: &Criterion) -> &'static str {
+    let scale = reference;
+    let near_zero = scalar_of(scale)
+        .map(|v| v.abs() < ABS_SCALE)
+        .unwrap_or(false);
+    if near_zero {
+        match c.abs {
+            Some(a) if diff <= a.max(1e-300) => "satisfied",
+            Some(_) => "unmet",
+            None => "unestablished",
+        }
+    } else {
+        match c.rel {
+            Some(r) if diff <= r => "satisfied",
+            Some(_) => "unmet",
+            None => "unestablished",
+        }
+    }
+}
+
 fn tkey(t: f64) -> String {
     if t == t.trunc() && t.abs() < 1e17 {
         format!("{}", t.trunc() as i64)
@@ -1099,17 +1410,78 @@ mod tests {
 
     #[test]
     fn unqualified_families_are_named() {
-        for (field, phase) in [
-            ("robustness", "P30"),
-            ("refinement", "P29"),
-            ("spatial_handoff", "P32"),
-        ] {
+        for (field, phase) in [("robustness", "P30"), ("spatial_handoff", "P32")] {
             let mut v = study_json();
             v[field] = json!({});
             let e = Study::from_json(&v.to_string()).unwrap_err();
             assert!(e.contains("family_not_qualified"), "{e}");
             assert!(e.contains(phase), "{e}");
         }
+    }
+
+    #[test]
+    fn refinement_criteria_are_validated() {
+        let mut v = study_json();
+        v["refinement"] = json!({
+            "criteria": [{
+                "response": "total_activity_bq_per_g",
+                "time_s": 0.0, "rel": 1e-6}],
+            "resource_limit_runs": 4});
+        assert!(Study::from_json(&v.to_string()).is_ok());
+        // unqualified response
+        let mut v = study_json();
+        v["refinement"] = json!({"criteria": [{
+            "response": "dose_rate", "time_s": 0.0, "rel": 1e-6}]});
+        let e = Study::from_json(&v.to_string()).unwrap_err();
+        assert!(e.contains("not qualified"), "{e}");
+        // no bound declared
+        let mut v = study_json();
+        v["refinement"] = json!({"criteria": [{
+            "response": "total_activity_bq_per_g", "time_s": 0.0}]});
+        assert!(Study::from_json(&v.to_string())
+            .unwrap_err()
+            .contains("requires rel or abs"));
+        // negative bound
+        let mut v = study_json();
+        v["refinement"] = json!({"criteria": [{
+            "response": "total_activity_bq_per_g", "time_s": 0.0,
+            "rel": -1.0}]});
+        assert!(Study::from_json(&v.to_string())
+            .unwrap_err()
+            .contains("finite >= 0"));
+    }
+
+    #[test]
+    fn criterion_verdict_semantics() {
+        let crit = |rel, abs| Criterion {
+            response: "total_activity_bq_per_g".into(),
+            time_s: 0.0,
+            rel,
+            abs,
+        };
+        // above the abs scale the rel bound applies
+        assert_eq!(
+            criterion_status(&json!(1e5), 5e-8, &crit(Some(1e-6), None)),
+            "satisfied"
+        );
+        assert_eq!(
+            criterion_status(&json!(1e5), 5e-4, &crit(Some(1e-6), None)),
+            "unmet"
+        );
+        // below the abs scale a rel-only criterion is unestablished,
+        // not a silent pass
+        assert_eq!(
+            criterion_status(&json!(1e-9), 0.5, &crit(Some(1e-6), None)),
+            "unestablished"
+        );
+        assert_eq!(
+            criterion_status(&json!(1e-9), 0.5, &crit(None, Some(1.0))),
+            "satisfied"
+        );
+        assert_eq!(
+            criterion_status(&json!(1e-9), 2.0, &crit(None, Some(1.0))),
+            "unmet"
+        );
     }
 
     #[test]
