@@ -1,0 +1,137 @@
+{
+  "amendments": [],
+  "identities": {
+    "actinv_binary": {
+      "path": "target/release/actinv",
+      "sha256": "70504feca9296624cf729608400f680cc2684159f572e2f937453db5b79581bc"
+    },
+    "actinv_version": "actinv 1.1.2",
+    "activation_index": {
+      "path": "target/p25c-release/tendl-2025-patched-neutron-709g_index.json",
+      "sha256": "18efc9b85655b736022360e85bebde3f816ec54ff0603e507a8ee9e2c9414982"
+    },
+    "activation_library": {
+      "path": "target/p25c-release/tendl-2025-patched-neutron-709g.npz",
+      "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+    },
+    "decay_fallback": {
+      "path": "actinv-data/v1.0.0/decay/jeff-3-3_decay.dat",
+      "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+    },
+    "decay_primary": {
+      "path": "actinv-data/v1.0.0/decay/endf-b-viii-0_decay.dat",
+      "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+    }
+  },
+  "opening_commit": "820adcadf294316654361cf5f4b5189429f35fac",
+  "partition": {
+    "diagnostic": "p29_diagnostic",
+    "qualifying": "p29_qualifying",
+    "rule": "outputs under p29_qualifying are consumed once, by the verdict gate; iteration uses p29_diagnostic"
+  },
+  "phase": "P29",
+  "prior_verdicts": {
+    "verdict_p10.json": "P10-CONDITIONAL",
+    "verdict_p11.json": "P11-CONDITIONAL",
+    "verdict_p12.json": "P12-CONDITIONAL",
+    "verdict_p13.json": "P13-PASS",
+    "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+    "verdict_p15.json": "P15-PASS",
+    "verdict_p16.json": "P16-CONDITIONAL",
+    "verdict_p17.json": "P17-FAIL",
+    "verdict_p18.json": "P18-FAIL",
+    "verdict_p18b.json": "P18b-FAIL",
+    "verdict_p19.json": "P19-PASS",
+    "verdict_p2.json": "P2-CONDITIONAL",
+    "verdict_p20.json": "P20-PASS",
+    "verdict_p21.json": "P21-PASS",
+    "verdict_p22.json": "P22-PASS",
+    "verdict_p23.json": "P23-PASS",
+    "verdict_p24.json": "P24-CONDITIONAL",
+    "verdict_p25.json": "P25-FAIL",
+    "verdict_p25b.json": "P25b-FAIL",
+    "verdict_p25c.json": "P25c-PASS",
+    "verdict_p26.json": "P26-FAIL",
+    "verdict_p26b.json": "P26b-CONDITIONAL",
+    "verdict_p27.json": "P27-PASS",
+    "verdict_p28.json": "P28-CONDITIONAL",
+    "verdict_p3.json": "P3-FAIL",
+    "verdict_p3b.json": "P3b-PASS",
+    "verdict_p4.json": "P4-FAIL",
+    "verdict_p4b.json": "P4b-PASS",
+    "verdict_p5.json": "P5-PASS",
+    "verdict_p6.json": "P6-CONDITIONAL",
+    "verdict_p7.json": "P7-CONDITIONAL",
+    "verdict_p8.json": "P8-CONDITIONAL",
+    "verdict_p9.json": "P9-CONDITIONAL"
+  },
+  "protocol_sha256": "33e8f389edfd01c2c2b7200682e2b36da216ece406428ca484c009115d21c600",
+  "recorded_at_utc": "2026-09-17T02:12:43Z",
+  "schema": "actinv-p29-g0-seals-1",
+  "tolerances": {
+    "abs_scale_atoms_per_g": 1e-06,
+    "analytic_chain_rel": 1e-06,
+    "reference_rel": 1e-09,
+    "resource_limit_runs": 4
+  },
+  "validation_population": {
+    "analytic_controls": [
+      {
+        "family": "analytic_chain",
+        "feed": {
+          "Mn56": 1000000000000000.0
+        },
+        "flux": 0.0,
+        "hold_s": 86400.0,
+        "id": "impulse_decay_mn56",
+        "note": "single decay; N(t) = N0 e^{-lam t}, t12=9284.04 s"
+      },
+      {
+        "family": "analytic_chain",
+        "feed": {
+          "Mo99": 1000000000000000.0
+        },
+        "flux": 0.0,
+        "hold_s": 86400.0,
+        "id": "chain_mo99_tc99m",
+        "note": "two-step Bateman: Mo-99 -> Tc-99m -> Tc-99; closed form with tabulated half-lives"
+      }
+    ],
+    "criteria_cases": [
+      "fe__fns_709__pulse_5min",
+      "fe__fns_709__pulse_1d",
+      "fe__irdff_sp_mat9861_709__pulse_5min",
+      "fe__irdff_sp_mat9861_709__pulse_1d",
+      "fe_co100wppm__fns_709__pulse_5min",
+      "fe_co100wppm__fns_709__pulse_1d",
+      "fe_co100wppm__irdff_sp_mat9861_709__pulse_5min",
+      "fe_co100wppm__irdff_sp_mat9861_709__pulse_1d"
+    ],
+    "criteria_responses": [
+      "total_activity_bq_per_g",
+      "decay_heat_w_per_g",
+      "inventory_per_nuclide"
+    ],
+    "criteria_times_s": [
+      0.0,
+      86400.0
+    ],
+    "near_zero": [
+      "fe__fns_709__pulse_5min__near_zero_activity"
+    ],
+    "negative_controls": [
+      "unproducible_response",
+      "resource_limit_exhaustion",
+      "envelope_violating_criterion"
+    ],
+    "reference_settings": {
+      "bmin_atoms_per_g": 0.0,
+      "cram_order": 48,
+      "mode": "coupled",
+      "prune": "none"
+    },
+    "stiff_long_history": [
+      "fe__fns_709__pulse_5min__cool_1y"
+    ]
+  }
+}
