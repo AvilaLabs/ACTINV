@@ -27,6 +27,10 @@ jobs:
         run: |
           python controls/fns_iron.py --data-root target/fns-data --plot
           python controls/test_fns_iron.py
+      - name: Diagnose heat and compare both iron campaigns
+        run: |
+          python controls/test_fns_iron_diagnose.py
+          python controls/fns_iron_diagnose.py --data-root target/fns-data
       - uses: actions/upload-artifact@v7
         if: always()
         with:
