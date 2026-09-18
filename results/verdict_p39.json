@@ -84,7 +84,10 @@
   "mo_late_time_outlier": {
    "case": "fe_mo100000wppm__irdff_sp_mat9861_709__60s",
    "ratio": "ALARA/ACTINV = 17.5x at 9y cooling (unchanged p38->p39)",
-   "mechanism": "unclassified - impurity-dominated late activity on a non-lumped path; the only sampled case with a late-time divergence >1.2x"
-  }
+   "mechanism": "decay-convention difference, NOT a production gap: ALARA's idx assigns Mo-98 t_half=3.15569e21 s (quasi-stable) so its ~1.5e20 atoms/g report 0.033 Bq; ACTINV's decay data treats Mo-98 as stable (activity=0). Both libraries produce Mo-98 atoms (ACTINV via Mo-100 MT17 -> 42098; ALARA via the listed 2n/decay paths)",
+   "consequence": "single-nuclide reporting-semantics divergence on a stable nuclide; physically zero-activity either way",
+   "evidence": "fendl32c_709.idx line 3033 (420980, t_half=3.15569e21); p39 artifact Mo100 row (17,42098,0); g2_p39_leg_ledger.jsonl"
+  },
+  "summary": "both sampled residual classes are data-REPRESENTATION differences, not ACTINV production gaps: (1) isomer-split branches carried by ALARA's REAC heritage but absent from FENDL's encoding; (2) quasi-stable activity conventions on stable nuclides. The identical-data arm now measures representation-floor differences on the sampled cases."
  }
 }
