@@ -116,3 +116,13 @@ Source: [IAEA CoNDERC](https://www-nds.iaea.org/conderc/),
 Dataset source terms apply separately from ACTINV's software license. Archive,
 member, catalog, data, executable, and generated-output hashes identify the
 exact artifacts used.
+
+## Discrepancy diagnosis
+
+The [follow-up investigation](../../results/fns-iron-diagnosis/note.md) retains
+this result and adds the 2000 campaign, independent heat reconstruction, a
+Mn56 cooling control, and an isolated spectrum sensitivity calculation.
+The second campaign is overpredicted, while changing the spectrum alone shifts
+heat by less than 0.84%. An archived inventory comparison localizes the largest
+early ACTINV–FISPACT difference to Mn57 production; it does not establish its
+cause or justify a solver correction. Both campaigns remain part of the evidence.

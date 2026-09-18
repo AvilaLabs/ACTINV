@@ -2,6 +2,7 @@
 """Independent energy-accounting and stale/malformed-output controls."""
 import copy
 import math
+import json
 import unittest
 
 import fns_iron_diagnose as diag
@@ -55,6 +56,21 @@ class ReferenceControl(unittest.TestCase):
         for old, new in [('6.6000E+01', '6.7000E+01'), ('1.00000E-03', '1.00000E-02')]:
             with self.assertRaises(ValueError):
                 diag.reference_first_inventory(text.replace(old, new))
+
+
+class RecordedControl(unittest.TestCase):
+    def test_recorded_diagnosis_rejects_changed_summary_or_nuclide(self):
+        path = diag.ROOT / 'results/fns-iron-diagnosis/diagnosis.json'
+        original = json.loads(path.read_text())
+        diag.check_recorded(original, copy.deepcopy(original))
+        changed = copy.deepcopy(original)
+        changed['2000']['summary']['geometric_mean_CE'] *= 1.01
+        with self.assertRaisesRegex(ValueError, 'summary regression'):
+            diag.check_recorded(original, changed)
+        changed = copy.deepcopy(original)
+        changed['1996']['decomposition'][0]['contributions_microW_per_g']['Mn57'] *= 1.01
+        with self.assertRaisesRegex(ValueError, 'nuclide heat regression'):
+            diag.check_recorded(original, changed)
 
 
 if __name__ == '__main__':

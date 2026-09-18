@@ -178,6 +178,31 @@ def compare_first_inventory(archive, result, decomposition):
             'caveat': 'Different activation libraries and rounded FISPACT printout; not a same-data solver test.'}
 
 
+def check_recorded(recorded, fresh):
+    for key in ('protocol', 'amendment', 'archive', 'data', 'sibling_members', 'independent_parser',
+                'historical_comparison'):
+        base.require(recorded['hashes'][key] == fresh['hashes'][key], f'diagnostic input changed: {key}')
+    base.require(recorded['spectra_numerically_equal'] == fresh['spectra_numerically_equal'], 'spectrum identity changed')
+    for campaign in ('1996', '2000'):
+        for key, old in recorded[campaign]['summary'].items():
+            new = fresh[campaign]['summary'][key]
+            base.require(math.isclose(old, new, rel_tol=1e-8, abs_tol=1e-10), 'campaign summary regression')
+        old_rows, new_rows = recorded[campaign]['decomposition'], fresh[campaign]['decomposition']
+        base.require(len(old_rows) == len(new_rows), 'decomposition coverage changed')
+        for old, new in zip(old_rows, new_rows):
+            base.require(old['cooling_seconds'] == new['cooling_seconds'], 'diagnostic times changed')
+            for name in ('Mn56', 'Mn57', 'Fe53'):
+                base.require(math.isclose(old['contributions_microW_per_g'][name],
+                                          new['contributions_microW_per_g'][name], rel_tol=1e-8, abs_tol=1e-12),
+                             f'nuclide heat regression: {name}')
+    old_rows = recorded['counterfactual_spectrum_swap']['ratios']
+    new_rows = fresh['counterfactual_spectrum_swap']['ratios']
+    base.require(len(old_rows) == len(new_rows), 'spectrum comparison coverage changed')
+    for old, new in zip(old_rows, new_rows):
+        for key in old:
+            base.require(math.isclose(old[key], new[key], rel_tol=1e-8, abs_tol=1e-10), 'spectrum comparison regression')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data-root', type=Path, required=True)
@@ -243,6 +268,11 @@ def main():
                          'Campaign comparison does not identify which measurement, normalization or nuclear datum is responsible.',
                          'No parameter changes, statistical confidence claim or physical accuracy gate.']}
     (output / 'diagnosis.json').write_text(json.dumps(report, indent=2, allow_nan=False) + '\n')
+    recorded = ROOT / 'results/fns-iron-diagnosis/diagnosis.json'
+    if recorded.exists():
+        check_recorded(json.loads(recorded.read_text()), report)
+    else:
+        print('Initial evidence generation: no recorded diagnostic comparison yet.')
     print(json.dumps({k: report[k]['summary'] for k in ('1996', '2000')}, indent=2))
 
 
