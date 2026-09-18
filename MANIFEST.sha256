@@ -602,6 +602,7 @@ ad130acc00de295fd0c0dec13ca2d42a4a485ef2debb1933cbc8ba042a2f74a0  ./examples/REA
 b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/damage_table_demo.json
 2480726bcadc1c010ddc893c6991532c28dfdaa7968c5f632999ca5a9ee77aa2  ./examples/feed_removal_demo.json
 a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207  ./examples/fns_fe_5min.json
+e04b539d4ab2176a3120dba67609b88dd09d5ff0ddadca790f7fc0388a1c6155  ./examples/fns_iron/case.json
 77576157da8c23c3657d86ae7b218081101bb2333299d662289ebff48c26d64d  ./examples/fusion_medical_isotopes/ac225/README.md
 1a6f04eadc6887ac0da1739ed0abd07194009e7b3b6d5f9aedfd81a5ea7262fe  ./examples/fusion_medical_isotopes/ac225/reduced_case.json
 758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7  ./examples/fusion_medical_isotopes/ac225/reference.json
@@ -725,6 +726,7 @@ d6353d29934e0b980955bdba3c6938473dbd6fd0e1c1bf0107e07bbadbddf7df  ./protocols/DR
 9434dc9b2e0ee1eb3b82dca07d277b963aefaa8830d5b925330154db0ec7f35f  ./protocols/DRAFT-ACTINV-P22_PROTOCOL.md
 17c009da211f1017ecb9f421ca3c66880dfe707b1ca669b6bc4971ff2e3d33bc  ./protocols/DRAFT-P4b_PROTOCOL.md
 810009b2f4e4c47b1b2f87a1720a19fc79c0dfa791d371fbfdd7120e8a007811  ./protocols/DRAFT-P5_PROTOCOL.md
+4a9203cb5bc1be9d39cb7419cfacabbba552293510699d8b569183a9d56da01d  ./protocols/FNS-IRON-001.md
 a3f3259c4f805d3c0e9250030e467ce4c13466a4a987fed4f1b7674400919cf8  ./protocols/FUSION-ISOTOPE-001-AMENDMENT-1.md
 99514a0e323a4a059401227ee95f67acceb8c72fcbba6c25038c7c7ac3d74d0b  ./protocols/FUSION-ISOTOPE-001.md
 df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HYPERION-NUMERICS-2026-09-15.md
