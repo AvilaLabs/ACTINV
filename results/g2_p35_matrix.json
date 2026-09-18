@@ -54,6 +54,22 @@
       "verdict": "P31-CONDITIONAL",
       "verdict_sha256": "9203d04840a7a5a47efa6ffa4ebdb4399d99698f19372f32b0f3e5b32acf1464"
     },
+    "identical_data_comparison": {
+      "blockers": null,
+      "claims": [
+        "912/1016 contract cases structurally executable on the relaxed FENDL-3.2c artifact; sampled legs run both arms with zero arm failures",
+        "lumped-channel synthesis closed the dominant coverage gap: shutdown ALARA/ACTINV ratios 0.98-1.10x; late-cooling ~1%"
+      ],
+      "limitations": [
+        "frozen 5e-4 tolerance still fails on all sampled cases \u2014 residuals are named representation floors",
+        "isomer-split branches exist only in ALARA's REAC heritage, absent from FENDL's own encoding",
+        "quasi-stable activity conventions differ on stable nuclides",
+        "sampled subset, not the full 912-case census"
+      ],
+      "status": "conditional",
+      "verdict": "P39-CONDITIONAL",
+      "verdict_sha256": "5b16965ffcbbc1e3cc3e0541e1c7ce11c99c74810d832f2bd77c384341207c73"
+    },
     "numerical_control": {
       "blockers": null,
       "claims": [
@@ -90,18 +106,19 @@
       "verdict_sha256": "bc6fc126d7e8ba91d88707275a04c053578c59618b50fc8861dbf1bd46f1a0b2"
     },
     "spatial_handoff": {
-      "blockers": [
-        "no OpenMC installation or module on this machine \u2014 the decisive gate requires an executed open R2S chain and comparison against the pinned native OpenMC path",
-        "no supplied R2S dataset (spatial flux/material mapping and external photon transport results) is present in the workspace",
-        "external photon transport tooling is not installed"
+      "blockers": null,
+      "claims": [
+        "the local R2S chain executed end-to-end: OpenMC neutron tally -> import-flux -> per-voxel actinv -> distributed OpenMC photon sources at all cooling steps",
+        "openmc.deplete comparison at solver-noise level (median rel deviation 2.1e-7)"
       ],
-      "claims": [],
       "limitations": [
-        "no executed R2S chain \u2014 OpenMC is not installed and no supplied R2S dataset exists"
+        "self-produced geometry only \u2014 not an external benchmark",
+        "photon leg is a flux-proxy tally, not a qualified dose",
+        "MCNP SDEF export stays point-at-origin"
       ],
-      "status": "blocked",
-      "verdict": "P32-BLOCKED",
-      "verdict_sha256": "181854bfcd27b71314bbe5223b20f12fd26f15ac5f7f23885469d5a7553fe2f4"
+      "status": "conditional",
+      "verdict": "P32-CONDITIONAL",
+      "verdict_sha256": "48820b8a2a432d53e3906368bebd44fafe30dcf6ed6dfb05d091c57bf2db5e59"
     },
     "uncertainty": {
       "blockers": null,

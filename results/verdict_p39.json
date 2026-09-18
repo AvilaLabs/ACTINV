@@ -89,5 +89,6 @@
    "evidence": "fendl32c_709.idx line 3033 (420980, t_half=3.15569e21); p39 artifact Mo100 row (17,42098,0); g2_p39_leg_ledger.jsonl"
   },
   "summary": "both sampled residual classes are data-REPRESENTATION differences, not ACTINV production gaps: (1) isomer-split branches carried by ALARA's REAC heritage but absent from FENDL's encoding; (2) quasi-stable activity conventions on stable nuclides. The identical-data arm now measures representation-floor differences on the sampled cases."
- }
+ },
+ "verdict": "P39-CONDITIONAL"
 }

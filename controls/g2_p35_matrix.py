@@ -85,11 +85,38 @@ FAMILIES = {
             "competitive claim",
         ],
     },
+    "identical_data_comparison": {
+        "verdict": "verdict_p39.json",
+        "claims": [
+            "912/1016 contract cases structurally executable on the "
+            "relaxed FENDL-3.2c artifact; sampled legs run both arms "
+            "with zero arm failures",
+            "lumped-channel synthesis closed the dominant coverage gap: "
+            "shutdown ALARA/ACTINV ratios 0.98-1.10x; late-cooling ~1%",
+        ],
+        "limitations": [
+            "frozen 5e-4 tolerance still fails on all sampled cases — "
+            "residuals are named representation floors",
+            "isomer-split branches exist only in ALARA's REAC heritage, "
+            "absent from FENDL's own encoding",
+            "quasi-stable activity conventions differ on stable nuclides",
+            "sampled subset, not the full 912-case census",
+        ],
+    },
     "spatial_handoff": {
         "verdict": "verdict_p32.json",
-        "claims": [],
-        "limitations": ["no executed R2S chain — OpenMC is not installed "
-                        "and no supplied R2S dataset exists"],
+        "claims": [
+            "the local R2S chain executed end-to-end: OpenMC neutron "
+            "tally -> import-flux -> per-voxel actinv -> distributed "
+            "OpenMC photon sources at all cooling steps",
+            "openmc.deplete comparison at solver-noise level "
+            "(median rel deviation 2.1e-7)",
+        ],
+        "limitations": [
+            "self-produced geometry only — not an external benchmark",
+            "photon leg is a flux-proxy tally, not a qualified dose",
+            "MCNP SDEF export stays point-at-origin",
+        ],
     },
     "ai_assisted_setup": {
         "verdict": "verdict_p33.json",
