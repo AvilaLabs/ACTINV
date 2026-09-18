@@ -268,6 +268,9 @@ chemical form, aerosol class, or safety margin for you.
 
 ## Validation in brief
 
+For a complete measured-data example, see the [FNS iron decay-heat case](examples/fns_iron/README.md):
+download verified inputs, run the CLI, and compare all twenty experimental measurements with a table and plot.
+
 The repository carries executable controls and compact evidence for every release phase. Highlights include:
 
 - 132 IAEA FNS decay-heat experiments across 73 materials;

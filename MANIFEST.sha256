@@ -1,5 +1,6 @@
 b4c319546effbc99a35f9e76615c750af569b5d4ccd33fe0e3ea40f3a4983f15  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
+30e6800ac5858a76f5dc2627c9aa761b5a0f0689742e16b15b05a75e27765451  ./.github/workflows/fns-iron.yml
 912169790dca7f57e73cd78fd6110429a60b917aa2bde9a973dcde2adef85e30  ./.github/workflows/fusion-isotope.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -12,7 +13,7 @@ e772282f962b1af030439729a3851c34ead37c8cb44de3b435d843128a01407c  ./Cargo.lock
 17551d733533d82c7e6ffa2a05f355a83497f698a6a7c3eb610f16efc53b7bf8  ./Cargo.toml
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
-4b60a767b416f78a4eaf3411f50fba36f99c55d82b7474a2b6c09407d7646802  ./README.md
+8e375e64d978c06487725f498b637694fc197a8db2df1a1b5161eb66526d270f  ./README.md
 012b9931fcade1111654eafa5a93e2f7a3f7e33090c071ac74d2d8d8efbc637e  ./controls/cb1_access.py
 65ae7b51ba71069f4c5628edb99521cca1c9c8095e5a551fcb76889120862f6f  ./controls/cb1_alara.py
 0c3c0e72c4e246d7ca718721ca44bf3fb51043c282592281b260aa27b8165b1a  ./controls/cb1_capabilities.py
@@ -194,6 +195,7 @@ eaf119980cd4fdbbe4b09ffb1f482f15165db764c24eefbb445cd748916b5c13  ./controls/fix
 afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b  ./controls/fixtures/p18b_g1_oracle.json
 3a66e633df8a5eb641eb9767fd4ee9653f10fa3df415626f73519f2c6b5537cc  ./controls/flag_library.py
 00ba0df782fb376ff32ef62f243032306576045b60d9c0ac903cbd46f9bbc23c  ./controls/fns_compare_libraries.py
+b8138886642399de431305403d22a9aef7b29c8b8b94d5a9dbe954b621d35b20  ./controls/fns_iron.py
 b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns_report.py
 7318fb3b48f2185c1891faaa6fe042e6cd91f98b6d6142a783e8811eebebbccd  ./controls/fusion_isotope_chain.py
 206110d876fee10df20e5eb9373006b72fe001002e2fe954a7dd09d508206077  ./controls/g0_cram_coefficients.py
@@ -436,6 +438,7 @@ f9f2eb7bd33c8fd756c4655b3cc12eb71419e846a8a3d1ce72fd28be187f5b39  ./controls/run
 cf815cf58389f4a2fcd16685f091c697825de05bf39c6dcc311537c8a0e90823  ./controls/tendl_build.py
 7665d438efc077633831b79b81cf9296ba8032ab2d1e34583a0c11465d2d2b2e  ./controls/test_check_p12.py
 e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/test_ci_result.py
+3e57c7b07c7134578b6f61f9e1c00db04d4d3da61f26acd0335449a490c2d2b0  ./controls/test_fns_iron.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
 c4f30f9bd696f2b4a1bd44574e28243f28dff58ad3898dbf24610c5462b326a3  ./controls/test_fusion_isotope_chain.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
@@ -602,6 +605,8 @@ ad130acc00de295fd0c0dec13ca2d42a4a485ef2debb1933cbc8ba042a2f74a0  ./examples/REA
 b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/damage_table_demo.json
 2480726bcadc1c010ddc893c6991532c28dfdaa7968c5f632999ca5a9ee77aa2  ./examples/feed_removal_demo.json
 a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207  ./examples/fns_fe_5min.json
+69c7d2cb624b588e269ee307b256999c556a8ef9e3f5638ffdea7e3a32881838  ./examples/fns_iron/README.md
+e04b539d4ab2176a3120dba67609b88dd09d5ff0ddadca790f7fc0388a1c6155  ./examples/fns_iron/case.json
 77576157da8c23c3657d86ae7b218081101bb2333299d662289ebff48c26d64d  ./examples/fusion_medical_isotopes/ac225/README.md
 1a6f04eadc6887ac0da1739ed0abd07194009e7b3b6d5f9aedfd81a5ea7262fe  ./examples/fusion_medical_isotopes/ac225/reduced_case.json
 758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7  ./examples/fusion_medical_isotopes/ac225/reference.json
@@ -725,6 +730,7 @@ d6353d29934e0b980955bdba3c6938473dbd6fd0e1c1bf0107e07bbadbddf7df  ./protocols/DR
 9434dc9b2e0ee1eb3b82dca07d277b963aefaa8830d5b925330154db0ec7f35f  ./protocols/DRAFT-ACTINV-P22_PROTOCOL.md
 17c009da211f1017ecb9f421ca3c66880dfe707b1ca669b6bc4971ff2e3d33bc  ./protocols/DRAFT-P4b_PROTOCOL.md
 810009b2f4e4c47b1b2f87a1720a19fc79c0dfa791d371fbfdd7120e8a007811  ./protocols/DRAFT-P5_PROTOCOL.md
+4a9203cb5bc1be9d39cb7419cfacabbba552293510699d8b569183a9d56da01d  ./protocols/FNS-IRON-001.md
 a3f3259c4f805d3c0e9250030e467ce4c13466a4a987fed4f1b7674400919cf8  ./protocols/FUSION-ISOTOPE-001-AMENDMENT-1.md
 99514a0e323a4a059401227ee95f67acceb8c72fcbba6c25038c7c7ac3d74d0b  ./protocols/FUSION-ISOTOPE-001.md
 df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HYPERION-NUMERICS-2026-09-15.md
@@ -768,6 +774,12 @@ ed4c997ceb973ca515ba5186f42cc9b6b7081b65ee97ff1f7e16941daea3bb75  ./results/chec
 51e7bad1b26eedb9a2caf9231cfee7d6e72290eb50be1415e56443ddad9c5649  ./results/desktop-interface-v1.json
 854b9a3dffefb077ae7570357466b6b61c03886e77a32f0d2d238a28f65f8a11  ./results/desktop-packaging-local.json
 fb2f2f790ea26b84a4b9d8f770525e85a209e81ced2fbae908fd15a2dc316bf4  ./results/desktop-ui-verification-v1.json
+ece2f3a6e6032d1a3436230dd60ef49b39e7b754cf4d04937188ee00b5f1d54d  ./results/fns-iron-001/comparison.csv
+357b0349228a4e765286497f9a625f3f1203ddff912910a3776a509fa3abeb1f  ./results/fns-iron-001/comparison.json
+72e6325e473ba905dca20cee147cab6411d18f75d06c53302d52f36d6f7dac8a  ./results/fns-iron-001/comparison.md
+ece8d7865b443b79d6e36e51cdc577f2c3471b4044e6d037f588afb529144d61  ./results/fns-iron-001/comparison.svg
+1e7a531b585d27f4690be761e5fec2a87dfa6b705135a6269bf2d77c306d24d4  ./results/fns-iron-001/ledger.md
+fdc38443c3ffcb6f625a828b3d47452d879e57b1619be2565335b3a128b67aa9  ./results/fns-iron-001/note.md
 782c5a8ca6e358d37415346be29b784a8aac14049b4adf17a4c181f5f3650f0e  ./results/fns/Ag_2000exp_5min.json
 506b4f427366a733a8ad735b10128e5058b05757104ad39506c8629c84de6c84  ./results/fns/Ag_2000exp_5min.result
 523af6d764b6aaafdd3add63a65b2e0820a57497095dd483adc0e824f957af1a  ./results/fns/Al_1996exp_5min.json
