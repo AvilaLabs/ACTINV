@@ -1,0 +1,38 @@
+{
+  "benchmark": "fusion-isotope-001",
+  "schema": "actinv-literature-case-1",
+  "source": {
+    "url": "https://arxiv.org/html/2609.19166v1",
+    "title": "Scalable Production of Lead-212 and Actinium-225 Generators with Fusion Neutrons",
+    "authors": ["J. F. Parisi", "A. Rutkowski"],
+    "retrieved_on": "2026-09-18",
+    "retrieved_html_sha256": "ebad987a7d1d9b711cdaa13d2794891d001b9e49c8f2900a35fad92c19da2795",
+    "locator": "Section III; Table 2; 10 MW wall, slab 27%, 7 cm"
+  },
+  "published": {
+    "source_area_m2": 1.2,
+    "emitted_neutrons_per_cm2_s": 3e14,
+    "target_facing_fraction": 0.5,
+    "target_thickness_cm": 7.0,
+    "target_total_mass_kg": 1000.0,
+    "th230_mass_kg": 275.0,
+    "th229_atoms_per_emitted_neutron": 0.065,
+    "th229_gross_activity_per_full_power_year_ci": 542.0,
+    "th229_half_life_years": 7916.0
+  },
+  "conventions": {
+    "seconds_per_year": 31557600.0,
+    "bq_per_ci": 3.7e10,
+    "initial_th229_atoms": 0.0,
+    "note": "Julian year and zero initial product are explicit arithmetic conventions; not a recovered full inventory model."
+  },
+  "missing_for_reproduction": [
+    "Exact target isotopic composition and basis: 27% label versus 275 kg Th230 in one tonne",
+    "Executable transport geometry, materials, boundaries, source distribution and OpenMC version",
+    "Target scalar-flux spectrum, group boundaries, spatial averaging and tally uncertainties",
+    "Complete isotope-resolved reaction rates including target destruction and product burn-up",
+    "Exact original nuclear-data files, processing settings, temperatures and SHA-256 hashes",
+    "Decay dataset, complete initial inventory, depletion method and time-step history",
+    "Machine-readable Figure 4 inventory values and uncertainty information"
+  ]
+}
