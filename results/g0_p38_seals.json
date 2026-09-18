@@ -1,0 +1,55 @@
+{
+ "admit_files": {
+  "Cr50.tendl": "2805b0e7bdad41e05bd6895cd6c1a3601c9615d9b534e39013a0e92f167b976b",
+  "Cr52.tendl": "684632c08504c935c1b3da0c8a98a5c1cba2255e341eaa4775feddcb196065d2",
+  "Cr53.tendl": "e3826d1294b3739f320f5d3a6b55c0e06aada04a4b59d265239e8298b8f9ac75",
+  "Cr54.tendl": "93df3576170d02ada06008591b3eebbff241f8ff90182840a9df94c32cbc7664",
+  "Fe57.tendl": "8a3e5566979b1324b13bf2822f712203b791a37b6d81e60f1f2fcd39b91ddeed",
+  "Mn55.tendl": "d9d3564dd2043fb4f8e249d42f7995922860bce8bef5e9c272848aa5332587c7",
+  "W180.tendl": "5c3925bc53ed1188b40029a8c1693b37607a107486ec10e3a26d037fb79d3eb1",
+  "W183.tendl": "a250d937b3f0f69eddd85613878a5ed0fa851cb200a30373cf28c87fc1f0ce83"
+ },
+ "binary": {
+  "path": "target/release/actinv",
+  "sha256": "829af885a505fdaf3897555db3b39866bc5b1cc091141971cdb70ed8bffc8253"
+ },
+ "contract": {
+  "path": "results/g2_p26b_leg_contract.json",
+  "sha256": "57836a56293f488e3dfb19d101f8e3ad71bf6b36ef42b42b2f6fa2964ad174fb"
+ },
+ "expected_executable_cases": 912,
+ "expected_remaining_gap": 104,
+ "phase": "P38",
+ "prior_artifact": {
+  "path": "nuclear-data/p26b-work/g1-run/actinv_fendl32c_709.npz",
+  "sha256": "18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0"
+ },
+ "protocol": {
+  "path": "protocols/ACTINV-P38_PROTOCOL.md",
+  "sha256": "a2f4a4cab6915f2c70e70d5f45495207e700ff8b38633d192e42ace3a7e494c5"
+ },
+ "schema": "actinv-p38-seal-1",
+ "sealed_at": "2026-09-18",
+ "still_rejected": {
+  "Ni62.tendl": "56f030009ca12a84450ebbcd210041f9b04d5a183e2daf21123235bb5bfa5250",
+  "W182.tendl": "c3dc8fca21cf66eb681ce40553b839c532bf3180a76ea5faff68496b504a3a4d",
+  "W184.tendl": "a550106ce756908041fbaa0d55f1d9ea595e4901908ab39e8be35fd117c9fc90",
+  "W186.tendl": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+ },
+ "execution_amendment": {
+  "date": "2026-09-18",
+  "admitted_files": [
+   "Cr50.tendl",
+   "Cr52.tendl",
+   "Cr53.tendl",
+   "Cr54.tendl",
+   "Fe57.tendl",
+   "Mn55.tendl",
+   "W180.tendl"
+  ],
+  "admitted_count": 7,
+  "w183_outcome": "strictness issues resolved but deeper true defect found (MT28 state excess 2.109e-3); reclassified true_defect, remains rejected",
+  "final_binary_sha256": "91214f64f588573f3b51c54d1140e239e742dd1b23b7277260df9dbf5e609865",
+  "note": "binary resealed: post-G0 changes added the zero-NRS placeholder tolerance discovered during execution; original sealed scope preserved above"
+ }
+}

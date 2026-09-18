@@ -1,0 +1,125 @@
+{
+ "schema": "actinv-p38-g2-leg-1",
+ "artifact": {
+  "path": "/home/connoravila/nuclear-data/p26b-work/p38-run/actinv_fendl32c_709_p38.npz",
+  "sha256": "ade233a8908526d559dd577d3c9d190bb88dbedff029387155a0775093b97cd2"
+ },
+ "expected_executable": 912,
+ "ledger_rows": 40,
+ "census": {
+  "tolerance_fail": 40
+ },
+ "tolerance": {
+  "tolerance_pass": 0,
+  "tolerance_fail": 40
+ },
+ "arm_failure_rollups": {},
+ "response_comparison": {
+  "note": "rel diff (alara-actinv)/actinv per response per time",
+  "responses": {
+   "total_activity_bq_per_g": {
+    "0": {
+     "n": 40,
+     "mean_rel": 24.33676089224164,
+     "max_abs_rel": 199.01734932641003,
+     "median_rel": 5.222349620990239
+    },
+    "86400": {
+     "n": 40,
+     "mean_rel": 1.2947759767313038,
+     "max_abs_rel": 2.6006260550835703,
+     "median_rel": 1.281326487355431
+    },
+    "2.592e+06": {
+     "n": 40,
+     "mean_rel": 0.02972989306350062,
+     "max_abs_rel": 0.10465184100323706,
+     "median_rel": 0.014732536036257935
+    },
+    "3.1536e+07": {
+     "n": 40,
+     "mean_rel": 0.0035474255348896594,
+     "max_abs_rel": 0.09322631418749579,
+     "median_rel": 0.006155182097544443
+    },
+    "3.1536e+08": {
+     "n": 40,
+     "mean_rel": 0.42056336627856383,
+     "max_abs_rel": 16.543684711233297,
+     "median_rel": 0.010302150908693724
+    }
+   },
+   "decay_heat_w_per_g": {
+    "0": {
+     "n": 40,
+     "mean_rel": 20.436279105185204,
+     "max_abs_rel": 172.2910261550698,
+     "median_rel": 3.698216457903919
+    },
+    "86400": {
+     "n": 40,
+     "mean_rel": 18.33370193109101,
+     "max_abs_rel": 70.31384910582547,
+     "median_rel": 3.5524418095113486
+    },
+    "2.592e+06": {
+     "n": 40,
+     "mean_rel": 0.008595429138278638,
+     "max_abs_rel": 0.014507267599063414,
+     "median_rel": 0.00951499519414774
+    },
+    "3.1536e+07": {
+     "n": 40,
+     "mean_rel": 0.007155811587208012,
+     "max_abs_rel": 0.018529229727302195,
+     "median_rel": 0.007020761989832168
+    },
+    "3.1536e+08": {
+     "n": 40,
+     "mean_rel": 0.40796594691463567,
+     "max_abs_rel": 16.27244405201892,
+     "median_rel": -0.0009157393584170226
+    }
+   },
+   "product_atoms_per_g": {
+    "0": {
+     "n": 40,
+     "mean_rel": 1.05890526497726,
+     "max_abs_rel": 1.5869769310846182,
+     "median_rel": 0.7938597695273225
+    },
+    "86400": {
+     "n": 40,
+     "mean_rel": 0.8716115193783278,
+     "max_abs_rel": 1.3422930245620504,
+     "median_rel": 0.6710187386509783
+    },
+    "2.592e+06": {
+     "n": 40,
+     "mean_rel": 0.8761119806149196,
+     "max_abs_rel": 1.377451520936677,
+     "median_rel": 0.6703895850475656
+    },
+    "3.1536e+07": {
+     "n": 40,
+     "mean_rel": 0.9425535221137917,
+     "max_abs_rel": 2.5984645870296372,
+     "median_rel": 0.6726187811035516
+    },
+    "3.1536e+08": {
+     "n": 40,
+     "mean_rel": 1.6049783196040917,
+     "max_abs_rel": 15.6714233156901,
+     "median_rel": 0.9472891079579723
+    }
+   }
+  }
+ },
+ "blocked_isotopes": {
+  "Ni-62": 100,
+  "W-182": 4,
+  "W-183": 4,
+  "W-184": 4,
+  "W-186": 4
+ }
+}

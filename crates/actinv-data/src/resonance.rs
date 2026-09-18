@@ -448,10 +448,12 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
             parity_a: integer(values[10], "RML parity A")?,
             parity_b: integer(values[11], "RML parity B")?,
         };
+        // ENDF-6 encodes parity in the sign of the IA/IB spin fields, so
+        // negative spins are legal and must not be rejected here; every
+        // downstream consumer takes the magnitude (see the spin-statistical
+        // factor below).
         if pair.mass_a < 0.0
             || pair.mass_b <= 0.0
-            || pair.spin_a < 0.0
-            || pair.spin_b < 0.0
             || !matches!(pair.penetrability, 0 | 1)
             || !matches!(pair.shift, 0 | 1)
             || pair.mt <= 0
@@ -504,19 +506,31 @@ fn parse_rmatrix_limited(lines: &[&str], mut index: usize) -> Result<(RangeData,
         index = next;
         let resonance_count = usize::try_from(resonance_record.head.l2)
             .map_err(|_| format!("negative RML NRS {}", resonance_record.head.l2))?;
-        if resonance_record.head.n2 != resonance_count {
+        // SAMMY-written evaluations emit a 6-zero placeholder record for
+        // zero-resonance spin groups (NRS=0 but one row present). Honor NRS
+        // and consume the inert payload; the N2=NRS count check only binds
+        // when resonances are actually declared.
+        if resonance_count > 0 && resonance_record.head.n2 != resonance_count {
             return Err("RML resonance LIST N2 does not equal L2/NRS".into());
         }
         let values_per_resonance = 6 * (channels.len() + 1).div_ceil(6);
-        if resonance_record.head.n1 != values_per_resonance * resonance_count {
+        let expected_values = values_per_resonance * resonance_count;
+        if resonance_record.head.n1 != expected_values
+            && !(resonance_count == 0
+                && resonance_record.head.n1 % values_per_resonance == 0
+                && resonance_record.values.iter().all(|value| *value == 0.0))
+        {
             return Err(format!(
                 "RML resonance LIST has NPL={}, expected {}",
-                resonance_record.head.n1,
-                values_per_resonance * resonance_count
+                resonance_record.head.n1, expected_values
             ));
         }
         let mut resonances = Vec::with_capacity(resonance_count);
-        for values in resonance_record.values.chunks_exact(values_per_resonance) {
+        for values in resonance_record
+            .values
+            .chunks_exact(values_per_resonance)
+            .take(resonance_count)
+        {
             resonances.push(RmlResonance {
                 energy: values[0],
                 widths: values[1..=channels.len()].to_vec(),
@@ -2281,5 +2295,26 @@ mod tests {
         assert!(reconstruct_rmatrix_limited(&range, 1e3)
             .unwrap_err()
             .contains("extension"));
+    }
+
+    #[test]
+    fn rml_negative_spin_parity_encoding_is_admitted() {
+        // ENDF-6 LRF=7 pair LIST carrying a negative spin (parity encoding),
+        // as FENDL/TENDL Fe-57 and W-183 do for the elastic channel.
+        let lines = [
+            " 0.000000+0 0.000000+0          0          3          0          0",
+            " 0.000000+0 0.000000+0          2          0         24          4",
+            " 0.000000+0 5.743560+1 0.000000+0 2.600000+1 1.000000+0 0.000000+0",
+            " 0.000000+0 0.000000+0 0.000000+0 1.020000+2 0.000000+0 1.000000+0",
+            " 1.000000+0 5.644629+1 0.000000+0 2.600000+1 5.000000-1-5.000000-1",
+            " 0.000000+0 1.000000+0 0.000000+0 2.000000+0 0.000000+0 0.000000+0",
+        ];
+        let (data, _next) = parse_rmatrix_limited(&lines, 0).unwrap();
+        let RangeData::RMatrixLimited(rml) = data else {
+            panic!("expected RML data");
+        };
+        assert_eq!(rml.particle_pairs.len(), 2);
+        assert_eq!(rml.particle_pairs[1].spin_b, -0.5);
+        assert_eq!(rml.particle_pairs[1].mt, 2);
     }
 }

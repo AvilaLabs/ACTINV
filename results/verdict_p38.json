@@ -1,0 +1,63 @@
+{
+  "schema": "actinv-verdict-1",
+  "phase": "P38",
+  "title": "governed ENDF-6 legality relaxation + identical-data leg re-execution",
+  "disposition": "conditional",
+  "sealed_at_commit": "WORKING-TREE",
+  "recorded_at_utc": "2026-09-18T03:20:00Z",
+  "protocol": "protocols/ACTINV-P38_PROTOCOL.md",
+  "scope_amendment": {
+    "admit_set": ["Cr-50", "Cr-52", "Cr-53", "Cr-54", "Fe-57", "Mn-55", "W-180"],
+    "admit_count": 7,
+    "planned_admit_count": 8,
+    "reclassification": {
+      "W-183": "P37 labeled actinv_strictness on the first rejection; after the two real strictness fixes (negative-spin parity, zero-NRS placeholder LIST) a deeper defect surfaced: MT28/MF=10 states exceed the MF=3 total by 2.108992e-3 (outside the frozen 0.001 envelope). W-183 now stands as true_defect; the P37 record is amended, not rewritten."
+    }
+  },
+  "code_changes": {
+    "builder.rs": "MF=10-only sections (no MF=3, no fission sentinel) admit with the MF=10 partial sum as the runtime comparator, ledgered missing_total_self_comparator (internal completeness, not anchored conservation)",
+    "resonance.rs": "negative IA/IB spins admitted (ENDF-6 parity encoding; downstream uses spin magnitudes); zero-NRS spin groups tolerate a SAMMY all-zero placeholder LIST row; N2=NRS still enforced for NRS>0"
+  },
+  "gates": {
+    "g0": {"status": "sealed", "artifact": "results/g0_p38_seals.json"},
+    "g1": {"status": "pass",
+           "artifact_build": "31/36 parents, 764 rows",
+           "artifact_sha256": "ade233a8908526d559dd577d3c9d190bb88dbedff029387155a0775093b97cd2",
+           "self_comparator_ledgered_mts": 20,
+           "tests": "99/99 actinv-data unit tests; fmt+clippy clean"},
+    "g2": {"status": "executed_with_findings",
+           "expected_executable_census": 912,
+           "executed_sample": 40,
+           "tolerance_pass": 0,
+           "tolerance_fail": 40,
+           "arm_failures": 0,
+           "evidence": "results/g2_p38_leg.json + g2_p38_leg_ledger.jsonl"},
+    "g3": {"status": "pass", "evidence": "results/g3_p38_check.json"},
+    "g4": {"status": "this_file"}
+  },
+  "identical_data_findings": {
+    "executability": "the arm now executes end-to-end: 40/40 sampled cases ran both arms with zero arm failures",
+    "comparison_validity": "NOT a solver-agreement measurement. The two FENDL processing paths diverge in channel content.",
+    "dominant_gap": "ACTINV's builder skips lumped-channel MTs 600-849 (ENDF-6 discrete-state n,p/n,d/n,t/n,h/n,alpha channels). FENDL carries charged-particle production only there for Fe-56, Mn-55, W-180 and partially for Fe-54/Fe-58/Ag-109. ALARA's REAC conversion reads them.",
+    "measured_pattern": {
+      "at_shutdown": "ALARA/ACTINV activity ratio 1.2x-200x (worst under IRDFF fast spectrum, 200x on pure Fe) - short-lived charged-particle products (Mn-56, Mn-57) absent from the ACTINV artifact",
+      "at_9y_cooling": "ALARA/ACTINV = 0.995-1.011 on ~90% of sampled cases - capture-dominated products agree within ~1%",
+      "exceptions": "fe_mo100000wppm irdff late-time 17.5x; divergence runs both directions (ACTINV emits Fe-55/Mn-54 rows ALARA does not list)"
+    },
+    "interpretation": "early-time and fast-spectrum responses are coverage-limited; late-time capture-dominated responses already agree at percent level. The frozen 5e-4 tolerance fails comprehensively and honestly records the coverage gap."
+  },
+  "conditions": [
+    "the MF10 self-comparator is internal completeness, NOT independently anchored conservation; it is ledgered per-MT in the artifact index",
+    "admitted files are legal ENDF-6 in FORMAT; this phase asserts nothing about their evaluation quality",
+    "the identical-data leg remains comparison-invalid at early times and under fast spectra until lumped-MT coverage (600-849) and any MF6-residual-only channels land - named as the next blocker",
+    "the 912/1016 census is structural executability, not a validity claim",
+    "W-183's reclassification narrows P37's strictness class to 7 files; the sealed P37 record is preserved and amended here",
+    "this phase changes data admission and coverage only - no solver, decay, or tolerance semantics changed"
+  ],
+  "claims": {
+    "artifact_built": "31/36 FENDL-3.2c contract parents build under the relaxed legality contract",
+    "identical_data_executable": "912/1016 contract cases are structurally executable; 40 sampled and executed end-to-end",
+    "defects_still_rejected": "Ni-62, W-182, W-183, W-184, W-186 all fail their original gates with named reasons",
+    "comparison_gap_measured": "ALARA-vs-ACTINV identical-data responses diverge at t=0 by 1.2x-200x and agree at 9y cooling within ~1% on most cases - a coverage finding, not a solver claim"
+  }
+}

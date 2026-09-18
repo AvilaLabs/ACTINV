@@ -472,6 +472,28 @@ changed; no comparator or solver claim follows
 (`results/verdict_p37.json`, `results/g1_p37_classification.json`,
 `controls/g{2,3}_p37_controls.py`, `protocols/ACTINV-P37_PROTOCOL.md`).
 
+**P38 execution entry (2026-09-18).** P38 (governed ENDF-6 legality
+relaxation + identical-data leg re-execution) closed `P38-CONDITIONAL`:
+three bounded format-legal relaxations landed — MF=10-only sections admit
+with the MF=10 partial sum as an explicitly ledgered internal comparator
+(`missing_total_self_comparator`, 20 MTs); negative IA/IB spins admitted
+(ENDF-6 parity encoding); zero-NRS spin groups tolerate an all-zero
+SAMMY placeholder LIST row. Result: **31/36 FENDL-3.2c parents build**
+(764 rows); the P37 strictness class narrows to 7 after W-183 surfaced a
+deeper true defect under the fixes (MT28 state excess 2.1e-3); all five
+defects (Ni-62, W-182/183/184/186) still fail their original gates. The
+identical-data arm is now structurally executable — 912/1016 cases, 40
+sampled end-to-end with zero arm failures — **but it is not yet a solver
+comparison**: ALARA/ACTINV diverge 1.2x-200x at shutdown (worst under
+IRDFF, driven by lumped-channel MTs 600-849 that FENDL uses for
+charged-particle production and ACTINV skips) while agreeing 0.995-1.011
+at 9y cooling on ~90% of cases. The frozen 5e-4 tolerance fails
+comprehensively and honestly records the coverage gap; lumped-MT
+coverage is the named next blocker for the identical-data arm
+(`results/verdict_p38.json`, `results/g2_p38_leg.json`,
+`controls/g2_p38_leg.py`, `controls/check_g{3,4}_p38.py`,
+`protocols/ACTINV-P38_PROTOCOL.md`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

@@ -1679,17 +1679,18 @@ fn build_evaluation(
                     "MT18: no MF=3 total; the MF=10 IZAP=-1 total-fission sentinel supplies the permitted runtime comparator"
                         .into(),
                 );
-            } else if mt == 18 {
-                // P25 Amendment B: fission partials without an MF=3 total or
-                // sentinel use their own MF=10 sum as the runtime comparator —
-                // internal completeness, not an independently anchored total.
-                ledger.push(
-                    "MT18: no MF=3 total or total-fission sentinel; the MF=10 partial sum supplies the runtime comparator (missing_total_self_comparator: conservation is internal completeness, not anchored to an independent total)"
-                        .into(),
-                );
             } else {
-                return Err(format!(
-                    "MT{mt}/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven"
+                // P38: any MT with MF=10 products but no MF=3 total uses its
+                // own MF=10 partial sum as the runtime comparator — internal
+                // completeness, not an independently anchored total. The
+                // P25 Amendment B path for fission generalizes here: ENDF-6
+                // does not require an MF=3 section for every MF=10 section,
+                // and activation-oriented files lawfully ship production-only
+                // channels. The emitted-row envelope still applies against
+                // this comparator downstream.
+                ledger.push(format!(
+                    "MT{mt}: no MF=3 total{}; the MF=10 partial sum supplies the runtime comparator (missing_total_self_comparator: conservation is internal completeness, not anchored to an independent total)",
+                    if mt == 18 { " or total-fission sentinel" } else { "" }
                 ));
             }
         }
@@ -3667,6 +3668,8 @@ mod tests {
                 },
             ],
         );
+        // P38: an MF=10-only MT is admitted with the self-comparator —
+        // internal completeness, ledgered, not an independent total.
         let missing_total = build_evaluation(
             input.clone(),
             LibraryFormat::Tendl,
@@ -3680,12 +3683,15 @@ mod tests {
             },
             &BTreeMap::new(),
         )
-        .unwrap_err();
+        .unwrap();
         assert!(
-            missing_total.contains(
-                "no matching MF=3 total or total-fission sentinel; conservation is unproven"
-            ),
-            "{missing_total}"
+            missing_total
+                .index
+                .ledger
+                .iter()
+                .any(|entry| entry.contains("missing_total_self_comparator")),
+            "{:?}",
+            missing_total.index.ledger
         );
         input.mf3.insert(4, table([4.0, 4.0]));
         let built = build_evaluation(

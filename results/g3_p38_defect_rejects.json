@@ -1,0 +1,17 @@
+{
+ "Ni62": {
+  "error": "MAT=2837/MF=2/MT=151: Breit-Wigner total width 1.882601 is below component sum 1882.6008 for LRX=0 (GN=1880, GG=2.6008, GF=0)"
+ },
+ "W182": {
+  "error": "MAT=7431/MF=2/MT=151: MF=2 ZA/AWR 74182/180.3852 disagree with MF=1 74182/180.385"
+ },
+ "W183": {
+  "error": "MT28/MF=10 ZAP=73182 group 635: emitted state sum 7.98392803253396397e-4 barn exceeds runtime total 7.96712542744243955e-4 barn by relative excess 2.108992e-3 (outside the frozen 0.001 standard envelope)"
+ },
+ "W184": {
+  "error": "MAT=7437/MF=2/MT=151: MF=2 ZA/AWR 74184/182.37 disagree with MF=1 74184/182.371"
+ },
+ "W186": {
+  "error": "MT16/MF=10 ZAP=74185 group 593: emitted state sum 2.89953383139147612e-2 barn exceeds runtime total 2.88750691166942478e-2 barn by relative excess 4.165157e-3 (outside the frozen 0.001 standard envelope)"
+ }
+}
