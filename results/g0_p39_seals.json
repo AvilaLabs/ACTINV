@@ -1,0 +1,56 @@
+{
+ "phase": "P39",
+ "protocol": "protocols/ACTINV-P39_PROTOCOL.md",
+ "commit": "23a526041b1d335e28e16a9446a5d14199b451d5",
+ "contract": {
+  "file": "results/g2_p26b_leg_contract.json",
+  "sha256": "57836a56293f488e3dfb19d101f8e3ad71bf6b36ef42b42b2f6fa2964ad174fb"
+ },
+ "prior_artifact": {
+  "path": "p38-run/actinv_fendl32c_709_p38.npz",
+  "sha256": "ade233a8908526d559dd577d3c9d190bb88dbedff029387155a0775093b97cd2"
+ },
+ "source_dir_sha256": {
+  "Ag107.tendl": "0610e15630cb0837a801611d42b6cd401435ddb93dde1126e63000b83ba14185",
+  "Ag109.tendl": "e64c40bbb5471fba92effe234819fcdb8fd26ef7556c72433dd8847aa36ce4a8",
+  "Co59.tendl": "a4c6480e200b9474ed04900e4d17d018577d6235d57f31609b75322ae9a3b75d",
+  "Cr50.tendl": "2805b0e7bdad41e05bd6895cd6c1a3601c9615d9b534e39013a0e92f167b976b",
+  "Cr52.tendl": "684632c08504c935c1b3da0c8a98a5c1cba2255e341eaa4775feddcb196065d2",
+  "Cr53.tendl": "e3826d1294b3739f320f5d3a6b55c0e06aada04a4b59d265239e8298b8f9ac75",
+  "Cr54.tendl": "93df3576170d02ada06008591b3eebbff241f8ff90182840a9df94c32cbc7664",
+  "Cu63.tendl": "85f55164e5164482e6896f6dc589fc6d5a5f1269a8bd6992993f0274560555bf",
+  "Cu65.tendl": "4b1f1a3cdfefa4c71a95f762d3a27ae96864055158faaf73d7c4d7427ab0df59",
+  "Fe54.tendl": "78f862ea205c3655a9347db105005f0fdac71394c79073c482a1e1f48fdb8da9",
+  "Fe56.tendl": "24a45021fb38262dd8fb598c520a807f342bd07e137a36e88d7ae97a0f38715e",
+  "Fe57.tendl": "8a3e5566979b1324b13bf2822f712203b791a37b6d81e60f1f2fcd39b91ddeed",
+  "Fe58.tendl": "c5379fc72eb20c5fdaeeb350d77f6e9d0f1cb9267f55de89d650f01951ec2b01",
+  "Mn55.tendl": "d9d3564dd2043fb4f8e249d42f7995922860bce8bef5e9c272848aa5332587c7",
+  "Mo100.tendl": "81abf5b9f6926118317f066811cf59bb49a5d648fd65d99b779370150e93bc8f",
+  "Mo92.tendl": "5c616deed4906f6c4fd28d0871a1af439c3ab1f8e5ea3027d8b8393ed341e9af",
+  "Mo94.tendl": "04ab22ada7a1b98ed8d52af8e3023c70b306c90d2ae3080de3566efd865b4dfd",
+  "Mo95.tendl": "88f6b5f5c115168dc88c1c5fad5640a40045a8182048ae9139b75d0cab6d148f",
+  "Mo96.tendl": "ab5dfef806a2faf63a291c666c3933716bd54162fd2bd1325be4746a2046ea88",
+  "Mo97.tendl": "e210cb02f4853fa58994632c39bdbfb56a56771c78a4083f71e192a9deaedfb2",
+  "Mo98.tendl": "7df7feaa8eb6f7ae08a345d6cde5626c69b696cdb0f1156e0f9efefc1fbb366b",
+  "Nb93.tendl": "5d8f3877f45254c9a8e96a0968e996b5b19706001bb1f84bc090e8fa6650103b",
+  "Ni58.tendl": "312f5a069dbda4e0abd662a258710ea332dd749191a9bad2a0c70567644af4f4",
+  "Ni60.tendl": "737d6f0c25932acef9d04b564e140c1402486b26d4b6fd267ecd5bddfc15b8b9",
+  "Ni61.tendl": "1bcb3cd5c6e946dca8bceb90f28c8435961966083d78c63c367a8ccd652c6549",
+  "Ni64.tendl": "a9bc250ccfaa391cb8d02bbd6436a169acb0abb5ec1c6af96589e60afbf9087b",
+  "Ta180m.tendl": "7f5e733b152687c22ff39448bd7f5744a39a98b9ae88b6ee45b49175ad23a6ee",
+  "Ta181.tendl": "de8ae794bdc218814bf6e1e30b62bd9418f2344b9138134f12cbe351ff4c42ee",
+  "V50.tendl": "58810ac2b600cfa46327e3e9c8602a92d40f1f8f861d11be05a667a432e4a109",
+  "V51.tendl": "bbb1bf70cc71f5b50420a0aa5f4c9c178c267d42e9a229cca9e671401766ec36",
+  "W180.tendl": "5c3925bc53ed1188b40029a8c1693b37607a107486ec10e3a26d037fb79d3eb1"
+ },
+ "expected_row_changes": {
+  "Fe56": "+(103,25056,0) from lumped 600-609+649",
+  "Mn55": "+(107,23052,0) from lumped 800-831; (103,24055) check",
+  "Fe54": "unchanged (MT103 governs)",
+  "W180": "unchanged (MF10 MT103 governs)"
+ },
+ "binary": {
+  "path": "target/release/actinv",
+  "sha256": "91214f64f588573f3b51c54d1140e239e742dd1b23b7277260df9dbf5e609865"
+ }
+}

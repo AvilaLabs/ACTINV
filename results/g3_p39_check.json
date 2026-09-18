@@ -1,0 +1,36 @@
+{
+ "schema": "actinv-p39-g3-1",
+ "checks": [
+  {
+   "name": "nc_no_double_count",
+   "claim": "lumped synthesis introduces no duplicate (target,mt,zap,lfs) rows beyond the pre-existing p38 set",
+   "pass": true,
+   "detail": {
+    "new_only": []
+   }
+  },
+  {
+   "name": "nc_no_rows_removed",
+   "claim": "no p38 row was removed or altered",
+   "pass": true,
+   "detail": {
+    "removed": []
+   }
+  },
+  {
+   "name": "nc_defects_still_reject",
+   "claim": "all five defect evaluations still fail their original gates under the p39 binary",
+   "pass": true,
+   "detail": {
+    "bad": []
+   }
+  },
+  {
+   "name": "nc_unit_test",
+   "claim": "unit test covers synthesis-when-absent, summary-governs skip, and MF10-governs skip",
+   "pass": true,
+   "detail": {}
+  }
+ ],
+ "all_pass": true
+}

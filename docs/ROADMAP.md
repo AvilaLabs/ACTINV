@@ -494,6 +494,24 @@ coverage is the named next blocker for the identical-data arm
 `controls/g2_p38_leg.py`, `controls/check_g{3,4}_p38.py`,
 `protocols/ACTINV-P38_PROTOCOL.md`).
 
+**P39 execution entry (2026-09-18).** P39 (lumped-channel MT 600-849
+synthesis) closed `P39-CONDITIONAL`: where a summary MT (103-107) has no
+MF3/processed/MF10 coverage, the family's collapsed MF3 tables now sum
+into one canonical-MT row (`lumped_channel_synthesis`, lfs=0, REAC-equivalent
+semantics); where coverage exists the lumped sections are ledgered
+redundant and skipped. Artifact: 31 targets, 777 rows (+13 synthesized
+including Fe56(n,p)->Mn-56 and Mn55(n,alpha)->V-52; zero removals; no new
+duplicates). Identical-data effect measured on the 36-case sample:
+shutdown ALARA/ACTINV ratios collapsed from 1.05x-200x to **0.98x-1.10x**;
+late-cooling unchanged at ~1%. The frozen 5e-4 tolerance still fails
+everywhere — the leg now measures a smaller residual divergence class
+(uniform ~9-10% under the IRDFF fast spectrum; a 17.5x Mo-impurity
+late-time outlier on a non-lumped mechanism), not the coverage void.
+All five defect evaluations still reject; no solver or equivalence claim
+follows (`results/verdict_p39.json`, `results/g2_p39_leg.json`,
+`controls/g2_p38_leg.py --p39`, `controls/check_g{3,4}_p39.py`,
+`protocols/ACTINV-P39_PROTOCOL.md`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

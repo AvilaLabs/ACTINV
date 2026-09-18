@@ -2106,6 +2106,71 @@ fn build_evaluation(
         }
     }
 
+    // Lumped-channel synthesis (P39): ENDF-6 carries discrete-state +
+    // continuum charged-particle production in MT600-849. Where the
+    // summary MT (103-107) has no coverage in MF3, the processed set, or
+    // MF10, the family's collapsed tables sum into one canonical-MT row;
+    // excitation-level branching to residual isomers is not attributed
+    // (REAC-equivalent lumped semantics). Where summary coverage exists
+    // the lumped sections are redundant decomposition and skipped.
+    const LUMPED_FAMILIES: &[(std::ops::RangeInclusive<i32>, i32)] = &[
+        (600..=649, 103),
+        (650..=699, 104),
+        (700..=749, 105),
+        (750..=799, 106),
+        (800..=849, 107),
+    ];
+    for (range, summary_mt) in LUMPED_FAMILIES {
+        let lumped: Vec<i32> = evaluation
+            .mf3
+            .keys()
+            .filter(|mt| range.contains(mt))
+            .copied()
+            .collect();
+        if lumped.is_empty() {
+            continue;
+        }
+        if processed.contains_key(summary_mt)
+            || evaluation.mf3.contains_key(summary_mt)
+            || evaluation.mf10.contains_key(summary_mt)
+        {
+            ledger.push(format!(
+                "MT{}-{}: {} lumped channel(s) present but MT{summary_mt} coverage already governs the residual; lumped sections skipped",
+                lumped.first().unwrap(),
+                lumped.last().unwrap(),
+                lumped.len()
+            ));
+            continue;
+        }
+        let mut sigma = vec![0.0; groups.groups()];
+        for mt in &lumped {
+            let collapsed = checked_collapse(groups, &evaluation.mf3[mt], &format!("MT{mt}/MF=3"))?;
+            sum_groups(&mut sigma, &collapsed)?;
+        }
+        let delta = products_by_mt
+            .get(summary_mt)
+            .copied()
+            .ok_or_else(|| format!("MT{summary_mt} has no product mapping"))?;
+        let Some(zap) = residual_product(metadata.za, metadata.projectile, delta) else {
+            ledger.push(format!(
+                "MT{summary_mt}: lumped-channel residual arithmetic is not a bound nuclide"
+            ));
+            continue;
+        };
+        rows.push(BuiltRow {
+            mt: *summary_mt,
+            zap,
+            lfs: 0,
+            lmf: -1,
+            sigma,
+            raw_state: None,
+        });
+        ledger.push(format!(
+            "MT{summary_mt}: synthesized from {} lumped MF=3 channel(s) (lumped_channel_synthesis: discrete-level and continuum production summed; excitation-level branching to residual isomers not attributed)",
+            lumped.len()
+        ));
+    }
+
     if format == LibraryFormat::Eaf {
         remap_eaf_levels(&mut rows, &mut ledger);
     }
@@ -4264,6 +4329,110 @@ mod tests {
             target.index.state_mappings[0].decision,
             "no_catalog_excitation_match_to_leakage"
         );
+    }
+
+    #[test]
+    fn lumped_channels_synthesize_only_when_summary_coverage_is_absent() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        fn settings<'a>(groups: &'a GroupStructure) -> EvaluationBuildSettings<'a> {
+            EvaluationBuildSettings {
+                groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+            }
+        }
+        let products = mt_products().unwrap();
+
+        // Lumped-only (n,p) 600-649 + (n,alpha) 800-849 synthesize the
+        // canonical summary-MT rows on the family residuals.
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf3.insert(600, table([1.0, 1.0]));
+        input.mf3.insert(649, table([0.5, 0.5]));
+        input.mf3.insert(800, table([2.0, 2.0]));
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            settings(&groups),
+            &products,
+        )
+        .unwrap();
+        let synthesized: Vec<_> = built
+            .rows
+            .iter()
+            .filter(|row| row.mt == 103 || row.mt == 107)
+            .collect();
+        assert_eq!(synthesized.len(), 2);
+        let np = synthesized.iter().find(|row| row.mt == 103).unwrap();
+        assert_eq!((np.zap, np.lfs), (25056, 0));
+        assert_eq!(np.sigma.iter().sum::<f64>(), 1.5);
+        let na = synthesized.iter().find(|row| row.mt == 107).unwrap();
+        assert_eq!((na.zap, na.lfs), (24053, 0));
+        assert_eq!(na.sigma.iter().sum::<f64>(), 2.0);
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|entry| entry.contains("lumped_channel_synthesis")));
+
+        // A present summary MT governs: lumped sections skip, no double row.
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf3.insert(103, table([4.0, 4.0]));
+        input.mf3.insert(600, table([1.0, 1.0]));
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            settings(&groups),
+            &products,
+        )
+        .unwrap();
+        let np_rows: Vec<_> = built
+            .rows
+            .iter()
+            .filter(|row| row.mt == 103 && row.zap == 25056)
+            .collect();
+        assert_eq!(np_rows.len(), 1);
+        assert_eq!(np_rows[0].sigma.iter().sum::<f64>(), 4.0);
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|entry| entry.contains("coverage already governs")));
+
+        // MF10 partial coverage of the summary MT also skips lumped.
+        let mut input = evaluation(Projectile::Neutron);
+        input.mf3.insert(600, table([1.0, 1.0]));
+        input
+            .mf10
+            .insert(103, vec![state_product(25056, 0, table([3.0, 3.0]))]);
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            settings(&groups),
+            &products,
+        )
+        .unwrap();
+        let np_rows: Vec<_> = built
+            .rows
+            .iter()
+            .filter(|row| row.mt == 103 && row.zap == 25056)
+            .collect();
+        assert_eq!(np_rows.len(), 1);
+        assert_eq!(np_rows[0].sigma.iter().sum::<f64>(), 3.0);
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|entry| entry.contains("coverage already governs")));
     }
 
     #[test]

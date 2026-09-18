@@ -25,6 +25,13 @@ LEDGER = ROOT / "results" / "g2_p38_leg_ledger.jsonl"
 OUT = ROOT / "results" / "g2_p38_leg.json"
 WORK = Path.home() / "nuclear-data" / "p26b-work" / "p38-run" / "g2-cases"
 
+# P39 variant: same driver on the lumped-MT artifact
+P39_NPZ = Path.home() / "nuclear-data" / "p26b-work" / "p38-run" / \
+    "actinv_fendl32c_709_p39.npz"
+LEDGER_P39 = ROOT / "results" / "g2_p39_leg_ledger.jsonl"
+OUT_P39 = ROOT / "results" / "g2_p39_leg.json"
+WORK_P39 = Path.home() / "nuclear-data" / "p26b-work" / "p38-run" / "g2-cases-p39"
+
 TOL = leg.CONTRACT_PATH.read_text()  # loaded once below
 
 
@@ -35,15 +42,16 @@ def executable_now(case: dict) -> bool:
 
 
 def run_case(case: dict, spectra: dict, elelib: dict, hl: dict,
-             lib_sha: str) -> dict:
-    """Same two-arm execution as the P26b runner, ACTINV arm on the p38
-    artifact."""
+             lib_sha: str, work: Path, npz: Path,
+             arm: str) -> dict:
+    """Same two-arm execution as the P26b runner, ACTINV arm on the
+    relaxed artifact."""
     row = {"case": case["case"], "leg": "identical_data",
            "status": "executable"}
     spec_name = case["spectrum"]
     flux_desc = (spectra[spec_name] if spec_name == "fns_709"
                  else list(reversed(spectra[spec_name])))
-    case_dir = WORK / case["case"]
+    case_dir = work / case["case"]
     case_dir.mkdir(parents=True, exist_ok=True)
 
     io = leg.write_alara_case(case_dir, case, flux_desc, elelib)
@@ -69,13 +77,13 @@ def run_case(case: dict, spectra: dict, elelib: dict, hl: dict,
     spec = leg.build_actinv_spec(
         case, flux=spectra[spec_name],
         descending=(spec_name == "fns_709"),
-        lib=P38_NPZ, lib_sha=lib_sha)
+        lib=npz, lib_sha=lib_sha)
     spec_path = case_dir / "spec.json"
     spec_path.write_text(json.dumps(spec))
     crun = leg.timed_run(
         [str(leg.ACTINV), "run", str(spec_path),
          str(case_dir / "out.json")], case_dir)
-    c = {"tool": "actinv", "arm": "actinv_fendl32c_709_p38",
+    c = {"tool": "actinv", "arm": arm,
          "spec_sha256": leg.sha256_file(spec_path),
          "wall_s": crun["wall_s"], "returncode": crun["returncode"],
          "stderr_tail": crun.get("stderr_tail")}
@@ -154,10 +162,19 @@ def main() -> int:
     ap.add_argument("--summarize", action="store_true")
     ap.add_argument("--only", type=str, default=None,
                     help="JSON file listing case names to run")
+    ap.add_argument("--p39", action="store_true",
+                    help="run on the P39 lumped-MT artifact")
     args = ap.parse_args()
 
+    npz = P39_NPZ if args.p39 else P38_NPZ
+    ledger = LEDGER_P39 if args.p39 else LEDGER
+    out = OUT_P39 if args.p39 else OUT
+    work = WORK_P39 if args.p39 else WORK
+    arm = ("actinv_fendl32c_709_p39" if args.p39
+           else "actinv_fendl32c_709_p38")
+
     contract = json.loads(leg.CONTRACT_PATH.read_text())
-    lib_sha = leg.sha256_file(P38_NPZ)
+    lib_sha = leg.sha256_file(npz)
     tol = contract["tolerances"]["identical_data"]
     all_executable = [c for c in contract["cases"] if executable_now(c)]
     cases = all_executable
@@ -174,34 +191,34 @@ def main() -> int:
             sum(spectra["irdff_sp_mat9861_709"])
         spectra["irdff_sp_mat9861_709"] = [
             v * scale for v in spectra["irdff_sp_mat9861_709"]]
-        WORK.mkdir(parents=True, exist_ok=True)
+        work.mkdir(parents=True, exist_ok=True)
 
         done = set()
-        if args.resume and LEDGER.exists():
-            for line in LEDGER.read_text().splitlines():
+        if args.resume and ledger.exists():
+            for line in ledger.read_text().splitlines():
                 r = json.loads(line)
                 done.add(r["case"])
         n = 0
         for case in cases:
             if case["case"] in done:
                 continue
-            row = run_case(case, spectra, elelib, hl, lib_sha)
+            row = run_case(case, spectra, elelib, hl, lib_sha, work, npz, arm)
             if row["status"] == "executed":
                 row["tolerance_report"] = tolerance_check(row, tol)
                 row["status"] = ("tolerance_pass" if
                                  row["tolerance_report"]["pass"]
                                  else "tolerance_fail")
-            with LEDGER.open("a") as f:
+            with ledger.open("a") as f:
                 f.write(json.dumps({"case": row["case"],
                                     "leg": "identical_data",
                                     "record": row}) + "\n")
             n += 1
             if args.limit and n >= args.limit:
                 break
-        print(f"executed {n} new case(s); ledger {LEDGER}")
+        print(f"executed {n} new case(s); ledger {ledger}")
 
     # summarize
-    rows = [json.loads(l) for l in LEDGER.read_text().splitlines()
+    rows = [json.loads(l) for l in ledger.read_text().splitlines()
             if l.strip()]
     census = {}
     tol_results = {"tolerance_pass": 0, "tolerance_fail": 0}
@@ -232,9 +249,9 @@ def main() -> int:
                        "median_rel": sorted(vs)[len(vs) // 2]}
                    for t, vs in times.items()}
                for k, times in cmp_stats.items()}
-    out = {
+    result = {
         "schema": "actinv-p38-g2-leg-1",
-        "artifact": {"path": str(P38_NPZ), "sha256": lib_sha},
+        "artifact": {"path": str(npz), "sha256": lib_sha},
         "expected_executable": len(all_executable),
         "ledger_rows": len(rows),
         "census": census,
@@ -247,7 +264,7 @@ def main() -> int:
         "blocked_isotopes": {"Ni-62": 100, "W-182": 4, "W-183": 4,
                              "W-184": 4, "W-186": 4},
     }
-    OUT.write_text(json.dumps(out, indent=1))
+    out.write_text(json.dumps(result, indent=1))
     print(json.dumps({"census": census, "tolerance": tol_results},
                      indent=1))
     return 0
