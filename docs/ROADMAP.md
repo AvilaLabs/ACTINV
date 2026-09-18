@@ -512,6 +512,18 @@ follows (`results/verdict_p39.json`, `results/g2_p39_leg.json`,
 `controls/g2_p38_leg.py --p39`, `controls/check_g{3,4}_p39.py`,
 `protocols/ACTINV-P39_PROTOCOL.md`).
 
+**P39 residual-classification addendum (2026-09-18).** The ~9-10%
+uniform IRDFF shutdown residual is diagnosed: ALARA emits Mn-58m1 (~11%
+of shutdown activity) from REAC-library isomer-split heritage, while
+FENDL-3.2c Mn-55 carries **no** (n,2n)->Mn-58m carrier anywhere in the
+file (MF8/10 isomers exist only for MT30/37; MF6 MT16 subsections are
+all emitted-neutron). The residual is a representation floor the
+identical-data arm cannot cross for isomer-active channels — closing it
+would require non-FENDL isomer data, which breaks the identical-data
+premise itself. Recorded in `results/verdict_p39.json`
+`residual_classification`; the second open class (Mo-impurity late-time
+outlier, 17.5x, non-lumped mechanism) remains unclassified.
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

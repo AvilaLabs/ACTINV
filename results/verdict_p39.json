@@ -1,51 +1,90 @@
 {
-  "schema": "actinv-verdict-1",
-  "phase": "P39",
-  "title": "lumped-channel MT 600-849 synthesis for FENDL artifacts",
-  "disposition": "conditional",
-  "sealed_at_commit": "WORKING-TREE",
-  "recorded_at_utc": "2026-09-18T04:30:00Z",
-  "protocol": "protocols/ACTINV-P39_PROTOCOL.md",
-  "code_changes": {
-    "builder.rs": "post-loop lumped synthesis: for each family (600-649->103, 650-699->104, 700-749->105, 750-799->106, 800-849->107), when the summary MT has no MF3/processed/MF10 coverage, the family's collapsed MF3 tables sum into one (summary_mt, residual, lfs=0) row ledgered lumped_channel_synthesis; when coverage exists the lumped sections are skipped and ledgered redundant"
+ "schema": "actinv-verdict-1",
+ "phase": "P39",
+ "title": "lumped-channel MT 600-849 synthesis for FENDL artifacts",
+ "disposition": "conditional",
+ "sealed_at_commit": "WORKING-TREE",
+ "recorded_at_utc": "2026-09-18T04:30:00Z",
+ "protocol": "protocols/ACTINV-P39_PROTOCOL.md",
+ "code_changes": {
+  "builder.rs": "post-loop lumped synthesis: for each family (600-649->103, 650-699->104, 700-749->105, 750-799->106, 800-849->107), when the summary MT has no MF3/processed/MF10 coverage, the family's collapsed MF3 tables sum into one (summary_mt, residual, lfs=0) row ledgered lumped_channel_synthesis; when coverage exists the lumped sections are skipped and ledgered redundant"
+ },
+ "gates": {
+  "g0": {
+   "status": "sealed",
+   "artifact": "results/g0_p39_seals.json"
   },
-  "gates": {
-    "g0": {"status": "sealed", "artifact": "results/g0_p39_seals.json"},
-    "g1": {"status": "pass",
-           "artifact_build": "31 targets, 777 rows (+13 vs p38's 764)",
-           "artifact_sha256": "18547cc311560f29ed20a4e553427f238d046046461feaf7bfbec8adf298e097",
-           "synthesized_rows": ["Cr50:(107,22047)", "Cr52:(107,22049)", "Cr53:(107,22050)", "Cr54:(107,22051)", "Fe54:(107,24051)", "Fe56:(103,25056)", "Fe56:(107,24053)", "Fe57:(103,25057)", "Fe57:(107,24054)", "Fe58:(107,24055)", "Mn55:(103,24055)", "Mn55:(107,23052)", "W180:(107,72177)"],
-           "tests": "89/89 actinv-data unit tests incl. lumped_channels_synthesize_only_when_summary_coverage_is_absent; fmt+clippy clean"},
-    "g2": {"status": "executed_with_findings",
-           "executed_sample": 36,
-           "tolerance_pass": 0,
-           "tolerance_fail": 36,
-           "arm_failures": 0,
-           "evidence": "results/g2_p39_leg.json + g2_p39_leg_ledger.jsonl"},
-    "g3": {"status": "pass", "evidence": "results/g3_p39_check.json"},
-    "g4": {"status": "this_file"}
+  "g1": {
+   "status": "pass",
+   "artifact_build": "31 targets, 777 rows (+13 vs p38's 764)",
+   "artifact_sha256": "18547cc311560f29ed20a4e553427f238d046046461feaf7bfbec8adf298e097",
+   "synthesized_rows": [
+    "Cr50:(107,22047)",
+    "Cr52:(107,22049)",
+    "Cr53:(107,22050)",
+    "Cr54:(107,22051)",
+    "Fe54:(107,24051)",
+    "Fe56:(103,25056)",
+    "Fe56:(107,24053)",
+    "Fe57:(103,25057)",
+    "Fe57:(107,24054)",
+    "Fe58:(107,24055)",
+    "Mn55:(103,24055)",
+    "Mn55:(107,23052)",
+    "W180:(107,72177)"
+   ],
+   "tests": "89/89 actinv-data unit tests incl. lumped_channels_synthesize_only_when_summary_coverage_is_absent; fmt+clippy clean"
   },
-  "measured_effect": {
-    "shutdown_activity_ratio_alara_over_actinv": {
-      "p38": "1.05x-200x (median ~6x FNS, ~30-90x IRDFF)",
-      "p39": "0.98x-1.10x across all 36 sampled cases"
-    },
-    "late_cooling_ratio": "unchanged 0.995-1.011 on ~90% of cases",
-    "residual_divergences": [
-      "uniform ~9-10% ALARA-higher shutdown activity under the IRDFF fast spectrum - a smaller, different divergence class (likely MT5/multi-particle or branching-path content, unclassified)",
-      "fe_mo100000wppm irdff late-time 17.5x unchanged - impurity-dominated late activity, mechanism not lumped-related"
-    ]
+  "g2": {
+   "status": "executed_with_findings",
+   "executed_sample": 36,
+   "tolerance_pass": 0,
+   "tolerance_fail": 36,
+   "arm_failures": 0,
+   "evidence": "results/g2_p39_leg.json + g2_p39_leg_ledger.jsonl"
   },
-  "conditions": [
-    "synthesized rows carry lfs=0: excitation-level branching to residual isomers is summed into the ground-state product, matching REAC lumped semantics; isomer-split production is not attributed and is a named refinement",
-    "the frozen 5e-4 tolerance still fails on all 36 cases - residual ~2-10% divergences and the Mo outlier are open divergence classes, not solver disagreement claims",
-    "Ta180m carries pre-existing duplicate sentinel rows (11/33/42, zap=0) unchanged from p38 - not a P39 regression, separately ledgered",
-    "synthesis is additive only: zero p38 rows removed or altered",
-    "all five defect evaluations still reject under the p39 binary"
-  ],
-  "claims": {
-    "coverage_gap_closed": "the dominant lumped-channel gap measured at P38 is closed: 13 canonical-MT rows synthesized across 9 targets including Fe56(n,p)->Mn-56 and Mn55(n,alpha)->V-52",
-    "comparison_improved": "identical-data shutdown ratios moved from 6-200x to 0.98-1.10 - the leg now measures residual channel-content divergence, not a coverage void",
-    "not_solver_validation": "remaining differences are data-path divergences; no equivalence or solver-superiority claim follows"
+  "g3": {
+   "status": "pass",
+   "evidence": "results/g3_p39_check.json"
+  },
+  "g4": {
+   "status": "this_file"
   }
+ },
+ "measured_effect": {
+  "shutdown_activity_ratio_alara_over_actinv": {
+   "p38": "1.05x-200x (median ~6x FNS, ~30-90x IRDFF)",
+   "p39": "0.98x-1.10x across all 36 sampled cases"
+  },
+  "late_cooling_ratio": "unchanged 0.995-1.011 on ~90% of cases",
+  "residual_divergences": [
+   "uniform ~9-10% ALARA-higher shutdown activity under the IRDFF fast spectrum - a smaller, different divergence class (likely MT5/multi-particle or branching-path content, unclassified)",
+   "fe_mo100000wppm irdff late-time 17.5x unchanged - impurity-dominated late activity, mechanism not lumped-related"
+  ]
+ },
+ "conditions": [
+  "synthesized rows carry lfs=0: excitation-level branching to residual isomers is summed into the ground-state product, matching REAC lumped semantics; isomer-split production is not attributed and is a named refinement",
+  "the frozen 5e-4 tolerance still fails on all 36 cases - residual ~2-10% divergences and the Mo outlier are open divergence classes, not solver disagreement claims",
+  "Ta180m carries pre-existing duplicate sentinel rows (11/33/42, zap=0) unchanged from p38 - not a P39 regression, separately ledgered",
+  "synthesis is additive only: zero p38 rows removed or altered",
+  "all five defect evaluations still reject under the p39 binary"
+ ],
+ "claims": {
+  "coverage_gap_closed": "the dominant lumped-channel gap measured at P38 is closed: 13 canonical-MT rows synthesized across 9 targets including Fe56(n,p)->Mn-56 and Mn55(n,alpha)->V-52",
+  "comparison_improved": "identical-data shutdown ratios moved from 6-200x to 0.98-1.10 - the leg now measures residual channel-content divergence, not a coverage void",
+  "not_solver_validation": "remaining differences are data-path divergences; no equivalence or solver-superiority claim follows"
+ },
+ "residual_classification": {
+  "isomer_branching": {
+   "mechanism": "ALARA emits Mn-58m1 (193 Bq of ~1787 Bq total = ~10.8% at t=0 under IRDFF); FENDL-3.2c Mn-55 carries NO (n,2n)->Mn-58m carrier - its MF8/10 isomer states exist only for MT30/MT37, and MF6 MT16 subsections are all emitted-neutron (ZAP=1) distributions",
+   "source": "ALARA's Mn58m1 arises from REAC-library isomer-split heritage - data not present in the identical FENDL input",
+   "consequence": "the ~9-10% uniform IRDFF shutdown residual is dominated by this isomer branch; it is a representation floor the identical-data arm cannot cross for isomer-active channels without importing non-FENDL isomer data, which would itself break the identical-data premise",
+   "evidence": "p38-run/fendl-p38/Mn55.tendl MF6/MT16 (NK=3, all ZAP=1); MF8 MT30/MT37 LFS records; g2_p39_leg_ledger.jsonl fe_mn1000wppm__irdff_sp_mat9861_709__60s"
+  },
+  "mo_late_time_outlier": {
+   "case": "fe_mo100000wppm__irdff_sp_mat9861_709__60s",
+   "ratio": "ALARA/ACTINV = 17.5x at 9y cooling (unchanged p38->p39)",
+   "mechanism": "unclassified - impurity-dominated late activity on a non-lumped path; the only sampled case with a late-time divergence >1.2x"
+  }
+ }
 }
