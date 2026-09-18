@@ -527,6 +527,27 @@ the Mo-98 atoms. Recorded in `results/verdict_p39.json`
 `residual_classification`. The identical-data arm's remaining
 divergence is a named representation floor, not an open coverage gap.
 
+**P40 execution entry (2026-09-18).** P40 (scoped identical-data
+equivalence under named representation floors) closed `P40-CONDITIONAL`:
+a 184-case census — every impurity element x wppm{1000,100000} x both
+spectra x all five irradiations + base cases — executed with **zero arm
+failures**. Full per-nuclide activity vectors were recovered per arm and
+every divergence class-tagged: `isomer_branching` (Mn58m1 in all 184,
+Nb93m1, Co60m1, Tc99m1...) and `quasi_stable_convention` (V50, Mo92,
+Mo98, Zr96, Cr50) are representational floors — ALARA's REAC-heritage
+isomer splits and quasi-stable half-life conventions are absent from the
+identical FENDL input and cannot be closed without breaking the
+identical-data premise. The pre-registered `other` rule fired (8.7% of
+cases exceed 1%), forcing two named OPEN classes:
+`short_lived_products_absent_in_actinv` (Ti55/V55/Ti53/Cr57/Mn59) and
+`common_nuclide_magnitude` (Cr51, Fe59, Cr55, Mn57, Fe53 — 2-30% gaps on
+shared channels). Scoped result: on class-cleaned channels the arms'
+total activity agrees to a median of 1.06%, p90 3.5%, worst 6.1% —
+versus 16.5x worst-case uncleaned. This is a measured residual over the
+census, not solver validation (`results/verdict_p40.json`,
+`results/g2_p40_classes.json`, `controls/g2_p40_classes.py`,
+`controls/check_g{3,4}_p40.py`, `protocols/ACTINV-P40_PROTOCOL.md`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

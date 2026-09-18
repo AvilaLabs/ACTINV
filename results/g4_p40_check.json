@@ -1,0 +1,44 @@
+{
+ "schema": "actinv-p40-g4-1",
+ "checks": [
+  {
+   "name": "disposition_scoped",
+   "claim": "verdict is conditional, not pass",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "g3_green",
+   "claim": "classifier negative controls all pass",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "census_complete",
+   "claim": "184/184 cases classified, zero skips",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "arm_failures_zero",
+   "claim": "no arm failures in the census",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "open_classes_named",
+   "claim": "pre-registered rule 2 fired: 'other'>1% on >5% of cases is named as open classes, not folded into floors",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "no_overclaim",
+   "claim": "claims carry no validation/release language",
+   "pass": true,
+   "detail": {
+    "hits": []
+   }
+  }
+ ],
+ "all_pass": true
+}

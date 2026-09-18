@@ -1,0 +1,50 @@
+{
+ "schema": "actinv-p40-g3-1",
+ "checks": [
+  {
+   "name": "nc_classify_isomer",
+   "claim": "'XxNm1' names tag isomer_branching",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "nc_classify_quasi",
+   "claim": "Mo98 (t_half=3.16e21s in idx) tags quasi_stable",
+   "pass": true,
+   "detail": {
+    "idx_t_half": 3.15569e+21
+   }
+  },
+  {
+   "name": "nc_classify_other",
+   "claim": "real radioactive nuclides (Ni59, t~76ky) tag other",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "nc_stable_is_other",
+   "claim": "stable nuclides (hl=None) are not quasi_stable",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "nc_zlabel_resolve",
+   "claim": "'Z22-51'->Ti51, 'Z43-99m'->Tc99m1, 'Z1-3'->H3",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "nc_zlabel_isomer",
+   "claim": "resolved Z-label isomers tag isomer_branching",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "nc_kza_encoding",
+   "claim": "kza_of('Mn58m1') == 250581 and kza_of('Mo98') == 420980",
+   "pass": true,
+   "detail": {}
+  }
+ ],
+ "all_pass": true
+}
