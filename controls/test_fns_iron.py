@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Unit/time/coverage and failure-path controls for the public iron example."""
 import copy
+import hashlib
+import io
 import json
 import math
 from pathlib import Path
@@ -74,6 +76,24 @@ class IronTests(unittest.TestCase):
             path.write_text("changed")
             with self.assertRaises(ValueError):
                 benchmark.pinned(path, "0" * 64)
+
+    def test_download_identification_and_verification(self):
+        content = b"public archive fixture"
+        case = {"archive_url": "https://example.invalid/fns.zip",
+                "archive_sha256": hashlib.sha256(content).hexdigest()}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "fns.zip"
+            with patch.object(benchmark.urllib.request, "urlopen", return_value=io.BytesIO(content)) as fetch:
+                benchmark.fetch_archive(path, case)
+                request = fetch.call_args.args[0]
+                self.assertTrue(request.get_header("User-agent").startswith("ACTINV-FNS-Iron/"))
+                self.assertEqual(fetch.call_args.kwargs["timeout"], 60)
+            self.assertEqual(path.read_bytes(), content)
+            path.unlink()
+            with patch.object(benchmark.urllib.request, "urlopen", return_value=io.BytesIO(b"wrong")):
+                with self.assertRaises(ValueError):
+                    benchmark.fetch_archive(path, case)
+            self.assertFalse(path.exists())
 
     def test_timeout_and_child_failure_cannot_reuse_stale_result(self):
         for error in (subprocess.TimeoutExpired("actinv", 180), subprocess.CalledProcessError(1, "actinv")):

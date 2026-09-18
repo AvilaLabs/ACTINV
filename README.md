@@ -270,6 +270,9 @@ chemical form, aerosol class, or safety margin for you.
 
 The repository carries executable controls and compact evidence for every release phase. Highlights include:
 
+For a complete measured-data example, see the [FNS iron decay-heat case](examples/fns_iron/README.md):
+download verified inputs, run the CLI, and compare all twenty experimental measurements with a table and plot.
+
 - 132 IAEA FNS decay-heat experiments across 73 materials;
 - independent decay-photon, transport-import, fission-yield, pulse-history, and mesh checks;
 - complete deterministic TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 library builds;

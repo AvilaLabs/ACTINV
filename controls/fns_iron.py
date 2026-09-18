@@ -73,7 +73,9 @@ def fetch_archive(path, case):
     # Fixed public URL, bounded download, verified before publishing. No archive extraction.
     with tempfile.TemporaryDirectory(dir=path.parent, prefix="fns-download-") as directory:
         part = Path(directory) / "fns.zip"
-        with urllib.request.urlopen(case["archive_url"], timeout=60) as response, part.open("wb") as output:
+        request = urllib.request.Request(case["archive_url"], headers={
+            "User-Agent": "ACTINV-FNS-Iron/1 (+https://github.com/AvilaLabs/ACTINV)"})
+        with urllib.request.urlopen(request, timeout=60) as response, part.open("wb") as output:
             size = 0
             for block in iter(lambda: response.read(1024 * 1024), b""):
                 size += len(block)
