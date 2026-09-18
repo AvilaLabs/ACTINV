@@ -548,6 +548,22 @@ census, not solver validation (`results/verdict_p40.json`,
 `results/g2_p40_classes.json`, `controls/g2_p40_classes.py`,
 `controls/check_g{3,4}_p40.py`, `protocols/ACTINV-P40_PROTOCOL.md`).
 
+**P40 mechanism addendum (2026-09-18).** Root mechanisms for both
+open classes resolved to structure, not channel defects: ALARA's
+library covers **4036 nuclides vs ACTINV's 31-target artifact** —
+product-on-product reactions and product burn-out exist only in
+ALARA's chain-complete library. `short_lived_products_absent` splits
+into decay-file gaps (channel rows exist — Cr54 MT111->Ti-53, Fe58
+MT111->Cr-57 — but Cr-57 is absent from BOTH decay files and Ti-53/V-55
+from ENDF-B primary; products without decay data are dropped
+fail-closed at solve time) and second-order channels on non-artifact
+parents (Fe-59(n,p)->Mn-59). `common_nuclide_magnitude` reflects
+burn-out/decay-feed asymmetries (Cr-55 systematically ACTINV-low;
+Mn-58/Fe-53/Mn-57 systematically ACTINV-high). The identical-data arm
+is saturated: remaining divergence is bounded by chain coverage
+(FENDL-3.2c does not evaluate the product nuclides) and decay-file
+coverage — data-availability limits, not ACTINV channel defects.
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

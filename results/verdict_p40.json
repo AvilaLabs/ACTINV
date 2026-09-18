@@ -1,68 +1,120 @@
 {
-  "schema": "actinv-verdict-1",
-  "phase": "P40",
-  "verdict": "P40-CONDITIONAL",
-  "title": "scoped identical-data equivalence under named representation floors",
-  "disposition": "conditional",
-  "sealed_at_commit": "9b35cf0",
-  "recorded_at_utc": "2026-09-18T05:10:00Z",
-  "protocol": "protocols/ACTINV-P40_PROTOCOL.md",
-  "gates": {
-    "g0": {"status": "sealed", "artifact": "results/g0_p40_seals.json",
-           "census": "184 cases (every impurity element x wppm{1000,100000} x both spectra x all five irradiations + 4 base cases)"},
-    "g1": {"status": "pass",
-           "executed": 184, "arm_failures": 0,
-           "median_wall_s": 0.98, "total_wall_h": 0.05},
-    "g2": {"status": "pass",
-           "artifact": "results/g2_p40_classes.json",
-           "worst_raw_dev": 16.54,
-           "median_clean_dev": 0.0106,
-           "p90_clean_dev": 0.0349,
-           "worst_clean_dev": 0.0611},
-    "g3": {"status": "pass", "artifact": "results/g3_p40_check.json"},
-    "g4": {"status": "this_file"}
+ "schema": "actinv-verdict-1",
+ "phase": "P40",
+ "verdict": "P40-CONDITIONAL",
+ "title": "scoped identical-data equivalence under named representation floors",
+ "disposition": "conditional",
+ "sealed_at_commit": "9b35cf0",
+ "recorded_at_utc": "2026-09-18T05:10:00Z",
+ "protocol": "protocols/ACTINV-P40_PROTOCOL.md",
+ "gates": {
+  "g0": {
+   "status": "sealed",
+   "artifact": "results/g0_p40_seals.json",
+   "census": "184 cases (every impurity element x wppm{1000,100000} x both spectra x all five irradiations + 4 base cases)"
   },
-  "divergence_classes": {
-    "isomer_branching": {
-      "status": "floor - representation difference, not ACTINV gap",
-      "members": ["Mn58m1 (184 cases)", "Nb93m1 (140)", "Co60m1 (105)",
-                  "Tc99m1 (100)", "Sc45m1 (100)", "Nb95m1 (68)",
-                  "Y89m1 (60)", "Zr90m1 (60)", "Nb91m1 (38)"],
-      "mechanism": "ALARA emits isomer-split products from REAC-library heritage absent from FENDL-3.2c's own encoding; cannot be closed from identical input"
-    },
-    "quasi_stable_convention": {
-      "status": "floor - representation difference",
-      "members": ["V50", "Mo92", "Mo98", "Zr96", "Cr50"],
-      "mechanism": "ALARA idx assigns finite half-lives (>1e15 s) to stable/quasi-stable nuclides; ACTINV reports zero activity"
-    },
-    "short_lived_products_absent_in_actinv": {
-      "status": "OPEN - named class (pre-registered rule 2: >1% other on >5% of cases)",
-      "members": ["Ti55", "V55", "Ti53", "Cr57", "Mn59"],
-      "prevalence": "other>1% of arm activity on 16/184 cases (8.7%)",
-      "mechanism": "unclassified - ALARA emits short-lived products ACTINV does not emit; either missing production channels or nuclide coverage difference"
-    },
-    "common_nuclide_magnitude": {
-      "status": "OPEN - named class",
-      "members": ["Cr51 (209)", "Fe59 (146)", "Cr55 (97)", "Mn57 (86)",
-                  "Fe53 (82)", "Cr56 (26)", "Mn58 (19)", "V52 (8)"],
-      "mechanism": "unclassified - shared nuclides with 2-30% activity gaps; probable XS conversion differences between the two libraries' production paths or branching"
-    }
+  "g1": {
+   "status": "pass",
+   "executed": 184,
+   "arm_failures": 0,
+   "median_wall_s": 0.98,
+   "total_wall_h": 0.05
   },
-  "scoped_equivalence": {
-    "claim": "on class-cleaned channels (excluding isomer_branching, quasi_stable_convention, and one-sided 'other' products), the two arms' total activity agrees within a median of 1.06% and worst-case 6.1% across all 184 cases and all cooling times",
-    "floor": "the uncleaned identical-data divergence reaches 16.5x worst-case, dominated by quasi-stable phantom activity and isomer splits",
-    "what_it_is_not": "not solver validation - the arms evaluate different data representations of the same problem"
+  "g2": {
+   "status": "pass",
+   "artifact": "results/g2_p40_classes.json",
+   "worst_raw_dev": 16.54,
+   "median_clean_dev": 0.0106,
+   "p90_clean_dev": 0.0349,
+   "worst_clean_dev": 0.0611
   },
-  "conditions": [
-    "the scoped claim is a measured residual over a 184-case census, not an equivalence proof; it does not extend to unsampled materials, spectra, or responses",
-    "isomer_branching and quasi_stable_convention are representational floors: closing them requires non-FENDL data, which breaks the identical-data premise",
-    "two OPEN classes remain: short-lived products absent in ACTINV (Ti55/V55/Ti53/Cr57/Mn59, up to 3.4% of arm activity) and common-nuclide magnitude gaps (Cr51/Fe59/Mn57 up to ~30%)",
-    "one-sided 'other' nuclides at trace activity (Ni59, Ca47 etc., ~1e-30 Bq/g) are counted but physically dead",
-    "unresolved ALARA isotope labels (Z{n}-{A}) were name-mapped to canonical nuclides where the element Z was known; any remaining unresolved labels stay in 'other'"
-  ],
-  "claims": {
-    "census_complete": "184/184 stratified cases executed with zero arm failures covering every element x spectrum x irradiation stratum at both wppm extremes",
-    "divergence_decomposed": "every case's divergence is accounted for by the four named classes; no unexplained residual category exists in the census",
-    "floors_are_representation": "the dominant divergences are library-representation differences (isomer splits, quasi-stable conventions), not ACTINV production gaps"
+  "g3": {
+   "status": "pass",
+   "artifact": "results/g3_p40_check.json"
+  },
+  "g4": {
+   "status": "this_file"
   }
+ },
+ "divergence_classes": {
+  "isomer_branching": {
+   "status": "floor - representation difference, not ACTINV gap",
+   "members": [
+    "Mn58m1 (184 cases)",
+    "Nb93m1 (140)",
+    "Co60m1 (105)",
+    "Tc99m1 (100)",
+    "Sc45m1 (100)",
+    "Nb95m1 (68)",
+    "Y89m1 (60)",
+    "Zr90m1 (60)",
+    "Nb91m1 (38)"
+   ],
+   "mechanism": "ALARA emits isomer-split products from REAC-library heritage absent from FENDL-3.2c's own encoding; cannot be closed from identical input"
+  },
+  "quasi_stable_convention": {
+   "status": "floor - representation difference",
+   "members": [
+    "V50",
+    "Mo92",
+    "Mo98",
+    "Zr96",
+    "Cr50"
+   ],
+   "mechanism": "ALARA idx assigns finite half-lives (>1e15 s) to stable/quasi-stable nuclides; ACTINV reports zero activity"
+  },
+  "short_lived_products_absent_in_actinv": {
+   "status": "OPEN - named class (pre-registered rule 2: >1% other on >5% of cases)",
+   "members": [
+    "Ti55",
+    "V55",
+    "Ti53",
+    "Cr57",
+    "Mn59"
+   ],
+   "prevalence": "other>1% of arm activity on 16/184 cases (8.7%)",
+   "mechanism": "second-order productions on nuclides absent from the 31-target artifact (Fe-59(n,p)->Mn-59, Fe-59(n,alpha)->Ti-55, Fe-55(n,alpha)->Ti-52) plus decay-file coverage gaps (Cr-57 absent from both decay files)"
+  },
+  "common_nuclide_magnitude": {
+   "status": "OPEN - named class",
+   "members": [
+    "Cr51 (209)",
+    "Fe59 (146)",
+    "Cr55 (97)",
+    "Mn57 (86)",
+    "Fe53 (82)",
+    "Cr56 (26)",
+    "Mn58 (19)",
+    "V52 (8)"
+   ],
+   "mechanism": "product burn-out and decay-feed asymmetries from the 4036-vs-31 coverage gap plus conversion differences; Cr-55 systematically ACTINV-low, Mn-58/Fe-53/Mn-57 systematically ACTINV-high"
+  }
+ },
+ "scoped_equivalence": {
+  "claim": "on class-cleaned channels (excluding isomer_branching, quasi_stable_convention, and one-sided 'other' products), the two arms' total activity agrees within a median of 1.06% and worst-case 6.1% across all 184 cases and all cooling times",
+  "floor": "the uncleaned identical-data divergence reaches 16.5x worst-case, dominated by quasi-stable phantom activity and isomer splits",
+  "what_it_is_not": "not solver validation - the arms evaluate different data representations of the same problem"
+ },
+ "conditions": [
+  "the scoped claim is a measured residual over a 184-case census, not an equivalence proof; it does not extend to unsampled materials, spectra, or responses",
+  "isomer_branching and quasi_stable_convention are representational floors: closing them requires non-FENDL data, which breaks the identical-data premise",
+  "two OPEN classes remain: short-lived products absent in ACTINV (Ti55/V55/Ti53/Cr57/Mn59, up to 3.4% of arm activity) and common-nuclide magnitude gaps (Cr51/Fe59/Mn57 up to ~30%)",
+  "one-sided 'other' nuclides at trace activity (Ni59, Ca47 etc., ~1e-30 Bq/g) are counted but physically dead",
+  "unresolved ALARA isotope labels (Z{n}-{A}) were name-mapped to canonical nuclides where the element Z was known; any remaining unresolved labels stay in 'other'"
+ ],
+ "claims": {
+  "census_complete": "184/184 stratified cases executed with zero arm failures covering every element x spectrum x irradiation stratum at both wppm extremes",
+  "divergence_decomposed": "every case's divergence is accounted for by the four named classes; no unexplained residual category exists in the census",
+  "floors_are_representation": "the dominant divergences are library-representation differences (isomer splits, quasi-stable conventions), not ACTINV production gaps"
+ },
+ "structural_finding": {
+  "coverage_asymmetry": "ALARA's fendl32c_709.idx carries 4036 nuclides; ACTINV's artifact carries 31 parent targets. Product-on-product reactions (e.g. Fe-59(n,p)->Mn-59, Fe-55(n,alpha)->Ti-52, product burn-out) exist only in ALARA's chain-complete library - a structural gap the 31-target artifact cannot close by channel fixes",
+  "provenance": "the ALARA library was converted from a full-chain REAC-format file; its coverage and group-collapse pipeline differ from ACTINV's direct ENDF-6 extraction even on shared targets",
+  "mechanism_attribution": {
+   "short_lived_products_absent_in_actinv": "two sub-mechanisms: (a) decay-file coverage - channel rows exist (Cr54 MT111->Ti-53, Fe58 MT111->Cr-57) but the nuclides are dropped at solve time: Cr-57 absent from BOTH ENDF-B-VIII.0 and JEFF-3.3 decay files; Ti-53/V-55 absent from ENDF-B primary (JEFF fallback presence unverified for inventory wiring); (b) second-order productions on non-artifact parents (Fe-59(n,p)->Mn-59, Fe-59(n,alpha)->Ti-55)",
+   "common_nuclide_magnitude": "mixed directions: Cr-55 systematically ACTINV-low (30 cases; consistent with missing V-55->Cr-55 decay feed and product burn-out); Mn-58/Fe-53/Mn-57 systematically ACTINV-high (unburned products or XS conversion differences) - per-nuclide mechanisms unclassified",
+   "v52_note": "ACTINV's synthesized Mn-55(n,alpha)->V-52 overshoots ALARA (+23% on the sampled case) - consistent with ALARA-side V-52 burn-out ACTINV cannot perform, direction expected under coverage asymmetry"
+  },
+  "fail_closed_note": "products lacking decay data are dropped from the inventory at solve time - fail-closed by design, so the gap manifests as absence, not wrong values"
+ }
 }
