@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Unit/time/coverage and failure-path controls for the public iron example."""
 import copy
+import csv
 import hashlib
 import io
 import json
@@ -110,6 +111,11 @@ class IronTests(unittest.TestCase):
 
     def test_recorded_mutations(self):
         original = json.loads(benchmark.RECORDED.read_text())
+        folder = benchmark.RECORDED.parent
+        self.assertEqual((folder / "comparison.md").read_text(), benchmark.report(original))
+        with (folder / "comparison.csv").open(newline="") as stream:
+            table = [{key: float(value) for key, value in row.items()} for row in csv.DictReader(stream)]
+        self.assertEqual(table, original["comparison"])
         benchmark.check_recorded(original, original)
         for mutation in ("heat", "units", "verdict", "summary", "hash"):
             changed = copy.deepcopy(original)

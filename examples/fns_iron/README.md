@@ -91,6 +91,15 @@ effects; it does not isolate solver error or establish a code ranking.
 
 ## Evidence and scope
 
+The first fresh CLI run completed successfully on GitHub. The geometric-mean
+calculated/measured ratio is **0.9263**, with pointwise ratios **0.8831–0.9623**.
+ACTINV underpredicts all twenty measurements by **3.77–11.69%**; **5/20**
+predictions lie inside the reported error bars. This is a documented systematic
+difference, not a passed experimental-accuracy gate. The
+[technical note](../../results/fns-iron-001/note.md) explains the result and its limits.
+
+![Predicted and measured iron decay heat](../../results/fns-iron-001/comparison.svg)
+
 The [frozen protocol](../../protocols/FNS-IRON-001.md) and [case metadata](case.json)
 precede fresh execution. See the [recorded comparison](../../results/fns-iron-001/comparison.md)
 and [machine-readable receipt](../../results/fns-iron-001/comparison.json).
