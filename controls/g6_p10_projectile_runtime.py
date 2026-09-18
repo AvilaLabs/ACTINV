@@ -103,6 +103,11 @@ def scrub_legacy_result(value):
 
 def canonical_result_hash(result: dict) -> str:
     value = copy.deepcopy(result)
+    # Canonical inactive P30 metadata is absent in the frozen P10 result.
+    # Retain every other value and every numerical output (amendment T).
+    assembly = value.get("ledger", {}).get("assembly", {})
+    if type(assembly.get("rate_scale")) is int and assembly["rate_scale"] == 0:
+        del assembly["rate_scale"]
     certificate = value.get("certificate", {})
     solver = certificate.get("solver")
     if not isinstance(solver, str) or not solver.startswith("actinv-core "):
@@ -127,6 +132,26 @@ def canonical_result_hash(result: dict) -> str:
         scrub_legacy_result(value), sort_keys=True, separators=(",", ":")
     ).encode()
     return hashlib.sha256(payload).hexdigest()
+
+
+def check_legacy_metadata_normalization() -> None:
+    baseline = {
+        "certificate": {"solver": "actinv-core 1.1.2",
+                        "tables_provenance": json.loads(TABLES.read_text())["source"]},
+        "ledger": {"assembly": {}}, "inventory": [1.0],
+    }
+    expected = canonical_result_hash(baseline)
+    for count in (0, 1, -1, True, 0.0, None, "0"):
+        changed = copy.deepcopy(baseline)
+        changed["ledger"]["assembly"]["rate_scale"] = count
+        matches = canonical_result_hash(changed) == expected
+        if matches != (type(count) is int and count == 0):
+            raise AssertionError("legacy rate-scale normalization erased a noncanonical value")
+    changed = copy.deepcopy(baseline)
+    changed["ledger"]["assembly"]["rate_scale"] = 0
+    changed["inventory"] = [2.0]
+    if canonical_result_hash(changed) == expected:
+        raise AssertionError("legacy normalization erased an inventory change")
 
 
 def run_cli(name: str, spec: dict) -> tuple[dict, Path]:
@@ -269,6 +294,7 @@ def checked_mesh_certificate(
 
 
 def main() -> int:
+    check_legacy_metadata_normalization()
     WORK.mkdir(parents=True, exist_ok=True)
     initial_atoms = 2.5e20
     flux = 1.0e20
@@ -539,6 +565,7 @@ def main() -> int:
             "normalized_result_sha256": legacy_hash,
             "expected_normalized_result_sha256": PRE_P10_NEUTRON_NORMALIZED_SHA256,
             "normalized_fields": [
+                "ledger.assembly.rate_scale exact integer zero (inactive P30 metadata)",
                 "top-level ms",
                 "working path",
                 "certificate.solver semantic version",
