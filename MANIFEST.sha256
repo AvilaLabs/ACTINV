@@ -1,6 +1,6 @@
 b4c319546effbc99a35f9e76615c750af569b5d4ccd33fe0e3ea40f3a4983f15  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
-30e6800ac5858a76f5dc2627c9aa761b5a0f0689742e16b15b05a75e27765451  ./.github/workflows/fns-iron.yml
+2f3859a3b7919cf0a7988233aabde76386c7a0d5619b809261f959a06e3f05fa  ./.github/workflows/fns-iron.yml
 912169790dca7f57e73cd78fd6110429a60b917aa2bde9a973dcde2adef85e30  ./.github/workflows/fusion-isotope.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
@@ -196,6 +196,7 @@ afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b  ./controls/fix
 3a66e633df8a5eb641eb9767fd4ee9653f10fa3df415626f73519f2c6b5537cc  ./controls/flag_library.py
 00ba0df782fb376ff32ef62f243032306576045b60d9c0ac903cbd46f9bbc23c  ./controls/fns_compare_libraries.py
 b8138886642399de431305403d22a9aef7b29c8b8b94d5a9dbe954b621d35b20  ./controls/fns_iron.py
+d13ec5a0e1f071c95171eb49949879247705c19bb611abb6bf7051c68fe5d086  ./controls/fns_iron_diagnose.py
 b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns_report.py
 7318fb3b48f2185c1891faaa6fe042e6cd91f98b6d6142a783e8811eebebbccd  ./controls/fusion_isotope_chain.py
 206110d876fee10df20e5eb9373006b72fe001002e2fe954a7dd09d508206077  ./controls/g0_cram_coefficients.py
@@ -439,6 +440,7 @@ cf815cf58389f4a2fcd16685f091c697825de05bf39c6dcc311537c8a0e90823  ./controls/ten
 7665d438efc077633831b79b81cf9296ba8032ab2d1e34583a0c11465d2d2b2e  ./controls/test_check_p12.py
 e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/test_ci_result.py
 3e57c7b07c7134578b6f61f9e1c00db04d4d3da61f26acd0335449a490c2d2b0  ./controls/test_fns_iron.py
+07df3d3c6f2b2452d9d37b58e563513de6e2d5a8fcc2100a200d378233acea0b  ./controls/test_fns_iron_diagnose.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
 c4f30f9bd696f2b4a1bd44574e28243f28dff58ad3898dbf24610c5462b326a3  ./controls/test_fusion_isotope_chain.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
@@ -731,6 +733,7 @@ d6353d29934e0b980955bdba3c6938473dbd6fd0e1c1bf0107e07bbadbddf7df  ./protocols/DR
 17c009da211f1017ecb9f421ca3c66880dfe707b1ca669b6bc4971ff2e3d33bc  ./protocols/DRAFT-P4b_PROTOCOL.md
 810009b2f4e4c47b1b2f87a1720a19fc79c0dfa791d371fbfdd7120e8a007811  ./protocols/DRAFT-P5_PROTOCOL.md
 4a9203cb5bc1be9d39cb7419cfacabbba552293510699d8b569183a9d56da01d  ./protocols/FNS-IRON-001.md
+07c7e5002801f2bcc4c6d9fb73a2afafb18d06196cdda6610e071a5b77aad52a  ./protocols/FNS-IRON-DIAG-001.md
 a3f3259c4f805d3c0e9250030e467ce4c13466a4a987fed4f1b7674400919cf8  ./protocols/FUSION-ISOTOPE-001-AMENDMENT-1.md
 99514a0e323a4a059401227ee95f67acceb8c72fcbba6c25038c7c7ac3d74d0b  ./protocols/FUSION-ISOTOPE-001.md
 df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HYPERION-NUMERICS-2026-09-15.md
