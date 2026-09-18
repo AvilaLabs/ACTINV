@@ -527,6 +527,45 @@ the Mo-98 atoms. Recorded in `results/verdict_p39.json`
 `residual_classification`. The identical-data arm's remaining
 divergence is a named representation floor, not an open coverage gap.
 
+**P40 execution entry (2026-09-18).** P40 (scoped identical-data
+equivalence under named representation floors) closed `P40-CONDITIONAL`:
+a 184-case census — every impurity element x wppm{1000,100000} x both
+spectra x all five irradiations + base cases — executed with **zero arm
+failures**. Full per-nuclide activity vectors were recovered per arm and
+every divergence class-tagged: `isomer_branching` (Mn58m1 in all 184,
+Nb93m1, Co60m1, Tc99m1...) and `quasi_stable_convention` (V50, Mo92,
+Mo98, Zr96, Cr50) are representational floors — ALARA's REAC-heritage
+isomer splits and quasi-stable half-life conventions are absent from the
+identical FENDL input and cannot be closed without breaking the
+identical-data premise. The pre-registered `other` rule fired (8.7% of
+cases exceed 1%), forcing two named OPEN classes:
+`short_lived_products_absent_in_actinv` (Ti55/V55/Ti53/Cr57/Mn59) and
+`common_nuclide_magnitude` (Cr51, Fe59, Cr55, Mn57, Fe53 — 2-30% gaps on
+shared channels). Scoped result: on class-cleaned channels the arms'
+total activity agrees to a median of 1.06%, p90 3.5%, worst 6.1% —
+versus 16.5x worst-case uncleaned. This is a measured residual over the
+census, not solver validation (`results/verdict_p40.json`,
+`results/g2_p40_classes.json`, `controls/g2_p40_classes.py`,
+`controls/check_g{3,4}_p40.py`, `protocols/ACTINV-P40_PROTOCOL.md`).
+
+**P40 mechanism addendum (2026-09-18).** Root mechanisms for both
+open classes resolved to structure, not channel defects: ALARA's
+library covers **4036 nuclides vs ACTINV's 31-target artifact** —
+product-on-product reactions and product burn-out exist only in
+ALARA's chain-complete library. `short_lived_products_absent` splits
+into decay-file gaps (channel rows exist — Cr54 MT111->Ti-53, Fe58
+MT111->Cr-57 — but Cr-57 is absent from BOTH decay files and Ti-53/V-55
+from ENDF-B primary; products without decay data are dropped
+fail-closed at solve time) and second-order channels on non-artifact
+parents (Fe-59(n,p)->Mn-59), and threshold-blocked channels — the only
+artifact rows for Ti-53/Cr-57 are MT111 (n,2p) at ~20 MeV, above both
+spectra, so ACTINV correctly produces none. `common_nuclide_magnitude`
+reflects burn-out/decay-feed asymmetries (Cr-55 systematically
+ACTINV-low; Mn-58/Fe-53/Mn-57 systematically ACTINV-high). The identical-data arm
+is saturated: remaining divergence is bounded by chain coverage
+(FENDL-3.2c does not evaluate the product nuclides) and decay-file
+coverage — data-availability limits, not ACTINV channel defects.
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

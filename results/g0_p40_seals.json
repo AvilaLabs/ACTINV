@@ -1,0 +1,21 @@
+{
+ "schema": "actinv-p40-g0-1",
+ "protocol": "protocols/ACTINV-P40_PROTOCOL.md",
+ "sealed_at_commit": "9b35cf0462d421e7d24685c742de7f87a67f647c",
+ "census_size": 184,
+ "census_sha256": "912034ba493e7f8d66f85b5013d57664635a4a0eff618859ffcffcb25bd85f5e",
+ "artifact": "actinv_fendl32c_709_p39.npz",
+ "artifact_sha256": "18547cc311560f29ed20a4e553427f238d046046461feaf7bfbec8adf298e097",
+ "expectations": [
+  "every case's divergence decomposes into isomer_branching / quasi_stable_convention / other; 'other' is quantified, never assumed zero",
+  "'other' >1% of arm total on >5% of cases forces the nuclide/path into named open classes",
+  "scoped claim reports measured medians/maxima per response; no unmeasured equivalence",
+  "isomer_branching expected dominant under IRDFF at shutdown (~11% on Mn-58m1 sampled); deviations are findings",
+  "census bounded to 184 cases; arm failures recorded not skipped"
+ ],
+ "classes": {
+  "isomer_branching": "ALARA metastable label (mN suffix) absent from ACTINV emission",
+  "quasi_stable_convention": "ALARA idx half-life finite but >1e15 s",
+  "other": "all remaining divergence incl. ACTINV-only nuclides and common-nuclide magnitude gaps"
+ }
+}
