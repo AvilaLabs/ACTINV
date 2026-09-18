@@ -1,0 +1,48 @@
+{
+ "schema": "actinv-p37-g3-1",
+ "n_controls": 8,
+ "n_pass": 8,
+ "all_pass": true,
+ "results": [
+  {
+   "control": "all 12 entries cite sealed, present files",
+   "pass": true,
+   "detail": "missing=[]"
+  },
+  {
+   "control": "phantom file is evidence_missing, not classified",
+   "pass": true,
+   "detail": "Cr55.tendl absent from seal and disk"
+  },
+  {
+   "control": "every entry carries evidence and a check_site",
+   "pass": true,
+   "detail": "no-evidence=[] no-site=[]"
+  },
+  {
+   "control": "every check_site resolves to an existing source line",
+   "pass": true,
+   "detail": "bad=[]"
+  },
+  {
+   "control": "all labels inside the declared enum",
+   "pass": true,
+   "detail": "bad=[]"
+  },
+  {
+   "control": "true_defect entries cite quantitative file-internal contradictions",
+   "pass": true,
+   "detail": "weak=[]"
+  },
+  {
+   "control": "actinv_strictness entries cite an ENDF-legality/convention argument",
+   "pass": true,
+   "detail": "weak=[]"
+  },
+  {
+   "control": "identical_data_arm records it remains blocked",
+   "pass": true,
+   "detail": "Remains blocked. Relaxing the strictness class (8 files) would admit at most Cr50/52/53/54"
+  }
+ ]
+}

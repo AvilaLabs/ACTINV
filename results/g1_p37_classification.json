@@ -1,0 +1,157 @@
+{
+ "schema": "actinv-p37-classification-1",
+ "phase": "P37",
+ "sealed_files": "results/g0_p37_seals.json",
+ "labels_enum": [
+  "true_defect",
+  "actinv_strictness",
+  "ambiguous"
+ ],
+ "entries": [
+  {
+   "file": "Cr50.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1692",
+   "rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=10 MT17 product record IZAP=24048, QM=-2.3581e7 eV: Cr-48 via (n,3n) on Cr-50 \u2014 physically consistent channel, threshold matches",
+    "MF=3 MT17 absent from the file; ENDF-6 does not require MF=3 for every MF=10 section",
+    "ALARA's convert_lib decoded the same file into 16 physically correct daughters (240510 via 2n etc.) \u2014 the file is parseable and its products are real nuclides"
+   ],
+   "note": "Activation-oriented files lawfully ship MF=10 production partials for high-threshold multi-nucleon channels without MF=3 transport totals. ACTINV's demand for an MF=3 comparator is a stricter-than-ENDF contract, correct under TENDL-paradigm assumptions but not an ENDF requirement."
+  },
+  {
+   "file": "Cr52.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1692",
+   "rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=10 MT17 product IZAP=24050, QM=-2.1301e7 eV: Cr-50 via (n,3n) \u2014 threshold and product correct for MT17=(n,3n)",
+    "MF=10 MT37 product IZAP=24049, QM=-3.43e7 eV: Cr-49 via (n,4n) \u2014 consistent",
+    "MF=3 MT17 absent; ENDF-6 legal; ALARA decoded 16 correct daughters (240510 via 2n, 240530 via g)"
+   ],
+   "note": "Same class as Cr50. Initial inspection read MT17 as (n,2n); ENDF-6 MT17 is (n,3n) and the file is correct."
+  },
+  {
+   "file": "Cr53.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1692",
+   "rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=10 MT17 product IZAP=24051, QM=-1.9978e7 eV: Cr-51 via (n,3n) on Cr-53 \u2014 consistent with ENDF-6 MT17=(n,3n)",
+    "MF=3 MT17 absent; ENDF-6 does not require MF=3 for every MF=10 section \u2014 the activation file lawfully carries production-only channels"
+   ],
+   "note": "Same MF=10-only activation-channel class as Cr50/Cr52; ENDF-6 legal."
+  },
+  {
+   "file": "Cr54.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1692",
+   "rejection": "MT17/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=10 MT17 product IZAP=24052, QM=-1.7657e7 eV: Cr-52 via (n,3n) on Cr-54 \u2014 consistent with ENDF-6 MT17=(n,3n)",
+    "MF=3 MT17 absent; ENDF-6 does not require MF=3 for every MF=10 section"
+   ],
+   "note": "Same MF=10-only activation-channel class as Cr50/Cr52; ENDF-6 legal."
+  },
+  {
+   "file": "Fe57.tendl",
+   "check_site": "crates/actinv-data/src/resonance.rs:459",
+   "rejection": "MAT=2634/MF=2/MT=151: invalid RML particle pair for MT=2",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=2 MT=151 LRF=7 particle-pair records (lines 975-984): pair for MT=2 carries IA=0.5, IB=-0.5",
+    "ENDF-6 RML (LRF=7) encodes parity in the sign of the spin fields \u2014 IB=-0.5 is legal ENDF-6 meaning spin 1/2 odd parity",
+    "ACTINV's validator requires spin_a>=0 and spin_b>=0, rejecting the parity-encoding convention outright"
+   ],
+   "note": "The file is legal ENDF-6 RML; ACTINV's pair validator does not implement the sign-of-spin parity convention."
+  },
+  {
+   "file": "Mn55.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1692",
+   "rejection": "MT30/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=10 MT30 products IZAP=21046 (Sc-46) ground+isomer, QM=-2.8868e7 eV \u2014 consistent with the (n,2n+2alpha) channel on Mn-55; MF=3 MT30 absent; ENDF-6 does not require MF=3 for every MF=10 section"
+   ],
+   "note": "Same MF=10-only activation-channel class; ENDF-6 legal."
+  },
+  {
+   "file": "Ni62.tendl",
+   "check_site": "crates/actinv-data/src/resonance.rs:139",
+   "rejection": "MAT=2837/MF=2/MT=151: Breit-Wigner total width 1.882601 is below component sum 1882.6008 for LRX=0 (GN=1880, GG=2.6008, GF=0)",
+   "label": "true_defect",
+   "evidence": [
+    "Resonance record (line 2832): ER=4540, J=0.5, GT=1.882601, GN=1880.0, GG=2.6008, GF=0",
+    "Component sum = 1882.6008; GT = 1.882601 \u2014 exactly 1000x smaller, a keV-vs-eV unit mix inside the file",
+    "ENDF-6 requires GT = GN+GG+GF(+GFA+GFB); the file violates this by a factor of 1000"
+   ],
+   "note": "The file literally contradicts ENDF-6 width conservation in units. ACTINV's rejection is correct; the defect is in the source evaluation."
+  },
+  {
+   "file": "W180.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1692",
+   "rejection": "MT44/MF=10 state partials have no matching MF=3 total or total-fission sentinel; conservation is unproven",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=10 MT44 product IZAP=72178, QM=-1.1776e7 eV (first MF=10 MT44 product); MF=3 MT44 absent \u2014 same activation-channel pattern; ENDF-6 does not require MF=3 for every MF=10 section"
+   ],
+   "note": "Same class."
+  },
+  {
+   "file": "W182.tendl",
+   "check_site": "crates/actinv-data/src/activation.rs:454",
+   "rejection": "MAT=7431/MF=2/MT=151: MF=2 ZA/AWR 74182/180.3852 disagree with MF=1 74182/180.385",
+   "label": "true_defect",
+   "evidence": [
+    "MF=1 HEAD (line 2): ZA=74182, AWR=180.3850",
+    "MF=2 HEAD (line 870): ZA=74182, AWR=180.3852",
+    "The file carries two different AWR values for the same material \u2014 a self-inconsistency in the source"
+   ],
+   "note": "The mismatch is small (1.1e-6 relative) and a tolerance-based check would also be defensible, but the file does literally contradict itself. ACTINV's exact-comparison check is correct as implemented."
+  },
+  {
+   "file": "W183.tendl",
+   "check_site": "crates/actinv-data/src/resonance.rs:459",
+   "rejection": "MAT=7434/MF=2/MT=151: invalid RML particle pair for MT=2",
+   "label": "actinv_strictness",
+   "evidence": [
+    "MF=2 MT=151 LRF=7 pairs (lines 881-886): MT=2 pair carries IA=0.5, IB=-0.5",
+    "Same parity-in-spin-sign ENDF-6 convention as Fe57"
+   ],
+   "note": "Same class as Fe57."
+  },
+  {
+   "file": "W184.tendl",
+   "check_site": "crates/actinv-data/src/activation.rs:454",
+   "rejection": "MAT=7437/MF=2/MT=151: MF=2 ZA/AWR 74184/182.37 disagree with MF=1 74184/182.371",
+   "label": "true_defect",
+   "evidence": [
+    "MF=1 HEAD (line 2): ZA=74184, AWR=182.3710",
+    "MF=2 HEAD (line 763): ZA=74184, AWR=182.3700",
+    "Same self-inconsistent AWR authoring as W182"
+   ],
+   "note": "Same class as W182."
+  },
+  {
+   "file": "W186.tendl",
+   "check_site": "crates/actinv-data/src/builder.rs:1061",
+   "rejection": "MAT=7443 MF=10 ZAP=74185 group 593: emitted state sum exceeds runtime total by relative excess 4.165157e-3 (outside the frozen 0.001 standard envelope); construction fails closed",
+   "label": "true_defect",
+   "evidence": [
+    "Independent energy-matched comparison: MF=10 MT16 (n,2n) state sum exceeds MF=3 MT16 total by 5.09e-2 at E=8.0 MeV (MF3 total 0.38233 b vs MF10 sum 0.40177 b on the shared grid)",
+    "The excess is real and larger than the collapsed value ACTINV reported \u2014 the file's state partials genuinely exceed its own total"
+   ],
+   "note": "The file's MF=10 partials exceed its MF=3 total \u2014 an internal conservation violation in the source evaluation. ACTINV's rejection is correct."
+  }
+ ],
+ "histogram": {
+  "true_defect": 4,
+  "actinv_strictness": 8,
+  "ambiguous": 0
+ },
+ "identical_data_arm": {
+  "consequence": "Remains blocked. Relaxing the strictness class (8 files) would admit at most Cr50/52/53/54, Fe57, Mn55, W180, W183 -> 32/36 parents; Ni62, W182, W184, W186 are genuine source defects that no lawful parser change admits without an unrecorded scientific modification of the data. The arm needs either upstream correction of those four evaluations or a documented, protocol-governed source-normalization pass.",
+  "relaxation_note": "The strictness class is a deliberate ACTINV contract (conservation anchored to an independent total). A lawful relaxation \u2014 e.g., extending the MT18 self-comparator amendment to non-fission MTs \u2014 is a separate phase decision with its own protocol; nothing in this classification compels it."
+ }
+}

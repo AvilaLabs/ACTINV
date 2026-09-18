@@ -1,0 +1,80 @@
+{
+ "files": {
+  "Cr50.tendl": {
+   "bytes": 10104428,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Cr50.tendl",
+   "sha256": "2805b0e7bdad41e05bd6895cd6c1a3601c9615d9b534e39013a0e92f167b976b"
+  },
+  "Cr52.tendl": {
+   "bytes": 9486396,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Cr52.tendl",
+   "sha256": "684632c08504c935c1b3da0c8a98a5c1cba2255e341eaa4775feddcb196065d2"
+  },
+  "Cr53.tendl": {
+   "bytes": 8897852,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Cr53.tendl",
+   "sha256": "e3826d1294b3739f320f5d3a6b55c0e06aada04a4b59d265239e8298b8f9ac75"
+  },
+  "Cr54.tendl": {
+   "bytes": 9020820,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Cr54.tendl",
+   "sha256": "93df3576170d02ada06008591b3eebbff241f8ff90182840a9df94c32cbc7664"
+  },
+  "Fe57.tendl": {
+   "bytes": 13671322,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Fe57.tendl",
+   "sha256": "8a3e5566979b1324b13bf2822f712203b791a37b6d81e60f1f2fcd39b91ddeed"
+  },
+  "Mn55.tendl": {
+   "bytes": 6283818,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Mn55.tendl",
+   "sha256": "d9d3564dd2043fb4f8e249d42f7995922860bce8bef5e9c272848aa5332587c7"
+  },
+  "Ni62.tendl": {
+   "bytes": 1842749,
+   "path": "nuclear-data/p26b-work/failed-nuclides/Ni62.tendl",
+   "sha256": "56f030009ca12a84450ebbcd210041f9b04d5a183e2daf21123235bb5bfa5250"
+  },
+  "W180.tendl": {
+   "bytes": 9155105,
+   "path": "nuclear-data/p26b-work/failed-nuclides/W180.tendl",
+   "sha256": "5c3925bc53ed1188b40029a8c1693b37607a107486ec10e3a26d037fb79d3eb1"
+  },
+  "W182.tendl": {
+   "bytes": 10821488,
+   "path": "nuclear-data/p26b-work/failed-nuclides/W182.tendl",
+   "sha256": "c3dc8fca21cf66eb681ce40553b839c532bf3180a76ea5faff68496b504a3a4d"
+  },
+  "W183.tendl": {
+   "bytes": 10795572,
+   "path": "nuclear-data/p26b-work/failed-nuclides/W183.tendl",
+   "sha256": "a250d937b3f0f69eddd85613878a5ed0fa851cb200a30373cf28c87fc1f0ce83"
+  },
+  "W184.tendl": {
+   "bytes": 7588752,
+   "path": "nuclear-data/p26b-work/failed-nuclides/W184.tendl",
+   "sha256": "a550106ce756908041fbaa0d55f1d9ea595e4901908ab39e8be35fd117c9fc90"
+  },
+  "W186.tendl": {
+   "bytes": 7970880,
+   "path": "nuclear-data/p26b-work/failed-nuclides/W186.tendl",
+   "sha256": "bf6bf3bb7a1583be49ae8aab865e75d256e0965f969f38a14d63260b3f4a8744"
+  }
+ },
+ "phase": "P37",
+ "prior_leg": {
+  "contract": "results/g2_p26b_leg_contract.json",
+  "leg": "results/g2_p26b_leg.json",
+  "verdict": "results/verdict_p26b.json"
+ },
+ "protocol": {
+  "path": "protocols/ACTINV-P37_PROTOCOL.md",
+  "sha256": "16cfde7d24cd8f525294569f00890138d4b317be050f272e5d1dc3d34e7c4564"
+ },
+ "rejection_log": {
+  "path": "nuclear-data/p26b-work/g1-run/actinv_build_iterations.log",
+  "sha256": "f351875aa80596cffcbee2d452f923f670a722b7ae1dab44175ad48bd41a51ba"
+ },
+ "schema": "actinv-p37-seal-1",
+ "sealed_at": "2026-09-18"
+}

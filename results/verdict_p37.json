@@ -1,0 +1,34 @@
+{
+  "schema": "actinv-verdict-1",
+  "phase": "P37",
+  "disposition": "P37-CONDITIONAL",
+  "headline_results": [
+    "All 12 FENDL-3.2c evaluations ACTINV rejected during the P26b artifact build were classified by file-level forensics: 4 true_defect, 8 actinv_strictness, 0 ambiguous.",
+    "true_defect (file contradicts ENDF-6 or itself): Ni62 (Breit-Wigner GT=1.882601 vs component sum 1882.6008 — an exact 1000x keV/eV unit mix), W182 (MF1 AWR 180.3850 vs MF2 AWR 180.3852), W184 (MF1 AWR 182.3710 vs MF2 AWR 182.3700), W186 (MF10 MT16 state sum exceeds its own MF3 total by 5.09e-2 at 8 MeV on the shared energy grid).",
+    "actinv_strictness (file is legal ENDF-6; ACTINV demands more than the format): Cr50/52/53/54, Mn55, W180 (MF=10 activation channels shipped without MF=3 totals — products verified physically consistent, e.g., Cr52 MT17=(n,3n) produces Cr-50 at QM=-21.301 MeV), Fe57 and W183 (LRF=7 RML particle pairs using the legal ENDF-6 negative-spin parity encoding, e.g., IB=-0.5)."
+  ],
+  "gates": {
+    "G0": "12 rejected source files + rejection log sealed (results/g0_p37_seals.json)",
+    "G1": "every file classified with quoted evidence and named check site (results/g1_p37_classification.json)",
+    "G2": "independent re-derivation of all grounding facts — 15 controls pass (results/g2_p37_controls.json)",
+    "G3": "8 negative controls pass — missing evidence flagged, enum enforced, no overclaim (results/g3_p37_controls.json)",
+    "G4": "closure checks — disposition scoped, no validation behavior changed"
+  },
+  "conditions": [
+    "This is file forensics, not evaluation-author adjudication: 'true_defect' means the file contradicts ENDF-6 semantics or itself at the cited record; whether the error entered at evaluation, processing, or distribution is outside what the artifact alone can prove.",
+    "The actinv_strictness class is a deliberate ACTINV contract (conservation anchored to an independent total), not a bug. Relaxing it — e.g., extending the MT18 self-comparator amendment to non-fission MTs — is a separate phase decision with its own protocol; this phase changes nothing.",
+    "W182/W184 are borderline: the AWR mismatch is real but tiny (1e-6 relative); a tolerance-based check would also be defensible. They are labeled true_defect because the file literally contradicts itself.",
+    "The identical-data arm remains blocked: the 8 strictness files are at most admissible under a future relaxation decision; the 4 true_defect files cannot be admitted by any lawful parser change without an unrecorded modification of the source data — that needs upstream correction or a protocol-governed normalization pass.",
+    "No claim follows about ALARA correctness: ALARA accepted the files because its format contract is looser, not because its activation results on them are verified.",
+    "No solver, superiority, coverage, release, or validation claim is made or implied."
+  ],
+  "artifacts": {
+    "protocol": "protocols/ACTINV-P37_PROTOCOL.md",
+    "seal": "results/g0_p37_seals.json",
+    "classification": "results/g1_p37_classification.json",
+    "controls_g2": "controls/g2_p37_controls.py",
+    "results_g2": "results/g2_p37_controls.json",
+    "controls_g3": "controls/g3_p37_controls.py",
+    "results_g3": "results/g3_p37_controls.json"
+  }
+}

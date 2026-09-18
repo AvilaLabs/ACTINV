@@ -452,6 +452,26 @@ phase does not constitute experimental validation
 (`results/verdict_p36.json`, `controls/check_g{0,1,2,3,4}_p36.py`,
 `protocols/ACTINV-P36_PROTOCOL.md`).
 
+**P37 execution entry (2026-09-18).** P37 (identical-data rejection
+classification) closed `P37-CONDITIONAL`: all twelve FENDL-3.2c evaluations
+ACTINV rejected during the P26b artifact build were classified by sealed
+file-level forensics — **4 true_defect, 8 actinv_strictness, 0 ambiguous**.
+True defects (file contradicts ENDF-6 or itself): Ni62 (Breit-Wigner GT
+exactly 1000x below its component sum — a keV/eV unit mix), W182 and W184
+(MF=1 and MF=2 headers carry different AWR values), W186 (MF=10 state
+partials exceed its own MF=3 total by 5.09e-2 on the shared grid).
+ACTINV-strictness (legal ENDF-6, stricter-than-format contract): the four
+Cr isotopes, Mn55 and W180 (MF=10 activation channels shipped without MF=3
+totals — products verified physically consistent), Fe57 and W183 (legal
+negative-spin parity encoding in LRF=7 particle pairs). Consequence: the
+P26b identical-data arm stays blocked — the strictness class is at most
+admissible under a separate, protocol-governed relaxation decision; the
+four defective sources cannot be lawfully admitted without upstream
+correction or a governed normalization pass. No validation behavior
+changed; no comparator or solver claim follows
+(`results/verdict_p37.json`, `results/g1_p37_classification.json`,
+`controls/g{2,3}_p37_controls.py`, `protocols/ACTINV-P37_PROTOCOL.md`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

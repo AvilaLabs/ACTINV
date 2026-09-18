@@ -1,0 +1,83 @@
+{
+ "schema": "actinv-p37-controls-1",
+ "n_controls": 15,
+ "n_pass": 15,
+ "all_pass": true,
+ "results": [
+  {
+   "control": "Cr50.tendl: MT17 MF10-only with legal products",
+   "pass": true,
+   "detail": "mf10=True mf3=False prods_ok=True"
+  },
+  {
+   "control": "Cr52.tendl: MT17 MF10-only with legal products",
+   "pass": true,
+   "detail": "mf10=True mf3=False prods_ok=True"
+  },
+  {
+   "control": "Cr53.tendl: MT17 MF10-only with legal products",
+   "pass": true,
+   "detail": "mf10=True mf3=False prods_ok=True"
+  },
+  {
+   "control": "Cr54.tendl: MT17 MF10-only with legal products",
+   "pass": true,
+   "detail": "mf10=True mf3=False prods_ok=True"
+  },
+  {
+   "control": "Mn55.tendl: MT30 MF10-only with legal products",
+   "pass": true,
+   "detail": "mf10=True mf3=False prods_ok=True"
+  },
+  {
+   "control": "W180.tendl: MT44 MF10-only with legal products",
+   "pass": true,
+   "detail": "mf10=True mf3=False prods_ok=True"
+  },
+  {
+   "control": "Fe57.tendl: RML MT=2 pair carries negative spin (parity encoding)",
+   "pass": true,
+   "detail": "IA=0.5 IB=-0.5"
+  },
+  {
+   "control": "W183.tendl: RML MT=2 pair carries negative spin (parity encoding)",
+   "pass": true,
+   "detail": "IA=0.5 IB=-0.5"
+  },
+  {
+   "control": "Ni62.tendl: GT < GN+GG+GF (unit-mixed width)",
+   "pass": true,
+   "detail": "GT=1.882601 sum=1882.6008 ratio=1000.0"
+  },
+  {
+   "control": "W182.tendl: MF1 AWR (180.385) != MF2 AWR (180.3852) \u2014 file self-inconsistent",
+   "pass": true,
+   "detail": "MF1=180.385 MF2=180.3852"
+  },
+  {
+   "control": "W184.tendl: MF1 AWR (182.371) != MF2 AWR (182.37) \u2014 file self-inconsistent",
+   "pass": true,
+   "detail": "MF1=182.371 MF2=182.37"
+  },
+  {
+   "control": "W186.tendl: MF10 MT16 sum exceeds MF3 total by >0.001",
+   "pass": true,
+   "detail": "max rel excess 5.0869e-02"
+  },
+  {
+   "control": "record: 12 entries, all labels in enum",
+   "pass": true,
+   "detail": "12 entries"
+  },
+  {
+   "control": "record: histogram matches label counts",
+   "pass": true,
+   "detail": "{'true_defect': 4, 'actinv_strictness': 8, 'ambiguous': 0}"
+  },
+  {
+   "control": "mutation: mislabeling Ni62 as strictness contradicts derived fact",
+   "pass": true,
+   "detail": "planted mislabel is inconsistent with GT<sum fact"
+  }
+ ]
+}
