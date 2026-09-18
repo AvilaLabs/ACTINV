@@ -1,0 +1,46 @@
+{
+  "schema": "actinv-reduced-chain-case-1",
+  "benchmark": "fusion-isotope-001",
+  "scope": "prescribed_rate_core_solver_verification",
+  "paper": {
+    "url": "https://arxiv.org/html/2609.19166v1",
+    "html_sha256": "ebad987a7d1d9b711cdaa13d2794891d001b9e49c8f2900a35fad92c19da2795",
+    "source_archive_url": "https://arxiv.org/src/2609.19166v1",
+    "source_archive_sha256": "94257f6b6cd3c6bf88d70fafdad14c047dad9e60b5ad1dbddfabac707129ddb1",
+    "locator": "Table 2 mixed slab; Table 6 direct Th230 row",
+    "table6_years": [1, 3, 5, 10, 15],
+    "table6_th229_ci": [532, 1530, 2460, 4460, 6060]
+  },
+  "daughter_decay_reference": {
+    "url": "https://www.nndc.bnl.gov/ensnds/225/Ac/beta_decay_14.9_d.pdf",
+    "sha256": "8965a151cfb8924973400c463eb38674fd485ba8a3da8ef1ced8b83c1d6b1df6",
+    "evaluation": "ENSDF, Balraj Singh, October 2019; page 1",
+    "retrieved_on": "2026-09-18",
+    "ra225_half_life_days": 14.9,
+    "ac225_half_life_days": 9.920,
+    "note": "Nominal tabulated values for numerical verification; not a matched Marathon decay library. No uncertainty propagation."
+  },
+  "conventions": {
+    "avogadro_per_mol": 6.02214076e23,
+    "th230_molar_mass_g": 230.0,
+    "seconds_per_day": 86400,
+    "initial_products_atoms": 0,
+    "modeled_branching_fraction": 1,
+    "note": "275 kg from Table 2; 230 g/mol mass-number approximation. Reduced chain excludes other target species and reactions."
+  },
+  "irradiation_days": [1, 30, 365.25, 1095.75, 1826.25, 3652.5, 5478.75],
+  "cooling_after_irradiation_days": 365.25,
+  "cooling_days": [1, 7, 30, 100, 365],
+  "numerical_tolerances": {
+    "relative": 1e-9,
+    "absolute_atoms": 1e6,
+    "conservation_relative": 1e-10
+  },
+  "omissions": [
+    "Natural Th230 decay and all competing neutron reactions",
+    "Neutron destruction of Th229, Ra225, and Ac225",
+    "Other target species, full downstream decay inventory, and contaminants",
+    "Spatial flux, spectrum, self-shielding, and composition feedback",
+    "Harvesting, separation losses, decay heat, and clinical dose claims"
+  ]
+}
