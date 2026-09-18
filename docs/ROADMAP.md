@@ -557,9 +557,11 @@ into decay-file gaps (channel rows exist — Cr54 MT111->Ti-53, Fe58
 MT111->Cr-57 — but Cr-57 is absent from BOTH decay files and Ti-53/V-55
 from ENDF-B primary; products without decay data are dropped
 fail-closed at solve time) and second-order channels on non-artifact
-parents (Fe-59(n,p)->Mn-59). `common_nuclide_magnitude` reflects
-burn-out/decay-feed asymmetries (Cr-55 systematically ACTINV-low;
-Mn-58/Fe-53/Mn-57 systematically ACTINV-high). The identical-data arm
+parents (Fe-59(n,p)->Mn-59), and threshold-blocked channels — the only
+artifact rows for Ti-53/Cr-57 are MT111 (n,2p) at ~20 MeV, above both
+spectra, so ACTINV correctly produces none. `common_nuclide_magnitude`
+reflects burn-out/decay-feed asymmetries (Cr-55 systematically
+ACTINV-low; Mn-58/Fe-53/Mn-57 systematically ACTINV-high). The identical-data arm
 is saturated: remaining divergence is bounded by chain coverage
 (FENDL-3.2c does not evaluate the product nuclides) and decay-file
 coverage — data-availability limits, not ACTINV channel defects.
