@@ -528,3 +528,750 @@ the Mo-98 atoms. Recorded in `results/verdict_p39.json`
 divergence is a named representation floor, not an open coverage gap.
 
 ### Phase sequence and acceptance gates
+
+The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
+controls and updates the support matrix and contract evidence for capabilities it actually qualifies. The rows
+below are bounded planning scopes; the detailed protocol, minimum gate input, tolerances, resource envelope,
+independent checker and stop rule must be frozen before each phase executes. No calendar commitment is made here:
+P26 supplies estimates based on measured bottlenecks, method feasibility, evidence access and user availability.
+
+| Phase | Deliverable | Entry dependency | Decisive gate |
+|---|---|---|---|
+| **P26 — user workloads and feasibility** | User-derived flagship, current competitive baseline, evidence partitions and bounded method prototypes. | Recorded P25/P24 and release-hold disposition. | A consequential user problem, complete comparison contract and a credible technical route to the proposed advantage; otherwise explicit replan. |
+| **P27 — shared studies and Core contracts** | Versioned study model, deterministic template construction, supported operations and initial Core adapters. | P26. | Every initially supported action has a tested contract/adapter; mutated populations, policies, identities and evidence cannot obtain an accepted result. |
+| **P28 — qualified physics combinations** | The processing and shielding regimes needed by the selected studies, with a complete applicability map. | P27. | Independent rate and response controls across the declared regime and its boundaries, with missing coverage counted. |
+| **P29 — response-specific numerical control** | Requested numerical criteria on selected outputs, refinement and explicit error accounting. | P28. | Bounds/estimators meet their stated claims on independent and difficult controls; unresolved error cannot masquerade as satisfied accuracy. |
+| **P30 — uncertainty and scientific explanation** | Consistent nuclear/input uncertainty, sensitivities, pathways and controlled result comparisons. | P29. | Independent local/nonlinear controls, complete coverage/sample accounting and evidence-backed attribution in the supported combinations. |
+| **P31 — efficient complete campaigns** | Reusable work, streaming and resumable execution across realistic variations, including uncertainty costs. | P30. | Frozen complete-workload speed/resource targets at qualified accuracy, including distinct inputs and failure recovery. |
+| **P32 — spatial handoff and portable studies** | External-transport source integration and reproducible studies across CLI, Python and desktop. | P31. | Source conservation/spatial controls, an executed open R2S chain and independent handoff/reproduction tasks. |
+| **P33 — assisted setup and interpretation** | Optional evidence-linked explanations and validated study drafts, using a direct connection to the user's own AI provider account. | P32. | Correct task completion, credential handling and provider-failure recovery; no Avila-hosted service dependency; official values/verdicts stay independent of narration. |
+| **P34 — bounded assisted investigations** | AI-initiated execution and follow-ups through the maintained contracts and Core runner. | P33. | Accepted task intent, bounded execution, immutable rules, complete evidence and recovery hold under repeated and adversarial evaluations. |
+| **P35 — independent product qualification** | Exact-candidate scientific, competitive, user and assisted-workflow qualification; release recommendation. | P34 and every shipped combination's controls. | Independent verdicts on scientific fitness, workflow benefit, AI reliability and competitive claims, with all prior failures preserved. |
+
+**P26 — define the work users need and test the difficult ideas.** Examine recent projects with a proposed five
+to eight practitioners across the candidate user groups, using existing work products where they can lawfully be
+shared. Record preparation, computation, debugging, interpretation and handoff time; identify studies abandoned or
+simplified and the practical reason. Seek repeat use of an actual case as adoption evidence. Outreach requires
+separate authorization; drafting this roadmap does not contact anyone. When participants are unavailable, label
+public studies/internal exercises as proxies and keep demand and usability conclusions unestablished.
+
+Freeze two campaign workloads and one spatial handoff, required output/evidence parity, resource limits, comparator
+versions and baseline configuration before optimization. Candidate scales are 1,000 material/history variants and
+the existing 20,000 distinct-spectrum case; validate the scales rather than treating them as demand evidence.
+Match physical assumptions, uncertainty scope and requested numerical accuracy across the timed paths; a capability
+mismatch is reported as such and cannot become a speed ratio. Enable each comparator's appropriate reusable path.
+Profile complete preparation, processing, solve, uncertainty and output costs. Test the smallest useful prototypes
+for response error control and reuse across genuinely changing inputs. Declare a compute budget and a go/no-go
+criterion for each prototype; promote a method only when it has independent numerical support and a useful cost
+case. This is permission for bounded feasibility work, not unrestricted engine redesign.
+
+Select separate development and final-evaluation tasks. Secure and seal suitable new measurement populations
+before their values are examined; if none are available, plan an honestly retrospective/engineering qualification.
+Opening deliverables are a workload manifest, user-evidence summary, combination matrix, baseline report, evidence
+access plan and revised per-phase estimates. A missing comparator is unmeasured, not an assumed win. No required
+development gate depends on obtaining a FISPACT/SCALE licence; optional lawful collaborators can widen claims later.
+
+**P27 — make study construction and contracts a shared product capability.** Deliver the study schema and
+deterministic generator, with initial executable ACT-STUDY-01 and ACT-COMPARE-01 paths limited to already qualified
+operations. Define the interfaces and obligations for the remaining families, leaving unsupported combinations
+explicitly unavailable until their delivering phase qualifies them. The maintained package, not generated model
+text, supplies workflow topology, evidence extraction, population accounting and verdict logic. Structured settings
+and inputs remain editable through the ordinary interfaces; users do not author Core JSON.
+
+Pin the Core semantic profile and supported version range, define an external-process interchange and failure
+contract, and qualify a minimum calculation/comparison end to end. Distinguish recorded attestations, current
+artifact verification, reused execution and fresh execution. Make qualification policy explicit: Core's default
+display of an unqualified-evidence warning is insufficient for an ACTINV result advertised as qualified. Test
+incorrect units, changed data/executables, missing/duplicate cases, zero/undefined metrics, forged or stale evidence,
+missing qualification, altered limits and unexpected schema fields. Independent checks must exercise substantive
+metric/coverage semantics, not only reproduce a hash or validate JSON. Establish template migration and revocation
+behavior without editing historical evidence. ACTINV's base calculation path stays independent of this integration.
+
+**P28 — qualify the combinations the investigation needs.** Starting from P25's recorded disposition, identify
+remaining method and coverage limitations that prevent the chosen studies. Qualify consistent rates, product
+identity, production/loss accounting and shielding within the selected regimes. Add resolved or unresolved
+treatment only where the workload requires it and an independent processing route exists. Check composition,
+temperature, dilution, spectrum and supported data combinations at regime boundaries as well as ordinary cases.
+Geometry-dependent transport remains an external input responsibility; a dilution approximation cannot claim to
+replace it. Freeze the intended validation population before construction so unsupported cases cannot disappear.
+
+Minimum gates include independent source-to-rate traces, analytic limits, an independently processed reference,
+and complete inventory/response comparisons for the selected cases. Update family applicability and ledger
+categories across all interfaces. Separate processing correctness from experimental prediction. If required
+coverage cannot be established, record the gap and revise unopened scope; do not qualify a narrower easy subset
+under the original broad claim.
+
+**P29 — control numerical error in the response the user asked for.** Deliver numerical criteria for selected
+activity, heat and photon responses at specified times. Account for solver, pruning, collapse/processing and
+other relevant approximations individually; distinguish rigorously bounded, empirically estimated and unresolved
+contributions. Demonstrate how combined error is justified, rather than adding unrelated estimates as though they
+were a proved bound. Use absolute criteria near zero and declared relative criteria elsewhere. Missing support
+must produce an unmet or unestablished criterion, with an exact/full calculation fallback where supported.
+
+Adaptive refinement may spend work where the response requires it and must stop at a declared resource limit.
+Reference controls include analytic chains, independent dense/high-accuracy solves, stiff/long histories,
+near-zero outputs, and independent processing/refinement cases. A two-resolution agreement alone does not prove
+convergence or a whole-pipeline error bound. Qualify ACT-REFINE-01 only for the demonstrated envelope. Computational
+error, nuclear/input uncertainty and predictive discrepancy remain separate in every report. This phase cannot
+promise a user-selected total physical accuracy that the data cannot support.
+
+**P30 — make uncertainty and explanation work together.** Deliver a supported nonlinear sampling path alongside
+local sensitivities, including the nuclear-data channels available to the selected studies and user-supplied flux
+normalization/spectral and composition/impurity uncertainty where justified. Preserve positivity, composition sums,
+correlations and schedule constraints; document independence assumptions when correlations are unavailable.
+Recompute shielding and rates consistently when perturbed inputs affect them. Local methods require an explicit
+applicability check against nonlinear controls; a fixed seed supplies repeatability, not convergence evidence.
+
+Report sampling error, covered uncertainty, missing covariance and model remainder separately, with every sample
+and failure accounted. Ranking claims name whether they concern nominal values, supplied distributions or a proved
+domain bound. A spread across data evaluations is a sensitivity result unless a statistical interpretation is
+justified. Build response-linked pathway/contribution views and controlled comparisons with explicit interactions
+and unexplained remainder; sensitivities do not automatically prove causation. Independent analytic/finite-
+difference and sampled controls check the numbers and interpretation. Qualify ACT-ROBUST-01 and the corresponding
+comparison combinations; no LLM is needed to produce the underlying explanations or diagnostics.
+
+**P31 — make the full investigation affordable.** Optimize measured work across changed compositions, histories
+and distinct spectra: preparation, rate construction, network assembly, sensitivity/uncertainty execution and
+output. Candidate mechanisms include reusable operator structure, batched responses and qualified response-aware
+reduction. Select mechanisms from P26 evidence; no algorithm is mandatory merely because it is sophisticated.
+Approximate reuse must carry the P29 error checks and revert to a supported full calculation when it cannot satisfy
+them. Exact-repeat cache hits alone do not establish the primary advantage.
+
+Measure elapsed time to all required results and evidence, including Core/checker overhead, preparation amortization,
+sampling and output. Report cold and warm states and realistic distinct-input workloads; give competitors their
+documented caches and suitable APIs. Include memory and artifact size at fixed output parity. Existing P21
+checkpointing is a starting point; exercise cancellation during all expensive stages, termination/reaping, resume
+after torn output, cache identity changes and resource exhaustion. The OS resource boundary must enforce limits;
+a post-hoc memory counter is not an allocation limit. The frozen competitive target and scientific equivalence have
+separate checker results, both including failed cases.
+
+**P32 — deliver source handoffs and studies another person can use.** Qualify at least one open OpenMC workflow
+from supplied neutron flux/material mapping through ACTINV activation to a spatial decay-photon source and external
+photon transport. Compare with the pinned native OpenMC R2S path where outputs and data permit. Check cell IDs,
+volumes, source normalization, spectra, cooling-time separation and spatial sampling independently; a point at the
+origin cannot satisfy a distributed source contract. Account for transport statistical error separately and keep
+source validation distinct from an unqualified dose prediction.
+
+Package the study definition, template release, data/tool identities, results, diagnostics and verification route
+into a portable record. Resolve bulky/licensed inputs by lawful references and hashes. Expose setup, requested
+outputs, comparisons, limitations and reproduction through the existing CLI/Python/desktop using shared operations.
+A new installation must reproduce a supplied study, diagnose a planted normalization/mapping error, and explain a
+controlled change. Test missing data, relocation, changed versions, interrupted export and Core-unavailable basic
+use. Qualify ACT-SOURCE-01 and complete all non-AI families needed by the flagship. The product should already be
+useful and testable with AI disabled.
+
+**P33 — assist setup and interpretation from evidence.** Introduce optional assistance for investigating recorded
+results, finding documentation and preparing study drafts. Tools return structured outputs, units, applicable
+limitations and source identities. Numerical answers are selected/computed by trusted tools; generated explanation
+links to that evidence and marks hypotheses. The model cannot manufacture a pathway contribution or claim that a
+saved receipt freshly verifies current files. A draft exposes material assumptions and unresolved inputs before
+execution; matching a template's schema does not prove that the intended scientific question was understood.
+
+Deliver provider/model selection and customer API credential setup inside ACTINV under the delivery decision
+above. Show usage and bounded request/token budgets, provide cancellation and bounded retries, and identify which
+study context is shared. Verify direct provider access, credential redaction, missing/invalid credentials, quota
+and rate-limit responses, timeouts and outages. The assistant must preserve local studies and remain optional
+through these failures. Qualify installation and operation without an Avila-hosted AI service or a local model.
+
+This phase grants no autonomous solver execution. Evaluate unseen natural-language tasks, ambiguous normalization,
+incompatible options, missing data, contradictory records and misleading instructions inside imported text.
+Include a strong conventional UI/documentation baseline. Measure task correctness, unsupported factual claims,
+hands-on time, model latency/cost and repeated-trial variability for each pinned supported model/configuration.
+Use deterministic grading for numerical/record assertions and independent domain assessment for intent and
+interpretation; an LLM judge alone cannot establish correctness. Freeze development/evaluation partitions before
+tuning prompts or tool descriptions. A provider/model change triggers the relevant evaluation again.
+
+**P34 — conduct bounded investigations through Core.** Enable the assistant to instantiate and execute only
+qualified study operations within the selected contract families. The user accepts a concrete study scope and
+resource budget; a trusted dispatcher binds the template, inputs, permitted variations and execution policy.
+Core runs the bound capabilities and the application renders its authoritative report. The AI has no write
+authority over trusted templates, checker executables, qualification records, receipts or technical verdicts.
+Use process and file permissions to enforce that separation; conversational instructions and MCP path checks
+alone are not an OS isolation boundary.
+
+Follow-up actions may vary only accepted axes and must preserve attempt lineage. A new scientific question or
+weakened criterion requires an explicit study revision; depleted budgets, unsupported requests and unresolved
+inputs return a specific incomplete state. Test duplicate requests, idempotency, interruption/cancellation,
+partial failures, retry exhaustion, invalid parameters, changed evidence and attempted contract bypass. Retain
+all attempts, including failed samples, while avoiding duplicate solver work through verified reuse. Final
+free-text conclusions must be checked against the structured result and cannot override its qualification limits.
+Compare a contracted assistant with an ordinary tool-using assistant and with non-AI ACTINV on the frozen tasks;
+measure whether Core actually reduces erroneous accepted claims and unnecessary execution. No statistical claim
+of zero AI error follows from a finite passing battery.
+
+**P35 — qualify the exact product and decide which claims it earns.** Re-run the frozen scientific, numerical,
+uncertainty, source-handoff, performance, reproduction and AI task batteries on exact candidate artifacts, data,
+Core/template versions and supported model configurations. Use new eligible measurements only according to their
+sealed protocol; preserve P17/P18/P18b failures and consumed partitions as historical/diagnostic evidence. Report
+common-case results and whole eligible-population coverage together, by family/projectile and important regime.
+Publish disagreements rather than attributing them to a competitor without matched-data/source evidence.
+
+Independent checkers derive numerical results, completeness and technical verdicts. Human task evaluation records
+participant background, task assignment/order, failures, hands-on and elapsed time, and observed errors under
+predeclared severity definitions. Unavailable user/comparator evidence remains unmeasured. A scientific release
+recommendation can be positive while usability, AI reliability or leadership remains unestablished; the release
+must then exclude the unsupported feature/claim and retain the missed gate. A failed phase still follows the
+standing successor rule; a required scientific or AI gate cannot be waived to ship its affected feature. Check
+final installation, supported-platform reproduction and ordinary operation without
+AI/Core. Produce a release recommendation and explicit claim/limitation matrix; tagging, publishing and external
+communications retain their existing authorization requirements.
+
+### Evidence, resource and completion rules for this extension
+
+1. Pin and report actual executable/module/data identities for every measured leg. P22's process performance leg
+   deliberately used v1.0.0 while its Python kernel leg used the candidate; it is historical evidence, not the
+   baseline measurement of this extension's prepared candidate. Add new records and leave CB1/P22 unchanged.
+2. Freeze eligible populations, required outputs, metrics, comparison rules and failure accounting before scoring.
+   Positive measurements with zero predictions, failed construction, missing samples and undefined ratios never
+   disappear through finite-only filtering. Report family counts beside row counts.
+3. Distinguish numerical equivalence, processor correctness, data coverage, experimental accuracy, user task
+   performance and AI reliability. A green result in one category does not establish another. Treat identical-data
+   and each-tool-with-its-data comparisons as separate experiments.
+4. Bind contract/checker qualification to the intended output and domain. Core integrity verifies identified
+   evidence under stated rules; it cannot repair an incorrect physical premise. Template selection, parameter
+   binding and whether the study answers the user's intent are separate evaluation obligations.
+5. Count all time relevant to the claimed benefit. Inventory campaign speed cannot stand in for whole R2S speed;
+   report external transport, hands-on work and model/network latency separately and in complete task totals.
+   No extrapolated million-cell or universal competitor claim. Separate feasibility data from final comparisons.
+6. Apply the current [local safety rules](../AGENTS.md): only the coordinating agent runs builds, executable tests,
+   benchmarks or solver jobs, one job at a time inside the enforced systemd cgroup. Stop if enforcement fails;
+   use disk-backed `target/preflight-tmp` for temporary build work, profile the minimum gate case first, and make
+   long work resumable. Historical `ulimit` guidance alone does not replace those protections.
+7. Every delivering phase updates the machine-readable family/combination matrix, user-visible limitations,
+   independent controls and qualification references. No shipped assistant action relies on a template that exists
+   only as a draft. A family has meaningful positive, negative and boundary tests, including attempted evidence
+   weakening. Composing supported families requires explicit combination evidence.
+8. The final extension has four separately reported outcomes: scientific qualification, user-workflow benefit,
+   assisted-workflow reliability and competitive leadership. Its defining demonstration is the complete flagship
+   investigation, with and without AI, on a case selected before implementation optimization.
+
+Planning milestones are therefore P26 (established need and feasible mechanism), P27–P30 (scientific investigation
+and contract foundation), P31–P32 (efficient, portable non-AI product), P33–P34 (qualified assistance), and P35
+(independent product decision). Useful earlier capabilities may have separate qualified release candidates; this
+does not confer a later phase's verdict or authorize publication. Uncertainty in estimates is concentrated in the
+P28 physics envelope, P29 numerical bounds, P30 covariance coverage and P31 performance headroom; P26 must make
+those risks concrete before the implementation sequence is committed.
+
+## Standing rules (from P0–P3b, binding on every phase)
+
+1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
+   at close, authored by the principal's git identity, no assistant attribution.
+2. Scope is frozen at the hash. Discoveries go to `docs/PARKING.md` with a dated line; they enter a later phase's
+   protocol or not at all. A phase that fails its gate after one repair round closes FAIL and gets a successor session
+   with a new protocol — never a silent retry.
+3. Memory guard: every heavy job under `ulimit -v 12000000`; no array beyond ~1 GB without a ledger reason; kernels
+   chunked and windowed; no concurrent heavy jobs.
+4. Data never in the repository; every input pinned by SHA-256 in the certificate; terms of use recorded in DATA.md.
+5. Controls are exact where the physics allows exactness (kernel laws, quadrature, identities) and reference-bound
+   where it does not (NJOY at its stated tolerances); a control whose premise turns out wrong is corrected by
+   amendment with the numbers that showed it.
+6. External acts — publishing the repository, releases, contact, filings — are the principal's.
+7. **Cost is designed, not discovered.** Before any computation expected to exceed ~10 minutes: (a) state the smallest
+   input set that settles the gate and use it — a gate's prerequisite is not the phase's deliverable, and the two are
+   scheduled separately; (b) profile one representative unit and record where the time goes; (c) checkpoint per unit of
+   work so an interruption resumes. A phase's protocol names its minimum gate input alongside its gates.
+
+   *Learned the expensive way in P4 (2026-08-26): the gate needed 255 of 2,847 library targets, but the phase was
+   executed in the order it was written, so a four-hour build blocked a twenty-minute validation. Profiling afterwards
+   showed 91–97 % of the cost in one kernel.*
+
+## Changelog
+- 2026-08-26 — roadmap written after P3b (v0.1 = P4–P6, v0.2 = P7–P8, v0.5 = P9–P10, v1.0 = P11–P12).
+- 2026-08-26 — standing rule 7 added (cost is designed, not discovered): minimum gate input, profile first, checkpoint.
+  Phases P7–P12 are re-read under it — each now states its minimum gate input before its full deliverable.
+- 2026-08-26 — P5 scope set by the principal ("do it the right way, not cut corners"): the Rust core owns spec → result,
+  so the three entry points are one code path and the certificate's solver hash is meaningful. Estimate 2–3 → 4 days.
+  P10 completes the move by porting library building (`actinv-data`), leaving a single binary.
+- 2026-08-26 — P7 closed P7-CONDITIONAL: decay photons, NIST-response dose proxy and OpenMC/MCNP exports delivered;
+  one G5 repair round is recorded in P7 Amendment A. P8 is next and remains unopened.
+- 2026-08-26 — P8 opened under protocol `bd3111cd…`: a hashed streaming flux interchange, fail-closed supported
+  subsets for OpenMC statepoint/MCNP meshtal+mctal/FISPACT fluxes, conservative lethargy rebinning, deterministic
+  chunked Rayon cells, and measured/extrapolated sizing through 10^6 cells.
+- 2026-08-26 — P8 closed P8-CONDITIONAL: all six gates pass after the single repair pass recorded in P8 Amendment A;
+  four source formats, exact mesh/single-cell identity, thread-deterministic records and bounded-memory sizing are
+  delivered. v0.2 is complete. P9 is next but remains unopened and unhashed.
+- 2026-08-26 — P9 opened under protocol `028c5846…`: explicit isotope/isomer materials, independently parsed and
+  hashed ENDF/B-VIII.0 MT=454 fission yields, corrected fluence-aware burn-up selection, explicit piecewise pulse
+  histories, and CoNDERC/OpenMC/ALARA validation. The roadmap's “nu_f-consistent” shorthand is fixed before evidence
+  as the ENDF independent-yield sum of two fission fragments, not prompt-neutron nubar.
+- 2026-08-26 — P9 closed P9-CONDITIONAL: all six gates pass after the single repair round recorded in Amendment A.
+  Explicit-nuclide materials, independent NFPY matrix feeds, exposure-based auto mode, boundary-level pulse records,
+  and OpenMC/ALARA/CoNDERC evidence are delivered. Dickens total pulse and Yarnell 20,000 s geometric-mean C/E are
+  1.0070 and 0.9845. P10 is next but remains unopened; v0.5 is not yet claimed.
+- 2026-08-26 — P10 opened under protocol `74273ec5…`. “TENDL (latest)” is resolved at scope freeze as TENDL-2025;
+  the production builder moves entirely to Rust and must complete full external TENDL-2025 n/p/d/alpha plus
+  EAF-2010 builds. Charged validation separates identical-data TENDL-2017/FISPACT processed comparisons from
+  TENDL-2025 MF6 checks against official residual tables. The public licensed FISPACT executable is not claimed as a
+  run. The P4 Rb-94 residual is correctly assigned to the resolved/unresolved boundary splice, while Fr-226 receives
+  the analytic ultra-narrow treatment. P10 is frozen until its checker-derived close.
+- 2026-08-27 — P10 closed P10-CONDITIONAL: all seven gates pass after the append-only repair record. The deterministic
+  Rust path completes TENDL-2025 neutron/proton/deuteron/alpha and EAF-2010 libraries (12,216 targets, 1,849,479 rows)
+  with fresh/cached byte identity and zero target errors, silent fallbacks or convergence flags. Limited R-matrix,
+  infinite-dilution unresolved averages, arbitrary-temperature broadening, ultra-narrow treatment and charged runtime
+  identity are independently controlled. Technical v0.5 is complete; P11 is next and remains unopened.
+- 2026-08-27 — P11 opened under protocol `fb9964d5…`. Its minimum gate uses TENDL-2025 Fe-56/Ni-58 MF=33,
+  synthetic 2×2 covariance networks and NJOY2016.79 ERRORR before the complete 2,850-file scan. The frozen scope
+  includes strict LB=0--6/8/9 processing, a separate deterministic covariance sidecar, exact differentiation of the
+  selected CRAM-16/48 recurrence, MF=33 heat/activity bands and explicit coverage/numerical-method budgets. P12
+  remains unopened.
+- 2026-08-27 — P11 closed P11-CONDITIONAL: all six gates pass after the append-only Amendments A--E. The complete
+  2,850-source scan retains 84,489 sections and 285,023 components with zero errors or silent omissions; current
+  fresh/cached sidecar and index bytes match under bounded memory. Heat/activity sensitivities, MF=33 bands,
+  coverage, excluded sources and CRAM-order bounds are identical through CLI, Python, prepared and mesh paths. P12
+  is next but remains unopened and unhashed; no v1.0 tag or publication is claimed.
+- 2026-08-27 — P12 opened under its frozen protocol. The minimum inputs are a two-nuclide response fixture, the
+  289-row Meija/AME2020 primary table controls, a 10,000-case fuzz smoke partition and the published FNG/ITER
+  campaign-1 cell-620 one-group activation record. External ICRP tables and all nuclear data remain hash-pinned and
+  unbundled; the technical release commit does not authorize a tag, registry upload or licensing claim.
+- 2026-08-27 — P12 G1--G2 green. A strict hash-pinned response table now produces clearance, waste, ingestion and
+  inhalation outputs with exact missing-activity coverage through CLI, Python, prepared and mesh paths. Independent
+  parsers reproduce all 289 Meija/AME2020 abundance/mass pairs bit-for-bit from primary files and the embedded Rust
+  table byte-for-byte; certificate provenance now names and hashes the primary sources. G3 parser fuzzing is next.
+- 2026-08-27 — P12 Amendment A records the first post-G2 CI repair. P10-G6 correctly detected that the required
+  primary-source table attribution changed its legacy-result hash. A recursive comparison found that provenance leaf
+  to be the sole non-timing/path/version difference; the control now requires it to match the embedded-table record
+  exactly before mapping only that leaf to the frozen pre-P12 value. A planted attribution change still fails closed.
+- 2026-08-27 — P12 G4 green. The external CC-BY-4.0 FNG/ITER cell-620 archive is transformed reproducibly into
+  temporary ACTINV inputs; four selected histories pass all 170 endpoints and independently read rates pass their
+  frozen bounds. Archive members and generated nuclear data remain outside Git.
+- 2026-08-27 — P12 Amendment B records a pre-publication packaging repair: three compile-time JSON tables moved
+  inside the `actinv-data` crate boundary without changing semantic content. Exact `1.0.0` path-dependency versions,
+  unpacked-crate compilation, stable-ABI wheel checks and licence inclusion now guard the distributable artifacts.
+  User-first installation, release, qualification, specification, method, data and validation documentation is part
+  of the G5 release candidate; no registry upload, tag or GitHub Release is authorized by this work.
+- 2026-08-27 — P12 Amendment C records a nested clean-clone control-path repair found by the first complete G5 run.
+  The inner build inherited the outer temporary target directory while its probe used its own clone path; explicitly
+  rooting `CARGO_TARGET_DIR` in the inner clone resolves the mismatch. The already completed package/interface stages,
+  product source and all scientific criteria are unchanged; G5 remains open pending the full rerun.
+- 2026-08-27 — P12 G5 green on the complete rerun. A fresh clone passes the exact Rust gates, prior-evidence and
+  dependency audits, CLI/Python end-to-end comparison and nested self-contained control. Exact unpacked 1.0.0 crate
+  packages compile, the standalone binary reports 1.0.0, and the Python 3.9 stable-ABI wheel and source archive pass
+  import, metadata, licence and content checks. No artifact was uploaded or publicly released.
+- 2026-08-27 — P12 G3 green. Two fixed 10,000-case runs have the same deterministic summary and the fixed
+  1,000,000-case partition covers all eleven production-reader families with zero process-level failures below the
+  1 GiB ceiling. Amendment D records five pre-full-run bounds/encoding findings and their minimized regressions;
+  accepted scientific inputs and results are unchanged. G6 closure and pushed CI confirmation remain.
+- 2026-08-27 — P12 Amendment E repairs a closure-control cycle found before G6: the manifest cannot hash reports
+  whose content records whether that same manifest reproduces. The exact exclusion set is frozen to the manifest
+  itself and the G6/verdict derived reports; the closure commit binds all three while every other file remains
+  inventoried. No product or scientific evidence changes.
+- 2026-08-27 — P12 closed P12-CONDITIONAL with all six gates passing. Release payload
+  `0151dd06ee12bc047da34a9e35341d23590a12a9` is pushed to the canonical repository and exact GitHub Actions run
+  `33134485488` is green. The closure checker independently re-derives G1--G5, binds that payload and run, and
+  reproduces the non-circular source/evidence inventory with Amendment E's exact derived-report exclusions. Technical
+  v1.0 is complete; no tag, GitHub Release or registry publication is claimed.
+- 2026-08-28 — P13 opened under protocol
+  `afbc60cb75411b1f10a558f77f2a512412de2f925bbaccada099ac5fd3c2f92c`. It is a distribution-only extension:
+  immutable P10/P11 TENDL artifacts may be released under the CC-BY-4.0 terms recorded in every TENDL-2025 source
+  header, while ENDF/B-VIII.0 and JEFF-3.3 decay archives remain direct official-host downloads. The embedded catalog,
+  atomic fetch/verify path, release staging, attribution and first-run docs are gated without changing scientific code.
+- 2026-08-28 — P13 closed P13-PASS. Source commit `cf862ab90c487be5f2668a2f4f383a2d0dec0869` passed GitHub Actions
+  run `33143906452`; release `data-v1.0.0` (GitHub release ID `378273436`) contains exactly the 14 staged assets and
+  server-reported SHA-256 identities recorded in `results/session_p13.json`. A clean public default fetch verified the
+  GitHub assets and both official IAEA archives, then completed the 21-step FNS iron example with all four certificate
+  input hashes matching. No raw evaluation, decay archive, generated payload, cache, or credential entered Git.
+- 2026-08-28 — post-release competitive benchmark CB1 opened from `19afc18d…`. Its pre-evidence protocol separates
+  identical-operator, identical-data, raw-data, and complete product/data comparisons; labels executed, public-reference,
+  documented-only, and unavailable evidence; forbids a composite winner score; and freezes numerical, experimental,
+  performance, first-use, and capability measures before any new benchmark result is generated.
+- 2026-08-28 — CB1 closed CB1-COMPLETE. ACTINV/OpenMC/dense identical operators agree within `4.18e-15` meaningful
+  relative error; the identical-data ALARA shutdown inventory differs by at most `4.12e-8`. In 2,360 FNS pairs,
+  FISPACT-II 4.0/TENDL-2017 leads ACTINV/TENDL-2025 in median point error (`0.1053` versus `0.1392`) and whole-family
+  30% coverage (`69/132` versus `59/132`), while ACTINV leads the 90th-percentile point error (`0.6637` versus
+  `0.6846`). The report forbids cross-data solver claims, records licensed-executable gaps, first-use/resource costs,
+  and all capability losses. Scorecard commit `121b35b01eb8a055b071efe7301d07e112269ad1` passed GitHub Actions run
+  `33185710084`; all required Rust gates and the isolated clean-clone/end-to-end/P10 legacy controls also pass locally.
+- 2026-08-28 — the maintainer approved the P14--P22 post-v1 program after CB1. Licensed FISPACT access is explicitly
+  not a dependency: open numerical, processing, end-to-end and measurement controls form the evidence chain, with a
+  future blind collaborator runner optional. P14 opens first and is restricted to measured, no-physics performance
+  anatomy and safe redundant-work removal; prepared formats and selective loading remain P15 scope.
+- 2026-08-28 — P14 closed P14-CLOSED-BELOW-THRESHOLD without relaxing its frozen criterion. The exact-preserving
+  candidate lowers warm median wall time by 6.55%, p95 wall time by 7.22% and peak RSS by 1.15% on the recorded
+  public-example workload, so G1--G3 and G5 pass while the 10% G4 threshold does not. The source/evidence checkpoint
+  is `8e59e6b800d6aaab4ff7add7fb17d4e0e4e77f38`; closure-control checkpoint
+  `7cd58fc6fb728e93c8ab5a50fee4b7b5fc688a1f` passed GitHub Actions run `33195930341`. P15 is next but remains
+  unopened.
+- 2026-08-28 — P15 opened at `5f7289a44c2686505d0e1b40f4b00ef5c8e4a9ab`. It retains every existing result and
+  ledger contribution while replacing dense deflate inflation with deterministic sparse prepared data and a
+  spectrum-bound collapsed artifact. Frozen required gates are at least 1.5x lower warm wall time, 2x lower peak RSS,
+  bounded and visible cold preparation, exact CLI/Python/provenance identity and fail-closed cache reuse. No prepared
+  or bulk artifact enters Git.
+- 2026-08-28 — P15 closed P15-PASS without threshold relaxation. On the frozen public example, the exact-preserving
+  warm path moves from 3,074.85 ms to 1,185.01 ms median wall time and from 1,076,908,032 to 129,343,488 bytes peak
+  RSS: 2.595x faster and 8.326x lower. The final one-second warm stretch goal is recorded as missed; every required
+  gate passes. All 167,735 source rows, 710 boundaries, 33,597,258 retained values and 167,735 collapsed values match
+  exactly; 23 corruption plants fail closed. Source/evidence commit
+  `c2c89deab1dcee533414a1e6512d0ff45075c184` passed GitHub Actions run `33207936195`. P16 is next but remains
+  unopened and unhashed; no tag or package publication is claimed.
+- 2026-08-28 — v1.0.1 publicly released from signed tag `v1.0.1` at
+  `0332779401363d2f39722efe7a0b7218afcfb270`. Release-candidate controls run `33217018813`, TestPyPI run
+  `33217366561`, production PyPI run `33218184459` and artifact run `33218184465` are green. A pre-upload crates.io
+  OIDC environment-name mismatch was corrected without moving the tag; repair commit
+  `72fa60e3ab90f84d9cab1bd3aa44bdc3dee5c72c` passed controls run `33218612601`, and protected recovery run
+  `33218644967` published all three crates from the exact signed tag source. Fresh PyPI and crates.io installs ran the
+  same 21-step public calculation with equal normalized results; public GitHub assets passed their downloaded
+  `SHA256SUMS`. P16 remains next and unfrozen until its protocol is committed and hashed.
+- 2026-08-28 — v1.0.1 release closeout commit `0624133d3daa5d8440497e06c3d372c8a546a0ed` passed all 34 control
+  steps in GitHub Actions run `33220183178`, including the bounded parser and clean self-contained clone. P16 then
+  opened without changing a public interface or scientific value. Its frozen scope introduces zero-cost physical
+  quantity types behind compatible wire APIs, compile-fail dimensional fixtures, seven analytic/metamorphic relation
+  families, exact release-result identity and explicit 10% median/15% p95 runtime ceilings. P17 remains unopened.
+- 2026-08-28 — P16 closed P16-CONDITIONAL with every frozen type, scientific, compatibility, runtime, memory and
+  quality gate passing. Eleven zero-cost scalar types now guard the validated spec/core boundary; six incompatible
+  consumer fixtures fail for the intended type errors; all seven metamorphic relation families pass; candidate,
+  signed v1.0.1, CLI, prepared and Python normalized results remain exact. On the frozen public workload, candidate
+  median and p95 are 2.95% and 2.41% lower with peak RSS 0.013% higher. Source/evidence commit
+  `ede20289ff63951e61db536e2e36dffa5809bd62` passed GitHub Actions run `33223472844`. Amendment A records the sole
+  repair: the first clean runner lacked the frozen opening commit under a depth-1 checkout; fetching full history
+  changed no product source, result, expectation or threshold. P17 is next but remains unopened pending the P16
+  closure commit.
+- 2026-08-28 — P16 closure commit `f9e6a5c8faf15f1748f1b2c4683889ea8a631c9d` passed all steps in GitHub Actions
+  run `33224125433`. P17 then opened under protocol `c1e2d2ef80ee91b63f7806ca2b93c1b49d8396f4dfacf8623fd1c2a623e17e2f`
+  with production code frozen. Public IAEA IRDFF-II inputs are hash-pinned; Tables 18–20 and FNS are diagnostic,
+  while SPR-III Tables 21–23, ACRR Tables 24–25 and high-temperature Maxwellian Table 36 remain numerically sealed
+  until the parsers, metrics, attribution taxonomy and independent checker pass at a pushed unseal checkpoint.
+- 2026-08-29 — P17 closed P17-FAIL without altering its protocol or hiding the failed assumptions. G0--G4 and G6--G7
+  pass; all 94 held-out rows are preserved. Twelve supported ACRR threshold responses are all within 10%, and 18 of
+  21 Maxwellian responses are within 30%, but Amendment 1's uniform-EOI, `Ag109g` alias and unshielded-`bare`
+  assumptions require a forbidden second post-unseal repair. The independent checker rejects 18 total diagnostic
+  and held-out evidence plants. Source/evidence commit `0b3a89f5c9953166f1547eb96be56a7bc9d5ff35` passed all 38
+  GitHub Actions steps in run `33231786946`. No production source or package changed; P18 remains unopened until the
+  closure commit is green.
+- 2026-08-29 — P17 closure commit `7a2d1f47b62155c0f7a22a4e0b9ec5d6e6730bc8` passed all 39 steps in GitHub
+  Actions run `33232228355`. P18 opened under protocol
+  `002afb038bbbf1ad0bdb34149971f8d3f33a3e2590c6d04ced87bb5ada046e09`. It freezes a physical ENDF product-state
+  catalog, state-partial conservation, fail-loud missing-isomer handling, exact unaffected compatibility, bounded
+  performance and family-level diagnostic/held-out evidence from the hash-pinned Rodrigo et al. compilation. A
+  successful candidate authorizes v1.1.0; after release closeout P19 opens and begins immediately.
+- 2026-08-29 — P18 Amendment 1
+  (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) records an attempted redaction that
+  checked column 1 instead of the supplement's fixed column 20 and displayed lines 1--140. Two gamma and three
+  neutron families are now permanently diagnostic before partitioning; no remaining family, rule, threshold or
+  held-out value changed. This consumes P18's sole repair round and caps an otherwise successful verdict at
+  P18-CONDITIONAL.
+- 2026-08-29 — P18 G0 sealed all 962 reaction families and 12,313 source rows without emitting a dependent value.
+  Canonical seal `3c4de15c94fbc39de279fda6a33e68e27dad89626f57172055df90113e81e94b` assigns 561 families diagnostic,
+  180 genuinely held out and 221 structurally ineligible; the held-out partition contains 1,945 unread rows. Fresh
+  hashes match 10.5 GB of raw TENDL archives plus manifests, released activation/decay data, the ENDF manual, paper
+  and supplement. An independent checker rederives every ID and partition and rejects four evidence mutations. The
+  apparent 963rd reaction was the preamble word `Reference:`, leaving the publication's 962 families exact.
+- 2026-08-29 — P18 G1 replaced per-reaction level-rank compression with evaluated physical identity. The production
+  parser retains `LIS`/`LISO`/`ELIS`, `LFS`/`ELFS` and `QM`/`QI`; the v2 index records every catalog source, tolerance
+  and decision. Hash-pinned TENDL Ag-109/110 maps sparse raw level 2 to Ag-110m (`LISO=1`), while Ag-116 raw levels 1
+  and 4 map to `m1` and `m2` across multiple target states. Generated fixtures cover ambiguity, missing metadata,
+  duplicates and ordering, and the independent checker rejects four mapping mutations. G2 is the next gate; no
+  diagnostic or held-out ratio was used and no package release is yet authorized.
+- 2026-08-29 — P18 G2 completed a bounded one-file-at-a-time audit of all 11,400 frozen neutron, proton, deuteron and
+  alpha TENDL evaluations. All 1,810,499 MF=8/9/10 declarations are accounted, all four 2,850-state catalogs are
+  file-order invariant, and there are no missing totals, descriptor omissions or conflicting duplicates. The frozen
+  conservation rule nevertheless finds 2,128,813 neutron, 175,883 proton, 264,272 deuteron and 78,647 alpha
+  comparison violations; 143 MF8-versus-Q excitation conflicts also remain explicit. The checker verifies the
+  truthful failure and rejects seven mutations without reading a diagnostic or held-out measurement. G2 therefore
+  fails, G3 onward is not authorized and P18 must close P18-FAIL without a v1.1.0 release.
+- 2026-08-29 — P18 closed P18-FAIL with its complete G2 failure intact. Source/evidence commit
+  `a460b6e4092d57ff228c6fb04ec41a12f575dd25` passed all 42 substantive controls in GitHub Actions run
+  `33257767713`; the closure checker binds that run, every G0--G2 artifact, the unchanged package version and the
+  absence of G3--G7/unseal/release evidence, and rejects seven closure mutations. Public v1.0.1 is unchanged. P18b is
+  planned as a new pre-evidence successor for evaluated decimal precision, threshold-domain interpolation and true
+  state-sum classification; it remains unopened and P19's finite-dilution scope remains separate.
+- 2026-08-29 — P18b opened after P18 closure run `33258605964` passed all 43 substantive controls. Before any new
+  per-file classification, its protocol pinned ENDF-102 and IAEA utility-code commit
+  `c2a6718bd831b5c8a6e975beb1946954b1d73c40`, separated strict source quality from runtime conservation, froze the
+  official `0.001` compatibility ceiling, allowed only common-factor ratio-preserving reconciliation inside that
+  ceiling, and required larger excesses to fail closed. Diagnostic and held-out measurements remain unread.
+- 2026-08-29 — P18b G0 sealed all 11,400 external source file identities and the deterministic 245-file IAEA-checker
+  sample before any checker output or new per-file result was read. The independent checker reconstructs the hash
+  selection and all P18 worst/conflict additions from a compact provenance-only manifest, binds opening run
+  `33259343493`, and rejects seven mutations. G1 decimal/checker fixtures are authorized; G2 and all measurements are
+  not.
+- 2026-08-29 — P18b G1 established the independent numerical oracle before reading a new corpus classification. Its
+  18 fixed-width real cases include all three ENDF-102 Table 17 forms and the ±38 exponent limits; seven tables cover
+  all five interpolation laws and repeated-energy sides. The 80/120-digit classifications are identical, the Rust
+  probe differs by zero ULP on the generated queries, and unmodified pinned IAEA CHECKR/FIZCON agrees on six MF9/10
+  inside/boundary/outside fixtures. The independent checker regenerates every official tape and rejects seven
+  mutations. Production, measurements and v1.0.1 remain unchanged; G2 starts only after this checkpoint is green.
+- 2026-09-10 — the maintainer directed closing the CB1 demand-led capability gaps now rather than after the
+  post-v1 sequence: P23 (continuous feed/removal, reverse calculation, damage observables) opens under frozen
+  protocol `fa0df3411e7e2d1d8c5777810db03e76563d6dec1f695fb9219dc0ce7ee59dd5`. P18b remains open — G0/G1 committed
+  and green, G2 controls staged but uncommitted since 2026-08-29 — and the one-phase-at-a-time rule is relaxed for
+  this ordering by explicit direction; P18b's gates, seals and staged controls are unchanged and nothing in P23
+  reads or depends on P18b evidence. P19–P22 remain scheduled behind it.
+- 2026-09-10 — P23 G3 lands damage observables: `actinv build-damage` collapses ENDF-6 MF=3/MT=444
+  damage-energy sections through the build-library pipeline into a hash-pinned `actinv-damage-table-1`, and a
+  spec `damage` section folds those rows over the composition-resolved target inventories to NRT dpa per element
+  and in aggregate. Coverage is honest: nuclides without a row are named, `require_complete` fails closed, and the
+  certificate carries the table hash and provenance. Amendment A records that no local evaluation store carries
+  MT=444 — the control battery therefore qualifies the builder on a persisted synthetic ENDF mini-corpus with an
+  independent re-collapse, and separately verifies that a real TENDL-2025 subset yields an honest zero-coverage
+  table. Users must source `heatr`-processed or equivalent damage-energy evaluations until a distributed MT=444
+  library is available.
+- 2026-09-10 — P23 closes with `P23-PASS` (session `results/session_p23.json`, verdict `results/verdict_p23.json`,
+  independent closure `results/p23_closure_check.json`): feed/removal, linear-regime reverse calculation, and NRT
+  damage observables are delivered with all gate batteries green and the frozen identity intact. Same day, a
+  usability pass landed outside the phase: problem files can reference installed data symbolically as
+  `catalog:<artifact-id>` (resolved against `$ACTINV_DATA_DIR` or `./actinv-data`, hash-filled from the embedded
+  catalog, conflicting hashes rejected), `actinv new` emits catalog references by default, and the examples
+  gallery grew to pulsed, feed/removal, damage, reverse, and two-cell mesh walkthroughs indexed by
+  `examples/README.md`. Next capability work: P18b completion or P19 finite-dilution self-shielding, whichever
+  the maintainer directs.
+- 2026-09-10 — P19 opens under frozen protocol: finite-dilution self-shielding via independently processed
+  Bondarenko factors (deterministic PURR-equivalent from ENDF-6 MF=2 LRU=2 blocks), with NJOY2016.79 as the
+  independent processing oracle and the oracle-comparison campaign run as an Avila Core case. Opt-in
+  `self_shielding` spec section; absent section preserves byte identity. P18b stays open and dormant.
+- 2026-09-10 — P19 G0 sealed: the frozen protocol's opening gate is green (`results/g0_p19_check.json`).
+  The TENDL-2025 unresolved-resonance inventory covers 2715/2850 neutron files including all six test-set
+  materials; the NJOY2016.79 oracle produced complete MT=152 Bondarenko data over the declared sigma0 x
+  temperature grid (792 energy rows, deterministic across runs); the Avila Core case at controls/p19_core
+  compiled, executed the oracle step under a verified receipt, and recorded PASS on both G0 requirements.
+  The four-surface identity baseline reproduces the P23-era hash exactly. Next: G1 build-shielding.
+- 2026-09-11 — P19 G1/G2 sealed: `build-shielding` emits the deterministic `actinv-shield-table-1` Bondarenko
+  artifact (PURR-equivalent ptable pipeline, six materials x 4 temperatures x 10 sigma0), and `self_shielding`
+  folds it into group rates with composition/fixed dilution, ledger+certificate provenance, fail-closed coverage,
+  and byte-identical absent-section output (`ebc307ff`).
+- 2026-09-11 — P19 G3 seals the oracle battery: the group fold was corrected to the full-group Bondarenko form
+  (covered segments carry probability-table weight moments; the uncovered part is suppressed by
+  sigma0/(sigma0+background)), after the flat `(1-c)+c*f` blend was shown to under-shield edge groups ~2x at
+  sigma0=0.1. Independent NJOY2016.79 PURR (node) and GROUPR (FISPACT-709 group) batteries pass all six materials
+  under measured per-material tolerances; raw GENDF tapes persist under `results/gendf/`. Held-out rates
+  (Ta-181 deep dilution, sigma0=1e10 byte-identical physics, run/mesh parity) and the FENDL-3.2c sanity leg land
+  inside the declared scope. Convention differences (GROUPR's pointwise weight on total/elastic; the ladder-mean
+  vs pointwise unshielded column) are measured, reported as diagnostics, and documented as limitations.
+- 2026-09-11 — P19 G4/G5 close the phase: `examples/shielding_demo.json` walkthrough, absent-feature performance
+  unchanged by construction (opt-in branch, byte-identical payloads) with feature cost recorded
+  (`results/g4_p19_perf.json`), and the independent closure checker `controls/check_g5_p19.py` re-verifies the
+  gate chain and artifact invariants without production imports (3/3 mutations rejected). Verdict
+  `results/verdict_p19.json`: **P19-PASS**. Next: P18b completion or the P20-P22 gap list.
+- 2026-09-12 — P18b G2 completes the complete four-corpus classification. A schema-v2 Rust probe and the
+  independent 80/120-digit decimal oracle audited all 11,400 evaluations (84.5M source comparisons plus 24.2M
+  runtime group comparisons): every frozen P18 inventory and violation count is reproduced exactly
+  (2,128,813 / 175,883 / 264,272 / 78,647 for neutron/proton/deuteron/alpha), 35,033 binary64 preliminary
+  labels are corrected by the authoritative exact-decimal classes, and the runtime comparator counts bound the
+  G3 reconciliation envelope (793,520 / 173,579 / 282,975 / 73,230 standard-compatible vs
+  1,769,831 / 140,423 / 339,399 / 54,580 outside-standard group excesses). A deterministic sub-resolution bound
+  (1e-30 relative, twenty orders below the finest printed ENDF difference) resolves true-zero differences whose
+  stable-integral residues flip sign across precisions; the bound is pinned in the emitted checkpoint header.
+  The pinned CHECKR/FIZCON sample explains all 245 official runs. Evidence `results/g2_p18b_corpus_classification.json`,
+  independent checker `controls/check_g2_p18b.py` replays all four checkpoints and rejects 3/3 mutations
+  (`results/g2_p18b_check.json`). Measurements and held-out values remain unread; G3 is authorized.
+- 2026-09-12 — P18b G3 replaces the retired P18 stress gate with runtime conservation enforcement. The raw
+  pointwise/collapsed MF10-vs-MF3 validators become non-fatal source diagnostics whose counts ride the target
+  ledger; the fatal gate moves after processing to `reconcile_emitted_states`, which compares each emitted
+  `(MT, ZAP)` state vector group-by-group against the runtime total row (processed MF2+MF3 where resonance
+  reconstruction applies, collapsed MF3 otherwise, the MF10/MT18 `IZAP=-1` fission sentinel where the manual
+  supplies that representation). Conformant sums stay byte-identical; sums inside the frozen 0.001 standard
+  envelope scale by the common factor T/S with at most a bounded one-ULP downward closure correction; anything
+  outside fails construction closed with MT/MF/ZAP/group, both sums, relative excess, MAT, ZA and
+  `source_sha256` in the diagnostic. MF=9 collapsed production rows obey the same rule. A `--strict-states`
+  option rejects every positive excess and is hashed into build checkpoint keys; legacy v1.0.1 libraries stay
+  readable because readers never gated on the builder fingerprint. Real fixtures exercise every branch:
+  n-At198 fails closed on the genuine MT16 defect (13.39 barns of emitted states against a 3.6e-6 barn
+  runtime total), n-Ag112 reconciles 624 group excesses including processed-resonance MF9 production and real
+  one-ULP corrections, p-Ac223 builds through the sentinel comparator, p-Ag096 fails closed outside the
+  envelope, and strict mode rejects a 1.3e-16 relative excess. The independent checker
+  `controls/check_g3_p18b.py` re-derives every emitted fixture value through its own lethargy collapse,
+  re-checks emitted-row closure on the real corpus build, verifies the diagnostic context contract, and
+  rejects 3/3 mutations (`results/g3_p18b_check.json`). Measurements and held-out values remain unread; G4 is
+  authorized.
+
+- 2026-09-12 — P18b G4 completes the diagnostic scoring leg and unseal authorization package. The scorer
+  `controls/g4_p18b_diagnostics.py` reads the frozen Rodrigo supplement once, reproduces every seal row id,
+  resolves all seven printed ratio forms against MF3-collapsed inelastic totals and MF9/MF10 state partials,
+  and applies the frozen eligibility predicates — with predicate 4 evaluated against the corpus-wide evaluated
+  target-header catalog (the deterministic evaluation-wide residual-state catalog), so a row is ineligible only
+  when no evaluated isomer exists, while candidate rows whose anchoring evaluation was quarantined are reported
+  `build_failed_g3` rather than silently scored through leakage-routed partials. Candidate diagnostic
+  libraries were built per-file under the released parameters with G3 fail-closed quarantine: 259 of 672 staged
+  evaluations constructed (85/200 neutron, 84/197 proton, 10/72 deuteron, 80/118 alpha); every quarantine is
+  ledgered with its source diagnostic. Of 6,600 diagnostic ledger rows, 6,134 are eligible: the v1.0.1 baseline
+  scores 4,212 rows (median |ln C/M| 0.175, p90 0.851, within-30% 65.3%) and the candidate 966 rows with 926
+  family-paired; the paired bootstrap reports median |ln| change +0.0007 (p95 +0.003) and p90 change +0.007
+  (p95 +0.032). The dominant candidate outcome is `build_failed_g3` (4,602 rows) — honest construction
+  coverage under genuine TENDL-2025 state-partial defects, concentrated in deuteron (62/72 files). The
+  compatibility/performance leg is unchanged: normalized results bit-identical to the signed v1.0.1 binary,
+  median ratio 0.998, p95 1.022, RSS 1.015. The independent checker `controls/check_g4_p18b.py` re-derives
+  every scored row's arithmetic, all metrics and the bootstrap plus an independent NPZ row-filter spot-check,
+  and rejects 4/4 mutations. A green workflow on this commit is the sole G5 held-out unseal authorization.
+
+- 2026-09-13 — P18b G5 executes the one-time held-out decision and **fails the frozen stratum gate**
+  (`results/verdict_p18b.json`: **P18b-FAIL**). The green controls run `34696870664` on commit `976e260`
+  authorized unseal; held-out values were then read through the unchanged frozen scorer. A first
+  execution scored only 128 of 1,859 eligible rows because diagnostic staging had never included the
+  held-out families' target files — a staging defect, not a physics result — and is preserved as
+  `results/g5_p18b_heldout_run1_coverage_limited.json` and cited inside the final report. Candidate
+  artifacts were rebuilt over all sealed targets and products (296 of 686 staged files constructed;
+  the newly staged deuteron evaluations all failed closed) and re-scored through the same unchanged
+  code. Final outcome on 180 held-out families / 1,859 eligible rows: the overall gate **passes**
+  (candidate median |ln C/M| 0.194 vs 0.222 ceiling, p90 0.962 vs 1.259, coverage improved, benefit
+  satisfied via +10.4% median improvement and 6,912 provable rank-artifact identity corrections with
+  zero provably-valid violations), but the frozen rule additionally requires every populated
+  projectile stratum to pass. Neutron passes; proton fails median and within-30% coverage
+  (0.291 vs 0.266 ceiling, 50.0% vs 55.2%); alpha fails p90 (1.189 vs 1.126); deuteron has zero
+  candidate-scored rows of 143 eligible because 86% of its corpus failed closed under genuine
+  TENDL-2025 state-partial defects. The result is therefore a coverage/stratum-qualification
+  failure, not a scoring error: the identity repair is measurably beneficial overall but cannot be
+  released while construction coverage leaves strata undemonstrated. G6 release artifacts are not
+  authorized; v1.0.1 remains the public release. A permitted append-only repair amendment could
+  reopen a corrected phase without weakening these frozen thresholds.
+
+- 2026-09-12 — P20 closes with `P20-PASS` (verdict `results/verdict_p20.json`, independent closure
+  `results/p20_closure_check.json`) under frozen protocol `76c2ca2f`. G0 sealed the opening gate: a
+  complete TENDL-2025 MF=33 census (`results/g0_p20_mf33_census.json.gz`) inventories 285,023
+  components across 200,534 blocks (LB5/LB8 paired short-range + relative, LB6 multi-column) with
+  zero parse failures, reproduced independently by `controls/check_g1_p20.py`, and the four-surface
+  identity baseline is intact. G2 classifies defective blocks — asymmetric sections, non-positive
+  eigenvalues, singular weights — and excludes them with named reasons per response
+  (`controls/g2_p20_defects.py`), adding per-channel band reporting. G3 delivers the deterministic
+  correlated-sampling oracle (`controls/g3_p20_sampling.py`): nine midpoint-normal quantiles, 192
+  perturbed solves on the richest FNS target's eigenbasis, every resolvable comparison inside 5% of
+  the linear band, with solver-floor gating so sub-CRAM-noise comparisons are evidence rather than
+  gates (checker `controls/check_g3_p20.py`, 6/6 mutations rejected). G4 adds the decay-constant
+  (MF=8/MT=457) and independent-yield (MF=8/MT=454) channels: synthetic tangents machine-exact,
+  real Mn56 half-life finite-difference agreement 3.7e-3, real Kr92 yield agreement 5.9e-5 with a
+  sum-to-two-preserving compensated perturbation, channel cost measured (+0.14 s for 34 decay
+  parameters, +1.92 s for 1,016 yield parameters) (`controls/g4_p20_channels.py`, checker
+  `controls/check_g4_p20.py`, 8/8 mutations rejected). The closure checker `controls/check_p20.py`
+  re-runs all five gate checkers, re-derives census aggregates, sampling variance and channel
+  arithmetic, re-walks the pinned MF=8 records, re-asserts all 23 prior verdicts including
+  P18b-FAIL, and rejects 5/5 evidence mutations. Scope is honest: no MF=32/34/35/40 covariance,
+  no cross-channel correlation, no flux or composition uncertainty, no tolerance limits; the
+  uncovered remainder is always named.
+
+- 2026-09-12 — P21 closes with `P21-PASS` (verdict `results/verdict_p21.json`, independent closure
+  `results/p21_closure_check.json`) under frozen protocol `871c9650`. G0 re-ran the four-surface identity battery
+  (CLI cold/warm, Python extension, one-cell mesh: unchanged normalized hashes) and recorded the baseline mesh
+  profile on the pinned TENDL-2025 709-group library. G1 adds signature-keyed workload grouping (SHA-256 of the
+  rebinned f64 flux bytes; memo bounded by 256 entries and 512 MiB), `cell_result_fields` selection, and the
+  post-hoc `memory_limit_bytes` guard: grouped and ungrouped runs emit bit-identical cell records with the header
+  differing only in `spec_fingerprint_sha256`, reuse recounts exactly from the recorded signatures, and the guard
+  fails loudly carrying observed and configured bytes (`controls/g1_p21_scaling.py`, checker
+  `controls/check_g1_p21.py`, 7/7 mutations rejected). G2 delivers checkpoint/resume: the output file is its own
+  checkpoint — a validated header fingerprint plus complete in-order cell records stand, a torn tail is truncated,
+  only unfinished cells re-solve, and the result is byte-identical to an uninterrupted run modulo footer timing
+  (`controls/g2_p21_resume.py`, checker `controls/check_g2_p21.py`, 7/7 mutations rejected). G3 executed a real
+  20,000-cell case on the pinned library: 2,943 s wall at 6.80 cells/s, 402 MB peak RSS, 219 MB output; peak RSS
+  stayed flat within 0.27 MB across 1,000/5,000/20,000 cells while the chunk 16→256 leg moved peak RSS by 1.59 GB,
+  and the repeated-spectrum grouping leg served 975/1,000 cells from reuse at 197.8 cells/s vs 6.9 ungrouped
+  (`controls/g3_p21_executed.py`, checker `controls/check_g3_p21.py`, 7/7 mutations rejected). G4 re-proved
+  absent-option identity on the post-change binaries across all four surfaces and superseded the CB1 million-cell
+  extrapolation with the executed record in `docs/COMPETITIVE_BENCHMARK.md` (checker `controls/check_g4_p21.py`).
+  The closure checker `controls/check_p21.py` re-runs all five gate checkers, recounts reuse from signatures,
+  re-verifies resumed-vs-reference line digests, recomputes both memory gates, re-asserts all 24 prior verdicts
+  including P18b-FAIL, and rejects 5/5 evidence mutations. Scope is honest: no distributed or cluster execution, no
+  million-cell claim (not executed), checkpoints resume the same spec only (not an interchange format), and the
+  memory guard is post-hoc — it cannot pre-empt a single oversized allocation.
+
+- 2026-09-13 — P22 re-scores the post-improvement candidate under frozen protocol `86f8509f` and
+  Amendment A (the frozen G4 premise "the version string is absent from normalized results" was
+  falsified on observation — `certificate.solver` is the documented solver-semver leaf, so the gate
+  became strictly stronger: the hash-pinned pre-bump 1.0.1 artifact must reproduce the G0 baseline
+  exactly AND the rebuilt 1.1.0 artifacts must match it under solver-semver normalization). G0 sealed
+  25 prior verdicts and 9 CB1 digests and bound the P21 executed 20,000-cell evidence to the
+  candidate. G1 re-ran the frozen CB1 battery against the candidate: worst-vs-SciPy 4.0960e-15,
+  identical-input ALARA agreement exact on collapsed rate/timeline and <=4.12e-8 on shutdown
+  inventory, FNS pooled geometric-mean C/E 1.0313 with 59/132 experiments wholly within 30% — every
+  sealed metric reproduced, integer counts exact (`controls/g1_p22_battery.py`, checker
+  `controls/check_g1_p22.py`, 6/6 mutations rejected). G2 re-exercised the released 1.0.0 binary for
+  the frozen performance path (startup 1.29 ms, example 2.27 s at 1.09 GB, kernel ratios 165x/19x/
+  4.2x/2.6x at 2/32/256/1024 states), re-verified `pip install actinv==1.0.0` first-use end-to-end
+  (~8.2 s to first result; ALARA 2.9.2 source to passing sample ~37 s), built a clean clone of HEAD,
+  and re-ran a fresh 1,000-cell mesh at 8.7 cells/s with 402.1 MB peak RSS inside the P21 bound
+  (`controls/g2_p22_exercises.py`, checker 7/7 mutations). G3 re-scored the sealed P17 held-out
+  partition (94 rows) once through unchanged scoring code — all family metrics reproduce within
+  1e-12 and `P17-FAIL` stands, as does `P18b-FAIL` (`controls/g3_p22_heldout.py`, checker 6/6
+  mutations). G4 updated `docs/COMPETITIVE_BENCHMARK.md` (P22 candidate re-score section, scoped
+  P19/P21/P23 capability cells, every remaining loss preserved), bumped the workspace to 1.1.0,
+  rebuilt the CLI binary/Python extension/wheel, and proved the bump solver-inert under the amended
+  gate (`controls/g4_p22_release.py`, checker 7/7 mutations); `release_ready` is recorded but
+  tagging, GitHub release and PyPI upload remain separate maintainer actions. The closure checker
+  `controls/check_p22.py` re-runs every gate checker, re-derives the CB1 comparisons and held-out
+  metrics, recomputes the release decision, re-asserts all 25 prior verdicts, verifies the manifest,
+  and rejects planted mutations.
+
+- 2026-09-13 — P22 closes with `P22-PASS` (verdict `results/verdict_p22.json`, closure
+  `results/p22_closure_check.json`) under frozen protocol `86f8509f` plus Amendment A (the recorded
+  correction to the G4 identity gate: `certificate.solver` is the documented solver-semver leaf, so the
+  gate is two-stage — pre-bump artifact reproduces the baseline exactly, rebuilt artifacts match under
+  solver-semver normalization). The maintainer directed that the 1.1.0 release **remain untagged and
+  unpublished** pending repair of the two standing failures: P24 re-validates the corrected benchmark
+  definitions P17's amendment falsified, and P25 repairs the isomeric coverage gap P18b's stratum gate
+  exposed. The P18/P18b closure checkers' release boundary is scoped accordingly: the workspace may
+  carry the 1.1.0 candidate version only while the green P22 RC record exists and no `v1.1*` tag does.
+  Independent read-only review of the P18b evidence then established that the candidate's headline
+  improvement is a coverage-selection artifact — the 356 paired rows span only 13 families with maximum
+  |Δln(C/M)| = 5.7e-7 — that 29 scored `181Ta(α,n)184Re` rows with zero candidate predictions are
+  silently filtered from metrics by the `isfinite` gate, and that the builder and scorer both apply the
+  neutron-file `inelastic(mt)` same-residual treatment unconditionally for charged-particle files.
+  P25 was rewritten accordingly: it is a new protocol (not a P18b amendment, which only authorizes
+  otherwise-passing closures) whose first milestone is a bounded cause diagnosis, with acceptance gates
+  that count coverage, zero predictions and construction failures explicitly.
+
+- 2026-09-13 — at the maintainer's request, draft the next-evolution extension P26–P35: validate complete user
+  investigations and competitive headroom; deliver shared studies and predefined Avila Core contract families,
+  qualified physics combinations, response-specific numerical control, practical uncertainty and explanation,
+  efficient campaigns, spatial handoffs and portable evidence; then qualify optional AI setup/interpretation and
+  bounded execution through Core before an independent product decision. The extension is unopened/unhashed;
+  P25/P24 obligations and the current release hold retain their existing authority. The advisory E0–E5 proposal
+  is superseded as a phase plan, with its research retained. No scientific evidence or prior verdict is changed.
+
+- 2026-09-13 — the maintainer fixes AI delivery to customer-supplied provider API credentials, with direct
+  ACTINV-to-provider requests and provider-to-customer billing. Avila hosts no AI backend, proxy, model or
+  account/billing service. P33 now explicitly delivers credential setup, usage controls and provider-failure
+  handling; P33–P35 inherit the no-hosting constraint. Local language-model inference is optional, and ordinary
+  ACTINV/Core calculation and verification remain local and independent of provider availability.
+
+- 2026-09-14 — **P25 closes P25-FAIL** (`results/verdict_p25.json`, independent G6 checker
+  `controls/check_g6_p25.py`). The phase executed its full G0–G6 protocol: a 397-file quarantine census
+  (`results/g1_p25_census.json`), decimal-oracle mechanism classification (`results/g2_p25_traces.json`),
+  a diagnosis with coverage floors frozen before repaired scoring (Amendment B), and bounded repairs that
+  legitimately recovered 287 of 397 quarantined files (neutron 40, proton 129, deuteron 73, alpha 45) —
+  including the projectile-aware fix for the charged-particle MT=4 same-residual defect behind the
+  `181Ta(α,n)184Re` wrong-nuclide rows. G5 then failed honestly under the frozen gates: all four
+  Amendment-B coverage floors miss (n 162/188, p 358/417, d 70/72, a 288/304 status-scored rows) and
+  stratum nonregression fails, while outcome accounting, the no-empty-stratum rule and byte-exact
+  historical reproducibility pass. The failure is structural, not a repair miss: the ~110 still-quarantined
+  files are genuine TENDL-2025 source inconsistencies that correctly fail closed, all 485 candidate
+  `zero_denominator` rows are also zero on the baseline library, and the composition-controlled paired
+  bootstrap shows ~zero per-row change (median Δ ≈ 2e-8) — the proton aggregate breach is population
+  composition, not physics. The census produced a hash-pinned per-file defect catalog of TENDL-2025
+  (`docs/P25_TENDL2025_DEFECT_REPORT.md`, qualified by absolute magnitude in `docs/DATA_TRAPS.md` traps
+  10–15). P17-FAIL, P18-FAIL and P18b-FAIL remain visible and unamended; the v1.1.0 release hold stands;
+  P24's corrected-definition re-validation retains its order and is the next scheduled phase.
+
+- 2026-09-14 — **P25b closes P25-FAIL analog `P25b-FAIL`** (`results/verdict_p25b.json`,
+  `results/g5_p25b_accounting.json`, independent checker `results/g5_p25b_check.json` green,
+  6/6 planted mutations rejected, gate ordering verified by git ancestry). Three hash-pinned
+  alternate neutron evaluations were qualified against the frozen machinery: TENDL-2023,
+  FENDL-3.2c and EAF-2010. Under the v1.0.1 builder all three met their Amendment-1 coverage
+  floors (47/44/35 IRDFF isotopic targets); under the 1.1.0 release-candidate builder — whose
+  added state-catalog and emitted-state validation is the stricter, release-relevant
+  instrument — all three fall below floor (37/34/31) and no candidate survives nonregression:
+  TENDL-2023 passes the IRDFF partition on 21 comparable rows but fails the isomeric
+  partition (median |ln C/E| 0.250 vs baseline 0.162 over 253 paired rows); EAF-2010 and
+  FENDL-3.2c fail IRDFF nonregression and cannot express isomeric identity at all (the EAF
+  format path emits no `state_catalog`; FENDL ships none of the 32 required product-isomer
+  anchor files). Decisive findings: TENDL-2023 carries the same TALYS emitted-sum>total
+  defect class as TENDL-2025 (upstream-confirmed, fixed in the next TENDL release);
+  EAF-2010 carries negative MF=8 ELFS excitation energies the 1.1.0 builder correctly
+  rejects. ACTINV 1.1.0 stays data-blocked; the recorded paths are the corrected upstream
+  TENDL release, or a new phase for EAF state-catalog emission under explicit isomeric
+  limitations. All scoring was retrospective; no blind evidence exists or was claimed.
+
+- 2026-09-14 — **P25c closes `P25c-PASS`** (`results/verdict_p25c.json`,
+  `results/g5_p25c_accounting.json`, independent checker `results/g5_p25c_check.json`
+  green, 7/7 planted mutations rejected, gate ordering verified by git ancestry). The
+  phase produced `tendl-2025-patched`, a clearly labeled derived corpus that mechanically
+  zeroes the 44 enumerated leaked leading ordinates across the 28 confirmed-signature
+  files while copying all 2,822 other files byte-for-byte; G2 replay verified surgical
+  integrity. The post-patch census shows zero residual leak-signature hits and recovered
+  three union targets (n-Sc045, n-Y088, n-Br080m) with zero regressions; coverage moved
+  IRDFF 29→30, union 43→45, anchors 41→42. The union+anchor artifact builds clean (87
+  targets, `state_catalog` liso {0,1}) and passes all frozen nonregression gates on both
+  partitions (IRDFF 17 comparable rows; isomeric 162 paired of 469 eligible neutron
+  rows). The honest boundary is equally clear: the five dosimetry-critical targets
+  (Ni-58, Nb-93, Ag-109, In-113, Au-197) remain unrecovered — their blockers are
+  non-signature defect classes, not the confirmed leak — and 46 non-signature
+  conservation-excess files plus 7 self-channel-only files stay ledgered and unpatched.
+  The verdict qualifies the derived corpus as a *candidate* for a separately labeled
+  data release; publishing it as a `data-v1.1.x` artifact remains the maintainer's
+  decision and must carry the defect scope verbatim. All scoring was retrospective; no
+  blind evidence exists or was claimed.
