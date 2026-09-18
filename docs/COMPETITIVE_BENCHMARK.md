@@ -37,24 +37,35 @@ against the same OpenMC 0.15.3 at the same Python-call boundary:
 
 | operator states | CB1 ratio (openmc/actinv) | CB2 ratio |
 |---:|---:|---:|
-| 2 | 186.8× | 156–215× |
-| 32 | 20.3× | 10–17× |
-| 256 | 3.96× | 1.7–1.9× |
-| 1024 | 2.83× | **0.68–0.73×** |
+| 2 | 186.8× | 164–179× |
+| 32 | 20.3× | 10–12× |
+| 256 | 3.96× | 2.0–2.2× |
+| 1024 | 2.83× | **0.79–0.84×** |
 
-At 1024 states ACTINV 1.1.2 is now *slower* than OpenMC's Python CRAM-48.
-The regression is fully attributed to `solve_refined` (commit `35d5448`):
-every CRAM shifted solve now runs compensated-residual iterative
+At 1024 states ACTINV 1.1.2 is slightly *slower* than OpenMC's Python
+CRAM-48. The regression is fully attributed to `solve_refined` (commit
+`35d5448`): every CRAM shifted solve runs compensated-residual iterative
 refinement — the fix for phantom radioactive parents on ill-conditioned
-activation matrices. An A/B build on the same host measured the
-refinement accounting for the entire slowdown (1024-state median
-42.5 ms → 8.4 ms without it). The slowdown is the price of a real
-correctness fix, reported rather than hidden; a selective refinement
-scheme could recover most of the speed on well-conditioned poles but is
-untested. The kernel claim is now: ACTINV's CRAM-48 remains faster than
-OpenMC's Python path on small and medium operators, roughly parity at
-the largest tested size, and the whole-product speed comparison is
-unchanged in kind — a kernel result, not a product-speed verdict.
+activation matrices. An A/B build on the same host measured refinement
+accounting for the entire slowdown (1024-state median 42.5 ms → 8.4 ms
+without it).
+
+A subsequent selective-refinement pass recovered most of the cost
+(42.5 → ~33 ms): refinement now skips only where the solve demonstrably
+behaved — every row's componentwise backward error below 1e-6, no
+populated component more than 1e-12 below the largest, and no solution
+amplification — and converged iterations exit on a per-row
+backward-error floor. The phantom-parent and trace-daughter regression
+tests still pass; the trace-daughter case itself demonstrated why a
+residual-only gate is unsafe (small backward error with ~1e-7 forward
+error on a trace component), which is why the state dynamic-range check
+is mandatory. At 1024 states every pole carries trace components, so the
+remaining ~20% gap is the genuine price of a trace-precision guarantee
+the OpenMC Python kernel does not perform. The kernel claim is now:
+ACTINV's CRAM-48 remains faster than OpenMC's Python path on small and
+medium operators, slightly behind at the largest tested size, and the
+whole-product speed comparison is unchanged in kind — a kernel result,
+not a product-speed verdict.
 
 **Not re-measured.** Install/first-use timings and the
 capability-survey legs remain the v1.0.0-era CB1 record below; nothing

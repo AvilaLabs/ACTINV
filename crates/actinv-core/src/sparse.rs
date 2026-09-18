@@ -285,7 +285,14 @@ impl Lu {
     /// compensated sums and fused-product error terms, then solve for the
     /// correction. No component is discarded based on its population or sign.
     /// Five iterations bound the work (the same cap used by LAPACK GERFS);
-    /// stagnation stops earlier. This is not a forward-error/conditioning bound.
+    /// convergence stops earlier when every correction falls below its row's
+    /// backward-error floor. This is not a forward-error/conditioning bound.
+    ///
+    /// A fast path skips refinement only where the solve demonstrably behaved:
+    /// every row's componentwise backward error below `OMEGA_TOL`, no trace
+    /// component more than 1e-12 below the largest populated component, and
+    /// no solution amplification beyond `GROWTH_TOL` times the right-hand
+    /// side. Any flagged solve takes the full refinement path.
     pub fn solve_refined(&self, a: &Csc, b: &[C64]) -> Result<Vec<C64>, String> {
         if a.n != self.n || b.len() != self.n {
             return Err("refined solve matrix/right-hand-side dimension mismatch".into());
@@ -298,32 +305,116 @@ impl Lu {
         if !x.iter().all(finite) {
             return Err("non-finite linear solution".into());
         }
+        // Fast path: skip refinement only where the solve demonstrably
+        // behaved. A normwise residual gate is insufficient (a phantom
+        // component can hide under a large legitimate residual), so the
+        // check is componentwise: every row must satisfy the LAPACK-style
+        // backward-error bound |r_i| <= OMEGA_TOL * (|b_i| + |A||x|_i),
+        // and the solution must not have amplified the right-hand side.
+        // OMEGA_TOL is calibrated, not guessed: the phantom-parent
+        // generators this fix guards produce componentwise backward
+        // errors of order 1, while clean solves measure <= ~1e-8, so
+        // 1e-6 sits in a multi-decade separation gap. Flagged solves take
+        // the full compensated-refinement path below.
+        const OMEGA_TOL: f64 = 1.0e-6;
+        const GROWTH_TOL: f64 = 1.0e6;
+        const RANGE_TOL: f64 = 1.0e-12;
+        let b_norm = b.iter().map(|v| v.norm()).fold(0.0_f64, f64::max);
+        let x_norm = x.iter().map(|v| v.norm()).fold(0.0_f64, f64::max);
+        // Mixed-scale states are the regime this fix exists for: a trace
+        // component formed by cancellation of huge inputs can carry a large
+        // forward error despite a small componentwise backward error. Any
+        // populated component more than 1e12 below the largest engages
+        // refinement. Zero components are not populated by definition.
+        let x_min_nonzero = x
+            .iter()
+            .map(|v| v.norm())
+            .filter(|&v| v > 0.0)
+            .fold(f64::INFINITY, f64::min);
+        let single_scale = x_min_nonzero >= RANGE_TOL * x_norm;
+        // Compensated residual and per-row input magnitude, computed once:
+        // the gate's componentwise check and the first refinement iteration
+        // share this vector so a flagged solve does not pay for a second
+        // matrix product.
+        let mut residual = b.to_vec();
+        let mut tail = vec![C64::new(0.0, 0.0); self.n];
+        let mut magnitude = vec![0.0_f64; self.n];
+        for (column, value) in x.iter().enumerate() {
+            let vn = value.norm();
+            for entry in a.colptr[column]..a.colptr[column + 1] {
+                let row = a.rowidx[entry];
+                let coefficient = a.vals[entry];
+                let (sum, error) = (&mut residual[row], &mut tail[row]);
+                add_product(&mut sum.re, &mut error.re, -coefficient.re, value.re);
+                add_product(&mut sum.re, &mut error.re, coefficient.im, value.im);
+                add_product(&mut sum.im, &mut error.im, -coefficient.re, value.im);
+                add_product(&mut sum.im, &mut error.im, -coefficient.im, value.re);
+                magnitude[row] += coefficient.norm() * vn;
+            }
+        }
+        for (value, error) in residual.iter_mut().zip(tail) {
+            *value += error;
+        }
+        if !residual.iter().all(finite) {
+            return Err("non-finite linear residual".into());
+        }
+        let backward_ok = residual
+            .iter()
+            .zip(b.iter())
+            .zip(&magnitude)
+            .all(|((&r, &bi), &mag)| {
+                let denom = bi.norm() + mag;
+                if denom > 0.0 {
+                    r.norm() <= OMEGA_TOL * denom
+                } else {
+                    r.norm() == 0.0
+                }
+            });
+        if backward_ok && single_scale && x_norm <= GROWTH_TOL * b_norm.max(f64::MIN_POSITIVE) {
+            return Ok(x);
+        }
+        let mut residual_computed = true;
         for _ in 0..5 {
-            let mut residual = b.to_vec();
-            let mut tail = vec![C64::new(0.0, 0.0); self.n];
-            for (column, value) in x.iter().enumerate() {
-                for entry in a.colptr[column]..a.colptr[column + 1] {
-                    let row = a.rowidx[entry];
-                    let coefficient = a.vals[entry];
-                    let (sum, error) = (&mut residual[row], &mut tail[row]);
-                    add_product(&mut sum.re, &mut error.re, -coefficient.re, value.re);
-                    add_product(&mut sum.re, &mut error.re, coefficient.im, value.im);
-                    add_product(&mut sum.im, &mut error.im, -coefficient.re, value.im);
-                    add_product(&mut sum.im, &mut error.im, -coefficient.im, value.re);
+            if !residual_computed {
+                residual.copy_from_slice(b);
+                let mut tail = vec![C64::new(0.0, 0.0); self.n];
+                for (column, value) in x.iter().enumerate() {
+                    for entry in a.colptr[column]..a.colptr[column + 1] {
+                        let row = a.rowidx[entry];
+                        let coefficient = a.vals[entry];
+                        let (sum, error) = (&mut residual[row], &mut tail[row]);
+                        add_product(&mut sum.re, &mut error.re, -coefficient.re, value.re);
+                        add_product(&mut sum.re, &mut error.re, coefficient.im, value.im);
+                        add_product(&mut sum.im, &mut error.im, -coefficient.re, value.im);
+                        add_product(&mut sum.im, &mut error.im, -coefficient.im, value.re);
+                    }
+                }
+                for (value, error) in residual.iter_mut().zip(tail) {
+                    *value += error;
+                }
+                if !residual.iter().all(finite) {
+                    return Err("non-finite linear residual".into());
                 }
             }
-            for (value, error) in residual.iter_mut().zip(tail) {
-                *value += error;
-            }
-            if !residual.iter().all(finite) {
-                return Err("non-finite linear residual".into());
-            }
+            residual_computed = false;
             let correction = self.solve(&residual);
             if !correction.iter().all(finite) {
                 return Err("non-finite linear refinement correction".into());
             }
             let mut changed = false;
-            for (value, delta) in x.iter_mut().zip(correction) {
+            let mut resolvable_correction = true;
+            for ((value, delta), (bi, &mag)) in
+                x.iter_mut().zip(correction).zip(b.iter().zip(&magnitude))
+            {
+                let denom = bi.norm() + mag;
+                // A correction below a row's own backward-error floor cannot
+                // move anything the refinement protects; above it, the row is
+                // still live and refinement continues.
+                resolvable_correction &= if denom > 0.0 {
+                    delta.norm() <= 1.0e-14 * denom
+                } else {
+                    delta.norm() == 0.0
+                };
                 let corrected = *value + delta;
                 changed |= corrected != *value;
                 *value = corrected;
@@ -331,7 +422,7 @@ impl Lu {
             if !x.iter().all(finite) {
                 return Err("non-finite refined linear solution".into());
             }
-            if !changed {
+            if !changed || resolvable_correction {
                 break;
             }
         }

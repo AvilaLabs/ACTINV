@@ -1735,6 +1735,7 @@ mod tests {
                 bound: Some(0.9),
                 band: None,
                 expected_order: None,
+                times_s: None,
             }],
         };
         let out = evaluate_comparison(&cmp, &per_case);
