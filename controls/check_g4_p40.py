@@ -18,22 +18,17 @@ checks.append(("g3_green", "classifier negative controls all pass",
 
 cls = json.loads((ROOT / "results/g2_p40_classes.json").read_text())
 checks.append(("census_complete",
-               "184/184 cases classified, zero skips",
-               cls["n_cases"] == 184 and not cls["skipped"], {}))
+               "912/912 cases classified, zero skips",
+               cls["n_cases"] == 912 and not cls["skipped"], {}))
 
-leg = json.loads((ROOT / "results/g2_p39_leg.json").read_text())
-sel = set(json.loads(
-    (Path.home() / "nuclear-data/p26b-work/p38-run/p40_cases.json")
-    .read_text()))
 rows = [json.loads(l)["record"]
         for l in (ROOT / "results/g2_p39_leg_ledger.jsonl")
         .read_text().splitlines()]
-census_rows = [r for r in rows if r["case"] in sel]
 checks.append(("arm_failures_zero",
-               "no arm failures in the census",
-               len(census_rows) == 184
+               "no arm failures across the full executable census",
+               len(rows) == 912
                and all(r["status"] != "executed_with_failures"
-                       for r in census_rows), {}))
+                       for r in rows), {}))
 
 checks.append(("open_classes_named",
                "pre-registered rule 2 fired: 'other'>1% on >5% of cases "

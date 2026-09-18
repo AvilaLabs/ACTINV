@@ -1,0 +1,34 @@
+{
+  "schema": "actinv-p40-ppd-1",
+  "intent": "mechanism test - rerun the P40 divergence classifier on the product_plus_data arm (ACTINV-TENDL ~2800 targets vs ALARA-FENDL-3.2c) to test whether the coverage-asymmetry mechanism predicted the second-order gap",
+  "arms": {
+    "identical_data": {
+      "actinv_library": "actinv_fendl32c_709_p39.npz (31 targets)",
+      "cases": 184,
+      "worst_other_share": 0.0317,
+      "worst_clean_dev": 0.0611,
+      "median_clean_dev": 0.0106
+    },
+    "product_plus_data": {
+      "actinv_library": "actinv_tendl2025_709.npz (~2800 targets)",
+      "cases": 408,
+      "worst_other_share": 0.0018,
+      "worst_clean_dev": 0.5232,
+      "worst_raw_dev": 0.872
+    }
+  },
+  "prediction_vs_result": {
+    "predicted": "if absent-product and other classes are coverage-driven, TENDL's full-chain coverage collapses the second-order gap while isomer/quasi-stable floors persist",
+    "measured": "other share collapsed 3.17% -> 0.18% (18x reduction); isomer_branching and quasi_stable_convention persist with shifted membership; clean divergence grew 6.1% -> 52% because with coverage parity the residual is real TENDL-vs-FENDL data difference",
+    "verdict": "mechanism CONFIRMED - coverage asymmetry, not channel defects"
+  },
+  "class_memberships": {
+    "isomer_branching": ["Mn60m1 (2040)", "Co60m1 (2030)", "Co58m1 (1632)",
+                         "Mn58m1 (1632)", "Sc45m1 (1520)", "Sc44m1 (1195)"],
+    "quasi_stable_convention": ["Ca48 (2040)", "V50 (1030)", "Cr50 (500)",
+                                "K40 (200)"],
+    "other": ["Ca45 (2040)", "Co57 (2040)", "Ni59 (2035)", "V57 (1970)",
+              "Ca47 (1815)", "V48 (1800)", "Sc46 (1690)", "Mn57 (1632)"]
+  },
+  "note": "product_plus_data compares DIFFERENT nuclear data (TENDL vs FENDL) so its larger clean deviation is expected - it measures data provenance differences, not coverage defects. The identical-data arm's residuals were coverage-bounded; this arm's are data-bounded."
+}
