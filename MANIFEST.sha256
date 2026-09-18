@@ -196,7 +196,7 @@ afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b  ./controls/fix
 3a66e633df8a5eb641eb9767fd4ee9653f10fa3df415626f73519f2c6b5537cc  ./controls/flag_library.py
 00ba0df782fb376ff32ef62f243032306576045b60d9c0ac903cbd46f9bbc23c  ./controls/fns_compare_libraries.py
 b8138886642399de431305403d22a9aef7b29c8b8b94d5a9dbe954b621d35b20  ./controls/fns_iron.py
-d13ec5a0e1f071c95171eb49949879247705c19bb611abb6bf7051c68fe5d086  ./controls/fns_iron_diagnose.py
+06436935b940b9e692cc5138f15e5c8fba17ffce39c7c0faa47a956395d69108  ./controls/fns_iron_diagnose.py
 b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns_report.py
 7318fb3b48f2185c1891faaa6fe042e6cd91f98b6d6142a783e8811eebebbccd  ./controls/fusion_isotope_chain.py
 206110d876fee10df20e5eb9373006b72fe001002e2fe954a7dd09d508206077  ./controls/g0_cram_coefficients.py
@@ -440,7 +440,7 @@ cf815cf58389f4a2fcd16685f091c697825de05bf39c6dcc311537c8a0e90823  ./controls/ten
 7665d438efc077633831b79b81cf9296ba8032ab2d1e34583a0c11465d2d2b2e  ./controls/test_check_p12.py
 e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/test_ci_result.py
 3e57c7b07c7134578b6f61f9e1c00db04d4d3da61f26acd0335449a490c2d2b0  ./controls/test_fns_iron.py
-07df3d3c6f2b2452d9d37b58e563513de6e2d5a8fcc2100a200d378233acea0b  ./controls/test_fns_iron_diagnose.py
+f62b14f5999244cb33ae33c13a565d1d7043cfae442bf29a2d48cf3b38f055f3  ./controls/test_fns_iron_diagnose.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
 c4f30f9bd696f2b4a1bd44574e28243f28dff58ad3898dbf24610c5462b326a3  ./controls/test_fusion_isotope_chain.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
@@ -733,6 +733,7 @@ d6353d29934e0b980955bdba3c6938473dbd6fd0e1c1bf0107e07bbadbddf7df  ./protocols/DR
 17c009da211f1017ecb9f421ca3c66880dfe707b1ca669b6bc4971ff2e3d33bc  ./protocols/DRAFT-P4b_PROTOCOL.md
 810009b2f4e4c47b1b2f87a1720a19fc79c0dfa791d371fbfdd7120e8a007811  ./protocols/DRAFT-P5_PROTOCOL.md
 4a9203cb5bc1be9d39cb7419cfacabbba552293510699d8b569183a9d56da01d  ./protocols/FNS-IRON-001.md
+3764db3fd2217afa23b95fe22911f81e531378b3d67d4b56e2e2b1fcde09ebe4  ./protocols/FNS-IRON-DIAG-001-AMENDMENT-1.md
 07c7e5002801f2bcc4c6d9fb73a2afafb18d06196cdda6610e071a5b77aad52a  ./protocols/FNS-IRON-DIAG-001.md
 a3f3259c4f805d3c0e9250030e467ce4c13466a4a987fed4f1b7674400919cf8  ./protocols/FUSION-ISOTOPE-001-AMENDMENT-1.md
 99514a0e323a4a059401227ee95f67acceb8c72fcbba6c25038c7c7ac3d74d0b  ./protocols/FUSION-ISOTOPE-001.md
@@ -783,6 +784,8 @@ ece2f3a6e6032d1a3436230dd60ef49b39e7b754cf4d04937188ee00b5f1d54d  ./results/fns-
 ece8d7865b443b79d6e36e51cdc577f2c3471b4044e6d037f588afb529144d61  ./results/fns-iron-001/comparison.svg
 1e7a531b585d27f4690be761e5fec2a87dfa6b705135a6269bf2d77c306d24d4  ./results/fns-iron-001/ledger.md
 fdc38443c3ffcb6f625a828b3d47452d879e57b1619be2565335b3a128b67aa9  ./results/fns-iron-001/note.md
+0e05e3dbf7c9fea79379974e9328fc0ecb2ebc43f85d9aaca338c1be38f98f2f  ./results/fns-iron-diagnosis/initial.json
+7ea328c867a778044ca4c531a55e9edc8bb93ac2d9b18ddf00018e62bf135ff7  ./results/fns-iron-diagnosis/ledger.md
 782c5a8ca6e358d37415346be29b784a8aac14049b4adf17a4c181f5f3650f0e  ./results/fns/Ag_2000exp_5min.json
 506b4f427366a733a8ad735b10128e5058b05757104ad39506c8629c84de6c84  ./results/fns/Ag_2000exp_5min.result
 523af6d764b6aaafdd3add63a65b2e0820a57497095dd483adc0e824f957af1a  ./results/fns/Al_1996exp_5min.json

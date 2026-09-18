@@ -43,5 +43,19 @@ class HeatControl(unittest.TestCase):
                 diag.score_any(result, rows)
 
 
+class ReferenceControl(unittest.TestCase):
+    def test_reference_mass_units_and_time(self):
+        text = ('1 * * * TIME INTERVAL   3 * COOLING TIME IS   6.6000E+01 SECS\n'
+                'INITIAL TOTAL MASS OF MATERIAL       1.00000E-03 kg\n')
+        for name in ('Mn 56', 'Mn 57', 'Fe 53'):
+            text += name + ' 100 0 10 1e-11 2e-11 3e-11 0 0 0 5\n'
+        rows = diag.reference_first_inventory(text)
+        self.assertAlmostEqual(rows['Mn56']['heat_microW_per_g'], .06)
+        self.assertEqual(rows['Fe53']['atoms_per_g'], 100)
+        for old, new in [('6.6000E+01', '6.7000E+01'), ('1.00000E-03', '1.00000E-02')]:
+            with self.assertRaises(ValueError):
+                diag.reference_first_inventory(text.replace(old, new))
+
+
 if __name__ == '__main__':
     unittest.main()
