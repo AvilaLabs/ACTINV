@@ -1,0 +1,36 @@
+name: fusion-isotope
+
+on:
+  push: { branches: [master, main] }
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  reduced-chain:
+    runs-on: ubuntu-latest
+    env:
+      CARGO_BUILD_JOBS: 1
+      RUST_TEST_THREADS: 1
+      RAYON_NUM_THREADS: 2
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2.9.2
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+      - name: Build existing ACTINV core probe
+        run: cargo build --release -p actinv-core --bin cram_probe
+      - name: Opening audit remains intact
+        run: python controls/check_fusion_isotope_001.py
+      - name: Execute reduced chain and independent Bateman control
+        run: |
+          python controls/fusion_isotope_chain.py
+          python controls/test_fusion_isotope_chain.py
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: fusion-isotope-evidence
+          path: |
+            results/fusion-isotope-001/reduced-chain.json
+            results/fusion-isotope-001/comparison.md
+            results/fusion-isotope-001/comparison.svg

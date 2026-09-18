@@ -181,6 +181,14 @@ impl CollapsedLibrary {
         if phi.len() != self.flux.len() {
             return Err("collapsed activation cache does not match the run spectrum".into());
         }
+        // A zero-flux collapse is valid for another all-zero request. It
+        // has no normalized shape, so handle it before dividing by sums.
+        if !phi.is_empty()
+            && phi.iter().all(|value| *value == 0.0)
+            && self.flux.iter().all(|value| *value == 0.0)
+        {
+            return Ok(());
+        }
         let actual_sum: f64 = phi.iter().sum();
         let cached_sum: f64 = self.flux.iter().sum();
         if !(actual_sum.is_finite()
@@ -2267,6 +2275,24 @@ mod tests {
         assert!(error.contains("integrity trailer"), "{error}");
         assert_eq!(std::fs::read(&paths.collapsed).unwrap(), corrupted);
         std::fs::remove_dir_all(scratch).unwrap();
+    }
+
+    #[test]
+    fn validate_flux_accepts_zero_cache_only_for_zero_request() {
+        let library = CollapsedLibrary {
+            rows: Vec::new(),
+            group_count: 3,
+            boundaries_ev: vec![0.0, 1.0, 2.0, 3.0],
+            flux: vec![0.0; 3],
+            one_group_barns: vec![],
+            fission_average_energy_ev: vec![],
+            fission_average_present: vec![],
+        };
+        assert!(library.validate_flux(&[0.0, 0.0, 0.0]).is_ok());
+        assert!(library.validate_flux(&[0.0, 0.0, 1.0]).is_err());
+        assert!(library.validate_flux(&[0.0, 0.0]).is_err());
+        assert!(library.validate_flux(&[0.0, f64::NAN, 0.0]).is_err());
+        assert!(library.validate_flux(&[0.0, f64::INFINITY, 0.0]).is_err());
     }
 
     #[test]

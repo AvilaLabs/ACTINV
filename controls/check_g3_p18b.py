@@ -15,7 +15,8 @@ generated ENDF fixtures:
 * a zero runtime total uses the frozen 0.001 barn absolute bound;
 * MF=9 production rows follow the same rule;
 * an MF=10/MT=18 IZAP=-1 sentinel supplies the permitted comparator when MF=3
-  is absent, while state partials with neither MF=3 nor a sentinel still fail.
+  is absent; under P38, production-only sections use a ledgered self-comparator
+  (see protocols/ACTINV-P18b_AMENDMENT_P38_RUNTIME.md).
 
 When the TENDL corpus is present it additionally builds the real fixtures
 recorded in the report: the At198 outside-envelope failure, the Ag112
@@ -488,18 +489,37 @@ def run_generated_legs(binary: Path) -> dict:
             ok = ok and "sentinel supplies the permitted runtime comparator" in ledger
         legs["fission_sentinel_comparator"] = {"pass": ok}
 
-        # 8. State partials with neither MF=3 nor a sentinel still fail.
+        # 8. P38 supersedes the historical missing-total rejection. Require
+        # the actual emitted values and the unanchored-comparator caveat.
         case = work / "missing"
         source = case / "in"
         source.mkdir(parents=True)
         (source / "n-fixture.tendl").write_text(
             fixture_tape([state_section(2631, 10, 102, 26056, [(26057, 0, "0.5")])])
         )
-        result = build(binary, source, case / "out.npz", temperature="0")
-        ok = result.returncode != 0 and "conservation is unproven" in (
-            result.stdout + result.stderr
-        )
-        legs["missing_total_still_fails"] = {"pass": ok}
+        out = case / "out.npz"
+        result = build(binary, source, out, temperature="0")
+        ok = result.returncode == 0
+        if ok:
+            rows, sigma, bounds = load_npz(out)
+            coverage = lethargy_coverage(bounds)
+            losses = [i for i, r in enumerate(rows) if r[1] == 102 and r[2] == -1 and r[4] == 0]
+            products = [i for i, r in enumerate(rows) if r[1] == 102 and r[4] in (10, -3)]
+            ok = len(losses) == len(products) == 1 and len(rows) == 2
+            ok = ok and all(
+                math.isfinite(sigma[i][group])
+                and abs(sigma[i][group] - 0.5 * fraction) <= 1e-12
+                for i in losses + products
+                for group, fraction in enumerate(coverage)
+            )
+            ok = ok and not vector_closure_failures(rows, sigma, len(coverage))
+            index = json.loads(out.with_name(out.stem + "_index.json").read_text())
+            ledger = "\n".join(index["targets"][0]["ledger"])
+            ok = ok and all(text in ledger for text in (
+                "missing_total_self_comparator",
+                "not anchored to an independent total",
+            ))
+        legs["missing_total_self_comparator"] = {"pass": ok}
     finally:
         shutil.rmtree(work, ignore_errors=True)
     return legs
