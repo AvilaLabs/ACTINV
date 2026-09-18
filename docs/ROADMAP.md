@@ -432,6 +432,26 @@ handoff, AI-assisted capability, experimental validation or competitive
 results beyond the locally measured preparation amortization
 (`results/verdict_p35.json`, `controls/check_g{0,1,2,3,4}_p35.py`).
 
+**P36 execution entry (2026-09-17).** P36 (flagship W-MATCMP, non-AI leg)
+closed `P36-CONDITIONAL`: the frozen three-case RAFM impurity study executed
+end-to-end under the sealed FNS 709-group spectrum and two-year schedule —
+activity, decay heat, grouped photon sources, inventories and trace-mode
+pathways at five cooling times, plus 24 robustness samples per case with
+zero failures. All three declared decision rules pass at the scoped 100 y
+cooling time (ranking high > base > low, impurity span 10.12x); the
+high-vs-low difference is driven by Ni-63 (96.4% share) via Ni-64(n,gamma),
+and Nb-94 attributes to Mo-98 feed rather than the Nb impurity. The flagship
+forced two machinery changes: `DecisionRule.times_s` scopes comparison
+rules to declared cooling times (early-time ordering genuinely differs),
+and `CollapsedLibrary::validate_flux` now compares normalized spectrum
+shapes rather than raw flux bits — collapsed rates are
+flux-denominator-normalized, so bit-exact validation wrongly rejected every
+flux-normalization sample (24/24 failed on first execution; one G1 repair
+round). The AI leg of W-MATCMP remains open under P33/P34's blockers; this
+phase does not constitute experimental validation
+(`results/verdict_p36.json`, `controls/check_g{0,1,2,3,4}_p36.py`,
+`protocols/ACTINV-P36_PROTOCOL.md`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier

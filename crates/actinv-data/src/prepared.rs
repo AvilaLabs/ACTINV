@@ -174,12 +174,28 @@ impl CollapsedLibrary {
     }
 
     pub fn validate_flux(&self, phi: &[f64]) -> Result<(), String> {
-        if phi.len() != self.flux.len()
-            || phi
-                .iter()
-                .zip(&self.flux)
-                .any(|(actual, cached)| actual.to_bits() != cached.to_bits())
+        // Collapsed one-group rates are normalized by the flux
+        // denominator, so they depend only on the spectrum *shape*: a
+        // change of normalization scalar (spectrum.total) must not
+        // reject reuse. Compare the normalized shapes, not raw bits.
+        if phi.len() != self.flux.len() {
+            return Err("collapsed activation cache does not match the run spectrum".into());
+        }
+        let actual_sum: f64 = phi.iter().sum();
+        let cached_sum: f64 = self.flux.iter().sum();
+        if !(actual_sum.is_finite()
+            && actual_sum > 0.0
+            && cached_sum.is_finite()
+            && cached_sum > 0.0)
         {
+            return Err("collapsed activation cache does not match the run spectrum".into());
+        }
+        let mismatched = phi.iter().zip(&self.flux).any(|(actual, cached)| {
+            let a = *actual / actual_sum;
+            let c = *cached / cached_sum;
+            (a - c).abs() > 1e-12 * c.abs().max(a.abs()).max(f64::MIN_POSITIVE)
+        });
+        if mismatched {
             return Err("collapsed activation cache does not match the run spectrum".into());
         }
         Ok(())
@@ -2251,5 +2267,27 @@ mod tests {
         assert!(error.contains("integrity trailer"), "{error}");
         assert_eq!(std::fs::read(&paths.collapsed).unwrap(), corrupted);
         std::fs::remove_dir_all(scratch).unwrap();
+    }
+
+    #[test]
+    fn validate_flux_accepts_rescaled_shape_and_rejects_shape_change() {
+        let library = CollapsedLibrary {
+            rows: Vec::new(),
+            group_count: 3,
+            boundaries_ev: vec![0.0, 1.0, 2.0, 3.0],
+            flux: vec![2.0, 4.0, 6.0],
+            one_group_barns: vec![],
+            fission_average_energy_ev: vec![],
+            fission_average_present: vec![],
+        };
+        // same shape, different normalization: collapsed rates are
+        // flux-denominator-normalized, so reuse must be accepted
+        assert!(library.validate_flux(&[1.0, 2.0, 3.0]).is_ok());
+        assert!(library.validate_flux(&[200.0, 400.0, 600.0]).is_ok());
+        // different shape fails closed
+        assert!(library.validate_flux(&[2.0, 4.0, 6.001]).is_err());
+        assert!(library.validate_flux(&[2.0, 4.0]).is_err());
+        // non-positive totals fail closed
+        assert!(library.validate_flux(&[0.0, 0.0, 0.0]).is_err());
     }
 }

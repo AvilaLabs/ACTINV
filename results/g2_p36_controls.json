@@ -1,0 +1,364 @@
+{
+ "case_completion": {
+  "executed": true,
+  "status": "complete"
+ },
+ "controls_pass": true,
+ "decision_rules": {
+  "act_rank_100y": {
+   "expected": [
+    "rafm_high",
+    "rafm_base",
+    "rafm_low"
+   ],
+   "observed": [
+    "rafm_high",
+    "rafm_base",
+    "rafm_low"
+   ],
+   "pass": true
+  },
+  "heat_rank_100y": {
+   "expected": [
+    "rafm_high",
+    "rafm_base",
+    "rafm_low"
+   ],
+   "observed": [
+    "rafm_high",
+    "rafm_base",
+    "rafm_low"
+   ],
+   "pass": true
+  },
+  "impurity_span_100y": {
+   "band": [
+    1.0,
+    1000000.0
+   ],
+   "max_ratio": 10.119201947766369,
+   "pass": true
+  }
+ },
+ "difference_drivers_100y": [
+  {
+   "delta_bq_per_g": 27.431249250555112,
+   "nuclide": "Ni63",
+   "share_of_difference": 0.9643562030600026
+  },
+  {
+   "delta_bq_per_g": 1.0094631690737417,
+   "nuclide": "Ni59",
+   "share_of_difference": 0.03548806909831754
+  },
+  {
+   "delta_bq_per_g": 0.008049638358743368,
+   "nuclide": "Co60",
+   "share_of_difference": 0.0002829881575111573
+  },
+  {
+   "delta_bq_per_g": 0.005947600967373325,
+   "nuclide": "Tc99",
+   "share_of_difference": 0.00020909021801462685
+  },
+  {
+   "delta_bq_per_g": 4.160616381849714e-07,
+   "nuclide": "Co60m1",
+   "share_of_difference": 1.462680820600484e-08
+  }
+ ],
+ "dominant_nuclides_100y": {
+  "rafm_base": {
+   "top": [
+    {
+     "bq_per_g": 2.818502780900496,
+     "nuclide": "Ni63",
+     "share": 0.4903865154083599
+    },
+    {
+     "bq_per_g": 1.4749557069184762,
+     "nuclide": "C14",
+     "share": 0.2566250402159745
+    },
+    {
+     "bq_per_g": 1.3495950142540099,
+     "nuclide": "Mn53",
+     "share": 0.2348137460560074
+    },
+    {
+     "bq_per_g": 0.10196597667411533,
+     "nuclide": "Ni59",
+     "share": 0.01774088722930191
+    },
+    {
+     "bq_per_g": 0.0009025390402618281,
+     "nuclide": "Be10",
+     "share": 0.00015703123586509194
+    },
+    {
+     "bq_per_g": 0.000839703858717629,
+     "nuclide": "Co60",
+     "share": 0.00014609864926935805
+    }
+   ],
+   "total_bq_per_g": 5.747512813547579
+  },
+  "rafm_high": {
+   "top": [
+    {
+     "bq_per_g": 27.713099528645163,
+     "nuclide": "Ni63",
+     "share": 0.8779859451907072
+    },
+    {
+     "bq_per_g": 1.4749557069184762,
+     "nuclide": "C14",
+     "share": 0.04672845702858685
+    },
+    {
+     "bq_per_g": 1.341490938552877,
+     "nuclide": "Mn53",
+     "share": 0.04250012483925494
+    },
+    {
+     "bq_per_g": 1.019659766741153,
+     "nuclide": "Ni59",
+     "share": 0.03230410741858055
+    },
+    {
+     "bq_per_g": 0.00813360874466828,
+     "nuclide": "Co60",
+     "share": 0.00025768298324471467
+    },
+    {
+     "bq_per_g": 0.00600767774482154,
+     "nuclide": "Tc99",
+     "share": 0.00019033080791761522
+    }
+   ],
+   "total_bq_per_g": 31.56439995474598
+  },
+  "rafm_low": {
+   "top": [
+    {
+     "bq_per_g": 1.4749557069184762,
+     "nuclide": "C14",
+     "share": 0.4728546933797931
+    },
+    {
+     "bq_per_g": 1.35105825604744,
+     "nuclide": "Mn53",
+     "share": 0.43313452356902604
+    },
+    {
+     "bq_per_g": 0.28185027809004953,
+     "nuclide": "Ni63",
+     "share": 0.09035812139994392
+    },
+    {
+     "bq_per_g": 0.010196597667411532,
+     "nuclide": "Ni59",
+     "share": 0.003268917867109543
+    },
+    {
+     "bq_per_g": 0.0009025390402618281,
+     "nuclide": "Be10",
+     "share": 0.0002893441607395251
+    },
+    {
+     "bq_per_g": 0.00014879800079208906,
+     "nuclide": "Fe55",
+     "share": 4.770301420580788e-05
+    }
+   ],
+   "total_bq_per_g": 3.1192578345284683
+  }
+ },
+ "gate": "G2",
+ "packaging": {
+  "artifact_sha256": {
+   "manifest": "04d4a05a0cfd89b0824c6043c768635cfba9eb02dbfe60bacf37c491e74d164b",
+   "study_record": "b549f9ad585087f5fb6a409a003f2651cc528ca481d22e570ac3d2f7e7c75671"
+  },
+  "study_digest_matches_g0": true,
+  "study_sha256": "4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545"
+ },
+ "pathway_attribution": {
+  "rafm_base": {
+   "impurity_parents": {
+    "Co60": [
+     {
+      "fraction": 0.5304732994469852,
+      "from": "Ni60"
+     },
+     {
+      "fraction": 0.4031259796485036,
+      "from": "Ni60"
+     },
+     {
+      "fraction": 0.037217457398175474,
+      "from": "Co59"
+     }
+    ],
+    "Nb94": [
+     {
+      "fraction": 0.9999999480913061,
+      "from": "Mo98"
+     }
+    ],
+    "Ni59": [
+     {
+      "fraction": 1.0,
+      "from": "Ni60"
+     }
+    ],
+    "Ni63": [
+     {
+      "fraction": 0.959533343816723,
+      "from": "Ni64"
+     },
+     {
+      "fraction": 0.02092991216381513,
+      "from": "Cu65"
+     },
+     {
+      "fraction": 0.01918516973736054,
+      "from": "Ni62"
+     }
+    ]
+   },
+   "nuclides_checked": 192,
+   "pass": true,
+   "raw_pathway_closure": 24916.87696545035,
+   "significant_nuclide_closure": 1.8609557820238706e-06
+  },
+  "rafm_high": {
+   "impurity_parents": {
+    "Co60": [
+     {
+      "fraction": 0.5476541723061112,
+      "from": "Ni60"
+     },
+     {
+      "fraction": 0.4161823506473311,
+      "from": "Ni60"
+     },
+     {
+      "fraction": 0.015369139859053535,
+      "from": "Co59"
+     }
+    ],
+    "Nb94": [
+     {
+      "fraction": 0.9999999480913063,
+      "from": "Mo98"
+     }
+    ],
+    "Ni59": [
+     {
+      "fraction": 1.0,
+      "from": "Ni60"
+     }
+    ],
+    "Ni63": [
+     {
+      "fraction": 0.9758733032076687,
+      "from": "Ni64"
+     },
+     {
+      "fraction": 0.019511875314021276,
+      "from": "Ni62"
+     },
+     {
+      "fraction": 0.004257265815881833,
+      "from": "Cu65"
+     }
+    ]
+   },
+   "nuclides_checked": 203,
+   "pass": true,
+   "raw_pathway_closure": 2.6571330909328566e+32,
+   "significant_nuclide_closure": 1.7711285493788298e-06
+  },
+  "rafm_low": {
+   "impurity_parents": {
+    "Co60": [
+     {
+      "fraction": 0.5304732991112178,
+      "from": "Ni60"
+     },
+     {
+      "fraction": 0.40312597939334194,
+      "from": "Ni60"
+     },
+     {
+      "fraction": 0.03721745737461839,
+      "from": "Co59"
+     }
+    ],
+    "Nb94": [
+     {
+      "fraction": 0.9999999480913064,
+      "from": "Mo98"
+     }
+    ],
+    "Ni59": [
+     {
+      "fraction": 1.0,
+      "from": "Ni60"
+     }
+    ],
+    "Ni63": [
+     {
+      "fraction": 0.959533343816723,
+      "from": "Ni64"
+     },
+     {
+      "fraction": 0.020929912163815147,
+      "from": "Cu65"
+     },
+     {
+      "fraction": 0.01918516973736054,
+      "from": "Ni62"
+     }
+    ]
+   },
+   "nuclides_checked": 174,
+   "pass": true,
+   "raw_pathway_closure": 5790071.7912084,
+   "significant_nuclide_closure": 1.8609321908436672e-06
+  }
+ },
+ "phase": "P36",
+ "robustness_survival": {
+  "by_response": {
+   "decay_heat_w_per_g": {
+    "rank": [
+     "rafm_high",
+     "rafm_base",
+     "rafm_low"
+    ],
+    "sample_means": {
+     "rafm_base": 2.0746830523153272e-14,
+     "rafm_high": 8.86893045496356e-14,
+     "rafm_low": 1.3804601119740012e-14
+    },
+    "survives": true
+   },
+   "total_activity_bq_per_g": {
+    "rank": [
+     "rafm_high",
+     "rafm_base",
+     "rafm_low"
+    ],
+    "sample_means": {
+     "rafm_base": 5.561468379129057,
+     "rafm_high": 29.391102470450132,
+     "rafm_low": 3.1296520395247795
+    },
+    "survives": true
+   }
+  },
+  "pass": true
+ }
+}

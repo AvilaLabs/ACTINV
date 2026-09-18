@@ -358,6 +358,17 @@
                 "items": {
                   "type": "string"
                 }
+              },
+              "times_s": {
+                "type": [
+                  "array",
+                  "null"
+                ],
+                "items": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "minItems": 1
               }
             }
           }

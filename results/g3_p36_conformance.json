@@ -1,0 +1,66 @@
+{
+ "all_named": true,
+ "cases": [
+  {
+   "expect_reject": true,
+   "name": "negative_times_s",
+   "named": true,
+   "rc": 2,
+   "rejected": true
+  },
+  {
+   "expect_reject": true,
+   "name": "empty_times_s",
+   "named": true,
+   "rc": 2,
+   "rejected": true
+  },
+  {
+   "expect_reject": false,
+   "name": "nonexistent_time_scope",
+   "named": true,
+   "rc": 0,
+   "rejected": false
+  },
+  {
+   "expect_reject": true,
+   "name": "zero_mass",
+   "named": true,
+   "rc": 2,
+   "rejected": true
+  },
+  {
+   "expect_reject": true,
+   "name": "unknown_rule_kind",
+   "named": true,
+   "rc": 2,
+   "rejected": true
+  },
+  {
+   "expect_reject": true,
+   "name": "no_robustness_channels",
+   "named": true,
+   "rc": 2,
+   "rejected": true
+  },
+  {
+   "expect_reject": false,
+   "name": "absent_element_channel",
+   "named": true,
+   "rc": 0,
+   "rejected": false
+  },
+  {
+   "expect_reject": true,
+   "name": "spec_ref_no_spectrum",
+   "named": true,
+   "rc": 1,
+   "rejected": true
+  }
+ ],
+ "gate": "G3",
+ "n_cases": 8,
+ "pass": true,
+ "phase": "P36",
+ "reject_count": 6
+}

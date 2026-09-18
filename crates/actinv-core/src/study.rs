@@ -248,6 +248,10 @@ pub struct DecisionRule {
     /// expected rank order of case ids for rank_equal
     #[serde(default)]
     pub expected_order: Option<Vec<String>>,
+    /// optional restriction to declared cooling times (seconds); when
+    /// absent the rule evaluates at every shared time key
+    #[serde(default)]
+    pub times_s: Option<Vec<f64>>,
 }
 
 impl Study {
@@ -613,6 +617,14 @@ fn validate_rule(r: &DecisionRule) -> Result<(), String> {
             return Err(format!("rule '{}' requires expected_order", r.id));
         }
         _ => {}
+    }
+    if let Some(ts) = &r.times_s {
+        if ts.is_empty() || ts.iter().any(|t| !(t.is_finite() && *t >= 0.0)) {
+            return Err(format!(
+                "rule '{}' times_s must be nonempty and nonnegative",
+                r.id
+            ));
+        }
     }
     Ok(())
 }
@@ -1368,7 +1380,14 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
                 Some(prev) => prev.into_iter().filter(|k| keys.contains(k)).collect(),
             });
         }
-        let times = shared.unwrap_or_default();
+        let mut times = shared.unwrap_or_default();
+        if let Some(scope) = &rule.times_s {
+            times.retain(|k| {
+                k.parse::<f64>()
+                    .map(|v| scope.contains(&v))
+                    .unwrap_or(false)
+            });
+        }
         if times.is_empty() {
             groups_undefined += 1;
             continue;

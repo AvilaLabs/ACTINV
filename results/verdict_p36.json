@@ -1,0 +1,57 @@
+{
+  "verdict_id": "verdict_p36",
+  "schema": "actinv-verdict-1",
+  "phase": "P36",
+  "title": "Flagship W-MATCMP investigation, non-AI leg",
+  "generated": "2026-09-17",
+  "disposition": "P36-CONDITIONAL",
+  "basis": {
+    "G0": "results/g0_p36_check.json",
+    "G1": "results/g1_p36_check.json",
+    "G2": "results/g2_p36_check.json",
+    "G3": "results/g3_p36_check.json",
+    "controls_record": "results/g2_p36_controls.json",
+    "conformance_record": "results/g3_p36_conformance.json",
+    "study_record": "target/p36-work/w-matcmp/out/study_record.json",
+    "protocol": "protocols/ACTINV-P36_PROTOCOL.md"
+  },
+  "scope": {
+    "study_id": "w-matcmp",
+    "materials": ["rafm_base", "rafm_low", "rafm_high"],
+    "spectrum": "FNS 709-group (sealed example spec)",
+    "schedule": "2 y irradiation + cooling at 0, 1 d, 1 y, 100 y, 1000 y",
+    "responses": ["total_activity_bq_per_g", "decay_heat_w_per_g",
+                   "photon_source_per_group",
+                   "inventory_per_nuclide", "total_atoms_per_g",
+                   "pathways (trace mode)"],
+    "robustness": "24 samples per case; composition_rel_std 0.3 on Ag/Co/Cu/Mo/Nb/Ni, flux_rel_std 0.05; cross_section_mf33 channel not enabled for this study"
+  },
+  "headline_results": {
+    "decision_rules_100y": {
+      "act_rank": "high(31.56) > base(5.75) > low(3.12) Bq/g — pass",
+      "heat_rank": "same ordering — pass",
+      "impurity_span": "10.12x, within declared band — pass"
+    },
+    "dominant_finding": "At 100 y the high-vs-low activity difference is driven by Ni-63 (96.4% of +28.4 Bq/g), produced via Ni-64(n,gamma); Ni is the controlling impurity in this scenario, not Nb. Nb-94 pathways attribute to Mo-98 feed, not the Nb impurity.",
+    "early_time_reversal": "At shutdown/1d/1y the ordering is flat to reversed (<1% spread, bulk-nuclide dominated); the declared ranking applies only at the scoped 100 y cooling time.",
+    "robustness_survival": "Sample means preserve the nominal ranking for activity and decay heat; 0/72 sample failures.",
+    "pathway_attribution": "Significant-nuclide pathway closure ~2e-6 at every step for all three cases."
+  },
+  "machinery_changes_forced_by_flagship": [
+    "DecisionRule.times_s: rank/band rules previously evaluated at every shared cooling time; an optional declared-time scope was added so rules apply only where intended. Early-time ordering genuinely differs from 100 y.",
+    "CollapsedLibrary::validate_flux: bit-exact flux comparison rejected every flux_rel_std sample (24/24 failed) because spectrum.total rescales flux_per_group at run time while remaining signature-invariant. Collapsed rates are flux-denominator-normalized, so only spectrum shape is collapse-relevant; validation now compares normalized shapes. Restores the P31 reuse intent."
+  ],
+  "conditions": [
+    "This phase demonstrates the flagship investigation executed end-to-end under the declared spectrum, schedule, compositions and sealed nuclear data only. It does not constitute experimental validation.",
+    "The AI leg of W-MATCMP is not executed: P33/P34 remain blocked on the user's AI-provider credentials and independent human evaluators. The flagship's defining 'with and without AI' comparison therefore remains open.",
+    "Conclusions are material-, spectrum-, schedule- and data-specific; no claim of generality, predictive superiority, regulatory qualification or competitive position.",
+    "pathway_closure (max relative deviation over all nuclides) is unstable on numerically dead inventories (~1e-80 atoms/g); the recorded qualification criterion is closure over nuclides >=1e-9 of step-peak atoms (~2e-6). The raw field remains emitted for transparency.",
+    "Robustness covers composition and flux-normalization channels only; cross_section_mf33 covariance sampling was not enabled in this study and is carried by P30's qualified envelope.",
+    "Early-time rankings are physically flat/reversed; any consumer must respect the declared times_s scope of the decision rules."
+  ],
+  "gates": {"G0": "pass", "G1": "pass", "G2": "pass", "G3": "pass"},
+  "repair_rounds": {"G1": 1,
+    "notes": "First execution exposed the validate_flux shape bug (all flux samples failed); one repair round used, consistent with the one-repair-per-gate rule."},
+  "prior_disposition": null,
+  "closure_verified_by": "controls/check_g4_p36.py"
+}
