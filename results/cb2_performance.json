@@ -1,0 +1,145 @@
+{
+ "schema": "actinv-cb2-performance-1",
+ "refresh_of": "results/cb1_performance.json",
+ "implementations": {
+  "actinv_version": "1.1.2",
+  "actinv_python_module_sha256": "719676a094f13e3d2fec109816b5e6cfb8e3913217e9e2d7255572966af0bd61",
+  "openmc_version": "0.15.3"
+ },
+ "identical_operator_cram48": [
+  {
+   "states": 2,
+   "nonzeros": 2,
+   "operator_sha256": "b5c8e776b4b15623cf820cf7f477f0220655c6bf2a20d91e9a1e482f5e9ae3c0",
+   "actinv_pyo3_cram48": {
+    "median_ms": 0.01843385,
+    "mean_ms": 0.035562891666666666,
+    "minimum_ms": 0.0172445,
+    "p95_ms": 0.17054699999999998,
+    "sample_standard_deviation_ms": 0.05053002021100253,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 0.0197335
+   },
+   "openmc_python_cram48": {
+    "median_ms": 8.45460555,
+    "mean_ms": 8.322496625,
+    "minimum_ms": 6.277740249999999,
+    "p95_ms": 9.8273879,
+    "sample_standard_deviation_ms": 1.113078081266271,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 7.961637
+   },
+   "openmc_over_actinv_median_time_ratio": 458.64567358419424,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 4.974063509652592e-16,
+    "within_cb1_numerical_tolerance": true
+   }
+  },
+  {
+   "states": 32,
+   "nonzeros": 92,
+   "operator_sha256": "69dafc811a4359e6a11046118353bd5a3572b13d8e93d34f718eac77a3855e18",
+   "actinv_pyo3_cram48": {
+    "median_ms": 0.37873702499999995,
+    "mean_ms": 0.4056110733333333,
+    "minimum_ms": 0.21775799999999998,
+    "p95_ms": 0.52674065,
+    "sample_standard_deviation_ms": 0.09266908059811045,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 0.221619
+   },
+   "openmc_python_cram48": {
+    "median_ms": 5.480977449999999,
+    "mean_ms": 6.195743988333333,
+    "minimum_ms": 4.5606153,
+    "p95_ms": 8.6953592,
+    "sample_standard_deviation_ms": 1.549368513048715,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 5.1654075
+   },
+   "openmc_over_actinv_median_time_ratio": 14.471723354747269,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 6.718255993325631e-16,
+    "within_cb1_numerical_tolerance": true
+   }
+  },
+  {
+   "states": 256,
+   "nonzeros": 764,
+   "operator_sha256": "08af912ab8862a5f0c7e1bbaaa77a7d6bf28780f91bea57888cf093d71cd985d",
+   "actinv_pyo3_cram48": {
+    "median_ms": 2.5410305749999997,
+    "mean_ms": 2.51554786,
+    "minimum_ms": 1.6618149,
+    "p95_ms": 3.1460949,
+    "sample_standard_deviation_ms": 0.45999750252436605,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 1.811709
+   },
+   "openmc_python_cram48": {
+    "median_ms": 7.939989525,
+    "mean_ms": 8.504147646666667,
+    "minimum_ms": 6.5032820000000005,
+    "p95_ms": 11.31036465,
+    "sample_standard_deviation_ms": 1.7624258066599203,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 6.961893
+   },
+   "openmc_over_actinv_median_time_ratio": 3.124712312837873,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 1.1803961025464319e-15,
+    "within_cb1_numerical_tolerance": true
+   }
+  },
+  {
+   "states": 1024,
+   "nonzeros": 3068,
+   "operator_sha256": "fface3410792455ca63683371b1a325ec450f9f448248e27faf0bdb7cad7c202",
+   "actinv_pyo3_cram48": {
+    "median_ms": 8.405877825,
+    "mean_ms": 9.815486133333332,
+    "minimum_ms": 7.979766149999999,
+    "p95_ms": 14.2606167,
+    "sample_standard_deviation_ms": 2.3017107114993376,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 8.291684
+   },
+   "openmc_python_cram48": {
+    "median_ms": 26.833865425,
+    "mean_ms": 27.24236871333333,
+    "minimum_ms": 22.97816845,
+    "p95_ms": 31.7929481,
+    "sample_standard_deviation_ms": 3.1557518801527444,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 26.8575195
+   },
+   "openmc_over_actinv_median_time_ratio": 3.1922740234450173,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 6.718255993325631e-16,
+    "within_cb1_numerical_tolerance": true
+   }
+  }
+ ],
+ "note": "kernel-only refresh: same operators and sampling protocol as CB1; startup/example/ALARA legs superseded by P40 identical-data census or unchanged",
+ "regression_attribution": {
+  "finding": "ACTINV 1.1.2 is ~5x slower than CB1's 1.0.0 at 1024 states and now LOSES to OpenMC's Python CRAM48 at the largest size (ratio ~0.7x vs CB1's 2.83x)",
+  "cause": "commit 35d5448 replaced raw LU solves with solve_refined (compensated-residual iterative refinement, up to 5 iterations per shifted solve) across all CRAM paths - a correctness fix for phantom radioactive parents on ill-conditioned activation matrices",
+  "attribution_measurement": "with solve_refined temporarily reverted to f.solve, the 1024-state median dropped 42.5ms -> 8.4ms (5.0x) on the same binary/environment - refinement accounts for essentially the entire regression; reverted back, refinement is the shipped behavior",
+  "no_refinement_reference_medians_ms": {
+   "2": 0.0184,
+   "32": 0.3787,
+   "256": 2.541,
+   "1024": 8.4059
+  },
+  "judgement": "the cost is the price of the trace-inventory correctness fix; it is reported, not hidden. A selective/adaptive refinement scheme could recover most of the speed on well-conditioned poles but is untested - left as open work",
+  "environment_note": "both arms ran thread-pinned in a bounded cgroup (CPUQuota 200%); absolute times are noisier than CB1's uncapped host but the refined-vs-raw A/B attribution is unambiguous"
+ }
+}

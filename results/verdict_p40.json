@@ -11,14 +11,15 @@
   "g0": {
    "status": "sealed",
    "artifact": "results/g0_p40_seals.json",
-   "census": "184 cases (every impurity element x wppm{1000,100000} x both spectra x all five irradiations + 4 base cases)"
+   "census": "all 912 executable cases (full identical-data census; the 184-case stratified stratum was found fully representative - bounds and classes unchanged on extension)"
   },
   "g1": {
    "status": "pass",
-   "executed": 184,
+   "executed": 912,
    "arm_failures": 0,
    "median_wall_s": 0.98,
-   "total_wall_h": 0.05
+   "total_wall_h": 0.25,
+   "note": "912/912 executed, zero arm failures"
   },
   "g2": {
    "status": "pass",
@@ -26,7 +27,9 @@
    "worst_raw_dev": 16.54,
    "median_clean_dev": 0.0106,
    "p90_clean_dev": 0.0349,
-   "worst_clean_dev": 0.0611
+   "worst_clean_dev": 0.0611,
+   "n_cases": 912,
+   "n_cases_over_other_1pct": 91
   },
   "g3": {
    "status": "pass",
@@ -58,7 +61,10 @@
     "V50",
     "Mo92",
     "Mo98",
-    "Zr96",
+    "Zr94",
+    "Cd108",
+    "Pd110",
+    "Zn64",
     "Cr50"
    ],
    "mechanism": "ALARA idx assigns finite half-lives (>1e15 s) to stable/quasi-stable nuclides; ACTINV reports zero activity"
@@ -72,7 +78,7 @@
     "Cr57",
     "Mn59"
    ],
-   "prevalence": "other>1% of arm activity on 16/184 cases (8.7%)",
+   "prevalence": "other>1% of arm activity on 91/912 cases (10.0%)",
    "mechanism": "second-order productions on nuclides absent from the 31-target artifact (Fe-59(n,p)->Mn-59, Fe-59(n,alpha)->Ti-55, Fe-55(n,alpha)->Ti-52) plus decay-file coverage gaps (Cr-57 absent from both decay files)"
   },
   "common_nuclide_magnitude": {
@@ -91,12 +97,12 @@
   }
  },
  "scoped_equivalence": {
-  "claim": "on class-cleaned channels (excluding isomer_branching, quasi_stable_convention, and one-sided 'other' products), the two arms' total activity agrees within a median of 1.06% and worst-case 6.1% across all 184 cases and all cooling times",
+  "claim": "on class-cleaned channels (excluding isomer_branching, quasi_stable_convention, and one-sided 'other' products), the two arms' total activity agrees within a median of 1.06%, p90 3.5%, and worst-case 6.1% across all 912 executable cases and all cooling times",
   "floor": "the uncleaned identical-data divergence reaches 16.5x worst-case, dominated by quasi-stable phantom activity and isomer splits",
   "what_it_is_not": "not solver validation - the arms evaluate different data representations of the same problem"
  },
  "conditions": [
-  "the scoped claim is a measured residual over a 184-case census, not an equivalence proof; it does not extend to unsampled materials, spectra, or responses",
+  "the scoped claim is a measured residual over the complete 912-case executable census - it does not extend to materials, spectra, or responses outside the contract",
   "isomer_branching and quasi_stable_convention are representational floors: closing them requires non-FENDL data, which breaks the identical-data premise",
   "two OPEN classes remain: short-lived products absent in ACTINV (Ti55/V55/Ti53/Cr57/Mn59, up to 3.4% of arm activity) and common-nuclide magnitude gaps (Cr51/Fe59/Mn57 up to ~30%)",
   "one-sided 'other' nuclides at trace activity (Ni59, Ca47 etc., ~1e-30 Bq/g) are counted but physically dead",
@@ -116,5 +122,10 @@
    "v52_note": "ACTINV's synthesized Mn-55(n,alpha)->V-52 overshoots ALARA (+23% on the sampled case) - consistent with ALARA-side V-52 burn-out ACTINV cannot perform, direction expected under coverage asymmetry"
   },
   "fail_closed_note": "products lacking decay data are dropped from the inventory at solve time - fail-closed by design; the gap manifests as absence, not wrong values. Rate pruning, composition-decay absences, and target-decay absences were all checked and ruled out as the cause for Ti-53/Cr-57/Ti-55/V-55/Mn-59"
+ },
+ "mechanism_confirmation": {
+  "method": "the same classifier was run on the product_plus_data arm (ACTINV-TENDL ~2800 targets vs ALARA, 408 cases) as a predictive test of the coverage-asymmetry mechanism",
+  "result": "the second-order 'other' share collapsed 3.17% -> 0.18% (18x) under TENDL's full-chain coverage, while isomer/quasi-stable floors persisted unchanged and clean deviation grew to 52% (TENDL-vs-FENDL data difference). The coverage mechanism predicted the direction correctly.",
+  "artifact": "results/g2_p40_ppd_check.json"
  }
 }

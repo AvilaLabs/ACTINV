@@ -15,13 +15,13 @@
   },
   {
    "name": "census_complete",
-   "claim": "184/184 cases classified, zero skips",
+   "claim": "912/912 cases classified, zero skips",
    "pass": true,
    "detail": {}
   },
   {
    "name": "arm_failures_zero",
-   "claim": "no arm failures in the census",
+   "claim": "no arm failures across the full executable census",
    "pass": true,
    "detail": {}
   },

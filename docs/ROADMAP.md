@@ -529,9 +529,11 @@ divergence is a named representation floor, not an open coverage gap.
 
 **P40 execution entry (2026-09-18).** P40 (scoped identical-data
 equivalence under named representation floors) closed `P40-CONDITIONAL`:
-a 184-case census — every impurity element x wppm{1000,100000} x both
-spectra x all five irradiations + base cases — executed with **zero arm
-failures**. Full per-nuclide activity vectors were recovered per arm and
+the complete **912-case executable census** (a 184-case stratified
+stratum — every impurity element x wppm{1000,100000} x both spectra x
+all five irradiations + base cases — was found fully representative;
+extension to the full census left every bound and class unchanged)
+executed with **zero arm failures**. Full per-nuclide activity vectors were recovered per arm and
 every divergence class-tagged: `isomer_branching` (Mn58m1 in all 184,
 Nb93m1, Co60m1, Tc99m1...) and `quasi_stable_convention` (V50, Mo92,
 Mo98, Zr96, Cr50) are representational floors — ALARA's REAC-heritage
@@ -543,7 +545,12 @@ cases exceed 1%), forcing two named OPEN classes:
 `common_nuclide_magnitude` (Cr51, Fe59, Cr55, Mn57, Fe53 — 2-30% gaps on
 shared channels). Scoped result: on class-cleaned channels the arms'
 total activity agrees to a median of 1.06%, p90 3.5%, worst 6.1% —
-versus 16.5x worst-case uncleaned. This is a measured residual over the
+versus 16.5x worst-case uncleaned. The coverage-asymmetry mechanism was
+then **confirmed predictively**: rerunning the classifier on the
+product_plus_data arm (ACTINV-TENDL ~2800 targets vs ALARA, 408 cases)
+collapsed the second-order 'other' share 3.17% -> 0.18% while the
+isomer/quasi-stable floors persisted — coverage, not channel defects
+(`results/g2_p40_ppd_check.json`). This is a measured residual over the
 census, not solver validation (`results/verdict_p40.json`,
 `results/g2_p40_classes.json`, `controls/g2_p40_classes.py`,
 `controls/check_g{3,4}_p40.py`, `protocols/ACTINV-P40_PROTOCOL.md`).

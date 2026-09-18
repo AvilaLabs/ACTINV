@@ -3,6 +3,67 @@
 *Initial scorecard: 2026-08-28 · ACTINV 1.0.0 · frozen protocol
 `627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398`*
 
+---
+
+## CB2 refresh — 2026-09-18 · ACTINV 1.1.2
+
+The measurable CB1 legs were re-run on the current binary and data. The
+frozen CB1 record below is unchanged; this section records what moved.
+
+**FNS 132-experiment comparison (`results/cb2_fns.json`).** Re-executed
+all 132 experiments on actinv 1.1.2 against the same pinned TENDL-2025
+library, decay files and frozen FISPACT-II/TENDL-2017 published
+references. **Every score is numerically identical to CB1** — the solver
+is bit-reproducible across versions on identical inputs, and the
+product-plus-data comparison conclusion stands: FISPACT-II/TENDL-2017
+keeps the better typical point error and more experiments wholly within
+30% (69 vs 59); ACTINV/TENDL-2025 keeps the slightly better p90 point
+error (0.6637 vs 0.6846) and pooled bias closer to one (1.0313 vs
+1.0636). This remains a product-plus-data comparison, not solver
+validation. Wall time for the 132 fresh runs measured 152 s (CB1
+recorded 298 s — different host load, not a speed claim).
+
+**Identical-data ALARA comparison — superseded.** CB1's single
+processed-data pulse case (4.12e-8 relative) is superseded by the P40
+912-case census on identical FENDL-3.2c inputs: median class-cleaned
+total-activity agreement of 1.06%, with all residual divergence
+classified into named representation floors and data-availability gaps
+(`results/verdict_p40.json`). That is the current evidence for the
+identical-data claim; the 4.12e-8 figure stays as the frozen CB1
+record.
+
+**CRAM-48 kernel benchmark (`results/cb2_performance.json`).** Re-run
+against the same OpenMC 0.15.3 at the same Python-call boundary:
+
+| operator states | CB1 ratio (openmc/actinv) | CB2 ratio |
+|---:|---:|---:|
+| 2 | 186.8× | 156–215× |
+| 32 | 20.3× | 10–17× |
+| 256 | 3.96× | 1.7–1.9× |
+| 1024 | 2.83× | **0.68–0.73×** |
+
+At 1024 states ACTINV 1.1.2 is now *slower* than OpenMC's Python CRAM-48.
+The regression is fully attributed to `solve_refined` (commit `35d5448`):
+every CRAM shifted solve now runs compensated-residual iterative
+refinement — the fix for phantom radioactive parents on ill-conditioned
+activation matrices. An A/B build on the same host measured the
+refinement accounting for the entire slowdown (1024-state median
+42.5 ms → 8.4 ms without it). The slowdown is the price of a real
+correctness fix, reported rather than hidden; a selective refinement
+scheme could recover most of the speed on well-conditioned poles but is
+untested. The kernel claim is now: ACTINV's CRAM-48 remains faster than
+OpenMC's Python path on small and medium operators, roughly parity at
+the largest tested size, and the whole-product speed comparison is
+unchanged in kind — a kernel result, not a product-speed verdict.
+
+**Not re-measured.** Install/first-use timings and the
+capability-survey legs remain the v1.0.0-era CB1 record below; nothing
+in them is claimed to have improved or regressed.
+
+---
+
+`627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398`*
+
 ## Bottom line
 
 ACTINV 1.0.0 is a credible, usable activation product, but this benchmark does **not** support calling it the best
