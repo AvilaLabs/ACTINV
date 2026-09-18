@@ -497,7 +497,7 @@ e16c9c532460b1a5ab91b02b673d38b8565451632c16de9ee1d6dfbfc5c77f58  ./crates/actin
 cce5586c142b252ba3d845295f0727a2920992f94d305f20da036334ccb8179e  ./crates/actinv-data/src/groups.rs
 8c2b9fb79d23c0ccf2cfcf56194518c3f2137fe859e41f5b3c6cf2fd26d7399b  ./crates/actinv-data/src/lib.rs
 a5d52dd092cc8b6d29cb795c4aeeee2bf9dfbef123b1f5919cd1b9f7160d5a60  ./crates/actinv-data/src/library.rs
-fec2def2d7cccd1990fa8a7f4f05a6adfabdcb533c3a90dc6aae038313aa2df9  ./crates/actinv-data/src/prepared.rs
+8b194d95bf817f3d4ccd22b80aec79da1275efb3fd4f65129a5e7b6e9e322715  ./crates/actinv-data/src/prepared.rs
 cfd69fb67e9e9dc9a6fc2d18204e9d135c4c0e9fb5121014ef1af42978ec68f2  ./crates/actinv-data/src/processing.rs
 c2f2356c516e0ace85b423bfda003fe48c2d8fce12d679e09b6aeb64e4c0fcc1  ./crates/actinv-data/src/resonance.rs
 924e2ca27bb16c5e6aa3e1d82224c694c7871eb681d2a65b3189204912d3225d  ./crates/actinv-data/src/shielding.rs
@@ -691,6 +691,7 @@ a1dbd13102ba88abe18facbf811c07beba8a3daf90a4fec8d1dec1e2a49dffdf  ./protocols/AC
 5237a3fe55be67eeb54585817edd6729d30801f04c0b8711188d0906fbdcda0b  ./protocols/ACTINV-P31_PROTOCOL.md
 4d022423b8bb696bef6634b9134d6e39959945d7929a96ce5c079fed23741dc9  ./protocols/ACTINV-P32_PROTOCOL.md
 e2caadc0e8e03c554cc04963b5c7ec05eda2ebf10c8081c62de408877393710a  ./protocols/ACTINV-P35_PROTOCOL.md
+7b1ed9af20193d5f3590fe47be33b9ebd56a3493f8e776fd54b8eaf9c025915e  ./protocols/ACTINV-P36_AMENDMENT_ZERO_FLUX.md
 339c4bab6d503a39b9ceb97ef0f3fca84f717f7833459764dfa109d6d997539f  ./protocols/ACTINV-P36_PROTOCOL.md
 16cfde7d24cd8f525294569f00890138d4b317be050f272e5d1dc3d34e7c4564  ./protocols/ACTINV-P37_PROTOCOL.md
 89513686635ef407b1d25b4c120e9ad2fbec78f7f9a48bb2cb16dfb3b57e3c9f  ./protocols/ACTINV-P38_PROTOCOL.md
