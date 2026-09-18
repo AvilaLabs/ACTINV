@@ -1,6 +1,6 @@
 b4c319546effbc99a35f9e76615c750af569b5d4ccd33fe0e3ea40f3a4983f15  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
-796f71e946dcb02b5f600826083758b79d1545d21f32f59db1d08c05edc7a4bd  ./.github/workflows/fusion-isotope.yml
+912169790dca7f57e73cd78fd6110429a60b917aa2bde9a973dcde2adef85e30  ./.github/workflows/fusion-isotope.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
 0b0fad81bd444524390a31fe1300e2ae37afd55e6dda7238632359fb02eb99ba  ./.github/workflows/release-artifacts.yml
@@ -437,7 +437,7 @@ cf815cf58389f4a2fcd16685f091c697825de05bf39c6dcc311537c8a0e90823  ./controls/ten
 7665d438efc077633831b79b81cf9296ba8032ab2d1e34583a0c11465d2d2b2e  ./controls/test_check_p12.py
 e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/test_ci_result.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
-ef6c1d15c758ee0b4498c993262c6fec378c9b3b24b0667d2cf193292d357bb3  ./controls/test_fusion_isotope_chain.py
+c4f30f9bd696f2b4a1bd44574e28243f28dff58ad3898dbf24610c5462b326a3  ./controls/test_fusion_isotope_chain.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
 3ff95b135ccc709ae238a78866495da1be1d21962cc0727dd0185739a58f0bb6  ./crates/actinv-cli/Cargo.toml
 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md
@@ -602,7 +602,7 @@ ad130acc00de295fd0c0dec13ca2d42a4a485ef2debb1933cbc8ba042a2f74a0  ./examples/REA
 b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/damage_table_demo.json
 2480726bcadc1c010ddc893c6991532c28dfdaa7968c5f632999ca5a9ee77aa2  ./examples/feed_removal_demo.json
 a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207  ./examples/fns_fe_5min.json
-4924973f894b6d286b0e48ba12b176f8274f9fe4ac74da12aa77c45aa2c7b167  ./examples/fusion_medical_isotopes/ac225/README.md
+77576157da8c23c3657d86ae7b218081101bb2333299d662289ebff48c26d64d  ./examples/fusion_medical_isotopes/ac225/README.md
 1a6f04eadc6887ac0da1739ed0abd07194009e7b3b6d5f9aedfd81a5ea7262fe  ./examples/fusion_medical_isotopes/ac225/reduced_case.json
 758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7  ./examples/fusion_medical_isotopes/ac225/reference.json
 b62843cbe4c583d73465ceca63fc53d5d3eddece23ec9553a1b1c9972da15906  ./examples/mesh_demo.json
@@ -1967,8 +1967,12 @@ a21043ff53c46d75ec2895d54e4efdb53fb7d3ef94abff93ccee158f5bd94ab9  ./results/fns_
 14c4147dd621c1e1a73d11d520772484343ba7c8050411863dd1ca5952024b1c  ./results/fns_tendl_full_certificate.json
 15a6b827dd0eb105c286fa84f46f633dfb7bbe7ea25effbe14388eb7512cee23  ./results/fns_tendl_full_summary.json
 df09f818ecc83d3bb18ee9cc2e8ce319a5735253ea18bcf5c4fbe636d6b581f3  ./results/fns_tendl_summary.json
-9c17fca5b955c2c2af46333dbd64fa3d83b3e8d93a9343b4e7d765558e51dbe5  ./results/fusion-isotope-001/ledger.md
+229d278e5dd25914178dd37df0b8e555211cba1d484667b99941db401b276b4f  ./results/fusion-isotope-001/comparison.md
+90164d059cbeabd1f34cfe5c0e6758720513de2cd22dac35b1790a7f7b984a4e  ./results/fusion-isotope-001/comparison.svg
+01e6ae92eb684a02dac623a60a2d459c25448aa2cb843293c4a1de3f27f61019  ./results/fusion-isotope-001/ledger.md
 74ef2d57ae97bc558940b61faedfbef2fa640efae9729ffd0ba51729b23cac72  ./results/fusion-isotope-001/opening.json
+0a3f4a6011fd65a9fc7cb176073f6f20f28d18f5558912528053f0ac9bd7891a  ./results/fusion-isotope-001/reduced-chain-note.md
+0070e68a7ac5be44e0bf5890d95f484f3af5f4082cb8f8926de9a51cc6884063  ./results/fusion-isotope-001/reduced-chain.json
 53645eb4f66c03a2b5ccb2aba845a7857e1ee1b9e9f3749e8a1861643f6d93cd  ./results/g0_cram_coefficients.json
 a2e4ab1655628263cf887e2a5c3bc492b7f9bf22dce19e48481944969111d3c8  ./results/g0_p17_seal.json
 8ea0b916657dbd5becba9116e3c1d11a17eb2cb0138e77d7fd0b49bb56df8f59  ./results/g0_p18_check.json

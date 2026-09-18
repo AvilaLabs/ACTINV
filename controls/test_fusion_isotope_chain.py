@@ -77,8 +77,6 @@ class ReducedChainTests(unittest.TestCase):
 
     def test_recorded_mutations_rejected(self):
         path = chain.RESULTS / "reduced-chain.json"
-        if not path.exists():
-            self.skipTest("first evidence generation has not executed")
         original = json.loads(path.read_text())
         chain.check_recorded(original, original)
         for mutation in ("inventory", "reference", "normalization", "omissions"):

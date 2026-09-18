@@ -20,17 +20,11 @@ jobs:
         with: { python-version: "3.12" }
       - name: Build existing ACTINV core probe
         run: cargo build --release -p actinv-core --bin cram_probe
-      - name: Plotting dependency
-        run: python -m pip install matplotlib
       - name: Opening audit remains intact
         run: python controls/check_fusion_isotope_001.py
       - name: Execute reduced chain and independent Bateman control
         run: |
-          if test -f results/fusion-isotope-001/reduced-chain.json; then
-            python controls/fusion_isotope_chain.py
-          else
-            python controls/fusion_isotope_chain.py --write
-          fi
+          python controls/fusion_isotope_chain.py
           python controls/test_fusion_isotope_chain.py
       - uses: actions/upload-artifact@v7
         if: always()
