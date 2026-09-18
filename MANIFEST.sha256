@@ -1,5 +1,6 @@
 b4c319546effbc99a35f9e76615c750af569b5d4ccd33fe0e3ea40f3a4983f15  ./.github/workflows/ci.yml
 c32478fe33c0d9525955887aef5ceb4c4164a44508174a8abb865cf9fe3a2a28  ./.github/workflows/desktop.yml
+796f71e946dcb02b5f600826083758b79d1545d21f32f59db1d08c05edc7a4bd  ./.github/workflows/fusion-isotope.yml
 571f1496d9895f4188699b0c2709aa01405ef6ceea64bee713cf19cb356fefbe  ./.github/workflows/publish-crates.yml
 f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/workflows/publish-pypi.yml
 0b0fad81bd444524390a31fe1300e2ae37afd55e6dda7238632359fb02eb99ba  ./.github/workflows/release-artifacts.yml
@@ -192,6 +193,7 @@ afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b  ./controls/fix
 3a66e633df8a5eb641eb9767fd4ee9653f10fa3df415626f73519f2c6b5537cc  ./controls/flag_library.py
 00ba0df782fb376ff32ef62f243032306576045b60d9c0ac903cbd46f9bbc23c  ./controls/fns_compare_libraries.py
 b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns_report.py
+7318fb3b48f2185c1891faaa6fe042e6cd91f98b6d6142a783e8811eebebbccd  ./controls/fusion_isotope_chain.py
 206110d876fee10df20e5eb9373006b72fe001002e2fe954a7dd09d508206077  ./controls/g0_cram_coefficients.py
 144585eb20c4fbf6c758e47303808aed699ef7d4f342deeead299601b69b6cc7  ./controls/g0_p17_seal.py
 00d0c2233b879e60b4bd1e4008b15301cbc67ed0864c912ab8bbb01e65ebefb1  ./controls/g0_p18_seal.py
@@ -433,6 +435,7 @@ cf815cf58389f4a2fcd16685f091c697825de05bf39c6dcc311537c8a0e90823  ./controls/ten
 7665d438efc077633831b79b81cf9296ba8032ab2d1e34583a0c11465d2d2b2e  ./controls/test_check_p12.py
 e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/test_ci_result.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
+ef6c1d15c758ee0b4498c993262c6fec378c9b3b24b0667d2cf193292d357bb3  ./controls/test_fusion_isotope_chain.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
 3ff95b135ccc709ae238a78866495da1be1d21962cc0727dd0185739a58f0bb6  ./crates/actinv-cli/Cargo.toml
 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md
