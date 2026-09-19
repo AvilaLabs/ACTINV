@@ -124,9 +124,7 @@ pub fn undeclared_competitive_width_count(evaluation: &ResonanceEvaluation) -> u
             group
                 .resonances
                 .iter()
-                .filter(|resonance| {
-                    undeclared_competitive_width_fields(group.lrx, resonance)
-                })
+                .filter(|resonance| undeclared_competitive_width_fields(group.lrx, resonance))
                 .count()
         })
         .sum()
@@ -159,7 +157,9 @@ pub fn omitted_fission_total_width_count(evaluation: &ResonanceEvaluation) -> us
 fn undeclared_competitive_width_fields(lrx: i32, resonance: &LegacyResonance) -> bool {
     lrx == 0
         && resonance.total
-            > resonance.neutron + resonance.capture + resonance.fission_a
+            > resonance.neutron
+                + resonance.capture
+                + resonance.fission_a
                 + width_rounding_tolerance(
                     resonance.total,
                     resonance.neutron + resonance.capture + resonance.fission_a,

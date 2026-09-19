@@ -1044,3 +1044,7 @@
   rebuilt: an external experiment binds that binary by digest.
 - Tracked-file manifest refreshed from the index; it had been stale since the last manifest
   commit (d2c2c52), which is why CI on master was failing at the manifest step.
+- Addendum, same day: CI on 06e7f4a passed the manifest step and failed at `cargo fmt --all -- --check`
+  on the pre-existing drift in `builder.rs` (3 hunks) and `resonance.rs` (2 hunks), so clippy and the
+  tests never ran there. The rustfmt output for those two files is committed as a formatting-only
+  follow-up; manifest refreshed again.

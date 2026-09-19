@@ -1407,9 +1407,7 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
             // still fails closed.
             const ABSURD_EXCITATION_EV: f64 = 2.0e7;
             match excitation {
-                Some(value)
-                    if value.abs() > ABSURD_EXCITATION_EV =>
-                {
+                Some(value) if value.abs() > ABSURD_EXCITATION_EV => {
                     let ground = catalog
                         .get(&original_zap)
                         .and_then(|states| states.iter().find(|state| state.liso == 0));
@@ -1454,14 +1452,10 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                         .get(&original_zap)
                         .into_iter()
                         .flatten()
-                        .filter(|state| {
-                            state.liso > 0 && state.representative.lis == raw.raw_lfs
-                        })
+                        .filter(|state| state.liso > 0 && state.representative.lis == raw.raw_lfs)
                         .collect();
                     match label.as_slice() {
-                        [state] => {
-                            (Some(state.liso), Some(*state), "catalog_lis_label_match")
-                        }
+                        [state] => (Some(state.liso), Some(*state), "catalog_lis_label_match"),
                         _ => (None, None, "no_catalog_excitation_match_to_leakage"),
                     }
                 }
@@ -1493,9 +1487,7 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                 .get(&original_zap)
                 .into_iter()
                 .flatten()
-                .filter(|state| {
-                    state.liso > 0 && state.representative.lis == raw.raw_lfs
-                })
+                .filter(|state| state.liso > 0 && state.representative.lis == raw.raw_lfs)
                 .collect();
             match label.as_slice() {
                 [state] => (
