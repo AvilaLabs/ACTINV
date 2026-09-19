@@ -100,13 +100,36 @@ pub fn omitted_fission_total_width(group: &LegacyLGroup, resonance: &LegacyReson
 }
 
 /// Natural LRF=1/2 width at the resonance energy, following NJOY's component-width reconstruction.
-pub fn legacy_effective_total_width(group: &LegacyLGroup, resonance: &LegacyResonance) -> f64 {
+/// `max(total, components)` for every LRX: declared-LRX files and LRX=0 files
+/// whose GT omits a listed component (Amendment D) reconstruct to the component
+/// sum, while LRX=0 files carrying an undeclared competitive width keep GT in
+/// the denominator — the excess is the competitive width.
+pub fn legacy_effective_total_width(_group: &LegacyLGroup, resonance: &LegacyResonance) -> f64 {
     let components = resonance.neutron + resonance.capture + resonance.fission_a;
-    if group.lrx == 0 {
-        components
-    } else {
-        resonance.total.max(components)
-    }
+    resonance.total.max(components)
+}
+
+/// Count of LRX=0 LRF=1/2 resonances carrying an undeclared competitive width.
+pub fn undeclared_competitive_width_count(evaluation: &ResonanceEvaluation) -> usize {
+    evaluation
+        .isotopes
+        .iter()
+        .flat_map(|isotope| &isotope.ranges)
+        .filter_map(|range| match &range.data {
+            RangeData::BreitWigner(resolved) => Some(resolved),
+            _ => None,
+        })
+        .flat_map(|resolved| &resolved.groups)
+        .map(|group| {
+            group
+                .resonances
+                .iter()
+                .filter(|resonance| {
+                    undeclared_competitive_width_fields(group.lrx, resonance)
+                })
+                .count()
+        })
+        .sum()
 }
 
 pub fn omitted_fission_total_width_count(evaluation: &ResonanceEvaluation) -> usize {
@@ -129,6 +152,20 @@ pub fn omitted_fission_total_width_count(evaluation: &ResonanceEvaluation) -> us
         .sum()
 }
 
+/// Whether this LRF=1/2 record carries a total width exceeding the listed
+/// components without declaring LRX — undeclared competitive width, the
+/// TENDL-2017-era convention the `max(total, components)` reconstruction
+/// already implements for declared LRX.
+fn undeclared_competitive_width_fields(lrx: i32, resonance: &LegacyResonance) -> bool {
+    lrx == 0
+        && resonance.total
+            > resonance.neutron + resonance.capture + resonance.fission_a
+                + width_rounding_tolerance(
+                    resonance.total,
+                    resonance.neutron + resonance.capture + resonance.fission_a,
+                )
+}
+
 fn validate_breit_wigner_widths(lrx: i32, resonance: &LegacyResonance) -> Result<(), String> {
     let component_sum = resonance.neutron + resonance.capture + resonance.fission_a;
     let rounding_tolerance = width_rounding_tolerance(resonance.total, component_sum);
@@ -138,12 +175,6 @@ fn validate_breit_wigner_widths(lrx: i32, resonance: &LegacyResonance) -> Result
         return Err(format!(
             "Breit-Wigner total width {} is below component sum {component_sum} for LRX={lrx} (GN={}, GG={}, GF={})",
             resonance.total, resonance.neutron, resonance.capture, resonance.fission_a
-        ));
-    }
-    if lrx == 0 && resonance.total > component_sum + rounding_tolerance {
-        return Err(format!(
-            "Breit-Wigner total width {} exceeds component sum {component_sum} without LRX",
-            resonance.total
         ));
     }
     Ok(())
@@ -1911,15 +1942,19 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
                         return Err("zero resonance penetrability".into());
                     }
                     let neutron = resonance.neutron * penetrability / resonance_penetrability;
-                    let competitive = if group.lrx == 0 {
-                        0.0
-                    } else {
-                        (resonance.total
-                            - resonance.neutron
-                            - resonance.capture
-                            - resonance.fission_a)
-                            .max(0.0)
-                    };
+                    // GT exceeding the listed components is the competitive
+                    // width, whether declared (LRX) or not (the TENDL-2017-era
+                    // LRX=0 convention validated above). Field-level rounding
+                    // is not a competitive width.
+                    let competitive = (resonance.total
+                        - resonance.neutron
+                        - resonance.capture
+                        - resonance.fission_a
+                        - width_rounding_tolerance(
+                            resonance.total,
+                            resonance.neutron + resonance.capture + resonance.fission_a,
+                        ))
+                    .max(0.0);
                     let total = neutron + resonance.capture + resonance.fission_a + competitive;
                     let shifted_energy = resonance.energy
                         + resonance.neutron * (resonance_shift - shift)
@@ -2025,15 +2060,39 @@ mod tests {
 
     #[test]
     fn unrelated_breit_wigner_total_mismatches_still_fail_closed() {
-        for reported_total in [0.59, 0.7] {
-            let range = breit_wigner_range(reported_total);
-            let RangeData::BreitWigner(resolved) = &range.data else {
-                unreachable!();
-            };
-            let resonance = &resolved.groups[0].resonances[0];
-            assert!(!omitted_fission_total_width(&resolved.groups[0], resonance));
-            assert!(validate_breit_wigner_widths(0, resonance).is_err());
+        let range = breit_wigner_range(0.59);
+        let RangeData::BreitWigner(resolved) = &range.data else {
+            unreachable!();
+        };
+        let resonance = &resolved.groups[0].resonances[0];
+        assert!(!omitted_fission_total_width(&resolved.groups[0], resonance));
+        assert!(validate_breit_wigner_widths(0, resonance).is_err());
+    }
+
+    #[test]
+    fn undeclared_competitive_width_is_accepted_and_reconstructed() {
+        // TENDL-2017-era convention: LRX=0 with GT exceeding GN+GG+GF. The
+        // excess is the competitive width — it must appear in the denominator
+        // and the competitive channel, exactly as declared LRX behaves.
+        let range = breit_wigner_range(0.7);
+        let RangeData::BreitWigner(resolved) = &range.data else {
+            unreachable!();
+        };
+        let group = &resolved.groups[0];
+        let resonance = &group.resonances[0];
+        assert!(undeclared_competitive_width_fields(0, resonance));
+        validate_breit_wigner_widths(group.lrx, resonance).unwrap();
+        assert_eq!(legacy_effective_total_width(group, resonance), 0.7);
+        // Declared-LRX and undeclared records with identical widths must
+        // reconstruct identically.
+        let mut declared = breit_wigner_range(0.7);
+        if let RangeData::BreitWigner(resolved) = &mut declared.data {
+            resolved.groups[0].lrx = 1;
         }
+        assert_eq!(
+            reconstruct_legacy(&range, 10.0).unwrap(),
+            reconstruct_legacy(&declared, 10.0).unwrap()
+        );
     }
 
     #[test]

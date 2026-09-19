@@ -7,7 +7,10 @@ use crate::activation::{
 use crate::groups::{GroupStructure, Tabulated};
 use crate::library::{write_npz, Library, Row};
 use crate::processing::{has_resonance_contribution, process_reaction, ProcessedReaction};
-use crate::resonance::{omitted_fission_total_width_count, validate_rmatrix_limited, RangeData};
+use crate::resonance::{
+    omitted_fission_total_width_count, undeclared_competitive_width_count,
+    validate_rmatrix_limited, RangeData,
+};
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -1397,18 +1400,34 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
         let q_excitation = raw.qm_minus_qi_eV()?;
         let excitation = raw.excitation_eV()?;
         let (canonical, catalog_state, decision) = if raw.raw_lfs == 0 {
-            if excitation.is_some_and(|value| value.abs() > excitation_tolerance(0.0, value)) {
-                return Err(format!(
-                    "MT{} product ZAP={} declares ground LFS=0 at excitation {:.17e} eV",
-                    row.mt,
-                    original_zap,
-                    excitation.unwrap_or_default()
-                ));
+            // LFS=0 declares the ground state. A physically impossible
+            // excitation alongside it (> ~20 MeV, far above every known
+            // isomer) is a sentinel value, not a state — the declaration
+            // wins. A plausible excitation is a genuine contradiction and
+            // still fails closed.
+            const ABSURD_EXCITATION_EV: f64 = 2.0e7;
+            match excitation {
+                Some(value)
+                    if value.abs() > ABSURD_EXCITATION_EV =>
+                {
+                    let ground = catalog
+                        .get(&original_zap)
+                        .and_then(|states| states.iter().find(|state| state.liso == 0));
+                    (Some(0), ground, "ground_lfs0_discard_sentinel_excitation")
+                }
+                Some(value) if value.abs() > excitation_tolerance(0.0, value) => {
+                    return Err(format!(
+                        "MT{} product ZAP={} declares ground LFS=0 at excitation {:.17e} eV",
+                        row.mt, original_zap, value
+                    ));
+                }
+                _ => {
+                    let ground = catalog
+                        .get(&original_zap)
+                        .and_then(|states| states.iter().find(|state| state.liso == 0));
+                    (Some(0), ground, "ground_lfs0")
+                }
             }
-            let ground = catalog
-                .get(&original_zap)
-                .and_then(|states| states.iter().find(|state| state.liso == 0));
-            (Some(0), ground, "ground_lfs0")
         } else if raw.raw_lfs == 98 {
             (None, None, "unspecified_lfs98_to_leakage")
         } else if let Some(excitation_eV) = excitation {
@@ -1423,7 +1442,29 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                 })
                 .collect();
             match matches.as_slice() {
-                [] => (None, None, "no_catalog_excitation_match_to_leakage"),
+                [] => {
+                    // TENDL-era MF=8 excitation fields carry ~10-100 eV
+                    // rounding and sentinel-grade values. When the declared
+                    // energy matches nothing, the evaluator's isomer label is
+                    // the surviving state identity — the same semantics
+                    // FISPACT applies to its collapsed library. A unique
+                    // catalog state with physical LIS equal to the raw LFS is
+                    // retained; anything else still leaks.
+                    let label: Vec<&CatalogState> = catalog
+                        .get(&original_zap)
+                        .into_iter()
+                        .flatten()
+                        .filter(|state| {
+                            state.liso > 0 && state.representative.lis == raw.raw_lfs
+                        })
+                        .collect();
+                    match label.as_slice() {
+                        [state] => {
+                            (Some(state.liso), Some(*state), "catalog_lis_label_match")
+                        }
+                        _ => (None, None, "no_catalog_excitation_match_to_leakage"),
+                    }
+                }
                 [state] => (Some(state.liso), Some(*state), "catalog_excitation_match"),
                 _ => {
                     return Err(format!(
@@ -1446,9 +1487,49 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                 }
             }
         } else {
-            (None, None, "missing_excitation_to_leakage")
+            // No excitation is declared at all; the isomer label is the only
+            // state identity available.
+            let label: Vec<&CatalogState> = catalog
+                .get(&original_zap)
+                .into_iter()
+                .flatten()
+                .filter(|state| {
+                    state.liso > 0 && state.representative.lis == raw.raw_lfs
+                })
+                .collect();
+            match label.as_slice() {
+                [state] => (
+                    Some(state.liso),
+                    Some(*state),
+                    "catalog_lis_label_match_no_excitation",
+                ),
+                _ => (None, None, "missing_excitation_to_leakage"),
+            }
         };
 
+        if matches!(
+            decision,
+            "catalog_lis_label_match" | "catalog_lis_label_match_no_excitation"
+        ) {
+            target.index.ledger.push(format!(
+                "MT{}->{}: raw LFS {} excitation {}; retained catalog LIS={} isomer by label",
+                row.mt,
+                original_zap,
+                raw.raw_lfs,
+                excitation
+                    .map(|value| format!("{value:.3e} eV unmatched"))
+                    .unwrap_or_else(|| "missing".into()),
+                raw.raw_lfs
+            ));
+        }
+        if decision == "ground_lfs0_discard_sentinel_excitation" {
+            target.index.ledger.push(format!(
+                "MT{}->{}: LFS=0 declares ground but excitation {:.3e} eV is a sentinel value; excitation discarded, ground retained",
+                row.mt,
+                original_zap,
+                excitation.unwrap_or_default()
+            ));
+        }
         if let Some(canonical_liso) = canonical {
             row.lfs = canonical_liso;
             if raw.raw_lfs != canonical_liso {
@@ -1551,6 +1632,12 @@ fn build_evaluation(
         if omitted_fission_totals > 0 {
             ledger.push(format!(
                 "MF=2: {omitted_fission_totals} LRX=0 Breit-Wigner GT fields omit GF; effective total widths reconstructed from GN+GG+GF per P10 Amendment D"
+            ));
+        }
+        let undeclared_competitive = undeclared_competitive_width_count(resonance);
+        if undeclared_competitive > 0 {
+            ledger.push(format!(
+                "MF=2: {undeclared_competitive} LRX=0 Breit-Wigner GT fields exceed GN+GG+GF; excess treated as undeclared competitive width (LRX semantics)"
             ));
         }
         for isotope in &resonance.isotopes {
@@ -4467,6 +4554,119 @@ mod tests {
         };
         let error = conflict.excitation_eV().unwrap_err();
         assert!(error.contains("conflicts with QM-QI"), "{error}");
+    }
+
+    #[test]
+    fn sentinel_excitation_maps_ground_but_plausible_excitation_fails() {
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+
+        // LFS=0 + 2e8 eV sentinel: the declaration is authoritative, the
+        // excitation is discarded and ledgered.
+        let mut target = state_target(
+            "sentinel.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(18, 26056, 0, Some(2.0e8))],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!(target.rows[0].lfs, 0);
+        assert!(target
+            .index
+            .ledger
+            .iter()
+            .any(|entry| entry.contains("sentinel value")));
+        assert_eq!(
+            target.index.state_mappings[0].decision,
+            "ground_lfs0_discard_sentinel_excitation"
+        );
+
+        // LFS=0 + 250 keV excitation: a physically plausible isomer energy is
+        // a genuine contradiction and still fails closed.
+        let mut contradictory = state_target(
+            "contradictory.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(18, 26056, 0, Some(250_000.0))],
+        );
+        let error = map_product_states(&mut contradictory, &catalog).unwrap_err();
+        assert!(error.contains("declares ground LFS=0"), "{error}");
+    }
+
+    #[test]
+    fn isomer_label_matches_when_excitation_is_unreliable_or_missing() {
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![
+                state_target("ground.endf", 26056, 0, 0, 0.0, Vec::new()),
+                state_target("isomer.endf", 26056, 1, 2, 250_000.0, Vec::new()),
+            ],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+
+        // TENDL-era rounding: the declared excitation disagrees with the
+        // catalog ELIS beyond tolerance but the LFS label names the isomer.
+        let mut target = state_target(
+            "rounded.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(102, 26056, 2, Some(250_040.0))],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!(target.rows[0].lfs, 1);
+        assert_eq!(
+            target.index.state_mappings[0].decision,
+            "catalog_lis_label_match"
+        );
+        assert!(target
+            .index
+            .ledger
+            .iter()
+            .any(|entry| entry.contains("isomer by label")));
+
+        // Missing excitation entirely: the label is the only state identity.
+        let mut target = state_target(
+            "missing.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(102, 26056, 2, None)],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!(target.rows[0].lfs, 1);
+        assert_eq!(
+            target.index.state_mappings[0].decision,
+            "catalog_lis_label_match_no_excitation"
+        );
+
+        // A label with no catalog LIS counterpart still leaks.
+        let mut target = state_target(
+            "unknown.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![state_row(102, 26056, 5, Some(250_040.0))],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!(
+            target.index.state_mappings[0].decision,
+            "no_catalog_excitation_match_to_leakage"
+        );
     }
 
     #[test]

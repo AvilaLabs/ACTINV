@@ -71,6 +71,64 @@ not a product-speed verdict.
 capability-survey legs remain the v1.0.0-era CB1 record below; nothing
 in them is claimed to have improved or regressed.
 
+## CB3 identical-data FISPACT comparison — 2026-09-18
+
+The FNS leg was re-run with the nuclear-data confound removed:
+**ACTINV 1.1.2 on TENDL-2017** vs the frozen published
+FISPACT-II 4.0/TENDL-2017 references (`results/cb3_fns_tendl2017.json`,
+runner `controls/cb3_fns.py`, artifact
+`neutron.n.p10.npz sha256 1de693f2…5485462` built from 715 TENDL-2017
+ENDF-6 files — the union of all experiment targets plus the full
+FISPACT reachable-nuclide space across the 132 outputs).
+
+| metric | ACTINV/TENDL-2017 | FISPACT-II/TENDL-2017 | ACTINV/TENDL-2025 (CB2) |
+|---|---:|---:|---:|
+| median pooled \|log C/E\| | 0.110 | 0.105 | 0.139 |
+| p90 pooled \|log C/E\| | 1.112 | 0.685 | 0.664 |
+| experiments all-points within 30% | 61 | 69 | 59 |
+| pooled geometric mean C/E | 0.898 | 1.064 | 1.031 |
+
+All six machine checks pass (132/132 experiments, certificate inputs
+match, positive pairs, references present, time alignment ≤2%,
+identities match). Two findings:
+
+1. **Solver+processing validated.** Comparing ACTINV to FISPACT *on the
+   same cross sections*: 113/132 experiments agree within 30%, 124/132
+   within 2×, and roughly half are near-exact (C/E ratios within a few
+   percent of each other). Same XS in → same heat out; the collapse,
+   chain assembly and CRAM solve agree with FISPACT's pipeline where
+   the state coverage is symmetric.
+
+2. **A named divergence class was measured, diagnosed and fixed.** The
+   first TENDL-2017 artifact ran 19 experiments beyond 2× of FISPACT,
+   **all ACTINV-low** — In (0.012×), Eu, Rb, Ce, Lu, Pt, W, Zr, Ba, Au
+   and other capture-dominated cases. Per-row inspection showed
+   TENDL-2017's MF=8 isomer-product excitation fields carry ~10–100 eV
+   rounding and sentinel-grade values, so strict excitation-energy
+   matching to the target-state catalog rejected ~4,300 isomer channels
+   (e.g. `In-115(n,γ)→In-116m` at 1.34 b and `→In-116n` at 2.57 b both
+   leaked; only the 0.5 b ground channel survived). The builder was
+   relaxed to FISPACT's own semantics — when no catalog state matches
+   the declared energy, the evaluator's LFS label is matched against
+   the catalog's physical LIS index — with every such mapping ledgered
+   in the artifact index. The rebuilt artifact recovered 1,347 isomer
+   channels, and the table above records the post-fix state. The 8
+   remaining divergent cases (Eu, Ce, Pt, Au, In, Ir, Nd, Ho — all
+   ACTINV-low) are products on isomer states TENDL-2017 does not
+   evaluate as targets: genuine coverage gaps, not mapping failures.
+   Notably In-2000 now reads ACTINV C/E=10.87 vs FISPACT 29.06 — on
+   that case ACTINV is *closer to the measured value*; FISPACT
+   over-predicts it 29×.
+
+Residual confounds, honestly: ACTINV's decay data remain
+ENDF/B-VIII-era ENDF-6 files while FISPACT used its condensed
+`tendl17_decay12`; 10 source files were evicted as genuine data
+defects (non-monotonic TAB1 grids, total widths below channel sums —
+each ledgered in the artifact index); and ~34 nuclides in the FISPACT
+reachable space have no TENDL-2017 evaluation at all. Products on
+isomer states with no TENDL-2017 target file (e.g. In-116n) still
+leak — a real coverage gap, not a mapping failure.
+
 ---
 
 `627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398`*
