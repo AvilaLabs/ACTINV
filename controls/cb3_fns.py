@@ -50,8 +50,8 @@ MODULE = Path(
 FNS_ARCHIVE = Path(os.environ.get("ACTINV_FNS_ARCHIVE", DATA / "conderc-fns/fns.zip")).resolve()
 
 EXPECTED = {
-    "library": "1de693f2b550fe685093445b50ea9c9fc5e35bb3f161fd58f58df88207485462",
-    "library_index": "1d3a759b655e2801f327cd988e2876fa7c002e7e2fd6f789f5d4c20ec604cc29",
+    "library": "4c7c4697170a435a779f5dc74fb01049f915e422cd872a72b80a7f2448b231ef",
+    "library_index": "d1c3a47d6fe201879ace96cbbf7bf6236ef8a88644fa1d9d9bebd43c2b3990a2",
     "decay_primary": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
     "decay_fallback": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
     "fns_archive": "ba1dd6cb150a4aa3e0d81461054aec7d415ef19d946aba8b9886b31de218252d",
