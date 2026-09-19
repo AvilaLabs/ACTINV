@@ -23,9 +23,14 @@ plausible half-life, so nothing errors and totals still look reasonable. In the 
 magnitude on individual experiments (Ba, Ce, Hg, Y, Rb, W) while leaving the *median* C/E almost unchanged — the median
 hid it; the per-experiment spread did not.
 
-**ACTINV:** the library builder renumbers the distinct positive `LFS` of each (MT, product) in increasing level order
-onto isomeric ordinals and ledgers every remap; the solver ledgers any ground-state fallback under
-`isomer_state_absent_from_decay_library_used_ground` rather than taking it silently.
+**ACTINV:** the library builder resolves each product state in three audited tiers: declared excitation energy
+against the cross-section catalog's `ELIS` values, then the evaluator's `LFS` label against the catalog's `LIS`
+index, then — for products with no catalog home — rank-compression of the distinct declared `LFS` of each
+(MT, product) in increasing level order onto isomeric ordinals (decision `no_catalog_rank_mapped_lfs`, ledgered).
+The chain then resolves the emitted ordinal against the decay sublibrary: isomer states need decay data, not a
+cross-section file, so product-only isomers such as Sc-50m or Ta-182n survive to feed their daughters. The solver
+ledgers any ground-state fallback under `isomer_state_absent_from_decay_library_used_ground` and any decay-absent
+product under `products_no_evaluated_decay_data` rather than taking either silently.
 
 ## 2. Inelastic scattering is a transmutation when it produces an isomer
 

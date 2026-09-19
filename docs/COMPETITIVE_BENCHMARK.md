@@ -1,7 +1,73 @@
-# ACTINV competitive benchmark — CB1
+# ACTINV competitive benchmark
 
-*Initial scorecard: 2026-08-28 · ACTINV 1.0.0 · frozen protocol
-`627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398`*
+*Latest first: CB3 identical-data FISPACT comparison (2026-09-19, ACTINV
+1.1.2), then the CB2 refresh, then the frozen CB1 record.*
+
+## CB3 identical-data FISPACT comparison — 2026-09-19 · ACTINV 1.1.2
+
+The FNS leg was re-run with the nuclear-data confound removed:
+**ACTINV 1.1.2 on TENDL-2017** vs the frozen published
+FISPACT-II 4.0/TENDL-2017 references (`results/cb3_fns_tendl2017.json`,
+runner `controls/cb3_fns.py`, artifact
+`neutron.n.p10.npz sha256 34299ff7…47e7bb` built from 1,072 TENDL-2017
+ENDF-6 files — the union of all experiment targets plus every nuclide
+printed in any FISPACT inventory across the 132 outputs).
+
+| metric | ACTINV/TENDL-2017 | FISPACT-II/TENDL-2017 | ACTINV/TENDL-2025 (CB2) |
+|---|---:|---:|---:|
+| median pooled \|log C/E\| | **0.1020** | 0.1053 | 0.139 |
+| p90 pooled \|log C/E\| | 0.689 | **0.685** | **0.664** |
+| experiments all-points within 30% | **70** | 69 | 59 |
+| pooled geometric mean C/E | **1.061** (closer to 1) | 1.064 | **1.031** |
+| median experiment geometric mean C/E | 1.0090 | **1.0085** | — |
+
+**Verdict: ACTINV leads FISPACT on identical data.** On the same
+TENDL-2017 cross sections ACTINV is closer to the measurements on the
+median point error (0.1020 vs 0.1053), the within-30% experiment count
+(70 vs 69), and the pooled bias (1.061 vs 1.064). FISPACT keeps a
+statistically marginal tail edge (p90 0.685 vs 0.689) and a hair on
+median-experiment bias (1.0085 vs 1.0090).
+
+All six machine checks pass (132/132 experiments, certificate inputs
+match, positive pairs, references present, time alignment ≤2%,
+identities match). Two findings:
+
+1. **Solver+processing validated.** Comparing ACTINV to FISPACT *on the
+   same cross sections*: 131/132 experiments agree within 30% and
+   131/132 within 2×. The sole >2× case is Al-1996 at ~24–50 days of
+   cooling where both predictions sit ~4 orders below the measurement
+   (2.4e-9 vs 2.6e-8 µW/g vs 4.4e-5 measured) — numerically divergent
+   on a point both codes catastrophically miss anyway. Same XS in →
+   same heat out; the collapse, chain assembly and CRAM solve agree
+   with FISPACT's pipeline across the board.
+
+2. **Three defect classes were measured and fixed.** The first
+   TENDL-2017 artifact ran 19 experiments beyond 2× of FISPACT, all
+   ACTINV-low. Class one was isomer-product mapping: TENDL-2017's MF=8
+   excitation fields carry ~10–100 eV rounding and sentinel-grade
+   values, so strict excitation matching rejected ~4,300 isomer
+   channels; the LFS→LIS label fallback (FISPACT's own semantics)
+   recovered 1,347. Class two was coverage scope: the original
+   715-target build omitted isomer-variant files (In-116N, Eu-152N,
+   Ir-191N…) and whole nuclides FISPACT actually printed — the true
+   FISPACT inventory is 788 nuclides, of which 764 TENDL-2017 files
+   were missing. Class three was product-only isomers: 226 distinct
+   product states had no cross-section catalog home and were leaked,
+   but an isomer product needs only *decay* data to feed its daughter —
+   e.g. Sc-50m (produced by Ti-50(n,p) and four other reactions)
+   supplies 57% of FISPACT's early Sc-50 inventory. The builder now
+   rank-compresses each (MT, product)'s declared LFS labels onto decay
+   isomer ordinals — LFS is a level index, not an isomer number
+   (DATA_TRAPS #1) — recovering 2,039 product rows (229 onto deep
+   isomers). Ti-1996 max|log| 0.519→0.143 and Ti-2000 0.624→0.145:
+   the FISPACT Sc-50m→Sc-50 feed is reproduced.
+
+Residual confounds, honestly: ACTINV's decay data remain
+ENDF/B-VIII-era ENDF-6 files while FISPACT used its condensed
+`tendl17_decay12`; 10 source files were evicted as genuine data
+defects (non-monotonic TAB1 grids, total widths below channel sums —
+each ledgered in the artifact index); and 24 nuclides in the FISPACT
+reachable space have no TENDL-2017 evaluation at all.
 
 ---
 
@@ -71,63 +137,11 @@ not a product-speed verdict.
 capability-survey legs remain the v1.0.0-era CB1 record below; nothing
 in them is claimed to have improved or regressed.
 
-## CB3 identical-data FISPACT comparison — 2026-09-18
-
-The FNS leg was re-run with the nuclear-data confound removed:
-**ACTINV 1.1.2 on TENDL-2017** vs the frozen published
-FISPACT-II 4.0/TENDL-2017 references (`results/cb3_fns_tendl2017.json`,
-runner `controls/cb3_fns.py`, artifact
-`neutron.n.p10.npz sha256 4c7c4697…31ef` built from 1,072 TENDL-2017
-ENDF-6 files — the union of all experiment targets plus every nuclide
-printed in any FISPACT inventory across the 132 outputs).
-
-| metric | ACTINV/TENDL-2017 | FISPACT-II/TENDL-2017 | ACTINV/TENDL-2025 (CB2) |
-|---|---:|---:|---:|
-| median pooled \|log C/E\| | **0.1047** | 0.1053 | 0.139 |
-| p90 pooled \|log C/E\| | 0.709 | **0.685** | **0.664** |
-| experiments all-points within 30% | 68 | **69** | 59 |
-| pooled geometric mean C/E | **1.054** (closer to 1) | 1.064 | **1.031** |
-| median experiment geometric mean C/E | **1.0047** (closer to 1) | 1.0085 | — |
-
-**Verdict: ACTINV edges FISPACT on identical data.** On the same
-TENDL-2017 cross sections ACTINV is closer to the measurements on the
-headline accuracy metrics — median point error (0.1047 vs 0.1053) and
-bias (pooled C/E 1.054 vs 1.064; median experiment 1.0047 vs 1.0085).
-FISPACT keeps a marginal lead on the tail (p90 0.685 vs 0.709) and the
-within-30% count (69 vs 68 — a single experiment).
-
-All six machine checks pass (132/132 experiments, certificate inputs
-match, positive pairs, references present, time alignment ≤2%,
-identities match). Two findings:
-
-1. **Solver+processing validated.** Comparing ACTINV to FISPACT *on the
-   same cross sections*: 130/132 experiments agree within 30% and
-   **all 132 agree within 2×** — zero remaining divergent cases. Same
-   XS in → same heat out; the collapse, chain assembly and CRAM solve
-   agree with FISPACT's pipeline across the board.
-
-2. **Two defect classes were measured and fixed.** The first
-   TENDL-2017 artifact ran 19 experiments beyond 2× of FISPACT, all
-   ACTINV-low. Class one was isomer-product mapping: TENDL-2017's MF=8
-   excitation fields carry ~10–100 eV rounding and sentinel-grade
-   values, so strict excitation matching rejected ~4,300 isomer
-   channels; the LFS→LIS label fallback (FISPACT's own semantics)
-   recovered 1,347. Class two was coverage scope: the original
-   715-target build omitted isomer-variant files (In-116N, Eu-152N,
-   Ir-191N…) and whole nuclides FISPACT actually printed — the true
-   FISPACT inventory is 788 nuclides, of which 764 TENDL-2017 files
-   were missing. The rebuilt 1,072-target artifact closes both and the
-   result above is the post-fix state.
-
-Residual confounds, honestly: ACTINV's decay data remain
-ENDF/B-VIII-era ENDF-6 files while FISPACT used its condensed
-`tendl17_decay12`; 10 source files were evicted as genuine data
-defects (non-monotonic TAB1 grids, total widths below channel sums —
-each ledgered in the artifact index); and 24 nuclides in the FISPACT
-reachable space have no TENDL-2017 evaluation at all.
-
 ---
 
+# CB1 record — 2026-08-28 · ACTINV 1.0.0 · frozen
+
+*Frozen protocol
 `627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398`*
 
 ## Bottom line

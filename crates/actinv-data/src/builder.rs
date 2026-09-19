@@ -1390,6 +1390,29 @@ fn build_state_catalog(sources: &[BuiltSource]) -> Result<StateCatalog, String> 
 }
 
 fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Result<(), String> {
+    // Distinct positive LFS labels declared for each (MT, product). ENDF
+    // level indices are energy-ordered, so when no catalog state exists the
+    // rank of a product's label inside its declared set is the isomer
+    // ordinal — the same compression that resolves TENDL's level-index LFS
+    // numbering (DATA_TRAPS #1) onto decay-sublibrary LISO values.
+    let mut declared_lfs: BTreeMap<(i32, i32), BTreeSet<i32>> = BTreeMap::new();
+    for row in &target.rows {
+        if let Some(raw) = row.raw_state {
+            if raw.raw_lfs > 0 && raw.raw_lfs != 98 {
+                declared_lfs
+                    .entry((row.mt, row.zap))
+                    .or_default()
+                    .insert(raw.raw_lfs);
+            }
+        }
+    }
+    let lfs_rank = |mt: i32, zap: i32, lfs: i32| -> i32 {
+        declared_lfs
+            .get(&(mt, zap))
+            .and_then(|set| set.iter().position(|&value| value == lfs))
+            .map(|rank| rank as i32 + 1)
+            .unwrap_or(lfs)
+    };
     let mut mappings = Vec::new();
     for row in &mut target.rows {
         let Some(raw) = row.raw_state else {
@@ -1456,7 +1479,20 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                         .collect();
                     match label.as_slice() {
                         [state] => (Some(state.liso), Some(*state), "catalog_lis_label_match"),
-                        _ => (None, None, "no_catalog_excitation_match_to_leakage"),
+                        // No cross-section catalog state exists, but the
+                        // product's identity is still declared by the
+                        // evaluator's LFS label. Renumber the label's rank
+                        // inside the declared set onto the isomer ordinal
+                        // (LFS is a level index; LISO is the isomer rank)
+                        // and let the chain resolve it against the decay
+                        // sublibrary — isomer states need decay data, not a
+                        // target file. Unmatched labels fall back to ground
+                        // or leak there, ledgered.
+                        _ => (
+                            Some(lfs_rank(row.mt, original_zap, raw.raw_lfs)),
+                            None,
+                            "no_catalog_rank_mapped_lfs",
+                        ),
                     }
                 }
                 [state] => (Some(state.liso), Some(*state), "catalog_excitation_match"),
@@ -1495,7 +1531,11 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                     Some(*state),
                     "catalog_lis_label_match_no_excitation",
                 ),
-                _ => (None, None, "missing_excitation_to_leakage"),
+                _ => (
+                    Some(lfs_rank(row.mt, original_zap, raw.raw_lfs)),
+                    None,
+                    "no_catalog_rank_mapped_lfs",
+                ),
             }
         };
 
@@ -1522,9 +1562,18 @@ fn map_product_states(target: &mut BuiltTarget, catalog: &StateCatalog) -> Resul
                 excitation.unwrap_or_default()
             ));
         }
+        if decision == "no_catalog_rank_mapped_lfs" {
+            target.index.ledger.push(format!(
+                "MT{}->{}: no catalog isomer for raw LFS {}; label rank-compressed to isomer ordinal {} for decay-library resolution",
+                row.mt,
+                original_zap,
+                raw.raw_lfs,
+                canonical.unwrap_or(raw.raw_lfs)
+            ));
+        }
         if let Some(canonical_liso) = canonical {
             row.lfs = canonical_liso;
-            if raw.raw_lfs != canonical_liso {
+            if raw.raw_lfs != canonical_liso && decision != "no_catalog_rank_mapped_lfs" {
                 target.index.ledger.push(format!(
                     "MT{}->{}: physical excitation mapped raw LFS {} to LISO {}",
                     row.mt, original_zap, raw.raw_lfs, canonical_liso
@@ -4379,7 +4428,7 @@ mod tests {
     }
 
     #[test]
-    fn unmapped_state_becomes_explicit_leakage_without_changing_strength() {
+    fn unmapped_state_rank_maps_to_isomer_ordinal_without_changing_strength() {
         let source = BuiltSource {
             format: LibraryFormat::Tendl,
             projectile: Projectile::Neutron,
@@ -4401,12 +4450,47 @@ mod tests {
         let before: f64 = target.rows[0].sigma.iter().sum();
         map_product_states(&mut target, &catalog).unwrap();
 
+        // No catalog state exists for the product; the single declared LFS
+        // rank-compresses to isomer ordinal 1 for decay-library resolution.
         let row = &target.rows[0];
-        assert_eq!((row.zap, row.lfs, row.lmf), (0, 0, -3));
+        assert_eq!((row.zap, row.lfs, row.lmf), (26056, 1, 10));
         assert_eq!(row.sigma.iter().sum::<f64>().to_bits(), before.to_bits());
         assert_eq!(
             target.index.state_mappings[0].decision,
-            "no_catalog_excitation_match_to_leakage"
+            "no_catalog_rank_mapped_lfs"
+        );
+    }
+
+    #[test]
+    fn level_index_labels_rank_compress_onto_isomer_ordinals() {
+        // TENDL-style MF=8: the product's LFS is a level index inside the
+        // evaluation's level scheme (DATA_TRAPS #1). With no catalog states
+        // the distinct declared labels renumber onto isomer ordinals —
+        // {1, 29} becomes {m, n} exactly as a decay sublibrary counts them.
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("ground.endf", 73182, 0, 0, 0.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            73181,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 73182, 1, Some(16_280.0)),
+                state_row(102, 73182, 29, Some(519_580.0)),
+            ],
+        );
+        map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!((target.rows[0].zap, target.rows[0].lfs), (73182, 1));
+        assert_eq!((target.rows[1].zap, target.rows[1].lfs), (73182, 2));
+        assert_eq!(
+            target.index.state_mappings[1].decision,
+            "no_catalog_rank_mapped_lfs"
         );
     }
 
@@ -4645,7 +4729,8 @@ mod tests {
             "catalog_lis_label_match_no_excitation"
         );
 
-        // A label with no catalog LIS counterpart still leaks.
+        // A label with no catalog LIS counterpart is rank-compressed onto
+        // the isomer ordinal for the chain to resolve against decay data.
         let mut target = state_target(
             "unknown.endf",
             27059,
@@ -4655,9 +4740,10 @@ mod tests {
             vec![state_row(102, 26056, 5, Some(250_040.0))],
         );
         map_product_states(&mut target, &catalog).unwrap();
+        assert_eq!((target.rows[0].zap, target.rows[0].lfs), (26056, 1));
         assert_eq!(
             target.index.state_mappings[0].decision,
-            "no_catalog_excitation_match_to_leakage"
+            "no_catalog_rank_mapped_lfs"
         );
     }
 
@@ -4767,14 +4853,14 @@ mod tests {
         map_product_states(&mut target, &catalog).unwrap();
         assert_eq!((target.rows[0].zap, target.rows[0].lfs), (26056, 0));
         assert_eq!((target.rows[1].zap, target.rows[1].lmf), (0, -3));
-        assert_eq!((target.rows[2].zap, target.rows[2].lmf), (0, -3));
+        assert_eq!((target.rows[2].zap, target.rows[2].lfs), (26056, 1));
         assert_eq!(
             target.index.state_mappings[1].decision,
             "unspecified_lfs98_to_leakage"
         );
         assert_eq!(
             target.index.state_mappings[2].decision,
-            "missing_excitation_to_leakage"
+            "no_catalog_rank_mapped_lfs"
         );
 
         let boundary = RawProductState {
