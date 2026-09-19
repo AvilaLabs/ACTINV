@@ -1015,3 +1015,32 @@
   numerical documentation, frozen protocol and summary receipts, not nuclear
   data, bulk run artifacts, email drafts or handoff attachments. No new release
   artifact or additional test execution is claimed by this publication step.
+
+## 52 — 2026-09-19 — Zero-spectrum collapse fallback
+
+- Defect found by an external per-layer activation harness (a breeding-blanket layer that no
+  tallied neutron reached at screen statistics): `actinv run` in the default collapsed mode failed
+  with "collapsed activation cache does not match the run spectrum" for an all-zero spectrum, after
+  `build_collapsed_artifact` had written an unusable artifact. The collapsed library normalizes its
+  one-group rates by the flux total, so it is undefined over a zero spectrum; `validate_flux`
+  reported the undefined denominator with the shape-mismatch message. `actinv validate` accepted
+  the spec, correctly: a zero spectrum is a legitimate input (an unreached mesh cell; the mesh
+  placeholder spec is one), and the groupwise data handle it exactly, as pure decay.
+- Fix (`crates/actinv-core/src/run.rs`, `crates/actinv-data/src/prepared.rs`): the run collapses
+  only a spectrum with a positive finite total and otherwise uses the groupwise data; the validator
+  names a zero run spectrum, a zero cached spectrum and a group-count mismatch separately. No
+  numerical change for any spectrum with positive total: that path is untouched. The result does
+  not record which library path ran. Regression tests: `zero_spectrum_is_not_collapsed` (run.rs);
+  `validate_flux_accepts_rescaled_shape_and_rejects_shape_change` extended (prepared.rs).
+- Checks, bounded scope (systemd-run 6 GiB, no swap, 128 tasks, 200 % CPU; `CARGO_BUILD_JOBS=1`,
+  `RUST_TEST_THREADS=1`, `RAYON_NUM_THREADS=2`, disk-backed TMPDIR): `cargo fmt --all` (only the
+  changed files; pre-existing formatting drift in `builder.rs` and `resonance.rs` was reverted, not
+  committed), `cargo clippy -p actinv-core -p actinv-data -p actinv-cli --all-targets
+  --all-features -- -D warnings`, `cargo test -p actinv-core -p actinv-data -p actinv-cli
+  --all-features`: all pass, the two regression tests included. The GUI crate was not built.
+  End to end: the failing layer problem runs under the fixed debug binary (36.6 s, trace mode)
+  and reports the composition's primordial activity only (1.12e-8 Bq/g at end of cooling); the
+  unchanged release binary still fails on it with the old message. `target/release` was not
+  rebuilt: an external experiment binds that binary by digest.
+- Tracked-file manifest refreshed from the index; it had been stale since the last manifest
+  commit (d2c2c52), which is why CI on master was failing at the manifest step.

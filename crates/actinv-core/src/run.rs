@@ -782,6 +782,15 @@ fn build_step_uncertainty(
     })
 }
 
+/// The spectrum-collapsed library normalizes its one-group rates by the flux
+/// total, so it is defined only for a spectrum with a positive finite total. A
+/// zero spectrum (an unreached mesh cell, a decay-only problem) is a legitimate
+/// input that the groupwise data handle exactly, as pure decay.
+fn collapsible_spectrum(phi: &[f64]) -> Option<&[f64]> {
+    let total: f64 = phi.iter().sum();
+    (total.is_finite() && total > 0.0).then_some(phi)
+}
+
 impl PreparedRun {
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
@@ -805,7 +814,7 @@ impl PreparedRun {
             spec.radiological.as_ref(),
             spec.damage.as_ref(),
             spec.self_shielding.as_ref(),
-            Some(physical.flux.values()),
+            collapsible_spectrum(physical.flux.values()),
             Some(&spec.spectrum.structure),
             profiler,
         )
@@ -3208,5 +3217,16 @@ mod projectile_output_tests {
             Some("fispact-709"),
             Some("fispact-162")
         ));
+    }
+
+    #[test]
+    fn zero_spectrum_is_not_collapsed() {
+        assert!(super::collapsible_spectrum(&[0.0, 0.0]).is_none());
+        assert!(super::collapsible_spectrum(&[]).is_none());
+        assert!(super::collapsible_spectrum(&[0.0, f64::INFINITY]).is_none());
+        assert_eq!(
+            super::collapsible_spectrum(&[0.0, 2.5]),
+            Some(&[0.0, 2.5][..])
+        );
     }
 }

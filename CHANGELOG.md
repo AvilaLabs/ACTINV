@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+**Fixed**
+
+- A spectrum with no positive total flux (an unreached mesh cell, a layer no tallied neutron reached)
+  failed in the default collapsed mode with "collapsed activation cache does not match the run
+  spectrum", a message naming the cache rather than the cause, after writing an unusable collapsed
+  artifact. The run now uses the groupwise data for such a spectrum, which is exact (pure decay), and
+  the collapsed-cache validator names a zero run spectrum, a zero cached spectrum and a group-count
+  mismatch separately. Found through an external per-layer activation harness; regression tests added.
+
 ## v1.1.2 — 2026-09-16
 
 Release-tooling patch. No functional changes to the solver, schemas, data catalog, or public interfaces;

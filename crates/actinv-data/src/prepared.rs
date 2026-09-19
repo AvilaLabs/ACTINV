@@ -179,16 +179,26 @@ impl CollapsedLibrary {
         // change of normalization scalar (spectrum.total) must not
         // reject reuse. Compare the normalized shapes, not raw bits.
         if phi.len() != self.flux.len() {
-            return Err("collapsed activation cache does not match the run spectrum".into());
+            return Err(format!(
+                "collapsed activation cache has {} groups; the run spectrum has {}",
+                self.flux.len(),
+                phi.len()
+            ));
         }
         let actual_sum: f64 = phi.iter().sum();
+        if !(actual_sum.is_finite() && actual_sum > 0.0) {
+            return Err("run spectrum has no positive finite total flux; the \
+                        spectrum-collapsed library is undefined over it (the run \
+                        must use the groupwise data)"
+                .into());
+        }
         let cached_sum: f64 = self.flux.iter().sum();
-        if !(actual_sum.is_finite()
-            && actual_sum > 0.0
-            && cached_sum.is_finite()
-            && cached_sum > 0.0)
-        {
-            return Err("collapsed activation cache does not match the run spectrum".into());
+        if !(cached_sum.is_finite() && cached_sum > 0.0) {
+            return Err(
+                "collapsed activation cache carries a spectrum with no positive \
+                        finite total flux; remove the artifact"
+                    .into(),
+            );
         }
         let mismatched = phi.iter().zip(&self.flux).any(|(actual, cached)| {
             let a = *actual / actual_sum;
@@ -2285,9 +2295,20 @@ mod tests {
         assert!(library.validate_flux(&[1.0, 2.0, 3.0]).is_ok());
         assert!(library.validate_flux(&[200.0, 400.0, 600.0]).is_ok());
         // different shape fails closed
-        assert!(library.validate_flux(&[2.0, 4.0, 6.001]).is_err());
-        assert!(library.validate_flux(&[2.0, 4.0]).is_err());
-        // non-positive totals fail closed
-        assert!(library.validate_flux(&[0.0, 0.0, 0.0]).is_err());
+        let shape = library.validate_flux(&[2.0, 4.0, 6.001]).unwrap_err();
+        assert!(shape.contains("does not match"), "{shape}");
+        let count = library.validate_flux(&[2.0, 4.0]).unwrap_err();
+        assert!(count.contains("groups"), "{count}");
+        // a zero run spectrum is named as such, not as a cache mismatch
+        let zero = library.validate_flux(&[0.0, 0.0, 0.0]).unwrap_err();
+        assert!(zero.contains("no positive finite total flux"), "{zero}");
+        assert!(!zero.contains("does not match"), "{zero}");
+        // a zero cached spectrum is named as a cache defect
+        let cached_zero = CollapsedLibrary {
+            flux: vec![0.0, 0.0, 0.0],
+            ..library.clone()
+        };
+        let message = cached_zero.validate_flux(&[1.0, 2.0, 3.0]).unwrap_err();
+        assert!(message.contains("cache carries"), "{message}");
     }
 }
