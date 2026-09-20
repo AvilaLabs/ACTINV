@@ -1,5 +1,6 @@
 //! ENDF-6 decay sublibrary (MF=8/MT=457): half-lives, modes, mean energies and radiation spectra.
 //! The general fields mirror `controls/endf_decay.py`; P7 adds independently controlled spectrum records.
+#![allow(non_snake_case)] // elis_eV matches the ENDF field vocabulary used across the crate.
 use crate::endf::{read_list_checked, read_tab1_checked, tail, ContRecord};
 use std::collections::HashMap;
 
@@ -265,6 +266,62 @@ pub fn parse_file(path: &str) -> std::io::Result<HashMap<(i32, i32), Nuclide>> {
     parse_text(&text).map_err(|error| std::io::Error::new(std::io::ErrorKind::InvalidData, error))
 }
 
+/// One decay-sublibrary state, from the second MF=1/MT=451 record of each
+/// material: excitation energy `elis_eV`, evaluator level index `lis` and
+/// isomer ordinal `liso`. The chain index keys states on (ZA, LISO), but
+/// cross-section evaluations declare products by LIS-like labels and their
+/// own per-file LISO values that need not agree with the decay sublibrary's
+/// numbering — TENDL-2017's Ta-182M file declares LISO=1 for the state
+/// ENDF/B-VIII decay numbers LIS=29 / LISO=2 (the 519.58 keV, 15.8-minute
+/// level). LIS and ELIS are the cross-library identifiers.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct DecayStateEntry {
+    pub liso: i32,
+    pub lis: i32,
+    pub elis_eV: f64,
+}
+
+/// Scan a decay sublibrary for its MF=1/MT=451 state records and return each
+/// nuclide's states keyed by ZA, ordered by LISO. Only record two of each
+/// material's MF=1/MT=451 section carries (ELIS, LIS, LISO); the record
+/// sequence number in columns 75-79 identifies it.
+pub fn state_table(text: &str) -> Result<HashMap<i32, Vec<DecayStateEntry>>, String> {
+    let mut out: HashMap<i32, Vec<DecayStateEntry>> = HashMap::new();
+    let mut material_za: HashMap<i32, i32> = HashMap::new();
+    for line in text.lines() {
+        let Some((mat, mf, mt)) = tail(line) else {
+            continue;
+        };
+        if mf != 1 || mt != 451 {
+            continue;
+        }
+        let sequence: i32 = line
+            .get(75..80)
+            .and_then(|field| field.trim().parse().ok())
+            .unwrap_or(-1);
+        match sequence {
+            1 => {
+                material_za.insert(mat, ContRecord::parse(line)?.c1.round() as i32);
+            }
+            2 => {
+                let record = ContRecord::parse(line)?;
+                if let Some(&za) = material_za.get(&mat) {
+                    out.entry(za).or_default().push(DecayStateEntry {
+                        liso: record.l2,
+                        lis: record.l1,
+                        elis_eV: record.c1,
+                    });
+                }
+            }
+            _ => {}
+        }
+    }
+    for states in out.values_mut() {
+        states.sort_by_key(|state| state.liso);
+    }
+    Ok(out)
+}
+
 #[cfg(test)]
 mod tests {
     use super::parse_text;
@@ -310,5 +367,42 @@ mod tests {
         ]))
         .unwrap_err();
         assert!(error.contains("declares 2000000000 spectra"));
+    }
+
+    #[test]
+    fn state_table_reads_elis_lis_liso_from_mf1() {
+        // Ta-182's three decay materials: ground plus the two isomers the
+        // sublibrary numbers by level index (LIS=1 -> LISO=1 at 16.263 keV;
+        // LIS=29 -> LISO=2 at 519.587 keV).
+        let text = [
+            record(["73182", "180.4", "0", "0", "0", "0"], 2659, 1, 451, 1),
+            record(["0", "1.0", "0", "0", "0", "6"], 2659, 1, 451, 2),
+            record(["73182", "180.4", "-1", "0", "0", "0"], 2660, 1, 451, 1),
+            record(["16263", "1.0", "1", "1", "0", "6"], 2660, 1, 451, 2),
+            record(["73182", "180.4", "-1", "0", "0", "0"], 2661, 1, 451, 1),
+            record(["519587", "1.0", "29", "2", "0", "6"], 2661, 1, 451, 2),
+        ]
+        .join("\n");
+        let table = super::state_table(&text).expect("state table");
+        assert_eq!(
+            table[&73182],
+            vec![
+                super::DecayStateEntry {
+                    liso: 0,
+                    lis: 0,
+                    elis_eV: 0.0
+                },
+                super::DecayStateEntry {
+                    liso: 1,
+                    lis: 1,
+                    elis_eV: 16_263.0
+                },
+                super::DecayStateEntry {
+                    liso: 2,
+                    lis: 29,
+                    elis_eV: 519_587.0
+                },
+            ]
+        );
     }
 }

@@ -17,20 +17,37 @@ scheme, and the numbering is library-dependent. Decay sublibraries index isomers
 | Rb-86m | 2 | 1 |
 | Y-90m | 2 | 1 |
 
+The trap is deeper than product labels: a cross-section file's *own* `LISO` header field is file-order bookkeeping,
+not the decay ordinal. TENDL-2017's Ta-182M file declares `LISO` = 1 for the state ENDF/B-VIII decay numbers
+`LIS` = 29 / `LISO` = 2 (519.587 keV, 15.8 min), while ENDF/B-VIII assigns `LISO` = 1 to Ta-182's other isomer
+(`LIS` = 1, 16.263 keV, 0.283 s). Rank-ordering labels onto ordinals lands the 15.8-minute isomer's entire
+production on the 0.283-second state — it evaporates before the first cooling point, which is exactly the failure
+mode the Ta-2000 FNS experiment showed before the fix.
+
 EAF-2010 uses 1 for these, so a pipeline validated only against EAF passes and then loses every isomer on TENDL. The
 failure is silent: the lookup misses and the production falls back to the ground state, which is a real nuclide with a
 plausible half-life, so nothing errors and totals still look reasonable. In the FNS benchmark this cost 2–5 orders of
 magnitude on individual experiments (Ba, Ce, Hg, Y, Rb, W) while leaving the *median* C/E almost unchanged — the median
 hid it; the per-experiment spread did not.
 
-**ACTINV:** the library builder resolves each product state in three audited tiers: declared excitation energy
+**ACTINV:** the library builder resolves each product state in audited tiers: declared excitation energy
 against the cross-section catalog's `ELIS` values, then the evaluator's `LFS` label against the catalog's `LIS`
-index, then — for products with no catalog home — rank-compression of the distinct declared `LFS` of each
-(MT, product) in increasing level order onto isomeric ordinals (decision `no_catalog_rank_mapped_lfs`, ledgered).
-The chain then resolves the emitted ordinal against the decay sublibrary: isomer states need decay data, not a
-cross-section file, so product-only isomers such as Sc-50m or Ta-182n survive to feed their daughters. The solver
-ledgers any ground-state fallback under `isomer_state_absent_from_decay_library_used_ground` and any decay-absent
-product under `products_no_evaluated_decay_data` rather than taking either silently.
+index. When `build-library --decay PATH` supplies a decay sublibrary, the emitted `LFS` is that sublibrary's
+`LISO` — resolved for catalog states by their own `LIS`/`ELIS` labels and for products with no catalog home by
+their declared `LFS`/excitation directly (decisions `decay_elis_match`, `decay_lis_label_match`; a declared level
+matching no decay isomer routes to ground as `decay_no_isomer_match_to_ground` — prompt levels decay instantly,
+so the daughter ground state keeps the strength). Isomer *target* identities are renumbered the same way.
+One edge remains: a state that matches no decay entry cannot keep its file `LISO` if that ordinal is already
+occupied by a *different* physical state in the decay sublibrary — keeping it would silently alias the nuclide onto
+the wrong half-life (Tb-156's unmatched second isomer collided with the just-renumbered first). Such states emit a
+synthetic ordinal `10000 + file LISO` (e.g. Tb-156N → `LISO` = 10002): outside the decay range, so the chain sees an
+honest "no decay data" product rather than a wrong-state decay, and two files can never collide on one identity.
+Without `--decay`, the distinct declared `LFS` of each (MT, product) rank-compresses onto isomeric ordinals
+(decision `no_catalog_rank_mapped_lfs`) — a reasonable guess at the decay numbering that the `--decay` path
+replaces with a lookup. Isomer states need decay data, not a cross-section file, so product-only isomers such as
+Sc-50m or Ta-182n survive to feed their daughters. The solver ledgers any ground-state fallback under
+`isomer_state_absent_from_decay_library_used_ground` and any decay-absent product under
+`products_no_evaluated_decay_data` rather than taking either silently.
 
 ## 2. Inelastic scattering is a transmutation when it produces an isomer
 
