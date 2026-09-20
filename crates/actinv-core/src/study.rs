@@ -95,13 +95,14 @@ pub struct RobustChannels {
     /// active library rows (requires `robustness.covariance`).
     #[serde(default)]
     pub cross_section_mf33: bool,
-    /// relative std of a normal draw on the total flux normalization,
-    /// applied to every schedule step.
+    /// relative std on the total flux normalization, applied to every
+    /// schedule step; draws are mean-preserving lognormal factors
+    /// (positive by construction).
     #[serde(default)]
     pub flux_rel_std: f64,
     /// per-element relative stds on the wt_percent composition; draws are
-    /// renormalized to the declared total, negative draws clamp at zero
-    /// and are counted.
+    /// mean-preserving lognormal factors renormalized to the declared
+    /// total.
     #[serde(default)]
     pub composition_rel_std: BTreeMap<String, f64>,
 }
@@ -1774,30 +1775,112 @@ impl Rng {
     }
 }
 
-/// Lower-triangular Cholesky factor of a row-major symmetric matrix, or
-/// None when not positive-semidefinite.
-fn cholesky(a: &[f64], n: usize) -> Option<Vec<f64>> {
-    let mut l = vec![0.0f64; n * n];
+/// Symmetric eigendecomposition by cyclic Jacobi sweeps. Returns
+/// (eigenvalues in descending order, row-major eigenvector matrix V with
+/// column j the eigenvector of eigenvalue j), or None when the input is
+/// nonfinite. Deterministic: same input, same rotations, same result.
+fn jacobi_eigh(a: &[f64], n: usize) -> Option<(Vec<f64>, Vec<f64>)> {
+    if a.iter().any(|v| !v.is_finite()) {
+        return None;
+    }
+    let mut m = a.to_vec();
+    let mut v = vec![0.0f64; n * n];
     for i in 0..n {
-        for j in 0..=i {
-            let mut sum = a[i * n + j];
-            for k in 0..j {
-                sum -= l[i * n + k] * l[j * n + k];
+        v[i * n + i] = 1.0;
+    }
+    let off_norm = |m: &[f64]| -> f64 {
+        let mut s = 0.0;
+        for i in 0..n {
+            for j in (i + 1)..n {
+                s += m[i * n + j] * m[i * n + j];
             }
-            if i == j {
-                // measured covariance collapses are often only
-                // numerically semi-definite: tolerate small negative
-                // diagonal residuals relative to the diagonal scale
-                if sum < 0.0 && sum < -1e-10 * a[i * n + i].abs().max(1e-300) {
-                    return None;
+        }
+        s.sqrt()
+    };
+    let scale = (0..n)
+        .map(|i| m[i * n + i].abs())
+        .fold(0.0f64, f64::max)
+        .max(1e-300);
+    for _ in 0..200 {
+        if off_norm(&m) <= 1e-12 * scale {
+            break;
+        }
+        for p in 0..n {
+            for q in (p + 1)..n {
+                let apq = m[p * n + q];
+                if apq == 0.0 {
+                    continue;
                 }
-                l[i * n + i] = sum.max(0.0).sqrt();
-            } else if l[j * n + j] > 0.0 {
-                l[i * n + j] = sum / l[j * n + j];
+                let app = m[p * n + p];
+                let aqq = m[q * n + q];
+                let theta = 0.5 * (aqq - app) / apq;
+                let t = theta.signum() / (theta.abs() + (theta * theta + 1.0).sqrt());
+                let c = 1.0 / (t * t + 1.0).sqrt();
+                let s = t * c;
+                for k in 0..n {
+                    let mkp = m[k * n + p];
+                    let mkq = m[k * n + q];
+                    m[k * n + p] = c * mkp - s * mkq;
+                    m[k * n + q] = s * mkp + c * mkq;
+                }
+                for k in 0..n {
+                    let mpk = m[p * n + k];
+                    let mqk = m[q * n + k];
+                    m[p * n + k] = c * mpk - s * mqk;
+                    m[q * n + k] = s * mpk + c * mqk;
+                }
+                for k in 0..n {
+                    let vkp = v[k * n + p];
+                    let vkq = v[k * n + q];
+                    v[k * n + p] = c * vkp - s * vkq;
+                    v[k * n + q] = s * vkp + c * vkq;
+                }
             }
         }
     }
-    Some(l)
+    let mut order: Vec<usize> = (0..n).collect();
+    order.sort_by(|&i, &j| {
+        m[j * n + j]
+            .partial_cmp(&m[i * n + i])
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    let eigenvalues: Vec<f64> = order.iter().map(|&i| m[i * n + i]).collect();
+    let mut vectors = vec![0.0f64; n * n];
+    for (new_j, &old_j) in order.iter().enumerate() {
+        for i in 0..n {
+            vectors[i * n + new_j] = v[i * n + old_j];
+        }
+    }
+    Some((eigenvalues, vectors))
+}
+
+/// Sampling factor of the nearest positive-semidefinite covariance:
+/// F = V·diag(√max(λ,0)) so draws are `σ0 + F·z` with z standard normal.
+/// Eigen-clipping removes only the non-PSD mass — unlike a diagonal ridge
+/// it does not inflate every variance. Returns (factor, clipped negative
+/// eigenvalue mass) for the channel ledger.
+fn psd_factor(cov: &[f64], n: usize) -> Option<(Vec<f64>, f64)> {
+    // Jacobi assumes symmetric input; collapsed covariances can carry a
+    // ledgered asymmetry, so take the symmetric part first
+    let mut sym = vec![0.0f64; n * n];
+    for i in 0..n {
+        for j in 0..n {
+            sym[i * n + j] = 0.5 * (cov[i * n + j] + cov[j * n + i]);
+        }
+    }
+    let (eigenvalues, vectors) = jacobi_eigh(&sym, n)?;
+    let clipped: f64 = eigenvalues.iter().map(|l| (-l).max(0.0)).sum();
+    let mut factor = vec![0.0f64; n * n];
+    for j in 0..n {
+        let root = eigenvalues[j].max(0.0).sqrt();
+        if root == 0.0 {
+            continue;
+        }
+        for i in 0..n {
+            factor[i * n + j] = vectors[i * n + j] * root;
+        }
+    }
+    Some((factor, clipped))
 }
 
 fn resolve_path(base: &Path, p: &str) -> PathBuf {
@@ -1983,46 +2066,37 @@ fn evaluate_robustness_inner(
         .unwrap_or(rb.samples);
     let truncated = n < rb.samples;
 
-    // precompute the xs Cholesky factor once per case; if the collapsed
-    // matrix is not numerically PSD, retry with increasing diagonal
-    // ridge, then fall back to independent diagonal draws
-    let m_diag_mean = cov_ctx.as_ref().map(|c| {
-        let m = c.rows.len();
-        if m == 0 {
-            0.0
-        } else {
-            (0..m).map(|i| c.cov[i * m + i].max(0.0)).sum::<f64>() / m as f64
-        }
-    });
-    let (xs_chol, xs_ridge) = cov_ctx
+    // precompute the xs sampling factor once per case: draws are
+    // multiplicative lognormal factors exp(F_rel·z − ½·diag(Σ_rel)) on the
+    // relative covariance Σ_rel[i,j] = Σ[i,j]/(σ_i σ_j), spectral-factored
+    // on the nearest-PSD projection. Multiplicative draws preserve the
+    // mean, keep the full correlation structure, and never go nonpositive
+    // — no ridge, no independence fallback, no clamps.
+    let (xs_factor, xs_clipped, xs_rel_diag) = cov_ctx
         .as_ref()
-        .map(|c| {
+        .and_then(|c| {
             let m = c.rows.len();
-            let mean = m_diag_mean.unwrap_or(0.0);
-            for k in [0.0, 1e-12, 1e-9, 1e-6, 1e-4, 1e-2] {
-                let ridge = k * mean;
-                let mut loaded = c.cov.clone();
-                if ridge > 0.0 {
-                    for i in 0..m {
-                        loaded[i * m + i] += ridge;
+            let mut rel = vec![0.0f64; m * m];
+            for i in 0..m {
+                for j in 0..m {
+                    let denom = c.sigma0[i] * c.sigma0[j];
+                    if denom > 0.0 {
+                        rel[i * m + j] = c.cov[i * m + j] / denom;
                     }
                 }
-                if let Some(l) = cholesky(&loaded, m) {
-                    return (Some(l), ridge);
-                }
             }
-            (None, f64::NAN)
+            let (factor, clipped) = psd_factor(&rel, m)?;
+            // projected diagonal diag(F F^T)_i: the −½·diag shift that
+            // keeps E[factor]=1 under the actually-sampled (clipped)
+            // distribution, not the unclipped Σ_rel diagonal
+            let diag: Vec<f64> = (0..m)
+                .map(|i| (0..m).map(|j| factor[i * m + j].powi(2)).sum())
+                .collect();
+            Some((factor, clipped, diag))
         })
-        .unwrap_or((None, f64::NAN));
-    let xs_correlated = xs_chol.is_some();
-    let xs_diag: Option<Vec<f64>> = if xs_chol.is_none() {
-        cov_ctx.as_ref().map(|c| {
-            let m = c.sigma0.len();
-            (0..m).map(|i| c.cov[i * m + i].max(0.0).sqrt()).collect()
-        })
-    } else {
-        None
-    };
+        .map(|(factor, clipped, diag)| (Some(factor), clipped, diag))
+        .unwrap_or((None, f64::NAN, Vec::new()));
+    let xs_correlated = xs_factor.is_some();
 
     let nominal_vals = response_times(nominal_out, &rb.responses);
     let mut samples_out: Vec<Value> = Vec::new();
@@ -2042,50 +2116,46 @@ fn evaluate_robustness_inner(
         let mut failed = 0usize;
         for i in 0..n {
             let mut sspec = spec.clone();
-            // flux normalization draw
+            // flux normalization draw: mean-preserving lognormal factor,
+            // positive by construction
             let flux_factor = if channels.flux_rel_std > 0.0 {
-                (1.0 + rng.normal() * channels.flux_rel_std).max(0.0)
+                let s2 = (1.0 + channels.flux_rel_std * channels.flux_rel_std).ln();
+                (-0.5 * s2 + s2.sqrt() * rng.normal()).exp()
             } else {
                 1.0
             };
-            // composition draws
+            // composition draws: same lognormal convention
             let comp_factors: BTreeMap<String, f64> = channels
                 .composition_rel_std
                 .iter()
-                .map(|(k, s)| (k.clone(), 1.0 + rng.normal() * s))
+                .map(|(k, s)| {
+                    let s2 = (1.0 + s * s).ln();
+                    (k.clone(), (-0.5 * s2 + s2.sqrt() * rng.normal()).exp())
+                })
                 .collect();
-            // cross-section draws: correlated Cholesky or diagonal
-            // fallback (only when the channel is enabled)
+            // cross-section draws: correlated lognormal multiplicative
+            // factors on the nearest-PSD relative covariance (only when
+            // the channel is enabled)
             let mut rate_factors: Vec<(usize, f64)> = Vec::new();
             if channels.cross_section_mf33 {
                 if let Some(ctx) = &cov_ctx {
-                    if let Some(l) = &xs_chol {
+                    if let Some(f) = &xs_factor {
                         let m = ctx.rows.len();
                         let z: Vec<f64> = (0..m).map(|_| rng.normal()).collect();
                         for (i2, &row) in ctx.rows.iter().enumerate() {
+                            if ctx.sigma0[i2] <= 0.0 {
+                                continue;
+                            }
                             let mut delta = 0.0;
-                            for (j, &zv) in z.iter().enumerate().take(i2 + 1) {
-                                delta += l[i2 * m + j] * zv;
+                            for (j, &zv) in z.iter().enumerate() {
+                                delta += f[i2 * m + j] * zv;
                             }
-                            let s0 = ctx.sigma0[i2];
-                            let perturbed = s0 + delta;
-                            if perturbed <= 0.0 {
+                            let factor = (delta - 0.5 * xs_rel_diag[i2]).exp();
+                            if !(factor.is_finite() && factor > 0.0) {
                                 n_clamped_xs += 1;
+                                continue;
                             }
-                            if s0 > 0.0 {
-                                rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
-                            }
-                        }
-                    } else if let Some(diag) = &xs_diag {
-                        for (i2, &row) in ctx.rows.iter().enumerate() {
-                            let s0 = ctx.sigma0[i2];
-                            let perturbed = s0 + rng.normal() * diag[i2];
-                            if perturbed <= 0.0 {
-                                n_clamped_xs += 1;
-                            }
-                            if s0 > 0.0 {
-                                rate_factors.push((row, perturbed.max(1e-300 * s0) / s0));
-                            }
+                            rate_factors.push((row, factor));
                         }
                     }
                 }
@@ -2373,7 +2443,11 @@ fn evaluate_robustness_inner(
                     path: cov_ref.path.clone(),
                     sha256: cov_ref.sha256.clone().unwrap_or_default(),
                 },
-                responses: vec!["activity:*".to_string(), "heat.total".to_string()],
+                responses: vec![
+                    "activity:*".to_string(),
+                    "activity.total".to_string(),
+                    "heat.total".to_string(),
+                ],
                 channels: vec!["cross_section_mf33".to_string()],
                 confidence_level: 0.95,
                 require_complete: false,
@@ -2411,7 +2485,7 @@ fn evaluate_robustness_inner(
                         "method": "first-order local propagation (P11) vs nonlinear sample spread",
                         "comparisons": comparisons,
                         "total_activity_approximation":
-                            "per-nuclide first-order bands combined by root-sum-square; cross-nuclide covariance neglected",
+                            "activity.total propagated directly through the full covariance (s^T Σ s); no root-sum-square combination",
                     });
                 }
                 Err(e) => {
@@ -2442,15 +2516,16 @@ fn evaluate_robustness_inner(
             "cross_section_mf33": {
                 "enabled": rb.channels.cross_section_mf33,
                 "correlated": xs_correlated,
-                "covariance_ridge_barn2": if xs_ridge.is_nan() {
+                "sampling": "correlated lognormal multiplicative factors on the nearest-PSD relative covariance",
+                "negative_eigenvalue_mass_clipped_relative": if xs_clipped.is_nan() {
                     Value::Null
                 } else {
-                    json!(xs_ridge)
+                    json!(xs_clipped)
                 },
                 "independence_assumption": if xs_correlated {
                     Value::Null
                 } else {
-                    json!("diagonal fallback: collapsed covariance not positive-semidefinite or channel off")
+                    json!("collapsed covariance not samplable (nonfinite or absent)")
                 },
                 "covered_rows": covered_rows,
                 "n_applied_rows": n_applied_rows,
@@ -2488,15 +2563,10 @@ fn first_order_std(uv: &Value, response: &str, time_s: f64) -> Option<f64> {
     let responses = &step["uncertainty"]["responses"];
     match response {
         "decay_heat_w_per_g" => responses["heat.total"]["mf33_standard_uncertainty"].as_f64(),
+        // direct propagated band on the aggregate response — no
+        // root-sum-square approximation
         "total_activity_bq_per_g" => {
-            let rss2: f64 = responses
-                .as_object()?
-                .iter()
-                .filter(|(k, _)| k.starts_with("activity:"))
-                .filter_map(|(_, v)| v["mf33_standard_uncertainty"].as_f64())
-                .map(|x| x.powi(2))
-                .sum();
-            Some(rss2.sqrt())
+            responses["activity.total"]["mf33_standard_uncertainty"].as_f64()
         }
         _ => None,
     }
@@ -2730,25 +2800,58 @@ mod robustness_tests {
     }
 
     #[test]
-    fn cholesky_psd_and_defect() {
-        // SPD
+    fn jacobi_recovers_known_eigensystem() {
+        // [[4,2],[2,3]] has eigenvalues (7±√17)/2 = 5.5615..., 1.4384...
         let a = [4.0, 2.0, 2.0, 3.0];
-        let l = cholesky(&a, 2).unwrap();
-        let mut rec = [0.0; 4];
-        for i in 0..2 {
-            for j in 0..2 {
-                for k in 0..2 {
-                    rec[i * 2 + j] += l[i * 2 + k] * l[j * 2 + k];
-                }
+        let (w, v) = jacobi_eigh(&a, 2).unwrap();
+        let e1 = (7.0 + 17.0f64.sqrt()) / 2.0;
+        let e2 = (7.0 - 17.0f64.sqrt()) / 2.0;
+        assert!((w[0] - e1).abs() < 1e-12);
+        assert!((w[1] - e2).abs() < 1e-12);
+        // A·v_j = λ_j·v_j for both columns of V
+        for j in 0..2 {
+            for i in 0..2 {
+                let av = a[i * 2] * v[j] + a[i * 2 + 1] * v[2 + j];
+                assert!((av - w[j] * v[i * 2 + j]).abs() < 1e-12);
             }
         }
-        for i in 0..4 {
-            assert!((rec[i] - a[i]).abs() < 1e-12);
+        // nonfinite input refuses
+        assert!(jacobi_eigh(&[1.0, f64::NAN, f64::NAN, 1.0], 2).is_none());
+    }
+
+    #[test]
+    fn psd_factor_reproduces_spd_and_clips_indefinite() {
+        // SPD input: factor reconstructs the matrix exactly, zero clipped
+        let a = [4.0, 2.0, 2.0, 3.0];
+        let (f, clipped) = psd_factor(&a, 2).unwrap();
+        assert_eq!(clipped, 0.0);
+        for i in 0..2 {
+            for j in 0..2 {
+                let mut rec = 0.0;
+                for k in 0..2 {
+                    rec += f[i * 2 + k] * f[j * 2 + k];
+                }
+                assert!((rec - a[i * 2 + j]).abs() < 1e-12);
+            }
         }
-        // strongly non-PSD
-        assert!(cholesky(&[1.0, 2.0, 2.0, 1.0], 2).is_none());
-        // numerically semi-definite (zero eigenvalue) tolerated
-        assert!(cholesky(&[1.0, 1.0, 1.0, 1.0], 2).is_some());
+        // indefinite input: clipped mass equals the negative eigenvalue and
+        // the reconstructed matrix is the eigen-clipped projection
+        let b = [1.0, 2.0, 2.0, 1.0];
+        let (f, clipped) = psd_factor(&b, 2).unwrap();
+        // eigenvalues of [[1,2],[2,1]] are 3 and -1
+        assert!((clipped - 1.0).abs() < 1e-12);
+        for i in 0..2 {
+            for j in 0..2 {
+                let mut rec = 0.0;
+                for k in 0..2 {
+                    rec += f[i * 2 + k] * f[j * 2 + k];
+                }
+                // projection of [[1,2],[2,1]] keeps the λ=3 eigenpair:
+                // 3·(1,1)/√2 outer product = [[1.5,1.5],[1.5,1.5]]
+                let want = [[1.5, 1.5], [1.5, 1.5]][i][j];
+                assert!((rec - want).abs() < 1e-12);
+            }
+        }
     }
 
     fn min_spec() -> Spec {

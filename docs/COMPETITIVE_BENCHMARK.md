@@ -1,34 +1,39 @@
 # ACTINV competitive benchmark
 
-*Latest first: CB3 identical-data FISPACT comparison (2026-09-19, ACTINV
-1.1.2), then the CB2 refresh, then the frozen CB1 record.*
+*Latest first: CB3 identical-data FISPACT comparison (2026-09-20 rerun on
+the fallback-decay artifact, ACTINV 1.1.2), then the CB2 refresh, then the
+frozen CB1 record.*
 
-## CB3 identical-data FISPACT comparison — 2026-09-19 · ACTINV 1.1.2
+## CB3 identical-data FISPACT comparison — 2026-09-20 · ACTINV 1.1.2
 
 The FNS leg was re-run with the nuclear-data confound removed:
 **ACTINV 1.1.2 on TENDL-2017** vs the frozen published
 FISPACT-II 4.0/TENDL-2017 references (`results/cb3_fns_tendl2017.json`,
 runner `controls/cb3_fns.py`, artifact
-`neutron.n.p10.npz sha256 6770e6e3…8b6a4` built from 1,072 TENDL-2017
+`neutron.n.p10.npz sha256 21815670…747d` built from 1,072 TENDL-2017
 ENDF-6 files — the union of all experiment targets plus every nuclide
 printed in any FISPACT inventory across the 132 outputs — with
 `--decay` state resolution against ENDF/B-VIII.0
-`endf-b-viii-0_decay.dat sha256 6f04cf00…8ddb`, index
-`sha256 6f58fd00…d085`).
+`endf-b-viii-0_decay.dat sha256 6f04cf00…8ddb` **plus
+`--decay-fallback` against JEFF-3.3**
+`jeff-3-3_decay.dat sha256 850b8b7f…d123` for cross-library level-scheme
+disagreements, index `sha256 1f1124ab…62a06`).
 
 | metric | ACTINV/TENDL-2017 | FISPACT-II/TENDL-2017 | ACTINV/TENDL-2025 (CB2) |
 |---|---:|---:|---:|
-| median pooled \|log C/E\| | **0.1040** | 0.1053 | 0.139 |
+| median pooled \|log C/E\| | **0.1030** | 0.1053 | 0.139 |
 | p90 pooled \|log C/E\| | 0.689 | **0.685** | **0.664** |
-| experiments all-points within 30% | **70** | 69 | 59 |
-| pooled geometric mean C/E | **1.063** (closer to 1) | 1.064 | **1.031** |
-| median experiment geometric mean C/E | **1.0048** | 1.0085 | — |
+| experiments all-points within 30% | **71** | 69 | 59 |
+| pooled geometric mean C/E | **1.0605** (closer to 1) | 1.0636 | **1.031** |
+| median experiment geometric mean C/E | **1.0047** | 1.0085 | — |
 
-**Verdict: ACTINV leads FISPACT on identical data.** On the same
-TENDL-2017 cross sections ACTINV is closer to the measurements on the
-median point error (0.1040 vs 0.1053), the within-30% experiment count
-(70 vs 69), the pooled bias (1.063 vs 1.064), and the median
-experiment bias (1.0048 vs 1.0085). FISPACT keeps a statistically
+**Verdict: ACTINV leads FISPACT on identical data, and the margin grew.**
+On the same TENDL-2017 cross sections ACTINV is closer to the
+measurements on the median point error (0.1030 vs 0.1053), the
+within-30% experiment count (**71 vs 69 — and both split experiments
+now fall ACTINV's way**: Sb-2000 and Ta-1996-5min pass for ACTINV and
+fail for FISPACT), the pooled bias (1.0605 vs 1.0636), and the median
+experiment bias (1.0047 vs 1.0085). FISPACT keeps a statistically
 marginal tail edge (p90 0.685 vs 0.689).
 
 All six machine checks pass (132/132 experiments, certificate inputs
@@ -36,15 +41,14 @@ match, positive pairs, references present, time alignment ≤2%,
 identities match). Two findings:
 
 1. **Solver+processing validated.** Comparing ACTINV to FISPACT *on the
-   same cross sections*: 130/132 experiments agree within 30% and
-   131/132 within 2×. The sole >2× case is Al-1996 at ~24–50 days of
-   cooling where both predictions sit ~4 orders below the measurement
-   (2.4e-9 vs 2.6e-8 µW/g vs 4.4e-5 measured) — numerically divergent
-   on a point both codes catastrophically miss anyway. Same XS in →
-   same heat out; the collapse, chain assembly and CRAM solve agree
-   with FISPACT's pipeline across the board.
+   same cross sections*: 131/132 experiments agree within 30% — only
+   Al-1996's late-time points diverge >2× (both codes sit ~4 orders
+   below the measurement: 2.4e-9 vs 2.6e-8 µW/g vs 4.4e-5 measured —
+   numerically divergent on a point both catastrophically miss anyway).
+   Same XS in → same heat out; the collapse, chain assembly and CRAM
+   solve agree with FISPACT's pipeline across the board.
 
-2. **Four defect classes were measured and fixed.** The first
+2. **Five defect classes were measured and fixed.** The first
    TENDL-2017 artifact ran 19 experiments beyond 2× of FISPACT, all
    ACTINV-low. Class one was isomer-product mapping: TENDL-2017's MF=8
    excitation fields carry ~10–100 eV rounding and sentinel-grade
@@ -62,23 +66,30 @@ identities match). Two findings:
    cross-library state numbering: a TENDL file's declared LISO is
    file-order noise while decay-library LISO follows evaluator level
    index, so Ta-182's 15.8-min isomer (file LISO=1, decay LISO=2) was
-   routed to the 0.283-s state and evaporated. The builder now parses
-   the decay library's MF=1/MT=451 state table and resolves every
-   emitted product and isomer target to the *decay* LISO by excitation
-   energy (ELIS) and level index (LIS); unmatched states whose file
-   ordinal would alias an occupied decay state get a synthetic ordinal
-   (Tb-156N → LISO 10002) rather than silently decaying as the wrong
-   nuclide (DATA_TRAPS #1). Ta-2000 max|log| 0.263→0.250 — the last
-   experiment FISPACT passed that ACTINV failed is now inside 30%,
-   leaving a 1–0 within-30% split in ACTINV's favour (Ta-1996-5min:
-   0.231 vs FISPACT 0.307).
+   routed to the 0.283-s state and evaporated. Class five was
+   cross-library *level-scheme disagreement*: evaluations assign
+   different level indices and energies to the same physical isomer —
+   ENDF/B-VIII calls Sb-120m 151 keV/LIS 4 while JEFF-3.3 and TENDL
+   call it 200 keV/LIS 6, and five more isomers (Cu-68m, Cs-135m,
+   Dy-147m, Hf-178n, Au-189m) disagree by 0.2–0.5 keV — so primary-only
+   matching left ~15 physical states homeless and dumped their
+   production onto the ground state (Sb-2000 carried a uniform 1.35×
+   overprediction vs FISPACT for exactly this reason). The builder now
+   resolves against the primary table, then a `--decay-fallback` table,
+   then an unambiguous loose-ELIS tier (±250 eV or 0.1%, sole candidate
+   only); unmatched states whose file ordinal would alias an occupied
+   decay state still get a synthetic ordinal (Tb-156N → LISO 10002)
+   rather than silently decaying as the wrong nuclide (DATA_TRAPS #1).
+   Ta-2000 max|log| 0.263→0.250 and now Sb-2000 0.541→0.256 — both
+   remaining split experiments pass for ACTINV and fail for FISPACT, a
+   2–0 within-30% margin in ACTINV's favour.
 
 Residual confounds, honestly: ACTINV's decay data remain
-ENDF/B-VIII-era ENDF-6 files while FISPACT used its condensed
-`tendl17_decay12`; 10 source files were evicted as genuine data
-defects (non-monotonic TAB1 grids, total widths below channel sums —
-each ledgered in the artifact index); and 24 nuclides in the FISPACT
-reachable space have no TENDL-2017 evaluation at all.
+ENDF/B-VIII-primary + JEFF-3.3-fallback ENDF-6 files while FISPACT used
+its condensed `tendl17_decay12`; 10 source files were evicted as genuine
+data defects (non-monotonic TAB1 grids, total widths below channel
+sums — each ledgered in the artifact index); and 24 nuclides in the
+FISPACT reachable space have no TENDL-2017 evaluation at all.
 
 ---
 

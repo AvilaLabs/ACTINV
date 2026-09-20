@@ -548,6 +548,7 @@ fn snapshot_value(snapshot: &ResponseSnapshot, response: &str) -> f64 {
         "heat.alpha" => snapshot.heat[1],
         "heat.beta" => snapshot.heat[2],
         "heat.gamma" => snapshot.heat[3],
+        "activity.total" => snapshot.activity.values().sum(),
         _ => response
             .strip_prefix("activity:")
             .and_then(|name| snapshot.activity.get(name))
@@ -575,6 +576,20 @@ fn tangent_value(
             })
             .map(|(global, subspace)| chain.lambda[global] * tangent[subspace])
             .unwrap_or(0.0);
+    }
+    if response == "activity.total" {
+        // sensitivity of total activity: sum over radioactive nuclides of
+        // λ·dn/dp — propagated through the full covariance, so
+        // cross-nuclide terms are not dropped
+        let mut value = 0.0;
+        for (subspace, derivative) in tangent.iter().enumerate() {
+            let global = keep[subspace];
+            if global == chain.leak || global == chain.unit {
+                continue;
+            }
+            value += chain.lambda[global] * derivative;
+        }
+        return value;
     }
     let component = match response {
         "heat.total" => 0,
@@ -1204,6 +1219,9 @@ impl PreparedRun {
             let known: std::collections::HashSet<_> =
                 nuclides.keys().map(|key| name_of(key.0, key.1)).collect();
             for selector in &options.responses {
+                if *selector == "activity.total" {
+                    continue;
+                }
                 if let Some(name) = selector.strip_prefix("activity:") {
                     if name != "*" && !known.contains(name) {
                         return Err(format!(

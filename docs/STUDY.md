@@ -126,13 +126,18 @@ fixed `seed` (repeatability only — not convergence evidence):
 ```
 
 Channels: `cross_section_mf33` draws correlated perturbations of the spectrum-collapsed
-cross-section covariance over the active library rows (Cholesky of the collapsed matrix with a
-diagonal-ridge ladder; if the matrix is not PSD even under the ladder the draw falls back to
-independent diagonal terms and the record says so under `independence_assumption`);
-`flux_rel_std` perturbs the total flux normalization; `composition_rel_std` perturbs named
-element weight percents, then renormalizes to the declared total. Nonpositive draws are clamped
-and counted; composition sums are preserved; correlations are preserved when the collapsed
-covariance admits a factor. Per-sample specs and outputs are persisted under each case directory
+cross-section covariance over the active library rows. The collapsed absolute covariance is
+converted to the *relative* covariance `Σ[i,j]/(σ_i σ_j)`, symmetrized, and spectral-factored on
+its nearest positive-semidefinite projection (cyclic-Jacobi eigendecomposition, negative
+eigenvalues clipped — the clipped mass is reported as
+`negative_eigenvalue_mass_clipped_relative`, never a diagonal ridge and never an independence
+fallback). Each parameter's perturbation is a mean-preserving lognormal factor
+`exp(F·z − ½·diag(FFᵀ))`, positive by construction.
+`flux_rel_std` perturbs the total flux normalization with the same mean-preserving lognormal
+convention; `composition_rel_std` perturbs named
+element weight percents the same way, then renormalizes to the declared total. Composition sums are
+preserved; correlations are preserved through the clipped spectral factor. Per-sample specs and
+outputs are persisted under each case directory
 (`rob_<i>.json`, `rob_<i>.out.json`).
 
 The record reports per-response `mean`/`std`/`ci95_half_width`/`sampling_error_std`, the

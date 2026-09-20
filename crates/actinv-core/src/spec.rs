@@ -435,6 +435,7 @@ impl Spec {
                 let valid = matches!(
                     selector.as_str(),
                     "heat.total" | "heat.alpha" | "heat.beta" | "heat.gamma" | "activity:*"
+                        | "activity.total"
                 ) || selector
                     .strip_prefix("activity:")
                     .is_some_and(|nuclide| !nuclide.is_empty() && nuclide != "*");

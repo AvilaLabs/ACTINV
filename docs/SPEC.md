@@ -168,7 +168,9 @@ Fissioning parents without a matching file remain explicit leakage and never bor
 every target/source identity. ACTINV recomputes and records both sidecar and index hashes before matrix assembly.
 
 `responses` accepts the canonical selectors `heat.total`, `heat.alpha`, `heat.beta`, `heat.gamma`,
-`activity:Nuclide`, and `activity:*`. Selectors must be unique. An empty or omitted list selects all four heat
+`activity:Nuclide`, `activity:*`, and `activity.total` (the aggregate propagated directly through the
+full covariance — not a root-sum-square combination of per-nuclide bands). Selectors must be unique.
+An empty or omitted list selects all four heat
 components plus every activity reported at that step. `confidence_level` defaults to `0.95` and must be strictly
 between zero and one. `require_complete` defaults to `false`; when true, an active activation row without a valid
 MF=33 self-covariance — or a nonzero-sensitivity parameter in any requested channel without uncertainty data —

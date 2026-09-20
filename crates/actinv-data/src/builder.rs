@@ -64,6 +64,13 @@ pub struct BuildOptions {
     /// target state labels onto decay LISO ordinals. When absent the emitted
     /// LFS keeps cross-section-side numbering.
     pub decay_path: Option<PathBuf>,
+    /// Second decay sublibrary consulted in the chain's own fallback order.
+    /// XS evaluations follow different level schemes; a state the primary
+    /// table cannot identify may be an exact entry in the fallback
+    /// (TENDL-2017's Sb-120M is JEFF-3.3's 200 keV / LIS=6 record while
+    /// ENDF/B-VIII describes the same 5.76-day isomer from another scheme).
+    /// Requires `decay_path`.
+    pub decay_fallback_path: Option<PathBuf>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -135,6 +142,7 @@ struct BuildIndex {
     /// inelastic reconstruction.
     emission_model: &'static str,
     decay_state_table_sha256: Option<String>,
+    decay_fallback_state_table_sha256: Option<String>,
     options: CanonicalOptions,
     state_catalog: Vec<CatalogState>,
     targets: Vec<TargetIndex>,
@@ -1411,47 +1419,125 @@ fn decay_elis_tolerance(elis_eV: f64) -> f64 {
     100.0_f64.max(elis_eV.abs() * 1.0e-4)
 }
 
+/// Loose excitation window for cross-library state identity. Independent
+/// evaluations disagree on an isomer's level energy by up to ~0.5 keV where
+/// the level schemes themselves differ (ENDF/B-VIII places Sb-120m at 151
+/// keV while TENDL-2017 and JEFF-3.3 agree on 200 keV). The window stays a
+/// last-resort tier: it fires only when exactly one decay isomer lies
+/// inside it, so neighbouring states can never be confused.
+fn decay_elis_loose_tolerance(elis_eV: f64) -> f64 {
+    250.0_f64.max(elis_eV.abs() * 1.0e-3)
+}
+
+/// Decay-sublibrary state tables mirroring the chain's own merge order:
+/// the primary evaluation is consulted first and the fallback fills the
+/// coverage the primary lacks. The XS file's declared level scheme follows
+/// whichever evaluator compiled it, so a state absent from one table is
+/// often present in the other (TENDL-2017's Sb-120M at 200 keV / LIS=6 is
+/// JEFF-3.3's exact entry while ENDF/B-VIII numbers the same 5.76-day
+/// isomer from a different scheme).
+pub struct DecayStateTables {
+    pub primary: HashMap<i32, Vec<DecayStateEntry>>,
+    pub fallback: Option<HashMap<i32, Vec<DecayStateEntry>>>,
+}
+
+/// Emit one matched decay isomer, optionally requiring the match be the
+/// sole candidate inside its window.
+fn decay_match_elis(
+    states: &[DecayStateEntry],
+    elis_eV: f64,
+    tolerance: f64,
+    unique: bool,
+) -> Option<i32> {
+    let mut best: Option<(&DecayStateEntry, f64)> = None;
+    let mut inside = 0usize;
+    for state in states.iter().filter(|state| state.liso > 0) {
+        let delta = (state.elis_eV - elis_eV).abs();
+        if delta <= tolerance {
+            inside += 1;
+            if best.map_or(true, |(_, d)| delta < d) {
+                best = Some((state, delta));
+            }
+        }
+    }
+    if unique && inside != 1 {
+        return None;
+    }
+    best.map(|(state, _)| state.liso)
+}
+
 /// Resolve a state's (level-index label, excitation energy) pair onto the
 /// decay sublibrary's LISO. Energy is the physical identifier and wins
 /// first; the evaluator's LIS label is the fallback. Both identifiers are
 /// cross-library stable where a file's own LISO label is not (TENDL-2017's
 /// Ta-182M file declares LISO=1 for the state the decay sublibrary numbers
-/// LIS=29 / LISO=2).
+/// LIS=29 / LISO=2). The fallback table is consulted before the loose
+/// tiers: an exact fallback match is stronger evidence than a near-energy
+/// primary match.
 fn decay_resolve(
-    table: &HashMap<i32, Vec<DecayStateEntry>>,
+    tables: &DecayStateTables,
     za: i32,
     lis: Option<i32>,
     elis_eV: Option<f64>,
 ) -> Option<(i32, &'static str)> {
-    let states = table.get(&za)?;
-    if let Some(elis) = elis_eV.filter(|value| *value > 0.0) {
-        let tolerance = decay_elis_tolerance(elis);
-        let mut best: Option<(&DecayStateEntry, f64)> = None;
-        for state in states.iter().filter(|state| state.liso > 0) {
-            let delta = (state.elis_eV - elis).abs();
-            if delta <= tolerance && best.map_or(true, |(_, d)| delta < d) {
-                best = Some((state, delta));
+    let lis = lis.filter(|value| *value > 0);
+    let elis = elis_eV.filter(|value| *value > 0.0);
+    let mut tiers: Vec<(&HashMap<i32, Vec<DecayStateEntry>>, bool, &'static str, &'static str)> =
+        Vec::new();
+    tiers.push((&tables.primary, false, "elis", "lis"));
+    if let Some(fallback) = &tables.fallback {
+        tiers.push((fallback, false, "fallback_elis", "fallback_lis"));
+    }
+    tiers.push((&tables.primary, true, "elis_loose", ""));
+    if let Some(fallback) = &tables.fallback {
+        tiers.push((fallback, true, "fallback_elis_loose", ""));
+    }
+    for (table, loose, elis_tag, lis_tag) in &tiers {
+        let Some(states) = table.get(&za) else {
+            continue;
+        };
+        if let Some(elis) = elis {
+            let (tolerance, unique) = if *loose {
+                (decay_elis_loose_tolerance(elis), true)
+            } else {
+                (decay_elis_tolerance(elis), false)
+            };
+            if let Some(liso) = decay_match_elis(states, elis, tolerance, unique) {
+                return Some((liso, elis_tag));
             }
         }
-        if let Some((state, _)) = best {
-            return Some((state.liso, "elis"));
-        }
-    }
-    if let Some(lis) = lis.filter(|value| *value > 0) {
-        if let Some(state) = states
-            .iter()
-            .find(|state| state.liso > 0 && state.lis == lis)
-        {
-            return Some((state.liso, "lis"));
+        if !loose {
+            if let Some(lis) = lis {
+                if let Some(state) = states
+                    .iter()
+                    .find(|state| state.liso > 0 && state.lis == lis)
+                {
+                    return Some((state.liso, lis_tag));
+                }
+            }
         }
     }
     None
 }
 
+/// Map a `decay_resolve` tier tag onto the emitted product decision string.
+/// The tag is preserved in the ledger so an audit can tell an exact-energy
+/// primary match apart from a fallback-library or loose-energy resolution.
+fn decay_product_decision(via: &str) -> &'static str {
+    match via {
+        "elis" => "decay_elis_match",
+        "lis" => "decay_lis_label_match",
+        "fallback_elis" => "decay_fallback_elis_match",
+        "fallback_lis" => "decay_fallback_lis_match",
+        "elis_loose" => "decay_elis_loose_match",
+        _ => "decay_fallback_elis_loose_match",
+    }
+}
+
 fn map_product_states(
     target: &mut BuiltTarget,
     catalog: &StateCatalog,
-    decay_states: Option<&HashMap<i32, Vec<DecayStateEntry>>>,
+    decay_states: Option<&DecayStateTables>,
 ) -> Result<(), String> {
     // Isomer target files carry the evaluation's own LISO label, which need
     // not equal the decay sublibrary's numbering (TENDL-2017's Ta-182M file
@@ -1463,10 +1549,10 @@ fn map_product_states(
     // decay-occupied ordinal would alias the file's reactions onto a
     // different physical isomer (Tb-156N), so those targets get a
     // synthesized ordinal the chain cannot resolve.
-    if let (Some(table), true) = (decay_states, target.index.liso > 0) {
+    if let (Some(tables), true) = (decay_states, target.index.liso > 0) {
         let lis = (target.index.lis > 0).then_some(target.index.lis);
         let elis = (target.index.elis_eV > 0.0).then_some(target.index.elis_eV);
-        match decay_resolve(table, target.index.za, lis, elis) {
+        match decay_resolve(tables, target.index.za, lis, elis) {
             Some((resolved, via)) => {
                 if resolved != target.index.liso {
                     target.index.ledger.push(format!(
@@ -1477,10 +1563,11 @@ fn map_product_states(
                 }
             }
             None => {
-                let occupied = table
-                    .get(&target.index.za)
-                    .map(|states| states.iter().any(|state| state.liso == target.index.liso))
-                    .unwrap_or(false);
+                let occupied = [&tables.primary]
+                    .into_iter()
+                    .chain(tables.fallback.iter())
+                    .filter_map(|table| table.get(&target.index.za))
+                    .any(|states| states.iter().any(|state| state.liso == target.index.liso));
                 if occupied {
                     target.index.ledger.push(format!(
                         "target state absent from decay sublibrary and file LISO {} aliases a decay-occupied ordinal; emitted as synthesized LISO {}",
@@ -1592,18 +1679,15 @@ fn map_product_states(
                         // for the isomer ordinal (LFS is a level index;
                         // LISO is the isomer rank — DATA_TRAPS #1).
                         _ => {
-                            if let Some(table) = decay_states {
+                            if let Some(tables) = decay_states {
                                 match decay_resolve(
-                                    table,
+                                    tables,
                                     original_zap,
                                     (raw.raw_lfs > 0).then_some(raw.raw_lfs),
                                     excitation,
                                 ) {
-                                    Some((liso, "elis")) => {
-                                        (Some(liso), None, "decay_elis_match")
-                                    }
-                                    Some((liso, _)) => {
-                                        (Some(liso), None, "decay_lis_label_match")
+                                    Some((liso, via)) => {
+                                        (Some(liso), None, decay_product_decision(via))
                                     }
                                     None => (
                                         Some(0),
@@ -1658,15 +1742,14 @@ fn map_product_states(
                     "catalog_lis_label_match_no_excitation",
                 ),
                 _ => {
-                    if let Some(table) = decay_states {
+                    if let Some(tables) = decay_states {
                         match decay_resolve(
-                            table,
+                            tables,
                             original_zap,
                             (raw.raw_lfs > 0).then_some(raw.raw_lfs),
                             excitation,
                         ) {
-                            Some((liso, "elis")) => (Some(liso), None, "decay_elis_match"),
-                            Some((liso, _)) => (Some(liso), None, "decay_lis_label_match"),
+                            Some((liso, via)) => (Some(liso), None, decay_product_decision(via)),
                             None => (Some(0), None, "decay_no_isomer_match_to_ground"),
                         }
                     } else {
@@ -1691,9 +1774,9 @@ fn map_product_states(
         // ordinal the chain cannot resolve.
         let mut decay_liso = None;
         let canonical = match (decay_states, canonical, catalog_state) {
-            (Some(table), Some(liso), Some(state)) if liso > 0 => {
+            (Some(tables), Some(liso), Some(state)) if liso > 0 => {
                 let resolved = decay_resolve(
-                    table,
+                    tables,
                     original_zap,
                     (state.representative.lis > 0).then_some(state.representative.lis),
                     (state.representative.elis_eV > 0.0)
@@ -1717,10 +1800,11 @@ fn map_product_states(
                         Some(renumbered)
                     }
                     None => {
-                        let occupied = table
-                            .get(&original_zap)
-                            .map(|states| states.iter().any(|state| state.liso == liso))
-                            .unwrap_or(false);
+                        let occupied = [&tables.primary]
+                            .into_iter()
+                            .chain(tables.fallback.iter())
+                            .filter_map(|table| table.get(&original_zap))
+                            .any(|states| states.iter().any(|state| state.liso == liso));
                         if occupied {
                             target.index.ledger.push(format!(
                                 "MT{}->{}: catalog isomer LISO {} absent from decay sublibrary and aliases a decay-occupied ordinal; emitted as synthesized LISO {}",
@@ -1771,7 +1855,7 @@ fn map_product_states(
                 canonical.unwrap_or(raw.raw_lfs)
             ));
         }
-        if matches!(decision, "decay_elis_match" | "decay_lis_label_match") {
+        if decision.starts_with("decay_") && decision.ends_with("_match") {
             decay_liso = canonical;
             target.index.ledger.push(format!(
                 "MT{}->{}: no catalog isomer for raw LFS {}; decay sublibrary resolves it to LISO {} via {}",
@@ -1779,7 +1863,7 @@ fn map_product_states(
                 original_zap,
                 raw.raw_lfs,
                 canonical.unwrap_or(raw.raw_lfs),
-                if decision == "decay_elis_match" { "ELIS" } else { "LIS" }
+                decision
             ));
         }
         if decision == "decay_no_isomer_match_to_ground" {
@@ -2748,6 +2832,9 @@ pub fn build_library(
     if sources.iter().any(|source| source.format != format) {
         return Err("input directory contains mixed TENDL/EAF evaluations".into());
     }
+    if options.decay_fallback_path.is_some() && options.decay_path.is_none() {
+        return Err("decay_fallback requires --decay to name the primary sublibrary".into());
+    }
     let decay_states = options
         .decay_path
         .as_ref()
@@ -2755,7 +2842,23 @@ pub fn build_library(
             let text = std::fs::read_to_string(path).map_err(|error| {
                 format!("cannot read decay sublibrary {}: {error}", path.display())
             })?;
-            decay::state_table(&text)
+            let fallback = options
+                .decay_fallback_path
+                .as_ref()
+                .map(|fallback_path| -> Result<_, String> {
+                    let text = std::fs::read_to_string(fallback_path).map_err(|error| {
+                        format!(
+                            "cannot read fallback decay sublibrary {}: {error}",
+                            fallback_path.display()
+                        )
+                    })?;
+                    decay::state_table(&text)
+                })
+                .transpose()?;
+            Ok(DecayStateTables {
+                primary: decay::state_table(&text)?,
+                fallback,
+            })
         })
         .transpose()?;
     let state_catalog = if format == LibraryFormat::Tendl {
@@ -2838,6 +2941,11 @@ pub fn build_library(
         emission_model: "p25-amendment-b",
         decay_state_table_sha256: options
             .decay_path
+            .as_ref()
+            .map(|path| sha256_file(path))
+            .transpose()?,
+        decay_fallback_state_table_sha256: options
+            .decay_fallback_path
             .as_ref()
             .map(|path| sha256_file(path))
             .transpose()?,
@@ -3739,6 +3847,7 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 decay_path: None,
+                decay_fallback_path: None,
             },
         )
         .unwrap();
@@ -4737,6 +4846,13 @@ mod tests {
         );
     }
 
+    fn decay_tables(map: HashMap<i32, Vec<DecayStateEntry>>) -> DecayStateTables {
+        DecayStateTables {
+            primary: map,
+            fallback: None,
+        }
+    }
+
     #[test]
     fn catalog_file_liso_relabels_through_decay_state_table() {
         // TENDL-2017's Ta-182M file declares LISO=1 for the 519.58 keV
@@ -4776,7 +4892,7 @@ mod tests {
             0.0,
             vec![state_row(102, 73182, 29, Some(519_580.0))],
         );
-        map_product_states(&mut target, &catalog, Some(&decay)).unwrap();
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
         assert_eq!((target.rows[0].zap, target.rows[0].lfs), (73182, 2));
         let mapping = &target.index.state_mappings[0];
         assert_eq!(mapping.canonical_liso, Some(2));
@@ -4811,7 +4927,7 @@ mod tests {
             0.0,
             vec![state_row(103, 21050, 1, Some(256_890.0))],
         );
-        map_product_states(&mut target, &catalog, Some(&decay)).unwrap();
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
         assert_eq!((target.rows[0].zap, target.rows[0].lfs), (21050, 1));
         let mapping = &target.index.state_mappings[0];
         assert_eq!(mapping.decision, "decay_elis_match");
@@ -4847,7 +4963,7 @@ mod tests {
             vec![state_row(102, 26056, 5, Some(400_000.0))],
         );
         let before: f64 = target.rows[0].sigma.iter().sum();
-        map_product_states(&mut target, &catalog, Some(&decay)).unwrap();
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
         assert_eq!((target.rows[0].zap, target.rows[0].lfs), (26056, 0));
         assert_eq!(
             target.rows[0].sigma.iter().sum::<f64>().to_bits(),
@@ -4888,7 +5004,7 @@ mod tests {
             ],
         );
         let mut target = state_target("m.endf", 73182, 1, 29, 519_577.0, Vec::new());
-        map_product_states(&mut target, &catalog, Some(&decay)).unwrap();
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
         assert_eq!(target.index.liso, 2);
     }
 
@@ -4922,8 +5038,109 @@ mod tests {
             ],
         );
         let mut target = state_target("n.endf", 65156, 2, 6, 154_000.0, Vec::new());
-        map_product_states(&mut target, &catalog, Some(&decay)).unwrap();
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
         assert_eq!(target.index.liso, SYNTHETIC_LISO_BASE + 2);
+    }
+
+    #[test]
+    fn fallback_decay_table_resolves_state_the_primary_numbers_differently() {
+        // Sb-120M: TENDL-2017 declares the 200 keV / LIS=6 isomer that
+        // JEFF-3.3 carries verbatim while ENDF/B-VIII describes the same
+        // 5.76-day state from a different scheme (151 keV / LIS=4). The
+        // fallback table identifies the physical state; emitting its
+        // ordinal 1 lands on the primary's entry in the merged chain.
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("ground.endf", 51120, 0, 0, 0.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut primary = HashMap::new();
+        primary.insert(
+            51120,
+            vec![DecayStateEntry {
+                liso: 1,
+                lis: 4,
+                elis_eV: 151_000.0,
+            }],
+        );
+        let mut fallback = HashMap::new();
+        fallback.insert(
+            51120,
+            vec![DecayStateEntry {
+                liso: 1,
+                lis: 6,
+                elis_eV: 200_000.0,
+            }],
+        );
+        let tables = DecayStateTables {
+            primary,
+            fallback: Some(fallback),
+        };
+        let mut target = state_target("m.endf", 51120, 1, 6, 200_000.0, Vec::new());
+        map_product_states(&mut target, &catalog, Some(&tables)).unwrap();
+        assert_eq!(target.index.liso, 1);
+    }
+
+    #[test]
+    fn sole_candidate_loose_energy_resolves_cross_library_scheme_drift() {
+        // Cs-135M: TENDL declares 1632.9 keV / LIS=10; the decay sublibrary
+        // carries the same isomer at 1633.3 keV / LIS=1 — inside the loose
+        // window (0.4 keV at 1.6 MeV) as the only candidate, so the ordinal
+        // resolves where the tight window could not.
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("ground.endf", 55135, 0, 0, 0.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut decay = HashMap::new();
+        decay.insert(
+            55135,
+            vec![DecayStateEntry {
+                liso: 1,
+                lis: 1,
+                elis_eV: 1_633_300.0,
+            }],
+        );
+        let mut target = state_target("m.endf", 55135, 1, 10, 1_632_900.0, Vec::new());
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
+        assert_eq!(target.index.liso, 1);
+    }
+
+    #[test]
+    fn ambiguous_loose_energy_refuses_to_choose_between_isomers() {
+        // Two decay isomers straddle the declared excitation inside the
+        // loose window; guessing would alias a physical state, so the
+        // unmatched target still gets a synthesized ordinal.
+        let source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("ground.endf", 99999, 0, 0, 0.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[source]).unwrap();
+        let mut decay = HashMap::new();
+        decay.insert(
+            99999,
+            vec![
+                DecayStateEntry {
+                    liso: 1,
+                    lis: 3,
+                    elis_eV: 100_150.0,
+                },
+                DecayStateEntry {
+                    liso: 2,
+                    lis: 5,
+                    elis_eV: 99_800.0,
+                },
+            ],
+        );
+        let mut target = state_target("m.endf", 99999, 1, 9, 100_000.0, Vec::new());
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
+        assert_eq!(target.index.liso, SYNTHETIC_LISO_BASE + 1);
     }
 
     #[test]

@@ -34,9 +34,17 @@ hid it; the per-experiment spread did not.
 against the cross-section catalog's `ELIS` values, then the evaluator's `LFS` label against the catalog's `LIS`
 index. When `build-library --decay PATH` supplies a decay sublibrary, the emitted `LFS` is that sublibrary's
 `LISO` — resolved for catalog states by their own `LIS`/`ELIS` labels and for products with no catalog home by
-their declared `LFS`/excitation directly (decisions `decay_elis_match`, `decay_lis_label_match`; a declared level
-matching no decay isomer routes to ground as `decay_no_isomer_match_to_ground` — prompt levels decay instantly,
-so the daughter ground state keeps the strength). Isomer *target* identities are renumbered the same way.
+their declared `LFS`/excitation directly. Cross-library level schemes differ: ENDF/B-VIII calls Sb-120m 151 keV /
+`LIS` 4 while JEFF-3.3 and TENDL-2017 call the same 5.76-day isomer 200 keV / `LIS` 6, and several isomers differ by
+0.2–0.5 keV between evaluations (Cu-68m, Cs-135m, Dy-147m, Hf-178n, Au-189m). `--decay-fallback PATH` supplies a
+second sublibrary consulted when the primary misses, and a conservative loose-`ELIS` tier (±250 eV or 0.1%,
+accepted only when exactly one isomer falls inside) absorbs small level-energy disagreements. Resolution order:
+primary tight `ELIS`, primary `LIS`, fallback tight `ELIS`, fallback `LIS`, primary loose `ELIS`, fallback loose
+`ELIS` (decisions `decay_elis_match`, `decay_lis_label_match`, `decay_fallback_elis_match`,
+`decay_fallback_lis_match`, `decay_elis_loose_match`, `decay_fallback_elis_loose_match`; both library hashes are
+recorded in the index). A declared level matching no decay isomer routes to ground as
+`decay_no_isomer_match_to_ground` — prompt levels decay instantly, so the daughter ground state keeps the
+strength. Isomer *target* identities are renumbered the same way.
 One edge remains: a state that matches no decay entry cannot keep its file `LISO` if that ordinal is already
 occupied by a *different* physical state in the decay sublibrary — keeping it would silently alias the nuclide onto
 the wrong half-life (Tb-156's unmatched second isomer collided with the just-renumbered first). Such states emit a
