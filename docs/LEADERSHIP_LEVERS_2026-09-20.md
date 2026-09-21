@@ -190,7 +190,7 @@ Verified against public sources — FISPACT-II manuals/pricing, OpenMC
 
 | axis | ACTINV 1.1.2 | FISPACT-II 5.x | OpenMC 0.15.3 | verdict |
 |---|---|---|---|---|
-| Same-data FNS accuracy | 71/132 ≤30%, median 0.1030 | 69/132, 0.1053 | n/a | **ACTINV (narrow)** |
+| Same-data FNS accuracy | 71/132 ≤30%, median 0.1030 | 69/132, 0.1053 | n/a | **ACTINV (narrow; inside decay-library sensitivity — JEFF-primary erases to parity)** |
 | Provenance/audit | full SHA chain + decision ledger + defect eviction | licensed binaries, condensed libs, JEFF pipelines non-public | open source, no data ledger | **ACTINV** |
 | Isomer/state resolution | auto ELIS/LIS + fallback + loose tiers, audited | manual condensed-library convention | incomplete activation chains (ARC paper) | **ACTINV** |
 | Solve verification | compensated-residual refinement gate | none documented | none (raw spsolve) | **ACTINV** |
@@ -207,7 +207,7 @@ correctness (provenance, isomer resolution, verified solves), kernel
 speed at parity-or-better to 4096 states (182×/13.8×/2.64×/1.28×/
 0.98×/1.83×),
 and holds a narrow identical-data accuracy edge; it trails FISPACT on
-feature depth (shielding×UQ, multi-spectrum pulses, TMC yields).
+feature depth (multi-spectrum pulses, TMC yields, γ projectiles).
 OpenMC's C++ CRAM port may still contest the kernel lead at scale.
 
 ## Ranking

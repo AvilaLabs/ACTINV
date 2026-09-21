@@ -91,6 +91,19 @@ data defects (non-monotonic TAB1 grids, total widths below channel
 sums — each ledgered in the artifact index); and 24 nuclides in the
 FISPACT reachable space have no TENDL-2017 evaluation at all.
 
+**Decay-library sensitivity (measured 2026-09-21).** The same arm was
+re-scored with primacy swapped — JEFF-3.3 primary + ENDF/B-VIII
+fallback (`results/cb3_fns_jeff_primary.json`): median pooled
+|log C/E| moves 0.1030 → 0.1058, within-30% experiments 71 → 69, and
+pooled geometric mean C/E 1.0605 → 1.0687 — i.e. under JEFF-primary the
+lead over FISPACT (0.1053, 69) disappears to parity. The two deciding
+experiments are the same isomer-resolution cases fixed under ENDF
+primacy: Sb-2000 and Ta-1996-5min both flip back to failing (max|log|
+0.256→0.265 and 0.231→0.310). The sensitivity is bidirectional — Yb-2000
+worsens +0.453 while Bi-1996-7hour improves −0.107 — so the honest claim
+is that the identical-data margin sits *inside* decay-evaluation
+uncertainty, not above it.
+
 ---
 
 ## CB2 refresh — 2026-09-18 · ACTINV 1.1.2

@@ -77,6 +77,11 @@ if os.environ.get("ACTINV_LIBRARY"):
     EXPECTED["library"] = sha256(LIBRARY)
     EXPECTED["library_index"] = sha256(LIBRARY.with_name(LIBRARY.stem + "_index.json"))
 
+if os.environ.get("ACTINV_ENDF_DECAY"):
+    EXPECTED["decay_primary"] = sha256(DECAY_PRIMARY)
+if os.environ.get("ACTINV_JEFF_DECAY"):
+    EXPECTED["decay_fallback"] = sha256(DECAY_FALLBACK)
+
 
 def load_actinv():
     if not MODULE.is_file():
