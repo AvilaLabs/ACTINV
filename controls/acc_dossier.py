@@ -18,7 +18,8 @@ import decayheat as dh
 import decay_sources as ds
 
 FNS = Path(os.path.expanduser("~/nuclear-data/conderc-fns/fns"))
-LIB17 = Path(os.path.expanduser("~/nuclear-data/tendl-2017/build/neutron.n.p10.npz"))
+LIB17 = Path(os.path.expanduser(
+    os.environ.get("ACTINV_LIBRARY", "~/nuclear-data/tendl-2017/build/neutron.n.p10.npz")))
 LIB25 = ROOT / "target/p25c-release/tendl-2025-patched-neutron-709g.npz"
 ACTINV = ROOT / "target/debug/actinv"
 OUT = ROOT / "target/preflight-tmp/dossier"

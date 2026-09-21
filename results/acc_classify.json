@@ -1,0 +1,1551 @@
+{
+ "aggregate": {
+  "shared_library": 59,
+  "isomer_dominant": 9,
+  "actinv_specific": 2
+ },
+ "records": [
+  {
+   "material": "Al",
+   "experiment": "1996exp_7hour",
+   "slope": -2.5599513536600664,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 4297536.0,
+    "abs_log_ce": 10.185,
+    "calc": 2.3685262833557173e-09,
+    "meas": 6.277e-05
+   },
+   "dominant": {
+    "nuclide": "Al26",
+    "heat": 2.3685236034172067e-09,
+    "share": 1.0
+   },
+   "fispact_ratio": null,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [
+    "both codes ~0 vs measurement; ratio n/a"
+   ],
+   "fispact_heat": 2.57316e-08
+  },
+  {
+   "material": "As",
+   "experiment": "2000exp_5min",
+   "slope": 0.060090860201937116,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 36.0,
+    "abs_log_ce": 0.3338,
+    "calc": 0.13773091952181557,
+    "meas": 0.1923
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.11989106454861904,
+    "share": 0.87
+   },
+   "fispact_ratio": 0.9941,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.138547
+  },
+  {
+   "material": "Au",
+   "experiment": "2000exp_5min",
+   "slope": -0.0034707638717396054,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 35.0,
+    "abs_log_ce": 0.5698,
+    "calc": 0.042924777013618985,
+    "meas": 0.02428
+   },
+   "dominant": {
+    "nuclide": "Au196m1",
+    "heat": 0.027483767136696514,
+    "share": 0.64
+   },
+   "fispact_ratio": 1.022,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.042000800000000005
+  },
+  {
+   "material": "Ba",
+   "experiment": "1996exp_5min",
+   "slope": -0.6313764883536641,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3429.0,
+    "abs_log_ce": 2.2741,
+    "calc": 0.001975444782075139,
+    "meas": 0.0192
+   },
+   "dominant": {
+    "nuclide": "Cs138",
+    "heat": 0.0011203435826198228,
+    "share": 0.567
+   },
+   "fispact_ratio": 1.0272,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00192308
+  },
+  {
+   "material": "Ba",
+   "experiment": "2000exp_5min",
+   "slope": 0.00657091266235368,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3298.0,
+    "abs_log_ce": 0.3626,
+    "calc": 0.002040660932908918,
+    "meas": 0.00142
+   },
+   "dominant": {
+    "nuclide": "Cs138",
+    "heat": 0.0011722580467146406,
+    "share": 0.574
+   },
+   "fispact_ratio": 1.0266,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00198788
+  },
+  {
+   "material": "Bi",
+   "experiment": "1996exp_5min",
+   "slope": -0.1642747776459653,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 1045.0,
+    "abs_log_ce": 1.8588,
+    "calc": 0.00027845970495275323,
+    "meas": 4.34e-05
+   },
+   "dominant": {
+    "nuclide": "Tl206",
+    "heat": 0.0001469357084452211,
+    "share": 0.528
+   },
+   "fispact_ratio": 0.9955,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000279723
+  },
+  {
+   "material": "Bi",
+   "experiment": "1996exp_7hour",
+   "slope": -0.14276752504299473,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 147139.19999999998,
+    "abs_log_ce": 2.2627,
+    "calc": 1.9505386659594608e-05,
+    "meas": 2.03e-06
+   },
+   "dominant": {
+    "nuclide": "Bi210",
+    "heat": 1.6371880900734785e-05,
+    "share": 0.839
+   },
+   "fispact_ratio": 1.0016,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 1.94738e-05
+  },
+  {
+   "material": "Bi",
+   "experiment": "2000exp_5min",
+   "slope": 0.21233967999467782,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 2076.0,
+    "abs_log_ce": 4.3435,
+    "calc": 4.948071027502172e-05,
+    "meas": 6.428e-07
+   },
+   "dominant": {
+    "nuclide": "Pb209",
+    "heat": 3.381488707705521e-05,
+    "share": 0.683
+   },
+   "fispact_ratio": 0.9972,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 4.96218e-05
+  },
+  {
+   "material": "Ca",
+   "experiment": "1996exp_5min",
+   "slope": 0.0807742060174988,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 199.0,
+    "abs_log_ce": 0.5529,
+    "calc": 0.00845622997028393,
+    "meas": 0.0147
+   },
+   "dominant": {
+    "nuclide": "K44",
+    "heat": 0.007653739846765847,
+    "share": 0.905
+   },
+   "fispact_ratio": 0.9968,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00848312
+  },
+  {
+   "material": "Ca",
+   "experiment": "2000exp_5min",
+   "slope": 0.12839372495335155,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 37.0,
+    "abs_log_ce": 0.838,
+    "calc": 0.13712034651527594,
+    "meas": 0.317
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.12793153057547163,
+    "share": 0.933
+   },
+   "fispact_ratio": 0.9939,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.137955
+  },
+  {
+   "material": "Ce",
+   "experiment": "2000exp_5min",
+   "slope": 0.15256214419366687,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3291.0,
+    "abs_log_ce": 1.8534,
+    "calc": 0.0006509051659612628,
+    "meas": 0.000102
+   },
+   "dominant": {
+    "nuclide": "La142",
+    "heat": 0.00025774494401990756,
+    "share": 0.396
+   },
+   "fispact_ratio": 1.0014,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000649987
+  },
+  {
+   "material": "Cl",
+   "experiment": "2000exp_5min",
+   "slope": 0.08961369022238067,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 2683.0,
+    "abs_log_ce": 0.3259,
+    "calc": 0.023577065834883344,
+    "meas": 0.01702
+   },
+   "dominant": {
+    "nuclide": "Cl34m1",
+    "heat": 0.01475771443634406,
+    "share": 0.626
+   },
+   "fispact_ratio": 1.0129,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0232772
+  },
+  {
+   "material": "Co",
+   "experiment": "1996exp_7hour",
+   "slope": -0.04637741194067146,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 54604.8,
+    "abs_log_ce": 0.3209,
+    "calc": 0.08136154392110118,
+    "meas": 0.05903
+   },
+   "dominant": {
+    "nuclide": "Co58",
+    "heat": 0.031955199801760294,
+    "share": 0.393
+   },
+   "fispact_ratio": 1.0064,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0808455
+  },
+  {
+   "material": "Cr",
+   "experiment": "1996exp_5min",
+   "slope": -0.21681029367692622,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3435.0,
+    "abs_log_ce": 1.1732,
+    "calc": 0.001203450262953451,
+    "meas": 0.00389
+   },
+   "dominant": {
+    "nuclide": "Cr49",
+    "heat": 0.0011299191536769874,
+    "share": 0.939
+   },
+   "fispact_ratio": 1.008,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0011938600000000001
+  },
+  {
+   "material": "Cr",
+   "experiment": "1996exp_7hour",
+   "slope": 0.34385091545536856,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 59443.2,
+    "abs_log_ce": 2.2473,
+    "calc": 0.001476352255554636,
+    "meas": 0.01397
+   },
+   "dominant": {
+    "nuclide": "Cr51",
+    "heat": 0.0014750941575356643,
+    "share": 0.999
+   },
+   "fispact_ratio": 1.0084,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00146403
+  },
+  {
+   "material": "Cr",
+   "experiment": "2000exp_5min",
+   "slope": -0.1261349062198609,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3289.0,
+    "abs_log_ce": 0.5451,
+    "calc": 0.0012796325844596774,
+    "meas": 0.002207
+   },
+   "dominant": {
+    "nuclide": "Cr49",
+    "heat": 0.0011758835231429662,
+    "share": 0.919
+   },
+   "fispact_ratio": 1.0068,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00127101
+  },
+  {
+   "material": "Cs",
+   "experiment": "2000exp_5min",
+   "slope": 0.2524255641182875,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 35.0,
+    "abs_log_ce": 1.547,
+    "calc": 0.08272450113229227,
+    "meas": 0.3886
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.08022670627290297,
+    "share": 0.97
+   },
+   "fispact_ratio": 0.994,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0832211
+  },
+  {
+   "material": "Dy",
+   "experiment": "2000exp_5min",
+   "slope": 0.4631312688509223,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3288.0,
+    "abs_log_ce": 3.4694,
+    "calc": 0.0029394395735082767,
+    "meas": 9.152e-05
+   },
+   "dominant": {
+    "nuclide": "Dy165",
+    "heat": 0.0027274534699503424,
+    "share": 0.928
+   },
+   "fispact_ratio": 1.0066,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0029203
+  },
+  {
+   "material": "Er",
+   "experiment": "2000exp_5min",
+   "slope": 0.510149074201778,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3288.0,
+    "abs_log_ce": 2.2909,
+    "calc": 0.0014084908502768607,
+    "meas": 0.0001425
+   },
+   "dominant": {
+    "nuclide": "Er165",
+    "heat": 0.0008130805611099283,
+    "share": 0.577
+   },
+   "fispact_ratio": 0.977,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00144163
+  },
+  {
+   "material": "Eu",
+   "experiment": "2000exp_5min",
+   "slope": 0.052389823865092305,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 194.0,
+    "abs_log_ce": 1.3959,
+    "calc": 0.016307553923145802,
+    "meas": 0.004038
+   },
+   "dominant": {
+    "nuclide": "Eu152m2",
+    "heat": 0.0069157740987652256,
+    "share": 0.424
+   },
+   "fispact_ratio": 0.9878,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0165089
+  },
+  {
+   "material": "Gd",
+   "experiment": "2000exp_5min",
+   "slope": 0.08324842666131267,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 199.0,
+    "abs_log_ce": 1.035,
+    "calc": 0.006173551541618313,
+    "meas": 0.002193
+   },
+   "dominant": {
+    "nuclide": "Gd159",
+    "heat": 0.002533181829628441,
+    "share": 0.41
+   },
+   "fispact_ratio": 1.0332,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00597518
+  },
+  {
+   "material": "Ge",
+   "experiment": "2000exp_5min",
+   "slope": 0.02074210389390116,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 20.0,
+    "abs_log_ce": 0.4563,
+    "calc": 0.8940363308693385,
+    "meas": 1.411
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.7161411491724202,
+    "share": 0.801
+   },
+   "fispact_ratio": 0.9921,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.9011929999999999
+  },
+  {
+   "material": "Hf",
+   "experiment": "2000exp_5min",
+   "slope": 0.23900329656463284,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3297.0,
+    "abs_log_ce": 0.5917,
+    "calc": 0.0010776888736042448,
+    "meas": 0.0005964
+   },
+   "dominant": {
+    "nuclide": "Hf180m1",
+    "heat": 0.0006476559899041411,
+    "share": 0.601
+   },
+   "fispact_ratio": 1.0492,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00102716
+  },
+  {
+   "material": "Ho",
+   "experiment": "2000exp_5min",
+   "slope": 0.12272891329845538,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 35.0,
+    "abs_log_ce": 1.2392,
+    "calc": 0.23760573822697356,
+    "meas": 0.8204
+   },
+   "dominant": {
+    "nuclide": "Ho164",
+    "heat": 0.10352497288309384,
+    "share": 0.436
+   },
+   "fispact_ratio": 0.9039,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.262863
+  },
+  {
+   "material": "I",
+   "experiment": "2000exp_5min",
+   "slope": -0.0729108495598075,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 36.0,
+    "abs_log_ce": 1.0072,
+    "calc": 0.055578638903607085,
+    "meas": 0.0203
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.035927783976441065,
+    "share": 0.646
+   },
+   "fispact_ratio": 0.9921,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.056019799999999995
+  },
+  {
+   "material": "In",
+   "experiment": "2000exp_5min",
+   "slope": 0.23123600498880834,
+   "classes": [
+    "actinv_specific",
+    "isomer_dominant"
+   ],
+   "worst": {
+    "cooling_s": 3299.0,
+    "abs_log_ce": 1.013,
+    "calc": 0.12361530831383194,
+    "meas": 0.04489
+   },
+   "dominant": {
+    "nuclide": "In116m1",
+    "heat": 0.1071723686106745,
+    "share": 0.867
+   },
+   "fispact_ratio": 0.0408,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [
+    "total heat differs from FISPACT by 0.0408x"
+   ],
+   "fispact_heat": 3.02903
+  },
+  {
+   "material": "Ir",
+   "experiment": "2000exp_5min",
+   "slope": -0.40676470070661197,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3296.0,
+    "abs_log_ce": 1.2464,
+    "calc": 0.002502383795648813,
+    "meas": 0.008703
+   },
+   "dominant": {
+    "nuclide": "Ir190",
+    "heat": 0.0010930979993289407,
+    "share": 0.437
+   },
+   "fispact_ratio": 0.9552,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0026198
+  },
+  {
+   "material": "K",
+   "experiment": "1996exp_7hour",
+   "slope": 0.07541705938780867,
+   "classes": [
+    "actinv_specific"
+   ],
+   "worst": {
+    "cooling_s": 8645961.600000001,
+    "abs_log_ce": 1.7154,
+    "calc": 1.964511526058473e-06,
+    "meas": 3.534e-07
+   },
+   "dominant": {
+    "nuclide": "S35",
+    "heat": 1.3740344919470817e-06,
+    "share": 0.699
+   },
+   "fispact_ratio": 0.5321,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [
+    "total heat differs from FISPACT by 0.5321x"
+   ],
+   "fispact_heat": 3.69218e-06
+  },
+  {
+   "material": "La",
+   "experiment": "2000exp_5min",
+   "slope": 0.26626800569327863,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3305.0,
+    "abs_log_ce": 2.777,
+    "calc": 0.0007154340644147243,
+    "meas": 4.452e-05
+   },
+   "dominant": {
+    "nuclide": "Ba139",
+    "heat": 0.0005971008117896751,
+    "share": 0.835
+   },
+   "fispact_ratio": 1.008,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000709747
+  },
+  {
+   "material": "Lu",
+   "experiment": "2000exp_5min",
+   "slope": 0.3456905064048955,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 161.0,
+    "abs_log_ce": 1.7071,
+    "calc": 0.003161043760851459,
+    "meas": 0.0005734
+   },
+   "dominant": {
+    "nuclide": "Lu176m1",
+    "heat": 0.0031227342232709636,
+    "share": 0.988
+   },
+   "fispact_ratio": 1.0184,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0031040200000000003
+  },
+  {
+   "material": "Mo",
+   "experiment": "1996exp_7hour",
+   "slope": 0.030028877086190692,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 8631619.2,
+    "abs_log_ce": 0.3461,
+    "calc": 0.0001515269145755366,
+    "meas": 0.0001072
+   },
+   "dominant": {
+    "nuclide": "Nb95",
+    "heat": 7.571702791237084e-05,
+    "share": 0.5
+   },
+   "fispact_ratio": 0.9799,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00015463399999999998
+  },
+  {
+   "material": "Na",
+   "experiment": "1996exp_5min",
+   "slope": -0.4486746639149224,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 742.0,
+    "abs_log_ce": 1.8287,
+    "calc": 0.00012561173484087904,
+    "meas": 0.000782
+   },
+   "dominant": {
+    "nuclide": "Na24",
+    "heat": 0.00011986285629056589,
+    "share": 0.954
+   },
+   "fispact_ratio": 1.0085,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000124556
+  },
+  {
+   "material": "Na",
+   "experiment": "2000exp_5min",
+   "slope": -0.05098225030062777,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 604.0,
+    "abs_log_ce": 0.6889,
+    "calc": 0.00014215191628486954,
+    "meas": 0.0002831
+   },
+   "dominant": {
+    "nuclide": "Na24",
+    "heat": 0.0001200754092034148,
+    "share": 0.845
+   },
+   "fispact_ratio": 1.0002,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000142128
+  },
+  {
+   "material": "Nd",
+   "experiment": "2000exp_5min",
+   "slope": 0.11915224738765949,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 2687.0,
+    "abs_log_ce": 0.6482,
+    "calc": 0.01678014391714749,
+    "meas": 0.008776
+   },
+   "dominant": {
+    "nuclide": "Nd149",
+    "heat": 0.011281687829256346,
+    "share": 0.672
+   },
+   "fispact_ratio": 0.9945,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0168726
+  },
+  {
+   "material": "Os",
+   "experiment": "2000exp_5min",
+   "slope": 0.3818820682285698,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3288.0,
+    "abs_log_ce": 1.5519,
+    "calc": 0.0010993518841870844,
+    "meas": 0.0002329
+   },
+   "dominant": {
+    "nuclide": "Os191m1",
+    "heat": 0.0005670802717057834,
+    "share": 0.516
+   },
+   "fispact_ratio": 0.9942,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00110579
+  },
+  {
+   "material": "Pb",
+   "experiment": "1996exp_5min",
+   "slope": 0.11783713558477474,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 81.0,
+    "abs_log_ce": 0.3313,
+    "calc": 0.007251607314708757,
+    "meas": 0.0101
+   },
+   "dominant": {
+    "nuclide": "Tl208",
+    "heat": 0.004014137770922646,
+    "share": 0.554
+   },
+   "fispact_ratio": 1.004,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.007223
+  },
+  {
+   "material": "Pb",
+   "experiment": "1996exp_7hour",
+   "slope": -0.5239588294302944,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 4296326.4,
+    "abs_log_ce": 3.056,
+    "calc": 5.239710518686913e-07,
+    "meas": 1.113e-05
+   },
+   "dominant": {
+    "nuclide": "Hg203",
+    "heat": 5.129059060136208e-07,
+    "share": 0.979
+   },
+   "fispact_ratio": 1.0366,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 5.054489999999999e-07
+  },
+  {
+   "material": "Pb",
+   "experiment": "2000exp_5min",
+   "slope": 0.24504566466239294,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3298.0,
+    "abs_log_ce": 0.6467,
+    "calc": 0.0004864497731627748,
+    "meas": 0.0002548
+   },
+   "dominant": {
+    "nuclide": "Pb204m1",
+    "heat": 0.0004201593804921788,
+    "share": 0.864
+   },
+   "fispact_ratio": 1.0108,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00048123899999999995
+  },
+  {
+   "material": "Pr",
+   "experiment": "2000exp_5min",
+   "slope": 0.026442348623252596,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3297.0,
+    "abs_log_ce": 0.8664,
+    "calc": 0.00020517378172556203,
+    "meas": 8.627e-05
+   },
+   "dominant": {
+    "nuclide": "Pr142",
+    "heat": 0.00011492194628233205,
+    "share": 0.56
+   },
+   "fispact_ratio": 0.9958,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00020604599999999999
+  },
+  {
+   "material": "Re",
+   "experiment": "1996exp_5min",
+   "slope": 0.04331337712717264,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 316.0,
+    "abs_log_ce": 0.369,
+    "calc": 0.002936030574297316,
+    "meas": 0.00203
+   },
+   "dominant": {
+    "nuclide": "Re186",
+    "heat": 0.0014581690399255603,
+    "share": 0.497
+   },
+   "fispact_ratio": 1.0065,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00291709
+  },
+  {
+   "material": "Rh",
+   "experiment": "2000exp_5min",
+   "slope": 0.04534402107702648,
+   "classes": [
+    "isomer_dominant",
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 1164.0,
+    "abs_log_ce": 1.4552,
+    "calc": 0.007855349296122123,
+    "meas": 0.001833
+   },
+   "dominant": {
+    "nuclide": "Rh103m1",
+    "heat": 0.006485090312793258,
+    "share": 0.826
+   },
+   "fispact_ratio": 1.0301,
+   "metastable_top": true,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0076254899999999995
+  },
+  {
+   "material": "S",
+   "experiment": "1996exp_5min",
+   "slope": 0.04024576654388118,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 198.0,
+    "abs_log_ce": 0.5362,
+    "calc": 0.003749490750526588,
+    "meas": 0.00641
+   },
+   "dominant": {
+    "nuclide": "Si31",
+    "heat": 0.0028022346417873258,
+    "share": 0.747
+   },
+   "fispact_ratio": 1.0,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0037496000000000005
+  },
+  {
+   "material": "S",
+   "experiment": "2000exp_5min",
+   "slope": -0.14125169867456258,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 67.0,
+    "abs_log_ce": 1.1811,
+    "calc": 0.010412295730879552,
+    "meas": 0.003196
+   },
+   "dominant": {
+    "nuclide": "P34",
+    "heat": 0.006484301322008439,
+    "share": 0.623
+   },
+   "fispact_ratio": 1.0045,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0103654
+  },
+  {
+   "material": "Sc",
+   "experiment": "2000exp_5min",
+   "slope": 0.04399145368133784,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 35.0,
+    "abs_log_ce": 0.5264,
+    "calc": 0.29530632756655534,
+    "meas": 0.4999
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.1895376360011557,
+    "share": 0.642
+   },
+   "fispact_ratio": 0.9964,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.29637600000000003
+  },
+  {
+   "material": "Sm",
+   "experiment": "2000exp_5min",
+   "slope": -0.0205020812193363,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 51.0,
+    "abs_log_ce": 0.5719,
+    "calc": 0.13101269781912522,
+    "meas": 0.2321
+   },
+   "dominant": {
+    "nuclide": "Sm143",
+    "heat": 0.05674576577326529,
+    "share": 0.433
+   },
+   "fispact_ratio": 0.9984,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.13122899999999998
+  },
+  {
+   "material": "Sn",
+   "experiment": "1996exp_7hour",
+   "slope": 0.10133276752162297,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 34743772.8,
+    "abs_log_ce": 0.4326,
+    "calc": 7.982407034289754e-05,
+    "meas": 5.179e-05
+   },
+   "dominant": {
+    "nuclide": "Sn123",
+    "heat": 4.3211591031751233e-05,
+    "share": 0.541
+   },
+   "fispact_ratio": 0.9918,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 8.04842e-05
+  },
+  {
+   "material": "Sn",
+   "experiment": "2000exp_5min",
+   "slope": 0.1411093661163358,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 36.0,
+    "abs_log_ce": 0.5756,
+    "calc": 0.19390524660179473,
+    "meas": 0.3448
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.10491703628883689,
+    "share": 0.541
+   },
+   "fispact_ratio": 1.0273,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.188757
+  },
+  {
+   "material": "Sr",
+   "experiment": "2000exp_5min",
+   "slope": 0.0538666389370517,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 37.0,
+    "abs_log_ce": 0.2729,
+    "calc": 0.20863666229809755,
+    "meas": 0.2741
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.14577827055760897,
+    "share": 0.699
+   },
+   "fispact_ratio": 0.9963,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.209416
+  },
+  {
+   "material": "Ta",
+   "experiment": "1996exp_7hour",
+   "slope": -0.22588818681679437,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 34989235.2,
+    "abs_log_ce": 1.321,
+    "calc": 9.137910775745953e-06,
+    "meas": 3.424e-05
+   },
+   "dominant": {
+    "nuclide": "Ta182",
+    "heat": 7.775678955716655e-06,
+    "share": 0.851
+   },
+   "fispact_ratio": 0.9884,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 9.24543e-06
+  },
+  {
+   "material": "Tb",
+   "experiment": "2000exp_5min",
+   "slope": -0.12044623444265556,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 197.0,
+    "abs_log_ce": 3.823,
+    "calc": 5.791253345256388e-05,
+    "meas": 0.002649
+   },
+   "dominant": {
+    "nuclide": "Gd159",
+    "heat": 3.58679559877351e-05,
+    "share": 0.619
+   },
+   "fispact_ratio": 1.0066,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 5.75341e-05
+  },
+  {
+   "material": "Tl",
+   "experiment": "2000exp_5min",
+   "slope": 0.0716225710132659,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 599.0,
+    "abs_log_ce": 0.524,
+    "calc": 0.0015685683551105317,
+    "meas": 0.0009288
+   },
+   "dominant": {
+    "nuclide": "Tl206",
+    "heat": 0.0005854563422189902,
+    "share": 0.373
+   },
+   "fispact_ratio": 0.9682,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00162017
+  },
+  {
+   "material": "Tm",
+   "experiment": "2000exp_5min",
+   "slope": 0.333617030853227,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3300.0,
+    "abs_log_ce": 2.2317,
+    "calc": 0.0003653497936277604,
+    "meas": 3.922e-05
+   },
+   "dominant": {
+    "nuclide": "Tm168",
+    "heat": 0.00034547125694211426,
+    "share": 0.946
+   },
+   "fispact_ratio": 1.0212,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000357764
+  },
+  {
+   "material": "V",
+   "experiment": "1996exp_5min",
+   "slope": -0.08643671051731741,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3443.0,
+    "abs_log_ce": 0.3838,
+    "calc": 0.0018190592854276102,
+    "meas": 0.00267
+   },
+   "dominant": {
+    "nuclide": "Sc48",
+    "heat": 0.0015078825033951638,
+    "share": 0.829
+   },
+   "fispact_ratio": 0.9945,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00182912
+  },
+  {
+   "material": "V",
+   "experiment": "1996exp_7hour",
+   "slope": -0.585555697441127,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 4296931.2,
+    "abs_log_ce": 4.0598,
+    "calc": 9.699664704536098e-08,
+    "meas": 5.622e-06
+   },
+   "dominant": {
+    "nuclide": "V49",
+    "heat": 8.317410675334567e-08,
+    "share": 0.857
+   },
+   "fispact_ratio": null,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [
+    "both codes ~0 vs measurement; ratio n/a"
+   ],
+   "fispact_heat": 9.79645e-08
+  },
+  {
+   "material": "W",
+   "experiment": "1996exp_5min",
+   "slope": -0.006845770586490217,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 3425.0,
+    "abs_log_ce": 0.5535,
+    "calc": 0.00039829459405357667,
+    "meas": 0.000229
+   },
+   "dominant": {
+    "nuclide": "W187",
+    "heat": 0.0002034558401173657,
+    "share": 0.511
+   },
+   "fispact_ratio": 1.0489,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00037970800000000003
+  },
+  {
+   "material": "W",
+   "experiment": "1996exp_7hour",
+   "slope": 0.05045094227995164,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 8631100.8,
+    "abs_log_ce": 0.498,
+    "calc": 0.0005719697827392765,
+    "meas": 0.0003476
+   },
+   "dominant": {
+    "nuclide": "W185",
+    "heat": 0.00040702445931382116,
+    "share": 0.712
+   },
+   "fispact_ratio": 0.9897,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000577895
+  },
+  {
+   "material": "W",
+   "experiment": "2000exp_5min",
+   "slope": -0.013032841142445777,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 2684.0,
+    "abs_log_ce": 0.8355,
+    "calc": 0.00045498029591312914,
+    "meas": 0.0001973
+   },
+   "dominant": {
+    "nuclide": "W187",
+    "heat": 0.0001884279548632845,
+    "share": 0.414
+   },
+   "fispact_ratio": 1.0411,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.00043700200000000003
+  },
+  {
+   "material": "Y",
+   "experiment": "1996exp_5min",
+   "slope": -0.00496006400090026,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 316.0,
+    "abs_log_ce": 0.9476,
+    "calc": 0.0009381539565524433,
+    "meas": 0.00242
+   },
+   "dominant": {
+    "nuclide": "Y88",
+    "heat": 0.0005154380563032594,
+    "share": 0.549
+   },
+   "fispact_ratio": 1.0038,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000934631
+  },
+  {
+   "material": "Y",
+   "experiment": "2000exp_5min",
+   "slope": 0.0003416569382520552,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 2691.0,
+    "abs_log_ce": 0.7686,
+    "calc": 0.0005862268116755545,
+    "meas": 0.0002718
+   },
+   "dominant": {
+    "nuclide": "Y88",
+    "heat": 0.0005153459583641081,
+    "share": 0.879
+   },
+   "fispact_ratio": 1.0001,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.000586162
+  },
+  {
+   "material": "Yb",
+   "experiment": "2000exp_5min",
+   "slope": 0.1729275526654537,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 36.0,
+    "abs_log_ce": 1.4623,
+    "calc": 0.06925611245205905,
+    "meas": 0.2989
+   },
+   "dominant": {
+    "nuclide": "N16",
+    "heat": 0.060192628450213524,
+    "share": 0.869
+   },
+   "fispact_ratio": 0.9952,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 0.0695902
+  },
+  {
+   "material": "Zr",
+   "experiment": "1996exp_7hour",
+   "slope": -0.042813556824588976,
+   "classes": [
+    "shared_library"
+   ],
+   "worst": {
+    "cooling_s": 34988457.6,
+    "abs_log_ce": 0.431,
+    "calc": 5.1600499951827646e-05,
+    "meas": 7.94e-05
+   },
+   "dominant": {
+    "nuclide": "Nb95",
+    "heat": 3.380159304042802e-05,
+    "share": 0.655
+   },
+   "fispact_ratio": 0.9989,
+   "metastable_top": false,
+   "missing_decay": false,
+   "defect_flags": [],
+   "notes": [],
+   "fispact_heat": 5.16597e-05
+  }
+ ]
+}
