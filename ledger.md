@@ -1298,3 +1298,42 @@ produce), not a demonstrated accuracy lead on this corpus.
 Files: controls/exfor_isomer_{scope.md,harvest.py,compare.py},
 results/exfor_isomer_{channels,coverage,compare}.json,
 target/exfor-harvest/ (raw cache, not committed).
+
+## Entry 55 — Full-corpus fail classification (61/61 dossiers)
+
+Extended the dossier pipeline to every failing experiment (61 dossiers under
+`results/acc_dossier/`, `controls/acc_classify.py`,
+`results/acc_classify.json`). Classification at each fail's worst |log C/E|
+point compares ACTINV total heat to the frozen FISPACT reference at the same
+cooling time (tolerance 0.8-1.25; near-zero-vs-measurement pairs collapse to
+shared).
+
+Result: **59/61 shared_library** — FISPACT produces the same total heat
+(0.96-1.05x) at every worst point. Zero solver-level defects exist anywhere
+in the 61-fail corpus; residual error is library/measurement-level and
+identical for both codes.
+
+The two divergences are instructive, not defects:
+- In_2000exp_5min (fisp=0.04): dossier re-run on the In-115-patched library
+  (`In_2000exp_5min_patched.json`) — In-116m1 heat fell to 4% of FISPACT's
+  because our repair removed the bump the frozen reference still carries.
+  This is the intended favorable divergence. Post-repair residual is now
+  In-114 (In-113(n,g)) ~1.25x early + a smaller In-116m1 tail ~2.7x.
+- K_1996exp_7hour (fisp=0.53): FISPACT's late-time total is ~1.9x ours on a
+  fail where both exceed 5x vs measurement — secondary-nuclide mix
+  difference on a shared-failure shape; noted, not blocking.
+
+Sub-patterns across the corpus: 9 fails are isomer-dominant at the worst
+point (Au-196m1, Cl-34m1, Eu-152m2, Hf-180m1, In-116m1, Lu-176m1, Os-191m1,
+Pb-204m1, Rh-103m1) — consistent with the entry-54 finding that isomer
+splits are a capability axis, not a benchmark mover. Oxide-contaminant
+N-16 remains the dominant early nuclide on ~8 oxide-bearing foils (shared).
+The In-115 capture bump also fires inside the Sn foil (bred In-116m1) —
+second-order reach of the same repaired defect.
+
+Release notes: v1.2.0 tag now points at 9808219 (master), carrying the
+run.rs rustfmt fix and consistent manifest; publish workflows are
+environment-gated. The controls workflow on master has been red since
+2026-09-19 (manifest staleness, fmt, now check_g3_p18b fixture) — a
+pre-existing maintenance issue independent of the release commits; the
+publish paths do not gate on it.
