@@ -31,3 +31,11 @@ qualification. Never claim that an unexecuted check passed.
 Strict no-AI-authorship: commits carry plain messages only — never add
 "Generated with", "Co-Authored-By", or any agent/tool attribution trailers,
 names, or links. Author and committer stay the repo owner's identity.
+
+# User preferences (owner direction, 2026-09-21)
+
+- Do not count reproducibility/provenance/auditability as a competitive
+  advantage or selling axis when evaluating "best in class". Users do not
+  care about it. Keep the SHA chains and defect ledgers — they catch real
+  upstream bugs — but treat them as internal QA, not leadership levers.
+  The axes that matter are accuracy, speed, and capability breadth.
