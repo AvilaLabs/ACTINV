@@ -81,3 +81,23 @@ fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a chec
   land at 1.1.2.
 - [x] Attach the packaged platform archives and `SHA256SUMS` to the `v1.1.2` GitHub release; record the
   release URL, tag commit, release ID, and asset identities in `results/p25c_release_publish.json`.
+
+## v1.2.0 (feature release — draft)
+
+- [x] Bump the workspace, `python`, `pyproject.toml` and inter-crate versions to 1.2.0; update
+  `release-artifacts.yml`, README release links and the DATA_LIMITATIONS header; refresh
+  `MANIFEST.sha256`.
+- [x] Write the v1.2.0 changelog section and `docs/RELEASE_NOTES_v1.2.0.md` from the 79 commits
+  since v1.1.2 (25 code-touching).
+- [ ] Confirm `controls` workflow green on the release commit.
+- [ ] Tag `v1.2.0` at the release commit and push; tag workflows publish release artifacts,
+  crates.io and PyPI.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+  wheel/sdist set land at 1.2.0.
+- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.2.0` GitHub release; paste the
+  release notes.
+- [ ] Record the release URL, tag commit, release ID, asset identities and smoke results in
+  `results/`.
+- [ ] Decide separately whether the ledgered TENDL-2017 In-115 repair becomes a labeled
+  remediation-derivative data release (`data-v1.2.0`); it is disclosed but NOT shipped in this
+  software release.

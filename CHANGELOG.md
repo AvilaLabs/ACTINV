@@ -1,6 +1,44 @@
 # Changelog
 
-## Unreleased
+## v1.2.0 — 2026-09-21
+
+**Added**
+
+- Per-step spectra on the activation schedule: each step may declare its own spectrum (same structure
+  and group count as the base spectrum); the step's flux multiplier scales that spectrum's total.
+  Distinct override spectra collapse once each on the groupwise rows and deduplicate against the base
+  spectrum; physical fluence accumulates each step's own spectrum total and the schedule ledger reports
+  the override count as `step_spectra`. Per-step spectra force the groupwise library path and are
+  rejected at validation on a group-count mismatch.
+- MF=33 uncertainty propagation across per-step spectra: covariance blocks collapse jointly over
+  (spectrum, row) parameters, reaction and fission-yield tangent directions assemble per spectrum, and
+  decay-constant directions remain shared. Identical overrides deduplicate to the bitwise-identical
+  single-spectrum path; sensitivity parameters report their spectrum index.
+- `activity.total` as a first-class uncertainty response, propagated sᵀΣs through the full covariance;
+  the per-nuclide RSS combination is removed.
+- `actinv export-openmc-mesh`: decay-photon source handoff for downstream transport — one
+  IndependentSource per mesh cell, box-sampled inside recorded bounds, discrete spectrum from the
+  cell's group structure, absolute per-cell strengths, with TOTAL_PHOTONS ledgered.
+- `actinv build-library --decay-fallback`: a second decay sublibrary for nuclides absent from the
+  primary file, plus a sole-candidate loose-ELIS tier resolving cross-library level-scheme drift
+  (recovers Sb-120m, Cu-68m, Cs-135m, Dy-147m, Hf-178n, Au-189m to real decay homes); both table
+  SHA-256 values are recorded in the artifact index.
+- Emitted-state products resolve to decay-library isomer levels through the MF=1 state table, with
+  rank-compressed LFS mapping for products lacking an explicit state catalog; the LIS label fallback
+  recovers 1,347 isomer production channels on TENDL-2017.
+- Finite self-shielding factors fold through the MF=33 covariance collapse, so shielded runs carry
+  consistent propagated uncertainties.
+
+**Changed**
+
+- CRAM solves apply a selective iterative-refinement gate with a convergence floor; rows at subnormal
+  scale are exempt from residual/convergence gates rather than forcing refinement that cannot
+  converge.
+- Robustness sampling draws every perturbation channel as a mean-preserving lognormal factor (never
+  nonpositive, never uncorrelated); the relative covariance is eigendecomposed and eigen-clipped to
+  the nearest positive-semidefinite matrix, replacing the ridge-ladder Cholesky path.
+- Governed ENDF-6 legality relaxation in the library builder accepts LRX=0 competitive-width and
+  sentinel-excitation rows from real evaluations; 31 of 36 FENDL-3.2c parents now build.
 
 **Fixed**
 
