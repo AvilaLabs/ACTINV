@@ -112,11 +112,11 @@ pub fn refinement_stats() -> [u64; 5] {
 }
 
 thread_local! {
-    static STATS: [std::cell::Cell<u64>; 5] = [
+    static STATS: [std::cell::Cell<u64>; 5] = const { [
         std::cell::Cell::new(0), std::cell::Cell::new(0),
         std::cell::Cell::new(0), std::cell::Cell::new(0),
         std::cell::Cell::new(0),
-    ];
+    ] };
 }
 
 pub struct Lu {

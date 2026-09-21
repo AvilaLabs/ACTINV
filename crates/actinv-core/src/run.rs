@@ -2081,7 +2081,7 @@ impl PreparedRun {
                 .collect()
         };
         let dsub = sub(&d_src);
-        let rsubs: Vec<Vec<(usize, usize, C64)>> = r_srcs.iter().map(|t| sub(t)).collect();
+        let rsubs: Vec<Vec<(usize, usize, C64)>> = r_srcs.iter().map(sub).collect();
         let rsub = rsubs[0].clone();
         let mut derivative_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
         for derivative in reaction_derivatives {

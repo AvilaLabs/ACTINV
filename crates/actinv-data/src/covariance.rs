@@ -792,6 +792,7 @@ impl CovarianceLibrary {
             .collect()
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn vector_for_grid(
         library: &Library,
         phi: &[f64],

@@ -1455,7 +1455,7 @@ fn decay_match_elis(
         let delta = (state.elis_eV - elis_eV).abs();
         if delta <= tolerance {
             inside += 1;
-            if best.map_or(true, |(_, d)| delta < d) {
+            if best.is_none_or(|(_, d)| delta < d) {
                 best = Some((state, delta));
             }
         }
@@ -1482,12 +1482,13 @@ fn decay_resolve(
 ) -> Option<(i32, &'static str)> {
     let lis = lis.filter(|value| *value > 0);
     let elis = elis_eV.filter(|value| *value > 0.0);
-    let mut tiers: Vec<(
-        &HashMap<i32, Vec<DecayStateEntry>>,
+    type DecayTier<'a> = (
+        &'a HashMap<i32, Vec<DecayStateEntry>>,
         bool,
         &'static str,
         &'static str,
-    )> = Vec::new();
+    );
+    let mut tiers: Vec<DecayTier<'_>> = Vec::new();
     tiers.push((&tables.primary, false, "elis", "lis"));
     if let Some(fallback) = &tables.fallback {
         tiers.push((fallback, false, "fallback_elis", "fallback_lis"));
@@ -1578,7 +1579,7 @@ fn map_product_states(
                         target.index.liso,
                         SYNTHETIC_LISO_BASE + target.index.liso
                     ));
-                    target.index.liso = SYNTHETIC_LISO_BASE + target.index.liso;
+                    target.index.liso += SYNTHETIC_LISO_BASE;
                 }
             }
         }
@@ -2938,15 +2939,11 @@ pub fn build_library(
         weighting: "flat-lethargy",
         builder_fingerprint: fingerprint.clone(),
         emission_model: "p25-amendment-b",
-        decay_state_table_sha256: options
-            .decay_path
-            .as_ref()
-            .map(|path| sha256_file(path))
-            .transpose()?,
+        decay_state_table_sha256: options.decay_path.as_ref().map(sha256_file).transpose()?,
         decay_fallback_state_table_sha256: options
             .decay_fallback_path
             .as_ref()
-            .map(|path| sha256_file(path))
+            .map(sha256_file)
             .transpose()?,
         options: CanonicalOptions {
             grid_density: options.grid_density,
