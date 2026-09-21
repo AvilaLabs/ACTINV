@@ -949,6 +949,155 @@
   published prerelease and all 13 assets. Added a prominent desktop download link near the top of the README;
   GitHub's latest-stable shortcut continues to identify the separately versioned stable CLI/Python release.
 
+## 47 — 2026-09-15 — HYPERION public external diagnostic comparison
+- At the maintainer's request, converted KronosFE/hyperion-activation commit
+  `b3d94db563887f23297272b9786144d910ae2dc0` without an upstream clarification round.
+  The descriptive JSON and cell tallies were adapted outside production code.
+  Recorded future cross-organization schema conversion requirements in the roadmap.
+- Froze `protocols/HYPERION-2026-09-15.md` and append-only amendments before each
+  corresponding analysis. Executed 23 ACTINV campaign cases and one preserved
+  unpruned control with the existing hash-pinned 1.1.0 candidate, published TENDL
+  neutron data and ENDF/B-VIII.0 decay. All jobs used verified systemd limits:
+  6 GiB, no swap, 128 tasks, two CPU equivalents; one executable job at a time.
+- The 7,773 above-floor cooling inventory comparisons all meet the declared 1%
+  descriptive band. The upstream combined Class-C arithmetic reconstructs to
+  3.14e-16 relative. Correct separate-table screening gives Class A for all five
+  supplied N50 inventories at 100 years; the independent activation cases remain
+  below Class C, but the smallest sampled margin is 4.79-fold, not tenfold.
+- Recovered public photoatomic/response data: supplied-inventory contact doses
+  reconstruct within 0.0041%. Independent 100-year contact estimates are higher;
+  Ag108m1 contributes 74–92%. The code selects ICRP-116 AP effective dose despite
+  its ICRP-74 ambient label. Full differences, assumptions and raw-yield versus
+  normalized-source attribution are retained in the report and CSVs.
+- Not all diagnostics passed: the reach/unpruned control differs by 3.779 atoms/g
+  of V54 at one day (zero in the reachable run), failing its predeclared 1% band.
+  `checks.json` remains `all_passed: false`. Conversion failures and the shell
+  runner's post-campaign summary interruption are recorded; summary was executed
+  separately and all 23 solver outputs were preserved.
+- This is a public, previously seen diagnostic case, not held-out qualification,
+  a release, or disposal/dose authorization. Exact upstream neutron processing
+  and chain identities remain unavailable. No production code, prior verdict,
+  nuclear-data input, or unrelated concurrent maintainer work was changed.
+- Handoff: `docs/HYPERION_COMPARISON.md`, `docs/HYPERION_REPRODUCTION.md`, and
+  `results/hyperion-2026-09-15/`; complete compressed solver results remain under
+  `target/hyperion-intake/`. No external message was sent and no commit was made.
+
+## 48 — 2026-09-15 — HYPERION public ENDF/B-VIII.0 follow-up
+
+- User requested the closest public-data comparison. Protocol amendments 4 and 5
+  were frozen before their respective calculations; hashes are appended to
+  `protocols/protocol_hash.txt`. Original TENDL evidence and ZIP are unchanged.
+- Recovered official public OpenMC ENDF/B-VIII.0 processed neutron data and both
+  full thermal/fast capture-branching chains. Both reduce to the supplied exact
+  521-nuclide set; all 239 reactive neutron targets are covered. Retained the
+  native 300 bins, 294 K request/293.6 K data, normalization and schedule.
+- All 36 ACTINV cases completed under verified 6 GiB/zero-swap/128-task/2-CPU
+  scopes with finite per-command/per-case timeouts. No production Rust edits,
+  builds, release claims or upstream script execution.
+- Final 1102 integration checks and 4408 C++ rate controls pass. Initial C++
+  comparison failed 27 rows due to Python near-endpoint clamping. Corrected
+  linear interpolation, retained failed attempt, reran unchanged tolerance;
+  final maximum relative difference 1.81e-14. Naming/API/extraction restarts are
+  documented in execution receipts and logs, not erased.
+- With public fast branching and upstream shared-FW spectrum, all 9606 supplied
+  N50 populations above 1 atom/g agree within the frozen 1% or 1 atom/g band;
+  worst 0.18355%. All 40 dose values agree within 0.00398%; all 120 supplied
+  combined Class-C indices agree within 9.57e-15 relative. Ag108m1 agrees to
+  roundoff. Public-chain matrix control also reproduces those inventories.
+- A distinct same-matrix numerical check remains FAILED: 167/19507 rows, maximum
+  879.832 atoms/g discrepancy. These residuals exceed ACTINV's reported numerical
+  floor and remain in delivered results. Separate, predeclared impact analysis
+  changes contact dose by at most 0.0005566%; no numerical production fix or
+  acceptance-threshold relaxation was made.
+- Thermal branching, local-spectrum sensitivity, response-label and separate-table
+  classification differences remain explicit. Public fast-chain N50/shared cases
+  screen Class A at 100 years; N100 minimum Table-1 margin is 8.81-fold, and local
+  N50 minimum is 6.40-fold. Not disposal/access approval or held-out qualification.
+- Handoff: `docs/HYPERION_ENDF_COMPARISON.md`, ready reply and reproduction notes,
+  `results/hyperion-endf-2026-09-15/`, and a separate public-ENDF ZIP under `target/`.
+  No external message or commit was made. Unrelated concurrent work was preserved.
+
+## 49. HYPERION decision-value report card — 2026-09-15
+
+- Froze amendment 6 and appended SHA-256 before the trade study. Used the pinned
+  public-ENDF fast-branching candidate, fixed local blanket spectra, original
+  density/schedule and true mass-ppm trace changes; no production Rust edits.
+- Completed 65 design cases, 12 inferred-budget bracket cases and six fresh CLI
+  repeats (83 executions total). Verified exact 6 GiB/zero-swap/128-task/2-CPU
+  cgroup limits; sequential children with finite timeouts and reaping. Other
+  workstation jobs were left untouched and timing contention was disclosed.
+- All 924 composition/closure checks, 28,023 equivalent-baseline inventory
+  checks, 12 budget prediction/bracket checks and 114 repeated-step inventory
+  checks passed at the frozen tolerances.
+- Independent Python/SciPy joint controls FAILED 29/3,768 inventory rows;
+  failures remain in raw tables. All 48 Table-1/photon-source/contact-dose
+  endpoint checks passed at 1e-5 relative. Maximum joint-case dose difference
+  was 3.43047165e-6 relative (0.00034305%). Shared CRAM48 is not independent
+  nuclear-data validation. Prior 167 residual failures and initial failed
+  rate conversion remain documented; no numerical floor/fix claim.
+- New decision evidence: nitrogen alone cannot achieve the declared Table-1
+  index 0.1 at 100 years in BLK_front or BLK_mid, even at zero. Conditional
+  baseline-other-impurity Nb crossings are 3.5280019 and 3.0361543 mass ppm;
+  verified with independent runs at 99% and 101% of each inferred value.
+- Joint N10/Nb1/Ag1 lowers BLK_mid's 100-year contact estimate from 36.5373
+  to 9.08438 microSv/h under fixed transport. Ni10 lowers FW's 10-year estimate
+  by 77.72%, versus only 1.46% at 100 years. These are sensitivity findings,
+  not procurement, access, disposal or 3-D transport qualification.
+- Initial 65 CLI solves: 54.946 s; full study including postprocessing, brackets,
+  repeats and independent controls: 178.663 s. Existing caches and prepared
+  data; contended workstation; no rival-tool speedup, saved labor or ROI claim.
+  The campaign-body timer excludes Python imports; per-CLI timers include
+  process startup and I/O. Report rendering and historical data setup excluded.
+- Delivered two-page report card, four-page technical annex, email draft,
+  spreadsheet extracts and an email-sized evidence ZIP under
+  `deliverables/hyperion-2026-09-15/`. Complete raw evidence is separately
+  archived under `target/hyperion-value-full-evidence-2026-09-15.zip`.
+  Native solver output is distinguished from the bespoke intake/reporting
+  workflow; universal schema conversion remains future work.
+- Original TENDL and public-ENDF ZIP hashes were rechecked unchanged. No email,
+  upload, commit, release or unexecuted Rust-test claim was made.
+
+## 50. Updated HYPERION upstream rerun — 2026-09-15
+
+- Pinned updated public commit `95e2d7b680bf87ff99bed928a52d4811b1af1171`
+  into a separate checkout. Froze amendment 7 before scientific calculations
+  and appended its hash. Inspected but did not execute upstream scripts.
+- Statepoint and energy grid are byte-identical to the original. The new script
+  performs per-region microscopic collapse and corrects the dose response label.
+  Independently reconstructed fluxes and checked all 615 isotope/recipe rows.
+  N10/50/100 labels retain upstream nominal additive-recipe semantics.
+- Freshly executed all 15 region/nitrogen cases, with local blanket spectra and
+  the declared FW proxy for DIV. Reused the pinned public fast-branching library
+  and candidate, verifying input hashes. No new neutron transport run or fitting.
+- All 4,408 repeated OpenMC C++ rate checks pass. All 120 combined-index checks
+  pass (maximum relative difference 1.48157e-14). All 40 dose and photon-source
+  comparisons pass against rounded CSV and full-precision JSON at 1e-4 relative.
+  Maximum dose difference: 0.00420613% CSV / 0.00340388% full precision.
+- Updated-reference inventory comparison: 9,281/9,284 scored populations pass
+  the frozen 1% or 1 atom/g band. Three Ta182 rows FAIL: BLK_mid 100 yr
+  (+1.03245%), BLK_back 100 yr (-1.27698%), BLK_back 1000 yr (+2.29530%).
+  Independent public-chain control passes all 9,284 reference populations.
+  The separately assembled raw-decay/NPZ matrix also reproduces the supplied
+  values at these three exceptions to roundoff, pointing to ACTINV numerical
+  discrepancies rather than a remaining spectrum mismatch. No tolerance change.
+- Separate same-matrix diagnostic: 98/9,410 inventory rows FAIL and remain
+  retained. All 120 Table-1/photon-source/dose endpoints pass at 1e-5 relative;
+  maximum dose difference 0.000697774%. Shared CRAM48 approximation and known
+  residual-floor limitations remain explicit. No production numerical fix.
+- All 9,410 continuity checks against prior equivalent local outputs pass.
+  New nominal 100-year Table-1 indices: FW 0.0710415, BLK_front 0.1332931,
+  BLK_mid 0.1562092, BLK_back 0.0837565, DIV 0.0876479. Combined indices are
+  labeled separately; agreement does not endorse upstream class-label logic.
+- Verified cgroup: 6 GiB, no swap, 128 tasks, two CPUs; sequential finite-timeout
+  children, disk-backed TMPDIR. Other jobs were left untouched. Campaign body
+  148.438 s; 15 CLI wall times total 13.200 s, shared workstation and existing
+  data/cache. No isolated/comparative benchmark claim.
+- Revision-specific two-page PDF, exception CSV, comparison CSV, report and
+  verified evidence ZIP under `deliverables/hyperion-update-95e2d7b/`.
+  Original TENDL, public-ENDF and complete value-study archives rehashed unchanged.
+  PDF layout required two pagination-only retries; scientific outputs unchanged.
+  No reply, Reddit post, upload, remote repository write, commit or release.
+
 ## 51. HYPERION numerical repair — 2026-09-15
 
 - Froze `HYPERION-NUMERICS-2026-09-15.md` (SHA-256
@@ -1048,3 +1197,48 @@
   on the pre-existing drift in `builder.rs` (3 hunks) and `resonance.rs` (2 hunks), so clippy and the
   tests never ran there. The rustfmt output for those two files is committed as a formatting-only
   follow-up; manifest refreshed again.
+
+## 53 — 2026-09-21 — FNS defect-hunt pilot: In-115 repair verified, systematic screens exhausted
+
+Hypothesis-driven defect campaign over the 10 worst FNS C/E failures
+(`controls/acc_dossier.py` generates per-experiment dossiers: CE-vs-time
+decomposition, dominant heat nuclides per cooling window, production channels
+with collapsed cross sections, decay-ledger flags, FISPACT per-nuclide
+comparison).
+
+Verified repair — In-115 capture bump (TENDL-2017 defect, inherited by both
+scored libraries): MF=3/MT=102 rises to ~5.4 b at 14–18 MeV, physically
+impossible (capture at >10 MeV is mb-scale and declining); TENDL-2025's
+evaluation is mb-scale. Repaired by freezing each of the four defective rows
+(aggregate + three emitted-state rows) at their pre-bump values above 8.71 MeV
+(`controls/patch_tendl2017_in115.py`, bitwise-reproduces the scored artifact;
+patched npz + index at `~/nuclear-data/tendl-2017/build/neutron.n.p10.infix*`).
+Full scored 132-experiment rerun (`results/cb3_fns_tendl2017_infix.json`):
+In geoCE 29.19 → 1.95; aggregate pooled geoCE 1.0605 → 1.0353, p90 |log C/E|
+0.689 → 0.661, RMS sigma 76.3 → 4.80; pass count unchanged 71/132 (frozen
+FISPACT-4 reference: 69/132, geoCE 1.0636, p90 0.685, RMS 76.0). The repair
+moves ACTINV's patched-library aggregate ahead of the frozen reference on
+every pooled metric; the honest claim is defect curation, not solver
+superiority — a reference run on the same patched data would inherit it.
+
+Screens exhausted (negative results, recorded to prevent re-investigation):
+- Airtight bound (capture >0.5 b above 10 MeV) over all 246 stable foil
+  isotopes: In-115 is unique; the class is exhausted for this benchmark.
+- TENDL-2017↔2025 >3× collapsed-σ diffs on benchmark-reachable targets:
+  24 rows, all Fe-56 at >20 MeV or <1 mb — immaterial.
+- Decay evaluation diff (ENDF/B-VIII.0 vs JEFF-3.3) on all pilot-dominant
+  nuclides: only Tb-157 (71 vs 99 y), outside every scored window.
+- Foil self-shielding as a systematic ~10× mechanism: falsified by Sm
+  (Sm-149 40 kb, geoCE 0.947), Gd (61+255 kb, 1.19), Cd (20 kb, 1.17),
+  Hg (2.1 kb, 1.09) — giant-absorber foils show no shielding signature.
+- Per-nuclide heats identical to FISPACT within ~2% at every checked cooling
+  point (N-16 needs a t=0 vs 36 s half-life correction to compare); residual
+  error is library/measurement-level, not solver-level. Al/V/Pb late tails,
+  oxide-foil N-16, K beta-nuclides, Bi Tl-206: shared with the reference,
+  classified irreducible for data repair.
+
+Jev semantic triage measured (project-jev-core exp-011, frozen protocol):
+defect-row flagging beat the bound baseline (flagged-set precision 40% vs
+15%, recall equal — compresses the verify queue ~2.6×); dossier cause
+classification gave no lift (4/10 = degenerate baseline). Deployment decision
+recorded there: flagger-only slot, deterministic verifier decides.
