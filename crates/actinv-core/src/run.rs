@@ -2167,8 +2167,7 @@ impl PreparedRun {
             derivative_sub
         };
         type DirectionMap = BTreeMap<usize, Vec<(usize, usize, C64)>>;
-        let mut derivative_subs: Vec<DirectionMap> =
-            Vec::with_capacity(1 + react_extra.len());
+        let mut derivative_subs: Vec<DirectionMap> = Vec::with_capacity(1 + react_extra.len());
         derivative_subs.push(to_sub(reaction_derivatives, &pos));
         for extra in reaction_derivatives_extra {
             derivative_subs.push(to_sub(extra, &pos));
