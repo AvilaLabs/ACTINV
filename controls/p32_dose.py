@@ -56,8 +56,14 @@ def sha(p):
 def dose_function():
     """f(E) = E * mu_en(E) * EV * 0.1 -> Gy·cm2 per photon, log-log interp."""
     d = json.load(open(MU_EN))["air_mass_energy_absorption"]
-    es = d["energy_eV"]
+    es = list(d["energy_eV"])
     mus = d["values_cm2_g"]
+    # XCOM tabulates absorption edges as duplicate ordinates; OpenMC's
+    # EnergyFunctionFilter requires strictly increasing energies, so nudge
+    # each non-increasing ordinate by a relative epsilon to keep the edge.
+    for i in range(1, len(es)):
+        if es[i] <= es[i - 1]:
+            es[i] = es[i - 1] * (1.0 + 1e-12)
     ys = [e * m * EV * 0.1 for e, m in zip(es, mus)]
     return es, ys
 

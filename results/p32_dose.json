@@ -1,0 +1,30 @@
+{
+ "basis": "replayed frozen exported sources through OpenMC photon transport with an EnergyFunctionFilter scoring E*mu_en,air \u2014 a dose estimate with MC error, discharging the 'flux proxy' condition; still not a qualified dosimetry prediction (no detector model)",
+ "cooling_step_doses": {
+  "2": {
+   "detector_air_dose_Gy_s": 0.002561730937198239,
+   "dose_Gy_h": 9.22223137391366,
+   "mc_std_Gy_s": 4.736253809247258e-06,
+   "relative_std": 0.0018488490498644213,
+   "statepoint": {
+    "path": "/home/connoravila/nuclear-data/p32-work/dose/dose_step2/statepoint.10.h5",
+    "sha256": "d29a4fed59da571c28c91107778c25a80c5c431f9b44d13026044a1878f31a45"
+   }
+  },
+  "3": {
+   "detector_air_dose_Gy_s": 6.711324818251152e-05,
+   "dose_Gy_h": 0.24160769345704147,
+   "mc_std_Gy_s": 3.3947870775774206e-07,
+   "relative_std": 0.005058296490650321,
+   "statepoint": {
+    "path": "/home/connoravila/nuclear-data/p32-work/dose/dose_step3/statepoint.10.h5",
+    "sha256": "0407d89059cb8419ed700faf6fc1a482e26dcbc200f294e92109c72acbad5623"
+   }
+  }
+ },
+ "mu_en_table": {
+  "path": "/home/connoravila/nuclear-data/photon-response/nist-xcom-air-fe.json",
+  "sha256": "4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307"
+ },
+ "schema": "actinv-p32-dose-1"
+}

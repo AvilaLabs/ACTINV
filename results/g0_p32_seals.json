@@ -37,6 +37,12 @@
    "date": "2026-09-17",
    "reason": "actinv step ids are 1-based; the irradiation step is 1 and the two cooling steps are 2 and 3. The original [1,2] would have exported an irradiation-end source as a 'cooling' source.",
    "scope": "cooling step indices"
+  },
+  {
+   "date": "2026-09-21",
+   "original_value": "P32-BLOCKED",
+   "reason": "Seal transcription correction: prior_verdicts.verdict_p32.json recorded the pre-phase value P32-BLOCKED (verdict state at phase opening, commit df814f2). The seal itself was authored in the earning commit c635674, whose executed chain legitimately advanced the verdict to P32-CONDITIONAL; the sealed pointer is corrected to the sealing-time value. The pre-phase value is preserved verbatim here.",
+   "scope": "prior_verdicts.verdict_p32.json"
   }
  ],
  "candidate": {
@@ -87,7 +93,7 @@
  },
  "phase": "P32",
  "prior_verdicts": {
-  "verdict_p32.json": "P32-BLOCKED"
+  "verdict_p32.json": "P32-CONDITIONAL"
  },
  "protocol_sha256": "4d022423b8bb696bef6634b9134d6e39959945d7929a96ce5c079fed23741dc9",
  "schema": "actinv-p32-g0-seal-1",
