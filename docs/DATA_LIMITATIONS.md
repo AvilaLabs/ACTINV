@@ -141,6 +141,30 @@ TENDL-2025, **not an official TENDL release**. Its exact scope:
   absent. Counts: `results/p25c_release_build.json`,
   `results/check_p25c_release.json`.
 
+## Known upstream defect: TENDL-2017 In-115 capture bump
+
+The TENDL-2017 evaluation of In-115 contains a spurious capture
+cross-section rise to ~5.4 b at 8.7–22 MeV on its MF=3/MT=102 rows
+(physically impossible — capture above 10 MeV is mb-scale and below the
+nonelastic sum). TENDL-2025 evaluates the same channel at mb-scale, so
+the defect is confirmed upstream-fixed. It is exercised by the FNS
+activation benchmark (In foil overprediction geoCE 29.19 on the
+identical-library arm, shared by the frozen FISPACT reference).
+
+An Avila Labs remediation of the **benchmark arm** exists:
+`controls/patch_tendl2017_in115.py` freezes the four defective rows
+(aggregate + three emitted states) above the bump boundary, producing
+`~/nuclear-data/tendl-2017/build/neutron.n.p10.infix.npz` (+ index),
+bitwise-reproducible. Scored 132-experiment rerun: In geoCE 29.19→1.95,
+pooled geoCE 1.0605→1.0353 (`results/cb3_fns_tendl2017_infix.json`).
+
+**Release decision:** the patched TENDL-2017 is a benchmark-internal
+evidence artifact and is *not* shipped as a data release — TENDL-2025
+already carries the correct evaluation, so the shipped default bundle is
+unaffected, and publishing a remediated copy of a superseded library
+would only invite confusion. The upstream report sits with the TENDL
+team alongside the P41 emitted-state report.
+
 ## Remediation path
 
 1. **Corrected TENDL release** — the upstream fix is committed; when it
