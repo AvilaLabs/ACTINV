@@ -199,7 +199,7 @@ Verified against public sources — FISPACT-II manuals/pricing, OpenMC
 | R2S | mesh + distributed sources, executed vs deplete | MCR2S workflow | R2SManager, FNG-published | parity on capability |
 | Kernel speed | 182×/13.8×/2.64×/1.28×/0.98×/1.83× @2–4096 states | proprietary solver | Python CRAM (C++ port in progress) | **ACTINV (≥parity at scale)** |
 | Self-shielding × UQ | shield factors folded through MF=33 collapse, bitwise-checked vs depletion | CALENDF prob tables through collapse+UQ | n/a | parity |
-| Per-step spectra | schedule steps carry distinct spectra (union prune, per-step fluence); UQ combination fail-closed | multi-spectrum pulse sequences | n/a in depletion | parity |
+| Per-step spectra | schedule steps carry distinct spectra (union prune, per-step fluence) and propagate MF=33 through a joint (spectrum,row) collapse with per-step tangent gating | multi-spectrum pulse sequences | n/a in depletion | parity |
 | Projectiles | n/p/d/α | n/p/d/α/γ | n via transport | FISPACT (γ) |
 | Access | source-available | £15k–35k or NEA/RSICC restricted | open source | ACTINV/OpenMC |
 
@@ -208,8 +208,9 @@ kernel speed at parity-or-better to 4096 states (182×/13.8×/2.64×/1.28×/
 0.98×/1.83×) and isomer-resolution mechanics; identical-data accuracy is
 at parity with FISPACT inside decay-library sensitivity (ENDF-primary
 71/132 vs 69/132; JEFF-primary erases the margin). Per-step spectra
-closed the schedule-depth gap on 2026-09-21 (UQ+multi-spectrum remains
-fail-closed); it still trails FISPACT on TMC yields and γ projectiles.
+closed the schedule-depth gap on 2026-09-21, and the same day the
+UQ×multi-spectrum restriction lifted via a joint (spectrum,row) MF=33
+collapse; it still trails FISPACT on TMC yields and γ projectiles.
 Audit/provenance infrastructure remains internal QA, not a selling axis
 (owner direction 2026-09-21). OpenMC's C++ CRAM port may still contest
 the kernel lead at scale.
