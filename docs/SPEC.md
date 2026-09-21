@@ -283,10 +283,16 @@ uncovered part is suppressed by `sigma0/(sigma0+sigma_t,background)` over the sm
 without `group_factors` fall back to the flat `(1-c)+c*f` blend.
 
 Material nuclides absent from the table are named `shielding_uncovered` and their rates are untouched;
-`require_shielding_complete: true` fails the run instead. The section rejects combination with `uncertainty`
-and any sha256 or boundary mismatch. The ledger and certificate record the table hash, dilution mode, effective
-sigma0 per nuclide, applied factors, and method limits — including that resolved-region pointwise shielding is
-not applied, damage observables are not shielded, and uncertainty propagation does not combine.
+`require_shielding_complete: true` fails the run instead. The section rejects any sha256 or boundary mismatch.
+The ledger and certificate record the table hash, dilution mode, effective sigma0 per nuclide, applied factors,
+and method limits — including that resolved-region pointwise shielding is not applied and damage observables
+are not shielded.
+
+When `uncertainty` is also present, the MF=33 collapse weights each row's spectrum integral by that row's
+shield factors (the `collapse_weighted` convention: `sigma_i = sum_g phi_g * f_i,g * sigma_i,g / sum_g phi_g`),
+so the propagated parameters are the same shielded one-group cross sections the depletion matrix uses; the
+run checks the collapsed nominals against the shielded fold bitwise. The same fold applies on the
+`study.robustness` MF=33 sampling path.
 
 A runnable walkthrough lives at `examples/shielding_demo.json`: pure W-186 under a 4–25 keV custom spectrum at
 fixed `sigma0_b = 0.1` — the ledger names every applied factor and W-187 activity lands ~28% below the

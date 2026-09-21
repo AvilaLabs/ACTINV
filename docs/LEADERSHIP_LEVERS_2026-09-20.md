@@ -51,8 +51,12 @@ implementation status as of this session:
   declared uncertainty. *Data-bound:* already ledgered per-band
   (`uncovered_library_rows`, `uncovered_decay_constants`,
   `uncovered_yield_products`); a coverage summary is emitted per step.
-- Flux and composition channels exist in the robustness sampling layer;
-  `self_shielding` + `uncertainty` remains rejected in the spec.
+- Flux and composition channels exist in the robustness sampling layer.
+  `self_shielding` + `uncertainty` is now supported: the MF=33 collapse
+  weights each row's flux by the same per-group shield factors the depletion
+  fold applies (`collapse_weighted`; nominal cross sections are checked
+  bitwise against the shielded depletion convention), and the study
+  robustness path folds the same plan into its sampled collapse.
 - No blind experimental validation — the FNS suite is the closest
   available blind-ish set; a per-experiment uncertainty-coverage score
   (fraction of measurements inside the propagated band) is locally
@@ -194,7 +198,7 @@ Verified against public sources — FISPACT-II manuals/pricing, OpenMC
 | UQ sampling mechanics | eigen-PSD lognormal, no ridge/clamps | covariance collapse + MC | n/a | **ACTINV (mechanics)** |
 | R2S | mesh + distributed sources, executed vs deplete | MCR2S workflow | R2SManager, FNG-published | parity on capability |
 | Kernel speed | 182×/13.8×/2.64×/1.28×/0.98×/1.83× @2–4096 states | proprietary solver | Python CRAM (C++ port in progress) | **ACTINV (≥parity at scale)** |
-| Self-shielding × UQ | rejected combination | CALENDF prob tables through collapse+UQ | n/a | FISPACT |
+| Self-shielding × UQ | shield factors folded through MF=33 collapse, bitwise-checked vs depletion | CALENDF prob tables through collapse+UQ | n/a | parity |
 | Projectiles | n/p/d/α | n/p/d/α/γ | n via transport | FISPACT (γ) |
 | Access | source-available | £15k–35k or NEA/RSICC restricted | open source | ACTINV/OpenMC |
 

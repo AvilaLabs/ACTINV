@@ -2068,13 +2068,52 @@ impl PreparedRun {
                 let dense_library = lib.dense().ok_or(
                     "uncertainty propagation requires the verified dense activation library",
                 )?;
-                let collapsed = prepared
-                    .library
-                    .collapse(dense_library, phi, &active_rows)?;
+                // When self-shielding is active the depletion folds per-group
+                // scale factors into each row's collapsed cross section; the
+                // covariance must collapse under the same per-row weights so
+                // the sampled parameters mean the same thing the matrix uses.
+                let row_scale = |row: usize, group: usize| -> f64 {
+                    let Some(plan) = shield_plan.as_ref() else {
+                        return 1.0;
+                    };
+                    let descriptor = dense_library.rows[row];
+                    let Some(&(za, liso)) = lib_targets.get(descriptor.target) else {
+                        return 1.0;
+                    };
+                    plan.row_scales(za, liso, descriptor.mt)
+                        .and_then(|scales| scales.get(&group).copied())
+                        .unwrap_or(1.0)
+                };
+                let collapsed = prepared.library.collapse_weighted(
+                    dense_library,
+                    phi,
+                    &active_rows,
+                    &row_scale,
+                )?;
+                let flux_denominator: f64 = phi.iter().sum();
+                let first_flux_group =
+                    phi.iter().position(|flux| *flux != 0.0).unwrap_or(phi.len());
+                let last_flux_group = phi
+                    .iter()
+                    .rposition(|flux| *flux != 0.0)
+                    .map(|group| group + 1)
+                    .unwrap_or(first_flux_group);
                 for (&row, &cross_section) in
                     collapsed.row_indices.iter().zip(&collapsed.one_group_barns)
                 {
-                    if cross_section.to_bits() != lib.one_group(row, phi).to_bits() {
+                    let nominal = if shield_plan.is_some() {
+                        lib.collapse_row_scaled(
+                            row,
+                            phi,
+                            flux_denominator,
+                            first_flux_group,
+                            last_flux_group,
+                            &|group| row_scale(row, group),
+                        )
+                    } else {
+                        lib.one_group(row, phi)
+                    };
+                    if cross_section.to_bits() != nominal.to_bits() {
                         return Err(format!(
                             "covariance collapse nominal cross section differs at library row {row}"
                         ));

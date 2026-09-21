@@ -651,11 +651,6 @@ impl Spec {
                     return Err(format!("unknown self_shielding.dilution '{value}'"));
                 }
             }
-            if self.uncertainty.is_some() {
-                return Err(
-                    "self_shielding cannot be combined with uncertainty propagation".into(),
-                );
-            }
         }
         if self.spectrum.structure == "custom" {
             let b = self
@@ -1077,7 +1072,7 @@ mod duration_tests {
     }
 
     #[test]
-    fn self_shielding_rejects_uncertainty_combination() {
+    fn self_shielding_accepts_uncertainty_combination() {
         let mut value = minimal_spec();
         value["self_shielding"] = serde_json::json!({
             "table": {"path": "t.json", "sha256": "0".repeat(64)},
@@ -1087,8 +1082,6 @@ mod duration_tests {
         value["uncertainty"] = serde_json::json!({
             "covariance": {"path": "c.npy", "sha256": "0".repeat(64)}
         });
-        assert!(Spec::from_json(&value.to_string())
-            .unwrap_err()
-            .contains("cannot be combined with uncertainty"));
+        assert!(Spec::from_json(&value.to_string()).is_ok());
     }
 }

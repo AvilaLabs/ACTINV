@@ -2051,7 +2051,47 @@ fn evaluate_robustness_inner(
             })
             .map(|(i, _)| i)
             .collect();
-        let collapsed = cov.collapse(&lib, phi, &active_rows)?;
+        // When the spec declares self-shielding the per-sample runs fold the
+        // plan's per-group scales into collapsed cross sections — the MF=33
+        // collapse must weight each row's flux by the same factors or the
+        // sampled parameters would not match the depleted matrix.
+        let shield_plan: Option<crate::shielding::ShieldPlan> = match &spec.self_shielding {
+            Some(options) => {
+                let table_path = resolve_path(base, &options.table.path);
+                let got = file_sha256(&table_path)?;
+                if got != options.table.sha256 {
+                    return Err(format!(
+                        "self-shielding table sha256 mismatch: declared {}, got {got}",
+                        options.table.sha256
+                    ));
+                }
+                let text = fs::read_to_string(&table_path).map_err(|error| {
+                    format!("cannot read self-shielding table {}: {error}", table_path.display())
+                })?;
+                let table = crate::shielding::PreparedShieldTable::from_json(&text)?;
+                Some(table.plan(
+                    &isotopes,
+                    &options.dilution,
+                    options.sigma0_b,
+                    spec.options.temperature_K,
+                    spec.options.require_shielding_complete,
+                )?)
+            }
+            None => None,
+        };
+        let row_scale = |row: usize, group: usize| -> f64 {
+            let Some(plan) = shield_plan.as_ref() else {
+                return 1.0;
+            };
+            let descriptor = lib.rows[row];
+            let Some(&(za, liso)) = lib_targets.get(descriptor.target) else {
+                return 1.0;
+            };
+            plan.row_scales(za, liso, descriptor.mt)
+                .and_then(|scales| scales.get(&group).copied())
+                .unwrap_or(1.0)
+        };
+        let collapsed = cov.collapse_weighted(&lib, phi, &active_rows, &row_scale)?;
         cov_ctx = Some(CovCtx {
             rows: collapsed.row_indices,
             sigma0: collapsed.one_group_barns,

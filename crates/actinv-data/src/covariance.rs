@@ -6,7 +6,7 @@
 use crate::endf::{parse_sections, read_cont_checked, read_list_checked, ContRecord};
 use crate::library::{
     ensure_eof, read_f64_values, read_i64, read_npy_header, temporary_sibling, write_npy_header,
-    Library, NpyDtype,
+    Library, NpyDtype, ReactionLibrary,
 };
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -800,6 +800,7 @@ impl CovarianceLibrary {
         base_index: usize,
         grid: &[f64],
         relative: bool,
+        scale: &dyn Fn(usize) -> f64,
     ) -> Result<Vec<f64>, String> {
         let row_sigma = library.sigma(row_index);
         let base_sigma = library.sigma(base_index);
@@ -810,7 +811,7 @@ impl CovarianceLibrary {
             }
             let low = library.bounds[group];
             let high = library.bounds[group + 1];
-            let density = group_flux / (high - low) / total_flux;
+            let density = group_flux * scale(group) / (high - low) / total_flux;
             let multiplier = if relative {
                 row_sigma[group]
             } else if row_index == base_index {
@@ -860,6 +861,8 @@ impl CovarianceLibrary {
         left_base: usize,
         right_row: usize,
         right_base: usize,
+        left_scale: &dyn Fn(usize) -> f64,
+        right_scale: &dyn Fn(usize) -> f64,
     ) -> Result<f64, String> {
         let grid = &self.grids[component.row_grid];
         let factors = self.component_values(component);
@@ -896,7 +899,10 @@ impl CovarianceLibrary {
                     continue;
                 }
                 let covariance_width = grid[bin + 1] - grid[bin];
-                let segment_weight = group_flux * segment_width / group_width / total_flux;
+                let left_weight =
+                    group_flux * left_scale(group) * segment_width / group_width / total_flux;
+                let right_weight =
+                    group_flux * right_scale(group) * segment_width / group_width / total_flux;
                 let variance = match component.kind {
                     ComponentKind::ShortRange8 => factors[bin] * covariance_width / segment_width,
                     ComponentKind::ShortRange9 => {
@@ -904,7 +910,7 @@ impl CovarianceLibrary {
                     }
                     _ => unreachable!(),
                 };
-                sum += segment_weight * segment_weight * left_ratio * right_ratio * variance;
+                sum += left_weight * right_weight * left_ratio * right_ratio * variance;
             }
         }
         Ok(sum)
@@ -916,6 +922,20 @@ impl CovarianceLibrary {
         library: &Library,
         phi: &[f64],
         selected_rows: &[usize],
+    ) -> Result<CollapsedCovariance, String> {
+        self.collapse_weighted(library, phi, selected_rows, &|_, _| 1.0)
+    }
+
+    /// `collapse` with a per-(row, group) multiplicative scale folded into the
+    /// flux weighting — the self-shielding convention w_i,g = phi_g * f_i,g
+    /// over the shared unweighted total flux, matching `collapse_row_scaled`.
+    /// `row_scale(library_row, group)` returns the scale (1.0 = unshielded).
+    pub fn collapse_weighted(
+        &self,
+        library: &Library,
+        phi: &[f64],
+        selected_rows: &[usize],
+        row_scale: &dyn Fn(usize, usize) -> f64,
     ) -> Result<CollapsedCovariance, String> {
         self.validate()?;
         library.validate()?;
@@ -952,9 +972,24 @@ impl CovarianceLibrary {
             }
         }
         let total_flux: f64 = phi.iter().sum();
+        let first_flux_group = phi.iter().position(|flux| *flux != 0.0).unwrap_or(phi.len());
+        let last_flux_group = phi
+            .iter()
+            .rposition(|flux| *flux != 0.0)
+            .map(|group| group + 1)
+            .unwrap_or(first_flux_group);
         let one_group_barns = row_indices
             .iter()
-            .map(|row| library.one_group(*row, phi))
+            .map(|&row| {
+                library.collapse_row_scaled(
+                    row,
+                    phi,
+                    total_flux,
+                    first_flux_group,
+                    last_flux_group,
+                    &|group| row_scale(row, group),
+                )
+            })
             .collect::<Vec<_>>();
         let size = row_indices.len();
         let mut covariance_barn2 = vec![0.0; size * size];
@@ -1032,6 +1067,7 @@ impl CovarianceLibrary {
                                     left_base,
                                     &self.grids[component.row_grid],
                                     relative,
+                                    &|group| row_scale(left_row, group),
                                 )?;
                                 entry.insert(vector);
                             }
@@ -1047,6 +1083,7 @@ impl CovarianceLibrary {
                                     right_base,
                                     &self.grids[component.column_grid],
                                     relative,
+                                    &|group| row_scale(right_row, group),
                                 )?;
                                 entry.insert(vector);
                             }
@@ -1058,8 +1095,16 @@ impl CovarianceLibrary {
                         }
                         ComponentKind::ShortRange8 | ComponentKind::ShortRange9 => self
                             .short_component(
-                                component, library, phi, total_flux, left_row, left_base,
-                                right_row, right_base,
+                                component,
+                                library,
+                                phi,
+                                total_flux,
+                                left_row,
+                                left_base,
+                                right_row,
+                                right_base,
+                                &|group| row_scale(left_row, group),
+                                &|group| row_scale(right_row, group),
                             )?,
                     };
                     covariance_barn2[left_parameter * size + right_parameter] += value;
@@ -1936,6 +1981,103 @@ mod tests {
         assert_eq!(collapsed.row_indices, vec![0, 1]);
         for value in collapsed.covariance_barn2 {
             assert!((value - 0.51).abs() < 1e-14, "{value}");
+        }
+    }
+
+    #[test]
+    fn weighted_collapse_matches_unweighted_at_unit_scale() {
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 102,
+            mt1: 102,
+            lb: 5,
+            kind: ComponentKind::Relative,
+            row_grid: vec![1.0, 3.0, 5.0],
+            column_grid: vec![1.0, 3.0, 5.0],
+            values: vec![0.04, 0.01, 0.01, 0.09],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let activation = Library {
+            rows: vec![
+                crate::library::Row {
+                    target: 0,
+                    mt: 102,
+                    zap: -1,
+                    lfs: -1,
+                    lmf: 0,
+                },
+                crate::library::Row {
+                    target: 0,
+                    mt: 102,
+                    zap: 26057,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![2.0, 4.0, 2.0, 4.0],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 5.0],
+        };
+        let plain = covariance.collapse(&activation, &[1.0, 3.0], &[0, 1]).unwrap();
+        let weighted = covariance
+            .collapse_weighted(&activation, &[1.0, 3.0], &[0, 1], &|_, _| 1.0)
+            .unwrap();
+        assert_eq!(plain, weighted);
+    }
+
+    #[test]
+    fn weighted_collapse_applies_per_row_group_scales() {
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 102,
+            mt1: 102,
+            lb: 5,
+            kind: ComponentKind::Relative,
+            row_grid: vec![1.0, 3.0, 5.0],
+            column_grid: vec![1.0, 3.0, 5.0],
+            values: vec![0.04, 0.01, 0.01, 0.09],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let activation = Library {
+            rows: vec![
+                crate::library::Row {
+                    target: 0,
+                    mt: 102,
+                    zap: -1,
+                    lfs: -1,
+                    lmf: 0,
+                },
+                crate::library::Row {
+                    target: 0,
+                    mt: 102,
+                    zap: 26057,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![2.0, 4.0, 2.0, 4.0],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 5.0],
+        };
+        // Shield row 0's first group to half weight; row 1 stays unshielded.
+        let collapsed = covariance
+            .collapse_weighted(&activation, &[1.0, 3.0], &[0, 1], &|row, group| {
+                if row == 0 && group == 0 {
+                    0.5
+                } else {
+                    1.0
+                }
+            })
+            .unwrap();
+        // sigma0 = sum_g sigma_g * f_g * phi_g / sum phi:
+        //   row 0: (2*0.5*1 + 4*1*3)/4 = 3.25 ; row 1: (2*1 + 4*3)/4 = 3.5
+        assert_eq!(collapsed.one_group_barns, vec![3.25, 3.5]);
+        // Row-0 weight vector becomes [1.25, 2.0] (from [1.5, 2.0]); row 1
+        // keeps [1.5, 2.0]. Bilinear over [[0.04,0.01],[0.01,0.09]]:
+        //   cov00 = 0.4725, cov01 = cov10 = 0.49, cov11 = 0.51
+        let expected = [0.4725, 0.49, 0.49, 0.51];
+        for (value, want) in collapsed.covariance_barn2.iter().zip(expected) {
+            assert!((value - want).abs() < 1e-14, "{value} != {want}");
         }
     }
 }
