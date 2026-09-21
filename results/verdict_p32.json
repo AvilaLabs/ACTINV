@@ -4,6 +4,11 @@
    "adds_evidence": "results/p32_dose.json",
    "date": "2026-09-21",
    "reason": "Dose leg discharged: replayed the SHA-verified frozen exported sources through OpenMC photon transport with an EnergyFunctionFilter scoring air dose directly (p32_dose.json). The flux-proxy condition is replaced by a dose-estimate condition; verdict remains CONDITIONAL under the each-tool-own-data depletion caveat and self-produced geometry."
+  },
+  {
+   "adds_evidence": "results/p32_tally_error.json",
+   "date": "2026-09-21",
+   "reason": "Tally-error propagation discharged: the neutron mesh tally std_dev is carried into the activation comparison via perturbed-flux re-solves; the propagated spread is measured at 2.0% max and reported per cell/step."
   }
  ],
  "basis": "all four gates green with machine checkers; the chain executed end-to-end on the frozen voxelized-Fe study: OpenMC 0.15.3 neutron transport (mesh x 709-group flux tally) -> actinv import-flux -> 64-cell mesh activation with photon output -> export-openmc-mesh spatial sources (one IndependentSource per voxel, Box-bounded) -> executed OpenMC photon transport for both cooling steps -> openmc.deplete comparison leg",
@@ -11,7 +16,7 @@
   "single self-produced geometry: the chain is a qualification of the handoff mechanics, not an external benchmark or validation",
   "the photon leg reports detector air dose with propagated MC error via an EnergyFunctionFilter (E*mu_en,air, NIST XCOM): step2 9.22 Gy/h (rel-std 0.18%), step3 0.24 Gy/h (rel-std 0.51%) - a dose estimate, still not a qualified dosimetry prediction (no detector model)",
   "the comparison leg used openmc.deplete with TENDL-2025 neutron-branch files + ENDF/B-VIII.0 decay vs ACTINV's pinned TENDL-2025 activation library; median relative deviation over 704 cell-nuclide pairs is 2.14e-7 (max 3.96e-7 in the top-50 by atoms) - solver/flux-noise level, not an experimental claim",
-  "neutron tally statistical error is recorded in the statepoint but not propagated into the activation comparison",
+  "neutron tally statistical error now propagated: 8 independent per-(cell,bin) lognormal flux perturbations sized by the frozen statepoint std_dev re-solved through the mesh activation leg (p32_tally_error.json): max per-cell activity/heat relative spread 2.0% at every cooling step",
   "MCNP SDEF remains point-at-origin (documented placeholder); only the OpenMC path is spatial"
  ],
  "date": "2026-09-17",
@@ -24,7 +29,8 @@
   "g2_controls": "69a472e2bb7b3c4b61d7db914ae263173a5c79b894f204edf629003ba660cf72",
   "g3_check": "5841ae7c1b45e14c84e0ef9204988238ac3d3540a1232846bad6347b872890c1",
   "g3_controls": "0b387ddd367cda102e9546b6a037d29595867cb0e78df0d7364cbcf00c383131",
-  "p32_dose": "e00c0d14114c05077fa96bcf0e7835f14a2fdf528b3c705e796602a0916a0659"
+  "p32_dose": "e00c0d14114c05077fa96bcf0e7835f14a2fdf528b3c705e796602a0916a0659",
+  "p32_tally_error": "48bf39735daf6b13e7f970419ea7ca97215a19209f6df19e19939ca5a3728203"
  },
  "g0_amendments": [
   "voxelized cube replaces spherical shells (mesh spec carries a fixed mass_g per cell; equal 1 cm3 voxels keep the depletion-leg cell identities aligned)",

@@ -107,6 +107,7 @@ def write_perturbed(nominal_lines, flat_relstd, n_cells, seed_i):
     """Return (path, header+cells) for sample seed_i."""
     rng = random.Random(SEED + seed_i)
     p = os.path.join(WORK, f"flux_pert{seed_i}.ndjson")
+    cell_flux_sum = 0.0
     with open(p, "w") as f:
         for line in nominal_lines:
             rec = json.loads(line)
@@ -122,6 +123,14 @@ def write_perturbed(nominal_lines, flat_relstd, n_cells, seed_i):
                     else:
                         new.append(v)
                 rec["flux_per_group"] = new
+                # keep the cell's declared total consistent with the
+                # perturbed groups — import-flux validates total == sum
+                rec["flux_total"] = sum(new)
+                cell_flux_sum += rec["flux_total"]
+            elif rec.get("record") == "footer":
+                # the canonical footer sum must close the perturbed cells
+                rec["flux_sum_over_cells"] = cell_flux_sum
+                rec["volume_integrated_flux"] = cell_flux_sum
             f.write(json.dumps(rec) + "\n")
     return p
 
@@ -198,9 +207,10 @@ def main():
             m, s = mean[i], std[i]
             if m > 0.0:
                 flat_relstd[f"{c}:{g}"] = s / m
-    # tally axes must be (cell, energy, score); assert before flattening
+    # OpenMC stores mesh x energy tallies either as (cells, bins, scores)
+    # or flattened to (cells*bins, 1, 1); both flatten C-order cell-major.
     shape = rel["shape"]
-    if len(shape) < 2 or shape[0] != n_cells:
+    if shape[0] not in (n_cells, n_cells * n_bins):
         raise RuntimeError(f"unexpected mesh tally shape {shape}")
     nominal_lines = open(nominal_flux).read().splitlines()
     nominal_acts = activities(nominal_result)

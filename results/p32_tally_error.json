@@ -1,0 +1,2833 @@
+{
+ "basis": "independent per-(cell,bin) lognormal flux perturbations sized by the neutron mesh tally's std_dev; empty bins carry no signal; 8 mesh re-solves",
+ "per_cell": {
+  "0": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 348003628270.197,
+     "relative_spread": 0.02000422491887847,
+     "sample_mean": 346102196318.0354,
+     "sample_std": 6961542852.502795
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11965297236627181,
+     "relative_spread": 0.020008125641697974,
+     "sample_mean": 0.11899938873454269,
+     "sample_std": 0.0023940317045069823
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 500835789.7607155,
+     "relative_spread": 0.01996152454782918,
+     "sample_mean": 498134210.57787067,
+     "sample_std": 9997445.911739936
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00015228236124315402,
+     "relative_spread": 0.020022533052961512,
+     "sample_mean": 0.0001514479892525401,
+     "sample_std": 3.0490786113740766e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 130163939.36002588,
+     "relative_spread": 0.019778704298569417,
+     "sample_mean": 129497789.04759791,
+     "sample_std": 2574474.066938873
+    },
+    "heat_W_per_g": {
+     "nominal": 2.932057698452447e-06,
+     "relative_spread": 0.019696031149314123,
+     "sample_mean": 2.9178575014930955e-06,
+     "sample_std": 5.774989976030566e-08
+    }
+   }
+  },
+  "1": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 523225166807.8123,
+     "relative_spread": 0.00822504631015823,
+     "sample_mean": 522859404753.48157,
+     "sample_std": 4303551227.6345215
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1798804121776269,
+     "relative_spread": 0.008224264193326065,
+     "sample_mean": 0.17975479179684803,
+     "sample_std": 0.0014793840329531908
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 752709321.5169413,
+     "relative_spread": 0.008207440918239236,
+     "sample_mean": 752184760.722995,
+     "sample_std": 6177817.284958237
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022879983165230127,
+     "relative_spread": 0.008231860253503594,
+     "sample_mean": 0.00022863923854619174,
+     "sample_std": 1.8834482401868922e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 195665551.44415945,
+     "relative_spread": 0.008135671150782033,
+     "sample_mean": 195530827.624324,
+     "sample_std": 1591870.5820861058
+    },
+    "heat_W_per_g": {
+     "nominal": 4.3571912009845545e-06,
+     "relative_spread": 0.008286593631198842,
+     "sample_mean": 4.353665391611844e-06,
+     "sample_std": 3.610627285599424e-08
+    }
+   }
+  },
+  "10": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 952932166961.0177,
+     "relative_spread": 0.00552167171408665,
+     "sample_mean": 952998980043.9186,
+     "sample_std": 5261778591.751948
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3275949026845547,
+     "relative_spread": 0.005523564534639582,
+     "sample_mean": 0.32761750629210606,
+     "sample_std": 0.0018094915861971116
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1370726637.2968922,
+     "relative_spread": 0.00549611497804367,
+     "sample_mean": 1370876150.8675654,
+     "sample_std": 7533671.202050882
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041652668409598647,
+     "relative_spread": 0.005538497820691443,
+     "sample_mean": 0.0004165701412335449,
+     "sample_std": 2.306932132125454e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 356534332.0769923,
+     "relative_spread": 0.005372788218470994,
+     "sample_mean": 356601062.26370263,
+     "sample_std": 1915583.458863689
+    },
+    "heat_W_per_g": {
+     "nominal": 7.891602547177991e-06,
+     "relative_spread": 0.005380683174856695,
+     "sample_mean": 7.90170087513665e-06,
+     "sample_std": 4.2462213048256855e-08
+    }
+   }
+  },
+  "11": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 522571942828.44275,
+     "relative_spread": 0.006513964490103454,
+     "sample_mean": 520318442942.34863,
+     "sample_std": 3404015079.1088486
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17967120600971015,
+     "relative_spread": 0.006530468354135162,
+     "sample_mean": 0.17889790409202766,
+     "sample_std": 0.0011733371249957115
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 751990009.8504251,
+     "relative_spread": 0.0064930790209829555,
+     "sample_mean": 748747876.6950998,
+     "sample_std": 4882730.556948561
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002286153346158287,
+     "relative_spread": 0.00663165028356938,
+     "sample_mean": 0.00022763780762199946,
+     "sample_std": 1.516096948633369e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 195472744.89392546,
+     "relative_spread": 0.006160426686590627,
+     "sample_mean": 194610006.74006388,
+     "sample_std": 1204195.5141456602
+    },
+    "heat_W_per_g": {
+     "nominal": 4.384790942108396e-06,
+     "relative_spread": 0.007591807459941911,
+     "sample_mean": 4.365923366680688e-06,
+     "sample_std": 3.328848858458424e-08
+    }
+   }
+  },
+  "12": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 341929335414.9059,
+     "relative_spread": 0.009742409047348619,
+     "sample_mean": 344073723331.1956,
+     "sample_std": 3331215450.9000793
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11757609497619124,
+     "relative_spread": 0.009735605822144609,
+     "sample_mean": 0.11830982501820336,
+     "sample_std": 0.001144674514795235
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 492124954.4311554,
+     "relative_spread": 0.009640778276458768,
+     "sample_mean": 495185721.7787215,
+     "sample_std": 4744467.569983144
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00014967630497899094,
+     "relative_spread": 0.009647624025956232,
+     "sample_mean": 0.00015059260555927757,
+     "sample_std": 1.4440207160316655e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 127795817.41418792,
+     "relative_spread": 0.009520327849806026,
+     "sample_mean": 128617518.99724236,
+     "sample_std": 1216658.0796170193
+    },
+    "heat_W_per_g": {
+     "nominal": 2.881457987529675e-06,
+     "relative_spread": 0.008297394096740384,
+     "sample_mean": 2.8956372437264116e-06,
+     "sample_std": 2.3908592495734153e-08
+    }
+   }
+  },
+  "13": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 523179767052.3463,
+     "relative_spread": 0.007538666453538256,
+     "sample_mean": 523720130836.20087,
+     "sample_std": 3944077759.0474825
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17989055598028036,
+     "relative_spread": 0.007539623954918052,
+     "sample_mean": 0.1800764988966936,
+     "sample_std": 0.0013563071451324488
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 752982861.4655038,
+     "relative_spread": 0.0074369258713648636,
+     "sample_mean": 753741992.4007072,
+     "sample_std": 5599877.72312715
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022895846482655905,
+     "relative_spread": 0.007525527724757719,
+     "sample_mean": 0.00022919530918819354,
+     "sample_std": 1.7230332748702351e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 195673188.64199346,
+     "relative_spread": 0.007113544432425641,
+     "sample_mean": 195855958.2001169,
+     "sample_std": 1391929.9216392247
+    },
+    "heat_W_per_g": {
+     "nominal": 4.408478791401212e-06,
+     "relative_spread": 0.006220822201230264,
+     "sample_mean": 4.4130797216156834e-06,
+     "sample_std": 2.742436273920142e-08
+    }
+   }
+  },
+  "14": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 516908249169.70874,
+     "relative_spread": 0.009689960731852642,
+     "sample_mean": 516217035976.59045,
+     "sample_std": 5008820636.425179
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1777396460312487,
+     "relative_spread": 0.009671577500477247,
+     "sample_mean": 0.17750211233842375,
+     "sample_std": 0.001719022761498615
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 744021083.5137252,
+     "relative_spread": 0.009574323879752414,
+     "sample_mean": 743005944.9551919,
+     "sample_std": 7123498.8269247245
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022623930187936768,
+     "relative_spread": 0.009602754720738765,
+     "sample_mean": 0.00022593540326960775,
+     "sample_std": 2.1725205241387405e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 193331698.69586894,
+     "relative_spread": 0.009391040781225301,
+     "sample_mean": 193054311.38597748,
+     "sample_std": 1815585.8667564676
+    },
+    "heat_W_per_g": {
+     "nominal": 4.356766859295435e-06,
+     "relative_spread": 0.007776403072434383,
+     "sample_mean": 4.3501140403616375e-06,
+     "sample_std": 3.387997519050531e-08
+    }
+   }
+  },
+  "15": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 344975552067.0161,
+     "relative_spread": 0.018089078719063366,
+     "sample_mean": 340829048520.96814,
+     "sample_std": 6240289917.492598
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11861724824209646,
+     "relative_spread": 0.01801071050637963,
+     "sample_mean": 0.11719206025480812,
+     "sample_std": 0.002136380919151767
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 496453849.97011846,
+     "relative_spread": 0.017879880710046203,
+     "sample_mean": 490471014.1652995,
+     "sample_std": 8876535.615508894
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00015096579660231333,
+     "relative_spread": 0.017722875384668844,
+     "sample_mean": 0.00014915297328233079,
+     "sample_std": 2.6755480005300623e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 128968888.77181454,
+     "relative_spread": 0.01808767016590537,
+     "sample_mean": 127397226.3373839,
+     "sample_std": 2332746.7217679177
+    },
+    "heat_W_per_g": {
+     "nominal": 2.899507036271591e-06,
+     "relative_spread": 0.01375125448606751,
+     "sample_mean": 2.8640026309494155e-06,
+     "sample_std": 3.9871859139914027e-08
+    }
+   }
+  },
+  "16": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 525644652240.2173,
+     "relative_spread": 0.0038324277767952247,
+     "sample_mean": 528093971732.296,
+     "sample_std": 2014495165.969275
+    },
+    "heat_W_per_g": {
+     "nominal": 0.18072194980489603,
+     "relative_spread": 0.003816770858072951,
+     "sample_mean": 0.1815581559876814,
+     "sample_std": 0.0006897742714294498
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 756308848.352961,
+     "relative_spread": 0.003784451830877546,
+     "sample_mean": 759845230.6691494,
+     "sample_std": 2862214.4058582513
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022993626039932117,
+     "relative_spread": 0.003736054258410587,
+     "sample_mean": 0.00023098050981915083,
+     "sample_std": 8.590543448278895e-07
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 196551758.71152192,
+     "relative_spread": 0.0038969137564989474,
+     "sample_mean": 197546367.577193,
+     "sample_std": 765945.2523869916
+    },
+    "heat_W_per_g": {
+     "nominal": 4.400258282386452e-06,
+     "relative_spread": 0.0028309105181321646,
+     "sample_mean": 4.420485155741341e-06,
+     "sample_std": 1.245673745410598e-08
+    }
+   }
+  },
+  "17": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 958006007046.4104,
+     "relative_spread": 0.007883046483193356,
+     "sample_mean": 961458113035.1572,
+     "sample_std": 7552005884.725316
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3293435932744258,
+     "relative_spread": 0.007867481462510602,
+     "sample_mean": 0.3305317861297475,
+     "sample_std": 0.0025911046148831764
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1377853275.8047426,
+     "relative_spread": 0.007860437040655708,
+     "sample_mean": 1382772003.3436942,
+     "sample_std": 10830528.925724402
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004187879109258011,
+     "relative_spread": 0.007788599306939215,
+     "sample_mean": 0.0004202986979078697,
+     "sample_std": 3.261771232791216e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 358136236.4491594,
+     "relative_spread": 0.008016152713522457,
+     "sample_mean": 359361581.0776149,
+     "sample_std": 2870874.7636226495
+    },
+    "heat_W_per_g": {
+     "nominal": 7.926373156430037e-06,
+     "relative_spread": 0.006989236834412627,
+     "sample_mean": 7.948967178092146e-06,
+     "sample_std": 5.539929922822029e-08
+    }
+   }
+  },
+  "18": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 961205531005.1975,
+     "relative_spread": 0.01052914574249935,
+     "sample_mean": 961241078859.3636,
+     "sample_std": 10120673124.450203
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3304462510205431,
+     "relative_spread": 0.010525125263656508,
+     "sample_mean": 0.3304546608301142,
+     "sample_std": 0.003477988184896898
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1382713699.7498925,
+     "relative_spread": 0.010531988038709883,
+     "sample_mean": 1382710179.2958288,
+     "sample_std": 14562724.146726156
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004202316204143478,
+     "relative_spread": 0.010512598274727662,
+     "sample_mean": 0.0004202255271499568,
+     "sample_std": 4.417726207753882e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 359560244.00340575,
+     "relative_spread": 0.010591872809118356,
+     "sample_mean": 359557407.1286309,
+     "sample_std": 3808416.371699635
+    },
+    "heat_W_per_g": {
+     "nominal": 7.985639222373293e-06,
+     "relative_spread": 0.01065366579489889,
+     "sample_mean": 7.979829972306164e-06,
+     "sample_std": 8.507633143380132e-08
+    }
+   }
+  },
+  "19": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 527056206078.5573,
+     "relative_spread": 0.009821579412970178,
+     "sample_mean": 527686067113.8244,
+     "sample_std": 5176524383.099326
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1812200668481065,
+     "relative_spread": 0.009831276802895271,
+     "sample_mean": 0.18144119256689842,
+     "sample_std": 0.0017816246394229197
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 758439574.4786618,
+     "relative_spread": 0.009807111691922402,
+     "sample_mean": 759353286.339237,
+     "sample_std": 7438101.6184863355
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00023061279367979224,
+     "relative_spread": 0.009829106057126145,
+     "sample_mean": 0.00023091440358724626,
+     "sample_std": 2.2667176072088278e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 197040590.52474445,
+     "relative_spread": 0.009703455068956672,
+     "sample_mean": 197224321.3609457,
+     "sample_std": 1911974.5169175474
+    },
+    "heat_W_per_g": {
+     "nominal": 4.4151504918587785e-06,
+     "relative_spread": 0.009125202911319907,
+     "sample_mean": 4.422558300494971e-06,
+     "sample_std": 4.028914412222525e-08
+    }
+   }
+  },
+  "2": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 509673755147.32446,
+     "relative_spread": 0.009592796449793136,
+     "sample_mean": 509964695273.8702,
+     "sample_std": 4889196588.92999
+    },
+    "heat_W_per_g": {
+     "nominal": 0.175257398679843,
+     "relative_spread": 0.009570530109467432,
+     "sample_mean": 0.17536688710046094,
+     "sample_std": 0.0016773062109723754
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 733610550.8752993,
+     "relative_spread": 0.009504797720919906,
+     "sample_mean": 734097342.0196615,
+     "sample_std": 6972819.892002341
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022310811014854926,
+     "relative_spread": 0.00947262051730706,
+     "sample_mean": 0.00022328509400340498,
+     "sample_std": 2.113418461770751e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 190562319.220311,
+     "relative_spread": 0.009518886561948233,
+     "sample_mean": 190641167.87861282,
+     "sample_std": 1813941.0996399077
+    },
+    "heat_W_per_g": {
+     "nominal": 4.304203408023092e-06,
+     "relative_spread": 0.008054428822921386,
+     "sample_mean": 4.316760015436639e-06,
+     "sample_std": 3.466789998929765e-08
+    }
+   }
+  },
+  "20": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 947718474915.2722,
+     "relative_spread": 0.006481729361989245,
+     "sample_mean": 946604654849.322,
+     "sample_std": 6142854665.757988
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3258088112192553,
+     "relative_spread": 0.006473115091679302,
+     "sample_mean": 0.3254297700749349,
+     "sample_std": 0.0021089979329054543
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1363234575.9690835,
+     "relative_spread": 0.006425858019716909,
+     "sample_mean": 1361664909.2474847,
+     "sample_std": 8759951.832746316
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041431965377395594,
+     "relative_spread": 0.00643699807522739,
+     "sample_mean": 0.00041387182433533736,
+     "sample_std": 2.666974813871833e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 354446583.9007534,
+     "relative_spread": 0.006349260381755614,
+     "sample_mean": 353993541.02311075,
+     "sample_std": 2250473.6526096705
+    },
+    "heat_W_per_g": {
+     "nominal": 7.86171683948957e-06,
+     "relative_spread": 0.005784484633678851,
+     "sample_mean": 7.863659142600592e-06,
+     "sample_std": 4.547598025236168e-08
+    }
+   }
+  },
+  "21": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5391087394237.923,
+     "relative_spread": 0.003855993745888562,
+     "sample_mean": 5390959077292.904,
+     "sample_std": 20787999275.720097
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8522925999632662,
+     "relative_spread": 0.003856184124932198,
+     "sample_mean": 1.852237691790858,
+     "sample_std": 0.007142781318707734
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7740245494.795198,
+     "relative_spread": 0.003852068586612314,
+     "sample_mean": 7740014689.073401,
+     "sample_std": 29815956.523168072
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0023487488189440553,
+     "relative_spread": 0.0038551090853451344,
+     "sample_mean": 0.0023486300228160663,
+     "sample_std": 9.054682911104882e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2016171478.1992052,
+     "relative_spread": 0.003837646813221999,
+     "sample_mean": 2016208589.509431,
+     "sample_std": 7737354.048220267
+    },
+    "heat_W_per_g": {
+     "nominal": 4.2434155205335834e-05,
+     "relative_spread": 0.003791530402284827,
+     "sample_mean": 4.2423469244414474e-05,
+     "sample_std": 1.6089038955630375e-07
+    }
+   }
+  },
+  "22": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5389888908980.788,
+     "relative_spread": 0.005682176757405764,
+     "sample_mean": 5361670399640.156,
+     "sample_std": 30626301483.609745
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8519275336507648,
+     "relative_spread": 0.005678912696955757,
+     "sample_mean": 1.84222152393098,
+     "sample_std": 0.010516934784691288
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7739068593.499284,
+     "relative_spread": 0.0056611567509097915,
+     "sample_mean": 7698517964.918098,
+     "sample_std": 43812080.41384242
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0023485418127159223,
+     "relative_spread": 0.005664850392366977,
+     "sample_mean": 0.0023361766177980043,
+     "sample_std": 1.3304138009254044e-05
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2015714743.8866947,
+     "relative_spread": 0.005631275266610408,
+     "sample_mean": 2005271226.858862,
+     "sample_std": 11351044.581791077
+    },
+    "heat_W_per_g": {
+     "nominal": 4.251692590301746e-05,
+     "relative_spread": 0.005273576650310467,
+     "sample_mean": 4.2282555255562204e-05,
+     "sample_std": 2.2421626768513318e-07
+    }
+   }
+  },
+  "23": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 958764340025.8977,
+     "relative_spread": 0.0067943076924320165,
+     "sample_mean": 955867979557.0056,
+     "sample_std": 6514139930.667462
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32961951104549136,
+     "relative_spread": 0.006778435669512634,
+     "sample_mean": 0.32862218368654833,
+     "sample_std": 0.0022343046510380723
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1379196734.3054507,
+     "relative_spread": 0.006740148963890287,
+     "sample_mean": 1375003568.0336573,
+     "sample_std": 9295991.43972975
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041920910199261,
+     "relative_spread": 0.006719494787171854,
+     "sample_mean": 0.0004179342179238238,
+     "sample_std": 2.8168733755743372e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 358521089.55298245,
+     "relative_spread": 0.006739720919478227,
+     "sample_mean": 357422407.53638196,
+     "sample_std": 2416332.087334363
+    },
+    "heat_W_per_g": {
+     "nominal": 7.961391179423862e-06,
+     "relative_spread": 0.005808756661265593,
+     "sample_mean": 7.933311125900584e-06,
+     "sample_std": 4.624578404641949e-08
+    }
+   }
+  },
+  "24": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 958296873954.8501,
+     "relative_spread": 0.0038185926950277792,
+     "sample_mean": 960173020047.4407,
+     "sample_std": 3659345442.551947
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3294318171276291,
+     "relative_spread": 0.003832157707259922,
+     "sample_mean": 0.33007448828807373,
+     "sample_std": 0.001262434677022285
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1378296382.613367,
+     "relative_spread": 0.0038338005356087796,
+     "sample_mean": 1380955311.5211082,
+     "sample_std": 5284113.40989077
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041884325965659664,
+     "relative_spread": 0.0038710174690450706,
+     "sample_mean": 0.0004196554069576812,
+     "sample_std": 1.621349574922466e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 358431580.5960058,
+     "relative_spread": 0.0037659733433482393,
+     "sample_mean": 359109038.44084316,
+     "sample_std": 1349843.7779387338
+    },
+    "heat_W_per_g": {
+     "nominal": 7.922473905728477e-06,
+     "relative_spread": 0.004370490258462721,
+     "sample_mean": 7.936210305216187e-06,
+     "sample_std": 3.462509502791141e-08
+    }
+   }
+  },
+  "25": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5396165787802.336,
+     "relative_spread": 0.004498522019558487,
+     "sample_mean": 5388549660276.556,
+     "sample_std": 24274770617.616978
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8540638853485665,
+     "relative_spread": 0.004494422915799243,
+     "sample_mean": 1.8514505639484515,
+     "sample_std": 0.008332947213666378
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7748133150.82658,
+     "relative_spread": 0.004482092877595136,
+     "sample_mean": 7737172702.605878,
+     "sample_std": 34727852.409978576
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0023511696869943375,
+     "relative_spread": 0.004478275364977035,
+     "sample_mean": 0.0023478557214645962,
+     "sample_std": 1.0529185288147508e-05
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2018371076.7563663,
+     "relative_spread": 0.00447851644235636,
+     "sample_mean": 2015474945.7863557,
+     "sample_std": 9039308.054029897
+    },
+    "heat_W_per_g": {
+     "nominal": 4.2563317848797425e-05,
+     "relative_spread": 0.004194319227058255,
+     "sample_mean": 4.249854544109039e-05,
+     "sample_std": 1.7852414242060287e-07
+    }
+   }
+  },
+  "26": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5384710065719.752,
+     "relative_spread": 0.002235582376332978,
+     "sample_mean": 5378771282677.242,
+     "sample_std": 12037962924.585869
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8501188487626292,
+     "relative_spread": 0.0022417708446529567,
+     "sample_mean": 1.8480738330025808,
+     "sample_std": 0.004147542494298955
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7731233531.376297,
+     "relative_spread": 0.0022382459258739567,
+     "sample_mean": 7722668889.941587,
+     "sample_std": 17304401.95358312
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0023460599526672556,
+     "relative_spread": 0.002265001605820201,
+     "sample_mean": 0.002343449707889183,
+     "sample_std": 5.313829560141799e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2013768247.0354805,
+     "relative_spread": 0.0021726874518788438,
+     "sample_mean": 2011552331.6463432,
+     "sample_std": 4375289.001326044
+    },
+    "heat_W_per_g": {
+     "nominal": 4.2408013806824835e-05,
+     "relative_spread": 0.002489811428688574,
+     "sample_mean": 4.235581728841818e-05,
+     "sample_std": 1.0558795744421531e-07
+    }
+   }
+  },
+  "27": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 949697384435.9384,
+     "relative_spread": 0.007933993775740722,
+     "sample_mean": 949179476747.6227,
+     "sample_std": 7534893136.951978
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3264778179246248,
+     "relative_spread": 0.00791018495716431,
+     "sample_mean": 0.3263050133537625,
+     "sample_std": 0.002582499924195196
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1365994453.517123,
+     "relative_spread": 0.007886613318125728,
+     "sample_mean": 1365227428.4492948,
+     "sample_std": 10773070.049594017
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041509480134495276,
+     "relative_spread": 0.007828007367772886,
+     "sample_mean": 0.0004148907645517589,
+     "sample_std": 3.249365163252513e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 355287482.91176635,
+     "relative_spread": 0.00801159271809605,
+     "sample_mean": 355011437.20589864,
+     "sample_std": 2846418.6109265815
+    },
+    "heat_W_per_g": {
+     "nominal": 7.864012646821739e-06,
+     "relative_spread": 0.0073153711461242735,
+     "sample_mean": 7.857692495626902e-06,
+     "sample_std": 5.7528171209316124e-08
+    }
+   }
+  },
+  "28": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 515848862869.4149,
+     "relative_spread": 0.005301594553797728,
+     "sample_mean": 514017329212.9658,
+     "sample_std": 2734821521.971241
+    },
+    "heat_W_per_g": {
+     "nominal": 0.177376671542882,
+     "relative_spread": 0.005297798720394424,
+     "sample_mean": 0.17675060937439752,
+     "sample_std": 0.0009397059035277023
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 742365180.4155862,
+     "relative_spread": 0.0053017324599262195,
+     "sample_mean": 739762043.3290696,
+     "sample_std": 3935821.5741282976
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002257826583349874,
+     "relative_spread": 0.005271749634555312,
+     "sample_mean": 0.00022500560710471109,
+     "sample_std": 1.1902696465663968e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 192774628.4378003,
+     "relative_spread": 0.005425354940210427,
+     "sample_mean": 192076091.96541917,
+     "sample_std": 1045870.7827422493
+    },
+    "heat_W_per_g": {
+     "nominal": 4.342644722888685e-06,
+     "relative_spread": 0.005945480174698724,
+     "sample_mean": 4.33293973397789e-06,
+     "sample_std": 2.581910810569471e-08
+    }
+   }
+  },
+  "29": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 956295378976.9878,
+     "relative_spread": 0.005881968913290159,
+     "sample_mean": 953970939704.792,
+     "sample_std": 5624899691.065674
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3287491037346489,
+     "relative_spread": 0.005864825921381029,
+     "sample_mean": 0.32794954575017726,
+     "sample_std": 0.0019280562652137499
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1375652094.681276,
+     "relative_spread": 0.005816567336838467,
+     "sample_mean": 1372303520.1488235,
+     "sample_std": 8001573.040776528
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041800446785294674,
+     "relative_spread": 0.005793319181658721,
+     "sample_mean": 0.00041697778290414794,
+     "sample_std": 2.4216333016315226e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 357890530.71437204,
+     "relative_spread": 0.005813734542100893,
+     "sample_mean": 357035422.1545522,
+     "sample_std": 2080680.5407049654
+    },
+    "heat_W_per_g": {
+     "nominal": 7.931309583460588e-06,
+     "relative_spread": 0.004823478617038703,
+     "sample_mean": 7.909326982645036e-06,
+     "sample_std": 3.825650218093629e-08
+    }
+   }
+  },
+  "3": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 341995459702.45544,
+     "relative_spread": 0.009885416615849265,
+     "sample_mean": 341375269729.8885,
+     "sample_std": 3380767599.887661
+    },
+    "heat_W_per_g": {
+     "nominal": 0.117606379587454,
+     "relative_spread": 0.00989591870537645,
+     "sample_mean": 0.11739418542905405,
+     "sample_std": 0.0011638231716310891
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 492353439.3378156,
+     "relative_spread": 0.009925665283180986,
+     "sample_mean": 491456836.19009036,
+     "sample_std": 4886935.439890112
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00014975067909897438,
+     "relative_spread": 0.009959898447817365,
+     "sample_mean": 0.0001494850119980308,
+     "sample_std": 1.4915015563174713e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 127869547.99970977,
+     "relative_spread": 0.009907146177856204,
+     "sample_mean": 127619021.39193688,
+     "sample_std": 1266822.303729525
+    },
+    "heat_W_per_g": {
+     "nominal": 2.8934814019586334e-06,
+     "relative_spread": 0.011329830125967694,
+     "sample_mean": 2.8881124270257255e-06,
+     "sample_std": 3.2782652756838164e-08
+    }
+   }
+  },
+  "30": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 954937005814.497,
+     "relative_spread": 0.005397206961110643,
+     "sample_mean": 955791277624.1766,
+     "sample_std": 5153992655.204158
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3282865246178036,
+     "relative_spread": 0.005380226169593094,
+     "sample_mean": 0.3285814227860435,
+     "sample_std": 0.0017662557508734745
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1373752371.4357963,
+     "relative_spread": 0.005331792470696045,
+     "sample_mean": 1374921812.3291516,
+     "sample_std": 7324562.550622215
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041746729668611104,
+     "relative_spread": 0.0052990865120951134,
+     "sample_mean": 0.00041783752689975284,
+     "sample_std": 2.21219532111018e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 357326721.7837369,
+     "relative_spread": 0.00535265647841279,
+     "sample_mean": 357577902.69124323,
+     "sample_std": 1912647.1922657238
+    },
+    "heat_W_per_g": {
+     "nominal": 7.932264528471186e-06,
+     "relative_spread": 0.0038453116466176506,
+     "sample_mean": 7.932461684681616e-06,
+     "sample_std": 3.050202917538232e-08
+    }
+   }
+  },
+  "31": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 514764734293.64185,
+     "relative_spread": 0.012312822691510213,
+     "sample_mean": 517670939451.47186,
+     "sample_std": 6338206901.199979
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17697865356425624,
+     "relative_spread": 0.012288454341847619,
+     "sample_mean": 0.1779751005109121,
+     "sample_std": 0.00217479410380603
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 740638949.5111156,
+     "relative_spread": 0.012232818716275086,
+     "sample_mean": 744803737.4726005,
+     "sample_std": 9060102.003581893
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002251432647184806,
+     "relative_spread": 0.012174319125012215,
+     "sample_mean": 0.00022639661809932868,
+     "sample_std": 2.7409659535298866e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 192513170.39477003,
+     "relative_spread": 0.012325187895889081,
+     "sample_mean": 193619661.17012253,
+     "sample_std": 2372760.9975488517
+    },
+    "heat_W_per_g": {
+     "nominal": 4.293789870882349e-06,
+     "relative_spread": 0.0103833477148163,
+     "sample_mean": 4.3149428833915865e-06,
+     "sample_std": 4.4583913243727616e-08
+    }
+   }
+  },
+  "32": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 522538269955.2405,
+     "relative_spread": 0.004859736821785412,
+     "sample_mean": 523120303550.0908,
+     "sample_std": 2539398471.293528
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17965226044646207,
+     "relative_spread": 0.004854649881575366,
+     "sample_mean": 0.17985109042941758,
+     "sample_std": 0.0008721488249011639
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 751925607.9915919,
+     "relative_spread": 0.004881417122214806,
+     "sample_mean": 752766341.8723478,
+     "sample_std": 3670462.5374819348
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022855732628264446,
+     "relative_spread": 0.0048380724604161224,
+     "sample_mean": 0.00022879893001611723,
+     "sample_std": 1.105776905914404e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 195518345.65363306,
+     "relative_spread": 0.005083636564985304,
+     "sample_mean": 195762210.50107092,
+     "sample_std": 993944.2110902446
+    },
+    "heat_W_per_g": {
+     "nominal": 4.37117414432084e-06,
+     "relative_spread": 0.005313642574535485,
+     "sample_mean": 4.37235130432581e-06,
+     "sample_std": 2.322685703397193e-08
+    }
+   }
+  },
+  "33": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 949828425337.5916,
+     "relative_spread": 0.003528890444943885,
+     "sample_mean": 950204234473.436,
+     "sample_std": 3351840454.509923
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3265320001452216,
+     "relative_spread": 0.003565010173208585,
+     "sample_mean": 0.3266645232416349,
+     "sample_std": 0.0011640899023958621
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1366300016.653239,
+     "relative_spread": 0.003527652390940198,
+     "sample_mean": 1366957537.0747483,
+     "sample_std": 4819831.520488431
+    },
+    "heat_W_per_g": {
+     "nominal": 0.000415208536784643,
+     "relative_spread": 0.0036947466252703846,
+     "sample_mean": 0.00041539848597897287,
+     "sample_std": 1.5340903400685141e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 355327570.22485447,
+     "relative_spread": 0.0031111641901121995,
+     "sample_mean": 355552142.03817046,
+     "sample_std": 1105482.412243145
+    },
+    "heat_W_per_g": {
+     "nominal": 7.870666632050514e-06,
+     "relative_spread": 0.0051215548832093255,
+     "sample_mean": 7.886230932641838e-06,
+     "sample_std": 4.0310051123491006e-08
+    }
+   }
+  },
+  "34": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 950796837749.6113,
+     "relative_spread": 0.007505954680757033,
+     "sample_mean": 949143092138.1215,
+     "sample_std": 7136637974.75568
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3268709311258927,
+     "relative_spread": 0.007494745676480812,
+     "sample_mean": 0.32630122594994276,
+     "sample_std": 0.0024498144978230417
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1367567780.3500838,
+     "relative_spread": 0.007502343037729825,
+     "sample_mean": 1365193443.8138556,
+     "sample_std": 10259962.615533082
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004156597330608301,
+     "relative_spread": 0.007440606135016986,
+     "sample_mean": 0.0004149276489579207,
+     "sample_std": 3.092760359891935e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 355478171.7682807,
+     "relative_spread": 0.007658471194736649,
+     "sample_mean": 354884686.3314458,
+     "sample_std": 2722419.3388450244
+    },
+    "heat_W_per_g": {
+     "nominal": 7.87145496086456e-06,
+     "relative_spread": 0.007180331330308,
+     "sample_mean": 7.856963050825605e-06,
+     "sample_std": 5.6519654670604125e-08
+    }
+   }
+  },
+  "35": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 510678254397.95703,
+     "relative_spread": 0.009112074315921747,
+     "sample_mean": 507551044473.4316,
+     "sample_std": 4653338205.599376
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17559881896464047,
+     "relative_spread": 0.009111034132666111,
+     "sample_mean": 0.17452317422722002,
+     "sample_std": 0.0015998868332426964
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 734897781.9452002,
+     "relative_spread": 0.009074088125341037,
+     "sample_mean": 730511896.3704827,
+     "sample_std": 6668527.236488408
+    },
+    "heat_W_per_g": {
+     "nominal": 0.000223486952512145,
+     "relative_spread": 0.009081224564714102,
+     "sample_mean": 0.00022211929574451504,
+     "sample_std": 2.0295352030463853e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 190858253.9847656,
+     "relative_spread": 0.009023189588290903,
+     "sample_mean": 189824296.9547216,
+     "sample_std": 1722150.2101947176
+    },
+    "heat_W_per_g": {
+     "nominal": 4.283699173854979e-06,
+     "relative_spread": 0.008353352761457282,
+     "sample_mean": 4.266756411759434e-06,
+     "sample_std": 3.578325032317377e-08
+    }
+   }
+  },
+  "36": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 957801207603.2867,
+     "relative_spread": 0.0033965601782088373,
+     "sample_mean": 961000336206.216,
+     "sample_std": 3253229440.385659
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3292642708473027,
+     "relative_spread": 0.0033932080076806304,
+     "sample_mean": 0.33036260289628344,
+     "sample_std": 0.0011172621604821915
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1377709822.0773942,
+     "relative_spread": 0.0033980094469029643,
+     "sample_mean": 1382213299.9307215,
+     "sample_std": 4681470.990509988
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004186327591206957,
+     "relative_spread": 0.0034032498082537696,
+     "sample_mean": 0.0004200158050856696,
+     "sample_std": 1.4247118572062542e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 358374483.866862,
+     "relative_spread": 0.003429913761803685,
+     "sample_mean": 359484755.9997858,
+     "sample_std": 1229193.5740942426
+    },
+    "heat_W_per_g": {
+     "nominal": 7.925463251881238e-06,
+     "relative_spread": 0.0038122915005061697,
+     "sample_mean": 7.94124112307892e-06,
+     "sample_std": 3.021417619272083e-08
+    }
+   }
+  },
+  "37": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5365047413127.629,
+     "relative_spread": 0.002815911948164561,
+     "sample_mean": 5363812342134.764,
+     "sample_std": 15107501113.09546
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8433670979358254,
+     "relative_spread": 0.0028165200388478528,
+     "sample_mean": 1.8429387395310375,
+     "sample_std": 0.0051918803702890644
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7703294960.649133,
+     "relative_spread": 0.00282975423747353,
+     "sample_mean": 7701570086.162131,
+     "sample_std": 21798431.55740537
+    },
+    "heat_W_per_g": {
+     "nominal": 0.002337587350894865,
+     "relative_spread": 0.0028156939907359652,
+     "sample_mean": 0.0023370177175518836,
+     "sample_std": 6.581930656735076e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2006591073.3976607,
+     "relative_spread": 0.00287706347028348,
+     "sample_mean": 2006251927.9537013,
+     "sample_std": 5773089.877069327
+    },
+    "heat_W_per_g": {
+     "nominal": 4.230046997908048e-05,
+     "relative_spread": 0.0029848342592950247,
+     "sample_mean": 4.228939329313335e-05,
+     "sample_std": 1.262598919778401e-07
+    }
+   }
+  },
+  "38": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5362598763879.064,
+     "relative_spread": 0.004910370217955888,
+     "sample_mean": 5371755859233.573,
+     "sample_std": 26332345260.998817
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8425219056319975,
+     "relative_spread": 0.004906789955188427,
+     "sample_mean": 1.8456648916855993,
+     "sample_std": 0.009040867978769724
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7699435859.809786,
+     "relative_spread": 0.004900551686481643,
+     "sample_mean": 7712497695.231934,
+     "sample_std": 37731483.387748085
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00233645817000003,
+     "relative_spread": 0.004887527763907166,
+     "sample_mean": 0.0023404059775337903,
+     "sample_std": 1.1419504175082876e-05
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2005388427.4733043,
+     "relative_spread": 0.004921612214190973,
+     "sample_mean": 2008785284.1827989,
+     "sample_std": 9869744.178849842
+    },
+    "heat_W_per_g": {
+     "nominal": 4.224133547039661e-05,
+     "relative_spread": 0.004653582993509404,
+     "sample_mean": 4.229504236161623e-05,
+     "sample_std": 1.9657356036816323e-07
+    }
+   }
+  },
+  "39": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 949390998275.4396,
+     "relative_spread": 0.009668795841837198,
+     "sample_mean": 948467955714.8376,
+     "sample_std": 9179467736.403236
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32638496618190704,
+     "relative_spread": 0.009661255766486467,
+     "sample_mean": 0.32606566799506387,
+     "sample_std": 0.00315328863661944
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1365590018.1635492,
+     "relative_spread": 0.009651588198944227,
+     "sample_mean": 1364268395.3132787,
+     "sample_std": 13180112.503903344
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041506821158852805,
+     "relative_spread": 0.009588452685557105,
+     "sample_mean": 0.000414653278557638,
+     "sample_std": 3.9798619080954065e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 354985274.19438446,
+     "relative_spread": 0.009767725946407515,
+     "sample_mean": 354672409.7201532,
+     "sample_std": 3467398.873341075
+    },
+    "heat_W_per_g": {
+     "nominal": 7.878106074382274e-06,
+     "relative_spread": 0.008547618598844366,
+     "sample_mean": 7.869668927692059e-06,
+     "sample_std": 6.73390460050587e-08
+    }
+   }
+  },
+  "4": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 502779220907.5036,
+     "relative_spread": 0.007081262199902089,
+     "sample_mean": 499750358763.6897,
+     "sample_std": 3560311491.9085274
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1728505057785255,
+     "relative_spread": 0.007074912499010144,
+     "sample_mean": 0.17181298221875654,
+     "sample_std": 0.0012229022037927152
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 723366501.041135,
+     "relative_spread": 0.0070682168424370945,
+     "sample_mean": 719041197.5004755,
+     "sample_std": 5112911.28591374
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002198773242160649,
+     "relative_spread": 0.007060687873182484,
+     "sample_mean": 0.00021857720532396946,
+     "sample_std": 1.5524851566801828e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 188073784.1533191,
+     "relative_spread": 0.00708510410904508,
+     "sample_mean": 186926327.0836296,
+     "sample_std": 1332522.3409083385
+    },
+    "heat_W_per_g": {
+     "nominal": 4.198592792787819e-06,
+     "relative_spread": 0.0070398930153541895,
+     "sample_mean": 4.178832160711995e-06,
+     "sample_std": 2.9557644076263404e-08
+    }
+   }
+  },
+  "40": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 952076439066.4603,
+     "relative_spread": 0.011862013836999833,
+     "sample_mean": 949798646880.328,
+     "sample_std": 11293543894.087881
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32732020115147553,
+     "relative_spread": 0.011845788998701355,
+     "sample_mean": 0.32653801830040025,
+     "sample_std": 0.0038773660378528634
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1369639445.417439,
+     "relative_spread": 0.011750783276711559,
+     "sample_mean": 1366379917.1262357,
+     "sample_std": 16094336.290335735
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004162745376791429,
+     "relative_spread": 0.011781286667807657,
+     "sample_mean": 0.0004152884130846332,
+     "sample_std": 4.904249660907082e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 356102330.0562385,
+     "relative_spread": 0.011569601110371494,
+     "sample_mean": 355250322.18445516,
+     "sample_std": 4119961.9132245327
+    },
+    "heat_W_per_g": {
+     "nominal": 7.90317157818983e-06,
+     "relative_spread": 0.010214052723248893,
+     "sample_mean": 7.88705657629505e-06,
+     "sample_std": 8.072341118051308e-08
+    }
+   }
+  },
+  "41": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5346027731884.557,
+     "relative_spread": 0.006924067765850724,
+     "sample_mean": 5333651006291.931,
+     "sample_std": 37016258293.68591
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8368404440118316,
+     "relative_spread": 0.006919630655443246,
+     "sample_mean": 1.832588165670167,
+     "sample_std": 0.012710257445542253
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7676048831.103798,
+     "relative_spread": 0.00691986219556162,
+     "sample_mean": 7658269105.182321,
+     "sample_std": 53117200.11764014
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0023292997822982773,
+     "relative_spread": 0.006904033717386163,
+     "sample_mean": 0.002323909523182641,
+     "sample_std": 1.6081564234887556e-05
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 1999527632.9654284,
+     "relative_spread": 0.006960889702628334,
+     "sample_mean": 1994881658.4317112,
+     "sample_std": 13918491.310429856
+    },
+    "heat_W_per_g": {
+     "nominal": 4.2144927711832886e-05,
+     "relative_spread": 0.006814072218664218,
+     "sample_mean": 4.2046431659214344e-05,
+     "sample_std": 2.871785810788122e-07
+    }
+   }
+  },
+  "42": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 5366685815144.807,
+     "relative_spread": 0.003196588975067566,
+     "sample_mean": 5370128219263.521,
+     "sample_std": 17155088709.343382
+    },
+    "heat_W_per_g": {
+     "nominal": 1.8439243044782834,
+     "relative_spread": 0.003198618638736,
+     "sample_mean": 1.845110256552935,
+     "sample_std": 0.005898010648722553
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 7705372492.485433,
+     "relative_spread": 0.003202289136852627,
+     "sample_mean": 7710138516.530029,
+     "sample_std": 24674830.628089152
+    },
+    "heat_W_per_g": {
+     "nominal": 0.002338235019381727,
+     "relative_spread": 0.003205287869479139,
+     "sample_mean": 0.002339737297482101,
+     "sample_std": 7.494716343615569e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 2007016435.8039854,
+     "relative_spread": 0.0032028142489850466,
+     "sample_mean": 2008078895.518215,
+     "sample_std": 6428100.838540186
+    },
+    "heat_W_per_g": {
+     "nominal": 4.228233873782401e-05,
+     "relative_spread": 0.0033326350488256285,
+     "sample_mean": 4.2292159315141585e-05,
+     "sample_std": 1.4091160402398988e-07
+    }
+   }
+  },
+  "43": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 941079171531.9325,
+     "relative_spread": 0.005802523668722149,
+     "sample_mean": 938781698411.4512,
+     "sample_std": 5460634166.95547
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3235261664722043,
+     "relative_spread": 0.0057870796534573955,
+     "sample_mean": 0.32273243154656167,
+     "sample_std": 0.0018722716953523636
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1353708281.0906272,
+     "relative_spread": 0.005737161431073105,
+     "sample_mean": 1350478366.8440115,
+     "sample_std": 7766442.939197416
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004114202319213929,
+     "relative_spread": 0.005742993938936378,
+     "sample_mean": 0.0004104060678866431,
+     "sample_std": 2.3627838982803585e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 351992242.87211555,
+     "relative_spread": 0.005686622701642316,
+     "sample_mean": 351252021.3755943,
+     "sample_std": 2001647.079118568
+    },
+    "heat_W_per_g": {
+     "nominal": 7.811772455953677e-06,
+     "relative_spread": 0.005048153360558395,
+     "sample_mean": 7.800879262479665e-06,
+     "sample_std": 3.943502537544006e-08
+    }
+   }
+  },
+  "44": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 510674872603.23157,
+     "relative_spread": 0.013918295306413855,
+     "sample_mean": 508942384718.48157,
+     "sample_std": 7107723682.457051
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17557583761124473,
+     "relative_spread": 0.013881623686935587,
+     "sample_mean": 0.17497560529967632,
+     "sample_std": 0.002437277706237811
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 735147587.3813176,
+     "relative_spread": 0.013761979440074337,
+     "sample_mean": 732679812.5974965,
+     "sample_std": 10117085.982961945
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022338101091593494,
+     "relative_spread": 0.013741449238163294,
+     "sample_mean": 0.0002225950910758234,
+     "sample_std": 3.069578822270921e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 191408642.99993548,
+     "relative_spread": 0.013664217340307403,
+     "sample_mean": 190854141.9394542,
+     "sample_std": 2615449.2987644277
+    },
+    "heat_W_per_g": {
+     "nominal": 4.2995884383292824e-06,
+     "relative_spread": 0.011075584057696458,
+     "sample_mean": 4.284690280276664e-06,
+     "sample_std": 4.762045316221581e-08
+    }
+   }
+  },
+  "45": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 953797170592.253,
+     "relative_spread": 0.009549143338056773,
+     "sample_mean": 953277387881.9539,
+     "sample_std": 9107945897.418413
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32788525740367713,
+     "relative_spread": 0.009541592273586006,
+     "sample_mean": 0.32770444150461064,
+     "sample_std": 0.0031285474386656843
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1371996405.878049,
+     "relative_spread": 0.00950127210063875,
+     "sample_mean": 1371271179.051231,
+     "sample_std": 13035711.173345746
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004168976766532217,
+     "relative_spread": 0.009521823511750422,
+     "sample_mean": 0.0004166557780672773,
+     "sample_std": 3.969626099550771e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 356917999.732871,
+     "relative_spread": 0.009418718917037064,
+     "sample_mean": 356778623.4761457,
+     "sample_std": 3361710.3159150216
+    },
+    "heat_W_per_g": {
+     "nominal": 7.905548427626188e-06,
+     "relative_spread": 0.009125714378594234,
+     "sample_mean": 7.899785805268447e-06,
+     "sample_std": 7.214377695666135e-08
+    }
+   }
+  },
+  "46": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 942665138001.1815,
+     "relative_spread": 0.012202324600016265,
+     "sample_mean": 944633264530.7549,
+     "sample_std": 11502706003.009544
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32406611445036815,
+     "relative_spread": 0.012164164627558453,
+     "sample_mean": 0.3247431769026737,
+     "sample_std": 0.003941993566387477
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1356189530.080778,
+     "relative_spread": 0.012147249388346592,
+     "sample_mean": 1358996618.9822154,
+     "sample_std": 16473972.43975578
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004121078254590195,
+     "relative_spread": 0.012016993601687537,
+     "sample_mean": 0.0004129659172285519,
+     "sample_std": 4.952297101746402e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 352854828.2281452,
+     "relative_spread": 0.01244459372301452,
+     "sample_mean": 353562754.8928737,
+     "sample_std": 4391134.980503342
+    },
+    "heat_W_per_g": {
+     "nominal": 7.847392725535958e-06,
+     "relative_spread": 0.010839090742038336,
+     "sample_mean": 7.859666359229916e-06,
+     "sample_std": 8.505860184049579e-08
+    }
+   }
+  },
+  "47": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 505402219958.00256,
+     "relative_spread": 0.009519557458897668,
+     "sample_mean": 502464955389.85126,
+     "sample_std": 4811205472.744643
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17375805694842292,
+     "relative_spread": 0.009545695352802155,
+     "sample_mean": 0.17274776993138818,
+     "sample_std": 0.001658641476724493
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 727207525.3862154,
+     "relative_spread": 0.009517495823183763,
+     "sample_mean": 723042450.2734622,
+     "sample_std": 6921194.585451106
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022104936728374692,
+     "relative_spread": 0.009634935929554165,
+     "sample_mean": 0.00021977020640872485,
+     "sample_std": 2.129796491047388e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 189072810.89904895,
+     "relative_spread": 0.009227084998985991,
+     "sample_mean": 188043287.74350387,
+     "sample_std": 1744590.8971627296
+    },
+    "heat_W_per_g": {
+     "nominal": 4.225522672416872e-06,
+     "relative_spread": 0.010435468983020299,
+     "sample_mean": 4.20978499649992e-06,
+     "sample_std": 4.4095310785055307e-08
+    }
+   }
+  },
+  "48": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 338874829886.9009,
+     "relative_spread": 0.008240434110473954,
+     "sample_mean": 335818339920.7005,
+     "sample_std": 2792475707.381077
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11652584786067427,
+     "relative_spread": 0.00821937657790542,
+     "sample_mean": 0.11547151649996285,
+     "sample_std": 0.0009577698246265964
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 487729826.65332764,
+     "relative_spread": 0.008308000386503409,
+     "sample_mean": 483317021.47852516,
+     "sample_std": 4052059.588345086
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00014834141390522086,
+     "relative_spread": 0.008153735178205368,
+     "sample_mean": 0.00014698321703284889,
+     "sample_std": 1.2095366049437222e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 126654160.14879267,
+     "relative_spread": 0.008802102687248608,
+     "sample_mean": 125539974.38303897,
+     "sample_std": 1114822.9233969036
+    },
+    "heat_W_per_g": {
+     "nominal": 2.8574897293162614e-06,
+     "relative_spread": 0.00903026986244516,
+     "sample_mean": 2.82841564872821e-06,
+     "sample_std": 2.580390338489121e-08
+    }
+   }
+  },
+  "49": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 507314477779.5893,
+     "relative_spread": 0.012112346160880383,
+     "sample_mean": 503018913754.4333,
+     "sample_std": 6144768567.2926445
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17443775161006453,
+     "relative_spread": 0.01211599988367799,
+     "sample_mean": 0.17296263813886417,
+     "sample_std": 0.002113487778216592
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 730063111.2267879,
+     "relative_spread": 0.012058836710697135,
+     "sample_mean": 723885616.6116757,
+     "sample_std": 8803711.846787356
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002220216436011062,
+     "relative_spread": 0.012101408909047226,
+     "sample_mean": 0.00022015401765325963,
+     "sample_std": 2.6867746958757347e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 189615122.88142678,
+     "relative_spread": 0.011876199134312787,
+     "sample_mean": 187990012.17549175,
+     "sample_std": 2251906.9582170136
+    },
+    "heat_W_per_g": {
+     "nominal": 4.26543878127478e-06,
+     "relative_spread": 0.011236807595681103,
+     "sample_mean": 4.232015827055375e-06,
+     "sample_std": 4.7929914896341196e-08
+    }
+   }
+  },
+  "5": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 955389178527.8446,
+     "relative_spread": 0.003965713830765752,
+     "sample_mean": 953882563298.9137,
+     "sample_std": 3788800079.0518036
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3284400769565148,
+     "relative_spread": 0.003958928273673802,
+     "sample_mean": 0.32792912946969865,
+     "sample_std": 0.0013002707068707458
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1374138698.8596463,
+     "relative_spread": 0.0039000246941881837,
+     "sample_mean": 1371956263.8614984,
+     "sample_std": 5359174.858792241
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041759071315872057,
+     "relative_spread": 0.0039421554734639964,
+     "sample_mean": 0.00041697327168560013,
+     "sample_std": 1.646207515546384e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 357312698.4344875,
+     "relative_spread": 0.0037560876752621075,
+     "sample_mean": 356641633.3029623,
+     "sample_std": 1342097.8228044247
+    },
+    "heat_W_per_g": {
+     "nominal": 7.894324606266203e-06,
+     "relative_spread": 0.0032180540956294815,
+     "sample_mean": 7.88566494345003e-06,
+     "sample_std": 2.5404363631423546e-08
+    }
+   }
+  },
+  "50": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 507311871009.00464,
+     "relative_spread": 0.01563051641017521,
+     "sample_mean": 506103910942.5985,
+     "sample_std": 7929546524.8829365
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17442745318898395,
+     "relative_spread": 0.015642928574279246,
+     "sample_mean": 0.17401316559490265,
+     "sample_std": 0.0027285561916287125
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 730126239.8315916,
+     "relative_spread": 0.015572572631837084,
+     "sample_mean": 728410964.623101,
+     "sample_std": 11369943.900187563
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002219718540464172,
+     "relative_spread": 0.015636826114780844,
+     "sample_mean": 0.00022145275310426582,
+     "sample_std": 3.4709352840993385e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 189801985.81276107,
+     "relative_spread": 0.015320077775455925,
+     "sample_mean": 189360094.5991158,
+     "sample_std": 2907781.1845874814
+    },
+    "heat_W_per_g": {
+     "nominal": 4.265716019759019e-06,
+     "relative_spread": 0.01488758041405775,
+     "sample_mean": 4.259683289778739e-06,
+     "sample_std": 6.350619026769676e-08
+    }
+   }
+  },
+  "51": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 338170240647.83466,
+     "relative_spread": 0.011838915152416434,
+     "sample_mean": 339929394373.3541,
+     "sample_std": 4003568786.1019616
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11627872355999602,
+     "relative_spread": 0.01183407632447294,
+     "sample_mean": 0.11688617248724345,
+     "sample_std": 0.001376051289521283
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 486718991.2439617,
+     "relative_spread": 0.011751946207612005,
+     "sample_mean": 489274616.2418067,
+     "sample_std": 5719895.403322216
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0001480128050453728,
+     "relative_spread": 0.011800759887989844,
+     "sample_mean": 0.00014879484461097014,
+     "sample_std": 1.7466635726882962e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 126445308.8861797,
+     "relative_spread": 0.011526196693231667,
+     "sample_mean": 127106800.86098069,
+     "sample_std": 1457433.5011585413
+    },
+    "heat_W_per_g": {
+     "nominal": 2.8520743533540515e-06,
+     "relative_spread": 0.01013267571321062,
+     "sample_mean": 2.8709603533077455e-06,
+     "sample_std": 2.8899144532501482e-08
+    }
+   }
+  },
+  "52": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 512157156254.8485,
+     "relative_spread": 0.0076991979257572014,
+     "sample_mean": 510449324101.12787,
+     "sample_std": 3943199315.0990367
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17609726867556494,
+     "relative_spread": 0.00767557721461432,
+     "sample_mean": 0.17550881183519768,
+     "sample_std": 0.0013516481830019823
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 737199064.0694284,
+     "relative_spread": 0.007682991165737786,
+     "sample_mean": 734835349.8426698,
+     "sample_std": 5663893.896635583
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002241219329260155,
+     "relative_spread": 0.0075949860840869975,
+     "sample_mean": 0.0002233783194458344,
+     "sample_std": 1.7022029617117671e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 191671868.45623088,
+     "relative_spread": 0.007924647000289765,
+     "sample_mean": 191147094.4062253,
+     "sample_std": 1518931.8974016043
+    },
+    "heat_W_per_g": {
+     "nominal": 4.3194937951142024e-06,
+     "relative_spread": 0.007131946217151163,
+     "sample_mean": 4.3169558184653395e-06,
+     "sample_std": 3.0806397432072653e-08
+    }
+   }
+  },
+  "53": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 950415334723.2828,
+     "relative_spread": 0.004708855188180094,
+     "sample_mean": 952417385467.4377,
+     "sample_std": 4475368179.837651
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32673948197352054,
+     "relative_spread": 0.004704235629243798,
+     "sample_mean": 0.3274216281549618,
+     "sample_std": 0.0015370595125804968
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1367155881.1413562,
+     "relative_spread": 0.004708627608288705,
+     "sample_mean": 1370039667.437209,
+     "sample_std": 6437427.926776461
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041550389635838455,
+     "relative_spread": 0.004693922048138359,
+     "sample_mean": 0.0004163544067524481,
+     "sample_std": 1.950342900204017e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 355484459.48626983,
+     "relative_spread": 0.004777104415579958,
+     "sample_mean": 356298526.85876745,
+     "sample_std": 1698186.3810819143
+    },
+    "heat_W_per_g": {
+     "nominal": 7.884279475732766e-06,
+     "relative_spread": 0.005823761142820814,
+     "sample_mean": 7.900924005376386e-06,
+     "sample_std": 4.591616044991214e-08
+    }
+   }
+  },
+  "54": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 961847285486.9854,
+     "relative_spread": 0.009524915624083554,
+     "sample_mean": 964458328530.9012,
+     "sample_std": 9161514237.517342
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3306580274584876,
+     "relative_spread": 0.009543458652408418,
+     "sample_mean": 0.33156095456705525,
+     "sample_std": 0.0031556212131370037
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1383471137.875781,
+     "relative_spread": 0.009511619342710527,
+     "sample_mean": 1387169556.6607838,
+     "sample_std": 13159050.835101021
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00042043672627981537,
+     "relative_spread": 0.009618258680148683,
+     "sample_mean": 0.00042159809906612187,
+     "sample_std": 4.0438691919941305e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 359743482.3787113,
+     "relative_spread": 0.009242477652435268,
+     "sample_mean": 360601188.55515707,
+     "sample_std": 3324921.0964944796
+    },
+    "heat_W_per_g": {
+     "nominal": 7.959428549480287e-06,
+     "relative_spread": 0.010146626975291211,
+     "sample_mean": 7.9761058670694e-06,
+     "sample_std": 8.076135242805968e-08
+    }
+   }
+  },
+  "55": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 520865685850.376,
+     "relative_spread": 0.009797000745983843,
+     "sample_mean": 520980042453.9067,
+     "sample_std": 5102921512.833519
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17908851914552182,
+     "relative_spread": 0.009790559833217223,
+     "sample_mean": 0.17912898735704974,
+     "sample_std": 0.0017533768621364996
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 749561435.2585809,
+     "relative_spread": 0.009817213726695523,
+     "sample_mean": 749716427.9104723,
+     "sample_std": 7358604.811222138
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022789032203285477,
+     "relative_spread": 0.009776273230184982,
+     "sample_mean": 0.0002279425988372753,
+     "sample_std": 2.227918054708033e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 194799278.20626935,
+     "relative_spread": 0.009939775250993724,
+     "sample_mean": 194822014.6914809,
+     "sample_std": 1936261.044426117
+    },
+    "heat_W_per_g": {
+     "nominal": 4.366882598091727e-06,
+     "relative_spread": 0.010135586473122278,
+     "sample_mean": 4.365851303165952e-06,
+     "sample_std": 4.426091619093158e-08
+    }
+   }
+  },
+  "56": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 509485927451.10455,
+     "relative_spread": 0.013171095397064432,
+     "sample_mean": 508924731665.8494,
+     "sample_std": 6710487753.920346
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1751905392266756,
+     "relative_spread": 0.01316659582324265,
+     "sample_mean": 0.17499786144087803,
+     "sample_std": 0.0023066630220535747
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 733303093.2860155,
+     "relative_spread": 0.013180105585733971,
+     "sample_mean": 732484108.9062194,
+     "sample_std": 9665012.195855012
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022300280320017096,
+     "relative_spread": 0.013145482268364265,
+     "sample_mean": 0.00022275395957752997,
+     "sample_std": 2.931479395263373e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 190489138.8189036,
+     "relative_spread": 0.013288645378830132,
+     "sample_mean": 190271099.88135272,
+     "sample_std": 2531342.6142831547
+    },
+    "heat_W_per_g": {
+     "nominal": 4.293350827953214e-06,
+     "relative_spread": 0.012974638074986748,
+     "sample_mean": 4.286663133492894e-06,
+     "sample_std": 5.570467312163765e-08
+    }
+   }
+  },
+  "57": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 951785184381.4054,
+     "relative_spread": 0.009869880212278337,
+     "sample_mean": 951001355085.5581,
+     "sample_std": 9394005757.665722
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3272118881572823,
+     "relative_spread": 0.009864150506489155,
+     "sample_mean": 0.3269433679167689,
+     "sample_std": 0.003227667312295929
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1368950842.021931,
+     "relative_spread": 0.009841908451098001,
+     "sample_mean": 1367885871.2936459,
+     "sample_std": 13473088.861233367
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0004161044528922887,
+     "relative_spread": 0.009838032816409308,
+     "sample_mean": 0.00041577408506373253,
+     "sample_std": 4.0936492626083774e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 355781417.35447013,
+     "relative_spread": 0.009834549613044046,
+     "sample_mean": 355542361.893449,
+     "sample_std": 3498950.0003716666
+    },
+    "heat_W_per_g": {
+     "nominal": 7.881014447548765e-06,
+     "relative_spread": 0.00961388877502756,
+     "sample_mean": 7.8834629543918e-06,
+     "sample_std": 7.57671963331191e-08
+    }
+   }
+  },
+  "58": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 976981112784.0914,
+     "relative_spread": 0.011201116381667113,
+     "sample_mean": 976741252287.9347,
+     "sample_std": 10943279146.985252
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3358672084729072,
+     "relative_spread": 0.011197437747789796,
+     "sample_mean": 0.33578148748413617,
+     "sample_std": 0.0037608521583993157
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1405360443.9572272,
+     "relative_spread": 0.011209625743525367,
+     "sample_mean": 1404933623.1857448,
+     "sample_std": 15753564.611515174
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00042710816742514763,
+     "relative_spread": 0.011201527194191319,
+     "sample_mean": 0.00042698857385344556,
+     "sample_std": 4.78426375227401e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 365441408.78833044,
+     "relative_spread": 0.011261352040596417,
+     "sample_mean": 365292913.3423488,
+     "sample_std": 4115364.3545768945
+    },
+    "heat_W_per_g": {
+     "nominal": 8.107054569303954e-06,
+     "relative_spread": 0.011763266991704692,
+     "sample_mean": 8.099523034651866e-06,
+     "sample_std": 9.53654474150419e-08
+    }
+   }
+  },
+  "59": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 516793796777.7286,
+     "relative_spread": 0.009928352106156129,
+     "sample_mean": 517096081172.7123,
+     "sample_std": 5130910780.6865835
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17768524030862515,
+     "relative_spread": 0.009896785719463383,
+     "sample_mean": 0.17778370938865093,
+     "sample_std": 0.0017585127488458207
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 743753344.6010704,
+     "relative_spread": 0.009795068760938459,
+     "sample_mean": 744130270.0098423,
+     "sample_std": 7285115.151545442
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002260928383094498,
+     "relative_spread": 0.009766366493760396,
+     "sample_mean": 0.00022619219611911832,
+     "sample_std": 2.2081055205445975e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 193378289.76943216,
+     "relative_spread": 0.009744736865142285,
+     "sample_mean": 193495540.80120122,
+     "sample_std": 1884420.5492343528
+    },
+    "heat_W_per_g": {
+     "nominal": 4.337192469423005e-06,
+     "relative_spread": 0.007329197083298571,
+     "sample_mean": 4.331963499997846e-06,
+     "sample_std": 3.178813839659962e-08
+    }
+   }
+  },
+  "6": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 953371304801.7336,
+     "relative_spread": 0.004096034674767526,
+     "sample_mean": 952004404674.1123,
+     "sample_std": 3905041922.3962607
+    },
+    "heat_W_per_g": {
+     "nominal": 0.32775881339304525,
+     "relative_spread": 0.004121458615573608,
+     "sample_mean": 0.32728521683785805,
+     "sample_std": 0.0013508443852889489
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1371396891.1260393,
+     "relative_spread": 0.004113737383000237,
+     "sample_mean": 1369403400.7116487,
+     "sample_std": 5641566.657955494
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041681487128591424,
+     "relative_spread": 0.0042151684919986,
+     "sample_mean": 0.00041619251336532124,
+     "sample_std": 1.7569449124408376e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 356538815.8087737,
+     "relative_spread": 0.003892352220017361,
+     "sample_mean": 356051131.9221486,
+     "sample_std": 1387774.6512356412
+    },
+    "heat_W_per_g": {
+     "nominal": 7.911229039652815e-06,
+     "relative_spread": 0.005246993450724498,
+     "sample_mean": 7.895644244022596e-06,
+     "sample_std": 4.1510166958239776e-08
+    }
+   }
+  },
+  "60": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 332548022069.7883,
+     "relative_spread": 0.010153185785207897,
+     "sample_mean": 331856074925.64844,
+     "sample_std": 3376421850.577977
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11435066392810145,
+     "relative_spread": 0.010123396405323976,
+     "sample_mean": 0.11411323639089792,
+     "sample_std": 0.0011576171001561521
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 478687473.82474774,
+     "relative_spread": 0.00999192637325031,
+     "sample_mean": 477714155.9304307,
+     "sample_std": 4783009.994254065
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0001455918469217781,
+     "relative_spread": 0.009954541480786342,
+     "sample_mean": 0.0001452935865491921,
+     "sample_std": 1.4493000794471354e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 124331060.87874867,
+     "relative_spread": 0.00989262218290544,
+     "sample_mean": 124092173.52134211,
+     "sample_std": 1229960.2108732758
+    },
+    "heat_W_per_g": {
+     "nominal": 2.8151919966776153e-06,
+     "relative_spread": 0.00718804290879584,
+     "sample_mean": 2.81286039291335e-06,
+     "sample_std": 2.0235720868617335e-08
+    }
+   }
+  },
+  "61": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 515243418386.06323,
+     "relative_spread": 0.00671903232527862,
+     "sample_mean": 517339472384.7097,
+     "sample_std": 3461937183.523015
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1771674453315572,
+     "relative_spread": 0.0067029665380853205,
+     "sample_mean": 0.1778908828650962,
+     "sample_std": 0.0011875474576954882
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 741485818.8226428,
+     "relative_spread": 0.006677888827499025,
+     "sample_mean": 744463944.0492533,
+     "sample_std": 4951559.865264692
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022549628716105177,
+     "relative_spread": 0.0066219518105724165,
+     "sample_mean": 0.00022642129468379425,
+     "sample_std": 1.4932255470434843e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 192573198.51780695,
+     "relative_spread": 0.006775325011699134,
+     "sample_mean": 193285451.62895495,
+     "sample_std": 1304746.0085006
+    },
+    "heat_W_per_g": {
+     "nominal": 4.329525595796053e-06,
+     "relative_spread": 0.006109654620633579,
+     "sample_mean": 4.341493078302905e-06,
+     "sample_std": 2.6451906061506706e-08
+    }
+   }
+  },
+  "62": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 518346765741.45544,
+     "relative_spread": 0.0028631902328283866,
+     "sample_mean": 516361061589.5032,
+     "sample_std": 1484125396.889119
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17822366762952416,
+     "relative_spread": 0.002879829759974973,
+     "sample_mean": 0.17754529182845222,
+     "sample_std": 0.000513253821971392
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 746000750.9078631,
+     "relative_spread": 0.002824237803012728,
+     "sample_mean": 743201907.166946,
+     "sample_std": 2106883.521789869
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022680127197185275,
+     "relative_spread": 0.002948560373826593,
+     "sample_mean": 0.00022596072859667132,
+     "sample_std": 6.68737243269673e-07
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 193920483.89627016,
+     "relative_spread": 0.002544667485724739,
+     "sample_mean": 193187155.75672853,
+     "sample_std": 493463.1501868465
+    },
+    "heat_W_per_g": {
+     "nominal": 4.358481236591359e-06,
+     "relative_spread": 0.003585242552034122,
+     "sample_mean": 4.350155941294056e-06,
+     "sample_std": 1.562621239166964e-08
+    }
+   }
+  },
+  "63": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 342811501332.38324,
+     "relative_spread": 0.011186982595787544,
+     "sample_mean": 340548675355.39453,
+     "sample_std": 3835026299.0411696
+    },
+    "heat_W_per_g": {
+     "nominal": 0.11787726168322454,
+     "relative_spread": 0.011201416308127604,
+     "sample_mean": 0.11710123557425296,
+     "sample_std": 0.0013203922813758964
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 493392471.1475595,
+     "relative_spread": 0.011212617949031571,
+     "sample_mean": 490157789.72591335,
+     "sample_std": 5532221.277906167
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00015004385859911936,
+     "relative_spread": 0.011240235545304535,
+     "sample_mean": 0.0001490647563711495,
+     "sample_std": 1.686528312780469e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 128161295.64622395,
+     "relative_spread": 0.011161319190045144,
+     "sample_mean": 127315453.00647604,
+     "sample_std": 1430449.1285172484
+    },
+    "heat_W_per_g": {
+     "nominal": 2.8856701700278104e-06,
+     "relative_spread": 0.011546950260707645,
+     "sample_mean": 2.869073461040294e-06,
+     "sample_std": 3.33206899221189e-08
+    }
+   }
+  },
+  "7": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 507879112003.5733,
+     "relative_spread": 0.0058015755184234186,
+     "sample_mean": 507306199162.7858,
+     "sample_std": 2946499022.518556
+    },
+    "heat_W_per_g": {
+     "nominal": 0.17461281086142338,
+     "relative_spread": 0.005800381465231613,
+     "sample_mean": 0.1744198108735406,
+     "sample_std": 0.0010128209117125934
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 730767885.0504059,
+     "relative_spread": 0.005802474080302569,
+     "sample_mean": 729994052.1322277,
+     "sample_std": 4240261.711722507
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00022215676116355224,
+     "relative_spread": 0.005810232920766351,
+     "sample_mean": 0.0002219346165150331,
+     "sample_std": 1.2907825272832989e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 189946712.55141646,
+     "relative_spread": 0.005839593325786608,
+     "sample_mean": 189733585.71090618,
+     "sample_std": 1109211.554870359
+    },
+    "heat_W_per_g": {
+     "nominal": 4.250428534192715e-06,
+     "relative_spread": 0.006708015802172753,
+     "sample_mean": 4.254167359883303e-06,
+     "sample_std": 2.8511941773370702e-08
+    }
+   }
+  },
+  "8": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 512266497579.8845,
+     "relative_spread": 0.008372570879547202,
+     "sample_mean": 507285512174.8213,
+     "sample_std": 4288987560.2049785
+    },
+    "heat_W_per_g": {
+     "nominal": 0.1761322525049282,
+     "relative_spread": 0.008345483729309792,
+     "sample_mean": 0.17442506936583788,
+     "sample_std": 0.0014699088474865623
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 737280477.1765367,
+     "relative_spread": 0.008232755626084026,
+     "sample_mean": 730145199.0585719,
+     "sample_std": 6069849.996477048
+    },
+    "heat_W_per_g": {
+     "nominal": 0.0002241542100975765,
+     "relative_spread": 0.008271111785335222,
+     "sample_mean": 0.0002220062353852033,
+     "sample_std": 1.8540045288705723e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 191652351.9596191,
+     "relative_spread": 0.0080420112836349,
+     "sample_mean": 189763100.50370082,
+     "sample_std": 1541270.376994424
+    },
+    "heat_W_per_g": {
+     "nominal": 4.311044360569028e-06,
+     "relative_spread": 0.00724305713661017,
+     "sample_mean": 4.2767397977400115e-06,
+     "sample_std": 3.122514062206253e-08
+    }
+   }
+  },
+  "9": {
+   "0": {
+    "activity_Bq_per_g": {
+     "nominal": 953253890861.9152,
+     "relative_spread": 0.00654916374979575,
+     "sample_mean": 952395663961.6782,
+     "sample_std": 6243015826.384609
+    },
+    "heat_W_per_g": {
+     "nominal": 0.3277113542815667,
+     "relative_spread": 0.006555928978325551,
+     "sample_mean": 0.327421678395811,
+     "sample_std": 0.0021484523640608343
+    }
+   },
+   "1": {
+    "activity_Bq_per_g": {
+     "nominal": 1371452771.5045338,
+     "relative_spread": 0.006523018773682581,
+     "sample_mean": 1370264388.0177596,
+     "sample_std": 8946012.17574308
+    },
+    "heat_W_per_g": {
+     "nominal": 0.00041673869909779056,
+     "relative_spread": 0.0065955886425745555,
+     "sample_mean": 0.0004163900119961365,
+     "sample_std": 2.7486370306906826e-06
+    }
+   },
+   "2": {
+    "activity_Bq_per_g": {
+     "nominal": 356832936.7022334,
+     "relative_spread": 0.006327278837748456,
+     "sample_mean": 356505884.2786359,
+     "sample_std": 2257781.4890076756
+    },
+    "heat_W_per_g": {
+     "nominal": 7.931417948637044e-06,
+     "relative_spread": 0.006989747162909611,
+     "sample_mean": 7.929755037143437e-06,
+     "sample_std": 5.543860610433615e-08
+    }
+   }
+  }
+ },
+ "samples": 8,
+ "schema": "actinv-p32-tally-error-1",
+ "seed": 20260920,
+ "statepoint": {
+  "path": "/home/connoravila/nuclear-data/p32-work/chain/neutron/statepoint.10.h5",
+  "sha256": "489a3baf4153563b0cd9f7cf78c1cd055383be1ffe99bd4c6c40a2123c8dbd39"
+ },
+ "summary": {
+  "max_flux_relstd": 1.0000000000000002,
+  "max_relative_spread": 0.020022533052961512,
+  "median_relative_spread": 0.007658471194736649
+ }
+}
