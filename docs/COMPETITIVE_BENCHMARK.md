@@ -126,10 +126,17 @@ sides pinned to one thread:
 
 | operator states | CB1 ratio (openmc/actinv) | CB2 ratio |
 |---:|---:|---:|
-| 2 | 186.8× | 175× |
-| 32 | 20.3× | 14.5× |
-| 256 | 3.96× | 2.49× |
-| 1024 | 2.83× | **1.39×** |
+| 2 | 186.8× | 182× |
+| 32 | 20.3× | 13.8× |
+| 256 | 3.96× | 2.64× |
+| 1024 | 2.83× | **1.28×** |
+| 2048 | — | 0.98× |
+| 4096 | — | 1.83× |
+
+(2048/4096 added 2026-09-20 — the TENDL-2025 library builds ~1700-state
+production operators, so coverage extends past the realistic top end.
+The 2048 row reads parity under host contention; 4096 confirms no
+second cliff.)
 
 ACTINV 1.1.2 now leads at every tested size, including 1024 states —
 while still running the compensated-residual verification that OpenMC's

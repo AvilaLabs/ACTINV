@@ -134,9 +134,13 @@ nuclear-data or measurement limits, not solver defects.
 
 CB2 measures the identical-operator CRAM-48 kernel ratio vs
 OpenMC 0.15.3's Python `CRAM48`, both pinned to one thread:
-**175× / 14.5× / 2.49× / 1.39×** at 2/32/256/1024 states. The 1024-state
-crossover is gone — ACTINV now leads at every size *while still running
-the compensated-residual verification OpenMC does not perform*.
+**182× / 13.8× / 2.64× / 1.28× / 0.98× / 1.83×** at
+2/32/256/1024/2048/4096 states (the two largest sizes added to cover
+the ~1700-state operators the TENDL-2025 library produces — 2048 reads
+parity under host contention, 4096 confirms no second cliff). The
+1024-state crossover is gone — ACTINV leads or matches at every size
+*while still running the compensated-residual verification OpenMC does
+not perform*.
 
 Diagnosis (instrumentation: `refinement_stats` + `cram_probe` phase
 mode): the regression was NOT the dynamic-range gate. At 1024 states all
@@ -189,14 +193,15 @@ Verified against public sources — FISPACT-II manuals/pricing, OpenMC
 | UQ channels | XS + decay + yield + flux + composition | XS + decay + TMC/GEF yields; pathways + MC sensitivity | none for depletion | ~parity (FISPACT deeper on yields) |
 | UQ sampling mechanics | eigen-PSD lognormal, no ridge/clamps | covariance collapse + MC | n/a | **ACTINV (mechanics)** |
 | R2S | mesh + distributed sources, executed vs deplete | MCR2S workflow | R2SManager, FNG-published | parity on capability |
-| Kernel speed | 175×/14.5×/2.49×/1.39× @2/32/256/1024 states | proprietary solver | Python CRAM (C++ port in progress) | **ACTINV all sizes** |
+| Kernel speed | 182×/13.8×/2.64×/1.28×/0.98×/1.83× @2–4096 states | proprietary solver | Python CRAM (C++ port in progress) | **ACTINV (≥parity at scale)** |
 | Self-shielding × UQ | rejected combination | CALENDF prob tables through collapse+UQ | n/a | FISPACT |
 | Projectiles | n/p/d/α | n/p/d/α/γ | n via transport | FISPACT (γ) |
 | Access | source-available | £15k–35k or NEA/RSICC restricted | open source | ACTINV/OpenMC |
 
 **Net:** excluding external validation, ACTINV leads on auditable
 correctness (provenance, isomer resolution, verified solves), kernel
-speed at every tested size (verified solves at 175×/14.5×/2.49×/1.39×),
+speed at parity-or-better to 4096 states (182×/13.8×/2.64×/1.28×/
+0.98×/1.83×),
 and holds a narrow identical-data accuracy edge; it trails FISPACT on
 feature depth (shielding×UQ, multi-spectrum pulses, TMC yields).
 OpenMC's C++ CRAM port may still contest the kernel lead at scale.

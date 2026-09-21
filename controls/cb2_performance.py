@@ -24,7 +24,7 @@ import cb1_numerical as numerical  # noqa: E402
 RESULT = ROOT / "results/cb2_performance.json"
 WARMUPS = 5
 SAMPLES = 30
-SIZES = (2, 32, 256, 1024)
+SIZES = (2, 32, 256, 1024, 2048, 4096)
 
 
 def kernel_measurement(function, repetitions=20):
