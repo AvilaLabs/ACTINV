@@ -572,11 +572,6 @@ impl Spec {
             if !st.flux.is_finite() || st.flux < 0.0 {
                 return Err("flux multiplier must be finite and nonnegative".into());
             }
-            if st.spectrum.is_some() && self.uncertainty.is_some() {
-                return Err(
-                    "per-step spectra are not yet supported with uncertainty; the MF=33 collapse is bound to a single spectrum".into(),
-                );
-            }
             if let Some(feed) = &st.feed {
                 for (key, rate) in feed {
                     match actinv_data::composition::material_key(key) {
@@ -1124,7 +1119,9 @@ mod duration_tests {
     }
 
     #[test]
-    fn per_step_spectrum_rejects_uncertainty() {
+    fn per_step_spectrum_accepts_uncertainty() {
+        // The joint MF=33 collapse covers (spectrum, row) parameters, so a
+        // per-step spectrum combined with uncertainty is a valid spec.
         let mut value = minimal_spec();
         value["schedule"][0]["spectrum"] = serde_json::json!({
             "structure": "custom",
@@ -1134,9 +1131,7 @@ mod duration_tests {
         value["uncertainty"] = serde_json::json!({
             "covariance": {"path": "cov.npz", "sha256": "0".repeat(64)},
         });
-        assert!(Spec::from_json(&value.to_string())
-            .unwrap_err()
-            .contains("not yet supported with uncertainty"));
+        assert!(Spec::from_json(&value.to_string()).is_ok());
     }
 
     #[test]

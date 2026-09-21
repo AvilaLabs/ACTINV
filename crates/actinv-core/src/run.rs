@@ -24,7 +24,7 @@ use actinv_data::{
 };
 use num_complex::Complex64 as C64;
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::io::Read;
 use std::sync::{Mutex, OnceLock};
 
@@ -453,9 +453,11 @@ struct UncertaintyRuntime {
     /// Fission-yield channel parameters; their tangents follow the decay block.
     yield_parameters: Vec<YieldParameter>,
     directions: Vec<Csc>,
-    /// Per-direction flux scaling: reaction and fission-yield directions carry
-    /// the schedule multiplier; decay-constant directions are unscaled.
-    flux_scaled: Vec<bool>,
+    /// Per-direction applicability: `Some(s)` tags a direction to spectrum
+    /// index s (0 = base) so it only acts on steps using that spectrum and
+    /// carries the flux multiplier; `None` (decay constants) acts unscaled on
+    /// every step.
+    parameter_spectrum: Vec<Option<usize>>,
     /// Whether the spec's `uncertainty.channels` requested each channel —
     /// needed to emit a `propagated` channel report even with zero parameters.
     decay_channel_requested: bool,
@@ -1738,20 +1740,39 @@ impl PreparedRun {
             }
         }
         let mut react_extra: Vec<Vec<(usize, usize, f64)>> = Vec::new();
+        // Extra spectra carry their own derivative sets under uncertainty: a
+        // row's tangent direction is the collapse of its derivative edges under
+        // that step's spectrum.
+        let mut react_extra_assembly: Vec<chain::ReactionAssembly> = Vec::new();
         for extra_phi in &extra_spectra {
             // a throwaway ledger per extra collapse: the base ledger already
             // recorded the channel universe; these calls only differ in phi
             let mut scratch = RateLedger::default();
-            react_extra.push(chain::reaction_rates(
-                lib,
-                lib_targets,
-                extra_phi,
-                ch,
-                &effective_fission_yields,
-                &mut scratch,
-                shield_plan.as_ref(),
-                rate_scales.as_ref(),
-            ));
+            if spec.uncertainty.is_some() {
+                let assembly = chain::reaction_rates_with_derivatives(
+                    lib,
+                    lib_targets,
+                    extra_phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut scratch,
+                    shield_plan.as_ref(),
+                    rate_scales.as_ref(),
+                );
+                react_extra.push(assembly.triplets.clone());
+                react_extra_assembly.push(assembly);
+            } else {
+                react_extra.push(chain::reaction_rates(
+                    lib,
+                    lib_targets,
+                    extra_phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut scratch,
+                    shield_plan.as_ref(),
+                    rate_scales.as_ref(),
+                ));
+            }
         }
         let flux_weighted_time_s: f64 = sched
             .iter()
@@ -1888,6 +1909,12 @@ impl PreparedRun {
         let mut r_srcs: Vec<Vec<(usize, usize, f64)>> = Vec::new();
         let r_src: Vec<(usize, usize, f64)>;
         let mut reaction_derivatives = Vec::new();
+        // Derivative sets for each distinct step-spectrum override, parallel to
+        // react_extra_assembly (empty when the schedule or run carries neither).
+        let mut reaction_derivatives_extra: Vec<Vec<chain::ReactionDerivative>> =
+            vec![Vec::new(); react_extra_assembly.len()];
+        let mut yield_derivatives_extra: Vec<Vec<chain::YieldDerivative>> =
+            vec![Vec::new(); react_extra_assembly.len()];
         // (decaying parent state, matrix row, matrix column, d(value)/d lambda_parent)
         let mut decay_derivatives: Vec<(usize, usize, usize, f64)> = Vec::new();
         let mut yield_derivatives = Vec::new();
@@ -1958,48 +1985,76 @@ impl PreparedRun {
                 r_srcs.push(r_i);
             }
             r_src = r_srcs[0].clone();
-            for derivative in reaction_assembly.derivatives {
-                if bulk.contains_key(&derivative.column) {
-                    if tracked_reservoir.contains(&derivative.column)
-                        && (derivative.row == derivative.column
-                            || !bulk.contains_key(&derivative.row))
-                    {
-                        reaction_derivatives.push(derivative);
+            let derivative_remap =
+                |derivative: &chain::ReactionDerivative,
+                 reaction_derivatives: &mut Vec<chain::ReactionDerivative>| {
+                    if bulk.contains_key(&derivative.column) {
+                        if tracked_reservoir.contains(&derivative.column)
+                            && (derivative.row == derivative.column
+                                || !bulk.contains_key(&derivative.row))
+                        {
+                            reaction_derivatives.push(*derivative);
+                        }
+                        if derivative.row == derivative.column || bulk.contains_key(&derivative.row)
+                        {
+                            return;
+                        }
+                        reaction_derivatives.push(chain::ReactionDerivative {
+                            row: derivative.row,
+                            column: ch.unit,
+                            per_barn_s: derivative.per_barn_s * bulk[&derivative.column],
+                            ..*derivative
+                        });
+                    } else if !bulk.contains_key(&derivative.row) {
+                        reaction_derivatives.push(*derivative);
                     }
-                    if derivative.row == derivative.column || bulk.contains_key(&derivative.row) {
-                        continue;
-                    }
-                    reaction_derivatives.push(chain::ReactionDerivative {
-                        row: derivative.row,
-                        column: ch.unit,
-                        per_barn_s: derivative.per_barn_s * bulk[&derivative.column],
-                        ..derivative
-                    });
-                } else if !bulk.contains_key(&derivative.row) {
-                    reaction_derivatives.push(derivative);
+                };
+            for derivative in &reaction_assembly.derivatives {
+                derivative_remap(derivative, &mut reaction_derivatives);
+            }
+            for (extra, reaction_derivatives_extra) in react_extra_assembly
+                .iter()
+                .zip(reaction_derivatives_extra.iter_mut())
+            {
+                for derivative in &extra.derivatives {
+                    derivative_remap(derivative, reaction_derivatives_extra);
                 }
             }
             // Fission-yield directions ride the same trace-form remap as the
             // reaction directions their product edges belong to.
-            for derivative in reaction_assembly.yield_derivatives {
-                if bulk.contains_key(&derivative.column) {
-                    if tracked_reservoir.contains(&derivative.column)
-                        && (derivative.row == derivative.column
-                            || !bulk.contains_key(&derivative.row))
-                    {
-                        yield_derivatives.push(derivative);
+            let yield_remap =
+                |derivative: &chain::YieldDerivative,
+                 yield_derivatives: &mut Vec<chain::YieldDerivative>| {
+                    if bulk.contains_key(&derivative.column) {
+                        if tracked_reservoir.contains(&derivative.column)
+                            && (derivative.row == derivative.column
+                                || !bulk.contains_key(&derivative.row))
+                        {
+                            yield_derivatives.push(*derivative);
+                        }
+                        if derivative.row == derivative.column || bulk.contains_key(&derivative.row)
+                        {
+                            return;
+                        }
+                        yield_derivatives.push(chain::YieldDerivative {
+                            row: derivative.row,
+                            column: ch.unit,
+                            per_yield_s: derivative.per_yield_s * bulk[&derivative.column],
+                            ..*derivative
+                        });
+                    } else if !bulk.contains_key(&derivative.row) {
+                        yield_derivatives.push(*derivative);
                     }
-                    if derivative.row == derivative.column || bulk.contains_key(&derivative.row) {
-                        continue;
-                    }
-                    yield_derivatives.push(chain::YieldDerivative {
-                        row: derivative.row,
-                        column: ch.unit,
-                        per_yield_s: derivative.per_yield_s * bulk[&derivative.column],
-                        ..derivative
-                    });
-                } else if !bulk.contains_key(&derivative.row) {
-                    yield_derivatives.push(derivative);
+                };
+            for derivative in &reaction_assembly.yield_derivatives {
+                yield_remap(derivative, &mut yield_derivatives);
+            }
+            for (extra, yield_derivatives_extra) in react_extra_assembly
+                .iter()
+                .zip(yield_derivatives_extra.iter_mut())
+            {
+                for derivative in &extra.yield_derivatives {
+                    yield_remap(derivative, yield_derivatives_extra);
                 }
             }
             for (c, nb) in &bulk {
@@ -2030,6 +2085,10 @@ impl PreparedRun {
             }
             reaction_derivatives = reaction_assembly.derivatives;
             yield_derivatives = reaction_assembly.yield_derivatives;
+            for (i, extra) in react_extra_assembly.into_iter().enumerate() {
+                reaction_derivatives_extra[i] = extra.derivatives;
+                yield_derivatives_extra[i] = extra.yield_derivatives;
+            }
         }
         // ---- initial vector
         let mut n0 = vec![0.0f64; n_total];
@@ -2083,21 +2142,36 @@ impl PreparedRun {
         let dsub = sub(&d_src);
         let rsubs: Vec<Vec<(usize, usize, C64)>> = r_srcs.iter().map(sub).collect();
         let rsub = rsubs[0].clone();
-        let mut derivative_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
-        for derivative in reaction_derivatives {
-            if derivative.per_barn_s != 0.0
-                && pos[derivative.row] != usize::MAX
-                && pos[derivative.column] != usize::MAX
-            {
-                derivative_sub
-                    .entry(derivative.library_row)
-                    .or_default()
-                    .push((
-                        pos[derivative.row],
-                        pos[derivative.column],
-                        C64::new(derivative.per_barn_s, 0.0),
-                    ));
+        // derivative_subs[0] is the base spectrum; one entry per distinct
+        // step-spectrum override follows. A row's tangent direction differs
+        // per spectrum because the collapse weights differ.
+        let to_sub = |derivatives: Vec<chain::ReactionDerivative>,
+                      pos: &Vec<usize>|
+         -> BTreeMap<usize, Vec<(usize, usize, C64)>> {
+            let mut derivative_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
+            for derivative in derivatives {
+                if derivative.per_barn_s != 0.0
+                    && pos[derivative.row] != usize::MAX
+                    && pos[derivative.column] != usize::MAX
+                {
+                    derivative_sub
+                        .entry(derivative.library_row)
+                        .or_default()
+                        .push((
+                            pos[derivative.row],
+                            pos[derivative.column],
+                            C64::new(derivative.per_barn_s, 0.0),
+                        ));
+                }
             }
+            derivative_sub
+        };
+        type DirectionMap = BTreeMap<usize, Vec<(usize, usize, C64)>>;
+        let mut derivative_subs: Vec<DirectionMap> =
+            Vec::with_capacity(1 + react_extra.len());
+        derivative_subs.push(to_sub(reaction_derivatives, &pos));
+        for extra in reaction_derivatives_extra {
+            derivative_subs.push(to_sub(extra, &pos));
         }
         // Decay-constant directions, grouped by the decaying parent's global
         // chain state; only edges inside the kept subspace survive.
@@ -2112,28 +2186,38 @@ impl PreparedRun {
             }
         }
         // Independent-yield directions, keyed by (parent ZA, parent LISO,
-        // product ZA, product state).
+        // product ZA, product state). Per-spectrum like derivative_subs: a
+        // yield direction scales with the parent's collapsed fission rate.
         type YieldTangents = BTreeMap<(i32, i32, i32, i32), Vec<(usize, usize, C64)>>;
-        let mut yield_sub: YieldTangents = BTreeMap::new();
-        for derivative in yield_derivatives {
-            if derivative.per_yield_s != 0.0
-                && pos[derivative.row] != usize::MAX
-                && pos[derivative.column] != usize::MAX
-            {
+        let to_yield_sub =
+            |derivatives: Vec<chain::YieldDerivative>, pos: &Vec<usize>| -> YieldTangents {
+                let mut yield_sub: YieldTangents = BTreeMap::new();
+                for derivative in derivatives {
+                    if derivative.per_yield_s != 0.0
+                        && pos[derivative.row] != usize::MAX
+                        && pos[derivative.column] != usize::MAX
+                    {
+                        yield_sub
+                            .entry((
+                                derivative.parent.0,
+                                derivative.parent.1,
+                                derivative.product.0,
+                                derivative.product.1,
+                            ))
+                            .or_default()
+                            .push((
+                                pos[derivative.row],
+                                pos[derivative.column],
+                                C64::new(derivative.per_yield_s, 0.0),
+                            ));
+                    }
+                }
                 yield_sub
-                    .entry((
-                        derivative.parent.0,
-                        derivative.parent.1,
-                        derivative.product.0,
-                        derivative.product.1,
-                    ))
-                    .or_default()
-                    .push((
-                        pos[derivative.row],
-                        pos[derivative.column],
-                        C64::new(derivative.per_yield_s, 0.0),
-                    ));
-            }
+            };
+        let mut yield_subs: Vec<YieldTangents> = Vec::with_capacity(1 + react_extra.len());
+        yield_subs.push(to_yield_sub(yield_derivatives, &pos));
+        for extra in yield_derivatives_extra {
+            yield_subs.push(to_yield_sub(extra, &pos));
         }
         let mut y = vec![0.0f64; m];
         for (g, v) in n0.iter().enumerate() {
@@ -2143,7 +2227,17 @@ impl PreparedRun {
         }
         let mut uncertainty_runtime = match (&self.covariance, &spec.uncertainty) {
             (Some(prepared), Some(options)) => {
-                let active_rows: Vec<usize> = derivative_sub.keys().copied().collect();
+                // Union of rows active under any step spectrum: a row's tangent
+                // direction is spectrum-dependent, so parameters are (spectrum,
+                // row) pairs and the covariance collapses jointly over all
+                // spectra — the same physical per-group perturbation weighted
+                // by each step's own flux shape.
+                let active_rows: Vec<usize> = derivative_subs
+                    .iter()
+                    .flat_map(|subs| subs.keys().copied())
+                    .collect::<BTreeSet<usize>>()
+                    .into_iter()
+                    .collect();
                 let dense_library = lib.dense().ok_or(
                     "uncertainty propagation requires the verified dense activation library",
                 )?;
@@ -2163,36 +2257,51 @@ impl PreparedRun {
                         .and_then(|scales| scales.get(&group).copied())
                         .unwrap_or(1.0)
                 };
-                let collapsed = prepared.library.collapse_weighted(
+                let phis: Vec<&[f64]> = std::iter::once(phi)
+                    .chain(extra_spectra.iter().copied())
+                    .collect();
+                let collapsed = prepared.library.collapse_weighted_multi(
                     dense_library,
-                    phi,
+                    &phis,
                     &active_rows,
                     &row_scale,
                 )?;
-                let flux_denominator: f64 = phi.iter().sum();
-                let first_flux_group = phi
+                let n_covered_rows = collapsed
+                    .row_indices
                     .iter()
-                    .position(|flux| *flux != 0.0)
-                    .unwrap_or(phi.len());
-                let last_flux_group = phi
+                    .copied()
+                    .collect::<BTreeSet<usize>>()
+                    .len();
+                for (param, (&row, &cross_section)) in collapsed
+                    .row_indices
                     .iter()
-                    .rposition(|flux| *flux != 0.0)
-                    .map(|group| group + 1)
-                    .unwrap_or(first_flux_group);
-                for (&row, &cross_section) in
-                    collapsed.row_indices.iter().zip(&collapsed.one_group_barns)
+                    .zip(&collapsed.one_group_barns)
+                    .enumerate()
                 {
-                    let nominal = if shield_plan.is_some() {
+                    let phi_s = phis[collapsed.param_spectrum[param]];
+                    let flux_denominator: f64 = phi_s.iter().sum();
+                    let nominal = if flux_denominator == 0.0 {
+                        0.0
+                    } else if shield_plan.is_some() {
+                        let first_flux_group = phi_s
+                            .iter()
+                            .position(|flux| *flux != 0.0)
+                            .unwrap_or(phi_s.len());
+                        let last_flux_group = phi_s
+                            .iter()
+                            .rposition(|flux| *flux != 0.0)
+                            .map(|group| group + 1)
+                            .unwrap_or(first_flux_group);
                         lib.collapse_row_scaled(
                             row,
-                            phi,
+                            phi_s,
                             flux_denominator,
                             first_flux_group,
                             last_flux_group,
                             &|group| row_scale(row, group),
                         )
                     } else {
-                        lib.one_group(row, phi)
+                        lib.one_group(row, phi_s)
                     };
                     if cross_section.to_bits() != nominal.to_bits() {
                         return Err(format!(
@@ -2218,36 +2327,63 @@ impl PreparedRun {
                     .filter(|block| block.mt == block.mt1)
                     .map(|block| (block.target, block.mt))
                     .collect();
-                let mut parameters = Vec::with_capacity(active_rows.len());
-                let mut directions = Vec::with_capacity(active_rows.len());
-                let mut covered_parameter_positions = Vec::new();
-                for (parameter_position, &row_index) in active_rows.iter().enumerate() {
-                    let row = lib.rows()[row_index];
-                    let &(za, liso) = lib_targets.get(row.target).ok_or_else(|| {
-                        format!("activation row {row_index} has an invalid target index")
-                    })?;
-                    let covered = covered_rows.contains_key(&row_index);
-                    let excluded = covered && excluded_self.contains(&(row.target, row.mt));
-                    if covered {
-                        covered_parameter_positions.push(parameter_position);
+                // One cross-section parameter per (spectrum, row): the
+                // direction is the row's derivative set collapsed under that
+                // spectrum, the nominal is its one-group value under that
+                // spectrum, and the joint covariance rows keep the
+                // cross-spectrum correlations.
+                let n_spectra = phis.len();
+                let mut parameters = Vec::with_capacity(active_rows.len() * n_spectra);
+                let mut directions = Vec::with_capacity(parameters.capacity());
+                let mut parameter_spectrum = Vec::with_capacity(parameters.capacity());
+                let mut position_of: HashMap<(usize, usize), usize> =
+                    HashMap::with_capacity(parameters.capacity());
+                for spectrum in 0..n_spectra {
+                    let phi_s = phis[spectrum];
+                    for &row_index in &active_rows {
+                        let row = lib.rows()[row_index];
+                        let &(za, liso) = lib_targets.get(row.target).ok_or_else(|| {
+                            format!("activation row {row_index} has an invalid target index")
+                        })?;
+                        let covered = covered_rows.contains_key(&row_index);
+                        let excluded = covered && excluded_self.contains(&(row.target, row.mt));
+                        position_of.insert((spectrum, row_index), parameters.len());
+                        parameters.push(SensitivityParameter {
+                            library_row: row_index,
+                            target: row.target,
+                            target_nuclide: name_of(za, liso),
+                            target_za: za,
+                            target_liso: liso,
+                            mt: row.mt,
+                            zap: row.zap,
+                            lfs: row.lfs,
+                            lmf: row.lmf,
+                            spectrum,
+                            collapsed_cross_section_b: lib.one_group(row_index, phi_s),
+                            covariance_covered: covered,
+                            covariance_excluded: excluded,
+                        });
+                        let triplets = derivative_subs[spectrum]
+                            .get(&row_index)
+                            .map_or(&[][..], |triplets| triplets.as_slice());
+                        directions.push(Csc::from_triplets(m, triplets));
+                        parameter_spectrum.push(Some(spectrum));
                     }
-                    parameters.push(SensitivityParameter {
-                        library_row: row_index,
-                        target: row.target,
-                        target_nuclide: name_of(za, liso),
-                        target_za: za,
-                        target_liso: liso,
-                        mt: row.mt,
-                        zap: row.zap,
-                        lfs: row.lfs,
-                        lmf: row.lmf,
-                        collapsed_cross_section_b: lib.one_group(row_index, phi),
-                        covariance_covered: covered,
-                        covariance_excluded: excluded,
-                    });
-                    directions.push(Csc::from_triplets(m, &derivative_sub[&row_index]));
                 }
-                let mut flux_scaled = vec![true; parameters.len()];
+                // covered_parameter_positions aligns `parameters` positions to
+                // the collapsed matrix's (spectrum-major) covered order.
+                let mut covered_parameter_positions =
+                    Vec::with_capacity(n_covered_rows * n_spectra);
+                for spectrum in 0..n_spectra {
+                    for &row_index in collapsed.row_indices
+                        [..n_covered_rows.min(collapsed.row_indices.len())]
+                        .iter()
+                    {
+                        if let Some(&position) = position_of.get(&(spectrum, row_index)) {
+                            covered_parameter_positions.push(position);
+                        }
+                    }
+                }
                 let mut decay_parameters = Vec::new();
                 let mut yield_parameters = Vec::new();
                 let decay_channel_requested = options
@@ -2275,37 +2411,48 @@ impl PreparedRun {
                             covered: relative > 0.0,
                         });
                         directions.push(Csc::from_triplets(m, triplets));
-                        flux_scaled.push(false);
+                        parameter_spectrum.push(None);
                     }
                 }
                 if yield_channel_requested {
-                    for (&(parent_za, parent_liso, product_za, product_liso), triplets) in
-                        &yield_sub
-                    {
-                        let effective = effective_fission_yields.get(&(parent_za, parent_liso));
-                        let yield_value = effective
-                            .and_then(|yields| yields.products.get(&(product_za, product_liso)))
-                            .copied()
-                            .unwrap_or(0.0);
-                        let standard_uncertainty = effective
-                            .and_then(|yields| {
-                                yields.uncertainties.get(&(product_za, product_liso))
-                            })
-                            .copied()
-                            .unwrap_or(0.0);
-                        yield_parameters.push(YieldParameter {
-                            parent_nuclide: name_of(parent_za, parent_liso),
-                            parent_za,
-                            parent_liso,
-                            product_nuclide: name_of(product_za, product_liso),
-                            product_za,
-                            product_liso,
-                            yield_value,
-                            standard_uncertainty,
-                            covered: standard_uncertainty > 0.0,
-                        });
-                        directions.push(Csc::from_triplets(m, triplets));
-                        flux_scaled.push(true);
+                    // A yield parameter exists per spectrum in which its parent
+                    // fission rate is nonzero: the tangent direction rides the
+                    // parent's collapsed rate, which is spectrum-dependent.
+                    let yield_keys: BTreeSet<(i32, i32, i32, i32)> = yield_subs
+                        .iter()
+                        .flat_map(|subs| subs.keys().copied())
+                        .collect();
+                    for (spectrum, yield_sub) in yield_subs.iter().enumerate() {
+                        for &(parent_za, parent_liso, product_za, product_liso) in &yield_keys {
+                            let effective = effective_fission_yields.get(&(parent_za, parent_liso));
+                            let yield_value = effective
+                                .and_then(|yields| yields.products.get(&(product_za, product_liso)))
+                                .copied()
+                                .unwrap_or(0.0);
+                            let standard_uncertainty = effective
+                                .and_then(|yields| {
+                                    yields.uncertainties.get(&(product_za, product_liso))
+                                })
+                                .copied()
+                                .unwrap_or(0.0);
+                            yield_parameters.push(YieldParameter {
+                                parent_nuclide: name_of(parent_za, parent_liso),
+                                parent_za,
+                                parent_liso,
+                                product_nuclide: name_of(product_za, product_liso),
+                                product_za,
+                                product_liso,
+                                spectrum,
+                                yield_value,
+                                standard_uncertainty,
+                                covered: standard_uncertainty > 0.0,
+                            });
+                            let triplets = yield_sub
+                                .get(&(parent_za, parent_liso, product_za, product_liso))
+                                .map_or(&[][..], |triplets| triplets.as_slice());
+                            directions.push(Csc::from_triplets(m, triplets));
+                            parameter_spectrum.push(Some(spectrum));
+                        }
                     }
                 }
                 Some(UncertaintyRuntime {
@@ -2316,7 +2463,7 @@ impl PreparedRun {
                             + yield_parameters.len()
                     ],
                     directions,
-                    flux_scaled,
+                    parameter_spectrum,
                     decay_channel_requested,
                     yield_channel_requested,
                     parameters,
@@ -2397,10 +2544,19 @@ impl PreparedRun {
             }
             let a = Csc::from_triplets(m, &trip);
             if let Some(runtime) = uncertainty_runtime.as_mut() {
+                // Each (spectrum, parameter) direction acts only on steps that
+                // use its own spectrum — index 0 is the base spectrum — and
+                // carries the flux multiplier there; spectrum-independent
+                // directions (decay constants) act unscaled on every step.
+                let step_spectrum = step_spectrum_id[si].map_or(0, |id| id + 1);
                 let direction_scales: Vec<f64> = runtime
-                    .flux_scaled
+                    .parameter_spectrum
                     .iter()
-                    .map(|&scaled| if scaled { fl.get() } else { 1.0 })
+                    .map(|tag| match tag {
+                        None => 1.0,
+                        Some(s) if *s == step_spectrum => fl.get(),
+                        Some(_) => 0.0,
+                    })
                     .collect();
                 let tangent_step = step_with_tangents(
                     &a,

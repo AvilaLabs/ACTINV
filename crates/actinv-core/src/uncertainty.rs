@@ -20,6 +20,10 @@ pub struct SensitivityParameter {
     pub lfs: i32,
     #[serde(rename = "LMF")]
     pub lmf: i32,
+    /// Which schedule spectrum this parameter's collapse belongs to: 0 is the
+    /// base spectrum, higher values index the schedule's distinct step
+    /// overrides. Single-spectrum runs report 0 for every parameter.
+    pub spectrum: usize,
     pub collapsed_cross_section_b: f64,
     pub covariance_covered: bool,
     /// The parameter's self block was excluded under the frozen
@@ -59,6 +63,9 @@ pub struct YieldParameter {
     pub product_za: i32,
     #[serde(rename = "product_LISO")]
     pub product_liso: i32,
+    /// Which schedule spectrum this parameter's parent-rate collapse belongs
+    /// to: 0 is the base spectrum. Single-spectrum runs report 0.
+    pub spectrum: usize,
     /// Effective independent yield at the case's incident energy.
     pub yield_value: f64,
     /// Interpolated independent-yield standard uncertainty from the MF=8/MT=454

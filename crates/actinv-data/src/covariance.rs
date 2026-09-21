@@ -94,6 +94,9 @@ pub struct ExcludedBlock {
 pub struct CollapsedCovariance {
     /// Activation-library row index for each matrix parameter.
     pub row_indices: Vec<usize>,
+    /// Spectrum index for each matrix parameter: 0 is the base spectrum.
+    /// The single-spectrum collapse fills this with zeros.
+    pub param_spectrum: Vec<usize>,
     pub one_group_barns: Vec<f64>,
     /// Dense row-major covariance matrix in barn^2.
     pub covariance_barn2: Vec<f64>,
@@ -851,13 +854,19 @@ impl CovarianceLibrary {
         sum
     }
 
+    /// `left_flux`/`left_total` and `right_flux`/`right_total` are separate so
+    /// the joint multi-spectrum collapse can evaluate cross-spectrum terms
+    /// phi_left^T C phi_right; the single-spectrum collapse passes the same
+    /// spectrum for both.
     #[allow(clippy::too_many_arguments)]
     fn short_component(
         &self,
         component: &StoredComponent,
         library: &Library,
-        phi: &[f64],
-        total_flux: f64,
+        left_flux: &[f64],
+        left_total: f64,
+        right_flux: &[f64],
+        right_total: f64,
         left_row: usize,
         left_base: usize,
         right_row: usize,
@@ -865,6 +874,9 @@ impl CovarianceLibrary {
         left_scale: &dyn Fn(usize) -> f64,
         right_scale: &dyn Fn(usize) -> f64,
     ) -> Result<f64, String> {
+        if left_total == 0.0 || right_total == 0.0 {
+            return Ok(0.0);
+        }
         let grid = &self.grids[component.row_grid];
         let factors = self.component_values(component);
         let left_sigma = library.sigma(left_row);
@@ -885,8 +897,10 @@ impl CovarianceLibrary {
             }
         };
         let mut sum = 0.0;
-        for (group, &group_flux) in phi.iter().enumerate() {
-            if group_flux == 0.0 {
+        for group in 0..library.ngroups {
+            let left_group_flux = left_flux[group];
+            let right_group_flux = right_flux[group];
+            if left_group_flux == 0.0 || right_group_flux == 0.0 {
                 continue;
             }
             let low = library.bounds[group];
@@ -901,9 +915,10 @@ impl CovarianceLibrary {
                 }
                 let covariance_width = grid[bin + 1] - grid[bin];
                 let left_weight =
-                    group_flux * left_scale(group) * segment_width / group_width / total_flux;
-                let right_weight =
-                    group_flux * right_scale(group) * segment_width / group_width / total_flux;
+                    left_group_flux * left_scale(group) * segment_width / group_width / left_total;
+                let right_weight = right_group_flux * right_scale(group) * segment_width
+                    / group_width
+                    / right_total;
                 let variance = match component.kind {
                     ComponentKind::ShortRange8 => factors[bin] * covariance_width / segment_width,
                     ComponentKind::ShortRange9 => {
@@ -938,14 +953,37 @@ impl CovarianceLibrary {
         selected_rows: &[usize],
         row_scale: &dyn Fn(usize, usize) -> f64,
     ) -> Result<CollapsedCovariance, String> {
+        self.collapse_weighted_multi(library, &[phi], selected_rows, row_scale)
+    }
+
+    /// Joint collapse over several spectra: parameters are (spectrum, row)
+    /// pairs ordered spectrum-major over the covered rows, so parameter
+    /// `s * R + p` is covered row `p` collapsed under `phis[s]`. Cross-spectrum
+    /// entries are the same MF=33 components collapsed with the left spectrum
+    /// on the left and the right spectrum on the right — the exact joint
+    /// covariance of one physical per-group perturbation seen through each
+    /// step's own weighting.
+    pub fn collapse_weighted_multi(
+        &self,
+        library: &Library,
+        phis: &[&[f64]],
+        selected_rows: &[usize],
+        row_scale: &dyn Fn(usize, usize) -> f64,
+    ) -> Result<CollapsedCovariance, String> {
         self.validate()?;
         library.validate()?;
-        if phi.len() != library.ngroups
-            || phi.iter().any(|value| !value.is_finite() || *value < 0.0)
-        {
-            return Err(
-                "covariance collapse flux must match the library and be finite/nonnegative".into(),
-            );
+        if phis.is_empty() {
+            return Err("covariance collapse requires at least one spectrum".into());
+        }
+        for phi in phis {
+            if phi.len() != library.ngroups
+                || phi.iter().any(|value| !value.is_finite() || *value < 0.0)
+            {
+                return Err(
+                    "covariance collapse flux must match the library and be finite/nonnegative"
+                        .into(),
+                );
+            }
         }
         let mut selected = BTreeSet::new();
         for &row in selected_rows {
@@ -962,48 +1000,64 @@ impl CovarianceLibrary {
             .filter(|component| component.mt == component.mt1)
             .map(|component| (component.target, component.mt))
             .collect();
-        let mut row_indices = Vec::new();
+        let mut covered_rows = Vec::new();
         let mut uncovered_rows = Vec::new();
         for row in selected {
             let descriptor = library.rows[row];
             if descriptor.lmf != 10 && self_covered.contains(&(descriptor.target, descriptor.mt)) {
-                row_indices.push(row);
+                covered_rows.push(row);
             } else {
                 uncovered_rows.push(row);
             }
         }
-        let total_flux: f64 = phi.iter().sum();
-        let first_flux_group = phi
+        let totals: Vec<f64> = phis.iter().map(|phi| phi.iter().sum()).collect();
+        let spans: Vec<(usize, usize)> = phis
             .iter()
-            .position(|flux| *flux != 0.0)
-            .unwrap_or(phi.len());
-        let last_flux_group = phi
-            .iter()
-            .rposition(|flux| *flux != 0.0)
-            .map(|group| group + 1)
-            .unwrap_or(first_flux_group);
-        let one_group_barns = row_indices
-            .iter()
-            .map(|&row| {
-                library.collapse_row_scaled(
-                    row,
-                    phi,
-                    total_flux,
-                    first_flux_group,
-                    last_flux_group,
-                    &|group| row_scale(row, group),
-                )
+            .map(|phi| {
+                let first = phi
+                    .iter()
+                    .position(|flux| *flux != 0.0)
+                    .unwrap_or(phi.len());
+                let last = phi
+                    .iter()
+                    .rposition(|flux| *flux != 0.0)
+                    .map(|group| group + 1)
+                    .unwrap_or(first);
+                (first, last)
             })
-            .collect::<Vec<_>>();
-        let size = row_indices.len();
+            .collect();
+        // Joint parameter list: every covered row under every spectrum,
+        // spectrum-major. A row inactive under one spectrum keeps a parameter
+        // with zero nominal and zero covariance row — harmless to the solve
+        // and keeps the (spectrum, row) indexing regular.
+        let n_covered = covered_rows.len();
+        let size = n_covered * phis.len();
+        let mut row_indices = Vec::with_capacity(size);
+        let mut param_spectrum = Vec::with_capacity(size);
+        let mut one_group_barns = Vec::with_capacity(size);
+        for (spectrum, phi) in phis.iter().enumerate() {
+            let (first, last) = spans[spectrum];
+            for &row in &covered_rows {
+                row_indices.push(row);
+                param_spectrum.push(spectrum);
+                one_group_barns.push(if totals[spectrum] == 0.0 {
+                    0.0
+                } else {
+                    library.collapse_row_scaled(row, phi, totals[spectrum], first, last, &|group| {
+                        row_scale(row, group)
+                    })
+                });
+            }
+        }
         let mut covariance_barn2 = vec![0.0; size * size];
-        if total_flux == 0.0 {
+        if totals.iter().all(|total| *total == 0.0) {
             return Ok(CollapsedCovariance {
                 row_indices,
+                param_spectrum,
                 one_group_barns,
                 covariance_barn2,
                 uncovered_rows,
-                absent_cross_parameter_pairs: size * size.saturating_sub(1) / 2,
+                absent_cross_parameter_pairs: n_covered * n_covered.saturating_sub(1) / 2,
                 maximum_asymmetry_barn2: 0.0,
                 excluded_blocks: Vec::new(),
             });
@@ -1028,7 +1082,9 @@ impl CovarianceLibrary {
                 )
             })
             .collect();
-        let mut vector_cache: HashMap<(usize, usize, bool), Vec<f64>> = HashMap::new();
+        // (row, grid, relative, spectrum) -> collapsed response vector; a
+        // zero-total spectrum yields a zero vector rather than a NaN.
+        let mut vector_cache: HashMap<(usize, usize, bool, usize), Vec<f64>> = HashMap::new();
         for component in &self.components {
             let Some(left_parameters) = by_key.get(&(component.target, component.mt)) else {
                 continue;
@@ -1038,6 +1094,7 @@ impl CovarianceLibrary {
             };
             for &left_parameter in left_parameters {
                 let left_row = row_indices[left_parameter];
+                let left_spectrum = param_spectrum[left_parameter];
                 let left_base = *base_rows
                     .get(&(component.target, component.mt))
                     .ok_or_else(|| {
@@ -1048,6 +1105,7 @@ impl CovarianceLibrary {
                     })?;
                 for &right_parameter in right_parameters {
                     let right_row = row_indices[right_parameter];
+                    let right_spectrum = param_spectrum[right_parameter];
                     let right_base = *base_rows
                         .get(&(component.target, component.mt1))
                         .ok_or_else(|| {
@@ -1059,36 +1117,45 @@ impl CovarianceLibrary {
                     let value = match component.kind {
                         ComponentKind::Relative | ComponentKind::Absolute => {
                             let relative = component.kind == ComponentKind::Relative;
-                            let left_key = (left_row, component.row_grid, relative);
+                            let left_key = (left_row, component.row_grid, relative, left_spectrum);
                             if let std::collections::hash_map::Entry::Vacant(entry) =
                                 vector_cache.entry(left_key)
                             {
-                                let vector = Self::vector_for_grid(
-                                    library,
-                                    phi,
-                                    total_flux,
-                                    left_row,
-                                    left_base,
-                                    &self.grids[component.row_grid],
-                                    relative,
-                                    &|group| row_scale(left_row, group),
-                                )?;
+                                let vector = if totals[left_spectrum] == 0.0 {
+                                    vec![0.0; self.grids[component.row_grid].len() - 1]
+                                } else {
+                                    Self::vector_for_grid(
+                                        library,
+                                        phis[left_spectrum],
+                                        totals[left_spectrum],
+                                        left_row,
+                                        left_base,
+                                        &self.grids[component.row_grid],
+                                        relative,
+                                        &|group| row_scale(left_row, group),
+                                    )?
+                                };
                                 entry.insert(vector);
                             }
-                            let right_key = (right_row, component.column_grid, relative);
+                            let right_key =
+                                (right_row, component.column_grid, relative, right_spectrum);
                             if let std::collections::hash_map::Entry::Vacant(entry) =
                                 vector_cache.entry(right_key)
                             {
-                                let vector = Self::vector_for_grid(
-                                    library,
-                                    phi,
-                                    total_flux,
-                                    right_row,
-                                    right_base,
-                                    &self.grids[component.column_grid],
-                                    relative,
-                                    &|group| row_scale(right_row, group),
-                                )?;
+                                let vector = if totals[right_spectrum] == 0.0 {
+                                    vec![0.0; self.grids[component.column_grid].len() - 1]
+                                } else {
+                                    Self::vector_for_grid(
+                                        library,
+                                        phis[right_spectrum],
+                                        totals[right_spectrum],
+                                        right_row,
+                                        right_base,
+                                        &self.grids[component.column_grid],
+                                        relative,
+                                        &|group| row_scale(right_row, group),
+                                    )?
+                                };
                                 entry.insert(vector);
                             }
                             self.matrix_component(
@@ -1101,8 +1168,10 @@ impl CovarianceLibrary {
                             .short_component(
                                 component,
                                 library,
-                                phi,
-                                total_flux,
+                                phis[left_spectrum],
+                                totals[left_spectrum],
+                                phis[right_spectrum],
+                                totals[right_spectrum],
                                 left_row,
                                 left_base,
                                 right_row,
@@ -1119,15 +1188,21 @@ impl CovarianceLibrary {
             }
         }
         let mut maximum_asymmetry_barn2 = 0.0f64;
-        let mut absent_cross_parameter_pairs = 0usize;
         for left in 0..size {
-            let left_row = library.rows[row_indices[left]];
             for right in left + 1..size {
-                let right_row = library.rows[row_indices[right]];
                 maximum_asymmetry_barn2 = maximum_asymmetry_barn2.max(
                     (covariance_barn2[left * size + right] - covariance_barn2[right * size + left])
                         .abs(),
                 );
+            }
+        }
+        let mut absent_cross_parameter_pairs = 0usize;
+        // Cross-pair absence is a property of the row pair, not the
+        // (spectrum, row) parameter pair — count each unordered row pair once.
+        for left in 0..n_covered {
+            let left_row = library.rows[covered_rows[left]];
+            for &right in covered_rows.iter().skip(left + 1) {
+                let right_row = library.rows[right];
                 if left_row.target != right_row.target
                     || !represented_pairs.contains(&(
                         left_row.target,
@@ -1225,6 +1300,7 @@ impl CovarianceLibrary {
         }
         Ok(CollapsedCovariance {
             row_indices,
+            param_spectrum,
             one_group_barns,
             covariance_barn2,
             uncovered_rows,
@@ -2084,6 +2160,132 @@ mod tests {
         let expected = [0.4725, 0.49, 0.49, 0.51];
         for (value, want) in collapsed.covariance_barn2.iter().zip(expected) {
             assert!((value - want).abs() < 1e-14, "{value} != {want}");
+        }
+    }
+
+    fn two_row_activation() -> Library {
+        Library {
+            rows: vec![
+                crate::library::Row {
+                    target: 0,
+                    mt: 102,
+                    zap: -1,
+                    lfs: -1,
+                    lmf: 0,
+                },
+                crate::library::Row {
+                    target: 0,
+                    mt: 102,
+                    zap: 26057,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![2.0, 4.0, 2.0, 4.0],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 5.0],
+        }
+    }
+
+    #[test]
+    fn joint_collapse_matches_single_spectrum_bitwise() {
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 102,
+            mt1: 102,
+            lb: 5,
+            kind: ComponentKind::Relative,
+            row_grid: vec![1.0, 3.0, 5.0],
+            column_grid: vec![1.0, 3.0, 5.0],
+            values: vec![0.04, 0.01, 0.01, 0.09],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let activation = two_row_activation();
+        let phi = [1.0, 3.0];
+        let single = covariance
+            .collapse_weighted(&activation, &phi, &[0, 1], &|_, _| 1.0)
+            .unwrap();
+        let joint = covariance
+            .collapse_weighted_multi(&activation, &[&phi], &[0, 1], &|_, _| 1.0)
+            .unwrap();
+        assert_eq!(joint.param_spectrum, vec![0, 0]);
+        assert_eq!(single, joint);
+    }
+
+    #[test]
+    fn joint_collapse_is_cross_spectrum_consistent() {
+        let component = ParsedComponent {
+            mat: 1,
+            mt: 102,
+            mt1: 102,
+            lb: 5,
+            kind: ComponentKind::Relative,
+            row_grid: vec![1.0, 3.0, 5.0],
+            column_grid: vec![1.0, 3.0, 5.0],
+            values: vec![0.04, 0.01, 0.01, 0.09],
+        };
+        let covariance = CovarianceLibrary::from_parsed([(0, component)]).unwrap();
+        let activation = two_row_activation();
+        // phi_a covers both groups; phi_b lives entirely in group 1.
+        let phi_a = [1.0, 3.0];
+        let phi_b = [0.0, 4.0];
+        let joint = covariance
+            .collapse_weighted_multi(&activation, &[&phi_a, &phi_b], &[0, 1], &|_, _| 1.0)
+            .unwrap();
+        assert_eq!(joint.param_spectrum, vec![0, 0, 1, 1]);
+        assert_eq!(joint.row_indices, vec![0, 1, 0, 1]);
+        // Nominals: under phi_a each row collapses to (2 + 12)/4 = 3.5; under
+        // phi_b only group 1 survives -> 4.0.
+        assert_eq!(joint.one_group_barns, vec![3.5, 3.5, 4.0, 4.0]);
+        // Weight vectors: phi_a -> [1.5, 2.0]; phi_b -> [4/3, 8/3].
+        // Diagonal blocks are the single-spectrum collapses; the off-diagonal
+        // block is the bilinear cross-collapse v_a^T C v_b = 0.62666...
+        let cov_a = 0.51f64;
+        let cov_b =
+            0.04 * (16.0 / 9.0) + 2.0 * 0.01 * (4.0 / 3.0) * (8.0 / 3.0) + 0.09 * (64.0 / 9.0);
+        let cov_ab = 1.5 * (0.04 * (4.0 / 3.0) + 0.01 * (8.0 / 3.0))
+            + 2.0 * (0.01 * (4.0 / 3.0) + 0.09 * (8.0 / 3.0));
+        let size = 4usize;
+        for (param, &value) in joint.covariance_barn2.iter().enumerate() {
+            let si = param / size / 2;
+            let sj = param % size / 2;
+            let want = match (si, sj) {
+                (0, 0) => cov_a,
+                (1, 1) => cov_b,
+                _ => cov_ab,
+            };
+            assert!(
+                (value - want).abs() < 1e-12,
+                "param {param}: {value} != {want}"
+            );
+        }
+        // The joint matrix is symmetric and its diagonal blocks equal the
+        // standalone single-spectrum collapses.
+        let single_a = covariance
+            .collapse_weighted(&activation, &phi_a, &[0, 1], &|_, _| 1.0)
+            .unwrap();
+        let single_b = covariance
+            .collapse_weighted(&activation, &phi_b, &[0, 1], &|_, _| 1.0)
+            .unwrap();
+        for i in 0..2 {
+            for j in 0..2 {
+                assert_eq!(
+                    joint.covariance_barn2[i * size + j],
+                    single_a.covariance_barn2[i * 2 + j]
+                );
+                assert_eq!(
+                    joint.covariance_barn2[(i + 2) * size + j + 2],
+                    single_b.covariance_barn2[i * 2 + j]
+                );
+                // Cross-spectrum mirror entries are computed independently per
+                // direction, so they may differ by a summation-order ULP — the
+                // same tolerance the block defect rules use.
+                let (a, b) = (
+                    joint.covariance_barn2[i * size + j + 2],
+                    joint.covariance_barn2[(j + 2) * size + i],
+                );
+                assert!((a - b).abs() <= 1e-9 * a.abs().max(1.0), "{a} != {b}");
+            }
         }
     }
 }

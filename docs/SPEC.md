@@ -337,9 +337,11 @@ spectrum shape itself changes between segments (for example fusion pulses at dif
 pulse inside a thermal field). A step spectrum must share the base spectrum's `structure` and group count; an override
 identical to the base deduplicates to it. The physical fluence sums each step's own spectrum total times its
 multiplier-weighted duration, and the schedule ledger reports how many steps declared overrides as `step_spectra`.
-Multi-spectrum schedules always collapse on the groupwise library rows (never the pre-collapsed artifact) and are not
-yet supported together with `uncertainty`, whose MF=33 collapse is bound to a single spectrum — such a spec is
-rejected at validation.
+Multi-spectrum schedules always collapse on the groupwise library rows (never the pre-collapsed artifact). Combined
+with `uncertainty`, the MF=33 collapse expands to one parameter per (spectrum, library row): each step's tangent
+directions are the rows collapsed under its own spectrum, decay-constant directions stay spectrum-independent, and
+the propagated covariance carries the cross-spectrum blocks `φ_sᵀ C φ_s'` so a single physical draw propagates
+through every step's collapse. Each sensitivity parameter reports its `spectrum` index (0 = base).
 
 Any step may also declare optional `feed` and `removal` maps. `feed` entries are explicit nuclides
 (`Co60`, `Ta180m1`) with constant rates in atoms s⁻¹ g⁻¹, applied during the declaring step regardless of the
