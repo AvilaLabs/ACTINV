@@ -29,7 +29,9 @@ sys.path.insert(0, str(ROOT / "controls"))
 from harness import fispact_io as fio  # noqa: E402
 
 
-RESULT = ROOT / "results/cb3_fns_tendl2017.json"
+RESULT = Path(
+    os.environ.get("ACTINV_CB3_FNS_RESULT", ROOT / "results/cb3_fns_tendl2017.json")
+).resolve()
 WORK = Path(os.environ.get("ACTINV_CB3_FNS_WORK", "/tmp/actinv-cb3-fns")).resolve()
 DATA = Path.home() / "nuclear-data"
 FNS = Path(os.environ.get("ACTINV_FNS_ROOT", DATA / "conderc-fns/fns")).resolve()
@@ -66,6 +68,14 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+if os.environ.get("ACTINV_LIBRARY"):
+    # Non-default library (e.g. the TENDL-2025 artifact): pin to the actual
+    # file hashes instead of the frozen TENDL-2017 pair so the spec's sha
+    # check still verifies the input that ran.
+    EXPECTED["library"] = sha256(LIBRARY)
+    EXPECTED["library_index"] = sha256(LIBRARY.with_name(LIBRARY.stem + "_index.json"))
 
 
 def load_actinv():
