@@ -1,12 +1,79 @@
 //! P1-G2 probe: read matrix + n0 + dt + CRAM coefficients from a text file, run one CRAM-16 step,
 //! time it over `reps` repetitions, write the result. Usage: cram_probe IN OUT [reps]
+//! With `phases` as a 4th arg, print a per-pole phase breakdown instead.
 use actinv_core::cram::{step, Cram};
-use actinv_core::sparse::Csc;
+use actinv_core::sparse::{lu, refinement_stats, Csc};
 use num_complex::Complex64 as C64;
 use std::io::{BufRead, BufReader, Write};
+
+fn phases(a: &Csc, n0: &[f64], dt: f64, c: &Cram) {
+    use std::time::Instant;
+    let n = a.n;
+    let mut y = n0.to_vec();
+    let (mut t_shift, mut t_lu, mut t_solve) = (0.0, 0.0, 0.0);
+    let mut stats0 = [0u64; 5];
+    let mut max_fill = 0usize;
+    for (th, al) in c.theta.iter().zip(c.alpha.iter()) {
+        let t = Instant::now();
+        let m = a.scale_shift(C64::new(dt, 0.0), -*th);
+        t_shift += t.elapsed().as_secs_f64() * 1e3;
+        let t = Instant::now();
+        let f = lu(&m).unwrap();
+        t_lu += t.elapsed().as_secs_f64() * 1e3;
+        let (ln, un) = f.nnz();
+        max_fill = max_fill.max(ln + un);
+        let b: Vec<C64> = y.iter().map(|v| C64::new(*v, 0.0)).collect();
+        let s0 = refinement_stats();
+        let t = Instant::now();
+        let z = f.solve_refined(&m, &b).unwrap();
+        t_solve += t.elapsed().as_secs_f64() * 1e3;
+        let s1 = refinement_stats();
+        for i in 0..5 {
+            stats0[i] += s1[i] - s0[i];
+        }
+        if s1[4] > s0[4] + 1 && std::env::var("CRAM_PROBE_DIAG").is_ok() {
+            eprintln!("    pole took {} iters", s1[4] - s0[4]);
+        }
+        if s1[0] == s0[0] && std::env::var("CRAM_PROBE_DIAG").is_ok() {
+            // Flagged solve: report the worst componentwise residual rows.
+            let mut r = b.clone();
+            let mut mag = vec![0.0f64; n];
+            for (col, v) in z.iter().enumerate() {
+                for e in m.colptr[col]..m.colptr[col + 1] {
+                    let row = m.rowidx[e];
+                    r[row] -= m.vals[e] * v;
+                    mag[row] += m.vals[e].norm() * v.norm();
+                }
+            }
+            let mut rows: Vec<(f64, usize, f64, f64)> = (0..n)
+                .map(|i| {
+                    let d = b[i].norm() + mag[i];
+                    (r[i].norm() / d.max(1e-320), i, r[i].norm(), d)
+                })
+                .collect();
+            rows.sort_by(|x, y| x.0.partial_cmp(&y.0).unwrap());
+            for &(ratio, i, rn, d) in rows.iter().rev().take(6) {
+                eprintln!(
+                    "    row {i}: |r|={rn:.3e} denom={d:.3e} ratio={ratio:.3e} |z|={:.3e}",
+                    z[i].norm()
+                );
+            }
+        }
+        for i in 0..n {
+            y[i] += 2.0 * (al * z[i]).re;
+        }
+    }
+    println!(
+        "poles={} fast={} ref_resid={} ref_range={} ref_growth={} iters={} | shift={:.3}ms lu={:.3}ms solve={:.3}ms fill={}",
+        c.theta.len(), stats0[0], stats0[1], stats0[2], stats0[3],
+        stats0[4], t_shift, t_lu, t_solve, max_fill
+    );
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let reps: usize = args.get(3).map(|s| s.parse().unwrap()).unwrap_or(20);
+    let do_phases = args.get(4).map(|s| s == "phases").unwrap_or(false);
     let f = BufReader::new(std::fs::File::open(&args[1]).unwrap());
     let mut it = f.lines().map(|l| l.unwrap());
     let hdr: Vec<usize> = it
@@ -48,6 +115,12 @@ fn main() {
         theta,
         alpha,
     };
+    if do_phases {
+        for _ in 0..reps {
+            phases(&a, &n0, dt, &c);
+        }
+        return;
+    }
     let (y, fill) = step(&a, &n0, dt, &c).unwrap();
     let t0 = std::time::Instant::now();
     let mut chk = 0.0;

@@ -76,21 +76,29 @@ claim about shipped data quality, not a solver claim.
 
 ## Lever 3 — Validation breadth
 
-On-disk non-FNS material is thin: `conderc-fission` holds only two U-235
-FISPACT inputs; `p17-irdff` holds IRDFF-II reference fields (spectra, not
-activation outcomes); the FNS corpus itself is decay-heat only in the
-harness. Real breadth needs public families fetched and frozen:
+The repo already holds **two** measured families: FNS decay-heat (132
+experiments, CB3) and the IRDFF-II SACS foil-activation corpus scored in
+P24/P25 (`g4_p25c_irdff_score.json`: 17 comparable rows, median |ln|
+0.065, 100% within 30% on TENDL-2025 — retrospective, consumed
+evidence). Re-scoring the IRDFF arm against the rebuilt artifacts is
+locally repeatable.
 
-- FNS **activity** measurements (same corpus files may carry them — the
-  `.out`/`.exp` pair structure suggests heat only in the current harness;
-  check for activity columns before looking elsewhere).
-- JAERI/FNS decay-heat publications (the FNS set's origin).
-- SINBAD shielding benchmarks (geometry + dose — doubles as the external
-  geometry P32 lacks).
-- FISPACT-II published validation suites (ITER-relevant).
+What's genuinely absent and why:
 
-Each family needs frozen denominators and eligible populations before
-scoring — same discipline as CB3.
+- **SINBAD** — license-gated (NEA GitLab, member-country licensees);
+  public abstract pages exist but the data files 404. External blocker:
+  needs a SINBAD license, also the natural source of an external R2S
+  geometry for Lever 4.
+- **JAERI FNS data compilations** (JAERI-Data-Code-98-021 et al.) —
+  public PDFs on JOPSS, but scanned images with no text layer; OCR of
+  1990s numeric tables is not trustworthy for a validation set.
+- **Activity time-series** — the FNS `.exp` files are 3-column
+  decay-heat records only; no fetchable public activity-family found.
+- `conderc-fission` — two U-235 FISPACT inputs only.
+
+Net: breadth means SINBAD (blocked on a license) or a curated extraction
+from scanned JAERI tables (blocked on transcription risk). Documented,
+not claimed.
 
 ## Lever 4 — Spatial R2S handoff (P32-CONDITIONAL)
 
@@ -102,9 +110,11 @@ local discharge paths:
 
 - *Self-produced geometry only* — needs an external benchmark geometry;
   SINBAD is the natural source.
-- *Photon leg is a flux proxy, not dose* — fold the photon flux tally with
-  published fluence-to-dose coefficients (ICRP/ANSI H*(10)); purely local
-  post-processing of the existing statepoint.
+- *Photon leg is a flux proxy, not dose* — **implemented**:
+  `controls/p32_dose.py` replays the frozen exported sources (SHA-re-verified)
+  through OpenMC photon transport with an `EnergyFunctionFilter` scoring
+  E·μ_en,air directly — a dose rate with MC std-dev, additive evidence that
+  leaves the frozen artifacts untouched. Awaiting the job slot.
 - *Tally statistical error not propagated* — carry the neutron tally
   std-dev into the activation comparison band; engineering only.
 - *MCNP export remains point-at-origin* — MCNP SDEF distributed-source
@@ -119,6 +129,77 @@ TENDL call it 200 keV/LIS 6). Fixed via fallback-decay resolution plus a
 sole-candidate loose-ELIS tier. Remaining tail is dominated by shared
 hard cases (In, Tb, Rh, Bi, Os, Na) where both codes miss — those are
 nuclear-data or measurement limits, not solver defects.
+
+## Lever 6 — Kernel-throughput crossover — RESOLVED 2026-09-20
+
+CB2 measures the identical-operator CRAM-48 kernel ratio vs
+OpenMC 0.15.3's Python `CRAM48`, both pinned to one thread:
+**175× / 14.5× / 2.49× / 1.39×** at 2/32/256/1024 states. The 1024-state
+crossover is gone — ACTINV now leads at every size *while still running
+the compensated-residual verification OpenMC does not perform*.
+
+Diagnosis (instrumentation: `refinement_stats` + `cram_probe` phase
+mode): the regression was NOT the dynamic-range gate. At 1024 states all
+24 poles flagged `backward_ok` — on rows whose entire scale is
+subnormal (denominators ~1e-318, below `f64::MIN_POSITIVE`), where a
+relative backward-error bound is unrepresentable and its scaled floor
+underflows. SuperLU's unrefined solve fails the identical bound on the
+identical rows — the bound is un-satisfiable at subnormal scale, and
+OpenMC simply never checks. The same rows also drove refinement to 2–5
+iterations because the correction floor (1e-14·denom) underflows below
+denormal deltas — non-convergent by construction, exiting only at the
+5-iteration cap or on bit-stability.
+
+Fix (all semantics preserved):
+
+- `backward_ok` and the correction floor now exempt rows at subnormal
+  scale — a row whose total magnitude is below `f64::MIN_POSITIVE`
+  cannot hide a material component and cannot satisfy a relative bound.
+- `x_min_nonzero` counts only normal-scale components.
+- `scale_shift` builds the shifted matrix directly in CSC form instead
+  of a triplet round-trip (~6× faster: 2.0–8.4 ms → 0.35 ms).
+
+A "material-and-hidden" narrowing of the range check was tried and
+rejected: the trace-daughter test proved the contract is stronger than
+phantom protection — refinement *achieves* forward accuracy on
+sub-scale components, and visibility to a row's residual check does not
+guarantee it. The RANGE_TOL flag stays; at 1024 states all 24 poles
+still flag it (ref_range), each now converging in exactly one
+iteration.
+
+Verification: 78/78 actinv-core tests including all phantom-parent and
+trace-daughter regressions; CB1 numerical output bit-identical to the
+pre-change record; CB2 re-run under the same cgroup/host.
+
+Not taken: pole parallelism (no benefit under the benchmark's 1-thread
+pin) and factorization reuse across identical (A, dt) steps (bounded
+benefit — FNS-style cooling varies dt).
+
+## Capability matrix (external landscape, 2026-09)
+
+Verified against public sources — FISPACT-II manuals/pricing, OpenMC
+0.15.3 release notes (2025-11-22), published ARC-class and FNG studies.
+
+| axis | ACTINV 1.1.2 | FISPACT-II 5.x | OpenMC 0.15.3 | verdict |
+|---|---|---|---|---|
+| Same-data FNS accuracy | 71/132 ≤30%, median 0.1030 | 69/132, 0.1053 | n/a | **ACTINV (narrow)** |
+| Provenance/audit | full SHA chain + decision ledger + defect eviction | licensed binaries, condensed libs, JEFF pipelines non-public | open source, no data ledger | **ACTINV** |
+| Isomer/state resolution | auto ELIS/LIS + fallback + loose tiers, audited | manual condensed-library convention | incomplete activation chains (ARC paper) | **ACTINV** |
+| Solve verification | compensated-residual refinement gate | none documented | none (raw spsolve) | **ACTINV** |
+| UQ channels | XS + decay + yield + flux + composition | XS + decay + TMC/GEF yields; pathways + MC sensitivity | none for depletion | ~parity (FISPACT deeper on yields) |
+| UQ sampling mechanics | eigen-PSD lognormal, no ridge/clamps | covariance collapse + MC | n/a | **ACTINV (mechanics)** |
+| R2S | mesh + distributed sources, executed vs deplete | MCR2S workflow | R2SManager, FNG-published | parity on capability |
+| Kernel speed | 175×/14.5×/2.49×/1.39× @2/32/256/1024 states | proprietary solver | Python CRAM (C++ port in progress) | **ACTINV all sizes** |
+| Self-shielding × UQ | rejected combination | CALENDF prob tables through collapse+UQ | n/a | FISPACT |
+| Projectiles | n/p/d/α | n/p/d/α/γ | n via transport | FISPACT (γ) |
+| Access | source-available | £15k–35k or NEA/RSICC restricted | open source | ACTINV/OpenMC |
+
+**Net:** excluding external validation, ACTINV leads on auditable
+correctness (provenance, isomer resolution, verified solves), kernel
+speed at every tested size (verified solves at 175×/14.5×/2.49×/1.39×),
+and holds a narrow identical-data accuracy edge; it trails FISPACT on
+feature depth (shielding×UQ, multi-spectrum pulses, TMC yields).
+OpenMC's C++ CRAM port may still contest the kernel lead at scale.
 
 ## Ranking
 

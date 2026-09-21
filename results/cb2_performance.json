@@ -1,132 +1,132 @@
 {
-  "schema": "actinv-cb2-performance-1",
-  "refresh_of": "results/cb1_performance.json",
-  "implementations": {
-    "actinv_version": "1.1.2",
-    "actinv_python_module_sha256": "9fff56384d98049e05a0d944066448286792166abcb5a837385ea5e5dc3ffb09",
-    "openmc_version": "0.15.3"
+ "schema": "actinv-cb2-performance-1",
+ "refresh_of": "results/cb1_performance.json",
+ "implementations": {
+  "actinv_version": "1.1.2",
+  "actinv_python_module_sha256": "ad14792207a193e335163e1b0b1ad38fb2fcd5af846eaba1bf02f162edf0ccfc",
+  "openmc_version": "0.15.3"
+ },
+ "identical_operator_cram48": [
+  {
+   "states": 2,
+   "nonzeros": 2,
+   "operator_sha256": "b5c8e776b4b15623cf820cf7f477f0220655c6bf2a20d91e9a1e482f5e9ae3c0",
+   "actinv_pyo3_cram48": {
+    "median_ms": 0.016246325,
+    "mean_ms": 0.016612534999999998,
+    "minimum_ms": 0.0159276,
+    "p95_ms": 0.017947349999999997,
+    "sample_standard_deviation_ms": 0.0008512785697418465,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 0.0166975
+   },
+   "openmc_python_cram48": {
+    "median_ms": 2.850068725,
+    "mean_ms": 2.8912337766666667,
+    "minimum_ms": 2.7447139999999997,
+    "p95_ms": 3.1205094,
+    "sample_standard_deviation_ms": 0.10822428541825471,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 2.7816125
+   },
+   "openmc_over_actinv_median_time_ratio": 175.42851844955706,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 4.974063509652592e-16,
+    "within_cb1_numerical_tolerance": true
+   }
   },
-  "identical_operator_cram48": [
-    {
-      "states": 2,
-      "nonzeros": 2,
-      "operator_sha256": "b5c8e776b4b15623cf820cf7f477f0220655c6bf2a20d91e9a1e482f5e9ae3c0",
-      "actinv_pyo3_cram48": {
-        "median_ms": 0.027022075,
-        "mean_ms": 0.03850841666666666,
-        "minimum_ms": 0.025469549999999997,
-        "p95_ms": 0.051019999999999996,
-        "sample_standard_deviation_ms": 0.03943810958614805,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 0.028002
-      },
-      "openmc_python_cram48": {
-        "median_ms": 4.691999174999999,
-        "mean_ms": 4.7963433166666665,
-        "minimum_ms": 4.1515555,
-        "p95_ms": 5.56237645,
-        "sample_standard_deviation_ms": 0.5689287572256958,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 4.3139505
-      },
-      "openmc_over_actinv_median_time_ratio": 173.6357838915035,
-      "output_comparison": {
-        "maximum_relative_above_1e-14_initial_1norm": 4.974063509652592e-16,
-        "within_cb1_numerical_tolerance": true
-      }
-    },
-    {
-      "states": 32,
-      "nonzeros": 92,
-      "operator_sha256": "69dafc811a4359e6a11046118353bd5a3572b13d8e93d34f718eac77a3855e18",
-      "actinv_pyo3_cram48": {
-        "median_ms": 0.42089287499999994,
-        "mean_ms": 0.4517633133333333,
-        "minimum_ms": 0.39423774999999994,
-        "p95_ms": 0.5835042500000001,
-        "sample_standard_deviation_ms": 0.06720105167477554,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 0.416652
-      },
-      "openmc_python_cram48": {
-        "median_ms": 5.02052235,
-        "mean_ms": 5.187178661666667,
-        "minimum_ms": 4.568113599999999,
-        "p95_ms": 6.10557825,
-        "sample_standard_deviation_ms": 0.5181780245819811,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 4.860146499999999
-      },
-      "openmc_over_actinv_median_time_ratio": 11.928266426463031,
-      "output_comparison": {
-        "maximum_relative_above_1e-14_initial_1norm": 1.320753643985804e-15,
-        "within_cb1_numerical_tolerance": true
-      }
-    },
-    {
-      "states": 256,
-      "nonzeros": 764,
-      "operator_sha256": "08af912ab8862a5f0c7e1bbaaa77a7d6bf28780f91bea57888cf093d71cd985d",
-      "actinv_pyo3_cram48": {
-        "median_ms": 3.761654225,
-        "mean_ms": 3.8108992749999997,
-        "minimum_ms": 3.27934635,
-        "p95_ms": 4.5496137999999995,
-        "sample_standard_deviation_ms": 0.45549106576743353,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 3.267061
-      },
-      "openmc_python_cram48": {
-        "median_ms": 7.574099475000001,
-        "mean_ms": 7.53509037,
-        "minimum_ms": 7.02679695,
-        "p95_ms": 7.858260249999999,
-        "sample_standard_deviation_ms": 0.2139215816775832,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 7.2073765
-      },
-      "openmc_over_actinv_median_time_ratio": 2.013502310941405,
-      "output_comparison": {
-        "maximum_relative_above_1e-14_initial_1norm": 1.320753643985804e-15,
-        "within_cb1_numerical_tolerance": true
-      }
-    },
-    {
-      "states": 1024,
-      "nonzeros": 3068,
-      "operator_sha256": "fface3410792455ca63683371b1a325ec450f9f448248e27faf0bdb7cad7c202",
-      "actinv_pyo3_cram48": {
-        "median_ms": 32.83737735,
-        "mean_ms": 33.3214085,
-        "minimum_ms": 31.2277217,
-        "p95_ms": 35.9087087,
-        "sample_standard_deviation_ms": 1.8254786036429056,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 32.5891285
-      },
-      "openmc_python_cram48": {
-        "median_ms": 27.291485224999995,
-        "mean_ms": 27.852499823333332,
-        "minimum_ms": 25.596686549999998,
-        "p95_ms": 31.640928149999997,
-        "sample_standard_deviation_ms": 2.1772582382939194,
-        "samples": 30,
-        "warmups": 5,
-        "profile_single_call_median_ms": 28.108507499999998
-      },
-      "openmc_over_actinv_median_time_ratio": 0.8311103817491685,
-      "output_comparison": {
-        "maximum_relative_above_1e-14_initial_1norm": 1.320753643985804e-15,
-        "within_cb1_numerical_tolerance": true
-      }
-    }
-  ],
-  "note": "kernel-only refresh: same operators and sampling protocol as CB1; startup/example/ALARA legs superseded by P40 identical-data census or unchanged. ACTINV 1.1.2 CRAM solves run selective compensated-residual refinement: refinement is skipped only where every row's componentwise backward error is below 1e-6, no populated component is more than 1e-12 below the largest, and the solution is unamplified; converged iterations exit on a per-row backward-error floor. The 1024-state residual gap vs OpenMC is the cost of the trace-precision guarantee; an A/B build attributes the entire slowdown to solve_refined (commit 35d5448)."
+  {
+   "states": 32,
+   "nonzeros": 92,
+   "operator_sha256": "69dafc811a4359e6a11046118353bd5a3572b13d8e93d34f718eac77a3855e18",
+   "actinv_pyo3_cram48": {
+    "median_ms": 0.264007875,
+    "mean_ms": 0.26196215166666664,
+    "minimum_ms": 0.22689795,
+    "p95_ms": 0.2859204,
+    "sample_standard_deviation_ms": 0.015498397563243732,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 0.26282649999999996
+   },
+   "openmc_python_cram48": {
+    "median_ms": 3.8357948749999995,
+    "mean_ms": 3.8226289016666666,
+    "minimum_ms": 3.5041877,
+    "p95_ms": 3.95247665,
+    "sample_standard_deviation_ms": 0.15845545138866726,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 3.830043
+   },
+   "openmc_over_actinv_median_time_ratio": 14.529092645437185,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 1.320753643985804e-15,
+    "within_cb1_numerical_tolerance": true
+   }
+  },
+  {
+   "states": 256,
+   "nonzeros": 764,
+   "operator_sha256": "08af912ab8862a5f0c7e1bbaaa77a7d6bf28780f91bea57888cf093d71cd985d",
+   "actinv_pyo3_cram48": {
+    "median_ms": 2.1454411249999996,
+    "mean_ms": 2.146794415,
+    "minimum_ms": 2.0769633,
+    "p95_ms": 2.2042451499999998,
+    "sample_standard_deviation_ms": 0.04183016718205469,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 2.118171
+   },
+   "openmc_python_cram48": {
+    "median_ms": 5.351416025,
+    "mean_ms": 5.312165326666666,
+    "minimum_ms": 4.82497445,
+    "p95_ms": 5.63231985,
+    "sample_standard_deviation_ms": 0.29356012639998846,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 5.411301999999999
+   },
+   "openmc_over_actinv_median_time_ratio": 2.4943196821586056,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 1.320753643985804e-15,
+    "within_cb1_numerical_tolerance": true
+   }
+  },
+  {
+   "states": 1024,
+   "nonzeros": 3068,
+   "operator_sha256": "fface3410792455ca63683371b1a325ec450f9f448248e27faf0bdb7cad7c202",
+   "actinv_pyo3_cram48": {
+    "median_ms": 15.050996099999999,
+    "mean_ms": 15.09306286,
+    "minimum_ms": 13.9829735,
+    "p95_ms": 15.803971049999998,
+    "sample_standard_deviation_ms": 0.5031400098516409,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 15.3689305
+   },
+   "openmc_python_cram48": {
+    "median_ms": 20.967512375,
+    "mean_ms": 21.833522583333334,
+    "minimum_ms": 18.593339949999997,
+    "p95_ms": 25.88746585,
+    "sample_standard_deviation_ms": 2.5677984492567805,
+    "samples": 30,
+    "warmups": 5,
+    "profile_single_call_median_ms": 21.477959999999996
+   },
+   "openmc_over_actinv_median_time_ratio": 1.3930979873817122,
+   "output_comparison": {
+    "maximum_relative_above_1e-14_initial_1norm": 1.320753643985804e-15,
+    "within_cb1_numerical_tolerance": true
+   }
+  }
+ ],
+ "note": "kernel-only refresh: same operators and sampling protocol as CB1; startup/example/ALARA legs superseded by P40 identical-data census or unchanged"
 }

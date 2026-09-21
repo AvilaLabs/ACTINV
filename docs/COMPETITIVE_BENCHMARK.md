@@ -121,39 +121,38 @@ identical-data claim; the 4.12e-8 figure stays as the frozen CB1
 record.
 
 **CRAM-48 kernel benchmark (`results/cb2_performance.json`).** Re-run
-against the same OpenMC 0.15.3 at the same Python-call boundary:
+against the same OpenMC 0.15.3 at the same Python-call boundary, both
+sides pinned to one thread:
 
 | operator states | CB1 ratio (openmc/actinv) | CB2 ratio |
 |---:|---:|---:|
-| 2 | 186.8× | 164–179× |
-| 32 | 20.3× | 10–12× |
-| 256 | 3.96× | 2.0–2.2× |
-| 1024 | 2.83× | **0.79–0.84×** |
+| 2 | 186.8× | 175× |
+| 32 | 20.3× | 14.5× |
+| 256 | 3.96× | 2.49× |
+| 1024 | 2.83× | **1.39×** |
 
-At 1024 states ACTINV 1.1.2 is slightly *slower* than OpenMC's Python
-CRAM-48. The regression is fully attributed to `solve_refined` (commit
-`35d5448`): every CRAM shifted solve runs compensated-residual iterative
-refinement — the fix for phantom radioactive parents on ill-conditioned
-activation matrices. An A/B build on the same host measured refinement
-accounting for the entire slowdown (1024-state median 42.5 ms → 8.4 ms
-without it).
-
-A subsequent selective-refinement pass recovered most of the cost
-(42.5 → ~33 ms): refinement now skips only where the solve demonstrably
-behaved — every row's componentwise backward error below 1e-6, no
-populated component more than 1e-12 below the largest, and no solution
-amplification — and converged iterations exit on a per-row
-backward-error floor. The phantom-parent and trace-daughter regression
-tests still pass; the trace-daughter case itself demonstrated why a
-residual-only gate is unsafe (small backward error with ~1e-7 forward
-error on a trace component), which is why the state dynamic-range check
-is mandatory. At 1024 states every pole carries trace components, so the
-remaining ~20% gap is the genuine price of a trace-precision guarantee
-the OpenMC Python kernel does not perform. The kernel claim is now:
-ACTINV's CRAM-48 remains faster than OpenMC's Python path on small and
-medium operators, slightly behind at the largest tested size, and the
-whole-product speed comparison is unchanged in kind — a kernel result,
-not a product-speed verdict.
+ACTINV 1.1.2 now leads at every tested size, including 1024 states —
+while still running the compensated-residual verification that OpenMC's
+`spsolve` path does not perform at all. The earlier 0.83× crossover was
+diagnosed by gate instrumentation (`refinement_stats`): at 1024 states
+every pole was flagged by `backward_ok`, but the violating rows were all
+at *subnormal* scale (denominators ~1e-318, below `f64::MIN_POSITIVE`),
+where a relative backward-error bound has no representable accuracy and
+its 1e-6-scaled floor underflows. SuperLU's unrefined solve fails the
+identical bound on the identical rows. The gate now exempts rows whose
+entire scale is subnormal — they cannot hide a material component — and
+applies the same exemption to the refinement loop's per-row convergence
+floor (subnormal deltas could never satisfy it, previously driving
+2–5 wasted iterations). The state dynamic-range check is unchanged and
+still mandatory: the trace-daughter regression test demonstrated that
+a residual-only gate is unsafe, and that check still engages refinement
+on every mixed-scale solve. `scale_shift` was also rewritten to build
+the shifted matrix directly in CSC form instead of a triplet
+round-trip (~6× faster). Net effect at 1024 states: 24 poles flagged,
+each converging in exactly one iteration; CB1 numerical output is
+bit-identical to the pre-change record. The whole-product speed
+comparison is unchanged in kind — a kernel result, not a product-speed
+verdict.
 
 **Not re-measured.** Install/first-use timings and the
 capability-survey legs remain the v1.0.0-era CB1 record below; nothing

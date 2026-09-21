@@ -62,17 +62,61 @@ impl Csc {
             vals,
         }
     }
-    /// M = a*A + s*I  (a, s complex)
+    /// M = a*A + s*I  (a, s complex). Direct CSC construction: the input's
+    /// sorted pattern is preserved, the diagonal is merged in place when
+    /// present and inserted at its sorted position otherwise.
     pub fn scale_shift(&self, a: C64, s: C64) -> Csc {
-        let mut trip: Vec<(usize, usize, C64)> = Vec::with_capacity(self.vals.len() + self.n);
+        let mut colptr = Vec::with_capacity(self.n + 1);
+        let mut rowidx = Vec::with_capacity(self.vals.len() + self.n);
+        let mut vals = Vec::with_capacity(self.vals.len() + self.n);
         for j in 0..self.n {
+            colptr.push(rowidx.len());
+            let mut inserted = false;
             for p in self.colptr[j]..self.colptr[j + 1] {
-                trip.push((self.rowidx[p], j, a * self.vals[p]));
+                let row = self.rowidx[p];
+                if !inserted && row >= j {
+                    if row != j {
+                        rowidx.push(j);
+                        vals.push(s);
+                    }
+                    inserted = true;
+                }
+                if row == j {
+                    vals.push(a * self.vals[p] + s);
+                } else {
+                    vals.push(a * self.vals[p]);
+                }
+                rowidx.push(row);
             }
-            trip.push((j, j, s));
+            if !inserted {
+                rowidx.push(j);
+                vals.push(s);
+            }
         }
-        Csc::from_triplets(self.n, &trip)
+        colptr.push(rowidx.len());
+        Csc {
+            n: self.n,
+            colptr,
+            rowidx,
+            vals,
+        }
     }
+}
+
+/// Per-thread counters recording how `solve_refined` gate outcomes split:
+/// (fast_path, refined_for_residual, refined_for_range, refined_for_growth,
+/// refinement_iterations). Used by probes and phase checkers to attribute
+/// solve cost; not part of results.
+pub fn refinement_stats() -> [u64; 5] {
+    STATS.with(|s| [s[0].get(), s[1].get(), s[2].get(), s[3].get(), s[4].get()])
+}
+
+thread_local! {
+    static STATS: [std::cell::Cell<u64>; 5] = [
+        std::cell::Cell::new(0), std::cell::Cell::new(0),
+        std::cell::Cell::new(0), std::cell::Cell::new(0),
+        std::cell::Cell::new(0),
+    ];
 }
 
 pub struct Lu {
@@ -329,7 +373,7 @@ impl Lu {
         let x_min_nonzero = x
             .iter()
             .map(|v| v.norm())
-            .filter(|&v| v > 0.0)
+            .filter(|&v| v > f64::MIN_POSITIVE)
             .fold(f64::INFINITY, f64::min);
         let single_scale = x_min_nonzero >= RANGE_TOL * x_norm;
         // Compensated residual and per-row input magnitude, computed once:
@@ -358,23 +402,34 @@ impl Lu {
         if !residual.iter().all(finite) {
             return Err("non-finite linear residual".into());
         }
+        let denom: Vec<f64> = b
+            .iter()
+            .zip(&magnitude)
+            .map(|(&bi, &mag)| bi.norm() + mag)
+            .collect();
+        // Rows at subnormal scale have no representable relative accuracy;
+        // exempting them cannot hide a material component because the row's
+        // whole scale is below the materiality floor.
         let backward_ok = residual
             .iter()
-            .zip(b.iter())
-            .zip(&magnitude)
-            .all(|((&r, &bi), &mag)| {
-                let denom = bi.norm() + mag;
-                if denom > 0.0 {
-                    r.norm() <= OMEGA_TOL * denom
-                } else {
-                    r.norm() == 0.0
-                }
-            });
-        if backward_ok && single_scale && x_norm <= GROWTH_TOL * b_norm.max(f64::MIN_POSITIVE) {
+            .zip(&denom)
+            .all(|(&r, &d)| d <= f64::MIN_POSITIVE || r.norm() <= OMEGA_TOL * d);
+        let growth_ok = x_norm <= GROWTH_TOL * b_norm.max(f64::MIN_POSITIVE);
+        if backward_ok && single_scale && growth_ok {
+            STATS.with(|s| s[0].set(s[0].get() + 1));
             return Ok(x);
         }
+        let cause = if !backward_ok {
+            1
+        } else if !single_scale {
+            2
+        } else {
+            3
+        };
+        STATS.with(|s| s[cause].set(s[cause].get() + 1));
         let mut residual_computed = true;
         for _ in 0..5 {
+            STATS.with(|s| s[4].set(s[4].get() + 1));
             if !residual_computed {
                 residual.copy_from_slice(b);
                 let mut tail = vec![C64::new(0.0, 0.0); self.n];
@@ -409,12 +464,12 @@ impl Lu {
                 let denom = bi.norm() + mag;
                 // A correction below a row's own backward-error floor cannot
                 // move anything the refinement protects; above it, the row is
-                // still live and refinement continues.
-                resolvable_correction &= if denom > 0.0 {
-                    delta.norm() <= 1.0e-14 * denom
-                } else {
-                    delta.norm() == 0.0
-                };
+                // still live and refinement continues. Rows at subnormal
+                // scale are exempt: their corrections can never satisfy a
+                // relative floor (it underflows) and cannot move anything
+                // material.
+                resolvable_correction &=
+                    denom <= f64::MIN_POSITIVE || delta.norm() <= 1.0e-14 * denom;
                 let corrected = *value + delta;
                 changed |= corrected != *value;
                 *value = corrected;
