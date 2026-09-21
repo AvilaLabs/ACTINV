@@ -1,0 +1,3712 @@
+[
+ {
+  "target": "AG-107",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 7,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "(47-AG-107(N,INL)47-AG-107-M,,SIG)+(47-AG-109(N,INL)47-AG-109-M,,SIG)",
+   "(47-AG-107(N,INL)47-AG-107-M,,SIG,,SPA/A)+(47-AG-109(N,INL)47-AG-109-M,,SIG,,SPA/A)",
+   "47-AG-107(N,INL)47-AG-107-M,,SIG",
+   "47-AG-107(N,INL)47-AG-107-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "AG-107",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 59,
+  "n_isomer_resolved": 57,
+  "isomer_reactions": [
+   "(47-AG-107(N,2N)47-AG-106-M,,SIG)/(13-AL-27(N,A)11-NA-24,,SIG)",
+   "(47-AG-107(N,2N)47-AG-106-M,,SIG)//(47-AG-107(N,2N)47-AG-106-M,,SIG)",
+   "47-AG-107(N,2N)47-AG-106-G,,SIG",
+   "47-AG-107(N,2N)47-AG-106-M,,SIG",
+   "47-AG-107(N,2N)47-AG-106-M,,SIG,,,DERIV",
+   "47-AG-107(N,2N)47-AG-106-M,,SIG,,FIS,DERIV",
+   "47-AG-107(N,2N)47-AG-106-M,,SIG,,REL",
+   "47-AG-107(N,2N)47-AG-106-M,,SIG,,SPA",
+   "47-AG-107(N,2N)47-AG-106-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "AG-107",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 52,
+  "n_isomer_resolved": 10,
+  "isomer_reactions": [
+   "(47-AG-107(N,G)47-AG-108-M,,RI)//(47-AG-107(N,G)47-AG-108-M,,SIG)",
+   "47-AG-107(N,G)47-AG-108-G,,SIG",
+   "47-AG-107(N,G)47-AG-108-G,M+,SIG,,SPA",
+   "47-AG-107(N,G)47-AG-108-M,,SIG",
+   "47-AG-107(N,G)47-AG-108-M,,SIG,,,RECOM",
+   "47-AG-107(N,G)47-AG-108-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "AG-109",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 10,
+  "n_isomer_resolved": 10,
+  "isomer_reactions": [
+   "(47-AG-107(N,INL)47-AG-107-M,,SIG)+(47-AG-109(N,INL)47-AG-109-M,,SIG)",
+   "(47-AG-107(N,INL)47-AG-107-M,,SIG,,SPA/A)+(47-AG-109(N,INL)47-AG-109-M,,SIG,,SPA/A)",
+   "47-AG-109(N,INL)47-AG-109-G,,SIG",
+   "47-AG-109(N,INL)47-AG-109-M,,SIG",
+   "47-AG-109(N,INL)47-AG-109-M,,SIG,,SPA",
+   "47-AG-109(N,INL)47-AG-109-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "AG-109",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 34,
+  "n_isomer_resolved": 34,
+  "isomer_reactions": [
+   "47-AG-109(N,2N)47-AG-108-G,,SIG",
+   "47-AG-109(N,2N)47-AG-108-M,,SIG",
+   "47-AG-109(N,2N)47-AG-108-M,,SIG,,,DERIV",
+   "47-AG-109(N,2N)47-AG-108-M,,SIG,,AV",
+   "47-AG-109(N,2N)47-AG-108-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "AG-109",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 68,
+  "n_isomer_resolved": 42,
+  "isomer_reactions": [
+   "(47-AG-109(N,G)47-AG-110-G,,RI)//(47-AG-109(N,G)47-AG-110-G,,SIG)",
+   "(47-AG-109(N,G)47-AG-110-M,,RI)//(47-AG-109(N,G)47-AG-110-M,,SIG)",
+   "47-AG-109(N,G)47-AG-110-G,,SIG",
+   "47-AG-109(N,G)47-AG-110-G,,SIG,,,RECOM",
+   "47-AG-109(N,G)47-AG-110-G,,SIG,,FIS",
+   "47-AG-109(N,G)47-AG-110-G,,SIG,,MXW",
+   "47-AG-109(N,G)47-AG-110-G,,SIG,,SPA",
+   "47-AG-109(N,G)47-AG-110-M,,SIG",
+   "47-AG-109(N,G)47-AG-110-M,,SIG,,,RECOM",
+   "47-AG-109(N,G)47-AG-110-M,,SIG,,FST",
+   "47-AG-109(N,G)47-AG-110-M,,SIG,,MXW",
+   "47-AG-109(N,G)47-AG-110-M,,SIG,,SPA",
+   "47-AG-109(N,G)47-AG-110-M/G,,SIG/RAT",
+   "47-AG-109(N,G)47-AG-110-M/G,,SIG/RAT,,MXW",
+   "47-AG-109(N,G)47-AG-110-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "AL-27",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 24,
+  "n_isomer_resolved": 23,
+  "isomer_reactions": [
+   "(13-AL-27(N,2N)13-AL-26-M,,SIG)/(13-AL-27(N,G)13-AL-28,,SIG)",
+   "13-AL-27(N,2N)13-AL-26-G,,SIG",
+   "13-AL-27(N,2N)13-AL-26-G,,SIG,,,DERIV",
+   "13-AL-27(N,2N)13-AL-26-G,,SIG,,FIS",
+   "13-AL-27(N,2N)13-AL-26-M,,SIG"
+  ]
+ },
+ {
+  "target": "AU-197",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 19,
+  "n_isomer_resolved": 17,
+  "isomer_reactions": [
+   "79-AU-197(N,INL)79-AU-197-M,,SIG",
+   "79-AU-197(N,INL)79-AU-197-M,,SIG,,,DERIV",
+   "79-AU-197(N,INL)79-AU-197-M,,SIG,,FIS",
+   "79-AU-197(N,INL)79-AU-197-M,,SIG,,SPA",
+   "79-AU-197(N,INL)79-AU-197-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "AU-197",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 158,
+  "n_isomer_resolved": 69,
+  "isomer_reactions": [
+   "(79-AU-197(N,2N)79-AU-196-M2,,SIG)/(79-AU-197(N,2N)79-AU-196-G+M1,,SIG)",
+   "79-AU-197(N,2N)79-AU-196-G,,SIG",
+   "79-AU-197(N,2N)79-AU-196-G,,SIG,,FIS",
+   "79-AU-197(N,2N)79-AU-196-G/M2,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M,,SIG",
+   "79-AU-197(N,2N)79-AU-196-M/G,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M1,,SIG,,,EVAL",
+   "79-AU-197(N,2N)79-AU-196-M1/G,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M1/M2,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M2,,SIG",
+   "79-AU-197(N,2N)79-AU-196-M2,,SIG,,,DERIV",
+   "79-AU-197(N,2N)79-AU-196-M2,,SIG,,,EVAL",
+   "79-AU-197(N,2N)79-AU-196-M2/G+M1,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M2/G+M1,,SIG/RAT,,,DERIV",
+   "79-AU-197(N,2N)79-AU-196-M2/G+M1,,SIG/RAT,,SPA",
+   "79-AU-197(N,2N)79-AU-196-M2/G,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M2/T,,SIG/RAT",
+   "79-AU-197(N,2N)79-AU-196-M2/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "AU-197",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 197,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(39-Y-89(N,G)39-Y-90-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(47-AG-0(N,G),,SIG,,MXW)/(79-AU-197(N,G)79-AU-198-G,,SIG,,MXW)",
+   "(49-IN-115(N,G)49-IN-116-M2,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(55-CS-133(N,G)55-CS-134-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(67-HO-165(N,G)67-HO-166-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(71-LU-175(N,G)71-LU-176-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(90-TH-232(N,G)90-TH-233,,SIG)/(79-AU-197(N,G)79-AU-198-G,,SIG)",
+   "(92-U-233(N,ABS),,SIG,,MXW)/(79-AU-197(N,G)79-AU-198-G,,SIG,,MXW)",
+   "(92-U-238(N,G)92-U-239,,SIG)/(79-AU-197(N,G)79-AU-198-G,,SIG)",
+   "(95-AM-241(N,G)95-AM-242-G,,SIG)/(79-AU-197(N,G)79-AU-198,,SIG)",
+   "79-AU-197(N,G)79-AU-198-G,(M),SIG",
+   "79-AU-197(N,G)79-AU-198-G,,SIG",
+   "79-AU-197(N,G)79-AU-198-G,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "BA-130",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 2,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "56-BA-130(N,2N)56-BA-129-M,,SIG"
+  ]
+ },
+ {
+  "target": "BA-130",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 41,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "(56-BA-130(N,G)56-BA-131,,SIG,,SPA)/(56-BA-132(N,G)56-BA-133-G,,SIG,,SPA)",
+   "56-BA-130(N,G)56-BA-131-G,,SIG,,,RECOM",
+   "56-BA-130(N,G)56-BA-131-G,,SIG,,MXW",
+   "56-BA-130(N,G)56-BA-131-G,,SIG,,SPA",
+   "56-BA-130(N,G)56-BA-131-M,,SIG,,,RECOM",
+   "56-BA-130(N,G)56-BA-131-M,,SIG,,MXW",
+   "56-BA-130(N,G)56-BA-131-M,,SIG,,SPA",
+   "56-BA-130(N,G)56-BA-131-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "BA-132",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 13,
+  "n_isomer_resolved": 9,
+  "isomer_reactions": [
+   "56-BA-132(N,2N)56-BA-131-G,(M),SIG",
+   "56-BA-132(N,2N)56-BA-131-G,,SIG",
+   "56-BA-132(N,2N)56-BA-131-M,,SIG",
+   "56-BA-132(N,2N)56-BA-131-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "BA-132",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 33,
+  "n_isomer_resolved": 17,
+  "isomer_reactions": [
+   "(56-BA-130(N,G)56-BA-131,,SIG,,SPA)/(56-BA-132(N,G)56-BA-133-G,,SIG,,SPA)",
+   "(56-BA-132(N,G)56-BA-133-M,,RI)//(56-BA-132(N,G)56-BA-133-M,,SIG)",
+   "56-BA-132(N,G)56-BA-133-G,,SIG,,,RECOM",
+   "56-BA-132(N,G)56-BA-133-G,,SIG,,MXW",
+   "56-BA-132(N,G)56-BA-133-G,,SIG,,SPA",
+   "56-BA-132(N,G)56-BA-133-M,,SIG",
+   "56-BA-132(N,G)56-BA-133-M,,SIG,,,RECOM",
+   "56-BA-132(N,G)56-BA-133-M,,SIG,,AV",
+   "56-BA-132(N,G)56-BA-133-M,,SIG,,MXW",
+   "56-BA-132(N,G)56-BA-133-M,,SIG,,MXW,DERIV",
+   "56-BA-132(N,G)56-BA-133-M,,SIG,,MXW,RECOM",
+   "56-BA-132(N,G)56-BA-133-M,,SIG,,SPA",
+   "56-BA-132(N,G)56-BA-133-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "BA-134",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 23,
+  "n_isomer_resolved": 16,
+  "isomer_reactions": [
+   "56-BA-134(N,2N)56-BA-133-G,,SIG",
+   "56-BA-134(N,2N)56-BA-133-G,,SIG,,,CALC",
+   "56-BA-134(N,2N)56-BA-133-G,,SIG,,,EVAL",
+   "56-BA-134(N,2N)56-BA-133-M,,SIG",
+   "56-BA-134(N,2N)56-BA-133-M,,SIG,,,EVAL",
+   "56-BA-134(N,2N)56-BA-133-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "BA-134",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 37,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(56-BA-134(N,G)56-BA-135-M,,RI)//(56-BA-134(N,G)56-BA-135-M,,SIG)",
+   "(56-BA-134(N,G)56-BA-135-M,,SIG,,A/FIS)+(56-BA-135(N,INL)56-BA-135-M,,SIG,,A/FIS)",
+   "(56-BA-135(N,INL)56-BA-135-M,,SIG,,A/SPA)+(56-BA-134(N,G)56-BA-135-M,,SIG,,A/SPA)",
+   "56-BA-134(N,G)56-BA-135-G,,SIG,,,EVAL",
+   "56-BA-134(N,G)56-BA-135-M,,SIG",
+   "56-BA-134(N,G)56-BA-135-M,,SIG,,,EVAL",
+   "56-BA-134(N,G)56-BA-135-M,,SIG,,,RECOM",
+   "56-BA-134(N,G)56-BA-135-M,,SIG,,AV",
+   "56-BA-134(N,G)56-BA-135-M,,SIG,,MXW",
+   "56-BA-134(N,G)56-BA-135-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "BA-135",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 8,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "(56-BA-134(N,G)56-BA-135-M,,SIG,,A/FIS)+(56-BA-135(N,INL)56-BA-135-M,,SIG,,A/FIS)",
+   "(56-BA-135(N,INL)56-BA-135-M,,SIG,,A/SPA)+(56-BA-134(N,G)56-BA-135-M,,SIG,,A/SPA)",
+   "(56-BA-136(N,2N)56-BA-135-M,,SIG)+(56-BA-135(N,INL)56-BA-135-M,,SIG)",
+   "(56-BA-136(N,2N)56-BA-135-M,,SIG,,A)+(56-BA-135(N,INL)56-BA-135-M,,SIG,,A)",
+   "56-BA-135(N,INL)56-BA-135-G,,SIG,,,EVAL",
+   "56-BA-135(N,INL)56-BA-135-M,,SIG",
+   "56-BA-135(N,INL)56-BA-135-M,,SIG,,,EVAL"
+  ]
+ },
+ {
+  "target": "BA-135",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 14,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "56-BA-135(N,G)56-BA-136-M,,SIG,,,RECOM"
+  ]
+ },
+ {
+  "target": "BA-136",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 2,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "56-BA-136(N,INL)56-BA-136-M,,SIG"
+  ]
+ },
+ {
+  "target": "BA-136",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 13,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "(56-BA-136(N,2N)56-BA-135-M,,SIG)+(56-BA-135(N,INL)56-BA-135-M,,SIG)",
+   "(56-BA-136(N,2N)56-BA-135-M,,SIG,,A)+(56-BA-135(N,INL)56-BA-135-M,,SIG,,A)",
+   "56-BA-136(N,2N)56-BA-135-G,,SIG,,,CALC",
+   "56-BA-136(N,2N)56-BA-135-G,,SIG,,,EVAL",
+   "56-BA-136(N,2N)56-BA-135-M,,SIG",
+   "56-BA-136(N,2N)56-BA-135-M,,SIG,,,EVAL"
+  ]
+ },
+ {
+  "target": "BA-136",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 30,
+  "n_isomer_resolved": 10,
+  "isomer_reactions": [
+   "(56-BA-136(N,G)56-BA-137-M,,SIG,,A/FIS)+(56-BA-137(N,INL)56-BA-137-M,,SIG,,A/FIS)",
+   "(56-BA-137(N,INL)56-BA-137-M,,SIG,,A/SPA)+(56-BA-136(N,G)56-BA-137-M,,SIG,,A/SPA)",
+   "56-BA-136(N,G)56-BA-137-G,,SIG,,,EVAL",
+   "56-BA-136(N,G)56-BA-137-G,,SIG,,,RECOM",
+   "56-BA-136(N,G)56-BA-137-M,,SIG,,,EVAL",
+   "56-BA-136(N,G)56-BA-137-M,,SIG,,,RECOM",
+   "56-BA-136(N,G)56-BA-137-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "BA-137",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 15,
+  "n_isomer_resolved": 15,
+  "isomer_reactions": [
+   "(56-BA-136(N,G)56-BA-137-M,,SIG,,A/FIS)+(56-BA-137(N,INL)56-BA-137-M,,SIG,,A/FIS)",
+   "(56-BA-137(N,INL)56-BA-137-M,,SIG,,A/SPA)+(56-BA-136(N,G)56-BA-137-M,,SIG,,A/SPA)",
+   "(56-BA-138(N,2N)56-BA-137-M,,SIG)+(56-BA-137(N,INL)56-BA-137-M,,SIG,,RAB)",
+   "56-BA-137(N,INL)56-BA-137-G,,SIG,,,EVAL",
+   "56-BA-137(N,INL)56-BA-137-M,,SIG",
+   "56-BA-137(N,INL)56-BA-137-M,,SIG,,,EVAL",
+   "56-BA-137(N,INL)56-BA-137-M,,SIG,,FIS",
+   "56-BA-137(N,INL)56-BA-137-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "BA-137",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 2,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "56-BA-137(N,2N)56-BA-136-M,,SIG"
+  ]
+ },
+ {
+  "target": "BA-138",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 21,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(56-BA-138(N,2N)56-BA-137-M,,SIG)+(56-BA-137(N,INL)56-BA-137-M,,SIG,,RAB)",
+   "56-BA-138(N,2N)56-BA-137-G,,SIG,,,EVAL",
+   "56-BA-138(N,2N)56-BA-137-M,,SIG",
+   "56-BA-138(N,2N)56-BA-137-M,,SIG,,,DERIV",
+   "56-BA-138(N,2N)56-BA-137-M,,SIG,,,EVAL",
+   "56-BA-138(N,2N)56-BA-137-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "BI-209",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 119,
+  "n_isomer_resolved": 71,
+  "isomer_reactions": [
+   "(83-BI-209(N,A)81-TL-206-G,(M),SIG)/(83-BI-209(N,G)83-BI-210-G,,SIG)",
+   "(83-BI-209(N,G)83-BI-210-G,,SIG)/(23-V-51(N,G)23-V-52,,SIG)",
+   "(83-BI-209(N,G)83-BI-210-G,,SIG,,MXW)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(83-BI-209(N,G)83-BI-210-G,,SIG,,SPA)/(11-NA-23(N,G)11-NA-24,,SIG,,SPA)",
+   "(83-BI-209(N,G)83-BI-210-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "83-BI-209(N,G)83-BI-210-G,,SIG",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,,RECOM",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,EPI",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,FIS",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,MXW",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,MXW,DERIV",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,MXW,RECOM",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,MXW/RAW",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,SPA",
+   "83-BI-209(N,G)83-BI-210-G,,SIG,,SPA/AV",
+   "83-BI-209(N,G)83-BI-210-G/M,,SIG/RAT",
+   "83-BI-209(N,G)83-BI-210-G/M,,SIG/RAT,,MXW",
+   "83-BI-209(N,G)83-BI-210-M,,SIG",
+   "83-BI-209(N,G)83-BI-210-M,,SIG,,,RECOM",
+   "83-BI-209(N,G)83-BI-210-M,,SIG,,EPI",
+   "83-BI-209(N,G)83-BI-210-M,,SIG,,MXW",
+   "83-BI-209(N,G)83-BI-210-M,,SIG,,MXW,DERIV",
+   "83-BI-209(N,G)83-BI-210-M,,SIG,,SPA",
+   "83-BI-209(N,G)83-BI-210-M/T,,SIG/RAT,,MXW,DERIV"
+  ]
+ },
+ {
+  "target": "BR-79",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 12,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "35-BR-79(N,INL)35-BR-79-M,,SIG",
+   "35-BR-79(N,INL)35-BR-79-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "BR-79",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 74,
+  "n_isomer_resolved": 56,
+  "isomer_reactions": [
+   "(35-BR-79(N,G)35-BR-80-G,,RI)//(35-BR-79(N,G)35-BR-80-G,,SIG)",
+   "(35-BR-79(N,G)35-BR-80-G,,SIG)/(23-V-51(N,G)23-V-52,,SIG)",
+   "(35-BR-79(N,G)35-BR-80-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(35-BR-79(N,G)35-BR-80-G,,SIG,,SPA)//(35-BR-79(N,G)35-BR-80-G,,SIG,,SPA)",
+   "(35-BR-79(N,G)35-BR-80-G,,SIG,,SPA/AV)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(35-BR-79(N,G)35-BR-80-M,,SIG)/(23-V-51(N,G)23-V-52,,SIG)",
+   "(35-BR-79(N,G)35-BR-80-M,,SIG,,MXW)/(79-AU-197(N,G)79-AU-198,,SIG,,MXW)",
+   "(35-BR-79(N,G)35-BR-80-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(35-BR-79(N,G)35-BR-80-M,,SIG,,SPA)//(35-BR-79(N,G)35-BR-80-M,,SIG,,SPA)",
+   "(35-BR-79(N,G)35-BR-80-M,,SIG,,SPA/AV)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "35-BR-79(N,G)35-BR-80-G,,SIG",
+   "35-BR-79(N,G)35-BR-80-G,,SIG,,,RECOM",
+   "35-BR-79(N,G)35-BR-80-G,,SIG,,FIS",
+   "35-BR-79(N,G)35-BR-80-G,,SIG,,MXW",
+   "35-BR-79(N,G)35-BR-80-G,,SIG,,SPA",
+   "35-BR-79(N,G)35-BR-80-G,,SIG,,SPA/AV",
+   "35-BR-79(N,G)35-BR-80-M,,SIG",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,,RECOM",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,FIS",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,MXW",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,MXW,DERIV",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,MXW,RECOM",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,SPA",
+   "35-BR-79(N,G)35-BR-80-M,,SIG,,SPA/AV",
+   "35-BR-79(N,G)35-BR-80-M/G,,SIG/RAT",
+   "35-BR-79(N,G)35-BR-80-M/G,,SIG/RAT,,MXW",
+   "35-BR-79(N,G)35-BR-80-M/T,,SIG/RAT",
+   "35-BR-79(N,G)35-BR-80-M/T,,SIG/RAT,,EPI",
+   "35-BR-79(N,G)35-BR-80-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "BR-81",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 35,
+  "n_isomer_resolved": 29,
+  "isomer_reactions": [
+   "(35-BR-81(N,2N)35-BR-80-G,,SIG)+(35-BR-81(N,2N)35-BR-80-M,,SIG)",
+   "35-BR-81(N,2N)35-BR-80-G,,SIG",
+   "35-BR-81(N,2N)35-BR-80-M,,SIG",
+   "35-BR-81(N,2N)35-BR-80-M/G,,SIG/RAT",
+   "35-BR-81(N,2N)35-BR-80-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "BR-81",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 55,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "(35-BR-81(N,G)35-BR-82-G,M+,RI)//(35-BR-81(N,G)35-BR-82-G,M+,SIG)",
+   "35-BR-81(N,G)35-BR-82-G,,SIG",
+   "35-BR-81(N,G)35-BR-82-G,,SIG,,,RECOM",
+   "35-BR-81(N,G)35-BR-82-G,,SIG,,SPA",
+   "35-BR-81(N,G)35-BR-82-G,M+,SIG",
+   "35-BR-81(N,G)35-BR-82-G,M+,SIG,,SPA",
+   "35-BR-81(N,G)35-BR-82-M,,SIG",
+   "35-BR-81(N,G)35-BR-82-M,,SIG,,,RECOM",
+   "35-BR-81(N,G)35-BR-82-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "CD-110",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 36,
+  "n_isomer_resolved": 19,
+  "isomer_reactions": [
+   "(48-CD-110(N,G)48-CD-111-M,,SIG,,A/FIS)+(48-CD-111(N,INL)48-CD-111-M,,SIG,,A/FIS)",
+   "(48-CD-111(N,INL)48-CD-111-M,,SIG)/(48-CD-110(N,G)48-CD-111-M,,SIG)",
+   "(48-CD-111(N,INL)48-CD-111-M,,SIG,,A/SPA)+(48-CD-110(N,G)48-CD-111-M,,SIG,,A/SPA)",
+   "48-CD-110(N,G)48-CD-111-M,,SIG",
+   "48-CD-110(N,G)48-CD-111-M,,SIG,,,DERIV",
+   "48-CD-110(N,G)48-CD-111-M,,SIG,,,RECOM",
+   "48-CD-110(N,G)48-CD-111-M,,SIG,,MXW",
+   "48-CD-110(N,G)48-CD-111-M,,SIG,,MXW,RECOM",
+   "48-CD-110(N,G)48-CD-111-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "CD-111",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 20,
+  "n_isomer_resolved": 20,
+  "isomer_reactions": [
+   "(48-CD-110(N,G)48-CD-111-M,,SIG,,A/FIS)+(48-CD-111(N,INL)48-CD-111-M,,SIG,,A/FIS)",
+   "(48-CD-111(N,INL)48-CD-111-M,,SIG)/(48-CD-110(N,G)48-CD-111-M,,SIG)",
+   "(48-CD-111(N,INL)48-CD-111-M,,SIG,,A/SPA)+(48-CD-110(N,G)48-CD-111-M,,SIG,,A/SPA)",
+   "(48-CD-112(N,2N)48-CD-111-M,,SIG)+(48-CD-111(N,INL)48-CD-111-M,,SIG)",
+   "48-CD-111(N,INL)48-CD-111-M,,SIG",
+   "48-CD-111(N,INL)48-CD-111-M,,SIG,,,DERIV",
+   "48-CD-111(N,INL)48-CD-111-M,,SIG,,FIS",
+   "48-CD-111(N,INL)48-CD-111-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "CD-112",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 13,
+  "n_isomer_resolved": 13,
+  "isomer_reactions": [
+   "(48-CD-112(N,2N)48-CD-111-M,,SIG)+(48-CD-111(N,INL)48-CD-111-M,,SIG)",
+   "48-CD-112(N,2N)48-CD-111-M,,SIG",
+   "48-CD-112(N,2N)48-CD-111-M,,SIG,,,DERIV",
+   "48-CD-112(N,2N)48-CD-111-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "CD-112",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 21,
+  "n_isomer_resolved": 6,
+  "isomer_reactions": [
+   "(48-CD-112(N,G)48-CD-113-M,,SIG,,MXW)/(48-CD-114(N,G)48-CD-115-M,,SIG,,MXW)",
+   "48-CD-112(N,G)48-CD-113-M,,SIG",
+   "48-CD-112(N,G)48-CD-113-M,,SIG,,MXW",
+   "48-CD-112(N,G)48-CD-113-M,,SIG,,SPA",
+   "48-CD-112(N,G)48-CD-113-M/G,,SIG/RAT,,RES"
+  ]
+ },
+ {
+  "target": "CD-113",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "CD-114",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "CD-114",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 61,
+  "n_isomer_resolved": 39,
+  "isomer_reactions": [
+   "(48-CD-112(N,G)48-CD-113-M,,SIG,,MXW)/(48-CD-114(N,G)48-CD-115-M,,SIG,,MXW)",
+   "(48-CD-114(N,G)48-CD-115-G,,RI)//(48-CD-114(N,G)48-CD-115-G,,SIG)",
+   "48-CD-114(N,G)48-CD-115-G,,SIG",
+   "48-CD-114(N,G)48-CD-115-G,,SIG,,,RECOM",
+   "48-CD-114(N,G)48-CD-115-G,,SIG,,MXW",
+   "48-CD-114(N,G)48-CD-115-G,,SIG,,MXW,RECOM",
+   "48-CD-114(N,G)48-CD-115-G,,SIG,,SPA",
+   "48-CD-114(N,G)48-CD-115-M,,SIG",
+   "48-CD-114(N,G)48-CD-115-M,,SIG,,,RECOM",
+   "48-CD-114(N,G)48-CD-115-M,,SIG,,MXW,RECOM",
+   "48-CD-114(N,G)48-CD-115-M,,SIG,,SPA",
+   "48-CD-114(N,G)48-CD-115-M/G,,SIG/RAT,,EPI",
+   "48-CD-114(N,G)48-CD-115-M/G,,SIG/RAT,,MXW",
+   "48-CD-114(N,G)48-CD-115-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "CD-116",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 24,
+  "n_isomer_resolved": 22,
+  "isomer_reactions": [
+   "48-CD-116(N,2N)48-CD-115-G,,SIG",
+   "48-CD-116(N,2N)48-CD-115-G,,SIG,,,DERIV",
+   "48-CD-116(N,2N)48-CD-115-M,,SIG",
+   "48-CD-116(N,2N)48-CD-115-M/G,,SIG/RAT",
+   "48-CD-116(N,2N)48-CD-115-M/G,,SIG/RAT,,SPA",
+   "48-CD-116(N,2N)48-CD-115-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "CD-116",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 53,
+  "n_isomer_resolved": 35,
+  "isomer_reactions": [
+   "(48-CD-116(N,G)48-CD-117-M,,SIG,,SPA)/(48-CD-116(N,G)48-CD-117-G,,SIG,,SPA)",
+   "48-CD-116(N,G)48-CD-117-G,(M),SIG",
+   "48-CD-116(N,G)48-CD-117-G,,SIG",
+   "48-CD-116(N,G)48-CD-117-G,,SIG,,,RECOM",
+   "48-CD-116(N,G)48-CD-117-G,,SIG,,MXW,RECOM",
+   "48-CD-116(N,G)48-CD-117-G,,SIG,,SPA",
+   "48-CD-116(N,G)48-CD-117-G/M,,SIG/RAT,,SPA",
+   "48-CD-116(N,G)48-CD-117-M,,SIG",
+   "48-CD-116(N,G)48-CD-117-M,,SIG,,,RECOM",
+   "48-CD-116(N,G)48-CD-117-M,,SIG,,MXW,RECOM",
+   "48-CD-116(N,G)48-CD-117-M,,SIG,,SPA",
+   "48-CD-116(N,G)48-CD-117-M/G,,SIG/RAT,,EPI",
+   "48-CD-116(N,G)48-CD-117-M/G,,SIG/RAT,,MXW",
+   "48-CD-116(N,G)48-CD-117-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "CE-136",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 11,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "CE-136",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 31,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "58-CE-136(N,G)58-CE-137-G,(M),SIG,,MXW",
+   "58-CE-136(N,G)58-CE-137-G,,SIG,,,RECOM",
+   "58-CE-136(N,G)58-CE-137-G,,SIG,,MXW",
+   "58-CE-136(N,G)58-CE-137-G,,SIG,,MXW,DERIV",
+   "58-CE-136(N,G)58-CE-137-G,,SIG,,SPA",
+   "58-CE-136(N,G)58-CE-137-M,,SIG,,,RECOM",
+   "58-CE-136(N,G)58-CE-137-M,,SIG,,MXW",
+   "58-CE-136(N,G)58-CE-137-M,,SIG,,MXW,DERIV",
+   "58-CE-136(N,G)58-CE-137-M,,SIG,,MXW,RECOM",
+   "58-CE-136(N,G)58-CE-137-M,,SIG,,SPA",
+   "58-CE-136(N,G)58-CE-137-M/G,,SIG/RAT,,MXW",
+   "58-CE-136(N,G)58-CE-137-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "CE-138",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 15,
+  "n_isomer_resolved": 13,
+  "isomer_reactions": [
+   "58-CE-138(N,2N)58-CE-137-G,,SIG",
+   "58-CE-138(N,2N)58-CE-137-M,,SIG",
+   "58-CE-138(N,2N)58-CE-137-M,,SIG,,,DERIV",
+   "58-CE-138(N,2N)58-CE-137-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "CE-138",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 22,
+  "n_isomer_resolved": 10,
+  "isomer_reactions": [
+   "(58-CE-138(N,G)58-CE-139-G,,SIG,,SPA)/(58-CE-140(N,G)58-CE-141,,SIG,,SPA)",
+   "58-CE-138(N,G)58-CE-139-G,,SIG,,,RECOM",
+   "58-CE-138(N,G)58-CE-139-G,,SIG,,MXW",
+   "58-CE-138(N,G)58-CE-139-G,,SIG,,SPA",
+   "58-CE-138(N,G)58-CE-139-M,,SIG,,,RECOM",
+   "58-CE-138(N,G)58-CE-139-M,,SIG,,MXW",
+   "58-CE-138(N,G)58-CE-139-M,,SIG,,SPA",
+   "58-CE-138(N,G)58-CE-139-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "CE-140",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 51,
+  "n_isomer_resolved": 31,
+  "isomer_reactions": [
+   "58-CE-140(N,2N)58-CE-139-G,,SIG",
+   "58-CE-140(N,2N)58-CE-139-M,,SIG",
+   "58-CE-140(N,2N)58-CE-139-M/G,,SIG/RAT",
+   "58-CE-140(N,2N)58-CE-139-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "CL-35",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(17-CL-35(N,2N)17-CL-34-M,,SIG)/(17-CL-35(N,2N)17-CL-34,,SIG)",
+   "17-CL-35(N,2N)17-CL-34-G,,SIG",
+   "17-CL-35(N,2N)17-CL-34-M,,SIG",
+   "17-CL-35(N,2N)17-CL-34-M,,SIG,,SPA",
+   "17-CL-35(N,2N)17-CL-34-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "CL-37",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 35,
+  "n_isomer_resolved": 4,
+  "isomer_reactions": [
+   "(17-CL-37(N,G)17-CL-38-M,,RI)//(17-CL-37(N,G)17-CL-38-M,,SIG)",
+   "(17-CL-37(N,G)17-CL-38-M,,SIG,,MXW)/(82-PB-206(N,G)82-PB-207-M,,SIG,,MXW)",
+   "17-CL-37(N,G)17-CL-38-M,,SIG,,,RECOM",
+   "17-CL-37(N,G)17-CL-38-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "CO-59",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 113,
+  "n_isomer_resolved": 37,
+  "isomer_reactions": [
+   "27-CO-59(N,2N)27-CO-58-G,,SIG",
+   "27-CO-59(N,2N)27-CO-58-G,,SIG,,FIS",
+   "27-CO-59(N,2N)27-CO-58-G/M,,SIG/RAT",
+   "27-CO-59(N,2N)27-CO-58-M,,SIG",
+   "27-CO-59(N,2N)27-CO-58-M,,SIG,,,DERIV",
+   "27-CO-59(N,2N)27-CO-58-M/G,,SIG/RAT",
+   "27-CO-59(N,2N)27-CO-58-M/T,,SIG/RAT",
+   "27-CO-59(N,2N)27-CO-58-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "CO-59",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 94,
+  "n_isomer_resolved": 30,
+  "isomer_reactions": [
+   "(27-CO-59(N,G)27-CO-60-M,,RI)//(27-CO-59(N,G)27-CO-60-M,,SIG)",
+   "(27-CO-59(N,G)27-CO-60-M,,RI,,AV)//(27-CO-59(N,G)27-CO-60-M,,SIG,,AV)",
+   "27-CO-59(N,G)27-CO-60-G,,SIG",
+   "27-CO-59(N,G)27-CO-60-G,,SIG,,AV",
+   "27-CO-59(N,G)27-CO-60-G,,SIG,,MXW",
+   "27-CO-59(N,G)27-CO-60-G,,SIG,,SPA",
+   "27-CO-59(N,G)27-CO-60-G,M+,SIG",
+   "27-CO-59(N,G)27-CO-60-G,M+,SIG,,MXW",
+   "27-CO-59(N,G)27-CO-60-G/M,,SIG/RAT,,SPA",
+   "27-CO-59(N,G)27-CO-60-M,,SIG",
+   "27-CO-59(N,G)27-CO-60-M,,SIG,,,RECOM",
+   "27-CO-59(N,G)27-CO-60-M,,SIG,,AV",
+   "27-CO-59(N,G)27-CO-60-M,,SIG,,FIS",
+   "27-CO-59(N,G)27-CO-60-M,,SIG,,MXW",
+   "27-CO-59(N,G)27-CO-60-M/G,,SIG/RAT",
+   "27-CO-59(N,G)27-CO-60-M/G,,SIG/RAT,,MXW",
+   "27-CO-59(N,G)27-CO-60-M/T,,SIG/RAT",
+   "27-CO-59(N,G)27-CO-60-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "CS-133",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 89,
+  "n_isomer_resolved": 43,
+  "isomer_reactions": [
+   "(55-CS-133(N,G)55-CS-134-M,,RI)//(55-CS-133(N,G)55-CS-134-M,,SIG)",
+   "(55-CS-133(N,G)55-CS-134-M,,SIG)/(55-CS-133(N,G)55-CS-134-G,,SIG)",
+   "(55-CS-133(N,G)55-CS-134-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "55-CS-133(N,G)55-CS-134-G,,SIG",
+   "55-CS-133(N,G)55-CS-134-G,,SIG,,MXW",
+   "55-CS-133(N,G)55-CS-134-G,,SIG,,SPA",
+   "55-CS-133(N,G)55-CS-134-M,,SIG",
+   "55-CS-133(N,G)55-CS-134-M,,SIG,,,RECOM",
+   "55-CS-133(N,G)55-CS-134-M,,SIG,,MXW",
+   "55-CS-133(N,G)55-CS-134-M,,SIG,,MXW,RECOM",
+   "55-CS-133(N,G)55-CS-134-M,,SIG,,SPA",
+   "55-CS-133(N,G)55-CS-134-M/G,,SIG/RAT",
+   "55-CS-133(N,G)55-CS-134-M/G,,SIG/RAT,,MXW",
+   "55-CS-133(N,G)55-CS-134-M/G,,SIG/RAT,,SPA",
+   "55-CS-133(N,G)55-CS-134-M/T,,SIG/RAT,,,DERIV",
+   "55-CS-133(N,G)55-CS-134-M/T,,SIG/RAT,,EPI",
+   "55-CS-133(N,G)55-CS-134-M/T,,SIG/RAT,,MXW",
+   "55-CS-133(N,G)55-CS-134-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "DY-164",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 82,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(66-DY-164(N,G)66-DY-165-G,M+,RI)//(66-DY-164(N,G)66-DY-165-G,M+,SIG)",
+   "66-DY-164(N,G)66-DY-165-G,,SIG",
+   "66-DY-164(N,G)66-DY-165-G,,SIG,,,RECOM",
+   "66-DY-164(N,G)66-DY-165-G,,SIG,,FIS",
+   "66-DY-164(N,G)66-DY-165-G,,SIG,,MXW",
+   "66-DY-164(N,G)66-DY-165-G,M+,SIG",
+   "66-DY-164(N,G)66-DY-165-M,,SIG",
+   "66-DY-164(N,G)66-DY-165-M,,SIG,,,RECOM",
+   "66-DY-164(N,G)66-DY-165-M,,SIG,,MXW",
+   "66-DY-164(N,G)66-DY-165-M/G,,SIG/RAT",
+   "66-DY-164(N,G)66-DY-165-M/T,,SIG/RAT",
+   "66-DY-164(N,G)66-DY-165-T/M,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "ER-166",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 14,
+  "n_isomer_resolved": 5,
+  "isomer_reactions": [
+   "(68-ER-167(N,INL)68-ER-167-M,,SIG,,SPA/RAW)+(68-ER-166(N,G)68-ER-167-M,,SIG,,SPA/RAW)",
+   "68-ER-166(N,G)68-ER-167-G,,SIG,,,RECOM",
+   "68-ER-166(N,G)68-ER-167-M,,SIG,,,RECOM",
+   "68-ER-166(N,G)68-ER-167-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "ER-167",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 7,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "(68-ER-167(N,INL)68-ER-167-M,,SIG,,SPA/RAW)+(68-ER-166(N,G)68-ER-167-M,,SIG,,SPA/RAW)",
+   "(68-ER-168(N,2N)68-ER-167-M,,SIG)+(68-ER-167(N,INL)68-ER-167-M,,SIG,,RAB)",
+   "68-ER-167(N,INL)68-ER-167-M,,SIG",
+   "68-ER-167(N,INL)68-ER-167-M,,SIG,,FIS",
+   "68-ER-167(N,INL)68-ER-167-M,,SIG,,SPA/RAW"
+  ]
+ },
+ {
+  "target": "ER-168",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 7,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "(68-ER-168(N,2N)68-ER-167-M,,SIG)+(68-ER-167(N,INL)68-ER-167-M,,SIG,,RAB)",
+   "68-ER-168(N,2N)68-ER-167-M,,SIG",
+   "68-ER-168(N,2N)68-ER-167-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "EU-151",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 40,
+  "n_isomer_resolved": 34,
+  "isomer_reactions": [
+   "63-EU-151(N,2N)63-EU-150-G,,SIG",
+   "63-EU-151(N,2N)63-EU-150-G,,SIG,,,DERIV",
+   "63-EU-151(N,2N)63-EU-150-G,,SIG,,SPA",
+   "63-EU-151(N,2N)63-EU-150-M,,SIG",
+   "63-EU-151(N,2N)63-EU-150-M,,SIG,,,DERIV",
+   "63-EU-151(N,2N)63-EU-150-M/T,,SIG/RAT",
+   "63-EU-151(N,2N)63-EU-150-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "EU-151",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 116,
+  "n_isomer_resolved": 67,
+  "isomer_reactions": [
+   "(63-EU-151(N,G)63-EU-152-M1,,RI)//(63-EU-151(N,G)63-EU-152-M1,,SIG)",
+   "(63-EU-151(N,G)63-EU-152-M1,,SIG,,MXW)/(79-AU-197(N,G)79-AU-198,,SIG,,MXW)",
+   "63-EU-151(N,G)63-EU-152-G+M2/M1,,SIG/RAT,,MXW",
+   "63-EU-151(N,G)63-EU-152-G,,SIG,,,DERIV",
+   "63-EU-151(N,G)63-EU-152-G,,SIG,,,RECOM",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG,,,DERIV",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG,,,RECOM",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG,,FIS",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG,,MXW",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG,,MXW,DERIV",
+   "63-EU-151(N,G)63-EU-152-M1,,SIG,,MXW,RECOM",
+   "63-EU-151(N,G)63-EU-152-M1/G+M1,,SIG/RAT,,SPA",
+   "63-EU-151(N,G)63-EU-152-M1/G+M2,,SIG/RAT,,MXW",
+   "63-EU-151(N,G)63-EU-152-M1/G,,SIG/RAT,,MXW",
+   "63-EU-151(N,G)63-EU-152-M1/M2,,SIG/RAT,,SPA",
+   "63-EU-151(N,G)63-EU-152-M1/T,,SIG/RAT",
+   "63-EU-151(N,G)63-EU-152-M1/T,,SIG/RAT,,EPI",
+   "63-EU-151(N,G)63-EU-152-M1/T,,SIG/RAT,,FIS",
+   "63-EU-151(N,G)63-EU-152-M1/T,,SIG/RAT,,RES",
+   "63-EU-151(N,G)63-EU-152-M1/T,,SIG/RAT,,SPA",
+   "63-EU-151(N,G)63-EU-152-M2,,SIG",
+   "63-EU-151(N,G)63-EU-152-M2,,SIG,,,RECOM",
+   "63-EU-151(N,G)63-EU-152-M2/G+M2,,SIG/RAT,,SPA",
+   "63-EU-151(N,G)63-EU-152-M2/G,,SIG/RAT,,MXW",
+   "63-EU-151(N,G)63-EU-152-M2/M1+M2,,SIG/RAT",
+   "63-EU-151(N,G)63-EU-152-M2/M1,,SIG/RAT",
+   "63-EU-151(N,G)63-EU-152-M2/M1,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "EU-153",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 41,
+  "n_isomer_resolved": 29,
+  "isomer_reactions": [
+   "63-EU-153(N,2N)63-EU-152-G,,SIG",
+   "63-EU-153(N,2N)63-EU-152-M1,,SIG",
+   "63-EU-153(N,2N)63-EU-152-M1,,SIG,,,DERIV",
+   "63-EU-153(N,2N)63-EU-152-M1/T,,SIG/RAT",
+   "63-EU-153(N,2N)63-EU-152-M1/T,,SIG/RAT,,,DERIV",
+   "63-EU-153(N,2N)63-EU-152-M2,,SIG",
+   "63-EU-153(N,2N)63-EU-152-M2/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "EU-153",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 47,
+  "n_isomer_resolved": 2,
+  "isomer_reactions": [
+   "63-EU-153(N,G)63-EU-154-M/G,,SIG/RAT,,MXW",
+   "63-EU-153(N,G)63-EU-154-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "FE-54",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 13,
+  "isomer_reactions": [
+   "26-FE-54(N,2N)26-FE-53-G,(M),SIG",
+   "26-FE-54(N,2N)26-FE-53-G,,SIG",
+   "26-FE-54(N,2N)26-FE-53-G,,SIG,,FIS",
+   "26-FE-54(N,2N)26-FE-53-G,M+,SIG",
+   "26-FE-54(N,2N)26-FE-53-G,M+,SIG,,SPA",
+   "26-FE-54(N,2N)26-FE-53-M,,SIG",
+   "26-FE-54(N,2N)26-FE-53-M,,SIG,,FIS",
+   "26-FE-54(N,2N)26-FE-53-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "GE-72",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 10,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "32-GE-72(N,G)32-GE-73-M,,SIG,,,RECOM"
+  ]
+ },
+ {
+  "target": "GE-73",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "GE-74",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "32-GE-74(N,2N)32-GE-73-M,,SIG"
+  ]
+ },
+ {
+  "target": "GE-74",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 58,
+  "n_isomer_resolved": 25,
+  "isomer_reactions": [
+   "(32-GE-74(N,G)32-GE-75-M,,RI)//(32-GE-74(N,G)32-GE-75-M,,SIG)",
+   "32-GE-74(N,G)32-GE-75-G,(M),SIG",
+   "32-GE-74(N,G)32-GE-75-G,,SIG",
+   "32-GE-74(N,G)32-GE-75-G,,SIG,,,RECOM",
+   "32-GE-74(N,G)32-GE-75-G,,SIG,,AV",
+   "32-GE-74(N,G)32-GE-75-G,,SIG,,MXW",
+   "32-GE-74(N,G)32-GE-75-G,M-,SIG",
+   "32-GE-74(N,G)32-GE-75-M,,SIG",
+   "32-GE-74(N,G)32-GE-75-M,,SIG,,,RECOM",
+   "32-GE-74(N,G)32-GE-75-M,,SIG,,AV",
+   "32-GE-74(N,G)32-GE-75-M,,SIG,,MXW",
+   "32-GE-74(N,G)32-GE-75-M/G,,SIG/RAT",
+   "32-GE-74(N,G)32-GE-75-M/T,,SIG/RAT",
+   "32-GE-74(N,G)32-GE-75-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "GE-76",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 49,
+  "n_isomer_resolved": 27,
+  "isomer_reactions": [
+   "32-GE-76(N,2N)32-GE-75-G,,SIG",
+   "32-GE-76(N,2N)32-GE-75-M,,SIG",
+   "32-GE-76(N,2N)32-GE-75-M/G,,SIG/RAT",
+   "32-GE-76(N,2N)32-GE-75-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "GE-76",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 64,
+  "n_isomer_resolved": 45,
+  "isomer_reactions": [
+   "(32-GE-76(N,G)32-GE-77-G,,RI)/(32-GE-76(N,G)32-GE-77-G,,SIG)",
+   "(32-GE-76(N,G)32-GE-77-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(32-GE-76(N,G)32-GE-77-M,,RI)/(32-GE-76(N,G)32-GE-77-M,,SIG)",
+   "(32-GE-76(N,G)32-GE-77-M,,RI)//(32-GE-76(N,G)32-GE-77-M,,SIG)",
+   "32-GE-76(N,G)32-GE-77-G,,SIG",
+   "32-GE-76(N,G)32-GE-77-G,,SIG,,,RECOM",
+   "32-GE-76(N,G)32-GE-77-G,,SIG,,MXW",
+   "32-GE-76(N,G)32-GE-77-G,,SIG,,MXW,DERIV",
+   "32-GE-76(N,G)32-GE-77-G,,SIG,,SPA",
+   "32-GE-76(N,G)32-GE-77-G,M+,SIG",
+   "32-GE-76(N,G)32-GE-77-G,M+,SIG,,MXW",
+   "32-GE-76(N,G)32-GE-77-G/T,,SIG/RAT,,SPA",
+   "32-GE-76(N,G)32-GE-77-M,,SIG",
+   "32-GE-76(N,G)32-GE-77-M,,SIG,,,RECOM",
+   "32-GE-76(N,G)32-GE-77-M,,SIG,,MXW",
+   "32-GE-76(N,G)32-GE-77-M,,SIG,,SPA",
+   "32-GE-76(N,G)32-GE-77-M/G,,SIG/RAT",
+   "32-GE-76(N,G)32-GE-77-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "HF-176",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 22,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "72-HF-176(N,G)72-HF-177-L/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "HF-177",
+  "mt": 4,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "HF-177",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 25,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "72-HF-177(N,G)72-HF-178-M/T,,SIG/RAT",
+   "72-HF-177(N,G)72-HF-178-M1,,SIG,,,RECOM",
+   "72-HF-177(N,G)72-HF-178-M1,,SIG,,MXW",
+   "72-HF-177(N,G)72-HF-178-M2,,SIG",
+   "72-HF-177(N,G)72-HF-178-M2,,SIG,,,RECOM",
+   "72-HF-177(N,G)72-HF-178-M2,,SIG,,MXW",
+   "72-HF-177(N,G)72-HF-178-M2/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "HF-178",
+  "mt": 4,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 2,
+  "n_isomer_resolved": 2,
+  "isomer_reactions": [
+   "(72-HF-179(N,2N)72-HF-178-M2,,SIG)+(72-HF-178(N,INL)72-HF-178-M2,,SIG,,RAB)",
+   "72-HF-178(N,INL)72-HF-178-M2,,SIG"
+  ]
+ },
+ {
+  "target": "HF-178",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "HF-178",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 35,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "(72-HF-178(N,G)72-HF-179-M1,,RI)//(72-HF-178(N,G)72-HF-179-M1,,SIG)",
+   "72-HF-178(N,G)72-HF-179-M,,SIG",
+   "72-HF-178(N,G)72-HF-179-M1,,SIG,,,RECOM",
+   "72-HF-178(N,G)72-HF-179-M1,,SIG,,MXW",
+   "72-HF-178(N,G)72-HF-179-M1/T,,SIG/RAT",
+   "72-HF-178(N,G)72-HF-179-M2,,SIG,,MXW",
+   "72-HF-178(N,G)72-HF-179-M2,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "HF-179",
+  "mt": 4,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 8,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "(72-HF-180(N,2N)72-HF-179-M2,,SIG)+(72-HF-179(N,INL)72-HF-179-M2,,SIG,,RAB)",
+   "(72-HF-180(N,2N)72-HF-179-M2,,SIG,,SPA)+(72-HF-179(N,INL)72-HF-179-M2,,SIG,,RAB/SPA)",
+   "72-HF-179(N,INL)72-HF-179-M1,,SIG",
+   "72-HF-179(N,INL)72-HF-179-M2,,SIG"
+  ]
+ },
+ {
+  "target": "HF-179",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 8,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "(72-HF-179(N,2N)72-HF-178-M2,,SIG)+(72-HF-178(N,INL)72-HF-178-M2,,SIG,,RAB)",
+   "72-HF-179(N,2N)72-HF-178-M1,,SIG",
+   "72-HF-179(N,2N)72-HF-178-M2,,SIG"
+  ]
+ },
+ {
+  "target": "HF-179",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(72-HF-179(N,G)72-HF-180-M,,RI)//(72-HF-179(N,G)72-HF-180-M,,SIG)",
+   "72-HF-179(N,G)72-HF-180-L/T,,SIG/RAT",
+   "72-HF-179(N,G)72-HF-180-M,,SIG",
+   "72-HF-179(N,G)72-HF-180-M,,SIG,,,RECOM",
+   "72-HF-179(N,G)72-HF-180-M,,SIG,,MXW",
+   "72-HF-179(N,G)72-HF-180-M,,SIG,,MXW,RECOM",
+   "72-HF-179(N,G)72-HF-180-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "HF-180",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 5,
+  "n_isomer_resolved": 5,
+  "isomer_reactions": [
+   "72-HF-180(N,INL)72-HF-180-M,,SIG"
+  ]
+ },
+ {
+  "target": "HF-180",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 10,
+  "n_isomer_resolved": 9,
+  "isomer_reactions": [
+   "(72-HF-180(N,2N)72-HF-179-M2,,SIG)+(72-HF-179(N,INL)72-HF-179-M2,,SIG,,RAB)",
+   "(72-HF-180(N,2N)72-HF-179-M2,,SIG,,SPA)+(72-HF-179(N,INL)72-HF-179-M2,,SIG,,RAB/SPA)",
+   "72-HF-180(N,2N)72-HF-179-M1,,SIG",
+   "72-HF-180(N,2N)72-HF-179-M2,,SIG"
+  ]
+ },
+ {
+  "target": "HG-196",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 16,
+  "n_isomer_resolved": 14,
+  "isomer_reactions": [
+   "80-HG-196(N,2N)80-HG-195-G,,SIG",
+   "80-HG-196(N,2N)80-HG-195-G,,SIG,,AV",
+   "80-HG-196(N,2N)80-HG-195-M,,SIG",
+   "80-HG-196(N,2N)80-HG-195-M,,SIG,,AV",
+   "80-HG-196(N,2N)80-HG-195-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "HG-196",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 33,
+  "n_isomer_resolved": 23,
+  "isomer_reactions": [
+   "80-HG-196(N,G)80-HG-197-G,,SIG",
+   "80-HG-196(N,G)80-HG-197-G,,SIG,,SPA",
+   "80-HG-196(N,G)80-HG-197-G/M,,SIG/RAT,,MXW",
+   "80-HG-196(N,G)80-HG-197-M,,SIG",
+   "80-HG-196(N,G)80-HG-197-M,,SIG,,,RECOM",
+   "80-HG-196(N,G)80-HG-197-M,,SIG,,MXW",
+   "80-HG-196(N,G)80-HG-197-M,,SIG,,MXW,DERIV",
+   "80-HG-196(N,G)80-HG-197-M,,SIG,,MXW,RECOM",
+   "80-HG-196(N,G)80-HG-197-M,,SIG,,SPA",
+   "80-HG-196(N,G)80-HG-197-M/G,,SIG/RAT",
+   "80-HG-196(N,G)80-HG-197-M/T,,SIG/RAT",
+   "80-HG-196(N,G)80-HG-197-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "HG-198",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 27,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "80-HG-198(N,2N)80-HG-197-G,,SIG",
+   "80-HG-198(N,2N)80-HG-197-M,,SIG",
+   "80-HG-198(N,2N)80-HG-197-M/G,,SIG/RAT",
+   "80-HG-198(N,2N)80-HG-197-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "HG-198",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 9,
+  "n_isomer_resolved": 4,
+  "isomer_reactions": [
+   "(80-HG-198(N,G)80-HG-199-M,,SIG,,A/FIS)+(80-HG-199(N,INL)80-HG-199-M,,SIG,,A/FIS)",
+   "(80-HG-199(N,INL)80-HG-199-M,,SIG,,SPA)+(80-HG-198(N,G)80-HG-199-M,,SIG,,SPA)",
+   "80-HG-198(N,G)80-HG-199-M,,SIG,,,RECOM",
+   "80-HG-198(N,G)80-HG-199-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "HG-199",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 23,
+  "n_isomer_resolved": 22,
+  "isomer_reactions": [
+   "(80-HG-198(N,G)80-HG-199-M,,SIG,,A/FIS)+(80-HG-199(N,INL)80-HG-199-M,,SIG,,A/FIS)",
+   "(80-HG-199(N,INL)80-HG-199-M,,SIG)+(80-HG-200(N,2N)80-HG-199-M,,SIG,,RAB)",
+   "(80-HG-199(N,INL)80-HG-199-M,,SIG,,SPA)+(80-HG-198(N,G)80-HG-199-M,,SIG,,SPA)",
+   "80-HG-199(N,INL)80-HG-199-M,,SIG",
+   "80-HG-199(N,INL)80-HG-199-M,,SIG,,FIS",
+   "80-HG-199(N,INL)80-HG-199-M,,SIG,,FIS,DERIV",
+   "80-HG-199(N,INL)80-HG-199-M,,SIG,,FIS,EVAL",
+   "80-HG-199(N,INL)80-HG-199-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "HG-200",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 4,
+  "n_isomer_resolved": 4,
+  "isomer_reactions": [
+   "(80-HG-199(N,INL)80-HG-199-M,,SIG)+(80-HG-200(N,2N)80-HG-199-M,,SIG,,RAB)",
+   "80-HG-200(N,2N)80-HG-199-M,,SIG"
+  ]
+ },
+ {
+  "target": "HO-165",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 33,
+  "n_isomer_resolved": 27,
+  "isomer_reactions": [
+   "67-HO-165(N,2N)67-HO-164-G,,SIG",
+   "67-HO-165(N,2N)67-HO-164-M,,SIG",
+   "67-HO-165(N,2N)67-HO-164-M/G,,SIG/RAT",
+   "67-HO-165(N,2N)67-HO-164-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "HO-165",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 70,
+  "n_isomer_resolved": 30,
+  "isomer_reactions": [
+   "(67-HO-165(N,G)67-HO-166-G,,RI)//(67-HO-165(N,G)67-HO-166-G,,SIG)",
+   "(67-HO-165(N,G)67-HO-166-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "67-HO-165(N,G)67-HO-166-G,,SIG",
+   "67-HO-165(N,G)67-HO-166-G,,SIG,,,RECOM",
+   "67-HO-165(N,G)67-HO-166-G,,SIG,,MXW",
+   "67-HO-165(N,G)67-HO-166-G,,SIG,,MXW,RECOM",
+   "67-HO-165(N,G)67-HO-166-G,,SIG,,SPA",
+   "67-HO-165(N,G)67-HO-166-G,M+,SIG",
+   "67-HO-165(N,G)67-HO-166-M,,SIG",
+   "67-HO-165(N,G)67-HO-166-M,,SIG,,,RECOM",
+   "67-HO-165(N,G)67-HO-166-M,,SIG,,MXW",
+   "67-HO-165(N,G)67-HO-166-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "IN-113",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 53,
+  "n_isomer_resolved": 51,
+  "isomer_reactions": [
+   "(49-IN-113(N,INL)49-IN-113-M,,SIG)/(49-IN-113(N,2N)49-IN-112-M,,SIG)",
+   "(49-IN-113(N,INL)49-IN-113-M,,SIG)/(92-U-235(N,F),,SIG)",
+   "(49-IN-113(N,INL)49-IN-113-M,,SIG)/(92-U-238(N,F),,SIG)",
+   "(49-IN-113(N,INL)49-IN-113-M,,SIG,,SPA)/(92-U-238(N,F),,SIG,,SPA)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG)/(49-IN-113(N,INL)49-IN-113-M,,SIG)",
+   "49-IN-113(N,INL)49-IN-113-M,,SIG",
+   "49-IN-113(N,INL)49-IN-113-M,,SIG,,,DERIV",
+   "49-IN-113(N,INL)49-IN-113-M,,SIG,,FIS",
+   "49-IN-113(N,INL)49-IN-113-M,,SIG,,FIS,EVAL",
+   "49-IN-113(N,INL)49-IN-113-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "IN-113",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 62,
+  "n_isomer_resolved": 57,
+  "isomer_reactions": [
+   "(49-IN-113(N,INL)49-IN-113-M,,SIG)/(49-IN-113(N,2N)49-IN-112-M,,SIG)",
+   "(49-IN-115(N,2N)49-IN-114-M,,SIG)/(49-IN-113(N,2N)49-IN-112-M,,SIG)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG)/(49-IN-113(N,2N)49-IN-112-M,,SIG)",
+   "49-IN-113(N,2N)49-IN-112-G,(M),SIG",
+   "49-IN-113(N,2N)49-IN-112-G,,SIG",
+   "49-IN-113(N,2N)49-IN-112-G,M+,SIG",
+   "49-IN-113(N,2N)49-IN-112-G/M,,SIG/RAT",
+   "49-IN-113(N,2N)49-IN-112-M,,SIG",
+   "49-IN-113(N,2N)49-IN-112-M,,SIG,,FIS",
+   "49-IN-113(N,2N)49-IN-112-M/G,,SIG/RAT",
+   "49-IN-113(N,2N)49-IN-112-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "IN-113",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 39,
+  "n_isomer_resolved": 34,
+  "isomer_reactions": [
+   "(49-IN-113(N,G)49-IN-114-M,,RI)//(49-IN-113(N,G)49-IN-114-M,,SIG)",
+   "49-IN-113(N,G)49-IN-114-G,,SIG",
+   "49-IN-113(N,G)49-IN-114-G,,SIG,,,RECOM",
+   "49-IN-113(N,G)49-IN-114-G,,SIG,,MXW",
+   "49-IN-113(N,G)49-IN-114-L/G,,SIG/RAT,,MXW",
+   "49-IN-113(N,G)49-IN-114-M,,SIG",
+   "49-IN-113(N,G)49-IN-114-M,,SIG,,,RECOM",
+   "49-IN-113(N,G)49-IN-114-M,,SIG,,MXW",
+   "49-IN-113(N,G)49-IN-114-M,,SIG,,MXW,RECOM",
+   "49-IN-113(N,G)49-IN-114-M/G,,SIG/RAT",
+   "49-IN-113(N,G)49-IN-114-M/G,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "IN-115",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 133,
+  "n_isomer_resolved": 127,
+  "isomer_reactions": [
+   "((13-AL-27(N,A)11-NA-24,,SIG,,FIS)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS))//((13-AL-27(N,A)11-NA-24,,SIG,,FIS)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS))",
+   "((13-AL-27(N,P)12-MG-27,,SIG,,FIS)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS))//((13-AL-27(N,P)12-MG-27,,SIG,,FIS)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS))",
+   "((13-AL-27(N,P)12-MG-27,,SIG,,FIS,DERIV)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS,DERIV))//((13-AL-27(N,P)12-MG-27,,SIG,,FIS,DERIV)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS,DERIV))",
+   "(30-ZN-67(N,P)29-CU-67,,SIG)/(49-IN-115(N,INL)49-IN-115-M,,SIG)",
+   "(42-MO-92(N,P)41-NB-92-M,,SIG)/(49-IN-115(N,INL)49-IN-115-M,,SIG)",
+   "(42-MO-98(N,G)42-MO-99,,SIG)/(49-IN-115(N,INL)49-IN-115-M,,SIG)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG)/(49-IN-113(N,2N)49-IN-112-M,,SIG)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG)/(49-IN-113(N,INL)49-IN-113-M,,SIG)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG)/(92-U-235(N,F),,SIG)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG)/(92-U-238(N,F),,SIG)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS)/(13-AL-27(N,A)11-NA-24,,SIG,,FIS)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS)/(92-U-238(N,F),,SIG,,FIS)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS)/(94-PU-239(N,F),,SIG,,FIS)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS,DERIV)//(49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS,DERIV)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,SPA)/(25-MN-55(N,G)25-MN-56,,SIG,,SPA)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,SPA)/(92-U-235(N,F),,SIG,,SPA)",
+   "(49-IN-115(N,INL)49-IN-115-M,,SIG,,SPA)/(92-U-238(N,F),,SIG,,SPA)",
+   "(90-TH-232(N,F),,SIG,,SPA)/(49-IN-115(N,INL)49-IN-115-M,,SIG,,SPA)",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG,,,DERIV",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG,,,EVAL",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG,,FIS,EVAL",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG,,FST",
+   "49-IN-115(N,INL)49-IN-115-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "IN-115",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 58,
+  "n_isomer_resolved": 50,
+  "isomer_reactions": [
+   "(49-IN-115(N,2N)49-IN-114-M,,SIG)/(49-IN-113(N,2N)49-IN-112-M,,SIG)",
+   "(49-IN-115(N,2N)49-IN-114-M,,SIG)/(49-IN-115(N,2N)49-IN-114,,SIG)",
+   "(49-IN-115(N,2N)49-IN-114-M,,SIG)//(49-IN-115(N,2N)49-IN-114-M,,SIG)",
+   "49-IN-115(N,2N)49-IN-114-G,,SIG",
+   "49-IN-115(N,2N)49-IN-114-G/M,,SIG/RAT",
+   "49-IN-115(N,2N)49-IN-114-M,,SIG",
+   "49-IN-115(N,2N)49-IN-114-M,,SIG,,,DERIV",
+   "49-IN-115(N,2N)49-IN-114-M/G,,SIG/RAT",
+   "49-IN-115(N,2N)49-IN-114-M1,,SIG"
+  ]
+ },
+ {
+  "target": "IN-115",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 148,
+  "n_isomer_resolved": 77,
+  "isomer_reactions": [
+   "(49-IN-115(N,G)49-IN-116-G,,SIG,,SPA)/(49-IN-115(N,G)49-IN-116,,SIG,,SPA)",
+   "(49-IN-115(N,G)49-IN-116-M,,RI)//(49-IN-115(N,G)49-IN-116-M,,SIG)",
+   "(49-IN-115(N,G)49-IN-116-M,,SIG,,FST)/(92-U-235(N,F),,SIG,,FST)",
+   "(49-IN-115(N,G)49-IN-116-M,,SIG,,MXW)/(25-MN-55(N,G)25-MN-56,,SIG,,MXW)",
+   "(49-IN-115(N,G)49-IN-116-M,,SIG,,SPA)/(92-U-235(N,F),,SIG,,SPA)",
+   "(49-IN-115(N,G)49-IN-116-M1,,SIG,,SPA)/(49-IN-115(N,G)49-IN-116,,SIG,,SPA)",
+   "(49-IN-115(N,G)49-IN-116-M2,,RI)//(49-IN-115(N,G)49-IN-116-M2,,SIG)",
+   "(49-IN-115(N,G)49-IN-116-M2,,SIG,,SPA)/(49-IN-115(N,G)49-IN-116,,SIG,,SPA)",
+   "(49-IN-115(N,G)49-IN-116-M2,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(92-U-238(N,G)92-U-239,,SIG)/(49-IN-115(N,G)49-IN-116-M,,SIG)",
+   "49-IN-115(N,G)49-IN-116-G,,SIG",
+   "49-IN-115(N,G)49-IN-116-G,,SIG,,,DERIV",
+   "49-IN-115(N,G)49-IN-116-G,,SIG,,,RECOM",
+   "49-IN-115(N,G)49-IN-116-G,,SIG,,FIS",
+   "49-IN-115(N,G)49-IN-116-G,,SIG,,MXW",
+   "49-IN-115(N,G)49-IN-116-G,,SIG,,SPA",
+   "49-IN-115(N,G)49-IN-116-G/M1+M2,,SIG/RAT",
+   "49-IN-115(N,G)49-IN-116-M,,SIG",
+   "49-IN-115(N,G)49-IN-116-M,,SIG,,MXW",
+   "49-IN-115(N,G)49-IN-116-M,,SIG,,MXW,RECOM",
+   "49-IN-115(N,G)49-IN-116-M,,SIG,,SPA",
+   "49-IN-115(N,G)49-IN-116-M1+M2/G,,SIG/RAT",
+   "49-IN-115(N,G)49-IN-116-M1+M2/G,,SIG/RAT,,SPA",
+   "49-IN-115(N,G)49-IN-116-M1+M2/T,,SIG/RAT,,SPA",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG,,,RECOM",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG,,FIS",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG,,MXW",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG,,MXW,DERIV",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG,,RES",
+   "49-IN-115(N,G)49-IN-116-M1,,SIG,,SPA",
+   "49-IN-115(N,G)49-IN-116-M1,M+,SIG",
+   "49-IN-115(N,G)49-IN-116-M1/G,,SIG/RAT",
+   "49-IN-115(N,G)49-IN-116-M1/G,,SIG/RAT,,MXW",
+   "49-IN-115(N,G)49-IN-116-M2,,SIG",
+   "49-IN-115(N,G)49-IN-116-M2,,SIG,,,RECOM",
+   "49-IN-115(N,G)49-IN-116-M2,,SIG,,MXW",
+   "49-IN-115(N,G)49-IN-116-M2,,SIG,,SPA",
+   "49-IN-115(N,G)49-IN-116-M2/G,,SIG/RAT,,MXW",
+   "49-IN-115(N,G)49-IN-116-M2/M1,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "IR-191",
+  "mt": 4,
+  "lfs": [
+   1,
+   10002
+  ],
+  "n_datasets": 8,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "77-IR-191(N,INL)77-IR-191-G,,SIG,,,DERIV",
+   "77-IR-191(N,INL)77-IR-191-M1,(M),SIG",
+   "77-IR-191(N,INL)77-IR-191-M1,(M),SIG,,,DERIV",
+   "77-IR-191(N,INL)77-IR-191-M1,(M),SIG,,FIS",
+   "77-IR-191(N,INL)77-IR-191-M1,,SIG",
+   "77-IR-191(N,INL)77-IR-191-M1,,SIG,,,DERIV",
+   "77-IR-191(N,INL)77-IR-191-M1/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "IR-191",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 45,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(77-IR-191(N,2N)77-IR-190-M1,,SIG)/(77-IR-193(N,2N)77-IR-192-M1,,SIG)",
+   "77-IR-191(N,2N)77-IR-190-G,,SIG",
+   "77-IR-191(N,2N)77-IR-190-M1/G,,SIG/RAT",
+   "77-IR-191(N,2N)77-IR-190-M2,,SIG",
+   "77-IR-191(N,2N)77-IR-190-M2,,SIG,,,DERIV",
+   "77-IR-191(N,2N)77-IR-190-M2/G+M1,,SIG/RAT",
+   "77-IR-191(N,2N)77-IR-190-M2/G,,SIG/RAT",
+   "77-IR-191(N,2N)77-IR-190-M2/T,,SIG/RAT",
+   "77-IR-191(N,2N)77-IR-190-T/M2,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "IR-191",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 39,
+  "n_isomer_resolved": 14,
+  "isomer_reactions": [
+   "77-IR-191(N,G)77-IR-192-G,,SIG,,,RECOM",
+   "77-IR-191(N,G)77-IR-192-G,,SIG,,MXW",
+   "77-IR-191(N,G)77-IR-192-M1,,SIG",
+   "77-IR-191(N,G)77-IR-192-M1,,SIG,,,RECOM",
+   "77-IR-191(N,G)77-IR-192-M1,,SIG,,MXW",
+   "77-IR-191(N,G)77-IR-192-M1/G,,SIG/RAT,,MXW",
+   "77-IR-191(N,G)77-IR-192-M2,,SIG,,,RECOM",
+   "77-IR-191(N,G)77-IR-192-M2,,SIG,,SPA",
+   "77-IR-191(N,G)77-IR-192-M2/G,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "IR-193",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 10,
+  "n_isomer_resolved": 10,
+  "isomer_reactions": [
+   "77-IR-193(N,INL)77-IR-193-G,,SIG,,,DERIV",
+   "77-IR-193(N,INL)77-IR-193-M,,SIG",
+   "77-IR-193(N,INL)77-IR-193-M,,SIG,,,DERIV",
+   "77-IR-193(N,INL)77-IR-193-M,,SIG,,AV",
+   "77-IR-193(N,INL)77-IR-193-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "IR-193",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 19,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "(77-IR-191(N,2N)77-IR-190-M1,,SIG)/(77-IR-193(N,2N)77-IR-192-M1,,SIG)",
+   "77-IR-193(N,2N)77-IR-192-G,,SIG",
+   "77-IR-193(N,2N)77-IR-192-M2,,SIG"
+  ]
+ },
+ {
+  "target": "LU-175",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 36,
+  "n_isomer_resolved": 23,
+  "isomer_reactions": [
+   "71-LU-175(N,2N)71-LU-174-G,,SIG",
+   "71-LU-175(N,2N)71-LU-174-M,,SIG",
+   "71-LU-175(N,2N)71-LU-174-M/G,,SIG/RAT",
+   "71-LU-175(N,2N)71-LU-174-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "LU-175",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 48,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(71-LU-175(N,G)71-LU-176-M,,RI)//(71-LU-175(N,G)71-LU-176-M,,SIG)",
+   "(71-LU-175(N,G)71-LU-176-M,,SIG)/(79-AU-197(N,G)79-AU-198,,SIG)",
+   "(71-LU-175(N,G)71-LU-176-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(71-LU-175(N,G)71-LU-176-M,,SIG,,SPA/A)+(71-LU-176(N,INL)71-LU-176-M,,SIG,,SPA/A)",
+   "71-LU-175(N,G)71-LU-176-G,,SIG,,,RECOM",
+   "71-LU-175(N,G)71-LU-176-M,,SIG",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,,RECOM",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,FIS",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,MXW",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,MXW,DERIV",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,MXW,RECOM",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,MXW/A",
+   "71-LU-175(N,G)71-LU-176-M,,SIG,,SPA",
+   "71-LU-175(N,G)71-LU-176-M/T,,SIG/RAT,,MXW,DERIV"
+  ]
+ },
+ {
+  "target": "LU-176",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 3,
+  "n_isomer_resolved": 3,
+  "isomer_reactions": [
+   "(71-LU-175(N,G)71-LU-176-M,,SIG,,SPA/A)+(71-LU-176(N,INL)71-LU-176-M,,SIG,,SPA/A)",
+   "71-LU-176(N,INL)71-LU-176-M,,SIG,,FIS",
+   "71-LU-176(N,INL)71-LU-176-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "LU-176",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 44,
+  "n_isomer_resolved": 16,
+  "isomer_reactions": [
+   "71-LU-176(N,G)71-LU-177-G,,SIG",
+   "71-LU-176(N,G)71-LU-177-G,,SIG,,MXW",
+   "71-LU-176(N,G)71-LU-177-G,M+,SIG,,SPA",
+   "71-LU-176(N,G)71-LU-177-G/M,,SIG/RAT,,MXW",
+   "71-LU-176(N,G)71-LU-177-L1/T,,SIG/RAT,,AV",
+   "71-LU-176(N,G)71-LU-177-L2/T,,SIG/RAT,,AV",
+   "71-LU-176(N,G)71-LU-177-M,,SIG",
+   "71-LU-176(N,G)71-LU-177-M,,SIG,,,RECOM",
+   "71-LU-176(N,G)71-LU-177-M,,SIG,,MXW",
+   "71-LU-176(N,G)71-LU-177-M/G,,SIG/RAT",
+   "71-LU-176(N,G)71-LU-177-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "MO-92",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 71,
+  "n_isomer_resolved": 54,
+  "isomer_reactions": [
+   "(42-MO-92(N,2N)42-MO-91-G,,SIG)/(42-MO-92(N,2N)42-MO-91,,SIG)",
+   "42-MO-92(N,2N)42-MO-91-G,(M),SIG",
+   "42-MO-92(N,2N)42-MO-91-G,,SIG",
+   "42-MO-92(N,2N)42-MO-91-G,M+,SIG",
+   "42-MO-92(N,2N)42-MO-91-G,M+,SIG,,REL",
+   "42-MO-92(N,2N)42-MO-91-G/M,,SIG/RAT",
+   "42-MO-92(N,2N)42-MO-91-G/T,,SIG/RAT",
+   "42-MO-92(N,2N)42-MO-91-M,,SIG",
+   "42-MO-92(N,2N)42-MO-91-M,,SIG,,,DERIV",
+   "42-MO-92(N,2N)42-MO-91-M,,SIG,,FIS",
+   "42-MO-92(N,2N)42-MO-91-M/G,,SIG/RAT",
+   "42-MO-92(N,2N)42-MO-91-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "MO-92",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 13,
+  "n_isomer_resolved": 4,
+  "isomer_reactions": [
+   "42-MO-92(N,G)42-MO-93-M,,SIG",
+   "42-MO-92(N,G)42-MO-93-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "MO-94",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 16,
+  "n_isomer_resolved": 15,
+  "isomer_reactions": [
+   "42-MO-94(N,2N)42-MO-93-M,,SIG"
+  ]
+ },
+ {
+  "target": "NB-93",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 34,
+  "n_isomer_resolved": 23,
+  "isomer_reactions": [
+   "41-NB-93(N,INL)41-NB-93-M,,SIG",
+   "41-NB-93(N,INL)41-NB-93-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "NB-93",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 125,
+  "n_isomer_resolved": 108,
+  "isomer_reactions": [
+   "(40-ZR-90(N,2N)40-ZR-89,,SIG)/(41-NB-93(N,2N)41-NB-92-M,,SIG)",
+   "(41-NB-93(N,2N)41-NB-92-M,,SIG)/(13-AL-27(N,A)11-NA-24,,SIG)",
+   "(41-NB-93(N,2N)41-NB-92-M,,SIG)//(41-NB-93(N,2N)41-NB-92-M,,SIG)",
+   "(41-NB-93(N,2N)41-NB-92-M,,SIG,,FIS)/(13-AL-27(N,A)11-NA-24,,SIG,,FIS)",
+   "(41-NB-93(N,2N)41-NB-92-M,,SIG,,FST)/(92-U-235(N,F),,SIG,,FST)",
+   "(41-NB-93(N,2N)41-NB-92-M,,SIG,,SPA)/(28-NI-58(N,P)27-CO-58,,SIG,,SPA)",
+   "(41-NB-93(N,2N)41-NB-92-M,,SIG,,SPA)/(92-U-238(N,F),,SIG,,SPA)",
+   "(41-NB-93(N,T)40-ZR-91,,SIG)/(41-NB-93(N,2N)41-NB-92-M,,SIG)",
+   "41-NB-93(N,2N)41-NB-92-G,,SIG,,,CALC",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG,,,DERIV",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG,,,EVAL",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG,,FIS",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG,,FIS,DERIV",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG,,REL",
+   "41-NB-93(N,2N)41-NB-92-M,,SIG,,SPA",
+   "41-NB-93(N,2N)41-NB-92-M2,,SIG"
+  ]
+ },
+ {
+  "target": "NB-93",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 72,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "(41-NB-93(N,G)41-NB-94-M,,RI)//(41-NB-93(N,G)41-NB-94-M,,SIG)",
+   "(41-NB-93(N,G)41-NB-94-M,,RI,,AV)//(41-NB-93(N,G)41-NB-94-M,,SIG,,AV)",
+   "41-NB-93(N,G)41-NB-94-G,,SIG,,MXW",
+   "41-NB-93(N,G)41-NB-94-M,,SIG",
+   "41-NB-93(N,G)41-NB-94-M,,SIG,,AV",
+   "41-NB-93(N,G)41-NB-94-M,,SIG,,FIS",
+   "41-NB-93(N,G)41-NB-94-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "ND-142",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 44,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(60-ND-142(N,2N)60-ND-141-G,,SIG)+(60-ND-142(N,2N)60-ND-141-M,,SIG,,FCT)",
+   "60-ND-142(N,2N)60-ND-141-G,,SIG",
+   "60-ND-142(N,2N)60-ND-141-G,,SIG,,,DERIV",
+   "60-ND-142(N,2N)60-ND-141-M,,SIG",
+   "60-ND-142(N,2N)60-ND-141-M/G,,SIG/RAT",
+   "60-ND-142(N,2N)60-ND-141-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "OS-184",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 9,
+  "n_isomer_resolved": 9,
+  "isomer_reactions": [
+   "76-OS-184(N,2N)76-OS-183-G,,SIG",
+   "76-OS-184(N,2N)76-OS-183-M,,SIG",
+   "76-OS-184(N,2N)76-OS-183-M/G,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "OS-188",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 10,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "OS-189",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "OS-190",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "OS-190",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "(76-OS-192(N,G)76-OS-193-M,,SIG)/(76-OS-190(N,G)76-OS-191,,SIG)",
+   "76-OS-190(N,G)76-OS-191-G,,SIG",
+   "76-OS-190(N,G)76-OS-191-G,,SIG,,,RECOM",
+   "76-OS-190(N,G)76-OS-191-G,,SIG,,MXW",
+   "76-OS-190(N,G)76-OS-191-G,,SIG,,SPA",
+   "76-OS-190(N,G)76-OS-191-M,,SIG",
+   "76-OS-190(N,G)76-OS-191-M,,SIG,,,RECOM",
+   "76-OS-190(N,G)76-OS-191-M,,SIG,,MXW",
+   "76-OS-190(N,G)76-OS-191-M,,SIG,,SPA",
+   "76-OS-190(N,G)76-OS-191-M/G,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "OS-192",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "76-OS-192(N,INL)76-OS-192-M,,SIG"
+  ]
+ },
+ {
+  "target": "OS-192",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 16,
+  "n_isomer_resolved": 11,
+  "isomer_reactions": [
+   "(76-OS-192(N,2N)76-OS-191-M,,SIG)/(76-OS-192(N,2N)76-OS-191,,SIG)",
+   "76-OS-192(N,2N)76-OS-191-G,,SIG",
+   "76-OS-192(N,2N)76-OS-191-M,,SIG",
+   "76-OS-192(N,2N)76-OS-191-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "PB-204",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 25,
+  "n_isomer_resolved": 25,
+  "isomer_reactions": [
+   "(82-PB-204(N,INL)82-PB-204-M,,SIG)/(92-U-235(N,F),,SIG)",
+   "(82-PB-204(N,INL)82-PB-204-M,,SIG)/(92-U-238(N,F),,SIG)",
+   "82-PB-204(N,INL)82-PB-204-M,,SIG",
+   "82-PB-204(N,INL)82-PB-204-M,,SIG,,FIS",
+   "82-PB-204(N,INL)82-PB-204-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "PB-204",
+  "mt": 16,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 34,
+  "n_isomer_resolved": 5,
+  "isomer_reactions": [
+   "82-PB-204(N,2N)82-PB-203-G,,SIG",
+   "82-PB-204(N,2N)82-PB-203-G,,SIG,,FIS",
+   "82-PB-204(N,2N)82-PB-203-M/G,,SIG/RAT",
+   "82-PB-204(N,2N)82-PB-203-M1,,SIG",
+   "82-PB-204(N,2N)82-PB-203-M1,M+,SIG"
+  ]
+ },
+ {
+  "target": "PB-206",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 20,
+  "n_isomer_resolved": 2,
+  "isomer_reactions": [
+   "(17-CL-37(N,G)17-CL-38-M,,SIG,,MXW)/(82-PB-206(N,G)82-PB-207-M,,SIG,,MXW)",
+   "82-PB-206(N,G)82-PB-207-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "PB-207",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 6,
+  "n_isomer_resolved": 5,
+  "isomer_reactions": [
+   "(82-PB-208(N,2N)82-PB-207-M,,SIG)+(82-PB-207(N,INL)82-PB-207-M,,SIG,,RAB)",
+   "82-PB-207(N,INL)82-PB-207-M,,SIG",
+   "82-PB-207(N,INL)82-PB-207-M,,SIG,,(A)"
+  ]
+ },
+ {
+  "target": "PB-208",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 11,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "(82-PB-208(N,2N)82-PB-207-M,,SIG)+(82-PB-207(N,INL)82-PB-207-M,,SIG,,RAB)",
+   "82-PB-208(N,2N)82-PB-207-M,,SIG"
+  ]
+ },
+ {
+  "target": "PD-106",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 19,
+  "n_isomer_resolved": 6,
+  "isomer_reactions": [
+   "(46-PD-106(N,G)46-PD-107-M,,RI)//(46-PD-106(N,G)46-PD-107-M,,SIG)",
+   "(46-PD-106(N,G)46-PD-107-M,,SIG,,MXW)/(46-PD-108(N,G)46-PD-109-M,,SIG,,MXW)",
+   "46-PD-106(N,G)46-PD-107-G,,SIG,,,RECOM",
+   "46-PD-106(N,G)46-PD-107-M,,SIG,,,RECOM",
+   "46-PD-106(N,G)46-PD-107-M,,SIG,,MXW",
+   "46-PD-106(N,G)46-PD-107-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "PD-108",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 8,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "46-PD-108(N,2N)46-PD-107-M,,SIG"
+  ]
+ },
+ {
+  "target": "PD-108",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 53,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(46-PD-106(N,G)46-PD-107-M,,SIG,,MXW)/(46-PD-108(N,G)46-PD-109-M,,SIG,,MXW)",
+   "(46-PD-108(N,G)46-PD-109-G,,SIG)+(46-PD-108(N,G)46-PD-109-M,,SIG,,FCT)",
+   "(46-PD-108(N,G)46-PD-109-M,,RI)//(46-PD-108(N,G)46-PD-109-M,,SIG)",
+   "46-PD-108(N,G)46-PD-109-G,,SIG",
+   "46-PD-108(N,G)46-PD-109-G,,SIG,,,RECOM",
+   "46-PD-108(N,G)46-PD-109-G,,SIG,,MXW",
+   "46-PD-108(N,G)46-PD-109-M,,SIG",
+   "46-PD-108(N,G)46-PD-109-M,,SIG,,,RECOM",
+   "46-PD-108(N,G)46-PD-109-M,,SIG,,MXW",
+   "46-PD-108(N,G)46-PD-109-M,,SIG,,SPA",
+   "46-PD-108(N,G)46-PD-109-M/T,,SIG/RAT",
+   "46-PD-108(N,G)46-PD-109-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "PD-110",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 33,
+  "n_isomer_resolved": 23,
+  "isomer_reactions": [
+   "46-PD-110(N,2N)46-PD-109-G,,SIG",
+   "46-PD-110(N,2N)46-PD-109-G,,SIG,,AV",
+   "46-PD-110(N,2N)46-PD-109-M,,SIG",
+   "46-PD-110(N,2N)46-PD-109-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "PD-110",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 39,
+  "n_isomer_resolved": 25,
+  "isomer_reactions": [
+   "(46-PD-110(N,G)46-PD-111-M,,RI)//(46-PD-110(N,G)46-PD-111-M,,SIG)",
+   "46-PD-110(N,G)46-PD-111-G,(M),SIG,,MXW",
+   "46-PD-110(N,G)46-PD-111-G,,SIG",
+   "46-PD-110(N,G)46-PD-111-G,,SIG,,,RECOM",
+   "46-PD-110(N,G)46-PD-111-G,,SIG,,MXW",
+   "46-PD-110(N,G)46-PD-111-M,,SIG",
+   "46-PD-110(N,G)46-PD-111-M,,SIG,,,RECOM",
+   "46-PD-110(N,G)46-PD-111-M,,SIG,,MXW",
+   "46-PD-110(N,G)46-PD-111-M,,SIG,,SPA",
+   "46-PD-110(N,G)46-PD-111-M/G,,SIG/RAT",
+   "46-PD-110(N,G)46-PD-111-M/G,,SIG/RAT,,MXW",
+   "46-PD-110(N,G)46-PD-111-M/T,,SIG/RAT",
+   "46-PD-110(N,G)46-PD-111-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "PR-141",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 64,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "59-PR-141(N,G)59-PR-142-G,(M),SIG",
+   "59-PR-141(N,G)59-PR-142-G,,SIG",
+   "59-PR-141(N,G)59-PR-142-M,,SIG",
+   "59-PR-141(N,G)59-PR-142-M,,SIG,,,RECOM",
+   "59-PR-141(N,G)59-PR-142-M,,SIG,,MXW",
+   "59-PR-141(N,G)59-PR-142-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "PT-192",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 13,
+  "n_isomer_resolved": 4,
+  "isomer_reactions": [
+   "78-PT-192(N,G)78-PT-193-M,,SIG",
+   "78-PT-192(N,G)78-PT-193-M,,SIG,,,RECOM",
+   "78-PT-192(N,G)78-PT-193-M,,SIG,,MXW",
+   "78-PT-192(N,G)78-PT-193-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "PT-194",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "PT-194",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 18,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "78-PT-194(N,G)78-PT-195-M,,SIG,,,RECOM",
+   "78-PT-194(N,G)78-PT-195-M,,SIG,,MXW",
+   "78-PT-194(N,G)78-PT-195-M,,SIG,,MXW,RECOM",
+   "78-PT-194(N,G)78-PT-195-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "PT-195",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "78-PT-195(N,INL)78-PT-195-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "PT-196",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "PT-196",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 61,
+  "n_isomer_resolved": 34,
+  "isomer_reactions": [
+   "(78-PT-196(N,G)78-PT-197-G,M+,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(78-PT-196(N,G)78-PT-197-G,M+,SIG,,SPA/AV)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(78-PT-196(N,G)78-PT-197-M,,RI)//(78-PT-196(N,G)78-PT-197-M,,SIG)",
+   "(78-PT-196(N,G)78-PT-197-M,,SIG,,SPA,DERIV)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "78-PT-196(N,G)78-PT-197-G,(M),SIG",
+   "78-PT-196(N,G)78-PT-197-G,,SIG",
+   "78-PT-196(N,G)78-PT-197-G,,SIG,,MXW",
+   "78-PT-196(N,G)78-PT-197-G,,SIG,,SPA",
+   "78-PT-196(N,G)78-PT-197-G,M+,SIG",
+   "78-PT-196(N,G)78-PT-197-G,M+,SIG,,SPA",
+   "78-PT-196(N,G)78-PT-197-G,M+,SIG,,SPA/AV",
+   "78-PT-196(N,G)78-PT-197-G/M,,SIG/RAT,,MXW",
+   "78-PT-196(N,G)78-PT-197-M,,SIG",
+   "78-PT-196(N,G)78-PT-197-M,,SIG,,,RECOM",
+   "78-PT-196(N,G)78-PT-197-M,,SIG,,MXW",
+   "78-PT-196(N,G)78-PT-197-M,,SIG,,MXW,RECOM",
+   "78-PT-196(N,G)78-PT-197-M,,SIG,,SPA,DERIV",
+   "78-PT-196(N,G)78-PT-197-M,,SIG,,SPA/FCT",
+   "78-PT-196(N,G)78-PT-197-M/T,,SIG/RAT",
+   "78-PT-196(N,G)78-PT-197-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "PT-198",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 35,
+  "n_isomer_resolved": 25,
+  "isomer_reactions": [
+   "(78-PT-198(N,2N)78-PT-197-M,,SIG)/(78-PT-198(N,2N)78-PT-197,,SIG)",
+   "78-PT-198(N,2N)78-PT-197-G,(M),SIG",
+   "78-PT-198(N,2N)78-PT-197-G,,SIG",
+   "78-PT-198(N,2N)78-PT-197-M,,SIG",
+   "78-PT-198(N,2N)78-PT-197-M/G,,SIG/RAT",
+   "78-PT-198(N,2N)78-PT-197-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "PT-198",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 46,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "78-PT-198(N,G)78-PT-199-G,,SIG",
+   "78-PT-198(N,G)78-PT-199-G,,SIG,,MXW",
+   "78-PT-198(N,G)78-PT-199-M,,SIG",
+   "78-PT-198(N,G)78-PT-199-M,,SIG,,,RECOM",
+   "78-PT-198(N,G)78-PT-199-M,,SIG,,MXW",
+   "78-PT-198(N,G)78-PT-199-M,,SIG,,MXW,RECOM",
+   "78-PT-198(N,G)78-PT-199-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "RB-85",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 52,
+  "n_isomer_resolved": 31,
+  "isomer_reactions": [
+   "37-RB-85(N,2N)37-RB-84-G,,SIG",
+   "37-RB-85(N,2N)37-RB-84-M,,SIG",
+   "37-RB-85(N,2N)37-RB-84-M,,SIG,,SPA",
+   "37-RB-85(N,2N)37-RB-84-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "RB-85",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 62,
+  "n_isomer_resolved": 23,
+  "isomer_reactions": [
+   "(37-RB-85(N,G)37-RB-86-M,,RI)//(37-RB-85(N,G)37-RB-86-M,,SIG)",
+   "37-RB-85(N,G)37-RB-86-G,,SIG",
+   "37-RB-85(N,G)37-RB-86-G,,SIG,,,RECOM",
+   "37-RB-85(N,G)37-RB-86-G,,SIG,,MXW",
+   "37-RB-85(N,G)37-RB-86-G,,SIG,,SPA",
+   "37-RB-85(N,G)37-RB-86-M,,SIG",
+   "37-RB-85(N,G)37-RB-86-M,,SIG,,,RECOM",
+   "37-RB-85(N,G)37-RB-86-M,,SIG,,MXW",
+   "37-RB-85(N,G)37-RB-86-M,,SIG,,SPA",
+   "37-RB-85(N,G)37-RB-86-M/G,,SIG/RAT,,MXW",
+   "37-RB-85(N,G)37-RB-86-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "RB-87",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 18,
+  "isomer_reactions": [
+   "37-RB-87(N,2N)37-RB-86-G,(M),SIG",
+   "37-RB-87(N,2N)37-RB-86-G,,SIG",
+   "37-RB-87(N,2N)37-RB-86-M,,SIG",
+   "37-RB-87(N,2N)37-RB-86-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "RE-185",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 45,
+  "n_isomer_resolved": 36,
+  "isomer_reactions": [
+   "75-RE-185(N,2N)75-RE-184-G,(M),SIG",
+   "75-RE-185(N,2N)75-RE-184-G,,SIG",
+   "75-RE-185(N,2N)75-RE-184-G,,SIG,,AV",
+   "75-RE-185(N,2N)75-RE-184-G,,SIG,,SPA",
+   "75-RE-185(N,2N)75-RE-184-M,,SIG",
+   "75-RE-185(N,2N)75-RE-184-M,,SIG,,AV",
+   "75-RE-185(N,2N)75-RE-184-M,,SIG,,SPA",
+   "75-RE-185(N,2N)75-RE-184-M/G,,SIG/RAT",
+   "75-RE-185(N,2N)75-RE-184-M/T,,SIG/RAT",
+   "75-RE-185(N,2N)75-RE-184-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "RE-185",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 19,
+  "isomer_reactions": [
+   "(75-RE-185(N,G)75-RE-186-G,,RI)//(75-RE-185(N,G)75-RE-186-G,,SIG)",
+   "75-RE-185(N,G)75-RE-186-G,,SIG",
+   "75-RE-185(N,G)75-RE-186-G,,SIG,,FIS",
+   "75-RE-185(N,G)75-RE-186-G,,SIG,,MXW",
+   "75-RE-185(N,G)75-RE-186-G,,SIG,,SPA",
+   "75-RE-185(N,G)75-RE-186-M,,SIG,,,RECOM",
+   "75-RE-185(N,G)75-RE-186-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "RE-187",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 17,
+  "n_isomer_resolved": 16,
+  "isomer_reactions": [
+   "75-RE-187(N,2N)75-RE-186-G,(M),SIG",
+   "75-RE-187(N,2N)75-RE-186-G,,SIG",
+   "75-RE-187(N,2N)75-RE-186-G,,SIG,,AV",
+   "75-RE-187(N,2N)75-RE-186-G,,SIG,,SPA",
+   "75-RE-187(N,2N)75-RE-186-M,,SIG",
+   "75-RE-187(N,2N)75-RE-186-M,,SIG,,,DERIV"
+  ]
+ },
+ {
+  "target": "RE-187",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 55,
+  "n_isomer_resolved": 20,
+  "isomer_reactions": [
+   "(75-RE-187(N,G)75-RE-188-M,,RI)//(75-RE-187(N,G)75-RE-188-M,,SIG)",
+   "(75-RE-187(N,G)75-RE-188-M,,RI,,AV)//(75-RE-187(N,G)75-RE-188-M,,SIG,,AV)",
+   "75-RE-187(N,G)75-RE-188-G,,SIG",
+   "75-RE-187(N,G)75-RE-188-G,,SIG,,,RECOM",
+   "75-RE-187(N,G)75-RE-188-G/M,,SIG/RAT,,SPA",
+   "75-RE-187(N,G)75-RE-188-M,,SIG",
+   "75-RE-187(N,G)75-RE-188-M,,SIG,,,RECOM",
+   "75-RE-187(N,G)75-RE-188-M,,SIG,,AV",
+   "75-RE-187(N,G)75-RE-188-M,,SIG,,SPA",
+   "75-RE-187(N,G)75-RE-188-M/G,,SIG/RAT,,,DERIV",
+   "75-RE-187(N,G)75-RE-188-M/G,,SIG/RAT,,MXW",
+   "75-RE-187(N,G)75-RE-188-M/T,,SIG/RAT,,MXW",
+   "75-RE-187(N,G)75-RE-188-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "RH-103",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 36,
+  "n_isomer_resolved": 35,
+  "isomer_reactions": [
+   "((13-AL-27(N,A)11-NA-24,,SIG,,FIS)/(45-RH-103(N,INL)45-RH-103-M,,SIG,,FIS))//((13-AL-27(N,A)11-NA-24,,SIG,,FIS)/(45-RH-103(N,INL)45-RH-103-M,,SIG,,FIS))",
+   "45-RH-103(N,INL)45-RH-103-G,,SIG",
+   "45-RH-103(N,INL)45-RH-103-M,,SIG",
+   "45-RH-103(N,INL)45-RH-103-M,,SIG,,,EVAL",
+   "45-RH-103(N,INL)45-RH-103-M,,SIG,,FIS",
+   "45-RH-103(N,INL)45-RH-103-M,,SIG,,FIS,EVAL",
+   "45-RH-103(N,INL)45-RH-103-M,,SIG,,SPA",
+   "45-RH-103(N,INL)45-RH-103-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "RH-103",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 33,
+  "n_isomer_resolved": 24,
+  "isomer_reactions": [
+   "45-RH-103(N,2N)45-RH-102-G,,SIG",
+   "45-RH-103(N,2N)45-RH-102-G,,SIG,,FIS",
+   "45-RH-103(N,2N)45-RH-102-G,,SIG,,SPA",
+   "45-RH-103(N,2N)45-RH-102-M,,SIG",
+   "45-RH-103(N,2N)45-RH-102-M,,SIG,,FIS",
+   "45-RH-103(N,2N)45-RH-102-M,,SIG,,SPA",
+   "45-RH-103(N,2N)45-RH-102-M/G,,SIG/RAT",
+   "45-RH-103(N,2N)45-RH-102-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "RH-103",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 93,
+  "n_isomer_resolved": 46,
+  "isomer_reactions": [
+   "(45-RH-103(N,G)45-RH-104-G,,SIG)/(23-V-51(N,G)23-V-52,,SIG)",
+   "(45-RH-103(N,G)45-RH-104-G,,SIG)/(45-RH-103(N,G)45-RH-104-M,,SIG)",
+   "(45-RH-103(N,G)45-RH-104-G,,SIG,,SPA)//(45-RH-103(N,G)45-RH-104-G,,SIG,,SPA)",
+   "(45-RH-103(N,G)45-RH-104-M,,RI)//(45-RH-103(N,G)45-RH-104-M,,SIG)",
+   "(45-RH-103(N,G)45-RH-104-M,,SIG)/(23-V-51(N,G)23-V-52,,SIG)",
+   "(45-RH-103(N,G)45-RH-104-M,,SIG,,SPA)//(45-RH-103(N,G)45-RH-104-M,,SIG,,SPA)",
+   "(45-RH-103(N,HE3)43-TC-101,,SIG)/(45-RH-103(N,G)45-RH-104-M,,SIG)",
+   "45-RH-103(N,G)45-RH-104-G,,SIG",
+   "45-RH-103(N,G)45-RH-104-G,,SIG,,,DERIV",
+   "45-RH-103(N,G)45-RH-104-G,,SIG,,FIS",
+   "45-RH-103(N,G)45-RH-104-G,,SIG,,MXW",
+   "45-RH-103(N,G)45-RH-104-G/M,,SIG/RAT",
+   "45-RH-103(N,G)45-RH-104-G/M,,SIG/RAT,,SPA",
+   "45-RH-103(N,G)45-RH-104-M,,SIG",
+   "45-RH-103(N,G)45-RH-104-M,,SIG,,,RECOM",
+   "45-RH-103(N,G)45-RH-104-M,,SIG,,FIS",
+   "45-RH-103(N,G)45-RH-104-M,,SIG,,MXW",
+   "45-RH-103(N,G)45-RH-104-M,,SIG,,SPA",
+   "45-RH-103(N,G)45-RH-104-M/G,,SIG/RAT",
+   "45-RH-103(N,G)45-RH-104-M/G,,SIG/RAT,,MXW",
+   "45-RH-103(N,G)45-RH-104-M/T,,SIG/RAT",
+   "45-RH-103(N,G)45-RH-104-M/T,,SIG/RAT,,MXW",
+   "45-RH-103(N,G)45-RH-104-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "SB-121",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 30,
+  "isomer_reactions": [
+   "(51-SB-121(N,2N)51-SB-120-M,,SIG)/(51-SB-121(N,2N)51-SB-120-G,,SIG)",
+   "51-SB-121(N,2N)51-SB-120-G,,SIG",
+   "51-SB-121(N,2N)51-SB-120-G/M,,SIG/RAT",
+   "51-SB-121(N,2N)51-SB-120-M,,SIG",
+   "51-SB-121(N,2N)51-SB-120-M,,SIG,,REL",
+   "51-SB-121(N,2N)51-SB-120-M,,SIG,,SPA",
+   "51-SB-121(N,2N)51-SB-120-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SB-121",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 57,
+  "n_isomer_resolved": 13,
+  "isomer_reactions": [
+   "51-SB-121(N,G)51-SB-122-G,(M),SIG",
+   "51-SB-121(N,G)51-SB-122-G,,SIG",
+   "51-SB-121(N,G)51-SB-122-G,,SIG,,MXW",
+   "51-SB-121(N,G)51-SB-122-M,,SIG",
+   "51-SB-121(N,G)51-SB-122-M,,SIG,,,RECOM",
+   "51-SB-121(N,G)51-SB-122-M,,SIG,,MXW",
+   "51-SB-121(N,G)51-SB-122-M/G,,SIG/RAT,,MXW",
+   "51-SB-121(N,G)51-SB-122-M/T,,SIG/RAT",
+   "51-SB-121(N,G)51-SB-122-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "SB-123",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 16,
+  "isomer_reactions": [
+   "51-SB-123(N,2N)51-SB-122-G,,SIG",
+   "51-SB-123(N,2N)51-SB-122-G,,SIG,,AV",
+   "51-SB-123(N,2N)51-SB-122-G/M,,SIG/RAT",
+   "51-SB-123(N,2N)51-SB-122-M,,SIG",
+   "51-SB-123(N,2N)51-SB-122-M,,SIG,,AV",
+   "51-SB-123(N,2N)51-SB-122-M/G,,SIG/RAT",
+   "51-SB-123(N,2N)51-SB-122-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SB-123",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 49,
+  "n_isomer_resolved": 27,
+  "isomer_reactions": [
+   "(51-SB-123(N,G)51-SB-124-G,,SIG,,SPA)/(51-SB-123(N,G)51-SB-124-M,,SIG,,SPA)",
+   "(51-SB-123(N,G)51-SB-124-G,M+,RI)//(51-SB-123(N,G)51-SB-124-G,M+,SIG)",
+   "(51-SB-123(N,G)51-SB-124-M,,SIG,,SPA)/(51-SB-123(N,G)51-SB-124-M,,SIG,,SPA)",
+   "51-SB-123(N,G)51-SB-124-G,(M),SIG",
+   "51-SB-123(N,G)51-SB-124-G,,SIG",
+   "51-SB-123(N,G)51-SB-124-G,,SIG,,,RECOM",
+   "51-SB-123(N,G)51-SB-124-G,,SIG,,MXW",
+   "51-SB-123(N,G)51-SB-124-G,M+,SIG",
+   "51-SB-123(N,G)51-SB-124-G,M+,SIG,,MXW",
+   "51-SB-123(N,G)51-SB-124-M1,(M),SIG,,MXW",
+   "51-SB-123(N,G)51-SB-124-M1,,SIG",
+   "51-SB-123(N,G)51-SB-124-M1,,SIG,,,RECOM",
+   "51-SB-123(N,G)51-SB-124-M1/G,,SIG/RAT",
+   "51-SB-123(N,G)51-SB-124-M2,,SIG",
+   "51-SB-123(N,G)51-SB-124-M2,,SIG,,,RECOM"
+  ]
+ },
+ {
+  "target": "SC-45",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "SC-45",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 75,
+  "n_isomer_resolved": 62,
+  "isomer_reactions": [
+   "(21-SC-45(N,2N)21-SC-44-G,,SIG)/(21-SC-45(N,2N)21-SC-44-M,,SIG)",
+   "(21-SC-45(N,2N)21-SC-44-M,,SIG)/(21-SC-45(N,2N)21-SC-44,,SIG)",
+   "21-SC-45(N,2N)21-SC-44-G,(M),SIG",
+   "21-SC-45(N,2N)21-SC-44-G,,SIG",
+   "21-SC-45(N,2N)21-SC-44-G,,SIG,,FIS",
+   "21-SC-45(N,2N)21-SC-44-G/T,,SIG/RAT",
+   "21-SC-45(N,2N)21-SC-44-M,,SIG",
+   "21-SC-45(N,2N)21-SC-44-M,,SIG,,FIS",
+   "21-SC-45(N,2N)21-SC-44-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SC-45",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 48,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "(21-SC-45(N,G)21-SC-46-M,,RI)//(21-SC-45(N,G)21-SC-46-M,,SIG)",
+   "21-SC-45(N,G)21-SC-46-G,,SIG,,,DERIV",
+   "21-SC-45(N,G)21-SC-46-G,,SIG,,,RECOM",
+   "21-SC-45(N,G)21-SC-46-M,,SIG,,,RECOM",
+   "21-SC-45(N,G)21-SC-46-M,,SIG,,SPA",
+   "21-SC-45(N,G)21-SC-46-M/T,,SIG/RAT,,MXW",
+   "21-SC-45(N,G)21-SC-46-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "SE-74",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 32,
+  "n_isomer_resolved": 25,
+  "isomer_reactions": [
+   "34-SE-74(N,2N)34-SE-73-G,,SIG",
+   "34-SE-74(N,2N)34-SE-73-G,M+,SIG",
+   "34-SE-74(N,2N)34-SE-73-G/M,,SIG/RAT",
+   "34-SE-74(N,2N)34-SE-73-M,,SIG",
+   "34-SE-74(N,2N)34-SE-73-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SE-76",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 16,
+  "n_isomer_resolved": 9,
+  "isomer_reactions": [
+   "(34-SE-76(N,G)34-SE-77-M,,RI)//(34-SE-76(N,G)34-SE-77-M,,SIG)",
+   "(34-SE-77(N,INL)34-SE-77-M,,SIG,,A/SPA)+(34-SE-76(N,G)34-SE-77-M,,SIG,,A/SPA)",
+   "34-SE-76(N,G)34-SE-77-M,,SIG,,,RECOM",
+   "34-SE-76(N,G)34-SE-77-M,,SIG,,MXW",
+   "34-SE-76(N,G)34-SE-77-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SE-77",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 5,
+  "n_isomer_resolved": 5,
+  "isomer_reactions": [
+   "(34-SE-77(N,INL)34-SE-77-M,,SIG,,A/SPA)+(34-SE-76(N,G)34-SE-77-M,,SIG,,A/SPA)",
+   "34-SE-77(N,INL)34-SE-77-M,,SIG",
+   "34-SE-77(N,INL)34-SE-77-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "SE-78",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 5,
+  "n_isomer_resolved": 3,
+  "isomer_reactions": [
+   "34-SE-78(N,2N)34-SE-77-M,,SIG",
+   "34-SE-78(N,2N)34-SE-77-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "SE-78",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 12,
+  "isomer_reactions": [
+   "(34-SE-78(N,G)34-SE-79-M,,RI,,RNV)//(34-SE-78(N,G)34-SE-79-M,,SIG)",
+   "34-SE-78(N,G)34-SE-79-G,,SIG,,,RECOM",
+   "34-SE-78(N,G)34-SE-79-M,,SIG",
+   "34-SE-78(N,G)34-SE-79-M,,SIG,,,RECOM",
+   "34-SE-78(N,G)34-SE-79-M,,SIG,,MXW",
+   "34-SE-78(N,G)34-SE-79-M,,SIG,,SPA",
+   "34-SE-78(N,G)34-SE-79-M/T,,SIG/RAT,,MXW,DERIV"
+  ]
+ },
+ {
+  "target": "SE-80",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 16,
+  "n_isomer_resolved": 14,
+  "isomer_reactions": [
+   "34-SE-80(N,2N)34-SE-79-M,,SIG",
+   "34-SE-80(N,2N)34-SE-79-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "SE-80",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 49,
+  "n_isomer_resolved": 38,
+  "isomer_reactions": [
+   "(34-SE-80(N,G)34-SE-81-M,,RI)//(34-SE-80(N,G)34-SE-81-M,,SIG)",
+   "(34-SE-80(N,G)34-SE-81-M,,RI,,RNV)//(34-SE-80(N,G)34-SE-81-M,,SIG)",
+   "(34-SE-80(N,G)34-SE-81-M,,RI,,RNV/FCT)//(34-SE-80(N,G)34-SE-81-M,,SIG)",
+   "34-SE-80(N,G)34-SE-81-G,(M),SIG,,MXW/A",
+   "34-SE-80(N,G)34-SE-81-G,,SIG",
+   "34-SE-80(N,G)34-SE-81-G,,SIG,,,RECOM",
+   "34-SE-80(N,G)34-SE-81-G,,SIG,,MXW",
+   "34-SE-80(N,G)34-SE-81-G,,SIG,,SPA",
+   "34-SE-80(N,G)34-SE-81-G/M,,SIG/RAT",
+   "34-SE-80(N,G)34-SE-81-M,,SIG",
+   "34-SE-80(N,G)34-SE-81-M,,SIG,,,RECOM",
+   "34-SE-80(N,G)34-SE-81-M,,SIG,,MXW",
+   "34-SE-80(N,G)34-SE-81-M,,SIG,,SPA",
+   "34-SE-80(N,G)34-SE-81-M,,SIG,,SPA/A",
+   "34-SE-80(N,G)34-SE-81-M/G,,SIG/RAT",
+   "34-SE-80(N,G)34-SE-81-M/G,,SIG/RAT,,MXW",
+   "34-SE-80(N,G)34-SE-81-M/T,,SIG/RAT",
+   "34-SE-80(N,G)34-SE-81-M/T,,SIG/RAT,,,DERIV",
+   "34-SE-80(N,G)34-SE-81-M/T,,SIG/RAT,,EPI",
+   "34-SE-80(N,G)34-SE-81-M/T,,SIG/RAT,,MXW",
+   "34-SE-80(N,G)34-SE-81-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "SE-82",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 41,
+  "n_isomer_resolved": 33,
+  "isomer_reactions": [
+   "34-SE-82(N,2N)34-SE-81-G,,SIG",
+   "34-SE-82(N,2N)34-SE-81-G/M,,SIG/RAT",
+   "34-SE-82(N,2N)34-SE-81-M,,SIG",
+   "34-SE-82(N,2N)34-SE-81-M,,SIG,,SPA",
+   "34-SE-82(N,2N)34-SE-81-M/G,,SIG/RAT",
+   "34-SE-82(N,2N)34-SE-81-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SE-82",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 20,
+  "n_isomer_resolved": 13,
+  "isomer_reactions": [
+   "34-SE-82(N,G)34-SE-83-G,,SIG",
+   "34-SE-82(N,G)34-SE-83-G,,SIG,,,RECOM",
+   "34-SE-82(N,G)34-SE-83-G,,SIG,,MXW",
+   "34-SE-82(N,G)34-SE-83-G,,SIG,,SPA",
+   "34-SE-82(N,G)34-SE-83-G/T,,SIG/RAT,,SPA",
+   "34-SE-82(N,G)34-SE-83-M,,SIG",
+   "34-SE-82(N,G)34-SE-83-M,,SIG,,,RECOM",
+   "34-SE-82(N,G)34-SE-83-M,,SIG,,MXW",
+   "34-SE-82(N,G)34-SE-83-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SM-144",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 49,
+  "n_isomer_resolved": 35,
+  "isomer_reactions": [
+   "(62-SM-144(N,2N)62-SM-143-G,,SIG)+(62-SM-144(N,2N)62-SM-143-M,,SIG,,FCT)",
+   "62-SM-144(N,2N)62-SM-143-G,(M),SIG",
+   "62-SM-144(N,2N)62-SM-143-G,,SIG",
+   "62-SM-144(N,2N)62-SM-143-M,,SIG",
+   "62-SM-144(N,2N)62-SM-143-M/G,,SIG/RAT",
+   "62-SM-144(N,2N)62-SM-143-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SN-112",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 35,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(50-SN-112(N,G)50-SN-113-G,M+,RI)//(50-SN-112(N,G)50-SN-113-G,M+,SIG)",
+   "(50-SN-112(N,G)50-SN-113-M,,RI)//(50-SN-112(N,G)50-SN-113-M,,SIG)",
+   "50-SN-112(N,G)50-SN-113-G,,SIG",
+   "50-SN-112(N,G)50-SN-113-G,,SIG,,,RECOM",
+   "50-SN-112(N,G)50-SN-113-G,,SIG,,MXW",
+   "50-SN-112(N,G)50-SN-113-G,,SIG,,SPA",
+   "50-SN-112(N,G)50-SN-113-G,M+,SIG",
+   "50-SN-112(N,G)50-SN-113-M,,SIG",
+   "50-SN-112(N,G)50-SN-113-M,,SIG,,,RECOM",
+   "50-SN-112(N,G)50-SN-113-M,,SIG,,SPA",
+   "50-SN-112(N,G)50-SN-113-M/G,,SIG/RAT,,SPA",
+   "50-SN-112(N,G)50-SN-113-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "SN-114",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 9,
+  "n_isomer_resolved": 6,
+  "isomer_reactions": [
+   "50-SN-114(N,2N)50-SN-113-G,M+,SIG",
+   "50-SN-114(N,2N)50-SN-113-M,,SIG"
+  ]
+ },
+ {
+  "target": "SN-116",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 40,
+  "n_isomer_resolved": 18,
+  "isomer_reactions": [
+   "(50-SN-116(N,G)50-SN-117-M,,RI)//(50-SN-116(N,G)50-SN-117-M,,SIG)",
+   "50-SN-116(N,G)50-SN-117-M,,SIG",
+   "50-SN-116(N,G)50-SN-117-M,,SIG,,,RECOM",
+   "50-SN-116(N,G)50-SN-117-M,,SIG,,MXW",
+   "50-SN-116(N,G)50-SN-117-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SN-117",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 14,
+  "n_isomer_resolved": 14,
+  "isomer_reactions": [
+   "(50-SN-118(N,2N)50-SN-117-M,,SIG)+(50-SN-117(N,INL)50-SN-117-M,,SIG)",
+   "50-SN-117(N,INL)50-SN-117-M,,SIG",
+   "50-SN-117(N,INL)50-SN-117-M,,SIG,,FIS",
+   "50-SN-117(N,INL)50-SN-117-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SN-118",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 11,
+  "n_isomer_resolved": 11,
+  "isomer_reactions": [
+   "(50-SN-118(N,2N)50-SN-117-M,,SIG)+(50-SN-117(N,INL)50-SN-117-M,,SIG)",
+   "50-SN-118(N,2N)50-SN-117-M,,SIG",
+   "50-SN-118(N,2N)50-SN-117-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SN-118",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 18,
+  "n_isomer_resolved": 2,
+  "isomer_reactions": [
+   "50-SN-118(N,G)50-SN-119-M,,SIG,,,RECOM",
+   "50-SN-118(N,G)50-SN-119-M,,SIG,,MXW"
+  ]
+ },
+ {
+  "target": "SN-119",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "SN-120",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 2,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "50-SN-120(N,2N)50-SN-119-M,,SIG"
+  ]
+ },
+ {
+  "target": "SN-120",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 8,
+  "isomer_reactions": [
+   "50-SN-120(N,G)50-SN-121-G,,SIG",
+   "50-SN-120(N,G)50-SN-121-G,,SIG,,,RECOM",
+   "50-SN-120(N,G)50-SN-121-G,,SIG,,FIS",
+   "50-SN-120(N,G)50-SN-121-G,,SIG,,SPA",
+   "50-SN-120(N,G)50-SN-121-G,,SIG,,SPA/A",
+   "50-SN-120(N,G)50-SN-121-M,,SIG,,,RECOM",
+   "50-SN-120(N,G)50-SN-121-M,,SIG,,MXW,RECOM",
+   "50-SN-120(N,G)50-SN-121-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SN-122",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "50-SN-122(N,2N)50-SN-121-M,,SIG"
+  ]
+ },
+ {
+  "target": "SN-122",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 29,
+  "isomer_reactions": [
+   "(50-SN-122(N,G)50-SN-123-M,,RI)//(50-SN-122(N,G)50-SN-123-M,,SIG)",
+   "50-SN-122(N,G)50-SN-123-G,,SIG",
+   "50-SN-122(N,G)50-SN-123-G,,SIG,,,RECOM",
+   "50-SN-122(N,G)50-SN-123-G,,SIG,,SPA",
+   "50-SN-122(N,G)50-SN-123-M,,SIG",
+   "50-SN-122(N,G)50-SN-123-M,,SIG,,,RECOM",
+   "50-SN-122(N,G)50-SN-123-M,,SIG,,FIS",
+   "50-SN-122(N,G)50-SN-123-M,,SIG,,MXW",
+   "50-SN-122(N,G)50-SN-123-M,,SIG,,MXW,RECOM",
+   "50-SN-122(N,G)50-SN-123-M,,SIG,,SPA",
+   "50-SN-122(N,G)50-SN-123-M,,SIG,,SPA/A",
+   "50-SN-122(N,G)50-SN-123-M/T,,SIG/RAT",
+   "50-SN-122(N,G)50-SN-123-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "SN-124",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 12,
+  "n_isomer_resolved": 11,
+  "isomer_reactions": [
+   "(51-SB-123(N,P)50-SN-123-M,,SIG)/(50-SN-124(N,2N)50-SN-123-M,,SIG)",
+   "(52-TE-126(N,A)50-SN-123-M,,SIG)/(50-SN-124(N,2N)50-SN-123-M,,SIG)",
+   "50-SN-124(N,2N)50-SN-123-G,,SIG",
+   "50-SN-124(N,2N)50-SN-123-M,,SIG"
+  ]
+ },
+ {
+  "target": "SN-124",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 54,
+  "n_isomer_resolved": 36,
+  "isomer_reactions": [
+   "(50-SN-124(N,G)50-SN-125-M,,RI)//(50-SN-124(N,G)50-SN-125-M,,SIG)",
+   "50-SN-124(N,G)50-SN-125-G,,SIG",
+   "50-SN-124(N,G)50-SN-125-G,,SIG,,,RECOM",
+   "50-SN-124(N,G)50-SN-125-G,,SIG,,FIS",
+   "50-SN-124(N,G)50-SN-125-G,,SIG,,MXW",
+   "50-SN-124(N,G)50-SN-125-G,,SIG,,SPA",
+   "50-SN-124(N,G)50-SN-125-M,,SIG",
+   "50-SN-124(N,G)50-SN-125-M,,SIG,,,RECOM",
+   "50-SN-124(N,G)50-SN-125-M,,SIG,,FIS",
+   "50-SN-124(N,G)50-SN-125-M,,SIG,,MXW",
+   "50-SN-124(N,G)50-SN-125-M,,SIG,,SPA",
+   "50-SN-124(N,G)50-SN-125-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SR-84",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 11,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "38-SR-84(N,2N)38-SR-83-G,M+,SIG"
+  ]
+ },
+ {
+  "target": "SR-84",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 69,
+  "n_isomer_resolved": 54,
+  "isomer_reactions": [
+   "(38-SR-84(N,G)38-SR-85-G,(M),RI)//(38-SR-84(N,G)38-SR-85-G,(M),SIG)",
+   "(38-SR-84(N,G)38-SR-85-G,,SIG,,MXW)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(38-SR-84(N,G)38-SR-85-G,M+,SIG,,SPA)/(38-SR-88(N,G)38-SR-89,,SIG,,SPA)",
+   "(38-SR-84(N,G)38-SR-85-M,,RI)//(38-SR-84(N,G)38-SR-85-M,,SIG)",
+   "(38-SR-84(N,G)38-SR-85-M,,SIG,,MXW)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(38-SR-86(N,2N)38-SR-85-M,,SIG)+(38-SR-84(N,G)38-SR-85-M,,SIG,,RAB)",
+   "(38-SR-86(N,2N)38-SR-85-M,,SIG,,FCT)+(38-SR-84(N,G)38-SR-85-M,,SIG,,FCT)",
+   "38-SR-84(N,G)38-SR-85-G,,SIG,,,RECOM",
+   "38-SR-84(N,G)38-SR-85-G,,SIG,,MXW",
+   "38-SR-84(N,G)38-SR-85-G,,SIG,,SPA",
+   "38-SR-84(N,G)38-SR-85-G,M+,SIG",
+   "38-SR-84(N,G)38-SR-85-G,M+,SIG,,SPA",
+   "38-SR-84(N,G)38-SR-85-M,,SIG",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,,RECOM",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,FIS",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,FIS,CRCTD",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,MXW",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,MXW,DERIV",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,MXW,RECOM",
+   "38-SR-84(N,G)38-SR-85-M,,SIG,,SPA",
+   "38-SR-84(N,G)38-SR-85-M/G,,SIG/RAT,,MXW",
+   "38-SR-84(N,G)38-SR-85-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "SR-86",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 50,
+  "n_isomer_resolved": 39,
+  "isomer_reactions": [
+   "(38-SR-86(N,2N)38-SR-85-M,,SIG)+(38-SR-84(N,G)38-SR-85-M,,SIG,,RAB)",
+   "(38-SR-86(N,2N)38-SR-85-M,,SIG,,FCT)+(38-SR-84(N,G)38-SR-85-M,,SIG,,FCT)",
+   "38-SR-86(N,2N)38-SR-85-G,(M),SIG",
+   "38-SR-86(N,2N)38-SR-85-G,,SIG",
+   "38-SR-86(N,2N)38-SR-85-G,M+,SIG",
+   "38-SR-86(N,2N)38-SR-85-M,,SIG",
+   "38-SR-86(N,2N)38-SR-85-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "SR-86",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 42,
+  "n_isomer_resolved": 31,
+  "isomer_reactions": [
+   "(38-SR-86(N,G)38-SR-87-M,,RI)//(38-SR-86(N,G)38-SR-87-M,,SIG)",
+   "(38-SR-86(N,G)38-SR-87-M,,SIG,,A/FIS)+(38-SR-87(N,INL)38-SR-87-M,,SIG,,A/FIS)",
+   "(38-SR-86(N,G)38-SR-87-M,,SIG,,MXW)/(79-AU-197(N,G)79-AU-198,,SIG,,MXW)",
+   "(38-SR-87(N,INL)38-SR-87-M,,SIG,,A/SPA)+(38-SR-86(N,G)38-SR-87-M,,SIG,,A/SPA)",
+   "(38-SR-88(N,2N)38-SR-87-M,,SIG)+(38-SR-86(N,G)38-SR-87-M,,SIG,,RAB)",
+   "(38-SR-88(N,2N)38-SR-87-M,,SIG,,FCT)+(38-SR-86(N,G)38-SR-87-M,,SIG,,FCT)",
+   "38-SR-86(N,G)38-SR-87-G,,SIG,,,RECOM",
+   "38-SR-86(N,G)38-SR-87-M,,SIG",
+   "38-SR-86(N,G)38-SR-87-M,,SIG,,,RECOM",
+   "38-SR-86(N,G)38-SR-87-M,,SIG,,MXW",
+   "38-SR-86(N,G)38-SR-87-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "SR-87",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 11,
+  "n_isomer_resolved": 11,
+  "isomer_reactions": [
+   "(38-SR-86(N,G)38-SR-87-M,,SIG,,A/FIS)+(38-SR-87(N,INL)38-SR-87-M,,SIG,,A/FIS)",
+   "(38-SR-87(N,INL)38-SR-87-M,,SIG)+(38-SR-88(N,2N)38-SR-87-M,,SIG)",
+   "(38-SR-87(N,INL)38-SR-87-M,,SIG,,A/SPA)+(38-SR-86(N,G)38-SR-87-M,,SIG,,A/SPA)",
+   "38-SR-87(N,INL)38-SR-87-M,,SIG",
+   "38-SR-87(N,INL)38-SR-87-M,,SIG,,FIS"
+  ]
+ },
+ {
+  "target": "SR-88",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 24,
+  "isomer_reactions": [
+   "(38-SR-87(N,INL)38-SR-87-M,,SIG)+(38-SR-88(N,2N)38-SR-87-M,,SIG)",
+   "(38-SR-88(N,2N)38-SR-87-M,,SIG)+(38-SR-86(N,G)38-SR-87-M,,SIG,,RAB)",
+   "(38-SR-88(N,2N)38-SR-87-M,,SIG,,FCT)+(38-SR-86(N,G)38-SR-87-M,,SIG,,FCT)",
+   "38-SR-88(N,2N)38-SR-87-G,,SIG,,,CALC",
+   "38-SR-88(N,2N)38-SR-87-M,,SIG",
+   "38-SR-88(N,2N)38-SR-87-M,,SIG,,,DERIV",
+   "38-SR-88(N,2N)38-SR-87-M,,SIG,,FIS",
+   "38-SR-88(N,2N)38-SR-87-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "TA-180",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "TA-181",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 38,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(73-TA-181(N,2N)73-TA-180-G,,SIG)//(73-TA-181(N,2N)73-TA-180-G,,SIG)",
+   "73-TA-181(N,2N)73-TA-180-G,,SIG",
+   "73-TA-181(N,2N)73-TA-180-G,,SIG,,,DERIV",
+   "73-TA-181(N,2N)73-TA-180-G,,SIG,,REL"
+  ]
+ },
+ {
+  "target": "TA-181",
+  "mt": 102,
+  "lfs": [
+   1,
+   2
+  ],
+  "n_datasets": 116,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(73-TA-181(N,G)73-TA-182-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "73-TA-181(N,G)73-TA-182-G,,SIG",
+   "73-TA-181(N,G)73-TA-182-G,,SIG,,,RECOM",
+   "73-TA-181(N,G)73-TA-182-G,,SIG,,MXW",
+   "73-TA-181(N,G)73-TA-182-G,,SIG,,SPA",
+   "73-TA-181(N,G)73-TA-182-G/M2,,SIG/RAT,,SPA",
+   "73-TA-181(N,G)73-TA-182-M2,,SIG",
+   "73-TA-181(N,G)73-TA-182-M2,,SIG,,,RECOM",
+   "73-TA-181(N,G)73-TA-182-M2,,SIG,,AV",
+   "73-TA-181(N,G)73-TA-182-M2,,SIG,,MXW",
+   "73-TA-181(N,G)73-TA-182-M2,,SIG,,SPA",
+   "73-TA-181(N,G)73-TA-182-M2/G+M2,,SIG/RAT",
+   "73-TA-181(N,G)73-TA-182-M2/G,,SIG/RAT,,MXW",
+   "73-TA-181(N,G)73-TA-182-M2/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "TB-159",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 21,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "65-TB-159(N,2N)65-TB-158-G,,SIG",
+   "65-TB-159(N,2N)65-TB-158-M,,SIG",
+   "65-TB-159(N,2N)65-TB-158-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "TE-120",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 22,
+  "n_isomer_resolved": 19,
+  "isomer_reactions": [
+   "52-TE-120(N,2N)52-TE-119-G,,SIG",
+   "52-TE-120(N,2N)52-TE-119-G,,SIG,,,DERIV",
+   "52-TE-120(N,2N)52-TE-119-G,,SIG,,FIS",
+   "52-TE-120(N,2N)52-TE-119-M,,SIG",
+   "52-TE-120(N,2N)52-TE-119-M,,SIG,,,DERIV",
+   "52-TE-120(N,2N)52-TE-119-M,,SIG,,FIS",
+   "52-TE-120(N,2N)52-TE-119-M/G,,SIG/RAT",
+   "52-TE-120(N,2N)52-TE-119-M/T,,SIG/RAT",
+   "52-TE-120(N,2N)52-TE-119-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "TE-120",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 37,
+  "n_isomer_resolved": 26,
+  "isomer_reactions": [
+   "(52-TE-120(N,G)52-TE-121-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(52-TE-120(N,G)52-TE-121-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "52-TE-120(N,G)52-TE-121-G,(M),SIG",
+   "52-TE-120(N,G)52-TE-121-G,,SIG,,,RECOM",
+   "52-TE-120(N,G)52-TE-121-G,,SIG,,MXW",
+   "52-TE-120(N,G)52-TE-121-G,,SIG,,SPA",
+   "52-TE-120(N,G)52-TE-121-G,,SIG,,SPA,DERIV",
+   "52-TE-120(N,G)52-TE-121-G/M,,SIG/RAT,,MXW",
+   "52-TE-120(N,G)52-TE-121-M,,SIG,,,RECOM",
+   "52-TE-120(N,G)52-TE-121-M,,SIG,,MXW",
+   "52-TE-120(N,G)52-TE-121-M,,SIG,,MXW,RECOM",
+   "52-TE-120(N,G)52-TE-121-M,,SIG,,SPA",
+   "52-TE-120(N,G)52-TE-121-M,,SIG,,SPA,DERIV",
+   "52-TE-120(N,G)52-TE-121-M/G,,SIG/RAT,,SPA",
+   "52-TE-120(N,G)52-TE-121-M/T,,SIG/RAT,,MXW"
+  ]
+ },
+ {
+  "target": "TE-122",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 22,
+  "isomer_reactions": [
+   "52-TE-122(N,2N)52-TE-121-G,,SIG",
+   "52-TE-122(N,2N)52-TE-121-G,,SIG,,,DERIV",
+   "52-TE-122(N,2N)52-TE-121-M,,SIG",
+   "52-TE-122(N,2N)52-TE-121-M,,SIG,,,DERIV",
+   "52-TE-122(N,2N)52-TE-121-M/G,,SIG/RAT",
+   "52-TE-122(N,2N)52-TE-121-M/T,,SIG/RAT",
+   "52-TE-122(N,2N)52-TE-121-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "TE-122",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 28,
+  "n_isomer_resolved": 7,
+  "isomer_reactions": [
+   "52-TE-122(N,G)52-TE-123-M,,SIG",
+   "52-TE-122(N,G)52-TE-123-M,,SIG,,,RECOM",
+   "52-TE-122(N,G)52-TE-123-M,,SIG,,MXW",
+   "52-TE-122(N,G)52-TE-123-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "TE-123",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "(52-TE-124(N,2N)52-TE-123-M,,SIG)+(52-TE-123(N,INL)52-TE-123-M,,SIG)"
+  ]
+ },
+ {
+  "target": "TE-124",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 6,
+  "n_isomer_resolved": 6,
+  "isomer_reactions": [
+   "(52-TE-124(N,2N)52-TE-123-M,,SIG)+(52-TE-123(N,INL)52-TE-123-M,,SIG)",
+   "52-TE-124(N,2N)52-TE-123-M,,SIG",
+   "52-TE-124(N,2N)52-TE-123-M,,SIG,,,DERIV"
+  ]
+ },
+ {
+  "target": "TE-124",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 29,
+  "n_isomer_resolved": 9,
+  "isomer_reactions": [
+   "52-TE-124(N,G)52-TE-125-M,,SIG",
+   "52-TE-124(N,G)52-TE-125-M,,SIG,,,RECOM",
+   "52-TE-124(N,G)52-TE-125-M,,SIG,,MXW",
+   "52-TE-124(N,G)52-TE-125-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "TE-125",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 0,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "TE-126",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 3,
+  "n_isomer_resolved": 3,
+  "isomer_reactions": [
+   "52-TE-126(N,2N)52-TE-125-M,,SIG",
+   "52-TE-126(N,2N)52-TE-125-M,,SIG,,,DERIV"
+  ]
+ },
+ {
+  "target": "TE-126",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 36,
+  "n_isomer_resolved": 19,
+  "isomer_reactions": [
+   "(52-TE-126(N,G)52-TE-127-G,,SIG)/(52-TE-130(N,G)52-TE-131-G,,SIG)",
+   "52-TE-126(N,G)52-TE-127-G,,SIG",
+   "52-TE-126(N,G)52-TE-127-G,,SIG,,,RECOM",
+   "52-TE-126(N,G)52-TE-127-G,,SIG,,MXW",
+   "52-TE-126(N,G)52-TE-127-G,,SIG,,SPA",
+   "52-TE-126(N,G)52-TE-127-M,,SIG",
+   "52-TE-126(N,G)52-TE-127-M,,SIG,,,RECOM",
+   "52-TE-126(N,G)52-TE-127-M,,SIG,,MXW",
+   "52-TE-126(N,G)52-TE-127-M,,SIG,,SPA",
+   "52-TE-126(N,G)52-TE-127-M/G,,SIG/RAT",
+   "52-TE-126(N,G)52-TE-127-M/G,,SIG/RAT,,MXW",
+   "52-TE-126(N,G)52-TE-127-M/T,,SIG/RAT",
+   "52-TE-126(N,G)52-TE-127-M/T,,SIG/RAT,,MXW",
+   "52-TE-126(N,G)52-TE-127-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "TE-128",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 22,
+  "n_isomer_resolved": 20,
+  "isomer_reactions": [
+   "52-TE-128(N,2N)52-TE-127-G,,SIG",
+   "52-TE-128(N,2N)52-TE-127-G,,SIG,,,DERIV",
+   "52-TE-128(N,2N)52-TE-127-M,,SIG",
+   "52-TE-128(N,2N)52-TE-127-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "TE-128",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 33,
+  "n_isomer_resolved": 22,
+  "isomer_reactions": [
+   "(52-TE-128(N,G)52-TE-129-G,,SIG)/(52-TE-130(N,G)52-TE-131-G,,SIG)",
+   "52-TE-128(N,G)52-TE-129-G,,SIG",
+   "52-TE-128(N,G)52-TE-129-G,,SIG,,,RECOM",
+   "52-TE-128(N,G)52-TE-129-G,,SIG,,MXW",
+   "52-TE-128(N,G)52-TE-129-G,,SIG,,SPA",
+   "52-TE-128(N,G)52-TE-129-M,,SIG",
+   "52-TE-128(N,G)52-TE-129-M,,SIG,,,RECOM",
+   "52-TE-128(N,G)52-TE-129-M,,SIG,,MXW",
+   "52-TE-128(N,G)52-TE-129-M,,SIG,,MXW,RECOM",
+   "52-TE-128(N,G)52-TE-129-M,,SIG,,SPA",
+   "52-TE-128(N,G)52-TE-129-M/G,,SIG/RAT",
+   "52-TE-128(N,G)52-TE-129-M/T,,SIG/RAT",
+   "52-TE-128(N,G)52-TE-129-M/T,,SIG/RAT,,MXW",
+   "52-TE-128(N,G)52-TE-129-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "TE-130",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 34,
+  "n_isomer_resolved": 28,
+  "isomer_reactions": [
+   "52-TE-130(N,2N)52-TE-129-G,,SIG",
+   "52-TE-130(N,2N)52-TE-129-G,,SIG,,,DERIV",
+   "52-TE-130(N,2N)52-TE-129-G/M,,SIG/RAT",
+   "52-TE-130(N,2N)52-TE-129-M,,SIG",
+   "52-TE-130(N,2N)52-TE-129-M,,SIG,,,DERIV",
+   "52-TE-130(N,2N)52-TE-129-M/G,,SIG/RAT",
+   "52-TE-130(N,2N)52-TE-129-M/T,,SIG/RAT",
+   "52-TE-130(N,2N)52-TE-129-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "TE-130",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 45,
+  "n_isomer_resolved": 27,
+  "isomer_reactions": [
+   "(52-TE-126(N,G)52-TE-127-G,,SIG)/(52-TE-130(N,G)52-TE-131-G,,SIG)",
+   "(52-TE-128(N,G)52-TE-129-G,,SIG)/(52-TE-130(N,G)52-TE-131-G,,SIG)",
+   "52-TE-130(N,G)52-TE-131-G,,SIG",
+   "52-TE-130(N,G)52-TE-131-G,,SIG,,,RECOM",
+   "52-TE-130(N,G)52-TE-131-G,,SIG,,MXW",
+   "52-TE-130(N,G)52-TE-131-G,M+,SIG",
+   "52-TE-130(N,G)52-TE-131-G/M,,SIG/RAT,,MXW",
+   "52-TE-130(N,G)52-TE-131-M,,SIG",
+   "52-TE-130(N,G)52-TE-131-M,,SIG,,,RECOM",
+   "52-TE-130(N,G)52-TE-131-M,,SIG,,MXW",
+   "52-TE-130(N,G)52-TE-131-M,,SIG,,SPA",
+   "52-TE-130(N,G)52-TE-131-M/G,,SIG/RAT",
+   "52-TE-130(N,G)52-TE-131-M/T,,SIG/RAT",
+   "52-TE-130(N,G)52-TE-131-M/T,,SIG/RAT,,MXW",
+   "52-TE-130(N,G)52-TE-131-M/T,,SIG/RAT,,SPA"
+  ]
+ },
+ {
+  "target": "TI-47",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 9,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "TI-48",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 1,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "TI-49",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 10,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "TL-205",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 15,
+  "n_isomer_resolved": 1,
+  "isomer_reactions": [
+   "(81-TL-203(N,A)79-AU-200-G,(M),SIG)/(81-TL-205(N,G)81-TL-206,,SIG)"
+  ]
+ },
+ {
+  "target": "YB-168",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 22,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "YB-170",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 9,
+  "n_isomer_resolved": 0,
+  "isomer_reactions": []
+ },
+ {
+  "target": "YB-176",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 4,
+  "n_isomer_resolved": 4,
+  "isomer_reactions": [
+   "70-YB-176(N,INL)70-YB-176-M,,SIG"
+  ]
+ },
+ {
+  "target": "YB-176",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 39,
+  "n_isomer_resolved": 3,
+  "isomer_reactions": [
+   "70-YB-176(N,G)70-YB-177-G/T,,SIG/RAT,,AV",
+   "70-YB-176(N,G)70-YB-177-M/G,,SIG/RAT,,AV",
+   "70-YB-176(N,G)70-YB-177-M/T,,SIG/RAT,,AV"
+  ]
+ },
+ {
+  "target": "ZN-68",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 64,
+  "n_isomer_resolved": 53,
+  "isomer_reactions": [
+   "(30-ZN-68(N,G)30-ZN-69-M,,RI)//(30-ZN-68(N,G)30-ZN-69-M,,SIG)",
+   "(30-ZN-68(N,G)30-ZN-69-M,,RI,,AV)//(30-ZN-68(N,G)30-ZN-69-M,,SIG,,AV)",
+   "(30-ZN-68(N,G)30-ZN-69-M,,SIG)/(23-V-51(N,G)23-V-52,,SIG)",
+   "(30-ZN-68(N,G)30-ZN-69-M,,SIG,,SPA)/(30-ZN-68(N,G)30-ZN-69-G,,SIG,,SPA)",
+   "(30-ZN-68(N,G)30-ZN-69-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "30-ZN-68(N,G)30-ZN-69-G,,SIG",
+   "30-ZN-68(N,G)30-ZN-69-G,,SIG,,,RECOM",
+   "30-ZN-68(N,G)30-ZN-69-G,,SIG,,FIS",
+   "30-ZN-68(N,G)30-ZN-69-G,,SIG,,MXW",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG,,,RECOM",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG,,AV",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG,,FIS",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG,,MXW",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG,,MXW,RECOM",
+   "30-ZN-68(N,G)30-ZN-69-M,,SIG,,SPA",
+   "30-ZN-68(N,G)30-ZN-69-M/G,,SIG/RAT,,MXW",
+   "30-ZN-68(N,G)30-ZN-69-M/T,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "ZN-70",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 18,
+  "n_isomer_resolved": 16,
+  "isomer_reactions": [
+   "30-ZN-70(N,2N)30-ZN-69-G,,SIG",
+   "30-ZN-70(N,2N)30-ZN-69-M,,SIG",
+   "30-ZN-70(N,2N)30-ZN-69-M/G,,SIG/RAT"
+  ]
+ },
+ {
+  "target": "ZN-70",
+  "mt": 102,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 26,
+  "n_isomer_resolved": 21,
+  "isomer_reactions": [
+   "(30-ZN-70(N,G)30-ZN-71-G,,SIG,,SPA)/(30-ZN-70(N,G)30-ZN-71,,SIG,,SPA)",
+   "(30-ZN-70(N,G)30-ZN-71-G,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "(30-ZN-70(N,G)30-ZN-71-M,,SIG,,SPA)/(79-AU-197(N,G)79-AU-198,,SIG,,SPA)",
+   "30-ZN-70(N,G)30-ZN-71-G,,SIG,,,RECOM",
+   "30-ZN-70(N,G)30-ZN-71-G,,SIG,,MXW",
+   "30-ZN-70(N,G)30-ZN-71-G,,SIG,,SPA",
+   "30-ZN-70(N,G)30-ZN-71-M,,SIG",
+   "30-ZN-70(N,G)30-ZN-71-M,,SIG,,,RECOM",
+   "30-ZN-70(N,G)30-ZN-71-M,,SIG,,MXW",
+   "30-ZN-70(N,G)30-ZN-71-M,,SIG,,SPA"
+  ]
+ },
+ {
+  "target": "ZR-90",
+  "mt": 4,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 6,
+  "n_isomer_resolved": 6,
+  "isomer_reactions": [
+   "40-ZR-90(N,INL)40-ZR-90-M,,SIG"
+  ]
+ },
+ {
+  "target": "ZR-90",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 140,
+  "n_isomer_resolved": 78,
+  "isomer_reactions": [
+   "(40-ZR-90(N,2N)40-ZR-89,,SIG)/(41-NB-93(N,2N)41-NB-92-M,,SIG)",
+   "(40-ZR-90(N,2N)40-ZR-89-G,M+,SIG,,FIS)/(13-AL-27(N,A)11-NA-24,,SIG,,FIS)",
+   "40-ZR-90(N,2N)40-ZR-89-G,,SIG",
+   "40-ZR-90(N,2N)40-ZR-89-G,,SIG,,,DERIV",
+   "40-ZR-90(N,2N)40-ZR-89-G,M+,SIG",
+   "40-ZR-90(N,2N)40-ZR-89-G,M+,SIG,,FIS",
+   "40-ZR-90(N,2N)40-ZR-89-G,M+,SIG,,SPA",
+   "40-ZR-90(N,2N)40-ZR-89-G/M,,SIG/RAT",
+   "40-ZR-90(N,2N)40-ZR-89-M,,SIG",
+   "40-ZR-90(N,2N)40-ZR-89-M,,SIG,,,DERIV",
+   "40-ZR-90(N,2N)40-ZR-89-M,,SIG,,SPA",
+   "40-ZR-90(N,2N)40-ZR-89-M/G,,SIG/RAT",
+   "40-ZR-90(N,2N)40-ZR-89-M/G,,SIG/RAT,,,DERIV",
+   "40-ZR-90(N,2N)40-ZR-89-M/T,,SIG/RAT",
+   "40-ZR-90(N,2N)40-ZR-89-M/T,,SIG/RAT,,,DERIV"
+  ]
+ },
+ {
+  "target": "ZR-91",
+  "mt": 16,
+  "lfs": [
+   1
+  ],
+  "n_datasets": 2,
+  "n_isomer_resolved": 2,
+  "isomer_reactions": [
+   "40-ZR-91(N,2N)40-ZR-90-M,,SIG"
+  ]
+ }
+]

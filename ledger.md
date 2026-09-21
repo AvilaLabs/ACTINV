@@ -1242,3 +1242,59 @@ defect-row flagging beat the bound baseline (flagged-set precision 40% vs
 15%, recall equal — compresses the verify queue ~2.6×); dossier cause
 classification gave no lift (4/10 = degenerate baseline). Deployment decision
 recorded there: flagger-only slot, deterministic verifier decides.
+
+## Entry 54 — EXFOR isomer-split census (TENDL-2017 stable-foil channels)
+
+Scope (`controls/exfor_isomer_scope.md`): test whether isomer-resolved
+branching errors — a defect class orthogonal to capture magnitude — bind the
+remaining FNS failures. Method: enumerate TENDL-2017 isomer-resolved (lfs>=1)
+production channels on stable isotopes of all 62 foil elements for MT in
+{4,16,102} (208 channels, `results/exfor_isomer_channels.json`); harvest
+EXFOR `x4dat` per channel (`controls/exfor_isomer_harvest.py`, raw cache
+`target/exfor-harvest/`); compare measured splits vs groupwise TENDL
+(`controls/exfor_isomer_compare.py`, `results/exfor_isomer_compare.json`).
+
+Coverage: 188/208 channels have isomer-resolved EXFOR datasets; 179
+comparable pointwise/ratio measurements after excluding spectrum-averaged
+quantities (MXW/SPA/RI/AV — integral, not σ(E)) and cumulative products
+(G,M+). 48 unit-free ratio flags at >3x.
+
+Parser lessons (recorded to prevent re-error): EXFOR data columns are
+heterogeneous — parse headers + units per dataset (B/MB/UB/NO-DIM, EV/KEV/
+MEV); averaged-quantity qualifiers are not pointwise σ(E); negative/offset
+E columns exist; `G,M+` means cumulative ground+metastable.
+
+Corrections that invalidated naive readings:
+- ~14.6k "duplicate" (target,mt,product,lfs) row-sets are the 240
+  metastable-target ENDF files (`n_*M.dat`) keyed as distinct target indices
+  with liso=1 — legitimate second-order physics (they fire only at m-parent
+  population), not double-counting. The In-115 defective set was confirmed
+  liso=0 ground-target, so the entry-53 repair is on the live path.
+- Ground-target-only (liso=0) thermal values must be used for split
+  comparisons; ZA-summed values conflate ground+m targets.
+
+Verdict on flagged ∩ fail elements (version-diff corroboration):
+- IN-115 M2/M1: TENDL-2017 0.24 vs measured ~0.9, TENDL-2025 moved to 0.54
+  — partial corroboration; m2 T½=2.2 s, minor at 5 min.
+- EU-151 M2/M1: 0.009 -> 0.0012 vs measured 1e-4 — direction confirmed,
+  tiny absolute effect.
+- BI-209 G/M: 4.3 -> 2.2 vs measured ~0.97 (Shor 2022) — direction
+  confirmed; secondary to the Tl-206m1 (n,p) dominance in the Bi fail.
+- RH-103 M/G: 0.034 -> 0.062 vs measured ~0.084 — m underproduced ~2.4x,
+  but total σ_th is already right (141 vs ~145 b); cannot explain Rh's
+  ~2.5x early overproduction, which lives in bred-chain channels
+  (Rh-105(n,2n) on irradiation-bred parent).
+- Rejected (newer eval unmoved or opposite; single-source measurement
+  claims): PR-141 M/G, ZN-68 M/T, SE-80 M/T, TE-130 M/G.
+
+Honest yield: the census machinery works end-to-end and surfaced real
+split corrections (2-4x, version-corroborated on three channels), but the
+isomer-split class does not bind the dominant error in the fails examined.
+TENDL's isomer splits are in-family where measurements exist; where off,
+the observable is second-order. Isomer-resolution is a capability claim
+(state-resolved inventories exist that condensed-state codes do not
+produce), not a demonstrated accuracy lead on this corpus.
+
+Files: controls/exfor_isomer_{scope.md,harvest.py,compare.py},
+results/exfor_isomer_{channels,coverage,compare}.json,
+target/exfor-harvest/ (raw cache, not committed).
