@@ -511,6 +511,7 @@ impl Study {
                 schedule.push(Step {
                     dt: format!("{dt} s"),
                     flux: 0.0,
+                    spectrum: None,
                     feed: None,
                     removal: None,
                 });
@@ -2066,7 +2067,10 @@ fn evaluate_robustness_inner(
                     ));
                 }
                 let text = fs::read_to_string(&table_path).map_err(|error| {
-                    format!("cannot read self-shielding table {}: {error}", table_path.display())
+                    format!(
+                        "cannot read self-shielding table {}: {error}",
+                        table_path.display()
+                    )
                 })?;
                 let table = crate::shielding::PreparedShieldTable::from_json(&text)?;
                 Some(table.plan(

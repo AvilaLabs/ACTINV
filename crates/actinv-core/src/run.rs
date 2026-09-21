@@ -818,6 +818,12 @@ impl PreparedRun {
         physical: &PhysicalInputs,
         profiler: &mut RunProfiler,
     ) -> Result<Self, String> {
+        // A spectrum-collapsed artifact is bound to one spectrum; per-step
+        // spectra need the groupwise rows so each step collapses on its own.
+        let multi_spectrum = physical
+            .schedule
+            .iter()
+            .any(|step| step.spectrum_flux.is_some());
         Self::prepare_inputs_with_extensions_profiled(
             &spec.library,
             &spec.decay,
@@ -829,7 +835,11 @@ impl PreparedRun {
             spec.radiological.as_ref(),
             spec.damage.as_ref(),
             spec.self_shielding.as_ref(),
-            collapsible_spectrum(physical.flux.values()),
+            if multi_spectrum {
+                None
+            } else {
+                collapsible_spectrum(physical.flux.values())
+            },
             Some(&spec.spectrum.structure),
             profiler,
         )
@@ -1699,6 +1709,50 @@ impl PreparedRun {
             }
         }
         let sched = &physical.schedule;
+        // ---- per-step spectra (P42): each step may override the base
+        // spectrum; distinct override spectra collapse once each on the
+        // groupwise rows (multi-spectrum specs never take the pre-collapsed
+        // library path) and map back to their declaring steps.
+        let mut step_spectrum_id: Vec<Option<usize>> = Vec::with_capacity(sched.len());
+        let mut extra_spectra: Vec<&[f64]> = Vec::new();
+        for step in sched.iter() {
+            if let Some(sf) = &step.spectrum_flux {
+                let vals: &[f64] = sf.values();
+                let id = if vals == phi {
+                    None
+                } else {
+                    let pos = extra_spectra.iter().position(|s| *s == vals);
+                    let pos = match pos {
+                        Some(p) => p,
+                        None => {
+                            lib.validate_flux(vals)?;
+                            extra_spectra.push(vals);
+                            extra_spectra.len() - 1
+                        }
+                    };
+                    Some(pos)
+                };
+                step_spectrum_id.push(id);
+            } else {
+                step_spectrum_id.push(None);
+            }
+        }
+        let mut react_extra: Vec<Vec<(usize, usize, f64)>> = Vec::new();
+        for extra_phi in &extra_spectra {
+            // a throwaway ledger per extra collapse: the base ledger already
+            // recorded the channel universe; these calls only differ in phi
+            let mut scratch = RateLedger::default();
+            react_extra.push(chain::reaction_rates(
+                lib,
+                lib_targets,
+                extra_phi,
+                ch,
+                &effective_fission_yields,
+                &mut scratch,
+                shield_plan.as_ref(),
+                rate_scales.as_ref(),
+            ));
+        }
         let flux_weighted_time_s: f64 = sched
             .iter()
             .map(|step| (step.duration() * step.multiplier()).get())
@@ -1830,7 +1884,9 @@ impl PreparedRun {
         };
         let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new(); // (product row fed, rate, bulk nuclide it came from)
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
-        let mut r_src: Vec<(usize, usize, f64)> = Vec::new();
+        // r_srcs[0] is the base spectrum; one entry per distinct step override follows
+        let mut r_srcs: Vec<Vec<(usize, usize, f64)>> = Vec::new();
+        let r_src: Vec<(usize, usize, f64)>;
         let mut reaction_derivatives = Vec::new();
         // (decaying parent state, matrix row, matrix column, d(value)/d lambda_parent)
         let mut decay_derivatives: Vec<(usize, usize, usize, f64)> = Vec::new();
@@ -1863,31 +1919,45 @@ impl PreparedRun {
                     }
                 }
             }
-            for (r, c, v) in &react {
-                if bulk.contains_key(c) {
-                    if r == c {
-                        if tracked_reservoir.contains(c) {
-                            r_src.push((*r, *c, *v));
+            // The trace remap runs per spectrum: bulk feeds differ across
+            // spectra, so each override needs its own r_src. Bookkeeping
+            // (sources, dropped-production ledger) stays base-spectrum only.
+            let reacts: Vec<&Vec<(usize, usize, f64)>> =
+                std::iter::once(&react).chain(react_extra.iter()).collect();
+            for (si_react, react_i) in reacts.iter().enumerate() {
+                let mut r_i: Vec<(usize, usize, f64)> = Vec::new();
+                for (r, c, v) in react_i.iter() {
+                    if bulk.contains_key(c) {
+                        if r == c {
+                            if tracked_reservoir.contains(c) {
+                                r_i.push((*r, *c, *v));
+                            }
+                            continue;
                         }
-                        continue;
+                        if bulk.contains_key(r) {
+                            if si_react == 0 {
+                                led.bulk_production_dropped.push((
+                                    name_of(ch.keys[*c].0, ch.keys[*c].1),
+                                    name_of(ch.keys[*r].0, ch.keys[*r].1),
+                                    *v,
+                                ));
+                            }
+                            continue;
+                        }
+                        if tracked_reservoir.contains(c) {
+                            r_i.push((*r, *c, *v));
+                        }
+                        r_i.push((*r, ch.unit, v * bulk[c]));
+                        if si_react == 0 {
+                            sources.push((*r, v * bulk[c], ch.keys[*c]));
+                        }
+                    } else if !bulk.contains_key(r) {
+                        r_i.push((*r, *c, *v));
                     }
-                    if bulk.contains_key(r) {
-                        led.bulk_production_dropped.push((
-                            name_of(ch.keys[*c].0, ch.keys[*c].1),
-                            name_of(ch.keys[*r].0, ch.keys[*r].1),
-                            *v,
-                        ));
-                        continue;
-                    }
-                    if tracked_reservoir.contains(c) {
-                        r_src.push((*r, *c, *v));
-                    }
-                    r_src.push((*r, ch.unit, v * bulk[c]));
-                    sources.push((*r, v * bulk[c], ch.keys[*c]));
-                } else if !bulk.contains_key(r) {
-                    r_src.push((*r, *c, *v));
                 }
+                r_srcs.push(r_i);
             }
+            r_src = r_srcs[0].clone();
             for derivative in reaction_assembly.derivatives {
                 if bulk.contains_key(&derivative.column) {
                     if tracked_reservoir.contains(&derivative.column)
@@ -1954,6 +2024,10 @@ impl PreparedRun {
             }
             d_src = ch.decay.clone();
             r_src = react.clone();
+            r_srcs.push(react.clone());
+            for extra in &react_extra {
+                r_srcs.push(extra.clone());
+            }
             reaction_derivatives = reaction_assembly.derivatives;
             yield_derivatives = reaction_assembly.yield_derivatives;
         }
@@ -1980,10 +2054,14 @@ impl PreparedRun {
                     for edges in step_feed.iter().chain(step_removal.iter()) {
                         graph.extend_from_slice(edges);
                     }
+                    // prune on the union of every step's reaction graph — a
+                    // nuclide reachable under any spectrum must be kept
+                    let r_union: Vec<(usize, usize, f64)> =
+                        r_srcs.iter().flatten().copied().collect();
                     crate::prune::reachable_physical(
                         n_total,
                         &graph,
-                        &r_src,
+                        &r_union,
                         &n0,
                         sched,
                         p == "rate",
@@ -2003,7 +2081,8 @@ impl PreparedRun {
                 .collect()
         };
         let dsub = sub(&d_src);
-        let rsub = sub(&r_src);
+        let rsubs: Vec<Vec<(usize, usize, C64)>> = r_srcs.iter().map(|t| sub(t)).collect();
+        let rsub = rsubs[0].clone();
         let mut derivative_sub: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
         for derivative in reaction_derivatives {
             if derivative.per_barn_s != 0.0
@@ -2091,8 +2170,10 @@ impl PreparedRun {
                     &row_scale,
                 )?;
                 let flux_denominator: f64 = phi.iter().sum();
-                let first_flux_group =
-                    phi.iter().position(|flux| *flux != 0.0).unwrap_or(phi.len());
+                let first_flux_group = phi
+                    .iter()
+                    .position(|flux| *flux != 0.0)
+                    .unwrap_or(phi.len());
                 let last_flux_group = phi
                     .iter()
                     .rposition(|flux| *flux != 0.0)
@@ -2286,6 +2367,7 @@ impl PreparedRun {
         let mut damage_cumulative_elements: BTreeMap<String, f64> = BTreeMap::new();
         let mut t_cum = Seconds::new(0.0).expect("zero seconds is valid");
         let mut flux_weighted_time_cum = Seconds::new(0.0).expect("zero seconds is valid");
+        let mut fluence_cum = 0.0f64;
         let base_flux_total = physical.flux.total();
         let bulk_activity: BTreeMap<String, f64> = bulk_photon_active
             .iter()
@@ -2294,9 +2376,14 @@ impl PreparedRun {
         for (si, schedule_step) in sched.iter().enumerate() {
             let dt = schedule_step.duration();
             let fl = schedule_step.multiplier();
+            // the step's spectrum (index into rsubs: 0 = base, 1.. = overrides)
+            let rs = match step_spectrum_id[si] {
+                Some(id) => &rsubs[id + 1],
+                None => &rsubs[0],
+            };
             let mut trip = dsub.clone();
             if fl.get() > 0.0 {
-                for (i, j, v) in rsub.iter() {
+                for (i, j, v) in rs.iter() {
                     trip.push((*i, *j, v * C64::new(fl.get(), 0.0)));
                 }
             }
@@ -2338,6 +2425,12 @@ impl PreparedRun {
             }
             t_cum += dt;
             flux_weighted_time_cum += dt * fl;
+            // physical fluence uses the step's own spectrum total
+            let step_flux_total: f64 = match step_spectrum_id[si] {
+                Some(id) => extra_spectra[id].iter().sum(),
+                None => base_flux_total.get(),
+            };
+            fluence_cum += dt.get() * fl.get() * step_flux_total;
             let mut zeroed = 0.0;
             for (k, v) in y.iter_mut().enumerate() {
                 if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed
@@ -2514,12 +2607,8 @@ impl PreparedRun {
                 t_s: t_cum.get(),
                 flux: fl.get(),
                 flux_weighted_time_s: flux_weighted_time_cum.get(),
-                fluence_n_cm2: spec
-                    .projectile
-                    .is_neutron()
-                    .then_some((base_flux_total * flux_weighted_time_cum).get()),
-                fluence_particles_cm2: (!spec.projectile.is_neutron())
-                    .then_some((base_flux_total * flux_weighted_time_cum).get()),
+                fluence_n_cm2: spec.projectile.is_neutron().then_some(fluence_cum),
+                fluence_particles_cm2: (!spec.projectile.is_neutron()).then_some(fluence_cum),
                 inventory: inv,
                 activity_Bq_per_g: act,
                 heat_W_per_g: heat,
@@ -2785,17 +2874,31 @@ impl PreparedRun {
                 })
             })
             .collect();
+        let fluence_total: f64 = sched
+            .iter()
+            .enumerate()
+            .map(|(si, step)| {
+                let total_i: f64 = match step_spectrum_id[si] {
+                    Some(id) => extra_spectra[id].iter().sum(),
+                    None => base_flux_total.get(),
+                };
+                (step.duration() * step.multiplier()).get() * total_i
+            })
+            .sum();
+        let n_step_spectra = step_spectrum_id.iter().filter(|s| s.is_some()).count();
         let schedule_ledger = if spec.projectile.is_neutron() {
             serde_json::json!({
                 "segments": sched.len(),
                 "flux_weighted_time_s": flux_weighted_time_s,
-                "fluence_n_cm2": base_flux_total.get() * flux_weighted_time_s,
+                "fluence_n_cm2": fluence_total,
+                "step_spectra": n_step_spectra,
             })
         } else {
             serde_json::json!({
                 "segments": sched.len(),
                 "flux_weighted_time_s": flux_weighted_time_s,
-                "fluence_particles_cm2": base_flux_total.get() * flux_weighted_time_s,
+                "fluence_particles_cm2": fluence_total,
+                "step_spectra": n_step_spectra,
             })
         };
         let mut ledger = serde_json::json!({

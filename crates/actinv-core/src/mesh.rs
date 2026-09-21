@@ -1031,6 +1031,7 @@ mod tests {
             schedule: vec![Step {
                 dt: "1 s".into(),
                 flux: 1.0,
+                spectrum: None,
                 feed: None,
                 removal: None,
             }],

@@ -331,6 +331,16 @@ as `flux`, cumulative elapsed `t_s`, cumulative multiplier-weighted exposure `fl
 `fluence_n_cm2` (base total flux times weighted exposure). Scientific notation in a duration, such as `1e-8 s`, is
 accepted as a number rather than mistaken for a unit suffix.
 
+Any step may also carry its own `spectrum` — the same shape as the base `spectrum` — replacing it for that step's
+duration while `flux` still scales the step's total. This expresses pulsed or multi-field irradiations where the
+spectrum shape itself changes between segments (for example fusion pulses at different field positions or a spallation
+pulse inside a thermal field). A step spectrum must share the base spectrum's `structure` and group count; an override
+identical to the base deduplicates to it. The physical fluence sums each step's own spectrum total times its
+multiplier-weighted duration, and the schedule ledger reports how many steps declared overrides as `step_spectra`.
+Multi-spectrum schedules always collapse on the groupwise library rows (never the pre-collapsed artifact) and are not
+yet supported together with `uncertainty`, whose MF=33 collapse is bound to a single spectrum — such a spec is
+rejected at validation.
+
 Any step may also declare optional `feed` and `removal` maps. `feed` entries are explicit nuclides
 (`Co60`, `Ta180m1`) with constant rates in atoms s⁻¹ g⁻¹, applied during the declaring step regardless of the
 multiplier — a feed on a zero-flux cooling step still delivers atoms. `removal` entries are nuclides or element

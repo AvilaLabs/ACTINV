@@ -222,6 +222,26 @@ pub struct Spectrum {
     #[serde(default)]
     pub descending: bool,
 }
+
+impl Spectrum {
+    /// Group fluxes in ascending-energy order, scaled to `total` when given.
+    pub fn ascending_flux(&self) -> Vec<f64> {
+        let mut f = self.flux_per_group.clone();
+        if self.descending {
+            f.reverse();
+        }
+        if let Some(t) = self.total {
+            let s: f64 = f.iter().sum();
+            if s > 0.0 {
+                let k = t / s;
+                for v in f.iter_mut() {
+                    *v *= k;
+                }
+            }
+        }
+        f
+    }
+}
 fn g709() -> String {
     "fispact-709".into()
 }
@@ -233,6 +253,11 @@ pub struct Step {
     pub dt: String,
     /// multiplier on the spectrum's total during this step; 0 is cooling
     pub flux: f64,
+    /// optional per-step spectrum replacing the base `spectrum` for this step's duration;
+    /// the `flux` multiplier scales this spectrum's total. Must share the base spectrum's
+    /// structure and group count.
+    #[serde(default)]
+    pub spectrum: Option<Spectrum>,
     /// optional constant feed during this step: explicit nuclide key -> atoms s^-1 g^-1 of material
     #[serde(default)]
     pub feed: Option<BTreeMap<String, f64>>,
@@ -309,6 +334,8 @@ pub(crate) enum RemovalSelector {
 pub(crate) struct PhysicalStep {
     duration: Seconds,
     multiplier: FluxMultiplier,
+    /// per-step spectrum (ascending group fluxes); None = base spectrum
+    pub(crate) spectrum_flux: Option<GroupFluxes>,
     /// ((ZA, LISO), atoms s^-1 g^-1) constant feed during this step
     pub(crate) feed: Vec<((i32, i32), f64)>,
     /// (selector, s^-1) first-order removal during this step
@@ -434,7 +461,11 @@ impl Spec {
             for selector in &uncertainty.responses {
                 let valid = matches!(
                     selector.as_str(),
-                    "heat.total" | "heat.alpha" | "heat.beta" | "heat.gamma" | "activity:*"
+                    "heat.total"
+                        | "heat.alpha"
+                        | "heat.beta"
+                        | "heat.gamma"
+                        | "activity:*"
                         | "activity.total"
                 ) || selector
                     .strip_prefix("activity:")
@@ -540,6 +571,11 @@ impl Spec {
             }
             if !st.flux.is_finite() || st.flux < 0.0 {
                 return Err("flux multiplier must be finite and nonnegative".into());
+            }
+            if st.spectrum.is_some() && self.uncertainty.is_some() {
+                return Err(
+                    "per-step spectra are not yet supported with uncertainty; the MF=33 collapse is bound to a single spectrum".into(),
+                );
             }
             if let Some(feed) = &st.feed {
                 for (key, rate) in feed {
@@ -854,9 +890,32 @@ impl Spec {
                         },
                     )
                     .collect::<Result<Vec<_>, String>>()?;
+                let spectrum_flux = step
+                    .spectrum
+                    .as_ref()
+                    .map(|s| {
+                        if s.structure != self.spectrum.structure {
+                            return Err(format!(
+                                "schedule step spectrum.structure '{}' must match the base spectrum's '{}'",
+                                s.structure, self.spectrum.structure
+                            ));
+                        }
+                        let f = s.ascending_flux();
+                        if f.len() != flux.values().len() {
+                            return Err(format!(
+                                "schedule step spectrum has {} groups; the base spectrum declares {}",
+                                f.len(),
+                                flux.values().len()
+                            ));
+                        }
+                        GroupFluxes::new(f)
+                            .map_err(|_| "schedule step spectrum group fluxes must be finite and nonnegative".to_string())
+                    })
+                    .transpose()?;
                 Ok(PhysicalStep {
                     duration,
                     multiplier,
+                    spectrum_flux,
                     feed,
                     removal,
                 })
@@ -889,20 +948,7 @@ impl Spec {
     }
     /// Group fluxes in ascending-energy order, scaled to `total` when given.
     pub fn flux_ascending(&self) -> Vec<f64> {
-        let mut f = self.spectrum.flux_per_group.clone();
-        if self.spectrum.descending {
-            f.reverse();
-        }
-        if let Some(t) = self.spectrum.total {
-            let s: f64 = f.iter().sum();
-            if s > 0.0 {
-                let k = t / s;
-                for v in f.iter_mut() {
-                    *v *= k;
-                }
-            }
-        }
-        f
+        self.spectrum.ascending_flux()
     }
     pub fn schedule_seconds(&self) -> Vec<(f64, f64)> {
         self.schedule
@@ -1028,6 +1074,69 @@ mod duration_tests {
             .contains("finite and nonnegative"));
         value["schedule"][0]["feed"] = serde_json::json!({"Co60": null});
         assert!(Spec::from_json(&value.to_string()).is_err());
+    }
+
+    #[test]
+    fn per_step_spectrum_parses_and_validates() {
+        // accepted when structure and group count match the base spectrum
+        let mut value = minimal_spec();
+        value["schedule"][0]["spectrum"] = serde_json::json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 2.0],
+            "flux_per_group": [2.0],
+        });
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let physical = spec.physical_inputs().unwrap();
+        assert_eq!(
+            physical.schedule[0]
+                .spectrum_flux
+                .as_ref()
+                .unwrap()
+                .values(),
+            &[2.0]
+        );
+    }
+
+    #[test]
+    fn per_step_spectrum_requires_matching_structure_and_groups() {
+        // structure mismatch is rejected
+        let mut value = minimal_spec();
+        value["schedule"][0]["spectrum"] = serde_json::json!({
+            "structure": "fispact-709",
+            "flux_per_group": [1.0],
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .and_then(|s| s.physical_inputs())
+            .unwrap_err()
+            .contains("must match the base spectrum"));
+
+        // group-count mismatch is rejected
+        let mut value = minimal_spec();
+        value["schedule"][0]["spectrum"] = serde_json::json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 2.0, 3.0],
+            "flux_per_group": [1.0, 1.0],
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .and_then(|s| s.physical_inputs())
+            .unwrap_err()
+            .contains("base spectrum declares 1"));
+    }
+
+    #[test]
+    fn per_step_spectrum_rejects_uncertainty() {
+        let mut value = minimal_spec();
+        value["schedule"][0]["spectrum"] = serde_json::json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 2.0],
+            "flux_per_group": [1.0],
+        });
+        value["uncertainty"] = serde_json::json!({
+            "covariance": {"path": "cov.npz", "sha256": "0".repeat(64)},
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("not yet supported with uncertainty"));
     }
 
     #[test]
