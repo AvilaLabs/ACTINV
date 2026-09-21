@@ -1,8 +1,14 @@
 # TENDL-2025 MF=10/MF=9 emitted-state conservation failures — corpus enumeration
 
 Prepared 2026-09-21 by Connor Avila / Avila Labs, from ACTINV P41 corpus audit.
-Status: reproduced in locally archived source files; companion to the
-2026-09-14 four-file threshold submission (`TENDL2025_THRESHOLD_SUBMISSION.md`).
+Status: **held for release verification — not submitted.** The maintainer has
+already identified the root cause (an unflushed array in TALYS
+`channelsout.f90` leaking previous-channel values into emitted-state output)
+and stated it will be fixed in the next TENDL version; every class below is a
+manifestation of that mechanism. This document is retained as the census and
+re-verification checklist for the next release: any class that survives the
+fix becomes a reportable residual. Companion to the 2026-09-14 four-file
+threshold submission (`TENDL2025_THRESHOLD_SUBMISSION.md`).
 
 ## Observation
 
