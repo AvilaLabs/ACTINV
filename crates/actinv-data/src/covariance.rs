@@ -972,7 +972,10 @@ impl CovarianceLibrary {
             }
         }
         let total_flux: f64 = phi.iter().sum();
-        let first_flux_group = phi.iter().position(|flux| *flux != 0.0).unwrap_or(phi.len());
+        let first_flux_group = phi
+            .iter()
+            .position(|flux| *flux != 0.0)
+            .unwrap_or(phi.len());
         let last_flux_group = phi
             .iter()
             .rposition(|flux| *flux != 0.0)
@@ -2018,7 +2021,9 @@ mod tests {
             ngroups: 2,
             bounds: vec![1.0, 2.0, 5.0],
         };
-        let plain = covariance.collapse(&activation, &[1.0, 3.0], &[0, 1]).unwrap();
+        let plain = covariance
+            .collapse(&activation, &[1.0, 3.0], &[0, 1])
+            .unwrap();
         let weighted = covariance
             .collapse_weighted(&activation, &[1.0, 3.0], &[0, 1], &|_, _| 1.0)
             .unwrap();

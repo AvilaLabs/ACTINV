@@ -1482,8 +1482,12 @@ fn decay_resolve(
 ) -> Option<(i32, &'static str)> {
     let lis = lis.filter(|value| *value > 0);
     let elis = elis_eV.filter(|value| *value > 0.0);
-    let mut tiers: Vec<(&HashMap<i32, Vec<DecayStateEntry>>, bool, &'static str, &'static str)> =
-        Vec::new();
+    let mut tiers: Vec<(
+        &HashMap<i32, Vec<DecayStateEntry>>,
+        bool,
+        &'static str,
+        &'static str,
+    )> = Vec::new();
     tiers.push((&tables.primary, false, "elis", "lis"));
     if let Some(fallback) = &tables.fallback {
         tiers.push((fallback, false, "fallback_elis", "fallback_lis"));
@@ -1689,11 +1693,7 @@ fn map_product_states(
                                     Some((liso, via)) => {
                                         (Some(liso), None, decay_product_decision(via))
                                     }
-                                    None => (
-                                        Some(0),
-                                        None,
-                                        "decay_no_isomer_match_to_ground",
-                                    ),
+                                    None => (Some(0), None, "decay_no_isomer_match_to_ground"),
                                 }
                             } else {
                                 (
@@ -1779,8 +1779,7 @@ fn map_product_states(
                     tables,
                     original_zap,
                     (state.representative.lis > 0).then_some(state.representative.lis),
-                    (state.representative.elis_eV > 0.0)
-                        .then_some(state.representative.elis_eV),
+                    (state.representative.elis_eV > 0.0).then_some(state.representative.elis_eV),
                 );
                 decay_liso = resolved.map(|(liso, _)| liso);
                 match resolved {
