@@ -1,0 +1,293 @@
+{
+ "schema": "g3_p42_recensus/1",
+ "input_sha256": {
+  "p40_classes_before": "f795121d1d9f78e3a6b49aadfa1a2a8bbcb2e55e025f9a85d36d21072621c532",
+  "p40_classes_after_recensus": "f795121d1d9f78e3a6b49aadfa1a2a8bbcb2e55e025f9a85d36d21072621c532",
+  "g1_census": "34cc2ea7fe7d4ebfd5a2ad5e3b55717df7fac2303d53ec166079262af439fcb1",
+  "g2_repairs": "42bd34381349a4769067b7c29387a8ea13e561db2c60857526dba732d52d3ed6",
+  "p40_verdict": "27df68e5d86f10c834106fd8264fd2a10a38badcd1b07ee9d4148541bc1a4944"
+ },
+ "byte_identical_to_p40": true,
+ "recensus_returncode": 0,
+ "n_cases": 912,
+ "mechanism_attribution": {
+  "members": [
+   {
+    "member": "Ti55",
+    "p40_class": "short_lived_products_absent_in_actinv",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_cr100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "unresolved",
+     "fe_ag": "unresolved",
+     "fe_co": "unresolved",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "unresolved",
+     "fe_mn": "unresolved",
+     "fe_mo": "unresolved",
+     "fe_nb": "unresolved",
+     "fe_ta": "unresolved",
+     "fe_v": "unresolved"
+    }
+   },
+   {
+    "member": "V55",
+    "p40_class": "short_lived_products_absent_in_actinv",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_cr100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "unresolved",
+     "fe_ag": "unresolved",
+     "fe_co": "unresolved",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "unresolved",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "unresolved",
+     "fe_nb": "unresolved",
+     "fe_ta": "unresolved",
+     "fe_v": "unresolved"
+    }
+   },
+   {
+    "member": "Ti53",
+    "p40_class": "short_lived_products_absent_in_actinv",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_cr100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "unresolved",
+     "fe_ag": "unresolved",
+     "fe_co": "unresolved",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "unresolved",
+     "fe_mn": "unresolved",
+     "fe_mo": "unresolved",
+     "fe_nb": "unresolved",
+     "fe_ta": "unresolved",
+     "fe_v": "unresolved"
+    }
+   },
+   {
+    "member": "Cr57",
+    "p40_class": "short_lived_products_absent_in_actinv",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_mn100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "Mn59",
+    "p40_class": "short_lived_products_absent_in_actinv",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_mn100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "Cr51",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "conversion_content",
+    "repair": "no_repair_alara_side",
+    "worst_case": "fe_cr100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "conversion_content",
+     "fe_ag": "conversion_content",
+     "fe_co": "conversion_content",
+     "fe_cr": "conversion_content",
+     "fe_cu": "conversion_content",
+     "fe_mn": "conversion_content",
+     "fe_mo": "conversion_content",
+     "fe_nb": "conversion_content",
+     "fe_ta": "conversion_content",
+     "fe_v": "conversion_content"
+    }
+   },
+   {
+    "member": "Fe59",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_mn100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "Cr55",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_cr100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "Mn57",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_mn100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "Fe53",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "conversion_content",
+    "repair": "no_repair_alara_side",
+    "worst_case": "fe_ag100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "conversion_content",
+     "fe_ag": "conversion_content",
+     "fe_co": "conversion_content",
+     "fe_cr": "conversion_content",
+     "fe_cu": "conversion_content",
+     "fe_mn": "conversion_content",
+     "fe_mo": "conversion_content",
+     "fe_nb": "conversion_content",
+     "fe_ta": "conversion_content",
+     "fe_v": "conversion_content"
+    }
+   },
+   {
+    "member": "Cr56",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_mn100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "Mn58",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "alara_heritage",
+    "repair": "not_eligible",
+    "worst_case": "fe_mn100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "alara_heritage",
+     "fe_ag": "alara_heritage",
+     "fe_co": "alara_heritage",
+     "fe_cr": "alara_heritage",
+     "fe_cu": "alara_heritage",
+     "fe_mn": "alara_heritage",
+     "fe_mo": "alara_heritage",
+     "fe_nb": "alara_heritage",
+     "fe_ta": "alara_heritage",
+     "fe_v": "alara_heritage"
+    }
+   },
+   {
+    "member": "V52",
+    "p40_class": "common_nuclide_magnitude",
+    "mechanism": "conversion_content",
+    "repair": "no_repair_alara_side",
+    "worst_case": "fe_cr100000wppm__fns_709__3600s",
+    "per_material_class": {
+     "fe": "unresolved",
+     "fe_ag": "unresolved",
+     "fe_co": "unresolved",
+     "fe_cr": "conversion_content",
+     "fe_cu": "unresolved",
+     "fe_mn": "conversion_content",
+     "fe_mo": "unresolved",
+     "fe_nb": "unresolved",
+     "fe_ta": "unresolved",
+     "fe_v": "conversion_content"
+    }
+   }
+  ],
+  "by_class": {
+   "alara_heritage": [
+    "Ti55",
+    "V55",
+    "Ti53",
+    "Cr57",
+    "Mn59",
+    "Fe59",
+    "Cr55",
+    "Mn57",
+    "Cr56",
+    "Mn58"
+   ],
+   "conversion_content": [
+    "Cr51",
+    "Fe53",
+    "V52"
+   ]
+  },
+  "alara_heritage_count": 10,
+  "conversion_content_count": 3,
+  "true_defect_count": 0,
+  "unresolved_count": 0
+ },
+ "equivalence": {
+  "worst_raw_dev": 16.54374131657282,
+  "worst_clean_dev": 0.06111487860094433,
+  "worst_other_share": 0.03171170864662648
+ },
+ "extraction_overlay_note": "G1's t_1/2-matched stdout parser found ALARA values for Ti-53/Ti-55 that the P26b element-resolution dropped (isobar ambiguity); P40's arm-only shares for those rows understate ALARA's side. Corrected per-case values are in g1_p42_mechanisms.json case_evidence. No ACTINV-side values changed."
+}
