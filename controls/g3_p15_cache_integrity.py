@@ -48,6 +48,11 @@ SOLVER_IDENTITY = re.compile(
 
 def normalize_value(value: dict[str, object]) -> dict[str, object]:
     value.pop("ms", None)
+    # P30 added the count of applied rate scales. Only its exact inactive
+    # representation is equivalent to the pre-P30 absence (see amendment).
+    assembly = value.get("ledger", {}).get("assembly", {})
+    if type(assembly.get("rate_scale")) is int and assembly["rate_scale"] == 0:
+        del assembly["rate_scale"]
     certificate = value.get("certificate")
     if isinstance(certificate, dict):
         solver = certificate.get("solver")
@@ -69,6 +74,17 @@ def check_version_normalization() -> None:
     )
     if baseline != patch:
         raise AssertionError("P15 scientific-result normalization depends on patch version")
+    absent = {"ledger": {"assembly": {}}, "inventory": [1.0]}
+    inactive = {"ledger": {"assembly": {"rate_scale": 0}}, "inventory": [1.0]}
+    if normalize_value(inactive) != absent:
+        raise AssertionError("inactive rate-scale metadata changes the legacy result")
+    for count in (1, -1, True, 0.0, None, "0"):
+        active = {"ledger": {"assembly": {"rate_scale": count}}, "inventory": [1.0]}
+        if normalize_value(active) == absent:
+            raise AssertionError("rate-scale normalization erased a noncanonical value")
+    changed = {"ledger": {"assembly": {"rate_scale": 0}}, "inventory": [2.0]}
+    if normalize_value(changed) == absent:
+        raise AssertionError("rate-scale normalization erased a scientific difference")
 
 
 def canonical_sha256(value: object, ephemeral_root: Path) -> str:

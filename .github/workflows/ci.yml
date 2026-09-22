@@ -42,6 +42,11 @@ jobs:
       - name: Preflight orchestration regression
         run: python3 scripts/test_preflight.py
 
+      - name: Fusion isotope benchmark opening audit (no inventory reproduction claim)
+        run: |
+          python3 controls/test_fusion_isotope_001.py
+          python3 controls/check_fusion_isotope_001.py
+
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2.9.2
 

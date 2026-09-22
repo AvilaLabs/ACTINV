@@ -1,0 +1,35 @@
+{
+  "benchmark": "fusion-isotope-001",
+  "protocol_sha256": "99514a0e323a4a059401227ee95f67acceb8c72fcbba6c25038c7c7ac3d74d0b",
+  "reference_sha256": "758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7",
+  "scope": "published_yield_arithmetic_only",
+  "overall_status": "not_reproduced",
+  "actinv_executed": false,
+  "openmc_executed": false,
+  "gates": {
+    "G0": "source_audited",
+    "G1": "arithmetic_reported",
+    "G2": "not_executed",
+    "G3": "blocked_missing_inputs"
+  },
+  "arithmetic": {
+    "emitted_source_neutrons_per_s": 3.6e+18,
+    "th229_production_atoms_per_s": 2.34e+17,
+    "th229_gross_atoms_one_year": 7.3844784e+24,
+    "th229_gross_activity_one_year_ci": 553.7755904942,
+    "th229_activity_one_year_with_parent_decay_ci": 553.7513461292519,
+    "published_gross_activity_one_year_ci": 542.0,
+    "gross_activity_residual_ci": 11.775590494199946,
+    "gross_activity_relative_residual": 0.021726181723616136
+  },
+  "missing_for_reproduction": [
+    "Exact target isotopic composition and basis: 27% label versus 275 kg Th230 in one tonne",
+    "Executable transport geometry, materials, boundaries, source distribution and OpenMC version",
+    "Target scalar-flux spectrum, group boundaries, spatial averaging and tally uncertainties",
+    "Complete isotope-resolved reaction rates including target destruction and product burn-up",
+    "Exact original nuclear-data files, processing settings, temperatures and SHA-256 hashes",
+    "Decay dataset, complete initial inventory, depletion method and time-step history",
+    "Machine-readable Figure 4 inventory values and uncertainty information"
+  ],
+  "residual_disposition": "unresolved; no normalization fitted; no agreement verdict"
+}
