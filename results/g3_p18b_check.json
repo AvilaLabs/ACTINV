@@ -2,11 +2,11 @@
   "schema": "actinv-p18b-g3-check-1",
   "protocol_sha256": "69076fa2656b239addbb15fbb4727caaa2c8ea37b3aa82a141f3a2b0b619eabe",
   "g2_report_sha256": "cfeb4fa2a1b3a5fb465f61299285d0633c43948fd5142e22ba1649dcaa8b38d6",
-  "g2_check_sha256": "9f0115c429e4e95833c356081229ff20a62bb9863b7c1bd9f21c6821cdc904f9",
+  "g2_check_sha256": "fb05923e1ab9535ffef61da4029cd07ddbfc0fecd3211f2ae98f8d2fffe9735d",
   "g2_audit_complete": true,
   "g2_check_pass": true,
-  "binary": "/home/connoravila/Documents/actinv/target/debug/actinv",
-  "binary_sha256": "c3484443ddfdba054be788a25e22b9772db72e94cd6714e5e9ec746853ca337a",
+  "binary": "/home/connoravila/Documents/actinv/target/release/actinv",
+  "binary_sha256": "73a32a6abda4307da2e485adb58f67afb75576e875bf874535b9481261febc56",
   "generated": {
     "envelope_reconcile": {
       "pass": true,
@@ -30,7 +30,7 @@
     "fission_sentinel_comparator": {
       "pass": true
     },
-    "missing_total_still_fails": {
+    "missing_total_self_comparator": {
       "pass": true
     }
   },
