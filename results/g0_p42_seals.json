@@ -1,0 +1,72 @@
+{
+ "census": {
+  "case_count": 912,
+  "case_root": "/home/connoravila/nuclear-data/p26b-work/p38-run/g2-cases-p39",
+  "evidence_files": [
+   "out.json",
+   "case.stdout",
+   "alara.dmp"
+  ],
+  "files_hashed": 2736,
+  "missing_files": [],
+  "p40_census_sha256": "912034ba493e7f8d66f85b5013d57664635a4a0eff618859ffcffcb25bd85f5e",
+  "tree_sha256": "21d95d7b900acbc15a4c976456fbbb8f37dd65bc56a05e8026aa765a6d99109a"
+ },
+ "expectations": [
+  "every member nuclide of both open classes lands in exactly one frozen class with a hash-pinned trace",
+  "repairs are permitted only for true_defect / conversion_content mechanisms",
+  "the extended artifact, if built, is labeled extended_artifact and derived from case inputs alone",
+  "no value is tuned toward ALARA's output; unresolved is a valid close, omission is not"
+ ],
+ "frozen_vocabulary": [
+  "coverage_parent",
+  "decay_file_gap",
+  "decay_feed_missing",
+  "burn_out",
+  "conversion_content",
+  "alara_heritage",
+  "true_defect",
+  "unresolved"
+ ],
+ "identities": {
+  "actinv_fendl32c_artifact": {
+   "expected_sha256": "18547cc311560f29ed20a4e553427f238d046046461feaf7bfbec8adf298e097",
+   "path": "/home/connoravila/nuclear-data/p26b-work/p38-run/actinv_fendl32c_709_p39.npz",
+   "sha256": "18547cc311560f29ed20a4e553427f238d046046461feaf7bfbec8adf298e097"
+  }
+ },
+ "open_classes": {
+  "common_nuclide_magnitude": {
+   "members": [
+    "Cr51",
+    "Fe59",
+    "Cr55",
+    "Mn57",
+    "Fe53",
+    "Cr56",
+    "Mn58",
+    "V52"
+   ],
+   "source": "verdict_p40.json divergence_classes"
+  },
+  "short_lived_products_absent_in_actinv": {
+   "members": [
+    "Ti55",
+    "V55",
+    "Ti53",
+    "Cr57",
+    "Mn59"
+   ],
+   "source": "verdict_p40.json divergence_classes"
+  }
+ },
+ "phase": "P42",
+ "prior_verdicts": {
+  "verdict_p40.json": "P40-CONDITIONAL",
+  "verdict_p40_sha256": "27df68e5d86f10c834106fd8264fd2a10a38badcd1b07ee9d4148541bc1a4944"
+ },
+ "protocol": "protocols/ACTINV-P42_PROTOCOL.md",
+ "protocol_sha256": "eb44b2cdf956c79299b1b58591a8e12514588ddbcc0bd51cb72fbf768fcf0394",
+ "schema": "actinv-p42-g0-1",
+ "sealed_at_commit": "32cf48f5aaef2e71b3f42cfb0b8b9866fdc4bf3d"
+}
