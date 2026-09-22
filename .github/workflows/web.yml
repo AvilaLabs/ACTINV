@@ -1,0 +1,71 @@
+name: Build browser workbench
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'crates/**'
+      - 'examples/fns_fe_5min.json'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'packaging/desktop.json'
+      - 'scripts/prepare_web.py'
+      - 'web/**'
+      - '.github/workflows/web.yml'
+  pull_request:
+    paths:
+      - 'crates/**'
+      - 'examples/fns_fe_5min.json'
+      - 'Cargo.toml'
+      - 'Cargo.lock'
+      - 'packaging/desktop.json'
+      - 'scripts/prepare_web.py'
+      - 'web/**'
+      - '.github/workflows/web.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: web-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy
+      - uses: Swatinem/rust-cache@v2.9.2
+        with:
+          key: web
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check platform detection
+        run: node --test web/download/platform.test.mjs
+      - name: Check browser Rust
+        run: cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: trunk
+      - name: Build browser bundle and download page
+        run: |
+          trunk build --config crates/actinv-gui/Trunk.toml --release --locked --public-url ./
+          python3 scripts/prepare_web.py dist/web
+      - name: Check built app and downloads in Chromium
+        run: |
+          npm ci --prefix web --ignore-scripts
+          web/node_modules/.bin/playwright install --with-deps chromium
+          python3 -m http.server 8080 --directory dist/web --bind 127.0.0.1 &
+          server_pid=$!
+          trap 'kill "$server_pid"; wait "$server_pid" || true' EXIT
+          timeout 120s node web/smoke.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: actinv-web
+          path: dist/web

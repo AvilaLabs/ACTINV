@@ -7,6 +7,7 @@ __pycache__/
 /python/build/
 /python/*.egg-info/
 /dist/
+/.wrangler/
 /actinv-data/
 /.venv/
 scratch/
@@ -14,3 +15,4 @@ scratch/
 *.actp
 *.actc
 packaging/node_modules/
+web/node_modules/

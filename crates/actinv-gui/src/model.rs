@@ -1,9 +1,11 @@
 use actinv_core::spec::Spec;
 use serde_json::Value;
+#[cfg(not(target_arch = "wasm32"))]
 use std::path::{Path, PathBuf};
 
 pub const EXAMPLE: &str = include_str!("../../../examples/fns_fe_5min.json");
 // Windows' small default stacks are insufficient for the solver's data readers.
+#[cfg(not(target_arch = "wasm32"))]
 pub const SOLVER_STACK_BYTES: usize = 8 * 1024 * 1024;
 
 pub fn decode_problem(text: &str) -> Result<Value, String> {
@@ -15,12 +17,14 @@ pub fn decode_problem(text: &str) -> Result<Value, String> {
     serde_json::to_value(spec).map_err(|e| e.to_string())
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn resolve_inputs(document: &Value, base: &Path) -> Result<Spec, String> {
     let mut spec = Spec::from_json(&document.to_string())?;
     actinv_cli::workflow::resolve_inputs(&mut spec, base);
     Ok(spec)
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn check_files(spec: &Spec) -> Result<(), String> {
     actinv_cli::workflow::check_files(spec, false)
 }
@@ -36,6 +40,7 @@ pub fn tutorial_result() -> ResultDocument {
 }
 
 /// A pasted vector, or a one-column CSV with an optional `flux` header.
+#[cfg(not(target_arch = "wasm32"))]
 pub fn parse_group_values(text: &str, count: usize) -> Result<Vec<f64>, String> {
     let mut values = Vec::new();
     for (i, token) in text
@@ -153,14 +158,17 @@ pub fn metric(step: &Value, metric: usize, selected: &str) -> f64 {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn write_json(path: &Path, value: &Value) -> Result<(), String> {
     let text = serde_json::to_string_pretty(value).map_err(|e| e.to_string())?;
     std::fs::write(path, text + "\n").map_err(|e| format!("Cannot save {}: {e}", path.display()))
 }
+#[cfg(not(target_arch = "wasm32"))]
 pub fn working_directory() -> PathBuf {
     std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn solve(spec: Spec) -> Result<Value, String> {
     actinv_core::run::run(&spec, "desktop")
         .and_then(|r| serde_json::to_value(r).map_err(|e| e.to_string()))

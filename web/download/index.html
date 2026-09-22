@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Download ACTINV for Windows, macOS, or Linux.">
+  <title>Download ACTINV · Avila Labs</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; color: #172038; background: #f6f7fb; }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 32px 20px; }
+    main { max-width: 680px; margin: 7vh auto; padding: 40px; background: white; border: 1px solid #dce0eb; border-radius: 16px; }
+    .brand { color: #1800ad; font-weight: 700; letter-spacing: .04em; text-decoration: none; }
+    h1 { font-size: clamp(28px, 5vw, 38px); margin-bottom: 12px; }
+    p { line-height: 1.6; }
+    a { color: #1800ad; text-underline-offset: 3px; }
+    #download { display: inline-block; padding: 13px 20px; margin: 8px 0; border-radius: 8px; background: #1800ad; color: white; text-decoration: none; font-weight: 650; }
+    [hidden] { display: none !important; }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+    .choices a { padding: 14px; border: 1px solid #dce0eb; border-radius: 8px; text-decoration: none; }
+    .choices small { display: block; color: #596478; margin-top: 5px; }
+    .note { color: #596478; font-size: 14px; }
+    footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #dce0eb; }
+    a:focus-visible { outline: 3px solid #958aff; outline-offset: 4px; }
+    @media (max-width: 500px) { main { padding: 24px; margin-top: 3vh; } .choices { grid-template-columns: 1fr; } }
+    @media (prefers-color-scheme: dark) { :root { color: #eef0fa; background: #10131e; } main { background: #191e2c; border-color: #363f55; } a, .brand { color: #b6acff; } .choices a, footer { border-color: #363f55; } .note, .choices small { color: #b6bfd1; } }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="brand" href="../">ACTINV · AVILA LABS</a>
+    <h1>Download ACTINV</h1>
+    <p id="status" role="status">Finding the download for your computer…</p>
+    <a id="download" hidden>Download</a>
+    <p id="mac-help" hidden>On your Mac, open the Apple menu → About This Mac. Choose Apple Silicon if you see a Chip entry such as Apple M1, M2, M3, or M4. Choose Intel if you see an Intel processor.</p>
+    <div id="choices" class="choices" aria-label="Choose a desktop download"></div>
+    <p class="note">The desktop preview is unsigned. See <a href="https://github.com/AvilaLabs/ACTINV/blob/master/docs/DESKTOP_INSTALL.md">installation help</a> for first-launch instructions.</p>
+    <noscript><p><a href="https://github.com/AvilaLabs/ACTINV/releases?q=desktop-v&amp;expanded=true">Choose your platform on the desktop releases page.</a></p></noscript>
+    <footer><a href="../">Open ACTINV in your browser</a> · <a href="https://github.com/AvilaLabs/ACTINV">Source and documentation</a></footer>
+  </main>
+  <script type="module" src="./download.mjs"></script>
+</body>
+</html>

@@ -7,19 +7,23 @@
 
 **Open, reproducible activation and nuclide-inventory calculations with a native desktop, command line, and Python.**
 
-## Install the desktop
+## Get started
 
-[![Download Windows installer](https://img.shields.io/badge/Windows-Download_installer-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-windows-x86_64-setup.exe)
-[![Download macOS Apple Silicon app](https://img.shields.io/badge/macOS-Apple_Silicon-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-macos-aarch64.dmg)
-[![Download macOS Intel app](https://img.shields.io/badge/macOS-Intel-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-macos-x86_64.dmg)
-[![Download Linux AppImage](https://img.shields.io/badge/Linux-Download_AppImage-1800AD?style=for-the-badge)](https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v0.1.0-preview.1/ACTINV-Desktop-0.1.0-preview.1-linux-x86_64.AppImage)
+[![Download ACTINV](https://img.shields.io/badge/Download-ACTINV-1800AD?style=for-the-badge)](https://actinv.avilalabs.org/download/)
+[![Open in browser](https://img.shields.io/badge/Open_in-browser-1800AD?style=for-the-badge)](https://actinv.avilalabs.org/)
 
-Click your platform to download directly—no Rust or Python needed. **Windows:** open the installer, then launch
+**Download ACTINV** selects the desktop installer for your computer when the browser can identify it.
+If it cannot, choose from the downloads shown. No Rust or Python is needed.
+**Windows:** open the installer, then launch
 ACTINV from Start. **macOS:** open the disk image and drag ACTINV to Applications. **Linux:** allow the AppImage
 to run in its file properties, then double-click it. Windows and Linux downloads are for x86_64 computers.
 
 Desktop **0.1.0-preview.1** is unsigned. See [first-launch help and installation details](docs/DESKTOP_INSTALL.md)
 if your system shows a security notice, or for an optional Linux application-menu shortcut.
+
+**Open in browser** lets you try the results tutorial, inspect and compare result files, and edit and download
+problem files. Your files stay on your device. Use the desktop app to run calculations and work with nuclear data.
+See the [browser guide](docs/WEB.md) for details.
 
 ## About ACTINV
 
@@ -296,6 +300,7 @@ evidence and complete limitations.
 
 ## Documentation
 
+[Desktop guide](docs/DESKTOP.md) · [Browser guide](docs/WEB.md) ·
 [Specification](docs/SPEC.md) · [Data sources](docs/DATA.md) · [Method](docs/METHOD.md) ·
 [Validation](docs/VALIDATION.md) · [Qualification boundary](docs/QUALIFICATION.md) ·
 [Known data limitations](docs/DATA_LIMITATIONS.md) ·
