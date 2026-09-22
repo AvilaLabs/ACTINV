@@ -1,0 +1,128 @@
+{
+ "schema": "actinv-verdict-1",
+ "phase": "P42",
+ "verdict": "P42-PASS",
+ "title": "mechanism closure of P40's open divergence classes",
+ "disposition": "pass",
+ "protocol": "protocols/ACTINV-P42_PROTOCOL.md",
+ "protocol_sha256": "eb44b2cdf956c79299b1b58591a8e12514588ddbcc0bd51cb72fbf768fcf0394",
+ "gates": {
+  "g0": {
+   "status": "sealed",
+   "artifact": "results/g0_p42_seals.json"
+  },
+  "g1": {
+   "status": "pass",
+   "artifact": "results/g1_p42_mechanisms.json",
+   "members": 13
+  },
+  "g2": {
+   "status": "pass",
+   "artifact": "results/g2_p42_repairs.json",
+   "repairs_required": 0
+  },
+  "g3": {
+   "status": "pass",
+   "artifact": "results/g3_p42_recensus.json",
+   "byte_identical_to_p40": true
+  },
+  "g4": {
+   "status": "pass",
+   "artifact": "results/g4_p42_check.json"
+  }
+ },
+ "mechanism_counts": {
+  "alara_heritage": 10,
+  "conversion_content": 3
+ },
+ "per_nuclide_ledger": [
+  {
+   "member": "Ti55",
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_cr100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "V55",
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_cr100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Ti53",
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_cr100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Cr57",
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_mn100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Mn59",
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_mn100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Cr51",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "conversion_content",
+   "worst_case": "fe_cr100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Fe59",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_mn100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Cr55",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_cr100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Mn57",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_mn100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Fe53",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "conversion_content",
+   "worst_case": "fe_ag100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Cr56",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_mn100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "Mn58",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "alara_heritage",
+   "worst_case": "fe_mn100000wppm__fns_709__3600s"
+  },
+  {
+   "member": "V52",
+   "p40_class": "common_nuclide_magnitude",
+   "mechanism": "conversion_content",
+   "worst_case": "fe_cr100000wppm__fns_709__3600s"
+  }
+ ],
+ "findings": {
+  "alara_heritage": "10 members diverge through ALARA conversion rows that no ENDF-6 mass balance permits (a*/p* impossible-daughter ladders) or through decay feeds of phantom-produced parents. ACTINV emits no such rows; the divergence is conversion heritage, unclosable under identical data.",
+  "conversion_content": "Cr51, Fe53, V52: shared real channels where ALARA's REAC allocation under-reads FENDL's lumped content (50.4%, 96.4%, 38.7% of truth) while ACTINV's synthesized MT107/MT16 rows match the ENDF lumped sums within 0.3%. ALARA's emitted-label totals conserve the XS (~101%) but scatter it across impossible daughters.",
+  "true_defect": "none demonstrated. No ACTINV row deviated from FENDL ground truth on any shared channel."
+ },
+ "notes": [
+  "Cr-57 is present in both pinned decay archives (MAT 471 in ENDF-B-VIII.0); P40's 'absent from both decay files' note was superseded by direct archive lookup.",
+  "The P26b stdout resolver drops isobar-ambiguous '-NN' rows; G1's t_1/2-matched parser is the authoritative arm value for the 13 members (documented in g3_p42_recensus.json).",
+  "Identical-data equivalence bound by coverage asymmetry remains as named floors; this phase closes mechanism attribution, not the residual gap."
+ ]
+}

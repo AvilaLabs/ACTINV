@@ -1,0 +1,147 @@
+{
+ "schema": "actinv-p42-g4-1",
+ "checks": [
+  {
+   "name": "sealed_inputs",
+   "claim": "every G0-sealed input digest still verifies",
+   "pass": true,
+   "detail": {
+    "mismatches": []
+   }
+  },
+  {
+   "name": "g0_green",
+   "claim": "G0 seal checker passed",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "census_complete",
+   "claim": "all 13 members carry exactly one frozen class",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "no_unresolved",
+   "claim": "no member left unresolved",
+   "pass": true,
+   "detail": {
+    "class_counts": {
+     "alara_heritage": 10,
+     "conversion_content": 3
+    }
+   }
+  },
+  {
+   "name": "g1_input_digests",
+   "claim": "G1 census input digests re-verify",
+   "pass": true,
+   "detail": {
+    "mismatches": []
+   }
+  },
+  {
+   "name": "g2_scope",
+   "claim": "G2 ledger covers exactly the conversion_content members",
+   "pass": true,
+   "detail": {
+    "ledger": [
+     "Cr51",
+     "Fe53",
+     "V52"
+    ],
+    "eligible": [
+     "Cr51",
+     "Fe53",
+     "V52"
+    ]
+   }
+  },
+  {
+   "name": "g2_no_repairs",
+   "claim": "no repair_required dispositions; all ALARA-side",
+   "pass": true,
+   "detail": {
+    "summary": {
+     "eligible": 3,
+     "no_repair_alara_side": 3,
+     "repair_required": 0
+    }
+   }
+  },
+  {
+   "name": "g3_byte_identical",
+   "claim": "unchanged layer reproduces P40 census byte-identically",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "gate_ordering",
+   "claim": "G3 digests chain to G1 census and G2 ledger",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "p40_verdict_verbatim",
+   "claim": "P40 verdict file hash matches the G0-sealed digest and verdict string is P40-CONDITIONAL",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "g1_checker_rerun",
+   "claim": "check_g1_p42.py re-runs green",
+   "pass": true,
+   "detail": {
+    "tail": [
+     "G1 CHECK PASS: 13 members, classes independently re-derived, all digests verified, 6/6 mutations rejected"
+    ]
+   }
+  },
+  {
+   "name": "g2_checker_rerun",
+   "claim": "check_g2_p42.py re-runs green",
+   "pass": true,
+   "detail": {
+    "tail": [
+     "G2 CHECK PASS: 3 conversion_content rows re-verified against FENDL truth, all dispositions = no_repair_alara_side, 4/4 mutations rejected"
+    ]
+   }
+  },
+  {
+   "name": "verdict_value",
+   "claim": "verdict is P42-PASS",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "verdict_ledger",
+   "claim": "verdict per-nuclide ledger covers all 13 members",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "verdict_class_counts",
+   "claim": "verdict class counts match the G1 census",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "verdict_no_overclaim",
+   "claim": "verdict carries no validation/release language",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "name": "mutations_rejected",
+   "claim": "planted verdict/census corruptions rejected",
+   "pass": true,
+   "detail": {
+    "verdict_flip": true,
+    "count_tamper": true,
+    "member_drop": true,
+    "g1_class_plant": true
+   }
+  }
+ ],
+ "all_pass": true
+}
