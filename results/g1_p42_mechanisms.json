@@ -1,0 +1,1809 @@
+{
+ "schema": "g1_p42_mechanisms/1",
+ "input_sha256": {
+  "artifact_npz": "18547cc311560f29ed20a4e553427f238d046046461feaf7bfbec8adf298e097",
+  "artifact_index": "987f361e08584f0e0a9036c754b05810a4b2705c9afb87d17efb681d3ca4f1be",
+  "alara_idx": "c2f979f47b769ab1e1c9ac07c1f0e069b70e30c9671d4a3f11803881199ce905",
+  "alara_dsv": "2f1614b807999814e5e55e470d0fe830680fd2d84362c86528e0c1db40a97221",
+  "p40_classes": "f795121d1d9f78e3a6b49aadfa1a2a8bbcb2e55e025f9a85d36d21072621c532",
+  "protocol": "eb44b2cdf956c79299b1b58591a8e12514588ddbcc0bd51cb72fbf768fcf0394",
+  "decay_endf_b_viii_0": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "decay_jeff_3_3": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+ },
+ "fendl_truth": {
+  "Fe54_alpha_lumped_MT800_823": {
+   "file": "n_2625_26-Fe-54.endf",
+   "mts": [
+    800,
+    801,
+    802,
+    803,
+    804,
+    805,
+    806,
+    807,
+    808,
+    809,
+    810,
+    811,
+    812,
+    813,
+    814,
+    815,
+    816,
+    817,
+    818,
+    819,
+    820,
+    821,
+    822,
+    823
+   ],
+   "sig_phi": 27782800.783418987
+  },
+  "Fe54_MT16_2n": {
+   "file": "n_2625_26-Fe-54.endf",
+   "mts": [
+    16
+   ],
+   "sig_phi": 114721682.83047354
+  },
+  "Mn55_alpha_lumped": {
+   "file": "n_2525_25-Mn-55.endf",
+   "mts": [
+    800,
+    801,
+    802,
+    803,
+    804,
+    805,
+    806,
+    807,
+    808,
+    809,
+    810,
+    811,
+    812,
+    813,
+    814,
+    815,
+    816,
+    817,
+    818,
+    819,
+    820,
+    821,
+    822,
+    823,
+    824,
+    825,
+    826,
+    827,
+    828,
+    829,
+    830,
+    831
+   ],
+   "sig_phi": 9376363.179448172
+  }
+ },
+ "vocabulary": [
+  "alara_heritage",
+  "burn_out",
+  "conversion_content",
+  "coverage_parent",
+  "decay_feed_missing",
+  "decay_file_gap",
+  "true_defect",
+  "unresolved"
+ ],
+ "census": [
+  {
+   "member": "Ti55",
+   "kza": 220550,
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 0.49,
+   "alara_real_channels": [],
+   "alara_phantom_channels": [
+    {
+     "parent": "Cr52",
+     "parent_kza": 240520,
+     "mt": 830,
+     "label": "a*",
+     "sig_phi_fns": 2569689.2227708357,
+     "sig_phi_irdff": 5669.744938405689,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 820,
+     "label": "a*",
+     "sig_phi_fns": 1884040.670412765,
+     "sig_phi_irdff": 1312.2999398708253,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "Sc55",
+     "parent_kza": 210550,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "V55",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "unresolved",
+    "fe_ag": "unresolved",
+    "fe_co": "unresolved",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "unresolved",
+    "fe_mn": "unresolved",
+    "fe_mo": "unresolved",
+    "fe_nb": "unresolved",
+    "fe_ta": "unresolved",
+    "fe_v": "unresolved"
+   },
+   "worst_case": "fe_cr100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 2544.5,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 5.5002,
+     "actinv": 0.0,
+     "ratio": 0.0
+    }
+   }
+  },
+  {
+   "member": "V55",
+   "kza": 230550,
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 6.54,
+   "alara_real_channels": [],
+   "alara_phantom_channels": [
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 155606.08428651013,
+     "sig_phi_irdff": 1575.8555948014416,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "Ti55",
+     "parent_kza": 220550,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 4453729.8931836,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Cr55",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "unresolved",
+    "fe_ag": "unresolved",
+    "fe_co": "unresolved",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "unresolved",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "unresolved",
+    "fe_nb": "unresolved",
+    "fe_ta": "unresolved",
+    "fe_v": "unresolved"
+   },
+   "worst_case": "fe_cr100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 170.51,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 2544.5,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 5.5002,
+     "actinv": 0.0,
+     "ratio": 0.0
+    }
+   }
+  },
+  {
+   "member": "Ti53",
+   "kza": 220530,
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 32.7,
+   "alara_real_channels": [
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 111,
+     "label": "2p",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.04544539206252902,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [
+    {
+     "parent": "Cr50",
+     "parent_kza": 240500,
+     "mt": 830,
+     "label": "a*",
+     "sig_phi_fns": 630587.2111453961,
+     "sig_phi_irdff": 49747.27906579673,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr52",
+     "parent_kza": 240520,
+     "mt": 820,
+     "label": "a*",
+     "sig_phi_fns": 1115771.829668189,
+     "sig_phi_irdff": 5354.90388024484,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr53",
+     "parent_kza": 240530,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 11635212.441251185,
+     "sig_phi_irdff": 43542.70983494438,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 810,
+     "label": "a*",
+     "sig_phi_fns": 1398711.1334722105,
+     "sig_phi_irdff": 2798.7707009239016,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 13419157.783328086,
+     "sig_phi_irdff": 6419.973960966125,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "Sc53",
+     "parent_kza": 210530,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "V53",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Cr54",
+     "mt": 111,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.04545750462429319
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "unresolved",
+    "fe_ag": "unresolved",
+    "fe_co": "unresolved",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "unresolved",
+    "fe_mn": "unresolved",
+    "fe_mo": "unresolved",
+    "fe_nb": "unresolved",
+    "fe_ta": "unresolved",
+    "fe_v": "unresolved"
+   },
+   "worst_case": "fe_cr100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 2799.6,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 0.0,
+     "ratio": null
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 12.739,
+     "actinv": 1.2451355009334368e-06,
+     "ratio": 9.77420127901277e-08
+    }
+   }
+  },
+  {
+   "member": "Cr57",
+   "kza": 240570,
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 21.1,
+   "alara_real_channels": [
+    {
+     "parent": "Fe58",
+     "parent_kza": 260580,
+     "mt": 111,
+     "label": "2p",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.06229075326921799,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": 610,
+     "label": "p*",
+     "sig_phi_fns": 247028.80249547714,
+     "sig_phi_irdff": 45034.386675580725,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": null,
+     "label": "p*",
+     "sig_phi_fns": 1432356.8172371695,
+     "sig_phi_irdff": 76699.4773465233,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 3345137.3348301575,
+     "sig_phi_irdff": 117043.1337892471,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "V57",
+     "parent_kza": 230570,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    },
+    {
+     "parent": "V58",
+     "parent_kza": 230580,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 243912.40305249736,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Mn57",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Fe58",
+     "mt": 111,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.06230697516747583
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_mn100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 681.51,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 2735.6,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 724.89,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 681.51,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 23.845,
+     "actinv": 1.7052724501692423e-06,
+     "ratio": 7.15148857273744e-08
+    }
+   }
+  },
+  {
+   "member": "Mn59",
+   "kza": 250590,
+   "p40_class": "short_lived_products_absent_in_actinv",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 4.59,
+   "alara_real_channels": [],
+   "alara_phantom_channels": [
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": 610,
+     "label": "p*",
+     "sig_phi_fns": 431808.03403057944,
+     "sig_phi_irdff": 188786.6854106987,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "Cr59",
+     "parent_kza": 240590,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 158308.62156363513,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Fe59",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_mn100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 87.973,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 261.44,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 87.973,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 87.973,
+     "actinv": 0.0,
+     "ratio": 0.0
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 38.462,
+     "actinv": 0.0,
+     "ratio": 0.0
+    }
+   }
+  },
+  {
+   "member": "Cr51",
+   "kza": 240510,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "conversion_content",
+   "alara_half_life_s": 2393630.0,
+   "alara_real_channels": [
+    {
+     "parent": "Cr50",
+     "parent_kza": 240500,
+     "mt": 102,
+     "label": "g",
+     "sig_phi_fns": 36430844.873501755,
+     "sig_phi_irdff": 47316328.38781217,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr52",
+     "parent_kza": 240520,
+     "mt": 16,
+     "label": "2n",
+     "sig_phi_fns": 4235264246.9045105,
+     "sig_phi_irdff": 1194245.9513988842,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe54",
+     "parent_kza": 260540,
+     "mt": 800,
+     "label": "a",
+     "sig_phi_fns": 2998825.442021214,
+     "sig_phi_irdff": 5180917.437412706,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe54",
+     "parent_kza": 260540,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 11011846.52143563,
+     "sig_phi_irdff": 4750201.027493334,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [],
+   "alara_decay_feeds": [
+    {
+     "parent": "Mn51",
+     "parent_kza": 250510,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "V51",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Cr50",
+     "mt": 102,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 36424825.86193144,
+     "sig_phi_irdff": 47292365.536737
+    },
+    {
+     "parent": "Cr52",
+     "mt": 16,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 4271597829.884126,
+     "sig_phi_irdff": 1180989.5045949088
+    },
+    {
+     "parent": "Cr53",
+     "mt": 17,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 576.546008202854
+    },
+    {
+     "parent": "Cr54",
+     "mt": 37,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.0
+    },
+    {
+     "parent": "Fe54",
+     "mt": 107,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 27798040.90958556,
+     "sig_phi_irdff": 10921346.617015434
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "conversion_content",
+    "fe_ag": "conversion_content",
+    "fe_co": "conversion_content",
+    "fe_cr": "conversion_content",
+    "fe_cu": "conversion_content",
+    "fe_mn": "conversion_content",
+    "fe_mo": "conversion_content",
+    "fe_nb": "conversion_content",
+    "fe_ta": "conversion_content",
+    "fe_v": "conversion_content"
+   },
+   "worst_case": "fe_cr100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 8.3559,
+     "actinv": 16.432330860329515,
+     "ratio": 1.9665542742648325
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 8.3559,
+     "actinv": 16.43233086039842,
+     "ratio": 1.9665542742730788
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 4291.3,
+     "actinv": 4338.003885493097,
+     "ratio": 1.0108833885985824
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 8.3559,
+     "actinv": 16.432330860478533,
+     "ratio": 1.9665542742826665
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 9.6101,
+     "actinv": 10.130317531255129,
+     "ratio": 1.0541323744035056
+    }
+   }
+  },
+  {
+   "member": "Fe59",
+   "kza": 260590,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 3844280.0,
+   "alara_real_channels": [
+    {
+     "parent": "Fe58",
+     "parent_kza": 260580,
+     "mt": 102,
+     "label": "g",
+     "sig_phi_fns": 19626034.4098201,
+     "sig_phi_irdff": 34636137.84375201,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Co59",
+     "parent_kza": 270590,
+     "mt": 103,
+     "label": "p",
+     "sig_phi_fns": 469836954.61872214,
+     "sig_phi_irdff": 18873946.444991633,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Ni62",
+     "parent_kza": 280620,
+     "mt": 107,
+     "label": "a",
+     "sig_phi_fns": 179844795.05385664,
+     "sig_phi_irdff": 836458.109537898,
+     "parent_in_artifact": false,
+     "parent_in_corpus": false
+    }
+   ],
+   "alara_phantom_channels": [],
+   "alara_decay_feeds": [
+    {
+     "parent": "Mn59",
+     "parent_kza": 250590,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 431808.03403057944,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Co59",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Co59",
+     "mt": 103,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 468468584.4834414,
+     "sig_phi_irdff": 18895467.895221073
+    },
+    {
+     "parent": "Fe58",
+     "mt": 102,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 19642920.721097853,
+     "sig_phi_irdff": 34629490.290541835
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_mn100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 0.40292,
+     "actinv": 0.3488391664159162,
+     "ratio": 0.8657777385483874
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 0.51526,
+     "actinv": 0.3488391664159162,
+     "ratio": 0.6770158103014327
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 0.40292,
+     "actinv": 0.3488391664159162,
+     "ratio": 0.8657777385483874
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 0.40292,
+     "actinv": 0.3488391664159162,
+     "ratio": 0.8657777385483874
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 0.63543,
+     "actinv": 0.6149860653551915,
+     "ratio": 0.9678266140333184
+    }
+   }
+  },
+  {
+   "member": "Cr55",
+   "kza": 240550,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 212.4,
+   "alara_real_channels": [
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 102,
+     "label": "g",
+     "sig_phi_fns": 13069018.731878549,
+     "sig_phi_irdff": 20749986.475005787,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": null,
+     "label": "p*",
+     "sig_phi_fns": 411199951.441645,
+     "sig_phi_irdff": 2706144.45138232,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": 600,
+     "label": "p",
+     "sig_phi_fns": 353547.640599229,
+     "sig_phi_irdff": 695909.0397403386,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe56",
+     "parent_kza": 260560,
+     "mt": 111,
+     "label": "2p",
+     "sig_phi_fns": 52.238030986624196,
+     "sig_phi_irdff": 48.03862482016613,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe58",
+     "parent_kza": 260580,
+     "mt": 800,
+     "label": "a",
+     "sig_phi_fns": 920368.0552573052,
+     "sig_phi_irdff": 132840.05445706946,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe58",
+     "parent_kza": 260580,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 8390567.172359949,
+     "sig_phi_irdff": 341504.643750987,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Co59",
+     "parent_kza": 270590,
+     "mt": 112,
+     "label": "pa",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 1.5259998677754196,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [
+    {
+     "parent": "Fe54",
+     "parent_kza": 260540,
+     "mt": 820,
+     "label": "a*",
+     "sig_phi_fns": 998372.2403343652,
+     "sig_phi_irdff": 62180.18818082395,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe56",
+     "parent_kza": 260560,
+     "mt": 810,
+     "label": "a*",
+     "sig_phi_fns": 1151501.8783183652,
+     "sig_phi_irdff": 41218.27247721002,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 5052441.640229133,
+     "sig_phi_irdff": 525837.438525801,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "V55",
+     "parent_kza": 230550,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 155606.08428651013,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Mn55",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Co59",
+     "mt": 112,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 1.5263424076024161
+    },
+    {
+     "parent": "Cr54",
+     "mt": 102,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 13097723.294864526,
+     "sig_phi_irdff": 20739437.665126603
+    },
+    {
+     "parent": "Fe56",
+     "mt": 111,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 60.323749386629416,
+     "sig_phi_irdff": 48.04935234693758
+    },
+    {
+     "parent": "Fe58",
+     "mt": 107,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 9162970.672180979,
+     "sig_phi_irdff": 476839.21324144106
+    },
+    {
+     "parent": "Mn55",
+     "mt": 103,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 413352306.9150209,
+     "sig_phi_irdff": 3765319.2761582723
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_cr100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 12100.0,
+     "actinv": 251.31575519738772,
+     "ratio": 0.02076989712375105
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 463240.0,
+     "actinv": 453352.4113331649,
+     "ratio": 0.9786555809799777
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 15003.0,
+     "actinv": 610.0756308248349,
+     "ratio": 0.04066357600645437
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 12100.0,
+     "actinv": 251.31575519738772,
+     "ratio": 0.02076989712375105
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 1096.5,
+     "actinv": 581.5524978596275,
+     "ratio": 0.5303716350748996
+    }
+   }
+  },
+  {
+   "member": "Mn57",
+   "kza": 250570,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 85.4,
+   "alara_real_channels": [
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": null,
+     "label": "p*",
+     "sig_phi_fns": 494505012.192868,
+     "sig_phi_irdff": 6559181.961877593,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": 600,
+     "label": "p",
+     "sig_phi_fns": 854510.1605449645,
+     "sig_phi_irdff": 2047701.3357598977,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Co59",
+     "parent_kza": 270590,
+     "mt": 106,
+     "label": "h",
+     "sig_phi_fns": 7.2664848288568376,
+     "sig_phi_irdff": 0.19138079411296047,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [],
+   "alara_decay_feeds": [
+    {
+     "parent": "Cr57",
+     "parent_kza": 240570,
+     "parent_sig_phi_fns_real": 0.0,
+     "parent_sig_phi_fns_phantom": 5024522.954562804,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Fe57",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Co59",
+     "mt": 106,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 7.334840401055544,
+     "sig_phi_irdff": 0.19139860223216182
+    },
+    {
+     "parent": "Fe57",
+     "mt": 103,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 496405236.50479954,
+     "sig_phi_irdff": 9669340.489042677
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_mn100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 101600.0,
+     "actinv": 102088.14449934506,
+     "ratio": 1.0048045718439473
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 103660.0,
+     "actinv": 102088.14449934506,
+     "ratio": 0.9848364315970004
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 101650.0,
+     "actinv": 102088.14449934506,
+     "ratio": 1.0043103246369411
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 101600.0,
+     "actinv": 102088.14449934506,
+     "ratio": 1.0048045718439473
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 1777.3,
+     "actinv": 1988.546770489994,
+     "ratio": 1.1188582515557273
+    }
+   }
+  },
+  {
+   "member": "Fe53",
+   "kza": 260530,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "conversion_content",
+   "alara_half_life_s": 510.6,
+   "alara_real_channels": [
+    {
+     "parent": "Fe54",
+     "parent_kza": 260540,
+     "mt": 16,
+     "label": "2n",
+     "sig_phi_fns": 110607006.30495682,
+     "sig_phi_irdff": 41068.27643647075,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [],
+   "alara_decay_feeds": [
+    {
+     "parent": "Fe53m1",
+     "parent_kza": 260531,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    },
+    {
+     "parent": "Co53",
+     "parent_kza": 270530,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Mn53",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Fe54",
+     "mt": 16,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 115022810.72770695,
+     "sig_phi_irdff": 41460.35482468589
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "conversion_content",
+    "fe_ag": "conversion_content",
+    "fe_co": "conversion_content",
+    "fe_cr": "conversion_content",
+    "fe_cu": "conversion_content",
+    "fe_mn": "conversion_content",
+    "fe_mo": "conversion_content",
+    "fe_nb": "conversion_content",
+    "fe_ta": "conversion_content",
+    "fe_v": "conversion_content"
+   },
+   "worst_case": "fe_ag100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 62833.0,
+     "actinv": 64757.179132055695,
+     "ratio": 1.0306237030231835
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 62833.0,
+     "actinv": 64757.179132055695,
+     "ratio": 1.0306237030231835
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 62833.0,
+     "actinv": 64757.179132055695,
+     "ratio": 1.0306237030231835
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 62833.0,
+     "actinv": 64757.179132055695,
+     "ratio": 1.0306237030231835
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 23.33,
+     "actinv": 23.34194067482107,
+     "ratio": 1.000511816323235
+    }
+   }
+  },
+  {
+   "member": "Cr56",
+   "kza": 240560,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 356.4,
+   "alara_real_channels": [
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": 111,
+     "label": "2p",
+     "sig_phi_fns": 38.11229090359341,
+     "sig_phi_irdff": 2.33153922160673,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": null,
+     "label": "p*",
+     "sig_phi_fns": 1705189.7085637727,
+     "sig_phi_irdff": 208499.89113770597,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": 810,
+     "label": "a*",
+     "sig_phi_fns": 609584.28171927,
+     "sig_phi_irdff": 99636.38428763155,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Fe57",
+     "parent_kza": 260570,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 4146500.930818859,
+     "sig_phi_irdff": 269894.43469983706,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "V56",
+     "parent_kza": 230560,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 323359.65272544016,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    },
+    {
+     "parent": "V57",
+     "parent_kza": 230570,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 0,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Mn56",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Fe57",
+     "mt": 111,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 43.71193027023381,
+     "sig_phi_irdff": 2.3325935695353137
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_mn100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 968.09,
+     "actinv": 0.008981385217699315,
+     "ratio": 9.277427943372326e-06
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 3188.9,
+     "actinv": 0.008981385217699315,
+     "ratio": 2.8164524499668583e-06
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 1109.8,
+     "actinv": 0.008981385217699315,
+     "ratio": 8.092796195440004e-06
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 968.09,
+     "actinv": 0.008981385217699315,
+     "ratio": 9.277427943372326e-06
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 75.922,
+     "actinv": 0.00047927239256911994,
+     "ratio": 6.312694509748426e-06
+    }
+   }
+  },
+  {
+   "member": "Mn58",
+   "kza": 250580,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "alara_heritage",
+   "alara_half_life_s": 65.2,
+   "alara_real_channels": [
+    {
+     "parent": "Fe58",
+     "parent_kza": 260580,
+     "mt": 103,
+     "label": "p",
+     "sig_phi_fns": 362338319.96391857,
+     "sig_phi_irdff": 539916.7070589284,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Co59",
+     "parent_kza": 270590,
+     "mt": 111,
+     "label": "2p",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.9670835670224358,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [],
+   "alara_decay_feeds": [
+    {
+     "parent": "Cr58",
+     "parent_kza": 240580,
+     "parent_sig_phi_fns_real": 0,
+     "parent_sig_phi_fns_phantom": 551605.9133942525,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Fe58",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Co59",
+     "mt": 111,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.9673211798788849
+    },
+    {
+     "parent": "Fe58",
+     "mt": 103,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 363287625.6578219,
+     "sig_phi_irdff": 541078.3269464284
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "alara_heritage",
+    "fe_ag": "alara_heritage",
+    "fe_co": "alara_heritage",
+    "fe_cr": "alara_heritage",
+    "fe_cu": "alara_heritage",
+    "fe_mn": "alara_heritage",
+    "fe_mo": "alara_heritage",
+    "fe_nb": "alara_heritage",
+    "fe_ta": "alara_heritage",
+    "fe_v": "alara_heritage"
+   },
+   "worst_case": "fe_mn100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 9914.0,
+     "actinv": 9942.777319111352,
+     "ratio": 1.0029026950888997
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 10188.0,
+     "actinv": 9942.777319111352,
+     "ratio": 0.9759302433364107
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 9914.0,
+     "actinv": 9942.777319111352,
+     "ratio": 1.0029026950888997
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 9914.0,
+     "actinv": 9942.777319111352,
+     "ratio": 1.0029026950888997
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 20.682,
+     "actinv": 14.808710611270376,
+     "ratio": 0.7160192733425383
+    }
+   }
+  },
+  {
+   "member": "V52",
+   "kza": 230520,
+   "p40_class": "common_nuclide_magnitude",
+   "primary_class": "conversion_content",
+   "alara_half_life_s": 224.7,
+   "alara_real_channels": [
+    {
+     "parent": "V51",
+     "parent_kza": 230510,
+     "mt": 102,
+     "label": "g",
+     "sig_phi_fns": 18855724.314194493,
+     "sig_phi_irdff": 27408008.78805517,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr52",
+     "parent_kza": 240520,
+     "mt": 103,
+     "label": "p",
+     "sig_phi_fns": 844168022.8031601,
+     "sig_phi_irdff": 14611678.958807314,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr53",
+     "parent_kza": 240530,
+     "mt": 28,
+     "label": "np",
+     "sig_phi_fns": 102716119.35034616,
+     "sig_phi_irdff": 40683.303886394344,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr53",
+     "parent_kza": 240530,
+     "mt": 104,
+     "label": "d",
+     "sig_phi_fns": 11060643.473922582,
+     "sig_phi_irdff": 5822.643434663507,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 41,
+     "label": "2np",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 10.89241638658413,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 105,
+     "label": "t",
+     "sig_phi_fns": 118281.60243896948,
+     "sig_phi_irdff": 165.44754060989084,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": 800,
+     "label": "a",
+     "sig_phi_fns": 423290.4707709401,
+     "sig_phi_irdff": 95930.35528748679,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Mn55",
+     "parent_kza": 250550,
+     "mt": null,
+     "label": "a*",
+     "sig_phi_fns": 3204091.0955351703,
+     "sig_phi_irdff": 433406.5911749309,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    },
+    {
+     "parent": "Co59",
+     "parent_kza": 270590,
+     "mt": 108,
+     "label": "2a",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.0092748321080746,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_phantom_channels": [
+    {
+     "parent": "Cr54",
+     "parent_kza": 240540,
+     "mt": 32,
+     "label": "nd",
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 28.46389615066843,
+     "parent_in_artifact": true,
+     "parent_in_corpus": true
+    }
+   ],
+   "alara_decay_feeds": [
+    {
+     "parent": "Ti52",
+     "parent_kza": 220520,
+     "parent_sig_phi_fns_real": 3.2387671333317,
+     "parent_sig_phi_fns_phantom": 54903540.739685796,
+     "parent_decay_present": {
+      "endf_b_viii_0": true,
+      "jeff_3_3": true
+     }
+    }
+   ],
+   "alara_own_daughters": [
+    [
+     "Cr52",
+     "*D"
+    ]
+   ],
+   "actinv_emission_rows": [
+    {
+     "parent": "Co59",
+     "mt": 108,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 0.009277881091722201
+    },
+    {
+     "parent": "Cr52",
+     "mt": 103,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 841847775.4170821,
+     "sig_phi_irdff": 14643726.836339382
+    },
+    {
+     "parent": "Cr53",
+     "mt": 28,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 107476211.04698788,
+     "sig_phi_irdff": 41068.55150404626
+    },
+    {
+     "parent": "Cr53",
+     "mt": 104,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 11121511.874207381,
+     "sig_phi_irdff": 5789.4059126560705
+    },
+    {
+     "parent": "Cr54",
+     "mt": 32,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 28.471241220599033
+    },
+    {
+     "parent": "Cr54",
+     "mt": 41,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 0.0,
+     "sig_phi_irdff": 10.895809522521938
+    },
+    {
+     "parent": "Cr54",
+     "mt": 105,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 130904.30663967645,
+     "sig_phi_irdff": 166.72296704095024
+    },
+    {
+     "parent": "Mn55",
+     "mt": 107,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 9380141.487464627,
+     "sig_phi_irdff": 651592.1993498711
+    },
+    {
+     "parent": "V51",
+     "mt": 102,
+     "parent_in_corpus": true,
+     "sig_phi_fns": 18858640.381720267,
+     "sig_phi_irdff": 27405642.350423638
+    }
+   ],
+   "decay_archive_present": {
+    "endf_b_viii_0": true,
+    "jeff_3_3": true
+   },
+   "per_material_class": {
+    "fe": "unresolved",
+    "fe_ag": "unresolved",
+    "fe_co": "unresolved",
+    "fe_cr": "conversion_content",
+    "fe_cu": "unresolved",
+    "fe_mn": "conversion_content",
+    "fe_mo": "unresolved",
+    "fe_nb": "unresolved",
+    "fe_ta": "unresolved",
+    "fe_v": "conversion_content"
+   },
+   "worst_case": "fe_cr100000wppm__fns_709__3600s",
+   "case_evidence": {
+    "fe_ag100000wppm__fns_709__3600s": {
+     "alara": 0.0,
+     "actinv": 1.0317941792848993e-07,
+     "ratio": "actinv_only"
+    },
+    "fe_mn100000wppm__fns_709__3600s": {
+     "alara": 3974.8,
+     "actinv": 10282.071404049238,
+     "ratio": 2.58681478415247
+    },
+    "fe_cr100000wppm__fns_709__3600s": {
+     "alara": 854310.0,
+     "actinv": 830000.9967597784,
+     "ratio": 0.9715454539450298
+    },
+    "fe_v100000wppm__fns_709__3600s": {
+     "alara": 22227.0,
+     "actinv": 22238.02728630645,
+     "ratio": 1.0004961212177284
+    },
+    "fe_cr100000wppm__irdff_sp_mat9861_709__3600s": {
+     "alara": 14231.0,
+     "actinv": 14215.749082213099,
+     "ratio": 0.9989283312636567
+    }
+   }
+  }
+ ]
+}
