@@ -13,6 +13,8 @@ bed3c1b946b3caf6f7b272636bd931214f50de31c57c4be55fbb195ff16ae38a  ./Cargo.lock
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
 e488c16f78bc2db0b2ef09d7580286c56c5d85c2258a1e4c8b4f8ae4a7d6e999  ./README.md
+6344b2b6e7c77a6a71e4147f95df6e357cb92c93fd54fc4c7b5f6ad4519fc8c4  ./contrib/jade/README.md
+f047ac77aa46b8a03031898a05de29e5306c50cca795a986da7f113d2df492e2  ./contrib/jade/jade-actinv-code-target.patch
 16dfa20a848c49ef6b7196f51a485390fa2796dc8b8fba49e6f3d42d3cc49ac2  ./controls/acc_classify.py
 0172f257c0d60112615e06b50f64181db6b6518af1be98cd304a2e419f48f480  ./controls/acc_dossier.py
 910e6ab9afeeaadfdfe94d1978118fb33d71d31d41782cfad33eef936581c539  ./controls/build_tendl2025_evict.py

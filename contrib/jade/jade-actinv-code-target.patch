@@ -1,0 +1,490 @@
+diff --git a/src/jade/config/run_config.py b/src/jade/config/run_config.py
+index bffc69e..fc71384 100644
+--- a/src/jade/config/run_config.py
++++ b/src/jade/config/run_config.py
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import json
+ import os
+ import xml.etree.ElementTree as ET
+ from abc import ABC, abstractmethod
+@@ -349,6 +350,35 @@ class LibraryD1S(LibraryMCNP):
+     transport_suffix: str
+ 
+ 
++@dataclass
++class LibraryACTINV(Library):
++    """Configuration for an ACTINV data bundle.
++
++    Attributes
++    ----------
++    name : str
++        extended name of the library.
++    path : PathLike
++        path to the ACTINV bundle directory (the versioned folder containing
++        ``activation/`` and ``decay/`` subdirectories, e.g.
++        ``actinv-data/v1.1.0``). ``ACTINV_DATA_DIR`` is set to its parent at
++        run time so ``catalog:`` references inside specs resolve.
++    """
++
++    def __post_init__(self):
++        self._available_zaids = []
++        activation_dir = Path(self.path, "activation")
++        for index in sorted(activation_dir.glob("*_index.json")):
++            try:
++                targets = json.loads(index.read_text())["targets"]
++            except (OSError, json.JSONDecodeError, KeyError):
++                continue
++            self._available_zaids.extend(str(t["za"]) for t in targets)
++
++    def get_lib_zaids(self) -> list[str]:
++        return self._available_zaids
++
++
+ class LibraryFactory:
+     def __init__(self, lib_cfg: PathLike) -> None:
+         """Factory objects which helps to create the correct Library for each code
+@@ -404,6 +434,8 @@ class LibraryFactory:
+             return LibrarySerpent(name, **kwargs)
+         elif code == CODE.D1S:
+             return LibraryD1S(name, **kwargs)
++        elif code == CODE.ACTINV:
++            return LibraryACTINV(name, **kwargs)
+         else:
+             raise ConfigError(f"Code {code} not supported")
+ 
+@@ -492,7 +524,7 @@ class BenchmarkRunConfig:
+             # skip the experiment tag
+             if code_tag == "exp":
+                 continue
+-            libs = options["codes"][code_tag]
++            libs = options["codes"].get(code_tag, [])
+             for lib in libs:
+                 run.append((CODE(code_tag), lib_factory.create(CODE(code_tag), lib)))
+ 
+diff --git a/src/jade/helper/constants.py b/src/jade/helper/constants.py
+index a3bd268..b714950 100644
+--- a/src/jade/helper/constants.py
++++ b/src/jade/helper/constants.py
+@@ -6,6 +6,7 @@ class CODE(Enum):
+     OPENMC = "openmc"
+     SERPENT = "serpent"
+     D1S = "d1s"
++    ACTINV = "actinv"
+     EXPERIMENT = "exp"
+ 
+ 
+diff --git a/src/jade/post/raw_processor.py b/src/jade/post/raw_processor.py
+index 314782f..1bf5baa 100644
+--- a/src/jade/post/raw_processor.py
++++ b/src/jade/post/raw_processor.py
+@@ -9,7 +9,12 @@ from jade.config.raw_config import ConfigRawProcessor, TallyModOption
+ from jade.helper.aux_functions import PathLike, get_jade_version
+ from jade.helper.constants import CODE
+ from jade.post.manipulate_tally import CONCAT_FUNCTIONS, MOD_FUNCTIONS
+-from jade.post.sim_output import MCNPSimOutput, OpenMCSimOutput, OpenMCSphereSimOutput
++from jade.post.sim_output import (
++    ActinvSimOutput,
++    MCNPSimOutput,
++    OpenMCSimOutput,
++    OpenMCSphereSimOutput,
++)
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -54,10 +59,12 @@ class RawProcessor:
+         if self.code in (CODE.MCNP, CODE.D1S):
+             self.sim_output = MCNPSimOutput(sim_folder)
+         elif self.code == CODE.OPENMC:
+-            if self.metadata.get("benchmark_name") =="Sphere":
++            if self.metadata.get("benchmark_name") == "Sphere":
+                 self.sim_output = OpenMCSphereSimOutput(sim_folder)
+             else:
+                 self.sim_output = OpenMCSimOutput(sim_folder)
++        elif self.code == CODE.ACTINV:
++            self.sim_output = ActinvSimOutput(sim_folder)
+         else:
+             raise NotImplementedError(
+                 f"Code {self.code} not implemented yet for raw data processing"
+diff --git a/src/jade/post/sim_output.py b/src/jade/post/sim_output.py
+index c4993ed..99682d6 100644
+--- a/src/jade/post/sim_output.py
++++ b/src/jade/post/sim_output.py
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import json
+ import logging
+ import os
+ from abc import ABC, abstractmethod
+@@ -571,3 +572,69 @@ def _remove_constant_columns(df: pd.DataFrame) -> pd.DataFrame:
+                 # Should work as long as they are the exact same value
+                 del df[column]
+     return df
++
++
++class ActinvSimOutput(AbstractSimOutput):
++    """Parser for an ACTINV ``result.json`` written by ``actinv run``.
++
++    Exposes two pseudo-tallies per run: tally 1 is total decay heat (W/g) and
++    tally 2 is total activity (Bq/g), both binned on the schedule's elapsed
++    time (``time`` column, seconds). ACTINV is deterministic so ``Error`` is
++    zero.
++    """
++
++    HEAT_TALLY = 1
++    ACTIVITY_TALLY = 2
++
++    def __init__(self, sim_folder: PathLike) -> None:
++        result_file = None
++        for file_name in os.listdir(sim_folder):
++            if file_name == "result.json":
++                result_file = Path(sim_folder, file_name)
++                break
++        if result_file is None:
++            raise FileNotFoundError(
++                f"No ACTINV result.json found in {sim_folder}"
++            )
++        with open(result_file, encoding="utf-8") as f:
++            self._result = json.load(f)
++        super().__init__(sim_folder)
++
++        steps = self._result["steps"]
++        times = [s["t_s"] for s in steps]
++        heat = [s["heat_W_per_g"]["total"] for s in steps]
++        activity = [sum(s["activity_Bq_per_g"].values()) for s in steps]
++
++        self._tallydata = {
++            self.HEAT_TALLY: pd.DataFrame(
++                {"time": times, "Value": heat, "Error": 0.0}
++            ),
++            self.ACTIVITY_TALLY: pd.DataFrame(
++                {"time": times, "Value": activity, "Error": 0.0}
++            ),
++        }
++        self._totalbin = {self.HEAT_TALLY: None, self.ACTIVITY_TALLY: None}
++        self._tally_numbers = [self.HEAT_TALLY, self.ACTIVITY_TALLY]
++        self._tally_comments = [
++            "total decay heat [W/g]",
++            "total activity [Bq/g]",
++        ]
++
++    @property
++    def tallydata(self) -> dict[int, pd.DataFrame]:
++        return self._tallydata
++
++    @property
++    def totalbin(self) -> dict[int, pd.DataFrame]:
++        return self._totalbin
++
++    @property
++    def tally_numbers(self) -> list[int]:
++        return self._tally_numbers
++
++    @property
++    def tally_comments(self) -> list[str]:
++        return self._tally_comments
++
++    def _read_code_version(self) -> str:
++        return self._result["certificate"]["solver"]
+diff --git a/src/jade/run/benchmark.py b/src/jade/run/benchmark.py
+index 1693f64..c399fa2 100644
+--- a/src/jade/run/benchmark.py
++++ b/src/jade/run/benchmark.py
+@@ -17,6 +17,7 @@ from jade.config.run_config import (
+     BenchmarkRunConfig,
+     EnvironmentVariables,
+     Library,
++    LibraryACTINV,
+     LibraryD1S,
+     LibraryMCNP,
+     RunMode,
+@@ -31,6 +32,7 @@ from jade.helper.constants import CODE
+ from jade.helper.errors import ConfigError
+ from jade.run.input import (
+     Input,
++    InputACTINV,
+     InputD1S,
+     InputD1SSphere,
+     InputMCNP,
+@@ -348,6 +350,28 @@ class SingleRunD1S(SingleRunMCNP):
+         return CODE.D1S
+ 
+ 
++class SingleRunACTINV(SingleRun):
++    """Implementation of the SingleRun class for ACTINV runs.
++
++    ACTINV is deterministic: ``nps`` is accepted by the factory but unused.
++    The command is ``actinv run <spec>.json result.json`` executed in the run
++    folder.
++    """
++
++    @property
++    def code(self) -> CODE:
++        return CODE.ACTINV
++
++    def _build_command(self, config: EnvironmentVariables) -> list[str]:
++        executable = config.executables[self.code]
++        return [executable, "run", f"{self.input.name}.json", "result.json"]
++
++    def _get_lib_data_command(self) -> tuple[str, str]:
++        # The library path is the versioned bundle directory; its parent is the
++        # data dir that catalog: references resolve against.
++        return "ACTINV_DATA_DIR", str(Path(self.lib.path).parent)
++
++
+ class SingleRunFactory:
+     @staticmethod
+     def create(
+@@ -392,6 +416,14 @@ class SingleRunFactory:
+                 raise ConfigError("A D1S library needs to be provided for D1S runs")
+             if not mock_input:
+                 inp = InputD1S(template_folder, lib)
++        elif code == CODE.ACTINV:
++            single_run_class = SingleRunACTINV
++            if not isinstance(lib, LibraryACTINV):
++                raise ConfigError(
++                    "An ACTINV library needs to be provided for ACTINV runs"
++                )
++            if not mock_input:
++                inp = InputACTINV(template_folder, lib)
+         else:
+             raise ValueError(f"Code {code} not supported")
+ 
+diff --git a/src/jade/run/input.py b/src/jade/run/input.py
+index ee48c33..b6b5d64 100644
+--- a/src/jade/run/input.py
++++ b/src/jade/run/input.py
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import json
+ import logging
+ import os
+ import shutil
+@@ -14,7 +15,7 @@ from f4enix.input.MCNPinput import D1S_Input
+ from f4enix.input.MCNPinput import Input as MCNPInput
+ from f4enix.core.irradiation import Nuclide
+ 
+-from jade.config.run_config import Library, LibraryD1S, LibraryMCNP
++from jade.config.run_config import Library, LibraryACTINV, LibraryD1S, LibraryMCNP
+ from jade.helper.__optionals__ import OMC_AVAIL
+ from jade.helper.aux_functions import PathLike
+ from jade.helper.constants import CODE, DOSIMETRY_LIBS
+@@ -471,3 +472,87 @@ class InputD1SSphere(InputD1S, InputMCNPSphere):
+             self.inp.reac_file = reacfile
+             # also the name needs to be updated
+             self._name = f"{self.name}_{MT}"
++
++
++class InputACTINV(Input):
++    """Implementation of the Input class for ACTINV spec files.
++
++    The benchmark template folder is expected to contain a single ``*.json``
++    ACTINV spec (``actinv-spec-1``). ``catalog:`` references are left
++    untouched and resolved at run time through ``ACTINV_DATA_DIR``; a spec
++    carrying an explicit ``library.path`` file reference is repointed to the
++    selected library's activation bundle during :meth:`translate`.
++    """
++
++    def __init__(self, template_folder: PathLike, lib: LibraryACTINV):
++        for file in sorted(os.listdir(template_folder)):
++            if file.endswith(".json") and file not in ("metadata.json", "volumes.json"):
++                filepath = os.path.join(template_folder, file)
++                with open(filepath, encoding="utf-8") as f:
++                    spec = json.load(f)
++                if spec.get("spec") in ("actinv-spec-1", "actinv-mesh-spec-1"):
++                    break
++        else:
++            raise ConfigError(
++                f"No ACTINV spec (actinv-spec-1) found in {template_folder}"
++            )
++        self.template_folder = template_folder
++        self.spec = spec
++        self._name = file[:-5]
++        self._lib = lib
++
++    @property
++    def code(self) -> CODE:
++        return CODE.ACTINV
++
++    @property
++    def name(self) -> str:
++        return self._name
++
++    @property
++    def lib(self) -> LibraryACTINV:
++        return self._lib
++
++    def set_nps(self, nps: int):
++        # deterministic solver: no particle histories to set
++        self.nps = nps
++
++    def translate(self):
++        # An explicit file reference is repointed at the selected bundle;
++        # catalog: references already carry their own pin and are left alone.
++        lib_ref = self.spec.get("library", {})
++        path = lib_ref.get("path", "")
++        if path and not str(path).startswith("catalog:"):
++            activation = Path(self.lib.path, "activation")
++            bundles = sorted(activation.glob("*-neutron-709g.npz"))
++            if not bundles:
++                raise ConfigError(f"No activation bundle found under {activation}")
++            bundle = bundles[0]
++            lib_ref["path"] = str(bundle)
++            lib_ref["sha256"] = _sha256(bundle)
++
++        # The same for decay data references: repoint them at the bundle's
++        # decay directory so runs are independent of the original layout.
++        decay = self.spec.get("decay", {})
++        for key in ("primary", "fallback"):
++            ref = decay.get(key)
++            if ref and not str(ref).startswith("catalog:"):
++                candidate = Path(self.lib.path, "decay", Path(ref).name)
++                if candidate.exists():
++                    decay[key] = str(candidate)
++
++    def _write(self, output_folder: PathLike):
++        outfile = Path(output_folder, f"{self.name}.json")
++        with open(outfile, "w", encoding="utf-8") as f:
++            json.dump(self.spec, f, indent=2)
++            f.write("\n")
++
++
++def _sha256(path: PathLike) -> str:
++    import hashlib
++
++    h = hashlib.sha256()
++    with open(path, "rb") as f:
++        for chunk in iter(lambda: f.read(1 << 20), b""):
++            h.update(chunk)
++    return h.hexdigest()
+diff --git a/tests/test_actinv.py b/tests/test_actinv.py
+new file mode 100644
+index 0000000..839be42
+--- /dev/null
++++ b/tests/test_actinv.py
+@@ -0,0 +1,122 @@
++from __future__ import annotations
++
++import json
++from pathlib import Path
++
++import pytest
++
++from jade.config.run_config import LibraryACTINV
++from jade.helper.constants import CODE
++from jade.post.sim_output import ActinvSimOutput
++from jade.run.benchmark import SingleRunACTINV, SingleRunFactory
++from jade.run.input import InputACTINV
++
++
++@pytest.fixture()
++def bundle(tmp_path):
++    """Minimal ACTINV bundle layout: activation npz + index, decay dir."""
++    activation = tmp_path / "bundle" / "activation"
++    decay = tmp_path / "bundle" / "decay"
++    activation.mkdir(parents=True)
++    decay.mkdir(parents=True)
++    npz = activation / "test-neutron-709g.npz"
++    npz.write_bytes(b"fake-npz")
++    index = {
++        "schema": "actinv-library-index-2",
++        "targets": [{"za": 26056, "liso": 0}, {"za": 49115, "liso": 0}],
++    }
++    (activation / "test-neutron-709g_index.json").write_text(json.dumps(index))
++    (decay / "endf-b-viii-0_decay.dat").write_text("fake-decay")
++    return LibraryACTINV(name="test", path=tmp_path / "bundle")
++
++
++@pytest.fixture()
++def spec_folder(tmp_path):
++    """Template folder holding an actinv-spec-1 input."""
++    folder = tmp_path / "template"
++    folder.mkdir()
++    spec = {
++        "spec": "actinv-spec-1",
++        "title": "test",
++        "projectile": "neutron",
++        "library": {"path": "old/lib.npz"},
++        "decay": {"primary": "old/decay/endf-b-viii-0_decay.dat"},
++        "material": {
++            "mass_g": 1.0,
++            "basis": "wt_percent",
++            "composition": {"Fe": 100.0},
++        },
++        "flux": {"path": "flux.json", "sha256": "x"},
++        "schedule": [{"dt": "1 s", "flux": 1.0}],
++        "options": {"mode": "auto"},
++    }
++    (folder / "case1.json").write_text(json.dumps(spec))
++    return folder
++
++
++class TestLibraryACTINV:
++    def test_zaids(self, bundle):
++        assert bundle.get_lib_zaids() == ["26056", "49115"]
++
++
++class TestInputACTINV:
++    def test_translate_repoints_paths(self, bundle, spec_folder):
++        inp = InputACTINV(spec_folder, bundle)
++        assert inp.code == CODE.ACTINV
++        assert inp.name == "case1"
++        inp.translate()
++        lib_ref = inp.spec["library"]
++        assert str(bundle.path) in lib_ref["path"]
++        assert len(lib_ref["sha256"]) == 64
++        assert str(bundle.path) in inp.spec["decay"]["primary"]
++
++    def test_write(self, bundle, spec_folder, tmp_path):
++        inp = InputACTINV(spec_folder, bundle)
++        out = tmp_path / "out"
++        out.mkdir()
++        inp._write(out)
++        assert (out / "case1.json").exists()
++
++
++class TestSingleRunACTINV:
++    def test_build_command(self, bundle, spec_folder):
++        run = SingleRunFactory.create(CODE.ACTINV, spec_folder, bundle, 1)
++        assert isinstance(run, SingleRunACTINV)
++
++        from types import SimpleNamespace
++
++        cmd = run._build_command(
++            SimpleNamespace(executables={CODE.ACTINV: "actinv"})
++        )
++        assert cmd == ["actinv", "run", "case1.json", "result.json"]
++        name, value = run._get_lib_data_command()
++        assert name == "ACTINV_DATA_DIR"
++        assert value == str(Path(bundle.path).parent)
++
++
++class TestActinvSimOutput:
++    def test_parse(self, tmp_path):
++        result = {
++            "certificate": {"solver": "actinv-core 1.2.0"},
++            "steps": [
++                {
++                    "t_s": 10.0,
++                    "heat_W_per_g": {"total": 1e-6},
++                    "activity_Bq_per_g": {"Mn56": 1e7},
++                },
++                {
++                    "t_s": 20.0,
++                    "heat_W_per_g": {"total": 5e-7},
++                    "activity_Bq_per_g": {"Mn56": 5e6},
++                },
++            ],
++        }
++        (tmp_path / "result.json").write_text(json.dumps(result))
++        out = ActinvSimOutput(tmp_path)
++        assert out.code_version == "actinv-core 1.2.0"
++        assert out.tally_numbers == [1, 2]
++        heat = out.tallydata[1]
++        assert list(heat["time"]) == [10.0, 20.0]
++        assert list(heat["Value"]) == [1e-6, 5e-7]
++        act = out.tallydata[2]
++        assert list(act["Value"]) == [1e7, 5e6]
