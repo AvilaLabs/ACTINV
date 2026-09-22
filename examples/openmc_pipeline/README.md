@@ -29,7 +29,8 @@ OpenMC transport ──► statepoint.N.h5 ──► actinv import-flux ──�
 ## Run
 
 ```bash
-./run.sh
+./run.sh          # shell pipeline: transport -> import -> mesh solve -> summary
+python r2s_demo.py  # same flow through the Python bridge (see below)
 ```
 
 Useful overrides: `ACTINV`, `PYTHON`, `ACTINV_LIBRARY` (path to the activation
@@ -65,6 +66,28 @@ Useful overrides: `ACTINV`, `PYTHON`, `ACTINV_LIBRARY` (path to the activation
         4200     5.63e-06      1.394e+07  Mn56 1.39e+07, Fe55 5.67e+03, ...
    6.054e+05     1.892e-10           9914  Fe55 5.64e+03, Cr51 3.04e+03, ...
 ```
+
+## R2S bridge (`actinv_r2s.py`)
+
+`ActinvR2S` mirrors the activation/source legs of
+`openmc.deplete.R2SManager.run()`: it takes an OpenMC statepoint with a
+MeshFilter+EnergyFilter flux tally, maps `(timesteps, source_rates)` — absolute
+n/s per step — onto the ACTINV schedule, and returns the decay-photon source as
+an OpenMC module. `r2s_demo.py` exercises it end-to-end:
+
+```python
+from actinv_r2s import ActinvR2S
+
+r2s = ActinvR2S(material={"Fe": 100.0}, mass_g=1.0)
+r2s.import_flux("statepoint.100.h5", tally_id=42, source_rate=1e15)
+r2s.activate(timesteps=[300, 60, 300, 3600],
+             source_rates=[1e15, 0.0, 0.0, 0.0])
+r2s.photon_source(step=2)     # -> photon_source.py
+r2s.heat()                    # [(t_s, W/g)]
+```
+
+The flux file is imported once at a reference rate; per-step rates become
+schedule multipliers, so on/off and ramped schedules don't re-import.
 
 ## Notes and limits
 
