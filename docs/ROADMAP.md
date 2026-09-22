@@ -573,6 +573,31 @@ is saturated: remaining divergence is bounded by chain coverage
 (FENDL-3.2c does not evaluate the product nuclides) and decay-file
 coverage — data-availability limits, not ACTINV channel defects.
 
+**P42 execution entry (2026-09-21).** P42 (mechanism closure of P40's
+open classes) closed `P42-PASS`: all 13 member nuclides carry a
+hash-pinned primary class under the frozen vocabulary, re-derived by an
+independent checker with 6/6 mutation rejections. Ten members are
+`alara_heritage`: ALARA's converted REAC rows emit to mass-impossible
+daughters (e.g. Fe-57 `p*`→Mn-59, gaining 2 amu), and Fe-59/Mn-57/Cr-56/
+Mn-58 inherit through `*D` decay feeds of phantom-produced parents —
+verified quantitatively (ALARA's Mn-59 feed ≈ 20% of its Fe-59 atoms,
+matching the observed 13% deficit). Three members are
+`conversion_content` on shared channels: ALARA under-reads FENDL's
+lumped content (50.4%/96.4%/38.7% for Cr-51/Fe-53/V-52) while ACTINV's
+synthesized MT107/MT16 rows match the ENDF lumped sums within 0.3%;
+ALARA's α-label totals conserve the cross section (~101%) but scatter
+it across impossible daughters. Zero `true_defect` — no ACTINV row
+deviated from FENDL ground truth — so G2 ledgered zero repairs and G3's
+re-census reproduced P40 byte-identically. Two corrections to the P40
+record: Cr-57 is present in both pinned decay archives (MAT 471 in
+ENDF-B-VIII.0), superseding the "absent from both decay files" note;
+and the P26b stdout resolver drops isobar-ambiguous rows (Ti-53/Ti-55),
+corrected by t_1/2-matched extraction in the G1 census
+(`results/verdict_p42.json`, `results/g1_p42_mechanisms.json`,
+`results/g2_p42_repairs.json`, `results/g3_p42_recensus.json`,
+`controls/check_g{0,1,2,4}_p42.py`, `controls/g{1,2,3}_p42*.py`,
+`protocols/ACTINV-P42_PROTOCOL.md`).
+
 ### Phase sequence and acceptance gates
 
 The default execution order is P26 through P35, one phase at a time. Each phase inherits all applicable earlier
