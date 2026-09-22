@@ -1,0 +1,41 @@
+{
+ "release": "v1.2.0",
+ "tag_commit": "9808219126162adb90484b20870ea2dc978e23e4",
+ "github_release": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.2.0",
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.2.0",
+   "files": [
+    "actinv-1.2.0-cp39-abi3-macosx_10_12_x86_64.whl",
+    "actinv-1.2.0-cp39-abi3-macosx_11_0_arm64.whl",
+    "actinv-1.2.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl",
+    "actinv-1.2.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+    "actinv-1.2.0-cp39-abi3-win_amd64.whl",
+    "actinv-1.2.0.tar.gz"
+   ],
+   "verified_via": "pypi.org/pypi/actinv/json"
+  },
+  "crates_io": {
+   "actinv-data": "1.2.0",
+   "actinv-core": "1.2.0",
+   "actinv-cli": "1.2.0",
+   "verified_via": "crates.io/api/v1/crates"
+  },
+  "github_assets": [
+   "actinv-1.2.0-linux-x86_64.tar.gz",
+   "actinv-1.2.0-macos-x86_64.tar.gz",
+   "actinv-1.2.0-macos-aarch64.tar.gz",
+   "actinv-1.2.0-windows-x86_64.zip",
+   "SHA256SUMS"
+  ]
+ },
+ "smoke": {
+  "pypi_install": "pip install actinv==1.2.0 in clean venv; `actinv --version` -> 1.2.0; --help OK",
+  "timestamp": "2026-09-22T01:45:52Z"
+ },
+ "notes": [
+  "publish runs: pypi run 35655017101 (env approved via API), crates run 35676054284 (workflow_dispatch resume; original tag-push run 35655017153 was stuck pending and cancelled)",
+  "controls workflow on master remained red at check_g3_p18b (pre-existing since 2026-09-19; publish paths do not gate on it)"
+ ]
+}

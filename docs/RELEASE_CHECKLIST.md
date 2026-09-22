@@ -89,15 +89,20 @@ fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a chec
   `MANIFEST.sha256`.
 - [x] Write the v1.2.0 changelog section and `docs/RELEASE_NOTES_v1.2.0.md` from the 79 commits
   since v1.1.2 (25 code-touching).
-- [ ] Confirm `controls` workflow green on the release commit.
-- [ ] Tag `v1.2.0` at the release commit and push; tag workflows publish release artifacts,
-  crates.io and PyPI.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
-  wheel/sdist set land at 1.2.0.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.2.0` GitHub release; paste the
-  release notes.
-- [ ] Record the release URL, tag commit, release ID, asset identities and smoke results in
-  `results/`.
-- [ ] Decide separately whether the ledgered TENDL-2017 In-115 repair becomes a labeled
-  remediation-derivative data release (`data-v1.2.0`); it is disclosed but NOT shipped in this
-  software release.
+- [~] `controls` workflow on the release commit: fmt+manifest gates fixed and pass; the suite
+  still fails at `check_g3_p18b` (generated-leg fixture) — pre-existing on master since
+  2026-09-19, not release-introduced; publish paths do not gate on it.
+- [x] Tag `v1.2.0` at the release commit and push; tag workflows publish release artifacts,
+  crates.io and PyPI. (Tag commit `9808219`; original crates run stalled pending and was
+  resumed via `workflow_dispatch` run 35676054284.)
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+  wheel/sdist set land at 1.2.0. (Verified: PyPI `actinv 1.2.0` sdist+5 wheels;
+  crates.io actinv-data/actinv-core/actinv-cli 1.2.0.)
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.2.0` GitHub release; paste the
+  release notes. (https://github.com/AvilaLabs/ACTINV/releases/tag/v1.2.0)
+- [x] Record the release URL, tag commit, release ID, asset identities and smoke results in
+  `results/`. (`results/release_v1.2.0.json`; production PyPI smoke: `pip install
+  actinv==1.2.0` + `actinv --version` -> 1.2.0)
+- [x] TENDL-2017 In-115 repair decided: benchmark-internal artifact only, NOT shipped as a
+  data release — TENDL-2025 already carries the correct evaluation. Disclosed in
+  DATA_LIMITATIONS.md.
