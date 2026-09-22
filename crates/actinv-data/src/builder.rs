@@ -1451,16 +1451,31 @@ fn decay_match_elis(
 ) -> Option<i32> {
     let mut best: Option<(&DecayStateEntry, f64)> = None;
     let mut inside = 0usize;
+    let mut tied = 0usize;
     for state in states.iter().filter(|state| state.liso > 0) {
         let delta = (state.elis_eV - elis_eV).abs();
-        if delta <= tolerance {
-            inside += 1;
-            if best.is_none_or(|(_, d)| delta < d) {
+        if delta > tolerance {
+            continue;
+        }
+        inside += 1;
+        match best {
+            Some((_, d)) if delta > d => {}
+            Some((_, d)) if delta == d => tied += 1,
+            _ => {
                 best = Some((state, delta));
+                tied = 1;
             }
         }
     }
     if unique && inside != 1 {
+        return None;
+    }
+    // An exact-distance tie cannot be broken by energy — real tables do
+    // carry distinct isomers at identical ELIS (ENDF-B-VIII.0 declares two
+    // states at ELIS=0 for Eu-136, Tb-154, Lu-162 and Bi-194), and choosing
+    // one would silently attach the wrong isomer's decay. Unresolved rows
+    // fall through to the LIS tier or the caller's conservative path.
+    if tied > 1 {
         return None;
     }
     best.map(|(state, _)| state.liso)
@@ -1513,11 +1528,17 @@ fn decay_resolve(
         }
         if !loose {
             if let Some(lis) = lis {
-                if let Some(state) = states
+                let mut matching = states
                     .iter()
-                    .find(|state| state.liso > 0 && state.lis == lis)
-                {
-                    return Some((state.liso, lis_tag));
+                    .filter(|state| state.liso > 0 && state.lis == lis);
+                match (matching.next(), matching.next()) {
+                    (Some(state), None) => return Some((state.liso, lis_tag)),
+                    // Each decay material numbers its own level scheme, so
+                    // the merged per-ZA table can carry the same LIS on two
+                    // different isomers (68 ZAs in ENDF-B-VIII.0). A shared
+                    // label cannot resolve identity; guessing would alias
+                    // the wrong isomer's decay data.
+                    _ => {}
                 }
             }
         }
@@ -5137,6 +5158,71 @@ mod tests {
         let mut target = state_target("m.endf", 99999, 1, 9, 100_000.0, Vec::new());
         map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
         assert_eq!(target.index.liso, SYNTHETIC_LISO_BASE + 1);
+    }
+
+    #[test]
+    fn duplicated_lis_label_cannot_resolve_isomer_identity() {
+        // Nb-90's merged decay table carries LIS=1 on two different isomers
+        // (LISO=2 at 124.67 keV and LISO=7 at 382.01 keV in both pinned
+        // archives): each decay material numbers its own level scheme, so
+        // the label alone cannot pick one. A unique label still resolves.
+        let mut primary = HashMap::new();
+        primary.insert(
+            41090,
+            vec![
+                DecayStateEntry {
+                    liso: 2,
+                    lis: 1,
+                    elis_eV: 124_670.0,
+                },
+                DecayStateEntry {
+                    liso: 7,
+                    lis: 1,
+                    elis_eV: 382_010.0,
+                },
+                DecayStateEntry {
+                    liso: 3,
+                    lis: 5,
+                    elis_eV: 90_000.0,
+                },
+            ],
+        );
+        let tables = decay_tables(primary);
+        assert_eq!(decay_resolve(&tables, 41090, Some(1), None), None);
+        assert_eq!(
+            decay_resolve(&tables, 41090, Some(5), None).map(|hit| hit.0),
+            Some(3)
+        );
+    }
+
+    #[test]
+    fn identical_elis_isomers_cannot_resolve_by_energy() {
+        // ENDF-B-VIII.0 declares two Eu-136 isomers at ELIS=0; a product
+        // declaring a small excitation sits at the same distance from both
+        // and energy cannot choose between them.
+        let mut primary = HashMap::new();
+        primary.insert(
+            63136,
+            vec![
+                DecayStateEntry {
+                    liso: 1,
+                    lis: 1,
+                    elis_eV: 0.0,
+                },
+                DecayStateEntry {
+                    liso: 2,
+                    lis: 2,
+                    elis_eV: 0.0,
+                },
+            ],
+        );
+        let tables = decay_tables(primary);
+        assert_eq!(decay_resolve(&tables, 63136, None, Some(50.0)), None);
+        // A clearly separated match still resolves.
+        assert_eq!(
+            decay_resolve(&tables, 63136, Some(1), Some(40.0)).map(|hit| hit.0),
+            Some(1)
+        );
     }
 
     #[test]

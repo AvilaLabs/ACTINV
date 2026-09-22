@@ -287,7 +287,7 @@ f516b1d3e331135a92540050c076a85ba25b95e0b0e5ad57ffda46dbc99ab735  ./controls/g2_
 3343645758398ac6a6dd62925e82e6233358413274847bc141d1abae49183513  ./controls/g2_p25c_patch.py
 74ddf99a0212d992aac7450b80718f72eea4ad118363f6cbde64be0a1854cdf9  ./controls/g2_p26_contract.py
 eae678ee19558c1fa9b7933ce951ad0ddca8b3153b333d6d1255acff2e2be7d8  ./controls/g2_p26b_contract.py
-049263da5d5a7198db7b192503edea8d107f78c73db6de8a8054b93a6d246a82  ./controls/g2_p26b_leg.py
+24b9d2d664ca33b61ce3b09ddb9dd77ec3499db15c42e9c38782158ad4ef2f29  ./controls/g2_p26b_leg.py
 206ffc242aa59b5f1c95410cc00895c6d097690c2d88aec751b5596aca9b32b7  ./controls/g2_p28_population.py
 5a5c531d2f4b34045af7e401cda0d19121eeb8e836f3c8b220fdf0421d18c8fb  ./controls/g2_p29_controls.py
 884c82612cb58be99965c9fc6aa496b8db22b207cead16bf664d8fe1dd2ec3a4  ./controls/g2_p30_controls.py
@@ -465,6 +465,7 @@ e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/tes
 c72eae00515a9f57b46456a32185a1732bf6f9554fb07d6f535f10cbcf6393e0  ./controls/test_fns_iron_diagnose.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
 c4f30f9bd696f2b4a1bd44574e28243f28dff58ad3898dbf24610c5462b326a3  ./controls/test_fusion_isotope_chain.py
+e291785fdfb579a1b517a5f4a45f7a884f8137f556872139ceef4c75e8c4c311  ./controls/test_g2_p26b_resolver.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
 78ccf2f5ba87ce9635acb1b9a7910268e21fd859c3398601de0a3190922d4c42  ./crates/actinv-cli/Cargo.toml
 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md
@@ -519,7 +520,7 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 570eaa5c84956e3aa0c96d0c7fb684ba3fa8174c18b7a1ec392497fa1927bf56  ./crates/actinv-data/src/bin/p20_collapse_probe.rs
 f274b0484b17ffb28e701076d830367858cc67110739e1026e5a894286d216d7  ./crates/actinv-data/src/bin/p20_corpus_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
-e7ba1b98ea88d27aa5039c64ea60cddf546115a440e286fb8d9e884c6885ce9d  ./crates/actinv-data/src/builder.rs
+e29cee9b98f27b8e7479275b6e51f914bbf1b2be61626dfeee9a2ca74affd314  ./crates/actinv-data/src/builder.rs
 8fa3ccc2d59fb244e8a15495b36e5b3d710700769550d861c7531c24722ec0ea  ./crates/actinv-data/src/composition.rs
 835beb6a7b55a90dc58c2fb8625c688f9b255167aa6443c15c9e9e5a67ba7c7a  ./crates/actinv-data/src/covariance.rs
 3d487cc020e892f9faf555b320eb1a3e7ac92bf44dcfe3e4c2a511740c1e48ed  ./crates/actinv-data/src/decay.rs
@@ -566,6 +567,7 @@ ec5f16bb493d0e3f7f19209b373c9b760d2b0a9aa3dd2c6723e59f1ee5266d56  ./docs/DATA_TR
 d9aaaa668c2a7d510fe5a514e53f650f496a30259a1297dc89e2db8b4082a129  ./docs/DESKTOP_INSTALL.md
 2e51ef93b2a8518efb4d9e28f7ff429cbc65f4b445d909700649d3a90be2ed41  ./docs/HARNESS.md
 54e33320f7a933f4b5187109649ba35066f6509fd13a19e981a636d66921e163  ./docs/HYPERION_NUMERICAL_REPAIR.md
+f7751791f18874456a6eb0a0b06299e29b8309374ab7bf75fad6d2f5cc708c75  ./docs/IDENTITY_AUDIT.md
 190ed7e91200661453b523b30e45747a753f4962ea022f9201b4a83cc3bc48c9  ./docs/LEADERSHIP_LEVERS_2026-09-20.md
 b58826e6a0ae32decbc1c3e848d7e7011ecb425bb30bcf2bfabc2f8b2592f574  ./docs/LEDGER.md
 2454e1d9684dfdf1c5e3552df9b97573efc7b1e89efba9058fb5e8f6bf4e4b28  ./docs/METHOD.md

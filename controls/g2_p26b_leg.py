@@ -321,7 +321,12 @@ def resolve_isotope_names(rows: list[dict], union_sorted: list[int],
                           hl: dict) -> list[dict]:
     """Align anonymous rows (a, liso, t_half) to sorted KZAs by order +
     A/liso match, tie-broken by printed t_1/2 vs the .idx half-life.
-    Returns rows with 'kza'/'name' added, or 'unresolved'."""
+    Returns rows with 'kza'/'name' added, or 'unresolved'.  The printed
+    table strips the element symbol ('-53' alone), so a multi-isobar row
+    resolves only on a *unique* half-life signature: isobars routinely
+    carry close half-lives and an order-consistent guess silently aliases
+    the row onto the wrong element (the Ti-53/Ti-55 misassignments P42
+    uncovered).  Rows with no unique signature stay unresolved."""
     resolved = []
     ki = 0
     for row in rows:
@@ -337,31 +342,24 @@ def resolve_isotope_names(rows: list[dict], union_sorted: list[int],
             if (liso == 0 and kl == 0) or (liso > 0 and kl == liso):
                 candidates.append(j)
         best = None
-        ambiguous = False
         if len(candidates) == 1:
             best = candidates[0]
         elif candidates:
+            tmatches = []
             for j in candidates:
                 t_idx = hl.get(union_sorted[j])
                 if t_idx is None and thalf < 0:
-                    best = j
-                    break
-                if t_idx and thalf > 0 and abs(t_idx - thalf) / thalf < 0.02:
-                    best = j
-                    break
-            if best is None:
-                # order-consistent fallback, flagged: the lambda*N
-                # cross-check will quantify any misassignment
-                best = candidates[0]
-                ambiguous = True
+                    tmatches.append(j)
+                elif t_idx and thalf > 0 and abs(t_idx - thalf) / thalf < 0.02:
+                    tmatches.append(j)
+            if len(tmatches) == 1:
+                best = tmatches[0]
         if best is None:
             resolved.append({**row, "name": f"unresolved-A{a}", "unresolved": True})
             continue
         ki = best + 1
         rec = {**row, "kza": union_sorted[best],
                "name": kza_name(union_sorted[best])}
-        if ambiguous:
-            rec["ambiguous"] = True
         resolved.append(rec)
     return resolved
 
