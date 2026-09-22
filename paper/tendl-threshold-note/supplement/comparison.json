@@ -1,0 +1,264 @@
+{
+  "study": "TCS-1",
+  "date": "2026-09-14",
+  "protocol_sha256": "7b0cc7abccd94ec93aeae3fc4ecd320f66a710b1cc6eb386cf69f553be156f06",
+  "method": "analytic linear-segment integration; single-ordinate experimental variant",
+  "flux_cm2_s": 100000000000000.0,
+  "gaussian": {
+    "mean_eV": 14000000.0,
+    "sd_eV": 500000.0,
+    "domain_eV": [
+      0,
+      20000000.0
+    ]
+  },
+  "scope": "rate sensitivity only; no inventory or qualified corrected-library claim",
+  "enforced_cgroup": {
+    "memory.max": "6442450944",
+    "memory.swap.max": "0",
+    "pids.max": "128",
+    "cpu.max": "200000 100000"
+  },
+  "code_sha256": {
+    "compare.py": "cf63b45da39584710fe7f93495a4e97faa816b47bb9d24be7059c29fb0d79bfc",
+    "reproduce_tendl2025_thresholds.py": "b743b0b20c68c0f24330a36f8724b87bac93a8b263c990ace1cbe7b9cba2f34a"
+  },
+  "cases": [
+    {
+      "file": "n-Fe053m.tendl",
+      "sha256": "7d3a58320465837055b854a5a61860584f9b0bc8bd2f8d264a659a1ef2aa095b",
+      "mat": 2623,
+      "mt": 16,
+      "zap": 26052,
+      "lfs": 0,
+      "energy_eV": "7791974",
+      "records": {
+        "3": {
+          "value_b": "0.000000",
+          "line_number": 1220,
+          "raw_record": " 7.791974+6 0.000000+0 7.800000+6 2.24586-11 8.000000+6 7.281567-92623 3 16    4"
+        },
+        "10": {
+          "value_b": "107582.0",
+          "line_number": 59859,
+          "raw_record": " 7.791974+6 1.075820+5 7.800000+6 2.24586-11 8.000000+6 7.281567-9262310 16    4"
+        }
+      },
+      "contradiction_reproduced": true,
+      "variant_sha256": "2982da749cec856ad0fa9c32ee7a0a7518baeea418a5cfd81d52629c07c061b6",
+      "changed_field": {
+        "line_1based": 59859,
+        "columns_1based": [
+          12,
+          22
+        ],
+        "before": " 7.791974+6 1.075820+5 7.800000+6 2.24586-11 8.000000+6 7.281567-9262310 16    4",
+        "after": " 7.791974+6 0.000000+0 7.800000+6 2.24586-11 8.000000+6 7.281567-9262310 16    4"
+      },
+      "next_energy_eV": 7800000.0,
+      "next_ordinate_b": 2.24586e-11,
+      "removed_area_b_eV": 431726566.0,
+      "original_at_14.1MeV_b": 0.0056209616,
+      "corrected_at_14.1MeV_b": 0.0056209616,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b": 21.59017556028157,
+          "corrected_b": 0.003847260281569222,
+          "delta_b_direct": 21.5863283,
+          "delta_over_corrected": 5610.831272168402,
+          "original_rate_per_target_s": 2.1590175560281568e-09,
+          "corrected_rate_per_target_s": 3.847260281569222e-13,
+          "delta_rate_per_target_s": 2.1586328300000004e-09,
+          "unmodified_mf3_total_b": 0.004653639894069222
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b": 0.005436662851816188,
+          "corrected_b": 0.005436662851816188,
+          "delta_b_direct": 1.234282557385958e-31,
+          "delta_over_corrected": 2.2702944637694974e-29,
+          "original_rate_per_target_s": 5.436662851816189e-13,
+          "corrected_rate_per_target_s": 5.436662851816189e-13,
+          "delta_rate_per_target_s": 1.234282557385958e-41,
+          "unmodified_mf3_total_b": 0.005446573500025878
+        }
+      }
+    },
+    {
+      "file": "n-Cl035.tendl",
+      "sha256": "c0ac6b92bad9851493b10a42bd81700eb3a7bbe8915b2627d2ce6454d3d08adf",
+      "mat": 1725,
+      "mt": 16,
+      "zap": 17034,
+      "lfs": 0,
+      "energy_eV": "13009500",
+      "records": {
+        "3": {
+          "value_b": "0.000000",
+          "line_number": 5807,
+          "raw_record": " 1.300950+7 0.000000+0 1.350000+7 7.012318-4 1.400000+7 3.986911-31725 3 16    4"
+        },
+        "10": {
+          "value_b": "24.59622",
+          "line_number": 52273,
+          "raw_record": " 1.300950+7 2.459622+1 1.350000+7 1.381986-4 1.400000+7 7.971717-4172510 16    4"
+        }
+      },
+      "contradiction_reproduced": true,
+      "variant_sha256": "9cf14ad855f354c65e1e8e5eb301a6d3b95ee3824dbfafeab20af8a51647fb03",
+      "changed_field": {
+        "line_1based": 52273,
+        "columns_1based": [
+          12,
+          22
+        ],
+        "before": " 1.300950+7 2.459622+1 1.350000+7 1.381986-4 1.400000+7 7.971717-4172510 16    4",
+        "after": " 1.300950+7 0.000000+0 1.350000+7 1.381986-4 1.400000+7 7.971717-4172510 16    4"
+      },
+      "next_energy_eV": 13500000.0,
+      "next_ordinate_b": 0.0001381986,
+      "removed_area_b_eV": 6032222.955,
+      "original_at_14.1MeV_b": 0.00106444136,
+      "corrected_at_14.1MeV_b": 0.00106444136,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b": 0.3050344907103325,
+          "corrected_b": 0.0034233429603325,
+          "delta_b_direct": 0.30161114775000003,
+          "delta_over_corrected": 88.10427446062995,
+          "original_rate_per_target_s": 3.0503449071033255e-11,
+          "corrected_rate_per_target_s": 3.4233429603325e-13,
+          "delta_rate_per_target_s": 3.0161114775000004e-11,
+          "unmodified_mf3_total_b": 0.009007049727447501
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b": 1.2808287858108072,
+          "corrected_b": 0.0011452245538720223,
+          "delta_b_direct": 1.279683561256935,
+          "delta_over_corrected": 1117.408421719832,
+          "original_rate_per_target_s": 1.280828785810807e-10,
+          "corrected_rate_per_target_s": 1.1452245538720223e-13,
+          "delta_rate_per_target_s": 1.279683561256935e-10,
+          "unmodified_mf3_total_b": 0.004721694090798513
+        }
+      }
+    },
+    {
+      "file": "n-Zr088.tendl",
+      "sha256": "148382919d34670d07f3ae3c121b06e05f8d1c8b763c6fba30a9401edfeb40a3",
+      "mat": 4019,
+      "mt": 16,
+      "zap": 40087,
+      "lfs": 0,
+      "energy_eV": "12494780",
+      "records": {
+        "3": {
+          "value_b": "0.000000",
+          "line_number": 1416,
+          "raw_record": " 1.249478+7 0.000000+0 1.250000+7 9.341547-6 1.300000+7 5.731728-24019 3 16    4"
+        },
+        "10": {
+          "value_b": "70.11846",
+          "line_number": 48600,
+          "raw_record": " 1.249478+7 7.011846+1 1.250000+7 9.341547-6 1.300000+7 5.672746-2401910 16    4"
+        }
+      },
+      "contradiction_reproduced": true,
+      "variant_sha256": "7ad0b5462bd550ba064dda84bcb8b1c1451f67400c529b166424fc80a5e7cf22",
+      "changed_field": {
+        "line_1based": 48600,
+        "columns_1based": [
+          12,
+          22
+        ],
+        "before": " 1.249478+7 7.011846+1 1.250000+7 9.341547-6 1.300000+7 5.672746-2401910 16    4",
+        "after": " 1.249478+7 0.000000+0 1.250000+7 9.341547-6 1.300000+7 5.672746-2401910 16    4"
+      },
+      "next_energy_eV": 12500000.0,
+      "next_ordinate_b": 9.341547e-06,
+      "removed_area_b_eV": 183009.1806,
+      "original_at_14.1MeV_b": 0.34278638,
+      "corrected_at_14.1MeV_b": 0.34278638,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b": 0.19168243351840938,
+          "corrected_b": 0.18253197448840938,
+          "delta_b_direct": 0.00915045903,
+          "delta_over_corrected": 0.05013071849820507,
+          "original_rate_per_target_s": 1.9168243351840938e-11,
+          "corrected_rate_per_target_s": 1.825319744884094e-11,
+          "delta_rate_per_target_s": 9.15045903e-13,
+          "unmodified_mf3_total_b": 0.19528489748840938
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b": 0.3105389448357089,
+          "corrected_b": 0.3089503257837451,
+          "delta_b_direct": 0.0015886190519638355,
+          "delta_over_corrected": 0.005141988596172628,
+          "original_rate_per_target_s": 3.105389448357089e-11,
+          "corrected_rate_per_target_s": 3.089503257837451e-11,
+          "delta_rate_per_target_s": 1.5886190519638355e-13,
+          "unmodified_mf3_total_b": 0.3313377791529297
+        }
+      }
+    },
+    {
+      "file": "n-Y088.tendl",
+      "sha256": "f6c69655d0991faddb90e8b1a620b9ccd4d0e68a56ce73f3ae52955295cfaedc",
+      "mat": 3922,
+      "mt": 16,
+      "zap": 39087,
+      "lfs": 0,
+      "energy_eV": "9459262",
+      "records": {
+        "3": {
+          "value_b": "0.000000",
+          "line_number": 1334,
+          "raw_record": " 9.459262+6 0.000000+0 9.500000+6 1.298063-4 1.000000+7 2.066088-23922 3 16    4"
+        },
+        "10": {
+          "value_b": "26.05538",
+          "line_number": 51527,
+          "raw_record": " 9.459262+6 2.605538+1 9.500000+6 1.298063-4 1.000000+7 1.430201-2392210 16    4"
+        }
+      },
+      "contradiction_reproduced": true,
+      "variant_sha256": "404c1836723f7fbe539c86c3d05284f5fceeca9b8087805476735b62d4b984ea",
+      "changed_field": {
+        "line_1based": 51527,
+        "columns_1based": [
+          12,
+          22
+        ],
+        "before": " 9.459262+6 2.605538+1 9.500000+6 1.298063-4 1.000000+7 1.430201-2392210 16    4",
+        "after": " 9.459262+6 0.000000+0 9.500000+6 1.298063-4 1.000000+7 1.430201-2392210 16    4"
+      },
+      "next_energy_eV": 9500000.0,
+      "next_ordinate_b": 0.0001298063,
+      "removed_area_b_eV": 530722.03522,
+      "original_at_14.1MeV_b": 0.2823713,
+      "corrected_at_14.1MeV_b": 0.2823713,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b": 0.14713185279097624,
+          "corrected_b": 0.12059575102997623,
+          "delta_b_direct": 0.026536101761,
+          "delta_over_corrected": 0.22004176377991938,
+          "original_rate_per_target_s": 1.4713185279097624e-11,
+          "corrected_rate_per_target_s": 1.2059575102997624e-11,
+          "delta_rate_per_target_s": 2.6536101761e-12,
+          "unmodified_mf3_total_b": 0.46754449927997627
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b": 0.2770567472516825,
+          "corrected_b": 0.2770567472516825,
+          "delta_b_direct": 6.785971745745381e-19,
+          "delta_over_corrected": 2.449307520231912e-18,
+          "original_rate_per_target_s": 2.770567472516825e-11,
+          "corrected_rate_per_target_s": 2.770567472516825e-11,
+          "delta_rate_per_target_s": 6.785971745745381e-29,
+          "unmodified_mf3_total_b": 1.037360430215836
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+{
+  "pass": true,
+  "comparison_sha256": "252f13cfadbb71e209f560e124c4396a6cb246f57d046de4166bf1d49c02f0c4",
+  "checker_sha256": "003d2d36d9fa74f2c4f213bbf0ff1dce5f152be1a4ce99678d88e37085841244",
+  "independent_parser": true,
+  "analytic_fixture_checks": true,
+  "hash_mutation_rejected": true,
+  "tolerance": {
+    "relative": 1e-09,
+    "absolute_b": 1e-13
+  },
+  "tiny_gaussian_delta_caveat": "below absolute tolerance; no resolved subtraction claim",
+  "cases": [
+    {
+      "file": "n-Fe053m.tendl",
+      "pass": true,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b_quadrature": 21.59017556028157,
+          "corrected_b_quadrature": 0.003847260281569222,
+          "delta_b_quadrature": 21.5863283,
+          "max_absolute_disagreement_b": 0.0
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b_quadrature": 0.005436662851816188,
+          "corrected_b_quadrature": 0.005436662851816188,
+          "delta_b_quadrature": 1.2342825572201557e-31,
+          "max_absolute_disagreement_b": 1.658022911575675e-41
+        }
+      }
+    },
+    {
+      "file": "n-Cl035.tendl",
+      "pass": true,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b_quadrature": 0.3050344907103325,
+          "corrected_b_quadrature": 0.0034233429603325,
+          "delta_b_quadrature": 0.30161114775,
+          "max_absolute_disagreement_b": 5.551115123125783e-17
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b_quadrature": 1.2808287858108072,
+          "corrected_b_quadrature": 0.0011452245538720223,
+          "delta_b_quadrature": 1.279683561256935,
+          "max_absolute_disagreement_b": 0.0
+        }
+      }
+    },
+    {
+      "file": "n-Zr088.tendl",
+      "pass": true,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b_quadrature": 0.19168243351840938,
+          "corrected_b_quadrature": 0.18253197448840938,
+          "delta_b_quadrature": 0.009150459029999999,
+          "max_absolute_disagreement_b": 1.734723475976807e-18
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b_quadrature": 0.3105389448357016,
+          "corrected_b_quadrature": 0.3089503257837451,
+          "delta_b_quadrature": 0.0015886190519565106,
+          "max_absolute_disagreement_b": 7.324869877312068e-15
+        }
+      }
+    },
+    {
+      "file": "n-Y088.tendl",
+      "pass": true,
+      "folds": {
+        "uniform_0_20MeV": {
+          "original_b_quadrature": 0.14713185279097624,
+          "corrected_b_quadrature": 0.12059575102997623,
+          "delta_b_quadrature": 0.026536101761,
+          "max_absolute_disagreement_b": 0.0
+        },
+        "gaussian_14MeV_sd0.5MeV": {
+          "original_b_quadrature": 0.27705674725168244,
+          "corrected_b_quadrature": 0.27705674725168244,
+          "delta_b_quadrature": 6.785971745748397e-19,
+          "max_absolute_disagreement_b": 5.551115123125783e-17
+        }
+      }
+    }
+  ]
+}
