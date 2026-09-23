@@ -94,7 +94,8 @@ GitHub's `fusion-isotope` workflow builds the probe and reruns verification.
 ## Published comparison and limitations
 
 The [executed technical note](../../../results/fusion-isotope-001/reduced-chain-note.md),
-[numerical receipt](../../../results/fusion-isotope-001/reduced-chain.json),
+[numerical receipt](../../../results/fusion-isotope-001/reduced-chain-2026-09-23.json) (re-seated after
+solver changes; the [original receipt](../../../results/fusion-isotope-001/reduced-chain.json) is kept),
 [comparison table](../../../results/fusion-isotope-001/comparison.md), and
 [standalone plot](../../../results/fusion-isotope-001/comparison.svg) record
 the result. The reduced model is 3.56% above the published one-year inventory

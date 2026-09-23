@@ -1,7 +1,7 @@
 b57f276538005d9a84327e30da3556062e054dcd917d98199ba7b313c0e4f9b7  ./.github/workflows/ci.yml
 69406f6c45e3d42c106e286778600dd93e8685bcdaaebf2c16dd240dc3a00a22  ./.github/workflows/desktop.yml
 bccd68cceb68ae9c46ab421c9f080877e268bfad6901198d3192ca0d8abe2c7b  ./.github/workflows/fns-iron.yml
-f11e0e7034856bfb7fc6304550b86d45ded925fc155d5688b26db15bfdfb5dd4  ./.github/workflows/fusion-isotope.yml
+4371ef11aaaaaa05e78f67ac065b6ada016dc74b129debec9374af2f6bc62015  ./.github/workflows/fusion-isotope.yml
 35f32079ded01135a8956b457daaaf1de373be5c652e4d5701db47af21127df5  ./.github/workflows/publish-crates.yml
 a5fdde37c08ded4e5cb97be9c642ae0d170af19f6b1b826792a31f4d5acbcefb  ./.github/workflows/publish-pypi.yml
 a16b6672e5095737c066931f9b2dcbc5bac7c369bc1d2e49223f125103ac79e9  ./.github/workflows/release-artifacts.yml
@@ -213,7 +213,7 @@ afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b  ./controls/fix
 b8138886642399de431305403d22a9aef7b29c8b8b94d5a9dbe954b621d35b20  ./controls/fns_iron.py
 787a69c5e1ef8f36a096db7b22248791478581bcb5a9ae847eee0fb75c29aeb6  ./controls/fns_iron_diagnose.py
 b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns_report.py
-7318fb3b48f2185c1891faaa6fe042e6cd91f98b6d6142a783e8811eebebbccd  ./controls/fusion_isotope_chain.py
+b8959141b9dccea1862cb1ba6c96ea7dfe4f93153deaac9f964df1204ef767da  ./controls/fusion_isotope_chain.py
 206110d876fee10df20e5eb9373006b72fe001002e2fe954a7dd09d508206077  ./controls/g0_cram_coefficients.py
 144585eb20c4fbf6c758e47303808aed699ef7d4f342deeead299601b69b6cc7  ./controls/g0_p17_seal.py
 00d0c2233b879e60b4bd1e4008b15301cbc67ed0864c912ab8bbb01e65ebefb1  ./controls/g0_p18_seal.py
@@ -465,7 +465,7 @@ e695fe3b4a7faaea3cd82df31ecfe7ce97c07ec727975db1aea361a98264b874  ./controls/tes
 3e57c7b07c7134578b6f61f9e1c00db04d4d3da61f26acd0335449a490c2d2b0  ./controls/test_fns_iron.py
 c72eae00515a9f57b46456a32185a1732bf6f9554fb07d6f535f10cbcf6393e0  ./controls/test_fns_iron_diagnose.py
 7c7d4cb9121a345ea58d353cfc17d93d87bda8d2515a7c00f140fd0e3715c8c2  ./controls/test_fusion_isotope_001.py
-c4f30f9bd696f2b4a1bd44574e28243f28dff58ad3898dbf24610c5462b326a3  ./controls/test_fusion_isotope_chain.py
+f808f5459a31d3a78611883fab602528e689b3d914d8bfdd54b880ce7026c425  ./controls/test_fusion_isotope_chain.py
 e291785fdfb579a1b517a5f4a45f7a884f8137f556872139ceef4c75e8c4c311  ./controls/test_g2_p26b_resolver.py
 b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/test_p16_dependency_history.py
 901aaa5d18da35b4eb503737405b9d86a941070f9ca837e660049e5e4cc5d22a  ./crates/actinv-cli/Cargo.toml
@@ -645,7 +645,7 @@ b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/dam
 a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207  ./examples/fns_fe_5min.json
 ec45333eccc2a4b8978a14b50f8873efccf62c99b260b8b46b0f9b2e5407db61  ./examples/fns_iron/README.md
 e04b539d4ab2176a3120dba67609b88dd09d5ff0ddadca790f7fc0388a1c6155  ./examples/fns_iron/case.json
-77576157da8c23c3657d86ae7b218081101bb2333299d662289ebff48c26d64d  ./examples/fusion_medical_isotopes/ac225/README.md
+3f1f93ce31453642e1ec5fc733831659f166e5652e3376b883e762de17fca0da  ./examples/fusion_medical_isotopes/ac225/README.md
 1a6f04eadc6887ac0da1739ed0abd07194009e7b3b6d5f9aedfd81a5ea7262fe  ./examples/fusion_medical_isotopes/ac225/reduced_case.json
 758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7  ./examples/fusion_medical_isotopes/ac225/reference.json
 b62843cbe4c583d73465ceca63fc53d5d3eddece23ec9553a1b1c9972da15906  ./examples/mesh_demo.json
@@ -805,6 +805,7 @@ d6353d29934e0b980955bdba3c6938473dbd6fd0e1c1bf0107e07bbadbddf7df  ./protocols/DR
 3764db3fd2217afa23b95fe22911f81e531378b3d67d4b56e2e2b1fcde09ebe4  ./protocols/FNS-IRON-DIAG-001-AMENDMENT-1.md
 07c7e5002801f2bcc4c6d9fb73a2afafb18d06196cdda6610e071a5b77aad52a  ./protocols/FNS-IRON-DIAG-001.md
 a3f3259c4f805d3c0e9250030e467ce4c13466a4a987fed4f1b7674400919cf8  ./protocols/FUSION-ISOTOPE-001-AMENDMENT-1.md
+7c7357d0ed8d3e3da232fbd72f72117d832b445de2ac011ffc7ff66678b36fa6  ./protocols/FUSION-ISOTOPE-001-AMENDMENT-2.md
 99514a0e323a4a059401227ee95f67acceb8c72fcbba6c25038c7c7ac3d74d0b  ./protocols/FUSION-ISOTOPE-001.md
 df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HYPERION-NUMERICS-2026-09-15.md
 f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/desktop-historical-checks-v1.md

@@ -17,6 +17,9 @@ REFERENCE = ROOT / "examples/fusion_medical_isotopes/ac225/reference.json"
 PROTOCOL = ROOT / "protocols/FUSION-ISOTOPE-001-AMENDMENT-1.md"
 COEFFICIENTS = ROOT / "data/cram_coefficients.json"
 RESULTS = ROOT / "results/fusion-isotope-001"
+# Re-seated after the CB2 kernel commits changed cram_probe.rs and sparse.rs (Amendment 2); the
+# 2026-09-18 receipt, reduced-chain.json, stays unchanged as the record of the 710969c run.
+RECEIPT = RESULTS / "reduced-chain-2026-09-23.json"
 NAMES = ["Th230", "Th229", "Ra225", "Ac225", "downstream_sink"]
 
 
@@ -275,7 +278,7 @@ def main():
     work.mkdir(parents=True, exist_ok=True)
     fresh = run(args.probe.resolve(), work)
     verify(fresh)
-    receipt_path = RESULTS / "reduced-chain.json"
+    receipt_path = RECEIPT
     if args.write:
         with receipt_path.open("x") as stream:
             json.dump(fresh, stream, indent=2, allow_nan=False)

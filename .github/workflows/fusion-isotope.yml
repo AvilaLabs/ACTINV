@@ -35,6 +35,6 @@ jobs:
         with:
           name: fusion-isotope-evidence
           path: |
-            results/fusion-isotope-001/reduced-chain.json
+            results/fusion-isotope-001/reduced-chain-2026-09-23.json
             results/fusion-isotope-001/comparison.md
             results/fusion-isotope-001/comparison.svg
