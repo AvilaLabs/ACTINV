@@ -113,12 +113,15 @@ fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a chec
   `release-artifacts.yml`, README release links and the DATA_LIMITATIONS header; refresh
   `MANIFEST.sha256`.
 - [x] Rename the changelog's Unreleased section to v1.2.1 and write `docs/RELEASE_NOTES_v1.2.1.md`.
-- [ ] Push the release commit and the `v1.2.1` tag in one atomic push. The P18/P18b and P12-G5
+- [x] Push the release commit and the `v1.2.1` tag in one atomic push. The P18/P18b and P12-G5
   release-boundary checks require the workspace version to be the newest tag, so the release
   commit's `controls` run must already see the tag; the publish workflows wait for that run.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
-  wheel/sdist set land at 1.2.1.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.2.1` GitHub release; paste the
-  release notes.
-- [ ] Record the release URL, tag commit, release ID, asset identities and smoke results in
-  `results/release_v1.2.1.json`.
+  (Tag commit `f30d5cd`; `controls` run 35863111572 green; release artifacts run 35863111642.)
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+  wheel/sdist set land at 1.2.1. (Gates approved via the API after each verify/validation job;
+  crates run 35863112008, PyPI run 35863112087; PyPI digests match the validated set.)
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.2.1` GitHub release; paste the
+  release notes. (https://github.com/AvilaLabs/ACTINV/releases/tag/v1.2.1, release 394678773)
+- [x] Record the release URL, tag commit, release ID, asset identities and smoke results in
+  `results/release_v1.2.1.json`. (Production smoke: `pip install actinv==1.2.1` and
+  `cargo install --locked actinv-cli --version 1.2.1` both give `actinv --version` -> 1.2.1.)

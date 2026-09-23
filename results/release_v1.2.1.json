@@ -1,0 +1,91 @@
+{
+ "release": "v1.2.1",
+ "tag": {
+  "name": "v1.2.1",
+  "object": "1b1a832bc983c126f543394b745991bfb1a4dead",
+  "commit": "f30d5cd75ef1eaf09ff7d226706f14ecfafd191a",
+  "message": "ACTINV 1.2.1",
+  "signed": false
+ },
+ "github_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.2.1",
+  "id": 394678773,
+  "published_at": "2026-09-23T13:16:40Z",
+  "latest": true,
+  "notes": "docs/RELEASE_NOTES_v1.2.1.md",
+  "assets_sha256": {
+   "actinv-1.2.1-linux-x86_64.tar.gz": "1a8bfc419fd39faa480d48cab876bde81ad1659249f686b0a93b39cfe824eabd",
+   "actinv-1.2.1-macos-aarch64.tar.gz": "690616b58880976fff4ac84c52b8c7f0beec1ca1eefa53403bf1bf2564e80787",
+   "actinv-1.2.1-macos-x86_64.tar.gz": "7e6d8a72da87b4bfb064693638e1f7244377604eec480ddcdd7e33afc38f5beb",
+   "actinv-1.2.1-windows-x86_64.zip": "55e82153073611f380ef680b160c06d1c2b4474f39331ecafec5daea451416be"
+  },
+  "sha256sums_asset": "SHA256SUMS"
+ },
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.2.1",
+   "files": {
+    "actinv-1.2.1-cp39-abi3-macosx_10_12_x86_64.whl": "b4147dfae37c0364fdb2d2d193136c7976ab7e0f6853d12ad0a763db85201970",
+    "actinv-1.2.1-cp39-abi3-macosx_11_0_arm64.whl": "725dcb401805e6c769ba6f8a711a29c13fb6da561d1401befdf3bfda8b15fb3e",
+    "actinv-1.2.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "1e472a94552908cddf208d5e8e771371cb2cc4a6ad9e1fdb4604b3fd65028ae1",
+    "actinv-1.2.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "d37d509694ac3fb068c2e1cbb15d7d370a81b4c5e30a198e044be513e5bbd0c3",
+    "actinv-1.2.1-cp39-abi3-win_amd64.whl": "2992e68fc198a957b661b3413263393eb995271d9a6975e7a5503a164f7d5ea4",
+    "actinv-1.2.1.tar.gz": "d267e180bdd5ae6870ed5327dc40fbe619667821808799dbae78cdf769cd4842"
+   },
+   "verified_via": "pypi.org/pypi/actinv/1.2.1/json; every digest matches the validated python-package-distributions artifact of the publish run"
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.2.1",
+    "created_at": "2026-09-23T13:12:57.625691Z",
+    "checksum": "979e815938c658c861aa6568149c26adb9941fb75dcd66f27ca70a3ffe693834",
+    "yanked": false
+   },
+   "actinv-core": {
+    "version": "1.2.1",
+    "created_at": "2026-09-23T13:14:15.182190Z",
+    "checksum": "3bafe008dae04e1b0d8b2fc38e4e635a0c62675c662e76636a0cd6a1b494e82f",
+    "yanked": false
+   },
+   "actinv-cli": {
+    "version": "1.2.1",
+    "created_at": "2026-09-23T13:15:53.870965Z",
+    "checksum": "3cb4bba96637b331c5d474ae21a9eba8ec4b33f551d02a2c9f755b8748f3f201",
+    "yanked": false
+   }
+  }
+ },
+ "workflows": {
+  "controls": {
+   "run": 35863111572,
+   "conclusion": "success",
+   "note": "release commit; saw the v1.2.1 tag (atomic push)"
+  },
+  "release_artifacts": {
+   "run": 35863111642,
+   "conclusion": "success"
+  },
+  "publish_pypi": {
+   "run": 35863112087,
+   "conclusion": "success"
+  },
+  "publish_crates": {
+   "run": 35863112008,
+   "conclusion": "success"
+  }
+ },
+ "approvals": "The crates.io gate (once per crate, in dependency order) and the pypi gate were approved through the GitHub API with the maintainer account, each after the run's verify or distribution-validation job passed and, for crates, after the previous crate appeared on crates.io.",
+ "smoke": {
+  "pre_publish_wheel": "manylinux x86_64 wheel from the validated set, fresh venv: `actinv --version` -> 1.2.1, `import actinv` -> 1.2.1, `actinv validate examples/fns_fe_5min.json` OK",
+  "pypi_install": "pip install actinv==1.2.1 (no cache) in a clean venv; `actinv --version` -> 1.2.1; `import actinv` -> 1.2.1; --help OK",
+  "pypi_timestamp": "2026-09-23T13:17:01Z",
+  "github_assets": "SHA256SUMS verified; the Linux archive's binary reports `actinv 1.2.1`",
+  "cargo_install": "cargo install --locked actinv-cli --version 1.2.1 from crates.io (bounded scope, fresh target dir): installed; `actinv --version` -> 1.2.1; the build compiled rustls 0.23.45 and a single zip 8.6.0",
+  "cargo_timestamp": "2026-09-23T13:20:50Z"
+ },
+ "notes": [
+  "Release commit and tag were pushed in one atomic push: the P18/P18b and P12-G5 release-boundary checks require the workspace version to be the newest v1.* tag, so the release commit's controls run had to see the tag.",
+  "The fusion-isotope workflow was red at the tag (receipt pinned pre-CB2 probe and sparse sources); it is not a publish gate. The receipt was re-seated after the tag (Amendment 2, d0d93d4 and 13de924)."
+ ]
+}
