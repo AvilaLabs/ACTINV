@@ -1510,3 +1510,12 @@ data-handling repair carries a regression test that fails on the pre-repair code
   library and prepared_probe for the entry-point comparisons) passes, P10's legacy pin f7b30255 included. Files
   the controls rewrote locally (paths, timings, error wording, FD residuals) were restored, not committed.
   Control: `a_radioactive_state_without_decay_modes_decays_into_leakage`.
+- **One zip version (INFRA-2).** actinv-data: `zip = "=8.6.0"`, features `deflate-flate2` (zip 8's own `deflate`
+  would switch to zlib-rs and change the compressed bytes). Byte-compatibility, checked before and after the
+  switch by re-writing archives through `write_npz`: the shipped `tendl-2025-patched-neutron-709g.npz` round-trips
+  to its pinned fb13c16c... under both zip 2.4.2 and 8.6.0; three covariance files give identical bytes under both
+  (two reproduce their originals; the third was written by a Python fixture). `deterministic_npz_round_trip` now
+  also pins its fixture's SHA-256 (2e70cdf6...), confirmed identical under zip 2.4.2 before the switch. Code change:
+  zip 8's `ZipFile` carries the reader type, so `Sha256VerifiedMember` gains a type parameter. Dropped from the
+  lockfiles: zip 2.4.2, zopfli, arbitrary/derive_arbitrary (and, for the Python binding, displaydoc, bumpalo and
+  thiserror 2). Gates, Python-binding clippy and the web workbench's wasm clippy pass.

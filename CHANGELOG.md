@@ -111,6 +111,11 @@
 - Third-party actions are pinned by commit like the publishing workflows already were:
   `dtolnay/rust-toolchain` (stable branch, which still installs the current stable toolchain),
   `Swatinem/rust-cache` v2.9.2 and `taiki-e/install-action` v2.87.18 (which also fixes the `trunk` version).
+- One `zip` implementation instead of two: `actinv-data` moves from zip 2.4.2 to the CLI's 8.6.0 (with the
+  `deflate-flate2` backend, so compression still goes through the workspace's miniz_oxide flate2). Library and
+  covariance `.npz` files are byte-identical: the shipped TENDL-2025 library re-written under zip 8 reproduces its
+  pinned SHA-256, and a unit test now pins the writer's bytes so a later zip or flate2 change cannot move them
+  silently.
 - `scripts/git-hooks/pre-commit` (opt-in; see CONTRIBUTING.md) refreshes and stages `MANIFEST.sha256` from the
   index on every commit; a stale manifest caused 24 of the 40 red `controls` runs before this release.
 

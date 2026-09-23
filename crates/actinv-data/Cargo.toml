@@ -11,7 +11,7 @@ categories.workspace = true
 description = "ACTINV data readers: ENDF-6 decay sublibraries and 709-group activation libraries"
 
 [dependencies]
-zip = { version = "2", default-features = false, features = ["deflate"] }
+zip = { version = "=8.6.0", default-features = false, features = ["deflate-flate2"] }
 libm = "0.2"
 num-complex = "0.4"
 rayon = "1.12"

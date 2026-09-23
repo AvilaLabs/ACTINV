@@ -594,12 +594,12 @@ pub(crate) fn read_bounds<R: Read + Seek>(
     decode_bounds(member, member_size, ngroups)
 }
 
-pub(crate) enum Sha256VerifiedMember<'a> {
-    Stored(zip::read::ZipFile<'a>),
-    Deflated(flate2::bufread::DeflateDecoder<BufReader<zip::read::ZipFile<'a>>>),
+pub(crate) enum Sha256VerifiedMember<'a, R: Read> {
+    Stored(zip::read::ZipFile<'a, R>),
+    Deflated(flate2::bufread::DeflateDecoder<BufReader<zip::read::ZipFile<'a, R>>>),
 }
 
-impl Read for Sha256VerifiedMember<'_> {
+impl<R: Read> Read for Sha256VerifiedMember<'_, R> {
     fn read(&mut self, buffer: &mut [u8]) -> std::io::Result<usize> {
         match self {
             Self::Stored(reader) => reader.read(buffer),
@@ -611,7 +611,7 @@ impl Read for Sha256VerifiedMember<'_> {
 pub(crate) fn sha256_verified_member<'a, R: Read + Seek>(
     archive: &'a mut zip::ZipArchive<R>,
     name: &str,
-) -> Result<(Sha256VerifiedMember<'a>, u64), String> {
+) -> Result<(Sha256VerifiedMember<'a, R>, u64), String> {
     let index = archive
         .file_names()
         .position(|candidate| candidate == name)
@@ -1038,6 +1038,13 @@ mod tests {
         assert_eq!(loaded.sig, library.sig);
         assert_eq!(loaded.bounds, library.bounds);
         let bytes = std::fs::read(&first).unwrap();
+        // Pin the wire bytes, not only determinism: a zip or flate2 change to the container or the
+        // deflate stream would silently change every rebuilt library's SHA-256.
+        use sha2::Digest;
+        assert_eq!(
+            format!("{:x}", sha2::Sha256::digest(&bytes)),
+            "2e70cdf6d352a5d1755f7ab3e2a1f38e6acab4e98b73af46a5d94aa2ef0b588d"
+        );
         let loaded_from_bytes = read_npz_bytes(&bytes).unwrap();
         assert_eq!(loaded_from_bytes.rows, library.rows);
         assert_eq!(loaded_from_bytes.sig, library.sig);

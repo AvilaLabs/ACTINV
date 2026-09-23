@@ -9,9 +9,9 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 5b0e4fd7a4b934875286d18ac1fd844bba8aaf8541dfe3f5105353a363f139cc  ./.github/workflows/web.yml
 ee436516243cf6cc3af117d599a6be52c9a7df171b43e7d25d1821b56ab774ba  ./.gitignore
 95cbf21273eefeb72fb7a9676cde68aeeadc4b76d8bc102b8ce5ad439a2ff6bd  ./AGENTS.md
-7e3b67ba1c04be62cd915c2ff3fb9f22aa55b8f235f71dd8cfea1c1c2c8acbc9  ./CHANGELOG.md
+718c6b9dc38de1ddbfd52afd8f8d2d91016bcb9b78221b3382c5d51e613186ed  ./CHANGELOG.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
-1e693c9779c4909766e20f1e4b0e1bb1403a1ac0188265d35fa75b1231786448  ./Cargo.lock
+1cc6073d5e8b3e291a5b0a3200fa149dcc9605ada6c82416c302b329051e9842  ./Cargo.lock
 42d187439ef1c7d5585c6480c993c855d2dce9b0ceb2da373677d065cc3cccf2  ./Cargo.toml
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
@@ -510,7 +510,7 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 8de2374a011cbf5e0a37833ec1674d0f95b9d1ef18abc1e34ed3214f53d20d23  ./crates/actinv-core/src/spec.rs
 e3117e7ae11b0ea81109c28ff01c08e82bea166ebcd9051b053e1447334e308e  ./crates/actinv-core/src/study.rs
 c24058f0f267d2f8e6f160ad8f42229c27a9072cff7bf01e05b6354868437b54  ./crates/actinv-core/src/uncertainty.rs
-774da35ec0814cefc18070df7c17c8fcad183b543213d1b24b8cb1f29fe50e41  ./crates/actinv-data/Cargo.toml
+ddd7c20e0b87ffb4ffcab7514746a1138f6712b04052e67580da05a0f6989c29  ./crates/actinv-data/Cargo.toml
 840a0b2702f922f925cf3fb6418ddc6fdebefe253818f24bf6d9bf11c9c55cde  ./crates/actinv-data/data/fispact_162_groups.json
 ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f  ./crates/actinv-data/data/fispact_709_groups.json
 a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actinv-data/data/mt_products.json
@@ -531,7 +531,7 @@ fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b  ./crates/actin
 f2e4dce7d2bc566cbf5c32cf68b0fe3007f2b722b65eeecad17f2d81661b2011  ./crates/actinv-data/src/fission.rs
 e4d08d36e4ff7ce34b8280f70a9ec4904158fa3ab84c20982a0153a16a4cfd80  ./crates/actinv-data/src/groups.rs
 bbac6c39606106cc493fa17c066e6f32783de25adad43b24daf45bfae2fe3450  ./crates/actinv-data/src/lib.rs
-d1dd327182133ce0549f391edba4d3f818bba5436338db1faa92bfb508182423  ./crates/actinv-data/src/library.rs
+9388971206a76ce3a3c74dd664dd80192bc42bd36ee71361a166d3a187ec5828  ./crates/actinv-data/src/library.rs
 d49d3415829b06bc36e10739d6c55c4791f3eb0bc395c3c77279acfdb5c8de16  ./crates/actinv-data/src/prepared.rs
 334c735a5008cea1e812ff358b442d2f326d11209c6c765315097671424b1b72  ./crates/actinv-data/src/processing.rs
 b0ff40a35ebdad3ed581c16f73683884e5bd0b5e4bbaf996b2f9975056d47de9  ./crates/actinv-data/src/resonance.rs
@@ -664,7 +664,7 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-a6790e0b70a9d62c61e38d7d0e57c625898a3f50ee5af8838407599feb18efad  ./ledger.md
+4bac6e63bdd94cc1d5652dba825528ed81caef78455a60826b50e6b07a92d869  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -812,7 +812,7 @@ f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/de
 4de75f65f2d978a8bc1a1462d68470c233608f10bdff8214b57e6bc6771120e9  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
-08ab69cfcdfaf07fcea280fc5ea18f3c7344a0ad7e1c68e6b6718c24ad7fe88a  ./python/Cargo.lock
+9ec680abd501cbda3baae6c5b32ad2531f85b2fb7cd4f1e134d378e8d653cdaa  ./python/Cargo.lock
 37091798fff733f675740015979940566b4a5267eb0cfa5e1df48b99210a0479  ./python/Cargo.toml
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./python/LICENSE-MIT
