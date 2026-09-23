@@ -71,6 +71,15 @@
   `--grid-density` is capped at 64; group collapse starts each group at its first overlapping segment
   (bit-identical, O(log N + k) instead of O(N) per group); the panicking/zero-filling legacy ENDF readers are
   deprecated; the P20 corpus probe finds the MF=1/MT=451 records by tag.
+- Decay chains now make every decay branch set account for the whole decay rate. A radioactive state whose
+  positive branching ratios summed to less than 1 lost the unassigned fraction of its decays with no ledger
+  line (JEFF-3.3 Ir-169 lists only its 45% alpha branch); one summing to more than 1 created atoms. Beyond a
+  1e-5 rounding allowance a shortfall is now routed to leakage and an excess scaled away, both listed in the new
+  `ledger.decay_branching_sums_off_unity` (present only when needed). A branch resolving to its own parent
+  (an isomeric transition from the ground state to an absent isomer, via the ground-state fallback) is booked
+  to leakage as a missing daughter instead of lengthening the half-life. The default ENDF/B-VIII.0 data sums
+  within 9e-7 and has no self-loops, so runs on it are byte-identical; JEFF-3.3 (31 states) and UKDD-2020 used
+  as the primary decay library are affected.
 - Desktop and web workbench: numeric fields refuse "nan"/"inf" (egui accepted them and clamped to 1.8e308, or
   serde_json stored `null`); opening a result reads, parses and validates it off the UI thread, so large results
   no longer freeze the window (opening works during a calculation too); the inventory table no longer allocates per

@@ -36,13 +36,21 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 - `isomer_state_absent_from_decay_library_used_ground` — requested product isomer replaced by evaluated ground state.
 - `targets_absent_from_decay_library` — activation-library targets absent from the assembled decay network.
 - `decay_daughters_missing`, `spontaneous_fission_branches_to_leakage` — missing/unsupported decay daughters routed to
-  leakage.
+  leakage. A branch whose daughter resolves to the parent itself (an isomeric transition from the ground state to an
+  isomer the library lacks) is counted here too.
+- `decay_branching_sums_off_unity` — present only when a radioactive state's positive branching ratios sum further than
+  1e-5 from 1; maps the state to that sum. A shortfall is routed to leakage and an excess is scaled away, so decay
+  neither destroys nor creates atoms. The default ENDF/B-VIII.0 data never triggers it; JEFF-3.3 and UKDD-2020 used
+  as the primary decay library do.
 - `decay_nuclides_from_fallback` — number of records supplied by the fallback sublibrary.
 - `library_convergence_flags` — grid-sensitive activation evaluations affecting an initial material isotope.
 - `library_target_limitations` — per-target builder ledger entries (for example unsupported resonance formalisms)
   affecting an initial isotope. These two categories repair the v0.1 promise that library-index guards propagate.
 
 `steps[].leakage_atoms_per_g` is the accumulated amount routed to leakage; the categories above explain why.
+`steps[].total_atoms_per_g` sums every state, leakage and removal sinks included. It also includes the unit source
+state, which holds exactly 1.0 atom/g in trace mode and in coupled runs with `feed` (and adds one to
+`n_states_populated`). Subtract it before comparing a trace-mode total with a coupled total.
 
 The certificate's `inputs.fission_yields` records every declared and recomputed file hash, parent, AWR and independent
 table size/sum; `certificate.fission_yields.selection` repeats the effective selection. Cumulative MT=459 tables are

@@ -114,6 +114,9 @@ pub struct StepOut {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub removed_atoms_per_g: Option<f64>,
     pub negative_atoms_zeroed: f64,
+    /// Sum over the whole state vector, leakage and removal sinks included. It also counts the
+    /// unit source state, which holds exactly 1.0 in trace mode and in coupled runs with `feed`;
+    /// `n_states_populated` counts that state too. Kept as-is: the value is a pinned study response.
     pub total_atoms_per_g: f64,
     pub n_states_populated: usize,
     /// Legacy CRAM asymptotic scale alpha0 * max(N), not a bound on total numerical
@@ -3139,6 +3142,19 @@ impl PreparedRun {
             ledger.as_object_mut().expect("ledger is an object").insert(
                 "projectile".into(),
                 serde_json::Value::String(spec.projectile.name().into()),
+            );
+        }
+        // Present only for a decay library with inconsistent branching, so runs on consistent data are unchanged.
+        if !ch.ledger.branching_sums.is_empty() {
+            let sums: BTreeMap<String, f64> = ch
+                .ledger
+                .branching_sums
+                .iter()
+                .map(|((za, liso), sum)| (name_of(*za, *liso), *sum))
+                .collect();
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "decay_branching_sums_off_unity".into(),
+                serde_json::json!(sums),
             );
         }
         if has_feed || has_removal {

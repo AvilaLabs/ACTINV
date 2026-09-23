@@ -1467,3 +1467,21 @@ data-handling repair carries a regression test that fails on the pre-repair code
   it needs a copy of a possibly large result), and external SIGTERM handling would need a new dependency; the
   graceful close path already cancels and reaps the worker. Wasm clippy (as in web.yml) and native gates pass.
   Control: `numeric_editors_refuse_non_finite_text`.
+- **Decay branching (NUM-7).** `chain::build` compares each radioactive state's positive branching sum with 1
+  (tolerance `BRANCHING_TOLERANCE` = 1e-5): shortfall to leakage, excess scaled by 1/sum, both in
+  `ChainLedger::branching_sums` and emitted as `ledger.decay_branching_sums_off_unity` only when non-empty (the
+  `projectile`/`feed_removal` precedent), so consistent-data outputs keep their bytes; self-resolving branches
+  join `daughters_missing`. Scan with the controls' decay parser before choosing the tolerance: merged default
+  (ENDF/B-VIII.0 + JEFF-3.3 fallback) max |sum-1| = 1.0e-6, 0 self-loops; ENDF/B-VIII.0 alone 9e-7; JEFF-3.3
+  alone 31 states above 1e-5, 20 above 1e-3 (Ir-169 0.45, No-257 0.85, No-251 0.91, Er-152 1.01); UKDD-2020
+  25 above 1e-5 (Th-225 0.90); no library has a self-loop. Replay of `examples/fns_fe_5min.json` on binaries
+  built before and after: canonical output identical with the default decay data; with JEFF-3.3 primary the
+  only difference is the new key. `controls/chain.py` (P1-G2 mirror) is unchanged and agrees on consistent
+  data. Controls: `branching_shortfall_goes_to_leakage_and_excess_is_scaled_away`,
+  `rounding_level_branching_sums_are_left_exact`, `a_transition_resolving_to_its_own_parent_is_booked_to_leakage`.
+- **Documented, not changed.** RUN-4: `total_atoms_per_g`/`n_states_populated` include the unit source state
+  (exactly 1.0 in trace mode and coupled runs with feed). It is a study response read by 13 controls, so the
+  definition is documented (run.rs field doc, docs/LEDGER.md) rather than altered. NUM-8: `solve_refined`
+  keeps the pre-loop |A||x| magnitude for the refinement stop test after the first correction; LAPACK xGERFS
+  refreshes it each pass. Recomputing it alongside the residual is cheap, but it is a CB2-kernel change that
+  can move solver outputs, so it is left for a governed kernel amendment rather than done here.

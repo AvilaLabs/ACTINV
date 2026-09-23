@@ -48,7 +48,15 @@ pub struct ChainLedger {
     pub sf_branches: usize,
     pub unknown_modes: usize,
     pub daughters_missing: Vec<(i32, i32, f64)>,
+    /// Radioactive states whose positive branching ratios sum further than `BRANCHING_TOLERANCE`
+    /// from 1, with that sum. A shortfall is booked to leakage; an excess is scaled away.
+    pub branching_sums: Vec<((i32, i32), f64)>,
 }
+
+/// Evaluations round each branching ratio to about six figures, leaving sums within ~1e-6 of 1
+/// (ENDF/B-VIII.0 decay: at most 9e-7). Past this a branch is missing or duplicated: JEFF-3.3 and
+/// UKDD-2020 each carry states summing to 0.9 or less, and 1.01.
+pub const BRANCHING_TOLERANCE: f64 = 1e-5;
 
 /// Build the decay network. Index order is (ZA, LISO) ascending, matching controls/chain.py.
 pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
@@ -69,11 +77,23 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
             continue;
         }
         trip.push((k, k, -l));
+        // Branches must carry exactly the loss on the diagonal, or atoms silently vanish or appear.
+        let assigned: f64 = nu.modes.iter().map(|md| md.br).filter(|br| *br > 0.0).sum();
+        let mut scale = 1.0;
+        if (assigned - 1.0).abs() > BRANCHING_TOLERANCE {
+            led.branching_sums.push((*key, assigned));
+            if assigned < 1.0 {
+                trip.push((leak, k, l * (1.0 - assigned)));
+            } else {
+                scale = 1.0 / assigned;
+            }
+        }
         let (z, a) = (nu.za / 1000, nu.za % 1000);
         for md in &nu.modes {
             if md.br <= 0.0 {
                 continue;
             }
+            let rate = l * md.br * scale;
             let digits = rtyp_digits(md.rtyp);
             let (mut zz, mut aa) = (z, a);
             let mut bad = false;
@@ -96,16 +116,18 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
                 }
             }
             if bad {
-                trip.push((leak, k, l * md.br));
+                trip.push((leak, k, rate));
                 continue;
             }
             let want = (zz * 1000 + aa, md.rfs.round() as i32);
             let j = index.get(&want).or_else(|| index.get(&(zz * 1000 + aa, 0)));
             match j {
-                Some(&j) => trip.push((j, k, l * md.br)),
-                None => {
-                    led.daughters_missing.push((want.0, want.1, l * md.br));
-                    trip.push((leak, k, l * md.br));
+                // An isomeric transition to an absent level falls back to the ground state; from the
+                // ground state that is the parent itself, which is no decay at all.
+                Some(&j) if j != k => trip.push((j, k, rate)),
+                _ => {
+                    led.daughters_missing.push((want.0, want.1, rate));
+                    trip.push((leak, k, rate));
                 }
             }
         }
@@ -476,7 +498,105 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use actinv_data::decay::Mode;
     use actinv_data::library::{Library, Row};
+
+    fn nuclide(za: i32, liso: i32, half_life: f64, modes: &[(f64, f64, f64)]) -> Nuclide {
+        Nuclide {
+            mat: 0,
+            za,
+            awr: 0.0,
+            liso,
+            nst: if half_life > 0.0 { 0 } else { 1 },
+            half_life,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes: modes
+                .iter()
+                .map(|&(rtyp, rfs, br)| Mode {
+                    rtyp,
+                    rfs,
+                    q: 0.0,
+                    dq: 0.0,
+                    br,
+                    dbr: 0.0,
+                })
+                .collect(),
+            spectra: Vec::new(),
+        }
+    }
+
+    fn network(nuclides: Vec<Nuclide>) -> Chain {
+        build(&nuclides.into_iter().map(|n| ((n.za, n.liso), n)).collect())
+    }
+
+    fn entries(chain: &Chain, column: (i32, i32)) -> Vec<(usize, f64)> {
+        let k = chain.index[&column];
+        let mut out: Vec<_> = chain
+            .decay
+            .iter()
+            .filter(|t| t.1 == k)
+            .map(|t| (t.0, t.2))
+            .collect();
+        out.sort_by_key(|entry| entry.0);
+        out
+    }
+
+    #[test]
+    fn branching_shortfall_goes_to_leakage_and_excess_is_scaled_away() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        // JEFF-3.3 Ir-169 lists only its 45% alpha branch; UKDD-2020 Er-152 sums to 1.01.
+        let chain = network(vec![
+            nuclide(77_169, 0, 10.0, &[(4.0, 0.0, 0.45)]),
+            nuclide(75_165, 0, 0.0, &[]),
+            nuclide(68_152, 0, 10.0, &[(1.0, 0.0, 0.61), (2.0, 0.0, 0.40)]),
+            nuclide(69_152, 0, 0.0, &[]),
+            nuclide(67_152, 0, 0.0, &[]),
+        ]);
+        let (ir, re) = (chain.index[&(77_169, 0)], chain.index[&(75_165, 0)]);
+        assert_eq!(
+            entries(&chain, (77_169, 0)),
+            vec![(re, l * 0.45), (ir, -l), (chain.leak, l * (1.0 - 0.45))]
+        );
+        for column in [(77_169, 0), (68_152, 0)] {
+            let net: f64 = entries(&chain, column).iter().map(|entry| entry.1).sum();
+            assert!(net.abs() <= 1e-15 * l, "{column:?} loses {net}");
+        }
+        assert!(entries(&chain, (68_152, 0))
+            .iter()
+            .all(|entry| entry.0 != chain.leak));
+        assert_eq!(
+            chain.ledger.branching_sums,
+            vec![((68_152, 0), 0.61 + 0.40), ((77_169, 0), 0.45)]
+        );
+    }
+
+    #[test]
+    fn rounding_level_branching_sums_are_left_exact() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        let chain = network(vec![
+            nuclide(27_060, 0, 10.0, &[(1.0, 0.0, 0.9999995)]),
+            nuclide(28_060, 0, 0.0, &[]),
+        ]);
+        let ni = chain.index[&(28_060, 0)];
+        let produced = entries(&chain, (27_060, 0))
+            .into_iter()
+            .find(|entry| entry.0 == ni)
+            .unwrap();
+        assert_eq!(produced.1.to_bits(), (l * 0.9999995).to_bits());
+        assert!(chain.ledger.branching_sums.is_empty());
+        assert!(chain.decay.iter().all(|t| t.0 != chain.leak));
+    }
+
+    #[test]
+    fn a_transition_resolving_to_its_own_parent_is_booked_to_leakage() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        // An isomeric transition from the ground state to an absent isomer falls back to the ground state.
+        let chain = network(vec![nuclide(49_115, 0, 10.0, &[(3.0, 1.0, 1.0)])]);
+        let k = chain.index[&(49_115, 0)];
+        assert_eq!(entries(&chain, (49_115, 0)), vec![(k, -l), (chain.leak, l)]);
+        assert_eq!(chain.ledger.daughters_missing.len(), 1);
+    }
 
     #[test]
     fn derivative_free_assembly_preserves_rates_and_ledger() {
