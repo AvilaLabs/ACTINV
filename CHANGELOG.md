@@ -29,6 +29,16 @@
   their declared responses instead of being held whole in memory, a channel with fewer than two successful
   isolated draws reports a `null` variance (and remainder) instead of `0`, and a study step carrying a per-step
   `spectrum` (absent from the study schema) is refused instead of silently forwarded.
+- Library building: a resolved-range NAPS other than 0 or 1 silently used the NAPS=0 computed channel radius.
+  NAPS=2 (defined only with an energy-dependent radius) now follows the unresolved shielding path's rule and any
+  other value fails closed; an MT carrying MF=6, MF=8 or MF=9 products without an MF=3/MF=10 reaction is now an
+  error instead of being skipped with no ledger line. A scan of the local TENDL-2025, TENDL-2017, FENDL-3.2c and
+  EAF-2010 corpora found neither case, so no shipped library changes.
+- `build-damage`/`build-shielding` checkpoint keys now include the validated projectile and the builder code
+  identity (the shielding key also covers the PURR port), so a persistent `--cache` can no longer serve factors
+  from older code or skip the projectile check; the embedded-source fingerprint is hashed once per process.
+- `build-covariance` refuses an MF=33 LB=0–4 block whose dense form would exceed the 1 GB per-array cap before
+  allocating it; a few hundred kB of declared (E, F) pairs could previously demand tens of GB.
 
 ## v1.2.0 — 2026-09-21
 

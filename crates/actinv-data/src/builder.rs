@@ -237,18 +237,24 @@ fn mt_products() -> Result<BTreeMap<i32, (i32, i32)>, String> {
 }
 
 pub fn builder_fingerprint() -> String {
-    let mut hash = Sha256::new();
-    hash.update(b"ACTINV-RUST-BUILDER-v1\0");
-    hash.update(include_bytes!("builder.rs"));
-    hash.update(include_bytes!("activation.rs"));
-    hash.update(include_bytes!("endf.rs"));
-    hash.update(include_bytes!("groups.rs"));
-    hash.update(include_bytes!("doppler.rs"));
-    hash.update(include_bytes!("resonance.rs"));
-    hash.update(include_bytes!("processing.rs"));
-    hash.update(include_bytes!("library.rs"));
-    hash.update(include_bytes!("../data/mt_products.json"));
-    format!("{:x}", hash.finalize())
+    // ~0.5 MB of embedded source: hash it once per process, not once per input file.
+    static FINGERPRINT: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+    FINGERPRINT
+        .get_or_init(|| {
+            let mut hash = Sha256::new();
+            hash.update(b"ACTINV-RUST-BUILDER-v1\0");
+            hash.update(include_bytes!("builder.rs"));
+            hash.update(include_bytes!("activation.rs"));
+            hash.update(include_bytes!("endf.rs"));
+            hash.update(include_bytes!("groups.rs"));
+            hash.update(include_bytes!("doppler.rs"));
+            hash.update(include_bytes!("resonance.rs"));
+            hash.update(include_bytes!("processing.rs"));
+            hash.update(include_bytes!("library.rs"));
+            hash.update(include_bytes!("../data/mt_products.json"));
+            format!("{:x}", hash.finalize())
+        })
+        .clone()
 }
 
 pub fn sha256_file(path: impl AsRef<Path>) -> Result<String, String> {
@@ -2094,6 +2100,24 @@ fn build_evaluation(
     let mut mts: BTreeSet<i32> = evaluation.mf3.keys().copied().collect();
     mts.extend(evaluation.mf10.keys().copied());
     mts.extend(processed.keys().copied());
+    // A product section whose MT has no MF=3, MF=10 or resonance entry would never be
+    // visited below, silently dropping its products; the MF=6/MF=9 checks that name
+    // this defect only run for visited MTs, so reject such sections up front.
+    let orphan = (evaluation.mf6.keys().map(|mt| (6, *mt)))
+        .chain(evaluation.mf9.keys().map(|mt| (9, *mt)))
+        .chain(
+            evaluation
+                .mf8
+                .keys()
+                .filter(|mt| !matches!(**mt, 454 | 457 | 459))
+                .map(|mt| (8, *mt)),
+        )
+        .find(|(_, mt)| !mts.contains(mt));
+    if let Some((mf, mt)) = orphan {
+        return Err(format!(
+            "MT{mt}/MF={mf} has no matching MF=3 or MF=10 reaction"
+        ));
+    }
     for mt in mts {
         // TENDL declarations are audited even when the reaction is later omitted. EAF keeps its established
         // skip-before-product-validation behavior and initializes these rows only after the skip decision.
@@ -3032,12 +3056,21 @@ fn damage_nuclide_name(za: i32, liso: i32) -> String {
     }
 }
 
-fn damage_cache_key(source_sha256: &str, options: &DamageBuildOptions) -> String {
+/// A damage checkpoint is valid only for the same source bytes, options, validated
+/// projectile and builder code: a cache hit skips the projectile check and the collapse.
+fn damage_cache_key(
+    source_sha256: &str,
+    options: &DamageBuildOptions,
+    projectile: Projectile,
+) -> String {
     let mut hasher = Sha256::new();
-    hasher.update(b"ACTINV-DAMAGE-BUILD-v1\0");
+    hasher.update(b"ACTINV-DAMAGE-BUILD-v2\0");
     hasher.update(source_sha256.as_bytes());
     hasher.update(options.temperature_K.to_bits().to_le_bytes());
     hasher.update(options.groups.hash().as_bytes());
+    hasher.update(projectile.name().as_bytes());
+    hasher.update([0]);
+    hasher.update(builder_fingerprint().as_bytes());
     format!("{:x}", hasher.finalize())
 }
 
@@ -3055,7 +3088,7 @@ fn build_damage_source(
         .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
         .to_owned();
     if let Some(cache) = &options.cache {
-        let key = damage_cache_key(&before, options);
+        let key = damage_cache_key(&before, options, projectile);
         let checkpoint = cache.join(format!("{key}.json"));
         if checkpoint.exists() {
             let entry: DamageCacheEntry =
@@ -3135,7 +3168,7 @@ fn build_damage_source(
         }
     }
     if let Some(cache) = &options.cache {
-        let key = damage_cache_key(&before, options);
+        let key = damage_cache_key(&before, options, projectile);
         let checkpoint = cache.join(format!("{key}.json"));
         write_json_atomic(&checkpoint, &entry)?;
     }
@@ -3268,11 +3301,28 @@ struct ShieldingCacheEntry {
     uncovered: Vec<String>,
 }
 
-fn shielding_cache_key(source_sha256: &str, options: &ShieldingBuildOptions) -> String {
+/// Like the damage key: source bytes, options, validated projectile and code identity
+/// (the builder plus the PURR port in `shielding.rs`), so an upgrade never reuses stale
+/// factors without a manual version bump.
+fn shielding_cache_key(
+    source_sha256: &str,
+    options: &ShieldingBuildOptions,
+    projectile: Projectile,
+) -> String {
+    static SHIELDING_CODE: std::sync::OnceLock<String> = std::sync::OnceLock::new();
+    let code = SHIELDING_CODE.get_or_init(|| {
+        let mut hash = Sha256::new();
+        hash.update(builder_fingerprint().as_bytes());
+        hash.update(include_bytes!("shielding.rs"));
+        format!("{:x}", hash.finalize())
+    });
     let mut hasher = Sha256::new();
-    hasher.update(b"ACTINV-SHIELDING-BUILD-v4\0");
+    hasher.update(b"ACTINV-SHIELDING-BUILD-v5\0");
     hasher.update(source_sha256.as_bytes());
     hasher.update(options.groups.hash().as_bytes());
+    hasher.update(projectile.name().as_bytes());
+    hasher.update([0]);
+    hasher.update(code.as_bytes());
     format!("{:x}", hasher.finalize())
 }
 
@@ -3461,7 +3511,7 @@ pub fn build_shielding(
             .ok_or_else(|| format!("input filename '{}' is not UTF-8", path.display()))?
             .to_owned();
         if let Some(cache) = &options.cache {
-            let key = shielding_cache_key(&before, options);
+            let key = shielding_cache_key(&before, options, projectile);
             let checkpoint = cache.join(format!("{key}.json"));
             if checkpoint.exists() {
                 let entry: ShieldingCacheEntry = serde_json::from_str(
@@ -3526,7 +3576,7 @@ pub fn build_shielding(
             }
         }
         if let Some(cache) = &options.cache {
-            let key = shielding_cache_key(&before, options);
+            let key = shielding_cache_key(&before, options, projectile);
             let checkpoint = cache.join(format!("{key}.json"));
             write_json_atomic(&checkpoint, &entry)?;
         }
@@ -4600,6 +4650,66 @@ mod tests {
         .unwrap_err();
         assert!(error.contains("MT102/MF=10 ZAP=26057 group 0"), "{error}");
         assert!(error.contains("fails closed"), "{error}");
+    }
+
+    #[test]
+    fn damage_and_shielding_checkpoints_are_keyed_by_projectile() {
+        // A cache hit skips the projectile check, so the key itself must carry it.
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let damage = DamageBuildOptions {
+            projectile: None,
+            groups: groups.clone(),
+            temperature_K: 293.6,
+            cache: None,
+        };
+        assert_ne!(
+            damage_cache_key("s", &damage, Projectile::Neutron),
+            damage_cache_key("s", &damage, Projectile::Proton)
+        );
+        let shielding = ShieldingBuildOptions {
+            projectile: None,
+            groups,
+            cache: None,
+        };
+        assert_ne!(
+            shielding_cache_key("s", &shielding, Projectile::Neutron),
+            shielding_cache_key("s", &shielding, Projectile::Proton)
+        );
+    }
+
+    #[test]
+    fn product_sections_without_a_reaction_fail_instead_of_vanishing() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        // MT103 has MF=9 multiplicities but no MF=3 or MF=10 section: it used to be
+        // skipped by the per-MT loop with no error and no ledger line.
+        let mut input = evaluation(Projectile::Neutron);
+        input
+            .mf9
+            .insert(103, vec![state_product(25056, 0, table([0.5, 0.5]))]);
+        let error = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "n-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(
+            error.contains("MT103/MF=9 has no matching MF=3 or MF=10 reaction"),
+            "{error}"
+        );
     }
 
     #[test]

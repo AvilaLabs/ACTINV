@@ -1800,14 +1800,24 @@ pub fn reconstruct_legacy(range: &ResonanceRange, energy: f64) -> Result<CrossSe
         } else {
             resolved.ap
         };
-        let penetration_radius = if range.naps == 1 {
-            if reich_moore {
-                apl
-            } else {
-                resolved.ap
+        let tabulated_radius = if reich_moore { apl } else { resolved.ap };
+        let penetration_radius = match range.naps {
+            0 => calculated,
+            1 => tabulated_radius,
+            // NAPS=2 is defined only with an energy-dependent radius (NRO=1): the
+            // constant CONT radius drives penetrability and shift while AP(E) drives
+            // the phase shift — the choice the unresolved shielding path makes.
+            2 if range.scattering_radius.is_some() => tabulated_radius,
+            naps => {
+                return Err(format!(
+                    "unsupported resolved NAPS={naps}{}",
+                    if naps == 2 {
+                        " without an energy-dependent scattering radius (NRO=1)"
+                    } else {
+                        ""
+                    }
+                ))
             }
-        } else {
-            calculated
         };
         let phase_radius = scattering_radius(range, apl, energy)?;
         let (penetrability, shift) = penetration_shift(group.l, wave * penetration_radius)?;
@@ -2025,6 +2035,37 @@ mod tests {
                 }],
             }),
         }
+    }
+
+    #[test]
+    fn resolved_naps_outside_the_defined_set_fails_closed() {
+        let mut range = breit_wigner_range(0.61);
+        // p-wave: for l = 0 the channel radius cancels in the penetrability ratio.
+        if let RangeData::BreitWigner(resolved) = &mut range.data {
+            resolved.groups[0].l = 1;
+        }
+        let naps1 = reconstruct_legacy(&range, 10.0).unwrap();
+        // Any other value used to fall through to the NAPS=0 computed radius.
+        range.naps = 3;
+        assert!(reconstruct_legacy(&range, 10.0)
+            .unwrap_err()
+            .contains("NAPS=3"));
+        // NAPS=2 is defined only with an energy-dependent radius.
+        range.naps = 2;
+        assert!(reconstruct_legacy(&range, 10.0)
+            .unwrap_err()
+            .contains("NRO=1"));
+        // With AP(E) equal to the CONT radius, NAPS=2 reproduces NAPS=1 exactly.
+        range.scattering_radius = Some(Tabulated {
+            interpolation: vec![(2, 2)],
+            x: vec![1.0, 100.0],
+            y: vec![0.5, 0.5],
+        });
+        assert_eq!(reconstruct_legacy(&range, 10.0).unwrap(), naps1);
+        // NAPS=0 takes the computed channel radius instead of AP.
+        range.naps = 0;
+        range.scattering_radius = None;
+        assert_ne!(reconstruct_legacy(&range, 10.0).unwrap(), naps1);
     }
 
     #[test]

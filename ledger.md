@@ -1393,3 +1393,13 @@ data-handling repair carries a regression test that fails on the pre-repair code
   admits that archive only at its reviewed SHA-256 (c4a152e9…, also pinned by the paper's own manifest); any
   edit to it, or any other archive, is still forbidden. `g1_p13_data_distribution.py` output is byte-identical
   to the committed record and P13 closes as P13-PASS.
+- **Builder and covariance hardening (actinv-data).** `reconstruct_legacy` treated every NAPS ≠ 1 as NAPS=0; it
+  now matches 0 / 1 / 2-with-NRO=1 (constant CONT radius for penetrability, as `shielding.rs` already does) and
+  fails closed otherwise. `build_evaluation` rejected MF=6/MF=9 sections lacking MF=3 only for MTs it visited,
+  and it visited only MF=3/MF=10/resonance MTs; orphan MF=6/8/9 sections now fail up front. Corpus scan (6,894
+  files, ENDF-formatted only for FENDL): no resolved NAPS outside {0,1}, no NRO=1, no orphan product section —
+  shipped builds are unchanged. Damage/shielding checkpoint keys gained the projectile and code identity (the
+  shielding key had been hand-bumped to v4). MF=33 LB=0–4 blocks are size-checked against MAX_ARRAY_BYTES before
+  densification. Controls: `resolved_naps_outside_the_defined_set_fails_closed`,
+  `product_sections_without_a_reaction_fail_instead_of_vanishing`,
+  `damage_and_shielding_checkpoints_are_keyed_by_projectile`, `oversized_dense_blocks_are_refused_before_allocation`.

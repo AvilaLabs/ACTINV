@@ -259,6 +259,23 @@ fn outer(left: &[f64], right: &[f64]) -> Vec<f64> {
     values
 }
 
+/// LB=0..4 expand O(n) ENDF values into a dense rows × columns block. Refuse a block
+/// above the per-array cap before allocating it, so a large declared NP cannot
+/// exhaust memory (the cap was otherwise enforced only when reading an artifact).
+fn checked_block(rows: usize, columns: usize, context: &str) -> Result<(), String> {
+    let bytes = rows
+        .checked_mul(columns)
+        .and_then(|cells| cells.checked_mul(std::mem::size_of::<f64>()))
+        .map(|bytes| bytes as u64);
+    match bytes {
+        Some(bytes) if bytes < MAX_ARRAY_BYTES => Ok(()),
+        _ => Err(format!(
+            "{context}: a {rows}x{columns} covariance block exceeds the \
+             {MAX_ARRAY_BYTES}-byte array cap"
+        )),
+    }
+}
+
 fn diagonal(values: &[f64]) -> Vec<f64> {
     let mut matrix = vec![0.0; values.len() * values.len()];
     for (index, value) in values.iter().enumerate() {
@@ -378,16 +395,24 @@ fn parse_lb_0_to_4(
     let split = 2 * first_pairs;
     let (first_grid, first_f) = pair_table(&record.values[..split], first_pairs, context)?;
     let (row_grid, column_grid, values) = match lb {
-        0 | 1 => (first_grid.clone(), first_grid, diagonal(&first_f)),
-        2 => (first_grid.clone(), first_grid, outer(&first_f, &first_f)),
+        0 | 1 => {
+            checked_block(first_f.len(), first_f.len(), context)?;
+            (first_grid.clone(), first_grid, diagonal(&first_f))
+        }
+        2 => {
+            checked_block(first_f.len(), first_f.len(), context)?;
+            (first_grid.clone(), first_grid, outer(&first_f, &first_f))
+        }
         3 => {
             let (second_grid, second_f) = pair_table(&record.values[split..], lt, context)?;
+            checked_block(first_f.len(), second_f.len(), context)?;
             (first_grid, second_grid, outer(&first_f, &second_f))
         }
         4 => {
             let (second_grid, second_f) = pair_table(&record.values[split..], lt, context)?;
             let grid = union_grid(&first_grid, &second_grid, context)?;
             let n = grid.len() - 1;
+            checked_block(n, n, context)?;
             let mut matrix = vec![0.0; n * n];
             for row in 0..n {
                 let row_energy = grid[row] + (grid[row + 1] - grid[row]) / 2.0;
@@ -1973,6 +1998,30 @@ pub fn read_npz(path: impl AsRef<Path>) -> Result<CovarianceLibrary, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn oversized_dense_blocks_are_refused_before_allocation() {
+        // 12,000 LB=1 pairs are ~190 kB of ENDF text but a ~1.15 GB dense block.
+        let np = 12_000usize;
+        let values = (0..np)
+            .flat_map(|k| [1.0 + k as f64, if k + 1 == np { 0.0 } else { 0.01 }])
+            .collect();
+        let record = crate::endf::CheckedListRecord {
+            head: crate::endf::ContRecord {
+                c1: 0.0,
+                c2: 0.0,
+                l1: 0,
+                l2: 1,
+                n1: 2 * np,
+                n2: np,
+            },
+            values,
+        };
+        match parse_lb_0_to_4(2631, 102, 102, &record, "test") {
+            Err(error) => assert!(error.contains("array cap"), "{error}"),
+            Ok(_) => panic!("an oversized LB=1 block was densified"),
+        }
+    }
 
     fn record(fields: [&str; 6], mat: i32, mf: i32, mt: i32, ns: i32) -> String {
         format!(
