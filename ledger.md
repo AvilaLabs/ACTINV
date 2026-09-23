@@ -1365,3 +1365,16 @@ data-handling repair carries a regression test that fails on the pre-repair code
   material). Unknown symbols now fail in `material_key`; abundance-free elements (Tc, Pm, Po, At, Rn, Fr, Ra, Ac)
   fail composition validation with a pointer to explicit nuclides. Controls:
   `misspelt_or_abundance_free_elements_are_rejected`, `misspelt_composition_element_fails_validation`.
+- **Study array responses (actinv-core `study.rs`).** `max_rel_diff` read `atoms_per_g` by position: photon groups
+  always compared as 0 (false `satisfied`), and inventories compared different nuclides because the declared and
+  reference variants keep different state sets. Robustness summed an empty iterator to `0 ± 0` for both array
+  responses, and comparison rules summed every numeric leaf. Historical note, not rewritten: every
+  `inventory_per_nuclide` criterion in `results/g1_p29_refinement.json` records `initial_rel_diff` 1.0 and four
+  escalations before `satisfied` — the escalation ended where declared settings equal the reference, so those
+  verdicts are trivially true; `controls/check_g1_p29.py` re-implements the same positional comparison and so
+  agrees. Repair: nuclide-keyed / group-keyed comparison for refinement; robustness and comparison refuse array
+  responses. Also: `__` refused in names (case-id collisions), `robustness.samples` ≤ 4096 with compact
+  per-sample retention, undetermined channel variances reported `null`, per-step spectra refused in studies.
+  Controls: `array_responses_compare_by_identity_not_position`, `scalar_only_consumers_refuse_array_responses`,
+  `case_id_separator_is_reserved_in_names`, `study_steps_do_not_accept_per_step_spectra`, and the extended
+  `robustness_validation`.

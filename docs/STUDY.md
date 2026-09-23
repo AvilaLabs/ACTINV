@@ -6,10 +6,10 @@ materials × spectra × schedules grid. `actinv study build` expands it determin
 solver path as `actinv run` and writes `study_record.json`. Users author the study document; they
 never author case specs or Core JSON by hand.
 
-Unknown fields are errors. The fields `robustness` and `spatial_handoff` are
-recognised and refused with `family_not_qualified` (delivered by P30 and P32
-respectively); they are never silently ignored. `refinement` is the ACT-REFINE-01
-family, qualified by P29 within the demonstrated envelope below.
+Unknown fields are errors. The field `spatial_handoff` is recognised and refused with
+`family_not_qualified` (delivered by P32); it is never silently ignored. `refinement` is the
+ACT-REFINE-01 family, qualified by P29, and `robustness` the ACT-ROBUST-01 family, qualified by
+P30, each within the demonstrated envelope below.
 
 ```json
 {
@@ -52,7 +52,8 @@ family, qualified by P29 within the demonstrated envelope below.
 ## Semantics
 
 - **Expansion** — case ids are `{material}__{spectrum}__{schedule}`, materials outermost and
-  schedules innermost in declaration order. `spec_ref` takes the spectrum block of an existing
+  schedules innermost in declaration order. Names are `[A-Za-z0-9_.-]+` and may not contain `__`,
+  the separator, so every case id splits back into exactly one triple. `spec_ref` takes the spectrum block of an existing
   `actinv-spec-1` file; `flux_file` reads whitespace-separated group fluxes; `flux_per_group` is
   inline. Exactly one form per spectrum. Spectrum paths resolve against the study file's
   directory; library/decay paths behave exactly as in `actinv-spec-1` (literal paths, resolved the
@@ -65,7 +66,9 @@ family, qualified by P29 within the demonstrated envelope below.
   `contract_gap` with its spec digest, output digest, wall time and per-time responses. Cases are
   never dropped; zero predictions and undefined responses are named in `undefined_responses`.
 - **Comparison** — `axes` names the axes that vary within a slice; cases are grouped by the other
-  axes and compared at every shared time point on the scalar response. `within_rel`/`max_rel` bound
+  axes and compared at every shared time point on the scalar response; a decision rule must name one
+  of the three scalar responses (`total_activity_bq_per_g`, `decay_heat_w_per_g`,
+  `total_atoms_per_g`). `within_rel`/`max_rel` bound
   the maximum relative spread, `min_rel` bounds the minimum, `ratio_band` bounds the max/min ratio,
   `rank_equal` requires the response ordering to match `expected_order` (case ids or axis values).
   A group containing a non-executed or metric-undefined case leaves its rule `undefined`.
@@ -95,7 +98,10 @@ and the error is decomposed per component:
 }
 ```
 
-Criterion verdicts: `satisfied`, `unmet`, `unestablished`. Near zero (`|reference| < 1e-6`)
+An array response is compared element by element: `inventory_per_nuclide` by nuclide name (a
+nuclide absent from one side counts as zero, so a pruned state is a 100 % difference) and
+`photon_source_per_group` by group on `photons_s_g`. Criterion verdicts: `satisfied`, `unmet`,
+`unestablished`. Near zero (`|reference| < 1e-6`)
 the `abs` bound applies and a rel-only criterion is `unestablished` — never a silent pass. When
 a criterion is unmet the runner escalates the declared spec one ladder step at a time
 (`bmin → 0`, `prune → none`, `cram_order → 48`, `mode → coupled`), re-checking against the same
@@ -140,12 +146,16 @@ preserved; correlations are preserved through the clipped spectral factor. Per-s
 outputs are persisted under each case directory
 (`rob_<i>.json`, `rob_<i>.out.json`).
 
+`samples` is capped at 4096 per case (`robustness_too_large`), and `responses` must be scalar:
+sample statistics are not defined for the per-group and per-nuclide arrays.
 The record reports per-response `mean`/`std`/`ci95_half_width`/`sampling_error_std`, the
 `covered_rows`/`uncovered_rows` split (MF=33 coverage only — uncovered rows are named by row
 index, never silently zero-uncertainty), failed-sample counts, and `truncated_by_resource_limit`.
 `local_vs_nonlinear` compares the sampled spread against the P11 first-order propagation per
 (response, time); `channel_attribution` reports isolated per-channel variances plus the
-unexplained interaction remainder; `pathway_view` names the dominant nuclides and their
+unexplained interaction remainder (a channel with fewer than two successful isolated draws
+reports a `null` variance, and the remainder is then `null`, never a silent zero);
+`pathway_view` names the dominant nuclides and their
 production legs per cooling time with the unattributed `pathway_closure` remainder.
 
 ## Execution efficiency (P31)

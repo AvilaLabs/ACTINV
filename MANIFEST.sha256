@@ -8,7 +8,7 @@ f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/work
 d6dcef24d539d3bce60d5d9c24eacf67347569487280db7ea672ca97d8c6d08c  ./.github/workflows/web.yml
 19832d6c188f4c1878740eca4d3bce13367fc792e37cde446ca7c2a079035483  ./.gitignore
 95cbf21273eefeb72fb7a9676cde68aeeadc4b76d8bc102b8ce5ad439a2ff6bd  ./AGENTS.md
-c97ffae1eb6f02535ab02447521c392fd3e37ef8014d27c09b6dfebeec074768  ./CHANGELOG.md
+461d1c0c0729e2aafce60ff1ff2631bc6acc0183c82dfcea71ca7b726b763f28  ./CHANGELOG.md
 565307cc43432e536e36c0fdbc23fb7e971054e749fb46d7c83ea780271f97c2  ./CONTRIBUTING.md
 bed3c1b946b3caf6f7b272636bd931214f50de31c57c4be55fbb195ff16ae38a  ./Cargo.lock
 42d187439ef1c7d5585c6480c993c855d2dce9b0ceb2da373677d065cc3cccf2  ./Cargo.toml
@@ -506,7 +506,7 @@ a8c39db5703993720c420a94302ad292d7bfa24574f7fbf7b7527c60fa3dbe75  ./crates/actin
 7bc9ceb357177c6f11ce115ca438df70701fa89ecfc6802ef1be3d5d7eade28b  ./crates/actinv-core/src/shielding.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
 39295bbc83e5151e0f21be4f09676e30dab6b51078edde00d5ecd9e8afba9dcd  ./crates/actinv-core/src/spec.rs
-fa144bb02c9cc7249d6350a8250d1b5ca6a578483bf98d01b6eecf95a84aed57  ./crates/actinv-core/src/study.rs
+e3117e7ae11b0ea81109c28ff01c08e82bea166ebcd9051b053e1447334e308e  ./crates/actinv-core/src/study.rs
 c24058f0f267d2f8e6f160ad8f42229c27a9072cff7bf01e05b6354868437b54  ./crates/actinv-core/src/uncertainty.rs
 774da35ec0814cefc18070df7c17c8fcad183b543213d1b24b8cb1f29fe50e41  ./crates/actinv-data/Cargo.toml
 840a0b2702f922f925cf3fb6418ddc6fdebefe253818f24bf6d9bf11c9c55cde  ./crates/actinv-data/data/fispact_162_groups.json
@@ -601,7 +601,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 74cdd713cf89d447b5324f88f6ed32c7dd09cd4eebcb6030f358ffcd699ace6e  ./docs/RELEASE_NOTES_v1.2.0.md
 8204716be9f2b8c79659e26628913080e8d56f836b85b19e2f06324126c773bb  ./docs/ROADMAP.md
 2ddee401b6130f704a8b9ea696243b7baafa10ca760049c7b059516a8878d1df  ./docs/SPEC.md
-fa7c80227e251e49ed086822b0735db2bcb8e3fab4554d5386bd78027076821f  ./docs/STUDY.md
+a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 646b593061975e4d7ae6e5b144a995202810be2b489535462b9d583a9b12567a  ./docs/TENDL2025_EMAIL_DRAFT.md
 c901b2287ed994f65a3517003d1d667aa669ba6c7f807edc0e4c86957935523a  ./docs/TENDL2025_THRESHOLD_SUBMISSION.md
 48fbacb01114259ac935417298e87d328968728a7f4fe35b9b5ce9ff547a70e9  ./docs/VALIDATION.md
@@ -662,7 +662,7 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 b4e6d2bc1589a7e0df74d4985b6c71d201c5fa9a2d85ad42022716563222c417  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-c4378eb2b834c25293cc8c33267f3e689c7e4a71339e1e4ada4cf4b1b183df05  ./ledger.md
+704212e9729936c73ac110339240a9c59cadf79411fbe8bc6f53bc37f8f8e42a  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -2594,7 +2594,7 @@ e72b03c382e3bfed6a4d80e033d0ff75dcf1bd6c9ce04f458fb270a1c1cf5042  ./results/verd
 c31aecdc01d884e475892dc257bbdac8132917e5106184fd69fa6873ac7d94a1  ./results/verdict_p7.json
 810beebff8e08b9a959d579a16d7d50d6533ab1f184469450f403cf3a7a443bf  ./results/verdict_p8.json
 bf631926e8bcf1b4fa41119e27fb5380eba9a5884649e5c7314694dc6807c924  ./results/verdict_p9.json
-91a99652dfff652fe63c7cf00e3bfc9244b461978c75f225991dfe81416fd0fc  ./schemas/actinv-study-1.schema.json
+3d80804d5e31cd8de21a0f3c662455cd78123395456343e61c91578460b30e41  ./schemas/actinv-study-1.schema.json
 adff219edf59ec5e02d0aa7c9693336839faadf6b6c3707598b581714e5da845  ./scripts/build_library.sh
 80ab1143c5c4baa144aa8b9702e43f208c7ce5e6a1b2ecd6729e35e5740b446c  ./scripts/build_photon_response.py
 e81b0bb37ffc71d64805a9e5f661c24a22c184f69d78e3949a26d9a78835f19e  ./scripts/check_crates_release_workflow.py

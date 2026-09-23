@@ -15,6 +15,20 @@
   (`"Tc"`, `"Pm"`) passed validation and silently contributed zero atoms; with `atom_fraction` the remaining
   members were renormalised over the survivors. The only trace was `ledger.composition_elements_unknown`. Such keys
   are now validation errors; give abundance-free elements as explicit nuclides.
+- Study refinement compared array responses by position and through the `atoms_per_g` field only.
+  `photon_source_per_group` groups carry no such field, so every photon criterion compared as 0 and was reported
+  `satisfied` regardless of the discrepancy; inventories are ordered by the kept-state set, which differs between
+  the declared (default `prune: rate`) and reference (`prune: none`) variants, so positions named different
+  nuclides. Inventories now join by nuclide name and photon groups compare `photons_s_g` by group.
+- Study robustness summarised the two array responses as a fabricated `0 ± 0` (an empty sum), and comparison
+  rules reduced them by summing every numeric leaf (Z + A + LISO + atoms; eV + photons + W). Both consumers now
+  require one of the three scalar responses; the schema says the same.
+- Study names may no longer contain `__`, the case-id separator: `a__b__c__d` could name two different cases,
+  resolve to the wrong triple and overwrite one spec file with the other.
+- `robustness.samples` is capped at 4096 per case (`robustness_too_large`), per-sample outputs are reduced to
+  their declared responses instead of being held whole in memory, a channel with fewer than two successful
+  isolated draws reports a `null` variance (and remainder) instead of `0`, and a study step carrying a per-step
+  `spectrum` (absent from the study schema) is refused instead of silently forwarded.
 
 ## v1.2.0 — 2026-09-21
 

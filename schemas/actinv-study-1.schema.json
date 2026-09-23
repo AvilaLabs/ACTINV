@@ -104,7 +104,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "pattern": "^[A-Za-z0-9_.-]+$"
+                "pattern": "^(?!.*__)[A-Za-z0-9_.-]+$"
               },
               "mass_g": {
                 "type": [
@@ -152,7 +152,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "pattern": "^[A-Za-z0-9_.-]+$"
+                "pattern": "^(?!.*__)[A-Za-z0-9_.-]+$"
               },
               "spec_ref": {
                 "type": [
@@ -214,7 +214,7 @@
             "properties": {
               "name": {
                 "type": "string",
-                "pattern": "^[A-Za-z0-9_.-]+$"
+                "pattern": "^(?!.*__)[A-Za-z0-9_.-]+$"
               },
               "steps": {
                 "type": "array",
@@ -330,7 +330,12 @@
                 ]
               },
               "response": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "total_activity_bq_per_g",
+                  "decay_heat_w_per_g",
+                  "total_atoms_per_g"
+                ]
               },
               "bound": {
                 "type": [
@@ -390,7 +395,8 @@
       "properties": {
         "samples": {
           "type": "integer",
-          "minimum": 2
+          "minimum": 2,
+          "maximum": 4096
         },
         "seed": {
           "type": "integer",
@@ -440,8 +446,6 @@
             "enum": [
               "total_activity_bq_per_g",
               "decay_heat_w_per_g",
-              "photon_source_per_group",
-              "inventory_per_nuclide",
               "total_atoms_per_g"
             ]
           }

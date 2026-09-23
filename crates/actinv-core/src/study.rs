@@ -37,6 +37,17 @@ pub const QUALIFIED_RESPONSES: &[&str] = &[
     "inventory_per_nuclide",
     "total_atoms_per_g",
 ];
+/// The qualified responses carrying one value per time point. Robustness
+/// statistics and comparison rules are defined only on these; the other two
+/// qualified responses are per-group and per-nuclide arrays.
+pub const SCALAR_RESPONSES: &[&str] = &[
+    "total_activity_bq_per_g",
+    "decay_heat_w_per_g",
+    "total_atoms_per_g",
+];
+/// Per-case robustness draw cap: every draw is a full solve plus two files,
+/// and each enabled channel is drawn again for attribution. Named refusal.
+pub const MAX_ROBUSTNESS_SAMPLES: u32 = 4096;
 
 pub const AXES: &[&str] = &["material", "spectrum", "schedule"];
 pub const RULE_KINDS: &[&str] = &[
@@ -284,6 +295,13 @@ impl Study {
             if rb.samples < 2 {
                 return Err("robustness.samples must be >= 2".into());
             }
+            if rb.samples > MAX_ROBUSTNESS_SAMPLES {
+                return Err(format!(
+                    "robustness_too_large: {} samples exceeds the \
+                     {MAX_ROBUSTNESS_SAMPLES} cap",
+                    rb.samples
+                ));
+            }
             if rb.responses.is_empty() {
                 return Err("robustness.responses must be non-empty".into());
             }
@@ -292,6 +310,12 @@ impl Study {
                     return Err(format!(
                         "robustness response '{response}' is not qualified \
                          (family_not_qualified)"
+                    ));
+                }
+                if !SCALAR_RESPONSES.contains(&response.as_str()) {
+                    return Err(format!(
+                        "robustness response '{response}' is array-valued; \
+                         sample statistics are defined for {SCALAR_RESPONSES:?}"
                     ));
                 }
             }
@@ -433,6 +457,15 @@ impl Study {
                 return Err(format!("schedule '{}': no steps", s.name));
             }
             for step in &s.steps {
+                // The study schema's step object has no spectrum; the shared
+                // spec Step type would otherwise accept one silently.
+                if step.spectrum.is_some() {
+                    return Err(format!(
+                        "schedule '{}': per-step spectrum is not part of \
+                         actinv-study-1",
+                        s.name
+                    ));
+                }
                 parse_duration(&step.dt).map_err(|e| format!("schedule '{}': {e}", s.name))?;
                 if !step.flux.is_finite() || step.flux < 0.0 {
                     return Err(format!(
@@ -488,7 +521,9 @@ impl Study {
         for m in &self.cases.materials {
             for s in &self.cases.spectra {
                 for c in &self.cases.schedules {
-                    ids.push(format!("{}__{}__{}", m.name, s.name, c.name));
+                    ids.push(
+                        [m.name.as_str(), s.name.as_str(), c.name.as_str()].join(CASE_ID_SEPARATOR),
+                    );
                 }
             }
         }
@@ -544,12 +579,7 @@ impl Study {
         &self,
         case_id: &str,
     ) -> Result<(&StudyMaterial, &StudySpectrum, &StudySchedule), String> {
-        let mut it = case_id.splitn(3, "__");
-        let (mn, sn, cn) = (
-            it.next().unwrap_or(""),
-            it.next().unwrap_or(""),
-            it.next().unwrap_or(""),
-        );
+        let (mn, sn, cn) = split_case_id(case_id);
         let m = self
             .cases
             .materials
@@ -598,6 +628,13 @@ fn validate_rule(r: &DecisionRule) -> Result<(), String> {
             r.id, r.response
         ));
     }
+    if !SCALAR_RESPONSES.contains(&r.response.as_str()) {
+        return Err(format!(
+            "decision rule '{}' response '{}' is array-valued; comparisons \
+             use a scalar response {SCALAR_RESPONSES:?}",
+            r.id, r.response
+        ));
+    }
     match r.kind.as_str() {
         "within_rel" | "max_rel" | "min_rel" => {
             let b = r
@@ -641,7 +678,27 @@ fn check_name(kind: &str, name: &str) -> Result<(), String> {
             "{kind} name '{name}' must be nonempty ASCII [a-zA-Z0-9_.-]"
         ));
     }
+    // `__` joins the three names into a case id; allowing it in a name makes
+    // the split ambiguous (two cases could share one id and one spec file).
+    if name.contains(CASE_ID_SEPARATOR) {
+        return Err(format!(
+            "{kind} name '{name}' must not contain '{CASE_ID_SEPARATOR}', the \
+             case-id separator"
+        ));
+    }
     Ok(())
+}
+
+const CASE_ID_SEPARATOR: &str = "__";
+
+/// Split a case id into its (material, spectrum, schedule) names.
+fn split_case_id(case_id: &str) -> (&str, &str, &str) {
+    let mut it = case_id.splitn(3, CASE_ID_SEPARATOR);
+    (
+        it.next().unwrap_or(""),
+        it.next().unwrap_or(""),
+        it.next().unwrap_or(""),
+    )
 }
 
 impl StudySpectrum {
@@ -984,44 +1041,60 @@ pub fn execute(
 /// (atoms/Bq/W per gram). Matches the P29 G0 seal.
 const ABS_SCALE: f64 = 1e-6;
 
-/// Elementwise max relative difference between two response values;
-/// scalars compare directly, arrays compare pairwise over the union of
-/// positions (a missing element counts as 0).
-fn max_rel_diff(a: &Value, b: &Value) -> Option<f64> {
-    match (a, b) {
-        (Value::Number(x), Value::Number(y)) => {
-            let (x, y) = (x.as_f64()?, y.as_f64()?);
-            if x == 0.0 && y == 0.0 {
-                Some(0.0)
-            } else {
-                Some((x - y).abs() / x.abs().max(y.abs()))
-            }
-        }
-        (Value::Array(x), Value::Array(y)) => {
-            let n = x.len().max(y.len());
-            let mut m = 0.0f64;
-            for i in 0..n {
-                let xa = x
-                    .get(i)
-                    .and_then(|v| v.get("atoms_per_g"))
-                    .and_then(Value::as_f64)
-                    .or_else(|| x.get(i).and_then(Value::as_f64))
-                    .unwrap_or(0.0);
-                let xb = y
-                    .get(i)
-                    .and_then(|v| v.get("atoms_per_g"))
-                    .and_then(Value::as_f64)
-                    .or_else(|| y.get(i).and_then(Value::as_f64))
-                    .unwrap_or(0.0);
-                if xa == 0.0 && xb == 0.0 {
-                    continue;
+/// Keyed numeric view of one response value, so arrays compare element by
+/// element. A scalar is a single entry. `inventory_per_nuclide` keys atoms/g
+/// by nuclide name: pruning changes which nuclides are present, so position
+/// is not identity. `photon_source_per_group` keys photons/s/g by group
+/// index: the group structure is fixed across the variants of one case.
+/// Returns `(is_array, values)`; any other shape is not a qualified response.
+fn keyed_response(v: &Value) -> Option<(bool, BTreeMap<String, f64>)> {
+    match v {
+        Value::Number(n) => Some((false, BTreeMap::from([(String::new(), n.as_f64()?)]))),
+        Value::Array(items) => {
+            let mut values = BTreeMap::new();
+            for (index, item) in items.iter().enumerate() {
+                let (key, value) = if let Some(name) = item.get("nuclide").and_then(Value::as_str) {
+                    (name.to_string(), item.get("atoms_per_g")?.as_f64()?)
+                } else if let Some(rate) = item.get("photons_s_g") {
+                    (format!("{index:08}"), rate.as_f64()?)
+                } else {
+                    (format!("{index:08}"), item.as_f64()?)
+                };
+                if values.insert(key, value).is_some() {
+                    return None;
                 }
-                m = m.max((xa - xb).abs() / xa.abs().max(xb.abs()));
             }
-            Some(m)
+            Some((true, values))
         }
         _ => None,
     }
+}
+
+/// One number per response value: the scalar itself, or the array total
+/// (atoms/g over nuclides, photons/s/g over groups).
+fn response_total(v: &Value) -> Option<f64> {
+    keyed_response(v).map(|(_, values)| values.values().sum())
+}
+
+/// Maximum relative difference between two values of one response: scalars
+/// compare directly; arrays compare element by element over the union of
+/// keys (see `keyed_response`), a missing element counting as 0.
+fn max_rel_diff(a: &Value, b: &Value) -> Option<f64> {
+    let (a_is_array, x) = keyed_response(a)?;
+    let (b_is_array, y) = keyed_response(b)?;
+    if a_is_array != b_is_array {
+        return None;
+    }
+    let mut m = 0.0f64;
+    for key in x.keys().chain(y.keys()) {
+        let xa = x.get(key).copied().unwrap_or(0.0);
+        let xb = y.get(key).copied().unwrap_or(0.0);
+        if xa == 0.0 && xb == 0.0 {
+            continue;
+        }
+        m = m.max((xa - xb).abs() / xa.abs().max(xb.abs()));
+    }
+    Some(m)
 }
 
 /// Response value at a cooling time, extracted from a run output Value.
@@ -1202,8 +1275,7 @@ fn evaluate_refinement(rf: &Refinement, spec: &Spec, declared_out: &Value, cdir:
 /// declared; `rel` applies otherwise. If no applicable bound exists the
 /// criterion is `unestablished`, never a silent pass.
 fn criterion_status(reference: &Value, diff: f64, c: &Criterion) -> &'static str {
-    let scale = reference;
-    let near_zero = scalar_of(scale)
+    let near_zero = response_total(reference)
         .map(|v| v.abs() < ABS_SCALE)
         .unwrap_or(false);
     if near_zero {
@@ -1270,38 +1342,9 @@ fn extract_per_time(outv: &Value, responses: &[String]) -> (Map<String, Value>, 
     (per_time, undef)
 }
 
-/// Scalar view of a response: numbers reduce to themselves; arrays and
-/// objects reduce to the sum of their numeric leaves.
-fn scalar_of(v: &Value) -> Option<f64> {
-    match v {
-        Value::Number(n) => n.as_f64(),
-        Value::Array(a) => {
-            let vals: Vec<f64> = a.iter().filter_map(scalar_of).collect();
-            if vals.is_empty() {
-                None
-            } else {
-                Some(vals.iter().sum())
-            }
-        }
-        Value::Object(o) => {
-            let vals: Vec<f64> = o.values().filter_map(scalar_of).collect();
-            if vals.is_empty() {
-                None
-            } else {
-                Some(vals.iter().sum())
-            }
-        }
-        _ => None,
-    }
-}
-
 fn case_parts_of(case_id: &str) -> (String, String, String) {
-    let mut it = case_id.splitn(3, "__");
-    (
-        it.next().unwrap_or("").to_string(),
-        it.next().unwrap_or("").to_string(),
-        it.next().unwrap_or("").to_string(),
-    )
+    let (m, s, c) = split_case_id(case_id);
+    (m.to_string(), s.to_string(), c.to_string())
 }
 
 /// Evaluate the predeclared decision rules. Cases are grouped by the axes
@@ -1399,7 +1442,9 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
             let vals: Vec<(String, f64)> = cases
                 .iter()
                 .filter_map(|(id, pt)| {
-                    scalar_of(&pt[t][rule.response.as_str()]).map(|v| (id.clone(), v))
+                    pt[t][rule.response.as_str()]
+                        .as_f64()
+                        .map(|v| (id.clone(), v))
                 })
                 .collect();
             if vals.len() != cases.len() || vals.is_empty() {
@@ -1547,6 +1592,65 @@ mod tests {
             "cooling_times_s": [0.0, 10.0, 20.0],
             "responses": ["total_activity_bq_per_g", "total_atoms_per_g"]
         })
+    }
+
+    #[test]
+    fn array_responses_compare_by_identity_not_position() {
+        // Photon groups carry photons_s_g, not atoms_per_g: they must still
+        // differ when they differ (they used to compare as 0).
+        let group = |p: f64| {
+            json!({"low_eV": 1.0, "high_eV": 2.0, "centroid_eV": 1.5,
+                                   "photons_s_g": p, "photons_s": p, "power_W_g": 0.0, "power_W": 0.0})
+        };
+        let a = json!([group(1.0), group(2.0)]);
+        let b = json!([group(1.0), group(3.0)]);
+        assert!((max_rel_diff(&a, &b).unwrap() - 1.0 / 3.0).abs() < 1e-15);
+        assert_eq!(max_rel_diff(&a, &a), Some(0.0));
+        // Inventories join by nuclide: an extra nuclide in the reference
+        // (pruning kept fewer states) no longer shifts every later position.
+        let n = |name: &str, atoms: f64| {
+            json!({"nuclide": name, "Z": 0, "A": 0, "LISO": 0,
+                                               "atoms_per_g": atoms})
+        };
+        let declared = json!([n("Fe55", 10.0), n("Mn54", 4.0)]);
+        let reference = json!([n("Cr51", 1e-30), n("Fe55", 10.0), n("Mn54", 4.0)]);
+        assert_eq!(max_rel_diff(&declared, &reference), Some(1.0)); // Cr51 absent: 100 %
+        let reordered = json!([n("Mn54", 4.0), n("Fe55", 10.0)]);
+        assert_eq!(max_rel_diff(&declared, &reordered), Some(0.0));
+        let shifted = json!([n("Fe55", 10.0), n("Mn54", 5.0)]);
+        assert!((max_rel_diff(&declared, &shifted).unwrap() - 0.2).abs() < 1e-15);
+        // Scalars are unchanged; mixed shapes are not comparable.
+        assert_eq!(max_rel_diff(&json!(2.0), &json!(4.0)), Some(0.5));
+        assert_eq!(max_rel_diff(&json!(0.0), &json!(0.0)), Some(0.0));
+        assert_eq!(max_rel_diff(&json!(1.0), &declared), None);
+        // Near-zero tests use the physical total, not Z+A+LISO+atoms.
+        assert_eq!(response_total(&declared), Some(14.0));
+    }
+
+    #[test]
+    fn scalar_only_consumers_refuse_array_responses() {
+        let mut v = study_json();
+        v["comparison"] = json!({"axes": ["material"], "decision_rules": [
+            {"id": "r", "kind": "within_rel", "response": "photon_source_per_group", "bound": 0.1}]});
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("array-valued"));
+    }
+
+    #[test]
+    fn case_id_separator_is_reserved_in_names() {
+        let mut v = study_json();
+        v["cases"]["spectra"][0]["name"] = json!("s__1");
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("case-id separator"));
+    }
+
+    #[test]
+    fn study_steps_do_not_accept_per_step_spectra() {
+        let mut v = study_json();
+        v["cases"]["schedules"][0]["steps"][0]["spectrum"] =
+            json!({"structure": "custom", "boundaries_eV": [1.0, 2.0], "flux_per_group": [1.0]});
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("per-step spectrum"));
     }
 
     #[test]
@@ -2229,10 +2333,10 @@ fn evaluate_robustness_inner(
                             "out_sha256": file_sha256(&opath).ok(),
                             "flux_factor": flux_factor,
                         }));
-                        outs.push(ov);
-                    } else {
-                        outs.push(ov);
                     }
+                    // Keep only the declared per-time responses; the full
+                    // output is on disk, so memory does not grow with it.
+                    outs.push(Value::Object(extract_per_time(&ov, &rb.responses).0));
                 }
                 Err(e) => {
                     failed += 1;
@@ -2260,17 +2364,10 @@ fn evaluate_robustness_inner(
     // per-response statistics across samples
     let mut response_stats = serde_json::Map::new();
     for response in &rb.responses {
-        for (time_s, tkey, nominal_v) in &nominal_vals[response] {
+        for (_, tkey, nominal_v) in &nominal_vals[response] {
             let vals: Vec<f64> = samples_out
                 .iter()
-                .filter_map(|o| {
-                    response_at(o, response, *time_s).and_then(|v| {
-                        v.as_f64().or_else(|| {
-                            v.as_array()
-                                .map(|a| a.iter().filter_map(|x| x.as_f64()).sum())
-                        })
-                    })
-                })
+                .filter_map(|o| sample_response(o, tkey, response))
                 .collect();
             let m = vals.len();
             let (mean, std) = if m > 0 {
@@ -2350,25 +2447,19 @@ fn evaluate_robustness_inner(
             let mut vars = Map::new();
             for response in &rb.responses {
                 let mut per_time = Map::new();
-                for (time_s, tkey, _) in &nominal_vals[response] {
+                for (_, tkey, _) in &nominal_vals[response] {
                     let vals: Vec<f64> = outs
                         .iter()
-                        .filter_map(|o| {
-                            response_at(o, response, *time_s).and_then(|v| {
-                                v.as_f64().or_else(|| {
-                                    v.as_array()
-                                        .map(|a| a.iter().filter_map(|x| x.as_f64()).sum())
-                                })
-                            })
-                        })
+                        .filter_map(|o| sample_response(o, tkey, response))
                         .collect();
                     let m = vals.len();
-                    if m > 1 {
+                    // Fewer than two successful isolated draws leave the
+                    // channel variance undetermined: null, never zero.
+                    let var = (m > 1).then(|| {
                         let mean = vals.iter().sum::<f64>() / m as f64;
-                        let var =
-                            vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (m - 1) as f64;
-                        per_time.insert(tkey.clone(), json!(var));
-                    }
+                        vals.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / (m - 1) as f64
+                    });
+                    per_time.insert(tkey.clone(), json!(var));
                 }
                 vars.insert(response.clone(), Value::Object(per_time));
             }
@@ -2385,23 +2476,27 @@ fn evaluate_robustness_inner(
                     .map(|x| x.powi(2));
                 let mut parts = Map::new();
                 let mut sum = 0.0;
+                let mut undetermined = false;
                 for (tag, _) in &isolations {
                     let v = channel_var
                         .get(*tag)
                         .and_then(|m| m.get(response))
                         .and_then(|m| m.get(tkey))
-                        .and_then(Value::as_f64)
-                        .unwrap_or(0.0);
+                        .and_then(Value::as_f64);
+                    match v {
+                        Some(v) => sum += v,
+                        None => undetermined = true,
+                    }
                     parts.insert(tag.to_string(), json!(v));
-                    sum += v;
                 }
                 per_time.insert(
                     tkey.clone(),
                     json!({
                         "total_variance": total,
                         "channel_variances": parts,
+                        // An undetermined channel makes the remainder unknown too.
                         "unexplained_remainder":
-                            total.map(|t| t - sum),
+                            total.filter(|_| !undetermined).map(|t| t - sum),
                     }),
                 );
             }
@@ -2746,6 +2841,11 @@ fn write_partial_record(
     );
 }
 
+/// One sample's scalar response at a time key, from its compact per-time map.
+fn sample_response(sample: &Value, tkey: &str, response: &str) -> Option<f64> {
+    sample.get(tkey)?.get(response)?.as_f64()
+}
+
 /// nominal response values as (time_s, tkey, value) triples
 fn response_times(
     nominal_out: &Value,
@@ -2756,15 +2856,10 @@ fn response_times(
         let (per_time, _) = extract_per_time(nominal_out, std::slice::from_ref(r));
         let mut m = Vec::new();
         for (tk, entry) in per_time {
-            if let Some(v) = entry.get(r.as_str()) {
-                let scalar = v.as_f64().or_else(|| {
-                    v.as_array()
-                        .map(|a| a.iter().filter_map(|x| x.as_f64()).sum())
-                });
+            // Robustness responses are validated scalar.
+            if let Some(s) = entry.get(r.as_str()).and_then(Value::as_f64) {
                 let time_s: f64 = tk.parse().unwrap_or(f64::NAN);
-                if let Some(s) = scalar {
-                    m.push((time_s, tk, s));
-                }
+                m.push((time_s, tk, s));
             }
         }
         out.insert(r.clone(), m);
@@ -2806,6 +2901,22 @@ mod robustness_tests {
         v["robustness"]["samples"] = json!(1);
         let s: Study = serde_json::from_value(v).unwrap();
         assert!(s.validate().unwrap_err().contains("samples"));
+
+        let mut v = base_study();
+        v["robustness"]["samples"] = json!(MAX_ROBUSTNESS_SAMPLES + 1);
+        let s: Study = serde_json::from_value(v).unwrap();
+        assert!(s.validate().unwrap_err().contains("robustness_too_large"));
+
+        // Array responses used to summarise as a fabricated 0 +/- 0.
+        for array in ["photon_source_per_group", "inventory_per_nuclide"] {
+            let mut v = base_study();
+            v["robustness"]["responses"] = json!([array]);
+            let s: Study = serde_json::from_value(v).unwrap();
+            assert!(
+                s.validate().unwrap_err().contains("array-valued"),
+                "{array}"
+            );
+        }
 
         let mut v = base_study();
         v["robustness"]["channels"]["flux_rel_std"] = json!(-0.5);
