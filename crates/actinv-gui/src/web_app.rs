@@ -28,6 +28,8 @@ pub struct Workbench {
     saved: Value,
     raw: String,
     raw_dirty: bool,
+    /// The problem `raw` was last rendered from; re-render only when it changes.
+    raw_source: Value,
     result: Option<ResultDocument>,
     comparison: Option<ResultDocument>,
     pending_file: Option<Receiver<FileRead>>,
@@ -62,6 +64,7 @@ impl Workbench {
             raw: String::new(),
             problem,
             raw_dirty: false,
+            raw_source: Value::Null,
             result: None,
             comparison: None,
             pending_file: None,
@@ -152,6 +155,7 @@ impl Workbench {
                 self.saved = problem.clone();
                 self.problem = problem;
                 self.raw.clear();
+                self.raw_source = Value::Null;
                 self.raw_dirty = false;
                 self.page = 1;
                 Ok(format!(
@@ -223,7 +227,7 @@ impl Workbench {
             if ui.button("Open problem…").clicked() { self.pick(FileKind::Problem, ui.ctx()); }
             if ui.button("Load iron example").clicked() && self.replace_problem_allowed() {
                 self.problem = model::decode_problem(model::EXAMPLE).expect("bundled problem");
-                self.saved = self.problem.clone(); self.raw_dirty = false; self.raw.clear();
+                self.saved = self.problem.clone(); self.raw_dirty = false; self.raw.clear(); self.raw_source = Value::Null;
             }
             if ui.button("Validate problem").clicked() {
                 let result = if self.raw_dirty { Err("Apply the JSON edits first.".into()) }
@@ -243,7 +247,7 @@ impl Workbench {
                 ui.horizontal(|ui| {
                     ui.label("Mass (g)");
                     let mut mass = self.problem["material"]["mass_g"].as_f64().unwrap_or(1.);
-                    if ui.add(egui::DragValue::new(&mut mass).range(0.000001..=1e30).speed(0.1)).changed() { self.problem["material"]["mass_g"] = json!(mass); }
+                    if ui.add(egui::DragValue::new(&mut mass).custom_parser(model::parse_finite).range(0.000001..=1e30).speed(0.1)).changed() { self.problem["material"]["mass_g"] = json!(mass); }
                 });
                 ui.label(format!("Composition basis: {}", self.problem["material"]["basis"].as_str().unwrap_or("wt_percent")));
                 if let Some(composition) = self.problem["material"]["composition"].as_object_mut() {
@@ -251,7 +255,7 @@ impl Workbench {
                         ui.horizontal(|ui| {
                             ui.label(name);
                             let mut amount = value.as_f64().unwrap_or(0.);
-                            if ui.add(egui::DragValue::new(&mut amount).range(0.0..=1e30).speed(0.1)).changed() { *value = json!(amount); }
+                            if ui.add(egui::DragValue::new(&mut amount).custom_parser(model::parse_finite).range(0.0..=1e30).speed(0.1)).changed() { *value = json!(amount); }
                         });
                     }
                 }
@@ -266,7 +270,7 @@ impl Workbench {
                             if ui.add(egui::TextEdit::singleline(&mut duration).desired_width(100.)).changed() { step["dt"] = duration.into(); }
                             ui.label("Flux multiplier");
                             if let Some(mut flux) = step["flux"].as_f64() {
-                                if ui.add(egui::DragValue::new(&mut flux).range(0.0..=1e30).speed(0.1)).changed() { step["flux"] = json!(flux); }
+                                if ui.add(egui::DragValue::new(&mut flux).custom_parser(model::parse_finite).range(0.0..=1e30).speed(0.1)).changed() { step["flux"] = json!(flux); }
                             } else { ui.label("Edit this step's spectrum in JSON."); }
                         }));
                     }
@@ -276,8 +280,9 @@ impl Workbench {
             ui.collapsing("Incident spectrum", |ui| visuals::spectrum(ui, &self.problem));
         });
         ui.collapsing("Complete problem JSON", |ui| {
-            if !self.raw_dirty {
+            if !self.raw_dirty && self.raw_source != self.problem {
                 self.raw = serde_json::to_string_pretty(&self.problem).unwrap_or_default();
+                self.raw_source = self.problem.clone();
             }
             if ui
                 .add(
@@ -528,9 +533,16 @@ impl eframe::App for Workbench {
             }
         }
         let drops = ctx.input(|input| input.raw.dropped_files.clone());
+        let dropped = drops.len();
         if let Some(file) = drops.into_iter().next() {
             if self.pending_file.is_some() {
                 return;
+            }
+            if dropped > 1 {
+                // Only one file is read per drop; say so instead of discarding the rest silently.
+                self.report(Err(format!(
+                    "{dropped} files were dropped; only the first is opened. Drop one file at a time."
+                )));
             }
             let (tx, rx) = mpsc::channel();
             self.pending_file = Some(rx);

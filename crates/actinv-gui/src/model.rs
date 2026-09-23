@@ -135,6 +135,27 @@ impl ResultDocument {
     }
 }
 
+/// `DragValue` text parser that refuses non-finite input. egui's default accepts
+/// "nan"/"inf" (`f64::from_str` does), clamps them to the range end (1.8e308 for
+/// `0.0..=f64::MAX`) and serde_json stores an unranged non-finite value as `null`.
+pub fn parse_finite(text: &str) -> Option<f64> {
+    let cleaned: String = text
+        .chars()
+        .filter(|character| !character.is_whitespace())
+        .map(|character| {
+            if character == '\u{2212}' {
+                '-'
+            } else {
+                character
+            }
+        })
+        .collect();
+    cleaned
+        .parse::<f64>()
+        .ok()
+        .filter(|value| value.is_finite())
+}
+
 pub fn number(v: &Value) -> f64 {
     v.as_f64().unwrap_or(0.0)
 }
@@ -206,6 +227,15 @@ pub fn inventory_csv(result: &ResultDocument, index: usize) -> Result<String, St
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn numeric_editors_refuse_non_finite_text() {
+        for text in ["nan", "NaN", "inf", "-inf", "infinity", ""] {
+            assert_eq!(super::parse_finite(text), None, "{text}");
+        }
+        assert_eq!(super::parse_finite(" 1 000.5 "), Some(1000.5));
+        assert_eq!(super::parse_finite("\u{2212}2e3"), Some(-2000.0));
+    }
     #[test]
     fn pasted_spectra_reject_bad_counts_negative_and_multiple_columns() {
         assert_eq!(

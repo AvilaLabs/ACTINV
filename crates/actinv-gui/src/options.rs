@@ -63,7 +63,14 @@ fn number(ui: &mut egui::Ui, label: &str, value: &mut Value, default: f64) {
     let mut v = value.as_f64().unwrap_or(default);
     ui.horizontal(|ui| {
         ui.label(label);
-        if ui.add(egui::DragValue::new(&mut v).speed(0.1)).changed() {
+        if ui
+            .add(
+                egui::DragValue::new(&mut v)
+                    .custom_parser(crate::model::parse_finite)
+                    .speed(0.1),
+            )
+            .changed()
+        {
             *value = json!(v);
         }
     });

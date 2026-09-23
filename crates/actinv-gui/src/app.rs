@@ -75,6 +75,8 @@ pub struct Desktop {
     amount: f64,
     raw: String,
     raw_dirty: bool,
+    /// The document `raw` was last rendered from; re-render only when it changes.
+    raw_source: Value,
     tour: Tour,
     help: bool,
     pending: Option<Pending>,
@@ -87,6 +89,8 @@ pub struct Desktop {
     capture: Option<crate::capture::Capture>,
     result_unsaved: bool,
     result_guard: Option<ResultAction>,
+    /// A result file being read and validated off the UI thread: (is comparison, outcome).
+    result_load: Option<(bool, Receiver<Result<ResultDocument, String>>)>,
     spectrum_text: String,
     log_time: bool,
     theme: String,
@@ -174,10 +178,10 @@ impl Desktop {
             error:false, logo, result:None, comparison:None, job:None,
             step:0, metric:0, selected:String::new(), filter:String::new(), ledger_filter:String::new(),
             descending:true, reset_plot:false, isotope:String::new(), amount:0.,
-            raw:String::new(), raw_dirty:false, tour:Tour::default(), help:false,
+            raw:String::new(), raw_dirty:false, raw_source:Value::Null, tour:Tour::default(), help:false,
             pending:None, undo:vec![], redo:vec![], allow_close:false,
             downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(),
-            result_unsaved:false, result_guard:None, spectrum_text:String::new(), log_time:false,
+            result_unsaved:false, result_guard:None, result_load:None, spectrum_text:String::new(), log_time:false,
             theme:"Light".into(),
             transport:crate::transport::Import::default(), imported:None,
         }
@@ -331,7 +335,7 @@ impl Desktop {
             }
         }
     }
-    fn open_result(&mut self, compare: bool) {
+    fn open_result(&mut self, ctx: &egui::Context, compare: bool) {
         if !compare && self.result_unsaved {
             self.result_guard = Some(ResultAction::Open);
             return;
@@ -340,34 +344,46 @@ impl Desktop {
             .add_filter("ACTINV result", &["json"])
             .pick_file()
         {
-            let r = std::fs::read_to_string(&path)
-                .map_err(|e| e.to_string())
-                .and_then(|s| serde_json::from_str(&s).map_err(|e| e.to_string()))
-                .and_then(|v| {
-                    ResultDocument::parse(
-                        v,
-                        path.file_name()
-                            .unwrap_or_default()
-                            .to_string_lossy()
-                            .into(),
-                    )
-                });
-            match r {
-                Ok(r) => {
-                    if compare {
-                        self.comparison = Some(r);
-                    } else {
-                        self.result = Some(r);
-                        self.result_unsaved = false;
-                        self.step = 0;
-                        self.selected.clear();
-                    }
-                    self.reset_plot = true;
-                    self.page = 4;
-                    self.report(Ok("Result loaded.".into()));
+            // Results can be hundreds of MB: read, parse and validate them off the UI
+            // thread so the window keeps repainting; `logic` installs the outcome.
+            let (tx, rx) = mpsc::channel();
+            let ctx = ctx.clone();
+            std::thread::spawn(move || {
+                let loaded = std::fs::read_to_string(&path)
+                    .map_err(|e| e.to_string())
+                    .and_then(|s| serde_json::from_str(&s).map_err(|e| e.to_string()))
+                    .and_then(|v| {
+                        ResultDocument::parse(
+                            v,
+                            path.file_name()
+                                .unwrap_or_default()
+                                .to_string_lossy()
+                                .into(),
+                        )
+                    });
+                let _ = tx.send(loaded);
+                ctx.request_repaint();
+            });
+            self.result_load = Some((compare, rx));
+            self.report(Ok("Loading result…".into()));
+        }
+    }
+    fn install_result(&mut self, loaded: Result<ResultDocument, String>, compare: bool) {
+        match loaded {
+            Ok(r) => {
+                if compare {
+                    self.comparison = Some(r);
+                } else {
+                    self.result = Some(r);
+                    self.result_unsaved = false;
+                    self.step = 0;
+                    self.selected.clear();
                 }
-                Err(e) => self.report(Err(e)),
+                self.reset_plot = true;
+                self.page = 4;
+                self.report(Ok("Result loaded.".into()));
             }
+            Err(e) => self.report(Err(e)),
         }
     }
     fn export(&mut self, csv: bool) {
@@ -540,7 +556,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             ui.horizontal(|ui|{ui.label("Solver mode");egui::ComboBox::from_id_salt("mode").selected_text(&mode).show_ui(ui,|ui|{for m in ["auto","trace","coupled"]{if ui.selectable_value(&mut mode,m.into(),m).changed(){self.document["options"]["mode"]=mode.clone().into();}}});});
             ui.label("Trace mode supports ranked production pathways. Auto chooses an appropriate mode based on the problem.");
             let mut temperature=self.document["options"]["temperature_K"].as_f64().unwrap_or(293.6);
-            ui.horizontal(|ui|{ui.label("Temperature (K)");if ui.add(egui::DragValue::new(&mut temperature).speed(1.).range(0.0..=f64::MAX)).changed(){self.document["options"]["temperature_K"]=json!(temperature);}});
+            ui.horizontal(|ui|{ui.label("Temperature (K)");if ui.add(egui::DragValue::new(&mut temperature).custom_parser(model::parse_finite).speed(1.).range(0.0..=f64::MAX)).changed(){self.document["options"]["temperature_K"]=json!(temperature);}});
             let mut outputs=self.document["options"]["outputs"].as_array().cloned().unwrap_or_else(||vec![json!("inventory"),json!("activity"),json!("heat")]);
             ui.horizontal_wrapped(|ui|{for (key,label) in [("inventory","Inventory"),("activity","Activity"),("heat","Decay heat"),("photons","Photon spectrum"),("pathways","Production pathways")]{let mut enabled=outputs.iter().any(|v|v.as_str()==Some(key));if ui.checkbox(&mut enabled,label).changed(){outputs.retain(|v|v.as_str()!=Some(key));if enabled{outputs.push(json!(key));}self.document["options"]["outputs"]=json!(outputs);}}});
         });
@@ -620,7 +636,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                         .hint_text("e.g. Fe56")
                         .desired_width(150.),
                 );
-                ui.add(egui::DragValue::new(&mut self.amount).speed(0.1));
+                ui.add(egui::DragValue::new(&mut self.amount).custom_parser(model::parse_finite).speed(0.1));
                 if ui.button("Add element / isotope").clicked() {
                     let key = self.isotope.trim();
                     if key.is_empty() {
@@ -874,13 +890,13 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             let open = ui.button("Open result");
             self.tour.mark("result_open", open.rect);
             if open.clicked() {
-                self.open_result(false);
+                self.open_result(ui.ctx(), false);
             }
             if ui
                 .add_enabled(self.result.is_some(), egui::Button::new("Add comparison"))
                 .clicked()
             {
-                self.open_result(true);
+                self.open_result(ui.ctx(), true);
             }
             if self.comparison.is_some() && ui.button("Remove comparison").clicked() {
                 self.comparison = None;
@@ -1100,6 +1116,8 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 ui.add(egui::TextEdit::singleline(&mut self.filter).hint_text("Filter nuclides…"));
                 ui.checkbox(&mut self.descending, "Highest activity first");
             });
+            // This runs every frame: lower-case the filter once and compare borrowed names.
+            let filter = self.filter.to_lowercase();
             let mut rows: Vec<_> = step["inventory"]
                 .as_array()
                 .map(|a| {
@@ -1109,18 +1127,20 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                                 .as_str()
                                 .unwrap_or("")
                                 .to_lowercase()
-                                .contains(&self.filter.to_lowercase())
+                                .contains(&filter)
                         })
                         .collect()
                 })
                 .unwrap_or_default();
             rows.sort_by(|a, b| {
-                let name = |v: &Value| v["nuclide"].as_str().unwrap_or("").to_owned();
+                fn name(v: &Value) -> &str {
+                    v["nuclide"].as_str().unwrap_or("")
+                }
                 if self.descending {
                     model::number(&step["activity_Bq_per_g"][name(b)])
                         .total_cmp(&model::number(&step["activity_Bq_per_g"][name(a)]))
                 } else {
-                    name(a).cmp(&name(b))
+                    name(a).cmp(name(b))
                 }
             });
             TableBuilder::new(ui)
@@ -1238,8 +1258,9 @@ if let Some(activity)=step["activity_Bq_per_g"][&self.pathway_node].as_f64(){ui.
     }
     fn advanced(&mut self, ui: &mut egui::Ui) {
         heading(ui,"Advanced specification","Edit every ACTINV option. Apply checks the schema; Validate checks the scientific inputs.");
-        if !self.raw_dirty {
+        if !self.raw_dirty && self.raw_source != self.document {
             self.raw = serde_json::to_string_pretty(&self.document).unwrap_or_default();
+            self.raw_source = self.document.clone();
         }
         ui.horizontal(|ui| {
             if ui
@@ -1306,6 +1327,21 @@ impl eframe::App for Desktop {
         // eframe restores its own context memory after app construction.
         // Our explicit appearance preference remains authoritative after restoration.
         self.apply_theme(ctx);
+        let polled = self
+            .result_load
+            .as_ref()
+            .map(|(compare, rx)| (*compare, rx.try_recv()));
+        match polled {
+            Some((compare, Ok(loaded))) => {
+                self.result_load = None;
+                self.install_result(loaded, compare);
+            }
+            Some((_, Err(mpsc::TryRecvError::Disconnected))) => {
+                self.result_load = None;
+                self.report(Err("result loading stopped unexpectedly".into()));
+            }
+            Some((_, Err(mpsc::TryRecvError::Empty))) | None => {}
+        }
         let result = self.job.as_ref().and_then(|job| {
             let received = if let Some(handle) = &job.handle {
                 handle.rx.try_recv().map(|v| v.map(JobOutput::Calculation))
@@ -1501,7 +1537,7 @@ impl Desktop {
                         self.result_guard = None;
                         match action {
                             ResultAction::Run => self.run(&ctx),
-                            ResultAction::Open => self.open_result(false),
+                            ResultAction::Open => self.open_result(&ctx, false),
                             ResultAction::Tutorial => { self.result = Some(model::tutorial_result()); self.step=0; self.selected.clear(); self.comparison=None; self.page=4; self.reset_plot=true; self.tour.start(true); },
                             ResultAction::Close => { if self.dirty() || self.job.is_some() { self.pending = Some(Pending::Close); } else { self.allow_close=true; ctx.send_viewport_cmd(egui::ViewportCommand::Close); } },
                         }
@@ -1620,6 +1656,7 @@ fn numeric(ui: &mut egui::Ui, value: &mut Value, speed: f64) {
     if ui
         .add(
             egui::DragValue::new(&mut n)
+                .custom_parser(model::parse_finite)
                 .speed(speed)
                 .range(0.0..=f64::MAX),
         )

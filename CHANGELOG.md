@@ -71,6 +71,11 @@
   `--grid-density` is capped at 64; group collapse starts each group at its first overlapping segment
   (bit-identical, O(log N + k) instead of O(N) per group); the panicking/zero-filling legacy ENDF readers are
   deprecated; the P20 corpus probe finds the MF=1/MT=451 records by tag.
+- Desktop and web workbench: numeric fields refuse "nan"/"inf" (egui accepted them and clamped to 1.8e308, or
+  serde_json stored `null`); opening a result reads, parses and validates it off the UI thread, so large results
+  no longer freeze the window (opening works during a calculation too); the inventory table no longer allocates per
+  row and per comparison every frame; the raw-JSON panels re-render only when the document changes; the web
+  workbench says when several files are dropped instead of silently keeping the first.
 
 **Security**
 

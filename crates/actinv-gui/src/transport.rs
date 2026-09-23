@@ -48,11 +48,11 @@ impl Import {
             file(ui,"Source file",&mut self.source);
             if self.format=="fispact" {file(ui,"Group boundaries JSON",&mut self.groups);}
             if matches!(self.format.as_str(),"openmc"|"meshtal"|"mctal") {
-                ui.horizontal(|ui| {ui.label("Tally ID");ui.add(egui::DragValue::new(&mut self.tally).range(1..=i64::MAX));});
-                ui.horizontal(|ui| {ui.label("Source rate (particles/s)");ui.add(egui::DragValue::new(&mut self.rate).speed(1e10));});
+                ui.horizontal(|ui| {ui.label("Tally ID");ui.add(egui::DragValue::new(&mut self.tally).custom_parser(crate::model::parse_finite).range(1..=i64::MAX));});
+                ui.horizontal(|ui| {ui.label("Source rate (particles/s)");ui.add(egui::DragValue::new(&mut self.rate).custom_parser(crate::model::parse_finite).speed(1e10));});
                 ui.horizontal(|ui| {ui.label("Energy floor (eV, only for a zero lower boundary)");ui.text_edit_singleline(&mut self.floor);});
             }
-            ui.horizontal(|ui| {ui.label("Cell ordinal (0 = first cell)");ui.add(egui::DragValue::new(&mut self.ordinal));});
+            ui.horizontal(|ui| {ui.label("Cell ordinal (0 = first cell)");ui.add(egui::DragValue::new(&mut self.ordinal).custom_parser(crate::model::parse_finite));});
             ui.checkbox(&mut self.rebin,"Allow conversion to the problem's groups (equal flux per unit lethargy)");
             ui.label("Applying replaces the spectrum with absolute transport flux and removes any prior total-flux override.");
             if ui.button("Import and preview selected cell").clicked() {

@@ -1461,3 +1461,9 @@ data-handling repair carries a regression test that fails on the pre-repair code
 - **Supply chain.** rustls updated past RUSTSEC-2026-0285 in `Cargo.lock` and `python/Cargo.lock` (only that
   package moved); `#![forbid(unsafe_code)]` on the three library crates and the CLI binary (the P12-G3 check of
   unsafe-freedom compared frozen hashes and never ran against the live tree in CI).
+- **Desktop/web GUI.** `model::parse_finite` backs every `DragValue`; result loading moved to a worker thread
+  with its own receiver (independent of the single calculation/data/transport job slot); per-frame table and
+  JSON-panel work reduced; multi-file drops reported. Not changed: export still writes on the UI thread (moving
+  it needs a copy of a possibly large result), and external SIGTERM handling would need a new dependency; the
+  graceful close path already cancels and reaps the worker. Wasm clippy (as in web.yml) and native gates pass.
+  Control: `numeric_editors_refuse_non_finite_text`.
