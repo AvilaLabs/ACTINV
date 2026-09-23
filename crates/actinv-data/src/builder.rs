@@ -1531,14 +1531,13 @@ fn decay_resolve(
                 let mut matching = states
                     .iter()
                     .filter(|state| state.liso > 0 && state.lis == lis);
-                match (matching.next(), matching.next()) {
-                    (Some(state), None) => return Some((state.liso, lis_tag)),
-                    // Each decay material numbers its own level scheme, so
-                    // the merged per-ZA table can carry the same LIS on two
-                    // different isomers (68 ZAs in ENDF-B-VIII.0). A shared
-                    // label cannot resolve identity; guessing would alias
-                    // the wrong isomer's decay data.
-                    _ => {}
+                // Each decay material numbers its own level scheme, so the
+                // merged per-ZA table can carry the same LIS on two different
+                // isomers (68 ZAs in ENDF-B-VIII.0). A shared label cannot
+                // resolve identity; guessing would alias the wrong isomer's
+                // decay data, so only a unique match resolves.
+                if let (Some(state), None) = (matching.next(), matching.next()) {
+                    return Some((state.liso, lis_tag));
                 }
             }
         }
