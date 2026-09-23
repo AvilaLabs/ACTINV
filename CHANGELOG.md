@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v1.2.1 — 2026-09-23
 
 **Fixed**
 
@@ -95,7 +95,7 @@
 
 - `rustls` 0.23.43 → 0.23.45 in both lockfiles (RUSTSEC-2026-0285: TLS 1.3 handshake messages accepted across
   encryption-level boundaries; used by `actinv data fetch`). Published v1.2.0 wheels and `cargo install --locked`
-  builds carry 0.23.43 until the next release. `cargo audit` is clean apart from two unmaintained crates pulled in
+  builds carry 0.23.43; 1.2.1 ships 0.23.45. `cargo audit` is clean apart from two unmaintained crates pulled in
   by the desktop's syntax highlighter.
 - `actinv-core`, `actinv-data`, `actinv-cli` and the `actinv` binary declare `#![forbid(unsafe_code)]`, so the
   no-`unsafe` policy is compiler-enforced rather than checked against frozen P12 source hashes.

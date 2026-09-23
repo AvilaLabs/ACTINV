@@ -106,3 +106,19 @@ fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a chec
 - [x] TENDL-2017 In-115 repair decided: benchmark-internal artifact only, NOT shipped as a
   data release — TENDL-2025 already carries the correct evaluation. Disclosed in
   DATA_LIMITATIONS.md.
+
+## v1.2.1 (patch release)
+
+- [x] Bump the workspace, `python`, `pyproject.toml` and inter-crate versions to 1.2.1; update
+  `release-artifacts.yml`, README release links and the DATA_LIMITATIONS header; refresh
+  `MANIFEST.sha256`.
+- [x] Rename the changelog's Unreleased section to v1.2.1 and write `docs/RELEASE_NOTES_v1.2.1.md`.
+- [ ] Push the release commit and the `v1.2.1` tag in one atomic push. The P18/P18b and P12-G5
+  release-boundary checks require the workspace version to be the newest tag, so the release
+  commit's `controls` run must already see the tag; the publish workflows wait for that run.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+  wheel/sdist set land at 1.2.1.
+- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.2.1` GitHub release; paste the
+  release notes.
+- [ ] Record the release URL, tag commit, release ID, asset identities and smoke results in
+  `results/release_v1.2.1.json`.

@@ -14,7 +14,7 @@ description = "ACTINV core: sparse Bateman/CRAM solver"
 num-complex = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["float_roundtrip"] }
-actinv-data = { version = "=1.2.0", path = "../actinv-data" }
+actinv-data = { version = "=1.2.1", path = "../actinv-data" }
 libm = "0.2"
 sha2 = "0.10"
 rayon = "1.12"

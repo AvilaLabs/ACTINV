@@ -1,6 +1,6 @@
 # Known data limitations — shipped nuclear-data artifacts
 
-This document is the disclosure for the activation data ACTINV 1.2.0
+This document is the disclosure for the activation data ACTINV 1.2.1
 ships with. It is generated from phase-P25/P25b/P25c evidence; every
 claim below is backed by a hash-pinned record in `results/` and an
 independently run checker. It is a statement about the *data*, not
