@@ -72,6 +72,15 @@
   (bit-identical, O(log N + k) instead of O(N) per group); the panicking/zero-filling legacy ENDF readers are
   deprecated; the P20 corpus probe finds the MF=1/MT=451 records by tag.
 
+**Security**
+
+- `rustls` 0.23.43 → 0.23.45 in both lockfiles (RUSTSEC-2026-0285: TLS 1.3 handshake messages accepted across
+  encryption-level boundaries; used by `actinv data fetch`). Published v1.2.0 wheels and `cargo install --locked`
+  builds carry 0.23.43 until the next release. `cargo audit` is clean apart from two unmaintained crates pulled in
+  by the desktop's syntax highlighter.
+- `actinv-core`, `actinv-data`, `actinv-cli` and the `actinv` binary declare `#![forbid(unsafe_code)]`, so the
+  no-`unsafe` policy is compiler-enforced rather than checked against frozen P12 source hashes.
+
 **Release engineering**
 
 - The PyPI and crates.io publishing workflows now wait for, and require, a successful `controls` run on the

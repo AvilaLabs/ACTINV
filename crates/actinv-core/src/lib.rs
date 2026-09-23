@@ -1,4 +1,5 @@
 //! ACTINV core.
+#![forbid(unsafe_code)]
 pub mod chain;
 pub mod cram;
 pub mod cram_coeffs;

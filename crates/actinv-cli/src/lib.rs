@@ -1,4 +1,5 @@
 //! Command-line support that does not belong to the scientific solver.
+#![forbid(unsafe_code)]
 
 pub mod command;
 pub mod workflow;

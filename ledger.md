@@ -1458,3 +1458,6 @@ data-handling repair carries a regression test that fails on the pre-repair code
   header scan in the P20 probe (0/11,400 corpus files had tripped the old offset). Local replays after the change:
   check_g3_p18b, g2_p9_fission_matrix and g3_p9_coupled_auto pass. Controls:
   `fields_use_the_canonical_endf_parsers`, `a_dead_writers_lock_is_reclaimed_instead_of_timing_out`.
+- **Supply chain.** rustls updated past RUSTSEC-2026-0285 in `Cargo.lock` and `python/Cargo.lock` (only that
+  package moved); `#![forbid(unsafe_code)]` on the three library crates and the CLI binary (the P12-G3 check of
+  unsafe-freedom compared frozen hashes and never ran against the live tree in CI).
