@@ -295,10 +295,17 @@ impl PreparedShieldTable {
             let last = lns.len() - 1;
             (last, last, 0.0)
         } else {
+            // sigma0_b is strictly descending: `hi` is the first (smaller-sigma0)
+            // entry at or below the query and `lo = hi - 1` its larger neighbour.
             let hi = lns.iter().position(|&l| l <= ln0).unwrap();
-            let lo = hi - 1;
-            let w = (ln0 - lns[hi]) / (lns[lo] - lns[hi]);
-            (lo, hi, w)
+            if lns[hi] == ln0 {
+                (hi, hi, 0.0)
+            } else {
+                let lo = hi - 1;
+                // Weight toward `hi`: 0 at lns[lo], 1 at lns[hi].
+                let w = (lns[lo] - ln0) / (lns[lo] - lns[hi]);
+                (lo, hi, w)
+            }
         };
         let st = temperature_K.sqrt();
         let ts: Vec<f64> = self.temperatures_K.iter().map(|t| t.sqrt()).collect();
@@ -534,6 +541,38 @@ mod tests {
         assert!((scale - 0.8).abs() < 1e-9, "scale {scale}");
         // The total channel stays at its uniform factor.
         assert_eq!(plan.row_scales(74186, 0, 11).unwrap()[&1], 1.0);
+    }
+
+    #[test]
+    fn factor_weights_follow_the_nearer_sigma0_row() {
+        // The midpoint test above cannot tell w from 1-w. Exact grid points and
+        // off-midpoint queries can: capture f=0.8 at 1e3, 0.4 at 1e2, 1.0 at 1e10.
+        let mut factors = uniform_factors(1.0);
+        factors["capture"][1] = serde_json::json!(vec![0.8; 4]);
+        factors["capture"][2] = serde_json::json!(vec![0.4; 4]);
+        let table = PreparedShieldTable::from_json(&table_json(factors)).unwrap();
+        let atoms = BTreeMap::from([((74186, 0), 1.0e22)]);
+        let scale_at = |sigma0: f64| {
+            let plan = table
+                .plan(&atoms, "fixed", Some(sigma0), 293.6, false)
+                .unwrap();
+            plan.row_scales(74186, 0, 102).unwrap()[&1]
+        };
+        // scale = (1-0.5) + 0.5*f with overlap fraction 0.5.
+        for (sigma0, f) in [
+            (1e3, 0.8),                                   // exact interior grid point
+            (1e2, 0.4),                                   // exact interior grid point
+            (10f64.powf(2.75), 0.8 + 0.25 * (0.4 - 0.8)), // nearer 1e3
+            (10f64.powf(2.25), 0.8 + 0.75 * (0.4 - 0.8)), // nearer 1e2
+            (1e5, 1.0 + (5.0 / 7.0) * (0.8 - 1.0)),       // first interval, ln-weighted
+        ] {
+            let scale = scale_at(sigma0);
+            assert!(
+                (scale - (0.5 + 0.5 * f)).abs() < 1e-12,
+                "sigma0 {sigma0}: scale {scale}, expected {}",
+                0.5 + 0.5 * f
+            );
+        }
     }
 
     #[test]

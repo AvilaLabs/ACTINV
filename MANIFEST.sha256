@@ -8,7 +8,7 @@ f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/work
 d6dcef24d539d3bce60d5d9c24eacf67347569487280db7ea672ca97d8c6d08c  ./.github/workflows/web.yml
 19832d6c188f4c1878740eca4d3bce13367fc792e37cde446ca7c2a079035483  ./.gitignore
 95cbf21273eefeb72fb7a9676cde68aeeadc4b76d8bc102b8ce5ad439a2ff6bd  ./AGENTS.md
-37a7ddf47f27a2e2219413eb55819500faa2500cc0bfee360f86c4c1c05f7eb5  ./CHANGELOG.md
+b437e6cf617418a9fa5bec893177971dea9df63611c19aaf0b7b1a38066bcbad  ./CHANGELOG.md
 565307cc43432e536e36c0fdbc23fb7e971054e749fb46d7c83ea780271f97c2  ./CONTRIBUTING.md
 bed3c1b946b3caf6f7b272636bd931214f50de31c57c4be55fbb195ff16ae38a  ./Cargo.lock
 42d187439ef1c7d5585c6480c993c855d2dce9b0ceb2da373677d065cc3cccf2  ./Cargo.toml
@@ -503,7 +503,7 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
 a8c39db5703993720c420a94302ad292d7bfa24574f7fbf7b7527c60fa3dbe75  ./crates/actinv-core/src/reverse.rs
 33c5495945993616a92f85693be884e7dc76eb080922aaf6ac9b82f2248bc8ff  ./crates/actinv-core/src/run.rs
-1fa018359901471d8a90bc445c688c0f7875e69c25996e71f8d9aa5ed60209a6  ./crates/actinv-core/src/shielding.rs
+7bc9ceb357177c6f11ce115ca438df70701fa89ecfc6802ef1be3d5d7eade28b  ./crates/actinv-core/src/shielding.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
 853c63d318fba4ffcac4c1f49aa8e9d383cd5a561bca36ee7beb8eda11faad0d  ./crates/actinv-core/src/spec.rs
 fa144bb02c9cc7249d6350a8250d1b5ca6a578483bf98d01b6eecf95a84aed57  ./crates/actinv-core/src/study.rs
@@ -662,7 +662,7 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 b4e6d2bc1589a7e0df74d4985b6c71d201c5fa9a2d85ad42022716563222c417  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-eda14778bd58db1b5b432e5f3321cd9f88418097d844b42689ca18cf6d1a57ce  ./ledger.md
+46efe6b1f41f9ae6923025fed31f38051ce36986a61e30a1af1278ffe6d591d5  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh

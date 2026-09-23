@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+**Fixed**
+
+- Self-shielding factors were interpolated in ln σ₀ with the weight mirrored: `sigma0_b` is descending, and
+  the weight toward the smaller-σ₀ neighbour was applied toward the larger one. A query exactly on an interior
+  grid point returned the neighbouring row (σ₀ = 1e3 b returned the 1e4 b factors) and off-midpoint queries
+  were reflected within their interval. Every shielded run whose effective σ₀ lay strictly inside the table
+  grid was affected — all `dilution: "composition"` runs and any fixed σ₀ other than the grid ends — including
+  the shielded rows folded into MF=33 uncertainty. Runs at σ₀ = 0.1 b or ≥ 1e10 b (the clamped grid ends, which
+  every P19 control uses) were unaffected. Regression test added at exact and off-midpoint interior points.
+
 ## v1.2.0 — 2026-09-21
 
 **Added**

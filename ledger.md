@@ -1337,3 +1337,19 @@ environment-gated. The controls workflow on master has been red since
 2026-09-19 (manifest staleness, fmt, now check_g3_p18b fixture) — a
 pre-existing maintenance issue independent of the release commits; the
 publish paths do not gate on it.
+
+## Entry 56 — Code-audit repairs (2026-09-23)
+
+A full read-only audit of the workspace (Rust crates, Python binding, controls, CI) was verified finding by
+finding against the source before any repair. Repairs land as separate commits; each physics or
+data-handling repair carries a regression test that fails on the pre-repair code.
+
+- **Self-shielding σ₀ interpolation (actinv-core `shielding.rs`, `factor_at`).** `sigma0_b` is stored
+  descending; the bilinear weight toward the smaller-σ₀ neighbour was applied toward the larger one, so an
+  exact interior grid point returned its neighbour's row and off-midpoint queries were reflected within the
+  interval. Scope: every shielded run whose effective σ₀ fell strictly inside the grid — all composition
+  dilution runs and the shielded rows folded through MF=33. Not affected: σ₀ at the clamped grid ends
+  (0.1 b, ≥1e10 b), which is every quantitative P19 control and the shielding demo, so P19 evidence stands.
+  Why it survived: the only interpolation unit test queried the ln-midpoint, where w and 1−w coincide.
+  Control: `factor_weights_follow_the_nearer_sigma0_row` (exact grid points 1e3/1e2 b, off-midpoint
+  10^2.75/10^2.25 b, first interval 1e5 b) fails on the pre-repair formula and passes after it.
