@@ -665,7 +665,7 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-4bac6e63bdd94cc1d5652dba825528ed81caef78455a60826b50e6b07a92d869  ./ledger.md
+b9386377cc58c19201a8b73edb799d3a96b9c00a75a6faa3b13627f14edbb99d  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -2131,7 +2131,8 @@ df09f818ecc83d3bb18ee9cc2e8ce319a5735253ea18bcf5c4fbe636d6b581f3  ./results/fns_
 90164d059cbeabd1f34cfe5c0e6758720513de2cd22dac35b1790a7f7b984a4e  ./results/fusion-isotope-001/comparison.svg
 01e6ae92eb684a02dac623a60a2d459c25448aa2cb843293c4a1de3f27f61019  ./results/fusion-isotope-001/ledger.md
 74ef2d57ae97bc558940b61faedfbef2fa640efae9729ffd0ba51729b23cac72  ./results/fusion-isotope-001/opening.json
-0a3f4a6011fd65a9fc7cb176073f6f20f28d18f5558912528053f0ac9bd7891a  ./results/fusion-isotope-001/reduced-chain-note.md
+be107e045aa00d02cecfa5e7202948121b946df4c1a45710a508da50c262ea31  ./results/fusion-isotope-001/reduced-chain-2026-09-23.json
+6280075a6087668cfe99ed32de315e4bed322523f2ca56636b036c9d16525f35  ./results/fusion-isotope-001/reduced-chain-note.md
 0070e68a7ac5be44e0bf5890d95f484f3af5f4082cb8f8926de9a51cc6884063  ./results/fusion-isotope-001/reduced-chain.json
 53645eb4f66c03a2b5ccb2aba845a7857e1ee1b9e9f3749e8a1861643f6d93cd  ./results/g0_cram_coefficients.json
 a2e4ab1655628263cf887e2a5c3bc492b7f9bf22dce19e48481944969111d3c8  ./results/g0_p17_seal.json

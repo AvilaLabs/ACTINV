@@ -69,3 +69,23 @@ Original G0/G1 receipts remain unchanged. This amendment verifies a reduced
 G2 core-solver case; original matched-data G2/G3 remain pending. See the
 [example documentation](../../examples/fusion_medical_isotopes/ac225/README.md)
 for assumptions, references, commands, and reproducibility limits.
+
+## Receipt re-seat (2026-09-23)
+
+The CB2 kernel commits `cc2cade` and `9420f8c`, and the lint commit `0944ad8`, changed `cram_probe.rs` and
+`sparse.rs`. The receipt pins both files' identities, so the workflow stopped at `hashes.probe_source`
+without comparing any number. Under [Amendment 2](../../protocols/FUSION-ISOTOPE-001-AMENDMENT-2.md) the
+control now checks [`reduced-chain-2026-09-23.json`](reduced-chain-2026-09-23.json). Its `--write` mode
+generated that receipt from the current sources on the workstation, inside the bounded scope; CI reruns
+the check on every push. The original receipt is unchanged.
+
+Compared with the original receipt:
+
+- The largest state error over its allowance is unchanged at 0.008968.
+- The largest conservation error is 3.8e-16 of the feed (was 7.6e-16).
+- 43 of the 60 state values differ, by at most 6.2e-15 relative.
+- The Table 6 comparison is identical to two decimals.
+
+`comparison.svg` is still the plot CI drew for the original receipt. A redraw differed only in the
+Matplotlib version stamp and generated element IDs; every coordinate was identical.
+

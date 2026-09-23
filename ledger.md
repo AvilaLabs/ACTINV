@@ -1519,3 +1519,14 @@ data-handling repair carries a regression test that fails on the pre-repair code
   zip 8's `ZipFile` carries the reader type, so `Sha256VerifiedMember` gains a type parameter. Dropped from the
   lockfiles: zip 2.4.2, zopfli, arbitrary/derive_arbitrary (and, for the Python binding, displaydoc, bumpalo and
   thiserror 2). Gates, Python-binding clippy and the web workbench's wasm clippy pass.
+- **Fusion-isotope receipt re-seat (Amendment 2).** The workflow had been red since the CB2 kernel commits
+  (`cc2cade`, `9420f8c`) and `0944ad8` changed `cram_probe.rs` and `sparse.rs`, whose identities the 2026-09-18
+  receipt pins; it stopped at `hashes.probe_source` before comparing any number. On the owner's go-ahead,
+  Amendment 2 and the control's pointer to a new receipt were committed first (`d0d93d4`); the control's
+  `--write` mode then created `reduced-chain-2026-09-23.json` in the bounded scope. The original receipt is
+  untouched. Differences: the control, probe and sparse identities and the platform binary hash; 43 of 60
+  state values by at most 6.2e-15 relative; worst error over allowance unchanged at 0.008968; conservation
+  3.8e-16 (was 7.6e-16); the Table 6 comparison is identical to two decimals, so `comparison.md` is
+  unchanged and the CI-drawn `comparison.svg` was kept (a redraw differed only in version stamp and element
+  IDs). Local replay of the workflow's steps: `check_fusion_isotope_001`, `fusion_isotope_chain` and
+  `test_fusion_isotope_chain` (9 tests) pass.

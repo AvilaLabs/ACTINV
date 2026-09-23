@@ -1,0 +1,466 @@
+{
+  "benchmark": "fusion-isotope-001",
+  "scope": "prescribed_rate_core_solver_verification",
+  "overall_status": "not_reproduced",
+  "actinv_core_executed": true,
+  "actinv_cli_executed": false,
+  "openmc_executed": false,
+  "numerical_verification": "passed",
+  "publication_comparison": "unmatched_reduced_model_no_agreement_verdict",
+  "hashes": {
+    "case": "1a6f04eadc6887ac0da1739ed0abd07194009e7b3b6d5f9aedfd81a5ea7262fe",
+    "opening_reference": "758c5cc20becc41bab8600a24b64a9ee15da2262998588b149f89eb7f6f651c7",
+    "protocol": "a3f3259c4f805d3c0e9250030e467ce4c13466a4a987fed4f1b7674400919cf8",
+    "control": "b8959141b9dccea1862cb1ba6c96ea7dfe4f93153deaac9f964df1204ef767da",
+    "probe_source": "27dbf073400a7ad3afb64f913fa809951eb800d0de3f8f11688606a1c2f64943",
+    "cram_source": "79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba",
+    "sparse_source": "0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc",
+    "coefficients": "df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23"
+  },
+  "execution": {
+    "probe_binary_sha256": "203135eae101fc58361b233bd54a414a336652f52c37aff4a8471a491264ea61",
+    "repetitions": 1,
+    "child_timeout_seconds": 60,
+    "cram_order": 16
+  },
+  "states": [
+    "Th230",
+    "Th229",
+    "Ra225",
+    "Ac225",
+    "downstream_sink"
+  ],
+  "initial_atoms": [
+    7.200385691304348e+26,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "initial_th229_production_atoms_per_s": 2.34e+17,
+  "irradiation_loss_rates_per_s": [
+    3.2498259125562337e-10,
+    2.774697918851709e-12,
+    5.384252893984164e-07,
+    8.087234689552827e-07,
+    0.0
+  ],
+  "cooling_loss_rates_per_s": [
+    0.0,
+    2.774697918851709e-12,
+    5.384252893984164e-07,
+    8.087234689552827e-07,
+    0.0
+  ],
+  "numerical_tolerances": {
+    "relative": 1e-09,
+    "absolute_atoms": 1000000.0,
+    "conservation_relative": 1e-10
+  },
+  "omissions": [
+    "Natural Th230 decay and all competing neutron reactions",
+    "Neutron destruction of Th229, Ra225, and Ac225",
+    "Other target species, full downstream decay inventory, and contaminants",
+    "Spatial flux, spectrum, self-shielding, and composition feedback",
+    "Harvesting, separation losses, decay heat, and clinical dose claims"
+  ],
+  "histories": [
+    {
+      "phase": "irradiation",
+      "days": 1,
+      "atoms": [
+        7.20018351814272e+26,
+        2.021731373935765e+22,
+        2386253294894579.0,
+        36504493285100.164,
+        641386532172.7169
+      ],
+      "analytic_atoms": [
+        7.20018351814272e+26,
+        2.0217313739358207e+22,
+        2386253294896580.0,
+        36504493285802.945,
+        641386532462.1339
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0006780301045990903,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      },
+      "split_atoms": [
+        7.200183518142725e+26,
+        2.0217313739357657e+22,
+        2386253294895320.0,
+        36504493285549.8,
+        641386532410.7494
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 0.000433797263217772,
+        "conservation_relative_error": 7.635088416887456e-16,
+        "passed": true
+      }
+    },
+    {
+      "phase": "irradiation",
+      "days": 30,
+      "atoms": [
+        7.19432296514631e+26,
+        6.062704353414483e+23,
+        1.440280205330628e+18,
+        4.5895586421687296e+17,
+        2.812262625092276e+17
+      ],
+      "analytic_atoms": [
+        7.19432296514631e+26,
+        6.06270435341465e+23,
+        1.440280205330714e+18,
+        4.589558642169308e+17,
+        2.812262625117585e+17
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.00896767004415315,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      },
+      "split_atoms": [
+        7.194322965146315e+26,
+        6.062704353414484e+23,
+        1.4402802053306286e+18,
+        4.589558642168732e+17,
+        2.8122626251050026e+17
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 0.004509403160020904,
+        "conservation_relative_error": 5.726316312665592e-16,
+        "passed": true
+      }
+    },
+    {
+      "phase": "irradiation",
+      "days": 365.25,
+      "atoms": [
+        7.126918280023378e+26,
+        7.346418937081628e+24,
+        3.564076603830218e+19,
+        2.2745105205763404e+19,
+        2.6380514410857293e+20
+      ],
+      "analytic_atoms": [
+        7.126918280023376e+26,
+        7.346418937081788e+24,
+        3.5640766038303003e+19,
+        2.2745105205763944e+19,
+        2.6380514410893604e+20
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0013763978440549916,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      },
+      "split_atoms": [
+        7.126918280023386e+26,
+        7.346418937081609e+24,
+        3.5640766038302077e+19,
+        2.274510520576332e+19,
+        2.638051441087388e+20
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 0.0006287632782795738,
+        "conservation_relative_error": 1.1452632625331184e-15,
+        "passed": true
+      }
+    },
+    {
+      "phase": "irradiation",
+      "days": 1095.75,
+      "atoms": [
+        6.982224630442554e+26,
+        2.181322622660113e+25,
+        1.1023881154407788e+20,
+        7.24305207433627e+19,
+        2.697190245963893e+21
+      ],
+      "analytic_atoms": [
+        6.982224630442552e+26,
+        2.1813226226601427e+25,
+        1.102388115440793e+20,
+        7.243052074336365e+19,
+        2.6971902459666314e+21
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.001015262165074474,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      },
+      "split_atoms": [
+        6.982224630442563e+26,
+        2.181322622660101e+25,
+        1.1023881154407706e+20,
+        7.243052074336215e+19,
+        2.697190245965011e+21
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 0.0004144244564313567,
+        "conservation_relative_error": 9.543860521109319e-16,
+        "passed": true
+      }
+    },
+    {
+      "phase": "irradiation",
+      "days": 1826.25,
+      "atoms": [
+        6.840468611322244e+26,
+        3.5983762992528377e+25,
+        1.833091471016349e+20,
+        1.2109842126926001e+20,
+        7.640598113414545e+21
+      ],
+      "analytic_atoms": [
+        6.840468611322243e+26,
+        3.5983762992528635e+25,
+        1.8330914710163676e+20,
+        1.2109842126926125e+20,
+        7.640598113420926e+21
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.000835089613429963,
+        "conservation_relative_error": 1.908772104221864e-16,
+        "passed": true
+      },
+      "split_atoms": [
+        6.840468611322253e+26,
+        3.5983762992528085e+25,
+        1.8330914710163387e+20,
+        1.2109842126925939e+20,
+        7.640598113416831e+21
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 0.00029917754433505996,
+        "conservation_relative_error": 5.726316312665592e-16,
+        "passed": true
+      }
+    },
+    {
+      "phase": "irradiation",
+      "days": 3652.5,
+      "atoms": [
+        6.498542276560811e+26,
+        7.015309785222267e+25,
+        3.5950326692302704e+20,
+        2.3845109179532627e+20,
+        3.064566777194388e+22
+      ],
+      "analytic_atoms": [
+        6.498542276560814e+26,
+        7.015309785222276e+25,
+        3.59503266923027e+20,
+        2.3845109179532624e+20,
+        3.0645667771960693e+22
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0005485528985218636,
+        "conservation_relative_error": 3.817544208443728e-16,
+        "passed": true
+      },
+      "split_atoms": [
+        6.498542276560817e+26,
+        7.015309785222228e+25,
+        3.595032669230234e+20,
+        2.3845109179532385e+20,
+        3.0645667771947703e+22
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 0.00012468355552736825,
+        "conservation_relative_error": 1.908772104221864e-16,
+        "passed": true
+      }
+    },
+    {
+      "phase": "irradiation",
+      "days": 5478.75,
+      "atoms": [
+        6.173707405125427e+26,
+        1.0259870712553877e+26,
+        5.268090475860207e+20,
+        3.498837775389944e+20,
+        6.82447995279092e+22
+      ],
+      "analytic_atoms": [
+        6.1737074051254296e+26,
+        1.0259870712553875e+26,
+        5.2680904758602066e+20,
+        3.4988377753899434e+20,
+        6.824479952793518e+22
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.00038068129403302455,
+        "conservation_relative_error": 3.817544208443728e-16,
+        "passed": true
+      },
+      "split_atoms": [
+        6.173707405125431e+26,
+        1.0259870712553841e+26,
+        5.2680904758601803e+20,
+        3.498837775389929e+20,
+        6.824479952791177e+22
+      ],
+      "split_check": {
+        "max_error_over_tolerance": 3.7736247099833067e-05,
+        "conservation_relative_error": 3.817544208443728e-16,
+        "passed": true
+      }
+    },
+    {
+      "phase": "cooling",
+      "days": 1,
+      "atoms": [
+        7.126918280023378e+26,
+        7.346417175896169e+24,
+        3.574158185984304e+19,
+        2.281378974367475e+19,
+        2.6539682920222006e+20
+      ],
+      "analytic_atoms": [
+        7.126918280023376e+26,
+        7.346417175896335e+24,
+        3.574158185984387e+19,
+        2.2813789743675273e+19,
+        2.653968292025833e+20
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0013686369669690742,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      }
+    },
+    {
+      "phase": "cooling",
+      "days": 7,
+      "atoms": [
+        7.126918280023378e+26,
+        7.346406608792324e+24,
+        3.625720351138502e+19,
+        2.3215656060050133e+19,
+        2.750464450863705e+20
+      ],
+      "analytic_atoms": [
+        7.126918280023376e+26,
+        7.346406608792483e+24,
+        3.625720351138583e+19,
+        2.3215656060050674e+19,
+        2.7504644508673422e+20
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0013224074845898021,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      }
+    },
+    {
+      "phase": "cooling",
+      "days": 30,
+      "atoms": [
+        7.126918280023378e+26,
+        7.346366101701697e+24,
+        3.7309242521265865e+19,
+        2.435160603608987e+19,
+        3.133655467247983e+20
+      ],
+      "analytic_atoms": [
+        7.126918280023376e+26,
+        7.346366101701858e+24,
+        3.730924252126668e+19,
+        2.435160603609042e+19,
+        3.133655467251642e+20
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0011676022594744261,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      }
+    },
+    {
+      "phase": "cooling",
+      "days": 100,
+      "atoms": [
+        7.126918280023378e+26,
+        7.346242820626272e+24,
+        3.7836842662103695e+19,
+        2.516452668245562e+19,
+        4.353061013661376e+20
+      ],
+      "analytic_atoms": [
+        7.126918280023376e+26,
+        7.34624282062643e+24,
+        3.783684266210451e+19,
+        2.516452668245617e+19,
+        4.353061013665094e+20
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.0008540768731612599,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      }
+    },
+    {
+      "phase": "cooling",
+      "days": 365,
+      "atoms": [
+        7.126918280023378e+26,
+        7.34577613243823e+24,
+        3.78556043628886e+19,
+        2.520328066127845e+19,
+        9.019367737272658e+20
+      ],
+      "analytic_atoms": [
+        7.126918280023376e+26,
+        7.345776132438389e+24,
+        3.785560436288943e+19,
+        2.520328066127885e+19,
+        9.019367737276601e+20
+      ],
+      "numerical": {
+        "max_error_over_tolerance": 0.00043727589584144377,
+        "conservation_relative_error": 0.0,
+        "passed": true
+      }
+    }
+  ],
+  "table6_comparison": [
+    {
+      "years": 1,
+      "published_th229_ci": 532,
+      "reduced_model_th229_ci": 550.921441506302,
+      "residual_ci": 18.921441506302017,
+      "relative_residual": 0.03556661937274815
+    },
+    {
+      "years": 3,
+      "published_th229_ci": 1530,
+      "reduced_model_th229_ci": 1635.8138760646398,
+      "residual_ci": 105.81387606463977,
+      "relative_residual": 0.06915939612067959
+    },
+    {
+      "years": 5,
+      "published_th229_ci": 2460,
+      "reduced_model_th229_ci": 2698.4884402113953,
+      "residual_ci": 238.4884402113953,
+      "relative_residual": 0.0969465204111363
+    },
+    {
+      "years": 10,
+      "published_th229_ci": 4460,
+      "reduced_model_th229_ci": 5260.909584096285,
+      "residual_ci": 800.9095840962846,
+      "relative_residual": 0.17957613993190236
+    },
+    {
+      "years": 15,
+      "published_th229_ci": 6060,
+      "reduced_model_th229_ci": 7694.065382111039,
+      "residual_ci": 1634.065382111039,
+      "relative_residual": 0.2696477528236038
+    }
+  ]
+}
