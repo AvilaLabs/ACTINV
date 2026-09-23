@@ -1485,3 +1485,11 @@ data-handling repair carries a regression test that fails on the pre-repair code
   keeps the pre-loop |A||x| magnitude for the refinement stop test after the first correction; LAPACK xGERFS
   refreshes it each pass. Recomputing it alongside the residual is cheap, but it is a CB2-kernel change that
   can move solver outputs, so it is left for a governed kernel amendment rather than done here.
+- **Non-finite result guard (CLI-3).** `finite::check` walks any `Serialize` value (serde serializer that
+  inspects only floats and tracks a field/index/key path) and `run_started_profiled` applies it to every
+  `RunResult` before returning, so all entry points share it. The `serde_json::Value` ledger and certificate
+  cannot carry NaN (json! already mapped it to null at construction), and reverse/study build Values, so for
+  those the guard is the upstream run check plus reverse's own finiteness tests. Checked before enabling:
+  no null inside any step record of the 132 stored run outputs; the six run examples and the mesh demo pass;
+  the full test suite (every `run()` path) passes. Control:
+  `non_finite_numbers_are_named_by_path_and_finite_results_pass`.

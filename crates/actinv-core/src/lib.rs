@@ -5,6 +5,7 @@ pub mod cram;
 pub mod cram_coeffs;
 pub mod damage;
 pub mod doppler;
+pub mod finite;
 pub mod flux;
 pub mod mesh;
 pub mod photon;

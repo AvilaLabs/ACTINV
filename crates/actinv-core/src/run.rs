@@ -3488,7 +3488,7 @@ impl PreparedRun {
                 );
         }
         profiler.finish("ledger_certificate_assembly", reporting_started);
-        Ok(RunResult {
+        let result = RunResult {
             spec_title: spec.title.clone(),
             entry_point: entry_point.into(),
             projectile: (!spec.projectile.is_neutron()).then(|| spec.projectile.name().to_owned()),
@@ -3501,7 +3501,11 @@ impl PreparedRun {
             ledger,
             certificate,
             ms: t0.elapsed().as_secs_f64() * 1e3,
-        })
+        };
+        // JSON writers record NaN and ±inf as null, indistinguishable from an absent value.
+        crate::finite::check(&result)
+            .map_err(|found| format!("the result holds a non-finite number: {found}"))?;
+        Ok(result)
     }
 }
 
