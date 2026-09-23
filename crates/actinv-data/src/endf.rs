@@ -59,6 +59,7 @@ pub fn parse_endf_usize(s: &str) -> Result<usize, String> {
 }
 
 /// Parse an ENDF numeric field: standard floats plus the exponent-without-`e` form used throughout ENDF.
+#[deprecated(note = "panics on a malformed field; use parse_endf_float")]
 pub fn endf_float(s: &str) -> f64 {
     parse_endf_float(s).expect("invalid ENDF float in legacy parser")
 }
@@ -456,6 +457,8 @@ pub fn parse_sections(text: &str) -> Result<Vec<Section<'_>>, String> {
 }
 
 /// Read a LIST record starting at `i`: returns ((C1, C2, L1, L2, N1, N2, values), next index).
+#[deprecated(note = "zero-fills truncated records; use read_list_checked")]
+#[allow(deprecated)]
 pub fn read_list(lines: &[&str], mut i: usize) -> (ListRecord, usize) {
     let f = fields(lines[i]);
     let (c1, c2) = (endf_float(f[0]), endf_float(f[1]));
@@ -482,6 +485,8 @@ pub fn read_list(lines: &[&str], mut i: usize) -> (ListRecord, usize) {
 /// Returns the CONT fields, `(NBT, INT)` interpolation ranges, `(x, y)` points, and the next
 /// record index. ENDF uses one-based `NBT` point numbers; they are preserved here rather than
 /// translated so a reader can compare the values directly with the evaluation.
+#[deprecated(note = "zero-fills truncated records; use read_tab1_checked")]
+#[allow(deprecated)]
 pub fn read_tab1(lines: &[&str], mut i: usize) -> (Tab1Record, usize) {
     let f = fields(lines[i]);
     let (c1, c2) = (endf_float(f[0]), endf_float(f[1]));

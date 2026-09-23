@@ -900,12 +900,31 @@ pub fn write_npz(path: impl AsRef<Path>, library: &Library) -> Result<(), String
                 temporary.display(),
                 path.display()
             )
-        })
+        })?;
+        // Persist the rename itself: the data was synced, but a crash before the directory
+        // entry reaches disk could still lose the file (the prepared cache syncs it too).
+        sync_parent_directory(path)
     })();
     if result.is_err() {
         let _ = std::fs::remove_file(&temporary);
     }
     result
+}
+
+#[cfg(unix)]
+fn sync_parent_directory(path: &Path) -> Result<(), String> {
+    let parent = path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."));
+    std::fs::File::open(parent)
+        .and_then(|directory| directory.sync_all())
+        .map_err(|error| format!("cannot sync directory {}: {error}", parent.display()))
+}
+
+#[cfg(not(unix))]
+fn sync_parent_directory(_path: &Path) -> Result<(), String> {
+    Ok(())
 }
 
 #[cfg(test)]

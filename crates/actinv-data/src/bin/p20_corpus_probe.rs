@@ -44,27 +44,19 @@ fn kind_name(kind: &ComponentKind) -> &'static str {
 }
 
 fn target_header(text: &str) -> (Option<i32>, Option<i32>) {
-    // TENDL tapes carry a comment banner line; the first section HEAD record
-    // holds ZA in field C1 and LISO in the L2 position... the evaluated
-    // convention here reads ZA/LISO from the MF=1/MT=451 head lines, which
-    // are lines 2 and 3 on these tapes.
-    let mut lines = text.lines();
-    let mut za = None;
-    let mut liso = None;
-    let head = lines.nth(1).and_then(|line| line.get(0..11));
-    if let Some(field) = head {
-        za = actinv_data::endf::parse_endf_float(field)
-            .ok()
-            .map(|value| value.round() as i32);
-    }
-    if let Some(line) = lines.next() {
-        if let Some(field) = line.get(33..44) {
-            liso = actinv_data::endf::parse_endf_float(field)
-                .ok()
-                .map(|value| value.round() as i32);
-        }
-    }
-    (za, liso)
+    // ZA is field C1 of the first MF=1/MT=451 record and LISO field N1 of the second.
+    // Locate them by their MF/MT tag rather than assuming exactly one banner line.
+    let mut head = text
+        .lines()
+        .filter(|line| line.get(70..72) == Some(" 1") && line.get(72..75) == Some("451"));
+    let field = |line: Option<&str>, columns: std::ops::Range<usize>| {
+        line.and_then(|line| line.get(columns))
+            .and_then(|field| actinv_data::endf::parse_endf_float(field).ok())
+            .map(|value| value.round() as i32)
+    };
+    let first = head.next();
+    let second = head.next();
+    (field(first, 0..11), field(second, 33..44))
 }
 
 fn probe(path: &Path) -> FileOut {

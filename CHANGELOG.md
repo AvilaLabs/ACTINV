@@ -64,6 +64,13 @@
   under/overflow power twice; the certificate no longer claims self-shielding cannot combine with uncertainty.
 - `actinv reverse`: an NNLS step at a boundary variable can no longer become infinite (0/0 was dropped by `min`),
   and the singular-system test is relative to the matrix scale instead of an absolute epsilon.
+- Data layer: fission-yield files parse numbers with the canonical ENDF parser (one correctly rounded conversion,
+  blank integers read as zero) instead of a private mantissa×10^exp copy; a prepared-cache lock left by a killed
+  process is reclaimed (its recorded pid is gone, or it is over an hour old where pids cannot be checked) instead
+  of blocking that artifact until deleted by hand; library `.npz` publication syncs the directory after the rename;
+  `--grid-density` is capped at 64; group collapse starts each group at its first overlapping segment
+  (bit-identical, O(log N + k) instead of O(N) per group); the panicking/zero-filling legacy ENDF readers are
+  deprecated; the P20 corpus probe finds the MF=1/MT=451 records by tag.
 
 **Release engineering**
 

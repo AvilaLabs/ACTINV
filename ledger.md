@@ -1451,3 +1451,10 @@ data-handling repair carries a regression test that fails on the pre-repair code
   Controls: `contradictory_or_unbounded_inputs_fail_validation`, `duplicate_records_are_an_error_not_last_wins`,
   `repeated_abscissa_is_a_zero_width_segment`, `dense_solve_singularity_is_relative_to_matrix_scale`,
   `nnls_clamps_to_the_nonnegative_orthant_with_finite_values`.
+- **Data-layer hardening (actinv-data).** Canonical ENDF parsing in fission.rs; stale publication-lock
+  reclamation (pid check under /proc, age elsewhere; worst case of a wrong call is duplicate work, never a torn
+  artifact); directory fsync in `write_npz`; grid-density cap; partition-point group collapse (same segments,
+  same order, so bit-identical); legacy readers deprecated rather than removed (published crate API); tag-based
+  header scan in the P20 probe (0/11,400 corpus files had tripped the old offset). Local replays after the change:
+  check_g3_p18b, g2_p9_fission_matrix and g3_p9_coupled_auto pass. Controls:
+  `fields_use_the_canonical_endf_parsers`, `a_dead_writers_lock_is_reclaimed_instead_of_timing_out`.

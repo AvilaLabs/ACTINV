@@ -532,8 +532,14 @@ fn validate_options(options: &BuildOptions) -> Result<(), String> {
     if !(1..=256).contains(&options.workers) {
         return Err("workers must be between 1 and 256".into());
     }
-    if !options.grid_density.is_finite() || options.grid_density <= 0.0 {
-        return Err("grid density must be finite and positive".into());
+    if !options.grid_density.is_finite()
+        || options.grid_density <= 0.0
+        || options.grid_density > crate::processing::MAX_GRID_DENSITY
+    {
+        return Err(format!(
+            "grid density must be finite, positive and at most {}",
+            crate::processing::MAX_GRID_DENSITY
+        ));
     }
     if let Some(projectile) = options.projectile {
         if projectile != Projectile::Neutron && options.temperature_K != 0.0 {

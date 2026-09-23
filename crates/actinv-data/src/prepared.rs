@@ -28,6 +28,8 @@ const COLLAPSED_ALGORITHM: &str =
     "actinv-collapsed-spectrum-1\nopening-collapse-order-v1\nfission-spectrum-average-v1\n";
 const LOCK_WAIT: std::time::Duration = std::time::Duration::from_secs(30);
 const LOCK_POLL: std::time::Duration = std::time::Duration::from_millis(25);
+/// Where the lock owner cannot be checked (no `/proc`), an older lock is treated as abandoned.
+const STALE_LOCK_AGE: std::time::Duration = std::time::Duration::from_secs(60 * 60);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct PreparedSpan {
@@ -1809,6 +1811,31 @@ fn lock_path(final_path: &Path) -> Result<PathBuf, String> {
     Ok(final_path.with_file_name(format!(".{name}.lock")))
 }
 
+/// Whether a publication lock's writer is gone. The lock records `pid=`; with `/proc`
+/// the process is checked directly, otherwise the lock's age decides. Removing a lock
+/// that turns out to be live costs only duplicate work: publication is an atomic,
+/// verified rename, never a torn artifact.
+fn lock_is_stale(lock_path: &Path) -> bool {
+    let recorded = std::fs::read_to_string(lock_path).ok().and_then(|text| {
+        text.split_whitespace()
+            .find_map(|field| field.strip_prefix("pid="))
+            .and_then(|pid| pid.parse::<u32>().ok())
+    });
+    if let Some(pid) = recorded {
+        if pid == std::process::id() {
+            return false;
+        }
+        if Path::new("/proc/self").exists() {
+            return !Path::new(&format!("/proc/{pid}")).exists();
+        }
+    }
+    std::fs::metadata(lock_path)
+        .and_then(|metadata| metadata.modified())
+        .ok()
+        .and_then(|modified| modified.elapsed().ok())
+        .is_some_and(|age| age > STALE_LOCK_AGE)
+}
+
 fn acquire_artifact_lock(final_path: &Path) -> Result<Option<ArtifactLock>, String> {
     let lock_path = lock_path(final_path)?;
     let started = std::time::Instant::now();
@@ -1843,6 +1870,11 @@ fn acquire_artifact_lock(final_path: &Path) -> Result<Option<ArtifactLock>, Stri
                             lock_path.display()
                         ));
                     }
+                }
+                // A writer killed before its lock guard dropped (OOM kill, SIGKILL) leaves the
+                // lock behind; without this every later run would time out on this artifact.
+                if lock_is_stale(&lock_path) && std::fs::remove_file(&lock_path).is_ok() {
+                    continue;
                 }
                 if started.elapsed() >= LOCK_WAIT {
                     return Err(format!(
@@ -2110,6 +2142,36 @@ fn load_or_prepare_collapsed_verified_in(
 mod tests {
     use super::*;
     use crate::library::{read_npz, write_npz, Library};
+
+    #[cfg(target_os = "linux")]
+    #[test]
+    fn a_dead_writers_lock_is_reclaimed_instead_of_timing_out() {
+        let directory = std::env::temp_dir().join(format!(
+            "actinv-stale-lock-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        std::fs::create_dir_all(&directory).unwrap();
+        let artifact = directory.join("artifact.bin");
+        let lock = lock_path(&artifact).unwrap();
+        // A pid far above any live process: the writer was killed before cleanup.
+        std::fs::write(&lock, "pid=4294967000 schema=x\n").unwrap();
+        let started = std::time::Instant::now();
+        let guard = acquire_artifact_lock(&artifact).unwrap();
+        assert!(guard.is_some());
+        assert!(
+            started.elapsed() < LOCK_WAIT / 2,
+            "stale lock was waited on"
+        );
+        // Our own live pid is never treated as stale.
+        drop(guard);
+        std::fs::write(&lock, format!("pid={} schema=x\n", std::process::id())).unwrap();
+        assert!(!lock_is_stale(&lock));
+        std::fs::remove_dir_all(&directory).unwrap();
+    }
 
     fn scratch(name: &str) -> PathBuf {
         let stamp = std::time::SystemTime::now()

@@ -1865,8 +1865,8 @@ fn node_w_and_xw(
     (w_acc, xw_acc)
 }
 
-/// Collapse per-node results onto a group structure. `groups` must expose
-/// descending-energy boundaries (FISPACT convention, index 0 = highest).
+/// Collapse per-node results onto a group structure. `GroupStructure` boundaries are
+/// ascending (group 0 = lowest energy); the collapse itself is order-agnostic.
 pub(crate) fn collapse_to_groups(
     nodes: &[ShieldNode],
     ranges: &[(f64, f64)],

@@ -13,6 +13,9 @@ use std::collections::BTreeSet;
 const LINEARIZATION_TOLERANCE: f64 = 2e-4;
 const MAX_LINEARIZATION_PASSES: usize = 20;
 const MAX_GRID_POINTS: usize = 10_000_000;
+/// Resonance-grid density multiplier cap: grids are generated before the point cap can
+/// be checked, so an unbounded density could allocate gigabytes first. 1.0 is the default.
+pub const MAX_GRID_DENSITY: f64 = 64.0;
 const ULTRA_NARROW_RATIO: f64 = 1e-4;
 const ULTRA_NARROW_ZERO_K_REFERENCE_K: f64 = 293.6;
 const ULTRA_NARROW_ISOLATION_WIDTHS: f64 = 100.0;
@@ -1169,8 +1172,10 @@ pub fn process_reaction(
     if !temperature_k.is_finite() || temperature_k < 0.0 {
         return Err("resonance-processing temperature must be finite and nonnegative".into());
     }
-    if !grid_density.is_finite() || grid_density <= 0.0 {
-        return Err("resonance grid density must be finite and positive".into());
+    if !grid_density.is_finite() || grid_density <= 0.0 || grid_density > MAX_GRID_DENSITY {
+        return Err(format!(
+            "resonance grid density must be finite, positive and at most {MAX_GRID_DENSITY}"
+        ));
     }
     groups.validate()?;
     background.validate()?;

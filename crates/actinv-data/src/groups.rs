@@ -301,9 +301,19 @@ impl Tabulated {
         let low = low.max(self.x[0]);
         let high = high.min(self.x[self.x.len() - 1]);
         let mut total = 0.0;
-        for segment in 0..self.x.len() - 1 {
+        // Start at the first segment reaching `low` and stop at the first starting at or
+        // above `high` (the abscissae are nondecreasing, as `evaluate` already assumes):
+        // the same segments in the same order, but O(log N + k) per group instead of O(N).
+        let start = self
+            .x
+            .partition_point(|point| *point <= low)
+            .saturating_sub(1);
+        for segment in start..self.x.len() - 1 {
             let (x1, x2) = (self.x[segment], self.x[segment + 1]);
-            if x2 <= low || x1 >= high || x2 <= x1 {
+            if x1 >= high {
+                break;
+            }
+            if x2 <= low || x2 <= x1 {
                 continue;
             }
             let a = low.max(x1);

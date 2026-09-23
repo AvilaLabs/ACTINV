@@ -51,46 +51,19 @@ struct RawList {
     values: Vec<f64>,
 }
 
+// The crate's canonical ENDF field parsers: one correctly rounded decimal conversion (the
+// private copy multiplied a parsed mantissa by 10^exp, rounding twice) and blank-is-zero
+// integers, matching the Python reference used for bit-identity controls.
 fn parse_float(field: &str) -> Result<f64, String> {
-    let text = field.trim();
-    if text.is_empty() {
-        return Ok(0.0);
-    }
-    if let Ok(value) = text.parse::<f64>() {
-        return value
-            .is_finite()
-            .then_some(value)
-            .ok_or_else(|| format!("nonfinite ENDF value '{text}'"));
-    }
-    let bytes = text.as_bytes();
-    for index in 1..bytes.len() {
-        if matches!(bytes[index], b'+' | b'-') && !matches!(bytes[index - 1], b'e' | b'E') {
-            let (mantissa, exponent) = text.split_at(index);
-            if let (Ok(mantissa), Ok(exponent)) = (mantissa.parse::<f64>(), exponent.parse::<i32>())
-            {
-                let value = mantissa * 10f64.powi(exponent);
-                return value
-                    .is_finite()
-                    .then_some(value)
-                    .ok_or_else(|| format!("nonfinite ENDF value '{text}'"));
-            }
-        }
-    }
-    Err(format!("invalid ENDF number '{text}'"))
+    crate::endf::parse_endf_float(field)
 }
 
 fn parse_i32(field: &str, name: &str) -> Result<i32, String> {
-    field
-        .trim()
-        .parse::<i32>()
-        .map_err(|_| format!("invalid ENDF {name} '{}'", field.trim()))
+    crate::endf::parse_endf_i32(field).map_err(|error| format!("ENDF {name}: {error}"))
 }
 
 fn parse_usize(field: &str, name: &str) -> Result<usize, String> {
-    field
-        .trim()
-        .parse::<usize>()
-        .map_err(|_| format!("invalid ENDF {name} '{}'", field.trim()))
+    crate::endf::parse_endf_usize(field).map_err(|error| format!("ENDF {name}: {error}"))
 }
 
 fn section<'a>(lines: &'a [&'a str], mf: i32, mt: i32) -> Result<Option<Vec<&'a str>>, String> {
@@ -398,6 +371,26 @@ impl FissionYields {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fields_use_the_canonical_endf_parsers() {
+        // One correctly rounded conversion, identical to Rust's (and Python's) literal parse.
+        for (text, expected) in [
+            ("1.400000+7", 1.4e7_f64),
+            ("2.530000-2", 2.53e-2),
+            ("-1.234567+5", -1.234567e5),
+            ("6.022141+23", 6.022141e23),
+        ] {
+            assert_eq!(
+                parse_float(text).unwrap().to_bits(),
+                expected.to_bits(),
+                "{text}"
+            );
+        }
+        // Blank integer fields are zero (ENDF convention), not an error.
+        assert_eq!(parse_i32("           ", "LISO").unwrap(), 0);
+        assert!(parse_usize("         -1", "NFP").is_err());
+    }
 
     fn record(values: [&str; 6], mat: i32, mf: i32, mt: i32, sequence: i32) -> String {
         let data: String = values
