@@ -29,9 +29,11 @@ TABLES = ROOT / "results" / "tables" / "abundance_mass.json"
 ADDRESS_SPACE_BYTES = 2 * 1024**3
 PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
 # Re-seated from 0ed6be99... after the reviewed CRAM solve-refinement fix
-# (35d5448) legitimately changed the normalized neutron result.
+# (35d5448) legitimately changed the normalized neutron result, and again from
+# a80fed95... after the CB2 kernel changes (cc2cade selective refinement gate,
+# 9420f8c subnormal-row exemption) moved it at ULP level.
 PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
-    "a80fed9578efd6af61cc48a08144a383093ef6aa955fd07abc360cea2fa61307"
+    "f7b30255edfe53e3a00522b3ee834dbd52288395cc5babc4472186cf568e1930"
 )
 PRE_P12_TABLES_PROVENANCE = (
     "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; "

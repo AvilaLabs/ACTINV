@@ -1,7 +1,7 @@
 {
   "address_space_limit_bytes": 2147483648,
   "analytic_tolerance": 2e-12,
-  "binary_sha256": "07616138cf8a248b8a1e5634005c529b66c400941f5523bfdded9f26963388d1",
+  "binary_sha256": "787309af7bbb9e6e1571b24c84fc1ac9574efcd858a619debc9f10dba8448a32",
   "canonical_flux_sha256": "cfefd98dcd10454f80e2a84a0a116c6198d6853ef913b3f98b3c28e33fae2134",
   "certificate_hashes": {
     "alpha_cli": {
@@ -175,7 +175,7 @@
       }
     }
   },
-  "control_sha256": "fa368b93b9bfcd2c687964368770db92b059ed486e65604a4b116b94bd79c099",
+  "control_sha256": "05f542a93091b95840ead1cb12f14d75a7daaa34cfb34fb91392c2f3690acb25",
   "entry_point_identity": {
     "alpha": true,
     "deuteron": true,
@@ -187,7 +187,7 @@
     "prepared_mesh"
   ],
   "gate": "P10-G6",
-  "max_analytic_relative_error": 1.6762293825766185e-14,
+  "max_analytic_relative_error": 1.6439942021424526e-14,
   "mesh_certificates": {
     "alpha": {
       "canonical_flux_sha256": "cfefd98dcd10454f80e2a84a0a116c6198d6853ef913b3f98b3c28e33fae2134",
@@ -223,20 +223,21 @@
   "pass": true,
   "pre_p10_neutron": {
     "baseline_commit": "e5421a0e30eb94303482bed2c4b9491b773244e6",
-    "current_solver": "actinv-core 1.1.1",
+    "current_solver": "actinv-core 1.2.0",
     "current_tables_provenance": "Meija et al., Isotopic compositions of the elements 2013, Pure Appl. Chem. 88 (2016) 293-306, DOI 10.1515/pac-2015-0503, NRC PDF SHA-256 d9079171301dc440e6ee40378da1aa5aef7c43e99d815f4cf31c1eb76561dd89 (Table 1 column 9 point values; column 6 when column 9 is an interval); AME2020 Huang et al./Wang et al., Chinese Physics C 45 (2021) 030002/030003, mass_1.mas20 SHA-256 e8599c6d7f724fac91934e59f1b9de8fb8f63e820f4b39456b790665ed2a3307",
-    "expected_normalized_result_sha256": "a80fed9578efd6af61cc48a08144a383093ef6aa955fd07abc360cea2fa61307",
+    "expected_normalized_result_sha256": "f7b30255edfe53e3a00522b3ee834dbd52288395cc5babc4472186cf568e1930",
     "index_sha256": "5e2ceba997b6fe5fd7598ae04bb5de8b0185390fd0d96d29862048ba3f95b151",
     "legacy_neutron_fluence_schema_unchanged": true,
     "library_sha256": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
     "no_projectile_in_spec_index_or_result": true,
     "normalized_fields": [
+      "ledger.assembly.rate_scale exact integer zero (inactive P30 metadata)",
       "top-level ms",
       "working path",
       "certificate.solver semantic version",
       "certificate.tables_provenance after exact embedded-table-record check"
     ],
-    "normalized_result_sha256": "a80fed9578efd6af61cc48a08144a383093ef6aa955fd07abc360cea2fa61307",
+    "normalized_result_sha256": "f7b30255edfe53e3a00522b3ee834dbd52288395cc5babc4472186cf568e1930",
     "pass": true,
     "spec_sha256": "8bb9e0a9ea9e6a536ff013aa05a6b82822e23c42ab0a02f1e1e93078a0d2a891",
     "wrong_tables_provenance_rejected": true
@@ -252,7 +253,7 @@
     "protocol": "74273ec549d113b24367341d1f94f57d0070795d6e679b84a1921d64dbc85b27"
   },
   "python_extension": "libactinv.so",
-  "python_extension_sha256": "26f937366999560cbe859b92d4c0bfda5dbaf8f7c768e7563432c048e1498d9e",
+  "python_extension_sha256": "a4412500ad84ee47062e15984c6668ca839656294d75ba9f402d31242d742adb",
   "rejections": {
     "charged_fission": {
       "context": "not supported for proton",
