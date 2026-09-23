@@ -391,20 +391,20 @@
   {
    "boundaries": [
     {
-     "actinv_total_atoms": 1.0024999999999993e+20,
+     "actinv_total_atoms": 1.0024999999999995e+20,
      "actinv_vs_dense": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
-      "maximum_relative_above_tolerance_crossover": 6.618935239002526e-16,
-      "maximum_resolvable_relative": 1.940478785776372e-08,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.964201429251895e-16,
+      "maximum_resolvable_relative": 1.9404788371476956e-08,
       "resolvable_components": 31,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
      "actinv_vs_openmc": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.6343142144638403e-16,
-      "maximum_relative_above_tolerance_crossover": 1.6547338097506325e-16,
-      "maximum_resolvable_relative": 1.320753643985804e-15,
+      "maximum_absolute_over_initial_norm": 1.2768079800498752e-18,
+      "maximum_relative_above_tolerance_crossover": 0.0,
+      "maximum_resolvable_relative": 1.0508627538592793e-15,
       "resolvable_components": 31,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
@@ -421,20 +421,20 @@
      }
     },
     {
-     "actinv_total_atoms": 1.0024999999999998e+20,
+     "actinv_total_atoms": 1.0025000000000005e+20,
      "actinv_vs_dense": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.6343142144638403e-16,
-      "maximum_relative_above_tolerance_crossover": 4.3346571701708716e-16,
-      "maximum_resolvable_relative": 1.2745441992086343e-08,
+      "maximum_absolute_over_initial_norm": 4.902942643391521e-16,
+      "maximum_relative_above_tolerance_crossover": 4.985344181851251e-16,
+      "maximum_resolvable_relative": 1.2745441655325273e-08,
       "resolvable_components": 31,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
      "actinv_vs_openmc": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.4708827930174563e-15,
-      "maximum_relative_above_tolerance_crossover": 1.4956032545553732e-15,
-      "maximum_resolvable_relative": 1.7310439255690678e-15,
+      "maximum_absolute_over_initial_norm": 8.171571072319202e-16,
+      "maximum_relative_above_tolerance_crossover": 8.308906969752074e-16,
+      "maximum_resolvable_relative": 1.939549150096794e-15,
       "resolvable_components": 31,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
@@ -451,20 +451,20 @@
      }
     },
     {
-     "actinv_total_atoms": 1.0024999999999992e+20,
+     "actinv_total_atoms": 1.0025000000000008e+20,
      "actinv_vs_dense": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
-      "maximum_relative_above_tolerance_crossover": 6.689224960516169e-16,
-      "maximum_resolvable_relative": 1.3139180653479348e-09,
+      "maximum_absolute_over_initial_norm": 9.805885286783043e-16,
+      "maximum_relative_above_tolerance_crossover": 1.0033837440774255e-15,
+      "maximum_resolvable_relative": 1.3139187664424817e-09,
       "resolvable_components": 31,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
      "actinv_vs_openmc": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 2.9417655860349126e-15,
-      "maximum_relative_above_tolerance_crossover": 3.0101512322322693e-15,
-      "maximum_resolvable_relative": 3.0101512322322693e-15,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3378449921032307e-15,
+      "maximum_resolvable_relative": 1.6997440104782577e-15,
       "resolvable_components": 31,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
@@ -481,20 +481,20 @@
      }
     },
     {
-     "actinv_total_atoms": 1.0025000000000002e+20,
+     "actinv_total_atoms": 1.0025000000000013e+20,
      "actinv_vs_dense": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.6343142144638403e-16,
-      "maximum_relative_above_tolerance_crossover": 5.126485414864687e-16,
-      "maximum_resolvable_relative": 1.3457806957952454e-09,
+      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
+      "maximum_relative_above_tolerance_crossover": 1.3415291291982498e-15,
+      "maximum_resolvable_relative": 1.3457804547475351e-09,
       "resolvable_components": 32,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
      "actinv_vs_openmc": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.7977456359102245e-15,
-      "maximum_relative_above_tolerance_crossover": 1.84460255264759e-15,
-      "maximum_resolvable_relative": 3.3041809236808544e-15,
+      "maximum_absolute_over_initial_norm": 6.537256857855361e-16,
+      "maximum_relative_above_tolerance_crossover": 6.707645645991235e-16,
+      "maximum_resolvable_relative": 2.9681477649372614e-15,
       "resolvable_components": 32,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
@@ -511,20 +511,20 @@
      }
     },
     {
-     "actinv_total_atoms": 1.002500000000001e+20,
+     "actinv_total_atoms": 1.0025000000000021e+20,
      "actinv_vs_dense": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.1440199501246883e-15,
-      "maximum_relative_above_tolerance_crossover": 1.17693159903918e-15,
-      "maximum_resolvable_relative": 8.452357718640267e-06,
+      "maximum_absolute_over_initial_norm": 2.2880399002493767e-15,
+      "maximum_relative_above_tolerance_crossover": 2.605626889406709e-15,
+      "maximum_resolvable_relative": 8.452357718319526e-06,
       "resolvable_components": 32,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
      "actinv_vs_openmc": {
       "all_components_within_relative_or_absolute": true,
-      "maximum_absolute_over_initial_norm": 1.3074513715710722e-15,
-      "maximum_relative_above_tolerance_crossover": 1.3450646846162024e-15,
-      "maximum_resolvable_relative": 2.7423412136598457e-15,
+      "maximum_absolute_over_initial_norm": 1.6343142144638403e-16,
+      "maximum_relative_above_tolerance_crossover": 2.013438959996092e-15,
+      "maximum_resolvable_relative": 2.3587807202646292e-15,
       "resolvable_components": 32,
       "tolerance_crossover_fraction_of_initial_norm": 0.01
      },
@@ -570,9 +570,9 @@
    ],
    "split_merged": {
     "all_components_within_relative_or_absolute": true,
-    "maximum_absolute_over_initial_norm": 2.2880399002493767e-15,
-    "maximum_relative_above_tolerance_crossover": 2.315812024332298e-15,
-    "maximum_resolvable_relative": 2.315812024332298e-15,
+    "maximum_absolute_over_initial_norm": 2.4514713216957608e-15,
+    "maximum_relative_above_tolerance_crossover": 2.4812271689274592e-15,
+    "maximum_resolvable_relative": 2.4812271689274592e-15,
     "resolvable_components": 30,
     "tolerance_crossover_fraction_of_initial_norm": 0.01
    },
@@ -580,8 +580,8 @@
   }
  ],
  "implementations": {
-  "actinv_module_sha256": "ad14792207a193e335163e1b0b1ad38fb2fcd5af846eaba1bf02f162edf0ccfc",
-  "actinv_version": "1.1.2",
+  "actinv_module_sha256": "bf514ab52ce1722ddb631f802d586fe2dbc59a898ae81681e890758b484b54f6",
+  "actinv_version": "1.0.0",
   "coefficient_document_sha256": "df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23",
   "dense_solver": "scipy.linalg.expm",
   "openmc_solver": "openmc.deplete.cram.CRAM48",

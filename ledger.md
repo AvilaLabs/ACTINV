@@ -1383,3 +1383,13 @@ data-handling repair carries a regression test that fails on the pre-repair code
   `release_boundary` failed; CI had not reached that step since the bump because earlier steps were red. The
   tag glob is now `v1.*` with the unchanged rule (workspace = newest published tag, no tag ahead of it), the
   same maintenance the v1.1.2 release applied for the 1.1 line; the output key is renamed `published_tags`.
+- **CB1 numerical evidence restored.** Commit 9420f8c (subnormal-row kernel exemption) rewrote the sealed
+  `results/cb1_numerical.json` with ULP-level different values (its message says CB1 output was bit-identical).
+  The P22 opening seal and `check_cb1.py` pin the sealed bytes, so both failed. The file is restored from 9420f8c^;
+  both checkers pass again. New kernel numbers belong in new evidence, not in the sealed CB1 record.
+- **P13 bulk-data rule and the TENDL threshold supplement.** Commit 9aad344 tracked
+  `paper/tendl-threshold-note/TENDL_threshold_supplement.zip` (17 KB; protocol, scripts, JSON and notes that are
+  also tracked individually; no evaluated data), which the P13 rule forbids as a tracked `.zip`. The rule now
+  admits that archive only at its reviewed SHA-256 (c4a152e9…, also pinned by the paper's own manifest); any
+  edit to it, or any other archive, is still forbidden. `g1_p13_data_distribution.py` output is byte-identical
+  to the committed record and P13 closes as P13-PASS.

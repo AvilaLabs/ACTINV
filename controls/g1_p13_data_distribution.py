@@ -180,6 +180,20 @@ def validate_catalog(catalog):
     return artifacts, bundles
 
 
+# Reviewed archives that carry no evaluated nuclear data. Each is pinned by SHA-256, so an
+# edited copy, or any other archive, is still forbidden.
+REVIEWED_ARCHIVES = {
+    # TENDL threshold note supplement: the tracked protocol, scripts, JSON and notes only.
+    "paper/tendl-threshold-note/TENDL_threshold_supplement.zip":
+        "c4a152e9ad7760e5ab4986a83f5fccd001ef31c90136fbd8d582aa6a44b0ea21",
+}
+
+
+def reviewed_archive(path):
+    expected = REVIEWED_ARCHIVES.get(path)
+    return expected is not None and hash_file(ROOT / path) == expected
+
+
 def hash_file(path):
     digest = hashlib.sha256()
     with path.open("rb") as source:
@@ -289,7 +303,8 @@ def main():
     ).stdout.split(b"\0")
     forbidden_tracked = sorted(
         path.decode() for path in tracked if path and (
-            path.decode().endswith((".npz", ".zip", ".endf"))
+            (path.decode().endswith((".npz", ".zip", ".endf"))
+             and not reviewed_archive(path.decode()))
             or path.decode() in {artifact["path"] for artifact in artifacts.values()}
         )
     )
