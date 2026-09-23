@@ -110,7 +110,9 @@ declaration is a constraint, not a value copied into the certificate.
 `material.mass_g` defaults to 1 g. Inventories remain per gram; the mass scales the total photon rates and powers.
 Composition keys are case-insensitive natural element symbols or explicit `SymbolA[mN]` nuclides. Bare `m` means
 `m1`, so `BA137M`, `Ba137m` and `Ba137m1` identify the same state; aliases which collide are an error. A natural
-element and one of its explicit isotopes cannot appear together. Explicit mass-based entries use the selected decay
+element and one of its explicit isotopes cannot appear together. An unknown element symbol is an error, and so is a
+natural element without tabulated natural isotopic abundances (Tc, Pm, Po, At, Rn, Fr, Ra, Ac): give those as
+explicit nuclides, since a natural key would otherwise contribute no atoms. Explicit mass-based entries use the selected decay
 evaluation's AWR times `1.00866491595 u` and fail if that record is absent. A literal `atoms_per_g` entry may instead
 be ledgered as absent from the solvable chain; a photon-response calculation still requires its mass.
 

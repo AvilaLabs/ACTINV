@@ -11,7 +11,8 @@ can distinguish “checked and empty” from “not evaluated.” Rates are per 
 - `composition_basis`, `composition_input_total`, `composition_weight_percent_total`,
   `composition_not_summing_to_100` — how the input composition was interpreted. The weight-percent total is `null`
   for other bases.
-- `composition_elements_unknown` — material keys without natural-isotope mass/abundance data.
+- `composition_elements_unknown` — material keys without natural-isotope mass/abundance data. Specification
+  validation now rejects such keys, so a validated run always reports this list empty.
 - `composition_isotopes_absent_from_decay_library` — initial isotopes which cannot enter the decay network.
 - `explicit_isotope_masses` — canonical nuclide, ZA/LISO, evaluated AWR, neutron-mass conversion, molar mass, resulting
   atoms per gram and primary/fallback source for each explicit isotope key. A literal unsolved `atoms_per_g` key may

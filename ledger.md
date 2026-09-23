@@ -1359,3 +1359,9 @@ data-handling repair carries a regression test that fails on the pre-repair code
   pins that file's historical hash (da34b2a6…, bound at the pre-unseal authorization commit), so CI failed
   with "P18b evidence hashes changed". The file is restored byte-for-byte from 29825b0^; the amended
   current-runtime leg stays in `controls/check_g3_p18b.py`, which never reads the report.
+- **Composition keys (actinv-data `composition.rs`).** The natural-element branch of `material_key` accepted any
+  alphabetic string, and conversion dropped keys without abundance rows with only a ledger note (and, for
+  `atom_fraction`, renormalised the survivors). No tracked spec uses such a key (scan of every tracked JSON
+  material). Unknown symbols now fail in `material_key`; abundance-free elements (Tc, Pm, Po, At, Rn, Fr, Ra, Ac)
+  fail composition validation with a pointer to explicit nuclides. Controls:
+  `misspelt_or_abundance_free_elements_are_rejected`, `misspelt_composition_element_fails_validation`.

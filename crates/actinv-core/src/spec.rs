@@ -1008,6 +1008,19 @@ mod duration_tests {
     }
 
     #[test]
+    fn misspelt_composition_element_fails_validation() {
+        let mut value = minimal_spec();
+        value["material"]["composition"] = serde_json::json!({"Fe": 99.0, "Coo": 1.0});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("unknown element symbol"));
+        value["material"]["composition"] = serde_json::json!({"Fe": 99.0, "Tc": 1.0});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("no natural isotopic abundance"));
+    }
+
+    #[test]
     fn omitted_projectile_is_backward_compatible_neutron() {
         let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
         assert_eq!(spec.projectile, Projectile::Neutron);

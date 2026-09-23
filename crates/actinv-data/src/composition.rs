@@ -64,7 +64,12 @@ pub fn material_key(raw: &str) -> Result<MaterialKey, String> {
         if !raw.chars().all(|character| character.is_ascii_alphabetic()) {
             return Err(format!("malformed material composition key '{raw}'"));
         }
-        return Ok(MaterialKey::Element(cap(raw)));
+        let symbol = cap(raw);
+        // A misspelt symbol must fail here, exactly as it does in an explicit nuclide key.
+        if z_of(&symbol).is_none() {
+            return Err(format!("unknown element symbol in material key '{raw}'"));
+        }
+        return Ok(MaterialKey::Element(symbol));
     };
     let (symbol_raw, rest) = raw.split_at(digit);
     if !(1..=2).contains(&symbol_raw.len())
@@ -130,6 +135,13 @@ fn checked_keys(elements: &BTreeMap<String, f64>) -> Result<Vec<(MaterialKey, f6
     for (raw, value) in elements {
         let key = material_key(raw)?;
         let (canonical, symbol, explicit) = match &key {
+            // An element without natural abundance data would contribute no atoms at all.
+            MaterialKey::Element(symbol) if isotopes(symbol).is_empty() => {
+                return Err(format!(
+                    "material composition element '{raw}' has no natural isotopic abundance \
+                     data; give its nuclides explicitly as '{symbol}' plus a mass number"
+                ));
+            }
             MaterialKey::Element(symbol) => (symbol.clone(), symbol.clone(), false),
             MaterialKey::Nuclide {
                 symbol, canonical, ..
@@ -399,8 +411,11 @@ pub fn symbol_of(z: i32) -> &'static str {
 
 #[cfg(test)]
 mod tests {
-    use super::{atoms_per_gram_basis, mass_fractions, material_key, MaterialKey, NA};
-    use std::collections::BTreeMap;
+    use super::{
+        atoms_per_gram_basis, mass_fractions, material_atoms_per_gram, material_key,
+        validate_material_keys, MaterialKey, NA,
+    };
+    use std::collections::{BTreeMap, HashMap};
 
     #[test]
     fn atom_fraction_and_atoms_per_gram_have_declared_meaning() {
@@ -444,5 +459,27 @@ mod tests {
         );
         assert!(material_key("Fe56m0").is_err());
         assert!(material_key("Xx56").is_err());
+    }
+
+    #[test]
+    fn misspelt_or_abundance_free_elements_are_rejected() {
+        // A typo must not silently contribute zero atoms.
+        assert!(material_key("Fee").is_err());
+        assert!(material_key("Xx").is_err());
+        assert_eq!(
+            material_key("tc").unwrap(),
+            MaterialKey::Element("Tc".into())
+        );
+        let typo = BTreeMap::from([("Fe".into(), 50.0), ("Fee".into(), 50.0)]);
+        assert!(validate_material_keys(&typo).is_err());
+        assert!(material_atoms_per_gram(&typo, "wt_percent", &HashMap::new()).is_err());
+        // Tc is a real element with no natural abundance: it must be given as nuclides.
+        let technetium = BTreeMap::from([("Tc".into(), 1.0)]);
+        let error = validate_material_keys(&technetium).unwrap_err();
+        assert!(error.contains("no natural isotopic abundance"), "{error}");
+        assert!(validate_material_keys(&BTreeMap::from([("Tc99".into(), 1.0)])).is_ok());
+        // atom_fraction must never renormalise over a silently dropped member.
+        let mixed = BTreeMap::from([("Fe".into(), 1.0), ("Pm".into(), 1.0)]);
+        assert!(material_atoms_per_gram(&mixed, "atom_fraction", &HashMap::new()).is_err());
     }
 }

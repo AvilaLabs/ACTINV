@@ -11,6 +11,10 @@
   grid was affected — all `dilution: "composition"` runs and any fixed σ₀ other than the grid ends — including
   the shielded rows folded into MF=33 uncertainty. Runs at σ₀ = 0.1 b or ≥ 1e10 b (the clamped grid ends, which
   every P19 control uses) were unaffected. Regression test added at exact and off-midpoint interior points.
+- A misspelt natural-element composition key (`"Fee"`, `"Coo"`) or an element without natural abundance data
+  (`"Tc"`, `"Pm"`) passed validation and silently contributed zero atoms; with `atom_fraction` the remaining
+  members were renormalised over the survivors. The only trace was `ledger.composition_elements_unknown`. Such keys
+  are now validation errors; give abundance-free elements as explicit nuclides.
 
 ## v1.2.0 — 2026-09-21
 
