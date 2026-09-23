@@ -675,7 +675,12 @@ pub fn main_from(a: Vec<String>) {
                 "ACTINV {}\nWorking directory: {}\nCache override: {}",
                 env!("CARGO_PKG_VERSION"),
                 std::env::current_dir().unwrap_or_default().display(),
-                std::env::var("ACTINV_CACHE_DIR").unwrap_or_else(|_| "platform default".into())
+                match std::env::var_os("ACTINV_CACHE_DIR") {
+                    // Every cache user rejects an empty override; say so here too.
+                    Some(value) if value.is_empty() => "set but empty (invalid)".to_string(),
+                    Some(value) => value.to_string_lossy().into_owned(),
+                    None => "platform default".to_string(),
+                }
             );
             let spec = if let Some(path) = a.get(2) {
                 Spec::from_json(
@@ -852,9 +857,12 @@ pub fn main_from(a: Vec<String>) {
             if a.len() != 5 {
                 die(USAGE, 2);
             }
-            let step: usize = a[3].parse().unwrap_or_else(|_| {
-                die("export-openmc-mesh step must be a non-negative integer", 2)
-            });
+            let step: usize = a[3]
+                .parse()
+                .unwrap_or_else(|_| die("export-openmc-mesh STEP must be a positive integer", 2));
+            if step == 0 {
+                die("STEP is one-based and must be positive", 2);
+            }
             let cells = collect_mesh_photon_cells(&a[2], step);
             let fragment = export_openmc_mesh(&cells).unwrap_or_else(|e| die(e, 1));
             std::fs::write(&a[4], fragment)

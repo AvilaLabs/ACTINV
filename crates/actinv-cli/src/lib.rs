@@ -508,8 +508,18 @@ struct NetworkDownloader {
 
 impl NetworkDownloader {
     fn new() -> Self {
+        // ureq bounds nothing by default: a stalled mirror would hang `data fetch` forever.
+        // Every phase is bounded; the body limit is generous because bundles are tens of
+        // MB and may cross slow links (a timed-out download is discarded, never installed).
+        let config = ureq::Agent::config_builder()
+            .timeout_resolve(Some(std::time::Duration::from_secs(30)))
+            .timeout_connect(Some(std::time::Duration::from_secs(30)))
+            .timeout_send_request(Some(std::time::Duration::from_secs(60)))
+            .timeout_recv_response(Some(std::time::Duration::from_secs(120)))
+            .timeout_recv_body(Some(std::time::Duration::from_secs(2 * 60 * 60)))
+            .build();
         Self {
-            agent: ureq::Agent::new_with_defaults(),
+            agent: ureq::Agent::new_with_config(config),
         }
     }
 }

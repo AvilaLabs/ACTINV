@@ -80,7 +80,7 @@ neutron data in one command:
 actinv data fetch
 ```
 
-The command downloads about 139 MiB, verifies every file with SHA-256 before installing it under
+The command downloads about 79 MiB, verifies every file with SHA-256 before installing it under
 `actinv-data/v1.1.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 

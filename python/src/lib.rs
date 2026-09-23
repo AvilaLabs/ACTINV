@@ -22,6 +22,7 @@ fn _cli(py: Python<'_>) -> PyResult<()> {
 #[pyfunction]
 #[allow(clippy::too_many_arguments)]
 fn cram_step(
+    py: Python<'_>,
     n: usize,
     rows: Vec<usize>,
     cols: Vec<usize>,
@@ -54,35 +55,54 @@ fn cram_step(
             .map(|(&r, &i)| C64::new(r, i))
             .collect(),
     };
-    let (y, _) = step(&a, &n0, dt, &c).map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+    let (y, _) = py
+        .detach(|| step(&a, &n0, dt, &c))
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
     Ok(y)
 }
 
 /// broaden(e, sig, T_K, awr, eout) -> list[float] — SIGMA1 Doppler broadening.
 #[pyfunction]
-fn broaden(e: Vec<f64>, sig: Vec<f64>, t_k: f64, awr: f64, eout: Vec<f64>) -> PyResult<Vec<f64>> {
-    Ok(dop::broaden(&e, &sig, t_k, awr, &eout))
+fn broaden(
+    py: Python<'_>,
+    e: Vec<f64>,
+    sig: Vec<f64>,
+    t_k: f64,
+    awr: f64,
+    eout: Vec<f64>,
+) -> PyResult<Vec<f64>> {
+    py.detach(|| dop::broaden(&e, &sig, t_k, awr, &eout))
+        .map_err(pyo3::exceptions::PyValueError::new_err)
 }
 
 /// run(spec_json: str) -> str — solve a problem specification and return the result as JSON.
 /// The same core function the `actinv` CLI and the harness call: one binary, three entry points (P5 G3).
+/// The solve releases the GIL, so other Python threads keep running meanwhile.
 #[pyfunction]
-fn run(spec_json: &str) -> PyResult<String> {
+fn run(py: Python<'_>, spec_json: &str) -> PyResult<String> {
     let resolved = actinv_cli::resolve_catalog_json(spec_json)
         .map_err(pyo3::exceptions::PyValueError::new_err)?;
     let spec = Spec::from_json(&resolved).map_err(pyo3::exceptions::PyValueError::new_err)?;
-    let r = core_run(&spec, "python").map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+    let r = py
+        .detach(|| core_run(&spec, "python"))
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
     serde_json::to_string(&r).map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
 
 /// reverse(problem_json: str, measurements_json: str, segments: bool) -> str
 /// Flux estimation from measured activities in the linear regime.
 #[pyfunction]
-fn reverse(problem_json: &str, measurements_json: &str, segments: bool) -> PyResult<String> {
+fn reverse(
+    py: Python<'_>,
+    problem_json: &str,
+    measurements_json: &str,
+    segments: bool,
+) -> PyResult<String> {
     let resolved = actinv_cli::resolve_catalog_json(problem_json)
         .map_err(pyo3::exceptions::PyValueError::new_err)?;
     let spec = Spec::from_json(&resolved).map_err(pyo3::exceptions::PyValueError::new_err)?;
-    let result = actinv_core::reverse::solve(&spec, &resolved, measurements_json, segments)
+    let result = py
+        .detach(|| actinv_core::reverse::solve(&spec, &resolved, measurements_json, segments))
         .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
     serde_json::to_string(&result)
         .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))

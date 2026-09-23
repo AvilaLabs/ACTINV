@@ -1414,3 +1414,11 @@ data-handling repair carries a regression test that fails on the pre-repair code
   the same torn-tail/corruption semantics; `read_prefix_result` reads buffered; the memory guard is refused
   where it cannot measure. Controls: `imported_mesh_cell_counts_are_checked_and_bounded`,
   `resume_scan_streams_complete_records_and_stops_at_a_torn_tail`.
+- **CLI and Python binding.** Download timeouts (ureq 3.4 defaults are all `None`); GIL released via
+  `py.detach` around the four solve-bearing functions; `actinv_core::doppler::broaden` returns `Result` with the
+  same input checks as the hardened actinv-data routine (algorithm unchanged, so valid inputs are bit-identical);
+  interchange contract-gap markers gained "not in the qualified" to stay a superset of the native classifier.
+  Deliberately unchanged: `interchange/run_case.py` (its docstring overclaims digest coverage and a timeout
+  surfaces as a traceback) is pinned by the sealed P27 Core package at sha256 4c42c2d6…, so repairing it needs a
+  P27 amendment; the Python `_cli` hard exit is left as is (the console-script path is unaffected).
+  Controls: `invalid_inputs_are_errors_not_panics`, `one_over_v_is_preserved`.

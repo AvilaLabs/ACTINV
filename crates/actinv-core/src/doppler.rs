@@ -28,12 +28,36 @@ fn poly_f_inf(c: &[f64; 5]) -> f64 {
 }
 
 /// Broaden `sig` given on ascending `e` (eV) from 0 K to `t_k` for target mass ratio `awr`, evaluated at `eout`.
-pub fn broaden(e: &[f64], sig: &[f64], t_k: f64, awr: f64, eout: &[f64]) -> Vec<f64> {
+/// Inputs are validated and reported as errors: this routine backs the Python API, where a
+/// panic would surface as an uncatchable `PanicException`.
+pub fn broaden(
+    e: &[f64],
+    sig: &[f64],
+    t_k: f64,
+    awr: f64,
+    eout: &[f64],
+) -> Result<Vec<f64>, String> {
     let n = e.len();
-    assert!(
-        n >= 2 && sig.len() == n,
-        "grid and cross section must have the same length >= 2"
-    );
+    if n < 2 || sig.len() != n {
+        return Err("grid and cross section must have the same length >= 2".into());
+    }
+    if !(t_k.is_finite() && t_k > 0.0) {
+        return Err("Doppler temperature must be finite and positive".into());
+    }
+    if !(awr.is_finite() && awr > 0.0) {
+        return Err("Doppler target AWR must be finite and positive".into());
+    }
+    if e.iter().any(|value| !value.is_finite() || *value <= 0.0)
+        || e.windows(2).any(|pair| pair[1] < pair[0])
+    {
+        return Err("Doppler input energies must be finite, positive and nondecreasing".into());
+    }
+    if sig.iter().any(|value| !value.is_finite()) {
+        return Err("Doppler input contains a nonfinite cross section".into());
+    }
+    if eout.iter().any(|value| !value.is_finite() || *value <= 0.0) {
+        return Err("Doppler output energies must be finite and positive".into());
+    }
     let kt = KB * t_k / awr;
     let x: Vec<f64> = e.iter().map(|v| (v / kt).sqrt()).collect();
     // segment coefficients: sigma = a + b x^2 on [x_k, x_{k+1}]  (linear in E; zero-length segments carry no weight)
@@ -59,11 +83,11 @@ pub fn broaden(e: &[f64], sig: &[f64], t_k: f64, awr: f64, eout: &[f64]) -> Vec<
             // segments whose t-range intersects [-WINDOW, WINDOW]
             let lo_x = yy - WINDOW;
             let hi_x = yy + WINDOW;
-            let k0 = match x.binary_search_by(|p| p.partial_cmp(&lo_x).unwrap()) {
+            let k0 = match x.binary_search_by(|p| p.total_cmp(&lo_x)) {
                 Ok(i) => i,
                 Err(i) => i.saturating_sub(1),
             };
-            let k1 = match x.binary_search_by(|p| p.partial_cmp(&hi_x).unwrap()) {
+            let k1 = match x.binary_search_by(|p| p.total_cmp(&hi_x)) {
                 Ok(i) => i,
                 Err(i) => i,
             }
@@ -89,5 +113,33 @@ pub fn broaden(e: &[f64], sig: &[f64], t_k: f64, awr: f64, eout: &[f64]) -> Vec<
         }
         out[oi] = acc / (y * y * SQPI);
     }
-    out
+    Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::broaden;
+
+    #[test]
+    fn invalid_inputs_are_errors_not_panics() {
+        let (e, s) = ([1.0, 2.0, 4.0], [3.0, 2.0, 1.0]);
+        assert!(broaden(&e, &s, 293.6, 55.0, &[1.5, 3.0]).is_ok());
+        assert!(broaden(&e[..1], &s[..1], 293.6, 55.0, &[1.5]).is_err());
+        assert!(broaden(&e, &s[..2], 293.6, 55.0, &[1.5]).is_err());
+        assert!(broaden(&e, &s, 0.0, 55.0, &[1.5]).is_err());
+        assert!(broaden(&e, &s, 293.6, 55.0, &[f64::NAN]).is_err());
+        assert!(broaden(&e, &s, 293.6, 55.0, &[-1.0]).is_err());
+        assert!(broaden(&[2.0, 1.0], &[1.0, 1.0], 293.6, 55.0, &[1.5]).is_err());
+    }
+
+    #[test]
+    fn one_over_v_is_preserved() {
+        // SIGMA1's exact law: a 1/v cross section is invariant under broadening.
+        let e: Vec<f64> = (0..400).map(|i| 1e-3 * 1.05f64.powi(i)).collect();
+        let s: Vec<f64> = e.iter().map(|v| 1.0 / v.sqrt()).collect();
+        let out = broaden(&e, &s, 293.6, 55.0, &[1.0, 10.0]).unwrap();
+        for (energy, value) in [1.0f64, 10.0].iter().zip(out) {
+            assert!((value * energy.sqrt() - 1.0).abs() < 1e-3, "{value}");
+        }
+    }
 }

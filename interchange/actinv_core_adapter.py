@@ -28,9 +28,12 @@ CLAIMS_SCHEMA = "avila.core/evidence-claims/v0.2-draft"
 ADAPTER_SCHEMA = "avila.core/external-checker-adapter/v0.1-draft"
 
 # Refusal strings the ACTINV side emits before any solve; a receipt or error
-# carrying one of these is a contract_gap, not a process failure.
+# carrying one of these is a contract_gap, not a process failure. Keep this a
+# superset of the native per-case classifier in crates/actinv-core/src/study.rs
+# (search "let gap ="), or the same refusal classifies differently per path.
 CONTRACT_GAP_MARKERS = (
     "family_not_qualified",
+    "not in the qualified",
     "unsupported study version",
     "study_too_large",
     "template_revoked",

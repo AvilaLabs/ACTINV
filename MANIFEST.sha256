@@ -8,13 +8,13 @@ f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/work
 d6dcef24d539d3bce60d5d9c24eacf67347569487280db7ea672ca97d8c6d08c  ./.github/workflows/web.yml
 19832d6c188f4c1878740eca4d3bce13367fc792e37cde446ca7c2a079035483  ./.gitignore
 95cbf21273eefeb72fb7a9676cde68aeeadc4b76d8bc102b8ce5ad439a2ff6bd  ./AGENTS.md
-1ef5763e0e41a2a1092a1aa5df8a13361d1fe789c4d3f2d593bde9e99383bee8  ./CHANGELOG.md
+a0878645ce4e5bf4cd0ba478da3c7c8f4ac11223e5abdb56eaabd80e54525ba1  ./CHANGELOG.md
 565307cc43432e536e36c0fdbc23fb7e971054e749fb46d7c83ea780271f97c2  ./CONTRIBUTING.md
 bed3c1b946b3caf6f7b272636bd931214f50de31c57c4be55fbb195ff16ae38a  ./Cargo.lock
 42d187439ef1c7d5585c6480c993c855d2dce9b0ceb2da373677d065cc3cccf2  ./Cargo.toml
 cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./LICENSE-APACHE
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./LICENSE-MIT
-d77ec0cf9abdcfde9e98c1a74819a224250e6ec3746e97e834dad2e30b44dccc  ./README.md
+55ac1eeaf00afbad7ac029ff5593820db9d3ddb6b8dcb8939e8ead65d99ea0be  ./README.md
 6344b2b6e7c77a6a71e4147f95df6e357cb92c93fd54fc4c7b5f6ad4519fc8c4  ./contrib/jade/README.md
 f047ac77aa46b8a03031898a05de29e5306c50cca795a986da7f113d2df492e2  ./contrib/jade/jade-actinv-code-target.patch
 16dfa20a848c49ef6b7196f51a485390fa2796dc8b8fba49e6f3d42d3cc49ac2  ./controls/acc_classify.py
@@ -474,8 +474,8 @@ b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/tes
 25638bddfd6bb183c51720e53254a6529b15a63cadae2202174c662f0cea3314  ./crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json
 a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207  ./crates/actinv-cli/data/iron-example.json
 8c89d478267a19681077016f5055c6e3c8db84a5ee77dbcdfd39ed04c70d3b90  ./crates/actinv-cli/src/bin/actinv.rs
-55a6dbec71e4c0f04c953867fec446d14be7d8b43f1287d4c9a5b9f02c0ba83d  ./crates/actinv-cli/src/command.rs
-2b54be38ffd55e0dddbd36d902878384cb0a068829711749e09d76d8518df2cf  ./crates/actinv-cli/src/lib.rs
+7cf129da681b7ad81de0ab890a90c1cbaa446fd69e8a467dd2ee41cf2aee0345  ./crates/actinv-cli/src/command.rs
+45943afd089259cda2cdf331f1cf2193baf6c51f9ac5f12ee466f269785efb4f  ./crates/actinv-cli/src/lib.rs
 bf72b51c4ef3759d398186dcadccd4969b7f074ca2b587b5e9c92eb4f46bb446  ./crates/actinv-cli/src/workflow.rs
 63a8b58468e90c034675733339a2e716204933b5d4feb46aebe4e3125b47e029  ./crates/actinv-cli/tests/data_command.rs
 4ce61a0b0447bf63bef9d89403c16e0bfaa281c68c96340aaac82b572f5b69ee  ./crates/actinv-cli/tests/validation.rs
@@ -493,7 +493,7 @@ a95e9328bfe93b23db3134930b2a0a8cedfcd0e076f6784bd5bc403151b93798  ./crates/actin
 79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba  ./crates/actinv-core/src/cram.rs
 ad87f5e6af18c6b4c4a0bb79d93d6530d7e45ae521e8521080f6106ca3b847a9  ./crates/actinv-core/src/cram_coeffs.rs
 d005ca5ab2b6d127002d903c504a95241a7e8b562a30742779d8e54aabbb1b37  ./crates/actinv-core/src/damage.rs
-8775e52ff1d8f9e56f4d45fd0ffc2a56f22e365a4d2786b2ec95a21b9d5f898c  ./crates/actinv-core/src/doppler.rs
+92e693b957514a6889a5e4bde3182f498385289c306fd0d03becf572a2cd8c6f  ./crates/actinv-core/src/doppler.rs
 074bb9bff7f6518242b21261782038d05b722e83ecf36d44a6647b89dd7f4e58  ./crates/actinv-core/src/flux.rs
 01c27355e600d34edb857dbc4245346d9f9fcabb05723cf12aadbc50fc0d7c83  ./crates/actinv-core/src/lib.rs
 85778f5c8d8775599f8cf17990fb9ae8635fa73b3e664eeb0b452fe58c96756f  ./crates/actinv-core/src/mesh.rs
@@ -558,7 +558,7 @@ de89029386c95dc6269bb739afd08e1f56791f32680ac1c14014144aa186b022  ./docs/APPLICA
 de9fd921aaaee00a9a4003f5e0ce1a9e310b243fb35240cc9ca458f7570de562  ./docs/COMPETITIVE_BENCHMARK.md
 f74eae1f47b5dead5c62c3b06833706392e97b4cde813dc204e1857a8b3c444c  ./docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md
 0c5e7f9a4975220e4ad7928e8861be57e3e01e9e4dd88c5dabd52f23aa279f3e  ./docs/CRATES_RELEASE.md
-7b1c7ec0be91c229eff70061f5eda832de7b4341d656ea597c32b578e46eccf3  ./docs/DATA.md
+6f884ba9a64181e8aa7f1d045c1e2116708e73a5e61d535844f62c84ecf40002  ./docs/DATA.md
 59cbd6060728f315a615c78577389b18a6429e0f535c0ee4c8ec28b574600ab7  ./docs/DATA_LIMITATIONS.md
 93998970b73a23d2b737e76b8d493e014cbc3e48f39828840b331d2c12ddb95f  ./docs/DATA_RELEASE_NOTES_v1.0.0.md
 b0f6cddedbb1ca41b5693ab07bb6a60dc8aa6501fbaa20b6025b8d824b524df0  ./docs/DATA_RELEASE_NOTES_v1.1.0.md
@@ -660,9 +660,9 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 07431d9ad494467edb0faaeb4087c838034f354f0189f6e7635798e09e45f218  ./examples/shielding_demo.json
 92f99c2101dabb159e19463bdfe2d6f8af91d21f54811d4d46f439c25b739228  ./examples/study_fe_smoke.json
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
-b4e6d2bc1589a7e0df74d4985b6c71d201c5fa9a2d85ad42022716563222c417  ./interchange/actinv_core_adapter.py
+057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-b49cc4364cc128a87d7103d30762398e6c2a25762b16ca9a51173e68733aa539  ./ledger.md
+bd5bf74bdc10c82cf84e784aecf9408b16acee076825a37f8b6d7b544a87da21  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -816,7 +816,7 @@ cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30  ./python/LICEN
 4f722528d1cb3662dcc69ff215f00088cd74706a21ad5c8fd35b167ce804e5e9  ./python/LICENSE-MIT
 05d8af7d93bb64ccd9da89f74b7161d6b4e7a3e1af53fbc971aebd84ac3ed74c  ./python/README.md
 2296d19e6f31f2f4da5bb5b8dd6871ff66f19bb83a4b74e8ed90845e6d10a4fd  ./python/pyproject.toml
-078e8f8b0ad4c02a10a59a8822675e6576abbfbf5c8ceb68550d877f459c2849  ./python/src/lib.rs
+3c442579c8413720939067ead441f48dddd655d5ee912ae59a32be87cc415dba  ./python/src/lib.rs
 c995e61b39b1b03de075f30dcf5736c083e4588d3463b6ae291542a222e898ad  ./python/src/objects.py
 50cdcf69035b4c5ab9c47856cf71c86d5375f82712c36cfdb638f66f7bed2b69  ./requirements-ci.txt
 0aea13e7a4a250b0c60000674e7086d0b7afe67d05025e7c8746a237628a55e9  ./results/FNS_LIBRARIES.md

@@ -8,7 +8,7 @@ Install the recommended neutron activation and decay data with:
 actinv data fetch
 ```
 
-This downloads about 139 MiB and installs about 229 MiB under `actinv-data/v1.1.0/`. ACTINV streams each download to a
+This downloads about 79 MiB and installs about 170 MiB under `actinv-data/v1.1.0/`. ACTINV streams each download to a
 temporary file and checks both its byte count and SHA-256 before making it visible. The two decay archives come
 directly from the IAEA; both the downloaded ZIP and the one extracted member are verified. Existing correct files are
 reused, and an incorrect file is left untouched unless you explicitly request a verified replacement with `--force`.

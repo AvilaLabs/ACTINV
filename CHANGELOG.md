@@ -44,6 +44,14 @@
 - Mesh resume streams the existing output instead of reading it whole into memory, re-reads prefix records
   with buffered I/O instead of one syscall per byte, refuses `memory_limit_bytes` where peak RSS cannot be
   measured (it was silently inert off Linux), and says when a tripped guard discards work because `resume` is off.
+- `actinv data fetch` bounds every network phase (30 s resolve/connect, 120 s to first response, 2 h per body);
+  ureq's defaults are unbounded, so a stalled mirror could hang the command indefinitely.
+- The Python binding releases the GIL for `run`, `reverse`, `cram_step` and `broaden`, so other Python threads
+  keep running during a solve; `broaden` validates its inputs and raises `ValueError` instead of panicking
+  (`PanicException`) on short, mismatched, non-finite or non-positive arrays.
+- `actinv doctor` reports an empty `ACTINV_CACHE_DIR` as invalid (every cache user rejects it) instead of printing
+  a blank; `export-openmc-mesh` rejects STEP 0 up front like the other exporters; the README and data guide quote
+  the current default-bundle sizes (about 79 MiB download, 170 MiB installed, not 139/229 MiB from v1.0.0).
 
 ## v1.2.0 — 2026-09-21
 
