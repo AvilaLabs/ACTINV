@@ -1,0 +1,7 @@
+#!/bin/sh
+# Refresh MANIFEST.sha256 from exactly what is staged, so CI's manifest gate cannot fail on a forgotten refresh.
+# Opt in (keeps any other hooks): ln -s ../../scripts/git-hooks/pre-commit .git/hooks/pre-commit
+set -e
+root=$(git rev-parse --show-toplevel)
+python3 "$root/scripts/refresh_manifest.py" --write --index >/dev/null
+git add -- "$root/MANIFEST.sha256"

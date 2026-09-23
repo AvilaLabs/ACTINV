@@ -28,3 +28,9 @@ cargo check --workspace --all-targets --all-features
 cargo clippy --workspace --all-targets --all-features -- -D warnings
 cargo test --workspace --all-targets --all-features
 ```
+
+`MANIFEST.sha256` must list every tracked file as committed; CI rejects a stale one. Stage your changes, then run
+`python3 scripts/refresh_manifest.py --write --index` and stage the manifest, or install the hook that does it on each
+commit: `ln -s ../../scripts/git-hooks/pre-commit .git/hooks/pre-commit`. The hook updates the index being
+committed, so with `git commit <paths>` (which commits from a temporary index) stage `MANIFEST.sha256` again
+afterwards.

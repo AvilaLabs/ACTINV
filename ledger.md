@@ -1493,3 +1493,9 @@ data-handling repair carries a regression test that fails on the pre-repair code
   no null inside any step record of the 132 stored run outputs; the six run examples and the mesh demo pass;
   the full test suite (every `run()` path) passes. Control:
   `non_finite_numbers_are_named_by_path_and_finite_results_pass`.
+- **Workflow pins and manifest hook (INFRA-12).** 16 third-party action references moved from tags/branches to
+  commit SHAs with the version as a comment (rust-toolchain stable 6bed076, rust-cache v2.9.2 6323deb,
+  install-action v2.87.18 dfae9bf, resolved through the GitHub API on 2026-09-23); GitHub's own `actions/*`
+  keep major tags, matching the publish workflows. The opt-in pre-commit hook was tested in a scratch clone
+  (commit touching a tracked file plus a new file; manifest matched after). It is not installed here: the
+  existing local commit-msg hook stays as it is.

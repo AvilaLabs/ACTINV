@@ -107,6 +107,11 @@
   credentials; the AI-attribution gate also matches the lowercase `Co-authored-by` trailer; CI's numpy, scipy and
   maturin are pinned; the desktop provenance record reads `solver_version` from the workspace instead of a stale
   `1.0.1` literal; `scripts/build_library.sh` exits with the build's status; `deliverables/` is ignored.
+- Third-party actions are pinned by commit like the publishing workflows already were:
+  `dtolnay/rust-toolchain` (stable branch, which still installs the current stable toolchain),
+  `Swatinem/rust-cache` v2.9.2 and `taiki-e/install-action` v2.87.18 (which also fixes the `trunk` version).
+- `scripts/git-hooks/pre-commit` (opt-in; see CONTRIBUTING.md) refreshes and stages `MANIFEST.sha256` from the
+  index on every commit; a stale manifest caused 24 of the 40 red `controls` runs before this release.
 
 ## v1.2.0 — 2026-09-21
 
