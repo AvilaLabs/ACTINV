@@ -221,13 +221,13 @@ def release_boundary() -> dict[str, Any]:
     cargo = tomllib.loads((ROOT / "Cargo.toml").read_text())
     python = tomllib.loads((ROOT / "python/pyproject.toml").read_text())
     version = cargo["workspace"]["package"]["version"]
-    tags = git_output(["tag", "--list", "v1.1*"])
+    tags = git_output(["tag", "--list", "v1.*"])
     # P22 authorized assembling a 1.1.0 release *candidate* on additive P19–P23
-    # evidence while P18-FAIL blocks only its own artifacts. Published v1.1.*
-    # tags now legitimately exist, so the boundary is: the workspace may carry
-    # 1.0.1, the P22-authorized 1.1.0 candidate, or the newest published tag —
-    # and no v1.1* tag may name a version ahead of the workspace, because a
-    # tag publishes the workspace's stated version.
+    # evidence while P18-FAIL blocks only its own artifacts. Published v1.*
+    # tags (v1.1.x, v1.2.0, ...) now legitimately exist, so the boundary is:
+    # the workspace may carry 1.0.1, the P22-authorized 1.1.0 candidate, or the
+    # newest published tag — and no v1.* tag may name a version ahead of the
+    # workspace, because a tag publishes the workspace's stated version.
     rc_record = ROOT / "results/g4_p22_release_candidate.json"
     p22_rc_ok = (
         rc_record.exists()
@@ -254,7 +254,7 @@ def release_boundary() -> dict[str, Any]:
         or (latest_published is not None
             and version == latest_published.removeprefix("v"))
     )
-    # A nonstandard tag matching v1.1* violates the release convention and a
+    # A nonstandard tag matching v1.* violates the release convention and a
     # tag naming a newer version than the workspace is always ahead of it.
     tags_ahead = [
         t for t in tag_list
@@ -264,7 +264,7 @@ def release_boundary() -> dict[str, Any]:
         "cargo_version": version,
         "python_version": python["project"]["version"],
         "p22_rc_authorized": p22_rc_ok,
-        "v1_1_tags": tag_list,
+        "published_tags": tag_list,
         "tags_ahead_of_workspace": tags_ahead,
         "pass": version_allowed
         and python["project"]["version"] == version

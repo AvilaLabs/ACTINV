@@ -1378,3 +1378,8 @@ data-handling repair carries a regression test that fails on the pre-repair code
   Controls: `array_responses_compare_by_identity_not_position`, `scalar_only_consumers_refuse_array_responses`,
   `case_id_separator_is_reserved_in_names`, `study_steps_do_not_accept_per_step_spectra`, and the extended
   `robustness_validation`.
+- **P18/P18b release boundary after v1.2.0.** Both closure checkers listed only `v1.1*` tags, so with the
+  workspace at 1.2.0 (tag v1.2.0 published) the newest published tag they saw was v1.1.2 and
+  `release_boundary` failed; CI had not reached that step since the bump because earlier steps were red. The
+  tag glob is now `v1.*` with the unchanged rule (workspace = newest published tag, no tag ahead of it), the
+  same maintenance the v1.1.2 release applied for the 1.1 line; the output key is renamed `published_tags`.
