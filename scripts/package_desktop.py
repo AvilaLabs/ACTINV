@@ -9,9 +9,16 @@ import platform
 import shutil
 import subprocess
 import tempfile
+import tomllib
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def workspace_version():
+    """The solver version actually compiled into this build: the workspace package version."""
+    with (ROOT / "Cargo.toml").open("rb") as stream:
+        return tomllib.load(stream)["workspace"]["package"]["version"]
 
 
 def main():
@@ -53,7 +60,7 @@ def main():
     def digest(path):
         return hashlib.sha256(path.read_bytes()).hexdigest()
     evidence = {
-        "desktop_version": config["version"], "solver_version": "1.0.1", "target": args.label,
+        "desktop_version": config["version"], "solver_version": workspace_version(), "target": args.label,
         "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "source_dirty": bool(subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, text=True).strip()),
         "packager": subprocess.check_output([args.packager, "--version"], text=True).strip(),

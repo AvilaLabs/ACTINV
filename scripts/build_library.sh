@@ -8,6 +8,8 @@ PY=${ACTINV_PYTHON:-$HOME/.venvs/w003env/bin/python}
 cd "$(dirname "$0")/.." || exit 1
 ulimit -v "$VMEM"   # parent also assembles the final arrays; see VMEM default                       # per process; WORKERS x VMEM must fit in available memory
 export PYTHONWARNINGS=ignore
-"$PY" controls/tendl_build.py "$FILES" "$OUT" --workers "$WORKERS" --dense "$DENSE" --name "$NAME" > "results/build_${NAME}.log" 2>&1
-echo "build exit=$?" >> "results/build_${NAME}.log"
+status=0
+"$PY" controls/tendl_build.py "$FILES" "$OUT" --workers "$WORKERS" --dense "$DENSE" --name "$NAME" > "results/build_${NAME}.log" 2>&1 || status=$?
+echo "build exit=$status" >> "results/build_${NAME}.log"
 tail -2 "results/build_${NAME}.log"
+exit "$status"

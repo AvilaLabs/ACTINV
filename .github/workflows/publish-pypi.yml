@@ -11,8 +11,17 @@ permissions:
   contents: read
 
 jobs:
+  ci-green:
+    uses: ./.github/workflows/require-green-ci.yml
+    permissions:
+      actions: read
+      contents: read
+    with:
+      ref: ${{ github.sha }}
+
   linux-wheels:
     name: Python distribution / Linux / ${{ matrix.target }}
+    needs: ci-green
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -61,6 +70,7 @@ jobs:
 
   native-wheels:
     name: Python distribution / ${{ matrix.label }}
+    needs: ci-green
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false

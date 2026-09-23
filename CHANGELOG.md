@@ -53,6 +53,15 @@
   a blank; `export-openmc-mesh` rejects STEP 0 up front like the other exporters; the README and data guide quote
   the current default-bundle sizes (about 79 MiB download, 170 MiB installed, not 139/229 MiB from v1.0.0).
 
+**Release engineering**
+
+- The PyPI and crates.io publishing workflows now wait for, and require, a successful `controls` run on the
+  release commit (new reusable `require-green-ci.yml`); v1.2.0 had published while that run was red.
+- `ci.yml`, `fns-iron.yml` and `fusion-isotope.yml` declare a read-only token and stop persisting checkout
+  credentials; the AI-attribution gate also matches the lowercase `Co-authored-by` trailer; CI's numpy, scipy and
+  maturin are pinned; the desktop provenance record reads `solver_version` from the workspace instead of a stale
+  `1.0.1` literal; `scripts/build_library.sh` exits with the build's status; `deliverables/` is ignored.
+
 ## v1.2.0 — 2026-09-21
 
 **Added**

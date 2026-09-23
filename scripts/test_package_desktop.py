@@ -18,6 +18,7 @@ class PackageStaging(unittest.TestCase):
             for name in ("packaging", "target/release", "target/desktop-packages", "docs", "crates/actinv-gui/assets"):
                 (root / name).mkdir(parents=True)
             (root / "packaging/desktop.json").write_text(json.dumps({"version": "0.1.0-preview.1"}))
+            (root / "Cargo.toml").write_text('[workspace.package]\nversion = "9.8.7"\n')
             for name in ("target/release/actinv-gui", "LICENSE-MIT", "LICENSE-APACHE", "docs/DESKTOP.md",
                          "packaging/install-linux.sh", "crates/actinv-gui/assets/avila-labs-logo.png"):
                 (root / name).write_bytes(b"fixture")
@@ -38,6 +39,9 @@ class PackageStaging(unittest.TestCase):
                 packaging.main()
                 output = next((root / "dist/desktop/linux-x86_64").glob("*.AppImage"))
                 self.assertEqual(output.read_bytes(), b"fresh")
+                # The provenance record names the compiled solver, not a stale literal.
+                evidence = json.loads(next((root / "dist/desktop/linux-x86_64").glob("build-*.json")).read_text())
+                self.assertEqual(evidence["solver_version"], "9.8.7")
                 self.assertEqual(stale.read_bytes(), b"stale")
                 self.assertFalse(staging[0].exists())
                 with self.assertRaises(SystemExit):

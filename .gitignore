@@ -16,3 +16,4 @@ scratch/
 *.actc
 packaging/node_modules/
 web/node_modules/
+/deliverables/

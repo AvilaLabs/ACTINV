@@ -24,8 +24,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  ci-green:
+    uses: ./.github/workflows/require-green-ci.yml
+    permissions:
+      actions: read
+      contents: read
+    with:
+      ref: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || github.ref_name }}
+
   verify:
     name: Verify tagged Rust release
+    needs: ci-green
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:

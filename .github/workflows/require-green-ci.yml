@@ -1,0 +1,46 @@
+name: require green controls CI
+
+# Called by the publishing workflows: a release may only ship a commit whose `controls` workflow
+# (ci.yml) concluded successfully. A tag push usually starts publishing while that run is still in
+# progress, so this waits for the newest completed run on the release commit.
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Tag, branch or commit whose controls run must be green
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  require-green-ci:
+    name: Require green controls CI on the release commit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 80
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Wait for the controls workflow
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RELEASE_REF: ${{ inputs.ref }}
+        run: |
+          set -euo pipefail
+          sha=$(gh api "repos/$REPO/commits/$RELEASE_REF" --jq .sha)
+          echo "release commit: $sha"
+          for attempt in $(seq 1 70); do
+            conclusion=$(gh api "repos/$REPO/actions/workflows/ci.yml/runs?head_sha=$sha&per_page=30" \
+              --jq '[.workflow_runs[] | select(.status == "completed")][0].conclusion // ""')
+            case "$conclusion" in
+              success) echo "controls CI is green for $sha"; exit 0 ;;
+              "") echo "waiting for a completed controls run on $sha ($attempt/70)"; sleep 60 ;;
+              *) echo "::error::controls CI concluded '$conclusion' for $sha"; exit 1 ;;
+            esac
+          done
+          echo "::error::no completed controls run for $sha within 70 minutes"
+          exit 1
