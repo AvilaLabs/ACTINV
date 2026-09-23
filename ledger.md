@@ -1353,3 +1353,9 @@ data-handling repair carries a regression test that fails on the pre-repair code
   Why it survived: the only interpolation unit test queried the ln-midpoint, where w and 1−w coincide.
   Control: `factor_weights_follow_the_nearer_sigma0_row` (exact grid points 1e3/1e2 b, off-midpoint
   10^2.75/10^2.25 b, first interval 1e5 b) fails on the pre-repair formula and passes after it.
+- **P18b historical G3 report restored.** Commit 29825b0 (P38 runtime alignment) regenerated
+  `results/g3_p18b_check.json` (release-binary path, new leg name) although its own amendment forbids
+  overwriting historical P18b reports and CI runs the checker with `--no-write`. The P18b closure checker
+  pins that file's historical hash (da34b2a6…, bound at the pre-unseal authorization commit), so CI failed
+  with "P18b evidence hashes changed". The file is restored byte-for-byte from 29825b0^; the amended
+  current-runtime leg stays in `controls/check_g3_p18b.py`, which never reads the report.
