@@ -1409,3 +1409,8 @@ data-handling repair carries a regression test that fails on the pre-repair code
   true. Re-seated exactly as e5a0dfb did after the earlier CRAM refinement fix; the regenerated record matches
   the CI runner's fresh value byte-for-byte. The fixture (explicit Fe56, no shielding) exercises none of the
   audit repairs.
+- **Flux import and mesh resume (actinv-core `flux.rs`, `mesh.rs`).** Imported mesh cell counts are now
+  checked (`MAX_IMPORTED_MESH_CELLS` = 1e8) before sizing allocations; `resume_scan` streams line by line with
+  the same torn-tail/corruption semantics; `read_prefix_result` reads buffered; the memory guard is refused
+  where it cannot measure. Controls: `imported_mesh_cell_counts_are_checked_and_bounded`,
+  `resume_scan_streams_complete_records_and_stops_at_a_torn_tail`.

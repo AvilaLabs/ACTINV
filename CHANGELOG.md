@@ -39,6 +39,11 @@
   from older code or skip the projectile check; the embedded-source fingerprint is hashed once per process.
 - `build-covariance` refuses an MF=33 LB=0–4 block whose dense form would exceed the 1 GB per-array cap before
   allocating it; a few hundred kB of declared (E, F) pairs could previously demand tens of GB.
+- Flux import refuses structured meshes above 100 million cells with overflow-checked arithmetic: an OpenMC
+  `dimension` dataset sized the geometry allocation unchecked, and the meshtal cell product could wrap.
+- Mesh resume streams the existing output instead of reading it whole into memory, re-reads prefix records
+  with buffered I/O instead of one syscall per byte, refuses `memory_limit_bytes` where peak RSS cannot be
+  measured (it was silently inert off Linux), and says when a tripped guard discards work because `resume` is off.
 
 ## v1.2.0 — 2026-09-21
 

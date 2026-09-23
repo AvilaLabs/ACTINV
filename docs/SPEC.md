@@ -465,6 +465,9 @@ Supported subsets are deliberately narrow:
 - standard FISPACT-II `fluxes`: N descending group values, first-wall loading, then its identifying title, against an
   explicitly supplied descending group-boundary JSON file.
 
+Structured meshes (OpenMC, meshtal) above 100,000,000 cells are refused before any allocation is sized by the
+declared dimensions.
+
 Other scores, particles, estimators, filters, dimensions, mesh shapes, multipliers, responses, cumulative/time bins or
 file variants produce a named error rather than a guessed interpretation.
 
@@ -526,6 +529,8 @@ footer records the count as `cells_served_from_reuse`. `cell_result_fields` keep
 `RunResult` fields in each cell record; absent means the complete record, and an unknown name is rejected at
 validation. `memory_limit_bytes` is a post-hoc guard: after each completed chunk the process peak RSS
 (`/proc/self/status` `VmHWM`) is compared to the limit and the run aborts with a named error carrying both numbers.
+It is refused at validation on platforms without that accounting (it could never fire there). Without `resume`
+the output is written atomically, so a tripped guard keeps no completed cells; pair it with `resume: true`.
 
 `resume: true` makes the output file itself the checkpoint. The run writes directly (not via atomic rename); on
 start it validates any existing file: the header must equal byte-for-byte the header a fresh run would emit —

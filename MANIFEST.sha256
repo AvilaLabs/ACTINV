@@ -8,7 +8,7 @@ f4c85be358084105a0acdb52deae145ab9b9111478f3508c64a4ec56fedf8e76  ./.github/work
 d6dcef24d539d3bce60d5d9c24eacf67347569487280db7ea672ca97d8c6d08c  ./.github/workflows/web.yml
 19832d6c188f4c1878740eca4d3bce13367fc792e37cde446ca7c2a079035483  ./.gitignore
 95cbf21273eefeb72fb7a9676cde68aeeadc4b76d8bc102b8ce5ad439a2ff6bd  ./AGENTS.md
-1c4af5f23b46bf73bdccbe54ce4ff4b52dc1dd2cecf13e925f7b3e14c4096c68  ./CHANGELOG.md
+1ef5763e0e41a2a1092a1aa5df8a13361d1fe789c4d3f2d593bde9e99383bee8  ./CHANGELOG.md
 565307cc43432e536e36c0fdbc23fb7e971054e749fb46d7c83ea780271f97c2  ./CONTRIBUTING.md
 bed3c1b946b3caf6f7b272636bd931214f50de31c57c4be55fbb195ff16ae38a  ./Cargo.lock
 42d187439ef1c7d5585c6480c993c855d2dce9b0ceb2da373677d065cc3cccf2  ./Cargo.toml
@@ -494,9 +494,9 @@ a95e9328bfe93b23db3134930b2a0a8cedfcd0e076f6784bd5bc403151b93798  ./crates/actin
 ad87f5e6af18c6b4c4a0bb79d93d6530d7e45ae521e8521080f6106ca3b847a9  ./crates/actinv-core/src/cram_coeffs.rs
 d005ca5ab2b6d127002d903c504a95241a7e8b562a30742779d8e54aabbb1b37  ./crates/actinv-core/src/damage.rs
 8775e52ff1d8f9e56f4d45fd0ffc2a56f22e365a4d2786b2ec95a21b9d5f898c  ./crates/actinv-core/src/doppler.rs
-3e99649be0b5347b397a77ad424a128f9171ff631167e0c3e0424858543c98d9  ./crates/actinv-core/src/flux.rs
+074bb9bff7f6518242b21261782038d05b722e83ecf36d44a6647b89dd7f4e58  ./crates/actinv-core/src/flux.rs
 01c27355e600d34edb857dbc4245346d9f9fcabb05723cf12aadbc50fc0d7c83  ./crates/actinv-core/src/lib.rs
-65e4e54058840ab4c9803d200d5a8a393e4980aee73c4aeaf425f3fd00fc6dd8  ./crates/actinv-core/src/mesh.rs
+85778f5c8d8775599f8cf17990fb9ae8635fa73b3e664eeb0b452fe58c96756f  ./crates/actinv-core/src/mesh.rs
 9bec81e789c36c59f276db10ebc3329808cc41343fa9f44178aa459d09117d0b  ./crates/actinv-core/src/photon.rs
 f243c865a425bb35b5f71978148a422a52945bd1d06b857369c3ea7f26a74435  ./crates/actinv-core/src/prune.rs
 ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actinv-core/src/quantity.rs
@@ -600,7 +600,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 13f40040a5d402ed06f1500de5f0c31b66d9dd649364c46c15ae3fb14f3cac38  ./docs/RELEASE_NOTES_v1.1.2.md
 74cdd713cf89d447b5324f88f6ed32c7dd09cd4eebcb6030f358ffcd699ace6e  ./docs/RELEASE_NOTES_v1.2.0.md
 8204716be9f2b8c79659e26628913080e8d56f836b85b19e2f06324126c773bb  ./docs/ROADMAP.md
-2ddee401b6130f704a8b9ea696243b7baafa10ca760049c7b059516a8878d1df  ./docs/SPEC.md
+88a989fd200befda076cd3e98e12759a9ce5624bf16c86593246be91fdcd16ca  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 646b593061975e4d7ae6e5b144a995202810be2b489535462b9d583a9b12567a  ./docs/TENDL2025_EMAIL_DRAFT.md
 c901b2287ed994f65a3517003d1d667aa669ba6c7f807edc0e4c86957935523a  ./docs/TENDL2025_THRESHOLD_SUBMISSION.md
@@ -662,7 +662,7 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 b4e6d2bc1589a7e0df74d4985b6c71d201c5fa9a2d85ad42022716563222c417  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-3caa915eaf966f2e59262cfeaad30c43e5c6eff0c00ee9fbea9daddb1e532c81  ./ledger.md
+b49cc4364cc128a87d7103d30762398e6c2a25762b16ca9a51173e68733aa539  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh

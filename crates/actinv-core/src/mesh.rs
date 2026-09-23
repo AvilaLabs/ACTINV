@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{BufWriter, Read, Seek, SeekFrom, Write};
+use std::io::{BufRead, BufWriter, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
 
 const MESH_SPEC_SCHEMA: &str = "actinv-mesh-spec-1";
@@ -148,6 +148,15 @@ impl MeshSpec {
         }
         if self.memory_limit_bytes.is_some_and(|limit| limit == 0) {
             return Err("memory_limit_bytes must be positive".into());
+        }
+        // The guard reads Linux peak-RSS accounting; elsewhere it could never fire, so
+        // refuse it rather than let a declared safety limit silently do nothing.
+        if self.memory_limit_bytes.is_some() && peak_rss_bytes().is_none() {
+            return Err(
+                "memory_limit_bytes needs peak-RSS accounting (/proc/self/status, Linux), \
+                 which this platform does not provide"
+                    .into(),
+            );
         }
 
         // Reuse the ordinary-spec validator for every shared field. The placeholder spectrum
@@ -459,6 +468,7 @@ fn peak_rss_bytes() -> Option<u64> {
 }
 
 /// A completed cell record's byte offset inside an existing output prefix.
+#[derive(Debug)]
 struct ResumePrefix {
     /// Byte offset to resume writing at (end of the last complete record).
     offset: u64,
@@ -472,52 +482,49 @@ struct ResumePrefix {
 /// header, then complete in-order cell records. Returns `None` when the file
 /// already carries a footer (the run is complete).
 fn resume_scan(output: &Path, expected_header: &[u8]) -> Result<Option<ResumePrefix>, String> {
-    let mut file = File::open(output)
-        .map_err(|error| format!("cannot read mesh output {}: {error}", output.display()))?;
-    let mut content = Vec::new();
-    file.read_to_end(&mut content)
-        .map_err(|error| format!("cannot read mesh output {}: {error}", output.display()))?;
-    if content.is_empty() {
+    let read_error =
+        |error: std::io::Error| format!("cannot read mesh output {}: {error}", output.display());
+    // Stream the prefix line by line: a nearly complete large mesh output can be
+    // many GB, and this pre-pass runs before any memory guard can see it.
+    let mut reader = std::io::BufReader::new(File::open(output).map_err(read_error)?);
+    let mut line = Vec::new();
+    let header_len = reader.read_until(b'\n', &mut line).map_err(read_error)?;
+    if header_len == 0 {
         return Ok(Some(ResumePrefix {
             offset: 0,
             cell_offsets: Vec::new(),
             pruned_states: Vec::new(),
         }));
     }
-    let header_end = content
-        .iter()
-        .position(|byte| *byte == b'\n')
-        .ok_or("mesh output contains no complete header line")?
-        + 1;
-    if content[..header_end] != *expected_header {
+    if !line.ends_with(b"\n") {
+        return Err("mesh output contains no complete header line".into());
+    }
+    if line != expected_header {
         return Err(
             "mesh output header does not match this spec's fingerprint; refusing to resume".into(),
         );
     }
-    let mut offset = header_end;
+    let mut position = header_len as u64;
+    let mut offset = position;
     let mut cell_offsets: Vec<u64> = Vec::new();
     let mut pruned_states: Vec<u64> = Vec::new();
-    let mut position = header_end;
-    while position < content.len() {
-        let line_end = content[position..]
-            .iter()
-            .position(|byte| *byte == b'\n')
-            .map(|index| position + index + 1)
-            .unwrap_or(content.len());
-        let line = &content[position..line_end];
-        if line.is_empty() {
-            position = line_end;
-            continue;
+    loop {
+        line.clear();
+        let read = reader.read_until(b'\n', &mut line).map_err(read_error)?;
+        if read == 0 {
+            break;
         }
+        let line_start = position;
+        position += read as u64;
         if !line.ends_with(b"\n") {
             // Truncated tail from an interrupted write: resume after the
             // last complete record.
             break;
         }
-        let record_bytes = &line[..line.len() - 1];
-        let value: serde_json::Value = match serde_json::from_slice(record_bytes) {
+        let at_end = reader.fill_buf().map_err(read_error)?.is_empty();
+        let value: serde_json::Value = match serde_json::from_slice(&line[..line.len() - 1]) {
             Ok(value) => value,
-            Err(_) if line_end == content.len() => break,
+            Err(_) if at_end => break,
             Err(_) => {
                 return Err(format!(
                     "mesh output contains a corrupt record at completed cell {}",
@@ -540,9 +547,9 @@ fn resume_scan(output: &Path, expected_header: &[u8]) -> Result<Option<ResumePre
                     .and_then(|result| result.get("pruned_states"))
                     .and_then(serde_json::Value::as_u64)
                     .ok_or("mesh output cell record lacks result.pruned_states")?;
-                cell_offsets.push(position as u64);
+                cell_offsets.push(line_start);
                 pruned_states.push(pruned);
-                offset = line_end;
+                offset = position;
             }
             Some("footer") => return Ok(None),
             _ => {
@@ -552,10 +559,9 @@ fn resume_scan(output: &Path, expected_header: &[u8]) -> Result<Option<ResumePre
                 ))
             }
         }
-        position = line_end;
     }
     Ok(Some(ResumePrefix {
-        offset: offset as u64,
+        offset,
         cell_offsets,
         pruned_states,
     }))
@@ -574,15 +580,13 @@ fn read_prefix_result(
         .ok_or_else(|| format!("completed cell {ordinal} has no recorded offset"))?;
     file.seek(SeekFrom::Start(offset))
         .map_err(|error| error.to_string())?;
+    // One buffered read instead of a syscall per byte; every call seeks first.
     let mut line = Vec::new();
-    let mut byte = [0u8; 1];
-    loop {
-        match file.read(&mut byte) {
-            Ok(0) => break,
-            Ok(_) if byte[0] == b'\n' => break,
-            Ok(_) => line.push(byte[0]),
-            Err(error) => return Err(error.to_string()),
-        }
+    std::io::BufReader::new(&mut *file)
+        .read_until(b'\n', &mut line)
+        .map_err(|error| error.to_string())?;
+    if line.last() == Some(&b'\n') {
+        line.pop();
     }
     let value: serde_json::Value =
         serde_json::from_slice(&line).map_err(|error| format!("prefix cell {ordinal}: {error}"))?;
@@ -755,7 +759,12 @@ fn write_mesh_body(
             if let Some(peak) = peak_rss_bytes() {
                 if peak > limit {
                     return Err(format!(
-                        "memory_limit_bytes exceeded: peak RSS {peak} bytes > limit {limit} bytes"
+                        "memory_limit_bytes exceeded: peak RSS {peak} bytes > limit {limit} bytes{}",
+                        if spec.resume {
+                            ""
+                        } else {
+                            "; completed cells are kept only with \"resume\": true"
+                        }
                     ));
                 }
             }
@@ -1060,6 +1069,65 @@ mod tests {
         spec.chunk_cells = 1;
         spec.threads = MAX_THREADS + 1;
         assert!(spec.validate().unwrap_err().contains("threads"));
+    }
+
+    #[test]
+    fn resume_scan_streams_complete_records_and_stops_at_a_torn_tail() {
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "actinv-mesh-resume-{}-{stamp}.ndjson",
+            std::process::id()
+        ));
+        let header = b"{\"record\":\"header\"}\n";
+        let cell = |ordinal: u64| {
+            format!(
+                "{{\"record\":\"cell\",\"ordinal\":{ordinal},\"result\":{{\"pruned_states\":{}}}}}\n",
+                ordinal + 3
+            )
+        };
+        let scan = |bytes: &[u8]| {
+            std::fs::write(&path, bytes).unwrap();
+            resume_scan(&path, header)
+        };
+        let two = [header.as_slice(), cell(0).as_bytes(), cell(1).as_bytes()].concat();
+        // Two complete records plus a torn tail: resume after the second.
+        let prefix = scan(&[two.as_slice(), b"{\"record\":\"ce"].concat())
+            .unwrap()
+            .unwrap();
+        assert_eq!(prefix.offset, two.len() as u64);
+        assert_eq!(
+            prefix.cell_offsets,
+            vec![header.len() as u64, (header.len() + cell(0).len()) as u64]
+        );
+        assert_eq!(prefix.pruned_states, vec![3, 4]);
+        // An unparseable final complete line is also a torn write.
+        assert_eq!(
+            scan(&[two.as_slice(), b"garbage\n"].concat())
+                .unwrap()
+                .unwrap()
+                .offset,
+            two.len() as u64
+        );
+        // ... but an unparseable record followed by more data is corruption.
+        assert!(
+            scan(&[header.as_slice(), b"garbage\n", cell(0).as_bytes()].concat())
+                .unwrap_err()
+                .contains("corrupt record")
+        );
+        // A footer means the run is complete; an empty file starts from zero.
+        assert!(
+            scan(&[two.as_slice(), b"{\"record\":\"footer\"}\n"].concat())
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(scan(b"").unwrap().unwrap().offset, 0);
+        assert!(scan(b"{\"record\":\"other\"}\n")
+            .unwrap_err()
+            .contains("fingerprint"));
+        std::fs::remove_file(&path).unwrap();
     }
 
     #[test]

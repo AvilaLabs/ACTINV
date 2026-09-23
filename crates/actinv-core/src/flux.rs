@@ -174,6 +174,23 @@ fn validate_boundaries(boundaries: &[f64]) -> Result<(), String> {
     Ok(())
 }
 
+/// Imported structured meshes above this many cells are refused: the executed scale
+/// evidence is 20,000 cells, and a corrupt or hostile header must not size allocations.
+pub const MAX_IMPORTED_MESH_CELLS: usize = 100_000_000;
+
+/// Overflow-checked cell count of an imported mesh, bounded by `MAX_IMPORTED_MESH_CELLS`.
+fn checked_cell_count(dimension: &[usize; 3], source: &str) -> Result<usize, String> {
+    dimension
+        .iter()
+        .try_fold(1usize, |cells, &axis| cells.checked_mul(axis))
+        .filter(|&cells| cells <= MAX_IMPORTED_MESH_CELLS)
+        .ok_or_else(|| {
+            format!(
+                "{source} dimensions {dimension:?} exceed the {MAX_IMPORTED_MESH_CELLS}-cell import cap"
+            )
+        })
+}
+
 fn validate_geometry(geometry: &FluxGeometry) -> Result<(), String> {
     if !matches!(geometry.kind.as_str(), "regular" | "rectilinear") {
         return Err(format!(
@@ -1055,6 +1072,8 @@ fn openmc_mesh_geometry(file: &Hdf5File, mesh_id: i64) -> Result<(FluxGeometry, 
         usize::try_from(raw_dimension[1]).map_err(|_| "OpenMC mesh dimension overflows usize")?,
         usize::try_from(raw_dimension[2]).map_err(|_| "OpenMC mesh dimension overflows usize")?,
     ];
+    // A few bytes of HDF5 declare the dimensions; bound them before anything is sized by them.
+    let cell_count = checked_cell_count(&dimension, "OpenMC mesh")?;
 
     let axis_boundaries_cm = if kind == "rectilinear" {
         let grids = [
@@ -1104,7 +1123,7 @@ fn openmc_mesh_geometry(file: &Hdf5File, mesh_id: i64) -> Result<(FluxGeometry, 
         grids
     };
 
-    let mut volumes = Vec::with_capacity(dimension.iter().product());
+    let mut volumes = Vec::with_capacity(cell_count);
     for k in 0..dimension[2] {
         for j in 0..dimension[1] {
             for i in 0..dimension[0] {
@@ -1721,7 +1740,7 @@ fn parse_meshtal_block(
     }
 
     let dimension = [x.len() - 1, y.len() - 1, z.len() - 1];
-    let cell_count = dimension.iter().product::<usize>();
+    let cell_count = checked_cell_count(&dimension, "MCNP meshtal")?;
     let group_count = boundaries_eV.len() - 1;
     let data_lines: Vec<&str> = block[header_index + 1..]
         .iter()
@@ -2298,6 +2317,15 @@ pub fn import_mctal(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn imported_mesh_cell_counts_are_checked_and_bounded() {
+        assert_eq!(checked_cell_count(&[10, 20, 30], "t"), Ok(6000));
+        // Overflow used to wrap silently in release builds; oversize used to size allocations.
+        assert!(checked_cell_count(&[usize::MAX, 2, 1], "t").is_err());
+        assert!(checked_cell_count(&[200_000, 200_000, 200_000], "t").is_err());
+        assert!(checked_cell_count(&[MAX_IMPORTED_MESH_CELLS, 1, 1], "t").is_ok());
+    }
 
     #[test]
     fn exact_grid_rebin_is_bit_identical() {
