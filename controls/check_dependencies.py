@@ -32,7 +32,11 @@ CI_ENTRY = ["scripts/test_package_desktop.py", "scripts/desktop_smoke.py", "scri
 STDLIB = set(sys.stdlib_module_names)
 declared = {l.split("==")[0].split(">=")[0].strip().lower() for l in open(os.path.join(ROOT, "requirements-ci.txt"))
             if l.strip() and not l.startswith("#")}
-local = {os.path.splitext(f)[0] for f in os.listdir(os.path.join(ROOT, "controls")) if f.endswith(".py")} | {"harness", "actinv"}
+CONTROLS = os.path.join(ROOT, "controls")
+# Packages (a directory with __init__.py, e.g. harness) are scanned file by file: resolving them to
+# controls/<name>.py found nothing and silently skipped every import inside them.
+packages = {d for d in os.listdir(CONTROLS) if os.path.isfile(os.path.join(CONTROLS, d, "__init__.py"))}
+local = {os.path.splitext(f)[0] for f in os.listdir(CONTROLS) if f.endswith(".py")} | packages | {"actinv"}
 seen, undeclared = set(), {}
 def scan(rel):
     if rel in seen: return
@@ -46,7 +50,10 @@ def scan(rel):
         elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0: mods = [node.module.split(".")[0]]
         for m in mods:
             if m in STDLIB or m in local: 
-                if m in local and m != "actinv": scan(f"controls/{m}.py")
+                if m in packages:
+                    for f in sorted(os.listdir(os.path.join(CONTROLS, m))):
+                        if f.endswith(".py"): scan(f"controls/{m}/{f}")
+                elif m in local and m != "actinv": scan(f"controls/{m}.py")
                 continue
             if m.lower() not in declared: undeclared.setdefault(m, []).append(rel)
 for e in CI_ENTRY: scan(e)

@@ -80,12 +80,14 @@ def git(*args: str) -> str:
 
 def npy_layout(blob: bytes):
     """Return (data_offset, shape, fmt) for a little-endian <f8/<i8 .npy member."""
-    assert blob[:6] == b"\x93NUMPY"
+    if blob[:6] != b"\x93NUMPY":
+        raise ValueError("not an npy payload")
     major = blob[6]
     hlen = struct.unpack("<H", blob[8:10])[0] if major == 1 else struct.unpack("<I", blob[8:12])[0]
     hoff = 10 if major == 1 else 12
     header = eval(blob[hoff:hoff + hlen].decode())  # dict literal
-    assert not header["fortran_order"]
+    if header["fortran_order"]:
+        raise ValueError("Fortran-ordered npy arrays are not supported")
     return hoff + hlen, header["shape"], {"<f8": "d", "<i8": "q"}[header["descr"]]
 
 

@@ -1432,3 +1432,11 @@ data-handling repair carries a regression test that fails on the pre-repair code
   completed `controls` run to succeed; the crates/PyPI contract checkers still pass on the edited workflows.
   Still red: `fusion-isotope`, whose reduced-chain receipt (recorded 2026-09-18 on benchmark/fusion-ac225) pins
   the pre-CB2 hashes of `cram_probe.rs` and `sparse.rs`; re-recording it is a governed evidence decision.
+- **Controls robustness.** `check_dependencies.py` now scans packages (e.g. `harness/`) file by file instead of a
+  nonexistent `controls/<pkg>.py`; `check_desktop.py` derives its verdict from its checks and exits non-zero rather
+  than relying on an `assert` beside a literal `"pass": true`; `p19_g3_oracle.py` reads the keys the compare records
+  actually carry (its own `cmp_ok` was always true; the authoritative P19 checkers were already correct);
+  `check_g3_p23.py` requires zero-reference groups to be zero within TOL of the row scale; three independent npy
+  readers raise instead of `assert`. Not changed, by design: `check_prior_verdicts.py` still trusts an explicit
+  amendment list, because post-closure runtime amendments (P10-T, P18b-P38) intentionally stay out of frozen
+  verdicts; the harness path-keyed caches are untouched because the P3 certificates pin those sources.

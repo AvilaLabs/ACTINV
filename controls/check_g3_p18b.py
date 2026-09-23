@@ -132,7 +132,8 @@ def fixture_tape(sections: list[list[str]], mat: int = 2631, za: int = 26056) ->
 
 
 def read_npy(blob: bytes):
-    assert blob[:6] == b"\x93NUMPY", "not an npy payload"
+    if blob[:6] != b"\x93NUMPY":
+        raise ValueError("not an npy payload")
     if blob[6] == 1:
         (length,) = struct.unpack("<H", blob[8:10])
         offset = 10 + length

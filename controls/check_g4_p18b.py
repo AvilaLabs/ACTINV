@@ -84,7 +84,8 @@ def sha256(path: Path) -> str:
 
 
 def read_npy(blob: bytes):
-    assert blob[:6] == b"\x93NUMPY", "not an npy payload"
+    if blob[:6] != b"\x93NUMPY":
+        raise ValueError("not an npy payload")
     if blob[6] == 1:
         (length,) = struct.unpack("<H", blob[8:10])
         offset = 10 + length
@@ -97,7 +98,8 @@ def read_npy(blob: bytes):
     fortran = "'fortran_order': True" in header_text
     shape_text = header_text.split("'shape':")[1].split(")")[0].split("(")[1]
     shape = tuple(int(s) for s in shape_text.split(",") if s.strip())
-    assert not fortran
+    if fortran:
+        raise ValueError("Fortran-ordered npy arrays are not supported")
     fmt = {"<f8": "d", "<i8": "q", "<i4": "i", "<f4": "f"}[descr]
     count = 1
     for dim in shape:

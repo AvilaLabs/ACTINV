@@ -247,7 +247,12 @@ def check_corpus_recollapse(evidence: dict, failures: list[str]) -> None:
             for g, e in zip(row, expected)
             if e != 0.0
         ]
-        if any(d > TOL for d in diffs) or len(diffs) != sum(1 for e in expected if e != 0.0):
+        # Groups whose reference collapse is exactly zero have no relative scale; they must
+        # still be zero to within TOL of the row's largest reference value.
+        floor = TOL * max((abs(e) for e in expected), default=0.0)
+        stray = [g for g, e in zip(row, expected) if e == 0.0 and abs(g) > floor]
+        if (any(d > TOL for d in diffs) or stray or len(row) != len(expected)
+                or len(diffs) != sum(1 for e in expected if e != 0.0)):
             failures.append(
                 f"checker re-collapse of {canonical} disagrees beyond {TOL}"
             )

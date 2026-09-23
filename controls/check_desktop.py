@@ -43,8 +43,12 @@ with tempfile.TemporaryDirectory(prefix="actinv-desktop-") as directory:
         and float(row["activity_Bq_per_g"]) == expected["activity_Bq_per_g"].get(row["nuclide"], 0.0)
         for row, nuclide in zip(rows, expected["inventory"])
     )
-    assert all(checks.values()), checks
+    # The verdict is derived from the checks, never a literal, and enforced without `assert`
+    # (which `python -O` strips).
+    passed = all(checks.values())
     evidence = {"protocol_sha256": hashlib.sha256((ROOT / "protocols/desktop-interface-v1.md").read_bytes()).hexdigest(),
-                "fixture": "existing P11 synthetic trace CRAM-16 with photons and pathways", "checks": checks, "pass": True}
+                "fixture": "existing P11 synthetic trace CRAM-16 with photons and pathways", "checks": checks, "pass": passed}
     (ROOT / "results/desktop-interface-v1.json").write_text(json.dumps(evidence, indent=2) + "\n")
     print(json.dumps(evidence, indent=2))
+    if not passed:
+        raise SystemExit(f"desktop/CLI parity failed: {checks}")

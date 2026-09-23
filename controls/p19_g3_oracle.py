@@ -175,9 +175,12 @@ def main() -> int:
     report["legs"]["fendl_sanity"] = fendl_sanity_leg()
     RESULT.write_text(json.dumps(report, indent=1, sort_keys=True) + "\n")
     lim = report["legs"]["analytic_limits"]
+    # shield_compare.py records `within_tolerance` and `group_comparison.within_tolerance`;
+    # the renamed node/group keys exist only in this report, so reading them from the raw
+    # records always hit the True default.
     cmp_ok = all(
-        v.get("node_within_tolerance", True)
-        and v.get("group_within_tolerance", True)
+        v.get("within_tolerance") is True
+        and v.get("group_comparison", {}).get("within_tolerance") is True
         for v in compare.get("materials", {}).values()
         if v.get("covered") == "covered"
     )
