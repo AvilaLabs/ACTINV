@@ -224,6 +224,19 @@ pub struct Spectrum {
 }
 
 impl Spectrum {
+    /// A positive declared `total` needs a group shape to scale; an all-zero shape
+    /// would silently discard it and turn the run into pure decay.
+    fn check_total_has_shape(&self, label: &str) -> Result<(), String> {
+        if self.total.is_some_and(|total| total > 0.0)
+            && self.flux_per_group.iter().sum::<f64>() <= 0.0
+        {
+            return Err(format!(
+                "{label}.total is positive but flux_per_group sums to zero: there is no shape to scale"
+            ));
+        }
+        Ok(())
+    }
+
     /// Group fluxes in ascending-energy order, scaled to `total` when given.
     pub fn ascending_flux(&self) -> Vec<f64> {
         let mut f = self.flux_per_group.clone();
@@ -367,6 +380,13 @@ pub(crate) struct PhysicalInputs {
 /// Parse a duration like "5 min" (also "5min", "300", "1 y"). Seconds when no unit is given.
 pub fn parse_duration(s: &str) -> Result<f64, String> {
     let t = s.trim();
+    // The split search below is quadratic in the length; no real duration is long.
+    if t.len() > 64 {
+        return Err(format!(
+            "duration '{}...' is longer than 64 characters",
+            t.chars().take(24).collect::<String>()
+        ));
+    }
     let split = (0..=t.len())
         .rev()
         .find(|index| {
@@ -661,6 +681,13 @@ impl Spec {
             }
         }
         if let Some(shielding) = &self.self_shielding {
+            // Checked here, not only at prepare time, so validate-only tooling agrees.
+            if !self.projectile.is_neutron() {
+                return Err(format!(
+                    "self_shielding is neutron-only; {} specs cannot declare it",
+                    self.projectile.name()
+                ));
+            }
             match shielding.dilution.as_str() {
                 "composition" => {
                     if shielding.sigma0_b.is_some() {
@@ -740,6 +767,7 @@ impl Spec {
         {
             return Err("spectrum.total must be finite and nonnegative".into());
         }
+        self.spectrum.check_total_has_shape("spectrum")?;
         match self.photon.group_structure.as_str() {
             "fispact-24" => {
                 if self.photon.group_boundaries_eV.is_some() {
@@ -889,6 +917,7 @@ impl Spec {
                     .spectrum
                     .as_ref()
                     .map(|s| {
+                        s.check_total_has_shape("schedule step spectrum")?;
                         if s.structure != self.spectrum.structure {
                             return Err(format!(
                                 "schedule step spectrum.structure '{}' must match the base spectrum's '{}'",
@@ -1005,6 +1034,34 @@ mod duration_tests {
             value["schedule"][0]["dt"] = serde_json::Value::String(invalid.into());
             assert!(Spec::from_json(&value.to_string()).is_err(), "{invalid}");
         }
+    }
+
+    #[test]
+    fn contradictory_or_unbounded_inputs_fail_validation() {
+        // A positive total with no shape used to be dropped silently (pure-decay run).
+        let mut value = minimal_spec();
+        value["spectrum"]["flux_per_group"] = serde_json::json!([0.0]);
+        value["spectrum"]["total"] = serde_json::json!(1.0e10);
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("no shape to scale"));
+        // Duration parsing is quadratic in length; a long string is refused up front.
+        let mut value = minimal_spec();
+        value["schedule"][0]["dt"] = serde_json::json!("x".repeat(100_000));
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("longer than 64"));
+        // Self-shielding is neutron-only at validation, not only at prepare time.
+        let mut value = minimal_spec();
+        value["projectile"] = serde_json::json!("proton");
+        value["options"] = serde_json::json!({"temperature_K": 0.0});
+        value["self_shielding"] = serde_json::json!({
+            "table": {"path": "shield.json", "sha256": "0".repeat(64)},
+            "dilution": "composition"
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("neutron-only"));
     }
 
     #[test]

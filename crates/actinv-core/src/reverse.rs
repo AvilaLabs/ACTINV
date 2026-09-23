@@ -120,6 +120,14 @@ fn dense_solve(a: &[Vec<f64>], b: &[f64]) -> Result<Vec<f64>, String> {
             row
         })
         .collect();
+    // Singularity is relative to the matrix scale (as NNLS's tolerance is): an absolute
+    // epsilon rejected well-conditioned systems of small magnitude and never fired for
+    // large ones.
+    let scale = a
+        .iter()
+        .flat_map(|row| row.iter())
+        .fold(0.0f64, |acc, v| acc.max(v.abs()));
+    let threshold = scale * n.max(1) as f64 * f64::EPSILON;
     for col in 0..n {
         let mut pivot = col;
         for row in col + 1..n {
@@ -127,7 +135,8 @@ fn dense_solve(a: &[Vec<f64>], b: &[f64]) -> Result<Vec<f64>, String> {
                 pivot = row;
             }
         }
-        if m[pivot][col].abs() <= f64::EPSILON {
+        let magnitude = m[pivot][col].abs();
+        if magnitude.is_nan() || magnitude <= threshold {
             return Err("reverse: singular sensitivity subproblem".into());
         }
         m.swap(col, pivot);
@@ -215,10 +224,20 @@ fn nnls(a: &[Vec<f64>], b: &[f64]) -> Result<Vec<f64>, String> {
                 x = z;
                 break;
             }
+            // Step to the first passive variable that reaches zero. A variable already at
+            // the boundary (x = 0, or a tolerance-sized z not below x) blocks the step:
+            // its ratio is 0, not the NaN of 0/0 that `f64::min` silently dropped,
+            // which could leave alpha infinite and fill x with inf/NaN.
             let mut alpha = f64::INFINITY;
             for &j in &p {
                 if z[j] <= tolerance {
-                    alpha = alpha.min(x[j] / (x[j] - z[j]));
+                    let denominator = x[j] - z[j];
+                    let ratio = if denominator > 0.0 {
+                        x[j] / denominator
+                    } else {
+                        0.0
+                    };
+                    alpha = alpha.min(ratio);
                 }
             }
             for j in 0..n {
@@ -555,4 +574,32 @@ pub fn solve(
         })
     };
     Ok(result)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{dense_solve, nnls};
+
+    #[test]
+    fn dense_solve_singularity_is_relative_to_matrix_scale() {
+        // Well conditioned but tiny in magnitude: used to be called singular.
+        let x = dense_solve(&[vec![1e-30, 0.0], vec![0.0, 2e-30]], &[1e-30, 4e-30]).unwrap();
+        assert!(
+            (x[0] - 1.0).abs() < 1e-12 && (x[1] - 2.0).abs() < 1e-12,
+            "{x:?}"
+        );
+        assert!(dense_solve(&[vec![1.0, 1.0], vec![1.0, 1.0]], &[1.0, 1.0]).is_err());
+    }
+
+    #[test]
+    fn nnls_clamps_to_the_nonnegative_orthant_with_finite_values() {
+        let x = nnls(&[vec![1.0, 0.0], vec![0.0, 1.0]], &[2.0, -1.0]).unwrap();
+        assert_eq!(x, vec![2.0, 0.0]);
+        let x = nnls(
+            &[vec![1.0, 1.0], vec![1.0, -1.0], vec![0.0, 1.0]],
+            &[1.0, 1.0, -3.0],
+        )
+        .unwrap();
+        assert!(x.iter().all(|v| v.is_finite() && *v >= 0.0), "{x:?}");
+    }
 }

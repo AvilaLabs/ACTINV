@@ -52,6 +52,18 @@
 - `actinv doctor` reports an empty `ACTINV_CACHE_DIR` as invalid (every cache user rejects it) instead of printing
   a blank; `export-openmc-mesh` rejects STEP 0 up front like the other exporters; the README and data guide quote
   the current default-bundle sizes (about 79 MiB download, 170 MiB installed, not 139/229 MiB from v1.0.0).
+- Every hash-pinned input (decay and fallback sublibraries, library and covariance indexes, photon response,
+  radiological, damage and self-shielding tables, fission-yield files) is now read once and parsed from exactly
+  the bytes that were hashed; they were hashed and then reopened, so a file replaced mid-run could be parsed under
+  the recorded digest. The decay files are no longer read twice.
+- Trace-mode bulk heat and photon activity are summed in chain order (HashMap order made their bits vary between
+  runs when two or more bulk nuclides decay); a positive `spectrum.total` with an all-zero shape, a duration longer
+  than 64 characters (quadratic parse) and `self_shielding` on a charged-projectile spec are validation errors;
+  duplicate (ZA, LISO) decay records are an error instead of last-wins; a repeated TAB1 abscissa in a continuous
+  photon spectrum no longer aborts the step's photon source; `represented_gamma_power_fraction` no longer counts
+  under/overflow power twice; the certificate no longer claims self-shielding cannot combine with uncertainty.
+- `actinv reverse`: an NNLS step at a boundary variable can no longer become infinite (0/0 was dropped by `min`),
+  and the singular-system test is relative to the matrix scale instead of an absolute epsilon.
 
 **Release engineering**
 

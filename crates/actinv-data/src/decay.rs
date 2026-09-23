@@ -231,6 +231,18 @@ fn parse_section(mat: i32, lines: &[&str]) -> Result<Nuclide, String> {
 }
 
 /// Parse a decay sublibrary from text. Key: (ZA, LISO).
+/// One record per (ZA, LISO): a second would silently replace the first by file order.
+fn insert_unique(out: &mut HashMap<(i32, i32), Nuclide>, nuclide: Nuclide) -> Result<(), String> {
+    let key = (nuclide.za, nuclide.liso);
+    if out.insert(key, nuclide).is_some() {
+        return Err(format!(
+            "duplicate decay record for ZA={} LISO={}",
+            key.0, key.1
+        ));
+    }
+    Ok(())
+}
+
 pub fn parse_text(text: &str) -> Result<HashMap<(i32, i32), Nuclide>, String> {
     let mut out = HashMap::new();
     let mut cur: Option<(i32, i32, i32)> = None;
@@ -248,14 +260,14 @@ pub fn parse_text(text: &str) -> Result<HashMap<(i32, i32), Nuclide>, String> {
             buf.push(line);
         } else if cur.is_some() && !buf.is_empty() {
             let n = parse_section(cur.expect("current decay section").0, &buf)?;
-            out.insert((n.za, n.liso), n);
+            insert_unique(&mut out, n)?;
             cur = None;
             buf.clear();
         }
     }
     if let (Some(c), false) = (cur, buf.is_empty()) {
         let n = parse_section(c.0, &buf)?;
-        out.insert((n.za, n.liso), n);
+        insert_unique(&mut out, n)?;
     }
     Ok(out)
 }
@@ -353,6 +365,16 @@ mod tests {
         assert_eq!(nuclide.half_life, 1.0);
         assert!(nuclide.modes.is_empty());
         assert!(nuclide.spectra.is_empty());
+    }
+
+    #[test]
+    fn duplicate_records_are_an_error_not_last_wins() {
+        let section = minimal_decay(["26056", "55.45", "0", "0", "0", "0"]);
+        let error = parse_text(&format!("{section}\n{section}")).unwrap_err();
+        assert!(
+            error.contains("duplicate decay record for ZA=26056"),
+            "{error}"
+        );
     }
 
     #[test]

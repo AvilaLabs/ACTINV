@@ -131,7 +131,8 @@ aggregates explicit isotopes back to elemental mass fractions.
 Neutrons use `fispact-709` with exactly 709 values. Proton, deuteron and alpha use `fispact-162` with exactly 162
 values and require `options.temperature_K: 0`; charged specs reject fission-yield files. `custom` requires one more
 strictly increasing boundary than flux values. Those boundaries must match the activation library to `1e-12`
-relative. `total`, when present, rescales group values while preserving shape. The spec, library index, group
+relative. `total`, when present, rescales group values while preserving shape; a positive `total` with an all-zero
+`flux_per_group` has no shape to scale and is rejected. The spec, library index, group
 structure and temperature must all identify the same projectile/data build before matrix assembly.
 
 ## Fission yields

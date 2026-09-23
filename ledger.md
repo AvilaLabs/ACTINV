@@ -1440,3 +1440,14 @@ data-handling repair carries a regression test that fails on the pre-repair code
   readers raise instead of `assert`. Not changed, by design: `check_prior_verdicts.py` still trusts an explicit
   amendment list, because post-closure runtime amendments (P10-T, P18b-P38) intentionally stay out of frozen
   verdicts; the harness path-keyed caches are untouched because the P3 certificates pin those sources.
+- **Run pipeline and numerics (actinv-core, actinv-data).** Single-read verified inputs (`read_verified`, which
+  also primes the SHA-256 cache); chain-ordered bulk heat sums; validation of zero-shape totals, over-long
+  durations and charged-projectile shielding; duplicate decay records rejected; zero-width TAB1 photon segments;
+  the represented-power fraction's double count removed; NNLS boundary ratios and a scale-relative pivot test.
+  Scans before changing decay handling: neither shipped decay library has duplicate (ZA, LISO) records, but
+  ENDF/B-VIII.0 carries 14 NST=0 records with T½ = 0 (Ca-46, Zn-70, Se-80, Te-123, Te-130, Xe-134, ...) —
+  observationally stable double-beta candidates for which λ = 0 is right — so the proposed "error on a
+  radioactive record without a half-life" was not made. The P15 and P10 pins are unchanged by this batch.
+  Controls: `contradictory_or_unbounded_inputs_fail_validation`, `duplicate_records_are_an_error_not_last_wins`,
+  `repeated_abscissa_is_a_zero_width_segment`, `dense_solve_singularity_is_relative_to_matrix_scale`,
+  `nnls_clamps_to_the_nonnegative_orthant_with_finite_values`.

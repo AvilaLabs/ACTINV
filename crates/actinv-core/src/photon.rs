@@ -220,6 +220,10 @@ fn segment_moments(
     a: f64,
     b: f64,
 ) -> Result<(f64, f64), String> {
+    // A repeated abscissa (ENDF's discontinuity idiom) is a legal zero-width segment.
+    if x1 == x0 && a == x0 && b == x0 {
+        return Ok((0.0, 0.0));
+    }
     if !(x1 > x0 && b >= a && a >= x0 && b <= x1) {
         return Err("invalid TAB1 integration interval".into());
     }
@@ -711,7 +715,8 @@ pub fn source_for_step(
     let grouped_energy: f64 = aggregate_moment.iter().sum();
     let ungrouped_power = diag.group_underflow_power_W_g + diag.group_overflow_power_W_g;
     let source_power = grouped_energy * EV + ungrouped_power;
-    let represented = (source_power + ungrouped_power).max(0.0);
+    // `source_power` already includes the under/overflow power once.
+    let represented = source_power.max(0.0);
     let denom = represented + missing_power;
     let coverage = if response_total_power > 0.0 {
         Some(response_included_power / response_total_power)
@@ -961,6 +966,17 @@ MODE P\nSDEF PAR=P POS=0 0 0 ERG=D1 WGT={:.17e}\n",
 #[cfg(test)]
 mod tests {
     use super::segment_moments;
+
+    #[test]
+    fn repeated_abscissa_is_a_zero_width_segment() {
+        // ENDF writes a discontinuity as two points at one energy; that used to abort
+        // the whole step's photon source.
+        assert_eq!(
+            segment_moments(1.0, 2.0, 1.0, 3.0, 2, 1.0, 1.0),
+            Ok((0.0, 0.0))
+        );
+        assert!(segment_moments(2.0, 1.0, 1.0, 1.0, 2, 1.0, 2.0).is_err());
+    }
 
     #[test]
     fn interpolation_moments_match_dense_reference() {

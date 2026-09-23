@@ -178,18 +178,65 @@ fn index_path(library_path: &str) -> String {
     }
 }
 
-fn file_sha256(path: &str) -> Result<String, String> {
-    type CacheKey = (String, u64, u128);
-    static CACHE: OnceLock<Mutex<HashMap<CacheKey, String>>> = OnceLock::new();
-    let metadata = std::fs::metadata(path).map_err(|e| format!("cannot stat {path}: {e}"))?;
-    let modified = metadata
+type ShaCacheKey = (String, u64, u128);
+
+/// Process-wide SHA-256 cache keyed by (path, length, modification time).
+fn sha_cache() -> &'static Mutex<HashMap<ShaCacheKey, String>> {
+    static CACHE: OnceLock<Mutex<HashMap<ShaCacheKey, String>>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(HashMap::new()))
+}
+
+fn modified_nanos(metadata: &std::fs::Metadata) -> u128 {
+    metadata
         .modified()
         .ok()
         .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
         .map(|d| d.as_nanos())
-        .unwrap_or(0);
-    let key = (path.to_string(), metadata.len(), modified);
-    let cache = CACHE.get_or_init(|| Mutex::new(HashMap::new()));
+        .unwrap_or(0)
+}
+
+/// Read an input once and hash exactly those bytes, so the certified SHA-256 always
+/// names the bytes that are parsed: hashing and then re-opening the file for parsing
+/// left a window in which it could be replaced. The digest also primes the cache.
+fn read_verified(path: &str, declared: Option<&str>) -> Result<(Vec<u8>, String), String> {
+    let before = std::fs::metadata(path).map_err(|e| format!("cannot stat {path}: {e}"))?;
+    let bytes = std::fs::read(path).map_err(|e| format!("cannot read {path}: {e}"))?;
+    let after = std::fs::metadata(path).map_err(|e| format!("cannot restat {path}: {e}"))?;
+    if after.len() != before.len()
+        || modified_nanos(&after) != modified_nanos(&before)
+        || bytes.len() as u64 != after.len()
+    {
+        return Err(format!("input changed while reading: {path}"));
+    }
+    let computed = format!("{:x}", Sha256::digest(&bytes));
+    if let Some(expected) = declared {
+        if !computed.eq_ignore_ascii_case(expected) {
+            return Err(format!(
+                "SHA-256 mismatch for {path}: declared {expected}, computed {computed}"
+            ));
+        }
+    }
+    sha_cache()
+        .lock()
+        .map_err(|_| "SHA-256 cache lock poisoned")?
+        .insert(
+            (path.to_string(), after.len(), modified_nanos(&after)),
+            computed.clone(),
+        );
+    Ok((bytes, computed))
+}
+
+/// `read_verified` for UTF-8 text inputs (ENDF, JSON).
+fn read_verified_text(path: &str, declared: Option<&str>) -> Result<(String, String), String> {
+    let (bytes, sha) = read_verified(path, declared)?;
+    let text = String::from_utf8(bytes).map_err(|_| format!("{path} is not UTF-8 text"))?;
+    Ok((text, sha))
+}
+
+fn file_sha256(path: &str) -> Result<String, String> {
+    let metadata = std::fs::metadata(path).map_err(|e| format!("cannot stat {path}: {e}"))?;
+    let key = (path.to_string(), metadata.len(), modified_nanos(&metadata));
+    let cache = sha_cache();
     if let Some(value) = cache
         .lock()
         .map_err(|_| "SHA-256 cache lock poisoned")?
@@ -212,13 +259,7 @@ fn file_sha256(path: &str) -> Result<String, String> {
     }
     let value = format!("{:x}", hasher.finalize());
     let after = std::fs::metadata(path).map_err(|e| format!("cannot restat {path}: {e}"))?;
-    let after_modified = after
-        .modified()
-        .ok()
-        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok())
-        .map(|d| d.as_nanos())
-        .unwrap_or(0);
-    if after.len() != key.1 || after_modified != key.2 {
+    if after.len() != key.1 || modified_nanos(&after) != key.2 {
         return Err(format!("input changed while hashing: {path}"));
     }
     cache
@@ -956,33 +997,23 @@ impl PreparedRun {
         let hashes_started = profiler.start();
         let library_sha = verify_hash(&library_ref.path, library_ref.sha256.as_deref())?;
         let idx_path = index_path(&library_ref.path);
-        let index_sha = verify_hash(&idx_path, None)?;
-        let decay_primary_sha = verify_hash(&decay_ref.primary, None)?;
-        let decay_fallback_sha = match &decay_ref.fallback {
-            Some(path) if !path.is_empty() => Some(verify_hash(path, None)?),
-            _ => None,
-        };
+        let (index_text, index_sha) = read_verified_text(&idx_path, None)?;
         profiler.finish("input_hash_verification", hashes_started);
 
         let extensions_started = profiler.start();
         let (response, response_sha) = match &photon_options.response {
             Some(reference) => {
-                let sha = verify_hash(&reference.path, Some(&reference.sha256))?;
-                let text = std::fs::read_to_string(&reference.path)
-                    .map_err(|e| format!("cannot read photon response {}: {e}", reference.path))?;
+                let (text, sha) = read_verified_text(&reference.path, Some(&reference.sha256))
+                    .map_err(|e| format!("photon response: {e}"))?;
                 (Some(PhotonResponse::from_json(&text)?), Some(sha))
             }
             None => (None, None),
         };
         let radiological = match radiological_options {
             Some(options) => {
-                let sha256 = verify_hash(&options.table.path, Some(&options.table.sha256))?;
-                let text = std::fs::read_to_string(&options.table.path).map_err(|error| {
-                    format!(
-                        "cannot read radiological table {}: {error}",
-                        options.table.path
-                    )
-                })?;
+                let (text, sha256) =
+                    read_verified_text(&options.table.path, Some(&options.table.sha256))
+                        .map_err(|error| format!("radiological table: {error}"))?;
                 Some(PreparedRadiological {
                     options: options.clone(),
                     sha256,
@@ -993,10 +1024,9 @@ impl PreparedRun {
         };
         let damage = match damage_options {
             Some(options) => {
-                let sha256 = verify_hash(&options.table.path, Some(&options.table.sha256))?;
-                let text = std::fs::read_to_string(&options.table.path).map_err(|error| {
-                    format!("cannot read damage table {}: {error}", options.table.path)
-                })?;
+                let (text, sha256) =
+                    read_verified_text(&options.table.path, Some(&options.table.sha256))
+                        .map_err(|error| format!("damage table: {error}"))?;
                 Some(PreparedDamage {
                     options: options.clone(),
                     sha256,
@@ -1013,13 +1043,9 @@ impl PreparedRun {
                         projectile.name()
                     ));
                 }
-                let sha256 = verify_hash(&options.table.path, Some(&options.table.sha256))?;
-                let text = std::fs::read_to_string(&options.table.path).map_err(|error| {
-                    format!(
-                        "cannot read self-shielding table {}: {error}",
-                        options.table.path
-                    )
-                })?;
+                let (text, sha256) =
+                    read_verified_text(&options.table.path, Some(&options.table.sha256))
+                        .map_err(|error| format!("self-shielding table: {error}"))?;
                 Some(PreparedShielding {
                     options: options.clone(),
                     sha256,
@@ -1031,8 +1057,9 @@ impl PreparedRun {
         let mut fission_yields = HashMap::new();
         let mut fission_yield_inputs = Vec::with_capacity(fission_options.files.len());
         for reference in &fission_options.files {
-            let sha = verify_hash(&reference.path, Some(&reference.sha256))?;
-            let parsed = fission::parse_file(&reference.path)?;
+            let (text, sha) = read_verified_text(&reference.path, Some(&reference.sha256))?;
+            let parsed =
+                fission::parse_text(&text).map_err(|e| format!("{}: {e}", reference.path))?;
             let parent = parsed.parent;
             if fission_yields.insert(parent, parsed).is_some() {
                 return Err(format!(
@@ -1046,8 +1073,7 @@ impl PreparedRun {
 
         let index_started = profiler.start();
         let index: serde_json::Value =
-            serde_json::from_str(&std::fs::read_to_string(&idx_path).map_err(|e| e.to_string())?)
-                .map_err(|e| e.to_string())?;
+            serde_json::from_str(&index_text).map_err(|e| e.to_string())?;
         let library_group_structure = index
             .get("groups")
             .and_then(serde_json::Value::as_str)
@@ -1203,17 +1229,22 @@ impl PreparedRun {
         profiler.finish("covariance_read_validation", covariance_started);
 
         let primary_decay_started = profiler.start();
-        let mut nuclides =
-            decay::parse_file(&decay_ref.primary).map_err(|error| error.to_string())?;
+        let (decay_text, decay_primary_sha) = read_verified_text(&decay_ref.primary, None)?;
+        let mut nuclides = decay::parse_text(&decay_text)
+            .map_err(|error| format!("{}: {error}", decay_ref.primary))?;
+        drop(decay_text);
         profiler.finish("decay_primary_read_parse", primary_decay_started);
 
         let fallback_decay_started = profiler.start();
         let mut decay_nuclides_from_fallback = 0usize;
         let mut decay_fallback_keys = std::collections::HashSet::new();
+        let mut decay_fallback_sha = None;
         if let Some(fallback) = &decay_ref.fallback {
             if !fallback.is_empty() {
-                for (key, value) in
-                    decay::parse_file(fallback).map_err(|error| error.to_string())?
+                let (fallback_text, sha) = read_verified_text(fallback, None)?;
+                decay_fallback_sha = Some(sha);
+                for (key, value) in decay::parse_text(&fallback_text)
+                    .map_err(|error| format!("{fallback}: {error}"))?
                 {
                     if let std::collections::hash_map::Entry::Vacant(entry) = nuclides.entry(key) {
                         entry.insert(value);
@@ -1293,12 +1324,10 @@ impl PreparedRun {
         let path = &options.covariance.path;
         let sha256 = verify_hash(path, Some(&options.covariance.sha256))?;
         let index_path = covariance::index_path(path)?.display().to_string();
-        let index_sha256 = verify_hash(&index_path, None)?;
-        let index: serde_json::Value = serde_json::from_str(
-            &std::fs::read_to_string(&index_path)
-                .map_err(|error| format!("cannot read covariance index {index_path}: {error}"))?,
-        )
-        .map_err(|error| format!("cannot parse covariance index {index_path}: {error}"))?;
+        let (index_text, index_sha256) = read_verified_text(&index_path, None)
+            .map_err(|error| format!("covariance index: {error}"))?;
+        let index: serde_json::Value = serde_json::from_str(&index_text)
+            .map_err(|error| format!("cannot parse covariance index {index_path}: {error}"))?;
         let string = |name: &str| {
             index
                 .get(name)
@@ -2057,7 +2086,11 @@ impl PreparedRun {
                     yield_remap(derivative, yield_derivatives_extra);
                 }
             }
-            for (c, nb) in &bulk {
+            // Chain-index order: summing in HashMap order made heat/photon bits vary
+            // from process to process whenever two or more bulk nuclides decay.
+            let mut bulk_ordered: Vec<(&usize, &f64)> = bulk.iter().collect();
+            bulk_ordered.sort_unstable_by_key(|(c, _)| **c);
+            for (c, nb) in bulk_ordered {
                 let key = ch.keys[*c];
                 if let Some(nu) = nuclides.get(&key) {
                     if nu.lambda() > 0.0 {
@@ -3413,7 +3446,6 @@ impl PreparedRun {
                         "damage-energy observables are not shielded",
                         "composition dilution uses the declared material, not evolved inventories",
                         "sigma_p for composition members absent from the table is the analytic channel-radius estimate",
-                        "cannot be combined with uncertainty propagation",
                     ],
                 }),
             );
