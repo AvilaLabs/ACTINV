@@ -1403,3 +1403,9 @@ data-handling repair carries a regression test that fails on the pre-repair code
   densification. Controls: `resolved_naps_outside_the_defined_set_fails_closed`,
   `product_sections_without_a_reaction_fail_instead_of_vanishing`,
   `damage_and_shielding_checkpoints_are_keyed_by_projectile`, `oversized_dense_blocks_are_refused_before_allocation`.
+- **P15 solver-output pin re-seated.** The P15 cache-integrity record pins a normalized result hash that CI
+  regenerates and diffs. The CB2 kernel commits (cc2cade refinement gate, 9420f8c subnormal-row exemption)
+  legitimately moved that result at ULP level (8a21e8ff… → 75a19f0a…); every identity flag in the record stays
+  true. Re-seated exactly as e5a0dfb did after the earlier CRAM refinement fix; the regenerated record matches
+  the CI runner's fresh value byte-for-byte. The fixture (explicit Fe56, no shielding) exercises none of the
+  audit repairs.
