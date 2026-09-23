@@ -9,7 +9,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 5b0e4fd7a4b934875286d18ac1fd844bba8aaf8541dfe3f5105353a363f139cc  ./.github/workflows/web.yml
 ee436516243cf6cc3af117d599a6be52c9a7df171b43e7d25d1821b56ab774ba  ./.gitignore
 95cbf21273eefeb72fb7a9676cde68aeeadc4b76d8bc102b8ce5ad439a2ff6bd  ./AGENTS.md
-be900816b490e3df1ff9c05072ec587097df04961bc26db9030e0ebe7196242f  ./CHANGELOG.md
+7e3b67ba1c04be62cd915c2ff3fb9f22aa55b8f235f71dd8cfea1c1c2c8acbc9  ./CHANGELOG.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 1e693c9779c4909766e20f1e4b0e1bb1403a1ac0188265d35fa75b1231786448  ./Cargo.lock
 42d187439ef1c7d5585c6480c993c855d2dce9b0ceb2da373677d065cc3cccf2  ./Cargo.toml
@@ -490,7 +490,7 @@ abc4a8dff5025eceb8a7bad5aead22763961e3208b8b693ad0e99bca2f9cc66c  ./crates/actin
 b5df928a0dc4ade085d8d3c8d5a03cadb61c9aebd6f2befef1f6214228723582  ./crates/actinv-core/src/bin/prepared_probe.rs
 a95e9328bfe93b23db3134930b2a0a8cedfcd0e076f6784bd5bc403151b93798  ./crates/actinv-core/src/bin/uncertainty_probe.rs
 81eba337cb1d0e7c2ae060de43b21b989936dd2106a17db5ef5af8d6526e1a0f  ./crates/actinv-core/src/bin/unit_probe.rs
-c5ed3a5abd821d4c1f0980acde6ae026d8a4db6d8a50ed1b51514eb790be8be0  ./crates/actinv-core/src/chain.rs
+65d1508504be101e89b89ceaf7bc9c4955a7701393f60327ee269bffc4444544  ./crates/actinv-core/src/chain.rs
 79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba  ./crates/actinv-core/src/cram.rs
 ad87f5e6af18c6b4c4a0bb79d93d6530d7e45ae521e8521080f6106ca3b847a9  ./crates/actinv-core/src/cram_coeffs.rs
 d005ca5ab2b6d127002d903c504a95241a7e8b562a30742779d8e54aabbb1b37  ./crates/actinv-core/src/damage.rs
@@ -664,7 +664,7 @@ d77ea54f285b898c2e1783fd835d7ab4f969b2ef68a9704c1067df54937605f7  ./examples/rev
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-a4518dd8ceb2a2dee539916e41201a00e6f1be78c6dd613d2be18ad49b9d3963  ./ledger.md
+a6790e0b70a9d62c61e38d7d0e57c625898a3f50ee5af8838407599feb18efad  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -2482,7 +2482,7 @@ cd0d3f9c510b4d1dd382b6f2a1a6daf878e0165e62e86b39699eda8d081ab3ac  ./results/gend
 b429642e58b630fd0df91b5fdd25559fc655b92cc2010bfd7ba106fd847939e7  ./results/manifest.sha256
 52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e  ./results/p14_performance.json
 db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_quality.json
-83c2ad13331c6ab70c2dc0ddff624795b505fa101b29007d17f3124a003bc929  ./results/p15_cache_integrity.json
+91f63abdbab000185f98c16d1fb911b93c5e423e27e9837f80efb76ead9df221  ./results/p15_cache_integrity.json
 c7129476489244052e70f482a003fab577ff1a9f2fc3ab2711a6cf615f7a3555  ./results/p15_interfaces.json
 141ec1ee3168933b0d52db2c0826bf188f75cebfcc06756d67a8a19837c10498  ./results/p15_performance.json
 1e7fa396839eac36470c8d4dc3863141ef6312585c770b37d6e8eb4c447f36f2  ./results/p15_prepared_identity.json

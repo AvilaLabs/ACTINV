@@ -78,7 +78,13 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
         }
         trip.push((k, k, -l));
         // Branches must carry exactly the loss on the diagonal, or atoms silently vanish or appear.
-        let assigned: f64 = nu.modes.iter().map(|md| md.br).filter(|br| *br > 0.0).sum();
+        // Folded from +0.0: `sum` starts at -0.0, which a state with no modes would print as.
+        let assigned = nu
+            .modes
+            .iter()
+            .map(|md| md.br)
+            .filter(|br| *br > 0.0)
+            .fold(0.0, |sum, br| sum + br);
         let mut scale = 1.0;
         if (assigned - 1.0).abs() > BRANCHING_TOLERANCE {
             led.branching_sums.push((*key, assigned));
@@ -596,6 +602,17 @@ mod tests {
         let k = chain.index[&(49_115, 0)];
         assert_eq!(entries(&chain, (49_115, 0)), vec![(k, -l), (chain.leak, l)]);
         assert_eq!(chain.ledger.daughters_missing.len(), 1);
+    }
+
+    #[test]
+    fn a_radioactive_state_without_decay_modes_decays_into_leakage() {
+        let l = std::f64::consts::LN_2 / 2.0;
+        // The P11 fixture's Mn-56 and Mn-57 carry a half-life and NDK = 0.
+        let chain = network(vec![nuclide(25_056, 0, 2.0, &[])]);
+        let k = chain.index[&(25_056, 0)];
+        assert_eq!(entries(&chain, (25_056, 0)), vec![(k, -l), (chain.leak, l)]);
+        assert_eq!(chain.ledger.branching_sums, vec![((25_056, 0), 0.0)]);
+        assert!(chain.ledger.branching_sums[0].1.is_sign_positive());
     }
 
     #[test]

@@ -79,7 +79,8 @@
   (an isomeric transition from the ground state to an absent isomer, via the ground-state fallback) is booked
   to leakage as a missing daughter instead of lengthening the half-life. The default ENDF/B-VIII.0 data sums
   within 9e-7 and has no self-loops, so runs on it are byte-identical; JEFF-3.3 (31 states) and UKDD-2020 used
-  as the primary decay library are affected.
+  as the primary decay library are affected. A radioactive record with no decay modes at all (NDK = 0; none in
+  the evaluated libraries, but present in the P11 test fixture) now decays into leakage instead of vanishing.
 - A run whose result holds a NaN or infinite number now fails, naming the field (`steps[3].heat_W_per_g.total
   is NaN`), instead of succeeding: serde_json writes non-finite numbers as `null`, indistinguishable from an
   absent value, and the CLI, Python binding, desktop and study/mesh paths all serialised results unchecked. No

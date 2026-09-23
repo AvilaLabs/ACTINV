@@ -1499,3 +1499,14 @@ data-handling repair carries a regression test that fails on the pre-repair code
   keep major tags, matching the publish workflows. The opt-in pre-commit hook was tested in a scratch clone
   (commit touching a tracked file plus a new file; manifest matched after). It is not installed here: the
   existing local commit-msg hook stays as it is.
+- **Correction (decay branching).** The branching entry above says consistent-data outputs keep their bytes. That
+  holds for the evaluated libraries but not for synthetic fixtures: the P11 fixture (reused by P15 and P12-G1)
+  declares Mn-56 and Mn-57 radioactive with NDK = 0, so their decays used to vanish and now enter leakage, ledgered
+  with a zero sum. CI's P15 cache-integrity step caught it on f9d3ee6 (normalized result 75a19f0a... ->
+  25006a28...). That zero printed as -0.0 (Rust's f64 `sum` starts from -0.0) and is now folded from +0.0; P15
+  is re-seated at 899963df..., following the e5a0dfb precedent. In that fixture only `leakage_atoms_per_g`,
+  `n_states_populated`, `ledger.assembly.n_decay_triplets` and the new key change; inventories, activities and
+  heat do not. Local replay of every CI step after P15 (an h5py-capable venv for P8/P21; freshly built Python
+  library and prepared_probe for the entry-point comparisons) passes, P10's legacy pin f7b30255 included. Files
+  the controls rewrote locally (paths, timings, error wording, FD residuals) were restored, not committed.
+  Control: `a_radioactive_state_without_decay_modes_decays_into_leakage`.
