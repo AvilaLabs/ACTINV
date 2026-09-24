@@ -81,11 +81,23 @@ def main() -> int:
     if rc_b != 0:
         return fail(f"run B failed: {pb.stderr[-300:]}")
 
-    la = (out_a / "optimize_ledger.jsonl").read_bytes()
-    lb = (out_b / "optimize_ledger.jsonl").read_bytes()
-    if la != lb:
-        return fail("identical-seed reruns produced different ledgers")
+    # wall_s is a measured quantity, not optimizer output — compare every
+    # deterministic field (protocol intent: identical seed ⇒ identical
+    # candidate sequence and outcomes)
+    def deterministic_rows(path):
+        rows = [json.loads(l) for l in path.read_text().splitlines()
+                if l.strip()]
+        for r in rows:
+            r.pop("wall_s", None)
+        return rows
 
+    ra = deterministic_rows(out_a / "optimize_ledger.jsonl")
+    rb = deterministic_rows(out_b / "optimize_ledger.jsonl")
+    if ra != rb:
+        return fail("identical-seed reruns produced different ledgers "
+                    "(beyond wall_s)")
+
+    la = (out_a / "optimize_ledger.jsonl").read_bytes()
     rows = [json.loads(l) for l in la.decode().splitlines() if l.strip()]
     ids = [r["eval_id"] for r in rows]
     if sorted(ids) != ids or len(set(ids)) != len(ids):
