@@ -287,28 +287,39 @@ def extract_sampled(rec_v: dict, cooling: list[float],
         sa.update(status="failed",
                   error=f"{rb.get('n_failed_samples')} failed samples")
         return sa
-    vals_per_t: dict[str, list[float]] = {}
-    nom_per_t: dict[str, float] = {}
-    for entry in sv:
-        if entry is None:
-            continue
-        for tk, metrics in (entry or {}).items():
+    def keyed(items):
+        out = {}
+        for tk, metrics in items:
+            try:
+                t = float(tk)
+            except (TypeError, ValueError):
+                continue
             v = (metrics or {}).get("decay_heat_w_per_g")
             if isinstance(v, (int, float)) and math.isfinite(v):
-                vals_per_t.setdefault(tk, []).append(float(v))
-    for tk, metrics in nominal_pt.items():
-        v = (metrics or {}).get("decay_heat_w_per_g")
-        if isinstance(v, (int, float)):
-            nom_per_t[tk] = float(v)
+                out[t] = float(v)
+        return out
+
+    sample_series: list[dict[float, float]] = [keyed((e or {}).items())
+                                               for e in sv if e]
+    nom_map = keyed(nominal_pt.items())
+
+    def nearest_t(t: float, keys) -> float | None:
+        cand = [k for k in keys if abs(k - t) <= max(1e-6 * t, 1e-9)]
+        return min(cand, key=lambda k: abs(k - t)) if cand else None
+
     bands = []
     for t in cooling:
-        tk = str(int(t)) if float(t) == int(t) else f"{t:e}"
-        vals = vals_per_t.get(tk, [])
+        vals = []
+        for series in sample_series:
+            k = nearest_t(t, series.keys())
+            if k is not None:
+                vals.append(series[k])
+        nk = nearest_t(t, nom_map.keys())
         if len(vals) < 2:
             sa.update(status="failed",
-                      error=f"{len(vals)} sample values at t={tk}")
+                      error=f"{len(vals)} sample values at t={t}")
             return sa
-        bands.append({"t_s": t, "nominal": nom_per_t.get(tk),
+        bands.append({"t_s": t, "nominal": nom_map.get(nk) if nk is not None else None,
                       "lo": quantile(vals, TAIL),
                       "hi": quantile(vals, 1.0 - TAIL),
                       "n": len(vals)})

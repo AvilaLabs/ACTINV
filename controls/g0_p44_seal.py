@@ -145,7 +145,13 @@ def main():
         },
         "envelope": {"sealed_scoring_minutes": 180},
         "prior_verdicts": prior,
-        "amendments": [],
+        "amendments": [
+            "sampled-band extraction matches post-shutdown step times "
+            "numerically (1e-6 rel) instead of string keys: Rust's "
+            "{:e} formatting ('1.126656e5') and float error in computed "
+            "times ('2.4926399999999997e5') break naive string lookup; "
+            "extraction-only fix — no physics changed",
+        ],
     }
     json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)
     print(f"sealed P44 at {head} -> {OUT}")
