@@ -1,5 +1,7 @@
 {
-  "amendments": [],
+  "amendments": [
+    "sampled-band extraction matches post-shutdown step times numerically (1e-6 rel) instead of string keys: Rust's {:e} formatting ('1.126656e5') and float error in computed times ('2.4926399999999997e5') break naive string lookup; extraction-only fix \u2014 no physics changed"
+  ],
   "band_definitions": {
     "channels": [
       "cross_section_mf33",
@@ -28,7 +30,7 @@
   },
   "code_sha256": {
     "corpus_reader": "e89cfbe50273fef78a822e3faec3eb492a49fe5a1bbaf350f935e470d5f4e2dc",
-    "driver": "f3813d45c302f105a9707823b4877347893bd69247d90239d13dbac7780e1a4b",
+    "driver": "827eb4644bbae673cd6b35f2246faa44daaf5bb2317f8160549eb8cff8a41d49",
     "scorer": "0c4a18169aa8ce1acb68126a66b6f44d914794d42d8a29f3e42966629240582b"
   },
   "corpus_files": {
@@ -459,7 +461,7 @@
       "sha256": "ba1dd6cb150a4aa3e0d81461054aec7d415ef19d946aba8b9886b31de218252d"
     }
   },
-  "opening_commit": "5669b12db867fa1df1ae61811b7f8d8ae6a9cbf2",
+  "opening_commit": "142c23014f00709edb964b974e30832c7013f7e4",
   "partitions": {
     "development": [
       [
@@ -1047,7 +1049,7 @@
   },
   "protocol": "protocols/ACTINV-P44_PROTOCOL.md",
   "protocol_sha256": "82e0a44d8e9aed0f59ce1eee4dd447cb62b7eb8419f8996476cde6b2705e611b",
-  "recorded_at_utc": "2026-09-24T05:31:27Z",
+  "recorded_at_utc": "2026-09-24T05:36:07Z",
   "schema": "actinv-g0-seal-1",
   "scoring_rules": {
     "boundary": "inclusive",
