@@ -3,12 +3,13 @@
     "fixture schema corrections: schedule is a bare Vec<Step>, outputs lives under options.outputs (frozen documents were invalid as first frozen; corrected before any gate evidence existed)",
     "yield_trace_scaled enumerates the effective pair set \u2014 the union of the two tables bracketing the spectrum-average energy (500 keV, 14 MeV), 1263 pairs \u2014 not the full-file union",
     "decay_perturbation_trace expectation corrected to the substrate model: N_daughter = N0\u00b7f\u03bbt and A = f\u03bbN0, not N0\u00b7exp(-f\u03bbt) \u2014 the declared composition is not a depleted chain state",
-    "covariance sidecar built over the full index (1679 targets); build-covariance supports no subset selection"
+    "covariance sidecar built over the full index (1679 targets); build-covariance supports no subset selection",
+    "study documents declare options.outputs [inventory,activity,heat,ledger,certificate]: the default null computes pathway analysis at ~90 s per step on the 3873-state fission chain (measured: 248 s vs 1.4 s per u235 solve) which would breach the 45-minute envelope by ~30x; the restriction changes no physics \u2014 same operator, schedule, and response extraction"
   ],
   "frozen_documents": {
     "campaign_study": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43-campaign.json",
-      "sha256": "257107d2268a90b208da155c2b354e55f4d6153878232508b9f5b0f48fd5cc1c"
+      "sha256": "0b23174b8b1398e34d700b15e37b9f35b9736de45f0c68365df173a42df693be"
     },
     "decay_trace_nominal": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_decay_trace_nominal.json",
@@ -20,7 +21,7 @@
     },
     "mechanics_study": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43-mech.json",
-      "sha256": "9e46d1572368f67c049ccd055662937ca444eafbc871df487eb6d424b8b34a82"
+      "sha256": "c6b5ea552f10e9ea64b11acf4d4355106bdfb709f582db1f7103c9465e66193c"
     },
     "yield_trace_nominal": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_yield_trace_nominal.json",
@@ -34,7 +35,7 @@
   "identities": {
     "actinv_binary": {
       "path": "target/release/actinv",
-      "sha256": "b98a6fd885d88bbb54cb664710475722637c7b2358cde04f8b32a4ad75b6cd23"
+      "sha256": "0af5ab368c6304c5d1af501515522c4b7c7ab74be4e5322a94932309cdd1d052"
     },
     "activation_index": {
       "path": "actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g_index.json",
@@ -65,7 +66,7 @@
       "sha256": "a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207"
     }
   },
-  "opening_commit": "8e3d4f2ddd57ddb0991e0fd06deb5b1b463a5113",
+  "opening_commit": "114459443e4e26a6237dd8c8f06a5bab3e2057f1",
   "partition": {
     "campaign": "p43-campaign",
     "fixtures": "p43-fixtures",
@@ -123,7 +124,7 @@
   },
   "protocol": "protocols/ACTINV-P43_PROTOCOL.md",
   "protocol_sha256": "eb138111b8d4a786ff9a658b1131bb6976f26a915b641b1c37b7f85e3e38f8bb",
-  "recorded_at_utc": "2026-09-24T02:37:26Z",
+  "recorded_at_utc": "2026-09-24T03:10:29Z",
   "schema": "actinv-g0-seal-1",
   "tolerances": {
     "decay_trace_rel": 1e-09,

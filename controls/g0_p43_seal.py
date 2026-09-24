@@ -159,6 +159,13 @@ def main():
             "chain state",
             "covariance sidecar built over the full index (1679 "
             "targets); build-covariance supports no subset selection",
+            "study documents declare options.outputs "
+            "[inventory,activity,heat,ledger,certificate]: the default "
+            "null computes pathway analysis at ~90 s per step on the "
+            "3873-state fission chain (measured: 248 s vs 1.4 s per "
+            "u235 solve) which would breach the 45-minute envelope by "
+            "~30x; the restriction changes no physics — same operator, "
+            "schedule, and response extraction",
         ],
     }
     json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)
