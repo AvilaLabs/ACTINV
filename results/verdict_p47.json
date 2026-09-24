@@ -1,0 +1,74 @@
+{
+ "spec": "actinv-verdict-1",
+ "phase": "P47",
+ "verdict": "P47-CONDITIONAL",
+ "gates": {
+  "g0_seal": true,
+  "g1_completeness": true,
+  "g2_controls": true,
+  "g3_report_issued": true
+ },
+ "basis": "dose leg verified byte-identical and qualified by the analytic uncollided control (rel_dev 0.0000 inside tolerance); propagated-band comparison issued (50/50 inside band); self-produced geometry condition named verbatim",
+ "conditions": [
+  "geometry provenance: self-produced \u2014 no lawful external benchmark (SINBAD) was available; the condition is named verbatim, not discharged by silence",
+  "the dose leg reports detector air dose with MC std-dev via EnergyFunctionFilter (E*mu_en,air) \u2014 a dose estimate on the executed geometry, still not a qualified dosimetry prediction (no detector model)",
+  "contact-proxy/transported ratio is reported with named drivers and is unmeasurable under the frozen P32 spec (no photon response declared -> proxy null per nuclide); no dose claim is made from the proxy",
+  "P32 normalization defect found and corrected: the OpenMC 0.15.3 tally returns f-weighted track length with no cell-volume division; p32_dose.json's published values overstate the dose by the detector volume (4124.79 cm3). P47's dose table is corrected; the P32 record is preserved unmodified",
+  "MCNP distributed-source emission remains a documented placeholder (no licensed MCNP verification route)"
+ ],
+ "dose_table": {
+  "2": {
+   "dose_Gy_h": 0.002235806166144455,
+   "mc_rel_std": 0.0018488490498644213,
+   "tally_raw": 0.002561730937198239,
+   "detector_volume_cm3": 4124.790204786391,
+   "p32_published_Gy_h": 9.22223137391366,
+   "p32_normalization_defect": "P32 read the raw f-weighted track-length tally as Gy/s; dividing by detector volume gives the true dose rate (P32 values overstated by 4124.79x)"
+  },
+  "3": {
+   "dose_Gy_h": 5.8574541118886677e-05,
+   "mc_rel_std": 0.005058296490650321,
+   "tally_raw": 6.711324818251152e-05,
+   "detector_volume_cm3": 4124.790204786391,
+   "p32_published_Gy_h": 0.24160769345704147,
+   "p32_normalization_defect": "P32 read the raw f-weighted track-length tally as Gy/s; dividing by detector volume gives the true dose rate (P32 values overstated by 4124.79x)"
+  }
+ },
+ "comparison": {
+  "median_rel_top50": 2.1382332902264452e-07,
+  "max_rel_top50": 3.9621799401042455e-07,
+  "inside_band": "50/50"
+ },
+ "contact_proxy_vs_transported": {
+  "2": {
+   "transported_dose_Gy_h": 0.002235806166144455,
+   "contact_proxy_sum_Gy_h": null,
+   "proxy_availability": "no proxy emitted \u2014 the frozen P32 mesh spec declared no photon response, so contact_gamma_air_dose_proxy is null per nuclide; the ratio is unmeasurable and is reported as such (no dose claim from the proxy)",
+   "ratio": null,
+   "drivers": [
+    "proxy is uncollided semi-infinite-slab point-isotropic approximation; the tally transports through the executed geometry",
+    "proxy is per-mass-of-source-material surface model; the tally integrates the r<10 cm detector cell",
+    "air mu_en convention shared (same XCOM table)"
+   ]
+  },
+  "3": {
+   "transported_dose_Gy_h": 5.8574541118886677e-05,
+   "contact_proxy_sum_Gy_h": null,
+   "proxy_availability": "no proxy emitted \u2014 the frozen P32 mesh spec declared no photon response, so contact_gamma_air_dose_proxy is null per nuclide; the ratio is unmeasurable and is reported as such (no dose claim from the proxy)",
+   "ratio": null,
+   "drivers": [
+    "proxy is uncollided semi-infinite-slab point-isotropic approximation; the tally transports through the executed geometry",
+    "proxy is per-mass-of-source-material surface model; the tally integrates the r<10 cm detector cell",
+    "air mu_en convention shared (same XCOM table)"
+   ]
+  }
+ },
+ "evidence_sha256": {
+  "seal": "60a85cf0b6353606ee8f08dfc684337b01cba174a5588489e0e16bb25c223af1",
+  "g1": "a01c824404d958622e97f0d4ba7419829f2bda64e8e579d30c69bbe0c7659a95",
+  "g2": "6e91d37dbfaa61cbf3e58c45dfdedccf1b89cfeac36744a055e09881bdb91c0d",
+  "g3": "4f98b94cb9241f12cb8d449ae08829e67e9da60abea16e4c8a905069a06fa23e",
+  "p32_dose": "e00c0d14114c05077fa96bcf0e7835f14a2fdf528b3c705e796602a0916a0659",
+  "p32_tally_error": "48bf39735daf6b13e7f970419ea7ca97215a19209f6df19e19939ca5a3728203"
+ }
+}

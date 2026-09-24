@@ -1,0 +1,165 @@
+{
+ "schema": "actinv-p47-seal-1",
+ "sealed_at_utc": "2026-09-24T08:37:40Z",
+ "opening_commit": "bbf5d95aebfe49ed210e0e3d007fa8f531acfe4e",
+ "protocol_sha256": "bdd13adbbcb3b3281e7c0455686bb932ba08deac23c5695162daf80eac436410",
+ "artifacts": {
+  "mesh_result": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/mesh_result.ndjson",
+   "sha256": "6ece4d7b93fd03dec71bac02bcda50fb58bfda2a5aeaee1fe1d21432c4d9d3be",
+   "p32_bound_sha256": "6ece4d7b93fd03dec71bac02bcda50fb58bfda2a5aeaee1fe1d21432c4d9d3be"
+  },
+  "flux_ndjson": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/flux.ndjson",
+   "sha256": "7067a8050c6cacb310036b1943f52e4cfb46a294795f666b60f88a9a9dfad8d6",
+   "p32_bound_sha256": "7067a8050c6cacb310036b1943f52e4cfb46a294795f666b60f88a9a9dfad8d6"
+  },
+  "mesh_spec": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/mesh_spec.json",
+   "sha256": "fcc4afed125333fd0d67c82ea521fd373fe7cb6e57c67c68f5056462291e33b1",
+   "p32_bound_sha256": "fcc4afed125333fd0d67c82ea521fd373fe7cb6e57c67c68f5056462291e33b1"
+  },
+  "neutron_statepoint": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/neutron/statepoint.10.h5",
+   "sha256": "489a3baf4153563b0cd9f7cf78c1cd055383be1ffe99bd4c6c40a2123c8dbd39",
+   "p32_bound_sha256": "489a3baf4153563b0cd9f7cf78c1cd055383be1ffe99bd4c6c40a2123c8dbd39"
+  },
+  "depletion_results": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/neutron/depletion_results.h5",
+   "sha256": "ac6267cdb8333792ed273f7db722f357061ee7297636e3060a29d4dc69d6dd19",
+   "p32_bound_sha256": "ac6267cdb8333792ed273f7db722f357061ee7297636e3060a29d4dc69d6dd19"
+  },
+  "source_step2": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/source_step2.py",
+   "sha256": "ccf68aeae95925ab10ac7f9df4072ba8527dcc26d3bca8141261b13f2b979de2",
+   "p32_bound_sha256": null
+  },
+  "source_step3": {
+   "path": "/home/connoravila/nuclear-data/p32-work/chain/source_step3.py",
+   "sha256": "78ed5dba5dcacf2310ec20398826ddfc281a1de24cc25da099ccf6249a02d490",
+   "p32_bound_sha256": null
+  },
+  "dose_statepoint_step2": {
+   "path": "/home/connoravila/nuclear-data/p32-work/dose/dose_step2/statepoint.10.h5",
+   "sha256": "d29a4fed59da571c28c91107778c25a80c5c431f9b44d13026044a1878f31a45",
+   "p32_bound_sha256": "d29a4fed59da571c28c91107778c25a80c5c431f9b44d13026044a1878f31a45"
+  },
+  "dose_statepoint_step3": {
+   "path": "/home/connoravila/nuclear-data/p32-work/dose/dose_step3/statepoint.10.h5",
+   "sha256": "0407d89059cb8419ed700faf6fc1a482e26dcbc200f294e92109c72acbad5623",
+   "p32_bound_sha256": "0407d89059cb8419ed700faf6fc1a482e26dcbc200f294e92109c72acbad5623"
+  },
+  "flux_pert0": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert0.ndjson",
+   "sha256": "9ecdfd730f73f0c6805383ff832ea6ed46111b8ea2085c53a0e588763eed9195",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert0": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert0.ndjson",
+   "sha256": "a30fd390c8bd92025aef61c278f011fba712b4827b3b049cd79e3414abddd0be",
+   "p32_bound_sha256": null
+  },
+  "flux_pert1": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert1.ndjson",
+   "sha256": "bfee71a848216bc8cfe471cc44d1098d681380dd54ea5e142db3cf6cf15814ec",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert1": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert1.ndjson",
+   "sha256": "2a850d3eff14554f263e4ecf7c874432f36e055b96af0d56c5a289398279cf60",
+   "p32_bound_sha256": null
+  },
+  "flux_pert2": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert2.ndjson",
+   "sha256": "a3c30c0ff89676ec9e89ce652fbafa055c9d79ac9ec21fdbed10c6e8eea7b625",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert2": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert2.ndjson",
+   "sha256": "99098de1b48dbad3c4672d521332c5b96d123771f2484917283e33c800c1be4e",
+   "p32_bound_sha256": null
+  },
+  "flux_pert3": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert3.ndjson",
+   "sha256": "17cb313abf18576e69bf9eda935e7d4c9d94628b03531f5e90a8ff6245358638",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert3": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert3.ndjson",
+   "sha256": "eb2857d27bbd511016a3240ff19f0e00bb623e7d6a8971ed2a36d2417df9b48c",
+   "p32_bound_sha256": null
+  },
+  "flux_pert4": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert4.ndjson",
+   "sha256": "9a45c468d7514a597a4d83bc3246239443445bc17e6e2f9a7915998b19da0e77",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert4": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert4.ndjson",
+   "sha256": "59afc4fe8756490e9e22a03ea1c4b3f665df218aa804d56f6a5205341eec958e",
+   "p32_bound_sha256": null
+  },
+  "flux_pert5": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert5.ndjson",
+   "sha256": "b084ed68e44c24ad18b29a7d54b27f3b82b0e54af5602eff7928d6bd7762f605",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert5": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert5.ndjson",
+   "sha256": "2f9596250129c6cabc3069570051ac4e7f22c980a617b4c8ad2f361a49312ae5",
+   "p32_bound_sha256": null
+  },
+  "flux_pert6": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert6.ndjson",
+   "sha256": "5ced01de9d07c653f7470a62ffd1a5fb54a537ace4328b22ddf6b9fbd746fe55",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert6": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert6.ndjson",
+   "sha256": "bb290047a3b04ef9a076e3a0c40c3aaf7728b53cc61d11b356902f2646164de3",
+   "p32_bound_sha256": null
+  },
+  "flux_pert7": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/flux_pert7.ndjson",
+   "sha256": "9b7549e0d710eadd192fba8436246f97433b78a4e86730c98835dbee3a0dc9dc",
+   "p32_bound_sha256": null
+  },
+  "mesh_pert7": {
+   "path": "/home/connoravila/nuclear-data/p32-work/tally_error/mesh_result_pert7.ndjson",
+   "sha256": "c7e9e7693d321dee75e79356de88cfe699b0a03a730b677f3c95687505b60115",
+   "p32_bound_sha256": null
+  }
+ },
+ "openmc": {
+  "env_python": "/home/connoravila/.local/share/mamba/envs/openmc/bin/python3",
+  "exe_sha256": "c0a9ee16d0484628a0b1436f8b8760a6e3ba601b34472ddc63ae098de90364d3",
+  "version": "0.15.3"
+ },
+ "code_sha256": {
+  "artifacts": "687bd927fa36a32fb23abe20d2dd2e2b722e5a9726b5a7bed2b236084878550b",
+  "g1": "c53c37e5d96920194b4346f2ad5a200a515acf612a4d0064c87b125d9cbf74df",
+  "g2": "fceb4b12e9d8531049f32c28c6a93e857ff5460a1ac918bf50c21097870dc6af",
+  "g3": "8ce0660aa945bd611f40ee2254e53d34df8f4a6b789ac517b4c55a1a8373ac89",
+  "p32_dose": "5d4605c0384cb83cc08ca38073c62529ae9fc8a7d5169ed7e42febdd8530f428",
+  "p32_tally_error": "b2995cca7e91613bc579befd2d05a9c42867876f7e2b764910ac009b694e4f2d",
+  "binary": "45b5b587a765f6cb14294ce25842cbf2b0692821cfe40c492c7b9b43c008620b"
+ },
+ "constants": {
+  "analytic_particles": 20000,
+  "analytic_batches": 100,
+  "analytic_source_e_eV": 1000000.0,
+  "detector_r_cm": 10.0,
+  "boundary_r_cm": 50.0,
+  "analytic_tolerance": "max(3*mc_rel_std, 0.05)",
+  "linearity_sigma0": 0.05,
+  "linearity_samples": 16,
+  "linearity_ratio_band": [
+   1.7,
+   2.3
+  ],
+  "linearity_response_min": 1.2,
+  "band_multiplier": 2.0,
+  "envelope_s": 1800,
+  "external_geometry": "unavailable"
+ }
+}

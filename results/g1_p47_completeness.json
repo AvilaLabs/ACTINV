@@ -1,0 +1,33 @@
+{
+ "spec": "actinv-p47-g1-1",
+ "probes": [
+  {
+   "probe": "artifact_identity",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "probe": "dose_table_complete",
+   "pass": true,
+   "detail": {
+    "2": {
+     "dose_Gy_h": 9.22223137391366,
+     "rel_std": 0.0018488490498644213
+    },
+    "3": {
+     "dose_Gy_h": 0.24160769345704147,
+     "rel_std": 0.005058296490650321
+    }
+   }
+  },
+  {
+   "probe": "band_complete",
+   "pass": true,
+   "detail": {
+    "cells_steps": 192,
+    "max_spread": 0.02000422491887847
+   }
+  }
+ ],
+ "all_pass": true
+}

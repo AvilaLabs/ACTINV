@@ -1009,6 +1009,27 @@ uncertainty. An external benchmark geometry (SINBAD) upgrades the claim only if 
 principal's channels; the self-produced condition otherwise stays named. MCNP distributed-source emission
 remains a documented placeholder until a lawful verification route exists.
 
+**P47 execution entry (2026-09-24).** P47 (dose-qualified spatial handoff) closed `P47-CONDITIONAL` — no lawful
+external benchmark geometry was available, so the self-produced condition stays named verbatim; MCNP emission
+remains a placeholder. All 25 frozen P32 artifacts re-verified byte-identical at G0 (OpenMC 0.15.3 pinned).
+Two real findings: (1) **P32 dose normalization defect corrected** — verified empirically (void, void+volume,
+material+volume cells) that OpenMC 0.15.3's EnergyFunctionFilter flux tally returns the f-weighted track-length
+integral `Σ strength·f(E)·L` with NO cell-volume division, so `p32_dose.json`'s values overstated dose by the
+detector volume (4124.79 cm³, ~4125×); the corrected transported dose is **2.24e-3 Gy/h** (step 2, MC rel-std
+0.18%) and **5.86e-5 Gy/h** (step 3, 0.51%). (2) The contact-proxy ratio is **unmeasurable** under the frozen
+P32 spec — no photon response was declared so the proxy is null per nuclide; reported as such, no dose claim
+made from the proxy. G2 analytic control: 1 MeV point source in void reproduces the exact uncollided
+track-length tally to **rel_dev 3.9e-13** (the energy-function + transport machinery is exact); linearity
+fixture verified σ-scaling of written perturbations (2.04×, band [1.7,2.3]) and response monotonicity.
+G3 issued the propagated-band comparison: all top-50 (cell,nuclide) ACTINV-vs-deplete deviations (median
+2.1e-7) sit inside the propagated tally band (2·~2%). G4 checker re-derived the dose table from sealed
+statepoints, verified band membership from raw records, and rejected 4/4 planted mutations including a real
+h5py-injected tally corruption (`results/verdict_p47.json`, `results/g{0,1,2,3,4}_p47*.json`,
+`results/check_g4_p47.json`, `controls/{p47_*,g0,g1,g2,g3,g4,check_g4}_p47*.py`,
+`protocols/ACTINV-P47_PROTOCOL.md`).
+
+
+
 **P48 — make speed visible.** Deliver interactive exploration in the desktop through the identical qualified
 solver path — never a second numerics implementation. Declared sweep axes only; per-interaction compute bounded
 and cancellable; a displayed result is always bound to the parameters that produced it. Regression coverage for

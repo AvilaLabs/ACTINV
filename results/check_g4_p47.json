@@ -1,0 +1,74 @@
+{
+ "spec": "actinv-p47-g4-check-1",
+ "checks": [
+  {
+   "check": "artifact_identity",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "check": "dose_table_rederivation",
+   "pass": true,
+   "detail": {
+    "2": {
+     "rederived_tally": 0.002561730937198239,
+     "p32_recorded": 0.002561730937198239,
+     "corrected_Gy_h": 0.002235806166144455,
+     "g3_dose_Gy_h": 0.002235806166144455,
+     "rel_std": 0.0018488490498644213
+    },
+    "3": {
+     "rederived_tally": 6.711324818251152e-05,
+     "p32_recorded": 6.711324818251152e-05,
+     "corrected_Gy_h": 5.8574541118886677e-05,
+     "g3_dose_Gy_h": 5.8574541118886677e-05,
+     "rel_std": 0.005058296490650321
+    }
+   }
+  },
+  {
+   "check": "band_membership_rederivation",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "gate_ordering",
+   "pass": true,
+   "detail": {
+    "seal": {
+     "match": true
+    },
+    "g1": {
+     "match": true
+    },
+    "g2": {
+     "match": true
+    },
+    "g3": {
+     "match": true
+    }
+   }
+  },
+  {
+   "check": "mutations_rejected",
+   "pass": true,
+   "detail": {
+    "m1_corrupt_statepoint": true,
+    "m2_mutated_source_sha": true,
+    "m3_tampered_band_detected": true,
+    "m4_mutated_mesh_sha": true
+   }
+  },
+  {
+   "check": "verdict_consistent",
+   "pass": true,
+   "detail": {
+    "g0_seal": true,
+    "g1_completeness": true,
+    "g2_controls": true,
+    "g3_report_issued": true
+   }
+  }
+ ],
+ "all_pass": true
+}

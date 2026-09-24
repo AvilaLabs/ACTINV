@@ -1,0 +1,46 @@
+{
+ "spec": "actinv-p47-g2-1",
+ "controls": [
+  {
+   "control": "analytic_uncollided",
+   "pass": true,
+   "detail": {
+    "mc_tally": 4.468470632224243e-15,
+    "analytic_tally": 4.4684706322259885e-15,
+    "f_e_Gy_cm2": 4.468470632225988e-16,
+    "track_length_cm": 10.0,
+    "mc_rel_std": 0.0,
+    "rel_dev": 3.9068158368637337e-13,
+    "tolerance": 0.05,
+    "normalization": "f-weighted track length, no volume division (OpenMC 0.15.3, verified)",
+    "statepoint_sha256": "61e6d4ee39fcf8ca1776bd29e60cbf3323e507daa991d4c2e03580b086fa8523"
+   }
+  },
+  {
+   "control": "linearity",
+   "pass": true,
+   "detail": {
+    "mechanism_factor_ratio": 2.0377476544896926,
+    "mechanism_band": [
+     1.7,
+     2.3
+    ],
+    "spread_s": 0.0298305136230585,
+    "spread_2s": 0.04592917342250527,
+    "response_ratio": 1.5396708887708446,
+    "response_min": 1.2,
+    "mean_shift": 0.0
+   }
+  },
+  {
+   "control": "mutation_rejected",
+   "pass": true,
+   "detail": {
+    "expected": "ccf68aeae95925ab",
+    "mutated": "f7f8e11c0721e02e"
+   }
+  }
+ ],
+ "all_pass": true,
+ "wall_s": 55.93066153593827
+}
