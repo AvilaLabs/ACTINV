@@ -150,11 +150,13 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
    `docs/ROADMAP.md`). Routed to P27.
 3. **Spatial/R2S handoff** — external-transport source integration and an executed open R2S chain against OpenMC.
    Routed to P32.
-4. **FNS C/E gap diagnosis** — the 132-experiment family still trails FISPACT on median `abs(ln(C/E))`
-   (0.1392 vs 0.1053) and 30% coverage (59/132 vs 69/132). P24 closed `P24-CONDITIONAL` (2026-09-14,
-   `verdict_p24.json`) but its scope was corrected IRDFF/SACS *measurement definitions*, not this gap.
-   The diagnosis — per-isotope C/E decomposition on held-out evidence — is unscheduled; needs its own
-   protocol to keep the measurement corpus out of any tuning loop.
+4. **FNS C/E gap — diagnosed** (`docs/FNS_GAP_DIAGNOSIS.md`, 2026-09-24): on identical data
+   (TENDL-2017) ACTINV matches FISPACT (0.1043 vs 0.1053 median |ln C/E|, 2,279 joined points); the
+   published deficit was a TENDL-2025 evaluation regression on ~8–10 materials' short-lived channels
+   (Cr-55/V-52 from Mn-55 (n,p)/(n,α) +33%/+20%; W-185m1/W-183m1 isomer branches; Pb-207m1). Remaining
+   open sub-questions are upstream-data ones: the all-corpora W isomer overprediction and the shared
+   Pb late-time production gap (Pb-210→Po-210 chain candidate). A quantified TENDL-2025-vs-2017
+   regression report to upstream is a candidate but unscheduled.
 5. **Blind many-nuclide FISPACT comparison** — needs lawfully licensed FISPACT access or a collaborator; optional
    runner design stays recorded, no gate waits for it. Routed to P35's competitive qualification.
 6. **Missing EAF-2010 decay products** — 18 products (W-193, Re-195, Os-197…201, Ir-200…202, Pt-203, Au-206,
