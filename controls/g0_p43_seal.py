@@ -47,8 +47,8 @@ def main():
     prior = {}
     for f in sorted(os.listdir(os.path.join(ROOT, "results"))):
         if f.startswith("verdict_") and f.endswith(".json"):
-            prior[f] = json.load(open(
-                os.path.join(ROOT, "results", f)))["verdict"]
+            doc = json.load(open(os.path.join(ROOT, "results", f)))
+            prior[f] = doc.get("verdict", doc.get("disposition"))
     seals = {
         "schema": "actinv-g0-seal-1",
         "phase": "P43",

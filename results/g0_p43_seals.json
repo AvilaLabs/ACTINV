@@ -1,0 +1,187 @@
+{
+  "amendments": [],
+  "frozen_documents": {
+    "campaign_study": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43-campaign.json",
+      "sha256": "257107d2268a90b208da155c2b354e55f4d6153878232508b9f5b0f48fd5cc1c"
+    },
+    "decay_trace_nominal": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43_decay_trace_nominal.json",
+      "sha256": "d19e9205121af1394dd3c2dd28fd0efd6e06145ab1458c01bf1a0c01466d6e8c"
+    },
+    "decay_trace_scaled": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43_decay_trace_scaled.json",
+      "sha256": "333aeebf8112b9fa2f7f5f83154b1e9f1cabf6b0d58cca2b41ad6e4f697bc470"
+    },
+    "mechanics_study": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43-mech.json",
+      "sha256": "9e46d1572368f67c049ccd055662937ca444eafbc871df487eb6d424b8b34a82"
+    },
+    "yield_trace_nominal": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43_yield_trace_nominal.json",
+      "sha256": "15602b0ade771f9769cd4a777f08f35787117743fcae975dd38c2f90b056d47b"
+    },
+    "yield_trace_scaled": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43_yield_trace_scaled.json",
+      "sha256": "b3d1768bb08dddf16fa5bd2563d89aa9c69ea9286303d2ef31b87484287d15c6"
+    }
+  },
+  "identities": {
+    "actinv_binary": {
+      "path": "target/release/actinv",
+      "sha256": "b98a6fd885d88bbb54cb664710475722637c7b2358cde04f8b32a4ad75b6cd23"
+    },
+    "activation_index": {
+      "path": "actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g_index.json",
+      "sha256": "18efc9b85655b736022360e85bebde3f816ec54ff0603e507a8ee9e2c9414982"
+    },
+    "activation_library": {
+      "path": "actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz",
+      "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+    },
+    "covariance_sidecar": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43.cov.npz",
+      "sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+    },
+    "decay_fallback": {
+      "path": "actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+      "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+    },
+    "decay_primary": {
+      "path": "actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+      "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+    },
+    "fission_yields": {
+      "path": "/home/connoravila/nuclear-data/endfb-viii.0-nfpy/nfy-092_U_235.endf",
+      "sha256": "9e1320293a544fc03f33f804a15a9e3ccc3be026552ee6dbc03b8d3e24615e41"
+    },
+    "spectrum_source_spec": {
+      "path": "examples/fns_fe_5min.json",
+      "sha256": "a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207"
+    }
+  },
+  "opening_commit": "bb8ad6b3d23e374bb0e80db172330eefd6f7e1a6",
+  "partition": {
+    "campaign": "p43-campaign",
+    "fixtures": "p43-fixtures",
+    "mechanics": "p43-mech"
+  },
+  "phase": "P43",
+  "prior_verdicts": {
+    "verdict_cb1.json": "CB1-COMPLETE",
+    "verdict_p10.json": "P10-CONDITIONAL",
+    "verdict_p11.json": "P11-CONDITIONAL",
+    "verdict_p12.json": "P12-CONDITIONAL",
+    "verdict_p13.json": "P13-PASS",
+    "verdict_p14.json": "P14-CLOSED-BELOW-THRESHOLD",
+    "verdict_p15.json": "P15-PASS",
+    "verdict_p16.json": "P16-CONDITIONAL",
+    "verdict_p17.json": "P17-FAIL",
+    "verdict_p18.json": "P18-FAIL",
+    "verdict_p18b.json": "P18b-FAIL",
+    "verdict_p19.json": "P19-PASS",
+    "verdict_p2.json": "P2-CONDITIONAL",
+    "verdict_p20.json": "P20-PASS",
+    "verdict_p21.json": "P21-PASS",
+    "verdict_p22.json": "P22-PASS",
+    "verdict_p23.json": "P23-PASS",
+    "verdict_p24.json": "P24-CONDITIONAL",
+    "verdict_p25.json": "P25-FAIL",
+    "verdict_p25b.json": "P25b-FAIL",
+    "verdict_p25c.json": "P25c-PASS",
+    "verdict_p26.json": "P26-FAIL",
+    "verdict_p26b.json": "P26b-CONDITIONAL",
+    "verdict_p27.json": "P27-PASS",
+    "verdict_p28.json": "P28-CONDITIONAL",
+    "verdict_p29.json": "P29-CONDITIONAL",
+    "verdict_p3.json": "P3-FAIL",
+    "verdict_p30.json": "P30-CONDITIONAL",
+    "verdict_p31.json": "P31-CONDITIONAL",
+    "verdict_p32.json": "P32-CONDITIONAL",
+    "verdict_p33.json": "P33-BLOCKED",
+    "verdict_p34.json": "P34-BLOCKED",
+    "verdict_p35.json": "P35-CONDITIONAL",
+    "verdict_p36.json": "P36-CONDITIONAL",
+    "verdict_p37.json": "P37-CONDITIONAL",
+    "verdict_p38.json": "P38-CONDITIONAL",
+    "verdict_p39.json": "P39-CONDITIONAL",
+    "verdict_p3b.json": "P3b-PASS",
+    "verdict_p4.json": "P4-FAIL",
+    "verdict_p40.json": "P40-CONDITIONAL",
+    "verdict_p42.json": "P42-PASS",
+    "verdict_p4b.json": "P4b-PASS",
+    "verdict_p5.json": "P5-PASS",
+    "verdict_p6.json": "P6-CONDITIONAL",
+    "verdict_p7.json": "P7-CONDITIONAL",
+    "verdict_p8.json": "P8-CONDITIONAL",
+    "verdict_p9.json": "P9-CONDITIONAL"
+  },
+  "protocol": "protocols/ACTINV-P43_PROTOCOL.md",
+  "protocol_sha256": "afa5b170f7ab979982f856e26eb26a7102da1063bfeb061728308fe1b4a9812e",
+  "recorded_at_utc": "2026-09-24T02:32:04Z",
+  "schema": "actinv-g0-seal-1",
+  "tolerances": {
+    "decay_trace_rel": 1e-09,
+    "envelope_minutes": 45,
+    "yield_trace_rel": 1e-09
+  },
+  "validation_population": {
+    "campaign_cases": [
+      "fe__fns_709__pulse_5min",
+      "fe_co100wppm__fns_709__pulse_5min",
+      "u235__fns_709__pulse_5min",
+      "fe__fns_709__cont_1d",
+      "fe_co100wppm__fns_709__cont_1d",
+      "u235__fns_709__cont_1d"
+    ],
+    "campaign_samples": 64,
+    "channels": [
+      "cross_section_mf33",
+      "flux_rel_std",
+      "composition_rel_std",
+      "decay_constants",
+      "fission_yields"
+    ],
+    "conformance_probes": [
+      "decay_scale_absent_nuclide",
+      "decay_scale_stable_nuclide",
+      "yield_scale_absent_pair",
+      "fission_channel_no_fissile_case",
+      "scales_on_plain_spec",
+      "all_scales_combined",
+      "unknown_channel",
+      "negative_std",
+      "samples_out_of_range",
+      "mutated_digest_fails_resume",
+      "prepared_run_reuse"
+    ],
+    "controls": [
+      "decay_perturbation_trace",
+      "yield_perturbation_trace",
+      "channel_isolation",
+      "coverage_accounting",
+      "sample_resume",
+      "survival_accounting",
+      "zero_variance",
+      "flux_linear",
+      "seed_reproducibility",
+      "composition_sum"
+    ],
+    "decision_rules": [
+      "r1",
+      "r2"
+    ],
+    "mechanics_cases": [
+      "fe__fns_709__pulse_5min",
+      "fe_co100wppm__fns_709__pulse_5min",
+      "u235__fns_709__pulse_5min"
+    ],
+    "mechanics_samples": 8,
+    "responses": [
+      "total_activity_bq_per_g",
+      "decay_heat_w_per_g",
+      "total_atoms_per_g"
+    ],
+    "seed": 43330177
+  }
+}
