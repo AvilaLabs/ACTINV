@@ -1,0 +1,61 @@
+{
+ "schema": "actinv-optimize-1",
+ "base_spec": "base_spec.json",
+ "design_axes": [
+  {
+   "kind": "composition_fraction",
+   "element": "NI",
+   "bounds": [
+    0.0,
+    3.0
+   ]
+  },
+  {
+   "kind": "composition_fraction",
+   "element": "MO",
+   "bounds": [
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "kind": "composition_fraction",
+   "element": "NB",
+   "bounds": [
+    0.0,
+    0.2
+   ]
+  }
+ ],
+ "objective": {
+  "response": "activity.total",
+  "time_s": 3180727000.0,
+  "edge": "nominal",
+  "direction": "min"
+ },
+ "constraints": [
+  {
+   "name": "heat_1y_upper95",
+   "response": "heat.total",
+   "time_s": 30727000.0,
+   "edge": "normal_upper",
+   "sense": "le",
+   "limit": 1.65e-12
+  },
+  {
+   "name": "nb94_100y",
+   "response": "activity:Nb94",
+   "time_s": 3180727000.0,
+   "edge": "nominal",
+   "sense": "le",
+   "limit": 1e-06
+  }
+ ],
+ "optimizer": {
+  "algorithm": "lhs_coordinate",
+  "seed": 49,
+  "init_points": 16,
+  "refine_points": 8,
+  "refine_step_fraction": 0.25
+ }
+}

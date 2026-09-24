@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 
 pub mod command;
+pub mod optimize;
 pub mod workflow;
 
 use serde::{Deserialize, Serialize};

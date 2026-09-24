@@ -36,6 +36,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
+                    actinv optimize OPTSPEC.json [OUTDIR] [--resume]\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
@@ -635,6 +636,7 @@ pub fn main_from(a: Vec<String>) {
             "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check the specification without requiring downloaded data.\n--files also checks readable input files and library indexes. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
             "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nReferences default to portable catalog IDs resolved against ./actinv-data or $ACTINV_DATA_DIR; --data-dir saves absolute paths instead.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
             "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
+            "optimize" => println!("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]\nRun a bounded, seeded design search over an actinv-optimize-1 document.\nEvery candidate is solved through the identical run path and recorded in\nOUTDIR/optimize_ledger.jsonl (append-only); the ranked result lands in\nOUTDIR/optimize_result.json. --resume skips already-ledgered evaluations."),
             "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
             _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
         }
@@ -739,6 +741,32 @@ pub fn main_from(a: Vec<String>) {
                 }
                 None => println!("{text}"),
             }
+        }
+        "optimize" => {
+            let resume = a.iter().any(|x| x == "--resume");
+            let positional: Vec<&String> =
+                a[2..].iter().filter(|x| x.as_str() != "--resume").collect();
+            if positional.len() < 1 || positional.len() > 2 {
+                die("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]", 2);
+            }
+            let summary = crate::optimize::run_optimize(
+                positional[0],
+                positional.get(1).map(|s| s.as_str()),
+                resume,
+            )
+            .unwrap_or_else(|e| die(e, 1));
+            println!(
+                "optimize: {} evals, best {} ({}), {:.1} s -> {}",
+                summary.n_evals,
+                if summary.infeasible {
+                    "none (infeasible box)".to_string()
+                } else {
+                    format!("eval {}", summary.best_feasible.unwrap_or(0))
+                },
+                summary.out_dir.join("optimize_result.json").display(),
+                summary.wall_s,
+                summary.out_dir.display(),
+            );
         }
         "mesh" => {
             if a.len() != 4 {
