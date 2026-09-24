@@ -931,7 +931,7 @@ pub fn execute(
     let robustness_sha = study
         .robustness
         .as_ref()
-        .map(|rb| robustness_config_sha(rb));
+        .map(|rb| robustness_config_sha(study, rb));
 
     let mut per_case = Vec::new();
     let (mut n_executed, mut n_failed, mut n_gap, mut n_undef) = (0usize, 0usize, 0usize, 0usize);
@@ -999,8 +999,9 @@ pub fn execute(
                     rec["refinement"] = rr2;
                 }
                 if let Some(rb) = &study.robustness {
-                    rec["robustness"] =
-                        evaluate_robustness(rb, &spec, &outv, base, &cdir, &mut prep);
+                    rec["robustness"] = evaluate_robustness(
+                        study, rb, &spec, &outv, base, &cdir, &mut prep,
+                    );
                 }
                 rec
             }
@@ -2254,13 +2255,15 @@ struct CovCtx {
     uncovered: Vec<usize>,
 }
 
-/// Digest of the study-level robustness configuration: recorded per
-/// case so a rerun only resumes a case whose recorded block was
-/// computed under the same sampling contract. Nominal spec digests
-/// cannot see `samples`, `seed`, `channels` or the comparison flag —
-/// without this digest a config change would silently reuse stale
-/// sample statistics.
-fn robustness_config_sha(rb: &Robustness) -> String {
+/// Digest of the study-level configuration a case record is derived
+/// from: recorded per case so a rerun only resumes a case whose
+/// recorded block was computed under the same sampling contract.
+/// Nominal spec digests cannot see `samples`, `seed`, `channels`,
+/// the comparison flag, or the study-level `responses` list that
+/// `per_time`/`undefined_responses` are extracted with — without this
+/// digest a config change would silently reuse stale sample
+/// statistics.
+fn robustness_config_sha(study: &Study, rb: &Robustness) -> String {
     sha256_hex(
         serde_json::to_vec(&json!({
             "samples": rb.samples,
@@ -2270,6 +2273,7 @@ fn robustness_config_sha(rb: &Robustness) -> String {
             "responses": rb.responses,
             "resource_limit_runs": rb.resource_limit_runs,
             "first_order_comparison": rb.first_order_comparison,
+            "study_responses": study.responses,
         }))
         .unwrap_or_default()
         .as_slice(),
@@ -2279,6 +2283,7 @@ fn robustness_config_sha(rb: &Robustness) -> String {
 /// Evaluate ACT-ROBUST-01 for one case: nominal + `samples` perturbed
 /// solves, per-response sample statistics and coverage accounting.
 fn evaluate_robustness(
+    study: &Study,
     rb: &Robustness,
     spec: &Spec,
     nominal_out: &Value,
@@ -2286,13 +2291,14 @@ fn evaluate_robustness(
     cdir: &Path,
     prep: &mut PreparedCache,
 ) -> Value {
-    match evaluate_robustness_inner(rb, spec, nominal_out, base, cdir, prep) {
+    match evaluate_robustness_inner(study, rb, spec, nominal_out, base, cdir, prep) {
         Ok(v) => v,
         Err(e) => json!({"status": "gap", "error": e}),
     }
 }
 
 fn evaluate_robustness_inner(
+    study: &Study,
     rb: &Robustness,
     spec: &Spec,
     nominal_out: &Value,
@@ -3125,7 +3131,7 @@ fn evaluate_robustness_inner(
         "truncated_by_resource_limit": truncated,
         "n_failed_samples": n_failed,
         "n_reused_samples": n_reused_samples,
-        "config_sha256": robustness_config_sha(rb),
+        "config_sha256": robustness_config_sha(study, rb),
         "channels": {
             "cross_section_mf33": {
                 "enabled": rb.channels.cross_section_mf33,

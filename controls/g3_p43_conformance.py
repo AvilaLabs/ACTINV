@@ -80,8 +80,10 @@ def main():
     res = {}
 
     # decay_scale on a nuclide absent from the chain -> named error
+    # (the archive has 3873 states — Pu239 IS in it; H999 parses as
+    # an explicit nuclide key but no such nuclide exists)
     spec = base_spec()
-    spec["options"]["decay_scale"] = {"Pu239": 1.5}
+    spec["options"]["decay_scale"] = {"H999": 1.5}
     r, _ = try_spec(spec, "decay_absent")
     res["decay_scale_absent_nuclide"] = {
         "rejected": r.returncode != 0 and "not in the decay chain"

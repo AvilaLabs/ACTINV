@@ -62,6 +62,7 @@ def main():
                 "channels": {
                     k: {"enabled": v.get("enabled")}
                     for k, v in rb["channels"].items()
+                    if isinstance(v, dict) and "enabled" in v
                 },
             })
         cases[cid] = entry

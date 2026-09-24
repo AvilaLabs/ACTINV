@@ -184,6 +184,11 @@ def main():
             "g1/mech/study_record_first_order_partial.json); u235 "
             "reports not_evaluated explicitly — the campaign cannot "
             "afford the O(active-rows) diagnostic on fissile chains",
+            "study-level responses lists drop photon_source_per_group: "
+            "the restricted outputs produce no photon block, so a "
+            "photon response would mark every case undefined for "
+            "comparison — the lists now name only extractable "
+            "responses (inventory_per_nuclide retained)",
         ],
     }
     json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)
