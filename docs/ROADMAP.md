@@ -895,6 +895,24 @@ Discharge every locally-dischargeable P30 condition; conditions that remain (par
 experimental validation) are carried as named limitations, not silently closed. Rankings claim nominal,
 distribution or bound status explicitly. No shipped band may be labeled total uncertainty without total coverage.
 
+**P43 execution entry (2026-09-24).** P43 (qualified uncertainty campaign driver) closed `P43-CONDITIONAL`
+— amendments were used and sealed at G0. Five channels qualified end-to-end: correlated MF=33 covariance
+draws, flux, renormalized composition, decay constants and fission yields, all mean-preserving lognormal on
+declared sigmas. Samples pair across cases through per-channel tagged substreams; per-sample ndjson records
+resume on verified spec/output digests, torn samples re-execute, and a recorded `config_sha256` prevents
+stale reuse under a changed sampling contract. The frozen 6-case x 64-sample campaign ran in 3.3 min against
+the 45-minute envelope — made possible by two documented amendments: restricted study outputs (default
+`outputs: null` ran pathway analysis at ~90 s/step on the 3873-state chain) and
+`robustness.first_order_comparison` (the first-order tangent system scales with active chain rows — ~15k
+parameters, 3.1 GB, >45 min on the fissile case — and is now opt-out, still demonstrated on the structural
+cases). Decision rules carry paired survival: r1 nominally passes at 34% survival, r2 nominally fails at 47%.
+10/10 frozen controls, all conformance probes, and the independent G4 checker passed with 5/5 planted-mutation
+rejections (`results/verdict_p43.json`, `results/g{0,1,2,3,4}_p43*.json`,
+`controls/g{0,1,2,3,4}_p43*.py`, `controls/check_g4_p43.py`,
+`protocols/ACTINV-P43_PROTOCOL.md`). Carried named conditions: partial MF=33 coverage is ledgered per case
+rather than completed, decay/yield coverage is declared-sigma only, and the local-vs-nonlinear diagnostic is
+not evaluated on fissile cases pending a covered-row-restricted tangent solve.
+
 **P44 — measure whether the bands are true.** The novel claim of this extension and the cheapest to get wrong.
 Freeze the scoring code, the band definitions and a sealed partition of the measurement corpus before any band
 is computed against it. Score the fraction of measured points inside each declared band; the development

@@ -103,6 +103,13 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   product targets in the chain: on a 1263-product fission chain the covered-row count is far larger than on a
   46-state structural chain, and the augmented tangent solve can dominate campaign cost. If P43's campaign envelope
   needs relief, cap or restrict the local comparison rather than shrinking samples.
+- 2026-09-24 — correction to the previous entry's mechanism, measured during P43 G1: the tangent parameter set is
+  built from the union of *all active chain reaction rows* (production rows into populated states), not from
+  covered covariance rows. The U235 case carried only ~100 covered rows / 23 applied rows yet built ~15k tangent
+  parameters (~3.1 GB RSS, >45 min unsolved at kill time vs seconds on the 46-state Fe chain). A
+  covered-row-restricted tangent build would collapse the diagnostic's cost on fissile chains by ~150x — the real
+  fix if the local-vs-nonlinear comparison is wanted inside campaign envelopes; until then
+  `robustness.first_order_comparison=false` is the supported relief (P43 campaign + mechanics both use it).
 
 ## Feature backlog — consolidated 2026-09-15
 
