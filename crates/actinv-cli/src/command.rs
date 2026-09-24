@@ -743,11 +743,18 @@ pub fn main_from(a: Vec<String>) {
             }
         }
         "optimize" => {
+            const OPT_USAGE: &str =
+                "usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]";
             let resume = a.iter().any(|x| x == "--resume");
-            let positional: Vec<&String> =
-                a[2..].iter().filter(|x| x.as_str() != "--resume").collect();
-            if positional.len() < 1 || positional.len() > 2 {
-                die("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]", 2);
+            let positional: Vec<&String> = a[2..]
+                .iter()
+                .filter(|x| x.as_str() != "--resume")
+                .collect();
+            if positional.iter().any(|x| x.starts_with("--"))
+                || positional.len() < 1
+                || positional.len() > 2
+            {
+                die(OPT_USAGE, 2);
             }
             let summary = crate::optimize::run_optimize(
                 positional[0],

@@ -84,7 +84,7 @@ The command downloads about 79 MiB, verifies every file with SHA-256 before inst
 `actinv-data/v1.1.0/`, and prints the exact paths to paste into a problem. Nothing is silently updated: a later data
 release goes in a new version directory. See [Data setup](docs/DATA.md) for the other particle and covariance bundles.
 
-Problem files may also use portable symbolic references — `"path": "catalog:tendl-2025-patched-neutron-709g"` resolves the
+Problem files may also use portable symbolic references — `"path": "catalog:tendl-2025-neutron-709g"` resolves the
 installed artifact by ID and fills its declared hash from the embedded catalog. `actinv new` emits these by default;
 set `ACTINV_DATA_DIR` if your data lives somewhere other than `./actinv-data`.
 
@@ -266,6 +266,18 @@ are linear-regime methods with named refusals outside it:
 actinv reverse problem.json measurements.json estimate.json
 actinv reverse problem.json measurements.json estimate.json --segments
 ```
+
+`actinv optimize` searches a declared design box — composition fractions, flux scale, schedule step durations —
+with a seeded, derivative-free optimizer. Every candidate is solved through the identical solver path and ledgered;
+objectives and constraints can evaluate on propagated MF=33 band edges, so a nominally acceptable design can be
+rejected for failing at its 95th-percentile uncertainty edge:
+
+```bash
+actinv optimize examples/optimize_ra_steel/opt.json out/
+```
+
+See [OPTIMIZE.md](docs/OPTIMIZE.md) for the optspec schema. Band-propagated candidates cost minutes each — this is a
+batch tool, not an interactive one.
 
 Radiological coefficients are user-supplied, hash-pinned tables. ACTINV does not choose a jurisdiction, regulation,
 chemical form, aerosol class, or safety margin for you.
