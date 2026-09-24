@@ -49,8 +49,10 @@ surface the P26–P35 machinery implied.
   - Both are ordinary spec options outside `robustness`, recorded in
     the run ledger like `rate_scale`, and excluded from the
     prepared-run signature so perturbed samples share preparation.
-- `study` gains an optional top-level `fission_yields` block (same
-  shape as the spec's), propagated verbatim into every case spec.
+- `study` gains an optional per-material `fission_yields` block
+  (`cases.materials[].fission_yields`, same shape as the spec's),
+  propagated verbatim into that material's case specs; materials
+  without it declare no yield files.
 - `decision_rules` survival: when `comparison` and `robustness` are
   both present, each rule is additionally evaluated on paired sample
   outputs — sample index `i` across a group's cases shares the drawn
@@ -101,11 +103,13 @@ surface the P26–P35 machinery implied.
   `<= 1e-9` at the step end, and activity `f·λ·N` consistently.
 - `yield_perturbation_trace`: material `{"U235": 100}`, fission_yields
   `nfy-092_U_235.endf` (hash-pinned at G0), FNS spectrum, 300 s pulse.
-  The network is linear in a single yield factor, so
-  `atoms_daughter(f=2)/atoms_daughter(f=1) == 2` exactly for any
-  fission product with nonzero yield; the checker verifies the ratio
-  to `<= 1e-9` on the named product and that unrelated products are
-  unchanged.
+  `yield_scale` applies factor 2.0 to *every* `(U235, product)` pair
+  of the effective yields: every fission-subtree production edge
+  scales by 2 and a pure-U235 target feeds the fission-mass range
+  only through fission, so `atoms(f)/atoms(1) == 2` exactly for any
+  nuclide in the fission subtree. The checker verifies the ratio to
+  `<= 1e-9` on the frozen named set `I135`, `Xe135`, `Kr88`, `Cs137`
+  and that the activation product `U236` is unchanged to `<= 1e-9`.
 - `channel_isolation`: a robustness run with only `decay_constants`
   enabled writes sample specs carrying `decay_scale` and identity
   `rate_scale`/`yield_scale`/flux/composition; likewise each channel
@@ -160,7 +164,7 @@ surface the P26–P35 machinery implied.
   `{fe, fe_co100wppm, u235}`; spectrum `fns_709` (`spec_ref`
   `examples/fns_fe_5min.json`); schedules `pulse_5min` (300 s),
   `cont_1d` (1 d); `cooling_times_s [0.0, 86400.0]`; all five qualified
-  responses; top-level `fission_yields` `nfy-092_U_235.endf`;
+  responses; `u235` declares `fission_yields` `nfy-092_U_235.endf`;
   `robustness.samples` 64, `seed` 43330177, channels
   `cross_section_mf33` + `flux_rel_std` 0.05 +
   `composition_rel_std {"Co": 0.20}` + `decay_constants` +
