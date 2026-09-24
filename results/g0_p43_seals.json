@@ -4,12 +4,14 @@
     "yield_trace_scaled enumerates the effective pair set \u2014 the union of the two tables bracketing the spectrum-average energy (500 keV, 14 MeV), 1263 pairs \u2014 not the full-file union",
     "decay_perturbation_trace expectation corrected to the substrate model: N_daughter = N0\u00b7f\u03bbt and A = f\u03bbN0, not N0\u00b7exp(-f\u03bbt) \u2014 the declared composition is not a depleted chain state",
     "covariance sidecar built over the full index (1679 targets); build-covariance supports no subset selection",
-    "study documents declare options.outputs [inventory,activity,heat,ledger,certificate]: the default null computes pathway analysis at ~90 s per step on the 3873-state fission chain (measured: 248 s vs 1.4 s per u235 solve) which would breach the 45-minute envelope by ~30x; the restriction changes no physics \u2014 same operator, schedule, and response extraction"
+    "study documents declare options.outputs [inventory,activity,heat,ledger,certificate]: the default null computes pathway analysis at ~90 s per step on the 3873-state fission chain (measured: 248 s vs 1.4 s per u235 solve) which would breach the 45-minute envelope by ~30x; the restriction changes no physics \u2014 same operator, schedule, and response extraction",
+    "campaign document declares robustness.first_order_comparison=false: the first-order tangent system scales with active chain reaction rows (u235 ~15k vs fe ~1k parameters, ~3.1 GB RSS and >25 min measured at G1) and would breach the envelope on every fissile case; the mechanics gate still runs it on all three cases including u235, and the campaign record reports the skip explicitly as not_evaluated",
+    "mechanics document also declares robustness.first_order_comparison=false after the u235 local-propagation solve exceeded 45 minutes without completing (3.1 GB resident); fe and fe_co100wppm comparisons completed under the earlier flag state and remain in the record via verified case-level resume (a copy also preserved in g1/mech/study_record_first_order_partial.json); u235 reports not_evaluated explicitly \u2014 the campaign cannot afford the O(active-rows) diagnostic on fissile chains"
   ],
   "frozen_documents": {
     "campaign_study": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43-campaign.json",
-      "sha256": "0b23174b8b1398e34d700b15e37b9f35b9736de45f0c68365df173a42df693be"
+      "sha256": "520201a851de2138bf2372ed946a2d54ed2ae73ee218559e10b11df53d17505e"
     },
     "decay_trace_nominal": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_decay_trace_nominal.json",
@@ -21,7 +23,7 @@
     },
     "mechanics_study": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43-mech.json",
-      "sha256": "c6b5ea552f10e9ea64b11acf4d4355106bdfb709f582db1f7103c9465e66193c"
+      "sha256": "efccf35a94d0b4091891b90b6bc17eec8f879d0f47e6325b73bf8bd4f0ec6c04"
     },
     "yield_trace_nominal": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_yield_trace_nominal.json",
@@ -35,7 +37,7 @@
   "identities": {
     "actinv_binary": {
       "path": "target/release/actinv",
-      "sha256": "0af5ab368c6304c5d1af501515522c4b7c7ab74be4e5322a94932309cdd1d052"
+      "sha256": "574b480dac19ebde0e90f76b43f26b9e466ecccf68b11d0a1e10aace295bf432"
     },
     "activation_index": {
       "path": "actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g_index.json",
@@ -66,7 +68,7 @@
       "sha256": "a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207"
     }
   },
-  "opening_commit": "114459443e4e26a6237dd8c8f06a5bab3e2057f1",
+  "opening_commit": "a1e5295e3b8d824e78fd30432f7e8406db75e525",
   "partition": {
     "campaign": "p43-campaign",
     "fixtures": "p43-fixtures",
@@ -124,7 +126,7 @@
   },
   "protocol": "protocols/ACTINV-P43_PROTOCOL.md",
   "protocol_sha256": "eb138111b8d4a786ff9a658b1131bb6976f26a915b641b1c37b7f85e3e38f8bb",
-  "recorded_at_utc": "2026-09-24T03:10:29Z",
+  "recorded_at_utc": "2026-09-24T04:08:27Z",
   "schema": "actinv-g0-seal-1",
   "tolerances": {
     "decay_trace_rel": 1e-09,

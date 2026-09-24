@@ -94,6 +94,15 @@ of `ROADMAP.md` or explicitly left out of v1.0.
 - 2026-09-14 — contact-photon screening should support clearly named absorbed-air and configurable effective-dose
   response modes with pinned coefficient provenance and the same model-limit warnings as the existing contact proxy;
   no screening approximation may be presented as transported dose. Route to P28/P32 as appropriate.
+- 2026-09-23 — `options.outputs` default `null` computes pathway analysis and pathway closure over the whole decay
+  chain at ~90 s per schedule step on a 3873-state fission chain (measured 248 s vs 1.4 s per solve on the P43 U235
+  case): output selection is the dominant per-solve cost on wide chains, not the matrix exponential. Study campaigns
+  must restrict `outputs` to what the declared responses need; a `pathways` request on fission-bearing material is a
+  deliberately expensive diagnostic. Route to P43's campaign record and any future campaign machinery.
+- 2026-09-23 — P11 first-order propagation scales its tangent system with covered MF=33 rows, which grow with
+  product targets in the chain: on a 1263-product fission chain the covered-row count is far larger than on a
+  46-state structural chain, and the augmented tangent solve can dominate campaign cost. If P43's campaign envelope
+  needs relief, cap or restrict the local comparison rather than shrinking samples.
 
 ## Feature backlog — consolidated 2026-09-15
 

@@ -166,6 +166,24 @@ def main():
             "u235 solve) which would breach the 45-minute envelope by "
             "~30x; the restriction changes no physics — same operator, "
             "schedule, and response extraction",
+            "campaign document declares "
+            "robustness.first_order_comparison=false: the first-order "
+            "tangent system scales with active chain reaction rows "
+            "(u235 ~15k vs fe ~1k parameters, ~3.1 GB RSS and >25 min "
+            "measured at G1) and would breach the envelope on every "
+            "fissile case; the mechanics gate still runs it on all "
+            "three cases including u235, and the campaign record "
+            "reports the skip explicitly as not_evaluated",
+            "mechanics document also declares "
+            "robustness.first_order_comparison=false after the u235 "
+            "local-propagation solve exceeded 45 minutes without "
+            "completing (3.1 GB resident); fe and fe_co100wppm "
+            "comparisons completed under the earlier flag state and "
+            "remain in the record via verified case-level resume "
+            "(a copy also preserved in "
+            "g1/mech/study_record_first_order_partial.json); u235 "
+            "reports not_evaluated explicitly — the campaign cannot "
+            "afford the O(active-rows) diagnostic on fissile chains",
         ],
     }
     json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)
