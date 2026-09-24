@@ -5,6 +5,7 @@ mod capture;
 mod model;
 mod options;
 mod smoke;
+mod sweep;
 mod tour;
 mod transport;
 mod visuals;
