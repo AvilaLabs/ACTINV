@@ -93,10 +93,10 @@ def main():
                 os.path.join(DATA, "p43-work", "p43.cov.npz"),
                 p44_bands.COVARIANCE_SHA),
             "decay_primary": pinned(
-                p44_bands.DECAY_PRIMARY,
+                str(p44_bands.DECAY_PRIMARY),
                 "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"),
             "decay_fallback": pinned(
-                p44_bands.DECAY_FALLBACK,
+                str(p44_bands.DECAY_FALLBACK),
                 "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"),
             "fns_archive": ident(
                 os.path.join(DATA, "conderc-fns", "fns.zip")),
