@@ -1,0 +1,191 @@
+{
+  "band_records": {
+    "Al/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "1d681a86c72fee2b106c57d53582762b95fa9aae70f5bd44810805f9f6ff852c",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "Cu/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "59ca32f10cd63c3417f7a61b8ff53f597a33e1ebf3b041da08227ca6ab2607de",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "Fe/1996exp_5min": {
+      "cooling_steps": 20,
+      "first_order": {
+        "n_bands": 20,
+        "status": "executed"
+      },
+      "record_sha256": "15b9d3e8a6343f0a25a44276241f08e64129b04e2512b10e04a6e86bfcb4064a",
+      "sampled": {
+        "n_bands": 20,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "Fe/1996exp_7hour": {
+      "cooling_steps": 10,
+      "first_order": {
+        "n_bands": 10,
+        "status": "executed"
+      },
+      "record_sha256": "a5d1e894b21e6d0b4b3e98c061d7a0bed12bd1b69cbf93935c622fb3c466a0a5",
+      "sampled": {
+        "n_bands": 10,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "Fe/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "d9d823606b541b5720cc0ffe21c1de5641fc310fd4d8bb6c904b1db992262023",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "Ni/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "f7233d7a30e5c10e327cbe87a38e12c884b5ef74b1df013c6883bd8c91f64375",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "SS316/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "20f004fc33467982b81335e91f93784a880355978838f06e755af46697543d0c",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "Ti/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "1e79fa1e255a5edfe77a4e794084f58f98c463cdcd6c230fe4dd6bf5f9b6b146",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "V/2000exp_5min": {
+      "cooling_steps": 21,
+      "first_order": {
+        "n_bands": 21,
+        "status": "executed"
+      },
+      "record_sha256": "9280d0cb675a9f968b92f8436c9c95a28818af8f063fac826dbb473dc4a81728",
+      "sampled": {
+        "n_bands": 21,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    },
+    "W/2000exp_5min": {
+      "cooling_steps": 20,
+      "first_order": {
+        "n_bands": 20,
+        "status": "executed"
+      },
+      "record_sha256": "2025f8243cdfc4b4a4ff24fd9abc3e8418067a79098da6bf0ab90392c395c311",
+      "sampled": {
+        "n_bands": 20,
+        "n_samples": 32,
+        "status": "executed"
+      }
+    }
+  },
+  "cooling_steps_total": 197,
+  "coverage_path": "/home/connoravila/nuclear-data/p44-work/coverage_development.json",
+  "coverage_pooled": {
+    "first_order.band_only": {
+      "coverage": 0.6243654822335025,
+      "covered": 123,
+      "denominator": 197,
+      "n/a": 0,
+      "not_covered": 74,
+      "undefined": 0
+    },
+    "first_order.combined_sigma": {
+      "coverage": 0.6395939086294417,
+      "covered": 126,
+      "denominator": 197,
+      "n/a": 0,
+      "not_covered": 71,
+      "undefined": 0
+    },
+    "sampled.band_only": {
+      "coverage": 0.6142131979695431,
+      "covered": 121,
+      "denominator": 197,
+      "n/a": 0,
+      "not_covered": 76,
+      "undefined": 0
+    },
+    "sampled.combined_sigma": {
+      "coverage": 0.6345177664974619,
+      "covered": 125,
+      "denominator": 197,
+      "n/a": 0,
+      "not_covered": 72,
+      "undefined": 0
+    }
+  },
+  "coverage_sha256": "8ba74769a41f13e890e0b0dcfff672926b2159e71787b0c9ff1013ea0f4a4ca1",
+  "development_partition": [
+    "Al/2000exp_5min",
+    "Cu/2000exp_5min",
+    "Fe/1996exp_5min",
+    "Fe/1996exp_7hour",
+    "Fe/2000exp_5min",
+    "Ni/2000exp_5min",
+    "SS316/2000exp_5min",
+    "Ti/2000exp_5min",
+    "V/2000exp_5min",
+    "W/2000exp_5min"
+  ],
+  "first_order_executed": 10,
+  "gate": "G1",
+  "n_scored_points": 197,
+  "pass": true,
+  "per_point_records_complete": true,
+  "phase": "P44",
+  "sampled_executed": 10,
+  "seal_sha256": "8ce192e8b602d2b6c3ee7469fe9dbc835fed59dbbbc891aa39e38b3423a39bae"
+}

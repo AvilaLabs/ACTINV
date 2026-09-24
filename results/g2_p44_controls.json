@@ -1,0 +1,157 @@
+{
+  "controls": {
+    "aggregate_arithmetic": {
+      "detail": {
+        "experiment": {
+          "X/e_a": {
+            "coverage": 0.6666666666666666,
+            "covered": 2,
+            "denominator": 3,
+            "n/a": 0,
+            "not_covered": 1,
+            "undefined": 0
+          },
+          "X/e_b": {
+            "coverage": 0.0,
+            "covered": 0,
+            "denominator": 1,
+            "n/a": 0,
+            "not_covered": 1,
+            "undefined": 0
+          },
+          "Y/e_a": {
+            "coverage": 1.0,
+            "covered": 1,
+            "denominator": 1,
+            "n/a": 0,
+            "not_covered": 0,
+            "undefined": 0
+          }
+        },
+        "experiment_type": {
+          "e_a": {
+            "coverage": 0.75,
+            "covered": 3,
+            "denominator": 4,
+            "n/a": 0,
+            "not_covered": 1,
+            "undefined": 0
+          },
+          "e_b": {
+            "coverage": 0.0,
+            "covered": 0,
+            "denominator": 1,
+            "n/a": 0,
+            "not_covered": 1,
+            "undefined": 0
+          }
+        },
+        "material": {
+          "X": {
+            "coverage": 0.5,
+            "covered": 2,
+            "denominator": 4,
+            "n/a": 0,
+            "not_covered": 2,
+            "undefined": 0
+          },
+          "Y": {
+            "coverage": 1.0,
+            "covered": 1,
+            "denominator": 1,
+            "n/a": 0,
+            "not_covered": 0,
+            "undefined": 0
+          }
+        },
+        "pooled": {
+          "all": {
+            "coverage": 0.6,
+            "covered": 3,
+            "denominator": 5,
+            "n/a": 0,
+            "not_covered": 2,
+            "undefined": 0
+          }
+        }
+      },
+      "status": "pass"
+    },
+    "alignment_undefined_named": {
+      "detail": {
+        "excluded": [
+          {
+            "reason": "no_cooling_step_within_2_percent",
+            "row": 0
+          },
+          {
+            "reason": "no_cooling_step_within_2_percent",
+            "row": 1
+          },
+          {
+            "reason": "no_cooling_step_within_2_percent",
+            "row": 2
+          }
+        ],
+        "matched": 0,
+        "unit": "h"
+      },
+      "status": "pass"
+    },
+    "alignment_unit_inference": {
+      "detail": {
+        "excluded": [],
+        "matched": 3,
+        "unit": "h"
+      },
+      "status": "pass"
+    },
+    "boundary_inclusive": {
+      "detail": {
+        "combined_edge": "covered",
+        "hi": "covered",
+        "lo": "covered"
+      },
+      "status": "pass"
+    },
+    "denominator_failures": {
+      "detail": {
+        "failed": {
+          "band_only": "not_covered",
+          "combined_sigma": "not_covered",
+          "reason": "band_unavailable"
+        },
+        "zero": {
+          "band_only": "not_covered",
+          "combined_sigma": "not_covered",
+          "reason": "zero_prediction"
+        }
+      },
+      "status": "pass"
+    },
+    "planted_offsets": {
+      "detail": {
+        "inside": "covered",
+        "outside": "not_covered"
+      },
+      "status": "pass"
+    },
+    "sigma_only_inclusion": {
+      "detail": {
+        "band_only": "not_covered",
+        "combined_sigma": "covered"
+      },
+      "status": "pass"
+    },
+    "torn_record_resumed": {
+      "detail": {
+        "bands_identical": true,
+        "status": "executed"
+      },
+      "status": "pass"
+    }
+  },
+  "gate": "G2",
+  "pass": true,
+  "phase": "P44"
+}

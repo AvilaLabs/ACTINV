@@ -1,0 +1,25 @@
+{
+  "gate": "G3",
+  "pass": true,
+  "phase": "P44",
+  "probes": {
+    "code_hash_mismatch_refused": {
+      "rejected": true
+    },
+    "development_as_sealed_refused": {
+      "rejected": true
+    },
+    "partition_mismatch_refused": {
+      "rejected": true
+    },
+    "sealed_double_scoring_refused": {
+      "rejected": true
+    },
+    "sealed_without_seal_refused": {
+      "rejected": true
+    },
+    "unsealed_development_scoring_free": {
+      "accepted": true
+    }
+  }
+}
