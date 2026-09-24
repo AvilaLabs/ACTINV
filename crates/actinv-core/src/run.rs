@@ -165,7 +165,7 @@ pub struct RunResult {
     pub ms: f64,
 }
 
-fn name_of(za: i32, liso: i32) -> String {
+pub(crate) fn name_of(za: i32, liso: i32) -> String {
     let s = composition::symbol_of(za / 1000);
     if liso > 0 {
         format!("{s}{}m{liso}", za % 1000)
@@ -620,7 +620,13 @@ fn tangent_value(
                 let subspace = positions[global];
                 (subspace != usize::MAX).then_some((global, subspace))
             })
-            .map(|(global, subspace)| chain.lambda[global] * tangent[subspace])
+            .map(|(global, subspace)| {
+                nuclides
+                    .get(&chain.keys[global])
+                    .map(|nu| nu.lambda())
+                    .unwrap_or(chain.lambda[global])
+                    * tangent[subspace]
+            })
             .unwrap_or(0.0);
     }
     if response == "activity.total" {
@@ -633,7 +639,11 @@ fn tangent_value(
             if global == chain.leak || global == chain.unit {
                 continue;
             }
-            value += chain.lambda[global] * derivative;
+            value += nuclides
+                .get(&chain.keys[global])
+                .map(|nu| nu.lambda())
+                .unwrap_or(chain.lambda[global])
+                * derivative;
         }
         return value;
     }
@@ -1555,6 +1565,75 @@ impl PreparedRun {
         Ok(())
     }
 
+    /// Radioactive nuclides in the decay chain as (key, lambda, rel_sigma)
+    /// tuples; `rel_sigma` is `d_half_life / half_life`, so a zero marks a
+    /// radioactive nuclide with no declared uncertainty. This is the input
+    /// set the P43 `decay_constants` sampling channel perturbs.
+    pub(crate) fn decay_inputs(&self) -> Vec<((i32, i32), f64, f64)> {
+        self.chain
+            .keys
+            .iter()
+            .zip(self.chain.lambda.iter())
+            // The channel's input set is radioactive *nuclides* — Z >= 1.
+            // Pseudo-particle entries (the free neutron ZA=1, photons)
+            // carry decay data but have no material-key name and are not
+            // sampled or listed in coverage.
+            .filter(|((za, _), lambda)| *za >= 1000 && **lambda > 0.0)
+            .map(|(key, lambda)| {
+                let rel = self
+                    .nuclides
+                    .get(key)
+                    .filter(|nuclide| nuclide.half_life > 0.0)
+                    .map_or(0.0, |nuclide| nuclide.d_half_life / nuclide.half_life);
+                (*key, *lambda, rel)
+            })
+            .collect()
+    }
+
+    /// Effective independent fission yields for a spec as
+    /// ((parent_za, parent_liso, product_za, product_liso), yield, rel_sigma)
+    /// tuples, using the spec's fission-energy selection on the nominal
+    /// (unperturbed) data. `rel_sigma` is `sigma_yield / yield`; a zero
+    /// marks a pair with no declared uncertainty — or a zero yield, where
+    /// a relative uncertainty is undefined. This is the input set the P43
+    /// `fission_yields` sampling channel perturbs.
+    pub(crate) fn yield_inputs(
+        &self,
+        spec: &Spec,
+        physical: &PhysicalInputs,
+    ) -> Result<Vec<((i32, i32, i32, i32), f64, f64)>, String> {
+        let phi = physical.flux.values();
+        let mut out = Vec::new();
+        let mut parents: Vec<_> = self.fission_yields.keys().copied().collect();
+        parents.sort_unstable();
+        for parent in parents {
+            let requested_energy = match spec.fission_yields.energy.as_str() {
+                "fixed" => physical.fixed_fission_energy.map(|energy| energy.get()),
+                "spectrum_average" => fission_average_energy_eV(
+                    &self.library,
+                    &self.library_targets,
+                    phi,
+                    parent,
+                )?,
+                _ => None,
+            };
+            let Some(requested_energy) = requested_energy else {
+                continue;
+            };
+            let effective = self.fission_yields[&parent].effective(requested_energy)?;
+            for (&(dza, dliso), &y) in &effective.products {
+                let sigma = effective
+                    .uncertainties
+                    .get(&(dza, dliso))
+                    .copied()
+                    .unwrap_or(0.0);
+                let rel = if y > 0.0 { sigma / y } else { 0.0 };
+                out.push(((parent.0, parent.1, dza, dliso), y, rel));
+            }
+        }
+        Ok(out)
+    }
+
     pub fn run(&self, spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
         let mut profiler = RunProfiler::disabled();
         let physical = spec.physical_inputs()?;
@@ -1587,9 +1666,120 @@ impl PreparedRun {
         let lib = &self.library;
         let idxj = &self.index;
         let lib_targets = &self.library_targets;
-        let nuclides = &self.nuclides;
         let n_fallback = self.decay_nuclides_from_fallback;
         let ch = &self.chain;
+        // ---- P43 option perturbations (nonlinear sampling). These are
+        // ordinary spec options, so perturbed samples share one prepared
+        // run: the maps are applied to a scaled view of the decay data
+        // and to the effective yields, never to the prepared inputs.
+        let decay_factors: BTreeMap<(i32, i32), f64> = spec
+            .options
+            .decay_scale
+            .iter()
+            .flatten()
+            .map(|(name, factor)| {
+                let key = match actinv_data::composition::material_key(name) {
+                    Ok(actinv_data::composition::MaterialKey::Nuclide {
+                        za,
+                        liso,
+                        ..
+                    }) => (za, liso),
+                    _ => {
+                        return Err(format!(
+                            "decay_scale key '{name}' must be an explicit nuclide"
+                        ))
+                    }
+                };
+                if !factor.is_finite() || *factor <= 0.0 {
+                    return Err(format!(
+                        "decay_scale['{name}'] must be finite and positive"
+                    ));
+                }
+                Ok((key, *factor))
+            })
+            .collect::<Result<_, String>>()?;
+        let yield_factors: BTreeMap<(i32, i32, i32, i32), f64> = spec
+            .options
+            .yield_scale
+            .iter()
+            .flatten()
+            .map(|(name, factor)| {
+                let (parent_raw, product_raw) = name.split_once(':').ok_or_else(|| {
+                    format!(
+                        "yield_scale key '{name}' must be '<parent>:<product>' nuclide names"
+                    )
+                })?;
+                let parse = |raw: &str| match actinv_data::composition::material_key(raw) {
+                    Ok(actinv_data::composition::MaterialKey::Nuclide {
+                        za,
+                        liso,
+                        ..
+                    }) => Ok((za, liso)),
+                    _ => Err(format!(
+                        "yield_scale key '{raw}' must be an explicit nuclide"
+                    )),
+                };
+                if !factor.is_finite() || *factor <= 0.0 {
+                    return Err(format!(
+                        "yield_scale['{name}'] must be finite and positive"
+                    ));
+                }
+                let (pza, pliso) = parse(parent_raw)?;
+                let (dza, dliso) = parse(product_raw)?;
+                Ok(((pza, pliso, dza, dliso), *factor))
+            })
+            .collect::<Result<_, String>>()?;
+        let mut nuclides_scaled = self.nuclides.clone();
+        for (key, factor) in &decay_factors {
+            match ch.index.get(key) {
+                None => {
+                    return Err(format!(
+                        "decay_scale nuclide '{}' is not in the decay chain",
+                        name_of(key.0, key.1)
+                    ))
+                }
+                Some(&i) if ch.lambda[i] <= 0.0 => {
+                    return Err(format!(
+                        "decay_scale nuclide '{}' is stable",
+                        name_of(key.0, key.1)
+                    ))
+                }
+                _ => {}
+            }
+            if let Some(nu) = nuclides_scaled.get_mut(key) {
+                nu.half_life /= *factor;
+            }
+        }
+        let nuclides = &nuclides_scaled;
+        let decay_edges: Vec<(usize, usize, f64)> = if decay_factors.is_empty() {
+            ch.decay.clone()
+        } else {
+            let col_factors: HashMap<usize, f64> = decay_factors
+                .iter()
+                .filter_map(|(key, factor)| ch.index.get(key).map(|&i| (i, *factor)))
+                .collect();
+            ch.decay
+                .iter()
+                .map(|&(r, c, v)| {
+                    (r, c, v * col_factors.get(&c).copied().unwrap_or(1.0))
+                })
+                .collect()
+        };
+        // Effective per-state decay constants. Derivative directions are
+        // stored as edge_value / lambda_parent: with scaled edges
+        // (v_eff = f * v_nom) the scaled lambda keeps the entries exact
+        // branching weights (v_eff / lambda_eff = v_nom / lambda_nom).
+        let lambda_eff: Vec<f64> = if decay_factors.is_empty() {
+            ch.lambda.clone()
+        } else {
+            let mut l = ch.lambda.clone();
+            for (key, factor) in &decay_factors {
+                if let Some(&i) = ch.index.get(key) {
+                    l[i] *= *factor;
+                }
+            }
+            l
+        };
         if lib.group_count() != spec.spectrum.flux_per_group.len() {
             return Err(format!(
                 "spectrum has {} groups but activation library has {}",
@@ -1665,7 +1855,32 @@ impl PreparedRun {
             let Some(requested_energy) = requested_energy else {
                 continue;
             };
-            let effective = self.fission_yields[&parent].effective(requested_energy)?;
+            let mut effective = self.fission_yields[&parent].effective(requested_energy)?;
+            for (&(pza, pliso, dza, dliso), factor) in
+                yield_factors.iter().filter(|(k, _)| k.0 == parent.0 && k.1 == parent.1)
+            {
+                match effective.products.get_mut(&(dza, dliso)) {
+                    Some(value) => *value *= factor,
+                    None => {
+                        return Err(format!(
+                            "yield_scale pair '{}:{}' is absent from the effective yields",
+                            name_of(pza, pliso),
+                            name_of(dza, dliso)
+                        ))
+                    }
+                }
+                // The declared uncertainty scales with the yield so the
+                // relative uncertainty is preserved.
+                if let Some(sigma) = effective.uncertainties.get_mut(&(dza, dliso)) {
+                    *sigma *= factor;
+                }
+            }
+            if yield_factors
+                .keys()
+                .any(|k| k.0 == parent.0 && k.1 == parent.1)
+            {
+                effective.sum = effective.products.values().sum();
+            }
             fission_yield_selection.push(serde_json::json!({
                 "parent": name_of(parent.0, parent.1),
                 "parent_ZA": parent.0,
@@ -1680,6 +1895,14 @@ impl PreparedRun {
                 "products": effective.products.len(),
             }));
             effective_fission_yields.insert(parent, effective);
+        }
+        for &(pza, pliso, ..) in yield_factors.keys() {
+            if !effective_fission_yields.contains_key(&(pza, pliso)) {
+                return Err(format!(
+                    "yield_scale parent '{}' has no effective fission yields",
+                    name_of(pza, pliso)
+                ));
+            }
         }
         let mut led = RateLedger::default();
         let rate_scales: Option<std::collections::HashMap<usize, f64>> = spec
@@ -1954,8 +2177,8 @@ impl PreparedRun {
         let mut bulk_heat_split = (0.0, 0.0, 0.0);
         let mut bulk_photon_active: Vec<(String, (i32, i32), f64)> = Vec::new();
         if mode == "trace" {
-            for (r, c, v) in &ch.decay {
-                let lambda_c = ch.lambda[*c];
+            for (r, c, v) in &decay_edges {
+                let lambda_c = lambda_eff[*c];
                 if bulk.contains_key(c) {
                     if r != c && !bulk.contains_key(r) {
                         d_src.push((*r, ch.unit, v * bulk[c]));
@@ -2107,13 +2330,13 @@ impl PreparedRun {
             }
             bulk_heat = bulk_heat_split.0 + bulk_heat_split.1 + bulk_heat_split.2;
         } else {
-            for (r, c, v) in &ch.decay {
-                let lambda_c = ch.lambda[*c];
+            for (r, c, v) in &decay_edges {
+                let lambda_c = lambda_eff[*c];
                 if lambda_c > 0.0 {
                     decay_derivatives.push((*c, *r, *c, v / lambda_c));
                 }
             }
-            d_src = ch.decay.clone();
+            d_src = decay_edges;
             r_src = react.clone();
             r_srcs.push(react.clone());
             for extra in &react_extra {
@@ -2432,8 +2655,17 @@ impl PreparedRun {
                         let &(za, liso) = ch.keys.get(parent).ok_or_else(|| {
                             format!("decay parameter {parent} is outside the chain index")
                         })?;
-                        let lambda = ch.lambda[parent];
-                        let relative = nuclides
+                        // Effective lambda: honours a decay_scale factor
+                        // the way every other response in this run does.
+                        // The declared relative uncertainty attaches to the
+                        // datum (unscaled half-life), so the propagated
+                        // sigma scales with the effective lambda — the same
+                        // convention as scaled yields.
+                        let lambda = nuclides
+                            .get(&(za, liso))
+                            .map_or(0.0, |nuclide| nuclide.lambda());
+                        let relative = self
+                            .nuclides
                             .get(&(za, liso))
                             .filter(|nuclide| nuclide.half_life > 0.0)
                             .map_or(0.0, |nuclide| nuclide.d_half_life / nuclide.half_life);
@@ -3136,7 +3368,9 @@ impl PreparedRun {
             "schedule": schedule_ledger,
             "assembly": {"n_bulk_isotopes": bulk.len(), "n_decay_triplets": d_src.len(), "n_reaction_triplets": r_src.len(),
                          "n_library_rows": lib.rows().len(), "n_chain_nuclides": ch.keys.len(), "flux_total": phi.iter().sum::<f64>(),
-                         "rate_scale": spec.options.rate_scale.as_ref().map(|m| m.len()).unwrap_or(0)},
+                         "rate_scale": spec.options.rate_scale.as_ref().map(|m| m.len()).unwrap_or(0),
+                         "decay_scale": spec.options.decay_scale.as_ref().map(|m| m.len()).unwrap_or(0),
+                         "yield_scale": spec.options.yield_scale.as_ref().map(|m| m.len()).unwrap_or(0)},
         });
         if !spec.projectile.is_neutron() {
             ledger.as_object_mut().expect("ledger is an object").insert(

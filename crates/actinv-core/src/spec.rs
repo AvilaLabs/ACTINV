@@ -305,6 +305,24 @@ pub struct Options {
     /// named in the run ledger.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub rate_scale: Option<BTreeMap<String, f64>>,
+    /// Optional per-nuclide multiplicative perturbation of decay
+    /// constants, keyed by explicit-nuclide name such as "Mn56"
+    /// (P43 nonlinear sampling). Scaling a nuclide's decay constant
+    /// scales its decay edges, activity, decay heat, photon source and
+    /// dose responses consistently. Absent or stable nuclides are
+    /// named errors at run time. The applied factors are named in the
+    /// run ledger.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub decay_scale: Option<BTreeMap<String, f64>>,
+    /// Optional per-(parent, product) multiplicative perturbation of
+    /// independent fission yields, keyed "<parent>:<product>"
+    /// explicit-nuclide names such as "U235:I135" (P43 nonlinear
+    /// sampling). The declared yield uncertainty scales with the
+    /// yield so relative uncertainty is preserved. A pair absent
+    /// from the effective yields is a named error at run time.
+    /// The applied factors are named in the run ledger.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub yield_scale: Option<BTreeMap<String, f64>>,
 }
 fn auto() -> String {
     "auto".into()
@@ -332,7 +350,24 @@ impl Default for Options {
             outputs: None,
             require_shielding_complete: false,
             rate_scale: None,
+            decay_scale: None,
+            yield_scale: None,
         }
+    }
+}
+
+/// Parse a scale-map key as an explicit nuclide (an element key like "Fe"
+/// is rejected); returns the (za, liso) identity for solver use.
+fn scale_nuclide_key(raw: &str, field: &str) -> Result<(i32, i32), String> {
+    match actinv_data::composition::material_key(raw)
+        .map_err(|error| format!("{field} key '{raw}': {error}"))?
+    {
+        actinv_data::composition::MaterialKey::Nuclide { za, liso, .. } => {
+            Ok((za, liso))
+        }
+        _ => Err(format!(
+            "{field} key '{raw}' must be an explicit nuclide, e.g. 'Mn56'"
+        )),
     }
 }
 
@@ -652,6 +687,33 @@ impl Spec {
                 if !factor.is_finite() || *factor <= 0.0 {
                     return Err(format!(
                         "options.rate_scale['{key}'] must be finite and positive"
+                    ));
+                }
+            }
+        }
+        if let Some(scales) = &self.options.decay_scale {
+            for (key, factor) in scales {
+                scale_nuclide_key(key, "options.decay_scale")?;
+                if !factor.is_finite() || *factor <= 0.0 {
+                    return Err(format!(
+                        "options.decay_scale['{key}'] must be finite and positive"
+                    ));
+                }
+            }
+        }
+        if let Some(scales) = &self.options.yield_scale {
+            for (key, factor) in scales {
+                let (parent, product) = key.split_once(':').ok_or_else(|| {
+                    format!(
+                        "options.yield_scale key '{key}' must be \
+                         '<parent>:<product>' nuclide names"
+                    )
+                })?;
+                scale_nuclide_key(parent, "options.yield_scale")?;
+                scale_nuclide_key(product, "options.yield_scale")?;
+                if !factor.is_finite() || *factor <= 0.0 {
+                    return Err(format!(
+                        "options.yield_scale['{key}'] must be finite and positive"
                     ));
                 }
             }
@@ -1257,5 +1319,70 @@ mod duration_tests {
             "covariance": {"path": "c.npy", "sha256": "0".repeat(64)}
         });
         assert!(Spec::from_json(&value.to_string()).is_ok());
+    }
+
+    #[test]
+    fn decay_scale_requires_explicit_nuclide_positive_factors() {
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"decay_scale": {"Mn56": 1.5, "Co60m1": 0.8}});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(spec.options.decay_scale.as_ref().unwrap()["Mn56"], 1.5);
+
+        for (key, want) in [
+            ("Fe", "must be an explicit nuclide"),
+            ("Mn56:Co60", "malformed explicit nuclide key"),
+            ("", "malformed material composition key"),
+        ] {
+            let mut v = minimal_spec();
+            v["options"] = serde_json::json!({"decay_scale": {key: 1.0}});
+            let e = Spec::from_json(&v.to_string()).unwrap_err();
+            assert!(e.contains(want), "{key}: {e}");
+        }
+        for bad in [serde_json::json!(0.0), serde_json::json!(-1.0), serde_json::json!("x")] {
+            let mut v = minimal_spec();
+            v["options"] = serde_json::json!({"decay_scale": {"Mn56": bad}});
+            assert!(Spec::from_json(&v.to_string()).is_err());
+        }
+    }
+
+    #[test]
+    fn yield_scale_requires_parent_product_nuclide_pairs() {
+        let mut value = minimal_spec();
+        value["options"] =
+            serde_json::json!({"yield_scale": {"U235:I135": 2.0, "U235:Xe135m1": 1.1}});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(spec.options.yield_scale.as_ref().unwrap()["U235:I135"], 2.0);
+
+        for key in ["U235", "U235:", ":I135", "U235:I135:Xe135", "U235-I135"] {
+            let mut v = minimal_spec();
+            v["options"] = serde_json::json!({"yield_scale": {key: 2.0}});
+            assert!(
+                Spec::from_json(&v.to_string()).is_err(),
+                "key '{key}' must be refused"
+            );
+        }
+        for key in ["U235:Fe", "Fe:I135"] {
+            let mut v = minimal_spec();
+            v["options"] = serde_json::json!({"yield_scale": {key: 2.0}});
+            let e = Spec::from_json(&v.to_string()).unwrap_err();
+            assert!(e.contains("explicit nuclide"), "{key}: {e}");
+        }
+        let mut v = minimal_spec();
+        v["options"] = serde_json::json!({"yield_scale": {"U235:I135": 0.0}});
+        assert!(Spec::from_json(&v.to_string()).is_err());
+    }
+
+    #[test]
+    fn all_scale_maps_coexist_on_one_spec() {
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({
+            "rate_scale": {"0": 1.1},
+            "decay_scale": {"Mn56": 1.5},
+            "yield_scale": {"U235:I135": 2.0},
+        });
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert!(spec.options.rate_scale.is_some());
+        assert!(spec.options.decay_scale.is_some());
+        assert!(spec.options.yield_scale.is_some());
     }
 }
