@@ -31,7 +31,7 @@ def main() -> int:
     for m, r in recs.items():
         ev = r.get("evidence") or {}
         for k in ("scorer_sha256", "ledger_sha256", "corpora",
-                  "n_scored", "median_ce"):
+                  "n_scored", "median_ce", "mean_abs_ln_ce"):
             if not ev.get(k):
                 raise SystemExit(
                     f"recommendation {m} lacks evidence.{k} — refused")
@@ -94,7 +94,7 @@ def main() -> int:
         for c in r["recommended"]:
             ev = r["evidence"]
             A(f"| {m} | {c} |"
-              f" {r['candidates'][c]['mean_abs_ln_ce']:.3f} |"
+              f" {ev['mean_abs_ln_ce'][c]:.3f} |"
               f" {ev['n_scored'][c]} | {ev['median_ce'][c]:.3f} |")
     A("")
     A("A recommendation is refused at construction unless it carries "

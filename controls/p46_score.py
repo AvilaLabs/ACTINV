@@ -276,9 +276,12 @@ def recommendation_row(material: str, rec: dict, scorer_sha: str,
                         "n_scored": {c: rec["candidates"][c]["n_scored"]
                                      for c in rec["recommended"]},
                         "median_ce": {c: rec["candidates"][c]["median_ce"]
-                                      for c in rec["recommended"]}}}
+                                      for c in rec["recommended"]},
+                        "mean_abs_ln_ce": {
+                            c: rec["candidates"][c]["mean_abs_ln_ce"]
+                            for c in rec["recommended"]}}}
     for k in ("scorer_sha256", "ledger_sha256", "corpora",
-              "n_scored", "median_ce"):
+              "n_scored", "median_ce", "mean_abs_ln_ce"):
         if not row["evidence"].get(k):
             raise ValueError(
                 f"recommendation for {material} lacks evidence.{k}")
