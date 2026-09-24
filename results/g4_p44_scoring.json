@@ -1,0 +1,50 @@
+{
+  "band_production_wall_minutes": 50.28574960629145,
+  "band_wall_method": "mtime span first-to-last sealed band record (multi-invocation resume); scorer timed directly",
+  "envelope_minutes": 180,
+  "gate": "G4",
+  "n_excluded_nonpoints": 31,
+  "n_points": 2179,
+  "pass": true,
+  "phase": "P44",
+  "pooled": {
+    "first_order.band_only": {
+      "coverage": 0.26525929325378617,
+      "covered": 578,
+      "denominator": 2179,
+      "n/a": 0,
+      "not_covered": 1585,
+      "undefined": 16
+    },
+    "first_order.combined_sigma": {
+      "coverage": 0.35979807251032586,
+      "covered": 784,
+      "denominator": 2179,
+      "n/a": 0,
+      "not_covered": 1379,
+      "undefined": 16
+    },
+    "sampled.band_only": {
+      "coverage": 0.255162918770078,
+      "covered": 556,
+      "denominator": 2179,
+      "n/a": 0,
+      "not_covered": 1607,
+      "undefined": 16
+    },
+    "sampled.combined_sigma": {
+      "coverage": 0.3478659935750344,
+      "covered": 758,
+      "denominator": 2179,
+      "n/a": 0,
+      "not_covered": 1405,
+      "undefined": 16
+    }
+  },
+  "scorer_wall_minutes": 0.006327684720357259,
+  "sealed_coverage_sha256": "7aee2b2949a348a9b31b72958849f57870c64d49c598a69812d003a34dc3c1d6",
+  "sealed_experiments": 122,
+  "status": "scored_once",
+  "total_wall_minutes": 50.29207729101181,
+  "within_envelope": true
+}

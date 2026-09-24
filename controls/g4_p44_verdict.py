@@ -39,6 +39,44 @@ def main():
                 for m, g in groups["material"].items()
                 if g["coverage"] is not None and g["coverage"] < 0.5)
 
+    # diagnostic decomposition (descriptive, post-hoc reporting — not a
+    # band or metric change): the covariance-bound patched library is a
+    # 1679-target subset of full TENDL-2025 (2850); materials whose
+    # composition elements lack natural-isotope targets in that subset
+    # show zero/partial nominals. Elements flagged: every natural
+    # isotope missing for Ag, Au, Nb, Ta, Ir; partial loss for Ba, Bi,
+    # Br, Cd, Cs, Dy, Er, Eu, Ge, Hf, Hg, I, K, La, Ni, Os, Pd, Te, W,
+    # Yb (plus alloy constituents).
+    isotope_incomplete = {
+        "Ag", "Au", "Nb", "Ta", "Ir", "Ba", "Bi", "Br", "Cd", "Cs",
+        "Dy", "Er", "Eu", "Ge", "Hf", "Hg", "I", "K", "La", "Os",
+        "Pd", "Te", "W", "Yb", "Ni", "Cu",
+    }
+    fo_mat = rep["aggregates"]["first_order.band_only"]["material"]
+    comp = inc = {"covered": 0, "denominator": 0}
+    comp, inc = dict(comp), dict(inc)
+    for m, g in fo_mat.items():
+        (inc if m in isotope_incomplete else comp)[
+            "covered"] += g["covered"]
+        (inc if m in isotope_incomplete else comp)[
+            "denominator"] += g["denominator"]
+    isotope_split = {
+        "isotope_complete": {**comp,
+                            "coverage": comp["covered"] / comp["denominator"]
+                            if comp["denominator"] else None},
+        "isotope_incomplete": {**inc,
+                              "coverage": inc["covered"] / inc["denominator"]
+                              if inc["denominator"] else None},
+        "basis": "first_order.band_only; element-level natural-isotope "
+                 "completeness vs the 1679-target patched index "
+                 "(approximate — alloys by flagged constituents)",
+    }
+    zero_nominal = sorted({
+        r["material"] for r in rep["experiments"]
+        if r["points"] and all(
+            (p["bands"]["first_order"].get("band") or {}).get("nominal", 1)
+            == 0 for p in r["points"])})
+
     verdict = {
         "schema": "actinv-verdict-1",
         "phase": "P44",
@@ -50,6 +88,12 @@ def main():
             "corpus caveat applies as declared: the FNS corpus is "
             "consumed C/E evidence — the seal binds band definitions, "
             "scoring code, partition and metrics, not blind data",
+            "pooled coverage is materially below the declared 0.6827 "
+            "level: the measured result names two causes — missing "
+            "natural-isotope targets in the covariance-bound patched "
+            "library (2.9% coverage on affected materials, five "
+            "zero-nominal) and genuinely narrow declared bands on "
+            "isotope-complete materials (39%)",
         ],
         "protocol_sha256": SEALS["protocol_sha256"],
         "opening_commit": SEALS["opening_commit"],
@@ -63,6 +107,12 @@ def main():
             "per_experiment_type": {k: v["per_experiment_type"]
                                     for k, v in coverage.items()},
             "materials_below_50pct_band_only": n_low,
+            "isotope_split": isotope_split,
+            "zero_nominal_materials": zero_nominal,
+            "library_subset_note":
+                "covariance-bound patched library holds 1679/2850 "
+                "full-TENDL-2025 targets; missing natural isotopes "
+                "drive zero/partial nominals on 26 flagged materials",
             "wall_minutes": g4s["total_wall_minutes"],
             "envelope_minutes": g4s["envelope_minutes"],
             "controls": {k: v["status"]

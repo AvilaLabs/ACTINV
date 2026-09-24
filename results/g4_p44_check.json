@@ -1,0 +1,11 @@
+{
+  "failures": [],
+  "gate": "G4",
+  "mutation_self_test": {
+    "planted": 5,
+    "rejected": 5
+  },
+  "n_band_records_verified": 122,
+  "pass": true,
+  "phase": "P44"
+}

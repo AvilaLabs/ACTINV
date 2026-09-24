@@ -110,6 +110,26 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   covered-row-restricted tangent build would collapse the diagnostic's cost on fissile chains by ~150x — the real
   fix if the local-vs-nonlinear comparison is wanted inside campaign envelopes; until then
   `robustness.first_order_comparison=false` is the supported relief (P43 campaign + mechanics both use it).
+- 2026-09-24 — P44 measured-coverage finding: the covariance-bound patched activation library
+  (`tendl-2025-patched-neutron-709g.npz`, 1679 targets) is a *subset* of full TENDL-2025 (2850 targets) — the
+  MF=33-covered working set. Dropped targets include natural stable isotopes for ~26 elements: every natural
+  isotope of Ag (107,109), Au (197), Nb (93), Ta (181), Ir (191,193); partial loss for Ba (6/7), Bi (1/1),
+  Br, Cd, Cs, Dy, Er, Eu, Ge, Hf, Hg, I, K, La, Ni (1/5), Os, Pd, Te, W (3/5), Yb, Cu. On the sealed FNS
+  partition these drive zero or partial nominals (2.9% pooled band coverage on affected materials vs 39.3%
+  on isotope-complete materials). Repair options, in order of increasing scope: (a) ship a full-library build
+  that keeps uncovered targets with an explicit `uncovered` row flag — the library should never drop a target
+  silently because it lacks covariance; (b) extend the covariance sidecar over all available MF=33; (c) treat
+  missing-target activation as a model-remainder channel in band definitions. Any future band-coverage
+  rescoring on the full library is a new sealed scoring.
+- 2026-09-24 — P44 excluded the IRDFF-II SACS arm named in the draft: its scoring unit is a folded
+  spectrum-averaged cross section, not an activation response, and no processed SACS activation corpus exists
+  on this host (only raw ENDF archives and PDFs). If a SACS arm is wanted, it is a dedicated phase with its own
+  corpus build + protocol, not an extension of the activation-response coverage scorer.
+- 2026-09-24 — P44 band-definition scope note: measured bands covered MF=33 + decay constants at 68.27% —
+  no flux/composition/fission-yield channels (FNS materials are non-fissile; flux/composition treated as
+  measurement-side inputs) and no model remainder. The measured ~39% coverage on isotope-complete materials
+  quantifies what the missing remainder must supply before a PASS-level calibration claim; options: declared
+  uncovered-remainder width, evaluation spread (P46), or a fitted remainder with its own sealed population.
 
 ## Feature backlog — consolidated 2026-09-15
 

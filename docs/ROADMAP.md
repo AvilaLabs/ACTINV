@@ -922,6 +922,28 @@ evidence. Under no circumstance is a band widened after seeing its coverage; wid
 and a new sealed scoring. This phase produces the calibration claim; P24 produces the complementary predictive
 re-validation of point estimates, and neither substitutes for the other.
 
+**P44 execution entry (2026-09-24).** P44 (measured band coverage) closed `P44-CONDITIONAL` — amendments were
+used and sealed at G0 and the corpus caveat applies as declared (FNS is consumed C/E evidence; the seal binds
+band definitions, scoring code, partition and metrics, not blind data). The sealed partition — 122 of the 132
+FNS experiments, 2179 measured decay-heat points — was scored exactly once through unchanged code in 50.3 min
+against the 180-minute envelope, both legs complete with zero failed runs. Declared nuclear-data bands (MF=33 +
+decay constants, 68.27% level) cover **26.5% first-order / 25.5% sampled** of sealed points band-only, 36.0% /
+34.8% with measurement sigma folded in — materially under the declared level, and the decomposition names two
+causes: (a) the covariance-bound patched library holds only 1679/2850 full-TENDL-2025 targets, so materials
+whose natural isotopes are absent give zero or partial nominals (2.9% pooled coverage on the 26 affected
+materials, five all-zero: Ag, Au, Nb, Ta, Ir); (b) on isotope-complete materials the declared bands still
+under-cover (39.3% band-only pooled) — the missing channel is band width/remainder, not just library
+completeness. Development partition (10 structural experiments) showed 62% — near nominal — so the pooled
+deficit is corpus-composition-driven. G1 mechanics 10/10 experiments with complete per-point records; 8/8
+frozen controls; all six conformance probes; independent G4 checker re-derived every outcome and aggregate,
+verified all 122 band-record file hashes and the 396-file corpus manifest, and rejected 5/5 planted mutations
+(`results/verdict_p44.json`, `results/g{0,1,2,3,4}_p44*.json`, `results/p44_sealed_coverage.json`,
+`controls/{p44_bands,p44_band_coverage,g0,g1,g2,g3,g4,check_g4}_p44*.py`,
+`protocols/ACTINV-P44_PROTOCOL.md`). Carried named conditions: coverage is measured against the
+covariance-covered library subset, not the full activation library; band definitions cover MF=33 + decay
+constants only (no flux/composition/yield channels, no model remainder); IRDFF-II SACS arm excluded — folded
+cross-section scoring unit, no processed corpus on this host, parked.
+
 **P45 — prove the campaign is affordable.** Replace the kernel-ratio headline with an executed whole-workload
 claim. Freeze workloads, output parity, comparator versions, resource limits and host before timing. Give each
 comparator its documented preparation and caches; where no lawful comparator exists the leg is unmeasured.
