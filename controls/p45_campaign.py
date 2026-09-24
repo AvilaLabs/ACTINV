@@ -400,7 +400,9 @@ def main() -> int:
                 if arm not in INVOCATION_ARMS:
                     continue            # batch arms handled below
                 key = f"{wl}|{cname}|{arm}"
-                dg = digest_case_arm(cname, arm, {"arm": arm})
+                dg = digest_case_arm(cname, arm,
+                                     {"arm": arm,
+                                      "repeat": args.repeat})
                 if key in done and done[key].get("input_digest") == dg:
                     continue
                 row = {"workload": wl, "case": cname, "arm": arm,
@@ -428,7 +430,9 @@ def main() -> int:
             wdir = WORK / "mesh" / "_actinv_mesh"
             wdir.mkdir(parents=True, exist_ok=True)
             key = "mesh|_batch|actinv_mesh"
-            dg = digest_case_arm("_batch", "actinv_mesh", {"wl": "mesh"})
+            dg = digest_case_arm("_batch", "actinv_mesh",
+                                     {"wl": "mesh",
+                                      "repeat": args.repeat})
             if not (key in done and done[key].get("input_digest") == dg):
                 res = run_actinv_mesh(cases, wdir, args.repeat)
                 append({"workload": "mesh", "case": "_batch",
@@ -465,7 +469,9 @@ def main() -> int:
             wdir = WORK / wl / "_openmc_batch"
             wdir.mkdir(parents=True, exist_ok=True)
             key = f"{wl}|_batch|openmc"
-            dg = digest_case_arm("_batch", "openmc", {"wl": wl})
+            dg = digest_case_arm("_batch", "openmc",
+                                     {"wl": wl,
+                                      "repeat": args.repeat})
             if not (key in done and done[key].get("input_digest") == dg):
                 res = openmc_job(wl, jcases, flux_by_name, wdir)
                 append({"workload": wl, "case": "_batch", "arm": "openmc",
@@ -484,7 +490,7 @@ def main() -> int:
                     continue
                 row = {"workload": wl, "case": cn, "arm": "openmc",
                        "input_digest": digest_case_arm(cn, "openmc",
-                                                     {}),
+                                                     {"repeat": args.repeat}),
                        "recorded_at": time.time(),
                        "arms": {"openmc": cases_res.get(cn, {
                            "status": "arm_failure",
