@@ -174,8 +174,11 @@ def main() -> int:
     if not res_c["resumed"]:
         return fail("result did not record resume hits")
 
-    print(json.dumps({"gate": "G1", "pass": True,
-                      "evals_a": len(rows), "resume_rows": len(rows_c)}))
+    record = {"gate": "G1", "pass": True,
+              "evals_a": len(rows), "resume_rows": len(rows_c)}
+    (ROOT / "results/p49_g1.json").write_text(
+        json.dumps(record, indent=2, sort_keys=True) + "\n")
+    print(json.dumps(record))
     return 0
 
 

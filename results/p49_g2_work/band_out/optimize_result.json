@@ -1,0 +1,98 @@
+{
+  "base_spec": "mini_base.json",
+  "best_feasible": null,
+  "constraints": [
+    {
+      "edge": "normalupper",
+      "limit": 0.001,
+      "name": "band",
+      "response": "heat.total",
+      "sense": "le",
+      "time_s": 461.0
+    }
+  ],
+  "infeasible": true,
+  "n_evals": 6,
+  "objective": {
+    "direction": "min",
+    "edge": "nominal",
+    "response": "heat.total",
+    "time_s": 461.0
+  },
+  "optimizer": {
+    "algorithm": "lhs_coordinate",
+    "init_points": 4,
+    "refine_points": 2,
+    "seed": 7
+  },
+  "optspec_sha256": "fd12e6ea96e02ad577677333b790e6b32677c5e9c6ac73f72fcd3b2c72fd7851",
+  "ranked": [
+    {
+      "eval_id": 4,
+      "feasible": false,
+      "objective": 1.0499331032502137e-7,
+      "status": "executed",
+      "violation_sum": null,
+      "x": [
+        1.0
+      ]
+    },
+    {
+      "eval_id": 1,
+      "feasible": false,
+      "objective": 1.0517372538287384e-7,
+      "status": "executed",
+      "violation_sum": null,
+      "x": [
+        0.754545789850869
+      ]
+    },
+    {
+      "eval_id": 5,
+      "feasible": false,
+      "objective": 1.0517706665348567e-7,
+      "status": "executed",
+      "violation_sum": null,
+      "x": [
+        0.75
+      ]
+    },
+    {
+      "eval_id": 0,
+      "feasible": false,
+      "objective": 1.0526519269956809e-7,
+      "status": "executed",
+      "violation_sum": null,
+      "x": [
+        0.6301047468421412
+      ]
+    },
+    {
+      "eval_id": 3,
+      "feasible": false,
+      "objective": 1.0547518764601898e-7,
+      "status": "executed",
+      "violation_sum": null,
+      "x": [
+        0.3444071763068889
+      ]
+    },
+    {
+      "eval_id": 2,
+      "feasible": false,
+      "objective": 1.0556386388337753e-7,
+      "status": "executed",
+      "violation_sum": null,
+      "x": [
+        0.22376338936944473
+      ]
+    }
+  ],
+  "resumed": false,
+  "resumed_hits": 0,
+  "schema": "actinv-optimize-result-1",
+  "wall_s": 6.637950364,
+  "winner_verification": {
+    "performed": false
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "base_spec": "mini_base.json",
+  "best_feasible": null,
+  "constraints": [
+    {
+      "edge": "nominal",
+      "limit": 1e-30,
+      "name": "impossible",
+      "response": "activity.total",
+      "sense": "le",
+      "time_s": 461.0
+    }
+  ],
+  "infeasible": true,
+  "n_evals": 6,
+  "objective": {
+    "direction": "min",
+    "edge": "nominal",
+    "response": "heat.total",
+    "time_s": 461.0
+  },
+  "optimizer": {
+    "algorithm": "lhs_coordinate",
+    "init_points": 4,
+    "refine_points": 2,
+    "seed": 7
+  },
+  "optspec_sha256": "1f27edf26caec522b5eb02aec14af28c241cbd40c0e692ff773b84082a4cc166",
+  "ranked": [
+    {
+      "eval_id": 5,
+      "feasible": false,
+      "objective": 1.0572833563887875e-7,
+      "status": "executed",
+      "violation_sum": 2.8017056647723376e+35,
+      "x": [
+        0.0
+      ]
+    },
+    {
+      "eval_id": 2,
+      "feasible": false,
+      "objective": 1.0556386388337753e-7,
+      "status": "executed",
+      "violation_sum": 2.808785772184061e+35,
+      "x": [
+        0.22376338936944473
+      ]
+    },
+    {
+      "eval_id": 3,
+      "feasible": false,
+      "objective": 1.0547518764601898e-7,
+      "status": "executed",
+      "violation_sum": 2.8126030676428144e+35,
+      "x": [
+        0.3444071763068889
+      ]
+    },
+    {
+      "eval_id": 4,
+      "feasible": false,
+      "objective": 1.0538010755491328e-7,
+      "status": "executed",
+      "violation_sum": 2.8166960333662855e+35,
+      "x": [
+        0.47376338936944473
+      ]
+    },
+    {
+      "eval_id": 0,
+      "feasible": false,
+      "objective": 1.0526519269956809e-7,
+      "status": "executed",
+      "violation_sum": 2.821642837251058e+35,
+      "x": [
+        0.6301047468421412
+      ]
+    },
+    {
+      "eval_id": 1,
+      "feasible": false,
+      "objective": 1.0517372538287384e-7,
+      "status": "executed",
+      "violation_sum": 2.825580281859007e+35,
+      "x": [
+        0.754545789850869
+      ]
+    }
+  ],
+  "resumed": false,
+  "resumed_hits": 0,
+  "schema": "actinv-optimize-result-1",
+  "wall_s": 6.438222519,
+  "winner_verification": {
+    "performed": false
+  }
+}

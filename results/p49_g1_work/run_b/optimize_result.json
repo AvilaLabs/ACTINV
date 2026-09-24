@@ -1,0 +1,182 @@
+{
+  "base_spec": "mini_base.json",
+  "best_feasible": {
+    "eval_id": 10,
+    "objective": 2.3077612526393804e-7,
+    "spec_file": "candidates/eval_0010.json",
+    "spec_sha256": "672a62a952a60129660fe2509eadc8ef161102626f6c58af71fcd89489c47ccb",
+    "x": [
+      3.0,
+      0.5047399960226636
+    ]
+  },
+  "constraints": [
+    {
+      "edge": "nominal",
+      "limit": 1000000000000.0,
+      "name": "act1d",
+      "response": "activity.total",
+      "sense": "le",
+      "time_s": 461.0
+    }
+  ],
+  "infeasible": false,
+  "n_evals": 12,
+  "objective": {
+    "direction": "min",
+    "edge": "nominal",
+    "response": "heat.total",
+    "time_s": 461.0
+  },
+  "optimizer": {
+    "algorithm": "lhs_coordinate",
+    "init_points": 8,
+    "refine_points": 4,
+    "seed": 49
+  },
+  "optspec_sha256": "5d1ef7059511dc6da7559c32f63c30bcf0c70d873cd88bd82b8a7d71db34c622",
+  "ranked": [
+    {
+      "eval_id": 10,
+      "feasible": true,
+      "objective": 2.3077612526393804e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        3.0,
+        0.5047399960226636
+      ]
+    },
+    {
+      "eval_id": 8,
+      "feasible": true,
+      "objective": 2.3098845138021496e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        3.0,
+        0.2547399960226636
+      ]
+    },
+    {
+      "eval_id": 11,
+      "feasible": true,
+      "objective": 2.3098845138021496e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        3.0,
+        0.2547399960226636
+      ]
+    },
+    {
+      "eval_id": 4,
+      "feasible": true,
+      "objective": 2.3113526951000543e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        2.928427830749396,
+        0.2547399960226636
+      ]
+    },
+    {
+      "eval_id": 7,
+      "feasible": true,
+      "objective": 2.3169540094410767e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        2.3788775387453174,
+        0.9225541039827754
+      ]
+    },
+    {
+      "eval_id": 0,
+      "feasible": true,
+      "objective": 2.3233071871161136e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        2.1584854468354955,
+        0.7068235971317576
+      ]
+    },
+    {
+      "eval_id": 9,
+      "feasible": true,
+      "objective": 2.3252694879472374e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        2.25,
+        0.2547399960226636
+      ]
+    },
+    {
+      "eval_id": 2,
+      "feasible": true,
+      "objective": 2.33704099430615e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        1.687172674964859,
+        0.22812277650815588
+      ]
+    },
+    {
+      "eval_id": 1,
+      "feasible": true,
+      "objective": 2.3401183829030507e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        1.2911079987404528,
+        0.8223978194147933
+      ]
+    },
+    {
+      "eval_id": 6,
+      "feasible": true,
+      "objective": 2.349734917932497e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        1.1172921347280322,
+        0.10993267729820902
+      ]
+    },
+    {
+      "eval_id": 3,
+      "feasible": true,
+      "objective": 2.3576148491436275e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        0.6010360845499216,
+        0.4290389043180648
+      ]
+    },
+    {
+      "eval_id": 5,
+      "feasible": true,
+      "objective": 2.3681702879336191e-7,
+      "status": "executed",
+      "violation_sum": 0.0,
+      "x": [
+        0.02657859747146621,
+        0.5736960179158908
+      ]
+    }
+  ],
+  "resumed": false,
+  "resumed_hits": 0,
+  "schema": "actinv-optimize-result-1",
+  "wall_s": 27.277839863,
+  "winner_verification": {
+    "bit_identical": true,
+    "ledgered_objective": 2.3077612526393804e-7,
+    "performed": true,
+    "re_executed_objective": 2.3077612526393804e-7
+  }
+}

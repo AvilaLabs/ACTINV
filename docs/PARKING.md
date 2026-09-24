@@ -185,3 +185,13 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
     *and* full coverage — the "best of both" default. Deferred: it changes what the solver emits for defective
     evaluations, a data-policy decision that needs its own protocol. Default flipped to full `tendl-2025` in the
     meantime (P46 evidence).
+
+## P49 parked items (2026-09-24)
+
+12. **Per-candidate band cost** — a 13-step spec with 4 propagated responses costs ~8–15 min of wall per
+    candidate (the full 24-evaluation RA-steel campaign ≈ 3.3 h solve wall). The optimizer is therefore a
+    batch tool by design; any *interactive* optimization surface needs parked item 10 (persistent worker)
+    first, and even then only for nominal-edge objectives — band propagation itself is the dominant cost,
+    not process spawn. Possible accelerations within the identical solver path: early-exit once a
+    constraint is violated, coarse-step prescreen, or cheaper response sets — each is a numerics-policy
+    decision needing its own protocol.

@@ -31,9 +31,8 @@ def violation(edge, sense, limit):
     return (edge - limit) / d if sense == "le" else (limit - edge) / d
 
 
-def recheck(rows, opt, constraints):
+def recheck(rows, direction_min, constraints):
     """Independently recompute feasibility + ranking from raw ledger rows."""
-    direction_min = opt["objective"]["direction"] == "min"
     recomputed = []
     for r in rows:
         vsum = 0.0
@@ -90,8 +89,8 @@ def check_campaign(ledger_path, result_path, cand_dir, constraints):
             problems.append(f"eval {r['eval_id']} spec sha mismatch")
 
     # 3. feasibility re-derived from raw constraint edges
-    recomputed, order, best = recheck(rows, result["optimizer"],
-                                      constraints)
+    recomputed, order, best = recheck(
+        rows, result["objective"]["direction"] == "min", constraints)
     for r, rc in zip(rows, recomputed):
         if r.get("feasible") != rc["feasible"]:
             problems.append(

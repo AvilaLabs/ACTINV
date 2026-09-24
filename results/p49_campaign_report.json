@@ -1,0 +1,32 @@
+{
+  "best_feasible": {
+    "eval_id": 23,
+    "objective": 2.7498421591909207e-05,
+    "spec_file": "candidates/eval_0023.json",
+    "spec_sha256": "c57995ee6016c1a39f37d8a972356cdbd6c1c6d057965562265596727915b3bb",
+    "x": [
+      0.0,
+      0.0,
+      0.11328001368213685
+    ]
+  },
+  "eval_wall_s_total": 11932.099187763,
+  "gate": "G3",
+  "infeasible": false,
+  "ledger_rows": 24,
+  "ledger_sha256": "5a783203ef5b321dbd4a0288276423ec57371c71daa9909d94b5cfe23b7f0712",
+  "n_candidate_specs": 24,
+  "n_evals": 24,
+  "n_feasible": 12,
+  "n_infeasible": 12,
+  "pass": true,
+  "result_sha256": "07669f3337c50a7052ea673beb73a2374cb517e9c46401be6f744f5f5217d5ba",
+  "stderr_tail": "",
+  "wall_s": 3206.777323484421,
+  "winner_verification": {
+    "bit_identical": true,
+    "ledgered_objective": 2.7498421591909207e-05,
+    "performed": true,
+    "re_executed_objective": 2.7498421591909207e-05
+  }
+}

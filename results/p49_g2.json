@@ -1,0 +1,23 @@
+{
+  "amended_artifacts": {
+    "optimize_module": {
+      "current": "c2c7f27b5cfad70f",
+      "sealed": "e9e2ac30ebb2fcd3"
+    },
+    "protocol": {
+      "current": "1c9a8bad407215a2",
+      "sealed": "60b73042cef811be"
+    }
+  },
+  "checks": {
+    "artifact_freeze": true,
+    "band_infeasible": true,
+    "declared_amendment_only": true,
+    "infeasible_flag": true,
+    "no_best": true,
+    "not_computable": true,
+    "unit_tests": true
+  },
+  "gate": "G2",
+  "pass": true
+}

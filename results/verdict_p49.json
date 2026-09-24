@@ -1,0 +1,42 @@
+{
+  "campaign": {
+    "best_feasible": {
+      "eval_id": 23,
+      "objective": 2.7498421591909207e-05,
+      "spec_file": "candidates/eval_0023.json",
+      "spec_sha256": "c57995ee6016c1a39f37d8a972356cdbd6c1c6d057965562265596727915b3bb",
+      "x": [
+        0.0,
+        0.0,
+        0.11328001368213685
+      ]
+    },
+    "n_evals": 24,
+    "n_feasible": 12,
+    "n_infeasible": 12,
+    "wall_s": 3206.777323484421,
+    "winner_bit_identical": true
+  },
+  "checker": "results/check_g4_p49.json",
+  "closed_at_utc": "2026-09-24T18:22:16Z",
+  "conditions": [
+    "Derivative-free seeded bounded search (LHS fill + coordinate refinement); no global-optimality claim is made.",
+    "Chance constraints are expressed on the spec's declared confidence-level band edges (normal/conservative); they are not posterior probabilities over model error.",
+    "Batch campaign only: per-candidate band propagation cost rules out interactive latency until the persistent-worker item ships.",
+    "Winner re-verification is a same-process re-solve (identical code path), not an independent implementation."
+  ],
+  "gates": {
+    "g1": {
+      "pass": true
+    },
+    "g2": {
+      "pass": true
+    },
+    "g3": {
+      "pass": true
+    }
+  },
+  "phase": "P49",
+  "schema": "actinv-verdict-1",
+  "verdict": "P49-CONDITIONAL"
+}

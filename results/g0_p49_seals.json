@@ -1,0 +1,61 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "cli_lib": {
+      "path": "crates/actinv-cli/src/lib.rs",
+      "sha256": "61a13ce08c24d28d0b5c4a599d7e2b97782f19e487fba758d397332ad94c837d"
+    },
+    "cli_manifest": {
+      "path": "crates/actinv-cli/Cargo.toml",
+      "sha256": "901aaa5d18da35b4eb503737405b9d86a941070f9ca837e660049e5e4cc5d22a"
+    },
+    "command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "24a5e7b62164f0579ccc93de3a4f57a16bd3caa43658aee6a386128263cd1974"
+    },
+    "core_run_module": {
+      "path": "crates/actinv-core/src/run.rs",
+      "sha256": "dd121087d2735819eb9b31181ca3a13b278f00d45bd08f7916ef94feb5aa646a"
+    },
+    "core_spec_module": {
+      "path": "crates/actinv-core/src/spec.rs",
+      "sha256": "fbb4be00704215d3a642ff5daea0b016c72cee2d80b438fff837f056028d7bfd"
+    },
+    "demo_base_spec": {
+      "path": "examples/optimize_ra_steel/base_spec.json",
+      "sha256": "592a20b23f54dadb3b3077536076624a80a3c3402bc59d72c21e997b438033a5"
+    },
+    "demo_optspec": {
+      "path": "examples/optimize_ra_steel/opt.json",
+      "sha256": "5dc346318a0e557cd0c39d678fb0bc662e23d9cc0119b2af2de6ea5b7b2c6670"
+    },
+    "optimize_module": {
+      "path": "crates/actinv-cli/src/optimize.rs",
+      "sha256": "e9e2ac30ebb2fcd3e558ac71456884a2573af19a2192bdc356fe2a6105b83980"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P49_PROTOCOL.md",
+      "sha256": "60b73042cef811be81516d676cae985edc82b372edc2d48ce171cd50369201ea"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "demonstration": "examples/optimize_ra_steel (Fe-9Cr base; Ni/Mo/Nb composition axes; heat objective at 1 y)",
+  "envelope_s": 14400,
+  "max_evals": 64,
+  "opening_commit": "6e9301d0e21b154a968d4c6e1036652a28bf2a49",
+  "optimizer": {
+    "algorithm": "lhs_coordinate",
+    "init_points": 16,
+    "refine_points": 8,
+    "seed": 49
+  },
+  "protocol_sha256": "60b73042cef811be81516d676cae985edc82b372edc2d48ce171cd50369201ea",
+  "schema": "actinv-p49-seal-1",
+  "sealed_at_utc": "2026-09-24T13:55:19Z"
+}

@@ -1073,12 +1073,56 @@ is a fork to channel work, not a failed phase — and whether any equivalent-out
 executable for P45. P44's outcome should be treated as the extension's first real decision point: it determines
 whether "calibrated uncertainty" ships as a claim or returns to channel-repair scope.
 
-## Draft product-innovation extension — P49 (2026-09-24)
+## Draft product-innovation extension — P49 (2026-09-24) — **closed P49-CONDITIONAL 2026-09-24**
 
-**Status: requested draft; the phase below is unopened and unhashed.** This section is the canonical proposed
-scope for ACTINV's first capability that no competitor ships: optimization, not just evaluation. It changes no
-frozen protocol, prior verdict, evidence record or release authorization. P33/P34 remain blocked on external
-dependencies; the standing rules and the P26–P35 evidence rules apply in full.
+P49 delivered `actinv optimize`: a bounded, seeded, derivative-free design
+search (`actinv-optimize-1` documents; `lhs_coordinate` — seeded
+Latin-hypercube fill plus coordinate-descent refinement, ≤64 evaluations).
+Design axes: `composition_fraction` (joint renormalization of non-axed
+elements), `flux_scale`, `step_dt`. Objectives and constraints evaluate on
+nominal or propagated `normal`/`conservative` band edges — chance
+constraints ("95th-percentile decay heat ≤ limit") are first-class.
+Every attempted candidate is solved through the identical
+`actinv_core::run::run` path and appended to `optimize_ledger.jsonl` with
+its generated spec's sha256, parameter vector, objective, constraint
+margins, feasibility and wall time; `--resume` replays the seeded sequence
+and skips ledgered parameter digests. `optimize_result.json` ranks
+feasible-first, flags `infeasible` boxes honestly, and re-executes the
+winner in a fresh evaluation (bit-identical objective required).
+
+Demonstration: reduced-activation steel box (Fe balance, Cr 9.0 wt%;
+axes NI [0,3], MO [0,1], NB [0,0.2] wt%; FNS 5-min shot + cooling to
+~100 y) — minimize `activity.total` nominal at ~100 y under
+`heat.total` 95%-upper ≤ 1.65e-12 W/g at 1 y and `activity:Nb94` nominal
+≤ 1e-6 Bq/g at ~100 y. 24 evaluations (12 feasible, 12 infeasible);
+winner Ni=0/Mo=0/Nb=0.113 wt% at 2.75e-5 Bq/g — the refinement found that
+removing Ni and Mo dominates the Nb-94 penalty of retained Nb. The
+showcase case exists in the ledger: nominally feasible points rejected by
+their 95% band edge. Total solve wall ≈ 3.3 h over two sessions (an
+OOM repair mid-campaign exercised `--resume` end-to-end).
+
+Verdict: **P49-CONDITIONAL** — one append-only mechanical amendment used
+(Amendment 1: post-seal G3 OOM — candidate evaluation serialized each
+RunResult to a serde_json::Value DOM, ~4 GB at this problem size; repaired
+by reading edges from typed `StepOut`/`ResponseUncertainty`, identical
+values). Independent checker re-derived ranking and feasibility from raw
+ledger rows, verified all 24 candidate spec hashes, and rejected all three
+planted mutations.
+
+Conditions: (a) batch tool only — ~8–15 min per band-propagated evaluation
+makes interactive optimization meaningless until the persistent-worker
+path lands (parked item 10 becomes a prerequisite for any interactive
+optimizer surface); (b) the optimizer reports the best ledgered candidate
+under the seeded bounded search — it does not claim global optimality;
+(c) band-edge constraints inherit the P43/P44 qualifications — bands are
+first-order normal (plus conservative floor bound) on the covariance
+subset, not full-quantile guarantees.
+
+**Status: closed — verdict `P49-CONDITIONAL` recorded in `results/verdict_p49.json`.** The text below is the
+pre-execution proposal, retained for provenance. This phase delivered ACTINV's first capability that no
+competitor ships: optimization, not just evaluation. It changed no frozen protocol, prior verdict, evidence
+record or release authorization. P33/P34 remain blocked on external
+dependencies; the standing rules and the P26–P35 evidence rules applied in full.
 
 Competitive landscape check (2026-09-24): FISPACT-II ships MC sensitivity and pathways but no optimizer;
 SCALE/ORSEN is a prototype adjoint-DPT module, not a product; ACTYS-1-GO (2019) did composition optimization

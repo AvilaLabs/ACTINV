@@ -109,13 +109,34 @@ def main() -> int:
         return fail("band-edge constraint on bandless spec not ledgered "
                     "constraint_not_computable")
 
-    # (d) artifact freeze
-    drift = {n: r["sha256"] for n, r in p49a.verify().items()
-             if not r["present"]}
-    checks["artifact_freeze"] = not drift
+    # (d) artifact freeze — compare against the G0 seal; the only lawful
+    # drift is the Amendment-1 optimize.rs (mechanical memory repair)
+    seal = json.loads((ROOT / "results/g0_p49_seals.json").read_text())
+    sealed = {n: r["sha256"] for n, r in seal["artifacts"].items()}
+    current = p49a.verify()
+    # Amendment 1 (committed 5b3cb46): optimize.rs memory repair + the
+    # protocol's own append-only amendment section
+    AMENDED = {"optimize_module", "protocol"}
+    unexpected = {}
+    amended = {}
+    for n, sha in sealed.items():
+        cur = current.get(n, {}).get("sha256")
+        if cur is None:
+            unexpected[n] = "missing"
+        elif cur != sha:
+            (amended if n in AMENDED else unexpected)[n] = cur
+    checks["artifact_freeze"] = not unexpected
+    checks["declared_amendment_only"] = (
+        set(amended) <= AMENDED and not unexpected)
+    amended_report = {n: {"sealed": sealed[n][:16],
+                          "current": amended[n][:16]}
+                      for n in amended}
 
-    print(json.dumps({"gate": "G2", "pass": all(checks.values()),
-                      "checks": checks}))
+    record = {"gate": "G2", "pass": all(checks.values()), "checks": checks,
+              "amended_artifacts": amended_report}
+    (ROOT / "results/p49_g2.json").write_text(
+        json.dumps(record, indent=2, sort_keys=True) + "\n")
+    print(json.dumps(record))
     return 0 if all(checks.values()) else 1
 
 
