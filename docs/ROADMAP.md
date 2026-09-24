@@ -1036,6 +1036,24 @@ and cancellable; a displayed result is always bound to the parameters that produ
 cancellation races and stale results is required by the local safety rules on process/worker launching. Latency
 is a measured claim on the flagship workload, not an aspiration.
 
+**P48 execution entry (2026-09-24).** Verdict `P48-CONDITIONAL`. The desktop gains a parameter sweep panel
+(`crates/actinv-gui/src/sweep.rs` + `sweep_panel` in `app.rs`): three declared axes — composition fraction
+(wt%, rest renormalized), flux normalization (× `spectrum.total`), cooling-step duration (s) — each point a
+complete generated spec solved through `worker::spawn`, the identical isolated-worker protocol as a manual
+Run. Bounded: `MAX_SWEEP_POINTS=32`, one sweep at a time, supersession cancels the running sweep and a new
+generation makes its late results inadmissible; every rendered point carries its spec sha256. G1 measured the
+identity claim on the sealed release binary — all 3 sweep points' worker results byte-equal the direct solver
+on identical specs. G2: 5/5 controls — supersession staleness rejected, mid-sweep cancellation clean, artifact
+freeze intact, 6/6 sweep unit regressions, stale-generation plant inadmissible. **G3 measured latency: median
+4579 ms per interactive point** (n=3: 4866/4492/4579 ms) on the flagship FNS Fe 5-minute workload, release
+binary, cgroup-bounded — the honest per-point number includes process spawn + library load + CRAM solve, no
+amortization claimed. G4: 10/10 independent checks, 3 planted mutations rejected. Conditions named verbatim:
+verification ran through the shipped binary's headless smoke mode (identical machinery, no on-screen
+click-through); the library/evaluation-selection axis is declared-but-unshipped; debug builds are slower and
+were not claimed. Evidence: `results/{g0_p48_seals,g1_p48_identity,g2_p48_controls,g3_p48_latency,
+verdict_p48,check_g4_p48}.json`; protocol `protocols/ACTINV-P48_PROTOCOL.md` (sha `852f14fe…`); opening commit
+`bb34acb`.
+
 ### Evidence and completion rules for this extension
 
 1. The P26–P35 evidence, resource and completion rules (1–8 above) and the standing rules apply in full.

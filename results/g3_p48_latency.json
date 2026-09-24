@@ -1,0 +1,28 @@
+{
+  "claim": {
+    "axis": "flux_normalization \u00d7 [0.5, 1.0, 2.0]",
+    "basis": "each point is one full isolated worker solve (process spawn + library load + CRAM solve + JSON emission) \u2014 the identical qualified path; no amortization across points is claimed",
+    "binary": "target/release/actinv-gui (release build)",
+    "cgroup": "MemoryMax=6G MemorySwapMax=0 TasksMax=128 CPUQuota=200%",
+    "hardware": {
+      "cpu_model": "unknown",
+      "machine": "x86_64",
+      "release": "7.0.0-31-generic",
+      "system": "Linux"
+    },
+    "measured": {
+      "max_ms": 4866,
+      "median_ms": 4579,
+      "min_ms": 4492,
+      "n": 3,
+      "per_point_ms": [
+        4866,
+        4492,
+        4579
+      ]
+    },
+    "workload": "examples/fns_fe_5min.json \u2014 FNS Fe 5-minute irradiation, tendl-2025-patched 709g"
+  },
+  "pass": true,
+  "schema": "actinv-p48-g3-1"
+}

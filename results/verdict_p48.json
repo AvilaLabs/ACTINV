@@ -1,0 +1,29 @@
+{
+  "conditions": [
+    "verification path: headless \u2014 the desktop binary's opt-in sweep smoke mode exercises the identical sweep machinery (sweep_specs -> worker::spawn per point); no on-screen interactive session was recorded, so the claim is qualified to the machinery, not the rendered panel",
+    "library/evaluation-selection axis declared in the roadmap is not shipped \u2014 named as unimplemented, not hidden",
+    "per-interaction bound: MAX_SWEEP_POINTS=32; a single sweep at a time; supersession cancels the running sweep",
+    "latency basis: per-point time includes process spawn and library load per point \u2014 no amortization claimed; debug builds are slower and were not used for the claim"
+  ],
+  "gates": {
+    "g0": true,
+    "g1": true,
+    "g2": true,
+    "g3": true
+  },
+  "latency_claim_ms": {
+    "max_ms": 4866,
+    "median_ms": 4579,
+    "min_ms": 4492,
+    "n": 3,
+    "per_point_ms": [
+      4866,
+      4492,
+      4579
+    ]
+  },
+  "opening_commit": "bb34acb6e694fddd504c8016cfab32e7c32626fe",
+  "protocol_sha256": "852f14fe06772440e026983aafd3b4f684edcf01c7b4cc935210ac7a115d1dfc",
+  "schema": "actinv-p48-verdict-1",
+  "verdict": "P48-CONDITIONAL"
+}

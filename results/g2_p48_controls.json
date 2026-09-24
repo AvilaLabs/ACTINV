@@ -1,0 +1,44 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "smoke_field": "supersession_stale_rejected"
+      },
+      "name": "supersession_stale_rejected",
+      "pass": true
+    },
+    {
+      "detail": {
+        "smoke_field": "mid_sweep_cancel_clean"
+      },
+      "name": "mid_sweep_cancel_clean",
+      "pass": true
+    },
+    {
+      "detail": {
+        "drifted": []
+      },
+      "name": "artifact_freeze_intact",
+      "pass": true
+    },
+    {
+      "detail": {
+        "tail": "5-i5396758.scope; invocation ID: c2dec57506624c92b5856460ab6be076\n   Compiling actinv-gui v0.1.0-preview.1 (/home/connoravila/Documents/actinv/crates/actinv-gui)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 6.42s\n     Running unittests src/lib.rs (target/debug/deps/actinv_web-3bfc04bcee84cef3)\n     Running unittests src/main.rs (target/debug/deps/actinv_gui-ff7eb821e648b8bd)\n"
+      },
+      "name": "sweep_unit_regressions",
+      "pass": true
+    },
+    {
+      "detail": {
+        "admission_sites": [
+          "self.sweep.points.push(p);"
+        ],
+        "evidence": "single admission site gated by admissible(); smoke exercised a generation-1 point rejected under generation 2"
+      },
+      "name": "stale_generation_plant_inadmissible",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "schema": "actinv-p48-g2-1"
+}

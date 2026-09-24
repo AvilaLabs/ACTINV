@@ -163,3 +163,14 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
    Remediation waits on corrected upstream TENDL; a further repair phase would need its own protocol.
 8. **AI-assisted setup and bounded investigations** — provider-credential setup, validated study drafts,
    AI-initiated runs through Core contracts. Routed to P33–P34 under the no-hosting constraint.
+
+## P48 parked items (2026-09-24)
+
+9. **Library/evaluation-selection sweep axis** — declared in the P48 scope but not shipped; swapping the
+   library path/hash per point is a discrete-selection axis that needs a UI for choosing among the P46
+   qualified corpora plus per-corpus sha resolution. Deferred; the three numeric axes shipped carry the
+   measured interactive-latency claim.
+10. **Amortized interactive latency** — P48's measured 4.6 s/point includes a fresh isolated worker
+    (spawn + library load) per point. A persistent-worker design could amortize library load across
+    points; deferred until the claim "interactive" needs to be faster, and any such design must keep
+    the identical solver path and per-point spec binding.

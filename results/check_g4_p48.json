@@ -1,0 +1,87 @@
+{
+  "checks": [
+    {
+      "detail": {
+        "drifted": []
+      },
+      "name": "artifacts_byte_identical",
+      "pass": true
+    },
+    {
+      "detail": {
+        "shas": [
+          "7bbf03c61929a96d8be2fe53ee16f4c1ad834947f461cf2048bf49f46506e439",
+          "1bf0a8be8834560dbaaf7d7ccf2db8aec0ad6f645466a405db83b438f5df23e0",
+          "75c91f99a839f15608fa16f389183d0be6890ceaf4aaaf5989bc52b2ac627b69"
+        ]
+      },
+      "name": "point_digests_wellformed",
+      "pass": true
+    },
+    {
+      "detail": {
+        "totals": [
+          5580000000.0,
+          11160000000.0,
+          22320000000.0
+        ]
+      },
+      "name": "independent_axis_derivation",
+      "pass": true
+    },
+    {
+      "detail": {
+        "identity_all_worker_eq_direct": true,
+        "mid_sweep_cancel_clean": true,
+        "supersession_stale_rejected": true
+      },
+      "name": "smoke_assertions_true",
+      "pass": true
+    },
+    {
+      "detail": {
+        "tail": "396789.scope; invocation ID: ca7ad4f574334eef99bab7ecedbb5c8f\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s\n     Running unittests src/lib.rs (target/debug/deps/actinv_web-3bfc04bcee84cef3)\n     Running unittests src/main.rs (target/debug/deps/actinv_gui-ff7eb821e648b8bd)\n"
+      },
+      "name": "unit_regressions_rerun",
+      "pass": true
+    },
+    {
+      "detail": {},
+      "name": "mutation_tampered_report_detected",
+      "pass": true
+    },
+    {
+      "detail": {
+        "admission_sites": 1
+      },
+      "name": "mutation_stale_generation_rejected",
+      "pass": true
+    },
+    {
+      "detail": {},
+      "name": "mutation_artifact_drift_detected",
+      "pass": true
+    },
+    {
+      "detail": {
+        "expected": "P48-CONDITIONAL",
+        "verdict": "P48-CONDITIONAL"
+      },
+      "name": "verdict_consistent",
+      "pass": true
+    },
+    {
+      "detail": {
+        "lat": [
+          4866,
+          4492,
+          4579
+        ]
+      },
+      "name": "latency_claim_grounded",
+      "pass": true
+    }
+  ],
+  "pass": true,
+  "schema": "actinv-p48-check-1"
+}
