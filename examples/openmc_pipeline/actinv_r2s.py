@@ -30,7 +30,7 @@ from pathlib import Path
 
 class ActinvR2S:
     def __init__(self, *, material, mass_g=1.0, basis="wt_percent",
-                 library="catalog:tendl-2025-patched-neutron-709g",
+                 library="catalog:tendl-2025-neutron-709g",
                  decay_primary="catalog:endfb-viii-0-decay",
                  decay_fallback="catalog:jeff-3-3-decay",
                  actinv="actinv", workdir=".", temperature_K=293.6):

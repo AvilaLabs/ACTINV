@@ -34,7 +34,7 @@ python r2s_demo.py  # same flow through the Python bridge (see below)
 ```
 
 Useful overrides: `ACTINV`, `PYTHON`, `ACTINV_LIBRARY` (path to the activation
-.npz — defaults to the fetched `tendl-2025-patched-neutron` bundle),
+.npz — defaults to the fetched `tendl-2025-neutron` bundle),
 `ACTINV_DATA_DIR`, `SOURCE_RATE` (default 1e15 n/s), `TALLY_ID`.
 
 ## What it does

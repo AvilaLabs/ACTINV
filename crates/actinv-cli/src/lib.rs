@@ -1249,7 +1249,7 @@ mod tests {
     #[test]
     fn embedded_catalog_is_strict_and_matches_release_evidence() {
         let catalog = embedded_catalog().unwrap();
-        assert_eq!(catalog.default_bundle, "tendl-2025-patched-neutron");
+        assert_eq!(catalog.default_bundle, "tendl-2025-neutron");
         assert_eq!(catalog.bundles.len(), 7);
         assert_eq!(
             catalog.artifact("tendl-2025-neutron-709g").unwrap().sha256,

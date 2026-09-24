@@ -3,8 +3,8 @@
  "title": "Mesh demonstration: two-cell Fe activation",
  "projectile": "neutron",
  "library": {
-  "path": "catalog:tendl-2025-patched-neutron-709g",
-  "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+  "path": "catalog:tendl-2025-neutron-709g",
+  "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
  },
  "decay": {
   "primary": "catalog:endfb-viii-0-decay",

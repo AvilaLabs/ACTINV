@@ -12,7 +12,7 @@ cd "$(dirname "$0")"
 
 ACTINV=${ACTINV:-actinv}
 PYTHON=${PYTHON:-python3}
-LIB=${ACTINV_LIBRARY:-../../actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz}
+LIB=${ACTINV_LIBRARY:-../../actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz}
 SRC_RATE=${SOURCE_RATE:-1e15}
 TALLY=${TALLY_ID:-42}
 
@@ -30,7 +30,7 @@ cat > mesh.json <<EOF
   "spec": "actinv-mesh-spec-1",
   "title": "OpenMC 14 MeV point source, 1 cm Fe cube",
   "projectile": "neutron",
-  "library": {"path": "catalog:tendl-2025-patched-neutron-709g"},
+  "library": {"path": "catalog:tendl-2025-neutron-709g"},
   "decay": {"primary": "catalog:endfb-viii-0-decay", "fallback": "catalog:jeff-3-3-decay"},
   "material": {"mass_g": 1.0, "basis": "wt_percent", "composition": {"FE": 100.0}},
   "flux": {"path": "flux.ndjson", "sha256": "$SHA"},

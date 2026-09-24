@@ -16,7 +16,7 @@
   "composition_wt_percent": {"FE": 100.0},
   "irradiation_seconds": 300,
   "total_flux_n_cm2_s": 1.116e10,
-  "data_bundle": "tendl-2025-patched-neutron",
+  "data_bundle": "tendl-2025-neutron",
   "catalog_version": "1.1.0",
   "note": "Already-seen experimental case; new application packaging, not a blind validation trial."
 }

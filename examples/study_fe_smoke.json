@@ -2,7 +2,7 @@
   "study": "actinv-study-1",
   "study_id": "fns-fe-smoke",
   "title": "Smallest executable study: pure Fe over the FNS spectrum, two schedules",
-  "library": {"path": "catalog:tendl-2025-patched-neutron-709g"},
+  "library": {"path": "catalog:tendl-2025-neutron-709g"},
   "decay": {"primary": "catalog:endfb-viii-0-decay", "fallback": "catalog:jeff-3-3-decay"},
   "cases": {
     "materials": [

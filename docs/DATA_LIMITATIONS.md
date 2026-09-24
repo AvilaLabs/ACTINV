@@ -9,15 +9,28 @@ about the ACTINV engine.
 ## What ships
 
 `actinv data fetch` installs the `data-v1.1.0` release. The default
-bundle is `tendl-2025-patched-neutron`:
-`actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz`
+bundle is `tendl-2025-neutron`:
+`actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz`
 plus its index, with proton-162g, deuteron-162g and alpha-162g
 alternatives carried unchanged from `data-v1.0.0`. Every artifact
-index carries per-target source SHA-256 digests. The patched neutron
-artifact derives from the **`tendl-2025-patched` corpus** described
-below — a TENDL-2025 derivative, not an official TENDL release. The
-unpatched v1.0.0 artifacts remain fetchable for byte-compatible
-reproduction of earlier work.
+index carries per-target source SHA-256 digests.
+
+The default was flipped from `tendl-2025-patched-neutron` after the
+P46 sealed corpus comparison measured the patched subset as the
+*worst* of five corpora on the 132-experiment FNS benchmark
+(pooled mean |ln C/E| 2.07 vs 0.267–0.293 for the others): the
+patch build fails closed on 1,172 source files whose residual
+defect classes are ledgered but not the confirmed signature, so
+targets like Ag-107/109, Au-197, Nb-93, Ta-181 and Ir-191/193 are
+absent entirely and produce zero predictions. The unpatched corpus
+covers all 2,850 targets but carries both the ledgered residual
+defect classes and the confirmed thermal (n,p) leak described below
+in 28 source files — the leak is a thermal-energy artifact and is
+not material on the 14-MeV FNS corpus, but users working thermal or
+mixed-spectrum problems should prefer the patched bundle. The P46
+evidence shows the coverage loss dominated the defect penalty on the
+measured corpus. The patched bundle remains installed and is the
+required pairing for the shipped covariance workflow.
 
 ## The confirmed upstream defect
 

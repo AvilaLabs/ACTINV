@@ -1,7 +1,7 @@
 {
   "schema": "actinv-data-catalog-1",
   "catalog_version": "1.1.0",
-  "default_bundle": "tendl-2025-patched-neutron",
+  "default_bundle": "tendl-2025-neutron",
   "release_url": "https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0",
   "notice": "ACTINV-DATA-NOTICE-v1.1.0.md",
   "artifacts": [

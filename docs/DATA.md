@@ -30,13 +30,14 @@ actinv data list
 actinv data manifest
 ```
 
-The default is `tendl-2025-patched-neutron`, the P25c-qualified Avila Labs remediation derivative of the
-TENDL-2025 neutron sublibrary (44 leaked leading ordinates zeroed across 28 confirmed-signature files; not an
-official TENDL release — see `DATA_LIMITATIONS.md`). The superseded unpatched `tendl-2025-neutron` and
-`tendl-2025-neutron-covariance` bundles remain available for byte-compatible reproduction of earlier work.
-Optional bundles are `tendl-2025-patched-neutron-covariance`, `tendl-2025-proton`, `tendl-2025-deuteron`, and
-`tendl-2025-alpha`; pass one after `fetch` or `verify`. Shared decay files are reused when multiple bundles use
-the same output directory.
+The default is `tendl-2025-neutron`, the full 2,850-target TENDL-2025 neutron sublibrary — flipped from the
+`tendl-2025-patched-neutron` subset after the P46 corpus comparison measured the subset as worst on the FNS
+benchmark (coverage loss on 1,172 fail-closed targets outweighed its confirmed-signature repair; see
+`DATA_LIMITATIONS.md`). `tendl-2025-patched-neutron` remains the required pairing for covariance work and is
+preferred for thermal/mixed-spectrum problems where its zeroed (n,p) leak matters. Other bundles:
+`tendl-2025-patched-neutron`, `tendl-2025-neutron-covariance`, `tendl-2025-patched-neutron-covariance`,
+`tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after `fetch` or `verify`.
+Shared decay files are reused when multiple bundles use the same output directory.
 
 Installed artifacts can be referenced symbolically from problem files: `"path": "catalog:<artifact-id>"` (and the
 decay `primary`/`fallback` strings) resolve against the embedded catalog under `<data-root>/v<catalog-version>/`.

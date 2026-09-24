@@ -174,3 +174,10 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
     (spawn + library load) per point. A persistent-worker design could amortize library load across
     points; deferred until the claim "interactive" needs to be faster, and any such design must keep
     the identical solver path and per-point spec binding.
+11. **Full-coverage patched corpus rebuild** — the `tendl-2025-patched` NPZ carries only the 1,678 targets that
+    survived the fail-closed conservation check; 1,172 files (incl. natural Ag/Au/Nb/Ta/Ir isotopes) are evicted
+    with ledgered residual defect classes. A rebuild that emits those targets with the residual defects
+    documented-but-present (rather than fail-closed) would give a corpus with both the confirmed-signature repair
+    *and* full coverage — the "best of both" default. Deferred: it changes what the solver emits for defective
+    evaluations, a data-policy decision that needs its own protocol. Default flipped to full `tendl-2025` in the
+    meantime (P46 evidence).

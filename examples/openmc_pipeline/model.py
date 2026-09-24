@@ -8,7 +8,7 @@ bins are the activation library's own 709-group boundaries, read straight from
 the ACTINV data bundle so the two tools can never disagree on group structure.
 
 Usage:
-    python model.py --library actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz
+    python model.py --library actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz
 
 Writes `statepoint.<N>.h5` in the current directory. Requires openmc >= 0.14
 and an HDF5 cross-section library (set OPENMC_CROSS_SECTIONS, e.g. to an

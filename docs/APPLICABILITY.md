@@ -1,9 +1,12 @@
 # ACTINV applicability map (P28)
 
 Regime axes and element coverage qualified by P28 against the
-shipped `tendl-2025-patched` artifact. `qualified_with_ledger`
-means the element's source files carry P25c residual defect
-classes (recorded, not cleared). `gap` names missing coverage.
+`tendl-2025-patched` artifact (the shipped default at the time;
+the default is now the full `tendl-2025` corpus — see
+`DATA_LIMITATIONS.md` for the flip and the trade-off).
+`qualified_with_ledger` means the element's source files carry
+P25c residual defect classes (recorded, not cleared). `gap` names
+missing coverage.
 
 ## projectile
 
