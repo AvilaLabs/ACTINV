@@ -1,0 +1,118 @@
+{
+ "schema": "actinv-p46-seal-1",
+ "sealed_at_utc": "2026-09-24T07:55:01Z",
+ "opening_commit": "d869fae17434a19a8d7f2fcda2e8b4cb91e805fe",
+ "protocol_sha256": "0e61e3b76971109cad26137a039e9cc07258377e4917314d5f7f63f5a000d50b",
+ "corpora": {
+  "tendl-2025": {
+   "name": "tendl-2025",
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "provenance": "legacy_builder",
+   "expressibility": [
+    "full_evaluation"
+   ]
+  },
+  "tendl-2025-patched": {
+   "name": "tendl-2025-patched",
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz",
+   "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d",
+   "provenance": "current_builder",
+   "expressibility": [
+    "covariance_subset"
+   ]
+  },
+  "tendl-2017": {
+   "name": "tendl-2017",
+   "path": "/home/connoravila/nuclear-data/tendl-2017/build/neutron.n.p10.npz",
+   "sha256": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d",
+   "provenance": "current_builder",
+   "expressibility": [
+    "legacy_evaluation"
+   ]
+  },
+  "eaf-2010": {
+   "name": "eaf-2010",
+   "path": "/home/connoravila/nuclear-data/eaf-2010/actinv_eaf2010_709g.npz",
+   "sha256": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7",
+   "provenance": "legacy_builder",
+   "expressibility": [
+    "no_state_catalog"
+   ]
+  },
+  "fendl-3.2c": {
+   "name": "fendl-3.2c",
+   "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709.npz",
+   "sha256": "18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0",
+   "provenance": "converted_subset",
+   "expressibility": [
+    "converted_subset"
+   ]
+  }
+ },
+ "corpus_indexes": {
+  "tendl-2025": {
+   "path": "/home/connoravila/nuclear-data/tendl-2025/builds/full/neutron.n.p10_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  },
+  "tendl-2025-patched": {
+   "path": "/home/connoravila/nuclear-data/tendl-2025-patched/build/neutron.n.p10_index.json",
+   "sha256": "3344b1d0d0d321ee1fcbc29c1ab23f880a73738c74da077d4cd2dce252c9f7ee"
+  },
+  "tendl-2017": {
+   "path": "/home/connoravila/nuclear-data/tendl-2017/build/neutron.n.p10_index.json",
+   "sha256": "1f1124ab299c95aa0e0fb7caac52c47cb63ca56df688a7bdd9ab2dfecbc62a06"
+  },
+  "eaf-2010": {
+   "path": "/home/connoravila/nuclear-data/eaf-2010/actinv_eaf2010_709g_index.json",
+   "sha256": "ed36363a726cbe991435f72d2aeb8a794a40b7dc79081ba86c511e14dd9ac4b7"
+  },
+  "fendl-3.2c": {
+   "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709_index.json",
+   "sha256": "a1983f9719aeef1242706385a4ad90e83fc71554f6f7787b14500c9b05738cad"
+  }
+ },
+ "fns_manifest_sha256": "d0900ab463309c2c5e486677133a84525e0b70220ef8273e44b46c320c9e40ab",
+ "fns_files": 396,
+ "decay": {
+  "primary": "/home/connoravila/nuclear-data/endfb-viii.0-decay/bulk/endf-b-viii-0_decay.dat",
+  "primary_sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+  "fallback": "/home/connoravila/nuclear-data/jeff-3.3-decay/bulk/jeff-3-3_decay.dat",
+  "fallback_sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+ },
+ "code_sha256": {
+  "driver": "3f4d752af92e4d38600461d3086cb3778c3cc6959bd7d70ce3600d9d8c44f7af",
+  "scorer": "5bd7a8cd707d1a175cf4c24b437698dd2a39408b394ab6e37a8c1894f21a1e56",
+  "report": "e08390cbb00052c4e2561feefb2d515efccc4063267b4b2564cd5150378a2eff",
+  "p44_bands": "827eb4644bbae673cd6b35f2246faa44daaf5bb2317f8160549eb8cff8a41d49",
+  "p44_band_coverage": "0c4a18169aa8ce1acb68126a66b6f44d914794d42d8a29f3e42966629240582b",
+  "corpus_reader": "e89cfbe50273fef78a822e3faec3eb492a49fe5a1bbaf350f935e470d5f4e2dc"
+ },
+ "binary_sha256": "45b5b587a765f6cb14294ce25842cbf2b0692821cfe40c492c7b9b43c008620b",
+ "constants": {
+  "within20": [
+   0.8,
+   1.25
+  ],
+  "within2x": [
+   0.5,
+   2.0
+  ],
+  "min_points_for_rec": 3,
+  "min_corpora_for_rec": 2,
+  "tie_tol": 1e-06,
+  "development_subset": [
+   "Al/2000exp_5min",
+   "Cu/2000exp_5min",
+   "Fe/1996exp_5min",
+   "Fe/1996exp_7hour",
+   "Fe/2000exp_5min",
+   "Ni/2000exp_5min",
+   "SS316/2000exp_5min",
+   "Ti/2000exp_5min",
+   "V/2000exp_5min",
+   "W/2000exp_5min"
+  ],
+  "irdff_arm": "unmeasured"
+ }
+}
