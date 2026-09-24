@@ -144,7 +144,22 @@ def main():
         "partition": {"campaign": "p43-campaign",
                       "mechanics": "p43-mech",
                       "fixtures": "p43-fixtures"},
-        "amendments": [],
+        "amendments": [
+            "fixture schema corrections: schedule is a bare Vec<Step>, "
+            "outputs lives under options.outputs (frozen documents were "
+            "invalid as first frozen; corrected before any gate "
+            "evidence existed)",
+            "yield_trace_scaled enumerates the effective pair set — the "
+            "union of the two tables bracketing the spectrum-average "
+            "energy (500 keV, 14 MeV), 1263 pairs — not the full-file "
+            "union",
+            "decay_perturbation_trace expectation corrected to the "
+            "substrate model: N_daughter = N0·fλt and A = fλN0, not "
+            "N0·exp(-fλt) — the declared composition is not a depleted "
+            "chain state",
+            "covariance sidecar built over the full index (1679 "
+            "targets); build-covariance supports no subset selection",
+        ],
     }
     json.dump(seals, open(OUT, "w"), indent=2, sort_keys=True)
     print(f"sealed P43 at {head} -> {OUT}")

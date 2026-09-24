@@ -1,5 +1,10 @@
 {
-  "amendments": [],
+  "amendments": [
+    "fixture schema corrections: schedule is a bare Vec<Step>, outputs lives under options.outputs (frozen documents were invalid as first frozen; corrected before any gate evidence existed)",
+    "yield_trace_scaled enumerates the effective pair set \u2014 the union of the two tables bracketing the spectrum-average energy (500 keV, 14 MeV), 1263 pairs \u2014 not the full-file union",
+    "decay_perturbation_trace expectation corrected to the substrate model: N_daughter = N0\u00b7f\u03bbt and A = f\u03bbN0, not N0\u00b7exp(-f\u03bbt) \u2014 the declared composition is not a depleted chain state",
+    "covariance sidecar built over the full index (1679 targets); build-covariance supports no subset selection"
+  ],
   "frozen_documents": {
     "campaign_study": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43-campaign.json",
@@ -7,11 +12,11 @@
     },
     "decay_trace_nominal": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_decay_trace_nominal.json",
-      "sha256": "d19e9205121af1394dd3c2dd28fd0efd6e06145ab1458c01bf1a0c01466d6e8c"
+      "sha256": "9a3a043e3c94da4c70d3de6fa652b4d58a3bda954723247043b18b12c7789784"
     },
     "decay_trace_scaled": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_decay_trace_scaled.json",
-      "sha256": "333aeebf8112b9fa2f7f5f83154b1e9f1cabf6b0d58cca2b41ad6e4f697bc470"
+      "sha256": "2199eb4c407b5aabfb654734eeeb82b0d310e0209517fc10974aec2cafc5fdd8"
     },
     "mechanics_study": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43-mech.json",
@@ -19,11 +24,11 @@
     },
     "yield_trace_nominal": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_yield_trace_nominal.json",
-      "sha256": "15602b0ade771f9769cd4a777f08f35787117743fcae975dd38c2f90b056d47b"
+      "sha256": "303509f0f0b7e6ed7908e21a6d544bc69741add55ee10d151703c83d47c5bcf9"
     },
     "yield_trace_scaled": {
       "path": "/home/connoravila/nuclear-data/p43-work/p43_yield_trace_scaled.json",
-      "sha256": "b3d1768bb08dddf16fa5bd2563d89aa9c69ea9286303d2ef31b87484287d15c6"
+      "sha256": "c3ef76df26c4b6ec57e0b6e401a32df10e4f6af224e907e51841311872446b54"
     }
   },
   "identities": {
@@ -60,7 +65,7 @@
       "sha256": "a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207"
     }
   },
-  "opening_commit": "bb8ad6b3d23e374bb0e80db172330eefd6f7e1a6",
+  "opening_commit": "8e3d4f2ddd57ddb0991e0fd06deb5b1b463a5113",
   "partition": {
     "campaign": "p43-campaign",
     "fixtures": "p43-fixtures",
@@ -117,8 +122,8 @@
     "verdict_p9.json": "P9-CONDITIONAL"
   },
   "protocol": "protocols/ACTINV-P43_PROTOCOL.md",
-  "protocol_sha256": "afa5b170f7ab979982f856e26eb26a7102da1063bfeb061728308fe1b4a9812e",
-  "recorded_at_utc": "2026-09-24T02:32:04Z",
+  "protocol_sha256": "eb138111b8d4a786ff9a658b1131bb6976f26a915b641b1c37b7f85e3e38f8bb",
+  "recorded_at_utc": "2026-09-24T02:37:26Z",
   "schema": "actinv-g0-seal-1",
   "tolerances": {
     "decay_trace_rel": 1e-09,

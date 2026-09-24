@@ -98,9 +98,15 @@ surface the P26–P35 machinery implied.
 
 - `decay_perturbation_trace`: a pure-decay spec — material `{"Mn56":
   100}`, a single zero-flux step — run at `decay_scale {"Mn56": 1.5}`
-  and unperturbed. The checker recomputes `N(t) = N0·exp(-f·λ·t)` from
-  the pinned decay file's own λ and requires relative agreement
-  `<= 1e-9` at the step end, and activity `f·λ·N` consistently.
+  and unperturbed. The declared composition is the substrate model —
+  the parent is not a depleted chain state — so the daughter
+  accumulates at the constant rate `λ_eff·N0` and the parent's
+  activity is `λ_eff·N0`. The checker recomputes
+  `N_daughter(t) = N0·(f·λ)·t` and `A_parent = f·λ·N0` from the pinned
+  decay file's own λ and requires relative agreement `<= 1e-9` at the
+  step end — i.e. the trace verifies that `f` multiplies every
+  λ-dependent response, exactly the property the sampled channel
+  relies on.
 - `yield_perturbation_trace`: material `{"U235": 100}`, fission_yields
   `nfy-092_U_235.endf` (hash-pinned at G0), FNS spectrum, 300 s pulse.
   `yield_scale` applies factor 2.0 to *every* `(U235, product)` pair
