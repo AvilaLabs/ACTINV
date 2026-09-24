@@ -39,7 +39,11 @@ def recheck(rows, direction_min, constraints):
         computable = True
         for c in constraints:
             info = r["constraints"].get(f"constraint.{c['name']}")
-            edge = info.get("edge") if isinstance(info, dict) else None
+            if c.get("kind") == "axis":
+                # re-derive from the parameter vector, not the recorded edge
+                edge = r["x"][c["axis"]]
+            else:
+                edge = info.get("edge") if isinstance(info, dict) else None
             if edge is None:
                 computable = False
                 break

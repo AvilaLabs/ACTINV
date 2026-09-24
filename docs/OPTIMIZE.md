@@ -59,14 +59,26 @@ Outputs in `OUTDIR` (default `optimize_out/` next to the optspec):
   `time_s` selects the step whose cumulative `t_s` is nearest (1e-3 relative
   tolerance). `edge` ∈ `nominal | normal_lower | normal_upper |
   conservative_lower | conservative_upper`; `direction` ∈ `min|max`.
-- `constraints` — same selector/edge fields plus `sense: le|ge` and `limit`.
-  A band edge requires the base spec's `uncertainty` block; without it the
-  constraint is ledgered `constraint_not_computable` and the candidate is
-  infeasible — never silently skipped.
-- `optimizer` — `lhs_coordinate` only: seeded Latin-hypercube fill
+- `constraints` — each entry is one of two kinds:
+  - `kind: "response"` (default): `response`/`time_s`/`edge` selector fields
+    plus `sense: le|ge` and `limit`. A band edge requires the base spec's
+    `uncertainty` block; without it the constraint is ledgered
+    `constraint_not_computable` and the candidate is infeasible — never
+    silently skipped.
+  - `kind: "axis"`: `{"name","kind":"axis","axis":i,"sense","limit"}` bounds
+    design-axis `i` directly (e.g. `ge 1.0` forces Ni ≥ 1 wt%). Evaluated on
+    the parameter vector before solving — a violated axis constraint is
+    ledgered `infeasible_by_axis` with the candidate spec still written, but
+    consumes no solver run and leaves response constraints
+    `constraint_not_evaluated`.
+- `optimizer` — `lhs_coordinate`: seeded Latin-hypercube fill
   (`init_points`) then coordinate-descent refinement from the best-ranked
   point (`refine_points`, initial step `refine_step_fraction` × axis width,
-  default 0.25). Total evaluations ≤ 64.
+  default 0.25). `lhs_corners_coordinate` (post-P49 variant) spends the
+  first `min(2^d, init_points)` evaluations on the box corners in
+  binary-counting order before LHS-filling the remainder — prefer it when
+  optima may sit on bounds (e.g. zero-dopant corners). Total evaluations
+  ≤ 64.
 
 Ranking: feasible candidates first, then total positive constraint
 violation, then objective value. A candidate is feasible iff every
@@ -98,6 +110,16 @@ propagation — the demonstration campaign (~24 evals on the 13-step RA-steel
 problem) runs in hours, not seconds. Optimization is a **batch** tool until
 the persistent-worker path lands; do not wrap it in an interactive loop.
 
-A complete worked example lives in `examples/optimize_ra_steel/`
-(reduced-activation steel: minimize 100-year activity under band-edge decay
-heat and Nb-94 constraints).
+A complete worked example lives in `examples/optimize_ra_steel/`:
+
+- `opt.json` — the P49 demonstration spec (frozen): minimize 100-year
+  activity under a 95%-edge decay-heat limit at 1 year and a nominal Nb-94
+  limit at ~100 years. 24 evaluations; the winner sits at Ni=0/Mo=0/Nb=0.113
+  wt%. Note the zero-dopant corner beats it — `lhs_coordinate` never
+  sampled the corner within its budget, an honest illustration that the
+  ledger, not a claimed optimum, is the deliverable.
+- `opt_v2.json` — the realistic variant: axis constraints force Ni ≥ 1.0
+  and Mo ≥ 0.3 wt% (austenitic-stability / strength proxies) and the
+  `lhs_corners_coordinate` algorithm covers the box corners first, so the
+  constrained optimum (Ni=1.0/Mo=0.3 boundary with Nb set by the Nb-94
+  response constraint) is found instead of merely bounded.

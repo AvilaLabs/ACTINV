@@ -77,13 +77,30 @@ fn edge_nominal() -> Edge {
     Edge::Nominal
 }
 
+fn constraint_response() -> String {
+    "response".into()
+}
+
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Constraint {
     pub name: String,
-    pub response: String,
+    /// "response" (default): evaluate a solver response edge at a time.
+    /// "axis": bound a design-axis value directly — evaluated on the
+    /// parameter vector before solving; a violation is ledgered
+    /// `infeasible_by_axis` and never consumes a solver run.
+    #[serde(default = "constraint_response")]
+    pub kind: String,
+    /// Required for kind="response".
+    #[serde(default)]
+    pub response: Option<String>,
+    #[serde(default)]
     pub time_s: f64,
+    #[serde(default = "edge_nominal")]
     pub edge: Edge,
+    /// Required for kind="axis": index into `design_axes`.
+    #[serde(default)]
+    pub axis: Option<usize>,
     pub sense: String,
     pub limit: f64,
 }
@@ -186,27 +203,50 @@ pub fn run_search<F: FnMut(&[f64]) -> EvalOutcome>(
     let mut rng = Rng::new(cfg.seed);
     let mut evaluated: Vec<(Vec<f64>, EvalOutcome)> = Vec::new();
 
-    // Stage 1: Latin hypercube — per-axis strata permuted by the seeded RNG.
+    // Stage 1: optional box corners, then Latin hypercube fill of the
+    // remaining init budget (per-axis strata permuted by the seeded RNG).
     let n1 = cfg.init_points.min(MAX_EVALS);
     if n1 == 0 || d == 0 {
         return evaluated;
     }
-    let mut strata: Vec<Vec<usize>> = (0..d).map(|_| (0..n1).collect()).collect();
-    for axis_strata in strata.iter_mut() {
-        for i in (1..n1).rev() {
-            let j = (rng.next_u64() % (i as u64 + 1)) as usize;
-            axis_strata.swap(i, j);
-        }
-    }
-    for i in 0..n1 {
+    let n_corners = if cfg.algorithm == "lhs_corners_coordinate" {
+        (1usize << d).min(n1)
+    } else {
+        0
+    };
+    for i in 0..n_corners {
         let x: Vec<f64> = (0..d)
             .map(|k| {
-                let u = (strata[k][i] as f64 + rng.next_f64()) / n1 as f64;
-                bounds[k][0] + u * (bounds[k][1] - bounds[k][0])
+                if (i >> k) & 1 == 1 {
+                    bounds[k][1]
+                } else {
+                    bounds[k][0]
+                }
             })
             .collect();
         let out = evaluate(&x);
         evaluated.push((x, out));
+    }
+    let n_lhs = n1 - n_corners;
+    if n_lhs > 0 {
+        let mut strata: Vec<Vec<usize>> =
+            (0..d).map(|_| (0..n_lhs).collect()).collect();
+        for axis_strata in strata.iter_mut() {
+            for i in (1..n_lhs).rev() {
+                let j = (rng.next_u64() % (i as u64 + 1)) as usize;
+                axis_strata.swap(i, j);
+            }
+        }
+        for i in 0..n_lhs {
+            let x: Vec<f64> = (0..d)
+                .map(|k| {
+                    let u = (strata[k][i] as f64 + rng.next_f64()) / n_lhs as f64;
+                    bounds[k][0] + u * (bounds[k][1] - bounds[k][0])
+                })
+                .collect();
+            let out = evaluate(&x);
+            evaluated.push((x, out));
+        }
     }
 
     // Stage 2: coordinate descent from the best-ranked point.
@@ -399,7 +439,10 @@ impl OptimizeSpec {
                 return Err(format!("axis {i} bounds must satisfy lo < hi"));
             }
         }
-        if self.optimizer.algorithm != "lhs_coordinate" {
+        if !matches!(
+            self.optimizer.algorithm.as_str(),
+            "lhs_coordinate" | "lhs_corners_coordinate"
+        ) {
             return Err(format!(
                 "unknown optimizer algorithm '{}'",
                 self.optimizer.algorithm
@@ -427,15 +470,49 @@ impl OptimizeSpec {
                     c.name
                 ));
             }
-            if c.response == "activity:*" {
-                return Err(format!(
-                    "constraint '{}': activity:* cannot be constrained",
-                    c.name
-                ));
+            match c.kind.as_str() {
+                "axis" => {
+                    let ok = c
+                        .axis
+                        .map(|i| i < self.design_axes.len())
+                        .unwrap_or(false);
+                    if !ok {
+                        return Err(format!(
+                            "constraint '{}': axis index required and must be < design_axes.len()",
+                            c.name
+                        ));
+                    }
+                }
+                "response" => {
+                    if c.response.as_deref() == Some("activity:*") {
+                        return Err(format!(
+                            "constraint '{}': activity:* cannot be constrained",
+                            c.name
+                        ));
+                    }
+                    if c.response.is_none() {
+                        return Err(format!(
+                            "constraint '{}': response required",
+                            c.name
+                        ));
+                    }
+                    if !c.time_s.is_finite() {
+                        return Err(format!(
+                            "constraint '{}': time_s must be finite",
+                            c.name
+                        ));
+                    }
+                }
+                other => {
+                    return Err(format!(
+                        "constraint '{}': unknown kind '{other}'",
+                        c.name
+                    ))
+                }
             }
-            if !c.limit.is_finite() || !c.time_s.is_finite() {
+            if !c.limit.is_finite() {
                 return Err(format!(
-                    "constraint '{}' limit/time must be finite",
+                    "constraint '{}': limit must be finite",
                     c.name
                 ));
             }
@@ -543,6 +620,63 @@ fn evaluate_candidate(
         }
     };
     let canon = serde_json::to_string(&doc).unwrap_or_default();
+
+    // Axis constraints evaluate on the parameter vector — a violated one is
+    // ledgered infeasible and never consumes a solver run.
+    let axis_violations: Vec<Option<f64>> = opt
+        .constraints
+        .iter()
+        .map(|c| {
+            if c.kind != "axis" {
+                return None;
+            }
+            let i = c.axis.unwrap();
+            let v = x[i];
+            let viol = if c.sense == "le" {
+                (v - c.limit) / c.limit.abs().max(TINY)
+            } else {
+                (c.limit - v) / c.limit.abs().max(TINY)
+            };
+            detail.insert(
+                format!("constraint.{}", c.name),
+                serde_json::json!({"axis": i, "value": v, "limit": c.limit,
+                                   "violation": viol}),
+            );
+            Some(viol)
+        })
+        .collect();
+    if let Some(failed) = opt
+        .constraints
+        .iter()
+        .zip(&axis_violations)
+        .find(|(_, v)| v.map(|v| v > 0.0).unwrap_or(false))
+    {
+        // response constraints stay not-computable: no solve was run
+        let violations: Vec<Option<f64>> = opt
+            .constraints
+            .iter()
+            .zip(&axis_violations)
+            .map(|(c, av)| if c.kind == "axis" { *av } else { None })
+            .collect();
+        for c in &opt.constraints {
+            if c.kind == "response" {
+                detail.insert(
+                    format!("constraint.{}", c.name),
+                    Value::from("constraint_not_evaluated: axis constraint violated"),
+                );
+            }
+        }
+        return (
+            EvalOutcome {
+                objective: None,
+                violations,
+                status: format!("infeasible_by_axis: {}", failed.0.name),
+            },
+            Some(canon),
+            detail,
+        );
+    }
+
     let resolved = match crate::resolve_catalog_json(&canon) {
         Ok(t) => t,
         Err(e) => {
@@ -619,9 +753,13 @@ fn evaluate_candidate(
     };
 
     let mut violations = Vec::with_capacity(opt.constraints.len());
-    for c in &opt.constraints {
+    for (c, av) in opt.constraints.iter().zip(&axis_violations) {
+        if c.kind == "axis" {
+            violations.push(*av);
+            continue;
+        }
         match select_step(steps, c.time_s)
-            .and_then(|st| response_edge(st, &c.response, c.edge))
+            .and_then(|st| response_edge(st, c.response.as_deref().unwrap(), c.edge))
         {
             Ok(Some(edge)) => {
                 let viol = if c.sense == "le" {
@@ -897,7 +1035,8 @@ pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> 
             "direction": opt.objective.direction,
         },
         "constraints": opt.constraints.iter().map(|c| serde_json::json!({
-            "name": c.name, "response": c.response, "time_s": c.time_s,
+            "name": c.name, "kind": c.kind, "response": c.response,
+            "time_s": c.time_s, "axis": c.axis,
             "edge": format!("{:?}", c.edge).to_lowercase(),
             "sense": c.sense, "limit": c.limit,
         })).collect::<Vec<_>>(),
@@ -944,6 +1083,13 @@ mod tests {
             init_points: init,
             refine_points: refine,
             refine_step_fraction: 0.25,
+        }
+    }
+
+    fn cfg_corners(init: usize, refine: usize) -> OptimizerCfg {
+        OptimizerCfg {
+            algorithm: "lhs_corners_coordinate".into(),
+            ..cfg(init, refine)
         }
     }
 
@@ -1040,5 +1186,65 @@ mod tests {
         assert!((sum - 100.0).abs() < 1e-9, "composition sum {sum}");
         assert_eq!(c["NI"].as_f64().unwrap(), 2.0);
         assert_eq!(c["MO"].as_f64().unwrap(), 0.5);
+    }
+
+    #[test]
+    fn corner_variant_evaluates_corners_first() {
+        let b = [[0.0, 3.0], [0.0, 1.0]];
+        let res = run_search(&b, &cfg_corners(6, 0), true, |x| {
+            feasible(x[0] + x[1])
+        });
+        let pts: Vec<&Vec<f64>> = res.iter().map(|(x, _)| x).collect();
+        // first 2^d=4 evals are the corners in binary-counting order
+        assert_eq!(*pts[0], vec![0.0, 0.0]);
+        assert_eq!(*pts[1], vec![3.0, 0.0]);
+        assert_eq!(*pts[2], vec![0.0, 1.0]);
+        assert_eq!(*pts[3], vec![3.0, 1.0]);
+        assert_eq!(res.len(), 6, "corners + remaining LHS fill");
+        // planted optimum at the lower corner is found as eval 0
+        let res = run_search(&b, &cfg_corners(6, 4), true, |x| {
+            feasible((x[0] - 0.0).powi(2) + (x[1] - 0.0).powi(2))
+        });
+        let best = res
+            .iter()
+            .min_by(|a, b| a.1.objective.partial_cmp(&b.1.objective).unwrap())
+            .unwrap();
+        assert_eq!(*best.0, vec![0.0, 0.0]);
+    }
+
+    #[test]
+    fn axis_constraint_validation() {
+        let mut opt: OptimizeSpec = serde_json::from_value(serde_json::json!({
+            "schema": "actinv-optimize-1",
+            "base_spec": "b.json",
+            "design_axes": [
+                {"kind": "composition_fraction", "element": "NI",
+                 "bounds": [0.0, 3.0]}
+            ],
+            "objective": {"response": "heat.total", "time_s": 1.0,
+                          "edge": "nominal", "direction": "min"},
+            "constraints": [
+                {"name": "ni_min", "kind": "axis", "axis": 0,
+                 "sense": "ge", "limit": 1.0}
+            ],
+            "optimizer": {"algorithm": "lhs_coordinate", "seed": 1,
+                          "init_points": 4, "refine_points": 0}
+        }))
+        .unwrap();
+        assert!(opt.validate().is_ok());
+
+        // out-of-range axis index rejected
+        opt.constraints[0].axis = Some(1);
+        assert!(opt.validate().is_err());
+        opt.constraints[0].axis = Some(0);
+
+        // axis constraint missing the index rejected
+        opt.constraints[0].axis = None;
+        assert!(opt.validate().is_err());
+        opt.constraints[0].axis = Some(0);
+
+        // response constraint without response rejected
+        opt.constraints[0].kind = "response".into();
+        assert!(opt.validate().is_err());
     }
 }
