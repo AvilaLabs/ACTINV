@@ -1,0 +1,58 @@
+{
+ "spec": "actinv-p46-g3c-1",
+ "probes": [
+  {
+   "probe": "sealed_code_identity",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "probe": "corpus_integrity",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "probe": "corpus_indexes",
+   "pass": true,
+   "detail": {
+    "tendl-2025": 2850,
+    "tendl-2025-patched": 1678,
+    "tendl-2017": 1072,
+    "eaf-2010": 816,
+    "fendl-3.2c": 24
+   }
+  },
+  {
+   "probe": "evidence_refusal",
+   "pass": true
+  },
+  {
+   "probe": "no_fabricated_scores",
+   "pass": true,
+   "detail": {
+    "n_measured": 0,
+    "n_scored": 0,
+    "n_uncovered": 0,
+    "n_failed": 1,
+    "n_unpopulated": 0,
+    "n_excluded": 0,
+    "median_ce": null,
+    "mean_abs_ln_ce": null,
+    "frac_within_20": null,
+    "frac_within_2x": null
+   }
+  },
+  {
+   "probe": "element_coverage_real",
+   "pass": true,
+   "detail": {
+    "tendl-2025": 113,
+    "tendl-2025-patched": 113,
+    "tendl-2017": 87,
+    "eaf-2010": 99,
+    "fendl-3.2c": 9
+   }
+  }
+ ],
+ "all_pass": true
+}

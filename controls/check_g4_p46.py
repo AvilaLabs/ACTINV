@@ -111,17 +111,25 @@ def main() -> int:
                 recs_ok = False
     checks.append(check("recommendation_evidence", recs_ok))
 
-    # c5: recommendation optimality — verify one material's winner
-    # really minimizes mean_abs_ln_ce among its candidates
-    m = next(iter(t["recommendations"]))
-    cand = t["recommendations"][m]["candidates"]
-    best = min(v["mean_abs_ln_ce"] for v in cand.values())
-    rec_c = t["recommendations"][m]["recommended"]
-    checks.append(check(
-        "recommendation_optimal",
-        all(abs(cand[c]["mean_abs_ln_ce"] - best) <= p46s.TIE_TOL
-            for c in rec_c),
-        {"material": m, "recommended": rec_c, "best": best}))
+    # c5: recommendation optimality — re-derive the candidate set from
+    # material_tables and confirm the published winner minimizes the
+    # frozen metric among them
+    recs_ok = True
+    for m, r in t["recommendations"].items():
+        cand = {k.split("|", 1)[0]: v["mean_abs_ln_ce"]
+                for k, v in t["material_tables"].items()
+                if k.endswith(f"|{m}")
+                and v["n_scored"] >= p46s.MIN_POINTS_FOR_REC
+                and v["mean_abs_ln_ce"] is not None}
+        if len(cand) < p46s.MIN_CORPORA_FOR_REC:
+            recs_ok = False
+            continue
+        best = min(cand.values())
+        expected = sorted(c for c, v in cand.items()
+                          if abs(v - best) <= p46s.TIE_TOL)
+        if r["recommended"] != expected:
+            recs_ok = False
+    checks.append(check("recommendation_optimal", recs_ok))
 
     # ---- planted mutations (each must be caught) ----
     # m1: drop all scored points for one corpus/material -> its table

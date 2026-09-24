@@ -1,0 +1,24 @@
+{
+ "spec": "actinv-p46-g3-1",
+ "wall_s": 619.2358006589347,
+ "within_envelope": true,
+ "envelope_s": 5400,
+ "steps": {
+  "run": {
+   "rc": 0,
+   "tail": ": 600, \"last\": \"fendl-3.2c/NiCr/1996exp_5min\"}\n{\"done\": 620, \"last\": \"fendl-3.2c/SS304/1996exp_5min\"}\n{\"done\": 640, \"last\": \"fendl-3.2c/Tb/2000exp_5min\"}\n{\"done\": 660, \"last\": \"fendl-3.2c/Zr/2000exp_5min\"}\n{\"records\": 660, \"ledger\": \"/home/connoravila/Documents/actinv/results/p46_run_ledger.jsonl\"}\n"
+  },
+  "score": {
+   "rc": 0,
+   "tail": "{\"points\": 10144, \"material_cells\": 365, \"recommendations\": 73, \"per_corpus\": {\"tendl-2025\": 132, \"tendl-2025-patched\": 132, \"tendl-2017\": 132, \"eaf-2010\": 132, \"fendl-3.2c\": 132}}\n"
+  },
+  "report": {
+   "rc": 1,
+   "tail": "nts/actinv/controls/p46_report.py\", line 112, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/connoravila/Documents/actinv/controls/p46_report.py\", line 97, in main\n    f\" {r['candidates'][c]['mean_abs_ln_ce']:.3f} |\"\n        ~^^^^^^^^^^^^^^\nKeyError: 'candidates'\n"
+  }
+ },
+ "records": 660,
+ "executed": 660,
+ "failed": 0,
+ "all_steps_ok": false
+}

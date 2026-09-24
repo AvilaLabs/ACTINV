@@ -1,0 +1,66 @@
+{
+ "spec": "actinv-p46-g4-check-1",
+ "checks": [
+  {
+   "check": "experiment_coverage",
+   "pass": true,
+   "detail": {
+    "missing": {}
+   }
+  },
+  {
+   "check": "table_cell_rederivation",
+   "pass": true,
+   "detail": {
+    "cell": "tendl-2025|Na",
+    "n": 52,
+    "pub": 0.7949644907643272,
+    "red": 0.7949644907643272
+   }
+  },
+  {
+   "check": "accounting_rederivation",
+   "pass": true
+  },
+  {
+   "check": "recommendation_evidence",
+   "pass": true
+  },
+  {
+   "check": "recommendation_optimal",
+   "pass": true
+  },
+  {
+   "check": "m1_zeroed_heat_detected",
+   "pass": true,
+   "detail": {
+    "scored": 0
+   }
+  },
+  {
+   "check": "m2_deleted_corpus_detected",
+   "pass": true
+  },
+  {
+   "check": "m3_evidence_refusal",
+   "pass": true
+  },
+  {
+   "check": "m4_scaled_values_detected",
+   "pass": true,
+   "detail": {
+    "pub": 0.7949644907643272,
+    "mut": 0.007949644907643272
+   }
+  },
+  {
+   "check": "envelope",
+   "pass": true,
+   "detail": {
+    "wall_s": 619.2358006589347
+   }
+  }
+ ],
+ "all_pass": true,
+ "n_checks": 10
+}

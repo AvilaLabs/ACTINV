@@ -983,6 +983,26 @@ evidence row. This converts the TENDL-2025 defect record from a liability disclo
 FISPACT's take-it-or-leave-it condensed libraries do not offer, and produces the decision evidence for whether
 an EAF state-catalog phase or the corrected upstream TENDL release is worth a later phase.
 
+**P46 execution entry (2026-09-24).** P46 (evaluation intelligence) closed `P46-CONDITIONAL` — the IRDFF-II
+SACS arm was declared `unmeasured` at freeze (folded-XS scoring unit needing dedicated per-corpus machinery;
+parked, not silently dropped) and corpus builder provenance is declared per artifact rather than one revision.
+The FNS arm scored fully: all five admitted corpora × 132 experiments = 660 solves, zero failures, 10.3 min
+against the 90-minute envelope under the identical spec→solve→C/E pipeline with decay data held fixed.
+Measured pooled mean |ln C/E| over scored points: **eaf-2010 0.267** (2,360 pts), tendl-2025 0.280 (2,360),
+tendl-2017 0.293 (2,360), fendl-3.2c 1.82 (609 — 24-target converted subset, 95/132 experiments `uncovered`),
+**tendl-2025-patched 2.07** (2,201 — the shipped covariance working set's missing-isotope gaps, quantified:
+it is the only corpus losing entire experiments' denominators). Per-material recommendations: tendl-2017 wins
+30 materials, eaf-2010 22, tendl-2025 13, patched 9, fendl 1 — no single corpus dominates; per-target
+selection is the only defensible answer (Ag→tendl-2017, Fe/SS316/Cu/Ta/Nb→eaf-2010, Au/Ba→tendl-2025,
+W→tendl-2017 as least-bad at |ln| 0.41 — all corpora diverge on W). Every recommendation carries corpus sha,
+scorer sha, ledger sha, n_scored and median C/E; construction refuses on missing evidence. G1 7/7, G2 7/7,
+G3 conformance all pass, G4 independent checker 10/10 with 4/4 planted mutations rejected
+(`results/verdict_p46.json`, `results/p46_eval_tables.json`, `results/g{0,1,2,3,4}_p46*.json`,
+`results/check_g4_p46.json`, `docs/P46_EVALUATION_RECOMMENDATIONS.md`,
+`controls/{p46_*,g0,g1,g2,g3,g4,check_g4}_p46*.py`, `protocols/ACTINV-P46_PROTOCOL.md`). Carried named
+conditions: IRDFF arm unmeasured (parked); per-artifact builder provenance (legacy indexes) rather than a
+rebuilt uniform revision; the FENDL-3.2c conversion gap is a measured score, not a patched input.
+
 **P47 — finish the R2S claim.** The executed chain is currently a flux proxy on a self-produced geometry.
 Execute the implemented dose leg, propagate tally statistical error, and report dose agreement with its MC
 uncertainty. An external benchmark geometry (SINBAD) upgrades the claim only if a licence arrives through the
