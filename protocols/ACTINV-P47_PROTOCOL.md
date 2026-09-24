@@ -1,88 +1,130 @@
 # ACTINV-P47 protocol — dose-qualified spatial handoff
 
-**Status:** DRAFT — unopened, unhashed | **Drafted:** 2026-09-23 |
-**Parent:** roadmap draft innovation extension P47 (`docs/ROADMAP.md`,
-commit `6db406d`) | **Depends on:** P32-CONDITIONAL
-(`results/verdict_p32.json`); implemented dose leg
-(`controls/p32_dose.py`); bounded job slots per local safety rules
+**Status:** FROZEN 2026-09-24 for G0 seal | **Parent:** roadmap draft
+innovation extension P47 (`docs/ROADMAP.md`) | **Depends on:**
+P32-CONDITIONAL (`results/verdict_p32.json`) — whose dose leg
+(`results/p32_dose.json`) and tally-error propagation
+(`results/p32_tally_error.json`) executed as post-close amendments on
+2026-09-21 under the bounded cgroup. P47 qualifies those executed legs:
+frozen bands, controls, propagated-band comparison, verdict.
 
-Frozen comparison bands, job envelope and dose metrics are placeholders
-to be fixed at the freeze; this document authorizes no execution.
+This document freezes the comparison bands, job envelope, dose metrics
+and verdict dispositions. Any change after the freeze is an amendment:
+the protocol text is updated, a new sha-256 is taken, the seal
+re-binds, and the verdict records that an amendment was used.
 
 ## Intent
 
-Discharge P32's recorded conditions so the R2S chain's claim can
-upgrade from "flux proxy" to "computed dose on the executed geometry".
-Three locally-dischargeable items and one external one:
+Discharge P32's recorded conditions so the R2S chain's claim upgrades
+from "flux proxy" to "computed dose on the executed geometry":
 
-1. Execute the implemented `EnergyFunctionFilter` dose leg — the frozen
-   exported sources SHA-re-verified, then replayed through OpenMC
-   photon transport scoring E·μ_en,air directly, producing a dose rate
-   with its Monte Carlo standard deviation.
+1. The dose leg executed: the same exported distributed sources
+   (SHA-verified byte-identical at G0) replayed through OpenMC photon
+   transport scoring E·μ_en,air directly, producing a dose rate with
+   its Monte Carlo standard deviation — already executed as a P32
+   amendment; P47 verifies artifact identity and qualifies the result.
 2. Carry the neutron-tally statistical error into the activation
-   comparison band — the per-cell tally relative standard deviation
-   enters the stated flux-normalization uncertainty used in the
-   `openmc.deplete` comparison, so the comparison's agreement is
-   reported inside a propagated band rather than as bare deviation.
+   comparison band — the per-cell tally relative std-dev enters the
+   stated flux-normalization uncertainty; the comparison's agreement
+   is reported inside a propagated band rather than as bare deviation.
 3. Report the contact-proxy/transported-dose relationship for what it
    is: different models (uncollided semi-infinite slab vs transported
-   geometry). Their ratio is *reported* with its drivers named; it is
-   not forced into agreement and no dose claim is made from the proxy.
-4. External geometry: consume a benchmark geometry (SINBAD is the
-   natural source) **only if** a lawful copy arrives through the
-   principal's channels before the freeze. Otherwise the self-produced
-   condition stays named verbatim — it is not discharged by silence.
+   geometry). Their ratio is *reported* with drivers named; it is not
+   forced into agreement and no dose claim is made from the proxy.
+4. External geometry: consume a benchmark geometry (SINBAD) **only
+   if** a lawful copy arrives through the principal's channels before
+   the freeze. None arrived — the self-produced condition stays named
+   verbatim; it is not discharged by silence.
 
 MCNP distributed-source emission remains a documented placeholder;
-it cannot be verified without a licensed MCNP install and opens only
-when that route exists.
+it cannot be verified without a licensed MCNP install.
 
-## Scope
+## Frozen artifacts (re-hashed at G0, asserted byte-identical)
 
-- Frozen artifacts: the P32 exported sources, manifests and comparison
-  records, re-hashed at G0 and asserted byte-identical to the sealed
-  record before any replay.
-- Dose execution under the enforced local cgroup, one job at a time,
-  bounded waits and resumable output per the local safety rules.
-- Tally-error propagation: per-cell tally relative std-dev enters the
-  comparison band by the declared linear mechanism (flux normalization
-  is linear in the qualified trace regime); the propagation mechanism
-  and its applicability limit are named in the record.
-- Deliverable record: executed dose table per cell per cooling step
-  with MC std-dev, the propagated-band comparison, and the named
-  geometry provenance (self-produced, or the licensed external
-  geometry's identity).
+- `chain/mesh_result.ndjson` — 64-cell activation result (P32).
+- `chain/flux.ndjson` — neutron mesh tally (mean + relative_error).
+- `chain/source_step{2,3}.py` — exported distributed photon sources.
+- `dose/dose_step{2,3}/statepoint.*.h5` — photon-dose statepoints.
+- `tally_error/flux_pert{0..7}.ndjson` +
+  `mesh_result_pert{0..7}.ndjson` — propagated-band solves.
+- `chain/neutron/depletion_results.h5` — deplete comparison leg.
+- `results/p32_dose.json`, `results/p32_tally_error.json` — the
+  executed addendum records.
 
-## Out of scope
+## Frozen metrics and bands
 
-- A regulatory dose prediction, room/shutdown dose-rate claims, or
-  scattered-photon completeness beyond what the transported tally
-  measures — the executed geometry's dose is reported, not a bounding
-  safety case.
-- New physics, geometry generation, or any transport inside ACTINV.
+**Dose claim (the upgrade condition).** The dose table reports per
+cooling step: `dose_Gy_h` and `mc_rel_std`. The upgrade to "dose on
+the executed geometry" passes iff the G2 analytic control holds.
 
-## Gates (draft)
+**Analytic uncollided control (G2).** A 1 MeV monoenergetic isotropic
+point source at the origin in an all-void geometry — spherical
+detector cell r < 10 cm inside vacuum boundary r = 50 cm — tallied
+with the identical EnergyFunctionFilter (E·μ_en,air, same XCOM table
+sha). Exact uncollided cell flux:
 
-- **G0** — seal: protocol hash, opening commit, frozen P32 artifact
-  hashes re-verified, OpenMC version pinned, job envelope declared.
-- **G1** — dose execution: the dose leg runs to completion inside the
-  envelope; per-cell per-step dose + MC std-dev records complete.
-- **G2** — controls: a synthetic point/box source in void geometry
-  reproduces the analytic uncollided dose within the frozen MC
-  tolerance; tally-error propagation linearity checked on a
-  two-cell fixture (scaled sigma scales the band, not the central
-  value); a mutated frozen source fails the G0 re-hash.
-- **G3** — report: the comparison re-issued with the propagated band;
-  contact-proxy relationship reported with named drivers; geometry
-  provenance stated verbatim.
-- **G4** — independent closure: checker re-derives the dose table from
-  tally records, re-verifies artifact identities and gate ordering,
-  rejects planted mutations, emits the verdict.
+    phi_cell = S · ∫_V (1/4πr²) dV / V = S · 10 cm / V_sphere
 
-## Closure rule (draft)
+    dose_Gy_s = S · f(1 MeV) · 30 / (4π·1000)   [Gy·cm²·cm⁻³·s⁻¹]
 
-PASS only if the dose leg executed under seal, the propagated-band
-comparison is issued, and controls hold — with the geometry provenance
-stated as whatever it actually was. CONDITIONAL if an amendment was
-used or the external geometry remained unavailable (condition named,
-not discharged). FAIL otherwise.
+Pass iff `|mc − analytic| / analytic ≤ max(3·mc_rel_std, 0.05)`.
+Particles 20000, batches 100 — frozen.
+
+**Propagated-band comparison.** Per cell, the tally-error record's
+`relative_spread` (8-sample lognormal perturbation band, measured
+~2.0%) is the propagated band half-width at the step. For each
+top-50 compared (cell, nuclide) pair from the P32 activation
+comparison, report `inside_band = rel_dev ≤ 2·relative_spread_cell`.
+The claim: agreement is reported inside a propagated band — the
+comparison never appears as bare deviation.
+
+**Linearity control (G2).** A synthetic 2-cell mesh fixture: declared
+per-bin rel_std σ₀ = 0.05; K = 8 lognormal perturbation samples at σ₀
+and at 2σ₀ through `actinv mesh`. Pass iff
+`spread(2σ₀)/spread(σ₀) ∈ [1.5, 2.5]` and the nominal central value is
+unchanged (mean-shift < 0.5·spread(σ₀)).
+
+**Mutation control (G2).** Any single-byte mutation of a frozen
+source file must fail the G0 re-hash assertion.
+
+**Contact-proxy ratio (G3).** Report
+`transported_detector_dose / Σ_cell contact_proxy` per step with named
+drivers (uncollided-vs-transported, semi-infinite-slab-vs-detector
+geometry, air μ_en convention shared). Reported, not judged.
+
+## Job envelope
+
+All OpenMC legs are cached-and-verified (statepoints exist and are
+SHA-asserted); a replay happens only if a statepoint is missing or
+corrupt. Controls add ≤ 10 min (analytic run ~2–5 min at 20k×100
+particles, linearity fixture 16 two-cell mesh solves). Total P47
+envelope 30 min under the bounded cgroup
+(`MemoryMax=6G`, `CPUQuota=200%`), one job at a time.
+
+OpenMC pinned: 0.15.3 (the P32 executor's version, env
+`~/.local/share/mamba/envs/openmc`).
+
+## Gates
+
+- **G0** — seal: protocol sha, opening commit, every frozen artifact
+  re-hashed and asserted byte-identical to its P32-sealed sha, OpenMC
+  version pinned, envelope declared. Before any comparison is issued.
+- **G1** — dose-table completeness: per-step dose + MC rel-std
+  present, statepoint shas verified; completeness check passes.
+- **G2** — controls: analytic uncollided dose inside frozen
+  tolerance; linearity band-scaling; frozen-source mutation rejected.
+- **G3** — report: propagated-band comparison issued per (cell,
+  nuclide); contact-proxy ratio with drivers; geometry provenance
+  verbatim.
+- **G4** — independent closure: checker re-derives the dose table
+  from the statepoint .h5 files (not from the record), re-verifies
+  artifact identities, rejects planted mutations, emits verdict.
+
+## Closure rule
+
+PASS only if the dose leg's artifacts verify byte-identical, the
+propagated-band comparison is issued, and all controls hold — with
+the geometry provenance stated as whatever it actually was.
+CONDITIONAL if an amendment was used or the external geometry
+remained unavailable (condition named, not discharged). FAIL
+otherwise.
