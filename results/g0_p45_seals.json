@@ -1,0 +1,123 @@
+{
+  "code_sha256": {
+    "campaign_harness": "f094d8ca3e93feb221c589e0aa331004e6c6274c30897e43bae27bcc3340ff73",
+    "openmc_driver": "4d7d751a4ac3d93f881b64ee9cadc11d37ef92ade865b3a0079d196d04e7cc9e",
+    "p26b_leg": "24b9d2d664ca33b61ce3b09ddb9dd77ec3499db15c42e9c38782158ad4ef2f29",
+    "parity_scorer": "15b24f5396fc58a2979af7d618501b56e2ddfc9fd13b3a1051b2facb8ae4e80a",
+    "population_builder": "28daf3b08f976460b0b92532f00fc953db1f1fc25f3fcac40979172020444361",
+    "robustness_driver": "3c5f748a41c300fe2bcbf15c0f26a6b4b737785be755784268ef1d468bcec1ae"
+  },
+  "contract": {
+    "path": "results/g2_p26b_leg_contract.json",
+    "sha256": "57836a56293f488e3dfb19d101f8e3ad71bf6b36ef42b42b2f6fa2964ad174fb"
+  },
+  "envelope": {
+    "cgroups": {
+      "CPUQuota": "200%",
+      "MemoryMax": "6G",
+      "MemorySwapMax": 0,
+      "RAYON_NUM_THREADS": 2,
+      "TasksMax": 128
+    },
+    "sequential_solver_jobs": 1,
+    "wall_minutes_max": 240
+  },
+  "frozen_values": {
+    "cooling_times_s": [
+      0.0,
+      86400.0,
+      2505600.0,
+      28944000.0,
+      283824000.0
+    ],
+    "envelope_minutes": 240,
+    "openmc_batch_timeout_s": 5400.0,
+    "parity_tolerance": 0.1,
+    "per_case_timeout_s": 300.0,
+    "reach_depth": 3,
+    "repeat_invocations": 3,
+    "robustness": {
+      "samples": 16,
+      "seed": 20260924
+    }
+  },
+  "identities": {
+    "actinv_binary": {
+      "path": "target/release/actinv",
+      "sha256": "45b5b587a765f6cb14294ce25842cbf2b0692821cfe40c492c7b9b43c008620b"
+    },
+    "alara_binary": {
+      "path": "/home/connoravila/nuclear-data/alara-2.9.2-build/src/alara",
+      "sha256": "7ef1d6324a611976bd19e24abf1472a1e0ca07d33e9b8760ae1c0673247877b0"
+    },
+    "alara_dmp": {
+      "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/alara.dmp",
+      "sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+    },
+    "alara_idx": {
+      "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709.idx",
+      "sha256": "c2f979f47b769ab1e1c9ac07c1f0e069b70e30c9671d4a3f11803881199ce905"
+    },
+    "alara_lib": {
+      "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709.lib",
+      "sha256": "45c2cae8e23429277d68f591365d9b13063e0233befd9fc1a318187ac87001e6"
+    },
+    "bounds": {
+      "path": "/home/connoravila/Documents/actinv/crates/actinv-data/data/fispact_709_groups.json",
+      "sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f"
+    },
+    "chain_xml": {
+      "path": "/home/connoravila/nuclear-data/p32-work/chain/depletion/chain.xml",
+      "sha256": "d3b829467cfdda9c624aaeb5709825df378b908ecc63c3f984ade51f8d0444a0"
+    },
+    "covariance_npz": {
+      "path": "/home/connoravila/nuclear-data/p43-work/p43.cov.npz",
+      "sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a"
+    },
+    "decay_fallback": {
+      "path": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/decay/jeff-3-3_decay.dat",
+      "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+    },
+    "decay_primary": {
+      "path": "/home/connoravila/Documents/actinv/actinv-data/v1.0.0/decay/endf-b-viii-0_decay.dat",
+      "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+    },
+    "elelib": {
+      "path": "/home/connoravila/nuclear-data/alara-2.9.2/sample/data/myElelib",
+      "sha256": "bdfcfdb255d89b4988be9fab4279c36fb9615709ee6a738e963591db6146c290"
+    },
+    "fendl_npz": {
+      "path": "/home/connoravila/nuclear-data/p26b-work/g1-run/actinv_fendl32c_709.npz",
+      "sha256": "18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0"
+    },
+    "openmc_driver": {
+      "path": "/home/connoravila/Documents/actinv/controls/p45_openmc_driver.py",
+      "sha256": "4d7d751a4ac3d93f881b64ee9cadc11d37ef92ade865b3a0079d196d04e7cc9e"
+    },
+    "openmc_python": {
+      "path": "/home/connoravila/micromamba/envs/openmc016/bin/python",
+      "sha256": "c3e03f9c6a91b73bc981b56cb0c2062ef5073304e9c5a6da39f6cb4eade18b24"
+    },
+    "tendl_npz": {
+      "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-patched-neutron-709g.npz",
+      "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d"
+    },
+    "xs_xml": {
+      "path": "/home/connoravila/nuclear-data/endfb-viii.1-hdf5/cross_sections.xml",
+      "sha256": "b8ffb6104a946bf951dc0f3b9a1f57a60f7f57c4b308cd66df4fd3dd4bc557ce"
+    }
+  },
+  "opening_commit": "adf2837a3edd433e0722346f33a49dbbb1960a75",
+  "phase": "P45",
+  "population": {
+    "campaign_cases": 28,
+    "fns_sha256": "a2ba307d3585feeeac7112175fffa702539c5e6d7d4d72f9bc2871f6678e6b18",
+    "mesh_cells": 16,
+    "path": "results/p45_population.json",
+    "sha256": "4ed7d9e520879f4354e7ac966bbf613109e1b9e0d37b524ca84a0844d6716c8e"
+  },
+  "protocol": "protocols/ACTINV-P45_PROTOCOL.md",
+  "protocol_sha256": "9d51e2af3f18b1f310564ff75812527eab1ee7600eccb85767c1b235b1a1648e",
+  "recorded_at_utc": "2026-09-24T07:26:53Z",
+  "schema": "actinv-g0-seal-1"
+}
