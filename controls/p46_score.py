@@ -129,6 +129,13 @@ def computed_at(heat: list[dict], t_s: float) -> float | None:
 
 def score_ledger(rows: list[dict], corpus_elem_sets: dict) -> dict:
     """Score ledger rows -> per-point outcomes + tables + recs."""
+    # latest row per (corpus, experiment) — appended ledgers may carry
+    # duplicate rows from re-runs
+    latest = {}
+    for r in rows:
+        latest[(r["corpus"], r["material"], r["experiment"])] = r
+    rows = list(latest.values())
+
     meas_cache = {}
     points = []
     per_cm = defaultdict(lambda: {"n_measured": 0, "n_scored": 0,
@@ -285,8 +292,12 @@ def main() -> int:
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
 
-    rows = [json.loads(l) for l in
-            args.ledger.read_text().splitlines() if l.strip()]
+    raw = [json.loads(l) for l in
+           args.ledger.read_text().splitlines() if l.strip()]
+    latest = {}
+    for r in raw:
+        latest[(r["corpus"], r["material"], r["experiment"])] = r
+    rows = list(latest.values())
     elem_sets = {c: corpus_elements(p)
                  for c, p in INDEX_PATHS.items()}
     scored = score_ledger(rows, elem_sets)
