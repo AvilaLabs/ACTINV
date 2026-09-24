@@ -1073,6 +1073,54 @@ is a fork to channel work, not a failed phase — and whether any equivalent-out
 executable for P45. P44's outcome should be treated as the extension's first real decision point: it determines
 whether "calibrated uncertainty" ships as a claim or returns to channel-repair scope.
 
+## Draft product-innovation extension — P49 (2026-09-24)
+
+**Status: requested draft; the phase below is unopened and unhashed.** This section is the canonical proposed
+scope for ACTINV's first capability that no competitor ships: optimization, not just evaluation. It changes no
+frozen protocol, prior verdict, evidence record or release authorization. P33/P34 remain blocked on external
+dependencies; the standing rules and the P26–P35 evidence rules apply in full.
+
+Competitive landscape check (2026-09-24): FISPACT-II ships MC sensitivity and pathways but no optimizer;
+SCALE/ORSEN is a prototype adjoint-DPT module, not a product; ACTYS-1-GO (2019) did composition optimization
+without uncertainty; STAYSL-PNNL owns standards-lane spectrum unfolding; ISOTOPIA lists neutron production and
+yield uncertainty as unimplemented future work; existing clearance classifiers (clearance-finder, F4E-radwaste)
+are deterministic. **No shipping tool couples design optimization to nuclear-data uncertainty.**
+
+### Intent and product outcome
+
+The first three extensions proved ACTINV can *answer* accurately, quickly, broadly. This phase makes it
+*decide*: an analyst states a design space and a chance-constrained objective, and gets back a ranked,
+fully-evidenced candidate table — "what should I build", not "what does this do". The differentiator is that
+objectives and constraints are evaluated on propagated nuclear-data bands, so a candidate can be rejected for
+failing *probabilistically*, not just nominally — something no competitor can express.
+
+### Scope boundaries
+
+Within this phase: a bounded, seeded optimizer over declared design axes (composition wt% bounds; schedule
+times; optionally evaluation corpus choice) evaluated through the unchanged qualified worker path; chance
+constraints on propagated-band quantiles (e.g. 95th-percentile contact-dose proxy ≤ limit); a complete
+evaluated-candidate ledger (no cherry-picking — every evaluation recorded, feasible or not); honest infeasibility
+reporting.
+
+Outside this phase: gradient/adjoint methods (the optimizer is derivative-free); multi-physics coupling
+(no thermal feedback); value-of-information / measurement-priority ranking (separate candidate lane); spectrum
+inference; isotope-production campaign design as a *productized workflow* (the optimizer primitives serve it but
+the Tb-149-class workflow is not packaged here); and interactivity — the deliverable is a batch campaign
+(`actinv optimize`), not a live GUI loop, since per-candidate band propagation at ~70 s rules out
+interactive latency until the persistent-worker item ships.
+
+### Phase sequence and acceptance gates
+
+| Phase | Deliverable | Entry dependency | Decisive gate |
+|---|---|---|---|
+| **P49 — chance-constrained activation design optimization** | `actinv optimize` over a declared design box: a base spec + bounded axes (composition wt%, irradiation/cooling times, corpus) + a scalar objective (min or max a named response at a named time) + chance constraints (band quantile vs limit). Output is a ranked candidate ledger — every evaluated spec, its response, its band, its feasibility verdict, and spec sha; the best feasible candidate re-executed and re-verified as a fresh independent run. | P43 (bands), P48 (sweep machinery as the evaluation kernel), the full-corpus default (2026-09-24 flip). | Fixed-seed determinism (identical rerun = identical ledger); every candidate evaluated through the identical solver path — no surrogate, no reduced numerics; the optimizer never sees a value it could not re-derive from its own ledger; an infeasible-box control must report infeasible, never return the least-bad violator silently; a synthetic known-optimum control must recover the planted vertex; independent checker re-derives the ranking and the feasibility verdicts from the raw ledger; measured wall time reported with hardware; no candidate rendered without its bound spec. |
+
+**Demonstration target (declared, not yet scoped to a spec):** minimize contact-dose proxy at a named
+cooling time over a reduced-activation steel composition box — the canonical "design for decommissioning"
+problem the fusion materials program runs by hand today. A second candidate demonstration, maximizing
+Tb-149 radionuclidic purity against the shipped feedstock example, exercises the maximize direction and a
+real published problem.
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
