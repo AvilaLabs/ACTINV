@@ -11,6 +11,7 @@ step with named drivers — reported, not judged.
 from __future__ import annotations
 
 import json
+import math
 import subprocess
 import sys
 import textwrap
@@ -124,18 +125,33 @@ def main() -> int:
         r["band_half_width"] = band_mult * r["cell_spread"]
         r["inside_band"] = r["rel"] <= r["band_half_width"]
 
-    # contact proxy vs transported dose
+    # contact proxy vs transported dose. The OpenMC tally is an
+    # f-weighted track-length integral (no volume division, verified
+    # G2); the physical dose rate divides by the detector volume.
+    V_GAP = 4.0 / 3.0 * math.pi * 10.0 ** 3 - 64.0  # sphere - cube
     dose = json.loads(
         (ROOT / "results/p32_dose.json").read_text())
     proxy = contact_proxy_sum(Path(arts["mesh_result"]["path"]))
     ratios = {}
+    dose_table = {}
     for step in ("2", "3"):
-        td = dose["cooling_step_doses"][step]["dose_Gy_h"]
+        raw = dose["cooling_step_doses"][step]
+        corrected_Gy_s = raw["detector_air_dose_Gy_s"] / V_GAP
+        dose_table[step] = {
+            "dose_Gy_h": corrected_Gy_s * 3600.0,
+            "mc_rel_std": raw["relative_std"],
+            "tally_raw": raw["detector_air_dose_Gy_s"],
+            "detector_volume_cm3": V_GAP,
+            "p32_published_Gy_h": raw["dose_Gy_h"],
+            "p32_normalization_defect":
+                "P32 read the raw f-weighted track-length tally as "
+                "Gy/s; dividing by detector volume gives the true "
+                "dose rate (P32 values overstated by 4124.79x)"}
         cp = proxy.get(step)
         ratios[step] = {
-            "transported_dose_Gy_h": td,
+            "transported_dose_Gy_h": corrected_Gy_s * 3600.0,
             "contact_proxy_sum_Gy_h": cp,
-            "ratio": td / cp if cp else None,
+            "ratio": (corrected_Gy_s * 3600.0) / cp if cp else None,
             "drivers": [
                 "proxy is uncollided semi-infinite-slab point-isotropic"
                 " approximation; the tally transports through the"
@@ -159,11 +175,7 @@ def main() -> int:
                     "(tally-error record)",
             "top50": top,
         },
-        "dose_table": {s: {"dose_Gy_h":
-                           dose["cooling_step_doses"][s]["dose_Gy_h"],
-                           "mc_rel_std": dose["cooling_step_doses"][s]
-                           ["relative_std"]}
-                       for s in ("2", "3")},
+        "dose_table": dose_table,
         "contact_proxy_vs_transported": ratios,
         "geometry_provenance": "self-produced (no lawful external"
                                " benchmark available; condition named"

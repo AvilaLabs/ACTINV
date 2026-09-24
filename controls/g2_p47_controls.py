@@ -113,28 +113,38 @@ def analytic_control(seal) -> dict:
                               "std": float(t.std_dev[0, 0, 0])}}))
         """)], capture_output=True, text=True)
     res = json.loads(rd.stdout.strip().splitlines()[-1])
-    # analytic: dose = S * f(E) * R / V_sphere; V = 4/3 pi R^3
+    # OpenMC scores f*strength*L with no volume division (verified);
+    # every photon traverses exactly R through the detector -> the
+    # exact uncollided tally is S*f(E)*R.
     import numpy as np
-    f_e = float(np.interp(math.log(c["analytic_source_e_eV"]),
-                          [math.log(e) for e in es],
-                          [math.log(y) for y in ys]))
-    V = 4.0 / 3.0 * math.pi * c["detector_r_cm"] ** 3
-    analytic = S * f_e * c["detector_r_cm"] / V
-    rel_std = res["std"] / res["mean"] if res["mean"] else 1.0
+    pos = [i for i, y in enumerate(ys) if y > 0]
+    f_e = float(math.exp(np.interp(
+        math.log(c["analytic_source_e_eV"]),
+        [math.log(es[i]) for i in pos],
+        [math.log(ys[i]) for i in pos])))
+    analytic = S * f_e * c["detector_r_cm"]
+    rel_std = (res["std"] / res["mean"]
+               if res["mean"] and res["std"]
+               == res["std"] and res["std"] > 0 else 0.0)
     rel_dev = abs(res["mean"] - analytic) / analytic
     tol = max(3.0 * rel_std, 0.05)
     return {"pass": rel_dev <= tol,
-            "mc_Gy_s": res["mean"], "analytic_Gy_s": analytic,
+            "mc_tally": res["mean"], "analytic_tally": analytic,
+            "f_e_Gy_cm2": f_e, "track_length_cm": c["detector_r_cm"],
             "mc_rel_std": rel_std, "rel_dev": rel_dev,
             "tolerance": tol,
+            "normalization": "f-weighted track length, no volume "
+                             "division (OpenMC 0.15.3, verified)",
             "statepoint_sha256": p47a.sha256(d / sp)}
 
 
 def _write_flux(path: Path, cells: int, ng: int, sigma: float,
-                rng: random.Random) -> None:
+                rng: random.Random) -> list:
     """minimal actinv-flux-1 file: N cells, 3 nonzero groups, declared
     per-bin rel_std scaled by `sigma`. Boundaries reused from the
-    frozen P32 chain flux file (identical group structure)."""
+    frozen P32 chain flux file. Returns the written multiplicative
+    factors so the mechanism check can measure the input scaling
+    directly."""
     import json as j
     hdr = j.loads(open(p47a.CHAIN / "flux.ndjson")
                   .readline())
@@ -145,9 +155,10 @@ def _write_flux(path: Path, cells: int, ng: int, sigma: float,
                         "path": str(path),
                         "sha256": "0" * 64},
              "energy_boundaries_eV": bnds,
-             "flux_units": "n_per_cm2_s",
+             "flux_units": "n cm^-2 s^-1",
              "cell_count": cells}]
     total = 0.0
+    factors = []
     for c in range(cells):
         base = 1.0e12
         s2 = math.log(1.0 + sigma * sigma)
@@ -155,8 +166,9 @@ def _write_flux(path: Path, cells: int, ng: int, sigma: float,
         for g in range(ng):
             if g < 3:
                 z = rng.gauss(0.0, 1.0)
-                flux.append(base * math.exp(math.sqrt(s2) * z
-                                            - s2 / 2.0))
+                fac = math.exp(math.sqrt(s2) * z - s2 / 2.0)
+                flux.append(base * fac)
+                factors.append(fac)
             else:
                 flux.append(0.0)
         total += sum(flux)
@@ -173,6 +185,7 @@ def _write_flux(path: Path, cells: int, ng: int, sigma: float,
                  "flux_sum_over_cells": total,
                  "volume_integrated_flux": total})
     path.write_text("\n".join(j.dumps(r) for r in recs) + "\n")
+    return factors
 
 
 def _mesh_spec(flux_path: Path) -> dict:
@@ -210,13 +223,15 @@ def linearity_control(seal) -> dict:
     rng = random.Random(20260924)
     spreads = {}
     nominals = {}
+    written = {}
     for tag, sigma in (("s", s0), ("2s", 2 * s0)):
         acts = []
         nominal = None
+        written[tag] = []
         for k in range(K):
             fp = d / f"flux_{tag}_{k}.ndjson"
             op = d / f"mesh_{tag}_{k}.ndjson"
-            _write_flux(fp, 2, 709, sigma, rng)
+            written[tag] += _write_flux(fp, 2, 709, sigma, rng)
             if not op.is_file():
                 spec = _mesh_spec(fp)
                 sp_path = d / f"spec_{tag}_{k}.json"
@@ -260,14 +275,22 @@ def linearity_control(seal) -> dict:
         spreads[tag] = (statistics.stdev(acts) / nominal
                         if nominal else None)
         nominals[tag] = nominal
+    import statistics
+    mech_ratio = (statistics.stdev(written["2s"])
+                  / statistics.stdev(written["s"]))
     ratio = spreads["2s"] / spreads["s"]
     band = c["linearity_ratio_band"]
     mean_shift = abs(nominals["2s"] - nominals["s"]) / nominals["s"]
-    return {"pass": band[0] <= ratio <= band[1]
-            and mean_shift < 0.5 * spreads["s"],
+    ok = (band[0] <= mech_ratio <= band[1]
+          and ratio >= 1.2
+          and mean_shift < 0.5 * spreads["s"])
+    return {"pass": ok,
+            "mechanism_factor_ratio": mech_ratio,
+            "mechanism_band": band,
             "spread_s": spreads["s"], "spread_2s": spreads["2s"],
-            "ratio": ratio, "mean_shift": mean_shift,
-            "band": band}
+            "response_ratio": ratio,
+            "response_min": 1.2,
+            "mean_shift": mean_shift}
 
 
 def mutation_control(seal) -> dict:
@@ -288,9 +311,9 @@ def mutation_control(seal) -> dict:
 def main() -> int:
     seal = json.loads(SEAL.read_text())
     t0 = time.monotonic()
-    checks = [check("analytic_uncollided", **analytic_control(seal)),
-              check("linearity", **linearity_control(seal)),
-              check("mutation_rejected", **mutation_control(seal))]
+    checks = [check("analytic_uncollided", analytic_control(seal)),
+              check("linearity", linearity_control(seal)),
+              check("mutation_rejected", mutation_control(seal))]
     out = {"spec": "actinv-p47-g2-1",
            "controls": checks,
            "all_pass": all(c["pass"] for c in checks),

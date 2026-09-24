@@ -41,6 +41,11 @@ def main() -> int:
         "prediction (no detector model)",
         "contact-proxy/transported ratio is reported with named "
         "drivers; no dose claim is made from the proxy",
+        "P32 normalization defect found and corrected: the OpenMC "
+        "0.15.3 tally returns f-weighted track length with no cell-"
+        "volume division; p32_dose.json's published values overstate "
+        "the dose by the detector volume (4124.79 cm3). P47's dose "
+        "table is corrected; the P32 record is preserved unmodified",
         "MCNP distributed-source emission remains a documented "
         "placeholder (no licensed MCNP verification route)",
     ]

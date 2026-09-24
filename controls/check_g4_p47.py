@@ -48,8 +48,12 @@ def main() -> int:
            != seal["artifacts"][n]["sha256"]}
     checks.append(check("artifact_identity", not bad, bad))
 
-    # 2. dose table re-derived from statepoints (independent read)
+    # 2. dose table re-derived from statepoints (independent read):
+    # raw tally must equal the P32 record; corrected dose must equal
+    # raw / detector volume as issued in the G3 report
+    V_GAP = 4.0 / 3.0 * math.pi * 10.0 ** 3 - 64.0
     red = {}
+    ok = True
     for step in ("2", "3"):
         sp = Path(seal["artifacts"][f"dose_statepoint_step{step}"]
                   ["path"])
@@ -62,19 +66,23 @@ def main() -> int:
                                   "std": float(t.std_dev[0, 0, 0])}}))
             """)], capture_output=True, text=True)
         res = json.loads(r.stdout.strip().splitlines()[-1])
-        pub = dose["cooling_step_doses"][step]
+        pub_raw = dose["cooling_step_doses"][step]
+        pub_corr = g3["dose_table"][step]
         red[step] = {
-            "rederived_Gy_s": res["mean"],
-            "published_Gy_s": pub["detector_air_dose_Gy_s"],
-            "rederived_rel_std": res["std"] / res["mean"],
-            "published_rel_std": pub["relative_std"],
+            "rederived_tally": res["mean"],
+            "p32_recorded": pub_raw["detector_air_dose_Gy_s"],
+            "corrected_Gy_h": res["mean"] / V_GAP * 3600.0,
+            "g3_dose_Gy_h": pub_corr["dose_Gy_h"],
+            "rel_std": res["std"] / res["mean"] if res["mean"] else 0,
         }
-    ok = all(
-        math.isclose(red[s]["rederived_Gy_s"],
-                     red[s]["published_Gy_s"], rel_tol=1e-12)
-        and math.isclose(red[s]["rederived_rel_std"],
-                         red[s]["published_rel_std"], rel_tol=1e-9)
-        for s in red)
+        ok = (ok
+              and math.isclose(res["mean"],
+                               pub_raw["detector_air_dose_Gy_s"],
+                               rel_tol=1e-12)
+              and math.isclose(res["mean"] / V_GAP * 3600.0,
+                               pub_corr["dose_Gy_h"], rel_tol=1e-9)
+              and math.isclose(res["std"] / res["mean"],
+                               pub_corr["mc_rel_std"], rel_tol=1e-9))
     checks.append(check("dose_table_rederivation", ok, red))
 
     # 3. inside_band re-derived from raw records

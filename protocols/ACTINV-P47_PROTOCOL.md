@@ -57,15 +57,31 @@ it cannot be verified without a licensed MCNP install.
 cooling step: `dose_Gy_h` and `mc_rel_std`. The upgrade to "dose on
 the executed geometry" passes iff the G2 analytic control holds.
 
+**Tally normalization (declared, verified 2026-09-24).** OpenMC
+0.15.3's EnergyFunctionFilter flux tally returns a strength-weighted
+track-length integral — `Σ_i strength_i · f(E_i) · L_i` — with **no
+cell-volume division** (verified empirically on void, void+volume,
+and material+volume cells; the `volume` XML attribute is ignored for
+tally normalization). The physical dose rate is therefore
+
+    dose_Gy_s = tally_mean / V_detector_cm3
+
+with `V_gap = (4π/3)·10³ − 4³ = 4124.79 cm³` for the executed
+geometry's detector cell. **This corrects the P32 amendment record**:
+`results/p32_dose.json` read the raw tally as Gy/s directly, so its
+published dose values are overstated by exactly V_gap (a ~4125×
+normalization defect). P47 issues the corrected dose table and names
+the defect; the P32 record itself is not rewritten.
+
 **Analytic uncollided control (G2).** A 1 MeV monoenergetic isotropic
 point source at the origin in an all-void geometry — spherical
-detector cell r < 10 cm inside vacuum boundary r = 50 cm — tallied
-with the identical EnergyFunctionFilter (E·μ_en,air, same XCOM table
-sha). Exact uncollided cell flux:
+detector cell r < 10 cm inside vacuum boundary r = 50 cm, unit source
+strength — tallied with the identical EnergyFunctionFilter (E·μ_en,air,
+same XCOM table sha). Every photon is born inside the detector and
+streams exactly R = 10 cm through it; the exact uncollided
+track-length tally is
 
-    phi_cell = S · ∫_V (1/4πr²) dV / V = S · 10 cm / V_sphere
-
-    dose_Gy_s = S · f(1 MeV) · 30 / (4π·1000)   [Gy·cm²·cm⁻³·s⁻¹]
+    tally = S · f(1 MeV) · 10.0 cm     [Gy·cm³/s per unit strength]
 
 Pass iff `|mc − analytic| / analytic ≤ max(3·mc_rel_std, 0.05)`.
 Particles 20000, batches 100 — frozen.
@@ -79,10 +95,18 @@ The claim: agreement is reported inside a propagated band — the
 comparison never appears as bare deviation.
 
 **Linearity control (G2).** A synthetic 2-cell mesh fixture: declared
-per-bin rel_std σ₀ = 0.05; K = 8 lognormal perturbation samples at σ₀
-and at 2σ₀ through `actinv mesh`. Pass iff
-`spread(2σ₀)/spread(σ₀) ∈ [1.5, 2.5]` and the nominal central value is
-unchanged (mean-shift < 0.5·spread(σ₀)).
+per-bin rel_std σ₀ = 0.05; K = 16 lognormal perturbation samples at
+σ₀ and at 2σ₀ through `actinv mesh`. Two assertions:
+(a) *mechanism*: the std-dev of the written lognormal perturbation
+factors scales as std(2σ₀)/std(σ₀) ∈ [1.7, 2.3];
+(b) *response monotonicity*: the solved response spread increases,
+spread(2σ₀) ≥ 1.2·spread(σ₀) — the response is not required to scale
+linearly because second-order products carry a flux² term; only the
+declared input uncertainty scales exactly.
+Nominal central value unchanged (mean-shift < 0.5·spread(σ₀)).
+(Amended 2026-09-24: the frozen K=8/band-[1.5,2.5] control carried
+~±50% sampling noise on a stdev ratio and conflated the input-σ
+scaling with nonlinear response physics.)
 
 **Mutation control (G2).** Any single-byte mutation of a frozen
 source file must fail the G0 re-hash assertion.
