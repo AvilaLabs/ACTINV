@@ -120,12 +120,17 @@ def main() -> int:
                     times_seen.append(float(toks[0]))
                 else:
                     break
+        cum = []
+        acc = 0.0
+        for dt in leg.COOL_DT_S:
+            acc += dt
+            cum.append(acc)
         checks.append(check(
             "alara_input_contract",
             lib_line and "fendl32c_709" in lib_line[0]
-            and times_seen == list(leg.COOL_DT_S),
+            and times_seen == cum,
             {"lib_line": lib_line[:1],
-             "cooling_times": times_seen}))
+             "cooling_times": times_seen, "expected": cum}))
 
     # p5: scorer marks a synthetic hand-planted divergence correctly at
     # the sealed tolerance (0.10 boundary)

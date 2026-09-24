@@ -944,6 +944,31 @@ covariance-covered library subset, not the full activation library; band definit
 constants only (no flux/composition/yield channels, no model remainder); IRDFF-II SACS arm excluded — folded
 cross-section scoring unit, no processed corpus on this host, parked.
 
+**P45 execution entry (2026-09-24).** P45 (executed complete-campaign benchmark) closed `P45-CONDITIONAL` —
+amendments were used and re-sealed (population regeneration + sealed-code fixes), and the identical-data leg
+closed fully divergent under the declared FENDL conversion gap. The sealed campaign executed all 147 ledger
+rows with zero failures in 12.8 min against the 240-minute envelope: 28-case campaign × {ALARA 2.9.2,
+ACTINV-FENDL, ACTINV-TENDL} at 3 invocations plus a one-batch OpenMC 0.16 deplete leg; 16-cell
+distinct-spectrum mesh through the real `actinv mesh` path plus per-cell ALARA and a 16-spectrum OpenMC batch;
+and the 24-case × 16-sample robustness capability leg in 129.8 s with 0 failed samples (~0.34 s/case-sample —
+the uncertainty product costs about a nominal solve each). Measured medians per invocation: ALARA 0.027 s,
+ACTINV-FENDL 0.83 s, ACTINV-TENDL 1.21 s; OpenMC batch 273 s over 28 cases (~9.8 s/case incl. 11.3 s union
+micro-XS amortization); mesh `actinv mesh` 16 cells in ~5.2 s (3.1 cells/s) vs OpenMC 152.6 s batch vs ALARA
+0.019 s/cell. Identical-data parity (ALARA-vs-ACTINV on the converted FENDL-3.2c, |rel| ≤ 0.10): **28/28
+parity_divergence** — all attributable to the declared conversion gap (12 targets failed ENDF parsing
+outright; Fe56 lost its (n,p) channel), physics-coherent: short-lived products (Mn56/Mn57/Cr55/Fe53) diverge
+at t=0 (rel 1.4–94) and converge at late cooling times; timing bias direction (toward ACTINV's sparser chain)
+is declared. Data-mismatch leg is descriptive only: OpenMC/ENDF-B-VIII.1 vs ACTINV/TENDL-2025 median rel
+−2.6% at t=0 rising to +33% at 3.15e8 s (evaluation spread on long-lived products). G1 mechanics 9/9 probes;
+9/9 frozen controls; all conformance probes; independent G4 checker re-derived coverage, timing and tallies
+from raw rows and rejected 3/3 planted mutations (`results/verdict_p45.json`, `results/p45_parity.json`,
+`results/g{0,1,2,3,4}_p45*.json`, `results/check_g4_p45.json`,
+`controls/{p45_*,g0,g1,g2,g3,g4,check_g4}_p45*.py`, `protocols/ACTINV-P45_PROTOCOL.md`). Carried named
+conditions: identical-data parity is scored on a minimal 24-target converted subset — conversion repair is
+parked, not silently patched; OpenMC leg carries the declared evaluation mismatch; FISPACT-II and
+SCALE/ORIGEN stay unmeasured (no lawful executable); the robustness leg is a capability cost, never a speed
+ratio.
+
 **P45 — prove the campaign is affordable.** Replace the kernel-ratio headline with an executed whole-workload
 claim. Freeze workloads, output parity, comparator versions, resource limits and host before timing. Give each
 comparator its documented preparation and caches; where no lawful comparator exists the leg is unmeasured.

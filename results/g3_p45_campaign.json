@@ -1,0 +1,30 @@
+{
+ "spec": "actinv-p45-g3-campaign-1",
+ "wall_s": 766.0156183060026,
+ "envelope_s": 14400,
+ "within_envelope": true,
+ "steps": {
+  "campaign": {
+   "wall_s": 635.5040032860124,
+   "returncode": 0,
+   "stdout_tail": "{\"wall_s\": 635.3483854209771, \"workloads\": [\"campaign\", \"mesh\"], \"arms\": [\"alara\", \"actinv_fendl\", \"actinv_tendl\", \"openmc\", \"actinv_mesh\"]}\n",
+   "stderr_tail": ""
+  },
+  "robustness": {
+   "wall_s": 130.20960926404223,
+   "returncode": 0,
+   "stdout_tail": "{\"spec\": \"actinv-p45-robustness-1\", \"study_sha256\": \"df87f7d483758342209dde0521783b0b61b119c0d1e8cedcf22b5080f9c7e646\", \"wall_s\": 129.84134016104508, \"returncode\": 0, \"record_sha256\": \"4d46605092e8b4d7821bb2bbbcc1bbe4cc2cae737aeed1182c8ae2cef3600858\", \"n_cases\": 24, \"failed_samples\": 0, \"study_status\": \"complete\"}\n",
+   "stderr_tail": ""
+  },
+  "parity": {
+   "wall_s": 0.22201503906399012,
+   "returncode": 0,
+   "stdout_tail": "{\"parity_ok\": 0, \"parity_divergence\": 28, \"cases\": 44}\n",
+   "stderr_tail": ""
+  }
+ },
+ "ledger_rows": 147,
+ "n_executed": 147,
+ "n_failed": 0,
+ "all_steps_ok": true
+}

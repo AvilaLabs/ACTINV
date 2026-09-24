@@ -1,0 +1,85 @@
+{
+ "spec": "actinv-p45-g1-mechanics-1",
+ "wall_s": 0.8183671860024333,
+ "checks": [
+  {
+   "probe": "campaign_harness",
+   "pass": true,
+   "wall_s": 0.29500449600163847,
+   "returncode": 0,
+   "stdout_tail": "{\"wall_s\": 0.0023429379798471928, \"workloads\": [\"campaign\"], \"arms\": [\"alara\", \"actinv_fendl\", \"actinv_tendl\", \"openmc\"]}\n",
+   "stderr_tail": ""
+  },
+  {
+   "probe": "mesh_harness",
+   "pass": true,
+   "wall_s": 0.18364627100527287,
+   "returncode": 0,
+   "stdout_tail": "{\"wall_s\": 0.0003127079689875245, \"workloads\": [\"mesh\"], \"arms\": [\"actinv_mesh\", \"alara\", \"openmc\"]}\n",
+   "stderr_tail": ""
+  },
+  {
+   "probe": "robustness_smoke",
+   "pass": true,
+   "wall_s": 0.03310931799933314,
+   "returncode": 0,
+   "n_cases": 1,
+   "samples_done": [
+    2
+   ],
+   "failed": 0
+  },
+  {
+   "probe": "arm_alara",
+   "pass": true,
+   "statuses": [
+    "executed",
+    "executed",
+    "executed",
+    "executed"
+   ]
+  },
+  {
+   "probe": "arm_actinv_fendl",
+   "pass": true,
+   "statuses": [
+    "executed",
+    "executed"
+   ]
+  },
+  {
+   "probe": "arm_actinv_tendl",
+   "pass": true,
+   "statuses": [
+    "executed",
+    "executed"
+   ]
+  },
+  {
+   "probe": "arm_openmc",
+   "pass": true,
+   "statuses": [
+    "executed",
+    "executed",
+    "executed",
+    "executed",
+    "executed",
+    "executed"
+   ]
+  },
+  {
+   "probe": "arm_actinv_mesh",
+   "pass": true,
+   "statuses": [
+    "executed"
+   ]
+  },
+  {
+   "probe": "parity_scorer_runs",
+   "pass": true,
+   "identical_status": "parity_divergence"
+  }
+ ],
+ "all_pass": true,
+ "ledger_rows_checked": 15
+}

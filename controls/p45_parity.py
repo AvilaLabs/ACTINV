@@ -114,6 +114,13 @@ def score_ledger(ledger_rows: list[dict]) -> dict:
             continue
         cases[(wl, cn)][arm] = r["arms"].get(arm, {})
 
+    # actinv_mesh runs as one batch; its per-cell results graft onto the
+    # cell rows so mesh cells get a comparable actinv arm
+    mesh_batch = batches.get("mesh|actinv_mesh") or {}
+    for cname, res in (mesh_batch.get("per_cell") or {}).items():
+        cases[("mesh", cname)]["actinv_mesh"] = {
+            "status": "executed", "result": res}
+
     hl = {}
     for b in batches.values():
         res = (b.get("results") or {})
@@ -142,8 +149,12 @@ def score_ledger(ledger_rows: list[dict]) -> dict:
                                 "alara": a.get("status"),
                                 "actinv_fendl": cf.get("status")}
 
-        # data-mismatch leg: openmc vs actinv_tendl (descriptive)
-        om, ct = arms.get("openmc", {}), arms.get("actinv_tendl", {})
+        # data-mismatch leg: openmc vs the workload's actinv arm
+        # (campaign: actinv_tendl; mesh: actinv_mesh) — descriptive only
+        om = arms.get("openmc", {})
+        ct = arms.get("actinv_tendl") if wl == "campaign" \
+            else arms.get("actinv_mesh")
+        ct = ct or {}
         if om.get("status") == "executed" and \
                 ct.get("status") == "executed":
             atoms = om.get("atoms_atom_per_cm3") or {}

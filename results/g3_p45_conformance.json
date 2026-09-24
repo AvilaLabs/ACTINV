@@ -1,0 +1,55 @@
+{
+ "spec": "actinv-p45-g3-conformance-1",
+ "probes": [
+  {
+   "probe": "sealed_code_identity",
+   "pass": true,
+   "detail": {}
+  },
+  {
+   "probe": "unknown_arm_no_fabrication",
+   "pass": true,
+   "detail": {
+    "returncode": 0
+   }
+  },
+  {
+   "probe": "arm_data_isolation",
+   "pass": true,
+   "detail": {
+    "fendl_lib": "p26b-work/g1-run/actinv_fendl32c_709.npz",
+    "tendl_lib": "tion/tendl-2025-patched-neutron-709g.npz"
+   }
+  },
+  {
+   "probe": "alara_input_contract",
+   "pass": true,
+   "detail": {
+    "lib_line": [
+     "data_library alaralib /home/connoravila/nuclear-data/p26b-work/g1-run/fendl32c_709"
+    ],
+    "cooling_times": [
+     86400.0,
+     2592000.0,
+     31536000.0,
+     315360000.0
+    ],
+    "expected": [
+     86400.0,
+     2592000.0,
+     31536000.0,
+     315360000.0
+    ]
+   }
+  },
+  {
+   "probe": "tolerance_boundary",
+   "pass": true,
+   "detail": {
+    "at_111": "parity_divergence",
+    "at_110": "parity_ok"
+   }
+  }
+ ],
+ "all_pass": true
+}

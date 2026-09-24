@@ -1,0 +1,69 @@
+{
+ "spec": "actinv-p45-g2-controls-1",
+ "controls": [
+  {
+   "control": "parity_ok_path",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "control": "parity_divergence_path",
+   "pass": true,
+   "detail": [
+    {
+     "response": "total_activity_bq_per_g",
+     "t": "0",
+     "rel": 0.16
+    }
+   ]
+  },
+  {
+   "control": "arm_failure_not_scored",
+   "pass": true
+  },
+  {
+   "control": "missing_arm_semantics",
+   "pass": true,
+   "detail": {
+    "one_sided": "arm_failure",
+    "alara_only": "arm_failure",
+    "both_missing": "absent"
+   }
+  },
+  {
+   "control": "openmc_step_alignment",
+   "pass": true,
+   "detail": {
+    "desc_0": 7466.649004093356,
+    "expected": 7466.649004093356
+   }
+  },
+  {
+   "control": "mesh_flux_canonical",
+   "pass": true,
+   "detail": {
+    "ascending": true,
+    "flux_reversed": true,
+    "footer": true
+   }
+  },
+  {
+   "control": "digest_repeat_sensitivity",
+   "pass": true
+  },
+  {
+   "control": "population_integrity",
+   "pass": true,
+   "detail": {
+    "n_cases": 28,
+    "names_ok": true,
+    "distinct_flux": 16
+   }
+  },
+  {
+   "control": "robustness_frozen_block",
+   "pass": true
+  }
+ ],
+ "all_pass": true
+}

@@ -3,7 +3,7 @@
     "campaign_harness": "f094d8ca3e93feb221c589e0aa331004e6c6274c30897e43bae27bcc3340ff73",
     "openmc_driver": "4d7d751a4ac3d93f881b64ee9cadc11d37ef92ade865b3a0079d196d04e7cc9e",
     "p26b_leg": "24b9d2d664ca33b61ce3b09ddb9dd77ec3499db15c42e9c38782158ad4ef2f29",
-    "parity_scorer": "15b24f5396fc58a2979af7d618501b56e2ddfc9fd13b3a1051b2facb8ae4e80a",
+    "parity_scorer": "f7b31388f0069309663b18a417e764b3d79984eb371885899f5a042faa118cba",
     "population_builder": "28daf3b08f976460b0b92532f00fc953db1f1fc25f3fcac40979172020444361",
     "robustness_driver": "3c5f748a41c300fe2bcbf15c0f26a6b4b737785be755784268ef1d468bcec1ae"
   },
@@ -107,7 +107,7 @@
       "sha256": "b8ffb6104a946bf951dc0f3b9a1f57a60f7f57c4b308cd66df4fd3dd4bc557ce"
     }
   },
-  "opening_commit": "adf2837a3edd433e0722346f33a49dbbb1960a75",
+  "opening_commit": "1593df2f3693de0d52a6caa61ea8b9cfb8f3c6c9",
   "phase": "P45",
   "population": {
     "campaign_cases": 28,
@@ -118,6 +118,6 @@
   },
   "protocol": "protocols/ACTINV-P45_PROTOCOL.md",
   "protocol_sha256": "9d51e2af3f18b1f310564ff75812527eab1ee7600eccb85767c1b235b1a1648e",
-  "recorded_at_utc": "2026-09-24T07:26:53Z",
+  "recorded_at_utc": "2026-09-24T07:40:18Z",
   "schema": "actinv-g0-seal-1"
 }

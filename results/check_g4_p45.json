@@ -1,0 +1,82 @@
+{
+ "spec": "actinv-p45-g4-check-1",
+ "checks": [
+  {
+   "check": "campaign_coverage",
+   "pass": true,
+   "detail": {
+    "n_cases": 28,
+    "missing": {}
+   }
+  },
+  {
+   "check": "mesh_coverage",
+   "pass": true,
+   "detail": {
+    "cells": 16,
+    "per_cell": 16
+   }
+  },
+  {
+   "check": "timing_rederivation",
+   "pass": true,
+   "detail": {
+    "rederived": 1.2394343515043147,
+    "verdict": 1.2394343515043147
+   }
+  },
+  {
+   "check": "parity_tally",
+   "pass": true,
+   "detail": {
+    "rederived": {
+     "campaign": {
+      "parity_divergence": 28
+     },
+     "mesh": {
+      "arm_failure": 16
+     }
+    },
+    "verdict": {
+     "campaign": {
+      "parity_divergence": 28
+     },
+     "mesh": {
+      "arm_failure": 16
+     }
+    }
+   }
+  },
+  {
+   "check": "no_false_parity_ok",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "check": "m1_dropped_case_detected",
+   "pass": true
+  },
+  {
+   "check": "m2_scaled_values_diverge",
+   "pass": true
+  },
+  {
+   "check": "m3_deleted_row_detected",
+   "pass": true
+  },
+  {
+   "check": "robustness_case_count",
+   "pass": true,
+   "detail": 24
+  },
+  {
+   "check": "envelope",
+   "pass": true,
+   "detail": {
+    "wall_s": 766.0156183060026
+   }
+  }
+ ],
+ "all_pass": true,
+ "n_checks": 10
+}

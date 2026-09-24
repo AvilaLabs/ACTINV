@@ -1,0 +1,10 @@
+{
+ "spec": "actinv-p45-robustness-1",
+ "study_sha256": "df87f7d483758342209dde0521783b0b61b119c0d1e8cedcf22b5080f9c7e646",
+ "wall_s": 129.84134016104508,
+ "returncode": 0,
+ "record_sha256": "4d46605092e8b4d7821bb2bbbcc1bbe4cc2cae737aeed1182c8ae2cef3600858",
+ "n_cases": 24,
+ "failed_samples": 0,
+ "study_status": "complete"
+}
