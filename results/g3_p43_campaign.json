@@ -1,0 +1,72 @@
+{
+  "cases": {
+    "fe__fns_709__cont_1d": {
+      "n_failed": 0,
+      "n_reused": 0,
+      "samples": 64,
+      "status": "executed"
+    },
+    "fe__fns_709__pulse_5min": {
+      "n_failed": 0,
+      "n_reused": 0,
+      "samples": 64,
+      "status": "executed"
+    },
+    "fe_co100wppm__fns_709__cont_1d": {
+      "n_failed": 0,
+      "n_reused": 0,
+      "samples": 64,
+      "status": "executed"
+    },
+    "fe_co100wppm__fns_709__pulse_5min": {
+      "n_failed": 0,
+      "n_reused": 0,
+      "samples": 64,
+      "status": "executed"
+    },
+    "u235__fns_709__cont_1d": {
+      "n_failed": 0,
+      "n_reused": 0,
+      "samples": 64,
+      "status": "executed"
+    },
+    "u235__fns_709__pulse_5min": {
+      "n_failed": 0,
+      "n_reused": 0,
+      "samples": 64,
+      "status": "executed"
+    }
+  },
+  "decision_rules": {
+    "r1": {
+      "survival": {
+        "failed_samples": 0,
+        "fraction_satisfied": 0.34375,
+        "paired_samples": 64,
+        "satisfied": 22,
+        "semantics": "fraction of paired common-random-number draws in which the rule's nominal predicate holds over every evaluated group and time"
+      },
+      "verdict": "pass"
+    },
+    "r2": {
+      "survival": {
+        "failed_samples": 0,
+        "fraction_satisfied": 0.46875,
+        "paired_samples": 64,
+        "satisfied": 30,
+        "semantics": "fraction of paired common-random-number draws in which the rule's nominal predicate holds over every evaluated group and time"
+      },
+      "verdict": "fail"
+    }
+  },
+  "envelope_minutes": 45,
+  "gate": "G3",
+  "pass": true,
+  "phase": "P43",
+  "population_match": true,
+  "prepared_runs": 2,
+  "record_path": "/home/connoravila/nuclear-data/p43-work/g3/campaign/study_record.json",
+  "study_sha256": "774c6730a20cb34e19e017da9604135a65b219963409efe6cf15e0db1b338fa6",
+  "wall_minutes": 3.2951232771835444,
+  "within_envelope": true
+}

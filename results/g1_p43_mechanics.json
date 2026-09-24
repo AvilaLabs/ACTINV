@@ -1,0 +1,68 @@
+{
+  "cases": {
+    "fe__fns_709__pulse_5min": {
+      "channels": {
+        "cross_section_mf33": {
+          "enabled": true
+        },
+        "decay_constants": {
+          "enabled": true
+        },
+        "fission_yields": {
+          "enabled": true
+        }
+      },
+      "n_failed": 0,
+      "prepared_runs": 2,
+      "reused_samples": 8,
+      "samples": 8,
+      "status": "executed"
+    },
+    "fe_co100wppm__fns_709__pulse_5min": {
+      "channels": {
+        "cross_section_mf33": {
+          "enabled": true
+        },
+        "decay_constants": {
+          "enabled": true
+        },
+        "fission_yields": {
+          "enabled": true
+        }
+      },
+      "n_failed": 0,
+      "prepared_runs": 2,
+      "reused_samples": 8,
+      "samples": 8,
+      "status": "executed"
+    },
+    "u235__fns_709__pulse_5min": {
+      "channels": {
+        "cross_section_mf33": {
+          "enabled": true
+        },
+        "decay_constants": {
+          "enabled": true
+        },
+        "fission_yields": {
+          "enabled": true
+        }
+      },
+      "n_failed": 0,
+      "prepared_runs": 2,
+      "reused_samples": 8,
+      "samples": 8,
+      "status": "executed"
+    }
+  },
+  "fixtures": {
+    "decay_trace_nominal": "/home/connoravila/nuclear-data/p43-work/g1/decay_trace_nominal.out.json",
+    "decay_trace_scaled": "/home/connoravila/nuclear-data/p43-work/g1/decay_trace_scaled.out.json",
+    "yield_trace_nominal": "/home/connoravila/nuclear-data/p43-work/g1/yield_trace_nominal.out.json",
+    "yield_trace_scaled": "/home/connoravila/nuclear-data/p43-work/g1/yield_trace_scaled.out.json"
+  },
+  "gate": "G1",
+  "phase": "P43",
+  "record_path": "/home/connoravila/nuclear-data/p43-work/g1/mech/study_record.json",
+  "study_sha256": "efccf35a94d0b4091891b90b6bc17eec8f879d0f47e6325b73bf8bd4f0ec6c04"
+}

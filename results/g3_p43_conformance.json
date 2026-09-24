@@ -1,0 +1,60 @@
+{
+  "gate": "G3",
+  "pass": true,
+  "phase": "P43",
+  "probes": {
+    "all_scales_combined": {
+      "all_ledgered": true,
+      "reason": "1 steps, 1132 of 3873 states, 1119.5 ms -> /home/connoravila/nuclear-data/p43-work/g3/all_scales.out.json",
+      "rejected": false
+    },
+    "decay_scale_absent_nuclide": {
+      "reason": "decay_scale nuclide 'H999' is not in the decay chain",
+      "rejected": true
+    },
+    "decay_scale_stable_nuclide": {
+      "reason": "decay_scale nuclide 'Fe56' is stable",
+      "rejected": true
+    },
+    "fission_channel_no_fissile_case": {
+      "reason": "robustness.channels.fission_yields requires at least one material declaring fission_yields.files",
+      "rejected": true
+    },
+    "mutated_digest_fails_resume": {
+      "re_executed_exactly_one": true,
+      "reason": "ok: p43-resume \u2014 1 cases -> /home/connoravila/nuclear-data/p43-work/g3/resume_mut",
+      "rejected": false
+    },
+    "negative_std": {
+      "reason": "robustness.channels.flux_rel_std must be finite and nonnegative",
+      "rejected": true
+    },
+    "prepared_run_reuse": {
+      "cases": 3,
+      "interpretation": "one PreparedRun per distinct signature across nominal + samples + attribution",
+      "prepared_runs": 2,
+      "rejected": false,
+      "reused": true
+    },
+    "samples_out_of_range": {
+      "reason": {
+        "high": true,
+        "low": true
+      },
+      "rejected": true
+    },
+    "scales_on_plain_spec": {
+      "accepted_and_ledgered": true,
+      "reason": "1 steps, 1132 of 3873 states, 1235.5 ms -> /home/connoravila/nuclear-data/p43-work/g3/plain_scales.out.json",
+      "rejected": false
+    },
+    "unknown_channel": {
+      "reason": "study parse: unknown field `bogus`, expected one of `cross_section_mf33`, `flux_rel_std`, `composition_rel_std`, `decay_constants`, `fission_yields` at line 1 column 1520",
+      "rejected": true
+    },
+    "yield_scale_absent_pair": {
+      "reason": "yield_scale pair 'U235:Te144' is absent from the effective yields",
+      "rejected": true
+    }
+  }
+}

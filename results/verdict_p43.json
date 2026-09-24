@@ -1,0 +1,142 @@
+{
+  "conditional_reasons": [
+    "amendments used and sealed at G0: fixture schema corrections, substrate-model decay trace, effective-set yield enumeration, full-index covariance build, restricted study outputs"
+  ],
+  "evidence_sha256": {
+    "g0_seals": "0cba2e397c99385306626343080402fe6e3e313069e63ca961a5d986762101cb",
+    "g1_mechanics": "b2aa4fd32f00305b0c5c8f5d525369f451d3064315630feced76205b9e2a483d",
+    "g2_controls": "688856d1cf9168267f24423aedd2b1e56a03b735369dfe0566120f7b3a99a309",
+    "g3_campaign": "cf95f891ab5daf3f42133d3946125c0aeba8cffb8a21f1ba316aec67f8ffe63c",
+    "g3_conformance": "18a401c4d7204404c1fd9363669457faa507dfd859f24197d1d4e328bc7d4d92"
+  },
+  "measured": {
+    "campaign_wall_minutes": 3.2951232771835444,
+    "conformance_probes": {
+      "all_scales_combined": {
+        "all_ledgered": true,
+        "rejected": false
+      },
+      "decay_scale_absent_nuclide": {
+        "rejected": true
+      },
+      "decay_scale_stable_nuclide": {
+        "rejected": true
+      },
+      "fission_channel_no_fissile_case": {
+        "rejected": true
+      },
+      "mutated_digest_fails_resume": {
+        "re_executed_exactly_one": true,
+        "rejected": false
+      },
+      "negative_std": {
+        "rejected": true
+      },
+      "prepared_run_reuse": {
+        "cases": 3,
+        "interpretation": "one PreparedRun per distinct signature across nominal + samples + attribution",
+        "prepared_runs": 2,
+        "rejected": false,
+        "reused": true
+      },
+      "samples_out_of_range": {
+        "rejected": true
+      },
+      "scales_on_plain_spec": {
+        "accepted_and_ledgered": true,
+        "rejected": false
+      },
+      "unknown_channel": {
+        "rejected": true
+      },
+      "yield_scale_absent_pair": {
+        "rejected": true
+      }
+    },
+    "controls": {
+      "channel_isolation": "pass",
+      "composition_sum": "pass",
+      "coverage_accounting": "pass",
+      "decay_perturbation_trace": "pass",
+      "flux_linear": "pass",
+      "sample_resume": "pass",
+      "seed_reproducibility": "pass",
+      "survival_accounting": "pass",
+      "yield_perturbation_trace": "pass",
+      "zero_variance": "pass"
+    },
+    "coverage": {
+      "fe__fns_709__cont_1d": {
+        "decay_covered": 3293,
+        "decay_uncovered": 318,
+        "xs_covered_rows": 166,
+        "xs_uncovered_rows": 45,
+        "yield_covered": 0,
+        "yield_uncovered": 0
+      },
+      "fe__fns_709__pulse_5min": {
+        "decay_covered": 3293,
+        "decay_uncovered": 318,
+        "xs_covered_rows": 166,
+        "xs_uncovered_rows": 45,
+        "yield_covered": 0,
+        "yield_uncovered": 0
+      },
+      "fe_co100wppm__fns_709__cont_1d": {
+        "decay_covered": 3293,
+        "decay_uncovered": 318,
+        "xs_covered_rows": 210,
+        "xs_uncovered_rows": 56,
+        "yield_covered": 0,
+        "yield_uncovered": 0
+      },
+      "fe_co100wppm__fns_709__pulse_5min": {
+        "decay_covered": 3293,
+        "decay_uncovered": 318,
+        "xs_covered_rows": 210,
+        "xs_uncovered_rows": 56,
+        "yield_covered": 0,
+        "yield_uncovered": 0
+      },
+      "u235__fns_709__cont_1d": {
+        "decay_covered": 3293,
+        "decay_uncovered": 318,
+        "xs_covered_rows": 37,
+        "xs_uncovered_rows": 11,
+        "yield_covered": 1193,
+        "yield_uncovered": 70
+      },
+      "u235__fns_709__pulse_5min": {
+        "decay_covered": 3293,
+        "decay_uncovered": 318,
+        "xs_covered_rows": 37,
+        "xs_uncovered_rows": 11,
+        "yield_covered": 1193,
+        "yield_uncovered": 70
+      }
+    },
+    "envelope_minutes": 45,
+    "survival": {
+      "r1": {
+        "failed_samples": 0,
+        "fraction_satisfied": 0.34375,
+        "paired_samples": 64,
+        "satisfied": 22,
+        "semantics": "fraction of paired common-random-number draws in which the rule's nominal predicate holds over every evaluated group and time"
+      },
+      "r2": {
+        "failed_samples": 0,
+        "fraction_satisfied": 0.46875,
+        "paired_samples": 64,
+        "satisfied": 30,
+        "semantics": "fraction of paired common-random-number draws in which the rule's nominal predicate holds over every evaluated group and time"
+      }
+    }
+  },
+  "opening_commit": "b48349001ef6dff3f819c5f70720c61ce1709538",
+  "phase": "P43",
+  "protocol_sha256": "eb138111b8d4a786ff9a658b1131bb6976f26a915b641b1c37b7f85e3e38f8bb",
+  "qualified_family": "ACT-ROBUST-01",
+  "schema": "actinv-verdict-1",
+  "verdict": "P43-CONDITIONAL"
+}

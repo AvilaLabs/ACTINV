@@ -1,0 +1,154 @@
+{
+  "controls": {
+    "channel_isolation": {
+      "interpretation": "a decay-only run perturbs only decay constants; every other channel's inputs stay at identity",
+      "samples": {
+        "s0": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s1": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s2": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s3": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s4": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s5": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s6": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        },
+        "s7": {
+          "decay_scale_entries": 3293,
+          "isolated": true
+        }
+      },
+      "status": "pass"
+    },
+    "composition_sum": {
+      "interpretation": "perturbed wt_percent compositions renormalize to the declared total",
+      "status": "pass"
+    },
+    "coverage_accounting": {
+      "cases": {
+        "fe__fns_709__pulse_5min": {
+          "decay": {
+            "covered": 3293,
+            "uncovered": 318
+          },
+          "xs": {
+            "covered_rows": 166,
+            "uncovered": 45
+          },
+          "yield": {
+            "covered": 0,
+            "uncovered": 0
+          }
+        },
+        "fe_co100wppm__fns_709__pulse_5min": {
+          "decay": {
+            "covered": 3293,
+            "uncovered": 318
+          },
+          "xs": {
+            "covered_rows": 210,
+            "uncovered": 56
+          },
+          "yield": {
+            "covered": 0,
+            "uncovered": 0
+          }
+        },
+        "u235__fns_709__pulse_5min": {
+          "decay": {
+            "covered": 3293,
+            "uncovered": 318
+          },
+          "xs": {
+            "covered_rows": 37,
+            "uncovered": 11
+          },
+          "yield": {
+            "covered": 1193,
+            "uncovered": 70
+          }
+        }
+      },
+      "interpretation": "every enabled channel reports a named covered/uncovered partition of its active input set; zero-parameter coverage is honest accounting",
+      "status": "pass"
+    },
+    "decay_perturbation_trace": {
+      "details": {
+        "activity_scaled": 0.0,
+        "daughter_nominal": 2.7541372684895703e-14,
+        "daughter_scaled": 2.8145350156055695e-14
+      },
+      "interpretation": "decay_scale multiplies the decay constant everywhere: daughter production rate and parent activity scale by f exactly",
+      "max_rel_dev": 2.8145350156055695e-14,
+      "status": "pass"
+    },
+    "flux_linear": {
+      "interpretation": "response linear in flux normalization",
+      "max_rel_dev": 3.2828676797614867e-13,
+      "n_probes": 8,
+      "status": "pass"
+    },
+    "sample_resume": {
+      "interpretation": "verified samples resume without re-solve; a torn artifact re-executes to the same response values under the per-sample seed",
+      "resume_byte_identical": true,
+      "reused_after_tear": 3,
+      "status": "pass",
+      "torn_rerun_values_identical": true
+    },
+    "seed_reproducibility": {
+      "interpretation": "fixed seed reproduces per-sample outputs",
+      "status": "pass"
+    },
+    "survival_accounting": {
+      "interpretation": "decision rules carry paired-sample survival fields under comparison+robustness",
+      "rules": {
+        "rk": {
+          "failed_samples": 0,
+          "fraction_satisfied": 0.0,
+          "paired_samples": 8,
+          "satisfied": 0,
+          "semantics": "fraction of paired common-random-number draws in which the rule's nominal predicate holds over every evaluated group and time"
+        }
+      },
+      "status": "pass"
+    },
+    "yield_perturbation_trace": {
+      "details": {
+        "Cs137": 0.0,
+        "I135": 0.0,
+        "Kr88": 0.0,
+        "U236_unchanged": 0.0,
+        "Xe135": 0.0
+      },
+      "interpretation": "every effective fission production edge scales by 2; activation channels unchanged",
+      "max_rel_dev": 0.0,
+      "status": "pass"
+    },
+    "zero_variance": {
+      "interpretation": "zero declared std -> zero spread",
+      "max_abs_dev": 0.0,
+      "status": "pass"
+    }
+  },
+  "gate": "G2",
+  "pass": true,
+  "phase": "P43"
+}
