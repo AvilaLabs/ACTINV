@@ -823,6 +823,132 @@ does not confer a later phase's verdict or authorize publication. Uncertainty in
 P28 physics envelope, P29 numerical bounds, P30 covariance coverage and P31 performance headroom; P26 must make
 those risks concrete before the implementation sequence is committed.
 
+## Draft innovation extension — P43–P48 (2026-09-23)
+
+**Status: requested draft; every phase below is unopened and unhashed.** This section is the canonical proposed
+scope for converting the P26–P35 machinery into product-level claims. It changes no frozen protocol, prior
+verdict, evidence record or release authorization. P24's corrected-definition re-validation retains its own
+schedule and is not subsumed here; the P17/P18/P18b/P25 failure record stays visible and unamended. P33/P34
+remain blocked on external dependencies (user AI-provider credentials, independent human evaluators) and are not
+resequenced by this draft. Phase numbers and dependencies may be revised by a dated entry before their protocols
+freeze; this document does not open six concurrent phases.
+
+Drafting baseline: commit `cc21d72` (v1.2.1 record). The evidence base is CB1–CB3, the P26b–P42 verdicts, and
+the levers analysis in [LEADERSHIP_LEVERS_2026-09-20.md](LEADERSHIP_LEVERS_2026-09-20.md). No new benchmark,
+solver job or comparator execution was run for this draft.
+
+### Intent and product outcome
+
+The identical-data accuracy margin over FISPACT-II is measured to sit inside decay-evaluation sensitivity
+(ENDF-primary 71/132 vs 69/132; JEFF-primary erases it). Further solver-accuracy work is therefore not the route
+to a defensible lead, and the well is recorded as nearly dry. The owner's scoring axes are accuracy, speed and
+capability breadth. This extension targets capabilities no competitor currently offers to any user:
+
+**An analyst can state a defensible uncertainty on an activation conclusion, afford the campaign that produces
+it, choose a nuclear-data evaluation on evidence, and explore the result interactively — in an open install.**
+
+| Outcome | Draft target and evidence required |
+|---|---|
+| Uncertainty that means something | Measured per-family coverage of declared uncertainty bands against the sealed experimental corpus, frozen scoring before band computation, failures counted against coverage. A band always names its included channels and uncovered remainder. This yields a calibration claim — "measured coverage on the sealed corpus" — not a universal coverage guarantee, not predictive-superiority. |
+| Affordable complete campaigns | Executed end-to-end wall time on frozen campaign workloads against the fastest accessible equivalent-output comparator with its documented amortization enabled. The claim is the executed number at named workload/comparator/resource limits; a miss is published, not relabeled a stretch goal. Capability mismatches are reported, never divided into a ratio. |
+| Evaluation intelligence | Per-target and per-family scored agreement for every lawfully buildable evaluation corpus under an identical pipeline and scorer, with construction failures counted per corpus. No recommendation is rendered without its attached evidence row. |
+| Interactive exploration | Desktop live re-solve on qualified paths through the identical spec→result machinery, measured interaction latency on the flagship workload, bounded and cancellable per-interaction compute. A second numerics path is not created. |
+
+### Scope boundaries
+
+Within this extension: qualified uncertainty campaigns, measured band coverage, executed campaign benchmarking,
+evaluation intelligence, dose-qualified spatial handoff completion, interactive desktop exploration. Each is an
+existing machine or partially-executed chain being converted into a product claim, not new physics.
+
+Outside this extension, unchanged and demand-led: gamma/triton/helion projectiles, resolved-region pointwise and
+probability-table self-shielding, an internal transport solver, criticality, thermal-hydraulics, MPI/cluster
+orchestration, MCNP distributed-source emission (unverifiable without a licensed install), and the blocked
+P33/P34 AI legs. None opens because a matrix cell is empty.
+
+External dependencies remain the principal's acts (standing rule 6): the JADE code-target contribution, the
+NEA/RSICC submission, and a SINBAD licence. A phase may consume their outcomes where they exist but cannot list
+obtaining them as a gate. Where a comparator or corpus stays inaccessible, the cell is `unmeasured` — never a
+silent win or loss.
+
+### Phase sequence and acceptance gates
+
+Default execution order is P43 through P48, one phase at a time. P46 and P47 are machinery-independent of
+P43–P45 and may be resequenced by dated entry; P24 retains its own schedule wherever it is slotted. Each phase
+inherits all applicable earlier controls and the P26–P35 extension's evidence, resource and completion rules.
+The rows below are bounded planning scopes; protocol, minimum gate input, tolerances, resource envelope,
+independent checker and stop rule freeze before each phase executes.
+
+| Phase | Deliverable | Entry dependency | Decisive gate |
+|---|---|---|---|
+| **P43 — qualified uncertainty campaign driver** | The robustness sampling path promoted from verification control to supported product path: ACT-ROBUST-01 qualified across declared channel combinations (cross-section MF=33, flux, composition; decay and yield where coverage exists), complete population accounting, per-channel coverage tables, prepared-run signature sharing, streaming record and digest resume. | Recorded P30/P31 dispositions. | Fixed-seed byte-reproducible campaign on the frozen population with zero unaccounted samples — covered, uncovered, failed, clamped and regularized draws all ledgered; independent local-vs-nonlinear control on the shared regime; unsupported channel combinations refuse `family_not_qualified`. |
+| **P44 — measured band coverage** | Sealed scoring of declared bands against the experimental corpus: fraction of measured points inside each declared band per experiment, per family and pooled, for first-order (P11) and sampled (P43) bands. Development partition diagnostic; sealed partition scored once through unchanged code. | P43 (sampled leg); existing P11 machinery (first-order leg). | Coverage table re-derived by independent checker arithmetic; failed constructions, zero predictions and uncovered rows counted against coverage, never filtered; report states measured coverage per band type per family including where coverage is poor — which names the missing channel and is itself the deliverable. |
+| **P45 — executed complete-campaign benchmark** | Frozen complete workloads (a material/history variant campaign with declared robustness; the distinct-spectrum mesh case or a scaled subset) executed end-to-end on the release candidate and on every accessible equivalent-output comparator with documented amortization enabled; cold/warm, preparation, solve, sampling, output and evidence time all reported; failed cases counted on both sides. | P43. | Output parity defined and checked per case before timing; checker re-derives every ratio from raw records; the published claim names exact workload, comparator versions, resource limits and host; no extrapolated or universal-competitor figure. |
+| **P46 — evaluation intelligence** | A supported comparison surface (CLI, Python, desktop) presenting per-target and per-family scored agreement for every lawfully buildable evaluation corpus — tendl-2025-patched, tendl-2025 legacy, tendl-2017, EAF-2010, FENDL-3.2c — built under an identical pipeline and scored on the frozen measurement partitions; every recommendation carries its evidence row. | Machinery-independent; sequenced after P44 for shared scoring code. | Identical builder/scorer per corpus or the difference named; construction failures and exclusions counted per corpus; scored populations frozen before values are read; a corpus that cannot express a channel (e.g. EAF isomeric identity) is labeled, not silently scored low. |
+| **P47 — dose-qualified spatial handoff** | Discharge P32's recorded conditions: execute the implemented EnergyFunctionFilter dose leg under the bounded scope, report photon-dose agreement with its Monte Carlo standard deviation, carry neutron-tally statistical error into the activation comparison band, and consume an external benchmark geometry if and only if one is lawfully available. | Independent; bounded job slots. | Frozen exported sources SHA-re-verified before replay; dose agreement reported with MC std-dev; tally sigma propagated into a stated band; the chain claim upgrades from "flux proxy" to "dose on the executed geometry" only if the dose leg passes its frozen band — otherwise the condition stays named. |
+| **P48 — interactive exploration** | Desktop live re-solve on qualified paths: declared sweep axes (composition fraction, flux normalization, cooling time, optionally evaluation selection from P46) rendered with bands from the P43 path; per-interaction compute bounded and cancellable. | P43 (bands), P45 (measured latency envelope). | Interactive-path results identical to CLI runs on the same generated specs; interaction latency measured on the flagship workload with hardware recorded; a cancelled or superseded sweep can never render a stale result under new parameters (planted race regressions pass). |
+
+**P43 — make the uncertainty campaign a product.** The ACT-ROBUST-01 family exists but is a verification
+control; this phase ships it as the supported campaign path. Wire the sampling driver over the declared
+robustness knobs with complete population accounting and the per-channel coverage table; reuse P31's
+prepared-run signatures so perturbed solves amortize preparation; stream the sample record and resume by digest.
+Discharge every locally-dischargeable P30 condition; conditions that remain (partial MF=33 coverage, no blind
+experimental validation) are carried as named limitations, not silently closed. Rankings claim nominal,
+distribution or bound status explicitly. No shipped band may be labeled total uncertainty without total coverage.
+
+**P44 — measure whether the bands are true.** The novel claim of this extension and the cheapest to get wrong.
+Freeze the scoring code, the band definitions and a sealed partition of the measurement corpus before any band
+is computed against it. Score the fraction of measured points inside each declared band; the development
+partition may guide channel work but the sealed partition is scored once through unchanged code. Poor coverage
+is a publishable result — it names the missing channel (decay data, yield covariance, model remainder) with
+evidence. Under no circumstance is a band widened after seeing its coverage; widening is a new band definition
+and a new sealed scoring. This phase produces the calibration claim; P24 produces the complementary predictive
+re-validation of point estimates, and neither substitutes for the other.
+
+**P45 — prove the campaign is affordable.** Replace the kernel-ratio headline with an executed whole-workload
+claim. Freeze workloads, output parity, comparator versions, resource limits and host before timing. Give each
+comparator its documented preparation and caches; where no lawful comparator exists the leg is unmeasured.
+Report preparation amortization separately so the win (or loss) is attributable. The P26 lesson applies: an
+undetermined target is a failure mode — every ambition here is an executed measurement, and a measured loss is
+published as one.
+
+**P46 — sell the evaluation choice.** Productize what the defect censuses already proved: ACTINV can say which
+evaluation is best for a target on evidence. Build every lawful corpus through the identical pipeline, score on
+the frozen partitions, and render per-target/per-family tables with a recommendation surface that carries its
+evidence row. This converts the TENDL-2025 defect record from a liability disclosure into a selection capability
+FISPACT's take-it-or-leave-it condensed libraries do not offer, and produces the decision evidence for whether
+an EAF state-catalog phase or the corrected upstream TENDL release is worth a later phase.
+
+**P47 — finish the R2S claim.** The executed chain is currently a flux proxy on a self-produced geometry.
+Execute the implemented dose leg, propagate tally statistical error, and report dose agreement with its MC
+uncertainty. An external benchmark geometry (SINBAD) upgrades the claim only if a licence arrives through the
+principal's channels; the self-produced condition otherwise stays named. MCNP distributed-source emission
+remains a documented placeholder until a lawful verification route exists.
+
+**P48 — make speed visible.** Deliver interactive exploration in the desktop through the identical qualified
+solver path — never a second numerics implementation. Declared sweep axes only; per-interaction compute bounded
+and cancellable; a displayed result is always bound to the parameters that produced it. Regression coverage for
+cancellation races and stale results is required by the local safety rules on process/worker launching. Latency
+is a measured claim on the flagship workload, not an aspiration.
+
+### Evidence and completion rules for this extension
+
+1. The P26–P35 evidence, resource and completion rules (1–8 above) and the standing rules apply in full.
+2. A calibration band is never tuned to the corpus it is scored against. Development and sealed partitions are
+   distinct; scoring code freezes before sealed values are read.
+3. Comparator fairness is a gate: documented competitor amortization is enabled, capability mismatches are
+   reported as such, and unmeasured cells stay unmeasured.
+4. Interactivity cannot create a second numerics path, and a rendered result is always bound to the inputs that
+   produced it.
+5. Every claim names its executed workload, comparator set, corpus identity and measured value. The deliverable
+   is the honest number; "best in class" is claimed per named workflow or not at all.
+
+Planning milestones are P43–P44 (uncertainty as a calibrated product), P45–P46 (affordability and evaluation
+intelligence as measured claims), P47–P48 (the R2S claim completed and speed made visible). The largest
+uncertainties are MF=33 coverage depth in P43, what the sealed coverage score actually is in P44 — a poor number
+is a fork to channel work, not a failed phase — and whether any equivalent-output comparator is lawfully
+executable for P45. P44's outcome should be treated as the extension's first real decision point: it determines
+whether "calibrated uncertainty" ships as a claim or returns to channel-repair scope.
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
@@ -1346,3 +1472,13 @@ those risks concrete before the implementation sequence is committed.
   data release; publishing it as a `data-v1.1.x` artifact remains the maintainer's
   decision and must carry the defect scope verbatim. All scoring was retrospective; no
   blind evidence exists or was claimed.
+
+- 2026-09-23 — at the maintainer's direction, draft the innovation extension P43–P48: convert the P26–P35
+  machinery into product-level claims on the owner's axes (accuracy, speed, capability breadth). Proposed scope:
+  a qualified uncertainty-campaign driver (P43), measured band coverage against the sealed experimental corpus
+  (P44), an executed complete-campaign comparator benchmark (P45), evaluation intelligence (P46), dose-qualified
+  spatial handoff completion (P47) and interactive desktop exploration (P48). The draft opens no phase and
+  changes no frozen protocol or verdict; P24's schedule, the P17/P18/P18b/P25 failure record and the P33/P34
+  blockers are unchanged. Gamma/triton/helion projectiles, probability-table shielding, internal transport, MPI
+  and the AI legs remain demand-led and unopened. JADE/NEA/SINBAD routes stay external maintainer acts that
+  phases may consume but cannot gate on.
