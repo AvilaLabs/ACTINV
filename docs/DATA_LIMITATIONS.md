@@ -29,8 +29,10 @@ in 28 source files — the leak is a thermal-energy artifact and is
 not material on the 14-MeV FNS corpus, but users working thermal or
 mixed-spectrum problems should prefer the patched bundle. The P46
 evidence shows the coverage loss dominated the defect penalty on the
-measured corpus. The patched bundle remains installed and is the
-required pairing for the shipped covariance workflow.
+measured corpus. Each library has its own covariance sidecar
+(`tendl-2025-neutron-covariance` for the full corpus,
+`tendl-2025-patched-neutron-covariance` for the subset); the solver
+rejects a mismatched pairing by index hash and per-target identity.
 
 ## The confirmed upstream defect
 
