@@ -165,3 +165,16 @@ formats, path plumbing, record completeness). No definition, ranking rule,
 constraint semantics, axis semantics, optimizer algorithm, seed, bound or
 inclusion predicate may change after the G0 seal; such a change fails the
 phase.
+
+## Amendment 1 — mechanical repair (memory plumbing)
+
+Post-seal, the first G3 run was OOM-killed inside the bounded scope: the
+candidate evaluator serialized each `RunResult` to a `serde_json::Value`
+DOM (~4 GB for the 13-step band problem) before extracting responses.
+Repaired by reading objective/constraint edges directly from the typed
+`RunResult`/`StepOut`/`ResponseUncertainty` structures — identical values,
+no serialization DOM. No definition, ranking rule, constraint semantic,
+axis semantic, optimizer algorithm, seed, bound or inclusion predicate
+changed. Sealed `optimize.rs` sha256 4f2f4b1… superseded by the amended
+module committed under this repair round; all other sealed artifacts are
+unchanged.

@@ -40,8 +40,10 @@ def main() -> int:
         return 1
 
     t0 = time.time()
+    # --resume is a no-op on a fresh ledger and lets an interrupted
+    # campaign continue from the last committed evaluation
     p = subprocess.run(
-        [str(ACTINV), "optimize", str(OPTSPEC), str(OUTDIR)],
+        [str(ACTINV), "optimize", str(OPTSPEC), str(OUTDIR), "--resume"],
         capture_output=True, text=True, cwd=ROOT)
     wall = time.time() - t0
     if p.returncode != 0:
@@ -57,6 +59,8 @@ def main() -> int:
         "gate": "G3",
         "pass": True,
         "wall_s": wall,
+        "eval_wall_s_total": sum(r.get("wall_s", 0.0)
+                                 for r in ledger_rows),
         "n_evals": result["n_evals"],
         "infeasible": result["infeasible"],
         "best_feasible": result["best_feasible"],

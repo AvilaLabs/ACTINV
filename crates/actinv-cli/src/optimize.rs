@@ -447,53 +447,62 @@ impl OptimizeSpec {
     }
 }
 
-/// Extract a response value or band edge from a serialized step.
+/// Extract a response value or band edge from a step — typed access, no
+/// full-result serialization (a serialized step is ~100 MB and would blow
+/// the bounded-memory envelope across candidates).
 fn response_edge(
-    step: &Value,
+    step: &actinv_core::run::StepOut,
     response: &str,
     edge: Edge,
 ) -> Result<Option<f64>, String> {
-    let nominal = |st: &Value| -> Option<f64> {
+    let nominal = |st: &actinv_core::run::StepOut| -> Option<f64> {
         if let Some(k) = response.strip_prefix("heat.") {
-            st["heat_W_per_g"][k].as_f64()
+            match k {
+                "total" => Some(st.heat_W_per_g.total),
+                "alpha" => Some(st.heat_W_per_g.alpha),
+                "beta" => Some(st.heat_W_per_g.beta),
+                "gamma" => Some(st.heat_W_per_g.gamma),
+                _ => None,
+            }
         } else if response == "activity.total" {
             // mirrors snapshot_value: sum over every activity entry
-            st["activity_Bq_per_g"]
-                .as_object()
-                .map(|m| m.values().filter_map(|v| v.as_f64()).sum())
+            Some(st.activity_Bq_per_g.values().sum())
         } else {
             response
                 .strip_prefix("activity:")
-                .map(|k| st["activity_Bq_per_g"][k].as_f64().unwrap_or(0.0))
+                .map(|k| st.activity_Bq_per_g.get(k).copied().unwrap_or(0.0))
         }
     };
     if edge == Edge::Nominal {
         return Ok(nominal(step));
     }
-    let u = &step["uncertainty"]["responses"][response];
-    if u.is_null() {
-        return Err(format!(
-            "band edge for '{response}' not present in step uncertainty"
-        ));
-    }
+    let u = step
+        .uncertainty
+        .as_ref()
+        .and_then(|u| u.responses.get(response))
+        .ok_or_else(|| {
+            format!("band edge for '{response}' not present in step uncertainty")
+        })?;
     let iv = if matches!(edge, Edge::NormalLower | Edge::NormalUpper) {
-        &u["normal_interval"]
+        u.normal_interval
     } else {
-        &u["conservative_interval"]
+        u.conservative_interval
     };
-    let idx = if matches!(edge, Edge::NormalLower | Edge::ConservativeLower) {
-        0
+    Ok(Some(if matches!(edge, Edge::NormalLower | Edge::ConservativeLower) {
+        iv[0]
     } else {
-        1
-    };
-    Ok(iv[idx].as_f64())
+        iv[1]
+    }))
 }
 
 /// Select the step whose cumulative t_s is nearest `time_s`.
-fn select_step<'a>(steps: &'a [Value], time_s: f64) -> Result<&'a Value, String> {
-    let mut best: Option<(&Value, f64)> = None;
+fn select_step<'a>(
+    steps: &'a [actinv_core::run::StepOut],
+    time_s: f64,
+) -> Result<&'a actinv_core::run::StepOut, String> {
+    let mut best: Option<(&actinv_core::run::StepOut, f64)> = None;
     for s in steps {
-        let t = s["t_s"].as_f64().unwrap_or(f64::NAN);
+        let t = s.t_s;
         if !t.is_finite() {
             continue;
         }
@@ -576,24 +585,21 @@ fn evaluate_candidate(
             )
         }
     };
-    let rj = serde_json::to_value(&result).unwrap_or(Value::Null);
-    let steps = match rj["steps"].as_array() {
-        Some(s) if !s.is_empty() => s,
-        _ => {
-            return (
-                EvalOutcome {
-                    objective: None,
-                    violations: vec![None; opt.constraints.len()],
-                    status: "run_error: empty steps".into(),
-                },
-                Some(canon),
-                detail,
-            )
-        }
-    };
+    if result.steps.is_empty() {
+        return (
+            EvalOutcome {
+                objective: None,
+                violations: vec![None; opt.constraints.len()],
+                status: "run_error: empty steps".into(),
+            },
+            Some(canon),
+            detail,
+        );
+    }
+    let steps = &result.steps;
 
     let objective = match select_step(steps, opt.objective.time_s)
-        .and_then(|st| response_edge(st, &opt.objective.response, opt.objective.edge).map_err(|e| e))
+        .and_then(|st| response_edge(st, &opt.objective.response, opt.objective.edge))
     {
         Ok(Some(v)) => {
             detail.insert(
@@ -842,9 +848,7 @@ pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> 
                 &crate::resolve_catalog_json(&c)?,
             )?;
             let re = actinv_core::run::run(&re_spec, "optimize-verify")?;
-            let rej = serde_json::to_value(&re).unwrap_or(Value::Null);
-            let re_steps = rej["steps"].as_array().cloned().unwrap_or_default();
-            let re_obj = select_step(&re_steps, opt.objective.time_s)
+            let re_obj = select_step(&re.steps, opt.objective.time_s)
                 .ok()
                 .and_then(|st| {
                     response_edge(st, &opt.objective.response, opt.objective.edge)
