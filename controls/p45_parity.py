@@ -135,8 +135,12 @@ def score_ledger(ledger_rows: list[dict]) -> dict:
                     if v is not None:
                         pool[f"identical:{k}"][t].append(v)
         else:
+            # absent = neither arm produced anything; arm_failure = one
+            # side exists but its comparator didn't (or failed)
             rec["identical"] = {"status":
-                                "arm_failure" if (a or cf) else "absent"}
+                                "arm_failure" if (a or cf) else "absent",
+                                "alara": a.get("status"),
+                                "actinv_fendl": cf.get("status")}
 
         # data-mismatch leg: openmc vs actinv_tendl (descriptive)
         om, ct = arms.get("openmc", {}), arms.get("actinv_tendl", {})

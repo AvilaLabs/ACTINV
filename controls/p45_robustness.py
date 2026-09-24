@@ -103,17 +103,25 @@ def main() -> int:
     WORK.mkdir(parents=True, exist_ok=True)
     spath = WORK / "robustness_study.json"
     spath.write_text(json.dumps(study))
-    out_path = WORK / "robustness_result.json"
+    out_path = WORK / "robustness_out"
     t0 = time.monotonic()
     r = leg.timed_run(
         [str(ACTINV), "study", "run", str(spath), str(out_path)],
         WORK, timeout=5400.0)
     wall = time.monotonic() - t0
+    rec_path = out_path / "study_record.json"
     rec = {"spec": "actinv-p45-robustness-1",
            "study_sha256": sha256_file(spath),
            "wall_s": wall, "returncode": r["returncode"],
-           "result_sha256": sha256_file(out_path)
-           if out_path.exists() else None}
+           "record_sha256": sha256_file(rec_path)
+           if rec_path.exists() else None}
+    if rec_path.exists():
+        o = json.loads(rec_path.read_text())
+        rec["n_cases"] = len(o.get("cases") or [])
+        rec["failed_samples"] = sum(
+            (c.get("robustness") or {}).get("n_failed_samples") or 0
+            for c in o.get("cases") or [])
+        rec["study_status"] = o.get("status")
     if r["returncode"] != 0:
         rec["failure"] = r.get("failure") or "study_error"
         rec["stderr_tail"] = (r.get("stderr") or "")[-2000:]
