@@ -120,32 +120,30 @@ def main() -> int:
     # mutation changes what the seal binds
     tmpdir = Path(tempfile.mkdtemp(prefix="p47-mut-"))
     muts = {}
-    # m1: zero a dose statepoint byte -> dose rederivation differs
+    # m1: scale the tally results inside a statepoint copy via h5py
+    # -> the independent rederivation must observe a different dose
     src = Path(seal["artifacts"]["dose_statepoint_step2"]["path"])
     mut = tmpdir / "sp2.h5"
-    data = bytearray(src.read_bytes())
-    data[4096] ^= 0xFF
-    mut.write_bytes(bytes(data))
+    shutil.copy2(src, mut)
     r = subprocess.run(
         [str(OMC_PY), "-c", textwrap.dedent(f"""
-            import openmc, json, sys
-            try:
-                sp = openmc.StatePoint({str(mut)!r})
-                t = sp.get_tally(name="detector_air_dose")
-                print("OK:" + json.dumps(float(t.mean[0, 0, 0])))
-            except Exception as e:
-                print("ERR:" + str(e)[:200])
+            import h5py, openmc, json
+            with h5py.File({str(mut)!r}, "r+") as f:
+                for key in f["tallies"]:
+                    grp = f["tallies"][key]
+                    if "results" in grp:
+                        grp["results"][...] *= 1.5
+            sp = openmc.StatePoint({str(mut)!r})
+            t = sp.get_tally(name="detector_air_dose")
+            print("OK:" + json.dumps(float(t.mean[0, 0, 0])))
         """)], capture_output=True, text=True)
     line = r.stdout.strip().splitlines()[-1] if r.stdout.strip() else ""
-    if line.startswith("OK:"):
-        muts["m1_corrupt_statepoint"] = not math.isclose(
+    muts["m1_corrupt_statepoint"] = (
+        line.startswith("OK:")
+        and not math.isclose(
             float(line[3:]),
             dose["cooling_step_doses"]["2"]["detector_air_dose_Gy_s"],
-            rel_tol=1e-9)
-    else:
-        # corrupted file unreadable or empty — the tamper broke the
-        # artifact, which is itself detection
-        muts["m1_corrupt_statepoint"] = True
+            rel_tol=1e-9))
     # m2: mutated flux copy fails sha assertion
     src = Path(seal["artifacts"]["source_step2"]["path"])
     mut = tmpdir / "src.py"

@@ -40,7 +40,9 @@ def main() -> int:
         "executed geometry, still not a qualified dosimetry "
         "prediction (no detector model)",
         "contact-proxy/transported ratio is reported with named "
-        "drivers; no dose claim is made from the proxy",
+        "drivers and is unmeasurable under the frozen P32 spec (no "
+        "photon response declared -> proxy null per nuclide); no dose "
+        "claim is made from the proxy",
         "P32 normalization defect found and corrected: the OpenMC "
         "0.15.3 tally returns f-weighted track length with no cell-"
         "volume division; p32_dose.json's published values overstate "

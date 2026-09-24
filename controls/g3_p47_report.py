@@ -69,8 +69,11 @@ def actinv_atoms(mesh_ndjson: Path, mass_g: float) -> dict:
 
 
 def contact_proxy_sum(mesh_ndjson: Path) -> dict:
-    """sum of per-cell per-step contact proxy over all cells."""
+    """sum of per-cell per-step contact proxy over all cells; also
+    counts how many nuclide entries actually carry a proxy value."""
     tot = {}
+    n_with = 0
+    n_without = 0
     for line in mesh_ndjson.read_text().splitlines():
         j = json.loads(line)
         if j.get("record") != "cell":
@@ -78,12 +81,15 @@ def contact_proxy_sum(mesh_ndjson: Path) -> dict:
         for s in j["result"]["steps"]:
             step = str(s["step"])
             ps = s.get("photon_source") or {}
-            v = 0.0
             for n in ps.get("by_nuclide", []):
-                v += (n.get("contact_gamma_air_dose_proxy_Gy_h")
-                      or 0.0)
-            tot[step] = tot.get(step, 0.0) + v
-    return tot
+                v = n.get("contact_gamma_air_dose_proxy_Gy_h")
+                if v is None:
+                    n_without += 1
+                    continue
+                n_with += 1
+                tot[step] = tot.get(step, 0.0) + v
+    return {"sums": tot, "n_with_proxy": n_with,
+            "n_without_proxy": n_without}
 
 
 def main() -> int:
@@ -147,10 +153,18 @@ def main() -> int:
                 "P32 read the raw f-weighted track-length tally as "
                 "Gy/s; dividing by detector volume gives the true "
                 "dose rate (P32 values overstated by 4124.79x)"}
-        cp = proxy.get(step)
+        cp = proxy["sums"].get(step)
         ratios[step] = {
             "transported_dose_Gy_h": corrected_Gy_s * 3600.0,
             "contact_proxy_sum_Gy_h": cp,
+            "proxy_availability": (
+                "no proxy emitted — the frozen P32 mesh spec declared "
+                "no photon response, so contact_gamma_air_dose_proxy "
+                "is null per nuclide; the ratio is unmeasurable and "
+                "is reported as such (no dose claim from the proxy)"
+                if proxy["n_with_proxy"] == 0 else
+                f"emitted for {proxy['n_with_proxy']} nuclide entries"
+                f" ({proxy['n_without_proxy']} without)"),
             "ratio": (corrected_Gy_s * 3600.0) / cp if cp else None,
             "drivers": [
                 "proxy is uncollided semi-infinite-slab point-isotropic"
