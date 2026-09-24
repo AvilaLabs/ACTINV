@@ -1,0 +1,77 @@
+{
+ "spec": "actinv-p46-g2-1",
+ "controls": [
+  {
+   "control": "exact_ce_rederivation",
+   "pass": true,
+   "detail": {
+    "a": 1.0,
+    "b": 2.0
+   }
+  },
+  {
+   "control": "uncovered_semantics",
+   "pass": true,
+   "detail": {
+    "points": [
+     {
+      "corpus": "fendl-3.2c",
+      "experiment": "Ag/2000exp_5min",
+      "outcome": "uncovered"
+     }
+    ],
+    "cell": {
+     "n_measured": 0,
+     "n_scored": 0,
+     "n_uncovered": 20,
+     "n_failed": 0,
+     "n_unpopulated": 0,
+     "n_excluded": 0,
+     "median_ce": null,
+     "mean_abs_ln_ce": null,
+     "frac_within_20": null,
+     "frac_within_2x": null
+    }
+   }
+  },
+  {
+   "control": "failed_semantics",
+   "pass": true,
+   "detail": {
+    "n_measured": 0,
+    "n_scored": 0,
+    "n_uncovered": 0,
+    "n_failed": 1,
+    "n_unpopulated": 0,
+    "n_excluded": 0,
+    "median_ce": null,
+    "mean_abs_ln_ce": null,
+    "frac_within_20": null,
+    "frac_within_2x": null
+   }
+  },
+  {
+   "control": "evidence_refusal",
+   "pass": true
+  },
+  {
+   "control": "coverage_shift_not_score",
+   "pass": true
+  },
+  {
+   "control": "family_derivation",
+   "pass": true,
+   "detail": {
+    "f1": "pure_element",
+    "f2": "alloy_composition",
+    "f3": "pure_element"
+   }
+  },
+  {
+   "control": "unpopulated_semantics",
+   "pass": true,
+   "detail": 20
+  }
+ ],
+ "all_pass": true
+}

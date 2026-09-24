@@ -1,7 +1,7 @@
 {
  "schema": "actinv-p46-seal-1",
- "sealed_at_utc": "2026-09-24T07:55:01Z",
- "opening_commit": "d869fae17434a19a8d7f2fcda2e8b4cb91e805fe",
+ "sealed_at_utc": "2026-09-24T07:59:30Z",
+ "opening_commit": "0db335fed96e36f023696b43aeccb89e9e54029f",
  "protocol_sha256": "0e61e3b76971109cad26137a039e9cc07258377e4917314d5f7f63f5a000d50b",
  "corpora": {
   "tendl-2025": {
@@ -82,7 +82,7 @@
  },
  "code_sha256": {
   "driver": "3f4d752af92e4d38600461d3086cb3778c3cc6959bd7d70ce3600d9d8c44f7af",
-  "scorer": "5bd7a8cd707d1a175cf4c24b437698dd2a39408b394ab6e37a8c1894f21a1e56",
+  "scorer": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
   "report": "e08390cbb00052c4e2561feefb2d515efccc4063267b4b2564cd5150378a2eff",
   "p44_bands": "827eb4644bbae673cd6b35f2246faa44daaf5bb2317f8160549eb8cff8a41d49",
   "p44_band_coverage": "0c4a18169aa8ce1acb68126a66b6f44d914794d42d8a29f3e42966629240582b",

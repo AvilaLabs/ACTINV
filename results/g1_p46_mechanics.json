@@ -1,0 +1,78 @@
+{
+ "spec": "actinv-p46-g1-1",
+ "probes": [
+  {
+   "probe": "development_run",
+   "pass": true,
+   "detail": "{\"done\": 20, \"last\": \"tendl-2025-patched/W/2000exp_5min\"}\n{\"done\": 40, \"last\": \"eaf-2010/W/2000exp_5min\"}\n{\"records\": 50, \"ledger\": \"/home/connoravila/Documents/actinv/results/p46_dev_ledger.jsonl\"}\n"
+  },
+  {
+   "probe": "development_scoring",
+   "pass": true,
+   "detail": "{\"points\": 926, \"material_cells\": 40, \"recommendations\": 8, \"per_corpus\": {\"tendl-2025\": 10, \"tendl-2025-patched\": 10, \"tendl-2017\": 10, \"eaf-2010\": 10, \"fendl-3.2c\": 10}}\n"
+  },
+  {
+   "probe": "accounting_complete",
+   "pass": true,
+   "detail": {
+    "tendl-2025": {
+     "executed": 10,
+     "failed": 0
+    },
+    "tendl-2025-patched": {
+     "executed": 10,
+     "failed": 0
+    },
+    "tendl-2017": {
+     "executed": 10,
+     "failed": 0
+    },
+    "eaf-2010": {
+     "executed": 10,
+     "failed": 0
+    },
+    "fendl-3.2c": {
+     "executed": 10,
+     "failed": 0
+    }
+   }
+  },
+  {
+   "probe": "expressibility_assigned",
+   "pass": true,
+   "detail": {
+    "tendl-2025": [
+     "full_evaluation"
+    ],
+    "tendl-2025-patched": [
+     "covariance_subset"
+    ],
+    "tendl-2017": [
+     "legacy_evaluation"
+    ],
+    "eaf-2010": [
+     "no_state_catalog"
+    ],
+    "fendl-3.2c": [
+     "converted_subset"
+    ]
+   }
+  },
+  {
+   "probe": "outcome_vocabulary",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "probe": "evidence_rows",
+   "pass": true,
+   "detail": []
+  },
+  {
+   "probe": "g1_complete",
+   "pass": true
+  }
+ ],
+ "all_pass": true,
+ "wall_s": 1.1981010850286111
+}

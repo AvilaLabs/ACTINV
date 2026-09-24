@@ -1,0 +1,7321 @@
+{
+ "schema": "actinv-p46-eval-1",
+ "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+ "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+ "corpus_accounting": {
+  "tendl-2025": {
+   "eligible_experiments": 132,
+   "executed": 10,
+   "failed": 0,
+   "uncovered_experiments": 0,
+   "provenance": "legacy_builder",
+   "expressibility": [
+    "full_evaluation"
+   ],
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+   "elements_covered": 113
+  },
+  "tendl-2025-patched": {
+   "eligible_experiments": 132,
+   "executed": 10,
+   "failed": 0,
+   "uncovered_experiments": 0,
+   "provenance": "current_builder",
+   "expressibility": [
+    "covariance_subset"
+   ],
+   "sha256": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d",
+   "elements_covered": 113
+  },
+  "tendl-2017": {
+   "eligible_experiments": 132,
+   "executed": 10,
+   "failed": 0,
+   "uncovered_experiments": 0,
+   "provenance": "current_builder",
+   "expressibility": [
+    "legacy_evaluation"
+   ],
+   "sha256": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d",
+   "elements_covered": 87
+  },
+  "eaf-2010": {
+   "eligible_experiments": 132,
+   "executed": 10,
+   "failed": 0,
+   "uncovered_experiments": 0,
+   "provenance": "legacy_builder",
+   "expressibility": [
+    "no_state_catalog"
+   ],
+   "sha256": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7",
+   "elements_covered": 99
+  },
+  "fendl-3.2c": {
+   "eligible_experiments": 132,
+   "executed": 10,
+   "failed": 0,
+   "uncovered_experiments": 3,
+   "provenance": "converted_subset",
+   "expressibility": [
+    "converted_subset"
+   ],
+   "sha256": "18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0",
+   "elements_covered": 9
+  }
+ },
+ "material_tables": {
+  "eaf-2010|Al": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0804624929507636,
+   "mean_abs_ln_ce": 0.07540449131786148,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|Cu": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0874996270845838,
+   "mean_abs_ln_ce": 0.08005999494963345,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|Fe": {
+   "n_measured": 51,
+   "n_scored": 51,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0093505179709992,
+   "mean_abs_ln_ce": 0.06262228778067402,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|Ni": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0500205138857024,
+   "mean_abs_ln_ce": 0.05567194509925634,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|SS316": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.9998043895822158,
+   "mean_abs_ln_ce": 0.012596705501263234,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|Ti": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.9933511038981956,
+   "mean_abs_ln_ce": 0.03238086879402245,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|V": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.138969948807573,
+   "mean_abs_ln_ce": 0.11732161449135163,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|W": {
+   "n_measured": 20,
+   "n_scored": 20,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.862593673170175,
+   "mean_abs_ln_ce": 0.6162836096804802,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.9
+  },
+  "fendl-3.2c|Al": {
+   "n_measured": 0,
+   "n_scored": 0,
+   "n_uncovered": 21,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": null,
+   "mean_abs_ln_ce": null,
+   "frac_within_20": null,
+   "frac_within_2x": null
+  },
+  "fendl-3.2c|Cu": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0648418682216882,
+   "mean_abs_ln_ce": 0.06032005936014786,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "fendl-3.2c|Fe": {
+   "n_measured": 51,
+   "n_scored": 51,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.05611265482869597,
+   "mean_abs_ln_ce": 3.065745599197362,
+   "frac_within_20": 0.13725490196078433,
+   "frac_within_2x": 0.1568627450980392
+  },
+  "fendl-3.2c|Ni": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.19758167607917734,
+   "mean_abs_ln_ce": 1.6084150346517114,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.09523809523809523
+  },
+  "fendl-3.2c|SS316": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.02367687659837376,
+   "mean_abs_ln_ce": 3.724429618286551,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.0
+  },
+  "fendl-3.2c|Ti": {
+   "n_measured": 0,
+   "n_scored": 0,
+   "n_uncovered": 21,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": null,
+   "mean_abs_ln_ce": null,
+   "frac_within_20": null,
+   "frac_within_2x": null
+  },
+  "fendl-3.2c|V": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0764076138129155,
+   "mean_abs_ln_ce": 0.0681078062864046,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "fendl-3.2c|W": {
+   "n_measured": 0,
+   "n_scored": 0,
+   "n_uncovered": 20,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": null,
+   "mean_abs_ln_ce": null,
+   "frac_within_20": null,
+   "frac_within_2x": null
+  },
+  "tendl-2017|Al": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.073824102432992,
+   "mean_abs_ln_ce": 0.068248640692653,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|Cu": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0530743306048806,
+   "mean_abs_ln_ce": 0.04717327161448524,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|Fe": {
+   "n_measured": 51,
+   "n_scored": 51,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.958071528894478,
+   "mean_abs_ln_ce": 0.07253100751771012,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|Ni": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0700372179233875,
+   "mean_abs_ln_ce": 0.0676729315700047,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|SS316": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0626048582240581,
+   "mean_abs_ln_ce": 0.05348192869295021,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|Ti": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.032089517108799,
+   "mean_abs_ln_ce": 0.034405384389816066,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|V": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.180972021697139,
+   "mean_abs_ln_ce": 0.1441721056919618,
+   "frac_within_20": 0.9523809523809523,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|W": {
+   "n_measured": 20,
+   "n_scored": 20,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.8741106509197907,
+   "mean_abs_ln_ce": 0.6077331793728824,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.95
+  },
+  "tendl-2025|Al": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.074065705455894,
+   "mean_abs_ln_ce": 0.06858664231339533,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|Cu": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0624156945671603,
+   "mean_abs_ln_ce": 0.06133745006115739,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|Fe": {
+   "n_measured": 51,
+   "n_scored": 51,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.9560255769692708,
+   "mean_abs_ln_ce": 0.07438700037412461,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|Ni": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.2061914507756095,
+   "mean_abs_ln_ce": 0.1870188197374372,
+   "frac_within_20": 0.5714285714285714,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|SS316": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.1967935876260647,
+   "mean_abs_ln_ce": 0.13523109118007576,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|Ti": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0042574725055016,
+   "mean_abs_ln_ce": 0.02186778243517709,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|V": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.1748291098373072,
+   "mean_abs_ln_ce": 0.14059398059742684,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|W": {
+   "n_measured": 20,
+   "n_scored": 20,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 2.362021642892497,
+   "mean_abs_ln_ce": 0.7898908681602007,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.3
+  },
+  "tendl-2025-patched|Al": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.074065705455894,
+   "mean_abs_ln_ce": 0.06846902373692301,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025-patched|Cu": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.03386522725331008,
+   "mean_abs_ln_ce": 3.331832594840615,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.0
+  },
+  "tendl-2025-patched|Fe": {
+   "n_measured": 51,
+   "n_scored": 51,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.9560255769468748,
+   "mean_abs_ln_ce": 0.0743870005982953,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025-patched|Ni": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.079895417081999,
+   "mean_abs_ln_ce": 0.21633234099973103,
+   "frac_within_20": 0.7619047619047619,
+   "frac_within_2x": 0.9523809523809523
+  },
+  "tendl-2025-patched|SS316": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.184114381131922,
+   "mean_abs_ln_ce": 0.12340177976105055,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025-patched|Ti": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.7080789567406174,
+   "mean_abs_ln_ce": 0.419691058101838,
+   "frac_within_20": 0.47619047619047616,
+   "frac_within_2x": 0.6190476190476191
+  },
+  "tendl-2025-patched|V": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.1748291098371886,
+   "mean_abs_ln_ce": 0.14059398059725745,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025-patched|W": {
+   "n_measured": 20,
+   "n_scored": 20,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.35957444084081724,
+   "mean_abs_ln_ce": 1.5545460338544932,
+   "frac_within_20": 0.1,
+   "frac_within_2x": 0.4
+  }
+ },
+ "family_tables": {
+  "eaf-2010|alloy_composition": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.9998043895822158,
+   "mean_abs_ln_ce": 0.012596705501263234,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "eaf-2010|pure_element": {
+   "n_measured": 176,
+   "n_scored": 176,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0791664674672907,
+   "mean_abs_ln_ce": 0.13123310271658303,
+   "frac_within_20": 0.8863636363636364,
+   "frac_within_2x": 0.9886363636363636
+  },
+  "fendl-3.2c|alloy_composition": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.02367687659837376,
+   "mean_abs_ln_ce": 3.724429618286551,
+   "frac_within_20": 0.0,
+   "frac_within_2x": 0.0
+  },
+  "fendl-3.2c|pure_element": {
+   "n_measured": 114,
+   "n_scored": 114,
+   "n_uncovered": 62,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 0.27508258624191206,
+   "mean_abs_ln_ce": 1.691462512853763,
+   "frac_within_20": 0.4298245614035088,
+   "frac_within_2x": 0.45614035087719296
+  },
+  "tendl-2017|alloy_composition": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.0626048582240581,
+   "mean_abs_ln_ce": 0.05348192869295021,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2017|pure_element": {
+   "n_measured": 176,
+   "n_scored": 176,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.059144103485694,
+   "mean_abs_ln_ce": 0.1332321817272625,
+   "frac_within_20": 0.8806818181818182,
+   "frac_within_2x": 0.9943181818181818
+  },
+  "tendl-2025|alloy_composition": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.1967935876260647,
+   "mean_abs_ln_ce": 0.13523109118007576,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025|pure_element": {
+   "n_measured": 176,
+   "n_scored": 176,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.070399340447135,
+   "mean_abs_ln_ce": 0.16851734409273206,
+   "frac_within_20": 0.8352272727272727,
+   "frac_within_2x": 0.9204545454545454
+  },
+  "tendl-2025-patched|alloy_composition": {
+   "n_measured": 21,
+   "n_scored": 21,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.184114381131922,
+   "mean_abs_ln_ce": 0.12340177976105055,
+   "frac_within_20": 1.0,
+   "frac_within_2x": 1.0
+  },
+  "tendl-2025-patched|pure_element": {
+   "n_measured": 176,
+   "n_scored": 176,
+   "n_uncovered": 0,
+   "n_failed": 0,
+   "n_unpopulated": 0,
+   "n_excluded": 0,
+   "median_ce": 1.021999446691553,
+   "mean_abs_ln_ce": 0.6965906629057192,
+   "frac_within_20": 0.6875,
+   "frac_within_2x": 0.7613636363636364
+  }
+ },
+ "families": {
+  "Al": "pure_element",
+  "Cu": "pure_element",
+  "Fe": "pure_element",
+  "Ni": "pure_element",
+  "SS316": "alloy_composition",
+  "Ti": "pure_element",
+  "V": "pure_element",
+  "W": "pure_element"
+ },
+ "recommendations": {
+  "Al": {
+   "material": "Al",
+   "recommended": [
+    "tendl-2017"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "tendl-2017": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d"
+    },
+    "n_scored": {
+     "tendl-2017": 21
+    },
+    "median_ce": {
+     "tendl-2017": 1.073824102432992
+    }
+   }
+  },
+  "Cu": {
+   "material": "Cu",
+   "recommended": [
+    "tendl-2017"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "tendl-2017": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d"
+    },
+    "n_scored": {
+     "tendl-2017": 21
+    },
+    "median_ce": {
+     "tendl-2017": 1.0530743306048806
+    }
+   }
+  },
+  "Fe": {
+   "material": "Fe",
+   "recommended": [
+    "eaf-2010"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "eaf-2010": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7"
+    },
+    "n_scored": {
+     "eaf-2010": 51
+    },
+    "median_ce": {
+     "eaf-2010": 1.0093505179709992
+    }
+   }
+  },
+  "Ni": {
+   "material": "Ni",
+   "recommended": [
+    "eaf-2010"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "eaf-2010": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7"
+    },
+    "n_scored": {
+     "eaf-2010": 21
+    },
+    "median_ce": {
+     "eaf-2010": 1.0500205138857024
+    }
+   }
+  },
+  "SS316": {
+   "material": "SS316",
+   "recommended": [
+    "eaf-2010"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "eaf-2010": "ee8ba0ae5d6ab7c304f935cd76097f05521aa6213bd8f35d04210861f7e073e7"
+    },
+    "n_scored": {
+     "eaf-2010": 21
+    },
+    "median_ce": {
+     "eaf-2010": 0.9998043895822158
+    }
+   }
+  },
+  "Ti": {
+   "material": "Ti",
+   "recommended": [
+    "tendl-2025"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "tendl-2025": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+    },
+    "n_scored": {
+     "tendl-2025": 21
+    },
+    "median_ce": {
+     "tendl-2025": 1.0042574725055016
+    }
+   }
+  },
+  "V": {
+   "material": "V",
+   "recommended": [
+    "fendl-3.2c"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "fendl-3.2c": "18fdb8db2707369bf500985188077eeb2d8d326ed17233f8b46324e0c3aa3ce0"
+    },
+    "n_scored": {
+     "fendl-3.2c": 21
+    },
+    "median_ce": {
+     "fendl-3.2c": 1.0764076138129155
+    }
+   }
+  },
+  "W": {
+   "material": "W",
+   "recommended": [
+    "tendl-2017"
+   ],
+   "metric": "mean_abs_ln_ce",
+   "evidence": {
+    "scorer_sha256": "e3f9fb97409295e78a41cb1dfb7670a4d19d1b386231340fe6fe094b5964af22",
+    "ledger_sha256": "83c97f1b159bbbdcb8ccfc80a8fb64a07a34028ea27c07cc6ee2db0ae8c796db",
+    "corpora": {
+     "tendl-2017": "218156708ae685db2a50cd7a2c74ca02049b68f266c38a29020b71095717447d"
+    },
+    "n_scored": {
+     "tendl-2017": 20
+    },
+    "median_ce": {
+     "tendl-2017": 1.8741106509197907
+    }
+   }
+  }
+ },
+ "points": [
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.1065076064774795
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.1021726790887338
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.099711866781904
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.099013414662818
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.0968047118463164
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.092772019609096
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.0908058109845606
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.0866606289424943
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.0853315854388539
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 1.0797137987244323
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 1.074065705455894
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 1.070399340447135
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 1.0655052610709481
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 727.0,
+   "outcome": "scored",
+   "ce": 1.0606225309313453
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 914.0,
+   "outcome": "scored",
+   "ce": 1.056958314503648
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1160.0,
+   "outcome": "scored",
+   "ce": 1.051741553162919
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1406.0,
+   "outcome": "scored",
+   "ce": 1.0496495637158092
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1652.0,
+   "outcome": "scored",
+   "ce": 1.0464470872351437
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2080.0,
+   "outcome": "scored",
+   "ce": 1.0309721150451447
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2686.0,
+   "outcome": "scored",
+   "ce": 1.0254408177406502
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0258559185564984
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.085774282602347
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0831062393007924
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0885768620099956
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.080552820248396
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.0792046551762962
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.077479649929437
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.071261052175474
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 191.0,
+   "outcome": "scored",
+   "ce": 1.0700316909971284
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 242.0,
+   "outcome": "scored",
+   "ce": 1.0715769276588005
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 309.0,
+   "outcome": "scored",
+   "ce": 1.0655414832206824
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 375.0,
+   "outcome": "scored",
+   "ce": 1.0624156945671603
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 469.0,
+   "outcome": "scored",
+   "ce": 1.0599193988575386
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 595.0,
+   "outcome": "scored",
+   "ce": 1.058545123897488
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 721.0,
+   "outcome": "scored",
+   "ce": 1.0564765344620097
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 908.0,
+   "outcome": "scored",
+   "ce": 1.0529743039470956
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0513208370437856
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1397.0,
+   "outcome": "scored",
+   "ce": 1.0531036785841812
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1643.0,
+   "outcome": "scored",
+   "ce": 1.051921849243657
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2070.0,
+   "outcome": "scored",
+   "ce": 1.0344503760764034
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2673.0,
+   "outcome": "scored",
+   "ce": 1.038812848953757
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 3279.0,
+   "outcome": "scored",
+   "ce": 1.0377754566024076
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 0.899537853641972
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 0.8974859284453454
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 98.0,
+   "outcome": "scored",
+   "ce": 0.8829404086126263
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 125.0,
+   "outcome": "scored",
+   "ce": 0.8974478532008503
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 161.0,
+   "outcome": "scored",
+   "ce": 0.903660988366485
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 0.9006488546132803
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 248.0,
+   "outcome": "scored",
+   "ce": 0.9097649542189717
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 314.0,
+   "outcome": "scored",
+   "ce": 0.9132767555200685
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 381.0,
+   "outcome": "scored",
+   "ce": 0.9225153070701141
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 477.0,
+   "outcome": "scored",
+   "ce": 0.921809254018307
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 604.0,
+   "outcome": "scored",
+   "ce": 0.9318375250941259
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 0.9328803162829383
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 855.0,
+   "outcome": "scored",
+   "ce": 0.9394166241000652
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1040.0,
+   "outcome": "scored",
+   "ce": 0.9395846464101464
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1284.0,
+   "outcome": "scored",
+   "ce": 0.9485759812686022
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1531.0,
+   "outcome": "scored",
+   "ce": 0.9538689208089878
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1778.0,
+   "outcome": "scored",
+   "ce": 0.9568873821230449
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2206.0,
+   "outcome": "scored",
+   "ce": 0.9586520332518763
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2813.0,
+   "outcome": "scored",
+   "ce": 0.9622538925195044
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 3421.0,
+   "outcome": "scored",
+   "ce": 0.9585822766114571
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 54864.0,
+   "outcome": "scored",
+   "ce": 0.9560255769692708
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 112665.6,
+   "outcome": "scored",
+   "ce": 0.8586220930677247
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 249264.0,
+   "outcome": "scored",
+   "ce": 0.8484736201415655
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 595641.6000000001,
+   "outcome": "scored",
+   "ce": 0.9166906401992767
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 1113004.8,
+   "outcome": "scored",
+   "ce": 0.9117039849508866
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 2063750.4,
+   "outcome": "scored",
+   "ce": 0.9140343981007676
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 4295635.2,
+   "outcome": "scored",
+   "ce": 0.8831353906857722
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 8632310.4,
+   "outcome": "scored",
+   "ce": 0.9326020969028603
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 17291318.4,
+   "outcome": "scored",
+   "ce": 0.9213488862238202
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 34987766.4,
+   "outcome": "scored",
+   "ce": 0.8683469760613333
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0252978580799923
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0302436454418373
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0312619497499977
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.0447309433725878
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.0404277220487395
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.0467270058685965
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.043137524625953
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 1.0509948663882585
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 246.0,
+   "outcome": "scored",
+   "ce": 1.056470721301827
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.0634728392009876
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.0638098014122295
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.0637875718672276
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 599.0,
+   "outcome": "scored",
+   "ce": 1.0707070274213302
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 722.0,
+   "outcome": "scored",
+   "ce": 1.0717222945683045
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 906.0,
+   "outcome": "scored",
+   "ce": 1.069327497357301
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1152.0,
+   "outcome": "scored",
+   "ce": 1.0773943606966545
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.077107522814537
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.0802682248617228
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2072.0,
+   "outcome": "scored",
+   "ce": 1.0798999208033502
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2679.0,
+   "outcome": "scored",
+   "ce": 1.0822235165428589
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 3285.0,
+   "outcome": "scored",
+   "ce": 1.0835851075422525
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.4480677823898755
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.250058747017926
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.2093240173865973
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.2572986854027197
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.2917832800008873
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.290407196575196
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.2655959634571923
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.2757375408480636
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 244.0,
+   "outcome": "scored",
+   "ce": 1.2700258991906141
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 310.0,
+   "outcome": "scored",
+   "ce": 1.2589637985778648
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 376.0,
+   "outcome": "scored",
+   "ce": 1.2061914507756095
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 473.0,
+   "outcome": "scored",
+   "ce": 1.1685908576602557
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 597.0,
+   "outcome": "scored",
+   "ce": 1.1455576304203234
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 723.0,
+   "outcome": "scored",
+   "ce": 1.1294238958507876
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 909.0,
+   "outcome": "scored",
+   "ce": 1.1278627979885003
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1155.0,
+   "outcome": "scored",
+   "ce": 1.1518950707961133
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.1648541836787696
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.1116016636670933
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2069.0,
+   "outcome": "scored",
+   "ce": 1.1306596900435315
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2675.0,
+   "outcome": "scored",
+   "ce": 1.136105954012179
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 3281.0,
+   "outcome": "scored",
+   "ce": 1.0878114121242475
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.2189912764201705
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.2106532341897596
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 67.0,
+   "outcome": "scored",
+   "ce": 1.2139980871693161
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 1.2232532888570105
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 97.0,
+   "outcome": "scored",
+   "ce": 1.216193998292596
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 123.0,
+   "outcome": "scored",
+   "ce": 1.2183525487720734
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.2175532403896272
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.2164481149550035
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.2135712002982746
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.2050558733420247
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 1.1967935876260647
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 1.170221985643059
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 602.0,
+   "outcome": "scored",
+   "ce": 1.1474854815974593
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 725.0,
+   "outcome": "scored",
+   "ce": 1.1202664524564807
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 910.0,
+   "outcome": "scored",
+   "ce": 1.080379540565497
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0486018542408388
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1400.0,
+   "outcome": "scored",
+   "ce": 1.03378121926612
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1644.0,
+   "outcome": "scored",
+   "ce": 1.0312579892120994
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2071.0,
+   "outcome": "scored",
+   "ce": 1.0320312277801242
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2678.0,
+   "outcome": "scored",
+   "ce": 1.0395979584592276
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 3284.0,
+   "outcome": "scored",
+   "ce": 1.042919129218186
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.11266798239959
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.9944967010954858
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.998626425587397
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0064861733888735
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 0.984259260128699
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.002785454066665
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.9868224069374296
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 0.99720031583741
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 0.9980692238251068
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 1.0042574725055016
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 0.9866428201702246
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 0.979099881967479
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 600.0,
+   "outcome": "scored",
+   "ce": 1.0001818106413467
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 726.0,
+   "outcome": "scored",
+   "ce": 1.0099080891047592
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 913.0,
+   "outcome": "scored",
+   "ce": 1.015335562818045
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1159.0,
+   "outcome": "scored",
+   "ce": 1.0299022415897496
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1405.0,
+   "outcome": "scored",
+   "ce": 1.0429537907034874
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1649.0,
+   "outcome": "scored",
+   "ce": 1.0397505591724514
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2076.0,
+   "outcome": "scored",
+   "ce": 1.0467378843633874
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2682.0,
+   "outcome": "scored",
+   "ce": 1.0515719229777412
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 3288.0,
+   "outcome": "scored",
+   "ce": 1.0324263581095001
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.2440672806478146
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.1976568999500439
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 1.1992470262032562
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.1969631957624074
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.1949841325307928
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.1925238719075857
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 159.0,
+   "outcome": "scored",
+   "ce": 1.1919594904627988
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 1.1866351134112225
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 247.0,
+   "outcome": "scored",
+   "ce": 1.1827698474181902
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 313.0,
+   "outcome": "scored",
+   "ce": 1.1760758253518755
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.1748291098373072
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.1661883998499138
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 603.0,
+   "outcome": "scored",
+   "ce": 1.1553077366187112
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 729.0,
+   "outcome": "scored",
+   "ce": 1.1498865388586157
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 916.0,
+   "outcome": "scored",
+   "ce": 1.1339131980128714
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1163.0,
+   "outcome": "scored",
+   "ce": 1.1237691400950511
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1409.0,
+   "outcome": "scored",
+   "ce": 1.109153238695822
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1655.0,
+   "outcome": "scored",
+   "ce": 1.10327399645632
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2083.0,
+   "outcome": "scored",
+   "ce": 1.0434143647015284
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2689.0,
+   "outcome": "scored",
+   "ce": 1.0382052900992897
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "V/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0388809724197716
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 2.4938477900699407
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 2.508919034991586
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 2.4838499212110614
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 2.486342682503906
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 2.467048841353928
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 2.4457314754600836
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 2.3994480233307565
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 2.3471962245302995
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 2.417128460349487
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 2.362021642892497
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 2.152930188019544
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 2.0006375802094967
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 1.8563378094220362
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 912.0,
+   "outcome": "scored",
+   "ce": 1.7586412725575642
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1158.0,
+   "outcome": "scored",
+   "ce": 1.8195260310750545
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1404.0,
+   "outcome": "scored",
+   "ce": 1.905685986366085
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1651.0,
+   "outcome": "scored",
+   "ce": 1.9599497564860422
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2078.0,
+   "outcome": "scored",
+   "ce": 2.137177665225933
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2684.0,
+   "outcome": "scored",
+   "ce": 2.4392194983363007
+  },
+  {
+   "corpus": "tendl-2025",
+   "experiment": "W/2000exp_5min",
+   "t_s": 3291.0,
+   "outcome": "scored",
+   "ce": 1.943803714874479
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.1043177462886047
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.101740063021841
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0996263769720813
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0989965002006132
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.0968013704202968
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.092771818749584
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.0908058068784328
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.0866606288587666
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.08533158543855
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 1.0797137987244319
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 1.074065705455894
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 1.070399340447135
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 1.0655052610709481
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 727.0,
+   "outcome": "scored",
+   "ce": 1.0606225309313453
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 914.0,
+   "outcome": "scored",
+   "ce": 1.056958314503648
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1160.0,
+   "outcome": "scored",
+   "ce": 1.051741553162919
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1406.0,
+   "outcome": "scored",
+   "ce": 1.0496495637158092
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1652.0,
+   "outcome": "scored",
+   "ce": 1.0464470872351437
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2080.0,
+   "outcome": "scored",
+   "ce": 1.0309721150451447
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2686.0,
+   "outcome": "scored",
+   "ce": 1.0254408177406502
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0258559185564984
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 0.0546221001595155
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.051086355367844276
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.04823303247861352
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 0.04506937859345859
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 0.042304202014011236
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 0.03853421229651406
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 0.03386522725331008
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 191.0,
+   "outcome": "scored",
+   "ce": 0.030699299754039275
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 242.0,
+   "outcome": "scored",
+   "ce": 0.02711956703306172
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 309.0,
+   "outcome": "scored",
+   "ce": 0.023880013069366858
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 375.0,
+   "outcome": "scored",
+   "ce": 0.02203118971513037
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 469.0,
+   "outcome": "scored",
+   "ce": 0.020804916661422427
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 595.0,
+   "outcome": "scored",
+   "ce": 0.02063255437865475
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 721.0,
+   "outcome": "scored",
+   "ce": 0.021306244773132702
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 908.0,
+   "outcome": "scored",
+   "ce": 0.023100070677828807
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 0.026416274999274934
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1397.0,
+   "outcome": "scored",
+   "ce": 0.03067628540365756
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1643.0,
+   "outcome": "scored",
+   "ce": 0.035956031482639636
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2070.0,
+   "outcome": "scored",
+   "ce": 0.047700680514704615
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2673.0,
+   "outcome": "scored",
+   "ce": 0.07613329436089616
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 3279.0,
+   "outcome": "scored",
+   "ce": 0.12511852372718368
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 0.8995378536318551
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 0.8974859284366602
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 98.0,
+   "outcome": "scored",
+   "ce": 0.8829404086052851
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 125.0,
+   "outcome": "scored",
+   "ce": 0.8974478531950895
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 161.0,
+   "outcome": "scored",
+   "ce": 0.9036609883623923
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 0.9006488546103516
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 248.0,
+   "outcome": "scored",
+   "ce": 0.9097649542172044
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 314.0,
+   "outcome": "scored",
+   "ce": 0.9132767555191198
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 381.0,
+   "outcome": "scored",
+   "ce": 0.9225153070695854
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 477.0,
+   "outcome": "scored",
+   "ce": 0.9218092540180483
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 604.0,
+   "outcome": "scored",
+   "ce": 0.9318375250939782
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 0.9328803162828188
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 855.0,
+   "outcome": "scored",
+   "ce": 0.9394166240999517
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1040.0,
+   "outcome": "scored",
+   "ce": 0.9395846464100344
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1284.0,
+   "outcome": "scored",
+   "ce": 0.9485759812684912
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1531.0,
+   "outcome": "scored",
+   "ce": 0.9538689208088797
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1778.0,
+   "outcome": "scored",
+   "ce": 0.9568873821229416
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2206.0,
+   "outcome": "scored",
+   "ce": 0.9586520332517826
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2813.0,
+   "outcome": "scored",
+   "ce": 0.9622538925194243
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 3421.0,
+   "outcome": "scored",
+   "ce": 0.9585822766113893
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 54864.0,
+   "outcome": "scored",
+   "ce": 0.9560255769468748
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 112665.6,
+   "outcome": "scored",
+   "ce": 0.8586220919805404
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 249264.0,
+   "outcome": "scored",
+   "ce": 0.8484736158309709
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 595641.6000000001,
+   "outcome": "scored",
+   "ce": 0.9166906373128055
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 1113004.8,
+   "outcome": "scored",
+   "ce": 0.9117039835474289
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 2063750.4,
+   "outcome": "scored",
+   "ce": 0.9140343977243849
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 4295635.2,
+   "outcome": "scored",
+   "ce": 0.8831353906692265
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 8632310.4,
+   "outcome": "scored",
+   "ce": 0.9326020969023971
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 17291318.4,
+   "outcome": "scored",
+   "ce": 0.9213488862233996
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 34987766.4,
+   "outcome": "scored",
+   "ce": 0.8683469760609432
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0252978580587742
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.030243645423273
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0312619497338393
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.0447309433585092
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.0404277220365834
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.0467270058590723
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.0431375246192676
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 1.0509948663835285
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 246.0,
+   "outcome": "scored",
+   "ce": 1.0564707212989763
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.0634728391994752
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.0638098014114166
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.0637875718668575
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 599.0,
+   "outcome": "scored",
+   "ce": 1.0707070274211399
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 722.0,
+   "outcome": "scored",
+   "ce": 1.0717222945681633
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 906.0,
+   "outcome": "scored",
+   "ce": 1.0693274973571743
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1152.0,
+   "outcome": "scored",
+   "ce": 1.0773943606965297
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.0771075228144151
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.080268224861605
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2072.0,
+   "outcome": "scored",
+   "ce": 1.079899920803242
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2679.0,
+   "outcome": "scored",
+   "ce": 1.0822235165427643
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 3285.0,
+   "outcome": "scored",
+   "ce": 1.0835851075421705
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.4058084322812743
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.210408530751405
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.1677312100504342
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.2105228236397865
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.2399272370639751
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.2316650986851738
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.1979127288684333
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.1968036235155564
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 244.0,
+   "outcome": "scored",
+   "ce": 1.1758696666419912
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 310.0,
+   "outcome": "scored",
+   "ce": 1.145806528698434
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 376.0,
+   "outcome": "scored",
+   "ce": 1.079895417081999
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 473.0,
+   "outcome": "scored",
+   "ce": 1.0235636485537494
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 597.0,
+   "outcome": "scored",
+   "ce": 0.9791972387222189
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 723.0,
+   "outcome": "scored",
+   "ce": 0.9439862680021757
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 909.0,
+   "outcome": "scored",
+   "ce": 0.91259579733961
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1155.0,
+   "outcome": "scored",
+   "ce": 0.8900005531353826
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 0.8544923777710309
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 0.7683952382326728
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2069.0,
+   "outcome": "scored",
+   "ce": 0.6935049472911491
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2675.0,
+   "outcome": "scored",
+   "ce": 0.5675389746344857
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 3281.0,
+   "outcome": "scored",
+   "ce": 0.4301742795703692
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.211741448284684
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.2033587496071674
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 67.0,
+   "outcome": "scored",
+   "ce": 1.2065597810886581
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 1.2156212064135516
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 97.0,
+   "outcome": "scored",
+   "ce": 1.2084514341426142
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 123.0,
+   "outcome": "scored",
+   "ce": 1.210287905855726
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.2090220372427802
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.2073511533956967
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.20355591520905
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.1937523796357405
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 1.184114381131922
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 1.1556118976655483
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 602.0,
+   "outcome": "scored",
+   "ce": 1.1303068824651985
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 725.0,
+   "outcome": "scored",
+   "ce": 1.1010365159795026
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 910.0,
+   "outcome": "scored",
+   "ce": 1.0591353182983845
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0264535516019337
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1400.0,
+   "outcome": "scored",
+   "ce": 1.0122421016007044
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1644.0,
+   "outcome": "scored",
+   "ce": 1.0110630091357236
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2071.0,
+   "outcome": "scored",
+   "ce": 1.0147462798525677
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2678.0,
+   "outcome": "scored",
+   "ce": 1.0258370837676904
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 3284.0,
+   "outcome": "scored",
+   "ce": 1.031657484688581
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 0.43917685010003943
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.3889157128816518
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.39237733244297024
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 0.40123440876575006
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 0.4007336510926527
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 0.42752865016257435
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.4530416686439814
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 0.49529012572509007
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 0.5557043807003411
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 0.640710078755995
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 0.7080789567406174
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 0.8011328847925311
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 600.0,
+   "outcome": "scored",
+   "ce": 0.9067990415085975
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 726.0,
+   "outcome": "scored",
+   "ce": 0.9634452703573247
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 913.0,
+   "outcome": "scored",
+   "ce": 0.997660547925023
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1159.0,
+   "outcome": "scored",
+   "ce": 1.021999446691553
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1405.0,
+   "outcome": "scored",
+   "ce": 1.036870811748919
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1649.0,
+   "outcome": "scored",
+   "ce": 1.0339863362645851
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2076.0,
+   "outcome": "scored",
+   "ce": 1.0408810883169755
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2682.0,
+   "outcome": "scored",
+   "ce": 1.0455038186067303
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 3288.0,
+   "outcome": "scored",
+   "ce": 1.0262927476291888
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.2440672806472035
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.1976568999494952
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 1.199247026202743
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.1969631957619293
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.1949841325303474
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.1925238719071913
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 159.0,
+   "outcome": "scored",
+   "ce": 1.191959490462466
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 1.186635113410942
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 247.0,
+   "outcome": "scored",
+   "ce": 1.18276984741797
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 313.0,
+   "outcome": "scored",
+   "ce": 1.176075825351714
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.1748291098371886
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.1661883998498388
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 603.0,
+   "outcome": "scored",
+   "ce": 1.1553077366186701
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 729.0,
+   "outcome": "scored",
+   "ce": 1.149886538858593
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 916.0,
+   "outcome": "scored",
+   "ce": 1.133913198012862
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1163.0,
+   "outcome": "scored",
+   "ce": 1.123769140095048
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1409.0,
+   "outcome": "scored",
+   "ce": 1.1091532386958207
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1655.0,
+   "outcome": "scored",
+   "ce": 1.1032739964563194
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2083.0,
+   "outcome": "scored",
+   "ce": 1.0434143647015275
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2689.0,
+   "outcome": "scored",
+   "ce": 1.0382052900992882
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "V/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.038880972419769
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.03938175647034544
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.043347638641738614
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 0.04685541460374375
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 0.051187535740912345
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 0.059074407922861186
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.07212578760812993
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 0.08753560126418351
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 0.11447973405271024
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 0.1714618160903153
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 0.2397488196406088
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 0.35957444084081724
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 0.5908286298702254
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 0.8600414892971162
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 912.0,
+   "outcome": "scored",
+   "ce": 1.2185039406042149
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1158.0,
+   "outcome": "scored",
+   "ce": 1.5492378903403672
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1404.0,
+   "outcome": "scored",
+   "ce": 1.7059617293493965
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1651.0,
+   "outcome": "scored",
+   "ce": 1.7699286825982772
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2078.0,
+   "outcome": "scored",
+   "ce": 1.9249330750923057
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2684.0,
+   "outcome": "scored",
+   "ce": 2.18590777492468
+  },
+  {
+   "corpus": "tendl-2025-patched",
+   "experiment": "W/2000exp_5min",
+   "t_s": 3291.0,
+   "outcome": "scored",
+   "ce": 1.741723351708643
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.1052278721429933
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.1012076232879242
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0988505128023132
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0982107324863337
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.096050992539964
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.0920940574753646
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.0902182332998294
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.0861526594773026
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.0849185417273153
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 1.0793976932585916
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 1.073824102432992
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 1.0702362023032561
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 1.065408014225996
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 727.0,
+   "outcome": "scored",
+   "ce": 1.0605645097229446
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 914.0,
+   "outcome": "scored",
+   "ce": 1.0569314115043251
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1160.0,
+   "outcome": "scored",
+   "ce": 1.0517318649016743
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1406.0,
+   "outcome": "scored",
+   "ce": 1.0496461011539646
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1652.0,
+   "outcome": "scored",
+   "ce": 1.0464458581968732
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2080.0,
+   "outcome": "scored",
+   "ce": 1.0309719029899105
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2686.0,
+   "outcome": "scored",
+   "ce": 1.0254407765447338
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0258558885850406
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.057421152113056
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.056781835416266
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0639130497421163
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.057691243693749
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.057936743418808
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.0583889819343697
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.0548642135764306
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 191.0,
+   "outcome": "scored",
+   "ce": 1.0554810860825865
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 242.0,
+   "outcome": "scored",
+   "ce": 1.059144103485694
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 309.0,
+   "outcome": "scored",
+   "ce": 1.0550419957993247
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 375.0,
+   "outcome": "scored",
+   "ce": 1.0530743306048806
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 469.0,
+   "outcome": "scored",
+   "ce": 1.0514537115975786
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 595.0,
+   "outcome": "scored",
+   "ce": 1.0504689324831848
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 721.0,
+   "outcome": "scored",
+   "ce": 1.048368012371123
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 908.0,
+   "outcome": "scored",
+   "ce": 1.0444960904924339
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0421140420814377
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1397.0,
+   "outcome": "scored",
+   "ce": 1.0430454036825239
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1643.0,
+   "outcome": "scored",
+   "ce": 1.040961641830707
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2070.0,
+   "outcome": "scored",
+   "ce": 1.0219693835120316
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2673.0,
+   "outcome": "scored",
+   "ce": 1.0235900052070022
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 3279.0,
+   "outcome": "scored",
+   "ce": 1.0197263258354503
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 0.9215570002524042
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 0.9174271871921303
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 98.0,
+   "outcome": "scored",
+   "ce": 0.9007412971261055
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 125.0,
+   "outcome": "scored",
+   "ce": 0.9128052590703202
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 161.0,
+   "outcome": "scored",
+   "ce": 0.9161195639878433
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 0.9108304787875801
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 248.0,
+   "outcome": "scored",
+   "ce": 0.9174480775647715
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 314.0,
+   "outcome": "scored",
+   "ce": 0.9188771668127383
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 381.0,
+   "outcome": "scored",
+   "ce": 0.9268616996916478
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 477.0,
+   "outcome": "scored",
+   "ce": 0.9251445980275659
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 604.0,
+   "outcome": "scored",
+   "ce": 0.9346461623064117
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 0.9354986344486325
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 855.0,
+   "outcome": "scored",
+   "ce": 0.9419887719627288
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1040.0,
+   "outcome": "scored",
+   "ce": 0.9421410579032022
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1284.0,
+   "outcome": "scored",
+   "ce": 0.9511670648295159
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1531.0,
+   "outcome": "scored",
+   "ce": 0.9564872285699932
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1778.0,
+   "outcome": "scored",
+   "ce": 0.9595239366588627
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2206.0,
+   "outcome": "scored",
+   "ce": 0.9613048331560167
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2813.0,
+   "outcome": "scored",
+   "ce": 0.9649251009797415
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 3421.0,
+   "outcome": "scored",
+   "ce": 0.9612471752842574
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 54864.0,
+   "outcome": "scored",
+   "ce": 0.958071528894478
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 112665.6,
+   "outcome": "scored",
+   "ce": 0.8627481452247221
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 249264.0,
+   "outcome": "scored",
+   "ce": 0.8615446747066892
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 595641.6000000001,
+   "outcome": "scored",
+   "ce": 0.9310323376596062
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 1113004.8,
+   "outcome": "scored",
+   "ce": 0.9262715577846344
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 2063750.4,
+   "outcome": "scored",
+   "ce": 0.9291493945847239
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 4295635.2,
+   "outcome": "scored",
+   "ce": 0.8987187823753274
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 8632310.4,
+   "outcome": "scored",
+   "ce": 0.9506321467236108
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 17291318.4,
+   "outcome": "scored",
+   "ce": 0.9418033256168529
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 34987766.4,
+   "outcome": "scored",
+   "ce": 0.893402315842608
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0574237150095636
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0597272948710847
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.058190029740035
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.0694504996678653
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.0628625856038567
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.065937150270934
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.0584765658284705
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 1.06344044896332
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 246.0,
+   "outcome": "scored",
+   "ce": 1.065766873286612
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.0701548265673735
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.0688503947556
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.0675543086383354
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 599.0,
+   "outcome": "scored",
+   "ce": 1.073811154538435
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 722.0,
+   "outcome": "scored",
+   "ce": 1.0745793932926062
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 906.0,
+   "outcome": "scored",
+   "ce": 1.0720767581700281
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1152.0,
+   "outcome": "scored",
+   "ce": 1.080154958358187
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.0798790831965086
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.083058833959328
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2072.0,
+   "outcome": "scored",
+   "ce": 1.082702380153712
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2679.0,
+   "outcome": "scored",
+   "ce": 1.0850415038794026
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 3285.0,
+   "outcome": "scored",
+   "ce": 1.0864110090250434
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.1755025555676641
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0196398048956772
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.9913090096761232
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0358891667359287
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.06984456496482
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.078568471488462
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.071525982047258
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.0938866363323074
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 244.0,
+   "outcome": "scored",
+   "ce": 1.1075666925604457
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 310.0,
+   "outcome": "scored",
+   "ce": 1.11892506213926
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 376.0,
+   "outcome": "scored",
+   "ce": 1.0881244102234584
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 473.0,
+   "outcome": "scored",
+   "ce": 1.0700372179233875
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 597.0,
+   "outcome": "scored",
+   "ce": 1.0596536287045337
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 723.0,
+   "outcome": "scored",
+   "ce": 1.0495417057171448
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 909.0,
+   "outcome": "scored",
+   "ce": 1.050724316880392
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1155.0,
+   "outcome": "scored",
+   "ce": 1.0745267505753153
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.088098329078536
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.0403609813249772
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2069.0,
+   "outcome": "scored",
+   "ce": 1.06309546004708
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2675.0,
+   "outcome": "scored",
+   "ce": 1.0773032842493755
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 3281.0,
+   "outcome": "scored",
+   "ce": 1.0408572071261963
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.083178489672698
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.074183557677669
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 67.0,
+   "outcome": "scored",
+   "ce": 1.0756651291625166
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 1.0826481938993924
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 97.0,
+   "outcome": "scored",
+   "ce": 1.0753596012810667
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 123.0,
+   "outcome": "scored",
+   "ce": 1.075839696324239
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.0739380825981564
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.0724567235338875
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.0704357496556285
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.0655140957891078
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 1.0626048582240581
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 1.0481069892427926
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 602.0,
+   "outcome": "scored",
+   "ce": 1.043127047344488
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 725.0,
+   "outcome": "scored",
+   "ce": 1.035183298439605
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 910.0,
+   "outcome": "scored",
+   "ce": 1.0229981040423042
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.01896459832447
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1400.0,
+   "outcome": "scored",
+   "ce": 1.0213869102823379
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1644.0,
+   "outcome": "scored",
+   "ce": 1.0281813504788215
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2071.0,
+   "outcome": "scored",
+   "ce": 1.0355060458394614
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2678.0,
+   "outcome": "scored",
+   "ce": 1.0448739356275039
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 3284.0,
+   "outcome": "scored",
+   "ce": 1.0480924965440448
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.1563566985000058
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.032089517108799
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0351143894267736
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0421171454520999
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.0180545790854216
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.0354304870612445
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.0164960295689438
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.024604404114665
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.0216012800598075
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 1.0229454010658698
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 1.0005191116521506
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 0.9878240048703338
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 600.0,
+   "outcome": "scored",
+   "ce": 1.005466910393833
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 726.0,
+   "outcome": "scored",
+   "ce": 1.0141302818603206
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 913.0,
+   "outcome": "scored",
+   "ce": 1.0199873242014375
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1159.0,
+   "outcome": "scored",
+   "ce": 1.0359063306064549
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1405.0,
+   "outcome": "scored",
+   "ce": 1.0500149320184362
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1649.0,
+   "outcome": "scored",
+   "ce": 1.0473528993317356
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2076.0,
+   "outcome": "scored",
+   "ce": 1.0547430168530902
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2682.0,
+   "outcome": "scored",
+   "ce": 1.0594607688073907
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 3288.0,
+   "outcome": "scored",
+   "ce": 1.0397738889822055
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.258538555131668
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.211210291917808
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 1.212443898916028
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.20976512917047
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.2073996766247017
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.2042914569440093
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 159.0,
+   "outcome": "scored",
+   "ce": 1.2028565101588802
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 1.1966681829865982
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 247.0,
+   "outcome": "scored",
+   "ce": 1.1916351653139763
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 313.0,
+   "outcome": "scored",
+   "ce": 1.183522871051936
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.180972021697139
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.170518137759486
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 603.0,
+   "outcome": "scored",
+   "ce": 1.15751432226119
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 729.0,
+   "outcome": "scored",
+   "ce": 1.1502485639113644
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 916.0,
+   "outcome": "scored",
+   "ce": 1.1319614587789073
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1163.0,
+   "outcome": "scored",
+   "ce": 1.1194388336385541
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1409.0,
+   "outcome": "scored",
+   "ce": 1.1031657289030103
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1655.0,
+   "outcome": "scored",
+   "ce": 1.0962158755763738
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2083.0,
+   "outcome": "scored",
+   "ce": 1.0362556646368701
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2689.0,
+   "outcome": "scored",
+   "ce": 1.0329165681869021
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "V/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0363353561260276
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.9415281785453498
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.9531339927622478
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.9340538689475566
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.9365610578008146
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.9226615574668757
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.907908710679185
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 1.8741106509197907
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.8372752549055082
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.899418302725102
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 1.8661292795500464
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 1.7206234244999175
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 1.6351591209066552
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 1.5620943448193803
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 912.0,
+   "outcome": "scored",
+   "ce": 1.540358765589023
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1158.0,
+   "outcome": "scored",
+   "ce": 1.6427913655613644
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1404.0,
+   "outcome": "scored",
+   "ce": 1.7430137753888575
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1651.0,
+   "outcome": "scored",
+   "ce": 1.8067138711973707
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2078.0,
+   "outcome": "scored",
+   "ce": 1.9924599976143822
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2684.0,
+   "outcome": "scored",
+   "ce": 2.3060329242472197
+  },
+  {
+   "corpus": "tendl-2017",
+   "experiment": "W/2000exp_5min",
+   "t_s": 3291.0,
+   "outcome": "scored",
+   "ce": 1.8566621029108012
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.1200602026671214
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.1157962537454766
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.112885207788933
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.1116753743223287
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.108945681910933
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.1040683127853603
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.1010965412962463
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.096056339862326
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.0936715198287046
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 1.0869588841094555
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 1.0804624929507636
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 1.0759063806748415
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 1.0702510321179182
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 727.0,
+   "outcome": "scored",
+   "ce": 1.0648987788975577
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 914.0,
+   "outcome": "scored",
+   "ce": 1.060844129420059
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1160.0,
+   "outcome": "scored",
+   "ce": 1.055365039990365
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1406.0,
+   "outcome": "scored",
+   "ce": 1.0531317941615437
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 1652.0,
+   "outcome": "scored",
+   "ce": 1.0498181611475685
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2080.0,
+   "outcome": "scored",
+   "ce": 1.034131765441169
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 2686.0,
+   "outcome": "scored",
+   "ce": 1.0283543340373007
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Al/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0285746022642301
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.092085431401636
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0913946127275183
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0987328148280335
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0922847357980148
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.0925178951537888
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.092960060121081
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.0892967710656496
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 191.0,
+   "outcome": "scored",
+   "ce": 1.0899238926318764
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 242.0,
+   "outcome": "scored",
+   "ce": 1.0937070229879127
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 309.0,
+   "outcome": "scored",
+   "ce": 1.0894933008443066
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 375.0,
+   "outcome": "scored",
+   "ce": 1.0874996270845838
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 469.0,
+   "outcome": "scored",
+   "ce": 1.085898336980055
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 595.0,
+   "outcome": "scored",
+   "ce": 1.0849979172591109
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 721.0,
+   "outcome": "scored",
+   "ce": 1.0829577556364212
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 908.0,
+   "outcome": "scored",
+   "ce": 1.0791664674672907
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0770050207585355
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1397.0,
+   "outcome": "scored",
+   "ce": 1.0782962189047283
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1643.0,
+   "outcome": "scored",
+   "ce": 1.0765135416911462
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2070.0,
+   "outcome": "scored",
+   "ce": 1.0576226864945526
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2673.0,
+   "outcome": "scored",
+   "ce": 1.0607004815126537
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 3279.0,
+   "outcome": "scored",
+   "ce": 1.05864105158841
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 0.9355873254072306
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 0.933030770879049
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 98.0,
+   "outcome": "scored",
+   "ce": 0.917467150078522
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 125.0,
+   "outcome": "scored",
+   "ce": 0.9317388743161947
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 161.0,
+   "outcome": "scored",
+   "ce": 0.937057704026457
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 0.9328466942678096
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 248.0,
+   "outcome": "scored",
+   "ce": 0.940588277547875
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 314.0,
+   "outcome": "scored",
+   "ce": 0.9421797708024476
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 381.0,
+   "outcome": "scored",
+   "ce": 0.9497585262687946
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 477.0,
+   "outcome": "scored",
+   "ce": 0.9464959619814829
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 604.0,
+   "outcome": "scored",
+   "ce": 0.9538403245330194
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 0.9524371235511141
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 855.0,
+   "outcome": "scored",
+   "ce": 0.9569241884697427
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1040.0,
+   "outcome": "scored",
+   "ce": 0.9544566889626117
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1284.0,
+   "outcome": "scored",
+   "ce": 0.9608811347432586
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1531.0,
+   "outcome": "scored",
+   "ce": 0.9642043873810417
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1778.0,
+   "outcome": "scored",
+   "ce": 0.9657520834951265
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2206.0,
+   "outcome": "scored",
+   "ce": 0.9658117593723904
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2813.0,
+   "outcome": "scored",
+   "ce": 0.9681531656770651
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 3421.0,
+   "outcome": "scored",
+   "ce": 0.9638670409675282
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 54864.0,
+   "outcome": "scored",
+   "ce": 0.966033655225724
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 112665.6,
+   "outcome": "scored",
+   "ce": 0.8836018824333679
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 249264.0,
+   "outcome": "scored",
+   "ce": 0.9360074289338054
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 595641.6000000001,
+   "outcome": "scored",
+   "ce": 1.0127948640533455
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 1113004.8,
+   "outcome": "scored",
+   "ce": 1.0093505179709992
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 2063750.4,
+   "outcome": "scored",
+   "ce": 1.0151917833645925
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 4295635.2,
+   "outcome": "scored",
+   "ce": 0.986137106282138
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 8632310.4,
+   "outcome": "scored",
+   "ce": 1.0466775887168263
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 17291318.4,
+   "outcome": "scored",
+   "ce": 1.0371514340207406
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 34987766.4,
+   "outcome": "scored",
+   "ce": 0.980023535799736
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0673068781354391
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0719967512337967
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0725625624370456
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.0860097366060555
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.080992899267819
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.086559596345416
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.0814541174519785
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 1.0882122400362038
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 246.0,
+   "outcome": "scored",
+   "ce": 1.0919218788208995
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.096802798340997
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.094950773955062
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.092075996037353
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 599.0,
+   "outcome": "scored",
+   "ce": 1.0960358125462724
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 722.0,
+   "outcome": "scored",
+   "ce": 1.0943893404703915
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 906.0,
+   "outcome": "scored",
+   "ce": 1.0886284825871828
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1152.0,
+   "outcome": "scored",
+   "ce": 1.0934052184403893
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.090567973739998
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.0918960307097032
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2072.0,
+   "outcome": "scored",
+   "ce": 1.089377401384836
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2679.0,
+   "outcome": "scored",
+   "ce": 1.0901129557167757
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 3285.0,
+   "outcome": "scored",
+   "ce": 1.0907424218608668
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0876298946952276
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.9457556160576217
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.9218192543040192
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 0.9657828886370128
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.000082628453308
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.012939944679354
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.0128549966960134
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 1.0405536642227402
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 244.0,
+   "outcome": "scored",
+   "ce": 1.0624596182354828
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 310.0,
+   "outcome": "scored",
+   "ce": 1.0835332071459798
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 376.0,
+   "outcome": "scored",
+   "ce": 1.0617042120125575
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 473.0,
+   "outcome": "scored",
+   "ce": 1.0524221850763777
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 597.0,
+   "outcome": "scored",
+   "ce": 1.0488013506991545
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 723.0,
+   "outcome": "scored",
+   "ce": 1.0428584205451699
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 909.0,
+   "outcome": "scored",
+   "ce": 1.0480556972288761
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1155.0,
+   "outcome": "scored",
+   "ce": 1.0761534380682263
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 1.0939436703780057
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 1.0500205138857024
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2069.0,
+   "outcome": "scored",
+   "ce": 1.080077667449409
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2675.0,
+   "outcome": "scored",
+   "ce": 1.1039723614062829
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 3281.0,
+   "outcome": "scored",
+   "ce": 1.0739865697655067
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.0046904999459394
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 0.9964577683051704
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 67.0,
+   "outcome": "scored",
+   "ce": 0.9980105304754381
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 1.004712822837557
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 97.0,
+   "outcome": "scored",
+   "ce": 0.9982221621702948
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 123.0,
+   "outcome": "scored",
+   "ce": 0.9992599422212262
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.9984850019328474
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 0.9984153833599826
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 0.998869676809738
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 0.9980089962082118
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 0.9996859808728572
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 0.993514882876115
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 602.0,
+   "outcome": "scored",
+   "ce": 0.9998043895822158
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 725.0,
+   "outcome": "scored",
+   "ce": 1.0031391938610492
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 910.0,
+   "outcome": "scored",
+   "ce": 1.0061395337206356
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0161673220821426
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1400.0,
+   "outcome": "scored",
+   "ce": 1.026259499414065
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1644.0,
+   "outcome": "scored",
+   "ce": 1.0363298506377632
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2071.0,
+   "outcome": "scored",
+   "ce": 1.0444741375177802
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2678.0,
+   "outcome": "scored",
+   "ce": 1.0522344144771596
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 3284.0,
+   "outcome": "scored",
+   "ce": 1.0539228593506982
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0847517388080297
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.9726301695079904
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.978750097555024
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 0.9878679546193119
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 0.9670055360061572
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 0.9863073555996805
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.9716011475236741
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 0.9827064312027873
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 0.9849980105552826
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 311.0,
+   "outcome": "scored",
+   "ce": 0.9933511038981956
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 377.0,
+   "outcome": "scored",
+   "ce": 0.9785022525903334
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 474.0,
+   "outcome": "scored",
+   "ce": 0.9750062395772999
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 600.0,
+   "outcome": "scored",
+   "ce": 1.0008262714666165
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 726.0,
+   "outcome": "scored",
+   "ce": 1.0143976094751208
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 913.0,
+   "outcome": "scored",
+   "ce": 1.023873123244972
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1159.0,
+   "outcome": "scored",
+   "ce": 1.041991364840244
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1405.0,
+   "outcome": "scored",
+   "ce": 1.0574840178019083
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 1649.0,
+   "outcome": "scored",
+   "ce": 1.0558566027844074
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2076.0,
+   "outcome": "scored",
+   "ce": 1.064959381583731
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 2682.0,
+   "outcome": "scored",
+   "ce": 1.071834278729181
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "Ti/2000exp_5min",
+   "t_s": 3288.0,
+   "outcome": "scored",
+   "ce": 1.0537834512865143
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.1890208721030806
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.1455674301444143
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 1.14798361655251
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.1466815853189685
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.1456590807692237
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.1447893402831395
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 159.0,
+   "outcome": "scored",
+   "ce": 1.1463180763349603
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 1.1431505100333936
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 247.0,
+   "outcome": "scored",
+   "ce": 1.1421485701426919
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 313.0,
+   "outcome": "scored",
+   "ce": 1.138969948807573
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.140881928691286
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.1367590124745661
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 603.0,
+   "outcome": "scored",
+   "ce": 1.1312100195128592
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 729.0,
+   "outcome": "scored",
+   "ce": 1.1303966491665534
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 916.0,
+   "outcome": "scored",
+   "ce": 1.120450605525588
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1163.0,
+   "outcome": "scored",
+   "ce": 1.116657013393265
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1409.0,
+   "outcome": "scored",
+   "ce": 1.1070335031987566
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1655.0,
+   "outcome": "scored",
+   "ce": 1.105041563125353
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2083.0,
+   "outcome": "scored",
+   "ce": 1.0496742569587252
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2689.0,
+   "outcome": "scored",
+   "ce": 1.0479089936231905
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "V/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0497078482429656
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.8790499173441608
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.8902572222712242
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.872181826286703
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 1.8750958718106072
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.862593673170175
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 1.8498628407422109
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 1.819015156420042
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 1.786550993227509
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 1.853039036908095
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 1.8286513040136338
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 1.7016683285959928
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 601.0,
+   "outcome": "scored",
+   "ce": 1.6449093955493757
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 1.6039165523050456
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 912.0,
+   "outcome": "scored",
+   "ce": 1.6214215792011022
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1158.0,
+   "outcome": "scored",
+   "ce": 1.754484977920947
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1404.0,
+   "outcome": "scored",
+   "ce": 1.8662139011492602
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 1651.0,
+   "outcome": "scored",
+   "ce": 1.9329543177928545
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2078.0,
+   "outcome": "scored",
+   "ce": 2.127064161448733
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 2684.0,
+   "outcome": "scored",
+   "ce": 2.4574378540575195
+  },
+  {
+   "corpus": "eaf-2010",
+   "experiment": "W/2000exp_5min",
+   "t_s": 3291.0,
+   "outcome": "scored",
+   "ce": 1.9784515739468373
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Al/2000exp_5min",
+   "outcome": "uncovered"
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 1.0835623969928596
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 1.0814655148251915
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 1.0874410352437796
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 1.0798841770049206
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.078974569492634
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 1.077838116061688
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 1.072301812404462
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 191.0,
+   "outcome": "scored",
+   "ce": 1.0715300095034885
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 242.0,
+   "outcome": "scored",
+   "ce": 1.0735675874414572
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 309.0,
+   "outcome": "scored",
+   "ce": 1.0678636857330523
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 375.0,
+   "outcome": "scored",
+   "ce": 1.0648418682216882
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 469.0,
+   "outcome": "scored",
+   "ce": 1.0622544477736893
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 595.0,
+   "outcome": "scored",
+   "ce": 1.0605092687126578
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 721.0,
+   "outcome": "scored",
+   "ce": 1.057921290032967
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 908.0,
+   "outcome": "scored",
+   "ce": 1.0535238763454235
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 1.0505881545586744
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1397.0,
+   "outcome": "scored",
+   "ce": 1.0510308676379885
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 1643.0,
+   "outcome": "scored",
+   "ce": 1.0484510772583
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2070.0,
+   "outcome": "scored",
+   "ce": 1.0286104540329397
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 2673.0,
+   "outcome": "scored",
+   "ce": 1.0297888870311283
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Cu/2000exp_5min",
+   "t_s": 3279.0,
+   "outcome": "scored",
+   "ce": 1.0268997704337928
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 0.06308100196173716
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 0.06270574405973799
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 98.0,
+   "outcome": "scored",
+   "ce": 0.06135878648850339
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 125.0,
+   "outcome": "scored",
+   "ce": 0.061595359495273484
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 161.0,
+   "outcome": "scored",
+   "ce": 0.06066373943546287
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 0.05893563380534818
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 248.0,
+   "outcome": "scored",
+   "ce": 0.05682190229383942
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 314.0,
+   "outcome": "scored",
+   "ce": 0.053397028907526206
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 381.0,
+   "outcome": "scored",
+   "ce": 0.0501493838199833
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 477.0,
+   "outcome": "scored",
+   "ce": 0.04487901752812471
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 604.0,
+   "outcome": "scored",
+   "ce": 0.03898630958600974
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 728.0,
+   "outcome": "scored",
+   "ce": 0.03355468939623549
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 855.0,
+   "outcome": "scored",
+   "ce": 0.02889288291077244
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1040.0,
+   "outcome": "scored",
+   "ce": 0.022960293276529695
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1284.0,
+   "outcome": "scored",
+   "ce": 0.017075097066512907
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1531.0,
+   "outcome": "scored",
+   "ce": 0.012578211277480834
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 1778.0,
+   "outcome": "scored",
+   "ce": 0.009232443684707369
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2206.0,
+   "outcome": "scored",
+   "ce": 0.0053751014894830645
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 2813.0,
+   "outcome": "scored",
+   "ce": 0.002499053441247626
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_5min",
+   "t_s": 3421.0,
+   "outcome": "scored",
+   "ce": 0.0011583942744580774
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 54864.0,
+   "outcome": "scored",
+   "ce": 0.0029494475494669515
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 112665.6,
+   "outcome": "scored",
+   "ce": 0.15791566830108264
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 249264.0,
+   "outcome": "scored",
+   "ce": 0.7638400593128869
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 595641.6000000001,
+   "outcome": "scored",
+   "ce": 0.8337407893389003
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 1113004.8,
+   "outcome": "scored",
+   "ce": 0.8405662996527985
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 2063750.4,
+   "outcome": "scored",
+   "ce": 0.860610994269906
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 4295635.2,
+   "outcome": "scored",
+   "ce": 0.8601320876470847
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 8632310.4,
+   "outcome": "scored",
+   "ce": 0.9361776095705865
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 17291318.4,
+   "outcome": "scored",
+   "ce": 0.9387011358054684
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/1996exp_7hour",
+   "t_s": 34987766.4,
+   "outcome": "scored",
+   "ce": 0.8913388735663444
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 0.06506535679714291
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.06536458805014818
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.06530845578623642
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 0.06591189046721972
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 0.06530732954788634
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 0.0649223293356604
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 158.0,
+   "outcome": "scored",
+   "ce": 0.06328724941473741
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 194.0,
+   "outcome": "scored",
+   "ce": 0.06205312209931345
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 246.0,
+   "outcome": "scored",
+   "ce": 0.059569817055748
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 0.05611265482869597
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 0.052167559582123074
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 0.04663805678261056
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 599.0,
+   "outcome": "scored",
+   "ce": 0.04050556969669711
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 722.0,
+   "outcome": "scored",
+   "ce": 0.03487999761308483
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 906.0,
+   "outcome": "scored",
+   "ce": 0.027709054997588717
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1152.0,
+   "outcome": "scored",
+   "ce": 0.02052532440372606
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 0.015036735601510842
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 0.011050696176827537
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2072.0,
+   "outcome": "scored",
+   "ce": 0.006428864479535938
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 2679.0,
+   "outcome": "scored",
+   "ce": 0.002983873256007735
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Fe/2000exp_5min",
+   "t_s": 3285.0,
+   "outcome": "scored",
+   "ce": 0.001392807473749038
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 35.0,
+   "outcome": "scored",
+   "ce": 0.0913476894527425
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 50.0,
+   "outcome": "scored",
+   "ce": 0.08236954000948403
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 65.0,
+   "outcome": "scored",
+   "ce": 0.08372260404745366
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 80.0,
+   "outcome": "scored",
+   "ce": 0.09177843612184222
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 95.0,
+   "outcome": "scored",
+   "ce": 0.09960575542989183
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 121.0,
+   "outcome": "scored",
+   "ce": 0.1094964138703565
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.12204923575723847
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 0.1383999860234089
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 244.0,
+   "outcome": "scored",
+   "ce": 0.15936335245140157
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 310.0,
+   "outcome": "scored",
+   "ce": 0.18379178379259947
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 376.0,
+   "outcome": "scored",
+   "ce": 0.19758167607917734
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 473.0,
+   "outcome": "scored",
+   "ce": 0.21596833654278344
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 597.0,
+   "outcome": "scored",
+   "ce": 0.23471454450815246
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 723.0,
+   "outcome": "scored",
+   "ce": 0.24994178652687124
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 909.0,
+   "outcome": "scored",
+   "ce": 0.27508258624191206
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1155.0,
+   "outcome": "scored",
+   "ce": 0.3182211180621151
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1399.0,
+   "outcome": "scored",
+   "ce": 0.3645585587839229
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 1645.0,
+   "outcome": "scored",
+   "ce": 0.3938694331155881
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2069.0,
+   "outcome": "scored",
+   "ce": 0.4894113176093283
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 2675.0,
+   "outcome": "scored",
+   "ce": 0.6245465008428663
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ni/2000exp_5min",
+   "t_s": 3281.0,
+   "outcome": "scored",
+   "ce": 0.7141263915245346
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 0.015193355070758974
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 0.015627973017200442
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 67.0,
+   "outcome": "scored",
+   "ce": 0.01626701194417969
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 82.0,
+   "outcome": "scored",
+   "ce": 0.016968601210198272
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 97.0,
+   "outcome": "scored",
+   "ce": 0.017457282287297204
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 123.0,
+   "outcome": "scored",
+   "ce": 0.018532737172157338
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 157.0,
+   "outcome": "scored",
+   "ce": 0.01992881580250728
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 193.0,
+   "outcome": "scored",
+   "ce": 0.021446420823236327
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 245.0,
+   "outcome": "scored",
+   "ce": 0.02367687659837376
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 312.0,
+   "outcome": "scored",
+   "ce": 0.026512122395101412
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 378.0,
+   "outcome": "scored",
+   "ce": 0.029303608583660785
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 475.0,
+   "outcome": "scored",
+   "ce": 0.0328516947905209
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 602.0,
+   "outcome": "scored",
+   "ce": 0.03712853237756266
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 725.0,
+   "outcome": "scored",
+   "ce": 0.03997908219708709
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 910.0,
+   "outcome": "scored",
+   "ce": 0.04172272028707283
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1154.0,
+   "outcome": "scored",
+   "ce": 0.04052244571890201
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1400.0,
+   "outcome": "scored",
+   "ce": 0.036892518544985826
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 1644.0,
+   "outcome": "scored",
+   "ce": 0.03258432149892928
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2071.0,
+   "outcome": "scored",
+   "ce": 0.025466205787254004
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 2678.0,
+   "outcome": "scored",
+   "ce": 0.018332542504969004
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "SS316/2000exp_5min",
+   "t_s": 3284.0,
+   "outcome": "scored",
+   "ce": 0.013972137878985512
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "Ti/2000exp_5min",
+   "outcome": "uncovered"
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 36.0,
+   "outcome": "scored",
+   "ce": 1.1302256075766208
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 51.0,
+   "outcome": "scored",
+   "ce": 1.0885021995846969
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 66.0,
+   "outcome": "scored",
+   "ce": 1.090384509117839
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 81.0,
+   "outcome": "scored",
+   "ce": 1.0887407741180444
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 96.0,
+   "outcome": "scored",
+   "ce": 1.0873692614955595
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 122.0,
+   "outcome": "scored",
+   "ce": 1.0858639406925912
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 159.0,
+   "outcome": "scored",
+   "ce": 1.0863760707224448
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 195.0,
+   "outcome": "scored",
+   "ce": 1.082498558211826
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 247.0,
+   "outcome": "scored",
+   "ce": 1.0803457322105192
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 313.0,
+   "outcome": "scored",
+   "ce": 1.0759155714259885
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 379.0,
+   "outcome": "scored",
+   "ce": 1.0764076138129155
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 476.0,
+   "outcome": "scored",
+   "ce": 1.0707948882112608
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 603.0,
+   "outcome": "scored",
+   "ce": 1.0636854452044455
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 729.0,
+   "outcome": "scored",
+   "ce": 1.0614674780291562
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 916.0,
+   "outcome": "scored",
+   "ce": 1.0507805229052056
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1163.0,
+   "outcome": "scored",
+   "ce": 1.0470582203635166
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1409.0,
+   "outcome": "scored",
+   "ce": 1.0400485273115074
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 1655.0,
+   "outcome": "scored",
+   "ce": 1.0429361222273223
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2083.0,
+   "outcome": "scored",
+   "ce": 1.0065884309193993
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 2689.0,
+   "outcome": "scored",
+   "ce": 1.0444660089448186
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "V/2000exp_5min",
+   "t_s": 3292.0,
+   "outcome": "scored",
+   "ce": 1.0859574809459875
+  },
+  {
+   "corpus": "fendl-3.2c",
+   "experiment": "W/2000exp_5min",
+   "outcome": "uncovered"
+  }
+ ]
+}
