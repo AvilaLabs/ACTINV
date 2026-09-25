@@ -245,7 +245,7 @@
   "bundles": [
     {
       "id": "tendl-2025-patched-neutron",
-      "description": "Recommended TENDL-2025-derived neutron activation data (Avila Labs remediation derivative, 44 leaked ordinates zeroed; not an official TENDL release) with ENDF/B-VIII.0 and JEFF-3.3 decay data",
+      "description": "TENDL-2025 remediation derivative (Avila Labs, 44 leaked ordinates zeroed; not an official TENDL release; alternative to the full-coverage default) with ENDF/B-VIII.0 and JEFF-3.3 decay data",
       "projectile": "neutron",
       "groups": "fispact-709",
       "temperature_K": 293.6,
@@ -259,7 +259,7 @@
     },
     {
       "id": "tendl-2025-patched-neutron-covariance",
-      "description": "Recommended patched neutron bundle plus its matching rebuilt MF=33 covariance sidecar",
+      "description": "Patched neutron remediation bundle plus its matching rebuilt MF=33 covariance sidecar",
       "projectile": "neutron",
       "groups": "fispact-709",
       "temperature_K": 293.6,
@@ -275,7 +275,7 @@
     },
     {
       "id": "tendl-2025-neutron",
-      "description": "Superseded TENDL-2025 neutron activation data (upstream-confirmed emitted-state defect; kept for byte-compatible catalog references) with ENDF/B-VIII.0 and JEFF-3.3 decay data",
+      "description": "TENDL-2025 neutron activation data (default full-coverage corpus; the upstream emitted-state repair is retained in the tendl-2025-patched-neutron bundle) with ENDF/B-VIII.0 and JEFF-3.3 decay data",
       "projectile": "neutron",
       "groups": "fispact-709",
       "temperature_K": 293.6,
@@ -289,7 +289,7 @@
     },
     {
       "id": "tendl-2025-neutron-covariance",
-      "description": "Superseded unpatched neutron bundle with its matching MF=33 covariance sidecar; kept for byte-compatible catalog references",
+      "description": "Default neutron bundle plus its matching MF=33 covariance sidecar",
       "projectile": "neutron",
       "groups": "fispact-709",
       "temperature_K": 293.6,

@@ -105,11 +105,12 @@ def scrub_legacy_result(value):
 
 def canonical_result_hash(result: dict) -> str:
     value = copy.deepcopy(result)
-    # Canonical inactive P30 metadata is absent in the frozen P10 result.
+    # Canonical inactive scale metadata is absent in the frozen P10 result.
     # Retain every other value and every numerical output (amendment T).
     assembly = value.get("ledger", {}).get("assembly", {})
-    if type(assembly.get("rate_scale")) is int and assembly["rate_scale"] == 0:
-        del assembly["rate_scale"]
+    for scale_key in ("rate_scale", "decay_scale", "yield_scale"):
+        if type(assembly.get(scale_key)) is int and assembly[scale_key] == 0:
+            del assembly[scale_key]
     certificate = value.get("certificate", {})
     solver = certificate.get("solver")
     if not isinstance(solver, str) or not solver.startswith("actinv-core "):

@@ -172,7 +172,7 @@ def validate_catalog(catalog):
                     != by_role["covariance-index"]["path"]):
                 raise ValueError(f"bundle {identifier!r} covariance pair is invalid")
         referenced.update(ids)
-    if catalog["default_bundle"] != "tendl-2025-patched-neutron" \
+    if catalog["default_bundle"] != "tendl-2025-neutron" \
             or catalog["default_bundle"] not in bundles:
         raise ValueError("default bundle differs")
     if referenced != set(artifacts):
