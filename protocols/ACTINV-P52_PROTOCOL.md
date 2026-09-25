@@ -45,19 +45,21 @@ coverage fields) are already present.
 {"record":"cell","ordinal":<int>,"id":"<cell id>","index":[i,j,k]|null,
  "bounds_cm":[[x0,x1],[y0,y1],[z0,z1]]|null,"volume_cm3":<float>,
  "photons_s":<float>,
- "sigma_photons_s_independent":<float|null>,"sigma_photons_s_conservative":<float|null>,
+ "sigma_photons_s_independent":<float>,"sigma_photons_s_conservative":<float>,
  "groups":[{"centroid_eV":<float>,"photons_s":<float>}],
  "per_nuclide":[{"nuclide":"<name>","photons_s":<float>,
     "activity_nominal_bq":<float>,
     "rel_sigma":<float|null>,"sigma_photons_s":<float|null>}],
  "coverage":{"photon_nuclides":<int>,"banded_nuclides":<int>,
-    "unbanded_photon_share":<float>,
+    "partially_unbanded":<bool>,"unbanded_photon_share":<float>,
     "uncovered_library_rows":<int>,"uncovered_decay_constants":[...],
     "uncovered_yield_products":[...],"excluded_blocks":<int>}}
 {"record":"footer","cell_count":<int>,
  "total_photons_s":<float>,
- "sigma_total_independent":<float|null>,"sigma_total_conservative":<float|null>,
- "cells_partially_unbanded":<int>}
+ "sigma_total_independent":<float>,"sigma_total_conservative":<float>,
+ "cells_partially_unbanded":<int>,
+ "totals_cover":"banded contributions only; unbanded fractions are per-cell
+    in coverage.unbanded_photon_share"}
 ```
 
 **Emission rules.**
@@ -67,15 +69,14 @@ coverage fields) are already present.
   `activity:<nuclide>` response's `combined_standard_uncertainty/nominal`
   (falling back to `mf33_standard_uncertainty/nominal` when no secondary
   channel ran). A photon-bearing nuclide without an `activity:` band
-  (response not requested or nominal ≤ 0) contributes `sigma:null`; the
-  cell's `sigma_*` fields are then `null` and `coverage.unbanded_photon_share`
-  carries that nuclide's share of the cell's photons/s — never silently
-  nominal.
+  (response not requested or nominal ≤ 0) contributes `sigma:null`.
 - Cell totals: `sigma_independent = sqrt(Σ σ_i²)`, `sigma_conservative =
-  Σ σ_i`, over banded contributions only; `unbanded_photon_share` records the
-  excluded fraction. Footer totals combine cells with the same rules;
-  cells' `unbanded_photon_share` is aggregated into
-  `cells_partially_unbanded`.
+  Σ σ_i`, computed over **banded contributions only** — a real lower bound,
+  never silently nominal: `coverage.partially_unbanded` and
+  `coverage.unbanded_photon_share` record exactly what the sums exclude
+  (both are 0/false only when every photon-bearing nuclide is banded).
+  Footer totals combine cells with the same rule and carry
+  `totals_cover`/`cells_partially_unbanded` stating the same bound.
 - `groups` is the nominal per-cell group spectrum (`centroid_eV`,
   `photons_s`) — bands apply to strength, not shape (declared in
   `band_semantics.applies_to`).
@@ -240,4 +241,11 @@ definitions above is a new phase, not an amendment.
   product shape: bands belong on the nuclides that carry the source; the
   remainder is emitted through `unbanded_photon_share`, which this demo
   now exercises against the ≤0.05 gate.
+- **A8 (2026-09-25, format semantics).** First executed demo showed every
+  cell's `sigma_*` null under the original "any unbanded nuclide → null
+  cell band" rule: unbanded nuclides carried ≈0 photons yet suppressed the
+  usable banded-part band entirely — a worse *and* less honest output.
+  Cell/footer `sigma_*` now emit the sum over banded contributions (a real
+  lower bound) with `coverage.partially_unbanded` + `unbanded_photon_share`
+  marking the excluded fraction; footer gains `totals_cover`.
 

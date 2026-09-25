@@ -125,8 +125,11 @@ def main() -> int:
     ok = r.returncode == 0 and doc
     if ok:
         c = json.loads(doc.splitlines()[1])
-        checks["unbanded_cell_sigma_null"] = \
-            c["sigma_photons_s_independent"] is None
+        # banded-part sums are real: sigma = 80*0.10 = 8.0 over the one
+        # banded nuclide; the unbanded contribution is flagged, not hidden.
+        checks["unbanded_cell_sigma_banded_part"] = \
+            close(c["sigma_photons_s_independent"], 8.0)
+        checks["unbanded_flag"] = c["coverage"]["partially_unbanded"] is True
         checks["unbanded_share"] = \
             close(c["coverage"]["unbanded_photon_share"], 0.2)
         checks["unbanded_entry_null"] = \

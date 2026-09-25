@@ -119,12 +119,18 @@ pub fn emit_r2s_source(mesh_bytes: &[u8], step: usize) -> Result<(String, Value)
                     emit_cell(&rec, step).map_err(|e| format!("cell '{}': {e}", cell_id(&rec)))?;
                 cells_seen += 1;
                 total_photons += f(&cell, "photons_s").unwrap_or(0.0);
-                match f(&cell, "sigma_photons_s_independent") {
-                    Some(s) => indep_sq += s * s,
-                    None => partial_cells += 1,
+                if let Some(s) = f(&cell, "sigma_photons_s_independent") {
+                    indep_sq += s * s;
                 }
                 if let Some(s) = f(&cell, "sigma_photons_s_conservative") {
                     consv += s;
+                }
+                if cell
+                    .pointer("/coverage/partially_unbanded")
+                    .and_then(Value::as_bool)
+                    .unwrap_or(false)
+                {
+                    partial_cells += 1;
                 }
                 out.push_str(&serde_json::to_string(&cell).map_err(|e| e.to_string())?);
                 out.push('\n');
@@ -150,9 +156,10 @@ pub fn emit_r2s_source(mesh_bytes: &[u8], step: usize) -> Result<(String, Value)
         "record": "footer",
         "cell_count": cells_seen,
         "total_photons_s": total_photons,
-        "sigma_total_independent": if partial_cells > 0 { Value::Null } else { indep_sq.sqrt().into() },
-        "sigma_total_conservative": if partial_cells > 0 { Value::Null } else { consv.into() },
+        "sigma_total_independent": indep_sq.sqrt(),
+        "sigma_total_conservative": consv,
         "cells_partially_unbanded": partial_cells,
+        "totals_cover": "banded contributions only; unbanded fractions are per-cell in coverage.unbanded_photon_share",
     });
     out.push_str(&serde_json::to_string(&footer).map_err(|e| e.to_string())?);
     out.push('\n');
@@ -243,10 +250,11 @@ fn emit_cell(rec: &Value, step: usize) -> Result<Value, String> {
 
     let partial = nuc_count > 0 && banded_count < nuc_count;
     let unbanded_share = if total > 0.0 { unbanded / total } else { 0.0 };
-    let (sig_i, sig_c) = if nuc_count == 0 {
+    // Cell sigmas cover the *banded* contributions only — a real lower bound
+    // — with `partially_unbanded` + `unbanded_photon_share` marking what the
+    // sums exclude. `null` only when no banded contribution exists at all.
+    let (sig_i, sig_c) = if banded_count == 0 {
         (Value::from(0.0_f64), Value::from(0.0_f64))
-    } else if partial {
-        (Value::Null, Value::Null)
     } else {
         (Value::from(indep_sq.sqrt()), Value::from(consv))
     };
@@ -270,6 +278,7 @@ fn emit_cell(rec: &Value, step: usize) -> Result<Value, String> {
     let coverage = serde_json::json!({
         "photon_nuclides": nuc_count,
         "banded_nuclides": banded_count,
+        "partially_unbanded": partial,
         "unbanded_photon_share": unbanded_share,
         "uncovered_library_rows": uq.get("uncovered_library_rows")
             .and_then(Value::as_array).map(|v| v.len() as u64).unwrap_or(0),

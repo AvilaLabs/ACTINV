@@ -90,10 +90,11 @@ def expected_cell(mesh_cell: dict, step: int) -> dict:
         "photons_s": total,
         "n_nuclides": len(nucs),
         "banded": banded_n,
+        "partially_unbanded": partial,
         "unbanded_share": (unbanded / total) if total > 0 else 0.0,
-        "sigma_independent": None if partial else (indep_sq ** 0.5
-                                                 if nucs else 0.0),
-        "sigma_conservative": None if partial else (consv if nucs else 0.0),
+        # banded-part sums (lower bound); 0.0 when nothing is banded
+        "sigma_independent": indep_sq ** 0.5,
+        "sigma_conservative": consv,
         "uncovered_rows": len(uq.get("uncovered_library_rows") or []),
         "per_nuclide": dict((n, (s, sig)) for n, s, sig in nucs),
     }
@@ -132,6 +133,8 @@ def check_r2s(problems: list[str], step: int) -> dict:
         cov = got["coverage"]
         if not close(cov["unbanded_photon_share"], exp["unbanded_share"]):
             problems.append(f"{cid}: unbanded_photon_share mismatch")
+        if cov.get("partially_unbanded") != exp["partially_unbanded"]:
+            problems.append(f"{cid}: partially_unbanded flag mismatch")
         if cov["photon_nuclides"] != exp["n_nuclides"]:
             problems.append(f"{cid}: photon_nuclides count mismatch")
         if cov["banded_nuclides"] != exp["banded"]:
@@ -148,10 +151,10 @@ def check_r2s(problems: list[str], step: int) -> dict:
                 problems.append(f"{cid}: {n} photons_s mismatch")
             if not close(row["sigma_photons_s"], sig):
                 problems.append(f"{cid}: {n} sigma mismatch")
-        if exp["sigma_independent"] is not None:
-            exp_indep_sq += exp["sigma_independent"] ** 2
-            exp_consv += exp["sigma_conservative"]
-        else:
+        # footer sums run over banded contributions always
+        exp_indep_sq += exp["sigma_independent"] ** 2
+        exp_consv += exp["sigma_conservative"]
+        if exp["partially_unbanded"]:
             exp_partial += 1
 
     footer = r2s_recs[-1]
@@ -162,11 +165,10 @@ def check_r2s(problems: list[str], step: int) -> dict:
             problems.append("footer cell_count mismatch")
         if footer["cells_partially_unbanded"] != exp_partial:
             problems.append("footer cells_partially_unbanded mismatch")
-        want_i = None if exp_partial else math.sqrt(exp_indep_sq)
-        want_c = None if exp_partial else exp_consv
-        if not close(footer["sigma_total_independent"], want_i):
+        if not close(footer["sigma_total_independent"],
+                     math.sqrt(exp_indep_sq)):
             problems.append("footer sigma_total_independent mismatch")
-        if not close(footer["sigma_total_conservative"], want_c):
+        if not close(footer["sigma_total_conservative"], exp_consv):
             problems.append("footer sigma_total_conservative mismatch")
         mesh_total = sum(
             next(s["photon_source"]["total_photons_s"]
