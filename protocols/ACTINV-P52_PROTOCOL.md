@@ -262,4 +262,9 @@ definitions above is a new phase, not an amendment.
   export-of-one-input run twice (two differing inputs produce different
   embedded mesh shas by construction, so comparing r2s outputs across
   runs was vacuous).
+- **A10 (2026-09-25, checker repair).** `controls/check_g5_p52.py`: the
+  `close()` absolute floor of 1.0 made every σ ≲ tol compare equal —
+  σ values run to 1e-30, so planted mutation 3 (doubling a per-nuclide
+  σ) passed vacuously. Floor replaced by pure-relative comparison
+  (1e-300 underflow floor only).
 

@@ -42,7 +42,10 @@ def sha256_file(path: Path) -> str:
 def close(a, b, tol=RTOL):
     if a is None or b is None:
         return a is b
-    return abs(a - b) <= tol * max(abs(a), abs(b), 1.0)
+    # Pure-relative: a 1.0 absolute floor makes every sigma below ~tol
+    # compare equal (sigmas routinely run to 1e-30 — a 2x corruption then
+    # passes). 1e-300 only rescues exact-zero vs exact-zero.
+    return abs(a - b) <= tol * max(abs(a), abs(b), 1e-300)
 
 
 def parse_ndjson(path: Path):
