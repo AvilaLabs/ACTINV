@@ -6,8 +6,8 @@
    ""
   ],
   "normalized_result_sha256": [
-   "899963df0581ae0269e5ce185c33d7190ea8a588dc2484fd01f1a34d8a3b697c",
-   "899963df0581ae0269e5ce185c33d7190ea8a588dc2484fd01f1a34d8a3b697c"
+   "a82bf233b2fe75903b57d281861e51e9b04de7ca7ee512c03061d8484e80c3da",
+   "a82bf233b2fe75903b57d281861e51e9b04de7ca7ee512c03061d8484e80c3da"
   ],
   "prepared_identical": true,
   "results_identical": true,
@@ -18,7 +18,7 @@
  },
  "deletion_recreation": {
   "collapsed_identical": true,
-  "normalized_result_sha256": "899963df0581ae0269e5ce185c33d7190ea8a588dc2484fd01f1a34d8a3b697c",
+  "normalized_result_sha256": "a82bf233b2fe75903b57d281861e51e9b04de7ca7ee512c03061d8484e80c3da",
   "prepared_identical": true,
   "result_identical": true,
   "returncode": 0
@@ -28,7 +28,7 @@
   "collapsed_sha256": "0f6f8127562d64eeec8ab0f73215144c993add57075ab71e36187389c5382e98",
   "internal_zero_groups": true,
   "leading_zero_groups": true,
-  "normalized_result_sha256": "899963df0581ae0269e5ce185c33d7190ea8a588dc2484fd01f1a34d8a3b697c",
+  "normalized_result_sha256": "a82bf233b2fe75903b57d281861e51e9b04de7ca7ee512c03061d8484e80c3da",
   "prepared_bytes": 632,
   "prepared_sha256": "cc9d399de0481744d4652b994f20851da1a4dc3725062790fd56a40f09ff4cce",
   "trailing_zero_groups": true,
@@ -36,7 +36,7 @@
  },
  "interrupted_publication": {
   "collapsed_identical": true,
-  "normalized_result_sha256": "899963df0581ae0269e5ce185c33d7190ea8a588dc2484fd01f1a34d8a3b697c",
+  "normalized_result_sha256": "a82bf233b2fe75903b57d281861e51e9b04de7ca7ee512c03061d8484e80c3da",
   "partial_not_accepted": true,
   "prepared_identical": true,
   "result_identical": true,
@@ -186,7 +186,7 @@
  "schema": "actinv-p15-cache-integrity-1",
  "warm_reuse": {
   "collapsed_unchanged": true,
-  "normalized_result_sha256": "899963df0581ae0269e5ce185c33d7190ea8a588dc2484fd01f1a34d8a3b697c",
+  "normalized_result_sha256": "a82bf233b2fe75903b57d281861e51e9b04de7ca7ee512c03061d8484e80c3da",
   "prepared_unchanged": true,
   "result_identical": true,
   "returncode": 0
