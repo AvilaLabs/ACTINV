@@ -18,3 +18,4 @@ packaging/node_modules/
 web/node_modules/
 /deliverables/
 results/p50_voi_result.json
+results/p52_mesh.ndjson
