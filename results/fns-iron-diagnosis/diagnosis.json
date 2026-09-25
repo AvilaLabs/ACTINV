@@ -15,8 +15,8 @@
     "binary": "69740345ebcb7b56092c63349f62ac5aa13e737e65355412e943582c5b175b5d",
     "historical_comparison": "70473d685f17cdbe5ac1158a4ab8f0b979927694fa990d80dc2a82a006c9cbac",
     "data": {
-      "tendl-2025-patched-neutron-709g": "fb13c16c703c71a862ff82c78bc7fbd0761902264cf45efb97aa1a7e5e43b48d",
-      "tendl-2025-patched-neutron-709g-index": "18efc9b85655b736022360e85bebde3f816ec54ff0603e507a8ee9e2c9414982",
+      "tendl-2025-neutron-709g": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+      "tendl-2025-neutron-709g-index": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
       "endfb-viii-0-decay": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
       "jeff-3-3-decay": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
     },
