@@ -53,7 +53,8 @@ def run_actinv_arm(work: Path) -> dict:
                              "flux_per_group": flux_asc,
                              "flux_total": total}) + "\n")
         fh.write(json.dumps({"record": "footer", "cell_count": 1,
-                             "flux_sum_over_cells": total}) + "\n")
+                             "flux_sum_over_cells": total,
+                             "volume_integrated_flux": total * 1.0}) + "\n")
 
     spec = {
         "spec": "actinv-mesh-spec-1",

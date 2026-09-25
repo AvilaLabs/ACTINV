@@ -77,7 +77,8 @@ def build_flux(work: Path) -> Path:
                 "flux_per_group": list(reversed(shape)),
                 "flux_total": sum(shape)}) + "\n")
         fh.write(json.dumps({"record": "footer", "cell_count": N_CELLS,
-                             "flux_sum_over_cells": flux_sum}) + "\n")
+                             "flux_sum_over_cells": flux_sum,
+                             "volume_integrated_flux": flux_sum}) + "\n")
     return path
 
 

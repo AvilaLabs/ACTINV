@@ -194,4 +194,9 @@ definitions above is a new phase, not an amendment.
   `cross_sections.xml` when spawning the sealed P45 driver — the driver
   requires it and P45 supplied it from the campaign harness. No protocol
   value, format, or gate changed.
+- **A2 (2026-09-25, mechanical).** `controls/g2_p52_parity.py` +
+  `controls/g3_p52_demo.py`: the canonical `actinv-flux-1` footer requires
+  `volume_integrated_flux` when cell records carry `volume_cm3`
+  (flux.rs:766-771); both writers omitted it. Added the field with the
+  required sum. No protocol value, format, or gate changed.
 
