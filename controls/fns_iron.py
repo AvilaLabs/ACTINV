@@ -123,7 +123,7 @@ def prepare(archive_path, data_root, output):
     spec["schedule"] = schedule(rows)
     catalog = json.loads(CATALOG.read_text())
     artifacts = {a["id"]: a for a in catalog["artifacts"]}
-    selected = ["tendl-2025-patched-neutron-709g", "tendl-2025-patched-neutron-709g-index",
+    selected = [f"{case['data_bundle']}-709g", f"{case['data_bundle']}-709g-index",
                 "endfb-viii-0-decay", "jeff-3-3-decay"]
     paths, hashes = {}, {}
     for name in selected:
