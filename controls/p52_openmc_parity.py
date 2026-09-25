@@ -21,6 +21,7 @@ DRIVER = ROOT / "controls" / "p45_openmc_driver.py"
 DRIVER_SEALED_SHA = ("4d7d751a4ac3d93f881b64ee9cadc11d37ef92ade865b3a0079d19"
                      "6d04e7cc9e")
 CHAIN_XML = Path.home() / "nuclear-data/p32-work/chain/depletion/chain.xml"
+XS_XML = Path.home() / "nuclear-data/endfb-viii.1-hdf5/cross_sections.xml"
 BOUNDS = ROOT / "crates/actinv-data/data/fispact_709_groups.json"
 
 IRR_S = 300.0
@@ -65,9 +66,11 @@ def run_openmc_parity(work: Path) -> dict:
     }
     job_path = work / "p52_parity_job.json"
     job_path.write_text(json.dumps(job, indent=1))
+    env = dict(__import__("os").environ)
+    env["OPENMC_CROSS_SECTIONS"] = str(XS_XML)
     r = subprocess.run(
         [str(OPENMC_PY), str(DRIVER), str(job_path)],
-        capture_output=True, text=True, timeout=3600)
+        capture_output=True, text=True, timeout=3600, env=env)
     (work / "p52_parity_driver.stdout").write_text(r.stdout)
     (work / "p52_parity_driver.stderr").write_text(r.stderr)
     if r.returncode != 0:

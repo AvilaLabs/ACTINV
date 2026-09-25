@@ -186,3 +186,12 @@ under the P52 workload, not assumed.
 Post-G0 changes to sealed artifacts are append-only amendments: recorded in
 this file with reason and sha, then re-sealed. Any change to the frozen
 definitions above is a new phase, not an amendment.
+
+## Amendments
+
+- **A1 (2026-09-25, mechanical).** `controls/p52_openmc_parity.py`: set
+  `OPENMC_CROSS_SECTIONS` to the pinned endfb-viii.1-hdf5
+  `cross_sections.xml` when spawning the sealed P45 driver — the driver
+  requires it and P45 supplied it from the campaign harness. No protocol
+  value, format, or gate changed.
+
