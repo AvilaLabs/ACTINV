@@ -70,6 +70,19 @@ pub struct UncertaintyOptions {
     pub confidence_level: f64,
     #[serde(default)]
     pub require_complete: bool,
+    /// Optional value-of-information reporting: emit a ranked per-parameter
+    /// variance-share table inside each requested response band (P50).
+    /// Absence leaves the emitted record byte-identical to pre-P50 output.
+    #[serde(default)]
+    pub voi: Option<VoiOptions>,
+}
+
+/// Reporting knob for `uncertainty.voi` (P50): how many ranked parameters to
+/// emit per (step, response), in `|variance_share|` descending order.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct VoiOptions {
+    pub top: usize,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -532,6 +545,11 @@ impl Spec {
                     return Err(format!(
                         "duplicate uncertainty response selector '{selector}'"
                     ));
+                }
+            }
+            if let Some(voi) = &uncertainty.voi {
+                if !(1..=256).contains(&voi.top) {
+                    return Err("uncertainty.voi.top must be between 1 and 256".into());
                 }
             }
             if !self.projectile.is_neutron() {

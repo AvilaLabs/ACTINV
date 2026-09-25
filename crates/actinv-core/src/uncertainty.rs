@@ -145,6 +145,10 @@ pub struct ResponseUncertainty {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub yield_sensitivities: Vec<YieldSensitivityOut>,
     pub sensitivities: Vec<SensitivityOut>,
+    /// P50 value-of-information table; present only when the spec requested
+    /// `uncertainty.voi`. Absence is byte-identical to pre-P50 output.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub voi: Option<VoiReport>,
 }
 
 #[derive(Debug, Serialize)]
@@ -190,6 +194,54 @@ pub struct BandInput {
     pub decay_channel: Option<ChannelData<DecaySensitivityOut>>,
     /// `Some` when the `fission_yields` channel was requested.
     pub fission_yield_channel: Option<ChannelData<YieldSensitivityOut>>,
+}
+
+/// One ranked parameter in a P50 value-of-information table.
+#[derive(Debug, Serialize)]
+pub struct VoiEntry {
+    /// `cross_section_mf33`, `decay_constants` or `fission_yields`.
+    pub channel: &'static str,
+    /// The channel's parameter record (SensitivityParameter, DecayParameter or
+    /// YieldParameter), serialized as emitted elsewhere in this response.
+    pub parameter: serde_json::Value,
+    /// Response derivative with respect to the parameter, in this response's
+    /// sensitivity unit.
+    pub sensitivity: f64,
+    /// Declared per-parameter standard uncertainty; emitted for the diagonal
+    /// channels (decay, yield), absent for MF=33 rows whose dispersion lives
+    /// in the covariance block.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub standard_uncertainty: Option<f64>,
+    /// This parameter's share of the propagated variance:
+    /// `s_i·(Σ·s)_i` for MF=33 (negative under anticorrelation),
+    /// `(s_i·σ_i)^2` for the diagonal channels.
+    pub variance_share: f64,
+    /// `variance_share / total_propagated_variance`; null when the total
+    /// variance is zero or nonfinite.
+    pub share_fraction: Option<f64>,
+}
+
+/// Sensitivity-bearing parameters with no covariance coverage; named honestly,
+/// never ranked at zero.
+#[derive(Debug, Serialize)]
+pub struct VoiUnranked {
+    pub count: usize,
+    /// sqrt(Σ s_i^2) over the family's uncovered sensitivity-bearing
+    /// parameters — a magnitude proxy, not a variance.
+    pub sensitivity_l2: f64,
+}
+
+/// Ranked variance-share table emitted inside a `ResponseUncertainty` when the
+/// spec requests `uncertainty.voi` (P50).
+#[derive(Debug, Serialize)]
+pub struct VoiReport {
+    /// Up to `top` parameters by `|variance_share|` descending.
+    pub top: Vec<VoiEntry>,
+    /// The variance the emitted band was built on (MF=33 plus declared
+    /// diagonal channels), not a recomputation.
+    pub total_propagated_variance: f64,
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub unranked: BTreeMap<&'static str, VoiUnranked>,
 }
 
 pub fn propagated_variance(
@@ -420,6 +472,7 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             .map(|channel| channel.sensitivities)
             .unwrap_or_default(),
         sensitivities: input.sensitivities,
+        voi: None,
     })
 }
 

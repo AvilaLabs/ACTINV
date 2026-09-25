@@ -3065,6 +3065,7 @@ fn evaluate_robustness_inner(
                 channels: vec!["cross_section_mf33".to_string()],
                 confidence_level: 0.95,
                 require_complete: false,
+                voi: None,
             });
             match prep.run_prepared(&uspec) {
                 Ok(urr) => {

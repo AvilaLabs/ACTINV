@@ -14,7 +14,8 @@ use crate::spec::{
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, ChannelData, DecayParameter, DecaySensitivityOut,
-    SensitivityOut, SensitivityParameter, StepUncertainty, YieldParameter, YieldSensitivityOut,
+    SensitivityOut, SensitivityParameter, StepUncertainty, VoiEntry, VoiReport, VoiUnranked,
+    YieldParameter, YieldSensitivityOut,
 };
 use actinv_data::{
     composition, covariance, decay, fission,
@@ -677,6 +678,126 @@ fn tangent_value(
     value
 }
 
+/// P50 value-of-information table (protocol ACTINV-P50): rank each covered
+/// uncertainty parameter by its share of this response's propagated variance.
+/// MF=33 shares use the full collapsed covariance (`s_i·(Σ·s)_i`, negative
+/// under anticorrelation); decay and yield channels are diagonal
+/// (`(s_i·σ_i)^2`). Sensitivity-bearing parameters without covariance coverage
+/// are summarized under `unranked`, never ranked at zero.
+fn build_voi(
+    top: usize,
+    runtime: &UncertaintyRuntime,
+    sensitivities: &[SensitivityOut],
+    decay_channel: Option<&ChannelData<DecaySensitivityOut>>,
+    yield_channel: Option<&ChannelData<YieldSensitivityOut>>,
+    total_variance: f64,
+) -> Result<VoiReport, String> {
+    let mut entries: Vec<VoiEntry> = Vec::new();
+    let mut unranked: BTreeMap<&'static str, VoiUnranked> = BTreeMap::new();
+    let mut add_unranked = |channel: &'static str, sensitivity: f64| {
+        let bucket = unranked.entry(channel).or_insert(VoiUnranked {
+            count: 0,
+            sensitivity_l2: 0.0,
+        });
+        bucket.count += 1;
+        bucket.sensitivity_l2 += sensitivity * sensitivity;
+    };
+
+    let n_covered = runtime.covered_parameter_positions.len();
+    let covered_sensitivity: Vec<f64> = runtime
+        .covered_parameter_positions
+        .iter()
+        .map(|&position| sensitivities[position].value)
+        .collect();
+    for (row, &position) in runtime.covered_parameter_positions.iter().enumerate() {
+        let parameter = &sensitivities[position].parameter;
+        if parameter.covariance_excluded {
+            continue;
+        }
+        let mut row_contribution = 0.0;
+        for (column, &s_j) in covered_sensitivity.iter().enumerate() {
+            row_contribution += runtime.covariance_barn2[row * n_covered + column] * s_j;
+        }
+        entries.push(VoiEntry {
+            channel: "cross_section_mf33",
+            parameter: serde_json::to_value(parameter)
+                .map_err(|_| "voi parameter serialization failed")?,
+            sensitivity: covered_sensitivity[row],
+            standard_uncertainty: None,
+            variance_share: covered_sensitivity[row] * row_contribution,
+            share_fraction: None,
+        });
+    }
+    for record in sensitivities {
+        if record.value != 0.0
+            && (!record.parameter.covariance_covered || record.parameter.covariance_excluded)
+        {
+            add_unranked("cross_section_mf33", record.value);
+        }
+    }
+
+    if let Some(channel) = decay_channel {
+        for record in &channel.sensitivities {
+            let sensitivity = record.value;
+            if record.parameter.covered {
+                entries.push(VoiEntry {
+                    channel: "decay_constants",
+                    parameter: serde_json::to_value(&record.parameter)
+                        .map_err(|_| "voi parameter serialization failed")?,
+                    sensitivity,
+                    standard_uncertainty: Some(record.parameter.standard_uncertainty_s),
+                    variance_share: (sensitivity * record.parameter.standard_uncertainty_s).powi(2),
+                    share_fraction: None,
+                });
+            } else if sensitivity != 0.0 {
+                add_unranked("decay_constants", sensitivity);
+            }
+        }
+    }
+    if let Some(channel) = yield_channel {
+        for record in &channel.sensitivities {
+            let sensitivity = record.value;
+            if record.parameter.covered {
+                entries.push(VoiEntry {
+                    channel: "fission_yields",
+                    parameter: serde_json::to_value(&record.parameter)
+                        .map_err(|_| "voi parameter serialization failed")?,
+                    sensitivity,
+                    standard_uncertainty: Some(record.parameter.standard_uncertainty),
+                    variance_share: (sensitivity * record.parameter.standard_uncertainty).powi(2),
+                    share_fraction: None,
+                });
+            } else if sensitivity != 0.0 {
+                add_unranked("fission_yields", sensitivity);
+            }
+        }
+    }
+
+    let share_ranked = total_variance.is_finite() && total_variance > 0.0;
+    entries.sort_by(|left, right| {
+        if share_ranked {
+            right
+                .variance_share
+                .abs()
+                .total_cmp(&left.variance_share.abs())
+        } else {
+            right.sensitivity.abs().total_cmp(&left.sensitivity.abs())
+        }
+    });
+    entries.truncate(top);
+    for entry in &mut entries {
+        entry.share_fraction = share_ranked.then_some(entry.variance_share / total_variance);
+    }
+    for bucket in unranked.values_mut() {
+        bucket.sensitivity_l2 = bucket.sensitivity_l2.sqrt();
+    }
+    Ok(VoiReport {
+        top: entries,
+        total_propagated_variance: total_variance,
+        unranked,
+    })
+}
+
 fn build_step_uncertainty(
     runtime: &UncertaintyRuntime,
     options: &UncertaintyOptions,
@@ -800,7 +921,7 @@ fn build_step_uncertainty(
             } else {
                 None
             };
-        let sensitivities = values
+        let sensitivities: Vec<SensitivityOut> = values
             .into_iter()
             .take(xs_count)
             .zip(&runtime.parameters)
@@ -810,7 +931,28 @@ fn build_step_uncertainty(
                 unit: sensitivity_unit.clone(),
             })
             .collect();
-        let report = uncertainty_report::response_band(BandInput {
+        let voi = if let Some(voi_options) = &options.voi {
+            // Same total the band uses: MF=33 propagated variance plus the
+            // declared diagonal channels.
+            let total_variance = variance
+                + decay_channel
+                    .as_ref()
+                    .map_or(0.0, |channel| channel.variance)
+                + yield_channel
+                    .as_ref()
+                    .map_or(0.0, |channel| channel.variance);
+            Some(build_voi(
+                voi_options.top,
+                runtime,
+                &sensitivities,
+                decay_channel.as_ref(),
+                yield_channel.as_ref(),
+                total_variance,
+            )?)
+        } else {
+            None
+        };
+        let mut report = uncertainty_report::response_band(BandInput {
             nominal: snapshot_value(nominal, &response),
             alternate: snapshot_value(alternate, &response),
             unit: response_unit.into(),
@@ -822,6 +964,7 @@ fn build_step_uncertainty(
             decay_channel,
             fission_yield_channel: yield_channel,
         })?;
+        report.voi = voi;
         if options.require_complete && report.coverage != "complete" {
             return Err(format!(
                 "uncertainty response '{response}' has partial coverage in a requested channel"

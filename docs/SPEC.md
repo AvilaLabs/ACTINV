@@ -189,6 +189,13 @@ evaluations carry no correlation data — and each reports its own sensitivity l
 coverage. A nuclide or product with no declared uncertainty is named in `uncovered_decay_constants` /
 `uncovered_yield_products`.
 
+`voi` is optional (`{"top": N}`, 1–256) and emits a value-of-information table inside each requested response: the
+`top` parameters ranked by `|variance_share|` — the share of the propagated variance each parameter carries
+(`s_i·(Σ·s)_i` over the MF=33 block, `(s_i·σ_i)²` for the diagonal decay/yield channels — negative shares are
+emitted, not hidden, under anticorrelation) — plus the total propagated variance the band was built on and an
+`unranked` summary naming sensitivity-bearing parameters with no covariance coverage. The table answers "which
+measurement most buys down this band": removing a parameter's uncertainty drops the variance by its share.
+
 Each requested response reports its nominal value, local sensitivity to every active collapsed row in response units
 per barn, MF=33 standard uncertainty, relative standard uncertainty when defined, the requested two-sided normal
 interval, an alternate-CRAM-order difference, and a conservative interval expanded by that numerical-method bound.
