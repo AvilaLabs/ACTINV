@@ -3,6 +3,7 @@
 
 pub mod command;
 pub mod optimize;
+pub mod worker;
 pub mod workflow;
 
 use serde::{Deserialize, Serialize};

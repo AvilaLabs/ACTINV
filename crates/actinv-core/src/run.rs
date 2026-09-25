@@ -3875,15 +3875,123 @@ impl PreparedRun {
     }
 }
 
-pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
+/// P51: single-slot prepared-input cache. A `PreparedRun` gathers every
+/// data-file-derived input a solve needs (activation library, covariance,
+/// decay tables, photon/fission/radiological/damage/shielding preparations,
+/// chain); none of it depends on the spec's material or schedule. The slot is
+/// keyed by a fingerprint of every input that determines it — spec-side
+/// references/options plus the resolved content sha256 of each referenced
+/// file — so a hit reuses preparation only when every file is unchanged, and
+/// a changed file is a miss that revalidates. One slot bounds worker memory.
+#[derive(Default)]
+pub struct PreparedCache {
+    slot: Option<(String, PreparedRun)>,
+    last_hit: bool,
+    last_fingerprint_ms: f64,
+}
+
+impl PreparedCache {
+    pub fn new() -> Self {
+        Self::default()
+    }
+    /// Whether the most recent `run_with_cache` reused the slot.
+    pub fn last_hit(&self) -> bool {
+        self.last_hit
+    }
+    /// Time spent fingerprinting inputs on the most recent call — the only
+    /// preparation a warm request pays.
+    pub fn last_fingerprint_ms(&self) -> f64 {
+        self.last_fingerprint_ms
+    }
+}
+
+fn fingerprint_file(path: &str) -> Result<serde_json::Value, String> {
+    Ok(serde_json::json!({"path": path, "sha256": file_sha256(path)?}))
+}
+
+fn prepared_fingerprint(spec: &Spec, physical: &PhysicalInputs) -> Result<String, String> {
+    let multi_spectrum = physical
+        .schedule
+        .iter()
+        .any(|step| step.spectrum_flux.is_some());
+    let collapse = if multi_spectrum {
+        None
+    } else {
+        collapsible_spectrum(physical.flux.values())
+    };
+    let mut files = vec![
+        fingerprint_file(&spec.library.path)?,
+        fingerprint_file(&spec.decay.primary)?,
+    ];
+    if let Some(path) = spec.decay.fallback.as_ref().filter(|p| !p.is_empty()) {
+        files.push(fingerprint_file(path)?);
+    }
+    if let Some(options) = spec.uncertainty.as_ref() {
+        files.push(fingerprint_file(&options.covariance.path)?);
+    }
+    if let Some(response) = spec.photon.response.as_ref() {
+        files.push(fingerprint_file(&response.path)?);
+    }
+    for file in &spec.fission_yields.files {
+        files.push(fingerprint_file(&file.path)?);
+    }
+    if let Some(options) = spec.radiological.as_ref() {
+        files.push(fingerprint_file(&options.table.path)?);
+    }
+    if let Some(options) = spec.damage.as_ref() {
+        files.push(fingerprint_file(&options.table.path)?);
+    }
+    if let Some(options) = spec.self_shielding.as_ref() {
+        files.push(fingerprint_file(&options.table.path)?);
+    }
+    let canonical = serde_json::json!({
+        "library": spec.library,
+        "decay": spec.decay,
+        "photon": spec.photon,
+        "fission_yields": spec.fission_yields,
+        "projectile": spec.projectile.name(),
+        "temperature_K": physical.temperature.get(),
+        "uncertainty": spec.uncertainty,
+        "radiological": spec.radiological,
+        "damage": spec.damage,
+        "self_shielding": spec.self_shielding,
+        "spectrum": spec.spectrum,
+        "multi_spectrum": multi_spectrum,
+        "collapse_flux": collapse
+            .map(|flux| flux.iter().map(|v| v.to_bits()).collect::<Vec<u64>>()),
+        "files": files,
+    });
+    let mut hasher = Sha256::new();
+    hasher.update(canonical.to_string().as_bytes());
+    Ok(format!("{:x}", hasher.finalize()))
+}
+
+pub fn run_with_cache(
+    spec: &Spec,
+    entry_point: &str,
+    cache: &mut PreparedCache,
+) -> Result<RunResult, String> {
     let started = std::time::Instant::now();
     let mut profiler = RunProfiler::from_environment();
     let physical = spec.physical_inputs()?;
-    let prepared = PreparedRun::prepare_profiled(spec, &physical, &mut profiler)?;
+    let fingerprint_started = std::time::Instant::now();
+    let fingerprint = prepared_fingerprint(spec, &physical)?;
+    cache.last_fingerprint_ms = fingerprint_started.elapsed().as_secs_f64() * 1e3;
+    let hit = matches!(cache.slot.as_ref(), Some((stored, _)) if *stored == fingerprint);
+    cache.last_hit = hit;
+    if !hit {
+        let prepared = PreparedRun::prepare_profiled(spec, &physical, &mut profiler)?;
+        cache.slot = Some((fingerprint, prepared));
+    }
+    let prepared = &cache.slot.as_ref().expect("cache slot populated").1;
     let result =
         prepared.run_started_profiled(spec, &physical, entry_point, started, &mut profiler)?;
     profiler.emit(started.elapsed());
     Ok(result)
+}
+
+pub fn run(spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
+    run_with_cache(spec, entry_point, &mut PreparedCache::new())
 }
 
 #[cfg(test)]

@@ -789,6 +789,15 @@ pub fn main_from(a: Vec<String>) {
         "study" => {
             study_command(&a[2..]);
         }
+        "worker" => {
+            if a.len() > 2 {
+                die(
+                    "usage: actinv worker\nServe actinv-worker-request-1 JSON lines on stdin; one actinv-worker-response-1 line per request on stdout.",
+                    2,
+                );
+            }
+            std::process::exit(crate::worker::serve());
+        }
         "validate" | "run" => {
             if a.len() < 3 {
                 die(USAGE, 2);
