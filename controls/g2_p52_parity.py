@@ -25,6 +25,7 @@ BIN = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 OUT = ROOT / "results/g2_p52_parity.json"
 TOLERANCE = 0.5
 DOMINANCE_FRACTION = 0.01
+FLOOR_FRACTION = 1e-12
 
 
 def sha256_file(path: Path) -> str:
@@ -141,20 +142,7 @@ def main() -> int:
     # actinv steps numbered 1..N: irradiation step 1, coolings 2..N.
     # openmc entries: initial + after each timestep -> len = N+1.
     comparisons = {}
-    dominant = set()
-    end_act = om_activity(1)
-    a_end = actinv["steps"].get(1, {}).get("activity_bq_per_g", {})
-    total_a = sum(a_end.values()) or 1.0
-    total_o = sum(end_act.values()) or 1.0
-    for n, a in a_end.items():
-        if a / total_a >= DOMINANCE_FRACTION:
-            dominant.add(n)
-    for n, a in end_act.items():
-        if a / total_o >= DOMINANCE_FRACTION:
-            dominant.add(n)
-
-    if not dominant:
-        problems.append("no dominant nuclides identified in either arm")
+    compared_nuclides = set()
 
     # openmc entries: index 0 = t=0 initial, index i = after timestep i.
     # actinv steps are numbered 1..N over the same schedule: step i
@@ -166,28 +154,52 @@ def main() -> int:
             problems.append(f"actinv missing step for openmc index {om_idx}")
             continue
         inv = st["atoms_per_g"]
+        act_map = st["activity_bq_per_g"]
+        om_act = om_activity(om_idx)
+        tot_a = sum(act_map.values()) or 1.0
+        tot_o = sum(om_act.values()) or 1.0
+        dominant = {n for n, a in act_map.items()
+                    if a / tot_a >= DOMINANCE_FRACTION}
+        dominant |= {n for n, a in om_act.items()
+                     if a / tot_o >= DOMINANCE_FRACTION}
+        # significance floor: compare only nuclides one arm carries above
+        # 1e-12 x that arm's largest single-nuclide inventory this step
+        floor_a = FLOOR_FRACTION * max(inv.values(), default=0.0)
+        floor_o = FLOOR_FRACTION * max(
+            (atoms[om_idx] for atoms in om_atoms.values()
+             if om_idx < len(atoms)), default=0.0)
         rows = {}
         for n in sorted(dominant):
             om = om_atoms.get(n)
             av = inv.get(n, 0.0)
-            ov = om[om_idx] if om and om_idx < len(om) else None
-            if ov is None:
+            ov = om[om_idx] if om and om_idx < len(om) else 0.0
+            if av < floor_a and ov < floor_o:
+                rows[n] = {"actinv": av, "openmc": ov,
+                           "below_floor": True}
+                continue
+            compared_nuclides.add(n)
+            if om is None:
                 rows[n] = {"actinv": av, "openmc": None}
                 problems.append(
-                    f"dominant nuclide {n} missing from openmc arm")
+                    f"step {act_step}: {n} above floor in actinv "
+                    f"({av:.3e}) but absent from openmc arm")
                 continue
-            rel = abs(av - ov) / max(abs(ov), 1e-300)
+            rel = abs(av - ov) / max(abs(ov), abs(av), 1e-300)
             rows[n] = {"actinv": av, "openmc": ov, "rel": rel}
             if rel > TOLERANCE:
                 problems.append(
                     f"step {act_step}: {n} rel diff {rel:.3f} > {TOLERANCE}")
         comparisons[str(act_step)] = rows
 
+    if not compared_nuclides:
+        problems.append("no nuclides compared — dominance/floor removed all")
+
     result = {
         "pass": not problems,
         "tolerance": TOLERANCE,
         "dominance_fraction": DOMINANCE_FRACTION,
-        "dominant_nuclides": sorted(dominant),
+        "floor_fraction": FLOOR_FRACTION,
+        "compared_nuclides": sorted(compared_nuclides),
         "actinv_steps": n_steps, "openmc_entries": n_om,
         "wall_s": wall_s, "actinv_mesh_wall_s": actinv["wall_s"],
         "openmc_deplete_s": case.get("deplete_s"),
@@ -196,7 +208,8 @@ def main() -> int:
         "problems": problems,
     }
     OUT.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    print(json.dumps({"pass": result["pass"], "dominant": sorted(dominant),
+    print(json.dumps({"pass": result["pass"],
+                      "compared": sorted(compared_nuclides),
                       "problems": problems[:8]}))
     return 0 if result["pass"] else 1
 

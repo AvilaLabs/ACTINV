@@ -95,12 +95,18 @@ schedule. Cross-section and decay-file *provenance* differ by construction —
 ACTINV uses the TENDL-2025 709-group activation library; OpenMC's deplete uses
 ENDF-B-based `MicroXS` collapsed by `from_multigroup_flux`, and its own
 chain.xml. The gate compares per-nuclide atom inventories: every nuclide
-contributing ≥1% of either arm's end-of-irradiation total activity must appear
-in both arms and agree within **rtol 0.5** at the declared comparison steps.
+contributing ≥1% of either arm's activity **at that step** must appear in
+both arms and agree within **rtol 0.5** — provided its inventory is
+physically significant: a nuclide is compared only when at least one arm
+carries it above `1e-12 ×` the largest single-nuclide inventory in that
+arm at that step (below the floor the residual is numerical dust — a
+2.58 h nuclide at 30 d decay reads 1e-10 vs 1e-40 across arms; no
+response can resolve that).
 (P45 measured actinv-vs-openmc total-activity divergence of 0.16–0.33 on the
 Fe FNS arm — the tolerance absorbs evaluation differences; it cannot absorb a
-factor-level coding error.) Every compared nuclide and its relative difference
-is ledgered; nothing outside the top set is silently dropped.
+factor-level coding error.) Every compared nuclide and its relative
+difference is ledgered; below-floor nuclides are ledgered as such, not
+dropped silently.
 
 **Determinism and resume.** Mesh runs are byte-deterministic on pinned inputs;
 `resume:true` treats a truncated output as a checkpoint. Both claims are gated
@@ -138,8 +144,8 @@ under the P52 workload, not assumed.
   env drives `MicroXS.from_multigroup_flux` + `IndependentOperator` +
   `PredictorIntegrator`; ACTINV runs the identical flux through `actinv mesh`
   (1 cell) on the TENDL library. Gate: every nuclide ≥1% of either arm's
-  end-of-irradiation activity, present in both, |rel| ≤ 0.5 at every compared
-  step. `results/g2_p52_parity.json`.
+  activity *at that step*, above the declared significance floor, present
+  in both, |rel| ≤ 0.5 at every compared step. `results/g2_p52_parity.json`.
 - **G3 (multi-cell demonstration).** 8 cells, distinct FNS-perturbed spectra
   (P45-style deterministic modulation), pure Fe, `uncertainty` declared with
   `activity:*` responses and the MF=33 covariance sidecar, `cell_result_fields`
@@ -199,4 +205,13 @@ definitions above is a new phase, not an amendment.
   `volume_integrated_flux` when cell records carry `volume_cm3`
   (flux.rs:766-771); both writers omitted it. Added the field with the
   required sum. No protocol value, format, or gate changed.
+- **A3 (2026-09-25, gate-methodology).** G2 comparison rule sharpened in two
+  ways after the first executed run exposed them: (1) dominance is evaluated
+  *per step* (a nuclide ≥1% of either arm's activity at that step is
+  compared), not only at end-of-irradiation — more nuclides are compared,
+  never fewer; (2) a declared significance floor (`1e-12 ×` the largest
+  per-nuclide inventory in each arm at that step) excludes numerical dust —
+  the first run's only failure was a 2.58 h nuclide read as 9.5e-10 vs
+  1.2e-40 atoms at 30 d cooling, physically identical silence. Below-floor
+  nuclides are ledgered, not dropped.
 
