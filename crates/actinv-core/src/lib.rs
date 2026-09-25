@@ -11,6 +11,7 @@ pub mod mesh;
 pub mod photon;
 pub mod prune;
 pub mod quantity;
+pub mod r2s;
 pub mod radiological;
 pub mod reverse;
 pub mod run;

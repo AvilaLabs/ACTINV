@@ -40,6 +40,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
+                    actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
 
 const DATA_USAGE: &str = "usage: actinv data list\n\
@@ -913,6 +914,27 @@ pub fn main_from(a: Vec<String>) {
                 step,
                 cells.len(),
                 a[4]
+            );
+        }
+        "export-r2s" => {
+            if a.len() != 5 {
+                die(USAGE, 2);
+            }
+            let step: usize = a[3]
+                .parse()
+                .unwrap_or_else(|_| die("export-r2s STEP must be a positive integer", 2));
+            if step == 0 {
+                die("STEP is one-based and must be positive", 2);
+            }
+            let bytes = std::fs::read(&a[2])
+                .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[2]), 2));
+            let (doc, summary) =
+                actinv_core::r2s::emit_r2s_source(&bytes, step).unwrap_or_else(|e| die(e, 1));
+            std::fs::write(&a[4], doc)
+                .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[4]), 1));
+            eprintln!(
+                "step {} banded r2s source: {} cells, {} partially unbanded -> {}",
+                step, summary["cells"], summary["cells_partially_unbanded"], a[4]
             );
         }
         _ => die(USAGE, 2),

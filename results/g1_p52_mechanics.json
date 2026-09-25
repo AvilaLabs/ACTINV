@@ -1,0 +1,26 @@
+{
+  "checks": {
+    "c1_nuclide_sig": true,
+    "c1_sigma_c": true,
+    "c1_sigma_i": true,
+    "c1_total": true,
+    "c2_sigma_i": true,
+    "coverage_rows": true,
+    "emits": true,
+    "footer_indep": true,
+    "footer_total": true,
+    "header": "059c52a2ef37fd35dba3440456bc59a9fbc6e5a3b148f2933e0d847f9873c790",
+    "missing_photon_source": true,
+    "missing_uncertainty": true,
+    "no_footer_rejected": true,
+    "order_rejected": true,
+    "sealed_artifacts_unchanged": true,
+    "unbanded_cell_sigma_null": true,
+    "unbanded_entry_null": true,
+    "unbanded_footer_flag": true,
+    "unbanded_share": true,
+    "zero_source": true
+  },
+  "pass": true,
+  "problems": []
+}
