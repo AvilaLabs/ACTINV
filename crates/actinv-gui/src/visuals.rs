@@ -49,6 +49,7 @@ pub fn spectrum(ui: &mut egui::Ui, doc: &Value) {
     ));
     Plot::new("spectrum-energy")
         .height(210.)
+        .allow_scroll(false)
         .x_axis_label("Energy (eV), logarithmic")
         .y_axis_label("Group-integrated flux (particles/cm²/s)")
         .x_axis_formatter(|mark, _| format!("{:.1e}", 10_f64.powf(mark.value)))
@@ -82,6 +83,7 @@ pub fn contributors(ui: &mut egui::Ui, step: &Value, selected: &mut String) {
         .collect();
     Plot::new("activity-contributions")
         .height(220.)
+        .allow_scroll(false)
         .include_y(0.)
         .include_y(100.)
         .x_axis_label("Nuclide rank")

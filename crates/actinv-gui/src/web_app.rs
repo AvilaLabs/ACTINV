@@ -378,6 +378,7 @@ impl Workbench {
         let color = visuals::accent(ui);
         Plot::new(("history", self.metric, self.log_time, &self.selected))
             .height(270.)
+            .allow_scroll(false)
             .legend(Legend::default())
             .x_axis_label(if self.log_time {
                 "log10(Time / s)"
@@ -496,6 +497,7 @@ impl Workbench {
                     let color = visuals::accent(ui);
                     Plot::new("photon-groups")
                         .height(230.)
+                        .allow_scroll(false)
                         .x_axis_label("Photon energy (MeV)")
                         .y_axis_label("Photons / s / g per group")
                         .show(ui, |plot| {

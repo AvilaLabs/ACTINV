@@ -852,7 +852,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             if normalized {numeric(ui,&mut self.document["spectrum"]["total"],1e10);}else{ui.label("Group values are absolute group fluxes (particles / cm^2 / s).");}
             let mut descending=self.document["spectrum"]["descending"].as_bool().unwrap_or(false);if ui.checkbox(&mut descending,"Input groups are highest-energy first").changed(){self.document["spectrum"]["descending"]=descending.into();}
             let points:Vec<[f64;2]>=self.document["spectrum"]["flux_per_group"].as_array().map(|a|a.iter().enumerate().map(|(i,v)|[i as f64+1.,model::number(v)]).collect()).unwrap_or_default();
-            Plot::new("incident").height(260.).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
+            Plot::new("incident").height(260.).allow_scroll(false).x_axis_label("Input group index").y_axis_label(if normalized{"Relative group weight"}else{"Group flux / cm^2 / s"}).show(ui,|p|p.line(Line::new("Incident spectrum",points).color(accent)));
             ui.collapsing("Edit group values",|ui|{if let Some(values)=self.document["spectrum"]["flux_per_group"].as_array_mut(){egui::ScrollArea::vertical().max_height(200.).show_rows(ui,28.,values.len(),|ui,range|{for i in range {ui.horizontal(|ui|{ui.label(format!("Group {}",i+1));numeric(ui,&mut values[i],1.);});}});}});
             ui.label("Custom boundaries and optional photon, uncertainty, or response settings are available in Advanced JSON.");
             ui.collapsing("Import or paste group values", |ui| {
@@ -1031,6 +1031,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             .collect();
         let mut plot = Plot::new("history")
             .height(240.)
+            .allow_scroll(false)
             .x_axis_label(if log_time {
                 "log10(Time / s)"
             } else {
@@ -1369,6 +1370,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             pts.sort_by(|a, b| a[0].total_cmp(&b[0]));
             egui_plot::Plot::new("sweep-plot")
                 .height(220.)
+                .allow_scroll(false)
                 .x_axis_label(axis_obj.label())
                 .y_axis_label(self.sweep.response.label())
                 .show(ui, |p| {
@@ -1458,7 +1460,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 if let Some(groups)=step["photon_source"]["groups"].as_array(){
                     if groups.iter().any(|g|model::number(&g["photons_s_g"])>0.) {
                     let bars:Vec<_>=groups.iter().map(|g|egui_plot::Bar::new(model::number(&g["centroid_eV"])/1e6,model::number(&g["photons_s_g"])).width((model::number(&g["high_eV"])-model::number(&g["low_eV"]))/1e6)).collect();
-                    Plot::new("photon-groups").height(230.).x_axis_label("Photon energy (MeV)").y_axis_label("Photons / s / g per group").show(ui,|p|p.bar_chart(egui_plot::BarChart::new("Decay photons",bars).color(accent)));
+                    Plot::new("photon-groups").height(230.).allow_scroll(false).x_axis_label("Photon energy (MeV)").y_axis_label("Photons / s / g per group").show(ui,|p|p.bar_chart(egui_plot::BarChart::new("Decay photons",bars).color(accent)));
                 }
                     else {ui.label("No grouped photon emission is recorded at this step. Review the photon source details and ledger for missing evaluated spectra or unrepresented emission.");}
                 }
