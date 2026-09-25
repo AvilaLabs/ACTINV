@@ -108,7 +108,7 @@ def build_spec(flux_path: Path) -> dict:
             "require_complete": False},
         "flux": {"path": str(flux_path),
                  "sha256": sha256_file(flux_path)},
-        "threads": 2,
+        "threads": 1,
         "cell_result_fields": ["steps", "mode", "pruned_states",
                                "total_states", "entry_point"],
     }

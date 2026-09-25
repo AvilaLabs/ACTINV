@@ -224,4 +224,10 @@ definitions above is a new phase, not an amendment.
   `index` components are 1-based (flux.rs:319); the writer used a 0
   component. Index is optional — bounds carry the geometry — so the field
   is dropped rather than re-based.
+- **A6 (2026-09-25, memory bound).** `controls/g3_p52_demo.py`:
+  `threads: 2` → `threads: 1`. Concurrent cells each run a full MF=33
+  collapse (~3 GB working set over ~15–20k covered rows); two concurrent
+  collapses exceeded the 6 GB workstation envelope (cgroup OOM, twice).
+  Sequential cells keep the whole run inside the envelope; the
+  demonstration cost is ledgered either way.
 
