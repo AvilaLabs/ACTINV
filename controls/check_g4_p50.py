@@ -10,7 +10,9 @@ Usage: check_g4_p50.py [--mutate 1|2|3]
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
+import pickle
 import sys
 from pathlib import Path
 
@@ -197,7 +199,22 @@ def rebuild(spec: dict, result: dict):
     rows inside one target, so the global covariance is exactly
     block-diagonal per target — collapsing per target is exact and stays
     inside the memory scope. `selected` is the run's active row set, read
-    from the emitted sensitivity parameters (the runtime's boundary)."""
+    from the emitted sensitivity parameters (the runtime's boundary).
+
+    The collapse is cached under target/ keyed by the spec bytes plus a
+    digest of every emitted `sensitivities` record — the only inputs that
+    change the rebuild. Mutating `voi` fields cannot hit a stale cache."""
+    sens_digest = hashlib.sha256(json.dumps(
+        [[i, name, rec["parameter"], rec["value"]]
+         for i, step in enumerate(result["steps"])
+         for name, resp in step["uncertainty"]["responses"].items()
+         for rec in resp["sensitivities"]],
+        sort_keys=True).encode()).hexdigest()
+    key_src = json.dumps(spec, sort_keys=True).encode() + sens_digest.encode()
+    cache = ROOT / "target" / f"p50-check-{hashlib.sha256(key_src).hexdigest()[:16]}.pkl"
+    if cache.exists():
+        with open(cache, "rb") as handle:
+            return pickle.load(handle)
     activation_path, covariance_path = spec_paths(spec)
     activation = load_activation(activation_path)
     flux = np.asarray(spec["spectrum"]["flux_per_group"], dtype=np.float64)
@@ -238,6 +255,7 @@ def rebuild(spec: dict, result: dict):
         excluded.extend(ex)
         for position, row_index in enumerate(covered):
             blocks[row_index] = (matrix, position)
+    cache.write_bytes(pickle.dumps((blocks, excluded)))
     return blocks, excluded
 
 
@@ -431,9 +449,9 @@ def verify(result: dict, spec: dict) -> list[str]:
 
 
 def main() -> int:
-    mutate = None
+    mutation_id = None
     if "--mutate" in sys.argv:
-        mutate = int(sys.argv[sys.argv.index("--mutate") + 1])
+        mutation_id = int(sys.argv[sys.argv.index("--mutate") + 1])
 
     seal = json.load(open(ROOT / "results/g0_p50_seals.json"))
     artifacts = p50a.verify()
@@ -441,8 +459,8 @@ def main() -> int:
              if r["sha256"] != seal["artifacts"][n]["sha256"]}
     result = json.load(open(RESULT))
     spec = json.load(open(ROOT / seal["artifacts"]["demo_spec"]["path"]))
-    if mutate:
-        result = mutate(result, mutate)
+    if mutation_id:
+        result = mutate(result, mutation_id)
 
     problems = verify(result, spec)
     if drift:
@@ -451,15 +469,15 @@ def main() -> int:
     record = {
         "schema": "actinv-p50-g4-1",
         "result": str(RESULT.relative_to(ROOT)),
-        "mutate": mutate,
+        "mutate": mutation_id,
         "problems": problems,
-        "pass": not problems if not mutate else bool(problems),
+        "pass": not problems if not mutation_id else bool(problems),
     }
-    if mutate:
+    if mutation_id:
         record["pass"] = bool(problems)  # mutation must be rejected
     OUT.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n")
     print(json.dumps({"pass": record["pass"], "problems": len(problems),
-                      "mutate": mutate}))
+                      "mutate": mutation_id}))
     return 0 if record["pass"] else 1
 
 

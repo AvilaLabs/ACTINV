@@ -232,3 +232,17 @@ artifact changed. Sealed `check_g4_p50.py` and `g2_p50_controls.py` shas
 superseded by the amended modules; all other sealed artifacts unchanged.
 
 Amended shas: recorded in the phase verdict.
+
+## Amendment 6 — mechanical repair (mutation entry + collapse cache)
+
+Post-seal, the `--mutate` entry crashed on a name shadow (`mutate` bound the
+integer argument and the function). Repaired the variable name, and added a
+rebuild cache under `target/` keyed by the spec bytes plus a digest of every
+emitted `sensitivities` record — the only inputs that change the collapse —
+so the mutation legs share one exact rebuild. Mutating `voi` fields cannot
+hit a stale key; a mutation that touched sensitivities would produce a new
+digest and rebuild. No definition, ranking rule, gate, share formula, or
+tolerance changed. Sealed `check_g4_p50.py` sha superseded; other artifacts
+unchanged.
+
+Amended checker sha256: recorded in the phase verdict.
