@@ -186,3 +186,17 @@ ranking rule, gate, share formula, or tolerance changed. Sealed
 artifacts unchanged.
 
 Amended checker sha256: recorded in the phase verdict.
+
+## Amendment 3 — mechanical repair (checker memory bound)
+
+Post-seal, `controls/check_g4_p50.py` rebuilt the global collapsed covariance
+with `read_sidecar` materializing the full-corpus components — 6G OOM inside
+the bounded scope. Repaired by collapsing per target and assembling the
+block-diagonal covariance: MF=33 components only ever couple rows inside one
+target, so per-target blocks are exact. The checker still re-derives the
+exclusion rules, all shares, ordering, truncation and unranked summaries.
+No definition, ranking rule, gate, share formula, or tolerance changed.
+Sealed `check_g4_p50.py` sha superseded by the amended module; all other
+sealed artifacts unchanged.
+
+Amended checker sha256: recorded in the phase verdict.

@@ -80,40 +80,54 @@ def excluded_block_matrix(matrix: np.ndarray, covered_targets: list,
 
 
 def rebuild(spec: dict, result: dict):
-    """Collapsed covariance with exclusions applied + covered (spectrum-major)
-    parameter order, entirely from the pinned artifacts. `selected` is the
-    run's active row set — read from the emitted sensitivity parameters, the
-    same boundary the Rust runtime draws."""
+    """Per-target collapsed covariance blocks with exclusions applied,
+    entirely from the pinned artifacts. MF=33 components only ever couple
+    rows inside one target, so the global covariance is exactly
+    block-diagonal per target — collapsing per target is exact and stays
+    inside the memory scope. `selected` is the run's active row set, read
+    from the emitted sensitivity parameters (the runtime's boundary)."""
     activation_path, covariance_path = spec_paths(spec)
     activation = load_activation(activation_path)
     flux = np.asarray(spec["spectrum"]["flux_per_group"], dtype=np.float64)
+    rows = activation["rows"]
     selected = sorted({
         record["parameter"]["library_row"]
         for step in result["steps"]
         for response in step["uncertainty"]["responses"].values()
         for record in response["sensitivities"]})
-    sidecar = read_sidecar(covariance_path)
-    collapsed = collapse(sidecar, activation, flux, selected)
-    rows = activation["rows"]
-    covered = collapsed["row_indices"]
-    n = len(covered)
-    matrix = np.asarray(collapsed["covariance_barn2"]).reshape(n, n)
-    by_mt_positions: dict[tuple[int, int], list[int]] = {}
-    for position, row_index in enumerate(covered):
-        row = rows[row_index]
-        by_mt_positions.setdefault((int(row[0]), int(row[1])), []).append(position)
-    represented = {
-        (item["target"], min(item["mt"], item["mt1"]), max(item["mt"], item["mt1"]))
-        for item in sidecar
-    }
-    matrix, excluded = excluded_block_matrix(matrix, covered, by_mt_positions, represented)
-    index_of = {row: i for i, row in enumerate(covered)}
-    return matrix, covered, index_of, excluded
+    by_target_rows: dict[int, list[int]] = {}
+    for row_index in selected:
+        by_target_rows.setdefault(int(rows[row_index][0]), []).append(row_index)
+
+    # blocks[row_index] -> (block_matrix, position_in_block, covered_row_order)
+    blocks: dict[int, tuple] = {}
+    excluded = []
+    for target, target_rows in sorted(by_target_rows.items()):
+        sidecar = read_sidecar(covariance_path, target=target)
+        collapsed = collapse(sidecar, activation, flux, target_rows)
+        covered = collapsed["row_indices"]
+        n = len(covered)
+        if n == 0:
+            continue
+        matrix = np.asarray(collapsed["covariance_barn2"]).reshape(n, n)
+        by_mt_positions: dict[tuple[int, int], list[int]] = {}
+        for position, row_index in enumerate(covered):
+            row = rows[row_index]
+            by_mt_positions.setdefault((int(row[0]), int(row[1])), []).append(position)
+        represented = {
+            (item["target"], min(item["mt"], item["mt1"]), max(item["mt"], item["mt1"]))
+            for item in sidecar
+        }
+        matrix, ex = excluded_block_matrix(matrix, covered, by_mt_positions, represented)
+        excluded.extend(ex)
+        for position, row_index in enumerate(covered):
+            blocks[row_index] = (matrix, position)
+    return blocks, excluded
 
 
-def share_map(step_response: dict, matrix: np.ndarray, index_of: dict,
-              covered_rows: list[int]):
+def share_map(step_response: dict, blocks: dict):
     """Expected per-parameter share, keyed by (spectrum, library_row, MT).
+    `blocks[row_index] -> (block_matrix, position)` comes from `rebuild`.
 
     The Python reference collapse is single-spectrum; a multi-spectrum run's
     joint covariance carries cross-spectrum blocks this checker cannot
@@ -124,23 +138,26 @@ def share_map(step_response: dict, matrix: np.ndarray, index_of: dict,
     if spectra != {0}:
         raise RuntimeError("multi-spectrum run: checker cannot rebuild the "
                            "joint covariance")
-    n = len(covered_rows)
-    by_pos: dict[int, dict] = {}
+    # Group covered records by block matrix (one per target).
+    members: dict[int, list] = {}
     for record in sensitivities:
         p = record["parameter"]
         if not p["covariance_covered"]:
             continue
         row = p["library_row"]
-        if row in index_of:
-            by_pos[index_of[row]] = record
-    s = np.zeros(n)
-    for pos, record in by_pos.items():
-        s[pos] = record["value"]
-    ws = matrix @ s
+        if row in blocks:
+            members.setdefault(id(blocks[row][0]), []).append(record)
     out = {}
-    for pos, record in by_pos.items():
-        p = record["parameter"]
-        out[(p["spectrum"], p["library_row"], p["MT"])] = s[pos] * ws[pos]
+    for records in members.values():
+        matrix = blocks[records[0]["parameter"]["library_row"]][0]
+        s = np.zeros(matrix.shape[0])
+        for record in records:
+            s[blocks[record["parameter"]["library_row"]][1]] = record["value"]
+        ws = matrix @ s
+        for record in records:
+            p = record["parameter"]
+            pos = blocks[p["library_row"]][1]
+            out[(p["spectrum"], p["library_row"], p["MT"])] = s[pos] * ws[pos]
     return out
 
 
@@ -263,7 +280,7 @@ def mutate(result: dict, which: int) -> dict:
 
 def verify(result: dict, spec: dict) -> list[str]:
     problems: list[str] = []
-    matrix, covered_rows, index_of, excluded = rebuild(spec, result)
+    blocks, excluded = rebuild(spec, result)
     emitted_excluded = {
         (b["target"], b["mt"], b["mt1"]) for b in
         result["steps"][0]["uncertainty"]["excluded_blocks"]}
@@ -279,7 +296,7 @@ def verify(result: dict, spec: dict) -> list[str]:
                 problems.append(f"step {index}/{name}: voi missing")
                 continue
             tables += 1
-            xs_shares = share_map(response, matrix, index_of, covered_rows)
+            xs_shares = share_map(response, blocks)
             diag_shares = {
                 **diagonal_expected(response, "decay_sensitivities",
                                     "standard_uncertainty_s"),
