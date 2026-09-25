@@ -19,7 +19,119 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "controls"))
 import p50_artifacts as p50a  # noqa: E402
-from p11_covariance import collapse, load_activation, read_sidecar  # noqa: E402
+from p11_covariance import load_activation, read_sidecar  # noqa: E402
+
+
+def collapse(sidecar: list[dict], activation: dict, flux: np.ndarray,
+             selected: list[int]) -> dict:
+    """Local reference collapse — same algorithm as p11_covariance.collapse
+    plus the production zero-base rule (covariance.rs vector_for_grid:
+    absolute-kind ratio is 0 where the base row's group sigma is 0 and the
+    row's is 0; the corpus presents no nonzero-over-zero-base case, which a
+    run would have rejected). Kept local so the shared p11_covariance
+    reference file stays byte-stable across phases."""
+    rows, sigma, bounds = activation["rows"], activation["sig"], activation["bounds"]
+    total_flux = float(np.sum(flux))
+    self_covered = {(item["target"], item["mt"])
+                    for item in sidecar if item["mt"] == item["mt1"]}
+    covered = [row for row in sorted(set(selected))
+               if rows[row, 4] != 10
+               and (rows[row, 0], rows[row, 1]) in self_covered]
+    base = {(int(row[0]), int(row[1])): index
+            for index, row in enumerate(rows) if row[2] == -1}
+    matrix = np.zeros((len(covered), len(covered)), dtype=np.float64)
+    positions: dict[tuple[int, int], list[int]] = {}
+    for parameter, row_index in enumerate(covered):
+        row = rows[row_index]
+        positions.setdefault((int(row[0]), int(row[1])), []).append(parameter)
+
+    def vector(row_index: int, base_index: int, grid: list[float],
+               relative: bool) -> np.ndarray:
+        result = np.zeros(len(grid) - 1)
+        if total_flux == 0.0:
+            return result
+        for group, group_flux in enumerate(flux):
+            if group_flux == 0.0:
+                continue
+            low, high = bounds[group:group + 2]
+            if relative:
+                multiplier = sigma[row_index, group]
+            elif row_index == base_index:
+                multiplier = 1.0
+            elif sigma[base_index, group] > 0.0:
+                multiplier = (sigma[row_index, group]
+                              / sigma[base_index, group])
+            elif sigma[row_index, group] == 0.0:
+                multiplier = 0.0
+            else:
+                raise ValueError(
+                    f"activation row {row_index} nonzero where base row "
+                    f"{base_index} is zero")
+            if multiplier == 0.0:
+                continue
+            for interval, (left, right) in enumerate(zip(grid, grid[1:])):
+                width = max(0.0, min(high, right) - max(low, left))
+                result[interval] += (group_flux / (high - low) / total_flux
+                                     * width * multiplier)
+        return result
+
+    represented = {
+        (item["target"], min(item["mt"], item["mt1"]), max(item["mt"], item["mt1"]))
+        for item in sidecar
+    }
+    for item in sidecar:
+        left_positions = positions.get((item["target"], item["mt"]), [])
+        right_positions = positions.get((item["target"], item["mt1"]), [])
+        for left_position in left_positions:
+            left_row = covered[left_position]
+            left_base = base[(item["target"], item["mt"])]
+            for right_position in right_positions:
+                right_row = covered[right_position]
+                right_base = base[(item["target"], item["mt1"])]
+                if item["kind"] in ("Absolute", "Relative"):
+                    left = vector(left_row, left_base, item["row_grid"],
+                                  item["kind"] == "Relative")
+                    right = vector(right_row, right_base, item["column_grid"],
+                                   item["kind"] == "Relative")
+                    values = np.asarray(item["values"]).reshape(len(left),
+                                                                len(right))
+                    value = float(left @ values @ right)
+                else:
+                    value = 0.0
+                    for group, group_flux in enumerate(flux):
+                        if group_flux == 0.0:
+                            continue
+                        low, high = bounds[group:group + 2]
+                        group_width = high - low
+                        def ratio(row_i, base_i):
+                            if row_i == base_i:
+                                return 1.0
+                            if sigma[base_i, group] > 0.0:
+                                return sigma[row_i, group] / sigma[base_i, group]
+                            if sigma[row_i, group] == 0.0:
+                                return 0.0
+                            raise ValueError("nonzero over zero base")
+                        left_ratio = ratio(left_row, left_base)
+                        right_ratio = ratio(right_row, right_base)
+                        for factor, grid_left, grid_right in zip(
+                                item["values"], item["row_grid"],
+                                item["row_grid"][1:]):
+                            width = max(0.0, min(high, grid_right)
+                                        - max(low, grid_left))
+                            if width == 0.0:
+                                continue
+                            covariance_width = grid_right - grid_left
+                            weight = group_flux * width / group_width / total_flux
+                            variance = (factor * covariance_width / width
+                                        if item["kind"] == "ShortRange8"
+                                        else factor * (1.0 - width / covariance_width))
+                            value += (weight * weight * left_ratio
+                                      * right_ratio * variance)
+                matrix[left_position, right_position] += value
+                if item["mt"] != item["mt1"]:
+                    matrix[right_position, left_position] += value
+    return {"row_indices": covered,
+            "covariance_barn2": matrix.ravel().tolist()}
 
 RESULT = ROOT / "results/p50_voi_result.json"
 OUT = ROOT / "results/check_g4_p50.json"

@@ -200,3 +200,17 @@ Sealed `check_g4_p50.py` sha superseded by the amended module; all other
 sealed artifacts unchanged.
 
 Amended checker sha256: recorded in the phase verdict.
+
+## Amendment 4 — mechanical repair (checker zero-base rule)
+
+Post-seal, the checker called the shared `p11_covariance.collapse` reference
+whose absolute-kind ratio divides by the base row's group sigma — zero-base
+groups in the corpus produced NaN. Repaired by carrying a local copy of the
+collapse inside `check_g4_p50.py` that applies the production zero-base rule
+(ratio = 0 where base sigma is 0 and row sigma is 0; a nonzero-over-zero-base
+case would have failed the run itself). The shared `p11_covariance.py`
+reference stays byte-stable. No definition, ranking rule, gate, share
+formula, or tolerance changed. Sealed `check_g4_p50.py` sha superseded by the
+amended module; all other sealed artifacts unchanged.
+
+Amended checker sha256: recorded in the phase verdict.
