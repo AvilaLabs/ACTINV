@@ -109,9 +109,12 @@ factor-level coding error.) Every compared nuclide and its relative
 difference is ledgered; below-floor nuclides are ledgered as such, not
 dropped silently.
 
-**Determinism and resume.** Mesh runs are byte-deterministic on pinned inputs;
-`resume:true` treats a truncated output as a checkpoint. Both claims are gated
-under the P52 workload, not assumed.
+**Determinism and resume.** Mesh runs are byte-deterministic on pinned inputs
+modulo a declared exclusion set — the mesh footer's wall-clock ledger fields
+`wall_time_s` and `cells_per_s` (same class as `ms` in `actinv run`). Every
+cell record must be byte-identical; the footer must be identical modulo those
+two keys. `resume:true` treats a truncated output as a checkpoint. Both claims
+are gated under the P52 workload, not assumed.
 
 ## Artifact set
 
@@ -155,9 +158,11 @@ under the P52 workload, not assumed.
   `actinv export-r2s` emits the banded source for the final cooling step;
   every cell's band fields present and `unbanded_photon_share` ≤ 0.05.
   `results/g3_p52_demo.json` + `results/p52_r2s_source.ndjson`.
-- **G4 (determinism/resume).** The G3 mesh spec run twice → byte-identical
-  output and identical emitted r2s doc; a run truncated mid-output resumed
-  with `resume:true` → byte-identical to the uninterrupted run.
+- **G4 (determinism/resume).** The G3 mesh spec run twice → outputs
+  identical modulo the declared exclusion set (`wall_time_s`,
+  `cells_per_s` in the footer); `export-r2s` run twice on one canonical
+  mesh file emits byte-identical documents; a run truncated mid-output
+  resumed with `resume:true` → identical modulo the same set.
   `results/g4_p52_determinism.json`.
 - **G5 (independent checker).** `controls/check_g5_p52.py` re-derives, from
   the mesh ndjson alone, every cell's per-nuclide σ, both combination rules,
@@ -248,4 +253,13 @@ definitions above is a new phase, not an amendment.
   Cell/footer `sigma_*` now emit the sum over banded contributions (a real
   lower bound) with `coverage.partially_unbanded` + `unbanded_photon_share`
   marking the excluded fraction; footer gains `totals_cover`.
+- **A9 (2026-09-25, gate-methodology).** G4's determinism comparison: mesh
+  outputs are byte-identical except the footer's wall-clock ledger
+  (`wall_time_s`, `cells_per_s`) — same exclusion class as `ms` in
+  `actinv run` under P51. Cell records were byte-identical on the first
+  executed comparison; the footer's timing keys now form the declared
+  exclusion set. `export-r2s` determinism is tested correctly as
+  export-of-one-input run twice (two differing inputs produce different
+  embedded mesh shas by construction, so comparing r2s outputs across
+  runs was vacuous).
 

@@ -31,6 +31,20 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def canon(path: Path) -> bytes:
+    """Canonical bytes: identical modulo the mesh footer's wall-clock
+    ledger (`wall_time_s`, `cells_per_s`) — the declared exclusion set."""
+    out = []
+    for ln in path.read_text().splitlines():
+        rec = json.loads(ln)
+        if rec.get("record") == "footer":
+            rec.pop("wall_time_s", None)
+            rec.pop("cells_per_s", None)
+            ln = json.dumps(rec, sort_keys=True)
+        out.append(ln)
+    return "\n".join(out).encode()
+
+
 def run_mesh(spec_path: Path, out_path: Path, timeout: int = 3000):
     r = subprocess.run([str(BIN), "mesh", str(spec_path), str(out_path)],
                        capture_output=True, text=True, timeout=timeout)
@@ -60,12 +74,13 @@ def main() -> int:
             problems.append("first run failed")
         if run_mesh(spec_path, b).returncode != 0:
             problems.append("second run failed")
-        sha_a, sha_b = sha256_file(a), sha256_file(b)
-        checks["run_twice_identical"] = sha_a == sha_b
+        ca, cb = canon(a), canon(b)
+        checks["run_twice_identical"] = ca == cb
 
+        # r2s determinism is export-of-one-input, run twice → identical
         ra, rb = work / "ra.ndjson", work / "rb.ndjson"
         export(a, demo.EMIT_STEP, ra)
-        export(b, demo.EMIT_STEP, rb)
+        export(a, demo.EMIT_STEP, rb)
         checks["r2s_identical"] = sha256_file(ra) == sha256_file(rb)
 
         # --- leg B: truncate + resume ---------------------------------------
@@ -81,7 +96,7 @@ def main() -> int:
         r = run_mesh(spec_r_path, trunc)
         checks["resume_succeeds"] = r.returncode == 0
         if r.returncode == 0:
-            checks["resume_identical"] = sha256_file(trunc) == sha_a
+            checks["resume_identical"] = canon(trunc) == ca
         else:
             checks["resume_identical"] = False
             problems.append(f"resume failed: {r.stderr[-800:]}")
