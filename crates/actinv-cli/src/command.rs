@@ -751,7 +751,7 @@ pub fn main_from(a: Vec<String>) {
                 .filter(|x| x.as_str() != "--resume")
                 .collect();
             if positional.iter().any(|x| x.starts_with("--"))
-                || positional.len() < 1
+                || positional.is_empty()
                 || positional.len() > 2
             {
                 die(OPT_USAGE, 2);

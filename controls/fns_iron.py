@@ -86,10 +86,10 @@ def fetch_archive(path, case):
 
 
 def prepare(archive_path, data_root, output):
-    pinned(CASE, "e04b539d4ab2176a3120dba67609b88dd09d5ff0ddadca790f7fc0388a1c6155")
+    pinned(CASE, "ada48af2808490010dc17ecd90573f3fcb4e3c3c0824c07020a2017a17ce7d55")
     pinned(PROTOCOL, "4a9203cb5bc1be9d39cb7419cfacabbba552293510699d8b569183a9d56da01d")
-    pinned(CATALOG, "25638bddfd6bb183c51720e53254a6529b15a63cadae2202174c662f0cea3314")
-    pinned(EXAMPLE, "a9ce69083f0112b32c477ae1bcb45417f133dd7fcdd383777ae6892cf29d9207")
+    pinned(CATALOG, "257f2a3f03b4ffadedde9e59871bb95131c626d40f1bd75ce56d1d3846cb9acc")
+    pinned(EXAMPLE, "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39")
     case = json.loads(CASE.read_text())
     fetch_archive(archive_path, case)
     members = {}

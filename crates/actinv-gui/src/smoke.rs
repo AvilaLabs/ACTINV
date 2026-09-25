@@ -1,7 +1,7 @@
 //! Opt-in checks of the shipped binary, never enabled during ordinary startup.
 use crate::model::{self, ResultDocument};
 use std::{
-    path::PathBuf,
+    path::{Path, PathBuf},
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
@@ -29,7 +29,7 @@ fn private_cache(label: &str) -> PathBuf {
 /// (sweep_specs -> worker::spawn per point) and reports point-level
 /// identity vs the direct solver, supersession staleness rejection,
 /// cancellation behaviour, and per-point latency.
-fn sweep_smoke(spec_path: &PathBuf, output: &PathBuf) -> Result<(), String> {
+fn sweep_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
     use crate::sweep::{self, SweepAxis};
     use std::time::Instant;
     let document =
@@ -140,7 +140,7 @@ fn sweep_smoke(spec_path: &PathBuf, output: &PathBuf) -> Result<(), String> {
     }
     c.request_cancel();
     let mut later = 0usize;
-    while let Ok(_) = c.rx.recv_timeout(Duration::from_secs(60)) {
+    while c.rx.recv_timeout(Duration::from_secs(60)).is_ok() {
         later += 1;
         if later > 4 {
             break;

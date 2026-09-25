@@ -237,6 +237,8 @@ pub fn run_search<F: FnMut(&[f64]) -> EvalOutcome>(
                 axis_strata.swap(i, j);
             }
         }
+        // i selects one stratum per axis — it indexes strata, not the points
+        #[allow(clippy::needless_range_loop)]
         for i in 0..n_lhs {
             let x: Vec<f64> = (0..d)
                 .map(|k| {
@@ -573,10 +575,10 @@ fn response_edge(
 }
 
 /// Select the step whose cumulative t_s is nearest `time_s`.
-fn select_step<'a>(
-    steps: &'a [actinv_core::run::StepOut],
+fn select_step(
+    steps: &[actinv_core::run::StepOut],
     time_s: f64,
-) -> Result<&'a actinv_core::run::StepOut, String> {
+) -> Result<&actinv_core::run::StepOut, String> {
     let mut best: Option<(&actinv_core::run::StepOut, f64)> = None;
     for s in steps {
         let t = s.t_s;

@@ -1579,6 +1579,9 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
             let mut paired = 0usize;
             let mut satisfied = 0usize;
             let mut failed = 0usize;
+            // i indexes the per-case rows of sample_sets (a map of vectors);
+            // no single container exists to enumerate over.
+            #[allow(clippy::needless_range_loop)]
             for i in 0..n_paired {
                 let any_missing = evaluated.iter().any(|(_, cases)| {
                     cases.iter().any(|(id, _)| sample_sets[id][i].is_null())
@@ -2439,7 +2442,7 @@ fn evaluate_robustness_inner(
     } else {
         Vec::new()
     };
-    let yield_inputs: Vec<((i32, i32, i32, i32), f64, f64)> = if rb.channels.fission_yields {
+    let yield_inputs: crate::run::YieldInputs = if rb.channels.fission_yields {
         prep.prepared(spec)?.yield_inputs(spec, &physical)?
     } else {
         Vec::new()

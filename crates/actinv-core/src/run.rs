@@ -183,6 +183,9 @@ fn index_path(library_path: &str) -> String {
 
 type ShaCacheKey = (String, u64, u128);
 
+/// Fission-yield sampling input: (parent nuclide key, yield, rel_sigma).
+pub(crate) type YieldInputs = Vec<((i32, i32, i32, i32), f64, f64)>;
+
 /// Process-wide SHA-256 cache keyed by (path, length, modification time).
 fn sha_cache() -> &'static Mutex<HashMap<ShaCacheKey, String>> {
     static CACHE: OnceLock<Mutex<HashMap<ShaCacheKey, String>>> = OnceLock::new();
@@ -1601,7 +1604,7 @@ impl PreparedRun {
         &self,
         spec: &Spec,
         physical: &PhysicalInputs,
-    ) -> Result<Vec<((i32, i32, i32, i32), f64, f64)>, String> {
+    ) -> Result<YieldInputs, String> {
         let phi = physical.flux.values();
         let mut out = Vec::new();
         let mut parents: Vec<_> = self.fission_yields.keys().copied().collect();
