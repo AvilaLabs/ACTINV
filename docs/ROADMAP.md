@@ -1165,7 +1165,7 @@ problem the fusion materials program runs by hand today. A second candidate demo
 Tb-149 radionuclidic purity against the shipped feedstock example, exercises the maximize direction and a
 real published problem.
 
-## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **P50 closed P50-CONDITIONAL 2026-09-25; P51 closed P51-CLOSED 2026-09-25; P52 unopened, unhashed**
+## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **P50 closed P50-CONDITIONAL 2026-09-25; P51 closed P51-CLOSED 2026-09-25; P52 closed P52-CLOSED 2026-09-25**
 
 Competitive landscape check (2026-09-25): OpenMC now ships `openmc.deplete` with an automated
 cell/mesh `R2SManager` plus D1S, validated against the FNG ITER SINBAD shutdown-dose benchmark —
@@ -1833,6 +1833,21 @@ gate input; nothing in this draft is frozen until sealed.
   reaped → respawned → byte-identical, RSS 1.56 GiB under a 4 GiB ceiling; G5 re-verified all
   ledgers independently and rejected three planted mutations. The qualified path — not a shortcut —
   is what got faster.
+- 2026-09-25 — **P52 closes `P52-CLOSED`** (`results/verdict_p52.json`; protocol sealed at
+  `7d12f615…`, 10 amendments — all mechanical/control-layer repairs plus two format-methodology
+  tightenings discovered by executing the gates). `actinv export-r2s` emits the
+  `actinv-r2s-source-1` interchange: per-cell banded decay-photon sources — per-nuclide photons/s
+  with σ from each `activity:` band (`σ_i = source_i × rel_σ_i`), cell totals under both
+  declared rules (independent sqrt-Σσ², conservative Σσ over banded contributions), and a coverage
+  ledger (`partially_unbanded`, `unbanded_photon_share`, uncovered rows/decays/yields) so no band
+  is silently nominal. Executed evidence: one-cell parity vs `openmc.deplete` on identical
+  Fe/FNS input — Mn-56 (n,p) at rel 0.0009, Fe-55 (n,γ) at rel 0.25 (known TENDL↔ENDF evaluation
+  divergence, inside the declared 0.5); 8-cell banded mesh at ~15 s/cell inside the 6 GB envelope;
+  byte-identical reruns modulo the declared wall-clock footer fields; mid-output resume converges
+  identically; G5 re-derived every cell's per-nuclide σ, both combination rules, coverage
+  fractions, and footer aggregates from the raw ndjson and rejected all three planted mutations.
+  The capability claim: uncertainty now propagates through the R2S handoff into the photon
+  transport source — the lane no incumbent offers.
 - 2026-09-25 — repository hygiene: `results/p50_voi_result.json` (408 MB, over GitHub's 100 MB push
   limit) was excised from unpushed local history (`c91d0af`→`0af91c6`, `8753255`→`1c7fb68`,
   `ebb7810`→`b6f9afa`, `fbfaaeb`→`5b562ff`); the file remains on disk, .gitignored, and its sealed

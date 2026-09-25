@@ -1,0 +1,73 @@
+{
+  "amendments": 10,
+  "closed_at_utc": "2026-09-25T23:10:48Z",
+  "conditions": [
+    "bands cover banded contributions only: partially_unbanded + unbanded_photon_share mark the excluded fraction (8/8 cells partial in the demo; share <0.001)",
+    "photon-source sigma is an uncertainty SCALE on cell strength: activity bands propagate by strength scaling, group shape stays nominal (declared band_semantics)",
+    "cross-nuclide covariance is not available in MF=33 \u2014 independent and fully-correlated combinations bound it; nothing between is claimed",
+    "G2 parity bound to the declared significance floor; Fe55 (n,gamma) shows the known TENDL-vs-ENDF evaluation divergence at 25%, within the declared 0.5",
+    "banded mesh cost: ~15 s/cell over the corpus collapse at threads:1 within the 6 GB envelope \u2014 memory-bound concurrency is a documented constraint, not hidden"
+  ],
+  "final_commit": "e0af844680bf8790361f3065905019820357d3aa",
+  "gates": {
+    "g0": {
+      "pass": true,
+      "seal": "results/g0_p52_seals.json"
+    },
+    "g1": {
+      "note": "mechanics: emission rules, combination rules, coverage rows, rejection of missing-uncertainty/missing-photon/no-footer/out-of-order inputs, sealed-artifact integrity",
+      "pass": true
+    },
+    "g2": {
+      "parity": {
+        "Fe55": "rel 0.2508 (n,gamma channel \u2014 TENDL vs ENDF-B evaluation divergence, within declared 0.5)",
+        "Mn56": "rel 0.0009 (n,p channel)"
+      },
+      "pass": true,
+      "result": "results/g2_p52_parity.json",
+      "walls": {
+        "actinv_mesh_s": 1.2,
+        "openmc_deplete_s": 1.8
+      }
+    },
+    "g3": {
+      "export_wall_s": 4.7,
+      "mesh": "8 cells, distinct FNS-perturbed 709g spectra, per-cell MF=33 banded solves",
+      "mesh_sha256": "8a63b7cfc3d6ae7a01efa51624bc51ec995dbea43423c9a5321602d8c365f85b",
+      "mesh_wall_s": 107.6,
+      "note": "529MB mesh evidence kept on disk (gitignored), referenced by sha256",
+      "pass": true,
+      "r2s_sha256": "932ba6cde4a93c5fa8a1cfa74dda3f85f734cdf5f91049ae1a88b38553782a73",
+      "result": "results/g3_p52_demo.json"
+    },
+    "g4": {
+      "checks": [
+        "run_twice_identical",
+        "r2s_identical",
+        "resume_succeeds",
+        "resume_identical"
+      ],
+      "exclusion_set": [
+        "footer.wall_time_s",
+        "footer.cells_per_s"
+      ],
+      "pass": true,
+      "result": "results/g4_p52_determinism.json"
+    },
+    "g5": {
+      "mutations_rejected": 3,
+      "pass": true,
+      "result": "results/check_g5_p52.json"
+    }
+  },
+  "phase": "P52",
+  "product": {
+    "command": "actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson",
+    "differentiator": "uncertainty propagates from per-bin activation bands into the downstream photon-transport source \u2014 no incumbent R2S chain carries data uncertainty through the handoff",
+    "emits": "actinv-r2s-source-1: per-cell banded decay-photon sources (nominal + sigma_independent + sigma_conservative + per-nuclide sigmas + coverage ledger)"
+  },
+  "protocol": "protocols/ACTINV-P52_PROTOCOL.md",
+  "protocol_sha256": "7d12f61577356395564cbf06d306d4c9b6174a2841fc7d46e1526622ffb1f2c5",
+  "schema": "actinv-verdict-1",
+  "verdict": "P52-CLOSED"
+}

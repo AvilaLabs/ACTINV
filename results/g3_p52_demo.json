@@ -1,0 +1,15 @@
+{
+  "cells": 8,
+  "export_wall_s": 4.702549513000122,
+  "hardware": {
+    "cell_emit_step": 4,
+    "cpu": "x86_64"
+  },
+  "mesh_bytes": 529024149,
+  "mesh_out_sha256": "8a63b7cfc3d6ae7a01efa51624bc51ec995dbea43423c9a5321602d8c365f85b",
+  "mesh_wall_s": 107.55418096799986,
+  "pass": true,
+  "problems": [],
+  "r2s_sha256": "932ba6cde4a93c5fa8a1cfa74dda3f85f734cdf5f91049ae1a88b38553782a73",
+  "total_wall_s": 112.65447365399996
+}

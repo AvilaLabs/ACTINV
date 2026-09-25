@@ -15,8 +15,9 @@
     "no_footer_rejected": true,
     "order_rejected": true,
     "sealed_artifacts_unchanged": true,
-    "unbanded_cell_sigma_null": true,
+    "unbanded_cell_sigma_banded_part": true,
     "unbanded_entry_null": true,
+    "unbanded_flag": true,
     "unbanded_footer_flag": true,
     "unbanded_share": true,
     "zero_source": true

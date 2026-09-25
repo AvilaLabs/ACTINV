@@ -1,0 +1,11 @@
+{
+  "checks": {
+    "r2s_identical": true,
+    "resume_identical": true,
+    "resume_succeeds": true,
+    "run_twice_identical": true
+  },
+  "pass": true,
+  "problems": [],
+  "wall_s": 345.60805145499944
+}

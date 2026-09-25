@@ -1,0 +1,66 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "cli_command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "711dc63f7134e0b2bef982cd6675aa5ab923ff93bf1e1fbde1a5d42def81d7dc"
+    },
+    "core_mesh_module": {
+      "path": "crates/actinv-core/src/mesh.rs",
+      "sha256": "85778f5c8d8775599f8cf17990fb9ae8635fa73b3e664eeb0b452fe58c96756f"
+    },
+    "core_r2s_module": {
+      "path": "crates/actinv-core/src/r2s.rs",
+      "sha256": "24a9bc33b32b0c1d24a708bb7506ee622d2e8a37238d70f55584e4cbd32c535c"
+    },
+    "core_run_module": {
+      "path": "crates/actinv-core/src/run.rs",
+      "sha256": "05a28ef80fb2702ffd87e759bbe9beb5281b42f29b872242e6b4d95c7afc9bac"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p52_mechanics.py",
+      "sha256": "e9bbecc4a6ab415fffdcac04cb699a3795eb8dfac693c4d48cf58a2daff803ac"
+    },
+    "g2_parity": {
+      "path": "controls/g2_p52_parity.py",
+      "sha256": "375fe55162fa16eee792834384e428b75406c9f22b66fd5e38135bca528c7514"
+    },
+    "g3_demo": {
+      "path": "controls/g3_p52_demo.py",
+      "sha256": "2b25735ccfe39216975d865768f61caf419b7483a69f2c04429f843eb8c25dd7"
+    },
+    "g4_determinism": {
+      "path": "controls/g4_p52_determinism.py",
+      "sha256": "40501dd707ba5ffc7272ff7d3f9b8a407ef28fcfe65fab25e1279b0486bae7fa"
+    },
+    "g5_checker": {
+      "path": "controls/check_g5_p52.py",
+      "sha256": "ac84b0b85a661bc62ca01a307be0857c1739bf76c7bce25fabf35f1918da5fab"
+    },
+    "mesh_flux_example": {
+      "path": "examples/mesh_flux.ndjson",
+      "sha256": "56b3290f9fb4fceeb4433f8e11bdf2f60f6685774fb7af1110c1f612d47a4161"
+    },
+    "openmc_parity_driver": {
+      "path": "controls/p52_openmc_parity.py",
+      "sha256": "22011f0c3adb1ddb8ed56bd4efd95f28c36087069c607d814303e83729680a92"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P52_PROTOCOL.md",
+      "sha256": "7d12f61577356395564cbf06d306d4c9b6174a2841fc7d46e1526622ffb1f2c5"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "demonstration": "8-cell Fe mesh, distinct FNS-perturbed spectra, banded via the TENDL covariance sidecar; export-r2s emits actinv-r2s-source-1",
+  "envelope_s": 3600,
+  "opening_commit": "e0af844680bf8790361f3065905019820357d3aa",
+  "protocol_sha256": "7d12f61577356395564cbf06d306d4c9b6174a2841fc7d46e1526622ffb1f2c5",
+  "schema": "actinv-p52-seal-1",
+  "sealed_at_utc": "2026-09-25T23:09:42Z"
+}

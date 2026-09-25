@@ -1,0 +1,67 @@
+{
+  "actinv_mesh_wall_s": 1.2313873500006594,
+  "actinv_steps": 4,
+  "artifacts": {
+    "cargo_lock": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5",
+    "cli_command_module": "711dc63f7134e0b2bef982cd6675aa5ab923ff93bf1e1fbde1a5d42def81d7dc",
+    "core_mesh_module": "85778f5c8d8775599f8cf17990fb9ae8635fa73b3e664eeb0b452fe58c96756f",
+    "core_r2s_module": "b853efe4704c2c2fe96e5893513cc7bcd9fbc3b705894119b7b9f264b916018b",
+    "core_run_module": "05a28ef80fb2702ffd87e759bbe9beb5281b42f29b872242e6b4d95c7afc9bac",
+    "g1_mechanics": "24cb9af2994c662790fc660b30add67b1d91d81bf5464153c1a79da5098048e3",
+    "g2_parity": "375fe55162fa16eee792834384e428b75406c9f22b66fd5e38135bca528c7514",
+    "g3_demo": "039ca59c7c02f84855fae54b255d83f8b2c831287da0cdf5813191fefa071db7",
+    "g4_determinism": "77dce6950a52b8895eee0049efdc1a92439cfc5d763a10a0bc970d9aa7430a30",
+    "g5_checker": "3104960dbfff9f773a5588607f4e033d46471d281030f115291e1f29f3965575",
+    "mesh_flux_example": "56b3290f9fb4fceeb4433f8e11bdf2f60f6685774fb7af1110c1f612d47a4161",
+    "openmc_parity_driver": "22011f0c3adb1ddb8ed56bd4efd95f28c36087069c607d814303e83729680a92",
+    "protocol": "95ff6754e724057fd41de1ff96d6b5acc5c26dc1c3cf86a4cd0277ac38b9c2cc",
+    "workspace_manifest": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+  },
+  "compared_nuclides": [
+    "Fe55",
+    "Mn56"
+  ],
+  "comparisons": {
+    "1": {
+      "Mn56": {
+        "actinv": 3338743956.7406697,
+        "openmc": 3341851402.466972,
+        "rel": 0.0009298575406459469
+      }
+    },
+    "2": {
+      "Fe55": {
+        "actinv": 12848219016.23672,
+        "openmc": 17150017613.414839,
+        "rel": 0.25083347983346843
+      },
+      "Mn56": {
+        "actinv": 5273630.0314415675,
+        "openmc": 5278538.320101731,
+        "rel": 0.0009298575405756258
+      }
+    },
+    "3": {
+      "Fe55": {
+        "actinv": 12584392893.018667,
+        "openmc": 16797858091.978384,
+        "rel": 0.250833479833468
+      }
+    },
+    "4": {
+      "Fe55": {
+        "actinv": 9776930841.436377,
+        "openmc": 13050410794.202402,
+        "rel": 0.25083347983346677
+      }
+    }
+  },
+  "dominance_fraction": 0.01,
+  "floor_fraction": 1e-12,
+  "openmc_deplete_s": 1.813233683999897,
+  "openmc_entries": 5,
+  "pass": true,
+  "problems": [],
+  "tolerance": 0.5,
+  "wall_s": 13.102984228000423
+}

@@ -1,0 +1,11 @@
+{
+  "detail": {
+    "cells_checked": 8
+  },
+  "mutate": 3,
+  "pass": true,
+  "problems": [
+    "cell-0: V52 sigma mismatch"
+  ],
+  "problems_count": 1
+}
