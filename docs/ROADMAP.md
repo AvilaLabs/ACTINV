@@ -1833,3 +1833,9 @@ gate input; nothing in this draft is frozen until sealed.
   reaped → respawned → byte-identical, RSS 1.56 GiB under a 4 GiB ceiling; G5 re-verified all
   ledgers independently and rejected three planted mutations. The qualified path — not a shortcut —
   is what got faster.
+- 2026-09-25 — repository hygiene: `results/p50_voi_result.json` (408 MB, over GitHub's 100 MB push
+  limit) was excised from unpushed local history (`c91d0af`→`0af91c6`, `8753255`→`1c7fb68`,
+  `ebb7810`→`b6f9afa`, `fbfaaeb`→`5b562ff`); the file remains on disk, .gitignored, and its sealed
+  sha256 in `results/verdict_p50.json` (`7a1c548c…`) is unaffected — it regenerates deterministically
+  via `controls/g3_p50_demonstration.py`. Seal `opening_commit` fields predate the excision and now
+  point to superseded local SHAs; artifact sha256s they bind are unchanged.
