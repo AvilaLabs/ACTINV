@@ -217,7 +217,7 @@ eaf119980cd4fdbbe4b09ffb1f482f15165db764c24eefbb445cd748916b5c13  ./controls/fix
 afea329ec685ee7738fb31b40218e7b1d526a71292a8c0c204cb27be6c82d25b  ./controls/fixtures/p18b_g1_oracle.json
 3a66e633df8a5eb641eb9767fd4ee9653f10fa3df415626f73519f2c6b5537cc  ./controls/flag_library.py
 00ba0df782fb376ff32ef62f243032306576045b60d9c0ac903cbd46f9bbc23c  ./controls/fns_compare_libraries.py
-15024dd24684832c806d2c9e6fc16f3b7f64e507b4846f2efbaff293b992f452  ./controls/fns_iron.py
+891a5e4ee9a1d6a21e7642414399cb98d00a5747e20b2c51897d3425f1b80798  ./controls/fns_iron.py
 787a69c5e1ef8f36a096db7b22248791478581bcb5a9ae847eee0fb75c29aeb6  ./controls/fns_iron_diagnose.py
 b4d1a508ab4641f92ed130df766f3b803089768c77acb774653e52cf6e4f75fa  ./controls/fns_report.py
 b8959141b9dccea1862cb1ba6c96ea7dfe4f93153deaac9f964df1204ef767da  ./controls/fusion_isotope_chain.py
@@ -257,7 +257,7 @@ bdca7a61d6529c6b0bacc8b08742b932af509053d91bf267bf14cad7370ad47a  ./controls/g0_
 0d617855b47a3ce18ea4ab3231e5054a932c6d29dbc88c1400fbbca8aa9f97ba  ./controls/g1_p10_builder.py
 62fe7442200c61c4e90353379f4e48f35046c6497eb6ea16212ebb964bc11a33  ./controls/g1_p11_covariance.py
 be79c7c52b3d6ac344425a67eae3d0e7da149ff01d32434e2c1e6638d68effe1  ./controls/g1_p12_radiological.py
-e59cf7318213bdc718625bca89468647409321ba19c7d3f668cc6358600951fd  ./controls/g1_p13_data_distribution.py
+7c3dac23c47cab18b02d3b1838438bf204fcbd01994e683f01064368c10ab24f  ./controls/g1_p13_data_distribution.py
 2ff7635e95030cd1b98f1bb09ad736a06926103a5a01a77ae6d1519bb84519e2  ./controls/g1_p15_prepared.py
 cfeb2324a4e79126810f2c62f9d1db7794a9b3948025c6da3d45598cbc24943b  ./controls/g1_p16_quantities.py
 7ba3662d04444c2045d50857187d751e496df181f69875e7e30a3c58b6924960  ./controls/g1_p17_operators.py
@@ -423,7 +423,7 @@ ca3a7583ba728a2115b431ffc1f5c35dee3a7971117cc54bd002200854cf4812  ./controls/g5_
 72b01722cf8c8628962e08230b9f8ca52a2f365399ab9e313a26ba725fe5c540  ./controls/g5_pathways.py
 bf80dae2fb177887cfd55879893f0668d53d9aee77a51959880aa9e3f9678429  ./controls/g5_pyo3_control.py
 c681cac5aae4a1ac1c358a7016e9d07402c85b749ab11eb577590e49217941d8  ./controls/g6_ledger_certificate.py
-05f542a93091b95840ead1cb12f14d75a7daaa34cfb34fb91392c2f3690acb25  ./controls/g6_p10_projectile_runtime.py
+a6f19b61ae8840f1daa0ae242b654ed56f0c863a854ea76dc01571bc348442aa  ./controls/g6_p10_projectile_runtime.py
 e5d61cb6bd3ebc260280116932ff6d9121849bf05b985adbe6145ad9825d54db  ./controls/g6_p11_complete.py
 d8e168020a346cab4c3dd52e3c27d326ef16b50ee7b592a0e80cfa8e72974000  ./controls/g6_p11_quality.py
 5e20ba67a9c4d3482cadce483cb5a31014c062107ec611a18a8fcf2aae76f090  ./controls/g6_p12_complete.py
@@ -531,7 +531,7 @@ b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/tes
 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.0.0.md
 132bacccc3fe16703455cc69efc68feaf811eea4415dc653336638c70f903136  ./crates/actinv-cli/data/ACTINV-DATA-NOTICE-v1.1.0.md
 27b77786b89a6303f0805646fc61e4fbcabaaf695dd92e4e15a87948b3d69430  ./crates/actinv-cli/data/actinv-data-catalog-v1.0.0.json
-257f2a3f03b4ffadedde9e59871bb95131c626d40f1bd75ce56d1d3846cb9acc  ./crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json
+951534baf043e5416932d2890843c5d5a10fdbdb8c16a8ebff699945b8e0496e  ./crates/actinv-cli/data/actinv-data-catalog-v1.1.0.json
 ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39  ./crates/actinv-cli/data/iron-example.json
 1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e  ./crates/actinv-cli/src/bin/actinv.rs
 8d4f67c6ae39938774bb4b41f6d59901705d26d466f22aa08282c9c933a8385b  ./crates/actinv-cli/src/command.rs
@@ -998,7 +998,7 @@ fb2f2f790ea26b84a4b9d8f770525e85a209e81ced2fbae908fd15a2dc316bf4  ./results/desk
 f2a02ada0b3f06b584dda2838f54376d67bec40f0d343aefddf8d12ebfde57c6  ./results/exfor_isomer_compare.json
 c1880c85dd247e299f89077d1a9c6025a4dec4a8c0f116c32aa53b201d9525a9  ./results/exfor_isomer_coverage.json
 ece2f3a6e6032d1a3436230dd60ef49b39e7b754cf4d04937188ee00b5f1d54d  ./results/fns-iron-001/comparison.csv
-5260d6f00d4717c9f58bd0e4ba3fcba15462b4debb6d9299925dcf6d55f43b6f  ./results/fns-iron-001/comparison.json
+5b345c66d28a87736a0e9f1c2fb4267114f6548f3726a83f81c78fcfaed666da  ./results/fns-iron-001/comparison.json
 72e6325e473ba905dca20cee147cab6411d18f75d06c53302d52f36d6f7dac8a  ./results/fns-iron-001/comparison.md
 ece8d7865b443b79d6e36e51cdc577f2c3471b4044e6d037f588afb529144d61  ./results/fns-iron-001/comparison.svg
 1e7a531b585d27f4690be761e5fec2a87dfa6b705135a6269bf2d77c306d24d4  ./results/fns-iron-001/ledger.md
