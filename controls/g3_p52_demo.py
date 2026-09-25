@@ -84,7 +84,7 @@ def build_flux(work: Path) -> Path:
 
 def build_spec(flux_path: Path) -> dict:
     lib = ROOT / "actinv-data/v1.1.0/activation/" \
-        "tendl-2025-patched-neutron-709g.npz"
+        "tendl-2025-neutron-709g.npz"  # the covariance sidecar binds this sha
     cov = ROOT / "actinv-data/v1.1.0/uncertainty/" \
         "tendl-2025-neutron-709g.cov.npz"
     return {

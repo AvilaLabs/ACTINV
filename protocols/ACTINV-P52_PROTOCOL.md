@@ -214,4 +214,10 @@ definitions above is a new phase, not an amendment.
   the first run's only failure was a 2.58 h nuclide read as 9.5e-10 vs
   1.2e-40 atoms at 30 d cooling, physically identical silence. Below-floor
   nuclides are ledgered, not dropped.
+- **A4 (2026-09-25, mechanical).** `controls/g3_p52_demo.py`: the banded
+  mesh must run the library the covariance sidecar binds
+  (`tendl-2025-neutron-709g.npz`, sha `ec4c72bf…`), not the P45-matched
+  patched variant — the covariance index pins `activation_library_sha256`
+  and rejects the mismatch (correctly). G2's nominal-only parity arm keeps
+  the patched library, unchanged.
 
