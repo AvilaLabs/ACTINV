@@ -79,13 +79,19 @@ def excluded_block_matrix(matrix: np.ndarray, covered_targets: list,
     return matrix, excluded
 
 
-def rebuild(spec: dict):
+def rebuild(spec: dict, result: dict):
     """Collapsed covariance with exclusions applied + covered (spectrum-major)
-    parameter order, entirely from the pinned artifacts."""
+    parameter order, entirely from the pinned artifacts. `selected` is the
+    run's active row set — read from the emitted sensitivity parameters, the
+    same boundary the Rust runtime draws."""
     activation_path, covariance_path = spec_paths(spec)
     activation = load_activation(activation_path)
     flux = np.asarray(spec["spectrum"]["flux_per_group"], dtype=np.float64)
-    selected = list(range(len(activation["rows"])))
+    selected = sorted({
+        record["parameter"]["library_row"]
+        for step in result["steps"]
+        for response in step["uncertainty"]["responses"].values()
+        for record in response["sensitivities"]})
     sidecar = read_sidecar(covariance_path)
     collapsed = collapse(sidecar, activation, flux, selected)
     rows = activation["rows"]
@@ -257,7 +263,7 @@ def mutate(result: dict, which: int) -> dict:
 
 def verify(result: dict, spec: dict) -> list[str]:
     problems: list[str] = []
-    matrix, covered_rows, index_of, excluded = rebuild(spec)
+    matrix, covered_rows, index_of, excluded = rebuild(spec, result)
     emitted_excluded = {
         (b["target"], b["mt"], b["mt1"]) for b in
         result["steps"][0]["uncertainty"]["excluded_blocks"]}

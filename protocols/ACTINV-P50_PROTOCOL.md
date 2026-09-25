@@ -174,3 +174,15 @@ gate, or artifact content changes. Sealed artifact shas unchanged; the
 protocol file itself is re-hashed under this amendment.
 
 Amended protocol sha256: recorded in the phase verdict.
+
+## Amendment 2 — mechanical repair (checker row bound)
+
+Post-seal, `controls/check_g4_p50.py` bounded the Python collapse with
+`selected = all library rows` — the full corpus covers ~106k rows, exceeding
+the sealed memory scope. Repaired to draw the active row set from the emitted
+sensitivity parameters, the same boundary the runtime draws. No definition,
+ranking rule, gate, share formula, or tolerance changed. Sealed
+`check_g4_p50.py` sha superseded by the amended module; all other sealed
+artifacts unchanged.
+
+Amended checker sha256: recorded in the phase verdict.
