@@ -379,11 +379,9 @@ impl Study {
                     .iter()
                     .any(|m| !m.fission_yields.files.is_empty())
             {
-                return Err(
-                    "robustness.channels.fission_yields requires at least one \
+                return Err("robustness.channels.fission_yields requires at least one \
                      material declaring fission_yields.files"
-                        .into(),
-                );
+                    .into());
             }
             if !ch.cross_section_mf33
                 && ch.flux_rel_std == 0.0
@@ -999,9 +997,8 @@ pub fn execute(
                     rec["refinement"] = rr2;
                 }
                 if let Some(rb) = &study.robustness {
-                    rec["robustness"] = evaluate_robustness(
-                        study, rb, &spec, &outv, base, &cdir, &mut prep,
-                    );
+                    rec["robustness"] =
+                        evaluate_robustness(study, rb, &spec, &outv, base, &cdir, &mut prep);
                 }
                 rec
             }
@@ -1565,9 +1562,9 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
             .map(|(gkey, _)| (gkey, &groups[gkey]))
             .collect();
         let ready = !evaluated.is_empty()
-            && evaluated.iter().all(|(_, cases)| {
-                cases.iter().all(|(id, _)| sample_sets.contains_key(id))
-            });
+            && evaluated
+                .iter()
+                .all(|(_, cases)| cases.iter().all(|(id, _)| sample_sets.contains_key(id)));
         if !ready {
             Value::Null
         } else {
@@ -1583,9 +1580,9 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
             // no single container exists to enumerate over.
             #[allow(clippy::needless_range_loop)]
             for i in 0..n_paired {
-                let any_missing = evaluated.iter().any(|(_, cases)| {
-                    cases.iter().any(|(id, _)| sample_sets[id][i].is_null())
-                });
+                let any_missing = evaluated
+                    .iter()
+                    .any(|(_, cases)| cases.iter().any(|(id, _)| sample_sets[id][i].is_null()));
                 if any_missing {
                     failed += 1;
                     continue;
@@ -1607,9 +1604,7 @@ fn evaluate_rule(rule: &DecisionRule, cmp: &Comparison, per_case: &[Value]) -> V
                                     .map(|v| (id.clone(), v))
                             })
                             .collect();
-                        if vals.len() != cases.len()
-                            || !rule_predicate(rule, &vals, axis_i)
-                        {
+                        if vals.len() != cases.len() || !rule_predicate(rule, &vals, axis_i) {
                             ok = false;
                             break 'groups;
                         }
@@ -1725,9 +1720,7 @@ fn rule_predicate(rule: &DecisionRule, vals: &[(String, f64)], axis_i: Option<us
         "rank_equal" => match &rule.expected_order {
             Some(eo) => {
                 let mut order = vals.to_vec();
-                order.sort_by(|a, b| {
-                    b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal)
-                });
+                order.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
                 let got: Vec<String> = order.into_iter().map(|(id, _)| id).collect();
                 let got_axis: Vec<String> = got
                     .iter()
@@ -3294,12 +3287,7 @@ fn prepared_signature(spec: &Spec) -> String {
 /// digest re-verifies against the files on disk: spec identity, nominal
 /// output, every robustness sample artifact, and the study-level
 /// robustness configuration the recorded block was computed under.
-fn case_resumable(
-    prev: &Value,
-    cent: &Value,
-    cdir: &Path,
-    robustness_sha: Option<&str>,
-) -> bool {
+fn case_resumable(prev: &Value, cent: &Value, cdir: &Path, robustness_sha: Option<&str>) -> bool {
     if prev["status"].as_str() != Some("executed") {
         return false;
     }
@@ -3485,10 +3473,7 @@ mod robustness_tests {
         let mut v = base_study();
         v["robustness"]["channels"] = json!({"fission_yields": true});
         let s: Study = serde_json::from_value(v.clone()).unwrap();
-        assert!(s
-            .validate()
-            .unwrap_err()
-            .contains("fission_yields.files"));
+        assert!(s.validate().unwrap_err().contains("fission_yields.files"));
 
         // a fissile material satisfies the requirement
         v["cases"]["materials"][0]["fission_yields"] = json!({
@@ -3633,8 +3618,14 @@ mod robustness_tests {
     fn perturb_spec_preserves_composition_sum() {
         let mut spec = min_spec();
         let comp = BTreeMap::from([("Fe".to_string(), 1.1), ("Co".to_string(), -0.5)]);
-        let clamps = perturb_spec(&mut spec, &[], 1.0, &comp,
-                                  &BTreeMap::new(), &BTreeMap::new());
+        let clamps = perturb_spec(
+            &mut spec,
+            &[],
+            1.0,
+            &comp,
+            &BTreeMap::new(),
+            &BTreeMap::new(),
+        );
         let total: f64 = spec.material.composition.values().sum();
         assert!((total - 100.0).abs() < 1e-9);
         assert_eq!(clamps, 1);

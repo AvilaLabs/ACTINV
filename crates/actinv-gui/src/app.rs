@@ -1254,36 +1254,24 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 .selected_text(AXES[self.sweep.axis])
                 .show_ui(ui, |ui| {
                     for (i, a) in AXES.iter().enumerate() {
-                        ui.selectable_value(
-                            &mut self.sweep.axis,
-                            i,
-                            *a,
-                        );
+                        ui.selectable_value(&mut self.sweep.axis, i, *a);
                     }
                 });
             match self.sweep.axis {
                 0 => {
-                    let mut elems: Vec<String> = self
-                        .document["material"]["composition"]
+                    let mut elems: Vec<String> = self.document["material"]["composition"]
                         .as_object()
-                        .map(|m| {
-                            m.keys().cloned().collect()
-                        })
+                        .map(|m| m.keys().cloned().collect())
                         .unwrap_or_default();
                     elems.sort();
                     if self.sweep.element.is_empty() {
-                        self.sweep.element =
-                            elems.first().cloned().unwrap_or_default();
+                        self.sweep.element = elems.first().cloned().unwrap_or_default();
                     }
                     egui::ComboBox::from_id_salt("sweep-element")
                         .selected_text(&self.sweep.element)
                         .show_ui(ui, |ui| {
                             for e in &elems {
-                                ui.selectable_value(
-                                    &mut self.sweep.element,
-                                    e.clone(),
-                                    e,
-                                );
+                                ui.selectable_value(&mut self.sweep.element, e.clone(), e);
                             }
                         });
                 }
@@ -1293,10 +1281,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                         .map(|s| s.len())
                         .unwrap_or(0);
                     egui::ComboBox::from_id_salt("sweep-step")
-                        .selected_text(format!(
-                            "cooling step {}",
-                            self.sweep.step_index + 1
-                        ))
+                        .selected_text(format!("cooling step {}", self.sweep.step_index + 1))
                         .show_ui(ui, |ui| {
                             for i in 0..n {
                                 ui.selectable_value(
@@ -1327,30 +1312,20 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                         crate::sweep::SweepResponse::TotalActivityBqPerG,
                         crate::sweep::SweepResponse::TotalHeatWPerG,
                     ] {
-                        ui.selectable_value(
-                            &mut self.sweep.response,
-                            r,
-                            r.label(),
-                        );
+                        ui.selectable_value(&mut self.sweep.response, r, r.label());
                     }
                 });
             ui.label("at step");
             let nsteps = self
                 .result
                 .as_ref()
-                .and_then(|r| {
-                    r.value["steps"].as_array().map(|s| s.len())
-                })
+                .and_then(|r| r.value["steps"].as_array().map(|s| s.len()))
                 .unwrap_or(1);
             egui::ComboBox::from_id_salt("sweep-steprow")
                 .selected_text(format!("{}", self.sweep.step_row + 1))
                 .show_ui(ui, |ui| {
                     for i in 0..nsteps {
-                        ui.selectable_value(
-                            &mut self.sweep.step_row,
-                            i,
-                            format!("{}", i + 1),
-                        );
+                        ui.selectable_value(&mut self.sweep.step_row, i, format!("{}", i + 1));
                     }
                 });
         });
@@ -1384,11 +1359,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             for p in &self.sweep.points {
                 match &p.result {
                     Ok(v) => {
-                        if let Some(y) = self
-                            .sweep
-                            .response
-                            .extract(v, self.sweep.step_row)
-                        {
+                        if let Some(y) = self.sweep.response.extract(v, self.sweep.step_row) {
                             pts.push([p.param, y]);
                         }
                     }
@@ -1401,10 +1372,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 .x_axis_label(axis_obj.label())
                 .y_axis_label(self.sweep.response.label())
                 .show(ui, |p| {
-                    p.line(
-                        egui_plot::Line::new("sweep", pts.clone())
-                            .color(accent),
-                    );
+                    p.line(egui_plot::Line::new("sweep", pts.clone()).color(accent));
                     p.points(
                         egui_plot::Points::new("sweep points", pts.clone())
                             .radius(4.)
@@ -1460,11 +1428,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                     std::process::id(),
                     self.sweep.generation
                 ));
-                match crate::sweep::spawn_sweep(
-                    points,
-                    self.sweep.generation,
-                    cache,
-                ) {
+                match crate::sweep::spawn_sweep(points, self.sweep.generation, cache) {
                     Ok(h) => {
                         self.sweep.handle = Some(h);
                         self.sweep.running = true;
@@ -1473,9 +1437,7 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                             n
                         )));
                     }
-                    Err(e) => {
-                        self.report(Err(format!("sweep launch: {e}")))
-                    }
+                    Err(e) => self.report(Err(format!("sweep launch: {e}"))),
                 }
             }
         }
@@ -1665,10 +1627,7 @@ impl eframe::App for Desktop {
             loop {
                 match handle.rx.try_recv() {
                     Ok(p) => {
-                        if crate::sweep::admissible(
-                            self.sweep.generation,
-                            &p,
-                        ) {
+                        if crate::sweep::admissible(self.sweep.generation, &p) {
                             self.sweep.points.push(p);
                         }
                     }

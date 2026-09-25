@@ -1612,12 +1612,9 @@ impl PreparedRun {
         for parent in parents {
             let requested_energy = match spec.fission_yields.energy.as_str() {
                 "fixed" => physical.fixed_fission_energy.map(|energy| energy.get()),
-                "spectrum_average" => fission_average_energy_eV(
-                    &self.library,
-                    &self.library_targets,
-                    phi,
-                    parent,
-                )?,
+                "spectrum_average" => {
+                    fission_average_energy_eV(&self.library, &self.library_targets, phi, parent)?
+                }
                 _ => None,
             };
             let Some(requested_energy) = requested_energy else {
@@ -1682,11 +1679,9 @@ impl PreparedRun {
             .flatten()
             .map(|(name, factor)| {
                 let key = match actinv_data::composition::material_key(name) {
-                    Ok(actinv_data::composition::MaterialKey::Nuclide {
-                        za,
-                        liso,
-                        ..
-                    }) => (za, liso),
+                    Ok(actinv_data::composition::MaterialKey::Nuclide { za, liso, .. }) => {
+                        (za, liso)
+                    }
                     _ => {
                         return Err(format!(
                             "decay_scale key '{name}' must be an explicit nuclide"
@@ -1694,9 +1689,7 @@ impl PreparedRun {
                     }
                 };
                 if !factor.is_finite() || *factor <= 0.0 {
-                    return Err(format!(
-                        "decay_scale['{name}'] must be finite and positive"
-                    ));
+                    return Err(format!("decay_scale['{name}'] must be finite and positive"));
                 }
                 Ok((key, *factor))
             })
@@ -1708,24 +1701,18 @@ impl PreparedRun {
             .flatten()
             .map(|(name, factor)| {
                 let (parent_raw, product_raw) = name.split_once(':').ok_or_else(|| {
-                    format!(
-                        "yield_scale key '{name}' must be '<parent>:<product>' nuclide names"
-                    )
+                    format!("yield_scale key '{name}' must be '<parent>:<product>' nuclide names")
                 })?;
                 let parse = |raw: &str| match actinv_data::composition::material_key(raw) {
-                    Ok(actinv_data::composition::MaterialKey::Nuclide {
-                        za,
-                        liso,
-                        ..
-                    }) => Ok((za, liso)),
+                    Ok(actinv_data::composition::MaterialKey::Nuclide { za, liso, .. }) => {
+                        Ok((za, liso))
+                    }
                     _ => Err(format!(
                         "yield_scale key '{raw}' must be an explicit nuclide"
                     )),
                 };
                 if !factor.is_finite() || *factor <= 0.0 {
-                    return Err(format!(
-                        "yield_scale['{name}'] must be finite and positive"
-                    ));
+                    return Err(format!("yield_scale['{name}'] must be finite and positive"));
                 }
                 let (pza, pliso) = parse(parent_raw)?;
                 let (dza, dliso) = parse(product_raw)?;
@@ -1763,9 +1750,7 @@ impl PreparedRun {
                 .collect();
             ch.decay
                 .iter()
-                .map(|&(r, c, v)| {
-                    (r, c, v * col_factors.get(&c).copied().unwrap_or(1.0))
-                })
+                .map(|&(r, c, v)| (r, c, v * col_factors.get(&c).copied().unwrap_or(1.0)))
                 .collect()
         };
         // Effective per-state decay constants. Derivative directions are
@@ -1859,8 +1844,9 @@ impl PreparedRun {
                 continue;
             };
             let mut effective = self.fission_yields[&parent].effective(requested_energy)?;
-            for (&(pza, pliso, dza, dliso), factor) in
-                yield_factors.iter().filter(|(k, _)| k.0 == parent.0 && k.1 == parent.1)
+            for (&(pza, pliso, dza, dliso), factor) in yield_factors
+                .iter()
+                .filter(|(k, _)| k.0 == parent.0 && k.1 == parent.1)
             {
                 match effective.products.get_mut(&(dza, dliso)) {
                     Some(value) => *value *= factor,

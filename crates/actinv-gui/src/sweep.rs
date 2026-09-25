@@ -85,37 +85,26 @@ pub fn sweep_specs(
                     .ok_or("material.composition is not a map")?;
                 let rest: f64 = comp
                     .iter()
-                    .filter(|(k, _)| {
-                        !k.eq_ignore_ascii_case(element)
-                    })
+                    .filter(|(k, _)| !k.eq_ignore_ascii_case(element))
                     .map(|(_, x)| x.as_f64().unwrap_or(0.0))
                     .sum();
                 if rest <= 0.0 && v < 100.0 {
-                    return Err(
-                        "cannot renormalize: no other constituents".into()
-                    );
+                    return Err("cannot renormalize: no other constituents".into());
                 }
                 let scale = (100.0 - v).max(0.0) / rest;
                 for (k, x) in comp.iter_mut() {
                     if k.eq_ignore_ascii_case(element) {
                         *x = Value::from(v);
                     } else {
-                        *x = Value::from(
-                            x.as_f64().unwrap_or(0.0) * scale,
-                        );
+                        *x = Value::from(x.as_f64().unwrap_or(0.0) * scale);
                     }
                 }
                 format!("{element}={v} wt%")
             }
             SweepAxis::FluxNormalization => {
-                let cur = doc["spectrum"]["total"]
-                    .as_f64()
-                    .unwrap_or(0.0);
+                let cur = doc["spectrum"]["total"].as_f64().unwrap_or(0.0);
                 if cur <= 0.0 {
-                    return Err(
-                        "spectrum.total is not positive; flux sweep "
-                        .into(),
-                    );
+                    return Err("spectrum.total is not positive; flux sweep ".into());
                 }
                 doc["spectrum"]["total"] = Value::from(cur * v);
                 format!("flux ×{v}")
@@ -220,9 +209,7 @@ pub fn spawn_sweep(
                     param: f64::NAN,
                     label: "sweep launch".into(),
                     spec_sha256: String::new(),
-                    result: Err(format!(
-                        "could not create sweep cache root: {e}"
-                    )),
+                    result: Err(format!("could not create sweep cache root: {e}")),
                     elapsed_ms: 0,
                 });
                 return;
@@ -233,9 +220,7 @@ pub fn spawn_sweep(
                     return;
                 }
                 let cache = cache_root.join(format!("pt{idx}"));
-                let spec = match actinv_core::spec::Spec::from_json(
-                    &point.spec_json,
-                ) {
+                let spec = match actinv_core::spec::Spec::from_json(&point.spec_json) {
                     Ok(s) => s,
                     Err(e) => {
                         let _ = tx.send(CompletedPoint {
@@ -276,14 +261,10 @@ pub fn spawn_sweep(
                     match handle.rx.try_recv() {
                         Ok(r) => break r,
                         Err(mpsc::TryRecvError::Empty) => {
-                            std::thread::sleep(
-                                std::time::Duration::from_millis(10),
-                            );
+                            std::thread::sleep(std::time::Duration::from_millis(10));
                         }
                         Err(mpsc::TryRecvError::Disconnected) => {
-                            break Err(
-                                "sweep worker channel closed".into()
-                            );
+                            break Err("sweep worker channel closed".into());
                         }
                     }
                 };
@@ -376,34 +357,22 @@ mod tests {
             &[50.0],
         )
         .unwrap();
-        let d: Value =
-            serde_json::from_str(&pts[0].spec_json).unwrap();
+        let d: Value = serde_json::from_str(&pts[0].spec_json).unwrap();
         let c = &d["material"]["composition"];
         assert_eq!(c["FE"], 50.0);
         assert_eq!(c["CR"], 50.0);
     }
     #[test]
     fn flux_scales_total() {
-        let pts = sweep_specs(
-            &doc(),
-            &SweepAxis::FluxNormalization,
-            &[2.0],
-        )
-        .unwrap();
-        let d: Value =
-            serde_json::from_str(&pts[0].spec_json).unwrap();
+        let pts = sweep_specs(&doc(), &SweepAxis::FluxNormalization, &[2.0]).unwrap();
+        let d: Value = serde_json::from_str(&pts[0].spec_json).unwrap();
         assert_eq!(d["spectrum"]["total"], 6.0e12);
     }
     #[test]
     fn cooling_sets_dt() {
-        let pts = sweep_specs(
-            &doc(),
-            &SweepAxis::CoolingTimeS { step_index: 1 },
-            &[120.0],
-        )
-        .unwrap();
-        let d: Value =
-            serde_json::from_str(&pts[0].spec_json).unwrap();
+        let pts =
+            sweep_specs(&doc(), &SweepAxis::CoolingTimeS { step_index: 1 }, &[120.0]).unwrap();
+        let d: Value = serde_json::from_str(&pts[0].spec_json).unwrap();
         assert_eq!(d["schedule"][1]["dt"], "120 s");
     }
     #[test]
@@ -417,12 +386,7 @@ mod tests {
     }
     #[test]
     fn distinct_points_have_distinct_digests() {
-        let pts = sweep_specs(
-            &doc(),
-            &SweepAxis::FluxNormalization,
-            &[1.0, 2.0],
-        )
-        .unwrap();
+        let pts = sweep_specs(&doc(), &SweepAxis::FluxNormalization, &[1.0, 2.0]).unwrap();
         assert_ne!(pts[0].spec_sha256, pts[1].spec_sha256);
     }
     #[test]

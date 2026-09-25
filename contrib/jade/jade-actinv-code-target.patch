@@ -1,42 +1,322 @@
+diff --git a/docs/source/benchmarks/benchdesc/fns-decay-heat.rst b/docs/source/benchmarks/benchdesc/fns-decay-heat.rst
+new file mode 100644
+index 00000000..86aa191c
+--- /dev/null
++++ b/docs/source/benchmarks/benchdesc/fns-decay-heat.rst
+@@ -0,0 +1,53 @@
++FNS decay heat: iron, five-minute irradiation
++---------------------------------------------
++
++This initial subset contains the 1996 FNS iron experiment with a 300-second
++irradiation and all 20 reported cooling-time measurements, distributed through
++`IAEA CoNDERC <https://www-nds.iaea.org/conderc/>`_. It is a decay-heat
++experiment, distinct from the FNS time-of-flight benchmark. The supplied
++709-group neutron spectrum and irradiation history are used directly; no
++transport calculation is needed.
++
++The source deck specifies elemental iron and a total flux of
++1.116 x 10^10 neutrons/cm^2/s. The calculation uses heat per gram. Experimental
++times are converted from minutes to seconds using the published decimal values,
++and each measurement is a schedule endpoint. No interpolation is used. The raw
++configuration removes the irradiation endpoint, subtracts the 300-second
++shutdown time and converts W/g to microW/g. This shutdown setting applies only
++to the initial five-minute case; raw processing fails for a case whose output
++has no endpoint at 300 seconds, instead of shifting its cooling times. Other
++irradiation histories need their own setting. Cooling-time labels are rounded
++to nine decimal places to remove floating-point subtraction noise before JADE
++matches table indices; no heat values are interpolated or rounded.
++
++The comparison is calculated/measured decay heat. Experimental ``Error`` is the
++reported absolute error divided by measured heat. Its published magnitude is
++retained without assuming a confidence level or covariance. With ACTINV's zero
++sampling-error field, JADE propagates that relative experimental error to C/E.
++The table and plot do not represent total predictive uncertainty.
++
++Input and measurement hosting is pending maintainer agreement and confirmation
++of redistribution terms. This draft supplies the adapter and post-processing
++configuration; these data are not installed by JADE's normal input download yet.
++For a local installation, the required layout is:
++
++.. code-block:: text
++
++   benchmark_templates/FNS-DecayHeat/
++     benchmark_metadata.json
++     Fe-1996-5min/actinv/spec.json
++   raw_data/_exp_-_exp_/FNS-DecayHeat/
++     Fe-1996-5min Decay heat.csv
++
++The input folder contains exactly one scalar spec JSON. Metadata uses
++``{"name": "FNS-DecayHeat", "version": {"actinv": "1.0.0"}}``.
++The experimental CSV columns are ``time,Value,Error`` in seconds after shutdown,
++microW/g and relative reported error, respectively. Benchmark case names must
++not contain spaces because JADE separates case and result names with a space.
++
++The source archive is ``https://www-nds.iaea.org/conderc/fusion/files/fns.zip``
++(SHA-256 ``ba1dd6cb150a4aa3e0d81461054aec7d415ef19d946aba8b9886b31de218252d``).
++The relevant members under ``fns/Fe/`` are ``1996exp_5min.exp``,
++``1996exp_5min_fluxes``, ``TENDL-2017_1996exp_5min.i`` and
++``total_1996exp_5min.pdf``. Obtain the source data separately under their
++applicable terms. ACTINV configuration is described in :doc:`../../usage/actinv`.
+diff --git a/docs/source/benchmarks/exp_overview.csv b/docs/source/benchmarks/exp_overview.csv
+index 2fc06e6b..7e334727 100644
+--- a/docs/source/benchmarks/exp_overview.csv
++++ b/docs/source/benchmarks/exp_overview.csv
+@@ -1,4 +1,5 @@
+ Benchmark, Location, Reference, WebApp supported
++FNS decay heat (iron draft), Hosting pending, IAEA CoNDERC, N
+ ALARM Cf AIR LAB, F4E GitLab, ICSBEP, Y
+ ASPIS Fe-88, F4E GitLab, SINBAD, Y
+ ASPIS PCA-REPLICA, F4E GitLab, SINBAD, Y
+diff --git a/docs/source/benchmarks/experimental.rst b/docs/source/benchmarks/experimental.rst
+index 83ad0d9a..ee0cb955 100644
+--- a/docs/source/benchmarks/experimental.rst
++++ b/docs/source/benchmarks/experimental.rst
+@@ -27,6 +27,10 @@ Experimental Benchmarks
+ 
+ .. include:: benchdesc/fns-tof.rst
+ 
++.. _fnsdecayheat:
++
++.. include:: benchdesc/fns-decay-heat.rst
++
+ .. include:: benchdesc/tud-fe.rst
+ 
+ .. include:: benchdesc/ippe/ippe_dt.rst
+@@ -39,4 +43,4 @@ Experimental Benchmarks
+ 
+ .. include:: benchdesc/ISIS-800MeV-C.rst
+ 
+-.. include:: benchdesc/alarm-cf-lab.rst
+\ No newline at end of file
++.. include:: benchdesc/alarm-cf-lab.rst
+diff --git a/docs/source/usage/actinv.rst b/docs/source/usage/actinv.rst
+new file mode 100644
+index 00000000..726ab039
+--- /dev/null
++++ b/docs/source/usage/actinv.rst
+@@ -0,0 +1,90 @@
++ACTINV inventory calculations
++=============================
++
++The initial ACTINV adapter supports local, deterministic neutron activation of
++one material per ``actinv-spec-1`` JSON input. Install the ACTINV CLI separately.
++It runs ``actinv run <input>.json <output>.json`` as a subprocess. No ACTINV
++Python dependency is required.
++
++In ``cfg/libs_cfg.yml``, each library name selects an explicit activation and
++decay combination. Paths should be absolute; relative paths resolve from the
++directory where JADE starts. The activation NPZ requires its companion
++``<stem>_index.json`` with schema ``actinv-library-index-2``, neutron projectile
++and ``fispact-709`` groups.
++
++.. code-block:: yaml
++
++   TENDL2025-patched-ENDF8-JEFF33:
++     actinv:
++       path: /data/activation/tendl-2025-patched-neutron-709g.npz
++       decay_primary: /data/decay/endf-b-viii-0_decay.dat
++       decay_fallback: /data/decay/jeff-3-3_decay.dat
++
++Library names label JADE's tables and plots, so name the data actually used:
++the example activation file is ACTINV's patched derivative of TENDL-2025, not
++an official TENDL release. ``decay_fallback`` is optional. The selected configuration replaces all template
++library and decay references, including catalog references. A missing file is an
++error. There is no automatic choice of a different file or retention of a
++template fallback when none is configured.
++
++Use these settings in ``cfg/env_vars_cfg.yml``:
++
++.. code-block:: yaml
++
++   mpi_tasks: 0
++   openmp_threads: 1
++   executables:
++     actinv: /path/to/actinv
++   run_mode: local
++   code_job_template: {}
++   exe_prefix: null
++
++MPI, executable prefixes and scheduler modes are rejected by this first adapter.
++These settings apply to the whole JADE session and are checked before any
++benchmark starts when ACTINV will execute; JADE's default configuration sets
++``exe_prefix: srun``. With ``only_input: true``, input generation needs no ACTINV
++executable and does not impose these execution settings. ``continue`` executes
++previously generated inputs and checks the settings even if ``only_input`` is
++still true.
++JADE's ``openmp_threads`` setting does not configure ACTINV. Each scalar process
++has a 180-second timeout. Successful runs require valid finite output at every
++requested schedule endpoint before JADE writes ``actinv.complete``. A failed,
++timed-out or interrupted attempt removes any old completion marker. ``continue``
++restarts an incomplete scalar case from its persisted input; it does not resume
++an internal solver checkpoint. Changing the selected data requires regenerating
++the input.
++
++Select the benchmark and library in ``cfg/run_cfg.yml``:
++
++.. code-block:: yaml
++
++   FNS-DecayHeat:
++     codes:
++       actinv: [TENDL2025-patched-ENDF8-JEFF33]
++     description: FNS iron five-minute irradiation
++     nps: 1
++     only_input: false
++     custom_input: null
++
++``nps`` is an unused compatibility field. ACTINV is deterministic, so increasing
++it does not improve the solution. The input must supply an inline 709-group
++spectrum and a positive-duration schedule. Mesh inputs, non-neutron projectiles,
++uncertainty sampling and other optional response calculations are outside this
++initial adapter.
++
++The output reader exposes total heat as tally 1 in W/g and total activity as
++tally 2 in Bq/g, with elapsed time in seconds. ``Error=0`` means no Monte Carlo
++sampling error is supplied; it does not mean zero uncertainty in nuclear data,
++the irradiation history or the model. The FNS benchmark separately retains
++reported experimental errors.
++
++For comparisons, list the experiment and the ACTINV library in
++``cfg/pp_cfg.yml``. JADE always uses ``_exp_-_exp_`` as the reference, so the
++ratio is calculated/measured:
++
++.. code-block:: yaml
++
++   benchmarks: [FNS-DecayHeat]
++   code_libs: [_exp_-_exp_, _actinv_-_TENDL2025-patched-ENDF8-JEFF33_]
++
++See :ref:`fnsdecayheat` for the initial case, data layout and availability.
+diff --git a/docs/source/usage/usage_idx.rst b/docs/source/usage/usage_idx.rst
+index 6c6255a1..aa1bbd35 100644
+--- a/docs/source/usage/usage_idx.rst
++++ b/docs/source/usage/usage_idx.rst
+@@ -41,7 +41,8 @@ JADE execution
+    :caption: JADE execution
+ 
+    run
++   actinv
+    postprocessing
+    utilities
+    tipstricks
+-   troubleshooting
+\ No newline at end of file
++   troubleshooting
+diff --git a/src/jade/app/app.py b/src/jade/app/app.py
+index 68b787fc..ae6341d1 100644
+--- a/src/jade/app/app.py
++++ b/src/jade/app/app.py
+@@ -28,7 +28,7 @@ from jade.helper.constants import CODE, EXP_TAG, FIRST_INITIALIZATION, JADE_TITL
+ from jade.post.atlas_processor import AtlasProcessor
+ from jade.post.excel_processor import ExcelProcessor
+ from jade.post.raw_processor import RawProcessor
+-from jade.run.benchmark import BenchmarkRunFactory, launch_global_jobs
++from jade.run.benchmark import BenchmarkRunFactory, SingleRunACTINV, launch_global_jobs
+ 
+ logger = logging.getLogger(__name__)
+ 
+@@ -158,9 +158,23 @@ class JadeApp:
+                             os.remove(os.path.join(pathroot, file))
+         logger.info("Runtpe files were removed successfully")
+ 
++    def _check_actinv_environment(self, *, include_input_only: bool = False) -> None:
++        """Validate execution settings for ACTINV runs before any benchmark starts.
++
++        Continuation executes generated inputs even when only_input is set.
++        """
++        if any(
++            code == CODE.ACTINV
++            for cfg in self.run_cfg.benchmarks.values()
++            if include_input_only or not cfg.only_input
++            for code, _ in cfg.run
++        ):
++            SingleRunACTINV.check_environment(self.run_cfg.env_vars)
++
+     def run_benchmarks(self, testing: bool = False) -> list[str] | None:
+         """Run the benchmarks according to the configuration."""
+         logger.info("Running benchmarks")
++        self._check_actinv_environment()
+         # first thing do to is to check if the benchmarks were already run
+         simulated = []
+         for bench_name, cfg in self.run_cfg.benchmarks.items():
+@@ -202,6 +216,7 @@ class JadeApp:
+ 
+     def continue_run(self, testing: bool = False):
+         """Continue the run of the benchmarks that were not completed."""
++        self._check_actinv_environment(include_input_only=True)
+         commands = []
+         for bench_name, cfg in self.run_cfg.benchmarks.items():
+             benchmark = BenchmarkRunFactory.create(
+diff --git a/src/jade/config/raw_config.py b/src/jade/config/raw_config.py
+index ecef8aa3..2808a19d 100644
+--- a/src/jade/config/raw_config.py
++++ b/src/jade/config/raw_config.py
+@@ -91,6 +91,7 @@ class TallyModOption(Enum):
+ 
+     LETHARGY = "lethargy"
+     SCALE = "scale"
++    COOLING_TIME = "cooling_time"
+     NO_ACTION = "no_action"
+     BY_ENERGY = "by_energy"
+     BY_BIN = "by_bin"
 diff --git a/src/jade/config/run_config.py b/src/jade/config/run_config.py
-index bffc69e..fc71384 100644
+index bffc69e0..8d9dd0b0 100644
 --- a/src/jade/config/run_config.py
 +++ b/src/jade/config/run_config.py
-@@ -1,5 +1,6 @@
+@@ -1,5 +1,7 @@
  from __future__ import annotations
  
++import hashlib
 +import json
  import os
  import xml.etree.ElementTree as ET
  from abc import ABC, abstractmethod
-@@ -349,6 +350,35 @@ class LibraryD1S(LibraryMCNP):
+@@ -349,6 +351,55 @@ class LibraryD1S(LibraryMCNP):
      transport_suffix: str
  
  
 +@dataclass
 +class LibraryACTINV(Library):
-+    """Configuration for an ACTINV data bundle.
++    """Explicit activation NPZ and decay files for scalar neutron calculations.
 +
-+    Attributes
-+    ----------
-+    name : str
-+        extended name of the library.
-+    path : PathLike
-+        path to the ACTINV bundle directory (the versioned folder containing
-+        ``activation/`` and ``decay/`` subdirectories, e.g.
-+        ``actinv-data/v1.1.0``). ``ACTINV_DATA_DIR`` is set to its parent at
-+        run time so ``catalog:`` references inside specs resolve.
++    Relative paths are resolved against the JADE working directory when the
++    configuration is loaded. The activation index must accompany the NPZ.
++    No directory scanning or implicit catalog selection is performed.
 +    """
 +
++    decay_primary: PathLike
++    decay_fallback: PathLike | None = None
++
 +    def __post_init__(self):
-+        self._available_zaids = []
-+        activation_dir = Path(self.path, "activation")
-+        for index in sorted(activation_dir.glob("*_index.json")):
-+            try:
-+                targets = json.loads(index.read_text())["targets"]
-+            except (OSError, json.JSONDecodeError, KeyError):
++        for field in ("path", "decay_primary", "decay_fallback"):
++            value = getattr(self, field)
++            if field == "decay_fallback" and value is None:
 +                continue
-+            self._available_zaids.extend(str(t["za"]) for t in targets)
++            if not isinstance(value, (str, os.PathLike)) or not str(value):
++                raise ConfigError(f"ACTINV {field} must name a data file")
++            resolved = Path(value).expanduser().resolve()
++            if not resolved.is_file():
++                raise ConfigError(f"ACTINV {field} file not found: {resolved}")
++            setattr(self, field, resolved)
++        if self.path.suffix != ".npz":
++            raise ConfigError("ACTINV path must name an activation .npz file")
++        index_path = self.path.with_name(f"{self.path.stem}_index.json")
++        try:
++            index = json.loads(index_path.read_text(encoding="utf-8"))
++            if (
++                index["schema"] != "actinv-library-index-2"
++                or index.get("projectile", "neutron") != "neutron"
++                or index["groups"] != "fispact-709"
++            ):
++                raise ValueError("expected neutron fispact-709 activation index")
++            self._available_zaids = sorted({str(t["za"]) for t in index["targets"]})
++        except (OSError, ValueError, KeyError, TypeError) as error:
++            raise ConfigError(
++                f"Invalid ACTINV activation index {index_path}: {error}"
++            ) from error
++        digest = hashlib.sha256()
++        with self.path.open("rb") as source:
++            for chunk in iter(lambda: source.read(1 << 20), b""):
++                digest.update(chunk)
++        self.sha256 = digest.hexdigest()
 +
 +    def get_lib_zaids(self) -> list[str]:
 +        return self._available_zaids
@@ -45,7 +325,7 @@ index bffc69e..fc71384 100644
  class LibraryFactory:
      def __init__(self, lib_cfg: PathLike) -> None:
          """Factory objects which helps to create the correct Library for each code
-@@ -404,6 +434,8 @@ class LibraryFactory:
+@@ -404,6 +455,8 @@ class LibraryFactory:
              return LibrarySerpent(name, **kwargs)
          elif code == CODE.D1S:
              return LibraryD1S(name, **kwargs)
@@ -54,7 +334,7 @@ index bffc69e..fc71384 100644
          else:
              raise ConfigError(f"Code {code} not supported")
  
-@@ -492,7 +524,7 @@ class BenchmarkRunConfig:
+@@ -492,7 +545,7 @@ class BenchmarkRunConfig:
              # skip the experiment tag
              if code_tag == "exp":
                  continue
@@ -63,8 +343,179 @@ index bffc69e..fc71384 100644
              for lib in libs:
                  run.append((CODE(code_tag), lib_factory.create(CODE(code_tag), lib)))
  
+diff --git a/src/jade/gui/run_config_gui.py b/src/jade/gui/run_config_gui.py
+index 43b71fbe..cf87c5ea 100644
+--- a/src/jade/gui/run_config_gui.py
++++ b/src/jade/gui/run_config_gui.py
+@@ -64,6 +64,7 @@ class ConfigGUI:
+             "d1s",
+             "openmc",
+             "serpent",
++            "actinv",
+             "nps",
+             "custom_input",
+         )
+@@ -77,6 +78,7 @@ class ConfigGUI:
+         self.bench_tree.heading("d1s", text="D1SUNED")
+         self.bench_tree.heading("openmc", text="OpenMC")
+         self.bench_tree.heading("serpent", text="Serpent")
++        self.bench_tree.heading("actinv", text="ACTINV")
+         self.bench_tree.heading("nps", text="NPS")
+         self.bench_tree.heading("custom_input", text="Custom Input")
+ 
+@@ -120,7 +122,7 @@ class ConfigGUI:
+ 
+         benchmark_libs = {}
+         for benchmark, values in cfg.items():
+-            codes = {"mcnp": "", "d1s": "", "openmc": "", "serpent": ""}
++            codes = {code: "" for code in CODE_TAGS if code != "exp"}
+ 
+             if values["only_input"]:
+                 only_input = "X"
+@@ -134,7 +136,7 @@ class ConfigGUI:
+             for code in CODE_TAGS:
+                 if code == "exp":
+                     continue
+-                libs = values["codes"][code]
++                libs = values["codes"].get(code, [])
+                 if len(libs) > 0:
+                     codes[code] = "X"
+                     # store the libraries to be run for each benchmark
+@@ -151,6 +153,7 @@ class ConfigGUI:
+                     codes["d1s"],
+                     codes["openmc"],
+                     codes["serpent"],
++                    codes.get("actinv", ""),
+                     values["nps"],
+                     custom_inp,
+                 ),
+@@ -176,6 +179,7 @@ class ConfigGUI:
+                 "d1s",
+                 "openmc",
+                 "serpent",
++                "actinv",
+             ):  # Checkboxes for "Generate Input" and "Run Benchmark"
+                 new_value = "X" if current_value == "" else ""
+                 self.bench_tree.set(row_id, column_id, new_value)
+@@ -229,7 +233,7 @@ class ConfigGUI:
+         selected_benchmarks = {}
+         for child in self.bench_tree.get_children():
+             values = self.bench_tree.item(child, "values")
+-            if any(value == "X" for value in values[2:7]):
++            if any(value == "X" for value in values[2:8]):
+                 benchmark_name = values[0]
+                 selected_benchmarks[benchmark_name] = values
+ 
+diff --git a/src/jade/helper/actinv.py b/src/jade/helper/actinv.py
+new file mode 100644
+index 00000000..4dba0e11
+--- /dev/null
++++ b/src/jade/helper/actinv.py
+@@ -0,0 +1,76 @@
++"""Small format helpers for the external ACTINV scalar CLI."""
++
++from __future__ import annotations
++
++import math
++import re
++
++
++def schedule_endpoints(schedule: list[dict]) -> list[tuple[float, float]]:
++    """Return elapsed seconds and flux multipliers from ACTINV duration strings.
++
++    Mirrors actinv-spec-1 duration syntax: ASCII numbers, optional scientific
++    notation, and seconds/minutes/hours/days/Julian years (365.25 days).
++    The compatibility controls live in tests/helper/test_actinv.py.
++    """
++    units = {
++        "": 1,
++        "s": 1,
++        "sec": 1,
++        "secs": 1,
++        "second": 1,
++        "seconds": 1,
++        "m": 60,
++        "min": 60,
++        "mins": 60,
++        "minute": 60,
++        "minutes": 60,
++        "h": 3600,
++        "hr": 3600,
++        "hrs": 3600,
++        "hour": 3600,
++        "hours": 3600,
++        "d": 86400,
++        "day": 86400,
++        "days": 86400,
++        "y": 31557600,
++        "yr": 31557600,
++        "yrs": 31557600,
++        "year": 31557600,
++        "years": 31557600,
++    }
++    if not isinstance(schedule, list) or not schedule:
++        raise ValueError("ACTINV schedule must contain at least one step")
++    time = 0.0
++    endpoints = []
++    for step in schedule:
++        duration_text = step["dt"]
++        if not isinstance(duration_text, str):
++            raise TypeError("ACTINV schedule duration must be a string")
++        duration_text = duration_text.strip()
++        if len(duration_text.encode("utf-8")) > 64:
++            raise ValueError("ACTINV duration exceeds the CLI's 64-byte limit")
++        match = re.fullmatch(
++            r"([+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)"
++            r"(?:[eE][+-]?[0-9]+)?)\s*([a-zA-Z]*)",
++            duration_text,
++        )
++        if match is None or match[2].lower() not in units:
++            raise ValueError(f"Unsupported ACTINV duration: {step['dt']}")
++        duration = float(match[1]) * units[match[2].lower()]
++        flux = step["flux"]
++        if (
++            not math.isfinite(duration)
++            or duration <= 0
++            or isinstance(flux, bool)
++            or not isinstance(flux, (int, float))
++            or not math.isfinite(flux)
++            or flux < 0
++        ):
++            raise ValueError("Invalid ACTINV schedule duration or flux")
++        previous = time
++        time += duration
++        if not math.isfinite(time) or time <= previous:
++            raise ValueError("ACTINV schedule has unresolvable or nonfinite endpoints")
++        endpoints.append((time, flux))
++    return endpoints
+diff --git a/src/jade/helper/aux_functions.py b/src/jade/helper/aux_functions.py
+index 0cb1f4d2..a89ebc1c 100644
+--- a/src/jade/helper/aux_functions.py
++++ b/src/jade/helper/aux_functions.py
+@@ -165,6 +165,13 @@ def add_rmode0(path: PathLike) -> None:
+                             f.write("RMODE 0\n")
+ 
+ 
++class ACTINVChecker(SimulationChecker):
++    """Only the adapter publishes the marker, after validating a fresh result."""
++
++    def check_success(self, files: list[str]) -> bool:
++        return "result.json" in files and "actinv.complete" in files
++
++
+ # Dictionary mapping CODE enums to checker instances
+ # All checkers implement the SimulationChecker interface
+ CODE_CHECKERS: dict[CODE, SimulationChecker] = {
+@@ -172,6 +179,7 @@ CODE_CHECKERS: dict[CODE, SimulationChecker] = {
+     CODE.OPENMC: OpenMCChecker(),
+     CODE.SERPENT: SerpentChecker(),
+     CODE.D1S: D1SChecker(),
++    CODE.ACTINV: ACTINVChecker(),
+ }
+ 
+ 
 diff --git a/src/jade/helper/constants.py b/src/jade/helper/constants.py
-index a3bd268..b714950 100644
+index a3bd2688..b7149503 100644
 --- a/src/jade/helper/constants.py
 +++ b/src/jade/helper/constants.py
 @@ -6,6 +6,7 @@ class CODE(Enum):
@@ -75,8 +526,50 @@ index a3bd268..b714950 100644
      EXPERIMENT = "exp"
  
  
+diff --git a/src/jade/post/manipulate_tally.py b/src/jade/post/manipulate_tally.py
+index 1f4515a8..a6ff6251 100644
+--- a/src/jade/post/manipulate_tally.py
++++ b/src/jade/post/manipulate_tally.py
+@@ -115,6 +115,29 @@ def no_action(tally: pd.DataFrame) -> pd.DataFrame:
+     return tally
+ 
+ 
++def cooling_time(tally: pd.DataFrame, shutdown_time: float) -> pd.DataFrame:
++    """Select endpoints strictly after shutdown and express time since shutdown.
++
++    All times use seconds. Values and relative errors are unchanged; this is
++    an origin change, not a time-bin integration or interpolation. An output
++    endpoint must exist at the configured shutdown time. This check does not
++    establish that irradiation actually ended there.
++    """
++    tolerance = 1e-6
++    if not math.isfinite(shutdown_time) or shutdown_time < 0:
++        raise ValueError("shutdown_time must be finite and nonnegative")
++    times = tally["time"].to_numpy(dtype=float)
++    if not np.isfinite(times).all() or not (np.diff(times) > 0).all():
++        raise ValueError("Time endpoints must be finite and strictly increasing")
++    if not (np.abs(times - shutdown_time) <= tolerance).any():
++        raise ValueError(f"No output endpoint at shutdown_time={shutdown_time} s")
++    cooling = tally.loc[tally["time"] > shutdown_time + tolerance].copy()
++    if cooling.empty:
++        raise ValueError("No output endpoints after shutdown")
++    cooling["time"] -= shutdown_time
++    return cooling.reset_index(drop=True)
++
++
+ def select_subset(tally: pd.DataFrame, column: str, values: list) -> pd.DataFrame:
+     """Select a subset of the tally based on the provided column and values."""
+     return tally.set_index(column).loc[values].reset_index()
+@@ -390,6 +413,7 @@ def mass(tally: pd.DataFrame, masses: dict[int, float]) -> pd.DataFrame:
+ 
+ 
+ MOD_FUNCTIONS = {
++    TallyModOption.COOLING_TIME: cooling_time,
+     TallyModOption.LETHARGY: by_lethargy,
+     TallyModOption.SCALE: scale,
+     TallyModOption.NO_ACTION: no_action,
 diff --git a/src/jade/post/raw_processor.py b/src/jade/post/raw_processor.py
-index 314782f..1bf5baa 100644
+index 314782f5..8a620605 100644
 --- a/src/jade/post/raw_processor.py
 +++ b/src/jade/post/raw_processor.py
 @@ -9,7 +9,12 @@ from jade.config.raw_config import ConfigRawProcessor, TallyModOption
@@ -93,12 +586,7 @@ index 314782f..1bf5baa 100644
  
  logger = logging.getLogger(__name__)
  
-@@ -54,10 +59,12 @@ class RawProcessor:
-         if self.code in (CODE.MCNP, CODE.D1S):
-             self.sim_output = MCNPSimOutput(sim_folder)
-         elif self.code == CODE.OPENMC:
--            if self.metadata.get("benchmark_name") =="Sphere":
-+            if self.metadata.get("benchmark_name") == "Sphere":
+@@ -58,6 +63,8 @@ class RawProcessor:
                  self.sim_output = OpenMCSphereSimOutput(sim_folder)
              else:
                  self.sim_output = OpenMCSimOutput(sim_folder)
@@ -108,17 +596,27 @@ index 314782f..1bf5baa 100644
              raise NotImplementedError(
                  f"Code {self.code} not implemented yet for raw data processing"
 diff --git a/src/jade/post/sim_output.py b/src/jade/post/sim_output.py
-index c4993ed..99682d6 100644
+index c4993edf..1afa64e0 100644
 --- a/src/jade/post/sim_output.py
 +++ b/src/jade/post/sim_output.py
-@@ -1,5 +1,6 @@
+@@ -1,6 +1,8 @@
  from __future__ import annotations
  
 +import json
  import logging
++import math
  import os
  from abc import ABC, abstractmethod
-@@ -571,3 +572,69 @@ def _remove_constant_columns(df: pd.DataFrame) -> pd.DataFrame:
+ from pathlib import Path
+@@ -12,6 +14,7 @@ from f4enix.output.mctal import Mctal, Tally
+ from f4enix.output.meshtal import Meshtal
+ 
+ from jade.helper.__optionals__ import OMC_AVAIL
++from jade.helper.actinv import schedule_endpoints
+ 
+ if TYPE_CHECKING:
+     from jade.helper.aux_functions import PathLike
+@@ -571,3 +574,105 @@ def _remove_constant_columns(df: pd.DataFrame) -> pd.DataFrame:
                  # Should work as long as they are the exact same value
                  del df[column]
      return df
@@ -129,36 +627,58 @@ index c4993ed..99682d6 100644
 +
 +    Exposes two pseudo-tallies per run: tally 1 is total decay heat (W/g) and
 +    tally 2 is total activity (Bq/g), both binned on the schedule's elapsed
-+    time (``time`` column, seconds). ACTINV is deterministic so ``Error`` is
-+    zero.
++    time (``time`` column, seconds). ``Error=0`` represents absent Monte Carlo
++    sampling error only; nuclear-data and model uncertainty are not reported.
 +    """
 +
 +    HEAT_TALLY = 1
 +    ACTIVITY_TALLY = 2
 +
 +    def __init__(self, sim_folder: PathLike) -> None:
-+        result_file = None
-+        for file_name in os.listdir(sim_folder):
-+            if file_name == "result.json":
-+                result_file = Path(sim_folder, file_name)
-+                break
-+        if result_file is None:
-+            raise FileNotFoundError(
-+                f"No ACTINV result.json found in {sim_folder}"
-+            )
++        result_file = Path(sim_folder, "result.json")
 +        with open(result_file, encoding="utf-8") as f:
 +            self._result = json.load(f)
 +        super().__init__(sim_folder)
 +
 +        steps = self._result["steps"]
++        if not isinstance(steps, list) or not steps:
++            raise ValueError("ACTINV result has no steps")
++        previous = 0.0
++        for step in steps:
++            heat_parts = step["heat_W_per_g"]
++            activity_values = list(step["activity_Bq_per_g"].values())
++            numeric = [step["t_s"], step["flux"], *activity_values]
++            numeric.extend(
++                heat_parts[key] for key in ("total", "alpha", "beta", "gamma")
++            )
++            if any(
++                isinstance(value, bool)
++                or not isinstance(value, (float, int))
++                or not math.isfinite(value)
++                or value < 0
++                for value in numeric
++            ):
++                raise ValueError(
++                    "ACTINV result contains invalid time, flux, heat or activity"
++                )
++            if step["t_s"] <= previous:
++                raise ValueError("ACTINV result times must be strictly increasing")
++            previous = step["t_s"]
++            if not math.isclose(
++                heat_parts["total"],
++                sum(heat_parts[key] for key in ("alpha", "beta", "gamma")),
++                rel_tol=1e-12,
++                abs_tol=1e-20,
++            ):
++                raise ValueError("ACTINV heat components do not sum to total")
 +        times = [s["t_s"] for s in steps]
 +        heat = [s["heat_W_per_g"]["total"] for s in steps]
 +        activity = [sum(s["activity_Bq_per_g"].values()) for s in steps]
++        if not all(math.isfinite(value) for value in activity):
++            raise ValueError("ACTINV total activity is nonfinite")
 +
 +        self._tallydata = {
-+            self.HEAT_TALLY: pd.DataFrame(
-+                {"time": times, "Value": heat, "Error": 0.0}
-+            ),
++            self.HEAT_TALLY: pd.DataFrame({"time": times, "Value": heat, "Error": 0.0}),
 +            self.ACTIVITY_TALLY: pd.DataFrame(
 +                {"time": times, "Value": activity, "Error": 0.0}
 +            ),
@@ -187,12 +707,142 @@ index c4993ed..99682d6 100644
 +        return self._tally_comments
 +
 +    def _read_code_version(self) -> str:
-+        return self._result["certificate"]["solver"]
++        solver = self._result["certificate"]["solver"]
++        if not isinstance(solver, str) or not solver.startswith("actinv-core "):
++            raise ValueError("ACTINV result has no valid solver version")
++        return solver
++
++    def validate_schedule(self, spec: dict) -> None:
++        expected = schedule_endpoints(spec["schedule"])
++        steps = self._result["steps"]
++        if len(steps) != len(expected):
++            raise ValueError("ACTINV result step count does not match input")
++        for step, (time, flux) in zip(steps, expected):
++            if not math.isclose(step["t_s"], time, rel_tol=1e-12, abs_tol=1e-6):
++                raise ValueError("ACTINV result time does not match input")
++            if not math.isclose(step["flux"], flux, rel_tol=1e-12, abs_tol=0):
++                raise ValueError("ACTINV result flux does not match input")
+diff --git a/src/jade/resources/default_cfg/benchmarks_pp/atlas/FNS-DecayHeat.yaml b/src/jade/resources/default_cfg/benchmarks_pp/atlas/FNS-DecayHeat.yaml
+new file mode 100644
+index 00000000..c85c6f21
+--- /dev/null
++++ b/src/jade/resources/default_cfg/benchmarks_pp/atlas/FNS-DecayHeat.yaml
+@@ -0,0 +1,12 @@
++Decay heat CE:
++  results: [Decay heat]
++  plot_type: ce
++  title: FNS iron decay heat - reported experimental errors
++  x_label: Cooling time [s]
++  y_labels: C/E
++  x: time
++  y: Value
++  expand_runs: true
++  plot_args:
++    style: point
++    ce_limits: [0.5, 1.5]
+diff --git a/src/jade/resources/default_cfg/benchmarks_pp/excel/FNS-DecayHeat.yaml b/src/jade/resources/default_cfg/benchmarks_pp/excel/FNS-DecayHeat.yaml
+new file mode 100644
+index 00000000..76480ee4
+--- /dev/null
++++ b/src/jade/resources/default_cfg/benchmarks_pp/excel/FNS-DecayHeat.yaml
+@@ -0,0 +1,10 @@
++Decay heat CE:
++  results: [Decay heat]
++  comparison_type: ratio
++  table_type: simple
++  x: time
++  y: [Value, Error]
++  change_col_names:
++    time: Cooling time [s]
++    Value: C/E
++    Error: Relative reported experimental error
+diff --git a/src/jade/resources/default_cfg/benchmarks_pp/raw/actinv/FNS-DecayHeat.yaml b/src/jade/resources/default_cfg/benchmarks_pp/raw/actinv/FNS-DecayHeat.yaml
+new file mode 100644
+index 00000000..e53d8215
+--- /dev/null
++++ b/src/jade/resources/default_cfg/benchmarks_pp/raw/actinv/FNS-DecayHeat.yaml
+@@ -0,0 +1,5 @@
++Decay heat:
++  concat_option: no_action
++  # Stabilize decimal-second labels after floating-point subtraction so JADE's
++  # exact table-index intersection retains every measured endpoint.
++  1: [[cooling_time, {shutdown_time: 300.0}], [format_decimals, {decimals: {time: 9}}], [scale, {factor: 1000000.0}]]
+diff --git a/src/jade/resources/default_cfg/env_vars_cfg.yml b/src/jade/resources/default_cfg/env_vars_cfg.yml
+index 4299cf26..3e1bd211 100644
+--- a/src/jade/resources/default_cfg/env_vars_cfg.yml
++++ b/src/jade/resources/default_cfg/env_vars_cfg.yml
+@@ -8,6 +8,7 @@ executables:
+   openmc:  path/to/openmc/executable  # idem
+   serpent: path/to/serpent/executable  # idem
+   d1s: path/to/d1s/executable  # idem
++  actinv:  # path to ACTINV; local mode with exe_prefix: null and mpi_tasks: 0 only
+ 
+ # run mode is either "local", "job" or "global_job"
+ # local: the code will be run locally on the machine where JADE is running
+@@ -26,4 +27,4 @@ code_job_template:
+   serpent: serpent_template.sh
+   d1s: d1s_template.sh
+ # Optional prefix to be added before the executable command
+-exe_prefix: srun  # e.g. 'srun' or 'aprun' or 'ibrun' or 'mpirun' depending on the system
+\ No newline at end of file
++exe_prefix: srun  # e.g. 'srun' or 'aprun' or 'ibrun' or 'mpirun' depending on the system
+diff --git a/src/jade/resources/default_cfg/libs_cfg.yml b/src/jade/resources/default_cfg/libs_cfg.yml
+index 54312f98..c899878b 100644
+--- a/src/jade/resources/default_cfg/libs_cfg.yml
++++ b/src/jade/resources/default_cfg/libs_cfg.yml
+@@ -1,4 +1,11 @@
+ # --- Transport libraries ---
++# ACTINV data combinations are configured separately; see usage/actinv in the docs.
++# Example (replace the paths before enabling):
++# TENDL2025-patched-ENDF8-JEFF33:
++#   actinv:
++#     path: /data/activation/tendl-2025-patched-neutron-709g.npz
++#     decay_primary: /data/decay/endf-b-viii-0_decay.dat
++#     decay_fallback: /data/decay/jeff-3-3_decay.dat
+ FENDL 3.2c:
+   mcnp:
+     path: /path/to/xsdir
+@@ -50,4 +57,3 @@ D1SUNED (FENDL 3.2b+TENDL2017):
+     transport_library_path: /path/to/xsdir
+     transport_suffix: 32c
+ 
+-
+diff --git a/src/jade/resources/default_cfg/run_cfg.yml b/src/jade/resources/default_cfg/run_cfg.yml
+index 1144946e..2cc5b3e8 100644
+--- a/src/jade/resources/default_cfg/run_cfg.yml
++++ b/src/jade/resources/default_cfg/run_cfg.yml
+@@ -87,6 +87,15 @@ Simple_Tokamak:
+   nps: 1e9
+   only_input: false
+ # --- Experimental benchmarks ---
++# Initial inventory benchmark; source data hosting is pending. See usage/actinv.
++FNS-DecayHeat:
++  codes:
++    actinv: []
++  custom_input: null
++  description: FNS iron five-minute decay heat (draft)
++  nps: 1  # ignored by the deterministic ACTINV solver
++  only_input: false
++#
+ ASPIS-PCA-Replica:
+   codes:
+     d1s: []
 diff --git a/src/jade/run/benchmark.py b/src/jade/run/benchmark.py
-index 1693f64..c399fa2 100644
+index 1693f643..a35321a9 100644
 --- a/src/jade/run/benchmark.py
 +++ b/src/jade/run/benchmark.py
-@@ -17,6 +17,7 @@ from jade.config.run_config import (
+@@ -2,8 +2,10 @@ from __future__ import annotations
+ 
+ import json
+ import os
++import shlex
+ import shutil
+ import subprocess
++import tempfile
+ from abc import ABC, abstractmethod
+ from pathlib import Path
+ 
+@@ -17,6 +19,7 @@ from jade.config.run_config import (
      BenchmarkRunConfig,
      EnvironmentVariables,
      Library,
@@ -200,15 +850,18 @@ index 1693f64..c399fa2 100644
      LibraryD1S,
      LibraryMCNP,
      RunMode,
-@@ -31,6 +32,7 @@ from jade.helper.constants import CODE
+@@ -29,8 +32,10 @@ from jade.helper.aux_functions import (
+ )
+ from jade.helper.constants import CODE
  from jade.helper.errors import ConfigError
++from jade.post.sim_output import ActinvSimOutput
  from jade.run.input import (
      Input,
 +    InputACTINV,
      InputD1S,
      InputD1SSphere,
      InputMCNP,
-@@ -348,6 +350,28 @@ class SingleRunD1S(SingleRunMCNP):
+@@ -348,6 +353,72 @@ class SingleRunD1S(SingleRunMCNP):
          return CODE.D1S
  
  
@@ -220,6 +873,8 @@ index 1693f64..c399fa2 100644
 +    folder.
 +    """
 +
++    TIMEOUT_SECONDS = 180
++
 +    @property
 +    def code(self) -> CODE:
 +        return CODE.ACTINV
@@ -229,15 +884,57 @@ index 1693f64..c399fa2 100644
 +        return [executable, "run", f"{self.input.name}.json", "result.json"]
 +
 +    def _get_lib_data_command(self) -> tuple[str, str]:
-+        # The library path is the versioned bundle directory; its parent is the
-+        # data dir that catalog: references resolve against.
++        # Required by the base interface. Translated specs use absolute data paths.
 +        return "ACTINV_DATA_DIR", str(Path(self.lib.path).parent)
++
++    @staticmethod
++    def check_environment(env_vars: EnvironmentVariables) -> None:
++        """Reject session settings this local scalar adapter cannot honour.
++
++        Also called before any benchmark starts or any results are removed.
++        """
++        if not env_vars.executables.get(CODE.ACTINV):
++            raise ConfigError("Set executables: actinv in env_vars_cfg.yml")
++        if env_vars.run_mode != RunMode.LOCAL:
++            raise ConfigError("ACTINV currently supports local execution only")
++        if env_vars.exe_prefix or (env_vars.mpi_tasks or 0) > 1:
++            raise ConfigError(
++                "ACTINV requires no executable prefix and at most one MPI task"
++            )
++
++    def run(self, env_vars: EnvironmentVariables, sim_folder: PathLike, test=False):
++        self.check_environment(env_vars)
++        command = self._build_command(env_vars)
++        if test:
++            return shlex.join(command)
++        folder = Path(sim_folder).resolve()
++        marker = folder / "actinv.complete"
++        marker.unlink(missing_ok=True)
++        # The scalar CLI is a leaf process. subprocess.run kills and reaps it on
++        # timeout and on cancellation; no shell or MPI wrapper is involved.
++        with tempfile.TemporaryDirectory(prefix=".actinv-", dir=folder) as temporary:
++            result_path = Path(temporary) / "result.json"
++            command[-1] = str(result_path)
++            with (folder / "dump.out").open("w", encoding="utf-8") as log:
++                subprocess.run(
++                    command,
++                    cwd=folder,
++                    stdout=log,
++                    stderr=subprocess.STDOUT,
++                    check=True,
++                    timeout=self.TIMEOUT_SECONDS,
++                )
++            parsed = ActinvSimOutput(temporary)
++            parsed.validate_schedule(self.input.spec)
++            result_path.replace(folder / "result.json")
++            marker.write_text("ACTINV result validated\n", encoding="utf-8")
++        return True
 +
 +
  class SingleRunFactory:
      @staticmethod
      def create(
-@@ -392,6 +416,14 @@ class SingleRunFactory:
+@@ -392,9 +463,27 @@ class SingleRunFactory:
                  raise ConfigError("A D1S library needs to be provided for D1S runs")
              if not mock_input:
                  inp = InputD1S(template_folder, lib)
@@ -252,8 +949,50 @@ index 1693f64..c399fa2 100644
          else:
              raise ValueError(f"Code {code} not supported")
  
++        if mock_input and code == CODE.ACTINV:
++            # Use the persisted filename and refuse to silently change its data.
++            inp = InputACTINV(template_folder, lib)
++            original = (inp.spec.get("library"), inp.spec.get("decay"))
++            inp.translate()
++            if original != (inp.spec["library"], inp.spec["decay"]):
++                raise ConfigError(
++                    "ACTINV continuation data differ; regenerate the benchmark"
++                )
++            return single_run_class(inp, lib, nps)
+         if mock_input:
+             # create a mock input with only the name,
+             # this is needed for continue run purposes
+@@ -530,16 +619,22 @@ class BenchmarkRun:
+             The executable for the code to be used was not set in the main config file.
+         """
+         benchmark_runs = []
++        if not self.config.only_input and any(
++            code == CODE.ACTINV for code, _ in self.config.run
++        ):
++            # before any previous results of this benchmark are removed
++            SingleRunACTINV.check_environment(self.env_vars)
+         # first we run the benchmark for each code-lib couple
+         for code, lib in self.config.run:
+             # --- perform some consistency checks here ---
+             # if a code is requested, its executable should also be provided
+-            try:
+-                self.env_vars.executables[code]
+-            except KeyError:
+-                raise ConfigError(
+-                    f"An assessment was requested using {code.value} but the executable was not set in the main config file"
+-                )
++            if not (code == CODE.ACTINV and self.config.only_input):
++                try:
++                    self.env_vars.executables[code]
++                except KeyError:
++                    raise ConfigError(
++                        f"An assessment was requested using {code.value} but the executable was not set in the main config file"
++                    )
+ 
+             code_lib = print_code_lib(code, lib)
+ 
 diff --git a/src/jade/run/input.py b/src/jade/run/input.py
-index ee48c33..b6b5d64 100644
+index ee48c33b..6cfe1912 100644
 --- a/src/jade/run/input.py
 +++ b/src/jade/run/input.py
 @@ -1,5 +1,6 @@
@@ -263,43 +1002,75 @@ index ee48c33..b6b5d64 100644
  import logging
  import os
  import shutil
-@@ -14,7 +15,7 @@ from f4enix.input.MCNPinput import D1S_Input
+@@ -14,8 +15,9 @@ from f4enix.input.MCNPinput import D1S_Input
  from f4enix.input.MCNPinput import Input as MCNPInput
  from f4enix.core.irradiation import Nuclide
  
 -from jade.config.run_config import Library, LibraryD1S, LibraryMCNP
 +from jade.config.run_config import Library, LibraryACTINV, LibraryD1S, LibraryMCNP
  from jade.helper.__optionals__ import OMC_AVAIL
++from jade.helper.actinv import schedule_endpoints
  from jade.helper.aux_functions import PathLike
  from jade.helper.constants import CODE, DOSIMETRY_LIBS
-@@ -471,3 +472,87 @@ class InputD1SSphere(InputD1S, InputMCNPSphere):
+ from jade.helper.errors import ConfigError
+@@ -471,3 +473,90 @@ class InputD1SSphere(InputD1S, InputMCNPSphere):
              self.inp.reac_file = reacfile
              # also the name needs to be updated
              self._name = f"{self.name}_{MT}"
 +
 +
 +class InputACTINV(Input):
-+    """Implementation of the Input class for ACTINV spec files.
-+
-+    The benchmark template folder is expected to contain a single ``*.json``
-+    ACTINV spec (``actinv-spec-1``). ``catalog:`` references are left
-+    untouched and resolved at run time through ``ACTINV_DATA_DIR``; a spec
-+    carrying an explicit ``library.path`` file reference is repointed to the
-+    selected library's activation bundle during :meth:`translate`.
-+    """
++    """One scalar neutron spec, with inline spectrum and explicit selected data."""
 +
 +    def __init__(self, template_folder: PathLike, lib: LibraryACTINV):
++        candidates = []
 +        for file in sorted(os.listdir(template_folder)):
-+            if file.endswith(".json") and file not in ("metadata.json", "volumes.json"):
++            if file.endswith(".json") and file not in (
++                "metadata.json",
++                "volumes.json",
++                "result.json",
++            ):
 +                filepath = os.path.join(template_folder, file)
 +                with open(filepath, encoding="utf-8") as f:
 +                    spec = json.load(f)
-+                if spec.get("spec") in ("actinv-spec-1", "actinv-mesh-spec-1"):
-+                    break
-+        else:
++                if not isinstance(spec, dict):
++                    continue
++                if spec.get("spec") == "actinv-mesh-spec-1":
++                    raise ConfigError(
++                        "ACTINV mesh inputs are not supported by this adapter"
++                    )
++                if spec.get("spec") == "actinv-spec-1":
++                    candidates.append((file, spec))
++        if len(candidates) != 1:
 +            raise ConfigError(
-+                f"No ACTINV spec (actinv-spec-1) found in {template_folder}"
++                f"Expected exactly one ACTINV scalar spec in {template_folder}"
 +            )
++        file, spec = candidates[0]
++        try:
++            schedule_endpoints(spec["schedule"])
++        except (ValueError, TypeError, KeyError) as error:
++            raise ConfigError(f"Invalid ACTINV schedule: {error}") from error
++        if spec.get("projectile", "neutron") != "neutron":
++            raise ConfigError("ACTINV adapter currently supports neutron inputs only")
++        spectrum = spec.get("spectrum", {})
++        if (
++            spectrum.get("structure") != "fispact-709"
++            or len(spectrum.get("flux_per_group", [])) != 709
++        ):
++            raise ConfigError("ACTINV adapter requires an inline fispact-709 spectrum")
++        # Auxiliary datasets need their own selection/translation contract.
++        for option in (
++            "uncertainty",
++            "radiological",
++            "damage",
++            "self_shielding",
++            "fission_yields",
++            "photon",
++        ):
++            if spec.get(option):
++                raise ConfigError(
++                    f"ACTINV adapter does not yet support option {option}"
++                )
 +        self.template_folder = template_folder
 +        self.spec = spec
 +        self._name = file[:-5]
@@ -322,169 +1093,651 @@ index ee48c33..b6b5d64 100644
 +        self.nps = nps
 +
 +    def translate(self):
-+        # An explicit file reference is repointed at the selected bundle;
-+        # catalog: references already carry their own pin and are left alone.
-+        lib_ref = self.spec.get("library", {})
-+        path = lib_ref.get("path", "")
-+        if path and not str(path).startswith("catalog:"):
-+            activation = Path(self.lib.path, "activation")
-+            bundles = sorted(activation.glob("*-neutron-709g.npz"))
-+            if not bundles:
-+                raise ConfigError(f"No activation bundle found under {activation}")
-+            bundle = bundles[0]
-+            lib_ref["path"] = str(bundle)
-+            lib_ref["sha256"] = _sha256(bundle)
-+
-+        # The same for decay data references: repoint them at the bundle's
-+        # decay directory so runs are independent of the original layout.
-+        decay = self.spec.get("decay", {})
-+        for key in ("primary", "fallback"):
-+            ref = decay.get(key)
-+            if ref and not str(ref).startswith("catalog:"):
-+                candidate = Path(self.lib.path, "decay", Path(ref).name)
-+                if candidate.exists():
-+                    decay[key] = str(candidate)
++        # Replace catalog and file references alike; a JADE selection is authoritative.
++        self.spec["library"] = {"path": str(self.lib.path), "sha256": self.lib.sha256}
++        self.spec["decay"] = {"primary": str(self.lib.decay_primary)}
++        if self.lib.decay_fallback is not None:
++            self.spec["decay"]["fallback"] = str(self.lib.decay_fallback)
 +
 +    def _write(self, output_folder: PathLike):
 +        outfile = Path(output_folder, f"{self.name}.json")
 +        with open(outfile, "w", encoding="utf-8") as f:
-+            json.dump(self.spec, f, indent=2)
++            json.dump(self.spec, f, indent=2, allow_nan=False)
 +            f.write("\n")
-+
-+
-+def _sha256(path: PathLike) -> str:
-+    import hashlib
-+
-+    h = hashlib.sha256()
-+    with open(path, "rb") as f:
-+        for chunk in iter(lambda: f.read(1 << 20), b""):
-+            h.update(chunk)
-+    return h.hexdigest()
-diff --git a/tests/test_actinv.py b/tests/test_actinv.py
+diff --git a/tests/helper/test_actinv.py b/tests/helper/test_actinv.py
 new file mode 100644
-index 0000000..839be42
+index 00000000..6acee7c2
 --- /dev/null
-+++ b/tests/test_actinv.py
-@@ -0,0 +1,122 @@
-+from __future__ import annotations
++++ b/tests/helper/test_actinv.py
+@@ -0,0 +1,69 @@
++"""Duration compatibility controls for the external ACTINV scalar CLI."""
 +
-+import json
-+from pathlib import Path
++from __future__ import annotations
 +
 +import pytest
 +
-+from jade.config.run_config import LibraryACTINV
++from jade.helper.actinv import schedule_endpoints
++
++
++# These controls follow actinv-spec-1 and ACTINV's parse_duration/Spec::validate
++# in crates/actinv-core/src/spec.rs. Keep them aligned when the CLI format changes.
++# JADE's tests do not require ACTINV or nuclear data to be installed.
++@pytest.mark.parametrize(
++    "duration,seconds",
++    [
++        ("300 s", 300),
++        ("300s", 300),
++        ("5 min", 300),
++        ("5min", 300),
++        ("0.08333333333333333 h", 300),
++        ("  +5 MINUTES  ", 300),
++        ("3e2", 300),
++        ("1e-8 s", 1e-8),
++        ("2.5E+3sec", 2500),
++        (".5 hr", 1800),
++        ("1. days", 86400),
++        ("1 y", 31557600),
++        ("1 years", 31557600),
++        ("0" * 63 + "1", 1),
++        ("  " + "0" * 63 + "1  ", 1),
++    ],
++)
++def test_cli_duration_compatibility(duration, seconds):
++    [(elapsed, flux)] = schedule_endpoints([{"dt": duration, "flux": 1}])
++    assert elapsed == pytest.approx(seconds, rel=1e-14, abs=0)
++    assert flux == 1
++
++
++@pytest.mark.parametrize(
++    "duration",
++    [
++        "0 s",
++        "-1 s",
++        "nan s",
++        "inf s",
++        "1e309 s",
++        "1e308 years",
++        "2.5E+3ms",
++        "1 fortnight",
++        "3e",
++        "٣٠٠ s",
++        "0" * 64 + "1",
++    ],
++)
++def test_cli_invalid_duration_rejected(duration):
++    with pytest.raises(ValueError):
++        schedule_endpoints([{"dt": duration, "flux": 1}])
++
++
++@pytest.mark.parametrize("duration", [None, 300])
++def test_duration_requires_string(duration):
++    with pytest.raises(TypeError):
++        schedule_endpoints([{"dt": duration, "flux": 1}])
++
++
++def test_mixed_units_accumulate_elapsed_time():
++    assert schedule_endpoints(
++        [{"dt": "5min", "flux": 1}, {"dt": "1.1 min", "flux": 0}]
++    ) == [(300, 1), (366, 0)]
+diff --git a/tests/run/test_actinv_adapter.py b/tests/run/test_actinv_adapter.py
+new file mode 100644
+index 00000000..f901d401
+--- /dev/null
++++ b/tests/run/test_actinv_adapter.py
+@@ -0,0 +1,556 @@
++"""Scalar adapter contracts; no nuclear libraries or ACTINV install required."""
++
++from __future__ import annotations
++
++import json
++import os
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++from unittest.mock import Mock
++
++import pandas as pd
++import pytest
++import yaml
++
++from jade.app.app import JadeApp
++from jade.config.excel_config import ComparisonType
++from jade.config.paths_tree import PathsTree
++from jade.config.raw_config import ConfigRawProcessor
++from jade.config.run_config import (
++    EnvironmentVariables,
++    LibraryFactory,
++    RunMode,
++)
++from jade.config.status import GlobalStatus
++from jade.gui import run_config_gui
++from jade.helper.aux_functions import CODE_CHECKERS
 +from jade.helper.constants import CODE
++from jade.helper.errors import ConfigError
++from jade.post.excel_routines import Table
++from jade.post.manipulate_tally import cooling_time
++from jade.post.raw_processor import RawProcessor
 +from jade.post.sim_output import ActinvSimOutput
-+from jade.run.benchmark import SingleRunACTINV, SingleRunFactory
++from jade.run.benchmark import BenchmarkRun, SingleRunFactory
 +from jade.run.input import InputACTINV
 +
-+
-+@pytest.fixture()
-+def bundle(tmp_path):
-+    """Minimal ACTINV bundle layout: activation npz + index, decay dir."""
-+    activation = tmp_path / "bundle" / "activation"
-+    decay = tmp_path / "bundle" / "decay"
-+    activation.mkdir(parents=True)
-+    decay.mkdir(parents=True)
-+    npz = activation / "test-neutron-709g.npz"
-+    npz.write_bytes(b"fake-npz")
-+    index = {
-+        "schema": "actinv-library-index-2",
-+        "targets": [{"za": 26056, "liso": 0}, {"za": 49115, "liso": 0}],
-+    }
-+    (activation / "test-neutron-709g_index.json").write_text(json.dumps(index))
-+    (decay / "endf-b-viii-0_decay.dat").write_text("fake-decay")
-+    return LibraryACTINV(name="test", path=tmp_path / "bundle")
++ROOT = Path(__file__).parents[2]
 +
 +
-+@pytest.fixture()
-+def spec_folder(tmp_path):
-+    """Template folder holding an actinv-spec-1 input."""
-+    folder = tmp_path / "template"
++@pytest.fixture
++def config(tmp_path):
++    activation = tmp_path / "activation"
++    activation.mkdir()
++    libraries = {}
++    for tag in ("first", "second"):
++        npz = activation / f"{tag}.npz"
++        npz.write_bytes(tag.encode())
++        (activation / f"{tag}_index.json").write_text(
++            json.dumps(
++                {
++                    "schema": "actinv-library-index-2",
++                    "projectile": "neutron",
++                    "groups": "fispact-709",
++                    "targets": [{"za": 26056, "liso": 0}],
++                }
++            )
++        )
++        decay = tmp_path / f"{tag}.decay"
++        decay.write_text("synthetic decay data")
++        libraries[tag] = {"actinv": {"path": str(npz), "decay_primary": str(decay)}}
++    libs_file = tmp_path / "libs.yml"
++    libs_file.write_text(yaml.safe_dump(libraries))
++    return LibraryFactory(libs_file)
++
++
++@pytest.fixture
++def lib(config):
++    return config.create(CODE.ACTINV, "first")
++
++
++@pytest.fixture
++def folder(tmp_path):
++    folder = tmp_path / "iron-subcase with spaces"
 +    folder.mkdir()
 +    spec = {
 +        "spec": "actinv-spec-1",
-+        "title": "test",
 +        "projectile": "neutron",
-+        "library": {"path": "old/lib.npz"},
-+        "decay": {"primary": "old/decay/endf-b-viii-0_decay.dat"},
-+        "material": {
-+            "mass_g": 1.0,
-+            "basis": "wt_percent",
-+            "composition": {"Fe": 100.0},
-+        },
-+        "flux": {"path": "flux.json", "sha256": "x"},
-+        "schedule": [{"dt": "1 s", "flux": 1.0}],
++        "library": {"path": "catalog:old"},
++        "decay": {"primary": "catalog:old-decay", "fallback": "old/fallback.dat"},
++        "material": {"mass_g": 1, "basis": "wt_percent", "composition": {"Fe": 100}},
++        "spectrum": {"structure": "fispact-709", "flux_per_group": [1.0] * 709},
++        "schedule": [{"dt": "5 min", "flux": 1}, {"dt": "66 s", "flux": 0}],
 +        "options": {"mode": "auto"},
 +    }
-+    (folder / "case1.json").write_text(json.dumps(spec))
++    (folder / "case one.json").write_text(json.dumps(spec))
 +    return folder
 +
 +
-+class TestLibraryACTINV:
-+    def test_zaids(self, bundle):
-+        assert bundle.get_lib_zaids() == ["26056", "49115"]
-+
-+
-+class TestInputACTINV:
-+    def test_translate_repoints_paths(self, bundle, spec_folder):
-+        inp = InputACTINV(spec_folder, bundle)
-+        assert inp.code == CODE.ACTINV
-+        assert inp.name == "case1"
-+        inp.translate()
-+        lib_ref = inp.spec["library"]
-+        assert str(bundle.path) in lib_ref["path"]
-+        assert len(lib_ref["sha256"]) == 64
-+        assert str(bundle.path) in inp.spec["decay"]["primary"]
-+
-+    def test_write(self, bundle, spec_folder, tmp_path):
-+        inp = InputACTINV(spec_folder, bundle)
-+        out = tmp_path / "out"
-+        out.mkdir()
-+        inp._write(out)
-+        assert (out / "case1.json").exists()
-+
-+
-+class TestSingleRunACTINV:
-+    def test_build_command(self, bundle, spec_folder):
-+        run = SingleRunFactory.create(CODE.ACTINV, spec_folder, bundle, 1)
-+        assert isinstance(run, SingleRunACTINV)
-+
-+        from types import SimpleNamespace
-+
-+        cmd = run._build_command(
-+            SimpleNamespace(executables={CODE.ACTINV: "actinv"})
++@pytest.fixture
++def env(tmp_path):
++    path = tmp_path / "env.yml"
++    path.write_text(
++        yaml.safe_dump(
++            {
++                "mpi_tasks": 0,
++                "openmp_threads": 1,
++                "executables": {"actinv": "actinv"},
++                "run_mode": "local",
++                "code_job_template": {},
++                "exe_prefix": None,
++            }
 +        )
-+        assert cmd == ["actinv", "run", "case1.json", "result.json"]
-+        name, value = run._get_lib_data_command()
-+        assert name == "ACTINV_DATA_DIR"
-+        assert value == str(Path(bundle.path).parent)
++    )
++    return EnvironmentVariables.from_yaml(path)
 +
 +
-+class TestActinvSimOutput:
-+    def test_parse(self, tmp_path):
-+        result = {
-+            "certificate": {"solver": "actinv-core 1.2.0"},
-+            "steps": [
-+                {
-+                    "t_s": 10.0,
-+                    "heat_W_per_g": {"total": 1e-6},
-+                    "activity_Bq_per_g": {"Mn56": 1e7},
-+                },
-+                {
-+                    "t_s": 20.0,
-+                    "heat_W_per_g": {"total": 5e-7},
-+                    "activity_Bq_per_g": {"Mn56": 5e6},
-+                },
-+            ],
++@pytest.fixture
++def app(config, folder, env, tmp_path):
++    tree = PathsTree(tmp_path / "jade")
++    tree.init_tree()
++    shutil.copytree(
++        ROOT / "src/jade/resources/default_cfg", tree.cfg.path, dirs_exist_ok=True
++    )
++    cfg = tree.cfg.path
++    libs = yaml.safe_load((cfg / "libs_cfg.yml").read_text())
++    (cfg / "libs_cfg.yml").write_text(yaml.safe_dump({**libs, **config.cfg}))
++    run = yaml.safe_load((cfg / "run_cfg.yml").read_text())
++    run["FNS-DecayHeat"]["codes"]["actinv"] = ["first"]
++    (cfg / "run_cfg.yml").write_text(yaml.safe_dump(run))
++    templates = tree.benchmark_input_templates / "FNS-DecayHeat"
++    case = templates / "iron" / "actinv"
++    case.mkdir(parents=True)
++    shutil.copy(folder / "case one.json", case / "spec.json")
++    (templates / "benchmark_metadata.json").write_text(
++        json.dumps({"name": "FNS-DecayHeat", "version": {"actinv": "1"}})
++    )
++    app = JadeApp(tree.root, skip_init=True)
++    app.run_cfg.env_vars = env
++    return app
++
++
++def result():
++    return {
++        "certificate": {"solver": "actinv-core test"},
++        "steps": [
++            {
++                "t_s": time,
++                "flux": flux,
++                "heat_W_per_g": {"total": heat, "alpha": 0, "beta": heat, "gamma": 0},
++                "activity_Bq_per_g": {"Mn56": activity},
++            }
++            for time, flux, heat, activity in ((300, 1, 2e-6, 20), (366, 0, 1e-6, 10))
++        ],
++    }
++
++
++def test_explicit_selection_overrides_catalog_and_removes_fallback(folder, config):
++    inputs = []
++    for name in ("first", "second"):
++        selected = config.create(CODE.ACTINV, name)
++        run = SingleRunFactory.create(CODE.ACTINV, folder, selected, 1)
++        assert run.input.spec["library"] == {
++            "path": str(selected.path),
++            "sha256": selected.sha256,
 +        }
-+        (tmp_path / "result.json").write_text(json.dumps(result))
-+        out = ActinvSimOutput(tmp_path)
-+        assert out.code_version == "actinv-core 1.2.0"
-+        assert out.tally_numbers == [1, 2]
-+        heat = out.tallydata[1]
-+        assert list(heat["time"]) == [10.0, 20.0]
-+        assert list(heat["Value"]) == [1e-6, 5e-7]
-+        act = out.tallydata[2]
-+        assert list(act["Value"]) == [1e7, 5e6]
++        assert run.input.spec["decay"] == {"primary": str(selected.decay_primary)}
++        inputs.append(run.input.spec)
++    assert inputs[0]["library"] != inputs[1]["library"]
++    assert inputs[0]["decay"] != inputs[1]["decay"]
++
++
++def test_explicit_selection_is_not_alphabetical(lib, folder):
++    (lib.path.parent / "aaa-neutron-709g.npz").write_bytes(b"wrong data")
++    run = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1)
++    assert run.input.spec["library"]["path"] == str(lib.path)
++
++
++@pytest.mark.parametrize("field", ["path", "decay_primary", "decay_fallback"])
++def test_missing_selected_file_fails(config, tmp_path, field):
++    config.cfg["first"]["actinv"][field] = str(tmp_path / "missing")
++    with pytest.raises(ConfigError, match=field):
++        config.create(CODE.ACTINV, "first")
++
++
++def test_directory_selection_fails(config):
++    config.cfg["first"]["actinv"]["path"] = str(
++        Path(config.cfg["first"]["actinv"]["path"]).parent
++    )
++    with pytest.raises(ConfigError, match="file"):
++        config.create(CODE.ACTINV, "first")
++
++
++@pytest.mark.parametrize(
++    "field,value",
++    [("groups", "wrong"), ("projectile", "proton"), ("schema", "unknown")],
++)
++def test_incompatible_index_fails(config, field, value):
++    path = Path(config.cfg["first"]["actinv"]["path"]).with_name("first_index.json")
++    index = json.loads(path.read_text())
++    index[field] = value
++    path.write_text(json.dumps(index))
++    with pytest.raises(ConfigError, match="index"):
++        config.create(CODE.ACTINV, "first")
++
++
++def test_mesh_and_ambiguous_specs_rejected(folder, lib):
++    spec_path = folder / "case one.json"
++    spec = json.loads(spec_path.read_text())
++    (folder / "another.json").write_text(json.dumps(spec))
++    with pytest.raises(ConfigError, match="exactly one"):
++        InputACTINV(folder, lib)
++    spec["spec"] = "actinv-mesh-spec-1"
++    spec_path.write_text(json.dumps(spec))
++    with pytest.raises(ConfigError, match="mesh"):
++        InputACTINV(folder, lib)
++
++
++def test_continue_uses_persisted_filename_and_rejects_changed_data(folder, config, env):
++    lib = config.create(CODE.ACTINV, "first")
++    run = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1)
++    run.write(folder)
++    resumed = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1, mock_input=True)
++    assert resumed._build_command(env)[2] == "case one.json"
++    with pytest.raises(ConfigError, match="continuation"):
++        SingleRunFactory.create(
++            CODE.ACTINV,
++            folder,
++            config.create(CODE.ACTINV, "second"),
++            1,
++            mock_input=True,
++        )
++
++
++@pytest.mark.parametrize(
++    "field,value",
++    [
++        ("mpi_tasks", 4),
++        ("exe_prefix", "srun"),
++        ("run_mode", "job"),
++        ("executables", {}),
++        ("executables", {CODE.ACTINV: None}),
++    ],
++)
++def test_unsupported_execution_rejected(folder, lib, env, field, value):
++    setattr(env, field, value)
++    run = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1)
++    with pytest.raises(ConfigError):
++        run.run(env, folder, test=True)
++
++
++def test_rejected_settings_keep_previous_results(app):
++    previous = app.tree.simulations / "_actinv_-_first_" / "FNS-DecayHeat" / "iron"
++    previous.mkdir(parents=True)
++    for name in ("result.json", "actinv.complete"):
++        (previous / name).write_text("previous")
++    app.run_cfg.env_vars.exe_prefix = "srun"
++    with pytest.raises(ConfigError, match="prefix"):
++        BenchmarkRun(
++            app.run_cfg.benchmarks["FNS-DecayHeat"],
++            app.tree.simulations,
++            app.tree.benchmark_input_templates,
++            app.run_cfg.env_vars,
++        ).run()
++    assert sorted(os.listdir(previous)) == ["actinv.complete", "result.json"]
++
++
++@pytest.mark.parametrize(
++    "method,only_input",
++    [("run_benchmarks", False), ("continue_run", False), ("continue_run", True)],
++)
++def test_session_checks_settings_before_any_benchmark(
++    app, monkeypatch, method, only_input
++):
++    app.run_cfg.benchmarks["FNS-DecayHeat"].only_input = only_input
++    app.run_cfg.env_vars.exe_prefix = "srun"  # as in JADE's shipped defaults
++
++    def started(*args, **kwargs):
++        raise AssertionError("work started before the settings were checked")
++
++    monkeypatch.setattr("jade.app.app.BenchmarkRunFactory.create", started)
++    monkeypatch.setattr("builtins.input", started)
++    with pytest.raises(ConfigError, match="prefix"):
++        getattr(app, method)()
++
++
++@pytest.mark.parametrize("entry_point", ["application", "benchmark"])
++@pytest.mark.parametrize(
++    "field,value",
++    [
++        ("exe_prefix", "srun"),
++        ("mpi_tasks", 4),
++        ("run_mode", RunMode.JOB_SUBMISSION),
++        ("run_mode", RunMode.GLOBAL_JOB),
++    ],
++)
++def test_input_only_needs_no_executable_or_execution_settings(
++    app, config, monkeypatch, entry_point, field, value
++):
++    benchmark = app.run_cfg.benchmarks["FNS-DecayHeat"]
++    benchmark.only_input = True
++    app.run_cfg.benchmarks = {"FNS-DecayHeat": benchmark}
++    app.run_cfg.env_vars.executables = {}
++
++    def launched(*args, **kwargs):
++        raise AssertionError("Input-only generation must not launch a process")
++
++    monkeypatch.setattr(subprocess, "run", launched)
++    setattr(app.run_cfg.env_vars, field, value)
++    if entry_point == "application":
++        app.run_benchmarks()
++    else:
++        BenchmarkRun(
++            benchmark,
++            app.tree.simulations,
++            app.tree.benchmark_input_templates,
++            app.run_cfg.env_vars,
++        ).run()
++    generated = app.tree.simulations / "_actinv_-_first_" / "FNS-DecayHeat" / "iron"
++    spec = json.loads((generated / "spec.json").read_text())
++    assert spec["library"]["path"] == str(config.create(CODE.ACTINV, "first").path)
++    assert not (generated / "actinv.complete").exists()
++    assert not (generated / "result.json").exists()
++
++
++def test_old_gui_configuration_loads_and_actinv_roundtrips(tmp_path, monkeypatch):
++    gui = run_config_gui.ConfigGUI
++    tree = Mock()
++    owner = Mock(bench_tree=tree)
++    gui.load_yaml_run(owner, ROOT / "src/jade/resources/default_cfg/run_cfg.yml")
++    assert tree.insert.called
++    path = tmp_path / "one.yml"
++    path.write_text(
++        yaml.safe_dump(
++            {
++                "FNS-DecayHeat": {
++                    "codes": {"actinv": ["first"]},
++                    "description": "heat",
++                    "nps": 1,
++                    "only_input": False,
++                    "custom_input": None,
++                }
++            }
++        )
++    )
++    tree.reset_mock()
++    gui.load_yaml_run(owner, path)
++    values = tree.insert.call_args.kwargs["values"]
++    assert values[7] == "X"
++    tree.get_children.return_value = ["row"]
++    tree.item.return_value = values
++    owner.bench_column_mapping = {
++        f"#{i + 1}": column
++        for i, column in enumerate(
++            (
++                "name",
++                "description",
++                "generate",
++                "mcnp",
++                "d1s",
++                "openmc",
++                "serpent",
++                "actinv",
++                "nps",
++                "custom_input",
++            )
++        )
++    }
++    owner._get_lib_settings.return_value = ["first"]
++    monkeypatch.setattr(
++        run_config_gui,
++        "filedialog",
++        Mock(asksaveasfilename=Mock(return_value=str(path))),
++        raising=False,
++    )
++    monkeypatch.setattr(run_config_gui, "messagebox", Mock(), raising=False)
++    gui.save_settings(owner)
++    assert yaml.safe_load(path.read_text())["FNS-DecayHeat"]["codes"]["actinv"] == [
++        "first"
++    ]
++
++
++def test_scalar_parse_and_cooling_units(tmp_path):
++    (tmp_path / "result.json").write_text(json.dumps(result()))
++    parsed = ActinvSimOutput(tmp_path)
++    heat = cooling_time(parsed.tallydata[1], 300)
++    assert list(heat["time"]) == [66]
++    assert list(heat["Value"] * 1e6) == [1]
++    assert list(heat["Error"]) == [0]
++    assert list(parsed.tallydata[2]["Value"]) == [20, 10]
++
++
++@pytest.mark.parametrize(
++    "mutation", ["empty", "nan", "decreasing", "negative", "unbalanced", "version"]
++)
++def test_bad_result_rejected(tmp_path, mutation):
++    data = result()
++    if mutation == "empty":
++        data["steps"] = []
++    elif mutation == "version":
++        data["certificate"]["solver"] = None
++    elif mutation == "decreasing":
++        data["steps"][1]["t_s"] = 200
++    else:
++        data["steps"][1]["heat_W_per_g"]["total"] = {
++            "nan": float("nan"),
++            "negative": -1,
++            "unbalanced": 2,
++        }[mutation]
++    (tmp_path / "result.json").write_text(json.dumps(data))
++    with pytest.raises(ValueError):
++        ActinvSimOutput(tmp_path)
++
++
++def test_wrong_endpoint_and_incomplete_schedule_rejected(tmp_path):
++    (tmp_path / "result.json").write_text(json.dumps(result()))
++    parsed = ActinvSimOutput(tmp_path)
++    for schedule in (
++        [{"dt": "300 s", "flux": 1}],
++        [{"dt": "300 s", "flux": 1}, {"dt": "67 s", "flux": 0}],
++    ):
++        with pytest.raises(ValueError):
++            parsed.validate_schedule({"schedule": schedule})
++
++
++def test_fresh_run_discovery_and_raw_csv(folder, lib, env, monkeypatch, tmp_path):
++    run = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1)
++    sim = tmp_path / "simulations/_actinv_-_first_/FNS-DecayHeat/iron"
++    sim.mkdir(parents=True)
++    run.write(sim)
++    (sim / "metadata.json").write_text(
++        json.dumps(
++            {
++                "code": "actinv",
++                "library": "first",
++                "benchmark_name": "FNS-DecayHeat",
++                "benchmark_version": "1",
++            }
++        )
++    )
++
++    def fake_cli(command, **kwargs):
++        assert isinstance(command, list) and "shell" not in kwargs
++        assert kwargs["timeout"] == 180
++        Path(command[-1]).write_text(json.dumps(result()))
++
++    monkeypatch.setattr(subprocess, "run", fake_cli)
++    assert run.run(env, sim)
++    status = GlobalStatus(tmp_path / "simulations", tmp_path / "raw")
++    assert status.simulations[(CODE.ACTINV, "first", "FNS-DecayHeat")].success
++    raw = tmp_path / "raw"
++    raw.mkdir()
++    cfg = ConfigRawProcessor.from_yaml(
++        ROOT
++        / "src/jade/resources/default_cfg/benchmarks_pp/raw/actinv/FNS-DecayHeat.yaml"
++    )
++    RawProcessor(cfg, sim, raw).process_raw_data()
++    csv = pd.read_csv(raw / "iron Decay heat.csv")
++    assert list(csv["time"]) == [66]
++    assert list(csv["Value"]) == [1]
++
++
++@pytest.mark.parametrize("failure", ["exit", "invalid", "incomplete", "cancel"])
++def test_failed_run_never_reuses_stale_success(folder, lib, env, monkeypatch, failure):
++    run = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1)
++    run.write(folder)
++    (folder / "actinv.complete").write_text("old")
++    (folder / "result.json").write_text(json.dumps(result()))
++
++    def fail(command, **kwargs):
++        if failure == "exit":
++            raise subprocess.CalledProcessError(2, command)
++        if failure == "cancel":
++            raise KeyboardInterrupt
++        payload = result()
++        if failure == "incomplete":
++            payload["steps"].pop()
++        Path(command[-1]).write_text(
++            "invalid" if failure == "invalid" else json.dumps(payload)
++        )
++
++    monkeypatch.setattr(subprocess, "run", fail)
++    with pytest.raises((subprocess.CalledProcessError, ValueError, KeyboardInterrupt)):
++        run.run(env, folder)
++    assert not CODE_CHECKERS[CODE.ACTINV].check_success(os.listdir(folder))
++    assert not list(folder.glob(".actinv-*"))
++
++
++def test_decimal_cooling_times_survive_table_intersection(tmp_path):
++    sim, raw = tmp_path / "sim", tmp_path / "raw"
++    sim.mkdir()
++    raw.mkdir()
++    payload = result()
++    payload["steps"][1]["t_s"] = 382.2
++    (sim / "result.json").write_text(json.dumps(payload))
++    (sim / "metadata.json").write_text(json.dumps({"code": "actinv"}))
++    cfg = ConfigRawProcessor.from_yaml(
++        ROOT
++        / "src/jade/resources/default_cfg/benchmarks_pp/raw/actinv/FNS-DecayHeat.yaml"
++    )
++    RawProcessor(cfg, sim, raw).process_raw_data()
++    calculated = pd.read_csv(raw / "sim Decay heat.csv")
++    measured = pd.DataFrame({"time": [82.2], "Value": [2.0], "Error": [0.05]})
++    comparison = Table._compare(measured, calculated, ComparisonType.RATIO)
++    assert list(comparison["time"]) == [82.2]
++    assert list(comparison["Value"]) == [0.5]
++    assert list(comparison["Error"]) == [0.05]
++
++
++def test_other_irradiation_history_fails_instead_of_shifting(tmp_path):
++    sim, raw = tmp_path / "sim", tmp_path / "raw"
++    sim.mkdir()
++    raw.mkdir()
++    payload = result()
++    # seven-hour irradiation: no endpoint at the configured 300-second shutdown
++    for step, elapsed in zip(payload["steps"], (25200, 28800)):
++        step["t_s"] = elapsed
++    (sim / "result.json").write_text(json.dumps(payload))
++    (sim / "metadata.json").write_text(json.dumps({"code": "actinv"}))
++    cfg = ConfigRawProcessor.from_yaml(
++        ROOT
++        / "src/jade/resources/default_cfg/benchmarks_pp/raw/actinv/FNS-DecayHeat.yaml"
++    )
++    with pytest.raises(ValueError, match="shutdown"):
++        RawProcessor(cfg, sim, raw).process_raw_data()
++
++
++@pytest.mark.parametrize("mode", ["timeout", "cancel", "exit_during_cancel"])
++def test_leaf_child_is_reaped_on_timeout_or_cancellation(
++    folder, lib, env, monkeypatch, mode
++):
++    run = SingleRunFactory.create(CODE.ACTINV, folder, lib, 1)
++    run.write(folder)
++    child = folder / "child.py"
++    child.write_text("import time\ntime.sleep(30)\n")
++    # Isolated Python leaf child, never a Rust test executable.
++    monkeypatch.setattr(
++        run,
++        "_build_command",
++        lambda cfg: [sys.executable, str(child), "unused", "result.json"],
++    )
++    children = []
++    original_popen = subprocess.Popen
++
++    class ObservedChild(original_popen):
++        def __init__(self, *args, **kwargs):
++            super().__init__(*args, **kwargs)
++            children.append(self)
++
++        def communicate(self, *args, **kwargs):
++            if mode == "cancel":
++                raise KeyboardInterrupt
++            if mode == "exit_during_cancel":
++                self.kill()
++                self.wait(timeout=5)
++                raise KeyboardInterrupt
++            return super().communicate(*args, **kwargs)
++
++    monkeypatch.setattr(subprocess, "Popen", ObservedChild)
++    run.TIMEOUT_SECONDS = 0.05
++    expected = subprocess.TimeoutExpired if mode == "timeout" else KeyboardInterrupt
++    with pytest.raises(expected):
++        run.run(env, folder)
++    assert len(children) == 1 and children[0].returncode is not None
++    assert not (folder / "actinv.complete").exists()
++    assert not list(folder.glob(".actinv-*"))

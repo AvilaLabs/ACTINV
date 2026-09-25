@@ -362,9 +362,7 @@ fn scale_nuclide_key(raw: &str, field: &str) -> Result<(i32, i32), String> {
     match actinv_data::composition::material_key(raw)
         .map_err(|error| format!("{field} key '{raw}': {error}"))?
     {
-        actinv_data::composition::MaterialKey::Nuclide { za, liso, .. } => {
-            Ok((za, liso))
-        }
+        actinv_data::composition::MaterialKey::Nuclide { za, liso, .. } => Ok((za, liso)),
         _ => Err(format!(
             "{field} key '{raw}' must be an explicit nuclide, e.g. 'Mn56'"
         )),
@@ -1338,7 +1336,11 @@ mod duration_tests {
             let e = Spec::from_json(&v.to_string()).unwrap_err();
             assert!(e.contains(want), "{key}: {e}");
         }
-        for bad in [serde_json::json!(0.0), serde_json::json!(-1.0), serde_json::json!("x")] {
+        for bad in [
+            serde_json::json!(0.0),
+            serde_json::json!(-1.0),
+            serde_json::json!("x"),
+        ] {
             let mut v = minimal_spec();
             v["options"] = serde_json::json!({"decay_scale": {"Mn56": bad}});
             assert!(Spec::from_json(&v.to_string()).is_err());

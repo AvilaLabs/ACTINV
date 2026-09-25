@@ -743,13 +743,10 @@ pub fn main_from(a: Vec<String>) {
             }
         }
         "optimize" => {
-            const OPT_USAGE: &str =
-                "usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]";
+            const OPT_USAGE: &str = "usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]";
             let resume = a.iter().any(|x| x == "--resume");
-            let positional: Vec<&String> = a[2..]
-                .iter()
-                .filter(|x| x.as_str() != "--resume")
-                .collect();
+            let positional: Vec<&String> =
+                a[2..].iter().filter(|x| x.as_str() != "--resume").collect();
             if positional.iter().any(|x| x.starts_with("--"))
                 || positional.is_empty()
                 || positional.len() > 2

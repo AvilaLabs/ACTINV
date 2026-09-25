@@ -61,8 +61,6 @@ pub enum Edge {
     ConservativeUpper,
 }
 
-
-
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Objective {
@@ -229,8 +227,7 @@ pub fn run_search<F: FnMut(&[f64]) -> EvalOutcome>(
     }
     let n_lhs = n1 - n_corners;
     if n_lhs > 0 {
-        let mut strata: Vec<Vec<usize>> =
-            (0..d).map(|_| (0..n_lhs).collect()).collect();
+        let mut strata: Vec<Vec<usize>> = (0..d).map(|_| (0..n_lhs).collect()).collect();
         for axis_strata in strata.iter_mut() {
             for i in (1..n_lhs).rev() {
                 let j = (rng.next_u64() % (i as u64 + 1)) as usize;
@@ -332,15 +329,11 @@ pub fn apply_axes(base: &Value, axes: &[Axis], x: &[f64]) -> Result<Value, Strin
             .ok_or("material.composition is not a map")?;
         let axed_total: f64 = comp_axes.iter().map(|(i, _)| x[*i]).sum();
         if axed_total > 100.0 + 1e-9 {
-            return Err(format!(
-                "axed composition sum {axed_total} exceeds 100 wt%"
-            ));
+            return Err(format!("axed composition sum {axed_total} exceeds 100 wt%"));
         }
         let rest: f64 = comp
             .iter()
-            .filter(|(k, _)| {
-                !comp_axes.iter().any(|(_, e)| k.eq_ignore_ascii_case(e))
-            })
+            .filter(|(k, _)| !comp_axes.iter().any(|(_, e)| k.eq_ignore_ascii_case(e)))
             .map(|(_, v)| v.as_f64().unwrap_or(0.0))
             .sum();
         if rest <= 0.0 && axed_total < 100.0 {
@@ -421,8 +414,8 @@ fn param_digest(x: &[f64]) -> String {
 pub fn load_optimize_spec(path: &Path) -> Result<OptimizeSpec, String> {
     let text = std::fs::read_to_string(path)
         .map_err(|e| format!("cannot read {}: {e}", path.display()))?;
-    let spec: OptimizeSpec = serde_json::from_str(&text)
-        .map_err(|e| format!("cannot parse {}: {e}", path.display()))?;
+    let spec: OptimizeSpec =
+        serde_json::from_str(&text).map_err(|e| format!("cannot parse {}: {e}", path.display()))?;
     spec.validate()?;
     Ok(spec)
 }
@@ -474,10 +467,7 @@ impl OptimizeSpec {
             }
             match c.kind.as_str() {
                 "axis" => {
-                    let ok = c
-                        .axis
-                        .map(|i| i < self.design_axes.len())
-                        .unwrap_or(false);
+                    let ok = c.axis.map(|i| i < self.design_axes.len()).unwrap_or(false);
                     if !ok {
                         return Err(format!(
                             "constraint '{}': axis index required and must be < design_axes.len()",
@@ -493,30 +483,16 @@ impl OptimizeSpec {
                         ));
                     }
                     if c.response.is_none() {
-                        return Err(format!(
-                            "constraint '{}': response required",
-                            c.name
-                        ));
+                        return Err(format!("constraint '{}': response required", c.name));
                     }
                     if !c.time_s.is_finite() {
-                        return Err(format!(
-                            "constraint '{}': time_s must be finite",
-                            c.name
-                        ));
+                        return Err(format!("constraint '{}': time_s must be finite", c.name));
                     }
                 }
-                other => {
-                    return Err(format!(
-                        "constraint '{}': unknown kind '{other}'",
-                        c.name
-                    ))
-                }
+                other => return Err(format!("constraint '{}': unknown kind '{other}'", c.name)),
             }
             if !c.limit.is_finite() {
-                return Err(format!(
-                    "constraint '{}': limit must be finite",
-                    c.name
-                ));
+                return Err(format!("constraint '{}': limit must be finite", c.name));
             }
         }
         if !self.objective.time_s.is_finite() {
@@ -559,19 +535,19 @@ fn response_edge(
         .uncertainty
         .as_ref()
         .and_then(|u| u.responses.get(response))
-        .ok_or_else(|| {
-            format!("band edge for '{response}' not present in step uncertainty")
-        })?;
+        .ok_or_else(|| format!("band edge for '{response}' not present in step uncertainty"))?;
     let iv = if matches!(edge, Edge::NormalLower | Edge::NormalUpper) {
         u.normal_interval
     } else {
         u.conservative_interval
     };
-    Ok(Some(if matches!(edge, Edge::NormalLower | Edge::ConservativeLower) {
-        iv[0]
-    } else {
-        iv[1]
-    }))
+    Ok(Some(
+        if matches!(edge, Edge::NormalLower | Edge::ConservativeLower) {
+            iv[0]
+        } else {
+            iv[1]
+        },
+    ))
 }
 
 /// Select the step whose cumulative t_s is nearest `time_s`.
@@ -814,7 +790,11 @@ pub struct OptimizeSummary {
     pub out_dir: PathBuf,
 }
 
-pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> Result<OptimizeSummary, String> {
+pub fn run_optimize(
+    optspec_path: &str,
+    out_arg: Option<&str>,
+    resume: bool,
+) -> Result<OptimizeSummary, String> {
     let started = std::time::Instant::now();
     let opt_path = Path::new(optspec_path);
     let opt = load_optimize_spec(opt_path)?;
@@ -825,8 +805,8 @@ pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> 
     let base_path = opt_dir.join(&opt.base_spec);
     let base_text = std::fs::read_to_string(&base_path)
         .map_err(|e| format!("cannot read base spec {}: {e}", base_path.display()))?;
-    let base_doc: Value = serde_json::from_str(&base_text)
-        .map_err(|e| format!("cannot parse base spec: {e}"))?;
+    let base_doc: Value =
+        serde_json::from_str(&base_text).map_err(|e| format!("cannot parse base spec: {e}"))?;
 
     let out_dir = out_arg
         .map(PathBuf::from)
@@ -879,11 +859,7 @@ pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> 
         spec_sha: Option<String>,
     }
     let mut rows: Vec<Row> = Vec::new();
-    let mut next_id = resumed
-        .values()
-        .map(|(id, _, _)| id + 1)
-        .max()
-        .unwrap_or(0);
+    let mut next_id = resumed.values().map(|(id, _, _)| id + 1).max().unwrap_or(0);
     let mut eval_err: Option<String> = None;
 
     // The engine drives point selection; each point is evaluated through the
@@ -984,9 +960,7 @@ pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> 
             .then(|| std::fs::read_to_string(&cand_path).ok())
             .flatten();
         if let Some(c) = canon {
-            let re_spec = actinv_core::spec::Spec::from_json(
-                &crate::resolve_catalog_json(&c)?,
-            )?;
+            let re_spec = actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&c)?)?;
             let re = actinv_core::run::run(&re_spec, "optimize-verify")?;
             let re_obj = select_step(&re.steps, opt.objective.time_s)
                 .ok()
@@ -1003,9 +977,7 @@ pub fn run_optimize(optspec_path: &str, out_arg: Option<&str>, resume: bool) -> 
                 "bit_identical": identical,
             });
             if !identical {
-                return Err(
-                    "winner re-execution diverged from the ledgered value".into(),
-                );
+                return Err("winner re-execution diverged from the ledgered value".into());
             }
         } else {
             return Err("best candidate has no recorded spec — cannot verify".into());
@@ -1114,10 +1086,7 @@ mod tests {
         assert_eq!(pa.len(), 8);
         // every axis stratum is hit once per dimension
         for k in 0..2 {
-            let mut strata: Vec<usize> = pa
-                .iter()
-                .map(|x| (x[k] * 8.0).floor() as usize)
-                .collect();
+            let mut strata: Vec<usize> = pa.iter().map(|x| (x[k] * 8.0).floor() as usize).collect();
             strata.sort();
             assert_eq!(strata, (0..8).collect::<Vec<_>>());
         }
@@ -1127,9 +1096,7 @@ mod tests {
     fn recovers_planted_optimum() {
         let b = [[0.0, 10.0]];
         // planted minimum at x=7.5
-        let res = run_search(&b, &cfg(16, 12), true, |x| {
-            feasible((x[0] - 7.5).powi(2))
-        });
+        let res = run_search(&b, &cfg(16, 12), true, |x| feasible((x[0] - 7.5).powi(2)));
         let best = res
             .iter()
             .min_by(|a, b| a.1.objective.partial_cmp(&b.1.objective).unwrap())
@@ -1176,8 +1143,14 @@ mod tests {
             "material": {"composition": {"FE": 91.0, "CR": 9.0}},
         });
         let axes = vec![
-            Axis::CompositionFraction { element: "NI".into(), bounds: [0.0, 3.0] },
-            Axis::CompositionFraction { element: "MO".into(), bounds: [0.0, 1.0] },
+            Axis::CompositionFraction {
+                element: "NI".into(),
+                bounds: [0.0, 3.0],
+            },
+            Axis::CompositionFraction {
+                element: "MO".into(),
+                bounds: [0.0, 1.0],
+            },
         ];
         let doc = apply_axes(&base, &axes, &[2.0, 0.5]).unwrap();
         let c = &doc["material"]["composition"];
@@ -1193,9 +1166,7 @@ mod tests {
     #[test]
     fn corner_variant_evaluates_corners_first() {
         let b = [[0.0, 3.0], [0.0, 1.0]];
-        let res = run_search(&b, &cfg_corners(6, 0), true, |x| {
-            feasible(x[0] + x[1])
-        });
+        let res = run_search(&b, &cfg_corners(6, 0), true, |x| feasible(x[0] + x[1]));
         let pts: Vec<&Vec<f64>> = res.iter().map(|(x, _)| x).collect();
         // first 2^d=4 evals are the corners in binary-counting order
         assert_eq!(*pts[0], vec![0.0, 0.0]);
