@@ -1,0 +1,26 @@
+{
+  "artifacts": "target/p51-battery",
+  "battery": {
+    "corpus_probe": {
+      "cold_equals_first": true,
+      "warm_equals_cold": true,
+      "warm_first": false,
+      "warm_second": true
+    },
+    "synthetic_nominal": {
+      "cold_equals_first": true,
+      "warm_equals_cold": true,
+      "warm_first": false,
+      "warm_second": true
+    },
+    "synthetic_uq": {
+      "cold_equals_first": true,
+      "warm_equals_cold": true,
+      "warm_first": false,
+      "warm_second": true
+    }
+  },
+  "pass": true,
+  "problems": [],
+  "schema": "actinv-p51-g2-1"
+}

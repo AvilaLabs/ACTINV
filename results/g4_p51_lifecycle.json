@@ -1,0 +1,43 @@
+{
+  "events": [
+    {
+      "event": "sustained_battery",
+      "n": 20,
+      "t_s": 46.97
+    },
+    {
+      "event": "killed",
+      "pid": 85842,
+      "t_s": 47.37
+    },
+    {
+      "event": "reaped",
+      "exit": -9,
+      "t_s": 47.48
+    },
+    {
+      "event": "reap_verified",
+      "gone": true,
+      "t_s": 47.48
+    },
+    {
+      "event": "respawn_answered",
+      "t_s": 47.49
+    },
+    {
+      "event": "restart_identity",
+      "match": true,
+      "t_s": 57.55
+    },
+    {
+      "event": "rss",
+      "max_mib": 1555.0,
+      "samples": 1134,
+      "t_s": 57.7
+    }
+  ],
+  "pass": true,
+  "problems": [],
+  "rss_ceiling_bytes": 4294967296,
+  "schema": "actinv-p51-g4-1"
+}

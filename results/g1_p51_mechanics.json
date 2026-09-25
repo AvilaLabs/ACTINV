@@ -1,0 +1,13 @@
+{
+  "checks": [
+    "roundtrip_warm_flag",
+    "malformed_rejected",
+    "failure_survival",
+    "stop_clean_exit",
+    "eof_clean_exit"
+  ],
+  "pass": true,
+  "problems": [],
+  "schema": "actinv-p51-g1-1",
+  "sealed_drift": []
+}

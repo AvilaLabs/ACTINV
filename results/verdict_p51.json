@@ -1,0 +1,42 @@
+{
+  "schema": "actinv-verdict-1",
+  "phase": "P51",
+  "verdict": "P51-CLOSED",
+  "closed_at_utc": "2026-09-25T22:04:00Z",
+  "gates": {
+    "g0": {
+      "pass": true,
+      "seal": "results/g0_p51_seals.json",
+      "protocol_sha256": "9065e48a85c54b4a8735d3e72c29cd53195f58d8e5e741adf6d66488ea4feb2e"
+    },
+    "g1": {"pass": true, "checks": ["roundtrip_warm_flag", "malformed_rejected",
+        "failure_survival", "stop_clean_exit", "eof_clean_exit"]},
+    "g2": {"pass": true, "battery": ["synthetic_nominal", "synthetic_uq",
+        "corpus_probe"],
+      "note": "worker result byte-identical to `actinv run` modulo ms + entry_point"},
+    "g3": {"pass": true, "cold_median_ms": 4690.5,
+      "warm_median_client_ms": 1736.5, "ratio": 0.3702,
+      "ledger": "results/g3_p51_amortization.json"},
+    "g4": {"pass": true, "sustained_requests": 20,
+      "kill_reap_respawn": "verified, restart result identical to cold",
+      "rss_peak_mib": 1555.0, "ceiling_bytes": 4294967296,
+      "ledger": "results/g4_p51_lifecycle.json"}
+  },
+  "checker": "results/check_g5_p51.json",
+  "mutations_rejected": [
+    "mutate-1: swapped warm flag → 'first worker solve was not recorded cold'",
+    "mutate-2: missing reap → 'lifecycle event reaped missing'",
+    "mutate-3: corrupted identity claim → 'recorded identity claim is false but the documents disagree with it'"
+  ],
+  "amendments": [],
+  "demonstration": {
+    "spec": "examples/p51_battery/corpus_probe.json",
+    "result": "results/g3_p51_amortization.json",
+    "headline": "full-corpus solve: 4.69 s cold vs 1.74 s warm client wall (0.37x); ~3 s per request of data-file load amortized"
+  },
+  "conditions": [
+    "The warm path skips data-file reload only — the sha256 fingerprint of every referenced input file runs on every request, and a changed file is a miss that revalidates; no solver step or qualification is skipped.",
+    "The cache is single-slot: alternating between two corpora thrashes honestly (demonstrated in the G4 ledger); same-corpus sweeps/optimize/per-bin workloads are the intended shape.",
+    "Cancellation is by process termination — an in-flight solve is killed, reaped, and re-issued; the restart path was demonstrated byte-identical to a never-killed run."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "cli_command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "59eb955f14d0868a98e22f387fbcb53c1bb099424052a118e8b038e9e15c8b18"
+    },
+    "cli_lib_module": {
+      "path": "crates/actinv-cli/src/lib.rs",
+      "sha256": "23031532aa478e1b51e2ecb5588f789ba522db982b7896ed600e295c4405e5ac"
+    },
+    "cli_worker_module": {
+      "path": "crates/actinv-cli/src/worker.rs",
+      "sha256": "1e99fbd1109027fbb2587686c9fcbbee1c8805bfe45134888181f40e252f4d51"
+    },
+    "core_run_module": {
+      "path": "crates/actinv-core/src/run.rs",
+      "sha256": "05a28ef80fb2702ffd87e759bbe9beb5281b42f29b872242e6b4d95c7afc9bac"
+    },
+    "corpus_probe_spec": {
+      "path": "examples/p51_battery/corpus_probe.json",
+      "sha256": "1b882e782af9156a58c8219f866a5c3d71f55dd7919afd5539f81f08df68aa89"
+    },
+    "fixtures": {
+      "path": "controls/p11_fixtures.py",
+      "sha256": "6281020bd7f489513f10a3330a9205c75ebda3e868520491a887ac47f2842c24"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p51_mechanics.py",
+      "sha256": "33ec6136c0c4b1c3f3e26f9b13a3cfb2442b38d4c22506080635eb6d09e3580c"
+    },
+    "g2_identity": {
+      "path": "controls/g2_p51_identity.py",
+      "sha256": "1ba989c2ca8a5b5469a7ad057d1f82066b2a8a3729c1af1f072845280233548a"
+    },
+    "g3_amortization": {
+      "path": "controls/g3_p51_amortization.py",
+      "sha256": "0eab14d330fb0beb7e340c1849086fd3fe0bb5ea4a9871591e8768dc041e9df1"
+    },
+    "g4_lifecycle": {
+      "path": "controls/g4_p51_lifecycle.py",
+      "sha256": "fa993392d9219950b29bc5a70d0cdc89fe53ae8b47caa950537911860bae9493"
+    },
+    "g5_checker": {
+      "path": "controls/check_g5_p51.py",
+      "sha256": "52c0ea3f9147b5671cb7c41b0e48fbc8e49f5ac21a47885005c246c7a6711db6"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P51_PROTOCOL.md",
+      "sha256": "9065e48a85c54b4a8735d3e72c29cd53195f58d8e5e741adf6d66488ea4feb2e"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "demonstration": "examples/p51_battery/corpus_probe.json (full corpus, single step: amortizes ~3.8 s of data-file load per request)",
+  "envelope_s": 3600,
+  "excluded_fields": [
+    "ms",
+    "timing_ms",
+    "entry_point",
+    "certificate.entry_point"
+  ],
+  "opening_commit": "875325591344466a7a82ce5f88dec9005ca7d705",
+  "protocol_sha256": "9065e48a85c54b4a8735d3e72c29cd53195f58d8e5e741adf6d66488ea4feb2e",
+  "schema": "actinv-p51-seal-1",
+  "sealed_at_utc": "2026-09-25T21:40:23Z"
+}

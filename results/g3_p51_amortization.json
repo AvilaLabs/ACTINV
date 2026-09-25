@@ -1,0 +1,50 @@
+{
+  "cold_median_ms": 4690.5,
+  "cold_wall_ms": [
+    4690.5,
+    4632.9,
+    4811.9
+  ],
+  "hardware": {
+    "machine": "x86_64",
+    "memory_cap": "MemoryMax=4G (scope)",
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "processor": ""
+  },
+  "pass": true,
+  "problems": [],
+  "ratio": 0.3702,
+  "schema": "actinv-p51-g3-1",
+  "spec": "/home/connoravila/Documents/actinv/examples/p51_battery/corpus_probe.json",
+  "warm": [
+    {
+      "client_wall_ms": 4770.4,
+      "fingerprint_ms": 233.77,
+      "ok": true,
+      "solve_ms": 4647.9,
+      "warm": false
+    },
+    {
+      "client_wall_ms": 1752.3,
+      "fingerprint_ms": 0.11,
+      "ok": true,
+      "solve_ms": 1657.5,
+      "warm": true
+    },
+    {
+      "client_wall_ms": 1736.5,
+      "fingerprint_ms": 0.11,
+      "ok": true,
+      "solve_ms": 1646.4,
+      "warm": true
+    },
+    {
+      "client_wall_ms": 1704.9,
+      "fingerprint_ms": 0.11,
+      "ok": true,
+      "solve_ms": 1614.0,
+      "warm": true
+    }
+  ],
+  "warm_median_solve_ms": 1736.5
+}

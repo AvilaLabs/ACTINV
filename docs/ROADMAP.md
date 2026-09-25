@@ -1165,7 +1165,7 @@ problem the fusion materials program runs by hand today. A second candidate demo
 Tb-149 radionuclidic purity against the shipped feedstock example, exercises the maximize direction and a
 real published problem.
 
-## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **P50 closed P50-CONDITIONAL 2026-09-25; P51–P52 unopened, unhashed**
+## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **P50 closed P50-CONDITIONAL 2026-09-25; P51 closed P51-CLOSED 2026-09-25; P52 unopened, unhashed**
 
 Competitive landscape check (2026-09-25): OpenMC now ships `openmc.deplete` with an automated
 cell/mesh `R2SManager` plus D1S, validated against the FNG ITER SINBAD shutdown-dose benchmark —
@@ -1223,6 +1223,25 @@ Every claim is measured: cold vs warm wall time ledgered per entry point, hot-pa
 to the qualified cold path (same worker semantics, no reduced numerics), memory ceiling enforced and
 recorded. Retires parked items 10 and 12's root cause; it does not change solver semantics, and the
 gate requires it provably not to.
+
+**P51 closed `P51-CLOSED` 2026-09-25** (`results/verdict_p51.json`, protocol
+`protocols/ACTINV-P51_PROTOCOL.md`, zero amendments). Delivered: `PreparedCache` in `actinv-core` —
+a single-slot `PreparedRun` holder keyed by a fingerprint of every input that determines it
+(spec-side references and options plus the resolved sha256 of each referenced file) — and
+`actinv worker`, a bounded NDJSON subprocess serving `actinv-worker-request-1` lines sequentially.
+`run()` delegates to `run_with_cache` with a one-shot cache, so cold and warm execute literally the
+same preparation code on a miss and the same solve code always; a fingerprint re-hashes every input
+file per request, so no qualification step is skipped and a changed file is a miss. G2: worker
+results byte-identical to fresh `actinv run` on the three-member battery (synthetic nominal
+Groupwise, synthetic uncertainty Dense, full-corpus probe) modulo the declared `ms`/`entry_point`
+fields. G3: full-corpus solve 4.69 s cold median vs 1.74 s warm client wall (0.37x; ~3 s of
+data-file load amortized per request) — ledgered with hardware. G4: 20-request alternating-corpora
+battery thrashed the slot honestly, kill-mid-solve → reaped → respawned → re-issued solve
+byte-identical, RSS peak 1.56 GiB under the 4 GiB ceiling across 1134 samples; no zombie or orphan.
+G5 independently re-diffed the saved documents, recomputed the timing arithmetic and the event
+order, and rejected all three planted mutations. Conditions: warm path skips data-file *reload*
+only; single-slot thrash on corpus alternation is honest and measured; cancellation is by process
+termination with demonstrated restart.
 
 **P52 — OpenMC-ingest, uncertainty-bearing R2S handoff.** Execute the parked spatial-handoff item
 (3): ingest OpenMC `get_microxs_and_flux()` exports — multigroup fluxes and microscopic cross sections
@@ -1804,3 +1823,13 @@ gate input; nothing in this draft is frozen until sealed.
   Nb-94 arms by Nb-93(n,γ) (~97%). The G4 checker re-derived every share independently from the pinned
   sidecar and rejected all planted mutations. Conditions and the P51/P52 opening order stand in the
   extension text; P51 is next and remains unopened.
+- 2026-09-25 — **P51 closes `P51-CLOSED`** (`results/verdict_p51.json`; protocol sealed at
+  `9065e48a…`, zero amendments). `PreparedCache` (single slot, fingerprint = spec inputs + resolved
+  content sha256 of every referenced file — re-verified per request) plus `actinv worker`, a bounded
+  NDJSON request/response subprocess. `run()` delegates to `run_with_cache`, so the cold and hot
+  paths are the same code; a warm request pays only the ~ms fingerprint. Evidence: bit-identity vs
+  `actinv run` on synthetic nominal/Dense/corpus members modulo `ms`/`entry_point`; full-corpus
+  4.69 s cold vs 1.74 s warm (0.37x); 20-request alternating-corpora thrash, kill-mid-solve →
+  reaped → respawned → byte-identical, RSS 1.56 GiB under a 4 GiB ceiling; G5 re-verified all
+  ledgers independently and rejected three planted mutations. The qualified path — not a shortcut —
+  is what got faster.
