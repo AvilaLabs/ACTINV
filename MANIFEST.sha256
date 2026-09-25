@@ -602,7 +602,7 @@ ab6f98523724e676918ecd18b628d24583eb4c21a36b5ce486e717a582a69a2f  ./crates/actin
 aec3b5ca3c83eddd977c8a37e7fac382f902f2f0ecabb2e3aec4f5550f98f01c  ./crates/actinv-gui/assets/avila-labs-logo.png
 ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6  ./crates/actinv-gui/build.rs
 fb694601cc2281e94a38ee673ccbd6de622a293a41a892a1d43d44fd7f26f8bf  ./crates/actinv-gui/index.html
-1c822a6da19e920ba9c62f82eae06cd20834b80591ed2c937f52bb466c5cf3e4  ./crates/actinv-gui/src/app.rs
+79d837cfb94d8a81f134795da9c0c81b513d4d6e89f37de30c56bd0d0ba69a05  ./crates/actinv-gui/src/app.rs
 b5bfdb71a16a36b954d52770c8ce0258f961c89d41ee9f8a3a95c7dae30dfc9e  ./crates/actinv-gui/src/capture.rs
 a25925117a2fe9daf1f6e7692750004c90ebbf4a273993af149cf8f822e91f9f  ./crates/actinv-gui/src/lib.rs
 d7f530b2976ec14ecf864fe8b5a03f982680427b99a5dbbb5be488362e736913  ./crates/actinv-gui/src/main.rs
@@ -612,9 +612,9 @@ d7f530b2976ec14ecf864fe8b5a03f982680427b99a5dbbb5be488362e736913  ./crates/actin
 ab40d3e2d3604b1ee941558cd683b929076d59136b18c0443ea3717c7eff8dbd  ./crates/actinv-gui/src/sweep.rs
 0869eb3e7b2e0d8468a4708484d173905d56b979f3cfe21eb20b9d5613225685  ./crates/actinv-gui/src/tour.rs
 6b3fd8795175e8b95be412719615e6018752353ea6dc30271d68966d01088a43  ./crates/actinv-gui/src/transport.rs
-10c475d0d56af63b62a3acae15b4028b798d79ab1c5fdb01437e75a27100830d  ./crates/actinv-gui/src/visuals.rs
+35842c494d2e654999d1e065cbcbf1e833e8d63f1c46004924c40cc345eafe25  ./crates/actinv-gui/src/visuals.rs
 6d6a672fc17c024234adc6fa887876131e5fdec8d5b33ca43d94fa868e86ca84  ./crates/actinv-gui/src/web.rs
-704c4b1e3c7895d67a4e345d616492e55c079ce790a61ed98321a206e4ed16c2  ./crates/actinv-gui/src/web_app.rs
+c234aa7fbedc9f710b1e10e0398beb7a007aca36d61faf718786699a7af7273c  ./crates/actinv-gui/src/web_app.rs
 cbc1185941ba34139062108560d2ab8931c94c24ac7281e9c86bc022dd4c7d0a  ./crates/actinv-gui/src/worker.rs
 df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23  ./data/cram_coefficients.json
 6a594fe883294466ca22e67224c2a9effc454ca06b8fa55f1e40aa9a8ec1e503  ./docs/APPLICABILITY.md
@@ -650,7 +650,7 @@ e696466a9cbc950cb1cb966574fd555f8a3a0c36673a3573c0af329b78b98264  ./docs/P25_DIA
 b4f7aeb6cd813e85662883b2db93ceeddfff785e2d860cf390e9b1f16f844f1e  ./docs/P25_TENDL2025_DEFECT_REPORT.md
 ef75e1c4e590b8a47ec011a3d46ae11ac56fc32a80319e0c63b23c9b0728ac91  ./docs/P41_TENDL_MF10_EXCESS_REPORT.md
 6d0b80750111cdd385a9f923ed32acf03fd254fc9ea3a194692f7b7d0f793af6  ./docs/P46_EVALUATION_RECOMMENDATIONS.md
-8bf23b5800cd60b44298c54857d24ab2f08a566ea120cb24b303c9060ef98cc7  ./docs/PARKING.md
+1b386723743980db45794ffd50e3f5b4d5b8a9ea43d28a146608e79deb16e489  ./docs/PARKING.md
 3686abd9861939888542da6ad70fad6a0ce16c484aedefc88e1bd7980c99b945  ./docs/PREFLIGHT.md
 a556994c6546b47f35f3559ae5854586f1ef49b035c800acc3cf7862d6a56b1c  ./docs/PYPI_RELEASE.md
 dc8e588438dc80314187b49901596cc6bf622d3f570425be46b7e2994a0b5886  ./docs/QUALIFICATION.md
@@ -666,7 +666,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 13f40040a5d402ed06f1500de5f0c31b66d9dd649364c46c15ae3fb14f3cac38  ./docs/RELEASE_NOTES_v1.1.2.md
 74cdd713cf89d447b5324f88f6ed32c7dd09cd4eebcb6030f358ffcd699ace6e  ./docs/RELEASE_NOTES_v1.2.0.md
 00f9febfdbaf33bcac7485964e206c958a9cfa92c5f73e98070788a04105fd0f  ./docs/RELEASE_NOTES_v1.2.1.md
-86c9cbe2b132c1019b415faa6f262fa4efce1fb6e125cbefb18d98fcf0be7d51  ./docs/ROADMAP.md
+ff8caedfd574e94ecb2a3d8f7ccb38ac0c1ebbd9dee0a4df1bca9ea80c895d8d  ./docs/ROADMAP.md
 85bb7e7e52767b120ce1eb1032c7a4537987e0d2ca0184571c67c199f1113945  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 646b593061975e4d7ae6e5b144a995202810be2b489535462b9d583a9b12567a  ./docs/TENDL2025_EMAIL_DRAFT.md
