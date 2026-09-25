@@ -1,0 +1,1937 @@
+{
+  "pass": true,
+  "result": "results/p50_voi_result.json",
+  "result_sha256": "7a1c548c704fce96b74d06a1adcbd75aed928d885e85a0594b39933d5df46e4f",
+  "schema": "actinv-p50-g3-1",
+  "spec": "examples/optimize_ra_steel/opt_v2_winner.json",
+  "spec_sha256": "d698eaac86fd014cb4ec728df69e4965c68b40c6bed76f8b36f714a33913372f",
+  "tables_head": {
+    "step0/activity.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.9087251917644474,
+        "variance_share": 72806171473.14728
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.07202892850522137,
+        "variance_share": 5770887136.512399
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 0.018707107270855925,
+        "variance_share": 1498795094.5697362
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 0.0004226030109739841,
+        "variance_share": 33858538.93001317
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr54",
+        "share_fraction": 9.350934811015614e-05,
+        "variance_share": 7491877.296403795
+      }
+    ],
+    "step0/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.7524019345465358,
+        "variance_share": 2.447183448405511e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.24759806545346424,
+        "variance_share": 8.053114430123335e-17
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 2.4914000123821444e-24,
+        "variance_share": 8.103265812751279e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 1.6583512299265575e-25,
+        "variance_share": 5.393778903512627e-41
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.464913095398867e-26,
+        "variance_share": 1.7774601924827292e-41
+      }
+    ],
+    "step0/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step0/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.9213014915989588,
+        "variance_share": 1.1809869901849944e-14
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.07355076302130165,
+        "variance_share": 9.428237665781175e-16
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 0.004356784012221808,
+        "variance_share": 5.584822432611105e-17
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr54",
+        "share_fraction": 0.00044392310688573056,
+        "variance_share": 5.690508684238225e-18
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 0.0002841621352677963,
+        "variance_share": 3.642583756941735e-18
+      }
+    ],
+    "step1/activity.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.8886275215728281,
+        "variance_share": 50270121448.7382
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.10110234207139662,
+        "variance_share": 5719412117.334977
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 0.010003664544934968,
+        "variance_share": 565912510.470342
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 0.00024371939906618555,
+        "variance_share": 13787333.267357659
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": -0.00010496714622163595,
+        "variance_share": -5938046.099843469
+      }
+    ],
+    "step1/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.6928505472144333,
+        "variance_share": 2.6571868722181195e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.3071494527855666,
+        "variance_share": 1.1779647097517438e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 2.112893229512829e-24,
+        "variance_share": 8.10326581169954e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 1.4064056628609528e-25,
+        "variance_share": 5.393778902812558e-41
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 1.0686749808103922e-25,
+        "variance_share": 4.0985305432665897e-41
+      }
+    ],
+    "step1/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step1/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.8948102518842831,
+        "variance_share": 8.154463690212549e-15
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.10253570778203089,
+        "variance_share": 9.344145357053226e-16
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 0.0023139392307448994,
+        "variance_share": 2.1087077845536096e-17
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 0.00016276355039229453,
+        "variance_share": 1.4832747601730495e-18
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr54",
+        "share_fraction": 0.00011942590489210275,
+        "variance_share": 1.0883359942096059e-18
+      }
+    ],
+    "step10/activity.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9977138299480893,
+        "variance_share": 15.731644532561925
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.0023107494277476636,
+        "variance_share": 0.03643518563137338
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -2.565094258201695e-05,
+        "variance_share": -0.0004044561661999237
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 9.953316645820083e-07,
+        "variance_share": 1.5694083282399724e-05
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 5.9560985138911813e-08,
+        "variance_share": 9.39139278307203e-07
+      }
+    ],
+    "step10/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417062,
+        "variance_share": 6.320917328400132e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.4131696961582938,
+        "variance_share": 4.450369169621551e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301841e-25,
+        "variance_share": 8.100973791728469e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710685e-25,
+        "variance_share": 6.288690346110715e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.006136700533491e-26,
+        "variance_share": 5.392253264970721e-41
+      }
+    ],
+    "step10/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step10/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.9798469692476827,
+        "variance_share": 6.676009163700859e-28
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.020229004554284252,
+        "variance_share": 1.3782664437961926e-29
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -7.599436899441259e-05,
+        "variance_share": -5.177738154212928e-32
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 1.1716553997551276e-08,
+        "variance_share": 7.982861029279368e-36
+      },
+      {
+        "MT": 105,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 7.953168576927709e-09,
+        "variance_share": 5.418746800920686e-36
+      }
+    ],
+    "step11/activity.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9999992271547113,
+        "variance_share": 8.697004471263097e-06
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 4.152184764595377e-07,
+        "variance_share": 3.6111597371874396e-12
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 3.5724135070017513e-07,
+        "variance_share": 3.106932025537269e-12
+      },
+      {
+        "MT": 104,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 2.6218080414914365e-10,
+        "variance_share": 2.2801893881980825e-15
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 7.253777875157195e-11,
+        "variance_share": 6.308618736965414e-16
+      }
+    ],
+    "step11/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417062,
+        "variance_share": 6.308618735800154e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.41316969615829385,
+        "variance_share": 4.441710097766466e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301842e-25,
+        "variance_share": 8.085211747842857e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710681e-25,
+        "variance_share": 6.276454457467344e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.006136700533492e-26,
+        "variance_share": 5.381761571652125e-41
+      }
+    ],
+    "step11/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step11/heat.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9999880641293806,
+        "variance_share": 7.6195399655389e-36
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 6.582771254380418e-06,
+        "variance_share": 5.01582873395804e-41
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 4.634732700824359e-06,
+        "variance_share": 3.531495255822591e-41
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 4.147653864193583e-07,
+        "variance_share": 3.1603591597825275e-42
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 3.037841545568666e-07,
+        "variance_share": 2.3147231347793472e-42
+      }
+    ],
+    "step12/activity.total": [
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.9989128015224045,
+        "variance_share": 3.1068527179239273e-12
+      },
+      {
+        "MT": 104,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.0007331059550209275,
+        "variance_share": 2.280131184034986e-15
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.00020189269415050307,
+        "variance_share": 6.2793355395436495e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.00014214661811507294,
+        "variance_share": 4.4210926735691023e-16
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 1.0050060147118989e-05,
+        "variance_share": 3.125804037728638e-17
+      }
+    ],
+    "step12/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.586830303841706,
+        "variance_share": 6.279335539481421e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.41316969615829385,
+        "variance_share": 4.421092673536074e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301839e-25,
+        "variance_share": 8.047682004359226e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710683e-25,
+        "variance_share": 6.247320560530352e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.0061367005334894e-26,
+        "variance_share": 5.356780638861087e-41
+      }
+    ],
+    "step12/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step12/heat.total": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5712732253251072,
+        "variance_share": 4.992546379490216e-41
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.40221642165671445,
+        "variance_share": 3.5151028451770246e-41
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.026485594651851834,
+        "variance_share": 2.314664049107096e-42
+      },
+      {
+        "MT": 104,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 1.9437879995081345e-05,
+        "variance_share": 1.6987408667574325e-45
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 5.3203881099927276e-06,
+        "variance_share": 4.649663806825638e-46
+      }
+    ],
+    "step2/activity.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.6739291385050435,
+        "variance_share": 11424975358.072245
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.3254959458038383,
+        "variance_share": 5518062578.820282
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 0.0006784789600157857,
+        "variance_share": 11502107.501014106
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": -0.00016688308442416958,
+        "variance_share": -2829132.9433457325
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe58",
+        "share_fraction": 4.574614057835313e-05,
+        "variance_share": 775524.4564643229
+      }
+    ],
+    "step2/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5578339590363802,
+        "variance_share": 3.299051197566889e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.4421660409636196,
+        "variance_share": 2.6149867417256064e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 1.3701748096092939e-24,
+        "variance_share": 8.103265807492237e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 2.8943543016828003e-25,
+        "variance_share": 1.711732114990652e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 9.120298103223386e-26,
+        "variance_share": 5.393778900012049e-41
+      }
+    ],
+    "step2/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step2/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.6726300908515241,
+        "variance_share": 1.853515606675454e-15
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.3271567511697661,
+        "variance_share": 9.015209880883156e-16
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 0.0001555337250794184,
+        "variance_share": 4.2859246221666154e-19
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 2.7640439756949368e-05,
+        "variance_share": 7.616665855674194e-20
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 1.4799597079614609e-05,
+        "variance_share": 4.078212457733966e-20
+      }
+    ],
+    "step3/activity.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9474157494608387,
+        "variance_share": 5045156178.929219
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.052777256965289586,
+        "variance_share": 281048213.771933
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": -0.00013209976576459878,
+        "variance_share": -703454.5814354928
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": -8.285320038355041e-05,
+        "variance_share": -441207.9238676498
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 8.438667422438413e-06,
+        "variance_share": 44937.394288064526
+      }
+    ],
+    "step3/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5480734576677071,
+        "variance_share": 4.936547400806537e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.45192654233229285,
+        "variance_share": 4.0705434037978504e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 8.996540584258425e-25,
+        "variance_share": 8.103265796972424e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 4.949440931492424e-25,
+        "variance_share": 4.458006390197799e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.988369619025564e-26,
+        "variance_share": 5.393778893009744e-41
+      }
+    ],
+    "step3/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step3/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9475047698139495,
+        "variance_share": 8.24264284452612e-16
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.05248157967296598,
+        "variance_share": 4.5655381475888784e-17
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 8.438286277580727e-06,
+        "variance_share": 7.34073138435189e-21
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 3.1227052399143825e-06,
+        "variance_share": 2.7165397812613274e-21
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr53",
+        "share_fraction": 2.156671456126088e-06,
+        "variance_share": 1.8761565231299074e-21
+      }
+    ],
+    "step4/activity.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 1.0001614364172366,
+        "variance_share": 3223388439.0474405
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": -0.0001744576204279373,
+        "variance_share": -562253.9085345686
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 8.908787084440816e-06,
+        "variance_share": 28711.84615634595
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 2.320475293867205e-06,
+        "variance_share": 7478.585919229964
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 9.928346582949699e-07,
+        "variance_share": 3199.775199189502
+      }
+    ],
+    "step4/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5866902350213967,
+        "variance_share": 6.316916751254004e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.41330976497860344,
+        "variance_share": 4.450122435998918e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.525992618249556e-25,
+        "variance_share": 8.103265744366918e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.835038951422288e-25,
+        "variance_share": 6.282609304911097e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.0095283988374565e-26,
+        "variance_share": 5.393778857993927e-41
+      }
+    ],
+    "step4/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step4/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9999898923387173,
+        "variance_share": 5.266470783185163e-16
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 8.90570890939279e-06,
+        "variance_share": 4.690212984571085e-21
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 1.0019302694100407e-06,
+        "variance_share": 5.27668982563027e-22
+      },
+      {
+        "MT": 104,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe57",
+        "share_fraction": 6.027118180803513e-07,
+        "variance_share": 3.174196264301266e-22
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": -4.039726296372889e-07,
+        "variance_share": -2.1275315555595946e-22
+      }
+    ],
+    "step5/activity.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.8240529989734142,
+        "variance_share": 12607.405777605423
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.20198642021796293,
+        "variance_share": 3090.243909586135
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": -0.06758961159282693,
+        "variance_share": -1034.071425943569
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.04908928308404636,
+        "variance_share": 751.0299846530635
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.00756014359201271,
+        "variance_share": -115.66464550242198
+      }
+    ],
+    "step5/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417064,
+        "variance_share": 6.32270452904832e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.4131696961582935,
+        "variance_share": 4.451627484238143e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301843e-25,
+        "variance_share": 8.103264292435775e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710691e-25,
+        "variance_share": 6.29046843477711e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.0061367005334934e-26,
+        "variance_share": 5.393777891544629e-41
+      }
+    ],
+    "step5/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step5/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9999819716365708,
+        "variance_share": 2.2487657389547676e-21
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": -0.00019533525943718757,
+        "variance_share": -4.392711583722755e-25
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.00019401056505239652,
+        "variance_share": 4.362921773190185e-25
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 4.745819361895699e-05,
+        "variance_share": 1.0672428390716927e-25
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -3.761478754386424e-05,
+        "variance_share": -8.458837049658965e-26
+      }
+    ],
+    "step6/activity.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.8012049844703251,
+        "variance_share": 2659.4390959035773
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.19204163455981135,
+        "variance_share": 637.4436516108643
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.03821400768745894,
+        "variance_share": 126.84372666799383
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.03151346101956176,
+        "variance_share": -104.60260720677034
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 4.994465626981959e-05,
+        "variance_share": 0.16578125959018356
+      }
+    ],
+    "step6/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417064,
+        "variance_share": 6.322700982601889e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.4131696961582936,
+        "variance_share": 4.451624987291096e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301842e-25,
+        "variance_share": 8.103259747261695e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710691e-25,
+        "variance_share": 6.290464906412116e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.006136700533492e-26,
+        "variance_share": 5.393774866139238e-41
+      }
+    ],
+    "step6/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step6/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.9730800846660763,
+        "variance_share": 4.380555858907941e-25
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.2040233624995987,
+        "variance_share": 9.184606180265334e-26
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.17734708896857146,
+        "variance_share": -7.983709068592628e-26
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.00024685428808386825,
+        "variance_share": 1.1112744110197452e-28
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -6.895877699057358e-06,
+        "variance_share": -3.1043464903800254e-30
+      }
+    ],
+    "step7/activity.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.758016468010332,
+        "variance_share": 688.5978413958363
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.1490952649587669,
+        "variance_share": 135.4412231734625
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.13451254830165335,
+        "variance_share": 122.1939816746952
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.041709278435299334,
+        "variance_share": -37.889571412759274
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 7.558028383303399e-05,
+        "variance_share": 0.06865869343989299
+      }
+    ],
+    "step7/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417064,
+        "variance_share": 6.322669064673554e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.4131696961582935,
+        "variance_share": 4.451602514830718e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301845e-25,
+        "variance_share": 8.103218840809757e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710688e-25,
+        "variance_share": 6.290433151216251e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.006136700533494e-26,
+        "variance_share": 5.393747637567132e-41
+      }
+    ],
+    "step7/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step7/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 1.0491768588687886,
+        "variance_share": 4.319625613639488e-25
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.10719206769242838,
+        "variance_share": -4.413265478257165e-26
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.05776153720692308,
+        "variance_share": 2.3781330429955568e-26
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.00026002282352926843,
+        "variance_share": 1.070554729789706e-28
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -8.099833431635186e-06,
+        "variance_share": -3.3348284096952675e-30
+      }
+    ],
+    "step8/activity.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.8036344509440128,
+        "variance_share": 110.91749651442466
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.15018535057208263,
+        "variance_share": 20.72855771554915
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.0719091342463221,
+        "variance_share": 9.924887040062192
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.025712433745157266,
+        "variance_share": -3.548825933178598
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -6.264125210634684e-05,
+        "variance_share": -0.008645735450991725
+      }
+    ],
+    "step8/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417064,
+        "variance_share": 6.32258631523935e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.41316969615829363,
+        "variance_share": 4.451544253424715e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301847e-25,
+        "variance_share": 8.103112788007145e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710691e-25,
+        "variance_share": 6.290350823677229e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.0061367005334963e-26,
+        "variance_share": 5.3936770456129e-41
+      }
+    ],
+    "step8/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step8/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 1.0193122935771461,
+        "variance_share": 3.463272889790661e-25
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.021696484502373388,
+        "variance_share": -7.371719840357834e-27
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 0.002106978598275315,
+        "variance_share": 7.158789219708114e-28
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.00028600897766578186,
+        "variance_share": 9.717602199327122e-29
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -9.051184623479792e-06,
+        "variance_share": -3.0752814936608233e-30
+      }
+    ],
+    "step9/activity.total": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.9256809049750603,
+        "variance_share": 77.99042440946948
+      },
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.074543774209581,
+        "variance_share": 6.280458586153422
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.0001413780030971037,
+        "variance_share": -0.011911372919595306
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -0.0001099508702187226,
+        "variance_share": -0.009263575586859174
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr50",
+        "share_fraction": 2.4085633654355743e-05,
+        "variance_share": 0.002029261682701357
+      }
+    ],
+    "step9/activity:Nb94": [
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.5868303038417063,
+        "variance_share": 6.3222853178343e-16
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb93",
+        "share_fraction": 0.41316969615829363,
+        "variance_share": 4.451332330138589e-16
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 7.520897149301839e-25,
+        "variance_share": 8.102727025630728e-40
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94m1",
+        "share_fraction": 5.838383694710685e-25,
+        "variance_share": 6.29005136089722e-40
+      },
+      {
+        "MT": 4,
+        "channel": "cross_section_mf33",
+        "nuclide": "Nb94",
+        "share_fraction": 5.006136700533491e-26,
+        "variance_share": 5.393420270503239e-41
+      }
+    ],
+    "step9/activity:Ni63": [
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 17,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 22,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 24,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      },
+      {
+        "MT": 28,
+        "channel": "cross_section_mf33",
+        "nuclide": "Ar37",
+        "share_fraction": null,
+        "variance_share": 0.0
+      }
+    ],
+    "step9/heat.total": [
+      {
+        "MT": 103,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": 0.9994794655345581,
+        "variance_share": 1.1417849514145794e-25
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe56",
+        "share_fraction": 0.0005981221735983199,
+        "variance_share": 6.832825690487659e-29
+      },
+      {
+        "MT": 107,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -6.442638087006587e-05,
+        "variance_share": -7.359938316711909e-30
+      },
+      {
+        "MT": 102,
+        "channel": "cross_section_mf33",
+        "nuclide": "Fe54",
+        "share_fraction": -1.3197736169214256e-05,
+        "variance_share": -1.5076824557560366e-30
+      },
+      {
+        "MT": 16,
+        "channel": "cross_section_mf33",
+        "nuclide": "Cr52",
+        "share_fraction": 1.8316752831760875e-08,
+        "variance_share": 2.0924684761681913e-33
+      }
+    ]
+  },
+  "total_ranked_entries": 1040,
+  "voi_tables": 52,
+  "wall_s": 222.22330052393954
+}

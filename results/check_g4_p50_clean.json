@@ -1,0 +1,7 @@
+{
+  "mutate": null,
+  "pass": true,
+  "problems": [],
+  "result": "results/p50_voi_result.json",
+  "schema": "actinv-p50-g4-1"
+}

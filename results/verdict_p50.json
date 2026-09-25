@@ -1,0 +1,56 @@
+{
+  "amendments": [
+    "1: seal-record filename (mechanical)",
+    "2: checker active-row bound (memory)",
+    "3: checker per-target block-diagonal collapse (memory; exact \u2014 MF=33 never couples targets)",
+    "4: checker zero-base rule (local collapse copy; production semantics)",
+    "5: checker descending-spectrum fold + share tolerance scaled to V (mechanical)",
+    "6: checker --mutate name shadow + rebuild cache keyed on spec+sensitivities digest (mechanical)"
+  ],
+  "checker": "results/check_g4_p50.json",
+  "closed_at_utc": "2026-09-25T21:18:55Z",
+  "conditions": [
+    "Variance shares are within-band accounting under the P43/P44 band qualifications (first-order normal plus conservative floor, covariance-covered subset) \u2014 not posterior probabilities over model error.",
+    "The roadmap draft's marginal band-reduction column under declared measurement improvements was narrowed to share ranking by the frozen protocol; buy-down numbers are a natural follow-on of the same table.",
+    "unranked names the coverage boundary (count + sensitivity L2 per family); it does not quantify what an uncovered channel would contribute.",
+    "The independent checker covers single-spectrum runs; multi-spectrum specs are rejected honestly rather than approximated."
+  ],
+  "demonstration": {
+    "headline": "step0 heat.total: Cr52(n,p) 92.1% of band; step12 heat.total + activity:Nb94: Nb93(n,g) ~97% split across two covariance components",
+    "result": "results/p50_voi_result.json",
+    "result_sha256": "sha256:7a1c548c704fce96b74d06a1adcbd75aed928d885e85a0594b39933d5df46e4f",
+    "spec": "examples/optimize_ra_steel/opt_v2_winner.json",
+    "spec_sha256": "sha256:d698eaac86fd014cb4ec728df69e4965c68b40c6bed76f8b36f714a33913372f"
+  },
+  "gates": {
+    "g0": {
+      "pass": true,
+      "protocol_sha256": "7bea341988afde9b7dc7852e6e542ce0651cc7837ee21d6e690bc879656bfbd4",
+      "seal": "results/g0_p50_seals.json"
+    },
+    "g1": {
+      "pass": true
+    },
+    "g2": {
+      "pass": true
+    },
+    "g3": {
+      "pass": true,
+      "total_ranked_entries": 1040,
+      "voi_tables": 52,
+      "wall_s": 222.22
+    },
+    "g4": {
+      "checker": "results/check_g4_p50.json",
+      "mutations_rejected": [
+        "results/check_g4_p50_mut1.json",
+        "results/check_g4_p50_mut2.json",
+        "results/check_g4_p50_mut3.json"
+      ],
+      "pass": true
+    }
+  },
+  "phase": "P50",
+  "schema": "actinv-verdict-1",
+  "verdict": "P50-CONDITIONAL"
+}

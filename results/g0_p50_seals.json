@@ -1,0 +1,65 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "core_run_module": {
+      "path": "crates/actinv-core/src/run.rs",
+      "sha256": "40e51cea9b0584eab5b3d02a6313f2d45ad8a51753a18203b1c5f800c399fc9d"
+    },
+    "core_spec_module": {
+      "path": "crates/actinv-core/src/spec.rs",
+      "sha256": "242b43167651fcdf71508032ba9ff699550e5f9466153ae017fe68e3429aa6ae"
+    },
+    "core_uncertainty_module": {
+      "path": "crates/actinv-core/src/uncertainty.rs",
+      "sha256": "6fbd8505dba341cdc9b7c620ed99842e12241315fb0d5c1a3557f71f85d4da20"
+    },
+    "demo_spec": {
+      "path": "examples/optimize_ra_steel/opt_v2_winner.json",
+      "sha256": "d698eaac86fd014cb4ec728df69e4965c68b40c6bed76f8b36f714a33913372f"
+    },
+    "fixtures": {
+      "path": "controls/p11_fixtures.py",
+      "sha256": "6281020bd7f489513f10a3330a9205c75ebda3e868520491a887ac47f2842c24"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p50_mechanics.py",
+      "sha256": "698c389e9c0c9263db6325a5bda550efabb07f9345feeb96696ab22b78d7ddf9"
+    },
+    "g2_controls": {
+      "path": "controls/g2_p50_controls.py",
+      "sha256": "b64a2352e3ed46586d58119e16d8b7f9aba9ff14cedbe75af3e9125a61a57cf5"
+    },
+    "g3_demonstration": {
+      "path": "controls/g3_p50_demonstration.py",
+      "sha256": "3abec26bde937054bb007ad6b397841c9daab40b83e060bfa36930bdbb65e85f"
+    },
+    "g4_checker": {
+      "path": "controls/check_g4_p50.py",
+      "sha256": "898564b25c20114836b9c7dceb1588b3b195148ba916b9b82e9a6ef7ff2d43c7"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P50_PROTOCOL.md",
+      "sha256": "7bea341988afde9b7dc7852e6e542ce0651cc7837ee21d6e690bc879656bfbd4"
+    },
+    "python_covariance_reference": {
+      "path": "controls/p11_covariance.py",
+      "sha256": "d15a10084c4689e550a4ca45b38d4d94d74bf8e90fe3022ecb698b625348b7c7"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "demonstration": "examples/optimize_ra_steel/opt_v2_winner.json (P49 winner: Fe-9Cr, Ni 0, Mo 0, Nb 0.11328 wt%; voi.top=20)",
+  "envelope_s": 7200,
+  "opening_commit": "1807cfc8119b1be2ea0029d304917ba6dea59046",
+  "protocol_sha256": "7bea341988afde9b7dc7852e6e542ce0651cc7837ee21d6e690bc879656bfbd4",
+  "schema": "actinv-p50-seal-1",
+  "sealed_at_utc": "2026-09-25T21:07:45Z",
+  "spec_flag": {
+    "uncertainty.voi.top": "1..256"
+  }
+}

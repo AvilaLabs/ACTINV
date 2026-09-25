@@ -1165,7 +1165,7 @@ problem the fusion materials program runs by hand today. A second candidate demo
 Tb-149 radionuclidic purity against the shipped feedstock example, exercises the maximize direction and a
 real published problem.
 
-## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **unopened, unhashed**
+## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **P50 closed P50-CONDITIONAL 2026-09-25; P51–P52 unopened, unhashed**
 
 Competitive landscape check (2026-09-25): OpenMC now ships `openmc.deplete` with an automated
 cell/mesh `R2SManager` plus D1S, validated against the FNG ITER SINBAD shutdown-dose benchmark —
@@ -1198,6 +1198,23 @@ P11 sensitivity paths and the qualified worker carry it. Nobody ships measuremen
 a product; the output is also independently publishable. Demonstration target (declared): rank
 uncertainty contributors to the P49 RA-steel constraint responses — the Nb-94 clearance arm and the
 heat-band edge — naming the two or three measurements that would most tighten the feasible region.
+
+**P50 closed `P50-CONDITIONAL` 2026-09-25** (`results/verdict_p50.json`, protocol
+`protocols/ACTINV-P50_PROTOCOL.md` at five append-only mechanical amendments — all in the checking
+layer; the emit path needed none). Delivered: `uncertainty.voi {top}` on the existing spec block —
+each requested response band now carries a ranked `voi` table (per-parameter `variance_share`,
+`share_fraction`, `sensitivity`), MF=33 shares are the exact row-wise decomposition
+`s_i·(Σs)_i` of the propagated variance (negative shares under anticorrelation preserved; Σshare_i ≡ V),
+decay/yield channels contribute `(s·σ)²`, and sensitivity-bearing parameters outside covariance
+coverage are summarized under `unranked` — never silently ranked at zero. Flag absent: byte-identical
+results. G3 executed the P49 winner spec on the full corpus (222 s, 52 tables): irradiation-step heat
+is carried by Cr-52(n,p) (92%), the 1-y heat band and the Nb-94 arms by Nb-93(n,γ) (~97%). G4
+re-derived every emitted share in Python — per-target block-diagonal collapse, locally re-diagnosed
+exclusions — and rejected the planted mutations (reordered ranking, zeroed share, dropped unranked
+family). Conditions: shares are within-band accounting under the P43/P44 qualifications, not posterior
+model-error probabilities; the draft's marginal band-reduction column under declared improvements was
+narrowed to share ranking by the frozen protocol (a natural follow-on); `unranked` names the coverage
+boundary, it does not quantify it.
 
 **P51 — amortized latency / persistent worker.** The extension's speed gate and the prerequisite for
 voxel-scale work. Deliverable: a bounded persistent worker that amortizes library load and
@@ -1777,3 +1794,13 @@ gate input; nothing in this draft is frozen until sealed.
   complementary layer inside incumbent pipelines. Clearance classification and inverse exposure-history
   lanes are logged in PARKING.md items 13–14. The draft opens no phase and changes no frozen protocol
   or verdict.
+- 2026-09-25 — **P50 closes `P50-CONDITIONAL`** (`results/verdict_p50.json`; protocol at five
+  append-only mechanical amendments, all in the checking layer — the emit path needed none).
+  `uncertainty.voi {top}` emits per-band ranked variance-share tables: MF=33 shares are the exact
+  row-wise decomposition s_i·(Σs)_i (anticorrelated channels can carry negative shares; shares sum to
+  the propagated variance), decay/yield contribute (s·σ)², uncovered sensitivity-bearing parameters
+  are summarized under `unranked`, and flag-absent output stays byte-identical. Demonstration on the
+  P49 RA-steel winner: irradiation heat carried by Cr-52(n,p) (92% share), the 1-y heat band and
+  Nb-94 arms by Nb-93(n,γ) (~97%). The G4 checker re-derived every share independently from the pinned
+  sidecar and rejected all planted mutations. Conditions and the P51/P52 opening order stand in the
+  extension text; P51 is next and remains unopened.

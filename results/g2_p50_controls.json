@@ -1,0 +1,32 @@
+{
+  "checks": {
+    "anticorrelation": {
+      "pass": true,
+      "shares": [
+        2.9466072273896947e-30,
+        -8.293692646078109e-31
+      ]
+    },
+    "planted_dominant": {
+      "dominant_mt": 102,
+      "pass": true
+    },
+    "shares_sum_to_total": {
+      "pass": true,
+      "sum": 9.63165443860997e-30,
+      "total": 9.63165443860997e-30
+    },
+    "top_truncation": {
+      "pass": true
+    },
+    "uncovered_unranked": {
+      "pass": true,
+      "unranked": {
+        "count": 1,
+        "sensitivity_l2": 4.785151708268438e-14
+      }
+    }
+  },
+  "pass": true,
+  "schema": "actinv-p50-g2-1"
+}

@@ -1,0 +1,31 @@
+{
+  "checks": {
+    "determinism": {
+      "pass": true
+    },
+    "emit_shape": {
+      "pass": true,
+      "steps": 4
+    },
+    "flag_absent_bytes": {
+      "pass": true
+    },
+    "reject_top_257": {
+      "exit": 2,
+      "pass": true
+    },
+    "reject_top_zero": {
+      "exit": 2,
+      "pass": true
+    },
+    "reject_unknown_key": {
+      "exit": 2,
+      "pass": true
+    },
+    "schema_roundtrip": {
+      "pass": true
+    }
+  },
+  "pass": true,
+  "schema": "actinv-p50-g1-1"
+}
