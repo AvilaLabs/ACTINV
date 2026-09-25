@@ -1165,6 +1165,77 @@ problem the fusion materials program runs by hand today. A second candidate demo
 Tb-149 radionuclidic purity against the shipped feedstock example, exercises the maximize direction and a
 real published problem.
 
+## Draft uncertainty-differentiation extension — P50–P52 (2026-09-25) — **unopened, unhashed**
+
+Competitive landscape check (2026-09-25): OpenMC now ships `openmc.deplete` with an automated
+cell/mesh `R2SManager` plus D1S, validated against the FNG ITER SINBAD shutdown-dose benchmark —
+real geometry and spatial dose maps ACTINV does not pursue. The maintainers state directly that
+uncertainties are *not* propagated through depletion: R2S produces point estimates only, and no
+shipped code couples nuclear-data covariance to the activation step, the decay photon source, or
+the dose. Shipped SDR-uncertainty work exists only in research code (R2S-UNED propagates Monte-Carlo
+*statistical* flux uncertainty; MS-CADIS is adjoint variance reduction) — a different uncertainty axis
+than data covariance, and neither is a product. FISPACT-II 5.x retains pathways UQ and MC sensitivity
+on full covariance but no decision layer. P49 already made ACTINV the only shipping code that couples
+design decisions to propagated bands. This extension deepens that moat: **uncertainty is the
+differentiator, and ACTINV is positioned as the missing layer of other pipelines rather than a
+competitor for transport geometry.**
+
+### Intent and product outcome
+
+P50–P52 extend "evaluate → decide" into "decide what to measure" and "decide inside other people's
+pipelines". The analyst who asks OpenMC-or-FISPACT for a shutdown dose gets a number; with ACTINV in
+the loop they get the band, the dominant uncertain reactions, and the measurement that would shrink it.
+Capability breadth on the three axes that matter (accuracy, speed, breadth) — provenance remains
+internal QA.
+
+**P50 — value-of-information / measurement-priority ranking.** Given a spec with declared uncertainty,
+a named response and a decision limit, rank the contributing nuclear-data uncertainties — reaction,
+decay constant, yield — by how much each buys down the response band. Deliverable is a ranked,
+fully-evidenced measurement-priority table: per-channel sensitivity times propagated variance, the
+share of total band width each channel carries, and the marginal reduction implied by a declared
+measurement improvement. This is the lane the P49 scope explicitly deferred; the P43 band machinery,
+P11 sensitivity paths and the qualified worker carry it. Nobody ships measurement-priority ranking as
+a product; the output is also independently publishable. Demonstration target (declared): rank
+uncertainty contributors to the P49 RA-steel constraint responses — the Nb-94 clearance arm and the
+heat-band edge — naming the two or three measurements that would most tighten the feasible region.
+
+**P51 — amortized latency / persistent worker.** The extension's speed gate and the prerequisite for
+voxel-scale work. Deliverable: a bounded persistent worker that amortizes library load and
+fixed-cost setup across evaluations, so sweeps, optimization and per-cell activation run at warm cost.
+Every claim is measured: cold vs warm wall time ledgered per entry point, hot-path results bit-identical
+to the qualified cold path (same worker semantics, no reduced numerics), memory ceiling enforced and
+recorded. Retires parked items 10 and 12's root cause; it does not change solver semantics, and the
+gate requires it provably not to.
+
+**P52 — OpenMC-ingest, uncertainty-bearing R2S handoff.** Execute the parked spatial-handoff item
+(3): ingest OpenMC `get_microxs_and_flux()` exports — multigroup fluxes and microscopic cross sections
+per cell or mesh element — run the identical activation chain per spatial bin *with propagated bands*,
+and emit per-bin decay photon sources with uncertainty. The photon-transport step stays external
+(OpenMC's own step or an equivalent); ACTINV supplies the activation+UQ layer OpenMC's deplete does
+not have. Result: the only shipping workflow producing shutdown-dose-relevant quantities with honest
+nuclear-data bands — and it lands *inside* the incumbent's pipeline, which is the adoption path.
+Gates must include one-cell parity against OpenMC's own activation step on identical data, a small
+executed mesh demonstration with bands ledgered per bin, and a determinism/resume contract identical in
+kind to P49's. Candidate demonstration (declared): a published SDR benchmark geometry at reduced
+mesh resolution, reporting dose-relevant bands and the dominant uncertainty-bearing nuclides.
+
+**Out of scope for this extension:** neutron or photon transport of any kind inside ACTINV
+(the transport engines stay external), spectrum unfolding (STAYSL-PNNL owns the standards lane),
+gradient/adjoint optimization methods (P50/P52 may motivate it; it enters a protocol only through a
+future phase), probabilistic clearance classification and inverse irradiation-history estimation
+(parked lanes; logged in PARKING.md with dated lines).
+
+### Phase sequence and acceptance gates
+
+| Phase | Deliverable | Entry dependency | Decisive gate |
+|---|---|---|---|
+| **P50 — measurement-priority (VoI) ranking** | `actinv` subcommand or study mode producing a ranked channel table for a named response at a named time: per-channel variance share of the propagated band, sensitivity column checkable against the P11 machinery, and marginal band reduction under declared measurement improvements. | P43 (bands), P11 (sensitivity), qualified worker path. | Fixed-seed determinism; ranks re-derived independently by a checker from raw sensitivity+covariance records; variance shares sum consistently with the propagated band (no double counting across correlated channels — correlations ledgered or excluded by declaration); a planted-dominant-channel control must rank it first; missing-covariance channels appear honestly as unranked, never zero. |
+| **P51 — persistent worker / amortized latency** | A bounded long-lived worker serving identical-path evaluations: library load amortized, per-call setup eliminated, results bit-identical to the cold path on a pinned corpus. | Qualified worker path; P48 sweep machinery as the first consumer. | Hot/cold bit-identity on a representative battery; measured cold vs warm wall time ledgered with hardware; memory ceiling enforced and demonstrated under sustained load; cancellation and crash-restart semantics verified; no path may answer faster by skipping qualification steps. |
+| **P52 — OpenMC-ingest UQ'd R2S handoff** | `actinv` intake of OpenMC microXS+flux exports → per-bin activation with bands → per-bin decay photon sources with bands, emitted in a documented interchange format for the external photon step. | P51 (per-bin band cost), P43, parked item 3. | One-cell parity vs `openmc.deplete` on identical data within declared tolerance; executed multi-bin demonstration with per-bin ledgers; determinism + resume like P49; an independent checker re-derives band and source tables from raw records; bands flagged honestly where covariance coverage is partial, never silently nominal. |
+
+Standing rules 1–7 apply unchanged. Each phase opens with its own hashed protocol naming its minimum
+gate input; nothing in this draft is frozen until sealed.
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
@@ -1698,3 +1769,11 @@ real published problem.
   blockers are unchanged. Gamma/triton/helion projectiles, probability-table shielding, internal transport, MPI
   and the AI legs remain demand-led and unopened. JADE/NEA/SINBAD routes stay external maintainer acts that
   phases may consume but cannot gate on.
+- 2026-09-25 — at the maintainer's direction, draft the uncertainty-differentiation extension P50–P52:
+  measurement-priority (value-of-information) ranking (P50), amortized latency through a persistent
+  worker (P51), and OpenMC-ingest uncertainty-bearing R2S handoff (P52, retiring parked item 3).
+  Motivation: OpenMC ships automated R2S/D1S (FNG-validated, real geometry) but propagates no
+  nuclear-data uncertainty through depletion; ACTINV's bands→decisions path is the open moat and the
+  complementary layer inside incumbent pipelines. Clearance classification and inverse exposure-history
+  lanes are logged in PARKING.md items 13–14. The draft opens no phase and changes no frozen protocol
+  or verdict.

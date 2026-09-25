@@ -195,3 +195,14 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
     not process spawn. Possible accelerations within the identical solver path: early-exit once a
     constraint is violated, coarse-step prescreen, or cheaper response sets — each is a numerics-policy
     decision needing its own protocol.
+
+## P50–P52 extension parked items (2026-09-25)
+
+13. **Probabilistic clearance classification** — a "probability this component clears free-release"
+    classifier with quantified misclassification risk. Existing clearance tools (clearance-finder,
+    F4E-radwaste) are deterministic; nobody ships band-driven classification. Deferred from the
+    P50–P52 draft as a later candidate — narrow but money-adjacent.
+
+14. **Inverse irradiation-history estimation** — measured sample inventories → inferred exposure
+    history/composition (decommissioning and assay forensics). Nobody ships it as a product; the
+    validation story is harder and the market narrower than the P50–P52 lanes. Parked pending demand.
