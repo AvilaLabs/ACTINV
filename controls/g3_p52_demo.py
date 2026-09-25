@@ -103,7 +103,16 @@ def build_spec(flux_path: Path) -> dict:
                     "bmin_atoms_per_g": 1e-08, "temperature_K": 293.6},
         "uncertainty": {
             "covariance": {"path": str(cov), "sha256": sha256_file(cov)},
-            "responses": ["activity:*"],
+            # Photon-dominant nuclides for 300 s FNS on Fe + cooling:
+            # the declared banded set; everything else lands in
+            # unbanded_photon_share (the coverage-honesty path under test).
+            "responses": ["activity.total", "heat.total",
+                          "activity:Mn56", "activity:Fe55",
+                          "activity:Fe59", "activity:Mn54",
+                          "activity:Co58", "activity:Cr51",
+                          "activity:Co57", "activity:Co60",
+                          "activity:Mn52", "activity:Ni57",
+                          "activity:Fe53", "activity:V52"],
             "confidence_level": 0.95,
             "require_complete": False},
         "flux": {"path": str(flux_path),

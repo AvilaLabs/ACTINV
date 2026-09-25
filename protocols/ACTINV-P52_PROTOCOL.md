@@ -230,4 +230,14 @@ definitions above is a new phase, not an amendment.
   collapses exceeded the 6 GB workstation envelope (cgroup OOM, twice).
   Sequential cells keep the whole run inside the envelope; the
   demonstration cost is ledgered either way.
+- **A7 (2026-09-25, memory bound).** `controls/g3_p52_demo.py`:
+  `activity:*` (~300 nuclide responses) → a declared list of the
+  photon-dominant nuclides for this case (13 nuclides + `activity.total` +
+  `heat.total`). Per-nuclide response storage scales with the response
+  count on a full MF=33 collapse, and `activity:*` put a *single* banded
+  cell over 6 GB — the OOM fired inside cell 1, so no cell-count or
+  threading change could help. The named-list form is also the honest
+  product shape: bands belong on the nuclides that carry the source; the
+  remainder is emitted through `unbanded_photon_share`, which this demo
+  now exercises against the ≤0.05 gate.
 
