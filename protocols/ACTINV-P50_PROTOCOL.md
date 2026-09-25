@@ -164,3 +164,13 @@ covariance fixtures (second-scale runs); only G3 executes a full-corpus run
 Post-G0 changes to sealed artifacts are append-only amendments: recorded in
 this file with reason and sha, then re-sealed. Any change to the frozen
 definitions above is a new phase, not an amendment.
+
+## Amendment 1 — mechanical repair (record filename)
+
+Post-seal, the G0 seal record is emitted at `results/g0_p50_seals.json`
+(following the P49 `g0_p49_seals.json` convention); the G0 paragraph above
+names `results/g0_p50_seal.json`. Filename only — no definition, ranking rule,
+gate, or artifact content changes. Sealed artifact shas unchanged; the
+protocol file itself is re-hashed under this amendment.
+
+Amended protocol sha256: recorded in the phase verdict.
