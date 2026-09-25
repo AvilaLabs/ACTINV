@@ -214,3 +214,21 @@ formula, or tolerance changed. Sealed `check_g4_p50.py` sha superseded by the
 amended module; all other sealed artifacts unchanged.
 
 Amended checker sha256: recorded in the phase verdict.
+
+## Amendment 5 — mechanical repair (checker spectrum order + share tolerance)
+
+Post-seal, the first full G4 checker's verdict exposed two mechanical defects
+in the checking layer — not in the emitted product: (a) `check_g4_p50.py`
+passed `spectrum.flux_per_group` in spec order into the collapse; the library
+npz indexes groups ascending in energy while a `descending` spectrum lists
+flux high-energy-first, so threshold-reaction shares collapsed to zero — the
+checker now folds the flux into library order; (b) the share comparison used
+an absolute 1e-6 floor, making shares below ~1e-6 unverifiable — tolerances
+now scale to the propagated variance (variance terms) or to the compared
+magnitude (unranked l2), and `g2_p50_controls.py` share tolerances tighten the
+same way so the synthetic controls compare real values. No definition,
+ranking rule, gate, share formula, or tolerance semantic of the emitted
+artifact changed. Sealed `check_g4_p50.py` and `g2_p50_controls.py` shas
+superseded by the amended modules; all other sealed artifacts unchanged.
+
+Amended shas: recorded in the phase verdict.

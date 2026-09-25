@@ -201,6 +201,10 @@ def rebuild(spec: dict, result: dict):
     activation_path, covariance_path = spec_paths(spec)
     activation = load_activation(activation_path)
     flux = np.asarray(spec["spectrum"]["flux_per_group"], dtype=np.float64)
+    # The library npz orders groups by ascending energy; a `descending` spec
+    # lists flux high-energy-first — fold it into library order.
+    if spec["spectrum"].get("descending"):
+        flux = flux[::-1]
     rows = activation["rows"]
     selected = sorted({
         record["parameter"]["library_row"]
@@ -299,6 +303,10 @@ def check_voi_table(voi: dict, step_response: dict, xs_shares: dict,
     emitted = voi["top"]
 
     # Every emitted MF=33 entry's share matches the independent computation.
+    # Tolerance is relative to the share and the total propagated variance —
+    # shares are variance terms, so a 1e-6·V floor keeps small-but-real
+    # shares checkable without letting misalignment hide as "small".
+    share_tol = RTOL * max(total, 1e-300) if total > 0 else RTOL
     for rank, entry in enumerate(emitted):
         share = entry["variance_share"]
         if entry["channel"] == "cross_section_mf33":
@@ -307,7 +315,7 @@ def check_voi_table(voi: dict, step_response: dict, xs_shares: dict,
             if expected is None:
                 problems.append(f"{context}: ranked entry {rank} names a "
                                 f"parameter outside the covered matrix")
-            elif abs(expected - share) > RTOL * max(1.0, abs(expected)):
+            elif abs(expected - share) > share_tol + RTOL * abs(expected):
                 problems.append(f"{context}: rank {rank} share {share:.6e} "
                                 f"!= independent {expected:.6e}")
         else:
@@ -316,7 +324,7 @@ def check_voi_table(voi: dict, step_response: dict, xs_shares: dict,
             expected = diag_shares.get(f"{name}:{p.get('spectrum', 0)}")
             expected_share = (entry["sensitivity"]
                               * entry["standard_uncertainty"]) ** 2
-            if expected is None and abs(expected_share - share) > RTOL * max(1.0, abs(share)):
+            if abs(expected_share - share) > share_tol + RTOL * abs(share):
                 problems.append(f"{context}: rank {rank} diagonal share "
                                 f"{share:.6e} != (s·σ)² = {expected_share:.6e}")
 
@@ -366,7 +374,7 @@ def check_voi_table(voi: dict, step_response: dict, xs_shares: dict,
     for channel, (count, l2) in expected_unranked.items():
         got = emitted_unranked.get(channel)
         if not got or got["count"] != count \
-                or abs(got["sensitivity_l2"] - l2 ** 0.5) > RTOL * max(1.0, l2 ** 0.5):
+                or abs(got["sensitivity_l2"] - l2 ** 0.5) > RTOL * max(l2 ** 0.5, 1e-300):
             problems.append(f"{context}: unranked[{channel}] mismatch "
                             f"(expected count={count}, emitted={got})")
     for channel in emitted_unranked:

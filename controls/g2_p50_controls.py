@@ -143,9 +143,10 @@ def main() -> int:
         emitted = voi_entries(result, RESPONSE)
         dominant_mt = covered[int(np.argmax(np.abs(shares)))]["parameter"]["MT"]
         emitted_by_mt = {mt_of(e): e for e in emitted}
+        total_v = float(np.sum(shares))
         exact = all(
             abs(emitted_by_mt[r["parameter"]["MT"]]["variance_share"]
-                - shares[i]) <= 1e-6 * max(1.0, abs(shares[i]))
+                - shares[i]) <= 1e-9 * max(total_v, abs(shares[i]), 1e-300)
             for i, r in enumerate(covered))
         total = result["steps"][0]["uncertainty"]["responses"][RESPONSE] \
             ["voi"]["total_propagated_variance"]
@@ -154,7 +155,7 @@ def main() -> int:
             "dominant_mt": int(dominant_mt)}
         checks["shares_sum_to_total"] = {
             "pass": abs(float(np.sum(shares)) - total)
-                    <= 1e-6 * max(1.0, abs(total)),
+                    <= 1e-9 * max(abs(total), 1e-300),
             "sum": float(np.sum(shares)), "total": total}
 
         # --- uncovered parameter lands in unranked, never in top ------------
@@ -198,7 +199,7 @@ def main() -> int:
         checks["anticorrelation"] = {
             "pass": (expected_negative and has_negative
                      and abs(float(np.sum(shares_a)) - total_a)
-                         <= 1e-6 * max(1.0, abs(total_a))),
+                         <= 1e-9 * max(abs(total_a), 1e-300)),
             "shares": [float(x) for x in shares_a]}
 
         # --- top truncation --------------------------------------------------
