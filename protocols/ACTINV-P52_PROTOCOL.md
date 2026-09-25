@@ -220,4 +220,8 @@ definitions above is a new phase, not an amendment.
   patched variant — the covariance index pins `activation_library_sha256`
   and rejects the mismatch (correctly). G2's nominal-only parity arm keeps
   the patched library, unchanged.
+- **A5 (2026-09-25, mechanical).** `controls/g3_p52_demo.py`: flux-cell
+  `index` components are 1-based (flux.rs:319); the writer used a 0
+  component. Index is optional — bounds carry the geometry — so the field
+  is dropped rather than re-based.
 

@@ -71,7 +71,6 @@ def build_flux(work: Path) -> Path:
             # cells spaced 1 cm apart along x so bounds are real
             fh.write(json.dumps({
                 "record": "cell", "ordinal": i, "id": f"cell-{i}",
-                "index": [i, 0, 0],
                 "bounds_cm": [[i, i + 1], [0, 1], [0, 1]],
                 "volume_cm3": 1.0,
                 "flux_per_group": list(reversed(shape)),
