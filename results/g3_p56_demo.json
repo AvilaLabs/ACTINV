@@ -1,0 +1,61 @@
+{
+ "pass": true,
+ "n": 9,
+ "checks": [
+  {
+   "name": "banded optimize ran",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "solved evals ran on real data",
+   "pass": true,
+   "detail": "[\"executed\", \"executed\", \"executed\"]"
+  },
+  {
+   "name": "banded edge recorded on real evals",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "nominal edge beside the banded one",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "certification present",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "covariance names the real file",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "confidence level from base spec",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "overcertify count is honest",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "honest infeasible verdict",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "certification": {
+  "confidence_level": 0.95,
+  "covariance": {
+   "path": "actinv-data/v1.1.0/uncertainty/tendl-2025-neutron-709g.cov.npz",
+   "sha256": "c19dec86b44ad5d90b66c9ab94d53e18641a1d354a89402a4da7986b6c530cde"
+  },
+  "nominal_would_overcertify": 0,
+  "statement": "no candidate is feasible under the declared band edges \u2014 the design box contains no certifiable design",
+  "winner": null
+ }
+}

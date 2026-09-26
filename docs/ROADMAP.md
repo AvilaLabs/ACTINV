@@ -2068,3 +2068,12 @@ extends onto the band — which response variance rides on isomer channels, and 
   `prepared_cache {hit, fingerprint_ms}` for observability. Objectives bit-identical to
   fresh-prepare re-runs (G2). Winner re-verification stays a fresh `run()` by design.
   P56's many-candidate economics: preparation amortizes to a fingerprint check.
+- 2026-09-26 — **P56 closes `P56-CLOSED`** (`results/verdict_p56.json`; protocol sealed at
+  `90035e8a…`, zero amendments). `actinv optimize` now emits a `certification` block:
+  the winner's satisfaction of every response constraint at its declared band edge under
+  the named covariance set + confidence level, per-constraint `nominal_edge`/
+  `nominal_violation` ledgered for free, and `nominal_would_overcertify` — the count of
+  candidates a nominal-only search would pass while the band fails. Winner
+  re-verification now checks every response-constraint edge bit-identically. Real-data
+  seed box returned the honest verdict "no certifiable design" — the band flipped
+  heat feasibility on one eval; `nb94_100y` failed all three nominally.

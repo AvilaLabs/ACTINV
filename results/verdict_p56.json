@@ -1,0 +1,32 @@
+{
+  "phase": "P56",
+  "status": "P56-CLOSED",
+  "closed_at_utc": "2026-09-26T22:05:00Z",
+  "final_commit": "3f401acc66d77598f41ea36cac80731106750928",
+  "amendments": 0,
+  "protocol_sha256": "90035e8a0ab3fd2c07fccc82b2b393cc0bd7a5c1e6fdce824a2eea2461f53fe2",
+  "gates": {
+    "g1_mechanics": {
+      "n": 13,
+      "pass": true
+    },
+    "g2_exactness": {
+      "n": 9,
+      "pass": true
+    },
+    "g3_demo_real": {
+      "pass": true,
+      "note": "RA-steel banded search, release build"
+    },
+    "g4_determinism": {
+      "ledger_equal": true,
+      "result_equal": true
+    },
+    "g5_checker": {
+      "checks": 4,
+      "mutations_caught": 3
+    }
+  },
+  "delivered": "actinv optimize now emits a certification block: winner satisfies each response constraint at its declared band edge under the named covariance + confidence; per-constraint nominal_edge/nominal_violation ledgered for free (same solve); nominal_would_overcertify counts candidates a nominal-only search would pass while the band fails; winner re-verification now checks every response-constraint edge bit-identically, not just the objective.",
+  "real_data_finding": "Seed-56 RA-steel 3-eval box: no certifiable design \u2014 honest infeasible verdict. Banded edge flipped eval-2 heat feasibility vs nominal, but nb94_100y fails all three candidates nominally, so nominal_would_overcertify=0. P62 cache confirmed on real data: cold 764 ms fingerprint, warm ~0.1 ms."
+}

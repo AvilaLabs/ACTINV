@@ -1,0 +1,71 @@
+{
+ "pass": true,
+ "n": 13,
+ "checks": [
+  {
+   "name": "certification block present",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "winner certified with eval_id",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "confidence level carried from base spec",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "covariance identity carried",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "statement names the edge rule",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "winner constraint carries edge+nominal+margin",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "banded edge above nominal on the fixture",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "positive margin on a feasible winner",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "banded constraint rows carry nominal_edge",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "no overcertify when band passes too",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "no certifiable design when the band fails",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "statement is honest about infeasibility",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "overcertify counts the nominal-only winners",
+   "pass": true,
+   "detail": "n=3"
+  }
+ ]
+}

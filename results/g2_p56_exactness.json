@@ -1,0 +1,51 @@
+{
+ "pass": true,
+ "n": 9,
+ "checks": [
+  {
+   "name": "margin_fraction exact for heat_band",
+   "pass": true,
+   "detail": "0.16176869585463963 vs 0.16176869585463963"
+  },
+  {
+   "name": "nominal_would_overcertify recomputed exactly",
+   "pass": true,
+   "detail": "0 vs 0"
+  },
+  {
+   "name": "eval 0 violation exact for heat_band",
+   "pass": true,
+   "detail": "-0.16176869585463963 vs -0.16176869585463963"
+  },
+  {
+   "name": "eval 0 nominal_violation exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "eval 1 violation exact for heat_band",
+   "pass": true,
+   "detail": "-0.16176869585463963 vs -0.16176869585463963"
+  },
+  {
+   "name": "eval 1 nominal_violation exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "eval 2 violation exact for heat_band",
+   "pass": true,
+   "detail": "-0.16176869585463963 vs -0.16176869585463963"
+  },
+  {
+   "name": "eval 2 nominal_violation exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "re-run constraint edges bit-identical",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
