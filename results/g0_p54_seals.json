@@ -14,7 +14,7 @@
     },
     "core_clearance_module": {
       "path": "crates/actinv-core/src/clearance.rs",
-      "sha256": "b1b1350bfca5d98ab54f1bf2eea9f5b5a2b4dacd8fdcc454010eaf08139cd9ef"
+      "sha256": "12fce28b6227ed164fbcbcc18d51d2f752862b712dada0aaa3acf4132aa820d9"
     },
     "core_lib_module": {
       "path": "crates/actinv-core/src/lib.rs",
@@ -34,7 +34,7 @@
     },
     "g4_determinism": {
       "path": "controls/g4_p54_determinism.py",
-      "sha256": "782b9865ef17d91f906bb8aa7052615da1ac723fa34cc80c005a7974bcfeedbb"
+      "sha256": "a5696ff3ae4e72640d836936d2542d42873875be18a8cd964dd77a8f48ea374f"
     },
     "g5_checker": {
       "path": "controls/check_g5_p54.py",
@@ -58,15 +58,15 @@
     },
     "protocol": {
       "path": "protocols/ACTINV-P54_PROTOCOL.md",
-      "sha256": "1246d46901a37413255aa524e4130aa1356186d88e5faea5acba4c2900b9be34"
+      "sha256": "ddcbb5df873859006d7b421f6c3dccba481204055f86d5027dc265abe27bb009"
     },
     "workspace_manifest": {
       "path": "Cargo.toml",
       "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
     }
   },
-  "opening_commit": "73ddc5197cf5165f6459f7a0b7d21ab4b67164a4",
-  "protocol_sha256": "1246d46901a37413255aa524e4130aa1356186d88e5faea5acba4c2900b9be34",
+  "opening_commit": "afb2f8b82b16e0ccb1644e0f3a6ef859b0d45df8",
+  "protocol_sha256": "ddcbb5df873859006d7b421f6c3dccba481204055f86d5027dc265abe27bb009",
   "schema": "actinv-p54-seal-1",
-  "sealed_at_utc": "2026-09-26T07:28:48Z"
+  "sealed_at_utc": "2026-09-26T07:38:33Z"
 }

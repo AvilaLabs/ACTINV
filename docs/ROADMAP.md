@@ -1305,9 +1305,10 @@ code calls wins differently than a rival every transport code routes around.
 **Deprecation caveat.** "Can't do" for an open-source incumbent means "can't do inside ~2–3 years of
 re-architecture plus a data program." The moat widens only while we build on it.
 
-**Candidate next lanes (P53 closed `P53-CLOSED` 2026-09-26; P54, P55, P57 approved for the next
-pass 2026-09-25; P56 deferred — bands inside the optimizer loop are the heaviest compute on the
-board; each opens with its own hashed protocol, one lane at a time, in the order listed):**
+**Candidate next lanes (P53 closed `P53-CLOSED` 2026-09-26; P54 closed `P54-CLOSED` 2026-09-26;
+P55, P57 approved for the next pass 2026-09-25; P56 deferred — bands inside the optimizer loop are
+the heaviest compute on the board; each opens with its own hashed protocol, one lane at a time, in
+the order listed):**
 
 | Lane | Structural claim | Builds on |
 |---|---|---|
@@ -1333,6 +1334,23 @@ the system band 2.82×; the conservative sum overstates it 1.41×); joint export
 188.6 s mesh; byte-identical reruns; G5's independent re-derivation reproduced every number and
 rejected all three planted mutations (checker wall 1615 s — the collapse is O(params²·spectra²)
 over ~4k covered rows × 8 spectra, and mutation legs reuse the J-independent map).
+
+**P54 closed `P54-CLOSED` 2026-09-26** (`results/verdict_p54.json`, protocol
+`protocols/ACTINV-P54_PROTOCOL.md`, zero amendments). Delivered: `actinv clearance INPUT STEP
+[--limits PATH] [--confidence T] OUT.ndjson` — certified probabilistic clearance, emitting
+`actinv-clearance-1`: per-cell sum-of-ratios S against the bundled 277-nuclide IAEA 2004 table
+(`data/clearance_iaea_2004.json`, ALARA transcription spot-verified against RS-G-1.7), σ_S under
+both declared combination rules, `P(S<1)` as an honest interval, five-state classification
+(deterministic/certified/indeterminate), coverage ledgers (unbanded + unregulated shares — nothing
+silent), and dominant-nuclide VoI pointers. Accepts mesh NDJSON or a single run result. G2 verified
+the Φ arithmetic exactly on synthesized boundary docs — catching a real `1/√2` multiply-vs-divide
+bug pre-seal — and re-derived the solver fixture to machine precision. G3 executed the corpus mesh
+at all four cooling steps: certified non-clearance everywhere (S 2.2e4 → 60, dominant shifting
+Mn-56 → Mn-54), which is itself the decision content: a *certified* negative at quantified
+confidence. G5 independently re-derived every emitted value and rejected all four planted
+mutations; the limits-table control (row count, canonical spot values, isomer mapping) rides in
+the same checker. Zero added solver compute — arithmetic over emitted bands. The claim: the only
+activation tool that answers "does this clear, at what confidence, and which nuclide decides it."
 
 ## Standing rules (from P0–P3b, binding on every phase)
 
@@ -1910,6 +1928,16 @@ over ~4k covered rows × 8 spectra, and mutation legs reuse the J-independent ma
   fractions, and footer aggregates from the raw ndjson and rejected all three planted mutations.
   The capability claim: uncertainty now propagates through the R2S handoff into the photon
   transport source — the lane no incumbent offers.
+- 2026-09-26 — **P54 closes `P54-CLOSED`** (`results/verdict_p54.json`; protocol sealed at
+  `1246d469…`, zero amendments). `actinv clearance` emits `actinv-clearance-1`: certified
+  probabilistic clearance — sum-of-ratios S per cell, σ_S under independent/conservative rules,
+  `P(S<1)` interval, five-state classification, coverage ledgers, dominant-nuclide pointers —
+  against a bundled 277-nuclide IAEA 2004 table (Bq/g). Executed evidence: exact Φ arithmetic on
+  boundary docs (caught a 1/√2 sign-class bug pre-seal); solver fixture re-derived to machine
+  precision; corpus mesh certified non-clearing at all cooling steps (S 2.2e4→60, Mn-54 dominant);
+  byte-identical determinism; independent checker reproduced everything and rejected 4 mutations;
+  table control verified. Zero solver compute added. Nobody else emits a confidence-qualified
+  clearance decision.
 - 2026-09-26 — **P53 closes `P53-CLOSED`** (`results/verdict_p53.json`; protocol sealed at
   `7c51e4a6…`, 2 amendments — both control-layer repairs inside the G5 checker: covariance-build
   reuse + zero-σ guard, then the LB=8/LB=9 short-range kind codes and two-phase exclusion ordering

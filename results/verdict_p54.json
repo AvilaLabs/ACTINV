@@ -1,0 +1,50 @@
+{
+ "phase": "P54",
+ "status": "P54-CLOSED",
+ "closed_at_utc": "2026-09-26T07:37:04Z",
+ "final_commit": "afb2f8b82b16e0ccb1644e0f3a6ef859b0d45df8",
+ "amendments": 1,
+ "protocol_sha256": "ddcbb5df873859006d7b421f6c3dccba481204055f86d5027dc265abe27bb009",
+ "gates": {
+  "g0": {
+   "pass": true,
+   "seal": "results/g0_p54_seals.json",
+   "opening_commit": "afb2f8b82b16e0ccb1644e0f3a6ef859b0d45df8"
+  },
+  "g1": {
+   "pass": true,
+   "result": "results/g1_p54_mechanics.json",
+   "checks": 27,
+   "note": "both input shapes (mesh ndjson, run json); 7 rejection paths; ledger fields"
+  },
+  "g2": {
+   "pass": true,
+   "result": "results/g2_p54_exactness.json",
+   "checks": 23,
+   "note": "closed-form Phi arithmetic on synthesized boundary docs (S=1, sigma=0, unlisted nuclide, equal-sigma sqrt2 spread); solver fixture re-derived exactly; caught a real FRAC_1_SQRT_2 mul/div bug pre-seal"
+  },
+  "g3": {
+   "pass": true,
+   "result": "results/g3_p54_demo.json",
+   "note": "corpus mesh at all 4 cooling steps: fails_certified everywhere, S 2.2e4 -> 60, dominant Mn56->Mn54, banded_share=1.0; artifact results/p54_clearance.ndjson"
+  },
+  "g4": {
+   "pass": true,
+   "result": "results/g4_p54_determinism.json",
+   "note": "byte-identical modulo declared wall_time_s"
+  },
+  "g5": {
+   "pass": true,
+   "result": "results/check_g5_p54.json",
+   "note": "independent re-derivation of all 8 cells exact; 4 mutations rejected; limits table control: 277 rows + canonical spot values + isomer mapping"
+  }
+ },
+ "deliverable": "actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson emits actinv-clearance-1: per-cell sum-of-ratios S, sigma_S under independent and fully-correlated rules, P(S<1) interval, classification {deterministic_clear, deterministic_fail, clears_certified, fails_certified, indeterminate}, coverage ledgers (banded/unbanded/unregulated shares), dominant-nuclide VoI pointers. Bundled data/clearance_iaea_2004.json: 277-nuclide IAEA 2004 table (ALARA transcription, Bq/g).",
+ "conditions": [
+  "probability model is linearized-Gaussian on the MF33-propagated channel only \u2014 same coverage class as the emitted bands; decay/yield channels remain not_evaluated",
+  "certification interval [P_lo, P_hi] brackets the unknown cross-nuclide correlation (P53 machinery could tighten it; not needed here since bands dominate at the single-nuclide scale on the corpus demo)",
+  "limits table is the IAEA 2004 basis; national transpositions differ \u2014 declared in the file's notes and echoed in output provenance",
+  "nuclides absent from the table are excluded from S and reported via unregulated_activity_share \u2014 never silently cleared"
+ ],
+ "summary": "Certified probabilistic clearance: P(S<1) as an honest interval with explicit confidence threshold and coverage ledgers \u2014 the decision-layer output no incumbent emits (FISPACT gives point S, OpenMC gives neither). Zero added solve compute; arithmetic over emitted bands."
+}
