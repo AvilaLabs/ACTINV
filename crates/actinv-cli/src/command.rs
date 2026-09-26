@@ -42,6 +42,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
                     actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
                     actinv export-r2s-joint MESH_RESULT.ndjson SPEC.json STEP OUT.ndjson\n\
+                    actinv export-source {openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT\n\
                     actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\
                     actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
@@ -986,6 +987,25 @@ pub fn main_from(a: Vec<String>) {
             eprintln!(
                 "step {} joint r2s source: {} cells, sigma_correlated {} -> {}",
                 step, summary["cells"], summary["sigma_total_correlated"], a[5]
+            );
+        }
+        "export-source" => {
+            if a.len() != 5 {
+                die(USAGE, 2);
+            }
+            let bytes = std::fs::read(&a[3])
+                .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[3]), 2));
+            let (doc, summary) = actinv_core::source_adapter::export_source(&a[2], &bytes)
+                .unwrap_or_else(|e| die(e, 1));
+            std::fs::write(&a[4], doc)
+                .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[4]), 1));
+            eprintln!(
+                "step {} {} source: {} cells, {} photons/s -> {}",
+                summary["step"],
+                summary["format"],
+                summary["cells"],
+                summary["total_photons_s"],
+                a[4]
             );
         }
         "clearance" => {
