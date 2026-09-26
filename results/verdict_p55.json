@@ -1,0 +1,52 @@
+{
+  "phase": "P55",
+  "status": "P55-CLOSED",
+  "closed_at_utc": "2026-09-26T10:55:00Z",
+  "final_commit": "c860de029a353b7fd3acddc18d0c5163060a5019",
+  "amendments": 1,
+  "protocol_sha256": "45cff12875a3165fb0061945ee4be89bfb30dd5c5c772d159c6144e74761fd9c",
+  "gates": {
+    "g0": {
+      "pass": true,
+      "seal": "results/g0_p55_seals.json",
+      "opening_commit": "6c6ef9130247c822f86b973ca4cd91589caded5c"
+    },
+    "g1": {
+      "pass": true,
+      "result": "results/g1_p55_mechanics.json",
+      "checks": 25,
+      "note": "emission on synthetic banded spec; all record kinds; 6 rejection paths (missing sigma, undeclared nuclide, unbanded spec, never-produced nuclide, underdetermined, feed schedule); causal-zero semantics verified"
+    },
+    "g2": {
+      "pass": true,
+      "result": "results/g2_p55_exactness.json",
+      "checks": 18,
+      "note": "independent re-derivation of every emitted field (f0 by active-set enumeration, C_model via the ported sparse collapse, GLS solve, posterior cov/corr, chi2, pulls, Kalman gains, identifiability) at machine precision; degenerate dead-segment leg flagged with named reasons; caught a real pre-seal bug (whitening solved per-measurement rows of length k against the m-by-m factor)"
+    },
+    "g3": {
+      "pass": true,
+      "result": "results/g3_p55_demo.json",
+      "note": "FNS-iron corpus, two 300 s segments separated by 24 h cooling: recovered planted multipliers (1.4, 0.8) -> (1.392+-0.011, 0.813+-0.007) — sub-1% posterior sigma on both segments, posterior correlation -0.31, chi2 4.04 on 2 dof, both segments resolvable; 2 forward runs, 33 s wall"
+    },
+    "g4": {
+      "pass": true,
+      "result": "results/g4_p55_determinism.json",
+      "note": "byte-identical reruns"
+    },
+    "g5": {
+      "pass": true,
+      "result": "results/check_g5_p55.json",
+      "note": "independent re-derivation on the corpus doc: design columns, C_model via the ported collapse, two-pass solve, posterior, pulls — all reproduce; mutations in sensitivity maps, estimates, and posterior blocks all detected; SHARED_COV reuses the J-independent collapse across legs"
+    }
+  },
+  "deliverable": "actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson emits actinv-reverse-qualified-1: two-pass NNLS->GLS segment estimates, posterior covariance + correlation, identifiability flags with named reasons, chi-square + per-measurement pulls, Kalman-gain dominant contributors, per-(measurement,segment) sensitivity maps, covariance/ledger fingerprints",
+  "conditions": [
+    "linearized two-pass: C_model is evaluated at the first-pass NNLS point f0 — the documented trade; iterant refinement is not claimed",
+    "coverage is cross_section_mf33 only — same scope as the forward bands; decay/yield channels and transport/model discrepancy are not inferred",
+    "trace-regime only (feed/removal and coupled-mode problems are rejected, not approximated)",
+    "single-spectrum sensitivity records only; multi-spectrum params are rejected",
+    "m >= k required (underdetermined problems refuse rather than regularize silently); weak ridge keeps degenerate directions finite and labelled",
+    "posterior is a Gaussian-mean-field marginal on multipliers — a point-estimate lane with honest bands, not a full posterior sample"
+  ],
+  "summary": "Qualified inverse: irradiation-history estimation that propagates nuclear-data covariance through the inversion rather than treating the response matrix as truth. C_model[i,j] = G_i^T Sigma G_j folds the P53 sparse collapse into cross-response covariances no unfolding code emits; the posterior carries genuine segment-segment correlations (-0.31 on the corpus), resolvable/degenerate flags, and Kalman-gain pointers to which measurement drives each estimate. Medium compute as approved: k+1 forward solves + one collapse + dense algebra."
+}
