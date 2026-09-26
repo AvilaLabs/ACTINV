@@ -1,0 +1,36 @@
+{
+  "checks": {
+    "b_exclusions": true,
+    "b_sigma_exact": true,
+    "cell_sigma_exact": true,
+    "no_exclusions": true,
+    "rho01_exact": true,
+    "rho_partial": true,
+    "sigma_corr_exact": true
+  },
+  "detail": {
+    "a": {
+      "emitted_sigma_corr": 2.099949847554637e-26,
+      "python_sigma_corr": 2.099949847554637e-26,
+      "rho01_emitted": 0.9157970808855607
+    },
+    "b": {
+      "emitted_sigma_corr": 0.0,
+      "excluded": [
+        [
+          102,
+          103,
+          "non_positive_semidefinite"
+        ],
+        [
+          103,
+          103,
+          "non_positive_semidefinite"
+        ]
+      ],
+      "python_sigma_corr": 0.0
+    }
+  },
+  "pass": true,
+  "problems": []
+}

@@ -1305,7 +1305,9 @@ code calls wins differently than a rival every transport code routes around.
 **Deprecation caveat.** "Can't do" for an open-source incumbent means "can't do inside ~2–3 years of
 re-architecture plus a data program." The moat widens only while we build on it.
 
-**Candidate next lanes (all unopened, unhashed; ranked by moat depth × reach):**
+**Candidate next lanes (P53, P54, P55, P57 approved for the next pass 2026-09-25; P56 deferred —
+bands inside the optimizer loop are the heaviest compute on the board; each opens with its own
+hashed protocol, one lane at a time, in the order listed):**
 
 | Lane | Structural claim | Builds on |
 |---|---|---|

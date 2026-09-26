@@ -1334,6 +1334,371 @@ impl CovarianceLibrary {
             excluded_blocks,
         })
     }
+
+    /// Sparse variant of `collapse_weighted_multi` for joint uncertainty
+    /// across many spectra: the assembled (spectrum, row) covariance is
+    /// returned as a map of nonzero entries (both directions stored, matching
+    /// the dense path's symmetric fill) instead of a dense `size²` matrix.
+    /// Exclusion rules are identical: every (target, MT, MT1) block is
+    /// diagnosed on the assembled values and excluded blocks are removed
+    /// from the map, so `JᵀΣJ` over the map equals the dense quadratic form.
+    /// Intended for quadratic-form consumers (correlated dose bands); the
+    /// assembled map stays sparse because MF=33 only couples parameters
+    /// inside declared component blocks.
+    pub fn collapse_sparse_weighted_multi(
+        &self,
+        library: &Library,
+        phis: &[&[f64]],
+        selected_rows: &[usize],
+        row_scale: &dyn Fn(usize, usize) -> f64,
+    ) -> Result<SparseJointCollapse, String> {
+        self.validate()?;
+        library.validate()?;
+        if phis.is_empty() {
+            return Err("covariance collapse requires at least one spectrum".into());
+        }
+        for phi in phis {
+            if phi.len() != library.ngroups
+                || phi.iter().any(|value| !value.is_finite() || *value < 0.0)
+            {
+                return Err(
+                    "covariance collapse flux must match the library and be finite/nonnegative"
+                        .into(),
+                );
+            }
+        }
+        let mut selected = BTreeSet::new();
+        for &row in selected_rows {
+            if row >= library.rows.len() {
+                return Err(format!("selected activation row {row} is out of range"));
+            }
+            if !selected.insert(row) {
+                return Err(format!("duplicate selected activation row {row}"));
+            }
+        }
+        let self_covered: BTreeSet<(usize, i32)> = self
+            .components
+            .iter()
+            .filter(|component| component.mt == component.mt1)
+            .map(|component| (component.target, component.mt))
+            .collect();
+        let mut covered_rows = Vec::new();
+        let mut uncovered_rows = Vec::new();
+        for row in selected {
+            let descriptor = library.rows[row];
+            if descriptor.lmf != 10 && self_covered.contains(&(descriptor.target, descriptor.mt)) {
+                covered_rows.push(row);
+            } else {
+                uncovered_rows.push(row);
+            }
+        }
+        let totals: Vec<f64> = phis.iter().map(|phi| phi.iter().sum()).collect();
+        let spans: Vec<(usize, usize)> = phis
+            .iter()
+            .map(|phi| {
+                let first = phi
+                    .iter()
+                    .position(|flux| *flux != 0.0)
+                    .unwrap_or(phi.len());
+                let last = phi
+                    .iter()
+                    .rposition(|flux| *flux != 0.0)
+                    .map(|group| group + 1)
+                    .unwrap_or(first);
+                (first, last)
+            })
+            .collect();
+        // Joint parameter list: every covered row under every spectrum,
+        // spectrum-major — identical indexing to the dense collapse.
+        let n_covered = covered_rows.len();
+        let size = n_covered * phis.len();
+        let mut row_indices = Vec::with_capacity(size);
+        let mut param_spectrum = Vec::with_capacity(size);
+        let mut one_group_barns = Vec::with_capacity(size);
+        for (spectrum, phi) in phis.iter().enumerate() {
+            let (first, last) = spans[spectrum];
+            for &row in &covered_rows {
+                row_indices.push(row);
+                param_spectrum.push(spectrum);
+                one_group_barns.push(if totals[spectrum] == 0.0 {
+                    0.0
+                } else {
+                    library.collapse_row_scaled(row, phi, totals[spectrum], first, last, &|group| {
+                        row_scale(row, group)
+                    })
+                });
+            }
+        }
+        let mut entries: HashMap<(usize, usize), f64> = HashMap::new();
+        if totals.iter().all(|total| *total == 0.0) {
+            return Ok(SparseJointCollapse {
+                row_indices,
+                param_spectrum,
+                one_group_barns,
+                entries,
+                uncovered_rows,
+                absent_cross_parameter_pairs: n_covered * n_covered.saturating_sub(1) / 2,
+                maximum_asymmetry_barn2: 0.0,
+                excluded_blocks: Vec::new(),
+            });
+        }
+        let base_rows = Self::base_rows(library);
+        let mut by_key: BTreeMap<(usize, i32), Vec<usize>> = BTreeMap::new();
+        for (parameter, &row_index) in row_indices.iter().enumerate() {
+            let row = library.rows[row_index];
+            by_key
+                .entry((row.target, row.mt))
+                .or_default()
+                .push(parameter);
+        }
+        let represented_pairs: BTreeSet<(usize, i32, i32)> = self
+            .components
+            .iter()
+            .map(|component| {
+                (
+                    component.target,
+                    component.mt.min(component.mt1),
+                    component.mt.max(component.mt1),
+                )
+            })
+            .collect();
+        let mut vector_cache: HashMap<(usize, usize, bool, usize), Vec<f64>> = HashMap::new();
+        for component in &self.components {
+            let Some(left_parameters) = by_key.get(&(component.target, component.mt)) else {
+                continue;
+            };
+            let Some(right_parameters) = by_key.get(&(component.target, component.mt1)) else {
+                continue;
+            };
+            for &left_parameter in left_parameters {
+                let left_row = row_indices[left_parameter];
+                let left_spectrum = param_spectrum[left_parameter];
+                let left_base = *base_rows
+                    .get(&(component.target, component.mt))
+                    .ok_or_else(|| {
+                        format!(
+                            "no loss row for target {}/MT{}",
+                            component.target, component.mt
+                        )
+                    })?;
+                for &right_parameter in right_parameters {
+                    let right_row = row_indices[right_parameter];
+                    let right_spectrum = param_spectrum[right_parameter];
+                    let right_base = *base_rows
+                        .get(&(component.target, component.mt1))
+                        .ok_or_else(|| {
+                            format!(
+                                "no loss row for target {}/MT{}",
+                                component.target, component.mt1
+                            )
+                        })?;
+                    let value = match component.kind {
+                        ComponentKind::Relative | ComponentKind::Absolute => {
+                            let relative = component.kind == ComponentKind::Relative;
+                            let left_key = (left_row, component.row_grid, relative, left_spectrum);
+                            if let std::collections::hash_map::Entry::Vacant(entry) =
+                                vector_cache.entry(left_key)
+                            {
+                                let vector = if totals[left_spectrum] == 0.0 {
+                                    vec![0.0; self.grids[component.row_grid].len() - 1]
+                                } else {
+                                    Self::vector_for_grid(
+                                        library,
+                                        phis[left_spectrum],
+                                        totals[left_spectrum],
+                                        left_row,
+                                        left_base,
+                                        &self.grids[component.row_grid],
+                                        relative,
+                                        &|group| row_scale(left_row, group),
+                                    )?
+                                };
+                                entry.insert(vector);
+                            }
+                            let right_key =
+                                (right_row, component.column_grid, relative, right_spectrum);
+                            if let std::collections::hash_map::Entry::Vacant(entry) =
+                                vector_cache.entry(right_key)
+                            {
+                                let vector = if totals[right_spectrum] == 0.0 {
+                                    vec![0.0; self.grids[component.column_grid].len() - 1]
+                                } else {
+                                    Self::vector_for_grid(
+                                        library,
+                                        phis[right_spectrum],
+                                        totals[right_spectrum],
+                                        right_row,
+                                        right_base,
+                                        &self.grids[component.column_grid],
+                                        relative,
+                                        &|group| row_scale(right_row, group),
+                                    )?
+                                };
+                                entry.insert(vector);
+                            }
+                            self.matrix_component(
+                                component,
+                                vector_cache.get(&left_key).expect("inserted vector"),
+                                vector_cache.get(&right_key).expect("inserted vector"),
+                            )
+                        }
+                        ComponentKind::ShortRange8 | ComponentKind::ShortRange9 => self
+                            .short_component(
+                                component,
+                                library,
+                                phis[left_spectrum],
+                                totals[left_spectrum],
+                                phis[right_spectrum],
+                                totals[right_spectrum],
+                                left_row,
+                                left_base,
+                                right_row,
+                                right_base,
+                                &|group| row_scale(left_row, group),
+                                &|group| row_scale(right_row, group),
+                            )?,
+                    };
+                    if value != 0.0 {
+                        *entries
+                            .entry((left_parameter, right_parameter))
+                            .or_insert(0.0) += value;
+                        if component.mt != component.mt1 {
+                            *entries
+                                .entry((right_parameter, left_parameter))
+                                .or_insert(0.0) += value;
+                        }
+                    }
+                }
+            }
+        }
+        let mut maximum_asymmetry_barn2 = 0.0f64;
+        for (&(left, right), &value) in &entries {
+            if left == right {
+                continue;
+            }
+            let reverse = entries.get(&(right, left)).copied().unwrap_or(0.0);
+            maximum_asymmetry_barn2 = maximum_asymmetry_barn2.max((value - reverse).abs());
+        }
+        let mut absent_cross_parameter_pairs = 0usize;
+        for left in 0..n_covered {
+            let left_row = library.rows[covered_rows[left]];
+            for &right in covered_rows.iter().skip(left + 1) {
+                let right_row = library.rows[right];
+                if left_row.target != right_row.target
+                    || !represented_pairs.contains(&(
+                        left_row.target,
+                        left_row.mt.min(right_row.mt),
+                        left_row.mt.max(right_row.mt),
+                    ))
+                {
+                    absent_cross_parameter_pairs += 1;
+                }
+            }
+        }
+        // Frozen P20 defect rules, identical to the dense path: per
+        // (target, MT, MT1) block, diagnosed on the assembled values.
+        let entry = |p: usize, q: usize| entries.get(&(p, q)).copied().unwrap_or(0.0);
+        let mut by_target: BTreeMap<usize, Vec<i32>> = BTreeMap::new();
+        for &(target, mt) in by_key.keys() {
+            by_target.entry(target).or_default().push(mt);
+        }
+        let mut excluded_blocks = Vec::new();
+        for (&target, mts) in &by_target {
+            for (a_index, &mt_a) in mts.iter().enumerate() {
+                for &mt_b in &mts[a_index..] {
+                    let is_self = mt_a == mt_b;
+                    if !is_self && !represented_pairs.contains(&(target, mt_a, mt_b)) {
+                        continue;
+                    }
+                    let mut joint = by_key[&(target, mt_a)].clone();
+                    if !is_self {
+                        joint.extend_from_slice(&by_key[&(target, mt_b)]);
+                    }
+                    joint.sort_unstable();
+                    let n = joint.len();
+                    let mut max_asymmetry = 0.0f64;
+                    let mut max_entry = 0.0f64;
+                    let mut symmetric = vec![0.0f64; n * n];
+                    for (i, &pi) in joint.iter().enumerate() {
+                        for (j, &pj) in joint.iter().enumerate() {
+                            let bij = entry(pi, pj);
+                            let bji = entry(pj, pi);
+                            max_asymmetry = max_asymmetry.max((bij - bji).abs());
+                            max_entry = max_entry.max(bij.abs());
+                            symmetric[i * n + j] = 0.5 * (bij + bji);
+                        }
+                    }
+                    if max_asymmetry > 1e-9 * max_entry && max_asymmetry > 0.0 {
+                        excluded_blocks.push(ExcludedBlock {
+                            target,
+                            mt: mt_a,
+                            mt1: mt_b,
+                            reason: "asymmetric_block",
+                            measured_defect: max_asymmetry,
+                        });
+                        continue;
+                    }
+                    let (lambda_min, lambda_max) = symmetric_eigen_extremes(&symmetric, n);
+                    if (lambda_max > 0.0 && lambda_min < -1e-10 * lambda_max)
+                        || (lambda_max <= 0.0 && lambda_min < -1e-30)
+                    {
+                        excluded_blocks.push(ExcludedBlock {
+                            target,
+                            mt: mt_a,
+                            mt1: mt_b,
+                            reason: "non_positive_semidefinite",
+                            measured_defect: lambda_min,
+                        });
+                    }
+                }
+            }
+        }
+        // Exclusion = removal from the sparse map: self blocks remove every
+        // pair inside the (target, MT) set; cross blocks remove only pairs
+        // split across the two MT sets.
+        for block in &excluded_blocks {
+            let left_params = &by_key[&(block.target, block.mt)];
+            if block.mt == block.mt1 {
+                for &pi in left_params {
+                    for &pj in left_params {
+                        entries.remove(&(pi, pj));
+                    }
+                }
+            } else {
+                let right_params = &by_key[&(block.target, block.mt1)];
+                for &pi in left_params {
+                    for &pj in right_params {
+                        entries.remove(&(pi, pj));
+                        entries.remove(&(pj, pi));
+                    }
+                }
+            }
+        }
+        Ok(SparseJointCollapse {
+            row_indices,
+            param_spectrum,
+            one_group_barns,
+            entries,
+            uncovered_rows,
+            absent_cross_parameter_pairs,
+            maximum_asymmetry_barn2,
+            excluded_blocks,
+        })
+    }
+}
+
+/// Sparse joint collapse: the assembled joint covariance as nonzero entries
+/// over (spectrum, covered-row) parameters, exclusions already removed.
+/// `Jᵀ Σ J` over `entries` equals the dense `covariance_barn2` quadratic form.
+pub struct SparseJointCollapse {
+    pub row_indices: Vec<usize>,
+    pub param_spectrum: Vec<usize>,
+    pub one_group_barns: Vec<f64>,
+    pub entries: HashMap<(usize, usize), f64>,
+    pub uncovered_rows: Vec<usize>,
+    pub absent_cross_parameter_pairs: usize,
+    pub maximum_asymmetry_barn2: f64,
+    pub excluded_blocks: Vec<ExcludedBlock>,
 }
 
 pub fn covariance_fingerprint() -> String {

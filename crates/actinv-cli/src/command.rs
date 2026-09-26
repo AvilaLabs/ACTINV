@@ -41,6 +41,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
                     actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
+                    actinv export-r2s-joint MESH_RESULT.ndjson SPEC.json STEP OUT.ndjson\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
 
 const DATA_USAGE: &str = "usage: actinv data list\n\
@@ -935,6 +936,30 @@ pub fn main_from(a: Vec<String>) {
             eprintln!(
                 "step {} banded r2s source: {} cells, {} partially unbanded -> {}",
                 step, summary["cells"], summary["cells_partially_unbanded"], a[4]
+            );
+        }
+        "export-r2s-joint" => {
+            if a.len() != 6 {
+                die(USAGE, 2);
+            }
+            let step: usize = a[4]
+                .parse()
+                .unwrap_or_else(|_| die("export-r2s-joint STEP must be a positive integer", 2));
+            if step == 0 {
+                die("STEP is one-based and must be positive", 2);
+            }
+            let mesh_bytes = std::fs::read(&a[2])
+                .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[2]), 2));
+            let spec_bytes =
+                crate::resolve_catalog_json(&read(&a[3])).unwrap_or_else(|e| die(e, 2));
+            let (doc, summary) =
+                actinv_core::r2s::emit_r2s_joint(&mesh_bytes, spec_bytes.as_bytes(), step)
+                    .unwrap_or_else(|e| die(e, 1));
+            std::fs::write(&a[5], doc)
+                .unwrap_or_else(|e| die(format!("cannot write {}: {e}", a[5]), 1));
+            eprintln!(
+                "step {} joint r2s source: {} cells, sigma_correlated {} -> {}",
+                step, summary["cells"], summary["sigma_total_correlated"], a[5]
             );
         }
         _ => die(USAGE, 2),

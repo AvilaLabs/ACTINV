@@ -1,0 +1,24 @@
+{
+  "checks": {
+    "binding_fields": true,
+    "cell_correlated_sigma": true,
+    "cells_emit_photons": true,
+    "corr_below_consv": true,
+    "corr_equals_consv_proportional": true,
+    "corr_record": true,
+    "export_run": true,
+    "footer_fields": true,
+    "mesh_run": true,
+    "reject_flux_mismatch": true,
+    "reject_spec_mismatch": true,
+    "reject_truncated": true,
+    "reject_unbanded": true,
+    "rho_degenerate_full": true,
+    "rho_diag": true,
+    "rho_shape": true,
+    "schema": true,
+    "two_cells": true
+  },
+  "pass": true,
+  "problems": []
+}
