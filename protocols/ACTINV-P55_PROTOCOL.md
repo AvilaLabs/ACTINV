@@ -162,3 +162,6 @@ linear algebra is m×m and k×k — trivial. No new solver path, no MCMC.
   collapse is built once and reused across the mutation legs (behavioural
   change in wall time only; the corpus collapse dropped from ~45 min to
   ~7 min because the earlier process rebuilt it once per mutation leg).
+  A1 also covers a test-only `needless_range_loop` repair for CI clippy
+  1.98 (local toolchain is 1.95 — the workspace `--all-targets` clippy is
+  now the local pre-push gate so the drift cannot recur silently).

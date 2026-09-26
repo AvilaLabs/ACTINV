@@ -1202,14 +1202,11 @@ mod tests {
                 )
             })
             .collect();
-        // aw[j] is the j-th whitened column; build precision properly
+        // aw[j] is the j-th whitened column; prec[u][v] = Σ_i aw[u][i]·aw[v][i]
         let mut prec = vec![vec![0.0; 2]; 2];
-        for i in 0..2 {
-            for u in 0..2 {
-                for v in 0..2 {
-                    // whitened system row i, column j: aw_cols[j][i]
-                    prec[u][v] += aw[u][i] * aw[v][i];
-                }
+        for (u, au) in aw.iter().enumerate() {
+            for (v, av) in aw.iter().enumerate() {
+                prec[u][v] = au.iter().zip(av).map(|(x, y)| x * y).sum();
             }
         }
         let post = invert(&prec).unwrap();
