@@ -46,7 +46,7 @@
     },
     "g5_checker": {
       "path": "controls/check_g5_p53.py",
-      "sha256": "e1b2bc1a69c92aea4fce4d613d888e9495463e1bd790c76c02e7eb5f6a4e0d43"
+      "sha256": "f12f4a35dfca870659d3f5a50faab6d0ed4dfa265f8a1cc4b5ffc9274576a6df"
     },
     "p11_covariance": {
       "path": "controls/p11_covariance.py",
@@ -66,15 +66,15 @@
     },
     "protocol": {
       "path": "protocols/ACTINV-P53_PROTOCOL.md",
-      "sha256": "e2551015d7cbf4e87a3d6f608d316952e690137e359ec3ca9f7d244b3c9fe19a"
+      "sha256": "7c51e4a677a110f478adca760635e5ba0c0609772b9e05376f5316a7bd2ebc02"
     },
     "workspace_manifest": {
       "path": "Cargo.toml",
       "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
     }
   },
-  "opening_commit": "3bc434edcfdb307dca686aae8a53c8934e22b072",
-  "protocol_sha256": "e2551015d7cbf4e87a3d6f608d316952e690137e359ec3ca9f7d244b3c9fe19a",
+  "opening_commit": "b4e8b4a570b5a8bf388e0b0f08cedcbb8a061df9",
+  "protocol_sha256": "7c51e4a677a110f478adca760635e5ba0c0609772b9e05376f5316a7bd2ebc02",
   "schema": "actinv-p53-seal-1",
-  "sealed_at_utc": "2026-09-26T03:23:34Z"
+  "sealed_at_utc": "2026-09-26T06:41:04Z"
 }
