@@ -24,6 +24,17 @@ of `ROADMAP.md` or explicitly left out of v1.0.
   (1/v invariant; constant → σ₀(1+1/(2y²))) make the correction analytic. Broadening only where σ departs from
   linear-in-E across the window, or reformulating as per-group kernel weights (≈130 grid points per group), would cut
   the dominant cost by ~10–100× → P10, with the exact-quadrature control as the gate.
+- 2026-09-26 — **measured refutation of the SIGMA1 linear-window claim** (P59 exploration, reverted
+  uncommitted): a sparse-table linear-window collapse of `doppler::broaden` — algebraically exact where it
+  fires (max rel deviation 1.5e-15), tolerance-insensitive — fired on 216/209,724 windows (0.1%) on
+  W-182's zero-K-refined table at tol=1e-12 **and identically at tol=1e-6**, and 114/1,542 (7.4%) on
+  N-14, netting 0.93–1.11× (a loss to parity, before O(n log n) table-build overhead). The premise —
+  "output points ≫ input in smooth windows" — does not occur: `process_reaction` builds the output grid
+  from the refined input itself (≈1:1), and every 8σ window spans genuine slope structure by construction
+  of the refinement. The 10–100× claim dies against the real pipeline shape; the remaining avenue, if
+  revisited, is the per-group-kernel-weight reformulation at the *unprocessed* MF3 stage where a coarse
+  input meets a dense evaluator grid — no production path exercises that today. Do not re-open without
+  a pipeline shape that actually emits output≫input.
 - 2026-08-26 — the original P5 draft claimed explicit isotope/isomer material keys (`Fe56`, `Ta180m`), but the shipped
   parser only implements natural elemental compositions. P7 corrected the normative documentation and the three
   elemental bases rather than pretending isotope keys work. Explicit isotope/isomer compositions are needed before
@@ -209,3 +220,54 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
     validation story is harder and the market narrower than the P50–P52 lanes. **Promoted
     2026-09-25 to candidate lane P55** in the strategic positioning assessment (structural moat:
     requires many-query solves no MC-coupled solver can host).
+
+## ENDF-8 head-to-head parked items (2026-09-26)
+
+From the identical-data FNS exercise (`results/FNS_ENDF8_HEADTOHEAD.md`,
+`~/nuclear-data/endfb-viii.1-fns-arm/`). Ordered by the principal's
+priority — each needs its own protocol before any code changes.
+
+1. **Normalization layer — SHIPPED 2026-09-26.** `--profile endfb8`
+   ingests PRISTINE ENDF/B-VIII.1 tapes: the 269-file FNS arm builds
+   269/269 — full coverage, matching the hand-patched arm plus the
+   three feature-gap files closed same day. Normalization classes:
+   LRF=0 degenerate range CONT, BW total-width deficit/omission under
+   LRX=0, unresolved case-A/B/C dof rounding (AMUX/AMUN/AMUF),
+   unresolved zero-width eps under log laws, RML photon-pair
+   PNT/SHF=-1, MF=2 TAB1 abscissa ordering, ZA/AWR/TITLE comment scrub,
+   plus collapse-level MF9/MF10 state-sum reconciliation via
+   `normalize_state_sums`. Every action lands in the per-source ledger
+   in the index; `NormalizeProfile::None` is byte-identical and all
+   normalization is gated on MF2 range context (LRU/LRF) to prevent
+   cross-structure corruption. **RML feature support shipped the same
+   day**: charged-channel Coulomb penetrability/shift (Steed's
+   continued-fraction method per DLMF 33.8 with propagation fallback,
+   ENDF-6 D.80–D.85 conventions, verified against mpmath references),
+   KBK background R-matrix elements (LBK=0/1/2 including the SAMMY
+   logarithmic form D.77 used by Sr88), and KPS tabulated phase shifts
+   (LPS=0/1, positional channel order). `inspect_projectile` now uses
+   the state-audit parse so defective MF2 payloads can't break
+   projectile detection before normalization runs. LBK=3 (Fröhner)
+   remains a clear not-implemented error, not silent wrong physics.
+
+2. **Workflow breadth** — OpenMC does transport→deplete→R2S end-to-end;
+   ACTINV needs a handed spectrum. Explicitly not pursued as a gap to
+   close by re-implementation; the strategy question is whether
+   complementing OpenMC (import-flux → solve → export source) is the
+   lane instead.
+
+3. **Accuracy tail vs FISPACT-TENDL** — ACTINV-TENDL is essentially
+   tied (gm 1.26 / median 0.086 vs FISPACT 1.26 / 0.085) but the
+   strict count (12-15/21) and p90 tail (0.50-0.59 vs 0.49) need
+   dedicated work. Tied-with-incumbent is the current ceiling.
+
+4. **W overshoot** — 1.77–2.2× on every ACTINV arm (ENDF-8 + both
+   TENDLs); the only low number is OpenMC's, which is partly the
+   missing W-185m channel compensating other error. Something in the
+   ACTINV W-185 chain stays wrong regardless of library. Root-cause
+   before the next comparison.
+
+5. **Coverage dropouts** — `products_no_evaluated_decay_data`,
+   `fission_no_yields_to_leakage`, isomer→ground rerouting, negative
+   atoms zeroed: small documented leakages on every run. FISPACT's
+   reference-data coverage is broader.

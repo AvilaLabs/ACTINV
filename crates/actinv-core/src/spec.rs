@@ -83,6 +83,12 @@ pub struct UncertaintyOptions {
     /// output.
     #[serde(default)]
     pub isomer: Option<IsomerOptions>,
+    /// Optional measurement-design reporting: rank parameters and reaction
+    /// blocks by the variance a perfect measurement would *remove*
+    /// (Kalman-gain / Schur-complement reduction), not the share they carry
+    /// (P60). Absence is byte-identical to pre-P60 output.
+    #[serde(default)]
+    pub design: Option<DesignOptions>,
 }
 
 /// Reporting knob for `uncertainty.isomer` (P58): optional cap on the ranked
@@ -91,6 +97,16 @@ pub struct UncertaintyOptions {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct IsomerOptions {
+    #[serde(default)]
+    pub top: Option<usize>,
+}
+
+/// Reporting knob for `uncertainty.design` (P60): optional cap on the ranked
+/// parameter and reaction tables per (step, response); defaults to `voi.top`
+/// when set, else 20.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct DesignOptions {
     #[serde(default)]
     pub top: Option<usize>,
 }
@@ -574,6 +590,13 @@ impl Spec {
                 if let Some(top) = isomer.top {
                     if !(1..=256).contains(&top) {
                         return Err("uncertainty.isomer.top must be between 1 and 256".into());
+                    }
+                }
+            }
+            if let Some(design) = &uncertainty.design {
+                if let Some(top) = design.top {
+                    if !(1..=256).contains(&top) {
+                        return Err("uncertainty.design.top must be between 1 and 256".into());
                     }
                 }
             }

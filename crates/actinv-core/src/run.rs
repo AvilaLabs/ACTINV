@@ -14,9 +14,10 @@ use crate::spec::{
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, ChannelData, DecayParameter, DecaySensitivityOut,
-    IsomerChannelEntry, IsomerPathwayProduct, IsomerPathwayShare, IsomerReport,
-    IsomerVarianceShares, SensitivityOut, SensitivityParameter, StepUncertainty, VoiEntry,
-    VoiReport, VoiUnranked, YieldParameter, YieldSensitivityOut,
+    DesignParameterEntry, DesignReactionEntry, DesignReport, IsomerChannelEntry,
+    IsomerPathwayProduct, IsomerPathwayShare, IsomerReport, IsomerVarianceShares, SensitivityOut,
+    SensitivityParameter, StepUncertainty, VoiEntry, VoiReport, VoiUnranked, YieldParameter,
+    YieldSensitivityOut,
 };
 use actinv_data::{
     composition, covariance, decay, fission,
@@ -976,6 +977,269 @@ fn build_isomer(
     })
 }
 
+/// Dense Cholesky solve `A x = b` for the small per-reaction covariance
+/// blocks; `None` when the block is not positive-definite to working
+/// precision — the caller names it `ill_conditioned` rather than emitting a
+/// fake reduction.
+fn cholesky_solve(matrix: &[f64], n: usize, rhs: &[f64]) -> Option<Vec<f64>> {
+    let mut lower = vec![0.0; n * n];
+    for i in 0..n {
+        for j in 0..=i {
+            let mut sum = matrix[i * n + j];
+            for k in 0..j {
+                sum -= lower[i * n + k] * lower[j * n + k];
+            }
+            if i == j {
+                if !(sum > 0.0) || !sum.is_finite() {
+                    return None;
+                }
+                lower[i * n + i] = sum.sqrt();
+            } else {
+                lower[i * n + j] = sum / lower[j * n + j];
+            }
+        }
+    }
+    let mut x = rhs.to_vec();
+    for i in 0..n {
+        let mut sum = x[i];
+        for j in 0..i {
+            sum -= lower[i * n + j] * x[j];
+        }
+        x[i] = sum / lower[i * n + i];
+    }
+    for i in (0..n).rev() {
+        let mut sum = x[i];
+        for j in i + 1..n {
+            sum -= lower[j * n + i] * x[j];
+        }
+        x[i] = sum / lower[i * n + i];
+    }
+    Some(x)
+}
+
+/// P60 measurement-design report: rank candidates by the variance a perfect
+/// measurement *removes* — the Kalman-gain quantity `(Σ·s)_i²/Σ_ii` per
+/// parameter and `(Σ·s)_Bᵀ Σ_BB⁻¹ (Σ·s)_B` per (target, MT) reaction block —
+/// over the identical collapsed covariance `voi` and `isomer` already use.
+fn build_design(
+    top: usize,
+    runtime: &UncertaintyRuntime,
+    sensitivities: &[SensitivityOut],
+    decay_channel: Option<&ChannelData<DecaySensitivityOut>>,
+    yield_channel: Option<&ChannelData<YieldSensitivityOut>>,
+    total_variance: f64,
+) -> Result<DesignReport, String> {
+    let share_ranked = total_variance.is_finite() && total_variance > 0.0;
+    let total_finite = total_variance.is_finite();
+    let share = |reduction: f64| share_ranked.then_some(reduction / total_variance);
+    let posterior = |reduction: f64| total_finite.then_some(total_variance - reduction);
+    // A reduction is a nonnegative quadratic form; a materially negative value
+    // indicates a non-PSD block, not round-off — fail rather than emit it.
+    let clamp_roundoff = |reduction: f64| -> Result<(f64, Option<f64>), String> {
+        if reduction >= 0.0 {
+            return Ok((reduction, None));
+        }
+        if -reduction <= 1.0e-9 * total_variance.abs().max(1.0e-300) {
+            return Ok((0.0, Some(reduction)));
+        }
+        Err(format!(
+            "materially negative measurement reduction {reduction:.17e}"
+        ))
+    };
+
+    let n_covered = runtime.covered_parameter_positions.len();
+    let covered_sensitivity: Vec<f64> = runtime
+        .covered_parameter_positions
+        .iter()
+        .map(|&position| sensitivities[position].value)
+        .collect();
+    // (Σ·s)_i for every covered row — shared by per-parameter reductions and
+    // the per-reaction block solves.
+    let mut sigma_s = vec![0.0; n_covered];
+    for row in 0..n_covered {
+        let mut value = 0.0;
+        for (column, &s_j) in covered_sensitivity.iter().enumerate() {
+            value += runtime.covariance_barn2[row * n_covered + column] * s_j;
+        }
+        sigma_s[row] = value;
+    }
+
+    let mut parameter_entries: Vec<DesignParameterEntry> = Vec::new();
+    let mut unranked: BTreeMap<&'static str, VoiUnranked> = BTreeMap::new();
+    let mut add_unranked = |channel: &'static str, sensitivity: f64| {
+        let bucket = unranked.entry(channel).or_insert(VoiUnranked {
+            count: 0,
+            sensitivity_l2: 0.0,
+        });
+        bucket.count += 1;
+        bucket.sensitivity_l2 += sensitivity * sensitivity;
+    };
+    // Covariance is per-(mat, MT): a measurement on a nuclide's file
+    // conditions every MT block it touches, so blocks group by target.
+    let mut reactions: BTreeMap<(i32, i32), Vec<usize>> = BTreeMap::new();
+
+    for (row, &position) in runtime.covered_parameter_positions.iter().enumerate() {
+        let parameter = &sensitivities[position].parameter;
+        if parameter.covariance_excluded {
+            continue;
+        }
+        let sigma_ii = runtime.covariance_barn2[row * n_covered + row];
+        let variance_share = covered_sensitivity[row] * sigma_s[row];
+        if !(sigma_ii > 0.0) || !sigma_ii.is_finite() {
+            continue;
+        }
+        // A zero-diagonal row is already perfectly known — conditioning on it
+        // removes nothing — so it stays out of the block solve entirely.
+        reactions
+            .entry((parameter.target_za, parameter.target_liso))
+            .or_default()
+            .push(row);
+        let (reduction, removed) = clamp_roundoff(sigma_s[row] * sigma_s[row] / sigma_ii)?;
+        parameter_entries.push(DesignParameterEntry {
+            channel: "cross_section_mf33",
+            parameter: serde_json::to_value(parameter)
+                .map_err(|_| "design parameter serialization failed")?,
+            sensitivity: covered_sensitivity[row],
+            standard_uncertainty: None,
+            variance_reduction: reduction,
+            share_of_total: share(reduction),
+            posterior_variance: posterior(reduction),
+            reduction_at_half_uncertainty: None,
+            variance_share: Some(variance_share),
+            negative_reduction_roundoff_removed: removed,
+        });
+    }
+    for record in sensitivities {
+        if record.value != 0.0
+            && (!record.parameter.covariance_covered || record.parameter.covariance_excluded)
+        {
+            add_unranked("cross_section_mf33", record.value);
+        }
+    }
+    if let Some(channel) = decay_channel {
+        for record in &channel.sensitivities {
+            let sensitivity = record.value;
+            if record.parameter.covered {
+                let reduction = (sensitivity * record.parameter.standard_uncertainty_s).powi(2);
+                parameter_entries.push(DesignParameterEntry {
+                    channel: "decay_constants",
+                    parameter: serde_json::to_value(&record.parameter)
+                        .map_err(|_| "design parameter serialization failed")?,
+                    sensitivity,
+                    standard_uncertainty: Some(record.parameter.standard_uncertainty_s),
+                    variance_reduction: reduction,
+                    share_of_total: share(reduction),
+                    posterior_variance: posterior(reduction),
+                    reduction_at_half_uncertainty: Some(0.75 * reduction),
+                    variance_share: Some(reduction),
+                    negative_reduction_roundoff_removed: None,
+                });
+            } else if sensitivity != 0.0 {
+                add_unranked("decay_constants", sensitivity);
+            }
+        }
+    }
+    if let Some(channel) = yield_channel {
+        for record in &channel.sensitivities {
+            let sensitivity = record.value;
+            if record.parameter.covered {
+                let reduction = (sensitivity * record.parameter.standard_uncertainty).powi(2);
+                parameter_entries.push(DesignParameterEntry {
+                    channel: "fission_yields",
+                    parameter: serde_json::to_value(&record.parameter)
+                        .map_err(|_| "design parameter serialization failed")?,
+                    sensitivity,
+                    standard_uncertainty: Some(record.parameter.standard_uncertainty),
+                    variance_reduction: reduction,
+                    share_of_total: share(reduction),
+                    posterior_variance: posterior(reduction),
+                    reduction_at_half_uncertainty: Some(0.75 * reduction),
+                    variance_share: Some(reduction),
+                    negative_reduction_roundoff_removed: None,
+                });
+            } else if sensitivity != 0.0 {
+                add_unranked("fission_yields", sensitivity);
+            }
+        }
+    }
+
+    let mut reaction_entries: Vec<DesignReactionEntry> = Vec::new();
+    for (&(target_za, target_liso), rows) in &reactions {
+        let n = rows.len();
+        let mts: Vec<i32> = {
+            let mut set: BTreeSet<i32> = BTreeSet::new();
+            for &row in rows {
+                set.insert(
+                    sensitivities[runtime.covered_parameter_positions[row]]
+                        .parameter
+                        .mt,
+                );
+            }
+            set.into_iter().collect()
+        };
+        let mut block = vec![0.0; n * n];
+        for (a, &row_a) in rows.iter().enumerate() {
+            for (b, &row_b) in rows.iter().enumerate() {
+                block[a * n + b] = runtime.covariance_barn2[row_a * n_covered + row_b];
+            }
+        }
+        let rhs: Vec<f64> = rows.iter().map(|&row| sigma_s[row]).collect();
+        match cholesky_solve(&block, n, &rhs) {
+            Some(solution) => {
+                let mut reduction = 0.0;
+                for (index, &b_i) in rhs.iter().enumerate() {
+                    reduction += b_i * solution[index];
+                }
+                let (reduction, _) = clamp_roundoff(reduction)?;
+                reaction_entries.push(DesignReactionEntry {
+                    target_za,
+                    target_liso,
+                    mts,
+                    status: "emitted",
+                    covered_parameters: n,
+                    variance_reduction: Some(reduction),
+                    share_of_total: share(reduction),
+                    posterior_variance: posterior(reduction),
+                });
+            }
+            None => reaction_entries.push(DesignReactionEntry {
+                target_za,
+                target_liso,
+                mts,
+                status: "ill_conditioned",
+                covered_parameters: n,
+                variance_reduction: None,
+                share_of_total: None,
+                posterior_variance: None,
+            }),
+        }
+    }
+
+    parameter_entries.sort_by(|left, right| {
+        right
+            .variance_reduction
+            .abs()
+            .total_cmp(&left.variance_reduction.abs())
+    });
+    parameter_entries.truncate(top);
+    reaction_entries.sort_by(|left, right| {
+        right
+            .variance_reduction
+            .unwrap_or(0.0)
+            .total_cmp(&left.variance_reduction.unwrap_or(0.0))
+    });
+    reaction_entries.truncate(top);
+    for bucket in unranked.values_mut() {
+        bucket.sensitivity_l2 = bucket.sensitivity_l2.sqrt();
+    }
+    Ok(DesignReport {
+        total_propagated_variance: total_variance,
+        top_parameters: parameter_entries,
+        top_reactions: reaction_entries,
+        unranked,
+    })
+}
+
 fn build_step_uncertainty(
     runtime: &UncertaintyRuntime,
     options: &UncertaintyOptions,
@@ -1153,6 +1417,29 @@ fn build_step_uncertainty(
         } else {
             None
         };
+        let design = if let Some(design_options) = &options.design {
+            let total_variance = variance
+                + decay_channel
+                    .as_ref()
+                    .map_or(0.0, |channel| channel.variance)
+                + yield_channel
+                    .as_ref()
+                    .map_or(0.0, |channel| channel.variance);
+            let top = design_options
+                .top
+                .or_else(|| options.voi.as_ref().map(|v| v.top))
+                .unwrap_or(20);
+            Some(build_design(
+                top,
+                runtime,
+                &sensitivities,
+                decay_channel.as_ref(),
+                yield_channel.as_ref(),
+                total_variance,
+            )?)
+        } else {
+            None
+        };
         let mut report = uncertainty_report::response_band(BandInput {
             nominal: snapshot_value(nominal, &response),
             alternate: snapshot_value(alternate, &response),
@@ -1167,6 +1454,7 @@ fn build_step_uncertainty(
         })?;
         report.voi = voi;
         report.isomer = isomer;
+        report.design = design;
         if options.require_complete && report.coverage != "complete" {
             return Err(format!(
                 "uncertainty response '{response}' has partial coverage in a requested channel"

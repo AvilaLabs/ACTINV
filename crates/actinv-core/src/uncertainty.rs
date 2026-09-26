@@ -154,6 +154,10 @@ pub struct ResponseUncertainty {
     /// output.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub isomer: Option<IsomerReport>,
+    /// P60 measurement-design report; present only when the spec requests
+    /// `uncertainty.design`. Absence is byte-identical to pre-P60 output.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub design: Option<DesignReport>,
 }
 
 /// P58: variance-share partition of one response band by isomer-channel class.
@@ -226,6 +230,77 @@ pub struct IsomerPathwayProduct {
     pub first_product: String,
     pub atoms_per_g: f64,
     pub share_of_isomer_flow: f64,
+}
+
+/// P60 measurement-design report for one response band: what a perfect
+/// measurement of each candidate would remove. Under correlation this is a
+/// Schur-complement quantity, not the marginal variance share — the two
+/// coincide only on diagonal (uncorrelated) channels.
+#[derive(Debug, Serialize)]
+pub struct DesignReport {
+    /// The variance the emitted band was built on — same convention as `voi`.
+    pub total_propagated_variance: f64,
+    /// Ranked single-parameter measurements by `variance_reduction`
+    /// descending. MF=33 rows: `(Σ·s)_i^2 / Σ_ii`. Diagonal channels:
+    /// `(s_i·σ_i)^2` (identical to the marginal share — no conditioning
+    /// structure exists).
+    pub top_parameters: Vec<DesignParameterEntry>,
+    /// Ranked reaction-block measurements (MF=33 parameters grouped by
+    /// target and MT): `variance_reduction` = `(Σ·s)_Bᵀ Σ_BB⁻¹ (Σ·s)_B`.
+    pub top_reactions: Vec<DesignReactionEntry>,
+    /// Sensitivity-bearing parameters with no covariance coverage; named
+    /// honestly by family — same convention as `voi`.
+    pub unranked: BTreeMap<&'static str, VoiUnranked>,
+}
+
+/// One ranked single-parameter measurement candidate.
+#[derive(Debug, Serialize)]
+pub struct DesignParameterEntry {
+    /// `cross_section_mf33`, `decay_constants` or `fission_yields`.
+    pub channel: &'static str,
+    /// The channel's parameter record, serialized as emitted elsewhere.
+    pub parameter: serde_json::Value,
+    /// Response derivative with respect to the parameter.
+    pub sensitivity: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub standard_uncertainty: Option<f64>,
+    /// Variance a perfect measurement removes: `(Σ·s)_i^2/Σ_ii` for MF=33,
+    /// `(s_i·σ_i)^2` for diagonal channels.
+    pub variance_reduction: f64,
+    /// `variance_reduction / total_propagated_variance`; null when the total
+    /// is zero or nonfinite.
+    pub share_of_total: Option<f64>,
+    /// `total − variance_reduction`; null when the total is nonfinite.
+    pub posterior_variance: Option<f64>,
+    /// Diagonal channels only: variance removed by measuring at half the
+    /// current standard uncertainty — `0.75·(s_i·σ_i)^2`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reduction_at_half_uncertainty: Option<f64>,
+    /// `variance_share` from the `voi` convention (`s_i·(Σ·s)_i`); emitted so
+    /// anticorrelated anchors (share small, reduction large) are visible.
+    pub variance_share: Option<f64>,
+    /// Present when the computed reduction was clamped from a small negative
+    /// round-off value to zero.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub negative_reduction_roundoff_removed: Option<f64>,
+}
+
+/// One ranked reaction-block measurement candidate — parameters grouped by
+/// target nuclide because covariance is per-(mat, MT): a measurement on the
+/// nuclide's file conditions its whole correlated block.
+#[derive(Debug, Serialize)]
+pub struct DesignReactionEntry {
+    pub target_za: i32,
+    pub target_liso: i32,
+    /// Sorted distinct MTs of the covered rows in this block.
+    pub mts: Vec<i32>,
+    /// `emitted` when the block solve succeeded, `ill_conditioned` when
+    /// Σ_BB could not be Cholesky-solved (no fake numbers).
+    pub status: &'static str,
+    pub covered_parameters: usize,
+    pub variance_reduction: Option<f64>,
+    pub share_of_total: Option<f64>,
+    pub posterior_variance: Option<f64>,
 }
 
 #[derive(Debug, Serialize)]
@@ -551,6 +626,7 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         sensitivities: input.sensitivities,
         voi: None,
         isomer: None,
+        design: None,
     })
 }
 
