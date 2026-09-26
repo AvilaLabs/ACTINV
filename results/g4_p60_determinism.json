@@ -1,0 +1,14 @@
+{
+ "pass": true,
+ "n": 2,
+ "checks": [
+  {
+   "name": "full document identical",
+   "pass": true
+  },
+  {
+   "name": "design blocks identical",
+   "pass": true
+  }
+ ]
+}

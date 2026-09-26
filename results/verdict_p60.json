@@ -1,0 +1,38 @@
+{
+  "phase": "P60",
+  "status": "P60-CLOSED",
+  "closed_at_utc": "2026-09-26T15:50:00Z",
+  "final_commit": "699efee61e445efbf3728a18f4911278d45edafa",
+  "amendments": 0,
+  "protocol_sha256": "33aabdd159b9ca8b1c8c9e927ffcecc39094aec1469074c2ba10031c0ea71e77",
+  "gates": {
+    "g0_seal": "results/g0_p60_seals.json",
+    "g1_mechanics": {
+      "n": 47,
+      "pass": true,
+      "file": "results/g1_p60_mechanics.json"
+    },
+    "g2_exactness": {
+      "n": 67,
+      "pass": true,
+      "file": "results/g2_p60_exactness.json"
+    },
+    "g3_demo": {
+      "n": 15,
+      "pass": true,
+      "file": "results/g3_p60_demo.json"
+    },
+    "g4_determinism": {
+      "n": 2,
+      "pass": true,
+      "file": "results/g4_p60_determinism.json"
+    },
+    "g5_checker": {
+      "checks": 5,
+      "problems": 0,
+      "mutations_caught": 4,
+      "file": "results/g5_p60_checker.json"
+    }
+  },
+  "delivered": "uncertainty.design emits a measurement-design report per banded response: per-parameter Kalman-gain reductions (Sig*s)_i^2/Sig_ii for MF=33 and (s*sigma)^2 for diagonal channels (identical to share; reduction_at_half_uncertainty = 0.75*share emitted), per-target-nuclide block reductions via dense Cholesky of the collapsed covariance sub-block (status ill_conditioned names singular blocks honestly), posterior_variance and share_of_total per candidate, marginal variance_share alongside each xs reduction so anticorrelated anchors are visible, unranked named by family, byte-identical output when absent. Real-data anchors: W184(n,g) removes 86.6% of W heat variance; W184 MT=107 carries ~0% marginal share yet removes 16.6% conditionally; Y89 MT=103 has negative marginal share yet removes 94.9%. Sigma1 linear-window collapse measured NEGATIVE (0.93-1.11x, 0.1-7.4% fire rate on real zero-K tables) and reverted; refutation recorded in PARKING."
+}

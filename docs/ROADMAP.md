@@ -2042,3 +2042,14 @@ extends onto the band — which response variance rides on isomer channels, and 
   forms; byte-identical output when absent. G2/G5 independently rebuilt the collapse
   (σ-ratio scaling of partial channels) and caught every planted mutation. The isomer
   advantage now lives on the band, not just the nominal.
+- 2026-09-26 — **P60 closes `P60-CLOSED`** (`results/verdict_p60.json`; protocol sealed at
+  `33aabdd1…`, zero amendments). `uncertainty.design` answers the question `voi` cannot:
+  not "who carries the band" but "which measurement *removes* it" — per-parameter Kalman
+  reductions `(Σ·s)ᵢ²/Σᵢᵢ`, per-target-nuclide block reductions via Cholesky on the
+  collapsed covariance (singular blocks honestly `ill_conditioned`), posterior variance
+  per candidate, marginal share beside each reduction so anticorrelated anchors are
+  visible. Real data confirms the physics: W184(n,γ) removes 86.6% of W heat variance,
+  and W184 MT=107 carries ≈0% marginal share yet removes 16.6% conditionally. Nobody else
+  ships a banded experiment-design surface. The same lane measured the parked SIGMA1
+  10–100× linear-window claim **negative** on real zero-K tables (0.1–7.4% collapse fire
+  rate, parity-to-loss speedups) — reverted; refutation recorded in PARKING.
