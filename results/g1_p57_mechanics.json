@@ -1,0 +1,31 @@
+{
+ "checks": {
+  "mcnp_emits": true,
+  "mcnp_mev": true,
+  "mcnp_provenance": true,
+  "mcnp_struct": true,
+  "openmc_emits": true,
+  "openmc_isotropic_all": true,
+  "openmc_provenance": true,
+  "openmc_strengths_match": true,
+  "openmc_struct": true,
+  "openmc_three_sources": true,
+  "reject_bad_bounds": true,
+  "reject_bad_format": true,
+  "reject_garbage": true,
+  "reject_no_bounds": true,
+  "reject_no_footer": true,
+  "reject_no_step": true,
+  "reject_wrong_schema": true,
+  "serpent_emits": true,
+  "serpent_id_sanitized": true,
+  "serpent_line_spectrum": true,
+  "serpent_provenance": true,
+  "serpent_struct": true,
+  "zero_cell_mcnp_wgt0": true,
+  "zero_cell_openmc": true,
+  "zero_cell_serpent": true
+ },
+ "pass": true,
+ "schema": "actinv-p57-g1-mechanics-1"
+}

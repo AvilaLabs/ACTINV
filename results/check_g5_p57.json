@@ -1,0 +1,11 @@
+{
+ "mutations_detected": {
+  "bound_moved": true,
+  "prob_flipped": true,
+  "sigma_comment_tampered": true,
+  "strength_scaled": true
+ },
+ "pass": true,
+ "problems": [],
+ "schema": "actinv-p57-check-g5-1"
+}

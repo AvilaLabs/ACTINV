@@ -1,0 +1,56 @@
+{
+  "phase": "P57",
+  "status": "P57-CLOSED",
+  "closed_at_utc": "2026-09-26T12:20:00Z",
+  "final_commit": "1b06def78e8ae96469448ce1ca7449d301fc66fe",
+  "amendments": 0,
+  "protocol_sha256": "867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2",
+  "gates": {
+    "g0": {
+      "pass": true,
+      "seal": "results/g0_p57_seals.json",
+      "opening_commit": "1b06def78e8ae96469448ce1ca7449d301fc66fe"
+    },
+    "g1": {
+      "pass": true,
+      "result": "results/g1_p57_mechanics.json",
+      "checks": 25,
+      "note": "all three formats emit on the synthetic fixture (2 ordinary cells + 1 zero-strength cell): XML parses, SDEF/SI/SP token counts reconcile, src cards well-formed; provenance carries sha+step+sigma; 7 rejection paths fire (bad bounds, wrong schema, missing footer, missing step, missing bounds, unknown format, unparseable input)"
+    },
+    "g2": {
+      "pass": true,
+      "result": "results/g2_p57_exactness.json",
+      "checks": 89,
+      "note": "independent re-derivation of every emitted token at machine precision \u2014 strengths, weights, box parameters, energy lists (eV for OpenMC, MeV for MCNP/Serpent), probabilities (exact ratios s_i/sum), zero-group handling, and Rust Display-format replication; sigma commentary matches the source sigma fields"
+    },
+    "g3": {
+      "pass": true,
+      "result": "results/g3_p57_demo.json",
+      "note": "corpus p52 r2s-source (8 cells, 220.3 photons/s) emits all three formats; per-cell totals conserved exactly; weight columns sum to 1; OpenMC fragment round-trips through the installed openmc 0.15.x IndependentSource.from_xml_element (8 sources, particle=photon, Discrete energies, Isotropic) \u2014 a real transport-code parse, not self-consistency"
+    },
+    "g4": {
+      "pass": true,
+      "result": "results/g4_p57_determinism.json",
+      "note": "byte-identical reruns across all three formats on the corpus document"
+    },
+    "g5": {
+      "pass": true,
+      "result": "results/check_g5_p57.json",
+      "note": "independent reparse of the persisted outputs with its own parsers: every numeric token recomputed from the actinv-r2s-source-1 bytes; input sha256 verified; sigma commentary exact; all 4 planted mutations caught (strength scaled, probability flipped, bound moved, sigma comment edited). Caught one real checker-side arithmetic subtlety: Python 3.12+ sum() is compensated and differs from Rust's left-to-right fold at the last ulp \u2014 the checker's naive_sum mirrors the emit semantics"
+    }
+  },
+  "emitted_surface": {
+    "command": "actinv export-source {openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT",
+    "openmc": "<sources>-rooted XML fragment, IndependentSource-equivalent elements (cartesian-uniform space, discrete energy, isotropic, photon, per-cell strength)",
+    "mcnp": "SDEF deck: X/Y/Z=D uniform-in-bounds SI H/SP, ERG=D discrete SI L/SP in MeV, per-cell WGT share",
+    "serpent": "src NAME p sx/sy/sz sw WGT sb NE 0 E p line spectrum in MeV",
+    "provenance": "actinv-source-adapter-1 header + input sha256 + step + total + per-cell sigma comments in each format's comment syntax",
+    "contract": "docs/INTERCHANGE_TRANSPORT.md"
+  },
+  "limits": [
+    "nominal strengths cross; correlated sigma stays in the banded document and comment lines \u2014 no foreign format carries a covariance",
+    "uniform-in-bounds spatial sampling only; CEL/MAT bindings need the user's geometry (parked extension)",
+    "verification by independent parse + arithmetic and a real openmc from_xml_element round-trip; MCNP and Serpent were not executed (licenses)",
+    "legacy emitters (export-openmc, export-mcnp, export-openmc-mesh) remain as un-banded convenience fragments; export-source is the pinned surface"
+  ]
+}

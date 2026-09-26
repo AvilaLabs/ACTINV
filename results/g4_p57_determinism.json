@@ -1,0 +1,14 @@
+{
+ "checks": {
+  "mcnp_byte_identical": true,
+  "openmc_byte_identical": true,
+  "serpent_byte_identical": true
+ },
+ "pass": true,
+ "schema": "actinv-p57-g4-determinism-1",
+ "sha256": {
+  "mcnp": "efb6ea4f43140ba2ff42eb1efe7f290f732b63a7533f92417ac5b7284f375efa",
+  "openmc": "20eac9e994d599bf8bd3809429c2b5a24c851c6aa3b2c1abe8fee296fa62bf37",
+  "serpent": "cf085a46be134fc7467b30d6d4949415f31f9f7453b458e64435008ac8a76d19"
+ }
+}

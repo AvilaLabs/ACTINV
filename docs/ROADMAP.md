@@ -1306,7 +1306,7 @@ code calls wins differently than a rival every transport code routes around.
 re-architecture plus a data program." The moat widens only while we build on it.
 
 **Candidate next lanes (P53 closed `P53-CLOSED` 2026-09-26; P54 closed `P54-CLOSED` 2026-09-26;
-P55 closed `P55-CLOSED` 2026-09-26; P57 approved for the next pass 2026-09-25; P56 deferred —
+P55 closed `P55-CLOSED` 2026-09-26; P57 closed `P57-CLOSED` 2026-09-26; P56 deferred —
 bands inside the optimizer loop are the heaviest compute on the board; each opens with its own
 hashed protocol, one lane at a time, in the order listed):**
 
@@ -1367,6 +1367,28 @@ solved per-measurement rows of length k against the m×m factor. G3 on the FNS-i
 (two 300 s segments, 24 h apart): recovered planted (1.4, 0.8) → (1.392±0.011, 0.813±0.007),
 posterior ρ = −0.31 between segments, χ² = 4.04 on 2 dof, 33 s wall. The claim: measured assay
 → exposure history *with an honest correlated band and an identifiability certificate*.
+
+**P57 closed `P57-CLOSED` 2026-09-26** (`results/verdict_p57.json`, protocol
+`protocols/ACTINV-P57_PROTOCOL.md`, zero amendments). Delivered: `actinv export-source
+{openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT` — the outbound half of the activation-oracle
+loop. The inbound half existed since P8 (`import-flux` reads OpenMC statepoint, MCNP
+meshtal/mctal, FISPACT fluxes); the banded document existed since P52 (`actinv-r2s-source-1`).
+What was missing was the last hop — a file a transport code can natively read. Delivered:
+OpenMC settings-XML `<source>` elements (cartesian-uniform bounds, discrete group centroids,
+isotropic, photon, per-cell strength — round-trips through the installed openmc 0.15.x
+`IndependentSource.from_xml_element`), a complete MCNP `SDEF`/`SI H`/`SP` + `SI L`/`SP` deck
+(uniform-in-bounds coordinates, discrete MeV energies, per-cell `WGT` share), and Serpent 2
+`src NAME p sx/sy/sz sw sb NE 0` line-spectrum cards — each with an `actinv-source-adapter-1`
+provenance block carrying input sha256, step, totals, and per-cell σ commentary in that
+format's comment syntax. The pinned contract is `docs/INTERCHANGE_TRANSPORT.md`. G2 re-derived
+every emitted token at machine precision including Rust `Display` float replication; G3
+conserved totals on the corpus document across all three formats plus the real OpenMC parse;
+G4 byte-identical; G5 reparsed all outputs with independent parsers, recomputed every value
+from the r2s-source bytes, and rejected all 4 planted mutations — and in doing so caught a
+real checker-side subtlety (Python 3.12+ `sum()` is compensated and differs from Rust's
+left-to-right fold at the last ulp). Zero new solver compute; pure emission over the
+interchange stream. The claim: a transport code takes ACTINV's banded activation result
+*natively* — the loop closes.
 
 ## Standing rules (from P0–P3b, binding on every phase)
 
@@ -1983,3 +2005,12 @@ posterior ρ = −0.31 between segments, χ² = 4.04 on 2 dof, 33 s wall. The cl
   sha256 in `results/verdict_p50.json` (`7a1c548c…`) is unaffected — it regenerates deterministically
   via `controls/g3_p50_demonstration.py`. Seal `opening_commit` fields predate the excision and now
   point to superseded local SHAs; artifact sha256s they bind are unchanged.
+- 2026-09-26 — **P57 closes `P57-CLOSED`** (`results/verdict_p57.json`; protocol sealed at
+  `867de37d…`, zero amendments). `actinv export-source {openmc|mcnp|serpent}` emits the banded
+  `actinv-r2s-source-1` photon source in the three transport codes' native formats — OpenMC
+  settings-XML (verified by a real `IndependentSource.from_xml_element` round-trip), a complete
+  MCNP `SDEF`/`SI`/`SP` deck, and Serpent 2 `src`/`sb` line-spectrum cards — with σ and sha256
+  provenance in comment syntax, per `docs/INTERCHANGE_TRANSPORT.md`. Zero solver compute;
+  G5 reparsed everything independently and caught all 4 planted mutations plus one real
+  checker-side float subtlety (Python compensated `sum()` vs Rust's naive fold). The
+  activation-oracle loop — transport tally in, native photon source out — is closed.

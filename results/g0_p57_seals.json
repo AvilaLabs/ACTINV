@@ -1,0 +1,56 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "cli_command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "064402e5d468da7cef9cbfd82440f80a0178688c07db101f64b96cb4e56efdd9"
+    },
+    "core_source_adapter": {
+      "path": "crates/actinv-core/src/source_adapter.rs",
+      "sha256": "95ec540cadcec350cd00ef8c629d9b4a760367726d4d848a575bb0aba5360f6a"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p57_mechanics.py",
+      "sha256": "fbedb8db5c97d4553e060aebb1661b762b4786e235096c6c8c4f3e73d031cf69"
+    },
+    "g2_exactness": {
+      "path": "controls/g2_p57_exactness.py",
+      "sha256": "c7fac0b099cb56823d48e7c4f62141a3ecae331d47c4da9cf31f8eed82ed7655"
+    },
+    "g3_demo": {
+      "path": "controls/g3_p57_demo.py",
+      "sha256": "6cba47e4474289779481af6341ba39faf111948e8230175eddb7b78368cf57ad"
+    },
+    "g4_determinism": {
+      "path": "controls/g4_p57_determinism.py",
+      "sha256": "7a4d28ff28313d223e49eb979e3cc1a06cbb3e561bc917f4600ba048e32bbffe"
+    },
+    "g5_checker": {
+      "path": "controls/check_g5_p57.py",
+      "sha256": "0605326c8cc09a00a71be859ac7ba53b995f44281b8b3b2a5cf940bdc364d9ee"
+    },
+    "interchange_doc": {
+      "path": "docs/INTERCHANGE_TRANSPORT.md",
+      "sha256": "00d7165ec2543737a724a61919c6ae436b5d286fb88a28cbe82a3c9113d447a4"
+    },
+    "p57_case": {
+      "path": "controls/p57_case.py",
+      "sha256": "ff17cc939c231feefa81497b12c3a78bc9b94455b2063bcb34135286abaf6149"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P57_PROTOCOL.md",
+      "sha256": "867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "opening_commit": "1b06def78e8ae96469448ce1ca7449d301fc66fe",
+  "protocol_sha256": "867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2",
+  "schema": "actinv-p57-seal-1",
+  "sealed_at_utc": "2026-09-26T15:53:47Z"
+}

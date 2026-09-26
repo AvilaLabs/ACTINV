@@ -1,0 +1,22 @@
+{
+ "cells": 8,
+ "checks": {
+  "mcnp_cells": true,
+  "mcnp_emits": true,
+  "mcnp_weight_sum": true,
+  "openmc_cells": true,
+  "openmc_emits": true,
+  "openmc_parsed_by_openmc": true,
+  "openmc_real_parse": true,
+  "openmc_strength_total": true,
+  "serpent_cells": true,
+  "serpent_emits": true,
+  "serpent_intt0": true,
+  "serpent_weight_sum": true
+ },
+ "corpus": "results/p52_r2s_source.ndjson",
+ "pass": true,
+ "persisted": "results/p57_sources",
+ "schema": "actinv-p57-g3-demo-1",
+ "total_photons_s": 220.3034526122621
+}
