@@ -1,0 +1,18 @@
+{
+ "pass": true,
+ "n": 3,
+ "checks": [
+  {
+   "name": "full document identical",
+   "pass": true
+  },
+  {
+   "name": "isomer blocks identical",
+   "pass": true
+  },
+  {
+   "name": "pathway shares identical",
+   "pass": true
+  }
+ ]
+}

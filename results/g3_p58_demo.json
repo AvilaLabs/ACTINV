@@ -1,0 +1,201 @@
+{
+ "pass": true,
+ "n": 15,
+ "checks": [
+  {
+   "name": "share sum ~= 1: W__2000exp_5min",
+   "pass": true,
+   "detail": "sum=1.0000000000000002"
+  },
+  {
+   "name": "isomer nonzero on W__2000exp_5min",
+   "pass": true,
+   "detail": "{\"isomer_product_channels\": 3.8333012363387456e-31, \"isomer_target_channels\": 9.655834471795962e-30, \"isomer_decay_constants\": 3.6960264354925294e-09, \"ground_channels\": 0.9999999963039737, \"unranked_l2_sensitivity\": 1.4924666050642353e-07}"
+  },
+  {
+   "name": "isomer channels ranked on W__2000exp_5min",
+   "pass": true,
+   "detail": "Hf182m1 lambda; Ta182m2 lambda; W183m1 lambda; Ta182m1 lambda; Hf182m1 MT=16 -> ZAP-1[lfs=-1]"
+  },
+  {
+   "name": "pathway shares on W__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "pathway shares emitted or honestly unavailable: W__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "share sum ~= 1: Pb__1996exp_5min",
+   "pass": true,
+   "detail": "sum=1.0"
+  },
+  {
+   "name": "isomer nonzero on Pb__1996exp_5min",
+   "pass": true,
+   "detail": "{\"isomer_product_channels\": 3.829798371513898e-25, \"isomer_target_channels\": 5.900621141289043e-23, \"isomer_decay_constants\": 0.0014642242696895251, \"ground_channels\": 0.9985357757303105, \"unranked_l2_sensitivity\": 1.0443449465894272e-07}"
+  },
+  {
+   "name": "isomer channels ranked on Pb__1996exp_5min",
+   "pass": true,
+   "detail": "Pb204m1 lambda; Tl206m1 lambda; Tl207m1 lambda; Pb203m1 lambda; Pb204m1 MT=16 -> ZAP-1[lfs=-1]"
+  },
+  {
+   "name": "pathway shares on Pb__1996exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "pathway shares emitted or honestly unavailable: Pb__1996exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "share sum ~= 1: Y__2000exp_5min",
+   "pass": true,
+   "detail": "sum=0.9999999999999997"
+  },
+  {
+   "name": "isomer nonzero on Y__2000exp_5min",
+   "pass": true,
+   "detail": "{\"isomer_product_channels\": 1.8170637277853256e-38, \"isomer_target_channels\": 6.620897933028325e-27, \"isomer_decay_constants\": 2.817302136864252e-18, \"ground_channels\": 0.9999999999999997, \"unranked_l2_sensitivity\": 5.585457300609577e-07}"
+  },
+  {
+   "name": "isomer channels ranked on Y__2000exp_5min",
+   "pass": true,
+   "detail": "Rb86m1 lambda; Y89m1 MT=16 -> Y88[lfs=0]; Sr87m1 lambda; Y89m1 MT=102 -> Y90[lfs=0]; Y89m1 lambda"
+  },
+  {
+   "name": "pathway shares on Y__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "pathway shares emitted or honestly unavailable: Y__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "demo": {
+  "W__2000exp_5min": {
+   "variance_shares": {
+    "isomer_product_channels": 3.8333012363387456e-31,
+    "isomer_target_channels": 9.655834471795962e-30,
+    "isomer_decay_constants": 3.6960264354925294e-09,
+    "ground_channels": 0.9999999963039737,
+    "unranked_l2_sensitivity": 1.4924666050642353e-07
+   },
+   "top_isomer_channels": [
+    "Hf182m1 lambda",
+    "Ta182m2 lambda",
+    "W183m1 lambda",
+    "Ta182m1 lambda",
+    "Hf182m1 MT=16 -> ZAP-1[lfs=-1]"
+   ],
+   "isomer_atoms_share": [
+    2.847684758207947e-06,
+    2.8480542739075436e-06,
+    2.8481613669567855e-06,
+    2.8482667736221126e-06,
+    2.848370521188022e-06,
+    2.848546498986499e-06,
+    2.848782318237332e-06,
+    2.8490155321753106e-06,
+    2.8493224440125912e-06,
+    2.8497014166901528e-06,
+    2.8500495709482134e-06,
+    2.850519550844218e-06,
+    2.8510632761688716e-06,
+    2.851544059117559e-06,
+    2.8521383381731112e-06,
+    2.8527780696214892e-06,
+    2.8532790268781735e-06,
+    2.853675209198781e-06,
+    2.8541781569022367e-06,
+    2.8546386125124812e-06,
+    2.8549322076872842e-06
+   ]
+  },
+  "Pb__1996exp_5min": {
+   "variance_shares": {
+    "isomer_product_channels": 3.829798371513898e-25,
+    "isomer_target_channels": 5.900621141289043e-23,
+    "isomer_decay_constants": 0.0014642242696895251,
+    "ground_channels": 0.9985357757303105,
+    "unranked_l2_sensitivity": 1.0443449465894272e-07
+   },
+   "top_isomer_channels": [
+    "Pb204m1 lambda",
+    "Tl206m1 lambda",
+    "Tl207m1 lambda",
+    "Pb203m1 lambda",
+    "Pb204m1 MT=16 -> ZAP-1[lfs=-1]"
+   ],
+   "isomer_atoms_share": [
+    0.020796179465637842,
+    0.020748848651797793,
+    0.020738425587734585,
+    0.02072676804566315,
+    0.020708596148458193,
+    0.02068438394511356,
+    0.02066097170991462,
+    0.02062881721172311,
+    0.02059210643937389,
+    0.020556049177414142,
+    0.020507373838088053,
+    0.020451964664514714,
+    0.020401325372912244,
+    0.02035580296337189,
+    0.020295850243242108,
+    0.020227831461133522,
+    0.020166819739218342,
+    0.020111058338306797,
+    0.020024301093241124,
+    0.019913611372143297,
+    0.0198153317440017
+   ]
+  },
+  "Y__2000exp_5min": {
+   "variance_shares": {
+    "isomer_product_channels": 1.8170637277853256e-38,
+    "isomer_target_channels": 6.620897933028325e-27,
+    "isomer_decay_constants": 2.817302136864252e-18,
+    "ground_channels": 0.9999999999999997,
+    "unranked_l2_sensitivity": 5.585457300609577e-07
+   },
+   "top_isomer_channels": [
+    "Rb86m1 lambda",
+    "Y89m1 MT=16 -> Y88[lfs=0]",
+    "Sr87m1 lambda",
+    "Y89m1 MT=102 -> Y90[lfs=0]",
+    "Y89m1 lambda"
+   ],
+   "isomer_atoms_share": [
+    0.022769957772029153,
+    0.005572304620194033,
+    0.0033983898246217146,
+    0.002223634105541107,
+    0.0016439242090051018,
+    0.0013706697021140227,
+    0.001168352029957311,
+    0.00109757084837968,
+    0.0010838037316692687,
+    0.001080798231985361,
+    0.0010804963360653555,
+    0.0010804809436444403,
+    0.0010804802819880486,
+    0.0010804805447902082,
+    0.0010804808125956264,
+    0.0010804812186765364,
+    0.0010804817457003226,
+    0.0010804822770238269,
+    0.0010804828104868302,
+    0.0010804837348196295,
+    0.0010804850391478989,
+    0.0010804863498317838
+   ]
+  }
+ }
+}

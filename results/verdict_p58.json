@@ -1,0 +1,50 @@
+{
+ "phase": "P58",
+ "status": "P58-CLOSED",
+ "closed_at_utc": "2026-09-26T14:05:00Z",
+ "final_commit": "c1fbff0dbb99de8fb137f717dcb69e0caede4f83",
+ "amendments": 0,
+ "protocol_sha256": "1c3f1d0001082ff90d5076e404b1f4e87f2c56dc47b606a6ce607d543e36c8db",
+ "gates": {
+  "g0": {
+   "pass": true,
+   "seal": "results/g0_p58_seals.json",
+   "opening_commit": "c1fbff0dbb99de8fb137f717dcb69e0caede4f83"
+  },
+  "g1": {
+   "pass": true,
+   "result": "results/g1_p58_mechanics.json",
+   "checks": 28,
+   "note": "synthetic isomer fixture: shares present and on the unit simplex; isomer production channel dominates activity:Mn57m1 (0.9997); pathway aggregation emits; absent isomer option is byte-identical (ms excluded); invalid isomer values rejected"
+  },
+  "g2": {
+   "pass": true,
+   "result": "results/g2_p58_exactness.json",
+   "checks": 22,
+   "note": "independent rebuild of the spectrum-collapsed covariance from the sidecar — including the sigma_row/sigma_base per-group multiplier for partial channels — reproduces every emitted share and variance_share at machine precision; isomer-share mutation detected"
+  },
+  "g3": {
+   "pass": true,
+   "result": "results/g3_p58_demo.json",
+   "checks": 15,
+   "note": "real FNS corpus (W/Pb/Y 1996/2000 experiments): shares on the unit simplex; isomer lambda channels ranked (Hf182m1, Pb204m1, Rb86m1/Y89m1/Sr87m1); pathway isomer shares 2.8e-6 (W) / 2.1% (Pb) / 2.3% (Y)"
+  },
+  "g4": {
+   "pass": true,
+   "result": "results/g4_p58_determinism.json",
+   "note": "two identical runs byte-identical including isomer blocks and pathway shares (ms excluded)"
+  },
+  "g5": {
+   "pass": true,
+   "result": "results/g5_p58_checker.json",
+   "note": "independent re-parse + own collapse recomputes the reference document exactly; all 4 planted mutations caught (bucket-label swap, variance_share scaled, pathway share moved, isomer product renamed)"
+  }
+ },
+ "delivered": [
+  "uncertainty.isomer opt-in option (plus top knob, validated 1-256, default voi.top or 20)",
+  "per-response isomer block: variance shares over isomer-product/isomer-target/isomer-decay/ground buckets, null when total variance is not finite-positive; unranked L2 for uncovered sensitivity mass",
+  "ranked top_isomer_channels table (label, channel, serialized parameter, sensitivity, sigma, variance_share, share_fraction)",
+  "isomer_pathway_shares top-level step-aligned array under trace mode, honest unavailable status otherwise",
+  "byte-identical output when the option is absent"
+ ]
+}

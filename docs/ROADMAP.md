@@ -1306,7 +1306,8 @@ code calls wins differently than a rival every transport code routes around.
 re-architecture plus a data program." The moat widens only while we build on it.
 
 **Candidate next lanes (P53 closed `P53-CLOSED` 2026-09-26; P54 closed `P54-CLOSED` 2026-09-26;
-P55 closed `P55-CLOSED` 2026-09-26; P57 closed `P57-CLOSED` 2026-09-26; P56 deferred —
+P55 closed `P55-CLOSED` 2026-09-26; P57 closed `P57-CLOSED` 2026-09-26;
+P58 closed `P58-CLOSED` 2026-09-26; P56 deferred —
 bands inside the optimizer loop are the heaviest compute on the board; each opens with its own
 hashed protocol, one lane at a time, in the order listed):**
 
@@ -1389,6 +1390,24 @@ real checker-side subtlety (Python 3.12+ `sum()` is compensated and differs from
 left-to-right fold at the last ulp). Zero new solver compute; pure emission over the
 interchange stream. The claim: a transport code takes ACTINV's banded activation result
 *natively* — the loop closes.
+
+**P58 closed `P58-CLOSED` 2026-09-26** (`results/verdict_p58.json`, protocol
+`protocols/ACTINV-P58_PROTOCOL.md`, zero amendments). Delivered: `uncertainty.isomer` —
+isomer-resolved uncertainty and channel introspection. Each banded response gains an
+`isomer` block partitioning the propagated variance the run already computes by parameter
+class: isomer-product channels (xs `LFS>0` plus covered yields with `product_LISO>0`),
+isomer-target channels (`target_LISO>0`), isomer decay constants (`LISO>0`), and ground.
+A ranked `top_isomer_channels` table names the dominant isomer channels, and trace-mode
+runs emit a step-aligned `isomer_pathway_shares` array aggregating production chains by
+isomer first product (honest `unavailable` status when pathway attribution does not
+apply). Exact arithmetic over the same covered-parameter quadratic forms as `voi`;
+absence of the option is byte-identical. G2 rebuilt the collapsed covariance
+independently — including the σ_row/σ_base per-group multiplier that scales partial
+channels — and reproduced every share at machine precision; G3 ran the real FNS corpus
+(W/Pb/Y) and ranked the physical isomer λ channels (Hf182m1, Pb204m1, Rb86m1/Y89m1);
+G5's own collapse reparsed everything and caught all 4 planted mutations. The claim:
+the demonstrated chain advantage (isomer-resolved production the incumbent lacks) now
+extends onto the band — which response variance rides on isomer channels, and how much.
 
 ## Standing rules (from P0–P3b, binding on every phase)
 
@@ -2014,3 +2033,12 @@ interchange stream. The claim: a transport code takes ACTINV's banded activation
   G5 reparsed everything independently and caught all 4 planted mutations plus one real
   checker-side float subtlety (Python compensated `sum()` vs Rust's naive fold). The
   activation-oracle loop — transport tally in, native photon source out — is closed.
+- 2026-09-26 — **P58 closes `P58-CLOSED`** (`results/verdict_p58.json`; protocol sealed at
+  `1c3f1d00…`, zero amendments). `uncertainty.isomer` partitions each banded response's
+  propagated variance by parameter class — isomer production (`LFS>0` / yield
+  `product_LISO>0`), isomer targets (`target_LISO>0`), isomer decay constants
+  (`LISO>0`), ground — plus a ranked isomer-channel table and a step-aligned
+  `isomer_pathway_shares` array under trace mode. Exact reuse of the `voi` quadratic
+  forms; byte-identical output when absent. G2/G5 independently rebuilt the collapse
+  (σ-ratio scaling of partial channels) and caught every planted mutation. The isomer
+  advantage now lives on the band, not just the nominal.
