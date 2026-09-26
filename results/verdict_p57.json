@@ -2,14 +2,14 @@
   "phase": "P57",
   "status": "P57-CLOSED",
   "closed_at_utc": "2026-09-26T12:20:00Z",
-  "final_commit": "1b06def78e8ae96469448ce1ca7449d301fc66fe",
-  "amendments": 0,
-  "protocol_sha256": "867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2",
+  "final_commit": "3d59b719880f9f6a7c4fbbb1c3dc56b45b8d9fd5",
+  "amendments": 2,
+  "protocol_sha256": "59311f4727c7ee3dcce2f31b173de11253f7899d05dbcf0c4b613df04a3c4b92",
   "gates": {
     "g0": {
       "pass": true,
       "seal": "results/g0_p57_seals.json",
-      "opening_commit": "1b06def78e8ae96469448ce1ca7449d301fc66fe"
+      "opening_commit": "3d59b719880f9f6a7c4fbbb1c3dc56b45b8d9fd5"
     },
     "g1": {
       "pass": true,
@@ -52,5 +52,6 @@
     "uniform-in-bounds spatial sampling only; CEL/MAT bindings need the user's geometry (parked extension)",
     "verification by independent parse + arithmetic and a real openmc from_xml_element round-trip; MCNP and Serpent were not executed (licenses)",
     "legacy emitters (export-openmc, export-mcnp, export-openmc-mesh) remain as un-banded convenience fragments; export-source is the pinned surface"
-  ]
+  ],
+  "amendment_note": "A1: CI clippy-1.98 repairs (lo>=hi partial-ord, map(fmt) closures) \u2014 no emitted byte changes. A2 pre-seal record: probabilities are exact ratios s_i/sum, not residual-folded (the fold cannot converge for ~55-decade spectra)."
 }

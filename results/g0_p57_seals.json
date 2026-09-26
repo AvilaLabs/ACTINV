@@ -10,7 +10,7 @@
     },
     "core_source_adapter": {
       "path": "crates/actinv-core/src/source_adapter.rs",
-      "sha256": "95ec540cadcec350cd00ef8c629d9b4a760367726d4d848a575bb0aba5360f6a"
+      "sha256": "96bbce40009d1cda32016cc33f6c2ced3b3b781d8af3b7791f529e441f254e3e"
     },
     "g1_mechanics": {
       "path": "controls/g1_p57_mechanics.py",
@@ -42,15 +42,15 @@
     },
     "protocol": {
       "path": "protocols/ACTINV-P57_PROTOCOL.md",
-      "sha256": "867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2"
+      "sha256": "59311f4727c7ee3dcce2f31b173de11253f7899d05dbcf0c4b613df04a3c4b92"
     },
     "workspace_manifest": {
       "path": "Cargo.toml",
       "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
     }
   },
-  "opening_commit": "1b06def78e8ae96469448ce1ca7449d301fc66fe",
-  "protocol_sha256": "867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2",
+  "opening_commit": "3d59b719880f9f6a7c4fbbb1c3dc56b45b8d9fd5",
+  "protocol_sha256": "59311f4727c7ee3dcce2f31b173de11253f7899d05dbcf0c4b613df04a3c4b92",
   "schema": "actinv-p57-seal-1",
-  "sealed_at_utc": "2026-09-26T15:53:47Z"
+  "sealed_at_utc": "2026-09-26T16:02:57Z"
 }

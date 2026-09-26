@@ -623,7 +623,7 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 7cdbb417c2c228e9524bff1cb5f85674b094938d5c204fea02b0a3dc45c48bb4  ./crates/actinv-core/src/reverse.rs
 05a28ef80fb2702ffd87e759bbe9beb5281b42f29b872242e6b4d95c7afc9bac  ./crates/actinv-core/src/run.rs
 7bc9ceb357177c6f11ce115ca438df70701fa89ecfc6802ef1be3d5d7eade28b  ./crates/actinv-core/src/shielding.rs
-95ec540cadcec350cd00ef8c629d9b4a760367726d4d848a575bb0aba5360f6a  ./crates/actinv-core/src/source_adapter.rs
+96bbce40009d1cda32016cc33f6c2ced3b3b781d8af3b7791f529e441f254e3e  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
 242b43167651fcdf71508032ba9ff699550e5f9466153ae017fe68e3429aa6ae  ./crates/actinv-core/src/spec.rs
 651479dabc164df08addd7bb5f3b62ccfc6a5a551f43f063263adf91d7e82633  ./crates/actinv-core/src/study.rs
@@ -929,7 +929,7 @@ d0f74f00fae15bce372aea62fea63532fb3c015987aea1fff5b8117953f94942  ./protocols/AC
 7c51e4a677a110f478adca760635e5ba0c0609772b9e05376f5316a7bd2ebc02  ./protocols/ACTINV-P53_PROTOCOL.md
 eec4e98db1c083bc5649700114f72568dcd74391e9c114432c362ff57efa033b  ./protocols/ACTINV-P54_PROTOCOL.md
 b3687fa7e3f3635c74a52571a567b968800060ecb08902ea6e621a75d4fe5c5c  ./protocols/ACTINV-P55_PROTOCOL.md
-867de37d483eac0d7538d3e139442ceb3937857ee943d17b395ac40cd17a95e2  ./protocols/ACTINV-P57_PROTOCOL.md
+59311f4727c7ee3dcce2f31b173de11253f7899d05dbcf0c4b613df04a3c4b92  ./protocols/ACTINV-P57_PROTOCOL.md
 98e5ee2a548f9b172638d5c57e7d5049581cd06669a28e6ec175fcfca29e2491  ./protocols/ACTINV-P5_PROTOCOL.md
 1714236375df7875fea927dd638c010177579c7413bb9f26eb0360f7406586e0  ./protocols/ACTINV-P6_AMENDMENT_A.md
 f97f861820e2291557e70ae286b330797d85921f0dad901c0d52e550f35fbd48  ./protocols/ACTINV-P6_PROTOCOL.md
@@ -2365,7 +2365,7 @@ da58f730c5f92efac32cc02d5647248e6917bf140d0cb5e0ddd82052b1b27565  ./results/g0_p
 3ae5c63d1951ae80dd6f8b018a519c329aecf97744f365241c5934333537886c  ./results/g0_p53_seals.json
 9d73bc978a83521a15c0efe3d7e6918e66c8d8dfae817c60ad3297be01c09660  ./results/g0_p54_seals.json
 d5eaac4ca3ab5744ffe2e55effaa8c9ecfacbfe5ade6aa53e00eeac907e5691f  ./results/g0_p55_seals.json
-d8dfc9ac8396a7c3eb926a228de8b5a6d08ca96d7f7de6160eb5330eac99571c  ./results/g0_p57_seals.json
+6a19ba0d62a64a1cdc93e16e720e770c7165c6a9f3109111e5b8bea4a8b791a4  ./results/g0_p57_seals.json
 80a643c7e0d4e23ed8b0594ded18e82157d4ac6b2bde32ca4ad0bcc1ee10aea3  ./results/g1_collapse.json
 be1c323089774d8f4752cf72415e5015455a2638e0a6304b2655e367be8be223  ./results/g1_decay_fallback.json
 62fd27f619199d94e06d1cfd7835294fb41cde00da7179956c9a036b7b0dfeb1  ./results/g1_library.json
@@ -3033,7 +3033,7 @@ e72b03c382e3bfed6a4d80e033d0ff75dcf1bd6c9ce04f458fb270a1c1cf5042  ./results/verd
 eb7256da918a8ae9c5cddc27596241f3f84fc0a417986b5426d407bce03c9848  ./results/verdict_p53.json
 90d2ba7a4ca237dd2df22219184b9147efa16a00f0fe1ec08b473f947061dd6a  ./results/verdict_p54.json
 4eef02e27aa59762f09802fb709d0e90892f392dd74ec8abb847d0dde124799f  ./results/verdict_p55.json
-ce98c23e7eb22ab100a880f4d08e2f39520df55ef0b56d5304247f8651ae2ef6  ./results/verdict_p57.json
+5dc7058182da7dda7c54a1fac6101f9b836b1c5b7a4d262a541833f3e93e76d9  ./results/verdict_p57.json
 03a34a4dcfa5004646e8c24b97d5a3dadde49863539e9035fd89785dad664215  ./results/verdict_p6.json
 c31aecdc01d884e475892dc257bbdac8132917e5106184fd69fa6873ac7d94a1  ./results/verdict_p7.json
 810beebff8e08b9a959d579a16d7d50d6533ab1f184469450f403cf3a7a443bf  ./results/verdict_p8.json
