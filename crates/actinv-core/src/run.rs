@@ -4125,6 +4125,189 @@ impl PreparedRun {
                 }),
             );
         }
+        // ---- P61 completeness audit: consolidate the chain/defect ledgers into
+        // one ranked verdict. Rates are per-parent coefficients (s^-1 per parent
+        // atom); each channel's denominator is its own summed triplet rates.
+        // Opt-in only — emitted solely when outputs explicitly lists "audit".
+        if spec
+            .options
+            .outputs
+            .as_ref()
+            .is_some_and(|o| o.iter().any(|x| x == "audit"))
+        {
+            // Channel denominators count only positive-rate triplets — the
+            // inflow through the channel. Diagonal outflow terms (−λ) sit in
+            // the same vectors and would cancel the production measure.
+            let total_react: f64 = r_src.iter().map(|(_, _, r)| *r).filter(|r| *r > 0.0).sum();
+            let total_decay: f64 = d_src.iter().map(|(_, _, r)| *r).filter(|r| *r > 0.0).sum();
+            let fraction = |rate: f64, denom: f64| -> Option<f64> {
+                if denom.is_finite() && denom > 0.0 && rate.is_finite() {
+                    Some(rate / denom)
+                } else {
+                    None
+                }
+            };
+            let largest = |map: &BTreeMap<String, f64>| -> Vec<serde_json::Value> {
+                let mut v: Vec<(&String, &f64)> = map.iter().collect();
+                v.sort_by(|a, b| b.1.total_cmp(a.1));
+                v.truncate(3);
+                v.iter()
+                    .map(|(k, r)| serde_json::json!({"name": k, "rate_coefficient_per_s": r}))
+                    .collect()
+            };
+            let mut reaction_defects = Vec::new();
+            for (class, map) in [
+                (
+                    "products_no_evaluated_decay_data",
+                    &led.products_no_decay_data,
+                ),
+                ("products_unmapped_to_leakage", &led.products_unmapped),
+                (
+                    "isomer_fell_back_to_ground",
+                    &led.isomer_fell_back_to_ground,
+                ),
+                ("fission_no_yields_to_leakage", &led.fission_no_yields),
+            ] {
+                if map.is_empty() {
+                    continue;
+                }
+                let rate: f64 = map.values().sum();
+                reaction_defects.push(serde_json::json!({
+                    "class": class,
+                    "instances": map.len(),
+                    "rate_coefficient_per_s": rate,
+                    "fraction_of_channel_flow": fraction(rate, total_react),
+                    "largest": largest(map),
+                }));
+            }
+            if !led.fission_product_leakage.is_empty() {
+                let rate: f64 = led
+                    .fission_product_leakage
+                    .iter()
+                    .map(|f| f.production_rate_per_parent_s)
+                    .sum();
+                let mut by_product: BTreeMap<String, f64> = BTreeMap::new();
+                for f in &led.fission_product_leakage {
+                    *by_product.entry(f.product.clone()).or_insert(0.0) +=
+                        f.production_rate_per_parent_s;
+                }
+                reaction_defects.push(serde_json::json!({
+                    "class": "fission_yield_products_to_leakage",
+                    "instances": led.fission_product_leakage.len(),
+                    "rate_coefficient_per_s": rate,
+                    "fraction_of_channel_flow": fraction(rate, total_react),
+                    "largest": largest(&by_product),
+                }));
+            }
+            let mut decay_defects = Vec::new();
+            if !ch.ledger.daughters_missing.is_empty() {
+                let rate: f64 = ch.ledger.daughters_missing.iter().map(|d| d.2).sum();
+                let mut by_name: BTreeMap<String, f64> = BTreeMap::new();
+                for (za, liso, r) in &ch.ledger.daughters_missing {
+                    *by_name.entry(name_of(*za, *liso)).or_insert(0.0) += *r;
+                }
+                decay_defects.push(serde_json::json!({
+                    "class": "decay_daughters_missing",
+                    "instances": ch.ledger.daughters_missing.len(),
+                    "rate_coefficient_per_s": rate,
+                    "fraction_of_channel_flow": fraction(rate, total_decay),
+                    "largest": largest(&by_name),
+                }));
+            }
+            if !ch.ledger.branching_sums.is_empty() {
+                let worst = ch
+                    .ledger
+                    .branching_sums
+                    .iter()
+                    .map(|((za, liso), s)| {
+                        serde_json::json!({
+                            "nuclide": name_of(*za, *liso),
+                            "branching_sum": s,
+                        })
+                    })
+                    .collect::<Vec<_>>();
+                decay_defects.push(serde_json::json!({
+                    "class": "decay_branching_sums_off_unity",
+                    "instances": worst.len(),
+                    "entries": worst,
+                }));
+            }
+            if ch.ledger.sf_branches > 0 {
+                decay_defects.push(serde_json::json!({
+                    "class": "spontaneous_fission_branches_to_leakage",
+                    "instances": ch.ledger.sf_branches,
+                }));
+            }
+            let mut unquantified: Vec<serde_json::Value> = Vec::new();
+            if !led.targets_absent_from_decay_lib.is_empty() {
+                unquantified.push(serde_json::json!({
+                    "class": "targets_absent_from_decay_library",
+                    "names": led.targets_absent_from_decay_lib.iter()
+                        .map(|(z, l)| format!("{z}_{l}")).collect::<Vec<_>>(),
+                }));
+            }
+            if !led.bulk_production_dropped.is_empty() {
+                unquantified.push(serde_json::json!({
+                    "class": "bulk_production_dropped",
+                    "instances": led.bulk_production_dropped.len(),
+                }));
+            }
+            let zeroed: f64 = steps.iter().map(|s| s.negative_atoms_zeroed).sum();
+            if zeroed > 0.0 {
+                unquantified.push(serde_json::json!({
+                    "class": "negative_atoms_zeroed",
+                    "atoms_zeroed": zeroed,
+                }));
+            }
+            if !absent.is_empty() {
+                unquantified.push(serde_json::json!({
+                    "class": "composition_isotopes_absent_from_decay_library",
+                    "names": absent.iter().map(|(z, l)| format!("{z}_{l}"))
+                        .collect::<Vec<_>>(),
+                }));
+            }
+            if n_fallback > 0 {
+                unquantified.push(serde_json::json!({
+                    "class": "decay_nuclides_from_fallback",
+                    "instances": n_fallback,
+                }));
+            }
+            reaction_defects.sort_by(|a: &serde_json::Value, b| {
+                b["rate_coefficient_per_s"]
+                    .as_f64()
+                    .unwrap_or(0.0)
+                    .total_cmp(&a["rate_coefficient_per_s"].as_f64().unwrap_or(0.0))
+            });
+            decay_defects.sort_by(|a: &serde_json::Value, b| {
+                b["rate_coefficient_per_s"]
+                    .as_f64()
+                    .unwrap_or(0.0)
+                    .total_cmp(&a["rate_coefficient_per_s"].as_f64().unwrap_or(0.0))
+            });
+            let status = if reaction_defects.is_empty()
+                && decay_defects.is_empty()
+                && unquantified.is_empty()
+            {
+                "complete"
+            } else {
+                "incomplete"
+            };
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "completeness".into(),
+                serde_json::json!({
+                    "status": status,
+                    "reaction_channel": {
+                        "total_production_rate_coefficient_per_s": total_react,
+                        "defects": reaction_defects,
+                    },
+                    "decay_channel": {
+                        "total_decay_rate_coefficient_per_s": total_decay,
+                        "defects": decay_defects,
+                    },
+                    "unquantified": unquantified,
+                }),
+            );
+        }
         if let Some(prepared) = &self.radiological {
             let coverage_per_step = steps
                 .iter()

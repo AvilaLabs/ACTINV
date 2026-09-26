@@ -798,7 +798,7 @@ impl Spec {
             for output in outputs {
                 match output.as_str() {
                     "inventory" | "activity" | "heat" | "photons" | "dose" | "pathways"
-                    | "radiological" | "damage" | "ledger" | "certificate" => {}
+                    | "radiological" | "damage" | "ledger" | "certificate" | "audit" => {}
                     value => return Err(format!("unknown options.outputs value '{value}'")),
                 }
             }
