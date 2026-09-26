@@ -118,3 +118,23 @@ block-by-block. Declared ceiling: G3's 8-cell corpus demo must run inside the
   path's); rejects planted mutations. `results/check_g5_p53.json`.
 
 ## Amendments (append-only)
+
+- **A1 — checker repair + reuse (control-layer only, no emit change).**
+  During the first G5 corpus run two control defects surfaced: (a) the
+  checker's collapsed-vector builder divided by a zero base-row σ without
+  the Rust `vector_for_grid` guard (`base==0 → multiplier 0`, since the
+  nonzero-row/zero-base case errors in emit and cannot appear in accepted
+  output); (b) the reference collapse was computed inside the per-input
+  comparison, forcing the ~20-minute sparse joint-covariance assembly to
+  rerun for each planted-mutation leg. The checker is split into a
+  J-independent `build_joint_covariance` pass computed once and a cheap
+  per-input `evaluate`; the `jnz_keys` component prefilter was dropped so
+  the built covariance is reusable for any mutation of J. Verified
+  identical to the G2 closed-form reference on the 2-cell fixture
+  (σ_correlated = 2.0999498475546367e-26 vs emitted 2.099949847554637e-26)
+  before the corpus run. Fixture note: `controls/p53_fixture.py` (2-group
+  library + a gamma-bearing Mn57 — the sealed P11 decay fixture carries
+  only MT=457 energy totals and emits no photon lines) replaces the
+  P11-only fixture originally implied by the G1/G2 text; response list
+  unchanged.
+

@@ -3659,6 +3659,7 @@ mod robustness_tests {
             channels: vec![],
             confidence_level: 0.95,
             require_complete: false,
+            voi: None,
         });
         assert_ne!(prepared_signature(&spec2), sig0);
     }

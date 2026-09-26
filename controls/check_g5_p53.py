@@ -8,18 +8,19 @@ sidecar with its own implementation of the joint quadratic form:
   Var(T)  = Jᵀ Σ_joint J                            (sparse accumulate)
   rho_cc' = Cov(T_c,T_c') / (sigma_c sigma_c')
 
-Only covariance components touching parameters with nonzero J can affect
-the emitted numbers, so the checker filters to those (target, MT) keys —
-but assembles each touched block completely (all covered params), applies
-the P20 exclusion diagnosis identically, and removes excluded entries
-before the quadratic form. Rejects planted mutations.
+Only covariance components whose (target, MT) pair appears among the
+selected covered rows can contribute, so the checker filters the sidecar
+to those — but assembles each touched block completely, applies the P20
+exclusion diagnosis identically, and removes excluded entries before the
+quadratic form. The sparse covariance is J-independent, so mutation legs
+reuse it and only recompute J + the quadratic form. Rejects planted
+mutations.
 """
 from __future__ import annotations
 
 import json
 import math
 import os
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -106,32 +107,18 @@ def extract_joint_inputs(mesh_path: Path, step: int):
     return cells, per_cell_sens, sigma_i, unbanded_share, totals, selected
 
 
-def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
-                    cov_path: Path, step: int):
-    """Independent sparse joint collapse + quadratic form."""
+def build_joint_covariance(lib_path: Path, cov_path: Path,
+                           phis: list[list[float]], selected):
+    """Sparse joint covariance over (spectrum, covered row) params —
+    computed once; independent of J. Returns dict with entries (sparse
+    map over param indices), covered rows, and the exclusion list."""
     import p11_covariance as pc
 
     activation = pc.load_activation(lib_path)
     rows, sig, bounds = activation["rows"], activation["sig"], \
         activation["bounds"]
     ngroups = len(bounds) - 1
-
-    # flux spectra per cell (ascending, already activation-group here:
-    # the corpus flux file is written on the activation structure — if a
-    # future mesh rebins, this checker must rebin identically).
-    phis: list[list[float]] = []
-    with flux_path.open() as fh:
-        for line in fh:
-            rec = json.loads(line)
-            if rec["record"] == "cell":
-                # stored order matches the header's ascending boundaries —
-                # identical to what rebin_equal_lethargy produced
-                phis.append(list(rec["flux_per_group"]))
-
-    cells, sens_maps, sigma_i, unbanded_share, totals, selected = \
-        extract_joint_inputs(mesh_path, step)
-    s_count = len(cells)
-    assert s_count == len(phis), "cell count vs flux cell count"
+    s_count = len(phis)
 
     with np.load(cov_path, allow_pickle=False) as z:
         descriptors = np.asarray(z["components"], dtype=np.int64)
@@ -148,22 +135,14 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
                if rows[r, 4] != 10 and
                (int(rows[r, 0]), int(rows[r, 1])) in self_covered]
     n = len(covered)
-    row_pos = {row: i for i, row in enumerate(covered)}
     base = {(int(r[0]), int(r[1])): i for i, r in enumerate(rows)
             if int(r[2]) == -1}
     totals_flux = [float(sum(p)) for p in phis]
 
-    # J over spectrum-major params
-    j = np.zeros(s_count * n)
-    for c, smap in enumerate(sens_maps):
-        for row, w in smap.items():
-            if row in row_pos:
-                j[c * n + row_pos[row]] += w
-    # which (target,mt) keys carry nonzero J
-    jnz_keys = set()
-    for p in range(n):
-        if any(j[c * n + p] != 0.0 for c in range(s_count)):
-            jnz_keys.add((int(rows[covered[p], 0]), int(rows[covered[p], 1])))
+    by_key: dict[tuple[int, int], list[int]] = {}
+    for p, row in enumerate(covered):
+        by_key.setdefault((int(rows[row, 0]), int(rows[row, 1])), []) \
+            .append(p)
 
     def vec(row, base_row, grid, relative, flux, total):
         out = np.zeros(len(grid) - 1)
@@ -174,21 +153,23 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
             if fg == 0.0:
                 continue
             low, high = bounds[g], bounds[g + 1]
-            mult = sig[row, g] if relative else (
-                1.0 if row == base_row else sig[row, g] / sig[base_row, g])
+            if relative:
+                mult = sig[row, g]
+            elif row == base_row:
+                mult = 1.0
+            elif sig[base_row, g] > 0.0:
+                mult = sig[row, g] / sig[base_row, g]
+            else:
+                mult = 0.0  # base zero: Rust errors unless row is also
+                # zero, which is the only case reachable here
             for k in range(len(grid) - 1):
                 width = max(0.0, min(high, grid[k + 1]) - max(low, grid[k]))
                 if width:
                     out[k] += fg / (high - low) / total * width * mult
         return out
 
-    # accumulate sparse entries only over params inside keys touched by J
     entries: dict[tuple[int, int], float] = {}
     vcache: dict[tuple, np.ndarray] = {}
-    by_key: dict[tuple[int, int], list[int]] = {}
-    for p, row in enumerate(covered):
-        by_key.setdefault((int(rows[row, 0]), int(rows[row, 1])), []) \
-            .append(p)
 
     def getv(row, base_row, grid_idx, relative, s_idx, grid):
         key = (row, grid_idx, relative, s_idx)
@@ -201,8 +182,6 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
         t, mt, mt1, lb, kind, rg, cg, off, ln = (int(x) for x in d)
         if (t, mt) not in by_key or (t, mt1) not in by_key:
             continue
-        if (t, mt) not in jnz_keys and (t, mt1) not in jnz_keys:
-            continue  # no J on either side — contributes nothing
         grid_l = grid_values[offsets[rg]:offsets[rg + 1]].tolist()
         grid_r = grid_values[offsets[cg]:offsets[cg + 1]].tolist()
         vals = stored_values[off:off + ln]
@@ -213,11 +192,12 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
                 rrow = covered[rp]
                 rb_row = base[(t, mt1)]
                 for sl in range(s_count):
+                    lv = getv(lrow, lb_row, rg, kind == 1, sl, grid_l) \
+                        if kind in (0, 1) else None
                     for sr in range(s_count):
                         if kind in (0, 1):  # Absolute / Relative
-                            rel = kind == 1
-                            lv = getv(lrow, lb_row, rg, rel, sl, grid_l)
-                            rv = getv(rrow, rb_row, cg, rel, sr, grid_r)
+                            rv = getv(rrow, rb_row, cg, kind == 1,
+                                      sr, grid_r)
                             m = np.asarray(vals).reshape(len(lv), len(rv))
                             v = float(lv @ m @ rv)
                         else:
@@ -228,10 +208,12 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
                                     continue
                                 low, high = bounds[g], bounds[g + 1]
                                 gw = high - low
-                                lr_ = 1.0 if lrow == lb_row else \
+                                lr_ = 1.0 if lrow == lb_row else (
                                     sig[lrow, g] / sig[lb_row, g]
-                                rr_ = 1.0 if rrow == rb_row else \
+                                    if sig[lb_row, g] > 0.0 else 0.0)
+                                rr_ = 1.0 if rrow == rb_row else (
                                     sig[rrow, g] / sig[rb_row, g]
+                                    if sig[rb_row, g] > 0.0 else 0.0)
                                 for k in range(len(vals)):
                                     gl, gr = grid_l[k], grid_l[k + 1]
                                     width = max(0.0, min(high, gr)
@@ -253,14 +235,15 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
                                 entries[e2] = entries.get(e2, 0.0) + v
 
     # exclusion diagnosis on assembled blocks — identical P20 rules,
-    # restricted to blocks touching keys that can affect J (declared scope).
+    # applied to every block spanned by covered params.
     excluded_keys = []
     mts_by_target: dict[int, list[int]] = {}
     for (t, mt) in by_key:
         mts_by_target.setdefault(t, []).append(mt)
     for t, mts in mts_by_target.items():
-        for ai, mt_a in enumerate(sorted(mts)):
-            for mt_b in sorted(mts)[ai:]:
+        smts = sorted(mts)
+        for ai, mt_a in enumerate(smts):
+            for mt_b in smts[ai:]:
                 self_b = mt_a == mt_b
                 if not self_b and not any(
                         int(dd[0]) == t and
@@ -297,19 +280,34 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
                                     (pi in pb and pj in pa)):
                                 entries.pop((pi, pj), None)
 
+    return {"entries": entries, "covered": covered, "n": n,
+            "excluded_keys": excluded_keys, "s_count": s_count}
+
+
+def evaluate(sens_maps, sigma_i, unbanded_share, totals, cov_state):
+    """Quadratic form over the precomputed sparse covariance."""
+    n = cov_state["n"]
+    s_count = cov_state["s_count"]
+    row_pos = {row: i for i, row in enumerate(cov_state["covered"])}
+    j = np.zeros(s_count * n)
+    for c, smap in enumerate(sens_maps):
+        for row, w in smap.items():
+            if row in row_pos:
+                j[c * n + row_pos[row]] += w
     var_total = 0.0
     cov_buckets: dict[tuple[int, int], float] = {}
-    for (l, r), v in entries.items():
+    for (l, r), v in cov_state["entries"].items():
         c_l, c_r = l // n, r // n
         contrib = j[l] * v * j[r]
-        cov_buckets[(c_l, c_r)] = cov_buckets.get((c_l, c_r), 0.0) + contrib
+        cov_buckets[(c_l, c_r)] = cov_buckets.get((c_l, c_r), 0.0) \
+            + contrib
         var_total += contrib
     cell_var = [cov_buckets.get((c, c), 0.0) for c in range(s_count)]
     cell_sigma = [math.sqrt(max(v, 0.0)) for v in cell_var]
-    rho = [[1.0 if i == j and cell_sigma[i] > 0 else
-            (cov_buckets.get((i, j), 0.0) / (cell_sigma[i] * cell_sigma[j])
-             if cell_sigma[i] > 0 and cell_sigma[j] > 0 else None)
-            for j in range(s_count)] for i in range(s_count)]
+    rho = [[1.0 if i == jj and cell_sigma[i] > 0 else
+            (cov_buckets.get((i, jj), 0.0) / (cell_sigma[i] * cell_sigma[jj])
+             if cell_sigma[i] > 0 and cell_sigma[jj] > 0 else None)
+            for jj in range(s_count)] for i in range(s_count)]
     return {
         "sigma_total_correlated": math.sqrt(max(var_total, 0.0)),
         "cell_sigma_correlated": cell_sigma,
@@ -317,7 +315,7 @@ def reference_joint(mesh_path: Path, flux_path: Path, lib_path: Path,
         "sigma_i": sigma_i,
         "total_photons": sum(totals),
         "unbanded_share": unbanded_share,
-        "excluded_keys": excluded_keys,
+        "excluded_keys": cov_state["excluded_keys"],
     }
 
 
@@ -360,10 +358,10 @@ def compare_emitted(joint_path: Path, ref: dict) -> list[str]:
     emitted_excl = {(b["target"], b["mt"], b["mt1"])
                     for b in corr.get("excluded_block_keys", [])}
     ref_excl = {(t, a, b) for (t, a, b, _) in ref["excluded_keys"]}
-    if not emitted_excl.issuperset(ref_excl):
+    if emitted_excl != ref_excl:
         problems.append(
-            f"emitted exclusions missing sensitive blocks: "
-            f"{sorted(ref_excl - emitted_excl)}")
+            f"exclusion set mismatch: emitted {sorted(emitted_excl)} "
+            f"vs recomputed {sorted(ref_excl)}")
     return problems
 
 
@@ -374,14 +372,27 @@ def main() -> int:
     cov_path = Path(spec["uncertainty"]["covariance"]["path"])
     problems = []
     t0 = __import__("time").monotonic()
-    ref = reference_joint(MESH, flux_path, lib_path, cov_path, EMIT_STEP)
+
+    cells_in, sens_maps, sigma_i, unbanded_share, totals, selected = \
+        extract_joint_inputs(MESH, EMIT_STEP)
+    phis = []
+    with flux_path.open() as fh:
+        for line in fh:
+            rec = json.loads(line)
+            if rec["record"] == "cell":
+                phis.append(list(rec["flux_per_group"]))
+    cov_state = build_joint_covariance(lib_path, cov_path, phis,
+                                       selected)
+    ref = evaluate(sens_maps, sigma_i, unbanded_share, totals,
+                   cov_state)
     problems += compare_emitted(JOINT, ref)
     wall = __import__("time").monotonic() - t0
 
     mutations = {}
     with tempfile.TemporaryDirectory(prefix="p53-g5-", dir="target") as d:
         work = Path(d)
-        # mutation 1: double a sensitivity value in the mesh → recompute
+        # mutation 1: double a sensitivity value in the mesh → the
+        # recomputed band must differ (mutation propagates into J)
         lines = MESH.read_text().splitlines()
         mutated = False
         for i, line in enumerate(lines):
@@ -405,15 +416,17 @@ def main() -> int:
         if mutated:
             mpath = work / "mesh_mut.ndjson"
             mpath.write_text("\n".join(lines) + "\n")
-            ref_m = reference_joint(mpath, flux_path, lib_path,
-                                    cov_path, EMIT_STEP)
-            mutations["sensitivity_doubled_detected"] = not close(
-                ref_m["sigma_total_correlated"],
-                ref["sigma_total_correlated"], 1e-6) or True
-            # emit must reflect the change (mutated input → different ref)
+            _, sens_m, _, _, _, sel_m = extract_joint_inputs(
+                mpath, EMIT_STEP)
+            assert sel_m == selected, \
+                "mutation must not change the covered-row set"
+            ref_m = evaluate(sens_m, sigma_i, unbanded_share, totals,
+                             cov_state)
             mutations["mutation1_changes_result"] = not close(
                 ref_m["sigma_total_correlated"],
                 ref["sigma_total_correlated"], 1e-6)
+        else:
+            problems.append("mutation 1 could not find a sensitivity")
 
         # mutation 2: tamper emitted sigma_correlated
         jlines = JOINT.read_text().splitlines()
@@ -438,12 +451,13 @@ def main() -> int:
                 break
         jmut2 = work / "joint_mut2.ndjson"
         jmut2.write_text("\n".join(jlines) + "\n")
-        mutations["tampered_rho_detected"] = bool(compare_emitted(jmut2, ref))
+        mutations["tampered_rho_detected"] = bool(
+            compare_emitted(jmut2, ref))
 
-    problems.extend(k for k, v in mutations.items()
-                    if k.endswith("_detected") and not v)
     if not mutations.get("mutation1_changes_result"):
         problems.append("mutation1_changes_result")
+    problems.extend(k for k, v in mutations.items()
+                    if k.endswith("_detected") and not v)
 
     result = {"pass": not problems,
               "checker_wall_s": wall,

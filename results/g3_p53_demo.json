@@ -1,0 +1,22 @@
+{
+  "detail": {
+    "corr_vs_conservative_ratio": 0.7092908541215476,
+    "corr_vs_independent_ratio": 2.8243419532888923,
+    "min_offdiag_rho": 0.9986990411198166,
+    "sigma_total_conservative": 46.07351210218177,
+    "sigma_total_correlated": 32.67952075133597,
+    "sigma_total_independent": 11.570667182591434
+  },
+  "hardware": {
+    "cell_emit_step": 4,
+    "cpu": "x86_64"
+  },
+  "joint_bytes": 54988,
+  "joint_sha256": "e4c22c7e58695f37efadd7e5d5b312b20cc5e7d10368ddcfcb6a72e4ee7ba3c0",
+  "joint_wall_s": 19.308651272000134,
+  "mesh_sha256": "08213131573f0132559f973c278222b763882ff99c991971b53ac98321580dd3",
+  "mesh_wall_s": 188.6281621909984,
+  "pass": true,
+  "problems": [],
+  "total_wall_s": 208.81170091400054
+}

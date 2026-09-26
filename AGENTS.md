@@ -39,3 +39,9 @@ names, or links. Author and committer stay the repo owner's identity.
   care about it. Keep the SHA chains and defect ledgers — they catch real
   upstream bugs — but treat them as internal QA, not leadership levers.
   The axes that matter are accuracy, speed, and capability breadth.
+
+- Future public docs site (owner picked the look, 2026-09-25): **mdBook**,
+  rust theme — i.e. the rust-analyzer manual style, not Sphinx/MkDocs.
+  Untracked demo scaffold left in place: `book.toml` + generated
+  `docs/SUMMARY.md` (grouping is auto-guessed, needs curation; many docs
+  are stale). Binary + build output under `scratch/mdbook-demo/`.
