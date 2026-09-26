@@ -1,0 +1,72 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "cli_command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "b307213a80e82f40638587180bb7e6fdc53397b45ad0a28c35056f56097fb71d"
+    },
+    "cli_lib_module": {
+      "path": "crates/actinv-cli/src/lib.rs",
+      "sha256": "23031532aa478e1b51e2ecb5588f789ba522db982b7896ed600e295c4405e5ac"
+    },
+    "core_clearance_module": {
+      "path": "crates/actinv-core/src/clearance.rs",
+      "sha256": "b1b1350bfca5d98ab54f1bf2eea9f5b5a2b4dacd8fdcc454010eaf08139cd9ef"
+    },
+    "core_lib_module": {
+      "path": "crates/actinv-core/src/lib.rs",
+      "sha256": "5a00d7af8e263d54eaa2479ebc4aa3a13c933e823c00eb1019915502f97ade92"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p54_mechanics.py",
+      "sha256": "7196ac37377fb5cccf127d835ebed608501c283e1fb44f6a1198b3962278d5e8"
+    },
+    "g2_exactness": {
+      "path": "controls/g2_p54_exactness.py",
+      "sha256": "e37d6ad39c999bcc713ed114958cc3727aac16c33221d919d263541a2073a43f"
+    },
+    "g3_demo": {
+      "path": "controls/g3_p54_demo.py",
+      "sha256": "6f931c3af95ac91bdab9c977bc7e006818beb16a7eeb6739da0494551bcf4f3c"
+    },
+    "g4_determinism": {
+      "path": "controls/g4_p54_determinism.py",
+      "sha256": "782b9865ef17d91f906bb8aa7052615da1ac723fa34cc80c005a7974bcfeedbb"
+    },
+    "g5_checker": {
+      "path": "controls/check_g5_p54.py",
+      "sha256": "ff5367111ce49ef9ae9852bbb41ce4308bfaecde559f48052a41fde9572f4c6a"
+    },
+    "limits_table": {
+      "path": "data/clearance_iaea_2004.json",
+      "sha256": "3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016"
+    },
+    "p11_fixtures": {
+      "path": "controls/p11_fixtures.py",
+      "sha256": "6281020bd7f489513f10a3330a9205c75ebda3e868520491a887ac47f2842c24"
+    },
+    "p53_fixture": {
+      "path": "controls/p53_fixture.py",
+      "sha256": "fd9f48e258d5688615021a5e38510547d6e468b583991a0d9a29680e4b7e2728"
+    },
+    "p54_fixture": {
+      "path": "controls/p54_fixture.py",
+      "sha256": "7b55b218b59577ee607b7a574846b011e222b855c13fd0ae2d333513f6fc2f3b"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P54_PROTOCOL.md",
+      "sha256": "1246d46901a37413255aa524e4130aa1356186d88e5faea5acba4c2900b9be34"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "opening_commit": "73ddc5197cf5165f6459f7a0b7d21ab4b67164a4",
+  "protocol_sha256": "1246d46901a37413255aa524e4130aa1356186d88e5faea5acba4c2900b9be34",
+  "schema": "actinv-p54-seal-1",
+  "sealed_at_utc": "2026-09-26T07:28:48Z"
+}
