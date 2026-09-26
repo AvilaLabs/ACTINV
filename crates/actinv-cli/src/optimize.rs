@@ -581,6 +581,7 @@ fn evaluate_candidate(
     base_doc: &Value,
     opt: &OptimizeSpec,
     x: &[f64],
+    cache: &mut actinv_core::run::PreparedCache,
 ) -> (EvalOutcome, Option<String>, BTreeMap<String, Value>) {
     let mut detail = BTreeMap::new();
     let doc = match apply_axes(base_doc, &opt.design_axes, x) {
@@ -683,8 +684,20 @@ fn evaluate_candidate(
             )
         }
     };
-    let result = match actinv_core::run::run(&spec, "optimize") {
-        Ok(r) => r,
+    // Candidates share the prepared-input cache: design axes never touch
+    // the file-derived inputs (library, decay, spectra), so after the
+    // first solve preparation cost is paid once per optimize session.
+    // The cache fingerprints every prep-relevant input, so an axis that
+    // did change them would miss and reprepare — never a stale reuse.
+    let result = match actinv_core::run::run_with_cache(&spec, "optimize", cache) {
+        Ok(r) => {
+            detail.insert(
+                "prepared_cache".into(),
+                serde_json::json!({"hit": cache.last_hit(),
+                                   "fingerprint_ms": cache.last_fingerprint_ms()}),
+            );
+            r
+        }
         Err(e) => {
             return (
                 EvalOutcome {
@@ -878,6 +891,8 @@ pub fn run_optimize(
         let rows_ref = &mut rows;
         let next_id_ref = &mut next_id;
         let err_ref = &mut eval_err;
+        let mut cache = actinv_core::run::PreparedCache::new();
+        let cache_ref = &mut cache;
         run_search(&bounds, &opt.optimizer, minimize, move |x| {
             let digest = param_digest(x);
             if let Some((id, out, sha)) = resumed.get(&digest) {
@@ -890,7 +905,7 @@ pub fn run_optimize(
                 return out.clone();
             }
             let t0 = std::time::Instant::now();
-            let (outcome, canon, detail) = evaluate_candidate(base_ref, opt_ref, x);
+            let (outcome, canon, detail) = evaluate_candidate(base_ref, opt_ref, x, cache_ref);
             let wall = t0.elapsed().as_secs_f64();
             let spec_sha = canon.as_deref().map(|c| sha256_hex(c.as_bytes()));
             let eval_id = *next_id_ref;
