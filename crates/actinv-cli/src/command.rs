@@ -43,6 +43,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
                     actinv export-r2s-joint MESH_RESULT.ndjson SPEC.json STEP OUT.ndjson\n\
                     actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\
+                    actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
 
 const DATA_USAGE: &str = "usage: actinv data list\n\
@@ -744,6 +745,30 @@ pub fn main_from(a: Vec<String>) {
                 }
                 None => println!("{text}"),
             }
+        }
+        "reverse-qualified" => {
+            const RQ_USAGE: &str =
+                "usage: actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson";
+            let positional: Vec<&String> = a[2..].iter().filter(|x| !x.starts_with("--")).collect();
+            if positional.len() != 3 || a.len() - 2 != positional.len() {
+                die(RQ_USAGE, 2);
+            }
+            let problem_text =
+                crate::resolve_catalog_json(&read(positional[0])).unwrap_or_else(|e| die(e, 2));
+            let spec = Spec::from_json(&problem_text).unwrap_or_else(|e| die(e, 2));
+            let measurements_text = read(positional[1]);
+            let (doc, summary) =
+                actinv_core::reverse::solve_qualified(&spec, &problem_text, &measurements_text)
+                    .unwrap_or_else(|e| die(e, 1));
+            std::fs::write(positional[2], doc)
+                .unwrap_or_else(|e| die(format!("Cannot write {}: {e}", positional[2]), 1));
+            eprintln!(
+                "qualified inverse: {} segments, {} measurements, {} forward runs -> {}",
+                summary["segments"],
+                summary["measurements"],
+                summary["forward_runs"],
+                positional[2]
+            );
         }
         "optimize" => {
             const OPT_USAGE: &str = "usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]";

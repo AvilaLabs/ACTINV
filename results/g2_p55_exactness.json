@@ -1,0 +1,49 @@
+{
+ "checks": {
+  "c_model_matches": true,
+  "c_total_matches": true,
+  "chi2_matches": true,
+  "degenerate_finite_sigma": true,
+  "degenerate_flagged": true,
+  "degenerate_reason_named": true,
+  "degenerate_runs": true,
+  "emitted": true,
+  "f0_matches": true,
+  "fhat_matches": true,
+  "gains_match": true,
+  "ident_flags_match": true,
+  "live_segments_unaffected": true,
+  "posterior_corr_matches": true,
+  "posterior_cov_matches": true,
+  "posterior_sigma_matches": true,
+  "pulls_match": true,
+  "residuals_match": true
+ },
+ "details": {
+  "chi2": 0.008425140410554692,
+  "corr": [
+   [
+    1.0,
+    0.6206438849921314
+   ],
+   [
+    0.6206438849921313,
+    1.0
+   ]
+  ],
+  "f": [
+   1.50133784677509,
+   0.6530400926714207
+  ],
+  "f0": [
+   1.4980037757500975,
+   0.604621669092378
+  ],
+  "psig": [
+   0.08381591829894738,
+   0.0470672402755846
+  ]
+ },
+ "pass": true,
+ "schema": "actinv-p55-g2-exactness-1"
+}

@@ -576,6 +576,586 @@ pub fn solve(
     Ok(result)
 }
 
+/// Lower-triangular Cholesky factor C = L·Lᵀ; `None` when C is not
+/// positive definite.
+#[allow(clippy::needless_range_loop)]
+fn cholesky(c: &[Vec<f64>]) -> Option<Vec<Vec<f64>>> {
+    let n = c.len();
+    let mut l = vec![vec![0.0; n]; n];
+    for i in 0..n {
+        for j in 0..=i {
+            let mut s = c[i][j];
+            for k in 0..j {
+                s -= l[i][k] * l[j][k];
+            }
+            if i == j {
+                if s.is_nan() || s <= 0.0 || !s.is_finite() {
+                    return None;
+                }
+                l[i][i] = s.sqrt();
+            } else {
+                l[i][j] = s / l[j][j];
+            }
+        }
+    }
+    Some(l)
+}
+
+/// Solve L·x = b for lower-triangular L.
+fn forward_solve(l: &[Vec<f64>], b: &[f64]) -> Vec<f64> {
+    let n = b.len();
+    let mut x = vec![0.0; n];
+    for i in 0..n {
+        let mut s = b[i];
+        for j in 0..i {
+            s -= l[i][j] * x[j];
+        }
+        x[i] = s / l[i][i];
+    }
+    x
+}
+
+const QUALIFIED_FORMAT: &str = "actinv-reverse-qualified-1";
+/// Declared resolvability thresholds (P55 protocol): a segment is
+/// `resolvable` when its relative posterior σ stays under REL_SIGMA_MAX and
+/// its worst posterior correlation stays under RHO_MAX.
+const REL_SIGMA_MAX: f64 = 0.5;
+const RHO_MAX: f64 = 0.95;
+/// Weak ridge prior on the posterior precision (fraction of the mean
+/// diagonal information) — keeps degenerate directions finite and labelled
+/// rather than exploding.
+const RIDGE_FRACTION: f64 = 1e-9;
+
+/// Qualified inverse (P55): per-segment irradiation-history estimation under
+/// generalized least squares with `C = C_meas + C_model`, where C_model is
+/// the propagated nuclear-data covariance of the sensitivity columns,
+/// `G_iᵀ Σ G_j` with `G_i = Σ_k f₀_k·J_{i,k}` at the first-pass NNLS point.
+/// Emits `actinv-reverse-qualified-1` NDJSON.
+#[allow(clippy::needless_range_loop)]
+pub fn solve_qualified(
+    spec: &Spec,
+    problem_json: &str,
+    measurements_json: &str,
+) -> Result<(String, serde_json::Value), String> {
+    use crate::flux::sha256_file;
+    use std::collections::{BTreeMap, HashMap};
+
+    if spec
+        .schedule
+        .iter()
+        .any(|step| step.feed.is_some() || step.removal.is_some())
+    {
+        return Err(
+            "reverse-qualified: feed/removal schedules are outside the linear inverse problem"
+                .into(),
+        );
+    }
+    let uncertainty = spec
+        .uncertainty
+        .as_ref()
+        .ok_or("reverse-qualified requires a spec with an uncertainty block")?;
+    if uncertainty.responses.is_empty() {
+        return Err(
+            "reverse-qualified requires uncertainty.responses declaring activity:<nuclide> for \
+             every measured nuclide"
+                .into(),
+        );
+    }
+    let n_steps = spec.schedule.len();
+    let measurements = parse_measurements(measurements_json, n_steps)?;
+    let irradiation: Vec<usize> = (0..n_steps)
+        .filter(|&i| spec.schedule[i].flux > 0.0)
+        .collect();
+    if irradiation.is_empty() {
+        return Err("reverse-qualified: the schedule declares no irradiation step".into());
+    }
+    let (m, k) = (measurements.len(), irradiation.len());
+    if m < k {
+        return Err(format!(
+            "reverse-qualified: {m} measurements cannot determine {k} segment multipliers"
+        ));
+    }
+    // Qualified mode requires every measurement to carry a declared
+    // measurement σ — the inverse claims are only as honest as the inputs.
+    for m_i in &measurements {
+        if m_i.weight == 1.0 {
+            return Err(format!(
+                "reverse-qualified: measurement {} at step {} declares no sigma_Bq_per_g — \
+                 unit weighting is not permitted under the qualified mode",
+                m_i.nuclide, m_i.step
+            ));
+        }
+        if !uncertainty
+            .responses
+            .iter()
+            .any(|r| r == &format!("activity:{}", m_i.nuclide))
+        {
+            return Err(format!(
+                "reverse-qualified: measured nuclide {} has no banded response \
+                 (uncertainty.responses lacks 'activity:{}')",
+                m_i.nuclide, m_i.nuclide
+            ));
+        }
+    }
+
+    // ---- forward solves: one unit-flux run per irradiation segment --------
+    let mut columns: Vec<Vec<f64>> = vec![Vec::with_capacity(m); k];
+    let mut j_maps: Vec<Vec<HashMap<usize, f64>>> = Vec::with_capacity(k);
+    let mut response_sigma: Vec<Vec<f64>> = vec![vec![0.0; k]; m];
+    let mut selected_rows: std::collections::BTreeSet<usize> = std::collections::BTreeSet::new();
+    let mut forward_runs = 0usize;
+    let mut mode_seen = String::new();
+    for (column_index, &step_index) in irradiation.iter().enumerate() {
+        let mut unit = spec.clone();
+        for (i, step) in unit.schedule.iter_mut().enumerate() {
+            step.flux = if step.flux > 0.0 && i == step_index {
+                1.0
+            } else {
+                0.0
+            };
+        }
+        let result = run::run(&unit, "reverse-qualified")?;
+        forward_runs += 1;
+        mode_seen = result.mode.clone();
+        if result.mode != "trace" {
+            return Err(format!(
+                "reverse-qualified: the problem resolved to '{}' mode; the linear inverse \
+                 requires the trace regime",
+                result.mode
+            ));
+        }
+        let mut maps: Vec<HashMap<usize, f64>> = Vec::with_capacity(m);
+        for (i, m_i) in measurements.iter().enumerate() {
+            let step = &result.steps[m_i.step - 1];
+            // A nuclide absent from a segment's step inventory is a causal
+            // zero — that irradiation happens later or makes none. It is only
+            // an error if every segment leaves the measurement dead.
+            let activity = step
+                .activity_Bq_per_g
+                .get(&m_i.nuclide)
+                .copied()
+                .unwrap_or(0.0);
+            columns[column_index].push(activity);
+            let mut map = HashMap::new();
+            if activity != 0.0 {
+                if let Some(resp) = step
+                    .uncertainty
+                    .as_ref()
+                    .and_then(|u| u.responses.get(&format!("activity:{}", m_i.nuclide)))
+                {
+                    response_sigma[i][column_index] = resp
+                        .combined_standard_uncertainty
+                        .unwrap_or(resp.mf33_standard_uncertainty);
+                    for s in &resp.sensitivities {
+                        if s.parameter.spectrum != 0 {
+                            return Err(
+                                "reverse-qualified: multi-spectrum sensitivity records are \
+                                 unsupported"
+                                    .into(),
+                            );
+                        }
+                        if s.parameter.covariance_covered {
+                            selected_rows.insert(s.parameter.library_row);
+                        }
+                        if s.value != 0.0 {
+                            *map.entry(s.parameter.library_row).or_insert(0.0) += s.value;
+                        }
+                    }
+                }
+            }
+            maps.push(map);
+        }
+        j_maps.push(maps);
+    }
+    for (i, m_i) in measurements.iter().enumerate() {
+        if (0..k).all(|seg| columns[seg][i] == 0.0) {
+            return Err(format!(
+                "reverse-qualified: measured nuclide {} at step {} is never produced by any \
+                 irradiation segment",
+                m_i.nuclide, m_i.step
+            ));
+        }
+    }
+
+    // ---- nuclear-data covariance collapse -------------------------------
+    let lib_sha = sha256_file(&spec.library.path)?;
+    if let Some(declared) = &spec.library.sha256 {
+        if !lib_sha.eq_ignore_ascii_case(declared) {
+            return Err(
+                "reverse-qualified: activation library does not match the spec's declared hash"
+                    .into(),
+            );
+        }
+    }
+    let library = actinv_data::library::read_npz(&spec.library.path)?;
+    let cov_sha = sha256_file(&uncertainty.covariance.path)?;
+    if !cov_sha.eq_ignore_ascii_case(&uncertainty.covariance.sha256) {
+        return Err(
+            "reverse-qualified: covariance sidecar does not match the spec's declared hash".into(),
+        );
+    }
+    let covariance = actinv_data::covariance::read_npz(&uncertainty.covariance.path)?;
+    let phi = spec.spectrum.flux_per_group.clone();
+    let selected: Vec<usize> = selected_rows.into_iter().collect();
+    let sparse =
+        covariance.collapse_sparse_weighted_multi(&library, &[&phi], &selected, &|_, _| 1.0)?;
+    let n_covered = sparse.row_indices.len();
+    let mut row_pos: HashMap<usize, usize> = HashMap::new();
+    for (i, &row) in sparse.row_indices.iter().enumerate() {
+        row_pos.insert(row, i);
+    }
+    // Densify each (measurement, segment) sensitivity onto covered positions.
+    let j_dense: Vec<Vec<Vec<f64>>> = j_maps
+        .iter()
+        .map(|maps| {
+            maps.iter()
+                .map(|map| {
+                    let mut v = vec![0.0; n_covered];
+                    for (&row, &val) in map {
+                        if let Some(&pos) = row_pos.get(&row) {
+                            v[pos] += val;
+                        }
+                    }
+                    v
+                })
+                .collect()
+        })
+        .collect();
+
+    // ---- pass 1: measurement-weighted NNLS point -------------------------
+    let aw0: Vec<Vec<f64>> = (0..m)
+        .map(|i| {
+            let root = measurements[i].weight.sqrt();
+            (0..k).map(|j| root * columns[j][i]).collect()
+        })
+        .collect();
+    let bw0: Vec<f64> = measurements
+        .iter()
+        .map(|m_i| m_i.weight.sqrt() * m_i.activity)
+        .collect();
+    let f0 = nnls(&aw0, &bw0)?;
+    if f0.iter().all(|&v| v <= 0.0) {
+        return Err(
+            "reverse-qualified: the first-pass estimate is identically zero; cannot evaluate \
+             the model covariance"
+                .into(),
+        );
+    }
+
+    // G_i = Σ_k f0_k · J_{i,k} — model covariance of the fitted response is
+    // quadratic in f: C_model[i,j] = Σ_kl f0_k f0_l · J_ikᵀΣJ_jl.
+    let g: Vec<Vec<f64>> = (0..m)
+        .map(|i| {
+            let mut gi = vec![0.0; n_covered];
+            for (seg, maps) in j_dense.iter().enumerate() {
+                let w = f0[seg];
+                if w != 0.0 {
+                    for (p, &v) in maps[i].iter().enumerate() {
+                        gi[p] += w * v;
+                    }
+                }
+            }
+            gi
+        })
+        .collect();
+    let mut c_model = vec![vec![0.0; m]; m];
+    for i in 0..m {
+        for j in 0..=i {
+            let mut acc = 0.0;
+            for (&(l, r), &v) in &sparse.entries {
+                acc += g[i][l] * v * g[j][r];
+            }
+            c_model[i][j] = acc;
+            c_model[j][i] = acc;
+        }
+    }
+    let c_meas_diag: Vec<f64> = measurements.iter().map(|m_i| 1.0 / m_i.weight).collect();
+    let mut c_total = c_model.clone();
+    for i in 0..m {
+        c_total[i][i] += c_meas_diag[i];
+    }
+
+    // ---- pass 2: GLS under the total covariance ---------------------------
+    let l = cholesky(&c_total).ok_or(
+        "reverse-qualified: the total covariance (measurement + model) is not positive definite",
+    )?;
+    // whiten the design columns: aw = L⁻¹ A — columnwise solves, each over
+    // the m measurement entries (solving per-measurement rows of length k
+    // against the m×m factor would silently truncate)
+    let mut aw = vec![vec![0.0; k]; m];
+    for (j, col) in columns.iter().enumerate() {
+        let x = forward_solve(&l, col);
+        for i in 0..m {
+            aw[i][j] = x[i];
+        }
+    }
+    let bw = forward_solve(
+        &l,
+        &measurements
+            .iter()
+            .map(|m_i| m_i.activity)
+            .collect::<Vec<_>>(),
+    );
+    let f_hat = nnls(&aw, &bw)?;
+
+    // Posterior: C_post = (Aᵀ C⁻¹ A + λI)⁻¹ on the free coordinates.
+    let mut precision = vec![vec![0.0; k]; k];
+    for i in 0..m {
+        for u in 0..k {
+            for v in 0..k {
+                precision[u][v] += aw[i][u] * aw[i][v];
+            }
+        }
+    }
+    let mean_diag: f64 = (0..k).map(|j| precision[j][j]).sum::<f64>() / k.max(1) as f64;
+    let ridge = RIDGE_FRACTION * mean_diag;
+    let mut prec_ridge = precision.clone();
+    for j in 0..k {
+        prec_ridge[j][j] += ridge;
+    }
+    let post_cov = invert(&prec_ridge)
+        .map_err(|e| format!("reverse-qualified: posterior precision is singular: {e}"))?;
+    let post_sigma: Vec<f64> = post_cov
+        .iter()
+        .enumerate()
+        .map(|(j, r)| r[j].max(0.0).sqrt())
+        .collect();
+    let post_corr: Vec<Vec<f64>> = (0..k)
+        .map(|u| {
+            (0..k)
+                .map(|v| {
+                    if post_sigma[u] > 0.0 && post_sigma[v] > 0.0 {
+                        post_cov[u][v] / (post_sigma[u] * post_sigma[v])
+                    } else {
+                        f64::NAN
+                    }
+                })
+                .collect()
+        })
+        .collect();
+
+    // ---- identifiability --------------------------------------------------
+    let post_eigs = jacobi_eigenvalues(&post_cov);
+    let lam_max = post_eigs.iter().cloned().fold(0.0, f64::max);
+    let effective_rank = post_eigs
+        .iter()
+        .filter(|&&lam| lam > 1e-8 * lam_max)
+        .count();
+    let identifiability: Vec<serde_json::Value> = (0..k)
+        .map(|j| {
+            let mut reasons: Vec<serde_json::Value> = Vec::new();
+            if f_hat[j] <= 0.0 {
+                reasons.push(serde_json::json!(
+                    "multiplier pinned at zero by the nonnegativity constraint"
+                ));
+            } else if post_sigma[j] > REL_SIGMA_MAX * f_hat[j] {
+                reasons.push(serde_json::json!(format!(
+                    "relative posterior sigma {:.3} exceeds {}",
+                    post_sigma[j] / f_hat[j],
+                    REL_SIGMA_MAX
+                )));
+            }
+            let worst = (0..k)
+                .filter(|&j2| j2 != j)
+                .filter_map(|j2| post_corr[j][j2].is_finite().then_some((j2, post_corr[j][j2])))
+                .max_by(|a, b| a.1.abs().total_cmp(&b.1.abs()));
+            if let Some((j2, rho)) = worst {
+                if rho.abs() >= RHO_MAX {
+                    reasons.push(serde_json::json!(format!(
+                        "posterior correlation {rho:.3} with segment at step {} exceeds {}",
+                        irradiation[j2] + 1,
+                        RHO_MAX
+                    )));
+                }
+            }
+            serde_json::json!({
+                "step": irradiation[j] + 1,
+                "resolvable": reasons.is_empty(),
+                "relative_posterior_sigma": if f_hat[j] > 0.0 { serde_json::json!(post_sigma[j] / f_hat[j]) } else { serde_json::Value::Null },
+                "worst_correlation": worst.map(|(j2, rho)| serde_json::json!({
+                    "segment_step": irradiation[j2] + 1, "rho": rho })),
+                "reasons": reasons,
+            })
+        })
+        .collect();
+
+    // ---- consistency ------------------------------------------------------
+    let residual: Vec<f64> = (0..m)
+        .map(|i| measurements[i].activity - (0..k).map(|j| f_hat[j] * columns[j][i]).sum::<f64>())
+        .collect();
+    let whitened = forward_solve(&l, &residual);
+    let chi_square: f64 = whitened.iter().map(|v| v * v).sum();
+    let pulls: Vec<serde_json::Value> = (0..m)
+        .map(|i| {
+            let pull = residual[i] / c_total[i][i].max(f64::MIN_POSITIVE).sqrt();
+            serde_json::json!({
+                "step": measurements[i].step,
+                "nuclide": measurements[i].nuclide,
+                "activity_Bq_per_g": measurements[i].activity,
+                "sigma_Bq_per_g": c_meas_diag[i].sqrt(),
+                "residual_Bq_per_g": residual[i],
+                "pull": pull,
+                "flagged": pull.abs() > 3.0,
+            })
+        })
+        .collect();
+
+    // ---- emit -------------------------------------------------------------
+    let confidence = uncertainty.confidence_level;
+    let z = crate::uncertainty::normal_multiplier(confidence);
+    let mut out = String::new();
+    out.push_str(
+        &serde_json::to_string(&serde_json::json!({
+            "record": "header",
+            "schema": QUALIFIED_FORMAT,
+            "problem_sha256": sha256_text(problem_json),
+            "measurements_sha256": sha256_text(measurements_json),
+            "activation_library_sha256": lib_sha,
+            "covariance_sha256": cov_sha,
+            "forward_runs": forward_runs,
+            "regime": mode_seen,
+            "segments": irradiation.iter().map(|&i| i + 1).collect::<Vec<_>>(),
+            "statistical_model": {
+                "estimate": "two-pass: measurement-weighted NNLS point f0, then GLS NNLS under C = C_meas + C_model(f0)",
+                "c_model": "C_model[i,j] = (Σ_k f0_k J_{i,k})ᵀ Σ (Σ_l f0_l J_{j,l}) — propagated MF33 XS covariance, shared-parameter correlations included",
+                "posterior": "C_post = (Aᵀ C⁻¹ A + λI)⁻¹, λ = 1e-9·mean(diag(AᵀC⁻¹A)) — a declared weak ridge keeping degenerate directions finite",
+                "coverage": "cross_section_mf33 only — same scope as the forward bands; decay/yield channels and transport/model discrepancy are not inferred",
+            },
+            "thresholds": {
+                "resolvable_relative_sigma_max": REL_SIGMA_MAX,
+                "resolvable_rho_max": RHO_MAX,
+                "pull_flag": 3.0,
+            },
+            "confidence_level": confidence,
+        }))
+        .map_err(|e| e.to_string())?,
+    );
+    out.push('\n');
+    // Sensitivity records carry the raw J maps — checkers apply their own
+    // coverage filter rather than trusting the emit's.
+    for (seg, maps) in j_maps.iter().enumerate() {
+        for (i, map) in maps.iter().enumerate() {
+            // Full sensitivity map (all nonzero rows) — checkers apply their
+            // own coverage filter rather than trusting the emit's.
+            let mut entries: BTreeMap<String, f64> = BTreeMap::new();
+            for (&row, &v) in map {
+                entries.insert(row.to_string(), v);
+            }
+            out.push_str(
+                &serde_json::to_string(&serde_json::json!({
+                    "record": "sensitivity",
+                    "measurement": i,
+                    "step": measurements[i].step,
+                    "nuclide": measurements[i].nuclide,
+                    "segment": seg,
+                    "segment_step": irradiation[seg] + 1,
+                    "a_Bq_per_g": columns[seg][i],
+                    "response_sigma_Bq_per_g": response_sigma[i][seg],
+                    "entries": entries,
+                }))
+                .map_err(|e| e.to_string())?,
+            );
+            out.push('\n');
+        }
+    }
+    // Kalman gain rows K_j = (C_post·AᵀC⁻¹)_j — which measurements drive
+    // each segment's estimate.
+    let mut cinv_a = vec![vec![0.0; k]; m];
+    for j in 0..k {
+        let x = dense_solve(&c_total, &columns[j])
+            .map_err(|e| format!("reverse-qualified: C⁻¹A solve failed: {e}"))?;
+        for i in 0..m {
+            cinv_a[i][j] = x[i];
+        }
+    }
+    for (j, &step_index) in irradiation.iter().enumerate() {
+        let mut gain: Vec<(usize, f64)> = (0..m)
+            .map(|i| {
+                (
+                    i,
+                    (0..k).map(|v| post_cov[j][v] * cinv_a[i][v]).sum::<f64>(),
+                )
+            })
+            .collect();
+        gain.sort_by(|a, b| b.1.abs().total_cmp(&a.1.abs()));
+        let top3: Vec<serde_json::Value> = gain
+            .iter()
+            .take(3)
+            .map(|&(i, g)| {
+                serde_json::json!({
+                    "step": measurements[i].step,
+                    "nuclide": measurements[i].nuclide,
+                    "gain": g,
+                })
+            })
+            .collect();
+        out.push_str(
+            &serde_json::to_string(&serde_json::json!({
+                "record": "estimate",
+                "segment": j,
+                "step": step_index + 1,
+                "top_sensitivity_contributors": top3,
+                "multiplier": f_hat[j],
+                "posterior_sigma": post_sigma[j],
+                "confidence_interval": [f_hat[j] - z * post_sigma[j],
+                                        f_hat[j] + z * post_sigma[j]],
+                "relative_posterior_sigma": if f_hat[j] > 0.0 {
+                    serde_json::json!(post_sigma[j] / f_hat[j])
+                } else {
+                    serde_json::Value::Null
+                },
+                "first_pass_multiplier": f0[j],
+            }))
+            .map_err(|e| e.to_string())?,
+        );
+        out.push('\n');
+    }
+    out.push_str(
+        &serde_json::to_string(&serde_json::json!({
+            "record": "posterior",
+            "covariance": post_cov,
+            "correlation": post_corr,
+            "eigenvalues": post_eigs,
+            "effective_rank": effective_rank,
+            "covariance_model": c_model,
+            "covariance_measurement_diagonal": c_meas_diag,
+            "covariance_total": c_total,
+        }))
+        .map_err(|e| e.to_string())?,
+    );
+    out.push('\n');
+    out.push_str(
+        &serde_json::to_string(&serde_json::json!({
+            "record": "identifiability",
+            "segments": identifiability,
+            "resolvable_count": identifiability.iter()
+                .filter(|s| s["resolvable"].as_bool() == Some(true)).count(),
+        }))
+        .map_err(|e| e.to_string())?,
+    );
+    out.push('\n');
+    out.push_str(
+        &serde_json::to_string(&serde_json::json!({
+            "record": "consistency",
+            "chi_square": chi_square,
+            "degrees_of_freedom": m.saturating_sub(k),
+            "pulls": pulls,
+        }))
+        .map_err(|e| e.to_string())?,
+    );
+    out.push('\n');
+    let summary = serde_json::json!({
+        "segments": k,
+        "measurements": m,
+        "forward_runs": forward_runs,
+        "covered_parameters": n_covered,
+        "chi_square": chi_square,
+        "resolvable": identifiability.iter()
+            .filter(|s| s["resolvable"].as_bool() == Some(true)).count(),
+    });
+    Ok((out, summary))
+}
+
 #[cfg(test)]
 mod tests {
     use super::{dense_solve, nnls};

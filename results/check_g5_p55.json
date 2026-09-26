@@ -1,0 +1,31 @@
+{
+ "checks": {
+  "all_emitted_values_reproduce": true,
+  "mutation_estimate_caught": true,
+  "mutation_posterior_caught": true,
+  "mutation_sensitivity_caught": true
+ },
+ "details": {
+  "problems": [],
+  "ref_corr": [
+   [
+    0.9999999999999999,
+    -0.30918017097538586
+   ],
+   [
+    -0.3091801709753859,
+    0.9999999999999999
+   ]
+  ],
+  "ref_f": [
+   1.391534701463134,
+   0.8132970750883379
+  ],
+  "ref_psig": [
+   0.010958405766651096,
+   0.007487905943803412
+  ]
+ },
+ "pass": true,
+ "schema": "actinv-p55-g5-check-1"
+}

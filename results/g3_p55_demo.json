@@ -1,0 +1,44 @@
+{
+ "checks": {
+  "both_segments_resolved": true,
+  "correlation_emitted": true,
+  "emitted": true,
+  "forward_runs_two": true,
+  "intervals_contain_truth": true,
+  "posterior_nonzero": true,
+  "sensitivity_records_present": true,
+  "truth_is_trace": true
+ },
+ "details": {
+  "chi_square": 4.041301371299446,
+  "estimates": {
+   "1": {
+    "multiplier": 1.3915347014631332,
+    "posterior_sigma": 0.010958405766651096,
+    "relative_sigma": 0.00787505029887422,
+    "truth": 1.4
+   },
+   "3": {
+    "multiplier": 0.8132970750883379,
+    "posterior_sigma": 0.007487905943803412,
+    "relative_sigma": 0.009206852173899799,
+    "truth": 0.8
+   }
+  },
+  "n_measurement": 4,
+  "posterior_correlation": [
+   [
+    0.9999999999999999,
+    -0.30918017097538586
+   ],
+   [
+    -0.3091801709753859,
+    0.9999999999999999
+   ]
+  ],
+  "resolvable_count": 2,
+  "wall_time_s": 26.44915024000511
+ },
+ "pass": true,
+ "schema": "actinv-p55-g3-demo-1"
+}

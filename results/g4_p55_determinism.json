@@ -1,0 +1,9 @@
+{
+ "checks": {
+  "byte_identical": true,
+  "run0_ok": true,
+  "run1_ok": true
+ },
+ "pass": true,
+ "schema": "actinv-p55-g4-determinism-1"
+}

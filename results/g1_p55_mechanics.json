@@ -1,0 +1,109 @@
+{
+ "checks": {
+  "c_model_emitted": true,
+  "consistency_record": true,
+  "corr_diag_one": true,
+  "covariance_psd_diag": true,
+  "emits": true,
+  "estimate_per_segment": true,
+  "estimates_finite": true,
+  "gains_emitted": true,
+  "header_first": true,
+  "header_schema": true,
+  "ident_structure": true,
+  "identifiability_record": true,
+  "posterior_record": true,
+  "posterior_shapes": true,
+  "pulls_carry_measurements": true,
+  "pulls_emitted": true,
+  "reject_feed_schedule": true,
+  "reject_never_produced": true,
+  "reject_sigma_less": true,
+  "reject_unbanded_nuclide": true,
+  "reject_unbanded_spec": true,
+  "reject_underdetermined": true,
+  "sensitivity_records": true,
+  "steps_are_1_3": true,
+  "truth_run_ok": true
+ },
+ "details": {
+  "estimates": {
+   "1": {
+    "confidence_interval": [
+     0.7121074851522036,
+     0.9646370984406687
+    ],
+    "first_pass_multiplier": 1.4980037757500977,
+    "multiplier": 0.8383722917964361,
+    "posterior_sigma": 0.06442200348587694,
+    "record": "estimate",
+    "relative_posterior_sigma": 0.07684176125124033,
+    "segment": 0,
+    "step": 1,
+    "top_sensitivity_contributors": [
+     {
+      "gain": 4.0103133089367555e+24,
+      "nuclide": "Mn56",
+      "step": 4
+     },
+     {
+      "gain": -6.823660014857525e+23,
+      "nuclide": "Mn57",
+      "step": 4
+     },
+     {
+      "gain": 1.903419585531539e+23,
+      "nuclide": "Mn56",
+      "step": 2
+     }
+    ]
+   },
+   "3": {
+    "confidence_interval": [
+     2.111003461983966,
+     2.8246398078561112
+    ],
+    "first_pass_multiplier": 0.604621669092377,
+    "multiplier": 2.4678216349200386,
+    "posterior_sigma": 0.18205343350725256,
+    "record": "estimate",
+    "relative_posterior_sigma": 0.07377090423844647,
+    "segment": 1,
+    "step": 3,
+    "top_sensitivity_contributors": [
+     {
+      "gain": 2.836315726187101e+26,
+      "nuclide": "Mn56",
+      "step": 4
+     },
+     {
+      "gain": -2.504960958796732e+26,
+      "nuclide": "Mn56",
+      "step": 2
+     },
+     {
+      "gain": -7.961570715346835e+23,
+      "nuclide": "Mn57",
+      "step": 4
+     }
+    ]
+   }
+  },
+  "kinds": [
+   "header",
+   "sensitivity",
+   "sensitivity",
+   "sensitivity",
+   "sensitivity",
+   "sensitivity",
+   "sensitivity",
+   "estimate",
+   "estimate",
+   "posterior",
+   "identifiability",
+   "consistency"
+  ]
+ },
+ "pass": true,
+ "schema": "actinv-p55-g1-mechanics-1"
+}
