@@ -1,0 +1,25 @@
+{
+  "phase": "P62",
+  "status": "P62-CLOSED",
+  "closed_at_utc": "2026-09-26T21:55:00Z",
+  "final_commit": "499a3c42dc16f4ddf04094ce093db107cf0c9ed0",
+  "amendments": 0,
+  "protocol_sha256": "9b67060ec50a8bd3de94d4f609b5e38ebd3263b46d2536d09bd0c12e80f555a3",
+  "gates": {
+    "g1_mechanics": {
+      "n": 8,
+      "pass": true
+    },
+    "g2_identity": {
+      "n": 7,
+      "pass": true
+    },
+    "g5_checker": {
+      "checks": 5,
+      "problems": 0,
+      "mutations_caught": 3
+    }
+  },
+  "measured": "worker probe on TENDL-2025 709g: cold 314.5 s vs warm 273.3 s + 1.2 ms fingerprint = ~41 s (13%) saved per candidate; P49 campaign cost ~570 s/eval x 24 evals -> ~30 min of preparation eliminated on that campaign shape; scales with any P56 candidate budget.",
+  "delivered": "evaluate_candidate shares one PreparedCache across the optimize search (lhs + coordinate descent); ledger rows report prepared_cache {hit, fingerprint_ms}; first solved eval is a cold miss, subsequent evals hit; axis-violated/spec-error rows never claim a block; winner re-verification keeps a fresh run() by design."
+}

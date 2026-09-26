@@ -2061,3 +2061,10 @@ extends onto the band — which response variance rides on isomer channels, and 
   classes named. Opt-in emit keeps absent-`outputs` runs byte-identical. Real data reads
   honest: every FNS case is `incomplete` — W names 170 products with no evaluated decay
   data, 19 isomer→ground fallbacks, 129 SF branches to leakage.
+- 2026-09-26 — **P62 closes `P62-CLOSED`** (`results/verdict_p62.json`; protocol sealed at
+  `9b67060e…`, zero amendments). `actinv optimize` candidates now share a single
+  `PreparedCache`: the per-candidate library/decay preparation (~41 s of a 314 s solve
+  on TENDL-2025 709g, 13%) is paid once per session, and each ledger row reports
+  `prepared_cache {hit, fingerprint_ms}` for observability. Objectives bit-identical to
+  fresh-prepare re-runs (G2). Winner re-verification stays a fresh `run()` by design.
+  P56's many-candidate economics: preparation amortizes to a fingerprint check.

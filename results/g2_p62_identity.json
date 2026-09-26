@@ -1,0 +1,41 @@
+{
+ "pass": true,
+ "n": 7,
+ "checks": [
+  {
+   "name": "solved evals exist",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "eval 0 re-runs",
+   "pass": true,
+   "detail": "4 steps, 6 of 6 states, 4.2 ms -> /home/connoravila/Documents/actinv/target/p62_g2_wzp_g_iz/re_0.out.json\n"
+  },
+  {
+   "name": "eval 0 objective bit-identical",
+   "pass": true,
+   "detail": "1.0366785247179804e-37 vs 1.0366785247179804e-37"
+  },
+  {
+   "name": "eval 1 re-runs",
+   "pass": true,
+   "detail": "4 steps, 6 of 6 states, 3.9 ms -> /home/connoravila/Documents/actinv/target/p62_g2_wzp_g_iz/re_1.out.json\n"
+  },
+  {
+   "name": "eval 1 objective bit-identical",
+   "pass": true,
+   "detail": "1.0366785247179804e-37 vs 1.0366785247179804e-37"
+  },
+  {
+   "name": "eval 2 re-runs",
+   "pass": true,
+   "detail": "4 steps, 6 of 6 states, 3.9 ms -> /home/connoravila/Documents/actinv/target/p62_g2_wzp_g_iz/re_2.out.json\n"
+  },
+  {
+   "name": "eval 2 objective bit-identical",
+   "pass": true,
+   "detail": "1.0366785247179804e-37 vs 1.0366785247179804e-37"
+  }
+ ]
+}

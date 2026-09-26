@@ -1,0 +1,47 @@
+{
+ "pass": true,
+ "n": 8,
+ "checks": [
+  {
+   "name": "evals ledgered",
+   "pass": true,
+   "detail": "n=4"
+  },
+  {
+   "name": "at least two solved evals",
+   "pass": true,
+   "detail": "[\"executed\", \"executed\", \"executed\", \"infeasible_by_axis: dt_upper\"]"
+  },
+  {
+   "name": "every solved eval carries the observability block",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "first solved eval is a cold miss",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "subsequent solved evals are hits",
+   "pass": true,
+   "detail": "[{\"fingerprint_ms\": 0.968927, \"hit\": false}, {\"fingerprint_ms\": 0.171597, \"hit\": true}, {\"fingerprint_ms\": 0.192416, \"hit\": true}]"
+  },
+  {
+   "name": "fingerprint_ms present and finite",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "non-solved rows never claim a hit",
+   "pass": true,
+   "detail": "1 non-solved rows"
+  },
+  {
+   "name": "result ranks a winner or reports infeasible honestly",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "ledger_rows": 4
+}

@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "case": {
+      "path": "controls/p62_case.py",
+      "sha256": "14c78363d45deab8d8c086bea73ccda40c0c357b8c102bb2a858aeeeeef52721"
+    },
+    "fixture": {
+      "path": "controls/p58_fixture.py",
+      "sha256": "b055b33df38a92ec43c4699574972bb3221f5274eb243f5ea48797bd6897b1b2"
+    },
+    "g1": {
+      "path": "controls/g1_p62_mechanics.py",
+      "sha256": "1f37b719e9f865061ee0c88d51fcf634af4577f44389f4c5a62a7a50fe499868"
+    },
+    "g2": {
+      "path": "controls/g2_p62_identity.py",
+      "sha256": "c3df77a25f7635c28ffc9abb1567b8489c85a770de73f731f198c368979055ba"
+    },
+    "g5": {
+      "path": "controls/check_g5_p62.py",
+      "sha256": "f15cd33f9aa6b031caf22d13773e3c46c6759a4379e4a942a4f9a52b6fddcd8c"
+    },
+    "optimize_rs": {
+      "path": "crates/actinv-cli/src/optimize.rs",
+      "sha256": "8366b99ae0ae44abeeb32faa668fbf13b3109b03e0d43506996672f2f5d9b4e5"
+    },
+    "p60_case": {
+      "path": "controls/p60_case.py",
+      "sha256": "bee61abb3c2bd5673fc34c4aea6a72d23d989e413ed321ab939c5295529723c8"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P62_PROTOCOL.md",
+      "sha256": "9b67060ec50a8bd3de94d4f609b5e38ebd3263b46d2536d09bd0c12e80f555a3"
+    }
+  },
+  "opening_commit": "499a3c42dc16f4ddf04094ce093db107cf0c9ed0",
+  "protocol_sha256": "9b67060ec50a8bd3de94d4f609b5e38ebd3263b46d2536d09bd0c12e80f555a3",
+  "schema": "actinv-p62-seal-1",
+  "sealed_at_utc": "2026-09-26T21:12:09Z"
+}
