@@ -749,19 +749,40 @@ fn evaluate_candidate(
             violations.push(*av);
             continue;
         }
-        match select_step(steps, c.time_s)
-            .and_then(|st| response_edge(st, c.response.as_deref().unwrap(), c.edge))
-        {
+        let step = match select_step(steps, c.time_s) {
+            Ok(st) => st,
+            Err(e) => {
+                detail.insert(
+                    format!("constraint.{}", c.name),
+                    Value::from(format!("constraint_not_computable: {e}")),
+                );
+                violations.push(None);
+                continue;
+            }
+        };
+        match response_edge(step, c.response.as_deref().unwrap(), c.edge) {
             Ok(Some(edge)) => {
                 let viol = if c.sense == "le" {
                     (edge - c.limit) / c.limit.abs().max(TINY)
                 } else {
                     (c.limit - edge) / c.limit.abs().max(TINY)
                 };
-                detail.insert(
-                    format!("constraint.{}", c.name),
-                    serde_json::json!({"edge": edge, "limit": c.limit, "violation": viol}),
-                );
+                let mut entry =
+                    serde_json::json!({"edge": edge, "limit": c.limit, "violation": viol});
+                if c.edge != Edge::Nominal {
+                    if let Ok(Some(nominal)) =
+                        response_edge(step, c.response.as_deref().unwrap(), Edge::Nominal)
+                    {
+                        let nviol = if c.sense == "le" {
+                            (nominal - c.limit) / c.limit.abs().max(TINY)
+                        } else {
+                            (c.limit - nominal) / c.limit.abs().max(TINY)
+                        };
+                        entry["nominal_edge"] = serde_json::json!(nominal);
+                        entry["nominal_violation"] = serde_json::json!(nviol);
+                    }
+                }
+                detail.insert(format!("constraint.{}", c.name), entry);
                 violations.push(Some(viol));
             }
             Ok(None) => {
@@ -870,6 +891,7 @@ pub fn run_optimize(
         x: Vec<f64>,
         out: EvalOutcome,
         spec_sha: Option<String>,
+        constraint_detail: BTreeMap<String, Value>,
     }
     let mut rows: Vec<Row> = Vec::new();
     let mut next_id = resumed.values().map(|(id, _, _)| id + 1).max().unwrap_or(0);
@@ -901,11 +923,13 @@ pub fn run_optimize(
                     x: x.to_vec(),
                     out: out.clone(),
                     spec_sha: sha.clone(),
+                    constraint_detail: BTreeMap::new(),
                 });
                 return out.clone();
             }
             let t0 = std::time::Instant::now();
             let (outcome, canon, detail) = evaluate_candidate(base_ref, opt_ref, x, cache_ref);
+            let row_detail = detail.clone();
             let wall = t0.elapsed().as_secs_f64();
             let spec_sha = canon.as_deref().map(|c| sha256_hex(c.as_bytes()));
             let eval_id = *next_id_ref;
@@ -937,6 +961,7 @@ pub fn run_optimize(
                 x: x.to_vec(),
                 out: outcome.clone(),
                 spec_sha,
+                constraint_detail: row_detail,
             });
             outcome
         })
@@ -985,13 +1010,57 @@ pub fn run_optimize(
                         .flatten()
                 });
             let identical = re_obj == row.out.objective;
+            // Re-execute the winner's banded constraint edges too — the
+            // certification stands on the re-run, not only the ledgered
+            // numbers.
+            let mut constraint_checks = Vec::new();
+            let mut constraints_identical = true;
+            let has_detail = row
+                .constraint_detail
+                .keys()
+                .any(|k| k.starts_with("constraint."));
+            for c in opt.constraints.iter().filter(|c| c.kind == "response") {
+                let name = format!("constraint.{}", c.name);
+                let re_edge = select_step(&re.steps, c.time_s).ok().and_then(|st| {
+                    response_edge(st, c.response.as_deref().unwrap(), c.edge)
+                        .ok()
+                        .flatten()
+                });
+                let ledgered = row
+                    .constraint_detail
+                    .get(&name)
+                    .and_then(|d| d.get("edge"))
+                    .and_then(Value::as_f64);
+                // Resumed rows carry no detail: the fresh re-run is the
+                // certification edge on its own — skip the comparison.
+                let same = if !has_detail {
+                    re_edge.is_some()
+                } else {
+                    match (re_edge, ledgered) {
+                        (Some(a), Some(b)) => a == b,
+                        (None, None) => true,
+                        _ => false,
+                    }
+                };
+                constraints_identical &= same;
+                constraint_checks.push(serde_json::json!({
+                    "name": c.name,
+                    "edge_rule": format!("{:?}", c.edge).to_lowercase(),
+                    "re_executed_edge": re_edge,
+                    "ledgered_edge": ledgered,
+                    "bit_identical": same,
+                }));
+            }
             verify = serde_json::json!({
                 "performed": true,
                 "re_executed_objective": re_obj,
                 "ledgered_objective": row.out.objective,
                 "bit_identical": identical,
+                "constraint_edges": constraint_checks,
+                "constraint_edges_bit_identical": constraints_identical
+                    && !constraint_checks.is_empty(),
             });
-            if !identical {
+            if !identical || !constraints_identical {
                 return Err("winner re-execution diverged from the ledgered value".into());
             }
         } else {
@@ -1005,6 +1074,151 @@ pub fn run_optimize(
             "spec_file": format!("candidates/eval_{:04}.json", row.eval_id),
         });
     }
+
+    // ---- P56 certification: the formal statement that the winner satisfies
+    // every response constraint at its declared band edge, plus the count of
+    // candidates a nominal-only search would have over-certified.
+    let banded: Vec<&Constraint> = opt
+        .constraints
+        .iter()
+        .filter(|c| c.kind == "response" && c.edge != Edge::Nominal)
+        .collect();
+    let n_response = opt
+        .constraints
+        .iter()
+        .filter(|c| c.kind == "response")
+        .count();
+    // Re-read the append-only ledger: covers resumed rows too.
+    let mut nominal_overcertify = 0usize;
+    if !banded.is_empty() {
+        if let Ok(text) = std::fs::read_to_string(&ledger_path) {
+            for line in text.lines().filter(|l| !l.trim().is_empty()) {
+                let Ok(row) = serde_json::from_str::<Value>(line) else {
+                    continue;
+                };
+                let violations = row["violations"].as_array();
+                let detail = &row["constraints"];
+                let mut nominal_ok = true;
+                let mut banded_fail = false;
+                let mut has_all = true;
+                for (i, c) in opt.constraints.iter().enumerate() {
+                    let v = violations.and_then(|vs| vs.get(i)).and_then(Value::as_f64);
+                    if c.kind == "axis" {
+                        if v.is_some_and(|x| x > 0.0) {
+                            nominal_ok = false;
+                        }
+                        continue;
+                    }
+                    let entry = detail.get(format!("constraint.{}", c.name));
+                    if c.edge == Edge::Nominal {
+                        if v.is_none_or(|x| x > 0.0) {
+                            nominal_ok = false;
+                        }
+                        continue;
+                    }
+                    let Some(entry) = entry else {
+                        has_all = false;
+                        break;
+                    };
+                    let nviol = entry["nominal_violation"].as_f64();
+                    match nviol {
+                        Some(x) if x <= 0.0 => {}
+                        _ => nominal_ok = false,
+                    }
+                    if v.is_some_and(|x| x > 0.0) {
+                        banded_fail = true;
+                    }
+                }
+                if has_all && nominal_ok && banded_fail {
+                    nominal_overcertify += 1;
+                }
+            }
+        }
+    }
+    let (confidence, covariance_id) = base_doc
+        .get("uncertainty")
+        .map(|u| {
+            (
+                u.get("confidence_level").cloned().unwrap_or(Value::Null),
+                u.get("covariance")
+                    .map(|c| {
+                        serde_json::json!({
+                            "path": c.get("path"),
+                            "sha256": c.get("sha256"),
+                        })
+                    })
+                    .unwrap_or(Value::Null),
+            )
+        })
+        .unwrap_or((Value::Null, Value::Null));
+    let winner_constraints: Vec<Value> = best_idx
+        .map(|bi| {
+            opt.constraints
+                .iter()
+                .filter(|c| c.kind == "response")
+                .map(|c| {
+                    let entry = rows[bi]
+                        .constraint_detail
+                        .get(&format!("constraint.{}", c.name))
+                        .cloned()
+                        .unwrap_or(Value::Null);
+                    let edge_v = entry.get("edge").and_then(Value::as_f64);
+                    let margin = edge_v.map(|e| {
+                        if c.sense == "le" {
+                            (c.limit - e) / c.limit.abs().max(TINY)
+                        } else {
+                            (e - c.limit) / c.limit.abs().max(TINY)
+                        }
+                    });
+                    serde_json::json!({
+                        "name": c.name,
+                        "edge_rule": format!("{:?}", c.edge).to_lowercase(),
+                        "edge_value": edge_v,
+                        "nominal_edge": entry.get("nominal_edge"),
+                        "limit": c.limit,
+                        "sense": c.sense,
+                        "margin_fraction": margin,
+                    })
+                })
+                .collect()
+        })
+        .unwrap_or_default();
+    let certification = if let Some(bi) = best_idx {
+        let k = winner_constraints
+            .iter()
+            .filter(|c| c["margin_fraction"].as_f64().is_some_and(|m| m >= 0.0))
+            .count();
+        serde_json::json!({
+            "statement": format!(
+                "eval {} satisfies {}/{} response constraints at their declared \
+                 band edges ({} at {}) under the base spec's covariance set",
+                rows[bi].eval_id, k, n_response,
+                banded.iter().map(|c| format!("{:?}", c.edge).to_lowercase())
+                    .collect::<Vec<_>>().join("/"),
+                confidence),
+            "confidence_level": confidence,
+            "covariance": covariance_id,
+            "winner": {
+                "eval_id": rows[bi].eval_id,
+                "objective": {
+                    "value": rows[bi].out.objective,
+                    "edge": format!("{:?}", opt.objective.edge).to_lowercase(),
+                    "response": opt.objective.response,
+                },
+                "constraints": winner_constraints,
+            },
+            "nominal_would_overcertify": nominal_overcertify,
+        })
+    } else {
+        serde_json::json!({
+            "statement": "no candidate is feasible under the declared band \
+                          edges — the design box contains no certifiable design",
+            "confidence_level": confidence,
+            "covariance": covariance_id,
+            "winner": null,
+            "nominal_would_overcertify": nominal_overcertify,
+        })
+    };
 
     let opt_text = std::fs::read_to_string(opt_path).unwrap_or_default();
     let result = serde_json::json!({
@@ -1033,6 +1247,7 @@ pub fn run_optimize(
         "resumed_hits": resumed.len(),
         "resumed": resume && !resumed.is_empty(),
         "infeasible": infeasible,
+        "certification": certification,
         "best_feasible": best_block,
         "ranked": order.iter().map(|&i| serde_json::json!({
             "eval_id": rows[i].eval_id,
