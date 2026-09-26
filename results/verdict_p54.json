@@ -2,14 +2,14 @@
  "phase": "P54",
  "status": "P54-CLOSED",
  "closed_at_utc": "2026-09-26T07:37:04Z",
- "final_commit": "afb2f8b82b16e0ccb1644e0f3a6ef859b0d45df8",
+ "final_commit": "9e8363639ef45919643dba02aa24b7f85edaae79",
  "amendments": 1,
- "protocol_sha256": "ddcbb5df873859006d7b421f6c3dccba481204055f86d5027dc265abe27bb009",
+ "protocol_sha256": "eec4e98db1c083bc5649700114f72568dcd74391e9c114432c362ff57efa033b",
  "gates": {
   "g0": {
    "pass": true,
    "seal": "results/g0_p54_seals.json",
-   "opening_commit": "afb2f8b82b16e0ccb1644e0f3a6ef859b0d45df8"
+   "opening_commit": "9e8363639ef45919643dba02aa24b7f85edaae79"
   },
   "g1": {
    "pass": true,
