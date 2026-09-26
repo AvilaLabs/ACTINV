@@ -1,0 +1,32 @@
+{
+  "phase": "P61",
+  "status": "P61-CLOSED",
+  "closed_at_utc": "2026-09-26T21:20:00Z",
+  "final_commit": "7c03761d3c72bb2e86f121d22430ca87a0ec1c5b",
+  "amendments": 0,
+  "protocol_sha256": "22328c56fa67f8a930790486361b0ad5b48a015dee07db1caf40fca5e3ad5037",
+  "gates": {
+    "g1_mechanics": {
+      "n": 19,
+      "pass": true
+    },
+    "g2_exactness": {
+      "n": 14,
+      "pass": true
+    },
+    "g3_demo": {
+      "n": 20,
+      "pass": true
+    },
+    "g4_determinism": {
+      "n": 3,
+      "pass": true
+    },
+    "g5_checker": {
+      "checks": 7,
+      "problems": 0,
+      "mutations_caught": 4
+    }
+  },
+  "delivered": "options.outputs accepts audit -> ledger.completeness consolidates the scattered chain-defect ledgers into one verdict: status, per-channel production coefficient totals (positive-rate inflow only), defects sorted by rate coefficient with instances/fraction_of_channel_flow/top-3 contributors, unquantified classes named. Emitted only on explicit audit membership so absent-outputs runs stay byte-identical. Real-data: every FNS case honest-incomplete; W lists 170 products lacking evaluated decay data (fraction 2.7e-20 of production coefficient flow), 19 isomer->ground fallbacks, 129 SF branches to leakage."
+}

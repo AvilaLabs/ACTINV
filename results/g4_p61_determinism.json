@@ -1,0 +1,18 @@
+{
+ "pass": true,
+ "n": 3,
+ "checks": [
+  {
+   "name": "audit run byte-identical",
+   "pass": true
+  },
+  {
+   "name": "completeness emitted",
+   "pass": true
+  },
+  {
+   "name": "audit absent -> no completeness key",
+   "pass": true
+  }
+ ]
+}

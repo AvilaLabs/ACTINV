@@ -2053,3 +2053,11 @@ extends onto the band — which response variance rides on isomer channels, and 
   ships a banded experiment-design surface. The same lane measured the parked SIGMA1
   10–100× linear-window claim **negative** on real zero-K tables (0.1–7.4% collapse fire
   rate, parity-to-loss speedups) — reverted; refutation recorded in PARKING.
+- 2026-09-26 — **P61 closes `P61-CLOSED`** (`results/verdict_p61.json`; protocol sealed at
+  `22328c56…`, zero amendments). `options.outputs: ["audit"]` consolidates the ten
+  scattered defect ledgers into a single `ledger.completeness` verdict — per-channel
+  production-coefficient totals (positive inflow only), defect classes ranked by summed
+  rate coefficient with `fraction_of_channel_flow` and top-3 contributors, unquantified
+  classes named. Opt-in emit keeps absent-`outputs` runs byte-identical. Real data reads
+  honest: every FNS case is `incomplete` — W names 170 products with no evaluated decay
+  data, 19 isomer→ground fallbacks, 129 SF branches to leakage.

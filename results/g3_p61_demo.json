@@ -1,0 +1,251 @@
+{
+ "pass": true,
+ "n": 20,
+ "checks": [
+  {
+   "name": "completeness present: W__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "status honest: W__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "status vs inventory consistent: W__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "channel totals positive: W__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "products_no_evaluated_decay_data rate traces to ledger: W__2000exp_5min",
+   "pass": true,
+   "detail": "6.419289074725183e-13"
+  },
+  {
+   "name": "isomer_fell_back_to_ground rate traces to ledger: W__2000exp_5min",
+   "pass": true,
+   "detail": "1.268562677000611e-13"
+  },
+  {
+   "name": "fission_no_yields_to_leakage rate traces to ledger: W__2000exp_5min",
+   "pass": true,
+   "detail": "4.1944198597301165e-24"
+  },
+  {
+   "name": "completeness present: Pb__1996exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "status honest: Pb__1996exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "status vs inventory consistent: Pb__1996exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "channel totals positive: Pb__1996exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "products_no_evaluated_decay_data rate traces to ledger: Pb__1996exp_5min",
+   "pass": true,
+   "detail": "6.419289074725183e-13"
+  },
+  {
+   "name": "isomer_fell_back_to_ground rate traces to ledger: Pb__1996exp_5min",
+   "pass": true,
+   "detail": "1.268562677000611e-13"
+  },
+  {
+   "name": "fission_no_yields_to_leakage rate traces to ledger: Pb__1996exp_5min",
+   "pass": true,
+   "detail": "3.2565134140686023e-18"
+  },
+  {
+   "name": "completeness present: Y__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "status honest: Y__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "status vs inventory consistent: Y__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "channel totals positive: Y__2000exp_5min",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "products_no_evaluated_decay_data rate traces to ledger: Y__2000exp_5min",
+   "pass": true,
+   "detail": "6.419289074725183e-13"
+  },
+  {
+   "name": "isomer_fell_back_to_ground rate traces to ledger: Y__2000exp_5min",
+   "pass": true,
+   "detail": "1.268562677000611e-13"
+  }
+ ],
+ "demo": {
+  "W__2000exp_5min": {
+   "status": "incomplete",
+   "reaction_defects": [
+    {
+     "class": "products_no_evaluated_decay_data",
+     "instances": 170,
+     "fraction": 2.6827592305696713e-20,
+     "largest": [
+      "0_0",
+      "99259_0",
+      "73191_0"
+     ]
+    },
+    {
+     "class": "isomer_fell_back_to_ground",
+     "instances": 19,
+     "fraction": 5.301596783792228e-21,
+     "largest": [
+      "83216_m1",
+      "69177_m1",
+      "75192_m1"
+     ]
+    },
+    {
+     "class": "fission_no_yields_to_leakage",
+     "instances": 19,
+     "fraction": 1.7529384429626195e-31,
+     "largest": [
+      "73183_0",
+      "73186_0",
+      "73185_0"
+     ]
+    }
+   ],
+   "decay_defects": [
+    {
+     "class": "decay_daughters_missing",
+     "instances": 2
+    },
+    {
+     "class": "spontaneous_fission_branches_to_leakage",
+     "instances": 129
+    }
+   ],
+   "unquantified": [
+    "targets_absent_from_decay_library",
+    "bulk_production_dropped",
+    "negative_atoms_zeroed",
+    "decay_nuclides_from_fallback"
+   ]
+  },
+  "Pb__1996exp_5min": {
+   "status": "incomplete",
+   "reaction_defects": [
+    {
+     "class": "products_no_evaluated_decay_data",
+     "instances": 170,
+     "fraction": 1.8350434782327043e-20,
+     "largest": [
+      "0_0",
+      "99259_0",
+      "73191_0"
+     ]
+    },
+    {
+     "class": "isomer_fell_back_to_ground",
+     "instances": 19,
+     "fraction": 3.6263636674736456e-21,
+     "largest": [
+      "83216_m1",
+      "69177_m1",
+      "75192_m1"
+     ]
+    },
+    {
+     "class": "fission_no_yields_to_leakage",
+     "instances": 33,
+     "fraction": 9.309198624179018e-26,
+     "largest": [
+      "82203_0",
+      "82203_1",
+      "82201_1"
+     ]
+    }
+   ],
+   "decay_defects": [
+    {
+     "class": "decay_daughters_missing",
+     "instances": 2
+    },
+    {
+     "class": "spontaneous_fission_branches_to_leakage",
+     "instances": 129
+    }
+   ],
+   "unquantified": [
+    "targets_absent_from_decay_library",
+    "bulk_production_dropped",
+    "negative_atoms_zeroed",
+    "decay_nuclides_from_fallback"
+   ]
+  },
+  "Y__2000exp_5min": {
+   "status": "incomplete",
+   "reaction_defects": [
+    {
+     "class": "products_no_evaluated_decay_data",
+     "instances": 170,
+     "fraction": 5.26779694637758e-21,
+     "largest": [
+      "0_0",
+      "99259_0",
+      "73191_0"
+     ]
+    },
+    {
+     "class": "isomer_fell_back_to_ground",
+     "instances": 19,
+     "fraction": 1.0410078933045204e-21,
+     "largest": [
+      "83216_m1",
+      "69177_m1",
+      "75192_m1"
+     ]
+    }
+   ],
+   "decay_defects": [
+    {
+     "class": "decay_daughters_missing",
+     "instances": 2
+    },
+    {
+     "class": "spontaneous_fission_branches_to_leakage",
+     "instances": 129
+    }
+   ],
+   "unquantified": [
+    "targets_absent_from_decay_library",
+    "bulk_production_dropped",
+    "negative_atoms_zeroed",
+    "decay_nuclides_from_fallback"
+   ]
+  }
+ }
+}
