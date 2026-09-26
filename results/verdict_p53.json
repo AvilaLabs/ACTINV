@@ -1,0 +1,55 @@
+{
+  "amendments": 2,
+  "closed_at_utc": "2026-09-26T06:35:00Z",
+  "conditions": [
+    "correlated sigma covers the MF=33 XS channel only (same scope as the per-cell bands); decay/yield channels are not_evaluated and excluded by construction",
+    "multi-spectrum sensitivity records (parameter.spectrum != 0) are rejected rather than approximated",
+    "cross-nuclide covariance is absent from MF=33: sigma_independent and sigma_conservative bound it; the correlated value propagates shared-nuclide covariance only",
+    "the joint quadratic form reuses each cell's emitted sensitivities; covariance_covered=false rows contribute no covariance entries by construction",
+    "PSD exclusion verdicts are borderline-sensitive at the 1e-16 eigensolver noise floor; G5's independent checker reproduced the emit path's kind-8/9 folding exactly after A2"
+  ],
+  "final_commit": "f89626d04fec3cb8454b403836f6baa486b3460b",
+  "gates": {
+    "g0": {
+      "pass": true,
+      "seal": "results/g0_p53_seals.json",
+      "protocol_sha256": "7c51e4a677a110f478adca760635e5ba0c0609772b9e05376f5316a7bd2ebc02"
+    },
+    "g1": {
+      "note": "emission rules, rho shape/diag/degenerate, binding + coverage ledgers, rejection of flux/spec mismatch, truncated mesh, and unbanded inputs",
+      "pass": true,
+      "result": "results/g1_p53_mechanics.json"
+    },
+    "g2": {
+      "note": "closed-form reference on a 2-group fixture: exact sigma_correlated (2.099949847554637e-26 both sides), partial rho=0.9158 on shape-differing spectra, planted non-PSD blocks excluded identically",
+      "pass": true,
+      "result": "results/g2_p53_exactness.json"
+    },
+    "g3": {
+      "note": "8-cell corpus mesh on real TENDL covariance; joint export adds 19.3s on a 188.6s mesh",
+      "pass": true,
+      "physics": {
+        "min_offdiag_rho": 0.9987,
+        "sigma_correlated": 32.6795,
+        "sigma_independent": 11.5707,
+        "corr_vs_independent": 2.82,
+        "corr_vs_conservative": 0.71
+      },
+      "result": "results/g3_p53_demo.json"
+    },
+    "g4": {
+      "note": "joint export byte-identical across reruns",
+      "pass": true,
+      "result": "results/g4_p53_determinism.json"
+    },
+    "g5": {
+      "note": "independent Python re-derivation from raw mesh + covariance sidecar: sigma_correlated, per-cell sigmas, full rho matrix, totals, exclusion set all match; all 3 planted mutations detected",
+      "pass": true,
+      "result": "results/check_g5_p53.json",
+      "checker_wall_s": 1615
+    }
+  },
+  "phase": "P53",
+  "status": "P53-CLOSED",
+  "summary": "actinv export-r2s-joint emits actinv-r2s-joint-1: correlated spatial dose bands via exact quadratic-form propagation of the shared nuclear-data covariance (sparse multi-spectrum collapse, J^T Sigma_joint J). Per-cell sigma_correlated, full rho matrix, sigma_total under correlated/independent/conservative rules, coverage + exclusion ledgers, spec fingerprint binding. Corpus evidence: rho >= 0.9987 between all 8 cells (shared Fe isotope covariances), so the independent-cell assumption understates the system band 2.82x; the conservative sum overstates it 1.41x. No incumbent ships this."
+}

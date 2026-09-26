@@ -1305,9 +1305,9 @@ code calls wins differently than a rival every transport code routes around.
 **Deprecation caveat.** "Can't do" for an open-source incumbent means "can't do inside ~2–3 years of
 re-architecture plus a data program." The moat widens only while we build on it.
 
-**Candidate next lanes (P53, P54, P55, P57 approved for the next pass 2026-09-25; P56 deferred —
-bands inside the optimizer loop are the heaviest compute on the board; each opens with its own
-hashed protocol, one lane at a time, in the order listed):**
+**Candidate next lanes (P53 closed `P53-CLOSED` 2026-09-26; P54, P55, P57 approved for the next
+pass 2026-09-25; P56 deferred — bands inside the optimizer loop are the heaviest compute on the
+board; each opens with its own hashed protocol, one lane at a time, in the order listed):**
 
 | Lane | Structural claim | Builds on |
 |---|---|---|
@@ -1316,6 +1316,23 @@ hashed protocol, one lane at a time, in the order listed):**
 | **P55 — inverse irradiation-history estimation** | Measured assay → inferred exposure history/composition. Needs thousands of solves; MC can't host it. Forensics/decommissioning lane. | P49, P51, parked 14 |
 | **P56 — optimization under uncertainty** | The P49 optimizer with banded constraints: "design that certifies dose < X at 95% over the covariance set." Requires speed + bands + optimizer together — no incumbent has all three. | P49, P43 |
 | **P57 — activation oracle / platform hardening** | Stable interchange surface + adapters (OpenMC, MCNP-format inputs, SERPENT) so ACTINV is the layer other codes call. | P51, P52 |
+
+**P53 closed `P53-CLOSED` 2026-09-26** (`results/verdict_p53.json`, protocol
+`protocols/ACTINV-P53_PROTOCOL.md`, 2 amendments — both control-layer checker repairs: J-independent
+covariance reuse + zero-base-sigma guard, then kind-8/9 short-range formula and two-phase exclusion
+ordering found by the first corpus run). Delivered: `collapse_sparse_weighted_multi` in
+`actinv-data` — a sparse multi-spectrum collapse accumulating the joint covariance as a map (no
+(S·n)² materialization), with the frozen P20 union-per-key exclusion diagnosed on the assembled
+map before removal — and `actinv export-r2s-joint MESH SPEC STEP OUT`, emitting
+`actinv-r2s-joint-1`: per-cell `sigma_photons_s_correlated`, the full ρ matrix, totals under
+correlated/independent/conservative rules, coverage and exclusion ledgers, bound to the exact spec
+by fingerprint_sha256. Executed evidence: G2 closed-form fixture exact to 15 digits including a
+genuine partial ρ=0.9158 and identical planted-defect exclusion cascade; corpus mesh shows ρ≥0.9987
+between all 8 cells → σ_correlated 32.68 vs the independent bound 11.57 (independence understates
+the system band 2.82×; the conservative sum overstates it 1.41×); joint export adds 19.3 s on a
+188.6 s mesh; byte-identical reruns; G5's independent re-derivation reproduced every number and
+rejected all three planted mutations (checker wall 1615 s — the collapse is O(params²·spectra²)
+over ~4k covered rows × 8 spectra, and mutation legs reuse the J-independent map).
 
 ## Standing rules (from P0–P3b, binding on every phase)
 
@@ -1893,6 +1910,18 @@ hashed protocol, one lane at a time, in the order listed):**
   fractions, and footer aggregates from the raw ndjson and rejected all three planted mutations.
   The capability claim: uncertainty now propagates through the R2S handoff into the photon
   transport source — the lane no incumbent offers.
+- 2026-09-26 — **P53 closes `P53-CLOSED`** (`results/verdict_p53.json`; protocol sealed at
+  `7c51e4a6…`, 2 amendments — both control-layer repairs inside the G5 checker: covariance-build
+  reuse + zero-σ guard, then the LB=8/LB=9 short-range kind codes and two-phase exclusion ordering
+  a borderline corpus block exposed). `actinv export-r2s-joint` emits `actinv-r2s-joint-1`:
+  correlated spatial dose bands from the shared nuclear-data covariance — sparse multi-spectrum
+  collapse (`collapse_sparse_weighted_multi`, no (S·n)² dense matrix) + exact quadratic forms over
+  each cell's emitted sensitivities. Executed corpus physics: ρ ≥ 0.9987 between all 8 cells
+  (shared Fe-isotope covariances) → independence understates the system band 2.82×, the
+  conservative sum overstates it 1.41×; joint export costs +10% wall over the mesh. G2 exact to 15
+  digits on the closed-form fixture including a genuine partial ρ; G5 re-derived every emitted
+  number from raw records and rejected all planted mutations. The capability claim: system-level
+  SDR bands with honest spatial correlation — a quantity no incumbent can emit at all.
 - 2026-09-25 — repository hygiene: `results/p50_voi_result.json` (408 MB, over GitHub's 100 MB push
   limit) was excised from unpushed local history (`c91d0af`→`0af91c6`, `8753255`→`1c7fb68`,
   `ebb7810`→`b6f9afa`, `fbfaaeb`→`5b562ff`); the file remains on disk, .gitignored, and its sealed
