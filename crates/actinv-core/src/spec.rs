@@ -75,6 +75,24 @@ pub struct UncertaintyOptions {
     /// Absence leaves the emitted record byte-identical to pre-P50 output.
     #[serde(default)]
     pub voi: Option<VoiOptions>,
+    /// Optional isomer-resolved variance partition: each requested response
+    /// band gains an `isomer` block splitting the propagated variance into
+    /// isomer-product, isomer-target, isomer-decay and ground classes plus a
+    /// ranked isomer-channel table (P58). Step-level pathway data gains an
+    /// `isomer_pathway_shares` summary. Absence is byte-identical to pre-P58
+    /// output.
+    #[serde(default)]
+    pub isomer: Option<IsomerOptions>,
+}
+
+/// Reporting knob for `uncertainty.isomer` (P58): optional cap on the ranked
+/// isomer-channel table per (step, response); defaults to `voi.top` when set,
+/// else 20.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct IsomerOptions {
+    #[serde(default)]
+    pub top: Option<usize>,
 }
 
 /// Reporting knob for `uncertainty.voi` (P50): how many ranked parameters to
@@ -550,6 +568,13 @@ impl Spec {
             if let Some(voi) = &uncertainty.voi {
                 if !(1..=256).contains(&voi.top) {
                     return Err("uncertainty.voi.top must be between 1 and 256".into());
+                }
+            }
+            if let Some(isomer) = &uncertainty.isomer {
+                if let Some(top) = isomer.top {
+                    if !(1..=256).contains(&top) {
+                        return Err("uncertainty.isomer.top must be between 1 and 256".into());
+                    }
                 }
             }
             if !self.projectile.is_neutron() {

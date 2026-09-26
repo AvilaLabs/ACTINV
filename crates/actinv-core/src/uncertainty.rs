@@ -149,6 +149,83 @@ pub struct ResponseUncertainty {
     /// `uncertainty.voi`. Absence is byte-identical to pre-P50 output.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub voi: Option<VoiReport>,
+    /// P58 isomer-resolved variance partition; present only when the spec
+    /// requests `uncertainty.isomer`. Absence is byte-identical to pre-P58
+    /// output.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub isomer: Option<IsomerReport>,
+}
+
+/// P58: variance-share partition of one response band by isomer-channel class.
+/// Shares use the identical `variance_share / total_propagated_variance`
+/// convention as `voi`; null when the total is zero or nonfinite.
+#[derive(Debug, Serialize)]
+pub struct IsomerReport {
+    /// Fractions of the propagated variance by parameter class. Sums to 1
+    /// (within fp round-off) when the total variance is finite and positive.
+    pub variance_shares: IsomerVarianceShares,
+    /// Ranked isomer-class parameters by |variance_share| descending.
+    pub top_isomer_channels: Vec<IsomerChannelEntry>,
+    /// The variance the emitted band was built on — same convention as `voi`.
+    pub total_propagated_variance: f64,
+}
+
+#[derive(Debug, Serialize)]
+pub struct IsomerVarianceShares {
+    /// MF=33 parameters producing an excited residual state (LFS > 0), plus
+    /// covered fission-yield parameters whose product is an isomer.
+    pub isomer_product_channels: Option<f64>,
+    /// MF=33 parameters on isomeric targets (target_LISO > 0) not already
+    /// counted as isomer-product channels.
+    pub isomer_target_channels: Option<f64>,
+    /// Covered decay-constant parameters on isomeric nuclides (liso > 0).
+    pub isomer_decay_constants: Option<f64>,
+    /// All remaining covered parameters (ground-state xs, decay and yield).
+    pub ground_channels: Option<f64>,
+    /// sqrt(Σ s_i²) over parameters with sensitivity but no covariance
+    /// coverage — a magnitude proxy, not a variance share.
+    pub unranked_l2_sensitivity: f64,
+}
+
+/// One ranked isomer-channel parameter.
+#[derive(Debug, Serialize)]
+pub struct IsomerChannelEntry {
+    /// Human-readable channel label, e.g. `W186 MT=16 -> W185[lfs=1]` or
+    /// `W185m1 lambda`.
+    pub channel_label: String,
+    /// `cross_section_mf33`, `decay_constants` or `fission_yields`.
+    pub channel: &'static str,
+    /// The channel's parameter record, serialized as emitted elsewhere.
+    pub parameter: serde_json::Value,
+    pub sensitivity: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub standard_uncertainty: Option<f64>,
+    pub variance_share: f64,
+    pub share_fraction: Option<f64>,
+}
+
+/// Step-level pathway aggregation by isomer product (P58). Emitted only when
+/// `uncertainty.isomer` is requested; `status` names why a share may be absent.
+#[derive(Debug, Serialize)]
+pub struct IsomerPathwayShare {
+    /// `emitted` when pathway attribution exists for this step, else
+    /// `unavailable` with a named `reason`.
+    pub status: &'static str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub reason: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub atoms_through_isomer_products_per_g: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub share: Option<f64>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub top_isomer_products: Vec<IsomerPathwayProduct>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct IsomerPathwayProduct {
+    pub first_product: String,
+    pub atoms_per_g: f64,
+    pub share_of_isomer_flow: f64,
 }
 
 #[derive(Debug, Serialize)]
@@ -473,6 +550,7 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             .unwrap_or_default(),
         sensitivities: input.sensitivities,
         voi: None,
+        isomer: None,
     })
 }
 

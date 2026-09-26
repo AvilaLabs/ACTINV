@@ -14,8 +14,9 @@ use crate::spec::{
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, ChannelData, DecayParameter, DecaySensitivityOut,
-    SensitivityOut, SensitivityParameter, StepUncertainty, VoiEntry, VoiReport, VoiUnranked,
-    YieldParameter, YieldSensitivityOut,
+    IsomerChannelEntry, IsomerPathwayProduct, IsomerPathwayShare, IsomerReport,
+    IsomerVarianceShares, SensitivityOut, SensitivityParameter, StepUncertainty, VoiEntry,
+    VoiReport, VoiUnranked, YieldParameter, YieldSensitivityOut,
 };
 use actinv_data::{
     composition, covariance, decay, fission,
@@ -161,6 +162,11 @@ pub struct RunResult {
     pub pathways: Vec<BTreeMap<String, Vec<Pathway>>>,
     /// largest relative disagreement between the summed pathway contributions and the main solve
     pub pathway_closure: f64,
+    /// P58: per-step pathway aggregation by isomer product; emitted only when
+    /// `uncertainty.isomer` is requested. Absence is byte-identical to
+    /// pre-P58 output.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub isomer_pathway_shares: Option<Vec<IsomerPathwayShare>>,
     pub ledger: serde_json::Value,
     pub certificate: serde_json::Value,
     pub ms: f64,
@@ -798,6 +804,178 @@ fn build_voi(
     })
 }
 
+/// True for `name_of`-style labels carrying an isomer ordinal (`W185m1`):
+/// the last `m` is digit-preceded and digit-terminated, so element symbols
+/// ending in `m` (Am, Cm, Pm, Sm, Tm) without an ordinal do not match.
+fn is_isomer_name(name: &str) -> bool {
+    match name.rfind('m') {
+        Some(p) => {
+            p > 0
+                && name.as_bytes()[p - 1].is_ascii_digit()
+                && p + 1 < name.len()
+                && name[p + 1..].bytes().all(|b| b.is_ascii_digit())
+        }
+        None => false,
+    }
+}
+
+fn isomer_channel_label(parameter: &SensitivityParameter) -> String {
+    let target = name_of(parameter.target_za, parameter.target_liso);
+    let product = if parameter.zap > 0 {
+        name_of(parameter.zap, 0)
+    } else {
+        format!("ZAP{}", parameter.zap)
+    };
+    format!(
+        "{target} MT={} -> {product}[lfs={}]",
+        parameter.mt, parameter.lfs
+    )
+}
+
+/// P58: partition the propagated variance the band already computed into
+/// isomer-product, isomer-target, isomer-decay and ground classes, and rank
+/// the isomer-class channels. Uses the same quadratic forms as `build_voi`.
+fn build_isomer(
+    top: usize,
+    runtime: &UncertaintyRuntime,
+    sensitivities: &[SensitivityOut],
+    decay_channel: Option<&ChannelData<DecaySensitivityOut>>,
+    yield_channel: Option<&ChannelData<YieldSensitivityOut>>,
+    total_variance: f64,
+) -> Result<IsomerReport, String> {
+    let share_ranked = total_variance.is_finite() && total_variance > 0.0;
+    let share = |variance_share: f64| share_ranked.then_some(variance_share / total_variance);
+    let mut product = 0.0;
+    let mut target = 0.0;
+    let mut decay_isomer = 0.0;
+    let mut ground = 0.0;
+    let mut unranked_l2 = 0.0;
+    let mut isomer_entries: Vec<IsomerChannelEntry> = Vec::new();
+
+    let n_covered = runtime.covered_parameter_positions.len();
+    let covered_sensitivity: Vec<f64> = runtime
+        .covered_parameter_positions
+        .iter()
+        .map(|&position| sensitivities[position].value)
+        .collect();
+    for (row, &position) in runtime.covered_parameter_positions.iter().enumerate() {
+        let parameter = &sensitivities[position].parameter;
+        if parameter.covariance_excluded {
+            continue;
+        }
+        let mut row_contribution = 0.0;
+        for (column, &s_j) in covered_sensitivity.iter().enumerate() {
+            row_contribution += runtime.covariance_barn2[row * n_covered + column] * s_j;
+        }
+        let variance_share = covered_sensitivity[row] * row_contribution;
+        if parameter.lfs > 0 {
+            product += variance_share;
+        } else if parameter.target_liso > 0 {
+            target += variance_share;
+        } else {
+            ground += variance_share;
+        }
+        if parameter.lfs > 0 || parameter.target_liso > 0 {
+            isomer_entries.push(IsomerChannelEntry {
+                channel_label: isomer_channel_label(parameter),
+                channel: "cross_section_mf33",
+                parameter: serde_json::to_value(parameter)
+                    .map_err(|_| "isomer parameter serialization failed")?,
+                sensitivity: covered_sensitivity[row],
+                standard_uncertainty: None,
+                variance_share,
+                share_fraction: share(variance_share),
+            });
+        }
+    }
+    for record in sensitivities {
+        if record.value != 0.0
+            && (!record.parameter.covariance_covered || record.parameter.covariance_excluded)
+        {
+            unranked_l2 += record.value * record.value;
+        }
+    }
+
+    if let Some(channel) = decay_channel {
+        for record in &channel.sensitivities {
+            if !record.parameter.covered {
+                if record.value != 0.0 {
+                    unranked_l2 += record.value * record.value;
+                }
+                continue;
+            }
+            let variance_share = (record.value * record.parameter.standard_uncertainty_s).powi(2);
+            if record.parameter.liso > 0 {
+                decay_isomer += variance_share;
+                isomer_entries.push(IsomerChannelEntry {
+                    channel_label: format!("{} lambda", record.parameter.nuclide),
+                    channel: "decay_constants",
+                    parameter: serde_json::to_value(&record.parameter)
+                        .map_err(|_| "isomer parameter serialization failed")?,
+                    sensitivity: record.value,
+                    standard_uncertainty: Some(record.parameter.standard_uncertainty_s),
+                    variance_share,
+                    share_fraction: share(variance_share),
+                });
+            } else {
+                ground += variance_share;
+            }
+        }
+    }
+    if let Some(channel) = yield_channel {
+        for record in &channel.sensitivities {
+            if !record.parameter.covered {
+                if record.value != 0.0 {
+                    unranked_l2 += record.value * record.value;
+                }
+                continue;
+            }
+            let variance_share = (record.value * record.parameter.standard_uncertainty).powi(2);
+            if record.parameter.product_liso > 0 {
+                product += variance_share;
+                isomer_entries.push(IsomerChannelEntry {
+                    channel_label: format!(
+                        "{} -> {} yield",
+                        record.parameter.parent_nuclide, record.parameter.product_nuclide
+                    ),
+                    channel: "fission_yields",
+                    parameter: serde_json::to_value(&record.parameter)
+                        .map_err(|_| "isomer parameter serialization failed")?,
+                    sensitivity: record.value,
+                    standard_uncertainty: Some(record.parameter.standard_uncertainty),
+                    variance_share,
+                    share_fraction: share(variance_share),
+                });
+            } else {
+                ground += variance_share;
+            }
+        }
+    }
+
+    isomer_entries.sort_by(|left, right| {
+        if share_ranked {
+            right
+                .variance_share
+                .abs()
+                .total_cmp(&left.variance_share.abs())
+        } else {
+            right.sensitivity.abs().total_cmp(&left.sensitivity.abs())
+        }
+    });
+    isomer_entries.truncate(top);
+    Ok(IsomerReport {
+        variance_shares: IsomerVarianceShares {
+            isomer_product_channels: share(product),
+            isomer_target_channels: share(target),
+            isomer_decay_constants: share(decay_isomer),
+            ground_channels: share(ground),
+            unranked_l2_sensitivity: unranked_l2.sqrt(),
+        },
+        top_isomer_channels: isomer_entries,
+        total_propagated_variance: total_variance,
+    })
+}
+
 fn build_step_uncertainty(
     runtime: &UncertaintyRuntime,
     options: &UncertaintyOptions,
@@ -952,6 +1130,29 @@ fn build_step_uncertainty(
         } else {
             None
         };
+        let isomer = if let Some(isomer_options) = &options.isomer {
+            let total_variance = variance
+                + decay_channel
+                    .as_ref()
+                    .map_or(0.0, |channel| channel.variance)
+                + yield_channel
+                    .as_ref()
+                    .map_or(0.0, |channel| channel.variance);
+            let top = isomer_options
+                .top
+                .or_else(|| options.voi.as_ref().map(|v| v.top))
+                .unwrap_or(20);
+            Some(build_isomer(
+                top,
+                runtime,
+                &sensitivities,
+                decay_channel.as_ref(),
+                yield_channel.as_ref(),
+                total_variance,
+            )?)
+        } else {
+            None
+        };
         let mut report = uncertainty_report::response_band(BandInput {
             nominal: snapshot_value(nominal, &response),
             alternate: snapshot_value(alternate, &response),
@@ -965,6 +1166,7 @@ fn build_step_uncertainty(
             fission_yield_channel: yield_channel,
         })?;
         report.voi = voi;
+        report.isomer = isomer;
         if options.require_complete && report.coverage != "complete" {
             return Err(format!(
                 "uncertainty response '{response}' has partial coverage in a requested channel"
@@ -3307,6 +3509,71 @@ impl PreparedRun {
         }
         profiler.finish("pathway_decomposition", pathways_started);
 
+        // P58: per-step pathway aggregation by isomer product, emitted only
+        // when the spec requested uncertainty.isomer.
+        let isomer_requested = spec
+            .uncertainty
+            .as_ref()
+            .is_some_and(|u| u.isomer.is_some());
+        let isomer_pathway_shares = isomer_requested.then(|| {
+            let reason = if mode != "trace" {
+                "pathway attribution requires trace mode"
+            } else if pathways_suppressed {
+                "pathway attribution suppressed for feed/removal schedules"
+            } else {
+                "no pathway attribution emitted for this step"
+            };
+            steps
+                .iter()
+                .enumerate()
+                .map(|(si, _)| match pathways.get(si) {
+                    Some(per) if !per.is_empty() => {
+                        let mut iso_total = 0.0;
+                        let mut all_total = 0.0;
+                        let mut by_product: BTreeMap<String, f64> = BTreeMap::new();
+                        for chains in per.values() {
+                            for p in chains {
+                                all_total += p.atoms_per_g;
+                                if is_isomer_name(&p.first_product) {
+                                    iso_total += p.atoms_per_g;
+                                    *by_product.entry(p.first_product.clone()).or_default() +=
+                                        p.atoms_per_g;
+                                }
+                            }
+                        }
+                        let mut top: Vec<(String, f64)> = by_product.into_iter().collect();
+                        top.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+                        top.truncate(10);
+                        IsomerPathwayShare {
+                            status: "emitted",
+                            reason: None,
+                            atoms_through_isomer_products_per_g: Some(iso_total),
+                            share: (all_total > 0.0).then_some(iso_total / all_total),
+                            top_isomer_products: top
+                                .into_iter()
+                                .map(|(first_product, atoms_per_g)| IsomerPathwayProduct {
+                                    first_product,
+                                    atoms_per_g,
+                                    share_of_isomer_flow: if iso_total > 0.0 {
+                                        atoms_per_g / iso_total
+                                    } else {
+                                        0.0
+                                    },
+                                })
+                                .collect(),
+                        }
+                    }
+                    _ => IsomerPathwayShare {
+                        status: "unavailable",
+                        reason: Some(reason),
+                        atoms_through_isomer_products_per_g: None,
+                        share: None,
+                        top_isomer_products: Vec::new(),
+                    },
+                })
+                .collect::<Vec<_>>()
+        });
+
         let reporting_started = profiler.start();
         // ---- ledger
         let rate_pruning: Vec<_> = rate_pruned
@@ -3864,6 +4131,7 @@ impl PreparedRun {
             steps,
             pathways,
             pathway_closure: closure,
+            isomer_pathway_shares,
             ledger,
             certificate,
             ms: t0.elapsed().as_secs_f64() * 1e3,
@@ -4069,5 +4337,20 @@ mod projectile_output_tests {
             super::collapsible_spectrum(&[0.0, 2.5]),
             Some(&[0.0, 2.5][..])
         );
+    }
+
+    #[test]
+    fn isomer_name_detection() {
+        assert!(super::is_isomer_name("W185m1"));
+        assert!(super::is_isomer_name("Mn57m1"));
+        assert!(super::is_isomer_name("Ta180m2"));
+        assert!(!super::is_isomer_name("W185"));
+        assert!(!super::is_isomer_name("Am241"));
+        assert!(!super::is_isomer_name("Cm242"));
+        assert!(!super::is_isomer_name("Pm147"));
+        assert!(!super::is_isomer_name("Sm149"));
+        assert!(!super::is_isomer_name("Tm170"));
+        assert!(!super::is_isomer_name("W185m"));
+        assert!(!super::is_isomer_name("m1"));
     }
 }

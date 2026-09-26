@@ -3066,6 +3066,7 @@ fn evaluate_robustness_inner(
                 confidence_level: 0.95,
                 require_complete: false,
                 voi: None,
+                isomer: None,
             });
             match prep.run_prepared(&uspec) {
                 Ok(urr) => {
@@ -3660,6 +3661,7 @@ mod robustness_tests {
             confidence_level: 0.95,
             require_complete: false,
             voi: None,
+            isomer: None,
         });
         assert_ne!(prepared_signature(&spec2), sig0);
     }
