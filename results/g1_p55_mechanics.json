@@ -30,59 +30,59 @@
   "estimates": {
    "1": {
     "confidence_interval": [
-     0.7121074851522036,
-     0.9646370984406687
+     1.3370616655780008,
+     1.6656140279721778
     ],
     "first_pass_multiplier": 1.4980037757500977,
-    "multiplier": 0.8383722917964361,
-    "posterior_sigma": 0.06442200348587694,
+    "multiplier": 1.5013378467750893,
+    "posterior_sigma": 0.08381591829894743,
     "record": "estimate",
-    "relative_posterior_sigma": 0.07684176125124033,
+    "relative_posterior_sigma": 0.055827486450825234,
     "segment": 0,
     "step": 1,
     "top_sensitivity_contributors": [
      {
-      "gain": 4.0103133089367555e+24,
+      "gain": 6.228468660909327e+24,
       "nuclide": "Mn56",
-      "step": 4
+      "step": 2
      },
      {
-      "gain": -6.823660014857525e+23,
+      "gain": -1.1436348026728056e+24,
       "nuclide": "Mn57",
       "step": 4
      },
      {
-      "gain": 1.903419585531539e+23,
+      "gain": 1.462777550660607e+23,
       "nuclide": "Mn56",
-      "step": 2
+      "step": 4
      }
     ]
    },
    "3": {
     "confidence_interval": [
-     2.111003461983966,
-     2.8246398078561112
+     0.5607899968795813,
+     0.745290188463259
     ],
     "first_pass_multiplier": 0.604621669092377,
-    "multiplier": 2.4678216349200386,
-    "posterior_sigma": 0.18205343350725256,
+    "multiplier": 0.6530400926714202,
+    "posterior_sigma": 0.04706724027558455,
     "record": "estimate",
-    "relative_posterior_sigma": 0.07377090423844647,
+    "relative_posterior_sigma": 0.07207404385088287,
     "segment": 1,
     "step": 3,
     "top_sensitivity_contributors": [
      {
-      "gain": 2.836315726187101e+26,
+      "gain": 1.1941871239722727e+25,
       "nuclide": "Mn56",
       "step": 4
      },
      {
-      "gain": -2.504960958796732e+26,
+      "gain": -8.402887734385497e+24,
       "nuclide": "Mn56",
       "step": 2
      },
      {
-      "gain": -7.961570715346835e+23,
+      "gain": -4.190275214372483e+23,
       "nuclide": "Mn57",
       "step": 4
      }

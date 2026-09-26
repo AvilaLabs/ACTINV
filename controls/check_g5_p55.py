@@ -24,6 +24,7 @@ TOL = 1e-6
 
 DOC = ROOT / "results/p55_corpus.ndjson"
 SPEC = ROOT / "results/p55_corpus_spec.json"
+SHARED_COV: dict = {}  # keyed by frozenset(selected); the collapse is J-independent
 
 
 def nnls_enum(A: np.ndarray, b: np.ndarray) -> np.ndarray:
@@ -68,12 +69,15 @@ def evaluate(doc_path: Path, spec: dict, cov_state=None) -> dict:
     k, m = A.shape[1], A.shape[0]
     selected = sorted({row for seg in jmaps for mp in seg for row in mp})
     phi = spec["spectrum"]["flux_per_group"]
-    if cov_state is None or set(cov_state.get("selected", [])) != set(selected):
+    if cov_state is None:
+        cov_state = SHARED_COV.get(frozenset(selected))
+    if cov_state is None:
         cov_state = g5p53.build_joint_covariance(
             Path(spec["library"]["path"]),
             Path(spec["uncertainty"]["covariance"]["path"]),
             [phi], selected)
         cov_state["selected"] = selected
+        SHARED_COV[frozenset(selected)] = cov_state
     pos = {row: i for i, row in enumerate(cov_state["covered"])}
     n = len(cov_state["covered"])
     J = np.zeros((k, m, n))

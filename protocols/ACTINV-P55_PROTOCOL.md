@@ -147,3 +147,18 @@ Linearized inverse — the approved medium-compute class. Forward solves: k+1
 forms over the covered parameter set — at corpus scale (≈4k covered rows) a
 pair is seconds; m≈10 measurements → ~45 pairs, minutes worst-case. Dense
 linear algebra is m×m and k×k — trivial. No new solver path, no MCMC.
+
+## Amendments
+
+- **A1 (post-G0, mechanical)**: two repairs discovered while assembling the
+  unit tests — `Measurement` gained a `declared_sigma` field so the
+  sigma-required check fires on *absence* rather than on the coincidental
+  `σ = 1.0` value (previously a genuine σ=1.0 measurement would have been
+  rejected as undeclared), and two unit tests were added for the Cholesky
+  factor and the posterior-precision identity. The sealed artifact sha for
+  `core_reverse_module` drifts accordingly; the checks themselves are the
+  same class the seal already bound (mechanical repair + test coverage).
+  Also: the checker gained a `SHARED_COV` cache — the J-independent sparse
+  collapse is built once and reused across the mutation legs (behavioural
+  change in wall time only; the corpus collapse dropped from ~45 min to
+  ~7 min because the earlier process rebuilt it once per mutation leg).

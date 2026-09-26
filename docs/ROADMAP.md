@@ -1306,9 +1306,9 @@ code calls wins differently than a rival every transport code routes around.
 re-architecture plus a data program." The moat widens only while we build on it.
 
 **Candidate next lanes (P53 closed `P53-CLOSED` 2026-09-26; P54 closed `P54-CLOSED` 2026-09-26;
-P55, P57 approved for the next pass 2026-09-25; P56 deferred — bands inside the optimizer loop are
-the heaviest compute on the board; each opens with its own hashed protocol, one lane at a time, in
-the order listed):**
+P55 closed `P55-CLOSED` 2026-09-26; P57 approved for the next pass 2026-09-25; P56 deferred —
+bands inside the optimizer loop are the heaviest compute on the board; each opens with its own
+hashed protocol, one lane at a time, in the order listed):**
 
 | Lane | Structural claim | Builds on |
 |---|---|---|
@@ -1351,6 +1351,22 @@ confidence. G5 independently re-derived every emitted value and rejected all fou
 mutations; the limits-table control (row count, canonical spot values, isomer mapping) rides in
 the same checker. Zero added solver compute — arithmetic over emitted bands. The claim: the only
 activation tool that answers "does this clear, at what confidence, and which nuclide decides it."
+
+**P55 closed `P55-CLOSED` 2026-09-26** (`results/verdict_p55.json`, protocol
+`protocols/ACTINV-P55_PROTOCOL.md`, 1 amendment — post-G0 mechanical repairs: a `declared_sigma`
+field so the sigma-required check fires on absence rather than a coincidental σ=1.0, plus unit
+tests and a checker cache). Delivered: `actinv reverse-qualified PROBLEM MEASUREMENTS OUT` —
+the qualified inverse, emitting `actinv-reverse-qualified-1`. Two-pass NNLS→GLS with
+`C = C_meas + C_model`, where `C_model[i,j] = G_iᵀΣG_j` folds the P53 sparse collapse into
+cross-response covariances evaluated at the first-pass point — no unfolding code propagates the
+response matrix's own covariance. Emitted: posterior covariance + correlation, resolvable/
+degenerate flags with named reasons, chi-square + pulls, Kalman-gain top contributors, and the
+raw sensitivity maps a checker needs. G2 re-derived every field at machine precision by
+active-set enumeration (not the Lawson–Hanson path) and caught a real pre-seal bug — whitening
+solved per-measurement rows of length k against the m×m factor. G3 on the FNS-iron corpus
+(two 300 s segments, 24 h apart): recovered planted (1.4, 0.8) → (1.392±0.011, 0.813±0.007),
+posterior ρ = −0.31 between segments, χ² = 4.04 on 2 dof, 33 s wall. The claim: measured assay
+→ exposure history *with an honest correlated band and an identifiability certificate*.
 
 ## Standing rules (from P0–P3b, binding on every phase)
 
@@ -1950,6 +1966,17 @@ activation tool that answers "does this clear, at what confidence, and which nuc
   digits on the closed-form fixture including a genuine partial ρ; G5 re-derived every emitted
   number from raw records and rejected all planted mutations. The capability claim: system-level
   SDR bands with honest spatial correlation — a quantity no incumbent can emit at all.
+- 2026-09-26 — **P55 closes `P55-CLOSED`** (`results/verdict_p55.json`; protocol sealed at
+  `593b2c40…`, 1 amendment — post-seal mechanical repairs: `declared_sigma` tracking so the
+  sigma-required check fires on absence, plus unit tests and a checker covariance cache).
+  `actinv reverse-qualified` emits `actinv-reverse-qualified-1`: the qualified inverse —
+  two-pass NNLS→GLS with `C = C_meas + C_model`, `C_model[i,j] = G_iᵀΣG_j` folding the P53
+  sparse collapse into cross-response covariances; posterior covariance + correlation,
+  resolvable/degenerate flags, χ² + pulls, Kalman-gain top contributors. G2 re-derived every
+  field at machine precision by active-set enumeration and caught a real pre-seal whitening
+  bug; corpus recovery of planted (1.4, 0.8) → (1.392±0.011, 0.813±0.007) with ρ = −0.31;
+  byte-identical reruns; G5 reproduced every value and caught all 3 mutations. Medium compute:
+  k+1 forward solves + one collapse. The claim: assay → history with an honest correlated band.
 - 2026-09-25 — repository hygiene: `results/p50_voi_result.json` (408 MB, over GitHub's 100 MB push
   limit) was excised from unpushed local history (`c91d0af`→`0af91c6`, `8753255`→`1c7fb68`,
   `ebb7810`→`b6f9afa`, `fbfaaeb`→`5b562ff`); the file remains on disk, .gitignored, and its sealed

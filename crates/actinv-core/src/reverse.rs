@@ -38,6 +38,7 @@ struct Measurement {
     nuclide: String,
     activity: f64,
     weight: f64,
+    declared_sigma: Option<f64>,
 }
 
 fn sha256_text(text: &str) -> String {
@@ -101,6 +102,7 @@ fn parse_measurements(text: &str, n_steps: usize) -> Result<Vec<Measurement>, St
             nuclide: m.nuclide.clone(),
             activity: m.activity_Bq_per_g,
             weight,
+            declared_sigma: m.sigma_Bq_per_g,
         });
     }
     Ok(resolved)
@@ -678,7 +680,7 @@ pub fn solve_qualified(
     // Qualified mode requires every measurement to carry a declared
     // measurement σ — the inverse claims are only as honest as the inputs.
     for m_i in &measurements {
-        if m_i.weight == 1.0 {
+        if m_i.declared_sigma.is_none() {
             return Err(format!(
                 "reverse-qualified: measurement {} at step {} declares no sigma_Bq_per_g — \
                  unit weighting is not permitted under the qualified mode",
@@ -1158,7 +1160,65 @@ pub fn solve_qualified(
 
 #[cfg(test)]
 mod tests {
-    use super::{dense_solve, nnls};
+    use super::{cholesky, dense_solve, forward_solve, invert, nnls};
+
+    #[test]
+    fn cholesky_factors_and_rejects_nondefinite() {
+        let c = vec![vec![4.0, 2.0], vec![2.0, 3.0]];
+        let l = cholesky(&c).unwrap();
+        // L·Lᵀ reconstructs C
+        for i in 0..2 {
+            for j in 0..2 {
+                let s: f64 = (0..=i.min(j)).map(|k| l[i][k] * l[j][k]).sum();
+                assert!((s - c[i][j]).abs() < 1e-12);
+            }
+        }
+        // forward_solve inverts L: L x = b
+        let b = vec![1.0, -2.0];
+        let x = forward_solve(&l, &b);
+        for i in 0..2 {
+            let s: f64 = (0..=i).map(|j| l[i][j] * x[j]).sum();
+            assert!((s - b[i]).abs() < 1e-12);
+        }
+        // indefinite → None
+        assert!(cholesky(&[vec![1.0, 3.0], vec![3.0, 1.0]]).is_none());
+    }
+
+    #[test]
+    fn gls_posterior_matches_known_two_measurement_case() {
+        // A = I on k=2, C = diag(4,1)+vv^T with v=(1,1): the model
+        // correlation must enter the posterior covariance.
+        // C = [[5,1],[1,2]]; whiten aw = L⁻¹; prec = awᵀaw = C⁻¹.
+        let c = vec![vec![5.0, 1.0], vec![1.0, 2.0]];
+        let l = cholesky(&c).unwrap();
+        let aw: Vec<Vec<f64>> = (0..2)
+            .map(|j| {
+                forward_solve(
+                    &l,
+                    &[
+                        if j == 0 { 1.0 } else { 0.0 },
+                        if j == 1 { 1.0 } else { 0.0 },
+                    ],
+                )
+            })
+            .collect();
+        // aw[j] is the j-th whitened column; build precision properly
+        let mut prec = vec![vec![0.0; 2]; 2];
+        for i in 0..2 {
+            for u in 0..2 {
+                for v in 0..2 {
+                    // whitened system row i, column j: aw_cols[j][i]
+                    prec[u][v] += aw[u][i] * aw[v][i];
+                }
+            }
+        }
+        let post = invert(&prec).unwrap();
+        // C⁻¹ = [[2,-1],[-1,5]]/9 → post = C/1 = [[5,1],[1,2]] (posterior of
+        // an identity observation equals the prior covariance)
+        assert!((post[0][0] - 5.0).abs() < 1e-9);
+        assert!((post[0][1] - 1.0).abs() < 1e-9);
+        assert!((post[1][1] - 2.0).abs() < 1e-9);
+    }
 
     #[test]
     fn dense_solve_singularity_is_relative_to_matrix_scale() {

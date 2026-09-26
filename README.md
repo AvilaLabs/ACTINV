@@ -267,6 +267,17 @@ actinv reverse problem.json measurements.json estimate.json
 actinv reverse problem.json measurements.json estimate.json --segments
 ```
 
+`actinv reverse-qualified` is the banded counterpart: it propagates MF=33 nuclear-data covariance into the
+measurement covariance (`C = C_meas + C_model`, with `C_model[i,j] = G_iᵀΣG_j` evaluated at a first-pass
+estimate), then re-solves by generalized least squares. The emitted `actinv-reverse-qualified-1` document
+carries the posterior covariance and correlation between segments, per-segment identifiability flags, chi-square
+pulls, and which measurements dominate each estimate — the forward problem's `uncertainty` block must declare
+banded `activity:<nuclide>` responses for every measured nuclide:
+
+```bash
+actinv reverse-qualified problem.json measurements.json qualified.ndjson
+```
+
 `actinv optimize` searches a declared design box — composition fractions, flux scale, schedule step durations —
 with a seeded, derivative-free optimizer. Every candidate is solved through the identical solver path and ledgered;
 objectives and constraints can evaluate on propagated MF=33 band edges, so a nominally acceptable design can be
