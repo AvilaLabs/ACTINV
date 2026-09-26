@@ -1,0 +1,33 @@
+{
+  "checks": {
+    "accept_custom_limits": true,
+    "cell_fields": true,
+    "classification_valid": true,
+    "clearance_mesh": true,
+    "clearance_run_doc": true,
+    "coverage_fields": true,
+    "custom_sha_recorded": true,
+    "footer_count": true,
+    "footer_fields": true,
+    "header_fields": true,
+    "interval_ordered": true,
+    "limits_count": true,
+    "limits_fields": true,
+    "mesh_run": true,
+    "mn56_regulated": true,
+    "mn57_unregulated": true,
+    "reject_bad_confidence": true,
+    "reject_bad_limits": true,
+    "reject_bad_step": true,
+    "reject_no_activity": true,
+    "reject_unbanded": true,
+    "reject_unknown_flag": true,
+    "run_doc": true,
+    "run_doc_one_cell": true,
+    "schema": true,
+    "two_cells": true,
+    "unregulated_share_positive": true
+  },
+  "pass": true,
+  "problems": []
+}

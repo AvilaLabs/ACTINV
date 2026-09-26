@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "a1_det_fail": true,
+    "a1_p_zero": true,
+    "a1_ran": true,
+    "a1_sum_one": true,
+    "a2_certified": true,
+    "a2_p": true,
+    "a2_ran": true,
+    "a2_sigma_cons": true,
+    "a2_sigma_ind": true,
+    "a2_sum": true,
+    "a3_indeterminate": true,
+    "a3_p_lo": true,
+    "a3_ran": true,
+    "a4_ran": true,
+    "a4_unreg_share": true,
+    "a4_unregulated": true,
+    "a4_zero_skipped": true,
+    "a5_ran": true,
+    "a5_ratio": true,
+    "a5_sigmas": true,
+    "fixture_clearance": true,
+    "fixture_exact": true,
+    "fixture_mesh": true
+  },
+  "pass": true,
+  "problems": []
+}
