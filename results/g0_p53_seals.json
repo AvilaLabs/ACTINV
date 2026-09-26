@@ -1,0 +1,80 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "598221d53ddeb4f15de83c89a1bb8f4223d207b905c10b64c5ba7680d47daca5"
+    },
+    "cli_command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "6b797fcba60d891c1ee03c73f1784424bcd23686257003c0b2049df5a7dd407a"
+    },
+    "cli_lib_module": {
+      "path": "crates/actinv-cli/src/lib.rs",
+      "sha256": "23031532aa478e1b51e2ecb5588f789ba522db982b7896ed600e295c4405e5ac"
+    },
+    "core_covariance_module": {
+      "path": "crates/actinv-data/src/covariance.rs",
+      "sha256": "6165db1e3338634fb9320a1b22988836e8f16d68b47bd732715238886c9a26d4"
+    },
+    "core_mesh_module": {
+      "path": "crates/actinv-core/src/mesh.rs",
+      "sha256": "85778f5c8d8775599f8cf17990fb9ae8635fa73b3e664eeb0b452fe58c96756f"
+    },
+    "core_r2s_module": {
+      "path": "crates/actinv-core/src/r2s.rs",
+      "sha256": "067b21dd7fdbe6fc7cbf6b3d8b8132d741117284b79bebb383171f24ed3a9cd2"
+    },
+    "core_run_module": {
+      "path": "crates/actinv-core/src/run.rs",
+      "sha256": "05a28ef80fb2702ffd87e759bbe9beb5281b42f29b872242e6b4d95c7afc9bac"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p53_mechanics.py",
+      "sha256": "5272161018e0bfa7fd9b244d1705e7bf993d88507e1cf6c148411524acd0d8e4"
+    },
+    "g2_exactness": {
+      "path": "controls/g2_p53_exactness.py",
+      "sha256": "e983e3ea057920ef33863d5f2c21fea47d6302527ae29cd1084f3dbd8a659962"
+    },
+    "g3_demo": {
+      "path": "controls/g3_p53_demo.py",
+      "sha256": "0995c289013006519b3da019f89cb7dad3cd2cf53d382e56b7a135661cb2ccae"
+    },
+    "g4_determinism": {
+      "path": "controls/g4_p53_determinism.py",
+      "sha256": "b158fbe5e42e166a2eb6c64d8e8fdbb43384e8b02589a421009abe4e2cfefa41"
+    },
+    "g5_checker": {
+      "path": "controls/check_g5_p53.py",
+      "sha256": "e1b2bc1a69c92aea4fce4d613d888e9495463e1bd790c76c02e7eb5f6a4e0d43"
+    },
+    "p11_covariance": {
+      "path": "controls/p11_covariance.py",
+      "sha256": "d15a10084c4689e550a4ca45b38d4d94d74bf8e90fe3022ecb698b625348b7c7"
+    },
+    "p11_fixtures": {
+      "path": "controls/p11_fixtures.py",
+      "sha256": "6281020bd7f489513f10a3330a9205c75ebda3e868520491a887ac47f2842c24"
+    },
+    "p52_demo": {
+      "path": "controls/g3_p52_demo.py",
+      "sha256": "2b25735ccfe39216975d865768f61caf419b7483a69f2c04429f843eb8c25dd7"
+    },
+    "p53_fixture": {
+      "path": "controls/p53_fixture.py",
+      "sha256": "fd9f48e258d5688615021a5e38510547d6e468b583991a0d9a29680e4b7e2728"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P53_PROTOCOL.md",
+      "sha256": "e2551015d7cbf4e87a3d6f608d316952e690137e359ec3ca9f7d244b3c9fe19a"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
+    }
+  },
+  "opening_commit": "3bc434edcfdb307dca686aae8a53c8934e22b072",
+  "protocol_sha256": "e2551015d7cbf4e87a3d6f608d316952e690137e359ec3ca9f7d244b3c9fe19a",
+  "schema": "actinv-p53-seal-1",
+  "sealed_at_utc": "2026-09-26T03:23:34Z"
+}
