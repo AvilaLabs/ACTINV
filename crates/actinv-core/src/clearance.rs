@@ -375,7 +375,7 @@ pub fn emit_clearance(
     let mut n_fail = 0usize;
     let mut n_indeterminate = 0usize;
     let mut n_deterministic = 0usize;
-    for (index, rec) in records.iter().enumerate() {
+    for rec in records.iter() {
         let kind = rec.get("record").and_then(Value::as_str);
         let target = match kind {
             Some("cell") => Some(rec),

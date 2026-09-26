@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "artifacts_present": true,
+    "cell_count": true,
+    "exact_recompute": true,
+    "input_sha_binds": true,
+    "limits_sha_binds": true,
+    "mutation_class_detected": true,
+    "mutation_limits_detected": true,
+    "mutation_sigma_detected": true,
+    "mutation_sum_detected": true,
+    "name_mapping": true,
+    "table_count": true,
+    "table_values": true
+  },
+  "pass": true,
+  "problems": []
+}

@@ -150,3 +150,24 @@ Zero solver compute: arithmetic over emitted fields only. G3 reuses the
 sealed P53 mesh artifact. The checker is pure text+math — seconds, not
 minutes. Total expected wall: minutes for gates, dominated by nothing
 heavier than JSON parsing a 500 MB mesh file.
+
+## Amendments (append-only)
+
+### A1 — post-seal mechanical repairs in the sealed artifacts (2026-09-26)
+
+G0 sealed `73ddc51`. Two frozen files then required mechanical fixes
+discovered while executing G4 and the release build:
+
+1. `crates/actinv-core/src/clearance.rs` — dropped the unused `index`
+   loop variable left over when `cell_index` switched to the cell ordinal
+   (release build warning under CI's `-D warnings`). No emitted value
+   changes.
+2. `controls/g4_p54_determinism.py` — the record-comparison block was
+   accidentally dedented outside `with TemporaryDirectory`, so outputs were
+   read after cleanup. Indentation only; no check content changed.
+
+Both are control-layer/whitespace-class repairs; no frozen math or emission
+rule changed. Pre-seal gate executions also caught a real emit bug —
+`normal_cdf` divided by `FRAC_1_SQRT_2` instead of multiplying (Φ(0.5) came
+out Φ(1.0)); found by the G2 synthesized `indeterminate` boundary doc, fixed
+before sealing.

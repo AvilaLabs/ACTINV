@@ -1,0 +1,11 @@
+{
+  "checks": {
+    "artifacts_present": true,
+    "byte_identical_modulo_wallclock": true,
+    "record_count": true,
+    "run_0": true,
+    "run_1": true
+  },
+  "pass": true,
+  "problems": []
+}

@@ -44,22 +44,22 @@ def main() -> int:
                 checks[f"run_{i}"] = True
                 outs.append(out)
 
-    if len(outs) == 2:
-        a = [json.loads(l) for l in outs[0].read_text().splitlines()
-             if l.strip()]
-        b = [json.loads(l) for l in outs[1].read_text().splitlines()
-             if l.strip()]
-        checks["record_count"] = len(a) == len(b)
-        diffs = []
-        for i, (ra, rb) in enumerate(zip(a, b)):
-            if ra["record"] == "footer":
-                ra.pop("wall_time_s", None)
-                rb.pop("wall_time_s", None)
-            if ra != rb:
-                diffs.append(i)
-        checks["byte_identical_modulo_wallclock"] = not diffs
-        if diffs:
-            problems.append(f"differing records: {diffs}")
+        if len(outs) == 2:
+            a = [json.loads(l) for l in outs[0].read_text().splitlines()
+                 if l.strip()]
+            b = [json.loads(l) for l in outs[1].read_text().splitlines()
+                 if l.strip()]
+            checks["record_count"] = len(a) == len(b)
+            diffs = []
+            for i, (ra, rb) in enumerate(zip(a, b)):
+                if ra["record"] == "footer":
+                    ra.pop("wall_time_s", None)
+                    rb.pop("wall_time_s", None)
+                if ra != rb:
+                    diffs.append(i)
+            checks["byte_identical_modulo_wallclock"] = not diffs
+            if diffs:
+                problems.append(f"differing records: {diffs}")
 
     problems.extend(k for k, v in checks.items() if not v)
     result = {"pass": not problems, "checks": checks,
