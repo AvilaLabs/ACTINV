@@ -32,6 +32,17 @@ Strict no-AI-authorship: commits carry plain messages only — never add
 "Generated with", "Co-Authored-By", or any agent/tool attribution trailers,
 names, or links. Author and committer stay the repo owner's identity.
 
+# CI verification (owner direction, 2026-09-26)
+
+- After every `git push`, verify the GitHub Actions run on the pushed commit
+  reports green before treating the push as done (`gh run list` /
+  `gh run view` on the new SHA — the controls workflow especially).
+- A red check on any pushed commit must be fixed before starting new feature
+  work. No new red X's.
+- Before pushing, run locally whatever cheap gates CI runs first (tracked-file
+  manifest refresh via `scripts/refresh_manifest.py --write --index`,
+  `cargo fmt --all -- --check`) so obvious failures never reach CI.
+
 # User preferences (owner direction, 2026-09-21)
 
 - Do not count reproducibility/provenance/auditability as a competitive
