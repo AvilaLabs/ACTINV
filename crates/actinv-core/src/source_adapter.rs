@@ -108,7 +108,7 @@ fn parse_r2s(bytes: &[u8]) -> Result<Source, String> {
                         .as_f64()
                         .filter(|v| v.is_finite())
                         .ok_or_else(|| format!("cell '{id}' bounds axis {a} high not finite"))?;
-                    if !(lo < hi) {
+                    if lo >= hi {
                         return Err(format!(
                             "cell '{id}' bounds axis {a} is not a positive interval \
                              ({lo}..{hi}) — non-Cartesian bounds are outside the pinned subset"
@@ -177,14 +177,8 @@ fn normalized_probs(groups: &[(f64, f64)]) -> Vec<f64> {
 }
 
 fn sigma_comment(c: &Cell, prefix: &str) -> String {
-    let si = c
-        .sigma_indep
-        .map(|v| fmt(v))
-        .unwrap_or_else(|| "unbanded".into());
-    let sc = c
-        .sigma_consv
-        .map(|v| fmt(v))
-        .unwrap_or_else(|| "unbanded".into());
+    let si = c.sigma_indep.map(fmt).unwrap_or_else(|| "unbanded".into());
+    let sc = c.sigma_consv.map(fmt).unwrap_or_else(|| "unbanded".into());
     format!(
         "{prefix} cell '{id}' photons_s={ps} sigma_independent={si} sigma_conservative={sc} \
          volume_cm3={vol} nonzero_groups={ng}",

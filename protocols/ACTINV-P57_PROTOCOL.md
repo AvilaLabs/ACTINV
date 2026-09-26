@@ -167,3 +167,25 @@ Pure text emission over an NDJSON stream — microseconds per cell; the
 corpus mesh (8 cells × ~30 nonzero groups) is a ~100-line file per format.
 No solver path invoked, no covariance collapse — this is the approved
 zero-compute lane.
+
+## Amendments
+
+- **A1 (post-G0, mechanical)**: CI clippy 1.98 repairs in
+  `source_adapter.rs` — `!(lo < hi)` rewrote to `lo >= hi` (NaN is already
+  excluded by the `is_finite` filter two lines above, so the check is
+  semantically identical), and two `map(|v| fmt(v))` closures collapsed to
+  `map(fmt)`. No emitted byte changes; the sealed artifact sha drifts
+  accordingly and is re-recorded in `results/g0_p57_seals.json`.
+- **A2 (pre-seal, noted for the record)**: the probability convention
+  changed from "residual folded into the largest until the printed text
+  sums to exactly 1.0" to "exact ratios `pᵢ = sᵢ/Σs`, sum within a few
+  ulp" — the iterative fold does not converge in general (residual
+  corrections re-associate differently under re-summation, and for
+  spectra spanning ~55 decades no folding of the largest element reaches
+  a fixed point). The honest contract is the true shares plus internal
+  normalization by each consumer; discovered when G5's reparse flagged
+  cells 5 and 7. Also discovered in the same pass: Python 3.12+ `sum()`
+  is compensated (Neumaier) and differs from Rust's left-to-right fold at
+  the last ulp — checkers use an explicit `naive_sum` helper. Both fixes
+  were made and verified before G0 ran; they are listed here for
+  completeness of the record.
