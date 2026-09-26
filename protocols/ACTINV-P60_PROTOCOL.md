@@ -97,3 +97,10 @@ Emission: each `ResponseUncertainty` gains `design`:
 - **G4** — byte-identical repeated runs.
 - **G5 checker** — independently reparse, recompute ΔV values, and catch
   planted mutations in reductions, rankings, and posterior totals.
+
+## Amendment A1 (post-G0)
+
+CI clippy-1.98 repairs after sealing — lint-only, semantics untouched:
+`!(sum > 0.0)` → `sum <= 0.0`, `for row in 0..n_covered` → `enumerate`,
+`!(sigma_ii > 0.0)` → `sigma_ii <= 0.0`. `run.rs` artifact hash drifts;
+gates re-run clean on the amended file.

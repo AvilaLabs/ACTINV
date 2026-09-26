@@ -990,7 +990,7 @@ fn cholesky_solve(matrix: &[f64], n: usize, rhs: &[f64]) -> Option<Vec<f64>> {
                 sum -= lower[i * n + k] * lower[j * n + k];
             }
             if i == j {
-                if !(sum > 0.0) || !sum.is_finite() {
+                if !sum.is_finite() || sum <= 0.0 {
                     return None;
                 }
                 lower[i * n + i] = sum.sqrt();
@@ -1056,12 +1056,12 @@ fn build_design(
     // (Σ·s)_i for every covered row — shared by per-parameter reductions and
     // the per-reaction block solves.
     let mut sigma_s = vec![0.0; n_covered];
-    for row in 0..n_covered {
+    for (row, slot) in sigma_s.iter_mut().enumerate() {
         let mut value = 0.0;
         for (column, &s_j) in covered_sensitivity.iter().enumerate() {
             value += runtime.covariance_barn2[row * n_covered + column] * s_j;
         }
-        sigma_s[row] = value;
+        *slot = value;
     }
 
     let mut parameter_entries: Vec<DesignParameterEntry> = Vec::new();
@@ -1085,7 +1085,7 @@ fn build_design(
         }
         let sigma_ii = runtime.covariance_barn2[row * n_covered + row];
         let variance_share = covered_sensitivity[row] * sigma_s[row];
-        if !(sigma_ii > 0.0) || !sigma_ii.is_finite() {
+        if !sigma_ii.is_finite() || sigma_ii <= 0.0 {
             continue;
         }
         // A zero-diagonal row is already perfectly known — conditioning on it
