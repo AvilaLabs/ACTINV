@@ -14,7 +14,7 @@
     },
     "core_reverse_module": {
       "path": "crates/actinv-core/src/reverse.rs",
-      "sha256": "7d568a87ddc8762423b96134ce88f1b52398227937d7874ae211623b3a66d80b"
+      "sha256": "7cdbb417c2c228e9524bff1cb5f85674b094938d5c204fea02b0a3dc45c48bb4"
     },
     "g1_mechanics": {
       "path": "controls/g1_p55_mechanics.py",
@@ -50,15 +50,15 @@
     },
     "protocol": {
       "path": "protocols/ACTINV-P55_PROTOCOL.md",
-      "sha256": "45cff12875a3165fb0061945ee4be89bfb30dd5c5c772d159c6144e74761fd9c"
+      "sha256": "b3687fa7e3f3635c74a52571a567b968800060ecb08902ea6e621a75d4fe5c5c"
     },
     "workspace_manifest": {
       "path": "Cargo.toml",
       "sha256": "fb8b94f59547f863dea74a9fd22d7aba21645aa9960580dae5a99dd0a039aac8"
     }
   },
-  "opening_commit": "c860de029a353b7fd3acddc18d0c5163060a5019",
-  "protocol_sha256": "45cff12875a3165fb0061945ee4be89bfb30dd5c5c772d159c6144e74761fd9c",
+  "opening_commit": "a730000013f698996cef68c46b88f910cc71a3fb",
+  "protocol_sha256": "b3687fa7e3f3635c74a52571a567b968800060ecb08902ea6e621a75d4fe5c5c",
   "schema": "actinv-p55-seal-1",
-  "sealed_at_utc": "2026-09-26T14:38:54Z"
+  "sealed_at_utc": "2026-09-26T14:52:28Z"
 }

@@ -2,9 +2,9 @@
   "phase": "P55",
   "status": "P55-CLOSED",
   "closed_at_utc": "2026-09-26T10:55:00Z",
-  "final_commit": "c860de029a353b7fd3acddc18d0c5163060a5019",
+  "final_commit": "a730000013f698996cef68c46b88f910cc71a3fb",
   "amendments": 1,
-  "protocol_sha256": "45cff12875a3165fb0061945ee4be89bfb30dd5c5c772d159c6144e74761fd9c",
+  "protocol_sha256": "b3687fa7e3f3635c74a52571a567b968800060ecb08902ea6e621a75d4fe5c5c",
   "gates": {
     "g0": {
       "pass": true,
@@ -26,7 +26,7 @@
     "g3": {
       "pass": true,
       "result": "results/g3_p55_demo.json",
-      "note": "FNS-iron corpus, two 300 s segments separated by 24 h cooling: recovered planted multipliers (1.4, 0.8) -> (1.392+-0.011, 0.813+-0.007) — sub-1% posterior sigma on both segments, posterior correlation -0.31, chi2 4.04 on 2 dof, both segments resolvable; 2 forward runs, 33 s wall"
+      "note": "FNS-iron corpus, two 300 s segments separated by 24 h cooling: recovered planted multipliers (1.4, 0.8) -> (1.392+-0.011, 0.813+-0.007) \u2014 sub-1% posterior sigma on both segments, posterior correlation -0.31, chi2 4.04 on 2 dof, both segments resolvable; 2 forward runs, 33 s wall"
     },
     "g4": {
       "pass": true,
@@ -36,17 +36,17 @@
     "g5": {
       "pass": true,
       "result": "results/check_g5_p55.json",
-      "note": "independent re-derivation on the corpus doc: design columns, C_model via the ported collapse, two-pass solve, posterior, pulls — all reproduce; mutations in sensitivity maps, estimates, and posterior blocks all detected; SHARED_COV reuses the J-independent collapse across legs"
+      "note": "independent re-derivation on the corpus doc: design columns, C_model via the ported collapse, two-pass solve, posterior, pulls \u2014 all reproduce; mutations in sensitivity maps, estimates, and posterior blocks all detected; SHARED_COV reuses the J-independent collapse across legs"
     }
   },
   "deliverable": "actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson emits actinv-reverse-qualified-1: two-pass NNLS->GLS segment estimates, posterior covariance + correlation, identifiability flags with named reasons, chi-square + per-measurement pulls, Kalman-gain dominant contributors, per-(measurement,segment) sensitivity maps, covariance/ledger fingerprints",
   "conditions": [
-    "linearized two-pass: C_model is evaluated at the first-pass NNLS point f0 — the documented trade; iterant refinement is not claimed",
-    "coverage is cross_section_mf33 only — same scope as the forward bands; decay/yield channels and transport/model discrepancy are not inferred",
+    "linearized two-pass: C_model is evaluated at the first-pass NNLS point f0 \u2014 the documented trade; iterant refinement is not claimed",
+    "coverage is cross_section_mf33 only \u2014 same scope as the forward bands; decay/yield channels and transport/model discrepancy are not inferred",
     "trace-regime only (feed/removal and coupled-mode problems are rejected, not approximated)",
     "single-spectrum sensitivity records only; multi-spectrum params are rejected",
     "m >= k required (underdetermined problems refuse rather than regularize silently); weak ridge keeps degenerate directions finite and labelled",
-    "posterior is a Gaussian-mean-field marginal on multipliers — a point-estimate lane with honest bands, not a full posterior sample"
+    "posterior is a Gaussian-mean-field marginal on multipliers \u2014 a point-estimate lane with honest bands, not a full posterior sample"
   ],
   "summary": "Qualified inverse: irradiation-history estimation that propagates nuclear-data covariance through the inversion rather than treating the response matrix as truth. C_model[i,j] = G_i^T Sigma G_j folds the P53 sparse collapse into cross-response covariances no unfolding code emits; the posterior carries genuine segment-segment correlations (-0.31 on the corpus), resolvable/degenerate flags, and Kalman-gain pointers to which measurement drives each estimate. Medium compute as approved: k+1 forward solves + one collapse + dense algebra."
 }
