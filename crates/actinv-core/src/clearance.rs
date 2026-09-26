@@ -390,8 +390,7 @@ pub fn emit_clearance(
             }
         };
         let Some(target) = target else { continue };
-        let step_obj =
-            step_from(target, step).map_err(|e| format!("cell {n_cells}: {e}"))?;
+        let step_obj = step_from(target, step).map_err(|e| format!("cell {n_cells}: {e}"))?;
         let cell_id = cell_id_of(target, n_cells);
         let mut eval = evaluate_step(step_obj, &table, confidence)?;
         eval["cell_index"] = json!(n_cells);
