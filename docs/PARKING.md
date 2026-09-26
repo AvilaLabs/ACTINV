@@ -201,8 +201,11 @@ tally-to-dose, browser/WebAssembly delivery and dose-response modes, each alread
 13. **Probabilistic clearance classification** — a "probability this component clears free-release"
     classifier with quantified misclassification risk. Existing clearance tools (clearance-finder,
     F4E-radwaste) are deterministic; nobody ships band-driven classification. Deferred from the
-    P50–P52 draft as a later candidate — narrow but money-adjacent.
+    P50–P52 draft as a later candidate — narrow but money-adjacent. **Promoted 2026-09-25 to
+    candidate lane P54** in the strategic positioning assessment (decommissioning reach + moat).
 
 14. **Inverse irradiation-history estimation** — measured sample inventories → inferred exposure
     history/composition (decommissioning and assay forensics). Nobody ships it as a product; the
-    validation story is harder and the market narrower than the P50–P52 lanes. Parked pending demand.
+    validation story is harder and the market narrower than the P50–P52 lanes. **Promoted
+    2026-09-25 to candidate lane P55** in the strategic positioning assessment (structural moat:
+    requires many-query solves no MC-coupled solver can host).

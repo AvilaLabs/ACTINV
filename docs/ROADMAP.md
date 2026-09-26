@@ -1272,6 +1272,49 @@ future phase), probabilistic clearance classification and inverse irradiation-hi
 Standing rules 1–7 apply unchanged. Each phase opens with its own hashed protocol naming its minimum
 gate input; nothing in this draft is frozen until sealed.
 
+## Strategic positioning assessment — 2026-09-25 (draft, unhashed)
+
+**Competitive reality.** OpenMC owns the transport-coupled lane: continuous-energy MC, geometry,
+and a shipped FNG-validated `R2SManager` doing cell/mesh depletion → decay photon source → photon
+transport in-tree. It is expanding into activation breadth and will keep doing so. Two things it
+cannot reach without a multi-year re-architecture: a nuclear-data covariance channel (no MF33
+ingestion, no collapse operator, no sensitivity machinery in `deplete` — the only UQ work in their
+ecosystem is a PHYSOR-2026 preprint propagating *stochastic* tally noise via adjoint PT, the
+orthogonal axis), and many-query workloads (MC-coupled depletion is hours/eval with tally noise —
+gradients and probability integrals over its outputs are not well-defined). FISPACT-II is the nearer
+UQ rival (real MF33/40 propagation: pathways, depletion, MC sampling); our edge there is
+deterministic propagation speed, the decision layer, and the data-quality ledger (the patched-TENDL
+corpus and its defect eviction are an *accuracy* advantage no incumbent ships).
+
+**The category reframe.** ACTINV does not win by out-featuring OpenMC on transport — it wins by
+owning the adjacent category: **activation decisions under uncertainty on prescribed spectra**.
+OpenMC computes activation; ACTINV computes *decisions about* activation — what to design, what to
+measure, what clears regulatory limits, and how confident each answer is. That category requires
+three properties an MC transport code cannot host by construction: (1) nuclear-data covariance
+propagation end-to-end, (2) deterministic, bit-reproducible solves cheap enough for 10³–10⁶-query
+workloads, (3) confidence-bearing outputs (bands → probability statements, not point estimates).
+For the large class of problems where the spectrum is already known (irradiation facilities, fusion
+first walls with precomputed flux maps, isotope production, decommissioning assay, clearance),
+transport is not the bottleneck at all — and there ACTINV should be the obvious choice outright.
+
+**The embeddability play.** The strongest adoption path is not replacement but indispensability:
+ACTINV as the activation+UQ layer *inside* incumbent pipelines (P52's interchange already feeds
+banded sources into an external photon step — OpenMC's own included). A tool that every transport
+code calls wins differently than a rival every transport code routes around.
+
+**Deprecation caveat.** "Can't do" for an open-source incumbent means "can't do inside ~2–3 years of
+re-architecture plus a data program." The moat widens only while we build on it.
+
+**Candidate next lanes (all unopened, unhashed; ranked by moat depth × reach):**
+
+| Lane | Structural claim | Builds on |
+|---|---|---|
+| **P53 — correlated spatial dose bands** | Cells share nuclide covariances → per-bin bands are correlated; a system-level SDR band needs the joint structure. Nobody ships this; only ACTINV has the machinery. | P52 |
+| **P54 — certified probabilistic clearance** | `P(component clears free-release) ≥ x` with quantified misclassification risk. Needs bands + many queries; deterministic clearance tools can't emit confidence. Money-adjacent (decommissioning). | P43, P51, parked 13 |
+| **P55 — inverse irradiation-history estimation** | Measured assay → inferred exposure history/composition. Needs thousands of solves; MC can't host it. Forensics/decommissioning lane. | P49, P51, parked 14 |
+| **P56 — optimization under uncertainty** | The P49 optimizer with banded constraints: "design that certifies dose < X at 95% over the covariance set." Requires speed + bands + optimizer together — no incumbent has all three. | P49, P43 |
+| **P57 — activation oracle / platform hardening** | Stable interchange surface + adapters (OpenMC, MCNP-format inputs, SERPENT) so ACTINV is the layer other codes call. | P51, P52 |
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
