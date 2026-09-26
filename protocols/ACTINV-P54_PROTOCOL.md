@@ -159,9 +159,10 @@ G0 sealed `73ddc51`. Two frozen files then required mechanical fixes
 discovered while executing G4 and the release build:
 
 1. `crates/actinv-core/src/clearance.rs` — dropped the unused `index`
-   loop variable left over when `cell_index` switched to the cell ordinal
-   (release build warning under CI's `-D warnings`). No emitted value
-   changes.
+   loop variable left over when `cell_index` switched to the cell ordinal,
+   plus two CI clippy upgrades (`map_or`→`is_none_or`, lifetime elision on
+   `step_from`) under the newer CI toolchain's `-D warnings`. No emitted
+   value changes.
 2. `controls/g4_p54_determinism.py` — the record-comparison block was
    accidentally dedented outside `with TemporaryDirectory`, so outputs were
    read after cleanup. Indentation only; no check content changed.

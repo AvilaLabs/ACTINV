@@ -124,7 +124,7 @@ fn erf(x: f64) -> f64 {
     }
 }
 
-fn step_from<'a>(record: &'a Value, step: u64) -> Result<&'a Value, String> {
+fn step_from(record: &Value, step: u64) -> Result<&Value, String> {
     let steps = record
         .pointer("/result/steps")
         .or_else(|| record.get("steps"))
@@ -226,10 +226,10 @@ fn evaluate_step(
         } else {
             unbanded_ratio += r_i;
         }
-        if dominant_ratio.map_or(true, |(v, _)| r_i > v) {
+        if dominant_ratio.is_none_or(|(v, _)| r_i > v) {
             dominant_ratio = Some((r_i, nuc));
         }
-        if dominant_sigma.map_or(true, |(v, _)| sr_i > v) {
+        if dominant_sigma.is_none_or(|(v, _)| sr_i > v) {
             dominant_sigma = Some((sr_i, nuc));
         }
         nuclides.push(json!({
