@@ -137,4 +137,20 @@ block-by-block. Declared ceiling: G3's 8-cell corpus demo must run inside the
   only MT=457 energy totals and emits no photon lines) replaces the
   P11-only fixture originally implied by the G1/G2 text; response list
   unchanged.
+- **A2 — checker kind-code and exclusion-ordering repair (control-layer
+  only, no emit change).** The first full-corpus G5 run flagged
+  σ_correlated +0.3% and a spurious `(390,102,103)` exclusion; root cause
+  was in the checker, not the emit path: (a) the sidecar stores
+  `ComponentKind` discriminants 8/9 (LB=8/LB=9 short-range), but the
+  checker branched on literal `kind == 2`, so every LB=8 block was folded
+  with the LB=9 variance formula — the wrong diagonal contributions made
+  a genuinely borderline (λmin −3.4e-16 vs −1.2e-16 threshold) union
+  block fail PSD when the emit's correctly-folded copy passes; (b) the
+  checker removed excluded-block params *inside* the diagnosis loop,
+  letting earlier verdicts damage later blocks — the emit diagnoses all
+  blocks on the fully assembled map first and removes afterwards
+  (two-phase). Both fixed; the corrected diagnosis reproduces the emit's
+  verdict on the borderline block in isolation (kept, λmin −4.8e-17 ≥
+  −1.2e-16) and exact G2 fixture values; the full corpus re-run is
+  recorded in `results/check_g5_p53.json`.
 

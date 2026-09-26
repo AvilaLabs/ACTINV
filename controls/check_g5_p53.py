@@ -170,6 +170,7 @@ def build_joint_covariance(lib_path: Path, cov_path: Path,
 
     entries: dict[tuple[int, int], float] = {}
     vcache: dict[tuple, np.ndarray] = {}
+    excluded_keys = []
 
     def getv(row, base_row, grid_idx, relative, s_idx, grid):
         key = (row, grid_idx, relative, s_idx)
@@ -200,7 +201,7 @@ def build_joint_covariance(lib_path: Path, cov_path: Path,
                                       sr, grid_r)
                             m = np.asarray(vals).reshape(len(lv), len(rv))
                             v = float(lv @ m @ rv)
-                        else:
+                        else:  # ShortRange8 (kind 8) / ShortRange9 (kind 9)
                             v = 0.0
                             for g in range(ngroups):
                                 fl, fr = phis[sl][g], phis[sr][g]
@@ -224,7 +225,7 @@ def build_joint_covariance(lib_path: Path, cov_path: Path,
                                     wl = fl * width / gw / totals_flux[sl]
                                     wr = fr * width / gw / totals_flux[sr]
                                     var = vals[k] * cw / width \
-                                        if kind == 2 else \
+                                        if kind == 8 else \
                                         vals[k] * (1.0 - width / cw)
                                     v += wl * wr * lr_ * rr_ * var
                         if v != 0.0:
@@ -234,8 +235,10 @@ def build_joint_covariance(lib_path: Path, cov_path: Path,
                                 e2 = (sr * n + rp, sl * n + lp)
                                 entries[e2] = entries.get(e2, 0.0) + v
 
-    # exclusion diagnosis on assembled blocks — identical P20 rules,
-    # applied to every block spanned by covered params.
+    # Exclusion diagnosis on the assembled union blocks — the frozen P20
+    # rule mirrors collapse_sparse_weighted_multi: ALL (target, mt_a,
+    # mt_b) blocks are diagnosed on the complete entries map FIRST; only
+    # then are excluded blocks' params removed (no cascade between blocks).
     excluded_keys = []
     mts_by_target: dict[int, list[int]] = {}
     for (t, mt) in by_key:
@@ -273,12 +276,21 @@ def build_joint_covariance(lib_path: Path, cov_path: Path,
                         bad = "non_positive_semidefinite"
                 if bad:
                     excluded_keys.append((t, mt_a, mt_b, bad))
-                    for pi in joint:
-                        for pj in joint:
-                            if self_b or (
-                                    (pi in pa and pj in pb) or
-                                    (pi in pb and pj in pa)):
-                                entries.pop((pi, pj), None)
+    # removal phase — after ALL verdicts, matching the Rust two-phase rule
+    for (t, mt_a, mt_b, _reason) in excluded_keys:
+        if mt_a == mt_b:
+            for pi in (s * n + p for s in range(s_count)
+                       for p in by_key[(t, mt_a)]):
+                for pj in (s * n + p for s in range(s_count)
+                           for p in by_key[(t, mt_a)]):
+                    entries.pop((pi, pj), None)
+        else:
+            for pi in (s * n + p for s in range(s_count)
+                       for p in by_key[(t, mt_a)]):
+                for pj in (s * n + p for s in range(s_count)
+                           for p in by_key[(t, mt_b)]):
+                    entries.pop((pi, pj), None)
+                    entries.pop((pj, pi), None)
 
     return {"entries": entries, "covered": covered, "n": n,
             "excluded_keys": excluded_keys, "s_count": s_count}
@@ -391,8 +403,18 @@ def main() -> int:
     mutations = {}
     with tempfile.TemporaryDirectory(prefix="p53-g5-", dir="target") as d:
         work = Path(d)
-        # mutation 1: double a sensitivity value in the mesh → the
-        # recomputed band must differ (mutation propagates into J)
+        # Mutation 1 must move JᵀΣJ by more than the comparison tolerance.
+        # Doubling one small sensitivity is invisible on the corpus (≈3.8k
+        # covarianced params share the variance); scale every sensitivity
+        # under photon-emitting activity responses in cell 0 by 1.5.
+        first_cell = load_cells(MESH)[0]
+        step0 = [s for s in first_cell["result"]["steps"]
+                 if s["step"] == EMIT_STEP][0]
+        emitting = {
+            e["nuclide"]
+            for e in step0["photon_source"]["by_nuclide"]
+            if sum(g["photons_s"] for g in e["groups"]) > 0.0
+        }
         lines = MESH.read_text().splitlines()
         mutated = False
         for i, line in enumerate(lines):
@@ -400,14 +422,17 @@ def main() -> int:
             if rec["record"] == "cell":
                 for st in rec["result"]["steps"]:
                     if st["step"] == EMIT_STEP:
-                        for r in st["uncertainty"]["responses"].values():
+                        n_mut = 0
+                        for nuclide in sorted(emitting):
+                            r = st["uncertainty"]["responses"].get(
+                                f"activity:{nuclide}")
+                            if r is None:
+                                continue
                             for s in r.get("sensitivities", []):
                                 if s.get("value"):
-                                    s["value"] *= 2.0
-                                    mutated = True
-                                    break
-                            if mutated:
-                                break
+                                    s["value"] *= 1.5
+                                    n_mut += 1
+                        mutated = n_mut > 0
                     if mutated:
                         break
             if mutated:

@@ -1,0 +1,10 @@
+{
+  "checker_wall_s": 1615.385291984996,
+  "mutations": {
+    "mutation1_changes_result": true,
+    "tampered_footer_detected": true,
+    "tampered_rho_detected": true
+  },
+  "pass": true,
+  "problems": []
+}
