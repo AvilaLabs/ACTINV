@@ -42,6 +42,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
                     actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
                     actinv export-r2s-joint MESH_RESULT.ndjson SPEC.json STEP OUT.ndjson\n\
+                    actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
 
 const DATA_USAGE: &str = "usage: actinv data list\n\
@@ -961,6 +962,64 @@ pub fn main_from(a: Vec<String>) {
                 "step {} joint r2s source: {} cells, sigma_correlated {} -> {}",
                 step, summary["cells"], summary["sigma_total_correlated"], a[5]
             );
+        }
+        "clearance" => {
+            // actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson
+            if a.len() < 4 {
+                die(USAGE, 2);
+            }
+            let step: u64 = a[3]
+                .parse()
+                .unwrap_or_else(|_| die("clearance STEP must be a positive integer", 2));
+            if step == 0 {
+                die("STEP is one-based and must be positive", 2);
+            }
+            let mut limits_path: Option<String> = None;
+            let mut confidence = 0.95f64;
+            let mut out_path: Option<String> = None;
+            let mut i = 4;
+            while i < a.len() {
+                match a[i].as_str() {
+                    "--limits" => {
+                        limits_path = Some(
+                            a.get(i + 1)
+                                .cloned()
+                                .unwrap_or_else(|| die("--limits requires a path", 2)),
+                        );
+                        i += 2;
+                    }
+                    "--confidence" => {
+                        confidence = a
+                            .get(i + 1)
+                            .and_then(|s| s.parse().ok())
+                            .unwrap_or_else(|| die("--confidence requires a number in (0,1)", 2));
+                        i += 2;
+                    }
+                    flag if flag.starts_with("--") => {
+                        die(format!("unknown clearance flag {flag}"), 2)
+                    }
+                    positional => {
+                        if out_path.is_some() {
+                            die("clearance takes exactly one output path", 2);
+                        }
+                        out_path = Some(positional.to_string());
+                        i += 1;
+                    }
+                }
+            }
+            let out = out_path.unwrap_or_else(|| die(USAGE, 2));
+            let bytes = std::fs::read(&a[2])
+                .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[2]), 2));
+            let doc = actinv_core::clearance::emit_clearance(
+                &bytes,
+                step,
+                limits_path.as_deref(),
+                confidence,
+            )
+            .unwrap_or_else(|e| die(e, 1));
+            std::fs::write(&out, doc)
+                .unwrap_or_else(|e| die(format!("cannot write {out}: {e}"), 1));
+            eprintln!("step {step} clearance evaluation -> {out}");
         }
         _ => die(USAGE, 2),
     }
