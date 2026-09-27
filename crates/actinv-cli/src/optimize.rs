@@ -1666,6 +1666,8 @@ mod tests {
             init_points: init,
             refine_points: refine,
             refine_step_fraction: 0.25,
+            prescreen: false,
+            prescreen_bmin_atoms_per_g: None,
         }
     }
 

@@ -1573,7 +1573,7 @@ impl PreparedRun {
                     .take_while(|c| c.is_ascii_alphabetic())
                     .collect::<String>()
                     .to_lowercase();
-                dominant = format!("{}{}", &alpha[..1].to_uppercase(), &alpha[1..]);
+                dominant = format!("{}{}", alpha[..1].to_uppercase(), &alpha[1..]);
                 (dominant, "inferred")
             }
         };
