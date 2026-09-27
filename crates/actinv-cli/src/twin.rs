@@ -34,6 +34,33 @@ struct TwinSpec {
     /// the assay's own `response`/`time_s` select the band it updates.
     #[serde(default)]
     assays: Option<Vec<CellAssay>>,
+    /// Named components as cell-id lists; a component clears only when
+    /// every member cell clears every evaluated time.
+    #[serde(default)]
+    components: Option<HashMap<String, Vec<String>>>,
+    /// Detector points for a point-kernel photon-flux estimate.
+    #[serde(default)]
+    dose_points: Option<Vec<DosePoint>>,
+}
+
+#[derive(serde::Deserialize)]
+struct DosePoint {
+    name: String,
+    position_cm: [f64; 3],
+    /// Optional shield slabs between every cell and this point:
+    /// flux attenuates by exp(-Σ mu_cm_inv · thickness_cm).
+    #[serde(default)]
+    shields: Option<Vec<ShieldSlab>>,
+    /// Optional photon→dose conversion applied to the attenuated flux:
+    /// Gy/h per (photon·cm^-2·s^-1), one scalar per point.
+    #[serde(default)]
+    dose_coeff_gy_cm2_per_photon_h: Option<f64>,
+}
+
+#[derive(serde::Deserialize)]
+struct ShieldSlab {
+    mu_cm_inv: f64,
+    thickness_cm: f64,
 }
 
 #[derive(serde::Deserialize)]
@@ -139,9 +166,36 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
     let mut assimilated_cells: Vec<String> = Vec::new();
 
     let mut cells: Vec<Value> = Vec::new();
+    let mut cell_verdicts: HashMap<String, String> = HashMap::new();
     let mut n_cells = 0usize;
     // (response, time) -> the binding cell (minimum margin)
     let mut binding: Map<String, Value> = Map::new();
+    // Per detector point: accumulated attenuated photon flux per step time.
+    struct PointState {
+        position: [f64; 3],
+        attenuation: f64,
+        dose_coeff: Option<f64>,
+        flux: HashMap<u64, f64>,
+    }
+    let mut point_rows: Vec<PointState> = spec
+        .dose_points
+        .iter()
+        .flatten()
+        .map(|p| {
+            let od: f64 = p
+                .shields
+                .iter()
+                .flatten()
+                .map(|s| s.mu_cm_inv * s.thickness_cm)
+                .sum();
+            PointState {
+                position: p.position_cm,
+                attenuation: (-od).exp(),
+                dose_coeff: p.dose_coeff_gy_cm2_per_photon_h,
+                flux: HashMap::new(),
+            }
+        })
+        .collect();
     for line in raw.lines().filter(|l| l.trim().starts_with('{')) {
         let mut rec: Value =
             serde_json::from_str(line).map_err(|e| format!("mesh output line: {e}"))?;
@@ -184,6 +238,16 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
         let steps = rec["result"]["steps"]
             .as_array()
             .ok_or_else(|| format!("cell {id}: result carries no steps"))?;
+        // Cell centroid + attenuated distance for the dose points.
+        let centroid: [f64; 3] = (0..3)
+            .map(|ax| {
+                let b = &rec["bounds_cm"][ax];
+                (b[0].as_f64().unwrap_or(0.0) + b[1].as_f64().unwrap_or(0.0)) / 2.0
+            })
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap_or([0.0, 0.0, 0.0]);
+        let v_eff = rec["volume_cm3"].as_f64().unwrap_or(1.0).max(1e-30);
         let mut cell_rows = Vec::new();
         let mut cell_worst = f64::INFINITY;
         for st in steps {
@@ -191,6 +255,27 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             if let Some(ts) = &spec.times_s {
                 if !ts.iter().any(|&tt| close(tt, t)) {
                     continue;
+                }
+            }
+            // Point-kernel: Σ_groups photons_s · atten / (4π r²).
+            let photons_s: f64 = st
+                .pointer("/photon_source/groups")
+                .and_then(|g| g.as_array())
+                .map(|gs| {
+                    gs.iter()
+                        .map(|g| g["photons_s"].as_f64().unwrap_or(0.0))
+                        .sum()
+                })
+                .unwrap_or(0.0);
+            if photons_s > 0.0 {
+                for pt in point_rows.iter_mut() {
+                    let dist = ((centroid[0] - pt.position[0]).powi(2)
+                        + (centroid[1] - pt.position[1]).powi(2)
+                        + (centroid[2] - pt.position[2]).powi(2))
+                    .sqrt()
+                    .max(0.5 * v_eff.cbrt());
+                    *pt.flux.entry(t.to_bits()).or_insert(0.0) +=
+                        photons_s * pt.attenuation / (4.0 * std::f64::consts::PI * dist * dist);
                 }
             }
             for l in &spec.limits {
@@ -231,10 +316,16 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
                 }
             }
         }
+        let verdict = if cell_worst >= 0.0 {
+            "cleared"
+        } else {
+            "restricted"
+        };
+        cell_verdicts.insert(id.clone(), verdict.to_string());
         cells.push(json!({
             "cell": id,
             "ordinal": rec["ordinal"],
-            "verdict": if cell_worst >= 0.0 { "cleared" } else { "restricted" },
+            "verdict": verdict,
             "worst_margin": cell_worst,
             "entries": cell_rows,
         }));
@@ -242,6 +333,63 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
     if n_cells == 0 {
         return Err(format!("{} carried no cell records", mesh_path.display()));
     }
+    // Component rollup: cleared only when every member cell cleared.
+    let components: Map<String, Value> = spec
+        .components
+        .iter()
+        .flatten()
+        .map(|(name, ids)| {
+            let missing: Vec<&String> = ids
+                .iter()
+                .filter(|i| !cell_verdicts.contains_key(*i))
+                .collect();
+            let verdict = if !missing.is_empty() {
+                "unknown"
+            } else if ids.iter().all(|i| cell_verdicts[i.as_str()] == "cleared") {
+                "cleared"
+            } else {
+                "restricted"
+            };
+            (
+                name.clone(),
+                json!({
+                    "cells": ids, "verdict": verdict,
+                    "missing_cells": missing.iter().map(|s| s.as_str()).collect::<Vec<_>>(),
+                }),
+            )
+        })
+        .collect();
+    // Point-kernel photon flux per detector point — a screening estimate,
+    // not a certified band (per-group photon strengths carry no band yet).
+    let dose_points: Vec<Value> = spec
+        .dose_points
+        .iter()
+        .flatten()
+        .zip(point_rows.iter())
+        .map(|(p, st)| {
+            let mut times: Vec<Value> = st
+                .flux
+                .iter()
+                .map(|(bits, flux)| {
+                    let t = f64::from_bits(*bits);
+                    let mut row = json!({
+                        "t_s": t,
+                        "photon_flux_cm2_s": flux,
+                    });
+                    if let Some(c) = st.dose_coeff {
+                        row["dose_gy_h"] = json!(flux * c);
+                    }
+                    row
+                })
+                .collect();
+            times.sort_by(|a, b| a["t_s"].as_f64().partial_cmp(&b["t_s"].as_f64()).unwrap());
+            json!({
+                "name": p.name, "position_cm": p.position_cm,
+                "attenuation": st.attenuation,
+                "steps": times,
+            })
+        })
+        .collect();
     let cleared = cells.iter().filter(|c| c["verdict"] == "cleared").count();
     let out = json!({
         "schema": "actinv-twin-1",
@@ -252,13 +400,15 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             "limit": l.limit, "sense": l.sense,
         })).collect::<Vec<_>>(),
         "per_cell": cells,
+        "components": components,
+        "dose_points": dose_points,
         "facility": {
             "cleared": cleared,
             "restricted": n_cells - cleared,
             "binding_cells": binding,
             "assimilated_cells": assimilated_cells,
         },
-        "note": "clearance is on the certified band edge, not the nominal — a cell clears only when its conservative interval clears the limit",
+        "note": "clearance is on the certified band edge, not the nominal — a cell clears only when its conservative interval clears the limit. dose_points flux is a point-kernel screening estimate (no scatter/buildup transport), not a certified band",
     });
     if let Some(p) = out_path {
         std::fs::write(p, serde_json::to_string_pretty(&out).unwrap())

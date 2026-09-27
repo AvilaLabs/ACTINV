@@ -87,13 +87,15 @@ records.append({"record": "footer", "cell_count": len(spectra),
 flux_path.write_text(
     "".join(json.dumps(r, separators=(",", ":")) + "\n" for r in records))
 
+options = json.loads(json.dumps(base["options"]))
+options["outputs"] = options["outputs"] + ["photons"]
 mesh = {
     "spec": "actinv-mesh-spec-1", "title": "d3 twin gate",
     "projectile": "neutron",
     "library": base["library"], "decay": base["decay"],
     "material": base["material"],
     "flux": {"path": str(flux_path), "sha256": sha(flux_path)},
-    "schedule": base["schedule"], "options": base["options"],
+    "schedule": base["schedule"], "options": options,
     "uncertainty": base["uncertainty"],
     "cell_result_fields": ["steps"],
 }
@@ -107,7 +109,8 @@ check("mesh emitted cells",
 
 # Twin: one clearance limit on heat.total. Loose limit clears all
 # cells; a tight one restricts the hot cell (and possibly others).
-def twinspec(limit, name, times=None, assays=None):
+def twinspec(limit, name, times=None, assays=None,
+             components=None, dose_points=None):
     doc = {"spec": "actinv-twin-1", "mesh_output": str(mesh_out),
            "limits": [{"name": "heat", "response": "heat.total",
                        "limit": limit}]}
@@ -115,6 +118,10 @@ def twinspec(limit, name, times=None, assays=None):
         doc["times_s"] = times
     if assays is not None:
         doc["assays"] = assays
+    if components is not None:
+        doc["components"] = components
+    if dose_points is not None:
+        doc["dose_points"] = dose_points
     p = tmp / f"{name}.json"
     p.write_text(json.dumps(doc))
     op = tmp / f"{name}.out.json"
@@ -204,6 +211,34 @@ check("assay flips the hot cell to cleared",
       pv.get("cell-1") == "cleared", f"{pv}")
 check("assimilated cells recorded",
       "cell-1" in post["facility"]["assimilated_cells"])
+
+# Component rollup: a component clears only when every member clears.
+comp = twinspec(mid, "components", times=[edge_t],
+                components={"hot-leg": ["cell-1"],
+                            "cold-leg": ["cell-0", "cell-2"],
+                            "ghost": ["cell-9"]})
+cv = {k: v["verdict"] for k, v in comp["components"].items()}
+check("component rollup verdicts",
+      cv == {"hot-leg": "restricted", "cold-leg": "cleared",
+             "ghost": "unknown"}, f"{cv}")
+
+# Dose points: the far detector sees the hot cell's photons stronger
+# than a shielded one; ordering and attenuation must be sane.
+dpt = twinspec(mid, "dose", times=[edge_t],
+               dose_points=[
+                   {"name": "near", "position_cm": [1.0, 0.5, 0.5]},
+                   {"name": "far", "position_cm": [10.0, 0.5, 0.5]},
+                   {"name": "shielded", "position_cm": [1.0, 0.5, 0.5],
+                    "shields": [{"mu_cm_inv": 1.0,
+                                 "thickness_cm": 4.0}]}])
+dp = {p["name"]: p for p in dpt["dose_points"]}
+fx = {k: v["steps"][0]["photon_flux_cm2_s"] for k, v in dp.items()}
+check("dose points emitted", len(dp) == 3 and all(v >= 0 for v in fx.values()),
+      f"{fx}")
+check("far point dimmer than near",
+      fx.get("far", 1.0) < fx.get("near", 0.0), f"{fx}")
+check("shielding attenuates",
+      fx.get("shielded", 1.0) < fx.get("near", 0.0) * 0.5, f"{fx}")
 
 failed = [c for c in checks if not c["pass"]]
 OUT.write_text(json.dumps({"pass": not failed, "n": len(checks),

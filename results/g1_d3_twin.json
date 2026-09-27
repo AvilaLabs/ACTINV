@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 12,
+ "n": 16,
  "checks": [
   {
    "name": "mesh emitted cells",
@@ -61,6 +61,26 @@
    "name": "assimilated cells recorded",
    "pass": true,
    "detail": ""
+  },
+  {
+   "name": "component rollup verdicts",
+   "pass": true,
+   "detail": "{'cold-leg': 'cleared', 'ghost': 'unknown', 'hot-leg': 'restricted'}"
+  },
+  {
+   "name": "dose points emitted",
+   "pass": true,
+   "detail": "{'near': 1.4909185380382257e-25, 'far': 5.339577645668668e-28, 'shielded': 2.7307125555227633e-27}"
+  },
+  {
+   "name": "far point dimmer than near",
+   "pass": true,
+   "detail": "{'near': 1.4909185380382257e-25, 'far': 5.339577645668668e-28, 'shielded': 2.7307125555227633e-27}"
+  },
+  {
+   "name": "shielding attenuates",
+   "pass": true,
+   "detail": "{'near': 1.4909185380382257e-25, 'far': 5.339577645668668e-28, 'shielded': 2.7307125555227633e-27}"
   }
  ]
 }
