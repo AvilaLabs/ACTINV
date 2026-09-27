@@ -31,9 +31,12 @@ PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
 # Re-seated from 0ed6be99... after the reviewed CRAM solve-refinement fix
 # (35d5448) legitimately changed the normalized neutron result, and again from
 # a80fed95... after the CB2 kernel changes (cc2cade selective refinement gate,
-# 9420f8c subnormal-row exemption) moved it at ULP level.
+# 9420f8c subnormal-row exemption) moved it at ULP level. Re-seated once more
+# from f7b30255... after P70 (fde8897) added the unconditional
+# max_product_optical_depth{,_nuclide} ledger keys — a schema addition, not a
+# numerical change.
 PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
-    "f7b30255edfe53e3a00522b3ee834dbd52288395cc5babc4472186cf568e1930"
+    "d27ba80b6c393ff3661f35cdf5be5ec32c8e8bc50876721ef7dbbed05e224e43"
 )
 PRE_P12_TABLES_PROVENANCE = (
     "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; "
