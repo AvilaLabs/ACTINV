@@ -348,7 +348,7 @@ f0a5a956b40b9003257309c96d07cf13f5025a610482a51038c9586cf30309c1  ./controls/g1_
 58a1bf2a8519acaefd7e8c9f25e3b863ad3dbaaa3826d50f2bd473ff5771ec2c  ./controls/g1_p66_mechanics.py
 f0c67f701d6e353883f6eb6b89d482d6b734d52e4fb7e2ae97c6600d32a66537  ./controls/g1_p67_mechanics.py
 02ad2f82eab2f6a6e692bdf9b21c33472d91f4d68b12c5606cb5ffa0fea29ee2  ./controls/g1_p68_mechanics.py
-10f77329d8255833e97faef35d9705eda177add0ab78a6d9e2a7d54c221b45c1  ./controls/g1_p69_live.py
+0cafd017b60f7be45c1de63fcd040ee8c4c07283073bcc3d5c4563a41c6cfe13  ./controls/g1_p69_live.py
 88df620c51745e786cba2f38abe6ccf0ff2e20d3feb6e4c85c489ecd9daa3556  ./controls/g1_p7_spectrum_reader.py
 192953779d2bf6e3330a655dd1a239beca5345b06470f9d1ef7e88af2c9c6b44  ./controls/g1_p8_canonical_rebin.py
 0d3bd685435c6b70361919beb7479260fe83d31fb60241f2ef639ce1abfa2d74  ./controls/g1_p9_composition_yields.py
@@ -706,7 +706,7 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 067b21dd7fdbe6fc7cbf6b3d8b8132d741117284b79bebb383171f24ed3a9cd2  ./crates/actinv-core/src/r2s.rs
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
 7cdbb417c2c228e9524bff1cb5f85674b094938d5c204fea02b0a3dc45c48bb4  ./crates/actinv-core/src/reverse.rs
-9039ffe87e24de55e5025f3b401ac636e890f7ee37c640153ca922f0af5d6825  ./crates/actinv-core/src/run.rs
+4198dc95fac56b15cb013f7b5e27e8c480fe231e4144e7fa1412be5e7f747b61  ./crates/actinv-core/src/run.rs
 7bc9ceb357177c6f11ce115ca438df70701fa89ecfc6802ef1be3d5d7eade28b  ./crates/actinv-core/src/shielding.rs
 96bbce40009d1cda32016cc33f6c2ced3b3b781d8af3b7791f529e441f254e3e  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
@@ -746,14 +746,14 @@ ab6f98523724e676918ecd18b628d24583eb4c21a36b5ce486e717a582a69a2f  ./crates/actin
 aec3b5ca3c83eddd977c8a37e7fac382f902f2f0ecabb2e3aec4f5550f98f01c  ./crates/actinv-gui/assets/avila-labs-logo.png
 ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6  ./crates/actinv-gui/build.rs
 fb694601cc2281e94a38ee673ccbd6de622a293a41a892a1d43d44fd7f26f8bf  ./crates/actinv-gui/index.html
-44d2091f99f92c61ebb799db6028e148ccf816ca9105656fe0d274902a7729bd  ./crates/actinv-gui/src/app.rs
+0c369247f45b770d11cee9f351751a298decb8552bb0593ac7c8bd8f69269d96  ./crates/actinv-gui/src/app.rs
 b5bfdb71a16a36b954d52770c8ce0258f961c89d41ee9f8a3a95c7dae30dfc9e  ./crates/actinv-gui/src/capture.rs
 a25925117a2fe9daf1f6e7692750004c90ebbf4a273993af149cf8f822e91f9f  ./crates/actinv-gui/src/lib.rs
 d7f530b2976ec14ecf864fe8b5a03f982680427b99a5dbbb5be488362e736913  ./crates/actinv-gui/src/main.rs
 361c9b5d25c1146454050eef483c1a22cf11ff6d249b7f6790f10c010ae80c14  ./crates/actinv-gui/src/model.rs
 0d9a2fcdd592060a5b8a5ee3e71822af940fb18fbfa2d51600c554815528d0e4  ./crates/actinv-gui/src/options.rs
-a1e6b7eecec8cdfa867231e1aae80932f894bcfafb4755a6d527fa41d879992a  ./crates/actinv-gui/src/smoke.rs
-7165cbe01b01cba25b072ec153b72e53b36566c5d449f29bfdd5e971eb2de165  ./crates/actinv-gui/src/sweep.rs
+7b993ad9a72e3ba181d6f844d869c4b7a57ccef8d67c45bc1e408a16d7954cff  ./crates/actinv-gui/src/smoke.rs
+18d78cdb94fe1d5a52baeb2161ed95dbd85acf244e3490d669cde26addd7de8a  ./crates/actinv-gui/src/sweep.rs
 0869eb3e7b2e0d8468a4708484d173905d56b979f3cfe21eb20b9d5613225685  ./crates/actinv-gui/src/tour.rs
 6b3fd8795175e8b95be412719615e6018752353ea6dc30271d68966d01088a43  ./crates/actinv-gui/src/transport.rs
 35842c494d2e654999d1e065cbcbf1e833e8d63f1c46004924c40cc345eafe25  ./crates/actinv-gui/src/visuals.rs

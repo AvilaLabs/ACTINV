@@ -69,6 +69,13 @@ else:
           len(rep["kept_states"]) == rep["landed"]
           and all(k > 0 for k in rep["kept_states"]))
     check("cache states reported", len(rep["cache_hits"]) == rep["landed"])
+    check("flux-scaled point certified", rep["flux_scale_certified"] is True)
+    check("flux scaling answered sub-second "
+          f"({rep.get('flux_scaled_ms')} ms)",
+          rep.get("flux_scaled_ms", 1e9) < 1000)
+    check("flux-scale correction bound recorded",
+          0 < rep.get("flux_scale_bound_rel", 0) < 1e-3,
+          "linear-scaling certificate carries its optical-depth bound")
 
 failed = [c for c in checks if not c["pass"]]
 OUT.write_text(json.dumps({"pass": not failed, "n": len(checks),

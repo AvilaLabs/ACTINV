@@ -292,7 +292,6 @@ fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
             Err(_) => {}
         }
     }
-    drop(h);
     for (i, p) in done.iter().enumerate() {
         let v = p
             .result
@@ -329,6 +328,62 @@ fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
             ));
         }
     }
+    // P70: certified flux scaling — submit two flux-normalisation points
+    // sequentially: the first solves (doc differs from the cooling
+    // schedule), the second differs only in spectrum.total and must be
+    // answered by scaling with a `flux_scale` certificate.
+    let flux_axis = SweepAxis::FluxNormalization;
+    let flux_pts = sweep::sweep_specs(&document, &flux_axis, &[1.5, 2.5])
+        .map_err(|e| format!("sweep_specs flux: {e}"))?;
+    h.submit(9, flux_pts[0].clone());
+    let mut flux_first = None;
+    while flux_first.is_none() {
+        match h.rx.recv_timeout(Duration::from_secs(600)) {
+            Ok(p) => {
+                if p.param == 1.5 {
+                    flux_first = Some(p);
+                }
+            }
+            Err(e) => return Err(format!("live flux first point: {e}")),
+        }
+    }
+    h.submit(9, flux_pts[1].clone());
+    let mut flux_scaled = None;
+    while flux_scaled.is_none() {
+        match h.rx.recv_timeout(Duration::from_secs(120)) {
+            Ok(p) => {
+                if p.param == 2.5 {
+                    flux_scaled = Some(p);
+                }
+            }
+            Err(e) => return Err(format!("live flux scaled point: {e}")),
+        }
+    }
+    let fs = flux_scaled.as_ref().unwrap();
+    let fv = fs
+        .result
+        .as_ref()
+        .map_err(|e| format!("flux scaled point failed: {e}"))?;
+    let cert = fv["flux_scale"]
+        .as_object()
+        .ok_or("scaled flux point carries no flux_scale certificate")?;
+    if cert["certified"] != true {
+        return Err("flux_scale certificate missing certified flag".into());
+    }
+    if cert["flux_multiplier"].as_f64().unwrap_or(0.0) != 2.5 / 1.5 {
+        return Err("flux_scale multiplier mismatch".into());
+    }
+    // the scaled response must equal multiplier × base response, and the
+    // scaled run must have skipped the solver (sub-second on debug too)
+    let base_v = flux_first.as_ref().unwrap().result.as_ref().unwrap();
+    let resp = crate::sweep::SweepResponse::TotalActivityBqPerG;
+    let a = resp.extract(base_v, 1).ok_or("base response missing")?;
+    let b = resp.extract(fv, 1).ok_or("scaled response missing")?;
+    if (b - a * (2.5 / 1.5)).abs() > 1e-12 * a.abs().max(1.0) {
+        return Err(format!("scaled response {b} != {a} × (2.5/1.5)"));
+    }
+    drop(h);
+
     let report = serde_json::json!({
         "submitted": values.len(),
         "landed": done.len(),
@@ -339,6 +394,9 @@ fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
             .filter_map(|p| p.screen_kept_states)
             .collect::<Vec<_>>(),
         "cache_hits": done.iter().map(|p| p.cache_hit).collect::<Vec<_>>(),
+        "flux_scaled_ms": fs.elapsed_ms,
+        "flux_scale_certified": cert["certified"],
+        "flux_scale_bound_rel": cert["relative_correction_bound"],
     });
     model::write_json(&output.join("sweep-live-smoke.json"), &report).map_err(|e| e.to_string())?;
     Ok(())

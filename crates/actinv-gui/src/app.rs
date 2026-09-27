@@ -1464,13 +1464,23 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 self.sweep.generation
             ));
             if let Some(p) = last {
-                let tier = match (p.cache_hit, p.screen_kept_states) {
-                    (Some(hit), Some(kept)) => format!(
-                        "screened · {} states kept · cache {}",
-                        kept,
-                        if hit { "warm" } else { "cold" }
-                    ),
-                    _ => "isolated worker".to_string(),
+                let flux_scaled = p
+                    .result
+                    .as_ref()
+                    .ok()
+                    .and_then(|v| v["flux_scale"]["certified"].as_bool())
+                    .unwrap_or(false);
+                let tier = if flux_scaled {
+                    "flux-scaled · certified".to_string()
+                } else {
+                    match (p.cache_hit, p.screen_kept_states) {
+                        (Some(hit), Some(kept)) => format!(
+                            "screened · {} states kept · cache {}",
+                            kept,
+                            if hit { "warm" } else { "cold" }
+                        ),
+                        _ => "isolated worker".to_string(),
+                    }
                 };
                 ui.monospace(format!(
                     "latest: {} · {} ms · {} · spec sha256 {}… — every rendered point is bound to the spec that produced it",

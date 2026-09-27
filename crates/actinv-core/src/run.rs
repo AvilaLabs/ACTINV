@@ -2682,16 +2682,27 @@ impl PreparedRun {
             .sum();
         let mut burnup_optical_depth: HashMap<usize, f64> = HashMap::new();
         for (r, c, v) in &react {
-            if *r == *c && *v < 0.0 && bulk.contains_key(c) {
+            if *r == *c && *v < 0.0 {
                 *burnup_optical_depth.entry(*c).or_insert(0.0) += -v * flux_weighted_time_s;
             }
         }
+        // Product-column optical depth: the scale on which a flux
+        // re-normalisation stops being linear — second-hop capture along
+        // a product chain contributes at order (product depth)^2, so the
+        // linear-scaling certificate bounds the correction by this depth.
+        let mut product_optical_depth_max = 0.0f64;
+        let mut product_optical_depth_nuclide = None;
         for (index, optical_depth) in burnup_optical_depth {
             let fraction = -(-optical_depth).exp_m1();
-            if optical_depth > led.burnup_optical_depth_max {
-                led.burnup_optical_depth_max = optical_depth;
-                led.burnup_fraction_max = fraction;
-                led.burnup_nuclide = Some(ch.keys[index]);
+            if bulk.contains_key(&index) {
+                if optical_depth > led.burnup_optical_depth_max {
+                    led.burnup_optical_depth_max = optical_depth;
+                    led.burnup_fraction_max = fraction;
+                    led.burnup_nuclide = Some(ch.keys[index]);
+                }
+            } else if optical_depth > product_optical_depth_max {
+                product_optical_depth_max = optical_depth;
+                product_optical_depth_nuclide = Some(ch.keys[index]);
             }
         }
         let mode = match spec.options.mode.as_str() {
@@ -4195,6 +4206,17 @@ impl PreparedRun {
                 serde_json::Value::String(spec.projectile.name().into()),
             );
         }
+        // Attached post-construction — the json! literal is at its
+        // recursion cap. Product-chain optical depth bounds the nonlinear
+        // correction to linear flux scaling (P70 flux_scale certificate).
+        ledger.as_object_mut().expect("ledger is an object").insert(
+            "max_product_optical_depth".into(),
+            serde_json::json!(product_optical_depth_max),
+        );
+        ledger.as_object_mut().expect("ledger is an object").insert(
+            "max_product_optical_depth_nuclide".into(),
+            serde_json::json!(product_optical_depth_nuclide.map(|key| name_of(key.0, key.1))),
+        );
         // Present only for a decay library with inconsistent branching, so runs on consistent data are unchanged.
         if !ch.ledger.branching_sums.is_empty() {
             let sums: BTreeMap<String, f64> = ch
