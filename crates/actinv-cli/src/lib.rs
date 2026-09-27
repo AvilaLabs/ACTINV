@@ -1,10 +1,12 @@
 //! Command-line support that does not belong to the scientific solver.
 #![forbid(unsafe_code)]
 
+pub mod assimilate;
 pub mod command;
 pub mod decide;
 pub mod optimize;
 pub mod surrogate;
+pub mod twin;
 pub mod worker;
 pub mod workflow;
 

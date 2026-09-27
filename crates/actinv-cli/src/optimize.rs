@@ -1432,7 +1432,10 @@ pub fn run_optimize(
             } else {
                 let re_spec =
                     actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&c)?)?;
-                ReRun::Solve(Box::new(actinv_core::run::run(&re_spec, "optimize-verify")?))
+                ReRun::Solve(Box::new(actinv_core::run::run(
+                    &re_spec,
+                    "optimize-verify",
+                )?))
             };
             let re_certified = match &re {
                 ReRun::Solve(r) => r.screen.as_ref().and_then(|s| s["certified"].as_object()),

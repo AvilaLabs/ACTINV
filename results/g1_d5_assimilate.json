@@ -1,0 +1,56 @@
+{
+ "pass": true,
+ "n": 10,
+ "checks": [
+  {
+   "name": "precise assay gains ~1",
+   "pass": true,
+   "detail": "K=0.992"
+  },
+  {
+   "name": "precise assay shrinks band",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "posterior band brackets the assay",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "consistent verdict inside prior band",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "sloppy assay gains ~0",
+   "pass": true,
+   "detail": "K=0.0000"
+  },
+  {
+   "name": "sloppy assay leaves the band ~unchanged",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "conflict verdict outside prior band",
+   "pass": true,
+   "detail": "verdict=conflict"
+  },
+  {
+   "name": "non-assay schema refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "unfitted response refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "provenance shas recorded",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

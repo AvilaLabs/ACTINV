@@ -809,6 +809,29 @@ pub fn main_from(a: Vec<String>) {
                 summary.out_dir.display(),
             );
         }
+        "assimilate" => {
+            if a.len() < 3 {
+                die(
+                    "usage: actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json]\nFold an assay into a certified response band (log-Gaussian update with an emitted Kalman gain and a consistency verdict).",
+                    2,
+                );
+            }
+            let options = valued_options(&a[2..]);
+            reject_unknown(&options, &["--result", "--assay", "--out"]);
+            let result = required_option(&options, "--result");
+            let assay = required_option(&options, "--assay");
+            let out = options.get("--out").copied();
+            let summary =
+                crate::assimilate::run(result, assay, out).unwrap_or_else(|error| die(error, 1));
+            if out.is_none() {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&summary).expect("serialise assimilate summary")
+                );
+            } else {
+                println!("{}", serde_json::to_string(&summary).unwrap());
+            }
+        }
         "surrogate" => {
             const SUR_USAGE: &str = "usage: actinv surrogate fit SURSPEC.json [OUTDIR]\n       \
                  actinv surrogate eval ARTIFACT.json X.json [OUT.json]";
@@ -890,6 +913,24 @@ pub fn main_from(a: Vec<String>) {
                 "{}",
                 serde_json::to_string_pretty(&summary).expect("serialise mesh summary")
             );
+        }
+        "twin" => {
+            if a.len() < 3 || a.len() > 4 {
+                die(
+                    "usage: actinv twin TWINSPEC.json [OUT.json]\nEvaluate declared clearance limits against per-cell certified bands from an `actinv mesh` output.",
+                    2,
+                );
+            }
+            let summary = crate::twin::run(&a[2], if a.len() == 4 { Some(&a[3]) } else { None })
+                .unwrap_or_else(|error| die(error, 1));
+            if a.len() == 3 {
+                println!(
+                    "{}",
+                    serde_json::to_string_pretty(&summary).expect("serialise twin summary")
+                );
+            } else {
+                println!("{}", serde_json::to_string(&summary).unwrap());
+            }
         }
         "study" => {
             study_command(&a[2..]);

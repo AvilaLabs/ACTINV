@@ -1,0 +1,51 @@
+{
+ "pass": true,
+ "n": 9,
+ "checks": [
+  {
+   "name": "mesh emitted cells",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "twin schema",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "loose limit clears every cell",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "per-cell entries recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "tight limit restricts cells",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "binding cells recorded per (limit, time)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "hot cell binds somewhere",
+   "pass": true,
+   "detail": "binding cells ['cell-1']"
+  },
+  {
+   "name": "empty limits refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "unfitted response refused",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

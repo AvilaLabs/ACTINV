@@ -418,7 +418,7 @@ fn solve_result(
     activation_boundaries: &[f64],
     flux_per_group: Vec<f64>,
     cell_id: &str,
-) -> Result<String, String> {
+) -> Result<(String, usize), String> {
     let spec = mesh_spec.cell_spec(activation_boundaries.to_vec(), flux_per_group);
     spec.validate()
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
@@ -427,13 +427,21 @@ fn solve_result(
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let mut result =
         result_without_timing(result).map_err(|error| format!("cell '{cell_id}': {error}"))?;
+    // The field filter may strip `pruned_states` from the emitted record;
+    // the runner itself needs it, so read it before filtering.
+    let pruned = result["pruned_states"]
+        .as_u64()
+        .ok_or_else(|| format!("cell '{cell_id}': solver result has no numeric pruned_states"))?
+        as usize;
     if let Some(fields) = &mesh_spec.cell_result_fields {
         result
             .as_object_mut()
             .ok_or_else(|| format!("cell '{cell_id}': result did not serialize as an object"))?
             .retain(|key, _| fields.iter().any(|field| field == key));
     }
-    serde_json::to_string(&result).map_err(|error| format!("cell '{cell_id}': {error}"))
+    let text =
+        serde_json::to_string(&result).map_err(|error| format!("cell '{cell_id}': {error}"))?;
+    Ok((text, pruned))
 }
 
 fn cell_record(
@@ -626,7 +634,7 @@ fn write_mesh_body(
     // Signature memo: at most GROUPING_CACHE_CAP distinct results and
     // GROUPING_CACHE_BYTES of payload, so memory stays bounded independently
     // of cell count and per-record size.
-    let mut memo: HashMap<[u8; 32], String> = HashMap::new();
+    let mut memo: HashMap<[u8; 32], (String, usize)> = HashMap::new();
     let mut memo_bytes = 0usize;
     loop {
         let input_cells = stream.read_chunk(spec.chunk_cells)?;
@@ -648,7 +656,8 @@ fn write_mesh_body(
             .collect();
         let mut pending: HashMap<[u8; 32], Pending> = HashMap::new();
         let mut to_solve: Vec<usize> = Vec::new();
-        let mut resolved: Vec<Option<String>> = (0..input_cells.len()).map(|_| None).collect();
+        let mut resolved: Vec<Option<(String, usize)>> =
+            (0..input_cells.len()).map(|_| None).collect();
         // In-chunk repeats: cell index -> first-occurrence chunk index.
         let mut deferred: Vec<(usize, usize)> = Vec::new();
         for (index, cell) in input_cells.iter().enumerate() {
@@ -668,7 +677,12 @@ fn write_mesh_body(
                                     .as_mut()
                                     .map(|(file, offsets)| (&mut **file, *offsets))
                                     .ok_or("resumable prefix reader unavailable")?;
-                                resolved[index] = Some(read_prefix_result(file, offsets, ordinal)?);
+                                let pruned = *prefix_pruned
+                                    .get(ordinal as usize)
+                                    .ok_or("resumable prefix lacks a pruned-state record")?
+                                    as usize;
+                                resolved[index] =
+                                    Some((read_prefix_result(file, offsets, ordinal)?, pruned));
                             }
                         }
                     }
@@ -691,9 +705,13 @@ fn write_mesh_body(
                         .map(|(file, offsets)| (&mut **file, *offsets))
                         .ok_or("resumable prefix reader unavailable")?;
                     let text = read_prefix_result(file, offsets, cell.ordinal)?;
+                    let pruned = *prefix_pruned
+                        .get(cell.ordinal as usize)
+                        .ok_or("resumable prefix lacks a pruned-state record")?
+                        as usize;
                     if memo_bytes + text.len() <= GROUPING_CACHE_BYTES {
                         memo_bytes += text.len();
-                        memo.insert(signature, text);
+                        memo.insert(signature, (text, pruned));
                     }
                 }
                 pending.insert(signature, Pending::Prefix(cell.ordinal));
@@ -702,7 +720,7 @@ fn write_mesh_body(
             pending.insert(signature, Pending::Solve(index));
             to_solve.push(index);
         }
-        let solved: Vec<Result<String, String>> = pool.install(|| {
+        let solved: Vec<Result<(String, usize), String>> = pool.install(|| {
             to_solve
                 .par_iter()
                 .map(|&index| {
@@ -717,15 +735,15 @@ fn write_mesh_body(
                 .collect()
         });
         for (result, &index) in solved.into_iter().zip(to_solve.iter()) {
-            let text = result?;
+            let (text, pruned) = result?;
             if spec.group_workloads
                 && memo.len() < GROUPING_CACHE_CAP
                 && memo_bytes + text.len() <= GROUPING_CACHE_BYTES
             {
                 memo_bytes += text.len();
-                memo.insert(signatures[index], text.clone());
+                memo.insert(signatures[index], (text.clone(), pruned));
             }
-            resolved[index] = Some(text);
+            resolved[index] = Some((text, pruned));
         }
         for (index, first) in deferred {
             resolved[index] = resolved[first].clone();
@@ -741,15 +759,12 @@ fn write_mesh_body(
                 totals.add(&ledger, pruned as usize);
                 continue;
             }
-            let text = resolved[index]
+            let (text, pruned) = resolved[index]
                 .as_ref()
                 .expect("every unsolved cell resolves to a result string");
             let result: serde_json::Value = serde_json::from_str(text)
                 .map_err(|error| format!("cell '{}': {error}", cell.id))?;
-            let pruned = result["pruned_states"]
-                .as_u64()
-                .ok_or("ordinary solver result has no numeric pruned_states")?
-                as usize;
+            let pruned = *pruned;
             let record = cell_record(cell, &rebinned[index], result);
             totals.add(&ledger, pruned);
             write_record(output, &record)?;
