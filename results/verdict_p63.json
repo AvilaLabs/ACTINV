@@ -1,0 +1,32 @@
+{
+  "phase": "P63",
+  "status": "P63-CLOSED",
+  "closed_at_utc": "2026-09-27T00:20:00Z",
+  "final_commit": "900a1cdd0699070041e5ee1726c5b4efed8572e7",
+  "amendments": 0,
+  "protocol_sha256": "6af3e6895dc9962f9877d1c0fedab132bcd75359379d95c97930eef510bbd077",
+  "gates": {
+    "g1_mechanics": {
+      "n": 39,
+      "pass": true
+    },
+    "g2_exactness": {
+      "n": 42,
+      "pass": true
+    },
+    "g3_demo": {
+      "pass": true,
+      "u_at_target": 0.897899220495006,
+      "coverage_u0": 0.35979807251032586
+    },
+    "g4_determinism": {
+      "byte_identical": true
+    },
+    "g5_checker": {
+      "checks": 5,
+      "mutations_caught": 4
+    }
+  },
+  "delivered": "uncertainty.unmodeled_relative: declared u>=0 folded as (u*nominal)^2 quadrature into every banded response, emitting unmodeled_relative/unmodeled_standard_uncertainty/modeled_standard_uncertainty/modeled_variance/unmodeled_variance (variance-level fields keep the fold bit-reproducible); absent => byte-identical. controls/p63_calibrate.py emits actinv-calibration-1: coverage(u) curve, u@target via bisection, per-material split, uncoverable class, input sha-bound.",
+  "honest_state": "Sealed-corpus certificate: band-only coverage 0.3598 over all points at u=0 reproduces the sealed measurement exactly; reaching 0.68 coverage over bandable points needs declared u=0.898; 175/2179 points (8%) are uncoverable by any relative term (zero predictions / unaligned). The certificate is the meter - coverage improves as the data workstream lands, measured by this instrument."
+}

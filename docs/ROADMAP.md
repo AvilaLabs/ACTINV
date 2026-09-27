@@ -2097,3 +2097,13 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
   re-verification now checks every response-constraint edge bit-identically. Real-data
   seed box returned the honest verdict "no certifiable design" — the band flipped
   heat feasibility on one eval; `nb94_100y` failed all three nominally.
+- 2026-09-27 — **P63 closes `P63-CLOSED`** (`results/verdict_p63.json`; protocol sealed at
+  `6af3e689…`, zero amendments). Two deliverables: `uncertainty.unmodeled_relative` — a
+  declared u ≥ 0 folded in quadrature as `(u·nominal)²` into every banded response, with
+  emitted `modeled_variance`/`unmodeled_variance` keeping the fold bit-reproducible; and
+  `controls/p63_calibrate.py` → `actinv-calibration-1`, the standing coverage instrument:
+  coverage(u) curve, fitted u@target, per-material splits, uncoverable class, input
+  sha-bound. Honest baseline on the sealed corpus: u=0 reproduces the sealed 0.3598
+  exactly; 68% coverage over bandable points needs u=0.898; 8% of points are uncoverable
+  by any relative term (missing channels, unaligned steps — completeness defects, not
+  uncertainty). The meter is now in place; coverage improvement rides the data workstream.

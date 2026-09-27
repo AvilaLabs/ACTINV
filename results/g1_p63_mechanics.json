@@ -1,0 +1,201 @@
+{
+ "pass": true,
+ "n": 39,
+ "checks": [
+  {
+   "name": "absent-option runs are byte-identical modulo ms",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "absent emit has no unmodeled fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.7: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.7: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.7: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.7: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.7: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.7: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.7: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.7: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.7: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.8999999999999999: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.8999999999999999: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.8999999999999999: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.8999999999999999: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.8999999999999999: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.8999999999999999: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.8999999999999999: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.8999999999999999: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.8999999999999999: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.2999999999999998: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.2999999999999998: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.2999999999999998: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.2999999999999998: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.2999999999999998: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.2999999999999998: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.2999999999999998: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.2999999999999998: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.2999999999999998: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.9: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.9: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.9: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.9: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.9: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.9: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.9: fold exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.9: emitted fields",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.9: band widened vs plain",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "negative u rejected",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

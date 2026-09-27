@@ -1,0 +1,216 @@
+{
+ "pass": true,
+ "n": 42,
+ "checks": [
+  {
+   "name": "activity:Mn57@0.7: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.7: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.7: modeled rebuild",
+   "pass": true,
+   "detail": "8.251109822836728e-53 vs 8.251109822836728e-53"
+  },
+  {
+   "name": "activity:Mn57m1@0.7: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.7: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.7: modeled rebuild",
+   "pass": true,
+   "detail": "1.4606804268868942e-51 vs 1.4606804268868942e-51"
+  },
+  {
+   "name": "heat.total@0.7: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.7: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.7: modeled rebuild",
+   "pass": true,
+   "detail": "1.474849263102875e-76 vs 1.4748492631028748e-76"
+  },
+  {
+   "name": "activity:Mn57@0.8999999999999999: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.8999999999999999: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@0.8999999999999999: modeled rebuild",
+   "pass": true,
+   "detail": "7.522722381043843e-53 vs 7.522722381043843e-53"
+  },
+  {
+   "name": "activity:Mn57m1@0.8999999999999999: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.8999999999999999: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@0.8999999999999999: modeled rebuild",
+   "pass": true,
+   "detail": "1.213905632563391e-51 vs 1.2139056325633909e-51"
+  },
+  {
+   "name": "heat.total@0.8999999999999999: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.8999999999999999: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@0.8999999999999999: modeled rebuild",
+   "pass": true,
+   "detail": "1.2676058480277488e-76 vs 1.2676058480277488e-76"
+  },
+  {
+   "name": "activity:Mn57@1.2999999999999998: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.2999999999999998: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.2999999999999998: modeled rebuild",
+   "pass": true,
+   "detail": "1.762896531213573e-52 vs 1.762896531213573e-52"
+  },
+  {
+   "name": "activity:Mn57m1@1.2999999999999998: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.2999999999999998: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.2999999999999998: modeled rebuild",
+   "pass": true,
+   "detail": "2.7347787975268657e-51 vs 2.734778797526866e-51"
+  },
+  {
+   "name": "heat.total@1.2999999999999998: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.2999999999999998: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.2999999999999998: modeled rebuild",
+   "pass": true,
+   "detail": "2.8961091900796536e-76 vs 2.8961091900796536e-76"
+  },
+  {
+   "name": "activity:Mn57@1.9: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.9: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57@1.9: modeled rebuild",
+   "pass": true,
+   "detail": "1.3360257387020654e-52 vs 1.3360257387020654e-52"
+  },
+  {
+   "name": "activity:Mn57m1@1.9: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.9: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57m1@1.9: modeled rebuild",
+   "pass": true,
+   "detail": "1.5699623331982647e-51 vs 1.5699623331982645e-51"
+  },
+  {
+   "name": "heat.total@1.9: w==z*sqrt(mv+uv)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.9: components re-derive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat.total@1.9: modeled rebuild",
+   "pass": true,
+   "detail": "1.8485282665775817e-76 vs 1.8485282665775814e-76"
+  },
+  {
+   "name": "extract splits all points",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "coverage(u=0.0) exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "coverage(u=0.5) exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "coverage(u=1.0) exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "certificate names sealed doc sha",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "uncoverable count matches",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

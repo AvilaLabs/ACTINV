@@ -1,0 +1,780 @@
+{
+ "coverage_curve": {
+  "0": {
+   "coverage_all_points": 0.35979807251032586,
+   "coverage_finite": 0.3912175648702595
+  },
+  "0.05": {
+   "coverage_all_points": 0.3919229004130335,
+   "coverage_finite": 0.42614770459081835
+  },
+  "0.1": {
+   "coverage_all_points": 0.4506654428636989,
+   "coverage_finite": 0.49001996007984033
+  },
+  "0.15": {
+   "coverage_all_points": 0.4782010096374484,
+   "coverage_finite": 0.5199600798403193
+  },
+  "0.2": {
+   "coverage_all_points": 0.4960991280403855,
+   "coverage_finite": 0.5394211576846307
+  },
+  "0.25": {
+   "coverage_all_points": 0.5071133547498853,
+   "coverage_finite": 0.5513972055888223
+  },
+  "0.3": {
+   "coverage_all_points": 0.5263882514915099,
+   "coverage_finite": 0.5723552894211577
+  },
+  "0.35": {
+   "coverage_all_points": 0.5461220743460303,
+   "coverage_finite": 0.593812375249501
+  },
+  "0.4": {
+   "coverage_all_points": 0.559889857732905,
+   "coverage_finite": 0.6087824351297405
+  },
+  "0.45": {
+   "coverage_all_points": 0.5718219366681965,
+   "coverage_finite": 0.6217564870259481
+  },
+  "0.5": {
+   "coverage_all_points": 0.5805415328132171,
+   "coverage_finite": 0.6312375249500998
+  },
+  "0.55": {
+   "coverage_all_points": 0.5878843506195502,
+   "coverage_finite": 0.6392215568862275
+  },
+  "0.6": {
+   "coverage_all_points": 0.5947682423129876,
+   "coverage_finite": 0.6467065868263473
+  },
+  "0.65": {
+   "coverage_all_points": 0.6039467645709041,
+   "coverage_finite": 0.656686626746507
+  },
+  "0.7": {
+   "coverage_all_points": 0.6117485084901331,
+   "coverage_finite": 0.6651696606786427
+  },
+  "0.75": {
+   "coverage_all_points": 0.6149609912804038,
+   "coverage_finite": 0.6686626746506986
+  },
+  "0.8": {
+   "coverage_all_points": 0.6181734740706746,
+   "coverage_finite": 0.6721556886227545
+  },
+  "0.85": {
+   "coverage_all_points": 0.6227627351996329,
+   "coverage_finite": 0.6771457085828343
+  },
+  "0.9": {
+   "coverage_all_points": 0.6255162918770077,
+   "coverage_finite": 0.6801397205588823
+  },
+  "0.95": {
+   "coverage_all_points": 0.6310234052317577,
+   "coverage_finite": 0.686127744510978
+  },
+  "1": {
+   "coverage_all_points": 0.6319412574575494,
+   "coverage_finite": 0.687125748502994
+  },
+  "1.05": {
+   "coverage_all_points": 0.6360715924736118,
+   "coverage_finite": 0.6916167664670658
+  },
+  "1.1": {
+   "coverage_all_points": 0.6388251491509866,
+   "coverage_finite": 0.6946107784431138
+  },
+  "1.15": {
+   "coverage_all_points": 0.6402019274896742,
+   "coverage_finite": 0.6961077844311377
+  },
+  "1.2": {
+   "coverage_all_points": 0.6415787058283616,
+   "coverage_finite": 0.6976047904191617
+  },
+  "1.25": {
+   "coverage_all_points": 0.6447911886186324,
+   "coverage_finite": 0.7010978043912176
+  },
+  "1.3": {
+   "coverage_all_points": 0.6452501147315283,
+   "coverage_finite": 0.7015968063872255
+  },
+  "1.35": {
+   "coverage_all_points": 0.6461679669573198,
+   "coverage_finite": 0.7025948103792415
+  },
+  "1.4": {
+   "coverage_all_points": 0.6489215236346948,
+   "coverage_finite": 0.7055888223552894
+  },
+  "1.45": {
+   "coverage_all_points": 0.6512161541991739,
+   "coverage_finite": 0.7080838323353293
+  },
+  "1.5": {
+   "coverage_all_points": 0.6525929325378614,
+   "coverage_finite": 0.7095808383233533
+  },
+  "1.55": {
+   "coverage_all_points": 0.6548875631023405,
+   "coverage_finite": 0.7120758483033932
+  },
+  "1.6": {
+   "coverage_all_points": 0.6581000458926113,
+   "coverage_finite": 0.7155688622754491
+  },
+  "1.65": {
+   "coverage_all_points": 0.6599357503441946,
+   "coverage_finite": 0.717564870259481
+  },
+  "1.7": {
+   "coverage_all_points": 0.6626893070215695,
+   "coverage_finite": 0.720558882235529
+  },
+  "1.75": {
+   "coverage_all_points": 0.6631482331344654,
+   "coverage_finite": 0.7210578842315369
+  },
+  "1.8": {
+   "coverage_all_points": 0.6645250114731528,
+   "coverage_finite": 0.7225548902195609
+  },
+  "1.85": {
+   "coverage_all_points": 0.6654428636989445,
+   "coverage_finite": 0.7235528942115769
+  },
+  "1.9": {
+   "coverage_all_points": 0.6659017898118403,
+   "coverage_finite": 0.7240518962075848
+  },
+  "1.95": {
+   "coverage_all_points": 0.6686553464892152,
+   "coverage_finite": 0.7270459081836327
+  },
+  "2": {
+   "coverage_all_points": 0.6704910509407985,
+   "coverage_finite": 0.7290419161676647
+  },
+  "2.05": {
+   "coverage_all_points": 0.671867829279486,
+   "coverage_finite": 0.7305389221556886
+  },
+  "2.1": {
+   "coverage_all_points": 0.6737035337310693,
+   "coverage_finite": 0.7325349301397206
+  },
+  "2.15": {
+   "coverage_all_points": 0.6750803120697567,
+   "coverage_finite": 0.7340319361277445
+  },
+  "2.2": {
+   "coverage_all_points": 0.6755392381826526,
+   "coverage_finite": 0.7345309381237525
+  },
+  "2.25": {
+   "coverage_all_points": 0.6778338687471317,
+   "coverage_finite": 0.7370259481037924
+  },
+  "2.3": {
+   "coverage_all_points": 0.679669573198715,
+   "coverage_finite": 0.7390219560878244
+  },
+  "2.35": {
+   "coverage_all_points": 0.6801284993116108,
+   "coverage_finite": 0.7395209580838323
+  },
+  "2.4": {
+   "coverage_all_points": 0.6837999082147774,
+   "coverage_finite": 0.7435129740518962
+  },
+  "2.45": {
+   "coverage_all_points": 0.6860945387792565,
+   "coverage_finite": 0.7460079840319361
+  },
+  "2.5": {
+   "coverage_all_points": 0.687471317117944,
+   "coverage_finite": 0.7475049900199601
+  },
+  "2.55": {
+   "coverage_all_points": 0.6883891693437356,
+   "coverage_finite": 0.7485029940119761
+  },
+  "2.6": {
+   "coverage_all_points": 0.6906837999082148,
+   "coverage_finite": 0.750998003992016
+  },
+  "2.65": {
+   "coverage_all_points": 0.692519504359798,
+   "coverage_finite": 0.7529940119760479
+  },
+  "2.7": {
+   "coverage_all_points": 0.6934373565855897,
+   "coverage_finite": 0.7539920159680639
+  },
+  "2.75": {
+   "coverage_all_points": 0.6934373565855897,
+   "coverage_finite": 0.7539920159680639
+  },
+  "2.8": {
+   "coverage_all_points": 0.695273061037173,
+   "coverage_finite": 0.7559880239520959
+  },
+  "2.85": {
+   "coverage_all_points": 0.6957319871500688,
+   "coverage_finite": 0.7564870259481038
+  },
+  "2.9": {
+   "coverage_all_points": 0.6961909132629647,
+   "coverage_finite": 0.7569860279441117
+  },
+  "2.95": {
+   "coverage_all_points": 0.698026617714548,
+   "coverage_finite": 0.7589820359281437
+  },
+  "3": {
+   "coverage_all_points": 0.6994033960532354,
+   "coverage_finite": 0.7604790419161677
+  },
+  "3.05": {
+   "coverage_all_points": 0.7003212482790271,
+   "coverage_finite": 0.7614770459081837
+  },
+  "3.1": {
+   "coverage_all_points": 0.7016980266177145,
+   "coverage_finite": 0.7629740518962076
+  },
+  "3.15": {
+   "coverage_all_points": 0.7021569527306104,
+   "coverage_finite": 0.7634730538922155
+  },
+  "3.2": {
+   "coverage_all_points": 0.7030748049564021,
+   "coverage_finite": 0.7644710578842315
+  },
+  "3.25": {
+   "coverage_all_points": 0.7035337310692978,
+   "coverage_finite": 0.7649700598802395
+  },
+  "3.3": {
+   "coverage_all_points": 0.7049105094079853,
+   "coverage_finite": 0.7664670658682635
+  },
+  "3.35": {
+   "coverage_all_points": 0.7049105094079853,
+   "coverage_finite": 0.7664670658682635
+  },
+  "3.4": {
+   "coverage_all_points": 0.7049105094079853,
+   "coverage_finite": 0.7664670658682635
+  },
+  "3.45": {
+   "coverage_all_points": 0.7067462138595686,
+   "coverage_finite": 0.7684630738522954
+  },
+  "3.5": {
+   "coverage_all_points": 0.7067462138595686,
+   "coverage_finite": 0.7684630738522954
+  },
+  "3.55": {
+   "coverage_all_points": 0.708122992198256,
+   "coverage_finite": 0.7699600798403193
+  },
+  "3.6": {
+   "coverage_all_points": 0.7085819183111519,
+   "coverage_finite": 0.7704590818363274
+  },
+  "3.65": {
+   "coverage_all_points": 0.7085819183111519,
+   "coverage_finite": 0.7704590818363274
+  },
+  "3.7": {
+   "coverage_all_points": 0.7090408444240477,
+   "coverage_finite": 0.7709580838323353
+  },
+  "3.75": {
+   "coverage_all_points": 0.7090408444240477,
+   "coverage_finite": 0.7709580838323353
+  },
+  "3.8": {
+   "coverage_all_points": 0.7094997705369436,
+   "coverage_finite": 0.7714570858283433
+  },
+  "3.85": {
+   "coverage_all_points": 0.7104176227627352,
+   "coverage_finite": 0.7724550898203593
+  },
+  "3.9": {
+   "coverage_all_points": 0.7113354749885269,
+   "coverage_finite": 0.7734530938123753
+  },
+  "3.95": {
+   "coverage_all_points": 0.7117944011014227,
+   "coverage_finite": 0.7739520958083832
+  },
+  "4": {
+   "coverage_all_points": 0.7131711794401101,
+   "coverage_finite": 0.7754491017964071
+  }
+ },
+ "input": {
+  "n_experiments": 122,
+  "n_points": 2179,
+  "path": "/home/connoravila/Documents/actinv/results/p44_sealed_coverage.json",
+  "schema": "actinv-p44-coverage-1",
+  "sha256": "7aee2b2949a348a9b31b72958849f57870c64d49c598a69812d003a34dc3c1d6"
+ },
+ "n_finite_bandable": 2004,
+ "n_uncoverable_by_relative_term": 175,
+ "normal_multiplier": 1.959963984540054,
+ "per_material": {
+  "Ag": {
+   "coverage_at_u_target": null,
+   "coverage_u0": null,
+   "finite_points": 0,
+   "uncoverable_points": 20
+  },
+  "Al": {
+   "coverage_at_u_target": 0.8888888888888888,
+   "coverage_u0": 0.8888888888888888,
+   "finite_points": 27,
+   "uncoverable_points": 0
+  },
+  "As": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.09523809523809523,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Au": {
+   "coverage_at_u_target": null,
+   "coverage_u0": null,
+   "finite_points": 0,
+   "uncoverable_points": 21
+  },
+  "Ba": {
+   "coverage_at_u_target": 0.125,
+   "coverage_u0": 0.0625,
+   "finite_points": 48,
+   "uncoverable_points": 0
+  },
+  "Bi": {
+   "coverage_at_u_target": 0.32558139534883723,
+   "coverage_u0": 0.32558139534883723,
+   "finite_points": 43,
+   "uncoverable_points": 0
+  },
+  "Br": {
+   "coverage_at_u_target": 0.14285714285714285,
+   "coverage_u0": 0.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Ca": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.5531914893617021,
+   "finite_points": 47,
+   "uncoverable_points": 0
+  },
+  "Cd": {
+   "coverage_at_u_target": 0.0,
+   "coverage_u0": 0.0,
+   "finite_points": 22,
+   "uncoverable_points": 0
+  },
+  "Ce": {
+   "coverage_at_u_target": 0.38095238095238093,
+   "coverage_u0": 0.3333333333333333,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Cl": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.5238095238095238,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Co": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.8611111111111112,
+   "finite_points": 36,
+   "uncoverable_points": 15
+  },
+  "Cr": {
+   "coverage_at_u_target": 0.9,
+   "coverage_u0": 0.84,
+   "finite_points": 50,
+   "uncoverable_points": 0
+  },
+  "Cs": {
+   "coverage_at_u_target": 0.0,
+   "coverage_u0": 0.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Cu": {
+   "coverage_at_u_target": 0.1,
+   "coverage_u0": 0.1,
+   "finite_points": 30,
+   "uncoverable_points": 0
+  },
+  "Dy": {
+   "coverage_at_u_target": 0.95,
+   "coverage_u0": 0.25,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "Er": {
+   "coverage_at_u_target": 0.47619047619047616,
+   "coverage_u0": 0.047619047619047616,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Eu": {
+   "coverage_at_u_target": 0.9,
+   "coverage_u0": 0.2,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "F": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.6585365853658537,
+   "finite_points": 41,
+   "uncoverable_points": 0
+  },
+  "Ga": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 1.0,
+   "finite_points": 22,
+   "uncoverable_points": 0
+  },
+  "Gd": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.5238095238095238,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Ge": {
+   "coverage_at_u_target": 0.8636363636363636,
+   "coverage_u0": 0.0,
+   "finite_points": 22,
+   "uncoverable_points": 0
+  },
+  "Hf": {
+   "coverage_at_u_target": 0.0,
+   "coverage_u0": 0.0,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "Hg": {
+   "coverage_at_u_target": 0.047619047619047616,
+   "coverage_u0": 0.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Ho": {
+   "coverage_at_u_target": 0.9523809523809523,
+   "coverage_u0": 0.8571428571428571,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "I": {
+   "coverage_at_u_target": 0.09523809523809523,
+   "coverage_u0": 0.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "In": {
+   "coverage_at_u_target": 0.5238095238095238,
+   "coverage_u0": 0.19047619047619047,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Inc600": {
+   "coverage_at_u_target": 0.803921568627451,
+   "coverage_u0": 0.7058823529411765,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  },
+  "Ir": {
+   "coverage_at_u_target": null,
+   "coverage_u0": null,
+   "finite_points": 0,
+   "uncoverable_points": 19
+  },
+  "K": {
+   "coverage_at_u_target": 0.22448979591836735,
+   "coverage_u0": 0.08163265306122448,
+   "finite_points": 49,
+   "uncoverable_points": 0
+  },
+  "La": {
+   "coverage_at_u_target": 0.42857142857142855,
+   "coverage_u0": 0.3333333333333333,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Lu": {
+   "coverage_at_u_target": 0.047619047619047616,
+   "coverage_u0": 0.047619047619047616,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Mg": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 1.0,
+   "finite_points": 19,
+   "uncoverable_points": 0
+  },
+  "Mn": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.9615384615384616,
+   "finite_points": 52,
+   "uncoverable_points": 0
+  },
+  "Mo": {
+   "coverage_at_u_target": 0.10204081632653061,
+   "coverage_u0": 0.0,
+   "finite_points": 49,
+   "uncoverable_points": 0
+  },
+  "Na": {
+   "coverage_at_u_target": 0.7884615384615384,
+   "coverage_u0": 0.5384615384615384,
+   "finite_points": 52,
+   "uncoverable_points": 0
+  },
+  "Nb": {
+   "coverage_at_u_target": null,
+   "coverage_u0": null,
+   "finite_points": 0,
+   "uncoverable_points": 48
+  },
+  "Nd": {
+   "coverage_at_u_target": 0.6190476190476191,
+   "coverage_u0": 0.047619047619047616,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Ni": {
+   "coverage_at_u_target": 0.6666666666666666,
+   "coverage_u0": 0.1,
+   "finite_points": 30,
+   "uncoverable_points": 0
+  },
+  "NiCr": {
+   "coverage_at_u_target": 0.803921568627451,
+   "coverage_u0": 0.6862745098039216,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  },
+  "Os": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.047619047619047616,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "P": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 1.0,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "Pb": {
+   "coverage_at_u_target": 0.9787234042553191,
+   "coverage_u0": 0.1276595744680851,
+   "finite_points": 47,
+   "uncoverable_points": 0
+  },
+  "Pd": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.42857142857142855,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Pr": {
+   "coverage_at_u_target": 0.047619047619047616,
+   "coverage_u0": 0.047619047619047616,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Pt": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.05,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "Rb": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Re": {
+   "coverage_at_u_target": 0.0,
+   "coverage_u0": 0.0,
+   "finite_points": 50,
+   "uncoverable_points": 0
+  },
+  "Rh": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.0,
+   "finite_points": 19,
+   "uncoverable_points": 0
+  },
+  "Ru": {
+   "coverage_at_u_target": 0.0,
+   "coverage_u0": 0.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "S": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.22916666666666666,
+   "finite_points": 48,
+   "uncoverable_points": 0
+  },
+  "SS304": {
+   "coverage_at_u_target": 0.8627450980392157,
+   "coverage_u0": 0.8235294117647058,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  },
+  "SS316": {
+   "coverage_at_u_target": 0.7333333333333333,
+   "coverage_u0": 0.7,
+   "finite_points": 30,
+   "uncoverable_points": 0
+  },
+  "Sb": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.5714285714285714,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Sc": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.8571428571428571,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Se": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.14285714285714285,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Si": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 1.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Sm": {
+   "coverage_at_u_target": 0.05,
+   "coverage_u0": 0.0,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "Sn": {
+   "coverage_at_u_target": 0.8823529411764706,
+   "coverage_u0": 0.0392156862745098,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  },
+  "Sr": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.8235294117647058,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  },
+  "Ta": {
+   "coverage_at_u_target": null,
+   "coverage_u0": null,
+   "finite_points": 0,
+   "uncoverable_points": 51
+  },
+  "Tb": {
+   "coverage_at_u_target": 0.5714285714285714,
+   "coverage_u0": 0.5714285714285714,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Te": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 1.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Ti": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 0.4,
+   "finite_points": 30,
+   "uncoverable_points": 0
+  },
+  "Tl": {
+   "coverage_at_u_target": 0.8,
+   "coverage_u0": 0.6,
+   "finite_points": 20,
+   "uncoverable_points": 0
+  },
+  "Tm": {
+   "coverage_at_u_target": 0.23809523809523808,
+   "coverage_u0": 0.14285714285714285,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "V": {
+   "coverage_at_u_target": 0.9629629629629629,
+   "coverage_u0": 0.9629629629629629,
+   "finite_points": 27,
+   "uncoverable_points": 0
+  },
+  "W": {
+   "coverage_at_u_target": 0.6,
+   "coverage_u0": 0.06666666666666667,
+   "finite_points": 30,
+   "uncoverable_points": 0
+  },
+  "Y": {
+   "coverage_at_u_target": 0.9215686274509803,
+   "coverage_u0": 0.3333333333333333,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  },
+  "Yb": {
+   "coverage_at_u_target": 0.85,
+   "coverage_u0": 0.45,
+   "finite_points": 20,
+   "uncoverable_points": 1
+  },
+  "Zn": {
+   "coverage_at_u_target": 1.0,
+   "coverage_u0": 1.0,
+   "finite_points": 21,
+   "uncoverable_points": 0
+  },
+  "Zr": {
+   "coverage_at_u_target": 0.4117647058823529,
+   "coverage_u0": 0.0,
+   "finite_points": 51,
+   "uncoverable_points": 0
+  }
+ },
+ "schema": "actinv-calibration-1",
+ "statement": "On the sealed corpus (2004 bandable of 2179 measured points), modeled-band coverage at declared confidence is 0.391; reaching 0.68 coverage over bandable points requires a declared unmodeled relative term u=0.897899220495006 (fitted, not derived). 175 points are uncoverable by any relative term (missing channels / unaligned steps).",
+ "target_coverage": 0.68,
+ "u_at_target_finite": 0.897899220495006,
+ "uncoverable_reasons": {
+  "no_cooling_step_within_2_percent": 16,
+  "zero_prediction": 159
+ }
+}

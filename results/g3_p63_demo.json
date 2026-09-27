@@ -1,0 +1,51 @@
+{
+ "pass": true,
+ "n": 9,
+ "checks": [
+  {
+   "name": "schema",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "input sha binds the sealed doc",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "point bookkeeping conserves",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "u=0 all-point coverage equals the sealed measured number",
+   "pass": true,
+   "detail": "0.35979807251032586 vs 0.35979807251032586"
+  },
+  {
+   "name": "u_at_target reported (fitted)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "curve reaches target only if u_at_target exists",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "statement is honest about fitting",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "uncoverable class enumerated",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "per-material split present",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
