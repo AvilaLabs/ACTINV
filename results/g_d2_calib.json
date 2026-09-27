@@ -1,0 +1,66 @@
+{
+ "pass": true,
+ "n": 12,
+ "checks": [
+  {
+   "name": "schema",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "corpus joined",
+   "pass": true,
+   "detail": "132 experiments"
+  },
+  {
+   "name": "both partitions populated",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "pooled u finite positive",
+   "pass": true,
+   "detail": "u=0.4374"
+  },
+  {
+   "name": "held-out z1 coverage \u2265 0.68",
+   "pass": true,
+   "detail": "0.7963"
+  },
+  {
+   "name": "held-out z2 coverage \u2265 0.90",
+   "pass": true,
+   "detail": "0.9308"
+  },
+  {
+   "name": "u needed for 68% held-out < pooled u (fit over-covers)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "u needed for 95% held-out recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "consumable table emitted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "result shas bound",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "independent join reproduces experiment count",
+   "pass": true,
+   "detail": "132 vs 132"
+  },
+  {
+   "name": "independent join reproduces point count",
+   "pass": true,
+   "detail": "2099 vs 2099"
+  }
+ ]
+}

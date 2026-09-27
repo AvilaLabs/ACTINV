@@ -186,9 +186,17 @@ def main() -> int:
                 lo = mid
         return round(hi, 4)
 
+    # the consumable artifact: `uncertainty.unmodeled_relative` values per
+    # material family, fit only on the fit partition — set the value for
+    # the experiment family being solved.
+    table = {"schema": "actinv-unmodeled-table-1",
+             "default": round(u_pooled, 4),
+             "per_material": {k: v for k, v in u_by_mat.items() if v is not None}}
+
     cert = {
         "schema": "actinv-calibration-fit-1",
         "results_dir": str(args.results),
+        "unmodeled_table": table,
         "n_experiments": len(corpus),
         "n_fit_experiments": sum(1 for e in corpus.values() if e["partition"] == "fit"),
         "n_fit_points": len(fit_pts),
