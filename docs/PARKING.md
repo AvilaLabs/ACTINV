@@ -294,3 +294,17 @@ priority — each needs its own protocol before any code changes.
    `fission_no_yields_to_leakage`, isomer→ground rerouting, negative
    atoms zeroed: small documented leakages on every run. FISPACT's
    reference-data coverage is broader.
+
+- 2026-09-27 — **Banded re-run of the decay-aware TENDL-2023 corpus is
+  blocked on a matched covariance artifact.** `results/fns_tendl_decay/`
+  is deterministic (no `uncertainty` blocks); the P63 coverage instrument
+  needs banded runs, and `p43.cov.npz` was built against the TENDL-2025
+  activation library. Producing `*.cov.npz` for
+  `actinv_tendl2023_fns_decay_709g.npz` needs TENDL-2023 MF33 covariance
+  evaluations (the `p43-work/cov-inputs` set is TENDL-2025 vintage).
+  Interim evidence: `controls/d2_empirical_calibrate.py` fits the
+  declared unmodeled term empirically on the deterministic corpus with a
+  fit/holdout split — `results/d2_calibration.json` (u_pooled = 0.437,
+  held-out u@68% = 0.306). The banded leg lands when the cov inputs are
+  fetched/built → re-run corpus with `uncertainty` → re-emit
+  `actinv-calibration-1` → compare coverage vs the sealed 0.360 baseline.
