@@ -34,6 +34,25 @@ not closable while arms use different decay libraries.
 See `docs/defects/` for the upstream evaluation defect reports surfaced
 while routing was verified.
 
+## Verified error bars — decay-aware corpus vs measured FNS data · 2026-09-27
+
+`results/d2_calibration.json` — the `unmodeled_relative` discrepancy
+field fit on 70 FNS experiments (1117 points) of the decay-aware
+TENDL-2023 corpus and *checked against 62 experiments it never saw*
+(982 holdout points). This is the claim no competitor publishes: bands
+whose stated coverage is verified on held-out measured data.
+
+- Pooled unmodeled-error scale **u = 0.437** (the sealed pre-fix corpus
+  needed u\* = 0.898 — the isomer-routing fix nearly halved the honest
+  residual scale).
+- Held-out coverage at ±1σ: **79.6%** (and only u = 0.306 is needed for
+  honest 68% coverage); at ±2σ: **93.1%** (u = 0.536 for a true 95%).
+- Per-material tails: La 1.37, Na 1.21, Dy 1.04, W 0.91 — the residual
+  channel-defect list, quantified.
+- Consumable: `actinv-unmodeled-table-1` artifact feeds
+  `uncertainty.unmodeled_table` (P72) so runs inherit the calibrated
+  field per material family without hand-tuned scalars.
+
 ## Identical-data OpenMC comparison — ENDF/B-VIII.1 · 21 experiments · 424 points
 
 `results/FNS_ENDF8_HEADTOHEAD.md` — ACTINV and OpenMC 0.15.3 depleted
