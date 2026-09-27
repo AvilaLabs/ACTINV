@@ -746,14 +746,14 @@ ab6f98523724e676918ecd18b628d24583eb4c21a36b5ce486e717a582a69a2f  ./crates/actin
 aec3b5ca3c83eddd977c8a37e7fac382f902f2f0ecabb2e3aec4f5550f98f01c  ./crates/actinv-gui/assets/avila-labs-logo.png
 ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6  ./crates/actinv-gui/build.rs
 fb694601cc2281e94a38ee673ccbd6de622a293a41a892a1d43d44fd7f26f8bf  ./crates/actinv-gui/index.html
-27942bbe0456e96ce13db6666552595129f957ef9296d2af234e4ec89310e0c3  ./crates/actinv-gui/src/app.rs
+44d2091f99f92c61ebb799db6028e148ccf816ca9105656fe0d274902a7729bd  ./crates/actinv-gui/src/app.rs
 b5bfdb71a16a36b954d52770c8ce0258f961c89d41ee9f8a3a95c7dae30dfc9e  ./crates/actinv-gui/src/capture.rs
 a25925117a2fe9daf1f6e7692750004c90ebbf4a273993af149cf8f822e91f9f  ./crates/actinv-gui/src/lib.rs
 d7f530b2976ec14ecf864fe8b5a03f982680427b99a5dbbb5be488362e736913  ./crates/actinv-gui/src/main.rs
 361c9b5d25c1146454050eef483c1a22cf11ff6d249b7f6790f10c010ae80c14  ./crates/actinv-gui/src/model.rs
 0d9a2fcdd592060a5b8a5ee3e71822af940fb18fbfa2d51600c554815528d0e4  ./crates/actinv-gui/src/options.rs
 a1e6b7eecec8cdfa867231e1aae80932f894bcfafb4755a6d527fa41d879992a  ./crates/actinv-gui/src/smoke.rs
-16767c8edde799ec3cb15d8ecde4373b68527e86dec3cc59972fc62a528d0818  ./crates/actinv-gui/src/sweep.rs
+7165cbe01b01cba25b072ec153b72e53b36566c5d449f29bfdd5e971eb2de165  ./crates/actinv-gui/src/sweep.rs
 0869eb3e7b2e0d8468a4708484d173905d56b979f3cfe21eb20b9d5613225685  ./crates/actinv-gui/src/tour.rs
 6b3fd8795175e8b95be412719615e6018752353ea6dc30271d68966d01088a43  ./crates/actinv-gui/src/transport.rs
 35842c494d2e654999d1e065cbcbf1e833e8d63f1c46004924c40cc345eafe25  ./crates/actinv-gui/src/visuals.rs
@@ -811,7 +811,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 13f40040a5d402ed06f1500de5f0c31b66d9dd649364c46c15ae3fb14f3cac38  ./docs/RELEASE_NOTES_v1.1.2.md
 74cdd713cf89d447b5324f88f6ed32c7dd09cd4eebcb6030f358ffcd699ace6e  ./docs/RELEASE_NOTES_v1.2.0.md
 00f9febfdbaf33bcac7485964e206c958a9cfa92c5f73e98070788a04105fd0f  ./docs/RELEASE_NOTES_v1.2.1.md
-859eecaa9cff6fd429cdb89eb783af9637d0bd58f8074e6f70a7ae99a85334a2  ./docs/ROADMAP.md
+0ac09a1abca66a375ef617ebe0082115cd2b382dd18300db4e0726a35c1e1719  ./docs/ROADMAP.md
 3e8c5614266465bfaddaea89877f82108751d6cb7f3df38919c96e04470f3234  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 23b6cf7131c93626ad2b72bea41a0a255cb887fcdf98cd25127ebd1286bff550  ./docs/SUMMARY.md
