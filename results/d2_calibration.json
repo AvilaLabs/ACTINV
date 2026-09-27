@@ -1,0 +1,888 @@
+{
+ "schema": "actinv-calibration-fit-1",
+ "results_dir": "results/fns_tendl_decay",
+ "n_experiments": 132,
+ "n_fit_experiments": 70,
+ "n_fit_points": 1117,
+ "n_holdout_points": 982,
+ "u_pooled": 0.4374,
+ "u_holdout_at_target_z1": 0.3056,
+ "u_holdout_at_target_z2": 0.5357,
+ "u_by_material_fit_points": {
+  "Ag": 0.1548,
+  "Al": 0.075,
+  "As": null,
+  "Au": 0.3343,
+  "Ba": 0.7653,
+  "Bi": null,
+  "Br": 0.0302,
+  "Ca": 0.2171,
+  "Cd": null,
+  "Ce": null,
+  "Cl": null,
+  "Co": 0.0608,
+  "Cr": null,
+  "Cs": null,
+  "Cu": 0.0618,
+  "Dy": 1.04,
+  "Er": 0.7628,
+  "Eu": null,
+  "F": 0.0316,
+  "Fe": 0.0599,
+  "Ga": 0.0387,
+  "Gd": null,
+  "Ge": null,
+  "Hf": null,
+  "Hg": 0.0528,
+  "Ho": 0.2808,
+  "I": 0.6153,
+  "In": 0.6607,
+  "Inc600": 0.0753,
+  "Ir": null,
+  "K": 0.1548,
+  "La": 1.3693,
+  "Lu": null,
+  "Mg": 0.1355,
+  "Mn": null,
+  "Mo": 0.2079,
+  "Na": 1.2146,
+  "Nb": 0.1032,
+  "Nd": 0.4971,
+  "Ni": 0.135,
+  "NiCr": 0.0978,
+  "Os": null,
+  "P": null,
+  "Pb": 0.2923,
+  "Pd": 0.1575,
+  "Pr": null,
+  "Pt": null,
+  "Rb": 0.0821,
+  "Re": null,
+  "Rh": null,
+  "Ru": 0.1472,
+  "S": null,
+  "SS304": 0.0966,
+  "SS316": 0.07,
+  "Sb": null,
+  "Sc": null,
+  "Se": 0.1164,
+  "Si": 0.1272,
+  "Sm": 0.1668,
+  "Sn": 0.2896,
+  "Sr": 0.0866,
+  "Ta": 0.1831,
+  "Tb": null,
+  "Te": 0.1042,
+  "Ti": null,
+  "Tl": 0.3222,
+  "Tm": 0.7412,
+  "V": 0.1339,
+  "W": 0.9144,
+  "Y": 0.5831,
+  "Yb": null,
+  "Zn": null,
+  "Zr": 0.0946
+ },
+ "coverage_holdout_pooled_u": {
+  "z1": 0.7963,
+  "z2": 0.9308
+ },
+ "coverage_fit_pooled_u": {
+  "z1": 0.8648,
+  "z2": 0.9561
+ },
+ "experiments": {
+  "Ag/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "c1d88000298944af3a62b3293ddad90fb0c840ad0cc73897da5d563fc2255984"
+  },
+  "Al/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "a39eab6632f584379aaeead1f6c42e2763154760c035bca732a3363dc8c0a73f"
+  },
+  "Al/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "fc0765090bb0ac459be668bd75d6749e3f6c4c40669d85246825f8f5716f26ba"
+  },
+  "Al/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "267a643a97eb43ccdbdce36f1a46d3a51b13451c17b91690e02c191f70cafffa"
+  },
+  "As/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "51602f5b98d87b2164d8e37ed167cb3bfbbc80d718c9e3d5622c1ca7fabc8c36"
+  },
+  "Au/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "b0ed05c9895f63cbc94291e8c01b125f17dfcf0a6469ed2858cb17478281bfe3"
+  },
+  "Ba/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "fb99678369a602deded115a38e8d52e199bcc198955bb3fa651c88351c7d1c1d"
+  },
+  "Ba/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "2e6ae71c2e375bd7210a9a3818ff946290d16f69b4f29d4055049ea28017d7bb"
+  },
+  "Ba/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 22,
+   "n_excluded": 0,
+   "result_sha256": "285ab1d543e2654d9be09880eedafd5e743e169e03f12f6c6f58673948e8246f"
+  },
+  "Bi/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 18,
+   "n_excluded": 2,
+   "result_sha256": "770e67287d85d10559b5f5ee7ecf58bdc8e620903fb8ffd55d65ab5b5805d151"
+  },
+  "Bi/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "081757108978903542c0faa9099f9086eb072e80c42a1e7e03e6cb3205cb93bd"
+  },
+  "Bi/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "920f330d53e53d2d4d3e25510045a2c63a7dc1d2aab296b8721ab0b14099d8f8"
+  },
+  "Br/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "1ddc76036a10fee56fc148834e59be4b0b14f42ae1d7dd7457f44671e529187c"
+  },
+  "Ca/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "61b6f556eff42ecfea9a807af28be686ad83b7eb98d441215e56f89e7b280ce0"
+  },
+  "Ca/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "9bbd460886c0fc71081e25cdb20084f827f5b67f02c9e2ceadf2ee5f010ba0b5"
+  },
+  "Ca/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "93da28b2e3af63b47b475d23dbe48110c9b1f73a5e3ad3256a8309bb4760dfb3"
+  },
+  "Cd/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 22,
+   "n_excluded": 0,
+   "result_sha256": "4fd3ef2b28f8880493a6a8e53b52f57c932c026daca38871b72f964e5d4f3536"
+  },
+  "Ce/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "879afb11107bb1cd3d6b566c917ff53b0017f98de340c6002340aee7958aa9b7"
+  },
+  "Cl/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "8a47cbf377dfd8dea5cdb5f00828f88ed7762648249526f4929ae59bfb7ce89a"
+  },
+  "Co/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 5,
+   "n_excluded": 15,
+   "result_sha256": "1a6ad5f3e0583484f56ed75b8f279f2b5045d7f289b292b26ba72b44ae2bd99b"
+  },
+  "Co/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "aa9cb71a326315ee9fdc7ff8102c1579271bb831ae040b9cdfd05f259d7dbf19"
+  },
+  "Co/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "a2418f1eb3421b565305b216e5128170dd5244b391427e9954b1bfac6cd336a1"
+  },
+  "Cr/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "67d906ab0618174c3b6a44e16241e98587e4b1d297584887ffa2d68a9541794d"
+  },
+  "Cr/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "3166707d2954ad1a6f040d0be7911a6b7e25d5bac12575f536042ed0a71d2ec2"
+  },
+  "Cr/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "fbba22ec8f6d8ae0edfb2ddab054886b63ff1bcdd379dafd768614437db025ba"
+  },
+  "Cs/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "49e6dbcdbc70dca53e21aa8ed8efb3b0f353eae8388131a840b1bb179eb8802a"
+  },
+  "Cu/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "341d504ab79538c6ab6d70d6d42d6cf862da48eacbd7a525a1562ff1d378ee21"
+  },
+  "Cu/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "24995f02859d6efb5f93e107bb8bad06931083061f0c0ffcb2560ebe540f07c6"
+  },
+  "Cu/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "bf8bcb39cc4485ddea05daa0d13c66a72a8fa92e0bc5d9fdfb5480714bd48a8b"
+  },
+  "Dy/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "4c90a55f3abaf4794d10c93448ff7b9c07ad652cb2e2116e4a902bc571aad8e2"
+  },
+  "Er/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "01812755b388cf3553de0719b84610a78b44abde120b5681ebd411332bbd397b"
+  },
+  "Eu/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "0d77e8aaad1ba6e6002db4fb5071dc29c685938d0d14a7a546ed9a12575ce14f"
+  },
+  "F/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "f66ba40861c5b4c8cce5c748be497ac43f27bd8d0200328b68a5618a6356922b"
+  },
+  "F/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "8e05ece5ae701684cb96271ad60521063c71f784886121210b7b83037f2a4469"
+  },
+  "Fe/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "ce8414f3f22f1d5a7a50e2c8f7a3df5ceeba828bd67ea64264a0b9a56dfbce00"
+  },
+  "Fe/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "9e97c748a9b27bb76ac5e161cb96269d1a60544e51d0304f2f7ca1e7312a65f8"
+  },
+  "Fe/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "9c57a573d3d02af9a090244a740c564aea957e83cc411764cd493248376c6768"
+  },
+  "Ga/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 22,
+   "n_excluded": 0,
+   "result_sha256": "79f4fc962d7d28bb3042779ef676a36657af7e6a7d665646f27fb29f1c90b62e"
+  },
+  "Gd/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "ac29ffe0b6de1ed67f7d3490d65ff80e8a1da7e19023ca29bc74575c2789125b"
+  },
+  "Ge/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 22,
+   "n_excluded": 0,
+   "result_sha256": "580383b9b8870dc67329c6a8f825b94b0b71619ba468f4d6c14493e3f4980747"
+  },
+  "Hf/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "98eae69c39cd633c1402369eec6b0de152b5813516e5f66adf13415a76889efb"
+  },
+  "Hg/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "c8a32b2b99a45bc4a399a7868ed219a6d76dc88cba89db559aa5d00c4c030262"
+  },
+  "Ho/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "3d9dcde7d12fc045729b3ac72a964f367a7d259c1b4242949a8089b95ae3b9c8"
+  },
+  "I/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "5d0f589170499846fb89e06250e80804d3b3e4f77ac976cc15e1c4cee29aeb16"
+  },
+  "In/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "ad351d57162f0109f31ffd76b2c98b5bfa109dd3573b21f3c80bdcdf47d7de00"
+  },
+  "Inc600/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "9b1402561564ff05e9ef7f32ff4c50ec169484dc2dd6fe2ece0d637aad0abe74"
+  },
+  "Inc600/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "c2a7012289b217cbdd9f6d1a6ad8b673dd916d8d7386d1f90086ec0e9c73eb63"
+  },
+  "Inc600/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "4f6325e9739c554d47a90d9e9b32112f6fb0aa66c3ee6a9ee88ac5510fcf67d8"
+  },
+  "Ir/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 19,
+   "n_excluded": 0,
+   "result_sha256": "e041ca147d759e7ae8dd4595b366b8f9a4ac4b1de442340622458fd004d6d01a"
+  },
+  "K/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "90be2a2f046a5f8c49e59bec86cac45eac334a00eac3f806a3c16fae459bd9cb"
+  },
+  "K/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "c2b848c67fd417c00d6299132955caaac25d5d296b896c13b7f423410628d2ff"
+  },
+  "K/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "05399ba820ec4ccf853d19fa8cd227a7040d4231c9c554f9ebeb9aaed45769c4"
+  },
+  "La/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "904d2ba7bd1440cd465f4aa989941c1e70c27d6ef122995d7060abf9e6b5e5ac"
+  },
+  "Lu/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "9c90d2cbf2f24f3106b125e34ea6e9feaa936c7938453f34325ae06516c3f56c"
+  },
+  "Mg/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 19,
+   "n_excluded": 0,
+   "result_sha256": "0cf2b910c4af20701a4d77821962147b2f40ca1055af6e2d17cc0bca14b2e95f"
+  },
+  "Mn/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "630c43b7e1bc49d7e50ba40e78e758b36613cee593a7128b092ecf0b38ce8f1d"
+  },
+  "Mn/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "54b95fa45fc3903a910707a69bc26f24c017e2d988d1b95e2d9aa5001a62b28b"
+  },
+  "Mn/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 22,
+   "n_excluded": 0,
+   "result_sha256": "5244aafb9ab94131232e82777d647f0cc3c08a4befa28c04c90a257f04e5b5a2"
+  },
+  "Mo/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "6d89be98e533110ab8280ed0365fde3583b488118251391c99c32df0a76247de"
+  },
+  "Mo/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "82f022e2c266579333e9b59bc55b2719c130f9ac4a5c56119792c3e1fd8c0fb5"
+  },
+  "Mo/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "8317abb8b815b2ae2a8bdce6ccc5918084e4cb523b3a5929cae5bbf3a532f665"
+  },
+  "Na/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "a1eaf229c0144580a0d38d61cec9059c6fcb29f446866aa317000989b881f3f0"
+  },
+  "Na/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "5f535e5039f5ea5e0738068efd736d3b0beec4e0cf8db10695f8ebfd134f4a72"
+  },
+  "Na/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 22,
+   "n_excluded": 0,
+   "result_sha256": "459d970b73278b3c4266c0f849bbcc54f271b03186d119c20b203722c468c53b"
+  },
+  "Nb/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "f76203071867355f92a3c4c3fc44297b062704239c5e85a09ff5b21a339f7c9c"
+  },
+  "Nb/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "c382780bc89b18b40d342729c27cd243b41044f4a80133857c2c86b84b9a0595"
+  },
+  "Nb/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "c29ff34b4d41a76b3808c81fef2eeabb06638adf966338fd1fb39032504c2b34"
+  },
+  "Nd/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "23dd671a73b3a304173c897065a0f77cc15fc5bd4fd404134f06689f489b175e"
+  },
+  "Ni/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "407421a9e26cf40255e4c780f9498a9770f24b38056b98fc9aa855beffefee4a"
+  },
+  "Ni/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "7c7fe1b6a8a40f4c1b6241f3188d73f0960ef7a69904818c224c2e0107883132"
+  },
+  "Ni/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "9f812e7864b00078794c2a745d100ba18ab4fd839f9486439bbc17f589c40e79"
+  },
+  "NiCr/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "2e42b063a5af0546c42d239a976bcad1fc7d64e904edce35bf209942ae159bb4"
+  },
+  "NiCr/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "37693d44cadafc5a128f3a7b1a3caeadfcd66c5b5339aa122ce7bf35ed864782"
+  },
+  "NiCr/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "809ea5bfc72b4602e4e23dbe684353bad0d310a1f9f50391e63aa2e9ed428657"
+  },
+  "Os/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "5323d5e523d55745e13b0656f9940cbed151e5b6b8177cc658943e57b8b022d7"
+  },
+  "P/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "b206695512dec7a087a61b81205a0d6834f99fe294414fa9a861dcb75f3ede37"
+  },
+  "Pb/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "6e2b28e0c1350fddfb2a8f4282ce8be7b8f1ac5cafbff06748b271407c33f047"
+  },
+  "Pb/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "2b9c88f8f4417078f68999fcc16ae447e301180ef09aff34e48b7c7496973e36"
+  },
+  "Pb/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "bad88faf4c0520834493fb2a43761788e08a746945ed588a5ffa7fb21e4ca167"
+  },
+  "Pd/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "fd74efb062b85f6a502ced5b3ce4f29d62b5abdfd4c25b9f3ed582a78020b8aa"
+  },
+  "Pr/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "ec44a90e20a33b65f993fc29c4788c45fc84d82cb69c1775b0618eff1f085e41"
+  },
+  "Pt/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "cd1f7ef3dabd485428fe10186d8c83c0a20edd0dd5925e30519a9f0faffd82a4"
+  },
+  "Rb/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "60da74076dc669bc03a9fdea288e0cc13ddd45561563b11641f89034e6f34e71"
+  },
+  "Re/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "8414ffae9db200a1cf143318fb73dfabe61d73a8aab42f3062da4e7b16a0c124"
+  },
+  "Re/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "e99dfcf185ad7799c1d71e5219ff048d61f4d0c949557fc93905f4246d5859f3"
+  },
+  "Re/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "9dfadea5296159bcec969f50b77c5920987dcef6800a51cc9a4576e919da1d2a"
+  },
+  "Rh/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 19,
+   "n_excluded": 0,
+   "result_sha256": "78e99eb5f3a11d1dc0ffee2b3bf3995a9c64163187a435aafe20d244711f337e"
+  },
+  "Ru/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "43d48aa87335cbb627c9f2a38eedd89494ed3ca037460ca51040583a46407703"
+  },
+  "S/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "b094c1a056c04929b39f5eeba1f72e1a538e89c6d452980967d92f3ce5034aa3"
+  },
+  "S/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "d2ba5f79f521e41a3b237b999fae08ee90fbfd16eb8d8f99c3f7d6482c1dc8ef"
+  },
+  "S/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 19,
+   "n_excluded": 0,
+   "result_sha256": "b12c0df66ec4449c5a25ee5ffc302f2592eb058373f5d349132e0cc7f5a0be16"
+  },
+  "SS304/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "36180ed9125797b16b57fee74e9234f6828cf083b42c2ff412226683f706440b"
+  },
+  "SS304/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "26441ec474ba5df65faebacd6cdb1362f8643b601dd5d748d449270c2d3d09cb"
+  },
+  "SS304/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "5ef693a7359c4b1d7d478d6e30eabd941edd842bbe9e81410afd3b1bd9b7eeea"
+  },
+  "SS316/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "f66f797284d1c47d6bfafa4af2e972a823eeec2f6ada38baa92cba8480eb308b"
+  },
+  "SS316/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "3dfcb9037b2999ed233ef210721299d2473dd5d44f7c2134e1bf545a79ceff42"
+  },
+  "SS316/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "74d0a0e4e7c8fc72510b2d739144ed8b707708a11b17e1c5a55f2075ff130569"
+  },
+  "Sb/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "43b0e3afece434e4af7039d719423a6254a85bfb785b283591d09203f6fdac6e"
+  },
+  "Sc/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "b45d80ec06a986c3e2991bfe97f474ca5d9cd07ed9dd00c7a14b73654774a749"
+  },
+  "Se/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "2bd6fe1388a688cce947c5295981e73a2bd80b5caae0cb3accb11990dc58da9a"
+  },
+  "Si/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "2a3b39efac6de77e1af7be2e8fb990fb7ca4228a9274873ff7e2274c51c8f60e"
+  },
+  "Sm/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "7971dda4fc479b5f9db0905a4b9f396d638f02dbdefb310f441ec3d1aa6efc58"
+  },
+  "Sn/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "8b219f8458feb6d31e5742ab701179119c7c235627d141f9c4f858ef52d65243"
+  },
+  "Sn/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "c5d615412ed71e62bb5a4e4102899dd0e60874f40793815aed18b8c8479357ab"
+  },
+  "Sn/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "63c49b33e31b4007e4a2a7c62dbdaa2862cecf94dff90d26b95ee17dfb73b17b"
+  },
+  "Sr/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "a59ec22af8c5bffe5a882cc20db8bfa9e743fd2539058a45f3ea379520168114"
+  },
+  "Sr/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "e92259fee9b0b417c766a6fee2cae25f9714ee5655fd264dbf00fbbf7c77986c"
+  },
+  "Sr/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "1a2cda4aa8a165dce61d72fcc54fa37ec553afcba2bdca90d4f9d29ca3a6facd"
+  },
+  "Ta/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "0f6cacccca73c53889d65a138bcf8a10b07c24edfe14078b7b46d1cac3a6818a"
+  },
+  "Ta/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "e8fe61626631285309e53956fce6202b05b87e3c89c2a3288693389e1f526ce7"
+  },
+  "Ta/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "b04d29e32752a00f4869c479c46d9dda76179af176c8f5e74105832fdf4a56cc"
+  },
+  "Tb/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "466c14d6357562598c7b07896abd5d2e365c40f3db1fe6d447d2ec8153ba1710"
+  },
+  "Te/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "70927265a0013be338ca50aafe534b58bbb4b8815a450316ba713229d86a152b"
+  },
+  "Ti/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "a136e683cd03b23af2471086362ca90242ba16e8f68118b73a317cf63e737f7c"
+  },
+  "Ti/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "0e8e880203c364f96d4bb2c77bb0648835f7219f61bbbe98b46ee29695999236"
+  },
+  "Ti/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "6bb9d07933e0005e8983dd7b004ec415c7efb4f2695243f85c2fc1d467f7c95a"
+  },
+  "Tl/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "d6b01b9946fb7594ea86dc948799f471430c4aedf5b79e7ffe4de78798f43e75"
+  },
+  "Tm/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "9f683ae185dce5d86d68b97a33209ee0ef6f3ffb630c3fead992589692bff488"
+  },
+  "V/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "e1db6b017ab3bdf211671785a3bc337e9db6a4f42ff0783fe8f35086bd6d866a"
+  },
+  "V/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "11669d34eeb1aeda8f8481d335712666674169652d6308ebed398317a0ea3efd"
+  },
+  "V/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "a4bd14e31577cf00c4331b7bbcfbab1a317f8d9734cc658b61ffffff74842808"
+  },
+  "W/1996exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "f4e2a432ad7fba51899b7fd8776d4e1dbb053f9d1a80cf0e3df18ff3cebabd5d"
+  },
+  "W/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "9fba85f2e3c0e34d46fcf1aff65ed203f18d5cc11c2211e49fa6ac23205529e0"
+  },
+  "W/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "879ed4e7cfe40a109e2fefc35cdbe880aa0b3ebabbf8aa258a37b32cde54f204"
+  },
+  "Y/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "03981d1718622a88bb363dfb63a6f7b045b90b120db12043d4430bdab36216e1"
+  },
+  "Y/1996exp_7hour": {
+   "partition": "fit",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "b60238392916e7d255213c19fe581be68cfd43c823b0d0b0bca67db78dfb9bac"
+  },
+  "Y/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "969cb72d9aed073c77a992aec3b59736c4396d5cf0e91d8f3e5af93373352f76"
+  },
+  "Yb/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 20,
+   "n_excluded": 1,
+   "result_sha256": "1f5ce267186ff689e6857c8e05741c507a2f3a7dccd26026c5668e8e67f195d2"
+  },
+  "Zn/2000exp_5min": {
+   "partition": "holdout",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "3943b83bb665acfeeecc0cfb2f5c9fb886eeb677635cb766b7ac70625b861334"
+  },
+  "Zr/1996exp_5min": {
+   "partition": "fit",
+   "n_points": 20,
+   "n_excluded": 0,
+   "result_sha256": "ba5198227899614387890ae4540e482d7649430663def0edd9b253a1f8d39d77"
+  },
+  "Zr/1996exp_7hour": {
+   "partition": "holdout",
+   "n_points": 0,
+   "n_excluded": 10,
+   "result_sha256": "394ab85a3414def7432c9dd412a01dea157a0554ff5bc9eb67e9fd5c6762812e"
+  },
+  "Zr/2000exp_5min": {
+   "partition": "fit",
+   "n_points": 21,
+   "n_excluded": 0,
+   "result_sha256": "abf7de93e01e77a5ebc48a19c8e34daa9e9ea2e61bd99c5ab5afabe9dd37fbe1"
+  }
+ }
+}
