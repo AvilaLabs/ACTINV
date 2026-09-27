@@ -2157,6 +2157,19 @@ doesn't have at all. They compose: D1 rides D4's speed and D2's bands.
   solves carrying a provable bound vs the certified band — sub-ms answers
   that are approximate-with-certificate, not approximate-but-hopeful.
   Structurally impossible for codes without bands. Enables D1 at scale.
+  *Certificate design*: the surrogate emits `band_surrogate ⊕ epsilon_cert`
+  where `epsilon_cert` is a per-cell error bound assembled from (i) the
+  max residual over a certified holdout grid of *certified* solves
+  (P63/P65 surfaces, not nominal), (ii) a local Lipschitz term
+  `L · dist(x, holdout-grid)` bounding interpolation error between
+  evaluated points, and (iii) the dropped-state bound inherited from the
+  P65 screening certificate of the training solves. The honest floor:
+  `epsilon_cert` is only as tight as holdout density — sparse
+  neighborhoods emit honest wide bands rather than false confidence, and
+  the certificate names the training-set sha + holdout max residual so a
+  stale surrogate is detectable. First scope: composition/schedule axes
+  where P69's shared cache already makes the training grid cheap;
+  spectrum-shape axes need the surrogate's own input sensitivity study.
 - **D5 — Continuous assimilation.** P60's Kalman measurement ranking +
   P55's inverse + certified bands: feed assays back, the facility model's
   bands shrink where measured. A research program, not a sprint.
