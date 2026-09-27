@@ -1,0 +1,36 @@
+{
+  "sealed": true,
+  "protocol_sha256": "d4ace791828a629fb29ee91962c7cd4ede975a63b8ce6e843a33ebaef8c57aee",
+  "seals": {
+    "protocol": {
+      "path": "protocols/ACTINV-P67_PROTOCOL.md",
+      "present": true,
+      "sha256": "d4ace791828a629fb29ee91962c7cd4ede975a63b8ce6e843a33ebaef8c57aee"
+    },
+    "optimize_rs": {
+      "path": "crates/actinv-cli/src/optimize.rs",
+      "present": true,
+      "sha256": "8579e2569050eaa30ab5ff712f960161c8dbe73d83e974b696a062b5c1af493f"
+    },
+    "g1": {
+      "path": "controls/g1_p67_mechanics.py",
+      "present": true,
+      "sha256": "f0c67f701d6e353883f6eb6b89d482d6b734d52e4fb7e2ae97c6600d32a66537"
+    },
+    "g3": {
+      "path": "controls/g3_p67_demo.py",
+      "present": true,
+      "sha256": "27515173770737fa35de0710313ad3bda382e59f00eba99c7f1985ae4708cbae"
+    },
+    "g4": {
+      "path": "controls/g4_p67_determinism.py",
+      "present": true,
+      "sha256": "39209e31949194e585e2a6b90e832abb0c170ae32c19b3e10bd98601a6a8a7fa"
+    },
+    "g5": {
+      "path": "controls/check_g5_p67.py",
+      "present": true,
+      "sha256": "b6bb457ecc5c93c61e9134882f5f0f8fab75be3e08e0428b7d9af5bf9e5a1dbc"
+    }
+  }
+}

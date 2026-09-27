@@ -25,6 +25,12 @@ pub struct OptimizeSpec {
     pub base_spec: String,
     pub design_axes: Vec<Axis>,
     pub objective: Objective,
+    /// P67: additional objectives measured on every candidate's solve
+    /// (free — same run) and used to emit the certified Pareto frontier
+    /// over the feasible set. ≥2 entries required when present; names
+    /// `"{response}@{time_s}"` must be unique.
+    #[serde(default)]
+    pub objectives: Vec<Objective>,
     #[serde(default)]
     pub constraints: Vec<Constraint>,
     pub optimizer: OptimizerCfg,
@@ -73,6 +79,11 @@ pub struct Objective {
 
 fn edge_nominal() -> Edge {
     Edge::Nominal
+}
+
+/// Stable ledger key for a named objective: `"{response}@{time_s}"`.
+fn objective_name(o: &Objective) -> String {
+    format!("{}@{}", o.response, o.time_s)
 }
 
 fn constraint_response() -> String {
@@ -147,12 +158,15 @@ impl Rng {
 // synthetic landscape without touching the solver.
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct EvalOutcome {
     /// None when the run failed or the objective is not computable.
     pub objective: Option<f64>,
     /// Per-constraint violation margin (≤0 satisfied); None = not computable.
     pub violations: Vec<Option<f64>>,
+    /// P67: per-`objectives`-entry values on the same solve; parallel to
+    /// `OptimizeSpec.objectives`. Empty when no extra objectives declared.
+    pub objective_values: Vec<Option<f64>>,
     pub status: String,
 }
 
@@ -455,6 +469,28 @@ impl OptimizeSpec {
         if self.objective.response == "activity:*" {
             return Err("activity:* cannot be an objective".into());
         }
+        if !self.objectives.is_empty() {
+            if self.objectives.len() < 2 {
+                return Err("objectives needs >=2 entries when present".into());
+            }
+            let mut names = std::collections::BTreeSet::new();
+            for (i, o) in self.objectives.iter().enumerate() {
+                if !matches!(o.direction.as_str(), "min" | "max") {
+                    return Err(format!("objectives[{i}].direction must be 'min' or 'max'"));
+                }
+                if o.response == "activity:*" {
+                    return Err(format!(
+                        "objectives[{i}]: activity:* cannot be an objective"
+                    ));
+                }
+                if !names.insert(objective_name(o)) {
+                    return Err(format!(
+                        "objectives[{i}] duplicates the name '{}'",
+                        objective_name(o)
+                    ));
+                }
+            }
+        }
         for c in &self.constraints {
             if c.name.is_empty() {
                 return Err("constraint name must be nonempty".into());
@@ -592,6 +628,7 @@ fn evaluate_candidate(
                     objective: None,
                     violations: vec![None; opt.constraints.len()],
                     status: format!("axis_apply_error: {e}"),
+                    ..Default::default()
                 },
                 None,
                 detail,
@@ -650,6 +687,7 @@ fn evaluate_candidate(
                 objective: None,
                 violations,
                 status: format!("infeasible_by_axis: {}", failed.0.name),
+                ..Default::default()
             },
             Some(canon),
             detail,
@@ -664,6 +702,7 @@ fn evaluate_candidate(
                     objective: None,
                     violations: vec![None; opt.constraints.len()],
                     status: format!("catalog_resolve_error: {e}"),
+                    ..Default::default()
                 },
                 Some(canon),
                 detail,
@@ -678,6 +717,7 @@ fn evaluate_candidate(
                     objective: None,
                     violations: vec![None; opt.constraints.len()],
                     status: format!("spec_error: {e}"),
+                    ..Default::default()
                 },
                 Some(canon),
                 detail,
@@ -704,6 +744,7 @@ fn evaluate_candidate(
                     objective: None,
                     violations: vec![None; opt.constraints.len()],
                     status: format!("run_error: {e}"),
+                    ..Default::default()
                 },
                 Some(canon),
                 detail,
@@ -716,6 +757,7 @@ fn evaluate_candidate(
                 objective: None,
                 violations: vec![None; opt.constraints.len()],
                 status: "run_error: empty steps".into(),
+                ..Default::default()
             },
             Some(canon),
             detail,
@@ -801,10 +843,33 @@ fn evaluate_candidate(
             }
         }
     }
+
+    // P67: extra objectives are read off this same solve — no extra runs.
+    let objective_values: Vec<Option<f64>> = opt
+        .objectives
+        .iter()
+        .map(|o| {
+            select_step(steps, o.time_s)
+                .ok()
+                .and_then(|st| response_edge(st, &o.response, o.edge).ok().flatten())
+        })
+        .collect();
+    if !opt.objectives.is_empty() {
+        detail.insert(
+            "objectives".into(),
+            serde_json::json!(opt
+                .objectives
+                .iter()
+                .map(objective_name)
+                .zip(objective_values.iter().copied())
+                .collect::<BTreeMap<String, Option<f64>>>()),
+        );
+    }
     (
         EvalOutcome {
             objective,
             violations,
+            objective_values,
             status: "executed".into(),
         },
         Some(canon),
@@ -870,6 +935,15 @@ pub fn run_optimize(
                         violations: row["violations"]
                             .as_array()
                             .map(|a| a.iter().map(|v| v.as_f64()).collect())
+                            .unwrap_or_default(),
+                        objective_values: row["objectives"]
+                            .as_object()
+                            .map(|m| {
+                                opt.objectives
+                                    .iter()
+                                    .map(|o| m.get(&objective_name(o)).and_then(Value::as_f64))
+                                    .collect::<Vec<_>>()
+                            })
                             .unwrap_or_default(),
                         status: "resumed".into(),
                     };
@@ -941,6 +1015,12 @@ pub fn run_optimize(
                 "spec_sha256": spec_sha,
                 "status": outcome.status,
                 "objective": outcome.objective,
+                "objectives": opt_ref
+                    .objectives
+                    .iter()
+                    .map(objective_name)
+                    .zip(outcome.objective_values.iter().copied())
+                    .collect::<BTreeMap<String, Option<f64>>>(),
                 "violations": outcome.violations,
                 "feasible": outcome.feasible(),
                 "violation_sum": outcome.violation_sum(),
@@ -1220,8 +1300,67 @@ pub fn run_optimize(
         })
     };
 
+    // ---- P67 Pareto frontier: the nondominated subset of evals that are
+    // certified under the declared constraint edges (violation_sum ≤ 0)
+    // and have every listed objective computable.
+    let pareto_block = if opt.objectives.len() >= 2 {
+        let eligible: Vec<usize> = (0..rows.len())
+            .filter(|&i| {
+                rows[i].out.violation_sum() <= 0.0
+                    && rows[i].out.objective_values.iter().all(Option::is_some)
+            })
+            .collect();
+        let dominates = |a: usize, b: usize| -> bool {
+            let mut strict = false;
+            for (j, o) in opt.objectives.iter().enumerate() {
+                let av = rows[a].out.objective_values[j].unwrap();
+                let bv = rows[b].out.objective_values[j].unwrap();
+                let (better, worse) = if o.direction == "min" {
+                    (av < bv, av > bv)
+                } else {
+                    (av > bv, av < bv)
+                };
+                if worse {
+                    return false;
+                }
+                strict |= better;
+            }
+            strict
+        };
+        let front: Vec<usize> = eligible
+            .iter()
+            .copied()
+            .filter(|&a| !eligible.iter().any(|&b| b != a && dominates(b, a)))
+            .collect();
+        Some(serde_json::json!({
+            "objectives": opt.objectives.iter().map(|o| serde_json::json!({
+                "name": objective_name(o),
+                "response": o.response,
+                "time_s": o.time_s,
+                "edge": format!("{:?}", o.edge).to_lowercase(),
+                "direction": o.direction,
+            })).collect::<Vec<_>>(),
+            "n_evals": rows.len(),
+            "n_certified": eligible.len(),
+            "n_front": front.len(),
+            "front": front.iter().map(|&i| serde_json::json!({
+                "eval_id": rows[i].eval_id,
+                "x": rows[i].x,
+                "param_digest": param_digest(&rows[i].x),
+                "objectives": opt.objectives.iter()
+                    .map(objective_name)
+                    .zip(rows[i].out.objective_values.iter().copied())
+                    .collect::<BTreeMap<String, Option<f64>>>(),
+                "violation_sum": rows[i].out.violation_sum(),
+                "certified": true,
+            })).collect::<Vec<_>>(),
+        }))
+    } else {
+        None
+    };
+
     let opt_text = std::fs::read_to_string(opt_path).unwrap_or_default();
-    let result = serde_json::json!({
+    let mut result = serde_json::json!({
         "schema": "actinv-optimize-result-1",
         "optspec_sha256": sha256_hex(opt_text.as_bytes()),
         "base_spec": opt.base_spec,
@@ -1260,6 +1399,12 @@ pub fn run_optimize(
         "winner_verification": verify,
         "wall_s": started.elapsed().as_secs_f64(),
     });
+    if let Some(p) = pareto_block {
+        result
+            .as_object_mut()
+            .expect("result object")
+            .insert("pareto".into(), p);
+    }
     std::fs::write(&result_path, serde_json::to_string_pretty(&result).unwrap())
         .map_err(|e| format!("cannot write result: {e}"))?;
 
@@ -1302,6 +1447,7 @@ mod tests {
             objective: Some(v),
             violations: vec![],
             status: "ok".into(),
+            ..Default::default()
         }
     }
 
@@ -1345,6 +1491,7 @@ mod tests {
             objective: Some(1.0),
             violations: vec![Some(1.0)], // always violated
             status: "ok".into(),
+            ..Default::default()
         });
         assert!(res.iter().all(|(_, o)| !o.feasible()));
     }
@@ -1357,6 +1504,7 @@ mod tests {
             objective: Some(-x[0]),
             violations: vec![Some(if x[0] > 0.5 { x[0] - 0.5 } else { -1.0 })],
             status: "ok".into(),
+            ..Default::default()
         });
         let best = res
             .iter()

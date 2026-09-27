@@ -1,0 +1,61 @@
+{
+ "pass": true,
+ "n": 11,
+ "checks": [
+  {
+   "name": "pareto block emitted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "objectives metadata",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "front nonempty",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "front is exactly the nondominated feasible set",
+   "pass": true,
+   "detail": "[0, 1, 2, 3, 4, 5] vs [0, 1, 2, 3, 4, 5]"
+  },
+  {
+   "name": "front certified flag",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "n_certified = feasible count",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "ledger rows carry objectives",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "len<2 objectives rejected",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "bad direction rejected",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "duplicate objective name rejected",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "absent objectives = no pareto key",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+{
+ "pass": true,
+ "n": 7,
+ "checks": [
+  {
+   "name": "pareto'd optimize ran",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "pareto emitted over the evals",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "banded objective edges carried on ledger rows",
+   "pass": true,
+   "detail": "[{\"activity:Nb94@3180700000\": 1.955603630005611e-06, \"heat.total@30727000\": 2.107959223417446e-12}, {\"activity:Nb94@3180700000\": 1.070519400567696e-06, \"heat.total@30727000\": 1.5371949379958843e-12}, {\"activity:Nb94@3180700000\": 1.070519400567696e-06, \"heat.total@30727000\": 1.6889889833499366e-12}]"
+  },
+  {
+   "name": "front bounded by the certified count",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "front members certified + feasible",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "front = nondominated certified set (ledger re-derivation)",
+   "pass": true,
+   "detail": "[] vs []"
+  },
+  {
+   "name": "front objectives ledgered identically",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
