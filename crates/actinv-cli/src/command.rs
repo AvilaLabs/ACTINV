@@ -17,6 +17,7 @@ use actinv_data::{
     builder::{self, BuildOptions, LibraryFormat},
     covariance::{build_covariance as build_covariance_sidecar, CovarianceBuildOptions},
     groups::GroupStructure,
+    normalize::NormalizeProfile,
 };
 use std::collections::BTreeMap;
 
@@ -31,7 +32,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
                     actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
-                    actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--decay PATH] [--decay-fallback PATH]\n\
+                    actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH]\n\
                     actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|alpha] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--cache DIR]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
@@ -445,11 +446,14 @@ fn build_library(args: &[String]) {
             "--cache",
             "--grid-density",
             "--strict-states",
+            "--profile",
             "--decay",
             "--decay-fallback",
         ],
     );
     let format = LibraryFormat::parse(options.get("--format").copied().unwrap_or("auto"))
+        .unwrap_or_else(|error| die(error, 2));
+    let profile = NormalizeProfile::parse(options.get("--profile").copied().unwrap_or("none"))
         .unwrap_or_else(|error| die(error, 2));
     let projectile_value = options.get("--projectile").copied().unwrap_or("auto");
     let requested_projectile = if projectile_value == "auto" {
@@ -486,6 +490,7 @@ fn build_library(args: &[String]) {
         decay_fallback_path: options
             .get("--decay-fallback")
             .map(std::path::PathBuf::from),
+        normalize_profile: profile,
     };
     let summary =
         builder::build_library(input, output, &build_options).unwrap_or_else(|error| die(error, 1));

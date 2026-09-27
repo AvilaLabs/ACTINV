@@ -11,6 +11,7 @@ pub mod endf;
 pub mod fission;
 pub mod groups;
 pub mod library;
+pub mod normalize;
 pub mod prepared;
 pub mod processing;
 pub mod resonance;

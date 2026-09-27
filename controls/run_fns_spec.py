@@ -29,7 +29,8 @@ def build_spec(mat, tag):
             "spectrum": {"structure": "fispact-709", "flux_per_group": vals[:709], "total": i["flux_total"], "descending": True},
             "schedule": sched,
             "options": {"mode": os.environ.get("ACTINV_MODE", "auto"), "prune": os.environ.get("ACTINV_PRUNE_MODE", "rate"),
-                        "bmin_atoms_per_g": float(os.environ.get("ACTINV_BMIN", "1e-8")), "temperature_K": 293.6}}
+                        "bmin_atoms_per_g": float(os.environ.get("ACTINV_BMIN", "1e-8")),
+                        "temperature_K": float(os.environ.get("ACTINV_TEMPERATURE_K", "293.6"))}}
 def main():
     exps = [(m, os.path.basename(f)[:-4]) for m in sorted(os.listdir(FNS)) for f in sorted(glob.glob(os.path.join(FNS, m, "*.exp")))]
     t0 = time.time(); nerr = 0

@@ -256,16 +256,31 @@ priority — each needs its own protocol before any code changes.
    complementing OpenMC (import-flux → solve → export source) is the
    lane instead.
 
-3. **Accuracy tail vs FISPACT-TENDL** — ACTINV-TENDL is essentially
-   tied (gm 1.26 / median 0.086 vs FISPACT 1.26 / 0.085) but the
-   strict count (12-15/21) and p90 tail (0.50-0.59 vs 0.49) need
-   dedicated work. Tied-with-incumbent is the current ceiling.
+3. **Accuracy tail vs FISPACT-TENDL** — narrowed to isomer routing
+   and decay-data (2026-09 diagnosis, see results/FNS_ENDF8_HEADTOHEAD.md
+   "Isomer-routing diagnosis"). The TENDL FNS libraries were built by
+   `controls/tendl_build.py`, which rank-compresses positive LFS values
+   per (MT,ZAP) onto isomer ordinals — wrong whenever an eval's level
+   index doesn't coincide with the decay library's LISO (TENDL-2023
+   Ta-182M is the confirmed case: capture feeds the 0.283-s isomer
+   instead of the 15.8-min one; verified by surgical npz patch).
+   267 isomer rows in the FNS set feed multi-isomer ZAs; 27 rows point
+   at decay-absent states. Fix path: rebuild through the Rust builder
+   with `--decay` (physical LIS/ELIS resolution) — gated on TENDL
+   normalization defects that currently fail closed (Ta-181 MT107/MF10
+   state-sum 4.7% > envelope). Remaining tail after routing is
+   decay-data disagreement (ENDF-8.0 vs EAF-2017 deposited energies
+   differ up to ~30x on individual isomers, e.g. Ta-182m 506 vs
+   ~16 keV/decay), which no routing fix can close while the arms use
+   different decay libraries.
 
-4. **W overshoot** — 1.77–2.2× on every ACTINV arm (ENDF-8 + both
-   TENDLs); the only low number is OpenMC's, which is partly the
-   missing W-185m channel compensating other error. Something in the
-   ACTINV W-185 chain stays wrong regardless of library. Root-cause
-   before the next comparison.
+4. **W overshoot — RESOLVED (not an ACTINV defect).** All
+   isomer-carrying arms overshoot ~1.9x early (ACTINV-E8 1.83,
+   ACTINV-T17 1.94, FISPACT-T17 1.97 at 50 s); ACTINV is within ~3% of
+   FISPACT on identical XS. OpenMC's low gm is a mis-shaped curve
+   (0.03 at 50 s → ~1.7 late) from the missing W-185m channel.
+   Root cause is W-185m evaluation-vs-measurement tension, shared by
+   every code.
 
 5. **Coverage dropouts** — `products_no_evaluated_decay_data`,
    `fission_no_yields_to_leakage`, isomer→ground rerouting, negative

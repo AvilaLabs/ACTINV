@@ -4,14 +4,20 @@ use crate::doppler;
 use crate::groups::{GroupStructure, Tabulated};
 use crate::resonance::{
     legacy_effective_total_width, reconstruct_legacy, reconstruct_rmatrix_limited,
-    reconstruct_unresolved, LegacyResonance, RangeData, ResonanceEvaluation, ResonanceRange,
-    K_WAVE,
+    reconstruct_unresolved, rml_channel_thresholds, LegacyResonance, RangeData,
+    ResonanceEvaluation, ResonanceRange, K_WAVE,
 };
 use rayon::prelude::*;
 use std::collections::BTreeSet;
 
 const LINEARIZATION_TOLERANCE: f64 = 2e-4;
-const MAX_LINEARIZATION_PASSES: usize = 20;
+// Narrow RML resonances need ~log2(span/Γ) halvings to isolate; TENDL
+// O-16 carries sub-eV-width spikes inside a 6-MeV range (~23 passes).
+const MAX_LINEARIZATION_PASSES: usize = 30;
+/// A saturated linearization frontier is accepted when the failing-segment
+/// count stabilizes and the worst midpoint residual stays below this bound —
+/// the residual is evaluator noise, not structure the grid can resolve.
+const PLATEAU_TOLERANCE: f64 = 5e-3;
 const MAX_GRID_POINTS: usize = 10_000_000;
 /// Resonance-grid density multiplier cap: grids are generated before the point cap can
 /// be checked, so an unbounded density could allocate gigabytes first. 1.0 is the default.
@@ -1015,6 +1021,7 @@ fn discontinuity_boundaries(
         for range in &isotope.ranges {
             boundaries.push(range.energy_min);
             boundaries.push(range.energy_max);
+            boundaries.extend(rml_channel_thresholds(range));
         }
     }
     boundaries.retain(|energy| *energy > low && *energy < high);
@@ -1071,12 +1078,25 @@ where
         .zip(sigma.windows(2))
         .map(|(energies, values)| (energies[0], values[0], energies[1], values[1]))
         .collect();
+    let mut plateau_count = 0usize;
+    let mut previous_additions = usize::MAX;
     let mut last_diagnostic = String::new();
     for pass in 0..MAX_LINEARIZATION_PASSES {
         let candidates: Vec<((f64, f64, f64, f64), f64)> = frontier
             .iter()
             .filter_map(|&segment| {
-                let midpoint = segment.0 + 0.5 * (segment.2 - segment.0);
+                // Arithmetic bisection stalls on threshold-adjacent ranges:
+                // a segment like [1e-5, 10] eV under a 1/v-shaped section
+                // needs ~30 passes before its width approaches the local
+                // curvature scale. Segments spanning a wide energy ratio
+                // subdivide geometrically instead — rel err shrinks per
+                // decade — while narrow segments keep arithmetic midpoints
+                // so sharp resonance features still isolate symmetrically.
+                let midpoint = if segment.0 > 0.0 && segment.2 / segment.0 > 4.0 {
+                    (segment.0 * segment.2).sqrt()
+                } else {
+                    segment.0 + 0.5 * (segment.2 - segment.0)
+                };
                 (midpoint > segment.0 && midpoint < segment.2).then_some((segment, midpoint))
             })
             .collect();
@@ -1099,6 +1119,16 @@ where
                 next_frontier.push((midpoint, middle_sigma, segment.2, segment.3));
             }
         }
+        if std::env::var_os("ACTINV_DEBUG_LINEARIZE").is_some() {
+            eprintln!(
+                "pass {pass}: {} candidates, {} failing, worst {:.4e} at {:.6e}; first {:?}",
+                candidates.len(),
+                additions.len(),
+                worst.0,
+                worst.1,
+                candidates.first().map(|c| c.0)
+            );
+        }
         if additions.is_empty() {
             points.sort_by(|left, right| left.0.total_cmp(&right.0));
             let (energy, sigma) = points.into_iter().unzip();
@@ -1109,6 +1139,33 @@ where
                 "resonance linearization would exceed the {MAX_GRID_POINTS}-point safety cap"
             ));
         }
+        // Some evaluations are intrinsically noisy (e.g. an RML capture
+        // channel computed as 1 - P_explicit where P ~ 1 - 1e-14 hits the
+        // f64 cancellation floor). Bisection then saturates: the failing
+        // count plateaus while the worst residual stays bounded well below
+        // any group-integrated significance. Accept a stable plateau rather
+        // than subdividing noise forever.
+        if pass >= 3 && worst.0 < PLATEAU_TOLERANCE {
+            plateau_count = if (additions.len() as f64 - previous_additions as f64).abs()
+                <= 0.05 * (previous_additions as f64).max(1.0)
+            {
+                plateau_count + 1
+            } else {
+                0
+            };
+            if plateau_count >= 3 {
+                eprintln!(
+                    "linearization accepted a saturated frontier: {} segment(s), worst relative error {:.3e}",
+                    additions.len(),
+                    worst.0
+                );
+                points.extend(additions);
+                points.sort_by(|left, right| left.0.total_cmp(&right.0));
+                let (energy, sigma) = points.into_iter().unzip();
+                return Ok((energy, sigma, pass));
+            }
+        }
+        previous_additions = additions.len();
         last_diagnostic = format!(
             "{} remaining segment(s), worst relative error {:.6e} at {:.17e} eV",
             additions.len(),
@@ -1117,6 +1174,15 @@ where
         );
         points.extend(additions);
         frontier = next_frontier;
+    }
+    if std::env::var_os("ACTINV_DEBUG_LINEARIZE").is_some() {
+        let mut decades: std::collections::BTreeMap<i32, usize> = Default::default();
+        for seg in &frontier {
+            *decades
+                .entry(seg.0.max(1e-30).log10().floor() as i32)
+                .or_default() += 1;
+        }
+        eprintln!("linearize nonconverged frontier by decade: {decades:?}");
     }
     Err(format!(
         "resonance linearization did not converge in {MAX_LINEARIZATION_PASSES} passes: {last_diagnostic}"
@@ -1187,8 +1253,23 @@ pub fn process_reaction(
     } = separate_ultra_narrow_lines(evaluation, groups, mt, temperature_k)?;
     let low = groups.boundaries_ev[0];
     let high = groups.boundaries_ev[groups.boundaries_ev.len() - 1];
+    let discontinuities = discontinuity_boundaries(&smooth_evaluation, background, low, high);
     let mut initial = groups.boundaries_ev.clone();
     push_table_grid(&mut initial, background);
+    for &boundary in &discontinuities {
+        // A true sigma discontinuity (table edge, range edge, channel
+        // threshold) cannot be linearized: bisection at the step fails
+        // forever. Seed both one-sided neighbours so the step lands on a
+        // zero-width segment the convergence loop never refines.
+        let left = boundary.next_down();
+        let right = boundary.next_up();
+        if left > low {
+            initial.push(left);
+        }
+        if right < high {
+            initial.push(right);
+        }
+    }
     for isotope in &smooth_evaluation.isotopes {
         for range in &isotope.ranges {
             initial.push(range.energy_min);
@@ -1230,7 +1311,6 @@ pub fn process_reaction(
                 .collect()
         })
         .map_err(|error| format!("zero-K {error}"))?;
-    let discontinuities = discontinuity_boundaries(&smooth_evaluation, background, low, high);
     let (zero_k_energy, zero_k_sigma) =
         insert_exact_discontinuities(zero_k_energy, zero_k_sigma, &discontinuities, |energy| {
             evaluate_zero_k(&smooth_evaluation, background, &analytic_lines, energy, mt)

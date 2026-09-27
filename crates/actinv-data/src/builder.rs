@@ -2,11 +2,13 @@
 //! Deterministic activation-library assembly from strict ENDF evaluations.
 
 use crate::activation::{
-    parse_evaluations, Evaluation, Mf6Product, ProductRef, ProductTable, Projectile,
+    parse_evaluations, parse_state_audit_evaluations, Evaluation, Mf6Product, ProductRef,
+    ProductTable, Projectile,
 };
 use crate::decay::{self, DecayStateEntry};
 use crate::groups::{GroupStructure, Tabulated};
 use crate::library::{write_npz, Library, Row};
+use crate::normalize::{normalize_tape, NormalizeProfile};
 use crate::processing::{has_resonance_contribution, process_reaction, ProcessedReaction};
 use crate::resonance::{
     omitted_fission_total_width_count, undeclared_competitive_width_count,
@@ -71,6 +73,11 @@ pub struct BuildOptions {
     /// ENDF/B-VIII describes the same 5.76-day isomer from another scheme).
     /// Requires `decay_path`.
     pub decay_fallback_path: Option<PathBuf>,
+    /// Tape-level normalization applied before strict parsing, plus the
+    /// collapse-level emitted-state normalization in
+    /// `reconcile_emitted_states`. `NormalizeProfile::None` keeps every
+    /// defect fail-closed (historical default).
+    pub normalize_profile: NormalizeProfile,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -125,6 +132,7 @@ pub struct StateMapping {
 #[derive(Clone, Debug, Serialize)]
 struct CanonicalOptions {
     grid_density: f64,
+    normalize_profile: &'static str,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -193,6 +201,11 @@ struct EvaluationBuildSettings<'a> {
     temperature_K: f64,
     grid_density: f64,
     strict_states: bool,
+    /// Emitted-state sums exceeding the runtime total are scaled to it
+    /// per group and ledgered (`state_sum_normalized`), regardless of
+    /// envelope. Off unless a normalization profile opts in; strict
+    /// states still overrides.
+    normalize_state_sums: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -292,6 +305,7 @@ fn checkpoint_key(source_sha256: &str, options: &BuildOptions) -> String {
     hash.update(options.temperature_K.to_bits().to_le_bytes());
     hash.update(options.grid_density.to_bits().to_le_bytes());
     hash.update([u8::from(options.strict_states)]);
+    hash.update(options.normalize_profile.name().as_bytes());
     hash.update(options.groups.hash().as_bytes());
     hash.update(builder_fingerprint().as_bytes());
     format!("{:x}", hash.finalize())
@@ -507,13 +521,15 @@ pub(crate) fn discover_inputs(input: &Path, output: Option<&Path>) -> Result<Vec
 }
 
 /// Inspect the first bytewise-ordered evaluation to select projectile-dependent CLI defaults. The full build still
-/// validates every file and rejects a mixed directory.
+/// validates every file and rejects a mixed directory. MF=2/6 payloads are
+/// skipped: this probe only needs MF=1 metadata, and strict MF=2 validation
+/// belongs to `build_source` after the normalization profile is applied.
 pub fn inspect_projectile(input: impl AsRef<Path>) -> Result<Projectile, String> {
     let files = discover_inputs(input.as_ref(), None)?;
     let first = &files[0];
     let text = std::fs::read_to_string(first)
         .map_err(|error| format!("cannot read {} as ENDF text: {error}", first.display()))?;
-    parse_evaluations(&text, None)
+    parse_state_audit_evaluations(&text, None)
         .map_err(|error| format!("{}: {error}", first.display()))?
         .first()
         .map(|evaluation| evaluation.metadata.projectile)
@@ -566,13 +582,16 @@ fn validate_options(options: &BuildOptions) -> Result<(), String> {
 }
 
 fn detected_format(text: &str, evaluation: &Evaluation) -> Result<LibraryFormat, String> {
-    if text.contains("EAF-2010") || text.contains("EAF-20100") {
-        Ok(LibraryFormat::Eaf)
-    } else if text.contains("TENDL-")
-        || !evaluation.mf2_sections.is_empty()
-        || !evaluation.mf6.is_empty()
+    // Structural evidence wins: an ENDF-6 XS evaluation carrying MF=2
+    // resonance or MF=6 product data is TENDL-family even when its MF=1
+    // comment text cites EAF-2010 (ENDF/B-VIII.1's O-18 and Zn-68 do
+    // exactly that). The marker only names EAF when no such sections
+    // exist — real EAF-2010 files have no MF=2/MF=6.
+    if text.contains("TENDL-") || !evaluation.mf2_sections.is_empty() || !evaluation.mf6.is_empty()
     {
         Ok(LibraryFormat::Tendl)
+    } else if text.contains("EAF-2010") || text.contains("EAF-20100") {
+        Ok(LibraryFormat::Eaf)
     } else {
         Err("cannot auto-detect ENDF library format; pass --format tendl or --format eaf".into())
     }
@@ -1008,6 +1027,9 @@ struct RuntimeReconciliation {
     scaled: usize,
     floor_reconciled: usize,
     interp_reconciled: usize,
+    /// Excesses normalized to the runtime total outside every envelope —
+    /// only reachable when the build opts into a normalization profile.
+    normalized: usize,
     min_scale: f64,
     max_relative_excess: f64,
     ulp_corrections: u64,
@@ -1024,6 +1046,11 @@ struct RuntimeReconciliation {
 /// (physically weightless), and an `interp_qualified` ZAP — proven consistent
 /// at every declared product gridpoint — reconciles under the 0.03
 /// interpolation-artifact envelope (`interp_artifact_reconciled`).
+///
+/// `normalize_excesses` (normalization-profile opt-in, overridden by
+/// `strict_states`) replaces fail-closed rejection with per-group scaling to
+/// the runtime total for any further excess; each such group is counted as
+/// `state_sum_normalized` so the ledger records the declared inconsistency.
 #[allow(clippy::too_many_arguments)]
 fn reconcile_emitted_states(
     mt: i32,
@@ -1032,6 +1059,7 @@ fn reconcile_emitted_states(
     states: &mut [&mut Vec<f64>],
     total: &[f64],
     strict_states: bool,
+    normalize_excesses: bool,
     interp_qualified: bool,
     mat: i32,
     za: i32,
@@ -1085,7 +1113,7 @@ fn reconcile_emitted_states(
         } else {
             f64::INFINITY
         };
-        if strict_states || !compatible {
+        if strict_states || (!compatible && !normalize_excesses) {
             let rule = if strict_states {
                 "the strict state-conservation option rejects every emitted sum above the runtime total"
             } else if interp_qualified {
@@ -1097,7 +1125,9 @@ fn reconcile_emitted_states(
                 "MT{mt}/MF={lmf} ZAP={zap} group {group}: emitted state sum {sum:.17e} barn exceeds runtime total {comparator:.17e} barn by relative excess {relative_excess:.6e} ({rule}); MAT={mat} ZA={za} source_sha256={source_sha256}; construction fails closed and no state row is emitted, scaled or relabeled"
             ));
         }
-        if !standard_ok {
+        if !compatible {
+            report.normalized += 1;
+        } else if !standard_ok {
             report.interp_reconciled += 1;
         }
         let scale = comparator / sum;
@@ -1979,6 +2009,7 @@ fn build_evaluation(
         temperature_K,
         grid_density,
         strict_states,
+        normalize_state_sums,
     } = settings;
     let metadata = &evaluation.metadata;
     let mut ledger = Vec::new();
@@ -2343,6 +2374,7 @@ fn build_evaluation(
                     states.as_mut_slice(),
                     &total,
                     strict_states,
+                    normalize_state_sums,
                     interp_zaps.contains(&zap),
                     metadata.mat,
                     metadata.za,
@@ -2370,6 +2402,14 @@ fn build_evaluation(
                         report.min_scale,
                         report.max_relative_excess,
                         report.ulp_corrections
+                    ));
+                }
+                if report.normalized > 0 {
+                    ledger.push(format!(
+                        "state_sum_normalized: MT{mt}/MF=10 ZAP={zap} emitted state sum exceeded the runtime total outside every envelope in {} of {} group(s); scaled by the common factor T/S under the normalization profile (max relative excess {:.6e})",
+                        report.normalized,
+                        report.checked,
+                        report.max_relative_excess
                     ));
                 }
             }
@@ -2449,6 +2489,7 @@ fn build_evaluation(
                     states.as_mut_slice(),
                     &total,
                     strict_states,
+                    normalize_state_sums,
                     false,
                     metadata.mat,
                     metadata.za,
@@ -2469,6 +2510,14 @@ fn build_evaluation(
                         report.min_scale,
                         report.max_relative_excess,
                         report.ulp_corrections
+                    ));
+                }
+                if report.normalized > 0 {
+                    ledger.push(format!(
+                        "state_sum_normalized: MT{mt}/MF=9 ZAP={zap} emitted production sum exceeded the runtime total outside every envelope in {} of {} group(s); scaled by the common factor T/S under the normalization profile (max relative excess {:.6e})",
+                        report.normalized,
+                        report.checked,
+                        report.max_relative_excess
                     ));
                 }
             }
@@ -2710,7 +2759,8 @@ fn build_source(
     }
     let text = std::fs::read_to_string(path)
         .map_err(|error| format!("cannot read {} as ENDF text: {error}", path.display()))?;
-    let evaluations = parse_evaluations(&text, options.projectile)
+    let normalized = normalize_tape(&text, options.normalize_profile);
+    let evaluations = parse_evaluations(&normalized.text, options.projectile)
         .map_err(|error| format!("{}: {error}", path.display()))?;
     let first = evaluations
         .first()
@@ -2749,22 +2799,28 @@ fn build_source(
                 evaluation.metadata.projectile.name()
             ));
         }
-        targets.push(
-            build_evaluation(
-                evaluation,
-                format,
-                filename,
-                &before,
-                EvaluationBuildSettings {
-                    groups: &options.groups,
-                    temperature_K: options.temperature_K,
-                    grid_density: options.grid_density,
-                    strict_states: options.strict_states,
-                },
-                products_by_mt,
-            )
-            .map_err(|error| format!("{}: {error}", path.display()))?,
-        );
+        let mut target = build_evaluation(
+            evaluation,
+            format,
+            filename,
+            &before,
+            EvaluationBuildSettings {
+                groups: &options.groups,
+                temperature_K: options.temperature_K,
+                grid_density: options.grid_density,
+                strict_states: options.strict_states,
+                normalize_state_sums: options.normalize_profile != NormalizeProfile::None,
+            },
+            products_by_mt,
+        )
+        .map_err(|error| format!("{}: {error}", path.display()))?;
+        // Tape-level fixes ran before every downstream check; they head
+        // the ledger so an audit reads interventions in pipeline order.
+        target
+            .index
+            .ledger
+            .splice(0..0, normalized.entries.iter().cloned());
+        targets.push(target);
     }
     let after = sha256_file(path)?;
     if before != after {
@@ -2997,6 +3053,7 @@ pub fn build_library(
             .transpose()?,
         options: CanonicalOptions {
             grid_density: options.grid_density,
+            normalize_profile: options.normalize_profile.name(),
         },
         state_catalog: state_catalog
             .into_iter()
@@ -3920,6 +3977,7 @@ mod tests {
                 strict_states: false,
                 decay_path: None,
                 decay_fallback_path: None,
+                normalize_profile: NormalizeProfile::None,
             },
         )
         .unwrap();
@@ -3969,6 +4027,7 @@ mod tests {
             temperature_K: 0.0,
             grid_density: 1.0,
             strict_states: false,
+            normalize_state_sums: false,
         };
         let products = BTreeMap::from([(102, (0, 1))]);
         let left = build_evaluation(
@@ -4041,6 +4100,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &products,
         )
@@ -4069,6 +4129,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4155,6 +4216,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4226,6 +4288,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::from([(102, (0, 1))]),
         )
@@ -4297,6 +4360,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4321,6 +4385,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4350,6 +4415,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4436,6 +4502,7 @@ mod tests {
             &total,
             false,
             false,
+            false,
             2631,
             26000,
             &"f".repeat(64),
@@ -4458,6 +4525,7 @@ mod tests {
             26056,
             &mut [&mut ground, &mut isomer],
             &total,
+            false,
             false,
             false,
             2631,
@@ -4489,6 +4557,7 @@ mod tests {
             85197,
             &mut [&mut ground, &mut isomer],
             &total,
+            false,
             false,
             false,
             8533,
@@ -4525,6 +4594,7 @@ mod tests {
             &total,
             false,
             false,
+            false,
             2631,
             26000,
             &"f".repeat(64),
@@ -4541,6 +4611,7 @@ mod tests {
             26056,
             &mut [&mut excess],
             &total,
+            false,
             false,
             false,
             2631,
@@ -4563,6 +4634,7 @@ mod tests {
             &mut [&mut ground, &mut isomer],
             &total,
             true,
+            false,
             false,
             2631,
             26000,
@@ -4597,6 +4669,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4650,6 +4723,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4708,6 +4782,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4742,6 +4817,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -4780,6 +4856,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: true,
+                normalize_state_sums: false,
             },
             &BTreeMap::new(),
         )
@@ -5352,6 +5429,7 @@ mod tests {
                 temperature_K: 0.0,
                 grid_density: 1.0,
                 strict_states: false,
+                normalize_state_sums: false,
             }
         }
         let products = mt_products().unwrap();
