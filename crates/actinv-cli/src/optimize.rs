@@ -45,7 +45,7 @@ pub enum Axis {
 }
 
 impl Axis {
-    fn bounds(&self) -> [f64; 2] {
+    pub(crate) fn bounds(&self) -> [f64; 2] {
         match self {
             Axis::CompositionFraction { bounds, .. }
             | Axis::FluxScale { bounds }
@@ -77,7 +77,7 @@ pub struct Objective {
     pub direction: String,
 }
 
-fn edge_nominal() -> Edge {
+pub(crate) fn edge_nominal() -> Edge {
     Edge::Nominal
 }
 

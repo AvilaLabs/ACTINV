@@ -1,0 +1,46 @@
+{
+ "pass": true,
+ "n": 8,
+ "checks": [
+  {
+   "name": "artifact schema + solver",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "spec sha + certificate formula",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "response carries values/residual/lipschitz",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "holdout points recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "grid-node eval near-exact",
+   "pass": true,
+   "detail": "\u0177=1.2573e-37 node=1.2573e-37"
+  },
+  {
+   "name": "epsilon_cert bounded and positive",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "surrogate band brackets a fresh certified solve",
+   "pass": true,
+   "detail": "band=[1.2573e-37,1.2573e-37] true=1.2573e-37 eps=1.257e-46"
+  },
+  {
+   "name": "out-of-domain eval refused",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

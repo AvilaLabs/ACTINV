@@ -809,6 +809,50 @@ pub fn main_from(a: Vec<String>) {
                 summary.out_dir.display(),
             );
         }
+        "surrogate" => {
+            const SUR_USAGE: &str = "usage: actinv surrogate fit SURSPEC.json [OUTDIR]\n       \
+                 actinv surrogate eval ARTIFACT.json X.json [OUT.json]";
+            let positional: Vec<&String> = a[2..].iter().filter(|x| !x.starts_with("--")).collect();
+            if positional.is_empty() || positional.len() != a.len() - 2 {
+                die(SUR_USAGE, 2);
+            }
+            match positional[0].as_str() {
+                "fit" if positional.len() == 2 || positional.len() == 3 => {
+                    let summary = crate::surrogate::run_fit(
+                        positional[1],
+                        positional.get(2).map(|s| s.as_str()),
+                    )
+                    .unwrap_or_else(|e| die(e, 1));
+                    println!(
+                        "surrogate fit: {} nodes, r_max [{}] -> {}",
+                        summary["n_nodes"],
+                        summary["r_max"]
+                            .as_array()
+                            .map(|a| a
+                                .iter()
+                                .map(|v| format!("{:.3e}", v.as_f64().unwrap_or(0.0)))
+                                .collect::<Vec<_>>()
+                                .join(", "))
+                            .unwrap_or_default(),
+                        summary["out"].as_str().unwrap_or("?"),
+                    );
+                }
+                "eval" if positional.len() == 3 || positional.len() == 4 => {
+                    let out = crate::surrogate::run_eval(
+                        positional[1],
+                        positional[2],
+                        positional.get(3).map(|s| s.as_str()),
+                    )
+                    .unwrap_or_else(|e| die(e, 1));
+                    if positional.get(3).is_none() {
+                        println!("{}", serde_json::to_string_pretty(&out).unwrap());
+                    } else {
+                        println!("surrogate eval -> {}", positional[3]);
+                    }
+                }
+                _ => die(SUR_USAGE, 2),
+            }
+        }
         "decide" => {
             const DECIDE_USAGE: &str = "usage: actinv decide DECISION.json [OUT.json]";
             let positional: Vec<&String> = a[2..].iter().filter(|x| !x.starts_with("--")).collect();

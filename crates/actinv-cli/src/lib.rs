@@ -4,6 +4,7 @@
 pub mod command;
 pub mod decide;
 pub mod optimize;
+pub mod surrogate;
 pub mod worker;
 pub mod workflow;
 
