@@ -161,8 +161,37 @@ def reverse(problem, measurements, *, segments=False):
     return Result(_json.loads(reverse_json(
         problem.to_json(), _json.dumps(measurements, allow_nan=False), segments)))
 
+
+decide_json = _decide_json = decide      # native bindings, before the
+optimize_json = _optimize_json = optimize  # wrapper functions shadow them
+
+
+def decide(decision, *, base_dir=None):
+    """Run an actinv-decide-1 mapping (or file path) and return the decision
+    document. `run_spec` may itself be an embedded spec mapping or a path
+    resolved against `base_dir` (default: current directory)."""
+    if isinstance(decision, (_os.PathLike, str)):
+        decision = _Path(decision)
+        if base_dir is None:
+            base_dir = str(decision.resolve().parent)
+        decision = _json.loads(decision.read_text(encoding="utf-8"))
+    return _json.loads(_decide_json(
+        _json.dumps(dict(decision), allow_nan=False),
+        None if base_dir is None else _os.fspath(base_dir)))
+
+
+def optimize(optspec_path, *, outdir=None, resume=False):
+    """Run an actinv-optimize-1 design search by path; returns the result
+    summary dict. The ledger lands in `outdir` (default: `optimize_out`
+    beside the spec)."""
+    return _json.loads(_optimize_json(_os.fspath(optspec_path),
+                                      None if outdir is None else _os.fspath(outdir),
+                                      resume))
+
+
 # Maturin's top-level package re-exports the extension using __all__. PyO3
 # registers native functions there, but dynamically defined classes need exports too.
 __all__ = ["__version__", "_cli", "cram_step", "broaden", "run", "run_json",
            "reverse", "reverse_json", "validate", "Material", "Spectrum",
-           "Schedule", "Problem", "Result", "solve"]
+           "Schedule", "Problem", "Result", "solve", "decide", "optimize",
+           "decide_json", "optimize_json"]

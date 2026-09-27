@@ -63,8 +63,24 @@ pub fn run_decide(spec_path: &str, out_arg: Option<&str>) -> Result<Value, Strin
         .unwrap_or_else(|| PathBuf::from("."));
     let dtext = std::fs::read_to_string(dpath)
         .map_err(|e| format!("cannot read decision spec {}: {e}", dpath.display()))?;
+    let doc_out = run_decide_doc(&dtext, &dir, spec_path)?;
+    let text =
+        serde_json::to_string_pretty(&doc_out).map_err(|e| format!("serialise decision: {e}"))?;
+    if let Some(out) = out_arg {
+        std::fs::write(out, format!("{text}\n")).map_err(|e| format!("cannot write {out}: {e}"))?;
+    } else {
+        println!("{text}");
+    }
+    Ok(doc_out)
+}
+
+/// The decision loop over spec *text* — the `decide` CLI command and the
+/// Python binding share this entry point. `base_dir` resolves relative
+/// `run_spec` paths; `spec_path` is only the recorded label.
+pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<Value, String> {
+    let dir = base_dir;
     let dspec: DecideSpec =
-        serde_json::from_str(&dtext).map_err(|e| format!("cannot parse decision spec: {e}"))?;
+        serde_json::from_str(dtext).map_err(|e| format!("cannot parse decision spec: {e}"))?;
     if dspec.schema != "actinv-decide-1" {
         return Err(format!(
             "decision schema must be actinv-decide-1, got '{}'",
@@ -302,13 +318,6 @@ pub fn run_decide(spec_path: &str, out_arg: Option<&str>) -> Result<Value, Strin
         "measurements": Value::Object(measurements),
     });
 
-    let text =
-        serde_json::to_string_pretty(&doc_out).map_err(|e| format!("serialise decision: {e}"))?;
-    if let Some(out) = out_arg {
-        std::fs::write(out, format!("{text}\n")).map_err(|e| format!("cannot write {out}: {e}"))?;
-    } else {
-        println!("{text}");
-    }
     Ok(doc_out)
 }
 

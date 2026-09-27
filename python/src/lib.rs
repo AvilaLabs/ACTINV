@@ -108,6 +108,38 @@ fn reverse(
         .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
 
+/// decide(decision_json: str, base_dir=None) -> str — run the P64 decision
+/// loop (actinv-decide-1 spec text) and return the actinv-decision-1 document.
+/// `run_spec` paths in the decision spec resolve against `base_dir`.
+#[pyfunction]
+#[pyo3(signature = (decision_json, base_dir=None))]
+fn decide(py: Python<'_>, decision_json: &str, base_dir: Option<&str>) -> PyResult<String> {
+    let base = std::path::PathBuf::from(base_dir.unwrap_or("."));
+    let doc = py
+        .detach(|| actinv_cli::decide::run_decide_doc(decision_json, &base, "<python>"))
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+    serde_json::to_string(&doc)
+        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
+}
+
+/// optimize(optspec_path: str, outdir=None, resume=False) -> str — run the
+/// P49/P56 design search for an actinv-optimize-1 file and return the result
+/// summary JSON (the full ledger lands in `outdir`).
+#[pyfunction]
+#[pyo3(signature = (optspec_path, outdir=None, resume=false))]
+fn optimize(
+    py: Python<'_>,
+    optspec_path: &str,
+    outdir: Option<&str>,
+    resume: bool,
+) -> PyResult<String> {
+    let summary = py
+        .detach(|| actinv_cli::optimize::run_optimize(optspec_path, outdir, resume))
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+    std::fs::read_to_string(summary.out_dir.join("optimize_result.json"))
+        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
+}
+
 /// validate(spec_json: str) -> str — parse and validate without solving.
 #[pyfunction]
 fn validate(spec_json: &str) -> PyResult<String> {
@@ -129,6 +161,8 @@ fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(cram_step, m)?)?;
     m.add_function(wrap_pyfunction!(broaden, m)?)?;
     m.add_function(wrap_pyfunction!(run, m)?)?;
+    m.add_function(wrap_pyfunction!(decide, m)?)?;
+    m.add_function(wrap_pyfunction!(optimize, m)?)?;
     m.add_function(wrap_pyfunction!(reverse, m)?)?;
     m.add_function(wrap_pyfunction!(validate, m)?)?;
     m.add_function(wrap_pyfunction!(_example_json, m)?)?;
