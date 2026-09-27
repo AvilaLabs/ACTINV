@@ -55,6 +55,17 @@ names, or links. Author and committer stay the repo owner's identity.
   unheralded. `cargo clippy --all-targets` helps; when CI fails on a lint
   that doesn't exist locally, fix the lint anyway and note the gap —
   a rustup toolchain update closes it for good.
+- Controls checkers resolve the binary as `ACTINV_BIN` or
+  `target/release/actinv`, NOT `target/debug/actinv`. Before running a
+  checker locally after changing emitted-result fields (ledger keys,
+  certificate block), rebuild release: `cargo build --release -p actinv-cli`
+  — a stale release binary silently reproduces the pre-change baseline and
+  hides committed-baseline drift that `git diff --exit-code` catches in CI.
+- Adding unconditional ledger/certificate fields changes
+  `normalized_result_sha256` in run-output controls
+  (`results/p15_cache_integrity.json` is diff-gated in CI). Regenerate the
+  baseline with the fresh release binary and commit it — the invariants
+  stay green; only the schema hash moves.
 
 # User preferences (owner direction, 2026-09-21)
 
