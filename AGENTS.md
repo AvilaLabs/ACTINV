@@ -42,6 +42,19 @@ names, or links. Author and committer stay the repo owner's identity.
 - Before pushing, run locally whatever cheap gates CI runs first (tracked-file
   manifest refresh via `scripts/refresh_manifest.py --write --index`,
   `cargo fmt --all -- --check`) so obvious failures never reach CI.
+- Ordering that actually works (learned 2026-09-27, three CI reds): stage the
+  code changes FIRST (`git add <files>`), THEN run
+  `scripts/refresh_manifest.py --write --index` — it hashes staged/indexed
+  content, so running it before staging records the old hashes. Confirm
+  `MANIFEST.sha256` appears in the staged diff before committing.
+- Local checks must include test code: `cargo build` does not compile
+  `#[cfg(test)]` modules. Run `cargo check -p actinv-cli --tests` (or the
+  equivalent for touched crates) before pushing — a struct-literal missing a
+  new field in test helpers passed local build and broke CI's `cargo test`.
+- Local clippy (1.95) lags CI's toolchain (1.98); new lints can land
+  unheralded. `cargo clippy --all-targets` helps; when CI fails on a lint
+  that doesn't exist locally, fix the lint anyway and note the gap —
+  a rustup toolchain update closes it for good.
 
 # User preferences (owner direction, 2026-09-21)
 
