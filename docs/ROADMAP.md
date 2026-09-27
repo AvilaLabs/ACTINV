@@ -2219,3 +2219,33 @@ exists to carry it.
   the stated log-Gaussian fusion on ln-scale — emitted Kalman gain, posterior
   band, and a `consistent`/`marginal`/`conflict` verdict: a measurement outside
   the prior's declared interval is flagged, never silently absorbed.
+- 2026-09-28 — **D3 leg 2 + D5 leg 2** (`results/g1_d3_twin.json`,
+  `results/g1_d5_assimilate.json`). The two layers now close a loop:
+  `twin` accepts per-cell assays (`assays: [{cell, assay}]`) and fuses them
+  into the certified band *before* margins are scored — the gate verifies a
+  measurement flips a hot cell's facility verdict. `assimilate --emit-result`
+  writes the posterior back into a valid run result, chainable into `decide`,
+  `clearance`, or a second `assimilate` (the gate verifies sequential
+  shrinkage).
+- 2026-09-28 — **D3 leg 3** (`results/g1_d3_twin.json`). `twin` gains
+  `components` (named cell-id lists → cleared only when every member clears
+  every evaluated time; unknown when cells are missing) and `dose_points`
+  (point-kernel photon flux per detector per step: Σ photons_s · e^−Σμt /
+  4πr² from each cell centroid, optional `dose_coeff_gy_cm2_per_photon_h` —
+  emitted as a screening estimate, not a certified band).
+- 2026-09-28 — **D3 leg 4 + D5 leg 3** (`results/g1_d3_twin.json`). The mesh
+  spec accepts `materials: {cell_id: material}` — per-cell material overrides
+  (a real facility is not one alloy); the identical-flux memo signature mixes
+  the resolved material bytes in, so cells with equal flux under different
+  materials can never collide, and records carry `material_sha256` for
+  material-class grouping. `twin` assays gain `propagates: [{cell, rho}]`:
+  a measured cell's ln-shift moves a sibling cell's band through the declared
+  response correlation (x_t += ρ·(s_t/s_src)·k·δ; s_t² → s_t²·(1−ρ²·k)) —
+  measure one Fe component, its siblings' bands narrow.
+- 2026-09-28 — **D5 value-of-information** (`results/g1_d3_twin.json`).
+  `twin` emits `facility.assay_recommendations`: for every restricted
+  (cell, time, limit) the assay precision needed to clear at the prior
+  nominal — sorted achievable-first — or `max_assay_value_for_clearance`
+  when the nominal already sits above the limit and only a low-side
+  measurement can rescue it. "Where do I measure next" is now a printed
+  table, not an expert judgment.
