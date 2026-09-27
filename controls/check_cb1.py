@@ -332,7 +332,7 @@ def evidence_integrity(values: dict[str, dict[str, object] | None]) -> dict[str,
 
 
 def documentation_check(values: dict[str, dict[str, object] | None]) -> dict[str, object]:
-    report_path = ROOT / "docs" / "COMPETITIVE_BENCHMARK.md"
+    report_path = ROOT / "docs" / "history" / "COMPETITIVE_BENCHMARK_ARCHIVE.md"
     report = report_path.read_text(encoding="utf-8") if report_path.is_file() else ""
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     required = {
@@ -351,7 +351,7 @@ def documentation_check(values: dict[str, dict[str, object] | None]) -> dict[str
         "typed_units_gap": "unit mistakes harder",
     }
     checks = {name: token in report for name, token in required.items()}
-    checks["readme_links_scorecard"] = "docs/COMPETITIVE_BENCHMARK.md" in readme
+    checks["readme_links_scorecard"] = "COMPETITIVE_BENCHMARK.md" in readme
     return {"checks": checks, "pass": all(checks.values())}
 
 

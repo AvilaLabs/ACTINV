@@ -38,7 +38,7 @@ REPORT = ROOT / "results/g4_p22_release_candidate.json"
 OUTPUT = ROOT / "results/g4_p22_check.json"
 RESULTS = ROOT / "results"
 BASELINE = ROOT / "results/g0_p21_identity_baseline.json"
-SCORECARD = ROOT / "docs" / "COMPETITIVE_BENCHMARK.md"
+SCORECARD = ROOT / "docs" / "history" / "COMPETITIVE_BENCHMARK_ARCHIVE.md"
 
 PROTOCOL_SHA256 = "86f8509f58780a82923fcfdd9996db0e557a1eba845f553a0835b64f8a3cf971"
 OPENING_COMMIT = "c4a361f0e1c1929e508decdd33848a789dcd9ef0"

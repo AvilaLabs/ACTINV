@@ -101,7 +101,7 @@ PRIOR_EVIDENCE = [
 
 PRIOR_DOCS = [
     REPO / "docs" / "P25_TENDL2025_DEFECT_REPORT.md",
-    REPO / "docs" / "COMPETITIVE_BENCHMARK.md",
+    REPO / "docs" / "history" / "COMPETITIVE_BENCHMARK_ARCHIVE.md",
 ]
 
 NUMERIC = re.compile(rb"^[ 0-9+\-.Ee]+$")

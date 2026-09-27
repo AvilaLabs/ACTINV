@@ -25,18 +25,6 @@ if your system shows a security notice, or for an optional Linux application-men
 problem files. Your files stay on your device. Use the desktop app to run calculations and work with nuclear data.
 See the [browser guide](docs/WEB.md) for details.
 
-## Benchmarks
-
-On identical TENDL-2017 data ACTINV leads FISPACT-II on the FNS
-132-experiment decay-heat corpus — median |log C/E| **0.103 vs 0.105**,
-experiments within 30% **71 vs 69** — and on the decay-aware TENDL-2023
-rebuild the pooled geometric-mean C/E is **1.097** vs the frozen
-FISPACT-T17 reference's 1.244. ACTINV also emits what the compared codes
-do not: propagated covariance bands on every response, band-certified
-optimization, and a certified-screening fast tier. Full numbers and
-methods:
-[competitive benchmark](docs/COMPETITIVE_BENCHMARK.md).
-
 ## About ACTINV
 
 ACTINV answers a practical question: what radioactive nuclides are created when a material is irradiated, and what
@@ -305,6 +293,19 @@ batch tool, not an interactive one.
 Radiological coefficients are user-supplied, hash-pinned tables. ACTINV does not choose a jurisdiction, regulation,
 chemical form, aerosol class, or safety margin for you.
 
+## Benchmarks
+
+On identical TENDL-2017 data ACTINV leads FISPACT-II on the FNS
+132-experiment decay-heat corpus — median |log C/E| **0.103 vs 0.105**,
+experiments within 30% **71 vs 69** — and on identical ENDF-8 data it
+beats OpenMC's depletion path on every pooled metric (median |ln C/E|
+0.131 vs 0.181; p90 0.970 vs 1.640). On the decay-aware TENDL-2023
+rebuild the pooled geometric-mean C/E is **1.097** vs the frozen
+FISPACT-T17 reference's 1.244. ACTINV also emits what the compared codes
+do not: propagated covariance bands on every response, band-certified
+optimization, and a certified-screening fast tier. Full numbers and
+methods: [competitive benchmark](COMPETITIVE_BENCHMARK.md).
+
 ## Validation in brief
 
 For a complete measured-data example, see the [FNS iron decay-heat case](examples/fns_iron/README.md):
@@ -323,7 +324,7 @@ Validation establishes behavior for the recorded models, inputs, and acceptance 
 particular user's material, spectrum, nuclear-data choice, radiological table, or regulatory scenario is suitable.
 The shipped TENDL-2025 evaluations carry documented upstream defects affecting 17 IRDFF-II benchmark targets —
 see [known data limitations](docs/DATA_LIMITATIONS.md). See the
-[competitive benchmark](docs/COMPETITIVE_BENCHMARK.md), [Validation](docs/VALIDATION.md),
+[competitive benchmark](COMPETITIVE_BENCHMARK.md), [Validation](docs/VALIDATION.md),
 [P17 held-out validation](docs/P17_HELDOUT_VALIDATION.md),
 [v1.0 release notes](docs/RELEASE_NOTES_v1.0.md), and the [qualification boundary](docs/QUALIFICATION.md) for the
 evidence and complete limitations.
@@ -342,7 +343,7 @@ evidence and complete limitations.
 [Specification](docs/SPEC.md) · [Data sources](docs/DATA.md) · [Method](docs/METHOD.md) ·
 [Validation](docs/VALIDATION.md) · [Qualification boundary](docs/QUALIFICATION.md) ·
 [Known data limitations](docs/DATA_LIMITATIONS.md) ·
-[Competitive benchmark](docs/COMPETITIVE_BENCHMARK.md) · [Ledger](docs/LEDGER.md) ·
+[Competitive benchmark](COMPETITIVE_BENCHMARK.md) · [Ledger](docs/LEDGER.md) ·
 [P17 held-out validation](docs/P17_HELDOUT_VALIDATION.md) ·
 [Harness](docs/HARNESS.md) · [Roadmap](docs/ROADMAP.md) ·
 [v1.0 release notes](docs/RELEASE_NOTES_v1.0.md)

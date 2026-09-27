@@ -102,7 +102,7 @@ def run_checks() -> dict:
             failures.append("CB1 extrapolation block lost its not-executed warning")
     # The committed record is sealed by session_cb1.json's evidence digests;
     # the supersession is carried by the committed benchmark report.
-    benchmark = (ROOT / "docs/COMPETITIVE_BENCHMARK.md").read_text(encoding="utf-8")
+    benchmark = (ROOT / "docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md").read_text(encoding="utf-8")
     if "superseded by executed evidence" not in benchmark:
         failures.append("COMPETITIVE_BENCHMARK.md lacks the supersession statement")
     if "g3_p21_executed.json" not in benchmark:

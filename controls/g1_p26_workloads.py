@@ -51,7 +51,7 @@ CANDIDATES = [
         ),
         "citations": [
             C("docs/history/sessions/P12.md", 53, 56, "FNG/ITER activation comparison"),
-            C("docs/COMPETITIVE_BENCHMARK.md", 17, 20, "132 FNS experiments"),
+            C("docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md", 17, 20, "132 FNS experiments"),
             C("docs/ROADMAP.md", 148, 153, "impurity-sensitive material comparison"),
             C("docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md", 82, 86, "impurity-sensitive alloys"),
         ],
@@ -97,7 +97,7 @@ CANDIDATES = [
             "position is recorded as strongest."
         ),
         "citations": [
-            C("docs/COMPETITIVE_BENCHMARK.md", 250, 255, "Open, reproducible activation and R2S"),
+            C("docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md", 250, 255, "Open, reproducible activation and R2S"),
             C("docs/QUALIFICATION.md", 60, 62, "distributed transport source"),
             C("docs/ROADMAP.md", 152, 153, "flux-to-photon handoff"),
             C("docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md", 140, 141, "R2S path"),
@@ -121,7 +121,7 @@ CANDIDATES = [
         ),
         "citations": [
             C("docs/ROADMAP.md", 155, 156, "shutdown source terms"),
-            C("docs/COMPETITIVE_BENCHMARK.md", 16, 16, "shutdown inventory"),
+            C("docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md", 16, 16, "shutdown inventory"),
             C("docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md", 41, 41, "clearance"),
         ],
         "disposition": "rejected",

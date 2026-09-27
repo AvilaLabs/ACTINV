@@ -34,6 +34,32 @@ not closable while arms use different decay libraries.
 See `docs/defects/` for the upstream evaluation defect reports surfaced
 while routing was verified.
 
+## Identical-data OpenMC comparison — ENDF/B-VIII.1 · 21 experiments · 424 points
+
+`results/FNS_ENDF8_HEADTOHEAD.md` — ACTINV and OpenMC 0.15.3 depleted
+on the *same* ENDF-8 files (pointwise XS matching OpenMC's 0 K data,
+collapsed to FISPACT-709), scored against FNS decay-heat measurements:
+
+| arm | gm C/E | median \|ln C/E\| | p90 \|ln C/E\| | expts all-pts within 30% |
+|---|---:|---:|---:|---:|
+| **ACTINV / ENDF-8** | **0.788** | **0.131** | **0.970** | 10/21 |
+| OpenMC / ENDF-8 | 0.685 | 0.181 | 1.640 | 10/21 |
+| ACTINV / TENDL-2025 | 1.089 | 0.141 | 0.587 | 12/21 |
+| ACTINV / TENDL-2017 | 1.261 | 0.086 | 0.504 | 15/21 |
+| FISPACT / TENDL-2017 | 1.256 | 0.085 | 0.490 | 15/21 |
+
+On identical ENDF-8 data ACTINV beats OpenMC on every pooled metric —
+gm closer to 1 (0.788 vs 0.685), median |ln C/E| 0.131 vs 0.181, and the
+tail is the separation: p90 0.970 vs **1.640** (OpenMC's worst points are
+~4 orders off). The mechanism is **isomer channels**: OpenMC's depletion
+chain is ground-state-only where it matters — Ta-180m's ~41% isomer
+branch (OpenMC overshoots Ta 1.46 vs ACTINV 0.89), Y-89's (n,n′) channel
+(absent entirely — OpenMC 0.28 gm on a mis-shaped curve), W-185m1 (97% of
+first-cool heat; ACTINV's extra channel gets closer at 1.76 vs 0.28). The
+OpenMC arm is neutron-induced depletion of its own transport fluxes —
+the comparison isolates the activation solve, not transport quality.
+ACTINV wall time for the corpus: 88 s for 132 experiments (~0.7 s/case).
+
 ## CB3 identical-data FISPACT comparison — 2026-09-20 · ACTINV 1.1.2
 
 The FNS leg was re-run with the nuclear-data confound removed:

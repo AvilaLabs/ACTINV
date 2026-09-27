@@ -76,7 +76,7 @@ PRIOR_EVIDENCE = [
     RESULTS / "g4_p24_row_ledger.json",
     RESULTS / "p24_cause_ledger.json",
     REPO / "docs" / "P25_TENDL2025_DEFECT_REPORT.md",
-    REPO / "docs" / "COMPETITIVE_BENCHMARK.md",
+    REPO / "docs" / "history" / "COMPETITIVE_BENCHMARK_ARCHIVE.md",
 ]
 
 failures: list[str] = []

@@ -3,7 +3,7 @@
 # Guide
 
 - [ACTINV applicability map (P28)](APPLICABILITY.md)
-- [ACTINV competitive benchmark](COMPETITIVE_BENCHMARK.md)
+- [ACTINV competitive benchmark](../COMPETITIVE_BENCHMARK.md)
 - [ACTINV competitive research and proposed extension](COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md)
 - [ACTINV desktop](DESKTOP.md)
 - [Install ACTINV Desktop preview](DESKTOP_INSTALL.md)
