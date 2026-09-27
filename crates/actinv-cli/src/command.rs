@@ -38,6 +38,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
                     actinv optimize OPTSPEC.json [OUTDIR] [--resume]\n\
+                    actinv decide DECISION.json [OUT.json]\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
@@ -805,6 +806,30 @@ pub fn main_from(a: Vec<String>) {
                 summary.wall_s,
                 summary.out_dir.display(),
             );
+        }
+        "decide" => {
+            const DECIDE_USAGE: &str = "usage: actinv decide DECISION.json [OUT.json]";
+            let positional: Vec<&String> = a[2..].iter().filter(|x| !x.starts_with("--")).collect();
+            if positional.is_empty() || positional.len() > 2 || positional.len() != a.len() - 2 {
+                die(DECIDE_USAGE, 2);
+            }
+            let doc =
+                crate::decide::run_decide(positional[0], positional.get(1).map(|s| s.as_str()))
+                    .unwrap_or_else(|e| die(e, 1));
+            if let Some(out) = positional.get(1) {
+                let certified = doc["verdict"]["certified"].as_bool().unwrap_or(false);
+                eprintln!(
+                    "decide: {} — {} constraints, {} binding -> {}",
+                    if certified {
+                        "certified"
+                    } else {
+                        "not certified"
+                    },
+                    doc["constraints"].as_array().map_or(0, Vec::len),
+                    doc["verdict"]["binding"].as_array().map_or(0, Vec::len),
+                    out
+                );
+            }
         }
         "mesh" => {
             if a.len() != 4 {

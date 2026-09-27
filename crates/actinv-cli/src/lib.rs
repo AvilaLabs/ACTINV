@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 
 pub mod command;
+pub mod decide;
 pub mod optimize;
 pub mod worker;
 pub mod workflow;

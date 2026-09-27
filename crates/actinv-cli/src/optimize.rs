@@ -505,7 +505,7 @@ impl OptimizeSpec {
 /// Extract a response value or band edge from a step — typed access, no
 /// full-result serialization (a serialized step is ~100 MB and would blow
 /// the bounded-memory envelope across candidates).
-fn response_edge(
+pub(crate) fn response_edge(
     step: &actinv_core::run::StepOut,
     response: &str,
     edge: Edge,
@@ -551,7 +551,7 @@ fn response_edge(
 }
 
 /// Select the step whose cumulative t_s is nearest `time_s`.
-fn select_step(
+pub(crate) fn select_step(
     steps: &[actinv_core::run::StepOut],
     time_s: f64,
 ) -> Result<&actinv_core::run::StepOut, String> {
