@@ -271,12 +271,17 @@ pub fn spawn_sweep_screened(
 /// Each solved point carries the same P65 screen certificate as the
 /// screened-sweep tier (same injected options, same re-digest binding).
 /// Warm points land ~sub-second on release builds.
+/// The pending slot the submit side overwrites and the worker drains —
+/// latest-generation single-slot semantics.
+#[cfg(not(target_arch = "wasm32"))]
+type PendingSlot = std::sync::Arc<(
+    std::sync::Mutex<Option<(u64, SweepPoint)>>,
+    std::sync::Condvar,
+)>;
+
 #[cfg(not(target_arch = "wasm32"))]
 pub struct LiveSweepHandle {
-    pending: std::sync::Arc<(
-        std::sync::Mutex<Option<(u64, SweepPoint)>>,
-        std::sync::Condvar,
-    )>,
+    pending: PendingSlot,
     pub rx: mpsc::Receiver<CompletedPoint>,
     cancel: mpsc::Sender<()>,
     supervisor: Option<std::thread::JoinHandle<()>>,
@@ -318,7 +323,7 @@ pub fn spawn_sweep_live(bmin: f64) -> Result<LiveSweepHandle, String> {
     }
     let (tx, rx) = mpsc::channel();
     let (cancel_tx, cancel_rx) = mpsc::channel::<()>();
-    let pending = std::sync::Arc::new((
+    let pending: PendingSlot = std::sync::Arc::new((
         std::sync::Mutex::<Option<(u64, SweepPoint)>>::new(None),
         std::sync::Condvar::new(),
     ));

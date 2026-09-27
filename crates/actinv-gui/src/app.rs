@@ -1744,14 +1744,9 @@ impl eframe::App for Desktop {
         // Live probe (P69): a persistent worker; each landed point is a
         // certified screened solve admitted under the live generation.
         if let Some(handle) = &self.sweep.live_handle {
-            loop {
-                match handle.rx.try_recv() {
-                    Ok(p) => {
-                        if crate::sweep::admissible(self.sweep.generation, &p) {
-                            self.sweep.points.push(p);
-                        }
-                    }
-                    Err(_) => break,
+            while let Ok(p) = handle.rx.try_recv() {
+                if crate::sweep::admissible(self.sweep.generation, &p) {
+                    self.sweep.points.push(p);
                 }
             }
         }
