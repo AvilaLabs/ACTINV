@@ -25,6 +25,18 @@ if your system shows a security notice, or for an optional Linux application-men
 problem files. Your files stay on your device. Use the desktop app to run calculations and work with nuclear data.
 See the [browser guide](docs/WEB.md) for details.
 
+## Benchmarks
+
+On identical TENDL-2017 data ACTINV leads FISPACT-II on the FNS
+132-experiment decay-heat corpus — median |log C/E| **0.103 vs 0.105**,
+experiments within 30% **71 vs 69** — and on the decay-aware TENDL-2023
+rebuild the pooled geometric-mean C/E is **1.097** vs the frozen
+FISPACT-T17 reference's 1.244. ACTINV also emits what the compared codes
+do not: propagated covariance bands on every response, band-certified
+optimization, and a certified-screening fast tier. Full numbers and
+methods:
+[competitive benchmark](docs/COMPETITIVE_BENCHMARK.md).
+
 ## About ACTINV
 
 ACTINV answers a practical question: what radioactive nuclides are created when a material is irradiated, and what
