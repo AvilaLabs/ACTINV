@@ -278,6 +278,7 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
 
     let mut cells: Vec<Value> = Vec::new();
     let mut cell_verdicts: HashMap<String, String> = HashMap::new();
+    let mut recommendations: Vec<Value> = Vec::new();
     let mut n_cells = 0usize;
     // (response, time) -> the binding cell (minimum margin)
     let mut binding: Map<String, Value> = Map::new();
@@ -450,9 +451,8 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
                 }
             }
             for l in &spec.limits {
-                let band = st
-                    .pointer(&format!("/uncertainty/responses/{}", l.response))
-                    .and_then(|r| r["conservative_interval"].as_array());
+                let resp = st.pointer(&format!("/uncertainty/responses/{}", l.response));
+                let band = resp.and_then(|r| r["conservative_interval"].as_array());
                 let Some(band) = band else {
                     return Err(format!(
                         "cell {id} step t={t}: no certified band for '{}'",
@@ -467,6 +467,42 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
                 } else {
                     (lo - l.limit) / l.limit.abs().max(1e-300)
                 };
+                // Where a restricted cell would flip: measurement precision
+                // required to pull the posterior band edge under the limit,
+                // assuming the assay lands at the prior nominal.
+                if margin < 0.0 {
+                    let nominal = resp.and_then(|r| r["nominal"].as_f64()).unwrap_or(0.0);
+                    let su_p = resp
+                        .and_then(|r| r["combined_standard_uncertainty"].as_f64())
+                        .or_else(|| resp.and_then(|r| r["mf33_standard_uncertainty"].as_f64()))
+                        .unwrap_or(0.0);
+                    let mult = resp
+                        .and_then(|r| r["normal_multiplier"].as_f64())
+                        .unwrap_or(1.959964);
+                    let s_p = su_p / nominal.max(1e-300);
+                    // Posterior edge must reach the limit; solve for the
+                    // posterior relσ then the assay precision that yields it
+                    // (s_post² = s_p² s_m² / (s_p² + s_m²)).
+                    let mut rec_v = json!({
+                        "cell": id, "response": l.response, "limit": l.name,
+                        "t_s": t, "margin": margin,
+                        "note": "assumes the assay lands at the prior nominal",
+                    });
+                    if l.sense == "le" && nominal < l.limit && nominal > 0.0 {
+                        let s_post_need = (l.limit / nominal).ln() / mult;
+                        if s_post_need > 0.0 && s_post_need < s_p {
+                            let s_m_need =
+                                s_post_need * s_p / (s_p * s_p - s_post_need * s_post_need).sqrt();
+                            rec_v["required_measurement_rel_su"] = json!(s_m_need);
+                        }
+                    }
+                    // A low-side assay clears only if its value lands below
+                    // this bound (for le): posterior edge ≈ meas·e^{m·s_post}
+                    // → in the sharp-measurement limit, meas < limit.
+                    rec_v["max_assay_value_for_clearance"] =
+                        json!(if l.sense == "le" { l.limit } else { f64::NAN });
+                    recommendations.push(rec_v);
+                }
                 cell_worst = cell_worst.min(margin);
                 cell_rows.push(json!({
                     "t_s": t, "limit": l.name, "band": [lo, hi],
@@ -561,6 +597,15 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             })
         })
         .collect();
+    // Rank: cells an assay can actually clear come first (ordered by the
+    // least-demanding precision), then cells needing a low-side assay.
+    recommendations.sort_by(|a, b| {
+        let key = |r: &Value| match r["required_measurement_rel_su"].as_f64() {
+            Some(s) => (0, -s),
+            None => (1, 0.0),
+        };
+        key(a).partial_cmp(&key(b)).unwrap()
+    });
     let cleared = cells.iter().filter(|c| c["verdict"] == "cleared").count();
     let out = json!({
         "schema": "actinv-twin-1",
@@ -578,6 +623,7 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             "restricted": n_cells - cleared,
             "binding_cells": binding,
             "assimilated_cells": assimilated_cells,
+            "assay_recommendations": recommendations,
         },
         "note": "clearance is on the certified band edge, not the nominal — a cell clears only when its conservative interval clears the limit. dose_points flux is a point-kernel screening estimate (no scatter/buildup transport), not a certified band",
     });

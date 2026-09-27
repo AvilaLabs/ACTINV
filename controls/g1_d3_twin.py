@@ -254,6 +254,28 @@ check("unpropagated cell untouched by propagation",
           ["entries"][0]["band"][1]
       == cells["cell-2"]["conservative_interval"][1])
 
+# Value-of-information: restricted cells get an assay recommendation —
+# the precision a nominal-landing measurement needs to clear them.
+recs = pre["facility"]["assay_recommendations"]
+c1_rec = next((r for r in recs if r["cell"] == "cell-1"), None)
+c2_rec = next((r for r in recs if r["cell"] == "cell-2"), None)
+check("assay recommendation names the restricted cell", c1_rec is not None)
+check("required precision is achievable for cell-1",
+      c1_rec and 0 < c1_rec["required_measurement_rel_su"] < 1,
+      f"{c1_rec}")
+# cell-2's nominal sits above the limit: no nominal-landing precision
+# suffices — the only path is a low-side measurement.
+check("cell-2 flagged as nominal-above-limit",
+      c2_rec and "required_measurement_rel_su" not in c2_rec
+      and c2_rec["max_assay_value_for_clearance"] == mid,
+      f"{c2_rec}")
+# Achievable recommendations sort before unachievable ones.
+reqs = [r.get("required_measurement_rel_su", float("inf")) for r in recs]
+check("achievable recommendations sort first",
+      all(not math.isinf(s) for s in reqs)
+      or reqs == sorted(reqs, key=lambda s: math.isinf(s)),
+      f"{reqs}")
+
 # Component rollup: a component clears only when every member clears.
 comp = twinspec(mid, "components", times=[edge_t],
                 components={"fe-leg": ["cell-0"],

@@ -297,7 +297,7 @@ f89b77d20454c9eff38e66c9c7db8ffe74a64f15e6112856639963df073e9910  ./controls/g0_
 f9c99fc68a6ca6f97e6f410d4dee66bbdd8946b3a654b61cd3fe769a173a78ed  ./controls/g0_p67_seal.py
 192c28f4dd9aa8ea75134a58011b4c366672de88492b569ed0af819dbcc9d163  ./controls/g0_p68_seal.py
 33dc5c0ada5ce8b84c0fe563516492c7a74362e2bfcbb313e8d55b92117fe176  ./controls/g1_collapse.py
-3473952aeb6c3936fb6b51cbc8e3dc3a42320d13e024040fa42de7ab0261b05e  ./controls/g1_d3_twin.py
+8228b76ee768922661956513b5c0aa0c463fd27123288dd6b00e44bfbaef5256  ./controls/g1_d3_twin.py
 0054fe5c110f4bb5abd2babee8f4ca912ce898ef5b2dde8e6383ce02149f3b13  ./controls/g1_d5_assimilate.py
 0062fd7e6a1cd39648c0669b225a3b06d9c4bb2a5c6924a3b4aa037ef24103f0  ./controls/g1_decay_fallback_control.py
 29fc62b332459f9cbf04fa2686a0ebce443fa5521daca55b3612033a3e8d014b  ./controls/g1_library_controls.py
@@ -684,7 +684,7 @@ c2f30a020e631099836594cc40f45477999466598b242c797e4ca56d0fe3f535  ./crates/actin
 213ee7d456cc3cd9ab77df003ee718fd2063cfe81a85752ed4e2c4e8e0312f08  ./crates/actinv-cli/src/lib.rs
 7d4f384ac0075b5246757fe30fe53c6efd023da3ba11f54c77d95a7037830c28  ./crates/actinv-cli/src/optimize.rs
 4f5170c98d54041561921d33223ad8568fa212b2d68ebf5b832f54288786740c  ./crates/actinv-cli/src/surrogate.rs
-9e049ca494406c03400f4f14934d0328ac06654cb679c563ca5714c4b0ce4e4a  ./crates/actinv-cli/src/twin.rs
+cdbcdf2822d15a53dd3c674b40b8fa322153a4924f8a40adb4f04c6f3a23d17b  ./crates/actinv-cli/src/twin.rs
 1e99fbd1109027fbb2587686c9fcbbee1c8805bfe45134888181f40e252f4d51  ./crates/actinv-cli/src/worker.rs
 962e83471c2f6e217c97e9d418034a30d097b5e63562f1d059e8e87b2887dff4  ./crates/actinv-cli/src/workflow.rs
 d88714714fb240cca43c69b78652a0473b363f3a394c53500fb2e4dd047e9cf4  ./crates/actinv-cli/tests/data_command.rs
@@ -2887,7 +2887,7 @@ a9f1e07e0c159f3f033d4236d0e77836cfb0829c082d5150f87bf60f2595d740  ./results/g0_p
 8e430b7595cd4cd78ebdc7ba24786481244fc19292ddc6350a2344ac4d312a18  ./results/g0_p67_seals.json
 ff33d34462ef7d4d6d057020e059aaa915641ef7a3d5d4aa1afa19921326b0cd  ./results/g0_p68_seals.json
 80a643c7e0d4e23ed8b0594ded18e82157d4ac6b2bde32ca4ad0bcc1ee10aea3  ./results/g1_collapse.json
-5b412813e0251b3040e0731c0b515e5e6334768de40192874a27e0ca20c69d1b  ./results/g1_d3_twin.json
+363d3fa56b4c2a1a1d006c0ab858f99657e1b0c1a656be9e8ab017eda6184325  ./results/g1_d3_twin.json
 f6c2a4c73f21d1745873fb183c66f15af8ae1836c69b186f3400bc8cfdf82e31  ./results/g1_d5_assimilate.json
 be1c323089774d8f4752cf72415e5015455a2638e0a6304b2655e367be8be223  ./results/g1_decay_fallback.json
 62fd27f619199d94e06d1cfd7835294fb41cde00da7179956c9a036b7b0dfeb1  ./results/g1_library.json

@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 21,
+ "n": 25,
  "checks": [
   {
    "name": "mesh emitted cells",
@@ -86,6 +86,26 @@
    "name": "unpropagated cell untouched by propagation",
    "pass": true,
    "detail": ""
+  },
+  {
+   "name": "assay recommendation names the restricted cell",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "required precision is achievable for cell-1",
+   "pass": true,
+   "detail": "{'cell': 'cell-1', 'limit': 'heat', 'margin': -0.15606936416184977, 'max_assay_value_for_clearance': 1.3336673224709164e-36, 'note': 'assumes the assay lands at the prior nominal', 'required_measurement_rel_su': 0.023360387287791204, 'response': 'heat.total', 't_s': 1.9}"
+  },
+  {
+   "name": "cell-2 flagged as nominal-above-limit",
+   "pass": true,
+   "detail": "{'cell': 'cell-2', 'limit': 'heat', 'margin': -1.1102661040022007e+22, 'max_assay_value_for_clearance': 1.3336673224709164e-36, 'note': 'assumes the assay lands at the prior nominal', 'response': 'heat.total', 't_s': 1.9}"
+  },
+  {
+   "name": "achievable recommendations sort first",
+   "pass": true,
+   "detail": "[0.023360387287791204, inf]"
   },
   {
    "name": "component rollup verdicts",
