@@ -2164,6 +2164,18 @@ doesn't have at all. They compose: D1 rides D4's speed and D2's bands.
 **Direction taken**: D1 first — it makes every certification surface
 demonstrable live; D2 is the deepest claim and lands after D1's surface
 exists to carry it.
+- 2026-09-27 — **P69 lands D1 leg 2** (`results/g1_p69_live.json`). Live certified
+  probe in the workbench: a persistent in-process worker owns one shared
+  `PreparedCache`; the sweep panel's "live" slider submits only the newest
+  position (superseded positions dropped, never queued). Each landed point is a
+  P65-screened solve — cert + kept-states + spec digest on the rendered curve.
+  Smoke verified: 3 submits → 2 superseded, last position landed certified.
+- 2026-09-27 — **D2 leg 1** (`results/d2_calibration.json`). Empirical
+  unmodeled-error calibration on the decay-aware TENDL-2023 corpus:
+  deterministic SHA-split 70-fit/62-holdout over 132 FNS experiments;
+  u_pooled = 0.437 (rms ln-residual), held-out coverage 80% at z=1 / 93% at z=2,
+  u needed for honest 68% held out = 0.306 — vs the pre-fix sealed corpus needing
+  u* = 0.898. First "verified error bars" evidence.
 - 2026-09-27 — **P68 closes `P68-CLOSED`** (`results/verdict_p68.json`). D1 first leg:
   the workbench sweep gains a certified-screening tier — in-process shared-cache
   solves with `options.screen` injected, P65 certificate on every point, warm

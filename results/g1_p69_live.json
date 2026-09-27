@@ -1,0 +1,31 @@
+{
+ "pass": true,
+ "n": 5,
+ "checks": [
+  {
+   "name": "last submitted position landed",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "at least one certified point",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "superseded positions were dropped or landed bounded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "kept states recorded on landed points",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "cache states reported",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

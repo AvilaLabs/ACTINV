@@ -265,6 +265,145 @@ pub fn spawn_sweep_screened(
     })
 }
 
+/// Live certified probe (P69/D1): a persistent worker owning one shared
+/// `PreparedCache`. `submit` overwrites the pending slot — a slider drag
+/// solves only the newest position, so superseded requests never queue.
+/// Each solved point carries the same P65 screen certificate as the
+/// screened-sweep tier (same injected options, same re-digest binding).
+/// Warm points land ~sub-second on release builds.
+#[cfg(not(target_arch = "wasm32"))]
+pub struct LiveSweepHandle {
+    pending: std::sync::Arc<(
+        std::sync::Mutex<Option<(u64, SweepPoint)>>,
+        std::sync::Condvar,
+    )>,
+    pub rx: mpsc::Receiver<CompletedPoint>,
+    cancel: mpsc::Sender<()>,
+    supervisor: Option<std::thread::JoinHandle<()>>,
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl LiveSweepHandle {
+    /// Queue the newest position; a still-pending earlier position is
+    /// dropped — the probe always solves the parameters the user is
+    /// looking at now, not where the slider passed through.
+    pub fn submit(&self, generation: u64, point: SweepPoint) {
+        let (lock, cvar) = &*self.pending;
+        if let Ok(mut slot) = lock.lock() {
+            *slot = Some((generation, point));
+            cvar.notify_one();
+        }
+    }
+    pub fn request_cancel(&self) {
+        let _ = self.cancel.send(());
+        let (_, cvar) = &*self.pending;
+        cvar.notify_one();
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+impl Drop for LiveSweepHandle {
+    fn drop(&mut self) {
+        self.request_cancel();
+        if let Some(s) = self.supervisor.take() {
+            let _ = s.join();
+        }
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn spawn_sweep_live(bmin: f64) -> Result<LiveSweepHandle, String> {
+    if !(bmin.is_finite() && bmin >= 0.0) {
+        return Err("screen bound must be finite and nonnegative".into());
+    }
+    let (tx, rx) = mpsc::channel();
+    let (cancel_tx, cancel_rx) = mpsc::channel::<()>();
+    let pending = std::sync::Arc::new((
+        std::sync::Mutex::<Option<(u64, SweepPoint)>>::new(None),
+        std::sync::Condvar::new(),
+    ));
+    let worker_pending = pending.clone();
+    let supervisor = std::thread::Builder::new()
+        .name("actinv-sweep-live".into())
+        .stack_size(crate::model::SOLVER_STACK_BYTES)
+        .spawn(move || {
+            let mut cache = actinv_core::run::PreparedCache::new();
+            let (lock, cvar) = &*worker_pending;
+            loop {
+                let taken = {
+                    let mut slot = match lock.lock() {
+                        Ok(s) => s,
+                        Err(_) => return,
+                    };
+                    loop {
+                        if cancel_rx.try_recv().is_ok() {
+                            return;
+                        }
+                        if let Some(p) = slot.take() {
+                            break p;
+                        }
+                        let Ok((guard, _timeout)) =
+                            cvar.wait_timeout(slot, std::time::Duration::from_millis(200))
+                        else {
+                            return;
+                        };
+                        slot = guard;
+                    }
+                };
+                let (generation, point) = taken;
+                if cancel_rx.try_recv().is_ok() {
+                    return;
+                }
+                let injected: Result<(actinv_core::spec::Spec, String), String> = (|| {
+                    let mut doc: Value =
+                        serde_json::from_str(&point.spec_json).map_err(|e| e.to_string())?;
+                    doc["options"]["prune"] = Value::from("rate");
+                    doc["options"]["screen"] = serde_json::json!({"bmin_atoms_per_g": bmin});
+                    let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
+                    let spec = actinv_core::spec::Spec::from_json(&text)?;
+                    Ok((spec, text))
+                })(
+                );
+                let t0 = std::time::Instant::now();
+                let (result, cache_hit, kept, digest) = match injected {
+                    Ok((spec, text)) => {
+                        let digest = sha256_hex(text.as_bytes());
+                        let r = actinv_core::run::run_with_cache(&spec, "sweep-live", &mut cache)
+                            .and_then(|v| serde_json::to_value(v).map_err(|e| e.to_string()));
+                        let kept = r
+                            .as_ref()
+                            .ok()
+                            .and_then(|v| v["screen"]["kept_states"].as_u64());
+                        (r, Some(cache.last_hit()), kept, digest)
+                    }
+                    Err(e) => (Err(e), None, None, point.spec_sha256.clone()),
+                };
+                if tx
+                    .send(CompletedPoint {
+                        generation,
+                        param: point.param,
+                        label: point.label,
+                        spec_sha256: digest,
+                        result,
+                        elapsed_ms: t0.elapsed().as_millis() as u64,
+                        cache_hit,
+                        screen_kept_states: kept,
+                    })
+                    .is_err()
+                {
+                    return;
+                }
+            }
+        })
+        .map_err(|e| e.to_string())?;
+    Ok(LiveSweepHandle {
+        pending,
+        rx,
+        cancel: cancel_tx,
+        supervisor: Some(supervisor),
+    })
+}
+
 /// Sequentially execute a sweep through `worker::spawn` — the same isolated
 /// worker protocol a manual Run uses. Each point gets its own private cache.
 /// Cancellation stops the current worker and abandons the queue; dropping the

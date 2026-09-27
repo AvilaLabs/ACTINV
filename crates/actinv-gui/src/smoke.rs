@@ -248,6 +248,102 @@ fn sweep_screened_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String
     Ok(())
 }
 
+/// Live certified-probe verification (P69/D1): the persistent worker's
+/// latest-only pending slot — submissions made back-to-back must end with
+/// the last submitted position solved, every landed point must carry the
+/// P65 screen certificate, and the emitted digest must bind the injected
+/// spec it actually ran. Superseded positions may legitimately be dropped.
+#[cfg(not(target_arch = "wasm32"))]
+fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
+    use crate::sweep::{self, SweepAxis};
+    let document =
+        model::decode_problem(&std::fs::read_to_string(spec_path).map_err(|e| e.to_string())?)
+            .map_err(|e| format!("sweep base decode: {e}"))?;
+    let axis = SweepAxis::CoolingTimeS { step_index: 1 };
+    let values = [0.5_f64, 1.0, 2.0];
+    let points =
+        sweep::sweep_specs(&document, &axis, &values).map_err(|e| format!("sweep_specs: {e}"))?;
+
+    let h = sweep::spawn_sweep_live(sweep::SCREEN_BMIN)
+        .map_err(|e| format!("live probe spawn: {e}"))?;
+    for p in points.iter() {
+        h.submit(9, p.clone());
+    }
+    let mut done = Vec::new();
+    let deadline = std::time::Instant::now() + Duration::from_secs(600);
+    loop {
+        match h.rx.recv_timeout(Duration::from_secs(5)) {
+            Ok(p) => {
+                if !sweep::admissible(9, &p) {
+                    return Err("live probe emitted the wrong generation".into());
+                }
+                let last = p.param == values[2];
+                done.push(p);
+                if last {
+                    break; // the final submitted position has landed
+                }
+            }
+            Err(_) if std::time::Instant::now() > deadline => {
+                return Err(format!(
+                    "live probe: last position never landed ({} done)",
+                    done.len()
+                ));
+            }
+            Err(_) => {}
+        }
+    }
+    drop(h);
+    for (i, p) in done.iter().enumerate() {
+        let v = p
+            .result
+            .as_ref()
+            .map_err(|e| format!("live point {i} failed: {e}"))?;
+        let sc = v["screen"]
+            .as_object()
+            .ok_or("live point carries no screen certificate")?;
+        if !sc.contains_key("certified") {
+            return Err(format!("live point {i}: certificate missing 'certified'"));
+        }
+        let mut doc: serde_json::Value = serde_json::from_str(
+            &points[values
+                .iter()
+                .position(|v| *v == p.param)
+                .ok_or("live point has an unsubmitted param")?]
+            .spec_json,
+        )
+        .map_err(|e| format!("regenerated spec decode: {e}"))?;
+        doc["options"]["prune"] = serde_json::Value::from("rate");
+        doc["options"]["screen"] = serde_json::json!({"bmin_atoms_per_g": sweep::SCREEN_BMIN});
+        let expect = {
+            use sha2::Digest;
+            let mut hsh = sha2::Sha256::new();
+            hsh.update(serde_json::to_string(&doc).map_err(|e| e.to_string())?);
+            hsh.finalize()
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect::<String>()
+        };
+        if p.spec_sha256 != expect {
+            return Err(format!(
+                "live point {i}: digest does not bind the injected spec"
+            ));
+        }
+    }
+    let report = serde_json::json!({
+        "submitted": values.len(),
+        "landed": done.len(),
+        "superseded_dropped": done.len() < values.len(),
+        "last_position_landed": done.last().map(|p| p.param) == Some(values[2]),
+        "per_point_ms": done.iter().map(|p| p.elapsed_ms).collect::<Vec<_>>(),
+        "kept_states": done.iter()
+            .filter_map(|p| p.screen_kept_states)
+            .collect::<Vec<_>>(),
+        "cache_hits": done.iter().map(|p| p.cache_hit).collect::<Vec<_>>(),
+    });
+    model::write_json(&output.join("sweep-live-smoke.json"), &report).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 pub fn from_env() -> Result<(), String> {
     let Some(path) = std::env::var_os("ACTINV_GUI_SMOKE_SPEC") else {
         return Ok(());
@@ -256,6 +352,16 @@ pub fn from_env() -> Result<(), String> {
     let output = PathBuf::from(
         std::env::var_os("ACTINV_GUI_SMOKE_OUT").ok_or("smoke output directory required")?,
     );
+    #[cfg(not(target_arch = "wasm32"))]
+    if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP_LIVE").is_some() {
+        return std::thread::Builder::new()
+            .name("sweep-live-smoke".into())
+            .stack_size(model::SOLVER_STACK_BYTES)
+            .spawn(move || sweep_live_smoke(&spec_path, &output))
+            .map_err(|e| e.to_string())?
+            .join()
+            .map_err(|_| "live sweep smoke panicked".to_owned())?;
+    }
     #[cfg(not(target_arch = "wasm32"))]
     if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP_SCREENED").is_some() {
         return std::thread::Builder::new()

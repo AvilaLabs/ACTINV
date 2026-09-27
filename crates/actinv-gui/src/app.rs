@@ -119,6 +119,11 @@ struct SweepUi {
     /// D1/P68: certified-screening tier — in-process shared-cache solves
     /// with the P65 screen certificate on every point.
     screened: bool,
+    /// D1/P69: live certified probe — a persistent worker on one shared
+    /// cache; the slider submits only the newest position.
+    live: bool,
+    live_handle: Option<crate::sweep::LiveSweepHandle>,
+    live_value: f64,
 }
 
 impl Default for SweepUi {
@@ -137,6 +142,9 @@ impl Default for SweepUi {
             points: Vec::new(),
             running: false,
             screened: false,
+            live: false,
+            live_handle: None,
+            live_value: 1.0,
         }
     }
 }
@@ -1358,7 +1366,66 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 &mut self.sweep.screened,
                 "certified screening (warm cache — each point emits the P65 certificate)",
             );
+            let live_resp = ui.checkbox(
+                &mut self.sweep.live,
+                "live (slider — solves only the newest position, certified)",
+            );
+            if live_resp.changed() {
+                if self.sweep.live {
+                    // Entering live mode supersedes any batch sweep and
+                    // clears the plotted curve for a fresh generation.
+                    if let Some(h) = &self.sweep.handle {
+                        h.request_cancel();
+                    }
+                    self.sweep.handle = None;
+                    self.sweep.running = false;
+                    self.sweep.generation += 1;
+                    self.sweep.points.clear();
+                    self.sweep.live_value = self.sweep.lo
+                        .clamp(self.sweep.lo.min(self.sweep.hi),
+                               self.sweep.lo.max(self.sweep.hi));
+                } else {
+                    self.sweep.live_handle = None; // drop cancels+joins
+                }
+            }
         });
+        if self.sweep.live {
+            let axis = match self.sweep.axis {
+                0 => crate::sweep::SweepAxis::CompositionFraction {
+                    element: self.sweep.element.clone(),
+                },
+                1 => crate::sweep::SweepAxis::FluxNormalization,
+                _ => crate::sweep::SweepAxis::CoolingTimeS {
+                    step_index: self.sweep.step_index,
+                },
+            };
+            let (lo, hi) = (
+                self.sweep.lo.min(self.sweep.hi),
+                self.sweep.lo.max(self.sweep.hi),
+            );
+            let slider = egui::Slider::new(&mut self.sweep.live_value, lo..=hi)
+                .logarithmic(lo > 0.0)
+                .text(axis.label());
+            if ui.add(slider).changed() {
+                if self.sweep.live_handle.is_none() {
+                    match crate::sweep::spawn_sweep_live(crate::sweep::SCREEN_BMIN) {
+                        Ok(h) => self.sweep.live_handle = Some(h),
+                        Err(e) => self.report(Err(format!("live probe: {e}"))),
+                    }
+                }
+                if let Some(h) = &self.sweep.live_handle {
+                    match crate::sweep::sweep_specs(&self.document, &axis, &[self.sweep.live_value])
+                    {
+                        Ok(mut pts) => {
+                            if let Some(p) = pts.pop() {
+                                h.submit(self.sweep.generation, p);
+                            }
+                        }
+                        Err(e) => self.report(Err(format!("live spec: {e}"))),
+                    }
+                }
+            }
+        }
         if self.sweep.points.is_empty() {
             ui.label("No completed points yet.");
         } else {
@@ -1673,6 +1740,20 @@ impl eframe::App for Desktop {
             self.sweep.handle = None;
             self.sweep.running = false;
             self.report(Ok("Parameter sweep finished.".into()));
+        }
+        // Live probe (P69): a persistent worker; each landed point is a
+        // certified screened solve admitted under the live generation.
+        if let Some(handle) = &self.sweep.live_handle {
+            loop {
+                match handle.rx.try_recv() {
+                    Ok(p) => {
+                        if crate::sweep::admissible(self.sweep.generation, &p) {
+                            self.sweep.points.push(p);
+                        }
+                    }
+                    Err(_) => break,
+                }
+            }
         }
         if let Some(result) = result {
             let cancelled = self.job.as_ref().is_some_and(|job| job.cancelled);
