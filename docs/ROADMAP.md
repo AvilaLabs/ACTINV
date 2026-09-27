@@ -1409,6 +1409,26 @@ G5's own collapse reparsed everything and caught all 4 planted mutations. The cl
 the demonstrated chain advantage (isomer-resolved production the incumbent lacks) now
 extends onto the band — which response variance rides on isomer channels, and how much.
 
+## Post-P56 differentiation candidates — 2026-09-26 (draft, unhashed)
+
+With P56 closed every lane from the 2026-09-25 assessment is done. The remaining honest
+gaps (external validation excluded): bands under-cover measured coverage (~36% combined
+vs ~68% honest), library breadth beyond TENDL, 5–7 min solves cap interactivity,
+single-objective LHS+coordinate optimization only, and JSON/CLI as the only surface.
+Five candidate lanes, ranked by compellingness-per-effort:
+
+| Lane | What it is | Why it's compelling | Depends on |
+|---|---|---|---|
+| **C1 — calibrated band honesty** | Close the measured under-coverage: land the data-defect fixes (isomer routing, decay data) *and* add an unmodeled-error term so stated coverage matches measured coverage on the FNS corpus. | Converts "we emit bands" into "our bands are provably honest" — the single strongest claim vs every incumbent, and the one nobody else can copy quickly. | P61 audit output (locates the defects); other workstream's TENDL normalization fixes |
+| **C2 — sub-second certified screening** | A fast solve tier (reduced chain / group-collapse / surrogate) answering in <1 s **with an error certificate** — "this screening band is provably within X of the full solve." | Nobody else's fast mode is quantified; ours would be. Makes the workbench a live design tool and changes every demo's economics. | P62 amortization; a truncation/surrogate error bound that needs its own protocol |
+| **C3 — the decision loop** | One artifact/command chaining what exists: flux in → banded activation → certified margins → `uncertainty.design` (what to measure next) → clearance verdict. | Packages the moat as a product: not "compute activation" but "tell me what to build and what to measure." Zero new solver math. | P52, P54, P56, P60 — all shipped |
+| **C4 — Python SDK** | `import actinv` — thin bindings over the spec/result surface so the layer embeds in notebooks and OpenMC pipelines directly. | OpenMC's actual moat is the Python surface + community; meeting users inside their pipeline is the adoption multiplier. | P51 worker (session lifecycle); P57 interchange |
+| **C5 — Pareto under uncertainty** | Multi-objective extension of P56: feasible-set frontiers where every point on the curve certifies at a declared edge; `nominal_would_overcertify` becomes a set-level statement. | "Show me every design that certifies" is a sentence no incumbent can finish. | P56 certification machinery; a real multi-objective engine |
+
+Ordering rationale: C1 makes the unique claim true under external scrutiny; C2 makes it
+demo-able at interactive speed; C3 makes it a product instead of a solver. C4/C5 widen
+reach once the core claim holds. Each enters its own hashed protocol per standing rules.
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
