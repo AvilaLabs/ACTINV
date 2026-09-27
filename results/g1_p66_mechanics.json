@@ -1,0 +1,41 @@
+{
+ "pass": true,
+ "n": 7,
+ "checks": [
+  {
+   "name": "decide dict arm",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "decide embedded-run_spec arm",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "decide path arm",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "all arms agree on the edge value",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "unbanded decide refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "optimize returns result doc",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "solve emits the screen certificate",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

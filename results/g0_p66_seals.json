@@ -1,0 +1,41 @@
+{
+  "sealed": true,
+  "protocol_sha256": "4a19f35f5b5ee2762d0e97a2bb2d9d626df5e048e84a8b63672002f41adb308f",
+  "seals": {
+    "protocol": {
+      "path": "protocols/ACTINV-P66_PROTOCOL.md",
+      "present": true,
+      "sha256": "4a19f35f5b5ee2762d0e97a2bb2d9d626df5e048e84a8b63672002f41adb308f"
+    },
+    "lib_rs": {
+      "path": "python/src/lib.rs",
+      "present": true,
+      "sha256": "f831832ccbed7ce32ee7175d1b3ff54867f6c7fcf89485cfa7f9fbfdb74a6195"
+    },
+    "objects_py": {
+      "path": "python/src/objects.py",
+      "present": true,
+      "sha256": "e5f20df8c86f6cae5bdc6af4a0403c07f014174e7ecc58f8d0f9faea58790a22"
+    },
+    "decide_rs": {
+      "path": "crates/actinv-cli/src/decide.rs",
+      "present": true,
+      "sha256": "284d882b1b7bdba578b53030457c0f3b3096254c31ff32d2a6e1829da457b4e8"
+    },
+    "readme": {
+      "path": "python/README.md",
+      "present": true,
+      "sha256": "c3c0f1faa20445da90fd87a3991fcc2b3aa83e51b6f6baa3924e551a70f6e043"
+    },
+    "g1": {
+      "path": "controls/g1_p66_mechanics.py",
+      "present": true,
+      "sha256": "58a1bf2a8519acaefd7e8c9f25e3b863ad3dbaaa3826d50f2bd473ff5771ec2c"
+    },
+    "g0": {
+      "path": "controls/g0_p66_seal.py",
+      "present": true,
+      "sha256": "732d0d0ad4be475aeca30fb6e1cf8140f854754120a3980c67566076ea48603a"
+    }
+  }
+}

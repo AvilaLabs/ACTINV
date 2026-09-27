@@ -2123,3 +2123,7 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
   interval provably contains the full-fidelity band (checked empirically at all steps);
   kept 28/43 states, solve stage 3.7×, cold wall 3.9s vs 6.0s (input reads dominate the
   cold path — the honest speed story is solve-stage and warm-cache). C2 lane complete.
+- 2026-09-27 — **P66 closes `P66-CLOSED`** (`results/verdict_p66.json`). Python SDK coverage
+  for the certified surfaces: `actinv.decide` (all three spec arms, identical documents and
+  refusals — `run_decide_doc` split out, P64 gates re-verified), `actinv.optimize`, and
+  `options.screen` through `solve`. C4 lane complete.

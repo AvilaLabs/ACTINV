@@ -1,0 +1,14 @@
+{
+  "phase": "P66",
+  "status": "P66-CLOSED",
+  "protocol_sha256": "4a19f35f5b5ee2762d0e97a2bb2d9d626df5e048e84a8b63672002f41adb308f",
+  "amendments": 0,
+  "gates": {
+    "g1_mechanics": {
+      "n": 7,
+      "pass": true
+    }
+  },
+  "delivered": "actinv.decide (dict/embedded/file arms via run_decide_doc \u2014 the CLI entry is unchanged and P64 gates re-verified green on the refactor), actinv.optimize returning the full optimize_result document, screening via options.screen on solve(). Same entry points as the CLI \u2014 identical documents and refusals.",
+  "honest_note": "The object layer (Problem/Material/Schedule/solve) already shipped; this phase covered the certified surfaces (decide/optimize/screen) that were CLI-only. C4 lane complete."
+}
