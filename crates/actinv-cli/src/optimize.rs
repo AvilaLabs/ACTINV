@@ -123,7 +123,26 @@ pub struct OptimizerCfg {
     pub refine_points: usize,
     #[serde(default = "default_refine_fraction")]
     pub refine_step_fraction: f64,
+    /// P73: per-candidate band-cost early exit — evaluate the candidate on
+    /// a certified screened solve first. The screen certificate widens
+    /// every emitted response edge by the dropped-state bound, so a
+    /// constraint certified on the screened record is provably satisfied;
+    /// only candidates the bound cannot certify pay for the full solve.
+    /// Recorded prescreened outcomes carry certified-edge margins and are
+    /// ledgered with `prescreen.tier = "screened"`.
+    #[serde(default)]
+    pub prescreen: bool,
+    /// Screen floor for the prescreened solve. The dropped-state bound
+    /// scales with this value — too large and the certified edge is
+    /// swamped (the prescreen then always defers to the full solve).
+    /// Defaults to a low 1e-1 atoms/g; tune toward the spec's own scale.
+    #[serde(default)]
+    pub prescreen_bmin_atoms_per_g: Option<f64>,
 }
+
+/// Prescreen floor — the same conservative screen depth the workbench's
+/// certified-screening tier uses.
+const PRESCREEN_BMIN: f64 = 1e-1;
 
 fn default_refine_fraction() -> f64 {
     0.25
@@ -611,6 +630,134 @@ pub(crate) fn select_step(
     Ok(step)
 }
 
+/// Same selection as `select_step` but returns the step's index — the
+/// screen certificate keys its certified map by step index.
+fn select_step_index(steps: &[actinv_core::run::StepOut], time_s: f64) -> Result<usize, String> {
+    let target = select_step(steps, time_s)? as *const _;
+    steps
+        .iter()
+        .position(|s| std::ptr::eq(s, target))
+        .ok_or_else(|| "select_step returned a step outside the list".into())
+}
+
+/// Certified edge read off a screened run's `screen.certified` map.
+/// `upper` picks the upper bound (le-sense / min-direction); false picks
+/// the lower bound.
+fn certified_edge_at(
+    steps: &[actinv_core::run::StepOut],
+    certified: &serde_json::Map<String, Value>,
+    time_s: f64,
+    response: &str,
+    upper: bool,
+) -> Option<f64> {
+    let si = select_step_index(steps, time_s).ok()?;
+    certified.get(&si.to_string())?.as_object()?.get(response)?
+        [if upper { "upper" } else { "lower" }]
+    .as_f64()
+}
+
+/// Inject the P65 screening options into a spec document.
+fn screened_doc(doc: &Value, bmin: f64) -> Option<Value> {
+    let mut sdoc = doc.clone();
+    let options = sdoc
+        .as_object_mut()?
+        .entry("options")
+        .or_insert_with(|| serde_json::json!({}))
+        .as_object_mut()?;
+    options.insert("prune".into(), Value::from("rate"));
+    options.insert(
+        "screen".into(),
+        serde_json::json!({"bmin_atoms_per_g": bmin}),
+    );
+    Some(sdoc)
+}
+
+/// P73 certified prescreen: evaluate the candidate on a screened solve.
+/// The screen certificate widens every emitted response edge by the
+/// dropped-state bound, so a constraint certified on the screened record
+/// is provably satisfied — the full solve is skipped. Returns None when
+/// the bound cannot certify feasibility (or the screened solve fails);
+/// the caller then pays for the full solve.
+fn try_prescreen(
+    doc: &Value,
+    opt: &OptimizeSpec,
+    cache: &mut actinv_core::run::PreparedCache,
+    axis_violations: &[Option<f64>],
+    detail: &mut BTreeMap<String, Value>,
+) -> Option<EvalOutcome> {
+    let bmin = opt
+        .optimizer
+        .prescreen_bmin_atoms_per_g
+        .unwrap_or(PRESCREEN_BMIN);
+    let sdoc = screened_doc(doc, bmin)?;
+    let canon = serde_json::to_string(&sdoc).ok()?;
+    let resolved = crate::resolve_catalog_json(&canon).ok()?;
+    let spec = actinv_core::spec::Spec::from_json(&resolved).ok()?;
+    let result = actinv_core::run::run_with_cache(&spec, "optimize", cache).ok()?;
+    let certified = result
+        .screen
+        .as_ref()
+        .and_then(|s| s["certified"].as_object())
+        .cloned()?;
+    if result.steps.is_empty() {
+        return None;
+    }
+    let certified_edge = |time_s: f64, response: &str, upper: bool| {
+        certified_edge_at(&result.steps, &certified, time_s, response, upper)
+    };
+    // Objective: the certified worst-case edge in the search direction.
+    let minimize = opt.objective.direction == "min";
+    let objective = certified_edge(opt.objective.time_s, &opt.objective.response, minimize)?;
+    let mut violations = Vec::with_capacity(opt.constraints.len());
+    for (c, av) in opt.constraints.iter().zip(axis_violations) {
+        if c.kind == "axis" {
+            violations.push(*av);
+            continue;
+        }
+        let le = c.sense == "le";
+        let edge = certified_edge(c.time_s, c.response.as_deref()?, le)?;
+        let viol = if le {
+            (edge - c.limit) / c.limit.abs().max(TINY)
+        } else {
+            (c.limit - edge) / c.limit.abs().max(TINY)
+        };
+        detail.insert(
+            format!("constraint.{}", c.name),
+            serde_json::json!({"certified_edge": edge, "edge": "screen_certified",
+                               "limit": c.limit, "violation": viol}),
+        );
+        violations.push(Some(viol));
+    }
+    // Certified margins must all be satisfied — else the bound cannot
+    // certify this candidate and the full solve is required.
+    if violations.iter().flatten().any(|v| *v > 0.0) {
+        return None;
+    }
+    let objective_values: Vec<Option<f64>> = opt
+        .objectives
+        .iter()
+        .map(|o| certified_edge(o.time_s, &o.response, o.direction == "min"))
+        .collect();
+    if objective_values.iter().any(|v| v.is_none()) && !opt.objectives.is_empty() {
+        return None;
+    }
+    detail.insert(
+        "prescreen".into(),
+        serde_json::json!({
+            "tier": "screened",
+            "bmin_atoms_per_g": PRESCREEN_BMIN,
+            "kept_states": result.screen.as_ref().map(|s| s["kept_states"].clone()),
+            "dropped_states": result.screen.as_ref().map(|s| s["dropped_states"].clone()),
+        }),
+    );
+    Some(EvalOutcome {
+        objective: Some(objective),
+        violations,
+        objective_values,
+        status: "executed·prescreened".into(),
+    })
+}
+
 /// Full candidate evaluation: mutate spec, solve, extract objective/constraints.
 /// Returns (outcome, canonical_spec_json, detail_map).
 fn evaluate_candidate(
@@ -724,6 +871,21 @@ fn evaluate_candidate(
             )
         }
     };
+    // P73: certified prescreen — the screen cert's bound-widened edges
+    // dominate the declared edges, so a certified pass on the screened
+    // record proves the candidate feasible and skips the full solve.
+    if opt.optimizer.prescreen {
+        match try_prescreen(&doc, opt, cache, &axis_violations, &mut detail) {
+            Some(outcome) => return (outcome, Some(canon), detail),
+            None => {
+                detail.insert(
+                    "prescreen".into(),
+                    serde_json::json!({"tier": "full",
+                        "reason": "certified bound crossed a limit, a response fell outside the screen vocabulary, or the screened solve failed"}),
+                );
+            }
+        }
+    }
     // Candidates share the prepared-input cache: design axes never touch
     // the file-derived inputs (library, decay, spectra), so after the
     // first solve preparation cost is paid once per optimize session.
@@ -1080,15 +1242,53 @@ pub fn run_optimize(
             .then(|| std::fs::read_to_string(&cand_path).ok())
             .flatten();
         if let Some(c) = canon {
-            let re_spec = actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&c)?)?;
-            let re = actinv_core::run::run(&re_spec, "optimize-verify")?;
-            let re_obj = select_step(&re.steps, opt.objective.time_s)
-                .ok()
-                .and_then(|st| {
-                    response_edge(st, &opt.objective.response, opt.objective.edge)
-                        .ok()
-                        .flatten()
-                });
+            // A prescreened row was ledgered on the *screened* solve —
+            // the re-execution must reproduce that evaluation (same
+            // screen options, certified edges), not the full solve's.
+            let prescreened = row
+                .constraint_detail
+                .get("prescreen")
+                .and_then(|p| p["tier"].as_str())
+                == Some("screened");
+            let re = if prescreened {
+                let doc: Value = serde_json::from_str(&c)
+                    .map_err(|e| format!("cannot parse winner candidate spec: {e}"))?;
+                let bmin = opt
+                    .optimizer
+                    .prescreen_bmin_atoms_per_g
+                    .unwrap_or(PRESCREEN_BMIN);
+                let sdoc = screened_doc(&doc, bmin)
+                    .ok_or("cannot inject screen options into winner spec")?;
+                let scanon = serde_json::to_string(&sdoc)
+                    .map_err(|e| format!("winner spec serialize: {e}"))?;
+                let sspec =
+                    actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&scanon)?)?;
+                actinv_core::run::run(&sspec, "optimize-verify")?
+            } else {
+                let re_spec =
+                    actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&c)?)?;
+                actinv_core::run::run(&re_spec, "optimize-verify")?
+            };
+            let re_certified = re.screen.as_ref().and_then(|s| s["certified"].as_object());
+            let re_obj = if prescreened {
+                re_certified.and_then(|cm| {
+                    certified_edge_at(
+                        &re.steps,
+                        cm,
+                        opt.objective.time_s,
+                        &opt.objective.response,
+                        minimize,
+                    )
+                })
+            } else {
+                select_step(&re.steps, opt.objective.time_s)
+                    .ok()
+                    .and_then(|st| {
+                        response_edge(st, &opt.objective.response, opt.objective.edge)
+                            .ok()
+                            .flatten()
+                    })
+            };
             let identical = re_obj == row.out.objective;
             // Re-execute the winner's banded constraint edges too — the
             // certification stands on the re-run, not only the ledgered
@@ -1101,15 +1301,33 @@ pub fn run_optimize(
                 .any(|k| k.starts_with("constraint."));
             for c in opt.constraints.iter().filter(|c| c.kind == "response") {
                 let name = format!("constraint.{}", c.name);
-                let re_edge = select_step(&re.steps, c.time_s).ok().and_then(|st| {
-                    response_edge(st, c.response.as_deref().unwrap(), c.edge)
-                        .ok()
-                        .flatten()
-                });
+                let re_edge = if prescreened {
+                    re_certified.and_then(|cm| {
+                        certified_edge_at(
+                            &re.steps,
+                            cm,
+                            c.time_s,
+                            c.response.as_deref().unwrap(),
+                            c.sense == "le",
+                        )
+                    })
+                } else {
+                    select_step(&re.steps, c.time_s).ok().and_then(|st| {
+                        response_edge(st, c.response.as_deref().unwrap(), c.edge)
+                            .ok()
+                            .flatten()
+                    })
+                };
                 let ledgered = row
                     .constraint_detail
                     .get(&name)
-                    .and_then(|d| d.get("edge"))
+                    .and_then(|d| {
+                        d.get(if prescreened {
+                            "certified_edge"
+                        } else {
+                            "edge"
+                        })
+                    })
                     .and_then(Value::as_f64);
                 // Resumed rows carry no detail: the fresh re-run is the
                 // certification edge on its own — skip the comparison.
@@ -1242,7 +1460,14 @@ pub fn run_optimize(
                         .get(&format!("constraint.{}", c.name))
                         .cloned()
                         .unwrap_or(Value::Null);
-                    let edge_v = entry.get("edge").and_then(Value::as_f64);
+                    // P73: a prescreened row's `edge` slot names the
+                    // screen-certified bound; the certified edge is the
+                    // recorded f64 — a strictly stronger statement than
+                    // the declared edge (bound-widened).
+                    let edge_v = entry
+                        .get("edge")
+                        .and_then(Value::as_f64)
+                        .or_else(|| entry.get("certified_edge").and_then(Value::as_f64));
                     let margin = edge_v.map(|e| {
                         if c.sense == "le" {
                             (c.limit - e) / c.limit.abs().max(TINY)
@@ -1268,11 +1493,20 @@ pub fn run_optimize(
             .iter()
             .filter(|c| c["margin_fraction"].as_f64().is_some_and(|m| m >= 0.0))
             .count();
+        let prescreened_winner = rows[bi]
+            .constraint_detail
+            .get("prescreen")
+            .and_then(|p| p["tier"].as_str())
+            == Some("screened");
         serde_json::json!({
             "statement": format!(
-                "eval {} satisfies {}/{} response constraints at their declared \
-                 band edges ({} at {}) under the base spec's covariance set",
+                "eval {} satisfies {}/{} response constraints at {} ({} at {}) under the base spec's covariance set",
                 rows[bi].eval_id, k, n_response,
+                if prescreened_winner {
+                    "their screen-certified bound-widened edges"
+                } else {
+                    "their declared band edges"
+                },
                 banded.iter().map(|c| format!("{:?}", c.edge).to_lowercase())
                     .collect::<Vec<_>>().join("/"),
                 confidence),

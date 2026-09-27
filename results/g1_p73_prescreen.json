@@ -1,0 +1,41 @@
+{
+ "pass": true,
+ "n": 7,
+ "checks": [
+  {
+   "name": "prescreened rows carry the screened tier",
+   "pass": true,
+   "detail": "3 executed rows"
+  },
+  {
+   "name": "prescreened status marked",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "prescreened winner certifies on the declared edge",
+   "pass": true,
+   "detail": "eval 0 satisfies 1/1 response constraints at their screen-certified bound-widened edges (conservativeupper at 0.95) unde"
+  },
+  {
+   "name": "same winner point as the plain search",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "prescreened run consumed fewer full solves than declared budget",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "uncertifiable bound falls back to the full tier",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "tight arm infeasible like the plain path",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
