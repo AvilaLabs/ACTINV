@@ -1,0 +1,19 @@
+{
+  "phase": "P65",
+  "status": "P65-CLOSED",
+  "closed_at_utc": "2026-09-27T02:00:00Z",
+  "final_commit": "6e140c5ad62384905a02e33a2563a71a6235b266",
+  "amendments": 0,
+  "protocol_sha256": "87f3a2294081327b27b87dd07a833f66a4365fd9b01cd7d659b084ef277944c0",
+  "gates": {
+    "g1_mechanics": {"n": 14, "pass": true},
+    "g2_exactness": {"n": 52, "pass": true},
+    "g3_demo": {"n": 6, "pass": true, "superset_verified": true,
+                "kept_states": [43, 28], "wall_s": [6.0, 3.9]},
+    "g4_determinism": {"pass": true},
+    "g5_checker": {"checks": 5, "mutations_caught": 4}
+  },
+  "delivered": "options.screen = {bmin_atoms_per_g}: rate-prune at a raised bound and emit a screen certificate — kept/dropped states, removed_heat and removed_activity bounds rebuilt from the rate_pruning ledger, and per-step certified intervals (conservative edge widened by the response bound, plus the floor bound on heat) for every banded response plus heat.total/activity.total. prune=none or a negative bound is refused; unbanded responses are honestly labelled edge=nominal.",
+  "real_data": "W FNS 1996exp_5min (TENDL-2025 709g): every certified interval contains the full bmin=1e-8 conservative band at every step — the superset claim verified empirically. kept 28 vs 43 states; cold wall 3.9 s vs 6.0 s; solve stage 1.64 s -> 0.44 s (3.7x).",
+  "honest_bound": "cold end-to-end is read-dominated (~3 s of input reads); the certified screen primarily accelerates the solve stage and the amortized warm-cache path."
+}

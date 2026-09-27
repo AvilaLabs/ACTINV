@@ -1,0 +1,44 @@
+{
+ "pass": true,
+ "n": 6,
+ "checks": [
+  {
+   "name": "screen certificate emitted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "screen solves fewer states",
+   "pass": true,
+   "detail": "28 vs 43"
+  },
+  {
+   "name": "certified intervals cover the full band everywhere",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "certified edges use the conservative band",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "nominal-only entries are honestly labelled",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "measured speedup on the solve",
+   "pass": true,
+   "detail": "screen 3.9s vs full 6.0s"
+  }
+ ],
+ "wall_s": {
+  "full": 6.039602279663086,
+  "screen": 3.8782198429107666
+ },
+ "kept_states": [
+  43,
+  28
+ ]
+}

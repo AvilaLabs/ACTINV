@@ -1,0 +1,76 @@
+{
+ "pass": true,
+ "n": 14,
+ "checks": [
+  {
+   "name": "screen block emitted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "bmin recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "bounds nonnegative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "higher bmin prunes more",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "heat certified interval exact",
+   "pass": true,
+   "detail": "{\"bound_lower\": 3.398561447969767e-37, \"bound_upper\": 3.398561447969767e-37, \"edge\": \"conservative\", \"lower\": -3.398561447969767e-37, \"upper\": 3.398561447969767e-37}"
+  },
+  {
+   "name": "heat edge labelled conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "bound fields emitted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity:Mn57 bound is dropped-state bound * lambda",
+   "pass": true,
+   "detail": "6.145905000964847e-26 vs 6.145905000964848e-26"
+  },
+  {
+   "name": "activity.total bound >= max per-nuclide bound",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "activity.total edge labelled nominal",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "certified block covers every step",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "prune=none + screen refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "negative screen bmin rejected",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "absent screen = absent block",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

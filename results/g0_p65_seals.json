@@ -1,0 +1,40 @@
+{
+  "artifacts": {
+    "g1": {
+      "path": "controls/g1_p65_mechanics.py",
+      "sha256": "985fb37882e43780cb2c2bbb4ab58e0b6dc9e8f054345c033d68977290b4e807"
+    },
+    "g2": {
+      "path": "controls/g2_p65_exactness.py",
+      "sha256": "0dc824d6583d823c27bcd88820278f54d3eb4e320d86ee9af7686e43323eaeb0"
+    },
+    "g3": {
+      "path": "controls/g3_p65_demo.py",
+      "sha256": "6d56b99ba3f059a79fbd0586dda310ea4448255f52b1d37da11c427f7205b5d5"
+    },
+    "g4": {
+      "path": "controls/g4_p65_determinism.py",
+      "sha256": "3dbf9e0a07af7ed4421082d8909a3c088bdfc082285f9122f1b58e02719222b4"
+    },
+    "g5": {
+      "path": "controls/check_g5_p65.py",
+      "sha256": "8e3e46ca83e2c710760e285f3be7ca211ae8c958bc2a251f10a6ed99f949df9f"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P65_PROTOCOL.md",
+      "sha256": "87f3a2294081327b27b87dd07a833f66a4365fd9b01cd7d659b084ef277944c0"
+    },
+    "run_rs": {
+      "path": "crates/actinv-core/src/run.rs",
+      "sha256": "9039ffe87e24de55e5025f3b401ac636e890f7ee37c640153ca922f0af5d6825"
+    },
+    "spec_rs": {
+      "path": "crates/actinv-core/src/spec.rs",
+      "sha256": "6cde8fedfb5f24cd15de000a5c016d409a7675a8e64dc802a48a2d3574e49966"
+    }
+  },
+  "opening_commit": "6e140c5ad62384905a02e33a2563a71a6235b266",
+  "protocol_sha256": "87f3a2294081327b27b87dd07a833f66a4365fd9b01cd7d659b084ef277944c0",
+  "schema": "actinv-p65-seal-1",
+  "sealed_at_utc": "2026-09-27T02:07:44Z"
+}

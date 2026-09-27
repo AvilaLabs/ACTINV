@@ -1,0 +1,266 @@
+{
+ "pass": true,
+ "n": 52,
+ "checks": [
+  {
+   "name": "activity total bound re-derived",
+   "pass": true,
+   "detail": "7.287287358286889e-25 vs 7.287287358286889e-25"
+  },
+  {
+   "name": "heat bound re-derived",
+   "pass": true,
+   "detail": "3.398561447969767e-37 vs 3.398561447969767e-37"
+  },
+  {
+   "name": "kept == pruned_states",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "dropped bounded by unkept",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 activity.total: edge nominal",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 activity.total: lower exact",
+   "pass": true,
+   "detail": "-7.287287358286889e-25 vs -7.287287358286889e-25"
+  },
+  {
+   "name": "s0 activity.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 activity:Mn57: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 activity:Mn57: lower exact",
+   "pass": true,
+   "detail": "-6.145905000964847e-26 vs -6.145905000964847e-26"
+  },
+  {
+   "name": "s0 activity:Mn57: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 activity:Mn57m1: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 activity:Mn57m1: lower exact",
+   "pass": true,
+   "detail": "-1.4047782859348221e-25 vs -1.4047782859348221e-25"
+  },
+  {
+   "name": "s0 activity:Mn57m1: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 heat.total: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s0 heat.total: lower exact",
+   "pass": true,
+   "detail": "-3.398561447969767e-37 vs -3.398561447969767e-37"
+  },
+  {
+   "name": "s0 heat.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 activity.total: edge nominal",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 activity.total: lower exact",
+   "pass": true,
+   "detail": "-7.287287358286889e-25 vs -7.287287358286889e-25"
+  },
+  {
+   "name": "s1 activity.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 activity:Mn57: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 activity:Mn57: lower exact",
+   "pass": true,
+   "detail": "-6.145905000964847e-26 vs -6.145905000964847e-26"
+  },
+  {
+   "name": "s1 activity:Mn57: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 activity:Mn57m1: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 activity:Mn57m1: lower exact",
+   "pass": true,
+   "detail": "-1.4047782859348221e-25 vs -1.4047782859348221e-25"
+  },
+  {
+   "name": "s1 activity:Mn57m1: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 heat.total: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s1 heat.total: lower exact",
+   "pass": true,
+   "detail": "-3.398561447969767e-37 vs -3.398561447969767e-37"
+  },
+  {
+   "name": "s1 heat.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 activity.total: edge nominal",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 activity.total: lower exact",
+   "pass": true,
+   "detail": "-7.287287358286889e-25 vs -7.287287358286889e-25"
+  },
+  {
+   "name": "s2 activity.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 activity:Mn57: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 activity:Mn57: lower exact",
+   "pass": true,
+   "detail": "-6.145905000964847e-26 vs -6.145905000964847e-26"
+  },
+  {
+   "name": "s2 activity:Mn57: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 activity:Mn57m1: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 activity:Mn57m1: lower exact",
+   "pass": true,
+   "detail": "-1.4047782859348221e-25 vs -1.4047782859348221e-25"
+  },
+  {
+   "name": "s2 activity:Mn57m1: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 heat.total: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s2 heat.total: lower exact",
+   "pass": true,
+   "detail": "-3.398561447969767e-37 vs -3.398561447969767e-37"
+  },
+  {
+   "name": "s2 heat.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 activity.total: edge nominal",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 activity.total: lower exact",
+   "pass": true,
+   "detail": "-7.287287358286889e-25 vs -7.287287358286889e-25"
+  },
+  {
+   "name": "s3 activity.total: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 activity:Mn57: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 activity:Mn57: lower exact",
+   "pass": true,
+   "detail": "-6.145905000964847e-26 vs -6.145905000964847e-26"
+  },
+  {
+   "name": "s3 activity:Mn57: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 activity:Mn57m1: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 activity:Mn57m1: lower exact",
+   "pass": true,
+   "detail": "-1.4047782859348221e-25 vs -1.4047782859348221e-25"
+  },
+  {
+   "name": "s3 activity:Mn57m1: upper exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 heat.total: edge conservative",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "s3 heat.total: lower exact",
+   "pass": true,
+   "detail": "-3.398561447969767e-37 vs -3.398561447969767e-37"
+  },
+  {
+   "name": "s3 heat.total: upper exact",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

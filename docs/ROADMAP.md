@@ -2116,3 +2116,10 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
   top measurement targets, and sha bindings. Unbanded run specs are refused outright.
   Real-data demo on the W FNS corpus honestly reports the known early-cooling gap as
   not-certified while a roomy constraint certifies.
+- 2026-09-27 — **P65 closes `P65-CLOSED`** (`results/verdict_p65.json`; protocol sealed at
+  `87f3a229…`, zero amendments). `options.screen` is the certified screening tier: prune
+  at a raised bound and emit per-step certified intervals = conservative edge widened by
+  the dropped-state bound (+ floor bound on heat). On the W FNS case every certified
+  interval provably contains the full-fidelity band (checked empirically at all steps);
+  kept 28/43 states, solve stage 3.7×, cold wall 3.9s vs 6.0s (input reads dominate the
+  cold path — the honest speed story is solve-stage and warm-cache). C2 lane complete.
