@@ -1588,9 +1588,11 @@ impl PreparedRun {
                         "table_default"
                     },
                 ),
-                None => return Err(format!(
+                None => {
+                    return Err(format!(
                     "unmodeled_table: no per_material entry for '{key}' and no default available"
-                )),
+                ))
+                }
             },
         };
         Ok((

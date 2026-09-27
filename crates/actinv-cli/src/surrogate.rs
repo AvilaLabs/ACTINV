@@ -236,7 +236,7 @@ pub fn run_fit(spec_path: &str, out_dir: Option<&str>) -> Result<Value, String> 
         values.push(
             spec.responses
                 .iter()
-                .map(|r| format!("{}@{:.3}:{}", r.response, r.time_s, format!("{:?}", r.edge)))
+                .map(|r| format!("{}@{:.3}:{:?}", r.response, r.time_s, r.edge))
                 .zip(v)
                 .collect(),
         );
