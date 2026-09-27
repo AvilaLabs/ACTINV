@@ -4,7 +4,7 @@ use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable};
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
-use crate::quantity::{Kelvin, Seconds};
+use crate::quantity::{AtomsPerGram, Kelvin, Seconds};
 use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
@@ -161,6 +161,10 @@ pub struct RunResult {
     /// from and the first product it made. Trace mode only; the system is linear in the source there, so the
     /// contributions are exact and sum to the nuclide's population.
     pub pathways: Vec<BTreeMap<String, Vec<Pathway>>>,
+    /// P65 certified screening: emitted only when `options.screen` is
+    /// declared. Absence is byte-identical to pre-P65 output.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub screen: Option<serde_json::Value>,
     /// largest relative disagreement between the summed pathway contributions and the main solve
     pub pathway_closure: f64,
     /// P58: per-step pathway aggregation by isomer product; emitted only when
@@ -171,6 +175,26 @@ pub struct RunResult {
     pub ledger: serde_json::Value,
     pub certificate: serde_json::Value,
     pub ms: f64,
+}
+
+/// Nominal value of a response name on a step — the subset of the CLI's
+/// edge vocabulary the P65 screen certificate supports.
+fn nominal_response(step: &StepOut, response: &str) -> f64 {
+    if let Some(kind) = response.strip_prefix("heat.") {
+        match kind {
+            "total" => step.heat_W_per_g.total,
+            "alpha" => step.heat_W_per_g.alpha,
+            "beta" => step.heat_W_per_g.beta,
+            "gamma" => step.heat_W_per_g.gamma,
+            _ => 0.0,
+        }
+    } else if response == "activity.total" {
+        step.activity_Bq_per_g.values().sum()
+    } else if let Some(name) = response.strip_prefix("activity:") {
+        step.activity_Bq_per_g.get(name).copied().unwrap_or(0.0)
+    } else {
+        0.0
+    }
 }
 
 pub(crate) fn name_of(za: i32, liso: i32) -> String {
@@ -3006,7 +3030,14 @@ impl PreparedRun {
                         &n0,
                         sched,
                         p == "rate",
-                        physical.bmin,
+                        // P65: a screening spec prunes at its own raised
+                        // bound; the certificate maps the drop onto the
+                        // banded responses.
+                        match spec.options.screen.as_ref() {
+                            Some(screen) => AtomsPerGram::new(screen.bmin_atoms_per_g)
+                                .map_err(|e| format!("options.screen.bmin_atoms_per_g: {e}"))?,
+                            None => physical.bmin,
+                        },
                     )
                 }
             };
@@ -3890,6 +3921,104 @@ impl PreparedRun {
                     * EV
             })
             .sum();
+
+        // ---- P65 certified screening
+        // The prune bound is time-independent (it bounds what the dropped
+        // states could ever hold), so one widening applies at every step.
+        let screen_block = if let Some(screen) = spec.options.screen.as_ref() {
+            let mut removed_activity_bound = 0.0f64;
+            let mut activity_bound_by_nuclide: BTreeMap<String, f64> = BTreeMap::new();
+            for (index, atoms_bound, _) in &rate_pruned {
+                let Some(key) = ch.keys.get(*index) else {
+                    continue;
+                };
+                let Some(nuclide) = nuclides.get(key) else {
+                    continue;
+                };
+                let contribution = nuclide.lambda() * atoms_bound;
+                removed_activity_bound += contribution;
+                *activity_bound_by_nuclide
+                    .entry(name_of(key.0, key.1))
+                    .or_default() += contribution;
+            }
+            let bound_for = |response: &str| -> Option<(f64, f64)> {
+                // (lower-bound widening, upper-bound widening); heat's upper
+                // also absorbs the below-floor bound at emit time.
+                if response.starts_with("heat.") {
+                    Some((
+                        rate_pruning_heat_bound_W_per_g,
+                        rate_pruning_heat_bound_W_per_g,
+                    ))
+                } else if response == "activity.total" {
+                    Some((removed_activity_bound, removed_activity_bound))
+                } else if let Some(name) = response.strip_prefix("activity:") {
+                    let b = activity_bound_by_nuclide.get(name).copied().unwrap_or(0.0);
+                    Some((b, b))
+                } else {
+                    None
+                }
+            };
+            let mut names: Vec<String> = spec
+                .uncertainty
+                .as_ref()
+                .map(|u| u.responses.clone())
+                .unwrap_or_default();
+            for base in ["heat.total", "activity.total"] {
+                if !names.iter().any(|n| n == base) {
+                    names.push(base.into());
+                }
+            }
+            let mut certified: serde_json::Map<String, serde_json::Value> = serde_json::Map::new();
+            for (si, step) in steps.iter().enumerate() {
+                let mut per_resp = serde_json::Map::new();
+                for response in &names {
+                    let Some((blo, mut bhi)) = bound_for(response) else {
+                        continue;
+                    };
+                    if response.starts_with("heat.") {
+                        bhi += step.heat_bound_from_below_floor_W_per_g;
+                    }
+                    // Prefer the band's conservative edge; an unbanded run
+                    // certifies the nominal — labelled honestly.
+                    let (lo, hi, edge) = step
+                        .uncertainty
+                        .as_ref()
+                        .and_then(|u| u.responses.get(response))
+                        .map(|r| {
+                            (
+                                r.conservative_interval[0],
+                                r.conservative_interval[1],
+                                "conservative",
+                            )
+                        })
+                        .unwrap_or_else(|| {
+                            let n = nominal_response(step, response);
+                            (n, n, "nominal")
+                        });
+                    per_resp.insert(
+                        response.clone(),
+                        serde_json::json!({
+                            "edge": edge,
+                            "lower": lo - blo,
+                            "upper": hi + bhi,
+                            "bound_lower": blo,
+                            "bound_upper": bhi,
+                        }),
+                    );
+                }
+                certified.insert(si.to_string(), serde_json::Value::Object(per_resp));
+            }
+            Some(serde_json::json!({
+                "bmin_atoms_per_g": screen.bmin_atoms_per_g,
+                "kept_states": keep.len(),
+                "dropped_states": rate_pruned.len(),
+                "removed_heat_W_per_g_bound": rate_pruning_heat_bound_W_per_g,
+                "removed_activity_Bq_per_g_bound": removed_activity_bound,
+                "certified": serde_json::Value::Object(certified),
+            }))
+        } else {
+            None
+        };
         let mut library_convergence_flags = Vec::new();
         let mut library_target_limitations = Vec::new();
         if let Some(targets) = idxj["targets"].as_array() {
@@ -4602,6 +4731,7 @@ impl PreparedRun {
             total_states: ch.n,
             steps,
             pathways,
+            screen: screen_block,
             pathway_closure: closure,
             isomer_pathway_shares,
             ledger,

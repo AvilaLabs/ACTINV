@@ -334,6 +334,14 @@ pub struct Step {
     pub removal: Option<BTreeMap<String, f64>>,
 }
 
+/// P65 certified screening options.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct ScreenOptions {
+    /// The raised atom bound used for rate pruning.
+    pub bmin_atoms_per_g: f64,
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Options {
@@ -354,6 +362,12 @@ pub struct Options {
     /// their rates pass through unmodified.
     #[serde(default)]
     pub require_shielding_complete: bool,
+    /// P65 certified screening: prune at this raised atom bound and emit a
+    /// `screen` certificate mapping the dropped-state bounds onto every
+    /// banded response edge. Requires `prune: "rate"` — a zero bound from
+    /// disabled pruning is not a certificate.
+    #[serde(default)]
+    pub screen: Option<ScreenOptions>,
     /// Optional per-library-row multiplicative perturbation of collapsed
     /// reaction rates, keyed by activation-library row index (P30
     /// nonlinear sampling). Absent = unperturbed. The applied factors are
@@ -404,6 +418,7 @@ impl Default for Options {
             cram_order: cram16_order(),
             outputs: None,
             require_shielding_complete: false,
+            screen: None,
             rate_scale: None,
             decay_scale: None,
             yield_scale: None,
@@ -744,6 +759,20 @@ impl Spec {
         match self.options.prune.as_str() {
             "rate" | "reach" | "none" => {}
             p => return Err(format!("unknown options.prune '{p}'")),
+        }
+        if let Some(screen) = &self.options.screen {
+            if !screen.bmin_atoms_per_g.is_finite() || screen.bmin_atoms_per_g < 0.0 {
+                return Err(
+                    "options.screen.bmin_atoms_per_g must be finite and nonnegative".into(),
+                );
+            }
+            if self.options.prune != "rate" {
+                return Err(
+                    "options.screen requires prune 'rate' — a zero bound from disabled \
+                     pruning is not a certificate"
+                        .into(),
+                );
+            }
         }
         if !self.options.bmin_atoms_per_g.is_finite() || self.options.bmin_atoms_per_g < 0.0 {
             return Err("options.bmin_atoms_per_g must be finite and nonnegative".into());
