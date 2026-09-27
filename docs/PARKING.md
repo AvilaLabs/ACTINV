@@ -256,23 +256,31 @@ priority — each needs its own protocol before any code changes.
    complementing OpenMC (import-flux → solve → export source) is the
    lane instead.
 
-3. **Accuracy tail vs FISPACT-TENDL** — narrowed to isomer routing
-   and decay-data (2026-09 diagnosis, see results/FNS_ENDF8_HEADTOHEAD.md
-   "Isomer-routing diagnosis"). The TENDL FNS libraries were built by
-   `controls/tendl_build.py`, which rank-compresses positive LFS values
-   per (MT,ZAP) onto isomer ordinals — wrong whenever an eval's level
-   index doesn't coincide with the decay library's LISO (TENDL-2023
-   Ta-182M is the confirmed case: capture feeds the 0.283-s isomer
-   instead of the 15.8-min one; verified by surgical npz patch).
-   267 isomer rows in the FNS set feed multi-isomer ZAs; 27 rows point
-   at decay-absent states. Fix path: rebuild through the Rust builder
-   with `--decay` (physical LIS/ELIS resolution) — gated on TENDL
-   normalization defects that currently fail closed (Ta-181 MT107/MF10
-   state-sum 4.7% > envelope). Remaining tail after routing is
+3. **Accuracy tail vs FISPACT-TENDL — CLOSED (2026-09-26).** Root
+   cause was the legacy Python builder's rank-compressed LFS→LISO.
+   The Rust builder's decay-aware path (physical LIS/ELIS resolution
+   against ENDF-8.0 + JEFF-3.3 fallback) fixed it; the new TENDL-2023
+   decay-aware library (`actinv_tendl2023_fns_decay_709g.npz`,
+   519 targets incl. 266 isomer evals, zero build failures) scores
+   gm 1.097 across FNS vs old rank-mapped arm 1.249 and FISPACT-T17
+   1.244. Standouts: In 29.2→1.9 (old arm's catastrophic misroute),
+   W 1.84→2.45 and Zn 0.90→0.63 regressed — TENDL-2023-vs-2017 data
+   differences, now physically routed; Sn ~1.33 and Ta ~0.85 are
+   unchanged (their residual is decay-data/XS-version, not routing —
+   TENDL-2023's Ta-181 lacks the 15.8-min Ta-182m capture channel
+   entirely; TENDL-2025 declares it as LFS=29). Enabling work landed
+   this session:
+   `NormalizeProfile::Tendl` (state-sum reconciliation + fix_bw_gt +
+   fix_nan_fields, orphan MF6/MF8/descriptor tolerance; confirmed
+   misroute exemplar Tb-156, 35 rows raw-LFS 3→LISO 2), RML direct
+   γ-capture reconstruction via Woodbury (kills the 1−P cancellation
+   noise that linearization could never resolve), generic
+   Riccati–Bessel L≤∞ path (TENDL O-16 uses L=5), RML channel-threshold
+   boundary seeding, `--continue-on-error`. Remaining tail is
    decay-data disagreement (ENDF-8.0 vs EAF-2017 deposited energies
-   differ up to ~30x on individual isomers, e.g. Ta-182m 506 vs
-   ~16 keV/decay), which no routing fix can close while the arms use
-   different decay libraries.
+   differ up to ~30× on individual isomers, e.g. Ta-182m 506 vs
+   ~16 keV/decay) — not closable while arms use different decay
+   libraries.
 
 4. **W overshoot — RESOLVED (not an ACTINV defect).** All
    isomer-carrying arms overshoot ~1.9x early (ACTINV-E8 1.83,

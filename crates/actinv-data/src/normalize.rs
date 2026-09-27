@@ -600,6 +600,72 @@ fn fix_tab1_order(lines: &mut [String], entries: &mut Vec<String>) {
     }
 }
 
+/// Literal NaN junction sentinels inside TAB1 bodies (TENDL Pb-208 writes
+/// `NaN` for the ordinate at exactly the resolved-range edge, MF=3/MT=1 and
+/// MT=3). The next same-parity slot carries the post-junction value;
+/// substituting it produces the duplicate-point step the writer intended.
+/// Restricted to contiguous same-(MF,MT) runs so a stray NaN cannot borrow
+/// a value across sections.
+fn fix_nan_fields(lines: &mut [String], entries: &mut Vec<String>) {
+    let mut i = 0;
+    while i < lines.len() {
+        let Some((mf, mt)) = tail_mf_mt(&lines[i]) else {
+            i += 1;
+            continue;
+        };
+        if mf <= 0 || mt <= 0 {
+            i += 1;
+            continue;
+        }
+        // contiguous run of one (MF,MT) section
+        let mut end = i;
+        while end < lines.len() && tail_mf_mt(&lines[end]) == Some((mf, mt)) {
+            end += 1;
+        }
+        // flatten the run's fields, tracking which carry nonfinite tokens
+        let mut flat: Vec<(usize, usize, f64)> = Vec::new();
+        for (li, line) in lines.iter().enumerate().take(end).skip(i) {
+            let raw = crate::endf::fields(line);
+            for (pos, field) in raw.iter().enumerate() {
+                let t = field.trim();
+                if t.is_empty() {
+                    flat.push((li, pos, 0.0));
+                } else {
+                    flat.push((
+                        li,
+                        pos,
+                        crate::endf::parse_endf_float(t).unwrap_or(f64::NAN),
+                    ));
+                }
+            }
+        }
+        for j in 0..flat.len() {
+            if flat[j].2.is_finite() {
+                continue;
+            }
+            let (li, pos, _) = flat[j];
+            let source = if j + 2 < flat.len() {
+                flat[j + 2].2
+            } else if j >= 2 {
+                flat[j - 2].2
+            } else {
+                continue;
+            };
+            if !source.is_finite() {
+                continue;
+            }
+            write_field(lines, li, pos, &ef_str(source));
+            entries.push(format!(
+                "nan_field: MF={mf}/MT={mt} nonfinite field at record {} set to same-parity neighbor {:.6e}",
+                li + 1,
+                source
+            ));
+            flat[j].2 = source;
+        }
+        i = end;
+    }
+}
+
 // ---------------------------------------------------------------------------
 // entry point
 // ---------------------------------------------------------------------------
@@ -610,10 +676,11 @@ fn fix_tab1_order(lines: &mut [String], entries: &mut Vec<String>) {
 /// returned text always round-trips: with `NormalizeProfile::None` it is
 /// byte-identical to the input.
 pub fn normalize_tape(text: &str, profile: NormalizeProfile) -> NormalizedTape {
-    // None preserves every defect byte-for-byte; Tendl performs no
-    // text surgery (its normalization is collapse-level state-sum
-    // reconciliation, applied in the builder).
-    if matches!(profile, NormalizeProfile::None | NormalizeProfile::Tendl) {
+    // None preserves every defect byte-for-byte. Tendl performs no ENDF-8
+    // structural surgery (its normalization is collapse-level state-sum
+    // reconciliation in the builder) but still takes the value-level repair
+    // that only rewrites a declared total width to its own component sum.
+    if matches!(profile, NormalizeProfile::None) {
         return NormalizedTape {
             text: text.to_string(),
             entries: Vec::new(),
@@ -628,13 +695,16 @@ pub fn normalize_tape(text: &str, profile: NormalizeProfile) -> NormalizedTape {
         }
     }
 
-    fix_zaawr(&mut lines, &mut entries);
-    fix_lrf0_range(&mut lines, &mut entries);
-    fix_rml_photon(&mut lines, &mut entries);
-    fix_unresolved_dof(&mut lines, &mut entries);
-    fix_unresolved_zero_width(&mut lines, &mut entries);
     fix_bw_gt(&mut lines, &mut entries);
-    fix_tab1_order(&mut lines, &mut entries);
+    fix_nan_fields(&mut lines, &mut entries);
+    if matches!(profile, NormalizeProfile::EndfB8) {
+        fix_zaawr(&mut lines, &mut entries);
+        fix_lrf0_range(&mut lines, &mut entries);
+        fix_rml_photon(&mut lines, &mut entries);
+        fix_unresolved_dof(&mut lines, &mut entries);
+        fix_unresolved_zero_width(&mut lines, &mut entries);
+        fix_tab1_order(&mut lines, &mut entries);
+    }
 
     NormalizedTape {
         text: lines.concat(),

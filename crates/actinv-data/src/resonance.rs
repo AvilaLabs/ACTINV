@@ -1895,6 +1895,9 @@ pub fn reconstruct_rmatrix_limited(
                 r_matrix[row][row] += rml_background(extension, energy)?;
             }
         }
+        let mut level_alphas = Vec::with_capacity(spin_group.resonances.len());
+        let mut level_gammas = Vec::with_capacity(spin_group.resonances.len());
+        let mut gamma_amplitudes = Vec::with_capacity(spin_group.resonances.len());
         for resonance in &spin_group.resonances {
             let half_capture = 0.5 * resonance.widths[gamma_channel].abs();
             let alpha = Complex64::new(resonance.energy - energy, -half_capture).inv();
@@ -1914,6 +1917,12 @@ pub fn reconstruct_rmatrix_limited(
                     r_matrix[row][column] += alpha * amplitudes[row] * amplitudes[column];
                 }
             }
+            level_alphas.push(alpha);
+            level_gammas.push(amplitudes);
+            gamma_amplitudes.push(
+                resonance.widths[gamma_channel].signum()
+                    * (0.5 * resonance.widths[gamma_channel].abs()).sqrt(),
+            );
         }
 
         // X = sqrt(P) (I - R L)^-1 R sqrt(P), W = I + 2iX, U = Omega W Omega.
@@ -1929,6 +1938,37 @@ pub fn reconstruct_rmatrix_limited(
             system[row][row] += Complex64::new(1.0, 0.0);
         }
         let reduced = solve_complex_matrix(system, r_matrix)?;
+        // The eliminated-capture probability 1 - Σ|U|² sits ~1e-13 below 1
+        // near threshold — catastrophic cancellation leaves sigma_capture at
+        // the f64 noise floor (~1e-3 relative jitter). Recover the level
+        // matrix A = (D - ΓᵀLΓ)⁻¹ by Woodbury from the channel solve:
+        //   K = (L⁻¹ - R)⁻¹ = L(I - LR)⁻¹ = L + L·reduced·L,
+        //   Aγ_c = D⁻¹γ_c + D⁻¹Γᵀ K (ΓD⁻¹γ_c),
+        //   |U_γc|² = 4 P_c |Σ_λ γ^γ_λ (Aγ_c)_λ|²
+        // — a direct, non-canceling expression for the eliminated channel.
+        // Only valid when R = ΓαΓᵀ exactly; diagonal channel backgrounds
+        // (LBK/KBK) break the factorization, so fall back to the residual.
+        let direct_capture = spin_group.backgrounds.is_empty();
+        let channel_l: Vec<Complex64> = open
+            .iter()
+            .map(|channel| Complex64::new(channel.shift_minus_boundary, channel.penetrability))
+            .collect();
+        let mut kappa = vec![vec![Complex64::new(0.0, 0.0); size]; size];
+        for row in 0..size {
+            for column in 0..size {
+                kappa[row][column] = channel_l[row] * reduced[row][column] * channel_l[column];
+            }
+            kappa[row][row] += channel_l[row];
+        }
+        // h[o] = Σ_λ γ^γ_λ α_λ γ_λo couples each open channel to the
+        // eliminated gamma channel through the level denominators.
+        let mut h = vec![Complex64::new(0.0, 0.0); size];
+        for (level, alpha) in level_alphas.iter().enumerate() {
+            let coupling = gamma_amplitudes[level] * alpha;
+            for column in 0..size {
+                h[column] += coupling * level_gammas[level][column];
+            }
+        }
         let mut collision = vec![vec![Complex64::new(0.0, 0.0); size]; size];
         for row in 0..size {
             for column in 0..size {
@@ -1977,7 +2017,30 @@ pub fn reconstruct_rmatrix_limited(
                     "RML collision matrix violates unitarity with explicit probability {explicit_probability}"
                 ));
             }
-            result.capture += scale * (1.0 - explicit_probability).max(0.0);
+            if direct_capture {
+                // t[o] = (Γ D⁻¹ γ_c)_o; s = K t; G_γc = h_c + hᵀ s.
+                let mut t = vec![Complex64::new(0.0, 0.0); size];
+                for (level, alpha) in level_alphas.iter().enumerate() {
+                    let source = level_gammas[level][incoming] * alpha;
+                    for (o, item) in t.iter_mut().enumerate() {
+                        *item += level_gammas[level][o] * source;
+                    }
+                }
+                let mut amplitude = h[incoming];
+                for row in 0..size {
+                    let mut accumulated = Complex64::new(0.0, 0.0);
+                    for column in 0..size {
+                        accumulated += kappa[row][column] * t[column];
+                    }
+                    amplitude += h[row] * accumulated;
+                }
+                let u_gamma =
+                    Complex64::new(0.0, 2.0) * open[incoming].penetrability.sqrt() * amplitude;
+                result.capture +=
+                    scale * u_gamma.norm_sqr() * (2.0 * open[incoming].absorption).exp();
+            } else {
+                result.capture += scale * (1.0 - explicit_probability).max(0.0);
+            }
         }
     }
     result.checked("R-matrix-limited reconstruction")
@@ -2888,6 +2951,69 @@ mod tests {
         assert_eq!(actual.fission, 0.0);
         assert_eq!(actual.competitive, 0.0);
         assert!(actual.elastic.is_finite() && actual.elastic >= 0.0);
+    }
+
+    #[test]
+    fn rml_eliminated_capture_tail_is_smooth_1_over_v() {
+        // Eliminated capture computed as 1 - Σ|U|² cancels catastrophically
+        // where capture is a tiny fraction of the open-channel flux (TENDL
+        // O-16 left a ~1e-3 relative noise floor at 1e-5 eV that no
+        // linearization could resolve). The direct U_γc amplitude keeps the
+        // s-wave tail exactly 1/v: sigma·sqrt(E) stays constant in f64.
+        let range = scalar_rml_range();
+        let mut previous = f64::NAN;
+        let mut worst_step = 0.0f64;
+        for i in 0..200 {
+            let energy = 1e-5 * (1e-3f64 / 1e-5).powf(i as f64 / 199.0);
+            let sigma = reconstruct_rmatrix_limited(&range, energy).unwrap().capture;
+            assert!(sigma.is_finite() && sigma > 0.0);
+            let normalized = sigma * energy.sqrt();
+            if previous.is_finite() {
+                worst_step = worst_step.max(((normalized - previous) / previous).abs());
+            }
+            previous = normalized;
+        }
+        // Smooth drift across the sweep is ~2e-6 total; the cancellation
+        // signature was ~1e-3 between adjacent points.
+        assert!(
+            worst_step < 1e-4,
+            "low-energy capture tail jitter {worst_step}"
+        );
+    }
+
+    #[test]
+    fn rml_channel_thresholds_report_in_range_openings() {
+        // A competitive channel with Q < 0 opens at E = -Q·(ma+mb)/mb_lab —
+        // a genuine sigma discontinuity the linearizer must seed, not bisect.
+        let mut range = scalar_rml_range();
+        if let RangeData::RMatrixLimited(rml) = &mut range.data {
+            rml.particle_pairs.push(ParticlePair {
+                mass_a: 1.0,
+                mass_b: 55.0,
+                za: 0,
+                zb: 26,
+                spin_a: 0.5,
+                spin_b: 0.0,
+                q_value: -500.0,
+                penetrability: 1,
+                shift: 0,
+                mt: 16,
+                parity_a: 1,
+                parity_b: 1,
+            });
+            rml.spin_groups[0].channels.push(RmlChannel {
+                pair: 2,
+                l: 0,
+                spin: 0.5,
+                boundary: 0.0,
+                effective_radius: 0.5,
+                true_radius: 0.5,
+            });
+        }
+        let thresholds = rml_channel_thresholds(&range);
+        // entrance masses 1,55: lab→cm = 55/56 → threshold 500·56/55
+        assert_eq!(thresholds.len(), 1);
+        assert!((thresholds[0] - 500.0 * 56.0 / 55.0).abs() < 1e-9);
     }
 
     #[test]

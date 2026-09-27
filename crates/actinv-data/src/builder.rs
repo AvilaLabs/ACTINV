@@ -78,6 +78,11 @@ pub struct BuildOptions {
     /// `reconcile_emitted_states`. `NormalizeProfile::None` keeps every
     /// defect fail-closed (historical default).
     pub normalize_profile: NormalizeProfile,
+    /// Skip inputs that fail instead of aborting the whole build. Each
+    /// skipped file is logged and recorded in `build_failures` in the index —
+    /// intended for mixed target/catalog input sets where auxiliary isomer
+    /// evaluations carry defects that cannot be normalized.
+    pub continue_on_error: bool,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -154,6 +159,9 @@ struct BuildIndex {
     options: CanonicalOptions,
     state_catalog: Vec<CatalogState>,
     targets: Vec<TargetIndex>,
+    /// Inputs skipped under `--continue-on-error`, each carrying its error.
+    #[serde(default)]
+    build_failures: Vec<String>,
     n_rows: usize,
     columns: &'static str,
     sha256_npz: String,
@@ -206,6 +214,10 @@ struct EvaluationBuildSettings<'a> {
     /// envelope. Off unless a normalization profile opts in; strict
     /// states still overrides.
     normalize_state_sums: bool,
+    /// TENDL orphan tolerance: product sections (MF=6/8/9) or MF=8 product
+    /// descriptors whose MT carries no cross-section or emitted-state data
+    /// cannot produce rows — ledgered rather than fatal.
+    drop_orphan_sections: bool,
 }
 
 #[derive(Clone, Debug)]
@@ -1168,14 +1180,23 @@ fn validate_descriptors(
     products: &[ProductRef],
     lmf: i32,
     actual: &BTreeSet<(i32, i32)>,
-) -> Result<(), String> {
+    orphan_ok: bool,
+) -> Result<Option<String>, String> {
     let declared = descriptor_set(products, lmf)?;
     if !declared.is_empty() && &declared != actual {
+        // TENDL keeps MF=8 product descriptors for reactions that carry no
+        // emitted-state section; an empty actual set means nothing conflicts —
+        // the descriptor is bookkeeping and produces no rows.
+        if orphan_ok && actual.is_empty() {
+            return Ok(Some(format!(
+                "descriptor_orphan: MF=8/LMF={lmf} declares {declared:?} but MF={lmf} is absent; descriptor ignored"
+            )));
+        }
         return Err(format!(
             "MF=8/LMF={lmf} products {declared:?} conflict with MF={lmf} products {actual:?}"
         ));
     }
-    Ok(())
+    Ok(None)
 }
 
 fn excitation_tolerance(left_eV: f64, right_eV: f64) -> f64 {
@@ -2010,6 +2031,7 @@ fn build_evaluation(
         grid_density,
         strict_states,
         normalize_state_sums,
+        drop_orphan_sections,
     } = settings;
     let metadata = &evaluation.metadata;
     let mut ledger = Vec::new();
@@ -2151,9 +2173,31 @@ fn build_evaluation(
         )
         .find(|(_, mt)| !mts.contains(mt));
     if let Some((mf, mt)) = orphan {
-        return Err(format!(
-            "MT{mt}/MF={mf} has no matching MF=3 or MF=10 reaction"
-        ));
+        // TENDL evaluations keep orphan MF=6/MF=8/MF=9 records (distribution
+        // bookkeeping without a cross section); they can emit no rows, so the
+        // normalization profile ledgers them instead of rejecting the file.
+        if drop_orphan_sections {
+            let orphans: Vec<String> = (evaluation.mf6.keys().map(|mt| (6, *mt)))
+                .chain(evaluation.mf9.keys().map(|mt| (9, *mt)))
+                .chain(
+                    evaluation
+                        .mf8
+                        .keys()
+                        .filter(|mt| !matches!(**mt, 454 | 457 | 459))
+                        .map(|mt| (8, *mt)),
+                )
+                .filter(|(_, mt)| !mts.contains(mt))
+                .map(|(mf, mt)| format!("MF{mf}/MT{mt}"))
+                .collect();
+            ledger.push(format!(
+                "orphan_sections: product sections without MF=3/MF=10 reactions ignored: {}",
+                orphans.join(", ")
+            ));
+        } else {
+            return Err(format!(
+                "MT{mt}/MF={mf} has no matching MF=3 or MF=10 reaction"
+            ));
+        }
     }
     for mt in mts {
         // TENDL declarations are audited even when the reaction is later omitted. EAF keeps its established
@@ -2243,7 +2287,11 @@ fn build_evaluation(
                 .collect();
             // Inelastic MF=10 commonly tabulates both return to the ground state and production of a metastable
             // state. Validate the complete declaration before intentionally retaining only transmuting LFS>0 rows.
-            validate_descriptors(descriptors, 10, &actual)?;
+            if let Some(note) =
+                validate_descriptors(descriptors, 10, &actual, drop_orphan_sections)?
+            {
+                ledger.push(format!("MT{mt}: {note}"));
+            }
             let retained: BTreeSet<_> = mf10_products
                 .iter()
                 .filter(|product| product.lfs > 0)
@@ -2349,7 +2397,11 @@ fn build_evaluation(
                 .filter(|product| product.zap >= 0)
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            validate_descriptors(descriptors, 10, &actual)?;
+            if let Some(note) =
+                validate_descriptors(descriptors, 10, &actual, drop_orphan_sections)?
+            {
+                ledger.push(format!("MT{mt}: {note}"));
+            }
             // Amendment B mechanism gate: the secondary envelope is available
             // only to a ZAP whose declared product gridpoints are all
             // consistent with the raw MF=3 total — proven grid-density
@@ -2454,7 +2506,10 @@ fn build_evaluation(
                 .iter()
                 .map(|product| (product.zap, product.lfs))
                 .collect();
-            validate_descriptors(descriptors, 9, &actual)?;
+            if let Some(note) = validate_descriptors(descriptors, 9, &actual, drop_orphan_sections)?
+            {
+                ledger.push(format!("MT{mt}: {note}"));
+            }
             let mut collapsed_mf9: Vec<(&ProductTable, Vec<f64>)> = Vec::new();
             for product in products {
                 if !done.insert((product.zap, product.lfs)) {
@@ -2810,6 +2865,7 @@ fn build_source(
                 grid_density: options.grid_density,
                 strict_states: options.strict_states,
                 normalize_state_sums: options.normalize_profile != NormalizeProfile::None,
+                drop_orphan_sections: options.normalize_profile == NormalizeProfile::Tendl,
             },
             products_by_mt,
         )
@@ -2921,12 +2977,30 @@ pub fn build_library(
         .num_threads(options.workers)
         .build()
         .map_err(|error| format!("cannot create builder worker pool: {error}"))?;
-    let mut sources: Vec<BuiltSource> = pool.install(|| {
-        files
-            .par_iter()
-            .map(|path| build_source(path, options, &products_by_mt))
-            .collect::<Result<Vec<_>, _>>()
-    })?;
+    let mut build_failures: Vec<String> = Vec::new();
+    let mut sources: Vec<BuiltSource> = {
+        let results: Vec<Result<BuiltSource, String>> = pool.install(|| {
+            files
+                .par_iter()
+                .map(|path| {
+                    build_source(path, options, &products_by_mt)
+                        .map_err(|error| format!("{}: {error}", path.display()))
+                })
+                .collect()
+        });
+        let mut ok = Vec::new();
+        for result in results {
+            match result {
+                Ok(source) => ok.push(source),
+                Err(error) if options.continue_on_error => {
+                    eprintln!("skipping failed input: {error}");
+                    build_failures.push(error);
+                }
+                Err(error) => return Err(error),
+            }
+        }
+        ok
+    };
     let projectile = sources
         .first()
         .ok_or("activation-library build produced no sources")?
@@ -3061,6 +3135,7 @@ pub fn build_library(
             .flatten()
             .collect(),
         targets,
+        build_failures,
         n_rows: library.rows.len(),
         columns: "rows: (target, MT, ZAP, LFS, LMF)",
         sha256_npz: npz_hash.clone(),
@@ -3978,6 +4053,7 @@ mod tests {
                 decay_path: None,
                 decay_fallback_path: None,
                 normalize_profile: NormalizeProfile::None,
+                continue_on_error: false,
             },
         )
         .unwrap();
@@ -4028,6 +4104,8 @@ mod tests {
             grid_density: 1.0,
             strict_states: false,
             normalize_state_sums: false,
+
+            drop_orphan_sections: false,
         };
         let products = BTreeMap::from([(102, (0, 1))]);
         let left = build_evaluation(
@@ -4101,6 +4179,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &products,
         )
@@ -4130,6 +4210,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4217,6 +4299,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4289,6 +4373,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::from([(102, (0, 1))]),
         )
@@ -4361,6 +4447,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4386,6 +4474,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4416,6 +4506,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4670,6 +4762,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4724,6 +4818,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4783,6 +4879,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4818,6 +4916,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -4857,6 +4957,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: true,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             },
             &BTreeMap::new(),
         )
@@ -5430,6 +5532,8 @@ mod tests {
                 grid_density: 1.0,
                 strict_states: false,
                 normalize_state_sums: false,
+
+                drop_orphan_sections: false,
             }
         }
         let products = mt_products().unwrap();
