@@ -705,6 +705,22 @@ pub fn admissible(current: u64, point: &CompletedPoint) -> bool {
     point.generation == current
 }
 
+/// Pareto-nondominated membership under minimize-both objectives
+/// (same dominance rule as the P67 `result.pareto` block — the sweep's
+/// live frontier view applies it to streamed points).
+pub fn nondominated(pairs: &[(f64, f64)]) -> Vec<bool> {
+    pairs
+        .iter()
+        .enumerate()
+        .map(|(i, p)| {
+            !pairs
+                .iter()
+                .enumerate()
+                .any(|(j, q)| j != i && q.0 <= p.0 && q.1 <= p.1 && (q.0 < p.0 || q.1 < p.1))
+        })
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -780,5 +796,15 @@ mod tests {
         };
         assert!(!admissible(2, &p));
         assert!(admissible(1, &p));
+    }
+    #[test]
+    fn nondominated_marks_frontier_members() {
+        // classic trade-off: (1,3) (2,2) (3,1) all nondominated;
+        // (2.5,2.5) dominated by (2,2); tie on x is still dominated
+        // only when strictly worse elsewhere.
+        let nd = nondominated(&[(1., 3.), (2., 2.), (3., 1.), (2.5, 2.5)]);
+        assert_eq!(nd, vec![true, true, true, false]);
+        assert_eq!(nondominated(&[]), Vec::<bool>::new());
+        assert_eq!(nondominated(&[(0., 0.)]), vec![true]);
     }
 }

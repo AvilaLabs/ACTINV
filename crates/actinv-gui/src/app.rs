@@ -124,6 +124,10 @@ struct SweepUi {
     live: bool,
     live_handle: Option<crate::sweep::LiveSweepHandle>,
     live_value: f64,
+    /// D1/P71: live frontier view — (activity, heat) pairs of landed
+    /// points rendered as a Pareto plot; the nondominated staircase
+    /// recomputes as points stream in.
+    frontier: bool,
 }
 
 impl Default for SweepUi {
@@ -145,6 +149,7 @@ impl Default for SweepUi {
             live: false,
             live_handle: None,
             live_value: 1.0,
+            frontier: false,
         }
     }
 }
@@ -1370,6 +1375,10 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 &mut self.sweep.live,
                 "live (slider — solves only the newest position, certified)",
             );
+            ui.checkbox(
+                &mut self.sweep.frontier,
+                "frontier (activity vs heat Pareto of landed points)",
+            );
             if live_resp.changed() {
                 if self.sweep.live {
                     // Entering live mode supersedes any batch sweep and
@@ -1456,6 +1465,62 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                             .color(accent),
                     );
                 });
+            if self.sweep.frontier {
+                // Live Pareto view: (activity, heat) per landed point at
+                // the selected step row; nondominated staircase live.
+                let mut pairs: Vec<(f64, f64, String)> = Vec::new();
+                for p in &self.sweep.points {
+                    if let Ok(v) = &p.result {
+                        let a = crate::sweep::SweepResponse::TotalActivityBqPerG
+                            .extract(v, self.sweep.step_row);
+                        let h = crate::sweep::SweepResponse::TotalHeatWPerG
+                            .extract(v, self.sweep.step_row);
+                        if let (Some(a), Some(h)) = (a, h) {
+                            pairs.push((a, h, p.label.clone()));
+                        }
+                    }
+                }
+                if pairs.len() >= 2 {
+                    let nd = crate::sweep::nondominated(
+                        &pairs.iter().map(|(a, h, _)| (*a, *h)).collect::<Vec<_>>(),
+                    );
+                    let mut front: Vec<[f64; 2]> = pairs
+                        .iter()
+                        .zip(&nd)
+                        .filter(|(_, d)| **d)
+                        .map(|((a, h, _), _)| [*a, *h])
+                        .collect();
+                    front.sort_by(|x, y| x[0].total_cmp(&y[0]));
+                    let all: Vec<[f64; 2]> = pairs.iter().map(|(a, h, _)| [*a, *h]).collect();
+                    egui_plot::Plot::new("sweep-frontier")
+                        .height(200.)
+                        .allow_scroll(false)
+                        .x_axis_label("total activity Bq/g")
+                        .y_axis_label("total heat W/g")
+                        .legend(egui_plot::Legend::default())
+                        .show(ui, |p| {
+                            p.points(
+                                egui_plot::Points::new("landed", all)
+                                    .radius(4.)
+                                    .color(egui::Color32::from_gray(140)),
+                            );
+                            p.points(
+                                egui_plot::Points::new("nondominated", front.clone())
+                                    .radius(5.5)
+                                    .color(accent),
+                            );
+                            p.line(egui_plot::Line::new("frontier", front.clone()).color(accent));
+                        });
+                    ui.monospace(format!(
+                        "{} of {} landed points nondominated — nominal frontier at step {}",
+                        front.len(),
+                        pairs.len(),
+                        self.sweep.step_row + 1
+                    ));
+                } else {
+                    ui.label("frontier needs ≥2 landed points with heat + activity");
+                }
+            }
             let last = self.sweep.points.last();
             ui.label(format!(
                 "{} point(s) plotted · {} failed · generation {}",
