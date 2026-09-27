@@ -11,6 +11,7 @@ a prescreened winner still certifies on its declared constraint edge."""
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -20,7 +21,7 @@ sys.path.insert(0, str(ROOT / "controls"))
 import p58_fixture  # noqa: E402
 import p56_case  # noqa: E402
 
-ACTINV = ROOT / "target/debug/actinv"
+ACTINV = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 OUT = ROOT / "results/g1_p73_prescreen.json"
 
 checks = []
@@ -34,22 +35,21 @@ tmp = Path(tempfile.mkdtemp(prefix="p73_g1_", dir=ROOT / "target"))
 fx = p58_fixture.build(tmp)
 
 
-def optspec_prescreen(fx, work, limit, name, prescreen):
+def optspec_prescreen(fx, work, limit, name, prescreen, bmin=None):
     path = p56_case.optspec(fx, work, limit, name)
     opt = json.loads(path.read_text())
     opt["optimizer"]["prescreen"] = prescreen
-    # The P58 fixture's response scale is ~1e-37 W/g — the workbench
-    # default floor (1e-1 atoms/g) would swamp it, so prescreen at a
-    # floor far below every state in the fixture.
-    opt["optimizer"]["prescreen_bmin_atoms_per_g"] = 1e-45
+    if bmin is not None:
+        opt["optimizer"]["prescreen_bmin_atoms_per_g"] = bmin
     path.write_text(json.dumps(opt, sort_keys=True) + "\n")
     return path
 
 
-# Feasible arm — the screen-certified edge on this fixture sits at
-# ~2.3e-37 (conservative band + dropped-state + below-floor bounds), so
-# a 4e-37 limit is certified-feasible while remaining inside the plain
-# path's feasible regime.
+# Feasible arm — auto floor: the fixture declares composition {Fe56: 1.0}
+# atoms/g, so the material-relative default lands at 1e-24 atoms/g. The
+# screen-certified edge on this fixture sits at ~2.3e-37 (conservative
+# band + below-floor bound), so a 4e-37 limit is certified-feasible while
+# remaining inside the plain path's feasible regime.
 pre = p56_case.optimize(
     ACTINV, optspec_prescreen(fx, tmp, 4e-37, "pre", True), tmp / "out_pre")
 plain = p56_case.optimize(
@@ -69,6 +69,15 @@ check(
 check(
     "prescreened status marked",
     all("prescreened" in r["status"] for r in prow),
+)
+check(
+    "auto floor is material-relative (composition 1.0 atoms/g -> 1e-24)",
+    all(
+        (r.get("constraints") or {}).get("prescreen", {}).get("bmin_atoms_per_g")
+        == 1e-24
+        for r in prow
+    ),
+    "recorded bmin in prescreened rows",
 )
 check(
     "prescreened winner certifies on the declared edge",
@@ -92,9 +101,10 @@ check(
 # Tight arm — certified edge cannot pass 1.1e-37 → every candidate falls
 # back to the full tier and the search concludes infeasible, same as the
 # plain path.
+# The explicit override still wins when declared — this arm exercises it.
 tight = p56_case.optimize(
     ACTINV,
-    optspec_prescreen(fx, tmp, 1.1e-37, "tight", True),
+    optspec_prescreen(fx, tmp, 1.1e-37, "tight", True, bmin=1e-45),
     tmp / "out_tight",
 )
 trows = [r for r in tight["rows"] if r["status"].startswith("executed")]

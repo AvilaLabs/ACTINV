@@ -135,13 +135,16 @@ pub struct OptimizerCfg {
     /// Screen floor for the prescreened solve. The dropped-state bound
     /// scales with this value — too large and the certified edge is
     /// swamped (the prescreen then always defers to the full solve).
-    /// Defaults to a low 1e-1 atoms/g; tune toward the spec's own scale.
+    /// Default: material-relative — 1e-24 × the spec's declared
+    /// composition total, falling back to 1e-1 atoms/g only when the
+    /// composition cannot be summed.
     #[serde(default)]
     pub prescreen_bmin_atoms_per_g: Option<f64>,
 }
 
-/// Prescreen floor — the same conservative screen depth the workbench's
-/// certified-screening tier uses.
+/// Prescreen floor fallback — the same conservative screen depth the
+/// workbench's certified-screening tier uses; applies only when the
+/// spec's composition cannot be summed to a material-relative floor.
 const PRESCREEN_BMIN: f64 = 1e-1;
 
 fn default_refine_fraction() -> f64 {
@@ -656,6 +659,24 @@ fn certified_edge_at(
     .as_f64()
 }
 
+/// Screen floor for a prescreened solve: explicit override wins; else
+/// material-relative — 1e-24 × the spec's declared composition total
+/// (a floor that scales with the material's inventory); the absolute
+/// 1e-1 constant applies only when the composition cannot be summed.
+/// Winner re-verification must call this same helper on the winner's
+/// own spec document — a different floor changes the screened solve.
+fn prescreen_bmin(doc: &Value, opt: &OptimizeSpec) -> f64 {
+    opt.optimizer.prescreen_bmin_atoms_per_g.unwrap_or_else(|| {
+        doc.get("material")
+            .and_then(|m| m.get("composition"))
+            .and_then(|c| c.as_object())
+            .map(|c| c.values().filter_map(Value::as_f64).sum::<f64>())
+            .filter(|t| t.is_finite() && *t > 0.0)
+            .map(|t| t * 1e-24)
+            .unwrap_or(PRESCREEN_BMIN)
+    })
+}
+
 /// Inject the P65 screening options into a spec document.
 fn screened_doc(doc: &Value, bmin: f64) -> Option<Value> {
     let mut sdoc = doc.clone();
@@ -685,10 +706,7 @@ fn try_prescreen(
     axis_violations: &[Option<f64>],
     detail: &mut BTreeMap<String, Value>,
 ) -> Option<EvalOutcome> {
-    let bmin = opt
-        .optimizer
-        .prescreen_bmin_atoms_per_g
-        .unwrap_or(PRESCREEN_BMIN);
+    let bmin = prescreen_bmin(doc, opt);
     let sdoc = screened_doc(doc, bmin)?;
     let canon = serde_json::to_string(&sdoc).ok()?;
     let resolved = crate::resolve_catalog_json(&canon).ok()?;
@@ -745,7 +763,7 @@ fn try_prescreen(
         "prescreen".into(),
         serde_json::json!({
             "tier": "screened",
-            "bmin_atoms_per_g": PRESCREEN_BMIN,
+            "bmin_atoms_per_g": bmin,
             "kept_states": result.screen.as_ref().map(|s| s["kept_states"].clone()),
             "dropped_states": result.screen.as_ref().map(|s| s["dropped_states"].clone()),
         }),
@@ -1253,10 +1271,7 @@ pub fn run_optimize(
             let re = if prescreened {
                 let doc: Value = serde_json::from_str(&c)
                     .map_err(|e| format!("cannot parse winner candidate spec: {e}"))?;
-                let bmin = opt
-                    .optimizer
-                    .prescreen_bmin_atoms_per_g
-                    .unwrap_or(PRESCREEN_BMIN);
+                let bmin = prescreen_bmin(&doc, &opt);
                 let sdoc = screened_doc(&doc, bmin)
                     .ok_or("cannot inject screen options into winner spec")?;
                 let scanon = serde_json::to_string(&sdoc)

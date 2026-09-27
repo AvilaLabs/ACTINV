@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 7,
+ "n": 8,
  "checks": [
   {
    "name": "prescreened rows carry the screened tier",
@@ -13,9 +13,14 @@
    "detail": ""
   },
   {
+   "name": "auto floor is material-relative (composition 1.0 atoms/g -> 1e-24)",
+   "pass": true,
+   "detail": "recorded bmin in prescreened rows"
+  },
+  {
    "name": "prescreened winner certifies on the declared edge",
    "pass": true,
-   "detail": "eval 0 satisfies 1/1 response constraints at their screen-certified bound-widened edges (conservativeupper at 0.95) unde"
+   "detail": "eval 1 satisfies 1/1 response constraints at their screen-certified bound-widened edges (conservativeupper at 0.95) unde"
   },
   {
    "name": "same winner point as the plain search",
