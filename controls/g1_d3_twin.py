@@ -55,7 +55,8 @@ base = p60_case.spec(fx)
 # Canonical flux: three cells on the library's exact group structure
 # (bounds [1,2,3] → two groups), second cell a 10x hotter spectrum.
 bounds = [1.0, 2.0, 3.0]
-spectra = [[1.0, 2.0], [10.0, 20.0], [0.5, 1.0]]
+# cell-2 carries cell-0's exact flux — but a different material below.
+spectra = [[1.0, 2.0], [10.0, 20.0], [1.0, 2.0]]
 descriptor = tmp / "flux.source.json"
 descriptor.write_text(json.dumps({"fixture": "d3-g1"}))
 flux_path = tmp / "flux.jsonl"
@@ -98,6 +99,9 @@ mesh = {
     "schedule": base["schedule"], "options": options,
     "uncertainty": base["uncertainty"],
     "cell_result_fields": ["steps"],
+    # Per-cell material: cell-2 solves a Mn-bearing alloy.
+    "materials": {"cell-2": {"mass_g": 1.0, "basis": "atoms_per_g",
+                             "composition": {"Fe56": 0.8, "Mn57": 0.2}}},
 }
 mp = tmp / "mesh.json"
 mp.write_text(json.dumps(mesh, sort_keys=True) + "\n")
@@ -107,8 +111,26 @@ check("mesh emitted cells",
       sum(1 for l in mesh_out.read_text().splitlines()
           if '"cell"' in l) == 3)
 
-# Twin: one clearance limit on heat.total. Loose limit clears all
-# cells; a tight one restricts the hot cell (and possibly others).
+# Materials: cell-0 and cell-2 share identical flux but differ in
+# composition — the memo signature must not collapse them.
+cell_recs = {}
+for line in mesh_out.read_text().splitlines():
+    rec = json.loads(line)
+    if rec.get("record") == "cell":
+        cell_recs[rec["id"]] = rec
+sha_by_cell = {k: v["material_sha256"] for k, v in cell_recs.items()}
+check("material sha groups cells",
+      sha_by_cell["cell-0"] == sha_by_cell["cell-1"]
+      and sha_by_cell["cell-0"] != sha_by_cell["cell-2"],
+      f"{sha_by_cell}")
+b0 = cell_recs["cell-0"]["result"]["steps"][-1]["uncertainty"]["responses"]["heat.total"]["conservative_interval"]
+b2 = cell_recs["cell-2"]["result"]["steps"][-1]["uncertainty"]["responses"]["heat.total"]["conservative_interval"]
+check("identical flux, different material -> different band",
+      abs(b0[0] - b2[0]) > 0.0 or abs(b0[1] - b2[1]) > 0.0,
+      f"{b0} vs {b2}")
+
+# Twin: one clearance limit on heat.total. Cell ranking is cell-2
+# (Mn57-seeded, ~1.5e-14) >> cell-1 (10x flux Fe) >> cell-0.
 def twinspec(limit, name, times=None, assays=None,
              components=None, dose_points=None):
     doc = {"spec": "actinv-twin-1", "mesh_output": str(mesh_out),
@@ -129,7 +151,7 @@ def twinspec(limit, name, times=None, assays=None,
     return json.loads(op.read_text())
 
 
-loose = twinspec(1e-30, "loose")
+loose = twinspec(1e-10, "loose")
 check("twin schema", loose.get("schema") == "actinv-twin-1")
 check("loose limit clears every cell",
       loose["facility"]["cleared"] == 3
@@ -146,8 +168,8 @@ bind = tight["facility"]["binding_cells"]
 check("binding cells recorded per (limit, time)",
       bind and all("cell" in v and "margin" in v for v in bind.values()))
 hot_keys = [v["cell"] for k, v in bind.items()]
-check("hot cell binds somewhere",
-      any(c == "cell-1" for c in hot_keys),
+check("dominant Mn57 cell binds somewhere",
+      any(c == "cell-2" for c in hot_keys),
       f"binding cells {sorted(set(hot_keys))}")
 
 # Error paths.
@@ -187,7 +209,7 @@ print(f"hot band {hot['conservative_interval']} cool band {cool['conservative_in
 # Evaluate at the measured time so only the fused step decides.
 pre = twinspec(mid, "pre_assay", times=[edge_t])
 verdicts = {c["cell"]: c["verdict"] for c in pre["per_cell"]}
-check("pre-assay: hot cell restricted, cool cleared",
+check("pre-assay: Fe-hot cell restricted, Fe-cool cleared",
       verdicts.get("cell-1") == "restricted"
       and verdicts.get("cell-0") == "cleared",
       f"{verdicts}")
@@ -207,19 +229,39 @@ ap.write_text(json.dumps({"schema": "actinv-assay-1",
 post = twinspec(mid, "with_assay", times=[edge_t],
               assays=[{"cell": "cell-1", "assay": str(ap)}])
 pv = {c["cell"]: c["verdict"] for c in post["per_cell"]}
-check("assay flips the hot cell to cleared",
+check("assay flips the Fe-hot cell to cleared",
       pv.get("cell-1") == "cleared", f"{pv}")
+check("Mn57 cell unaffected by an Fe assay",
+      pv.get("cell-2") == "restricted", f"{pv}")
 check("assimilated cells recorded",
       "cell-1" in post["facility"]["assimilated_cells"])
 
+# D5 correlated propagation: cell-1's assay informs cell-0's band
+# through a declared ln-correlation — measure one Fe component, the
+# sibling's uncertainty narrows too.
+prop = twinspec(mid, "with_prop", times=[edge_t],
+                assays=[{"cell": "cell-1", "assay": str(ap),
+                         "propagates": [{"cell": "cell-0",
+                                         "rho": 0.9}]}])
+c0_prior_hi = cells["cell-0"]["conservative_interval"][1]
+c0_post = next(c for c in prop["per_cell"] if c["cell"] == "cell-0")
+c0_post_hi = c0_post["entries"][0]["band"][1]
+check("propagated assay shrinks the sibling band",
+      c0_post_hi < c0_prior_hi,
+      f"prior_hi={c0_prior_hi:.3e} post_hi={c0_post_hi:.3e}")
+check("unpropagated cell untouched by propagation",
+      next(c for c in prop["per_cell"] if c["cell"] == "cell-2")
+          ["entries"][0]["band"][1]
+      == cells["cell-2"]["conservative_interval"][1])
+
 # Component rollup: a component clears only when every member clears.
 comp = twinspec(mid, "components", times=[edge_t],
-                components={"hot-leg": ["cell-1"],
-                            "cold-leg": ["cell-0", "cell-2"],
+                components={"fe-leg": ["cell-0"],
+                            "mn-bearing": ["cell-2"],
                             "ghost": ["cell-9"]})
 cv = {k: v["verdict"] for k, v in comp["components"].items()}
 check("component rollup verdicts",
-      cv == {"hot-leg": "restricted", "cold-leg": "cleared",
+      cv == {"fe-leg": "cleared", "mn-bearing": "restricted",
              "ghost": "unknown"}, f"{cv}")
 
 # Dose points: the far detector sees the hot cell's photons stronger

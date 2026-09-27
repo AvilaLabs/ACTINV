@@ -69,6 +69,17 @@ struct CellAssay {
     cell: String,
     /// Path to an actinv-assay-1 document, resolved against the spec dir.
     assay: String,
+    /// Cells this assay also informs through a declared ln-correlation:
+    /// x_target += rho·(s_target/s_src)·k·(ln y - ln x_src) and
+    /// s_target² → s_target²·(1 − rho²·k). ρ is user-declared.
+    #[serde(default)]
+    propagates: Option<Vec<Propagation>>,
+}
+
+#[derive(serde::Deserialize)]
+struct Propagation {
+    cell: String,
+    rho: f64,
 }
 
 #[derive(serde::Deserialize)]
@@ -87,6 +98,57 @@ struct LimitDecl {
 /// Parsed assay: (response key, time_s, measured value, std uncertainty,
 /// assay file sha256).
 type LoadedAssay = (String, f64, f64, f64, String);
+
+/// A propagated ln-shift destined for a sibling cell, computed from the
+/// source cell's prior and the assay.
+#[derive(Clone)]
+struct PropagatedShift {
+    /// k·(ln y − ln x_src) — the source cell's assimilated ln-shift.
+    delta: f64,
+    /// Source assay's Kalman gain.
+    k_src: f64,
+    /// Source prior relative σ.
+    s_src: f64,
+    /// Source cell id.
+    src: String,
+    /// User-declared ln-correlation between the two cells' responses.
+    rho: f64,
+}
+
+/// A cell record's (nominal, relative σ) for (response, t_s), plus the
+/// Kalman gain an assay would produce — used for propagation sources.
+fn prior_and_gain(
+    rec: &Value,
+    response: &str,
+    t_s: f64,
+    meas: f64,
+    su: f64,
+) -> Result<(f64, f64, f64), String> {
+    let steps = rec["result"]["steps"]
+        .as_array()
+        .ok_or("result carries no steps")?;
+    let st = steps
+        .iter()
+        .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+        .ok_or_else(|| format!("assay time_s={t_s} matches no step"))?;
+    let r = st
+        .pointer(&format!("/uncertainty/responses/{response}"))
+        .ok_or_else(|| format!("assay response '{response}' has no certified band"))?;
+    let nominal = r["nominal"].as_f64().unwrap_or(0.0);
+    let s_p = r["combined_standard_uncertainty"]
+        .as_f64()
+        .or_else(|| r["mf33_standard_uncertainty"].as_f64())
+        .unwrap_or(0.0);
+    if nominal <= 0.0 || s_p <= 0.0 {
+        return Err(format!(
+            "'{response}' prior is not positive — cannot propagate"
+        ));
+    }
+    let s_p_rel = s_p / nominal;
+    let s_m_rel = su / meas;
+    let k = s_p_rel * s_p_rel / (s_p_rel * s_p_rel + s_m_rel * s_m_rel);
+    Ok((nominal, s_p_rel, k))
+}
 
 fn le() -> String {
     "le".into()
@@ -164,6 +226,55 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             .push((resp, t, meas, su, sha));
     }
     let mut assimilated_cells: Vec<String> = Vec::new();
+    // Propagation sources: target cell id -> (src ln-shift δ, src Kalman
+    // gain, src prior relative σ, src cell id, declared rho). Computed in
+    // a pre-pass so ordering of cell records in the stream doesn't matter.
+    let mut propagations: HashMap<String, Vec<PropagatedShift>> = HashMap::new();
+    // Source cell -> (response, t_s) so target cells know which band the
+    // propagated shift applies to.
+    let mut propagation_selectors: HashMap<String, (String, f64)> = HashMap::new();
+    if spec.assays.iter().flatten().any(|a| a.propagates.is_some()) {
+        for a in spec.assays.iter().flatten() {
+            let Some(propagates) = &a.propagates else {
+                continue;
+            };
+            let loaded = assays.get(&a.cell).cloned().unwrap_or_default();
+            let Some((resp, t_s, meas, su, _)) = loaded.first().cloned() else {
+                continue;
+            };
+            for line in raw.lines().filter(|l| l.trim().starts_with('{')) {
+                let rec: Value =
+                    serde_json::from_str(line).map_err(|e| format!("mesh output line: {e}"))?;
+                if rec["record"].as_str() != Some("cell")
+                    || rec["id"].as_str() != Some(a.cell.as_str())
+                {
+                    continue;
+                }
+                let (x_a, s_a, k) = prior_and_gain(&rec, &resp, t_s, meas, su)
+                    .map_err(|e| format!("cell {}: {e}", a.cell))?;
+                let delta = k * (meas.ln() - x_a.ln());
+                propagation_selectors.insert(a.cell.clone(), (resp.clone(), t_s));
+                for p in propagates {
+                    if !p.rho.is_finite() || p.rho.abs() > 1.0 {
+                        return Err(format!(
+                            "propagation rho={} for '{}' must satisfy |rho| <= 1",
+                            p.rho, p.cell
+                        ));
+                    }
+                    propagations
+                        .entry(p.cell.clone())
+                        .or_default()
+                        .push(PropagatedShift {
+                            delta,
+                            k_src: k,
+                            s_src: s_a,
+                            src: a.cell.clone(),
+                            rho: p.rho,
+                        });
+                }
+            }
+        }
+    }
 
     let mut cells: Vec<Value> = Vec::new();
     let mut cell_verdicts: HashMap<String, String> = HashMap::new();
@@ -233,6 +344,66 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             }
             let f = crate::assimilate::fuse(nominal, su_prior, meas, su, mult);
             crate::assimilate::apply_fusion(r, &f, &sha);
+            assimilated_cells.push(id.clone());
+        }
+        // Declared-correlation propagation: an assay on a sibling cell
+        // shifts this cell's band by rho·(s_B/s_A)·k·(ln y - ln x_A) and
+        // narrows its σ by sqrt(1 - rho²·k). Response and time come from
+        // the source assay.
+        for shift in propagations.get(&id).cloned().unwrap_or_default() {
+            let PropagatedShift {
+                delta,
+                k_src,
+                s_src,
+                src,
+                rho,
+            } = shift;
+            // Find the source assay's (response, t_s) — recoverable from
+            // the pre-pass inputs stored per source cell.
+            let (resp_name, t_s) = propagation_selectors.get(&src).cloned().unwrap_or_default();
+            let Some(steps) = rec["result"]["steps"].as_array_mut() else {
+                return Err(format!("cell {id}: result carries no steps"));
+            };
+            let Some(st) = steps
+                .iter_mut()
+                .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+            else {
+                return Err(format!(
+                    "cell {id}: propagation time_s={t_s} matches no step"
+                ));
+            };
+            let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{resp_name}")) else {
+                return Err(format!(
+                    "cell {id}: propagated response '{resp_name}' has no certified band"
+                ));
+            };
+            let nominal = r["nominal"].as_f64().unwrap_or(0.0);
+            let su_prior = r["combined_standard_uncertainty"]
+                .as_f64()
+                .or_else(|| r["mf33_standard_uncertainty"].as_f64())
+                .unwrap_or(0.0);
+            let mult = r["normal_multiplier"].as_f64().unwrap_or(1.959964);
+            if nominal <= 0.0 || su_prior <= 0.0 {
+                return Err(format!(
+                    "cell {id}: '{resp_name}' prior is not positive — cannot propagate"
+                ));
+            }
+            let s_b = su_prior / nominal;
+            let x_post = nominal.ln() + rho * (s_b / s_src) * delta;
+            let s_post = s_b * (1.0 - rho * rho * k_src).max(0.0).sqrt();
+            let post = x_post.exp();
+            let half = (mult * s_post).exp();
+            let f = crate::assimilate::Fusion {
+                posterior: post,
+                posterior_rel_su: s_post,
+                band: [post / half, post * half],
+                kalman_gain: rho * rho * k_src,
+            };
+            crate::assimilate::apply_fusion(r, &f, "propagated");
+            r["assimilation"]["propagated_from"] = json!({
+                "cell": src, "declared_rho": rho,
+                "note": "ln-shift propagated through the declared response correlation — rho is asserted, not inferred",
+            });
             assimilated_cells.push(id.clone());
         }
         let steps = rec["result"]["steps"]

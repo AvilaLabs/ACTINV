@@ -1,11 +1,21 @@
 {
  "pass": true,
- "n": 16,
+ "n": 21,
  "checks": [
   {
    "name": "mesh emitted cells",
    "pass": true,
    "detail": ""
+  },
+  {
+   "name": "material sha groups cells",
+   "pass": true,
+   "detail": "{'cell-0': '1c5a694e4397941ff659512ac466173a316e113525e7759da88e72b635209459', 'cell-1': '1c5a694e4397941ff659512ac466173a316e113525e7759da88e72b635209459', 'cell-2': '9d7a4f0fcad218360999fa17796a68b3221513352f360a9abb72af5b6128cc7b'}"
+  },
+  {
+   "name": "identical flux, different material -> different band",
+   "pass": true,
+   "detail": "[1.0088562049389933e-37, 1.5418119334923902e-37] vs [1.480725622154831e-14, 1.480725622154831e-14]"
   },
   {
    "name": "twin schema",
@@ -33,9 +43,9 @@
    "detail": ""
   },
   {
-   "name": "hot cell binds somewhere",
+   "name": "dominant Mn57 cell binds somewhere",
    "pass": true,
-   "detail": "binding cells ['cell-1']"
+   "detail": "binding cells ['cell-2']"
   },
   {
    "name": "empty limits refused",
@@ -48,14 +58,19 @@
    "detail": ""
   },
   {
-   "name": "pre-assay: hot cell restricted, cool cleared",
+   "name": "pre-assay: Fe-hot cell restricted, Fe-cool cleared",
    "pass": true,
-   "detail": "{'cell-0': 'cleared', 'cell-1': 'restricted', 'cell-2': 'cleared'}"
+   "detail": "{'cell-0': 'cleared', 'cell-1': 'restricted', 'cell-2': 'restricted'}"
   },
   {
-   "name": "assay flips the hot cell to cleared",
+   "name": "assay flips the Fe-hot cell to cleared",
    "pass": true,
-   "detail": "{'cell-0': 'cleared', 'cell-1': 'cleared', 'cell-2': 'cleared'}"
+   "detail": "{'cell-0': 'cleared', 'cell-1': 'cleared', 'cell-2': 'restricted'}"
+  },
+  {
+   "name": "Mn57 cell unaffected by an Fe assay",
+   "pass": true,
+   "detail": "{'cell-0': 'cleared', 'cell-1': 'cleared', 'cell-2': 'restricted'}"
   },
   {
    "name": "assimilated cells recorded",
@@ -63,24 +78,34 @@
    "detail": ""
   },
   {
+   "name": "propagated assay shrinks the sibling band",
+   "pass": true,
+   "detail": "prior_hi=1.542e-37 post_hi=1.345e-37"
+  },
+  {
+   "name": "unpropagated cell untouched by propagation",
+   "pass": true,
+   "detail": ""
+  },
+  {
    "name": "component rollup verdicts",
    "pass": true,
-   "detail": "{'cold-leg': 'cleared', 'ghost': 'unknown', 'hot-leg': 'restricted'}"
+   "detail": "{'fe-leg': 'cleared', 'ghost': 'unknown', 'mn-bearing': 'restricted'}"
   },
   {
    "name": "dose points emitted",
    "pass": true,
-   "detail": "{'near': 1.4909185380382257e-25, 'far': 5.339577645668668e-28, 'shielded': 2.7307125555227633e-27}"
+   "detail": "{'near': 0.0017977715567993834, 'far': 7.191086227197533e-05, 'shielded': 3.2927334638774974e-05}"
   },
   {
    "name": "far point dimmer than near",
    "pass": true,
-   "detail": "{'near': 1.4909185380382257e-25, 'far': 5.339577645668668e-28, 'shielded': 2.7307125555227633e-27}"
+   "detail": "{'near': 0.0017977715567993834, 'far': 7.191086227197533e-05, 'shielded': 3.2927334638774974e-05}"
   },
   {
    "name": "shielding attenuates",
    "pass": true,
-   "detail": "{'near': 1.4909185380382257e-25, 'far': 5.339577645668668e-28, 'shielded': 2.7307125555227633e-27}"
+   "detail": "{'near': 0.0017977715567993834, 'far': 7.191086227197533e-05, 'shielded': 3.2927334638774974e-05}"
   }
  ]
 }

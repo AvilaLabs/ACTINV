@@ -105,6 +105,12 @@ pub struct MeshSpec {
     /// not re-solved.
     #[serde(default)]
     pub resume: bool,
+    /// Per-cell material overrides: cell id -> material. Cells not listed
+    /// solve with the default `material`. The signature that memoizes
+    /// identical-flux cells mixes the resolved material bytes in, so an
+    /// override can never inherit another material's result.
+    #[serde(default)]
+    pub materials: Option<HashMap<String, Material>>,
 }
 
 impl MeshSpec {
@@ -161,7 +167,16 @@ impl MeshSpec {
 
         // Reuse the ordinary-spec validator for every shared field. The placeholder spectrum
         // is valid by construction and is replaced with each rebinned cell before execution.
-        self.cell_spec(vec![1.0, 2.0], vec![0.0]).validate()
+        self.cell_spec(vec![1.0, 2.0], vec![0.0], &self.material)
+            .validate()?;
+        if let Some(overrides) = &self.materials {
+            for (cell_id, material) in overrides {
+                self.cell_spec(vec![1.0, 2.0], vec![0.0], material)
+                    .validate()
+                    .map_err(|error| format!("materials['{cell_id}']: {error}"))?;
+            }
+        }
+        Ok(())
     }
 
     /// Canonical SHA-256 of the spec content that determines output bytes.
@@ -181,14 +196,19 @@ impl MeshSpec {
         Ok(digest.iter().map(|byte| format!("{byte:02x}")).collect())
     }
 
-    fn cell_spec(&self, boundaries_eV: Vec<f64>, flux_per_group: Vec<f64>) -> Spec {
+    fn cell_spec(
+        &self,
+        boundaries_eV: Vec<f64>,
+        flux_per_group: Vec<f64>,
+        material: &Material,
+    ) -> Spec {
         Spec {
             spec: "actinv-spec-1".into(),
             title: self.title.clone(),
             projectile: self.projectile,
             library: self.library.clone(),
             decay: self.decay.clone(),
-            material: self.material.clone(),
+            material: material.clone(),
             spectrum: Spectrum {
                 structure: "custom".into(),
                 flux_per_group,
@@ -264,6 +284,9 @@ struct MeshCellRecord {
     bounds_cm: Option<[[f64; 2]; 3]>,
     #[serde(skip_serializing_if = "Option::is_none")]
     volume_cm3: Option<f64>,
+    /// Canonical SHA-256 of the material this cell solved with — groups
+    /// cells into material classes for downstream assimilation.
+    material_sha256: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     source_relative_error: Option<Vec<f64>>,
     rebin: RebinLedger,
@@ -404,12 +427,22 @@ fn resolved_path(path: &Path) -> Result<PathBuf, String> {
 /// SHA-256 of the rebinned activation-group flux vector — the workload
 /// signature. Two cells with equal rebinned flux produce equal results, so
 /// the second is served from the memo rather than re-solved.
-fn flux_signature(flux_per_group: &[f64]) -> [u8; 32] {
+fn flux_signature(flux_per_group: &[f64], material_sha: &[u8; 32]) -> [u8; 32] {
     let mut hasher = Sha256::new();
+    hasher.update(material_sha);
     for value in flux_per_group {
         hasher.update(value.to_le_bytes());
     }
     hasher.finalize().into()
+}
+
+fn material_sha256(material: &Material) -> [u8; 32] {
+    let canonical = serde_json::to_vec(material).unwrap_or_default();
+    Sha256::digest(&canonical).into()
+}
+
+fn hex32(digest: &[u8; 32]) -> String {
+    digest.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
 fn solve_result(
@@ -417,9 +450,10 @@ fn solve_result(
     prepared: &PreparedRun,
     activation_boundaries: &[f64],
     flux_per_group: Vec<f64>,
+    material: &Material,
     cell_id: &str,
 ) -> Result<(String, usize), String> {
-    let spec = mesh_spec.cell_spec(activation_boundaries.to_vec(), flux_per_group);
+    let spec = mesh_spec.cell_spec(activation_boundaries.to_vec(), flux_per_group, material);
     spec.validate()
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let result = prepared
@@ -448,6 +482,7 @@ fn cell_record(
     cell: &FluxCell,
     rebinned: &RebinResult,
     result: serde_json::Value,
+    material_sha256: String,
 ) -> MeshCellRecord {
     MeshCellRecord {
         record: "cell",
@@ -456,6 +491,7 @@ fn cell_record(
         index: cell.index,
         bounds_cm: cell.bounds_cm,
         volume_cm3: cell.volume_cm3,
+        material_sha256,
         source_relative_error: cell.relative_error.clone(),
         rebin: RebinLedger::from_result(rebinned),
         result,
@@ -650,9 +686,21 @@ fn write_mesh_body(
                 })
                 .collect::<Result<_, String>>()
         })?;
+        let cell_materials: Vec<&Material> = input_cells
+            .iter()
+            .map(|cell| {
+                spec.materials
+                    .as_ref()
+                    .and_then(|m| m.get(&cell.id))
+                    .unwrap_or(&spec.material)
+            })
+            .collect();
+        let cell_material_sha: Vec<[u8; 32]> =
+            cell_materials.iter().map(|m| material_sha256(m)).collect();
         let signatures: Vec<[u8; 32]> = rebinned
             .iter()
-            .map(|value| flux_signature(&value.flux_per_group))
+            .zip(cell_material_sha.iter())
+            .map(|(value, sha)| flux_signature(&value.flux_per_group, sha))
             .collect();
         let mut pending: HashMap<[u8; 32], Pending> = HashMap::new();
         let mut to_solve: Vec<usize> = Vec::new();
@@ -729,6 +777,7 @@ fn write_mesh_body(
                         prepared,
                         activation_boundaries,
                         rebinned[index].flux_per_group.clone(),
+                        cell_materials[index],
                         &input_cells[index].id,
                     )
                 })
@@ -765,7 +814,12 @@ fn write_mesh_body(
             let result: serde_json::Value = serde_json::from_str(text)
                 .map_err(|error| format!("cell '{}': {error}", cell.id))?;
             let pruned = *pruned;
-            let record = cell_record(cell, &rebinned[index], result);
+            let record = cell_record(
+                cell,
+                &rebinned[index],
+                result,
+                hex32(&cell_material_sha[index]),
+            );
             totals.add(&ledger, pruned);
             write_record(output, &record)?;
         }
@@ -1072,6 +1126,7 @@ mod tests {
             cell_result_fields: None,
             memory_limit_bytes: None,
             resume: false,
+            materials: None,
         }
     }
 
