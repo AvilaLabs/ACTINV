@@ -1,0 +1,46 @@
+{
+ "pass": true,
+ "n": 8,
+ "checks": [
+  {
+   "name": "table-resolved bands byte-identical to declared u",
+   "pass": true,
+   "detail": "0.31 from per_material['Fe'] applied where unmodeled_relative lived"
+  },
+  {
+   "name": "resolution provenance emitted",
+   "pass": true,
+   "detail": "{\"key\": \"Fe\", \"key_source\": \"declared\", \"path\": \"/home/connoravila/Documents/actinv/target/p72_g1_lvptbvu0/u_table.json\", \"resolved_unmodeled_relative\": 0.31, \"sha256\": \"3729dda969e42cfdb8b0ef7c3675cffb4944693bb41559b16033368746a275af\", \"sha256_declared\": \"3729dda969e42cfdb8b0ef7c3675cffb4944693bb41559b16033368746a275af\", \"source\": \"per_material\"}"
+  },
+  {
+   "name": "composition-dominant key infers the family",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "missing key falls to spec fallback",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "missing key with no fallback uses table default",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "unmodeled_relative + unmodeled_table refused together",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "table sha256 mismatch refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "missing key with no default anywhere refused",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

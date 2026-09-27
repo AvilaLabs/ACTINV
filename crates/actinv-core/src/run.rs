@@ -494,6 +494,9 @@ pub struct PreparedRun {
     temperature_K: Kelvin,
     uncertainty_options: Option<UncertaintyOptions>,
     covariance: Option<PreparedCovariance>,
+    /// P72 provenance record when `uncertainty.unmodeled_table` resolved
+    /// the declared unmodeled term; emitted under `certificate.inputs`.
+    unmodeled_table: Option<serde_json::Value>,
     radiological: Option<PreparedRadiological>,
     damage: Option<PreparedDamage>,
     shielding: Option<PreparedShielding>,
@@ -1530,6 +1533,80 @@ impl PreparedRun {
         Self::prepare_profiled(spec, &physical, &mut profiler)
     }
 
+    /// P72: resolve an `actinv-unmodeled-table-1` artifact into a declared
+    /// `unmodeled_relative` value. Returns the resolved u plus the
+    /// provenance record emitted under `certificate.inputs.unmodeled_table`.
+    fn resolve_unmodeled_table(
+        table: &crate::spec::UnmodeledTableRef,
+        spec: &Spec,
+    ) -> Result<(f64, serde_json::Value), String> {
+        let (text, sha256) = read_verified_text(&table.path, Some(&table.sha256))?;
+        let doc: serde_json::Value = serde_json::from_str(&text)
+            .map_err(|e| format!("cannot parse unmodeled table {}: {e}", table.path))?;
+        // the artifact may BE the table or carry it nested (d2 calibration)
+        let root = if doc["schema"].as_str() == Some("actinv-unmodeled-table-1") {
+            &doc
+        } else {
+            doc.get("unmodeled_table")
+                .filter(|t| t["schema"].as_str() == Some("actinv-unmodeled-table-1"))
+                .ok_or_else(|| format!("{}: no actinv-unmodeled-table-1 block found", table.path))?
+        };
+        let per_material = root["per_material"]
+            .as_object()
+            .ok_or("unmodeled table: per_material must be an object")?;
+        let table_default = root["default"].as_f64();
+        // key: declared, else dominant composition element (title-cased)
+        let (key, key_source) = match &table.key {
+            Some(k) => (k.clone(), "declared"),
+            None => {
+                let mut dominant = spec
+                    .material
+                    .composition
+                    .iter()
+                    .max_by(|a, b| a.1.total_cmp(b.1))
+                    .map(|(k, _)| k.clone())
+                    .ok_or(
+                        "unmodeled_table: material.composition is empty — declare key explicitly",
+                    )?;
+                let alpha: String = dominant
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphabetic())
+                    .collect::<String>()
+                    .to_lowercase();
+                dominant = format!("{}{}", &alpha[..1].to_uppercase(), &alpha[1..]);
+                (dominant, "inferred")
+            }
+        };
+        let (u, source) = match per_material.get(&key).and_then(|v| v.as_f64()) {
+            Some(u) => (u, "per_material"),
+            None => match table.fallback.or(table_default) {
+                Some(u) => (
+                    u,
+                    if table.fallback.is_some() {
+                        "spec_fallback"
+                    } else {
+                        "table_default"
+                    },
+                ),
+                None => return Err(format!(
+                    "unmodeled_table: no per_material entry for '{key}' and no default available"
+                )),
+            },
+        };
+        Ok((
+            u,
+            serde_json::json!({
+                "path": table.path,
+                "sha256_declared": table.sha256,
+                "sha256": sha256,
+                "key": key,
+                "key_source": key_source,
+                "resolved_unmodeled_relative": u,
+                "source": source,
+            }),
+        ))
+    }
+
     fn prepare_profiled(
         spec: &Spec,
         physical: &PhysicalInputs,
@@ -1541,7 +1618,18 @@ impl PreparedRun {
             .schedule
             .iter()
             .any(|step| step.spectrum_flux.is_some());
-        Self::prepare_inputs_with_extensions_profiled(
+        // P72: a declared unmodeled table resolves to the unmodeled term
+        // once, at prepare — the authored options stay on the prepared
+        // run so the fingerprint still compares like-for-like; the band
+        // emit injects the resolved value where `spec.uncertainty` is read.
+        let mut unmodeled_table = None;
+        if let Some(options) = &spec.uncertainty {
+            if let Some(table) = &options.unmodeled_table {
+                let (_u, provenance) = Self::resolve_unmodeled_table(table, spec)?;
+                unmodeled_table = Some(provenance);
+            }
+        }
+        let mut prepared = Self::prepare_inputs_with_extensions_profiled(
             &spec.library,
             &spec.decay,
             &spec.photon,
@@ -1559,7 +1647,9 @@ impl PreparedRun {
             },
             Some(&spec.spectrum.structure),
             profiler,
-        )
+        )?;
+        prepared.unmodeled_table = unmodeled_table;
+        Ok(prepared)
     }
 
     pub fn prepare_inputs(
@@ -1981,6 +2071,7 @@ impl PreparedRun {
             temperature_K,
             uncertainty_options: uncertainty_options.cloned(),
             covariance,
+            unmodeled_table: None,
             radiological,
             damage,
             shielding,
@@ -3599,6 +3690,25 @@ impl PreparedRun {
             };
             let uncertainty = match (&uncertainty_runtime, &spec.uncertainty) {
                 (Some(runtime), Some(options)) => {
+                    // P72: a declared unmodeled_table resolves to the
+                    // prepared unmodeled term — the band emit sees it as
+                    // `unmodeled_relative` exactly as if the spec declared
+                    // it, with provenance on `certificate.inputs`.
+                    let options_resolved;
+                    let options = match self
+                        .unmodeled_table
+                        .as_ref()
+                        .and_then(|t| t["resolved_unmodeled_relative"].as_f64())
+                    {
+                        Some(u) => {
+                            options_resolved = UncertaintyOptions {
+                                unmodeled_relative: Some(u),
+                                ..options.clone()
+                            };
+                            &options_resolved
+                        }
+                        None => options,
+                    };
                     let nominal = ResponseSnapshot {
                         heat: [heat.total, heat.alpha, heat.beta, heat.gamma],
                         activity: act.clone(),
@@ -4625,6 +4735,15 @@ impl PreparedRun {
                         "builder_fingerprint": prepared.index.get("builder_fingerprint"),
                     }),
                 );
+        }
+        if let Some(provenance) = &self.unmodeled_table {
+            certificate
+                .as_object_mut()
+                .expect("certificate is an object")
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert("unmodeled_table".into(), provenance.clone());
         }
         if let Some(prepared) = &self.radiological {
             let mut metadata = prepared.table.certificate_metadata();

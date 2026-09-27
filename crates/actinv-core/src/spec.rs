@@ -97,6 +97,30 @@ pub struct UncertaintyOptions {
     /// Absence is byte-identical to pre-P63 output.
     #[serde(default)]
     pub unmodeled_relative: Option<f64>,
+    /// Optional calibrated-error table (P72): resolves `unmodeled_relative`
+    /// from an `actinv-unmodeled-table-1` artifact — `key` names the
+    /// material family, else the dominant composition element is looked
+    /// up; a miss falls to `fallback` if declared, else the table's own
+    /// `default`. Mutually exclusive with `unmodeled_relative` — one
+    /// declared source for the unmodeled term.
+    #[serde(default)]
+    pub unmodeled_table: Option<UnmodeledTableRef>,
+}
+
+/// A sha-bound reference to an `actinv-unmodeled-table-1` artifact.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct UnmodeledTableRef {
+    pub path: String,
+    pub sha256: String,
+    /// material-family key into `per_material`; absent → the dominant
+    /// composition element is looked up (title-cased).
+    #[serde(default)]
+    pub key: Option<String>,
+    /// u used when the key is absent from `per_material` — else the
+    /// table's own `default` applies.
+    #[serde(default)]
+    pub fallback: Option<f64>,
 }
 
 /// Reporting knob for `uncertainty.isomer` (P58): optional cap on the ranked
@@ -626,6 +650,33 @@ impl Spec {
             if let Some(u) = uncertainty.unmodeled_relative {
                 if !u.is_finite() || u < 0.0 {
                     return Err("uncertainty.unmodeled_relative must be a finite value >= 0".into());
+                }
+            }
+            if let Some(table) = &uncertainty.unmodeled_table {
+                if uncertainty.unmodeled_relative.is_some() {
+                    return Err("uncertainty.unmodeled_table and unmodeled_relative are mutually exclusive — declare one source for the unmodeled term".into());
+                }
+                if table.path.is_empty()
+                    || table.sha256.len() != 64
+                    || !table.sha256.bytes().all(|b| b.is_ascii_hexdigit())
+                {
+                    return Err(
+                        "uncertainty.unmodeled_table requires a path and a 64-hex-digit sha256"
+                            .into(),
+                    );
+                }
+                if table.key.as_deref().is_some_and(|k| k.is_empty()) {
+                    return Err(
+                        "uncertainty.unmodeled_table.key must be non-empty when present".into(),
+                    );
+                }
+                if let Some(u) = table.fallback {
+                    if !u.is_finite() || u < 0.0 {
+                        return Err(
+                            "uncertainty.unmodeled_table.fallback must be a finite value >= 0"
+                                .into(),
+                        );
+                    }
                 }
             }
             if !self.projectile.is_neutron() {

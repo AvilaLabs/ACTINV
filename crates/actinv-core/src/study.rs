@@ -3069,6 +3069,7 @@ fn evaluate_robustness_inner(
                 isomer: None,
                 design: None,
                 unmodeled_relative: None,
+                unmodeled_table: None,
             });
             match prep.run_prepared(&uspec) {
                 Ok(urr) => {
@@ -3666,6 +3667,7 @@ mod robustness_tests {
             isomer: None,
             design: None,
             unmodeled_relative: None,
+            unmodeled_table: None,
         });
         assert_ne!(prepared_signature(&spec2), sig0);
     }
