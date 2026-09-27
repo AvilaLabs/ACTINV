@@ -1451,6 +1451,7 @@ fn build_step_uncertainty(
             sensitivities,
             decay_channel,
             fission_yield_channel: yield_channel,
+            unmodeled_relative: options.unmodeled_relative,
         })?;
         report.voi = voi;
         report.isomer = isomer;

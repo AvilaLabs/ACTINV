@@ -140,6 +140,29 @@ pub struct ResponseUncertainty {
     /// `conservative_interval` are built on this combined variance in that case.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub combined_standard_uncertainty: Option<f64>,
+    /// P63: declared unmodeled relative error u folded into
+    /// `standard_uncertainty` (and the intervals) as `(u · nominal)²`. Present
+    /// only when the spec declared `uncertainty.unmodeled_relative`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unmodeled_relative: Option<f64>,
+    /// P63: `|nominal| · unmodeled_relative` — the absolute σ contribution
+    /// of the declared unmodeled term.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unmodeled_standard_uncertainty: Option<f64>,
+    /// P63: the propagated σ before the unmodeled term was folded in
+    /// (`combined_standard_uncertainty`'s value at that point).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub modeled_standard_uncertainty: Option<f64>,
+    /// P63: raw propagated variance before the fold — emitted so the
+    /// band's σ_total² = modeled_variance + unmodeled_variance is
+    /// re-derivable at bit precision (a σ-level round-trip loses the
+    /// last bit).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub modeled_variance: Option<f64>,
+    /// P63: `(unmodeled_relative · nominal)²` — the declared variance
+    /// contribution folded into the band.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub unmodeled_variance: Option<f64>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub decay_sensitivities: Vec<DecaySensitivityOut>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -346,6 +369,11 @@ pub struct BandInput {
     pub decay_channel: Option<ChannelData<DecaySensitivityOut>>,
     /// `Some` when the `fission_yields` channel was requested.
     pub fission_yield_channel: Option<ChannelData<YieldSensitivityOut>>,
+    /// P63 declared unmodeled relative error u ≥ 0. When `Some(u)`, the
+    /// combined variance gains `(u · nominal)²` in quadrature before
+    /// `standard_uncertainty` and the intervals are formed. `None`
+    /// preserves the pre-P63 fold byte-identically.
+    pub unmodeled_relative: Option<f64>,
 }
 
 /// One ranked parameter in a P50 value-of-information table.
@@ -479,7 +507,7 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         return Err("nonfinite response value or invalid propagated variance".into());
     }
     let mf33_uncertainty = input.variance.sqrt();
-    let combined_variance = input.variance
+    let modeled_variance = input.variance
         + input
             .decay_channel
             .as_ref()
@@ -488,6 +516,12 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             .fission_yield_channel
             .as_ref()
             .map_or(0.0, |channel| channel.variance);
+    let modeled_standard_uncertainty = modeled_variance.sqrt();
+    let unmodeled_variance = input.unmodeled_relative.map_or(0.0, |u| {
+        let term = u * input.nominal;
+        term * term
+    });
+    let combined_variance = modeled_variance + unmodeled_variance;
     let standard_uncertainty = combined_variance.sqrt();
     let half_width = input.normal_multiplier * standard_uncertainty;
     let cram_order_bound = (input.alternate - input.nominal).abs();
@@ -615,6 +649,13 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         total_parameters,
         channels,
         combined_standard_uncertainty: extra_channels.then_some(standard_uncertainty),
+        unmodeled_relative: input.unmodeled_relative,
+        unmodeled_standard_uncertainty: input.unmodeled_relative.map(|u| u * input.nominal.abs()),
+        modeled_standard_uncertainty: input
+            .unmodeled_relative
+            .map(|_| modeled_standard_uncertainty),
+        modeled_variance: input.unmodeled_relative.map(|_| modeled_variance),
+        unmodeled_variance: input.unmodeled_relative.map(|_| unmodeled_variance),
         decay_sensitivities: input
             .decay_channel
             .map(|channel| channel.sensitivities)

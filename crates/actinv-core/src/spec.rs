@@ -89,6 +89,14 @@ pub struct UncertaintyOptions {
     /// (P60). Absence is byte-identical to pre-P60 output.
     #[serde(default)]
     pub design: Option<DesignOptions>,
+    /// Optional declared unmodeled relative error u ≥ 0 (P63): every banded
+    /// response's total variance gains `(u · nominal)²` in quadrature before
+    /// intervals are formed. Declared, emitted, and re-derivable — never
+    /// silently folded. A relative term cannot cover zero or missing-channel
+    /// predictions; those are completeness defects, not uncertainty.
+    /// Absence is byte-identical to pre-P63 output.
+    #[serde(default)]
+    pub unmodeled_relative: Option<f64>,
 }
 
 /// Reporting knob for `uncertainty.isomer` (P58): optional cap on the ranked
@@ -598,6 +606,11 @@ impl Spec {
                     if !(1..=256).contains(&top) {
                         return Err("uncertainty.design.top must be between 1 and 256".into());
                     }
+                }
+            }
+            if let Some(u) = uncertainty.unmodeled_relative {
+                if !u.is_finite() || u < 0.0 {
+                    return Err("uncertainty.unmodeled_relative must be a finite value >= 0".into());
                 }
             }
             if !self.projectile.is_neutron() {
