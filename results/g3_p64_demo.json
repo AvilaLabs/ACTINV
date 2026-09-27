@@ -1,0 +1,57 @@
+{
+ "pass": true,
+ "n": 9,
+ "checks": [
+  {
+   "name": "measured bandable points present",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "decide ran on real data",
+   "pass": true,
+   "detail": "decide: not certified \u2014 2 constraints, 0 binding -> /home/connoravila/Documents/actinv/results/p64_decision_w.json\n"
+  },
+  {
+   "name": "measurement-agreement constraint evaluated",
+   "pass": true,
+   "detail": "{\"value\": 2.9910446741357177e-09, \"nominal\": 2.778234391896402e-09, \"violation\": 0.9636125952051616}"
+  },
+  {
+   "name": "roomy constraint certified",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "verdict honest either way",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "overcertify count is an honest integer",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "statement names confidence",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "audit verdict emitted (P61 surface)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "measurement targets ranked",
+   "pass": true,
+   "detail": "[\"heat.total@367\", \"heat.total@3725\"]"
+  }
+ ],
+ "verdict": {
+  "binding": [],
+  "certified": false,
+  "nominal_would_overcertify": 0,
+  "statement": "not certified: 1 of 2 constraints fail at their declared band edges under covariance 18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a at confidence 0.68"
+ }
+}

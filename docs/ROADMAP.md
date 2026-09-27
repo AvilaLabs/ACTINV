@@ -2107,3 +2107,12 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
   exactly; 68% coverage over bandable points needs u=0.898; 8% of points are uncoverable
   by any relative term (missing channels, unaligned steps — completeness defects, not
   uncertainty). The meter is now in place; coverage improvement rides the data workstream.
+- 2026-09-27 — **P64 closes `P64-CLOSED`** (`results/verdict_p64.json`; protocol sealed at
+  `372aa0d7…`, zero amendments). `actinv decide` is the product loop in one command: an
+  `actinv-decide-1` spec declares response constraints at band edges; the tool runs the
+  banded solve (injecting the P61 audit and P60 design blocks when absent), evaluates
+  every constraint through the identical edge machinery as the optimizer, and emits
+  `actinv-decision-1` — margins, `nominal_would_overcertify`, the completeness verdict,
+  top measurement targets, and sha bindings. Unbanded run specs are refused outright.
+  Real-data demo on the W FNS corpus honestly reports the known early-cooling gap as
+  not-certified while a roomy constraint certifies.

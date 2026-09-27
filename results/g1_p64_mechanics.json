@@ -1,0 +1,76 @@
+{
+ "pass": true,
+ "n": 14,
+ "checks": [
+  {
+   "name": "decide ran clean",
+   "pass": true,
+   "detail": "decide: not certified \u2014 2 constraints, 0 binding -> /home/connoravila/Documents/actinv/target/p64_g1_mm9sm5x6/decision.json\n"
+  },
+  {
+   "name": "schema",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "constraint values are the band edges",
+   "pass": true,
+   "detail": "1.2573469562180405e-37 1.2573469562180401e-37"
+  },
+  {
+   "name": "certifying constraint satisfied",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "failing constraint fails at band edge",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "failing constraint passes nominally",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "verdict not certified",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "nominal_would_overcertify == 1",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "provenance names covariance",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "audit block present (injected)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "measurements emitted for constraint response",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "relaxed spec certifies",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "certified statement names covariance+confidence",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "unbanded run spec refused",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

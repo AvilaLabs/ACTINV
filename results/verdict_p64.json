@@ -1,0 +1,33 @@
+{
+  "phase": "P64",
+  "status": "P64-CLOSED",
+  "closed_at_utc": "2026-09-27T01:10:00Z",
+  "final_commit": "532ddd888ed923504b0ac6e339d1863366ce8391",
+  "amendments": 0,
+  "protocol_sha256": "372aa0d7f9d877e8fb4c2d4c64e906140f3237f8e2470089886ad20cbea5fc10",
+  "gates": {
+    "g1_mechanics": {
+      "n": 14,
+      "pass": true
+    },
+    "g2_exactness": {
+      "n": 15,
+      "pass": true
+    },
+    "g3_demo": {
+      "n": 9,
+      "pass": true,
+      "certified": false,
+      "nominal_would_overcertify": 0
+    },
+    "g4_determinism": {
+      "byte_identical": true
+    },
+    "g5_checker": {
+      "checks": 6,
+      "mutations_caught": 4
+    }
+  },
+  "delivered": "actinv decide DECISION.json [OUT.json]: an actinv-decide-1 spec names a run spec plus response constraints at declared band edges; decide injects audit+design, runs the banded solve, and emits actinv-decision-1 \u2014 per-constraint edge value, nominal, violation, satisfied, nominal_satisfied; verdict {certified, binding, nominal_would_overcertify, statement}; the P61 completeness verdict verbatim; per-constraint measurement targets from the emitted design block; sha256 bindings of authored spec, effective spec, and ms-stripped run result. Unbanded run specs are refused.",
+  "real_data_demo": "W FNS 1996exp_5min (TENDL-2025 709g): constraint heat.upper-normal >= measured fails honestly (band 2.99e-9 vs measured 8.22e-8 \u2014 the known W early-cooling gap), roomy conservative_upper constraint certifies; audit reads incomplete; top measurement W186 mt=103 (93% heat variance). results/p64_decision_w.json."
+}

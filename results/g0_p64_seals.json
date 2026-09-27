@@ -1,0 +1,48 @@
+{
+  "artifacts": {
+    "command_rs": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "8db14c80eea471a2dcc4d13e6d3a02ec5716f8b47c992a8e4308bd9d20f6373b"
+    },
+    "decide_rs": {
+      "path": "crates/actinv-cli/src/decide.rs",
+      "sha256": "87e6c26f3ba7f0b221550b3a29ac2efe075dda1ed19f12a9587aecb01a68b636"
+    },
+    "g1": {
+      "path": "controls/g1_p64_mechanics.py",
+      "sha256": "f0a5a956b40b9003257309c96d07cf13f5025a610482a51038c9586cf30309c1"
+    },
+    "g2": {
+      "path": "controls/g2_p64_exactness.py",
+      "sha256": "03ccbee440ee5a0f6333f099eab6eb2ae00233482346cfa38302cb742f48dbef"
+    },
+    "g3": {
+      "path": "controls/g3_p64_demo.py",
+      "sha256": "6216caa1d831c3986d0d6d54ca152a95565686f2c74a738f1f25683ceac968d2"
+    },
+    "g4": {
+      "path": "controls/g4_p64_determinism.py",
+      "sha256": "919fe52dda3e32069edff5575a3583b6735f985c8e1f9907a46252d73c093520"
+    },
+    "g5": {
+      "path": "controls/check_g5_p64.py",
+      "sha256": "26047b79fe6ea3d97fffd97bb756837f0e37e35644de311aafdea4429c5dc31e"
+    },
+    "lib_rs": {
+      "path": "crates/actinv-cli/src/lib.rs",
+      "sha256": "ccab35cb954328ca19f7799f8c58b6e4bfed505bceab3fd0844c0c10e4dacc18"
+    },
+    "optimize_rs": {
+      "path": "crates/actinv-cli/src/optimize.rs",
+      "sha256": "42f08f8f5fabb02774c8009ac26566d460ee0263ccf43c887ed3fc8fd15669cc"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P64_PROTOCOL.md",
+      "sha256": "372aa0d7f9d877e8fb4c2d4c64e906140f3237f8e2470089886ad20cbea5fc10"
+    }
+  },
+  "opening_commit": "532ddd888ed923504b0ac6e339d1863366ce8391",
+  "protocol_sha256": "372aa0d7f9d877e8fb4c2d4c64e906140f3237f8e2470089886ad20cbea5fc10",
+  "schema": "actinv-p64-seal-1",
+  "sealed_at_utc": "2026-09-27T01:25:33Z"
+}

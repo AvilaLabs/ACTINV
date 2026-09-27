@@ -1,0 +1,860 @@
+{
+  "completeness": {
+    "decay_channel": {
+      "defects": [
+        {
+          "class": "decay_daughters_missing",
+          "fraction_of_channel_flow": 4.918386513090976e-24,
+          "instances": 2,
+          "largest": [
+            {
+              "name": "Hs275",
+              "rate_coefficient_per_s": 0.3648143055578659
+            },
+            {
+              "name": "Cf258",
+              "rate_coefficient_per_s": 0.001925408834888737
+            }
+          ],
+          "rate_coefficient_per_s": 0.36673971439275466
+        },
+        {
+          "class": "spontaneous_fission_branches_to_leakage",
+          "instances": 129
+        }
+      ],
+      "total_decay_rate_coefficient_per_s": 7.456504555236264e+22
+    },
+    "reaction_channel": {
+      "defects": [
+        {
+          "class": "products_no_evaluated_decay_data",
+          "fraction_of_channel_flow": 2.6992879964009636e-20,
+          "instances": 170,
+          "largest": [
+            {
+              "name": "0_0",
+              "rate_coefficient_per_s": 6.327333955331371e-13
+            },
+            {
+              "name": "99259_0",
+              "rate_coefficient_per_s": 8.819685005409055e-16
+            },
+            {
+              "name": "73191_0",
+              "rate_coefficient_per_s": 8.53082331197131e-16
+            }
+          ],
+          "rate_coefficient_per_s": 6.459304944664877e-13
+        },
+        {
+          "class": "isomer_fell_back_to_ground",
+          "fraction_of_channel_flow": 5.2847392039762925e-21,
+          "instances": 19,
+          "largest": [
+            {
+              "name": "83216_m1",
+              "rate_coefficient_per_s": 2.6451152811327236e-14
+            },
+            {
+              "name": "69177_m1",
+              "rate_coefficient_per_s": 2.5078955668177058e-14
+            },
+            {
+              "name": "75192_m1",
+              "rate_coefficient_per_s": 2.34574125628982e-14
+            }
+          ],
+          "rate_coefficient_per_s": 1.2646202301133682e-13
+        },
+        {
+          "class": "fission_no_yields_to_leakage",
+          "fraction_of_channel_flow": 1.9626981171549475e-31,
+          "instances": 19,
+          "largest": [
+            {
+              "name": "73183_0",
+              "rate_coefficient_per_s": 3.720065665321258e-24
+            },
+            {
+              "name": "73186_0",
+              "rate_coefficient_per_s": 3.4415080643478196e-25
+            },
+            {
+              "name": "73185_0",
+              "rate_coefficient_per_s": 2.6818514960781624e-25
+            }
+          ],
+          "rate_coefficient_per_s": 4.696670258944909e-24
+        }
+      ],
+      "total_production_rate_coefficient_per_s": 23929662.019307498
+    },
+    "status": "incomplete",
+    "unquantified": [
+      {
+        "class": "targets_absent_from_decay_library",
+        "names": [
+          "89237_0",
+          "95229_0",
+          "95230_0",
+          "95236_1",
+          "85224_0",
+          "85225_0",
+          "85226_0",
+          "85227_0",
+          "85228_0",
+          "85229_0",
+          "79205_1",
+          "79206_0",
+          "79207_0",
+          "79208_0",
+          "79209_0",
+          "79210_0",
+          "107268_0",
+          "107270_0",
+          "107271_0",
+          "107272_0",
+          "107273_0",
+          "107274_0",
+          "107275_0",
+          "107276_0",
+          "107277_0",
+          "107278_0",
+          "83214_1",
+          "83216_1",
+          "83219_0",
+          "83220_0",
+          "83221_0",
+          "83222_0",
+          "83223_0",
+          "83224_0",
+          "97233_0",
+          "97234_0",
+          "96231_0",
+          "96232_0",
+          "112283_0",
+          "112285_0",
+          "105266_0",
+          "105267_0",
+          "105268_0",
+          "105269_0",
+          "105270_0",
+          "110281_0",
+          "110282_0",
+          "110283_0",
+          "110284_0",
+          "66174_0",
+          "68178_0",
+          "68179_0",
+          "68180_0",
+          "99239_0",
+          "63160_1",
+          "114289_0",
+          "87224_1",
+          "31080_1",
+          "80211_0",
+          "80212_0",
+          "80213_0",
+          "80214_0",
+          "80216_0",
+          "67176_0",
+          "67177_0",
+          "108266_1",
+          "108270_0",
+          "108271_0",
+          "108272_0",
+          "108277_1",
+          "108278_0",
+          "108279_0",
+          "49127_2",
+          "77200_0",
+          "77201_0",
+          "77202_0",
+          "77203_0",
+          "77204_0",
+          "77205_0",
+          "103264_0",
+          "103265_0",
+          "103266_0",
+          "71185_0",
+          "71186_0",
+          "71187_0",
+          "71188_0",
+          "115291_0",
+          "101246_1",
+          "101262_0",
+          "109276_1",
+          "109278_0",
+          "109280_0",
+          "109281_0",
+          "113285_0",
+          "113286_0",
+          "113287_0",
+          "113288_0",
+          "113289_0",
+          "113290_0",
+          "28071_1",
+          "102263_0",
+          "102264_0",
+          "93245_0",
+          "76195_1",
+          "76197_0",
+          "76198_0",
+          "76199_0",
+          "76200_0",
+          "76201_0",
+          "76202_0",
+          "91241_0",
+          "82216_0",
+          "82217_0",
+          "82218_0",
+          "82219_0",
+          "82220_0",
+          "61156_1",
+          "61161_1",
+          "84221_0",
+          "84222_0",
+          "84223_0",
+          "84224_0",
+          "84225_0",
+          "84226_0",
+          "84227_0",
+          "78203_0",
+          "78203_1",
+          "78204_0",
+          "78205_0",
+          "94227_0",
+          "94244_1",
+          "88235_0",
+          "75192_1",
+          "75194_1",
+          "75194_2",
+          "75195_0",
+          "75196_0",
+          "75198_0",
+          "104266_0",
+          "104267_0",
+          "104268_0",
+          "111280_0",
+          "111281_0",
+          "111282_0",
+          "111283_0",
+          "86229_0",
+          "86230_0",
+          "86231_0",
+          "106267_0",
+          "106268_0",
+          "106270_0",
+          "106271_0",
+          "106272_0",
+          "106273_0",
+          "73188_1",
+          "73192_0",
+          "73194_0",
+          "90239_0",
+          "81213_0",
+          "81214_0",
+          "81215_0",
+          "81216_0",
+          "81217_0",
+          "81218_0",
+          "69177_1",
+          "69180_0",
+          "69181_0",
+          "92243_0",
+          "74193_0",
+          "74194_0",
+          "74195_0",
+          "74196_0",
+          "74197_0",
+          "70182_0",
+          "70183_0",
+          "70184_0",
+          "70185_0"
+        ]
+      },
+      {
+        "class": "bulk_production_dropped",
+        "instances": 3
+      },
+      {
+        "atoms_zeroed": 3.95602968232289e-123,
+        "class": "negative_atoms_zeroed"
+      },
+      {
+        "class": "decay_nuclides_from_fallback",
+        "instances": 50
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "edge": "normal_upper",
+      "limit": 8.22e-8,
+      "name": "heat_matches_measured",
+      "nominal": 2.778234391896402e-9,
+      "nominal_satisfied": false,
+      "nominal_violation": 0.9662015280791192,
+      "response": "heat.total",
+      "satisfied": false,
+      "sense": "ge",
+      "step_t_s": 367.0,
+      "time_s": 367.0,
+      "value": 2.9910446741357177e-9,
+      "violation": 0.9636125952051616
+    },
+    {
+      "edge": "conservative_upper",
+      "limit": 1.145e-9,
+      "name": "heat_budget",
+      "nominal": 3.741870011598227e-10,
+      "nominal_satisfied": true,
+      "nominal_violation": -0.673199125624609,
+      "response": "heat.total",
+      "satisfied": true,
+      "sense": "le",
+      "step_t_s": 3725.0,
+      "time_s": 3725.0,
+      "value": 3.924704030641474e-10,
+      "violation": -0.6572310890269455
+    }
+  ],
+  "decision_spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p64_g3_zk1fv7n6/decide.json",
+    "sha256": "e157aa42990b9e7dbf342c34f8f7af0d63d21edf03682fd0fb23b43ca38d2e83"
+  },
+  "measurements": {
+    "heat.total@367": {
+      "top_parameters": [
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 103,
+            "ZAP": 73186,
+            "collapsed_cross_section_b": 0.002292443781515995,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81272,
+            "spectrum": 0,
+            "target": 1570,
+            "target_LISO": 0,
+            "target_ZA": 74186,
+            "target_nuclide": "W186"
+          },
+          "posterior_variance": 3.2211491942336325e-21,
+          "sensitivity": 1.0559982927891902e-6,
+          "share_of_total": 0.9288713632851487,
+          "variance_reduction": 4.2065100381263645e-20,
+          "variance_share": 4.2531337550282027e-20
+        },
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 102,
+            "ZAP": 74187,
+            "collapsed_cross_section_b": 0.061962673914336734,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81270,
+            "spectrum": 0,
+            "target": 1570,
+            "target_LISO": 0,
+            "target_ZA": 74186,
+            "target_nuclide": "W186"
+          },
+          "posterior_variance": 2.6181369624225138e-20,
+          "sensitivity": 3.2715029451248405e-9,
+          "share_of_total": 0.4218693340772712,
+          "variance_reduction": 1.910487995127214e-20,
+          "variance_share": -6.921727998540614e-22
+        },
+        {
+          "channel": "decay_constants",
+          "parameter": {
+            "LISO": 0,
+            "ZA": 73186,
+            "covered": true,
+            "lambda_s": 0.0011002336199364211,
+            "nuclide": "Ta186",
+            "standard_uncertainty_s": 0.00003143524628389775
+          },
+          "posterior_variance": 4.2447541458985575e-20,
+          "reduction_at_half_uncertainty": 2.1290310873837755e-21,
+          "sensitivity": 1.6948977474886093e-6,
+          "share_of_total": 0.06268366541988103,
+          "standard_uncertainty": 0.00003143524628389775,
+          "variance_reduction": 2.8387081165117008e-21,
+          "variance_share": 2.8387081165117008e-21
+        },
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 107,
+            "ZAP": 72183,
+            "collapsed_cross_section_b": 0.0005800962939208047,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81281,
+            "spectrum": 0,
+            "target": 1570,
+            "target_LISO": 0,
+            "target_ZA": 74186,
+            "target_nuclide": "W186"
+          },
+          "posterior_variance": 4.444032762667806e-20,
+          "sensitivity": 1.0256514194983349e-7,
+          "share_of_total": 0.018679443688728817,
+          "variance_reduction": 8.459219488192207e-22,
+          "variance_share": 2.480260468590096e-22
+        },
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 103,
+            "ZAP": 73184,
+            "collapsed_cross_section_b": 0.003168145304778514,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81210,
+            "spectrum": 0,
+            "target": 1569,
+            "target_LISO": 0,
+            "target_ZA": 74184,
+            "target_nuclide": "W184"
+          },
+          "posterior_variance": 4.493992691728057e-20,
+          "sensitivity": 2.5217769302542964e-8,
+          "share_of_total": 0.00764741309918688,
+          "variance_reduction": 3.4632265821670413e-22,
+          "variance_share": 3.462212344560748e-22
+        }
+      ],
+      "top_reactions": [
+        {
+          "covered_parameters": 13,
+          "mts": [
+            16,
+            24,
+            28,
+            32,
+            33,
+            34,
+            41,
+            102,
+            103,
+            104,
+            105,
+            107,
+            112
+          ],
+          "posterior_variance": 3.1867808557788893e-21,
+          "share_of_total": 0.9296302766148439,
+          "status": "emitted",
+          "target_liso": 0,
+          "target_za": 74186,
+          "variance_reduction": 4.209946871971839e-20
+        },
+        {
+          "covered_parameters": 21,
+          "mts": [
+            16,
+            22,
+            24,
+            28,
+            32,
+            33,
+            34,
+            41,
+            45,
+            102,
+            103,
+            104,
+            105,
+            107,
+            112,
+            116
+          ],
+          "posterior_variance": 4.4939925398851103e-20,
+          "share_of_total": 0.007647446628778906,
+          "status": "emitted",
+          "target_liso": 0,
+          "target_za": 74184,
+          "variance_reduction": 3.4632417664617684e-22
+        },
+        {
+          "covered_parameters": 16,
+          "mts": [
+            16,
+            17,
+            22,
+            24,
+            25,
+            28,
+            32,
+            33,
+            41,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "posterior_variance": 4.528624957549728e-20,
+          "share_of_total": 1.3703933024801095e-57,
+          "status": "emitted",
+          "target_liso": 0,
+          "target_za": 70178,
+          "variance_reduction": 6.205997311270417e-77
+        },
+        {
+          "covered_parameters": 18,
+          "mts": [
+            4,
+            16,
+            17,
+            22,
+            24,
+            25,
+            28,
+            32,
+            33,
+            34,
+            41,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "posterior_variance": null,
+          "share_of_total": null,
+          "status": "ill_conditioned",
+          "target_liso": 0,
+          "target_za": 70177,
+          "variance_reduction": null
+        },
+        {
+          "covered_parameters": 18,
+          "mts": [
+            4,
+            16,
+            17,
+            22,
+            24,
+            25,
+            28,
+            32,
+            33,
+            34,
+            41,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "posterior_variance": null,
+          "share_of_total": null,
+          "status": "ill_conditioned",
+          "target_liso": 1,
+          "target_za": 70177,
+          "variance_reduction": null
+        }
+      ],
+      "total_propagated_variance": 4.528624957549728e-20,
+      "unranked": {
+        "cross_section_mf33": {
+          "count": 214,
+          "sensitivity_l2": 2.2640027722861702e-6
+        }
+      }
+    },
+    "heat.total@3725": {
+      "top_parameters": [
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 103,
+            "ZAP": 73184,
+            "collapsed_cross_section_b": 0.003168145304778514,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81210,
+            "spectrum": 0,
+            "target": 1569,
+            "target_LISO": 0,
+            "target_ZA": 74184,
+            "target_nuclide": "W184"
+          },
+          "posterior_variance": 3.5764381895083606e-23,
+          "sensitivity": 2.341162098278423e-8,
+          "share_of_total": 0.8930069491365897,
+          "variance_reduction": 2.9850388699222203e-22,
+          "variance_share": 2.984097851232928e-22
+        },
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 107,
+            "ZAP": 72181,
+            "collapsed_cross_section_b": 0.0008731147888912938,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81221,
+            "spectrum": 0,
+            "target": 1569,
+            "target_LISO": 0,
+            "target_ZA": 74184,
+            "target_nuclide": "W184"
+          },
+          "posterior_variance": 2.77163201792705e-22,
+          "sensitivity": 7.434091884325149e-11,
+          "share_of_total": 0.17083603922289403,
+          "variance_reduction": 5.710506709460064e-23,
+          "variance_share": 9.422768660308159e-26
+        },
+        {
+          "channel": "decay_constants",
+          "parameter": {
+            "LISO": 0,
+            "ZA": 73186,
+            "covered": true,
+            "lambda_s": 0.0011002336199364211,
+            "nuclide": "Ta186",
+            "standard_uncertainty_s": 0.00003143524628389775
+          },
+          "posterior_variance": 3.0898995071733344e-22,
+          "reduction_at_half_uncertainty": 1.895873862747914e-23,
+          "sensitivity": -1.5994004751182927e-7,
+          "share_of_total": 0.07562284704473238,
+          "standard_uncertainty": 0.00003143524628389775,
+          "variance_reduction": 2.527831816997219e-23,
+          "variance_share": 2.527831816997219e-23
+        },
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 103,
+            "ZAP": 73186,
+            "collapsed_cross_section_b": 0.002292443781515995,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81272,
+            "spectrum": 0,
+            "target": 1570,
+            "target_LISO": 0,
+            "target_ZA": 74186,
+            "target_nuclide": "W186"
+          },
+          "posterior_variance": 3.2796929534380345e-22,
+          "sensitivity": 2.6249773274660102e-8,
+          "share_of_total": 0.01884406666678203,
+          "variance_reduction": 6.298973543502209e-24,
+          "variance_share": 1.2937349442742294e-23
+        },
+        {
+          "channel": "cross_section_mf33",
+          "parameter": {
+            "LFS": 0,
+            "LMF": -1,
+            "MT": 102,
+            "ZAP": 74187,
+            "collapsed_cross_section_b": 0.061962673914336734,
+            "covariance_covered": true,
+            "covariance_excluded": false,
+            "library_row": 81270,
+            "spectrum": 0,
+            "target": 1570,
+            "target_LISO": 0,
+            "target_ZA": 74186,
+            "target_nuclide": "W186"
+          },
+          "posterior_variance": 3.286563750370159e-22,
+          "sensitivity": 3.184546258765105e-9,
+          "share_of_total": 0.01678859279395649,
+          "variance_reduction": 5.61189385028973e-24,
+          "variance_share": -1.1547749183962363e-23
+        }
+      ],
+      "top_reactions": [
+        {
+          "covered_parameters": 21,
+          "mts": [
+            16,
+            22,
+            24,
+            28,
+            32,
+            33,
+            34,
+            41,
+            45,
+            102,
+            103,
+            104,
+            105,
+            107,
+            112,
+            116
+          ],
+          "posterior_variance": 3.57628763689561e-23,
+          "share_of_total": 0.8930114530822754,
+          "status": "emitted",
+          "target_liso": 0,
+          "target_za": 74184,
+          "variance_reduction": 2.9850539251834954e-22
+        },
+        {
+          "covered_parameters": 13,
+          "mts": [
+            16,
+            24,
+            28,
+            32,
+            33,
+            34,
+            41,
+            102,
+            103,
+            104,
+            105,
+            107,
+            112
+          ],
+          "posterior_variance": 3.2443912264129123e-22,
+          "share_of_total": 0.029404963500523563,
+          "status": "emitted",
+          "target_liso": 0,
+          "target_za": 74186,
+          "variance_reduction": 9.829146246014418e-24
+        },
+        {
+          "covered_parameters": 16,
+          "mts": [
+            16,
+            17,
+            22,
+            24,
+            25,
+            28,
+            32,
+            33,
+            41,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "posterior_variance": 3.3426826888730564e-22,
+          "share_of_total": 4.156339457539769e-55,
+          "status": "emitted",
+          "target_liso": 0,
+          "target_za": 70178,
+          "variance_reduction": 1.3893323953798215e-76
+        },
+        {
+          "covered_parameters": 18,
+          "mts": [
+            4,
+            16,
+            17,
+            22,
+            24,
+            25,
+            28,
+            32,
+            33,
+            34,
+            41,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "posterior_variance": null,
+          "share_of_total": null,
+          "status": "ill_conditioned",
+          "target_liso": 0,
+          "target_za": 70177,
+          "variance_reduction": null
+        },
+        {
+          "covered_parameters": 18,
+          "mts": [
+            4,
+            16,
+            17,
+            22,
+            24,
+            25,
+            28,
+            32,
+            33,
+            34,
+            41,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107
+          ],
+          "posterior_variance": null,
+          "share_of_total": null,
+          "status": "ill_conditioned",
+          "target_liso": 1,
+          "target_za": 70177,
+          "variance_reduction": null
+        }
+      ],
+      "total_propagated_variance": 3.3426826888730564e-22,
+      "unranked": {
+        "cross_section_mf33": {
+          "count": 214,
+          "sensitivity_l2": 1.4570383857908814e-7
+        }
+      }
+    }
+  },
+  "run": {
+    "authored_sha256": "f1933d76b588e7120c746fb4d4d847c95d0088563450c8b46f48bd2f125ae539",
+    "effective_sha256": "2a6e5e3af430bd0a0e617b6b53b113089b5095b27c64d5a4b6253ea165cb5571",
+    "result_sha256": "10c26adbb7cf3416d7ec6a623567ccdeebd79f606cc1a62ec71d1fbad6d28fd0",
+    "run_spec": "/home/connoravila/Documents/actinv/target/p64_g3_zk1fv7n6/w_run.json"
+  },
+  "schema": "actinv-decision-1",
+  "uncertainty_provenance": {
+    "confidence_level": 0.6827,
+    "covariance_path": "/home/connoravila/nuclear-data/p43-work/p43.cov.npz",
+    "covariance_sha256": "18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a",
+    "unmodeled_relative": null
+  },
+  "verdict": {
+    "binding": [],
+    "certified": false,
+    "nominal_would_overcertify": 0,
+    "statement": "not certified: 1 of 2 constraints fail at their declared band edges under covariance 18b8afaf239d22436d9e4cda1fd3f3d8347b7eda1a76ba2b8cd07af0cbe5348a at confidence 0.68"
+  }
+}

@@ -1,0 +1,81 @@
+{
+ "pass": true,
+ "n": 15,
+ "checks": [
+  {
+   "name": "a: value exact",
+   "pass": true,
+   "detail": "1.2573469562180401e-37 vs 1.2573469562180401e-37"
+  },
+  {
+   "name": "a: violation exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "a: satisfied re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "a: nominal re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "b: value exact",
+   "pass": true,
+   "detail": "1.5418119334923902e-37 vs 1.5418119334923902e-37"
+  },
+  {
+   "name": "b: violation exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "b: satisfied re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "b: nominal re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "c: value exact",
+   "pass": true,
+   "detail": "1.996248905758536e-26 vs 1.996248905758536e-26"
+  },
+  {
+   "name": "c: violation exact",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "c: satisfied re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "overcertify count re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "certified re-derived",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "sha binds run result",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "measurements truncated to top",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
