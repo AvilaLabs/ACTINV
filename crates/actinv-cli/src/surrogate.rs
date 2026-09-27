@@ -348,11 +348,130 @@ pub fn run_fit(spec_path: &str, out_dir: Option<&str>) -> Result<Value, String> 
     }))
 }
 
-fn axis_name(axis: &Axis) -> String {
+pub(crate) fn axis_name(axis: &Axis) -> String {
     match axis {
         Axis::CompositionFraction { element, .. } => format!("composition_fraction:{element}"),
         Axis::FluxScale { .. } => "flux_scale".into(),
         Axis::StepDt { step, .. } => format!("step_dt:{step}"),
+    }
+}
+
+/// In-memory certified surrogate: the grids, per-response values and the
+/// fitted honesty constants. Shared by the `eval` CLI and the optimizer's
+/// surrogate tier.
+pub struct SurrogateResponseEval {
+    /// Fully qualified fitted response identifier (`name` field), the
+    /// bare response path, and its fitted (ŷ, ε_cert) pair.
+    pub name: String,
+    pub response: String,
+    pub time_s: f64,
+    pub y: Option<f64>,
+    pub eps: f64,
+    pub holdout_max_residual: f64,
+    pub lipschitz_term: f64,
+}
+
+pub struct Surrogate {
+    /// Positional axis identifiers (`axis_name` strings) — the optimizer
+    /// asserts they match its design_axes order before trusting evals.
+    pub axis_names: Vec<String>,
+    pub grids: Vec<Vec<f64>>,
+    responses: Vec<(String, String, f64, Vec<f64>, f64, f64)>,
+    pub artifact_sha256: String,
+}
+
+impl Surrogate {
+    pub fn load_file(path: &str) -> Result<Surrogate, String> {
+        let text = std::fs::read_to_string(path).map_err(|e| format!("cannot read {path}: {e}"))?;
+        let artifact: Value = serde_json::from_str(&text).map_err(|e| format!("{path}: {e}"))?;
+        Surrogate::from_artifact(&artifact, sha256_hex(text.as_bytes()))
+    }
+
+    pub fn from_artifact(artifact: &Value, sha: String) -> Result<Surrogate, String> {
+        if artifact["schema"].as_str() != Some("actinv-surrogate-1") {
+            return Err("not an actinv-surrogate-1 artifact".into());
+        }
+        let axes = artifact["axes"].as_array().ok_or("artifact axes missing")?;
+        let grids: Vec<Vec<f64>> = axes
+            .iter()
+            .map(|a| {
+                a["grid"]
+                    .as_array()
+                    .unwrap_or(&vec![])
+                    .iter()
+                    .filter_map(|v| v.as_f64())
+                    .collect()
+            })
+            .collect();
+        let axis_names: Vec<String> = axes
+            .iter()
+            .filter_map(|a| a["axis"].as_str().map(String::from))
+            .collect();
+        let responses = artifact["responses"]
+            .as_array()
+            .unwrap_or(&vec![])
+            .iter()
+            .map(|r| {
+                (
+                    r["name"].as_str().unwrap_or_default().to_string(),
+                    r["response"].as_str().unwrap_or_default().to_string(),
+                    r["time_s"].as_f64().unwrap_or(0.0),
+                    r["values"]
+                        .as_array()
+                        .unwrap_or(&vec![])
+                        .iter()
+                        .filter_map(|v| v.as_f64())
+                        .collect(),
+                    r["holdout_max_residual"].as_f64().unwrap_or(0.0),
+                    r["lipschitz_estimate"].as_f64().unwrap_or(0.0),
+                )
+            })
+            .collect();
+        Ok(Surrogate {
+            axis_names,
+            grids,
+            responses,
+            artifact_sha256: sha,
+        })
+    }
+
+    /// Evaluate at x: None when out of domain (the caller's responsibility
+    /// is to refuse extrapolation by falling back, never to widen silently).
+    /// Each response yields (ŷ, ε_cert) with ε_cert never zero-width.
+    pub fn eval(&self, x: &[f64]) -> Option<Vec<SurrogateResponseEval>> {
+        if x.len() != self.grids.len() {
+            return None;
+        }
+        for (d, g) in self.grids.iter().enumerate() {
+            if g.is_empty() || x[d] < g[0] || x[d] > *g.last().unwrap() {
+                return None;
+            }
+        }
+        let d_nearest = dist_to_grid(&self.grids, x);
+        Some(
+            self.responses
+                .iter()
+                .map(|(name, response, time_s, values, r_max, l)| {
+                    let y = predict(&self.grids, values, x);
+                    // Never emit a zero-width certificate: below the
+                    // observed residual the solver's own numerical noise
+                    // still bounds the surrogate's honesty. The floor is
+                    // relative to ŷ.
+                    let eps = (r_max + l * d_nearest)
+                        .max(y.map(|v| v.abs() * 1e-9).unwrap_or(0.0))
+                        .max(1e-300);
+                    SurrogateResponseEval {
+                        name: name.clone(),
+                        response: response.clone(),
+                        time_s: *time_s,
+                        y,
+                        eps,
+                        holdout_max_residual: *r_max,
+                        lipschitz_term: l * d_nearest,
+                    }
+                })
+                .collect(),
+        )
     }
 }
 
@@ -365,9 +484,7 @@ pub fn run_eval(
         .map_err(|e| format!("cannot read {artifact_path}: {e}"))?;
     let artifact: Value =
         serde_json::from_str(&artifact_text).map_err(|e| format!("{artifact_path}: {e}"))?;
-    if artifact["schema"].as_str() != Some("actinv-surrogate-1") {
-        return Err("not an actinv-surrogate-1 artifact".into());
-    }
+    let sur = Surrogate::from_artifact(&artifact, sha256_hex(artifact_text.as_bytes()))?;
     let x_text =
         std::fs::read_to_string(x_path).map_err(|e| format!("cannot read {x_path}: {e}"))?;
     let xdoc: Value = serde_json::from_str(&x_text).map_err(|e| format!("{x_path}: {e}"))?;
@@ -377,64 +494,25 @@ pub fn run_eval(
         .iter()
         .map(|v| v.as_f64().ok_or("x entries must be numeric"))
         .collect::<Result<_, _>>()?;
-    let axes = artifact["axes"].as_array().ok_or("artifact axes missing")?;
-    let grids: Vec<Vec<f64>> = axes
+    let evals = sur.eval(&x).ok_or_else(|| {
+        let bounds: Vec<String> = sur
+            .grids
+            .iter()
+            .map(|g| format!("[{}, {}]", g[0], g.last().unwrap()))
+            .collect();
+        format!("x outside surrogate domain {bounds:?} — refuse to extrapolate")
+    })?;
+    let d_nearest = dist_to_grid(&sur.grids, &x);
+    let responses: Vec<Value> = evals
         .iter()
-        .map(|a| {
-            a["grid"]
-                .as_array()
-                .unwrap_or(&vec![])
-                .iter()
-                .filter_map(|v| v.as_f64())
-                .collect()
-        })
-        .collect();
-    if x.len() != grids.len() {
-        return Err(format!(
-            "x has {} dims, artifact has {}",
-            x.len(),
-            grids.len()
-        ));
-    }
-    // refuse extrapolation
-    for (d, g) in grids.iter().enumerate() {
-        if x[d] < g[0] || x[d] > *g.last().unwrap() {
-            return Err(format!(
-                "x[{d}]={} outside surrogate domain [{}, {}] — refuse to extrapolate",
-                x[d],
-                g[0],
-                g.last().unwrap()
-            ));
-        }
-    }
-    let d_nearest = dist_to_grid(&grids, &x);
-    let responses: Vec<Value> = artifact["responses"]
-        .as_array()
-        .unwrap_or(&vec![])
-        .iter()
-        .map(|r| {
-            let values: Vec<f64> = r["values"]
-                .as_array()
-                .unwrap_or(&vec![])
-                .iter()
-                .filter_map(|v| v.as_f64())
-                .collect();
-            let y = predict(&grids, &values, &x);
-            let r_max = r["holdout_max_residual"].as_f64().unwrap_or(0.0);
-            let l = r["lipschitz_estimate"].as_f64().unwrap_or(0.0);
-            // Never emit a zero-width certificate: below the observed
-            // residual the solver's own numerical noise still bounds the
-            // surrogate's honesty. The floor is relative to ŷ.
-            let eps = (r_max + l * d_nearest)
-                .max(y.map(|v| v.abs() * 1e-9).unwrap_or(0.0))
-                .max(1e-300);
+        .map(|e| {
             serde_json::json!({
-                "name": r["name"],
-                "surrogate": y,
-                "epsilon_cert": eps,
-                "band": y.map(|v| [v - eps, v + eps]),
-                "holdout_max_residual": r_max,
-                "lipschitz_term": l * d_nearest,
+                "name": e.name,
+                "surrogate": e.y,
+                "epsilon_cert": e.eps,
+                "band": e.y.map(|v| [v - e.eps, v + e.eps]),
+                "holdout_max_residual": e.holdout_max_residual,
+                "lipschitz_term": e.lipschitz_term,
             })
         })
         .collect();
@@ -442,7 +520,7 @@ pub fn run_eval(
         "schema": "actinv-surrogate-eval-1",
         "x": x,
         "dist_to_nearest_grid_node": d_nearest,
-        "artifact_sha256": sha256_hex(artifact_text.as_bytes()),
+        "artifact_sha256": sur.artifact_sha256,
         "certificate": artifact["certificate"].clone(),
         "responses": responses,
     });

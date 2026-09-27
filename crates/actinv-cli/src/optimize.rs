@@ -140,6 +140,15 @@ pub struct OptimizerCfg {
     /// composition cannot be summed.
     #[serde(default)]
     pub prescreen_bmin_atoms_per_g: Option<f64>,
+    /// Path to an `actinv-surrogate-1` artifact fitted over the same
+    /// design axes. When set, every candidate first evaluates through
+    /// the surrogate's certified band (ŷ ± ε_cert); candidates whose
+    /// constraints are all certified-feasible skip the solver entirely.
+    /// Axis identity is verified positionally against `design_axes`.
+    /// A surrogate that cannot certify falls through to the prescreen/
+    /// full-solve tiers.
+    #[serde(default)]
+    pub surrogate: Option<String>,
 }
 
 /// Prescreen floor fallback — the same conservative screen depth the
@@ -693,6 +702,90 @@ fn screened_doc(doc: &Value, bmin: f64) -> Option<Value> {
     Some(sdoc)
 }
 
+/// P74 surrogate tier: evaluate the candidate through the certified
+/// surrogate band (ŷ ± ε_cert) — no solve at all. A certified band that
+/// satisfies every constraint edge certifies the candidate; one that
+/// cannot (band crosses a limit, or x is out of domain) returns None and
+/// the caller falls through to prescreen/full-solve. Band edges are
+/// symmetric, so a `le` constraint reads ŷ+ε and `ge` reads ŷ−ε —
+/// the surrogate's fitted `edge` kind is irrelevant to certification.
+fn try_surrogate(
+    x: &[f64],
+    opt: &OptimizeSpec,
+    sur: &crate::surrogate::Surrogate,
+    axis_violations: &[Option<f64>],
+    detail: &mut BTreeMap<String, Value>,
+) -> Option<EvalOutcome> {
+    let evals = sur.eval(x)?;
+    let edge = |time_s: f64, response: &str, upper: bool| -> Option<f64> {
+        surrogate_edge(&evals, time_s, response, upper)
+    };
+    // objective edge in the search direction
+    let minimize = opt.objective.direction == "min";
+    let objective = edge(opt.objective.time_s, &opt.objective.response, minimize)?;
+    let mut violations = Vec::with_capacity(opt.constraints.len());
+    for (c, av) in opt.constraints.iter().zip(axis_violations) {
+        if c.kind == "axis" {
+            violations.push(*av);
+            continue;
+        }
+        let le = c.sense == "le";
+        let e = edge(c.time_s, c.response.as_deref()?, le)?;
+        let viol = if le {
+            (e - c.limit) / c.limit.abs().max(TINY)
+        } else {
+            (c.limit - e) / c.limit.abs().max(TINY)
+        };
+        detail.insert(
+            format!("constraint.{}", c.name),
+            serde_json::json!({"certified_edge": e, "edge": "surrogate_certified",
+                               "limit": c.limit, "violation": viol}),
+        );
+        violations.push(Some(viol));
+    }
+    if violations.iter().flatten().any(|v| *v > 0.0) {
+        return None;
+    }
+    let objective_values: Vec<Option<f64>> = opt
+        .objectives
+        .iter()
+        .map(|o| edge(o.time_s, &o.response, o.direction == "min"))
+        .collect();
+    if objective_values.iter().any(|v| v.is_none()) && !opt.objectives.is_empty() {
+        return None;
+    }
+    detail.insert(
+        "surrogate".into(),
+        serde_json::json!({
+            "tier": "surrogate",
+            "artifact_sha256": sur.artifact_sha256,
+            "epsilon_cert": evals.iter().map(|e| serde_json::json!({
+                "name": e.name, "eps": e.eps})).collect::<Vec<_>>(),
+        }),
+    );
+    Some(EvalOutcome {
+        objective: Some(objective),
+        violations,
+        objective_values,
+        status: "executed·surrogate".into(),
+    })
+}
+
+/// Certified surrogate edge for a fitted (response, time_s): `upper`
+/// picks ŷ+ε_cert (le-sense / min-direction), `false` picks ŷ−ε_cert.
+fn surrogate_edge(
+    evals: &[crate::surrogate::SurrogateResponseEval],
+    time_s: f64,
+    response: &str,
+    upper: bool,
+) -> Option<f64> {
+    let e = evals.iter().find(|e| {
+        e.response == response
+            && (e.time_s - time_s).abs() <= time_s.abs().max(1e-300) * TIME_REL_TOL
+    })?;
+    e.y.map(|y| if upper { y + e.eps } else { y - e.eps })
+}
+
 /// P73 certified prescreen: evaluate the candidate on a screened solve.
 /// The screen certificate widens every emitted response edge by the
 /// dropped-state bound, so a constraint certified on the screened record
@@ -783,6 +876,7 @@ fn evaluate_candidate(
     opt: &OptimizeSpec,
     x: &[f64],
     cache: &mut actinv_core::run::PreparedCache,
+    surrogate: Option<&crate::surrogate::Surrogate>,
 ) -> (EvalOutcome, Option<String>, BTreeMap<String, Value>) {
     let mut detail = BTreeMap::new();
     let doc = match apply_axes(base_doc, &opt.design_axes, x) {
@@ -889,6 +983,18 @@ fn evaluate_candidate(
             )
         }
     };
+    // P74: certified surrogate tier — ŷ ± ε_cert certifies feasibility
+    // with no solve at all; falls through when the band cannot certify.
+    if let Some(sur) = surrogate {
+        if let Some(outcome) = try_surrogate(x, opt, sur, &axis_violations, &mut detail) {
+            return (outcome, Some(canon), detail);
+        }
+        detail.insert(
+            "surrogate".into(),
+            serde_json::json!({"tier": "surrogate_fallback",
+                "reason": "surrogate band crossed a limit, a response was unfitted, or x left the surrogate domain"}),
+        );
+    }
     // P73: certified prescreen — the screen cert's bound-widened edges
     // dominate the declared edges, so a certified pass on the screened
     // record proves the candidate feasible and skips the full solve.
@@ -1101,6 +1207,29 @@ pub fn run_optimize(
     let bounds: Vec<[f64; 2]> = opt.design_axes.iter().map(|a| a.bounds()).collect();
     let minimize = opt.objective.direction == "min";
 
+    // P74: certified surrogate tier — loaded once, axis identity verified
+    // positionally against design_axes before any candidate may use it.
+    let surrogate = match &opt.optimizer.surrogate {
+        Some(path) => {
+            let p = opt_dir.join(path);
+            let s = crate::surrogate::Surrogate::load_file(p.to_str().unwrap_or_default())
+                .map_err(|e| format!("optimizer.surrogate {path}: {e}"))?;
+            let expected: Vec<String> = opt
+                .design_axes
+                .iter()
+                .map(crate::surrogate::axis_name)
+                .collect();
+            if s.axis_names != expected {
+                return Err(format!(
+                    "optimizer.surrogate axes {:?} do not match design_axes {:?}",
+                    s.axis_names, expected
+                ));
+            }
+            Some(s)
+        }
+        None => None,
+    };
+
     // Resume cache: param digest -> reconstructed outcome + its ledger id.
     let mut resumed: std::collections::HashMap<String, (usize, EvalOutcome, Option<String>)> =
         Default::default();
@@ -1169,6 +1298,9 @@ pub fn run_optimize(
         let err_ref = &mut eval_err;
         let mut cache = actinv_core::run::PreparedCache::new();
         let cache_ref = &mut cache;
+        // Copyable reference so the move closure leaves `surrogate`
+        // owned for winner re-verification below.
+        let sur_ref = surrogate.as_ref();
         run_search(&bounds, &opt.optimizer, minimize, move |x| {
             let digest = param_digest(x);
             if let Some((id, out, sha)) = resumed.get(&digest) {
@@ -1182,7 +1314,8 @@ pub fn run_optimize(
                 return out.clone();
             }
             let t0 = std::time::Instant::now();
-            let (outcome, canon, detail) = evaluate_candidate(base_ref, opt_ref, x, cache_ref);
+            let (outcome, canon, detail) =
+                evaluate_candidate(base_ref, opt_ref, x, cache_ref, sur_ref);
             let row_detail = detail.clone();
             let wall = t0.elapsed().as_secs_f64();
             let spec_sha = canon.as_deref().map(|c| sha256_hex(c.as_bytes()));
@@ -1260,15 +1393,32 @@ pub fn run_optimize(
             .then(|| std::fs::read_to_string(&cand_path).ok())
             .flatten();
         if let Some(c) = canon {
-            // A prescreened row was ledgered on the *screened* solve —
-            // the re-execution must reproduce that evaluation (same
-            // screen options, certified edges), not the full solve's.
+            // A prescreened row was ledgered on the *screened* solve, a
+            // surrogate row on the certified band — the re-execution must
+            // reproduce the tier that produced the row, not the full solve.
             let prescreened = row
                 .constraint_detail
                 .get("prescreen")
                 .and_then(|p| p["tier"].as_str())
                 == Some("screened");
-            let re = if prescreened {
+            let surrogate_tier = row
+                .constraint_detail
+                .get("surrogate")
+                .and_then(|p| p["tier"].as_str())
+                == Some("surrogate");
+            enum ReRun {
+                Solve(Box<actinv_core::run::RunResult>),
+                Surrogate(Vec<crate::surrogate::SurrogateResponseEval>),
+            }
+            let re = if surrogate_tier {
+                let Some(sur) = surrogate.as_ref() else {
+                    return Err("surrogate-tier winner but no artifact loaded".into());
+                };
+                ReRun::Surrogate(
+                    sur.eval(&row.x)
+                        .ok_or("surrogate-tier winner left the domain")?,
+                )
+            } else if prescreened {
                 let doc: Value = serde_json::from_str(&c)
                     .map_err(|e| format!("cannot parse winner candidate spec: {e}"))?;
                 let bmin = prescreen_bmin(&doc, &opt);
@@ -1278,31 +1428,41 @@ pub fn run_optimize(
                     .map_err(|e| format!("winner spec serialize: {e}"))?;
                 let sspec =
                     actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&scanon)?)?;
-                actinv_core::run::run(&sspec, "optimize-verify")?
+                ReRun::Solve(Box::new(actinv_core::run::run(&sspec, "optimize-verify")?))
             } else {
                 let re_spec =
                     actinv_core::spec::Spec::from_json(&crate::resolve_catalog_json(&c)?)?;
-                actinv_core::run::run(&re_spec, "optimize-verify")?
+                ReRun::Solve(Box::new(actinv_core::run::run(&re_spec, "optimize-verify")?))
             };
-            let re_certified = re.screen.as_ref().and_then(|s| s["certified"].as_object());
-            let re_obj = if prescreened {
-                re_certified.and_then(|cm| {
+            let re_certified = match &re {
+                ReRun::Solve(r) => r.screen.as_ref().and_then(|s| s["certified"].as_object()),
+                ReRun::Surrogate(_) => None,
+            };
+            let re_obj = match &re {
+                ReRun::Surrogate(evals) => surrogate_edge(
+                    evals,
+                    opt.objective.time_s,
+                    &opt.objective.response,
+                    minimize,
+                ),
+                ReRun::Solve(r) if prescreened => re_certified.and_then(|cm| {
                     certified_edge_at(
-                        &re.steps,
+                        &r.steps,
                         cm,
                         opt.objective.time_s,
                         &opt.objective.response,
                         minimize,
                     )
-                })
-            } else {
-                select_step(&re.steps, opt.objective.time_s)
-                    .ok()
-                    .and_then(|st| {
-                        response_edge(st, &opt.objective.response, opt.objective.edge)
-                            .ok()
-                            .flatten()
-                    })
+                }),
+                ReRun::Solve(r) => {
+                    select_step(&r.steps, opt.objective.time_s)
+                        .ok()
+                        .and_then(|st| {
+                            response_edge(st, &opt.objective.response, opt.objective.edge)
+                                .ok()
+                                .flatten()
+                        })
+                }
             };
             let identical = re_obj == row.out.objective;
             // Re-execute the winner's banded constraint edges too — the
@@ -1316,28 +1476,33 @@ pub fn run_optimize(
                 .any(|k| k.starts_with("constraint."));
             for c in opt.constraints.iter().filter(|c| c.kind == "response") {
                 let name = format!("constraint.{}", c.name);
-                let re_edge = if prescreened {
-                    re_certified.and_then(|cm| {
+                let re_edge = match &re {
+                    ReRun::Surrogate(evals) => surrogate_edge(
+                        evals,
+                        c.time_s,
+                        c.response.as_deref().unwrap(),
+                        c.sense == "le",
+                    ),
+                    ReRun::Solve(r) if prescreened => re_certified.and_then(|cm| {
                         certified_edge_at(
-                            &re.steps,
+                            &r.steps,
                             cm,
                             c.time_s,
                             c.response.as_deref().unwrap(),
                             c.sense == "le",
                         )
-                    })
-                } else {
-                    select_step(&re.steps, c.time_s).ok().and_then(|st| {
+                    }),
+                    ReRun::Solve(r) => select_step(&r.steps, c.time_s).ok().and_then(|st| {
                         response_edge(st, c.response.as_deref().unwrap(), c.edge)
                             .ok()
                             .flatten()
-                    })
+                    }),
                 };
                 let ledgered = row
                     .constraint_detail
                     .get(&name)
                     .and_then(|d| {
-                        d.get(if prescreened {
+                        d.get(if prescreened || surrogate_tier {
                             "certified_edge"
                         } else {
                             "edge"
@@ -1513,11 +1678,18 @@ pub fn run_optimize(
             .get("prescreen")
             .and_then(|p| p["tier"].as_str())
             == Some("screened");
+        let surrogate_winner = rows[bi]
+            .constraint_detail
+            .get("surrogate")
+            .and_then(|p| p["tier"].as_str())
+            == Some("surrogate");
         serde_json::json!({
             "statement": format!(
                 "eval {} satisfies {}/{} response constraints at {} ({} at {}) under the base spec's covariance set",
                 rows[bi].eval_id, k, n_response,
-                if prescreened_winner {
+                if surrogate_winner {
+                    "their surrogate-certified edges (y +/- eps_cert)"
+                } else if prescreened_winner {
                     "their screen-certified bound-widened edges"
                 } else {
                     "their declared band edges"
@@ -1683,6 +1855,7 @@ mod tests {
             refine_step_fraction: 0.25,
             prescreen: false,
             prescreen_bmin_atoms_per_g: None,
+            surrogate: None,
         }
     }
 

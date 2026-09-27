@@ -1,0 +1,41 @@
+{
+ "pass": true,
+ "n": 7,
+ "checks": [
+  {
+   "name": "surrogate rows carry the surrogate tier",
+   "pass": true,
+   "detail": "3 executed rows"
+  },
+  {
+   "name": "surrogate status marked",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "artifact sha ledgered",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "surrogate winner certifies",
+   "pass": true,
+   "detail": "eval 0 satisfies 1/1 response constraints at their surrogate-certified edges (y +/- eps_cert) (conservativeupper at 0.95"
+  },
+  {
+   "name": "winner re-verification reproduced the surrogate eval",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "uncertifiable band falls through",
+   "pass": true,
+   "detail": "3 executed rows"
+  },
+  {
+   "name": "tight arm infeasible like a full search",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

@@ -9,6 +9,7 @@ training sha, holdout residual, and Lipschitz estimate."""
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -19,7 +20,7 @@ sys.path.insert(0, str(ROOT / "controls"))
 import p58_fixture  # noqa: E402
 import p60_case  # noqa: E402
 
-ACTINV = ROOT / "target/debug/actinv"
+ACTINV = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 OUT = ROOT / "results/g1_p74_surrogate.json"
 
 checks = []
