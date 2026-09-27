@@ -1,0 +1,26 @@
+{
+ "pass": true,
+ "n": 4,
+ "checks": [
+  {
+   "name": "all sweep points completed",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "warm prepared cache after first point",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "kept states recorded per point",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "warm points land sub-10s in debug ([1107, 1098] ms)",
+   "pass": true,
+   "detail": "certified-screening tier demonstrably faster than the cold solve"
+  }
+ ]
+}

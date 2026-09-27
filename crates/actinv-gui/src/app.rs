@@ -116,6 +116,9 @@ struct SweepUi {
     generation: u64,
     points: Vec<crate::sweep::CompletedPoint>,
     running: bool,
+    /// D1/P68: certified-screening tier — in-process shared-cache solves
+    /// with the P65 screen certificate on every point.
+    screened: bool,
 }
 
 impl Default for SweepUi {
@@ -133,6 +136,7 @@ impl Default for SweepUi {
             generation: 0,
             points: Vec::new(),
             running: false,
+            screened: false,
         }
     }
 }
@@ -1350,6 +1354,10 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
             } else if ui.button("Run sweep").clicked() {
                 self.run_sweep();
             }
+            ui.checkbox(
+                &mut self.sweep.screened,
+                "certified screening (warm cache — each point emits the P65 certificate)",
+            );
         });
         if self.sweep.points.is_empty() {
             ui.label("No completed points yet.");
@@ -1389,10 +1397,19 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 self.sweep.generation
             ));
             if let Some(p) = last {
+                let tier = match (p.cache_hit, p.screen_kept_states) {
+                    (Some(hit), Some(kept)) => format!(
+                        "screened · {} states kept · cache {}",
+                        kept,
+                        if hit { "warm" } else { "cold" }
+                    ),
+                    _ => "isolated worker".to_string(),
+                };
                 ui.monospace(format!(
-                    "latest: {} · {} ms · spec sha256 {}… — every rendered point is bound to the spec that produced it",
+                    "latest: {} · {} ms · {} · spec sha256 {}… — every rendered point is bound to the spec that produced it",
                     p.label,
                     p.elapsed_ms,
+                    tier,
                     &p.spec_sha256[..16]
                 ));
             }
@@ -1430,13 +1447,24 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                     std::process::id(),
                     self.sweep.generation
                 ));
-                match crate::sweep::spawn_sweep(points, self.sweep.generation, cache) {
-                    Ok(h) => {
+                let launched = if self.sweep.screened {
+                    crate::sweep::spawn_sweep_screened(
+                        points,
+                        self.sweep.generation,
+                        crate::sweep::SCREEN_BMIN,
+                    )
+                    .map(|h| (h, "certified-screening"))
+                } else {
+                    crate::sweep::spawn_sweep(points, self.sweep.generation, cache)
+                        .map(|h| (h, "isolated-worker"))
+                };
+                match launched {
+                    Ok((h, tier)) => {
                         self.sweep.handle = Some(h);
                         self.sweep.running = true;
                         self.report(Ok(format!(
-                            "Sweep running: {} generated specs through the isolated worker path.",
-                            n
+                            "Sweep running: {} generated specs through the {} path.",
+                            n, tier
                         )));
                     }
                     Err(e) => self.report(Err(format!("sweep launch: {e}"))),

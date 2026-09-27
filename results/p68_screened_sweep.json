@@ -1,0 +1,15 @@
+{
+  "kept_states": [
+    34,
+    34,
+    34
+  ],
+  "per_point_ms": [
+    22509,
+    1107,
+    1098
+  ],
+  "points": 3,
+  "wall_ms": 24741,
+  "warm_after_first": true
+}

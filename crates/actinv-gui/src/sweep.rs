@@ -154,6 +154,11 @@ pub struct CompletedPoint {
     pub spec_sha256: String,
     pub result: Result<Value, String>,
     pub elapsed_ms: u64,
+    /// Certified-screening tier (P68): whether this point reused the
+    /// shared prepared inputs (warm cache hit) and how many states the
+    /// screened solve kept. None for the isolated-worker tier.
+    pub cache_hit: Option<bool>,
+    pub screen_kept_states: Option<u64>,
 }
 
 /// Cancellable sweep run. Dropping the handle requests cancellation and
@@ -178,6 +183,86 @@ impl Drop for SweepHandle {
             let _ = s.join();
         }
     }
+}
+
+/// Certified-screening sweep tier (P68/D1): the same declared axes and
+/// point->spec binding, but each point is solved in-process through
+/// `run_with_cache` on one shared `PreparedCache` with `options.prune`
+/// "rate" and `options.screen` injected — every point emits the P65
+/// `screen` certificate (dropped-state bound widened onto the response
+/// intervals). Points land ~sub-second after the first cold prepare.
+/// Cancellation is checked between points.
+#[cfg(not(target_arch = "wasm32"))]
+pub const SCREEN_BMIN: f64 = 1e-4;
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn spawn_sweep_screened(
+    points: Vec<SweepPoint>,
+    generation: u64,
+    bmin: f64,
+) -> Result<SweepHandle, String> {
+    if !(bmin.is_finite() && bmin >= 0.0) {
+        return Err("screen bound must be finite and nonnegative".into());
+    }
+    let (tx, rx) = mpsc::channel();
+    let (cancel_tx, cancel_rx) = mpsc::channel::<()>();
+    let supervisor = std::thread::Builder::new()
+        .name("actinv-sweep-screened".into())
+        .stack_size(crate::model::SOLVER_STACK_BYTES)
+        .spawn(move || {
+            let mut cache = actinv_core::run::PreparedCache::new();
+            for point in points.into_iter() {
+                if cancel_rx.try_recv().is_ok() {
+                    return;
+                }
+                // Inject the screening options, then re-canonicalise so
+                // the emitted digest binds the spec that actually ran.
+                let injected: Result<(actinv_core::spec::Spec, String), String> = (|| {
+                    let mut doc: Value =
+                        serde_json::from_str(&point.spec_json).map_err(|e| e.to_string())?;
+                    doc["options"]["prune"] = Value::from("rate");
+                    doc["options"]["screen"] = serde_json::json!({"bmin_atoms_per_g": bmin});
+                    let text = serde_json::to_string(&doc).map_err(|e| e.to_string())?;
+                    let spec = actinv_core::spec::Spec::from_json(&text)?;
+                    Ok((spec, text))
+                })(
+                );
+                let t0 = std::time::Instant::now();
+                let (result, cache_hit, kept, digest) = match injected {
+                    Ok((spec, text)) => {
+                        let digest = sha256_hex(text.as_bytes());
+                        let r =
+                            actinv_core::run::run_with_cache(&spec, "sweep-screened", &mut cache)
+                                .and_then(|v| serde_json::to_value(v).map_err(|e| e.to_string()));
+                        let kept = r
+                            .as_ref()
+                            .ok()
+                            .and_then(|v| v["screen"]["kept_states"].as_u64());
+                        (r, Some(cache.last_hit()), kept, digest)
+                    }
+                    Err(e) => (Err(e), None, None, point.spec_sha256.clone()),
+                };
+                let send = tx.send(CompletedPoint {
+                    generation,
+                    param: point.param,
+                    label: point.label,
+                    spec_sha256: digest,
+                    result,
+                    elapsed_ms: t0.elapsed().as_millis() as u64,
+                    cache_hit,
+                    screen_kept_states: kept,
+                });
+                if send.is_err() {
+                    return;
+                }
+            }
+        })
+        .map_err(|e| e.to_string())?;
+    Ok(SweepHandle {
+        rx,
+        cancel: cancel_tx,
+        supervisor: Some(supervisor),
+    })
 }
 
 /// Sequentially execute a sweep through `worker::spawn` — the same isolated
@@ -211,6 +296,8 @@ pub fn spawn_sweep(
                     spec_sha256: String::new(),
                     result: Err(format!("could not create sweep cache root: {e}")),
                     elapsed_ms: 0,
+                    cache_hit: None,
+                    screen_kept_states: None,
                 });
                 return;
             }
@@ -230,6 +317,8 @@ pub fn spawn_sweep(
                             spec_sha256: point.spec_sha256,
                             result: Err(e),
                             elapsed_ms: 0,
+                            cache_hit: None,
+                            screen_kept_states: None,
                         });
                         continue;
                     }
@@ -245,6 +334,8 @@ pub fn spawn_sweep(
                             spec_sha256: point.spec_sha256,
                             result: Err(e),
                             elapsed_ms: 0,
+                            cache_hit: None,
+                            screen_kept_states: None,
                         });
                         continue;
                     }
@@ -281,6 +372,8 @@ pub fn spawn_sweep(
                     spec_sha256: point.spec_sha256,
                     result,
                     elapsed_ms,
+                    cache_hit: None,
+                    screen_kept_states: None,
                 });
                 if send.is_err() || cancelled {
                     return; // superseded or cancelled: stop dequeuing
@@ -398,6 +491,8 @@ mod tests {
             spec_sha256: "s".into(),
             result: Err("e".into()),
             elapsed_ms: 0,
+            cache_hit: None,
+            screen_kept_states: None,
         };
         assert!(!admissible(2, &p));
         assert!(admissible(1, &p));

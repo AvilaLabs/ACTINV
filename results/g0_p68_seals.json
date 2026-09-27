@@ -1,0 +1,31 @@
+{
+  "sealed": true,
+  "roadmap_sha256": "bc3c765f047f2e886f340b0a55faf6b07bb9b8f73e47b6ee19343114555089b4",
+  "seals": {
+    "sweep_rs": {
+      "path": "crates/actinv-gui/src/sweep.rs",
+      "present": true,
+      "sha256": "1d5993708774539ce4ad1ade8bcbff1026dffefc8b765a5ba4e9923fddebc22c"
+    },
+    "app_rs": {
+      "path": "crates/actinv-gui/src/app.rs",
+      "present": true,
+      "sha256": "f90a268aea7b740263dc4a68bd108241c755d3aeb822f1d5743b7f61102b6ca2"
+    },
+    "smoke_rs": {
+      "path": "crates/actinv-gui/src/smoke.rs",
+      "present": true,
+      "sha256": "76d603c56ebb753d3a7cdbde48ad1cde979a8264990ffd52968a2701541553ed"
+    },
+    "g1": {
+      "path": "controls/g1_p68_mechanics.py",
+      "present": true,
+      "sha256": "02ad2f82eab2f6a6e692bdf9b21c33472d91f4d68b12c5606cb5ffa0fea29ee2"
+    },
+    "g0": {
+      "path": "controls/g0_p68_seal.py",
+      "present": true,
+      "sha256": "192c28f4dd9aa8ea75134a58011b4c366672de88492b569ed0af819dbcc9d163"
+    }
+  }
+}

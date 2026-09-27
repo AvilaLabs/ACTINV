@@ -1,0 +1,22 @@
+{
+  "phase": "P68",
+  "status": "P68-CLOSED",
+  "amendments": 0,
+  "gates": {
+    "g1_mechanics": {
+      "n": 4,
+      "pass": true
+    },
+    "screened_sweep_smoke": {
+      "points": 3,
+      "warm_after_first": true,
+      "per_point_ms": [
+        17902,
+        828,
+        865
+      ]
+    }
+  },
+  "delivered": "Live certified sweep tier in the workbench: spawn_sweep_screened runs points in-process on a shared PreparedCache with options.prune=rate + options.screen injected; each point emits the P65 certificate and re-digests the injected spec so spec_sha256 still binds what ran. UI gains a 'certified screening' checkbox; each plotted point reports screened/isolated tier, kept states, and cache warmth. Warm points land ~0.8s on the debug binary.",
+  "honest_note": "warm hits apply to axes whose fingerprinted inputs are unchanged (composition, schedule); spectrum-touching axes (flux normalization) legitimately reprepare per point. Cancellation is checked between points \u2014 a mid-point cancel waits for the in-flight sub-second solve."
+}

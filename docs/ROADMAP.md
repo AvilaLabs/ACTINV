@@ -2132,3 +2132,40 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
   emits the nondominated subset of the banded-certified feasible set (each front member
   `certified: true` under the declared constraint edges) with ledger cross-verification.
   C5 lane complete.
+
+## Tier-D — the category leap (post-C-table)
+
+C1–C5 hardened the solver. The D lanes turn it into something the field
+doesn't have at all. They compose: D1 rides D4's speed and D2's bands.
+
+- **D1 — Live certified workbench.** Drag a composition/schedule slider,
+  certified bands redraw in ~sub-second. The P65 `screen` tier + P62
+  prepared-cache make interactive solves feasible inside the existing
+  egui/wasm workbench; the P67 frontier becomes a live object. Nobody in
+  activation has an interactive *certified* design surface — FISPACT and
+  OpenMC are batch. This is the visible product.
+- **D2 — Demonstrated calibration.** Fit the `unmodeled_relative` field
+  per material/channel from measured corpora (FNS etc.) + holdout
+  certification: bands whose stated coverage is *verified on experiments
+  the fit never saw*. Nobody can claim verified error bars; it converts
+  C1's instrument into the deepest trust claim available.
+- **D3 — Facility-scale activation twin.** Multi-component lifecycle:
+  hundreds of parts × operation schedule × maintenance × R2S dose →
+  per-component certified clearance. ALARA does the shape unbanded and
+  batch. Largest scope, largest contract value, largest build.
+- **D4 — Certified surrogates.** Surrogate trained on ACTINV's own
+  solves carrying a provable bound vs the certified band — sub-ms answers
+  that are approximate-with-certificate, not approximate-but-hopeful.
+  Structurally impossible for codes without bands. Enables D1 at scale.
+- **D5 — Continuous assimilation.** P60's Kalman measurement ranking +
+  P55's inverse + certified bands: feed assays back, the facility model's
+  bands shrink where measured. A research program, not a sprint.
+
+**Direction taken**: D1 first — it makes every certification surface
+demonstrable live; D2 is the deepest claim and lands after D1's surface
+exists to carry it.
+- 2026-09-27 — **P68 closes `P68-CLOSED`** (`results/verdict_p68.json`). D1 first leg:
+  the workbench sweep gains a certified-screening tier — in-process shared-cache
+  solves with `options.screen` injected, P65 certificate on every point, warm
+  points ~0.8 s (debug) on the real 709g library. The sweep panel reports the
+  tier, kept states, and cache warmth per point. D1 live-surface core landed.

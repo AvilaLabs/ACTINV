@@ -151,6 +151,103 @@ fn sweep_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
     Ok(())
 }
 
+/// Certified-screening sweep verification (P68/D1): the live tier's real
+/// machinery — `spawn_sweep_screened` in-process on a shared prepared
+/// cache — must emit the P65 `screen` certificate on every point, reuse
+/// prepared inputs after the first point, and bind each result to the
+/// sha of the *screen-injected* spec it actually ran.
+#[cfg(not(target_arch = "wasm32"))]
+fn sweep_screened_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
+    use crate::sweep::{self, SweepAxis};
+    use std::time::Instant;
+    let document =
+        model::decode_problem(&std::fs::read_to_string(spec_path).map_err(|e| e.to_string())?)
+            .map_err(|e| format!("sweep base decode: {e}"))?;
+    let values: Vec<f64> = std::env::var("ACTINV_GUI_SMOKE_SWEEP_VALUES")
+        .unwrap_or_else(|_| "0.5,1.0,2.0".into())
+        .split(',')
+        .filter_map(|s| s.trim().parse().ok())
+        .collect();
+    // The cooling-time axis exercises the warm path: prepared inputs are
+    // fingerprinted on file-derived + spectrum inputs, so schedule-only
+    // changes reuse the prepare on every point after the first.
+    let axis = SweepAxis::CoolingTimeS { step_index: 1 };
+    let points =
+        sweep::sweep_specs(&document, &axis, &values).map_err(|e| format!("sweep_specs: {e}"))?;
+
+    let t0 = Instant::now();
+    let h = sweep::spawn_sweep_screened(points.clone(), 7, sweep::SCREEN_BMIN)
+        .map_err(|e| format!("screened sweep spawn: {e}"))?;
+    let mut done = Vec::new();
+    while let Ok(p) = h.rx.recv_timeout(Duration::from_secs(600)) {
+        if !sweep::admissible(7, &p) {
+            return Err("screened sweep emitted the wrong generation".into());
+        }
+        done.push(p);
+        if done.len() == points.len() {
+            break;
+        }
+    }
+    drop(h);
+    if done.len() != points.len() {
+        return Err(format!(
+            "screened sweep produced {}/{}",
+            done.len(),
+            points.len()
+        ));
+    }
+    let mut latencies = Vec::new();
+    let mut kept = Vec::new();
+    for (i, p) in done.iter().enumerate() {
+        let v = p
+            .result
+            .as_ref()
+            .map_err(|e| format!("screened point {i} failed: {e}"))?;
+        let sc = v["screen"]
+            .as_object()
+            .ok_or("screened point carries no screen certificate")?;
+        if !sc.contains_key("certified") {
+            return Err(format!(
+                "screened point {i}: certificate missing 'certified'"
+            ));
+        }
+        kept.push(sc["kept_states"].as_u64().unwrap_or(0));
+        // the emitted digest must bind the injected spec text
+        let mut doc: serde_json::Value = serde_json::from_str(&points[i].spec_json)
+            .map_err(|e| format!("regenerated spec decode: {e}"))?;
+        doc["options"]["prune"] = serde_json::Value::from("rate");
+        doc["options"]["screen"] = serde_json::json!({"bmin_atoms_per_g": sweep::SCREEN_BMIN});
+        let expect = {
+            use sha2::Digest;
+            let mut hsh = sha2::Sha256::new();
+            hsh.update(serde_json::to_string(&doc).map_err(|e| e.to_string())?);
+            hsh.finalize()
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect::<String>()
+        };
+        if p.spec_sha256 != expect {
+            return Err(format!(
+                "point {i}: spec digest does not bind the screened spec"
+            ));
+        }
+        if i > 0 && p.cache_hit != Some(true) {
+            return Err(format!("point {i}: prepared cache was not warm"));
+        }
+        latencies.push(p.elapsed_ms);
+    }
+    let report = serde_json::json!({
+        "points": done.len(),
+        "wall_ms": t0.elapsed().as_millis() as u64,
+        "per_point_ms": latencies,
+        "kept_states": kept,
+        "warm_after_first": done.iter().skip(1).all(|p| p.cache_hit == Some(true)),
+    });
+    model::write_json(&output.join("sweep-screened-smoke.json"), &report)
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
 pub fn from_env() -> Result<(), String> {
     let Some(path) = std::env::var_os("ACTINV_GUI_SMOKE_SPEC") else {
         return Ok(());
@@ -159,6 +256,16 @@ pub fn from_env() -> Result<(), String> {
     let output = PathBuf::from(
         std::env::var_os("ACTINV_GUI_SMOKE_OUT").ok_or("smoke output directory required")?,
     );
+    #[cfg(not(target_arch = "wasm32"))]
+    if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP_SCREENED").is_some() {
+        return std::thread::Builder::new()
+            .name("sweep-screened-smoke".into())
+            .stack_size(model::SOLVER_STACK_BYTES)
+            .spawn(move || sweep_screened_smoke(&spec_path, &output))
+            .map_err(|e| e.to_string())?
+            .join()
+            .map_err(|_| "screened sweep smoke panicked".to_owned())?;
+    }
     if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP").is_some() {
         return std::thread::Builder::new()
             .name("sweep-smoke".into())
