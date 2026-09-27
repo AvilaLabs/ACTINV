@@ -2194,3 +2194,28 @@ exists to carry it.
   solves with `options.screen` injected, P65 certificate on every point, warm
   points ~0.8 s (debug) on the real 709g library. The sweep panel reports the
   tier, kept states, and cache warmth per point. D1 live-surface core landed.
+- 2026-09-28 — **P73** (`results/g1_p73_prescreen.json`). `optimizer.prescreen`
+  evaluates each candidate on a certified screened solve first; a certified pass
+  skips the full solve. The screen floor is material-relative — auto
+  `bmin = 1e-24 × declared composition total`, absolute `1e-1` fallback only
+  when the composition cannot be summed. Winner re-verification reproduces the
+  screened evaluation with the identical floor.
+- 2026-09-28 — **D4 leg 2** (`results/g1_p74_surrogate.json`,
+  `results/g1_p74_surrogate_optimize.json`). `actinv surrogate fit/eval` emits
+  `ŷ ⊕ ε_cert` (holdout max-residual + Lipschitz term, nonzero floor), refusing
+  extrapolation. `optimizer.surrogate` loads the artifact once, verifies axis
+  identity positionally, and evaluates candidates through the certified band
+  with zero solver work; bands that cannot certify fall through to prescreen →
+  full solve. Winner re-verification replays the deterministic eval.
+- 2026-09-28 — **D3 leg 1** (`results/g1_d3_twin.json`). `actinv twin` — the
+  facility decision layer over `actinv mesh` output: declared clearance limits
+  evaluated on per-cell certified band edges across every step time, emitting
+  the cell × time × limit margin matrix, per-cell cleared/restricted verdicts,
+  and a facility rollup with the binding cell per (limit, time). Surfaced and
+  fixed a mesh bug: `cell_result_fields` filtering could strip `pruned_states`
+  before the runner's own integrity accounting read it.
+- 2026-09-28 — **D5 leg 1** (`results/g1_d5_assimilate.json`). `actinv
+  assimilate` folds an `actinv-assay-1` measurement into a response band via
+  the stated log-Gaussian fusion on ln-scale — emitted Kalman gain, posterior
+  band, and a `consistent`/`marginal`/`conflict` verdict: a measurement outside
+  the prior's declared interval is flagged, never silently absorbed.
