@@ -120,6 +120,40 @@ check("provenance shas recorded",
       bool(a["provenance"]["result_sha256"])
       and bool(a["provenance"]["assay_sha256"]))
 
+# --emit-result: the updated document is a valid run result carrying the
+# posterior band — and it chains into a second assimilate (D5 sequential).
+up = tmp / "updated.json"
+cli("assimilate", "--result", str(rp), "--assay", str(tmp / "precise.json"),
+    "--emit-result", str(up))
+res2 = json.loads(up.read_text())
+step2 = next(s for s in res2["steps"] if abs(s["t_s"] - 0.9) < 0.2)
+post_resp = step2["uncertainty"]["responses"]["heat.total"]
+check("emit-result band equals the posterior",
+      abs(post_resp["conservative_interval"][0] - a["update"]["posterior_band"][0])
+      <= a["update"]["posterior_band"][0] * 1e-9
+      and abs(post_resp["nominal"] - a["update"]["posterior"]) < 1e-60)
+check("emit-result stamps assimilation provenance",
+      "assimilation" in post_resp and "assimilated" in res2)
+
+# Sequential assimilation: a second precise assay fuses on the posterior.
+# Value at the posterior nominal — inside the (narrowed) prior band.
+seq = tmp / "seq_assay.json"
+post_nominal = post_resp["nominal"]
+seq.write_text(json.dumps({"schema": "actinv-assay-1",
+                           "response": "heat.total", "time_s": 0.9,
+                           "value": post_nominal,
+                           "standard_uncertainty": post_nominal * 0.01}))
+so = tmp / "seq.out.json"
+cli("assimilate", "--result", str(up), "--assay", str(seq), "--out", str(so))
+s = json.loads(so.read_text())
+check("second assay shrinks the band further",
+      s["update"]["posterior_relative_standard_uncertainty"]
+      < a["update"]["posterior_relative_standard_uncertainty"],
+      f"{s['update']['posterior_relative_standard_uncertainty']:.3e} vs "
+      f"{a['update']['posterior_relative_standard_uncertainty']:.3e}")
+check("chain verdict consistent",
+      s["verdict"] == "consistent")
+
 failed = [c for c in checks if not c["pass"]]
 OUT.write_text(json.dumps({"pass": not failed, "n": len(checks),
                            "checks": checks}, indent=1) + "\n")

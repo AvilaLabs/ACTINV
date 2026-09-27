@@ -812,17 +812,18 @@ pub fn main_from(a: Vec<String>) {
         "assimilate" => {
             if a.len() < 3 {
                 die(
-                    "usage: actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json]\nFold an assay into a certified response band (log-Gaussian update with an emitted Kalman gain and a consistency verdict).",
+                    "usage: actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json] [--emit-result UPDATED.json]\nFold an assay into a certified response band (log-Gaussian update with an emitted Kalman gain and a consistency verdict).\n--emit-result writes the full run result with the response's band replaced by the posterior — chainable into decide/clearance/another assimilate.",
                     2,
                 );
             }
             let options = valued_options(&a[2..]);
-            reject_unknown(&options, &["--result", "--assay", "--out"]);
+            reject_unknown(&options, &["--result", "--assay", "--out", "--emit-result"]);
             let result = required_option(&options, "--result");
             let assay = required_option(&options, "--assay");
             let out = options.get("--out").copied();
-            let summary =
-                crate::assimilate::run(result, assay, out).unwrap_or_else(|error| die(error, 1));
+            let emit = options.get("--emit-result").copied();
+            let summary = crate::assimilate::run(result, assay, out, emit)
+                .unwrap_or_else(|error| die(error, 1));
             if out.is_none() {
                 println!(
                     "{}",

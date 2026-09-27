@@ -33,7 +33,68 @@ fn find_step(result: &Value, time_s: f64) -> Option<&Value> {
     })
 }
 
-pub fn run(result_path: &str, assay_path: &str, out_path: Option<&str>) -> Result<Value, String> {
+/// The shared log-Gaussian fusion: prior (nominal, relative σ) meets a
+/// measurement (value, relative σ) in ln space. Returned values feed both
+/// `assimilate`'s record and `twin`'s in-place band update.
+pub struct Fusion {
+    pub posterior: f64,
+    pub posterior_rel_su: f64,
+    pub band: [f64; 2],
+    pub kalman_gain: f64,
+}
+
+pub fn fuse(nominal: f64, prior_su: f64, meas: f64, meas_su: f64, multiplier: f64) -> Fusion {
+    let s_p = (prior_su / nominal).max(1e-300);
+    let s_m = (meas_su / meas).max(1e-300);
+    let k = s_p * s_p / (s_p * s_p + s_m * s_m);
+    let x_post = nominal.ln() + k * (meas.ln() - nominal.ln());
+    let s_post = (s_p * s_p * (1.0 - k)).sqrt();
+    let post = x_post.exp();
+    let half = (multiplier * s_post).exp();
+    Fusion {
+        posterior: post,
+        posterior_rel_su: s_post,
+        band: [post / half, post * half],
+        kalman_gain: k,
+    }
+}
+
+/// Apply a fusion to a response uncertainty object in place: nominal,
+/// standard uncertainties, and both intervals move to the posterior, and
+/// the fusion is stamped under `assimilation` for provenance.
+pub fn apply_fusion(resp: &mut Value, f: &Fusion, assay_sha: &str) {
+    let obj = match resp.as_object_mut() {
+        Some(o) => o,
+        None => return,
+    };
+    obj.insert("nominal".into(), json!(f.posterior));
+    obj.insert(
+        "combined_standard_uncertainty".into(),
+        json!(f.posterior * f.posterior_rel_su),
+    );
+    obj.insert(
+        "relative_standard_uncertainty".into(),
+        json!(f.posterior_rel_su),
+    );
+    obj.insert("normal_interval".into(), json!(f.band));
+    obj.insert("conservative_interval".into(), json!(f.band));
+    obj.insert(
+        "assimilation".into(),
+        json!({
+            "kalman_gain": f.kalman_gain,
+            "posterior_relative_standard_uncertainty": f.posterior_rel_su,
+            "assay_sha256": assay_sha,
+            "note": "posterior after log-Gaussian fusion with the declared assay; intervals are the posterior band at the response's own confidence multiplier",
+        }),
+    );
+}
+
+pub fn run(
+    result_path: &str,
+    assay_path: &str,
+    out_path: Option<&str>,
+    emit_result: Option<&str>,
+) -> Result<Value, String> {
     let result_text = std::fs::read_to_string(result_path)
         .map_err(|e| format!("cannot read {result_path}: {e}"))?;
     let result: Value =
@@ -85,17 +146,11 @@ pub fn run(result_path: &str, assay_path: &str, out_path: Option<&str>) -> Resul
         .ok_or("response carries no standard uncertainty")?;
     let multiplier = resp["normal_multiplier"].as_f64().unwrap_or(1.959964);
 
-    // Relative-σ fusion in ln space.
+    // Relative-σ fusion in ln space (shared with `twin`'s assay layer).
+    let f = fuse(nominal, prior_su, meas, meas_su, multiplier);
+    let (k, s_post, post, band) = (f.kalman_gain, f.posterior_rel_su, f.posterior, f.band);
     let s_p = (prior_su / nominal).max(1e-300);
     let s_m = (meas_su / meas).max(1e-300);
-    let x = nominal.ln();
-    let y = meas.ln();
-    let k = s_p * s_p / (s_p * s_p + s_m * s_m);
-    let x_post = x + k * (y - x);
-    let s_post = (s_p * s_p * (1.0 - k)).sqrt();
-    let post = x_post.exp();
-    let half = (multiplier * s_post).exp();
-    let band = [post / half, post * half];
 
     // Consistency verdict: is the measurement inside the prior band?
     let prior_band = resp["conservative_interval"]
@@ -155,6 +210,40 @@ pub fn run(result_path: &str, assay_path: &str, out_path: Option<&str>) -> Resul
     });
     if let Some(p) = out_path {
         std::fs::write(p, serde_json::to_string_pretty(&out).unwrap())
+            .map_err(|e| format!("cannot write {p}: {e}"))?;
+    }
+    if let Some(p) = emit_result {
+        // Re-issue the run result with the response band replaced by the
+        // posterior — the document feeds `decide`/`clearance`/another
+        // `assimilate` unchanged, carrying `assimilation` provenance.
+        let mut updated = result.clone();
+        let assay_sha =
+            actinv_data::builder::sha256_file(std::path::Path::new(assay_path)).unwrap_or_default();
+        if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
+            steps.iter_mut().find(|s| {
+                s["t_s"]
+                    .as_f64()
+                    .map(|t| is_close(t, time_s))
+                    .unwrap_or(false)
+            })
+        }) {
+            if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{response}")) {
+                apply_fusion(r, &f, &assay_sha);
+            }
+        }
+        updated
+            .as_object_mut()
+            .ok_or("result did not serialize as an object")?
+            .insert(
+                "assimilated".into(),
+                json!({
+                    "response": response, "time_s": time_s,
+                    "posterior": post,
+                    "posterior_relative_standard_uncertainty": s_post,
+                    "verdict": verdict,
+                }),
+            );
+        std::fs::write(p, serde_json::to_string_pretty(&updated).unwrap())
             .map_err(|e| format!("cannot write {p}: {e}"))?;
     }
     Ok(out)

@@ -107,12 +107,16 @@ check("mesh emitted cells",
 
 # Twin: one clearance limit on heat.total. Loose limit clears all
 # cells; a tight one restricts the hot cell (and possibly others).
-def twinspec(limit, name):
+def twinspec(limit, name, times=None, assays=None):
+    doc = {"spec": "actinv-twin-1", "mesh_output": str(mesh_out),
+           "limits": [{"name": "heat", "response": "heat.total",
+                       "limit": limit}]}
+    if times is not None:
+        doc["times_s"] = times
+    if assays is not None:
+        doc["assays"] = assays
     p = tmp / f"{name}.json"
-    p.write_text(json.dumps({
-        "spec": "actinv-twin-1", "mesh_output": str(mesh_out),
-        "limits": [{"name": "heat", "response": "heat.total",
-                    "limit": limit}]}))
+    p.write_text(json.dumps(doc))
     op = tmp / f"{name}.out.json"
     cli("twin", str(p), str(op))
     return json.loads(op.read_text())
@@ -154,6 +158,52 @@ bad2.write_text(json.dumps({"spec": "actinv-twin-1",
                                         "limit": 1.0}]}))
 cli("twin", str(bad2), expect_err="no certified band")
 check("unfitted response refused", True)
+
+# D5→D3: an assay on the hot cell shrinks its band below the limit and
+# flips the verdict — measure the cell, clear the cell.
+cells = {}
+for line in mesh_out.read_text().splitlines():
+    rec = json.loads(line)
+    if rec.get("record") == "cell":
+        st = rec["result"]["steps"][-1]
+        cells[rec["id"]] = st["uncertainty"]["responses"]["heat.total"]
+hot = cells["cell-1"]
+cool = cells["cell-0"]
+# Limit sits in the upper tail of the hot cell's band (still above the
+# cool cells' edges): the hot cell is restricted on the prior band but a
+# low-side assay can pull its posterior edge under the limit.
+mid = cool["conservative_interval"][1] + 0.85 * (
+    hot["conservative_interval"][1] - cool["conservative_interval"][1])
+edge_t = json.loads(mesh_out.read_text().splitlines()[1])["result"]["steps"][-1]["t_s"]
+print(f"hot band {hot['conservative_interval']} cool band {cool['conservative_interval']} limit {mid:.3e} t={edge_t}")
+
+# Evaluate at the measured time so only the fused step decides.
+pre = twinspec(mid, "pre_assay", times=[edge_t])
+verdicts = {c["cell"]: c["verdict"] for c in pre["per_cell"]}
+check("pre-assay: hot cell restricted, cool cleared",
+      verdicts.get("cell-1") == "restricted"
+      and verdicts.get("cell-0") == "cleared",
+      f"{verdicts}")
+
+# Assay inside the prior band but low enough that the posterior's upper
+# edge clears the limit: posterior_hi ≈ meas·e^(m·s_post) with s_post≈2%
+# → meas = limit/1.1 leaves headroom either side.
+meas = mid / 1.1
+assert hot["conservative_interval"][0] < meas < hot["conservative_interval"][1], \
+    f"assay {meas:.3e} outside prior band {hot['conservative_interval']}"
+ap = tmp / "cell1_assay.json"
+ap.write_text(json.dumps({"schema": "actinv-assay-1",
+                          "response": "heat.total",
+                          "time_s": edge_t,
+                          "value": meas,
+                          "standard_uncertainty": meas * 0.02}))
+post = twinspec(mid, "with_assay", times=[edge_t],
+              assays=[{"cell": "cell-1", "assay": str(ap)}])
+pv = {c["cell"]: c["verdict"] for c in post["per_cell"]}
+check("assay flips the hot cell to cleared",
+      pv.get("cell-1") == "cleared", f"{pv}")
+check("assimilated cells recorded",
+      "cell-1" in post["facility"]["assimilated_cells"])
 
 failed = [c for c in checks if not c["pass"]]
 OUT.write_text(json.dumps({"pass": not failed, "n": len(checks),

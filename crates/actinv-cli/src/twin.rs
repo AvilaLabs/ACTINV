@@ -15,6 +15,7 @@
 //! never produces banded.
 
 use serde_json::{json, Map, Value};
+use std::collections::HashMap;
 use std::io::Read as _;
 use std::path::Path;
 
@@ -29,6 +30,18 @@ struct TwinSpec {
     /// Decision times in seconds; absent → every step time.
     #[serde(default)]
     times_s: Option<Vec<f64>>,
+    /// D5→D3: assays applied to named cells before margins are scored —
+    /// the assay's own `response`/`time_s` select the band it updates.
+    #[serde(default)]
+    assays: Option<Vec<CellAssay>>,
+}
+
+#[derive(serde::Deserialize)]
+struct CellAssay {
+    /// Mesh cell id the assay measures.
+    cell: String,
+    /// Path to an actinv-assay-1 document, resolved against the spec dir.
+    assay: String,
 }
 
 #[derive(serde::Deserialize)]
@@ -43,6 +56,10 @@ struct LimitDecl {
     #[serde(default = "le")]
     sense: String,
 }
+
+/// Parsed assay: (response key, time_s, measured value, std uncertainty,
+/// assay file sha256).
+type LoadedAssay = (String, f64, f64, f64, String);
 
 fn le() -> String {
     "le".into()
@@ -87,18 +104,83 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
     file.read_to_string(&mut raw)
         .map_err(|e| format!("cannot read {}: {e}", mesh_path.display()))?;
 
+    // Pre-load assays: cell id -> (fusion inputs + response/time selectors).
+    // Each assay is validated up front so a malformed one fails the run
+    // before any margin is scored on a silently un-updated band.
+    let mut assays: HashMap<String, Vec<LoadedAssay>> = HashMap::new();
+    for a in spec.assays.iter().flatten() {
+        let ap = base.join(&a.assay);
+        let atext = std::fs::read_to_string(&ap)
+            .map_err(|e| format!("cannot read {}: {e}", ap.display()))?;
+        let av: Value =
+            serde_json::from_str(&atext).map_err(|e| format!("{}: {e}", ap.display()))?;
+        if av["schema"].as_str() != Some("actinv-assay-1") {
+            return Err(format!(
+                "{}: assay schema must be actinv-assay-1",
+                ap.display()
+            ));
+        }
+        let resp = av["response"].as_str().unwrap_or_default().to_string();
+        let t = av["time_s"].as_f64().unwrap_or(f64::NAN);
+        let meas = av["value"].as_f64().unwrap_or(0.0);
+        let su = av["standard_uncertainty"].as_f64().unwrap_or(0.0);
+        if !t.is_finite() || meas <= 0.0 || su <= 0.0 {
+            return Err(format!(
+                "{}: assay needs positive value, uncertainty, time_s",
+                ap.display()
+            ));
+        }
+        let sha = actinv_data::builder::sha256_file(&ap).unwrap_or_default();
+        assays
+            .entry(a.cell.clone())
+            .or_default()
+            .push((resp, t, meas, su, sha));
+    }
+    let mut assimilated_cells: Vec<String> = Vec::new();
+
     let mut cells: Vec<Value> = Vec::new();
     let mut n_cells = 0usize;
     // (response, time) -> the binding cell (minimum margin)
     let mut binding: Map<String, Value> = Map::new();
     for line in raw.lines().filter(|l| l.trim().starts_with('{')) {
-        let rec: Value =
+        let mut rec: Value =
             serde_json::from_str(line).map_err(|e| format!("mesh output line: {e}"))?;
         if rec["record"].as_str() != Some("cell") {
             continue;
         }
         n_cells += 1;
         let id = rec["id"].as_str().unwrap_or("?").to_string();
+        // Assays fuse into the cell's band before any margin is scored.
+        for (resp_name, t_s, meas, su, sha) in assays.get(&id).cloned().unwrap_or_default() {
+            let Some(steps) = rec["result"]["steps"].as_array_mut() else {
+                return Err(format!("cell {id}: result carries no steps"));
+            };
+            let Some(st) = steps
+                .iter_mut()
+                .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+            else {
+                return Err(format!("cell {id}: assay time_s={t_s} matches no step"));
+            };
+            let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{resp_name}")) else {
+                return Err(format!(
+                    "cell {id}: assay response '{resp_name}' has no certified band"
+                ));
+            };
+            let nominal = r["nominal"].as_f64().unwrap_or(0.0);
+            let su_prior = r["combined_standard_uncertainty"]
+                .as_f64()
+                .or_else(|| r["mf33_standard_uncertainty"].as_f64())
+                .unwrap_or(0.0);
+            let mult = r["normal_multiplier"].as_f64().unwrap_or(1.959964);
+            if nominal <= 0.0 || su_prior <= 0.0 {
+                return Err(format!(
+                    "cell {id}: '{resp_name}' prior is not positive — cannot fuse"
+                ));
+            }
+            let f = crate::assimilate::fuse(nominal, su_prior, meas, su, mult);
+            crate::assimilate::apply_fusion(r, &f, &sha);
+            assimilated_cells.push(id.clone());
+        }
         let steps = rec["result"]["steps"]
             .as_array()
             .ok_or_else(|| format!("cell {id}: result carries no steps"))?;
@@ -174,6 +256,7 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             "cleared": cleared,
             "restricted": n_cells - cleared,
             "binding_cells": binding,
+            "assimilated_cells": assimilated_cells,
         },
         "note": "clearance is on the certified band edge, not the nominal — a cell clears only when its conservative interval clears the limit",
     });

@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 9,
+ "n": 12,
  "checks": [
   {
    "name": "mesh emitted cells",
@@ -44,6 +44,21 @@
   },
   {
    "name": "unfitted response refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "pre-assay: hot cell restricted, cool cleared",
+   "pass": true,
+   "detail": "{'cell-0': 'cleared', 'cell-1': 'restricted', 'cell-2': 'cleared'}"
+  },
+  {
+   "name": "assay flips the hot cell to cleared",
+   "pass": true,
+   "detail": "{'cell-0': 'cleared', 'cell-1': 'cleared', 'cell-2': 'cleared'}"
+  },
+  {
+   "name": "assimilated cells recorded",
    "pass": true,
    "detail": ""
   }

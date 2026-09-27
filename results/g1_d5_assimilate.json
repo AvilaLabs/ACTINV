@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 10,
+ "n": 14,
  "checks": [
   {
    "name": "precise assay gains ~1",
@@ -49,6 +49,26 @@
   },
   {
    "name": "provenance shas recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "emit-result band equals the posterior",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "emit-result stamps assimilation provenance",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "second assay shrinks the band further",
+   "pass": true,
+   "detail": "7.056e-03 vs 9.958e-03"
+  },
+  {
+   "name": "chain verdict consistent",
    "pass": true,
    "detail": ""
   }
