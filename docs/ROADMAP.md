@@ -2127,3 +2127,8 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
   for the certified surfaces: `actinv.decide` (all three spec arms, identical documents and
   refusals — `run_decide_doc` split out, P64 gates re-verified), `actinv.optimize`, and
   `options.screen` through `solve`. C4 lane complete.
+- 2026-09-27 — **P67 closes `P67-CLOSED`** (`results/verdict_p67.json`). C5 shipped:
+  `optspec.objectives` adds ≥2 named objectives measured free per solve; `result.pareto`
+  emits the nondominated subset of the banded-certified feasible set (each front member
+  `certified: true` under the declared constraint edges) with ledger cross-verification.
+  C5 lane complete.

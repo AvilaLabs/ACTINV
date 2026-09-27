@@ -1,0 +1,25 @@
+{
+  "phase": "P67",
+  "status": "P67-CLOSED",
+  "protocol_sha256": "d4ace791828a629fb29ee91962c7cd4ede975a63b8ce6e843a33ebaef8c57aee",
+  "amendments": 0,
+  "gates": {
+    "g1_mechanics": {
+      "n": 11,
+      "pass": true
+    },
+    "g3_demo": {
+      "n": 7,
+      "pass": true
+    },
+    "g4_determinism": {
+      "pass": true
+    },
+    "g5_checker": {
+      "checks": 5,
+      "pass": true
+    }
+  },
+  "delivered": "optspec.objectives (>=2 {response,time_s,edge,direction} entries) evaluated free on every candidate's solve and ledgered per-eval; result.pareto emits the nondominated subset of the certified-feasible set ({x, param_digest, objectives map, violation_sum, certified:true}) plus n_evals/n_certified/n_front accounting. Absent objectives = byte-identical output. Real-data front (heat@1y banded vs Nb94@100y banded, RA-steel 3-axis box) re-derived bit-exactly from the ledger.",
+  "honest_note": "objective remains the sole search driver \u2014 the front is the evaluated set's nondominated boundary, not a fitted curve; n_evals states the coverage."
+}
