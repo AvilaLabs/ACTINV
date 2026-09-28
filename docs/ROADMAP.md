@@ -2285,9 +2285,14 @@ exists to carry it.
   source-attributed half-life/energy/mode corrections applied after the
   primary+fallback merge, ledgered per applied entry.
   *D6c*: the build index emits `product_coverage` — emitted (zap, lfs)
-  states vs built targets, with up to 200 named unbuilt products; the
-  shipped TENDL-2025 library leaks 43% (1,273/2,941) of emitted product
-  states, dominated by Ta/Hf/La.
+  states vs built targets, with up to 200 named unbuilt products.
+  Audited against the shipped corpora: the default unpatched bundle
+  (2,850 targets) leaves 787/3,632 (22%) unbuilt — **all of them nuclides
+  with no evaluated file in any library on disk** (TENDL-exhausted;
+  EAF-2010 adds zero), so the default already sits at the evaluated-data
+  boundary. The patched bundle (1,679 targets) sits at 43% — the extra
+  662 are defect-quarantined evaluations, a documented tradeoff, not
+  omittable files.
   *D6d*: named group structures accept an `xN` refinement suffix
   (`fispact-709x4` = 2836 log-uniform subgroups) applied identically at
   build and run resolution.

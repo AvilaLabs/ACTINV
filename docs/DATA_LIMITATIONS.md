@@ -180,6 +180,34 @@ unaffected, and publishing a remediated copy of a superseded library
 would only invite confusion. The upstream report sits with the TENDL
 team alongside the P41 emitted-state report.
 
+## Product-state coverage (evaluated-data boundary)
+
+Every activation row emits a product state (zap, lfs); a product can
+decay under the shipped decay data but can only undergo secondary
+activation if a built target exists for it. The build index emits
+`product_coverage` naming the uncovered states (D6c,
+`results/g1_d6c_product_coverage.json`).
+
+Measured on the shipped bundles:
+
+- **Default `tendl-2025-neutron` (2,850 targets)**: 3,632 emitted
+  states, 787 (22%) without a built target — and **every one of the 787
+  has no evaluated file in TENDL or any other library on disk**
+  (EAF-2010 contributes zero beyond TENDL). This is the evaluated-data
+  boundary: near-dripline and superheavy nuclides nobody has evaluated,
+  plus 75 isomeric states. No build extension can close it; the states
+  decay correctly but cannot transmute further.
+- **`tendl-2025-patched` (1,679 targets)**: 2,940 emitted, 1,272 (43%)
+  unbuilt — the 610 no-file states plus 662 states whose TENDL files
+  are defect-quarantined by the P25 census (a coverage-vs-defect
+  tradeoff, not omitted files).
+
+For fusion-relevant structural materials (Fe, Cr, Ni, W) all
+first-generation daughters are covered; the uncovered set is
+dominated by second-generation and exotic fragments that matter only
+at high fluence × long lifetime, where secondary capture competes
+with decay.
+
 ## Remediation path
 
 1. **Corrected TENDL release** — the upstream fix is committed; when it
