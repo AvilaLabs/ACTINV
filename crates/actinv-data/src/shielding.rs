@@ -1898,6 +1898,175 @@ fn resolved_pointwise(
     Ok(acc)
 }
 
+/// The isotope's atomic-weight ratio for the SIGMA1 kernel: the L-group
+/// AWRI for legacy formats, the neutron pair's target mass for RML.
+fn range_awri(range: &crate::resonance::ResonanceRange) -> Option<f64> {
+    use crate::resonance::RangeData;
+    let a = match &range.data {
+        RangeData::BreitWigner(res) | RangeData::ReichMoore(res) => res
+            .groups
+            .iter()
+            .map(|g| g.awri.abs())
+            .fold(0.0_f64, f64::max),
+        RangeData::RMatrixLimited(rml) => rml
+            .particle_pairs
+            .iter()
+            .map(|p| p.mass_a.abs())
+            .fold(0.0_f64, f64::max),
+        _ => 0.0,
+    };
+    (a.is_finite() && a > 0.0).then_some(a)
+}
+
+/// One temperature's SIGMA1-broadened view of a resolved range. The 0 K
+/// pointwise reconstruction is sampled once on a shared grid — resonance
+/// windows at ~Γ/8 plus a lethargy fill — and broadened per channel;
+/// every quadrature node then interpolates instead of re-reconstructing.
+struct Broadened {
+    energy: Vec<f64>,
+    /// Broadened curves in channel order [elastic, capture, fission,
+    /// competitive] — broadening is linear so the total is their sum.
+    channel: [Vec<f64>; 4],
+}
+
+impl Broadened {
+    /// Linear-in-E interpolation — the same convention `doppler::broaden`
+    /// applies to its input grid.
+    fn xs_at(&self, energy: f64) -> crate::resonance::CrossSections {
+        let n = self.energy.len();
+        let pick = |i: usize, j: usize, w: f64| -> crate::resonance::CrossSections {
+            let mut xs = crate::resonance::CrossSections::default();
+            for (v, ch) in [
+                &mut xs.elastic,
+                &mut xs.capture,
+                &mut xs.fission,
+                &mut xs.competitive,
+            ]
+            .into_iter()
+            .zip(&self.channel)
+            {
+                *v = ch[i] + w * (ch[j] - ch[i]);
+            }
+            xs
+        };
+        if energy <= self.energy[0] {
+            pick(0, 0, 0.0)
+        } else if energy >= self.energy[n - 1] {
+            pick(n - 1, n - 1, 0.0)
+        } else {
+            let upper = self.energy.partition_point(|&v| v <= energy);
+            let lower = upper - 1;
+            let w = (energy - self.energy[lower]) / (self.energy[upper] - self.energy[lower]);
+            pick(lower, upper, w)
+        }
+    }
+}
+
+/// Reconstruction grid for one resolved range: every resonance padded
+/// ±5·width and sampled at ~width/8, plus a Δu=1e-3 lethargy fill so the
+/// smooth valleys between resonances are covered too.
+fn resolved_grid(range: &crate::resonance::ResonanceRange) -> Vec<f64> {
+    let mut e = Vec::new();
+    let knots = resolved_knots(range);
+    for [lo, hi] in knots.as_chunks::<2>().0 {
+        let (lo, hi) = (*lo, *hi);
+        if !(lo.is_finite() && hi.is_finite() && hi > lo) {
+            continue;
+        }
+        // ~80 uniform-in-E samples over the padded window.
+        for k in 0..=80 {
+            e.push(lo + (hi - lo) * f64::from(k) / 80.0);
+        }
+    }
+    let (emin, emax) = (range.energy_min.max(1e-12), range.energy_max);
+    if emax > emin {
+        let n = ((emax / emin).ln() / 1e-3).ceil().max(1.0) as usize;
+        for k in 0..=n {
+            e.push(emin * (k as f64 * 1e-3).exp());
+        }
+    }
+    e.retain(|v| v.is_finite() && *v > 0.0);
+    e.sort_by(f64::total_cmp);
+    e.dedup_by(|a, b| (*b - *a).abs() <= a.abs().max(1e-12) * 1e-9);
+    e
+}
+
+/// Broaden one resolved range to `temperature_k`. Returns `None` for
+/// range kinds the pointwise path cannot reconstruct (they contribute
+/// nothing to the resolved quadrature).
+fn broaden_range(
+    range: &crate::resonance::ResonanceRange,
+    temperature_k: f64,
+) -> Result<Option<Broadened>, String> {
+    use crate::resonance::RangeData;
+    let reconstructable = matches!(
+        range.data,
+        RangeData::RMatrixLimited(_) | RangeData::BreitWigner(_) | RangeData::ReichMoore(_)
+    );
+    if !reconstructable {
+        return Ok(None);
+    }
+    let awri = range_awri(range).ok_or_else(|| {
+        format!(
+            "resolved range [{}, {}] has no positive AWRI for broadening",
+            range.energy_min, range.energy_max
+        )
+    })?;
+    let e = resolved_grid(range);
+    if e.len() < 2 {
+        return Ok(None);
+    }
+    let mut raw = Vec::with_capacity(e.len());
+    for &v in &e {
+        raw.push(resolved_pointwise(&[range], v)?);
+    }
+    let inputs: [Vec<f64>; 4] = [
+        raw.iter().map(|x| x.elastic).collect(),
+        raw.iter().map(|x| x.capture).collect(),
+        raw.iter().map(|x| x.fission).collect(),
+        raw.iter().map(|x| x.competitive).collect(),
+    ];
+    let mut channel: [Vec<f64>; 4] = Default::default();
+    for (dst, input) in channel.iter_mut().zip(inputs.iter()) {
+        *dst = if temperature_k > 0.0 {
+            crate::doppler::broaden(&e, input, temperature_k, awri, &e)?
+        } else {
+            input.clone()
+        };
+    }
+    Ok(Some(Broadened { energy: e, channel }))
+}
+
+/// The resolved-range cross-section source for one quadrature pass:
+/// the exact 0 K reconstruction, or a temperature's broadened grids.
+enum ResolvedXs<'a> {
+    Exact(&'a [&'a crate::resonance::ResonanceRange]),
+    Broadened(&'a [&'a Broadened]),
+}
+
+fn resolved_xs(
+    src: &ResolvedXs<'_>,
+    energy: f64,
+) -> Result<crate::resonance::CrossSections, String> {
+    match src {
+        ResolvedXs::Exact(ranges) => resolved_pointwise(ranges, energy),
+        ResolvedXs::Broadened(grids) => {
+            let mut acc = crate::resonance::CrossSections::default();
+            for g in grids.iter() {
+                if energy < g.energy[0] || energy > g.energy[g.energy.len() - 1] {
+                    continue;
+                }
+                let xs = g.xs_at(energy);
+                acc.elastic += xs.elastic;
+                acc.capture += xs.capture;
+                acc.fission += xs.fission;
+                acc.competitive += xs.competitive;
+            }
+            Ok(acc)
+        }
+    }
+}
+
 /// Resonance-centre knots for one resolved range, padded by ±5 total
 /// widths so an adaptive quadrature can never stride over a narrow peak.
 fn resolved_knots(range: &crate::resonance::ResonanceRange) -> Vec<f64> {
@@ -1967,12 +2136,8 @@ const GL8_W: [f64; 8] = [
 /// One quadrature point's contribution to every moment at once.
 /// Returns [xs_t, xs_e, xs_f, xs_g, w_0..w_K, xw(0,0)..xw(3,K)]
 /// laid out as [4 + K + 4·K] values.
-fn resolved_integrand(
-    resolved: &[&crate::resonance::ResonanceRange],
-    sig0: &[f64],
-    u: f64,
-) -> Result<Vec<f64>, String> {
-    let xs = resolved_pointwise(resolved, u.exp())?;
+fn resolved_integrand(source: &ResolvedXs<'_>, sig0: &[f64], u: f64) -> Result<Vec<f64>, String> {
+    let xs = resolved_xs(source, u.exp())?;
     let sig_t = xs.total();
     let channels = [sig_t, xs.elastic, xs.fission, xs.capture];
     let mut out = Vec::with_capacity(4 + 5 * sig0.len());
@@ -2060,20 +2225,34 @@ struct ResolvedSeg {
 }
 
 fn resolved_segment_moments(
-    resolved: &[&crate::resonance::ResonanceRange],
+    source: &ResolvedXs<'_>,
+    knot_ranges: &[&crate::resonance::ResonanceRange],
     a: f64,
     b: f64,
     sig0: &[f64],
 ) -> Result<ResolvedSeg, String> {
     let k = sig0.len();
     let n = 4 + 5 * k;
-    let f = |u: f64| resolved_integrand(resolved, sig0, u);
-    // Knots: segment edges plus padded resonance centres inside.
+    let f = |u: f64| resolved_integrand(source, sig0, u);
+    // Knots: segment edges plus padded resonance centres inside — the
+    // broadened curves peak at the same centres as the 0 K ones. On a
+    // broadened grid the integrand additionally carries a linear corner
+    // at every grid energy; those land as knots too so no GL8 window
+    // ever straddles an interpolation break.
     let mut knots = vec![a.ln(), b.ln()];
-    for range in resolved {
+    for range in knot_ranges {
         for knot in resolved_knots(range) {
             if knot > a && knot < b && knot.is_finite() && knot > 0.0 {
                 knots.push(knot.ln());
+            }
+        }
+    }
+    if let ResolvedXs::Broadened(grids) = source {
+        for g in grids.iter() {
+            for &ev in &g.energy {
+                if ev > a && ev < b {
+                    knots.push(ev.ln());
+                }
             }
         }
     }
@@ -2118,6 +2297,18 @@ pub(crate) fn collapse_to_groups(
 ) -> Result<Vec<ShieldGroup>, String> {
     let bounds = &groups.boundaries_ev;
     let n_groups = bounds.len().saturating_sub(1);
+    // D6e: the resolved-range quadrature is Doppler-broadened per
+    // temperature — SIGMA1 on the 0 K reconstruction, sampled once per
+    // (range, T) so every overlapping group segment shares the grid.
+    let broadened: Vec<Vec<Option<Broadened>>> = resolved
+        .iter()
+        .map(|r| {
+            temps
+                .iter()
+                .map(|&t| broaden_range(r, t))
+                .collect::<Result<Vec<_>, String>>()
+        })
+        .collect::<Result<Vec<_>, String>>()?;
     let mut out = Vec::new();
     for g in 0..n_groups {
         let (hi, lo) = (bounds[g].max(bounds[g + 1]), bounds[g].min(bounds[g + 1]));
@@ -2229,35 +2420,65 @@ pub(crate) fn collapse_to_groups(
             }
         }
         // D6e resolved-range moments: pointwise quadrature per segment.
-        // `res_inf` carries lethargy-mean infinite-dilution xs over the
-        // resolved union; `res_w`/`res_xw` carry raw segment integrals so
-        // the full-group fold can combine covered classes directly.
-        let mut res_inf = [0.0f64; 4];
-        let mut res_w = vec![0.0f64; sig0.len()];
-        let mut res_xw = vec![vec![0.0f64; sig0.len()]; 4];
+        // `res_inf[t]` is the lethargy-mean infinite-dilution xs at that
+        // temperature — SIGMA1 does not conserve the lethargy mean, so the
+        // unshielded reference genuinely moves with T and the Bondarenko
+        // factor must divide by its own column's dilute xs (against the
+        // 0 K mean, a near-dilute σ0 column would report f > 1 — a
+        // temperature shift masquerading as anti-shielding). `res_w` and
+        // `res_xw` carry raw segment integrals for the full-group fold.
+        let mut res_inf = vec![[0.0f64; 4]; temps.len()];
+        let mut res_w = vec![vec![0.0f64; sig0.len()]; temps.len()];
+        let mut res_xw = vec![vec![vec![0.0f64; sig0.len()]; temps.len()]; 4];
         let mut res_sigma_p = 0.0f64;
         if covered_r > 0.0 {
             for &(a, b) in &res_segs {
-                let covering: Vec<&crate::resonance::ResonanceRange> = resolved
+                let covering_idx: Vec<usize> = resolved
                     .iter()
-                    .copied()
-                    .filter(|r| r.energy_min < b && r.energy_max > a)
+                    .enumerate()
+                    .filter(|(_, r)| r.energy_min < b && r.energy_max > a)
+                    .map(|(idx, _)| idx)
                     .collect();
-                if covering.is_empty() {
+                if covering_idx.is_empty() {
                     continue;
                 }
-                let seg = resolved_segment_moments(&covering, a, b, sig0)?;
-                let weight = seg.lethargy / covered_r;
-                for c in 0..4 {
-                    res_inf[c] += weight * seg.inf[c] / seg.lethargy;
-                }
+                let covering: Vec<&crate::resonance::ResonanceRange> =
+                    covering_idx.iter().map(|&i| resolved[i]).collect();
+                // σ_p keeps the exact 0 K reconstruction — the potential
+                // scatter proxy is a smooth background term, not a
+                // temperature column.
+                let seg0 =
+                    resolved_segment_moments(&ResolvedXs::Exact(&covering), &covering, a, b, sig0)?;
                 // Potential scattering over a resolved range is approximated
                 // by the lethargy-mean elastic channel.
-                res_sigma_p += weight * seg.inf[1] / seg.lethargy;
-                for (i, _) in sig0.iter().enumerate() {
-                    res_w[i] += seg.w[i];
+                res_sigma_p += (seg0.lethargy / covered_r) * seg0.inf[1] / seg0.lethargy;
+                // One quadrature per temperature on the SIGMA1-broadened
+                // grids — resonance valleys fill with T, so the escape
+                // weight honestly relaxes as the column warms.
+                for (t, _) in temps.iter().enumerate() {
+                    let grids: Vec<&Broadened> = covering_idx
+                        .iter()
+                        .filter_map(|&ri| broadened[ri][t].as_ref())
+                        .collect();
+                    if grids.is_empty() {
+                        continue;
+                    }
+                    let seg = resolved_segment_moments(
+                        &ResolvedXs::Broadened(&grids),
+                        &covering,
+                        a,
+                        b,
+                        sig0,
+                    )?;
+                    let weight = seg.lethargy / covered_r;
                     for c in 0..4 {
-                        res_xw[c][i] += seg.xw[c][i];
+                        res_inf[t][c] += weight * seg.inf[c] / seg.lethargy;
+                    }
+                    for (i, _) in sig0.iter().enumerate() {
+                        res_w[t][i] += seg.w[i];
+                        for c in 0..4 {
+                            res_xw[c][t][i] += seg.xw[c][i];
+                        }
                     }
                 }
             }
@@ -2353,27 +2574,37 @@ pub(crate) fn collapse_to_groups(
             }
         }
         let bkg_t = background[0];
-        let mut group_unshielded = [0.0f64; 4];
+        // Unshielded is per-temperature internally: the resolved dilute
+        // mean moves with T, so each column's factor divides by its own
+        // dilute xs. The emitted `group_unshielded_b` is the lowest-T
+        // column — the table's natural reference point.
+        let mut unshielded_t = vec![[0.0f64; 4]; temps.len()];
         let mut group_shielded = vec![vec![vec![0.0f64; temps.len()]; sig0.len()]; 4];
         let mut group_factors = vec![vec![vec![1.0f64; temps.len()]; sig0.len()]; 4];
+        let overlap_u = overlap - overlap_r;
         for c in 0..4 {
             // Unshielded group xs: unresolved segments carry their node
             // means, resolved segments carry the quadrature integral, the
             // remainder keeps the smooth MF=3 background.
-            let overlap_u = overlap - overlap_r;
-            group_unshielded[c] =
-                overlap_u * inf[c] + overlap_r * res_inf[c] + (1.0 - overlap) * background[c];
-            if group_unshielded[c] == 0.0 {
+            for t in 0..temps.len() {
+                unshielded_t[t][c] = overlap_u * inf[c]
+                    + overlap_r * res_inf[t][c]
+                    + (1.0 - overlap) * background[c];
+            }
+            if unshielded_t.iter().all(|u| u[c] == 0.0) {
                 continue;
             }
             for (i, &s0) in sig0.iter().enumerate() {
                 let w_rest = s0 / (s0 + bkg_t);
                 for t in 0..temps.len() {
+                    if unshielded_t[t][c] == 0.0 {
+                        continue;
+                    }
                     if i == 0 {
                         // The infinite-dilution column is the reference by
                         // definition; pin it exactly rather than leaving the
                         // ~1e-10 float residual of the weight fold.
-                        group_shielded[c][i][t] = group_unshielded[c];
+                        group_shielded[c][i][t] = unshielded_t[t][c];
                         group_factors[c][i][t] = 1.0;
                         continue;
                     }
@@ -2382,16 +2613,17 @@ pub(crate) fn collapse_to_groups(
                     // integrals, plus the uncovered background under its
                     // own escape weight.
                     let num = covered_u * xw_seg[c][i][t]
-                        + res_xw[c][i]
+                        + res_xw[c][t][i]
                         + rest_width * background[c] * w_rest;
-                    let den = covered_u * weight_mean[i][t] + res_w[i] + rest_width * w_rest;
+                    let den = covered_u * weight_mean[i][t] + res_w[t][i] + rest_width * w_rest;
                     if den > 0.0 {
                         group_shielded[c][i][t] = num / den;
-                        group_factors[c][i][t] = group_shielded[c][i][t] / group_unshielded[c];
+                        group_factors[c][i][t] = group_shielded[c][i][t] / unshielded_t[t][c];
                     }
                 }
             }
         }
+        let group_unshielded = unshielded_t[0];
         let _ = res_sigma_p;
         out.push(ShieldGroup {
             group: g,
@@ -2521,8 +2753,15 @@ mod tests {
         // stepped over: knot-seeded adaptive quadrature recovers the peak's
         // contribution where a plain fixed subdivision would miss it.
         let range = bw_range(1000.0, 0.5, 0.5);
-        let seg = resolved_segment_moments(&[&range], 500.0, 2000.0, &[1.0e10, 1.0])
-            .expect("segment moments");
+        let ranges = [&range];
+        let seg = resolved_segment_moments(
+            &ResolvedXs::Exact(&ranges),
+            &ranges,
+            500.0,
+            2000.0,
+            &[1.0e10, 1.0],
+        )
+        .expect("segment moments");
         assert!(seg.inf[3] > 0.0, "capture moment vanished: {:?}", seg.inf);
         // The capture integral must be dominated by the peak: compare
         // against the two-sided Breit-Wigner estimate
@@ -2539,7 +2778,14 @@ mod tests {
         assert!(seg.w[1] < seg.w[0]);
         assert!(seg.w[1] > 0.0 && seg.xw[3][1] > 0.0);
         // Determinism: repeating the integration is bit-identical.
-        let again = resolved_segment_moments(&[&range], 500.0, 2000.0, &[1.0e10, 1.0]).unwrap();
+        let again = resolved_segment_moments(
+            &ResolvedXs::Exact(&ranges),
+            &ranges,
+            500.0,
+            2000.0,
+            &[1.0e10, 1.0],
+        )
+        .unwrap();
         assert_eq!(seg.inf, again.inf);
         assert_eq!(seg.w, again.w);
     }
@@ -2549,7 +2795,14 @@ mod tests {
         // A segment disjoint from every range integrates to zero, never to
         // a fabricated background.
         let range = bw_range(1000.0, 0.5, 0.5);
-        let res = resolved_segment_moments(&[&range], 4000.0, 8000.0, &[1.0e10]);
+        let ranges = [&range];
+        let res = resolved_segment_moments(
+            &ResolvedXs::Exact(&ranges),
+            &ranges,
+            4000.0,
+            8000.0,
+            &[1.0e10],
+        );
         assert!(res.is_err() || res.unwrap().inf.iter().all(|v| *v == 0.0));
     }
 

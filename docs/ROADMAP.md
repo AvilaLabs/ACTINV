@@ -2352,5 +2352,15 @@ exists to carry it.
   R-matrix limited), using the escape-probability weight σ0/(σ0+σt) to
   match the unresolved probability-table convention; unresolved groups'
   arithmetic is unchanged by construction (resolved terms reduce to zero
-  when res_segs is empty). Gate: W-186 capture factor falls to 0.028 at
-  σ0=0.1 in its resolved region while Fe-56 smooth groups stay at 1.0.
+  when res_segs is empty). 2026-09-28 follow-on: the quadrature now runs
+  per temperature column on a SIGMA1-broadened grid (`doppler::broaden`
+  over the 0 K reconstruction, sampled once per (range, T) — resonance
+  windows at ~Γ/8 plus a Δu=1e-3 lethargy fill, grid breaks hoisted into
+  the knot set so no GL8 window straddles an interpolation corner), and
+  each column's factor divides by its own dilute mean — SIGMA1 does not
+  conserve the lethargy mean, so a 0 K denominator would report the
+  dilute temperature shift as f>1 anti-shielding. Gate: W-186 capture
+  factor falls to 0.028 at σ0=0.1, relaxes monotonically upward with T
+  (0.0278→0.0286 over 293–1200 K), and Fe-56's monotone σ0 trend is
+  restored exactly. Cost: ~5× the resolved-range quadrature work; a
+  six-evaluation table build runs ~25 min under the local scope.

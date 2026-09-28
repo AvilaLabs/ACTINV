@@ -42,7 +42,7 @@ EXPECTED_CHECKS = {
     "composition_dilution_computes_sigma0",
     "uncovered_named",
     "require_complete_fails_closed",
-    "uncertainty_combination_rejected",
+    "uncertainty_combination_fails_on_missing_covariance",
     "sha_mismatch_rejected",
     "boundary_mismatch_rejected",
     "mesh_surface_accepts_section",

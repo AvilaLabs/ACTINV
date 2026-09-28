@@ -1,8 +1,8 @@
 {
  "schema": "actinv-p19-g1-shield-1",
- "builder": "6 shielding targets, 0 evaluations without unresolved data, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p19_g1_stage/shield.json, sha256 b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
- "wall_seconds": 692.29,
- "artifact_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+ "builder": "6 shielding targets, 0 evaluations without unresolved data, 0 cache hits, neutron /home/connoravila/Documents/actinv/target/p19_g1_stage/shield.json, sha256 8f46bde47a9ac390057aa4a9eb1af36ec5d043536693f8a6c96efb212e1c9fe1",
+ "wall_seconds": 1895.77,
+ "artifact_sha256": "8f46bde47a9ac390057aa4a9eb1af36ec5d043536693f8a6c96efb212e1c9fe1",
  "eval_sha256": {
   "W-186": "ff8cb04fa35fc4fb5e84d6b406238f05c0797f6fc873f5555e869999e508e083",
   "Ag-107": "63772d0fbfa9619e8ce6626eeda8bf7b27233c26cfca268f4299b7b799aae647",
@@ -33,42 +33,42 @@
  "probes": {
   "W-186": {
    "nodes": 24,
-   "groups": 24,
+   "groups": 455,
    "inf_factor": 1.0,
    "monotone_in_sigma0": true,
    "finite": true
   },
   "Ag-107": {
    "nodes": 18,
-   "groups": 18,
+   "groups": 460,
    "inf_factor": 1.0,
    "monotone_in_sigma0": true,
    "finite": true
   },
   "Ta-181": {
    "nodes": 26,
-   "groups": 26,
+   "groups": 456,
    "inf_factor": 1.0,
    "monotone_in_sigma0": true,
    "finite": true
   },
   "Nb-93": {
    "nodes": 33,
-   "groups": 34,
+   "groups": 476,
    "inf_factor": 1.0,
    "monotone_in_sigma0": true,
    "finite": true
   },
   "U-238": {
    "nodes": 83,
-   "groups": 44,
+   "groups": 509,
    "inf_factor": 1.0,
    "monotone_in_sigma0": true,
    "finite": true
   },
   "Fe-56": {
    "nodes": 14,
-   "groups": 11,
+   "groups": 557,
    "inf_factor": 1.0,
    "monotone_in_sigma0": true,
    "finite": true

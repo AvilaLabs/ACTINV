@@ -125,6 +125,24 @@ def main() -> int:
           len(w_res) > len(w_groups) // 2,
           f"{len(w_res)}/{len(w_groups)} resolved-covered")
 
+    # D6e temperature dependence: the resolved quadrature is SIGMA1-
+    # broadened per column, so at fixed small σ0 the capture factor must
+    # relax toward 1 as T rises — broadened valleys stop self-shielding.
+    w_deep = min(
+        w_res,
+        key=lambda g: g["group_factors"]["capture"][-1][0],
+    )
+    fac_t = w_deep["group_factors"]["capture"][-1]
+    check("W186 capture factor rises with T at smallest σ0",
+          all(fac_t[k + 1] >= fac_t[k] - 1e-9 for k in range(len(fac_t) - 1))
+          and fac_t[-1] > fac_t[0],
+          f"group {w_deep['group']}: {['%.4f' % v for v in fac_t]}")
+    check("W186 factors stay ≤ 1 under broadening",
+          all(v <= 1.0 + 1e-9 for row in w_deep["group_factors"]["capture"]
+              for v in row),
+          "capture factors above 1 would mean the broadened quadrature "
+          "invents anti-shielding")
+
     return write_report()
 
 

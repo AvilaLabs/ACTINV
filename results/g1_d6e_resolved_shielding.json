@@ -1,7 +1,7 @@
 {
   "gate": "g1_d6e_resolved_shielding",
-  "passed": 18,
-  "total": 18,
+  "passed": 20,
+  "total": 20,
   "verdict": "PASS",
   "checks": [
     {
@@ -42,12 +42,12 @@
     {
       "check": "Fe56: capture factor < 1 at \u03c30=0.1",
       "ok": true,
-      "detail": "group 495 f=0.1118"
+      "detail": "group 495 f=0.1153"
     },
     {
       "check": "Fe56: capture factor monotone-ish",
       "ok": true,
-      "detail": "group 495: ['1.000', '1.000', '0.996', '0.959', '0.741', '0.372', '0.252', '0.185', '0.138', '0.112']"
+      "detail": "group 495: ['1.000', '1.000', '0.997', '0.973', '0.801', '0.410', '0.271', '0.196', '0.144', '0.115']"
     },
     {
       "check": "W186: resolved_overlap_fraction emitted",
@@ -72,27 +72,37 @@
     {
       "check": "W186: capture factor < 1 at \u03c30=0.1",
       "ok": true,
-      "detail": "group 366 f=0.0276"
+      "detail": "group 366 f=0.0278"
     },
     {
       "check": "W186: capture factor monotone-ish",
       "ok": true,
-      "detail": "group 366: ['1.000', '0.954', '0.710', '0.302', '0.102', '0.045', '0.034', '0.030', '0.028', '0.028']"
+      "detail": "group 366: ['1.000', '0.964', '0.750', '0.321', '0.104', '0.045', '0.035', '0.030', '0.028', '0.028']"
     },
     {
       "check": "Fe56 smooth group stays unshielded",
       "ok": true,
-      "detail": "group 0: min=0.999960"
+      "detail": "group 0: min=0.999956"
     },
     {
       "check": "W186 deep suppression exists",
       "ok": true,
-      "detail": "min capture factor 0.0276"
+      "detail": "min capture factor 0.0278"
     },
     {
       "check": "W186 resolved coverage is the dominant mode",
       "ok": true,
       "detail": "432/455 resolved-covered"
+    },
+    {
+      "check": "W186 capture factor rises with T at smallest \u03c30",
+      "ok": true,
+      "detail": "group 366: ['0.0278', '0.0280', '0.0283', '0.0286']"
+    },
+    {
+      "check": "W186 factors stay \u2264 1 under broadening",
+      "ok": true,
+      "detail": "capture factors above 1 would mean the broadened quadrature invents anti-shielding"
     }
   ]
 }

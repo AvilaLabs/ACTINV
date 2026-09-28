@@ -1,6 +1,6 @@
 {
  "schema": "actinv-p19-g2-runtime-1",
- "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
+ "table_sha256": "8f46bde47a9ac390057aa4a9eb1af36ec5d043536693f8a6c96efb212e1c9fe1",
  "checks": {
   "absent_deterministic": true,
   "fixed_dilution_changes_rate": true,
@@ -9,19 +9,19 @@
   "composition_dilution_computes_sigma0": true,
   "uncovered_named": true,
   "require_complete_fails_closed": true,
-  "uncertainty_combination_rejected": true,
+  "uncertainty_combination_fails_on_missing_covariance": true,
   "sha_mismatch_rejected": true,
   "boundary_mismatch_rejected": true,
   "mesh_surface_accepts_section": true
  },
  "details": {
-  "table_sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384",
-  "w187_ratio_sigma0_0p1": 0.7232523287566518,
+  "table_sha256": "8f46bde47a9ac390057aa4a9eb1af36ec5d043536693f8a6c96efb212e1c9fe1",
+  "w187_ratio_sigma0_0p1": 0.6019887044274143,
   "composition_sigma0_eff_b": {
-   "Fe56": 0.3293539208082381,
-   "W186": 83.06580674408474
+   "Fe56": 5.557247139619576,
+   "W186": 278.7983206230324
   }
  },
- "wall_seconds": 11.64,
+ "wall_seconds": 17.38,
  "pass": true
 }

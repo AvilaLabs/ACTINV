@@ -222,15 +222,20 @@ def main() -> None:
         and "lack table coverage" in fe_req_result["stderr"]
     )
 
-    # -- leg 5: uncertainty + self_shielding is rejected --------------------
+    # -- leg 5: uncertainty + self_shielding now runs — the covariance
+    #    collapse folds the shield plan's per-row scales (run.rs), so the
+    #    combination is legal and only fails on the missing covariance
+    #    artifact. The check pins that ordering: the run must reach the
+    #    covariance input stage ("cannot stat"), not bounce off a
+    #    combination refusal.
     unc_spec = WORK / "uncertain.json"
     unc = json.loads(fixed_spec.read_text())
     unc["uncertainty"] = {"covariance": {"path": "x", "sha256": "0" * 64}}
     unc_spec.write_text(json.dumps(unc))
     unc_result = run_cli(unc_spec, WORK / "unc_out.json")
-    checks["uncertainty_combination_rejected"] = (
+    checks["uncertainty_combination_fails_on_missing_covariance"] = (
         unc_result["returncode"] != 0
-        and "uncertainty" in unc_result["stderr"].lower()
+        and "cannot stat" in unc_result["stderr"]
     )
 
     # -- leg 6: sha256 mismatch rejected ------------------------------------
