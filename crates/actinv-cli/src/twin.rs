@@ -100,12 +100,12 @@ struct LimitDecl {
 type LoadedAssay = (String, f64, f64, f64, String);
 
 /// A propagated ln-shift destined for a sibling cell, computed from the
-/// source cell's prior and the assay.
+/// source cell's prior and one assay entry.
 #[derive(Clone)]
 struct PropagatedShift {
     /// k·(ln y − ln x_src) — the source cell's assimilated ln-shift.
     delta: f64,
-    /// Source assay's Kalman gain.
+    /// Source assay entry's Kalman gain.
     k_src: f64,
     /// Source prior relative σ.
     s_src: f64,
@@ -113,6 +113,11 @@ struct PropagatedShift {
     src: String,
     /// User-declared ln-correlation between the two cells' responses.
     rho: f64,
+    /// Response key the source entry measured — selects the band the
+    /// propagated shift applies to in the target cell.
+    response: String,
+    /// Measurement time of the source entry.
+    time_s: f64,
 }
 
 /// A cell record's (nominal, relative σ) for (response, t_s), plus the
@@ -203,74 +208,63 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             .map_err(|e| format!("cannot read {}: {e}", ap.display()))?;
         let av: Value =
             serde_json::from_str(&atext).map_err(|e| format!("{}: {e}", ap.display()))?;
-        if av["schema"].as_str() != Some("actinv-assay-1") {
-            return Err(format!(
-                "{}: assay schema must be actinv-assay-1",
-                ap.display()
-            ));
-        }
-        let resp = av["response"].as_str().unwrap_or_default().to_string();
-        let t = av["time_s"].as_f64().unwrap_or(f64::NAN);
-        let meas = av["value"].as_f64().unwrap_or(0.0);
-        let su = av["standard_uncertainty"].as_f64().unwrap_or(0.0);
-        if !t.is_finite() || meas <= 0.0 || su <= 0.0 {
-            return Err(format!(
-                "{}: assay needs positive value, uncertainty, time_s",
-                ap.display()
-            ));
-        }
+        let (t_s, entries) = crate::assimilate::parse_assay(&av, &ap.display().to_string())?;
         let sha = actinv_data::builder::sha256_file(&ap).unwrap_or_default();
-        assays
-            .entry(a.cell.clone())
-            .or_default()
-            .push((resp, t, meas, su, sha));
+        for e in entries {
+            assays.entry(a.cell.clone()).or_default().push((
+                e.response,
+                t_s,
+                e.value,
+                e.standard_uncertainty,
+                sha.clone(),
+            ));
+        }
     }
     let mut assimilated_cells: Vec<String> = Vec::new();
     // Propagation sources: target cell id -> (src ln-shift δ, src Kalman
     // gain, src prior relative σ, src cell id, declared rho). Computed in
     // a pre-pass so ordering of cell records in the stream doesn't matter.
     let mut propagations: HashMap<String, Vec<PropagatedShift>> = HashMap::new();
-    // Source cell -> (response, t_s) so target cells know which band the
-    // propagated shift applies to.
-    let mut propagation_selectors: HashMap<String, (String, f64)> = HashMap::new();
     if spec.assays.iter().flatten().any(|a| a.propagates.is_some()) {
         for a in spec.assays.iter().flatten() {
             let Some(propagates) = &a.propagates else {
                 continue;
             };
             let loaded = assays.get(&a.cell).cloned().unwrap_or_default();
-            let Some((resp, t_s, meas, su, _)) = loaded.first().cloned() else {
-                continue;
-            };
-            for line in raw.lines().filter(|l| l.trim().starts_with('{')) {
-                let rec: Value =
-                    serde_json::from_str(line).map_err(|e| format!("mesh output line: {e}"))?;
-                if rec["record"].as_str() != Some("cell")
-                    || rec["id"].as_str() != Some(a.cell.as_str())
-                {
-                    continue;
-                }
-                let (x_a, s_a, k) = prior_and_gain(&rec, &resp, t_s, meas, su)
-                    .map_err(|e| format!("cell {}: {e}", a.cell))?;
-                let delta = k * (meas.ln() - x_a.ln());
-                propagation_selectors.insert(a.cell.clone(), (resp.clone(), t_s));
-                for p in propagates {
-                    if !p.rho.is_finite() || p.rho.abs() > 1.0 {
-                        return Err(format!(
-                            "propagation rho={} for '{}' must satisfy |rho| <= 1",
-                            p.rho, p.cell
-                        ));
+            // Every entry of a multi-nuclide assay propagates on its own
+            // response — the selector travels inside the shift.
+            for (resp, t_s, meas, su, _sha) in &loaded {
+                for line in raw.lines().filter(|l| l.trim().starts_with('{')) {
+                    let rec: Value =
+                        serde_json::from_str(line).map_err(|e| format!("mesh output line: {e}"))?;
+                    if rec["record"].as_str() != Some("cell")
+                        || rec["id"].as_str() != Some(a.cell.as_str())
+                    {
+                        continue;
                     }
-                    propagations
-                        .entry(p.cell.clone())
-                        .or_default()
-                        .push(PropagatedShift {
-                            delta,
-                            k_src: k,
-                            s_src: s_a,
-                            src: a.cell.clone(),
-                            rho: p.rho,
-                        });
+                    let (x_a, s_a, k) = prior_and_gain(&rec, resp, *t_s, *meas, *su)
+                        .map_err(|e| format!("cell {}: {e}", a.cell))?;
+                    let delta = k * (meas.ln() - x_a.ln());
+                    for p in propagates {
+                        if !p.rho.is_finite() || p.rho.abs() > 1.0 {
+                            return Err(format!(
+                                "propagation rho={} for '{}' must satisfy |rho| <= 1",
+                                p.rho, p.cell
+                            ));
+                        }
+                        propagations
+                            .entry(p.cell.clone())
+                            .or_default()
+                            .push(PropagatedShift {
+                                delta,
+                                k_src: k,
+                                s_src: s_a,
+                                src: a.cell.clone(),
+                                rho: p.rho,
+                                response: resp.clone(),
+                                time_s: *t_s,
+                            });
+                    }
                 }
             }
         }
@@ -358,10 +352,9 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
                 s_src,
                 src,
                 rho,
+                response: resp_name,
+                time_s: t_s,
             } = shift;
-            // Find the source assay's (response, t_s) — recoverable from
-            // the pre-pass inputs stored per source cell.
-            let (resp_name, t_s) = propagation_selectors.get(&src).cloned().unwrap_or_default();
             let Some(steps) = rec["result"]["steps"].as_array_mut() else {
                 return Err(format!("cell {id}: result carries no steps"));
             };

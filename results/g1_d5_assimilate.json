@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 14,
+ "n": 22,
  "checks": [
   {
    "name": "precise assay gains ~1",
@@ -69,6 +69,46 @@
   },
   {
    "name": "chain verdict consistent",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "multi-entry count reported",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "each entry fused its own response",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "overall verdict aggregates (consistent)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "posteriors driven toward each measurement",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "emit-result moves every entry's band",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "untouched response stays at the prior",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "conflicting entry flags the whole assay",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "scalar+entries ambiguity refused",
    "pass": true,
    "detail": ""
   }

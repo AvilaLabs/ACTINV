@@ -236,6 +236,25 @@ check("Mn57 cell unaffected by an Fe assay",
 check("assimilated cells recorded",
       "cell-1" in post["facility"]["assimilated_cells"])
 
+# The entries form is equivalent: a one-line multi-nuclide assay doc must
+# fuse identically to the scalar shape.
+ap_entries = tmp / "cell1_assay_entries.json"
+ap_entries.write_text(json.dumps({"schema": "actinv-assay-1",
+                                  "time_s": edge_t,
+                                  "entries": [{"response": "heat.total",
+                                               "value": meas,
+                                               "standard_uncertainty":
+                                                   meas * 0.02}]}))
+post_e = twinspec(mid, "with_entries_assay", times=[edge_t],
+                  assays=[{"cell": "cell-1", "assay": str(ap_entries)}])
+pv_e = {c["cell"]: c["verdict"] for c in post_e["per_cell"]}
+check("entries-form assay fuses identically",
+      pv_e == pv
+      and next(c for c in post_e["per_cell"] if c["cell"] == "cell-1")
+          ["entries"][0]["band"][1]
+      == next(c for c in post["per_cell"] if c["cell"] == "cell-1")
+          ["entries"][0]["band"][1])
+
 # D5 correlated propagation: cell-1's assay informs cell-0's band
 # through a declared ln-correlation — measure one Fe component, the
 # sibling's uncertainty narrows too.

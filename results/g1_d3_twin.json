@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 25,
+ "n": 26,
  "checks": [
   {
    "name": "mesh emitted cells",
@@ -74,6 +74,11 @@
   },
   {
    "name": "assimilated cells recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "entries-form assay fuses identically",
    "pass": true,
    "detail": ""
   },

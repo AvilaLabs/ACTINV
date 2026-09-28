@@ -2265,6 +2265,20 @@ exists to carry it.
   a measured cell's ln-shift moves a sibling cell's band through the declared
   response correlation (x_t += ρ·(s_t/s_src)·k·δ; s_t² → s_t²·(1−ρ²·k)) —
   measure one Fe component, its siblings' bands narrow.
+- 2026-09-28 — **D5 leg 4 — multi-nuclide assay ingest**
+  (`results/g1_d5_assimilate.json`, `results/g1_d3_twin.json`).
+  `actinv-assay-1` gains `entries: [{response, value,
+  standard_uncertainty}]` sharing one `time_s` — a gamma-spectroscopy
+  count's shape (one measurement, several nuclide activities). Each entry
+  fuses independently at the shared time; the emitted record carries a
+  per-entry `updates` array plus a worst-of aggregate verdict, and
+  `--emit-result` writes every fused band back. `twin` assays accept the
+  same form — entries flatten per-cell and each propagates on its own
+  response under `propagates`. Scalar documents and single-entry emit
+  keep their exact prior shape. The gate verifies: one count drives two
+  nuclide posteriors, untouched responses stay at the prior, a single
+  conflicting line flags the whole document, and mixed scalar+entries is
+  refused as ambiguous.
 - 2026-09-28 — **D5 value-of-information** (`results/g1_d3_twin.json`).
   `twin` emits `facility.assay_recommendations`: for every restricted
   (cell, time, limit) the assay precision needed to clear at the prior

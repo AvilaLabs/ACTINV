@@ -154,6 +154,92 @@ check("second assay shrinks the band further",
 check("chain verdict consistent",
       s["verdict"] == "consistent")
 
+# --- Multi-nuclide assay ingest (D5 leg: one HPGe-style count, two lines) ---
+# A single assay document carrying entries for activity:Mn57 and
+# activity:Mn57m1 — the gamma-spectroscopy shape: one count, several
+# nuclide activities, one measurement time.
+step_m57 = step["uncertainty"]["responses"]["activity:Mn57"]
+step_m57m = step["uncertainty"]["responses"]["activity:Mn57m1"]
+nom57, nom57m = step_m57["nominal"], step_m57m["nominal"]
+assert nom57 > 0 and nom57m > 0, "fixture responses must be positive"
+
+multi = tmp / "multi.json"
+multi.write_text(json.dumps({
+    "schema": "actinv-assay-1",
+    "time_s": 0.9,
+    "entries": [
+        {"response": "activity:Mn57", "value": nom57 * 0.9,
+         "standard_uncertainty": nom57 * 0.02},
+        {"response": "activity:Mn57m1", "value": nom57m * 1.1,
+         "standard_uncertainty": nom57m * 0.02},
+    ],
+}))
+mo = tmp / "multi.out.json"
+cli("assimilate", "--result", str(rp), "--assay", str(multi), "--out", str(mo))
+m = json.loads(mo.read_text())
+check("multi-entry count reported", m["entries"] == 2 and len(m["updates"]) == 2)
+by_resp = {u["response"]: u for u in m["updates"]}
+check("each entry fused its own response",
+      set(by_resp) == {"activity:Mn57", "activity:Mn57m1"}
+      and by_resp["activity:Mn57"]["update"]["kalman_gain"] > 0.9
+      and by_resp["activity:Mn57m1"]["update"]["kalman_gain"] > 0.9)
+check("overall verdict aggregates (consistent)",
+      m["verdict"] == "consistent")
+post57 = by_resp["activity:Mn57"]["update"]["posterior"]
+post57m = by_resp["activity:Mn57m1"]["update"]["posterior"]
+check("posteriors driven toward each measurement",
+      abs(post57 / nom57 - 0.9) < 0.05 and abs(post57m / nom57m - 1.1) < 0.05)
+
+# emit-result applies ALL entries — both bands move in the issued result.
+mu = tmp / "multi_updated.json"
+cli("assimilate", "--result", str(rp), "--assay", str(multi),
+    "--emit-result", str(mu))
+res3 = json.loads(mu.read_text())
+step3 = next(s for s in res3["steps"] if abs(s["t_s"] - 0.9) < 0.2)
+check("emit-result moves every entry's band",
+      abs(step3["uncertainty"]["responses"]["activity:Mn57"]["nominal"]
+          - post57) < post57 * 1e-9
+      and abs(step3["uncertainty"]["responses"]["activity:Mn57m1"]["nominal"]
+          - post57m) < post57m * 1e-9
+      and "assimilation" in step3["uncertainty"]["responses"]["activity:Mn57"]
+      and len(res3["assimilated"]["entries"]) == 2)
+check("untouched response stays at the prior",
+      abs(step3["uncertainty"]["responses"]["heat.total"]["nominal"]
+          - nominal) < nominal * 1e-9)
+
+# A conflicting line inside a multi assay marks the whole document.
+# (heat.total carries a positive log-scale band; the isomer bands in
+# this fixture are linear intervals whose negative lower bound makes
+# 'conflict' unreachable — a known band-shape asymmetry.)
+conf = tmp / "multi_conflict.json"
+conf.write_text(json.dumps({
+    "schema": "actinv-assay-1",
+    "time_s": 0.9,
+    "entries": [
+        {"response": "activity:Mn57", "value": nom57,
+         "standard_uncertainty": nom57 * 0.02},
+        {"response": "heat.total", "value": nominal * 0.02,
+         "standard_uncertainty": nominal * 0.0004},
+    ],
+}))
+co = tmp / "conflict.out.json"
+cli("assimilate", "--result", str(rp), "--assay", str(conf), "--out", str(co))
+cm = json.loads(co.read_text())
+check("conflicting entry flags the whole assay",
+      cm["verdict"] == "conflict"
+      and {u["verdict"] for u in cm["updates"]} == {"consistent", "conflict"})
+
+# Mixed-shape documents are refused as ambiguous.
+amb = tmp / "ambig.json"
+amb.write_text(json.dumps({
+    "schema": "actinv-assay-1", "response": "heat.total",
+    "time_s": 0.9, "value": 1.0, "standard_uncertainty": 1.0,
+    "entries": [{"response": "heat.total", "value": 1.0,
+                 "standard_uncertainty": 1.0}]}))
+cli("assimilate", "--result", str(rp), "--assay", str(amb),
+    expect_err="both scalar")
+check("scalar+entries ambiguity refused", True)
+
 failed = [c for c in checks if not c["pass"]]
 OUT.write_text(json.dumps({"pass": not failed, "n": len(checks),
                            "checks": checks}, indent=1) + "\n")
