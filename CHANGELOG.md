@@ -1,5 +1,45 @@
 # Changelog
 
+## v1.3.0 — 2026-09-28
+
+**Added**
+
+- `actinv assimilate` folds an `actinv-assay-1` measurement into response bands — scalar assays,
+  multi-nuclide `entries` (one HPGe count updates several bands, worst-of verdict), and `mixture`
+  assays measuring `Σcᵢ·xᵢ` via a Kalman H-row update with an emitted correlation matrix. Kalman
+  gain and a consistent/marginal/conflict verdict are reported per response; `--emit-result` writes
+  posterior bands into a chainable run result, and results persist the joint ln-space Gaussian under
+  `assimilated.state` so later assays condition correlated siblings.
+- `actinv twin` — facility-scale clearance over mesh output: per-cell certified band margins,
+  components rollup, dose-point point kernels, per-cell materials, per-cell assays with declared-ρ
+  propagation and dose-share inversion, and `assay_recommendations` naming the assay precision that
+  would clear each restricted (cell, time, limit).
+- `actinv decide`, `actinv clearance`, `actinv optimize`, `actinv surrogate fit/eval` — certified
+  decision surfaces: probabilistic clearance against the IAEA limits table, banded-constraint
+  optimization with prescreen and certified-surrogate tiers, and one-command decision records.
+- `actinv export-r2s`, `actinv export-r2s-joint`, `actinv export-source {openmc|mcnp|serpent}`,
+  `actinv export-mcnp` — banded R2S photon-source interchange, joint-covariance export, and foreign
+  transport adapters.
+- `actinv worker` — persistent prepared-input cache over NDJSON (0.37× warm wall, bit-identical),
+  and `outputs audit` chain-completeness reporting.
+- Uncertainty surface: sampled decay/yield channels, isomer-resolved introspection,
+  `uncertainty.unmodeled_relative`, `uncertainty.unmodeled_table` resolving a calibrated
+  `actinv-unmodeled-table-1` artifact, `options.screen` certified screening tier, certified
+  `flux_scale`, and measurement-design reports with variance-share VoI ranking.
+- Workbench: live certified sweep on a shared-cache worker, live Pareto frontier view, and a
+  results-page assay panel sharing the CLI's fusion core bit-identically.
+- Python SDK: `actinv.decide`, `actinv.optimize`, and screen options.
+
+**Changed**
+
+- Resolved-resonance Bondarenko factors are SIGMA1-broadened per temperature column: each column is
+  quadratured on its own Doppler-broadened grid and normalized by its own dilute mean. Shielded
+  factors relax toward 1 as temperature rises — previous columns reused the lowest-temperature
+  curve and were over-shielded.
+- `uncertainty` + `self_shielding` specs are accepted: the covariance collapse folds the shield
+  plan's per-row scales. Composition σ₀ estimates now include resolved-range elastic means.
+- Default build corpus sits at the evaluated-data boundary; every build prints `product_coverage`.
+
 ## v1.2.1 — 2026-09-23
 
 **Fixed**
