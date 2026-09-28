@@ -1,0 +1,66 @@
+{
+ "pass": true,
+ "n": 12,
+ "checks": [
+  {
+   "name": "mixture emits a joint state",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "state agrees with written marginals",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "carried covariance is symmetric and SPD",
+   "pass": true,
+   "detail": "cov=[[0.15134002315215483, -0.14955873548663612], [-0.14955873548663612, 0.1493796189470885]]"
+  },
+  {
+   "name": "correlated sibling moves to the joint posterior",
+   "pass": true,
+   "detail": "post=8.557603e-26 expected=8.557603e-26 prior=6.888729e-26"
+  },
+  {
+   "name": "sibling posterior \u03c3 from the joint covariance",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "sibling listed under jointly_moved",
+   "pass": true,
+   "detail": "['activity:Mn57m1']"
+  },
+  {
+   "name": "sibling stamped correlated, not measured",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "second state still SPD and consistent",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "uncorrelated assay leaves carried members untouched",
+   "pass": true,
+   "detail": "8.557603e-26 vs 8.557603e-26"
+  },
+  {
+   "name": "entries on a carried state match sequential conditioning",
+   "pass": true,
+   "detail": "[-59.24697333416798, -57.6921738542549, -85.24656090003418]"
+  },
+  {
+   "name": "time-mismatched assay drops the carried covariance",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "scalar-only fusion emits no carried state",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

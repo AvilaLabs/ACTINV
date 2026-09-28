@@ -25,7 +25,7 @@
   {
    "name": "induced correlations negative off-diagonal, bounded",
    "pass": true,
-   "detail": "[[1.0, -0.9946933463431598], [-0.9946933463431602, 1.0]]"
+   "detail": "[[1.0, -0.9946933463431608], [-0.9946933463431608, 1.0]]"
   },
   {
    "name": "verdict consistent when measurement inside forward band",

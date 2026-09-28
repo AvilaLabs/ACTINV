@@ -208,6 +208,7 @@ fn find_step(result: &Value, time_s: f64) -> Option<&Value> {
 /// The shared log-Gaussian fusion: prior (nominal, relative σ) meets a
 /// measurement (value, relative σ) in ln space. Returned values feed both
 /// `assimilate`'s record and `twin`'s in-place band update.
+#[derive(Clone)]
 pub struct Fusion {
     pub posterior: f64,
     pub posterior_rel_su: f64,
@@ -527,6 +528,274 @@ fn overall_verdict(updates: &[EntryUpdate]) -> &'static str {
     }
 }
 
+/// The joint ln-space Gaussian state carried between assimilations on
+/// the same result at the same time. A mixture measurement entangles
+/// its terms; a later assay on any member then conditions *all*
+/// correlated siblings — the pulled responses are written back with a
+/// `correlated` assimilation stamp. Stored under `assimilated.state`
+/// in emitted results so `--emit-result` chains keep the covariance.
+struct JointState {
+    responses: Vec<String>,
+    ln_mean: Vec<f64>,
+    /// ln-space covariance, row-major. Symmetric, positive semidefinite
+    /// by construction; validated on load.
+    ln_cov: Vec<Vec<f64>>,
+    /// Per-member band multiplier, re-read from the step marginals.
+    multipliers: Vec<f64>,
+}
+
+impl JointState {
+    fn index(&self, response: &str) -> Option<usize> {
+        self.responses.iter().position(|r| r == response)
+    }
+    fn nominal(&self, i: usize) -> f64 {
+        self.ln_mean[i].exp()
+    }
+    fn s_ln(&self, i: usize) -> f64 {
+        self.ln_cov[i][i].max(0.0).sqrt()
+    }
+    /// Append a member with an independent (diagonal) prior — a response
+    /// not previously fused carries its marginal and no covariance.
+    fn ensure(&mut self, response: &str, nominal: f64, s_ln: f64, multiplier: f64) -> usize {
+        if let Some(i) = self.index(response) {
+            return i;
+        }
+        let i = self.responses.len();
+        self.responses.push(response.to_string());
+        self.ln_mean.push(nominal.ln());
+        for row in self.ln_cov.iter_mut() {
+            row.push(0.0);
+        }
+        let mut row = vec![0.0; i + 1];
+        row[i] = s_ln * s_ln;
+        self.ln_cov.push(row);
+        self.multipliers.push(multiplier);
+        i
+    }
+    /// Innovation variance S = s_m² + HΣHᵀ for a measurement row H.
+    fn innovation_variance(&self, h: &[(usize, f64)], s_meas: f64) -> f64 {
+        let m = self.sigma_h(h);
+        let hsigh: f64 = h.iter().map(|(i, hi)| hi * m[*i]).sum();
+        s_meas * s_meas + hsigh
+    }
+    /// ΣHᵀ — the covariance of every member with the measured form.
+    fn sigma_h(&self, h: &[(usize, f64)]) -> Vec<f64> {
+        self.ln_cov
+            .iter()
+            .map(|row| h.iter().map(|(j, hj)| row[*j] * hj).sum())
+            .collect()
+    }
+    /// Condition on a measurement with innovation ν and measurement
+    /// relative σ: μ' = μ + ΣHᵀS⁻¹ν, Σ' = Σ − ΣHᵀS⁻¹HΣ. Returns the
+    /// gains Kᵢ = (ΣHᵀ)ᵢ/S for every member.
+    fn condition(&mut self, h: &[(usize, f64)], innovation: f64, s_meas: f64) -> Vec<f64> {
+        let m = self.sigma_h(h);
+        let s_var = self.innovation_variance(h, s_meas).max(1e-300);
+        let gains: Vec<f64> = m.iter().map(|mi| mi / s_var).collect();
+        for (mu, g) in self.ln_mean.iter_mut().zip(&gains) {
+            *mu += g * innovation;
+        }
+        for (row, mi) in self.ln_cov.iter_mut().zip(&m) {
+            for (cell, mj) in row.iter_mut().zip(&m) {
+                *cell -= mi * mj / s_var;
+            }
+        }
+        gains
+    }
+    fn to_json(&self, time_s: f64) -> Value {
+        json!({
+            "time_s": time_s,
+            "responses": self.responses,
+            "ln_mean": self.ln_mean,
+            "ln_covariance": self.ln_cov,
+            "note": "joint ln-space Gaussian over the fused responses — a later assay at this time conditions correlated members; covariance carries no information across a different time_s",
+        })
+    }
+}
+
+/// Load the carried joint state if one exists for this assay time.
+/// Fails closed on a malformed or inconsistent block — a silently
+/// dropped covariance would corrupt every later posterior.
+fn load_joint(result: &Value, time_s: f64) -> Result<Option<JointState>, String> {
+    let state = &result["assimilated"]["state"];
+    if state.is_null() {
+        return Ok(None);
+    }
+    let st_t = state["time_s"]
+        .as_f64()
+        .ok_or("assimilated.state is missing time_s")?;
+    if !is_close(st_t, time_s) {
+        return Ok(None);
+    }
+    let bad = |m: &str| format!("assimilated.state malformed: {m}");
+    let responses: Vec<String> = state["responses"]
+        .as_array()
+        .ok_or_else(|| bad("responses is not an array"))?
+        .iter()
+        .map(|v| {
+            v.as_str()
+                .map(str::to_string)
+                .ok_or_else(|| bad("responses contains a non-string"))
+        })
+        .collect::<Result<_, _>>()?;
+    let n = responses.len();
+    let ln_mean: Vec<f64> = state["ln_mean"]
+        .as_array()
+        .ok_or_else(|| bad("ln_mean is not an array"))?
+        .iter()
+        .map(|v| v.as_f64().filter(|x| x.is_finite()))
+        .collect::<Option<_>>()
+        .ok_or_else(|| bad("ln_mean has a non-finite entry"))?;
+    if ln_mean.len() != n {
+        return Err(bad("ln_mean length != responses length"));
+    }
+    let ln_cov: Vec<Vec<f64>> = state["ln_covariance"]
+        .as_array()
+        .ok_or_else(|| bad("ln_covariance is not an array"))?
+        .iter()
+        .map(|row| {
+            row.as_array()
+                .and_then(|r| {
+                    r.iter()
+                        .map(|v| v.as_f64().filter(|x| x.is_finite()))
+                        .collect::<Option<Vec<f64>>>()
+                })
+                .ok_or_else(|| bad("ln_covariance has a non-finite row"))
+        })
+        .collect::<Result<_, _>>()?;
+    if ln_cov.len() != n || ln_cov.iter().any(|r| r.len() != n) {
+        return Err(bad("ln_covariance is not n×n"));
+    }
+    #[allow(clippy::needless_range_loop)] // symmetric-matrix check
+    for i in 0..n {
+        if ln_cov[i][i] <= 0.0 {
+            return Err(bad("ln_covariance has a non-positive diagonal"));
+        }
+        for j in (i + 1)..n {
+            let (a, b) = (ln_cov[i][j], ln_cov[j][i]);
+            if (a - b).abs() > a.abs().max(b.abs()).max(1e-300) * 1e-9 {
+                return Err(bad("ln_covariance is not symmetric"));
+            }
+        }
+    }
+    // The state must agree with the step marginals it produced — if the
+    // document was edited between assimilations, fail rather than fuse
+    // against a stale covariance.
+    let step =
+        find_step(result, time_s).ok_or_else(|| format!("result has no step at t_s={time_s}"))?;
+    let mut multipliers = Vec::with_capacity(n);
+    for (i, resp) in responses.iter().enumerate() {
+        let r = step
+            .pointer(&format!("/uncertainty/responses/{resp}"))
+            .ok_or_else(|| format!("assimilated.state member '{resp}' missing from the result"))?;
+        let nominal = r["nominal"].as_f64().unwrap_or(f64::NAN);
+        let su = r["combined_standard_uncertainty"]
+            .as_f64()
+            .or_else(|| r["mf33_standard_uncertainty"].as_f64())
+            .unwrap_or(f64::NAN);
+        let marginal_s = (su / nominal).abs();
+        if nominal <= 0.0 || marginal_s <= 0.0 || !marginal_s.is_finite() {
+            return Err(bad("member marginal is degenerate"));
+        }
+        let rel_drift = (ln_cov[i][i].sqrt() - marginal_s).abs() / marginal_s;
+        if rel_drift > 0.01 {
+            return Err(format!(
+                "assimilated.state inconsistent for '{resp}': carried ln-σ {} vs marginal {marginal_s} — the document changed since the last fusion",
+                ln_cov[i][i].sqrt()
+            ));
+        }
+        multipliers.push(r["normal_multiplier"].as_f64().unwrap_or(1.959964));
+    }
+    Ok(Some(JointState {
+        responses,
+        ln_mean,
+        ln_cov,
+        multipliers,
+    }))
+}
+
+/// Pull a response's prior marginal at the assay time: (nominal,
+/// ln-space σ, band multiplier). Used to extend the joint state with
+/// newly-measured responses.
+fn marginal_prior(result: &Value, time_s: f64, resp: &str) -> Result<(f64, f64, f64), String> {
+    let (nominal, su, mult) = term_prior(result, time_s, resp)?;
+    Ok((nominal, (su / nominal).max(1e-300), mult))
+}
+
+/// Stamp a response whose posterior moved only through covariance — it
+/// was not itself measured. The marginal is exact; the provenance says
+/// why it changed.
+fn apply_correlated(
+    resp: &mut Value,
+    post: f64,
+    post_s_ln: f64,
+    multiplier: f64,
+    measured: &[String],
+    assay_sha: &str,
+) {
+    let obj = match resp.as_object_mut() {
+        Some(o) => o,
+        None => return,
+    };
+    let half = (multiplier * post_s_ln).exp();
+    let band = [post / half, post * half];
+    obj.insert("nominal".into(), json!(post));
+    obj.insert(
+        "combined_standard_uncertainty".into(),
+        json!(post * post_s_ln),
+    );
+    obj.insert("relative_standard_uncertainty".into(), json!(post_s_ln));
+    obj.insert("normal_interval".into(), json!(band));
+    obj.insert("conservative_interval".into(), json!(band));
+    obj.insert(
+        "assimilation".into(),
+        json!({
+            "kind": "correlated",
+            "pulled_by": measured,
+            "posterior_relative_standard_uncertainty": post_s_ln,
+            "assay_sha256": assay_sha,
+            "note": "posterior moved via the carried joint covariance — this response was not directly measured; correlation persists in assimilated.state",
+        }),
+    );
+}
+
+/// Write every joint member's marginal into the result step at time_s.
+/// Measured members are written by the caller's own apply path; this
+/// covers the correlated siblings.
+fn write_marginals(
+    updated: &mut Value,
+    time_s: f64,
+    st: &JointState,
+    written: &std::collections::BTreeSet<String>,
+    measured: &[String],
+    assay_sha: &str,
+) {
+    if let Some(step) = updated["steps"].as_array_mut().and_then(|steps| {
+        steps.iter_mut().find(|s| {
+            s["t_s"]
+                .as_f64()
+                .map(|t| is_close(t, time_s))
+                .unwrap_or(false)
+        })
+    }) {
+        for (i, resp) in st.responses.iter().enumerate() {
+            if written.contains(resp) {
+                continue;
+            }
+            if let Some(r) = step.pointer_mut(&format!("/uncertainty/responses/{resp}")) {
+                apply_correlated(
+                    r,
+                    st.nominal(i),
+                    st.s_ln(i),
+                    st.multipliers[i],
+                    measured,
+                    assay_sha,
+                );
+            }
+        }
+    }
+}
+
 pub fn run(
     result_path: &str,
     assay_path: &str,
@@ -635,13 +904,66 @@ fn entries_document(
         .map(|e| fuse_entry(result, time_s, e))
         .collect::<Result<_, _>>()?;
 
+    // When a carried joint state exists, fusion is sequential
+    // conditioning on the state — a measured member's posterior then
+    // includes the pull of earlier correlated entries, so the report
+    // rows and applied marginals are taken from the state, not the
+    // isolated scalar fusion.
+    let had_state = result["assimilated"]["state"].is_object();
+    let measured: Vec<String> = entries.iter().map(|e| e.response.clone()).collect();
+    let measured_set: std::collections::BTreeSet<String> = measured.iter().cloned().collect();
+    let mut jointly_moved: Vec<String> = Vec::new();
+    let mut joint_rows: Vec<(usize, f64)> = Vec::new();
+    let mut joint = load_joint(result, time_s)?;
+    if let Some(st) = joint.as_mut() {
+        // Extend the carried state with newly-measured responses
+        // (independent diagonal entry), then condition sequentially —
+        // one measurement row per entry, in assay order.
+        for e in entries {
+            if st.index(&e.response).is_none() {
+                let (nom, s_ln, mult) = marginal_prior(result, time_s, &e.response)?;
+                st.ensure(&e.response, nom, s_ln, mult);
+            }
+        }
+        for e in entries {
+            let i = st.index(&e.response).expect("ensured above");
+            let s_m = (e.standard_uncertainty / e.value).max(1e-300);
+            let nu = e.value.ln() - st.ln_mean[i];
+            let gains = st.condition(&[(i, 1.0)], nu, s_m);
+            joint_rows.push((i, gains[i]));
+            for (j, g) in gains.iter().enumerate() {
+                if j != i
+                    && *g * nu != 0.0
+                    && !measured_set.contains(&st.responses[j])
+                    && !jointly_moved.contains(&st.responses[j])
+                {
+                    jointly_moved.push(st.responses[j].clone());
+                }
+            }
+        }
+    }
+
+    let mut rows: Vec<Value> = updates.iter().map(entry_json).collect();
+    if let (Some(st), true) = (&joint, joint_rows.len() == updates.len()) {
+        for (k, (i, gain)) in joint_rows.iter().enumerate() {
+            let post = st.nominal(*i);
+            let s = st.s_ln(*i);
+            let half = (st.multipliers[*i] * s).exp();
+            let u = rows[k]["update"].as_object_mut().expect("object");
+            u.insert("posterior".into(), json!(post));
+            u.insert("posterior_relative_standard_uncertainty".into(), json!(s));
+            u.insert("posterior_band".into(), json!([post / half, post * half]));
+            u.insert("kalman_gain".into(), json!(*gain));
+            u.insert("jointly_conditioned".into(), json!(true));
+        }
+    }
     let note = "Gaussian fusion on ln-scale between the solver's propagated band and the assay's declared lognormal uncertainty; `conflict` means the measurement lies outside the prior's declared interval — a real discrepancy between model and assay, not a reason to silently widen";
 
     let mut out = json!({
         "schema": "actinv-assimilated-1",
         "time_s": time_s,
         "entries": updates.len(),
-        "updates": updates.iter().map(entry_json).collect::<Vec<_>>(),
+        "updates": rows,
         "verdict": overall_verdict(&updates),
         "provenance": provenance,
         "note": note,
@@ -651,7 +973,7 @@ fn entries_document(
     // actinv-assimilated-1 keep working unchanged.
     if updates.len() == 1 {
         let u = &updates[0];
-        let ej = entry_json(u);
+        let ej = out["updates"][0].clone();
         let o = out.as_object_mut().expect("object");
         o.insert("response".into(), json!(u.entry.response));
         o.insert("prior".into(), ej["prior"].clone());
@@ -663,7 +985,7 @@ fn entries_document(
     // `assimilate` unchanged, carrying `assimilation` provenance per
     // response.
     let mut updated = result.clone();
-    for u in &updates {
+    for (k, u) in updates.iter().enumerate() {
         if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
             steps.iter_mut().find(|s| {
                 s["t_s"]
@@ -674,26 +996,70 @@ fn entries_document(
         }) {
             if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{}", u.entry.response))
             {
-                apply_fusion(r, &u.fusion, assay_sha);
+                let f = match (&joint, joint_rows.get(k)) {
+                    (Some(st), Some((i, gain))) => {
+                        let post = st.nominal(*i);
+                        let s = st.s_ln(*i);
+                        let half = (st.multipliers[*i] * s).exp();
+                        Fusion {
+                            posterior: post,
+                            posterior_rel_su: s,
+                            band: [post / half, post * half],
+                            kalman_gain: *gain,
+                        }
+                    }
+                    _ => u.fusion.clone(),
+                };
+                apply_fusion(r, &f, assay_sha);
             }
         }
+    }
+    if let Some(st) = &joint {
+        // Sibling responses pulled purely by covariance get their own
+        // stamp; the measured members were already written above.
+        write_marginals(
+            &mut updated,
+            time_s,
+            st,
+            &measured_set,
+            &measured,
+            assay_sha,
+        );
+        if !jointly_moved.is_empty() {
+            out.as_object_mut().expect("object").insert(
+                "jointly_moved".into(),
+                json!({
+                    "responses": jointly_moved,
+                    "note": "these marginals moved through the carried covariance — they were not directly measured",
+                }),
+            );
+        }
+    } else if had_state {
+        out.as_object_mut().expect("object").insert(
+            "joint_prior".into(),
+            json!("dropped — assay time differs from the carried state's time_s; the covariance carries no information across steps"),
+        );
+    }
+    let mut assimilated = json!({
+        "time_s": time_s,
+        "entries": updates.iter().map(|u| json!({
+            "response": u.entry.response,
+            "posterior": u.fusion.posterior,
+            "posterior_relative_standard_uncertainty": u.fusion.posterior_rel_su,
+            "verdict": u.verdict,
+        })).collect::<Vec<_>>(),
+        "verdict": overall_verdict(&updates),
+    });
+    if let Some(st) = &joint {
+        assimilated
+            .as_object_mut()
+            .expect("object")
+            .insert("state".into(), st.to_json(time_s));
     }
     updated
         .as_object_mut()
         .ok_or("result did not serialize as an object")?
-        .insert(
-            "assimilated".into(),
-            json!({
-                "time_s": time_s,
-                "entries": updates.iter().map(|u| json!({
-                    "response": u.entry.response,
-                    "posterior": u.fusion.posterior,
-                    "posterior_relative_standard_uncertainty": u.fusion.posterior_rel_su,
-                    "verdict": u.verdict,
-                })).collect::<Vec<_>>(),
-                "verdict": overall_verdict(&updates),
-            }),
-        );
+        .insert("assimilated".into(), assimilated);
     Ok((out, updated))
 }
 
@@ -745,25 +1111,59 @@ fn mixture_document(
             normal_multiplier: mult,
         });
     }
-    let f = fuse_mixture(&mterms, value, su);
+
+    // One path serves both cases: build or load the joint ln-space
+    // state over the union of carried members and this assay's terms,
+    // then condition on the H-row measurement. With a fresh diagonal
+    // prior this reproduces the closed-form `fuse_mixture` update;
+    // with a carried covariance the term correlations enter S and the
+    // gains properly — and siblings outside the term set move too.
+    let had_state = result["assimilated"]["state"].is_object();
+    let loaded = load_joint(result, time_s)?;
+    let state_dropped = had_state && loaded.is_none();
+    let mut st = loaded.unwrap_or_else(|| JointState {
+        responses: Vec::new(),
+        ln_mean: Vec::new(),
+        ln_cov: Vec::new(),
+        multipliers: Vec::new(),
+    });
+    for t in &mterms {
+        st.ensure(&t.response, t.nominal, t.s_ln, t.normal_multiplier);
+    }
+    let idx: Vec<usize> = mterms
+        .iter()
+        .map(|t| st.index(&t.response).expect("ensured"))
+        .collect();
+    let forward: f64 = mterms
+        .iter()
+        .map(|t| t.coefficient * t.nominal)
+        .sum::<f64>()
+        .max(1e-300);
+    let h: Vec<(usize, f64)> = idx
+        .iter()
+        .zip(&mterms)
+        .map(|(i, t)| (*i, t.coefficient * t.nominal / forward))
+        .collect();
+    let s_m = (su / value).max(1e-300);
+    let m = st.sigma_h(&h);
+    let hsigh: f64 = h.iter().map(|(i, hi)| hi * m[*i]).sum();
+    let s_inn = s_m * s_m + hsigh;
+    let s_prior = hsigh.max(0.0).sqrt();
+    let nu = (value / forward).ln();
+    let gains = st.condition(&h, nu, s_m);
+    let weights: Vec<f64> = h.iter().map(|(_, hi)| *hi).collect();
+    let posteriors: Vec<f64> = idx.iter().map(|i| st.nominal(*i)).collect();
+    let posterior_s_ln: Vec<f64> = idx.iter().map(|i| st.s_ln(*i)).collect();
 
     // Consistency verdict on the forward value: the prior predicts
     // y₀·exp(±m·√S_prior) — the analogue of the scalar interval check.
-    let s_prior = {
-        let v: f64 = mterms
-            .iter()
-            .zip(&f.weights)
-            .map(|(t, h)| h * h * t.s_ln * t.s_ln)
-            .sum();
-        v.sqrt()
-    };
     let mult = mterms
         .iter()
         .map(|t| t.normal_multiplier)
         .fold(1.0_f64, f64::max);
     let (lo, hi) = (
-        f.forward * (-mult * s_prior).exp(),
-        f.forward * (mult * s_prior).exp(),
+        forward * (-mult * s_prior).exp(),
+        forward * (mult * s_prior).exp(),
     );
     let verdict = if value >= lo && value <= hi {
         "consistent"
@@ -781,6 +1181,20 @@ fn mixture_document(
         }
     };
 
+    let correlations: Vec<Vec<f64>> = (0..mterms.len())
+        .map(|i| {
+            (0..mterms.len())
+                .map(|j| {
+                    if i == j {
+                        1.0
+                    } else {
+                        st.ln_cov[idx[i]][idx[j]]
+                            / (posterior_s_ln[i] * posterior_s_ln[j]).max(1e-300)
+                    }
+                })
+                .collect()
+        })
+        .collect();
     let term_records: Vec<Value> = mterms
         .iter()
         .enumerate()
@@ -788,39 +1202,63 @@ fn mixture_document(
             json!({
                 "response": t.response,
                 "coefficient": t.coefficient,
-                "share_of_combination": f.weights[i],
-                "kalman_gain": f.gains[i],
+                "share_of_combination": weights[i],
+                "kalman_gain": gains[idx[i]],
                 "prior_nominal": t.nominal,
-                "posterior": f.posteriors[i],
-                "posterior_relative_standard_uncertainty": f.posterior_s_ln[i],
+                "posterior": posteriors[i],
+                "posterior_relative_standard_uncertainty": posterior_s_ln[i],
             })
         })
         .collect();
-    let out = json!({
+    let measured: Vec<String> = mterms.iter().map(|t| t.response.clone()).collect();
+    let measured_set: std::collections::BTreeSet<String> = measured.iter().cloned().collect();
+    let jointly_moved: Vec<String> = st
+        .responses
+        .iter()
+        .enumerate()
+        .filter(|(i, r)| !measured_set.contains(*r) && gains[*i] * nu != 0.0)
+        .map(|(_, r)| r.clone())
+        .collect();
+    let mut out = json!({
         "schema": "actinv-assimilated-1",
         "kind": "mixture",
         "time_s": time_s,
         "measured_combination": {
             "value": value,
             "standard_uncertainty": su,
-            "forward_value": f.forward,
+            "forward_value": forward,
             "forward_band": [lo, hi],
-            "innovation_ln": f.innovation,
-            "innovation_sigma": f.s_innovation,
+            "innovation_ln": nu,
+            "innovation_sigma": s_inn.max(0.0).sqrt(),
         },
         "terms": term_records,
         "induced_correlations": {
             "responses": mterms.iter().map(|t| t.response.clone()).collect::<Vec<_>>(),
-            "matrix": f.correlations,
+            "matrix": correlations,
             "note": "the measurement entangles the terms — off-diagonal correlation means a later assay on one member moves the others; marginal bands remain individually correct",
         },
         "verdict": verdict,
         "provenance": provenance,
         "note": "Kalman H-row update on ln(y)=ln(Σcᵢxᵢ): posterior marginals shrink by each term's share of the measured combination; the terms are correlated afterward — use the emitted matrix for any joint statement",
     });
+    if !jointly_moved.is_empty() {
+        out.as_object_mut().expect("object").insert(
+            "jointly_moved".into(),
+            json!({
+                "responses": jointly_moved,
+                "note": "these marginals moved through the carried covariance — they were not measured by this assay",
+            }),
+        );
+    }
+    if state_dropped {
+        out.as_object_mut().expect("object").insert(
+            "joint_prior".into(),
+            json!("dropped — assay time differs from the carried state's time_s; the covariance carries no information across steps"),
+        );
+    }
     let mut updated = result.clone();
     for (i, t) in mterms.iter().enumerate() {
-        if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
+        if let Some(stp) = updated["steps"].as_array_mut().and_then(|steps| {
             steps.iter_mut().find(|s| {
                 s["t_s"]
                     .as_f64()
@@ -828,18 +1266,26 @@ fn mixture_document(
                     .unwrap_or(false)
             })
         }) {
-            if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{}", t.response)) {
+            if let Some(r) = stp.pointer_mut(&format!("/uncertainty/responses/{}", t.response)) {
                 apply_mixture_fusion(
                     r,
-                    f.posteriors[i],
-                    f.posterior_s_ln[i],
+                    posteriors[i],
+                    posterior_s_ln[i],
                     t.normal_multiplier,
-                    f.weights[i],
+                    weights[i],
                     assay_sha,
                 );
             }
         }
     }
+    write_marginals(
+        &mut updated,
+        time_s,
+        &st,
+        &measured_set,
+        &measured,
+        assay_sha,
+    );
     updated
         .as_object_mut()
         .ok_or("result did not serialize as an object")?
@@ -850,6 +1296,7 @@ fn mixture_document(
                 "time_s": time_s,
                 "responses": mterms.iter().map(|t| t.response.clone()).collect::<Vec<_>>(),
                 "verdict": verdict,
+                "state": st.to_json(time_s),
             }),
         );
     Ok((out, updated))

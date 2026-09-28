@@ -2301,6 +2301,20 @@ exists to carry it.
   path, no second implementation), previews the per-response Kalman
   update, and writes posterior bands back on Apply; the packaged smoke
   path verifies parity with the CLI bit-for-bit.
+- 2026-09-29 — **D5 covariance carry** (`results/g1_d5_covariance.json`).
+  Emitted results now carry `assimilated.state` — the joint ln-space
+  Gaussian (mean + covariance) over fused responses. A later `assimilate`
+  on the same document loads it and conditions jointly: a scalar assay
+  on one mixture member pulls its correlated siblings to the exact joint
+  posterior (gate-verified against an independent recompute), stamped
+  `kind: correlated` with `pulled_by`; siblings never measured move
+  through covariance alone. Entries assays on a carried state condition
+  sequentially; new responses join the state with independent priors.
+  Honest edges kept honest: covariance carries no information across a
+  different `time_s` (dropped with an emitted `joint_prior` note), a
+  malformed or marginal-inconsistent state fails closed rather than
+  fusing stale, and the twin's per-cell propagation still carries
+  marginals only (cross-cell covariance remains out of scope).
 - 2026-09-28 — **D5 value-of-information** (`results/g1_d3_twin.json`).
   `twin` emits `facility.assay_recommendations`: for every restricted
   (cell, time, limit) the assay precision needed to clear at the prior
