@@ -61,7 +61,7 @@
 - [ACTINV v1.1.2 — release notes](RELEASE_NOTES_v1.1.2.md)
 - [ACTINV v1.2.0 — release notes](RELEASE_NOTES_v1.2.0.md)
 - [ACTINV v1.2.1 — release notes](RELEASE_NOTES_v1.2.1.md)
-- [ACTINV v1.3.0 — release notes](RELEASE_NOTES_v1.3.0.md)
+- [ACTINV v1.3.1 — release notes](RELEASE_NOTES_v1.3.1.md)
 - [ACTINV Desktop 0.1.0-preview.1](releases/desktop-v0.1.0-preview.1.md)
 
 # Maintainers

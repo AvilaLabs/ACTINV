@@ -1,6 +1,6 @@
-# ACTINV v1.3.0 — release notes
+# ACTINV v1.3.1 — release notes
 
-ACTINV 1.3.0 is a feature release centred on the measurement-driven product line: assays, facility
+ACTINV 1.3.1 is a feature release centred on the measurement-driven product line: assays, facility
 twins, certified decision loops, and calibrated uncertainty. It also lands the resolved-resonance
 self-shielding quadrature — SIGMA1-broadened per temperature — plus the chance-constrained design
 optimizer and the OpenMC/MCNP/Serpent photon-source export surface. Schemas are additive;
@@ -15,8 +15,16 @@ python -m pip install --upgrade actinv
 Rust CLI users can install this exact version with:
 
 ```bash
-cargo install --locked --force actinv-cli --version 1.3.0
+cargo install --locked --force actinv-cli --version 1.3.1
 ```
+
+## Supersedes v1.3.0
+
+v1.3.1 is a packaging repair on top of v1.3.0: `actinv-core` bundled the IAEA clearance table via a
+path outside the crate root, so the crates.io tarball and the PyPI source distribution could not
+build it. The table now lives inside the crate (`crates/actinv-core/data/`, byte-identical to the
+canonical `data/clearance_iaea_2004.json`, drift-guarded by `controls/g2_p54_exactness.py`). Use
+v1.3.1; v1.3.0's PyPI wheels remain valid, but its sdist cannot build from source.
 
 ## Results to re-check
 

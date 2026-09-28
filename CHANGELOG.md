@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.1 — 2026-09-28
+
+**Fixed**
+
+- `actinv-core` crate packaging: the bundled IAEA clearance table was included via a path outside
+  the crate root, so `cargo publish` verification failed and the PyPI source distribution could
+  not build. The table is now packaged inside the crate (`crates/actinv-core/data/`,
+  byte-identical to `data/clearance_iaea_2004.json`; a drift guard in
+  `controls/g2_p54_exactness.py` keeps the copies equal). Supersedes v1.3.0.
+
 ## v1.3.0 — 2026-09-28
 
 **Added**

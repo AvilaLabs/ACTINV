@@ -10,8 +10,10 @@
 use serde_json::{json, Value};
 
 /// Bundled IAEA 2004 clearance table (RS-G-1.7 Table 2 basis, Bq g⁻¹).
-/// Canonical artifact: `data/clearance_iaea_2004.json`.
-const BUNDLED_LIMITS: &str = include_str!("../../../data/clearance_iaea_2004.json");
+/// Canonical artifact: `data/clearance_iaea_2004.json`; `crates/actinv-core/data/`
+/// carries the same bytes so the published crate tarball contains the table
+/// (cargo packages may not include paths outside the package root).
+const BUNDLED_LIMITS: &str = include_str!("../data/clearance_iaea_2004.json");
 
 pub struct LimitsTable {
     /// RS-G-1.7-style keys ("Fe-55", "Co-60m") -> Bq/g.

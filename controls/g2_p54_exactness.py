@@ -23,8 +23,12 @@ import p54_fixture as p54fx  # noqa: E402
 BIN = Path(os.environ.get("ACTINV_BIN", ROOT / "target/debug/actinv"))
 OUT = ROOT / "results/g2_p54_exactness.json"
 EMIT_STEP = 2
-LIMITS = json.loads((ROOT / "data/clearance_iaea_2004.json").read_text())[
-    "limits"]
+CANONICAL_LIMITS_PATH = ROOT / "data/clearance_iaea_2004.json"
+CRATE_LIMITS_PATH = ROOT / "crates/actinv-core/data/clearance_iaea_2004.json"
+assert CRATE_LIMITS_PATH.read_bytes() == CANONICAL_LIMITS_PATH.read_bytes(), (
+    "crate-packaged clearance table diverged from data/clearance_iaea_2004.json"
+)
+LIMITS = json.loads(CANONICAL_LIMITS_PATH.read_text())["limits"]
 
 
 def run(args: list[str]) -> subprocess.CompletedProcess:
