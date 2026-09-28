@@ -125,3 +125,38 @@ fix on master could not retro-apply. v1.1.2 re-fires the tag workflows on a chec
 - [x] Record the release URL, tag commit, release ID, asset identities and smoke results in
   `results/release_v1.2.1.json`. (Production smoke: `pip install actinv==1.2.1` and
   `cargo install --locked actinv-cli --version 1.2.1` both give `actinv --version` -> 1.2.1.)
+
+## v1.3.0/v1.3.1 (feature release + same-day packaging patch)
+
+The v1.3.0 tag's crates publish failed at `cargo publish` verification: `actinv-core` bundled the
+IAEA clearance table with `include_str!("../../../data/clearance_iaea_2004.json")`, a path outside
+the package root, so the crate tarball — and the PyPI sdist, which vendors the workspace `crates/`
+tree without the repo-level `data/` — could not build it. The fix ships the table inside the crate
+(`crates/actinv-core/data/`, drift-guarded in `controls/g2_p54_exactness.py`) and landed as v1.3.1;
+PyPI filenames are immutable so v1.3.0's defective sdist remains published but superseded.
+
+Two pre-tag gates would have caught this; adopt them for every release:
+
+- [ ] Run `cargo publish -p actinv-data --dry-run`, `-p actinv-core --dry-run`, and
+  `-p actinv-cli --dry-run` on the release commit (each resolves inter-crate deps from the
+  registry index, so run them after any prior registry publish of those versions, or accept the
+  missing-version warning for not-yet-published deps) — the verify build fails on any
+  `include_str!`/`include_bytes!` path that escapes the package root.
+- [ ] Build the PyPI sdist (`maturin sdist` or the publish workflow's sdist job) and check every
+  `include_str!`/`include_bytes!` in `crates/` resolves inside the packaged tree.
+
+Sequencing notes learned this cycle:
+
+- `controls` does not run on tag pushes, and its `release_boundary` check fails the pre-tag
+  workspace bump by design (`version` ahead of the newest published tag). After pushing the tag,
+  re-run controls on the same commit (`workflow_dispatch` on master, or `gh run rerun`) — the
+  publish workflows' `ci-green` gate reads the **newest completed** controls run for the release
+  commit and aborts if that run is the pre-tag failure.
+- Each `crates.io` environment job (`Publish actinv-data`, `-core`, `-cli`) and the `pypi` job are
+  separate environment approvals; approve each pending deployment as it queues.
+
+v1.3.0/v1.3.1 execution: bumps `af046ce`+`2979f35` (v1.3.0; `2979f35` also reseated the P10-G6
+canonical hash for the `decay_overrides_applied` schema key) and `6e86cad` (v1.3.1 packaging fix);
+tags `v1.3.0`/`v1.3.1`; controls runs 36428795353+36429728374 (v1.3.0) and 36451256724 (v1.3.1)
+green; PyPI/crates verified at both versions (records in `results/release_v1.3.0.json` and
+`results/release_v1.3.1.json`).
