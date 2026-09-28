@@ -237,7 +237,7 @@ amb.write_text(json.dumps({
     "entries": [{"response": "heat.total", "value": 1.0,
                  "standard_uncertainty": 1.0}]}))
 cli("assimilate", "--result", str(rp), "--assay", str(amb),
-    expect_err="both scalar")
+    expect_err="multiple measurement shapes")
 check("scalar+entries ambiguity refused", True)
 
 failed = [c for c in checks if not c["pass"]]

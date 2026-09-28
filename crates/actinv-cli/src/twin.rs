@@ -41,6 +41,24 @@ struct TwinSpec {
     /// Detector points for a point-kernel photon-flux estimate.
     #[serde(default)]
     dose_points: Option<Vec<DosePoint>>,
+    /// D5 dose-rate assimilation: a measured dose (or photon flux) at a
+    /// named dose point is a linear combination over cells —
+    /// y = Σ_cell kᵢ·Φᵢ with kᵢ = atten·coeff/(4πrᵢ²). The constraint
+    /// lands on each cell's declared response under the proportionality
+    /// Φ ∝ x — emitted openly as the dose-share weight per cell.
+    #[serde(default)]
+    dose_assays: Option<Vec<DoseAssayRef>>,
+}
+
+#[derive(serde::Deserialize)]
+struct DoseAssayRef {
+    /// Name of a declared dose_point the measurement was taken at.
+    dose_point: String,
+    /// Path to an actinv-assay-1 scalar document — `response` declares
+    /// which cell band the constraint lands on; `value` is the measured
+    /// dose_gy_h (or photon_flux_cm2_s when the point has no
+    /// dose_coeff).
+    assay: String,
 }
 
 #[derive(serde::Deserialize)]
@@ -202,22 +220,48 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
     // Each assay is validated up front so a malformed one fails the run
     // before any margin is scored on a silently un-updated band.
     let mut assays: HashMap<String, Vec<LoadedAssay>> = HashMap::new();
+    /// Mixture assays per cell: (time_s, terms, measured value, su, sha).
+    type LoadedMixture = (f64, Vec<(String, f64)>, f64, f64, String);
+    let mut mixture_assays: HashMap<String, Vec<LoadedMixture>> = HashMap::new();
     for a in spec.assays.iter().flatten() {
         let ap = base.join(&a.assay);
         let atext = std::fs::read_to_string(&ap)
             .map_err(|e| format!("cannot read {}: {e}", ap.display()))?;
         let av: Value =
             serde_json::from_str(&atext).map_err(|e| format!("{}: {e}", ap.display()))?;
-        let (t_s, entries) = crate::assimilate::parse_assay(&av, &ap.display().to_string())?;
+        let (t_s, body) = crate::assimilate::parse_assay(&av, &ap.display().to_string())?;
         let sha = actinv_data::builder::sha256_file(&ap).unwrap_or_default();
-        for e in entries {
-            assays.entry(a.cell.clone()).or_default().push((
-                e.response,
-                t_s,
-                e.value,
-                e.standard_uncertainty,
-                sha.clone(),
-            ));
+        match body {
+            crate::assimilate::AssayBody::Entries(entries) => {
+                for e in entries {
+                    assays.entry(a.cell.clone()).or_default().push((
+                        e.response,
+                        t_s,
+                        e.value,
+                        e.standard_uncertainty,
+                        sha.clone(),
+                    ));
+                }
+            }
+            crate::assimilate::AssayBody::Mixture {
+                terms,
+                value,
+                standard_uncertainty,
+            } => {
+                if a.propagates.is_some() {
+                    return Err(format!(
+                        "{}: mixture assays cannot propagate — the induced cross-term covariance has no single ln-shift to send",
+                        ap.display()
+                    ));
+                }
+                mixture_assays.entry(a.cell.clone()).or_default().push((
+                    t_s,
+                    terms,
+                    value,
+                    standard_uncertainty,
+                    sha,
+                ));
+            }
         }
     }
     let mut assimilated_cells: Vec<String> = Vec::new();
@@ -270,6 +314,203 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
         }
     }
 
+    // Dose-rate assimilation pre-pass: for every dose assay, pull each
+    // cell's photon emission and response prior at the assay time,
+    // compute kernel coefficients, and fuse the mixture — posteriors are
+    // applied per-cell in the main pass BEFORE scalar cell assays, so a
+    // later cell assay sees the dose posterior as its prior (sequential
+    // Bayes on the record's own bands).
+    /// cell id -> (response, posterior, posterior ln-σ, dose-share,
+    ///   band multiplier, assay sha, time_s)
+    type DoseApplied = (String, f64, f64, f64, f64, String, f64);
+    let mut dose_applied: HashMap<String, Vec<DoseApplied>> = HashMap::new();
+    let mut dose_assay_records: Vec<Value> = Vec::new();
+    for da in spec.dose_assays.iter().flatten() {
+        let ap = base.join(&da.assay);
+        let atext = std::fs::read_to_string(&ap)
+            .map_err(|e| format!("cannot read {}: {e}", ap.display()))?;
+        let av: Value =
+            serde_json::from_str(&atext).map_err(|e| format!("{}: {e}", ap.display()))?;
+        let (t_s, body) = crate::assimilate::parse_assay(&av, &ap.display().to_string())?;
+        let crate::assimilate::AssayBody::Entries(entries) = body else {
+            return Err(format!(
+                "{}: dose assays take a scalar actinv-assay-1 document",
+                ap.display()
+            ));
+        };
+        if entries.len() != 1 {
+            return Err(format!(
+                "{}: dose assays carry exactly one response — the cell band the dose constraint lands on",
+                ap.display()
+            ));
+        }
+        let e = &entries[0];
+        let Some(point) = spec
+            .dose_points
+            .iter()
+            .flatten()
+            .find(|p| p.name == da.dose_point)
+        else {
+            return Err(format!(
+                "dose assay names unknown dose_point '{}'",
+                da.dose_point
+            ));
+        };
+        let od: f64 = point
+            .shields
+            .iter()
+            .flatten()
+            .map(|s| s.mu_cm_inv * s.thickness_cm)
+            .sum();
+        let atten = (-od).exp();
+        let dcoef = point.dose_coeff_gy_cm2_per_photon_h.unwrap_or(1.0);
+        let sha = actinv_data::builder::sha256_file(&ap).unwrap_or_default();
+
+        // Collect per-cell terms: c_i = kernel_i·Φ_i(t)/nom_i(t) so the
+        // forward value Σcᵢ·nomᵢ equals the computed dose exactly.
+        let mut mterms: Vec<(String, crate::assimilate::MixtureTerm)> = Vec::new();
+        for line in raw.lines().filter(|l| l.trim().starts_with('{')) {
+            let rec: Value =
+                serde_json::from_str(line).map_err(|e| format!("mesh output line: {e}"))?;
+            if rec["record"].as_str() != Some("cell") {
+                continue;
+            }
+            let id = rec["id"].as_str().unwrap_or("?").to_string();
+            let centroid: [f64; 3] = (0..3)
+                .map(|ax| {
+                    let b = &rec["bounds_cm"][ax];
+                    (b[0].as_f64().unwrap_or(0.0) + b[1].as_f64().unwrap_or(0.0)) / 2.0
+                })
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap_or([0.0, 0.0, 0.0]);
+            let v_eff = rec["volume_cm3"].as_f64().unwrap_or(1.0).max(1e-30);
+            let dist = ((centroid[0] - point.position_cm[0]).powi(2)
+                + (centroid[1] - point.position_cm[1]).powi(2)
+                + (centroid[2] - point.position_cm[2]).powi(2))
+            .sqrt()
+            .max(0.5 * v_eff.cbrt());
+            let kernel = atten * dcoef / (4.0 * std::f64::consts::PI * dist * dist);
+            let Some(st) = rec["result"]["steps"].as_array().and_then(|ss| {
+                ss.iter()
+                    .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+            }) else {
+                continue;
+            };
+            let photons_s: f64 = st
+                .pointer("/photon_source/groups")
+                .and_then(|g| g.as_array())
+                .map(|gs| {
+                    gs.iter()
+                        .map(|g| g["photons_s"].as_f64().unwrap_or(0.0))
+                        .sum()
+                })
+                .unwrap_or(0.0);
+            if photons_s <= 0.0 {
+                continue;
+            }
+            let Some(r) = st.pointer(&format!("/uncertainty/responses/{}", e.response)) else {
+                return Err(format!(
+                    "cell {id}: dose assay response '{}' has no certified band",
+                    e.response
+                ));
+            };
+            let nominal = r["nominal"].as_f64().unwrap_or(0.0);
+            let su_prior = r["combined_standard_uncertainty"]
+                .as_f64()
+                .or_else(|| r["mf33_standard_uncertainty"].as_f64())
+                .unwrap_or(0.0);
+            if nominal <= 0.0 || su_prior <= 0.0 {
+                return Err(format!(
+                    "cell {id}: dose assay response '{}' prior is not positive",
+                    e.response
+                ));
+            }
+            mterms.push((
+                id,
+                crate::assimilate::MixtureTerm {
+                    response: e.response.clone(),
+                    coefficient: kernel * photons_s / nominal,
+                    nominal,
+                    s_ln: (su_prior / nominal).max(1e-300),
+                    normal_multiplier: r["normal_multiplier"].as_f64().unwrap_or(1.959964),
+                },
+            ));
+        }
+        if mterms.is_empty() {
+            return Err(format!(
+                "dose assay '{}': no emitting cell at t_s={t_s}",
+                da.dose_point
+            ));
+        }
+        let f = crate::assimilate::fuse_mixture(
+            &mterms.iter().map(|(_, t)| t.clone()).collect::<Vec<_>>(),
+            e.value,
+            e.standard_uncertainty,
+        );
+        for (i, (id, t)) in mterms.iter().enumerate() {
+            dose_applied.entry(id.clone()).or_default().push((
+                t.response.clone(),
+                f.posteriors[i],
+                f.posterior_s_ln[i],
+                f.weights[i],
+                t.normal_multiplier,
+                sha.clone(),
+                t_s,
+            ));
+        }
+        let s_prior = {
+            let v: f64 = mterms
+                .iter()
+                .zip(&f.weights)
+                .map(|((_, t), h)| h * h * t.s_ln * t.s_ln)
+                .sum();
+            v.sqrt()
+        };
+        let mult = mterms
+            .iter()
+            .map(|(_, t)| t.normal_multiplier)
+            .fold(1.0_f64, f64::max);
+        let (lo, hi) = (
+            f.forward * (-mult * s_prior).exp(),
+            f.forward * (mult * s_prior).exp(),
+        );
+        let verdict = if e.value >= lo && e.value <= hi {
+            "consistent"
+        } else {
+            let width = (hi / lo.max(1e-300)).ln().abs();
+            let dist = if e.value > hi {
+                (e.value / hi).ln()
+            } else {
+                (lo / e.value).ln()
+            };
+            if dist <= 0.5 * width.max(1e-300) {
+                "marginal"
+            } else {
+                "conflict"
+            }
+        };
+        dose_assay_records.push(json!({
+            "dose_point": da.dose_point,
+            "response": e.response,
+            "time_s": t_s,
+            "units": if point.dose_coeff_gy_cm2_per_photon_h.is_some() {
+                "dose_gy_h" } else { "photon_flux_cm2_s" },
+            "measured": e.value,
+            "measured_su": e.standard_uncertainty,
+            "forward": f.forward,
+            "forward_band": [lo, hi],
+            "forward_sigma_ln": s_prior,
+            "innovation_ln": f.innovation,
+            "verdict": verdict,
+            "cells": mterms.iter().enumerate().map(|(i,(id,_))| json!({
+                "cell": id, "dose_share": f.weights[i],
+                "kalman_gain": f.gains[i], "posterior": f.posteriors[i],
+            })).collect::<Vec<_>>(),
+            "assay_sha256": sha,
+        }));
+    }
+
     let mut cells: Vec<Value> = Vec::new();
     let mut cell_verdicts: HashMap<String, String> = HashMap::new();
     let mut recommendations: Vec<Value> = Vec::new();
@@ -310,6 +551,26 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
         }
         n_cells += 1;
         let id = rec["id"].as_str().unwrap_or("?").to_string();
+        // Dose assays land first: the pre-pass already fused the linear
+        // combination, so these write the joint posterior in place — a
+        // later cell assay then sees it as its prior.
+        for (resp_name, post, s_ln, weight, mult, sha, t_s) in
+            dose_applied.get(&id).cloned().unwrap_or_default()
+        {
+            let Some(steps) = rec["result"]["steps"].as_array_mut() else {
+                return Err(format!("cell {id}: result carries no steps"));
+            };
+            let Some(st) = steps
+                .iter_mut()
+                .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+            else {
+                continue;
+            };
+            if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{resp_name}")) {
+                crate::assimilate::apply_mixture_fusion(r, post, s_ln, mult, weight, &sha);
+                assimilated_cells.push(id.clone());
+            }
+        }
         // Assays fuse into the cell's band before any margin is scored.
         for (resp_name, t_s, meas, su, sha) in assays.get(&id).cloned().unwrap_or_default() {
             let Some(steps) = rec["result"]["steps"].as_array_mut() else {
@@ -339,6 +600,67 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             }
             let f = crate::assimilate::fuse(nominal, su_prior, meas, su, mult);
             crate::assimilate::apply_fusion(r, &f, &sha);
+            assimilated_cells.push(id.clone());
+        }
+        // Mixture assays: one linear-combination measurement updates
+        // several of this cell's response bands jointly (Kalman H-row).
+        for (t_s, terms, meas, su, sha) in mixture_assays.get(&id).cloned().unwrap_or_default() {
+            let mut mterms = Vec::with_capacity(terms.len());
+            for (resp_name, coeff) in &terms {
+                let Some(steps) = rec["result"]["steps"].as_array() else {
+                    return Err(format!("cell {id}: result carries no steps"));
+                };
+                let Some(st) = steps
+                    .iter()
+                    .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+                else {
+                    return Err(format!("cell {id}: assay time_s={t_s} matches no step"));
+                };
+                let Some(r) = st.pointer(&format!("/uncertainty/responses/{resp_name}")) else {
+                    return Err(format!(
+                        "cell {id}: mixture term '{resp_name}' has no certified band"
+                    ));
+                };
+                let nominal = r["nominal"].as_f64().unwrap_or(0.0);
+                let su_prior = r["combined_standard_uncertainty"]
+                    .as_f64()
+                    .or_else(|| r["mf33_standard_uncertainty"].as_f64())
+                    .unwrap_or(0.0);
+                if nominal <= 0.0 || su_prior <= 0.0 {
+                    return Err(format!(
+                        "cell {id}: mixture term '{resp_name}' prior is not positive"
+                    ));
+                }
+                mterms.push(crate::assimilate::MixtureTerm {
+                    response: resp_name.clone(),
+                    coefficient: *coeff,
+                    nominal,
+                    s_ln: (su_prior / nominal).max(1e-300),
+                    normal_multiplier: r["normal_multiplier"].as_f64().unwrap_or(1.959964),
+                });
+            }
+            let f = crate::assimilate::fuse_mixture(&mterms, meas, su);
+            let Some(steps) = rec["result"]["steps"].as_array_mut() else {
+                return Err(format!("cell {id}: result carries no steps"));
+            };
+            let Some(st) = steps
+                .iter_mut()
+                .find(|s| s["t_s"].as_f64().map(|v| close(v, t_s)).unwrap_or(false))
+            else {
+                continue;
+            };
+            for (i, t) in mterms.iter().enumerate() {
+                if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{}", t.response)) {
+                    crate::assimilate::apply_mixture_fusion(
+                        r,
+                        f.posteriors[i],
+                        f.posterior_s_ln[i],
+                        t.normal_multiplier,
+                        f.weights[i],
+                        &sha,
+                    );
+                }
+            }
             assimilated_cells.push(id.clone());
         }
         // Declared-correlation propagation: an assay on a sibling cell
@@ -617,6 +939,7 @@ pub fn run(spec_path: &str, out_path: Option<&str>) -> Result<Value, String> {
             "binding_cells": binding,
             "assimilated_cells": assimilated_cells,
             "assay_recommendations": recommendations,
+            "dose_assimilations": dose_assay_records,
         },
         "note": "clearance is on the certified band edge, not the nominal — a cell clears only when its conservative interval clears the limit. dose_points flux is a point-kernel screening estimate (no scatter/buildup transport), not a certified band",
     });

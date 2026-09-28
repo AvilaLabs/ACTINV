@@ -806,7 +806,7 @@ pub fn main_from(a: Vec<String>) {
         "assimilate" => {
             if a.len() < 3 {
                 die(
-                    "usage: actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json] [--emit-result UPDATED.json]\nFold an assay into certified response bands (log-Gaussian update with an emitted Kalman gain and a consistency verdict). The assay may carry scalar fields (response/value/standard_uncertainty) or `entries: [{response,value,standard_uncertainty}]` — a multi-nuclide count fusing every line at its shared time_s.\n--emit-result writes the full run result with the fused bands replaced by posteriors — chainable into decide/clearance/another assimilate.",
+                    "usage: actinv assimilate --result RUN.json --assay ASSAY.json [--out OUT.json] [--emit-result UPDATED.json]\nFold an assay into certified response bands (log-Gaussian update with an emitted Kalman gain and a consistency verdict). The assay may carry scalar fields (response/value/standard_uncertainty), `entries: [{response,value,standard_uncertainty}]` — a multi-nuclide count fusing every line at its shared time_s — or `mixture: [{response,coefficient}]` with a scalar `value` — a linear-combination measurement (dose-rate, gross activity) fused jointly via a Kalman H-row update with the induced correlation matrix emitted.\n--emit-result writes the full run result with the fused bands replaced by posteriors — chainable into decide/clearance/another assimilate.",
                     2,
                 );
             }

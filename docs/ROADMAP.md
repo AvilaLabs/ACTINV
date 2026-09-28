@@ -2279,6 +2279,23 @@ exists to carry it.
   nuclide posteriors, untouched responses stay at the prior, a single
   conflicting line flags the whole document, and mixed scalar+entries is
   refused as ambiguous.
+- 2026-09-28 — **D5 leg 5 — linear-combination + dose-rate assays**
+  (`results/g1_d5_mixture.json`, `results/g1_d3_twin.json`).
+  `actinv-assay-1` gains `mixture: [{response, coefficient}]` — a
+  measured linear form y = Σcᵢ·xᵢ (dose rate, gross activity) fused
+  jointly through a Kalman H-row update: ln y ≈ ln y₀ + ΣHᵢδln xᵢ with
+  Hᵢ the fractional contribution. Each term's posterior narrows by its
+  share, the emitted record carries the induced cross-term correlation
+  matrix (a mixture measurement entangles its terms), and a one-term
+  mixture reduces bit-identically to the scalar fusion. `twin` gains
+  `dose_assays: [{dose_point, assay}]` — a measured photon flux or
+  dose_rate at a declared detector is inverted through the point-kernel
+  weights into per-cell constraint shares; the gate verifies the forward
+  dose equals the emitted flux exactly, the dominant-emitter cell is
+  pulled to the measured share, and non-emitting cells gain nothing
+  (K ≈ dose-share ≈ 0). Honest edges: a degenerate zero-σ prior cannot
+  absorb information (conflict, by design); Φ∝x proportionality is
+  declared per-assay, not assumed.
 - 2026-09-28 — **D5 value-of-information** (`results/g1_d3_twin.json`).
   `twin` emits `facility.assay_recommendations`: for every restricted
   (cell, time, limit) the assay precision needed to clear at the prior

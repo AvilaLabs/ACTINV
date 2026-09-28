@@ -132,7 +132,7 @@ check("identical flux, different material -> different band",
 # Twin: one clearance limit on heat.total. Cell ranking is cell-2
 # (Mn57-seeded, ~1.5e-14) >> cell-1 (10x flux Fe) >> cell-0.
 def twinspec(limit, name, times=None, assays=None,
-             components=None, dose_points=None):
+             components=None, dose_points=None, dose_assays=None):
     doc = {"spec": "actinv-twin-1", "mesh_output": str(mesh_out),
            "limits": [{"name": "heat", "response": "heat.total",
                        "limit": limit}]}
@@ -144,6 +144,8 @@ def twinspec(limit, name, times=None, assays=None,
         doc["components"] = components
     if dose_points is not None:
         doc["dose_points"] = dose_points
+    if dose_assays is not None:
+        doc["dose_assays"] = dose_assays
     p = tmp / f"{name}.json"
     p.write_text(json.dumps(doc))
     op = tmp / f"{name}.out.json"
@@ -322,6 +324,69 @@ check("far point dimmer than near",
       fx.get("far", 1.0) < fx.get("near", 0.0), f"{fx}")
 check("shielding attenuates",
       fx.get("shielded", 1.0) < fx.get("near", 0.0) * 0.5, f"{fx}")
+
+# D5 dose-rate assimilation: a measured photon flux at the "near" point
+# is a linear combination over cells — the kernel weights each cell's
+# contribution. The assay lands on activity:Mn57m1 (the only response
+# carrying real σ on the Mn-57-seeded cell — heat.total there is a
+# degenerate zero-σ prior, which a measurement honestly cannot move).
+# Measuring 60% of the forward flux on a s_ln≈161 prior should pull
+# cell-2's band to ≈0.6× nominal while Fe cells (dose share ~1e-23)
+# stay put — a dose dominated by one cell teaches nothing about others.
+near_flux = dp["near"]["steps"][0]["photon_flux_cm2_s"]
+meas_flux = near_flux * 0.6
+dassay = tmp / "dose_assay.json"
+dassay.write_text(json.dumps({"schema": "actinv-assay-1",
+                              "response": "activity:Mn57m1",
+                              "time_s": edge_t,
+                              "value": meas_flux,
+                              "standard_uncertainty": meas_flux * 0.05}))
+dassim = twinspec(mid, "dose_assim", times=[edge_t],
+                  dose_points=[
+                      {"name": "near", "position_cm": [1.0, 0.5, 0.5]}],
+                  dose_assays=[{"dose_point": "near",
+                                "assay": str(dassay)}])
+drecs = dassim["facility"]["dose_assimilations"]
+check("dose assimilation record emitted",
+      len(drecs) == 1 and drecs[0]["dose_point"] == "near")
+if drecs:
+    dr = drecs[0]
+    shares = {c["cell"]: c["dose_share"] for c in dr["cells"]}
+    check("forward dose equals emitted flux",
+          abs(dr["forward"] - near_flux) <= near_flux * 1e-9
+          and dr["units"] == "photon_flux_cm2_s",
+          f"{dr['forward']:.6e} vs {near_flux:.6e}")
+    check("dose shares sum to one and cell-2 dominates",
+          abs(sum(shares.values()) - 1.0) < 1e-9
+          and shares.get("cell-2", 0.0) > 0.99, f"{shares}")
+    check("near-consistent verdict", dr["verdict"] == "consistent",
+          f"{dr['verdict']}")
+    # Cell-2's fused band lands under its per-cell entry when the twin
+    # spec evaluates that cell under the same limit — but the per_cell
+    # band is heat.total; read the emitted record's posterior instead.
+    priors = {}
+    for line in mesh_out.read_text().splitlines():
+        rec = json.loads(line)
+        if rec.get("record") == "cell":
+            st = next(s for s in rec["result"]["steps"]
+                      if abs(s["t_s"] - edge_t) < 0.01)
+            priors[rec["id"]] = \
+                st["uncertainty"]["responses"]["activity:Mn57m1"]["nominal"]
+    def prior_or_one(cid):
+        return priors.get(cid, 1.0)
+    c2 = next(c for c in dr["cells"] if c["cell"] == "cell-2")
+    prior_c2 = priors.get("cell-2")
+    check("dominant cell pulled to the measurement share",
+          prior_c2 is not None
+          and abs(c2["posterior"] / prior_c2 - 0.6) < 0.05,
+          f"post/prior={c2['posterior'] / prior_c2:.4f}")
+    fe = [c for c in dr["cells"] if c["cell"] != "cell-2"]
+    check("non-emitting cells gain ~nothing (K≈share)",
+          all(abs(c["kalman_gain"]) < 1e-10 for c in fe)
+          and all(abs(c["posterior"]
+                      / prior_or_one(c["cell"]) - 1.0) < 0.01
+                  for c in fe),
+          f"{fe}")
 
 failed = [c for c in checks if not c["pass"]]
 OUT.write_text(json.dumps({"pass": not failed, "n": len(checks),

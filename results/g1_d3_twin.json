@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 26,
+ "n": 32,
  "checks": [
   {
    "name": "mesh emitted cells",
@@ -131,6 +131,36 @@
    "name": "shielding attenuates",
    "pass": true,
    "detail": "{'near': 0.0017977715567993834, 'far': 7.191086227197533e-05, 'shielded': 3.2927334638774974e-05}"
+  },
+  {
+   "name": "dose assimilation record emitted",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "forward dose equals emitted flux",
+   "pass": true,
+   "detail": "1.797772e-03 vs 1.797772e-03"
+  },
+  {
+   "name": "dose shares sum to one and cell-2 dominates",
+   "pass": true,
+   "detail": "{'cell-0': 7.501339793665243e-24, 'cell-1': 7.501339793665239e-23, 'cell-2': 1.0}"
+  },
+  {
+   "name": "near-consistent verdict",
+   "pass": true,
+   "detail": "consistent"
+  },
+  {
+   "name": "dominant cell pulled to the measurement share",
+   "pass": true,
+   "detail": "post/prior=0.6010"
+  },
+  {
+   "name": "non-emitting cells gain ~nothing (K\u2248share)",
+   "pass": true,
+   "detail": "[{'cell': 'cell-0', 'dose_share': 7.501339793665243e-24, 'kalman_gain': 7.476300924883486e-24, 'posterior': 4.5860478037581756e-26}, {'cell': 'cell-1', 'dose_share': 7.501339793665239e-23, 'kalman_gain': 7.47630092488347e-23, 'posterior': 4.586047803758174e-25}]"
   }
  ]
 }

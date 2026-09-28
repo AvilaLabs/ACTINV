@@ -1,0 +1,71 @@
+{
+ "pass": true,
+ "n": 13,
+ "checks": [
+  {
+   "name": "mixture record kinded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "forward value is \u03a3c\u1d62\u00b7nom\u1d62 exactly",
+   "pass": true,
+   "detail": "4.011997171132691e-26 vs 4.011997171132691e-26"
+  },
+  {
+   "name": "shares sum to one and match c\u1d62nom\u1d62/y\u2080",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "posterior matches independent Kalman recompute",
+   "pass": true,
+   "detail": "2.282728e-26 vs 2.282728e-26"
+  },
+  {
+   "name": "induced correlations negative off-diagonal, bounded",
+   "pass": true,
+   "detail": "[[1.0, -0.9946933463431598], [-0.9946933463431602, 1.0]]"
+  },
+  {
+   "name": "verdict consistent when measurement inside forward band",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "one-term mixture \u2261 scalar fusion exactly",
+   "pass": true,
+   "detail": "5.6045234623e-26 vs 5.6045234623e-26"
+  },
+  {
+   "name": "emit-result moves both term bands",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "mixture provenance stamped per response",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "far-outside combination reads conflict",
+   "pass": true,
+   "detail": "conflict"
+  },
+  {
+   "name": "unfitted mixture term refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "scalar+mixture ambiguity refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "missing coefficient refused",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
