@@ -208,6 +208,25 @@ dominated by second-generation and exotic fragments that matter only
 at high fluence × long lifetime, where secondary capture competes
 with decay.
 
+## Calibrated model remainder (banded-corpus fit)
+
+MF=33 + decay-constant propagation alone under-covers measured
+residuals: on the sealed FNS banded corpus (132 experiments, 943
+held-out points), propagated-only bands cover 44% at z=1. The
+calibrated remainder artifact `results/d2_banded_calibration.json`
+(`actinv-banded-calibration-1`) fits an `actinv-unmodeled-table-1` —
+per-material fitted u values on the SHA-split fit partition — and
+restores held-out coverage to 73% at z=1 with the per-material table
+applied (71% pooled). Declared through `uncertainty.unmodeled_table`
+or `unmodeled_relative`.
+
+Honest limit: the residual distribution is heavy-tailed —
+evaluation-regression materials (Re, Bi, Pr, Cd, Cs, Lu, Hf)
+concentrate the misses — so z=2 holdout coverage reaches 80% rather
+than the nominal 95%. The certificate names the tail materials rather
+than inflating u to a physically meaningless value (~u=18 would be
+needed at 95%).
+
 ## Remediation path
 
 1. **Corrected TENDL release** — the upstream fix is committed; when it

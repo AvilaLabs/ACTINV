@@ -2364,3 +2364,15 @@ exists to carry it.
   (0.0278→0.0286 over 293–1200 K), and Fe-56's monotone σ0 trend is
   restored exactly. Cost: ~5× the resolved-range quadrature work; a
   six-evaluation table build runs ~25 min under the local scope.
+- 2026-09-28 — **D2b banded-corpus calibration** (`results/d2_banded_calibration.json`,
+  `controls/d2_banded_calibrate.py` + `controls/check_g_d2_banded.py` gate, 19/19).
+  The deterministic fitter's u covered *all* residual error; on a banded run that
+  double-counts the propagated channels. This producer fits the remainder *on top
+  of* the emitted 1σ band per aligned `.exp` point — coverage model
+  |ln(nom/meas)| ≤ sqrt(z²(h_ln²+u²)+σ_meas²) — on the sealed P44 corpus (132
+  experiments, SHA-split fit/holdout). Propagated-only bands hold 44% z1 coverage
+  on the held-out 943 points; the fitted per-material remainder table
+  (`actinv-unmodeled-table-1`, declared via `uncertainty.unmodeled_table`) restores
+  73% (pooled 71%). Honest tail: z2 reaches 80% not 95% — the residual tail is
+  non-Gaussian, concentrated in the TENDL-2025 regression materials (Re, Bi, Pr,
+  Cd, Cs, Lu, Hf); the certificate names them rather than reporting u≈18.
