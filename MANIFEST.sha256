@@ -3552,6 +3552,8 @@ cabbea799b5a4b480973abbc02c371884b5a96302c0b631c19d9d596d8655832  ./results/p64_
 da3a63bbb7699f40659901caebd9d4bfd8983604012b64a265e5ad8c41bbc0d0  ./results/p68_screened_sweep.json
 5216fed4ffd48269e7b2153af4d17e241b2324f1b83cf68351a5ab26a4a1716b  ./results/release_v1.2.0.json
 f6d34b9d6bad0d892f904ad7f1a49b4a795309ced71311d8bf8c0fb1ede43db7  ./results/release_v1.2.1.json
+580fe8793c040b1bfe9070e8f1ce398fa91e5cf7277a6f5b1fed1b706d43bbbd  ./results/release_v1.3.0.json
+5c8d39cf6d08091016a94c02a431fe45b4be2dd18f2310f63baafe3bac2c04f8  ./results/release_v1.3.1.json
 b2fa431b0d73afd7b3fe8cb523300722f509f55b4b8c0ef61d236699d6efd9f2  ./results/session_cb1.json
 6b7bb6069d172812b4600c384732cf4f81df02aa852fddcae10fd6e7a48b71c4  ./results/session_p13.json
 13ca8c1ed7f0e3d4629d117ff1a14f4967737af4beaec1389f449352bde2b4f7  ./results/session_p14.json

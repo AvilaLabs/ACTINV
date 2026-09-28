@@ -1,0 +1,70 @@
+{
+ "release": "v1.3.1",
+ "tag": {
+  "name": "v1.3.1",
+  "object": "ec2aba3d6b4250dc437e2290accc92b3d30ff936",
+  "commit": "6e86caddfbb83b9e8d7f84ad69fe541fa8e65c66",
+  "message": "ACTINV 1.3.1",
+  "signed": false
+ },
+ "github_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.3.1",
+  "id": "RE_kwDOUDaWv84Xv9dF",
+  "published_at": "2026-09-28T16:56:57Z",
+  "latest": true,
+  "notes": "docs/RELEASE_NOTES_v1.3.1.md",
+  "assets_sha256": {
+   "actinv-1.3.1-linux-x86_64.tar.gz": "d47cae8fd422713dad07949a0a746a42958dab80f4878f1d9f32f28540863f73",
+   "actinv-1.3.1-macos-aarch64.tar.gz": "b39a32ef1bf2207b1a6c701b6b73eba43b4b4bf4a93c817da83fc643448163b8",
+   "actinv-1.3.1-macos-x86_64.tar.gz": "970bdd650e5bf0eaeff808e0dd5bb5e5ec7c185c59368ec811f7b5144762b201",
+   "actinv-1.3.1-windows-x86_64.zip": "a3b1f9972134535d03c5baa926bda293d0c133e592b1e12823e83c807a71045b"
+  },
+  "sha256sums_asset": "SHA256SUMS"
+ },
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.3.1",
+   "files": {
+    "actinv-1.3.1-cp39-abi3-macosx_10_12_x86_64.whl": "5ec1bcb2d29debc0c20c0789dd8308ef463ed3881f3eb4a121f6ecfcb4fa0d50",
+    "actinv-1.3.1-cp39-abi3-macosx_11_0_arm64.whl": "b6f0743ba762405c793b9e4ea6fb72ec856bef30b3f556a098e10cf7248c162d",
+    "actinv-1.3.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "31ce01f3c92257b51212b978d3356be9428f73d0a5c480618132eba9c819dc39",
+    "actinv-1.3.1-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "f38e69b22d4768e6830f338ff89fb987024585a8acd2f1c106cda00134064e62",
+    "actinv-1.3.1-cp39-abi3-win_amd64.whl": "f1b2032aa84d57c3c91ca2e3c4bcf98b543aff9a330f7ed5e1761139fd1bcd05",
+    "actinv-1.3.1.tar.gz": "6ba19c5f20482cb0f6b0a43eef4e3d30f4f2dd79574267d2645f9e478b80cd4c"
+   },
+   "verified_via": "pypi.org/pypi/actinv/1.3.1/json; pip install actinv==1.3.1 smoke test imported actinv 1.3.1; sdist contains crates/actinv-core/data/clearance_iaea_2004.json"
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.3.1",
+    "created_at": "2026-09-28T16:51:28.263072Z",
+    "checksum": "4f035dc7f0da06797ab41b4b99ee8b6166da578af465c94ba37b72f06ef509da",
+    "yanked": false
+   },
+   "actinv-core": {
+    "version": "1.3.1",
+    "created_at": "2026-09-28T16:52:46.310281Z",
+    "checksum": "c9a3cfbf1760bee18adaa527ed7af974e0c6f023e9ec7d83c6674f84bd1dae86",
+    "yanked": false
+   },
+   "actinv-cli": {
+    "version": "1.3.1",
+    "created_at": "2026-09-28T16:53:46.648110Z",
+    "checksum": "239629400b1a6465a3aa5467cf0e1c1f7531f4a2850eb505182030555481bc05",
+    "yanked": false
+   }
+  }
+ },
+ "supersedes": {
+  "v1.3.0": "PyPI wheels remain valid; its sdist cannot build (packaged source lacks data/clearance_iaea_2004.json \u2014 include_str! escaped the crate root). crates.io actinv-core/actinv-cli never published at 1.3.0; actinv-data@1.3.0 remains published. See results/release_v1.3.0.json."
+ },
+ "workflow_runs": {
+  "controls_green": 36451256724,
+  "controls_push_prerelease_failed_release_boundary_expected": 36449953607,
+  "release_artifacts_dispatch": 36449968910,
+  "release_artifacts_tag": 36451257661,
+  "publish_crates": 36451258178,
+  "publish_pypi": 36451258246
+ }
+}

@@ -1,0 +1,53 @@
+{
+ "release": "v1.3.0",
+ "status": "superseded_by_v1.3.1",
+ "tag": {
+  "name": "v1.3.0",
+  "object": "b941e010e052343420d0b6c618d3331a2f83c7b3",
+  "commit": "2979f35e3d38d0f43772ba2cba679cbe7bcc9d89",
+  "message": "ACTINV 1.3.0",
+  "signed": false
+ },
+ "github_release": null,
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.3.0",
+   "files": {
+    "actinv-1.3.0-cp39-abi3-macosx_10_12_x86_64.whl": "9c8102d7128001935e67a1e82d223bab7d2c343c14e8ddaac86d6bf6a6f278e7",
+    "actinv-1.3.0-cp39-abi3-macosx_11_0_arm64.whl": "ef07e20a9d6d1f9e256411406c18ff4fa9f8a232d904e741cc2aa581977f275e",
+    "actinv-1.3.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "c6984331bb5caaeed3f27b96d59e4e06ff989084f3d89d28be000bde11a783b5",
+    "actinv-1.3.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "95b8080ae1bfee8e72c2955185233cf95d902aa537a960cd17d087b317c4d3eb",
+    "actinv-1.3.0-cp39-abi3-win_amd64.whl": "a270a1892d6699599870d92710f95a68244f6bfbf0d995509a5d659c7566bdfb",
+    "actinv-1.3.0.tar.gz": "cc57ff6295108283919aa42fd7aa730bd578d7f828258eb825e0125ce7fd15d3"
+   },
+   "defect": "sdist cannot build: crates/actinv-core/src/clearance.rs include_str! referenced ../../../data/clearance_iaea_2004.json, absent from the packaged tree; wheels unaffected"
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.3.0",
+    "created_at": "2026-09-28T15:05:41.734247Z",
+    "yanked": false
+   },
+   "actinv-core": "not published \u2014 cargo publish verify failed on the missing packaged file",
+   "actinv-cli": "not published \u2014 dependency chain skipped after actinv-core"
+  }
+ },
+ "superseded_by": "v1.3.1 (commit 6e86caddfbb83b9e8d7f84ad69fe541fa8e65c66) \u2014 identical features; the only change is packaging the clearance table inside actinv-core",
+ "workflow_runs": {
+  "controls_green_runs": [
+   36428795353,
+   36429728374
+  ],
+  "release_artifacts_tag": 36429676831,
+  "release_artifacts_dispatch": 36428811548,
+  "publish_crates_failed_verify": 36429677798,
+  "publish_pypi": 36429677421,
+  "controls_prerelease_failures_expected": {
+   "2979f35_boundary": 36428795353,
+   "af046ce_boundary": 36425599922,
+   "d4ac376_stale_g6_pin": 36424296896,
+   "e333402_stale_p15_seal": 36384239265
+  }
+ }
+}
