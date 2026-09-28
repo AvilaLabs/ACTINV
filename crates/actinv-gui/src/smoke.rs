@@ -494,6 +494,24 @@ pub fn from_env() -> Result<(), String> {
         if result.value != reloaded {
             return Err("result round-trip mismatch".into());
         }
+
+        // Opt-in assay fusion (the assay panel's exact call path):
+        // ACTINV_GUI_SMOKE_ASSAY points at an actinv-assay-1 document;
+        // the fused result must round-trip through ResultDocument — the
+        // same validation the Apply button runs.
+        #[cfg(not(target_arch = "wasm32"))]
+        if let Some(assay_path) = std::env::var_os("ACTINV_GUI_SMOKE_ASSAY") {
+            let assay: serde_json::Value =
+                serde_json::from_str(&std::fs::read_to_string(PathBuf::from(assay_path))?)?;
+            let (summary, updated) =
+                actinv_cli::assimilate::fuse_document(&result.value, &assay, "smoke")
+                    .map_err(|e| format!("smoke assay fusion: {e}"))?;
+            ResultDocument::parse(updated.clone(), "fused".into())
+                .map_err(|e| format!("fused result fails validation: {e}"))?;
+            model::write_json(&output.join("assimilation.json"), &summary)?;
+            model::write_json(&output.join("result-fused.json"), &updated)?;
+        }
+
         std::fs::write(
             output.join("inventory.csv"),
             model::inventory_csv(&result, 0)?,

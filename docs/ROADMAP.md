@@ -2295,7 +2295,12 @@ exists to carry it.
   pulled to the measured share, and non-emitting cells gain nothing
   (K ≈ dose-share ≈ 0). Honest edges: a degenerate zero-σ prior cannot
   absorb information (conflict, by design); Φ∝x proportionality is
-  declared per-assay, not assumed.
+  declared per-assay, not assumed. The workbench exposes the same
+  engine — a Results-page assay panel folds scalar/entries/mixture
+  assays in-memory through `assimilate::fuse_document` (one shared math
+  path, no second implementation), previews the per-response Kalman
+  update, and writes posterior bands back on Apply; the packaged smoke
+  path verifies parity with the CLI bit-for-bit.
 - 2026-09-28 — **D5 value-of-information** (`results/g1_d3_twin.json`).
   `twin` emits `facility.assay_recommendations`: for every restricted
   (cell, time, limit) the assay precision needed to clear at the prior

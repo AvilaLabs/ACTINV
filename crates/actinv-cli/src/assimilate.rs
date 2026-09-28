@@ -542,39 +542,99 @@ pub fn run(
     let assay: Value =
         serde_json::from_str(&assay_text).map_err(|e| format!("{assay_path}: {e}"))?;
     let (time_s, body) = parse_assay(&assay, assay_path)?;
-
-    if let AssayBody::Mixture {
-        terms,
-        value,
-        standard_uncertainty,
-    } = &body
-    {
-        return run_mixture(
-            result,
-            result_path,
-            assay_path,
-            time_s,
-            terms,
-            *value,
-            *standard_uncertainty,
-            out_path,
-            emit_result,
-        );
-    }
-    let AssayBody::Entries(entries) = body else {
-        unreachable!("mixture returned above")
-    };
-    let updates: Vec<EntryUpdate> = entries
-        .iter()
-        .map(|e| fuse_entry(&result, time_s, e))
-        .collect::<Result<_, _>>()?;
-
     let provenance = json!({
         "result_sha256": actinv_data::builder::sha256_file(std::path::Path::new(result_path))
             .unwrap_or_default(),
         "assay_sha256": actinv_data::builder::sha256_file(std::path::Path::new(assay_path))
             .unwrap_or_default(),
     });
+    let assay_sha =
+        actinv_data::builder::sha256_file(std::path::Path::new(assay_path)).unwrap_or_default();
+    let (out, updated) = fuse_body(&result, time_s, &body, provenance, &assay_sha)?;
+    if let Some(p) = out_path {
+        std::fs::write(p, serde_json::to_string_pretty(&out).unwrap())
+            .map_err(|e| format!("cannot write {p}: {e}"))?;
+    }
+    if let Some(p) = emit_result {
+        std::fs::write(p, serde_json::to_string_pretty(&updated).unwrap())
+            .map_err(|e| format!("cannot write {p}: {e}"))?;
+    }
+    Ok(out)
+}
+
+/// sha256 of a serialized value — in-memory provenance for the
+/// workbench path, which has no files to hash.
+fn sha256_value(v: &Value) -> String {
+    use sha2::{Digest, Sha256};
+    let mut h = Sha256::new();
+    h.update(serde_json::to_vec(v).unwrap_or_default());
+    format!("{:x}", h.finalize())
+}
+
+/// File-free fusion for the workbench: identical math and emit semantics
+/// to `run`, on in-memory values. Returns (assimilation summary, updated
+/// result document) — the caller decides whether to adopt the update.
+pub fn fuse_document(
+    result: &Value,
+    assay: &Value,
+    source: &str,
+) -> Result<(Value, Value), String> {
+    let (time_s, body) = parse_assay(assay, source)?;
+    let assay_sha = sha256_value(assay);
+    let provenance = json!({
+        "result_sha256": sha256_value(result),
+        "assay_sha256": assay_sha,
+        "source": source,
+    });
+    fuse_body(result, time_s, &body, provenance, &assay_sha)
+}
+
+/// Shared fusion core: dispatch on the parsed assay body, produce the
+/// `actinv-assimilated-1` summary and the updated result document (the
+/// equivalent of `--emit-result`). One math path serves the CLI and the
+/// workbench.
+fn fuse_body(
+    result: &Value,
+    time_s: f64,
+    body: &AssayBody,
+    provenance: Value,
+    assay_sha: &str,
+) -> Result<(Value, Value), String> {
+    match body {
+        AssayBody::Entries(entries) => {
+            entries_document(result, time_s, entries, provenance, assay_sha)
+        }
+        AssayBody::Mixture {
+            terms,
+            value,
+            standard_uncertainty,
+        } => mixture_document(
+            result,
+            time_s,
+            terms,
+            *value,
+            *standard_uncertainty,
+            provenance,
+            assay_sha,
+        ),
+    }
+}
+
+/// Entries path: fuse every measured response independently, emit the
+/// per-entry updates plus the legacy scalar fields when one entry is
+/// present, and return the updated result with `assimilated` provenance.
+fn entries_document(
+    result: &Value,
+    time_s: f64,
+    entries: &[AssayEntry],
+    provenance: Value,
+    assay_sha: &str,
+) -> Result<(Value, Value), String> {
+    let updates: Vec<EntryUpdate> = entries
+        .iter()
+        .map(|e| fuse_entry(result, time_s, e))
+        .collect::<Result<_, _>>()?;
+
     let note = "Gaussian fusion on ln-scale between the solver's propagated band and the assay's declared lognormal uncertainty; `conflict` means the measurement lies outside the prior's declared interval — a real discrepancy between model and assay, not a reason to silently widen";
 
     let mut out = json!({
@@ -598,54 +658,43 @@ pub fn run(
         o.insert("assay".into(), ej["assay"].clone());
         o.insert("update".into(), ej["update"].clone());
     }
-    if let Some(p) = out_path {
-        std::fs::write(p, serde_json::to_string_pretty(&out).unwrap())
-            .map_err(|e| format!("cannot write {p}: {e}"))?;
-    }
-    if let Some(p) = emit_result {
-        // Re-issue the run result with each fused response band replaced
-        // by its posterior — the document feeds `decide`/`clearance`/
-        // another `assimilate` unchanged, carrying `assimilation`
-        // provenance per response.
-        let mut updated = result.clone();
-        let assay_sha =
-            actinv_data::builder::sha256_file(std::path::Path::new(assay_path)).unwrap_or_default();
-        for u in &updates {
-            if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
-                steps.iter_mut().find(|s| {
-                    s["t_s"]
-                        .as_f64()
-                        .map(|t| is_close(t, time_s))
-                        .unwrap_or(false)
-                })
-            }) {
-                if let Some(r) =
-                    st.pointer_mut(&format!("/uncertainty/responses/{}", u.entry.response))
-                {
-                    apply_fusion(r, &u.fusion, &assay_sha);
-                }
+    // Re-issue the run result with each fused response band replaced by
+    // its posterior — the document feeds `decide`/`clearance`/another
+    // `assimilate` unchanged, carrying `assimilation` provenance per
+    // response.
+    let mut updated = result.clone();
+    for u in &updates {
+        if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
+            steps.iter_mut().find(|s| {
+                s["t_s"]
+                    .as_f64()
+                    .map(|t| is_close(t, time_s))
+                    .unwrap_or(false)
+            })
+        }) {
+            if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{}", u.entry.response))
+            {
+                apply_fusion(r, &u.fusion, assay_sha);
             }
         }
-        updated
-            .as_object_mut()
-            .ok_or("result did not serialize as an object")?
-            .insert(
-                "assimilated".into(),
-                json!({
-                    "time_s": time_s,
-                    "entries": updates.iter().map(|u| json!({
-                        "response": u.entry.response,
-                        "posterior": u.fusion.posterior,
-                        "posterior_relative_standard_uncertainty": u.fusion.posterior_rel_su,
-                        "verdict": u.verdict,
-                    })).collect::<Vec<_>>(),
-                    "verdict": overall_verdict(&updates),
-                }),
-            );
-        std::fs::write(p, serde_json::to_string_pretty(&updated).unwrap())
-            .map_err(|e| format!("cannot write {p}: {e}"))?;
     }
-    Ok(out)
+    updated
+        .as_object_mut()
+        .ok_or("result did not serialize as an object")?
+        .insert(
+            "assimilated".into(),
+            json!({
+                "time_s": time_s,
+                "entries": updates.iter().map(|u| json!({
+                    "response": u.entry.response,
+                    "posterior": u.fusion.posterior,
+                    "posterior_relative_standard_uncertainty": u.fusion.posterior_rel_su,
+                    "verdict": u.verdict,
+                })).collect::<Vec<_>>(),
+                "verdict": overall_verdict(&updates),
+            }),
+        );
+    Ok((out, updated))
 }
 
 /// A term's pulled prior from the result at the assay time.
@@ -676,20 +725,18 @@ fn term_prior(result: &Value, time_s: f64, resp: &str) -> Result<(f64, f64, f64)
 /// ln-space band from the term σs through the H weights; the measurement
 /// is checked against it for the consistency verdict.
 #[allow(clippy::too_many_arguments)]
-fn run_mixture(
-    result: Value,
-    result_path: &str,
-    assay_path: &str,
+fn mixture_document(
+    result: &Value,
     time_s: f64,
     terms: &[(String, f64)],
     value: f64,
     su: f64,
-    out_path: Option<&str>,
-    emit_result: Option<&str>,
-) -> Result<Value, String> {
+    provenance: Value,
+    assay_sha: &str,
+) -> Result<(Value, Value), String> {
     let mut mterms = Vec::with_capacity(terms.len());
     for (resp, c) in terms {
-        let (nominal, s_abs, mult) = term_prior(&result, time_s, resp)?;
+        let (nominal, s_abs, mult) = term_prior(result, time_s, resp)?;
         mterms.push(MixtureTerm {
             response: resp.clone(),
             coefficient: *c,
@@ -749,8 +796,6 @@ fn run_mixture(
             })
         })
         .collect();
-    let assay_sha =
-        actinv_data::builder::sha256_file(std::path::Path::new(assay_path)).unwrap_or_default();
     let out = json!({
         "schema": "actinv-assimilated-1",
         "kind": "mixture",
@@ -770,55 +815,42 @@ fn run_mixture(
             "note": "the measurement entangles the terms — off-diagonal correlation means a later assay on one member moves the others; marginal bands remain individually correct",
         },
         "verdict": verdict,
-        "provenance": {
-            "result_sha256":
-                actinv_data::builder::sha256_file(std::path::Path::new(result_path))
-                    .unwrap_or_default(),
-            "assay_sha256": assay_sha,
-        },
+        "provenance": provenance,
         "note": "Kalman H-row update on ln(y)=ln(Σcᵢxᵢ): posterior marginals shrink by each term's share of the measured combination; the terms are correlated afterward — use the emitted matrix for any joint statement",
     });
-    if let Some(p) = out_path {
-        std::fs::write(p, serde_json::to_string_pretty(&out).unwrap())
-            .map_err(|e| format!("cannot write {p}: {e}"))?;
-    }
-    if let Some(p) = emit_result {
-        let mut updated = result.clone();
-        for (i, t) in mterms.iter().enumerate() {
-            if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
-                steps.iter_mut().find(|s| {
-                    s["t_s"]
-                        .as_f64()
-                        .map(|tt| is_close(tt, time_s))
-                        .unwrap_or(false)
-                })
-            }) {
-                if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{}", t.response)) {
-                    apply_mixture_fusion(
-                        r,
-                        f.posteriors[i],
-                        f.posterior_s_ln[i],
-                        t.normal_multiplier,
-                        f.weights[i],
-                        &assay_sha,
-                    );
-                }
+    let mut updated = result.clone();
+    for (i, t) in mterms.iter().enumerate() {
+        if let Some(st) = updated["steps"].as_array_mut().and_then(|steps| {
+            steps.iter_mut().find(|s| {
+                s["t_s"]
+                    .as_f64()
+                    .map(|tt| is_close(tt, time_s))
+                    .unwrap_or(false)
+            })
+        }) {
+            if let Some(r) = st.pointer_mut(&format!("/uncertainty/responses/{}", t.response)) {
+                apply_mixture_fusion(
+                    r,
+                    f.posteriors[i],
+                    f.posterior_s_ln[i],
+                    t.normal_multiplier,
+                    f.weights[i],
+                    assay_sha,
+                );
             }
         }
-        updated
-            .as_object_mut()
-            .ok_or("result did not serialize as an object")?
-            .insert(
-                "assimilated".into(),
-                json!({
-                    "kind": "mixture",
-                    "time_s": time_s,
-                    "responses": mterms.iter().map(|t| t.response.clone()).collect::<Vec<_>>(),
-                    "verdict": verdict,
-                }),
-            );
-        std::fs::write(p, serde_json::to_string_pretty(&updated).unwrap())
-            .map_err(|e| format!("cannot write {p}: {e}"))?;
     }
-    Ok(out)
+    updated
+        .as_object_mut()
+        .ok_or("result did not serialize as an object")?
+        .insert(
+            "assimilated".into(),
+            json!({
+                "kind": "mixture",
+                "time_s": time_s,
+                "responses": mterms.iter().map(|t| t.response.clone()).collect::<Vec<_>>(),
+                "verdict": verdict,
+            }),
+        );
+    Ok((out, updated))
 }
