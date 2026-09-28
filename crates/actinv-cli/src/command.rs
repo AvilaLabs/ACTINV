@@ -467,9 +467,7 @@ fn build_library(args: &[String]) {
         builder::inspect_projectile(input).unwrap_or_else(|error| die(error, 2))
     });
     let groups = match options.get("--groups").copied() {
-        Some("fispact-709") => GroupStructure::fispact_709(),
-        Some("fispact-162") => GroupStructure::fispact_162(),
-        Some(path) => GroupStructure::from_json(&read(path)),
+        Some(spec) => GroupStructure::resolve(spec),
         None if detected_projectile == Projectile::Neutron => GroupStructure::fispact_709(),
         None => GroupStructure::fispact_162(),
     }
@@ -530,9 +528,7 @@ fn build_damage(args: &[String]) {
         builder::inspect_projectile(input).unwrap_or_else(|error| die(error, 2))
     });
     let groups = match options.get("--groups").copied() {
-        Some("fispact-709") => GroupStructure::fispact_709(),
-        Some("fispact-162") => GroupStructure::fispact_162(),
-        Some(path) => GroupStructure::from_json(&read(path)),
+        Some(spec) => GroupStructure::resolve(spec),
         None if detected_projectile == Projectile::Neutron => GroupStructure::fispact_709(),
         None => GroupStructure::fispact_162(),
     }
@@ -579,9 +575,7 @@ fn build_shielding(args: &[String]) {
         builder::inspect_projectile(input).unwrap_or_else(|error| die(error, 2))
     });
     let groups = match options.get("--groups").copied() {
-        Some("fispact-709") => GroupStructure::fispact_709(),
-        Some("fispact-162") => GroupStructure::fispact_162(),
-        Some(path) => GroupStructure::from_json(&read(path)),
+        Some(spec) => GroupStructure::resolve(spec),
         None if detected_projectile == Projectile::Neutron => GroupStructure::fispact_709(),
         None => GroupStructure::fispact_162(),
     }
@@ -832,6 +826,17 @@ pub fn main_from(a: Vec<String>) {
             } else {
                 println!("{}", serde_json::to_string(&summary).unwrap());
             }
+        }
+        "eval-spread" => {
+            if a.len() < 3 || a.len() > 4 {
+                die(
+                    "usage: actinv eval-spread SPEC.json [OUT.json]\nSolve the spec under both decay primacies and report the per-quantity spread in log space.\nRequires decay.fallback naming the alternate evaluation; emits actinv-eval-spread-1.",
+                    2,
+                );
+            }
+            let summary = crate::evalspread::run(&a[2], a.get(3).map(String::as_str))
+                .unwrap_or_else(|e| die(e, 1));
+            println!("{}", serde_json::to_string(&summary).unwrap());
         }
         "surrogate" => {
             const SUR_USAGE: &str = "usage: actinv surrogate fit SURSPEC.json [OUTDIR]\n       \

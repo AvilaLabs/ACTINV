@@ -1,0 +1,72 @@
+{
+ "schema": "actinv-control-g1-d6a-1",
+ "pass": true,
+ "checks": [
+  {
+   "name": "schema",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "steps compared",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "Mn57 activity spread = ln(1.5)",
+   "pass": true,
+   "detail": "{'at_time_s': 2.0, 'max_abs_ln_ratio': 0.4054651081081643}"
+  },
+  {
+   "name": "unchanged Mn56 spread = 0",
+   "pass": true,
+   "detail": "{'at_time_s': None, 'max_abs_ln_ratio': 0.0}"
+  },
+  {
+   "name": "heat.total spread = ln(1.5) (only Mn57 decaying... weighted)",
+   "pass": true,
+   "detail": "{'at_time_s': 2.0, 'max_abs_ln_ratio': 0.15565330971179314} \u2014 mixed Mn56/Mn57 heat caps at the Mn57 spread"
+  },
+  {
+   "name": "suggested unmodeled = max spread",
+   "pass": true,
+   "detail": "0.4054651081081643"
+  },
+  {
+   "name": "decay inputs recorded",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "refuses without decay.fallback",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "evalspread-resolved bands byte-identical to declared u",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "evalspread provenance recorded",
+   "pass": true,
+   "detail": "{'path': '/home/connoravila/Documents/actinv/target/d6a_g1_ycb9syda/spread.out.json', 'resolved_unmodeled_relative': 0.4054651081081643, 'sha256': '09cede2f70f7837d110dcdb717e02be41ecfef39d1ef88c69b020e4b5dc8a45c', 'sha256_declared': '09cede2f70f7837d110dcdb717e02be41ecfef39d1ef88c69b020e4b5dc8a45c', 'source': 'eval_spread'}"
+  },
+  {
+   "name": "mutual exclusivity enforced",
+   "pass": true,
+   "detail": ""
+  }
+ ],
+ "evidence": {
+  "expected_spread_ln": 0.4054651081081644,
+  "Mn57": {
+   "at_time_s": 2.0,
+   "max_abs_ln_ratio": 0.4054651081081643
+  },
+  "heat_total": {
+   "at_time_s": 2.0,
+   "max_abs_ln_ratio": 0.15565330971179314
+  }
+ }
+}

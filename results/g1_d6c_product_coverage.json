@@ -1,0 +1,53 @@
+{
+  "gate": "g1_d6c_product_coverage",
+  "passed": 9,
+  "total": 9,
+  "verdict": "PASS",
+  "checks": [
+    {
+      "check": "product_coverage emitted (Fe-only)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "product_coverage emitted (Fe+Mn55)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "emitted count matches npz rows (Fe-only)",
+      "ok": true,
+      "detail": "16 vs 16"
+    },
+    {
+      "check": "emitted count matches npz rows (Fe+Mn55)",
+      "ok": true,
+      "detail": "23 vs 23"
+    },
+    {
+      "check": "Fe-only: all emitted products unbuilt",
+      "ok": true,
+      "detail": "16 unbuilt of 16"
+    },
+    {
+      "check": "Mn55 leaves the unbuilt set",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "coverage counts equal independent recompute",
+      "ok": true,
+      "detail": "22 unbuilt"
+    },
+    {
+      "check": "unbuilt_products names match independent recompute",
+      "ok": true,
+      "detail": "16 missing states"
+    },
+    {
+      "check": "audit note explains the leak semantics",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

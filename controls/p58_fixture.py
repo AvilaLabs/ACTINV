@@ -74,8 +74,13 @@ def write_library(path: Path) -> Path:
     return index
 
 
-def write_decay(path: Path) -> None:
-    """P53 decay set plus Mn57m1: liso encoded in head record L2."""
+def write_decay(path: Path, t12_scale: dict | None = None) -> None:
+    """P53 decay set plus Mn57m1: liso encoded in head record L2.
+
+    `t12_scale` optionally rescales per-(za, liso) half-lives — the
+    D6a evaluation-spread gate uses it to fabricate an alternate
+    decay evaluation without touching the baseline fixture.
+    """
     lines = []
     # (za, awr, stable, t_half, dthalf, energies, gammas, liso)
     nuclides = [
@@ -86,6 +91,13 @@ def write_decay(path: Path) -> None:
         (25057, 56.450, False, 1.5, 0.05, (0.4e6, 0.6e6, 0.1e6),
          [(2.1e6, 1.0)], 1),
     ]
+    if t12_scale:
+        nuclides = [
+            (za, awr, stable, t_half * t12_scale.get((za, liso), 1.0),
+             dthalf, energies, gammas, liso)
+            for za, awr, stable, t_half, dthalf, energies, gammas, liso
+            in nuclides
+        ]
     for material, (za, awr, stable, t_half, dthalf, energies,
                    gammas, liso) in enumerate(nuclides, 100):
         seq = 1

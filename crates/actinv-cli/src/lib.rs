@@ -4,6 +4,7 @@
 pub mod assimilate;
 pub mod command;
 pub mod decide;
+pub mod evalspread;
 pub mod optimize;
 pub mod surrogate;
 pub mod twin;

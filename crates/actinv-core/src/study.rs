@@ -2357,6 +2357,16 @@ fn evaluate_robustness_inner(
                 }
             }
         }
+        if let Some(overrides_path) = &spec.decay.overrides {
+            if !overrides_path.is_empty() {
+                let text = std::fs::read_to_string(overrides_path)
+                    .map_err(|e| format!("{overrides_path}: {e}"))?;
+                let items =
+                    decay::parse_overrides(&text).map_err(|e| format!("{overrides_path}: {e}"))?;
+                decay::apply_overrides(&mut nuclides, &items)
+                    .map_err(|e| format!("{overrides_path}: {e}"))?;
+            }
+        }
         let (isotopes, _) = composition::material_atoms_per_gram(
             &spec.material.composition,
             &spec.material.basis,
@@ -3070,6 +3080,7 @@ fn evaluate_robustness_inner(
                 design: None,
                 unmodeled_relative: None,
                 unmodeled_table: None,
+                unmodeled_evalspread: None,
             });
             match prep.run_prepared(&uspec) {
                 Ok(urr) => {
@@ -3668,6 +3679,7 @@ mod robustness_tests {
             design: None,
             unmodeled_relative: None,
             unmodeled_table: None,
+            unmodeled_evalspread: None,
         });
         assert_ne!(prepared_signature(&spec2), sig0);
     }

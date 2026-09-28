@@ -624,6 +624,91 @@ impl GroupStructure {
         self.boundaries_ev.len() - 1
     }
 
+    /// Each group split into `n` log-uniform subgroups. Collapsing
+    /// pointwise data onto the refined mesh shrinks the intra-group
+    /// weighting error on steep cross-section shapes (threshold tails,
+    /// resonance wings) — the D6d ultra-fine collapse leg.
+    pub fn refined(&self, n: usize) -> Result<Self, String> {
+        if !(2..=64).contains(&n) {
+            return Err(format!(
+                "group refinement factor must be in 2..=64, got {n}"
+            ));
+        }
+        let groups = self.groups();
+        let mut boundaries = Vec::with_capacity(groups * n + 1);
+        let n_f = n as f64;
+        for w in self.boundaries_ev.windows(2) {
+            let (lo, hi) = (w[0].ln(), w[1].ln());
+            for i in 0..n {
+                if i == 0 {
+                    boundaries.push(w[0]);
+                } else {
+                    boundaries.push((lo + (hi - lo) * (i as f64) / n_f).exp());
+                }
+            }
+        }
+        boundaries.push(*self.boundaries_ev.last().unwrap());
+        let out = Self {
+            name: format!("{}x{n}", self.name),
+            boundaries_ev: boundaries,
+        };
+        out.validate()?;
+        Ok(out)
+    }
+
+    /// Resolve a group-structure specifier: a named structure
+    /// ("fispact-709", "fispact-162"), a named structure with an `xN`
+    /// refinement suffix ("fispact-709x4" → 2836 groups), or a path to
+    /// a group JSON file. The suffix is only honoured on named bases —
+    /// a file path already carries explicit boundaries.
+    pub fn resolve(spec: &str) -> Result<Self, String> {
+        if let Some((base, n)) = spec
+            .rsplit_once('x')
+            .and_then(|(b, n)| n.parse::<usize>().ok().map(|n| (b, n)))
+        {
+            let base = match base {
+                "fispact-709" => Some(Self::fispact_709()?),
+                "fispact-162" => Some(Self::fispact_162()?),
+                _ => None,
+            };
+            if let Some(base) = base {
+                return base.refined(n);
+            }
+        }
+        match spec {
+            "fispact-709" => Self::fispact_709(),
+            "fispact-162" => Self::fispact_162(),
+            path => {
+                let text = std::fs::read_to_string(path)
+                    .map_err(|e| format!("cannot read group structure {path}: {e}"))?;
+                Self::from_json(&text)
+            }
+        }
+    }
+
+    /// Resolve only named structures — bare or `xN`-suffixed — so a
+    /// stored custom name is never misread as a filesystem path.
+    /// `Ok(None)` for anything else.
+    pub fn resolve_named(spec: &str) -> Result<Option<Self>, String> {
+        let (base, n) = match spec.rsplit_once('x') {
+            Some((b, n)) => n
+                .parse::<usize>()
+                .ok()
+                .map(|n| (b, Some(n)))
+                .unwrap_or((spec, None)),
+            None => (spec, None),
+        };
+        let base = match base {
+            "fispact-709" => Self::fispact_709()?,
+            "fispact-162" => Self::fispact_162()?,
+            _ => return Ok(None),
+        };
+        match n {
+            None => Ok(Some(base)),
+            Some(n) => Ok(Some(base.refined(n)?)),
+        }
+    }
+
     pub fn hash(&self) -> String {
         let mut hasher = Sha256::new();
         hasher.update(b"ACTINV-GROUP-BOUNDARIES-v1\0");
@@ -906,5 +991,62 @@ mod tests {
         };
         let actual = groups.collapse_product(&[&log_linear, &linear]).unwrap()[0];
         assert!(actual.is_finite() && actual > 0.0);
+    }
+
+    #[test]
+    fn refined_splits_each_group_log_uniformly() {
+        let base = GroupStructure {
+            name: "test-2".into(),
+            boundaries_ev: vec![1.0, 4.0, 16.0],
+        };
+        let fine = base.refined(2).unwrap();
+        assert_eq!(fine.name, "test-2x2");
+        let expected = [1.0, 2.0, 4.0, 8.0, 16.0];
+        assert_eq!(fine.boundaries_ev.len(), expected.len());
+        for (a, b) in fine.boundaries_ev.iter().zip(expected) {
+            assert!((a - b).abs() <= 1e-12 * b, "{a} vs {b}");
+        }
+        assert_eq!(fine.groups(), 4);
+    }
+
+    #[test]
+    fn refined_rejects_extreme_factors() {
+        let base = GroupStructure {
+            name: "t".into(),
+            boundaries_ev: vec![1.0, 2.0],
+        };
+        assert!(base.refined(1).is_err());
+        assert!(base.refined(0).is_err());
+        assert!(base.refined(65).is_err());
+    }
+
+    #[test]
+    fn resolve_named_handles_suffix_and_rejects_paths() {
+        assert_eq!(
+            GroupStructure::resolve_named("fispact-709")
+                .unwrap()
+                .unwrap()
+                .groups(),
+            709
+        );
+        let r = GroupStructure::resolve_named("fispact-709x4")
+            .unwrap()
+            .unwrap();
+        assert_eq!(r.groups(), 2836);
+        // Endpoints preserved: refinement never moves outer bounds.
+        let b = &r.boundaries_ev;
+        let base = GroupStructure::fispact_709().unwrap();
+        assert_eq!(b[0], base.boundaries_ev[0]);
+        assert_eq!(b[b.len() - 1], *base.boundaries_ev.last().unwrap());
+        // Refined boundaries are ordered and finer inside each base group.
+        assert!(b.windows(2).all(|w| w[1] > w[0]));
+        // Custom names and paths are not named structures.
+        assert!(GroupStructure::resolve_named("my-custom-groups")
+            .unwrap()
+            .is_none());
+        assert!(GroupStructure::resolve_named("/tmp/groups.json")
+            .unwrap()
+            .is_none());
+        assert!(GroupStructure::resolve_named("fispact-709x1").is_err());
     }
 }

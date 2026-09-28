@@ -105,6 +105,13 @@ pub struct UncertaintyOptions {
     /// declared source for the unmodeled term.
     #[serde(default)]
     pub unmodeled_table: Option<UnmodeledTableRef>,
+    /// Optional D6a fold-in (P77): resolves `unmodeled_relative` from an
+    /// `actinv-eval-spread-1` artifact — the sha-bound output of
+    /// `actinv eval-spread`. The artifact's `suggested_unmodeled_relative`
+    /// becomes the declared term. Mutually exclusive with
+    /// `unmodeled_relative` and `unmodeled_table`.
+    #[serde(default)]
+    pub unmodeled_evalspread: Option<HashedFileRef>,
 }
 
 /// A sha-bound reference to an `actinv-unmodeled-table-1` artifact.
@@ -232,6 +239,11 @@ pub struct DecayRef {
     pub primary: String,
     #[serde(default)]
     pub fallback: Option<String>,
+    /// Path to an `actinv-decay-overrides-1` document: curated,
+    /// source-attributed per-nuclide corrections applied after the
+    /// primary+fallback merge, recorded in the ledger.
+    #[serde(default)]
+    pub overrides: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -679,6 +691,21 @@ impl Spec {
                     }
                 }
             }
+            if let Some(spread) = &uncertainty.unmodeled_evalspread {
+                if uncertainty.unmodeled_relative.is_some() || uncertainty.unmodeled_table.is_some()
+                {
+                    return Err("uncertainty.unmodeled_evalspread is mutually exclusive with unmodeled_relative and unmodeled_table — declare one source for the unmodeled term".into());
+                }
+                if spread.path.is_empty()
+                    || spread.sha256.len() != 64
+                    || !spread.sha256.bytes().all(|b| b.is_ascii_hexdigit())
+                {
+                    return Err(
+                        "uncertainty.unmodeled_evalspread requires a path and a 64-hex-digit sha256"
+                            .into(),
+                    );
+                }
+            }
             if !self.projectile.is_neutron() {
                 return Err("MF=33 uncertainty is supported only for neutron activation".into());
             }
@@ -741,6 +768,15 @@ impl Spec {
         }
         if self.decay.primary.is_empty() {
             return Err("decay.primary is empty".into());
+        }
+        if self
+            .decay
+            .overrides
+            .as_deref()
+            .map(str::is_empty)
+            .unwrap_or(false)
+        {
+            return Err("decay.overrides is present but empty".into());
         }
         if self
             .material
@@ -947,9 +983,24 @@ impl Spec {
                 return Err("boundaries_eV must be finite and strictly ascending".into());
             }
         } else {
-            let (groups, expected_projectile) = match self.spectrum.structure.as_str() {
-                "fispact-709" => (709, Projectile::Neutron),
-                "fispact-162" if !self.projectile.is_neutron() => (162, self.projectile),
+            let (base_name, refine) = match self.spectrum.structure.rsplit_once('x') {
+                Some((b, n)) => match n.parse::<usize>() {
+                    Ok(n) => (b, Some(n)),
+                    Err(_) => (self.spectrum.structure.as_str(), None),
+                },
+                None => (self.spectrum.structure.as_str(), None),
+            };
+            if let Some(n) = refine {
+                if !(2..=64).contains(&n) {
+                    return Err(format!(
+                        "spectrum.structure refinement must be in 2..=64, got {n}"
+                    ));
+                }
+            }
+            let factor = refine.unwrap_or(1);
+            let (groups, expected_projectile) = match base_name {
+                "fispact-709" => (709 * factor, Projectile::Neutron),
+                "fispact-162" if !self.projectile.is_neutron() => (162 * factor, self.projectile),
                 "fispact-162" => {
                     return Err("fispact-162 is reserved for charged-particle spectra".into());
                 }

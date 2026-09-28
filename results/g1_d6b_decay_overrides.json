@@ -1,0 +1,51 @@
+{
+ "schema": "actinv-control-g1-d6b-1",
+ "pass": true,
+ "checks": [
+  {
+   "name": "baseline Mn57 activity present",
+   "pass": true,
+   "detail": "2.3105e-01"
+  },
+  {
+   "name": "baseline heat present",
+   "pass": true,
+   "detail": "7.4036e-14"
+  },
+  {
+   "name": "baseline applies no overrides",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "half-life override rescales activity exactly",
+   "pass": true,
+   "detail": "measured 0.500000 expected 0.5"
+  },
+  {
+   "name": "half-life override rescales leakage rate exactly",
+   "pass": true,
+   "detail": "measured 0.500000 expected 0.5"
+  },
+  {
+   "name": "override recorded in ledger",
+   "pass": true,
+   "detail": "['Mn57 (gate synthetic): half_life_s=6 [half-life patch check]']"
+  },
+  {
+   "name": "override file hashed into certificate inputs",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "em-energy override rescales heat exactly",
+   "pass": true,
+   "detail": "measured 1.550000 expected 1.55"
+  }
+ ],
+ "evidence": {
+  "activity_ratio_halved_t12": 0.5,
+  "leakage_ratio": 0.5,
+  "heat_ratio_doubled_em": 1.55
+ }
+}

@@ -2173,6 +2173,29 @@ doesn't have at all. They compose: D1 rides D4's speed and D2's bands.
 - **D5 — Continuous assimilation.** P60's Kalman measurement ranking +
   P55's inverse + certified bands: feed assays back, the facility model's
   bands shrink where measured. A research program, not a sprint.
+- **D6 — Accuracy leadership.** CB3 proved the residual margin over
+  FISPACT sits inside decay-evaluation uncertainty, so the solver is no
+  longer the lever — the data and physics coverage are. Five legs:
+  *D6a evaluation spread* — every spec optionally re-solves under the
+  alternate decay primacy (ENDF/B-VIII.0 ↔ JEFF-3.3) and emits
+  per-response `evaluation_spread`, folded into the unmodeled term
+  where it dominates; converts a known residual driver into a
+  quantified term instead of an invisible one.
+  *D6b curated decay overrides* — the builder consumes a
+  `decay_overrides` table sourced from measured compilations
+  (DDEP/ENSDF) for entries where evaluations are provably wrong
+  (the Ta-182m deposited-energy class); the defect reports already
+  enumerate the candidates.
+  *D6c inventory depth* — default build target lists extend toward the
+  full TENDL reachable space so impure materials stop leaking
+  population through unbuilt daughters (P40's classified residual).
+  *D6d ultra-fine collapse* — finer named group structures for
+  collapse when imported spectra are coarse; intra-group weighting
+  error on steep XS shapes.
+  *D6e resolved-region self-shielding* — probability-table or
+  subgroup-class shielding for the resolved range; the last physics
+  feature where FISPACT holds ground, and a real systematic for thick
+  resonance absorbers (W, Ta, actinides).
 
 **Direction taken**: D1 first — it makes every certification surface
 demonstrable live; D2 is the deepest claim and lands after D1's surface
@@ -2249,3 +2272,30 @@ exists to carry it.
   when the nominal already sits above the limit and only a low-side
   measurement can rescue it. "Where do I measure next" is now a printed
   table, not an expert judgment.
+- 2026-09-28 — **D6 accuracy lane shipped** (`results/g1_d6a_eval_spread.json`,
+  `results/g1_d6c_product_coverage.json`,
+  `results/g1_d6e_resolved_shielding.json`). All five legs landed:
+  *D6a*: `actinv eval-spread` solves the spec under both decay primacies
+  and emits per-nuclide/per-heat-component `max_abs_ln_ratio` plus
+  `suggested_unmodeled_relative` (the global max); the P77
+  `uncertainty.unmodeled_evalspread` spec field sha-binds the artifact and
+  injects the resolved u at band emit — verified byte-identical to the
+  equivalent `unmodeled_relative` declaration.
+  *D6b*: `decay.overrides` consumes `actinv-decay-overrides-1` documents —
+  source-attributed half-life/energy/mode corrections applied after the
+  primary+fallback merge, ledgered per applied entry.
+  *D6c*: the build index emits `product_coverage` — emitted (zap, lfs)
+  states vs built targets, with up to 200 named unbuilt products; the
+  shipped TENDL-2025 library leaks 43% (1,273/2,941) of emitted product
+  states, dominated by Ta/Hf/La.
+  *D6d*: named group structures accept an `xN` refinement suffix
+  (`fispact-709x4` = 2836 log-uniform subgroups) applied identically at
+  build and run resolution.
+  *D6e*: `build-shielding` folds resolved-resonance ranges into per-group
+  Bondarenko factors by knot-seeded adaptive Gauss-Legendre quadrature
+  over the pointwise MF=2 reconstruction (Breit-Wigner, Reich-Moore,
+  R-matrix limited), using the escape-probability weight σ0/(σ0+σt) to
+  match the unresolved probability-table convention; unresolved groups'
+  arithmetic is unchanged by construction (resolved terms reduce to zero
+  when res_segs is empty). Gate: W-186 capture factor falls to 0.028 at
+  σ0=0.1 in its resolved region while Fe-56 smooth groups stay at 1.0.

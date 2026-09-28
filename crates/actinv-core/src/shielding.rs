@@ -33,6 +33,9 @@ fn name_of(za: i32, liso: i32) -> String {
 struct WireGroup {
     group: usize,
     overlap_fraction: f64,
+    /// D6e: resolved-range coverage inside `overlap_fraction`; informational.
+    #[serde(default)]
+    resolved_overlap_fraction: Option<f64>,
     sigma_p_b: f64,
     infinite_dilution_b: Vec<f64>,
     factors: BTreeMap<String, Vec<Vec<f64>>>,
@@ -58,6 +61,9 @@ struct WireNuclide {
     za: i32,
     liso: i32,
     unresolved_ranges_ev: Vec<Vec<f64>>,
+    /// D6e: resolved-resonance ranges folded pointwise into group_factors.
+    #[serde(default)]
+    resolved_ranges_ev: Option<Vec<Vec<f64>>>,
     groups: Vec<WireGroup>,
     #[serde(default)]
     nodes: Vec<serde_json::Value>,

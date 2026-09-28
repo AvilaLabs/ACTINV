@@ -162,6 +162,9 @@ struct BuildIndex {
     /// Inputs skipped under `--continue-on-error`, each carrying its error.
     #[serde(default)]
     build_failures: Vec<String>,
+    /// D6c: emitted product states versus the built target set — the
+    /// population-leak surface for secondary activation.
+    product_coverage: serde_json::Value,
     n_rows: usize,
     columns: &'static str,
     sha256_npz: String,
@@ -3105,6 +3108,11 @@ pub fn build_library(
     write_npz(output, &library)?;
     let npz_hash = sha256_file(output)?;
     let fingerprint = builder_fingerprint();
+    // D6c coverage audit: every emitted product state (zap, emitted-lfs)
+    // is checked against the built target set. A product without a
+    // matching target decays inside the chain but cannot feed secondary
+    // activation — the missing-target set is the inventory-leak surface.
+    let product_coverage = product_coverage_audit(&library.rows, &targets);
     let index = BuildIndex {
         schema: if format == LibraryFormat::Tendl {
             "actinv-library-index-2"
@@ -3136,6 +3144,7 @@ pub fn build_library(
             .collect(),
         targets,
         build_failures,
+        product_coverage,
         n_rows: library.rows.len(),
         columns: "rows: (target, MT, ZAP, LFS, LMF)",
         sha256_npz: npz_hash.clone(),
@@ -3183,6 +3192,38 @@ pub struct DamageBuildSummary {
 struct DamageCacheEntry {
     targets: BTreeMap<String, Vec<f64>>,
     uncovered: Vec<String>,
+}
+
+/// D6c: emitted product states versus the built target set — the
+/// population-leak surface for secondary activation. Rows emit
+/// (zap, lfs); targets carry (za, liso). When a decay sublibrary was
+/// supplied the emitted lfs is the decay-ordinal LISO, so isomeric
+/// targets only match when their metadata liso aligns with it.
+fn product_coverage_audit(
+    rows: &[crate::library::Row],
+    targets: &[TargetIndex],
+) -> serde_json::Value {
+    let target_keys: BTreeSet<(i32, i32)> = targets.iter().map(|t| (t.za, t.liso)).collect();
+    let mut emitted: BTreeSet<(i32, i32)> = BTreeSet::new();
+    for row in rows {
+        // zap < 1000 covers emitted light ejectiles (n=1, p=1001 is a
+        // nuclide; 0 is 'no residual product'); only true residuals count.
+        if row.zap >= 1000 && row.lfs >= 0 {
+            emitted.insert((row.zap, row.lfs));
+        }
+    }
+    let unbuilt: Vec<&(i32, i32)> = emitted.difference(&target_keys).collect();
+    serde_json::json!({
+        "product_states_emitted": emitted.len(),
+        "product_states_with_target": emitted.len() - unbuilt.len(),
+        "product_states_without_target": unbuilt.len(),
+        "unbuilt_products": unbuilt
+            .iter()
+            .take(200)
+            .map(|(za, liso)| damage_nuclide_name(*za, *liso))
+            .collect::<Vec<_>>(),
+        "note": "emitted product states are (zap, emitted-lfs); a state absent from targets decays but cannot undergo secondary activation",
+    })
 }
 
 fn damage_nuclide_name(za: i32, liso: i32) -> String {
@@ -3472,14 +3513,23 @@ fn shielding_nuclide_entry(
         return Ok(None);
     };
     let mut ranges: Vec<(f64, f64)> = Vec::new();
+    let mut resolved: Vec<&crate::resonance::ResonanceRange> = Vec::new();
     for isotope in &resonance.isotopes {
         for range in &isotope.ranges {
-            if matches!(range.data, crate::resonance::RangeData::Unresolved(_)) {
-                ranges.push((range.energy_min, range.energy_max));
+            match &range.data {
+                crate::resonance::RangeData::Unresolved(_) => {
+                    ranges.push((range.energy_min, range.energy_max));
+                }
+                crate::resonance::RangeData::BreitWigner(_)
+                | crate::resonance::RangeData::ReichMoore(_)
+                | crate::resonance::RangeData::RMatrixLimited(_) => {
+                    resolved.push(range);
+                }
+                _ => {}
             }
         }
     }
-    if ranges.is_empty() {
+    if ranges.is_empty() && resolved.is_empty() {
         return Ok(None);
     }
     let nodes = crate::shielding::shield_evaluation(
@@ -3488,12 +3538,13 @@ fn shielding_nuclide_entry(
         &crate::shielding::TEMPERATURES_K,
         crate::shielding::NLADR,
     )?;
-    if nodes.is_empty() {
+    if nodes.is_empty() && resolved.is_empty() {
         return Ok(None);
     }
     let collapsed = crate::shielding::collapse_to_groups(
         &nodes,
         &ranges,
+        &resolved,
         groups,
         &crate::shielding::SIGMA0_B,
         &crate::shielding::TEMPERATURES_K,
@@ -3555,6 +3606,7 @@ fn shielding_nuclide_entry(
             serde_json::json!({
                 "group": row.group,
                 "overlap_fraction": row.overlap_fraction,
+                "resolved_overlap_fraction": row.resolved_overlap_fraction,
                 "sigma_p_b": row.sigma_p_b,
                 "infinite_dilution_b": row.infinite_dilution_b,
                 "factors": serde_json::Value::Object(
@@ -3599,6 +3651,10 @@ fn shielding_nuclide_entry(
         "za": evaluation.metadata.za,
         "liso": evaluation.metadata.liso,
         "unresolved_ranges_ev": ranges,
+        "resolved_ranges_ev": resolved
+            .iter()
+            .map(|r| [r.energy_min, r.energy_max])
+            .collect::<Vec<_>>(),
         "nodes": node_rows,
         "groups": group_rows,
     })))
@@ -5913,5 +5969,56 @@ mod tests {
         let error = outside.excitation_eV().unwrap_err();
         assert!(error.contains("conflicts with QM-QI"), "{error}");
         assert!(error.contains("precedence bound"), "{error}");
+    }
+
+    #[test]
+    fn product_coverage_counts_emitted_states_without_targets() {
+        let mk_target = |za: i32, liso: i32| TargetIndex {
+            file: "t.endf".into(),
+            source_sha256: "x".into(),
+            mat: 1,
+            za,
+            liso,
+            lis: 0,
+            elis_eV: 0.0,
+            awr: 1.0,
+            evaluation_temperature_K: 0.0,
+            n_mf2: 0,
+            n_mf3: 0,
+            n_mf6: 0,
+            n_mf8: 0,
+            n_mf9: 0,
+            n_mf10: 0,
+            n_rows: 0,
+            state_mappings: vec![],
+            ledger: vec![],
+        };
+        let mk_row = |zap: i32, lfs: i32| crate::library::Row {
+            target: 0,
+            mt: 102,
+            zap,
+            lfs,
+            lmf: 10,
+        };
+        let targets = vec![mk_target(26056, 0), mk_target(25056, 0)];
+        let rows = vec![
+            mk_row(25056, 0), // covered
+            mk_row(25057, 0), // emitted, no target
+            mk_row(25057, 1), // emitted isomer, no target
+            mk_row(0, 0),     // ejectile marker — not a residual
+            mk_row(-1, -1),   // no product
+            mk_row(25056, 0), // duplicate emission
+        ];
+        let cov = product_coverage_audit(&rows, &targets);
+        assert_eq!(cov["product_states_emitted"], 3);
+        assert_eq!(cov["product_states_with_target"], 1);
+        assert_eq!(cov["product_states_without_target"], 2);
+        let names: Vec<&str> = cov["unbuilt_products"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_str().unwrap())
+            .collect();
+        assert_eq!(names, ["Mn57", "Mn57m1"]);
     }
 }

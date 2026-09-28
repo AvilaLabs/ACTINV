@@ -1096,6 +1096,7 @@ mod tests {
             decay: DecayRef {
                 primary: "decay.dat".into(),
                 fallback: None,
+                overrides: None,
             },
             material: Material {
                 mass_g: 1.0,

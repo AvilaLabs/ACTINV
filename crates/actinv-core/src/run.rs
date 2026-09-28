@@ -479,6 +479,8 @@ pub struct PreparedRun {
     decay_primary_sha: String,
     decay_fallback: Option<String>,
     decay_fallback_sha: Option<String>,
+    decay_overrides_sha: Option<String>,
+    decay_overrides_applied: Vec<String>,
     nuclides: HashMap<(i32, i32), decay::Nuclide>,
     decay_fallback_keys: std::collections::HashSet<(i32, i32)>,
     chain: chain::Chain,
@@ -497,6 +499,9 @@ pub struct PreparedRun {
     /// P72 provenance record when `uncertainty.unmodeled_table` resolved
     /// the declared unmodeled term; emitted under `certificate.inputs`.
     unmodeled_table: Option<serde_json::Value>,
+    /// P77 provenance record when `uncertainty.unmodeled_evalspread`
+    /// resolved the unmodeled term from an `actinv-eval-spread-1` artifact.
+    unmodeled_evalspread: Option<serde_json::Value>,
     radiological: Option<PreparedRadiological>,
     damage: Option<PreparedDamage>,
     shielding: Option<PreparedShielding>,
@@ -1609,6 +1614,46 @@ impl PreparedRun {
         ))
     }
 
+    /// P77: resolve an `actinv-eval-spread-1` artifact (the sha-bound output
+    /// of `actinv eval-spread`) into a declared `unmodeled_relative`.
+    fn resolve_unmodeled_evalspread(
+        reference: &crate::spec::HashedFileRef,
+    ) -> Result<(f64, serde_json::Value), String> {
+        let (text, sha256) = read_verified_text(&reference.path, Some(&reference.sha256))?;
+        let doc: serde_json::Value = serde_json::from_str(&text)
+            .map_err(|e| format!("cannot parse eval-spread artifact {}: {e}", reference.path))?;
+        if doc["schema"].as_str() != Some("actinv-eval-spread-1") {
+            return Err(format!(
+                "{}: schema must be 'actinv-eval-spread-1'",
+                reference.path
+            ));
+        }
+        let u = doc["suggested_unmodeled_relative"]
+            .as_f64()
+            .ok_or_else(|| {
+                format!(
+                    "{}: no numeric suggested_unmodeled_relative",
+                    reference.path
+                )
+            })?;
+        if !(u.is_finite() && u >= 0.0) {
+            return Err(format!(
+                "{}: suggested_unmodeled_relative must be finite and >= 0",
+                reference.path
+            ));
+        }
+        Ok((
+            u,
+            serde_json::json!({
+                "path": reference.path,
+                "sha256_declared": reference.sha256,
+                "sha256": sha256,
+                "resolved_unmodeled_relative": u,
+                "source": "eval_spread",
+            }),
+        ))
+    }
+
     fn prepare_profiled(
         spec: &Spec,
         physical: &PhysicalInputs,
@@ -1625,10 +1670,15 @@ impl PreparedRun {
         // run so the fingerprint still compares like-for-like; the band
         // emit injects the resolved value where `spec.uncertainty` is read.
         let mut unmodeled_table = None;
+        let mut unmodeled_evalspread = None;
         if let Some(options) = &spec.uncertainty {
             if let Some(table) = &options.unmodeled_table {
                 let (_u, provenance) = Self::resolve_unmodeled_table(table, spec)?;
                 unmodeled_table = Some(provenance);
+            }
+            if let Some(spread) = &options.unmodeled_evalspread {
+                let (_u, provenance) = Self::resolve_unmodeled_evalspread(spread)?;
+                unmodeled_evalspread = Some(provenance);
             }
         }
         let mut prepared = Self::prepare_inputs_with_extensions_profiled(
@@ -1651,6 +1701,7 @@ impl PreparedRun {
             profiler,
         )?;
         prepared.unmodeled_table = unmodeled_table;
+        prepared.unmodeled_evalspread = unmodeled_evalspread;
         Ok(prepared)
     }
 
@@ -1933,11 +1984,7 @@ impl PreparedRun {
             return Err("charged activation-library index has no named group structure".into());
         }
         if let Some(name) = library_group_structure.as_deref() {
-            let canonical = match name {
-                "fispact-709" => Some(GroupStructure::fispact_709()?),
-                "fispact-162" => Some(GroupStructure::fispact_162()?),
-                _ => None,
-            };
+            let canonical = GroupStructure::resolve_named(name)?;
             if let Some(canonical) = canonical {
                 if canonical.boundaries_ev.len() != library.boundaries_ev().len()
                     || canonical
@@ -2022,6 +2069,23 @@ impl PreparedRun {
         }
         profiler.finish("decay_fallback_read_parse_merge", fallback_decay_started);
 
+        // Curated decay overrides (D6b): source-attributed per-nuclide
+        // corrections applied after the primary+fallback merge, before
+        // chain construction, so every downstream quantity — rates,
+        // activity, heat, photons — inherits the patched constants.
+        let mut decay_overrides_sha = None;
+        let mut decay_overrides_applied = Vec::new();
+        if let Some(overrides_path) = &decay_ref.overrides {
+            if !overrides_path.is_empty() {
+                let (text, sha) = read_verified_text(overrides_path, None)?;
+                let items =
+                    decay::parse_overrides(&text).map_err(|e| format!("{overrides_path}: {e}"))?;
+                decay_overrides_applied = decay::apply_overrides(&mut nuclides, &items)
+                    .map_err(|e| format!("{overrides_path}: {e}"))?;
+                decay_overrides_sha = Some(sha);
+            }
+        }
+
         let chain_started = profiler.start();
         let chain = chain::build(&nuclides);
         if let Some(options) = uncertainty_options {
@@ -2058,6 +2122,8 @@ impl PreparedRun {
                 .filter(|path| !path.is_empty())
                 .cloned(),
             decay_fallback_sha,
+            decay_overrides_sha,
+            decay_overrides_applied,
             nuclides,
             decay_fallback_keys,
             chain,
@@ -2074,6 +2140,7 @@ impl PreparedRun {
             uncertainty_options: uncertainty_options.cloned(),
             covariance,
             unmodeled_table: None,
+            unmodeled_evalspread: None,
             radiological,
             damage,
             shielding,
@@ -2412,6 +2479,8 @@ impl PreparedRun {
         let index_sha = &self.index_sha;
         let decay_primary_sha = &self.decay_primary_sha;
         let decay_fallback_sha = &self.decay_fallback_sha;
+        let decay_overrides_sha = &self.decay_overrides_sha;
+        let decay_overrides_applied = &self.decay_overrides_applied;
         let response = &self.response;
         let response_sha = &self.response_sha;
         let lib = &self.library;
@@ -3692,16 +3761,21 @@ impl PreparedRun {
             };
             let uncertainty = match (&uncertainty_runtime, &spec.uncertainty) {
                 (Some(runtime), Some(options)) => {
-                    // P72: a declared unmodeled_table resolves to the
+                    // P72/P77: a declared unmodeled source resolves to the
                     // prepared unmodeled term — the band emit sees it as
                     // `unmodeled_relative` exactly as if the spec declared
                     // it, with provenance on `certificate.inputs`.
                     let options_resolved;
-                    let options = match self
+                    let resolved_u = self
                         .unmodeled_table
                         .as_ref()
                         .and_then(|t| t["resolved_unmodeled_relative"].as_f64())
-                    {
+                        .or_else(|| {
+                            self.unmodeled_evalspread
+                                .as_ref()
+                                .and_then(|t| t["resolved_unmodeled_relative"].as_f64())
+                        });
+                    let options = match resolved_u {
                         Some(u) => {
                             options_resolved = UncertaintyOptions {
                                 unmodeled_relative: Some(u),
@@ -4264,6 +4338,7 @@ impl PreparedRun {
                 "step_spectra": n_step_spectra,
             })
         };
+        let decay_overrides_json = serde_json::to_value(decay_overrides_applied).unwrap();
         let mut ledger = serde_json::json!({
             "mode": mode,
             "max_burnup_fraction": led.burnup_fraction_max,
@@ -4329,6 +4404,10 @@ impl PreparedRun {
             "max_product_optical_depth_nuclide".into(),
             serde_json::json!(product_optical_depth_nuclide.map(|key| name_of(key.0, key.1))),
         );
+        ledger
+            .as_object_mut()
+            .expect("ledger is an object")
+            .insert("decay_overrides_applied".into(), decay_overrides_json);
         // Present only for a decay library with inconsistent branching, so runs on consistent data are unchanged.
         if !ch.ledger.branching_sums.is_empty() {
             let sums: BTreeMap<String, f64> = ch
@@ -4690,6 +4769,8 @@ impl PreparedRun {
                 "decay_primary": {"path": spec.decay.primary, "sha256": decay_primary_sha},
                 "decay_fallback": spec.decay.fallback.as_ref().filter(|p| !p.is_empty()).zip(decay_fallback_sha.as_ref())
                     .map(|(path, sha)| serde_json::json!({"path": path, "sha256": sha})),
+                "decay_overrides": spec.decay.overrides.as_ref().filter(|p| !p.is_empty()).zip(decay_overrides_sha.as_ref())
+                    .map(|(path, sha)| serde_json::json!({"path": path, "sha256": sha})),
                 "photon_response": spec.photon.response.as_ref().zip(response_sha.as_ref())
                     .map(|(r, sha)| serde_json::json!({"path": r.path, "sha256": sha})),
                 "fission_yields": fission_yield_inputs,
@@ -4746,6 +4827,15 @@ impl PreparedRun {
                 .and_then(serde_json::Value::as_object_mut)
                 .expect("certificate inputs is an object")
                 .insert("unmodeled_table".into(), provenance.clone());
+        }
+        if let Some(provenance) = &self.unmodeled_evalspread {
+            certificate
+                .as_object_mut()
+                .expect("certificate is an object")
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert("unmodeled_evalspread".into(), provenance.clone());
         }
         if let Some(prepared) = &self.radiological {
             let mut metadata = prepared.table.certificate_metadata();

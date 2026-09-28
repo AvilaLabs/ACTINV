@@ -1,0 +1,98 @@
+{
+  "gate": "g1_d6e_resolved_shielding",
+  "passed": 18,
+  "total": 18,
+  "verdict": "PASS",
+  "checks": [
+    {
+      "check": "build-shielding exits clean",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "Fe56 present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "W186 present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "Fe56: resolved_overlap_fraction emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "Fe56: resolved-covered groups exist",
+      "ok": true,
+      "detail": "547 groups"
+    },
+    {
+      "check": "Fe56: resolved \u2286 total coverage",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "Fe56: infinite-dilution column pinned at 1",
+      "ok": true,
+      "detail": "group 495 f0=1.0"
+    },
+    {
+      "check": "Fe56: capture factor < 1 at \u03c30=0.1",
+      "ok": true,
+      "detail": "group 495 f=0.1118"
+    },
+    {
+      "check": "Fe56: capture factor monotone-ish",
+      "ok": true,
+      "detail": "group 495: ['1.000', '1.000', '0.996', '0.959', '0.741', '0.372', '0.252', '0.185', '0.138', '0.112']"
+    },
+    {
+      "check": "W186: resolved_overlap_fraction emitted",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "W186: resolved-covered groups exist",
+      "ok": true,
+      "detail": "432 groups"
+    },
+    {
+      "check": "W186: resolved \u2286 total coverage",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "W186: infinite-dilution column pinned at 1",
+      "ok": true,
+      "detail": "group 366 f0=1.0"
+    },
+    {
+      "check": "W186: capture factor < 1 at \u03c30=0.1",
+      "ok": true,
+      "detail": "group 366 f=0.0276"
+    },
+    {
+      "check": "W186: capture factor monotone-ish",
+      "ok": true,
+      "detail": "group 366: ['1.000', '0.954', '0.710', '0.302', '0.102', '0.045', '0.034', '0.030', '0.028', '0.028']"
+    },
+    {
+      "check": "Fe56 smooth group stays unshielded",
+      "ok": true,
+      "detail": "group 0: min=0.999960"
+    },
+    {
+      "check": "W186 deep suppression exists",
+      "ok": true,
+      "detail": "min capture factor 0.0276"
+    },
+    {
+      "check": "W186 resolved coverage is the dominant mode",
+      "ok": true,
+      "detail": "432/455 resolved-covered"
+    }
+  ]
+}

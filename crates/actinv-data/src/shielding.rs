@@ -1719,8 +1719,12 @@ pub(crate) fn shield_evaluation(
 #[derive(Clone, Debug)]
 pub struct ShieldGroup {
     pub group: usize,
-    /// Fraction of the group's lethargy width covered by unresolved ranges.
+    /// Fraction of the group's lethargy width covered by resonance ranges
+    /// (unresolved + resolved).
     pub overlap_fraction: f64,
+    /// Fraction of the group's lethargy width covered by resolved-resonance
+    /// ranges, integrated pointwise (D6e).
+    pub resolved_overlap_fraction: f64,
     /// Lethargy-collapsed potential scattering (barns).
     pub sigma_p_b: f64,
     /// Lethargy-collapsed infinite-dilution xs [total, elastic, fission, capture].
@@ -1865,11 +1869,248 @@ fn node_w_and_xw(
     (w_acc, xw_acc)
 }
 
+/// D6e: pointwise cross section at `energy` summed over every resolved
+/// range covering it (a multi-isotope evaluation can overlap).
+fn resolved_pointwise(
+    resolved: &[&crate::resonance::ResonanceRange],
+    energy: f64,
+) -> Result<crate::resonance::CrossSections, String> {
+    use crate::resonance::RangeData;
+    let mut acc = crate::resonance::CrossSections::default();
+    for range in resolved {
+        if energy < range.energy_min || energy > range.energy_max {
+            continue;
+        }
+        let xs = match &range.data {
+            RangeData::RMatrixLimited(_) => {
+                crate::resonance::reconstruct_rmatrix_limited(range, energy)?
+            }
+            RangeData::BreitWigner(_) | RangeData::ReichMoore(_) => {
+                crate::resonance::reconstruct_legacy(range, energy)?
+            }
+            _ => continue,
+        };
+        acc.elastic += xs.elastic;
+        acc.capture += xs.capture;
+        acc.fission += xs.fission;
+        acc.competitive += xs.competitive;
+    }
+    Ok(acc)
+}
+
+/// Resonance-centre knots for one resolved range, padded by ±5 total
+/// widths so an adaptive quadrature can never stride over a narrow peak.
+fn resolved_knots(range: &crate::resonance::ResonanceRange) -> Vec<f64> {
+    use crate::resonance::RangeData;
+    let mut out = Vec::new();
+    match &range.data {
+        RangeData::BreitWigner(res) | RangeData::ReichMoore(res) => {
+            for group in &res.groups {
+                for res in &group.resonances {
+                    let width = if res.total > 0.0 {
+                        res.total
+                    } else {
+                        res.neutron.abs()
+                            + res.capture.abs()
+                            + res.fission_a.abs()
+                            + res.fission_b.abs()
+                    };
+                    let pad = (5.0 * width).max(res.energy.abs() * 1e-4);
+                    out.push(res.energy - pad);
+                    out.push(res.energy + pad);
+                }
+            }
+        }
+        RangeData::RMatrixLimited(rml) => {
+            for group in &rml.spin_groups {
+                for res in &group.resonances {
+                    let width: f64 = res
+                        .widths
+                        .iter()
+                        .map(|w| w.abs() * w.abs())
+                        .sum::<f64>()
+                        .sqrt();
+                    let pad =
+                        (5.0 * width.max(res.energy.abs() * 1e-3)).max(res.energy.abs() * 1e-4);
+                    out.push(res.energy - pad);
+                    out.push(res.energy + pad);
+                }
+            }
+        }
+        _ => {}
+    }
+    out
+}
+
+/// 8-point Gauss-Legendre on [-1,1].
+const GL8_X: [f64; 8] = [
+    -0.960_289_856_497_536,
+    -0.796_666_477_413_627,
+    -0.525_532_409_916_329,
+    -0.183_434_642_495_650,
+    0.183_434_642_495_650,
+    0.525_532_409_916_329,
+    0.796_666_477_413_627,
+    0.960_289_856_497_536,
+];
+const GL8_W: [f64; 8] = [
+    0.101_228_536_290_376,
+    0.222_381_034_453_374,
+    0.313_706_645_877_887,
+    0.362_683_783_378_362,
+    0.362_683_783_378_362,
+    0.313_706_645_877_887,
+    0.222_381_034_453_374,
+    0.101_228_536_290_376,
+];
+
+/// One quadrature point's contribution to every moment at once.
+/// Returns [xs_t, xs_e, xs_f, xs_g, w_0..w_K, xw(0,0)..xw(3,K)]
+/// laid out as [4 + K + 4·K] values.
+fn resolved_integrand(
+    resolved: &[&crate::resonance::ResonanceRange],
+    sig0: &[f64],
+    u: f64,
+) -> Result<Vec<f64>, String> {
+    let xs = resolved_pointwise(resolved, u.exp())?;
+    let sig_t = xs.total();
+    let channels = [sig_t, xs.elastic, xs.fission, xs.capture];
+    let mut out = Vec::with_capacity(4 + 5 * sig0.len());
+    out.extend_from_slice(&channels);
+    // Escape-probability weight w = σ0/(σ0 + σ_t), matching the
+    // probability-table convention in `node_w_and_xw`: w → 1 at infinite
+    // dilution and suppresses resonance peaks as σ0 shrinks.
+    for &s0 in sig0 {
+        out.push(s0 / (sig_t + s0));
+    }
+    for c in channels {
+        for &s0 in sig0 {
+            out.push(c * s0 / (sig_t + s0));
+        }
+    }
+    Ok(out)
+}
+
+fn gl8_integrate<F>(f: &F, lo: f64, hi: f64, n: usize) -> Result<Vec<f64>, String>
+where
+    F: Fn(f64) -> Result<Vec<f64>, String>,
+{
+    let mid = 0.5 * (lo + hi);
+    let half = 0.5 * (hi - lo);
+    let mut acc = vec![0.0f64; n];
+    for (x, w) in GL8_X.iter().zip(GL8_W.iter()) {
+        let v = f(mid + half * x)?;
+        for (a, val) in acc.iter_mut().zip(v.iter()) {
+            *a += w * val;
+        }
+    }
+    for a in acc.iter_mut() {
+        *a *= half;
+    }
+    Ok(acc)
+}
+
+/// Adaptive GL8: bisect until the three dominant components converge
+/// relatively, or the depth cap trips (honest failure, not a silent
+/// coarse answer).
+fn adaptive_integrate<F>(
+    f: &F,
+    lo: f64,
+    hi: f64,
+    n: usize,
+    watch: &[usize],
+    depth: usize,
+) -> Result<Vec<f64>, String>
+where
+    F: Fn(f64) -> Result<Vec<f64>, String>,
+{
+    let whole = gl8_integrate(f, lo, hi, n)?;
+    let mid = 0.5 * (lo + hi);
+    let left = gl8_integrate(f, lo, mid, n)?;
+    let right = gl8_integrate(f, mid, hi, n)?;
+    let mut split: Vec<f64> = left.iter().zip(&right).map(|(a, b)| a + b).collect();
+    let converged = watch.iter().all(|&k| {
+        let scale = split[k].abs().max(whole[k].abs()).max(1e-30);
+        (split[k] - whole[k]).abs() <= 1e-4 * scale
+    });
+    if converged {
+        return Ok(split);
+    }
+    if depth == 0 {
+        return Err(format!(
+            "resolved-range quadrature did not converge on [{lo}, {hi}]"
+        ));
+    }
+    let left = adaptive_integrate(f, lo, mid, n, watch, depth - 1)?;
+    let right = adaptive_integrate(f, mid, hi, n, watch, depth - 1)?;
+    for (s, (a, b)) in split.iter_mut().zip(left.iter().zip(&right)) {
+        *s = *a + *b;
+    }
+    Ok(split)
+}
+
+/// Bondarenko moments for one resolved-range segment [a,b] (lethargy
+/// integrals over the segment, un-normalized): infinite-dilution xs per
+/// channel, weight integrals per σ0, channel×σ0 moments.
+struct ResolvedSeg {
+    lethargy: f64,
+    inf: [f64; 4],
+    w: Vec<f64>,
+    xw: Vec<Vec<f64>>,
+}
+
+fn resolved_segment_moments(
+    resolved: &[&crate::resonance::ResonanceRange],
+    a: f64,
+    b: f64,
+    sig0: &[f64],
+) -> Result<ResolvedSeg, String> {
+    let k = sig0.len();
+    let n = 4 + 5 * k;
+    let f = |u: f64| resolved_integrand(resolved, sig0, u);
+    // Knots: segment edges plus padded resonance centres inside.
+    let mut knots = vec![a.ln(), b.ln()];
+    for range in resolved {
+        for knot in resolved_knots(range) {
+            if knot > a && knot < b && knot.is_finite() && knot > 0.0 {
+                knots.push(knot.ln());
+            }
+        }
+    }
+    knots.sort_by(f64::total_cmp);
+    knots.dedup_by(|x, y| (*x - *y).abs() < 1e-15);
+    let mut acc = vec![0.0f64; n];
+    // watch components: infinite-dilution total, weight at the smallest
+    // σ0, capture moment at the smallest σ0 — the stiffest integrands.
+    let watch = [0usize, 4, 4 + k + 3 * k];
+    for w in knots.windows(2) {
+        if w[1] <= w[0] {
+            continue;
+        }
+        let part = adaptive_integrate(&f, w[0], w[1], n, &watch, 8)?;
+        for (a_, v) in acc.iter_mut().zip(part.iter()) {
+            *a_ += *v;
+        }
+    }
+    Ok(ResolvedSeg {
+        lethargy: b.ln() - a.ln(),
+        inf: [acc[0], acc[1], acc[2], acc[3]],
+        w: acc[4..4 + k].to_vec(),
+        xw: (0..4)
+            .map(|c| acc[4 + k + c * k..4 + k + (c + 1) * k].to_vec())
+            .collect(),
+    })
+}
+
 /// Collapse per-node results onto a group structure. `GroupStructure` boundaries are
 /// ascending (group 0 = lowest energy); the collapse itself is order-agnostic.
+/// `resolved` carries resolved-resonance ranges: their segment moments are
+/// integrated pointwise (D6e) instead of inheriting the uncovered-segment
+/// σ0/(σ0+background) suppression.
 pub(crate) fn collapse_to_groups(
     nodes: &[ShieldNode],
     ranges: &[(f64, f64)],
+    resolved: &[&crate::resonance::ResonanceRange],
     groups: &crate::groups::GroupStructure,
     sig0: &[f64],
     temps: &[f64],
@@ -1889,18 +2130,43 @@ pub(crate) fn collapse_to_groups(
                 segs.push((a, b));
             }
         }
-        if segs.is_empty() {
+        // Resolved segments: group ∩ union of resolved ranges.
+        let mut res_segs: Vec<(f64, f64)> = Vec::new();
+        for range in resolved {
+            let a = lo.max(range.energy_min);
+            let b = hi.min(range.energy_max);
+            if a < b {
+                res_segs.push((a, b));
+            }
+        }
+        if segs.is_empty() && res_segs.is_empty() {
             continue;
         }
         segs.sort_by(|a, b| a.0.total_cmp(&b.0));
+        res_segs.sort_by(|a, b| a.0.total_cmp(&b.0));
+        // Merge overlapping resolved segments into a disjoint union so the
+        // coverage bookkeeping never double-counts lethargy.
+        let mut merged: Vec<(f64, f64)> = Vec::new();
+        for &(a, b) in &res_segs {
+            if let Some(last) = merged.last_mut() {
+                if a <= last.1 {
+                    last.1 = last.1.max(b);
+                    continue;
+                }
+            }
+            merged.push((a, b));
+        }
+        let res_segs = merged;
         let group_width = hi.ln() - lo.ln();
-        let covered: f64 = segs.iter().map(|(a, b)| b.ln() - a.ln()).sum();
-        let overlap = if group_width > 0.0 {
-            covered / group_width
+        let covered_u: f64 = segs.iter().map(|(a, b)| b.ln() - a.ln()).sum();
+        let covered_r: f64 = res_segs.iter().map(|(a, b)| b.ln() - a.ln()).sum();
+        let covered = covered_u + covered_r;
+        let (overlap, overlap_r) = if group_width > 0.0 {
+            (covered / group_width, covered_r / group_width)
         } else {
-            0.0
+            (0.0, 0.0)
         };
-        // Node energies inside the segments (covered nodes only).
+        // Node energies inside the unresolved segments (covered nodes only).
         let inside: Vec<&ShieldNode> = nodes
             .iter()
             .filter(|n| {
@@ -1910,7 +2176,7 @@ pub(crate) fn collapse_to_groups(
                         .any(|&(a, b)| n.energy_ev >= a && n.energy_ev <= b)
             })
             .collect();
-        if inside.is_empty() {
+        if inside.is_empty() && res_segs.is_empty() {
             continue;
         }
         let ens: Vec<f64> = inside.iter().map(|n| n.energy_ev).collect();
@@ -1921,54 +2187,97 @@ pub(crate) fn collapse_to_groups(
         // Collapse each segment independently and combine with lethargy weight.
         // The trapezoid interpolates log-linearly at interior nodes and extends
         // end values to the segment edges, so the whole segment contributes.
-        for &(a, b) in &segs {
-            let seg_nodes: Vec<f64> = ens.iter().copied().filter(|&v| v >= a && v <= b).collect();
-            if seg_nodes.is_empty() {
-                continue;
-            }
-            let weight = (b.ln() - a.ln()) / covered;
-            let collapse = |pick: &dyn Fn(&ShieldNode) -> f64| -> f64 {
-                let vals: Vec<f64> = inside
-                    .iter()
-                    .filter(|n| seg_nodes.contains(&n.energy_ev))
-                    .map(|n| pick(n))
-                    .collect();
-                if seg_nodes.len() == 1 {
-                    vals[0]
-                } else {
-                    lethargy_trapezoid(&seg_nodes, &vals, a, b)
+        if covered_u > 0.0 {
+            for &(a, b) in &segs {
+                let seg_nodes: Vec<f64> =
+                    ens.iter().copied().filter(|&v| v >= a && v <= b).collect();
+                if seg_nodes.is_empty() {
+                    continue;
                 }
-            };
-            sigma_p += weight * collapse(&|n| n.sigma_p_b);
-            for c in 0..4 {
-                let sigi_c = collapse(&|n| n.infinite_dilution_b[c]);
-                inf[c] += weight * sigi_c;
-                for (i, _) in sig0.iter().enumerate() {
-                    for (t, _) in temps.iter().enumerate() {
-                        let xs_c = collapse(&|n| {
-                            n.sigf
-                                .as_ref()
-                                .map(|s| s[c][i][t])
-                                .unwrap_or(n.infinite_dilution_b[c])
-                        });
-                        shielded[c][i][t] += weight * xs_c;
-                        if sigi_c != 0.0 {
-                            factors[c][i][t] += weight * xs_c / sigi_c;
+                let weight = (b.ln() - a.ln()) / covered_u;
+                let collapse = |pick: &dyn Fn(&ShieldNode) -> f64| -> f64 {
+                    let vals: Vec<f64> = inside
+                        .iter()
+                        .filter(|n| seg_nodes.contains(&n.energy_ev))
+                        .map(|n| pick(n))
+                        .collect();
+                    if seg_nodes.len() == 1 {
+                        vals[0]
+                    } else {
+                        lethargy_trapezoid(&seg_nodes, &vals, a, b)
+                    }
+                };
+                sigma_p += weight * collapse(&|n| n.sigma_p_b);
+                for c in 0..4 {
+                    let sigi_c = collapse(&|n| n.infinite_dilution_b[c]);
+                    inf[c] += weight * sigi_c;
+                    for (i, _) in sig0.iter().enumerate() {
+                        for (t, _) in temps.iter().enumerate() {
+                            let xs_c = collapse(&|n| {
+                                n.sigf
+                                    .as_ref()
+                                    .map(|s| s[c][i][t])
+                                    .unwrap_or(n.infinite_dilution_b[c])
+                            });
+                            shielded[c][i][t] += weight * xs_c;
+                            if sigi_c != 0.0 {
+                                factors[c][i][t] += weight * xs_c / sigi_c;
+                            }
                         }
                     }
                 }
             }
         }
-        // Full-group Bondarenko fold: the covered segments contribute their
-        // probability-table moments; the uncovered part contributes its MF=3
-        // background suppressed by the uniform weight sigma0/(sigma0+bkg_t).
+        // D6e resolved-range moments: pointwise quadrature per segment.
+        // `res_inf` carries lethargy-mean infinite-dilution xs over the
+        // resolved union; `res_w`/`res_xw` carry raw segment integrals so
+        // the full-group fold can combine covered classes directly.
+        let mut res_inf = [0.0f64; 4];
+        let mut res_w = vec![0.0f64; sig0.len()];
+        let mut res_xw = vec![vec![0.0f64; sig0.len()]; 4];
+        let mut res_sigma_p = 0.0f64;
+        if covered_r > 0.0 {
+            for &(a, b) in &res_segs {
+                let covering: Vec<&crate::resonance::ResonanceRange> = resolved
+                    .iter()
+                    .copied()
+                    .filter(|r| r.energy_min < b && r.energy_max > a)
+                    .collect();
+                if covering.is_empty() {
+                    continue;
+                }
+                let seg = resolved_segment_moments(&covering, a, b, sig0)?;
+                let weight = seg.lethargy / covered_r;
+                for c in 0..4 {
+                    res_inf[c] += weight * seg.inf[c] / seg.lethargy;
+                }
+                // Potential scattering over a resolved range is approximated
+                // by the lethargy-mean elastic channel.
+                res_sigma_p += weight * seg.inf[1] / seg.lethargy;
+                for (i, _) in sig0.iter().enumerate() {
+                    res_w[i] += seg.w[i];
+                    for c in 0..4 {
+                        res_xw[c][i] += seg.xw[c][i];
+                    }
+                }
+            }
+        }
+        if covered > 0.0 {
+            sigma_p = (covered_u * sigma_p + covered_r * res_sigma_p) / covered;
+        }
+        // Uncovered remainder: the group's lethargy outside the union of
+        // covered (unresolved + resolved) segments.
+        let mut all_segs = segs.clone();
+        all_segs.extend_from_slice(&res_segs);
+        all_segs.sort_by(|a, b| a.0.total_cmp(&b.0));
         let mut uncovered: Vec<(f64, f64)> = Vec::new();
         let mut edge = lo;
-        for &(a, b) in &segs {
+        for &(a, b) in &all_segs {
+            let a = a.max(edge);
             if a > edge {
                 uncovered.push((edge, a));
             }
-            edge = b;
+            edge = edge.max(b);
         }
         if edge < hi {
             uncovered.push((edge, hi));
@@ -1988,53 +2297,57 @@ pub(crate) fn collapse_to_groups(
         let sig0_max = sig0[0];
         let mut weight_mean = vec![vec![0.0f64; temps.len()]; sig0.len()];
         let mut xw_seg = vec![vec![vec![0.0f64; temps.len()]; sig0.len()]; 4];
-        for &(a, b) in &segs {
-            let seg_nodes: Vec<f64> = ens.iter().copied().filter(|&v| v >= a && v <= b).collect();
-            if seg_nodes.is_empty() {
-                continue;
-            }
-            let wseg = (b.ln() - a.ln()) / covered;
-            let seg_inside: Vec<&ShieldNode> = inside
-                .iter()
-                .filter(|n| seg_nodes.contains(&n.energy_ev))
-                .copied()
-                .collect();
-            for (i, &s0) in sig0.iter().enumerate() {
-                for (t, _) in temps.iter().enumerate() {
-                    let (wm_vals, xw_vals): (Vec<f64>, [Vec<f64>; 4]) = if seg_nodes.len() == 1 {
-                        let (wm, _) = node_w_and_xw(seg_inside[0], 0, s0, sig0_max, t);
-                        let mut xv: [Vec<f64>; 4] = Default::default();
-                        for c in 0..4 {
-                            xv[c] = vec![node_w_and_xw(seg_inside[0], c, s0, sig0_max, t).1];
-                        }
-                        (vec![wm], xv)
-                    } else {
-                        let wm: Vec<f64> = seg_inside
-                            .iter()
-                            .map(|n| node_w_and_xw(n, 0, s0, sig0_max, t).0)
-                            .collect();
-                        let mut xv: [Vec<f64>; 4] = Default::default();
-                        for c in 0..4 {
-                            xv[c] = seg_inside
-                                .iter()
-                                .map(|n| node_w_and_xw(n, c, s0, sig0_max, t).1)
-                                .collect();
-                        }
-                        (wm, xv)
-                    };
-                    weight_mean[i][t] += wseg
-                        * if wm_vals.len() == 1 {
-                            wm_vals[0]
+        if covered_u > 0.0 {
+            for &(a, b) in &segs {
+                let seg_nodes: Vec<f64> =
+                    ens.iter().copied().filter(|&v| v >= a && v <= b).collect();
+                if seg_nodes.is_empty() {
+                    continue;
+                }
+                let wseg = (b.ln() - a.ln()) / covered_u;
+                let seg_inside: Vec<&ShieldNode> = inside
+                    .iter()
+                    .filter(|n| seg_nodes.contains(&n.energy_ev))
+                    .copied()
+                    .collect();
+                for (i, &s0) in sig0.iter().enumerate() {
+                    for (t, _) in temps.iter().enumerate() {
+                        let (wm_vals, xw_vals): (Vec<f64>, [Vec<f64>; 4]) = if seg_nodes.len() == 1
+                        {
+                            let (wm, _) = node_w_and_xw(seg_inside[0], 0, s0, sig0_max, t);
+                            let mut xv: [Vec<f64>; 4] = Default::default();
+                            for c in 0..4 {
+                                xv[c] = vec![node_w_and_xw(seg_inside[0], c, s0, sig0_max, t).1];
+                            }
+                            (vec![wm], xv)
                         } else {
-                            lethargy_trapezoid(&seg_nodes, &wm_vals, a, b)
+                            let wm: Vec<f64> = seg_inside
+                                .iter()
+                                .map(|n| node_w_and_xw(n, 0, s0, sig0_max, t).0)
+                                .collect();
+                            let mut xv: [Vec<f64>; 4] = Default::default();
+                            for c in 0..4 {
+                                xv[c] = seg_inside
+                                    .iter()
+                                    .map(|n| node_w_and_xw(n, c, s0, sig0_max, t).1)
+                                    .collect();
+                            }
+                            (wm, xv)
                         };
-                    for c in 0..4 {
-                        xw_seg[c][i][t] += wseg
-                            * if xw_vals[c].len() == 1 {
-                                xw_vals[c][0]
+                        weight_mean[i][t] += wseg
+                            * if wm_vals.len() == 1 {
+                                wm_vals[0]
                             } else {
-                                lethargy_trapezoid(&seg_nodes, &xw_vals[c], a, b)
+                                lethargy_trapezoid(&seg_nodes, &wm_vals, a, b)
                             };
+                        for c in 0..4 {
+                            xw_seg[c][i][t] += wseg
+                                * if xw_vals[c].len() == 1 {
+                                    xw_vals[c][0]
+                                } else {
+                                    lethargy_trapezoid(&seg_nodes, &xw_vals[c], a, b)
+                                };
+                        }
                     }
                 }
             }
@@ -2044,7 +2357,12 @@ pub(crate) fn collapse_to_groups(
         let mut group_shielded = vec![vec![vec![0.0f64; temps.len()]; sig0.len()]; 4];
         let mut group_factors = vec![vec![vec![1.0f64; temps.len()]; sig0.len()]; 4];
         for c in 0..4 {
-            group_unshielded[c] = overlap * inf[c] + (1.0 - overlap) * background[c];
+            // Unshielded group xs: unresolved segments carry their node
+            // means, resolved segments carry the quadrature integral, the
+            // remainder keeps the smooth MF=3 background.
+            let overlap_u = overlap - overlap_r;
+            group_unshielded[c] =
+                overlap_u * inf[c] + overlap_r * res_inf[c] + (1.0 - overlap) * background[c];
             if group_unshielded[c] == 0.0 {
                 continue;
             }
@@ -2059,8 +2377,14 @@ pub(crate) fn collapse_to_groups(
                         group_factors[c][i][t] = 1.0;
                         continue;
                     }
-                    let num = covered * xw_seg[c][i][t] + rest_width * background[c] * w_rest;
-                    let den = covered * weight_mean[i][t] + rest_width * w_rest;
+                    // num = covered xs·w integrals: unresolved ptable
+                    // means (normalized by covered_u), resolved pointwise
+                    // integrals, plus the uncovered background under its
+                    // own escape weight.
+                    let num = covered_u * xw_seg[c][i][t]
+                        + res_xw[c][i]
+                        + rest_width * background[c] * w_rest;
+                    let den = covered_u * weight_mean[i][t] + res_w[i] + rest_width * w_rest;
                     if den > 0.0 {
                         group_shielded[c][i][t] = num / den;
                         group_factors[c][i][t] = group_shielded[c][i][t] / group_unshielded[c];
@@ -2068,9 +2392,11 @@ pub(crate) fn collapse_to_groups(
                 }
             }
         }
+        let _ = res_sigma_p;
         out.push(ShieldGroup {
             group: g,
             overlap_fraction: overlap,
+            resolved_overlap_fraction: overlap_r,
             sigma_p_b: sigma_p,
             infinite_dilution_b: inf,
             factors,
@@ -2156,5 +2482,87 @@ mod tests {
             resonances_per_ladder: 0,
         };
         assert!(node.sigf.is_none());
+    }
+
+    fn bw_range(energy: f64, neutron_w: f64, capture_w: f64) -> crate::resonance::ResonanceRange {
+        crate::resonance::ResonanceRange {
+            energy_min: energy * 0.5,
+            energy_max: energy * 2.0,
+            lru: 1,
+            lrf: 2,
+            naps: 0,
+            scattering_radius: None,
+            data: crate::resonance::RangeData::BreitWigner(crate::resonance::LegacyResolved {
+                spin: 0.5,
+                ap: 6.0e-15,
+                groups: vec![crate::resonance::LegacyLGroup {
+                    awri: 55.0,
+                    apl: 0.0,
+                    qx: 0.0,
+                    l: 0,
+                    lrx: 0,
+                    resonances: vec![crate::resonance::LegacyResonance {
+                        energy,
+                        spin: 1.0,
+                        total: neutron_w + capture_w,
+                        neutron: neutron_w,
+                        capture: capture_w,
+                        fission_a: 0.0,
+                        fission_b: 0.0,
+                    }],
+                }],
+            }),
+        }
+    }
+
+    #[test]
+    fn resolved_quadrature_captures_narrow_resonance() {
+        // A resonance 2 orders narrower than the segment width must not be
+        // stepped over: knot-seeded adaptive quadrature recovers the peak's
+        // contribution where a plain fixed subdivision would miss it.
+        let range = bw_range(1000.0, 0.5, 0.5);
+        let seg = resolved_segment_moments(&[&range], 500.0, 2000.0, &[1.0e10, 1.0])
+            .expect("segment moments");
+        assert!(seg.inf[3] > 0.0, "capture moment vanished: {:?}", seg.inf);
+        // The capture integral must be dominated by the peak: compare
+        // against the two-sided Breit-Wigner estimate
+        // ∫σγ dlnE ≈ σγ_peak · Γ / (2 E0) · π for a narrow line.
+        let xs = resolved_pointwise(&[&range], 1000.0).expect("peak xs");
+        let peak_g = xs.capture;
+        let rough = peak_g * (0.5 + 0.5) / (2.0 * 1000.0) * std::f64::consts::PI;
+        assert!(
+            seg.inf[3] > 0.2 * rough && seg.inf[3] < 5.0 * rough,
+            "capture integral {} far from BW estimate {rough}",
+            seg.inf[3]
+        );
+        // Escape weight suppresses the line at small σ0: w(σ0=1) << w(σ0=1e10).
+        assert!(seg.w[1] < seg.w[0]);
+        assert!(seg.w[1] > 0.0 && seg.xw[3][1] > 0.0);
+        // Determinism: repeating the integration is bit-identical.
+        let again = resolved_segment_moments(&[&range], 500.0, 2000.0, &[1.0e10, 1.0]).unwrap();
+        assert_eq!(seg.inf, again.inf);
+        assert_eq!(seg.w, again.w);
+    }
+
+    #[test]
+    fn resolved_segment_moments_empty_outside_ranges() {
+        // A segment disjoint from every range integrates to zero, never to
+        // a fabricated background.
+        let range = bw_range(1000.0, 0.5, 0.5);
+        let res = resolved_segment_moments(&[&range], 4000.0, 8000.0, &[1.0e10]);
+        assert!(res.is_err() || res.unwrap().inf.iter().all(|v| *v == 0.0));
+    }
+
+    #[test]
+    fn knots_merge_overlapping_windows() {
+        let range = bw_range(1000.0, 0.5, 0.5);
+        let knots = resolved_knots(&range);
+        assert!(!knots.is_empty());
+        // Window edges around the resonance, sorted ascending.
+        assert!(knots.iter().any(|&k| k < 1000.0));
+        assert!(knots.iter().any(|&k| k > 1000.0));
+        let mut sorted = knots.clone();
+        sorted.sort_by(|a, b| a.total_cmp(b));
+        assert_eq!(knots, sorted);
     }
 }
