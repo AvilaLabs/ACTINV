@@ -34,9 +34,11 @@ PRE_P10_COMMIT = "e5421a0e30eb94303482bed2c4b9491b773244e6"
 # 9420f8c subnormal-row exemption) moved it at ULP level. Re-seated once more
 # from f7b30255... after P70 (fde8897) added the unconditional
 # max_product_optical_depth{,_nuclide} ledger keys — a schema addition, not a
-# numerical change.
+# numerical change. Re-seated again from d27ba80b... after b7e81f2 (D6 decay
+# overrides) added the unconditional decay_overrides_applied ledger key —
+# likewise a schema addition, not a numerical change.
 PRE_P10_NEUTRON_NORMALIZED_SHA256 = (
-    "d27ba80b6c393ff3661f35cdf5be5ec32c8e8bc50876721ef7dbbed05e224e43"
+    "e6157b592dd8285cbdcf079153d27e44161c178378219b6afddbc4f4be8ee285"
 )
 PRE_P12_TABLES_PROVENANCE = (
     "openmc.data.NATURAL_ABUNDANCE and openmc.data.atomic_mass (OpenMC 0.15.3; "
