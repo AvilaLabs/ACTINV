@@ -109,6 +109,51 @@ class MaterialToActinvTests(unittest.TestCase):
 
 
 @unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class FirstTallyNuclideTests(unittest.TestCase):
+    class _FakeMaterial:
+        def __init__(self, nuclides):
+            self._nuclides = nuclides
+
+        def get_nuclide_atom_densities(self):
+            return self._nuclides
+
+    class _BrokenMaterial:
+        def get_nuclide_atom_densities(self):
+            raise RuntimeError("not fillable")
+
+    def test_returns_first_nuclide_of_first_material_with_any(self):
+        materials = [self._FakeMaterial({}), self._FakeMaterial({"Fe56": 0.1, "Cr52": 0.2})]
+
+        self.assertEqual(m.first_tally_nuclide(materials), "Fe56")
+
+    def test_skips_materials_that_raise(self):
+        materials = [self._BrokenMaterial(), self._FakeMaterial({"Am242m1": 0.01})]
+
+        self.assertEqual(m.first_tally_nuclide(materials), "Am242m1")
+
+    def test_no_material_with_any_nuclide_raises_valueerror_not_stopiteration(self):
+        materials = [self._FakeMaterial({}), self._BrokenMaterial()]
+
+        with self.assertRaises(ValueError) as ctx:
+            m.first_tally_nuclide(materials)
+        self.assertIn("micro_kwargs", str(ctx.exception))
+
+    def test_empty_material_list_raises_valueerror(self):
+        with self.assertRaises(ValueError):
+            m.first_tally_nuclide([])
+
+
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
+class RequireActivationRegionsTests(unittest.TestCase):
+    def test_zero_regions_raises_valueerror(self):
+        with self.assertRaises(ValueError):
+            m.require_activation_regions([])
+
+    def test_nonzero_regions_does_not_raise(self):
+        m.require_activation_regions(["placeholder-material"])  # must not raise
+
+
+@unittest.skipUnless(HAVE_OPENMC, f"openmc not importable: {_IMPORT_ERROR}")
 class BuildScheduleTests(unittest.TestCase):
     def test_scalar_rate_broadcast_and_units(self):
         schedule, reference = m.build_schedule([1.0, 2.0], 5.0, timestep_units="min")
@@ -132,11 +177,13 @@ class BuildScheduleTests(unittest.TestCase):
         self.assertEqual(schedule[0]["dt"], f"{3600.0!r} s")
         self.assertEqual(schedule[1]["dt"], f"{86400.0!r} s")
 
-    def test_all_zero_rates_defaults_reference_to_one(self):
-        schedule, reference = m.build_schedule([1.0], [0.0])
+    def test_all_zero_rates_raises(self):
+        with self.assertRaises(ValueError):
+            m.build_schedule([1.0], [0.0])
 
-        self.assertEqual(reference, 1.0)
-        self.assertEqual(schedule[0]["flux"], 0.0)
+    def test_all_negative_rates_raises(self):
+        with self.assertRaises(ValueError):
+            m.build_schedule([1.0, 1.0], [-1.0, 0.0])
 
     def test_unsupported_unit_raises(self):
         with self.assertRaises(ValueError):

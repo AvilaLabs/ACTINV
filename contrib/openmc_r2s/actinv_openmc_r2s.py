@@ -99,6 +99,29 @@ class _Results(list):
     """Stand-in for openmc.deplete.Results: index 0 = before irradiation, i = after step i."""
 
 
+def first_tally_nuclide(materials):
+    """First nuclide found in any of ``materials``, in order.
+
+    Used to pick step 1's throwaway tally nuclide (see ``ActinvR2SManager.step1_neutron_transport``).
+    Materials that raise on ``get_nuclide_atom_densities()`` (e.g. an unfilled/void material) are
+    skipped rather than propagating. Raises ``ValueError`` with an adapter-specific message,
+    rather than letting a bare ``next(iter(...))`` raise ``StopIteration``, if none of the given
+    materials has any nuclide at all.
+    """
+    for mat in materials:
+        try:
+            nuclides = mat.get_nuclide_atom_densities()
+        except Exception:
+            continue
+        for name in nuclides:
+            return name
+    raise ValueError(
+        "step1_neutron_transport: no material in the model has any nuclide to tally for the "
+        "slimmed step-1 flux tally; pass micro_kwargs={'nuclides': [...], 'reactions': [...]} "
+        "explicitly"
+    )
+
+
 def build_schedule(timesteps, source_rates, timestep_units="s"):
     """ACTINV schedule entries (durations in seconds, flux relative to a reference source rate).
 
@@ -107,7 +130,9 @@ def build_schedule(timesteps, source_rates, timestep_units="s"):
     sequence; every schedule entry's "flux" multiplier is its own rate divided by that reference,
     so this assumes a single, constant neutron spectral shape that only scales up and down with
     source strength (irradiation steps share one reference rate; cooling steps use 0.0). Returns
-    ``(schedule, reference)``.
+    ``(schedule, reference)``. Raises ``ValueError`` if no timestep has a positive source rate,
+    since there would then be no irradiation to activate anything (a pure-decay-only schedule is
+    not a useful R2S run and silently defaulting the reference to 1.0 would hide that).
     """
     rates = [float(r) for r in (source_rates if np.iterable(source_rates) else [source_rates] * len(timesteps))]
     durations = []
@@ -116,7 +141,10 @@ def build_schedule(timesteps, source_rates, timestep_units="s"):
         if unit not in _UNITS_S:
             raise ValueError(f"unsupported timestep unit {unit!r}")
         durations.append(float(value) * _UNITS_S[unit])
-    reference = next((r for r in rates if r > 0.0), 1.0)
+    if not any(r > 0.0 for r in rates):
+        raise ValueError("build_schedule: at least one timestep must have a positive source rate "
+                         "(every entry in source_rates was zero or negative)")
+    reference = next(r for r in rates if r > 0.0)
     schedule = [{"dt": f"{d!r} s", "flux": r / reference} for d, r in zip(durations, rates)]
     return schedule, reference
 
@@ -173,6 +201,18 @@ def build_results_shim(per_step):
     return _Results([_Step({})] + [_Step(m) for m in per_step])
 
 
+def require_activation_regions(mats):
+    """Guard against a zero-region schedule (see ``ActinvR2SManager.step2_activation``).
+
+    A zero-length ``mats`` means the mesh/cell domain produced no activation region at all
+    (e.g. an all-void domain), in which case there is nothing to solve; raises ``ValueError``
+    rather than letting the ACTINV mesh spec silently substitute a placeholder material.
+    """
+    if len(mats) == 0:
+        raise ValueError("step2_activation: no activation regions found (the mesh/cell domain "
+                         "has no material to activate); nothing to solve")
+
+
 class ActinvR2SManager(openmc.deplete.R2SManager):
     def __init__(self, neutron_model, domains, photon_model=None, *, library, decay_primary,
                  decay_fallback=None, actinv_bin="actinv", options=None, photon=None, threads=1):
@@ -192,10 +232,14 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
         micro_kwargs.setdefault("energies", list(library_bounds(self.library)))
         # OpenMC also tallies per-nuclide reaction rates here for its own depletion solver; ACTINV
         # uses only the flux. With 709 groups the default (every chain nuclide x every reaction)
-        # runs to gigabytes, so tally one throwaway rate unless the caller asks otherwise.
+        # runs to gigabytes, so tally one throwaway rate unless the caller asks otherwise. Prefer a
+        # nuclide from the actual activation-region materials (the cell domain, for cell-based R2S);
+        # for mesh-based R2S those aren't known until material_volumes runs inside step 1, so fall
+        # back to the first material anywhere in the model that has a nuclide.
         if "nuclides" not in micro_kwargs:
-            first = next(iter(self.neutron_model.materials[0].get_nuclide_atom_densities()))
-            micro_kwargs["nuclides"] = [first]
+            domain_mats = [cell.fill for cell in self.domains if cell.fill is not None] \
+                if self.method == "cell-based" else []
+            micro_kwargs["nuclides"] = [first_tally_nuclide(domain_mats + list(self.neutron_model.materials))]
             micro_kwargs.setdefault("reactions", ["(n,gamma)"])
         return super().step1_neutron_transport(output_dir, mat_vol_kwargs, micro_kwargs)
 
@@ -213,6 +257,7 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
                 mat.name = f"Cell {cell.id}"
                 mat.volume = cell.volume
                 mats.append(mat)
+        require_activation_regions(mats)
         self.results["activation_materials"] = mats
         fluxes = self.results["fluxes"]
         if len(fluxes) != len(mats):
@@ -233,7 +278,7 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             "spec": "actinv-mesh-spec-1", "title": "ACTINV activation for OpenMC R2S", "projectile": "neutron",
             "library": {"path": self.library},
             "decay": {"primary": self.decay_primary, **({"fallback": self.decay_fallback} if self.decay_fallback else {})},
-            "material": materials["0"] if materials else {"composition": {"Fe": 100.0}},
+            "material": materials["0"],
             "materials": materials,
             "flux": {"path": str(flux_path.resolve()),
                      "sha256": hashlib.sha256(flux_path.read_bytes()).hexdigest()},

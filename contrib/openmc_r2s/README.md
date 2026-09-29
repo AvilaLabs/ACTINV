@@ -71,9 +71,15 @@ ACTINV:
 
 - `energies` defaults to the ACTINV library's exact group boundaries (`library_bounds`), instead
   of OpenMC's own energy grouping, so the flux ACTINV receives needs no rebinning.
-- Unless the caller passes `nuclides=`/`reactions=` explicitly, only a single throwaway nuclide
-  (the first nuclide found in `neutron_model.materials[0]`) is tallied, with `reactions=["(n,gamma)"]`.
-  OpenMC's default is every chain nuclide times every reaction, which with a 709-group structure
+- Unless the caller passes `nuclides=`/`reactions=` explicitly, only a single throwaway nuclide is
+  tallied, with `reactions=["(n,gamma)"]`. The nuclide is the first one found in an activation-
+  region material (a cell domain's fill material, for cell-based R2S), falling back to the first
+  material anywhere in the model that has any nuclide if the domain materials aren't cleanly known
+  yet (mesh-based R2S: the mesh/material combinations aren't resolved until `material_volumes`
+  runs later in the same step). If no material anywhere in the model has a nuclide,
+  `step1_neutron_transport` raises `ValueError` naming `micro_kwargs={"nuclides": [...], "reactions":
+  [...]}` as the explicit alternative, rather than failing with a bare `StopIteration`. OpenMC's
+  default tally is every chain nuclide times every reaction, which with a 709-group structure
   produces gigabyte-scale tallies that ACTINV never reads — it only uses the flux array, not
   OpenMC's microscopic cross sections. `micro_kwargs` still needs a `chain_file` (or
   `openmc.config['chain_file']` set globally); OpenMC's `get_microxs_and_flux` requires one to run
@@ -111,14 +117,9 @@ approximate and will drift as the file changes.
   scales up and down with source strength — irradiation steps at different absolute rates but
   the same *spectrum* are fine, but a schedule that changes the spectrum (e.g. a different source
   position or energy between steps) is not represented; ACTINV would see the same normalized
-  spectrum scaled by a different multiplier, not a genuinely different one. If every entry in
-  `source_rates` is zero or negative, the reference silently defaults to `1.0` and every schedule
-  step gets `flux: 0.0` (a pure-decay schedule) rather than raising.
-- **Step 1's throwaway-nuclide tally picks `neutron_model.materials[0]`.** If that material has
-  no nuclides (e.g. it is a void/placeholder material, or nuclide data has not been added yet),
-  `next(iter(...))` raises `StopIteration` with no adapter-specific error message. Pass
-  `micro_kwargs={"nuclides": [...], "reactions": [...]}` explicitly to avoid depending on
-  material ordering.
+  spectrum scaled by a different multiplier, not a genuinely different one. (If no timestep has a
+  positive source rate at all, `build_schedule` raises `ValueError` rather than guessing at a
+  reference — there is no irradiation for ACTINV to solve in that case.)
 - **`actinv mesh` region identity is round-tripped through a string index, not the OpenMC
   material ID.** The flux NDJSON writer assigns each region `id: str(i)` by its position in the
   `mats` list; `step2_activation` then reads `actinv mesh`'s result records back with
@@ -141,12 +142,6 @@ approximate and will drift as the file changes.
 - **`options["outputs"]` always forces `{"photons", "ledger"}`** into whatever the caller passes,
   since step 3 needs the photon source and cell-result parsing needs the per-step ledger; callers
   cannot disable either output.
-- **Degenerate zero-region case.** If `mats` is empty (no activation regions found at all), the
-  ACTINV mesh spec's top-level `"material"` field falls back to a hardcoded placeholder
-  (`{"composition": {"Fe": 100.0}}`) rather than failing fast; this only matters if the spec
-  format requires a top-level `"material"` key even when `"materials"` is empty, and should not
-  be reached in practice since a real geometry should always produce at least one activation
-  region.
 - **Cell-based R2S materials are cloned per call, not cached.** Every `step2_activation` call
   re-clones each cell's fill material; running it twice for the same manager produces two
   independent sets of activation materials rather than reusing state, unlike OpenMC's own
