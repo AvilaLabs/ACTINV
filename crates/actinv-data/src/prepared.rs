@@ -114,14 +114,22 @@ impl ReactionLibrary for PreparedLibrary {
         first_flux_group: usize,
         last_flux_group: usize,
     ) -> f64 {
+        // Only the row's stored span can contribute. Outside it every term of the former
+        // whole-window loop was 0.0 * flux = +0.0 (fluxes are validated finite and non-negative),
+        // and adding +0.0 to a running sum that starts at +0.0 never changes its bits, so
+        // iterating the intersection is exact while skipping the implicit zeros.
+        let span = self.spans[row];
+        let lo = first_flux_group.max(span.first_group);
+        let hi = last_flux_group
+            .min(span.first_group + span.value_count)
+            .min(phi.len());
         let mut numerator = 0.0;
-        for (group, flux) in phi
-            .iter()
-            .enumerate()
-            .take(last_flux_group)
-            .skip(first_flux_group)
-        {
-            numerator += self.cross_section(row, group) * flux;
+        if lo < hi {
+            let start = span.value_offset + (lo - span.first_group);
+            let end = span.value_offset + (hi - span.first_group);
+            for (sigma, flux) in self.values[start..end].iter().zip(&phi[lo..hi]) {
+                numerator += sigma * flux;
+            }
         }
         if flux_denominator > 0.0 {
             numerator / flux_denominator

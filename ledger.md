@@ -1611,3 +1611,15 @@ refused (self_shielding, uncertainty, options.screen, schedule feed).
 - **Known limitation:** an impurity whose activation products have no entry in the limits table shows
   "no clearance-index response" (Ag: Ag-108m is missing from the bundled IAEA table). Its activity
   appears under uncovered nuclides, not as cleared. A verified Ag-108m limit is still needed.
+
+## Entry 60 — P77 landed on master (2026-09-29)
+
+The P77 changes (trace hybrid reservoir, activity merge, span-bounded collapse; verdict in entry 57)
+were applied onto master unchanged from branch `p77-trace-mesh`. The branch had been held for the
+uncommitted lane-2 work in the main checkout; that work is parked (handoff note dated 2026-09-28), so
+P77 lands first and lane 2 rebases onto it. Local replay of the CI runtime steps with the patched code:
+every step passes except, as expected, the two that pin the trace-mode end-to-end case
+(`ci_end_to_end`, and `g6_p8_scaling_regression` through it): `pruned_states` 36 → 40 because
+production into bulk iron isotopes is now tracked. Heat per step moves by ≤ 1.4e-20 W/g against the
+1e-17 criterion. `controls/ci_expected.json` is re-baselined for the state count only, with a note.
+FNS iron and fusion-isotope workflows pass unchanged.

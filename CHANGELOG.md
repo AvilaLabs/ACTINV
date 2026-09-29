@@ -9,6 +9,22 @@
   uncovered activity per target. Every emitted limit is re-solved at its composition and compared
   with the prediction; `--no-verify` skips that. See `docs/BUDGET.md`. (P79)
 
+**Fixed**
+
+- Trace mode dropped production into nuclides that are also bulk constituents: from a tracked precursor
+  (Fe-59 → Co-59 in a cobalt-bearing alloy) silently, from another bulk nuclide into the
+  `bulk_production_dropped` ledger. Such products now get a tracked state beside their constant reservoir,
+  so trace mode approximates only the constancy of the bulk. Composition additivity in trace mode went
+  from 0.51 to 6.8e-12 (P75b → P77). Trace-mode results for multi-element materials move; coupled mode is
+  bitwise unchanged.
+- A tracked nuclide's activity overwrote the bulk activity of the same nuclide in the output and the
+  response snapshot instead of adding to it.
+
+**Performance**
+
+- Groupwise collapse loops only over the intersection of the flux window and each row's stored span:
+  bitwise identical, mesh runs 2.0–3.4× faster (P77).
+
 **Changed**
 
 - Workbench live sweep: the P70 flux-scaling shortcut is removed, so every slider position is

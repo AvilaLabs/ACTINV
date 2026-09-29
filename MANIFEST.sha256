@@ -9,7 +9,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 5b0e4fd7a4b934875286d18ac1fd844bba8aaf8541dfe3f5105353a363f139cc  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 501d1c98ddae1a1348d96091ec120d19e848cf484637c8bf151ca583bbde9ddf  ./AGENTS.md
-97d569a4217c67c082e3c48e830d3865c1d7be099a436322630ff6941682ea21  ./CHANGELOG.md
+6ade78911465f777eedf3c940ace99bd70857bb9e6b588b08dfaa53d6a2e1dca  ./CHANGELOG.md
 04795cfec8c6241d33edbf94ef2df47637d939380563bf3470d5f5f7ddc521ca  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a5a361eb24c1459e44a7456f2503049b003470ada418e176013fe7afa2e1592  ./Cargo.lock
@@ -218,7 +218,7 @@ b48124e48f06838ae903cb5b38d0bb33ab94985cb2702e2ee38d544581677f97  ./controls/che
 93e4ad814a873d713b64508d706f609dc7d9cbb94e39dcf1019e8485b9077fc0  ./controls/check_public_examples.py
 29eda62c1a9a9372f5e714f6ee5bc3c714bb892ac097da55dadb917c0185e1e3  ./controls/check_release_notes.py
 741dd9bc94bf678d8174e95fa8f2f36dc56485c1770434e4cc8c867603424354  ./controls/ci_end_to_end.py
-779647af61c42ecc320dd76f530da5966cf74fd9202414eb44867aa888ac6b44  ./controls/ci_expected.json
+1fd3a7dac52fe52ed35110485a9568ffc83c8f3fdc45dc1c50864ab5407c3a27  ./controls/ci_expected.json
 ca86db417052addca94b94bbae3166662fc9066315ba25c1e9c901869818fc29  ./controls/ci_result.py
 307ae437ffe46aef94da1ad3a0c4a99adc3c0641d5b6e44e6839c12f9a2a2c44  ./controls/cram_ref.py
 1f237ac4f928431fdeb367b6fe7eef8f9e1523a3ae53b5da34c8b820e12b2623  ./controls/d2_banded_calibrate.py
@@ -741,7 +741,7 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 067b21dd7fdbe6fc7cbf6b3d8b8132d741117284b79bebb383171f24ed3a9cd2  ./crates/actinv-core/src/r2s.rs
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
 7cdbb417c2c228e9524bff1cb5f85674b094938d5c204fea02b0a3dc45c48bb4  ./crates/actinv-core/src/reverse.rs
-ca7dc7a2ccb77d789cfe22420d46a8569b2c6c3d3dafcbaf932e0ab0e7e12c8f  ./crates/actinv-core/src/run.rs
+9dee3e6cbf0142a1f35551ed0d705ee5e3e649cfb1a99d288268ec3b8b6b3598  ./crates/actinv-core/src/run.rs
 0ebf3068ace5641afe5fa4034eca7c12a8914d3d7f3760606007fbceda93c21e  ./crates/actinv-core/src/shielding.rs
 96bbce40009d1cda32016cc33f6c2ced3b3b781d8af3b7791f529e441f254e3e  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
@@ -771,7 +771,7 @@ f2e4dce7d2bc566cbf5c32cf68b0fe3007f2b722b65eeecad17f2d81661b2011  ./crates/actin
 91567ccc466c91bb10866f82545b1b929eeefa008a19920075cfe8f0bf669018  ./crates/actinv-data/src/lib.rs
 9388971206a76ce3a3c74dd664dd80192bc42bd36ee71361a166d3a187ec5828  ./crates/actinv-data/src/library.rs
 7041f7a53856f6409ac8d95fd44f683a5c18f496537339668d1953bd49261e6d  ./crates/actinv-data/src/normalize.rs
-d49d3415829b06bc36e10739d6c55c4791f3eb0bc395c3c77279acfdb5c8de16  ./crates/actinv-data/src/prepared.rs
+63585ffee9de6282ec4c84c128ed4cffa0de5f831e53bf22f815c1c09bfdf8f2  ./crates/actinv-data/src/prepared.rs
 b80de2abfc574df37e79db771aa164a754d3bad62c8fc2205b732609376b9700  ./crates/actinv-data/src/processing.rs
 8ad5bdfae5acaf6083729c2e4161c7e1f8c584cabf6c6ddc0d57d8b63edf1b54  ./crates/actinv-data/src/resonance.rs
 b5596655068fd267e3422f60ea77ab69857d68cd6b3b4f8556dc084f041b98cc  ./crates/actinv-data/src/shielding.rs
@@ -923,7 +923,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-a6944c0097be04d9b1fa00028f6f4a9b9a2e13b8657f06dc7de840b20b463a29  ./ledger.md
+8903b07131d466c496ee5b5fe693dfad6b6e8d9b20a3e6b3333fda39d9a1a79a  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh

@@ -597,7 +597,8 @@ fn response_snapshot(
         if decay_rate <= 0.0 {
             continue;
         }
-        activity.insert(name_of(key.0, key.1), decay_rate * atoms);
+        // a hybrid reservoir nuclide's tracked population adds to its bulk activity
+        *activity.entry(name_of(key.0, key.1)).or_insert(0.0) += decay_rate * atoms;
         alpha += decay_rate * atoms * nuclide.e_heavy() * EV;
         beta += decay_rate * atoms * nuclide.e_light() * EV;
         gamma += decay_rate * atoms * nuclide.e_em() * EV;
@@ -2906,12 +2907,31 @@ impl PreparedRun {
             step_feed.push(edges);
         }
         // Reservoir nuclides that are explicitly fed carry their fed population in a real tracked
-        // state while the constant reservoir keeps producing through the unit source.
-        let tracked_reservoir: std::collections::HashSet<usize> = feed_states
+        // state while the constant reservoir keeps producing through the unit source. A reservoir
+        // nuclide that is also produced from a tracked (non-bulk) precursor gets the same hybrid
+        // treatment: its constant bulk amount still sources through the unit state, and the atoms
+        // arriving from the precursor accumulate in the tracked state and react further. Without
+        // this that production had no destination and was dropped unledgered, which broke
+        // composition superposition in trace mode (P75b: Co-59 from Fe-59, V-51 from Ti-51).
+        // Production from one reservoir nuclide into another (Ca-40(n,p)K-40 in concrete) is
+        // likewise tracked rather than dropped: trace mode approximates only the constancy of the
+        // bulk, not the absence of production into nuclides that happen to be bulk.
+        let mut tracked_reservoir: std::collections::HashSet<usize> = feed_states
             .iter()
             .copied()
             .filter(|state| bulk.contains_key(state))
             .collect();
+        if mode == "trace" {
+            for &(r, c, _) in decay_edges
+                .iter()
+                .chain(react.iter())
+                .chain(react_extra.iter().flat_map(|edges| edges.iter()))
+            {
+                if r != c && bulk.contains_key(&r) {
+                    tracked_reservoir.insert(r);
+                }
+            }
+        }
         let mut step_removal: Vec<Vec<(usize, usize, f64)>> = Vec::with_capacity(sched.len());
         let mut removal_reservoir_exempt: Vec<String> = Vec::new();
         for (si, step) in sched.iter().enumerate() {
@@ -3000,7 +3020,7 @@ impl PreparedRun {
             for (r, c, v) in &decay_edges {
                 let lambda_c = lambda_eff[*c];
                 if bulk.contains_key(c) {
-                    if r != c && !bulk.contains_key(r) {
+                    if r != c && (!bulk.contains_key(r) || tracked_reservoir.contains(r)) {
                         d_src.push((*r, ch.unit, v * bulk[c]));
                         if lambda_c > 0.0 {
                             decay_derivatives.push((*c, *r, ch.unit, v * bulk[c] / lambda_c));
@@ -3008,13 +3028,15 @@ impl PreparedRun {
                     }
                     // a fed reservoir nuclide's tracked population decays and produces normally;
                     // production into other reservoir rows stays absorbed by the reservoir
-                    if tracked_reservoir.contains(c) && (r == c || !bulk.contains_key(r)) {
+                    if tracked_reservoir.contains(c)
+                        && (r == c || !bulk.contains_key(r) || tracked_reservoir.contains(r))
+                    {
                         d_src.push((*r, *c, *v));
                         if lambda_c > 0.0 {
                             decay_derivatives.push((*c, *r, *c, v / lambda_c));
                         }
                     }
-                } else if !bulk.contains_key(r) {
+                } else if !bulk.contains_key(r) || tracked_reservoir.contains(r) {
                     d_src.push((*r, *c, *v));
                     if lambda_c > 0.0 {
                         decay_derivatives.push((*c, *r, *c, v / lambda_c));
@@ -3036,7 +3058,7 @@ impl PreparedRun {
                             }
                             continue;
                         }
-                        if bulk.contains_key(r) {
+                        if bulk.contains_key(r) && !tracked_reservoir.contains(r) {
                             if si_react == 0 {
                                 led.bulk_production_dropped.push((
                                     name_of(ch.keys[*c].0, ch.keys[*c].1),
@@ -3053,7 +3075,7 @@ impl PreparedRun {
                         if si_react == 0 {
                             sources.push((*r, v * bulk[c], ch.keys[*c]));
                         }
-                    } else if !bulk.contains_key(r) {
+                    } else if !bulk.contains_key(r) || tracked_reservoir.contains(r) {
                         r_i.push((*r, *c, *v));
                     }
                 }
@@ -3066,11 +3088,14 @@ impl PreparedRun {
                     if bulk.contains_key(&derivative.column) {
                         if tracked_reservoir.contains(&derivative.column)
                             && (derivative.row == derivative.column
-                                || !bulk.contains_key(&derivative.row))
+                                || !bulk.contains_key(&derivative.row)
+                                || tracked_reservoir.contains(&derivative.row))
                         {
                             reaction_derivatives.push(*derivative);
                         }
-                        if derivative.row == derivative.column || bulk.contains_key(&derivative.row)
+                        if derivative.row == derivative.column
+                            || (bulk.contains_key(&derivative.row)
+                                && !tracked_reservoir.contains(&derivative.row))
                         {
                             return;
                         }
@@ -3080,7 +3105,9 @@ impl PreparedRun {
                             per_barn_s: derivative.per_barn_s * bulk[&derivative.column],
                             ..*derivative
                         });
-                    } else if !bulk.contains_key(&derivative.row) {
+                    } else if !bulk.contains_key(&derivative.row)
+                        || tracked_reservoir.contains(&derivative.row)
+                    {
                         reaction_derivatives.push(*derivative);
                     }
                 };
@@ -3103,11 +3130,14 @@ impl PreparedRun {
                     if bulk.contains_key(&derivative.column) {
                         if tracked_reservoir.contains(&derivative.column)
                             && (derivative.row == derivative.column
-                                || !bulk.contains_key(&derivative.row))
+                                || !bulk.contains_key(&derivative.row)
+                                || tracked_reservoir.contains(&derivative.row))
                         {
                             yield_derivatives.push(*derivative);
                         }
-                        if derivative.row == derivative.column || bulk.contains_key(&derivative.row)
+                        if derivative.row == derivative.column
+                            || (bulk.contains_key(&derivative.row)
+                                && !tracked_reservoir.contains(&derivative.row))
                         {
                             return;
                         }
@@ -3117,7 +3147,9 @@ impl PreparedRun {
                             per_yield_s: derivative.per_yield_s * bulk[&derivative.column],
                             ..*derivative
                         });
-                    } else if !bulk.contains_key(&derivative.row) {
+                    } else if !bulk.contains_key(&derivative.row)
+                        || tracked_reservoir.contains(&derivative.row)
+                    {
                         yield_derivatives.push(*derivative);
                     }
                 };
@@ -3746,8 +3778,13 @@ impl PreparedRun {
                 });
                 let l = nu.lambda();
                 if l > 0.0 {
-                    act.insert(nm.clone(), l * v);
-                    photon_active.push((nm, key, l * v));
+                    // a hybrid reservoir nuclide (trace mode) already carries its constant bulk
+                    // activity here; its tracked population adds to it rather than replacing it
+                    *act.entry(nm.clone()).or_insert(0.0) += l * v;
+                    match photon_active.iter_mut().find(|entry| entry.1 == key) {
+                        Some(entry) => entry.2 += l * v,
+                        None => photon_active.push((nm, key, l * v)),
+                    }
                     ha += l * v * nu.e_heavy() * EV;
                     hb += l * v * nu.e_light() * EV;
                     hg += l * v * nu.e_em() * EV;
