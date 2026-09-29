@@ -8,6 +8,10 @@
   with the spec margin factor, single-impurity limits (or the reason none exists), top nuclides and
   uncovered activity per target. Every emitted limit is re-solved at its composition and compared
   with the prediction; `--no-verify` skips that. See `docs/BUDGET.md`. (P79)
+- `contrib/openmc_r2s`: an OpenMC 0.15.3 `R2SManager` subclass that replaces OpenMC's depletion step
+  with an `actinv mesh` run and hands the decay photon sources back to OpenMC. Step 1 tallies only
+  the flux, so 709-group runs do not tally every chain reaction. Unit tests run without OpenMC
+  installed (skipped) or with it; known limits are listed in its README.
 
 **Fixed**
 
