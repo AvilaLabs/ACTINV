@@ -283,20 +283,8 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
     let rate_per_barn = RatePerBarnSecond::from_particle_flux(ParticleFlux::sum_groups(phi));
     let rate_per_barn_s = rate_per_barn.get();
-    let mut flux_denominator = 0.0;
-    let group_count = lib.group_count();
-    for flux in &phi[..group_count] {
-        flux_denominator += *flux;
-    }
-    let first_flux_group = phi[..group_count]
-        .iter()
-        .position(|flux| *flux != 0.0)
-        .unwrap_or(group_count);
-    let last_flux_group = phi[..group_count]
-        .iter()
-        .rposition(|flux| *flux != 0.0)
-        .map(|group| group + 1)
-        .unwrap_or(first_flux_group);
+    let (flux_denominator, first_flux_group, last_flux_group) =
+        actinv_data::library::flux_window(phi, lib.group_count());
     for (i, r) in lib.rows().iter().enumerate() {
         let shielded_target = lib_targets.get(r.target).copied();
         let scale = shield.and_then(|plan| {

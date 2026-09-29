@@ -28,6 +28,9 @@
 
 - Groupwise collapse loops only over the intersection of the flux window and each row's stored span:
   bitwise identical, mesh runs 2.0–3.4× faster (P77).
+- Mesh runs collapse the cross sections of up to 16 cells in one pass over the library, each cell
+  in its own accumulator in the original order, and single runs no longer clone the decay table
+  when no `decay_scale` is given: bitwise identical, one-thread mesh runs 1.33–1.77× faster (P81).
 
 **Changed**
 

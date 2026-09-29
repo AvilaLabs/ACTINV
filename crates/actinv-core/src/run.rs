@@ -461,6 +461,86 @@ impl ReactionLibrary for ActivationLibrary {
     }
 }
 
+/// One mesh cell's row values from [`PreparedRun::collapse_rows_batched`] (P81):
+/// `values[row * stride + offset]` is the one-group value of `row` under `phi`.
+#[derive(Clone, Copy)]
+pub struct CellCollapse<'a> {
+    pub phi: &'a [f64],
+    pub values: &'a [f64],
+    pub stride: usize,
+    pub offset: usize,
+}
+
+/// The groupwise library with one cell's batched row values in place of `collapse_row` for the
+/// run's base spectrum `phi` (the same slice, by address). Every other call goes to the library.
+struct BatchedView<'a> {
+    base: &'a ActivationLibrary,
+    phi: &'a [f64],
+    cell: CellCollapse<'a>,
+}
+
+impl ReactionLibrary for BatchedView<'_> {
+    fn rows(&self) -> &[library::Row] {
+        self.base.rows()
+    }
+
+    fn group_count(&self) -> usize {
+        self.base.group_count()
+    }
+
+    fn boundaries_ev(&self) -> &[f64] {
+        self.base.boundaries_ev()
+    }
+
+    fn collapse_row(
+        &self,
+        row: usize,
+        phi: &[f64],
+        flux_denominator: f64,
+        first_flux_group: usize,
+        last_flux_group: usize,
+    ) -> f64 {
+        if std::ptr::eq(phi, self.phi) {
+            self.cell.values[row * self.cell.stride + self.cell.offset]
+        } else {
+            self.base.collapse_row(
+                row,
+                phi,
+                flux_denominator,
+                first_flux_group,
+                last_flux_group,
+            )
+        }
+    }
+
+    fn collapse_row_scaled(
+        &self,
+        row: usize,
+        phi: &[f64],
+        flux_denominator: f64,
+        first_flux_group: usize,
+        last_flux_group: usize,
+        scale: &dyn Fn(usize) -> f64,
+    ) -> f64 {
+        self.base.collapse_row_scaled(
+            row,
+            phi,
+            flux_denominator,
+            first_flux_group,
+            last_flux_group,
+            scale,
+        )
+    }
+
+    fn row_cross_section(&self, row: usize, group: usize) -> f64 {
+        self.base.row_cross_section(row, group)
+    }
+
+    fn fission_average_energy_ev(&self, row: usize, phi: &[f64]) -> Result<Option<f64>, String> {
+        self.base.fission_average_energy_ev(row, phi)
+    }
+}
+
 /// Immutable, verified nuclear data shared by ordinary and mesh solves.
 ///
 /// A prepared value owns the decompressed activation library, parsed decay records, decay
@@ -2454,6 +2534,17 @@ impl PreparedRun {
     }
 
     pub fn run(&self, spec: &Spec, entry_point: &str) -> Result<RunResult, String> {
+        self.run_with_collapse(spec, entry_point, None)
+    }
+
+    /// [`Self::run`] taking the base-spectrum row values from a batched collapse. They are used
+    /// only if `cell.phi` is bitwise the run's base spectrum; the result is the same either way.
+    pub fn run_with_collapse(
+        &self,
+        spec: &Spec,
+        entry_point: &str,
+        cell: Option<CellCollapse<'_>>,
+    ) -> Result<RunResult, String> {
         let mut profiler = RunProfiler::disabled();
         let physical = spec.physical_inputs()?;
         self.run_started_profiled(
@@ -2462,7 +2553,35 @@ impl PreparedRun {
             entry_point,
             std::time::Instant::now(),
             &mut profiler,
+            cell,
         )
+    }
+
+    /// Number of activation-library rows (the row range of [`Self::collapse_rows_batched`]).
+    pub fn library_row_count(&self) -> usize {
+        self.library.rows().len()
+    }
+
+    /// Batched one-group values for several spectra (see
+    /// `PreparedLibrary::collapse_rows_batched`). Returns false, leaving `out` untouched, unless
+    /// the library is groupwise.
+    pub fn collapse_rows_batched(
+        &self,
+        phis: &[&[f64]],
+        rows: std::ops::Range<usize>,
+        out: &mut [f64],
+    ) -> bool {
+        let group_count = self.library.group_count();
+        if phis.iter().any(|phi| phi.len() < group_count) {
+            return false;
+        }
+        match &self.library {
+            ActivationLibrary::Groupwise(library) => {
+                library.collapse_rows_batched(phis, rows, out);
+                true
+            }
+            _ => false,
+        }
     }
 
     fn run_started_profiled(
@@ -2472,6 +2591,7 @@ impl PreparedRun {
         entry_point: &str,
         t0: std::time::Instant,
         profiler: &mut RunProfiler,
+        cell_collapse: Option<CellCollapse<'_>>,
     ) -> Result<RunResult, String> {
         let network_started = profiler.start();
         self.ensure_compatible(spec, physical)?;
@@ -2540,7 +2660,9 @@ impl PreparedRun {
                 Ok(((pza, pliso, dza, dliso), *factor))
             })
             .collect::<Result<_, String>>()?;
-        let mut nuclides_scaled = self.nuclides.clone();
+        // Without decay_scale the prepared table is used as is; cloning it cost ~10 ms per mesh
+        // cell (P81).
+        let mut nuclides_scaled = (!decay_factors.is_empty()).then(|| self.nuclides.clone());
         for (key, factor) in &decay_factors {
             match ch.index.get(key) {
                 None => {
@@ -2557,11 +2679,14 @@ impl PreparedRun {
                 }
                 _ => {}
             }
-            if let Some(nu) = nuclides_scaled.get_mut(key) {
+            if let Some(nu) = nuclides_scaled
+                .as_mut()
+                .and_then(|table| table.get_mut(key))
+            {
                 nu.half_life /= *factor;
             }
         }
-        let nuclides = &nuclides_scaled;
+        let nuclides = nuclides_scaled.as_ref().unwrap_or(&self.nuclides);
         let decay_edges: Vec<(usize, usize, f64)> = if decay_factors.is_empty() {
             ch.decay.clone()
         } else {
@@ -2748,9 +2873,32 @@ impl PreparedRun {
                 rate_scales.as_ref(),
             )
         } else {
-            chain::ReactionAssembly {
-                yield_derivatives: Vec::new(),
-                triplets: chain::reaction_rates(
+            let batched = cell_collapse
+                .filter(|cell| {
+                    cell.phi.len() == phi.len()
+                        && cell
+                            .phi
+                            .iter()
+                            .zip(phi)
+                            .all(|(a, b)| a.to_bits() == b.to_bits())
+                })
+                .map(|cell| BatchedView {
+                    base: lib,
+                    phi,
+                    cell,
+                });
+            let triplets = match &batched {
+                Some(view) => chain::reaction_rates(
+                    view,
+                    lib_targets,
+                    phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut led,
+                    shield_plan.as_ref(),
+                    rate_scales.as_ref(),
+                ),
+                None => chain::reaction_rates(
                     lib,
                     lib_targets,
                     phi,
@@ -2760,6 +2908,10 @@ impl PreparedRun {
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
                 ),
+            };
+            chain::ReactionAssembly {
+                yield_derivatives: Vec::new(),
+                triplets,
                 derivatives: Vec::new(),
             }
         };
@@ -5124,8 +5276,14 @@ pub fn run_with_cache(
         cache.slot = Some((fingerprint, prepared));
     }
     let prepared = &cache.slot.as_ref().expect("cache slot populated").1;
-    let result =
-        prepared.run_started_profiled(spec, &physical, entry_point, started, &mut profiler)?;
+    let result = prepared.run_started_profiled(
+        spec,
+        &physical,
+        entry_point,
+        started,
+        &mut profiler,
+        None,
+    )?;
     profiler.emit(started.elapsed());
     Ok(result)
 }

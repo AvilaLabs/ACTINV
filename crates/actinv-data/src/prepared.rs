@@ -5,7 +5,7 @@
 //! spectrum-collapsed representation for ordinary single-spectrum runs.
 
 use crate::library::{
-    self, ensure_eof, read_bounds, read_npy_header, read_rows, require_payload_size,
+    self, ensure_eof, flux_window, read_bounds, read_npy_header, read_rows, require_payload_size,
     sha256_verified_member, NpyDtype, ReactionLibrary, Row,
 };
 use sha2::{Digest, Sha256};
@@ -52,6 +52,104 @@ pub struct PreparedLibrary {
 }
 
 impl PreparedLibrary {
+    /// One-group values of `rows` for several spectra in one pass over the stored data (P81).
+    ///
+    /// `out[(row - rows.start) * phis.len() + cell]` receives exactly
+    /// `collapse_row(row, phis[cell], ..)` with the window and denominator of
+    /// [`flux_window`]: for every (row, cell) the same products are added in the same increasing
+    /// group order from `+0.0` and divided by the same denominator. Only the independent sums of
+    /// different cells are interleaved, which changes no bit of any of them.
+    // Indexed loops keep the per-cell windows and the interleave explicit.
+    #[allow(clippy::needless_range_loop)]
+    pub fn collapse_rows_batched(
+        &self,
+        phis: &[&[f64]],
+        rows: std::ops::Range<usize>,
+        out: &mut [f64],
+    ) {
+        let cells = phis.len();
+        assert_eq!(
+            out.len(),
+            rows.len() * cells,
+            "batched collapse output size"
+        );
+        let windows: Vec<(f64, usize, usize)> = phis
+            .iter()
+            .map(|phi| flux_window(phi, self.group_count))
+            .collect();
+        let mut lows = vec![0usize; cells];
+        let mut highs = vec![0usize; cells];
+        let mut numerators = vec![0.0f64; cells];
+        // Fluxes transposed to a fixed stride of `LANES` cells per group (zero padding), so the
+        // common case below adds one independent accumulator per cell in fixed-width lanes.
+        const LANES: usize = 16;
+        let lanes = cells <= LANES;
+        let mut transposed = Vec::new();
+        if lanes {
+            transposed = vec![0.0f64; self.group_count * LANES];
+            for (cell, phi) in phis.iter().enumerate() {
+                for (group, flux) in phi[..self.group_count].iter().enumerate() {
+                    transposed[group * LANES + cell] = *flux;
+                }
+            }
+        }
+        for (slot, row) in rows.enumerate() {
+            let span = self.spans[row];
+            let span_end = span.first_group + span.value_count;
+            let mut union_low = usize::MAX;
+            let mut union_high = 0usize;
+            for cell in 0..cells {
+                let (_, first, last) = windows[cell];
+                // The same bounds as `collapse_row`.
+                let low = first.max(span.first_group);
+                let high = last.min(span_end).min(phis[cell].len());
+                lows[cell] = low;
+                highs[cell] = high;
+                if low < high {
+                    union_low = union_low.min(low);
+                    union_high = union_high.max(high);
+                }
+            }
+            numerators.fill(0.0);
+            let uniform = union_low < union_high
+                && (0..cells).all(|cell| lows[cell] == union_low && highs[cell] == union_high);
+            if lanes && uniform {
+                // Every cell adds every group of the union, in increasing order, into its own lane.
+                let mut accumulators = [0.0f64; LANES];
+                let stored = &self.values[span.value_offset + (union_low - span.first_group)
+                    ..span.value_offset + (union_high - span.first_group)];
+                for (sigma, fluxes) in stored.iter().zip(
+                    transposed[union_low * LANES..union_high * LANES]
+                        .as_chunks::<LANES>()
+                        .0,
+                ) {
+                    for lane in 0..LANES {
+                        accumulators[lane] += sigma * fluxes[lane];
+                    }
+                }
+                numerators.copy_from_slice(&accumulators[..cells]);
+            } else {
+                for group in union_low..union_high {
+                    let sigma = self.values[span.value_offset + (group - span.first_group)];
+                    for cell in 0..cells {
+                        if group >= lows[cell] && group < highs[cell] {
+                            numerators[cell] += sigma * phis[cell][group];
+                        }
+                    }
+                }
+            }
+            let row_out = &mut out[slot * cells..(slot + 1) * cells];
+            for cell in 0..cells {
+                let denominator = windows[cell].0;
+                row_out[cell] = if denominator > 0.0 {
+                    numerators[cell] / denominator
+                } else {
+                    0.0
+                };
+            }
+        }
+    }
+
     pub fn rows(&self) -> &[Row] {
         &self.rows
     }
@@ -2238,6 +2336,66 @@ mod tests {
             ],
             ngroups: 5,
             bounds: vec![1.0, 2.0, 4.0, 8.0, 16.0, 32.0],
+        }
+    }
+
+    #[test]
+    fn batched_collapse_equals_single_cell_collapse_bit_for_bit() {
+        let scratch = scratch("batched-collapse");
+        let source = scratch.join("source.npz");
+        let mut dense = fixture();
+        // Rows with a leading gap, interior zeros, a negative zero and a late span.
+        dense.rows.push(Row {
+            target: 0,
+            mt: 16,
+            zap: 26_055,
+            lfs: 0,
+            lmf: 3,
+        });
+        dense.sig.extend_from_slice(&[0.0, 0.0, 1.0e-3, 0.0, 7.25]);
+        write_npz(&source, &dense).unwrap();
+        let library_sha = sha256_file(&source);
+        let index_sha = "22".repeat(32);
+        let prepared = load_or_prepare_groupwise_in(
+            &scratch.join("cache"),
+            source.to_str().unwrap(),
+            &library_sha,
+            &index_sha,
+        )
+        .unwrap();
+        let spectra: [&[f64]; 6] = [
+            &[0.0, 2.0, 3.0, 0.0, 5.0],
+            &[1.0, 0.0, 0.0, 0.0, 0.0],
+            &[0.0, 0.0, 0.0, 0.0, 0.0],
+            &[0.1, 0.2, 0.3, 0.4, 0.5],
+            &[0.0, 0.0, 0.0, 9.0, 1.0e-30],
+            &[3.0e14, 0.0, 1.0e-9, 0.0, 0.0],
+        ];
+        // Every flux positive: all cells share each row's window (the fixed-lane path).
+        let uniform: [&[f64]; 3] = [
+            &[0.1, 0.2, 0.3, 0.4, 0.5],
+            &[1.0, 2.0, 3.0, 4.0, 5.0],
+            &[5.0, 4.0, 3.0, 2.0, 1.0e-300],
+        ];
+        let rows = prepared.rows().len();
+        for spectra in [&spectra[..], &uniform[..]] {
+            let mut out = vec![f64::NAN; rows * spectra.len()];
+            prepared.collapse_rows_batched(spectra, 0..rows, &mut out);
+            let mut tail = vec![f64::NAN; (rows - 1) * spectra.len()];
+            prepared.collapse_rows_batched(spectra, 1..rows, &mut tail);
+            for (cell, phi) in spectra.iter().enumerate() {
+                let (denominator, first, last) = flux_window(phi, prepared.group_count());
+                for row in 0..rows {
+                    let single = prepared.collapse_row(row, phi, denominator, first, last);
+                    assert_eq!(out[row * spectra.len() + cell].to_bits(), single.to_bits());
+                    if row > 0 {
+                        assert_eq!(
+                            tail[(row - 1) * spectra.len() + cell].to_bits(),
+                            single.to_bits()
+                        );
+                    }
+                }
+            }
         }
     }
 

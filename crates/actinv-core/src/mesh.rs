@@ -5,7 +5,7 @@ use crate::flux::{
     atomic_output, rebin_equal_lethargy, sha256_file, FluxCell, FluxGeometry, FluxSource,
     FluxStream, RebinResult,
 };
-use crate::run::{PreparedRun, RunResult};
+use crate::run::{CellCollapse, PreparedRun, RunResult};
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options,
     PhotonOptions, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum, Step,
@@ -445,19 +445,95 @@ fn hex32(digest: &[u8; 32]) -> String {
     digest.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
+/// Cells whose flux collapse shares one pass over the library (P81); bounds the batch buffer to
+/// `COLLAPSE_BATCH_CELLS` values per library row.
+const COLLAPSE_BATCH_CELLS: usize = 16;
+/// Library rows per parallel task of a batched collapse.
+const COLLAPSE_ROW_BLOCK: usize = 4096;
+
+/// Solve the cells `to_solve` (chunk indices), in order, collapsing each batch of cells in one
+/// pass over the library. Every cell's result is the same as solving it alone.
+#[allow(clippy::too_many_arguments)]
+fn solve_cells(
+    mesh_spec: &MeshSpec,
+    prepared: &PreparedRun,
+    pool: &rayon::ThreadPool,
+    activation_boundaries: &[f64],
+    rebinned: &[RebinResult],
+    cell_materials: &[&Material],
+    input_cells: &[FluxCell],
+    to_solve: &[usize],
+) -> Vec<Result<(String, usize), String>> {
+    let mut solved = Vec::with_capacity(to_solve.len());
+    for batch in to_solve.chunks(COLLAPSE_BATCH_CELLS) {
+        let specs: Vec<Spec> = batch
+            .iter()
+            .map(|&index| {
+                mesh_spec.cell_spec(
+                    activation_boundaries.to_vec(),
+                    rebinned[index].flux_per_group.clone(),
+                    cell_materials[index],
+                )
+            })
+            .collect();
+        let fluxes: Vec<Vec<f64>> = specs.iter().map(Spec::flux_ascending).collect();
+        let phis: Vec<&[f64]> = fluxes.iter().map(Vec::as_slice).collect();
+        let rows = prepared.library_row_count();
+        // A lone cell gains nothing from a shared pass (the pass costs a fixed number of lanes),
+        // so it keeps the ordinary per-row collapse; the result is the same either way.
+        let batch_worthwhile = phis.len() >= 2;
+        let mut values = vec![0.0f64; rows * phis.len() * usize::from(batch_worthwhile)];
+        let batched = batch_worthwhile
+            && pool.install(|| {
+                values
+                    .par_chunks_mut(COLLAPSE_ROW_BLOCK * phis.len())
+                    .enumerate()
+                    .map(|(block, out)| {
+                        let start = block * COLLAPSE_ROW_BLOCK;
+                        let end = (start + COLLAPSE_ROW_BLOCK).min(rows);
+                        prepared.collapse_rows_batched(&phis, start..end, out)
+                    })
+                    .collect::<Vec<bool>>()
+                    .into_iter()
+                    .all(|done| done)
+            });
+        let results: Vec<Result<(String, usize), String>> = pool.install(|| {
+            batch
+                .par_iter()
+                .enumerate()
+                .map(|(slot, &index)| {
+                    let cell = batched.then_some(CellCollapse {
+                        phi: phis[slot],
+                        values: &values,
+                        stride: phis.len(),
+                        offset: slot,
+                    });
+                    solve_result(
+                        mesh_spec,
+                        prepared,
+                        &specs[slot],
+                        cell,
+                        &input_cells[index].id,
+                    )
+                })
+                .collect()
+        });
+        solved.extend(results);
+    }
+    solved
+}
+
 fn solve_result(
     mesh_spec: &MeshSpec,
     prepared: &PreparedRun,
-    activation_boundaries: &[f64],
-    flux_per_group: Vec<f64>,
-    material: &Material,
+    spec: &Spec,
+    cell: Option<CellCollapse<'_>>,
     cell_id: &str,
 ) -> Result<(String, usize), String> {
-    let spec = mesh_spec.cell_spec(activation_boundaries.to_vec(), flux_per_group, material);
     spec.validate()
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let result = prepared
-        .run(&spec, "mesh")
+        .run_with_collapse(spec, "mesh", cell)
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let mut result =
         result_without_timing(result).map_err(|error| format!("cell '{cell_id}': {error}"))?;
@@ -768,21 +844,16 @@ fn write_mesh_body(
             pending.insert(signature, Pending::Solve(index));
             to_solve.push(index);
         }
-        let solved: Vec<Result<(String, usize), String>> = pool.install(|| {
-            to_solve
-                .par_iter()
-                .map(|&index| {
-                    solve_result(
-                        spec,
-                        prepared,
-                        activation_boundaries,
-                        rebinned[index].flux_per_group.clone(),
-                        cell_materials[index],
-                        &input_cells[index].id,
-                    )
-                })
-                .collect()
-        });
+        let solved = solve_cells(
+            spec,
+            prepared,
+            pool,
+            activation_boundaries,
+            &rebinned,
+            &cell_materials,
+            &input_cells,
+            &to_solve,
+        );
         for (result, &index) in solved.into_iter().zip(to_solve.iter()) {
             let (text, pruned) = result?;
             if spec.group_workloads

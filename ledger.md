@@ -1656,3 +1656,43 @@ quantities, not bulk clearance, so it is not substituted. The bundled table (`da
 svalinn/ALARA transcription) also carries RS-G-1.7 Table 1 natural-origin values (K-40 10 Bq/g;
 Gd-152, Hf-174, Re-187 1 Bq/g) although its `source` field names Table 2 only. The data file is left
 unchanged; `docs/BUDGET.md` now states both points.
+
+## Entry 63 — P81 chunk-batched mesh collapse: PASS, merged (2026-09-29)
+
+P81 (`843f514a…`) replaces P80's approach. A throwaway instrumented build (never committed) showed that
+collapsing all 167,735 library rows takes 38.6 of about 70 ms per iron mesh cell. Each row is one
+sequential chain of additions over roughly 34 M stored values, so the collapse is bound by addition
+latency and by streaming the 275 MB library once per cell. A further 9.9 ms per cell went to cloning
+the decay table. The change:
+
+- collapse up to 16 cells in one pass (rows outer, groups, cells in fixed-width lanes), each cell adding
+  exactly its own terms in the original order;
+- each cell's run takes its values from the batch only when its base spectrum is bitwise the batch
+  spectrum;
+- borrow the decay table when no `decay_scale` is given.
+
+Verdict `results/p81_verdict.json` from `controls/check_p81.py`; reference = master release
+`d85abd2e…`, candidate `c2b2d688…`:
+
+- G0 PASS. G1 PASS: fmt, clippy on core/data/cli, and core and data tests, including a bit-for-bit
+  batched-vs-single collapse test on both the mixed-window path and the fixed-lane path.
+- G2 PASS: all records identical on `fe_coupled`, `fe_p21like` and `ss316_r2s`, and on `fe_coupled`
+  with `threads` 3 and with `chunk_cells` 1.
+- G3 PASS: all 783 P75b single runs identical.
+- G4 PASS: local replay of the CI runtime steps, every step exit 0.
+- G5 PASS against the pre-registered 1.3× threshold. One-thread median wall time, fe_coupled
+  5.68 → 3.20 s (1.77×); reported only: fe_p21like 6.20 → 3.68 s (1.68×), ss316_r2s
+  17.3 → 13.0 s (1.33×).
+
+Two process notes:
+
+- **Rebuild after the first gate run.** The first candidate build ran the gates up to the speed step
+  (`target/p81/first_candidate_run.out`, not committed). It showed `chunk_cells` 1 slower than the
+  reference (7.5 vs 5.5 s), because a lone cell paid for all 16 lanes. Single-cell batches now use the
+  ordinary collapse, and every gate was rerun on the final build. No gate or threshold was changed.
+- **Checker overwrote the P80 verdict.** `check_p81.py` was derived from `check_p80.py` and at first
+  wrote its verdict to `results/p80_verdict.json`. The sealed P80 file was restored from git before this
+  commit, and the P81 verdict was re-derived from the unchanged run log.
+
+SS316 cells are now dominated by the CRAM solve: 16 sparse LU factorizations and refined solves per
+cell. That is the next target.
