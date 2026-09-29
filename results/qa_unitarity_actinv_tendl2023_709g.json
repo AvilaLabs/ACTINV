@@ -1,0 +1,27 @@
+{
+ "schema": "actinv-qa-unitarity-1",
+ "library": "/home/connoravila/nuclear-data/tendl-2023/actinv_tendl2023_709g.npz",
+ "library_sha256": "a9f90234e42c538676de904c734510c4a62126017459e638ed338d052072e92c",
+ "rows_scanned": 164315,
+ "rows_violating": 1,
+ "target_files_violating": 1,
+ "bound": "pi*lambdabar^2*(L+1)^2, L=ceil(kR)+1, R=1.35 A^(1/3) fm, evaluated at the group lower edge",
+ "violations": [
+  {
+   "row": 4069,
+   "target_file": "n_017-Cl-35_1725.dat",
+   "za": 17035,
+   "liso": 0,
+   "mt": 16,
+   "product_za": 17034,
+   "max_ratio_to_bound": 10.20379914248721,
+   "group": 615,
+   "group_low_eV": 13000000.0,
+   "sigma_barns": 19.470919721581232,
+   "bound_barns": 1.9082029594748697
+  }
+ ],
+ "files": [
+  "n_017-Cl-35_1725.dat"
+ ]
+}

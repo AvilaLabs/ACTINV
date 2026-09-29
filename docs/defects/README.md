@@ -21,3 +21,15 @@ without re-finding anything.
   considering it reportable — regenerated evaluations often self-correct.
 - Historical/sealed reports remain at their original locations under
   `docs/`; new entries go here.
+
+## Index
+
+Report status is the maintainer's call. `held` = documented, not sent; small defects are
+collected and reported together.
+
+| entry | library | status |
+|---|---|---|
+| [pb208-nan-field.md](pb208-nan-field.md) | see entry | see entry |
+| [tendl2023-o18-width-inconsistency.md](tendl2023-o18-width-inconsistency.md) | TENDL-2023 | see entry |
+| [tendl2023-orphan-product-sections.md](tendl2023-orphan-product-sections.md) | TENDL-2023 | see entry |
+| [unitarity-violating-partial-cross-sections.md](unitarity-violating-partial-cross-sections.md) | TENDL-2025 (242 exotic files, new in 2025); TENDL-2023 Cl-35 (n,2n) | held |

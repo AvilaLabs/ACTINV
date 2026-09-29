@@ -1,0 +1,82 @@
+{
+ "G0": {
+  "failed": [],
+  "missing": 0,
+  "pass": true
+ },
+ "G1": {
+  "max_by_amplitude": {
+   "1e+10": 1.4510968357800921e-12,
+   "1e+13": 3.1787201786703644e-13,
+   "1e+15": 6.762162943742714e-12
+  },
+  "max_e_agg": 6.762162943742714e-12,
+  "pass": true,
+  "worst_at": "R__ss316ln__mix__1e+15 step 7 (Ni63)"
+ },
+ "G2": {
+  "compared": 460,
+  "differing": [],
+  "pass": true
+ },
+ "G3": {
+  "fe_p21like": {
+   "bitwise_identical_steps": false,
+   "cells": 60,
+   "new_cells_per_s": 9.622049485244071,
+   "old_cells_per_s": 3.01694329731507,
+   "speedup": 3.189337198948094
+  },
+  "pass": false,
+  "ss316_r2s": {
+   "bitwise_identical_steps": true,
+   "cells": 60,
+   "new_cells_per_s": 3.7909708087358087,
+   "old_cells_per_s": 1.9331506697955199,
+   "speedup": 1.9610322505988635
+  }
+ },
+ "fns_fe_descriptive": {
+  "max_rel_activity_change": 1.6337420224102402e-13,
+  "max_rel_heat_change": 1.0848409610476387e-13,
+  "mode_new": "trace",
+  "mode_old": "trace",
+  "n_changed": 20,
+  "nuclides_changed": [
+   "Co58",
+   "Co58m1",
+   "Cr55",
+   "Cr56",
+   "Cr57",
+   "Cr58",
+   "Fe55",
+   "Fe59",
+   "Fe60",
+   "Mn56",
+   "Mn57",
+   "Mn58",
+   "Mn58m1",
+   "Mn59",
+   "Ti51",
+   "Ti52",
+   "V52",
+   "V53",
+   "V54",
+   "V55"
+  ]
+ },
+ "inputs": {
+  "new_binary_sha256": "8f7777eef7b5b0256aa37e5a87c3cc6adf1cd3aeb463d7a0ec28ca78e51d9688",
+  "new_checkpoint_sha256": "eedff527d6b12b8253c947f92950be09d9667a568c79caa0e860024fb4a77c0c",
+  "old_binary_sha256": "8113231b63609933c264c8c2e67a6eec157899c545e38e4aac1fe3eeb4e6a9ea",
+  "p75b_checkpoint_sha256": "fe0c8b3a969b72a32f91223b4ea472b3ee23b5e920a5c0e07c04538430410a7e",
+  "protocol_sha256": "dae03e2be5bfee597e6f9f914c85dfc5185ac3bfbc25ac68e957bc4ae2f6d5b4"
+ },
+ "protocol": "ACTINV-P77",
+ "summary": {
+  "G0": true,
+  "G1": true,
+  "G2": true,
+  "G3": false
+ }
+}

@@ -1530,3 +1530,42 @@ data-handling repair carries a regression test that fails on the pre-repair code
   unchanged and the CI-drawn `comparison.svg` was kept (a redraw differed only in version stamp and element
   IDs). Local replay of the workflow's steps: `check_fusion_isotope_001`, `fusion_isotope_chain` and
   `test_fusion_isotope_chain` (9 tests) pass.
+
+## Entry 57 — Linear-response evidence, impurity budget, trace/mesh repair, data QA, OpenMC adapter (2026-09-29)
+
+Protocol-first studies of activation as a linear operator, each frozen and hashed before evidence
+(`protocols/protocol_hash.txt`), each verdict derived by its checker.
+
+- **P75 flux linearity** (`ACTINV-P75`, `controls/p75_linear_response.py`, `check_p75.py`,
+  `results/p75_verdict.json`, `p75_summary.md`). G0 PASS. G1 FAIL: a test-design artifact (U−B
+  cancellation against K-40/W-180 background at unit flux). G2 FAIL: linearity in flux breaks at vessel
+  fluence in soft spectra (Co-58, Ta-182, Na-22, Eu-152 product burn-up; Eu-151 bulk burn-up;
+  second-order Co-60, Zn-65, Re-186m in pure elements). It holds within 0.5 % in a D-T spectrum up to
+  3.2e20 n/cm² for cooling ≤ 1 y. G4 PASS vacuously: 0 of 672 pairs certified, because the P70 slider
+  bound `tau_p` is set by Mo-86 on every run (see the unitarity entry below).
+- **P75b composition superposition** (`ACTINV-P75B`, `results/p75b_*`). Coupled/reach runs are exactly
+  linear in composition at fixed flux (max 1.06e-11, 1e10–1e15, all spectra). Trace mode was not
+  (up to 0.51 at 1e15), which P77 traced to dropped bulk production.
+- **P76 impurity budget** (`ACTINV-P76` + Amendment A, `controls/p76_impurity_budget.py`,
+  `p76a_impurity_budget.py`, `results/p76_verdict.json`, `p76a_verdict.json`). One coupled run per
+  element gives dCI/dw with Fe as balance; full solves at the computed edges reproduce the budget to
+  ≤ 3e-15 (edge CI 0.9999999999999991). Vessel-fluence EUROFER-type and 316-type steel cannot clear at
+  100 y at any impurity level (C-14 from N; Ni-63). Ex-vessel EUROFER-type (Amendment A): Co binds at
+  50 y (~1 ppm), N at 100 y (~62 ppm vs 300 ppm spec). The bundled clearance table has no Ag-108m entry;
+  no value was invented.
+- **P77 trace reservoir repair and span-bounded collapse** (`ACTINV-P77`, `controls/p77_verify.py`,
+  `results/p77_verdict.json`, `p77_summary.md`). Code on branch `p77-trace-mesh` (not on master): trace
+  mode tracks production into bulk nuclides in hybrid reservoir states instead of dropping it, a
+  tracked nuclide's activity no longer overwrites its bulk activity (output and response snapshot), and
+  `collapse_row` loops only over the flux window ∩ the row's span. G0 PASS, G1 PASS (trace additivity
+  6.8e-12), G2 PASS (460/460 coupled runs bitwise identical), G3 FAIL by protocol design (the Fe mesh
+  profile runs in trace mode; the same mesh in coupled mode is bitwise identical). Mesh 2.0–3.4× faster.
+  Trace-mode CI baselines for multi-element materials will move when the branch lands.
+- **Unitarity screen** (`controls/qa_unitarity.py`, `results/qa_unitarity_*.json`,
+  `docs/defects/unitarity-violating-partial-cross-sections.md`, status held). TENDL-2025: 269 rows in 242
+  exotic files above the partial-wave ceiling, none a natural target, new in 2025. TENDL-2023: one
+  natural-target violation (Cl-35 (n,2n), 10×), corrected in 2025.
+- **OpenMC R2S adapter** (`contrib/openmc_r2s/`). `ActinvR2SManager` subclasses OpenMC 0.15.3
+  `R2SManager` and replaces step 2 with one `actinv mesh` run; OpenMC's step 3/4 run unmodified.
+  Engineering demo, not protocol evidence (`results/openmc_r2s_demo.json`): SS316 cube, dose ratio
+  ACTINV/OpenMC 1.019 ± 0.011; 19 s vs 850 s end to end, the difference being OpenMC's default step 1.

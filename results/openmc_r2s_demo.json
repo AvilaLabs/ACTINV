@@ -1,0 +1,29 @@
+{
+ "what": "engineering demo, not a frozen-protocol validation: SS316 20 cm cube, 14.1 MeV point source 1e17 n/s for 1 y, 1e6 s cooling, 2x2x2 mesh, dose in air shell at 30-31 cm, 20k particles x 5 batches each transport",
+ "openmc_r2s_defaults": {
+  "step1_s": 828.7902954969904,
+  "step2_s": 10.97099474305287,
+  "step3_s": 10.422200033965055,
+  "photons_per_s": 6094401614502592.0,
+  "dose_per_photon_pSv_cm2": 3311755523259680.5,
+  "dose_sd": 22296246305265.71,
+  "dose_rate_Sv_h": 1019.7936990070901
+ },
+ "actinv_adapter": {
+  "step1_s": 9.182675904012285,
+  "step2_s": 4.9590231259935535,
+  "step3_s": 4.935548148991074,
+  "photons_per_s": 8399308625584894.0,
+  "dose_per_photon_pSv_cm2": 3374218603020767.0,
+  "dose_sd": 28757889135166.055,
+  "dose_rate_uSv_h": 1039028046.0817908,
+  "dose_rate_Sv_h": 1039.0280460817908
+ },
+ "dose_ratio_actinv_over_openmc": 1.0188610177660715,
+ "ratio_1sigma": 0.010987742783275318,
+ "notes": [
+  "OpenMC arm step1 = OpenMC default get_microxs_and_flux (reaction-rate tallies for all chain nuclides); first combined run was OOM-killed in its 8G cgroup during the ACTINV arm, so the ACTINV arm was rerun alone with the adapter's slim step1",
+  "data differ: OpenMC arm ENDF/B-VIII.1 + p32 chain.xml; ACTINV arm TENDL-2025 709g + ENDF/B-VIII.0/JEFF-3.3 decay; photon transport ENDF/B-VIII.1 in both",
+  "tallies are scaled by total source strength in OpenMC 0.15.3; the first-run dose_rate field in the log double-counted strength"
+ ]
+}
