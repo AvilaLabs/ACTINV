@@ -99,6 +99,80 @@ class _Results(list):
     """Stand-in for openmc.deplete.Results: index 0 = before irradiation, i = after step i."""
 
 
+def build_schedule(timesteps, source_rates, timestep_units="s"):
+    """ACTINV schedule entries (durations in seconds, flux relative to a reference source rate).
+
+    ``source_rates`` may be a single value (applied to every timestep, matching OpenMC's own
+    convention) or one value per timestep. The reference rate is the first positive rate in the
+    sequence; every schedule entry's "flux" multiplier is its own rate divided by that reference,
+    so this assumes a single, constant neutron spectral shape that only scales up and down with
+    source strength (irradiation steps share one reference rate; cooling steps use 0.0). Returns
+    ``(schedule, reference)``.
+    """
+    rates = [float(r) for r in (source_rates if np.iterable(source_rates) else [source_rates] * len(timesteps))]
+    durations = []
+    for step in timesteps:
+        value, unit = step if isinstance(step, tuple) else (step, timestep_units)
+        if unit not in _UNITS_S:
+            raise ValueError(f"unsupported timestep unit {unit!r}")
+        durations.append(float(value) * _UNITS_S[unit])
+    reference = next((r for r in rates if r > 0.0), 1.0)
+    schedule = [{"dt": f"{d!r} s", "flux": r / reference} for d, r in zip(durations, rates)]
+    return schedule, reference
+
+
+def flux_record_lines(bounds, region_names, region_volumes, fluxes, reference):
+    """``actinv-flux-1`` NDJSON lines (header, one cell record per region, footer).
+
+    ``fluxes[i]`` is OpenMC's per-group track length per source particle for region ``i``
+    (n·cm / source particle); dividing by the region volume and scaling by ``reference`` (see
+    ``build_schedule``) converts it to a physical flux in n cm^-2 s^-1.
+    """
+    bounds = [float(b) for b in bounds]
+    lines = [json.dumps({"record": "header", "schema": "actinv-flux-1",
+                         "source": {"format": "openmc.deplete.get_microxs_and_flux", "path": "memory",
+                                    "sha256": "0" * 64},
+                         "energy_boundaries_eV": bounds, "flux_units": "n cm^-2 s^-1",
+                         "cell_count": len(region_volumes)})]
+    total = 0.0
+    for i, (vol, flux) in enumerate(zip(region_volumes, fluxes)):
+        if not vol or vol <= 0.0:
+            raise ValueError(f"activation region {i} ({region_names[i]}) has no volume")
+        phi = np.asarray(flux, dtype=float).ravel() / vol * reference
+        if phi.size != len(bounds) - 1:
+            raise RuntimeError(f"region {i}: {phi.size} flux groups, library has {len(bounds) - 1}")
+        lines.append(json.dumps({"record": "cell", "ordinal": i, "id": str(i),
+                                 "flux_per_group": [float(x) for x in phi], "flux_total": float(phi.sum())}))
+        total += float(phi.sum())
+    lines.append(json.dumps({"record": "footer", "cell_count": len(region_volumes), "flux_sum_over_cells": total}))
+    return lines
+
+
+def parse_photon_groups(result_path, mats, n_steps):
+    """Per-schedule-step photon groups keyed by activation-material id, from an ``actinv mesh``
+    result NDJSON. Each ``actinv mesh`` cell record's ``id`` field round-trips the region index
+    (as a string) written into the flux NDJSON by ``flux_record_lines``, so ``mats[int(id)]``
+    recovers the OpenMC activation material for that region.
+    """
+    per_step = [dict() for _ in range(n_steps)]
+    with open(result_path) as f:
+        for line in f:
+            rec = json.loads(line)
+            if rec.get("record") != "cell":
+                continue
+            mat_id = str(mats[int(rec["id"])].id)
+            for k, step in enumerate(rec["result"]["steps"]):
+                groups = [(g["centroid_eV"], g["photons_s"])
+                          for g in (step.get("photon_source") or {}).get("groups", []) if g["photons_s"] > 0.0]
+                per_step[k][mat_id] = groups or None
+    return per_step
+
+
+def build_results_shim(per_step):
+    """``_Results`` with index 0 = pre-irradiation (no source), index i = after schedule step i."""
+    return _Results([_Step({})] + [_Step(m) for m in per_step])
+
+
 class ActinvR2SManager(openmc.deplete.R2SManager):
     def __init__(self, neutron_model, domains, photon_model=None, *, library, decay_primary,
                  decay_fallback=None, actinv_bin="actinv", options=None, photon=None, threads=1):
@@ -145,35 +219,13 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             raise RuntimeError(f"{len(fluxes)} flux vectors for {len(mats)} activation regions")
 
         # schedule: durations in seconds; ACTINV multipliers relative to a reference source rate
-        rates = [float(r) for r in (source_rates if np.iterable(source_rates) else [source_rates] * len(timesteps))]
-        durations = []
-        for step in timesteps:
-            value, unit = step if isinstance(step, tuple) else (step, timestep_units)
-            if unit not in _UNITS_S:
-                raise ValueError(f"unsupported timestep unit {unit!r}")
-            durations.append(float(value) * _UNITS_S[unit])
-        reference = next((r for r in rates if r > 0.0), 1.0)
-        schedule = [{"dt": f"{d!r} s", "flux": r / reference} for d, r in zip(durations, rates)]
+        schedule, reference = build_schedule(timesteps, source_rates, timestep_units)
 
         # flux records: OpenMC reports n-cm per source particle for each region
-        bounds = [float(b) for b in library_bounds(self.library)]
-        lines = [json.dumps({"record": "header", "schema": "actinv-flux-1",
-                             "source": {"format": "openmc.deplete.get_microxs_and_flux", "path": "memory",
-                                        "sha256": "0" * 64},
-                             "energy_boundaries_eV": bounds, "flux_units": "n cm^-2 s^-1",
-                             "cell_count": len(mats)})]
-        materials, total = {}, 0.0
-        for i, (mat, flux) in enumerate(zip(mats, fluxes)):
-            if not mat.volume or mat.volume <= 0.0:
-                raise ValueError(f"activation region {i} ({mat.name}) has no volume")
-            phi = np.asarray(flux, dtype=float).ravel() / mat.volume * reference
-            if phi.size != len(bounds) - 1:
-                raise RuntimeError(f"region {i}: {phi.size} flux groups, library has {len(bounds) - 1}")
-            materials[str(i)] = material_to_actinv(mat, mat.volume)
-            lines.append(json.dumps({"record": "cell", "ordinal": i, "id": str(i),
-                                     "flux_per_group": [float(x) for x in phi], "flux_total": float(phi.sum())}))
-            total += float(phi.sum())
-        lines.append(json.dumps({"record": "footer", "cell_count": len(mats), "flux_sum_over_cells": total}))
+        bounds = library_bounds(self.library)
+        lines = flux_record_lines(bounds, [mat.name for mat in mats], [mat.volume for mat in mats],
+                                  fluxes, reference)
+        materials = {str(i): material_to_actinv(mat, mat.volume) for i, mat in enumerate(mats)}
         flux_path = output_dir / "flux.ndjson"
         flux_path.write_text("\n".join(lines) + "\n")
 
@@ -197,16 +249,6 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             raise RuntimeError(f"actinv mesh failed:\n{proc.stderr[-4000:]}")
 
         # photon groups per region and step -> results shim keyed by activation-material id
-        per_step = [dict() for _ in schedule]
-        with open(result_path) as f:
-            for line in f:
-                rec = json.loads(line)
-                if rec.get("record") != "cell":
-                    continue
-                mat_id = str(mats[int(rec["id"])].id)
-                for k, step in enumerate(rec["result"]["steps"]):
-                    groups = [(g["centroid_eV"], g["photons_s"])
-                              for g in (step.get("photon_source") or {}).get("groups", []) if g["photons_s"] > 0.0]
-                    per_step[k][mat_id] = groups or None
-        self.results["depletion_results"] = _Results([_Step({})] + [_Step(m) for m in per_step])
+        per_step = parse_photon_groups(result_path, mats, len(schedule))
+        self.results["depletion_results"] = build_results_shim(per_step)
         self.results["actinv_mesh_result"] = result_path
