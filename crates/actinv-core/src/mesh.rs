@@ -290,7 +290,9 @@ struct MeshCellRecord {
     #[serde(skip_serializing_if = "Option::is_none")]
     source_relative_error: Option<Vec<f64>>,
     rebin: RebinLedger,
-    result: serde_json::Value,
+    /// The cell's result text, written verbatim (P82). With `float_roundtrip`, parsing it into a
+    /// `Value` and serializing again would reproduce it byte for byte, so the round trip is skipped.
+    result: Box<serde_json::value::RawValue>,
 }
 
 #[derive(Debug, Serialize)]
@@ -557,7 +559,7 @@ fn solve_result(
 fn cell_record(
     cell: &FluxCell,
     rebinned: &RebinResult,
-    result: serde_json::Value,
+    result: Box<serde_json::value::RawValue>,
     material_sha256: String,
 ) -> MeshCellRecord {
     MeshCellRecord {
@@ -880,11 +882,10 @@ fn write_mesh_body(
                 continue;
             }
             let (text, pruned) = resolved[index]
-                .as_ref()
+                .take()
                 .expect("every unsolved cell resolves to a result string");
-            let result: serde_json::Value = serde_json::from_str(text)
+            let result = serde_json::value::RawValue::from_string(text)
                 .map_err(|error| format!("cell '{}': {error}", cell.id))?;
-            let pruned = *pruned;
             let record = cell_record(
                 cell,
                 &rebinned[index],
@@ -1152,6 +1153,66 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn spliced_result_text_equals_round_tripped_record_byte_for_byte() {
+        #[derive(serde::Serialize)]
+        struct Record<T> {
+            record: &'static str,
+            ordinal: u64,
+            result: T,
+        }
+        let mut result = serde_json::Map::new();
+        let floats = [
+            -0.0,
+            0.0,
+            f64::MIN_POSITIVE / 3.0,
+            5e-324,
+            f64::MAX,
+            -1.7976931348623157e308,
+            0.1,
+            1.0 / 3.0,
+            2.0f64.powi(60) + 1.0,
+            123456789.12345679,
+            6.02214076e23,
+            1e-17,
+            f64::NAN,
+            f64::INFINITY,
+        ];
+        result.insert("floats".into(), serde_json::json!(floats));
+        result.insert(
+            "u64".into(),
+            serde_json::json!([u64::MAX, 0u64, 1u64 << 53]),
+        );
+        result.insert("i64".into(), serde_json::json!([i64::MIN, -1i64, i64::MAX]));
+        result.insert(
+            "strings".into(),
+            serde_json::json!([
+                "quote \" backslash \\ tab \t",
+                "\u{1}\u{1f}",
+                "é ☢ 𝔸",
+                "</script>"
+            ]),
+        );
+        result.insert(
+            "nested".into(),
+            serde_json::json!({"z": [1.5, {"b": -0.0, "a": null}], "a": true}),
+        );
+        let text = serde_json::to_string(&serde_json::Value::Object(result)).unwrap();
+        let round_tripped = serde_json::to_string(&Record {
+            record: "cell",
+            ordinal: 7,
+            result: serde_json::from_str::<serde_json::Value>(&text).unwrap(),
+        })
+        .unwrap();
+        let spliced = serde_json::to_string(&Record {
+            record: "cell",
+            ordinal: 7,
+            result: serde_json::value::RawValue::from_string(text).unwrap(),
+        })
+        .unwrap();
+        assert_eq!(spliced, round_tripped);
+    }
+
     use super::*;
     use std::collections::BTreeMap;
 
