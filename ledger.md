@@ -1696,3 +1696,27 @@ Two process notes:
 
 SS316 cells are now dominated by the CRAM solve: 16 sparse LU factorizations and refined solves per
 cell. That is the next target.
+
+## Entry 64 — P82 verbatim mesh cell result text: FAIL as frozen, not merged (2026-09-29)
+
+P82 (`d3739dbf…`) targeted the part of an SS316 mesh cell spent outside the solver. A throwaway probe
+measured per cell: solve 70 ms, result → `Value` 34 ms, `Value` → text 29 ms, for 9.2 MB of text per
+cell (553 MB for 60 cells). The runner then parsed that text back and serialized it again to write
+the cell record. The candidate writes the text verbatim as a `RawValue`. That is byte-identical because
+`float_roundtrip` makes the parse/serialize round trip exact. Code is on branch
+`p82-raw-cell-result` (`9210217`); master is unchanged. Verdict `results/p82_verdict.json`:
+
+- G0, G1 PASS, including a byte-equality test of spliced vs round-tripped records with −0.0,
+  subnormals, extremes, non-finite values, 64-bit integer extremes and escaped strings.
+- G2: all three profiles byte-identical and the resumed run identical. **FAIL** on the
+  `group_workloads` variant. Diagnosed after the verdict: reference and candidate are byte-identical
+  when given the same `group_workloads` spec. The only differing line against the protocol's plain
+  reference is the header, whose spec fingerprint includes `group_workloads` by design. This is a
+  protocol design error, not an output change.
+- G5 **FAIL**: `ss316_r2s` one-thread median 16.20 → 12.47 s = 1.299× against the pre-registered
+  1.3×. `fe_coupled` and `fe_p21like` are unchanged (1.00×), as expected for their small records.
+
+No amendment was written: the threshold stands. One observation that was not measured: with
+`threads` > 1, cells are solved and serialized in parallel, but the parse and write happen serially on
+the collecting thread. The saved round trip may therefore matter more in multi-threaded runs. That
+would need its own protocol and gate before it counts.

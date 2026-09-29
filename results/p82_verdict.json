@@ -1,0 +1,227 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "release": "0",
+   "test": "0"
+  },
+  "pass": true,
+  "unit_test_ok": true
+ },
+ "G2": {
+  "pass": false,
+  "profiles": {
+   "fe_coupled": {
+    "cand": {
+     "body_lines": 61,
+     "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 63,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 34,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "pass": true,
+    "ref": {
+     "body_lines": 61,
+     "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 63,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 34,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    }
+   },
+   "fe_p21like": {
+    "cand": {
+     "body_lines": 61,
+     "body_sha256": "7cecf3e8a40adfb6bd87e59425d3de8429ccead6d51fee82810d77eb67091e0c",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 64,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 35,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "pass": true,
+    "ref": {
+     "body_lines": 61,
+     "body_sha256": "7cecf3e8a40adfb6bd87e59425d3de8429ccead6d51fee82810d77eb67091e0c",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 64,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 35,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    }
+   },
+   "ss316_r2s": {
+    "cand": {
+     "body_lines": 61,
+     "body_sha256": "91dac06bea508ccafdb327c1fb25398a3042144f1bf0a048271e907791606ec0",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 1056,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 460,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "pass": true,
+    "ref": {
+     "body_lines": 61,
+     "body_sha256": "91dac06bea508ccafdb327c1fb25398a3042144f1bf0a048271e907791606ec0",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 1056,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 460,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    }
+   }
+  },
+  "variants": {
+   "group_workloads": {
+    "digest": {
+     "body_lines": 61,
+     "body_sha256": "1a0cd9efc8902042e041139c7cc19e74fa3e8856f14918272ce3b0d58500f218",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 63,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 34,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "pass": false,
+    "returncode": 0
+   },
+   "resume": {
+    "digest": {
+     "body_lines": 61,
+     "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 63,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 34,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "first_returncode": 0,
+    "kept_lines": 21,
+    "pass": true,
+    "returncode": 0
+   }
+  }
+ },
+ "G5": {
+  "gated_profile": "ss316_r2s",
+  "pass": false,
+  "profiles": {
+   "fe_coupled": {
+    "cand_median_s": 3.344151135010179,
+    "cand_wall_s": [
+     3.345732791989576,
+     3.334337819018401,
+     3.344151135010179
+    ],
+    "ref_median_s": 3.333964036020916,
+    "ref_wall_s": [
+     3.331851879018359,
+     3.3447066290536895,
+     3.333964036020916
+    ],
+    "speedup": 0.9969537564009552
+   },
+   "fe_p21like": {
+    "cand_median_s": 3.8402672020019963,
+    "cand_wall_s": [
+     3.835045629006345,
+     3.9008963860105723,
+     3.8402672020019963
+    ],
+    "ref_median_s": 3.8301880449871533,
+    "ref_wall_s": [
+     3.850252711039502,
+     3.8118784810067154,
+     3.8301880449871533
+    ],
+    "speedup": 0.9973754021570196
+   },
+   "ss316_r2s": {
+    "cand_median_s": 12.474338292027824,
+    "cand_wall_s": [
+     11.37118245702004,
+     12.51902094495017,
+     12.474338292027824
+    ],
+    "ref_median_s": 16.200013800000306,
+    "ref_wall_s": [
+     16.200013800000306,
+     16.18373884697212,
+     17.694510421017185
+    ],
+    "speedup": 1.2986671854453002
+   }
+  },
+  "threshold": 1.3
+ },
+ "inputs": {
+  "candidate_sha256": "53dedafbdc8f1ece15c69d85e99ed864b1e162b72cfd624e1537d6a80a8778fb",
+  "protocol_sha256": "d3739dbf653cb350e3b8ca4f4c8683544b754e3708164390b3ed42e0e0c38b2e",
+  "reference_sha256": "c2b2d6880465d4dd51fd1eb2857c8e9dd07a72d2d3d81be5122af42fbad4a714"
+ },
+ "protocol": "ACTINV-P82"
+}
