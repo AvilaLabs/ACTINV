@@ -1,6 +1,6 @@
 {
  "pass": true,
- "n": 5,
+ "n": 7,
  "checks": [
   {
    "name": "last submitted position landed",
@@ -24,6 +24,16 @@
   },
   {
    "name": "cache states reported",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "flux-only point was solved, not scaled",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "flux-only point latency recorded (23731 ms)",
    "pass": true,
    "detail": ""
   }

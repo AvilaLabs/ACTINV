@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+**Changed**
+
+- Workbench live sweep: the P70 flux-scaling shortcut is removed, so every slider position is
+  solved, including positions that change only `spectrum.total`. Its optical-depth bound did not
+  cover bulk burn-up or second-order production, and on TENDL-2025 it never certified at realistic
+  fluence (P75). The v1.3.1 release notes describe this as `options.flux_scale`; no such spec option
+  existed, only the workbench path. (P78)
+
 ## v1.3.1 — 2026-09-28
 
 **Fixed**

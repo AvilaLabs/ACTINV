@@ -1569,3 +1569,16 @@ Protocol-first studies of activation as a linear operator, each frozen and hashe
   `R2SManager` and replaces step 2 with one `actinv mesh` run; OpenMC's step 3/4 run unmodified.
   Engineering demo, not protocol evidence (`results/openmc_r2s_demo.json`): SS316 cube, dose ratio
   ACTINV/OpenMC 1.019 ± 0.011; 19 s vs 850 s end to end, the difference being OpenMC's default step 1.
+
+## Entry 58 — P70 flux-scaling shortcut retired in the live sweep (P78, 2026-09-29)
+
+Owner decision (option C of the P75 follow-up): the workbench live sweep no longer answers a
+flux-only slider move by scaling the last result. `scale_flux_result` and its tables are removed
+from `crates/actinv-gui/src/sweep.rs`; the smoke leg and `controls/g1_p69_live.py` now require a
+flux-only point to be solved with its own screen record. Reason: P75 G2 (the optical-depth bound
+does not cover bulk burn-up or second-order production) and G4 (never certified on TENDL-2025).
+Verdict `results/p78_verdict.json`: G0, G1, G3, G4 PASS; G2 FAIL by protocol drafting (the residue
+scan matched the negative assertion the protocol itself required). Per the protocol, this change
+stays on branch `slider-flux-scale-off` pending an owner decision. Cost: a flux-only move is a
+cold solve because the prepared-run fingerprint includes the spectrum total (release CLI 0.99 s on
+the smoke fixture). See `results/p78_summary.md`.

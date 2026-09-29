@@ -333,9 +333,6 @@ pub fn spawn_sweep_live(bmin: f64) -> Result<LiveSweepHandle, String> {
         .stack_size(crate::model::SOLVER_STACK_BYTES)
         .spawn(move || {
             let mut cache = actinv_core::run::PreparedCache::new();
-            // P70: the last (injected doc, result) pair — a flux-only
-            // change from it is answered by certified scaling, no solve.
-            let mut scaled_base: Option<(Value, Value)> = None;
             let (lock, cvar) = &*worker_pending;
             loop {
                 let taken = {
@@ -373,32 +370,23 @@ pub fn spawn_sweep_live(bmin: f64) -> Result<LiveSweepHandle, String> {
                 })(
                 );
                 let t0 = std::time::Instant::now();
-                // certified fast path: a pure flux re-normalisation of the
-                // last solved point answers by scaling, zero solve.
-                let scaled = injected.as_ref().ok().and_then(|(_, text)| {
-                    let doc: Value = serde_json::from_str(text).ok()?;
-                    let (bd, br) = scaled_base.as_ref()?;
-                    scale_flux_result(bd, br, &doc).ok().flatten()
-                });
-                let (result, cache_hit, kept, digest) = match (scaled, injected) {
-                    (Some(scaled_v), Ok((_, text))) => {
-                        (Ok(scaled_v), None, None, sha256_hex(text.as_bytes()))
-                    }
-                    (_, Ok((spec, text))) => {
+                // Every position is solved, flux-only changes included: the
+                // P70 flux-scaling shortcut was retired (P78) because its
+                // optical-depth bound does not cover bulk burn-up or
+                // second-order production and never certified at vessel
+                // fluence (P75 G2/G4).
+                let (result, cache_hit, kept, digest) = match injected {
+                    Ok((spec, text)) => {
                         let digest = sha256_hex(text.as_bytes());
-                        let doc: Value = serde_json::from_str(&text).unwrap_or(Value::Null);
                         let r = actinv_core::run::run_with_cache(&spec, "sweep-live", &mut cache)
                             .and_then(|v| serde_json::to_value(v).map_err(|e| e.to_string()));
                         let kept = r
                             .as_ref()
                             .ok()
                             .and_then(|v| v["screen"]["kept_states"].as_u64());
-                        if let Ok(rv) = &r {
-                            scaled_base = Some((doc, rv.clone()));
-                        }
                         (r, Some(cache.last_hit()), kept, digest)
                     }
-                    (_, Err(e)) => (Err(e), None, None, point.spec_sha256.clone()),
+                    Err(e) => (Err(e), None, None, point.spec_sha256.clone()),
                 };
                 if tx
                     .send(CompletedPoint {
@@ -547,129 +535,6 @@ pub fn spawn_sweep(
         cancel: cancel_tx,
         supervisor: Some(supervisor),
     })
-}
-
-/// Certified linear flux-scaling (P70). A flux-normalisation sweep point
-/// differs from a solved spec only in `spectrum.total`; in the trace
-/// regime every transmutation-driven response is linear in flux to order
-/// (product optical depth)². The scaled result carries a `flux_scale`
-/// certificate: relative correction bound `tau_p·|v−1|` (conservative —
-/// the leading nonlinear term is O(tau_p²·|v−1|)), refused above
-/// `FLUX_SCALE_MAX_CORRECTION`.
-#[cfg(not(target_arch = "wasm32"))]
-pub const FLUX_SCALE_MAX_CORRECTION: f64 = 1e-3;
-
-/// keys whose every numeric leaf scales linearly with flux
-#[cfg(not(target_arch = "wasm32"))]
-const LINEAR_CONTAINERS: &[&str] = &[
-    "activity_Bq_per_g",
-    "heat_W_per_g",
-    "heat_uW_g",
-    "heat_split_uW_g",
-    "normal_interval",
-    "conservative_interval",
-    "standard_uncertainty",
-    "modeled_standard_uncertainty",
-    "unmodeled_standard_uncertainty",
-    "nominal",
-];
-/// scalar leaf keys scaling linearly
-#[cfg(not(target_arch = "wasm32"))]
-const LINEAR_LEAVES: &[&str] = &[
-    "atoms_per_g",
-    "total_atoms_per_g",
-    "leakage_atoms_per_g",
-    "numerical_floor_atoms_per_g",
-    "heat_bound_from_below_floor_W_per_g",
-    "removed_heat_W_per_g_bound",
-];
-/// variance leaves scale quadratically
-#[cfg(not(target_arch = "wasm32"))]
-const VARIANCE_LEAVES: &[&str] = &["modeled_variance", "unmodeled_variance"];
-
-#[cfg(not(target_arch = "wasm32"))]
-fn scale_deep(v: &mut Value, factor: f64) {
-    match v {
-        Value::Number(n) => {
-            if let Some(f) = n.as_f64() {
-                *v = Value::from(f * factor);
-            }
-        }
-        Value::Array(a) => a.iter_mut().for_each(|x| scale_deep(x, factor)),
-        Value::Object(o) => o.values_mut().for_each(|x| scale_deep(x, factor)),
-        _ => {}
-    }
-}
-
-#[cfg(not(target_arch = "wasm32"))]
-fn walk_and_scale(v: &mut Value, factor: f64) {
-    match v {
-        Value::Array(a) => a.iter_mut().for_each(|x| walk_and_scale(x, factor)),
-        Value::Object(o) => {
-            for (k, x) in o.iter_mut() {
-                let key = k.as_str();
-                if LINEAR_CONTAINERS.contains(&key) {
-                    scale_deep(x, factor);
-                } else if VARIANCE_LEAVES.contains(&key) {
-                    scale_deep(x, factor * factor);
-                } else if LINEAR_LEAVES.contains(&key) {
-                    if let Some(f) = x.as_f64() {
-                        *x = Value::from(f * factor);
-                    }
-                } else {
-                    walk_and_scale(x, factor);
-                }
-            }
-        }
-        _ => {}
-    }
-}
-
-/// Build the flux-scaled result for `doc` from a solved base, or `None`
-/// when scaling is not certified (doc differs beyond `spectrum.total`,
-/// no optical-depth ledger, or the correction bound exceeds the cap).
-/// The emitted result's `spec` is replaced by the target document so the
-/// point digest binds the parameters the user sees.
-#[cfg(not(target_arch = "wasm32"))]
-pub fn scale_flux_result(
-    base_doc: &Value,
-    base_result: &Value,
-    doc: &Value,
-) -> Result<Option<Value>, String> {
-    let base_total = base_doc["spectrum"]["total"].as_f64().unwrap_or(0.0);
-    let total = doc["spectrum"]["total"].as_f64().unwrap_or(0.0);
-    if base_total <= 0.0 || total <= 0.0 {
-        return Ok(None);
-    }
-    let mut a = base_doc.clone();
-    let mut b = doc.clone();
-    a["spectrum"]["total"] = Value::Null;
-    b["spectrum"]["total"] = Value::Null;
-    if a != b {
-        return Ok(None); // differs beyond the normalisation — solve it
-    }
-    let v = total / base_total;
-    let tau_p = base_result["ledger"]["max_product_optical_depth"]
-        .as_f64()
-        .unwrap_or(f64::INFINITY);
-    let bound_rel = tau_p * (v - 1.0).abs();
-    if bound_rel > FLUX_SCALE_MAX_CORRECTION {
-        return Ok(None); // outside the certified-linear regime
-    }
-    let mut out = base_result.clone();
-    walk_and_scale(&mut out, v);
-    out["spec"] = doc.clone();
-    out["flux_scale"] = serde_json::json!({
-        "kind": "linear-trace-scaling",
-        "certified": true,
-        "flux_multiplier": v,
-        "base_total": base_total,
-        "total": total,
-        "relative_correction_bound": bound_rel,
-        "max_product_optical_depth": tau_p,
-        "rule": "trace-regime responses are linear in flux; the first nonlinear correction is a product-chain reaction at order tau_p^2·|v−1|, bounded conservatively by tau_p·|v−1|",
-    });
-    Ok(Some(out))
 }
 
 /// Response extraction for the plotted quantity — named, not implicit.

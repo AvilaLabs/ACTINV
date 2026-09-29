@@ -328,59 +328,36 @@ fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
             ));
         }
     }
-    // P70: certified flux scaling — submit two flux-normalisation points
-    // sequentially: the first solves (doc differs from the cooling
-    // schedule), the second differs only in spectrum.total and must be
-    // answered by scaling with a `flux_scale` certificate.
+    // P78: the P70 flux-scaling shortcut is retired — a point that differs
+    // from the last solved one only in spectrum.total must be solved, with
+    // its own screen certificate, and carry no flux_scale block.
     let flux_axis = SweepAxis::FluxNormalization;
     let flux_pts = sweep::sweep_specs(&document, &flux_axis, &[1.5, 2.5])
         .map_err(|e| format!("sweep_specs flux: {e}"))?;
-    h.submit(9, flux_pts[0].clone());
-    let mut flux_first = None;
-    while flux_first.is_none() {
-        match h.rx.recv_timeout(Duration::from_secs(600)) {
-            Ok(p) => {
-                if p.param == 1.5 {
-                    flux_first = Some(p);
+    let mut flux_landed = Vec::new();
+    for (k, fp) in flux_pts.iter().enumerate() {
+        h.submit(9, fp.clone());
+        loop {
+            match h.rx.recv_timeout(Duration::from_secs(600)) {
+                Ok(p) if p.param == fp.param => {
+                    flux_landed.push(p);
+                    break;
                 }
+                Ok(_) => {}
+                Err(e) => return Err(format!("live flux point {k}: {e}")),
             }
-            Err(e) => return Err(format!("live flux first point: {e}")),
         }
     }
-    h.submit(9, flux_pts[1].clone());
-    let mut flux_scaled = None;
-    while flux_scaled.is_none() {
-        match h.rx.recv_timeout(Duration::from_secs(120)) {
-            Ok(p) => {
-                if p.param == 2.5 {
-                    flux_scaled = Some(p);
-                }
-            }
-            Err(e) => return Err(format!("live flux scaled point: {e}")),
-        }
-    }
-    let fs = flux_scaled.as_ref().unwrap();
+    let fs = &flux_landed[1];
     let fv = fs
         .result
         .as_ref()
-        .map_err(|e| format!("flux scaled point failed: {e}"))?;
-    let cert = fv["flux_scale"]
-        .as_object()
-        .ok_or("scaled flux point carries no flux_scale certificate")?;
-    if cert["certified"] != true {
-        return Err("flux_scale certificate missing certified flag".into());
+        .map_err(|e| format!("flux-only point failed: {e}"))?;
+    if !fv["flux_scale"].is_null() {
+        return Err("flux-only point was answered by scaling, not solved".into());
     }
-    if cert["flux_multiplier"].as_f64().unwrap_or(0.0) != 2.5 / 1.5 {
-        return Err("flux_scale multiplier mismatch".into());
-    }
-    // the scaled response must equal multiplier × base response, and the
-    // scaled run must have skipped the solver (sub-second on debug too)
-    let base_v = flux_first.as_ref().unwrap().result.as_ref().unwrap();
-    let resp = crate::sweep::SweepResponse::TotalActivityBqPerG;
-    let a = resp.extract(base_v, 1).ok_or("base response missing")?;
-    let b = resp.extract(fv, 1).ok_or("scaled response missing")?;
-    if (b - a * (2.5 / 1.5)).abs() > 1e-12 * a.abs().max(1.0) {
-        return Err(format!("scaled response {b} != {a} × (2.5/1.5)"));
+    if fs.cache_hit.is_none() || fs.screen_kept_states.unwrap_or(0) == 0 {
+        return Err("flux-only point carries no screened-solve record".into());
     }
     drop(h);
 
@@ -394,9 +371,8 @@ fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
             .filter_map(|p| p.screen_kept_states)
             .collect::<Vec<_>>(),
         "cache_hits": done.iter().map(|p| p.cache_hit).collect::<Vec<_>>(),
-        "flux_scaled_ms": fs.elapsed_ms,
-        "flux_scale_certified": cert["certified"],
-        "flux_scale_bound_rel": cert["relative_correction_bound"],
+        "flux_only_point_solved": true,
+        "flux_only_point_ms": fs.elapsed_ms,
     });
     model::write_json(&output.join("sweep-live-smoke.json"), &report).map_err(|e| e.to_string())?;
     Ok(())
