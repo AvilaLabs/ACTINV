@@ -2748,9 +2748,34 @@ impl PreparedRun {
                 rate_scales.as_ref(),
             )
         } else {
-            chain::ReactionAssembly {
-                yield_derivatives: Vec::new(),
-                triplets: chain::reaction_rates(
+            // P80: skip production rows of targets the material can never populate. Only
+            // where the skipped columns are provably pruned before the solve (reach/rate
+            // pruning) and every step shares the base spectrum.
+            let single_spectrum = physical
+                .schedule
+                .iter()
+                .all(|step| step.spectrum_flux.is_none());
+            let prunes = matches!(spec.options.prune.as_str(), "reach" | "rate");
+            let triplets = if single_spectrum && prunes {
+                let mut seeds: Vec<usize> = bulk_inv
+                    .keys()
+                    .filter_map(|key| ch.index.get(key).copied())
+                    .collect();
+                for step in physical.schedule.iter() {
+                    for (key, _) in step.feed.iter() {
+                        if let Some(&c) = ch.index.get(key) {
+                            seeds.push(c);
+                        }
+                    }
+                }
+                let reachable = chain::reachable_columns(
+                    lib,
+                    lib_targets,
+                    ch,
+                    &effective_fission_yields,
+                    &seeds,
+                );
+                chain::reaction_rates_masked(
                     lib,
                     lib_targets,
                     phi,
@@ -2759,7 +2784,23 @@ impl PreparedRun {
                     &mut led,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
-                ),
+                    &reachable,
+                )
+            } else {
+                chain::reaction_rates(
+                    lib,
+                    lib_targets,
+                    phi,
+                    ch,
+                    &effective_fission_yields,
+                    &mut led,
+                    shield_plan.as_ref(),
+                    rate_scales.as_ref(),
+                )
+            };
+            chain::ReactionAssembly {
+                yield_derivatives: Vec::new(),
+                triplets,
                 derivatives: Vec::new(),
             }
         };

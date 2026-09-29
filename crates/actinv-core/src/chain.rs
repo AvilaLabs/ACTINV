@@ -240,6 +240,111 @@ pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
     .triplets
 }
 
+/// `reaction_rates` restricted by a reachable-column mask (P80). A row is skipped, before its
+/// collapse, only when its target column is unreachable and the row feeds nothing but the
+/// matrix: it is not a total-loss row (every diagonal loss feeds the optical-depth
+/// diagnostics), not fission, not an unmapped product, its target is in the chain, and its
+/// product maps directly onto a chain state (no ledger entry). The kept rows are processed
+/// in their original order, so every kept triplet and ledger sum is bitwise unchanged; the
+/// skipped triplets touch only columns that start empty and receive no production, which
+/// reach and rate pruning remove before the solve.
+#[allow(clippy::too_many_arguments)]
+pub fn reaction_rates_masked<L: ReactionLibrary + ?Sized>(
+    lib: &L,
+    lib_targets: &[(i32, i32)],
+    phi: &[f64],
+    chain: &Chain,
+    fission_yields: &HashMap<(i32, i32), EffectiveYields>,
+    led: &mut RateLedger,
+    shield: Option<&crate::shielding::ShieldPlan>,
+    rate_scale: Option<&HashMap<usize, f64>>,
+    reachable: &[bool],
+) -> Vec<(usize, usize, f64)> {
+    assemble_reaction_rates_masked(
+        lib,
+        lib_targets,
+        phi,
+        chain,
+        fission_yields,
+        led,
+        false,
+        shield,
+        rate_scale,
+        Some(reachable),
+    )
+    .triplets
+}
+
+/// Chain columns reachable from `seeds` through decay edges and through the product of any
+/// reaction row, independent of the flux values (a structural superset of what any spectrum
+/// can populate). Fission rows reach their yield products when effective yields are given.
+pub fn reachable_columns<L: ReactionLibrary + ?Sized>(
+    lib: &L,
+    lib_targets: &[(i32, i32)],
+    chain: &Chain,
+    fission_yields: &HashMap<(i32, i32), EffectiveYields>,
+    seeds: &[usize],
+) -> Vec<bool> {
+    let mut rows_by_column: Vec<Vec<usize>> = vec![Vec::new(); chain.n];
+    for (i, r) in lib.rows().iter().enumerate() {
+        if let Some(&c) = lib_targets.get(r.target).and_then(|t| chain.index.get(t)) {
+            rows_by_column[c].push(i);
+        }
+    }
+    let mut decay_successors: Vec<Vec<usize>> = vec![Vec::new(); chain.n];
+    for &(r, c, _) in &chain.decay {
+        if r != c && c < chain.n && r < chain.n {
+            decay_successors[c].push(r);
+        }
+    }
+    let mut seen = vec![false; chain.n];
+    let mut queue: std::collections::VecDeque<usize> = std::collections::VecDeque::new();
+    for &s in seeds {
+        if s < chain.n && !seen[s] {
+            seen[s] = true;
+            queue.push_back(s);
+        }
+    }
+    let visit = |c: usize, seen: &mut [bool], queue: &mut std::collections::VecDeque<usize>| {
+        if c < chain.n && !seen[c] {
+            seen[c] = true;
+            queue.push_back(c);
+        }
+    };
+    while let Some(c) = queue.pop_front() {
+        for &d in &decay_successors[c] {
+            visit(d, &mut seen, &mut queue);
+        }
+        for &i in &rows_by_column[c] {
+            let r = &lib.rows()[i];
+            if r.zap == -1 || r.lmf == -2 {
+                continue;
+            }
+            if r.mt == 18 && r.zap == 0 {
+                if let Some(y) = lib_targets
+                    .get(r.target)
+                    .and_then(|t| fission_yields.get(t))
+                {
+                    for product in y.products.keys() {
+                        if let Some(&p) = chain.index.get(product) {
+                            visit(p, &mut seen, &mut queue);
+                        }
+                    }
+                }
+                continue;
+            }
+            if let Some(&p) = chain
+                .index
+                .get(&(r.zap, r.lfs))
+                .or_else(|| chain.index.get(&(r.zap, 0)))
+            {
+                visit(p, &mut seen, &mut queue);
+            }
+        }
+    }
+    seen
+}
+
 /// Reaction-rate assembly plus the exact matrix contribution of every activation-library row.
 #[allow(clippy::too_many_arguments)]
 pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
@@ -277,6 +382,33 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     shield: Option<&crate::shielding::ShieldPlan>,
     rate_scale: Option<&HashMap<usize, f64>>,
 ) -> ReactionAssembly {
+    assemble_reaction_rates_masked(
+        lib,
+        lib_targets,
+        phi,
+        chain,
+        fission_yields,
+        led,
+        include_derivatives,
+        shield,
+        rate_scale,
+        None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn assemble_reaction_rates_masked<L: ReactionLibrary + ?Sized>(
+    lib: &L,
+    lib_targets: &[(i32, i32)],
+    phi: &[f64],
+    chain: &Chain,
+    fission_yields: &HashMap<(i32, i32), EffectiveYields>,
+    led: &mut RateLedger,
+    include_derivatives: bool,
+    shield: Option<&crate::shielding::ShieldPlan>,
+    rate_scale: Option<&HashMap<usize, f64>>,
+    reachable: Option<&[bool]>,
+) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
     let mut derivatives = include_derivatives.then(Vec::new);
     let mut yield_derivatives = include_derivatives.then(Vec::new);
@@ -298,6 +430,19 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
         .map(|group| group + 1)
         .unwrap_or(first_flux_group);
     for (i, r) in lib.rows().iter().enumerate() {
+        if let Some(reachable) = reachable {
+            let matrix_only = r.zap != -1
+                && !(r.mt == 18 && r.zap == 0)
+                && r.lmf != -2
+                && chain.index.contains_key(&(r.zap, r.lfs));
+            if matrix_only {
+                if let Some(&c) = lib_targets.get(r.target).and_then(|t| chain.index.get(t)) {
+                    if !reachable[c] {
+                        continue;
+                    }
+                }
+            }
+        }
         let shielded_target = lib_targets.get(r.target).copied();
         let scale = shield.and_then(|plan| {
             shielded_target.and_then(|(za, liso)| plan.row_scales(za, liso, r.mt))
@@ -687,5 +832,83 @@ mod tests {
             plain[1].2.to_bits(),
             (-library.one_group(1, &flux) * rate_per_barn).to_bits()
         );
+    }
+
+    #[test]
+    fn masked_assembly_skips_only_matrix_rows_of_unreachable_targets() {
+        // Target 0: Fe-56 (seed). Target 1: Mn-55, unreachable from Fe-56 here.
+        let row = |target, mt, zap, lfs| Row {
+            target,
+            mt,
+            zap,
+            lfs,
+            lmf: 3,
+        };
+        let library = Library {
+            rows: vec![
+                row(0, 102, 26_057, 0), // Fe-56 (n,g) Fe-57: reachable, kept
+                row(0, 1, -1, 0),       // Fe-56 loss: kept
+                row(1, 102, 25_056, 0), // Mn-55 (n,g) Mn-56: unreachable, matrix-only -> skipped
+                row(1, 1, -1, 0),       // Mn-55 loss: kept (optical-depth diagnostics)
+                row(1, 16, 25_054, 0),  // Mn-55 (n,2n) Mn-54: absent from chain -> ledger, kept
+            ],
+            sig: vec![1.0; 5 * 2],
+            ngroups: 2,
+            bounds: vec![1.0, 2.0, 3.0],
+        };
+        let chain = Chain {
+            index: HashMap::from([
+                ((25_055, 0), 0),
+                ((25_056, 0), 1),
+                ((26_056, 0), 2),
+                ((26_057, 0), 3),
+            ]),
+            keys: vec![(25_055, 0), (25_056, 0), (26_056, 0), (26_057, 0)],
+            lambda: vec![0.0; 4],
+            decay: Vec::new(),
+            leak: 4,
+            unit: 5,
+            n: 6,
+            ledger: ChainLedger::default(),
+        };
+        let targets = [(26_056, 0), (25_055, 0)];
+        let yields = HashMap::new();
+        let flux = [2.0, 3.0];
+        let reachable = reachable_columns(&library, &targets, &chain, &yields, &[2]);
+        assert_eq!(reachable, vec![false, false, true, true, false, false]);
+
+        let mut full_ledger = RateLedger::default();
+        let full = reaction_rates(
+            &library,
+            &targets,
+            &flux,
+            &chain,
+            &yields,
+            &mut full_ledger,
+            None,
+            None,
+        );
+        let mut masked_ledger = RateLedger::default();
+        let masked = reaction_rates_masked(
+            &library,
+            &targets,
+            &flux,
+            &chain,
+            &yields,
+            &mut masked_ledger,
+            None,
+            None,
+            &reachable,
+        );
+        // exactly the Mn-55 -> Mn-56 production triplet (row 1, column 0) is gone
+        let expected: Vec<_> = full
+            .iter()
+            .copied()
+            .filter(|&(r, c, _)| !(r == 1 && c == 0))
+            .collect();
+        assert_eq!(masked, expected);
+        assert_eq!(full.len(), masked.len() + 1);
+        assert_eq!(masked_ledger, full_ledger);
+        assert!(!full_ledger.products_no_decay_data.is_empty());
     }
 }
