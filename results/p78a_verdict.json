@@ -1,0 +1,45 @@
+{
+ "protocol": "ACTINV-P78 Amendment A (post-hoc)",
+ "gates": {
+  "G0": {
+   "pass": true,
+   "protocol_sha256": "24e285bf4e7125931daf6d2f5636f715eadd15bc4ea80247e806fd214ff4c2ac"
+  },
+  "G1": {
+   "pass": true,
+   "exit_codes": {
+    "fmt": 0,
+    "clippy": 0,
+    "test": 0
+   }
+  },
+  "G2": {
+   "pass": false,
+   "matches": [
+    "crates/actinv-gui/src/smoke.rs:356:    if !fv[\"flux_scale\"].is_null() {"
+   ]
+  },
+  "G2a": {
+   "pass": true,
+   "amendment_sha256": "2997990fc6cccba319811bf36a43139839743874fe64e1fac5b8e7a8716029d4",
+   "amendment_registered": true,
+   "matches": [],
+   "post_hoc": true
+  },
+  "G3": {
+   "pass": true,
+   "control_checks": 7,
+   "flux_only_solved_check": true
+  },
+  "G4": {
+   "pass": true,
+   "exit_code": 0
+  }
+ },
+ "master_commit_rule_gates": [
+  "G1",
+  "G2a",
+  "G3"
+ ],
+ "master_commit_permitted": true
+}

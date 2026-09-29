@@ -41,3 +41,10 @@ flux-only moves warm again; not done.
 - `docs/RELEASE_NOTES_v1.3.1.md` lists `options.flux_scale` as a spec option; none exists (the P70
   path was workbench-only). The release notes are historical and are not edited; the CHANGELOG
   Unreleased entry says so.
+
+## Amendment A (post-hoc, 2026-09-29)
+
+`protocols/ACTINV-P78_AMENDMENT_A.md` (sha256 `2997990f…29d4`) replaces the G2 pattern with one that
+matches code defining or emitting flux scaling, not a read-only absence check. G2a **PASS**
+(0 matches); `results/p78a_verdict.json` permits the master commit. The original verdict above is
+unchanged. Decided under the owner's delegation of procedural calls.

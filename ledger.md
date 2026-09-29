@@ -1582,3 +1582,6 @@ scan matched the negative assertion the protocol itself required). Per the proto
 stays on branch `slider-flux-scale-off` pending an owner decision. Cost: a flux-only move is a
 cold solve because the prepared-run fingerprint includes the spectrum total (release CLI 0.99 s on
 the smoke fixture). See `results/p78_summary.md`.
+Follow-up (same day): post-hoc Amendment A (`protocols/ACTINV-P78_AMENDMENT_A.md`) replaces G2 with G2a,
+a scan for code that defines or emits scaling. G2a PASS, `results/p78a_verdict.json`; the original
+verdict is unchanged. Landed on master under the owner's delegation of procedural calls.
