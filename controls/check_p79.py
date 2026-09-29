@@ -3,6 +3,7 @@
 
     python3 controls/check_p79.py run     # budget runs + independent full solves (target/p79/)
     python3 controls/check_p79.py check   # verdict -> results/p79_verdict.json
+    python3 controls/check_p79.py {run|check} --amendment A   # P79 Amendment A -> p79a_* outputs
 
 G2 does not trust the command's own verification: every verification composition is re-solved here
 with `actinv run` and its clearance index recomputed with the P76 prototype arithmetic (`ci_of`).
@@ -36,8 +37,16 @@ def sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
-def out_of(mat: str) -> Path:
-    return ROOT / "results" / f"p79_budget_{mat}.json"
+AMEND = "--amendment" in sys.argv and sys.argv[sys.argv.index("--amendment") + 1] == "A"
+TAG = "p79a" if AMEND else "p79"
+if AMEND:
+    WORK = ROOT / "target" / "p79a"
+    BUILD_LOG = WORK / "build.log"
+    AMENDMENT = ROOT / "protocols" / "ACTINV-P79_AMENDMENT_A.md"
+
+
+def out_of(mat: str, tag: str | None = None) -> Path:
+    return ROOT / "results" / f"{tag or TAG}_budget_{mat}.json"
 
 
 def cmd_run() -> None:
@@ -87,13 +96,15 @@ def rel(a, b):
 def cmd_check() -> int:
     log = json.loads((WORK / "run_log.json").read_text())
     registered = f"{sha(PROTOCOL)}  protocols/ACTINV-P79_PROTOCOL.md" in (ROOT / "protocols/protocol_hash.txt").read_text()
+    if AMEND:
+        registered = registered and f"{sha(AMENDMENT)}  protocols/ACTINV-P79_AMENDMENT_A.md" in (ROOT / "protocols/protocol_hash.txt").read_text()
     g0 = registered and all(log["budget"].get(m, {}).get("returncode") == 0 for m in MATERIALS)
 
     blog = BUILD_LOG.read_text() if BUILD_LOG.exists() else ""
     rc = dict(re.findall(r"^(fmt|clippy|test) rc=(\d+)$", blog, re.M))
     tests = re.findall(r"^test budget::tests::(\w+) \.\.\. ok$", blog, re.M)
     need = {"budget_algebra_on_a_synthetic_table", "budget_statuses_for_no_response_and_infeasible",
-            "budget_refuses_nonlinear_inputs"}
+            "budget_refuses_nonlinear_inputs"} | ({"budget_sole_limit_reaches_ci_one_alone"} if AMEND else set())
     g1 = all(rc.get(k) == "0" for k in ("fmt", "clippy", "test")) and need <= set(tests)
 
     g2 = {}
@@ -117,9 +128,12 @@ def cmd_check() -> int:
             ok &= d <= TOL_G2
             rows.append({"id": pt["id"], "max_rel_dev": d, "ok": d <= TOL_G2, "independent_mode": ind["mode"]})
         status = "NOT EXERCISED" if edges == 0 else ("PASS" if ok else "FAIL")
+        sole = sum(1 for pt in res["verification"]["points"] if pt["id"].startswith("sole_"))
+        if AMEND and mat == "eurofer97" and sole == 0:
+            status = "FAIL"
         if not ok:
             status = "FAIL"
-        g2[mat] = {"status": status, "edge_points": edges, "points": len(rows), "max_rel_dev": worst, "rows": rows}
+        g2[mat] = {"status": status, "edge_points": edges, "sole_points": sole, "points": len(rows), "max_rel_dev": worst, "rows": rows}
 
     proto = json.loads((ROOT / "results" / "p76a_verdict.json").read_text())["report"]
     g3 = {}
@@ -158,6 +172,30 @@ def cmd_check() -> int:
         g3[mat] = {"pass": not fails, "compared": len(cmp),
                    "max_rel": max((c["rel"] for c in cmp), default=None), "failures": fails}
 
+    if AMEND:
+        g3 = {}
+        for mat in MATERIALS:
+            old = {t["step"]: t for t in json.loads(out_of(mat, "p79").read_text())["targets"]}
+            new = {t["step"]: t for t in json.loads(out_of(mat).read_text())["targets"]}
+            cmp, fails = [], []
+            for k, t0 in old.items():
+                t1 = new[k]
+                q = [(n, t1[n], t0[n]) for n in ("ci_matrix_only", "ci_at_spec", "spec_margin_factor_k")]
+                for e, d0 in t0["impurities"].items():
+                    for f in ("dci_per_wt_pct", "ci_contribution_at_spec", "single_limit_wt_pct_others_at_spec"):
+                        q.append((f"{e} {f}", t1["impurities"][e][f], d0[f]))
+                for n, a, b in q:
+                    if a is None or b is None:
+                        if a != b:
+                            fails.append(f"step {k} {n}: {a} vs {b}")
+                        continue
+                    d = rel(a, b)
+                    cmp.append(d)
+                    if d > 1e-12:
+                        fails.append(f"step {k} {n}: rel {d:.3e}")
+            g3[mat] = {"pass": not fails, "compared": len(cmp), "max_rel": max(cmp, default=None),
+                       "failures": fails}
+
     g4 = {}
     for mat in MATERIALS:
         if out_of(mat).exists():
@@ -168,8 +206,9 @@ def cmd_check() -> int:
                        "verification_solves": len(vp), "element_solve_ms": el, "verification_solve_ms": vp}
 
     verdict = {
-        "protocol": "ACTINV-P79",
-        "inputs": {"protocol_sha256": sha(PROTOCOL), "binary_sha256": log["binary_sha256"],
+        "protocol": "ACTINV-P79" + (" Amendment A" if AMEND else ""),
+        "inputs": {"protocol_sha256": sha(PROTOCOL),
+                   **({"amendment_sha256": sha(AMENDMENT)} if AMEND else {}), "binary_sha256": log["binary_sha256"],
                    "p76a_verdict_sha256": sha(ROOT / "results" / "p76a_verdict.json"),
                    **{f"budget_{m}_sha256": sha(out_of(m)) for m in MATERIALS if out_of(m).exists()},
                    **{f"input_{p.name}_sha256": sha(p) for p in sorted(INPUTS.glob("*.json"))}},
@@ -179,7 +218,7 @@ def cmd_check() -> int:
         "G3": g3,
         "G4_descriptive": g4,
     }
-    (ROOT / "results" / "p79_verdict.json").write_text(json.dumps(verdict, indent=1, sort_keys=True) + "\n")
+    (ROOT / "results" / f"{TAG}_verdict.json").write_text(json.dumps(verdict, indent=1, sort_keys=True) + "\n")
     print(json.dumps({"G0": g0, "G1": g1, "G2": {m: v["status"] for m, v in g2.items()},
                       "G3": {m: v["pass"] for m, v in g3.items()}}, indent=1))
     return 0
@@ -187,6 +226,6 @@ def cmd_check() -> int:
 
 if __name__ == "__main__":
     fn = {"run": cmd_run, "check": cmd_check}
-    if len(sys.argv) < 2 or sys.argv[1] not in fn:
+    if len(sys.argv) < 2 or sys.argv[1] not in fn or (("--amendment" in sys.argv) and not AMEND):
         sys.exit(__doc__)
     fn[sys.argv[1]]()

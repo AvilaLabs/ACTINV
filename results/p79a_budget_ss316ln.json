@@ -1,0 +1,506 @@
+{
+  "balance": "Fe",
+  "base_spec": "base_exvessel.json",
+  "base_spec_sha256": "490bbeab4b063ca888eced9ccc7160ce0a6278ed6c42c5ded3bd1325f88d56be",
+  "budget_sha256": "1c20fc857af3f0f073416d97f46f9e89d91086ea8bb29c354055d3392697256f",
+  "elapsed_ms": 5626,
+  "element_solves": [
+    {
+      "element": "Ag",
+      "mode": "coupled",
+      "ms": 1245
+    },
+    {
+      "element": "B",
+      "mode": "coupled",
+      "ms": 73
+    },
+    {
+      "element": "C",
+      "mode": "coupled",
+      "ms": 68
+    },
+    {
+      "element": "Co",
+      "mode": "coupled",
+      "ms": 249
+    },
+    {
+      "element": "Cr",
+      "mode": "coupled",
+      "ms": 215
+    },
+    {
+      "element": "Cu",
+      "mode": "coupled",
+      "ms": 280
+    },
+    {
+      "element": "Fe",
+      "mode": "coupled",
+      "ms": 224
+    },
+    {
+      "element": "Mn",
+      "mode": "coupled",
+      "ms": 209
+    },
+    {
+      "element": "Mo",
+      "mode": "coupled",
+      "ms": 376
+    },
+    {
+      "element": "N",
+      "mode": "coupled",
+      "ms": 73
+    },
+    {
+      "element": "Nb",
+      "mode": "coupled",
+      "ms": 372
+    },
+    {
+      "element": "Ni",
+      "mode": "coupled",
+      "ms": 283
+    },
+    {
+      "element": "P",
+      "mode": "coupled",
+      "ms": 121
+    },
+    {
+      "element": "S",
+      "mode": "coupled",
+      "ms": 147
+    },
+    {
+      "element": "Si",
+      "mode": "coupled",
+      "ms": 119
+    },
+    {
+      "element": "Ta",
+      "mode": "coupled",
+      "ms": 876
+    }
+  ],
+  "impurities": {
+    "Ag": 0.0001,
+    "B": 0.001,
+    "Co": 0.05,
+    "Cu": 0.3,
+    "N": 0.07,
+    "Nb": 0.01,
+    "Ta": 0.01
+  },
+  "limits": {
+    "sha256": "3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016",
+    "source": "IAEA unconditional clearance activity concentrations, 2004 basis (RS-G-1.7 Table 2 values)"
+  },
+  "matrix": {
+    "C": 0.03,
+    "Cr": 17.5,
+    "Mn": 1.8,
+    "Mo": 2.5,
+    "Ni": 12.25,
+    "P": 0.025,
+    "S": 0.01,
+    "Si": 0.5
+  },
+  "schema": "actinv-budget-result-1",
+  "solver": {
+    "mode": "coupled",
+    "outputs": [
+      "ledger"
+    ],
+    "prune": "reach"
+  },
+  "summary": {
+    "Ag": {
+      "alone": {
+        "binding_step": null,
+        "limit_wt_pct": null,
+        "status": "no clearance-index response"
+      },
+      "others_at_spec": {
+        "binding_step": null,
+        "limit_wt_pct": null,
+        "status": "no clearance-index response"
+      }
+    },
+    "B": {
+      "alone": {
+        "binding_step": null,
+        "limit_wt_pct": null,
+        "status": "no clearance-index response"
+      },
+      "others_at_spec": {
+        "binding_step": null,
+        "limit_wt_pct": null,
+        "status": "no clearance-index response"
+      }
+    },
+    "Co": {
+      "alone": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the matrix without impurities exceeds CI = 1"
+      },
+      "others_at_spec": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the other constituents alone exceed CI = 1"
+      }
+    },
+    "Cu": {
+      "alone": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the matrix without impurities exceeds CI = 1"
+      },
+      "others_at_spec": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the other constituents alone exceed CI = 1"
+      }
+    },
+    "N": {
+      "alone": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the matrix without impurities exceeds CI = 1"
+      },
+      "others_at_spec": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the other constituents alone exceed CI = 1"
+      }
+    },
+    "Nb": {
+      "alone": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the matrix without impurities exceeds CI = 1"
+      },
+      "others_at_spec": {
+        "binding_step": 6,
+        "limit_wt_pct": null,
+        "status": "infeasible: the other constituents alone exceed CI = 1"
+      }
+    },
+    "Ta": {
+      "alone": {
+        "binding_step": null,
+        "limit_wt_pct": null,
+        "status": "no clearance-index response"
+      },
+      "others_at_spec": {
+        "binding_step": null,
+        "limit_wt_pct": null,
+        "status": "no clearance-index response"
+      }
+    },
+    "joint": {
+      "binding_step": 6,
+      "spec_margin_factor_k": null,
+      "status": "infeasible: the matrix without impurities exceeds CI = 1"
+    }
+  },
+  "targets": [
+    {
+      "ci_at_spec": 538.2502085267432,
+      "ci_matrix_only": 99.68779316155742,
+      "feasible_with_zero_impurities": false,
+      "impurities": {
+        "Ag": {
+          "ci_contribution_at_spec": -3.3527897530394978e-9,
+          "dci_per_wt_pct": -0.000033527897530394975,
+          "single_limit_status": "no clearance-index response",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "no clearance-index response",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.0001
+        },
+        "B": {
+          "ci_contribution_at_spec": -3.35278976594265e-8,
+          "dci_per_wt_pct": -0.0000335278976594265,
+          "single_limit_status": "no clearance-index response",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "no clearance-index response",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.001
+        },
+        "Co": {
+          "ci_contribution_at_spec": 427.1565168370113,
+          "dci_per_wt_pct": 8543.130336740225,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.05
+        },
+        "Cu": {
+          "ci_contribution_at_spec": 1.0152595371331463,
+          "dci_per_wt_pct": 3.3841984571104877,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.3
+        },
+        "N": {
+          "ci_contribution_at_spec": 9.685128607450663,
+          "dci_per_wt_pct": 138.35898010643803,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.07
+        },
+        "Nb": {
+          "ci_contribution_at_spec": 0.7055107557493159,
+          "dci_per_wt_pct": 70.55107557493159,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.01
+        },
+        "Ta": {
+          "ci_contribution_at_spec": -3.352781171527628e-7,
+          "dci_per_wt_pct": -0.00003352781171527628,
+          "single_limit_status": "no clearance-index response",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "no clearance-index response",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.01
+        }
+      },
+      "spec_margin_factor_k": -0.2250256513189378,
+      "spec_margin_status": "infeasible: the matrix without impurities exceeds CI = 1",
+      "step": 6,
+      "t_s": 1735668000.0,
+      "top_nuclides_ci_at_spec": [
+        [
+          "Co60",
+          480.31566799758383
+        ],
+        [
+          "Ni63",
+          45.80474701944936
+        ],
+        [
+          "C14",
+          9.685187260630327
+        ],
+        [
+          "Nb94",
+          1.0744994286728984
+        ],
+        [
+          "Ni59",
+          0.4888206509363954
+        ],
+        [
+          "Nb93m1",
+          0.3281566128607698
+        ]
+      ],
+      "top_uncovered_nuclides_Bq_g_at_spec": [
+        [
+          "Nb91",
+          21.303420172883126
+        ],
+        [
+          "Ag108m1",
+          0.005405143374666908
+        ],
+        [
+          "Ag108",
+          0.0004702474784583272
+        ],
+        [
+          "Si32",
+          0.0000456196399262378
+        ],
+        [
+          "Nb92",
+          0.00002457257929637257
+        ],
+        [
+          "Be10",
+          0.000018286626352241483
+        ]
+      ],
+      "uncovered_activity_share_at_spec": 0.004517579216438826
+    },
+    {
+      "ci_at_spec": 45.214028378655385,
+      "ci_matrix_only": 34.26632960404041,
+      "feasible_with_zero_impurities": false,
+      "impurities": {
+        "Ag": {
+          "ci_contribution_at_spec": -6.801889068652682e-10,
+          "dci_per_wt_pct": -6.801889068652682e-6,
+          "single_limit_status": "no clearance-index response",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "no clearance-index response",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.0001
+        },
+        "B": {
+          "ci_contribution_at_spec": -6.801889089576642e-9,
+          "dci_per_wt_pct": -6.801889089576642e-6,
+          "single_limit_status": "no clearance-index response",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "no clearance-index response",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.001
+        },
+        "Co": {
+          "ci_contribution_at_spec": 0.5958360689605222,
+          "dci_per_wt_pct": 11.916721379210443,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.05
+        },
+        "Cu": {
+          "ci_contribution_at_spec": 0.034619769399441704,
+          "dci_per_wt_pct": 0.11539923133147235,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.3
+        },
+        "N": {
+          "ci_contribution_at_spec": 9.626421132718917,
+          "dci_per_wt_pct": 137.52030189598452,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.07
+        },
+        "Nb": {
+          "ci_contribution_at_spec": 0.6908218790362055,
+          "dci_per_wt_pct": 69.08218790362055,
+          "single_limit_status": "infeasible: the other constituents alone exceed CI = 1",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "infeasible: the matrix without impurities exceeds CI = 1",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.01
+        },
+        "Ta": {
+          "ci_contribution_at_spec": -6.801803145761066e-8,
+          "dci_per_wt_pct": -6.801803145761066e-6,
+          "single_limit_status": "no clearance-index response",
+          "single_limit_wt_pct_others_at_spec": null,
+          "sole_limit_status": "no clearance-index response",
+          "sole_limit_wt_pct": null,
+          "spec_wt_pct": 0.01
+        }
+      },
+      "spec_margin_factor_k": -3.0386595657141076,
+      "spec_margin_status": "infeasible: the matrix without impurities exceeds CI = 1",
+      "step": 7,
+      "t_s": 3313548000.0,
+      "top_nuclides_ci_at_spec": [
+        [
+          "Ni63",
+          32.52222835103904
+        ],
+        [
+          "C14",
+          9.626477573760786
+        ],
+        [
+          "Nb94",
+          1.0726665440310557
+        ],
+        [
+          "Co60",
+          0.669992178412853
+        ],
+        [
+          "Ni59",
+          0.48859779101942946
+        ],
+        [
+          "Mo93",
+          0.31707041009131304
+        ]
+      ],
+      "top_uncovered_nuclides_Bq_g_at_spec": [
+        [
+          "Nb91",
+          20.244861390786276
+        ],
+        [
+          "Ag108m1",
+          0.004993936226236311
+        ],
+        [
+          "Ag108",
+          0.0004344724561749555
+        ],
+        [
+          "Si32",
+          0.00003637273684053782
+        ],
+        [
+          "Nb92",
+          0.00002457255475403015
+        ],
+        [
+          "Be10",
+          0.000018286206644570823
+        ]
+      ],
+      "uncovered_activity_share_at_spec": 0.006067645269388976
+    }
+  ],
+  "verification": {
+    "max_rel_dev": 8.448623775384376e-16,
+    "points": [
+      {
+        "composition_wt_pct": {
+          "Ag": 0.0001,
+          "B": 0.001,
+          "C": 0.03,
+          "Co": 0.05,
+          "Cr": 17.5,
+          "Cu": 0.3,
+          "Fe": 64.94390000000001,
+          "Mn": 1.8,
+          "Mo": 2.5,
+          "N": 0.07,
+          "Nb": 0.01,
+          "Ni": 12.25,
+          "P": 0.025,
+          "S": 0.01,
+          "Si": 0.5,
+          "Ta": 0.01
+        },
+        "id": "at_spec",
+        "max_rel_dev": 8.448623775384376e-16,
+        "ms": 616,
+        "pass": true,
+        "predicted_ci": {
+          "6": 538.2502085267432,
+          "7": 45.214028378655385
+        },
+        "solved_ci": {
+          "6": 538.2502085267428,
+          "7": 45.21402837865542
+        }
+      }
+    ],
+    "tolerance_rel": 1e-6,
+    "verified": true
+  }
+}

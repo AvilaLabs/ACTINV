@@ -1585,3 +1585,29 @@ the smoke fixture). See `results/p78_summary.md`.
 Follow-up (same day): post-hoc Amendment A (`protocols/ACTINV-P78_AMENDMENT_A.md`) replaces G2 with G2a,
 a scan for code that defines or emits scaling. G2a PASS, `results/p78a_verdict.json`; the original
 verdict is unchanged. Landed on master under the owner's delegation of procedural calls.
+
+## Entry 59 — `actinv budget`: verified impurity budgets (P79 + Amendment A, 2026-09-29)
+
+New command `actinv budget BUDGET.json [OUT.json] [--no-verify]` (`crates/actinv-cli/src/budget.rs`,
+`docs/BUDGET.md`, schema `actinv-budget-1` → `actinv-budget-result-1`). One coupled/reach solve per
+element gives the clearance index of any composition by superposition (P75b), so per target step it
+reports matrix-only and at-spec CI, the spec margin factor k, per-impurity gradients, contributions,
+limits with the other impurities at spec and alone (Amendment A), top and uncovered nuclides, and a
+`summary` with the binding step per impurity and the joint k. Every emitted limit is re-solved at its
+composition in the same invocation (exit 3 on a miss). Inputs that break linearity in composition are
+refused (self_shielding, uncertainty, options.screen, schedule feed).
+
+- **P79** (`bacf08d5…`, `results/p79_verdict.json`): G0/G1 PASS; G2 EUROFER97 PASS (4 points
+  re-solved independently by `controls/check_p79.py` with `actinv run` and Python CI arithmetic, max
+  2.6e-15), SS316LN NOT EXERCISED (matrix alone exceeds CI = 1, so no edge exists); G3 parity with the
+  P76a prototype PASS (45 quantities, max 4e-16). EUROFER97 budget 8.4 s including verification;
+  ~0.2 s per solve once prepared data are loaded.
+- **Amendment A** (`7feae0a9…`, frozen before the amended build; `results/p79a_verdict.json`): the
+  P79 summary called every EUROFER97 impurity "infeasible" (cobalt at spec alone gives CI = 47 at
+  50 y), which is correct for "others at spec" but misleading. Added sole-impurity limits and the joint
+  headline. A-G1 PASS (5 tests), A-G2 EUROFER97 PASS (16 points, 12 sole limits, max 2.6e-15), A-G3
+  PASS (all P79 quantities bitwise unchanged). Ex-vessel EUROFER97 at 50 y: Co alone ≤ 1.17 ppm,
+  N ≤ 72 ppm, Nb ≤ 141 ppm, Ni ≤ 0.12 wt%; joint k = 0.021.
+- **Known limitation:** an impurity whose activation products have no entry in the limits table shows
+  "no clearance-index response" (Ag: Ag-108m is missing from the bundled IAEA table). Its activity
+  appears under uncovered nuclides, not as cleared. A verified Ag-108m limit is still needed.

@@ -1,0 +1,239 @@
+{
+ "G0": {
+  "pass": true,
+  "protocol_registered": true
+ },
+ "G1": {
+  "budget_tests_ok": [
+   "budget_algebra_on_a_synthetic_table",
+   "budget_refuses_nonlinear_inputs",
+   "budget_rejects_bad_compositions",
+   "budget_sole_limit_reaches_ci_one_alone",
+   "budget_statuses_for_no_response_and_infeasible"
+  ],
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "test": "0"
+  },
+  "pass": true
+ },
+ "G2": {
+  "eurofer97": {
+   "edge_points": 15,
+   "max_rel_dev": 2.5700602209728554e-15,
+   "points": 16,
+   "rows": [
+    {
+     "id": "at_spec",
+     "independent_mode": "coupled",
+     "max_rel_dev": 2.5700602209728554e-15,
+     "ok": true
+    },
+    {
+     "id": "spec_x_k@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 1.5181098429976937e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Co@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 1.7556547359753032e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Cu@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 2.4424906541753444e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Mo@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 2.285300614965298e-16,
+     "ok": true
+    },
+    {
+     "id": "sole_N@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 4.478613372110632e-16,
+     "ok": true
+    },
+    {
+     "id": "sole_Nb@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 2.045726680513512e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Ni@6",
+     "independent_mode": "coupled",
+     "max_rel_dev": 4.440892098500625e-16,
+     "ok": true
+    },
+    {
+     "id": "spec_x_k@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 1.2920979112852716e-15,
+     "ok": true
+    },
+    {
+     "id": "limit_N@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 1.998401444325281e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Co@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 2.553512956637859e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Cu@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 2.06096405805995e-15,
+     "ok": true
+    },
+    {
+     "id": "sole_Mo@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 6.472729133685234e-16,
+     "ok": true
+    },
+    {
+     "id": "sole_N@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 9.992007221626407e-16,
+     "ok": true
+    },
+    {
+     "id": "sole_Nb@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 8.881784197001252e-16,
+     "ok": true
+    },
+    {
+     "id": "sole_Ni@7",
+     "independent_mode": "coupled",
+     "max_rel_dev": 4.471993363491706e-16,
+     "ok": true
+    }
+   ],
+   "sole_points": 12,
+   "status": "PASS"
+  },
+  "ss316ln": {
+   "edge_points": 0,
+   "max_rel_dev": 8.448623775384376e-16,
+   "points": 1,
+   "rows": [
+    {
+     "id": "at_spec",
+     "independent_mode": "coupled",
+     "max_rel_dev": 8.448623775384376e-16,
+     "ok": true
+    }
+   ],
+   "sole_points": 0,
+   "status": "NOT EXERCISED"
+  }
+ },
+ "G3": {
+  "eurofer97": {
+   "compared": 43,
+   "failures": [],
+   "max_rel": 0.0,
+   "pass": true
+  },
+  "ss316ln": {
+   "compared": 34,
+   "failures": [],
+   "max_rel": 0.0,
+   "pass": true
+  }
+ },
+ "G4_descriptive": {
+  "eurofer97": {
+   "element_solve_ms": [
+    1298,
+    95,
+    60,
+    221,
+    192,
+    246,
+    200,
+    187,
+    333,
+    62,
+    326,
+    245,
+    107,
+    778,
+    192,
+    193,
+    856
+   ],
+   "element_solves": 17,
+   "verification_solve_ms": [
+    565,
+    564,
+    677,
+    663,
+    583,
+    687,
+    589,
+    677,
+    568,
+    566,
+    681,
+    656,
+    585,
+    694,
+    591,
+    678
+   ],
+   "verification_solves": 16,
+   "wall_s": 15.887386546004564
+  },
+  "ss316ln": {
+   "element_solve_ms": [
+    1245,
+    73,
+    68,
+    249,
+    215,
+    280,
+    224,
+    209,
+    376,
+    73,
+    372,
+    283,
+    121,
+    147,
+    119,
+    876
+   ],
+   "element_solves": 16,
+   "verification_solve_ms": [
+    616
+   ],
+   "verification_solves": 1,
+   "wall_s": 5.6445563090383075
+  }
+ },
+ "inputs": {
+  "amendment_sha256": "7feae0a9329ef3b4f562b685b1e723135af88a45b6774b5bd452619dd21c4cd9",
+  "binary_sha256": "40f76562c593d2c6dd13236f77c40becce062d61c745937db2c66882d227cf6b",
+  "budget_eurofer97_sha256": "aaee293e27494b0b2354865b6bd3c2fd1b9aff812713b84d990c1b66da259910",
+  "budget_ss316ln_sha256": "6dad34ba126910edcc70ec16e92ebfd28a70bccfa899faa019fea7f1972cdb11",
+  "input_base_exvessel.json_sha256": "490bbeab4b063ca888eced9ccc7160ce0a6278ed6c42c5ded3bd1325f88d56be",
+  "input_eurofer97_exvessel.json_sha256": "aa9765cd3950ec39d9275c6fd2e3222983121fc3c87b74303e728e99fe3ea66b",
+  "input_ss316ln_exvessel.json_sha256": "1c20fc857af3f0f073416d97f46f9e89d91086ea8bb29c354055d3392697256f",
+  "p76a_verdict_sha256": "7a4f2346ac50e81a42b34a7b0d41da045a8537c2bc975033e7bd65903f9e82ff",
+  "protocol_sha256": "bacf08d5b71cfa01507ec397141729b9c3053ef0047b73c4e1d0588fc7df54d4"
+ },
+ "protocol": "ACTINV-P79 Amendment A"
+}

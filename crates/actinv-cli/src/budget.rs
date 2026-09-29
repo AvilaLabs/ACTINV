@@ -58,6 +58,9 @@ pub struct TargetAnalysis {
     pub margin_status: &'static str,
     pub single_limit: BTreeMap<String, Option<f64>>,
     pub single_status: BTreeMap<String, &'static str>,
+    /// Limit with every other impurity at zero (P79 Amendment A).
+    pub sole_limit: BTreeMap<String, Option<f64>>,
+    pub sole_status: BTreeMap<String, &'static str>,
 }
 
 /// Full composition: matrix plus impurities, balance to 100 wt%.
@@ -101,6 +104,8 @@ pub fn analyse_target(
     let mut contribution = BTreeMap::new();
     let mut single_limit = BTreeMap::new();
     let mut single_status = BTreeMap::new();
+    let mut sole_limit = BTreeMap::new();
+    let mut sole_status = BTreeMap::new();
     for (e, &w) in impurities {
         let g = (r.get(e).copied().unwrap_or(0.0) - r_bal) / 100.0;
         gradient.insert(e.clone(), g);
@@ -121,6 +126,19 @@ pub fn analyse_target(
         };
         single_limit.insert(e.clone(), lim);
         single_status.insert(e.clone(), status);
+        // every other impurity at zero: w_e = (1 − CI_matrix_only)/g
+        let (sole, status) = if g <= 0.0 {
+            (None, "no clearance-index response")
+        } else if ci_matrix_only >= 1.0 {
+            (
+                None,
+                "infeasible: the matrix without impurities exceeds CI = 1",
+            )
+        } else {
+            (Some((1.0 - ci_matrix_only) / g), "limit")
+        };
+        sole_limit.insert(e.clone(), sole);
+        sole_status.insert(e.clone(), status);
     }
     let imp_ci: f64 = contribution.values().sum();
     let (margin_factor, margin_status) = if imp_ci > 0.0 {
@@ -145,7 +163,34 @@ pub fn analyse_target(
         margin_status,
         single_limit,
         single_status,
+        sole_limit,
+        sole_status,
     })
+}
+
+/// Tightest limit across targets for one impurity, given a per-target
+/// (limit, status) view; the first target without a limit (other than
+/// "no response") decides the status.
+fn tightest(analyses: impl Iterator<Item = (u64, Option<f64>, &'static str)>) -> Value {
+    let mut tight: Option<(f64, u64)> = None;
+    let mut blocked: Option<(u64, &'static str)> = None;
+    for (k, lim, status) in analyses {
+        match lim {
+            Some(l) if tight.is_none_or(|(t, _)| l < t) => tight = Some((l, k)),
+            Some(_) => {}
+            None if status != "no clearance-index response" => {
+                blocked.get_or_insert((k, status));
+            }
+            None => {}
+        }
+    }
+    match (blocked, tight) {
+        (Some((k, s)), _) => json!({"limit_wt_pct": null, "binding_step": k, "status": s}),
+        (None, Some((l, k))) => json!({"limit_wt_pct": l, "binding_step": k, "status": "limit"}),
+        (None, None) => {
+            json!({"limit_wt_pct": null, "binding_step": null, "status": "no clearance-index response"})
+        }
+    }
 }
 
 /// Refuse base specs whose response is not linear in the initial
@@ -403,6 +448,8 @@ pub fn run_budget_doc(text: &str, dir: &Path, verify: bool) -> Result<Value, Str
                         "ci_contribution_at_spec": a.contribution[e],
                         "single_limit_wt_pct_others_at_spec": opt_num(a.single_limit[e]),
                         "single_limit_status": a.single_status[e],
+                        "sole_limit_wt_pct": opt_num(a.sole_limit[e]),
+                        "sole_limit_status": a.sole_status[e],
                     }),
                 )
             })
@@ -424,32 +471,57 @@ pub fn run_budget_doc(text: &str, dir: &Path, verify: bool) -> Result<Value, Str
         analyses.insert(k, (a, r));
     }
 
-    // Tightest limit per impurity across targets; a target without a limit
-    // decides the status.
-    let summary: Map<String, Value> = b
+    // Tightest limit per impurity across targets, alone and with the other
+    // impurities at spec, plus the joint scaling headline.
+    let mut summary: Map<String, Value> = b
         .impurities
         .keys()
         .map(|e| {
-            let mut tight: Option<(f64, u64)> = None;
-            let mut blocked: Option<(u64, &'static str)> = None;
-            for (&k, (a, _)) in &analyses {
-                match a.single_limit[e] {
-                    Some(l) if tight.is_none_or(|(t, _)| l < t) => tight = Some((l, k)),
-                    Some(_) => {}
-                    None if a.single_status[e] != "no clearance-index response" => {
-                        blocked.get_or_insert((k, a.single_status[e]));
-                    }
-                    None => {}
-                }
-            }
-            let v = match (blocked, tight) {
-                (Some((k, s)), _) => json!({"limit_wt_pct": null, "binding_step": k, "status": s}),
-                (None, Some((l, k))) => json!({"limit_wt_pct": l, "binding_step": k, "status": "limit"}),
-                (None, None) => json!({"limit_wt_pct": null, "binding_step": null, "status": "no clearance-index response"}),
-            };
-            (e.clone(), v)
+            let alone = tightest(
+                analyses
+                    .iter()
+                    .map(|(&k, (a, _))| (k, a.sole_limit[e], a.sole_status[e])),
+            );
+            let at_spec = tightest(
+                analyses
+                    .iter()
+                    .map(|(&k, (a, _))| (k, a.single_limit[e], a.single_status[e])),
+            );
+            (
+                e.clone(),
+                json!({"alone": alone, "others_at_spec": at_spec}),
+            )
         })
         .collect();
+    let mut joint: Option<(f64, u64)> = None;
+    let mut joint_blocked: Option<(u64, &'static str)> = None;
+    for (&k, (a, _)) in &analyses {
+        match (a.margin_factor, a.margin_status) {
+            (Some(kf), "feasible") => {
+                if joint.is_none_or(|(t, _)| kf < t) {
+                    joint = Some((kf, k));
+                }
+            }
+            (_, status) => {
+                joint_blocked.get_or_insert((k, status));
+            }
+        }
+    }
+    summary.insert(
+        "joint".into(),
+        match (joint_blocked, joint) {
+            (Some((k, s)), _) => {
+                json!({"spec_margin_factor_k": null, "binding_step": k, "status": s})
+            }
+            (None, Some((kf, k))) => json!({
+                "spec_margin_factor_k": kf, "binding_step": k,
+                "status": "all impurities scaled by k clear at every target",
+            }),
+            (None, None) => {
+                json!({"spec_margin_factor_k": null, "binding_step": null, "status": "no targets"})
+            }
+        },
+    );
 
     let verification = if verify {
         let mut points: Vec<(String, BTreeMap<String, f64>)> =
@@ -472,6 +544,15 @@ pub fn run_budget_doc(text: &str, dir: &Path, verify: bool) -> Result<Value, Str
                     imp.insert(e.clone(), *l);
                     points.push((
                         format!("limit_{e}@{k}"),
+                        full_composition(&b.balance, &b.matrix, &imp)?,
+                    ));
+                }
+            }
+            for (e, l) in &a.sole_limit {
+                if let Some(l) = l {
+                    let imp = BTreeMap::from([(e.clone(), *l)]);
+                    points.push((
+                        format!("sole_{e}@{k}"),
                         full_composition(&b.balance, &b.matrix, &imp)?,
                     ));
                 }
@@ -553,6 +634,22 @@ mod tests {
         let lim = a.single_limit["Co"].unwrap();
         let at_lim = full_composition("Fe", &matrix, &m(&[("Co", lim)])).unwrap();
         assert!((composed_ci(&r, &at_lim) - 1.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn budget_sole_limit_reaches_ci_one_alone() {
+        // Co at spec alone breaks clearance, so no limit exists with the
+        // others at spec, but Co alone still has one.
+        let r = m(&[("Fe", 0.01), ("Ni", 10.0), ("Co", 1000.0), ("Nb", 2000.0)]);
+        let matrix = m(&[("Ni", 1.0)]);
+        let imp = m(&[("Co", 0.5), ("Nb", 0.001)]);
+        let a = analyse_target(&r, "Fe", &matrix, &imp).unwrap();
+        assert!(a.ci_at_spec > 1.0);
+        assert_eq!(a.single_limit["Nb"], None);
+        let sole = a.sole_limit["Nb"].unwrap();
+        assert_eq!(a.sole_status["Nb"], "limit");
+        let comp = full_composition("Fe", &matrix, &m(&[("Nb", sole)])).unwrap();
+        assert!((composed_ci(&r, &comp) - 1.0).abs() < 1e-12);
     }
 
     #[test]
