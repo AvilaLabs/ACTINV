@@ -70,6 +70,7 @@
 - [Identity-resolution audit (2026-09-22)](IDENTITY_AUDIT.md)
 - [Ledger semantics](LEDGER.md)
 - [actinv optimize — chance-constrained design search](OPTIMIZE.md)
+- [actinv budget — impurity budgets for clearance](BUDGET.md)
 - [Parking lot](PARKING.md)
 - [Release preflight](PREFLIGHT.md)
 - [ACTINV maintainer and agent working agreement](maintainers/AGENTS.md)

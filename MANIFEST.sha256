@@ -9,7 +9,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 5b0e4fd7a4b934875286d18ac1fd844bba8aaf8541dfe3f5105353a363f139cc  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 501d1c98ddae1a1348d96091ec120d19e848cf484637c8bf151ca583bbde9ddf  ./AGENTS.md
-ef5179d50b25c11f58c9d6b9662ea7180406d014b3e6d522d52c9b3d576c31ca  ./CHANGELOG.md
+97d569a4217c67c082e3c48e830d3865c1d7be099a436322630ff6941682ea21  ./CHANGELOG.md
 04795cfec8c6241d33edbf94ef2df47637d939380563bf3470d5f5f7ddc521ca  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a5a361eb24c1459e44a7456f2503049b003470ada418e176013fe7afa2e1592  ./Cargo.lock
@@ -211,6 +211,7 @@ c7c757364d122fa48335479851e1f0f0f788dc246ab9ea95c502e14a8773946c  ./controls/che
 b48124e48f06838ae903cb5b38d0bb33ab94985cb2702e2ee38d544581677f97  ./controls/check_p75.py
 3e14ba1d46420d48a28509009648605534d72f12fcbca1b34e786c1d90a5e5b3  ./controls/check_p75b.py
 6010c9228328dbc3549ac9474bbc3f8d47d98b8b2c786982ad4b29f881556406  ./controls/check_p78.py
+02b9cba4c8dcbcd94ce952ccff99cea69642f95788582e3af21064a0954fdc33  ./controls/check_p79.py
 66e07bd8867e336c594c1db2536bf68186932e70f472f8be564c7c0945333bc0  ./controls/check_p8.py
 3efb681ab3ac54e609104cc84771ee93add45af6a56ead069e49f72da1544b7e  ./controls/check_p9.py
 684b885fe29b6cc0acbd50b2e23d226073a9c29a13dcf9721511bb42a0df541a  ./controls/check_prior_verdicts.py
@@ -671,6 +672,9 @@ da755189f816bad816f67059c5a907cb38e31235033061b4853ba95022532517  ./controls/p75
 6cde4e1b0472ef543b9834da67ae1aa92d841c965ad783094de5a2de7d7afc4b  ./controls/p76_impurity_budget.py
 b5fff56f24488de783c3c87b5f3e8757f8eef04a134cbe5bebcc3511cfae1a72  ./controls/p76a_impurity_budget.py
 aba4d7627991ac6529c324d77869000414f1990cfc9e02d30d4a66a746ec1d79  ./controls/p77_verify.py
+490bbeab4b063ca888eced9ccc7160ce0a6278ed6c42c5ded3bd1325f88d56be  ./controls/p79/base_exvessel.json
+aa9765cd3950ec39d9275c6fd2e3222983121fc3c87b74303e728e99fe3ea66b  ./controls/p79/eurofer97_exvessel.json
+1c20fc857af3f0f073416d97f46f9e89d91086ea8bb29c354055d3392697256f  ./controls/p79/ss316ln_exvessel.json
 4a7a7bb298ebec8b319de2ca3f6a762b9be8af5dcc0a67169bb7760616d62279  ./controls/p7_spectra.py
 d0fef3075201b275543c065a6401a746d867deb1c4451a3b9bf156180021b5f6  ./controls/p8_fixtures.py
 258f0df0d658d2b11979432c6c531284901c43b764a6f4beeffca0e58b306c2d  ./controls/p9_fixtures.py
@@ -698,10 +702,11 @@ b1566cb59da3d7e7dbf646c23e0ac6106d89518a66e2b8c23223b44a7d736527  ./controls/tes
 ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39  ./crates/actinv-cli/data/iron-example.json
 b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237  ./crates/actinv-cli/src/assimilate.rs
 1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e  ./crates/actinv-cli/src/bin/actinv.rs
-63fc7d5bef0897323693d0885a0dfb2295d8c9294aea85d1adcefc0087691be4  ./crates/actinv-cli/src/command.rs
+da81ac015ee2a14723ec69ca6af48c33653b708ea1afa6c7ec9cbd5d4d39f5b5  ./crates/actinv-cli/src/budget.rs
+ab8848cd2aaf212a94fb43c67740b5700467316e9be0c0a8fc0e94b056de60b8  ./crates/actinv-cli/src/command.rs
 284d882b1b7bdba578b53030457c0f3b3096254c31ff32d2a6e1829da457b4e8  ./crates/actinv-cli/src/decide.rs
 dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c  ./crates/actinv-cli/src/evalspread.rs
-80736fbb9a652802432b0e3265181ff178226ace7d3b4f08c229e5a1acb690ab  ./crates/actinv-cli/src/lib.rs
+b961f5e85ca37d3d597b46d0e4424e88dd0e37c08007105583c660bbf447feb1  ./crates/actinv-cli/src/lib.rs
 7d4f384ac0075b5246757fe30fe53c6efd023da3ba11f54c77d95a7037830c28  ./crates/actinv-cli/src/optimize.rs
 4f5170c98d54041561921d33223ad8568fa212b2d68ebf5b832f54288786740c  ./crates/actinv-cli/src/surrogate.rs
 bb633c6e63f9afcffdac08195cb1bf8dd2d8de38e9ed84fd93600520af2953a2  ./crates/actinv-cli/src/twin.rs
@@ -793,6 +798,7 @@ cbc1185941ba34139062108560d2ab8931c94c24ac7281e9c86bc022dd4c7d0a  ./crates/actin
 3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016  ./data/clearance_iaea_2004.json
 df5b6970c892117944416a67e40072227cafd7ec677917f71b1b2e7bce1cae23  ./data/cram_coefficients.json
 6a594fe883294466ca22e67224c2a9effc454ca06b8fa55f1e40aa9a8ec1e503  ./docs/APPLICABILITY.md
+2398b3cf7f4053159a0fd4539f375130bf25b94f8eebd68f49c9a18ac2a88b4a  ./docs/BUDGET.md
 f74eae1f47b5dead5c62c3b06833706392e97b4cde813dc204e1857a8b3c444c  ./docs/COMPETITIVE_EXTENSION_RESEARCH_2026-09-13.md
 0c5e7f9a4975220e4ad7928e8861be57e3e01e9e4dd88c5dabd52f23aa279f3e  ./docs/CRATES_RELEASE.md
 b24a0e79830cc2b74d71ad220761e10db5b25338faca2396b64d29aecf02b734  ./docs/DATA.md
@@ -845,7 +851,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 3c8d902db4bfac437dd55344ba787ff9000aeac1675d3e96994bf77f5f712b40  ./docs/ROADMAP.md
 3e8c5614266465bfaddaea89877f82108751d6cb7f3df38919c96e04470f3234  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
-02198778c55e6021f61eb79dd77452f16c696ade9815f0c677e39bc28281dfc3  ./docs/SUMMARY.md
+f3db0b32d0f487add71e5d1d89d81824c4ad0c567337bef506d796ddfc8c257f  ./docs/SUMMARY.md
 646b593061975e4d7ae6e5b144a995202810be2b489535462b9d583a9b12567a  ./docs/TENDL2025_EMAIL_DRAFT.md
 c901b2287ed994f65a3517003d1d667aa669ba6c7f807edc0e4c86957935523a  ./docs/TENDL2025_THRESHOLD_SUBMISSION.md
 48fbacb01114259ac935417298e87d328968728a7f4fe35b9b5ce9ff547a70e9  ./docs/VALIDATION.md
@@ -1073,6 +1079,7 @@ f97f861820e2291557e70ae286b330797d85921f0dad901c0d52e550f35fbd48  ./protocols/AC
 dae03e2be5bfee597e6f9f914c85dfc5185ac3bfbc25ac68e957bc4ae2f6d5b4  ./protocols/ACTINV-P77_PROTOCOL.md
 2997990fc6cccba319811bf36a43139839743874fe64e1fac5b8e7a8716029d4  ./protocols/ACTINV-P78_AMENDMENT_A.md
 24e285bf4e7125931daf6d2f5636f715eadd15bc4ea80247e806fd214ff4c2ac  ./protocols/ACTINV-P78_PROTOCOL.md
+bacf08d5b71cfa01507ec397141729b9c3053ef0047b73c4e1d0588fc7df54d4  ./protocols/ACTINV-P79_PROTOCOL.md
 5f5319ced7faff3f1141c80619c738c99b9d8593f8aa8ea4997d42293ff4b9c5  ./protocols/ACTINV-P7_AMENDMENT_A.md
 5dd3c3f5f09440a0bb69154ba18d99d581f862001a252c41f1f1102fbc615255  ./protocols/ACTINV-P7_PROTOCOL.md
 4e75fc45357390000d2b015ee936b83d3d45e0a3dc1d5acf51bc23f3c547588f  ./protocols/ACTINV-P8_AMENDMENT_A.md
@@ -1094,7 +1101,7 @@ df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HY
 f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/desktop-historical-checks-v1.md
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
-444cefc2e67cbe39eb32aef6967be2234f64496fa9961d3c48141c4bd37199d4  ./protocols/protocol_hash.txt
+1a40d45206e7747557a600d8c62134c678b63030dc73e67487b5885c079f924e  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 846abac070437d1c99b6165549f1891e2ef2d58fc7b8b4de3555868e9025bae6  ./python/Cargo.lock
@@ -3584,6 +3591,9 @@ a82481cc6e7ce0556d514f0f0960c76677d4919c8425c0b62b94aa2d2256b503  ./results/p77_
 57ee2dc34d95163d7d1a0de9ffdb428894ca7582cc929385caf53ff48b579844  ./results/p78_summary.md
 4cea3e05179660ee0e342c716928f83f5dcf3ff97496cf583fdaa38e37a194ea  ./results/p78_verdict.json
 7c7f00af150e4a319f6288792616202b0c1c0505df9edc523808bbe839f23f40  ./results/p78a_verdict.json
+819da35c4a084c8050eff9f61090f333798d4c1906c1f1b24955bde23c17e363  ./results/p79_budget_eurofer97.json
+d93e35eb21c42e809c466114363c11cdbda8b6fb45c7b43799c58f9e927f0488  ./results/p79_budget_ss316ln.json
+73af3c470a5c4eb3045944e8054da0117bc310a800cb3f6ec547d30bd38792bd  ./results/p79_verdict.json
 82ac3b499737b867bcdfc40f3fc5c0ef5a0a0b25b9f1978841ea350a0fcfde3e  ./results/qa_unitarity_actinv_tendl2023_709g.json
 9024a4ac890ce631a8fe58f3e913cf98a80f84e9fc0c1b661014b5920506e41a  ./results/qa_unitarity_tendl-2025-neutron-709g.json
 5216fed4ffd48269e7b2153af4d17e241b2324f1b83cf68351a5ab26a4a1716b  ./results/release_v1.2.0.json

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+**Added**
+
+- `actinv budget`: impurity budgets for the IAEA clearance index from one coupled solve per element,
+  with the spec margin factor, single-impurity limits (or the reason none exists), top nuclides and
+  uncovered activity per target. Every emitted limit is re-solved at its composition and compared
+  with the prediction; `--no-verify` skips that. See `docs/BUDGET.md`. (P79)
+
 **Changed**
 
 - Workbench live sweep: the P70 flux-scaling shortcut is removed, so every slider position is

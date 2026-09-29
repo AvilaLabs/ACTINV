@@ -2,6 +2,7 @@
 #![forbid(unsafe_code)]
 
 pub mod assimilate;
+pub mod budget;
 pub mod command;
 pub mod decide;
 pub mod evalspread;
