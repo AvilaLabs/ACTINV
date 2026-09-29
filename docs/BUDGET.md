@@ -72,3 +72,11 @@ them. See `results/p79_verdict.json` and `results/p79a_verdict.json` for the acc
 **Limitation:** an impurity whose products have no limit in the table (silver: Ag-108m is not in the
 bundled IAEA table) shows `no clearance-index response`; its activity is listed as uncovered, not
 cleared. Check `top_uncovered_nuclides_Bq_g_at_spec` before trusting such a status.
+
+**Table provenance.** `data/clearance_iaea_2004.json` is the svalinn/ALARA transcription
+(`IAEA.clearance.2004.Bq_kg`, converted to Bq/g). Its `source` field says RS-G-1.7 Table 2, but it
+also carries Table 1 natural-origin values (K-40 at 10 Bq/g; Gd-152, Hf-174 and Re-187 at 1 Bq/g).
+Ag-108m is absent from RS-G-1.7 Table 2 itself, not only from the transcription. IAEA GSR Part 3
+Table I.1 lists Ag-108m at 10 Bq/g, but that table has a different basis (exemption of moderate
+quantities, not bulk clearance), so it is not substituted here. Supply your own `limits` table if
+your regulator's list covers nuclides this one does not.

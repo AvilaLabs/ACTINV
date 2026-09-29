@@ -1623,3 +1623,36 @@ every step passes except, as expected, the two that pin the trace-mode end-to-en
 production into bulk iron isotopes is now tracked. Heat per step moves by ≤ 1.4e-20 W/g against the
 1e-17 criterion. `controls/ci_expected.json` is re-baselined for the state count only, with a note.
 FNS iron and fusion-isotope workflows pass unchanged.
+
+## Entry 61 — P80 reachable-row assembly: FAIL as frozen, not merged (2026-09-29)
+
+P80 (`3eb0daab…`) tested an exact restriction for mesh speed: before collapsing a library row, skip
+it when its target cannot be reached from the material or feed and the row only feeds the matrix
+(not a loss, fission or ledger row). Candidate code is kept on branch `p80-reachable-rows`
+(`2f6bdca`); master is unchanged. Verdict `results/p80_verdict.json` from `controls/check_p80.py`:
+
+- G0, G1 PASS (fmt, clippy, 113 core tests including the new masked-assembly test).
+- G2 mesh FAIL on all three profiles. Every per-cell record is identical; the only differing fields
+  are `wall_time_s` and `cells_per_s` in the summary record, timing keys the protocol's normalisation
+  list did not name.
+- G3 single runs FAIL on all 783 P75b specs. Diagnosed on `A__concrete__fns__1e+10` (a reference
+  rerun is bitwise identical): the only differing field is the diagnostic
+  `ledger.assembly.n_reaction_triplets`, 127,645 → 125,941. The other 782 were not diagnosed
+  individually.
+- G5 descriptive: mesh 0.89× (fe_coupled), 0.88× (fe_p21like), 1.03× (ss316_r2s); the singles took
+  1214 s vs 1207 s in total.
+
+No amendment was written. Relabelling those fields could turn G2/G3 into a pass, but the change still
+would not be worth merging. Structural reachability from a real material covers almost the whole chain:
+capture climbs upward and (n,p)/(n,α) step downward, so only about 1.3 % of triplets were skipped and the
+reachability search costs more than it saves. The per-cell cost has to be cut some other way; the next
+step is to measure it stage by stage inside network preparation.
+
+## Entry 62 — clearance table provenance correction (2026-09-29)
+
+Entry 59 says Ag-108m is missing from the bundled IAEA table. It is also absent from IAEA RS-G-1.7
+Table 2 itself. GSR Part 3 Table I.1 gives 10 Bq/g, but that table is for exemption of moderate
+quantities, not bulk clearance, so it is not substituted. The bundled table (`data/clearance_iaea_2004.json`,
+svalinn/ALARA transcription) also carries RS-G-1.7 Table 1 natural-origin values (K-40 10 Bq/g;
+Gd-152, Hf-174, Re-187 1 Bq/g) although its `source` field names Table 2 only. The data file is left
+unchanged; `docs/BUDGET.md` now states both points.
