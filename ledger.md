@@ -1945,3 +1945,76 @@ with `ACTINV_GAS_PROTOCOL=P95`; logs are in `target/p95/`. Candidate `ba842d89�
 Adopted: `options.gas` ships. Limits (v1):
 - refused with `uncertainty` and for non-neutron projectiles;
 - fission ejectiles are uncovered and listed in the ledger.
+
+## Entry 72 — Transport-tally statistical error as a flux channel: P93 FAIL, P96 FAIL, P97 PASS, merged (2026-09-30)
+
+The feature propagates each transport tally group's declared statistical relative error as a
+first-order, diagonal flux channel: `uncertainty.channels: ["flux"]` and
+`spectrum.relative_error`. The sensitivity is s_g = dR/d ln φ_g. The channel runs flux-only,
+with covariance omitted, or alongside MF=33.
+
+**P93** (`41cfc21b…`, candidate `d12ba06a…`, reference `0d8dc849…`). Verdict
+`results/p93_verdict.json`, **FAIL**:
+- G1 PASS.
+- **G2(b) FAIL.** The three uncertainty examples were not bitwise identical. The candidate's
+  ledger uncertainty record, rebuilt from a shared runtime record, dropped
+  `ledger.uncertainty.band_name`, while the certificate kept it. This is a real defect.
+- G2(a) PASS: 783 P75b specs and 3 mesh profiles bitwise.
+- G2(c) PASS.
+- **G3 FAIL as registered.** Directional derivatives against central finite differences.
+  - Run 1 is void because of two checker defects, and its files are kept
+    (`target/p93/g3_run1_checker_defect.json`):
+    - The FD perturbed `flux_per_group` while leaving `spectrum.total` in place, so the
+      perturbation was renormalized away. The fix perturbs the absolute flux and drops `total`.
+    - The custom-10 baseline was compared as a tuple against a list.
+  - A G2 aggregation crash (list against dict indexing of `run_single_hash`) was also fixed
+    before any G2 outcome was read.
+  - Run 2: 2189 of 2256 comparisons within tolerance (97.0 %, 99 % required); 2205 within 100×.
+    All 67 failures sit at late cooling steps with |R|/peak ≤ 2.4e-13. There, CRAM is at its
+    precision floor and the central difference is noise, not a derivative.
+- G4 PASS: P32 cube, K = 64. Mean variance ratios 0.993–0.996; every cell's std ratio in band.
+- G5 not run.
+- Evidence in `target/p93_record/`.
+
+**P96** (`f9e4ef16…`), the G3 successor, is **FAIL**:
+- New checker `controls/check_p96.py`: fresh spec set (offset 10, seed base 20261001), central
+  differences at h = 1e-4 and h′ = 1e-3, and exclusion rule (b), which drops a comparison when
+  the two step sizes disagree (unconverged reference), capped at 5 %.
+- It carried P93's G2 over whatever its outcome, so it fails on G2(b).
+- Its G3 was stopped once that FAIL was certain: 8 of 42 nominal pairs had run and no comparison
+  had been computed, so the offset-10 set stayed unseen.
+- The first launch, with 3 workers, was OOM-killed inside its 6 GB scope. The relaunch used 2
+  workers and 8 GB.
+
+**P97** (`18665790…`) re-gates everything on a candidate with one added line: the ledger record
+gains `band_name` from the same runtime value the certificate uses.
+- It ran twice.
+  - First on the branch alone (candidate `015f0d4c…`): G1–G4 all passed.
+  - Then again after merging master, which brought in the P95 gas code that also touches
+    `run.rs`. The merge had conflicts: the gas ledger block and the flux-aware uncertainty
+    record, and the two test modules. Each side's new tests also needed the other's added
+    parameter (`gas: false`; the mesh `flux_origin` `None`).
+- The P93 checker's run caches (`g3_runs/`, `g3_custom10_runs/`) are keyed by case content, not
+  by binary. They were moved aside, so the merged rerun computed everything fresh.
+- The verdict is on the merged candidate `c7b8923d…` (`results/p97_verdict.json`):
+  - G0 PASS.
+  - G1 PASS.
+  - G2 PASS: (a) bitwise, (b) bitwise, now including `band_name`, (c).
+  - G3 PASS:
+    - 141 cases, 2160 comparisons; rule (a) excluded 0;
+    - rule (b) excluded 63 (2.9 %, cap 5 %), all with |R|/peak ≤ 5.1e-15;
+    - **2097 of 2097** remaining comparisons within tolerance, all within 100×;
+    - identical to the pre-merge run.
+  - G4 PASS: mean variance ratios 0.993–0.996, all 64 cells in band.
+  - G5 PASS: CI replay, every step exits 0 (23/23).
+
+Adopted: the flux channel ships.
+- Diagonal only: the fully correlated bound `sum(|s_g| e_g)` is reported beside it.
+- Energy-dependent fission-yield selection, pruning and mode are held at the nominal run's
+  choices.
+- Systematic flux uncertainty (transport model, geometry, transport nuclear data) is still
+  excluded and named in the ledger.
+
+Performance note for later: a flux-only run costs about 6× a nominal run (46 s against 7.5 s on
+the G4 cube). One tangent solve per group direction is the obvious reduction. It is not pursued
+here.

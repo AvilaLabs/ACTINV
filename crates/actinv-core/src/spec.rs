@@ -57,13 +57,21 @@ pub struct HashedFileRef {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct UncertaintyOptions {
-    pub covariance: HashedFileRef,
+    /// MF=33 cross-section covariance. Required unless `channels` is exactly
+    /// `["flux"]` (P93 flux-only mode), in which case it may be omitted:
+    /// then MF=33 is not propagated and the band is the flux channel alone.
+    /// When present, MF=33 is propagated exactly as before regardless of
+    /// what else `channels` requests.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub covariance: Option<HashedFileRef>,
     #[serde(default)]
     pub responses: Vec<String>,
     /// Uncertainty channels propagated into the band. Absent or empty selects
     /// `cross_section_mf33` only (the P11/G2 behavior); `decay_constants` and
     /// `fission_yields` add first-order MF=8/MT=457 half-life and MF=8/MT=454
     /// independent-yield channels, each reported with its own coverage.
+    /// `flux` (P93) adds the first-order transport-tally statistical-error
+    /// channel from `spectrum.relative_error`.
     #[serde(default)]
     pub channels: Vec<String>,
     #[serde(default = "confidence_95")]
@@ -312,6 +320,12 @@ pub struct Spectrum {
     /// true when `flux_per_group` is listed highest-energy first, as FISPACT fluxes files are
     #[serde(default)]
     pub descending: bool,
+    /// P93: relative statistical error of each group's transport tally, same
+    /// length and order as `flux_per_group` (honouring `descending`). Used
+    /// only when `uncertainty.channels` requests `"flux"`; accepted and
+    /// unused otherwise.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub relative_error: Option<Vec<f64>>,
 }
 
 impl Spectrum {
@@ -344,6 +358,19 @@ impl Spectrum {
             }
         }
         f
+    }
+
+    /// P93: `relative_error` in ascending-energy order (honouring
+    /// `descending`, like `ascending_flux`). `total` scaling never touches a
+    /// *relative* error, so it is not rescaled here.
+    pub fn ascending_relative_error(&self) -> Option<Vec<f64>> {
+        self.relative_error.as_ref().map(|errors| {
+            let mut e = errors.clone();
+            if self.descending {
+                e.reverse();
+            }
+            e
+        })
     }
 }
 fn g709() -> String {
@@ -586,17 +613,29 @@ impl Spec {
             }
         }
         if let Some(uncertainty) = &self.uncertainty {
-            if uncertainty.covariance.path.is_empty()
-                || uncertainty.covariance.sha256.len() != 64
-                || !uncertainty
-                    .covariance
-                    .sha256
-                    .bytes()
-                    .all(|byte| byte.is_ascii_hexdigit())
-            {
-                return Err(
-                    "uncertainty.covariance requires a path and a 64-hex-digit sha256".into(),
-                );
+            let flux_only = uncertainty.channels.len() == 1 && uncertainty.channels[0] == "flux";
+            match &uncertainty.covariance {
+                Some(covariance) => {
+                    if covariance.path.is_empty()
+                        || covariance.sha256.len() != 64
+                        || !covariance
+                            .sha256
+                            .bytes()
+                            .all(|byte| byte.is_ascii_hexdigit())
+                    {
+                        return Err(
+                            "uncertainty.covariance requires a path and a 64-hex-digit sha256"
+                                .into(),
+                        );
+                    }
+                }
+                None if flux_only => {}
+                None => {
+                    return Err(
+                        "uncertainty.covariance is required unless channels is exactly [\"flux\"]"
+                            .into(),
+                    );
+                }
             }
             if !uncertainty.confidence_level.is_finite()
                 || !(0.0..1.0).contains(&uncertainty.confidence_level)
@@ -610,7 +649,7 @@ impl Spec {
             let mut seen_channels = std::collections::HashSet::new();
             for channel in &uncertainty.channels {
                 match channel.as_str() {
-                    "cross_section_mf33" | "decay_constants" | "fission_yields" => {}
+                    "cross_section_mf33" | "decay_constants" | "fission_yields" | "flux" => {}
                     "uncovered_remainder" => {
                         return Err(
                             "uncertainty.channels cannot request uncovered_remainder; it is always named, never propagated"
@@ -1048,6 +1087,21 @@ impl Spec {
             .any(|f| !f.is_finite() || *f < 0.0)
         {
             return Err("group fluxes must be finite and nonnegative".into());
+        }
+        if let Some(errors) = &self.spectrum.relative_error {
+            if errors.len() != self.spectrum.flux_per_group.len() {
+                return Err(format!(
+                    "spectrum.relative_error has {} entries; flux_per_group has {}",
+                    errors.len(),
+                    self.spectrum.flux_per_group.len()
+                ));
+            }
+            if errors
+                .iter()
+                .any(|value| !value.is_finite() || *value < 0.0)
+            {
+                return Err("spectrum.relative_error must be finite and nonnegative".into());
+            }
         }
         if self
             .spectrum
@@ -1678,5 +1732,127 @@ mod duration_tests {
         assert!(spec.options.rate_scale.is_some());
         assert!(spec.options.decay_scale.is_some());
         assert!(spec.options.yield_scale.is_some());
+    }
+
+    // P93 G1: the flux channel's own validation (uncertainty.covariance's
+    // flux-only exemption, spectrum.relative_error's shape/sign checks, and
+    // that descending reorder keeps a group's error paired with its flux).
+
+    #[test]
+    fn covariance_is_required_unless_channels_is_exactly_flux() {
+        // channels == ["flux"] alone: covariance may be omitted.
+        let mut value = minimal_spec();
+        value["spectrum"]["relative_error"] = serde_json::json!([0.1]);
+        value["uncertainty"] = serde_json::json!({"channels": ["flux"]});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+
+        // Any other channel set still requires covariance, flux included or not.
+        for channels in [
+            serde_json::json!(["decay_constants"]),
+            serde_json::json!(["flux", "decay_constants"]),
+            serde_json::json!([]),
+        ] {
+            let mut value = minimal_spec();
+            value["spectrum"]["relative_error"] = serde_json::json!([0.1]);
+            value["uncertainty"] = serde_json::json!({"channels": channels});
+            let err = Spec::from_json(&value.to_string()).unwrap_err();
+            assert!(
+                err.contains("uncertainty.covariance is required unless channels is exactly"),
+                "{err}"
+            );
+        }
+
+        // With covariance present, channels == ["flux"] still validates (MF=33
+        // still runs; flux-only mode is about what's *required*, not what's allowed).
+        let mut value = minimal_spec();
+        value["spectrum"]["relative_error"] = serde_json::json!([0.1]);
+        value["uncertainty"] = serde_json::json!({
+            "channels": ["flux"],
+            "covariance": {"path": "cov.npz", "sha256": "0".repeat(64)},
+        });
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+    }
+
+    #[test]
+    fn spectrum_relative_error_length_must_match_flux_per_group() {
+        let mut value = minimal_spec();
+        value["spectrum"]["relative_error"] = serde_json::json!([0.1, 0.2]);
+        let err = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(
+            err.contains("spectrum.relative_error has 2 entries; flux_per_group has 1"),
+            "{err}"
+        );
+    }
+
+    #[test]
+    fn spectrum_relative_error_must_be_finite_and_nonnegative() {
+        // A negative value is expressible in JSON directly.
+        let mut value = minimal_spec();
+        value["spectrum"]["relative_error"] = serde_json::json!([-0.1]);
+        let err = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(err.contains("must be finite and nonnegative"), "{err}");
+
+        // NaN/infinity have no JSON literal; exercise the check directly on a
+        // parsed, otherwise-valid Spec (mirrors how other *_must_be_finite
+        // checks in this file can only be reached this way).
+        let base = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        for bad in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            let mut spec = base.clone();
+            spec.spectrum.relative_error = Some(vec![bad]);
+            let err = spec.validate().unwrap_err();
+            assert!(
+                err.contains("must be finite and nonnegative"),
+                "{bad}: {err}"
+            );
+        }
+    }
+
+    #[test]
+    fn relative_error_is_optional_and_unused_without_the_flux_channel() {
+        // No relative_error, no flux channel requested: unaffected (pre-P93 behavior).
+        let value = minimal_spec();
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+
+        // relative_error present but the flux channel not requested: accepted,
+        // simply carried and unused (documented in the field's doc comment).
+        let mut value = minimal_spec();
+        value["spectrum"]["relative_error"] = serde_json::json!([0.1]);
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(spec.spectrum.relative_error, Some(vec![0.1]));
+    }
+
+    #[test]
+    fn descending_reorder_keeps_a_groups_error_paired_with_its_flux() {
+        let mut value = minimal_spec();
+        value["spectrum"] = serde_json::json!({
+            "structure": "custom",
+            "boundaries_eV": [1.0, 2.0, 3.0],
+            "flux_per_group": [2.0, 5.0],
+            "relative_error": [0.02, 0.05],
+            "descending": true,
+        });
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let ascending_flux = spec.spectrum.ascending_flux();
+        let ascending_error = spec.spectrum.ascending_relative_error().unwrap();
+        assert_eq!(ascending_flux, vec![5.0, 2.0]);
+        assert_eq!(ascending_error, vec![0.05, 0.02]);
+        // Every group's error stays attached to that same group's flux under reorder.
+        let declared: Vec<(f64, f64)> = value["spectrum"]["flux_per_group"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_f64().unwrap())
+            .zip(
+                value["spectrum"]["relative_error"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_f64().unwrap()),
+            )
+            .collect();
+        let mut reordered: Vec<(f64, f64)> =
+            ascending_flux.into_iter().zip(ascending_error).collect();
+        reordered.reverse();
+        assert_eq!(declared, reordered);
     }
 }

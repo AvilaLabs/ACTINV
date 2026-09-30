@@ -776,6 +776,7 @@ impl StudySpectrum {
             total: self.total,
             boundaries_eV: self.boundaries_eV.clone(),
             descending: self.descending,
+            relative_error: None,
         })
     }
 }
@@ -3063,10 +3064,10 @@ fn evaluate_robustness_inner(
             let mut uspec = spec.clone();
             uspec.options.rate_scale = None;
             uspec.uncertainty = Some(crate::spec::UncertaintyOptions {
-                covariance: crate::spec::HashedFileRef {
+                covariance: Some(crate::spec::HashedFileRef {
                     path: cov_ref.path.clone(),
                     sha256: cov_ref.sha256.clone().unwrap_or_default(),
-                },
+                }),
                 responses: vec![
                     "activity:*".to_string(),
                     "activity.total".to_string(),
@@ -3672,10 +3673,10 @@ mod robustness_tests {
         assert_eq!(prepared_signature(&spec2), sig0);
         // uncertainty options form their own signature
         spec2.uncertainty = Some(crate::spec::UncertaintyOptions {
-            covariance: crate::spec::HashedFileRef {
+            covariance: Some(crate::spec::HashedFileRef {
                 path: "c.npz".into(),
                 sha256: "ab".repeat(32),
-            },
+            }),
             responses: vec![],
             channels: vec![],
             confidence_level: 0.95,

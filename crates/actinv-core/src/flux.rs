@@ -646,6 +646,52 @@ pub fn rebin_equal_lethargy(
     })
 }
 
+/// P93: per-source-group equal-lethargy weight map onto destination groups —
+/// the same overlap convention `rebin_equal_lethargy` uses to rebin a flux
+/// array, but returned per source group so a single input group's own flux
+/// channel parameter can be mapped onto the destination (activation-library)
+/// groups its uncertainty direction touches. Flux outside `[destination[0],
+/// destination[last]]` (underflow/overflow) carries no weight, matching how
+/// that flux never reaches a destination group's rate in the nominal rebin.
+pub fn group_rebin_weights(
+    source_boundaries: &[f64],
+    destination_boundaries: &[f64],
+) -> Result<Vec<Vec<(usize, f64)>>, String> {
+    validate_boundaries(source_boundaries)?;
+    validate_boundaries(destination_boundaries)?;
+    let source_groups = source_boundaries.len() - 1;
+    let destination_groups = destination_boundaries.len() - 1;
+    if source_boundaries == destination_boundaries {
+        return Ok((0..source_groups).map(|g| vec![(g, 1.0)]).collect());
+    }
+    let mut weights: Vec<Vec<(usize, f64)>> = vec![Vec::new(); source_groups];
+    for group in 0..source_groups {
+        let low = source_boundaries[group];
+        let high = source_boundaries[group + 1];
+        let width = (high / low).ln();
+        if width <= 0.0 {
+            continue;
+        }
+        let mut destination_group = destination_boundaries.partition_point(|value| *value <= low);
+        destination_group = destination_group.saturating_sub(1);
+        while destination_group < destination_groups {
+            let overlap_low = low.max(destination_boundaries[destination_group]);
+            let overlap_high = high.min(destination_boundaries[destination_group + 1]);
+            if overlap_high > overlap_low {
+                let weight = (overlap_high / overlap_low).ln() / width;
+                if weight > 0.0 {
+                    weights[group].push((destination_group, weight));
+                }
+            }
+            if destination_boundaries[destination_group + 1] >= high {
+                break;
+            }
+            destination_group += 1;
+        }
+    }
+    Ok(weights)
+}
+
 pub struct FluxStream {
     reader: BufReader<File>,
     pub header: FluxHeader,
