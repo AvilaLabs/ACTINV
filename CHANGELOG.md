@@ -22,6 +22,12 @@
   `inventory_appm`, the FISPACT-II `APPM OF` convention with initial content included. Against
   FISPACT-II/TENDL-2017 on the 132 FNS experiments, 403/403 gated pairs agree within ±10 %.
   With gas off, output is byte-identical (P92, P95).
+- Transport-tally statistical error as an uncertainty channel: `uncertainty.channels: ["flux"]` with a
+  per-group `spectrum.relative_error` propagates each group's declared relative error to first order
+  (sensitivity dR/d ln φ_g, diagonal), flux-only with `covariance` omitted or alongside MF=33. Each
+  response reports `flux_sensitivities` and the fully correlated bound `flux_fully_correlated_bound`.
+  Checked against central finite differences on an unseen spec set (2097/2097 within tolerance) and
+  against sampling on the P32 cube (P93, P96, P97).
 
 **Fixed**
 
