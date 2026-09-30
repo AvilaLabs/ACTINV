@@ -31,6 +31,9 @@
 - Mesh runs collapse the cross sections of up to 16 cells in one pass over the library, each cell
   in its own accumulator in the original order, and single runs no longer clone the decay table
   when no `decay_scale` is given: bitwise identical, one-thread mesh runs 1.33–1.77× faster (P81).
+- Mesh cell records carry the cell's result text verbatim instead of parsing it back and serializing
+  it again on the writer thread: byte-identical output; SS316 with photon output 1.77× faster at
+  3 threads, small records unchanged (P83).
 
 **Changed**
 

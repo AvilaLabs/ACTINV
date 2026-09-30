@@ -1720,3 +1720,27 @@ No amendment was written: the threshold stands. One observation that was not mea
 `threads` > 1, cells are solved and serialized in parallel, but the parse and write happen serially on
 the collecting thread. The saved round trip may therefore matter more in multi-threaded runs. That
 would need its own protocol and gate before it counts.
+
+## Entry 65 — P83 verbatim mesh cell result text, multi-thread gate: PASS, merged (2026-09-29)
+
+P83 (`73d4d9a4…`) is the second and final test of the P82 change (ledger 64), approved by the owner
+after P82 failed its one-thread gate at 1.299× against 1.3×. P82's FAIL stands. The code is the P82
+candidate unchanged; the build is byte-identical (`53dedafb…`). The gate was fixed before any
+multi-threaded timing: `ss316_r2s` with `threads` 3. The reason, a hypothesis at the time: cells are
+serialized in parallel, but the parse-and-reserialize happened serially on the writer thread. If P83
+had failed, the change would have been abandoned. Reference is master `831a256`, i.e. the P81 build
+`c2b2d688…`. Verdict `results/p83_verdict.json` from `controls/check_p83.py`:
+
+- G0 PASS. G1 PASS (fmt, clippy, tests including the spliced-record byte-equality test).
+- G2 PASS: byte-identical on all three profiles at 1 and 3 threads. Also identical on
+  `group_workloads` (reference run on the same spec, correcting P82's comparison) and on the resumed
+  run (20 cells, then `resume`) against the reference's one-pass run of the same spec.
+- G4 PASS: every CI runtime step exits 0 in the local replay. The replay was first started by mistake
+  alongside the gate run. It was stopped at the start of clippy, having overlapped only the first
+  untimed byte comparisons, and was rerun after the gates finished.
+- G5 PASS: `ss316_r2s` at 3 threads, median 10.53 → 5.96 s, **1.77×** against 1.3×. Reported only:
+  `ss316_r2s` at 1 thread 15.17 → 10.54 s (1.44×); iron profiles 0.98–1.02× at 1 and 3 threads.
+
+The one-thread SS316 speedup was 1.299× in P82 and 1.44× here, for the same code and the same
+reference. Run-to-run variance on this laptop is therefore larger than P82's margin to its gate.
+Future adoption thresholds should use more repeats or a wider margin.
