@@ -34,6 +34,12 @@
 - Mesh cell records carry the cell's result text verbatim instead of parsing it back and serializing
   it again on the writer thread: byte-identical output; SS316 with photon output 1.77× faster at
   3 threads, small records unchanged (P83).
+- Prepared-run cache (workbench sweeps, `actinv worker` and the other cached-run commands): once a
+  cache has seen two spectra for otherwise identical inputs, it keeps groupwise prepared data in
+  memory and collapses each new spectrum from it. Before this change, every new flux level built,
+  wrote and read back a 6.9 MB collapsed artifact under the prepared cache. Results are bitwise
+  identical. A flux-only slider move on SS316 went from about 2.5 s to about 0.15 s (17×). The
+  groupwise slot holds about 275 MB in memory for TENDL-2025 at 709 groups (P85, P86).
 
 **Changed**
 

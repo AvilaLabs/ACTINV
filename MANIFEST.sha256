@@ -9,7 +9,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 5b0e4fd7a4b934875286d18ac1fd844bba8aaf8541dfe3f5105353a363f139cc  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 501d1c98ddae1a1348d96091ec120d19e848cf484637c8bf151ca583bbde9ddf  ./AGENTS.md
-b6235acf22df2a0f82509a505230e12df7eb278bfcc5abd207212e4c42adb77a  ./CHANGELOG.md
+476faf85f2d4c4df198b84105c0f2dba7f133c40f56d970a16b800bdd2daa4e5  ./CHANGELOG.md
 04795cfec8c6241d33edbf94ef2df47637d939380563bf3470d5f5f7ddc521ca  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a5a361eb24c1459e44a7456f2503049b003470ada418e176013fe7afa2e1592  ./Cargo.lock
@@ -219,6 +219,9 @@ b48124e48f06838ae903cb5b38d0bb33ab94985cb2702e2ee38d544581677f97  ./controls/che
 2617908dd4eece77e2869a8416026f194da409ae4acca52863e0e858a7b26f75  ./controls/check_p81.py
 82a70cc174e9d7691b4e4f965f2b5b367c90068fbc1c9470feedeb658c3f9177  ./controls/check_p82.py
 27ded8b79c9cd3ccf790ab45845bb82983ab377091030799186b09081e34817b  ./controls/check_p83.py
+c3233fe6a28f60023b175946e3e71009f2a0a34c15f0c553674ceacb4a310e11  ./controls/check_p85.py
+f3aebe1f309718832da619fe2e58fd886ee2042eb4166b9625cecbbb17589a60  ./controls/check_p86.py
+c999a7e0043679525efe766b2000f22b76bf8d2cacc1630f6f780ef1ddd90397  ./controls/check_p86_rerun.py
 3efb681ab3ac54e609104cc84771ee93add45af6a56ead069e49f72da1544b7e  ./controls/check_p9.py
 684b885fe29b6cc0acbd50b2e23d226073a9c29a13dcf9721511bb42a0df541a  ./controls/check_prior_verdicts.py
 93e4ad814a873d713b64508d706f609dc7d9cbb94e39dcf1019e8485b9077fc0  ./controls/check_public_examples.py
@@ -723,6 +726,7 @@ d88714714fb240cca43c69b78652a0473b363f3a394c53500fb2e4dd047e9cf4  ./crates/actin
 d821ad302a2fa82e0ce91e9aae194c42488d05b71b2453d40c8d683b3ad8c3a1  ./crates/actinv-cli/tests/version.rs
 c8c9ce34373df549467da40ddfa1531209c9f44263b950f46bb0d6582410e277  ./crates/actinv-core/Cargo.toml
 3b2e1bde3099de437f81a76a2c0ac9315803a83ecc81c005dc69de11305c1016  ./crates/actinv-core/data/clearance_iaea_2004.json
+ade32188ff57bb40e9f763a59a2c33e3f7b447779a0fb3495b5257472609ae03  ./crates/actinv-core/src/bin/cache_probe.rs
 27dbf073400a7ad3afb64f913fa809951eb800d0de3f8f11688606a1c2f64943  ./crates/actinv-core/src/bin/cram_probe.rs
 81ff1f7164e829679a639a80df44710b8fd6b31129e4eefc1ea75728ec02ba5d  ./crates/actinv-core/src/bin/fission_probe.rs
 a55ee49f8d0544fc05fec3e6d1ec5363de814db041b298087aeeb983362899b3  ./crates/actinv-core/src/bin/flux_probe.rs
@@ -747,7 +751,7 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 067b21dd7fdbe6fc7cbf6b3d8b8132d741117284b79bebb383171f24ed3a9cd2  ./crates/actinv-core/src/r2s.rs
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
 7cdbb417c2c228e9524bff1cb5f85674b094938d5c204fea02b0a3dc45c48bb4  ./crates/actinv-core/src/reverse.rs
-dad9e5e4b805417eeabcfe437fe79c57cfffdcdab9a6876be1e6263732d4edb7  ./crates/actinv-core/src/run.rs
+8fb86848e744b125fcd7c98eddbbf7a5ff945b994fde529ba183c529f55454f5  ./crates/actinv-core/src/run.rs
 0ebf3068ace5641afe5fa4034eca7c12a8914d3d7f3760606007fbceda93c21e  ./crates/actinv-core/src/shielding.rs
 96bbce40009d1cda32016cc33f6c2ced3b3b781d8af3b7791f529e441f254e3e  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
@@ -777,7 +781,7 @@ f2e4dce7d2bc566cbf5c32cf68b0fe3007f2b722b65eeecad17f2d81661b2011  ./crates/actin
 91567ccc466c91bb10866f82545b1b929eeefa008a19920075cfe8f0bf669018  ./crates/actinv-data/src/lib.rs
 f1f80249839874ce695f530f662182663f888e87949d8aaeca8638ae5326c871  ./crates/actinv-data/src/library.rs
 7041f7a53856f6409ac8d95fd44f683a5c18f496537339668d1953bd49261e6d  ./crates/actinv-data/src/normalize.rs
-0563dabfa3cbb31ffb575f5e29d90dd12bc4a9df6dd135ffa3673e6c2448d157  ./crates/actinv-data/src/prepared.rs
+43bc4ea5590a4069fb5b503b798222a661a9c14718727bfddd77c55366414762  ./crates/actinv-data/src/prepared.rs
 b80de2abfc574df37e79db771aa164a754d3bad62c8fc2205b732609376b9700  ./crates/actinv-data/src/processing.rs
 8ad5bdfae5acaf6083729c2e4161c7e1f8c584cabf6c6ddc0d57d8b63edf1b54  ./crates/actinv-data/src/resonance.rs
 b5596655068fd267e3422f60ea77ab69857d68cd6b3b4f8556dc084f041b98cc  ./crates/actinv-data/src/shielding.rs
@@ -929,7 +933,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-7f5cce1077bc7897758cf9154ede69f8e3f5acc0dfc15ab39bf7ed8dbd6677b8  ./ledger.md
+4a18020a86d3238304e3e362ac7a6ed55c4bb8bc854d428ee4d2827531eab7b2  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -1093,6 +1097,9 @@ bacf08d5b71cfa01507ec397141729b9c3053ef0047b73c4e1d0588fc7df54d4  ./protocols/AC
 843f514a48995f63f2868dc835764afeea6e139a17b4a5ebc640ab2b54bf26e7  ./protocols/ACTINV-P81_PROTOCOL.md
 d3739dbf653cb350e3b8ca4f4c8683544b754e3708164390b3ed42e0e0c38b2e  ./protocols/ACTINV-P82_PROTOCOL.md
 73d4d9a400bf77aaa574696850e86443e79ed0723639e537d3cbfe73dc34593d  ./protocols/ACTINV-P83_PROTOCOL.md
+310e389eb270b0ba989b9d48a1fc7d5d36d525c6efaff49133f6023bac5e7b2a  ./protocols/ACTINV-P84_PROTOCOL.md
+169269e715439a2b8263c4cffba97f8f9d1958f10c0312ae02266770d3b25eb4  ./protocols/ACTINV-P85_PROTOCOL.md
+903adffa6ff3e8a2b06400e0dc062147beea2187eb6206f445161547d7af0f12  ./protocols/ACTINV-P86_PROTOCOL.md
 4e75fc45357390000d2b015ee936b83d3d45e0a3dc1d5acf51bc23f3c547588f  ./protocols/ACTINV-P8_AMENDMENT_A.md
 bd3111cd4bc527ae60a2d34ea0d06de065f77caf6276eb63fdca78fa290637e3  ./protocols/ACTINV-P8_PROTOCOL.md
 5ac1f139b4f4c878f8595b685bdc1e7f0be95abc74b21ad3309df9ecc13dd4f6  ./protocols/ACTINV-P9_AMENDMENT_A.md
@@ -1112,7 +1119,7 @@ df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HY
 f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/desktop-historical-checks-v1.md
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
-e020891f70e215ed63295f4641667c050ec6d1b0777df1a94dc6cfd9b6e4332c  ./protocols/protocol_hash.txt
+8dd701efc451a6a15d8924b2ebda88a34f65d4c0072c18c2e0a1cdcae8fcbef1  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 846abac070437d1c99b6165549f1891e2ef2d58fc7b8b4de3555868e9025bae6  ./python/Cargo.lock
@@ -3612,6 +3619,9 @@ bb2ca026d9a7539b48694d6445a7b683d5c7084c4b39bb5dda90cf5fa31b6e36  ./results/p80_
 3de208562233f2bfbd316c671c34a02303c010cda27009ae3eaa167623777047  ./results/p81_verdict.json
 d14ddd909b9458bb429870654f53cc0fb36d7706ee22db55c7388bb104aa5a21  ./results/p82_verdict.json
 80d5eceef94e58f7b403a88941577cb0d8a96f588f0add52c7f56049ba232ed9  ./results/p83_verdict.json
+77b4cffbd3485b53cab5f01a3141925c32a57b8ebe62998879576d418251a724  ./results/p85_verdict.json
+46e1a36fa4f39c9235a0bc4d8690efbe76b091d85cbb67a502f05c54cc52eec1  ./results/p86_p85_gates.json
+f9d3cdf19186e044776aceb6bb9c76c7779b2eec508482ffa66585f873d65301  ./results/p86_verdict.json
 82ac3b499737b867bcdfc40f3fc5c0ef5a0a0b25b9f1978841ea350a0fcfde3e  ./results/qa_unitarity_actinv_tendl2023_709g.json
 9024a4ac890ce631a8fe58f3e913cf98a80f84e9fc0c1b661014b5920506e41a  ./results/qa_unitarity_tendl-2025-neutron-709g.json
 5216fed4ffd48269e7b2153af4d17e241b2324f1b83cf68351a5ab26a4a1716b  ./results/release_v1.2.0.json

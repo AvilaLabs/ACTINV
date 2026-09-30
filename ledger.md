@@ -1744,3 +1744,64 @@ had failed, the change would have been abandoned. Reference is master `831a256`,
 The one-thread SS316 speedup was 1.299× in P82 and 1.44× here, for the same code and the same
 reference. Run-to-run variance on this laptop is therefore larger than P82's margin to its gate.
 Future adoption thresholds should use more repeats or a wider margin.
+
+## Entry 66 — P84 withdrawn untested; P85 groupwise prepared data after a spectrum-only miss: G4 FAIL, not merged (2026-09-29)
+
+**P84** (`310e389e…`) proposed memoizing parsed decay data to speed up flux-only reruns in the
+workbench live sweep and in the worker. Before any candidate build, its measurement probe
+(`cache_probe`) was run on the reference. The probe showed that P84's motivation was incomplete. In a
+warm process, a flux-only change to a spectrum total not seen before cost about 4 s. About 3 s of that
+built a new spectrum-collapsed artifact: open and verify the 275 MB prepared library, collapse it, write
+6.9 MB under `~/.cache/actinv/prepared-v1` (984 MB accumulated at the time), and read it back. Decay
+parsing was about 0.65 s. The probe also showed that P84's timing design was biased: reference and
+candidate would have shared the on-disk prepared cache. P84 was withdrawn untested. Its file and hash
+stay on record.
+
+**P85** (`169269e7…`) was registered before its candidate build. `PreparedCache` also records a base
+fingerprint: the same canonical object without the spectrum's flux values and total, without
+`collapse_flux` and without `multi_spectrum`. On a miss that differs from the slot only by spectrum,
+it prepares groupwise activation data, the route that multi-spectrum and mesh runs already use. That
+slot then serves every later spectrum with the same base fingerprint, collapsing in memory and
+writing nothing to disk. Reference `53dedafb…` (master `feb0c68` plus the probe); candidate
+`38ecc4e4…`. Each probe got a fresh, empty `ACTINV_CACHE_DIR`. Verdict `results/p85_verdict.json`:
+
+- G0, G1 PASS, including the unit test that the collapsed artifact's values and fission energies equal
+  the groupwise values bit for bit for five spectra.
+- G2 PASS: SS316, Eurofer97 and concrete, 10-factor flux sequences. All result hashes are identical
+  across reference and candidate, cold and warm. Candidate warm hits read F, F, T×8; the reference
+  never hits.
+- G3 PASS: 783 single runs identical after timing keys are removed.
+- G5 PASS: SS316 warm runs 3–10, repeat medians 2446/2489/2497 ms → 148.9/142.6/145.4 ms,
+  **17.12×** against 3×. Reported only: the second warm run on the candidate (the groupwise
+  preparation) takes 1.7–2.2 s; later runs take 128–285 ms.
+- **G4 FAIL**: in the local CI replay, step `p16` exited 1; the other 22 steps exited 0. The P16
+  control `g1_p16_quantities.py` checks, by a fixed source string, that `PreparedRun::prepare` goes
+  through the shared profiled preparation. P85's added `groupwise` argument changed that call, so
+  `wiring.shared_prepare` read false. This is a source-structure control, not a change in results,
+  but the gate was pre-registered and the FAIL stands. P85 is not merged as built. The replay log is
+  archived at `target/p85/ci_replay_summary.log`, and the machine-readable record is in
+  `results/p86_verdict.json` (`p85_G4_ci_replay`).
+
+## Entry 67 — P86 P85 with the shared-prepare wiring kept: PASS, merged (2026-09-29)
+
+P86 (`903adffa…`) was registered after P85's G4 FAIL (entry 66) and before its build. It is the P85
+change with one refactor. `prepare_profiled(spec, physical, profiler)` keeps its signature and forwards
+to a new private `prepare_profiled_with(…, groupwise)`, so the P16 wiring control holds unchanged. The
+first build failed fmt on one line wrap, which `cargo fmt` fixed, and the whole build script was then
+rerun. The final build is `actinv` `0d8dc849…` and `cache_probe` `67224ff4…`. It is not
+byte-identical to the P85 candidate: line numbers moved, and panic locations are embedded in the
+binary. So the protocol's fallback applied, and P85's runtime gates were rerun on this build by
+`controls/check_p86_rerun.py`, which calls `check_p85.py` unchanged with its work directory and
+verdict path redirected (`results/p86_p85_gates.json`). Verdict `results/p86_verdict.json` from
+`controls/check_p86.py`:
+
+- G0 PASS. G1 PASS (fmt, clippy, tests including the artifact-vs-groupwise bit-equality test).
+- G2 PASS via rerun on this build. Sequences: all hashes identical across reference and candidate,
+  cold and warm, for all three specs; candidate warm hits F, F, T×8. Singles: 783 identical. SS316
+  warm runs 3–10: repeat medians 3363/2956/2807 ms → 162/174/159 ms, **18.25×** against 3×.
+- G3 PASS: every local CI replay step exits 0, including `p16`.
+
+Adopted. Effect: in the workbench live sweep and the other cached-run paths, a flux-only change after
+the second distinct spectrum reuses in-memory groupwise data. No collapsed artifact is written per
+flux level any more, so these writes no longer accumulate under `~/.cache/actinv/prepared-v1`. The cost
+is about 275 MB resident for the groupwise slot (TENDL-2025, 709 groups).

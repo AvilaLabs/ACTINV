@@ -1740,6 +1740,16 @@ impl PreparedRun {
         physical: &PhysicalInputs,
         profiler: &mut RunProfiler,
     ) -> Result<Self, String> {
+        Self::prepare_profiled_with(spec, physical, profiler, false)
+    }
+
+    /// `groupwise` keeps groupwise activation data even for a single spectrum (P85).
+    fn prepare_profiled_with(
+        spec: &Spec,
+        physical: &PhysicalInputs,
+        profiler: &mut RunProfiler,
+        groupwise: bool,
+    ) -> Result<Self, String> {
         // A spectrum-collapsed artifact is bound to one spectrum; per-step
         // spectra need the groupwise rows so each step collapses on its own.
         let multi_spectrum = physical
@@ -1773,7 +1783,7 @@ impl PreparedRun {
             spec.radiological.as_ref(),
             spec.damage.as_ref(),
             spec.self_shielding.as_ref(),
-            if multi_spectrum {
+            if multi_spectrum || groupwise {
                 None
             } else {
                 collapsible_spectrum(physical.flux.values())
@@ -5175,9 +5185,16 @@ impl PreparedRun {
 /// references/options plus the resolved content sha256 of each referenced
 /// file — so a hit reuses preparation only when every file is unchanged, and
 /// a changed file is a miss that revalidates. One slot bounds worker memory.
+///
+/// P85: the slot also records a base fingerprint that leaves out the spectrum's flux values. When a
+/// miss differs from the slot only in the spectrum, the slot is re-prepared with groupwise activation
+/// data and then serves every spectrum with that base fingerprint, collapsing each run's own flux in
+/// memory instead of building and writing a spectrum-collapsed artifact per spectrum.
 #[derive(Default)]
 pub struct PreparedCache {
     slot: Option<(String, PreparedRun)>,
+    base: Option<String>,
+    groupwise: bool,
     last_hit: bool,
     last_fingerprint_ms: f64,
 }
@@ -5201,7 +5218,12 @@ fn fingerprint_file(path: &str) -> Result<serde_json::Value, String> {
     Ok(serde_json::json!({"path": path, "sha256": file_sha256(path)?}))
 }
 
-fn prepared_fingerprint(spec: &Spec, physical: &PhysicalInputs) -> Result<String, String> {
+/// The full fingerprint, and the base fingerprint without the spectrum's flux values and total and
+/// without the collapse flux (P85).
+fn prepared_fingerprint(
+    spec: &Spec,
+    physical: &PhysicalInputs,
+) -> Result<(String, String), String> {
     let multi_spectrum = physical
         .schedule
         .iter()
@@ -5236,7 +5258,7 @@ fn prepared_fingerprint(spec: &Spec, physical: &PhysicalInputs) -> Result<String
     if let Some(options) = spec.self_shielding.as_ref() {
         files.push(fingerprint_file(&options.table.path)?);
     }
-    let canonical = serde_json::json!({
+    let mut canonical = serde_json::json!({
         "library": spec.library,
         "decay": spec.decay,
         "photon": spec.photon,
@@ -5253,9 +5275,21 @@ fn prepared_fingerprint(spec: &Spec, physical: &PhysicalInputs) -> Result<String
             .map(|flux| flux.iter().map(|v| v.to_bits()).collect::<Vec<u64>>()),
         "files": files,
     });
-    let mut hasher = Sha256::new();
-    hasher.update(canonical.to_string().as_bytes());
-    Ok(format!("{:x}", hasher.finalize()))
+    let full = format!("{:x}", Sha256::digest(canonical.to_string().as_bytes()));
+    let object = canonical
+        .as_object_mut()
+        .ok_or("prepared fingerprint is not an object")?;
+    object.remove("multi_spectrum");
+    object.remove("collapse_flux");
+    if let Some(spectrum) = object
+        .get_mut("spectrum")
+        .and_then(serde_json::Value::as_object_mut)
+    {
+        spectrum.remove("flux_per_group");
+        spectrum.remove("total");
+    }
+    let base = format!("{:x}", Sha256::digest(canonical.to_string().as_bytes()));
+    Ok((full, base))
 }
 
 pub fn run_with_cache(
@@ -5267,13 +5301,23 @@ pub fn run_with_cache(
     let mut profiler = RunProfiler::from_environment();
     let physical = spec.physical_inputs()?;
     let fingerprint_started = std::time::Instant::now();
-    let fingerprint = prepared_fingerprint(spec, &physical)?;
+    let (fingerprint, base) = prepared_fingerprint(spec, &physical)?;
     cache.last_fingerprint_ms = fingerprint_started.elapsed().as_secs_f64() * 1e3;
-    let hit = matches!(cache.slot.as_ref(), Some((stored, _)) if *stored == fingerprint);
+    let same_base = cache.slot.is_some() && cache.base.as_deref() == Some(base.as_str());
+    let hit = if cache.groupwise {
+        same_base
+    } else {
+        matches!(cache.slot.as_ref(), Some((stored, _)) if *stored == fingerprint)
+    };
     cache.last_hit = hit;
     if !hit {
-        let prepared = PreparedRun::prepare_profiled(spec, &physical, &mut profiler)?;
+        // Only the spectrum changed: prepare groupwise data that serve every spectrum (P85).
+        let groupwise = same_base;
+        let prepared =
+            PreparedRun::prepare_profiled_with(spec, &physical, &mut profiler, groupwise)?;
         cache.slot = Some((fingerprint, prepared));
+        cache.base = Some(base);
+        cache.groupwise = groupwise;
     }
     let prepared = &cache.slot.as_ref().expect("cache slot populated").1;
     let result = prepared.run_started_profiled(

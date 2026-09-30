@@ -2400,6 +2400,71 @@ mod tests {
     }
 
     #[test]
+    fn collapsed_artifact_equals_groupwise_collapse_bit_for_bit() {
+        let scratch = scratch("artifact-vs-groupwise");
+        let source = scratch.join("source.npz");
+        let mut dense = fixture();
+        dense.rows.push(Row {
+            target: 0,
+            mt: 16,
+            zap: 26_055,
+            lfs: 0,
+            lmf: 3,
+        });
+        dense.sig.extend_from_slice(&[0.0, 0.0, 1.0e-3, -0.0, 7.25]);
+        write_npz(&source, &dense).unwrap();
+        let library_sha = sha256_file(&source);
+        let index_sha = "33".repeat(32);
+        let source_text = source.to_str().unwrap();
+        let groupwise = load_or_prepare_groupwise_in(
+            &scratch.join("cache"),
+            source_text,
+            &library_sha,
+            &index_sha,
+        )
+        .unwrap();
+        let spectra: [&[f64]; 5] = [
+            &[0.0, 2.0, 3.0, 0.0, 5.0],
+            &[0.1, 0.2, 0.3, 0.4, 0.5],
+            &[0.0, 0.0, 4.0, 0.0, 0.0],
+            &[3.0e14, 1.0e-9, 0.0, 2.5e13, 1.0],
+            &[5.0, 4.0, 3.0, 2.0, 1.0e-300],
+        ];
+        for phi in spectra {
+            let collapsed = load_or_prepare_collapsed_in(
+                &scratch.join("cache"),
+                source_text,
+                &library_sha,
+                &index_sha,
+                phi,
+            )
+            .unwrap();
+            let (denominator, first, last) = flux_window(phi, groupwise.group_count());
+            for row in 0..groupwise.rows().len() {
+                let expected = groupwise.collapse_row(row, phi, denominator, first, last);
+                assert_eq!(
+                    collapsed.one_group_barns()[row].to_bits(),
+                    expected.to_bits()
+                );
+                let row_meta = groupwise.rows()[row];
+                if !(row_meta.mt == 18 && row_meta.zap == 0) {
+                    continue;
+                }
+                assert_eq!(
+                    collapsed
+                        .fission_average_energy_ev(row, phi)
+                        .unwrap()
+                        .map(f64::to_bits),
+                    groupwise
+                        .fission_average_energy_ev(row, phi)
+                        .unwrap()
+                        .map(f64::to_bits)
+                );
+            }
+        }
+    }
+
+    #[test]
     fn deterministic_exact_round_trip_and_indexed_selection() {
         let scratch = scratch("round-trip");
         let source = scratch.join("source.npz");
