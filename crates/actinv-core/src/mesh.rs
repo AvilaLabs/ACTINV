@@ -5,7 +5,7 @@ use crate::flux::{
     atomic_output, rebin_equal_lethargy, sha256_file, FluxCell, FluxGeometry, FluxSource,
     FluxStream, RebinResult,
 };
-use crate::run::{CellCollapse, PreparedRun, RunResult};
+use crate::run::{CellCollapse, MeshFluxOrigin, PreparedRun, RunResult};
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options,
     PhotonOptions, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum, Step,
@@ -215,6 +215,10 @@ impl MeshSpec {
                 total: None,
                 boundaries_eV: Some(boundaries_eV),
                 descending: false,
+                // P93: the flux channel's mesh input is the flux file's own
+                // (pre-rebin) source groups, carried separately via
+                // `MeshFluxOrigin`; this rebinned spectrum never carries it.
+                relative_error: None,
             },
             schedule: self.schedule.clone(),
             options: self.options.clone(),
@@ -429,11 +433,26 @@ fn resolved_path(path: &Path) -> Result<PathBuf, String> {
 /// SHA-256 of the rebinned activation-group flux vector — the workload
 /// signature. Two cells with equal rebinned flux produce equal results, so
 /// the second is served from the memo rather than re-solved.
-fn flux_signature(flux_per_group: &[f64], material_sha: &[u8; 32]) -> [u8; 32] {
+///
+/// P93: when the flux channel is requested, the caller also passes the cell's
+/// own (pre-rebin) source `relative_error`: two cells with equal flux but
+/// different tally statistical error propagate different bands and must not
+/// be deduplicated together. With `None` the digest is the pre-P93 one.
+fn flux_signature(
+    flux_per_group: &[f64],
+    relative_error: Option<&[f64]>,
+    material_sha: &[u8; 32],
+) -> [u8; 32] {
     let mut hasher = Sha256::new();
     hasher.update(material_sha);
     for value in flux_per_group {
         hasher.update(value.to_le_bytes());
+    }
+    if let Some(errors) = relative_error {
+        hasher.update([1u8]);
+        for value in errors {
+            hasher.update(value.to_le_bytes());
+        }
     }
     hasher.finalize().into()
 }
@@ -460,12 +479,22 @@ fn solve_cells(
     mesh_spec: &MeshSpec,
     prepared: &PreparedRun,
     pool: &rayon::ThreadPool,
+    source_boundaries: &[f64],
     activation_boundaries: &[f64],
     rebinned: &[RebinResult],
     cell_materials: &[&Material],
     input_cells: &[FluxCell],
     to_solve: &[usize],
 ) -> Vec<Result<(String, usize), String>> {
+    // P93: a mesh cell's flux channel uses the flux file's own (pre-rebin)
+    // source groups, not `cell_spec`'s activation-group-rebinned spectrum
+    // (which never carries relative_error — see `cell_spec`). Built once
+    // per cell only when the channel is actually requested, so a run
+    // without it is unaffected.
+    let flux_channel_requested = mesh_spec
+        .uncertainty
+        .as_ref()
+        .is_some_and(|options| options.channels.iter().any(|name| name == "flux"));
     let mut solved = Vec::with_capacity(to_solve.len());
     for batch in to_solve.chunks(COLLAPSE_BATCH_CELLS) {
         let specs: Vec<Spec> = batch
@@ -510,11 +539,17 @@ fn solve_cells(
                         stride: phis.len(),
                         offset: slot,
                     });
+                    let flux_origin = flux_channel_requested.then(|| MeshFluxOrigin {
+                        source_boundaries_eV: source_boundaries,
+                        source_flux_per_group: &input_cells[index].flux_per_group,
+                        source_relative_error: input_cells[index].relative_error.as_deref(),
+                    });
                     solve_result(
                         mesh_spec,
                         prepared,
                         &specs[slot],
                         cell,
+                        flux_origin,
                         &input_cells[index].id,
                     )
                 })
@@ -530,12 +565,13 @@ fn solve_result(
     prepared: &PreparedRun,
     spec: &Spec,
     cell: Option<CellCollapse<'_>>,
+    flux_origin: Option<MeshFluxOrigin<'_>>,
     cell_id: &str,
 ) -> Result<(String, usize), String> {
     spec.validate()
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let result = prepared
-        .run_with_collapse(spec, "mesh", cell)
+        .run_with_collapse_and_flux_origin(spec, "mesh", cell, flux_origin)
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let mut result =
         result_without_timing(result).map_err(|error| format!("cell '{cell_id}': {error}"))?;
@@ -750,6 +786,10 @@ fn write_mesh_body(
     // of cell count and per-record size.
     let mut memo: HashMap<[u8; 32], (String, usize)> = HashMap::new();
     let mut memo_bytes = 0usize;
+    let flux_channel = spec
+        .uncertainty
+        .as_ref()
+        .is_some_and(|options| options.channels.iter().any(|channel| channel == "flux"));
     loop {
         let input_cells = stream.read_chunk(spec.chunk_cells)?;
         if input_cells.is_empty() {
@@ -777,8 +817,14 @@ fn write_mesh_body(
             cell_materials.iter().map(|m| material_sha256(m)).collect();
         let signatures: Vec<[u8; 32]> = rebinned
             .iter()
+            .zip(input_cells.iter())
             .zip(cell_material_sha.iter())
-            .map(|(value, sha)| flux_signature(&value.flux_per_group, sha))
+            .map(|((value, cell), sha)| {
+                // Errors join the signature only when the flux channel consumes them, so
+                // memoization without the channel is exactly the pre-P93 behavior.
+                let errors = cell.relative_error.as_deref().filter(|_| flux_channel);
+                flux_signature(&value.flux_per_group, errors, sha)
+            })
             .collect();
         let mut pending: HashMap<[u8; 32], Pending> = HashMap::new();
         let mut to_solve: Vec<usize> = Vec::new();
@@ -850,6 +896,7 @@ fn write_mesh_body(
             spec,
             prepared,
             pool,
+            source_groups,
             activation_boundaries,
             &rebinned,
             &cell_materials,
@@ -1351,5 +1398,28 @@ mod tests {
             resolved_path(&alias).unwrap()
         );
         std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn flux_signature_without_relative_error_matches_the_pre_p93_digest() {
+        // The dedup signature must be byte-identical to its pre-flux-channel
+        // form whenever `relative_error` is not passed (i.e. whenever the mesh
+        // spec did not request the flux channel), so memoization for every
+        // existing mesh run is completely unaffected by P93.
+        let flux = [0.0_f64, 1.25, -3.5, f64::MIN_POSITIVE, 6.02214076e23];
+        let material_sha: [u8; 32] = Sha256::digest(b"fixture material").into();
+        let mut expected = Sha256::new();
+        expected.update(material_sha);
+        for value in &flux {
+            expected.update(value.to_le_bytes());
+        }
+        let expected: [u8; 32] = expected.finalize().into();
+        assert_eq!(flux_signature(&flux, None, &material_sha), expected);
+        // Passing errors changes the digest (this is the P93 extension).
+        let errors = [0.0_f64, 0.05, 0.0, 0.1, 0.0];
+        assert_ne!(
+            flux_signature(&flux, Some(&errors), &material_sha),
+            expected
+        );
     }
 }

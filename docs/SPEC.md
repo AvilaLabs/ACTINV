@@ -135,6 +135,11 @@ relative. `total`, when present, rescales group values while preserving shape; a
 `flux_per_group` has no shape to scale and is rejected. The spec, library index, group
 structure and temperature must all identify the same projectile/data build before matrix assembly.
 
+`spectrum.relative_error` is an optional array, the same length and order as `flux_per_group` (honouring
+`descending`): each group's transport-tally statistical relative standard uncertainty. It is accepted and carried
+but otherwise unused unless `uncertainty.channels` requests `"flux"` (see below); requesting that channel with no
+`relative_error` given is an error naming the spectrum.
+
 ## Fission yields
 
 `fission_yields` is optional. Each file is one hash-pinned ENDF evaluation for one parent:
@@ -165,10 +170,12 @@ Fissioning parents without a matching file remain explicit leakage and never bor
 
 ## MF=33 uncertainty
 
-`uncertainty` is optional and neutron-only. `uncertainty.covariance.path` names an
-`actinv-covariance-1` sidecar and `uncertainty.covariance.sha256` is mandatory. The adjacent
-`<stem>_index.json` must link the exact activation-library/index hashes, neutron projectile, group-boundary hash and
-every target/source identity. ACTINV recomputes and records both sidecar and index hashes before matrix assembly.
+`uncertainty` is optional and neutron-only. `uncertainty.covariance` names an `actinv-covariance-1` sidecar
+(`path` and a mandatory `sha256`); the adjacent `<stem>_index.json` must link the exact activation-library/index
+hashes, neutron projectile, group-boundary hash and every target/source identity. ACTINV recomputes and records
+both sidecar and index hashes before matrix assembly. `covariance` may be omitted only when `channels` is exactly
+`["flux"]` (flux-only mode, below); any other `channels` value still requires it, and when present MF=33 is
+propagated exactly as always regardless of what else `channels` requests.
 
 `responses` accepts the canonical selectors `heat.total`, `heat.alpha`, `heat.beta`, `heat.gamma`,
 `activity:Nuclide`, `activity:*`, and `activity.total` (the aggregate propagated directly through the
@@ -179,15 +186,34 @@ between zero and one. `require_complete` defaults to `false`; when true, an acti
 MF=33 self-covariance — or a nonzero-sensitivity parameter in any requested channel without uncertainty data —
 fails rather than returning a partial band.
 
-`channels` is optional and accepts `"cross_section_mf33"` (the implicit default), `"decay_constants"` and
-`"fission_yields"`. When omitted, only the MF=33 cross-section channel is evaluated and the channel fields are
-absent from the output. `decay_constants` propagates
+`channels` is optional and accepts `"cross_section_mf33"` (the implicit default), `"decay_constants"`,
+`"fission_yields"` and `"flux"`. When omitted, only the MF=33 cross-section channel is evaluated and the channel
+fields are absent from the output. `decay_constants` propagates
 each radioactive chain member's decay-constant uncertainty `sigma_lambda = lambda * dT_half/T_half` read from the
 pinned decay file's MF=8/MT=457 record. `fission_yields` propagates each populated fission edge's independent-yield
 `DY` read from the pinned MF=8/MT=454 file at the requested yield energy. Both channels are diagonal — the
 evaluations carry no correlation data — and each reports its own sensitivity list, standard uncertainty and
 coverage. A nuclide or product with no declared uncertainty is named in `uncovered_decay_constants` /
 `uncovered_yield_products`.
+
+`flux` propagates each input group's transport-tally statistical error (`spectrum.relative_error`, or a mesh
+cell's own flux-file `relative_error` — a mesh cell without one is an error naming that cell) as a first-order,
+diagonal (uncorrelated group-to-group) channel: the parameter is the log of that group's absolute flux after
+`total` scaling, its direction is the reaction-only burn matrix a unit flux confined to that group alone would
+produce, and its sensitivity is exactly the response's own sensitivity to that group's flux level. Each
+`flux_sensitivities` parameter reports its `group` in the order the spec declared `flux_per_group` (undoing
+`descending` for that label only — energy bounds, flux and standard uncertainty are unaffected, since they name
+the same physical group either way). The channel's
+variance is `sum((s_g * e_g)^2)` over groups with a positive sensitivity and a given error; a fully-correlated
+alternative bound, `sum(|s_g| * e_g)`, is reported alongside it (`flux_fully_correlated_bound`) for a worst-case,
+correlated-error comparison. `flux` needs no covariance sidecar by itself: `channels: ["flux"]` alone (`covariance`
+omitted) is
+*flux-only mode* — MF=33 is not propagated and the band is the flux channel alone, with the method and band name
+naming that. Everything else the flux collapse depends on (self-shielding row scale, `rate_scale`, fission-yield
+selection, mode and pruning choices) is held at the nominal run's values. The flux channel is diagonal, needs no
+covariance and is not a nuclear-data parameter, so it is excluded from `voi`, `isomer` and `design` (below): those
+report ranks over parameters an experiment could better-measure, and a transport tally's statistical error only
+shrinks by running more particle histories.
 
 `voi` is optional (`{"top": N}`, 1–256) and emits a value-of-information table inside each requested response: the
 `top` parameters ranked by `|variance_share|` — the share of the propagated variance each parameter carries
@@ -204,8 +230,11 @@ and a `combined_standard_uncertainty` equal to the root-sum-of-squares across ch
 naming each channel's coverage. Coverage is `complete` only when every nonzero-sensitivity parameter in every
 requested channel has evaluated uncertainty data. Missing evaluated cross-reaction terms contribute zero and are
 counted; they are not invented. These intervals are neither tolerance limits nor safety margins, and exclude
-MF=32 resonance-parameter and MF=40 production covariance, decay-yield and cross-channel correlation, incident-flux,
+MF=32 resonance-parameter and MF=40 production covariance, decay-yield and cross-channel correlation,
 material-composition, response-coefficient and model uncertainty — the `uncovered_remainder` channel names these.
+Absent a requested `flux` channel, incident-flux uncertainty is excluded there too; with `flux` requested, that
+entry instead names the narrower remainder the channel does not cover (systematic flux uncertainty from the
+transport model, geometry and transport nuclear data — the channel covers only the tally's own statistical error).
 
 ## Radiological responses
 

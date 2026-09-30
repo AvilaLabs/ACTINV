@@ -9,15 +9,15 @@ use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions,
-    PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec,
+    PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum,
     UncertaintyOptions,
 };
 use crate::uncertainty::{
     self as uncertainty_report, BandInput, ChannelData, DecayParameter, DecaySensitivityOut,
-    DesignParameterEntry, DesignReactionEntry, DesignReport, IsomerChannelEntry,
-    IsomerPathwayProduct, IsomerPathwayShare, IsomerReport, IsomerVarianceShares, SensitivityOut,
-    SensitivityParameter, StepUncertainty, VoiEntry, VoiReport, VoiUnranked, YieldParameter,
-    YieldSensitivityOut,
+    DesignParameterEntry, DesignReactionEntry, DesignReport, FluxParameter, FluxSensitivityOut,
+    IsomerChannelEntry, IsomerPathwayProduct, IsomerPathwayShare, IsomerReport,
+    IsomerVarianceShares, SensitivityOut, SensitivityParameter, StepUncertainty, VoiEntry,
+    VoiReport, VoiUnranked, YieldParameter, YieldSensitivityOut,
 };
 use actinv_data::{
     composition, covariance, decay, fission,
@@ -471,6 +471,20 @@ pub struct CellCollapse<'a> {
     pub offset: usize,
 }
 
+/// P93: a mesh cell's pre-rebin flux-file origin, carried alongside the
+/// rebinned `Spec.spectrum` so the flux channel's input-group parameters are
+/// the flux file's own source groups (its own boundaries and per-group
+/// statistical error), not the activation-library-aligned spectrum the cell
+/// actually solves with. `source_flux_per_group` and `source_relative_error`
+/// are in ascending-energy order (canonical flux files carry no `descending`
+/// concept).
+#[derive(Clone, Copy)]
+pub struct MeshFluxOrigin<'a> {
+    pub source_boundaries_eV: &'a [f64],
+    pub source_flux_per_group: &'a [f64],
+    pub source_relative_error: Option<&'a [f64]>,
+}
+
 /// The groupwise library with one cell's batched row values in place of `collapse_row` for the
 /// run's base spectrum `phi` (the same slice, by address). Every other call goes to the library.
 struct BatchedView<'a> {
@@ -619,6 +633,15 @@ struct UncertaintyRuntime {
     decay_parameters: Vec<DecayParameter>,
     /// Fission-yield channel parameters; their tangents follow the decay block.
     yield_parameters: Vec<YieldParameter>,
+    /// P93 flux-channel parameters; their tangents follow the yield block.
+    flux_parameters: Vec<FluxParameter>,
+    /// Whether `uncertainty.channels` requested `"flux"`.
+    flux_channel_requested: bool,
+    /// `StepUncertainty.method`, chosen once per run: the P93 flux-only
+    /// wording when no MF=33 covariance is propagated, else unchanged.
+    method: &'static str,
+    /// The band's name, following `method`.
+    band_name: &'static str,
     directions: Vec<Csc>,
     /// Per-direction applicability: `Some(s)` tags a direction to spectrum
     /// index s (0 = base) so it only acts on steps using that spectrum and
@@ -1476,6 +1499,41 @@ fn build_step_uncertainty(
             } else {
                 None
             };
+        let yield_count = runtime.yield_parameters.len();
+        let (flux_channel, flux_fully_correlated_bound) = if !runtime.flux_parameters.is_empty()
+            || runtime.flux_channel_requested
+        {
+            let mut sensitivities = Vec::with_capacity(runtime.flux_parameters.len());
+            let mut channel_variance = 0.0;
+            let mut bound = 0.0;
+            let mut covered = 0usize;
+            let mut total = 0usize;
+            for (index, parameter) in runtime.flux_parameters.iter().enumerate() {
+                let value = values[xs_count + decay_count + yield_count + index];
+                if value != 0.0 {
+                    total += 1;
+                    covered += 1;
+                    channel_variance += (value * parameter.standard_uncertainty_relative).powi(2);
+                    bound += (value * parameter.standard_uncertainty_relative).abs();
+                }
+                sensitivities.push(FluxSensitivityOut {
+                    parameter: parameter.clone(),
+                    value,
+                    unit: response_unit.into(),
+                });
+            }
+            (
+                Some(ChannelData {
+                    variance: channel_variance,
+                    covered_parameters: covered,
+                    total_parameters: total,
+                    sensitivities,
+                }),
+                Some(bound),
+            )
+        } else {
+            (None, None)
+        };
         let sensitivities: Vec<SensitivityOut> = values
             .into_iter()
             .take(xs_count)
@@ -1489,6 +1547,16 @@ fn build_step_uncertainty(
         let voi = if let Some(voi_options) = &options.voi {
             // Same total the band uses: MF=33 propagated variance plus the
             // declared diagonal channels.
+            //
+            // P93: the flux channel is deliberately left out of this total
+            // and out of `build_voi` itself — VOI ranks *nuclear-data*
+            // parameters an experiment could better-measure to shrink the
+            // band, and a transport tally's statistical error is neither a
+            // nuclear-data parameter nor something a measurement campaign
+            // can improve (it shrinks only by running more particle
+            // histories). Excluding it keeps every entry's share_fraction a
+            // valid ratio over the nuclear-data variance it was designed to
+            // rank, instead of being silently diluted by an unranked term.
             let total_variance = variance
                 + decay_channel
                     .as_ref()
@@ -1508,6 +1576,9 @@ fn build_step_uncertainty(
             None
         };
         let isomer = if let Some(isomer_options) = &options.isomer {
+            // P93: flux excluded from this total for the same reason as VOI
+            // above — it is not a nuclear-data channel the isomer partition
+            // is classifying.
             let total_variance = variance
                 + decay_channel
                     .as_ref()
@@ -1531,6 +1602,9 @@ fn build_step_uncertainty(
             None
         };
         let design = if let Some(design_options) = &options.design {
+            // P93: flux excluded from this total for the same reason as VOI
+            // above — it is not a nuclear-data channel the design report is
+            // classifying.
             let total_variance = variance
                 + decay_channel
                     .as_ref()
@@ -1564,6 +1638,8 @@ fn build_step_uncertainty(
             sensitivities,
             decay_channel,
             fission_yield_channel: yield_channel,
+            flux_channel,
+            flux_fully_correlated_bound,
             unmodeled_relative: options.unmodeled_relative,
         })?;
         report.voi = voi;
@@ -1577,7 +1653,7 @@ fn build_step_uncertainty(
         responses.insert(response, report);
     }
     Ok(StepUncertainty {
-        method: "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
+        method: runtime.method,
         uncovered_library_rows: runtime.uncovered_library_rows.clone(),
         absent_cross_parameter_pairs: runtime.absent_cross_parameter_pairs,
         maximum_covariance_asymmetry_barn2: runtime.maximum_covariance_asymmetry_barn2,
@@ -1610,6 +1686,204 @@ fn build_step_uncertainty(
 fn collapsible_spectrum(phi: &[f64]) -> Option<&[f64]> {
     let total: f64 = phi.iter().sum();
     (total.is_finite() && total > 0.0).then_some(phi)
+}
+
+/// P93: resolves the flux channel's per-group relative statistical error,
+/// from the mesh cell's flux-file origin when present, otherwise from the
+/// spec's own declared spectrum. Pulled out of `run_started_profiled` so the
+/// "channel requested but no errors given" failure (for both the plain-spec
+/// and the mesh-cell case) is unit-testable without a full run.
+fn resolve_flux_relative_error(
+    spectrum: &Spectrum,
+    flux_origin: Option<&MeshFluxOrigin<'_>>,
+) -> Result<Vec<f64>, String> {
+    match flux_origin {
+        Some(origin) => origin
+            .source_relative_error
+            .map(|errors| errors.to_vec())
+            .ok_or_else(|| {
+                "uncertainty channel 'flux' requires the mesh cell's source relative_error"
+                    .to_string()
+            }),
+        None => spectrum.ascending_relative_error().ok_or_else(|| {
+            "uncertainty channel 'flux' requires spectrum.relative_error".to_string()
+        }),
+    }
+}
+
+/// P93: the flux channel's input-group basis for the base spectrum. A plain
+/// spec's declared spectrum is always exactly library-group-aligned (an
+/// existing invariant `run_started_profiled` checks), so its input groups
+/// map to library groups by identity. A mesh cell's flux channel instead
+/// uses the flux file's own source groups, mapped to library groups by the
+/// same equal-lethargy rebin the nominal per-cell spectrum used.
+enum FluxInputGroups<'a> {
+    Identity {
+        boundaries_ev: &'a [f64],
+        flux_per_group: &'a [f64],
+        relative_error: &'a [f64],
+        /// `spectrum.descending`: `flux_per_group`/`relative_error` here are
+        /// already reordered ascending, but `FluxParameter.group` reports
+        /// the group index as the spec declared it (protocol G1 "descending
+        /// input mapped to the right groups"), so the reversal is undone
+        /// only for that reported label.
+        descending: bool,
+    },
+    Rebinned {
+        boundaries_ev: &'a [f64],
+        flux_per_group: &'a [f64],
+        relative_error: &'a [f64],
+        /// Per source group: the (library group, equal-lethargy weight)
+        /// pairs its flux is distributed across.
+        weights: Vec<Vec<(usize, f64)>>,
+    },
+}
+
+/// P93: builds the flux channel's per-input-group parameters and directions
+/// for the base spectrum. `derivative_sub_base` is `derivative_subs[0]`
+/// (library_row -> kept-state (row, col, per_barn_s) triplets), already
+/// computed for the nominal MF=33 differentiation and reused here without
+/// re-assembling the reaction network.
+///
+/// The direction for library group `d` is the reaction-only matrix that a
+/// unit flux confined to group `d` alone would produce (linearity: rate is
+/// `sum_g phi_g * sigma_g`, so `d(rate)/d(phi_d) = sigma_d`), built once per
+/// (row, group) pair actually active rather than by re-assembling the whole
+/// reaction network per group. An input group's direction is that same
+/// linear combination of destination-group blocks the flux file's own rebin
+/// would send it through (identity for a plain spec). Summing every group's
+/// direction reproduces the nominal reaction matrix exactly (P93 G1).
+/// Per library row: `(library_row, (row, col, unit_factor))` triplets, where
+/// `unit_factor = per_barn_s / total_flux` (the group-independent scale of
+/// that row's direction, before the per-group cross section is folded in).
+type UnitRow = (usize, Vec<(usize, usize, f64)>);
+
+#[allow(clippy::too_many_arguments, clippy::type_complexity)]
+fn build_flux_parameters(
+    derivative_sub_base: &BTreeMap<usize, Vec<(usize, usize, C64)>>,
+    dense_library: &library::Library,
+    lib_targets: &[(i32, i32)],
+    shield_plan: Option<&crate::shielding::ShieldPlan>,
+    m: usize,
+    phi: &[f64],
+    input: &FluxInputGroups<'_>,
+) -> Result<(Vec<FluxParameter>, Vec<Csc>), String> {
+    let group_count = dense_library.group_count();
+    let total_flux: f64 = phi.iter().sum();
+    if total_flux.is_nan() || total_flux <= 0.0 {
+        return Ok((Vec::new(), Vec::new()));
+    }
+    // Per active library row, the group-independent unit factor: +1 for a
+    // normal or fission-product row, -1 for a loss row, the independent
+    // yield for a fission-product row to an absent chain state — exactly
+    // `per_barn_s / (rate_per_barn_s at the base spectrum)`, recovered
+    // without re-deriving the row classification.
+    let unit_rows: Vec<UnitRow> = derivative_sub_base
+        .iter()
+        .map(|(&library_row, entries)| {
+            let scaled = entries
+                .iter()
+                .map(|&(row, col, per_barn_s)| (row, col, per_barn_s.re / total_flux))
+                .collect();
+            (library_row, scaled)
+        })
+        .collect();
+    // D[d]: the reaction-only (row, col, value) triplets a unit flux in
+    // library group d alone produces, summed once over every active row.
+    let mut d_blocks: Vec<Vec<(usize, usize, f64)>> = vec![Vec::new(); group_count];
+    for (library_row, entries) in &unit_rows {
+        let row_descriptor = dense_library.rows[*library_row];
+        let target = lib_targets.get(row_descriptor.target).copied();
+        // `group` indexes `d_blocks` but is also used to look up the row's
+        // cross section and its shielding scale at that same group, so a
+        // plain range loop (not an iterator over `d_blocks`) is clearest.
+        #[allow(clippy::needless_range_loop)]
+        for group in 0..group_count {
+            let mut sigma = dense_library.row_cross_section(*library_row, group);
+            if sigma == 0.0 {
+                continue;
+            }
+            if let Some(plan) = shield_plan {
+                if let Some((za, liso)) = target {
+                    if let Some(scales) = plan.row_scales(za, liso, row_descriptor.mt) {
+                        sigma *= scales.get(&group).copied().unwrap_or(1.0);
+                    }
+                }
+            }
+            if sigma == 0.0 {
+                continue;
+            }
+            for &(row, col, unit_factor) in entries {
+                let value = unit_factor * sigma;
+                if value != 0.0 {
+                    d_blocks[group].push((row, col, value));
+                }
+            }
+        }
+    }
+    let (boundaries_ev, flux_per_group, relative_error, descending) = match input {
+        FluxInputGroups::Identity {
+            boundaries_ev,
+            flux_per_group,
+            relative_error,
+            descending,
+        } => (
+            *boundaries_ev,
+            *flux_per_group,
+            *relative_error,
+            *descending,
+        ),
+        FluxInputGroups::Rebinned {
+            boundaries_ev,
+            flux_per_group,
+            relative_error,
+            ..
+        } => (*boundaries_ev, *flux_per_group, *relative_error, false),
+    };
+    let mut parameters = Vec::new();
+    let mut directions = Vec::new();
+    for g in 0..flux_per_group.len() {
+        let flux_g = flux_per_group[g];
+        if flux_g.is_nan() || flux_g <= 0.0 {
+            continue;
+        }
+        let e_g = relative_error[g];
+        if e_g.is_nan() || e_g <= 0.0 {
+            continue;
+        }
+        let mut combined: Vec<(usize, usize, C64)> = Vec::new();
+        match input {
+            FluxInputGroups::Identity { .. } => {
+                for &(row, col, value) in &d_blocks[g] {
+                    combined.push((row, col, C64::new(value * flux_g, 0.0)));
+                }
+            }
+            FluxInputGroups::Rebinned { weights, .. } => {
+                for &(destination, weight) in &weights[g] {
+                    for &(row, col, value) in &d_blocks[destination] {
+                        combined.push((row, col, C64::new(value * weight * flux_g, 0.0)));
+                    }
+                }
+            }
+        }
+        // `group` is reported as the spec declared it: `g` is the
+        // already-reordered ascending index, undone here only for the label.
+        let declared_group = if descending {
+            flux_per_group.len() - 1 - g
+        } else {
+            g
+        };
+        parameters.push(FluxParameter {
+            spectrum: 0,
+            group: declared_group,
+            lower_bound_eV: boundaries_ev[g],
+            upper_bound_eV: boundaries_ev[g + 1],
+            flux_per_cm2_s: flux_g,
+            standard_uncertainty_relative: e_g,
+        });
+        directions.push(Csc::from_triplets(m, &combined));
+    }
+    Ok((parameters, directions))
 }
 
 impl PreparedRun {
@@ -2119,9 +2393,9 @@ impl PreparedRun {
             })
             .collect();
         let covariance_started = profiler.start();
-        let covariance = match uncertainty_options {
-            Some(options) => Some(Self::load_covariance(
-                options,
+        let covariance = match uncertainty_options.and_then(|options| options.covariance.as_ref()) {
+            Some(covariance_ref) => Some(Self::load_covariance(
+                covariance_ref,
                 &library_sha,
                 &index_sha,
                 &actual_group_hash,
@@ -2239,15 +2513,15 @@ impl PreparedRun {
     }
 
     fn load_covariance(
-        options: &UncertaintyOptions,
+        covariance_ref: &HashedFileRef,
         activation_library_sha256: &str,
         activation_index_sha256: &str,
         group_boundary_sha256: &str,
         activation_index: &serde_json::Value,
         activation_targets: &[(i32, i32)],
     ) -> Result<PreparedCovariance, String> {
-        let path = &options.covariance.path;
-        let sha256 = verify_hash(path, Some(&options.covariance.sha256))?;
+        let path = &covariance_ref.path;
+        let sha256 = verify_hash(path, Some(&covariance_ref.sha256))?;
         let index_path = covariance::index_path(path)?.display().to_string();
         let (index_text, index_sha256) = read_verified_text(&index_path, None)
             .map_err(|error| format!("covariance index: {error}"))?;
@@ -2555,6 +2829,19 @@ impl PreparedRun {
         entry_point: &str,
         cell: Option<CellCollapse<'_>>,
     ) -> Result<RunResult, String> {
+        self.run_with_collapse_and_flux_origin(spec, entry_point, cell, None)
+    }
+
+    /// [`Self::run_with_collapse`] additionally taking the P93 mesh flux
+    /// channel's pre-rebin source-group origin, when the flux channel is
+    /// requested for a mesh cell.
+    pub fn run_with_collapse_and_flux_origin(
+        &self,
+        spec: &Spec,
+        entry_point: &str,
+        cell: Option<CellCollapse<'_>>,
+        flux_origin: Option<MeshFluxOrigin<'_>>,
+    ) -> Result<RunResult, String> {
         let mut profiler = RunProfiler::disabled();
         let physical = spec.physical_inputs()?;
         self.run_started_profiled(
@@ -2564,6 +2851,7 @@ impl PreparedRun {
             std::time::Instant::now(),
             &mut profiler,
             cell,
+            flux_origin,
         )
     }
 
@@ -2594,6 +2882,7 @@ impl PreparedRun {
         }
     }
 
+    #[allow(clippy::too_many_arguments)]
     fn run_started_profiled(
         &self,
         spec: &Spec,
@@ -2602,6 +2891,7 @@ impl PreparedRun {
         t0: std::time::Instant,
         profiler: &mut RunProfiler,
         cell_collapse: Option<CellCollapse<'_>>,
+        flux_origin: Option<MeshFluxOrigin<'_>>,
     ) -> Result<RunResult, String> {
         let network_started = profiler.start();
         self.ensure_compatible(spec, physical)?;
@@ -3504,6 +3794,62 @@ impl PreparedRun {
                 y[pos[g]] = *v;
             }
         }
+        // P93: the flux channel's input-group basis, resolved once whatever
+        // else `uncertainty.channels` requests. A mesh cell's pre-rebin
+        // source groups (`flux_origin`) take priority when present; a plain
+        // spec's declared spectrum is the basis otherwise.
+        let flux_channel_requested = spec
+            .uncertainty
+            .as_ref()
+            .is_some_and(|options| options.channels.iter().any(|name| name == "flux"));
+        let flux_group_weights: Option<Vec<Vec<(usize, f64)>>> =
+            match (flux_channel_requested, &flux_origin) {
+                (true, Some(origin)) => Some(crate::flux::group_rebin_weights(
+                    origin.source_boundaries_eV,
+                    lib.boundaries_ev(),
+                )?),
+                _ => None,
+            };
+        let flux_relative_error: Option<Vec<f64>> = if !flux_channel_requested {
+            None
+        } else {
+            Some(resolve_flux_relative_error(
+                &spec.spectrum,
+                flux_origin.as_ref(),
+            )?)
+        };
+        let build_flux_channel =
+            |dense_library: &library::Library,
+             derivative_sub_base: &BTreeMap<usize, Vec<(usize, usize, C64)>>|
+             -> Result<(Vec<FluxParameter>, Vec<Csc>), String> {
+                if !flux_channel_requested {
+                    return Ok((Vec::new(), Vec::new()));
+                }
+                let relative_error = flux_relative_error.as_deref().expect("checked above");
+                let input = match (&flux_origin, &flux_group_weights) {
+                    (Some(origin), Some(weights)) => FluxInputGroups::Rebinned {
+                        boundaries_ev: origin.source_boundaries_eV,
+                        flux_per_group: origin.source_flux_per_group,
+                        relative_error,
+                        weights: weights.clone(),
+                    },
+                    _ => FluxInputGroups::Identity {
+                        boundaries_ev: dense_library.boundaries_ev(),
+                        flux_per_group: phi,
+                        relative_error,
+                        descending: spec.spectrum.descending,
+                    },
+                };
+                build_flux_parameters(
+                    derivative_sub_base,
+                    dense_library,
+                    lib_targets,
+                    shield_plan.as_ref(),
+                    m,
+                    phi,
+                    &input,
+                )
+            };
         let mut uncertainty_runtime = match (&self.covariance, &spec.uncertainty) {
             (Some(prepared), Some(options)) => {
                 // Union of rows active under any step spectrum: a row's tangent
@@ -3743,26 +4089,76 @@ impl PreparedRun {
                         }
                     }
                 }
+                let (flux_parameters, flux_directions) =
+                    build_flux_channel(dense_library, &derivative_subs[0])?;
+                for direction in flux_directions {
+                    directions.push(direction);
+                    parameter_spectrum.push(Some(0));
+                }
                 Some(UncertaintyRuntime {
                     tangents: vec![
                         vec![0.0; m];
                         parameters.len()
                             + decay_parameters.len()
                             + yield_parameters.len()
+                            + flux_parameters.len()
                     ],
                     directions,
                     parameter_spectrum,
                     decay_channel_requested,
                     yield_channel_requested,
+                    flux_channel_requested,
+                    method: "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
+                    band_name: "MF=33 nuclear-data band",
                     parameters,
                     decay_parameters,
                     yield_parameters,
+                    flux_parameters,
                     covered_parameter_positions,
                     covariance_barn2: collapsed.covariance_barn2,
                     uncovered_library_rows: collapsed.uncovered_rows,
                     absent_cross_parameter_pairs: collapsed.absent_cross_parameter_pairs,
                     maximum_covariance_asymmetry_barn2: collapsed.maximum_asymmetry_barn2,
                     excluded_blocks: collapsed.excluded_blocks,
+                    normal_multiplier: uncertainty_report::normal_multiplier(
+                        options.confidence_level,
+                    ),
+                    alternate_y: y.clone(),
+                })
+            }
+            (None, Some(options)) => {
+                // P93 flux-only mode: `spec.validate()` guarantees
+                // `channels == ["flux"]` whenever covariance is absent.
+                let dense_library = lib.dense().ok_or(
+                    "uncertainty propagation requires the verified dense activation library",
+                )?;
+                let (flux_parameters, flux_directions) =
+                    build_flux_channel(dense_library, &derivative_subs[0])?;
+                let mut directions = Vec::with_capacity(flux_parameters.len());
+                let mut parameter_spectrum = Vec::with_capacity(flux_parameters.len());
+                for direction in flux_directions {
+                    directions.push(direction);
+                    parameter_spectrum.push(Some(0));
+                }
+                Some(UncertaintyRuntime {
+                    tangents: vec![vec![0.0; m]; flux_parameters.len()],
+                    directions,
+                    parameter_spectrum,
+                    decay_channel_requested: false,
+                    yield_channel_requested: false,
+                    flux_channel_requested,
+                    method: "first-order propagation of transport-tally statistical error (flux channel only)",
+                    band_name: "transport-tally statistical-error band (flux channel only)",
+                    parameters: Vec::new(),
+                    decay_parameters: Vec::new(),
+                    yield_parameters: Vec::new(),
+                    flux_parameters,
+                    covered_parameter_positions: Vec::new(),
+                    covariance_barn2: Vec::new(),
+                    uncovered_library_rows: Vec::new(),
+                    absent_cross_parameter_pairs: 0,
+                    maximum_covariance_asymmetry_barn2: 0.0,
+                    excluded_blocks: Vec::new(),
                     normal_multiplier: uncertainty_report::normal_multiplier(
                         options.confidence_level,
                     ),
@@ -4924,38 +5320,72 @@ impl PreparedRun {
                 }),
             );
         }
-        if let (Some(prepared), Some(options), Some(runtime)) =
-            (&self.covariance, &spec.uncertainty, &uncertainty_runtime)
-        {
-            ledger.as_object_mut().expect("ledger is an object").insert(
-                "uncertainty".into(),
-                serde_json::json!({
-                    "method": "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
-                    "band_name": "MF=33 nuclear-data band",
-                    "confidence_level": options.confidence_level,
-                    "normal_multiplier": runtime.normal_multiplier,
-                    "collapse_convention": "group-integrated flux is uniform in energy within each activation group; activation cross sections are groupwise constant; the union of activation and covariance boundaries is integrated",
-                    "active_parameters": runtime.parameters.len(),
-                    "covered_parameters": runtime.covered_parameter_positions.len(),
-                    "uncovered_library_rows": runtime.uncovered_library_rows,
-                    "absent_cross_parameter_pairs": runtime.absent_cross_parameter_pairs,
-                    "maximum_covariance_asymmetry_barn2": runtime.maximum_covariance_asymmetry_barn2,
-                    "excluded_blocks": runtime.excluded_blocks,
-                    "selected_cram_order": spec.options.cram_order,
-                    "comparison_cram_order": if spec.options.cram_order == 16 { 48 } else { 16 },
-                    "excluded_sources": [
-                        "decay data and MF=32 resonance-parameter covariance",
-                        "MF=40 radionuclide-production and yield covariance",
-                        "fission/product-yield covariance",
-                        "incident-flux uncertainty",
-                        "material-composition uncertainty",
-                        "response-coefficient uncertainty",
-                        "model discrepancy"
-                    ],
-                    "covariance_builder_fingerprint": prepared.index.get("builder_fingerprint"),
-                    "covariance_source_manifest_sha256": prepared.index.get("source_manifest_sha256"),
-                }),
-            );
+        if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {
+            let flux_running = runtime.flux_channel_requested;
+            let flux_excluded_entry = if flux_running {
+                "systematic flux uncertainty (transport model, geometry, transport nuclear data); statistical tally error is propagated as the flux channel"
+            } else {
+                "incident-flux uncertainty"
+            };
+            let mut record = serde_json::json!({
+                "method": runtime.method,
+                "band_name": runtime.band_name,
+                "confidence_level": options.confidence_level,
+                "normal_multiplier": runtime.normal_multiplier,
+                "collapse_convention": "group-integrated flux is uniform in energy within each activation group; activation cross sections are groupwise constant; the union of activation and covariance boundaries is integrated",
+                "active_parameters": runtime.parameters.len(),
+                "covered_parameters": runtime.covered_parameter_positions.len(),
+                "uncovered_library_rows": runtime.uncovered_library_rows,
+                "absent_cross_parameter_pairs": runtime.absent_cross_parameter_pairs,
+                "maximum_covariance_asymmetry_barn2": runtime.maximum_covariance_asymmetry_barn2,
+                "excluded_blocks": runtime.excluded_blocks,
+                "selected_cram_order": spec.options.cram_order,
+                "comparison_cram_order": if spec.options.cram_order == 16 { 48 } else { 16 },
+                "excluded_sources": [
+                    "decay data and MF=32 resonance-parameter covariance",
+                    "MF=40 radionuclide-production and yield covariance",
+                    "fission/product-yield covariance",
+                    flux_excluded_entry,
+                    "material-composition uncertainty",
+                    "response-coefficient uncertainty",
+                    "model discrepancy"
+                ],
+            });
+            if flux_running {
+                let object = record.as_object_mut().expect("record is an object");
+                object.insert("flux_channel_requested".into(), serde_json::json!(true));
+                object.insert(
+                    "flux_parameters".into(),
+                    serde_json::json!(runtime.flux_parameters.len()),
+                );
+                object.insert(
+                    "flux_held_at_nominal".into(),
+                    serde_json::json!("energy-dependent fission-yield selection, pruning and mode selection are held at the nominal run's choices while the flux channel is propagated"),
+                );
+            }
+            if let Some(prepared) = &self.covariance {
+                let object = record.as_object_mut().expect("record is an object");
+                object.insert(
+                    "covariance_builder_fingerprint".into(),
+                    prepared
+                        .index
+                        .get("builder_fingerprint")
+                        .cloned()
+                        .unwrap_or(serde_json::Value::Null),
+                );
+                object.insert(
+                    "covariance_source_manifest_sha256".into(),
+                    prepared
+                        .index
+                        .get("source_manifest_sha256")
+                        .cloned()
+                        .unwrap_or(serde_json::Value::Null),
+                );
+            }
+            ledger
+                .as_object_mut()
+                .expect("ledger is an object")
+                .insert("uncertainty".into(), record);
         }
         let mut certificate = serde_json::json!({
             "solver": concat!("actinv-core ", env!("CARGO_PKG_VERSION")),
@@ -4986,37 +5416,45 @@ impl PreparedRun {
                 "selection": fission_yield_selection,
             },
         });
-        if let (Some(prepared), Some(options)) = (&self.covariance, &spec.uncertainty) {
+        if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {
+            let flux_running = runtime.flux_channel_requested;
+            let flux_excluded_entry = if flux_running {
+                "systematic flux (statistical tally error covered by the flux channel)"
+            } else {
+                "flux"
+            };
             let certificate_object = certificate
                 .as_object_mut()
                 .expect("certificate is an object");
             certificate_object.insert(
                 "uncertainty".into(),
                 serde_json::json!({
-                    "method": "local first-order propagation of spectrum-collapsed ENDF-6 MF=33 covariance",
-                    "band_name": "MF=33 nuclear-data band",
+                    "method": runtime.method,
+                    "band_name": runtime.band_name,
                     "confidence_level": options.confidence_level,
                     "selected_cram_order": spec.options.cram_order,
                     "comparison_cram_order": if spec.options.cram_order == 16 { 48 } else { 16 },
                     "collapse_convention": "uniform flux per unit energy inside activation groups, integrated on the union boundary grid",
-                    "excluded_sources": ["decay/MF=32", "production/MF=40 and yields", "flux", "composition", "response coefficients", "model discrepancy"],
+                    "excluded_sources": ["decay/MF=32", "production/MF=40 and yields", flux_excluded_entry, "composition", "response coefficients", "model discrepancy"],
                 }),
             );
-            certificate_object
-                .get_mut("inputs")
-                .and_then(serde_json::Value::as_object_mut)
-                .expect("certificate inputs is an object")
-                .insert(
-                    "covariance".into(),
-                    serde_json::json!({
-                        "path": options.covariance.path,
-                        "sha256_declared": options.covariance.sha256,
-                        "sha256": prepared.sha256,
-                        "index": {"path": prepared.index_path, "sha256": prepared.index_sha256},
-                        "source_manifest_sha256": prepared.index.get("source_manifest_sha256"),
-                        "builder_fingerprint": prepared.index.get("builder_fingerprint"),
-                    }),
-                );
+            if let Some(prepared) = &self.covariance {
+                certificate_object
+                    .get_mut("inputs")
+                    .and_then(serde_json::Value::as_object_mut)
+                    .expect("certificate inputs is an object")
+                    .insert(
+                        "covariance".into(),
+                        serde_json::json!({
+                            "path": options.covariance.as_ref().map(|c| c.path.as_str()),
+                            "sha256_declared": options.covariance.as_ref().map(|c| c.sha256.as_str()),
+                            "sha256": prepared.sha256,
+                            "index": {"path": prepared.index_path, "sha256": prepared.index_sha256},
+                            "source_manifest_sha256": prepared.index.get("source_manifest_sha256"),
+                            "builder_fingerprint": prepared.index.get("builder_fingerprint"),
+                        }),
+                    );
+            }
         }
         if let Some(provenance) = &self.unmodeled_table {
             certificate
@@ -5240,8 +5678,12 @@ fn prepared_fingerprint(
     if let Some(path) = spec.decay.fallback.as_ref().filter(|p| !p.is_empty()) {
         files.push(fingerprint_file(path)?);
     }
-    if let Some(options) = spec.uncertainty.as_ref() {
-        files.push(fingerprint_file(&options.covariance.path)?);
+    if let Some(covariance) = spec
+        .uncertainty
+        .as_ref()
+        .and_then(|options| options.covariance.as_ref())
+    {
+        files.push(fingerprint_file(&covariance.path)?);
     }
     if let Some(response) = spec.photon.response.as_ref() {
         files.push(fingerprint_file(&response.path)?);
@@ -5326,6 +5768,7 @@ pub fn run_with_cache(
         entry_point,
         started,
         &mut profiler,
+        None,
         None,
     )?;
     profiler.emit(started.elapsed());
@@ -5426,5 +5869,425 @@ mod projectile_output_tests {
         assert!(!super::is_isomer_name("Tm170"));
         assert!(!super::is_isomer_name("W185m"));
         assert!(!super::is_isomer_name("m1"));
+    }
+}
+
+/// P93 G1: unit tests for the flux (transport-tally statistical error) channel.
+#[cfg(test)]
+mod flux_channel_tests {
+    use super::*;
+    use crate::chain::{self, Chain, ChainLedger, RateLedger};
+    use crate::cram;
+    use actinv_data::fission::EffectiveYields;
+    use actinv_data::library::{Library, Row};
+
+    fn dense_get(csc: &Csc, row: usize, col: usize) -> C64 {
+        for k in csc.colptr[col]..csc.colptr[col + 1] {
+            if csc.rowidx[k] == row {
+                return csc.vals[k];
+            }
+        }
+        C64::new(0.0, 0.0)
+    }
+
+    // -- Sum identity: the flux channel's per-group directions must sum to
+    // -- exactly the reaction part of the nominal matrix, for a dense
+    // -- (709-group) input and a coarse custom input.
+
+    /// A two-row library (one MT=1 loss row, one MT=102 production row),
+    /// generalized from chain.rs's own
+    /// `derivative_free_assembly_preserves_rates_and_ledger` fixture to an
+    /// arbitrary group count, with a deterministic pattern that includes
+    /// exact-zero cross sections (exercising the `sigma == 0.0 { continue }`
+    /// skip in `build_flux_parameters`).
+    fn synthetic_library(ngroups: usize) -> Library {
+        let mut bounds = Vec::with_capacity(ngroups + 1);
+        for g in 0..=ngroups {
+            bounds.push(1.0e-5 * 10f64.powf(11.0 * g as f64 / ngroups as f64));
+        }
+        let mut sig = Vec::with_capacity(2 * ngroups);
+        for row in 0..2usize {
+            for g in 0..ngroups {
+                let phase = (row * 7 + g * 3) as f64;
+                let value = (phase.sin() * 4.0 + 5.0).max(0.0);
+                sig.push(if g % 4 == 0 { 0.0 } else { value });
+            }
+        }
+        Library {
+            rows: vec![
+                Row {
+                    target: 0,
+                    mt: 102,
+                    zap: 26_057,
+                    lfs: 0,
+                    lmf: 3,
+                },
+                Row {
+                    target: 0,
+                    mt: 1,
+                    zap: -1,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig,
+            ngroups,
+            bounds,
+        }
+    }
+
+    fn synthetic_chain() -> Chain {
+        Chain {
+            index: HashMap::from([((26_056, 0), 0), ((26_057, 0), 1)]),
+            keys: vec![(26_056, 0), (26_057, 0)],
+            lambda: vec![0.0, 0.0],
+            decay: Vec::new(),
+            leak: 2,
+            unit: 3,
+            n: 4,
+            ledger: ChainLedger::default(),
+        }
+    }
+
+    fn synthetic_flux(ngroups: usize) -> Vec<f64> {
+        (0..ngroups)
+            .map(|g| {
+                if g % 5 == 0 {
+                    0.0
+                } else {
+                    1.0 + (g as f64 * 1.7).cos().abs()
+                }
+            })
+            .collect()
+    }
+
+    fn check_sum_matches_nominal(ngroups: usize) {
+        let library = synthetic_library(ngroups);
+        let chain = synthetic_chain();
+        let flux = synthetic_flux(ngroups);
+        let targets = [(26_056, 0)];
+        let yields: HashMap<(i32, i32), EffectiveYields> = HashMap::new();
+        let mut ledger = RateLedger::default();
+        let assembly = chain::reaction_rates_with_derivatives(
+            &library,
+            &targets,
+            &flux,
+            &chain,
+            &yields,
+            &mut ledger,
+            None,
+            None,
+        );
+
+        let mut nominal: BTreeMap<(usize, usize), C64> = BTreeMap::new();
+        for &(row, col, value) in &assembly.triplets {
+            *nominal
+                .entry((row, col))
+                .or_insert_with(|| C64::new(0.0, 0.0)) += C64::new(value, 0.0);
+        }
+
+        let mut derivative_sub_base: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
+        for derivative in &assembly.derivatives {
+            if derivative.per_barn_s != 0.0 {
+                derivative_sub_base
+                    .entry(derivative.library_row)
+                    .or_default()
+                    .push((
+                        derivative.row,
+                        derivative.column,
+                        C64::new(derivative.per_barn_s, 0.0),
+                    ));
+            }
+        }
+
+        let relative_error = vec![0.1; ngroups];
+        let input = FluxInputGroups::Identity {
+            boundaries_ev: library.boundaries_ev(),
+            flux_per_group: &flux,
+            relative_error: &relative_error,
+            descending: false,
+        };
+        let (parameters, directions) = build_flux_parameters(
+            &derivative_sub_base,
+            &library,
+            &targets,
+            None,
+            chain.n,
+            &flux,
+            &input,
+        )
+        .unwrap();
+        assert_eq!(parameters.len(), directions.len());
+        assert!(!directions.is_empty());
+
+        let mut summed: BTreeMap<(usize, usize), C64> = BTreeMap::new();
+        for direction in &directions {
+            for col in 0..direction.n {
+                for k in direction.colptr[col]..direction.colptr[col + 1] {
+                    let row = direction.rowidx[k];
+                    *summed
+                        .entry((row, col))
+                        .or_insert_with(|| C64::new(0.0, 0.0)) += direction.vals[k];
+                }
+            }
+        }
+
+        let mut keys: BTreeSet<(usize, usize)> = nominal.keys().copied().collect();
+        keys.extend(summed.keys().copied());
+        assert!(!keys.is_empty());
+        for key in keys {
+            let expected = nominal.get(&key).copied().unwrap_or(C64::new(0.0, 0.0));
+            let actual = summed.get(&key).copied().unwrap_or(C64::new(0.0, 0.0));
+            let scale = expected.norm().max(1e-300);
+            assert!(
+                (actual - expected).norm() <= 1e-12 * scale,
+                "{key:?}: expected {expected}, got {actual} ({ngroups} groups)"
+            );
+        }
+    }
+
+    #[test]
+    fn flux_direction_sum_reproduces_nominal_matrix_dense_709_group() {
+        check_sum_matches_nominal(709);
+    }
+
+    #[test]
+    fn flux_direction_sum_reproduces_nominal_matrix_coarse_custom() {
+        check_sum_matches_nominal(5);
+    }
+
+    // -- CRAM tangent correctness: the flux parameter's tangent must match a
+    // -- central difference of plain CRAM steps at perturbed flux, and (at
+    // -- low burnup, single group, single reaction) the propagated relative
+    // -- standard uncertainty of the product activity must equal the
+    // -- declared relative error `e`.
+
+    fn one_group_one_reaction_matrix(rate: f64, lambda_b: f64) -> Csc {
+        // State 0 = target (held exactly constant: no entries in its own
+        // row/column other than feeding state 1), state 1 = product.
+        Csc::from_triplets(
+            2,
+            &[
+                (1, 0, C64::new(rate, 0.0)),
+                (1, 1, C64::new(-lambda_b, 0.0)),
+            ],
+        )
+    }
+
+    #[test]
+    fn flux_tangent_matches_central_difference_of_plain_cram_steps() {
+        let rate = 3.0e-3;
+        let lambda_b = 1.0e-2;
+        let n0 = [1.0, 0.0];
+        let dt = 1.0;
+        let c = super::cram(16);
+
+        let a = one_group_one_reaction_matrix(rate, lambda_b);
+        // ln(phi)-parameterized direction: d(rate)/d ln(phi) = rate itself,
+        // since a single group's rate is linear in its own flux.
+        let direction = Csc::from_triplets(2, &[(1, 0, C64::new(rate, 0.0))]);
+
+        let step =
+            cram::step_with_tangents(&a, &n0, &[vec![0.0, 0.0]], &[direction], &[1.0], dt, &c)
+                .unwrap();
+        let tangent_b = step.tangents[0][1];
+
+        let h = 1.0e-6;
+        let a_plus = one_group_one_reaction_matrix(rate * (1.0 + h), lambda_b);
+        let a_minus = one_group_one_reaction_matrix(rate * (1.0 - h), lambda_b);
+        let (state_plus, _) = cram::step(&a_plus, &n0, dt, &c).unwrap();
+        let (state_minus, _) = cram::step(&a_minus, &n0, dt, &c).unwrap();
+        // d/d ln(phi) ~= (f(phi(1+h)) - f(phi(1-h))) / (ln(1+h) - ln(1-h))
+        let central_difference =
+            (state_plus[1] - state_minus[1]) / ((1.0 + h).ln() - (1.0 - h).ln());
+
+        let scale = tangent_b.abs().max(1e-12);
+        assert!(
+            (tangent_b - central_difference).abs() <= 1.0e-6 * scale,
+            "tangent {tangent_b} vs central difference {central_difference}"
+        );
+    }
+
+    #[test]
+    fn low_burnup_relative_uncertainty_of_product_activity_equals_declared_error() {
+        let rate = 1.0e-4;
+        let lambda_b = 1.0e-3;
+        let n0 = [1.0, 0.0];
+        let dt = 1.0; // low burnup: rate*dt and lambda_b*dt are both << 1
+        let c = super::cram(16);
+        let e = 0.037; // declared relative statistical error of the one group
+
+        let a = one_group_one_reaction_matrix(rate, lambda_b);
+        let direction = Csc::from_triplets(2, &[(1, 0, C64::new(rate, 0.0))]);
+        let step =
+            cram::step_with_tangents(&a, &n0, &[vec![0.0, 0.0]], &[direction], &[1.0], dt, &c)
+                .unwrap();
+        let n_b = step.state[1];
+        let tangent_b = step.tangents[0][1];
+
+        // activity = lambda_b * N_b; sensitivity = lambda_b * tangent_b; the
+        // lambda_b factor cancels in the ratio, so this is exactly N_b's own
+        // relative sensitivity to ln(phi).
+        assert!(n_b > 0.0);
+        let relative_standard_uncertainty = (tangent_b * e).abs() / n_b;
+        assert!(
+            (relative_standard_uncertainty - e).abs() <= 1.0e-3 * e,
+            "relative_standard_uncertainty {relative_standard_uncertainty} vs declared e {e}"
+        );
+    }
+
+    // -- Validation: `resolve_flux_relative_error` names the spectrum or the
+    // -- mesh cell when the channel is requested but no errors are given,
+    // -- and a mesh cell's own errors take priority over the spec's.
+
+    fn plain_spectrum(relative_error: Option<Vec<f64>>) -> Spectrum {
+        Spectrum {
+            structure: "custom".into(),
+            flux_per_group: vec![1.0, 2.0],
+            total: None,
+            boundaries_eV: None,
+            descending: false,
+            relative_error,
+        }
+    }
+
+    #[test]
+    fn plain_spec_without_relative_error_names_the_spectrum() {
+        let spectrum = plain_spectrum(None);
+        let err = resolve_flux_relative_error(&spectrum, None).unwrap_err();
+        assert!(err.contains("spectrum.relative_error"), "{err}");
+    }
+
+    #[test]
+    fn mesh_cell_without_relative_error_names_the_cell() {
+        let spectrum = plain_spectrum(None);
+        let boundaries = [1.0, 2.0, 3.0];
+        let flux = [1.0, 2.0];
+        let origin = MeshFluxOrigin {
+            source_boundaries_eV: &boundaries,
+            source_flux_per_group: &flux,
+            source_relative_error: None,
+        };
+        let err = resolve_flux_relative_error(&spectrum, Some(&origin)).unwrap_err();
+        assert!(err.contains("mesh cell"), "{err}");
+    }
+
+    #[test]
+    fn mesh_cell_relative_error_takes_priority_over_the_specs_own() {
+        let spectrum = plain_spectrum(Some(vec![0.9, 0.9]));
+        let boundaries = [1.0, 2.0, 3.0];
+        let flux = [1.0, 2.0];
+        let cell_error = [0.05, 0.06];
+        let origin = MeshFluxOrigin {
+            source_boundaries_eV: &boundaries,
+            source_flux_per_group: &flux,
+            source_relative_error: Some(&cell_error),
+        };
+        let resolved = resolve_flux_relative_error(&spectrum, Some(&origin)).unwrap();
+        assert_eq!(resolved, vec![0.05, 0.06]);
+    }
+
+    #[test]
+    fn plain_spec_relative_error_is_used_when_no_mesh_origin() {
+        let spectrum = plain_spectrum(Some(vec![0.1, 0.2]));
+        let resolved = resolve_flux_relative_error(&spectrum, None).unwrap();
+        assert_eq!(resolved, vec![0.1, 0.2]);
+    }
+
+    #[test]
+    fn plain_spec_relative_error_honours_descending_reorder() {
+        let mut spectrum = plain_spectrum(Some(vec![0.1, 0.2]));
+        spectrum.descending = true;
+        let resolved = resolve_flux_relative_error(&spectrum, None).unwrap();
+        assert_eq!(resolved, vec![0.2, 0.1]);
+    }
+
+    #[test]
+    fn dense_get_reads_absent_entries_as_zero() {
+        let csc = Csc::from_triplets(2, &[(1, 0, C64::new(3.0, 0.0))]);
+        assert_eq!(dense_get(&csc, 1, 0), C64::new(3.0, 0.0));
+        assert_eq!(dense_get(&csc, 0, 0), C64::new(0.0, 0.0));
+        assert_eq!(dense_get(&csc, 0, 1), C64::new(0.0, 0.0));
+    }
+
+    #[test]
+    fn descending_flag_maps_reported_group_index_to_the_declared_order() {
+        // `flux_per_group`/`relative_error` reach `build_flux_parameters`
+        // already reordered ascending (as `run_started_profiled` always
+        // passes them): only the reported `FluxParameter.group` label
+        // should undo the reversal, matching the array the spec declared.
+        let ngroups = 4;
+        let library = synthetic_library(ngroups);
+        let chain = synthetic_chain();
+        let flux = synthetic_flux(ngroups);
+        let targets = [(26_056, 0)];
+        let yields: HashMap<(i32, i32), EffectiveYields> = HashMap::new();
+        let mut ledger = RateLedger::default();
+        let assembly = chain::reaction_rates_with_derivatives(
+            &library,
+            &targets,
+            &flux,
+            &chain,
+            &yields,
+            &mut ledger,
+            None,
+            None,
+        );
+        let mut derivative_sub_base: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
+        for derivative in &assembly.derivatives {
+            if derivative.per_barn_s != 0.0 {
+                derivative_sub_base
+                    .entry(derivative.library_row)
+                    .or_default()
+                    .push((
+                        derivative.row,
+                        derivative.column,
+                        C64::new(derivative.per_barn_s, 0.0),
+                    ));
+            }
+        }
+        let relative_error = vec![0.1; ngroups];
+        let ascending_input = FluxInputGroups::Identity {
+            boundaries_ev: library.boundaries_ev(),
+            flux_per_group: &flux,
+            relative_error: &relative_error,
+            descending: false,
+        };
+        let descending_input = FluxInputGroups::Identity {
+            boundaries_ev: library.boundaries_ev(),
+            flux_per_group: &flux,
+            relative_error: &relative_error,
+            descending: true,
+        };
+        let (ascending_parameters, _) = build_flux_parameters(
+            &derivative_sub_base,
+            &library,
+            &targets,
+            None,
+            chain.n,
+            &flux,
+            &ascending_input,
+        )
+        .unwrap();
+        let (descending_parameters, _) = build_flux_parameters(
+            &derivative_sub_base,
+            &library,
+            &targets,
+            None,
+            chain.n,
+            &flux,
+            &descending_input,
+        )
+        .unwrap();
+        assert_eq!(ascending_parameters.len(), descending_parameters.len());
+        assert!(!ascending_parameters.is_empty());
+        for (ascending, descending) in ascending_parameters.iter().zip(&descending_parameters) {
+            // Same ascending group physically (same energy bounds, flux and
+            // error): only the reported label differs.
+            assert_eq!(ascending.lower_bound_eV, descending.lower_bound_eV);
+            assert_eq!(ascending.upper_bound_eV, descending.upper_bound_eV);
+            assert_eq!(ascending.flux_per_cm2_s, descending.flux_per_cm2_s);
+            assert_eq!(descending.group, ngroups - 1 - ascending.group);
+        }
     }
 }

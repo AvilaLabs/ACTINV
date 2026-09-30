@@ -790,13 +790,16 @@ pub fn solve_qualified(
         }
     }
     let library = actinv_data::library::read_npz(&spec.library.path)?;
-    let cov_sha = sha256_file(&uncertainty.covariance.path)?;
-    if !cov_sha.eq_ignore_ascii_case(&uncertainty.covariance.sha256) {
+    let covariance_ref = uncertainty.covariance.as_ref().ok_or(
+        "reverse-qualified: requires uncertainty.covariance (P93 flux-only mode is not supported here)",
+    )?;
+    let cov_sha = sha256_file(&covariance_ref.path)?;
+    if !cov_sha.eq_ignore_ascii_case(&covariance_ref.sha256) {
         return Err(
             "reverse-qualified: covariance sidecar does not match the spec's declared hash".into(),
         );
     }
-    let covariance = actinv_data::covariance::read_npz(&uncertainty.covariance.path)?;
+    let covariance = actinv_data::covariance::read_npz(&covariance_ref.path)?;
     let phi = spec.spectrum.flux_per_group.clone();
     let selected: Vec<usize> = selected_rows.into_iter().collect();
     let sparse =
