@@ -1111,6 +1111,7 @@ bd3111cd4bc527ae60a2d34ea0d06de065f77caf6276eb63fdca78fa290637e3  ./protocols/AC
 c0b4cdad5efc2a991beea9d727c9fac5d4bfcfd45d3b46d82ce509268c67ec4e  ./protocols/ACTINV-P90_PROTOCOL.md
 d6a8381e47904f45f0ccd020e5f722bce40dde5ad030ad34efb6f784776bd3e0  ./protocols/ACTINV-P91_PROTOCOL.md
 dae429bb127ac3268590ce18a8f5d751c192856fdbae14526e1d8d2e2c06c353  ./protocols/ACTINV-P92_PROTOCOL.md
+41cfc21bb3081a12312f2ec31735004bf5c02df756e9e97deeb609e0f7b27c5f  ./protocols/ACTINV-P93_PROTOCOL.md
 5ac1f139b4f4c878f8595b685bdc1e7f0be95abc74b21ad3309df9ecc13dd4f6  ./protocols/ACTINV-P9_AMENDMENT_A.md
 028c5846865490e9dee5902f22f5ad4be583ee332be9d92ce23efa80c52d39c0  ./protocols/ACTINV-P9_PROTOCOL.md
 af83a6d84de196f575326cddd34bf10afdffcb9d2bdc719a9bb63d05c1744126  ./protocols/DRAFT-ACTINV-P20_PROTOCOL.md
@@ -1128,7 +1129,7 @@ df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HY
 f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/desktop-historical-checks-v1.md
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
-292b4051de11c042ebda61d97d4dcceb1449013d5b61d958f5de588b36ca993f  ./protocols/protocol_hash.txt
+f8af0fd39c04f32c600336c74f0d8b43d139bb594c23f03ecf97d99250f2ee7d  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 846abac070437d1c99b6165549f1891e2ef2d58fc7b8b4de3555868e9025bae6  ./python/Cargo.lock
