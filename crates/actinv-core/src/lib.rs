@@ -8,6 +8,7 @@ pub mod damage;
 pub mod doppler;
 pub mod finite;
 pub mod flux;
+pub mod gas;
 pub mod mesh;
 pub mod photon;
 pub mod prune;

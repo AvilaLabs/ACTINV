@@ -1,6 +1,7 @@
 //! Transmutation network: decay matrix from the decay sublibraries, reaction columns from the activation library,
 //! and the trace formulation (constant bulk as a source through a unit state). Mirrors controls/chain.py and the
 //! trace formulation of controls/run_fns.py, which the P5-G4 control checks to 1e-12 on 132 experiments.
+use crate::gas;
 use crate::quantity::{CrossSectionBarns, ParticleFlux, RatePerBarnSecond};
 use actinv_data::decay::Nuclide;
 use actinv_data::fission::EffectiveYields;
@@ -150,6 +151,125 @@ pub fn build(nuclides: &HashMap<(i32, i32), Nuclide>) -> Chain {
     }
 }
 
+/// P92 gas: ensures the chain contains the five light ground states (H1, H2, H3, He3, He4),
+/// appending a stable stand-in (lambda = 0, no decay modes) for any absent from the decay
+/// library used to build `chain`. A state already present (real decay data) is untouched.
+/// No-op, byte-for-byte, when all five are already present (the common case for real decay
+/// libraries). Returns the (possibly augmented) chain and the ZA of any stand-ins inserted.
+///
+/// New states are appended after the existing nuclide rows, and `leak`/`unit` are renumbered
+/// to stay last; every existing triplet referencing the old `leak`/`unit` index is remapped to
+/// the new one. This never reorders or renumbers an existing nuclide row, so callers that do
+/// not enable gas never call this and see byte-identical chains (G3).
+pub fn ensure_light_states(chain: Chain) -> (Chain, Vec<(i32, i32)>) {
+    let missing: Vec<(i32, i32)> = gas::LIGHT_STATES
+        .iter()
+        .copied()
+        .filter(|za| !chain.index.contains_key(za))
+        .collect();
+    if missing.is_empty() {
+        return (chain, missing);
+    }
+    let Chain {
+        mut index,
+        mut keys,
+        mut lambda,
+        mut decay,
+        leak: old_leak,
+        unit: old_unit,
+        ledger,
+        ..
+    } = chain;
+    let old_n_nuc = keys.len();
+    let new_leak = old_n_nuc + missing.len();
+    let new_unit = new_leak + 1;
+    let remap = |i: usize| -> usize {
+        if i == old_leak {
+            new_leak
+        } else if i == old_unit {
+            new_unit
+        } else {
+            i
+        }
+    };
+    for t in decay.iter_mut() {
+        t.0 = remap(t.0);
+        t.1 = remap(t.1);
+    }
+    for (offset, za) in missing.iter().enumerate() {
+        let idx = old_n_nuc + offset;
+        index.insert(*za, idx);
+        keys.push(*za);
+        lambda.push(0.0); // stable stand-in: no decay library entry for this ZA
+    }
+    let n = new_unit + 1;
+    (
+        Chain {
+            index,
+            keys,
+            lambda,
+            decay,
+            leak: new_leak,
+            unit: new_unit,
+            n,
+            ledger,
+        },
+        missing,
+    )
+}
+
+/// P92 gas: for every decaying nuclide's mode, adds `branching * lambda` into He4 for each RTYP
+/// digit 4 (alpha emission) and into H1 for each digit 7 (proton emission), mirroring the same
+/// per-mode branching normalization `build` applies to its own daughter edges (excess branching
+/// sums are rescaled to 1; a shortfall is left as-is — its remainder already leaks in `build`'s
+/// own edges). Multi-digit RTYP contributes once per matching digit (e.g. 4.4 gives two alphas).
+/// No-op if He4 or H1 is absent from `chain.index` (gas is disabled, or `ensure_light_states`
+/// was not called first).
+pub fn add_gas_decay_edges(nuclides: &HashMap<(i32, i32), Nuclide>, chain: &mut Chain) {
+    let (Some(&he4), Some(&h1)) = (chain.index.get(&gas::HE4), chain.index.get(&gas::H1)) else {
+        return;
+    };
+    let mut extra: Vec<(usize, usize, f64)> = Vec::new();
+    for (k, key) in chain.keys.iter().enumerate() {
+        let nu = match nuclides.get(key) {
+            Some(nu) => nu,
+            None => continue,
+        };
+        let l = nu.lambda();
+        if l == 0.0 {
+            continue;
+        }
+        let assigned = nu
+            .modes
+            .iter()
+            .map(|md| md.br)
+            .filter(|br| *br > 0.0)
+            .fold(0.0, |sum, br| sum + br);
+        let scale = if (assigned - 1.0).abs() > BRANCHING_TOLERANCE && assigned > 1.0 {
+            1.0 / assigned
+        } else {
+            1.0
+        };
+        for md in &nu.modes {
+            if md.br <= 0.0 {
+                continue;
+            }
+            let rate = l * md.br * scale;
+            if rate == 0.0 {
+                continue;
+            }
+            for d in rtyp_digits(md.rtyp) {
+                match d {
+                    4 => extra.push((he4, k, rate)),
+                    7 => extra.push((h1, k, rate)),
+                    _ => {}
+                }
+            }
+        }
+    }
+    chain.decay.extend(extra);
+}
+
 #[derive(Clone, Debug, PartialEq, serde::Serialize)]
 pub struct FissionProductLeakage {
     pub parent: String,
@@ -179,6 +299,9 @@ pub struct RateLedger {
     pub burnup_optical_depth_max: f64,
     pub burnup_fraction_max: f64,
     pub burnup_nuclide: Option<(i32, i32)>,
+    /// P92 gas: reaction rate of product rows whose MT has no ejectile-table entry (for
+    /// example MT 18, fission), keyed by MT. Populated only when gas is enabled.
+    pub gas_uncovered: BTreeMap<String, f64>,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -225,6 +348,7 @@ pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
     led: &mut RateLedger,
     shield: Option<&crate::shielding::ShieldPlan>,
     rate_scale: Option<&HashMap<usize, f64>>,
+    gas: bool,
 ) -> Vec<(usize, usize, f64)> {
     assemble_reaction_rates(
         lib,
@@ -236,6 +360,7 @@ pub fn reaction_rates<L: ReactionLibrary + ?Sized>(
         false,
         shield,
         rate_scale,
+        gas,
     )
     .triplets
 }
@@ -251,6 +376,7 @@ pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
     led: &mut RateLedger,
     shield: Option<&crate::shielding::ShieldPlan>,
     rate_scale: Option<&HashMap<usize, f64>>,
+    gas: bool,
 ) -> ReactionAssembly {
     assemble_reaction_rates(
         lib,
@@ -262,7 +388,57 @@ pub fn reaction_rates_with_derivatives<L: ReactionLibrary + ?Sized>(
         true,
         shield,
         rate_scale,
+        gas,
     )
+}
+
+/// P92 gas: for a product row's own rate, either add `mult * rate` triplets (and matching
+/// derivatives) into the light-nuclide rows the row's MT emits, or — if the MT has no
+/// ejectile-table entry — book the rate to the ledger's `gas.uncovered`, keyed by MT. Called
+/// once per product row (the loss row and, within the fission branch, the fission row itself
+/// are not product rows and never reach this function), so a reaction sharing several product
+/// rows (isomer branches) is still counted once per row, exactly as its own rate already is.
+#[allow(clippy::too_many_arguments)]
+fn add_gas_ejectiles(
+    chain: &Chain,
+    mt: i32,
+    col: usize,
+    rate: f64,
+    rate_per_barn_s: f64,
+    library_row: usize,
+    trip: &mut Vec<(usize, usize, f64)>,
+    derivatives: &mut Option<Vec<ReactionDerivative>>,
+    led: &mut RateLedger,
+) {
+    if rate == 0.0 {
+        return;
+    }
+    match gas::table(mt) {
+        Some(ejectiles) => {
+            for (za, mult) in ejectiles.gas_products() {
+                if mult == 0 {
+                    continue;
+                }
+                if let Some(&row) = chain.index.get(&za) {
+                    let value = f64::from(mult) * rate;
+                    if value != 0.0 {
+                        trip.push((row, col, value));
+                    }
+                    if let Some(derivatives) = derivatives.as_mut() {
+                        derivatives.push(ReactionDerivative {
+                            library_row,
+                            row,
+                            column: col,
+                            per_barn_s: f64::from(mult) * rate_per_barn_s,
+                        });
+                    }
+                }
+            }
+        }
+        None => {
+            *led.gas_uncovered.entry(mt.to_string()).or_insert(0.0) += rate;
+        }
+    }
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -276,6 +452,7 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     include_derivatives: bool,
     shield: Option<&crate::shielding::ShieldPlan>,
     rate_scale: Option<&HashMap<usize, f64>>,
+    gas: bool,
 ) -> ReactionAssembly {
     let mut trip: Vec<(usize, usize, f64)> = Vec::new();
     let mut derivatives = include_derivatives.then(Vec::new);
@@ -283,20 +460,8 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
     let mut seen_absent: std::collections::HashSet<(i32, i32)> = Default::default();
     let rate_per_barn = RatePerBarnSecond::from_particle_flux(ParticleFlux::sum_groups(phi));
     let rate_per_barn_s = rate_per_barn.get();
-    let mut flux_denominator = 0.0;
-    let group_count = lib.group_count();
-    for flux in &phi[..group_count] {
-        flux_denominator += *flux;
-    }
-    let first_flux_group = phi[..group_count]
-        .iter()
-        .position(|flux| *flux != 0.0)
-        .unwrap_or(group_count);
-    let last_flux_group = phi[..group_count]
-        .iter()
-        .rposition(|flux| *flux != 0.0)
-        .map(|group| group + 1)
-        .unwrap_or(first_flux_group);
+    let (flux_denominator, first_flux_group, last_flux_group) =
+        actinv_data::library::flux_window(phi, lib.group_count());
     for (i, r) in lib.rows().iter().enumerate() {
         let shielded_target = lib_targets.get(r.target).copied();
         let scale = shield.and_then(|plan| {
@@ -348,6 +513,20 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
             continue;
         } // loss term
         if r.mt == 18 && r.zap == 0 {
+            // Ternary-fission gas is not modelled: fission is always uncovered.
+            if gas {
+                add_gas_ejectiles(
+                    chain,
+                    r.mt,
+                    col,
+                    rate,
+                    rate_per_barn_s,
+                    i,
+                    &mut trip,
+                    &mut derivatives,
+                    led,
+                );
+            }
             let parent = format!("{}_{}", tgt.0, tgt.1);
             if let Some(yields) = fission_yields.get(&tgt) {
                 let mut mapped_yield_sum = 0.0;
@@ -444,7 +623,8 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
             continue;
         }
         if r.lmf == -2 {
-            // builder could not map the product
+            // builder could not map the product; the reaction still happened, so gas ejectiles
+            // (if the MT is covered) are still added even though the residual itself leaks.
             if rate != 0.0 {
                 *led.products_unmapped
                     .entry(format!("{}_{}_MT{}", tgt.0, tgt.1, r.mt))
@@ -458,6 +638,19 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                     column: col,
                     per_barn_s: rate_per_barn_s,
                 });
+            }
+            if gas {
+                add_gas_ejectiles(
+                    chain,
+                    r.mt,
+                    col,
+                    rate,
+                    rate_per_barn_s,
+                    i,
+                    &mut trip,
+                    &mut derivatives,
+                    led,
+                );
             }
             continue;
         }
@@ -492,6 +685,21 @@ fn assemble_reaction_rates<L: ReactionLibrary + ?Sized>(
                 column: col,
                 per_barn_s: rate_per_barn_s,
             });
+        }
+        // A normal product row, including one whose product fell back to chain.leak above,
+        // still adds gas ejectiles: the reaction happened regardless of where its residual went.
+        if gas {
+            add_gas_ejectiles(
+                chain,
+                r.mt,
+                col,
+                rate,
+                rate_per_barn_s,
+                i,
+                &mut trip,
+                &mut derivatives,
+                led,
+            );
         }
     }
     ReactionAssembly {
@@ -661,6 +869,7 @@ mod tests {
             &mut plain_ledger,
             None,
             None,
+            false,
         );
         let mut derivative_ledger = RateLedger::default();
         let with_derivatives = reaction_rates_with_derivatives(
@@ -672,6 +881,7 @@ mod tests {
             &mut derivative_ledger,
             None,
             None,
+            false,
         );
 
         assert_eq!(plain, with_derivatives.triplets);
@@ -687,5 +897,318 @@ mod tests {
             plain[1].2.to_bits(),
             (-library.one_group(1, &flux) * rate_per_barn).to_bits()
         );
+    }
+
+    // ---- P92 gas ----
+
+    #[test]
+    fn ensure_light_states_is_a_no_op_when_all_present() {
+        let mut nuclides = vec![nuclide(25_056, 0, 2.0, &[])];
+        for za in gas::LIGHT_STATES {
+            nuclides.push(nuclide(za.0, za.1, 0.0, &[]));
+        }
+        let chain = network(nuclides);
+        let (before_n, before_leak, before_unit) = (chain.n, chain.leak, chain.unit);
+        let before_decay = chain.decay.clone();
+        let (same, missing) = ensure_light_states(chain);
+        assert!(missing.is_empty());
+        assert_eq!(same.n, before_n);
+        assert_eq!(same.leak, before_leak);
+        assert_eq!(same.unit, before_unit);
+        assert_eq!(same.decay, before_decay);
+    }
+
+    #[test]
+    fn ensure_light_states_appends_stand_ins_and_remaps_leak_references() {
+        // Mn-56 has a half-life but no decay modes in this fixture, so `build` books its whole
+        // decay rate to leakage (mirrors the P11 fixture case above).
+        let chain = network(vec![nuclide(25_056, 0, 2.0, &[])]);
+        let old_leak = chain.leak;
+        let k = chain.index[&(25_056, 0)];
+        let (augmented, missing) = ensure_light_states(chain);
+        assert_eq!(missing, gas::LIGHT_STATES.to_vec());
+        assert_eq!(augmented.n, old_leak + 5 + 2);
+        assert_eq!(augmented.leak, old_leak + 5);
+        assert_eq!(augmented.unit, old_leak + 6);
+        for za in gas::LIGHT_STATES {
+            let idx = augmented.index[&za];
+            assert_eq!(augmented.keys[idx], za);
+            assert_eq!(augmented.lambda[idx], 0.0);
+        }
+        let l = std::f64::consts::LN_2 / 2.0;
+        assert!(augmented.decay.contains(&(augmented.leak, k, l)));
+        assert!(!augmented
+            .decay
+            .iter()
+            .any(|&(r, c, _)| r == old_leak && c == k));
+    }
+
+    #[test]
+    fn add_gas_decay_edges_tallies_one_digit_per_alpha_or_proton() {
+        let l = std::f64::consts::LN_2 / 10.0;
+        let nuclides: HashMap<(i32, i32), Nuclide> = vec![
+            // one alpha branch (RTYP 1.4, digit 4 once) and one proton branch (RTYP 7).
+            nuclide(94_238, 0, 10.0, &[(1.4, 0.0, 0.5), (7.0, 0.0, 0.5)]),
+            // RTYP 4.4: two alphas from a single decay mode.
+            nuclide(96_242, 0, 10.0, &[(4.4, 0.0, 1.0)]),
+            // shortfall branching (assigned 0.4 < 1): build() leaves it unscaled, and so does
+            // add_gas_decay_edges — the He4 edge carries the raw br, not a rescaled one.
+            nuclide(94_239, 0, 10.0, &[(4.0, 0.0, 0.4)]),
+        ]
+        .into_iter()
+        .map(|n| ((n.za, n.liso), n))
+        .collect();
+        let chain = build(&nuclides);
+        let (mut chain, missing) = ensure_light_states(chain);
+        assert_eq!(missing.len(), 5);
+        add_gas_decay_edges(&nuclides, &mut chain);
+        let he4 = chain.index[&gas::HE4];
+        let h1 = chain.index[&gas::H1];
+        let p1 = chain.index[&(94_238, 0)];
+        let p2 = chain.index[&(96_242, 0)];
+        let p3 = chain.index[&(94_239, 0)];
+
+        let sum_edges = |row: usize, col: usize| -> Vec<f64> {
+            chain
+                .decay
+                .iter()
+                .filter(|&&(r, c, _)| r == row && c == col)
+                .map(|t| t.2)
+                .collect()
+        };
+        assert_eq!(sum_edges(he4, p1), vec![l * 0.5]);
+        assert_eq!(sum_edges(h1, p1), vec![l * 0.5]);
+        let p2_alphas = sum_edges(he4, p2);
+        assert_eq!(p2_alphas, vec![l, l]); // two pushes, one per matching RTYP digit
+        assert_eq!(sum_edges(he4, p3), vec![l * 0.4]); // unscaled shortfall branching
+        assert!(sum_edges(h1, p2).is_empty());
+    }
+
+    #[test]
+    fn add_gas_decay_edges_is_a_no_op_without_light_states() {
+        let nuclides: HashMap<(i32, i32), Nuclide> =
+            vec![nuclide(94_238, 0, 10.0, &[(1.4, 0.0, 1.0)])]
+                .into_iter()
+                .map(|n| ((n.za, n.liso), n))
+                .collect();
+        let mut chain = build(&nuclides); // no ensure_light_states call: He4/H1 absent
+        let before = chain.decay.clone();
+        add_gas_decay_edges(&nuclides, &mut chain);
+        assert_eq!(chain.decay, before);
+    }
+
+    fn gas_test_fixture() -> (Library, [(i32, i32); 1], Chain) {
+        let library = Library {
+            rows: vec![
+                // (n,p): H1, normal mapped product row.
+                Row {
+                    target: 0,
+                    mt: 103,
+                    zap: 27_057,
+                    lfs: 0,
+                    lmf: 3,
+                },
+                // (n,t): H3, product unmapped -> leak, gas still applies.
+                Row {
+                    target: 0,
+                    mt: 105,
+                    zap: 999_999,
+                    lfs: 0,
+                    lmf: -2,
+                },
+                // fission: always uncovered, no ejectiles.
+                Row {
+                    target: 0,
+                    mt: 18,
+                    zap: 0,
+                    lfs: 0,
+                    lmf: 3,
+                },
+            ],
+            sig: vec![1.0; 3 * 4],
+            ngroups: 4,
+            bounds: vec![1.0, 2.0, 3.0, 4.0, 5.0],
+        };
+        let targets = [(26_056, 0)];
+        let chain = Chain {
+            index: HashMap::from([
+                ((26_056, 0), 0),
+                ((27_057, 0), 1),
+                (gas::H1, 2),
+                (gas::H3, 3),
+            ]),
+            keys: vec![(26_056, 0), (27_057, 0), gas::H1, gas::H3],
+            lambda: vec![0.0; 4],
+            decay: Vec::new(),
+            leak: 4,
+            unit: 5,
+            n: 6,
+            ledger: ChainLedger::default(),
+        };
+        (library, targets, chain)
+    }
+
+    #[test]
+    fn gas_ejectiles_are_added_for_normal_and_unmapped_rows_and_fission_is_uncovered() {
+        let (library, targets, chain) = gas_test_fixture();
+        let flux = [0.0, 5.0, 7.0, 0.0];
+        let yields = HashMap::new();
+        let mut led = RateLedger::default();
+        let trip = reaction_rates(
+            &library, &targets, &flux, &chain, &yields, &mut led, None, None, true,
+        );
+        let edges = |row: usize, col: usize| -> Vec<f64> {
+            trip.iter()
+                .filter(|&&(r, c, _)| r == row && c == col)
+                .map(|t| t.2)
+                .collect()
+        };
+        let residual_rate = edges(1, 0)[0]; // the mt103 product (Co-57) row
+        assert_eq!(edges(2, 0), vec![residual_rate]); // H1 gas: same row's rate, mult 1
+        let leak_edges = edges(4, 0); // mt105 unmapped product + mt18 fission-no-yields
+        assert_eq!(leak_edges.len(), 2);
+        let h3_rate = edges(3, 0)[0];
+        assert!(leak_edges.contains(&h3_rate)); // H3 gas from the lmf=-2 row
+        assert_eq!(led.gas_uncovered.len(), 1);
+        assert!(led.gas_uncovered.contains_key("18"));
+    }
+
+    #[test]
+    fn gas_off_adds_no_ejectiles_or_uncovered_ledger_entries() {
+        let (library, targets, chain) = gas_test_fixture();
+        let flux = [0.0, 5.0, 7.0, 0.0];
+        let yields = HashMap::new();
+        let mut led = RateLedger::default();
+        let trip = reaction_rates(
+            &library, &targets, &flux, &chain, &yields, &mut led, None, None, false,
+        );
+        assert!(trip.iter().all(|&(r, _, _)| r != 2 && r != 3));
+        assert!(led.gas_uncovered.is_empty());
+    }
+
+    /// One CRAM-16 step of a chain's decay triplets alone (no reactions), for the analytic-integral
+    /// tests below: real matrix exponential math over a hand-built `Chain`, no files or Spec.
+    fn decay_step(chain: &Chain, y0: &[f64], dt: f64) -> Vec<f64> {
+        use crate::cram::{step, Cram};
+        use crate::cram_coeffs::{CRAM16_ALPHA, CRAM16_ALPHA0, CRAM16_THETA};
+        use crate::sparse::Csc;
+        use num_complex::Complex64 as C64;
+        let c = Cram {
+            alpha0: CRAM16_ALPHA0,
+            theta: CRAM16_THETA.iter().map(|(r, i)| C64::new(*r, *i)).collect(),
+            alpha: CRAM16_ALPHA.iter().map(|(r, i)| C64::new(*r, *i)).collect(),
+        };
+        let trip: Vec<(usize, usize, C64)> = chain
+            .decay
+            .iter()
+            .map(|&(r, c, v)| (r, c, C64::new(v, 0.0)))
+            .collect();
+        let a = Csc::from_triplets(chain.n, &trip);
+        step(&a, y0, dt, &c).expect("CRAM step succeeds").0
+    }
+
+    #[test]
+    fn gas_produced_from_a_constant_reservoir_matches_the_exact_linear_integral() {
+        // T has no decay: its only edge is a hand-added constant-rate feed into He4, mirroring
+        // the matrix a reaction triplet would produce for a target with no library loss row
+        // (chain.rs's own gas_test_fixture has none). With T's diagonal exactly zero the 2x2
+        // generator is nilpotent (A^2 = 0), so the true solution is the exact affine integral
+        // He4(t) = He4_0 + R*T0*t, and CRAM (a rational approximation to exp matching its low-order
+        // Taylor terms) reproduces it to machine precision, not just approximately.
+        let nuclides: HashMap<(i32, i32), Nuclide> = vec![nuclide(26_056, 0, 0.0, &[])] // T: stable stand-in, no decay
+            .into_iter()
+            .map(|n| ((n.za, n.liso), n))
+            .collect();
+        let chain = build(&nuclides);
+        let (mut chain, missing) = ensure_light_states(chain);
+        assert_eq!(missing.len(), 5);
+        let t = chain.index[&(26_056, 0)];
+        let he4 = chain.index[&gas::HE4];
+        let rate = 3.0e-7; // R, s^-1 per target atom; arbitrary, just not zero
+        chain.decay.push((he4, t, rate));
+
+        let t0 = 1.0e10; // T0, atoms/g
+        let mut y0 = vec![0.0; chain.n];
+        y0[t] = t0;
+        let dt = 100.0;
+        let y1 = decay_step(&chain, &y0, dt);
+
+        let want_he4 = rate * t0 * dt;
+        let rel = (y1[he4] - want_he4).abs() / want_he4;
+        assert!(
+            rel < 1e-9,
+            "He4 {} vs analytic {want_he4}, rel {rel}",
+            y1[he4]
+        );
+        // T itself must be untouched: A's (t,t) entry is exactly zero, so only CRAM's own
+        // floating-point solve error (not any depletion) can move it.
+        assert!((y1[t] - t0).abs() / t0 < 1e-9, "T {} vs {t0}", y1[t]);
+    }
+
+    #[test]
+    fn h3_ejectiles_decay_to_he3_at_the_tabulated_lambda() {
+        // H3 already real (as P92 requires once gas is on) with tritium's actual half-life
+        // (12.32 y) and its real beta-minus branch (RTYP 1: Z -> Z+1, A unchanged); He3 already
+        // present as its stable daughter. `ensure_light_states` must leave both alone — they are
+        // not among its 5 missing stand-ins — and ordinary decay integration must reproduce the
+        // textbook exponential to high precision.
+        let half_life_s = 12.32 * 365.25 * 86_400.0; // tabulated tritium half-life
+        let nuclides: HashMap<(i32, i32), Nuclide> = vec![
+            nuclide(1_003, 0, half_life_s, &[(1.0, 0.0, 1.0)]), // H3 -> He3, 100% beta-minus
+            nuclide(2_003, 0, 0.0, &[]),                        // He3: stable
+        ]
+        .into_iter()
+        .map(|n| ((n.za, n.liso), n))
+        .collect();
+        let chain = build(&nuclides);
+        assert_eq!(chain.index[&gas::H3], chain.index[&(1_003, 0)]);
+        let (chain, missing) = ensure_light_states(chain);
+        assert_eq!(missing.len(), 3); // H1, H2, He4 stand in; H3 and He3 were already real
+        assert!(!missing.contains(&gas::H3) && !missing.contains(&gas::HE3));
+        let h3 = chain.index[&gas::H3];
+        let he3 = chain.index[&gas::HE3];
+
+        let lambda = std::f64::consts::LN_2 / half_life_s;
+        let h3_0 = 1.0e12;
+        let mut y0 = vec![0.0; chain.n];
+        y0[h3] = h3_0;
+        let dt = half_life_s * 0.37; // an arbitrary fraction of a half-life
+        let y1 = decay_step(&chain, &y0, dt);
+
+        let want_h3 = h3_0 * (-lambda * dt).exp();
+        let want_he3 = h3_0 - want_h3;
+        assert!((y1[h3] - want_h3).abs() / want_h3 < 1e-9);
+        assert!((y1[he3] - want_he3).abs() / want_he3 < 1e-9);
+    }
+
+    #[test]
+    fn decay_alpha_case_feeds_he4_at_the_parents_lambda() {
+        // A pure-alpha decaying nuclide (P92's gas-decay path, not the ordinary daughter-mapping
+        // path H3->He3 exercises above): He4 comes from `add_gas_decay_edges`, at the parent's own
+        // lambda, exactly matching the parent's own depletion curve.
+        let half_life_s = 87.7 * 365.25 * 86_400.0; // Pu-238-like, arbitrary but realistic scale
+        let nuclides: HashMap<(i32, i32), Nuclide> =
+            vec![nuclide(94_238, 0, half_life_s, &[(4.0, 0.0, 1.0)])] // 100% alpha, daughter absent (leaks)
+                .into_iter()
+                .map(|n| ((n.za, n.liso), n))
+                .collect();
+        let chain = build(&nuclides);
+        let (mut chain, missing) = ensure_light_states(chain);
+        assert_eq!(missing.len(), 5);
+        add_gas_decay_edges(&nuclides, &mut chain);
+        let p = chain.index[&(94_238, 0)];
+        let he4 = chain.index[&gas::HE4];
+
+        let lambda = std::f64::consts::LN_2 / half_life_s;
+        let p0 = 5.0e9;
+        let mut y0 = vec![0.0; chain.n];
+        y0[p] = p0;
+        let dt = half_life_s * 1.5;
+        let y1 = decay_step(&chain, &y0, dt);
+
+        let want_p = p0 * (-lambda * dt).exp();
+        let want_he4 = p0 - want_p;
+        assert!((y1[p] - want_p).abs() / want_p < 1e-9);
+        assert!((y1[he4] - want_he4).abs() / want_he4 < 1e-9);
     }
 }

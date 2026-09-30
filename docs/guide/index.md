@@ -4,6 +4,8 @@ ACTINV calculates which nuclides a material contains during irradiation and cool
 
 This handbook covers **ACTINV 1.3.1** and nuclear-data catalog **1.1.0**. The downloadable desktop preview has a separate release history; [check its solver version](releases.md) before using a feature described here.
 
+The reference also includes additions on current `master`. Gas production, transport-tally error propagation, and impurity budgets are currently unreleased; [Versions and releases](releases.md#current-master) distinguishes them from the installed packages.
+
 ## Choose how to work
 
 | Interface | Use it for | Start here |

@@ -19,7 +19,9 @@ pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
         resolve(&mut r.path);
     }
     if let Some(r) = &mut spec.uncertainty {
-        resolve(&mut r.covariance.path);
+        if let Some(covariance) = &mut r.covariance {
+            resolve(&mut covariance.path);
+        }
     }
     if let Some(r) = &mut spec.radiological {
         resolve(&mut r.table.path);
@@ -44,8 +46,12 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     if let Some(r) = &spec.photon.response {
         inputs.push(("Photon response", &r.path, Some(&r.sha256)));
     }
-    if let Some(r) = &spec.uncertainty {
-        inputs.push(("Covariance", &r.covariance.path, Some(&r.covariance.sha256)));
+    if let Some(covariance) = spec
+        .uncertainty
+        .as_ref()
+        .and_then(|r| r.covariance.as_ref())
+    {
+        inputs.push(("Covariance", &covariance.path, Some(&covariance.sha256)));
     }
     if let Some(r) = &spec.radiological {
         inputs.push(("Radiological table", &r.table.path, Some(&r.table.sha256)));
@@ -75,7 +81,8 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     for path in std::iter::once(spec.library.path.as_str()).chain(
         spec.uncertainty
             .as_ref()
-            .map(|u| u.covariance.path.as_str()),
+            .and_then(|u| u.covariance.as_ref())
+            .map(|c| c.path.as_str()),
     ) {
         if path.is_empty() {
             continue;

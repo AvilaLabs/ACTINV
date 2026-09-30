@@ -73,6 +73,11 @@ relative. `total`, when present, rescales group values while preserving shape; a
 `flux_per_group` has no shape to scale and is rejected. The spec, library index, group
 structure and temperature must all identify the same projectile/data build before matrix assembly.
 
+`spectrum.relative_error` is an optional array, the same length and order as `flux_per_group` (honouring
+`descending`): each group's transport-tally statistical relative standard uncertainty. It is accepted and carried
+but otherwise unused unless `uncertainty.channels` requests `"flux"` (see below); requesting that channel with no
+`relative_error` given is an error naming the spectrum.
+
 ## Fission yields
 
 `fission_yields` is optional. Each file is one hash-pinned ENDF evaluation for one parent:
@@ -103,10 +108,12 @@ Fissioning parents without a matching file remain explicit leakage and never bor
 
 ## MF=33 uncertainty
 
-`uncertainty` is optional and neutron-only. `uncertainty.covariance.path` names an
-`actinv-covariance-1` sidecar and `uncertainty.covariance.sha256` is mandatory. The adjacent
-`<stem>_index.json` must link the exact activation-library/index hashes, neutron projectile, group-boundary hash and
-every target/source identity. ACTINV recomputes and records both sidecar and index hashes before matrix assembly.
+`uncertainty` is optional and neutron-only. `uncertainty.covariance` names an `actinv-covariance-1` sidecar
+(`path` and a mandatory `sha256`); the adjacent `<stem>_index.json` must link the exact activation-library/index
+hashes, neutron projectile, group-boundary hash and every target/source identity. ACTINV recomputes and records
+both sidecar and index hashes before matrix assembly. `covariance` may be omitted only when `channels` is exactly
+`["flux"]` (flux-only mode, below); any other `channels` value still requires it, and when present MF=33 is
+propagated exactly as always regardless of what else `channels` requests.
 
 `responses` accepts the canonical selectors `heat.total`, `heat.alpha`, `heat.beta`, `heat.gamma`,
 `activity:Nuclide`, `activity:*`, and `activity.total` (the aggregate propagated directly through the
@@ -117,15 +124,34 @@ between zero and one. `require_complete` defaults to `false`; when true, an acti
 MF=33 self-covariance — or a nonzero-sensitivity parameter in any requested channel without uncertainty data —
 fails rather than returning a partial band.
 
-`channels` is optional and accepts `"cross_section_mf33"` (the implicit default), `"decay_constants"` and
-`"fission_yields"`. When omitted, only the MF=33 cross-section channel is evaluated and the channel fields are
-absent from the output. `decay_constants` propagates
+`channels` is optional and accepts `"cross_section_mf33"` (the implicit default), `"decay_constants"`,
+`"fission_yields"` and `"flux"`. When omitted, only the MF=33 cross-section channel is evaluated and the channel
+fields are absent from the output. `decay_constants` propagates
 each radioactive chain member's decay-constant uncertainty `sigma_lambda = lambda * dT_half/T_half` read from the
 pinned decay file's MF=8/MT=457 record. `fission_yields` propagates each populated fission edge's independent-yield
 `DY` read from the pinned MF=8/MT=454 file at the requested yield energy. Both channels are diagonal — the
 evaluations carry no correlation data — and each reports its own sensitivity list, standard uncertainty and
 coverage. A nuclide or product with no declared uncertainty is named in `uncovered_decay_constants` /
 `uncovered_yield_products`.
+
+The `flux` channel is an [unreleased addition on master](releases.md#current-master). It propagates each input group's transport-tally statistical error (`spectrum.relative_error`, or a mesh
+cell's own flux-file `relative_error` — a mesh cell without one is an error naming that cell) as a first-order,
+diagonal (uncorrelated group-to-group) channel: the parameter is the log of that group's absolute flux after
+`total` scaling, its direction is the reaction-only burn matrix a unit flux confined to that group alone would
+produce, and its sensitivity is exactly the response's own sensitivity to that group's flux level. Each
+`flux_sensitivities` parameter reports its `group` in the order the spec declared `flux_per_group` (undoing
+`descending` for that label only — energy bounds, flux and standard uncertainty are unaffected, since they name
+the same physical group either way). The channel's
+variance is `sum((s_g * e_g)^2)` over groups with a positive sensitivity and a given error; a fully-correlated
+alternative bound, `sum(|s_g| * e_g)`, is reported alongside it (`flux_fully_correlated_bound`) for a worst-case,
+correlated-error comparison. `flux` needs no covariance sidecar by itself: `channels: ["flux"]` alone (`covariance`
+omitted) is
+*flux-only mode* — MF=33 is not propagated and the band is the flux channel alone, with the method and band name
+naming that. Everything else the flux collapse depends on (self-shielding row scale, `rate_scale`, fission-yield
+selection, mode and pruning choices) is held at the nominal run's values. The flux channel is diagonal, needs no
+covariance and is not a nuclear-data parameter, so it is excluded from `voi`, `isomer` and `design` (below): those
+report ranks over parameters an experiment could better-measure, and a transport tally's statistical error only
+shrinks by running more particle histories.
 
 `voi` is optional (`{"top": N}`, 1–256) and emits a value-of-information table inside each requested response: the
 `top` parameters ranked by `|variance_share|` — the share of the propagated variance each parameter carries
@@ -142,8 +168,11 @@ and a `combined_standard_uncertainty` equal to the root-sum-of-squares across ch
 naming each channel's coverage. Coverage is `complete` only when every nonzero-sensitivity parameter in every
 requested channel has evaluated uncertainty data. Missing evaluated cross-reaction terms contribute zero and are
 counted; they are not invented. These intervals are neither tolerance limits nor safety margins, and exclude
-MF=32 resonance-parameter and MF=40 production covariance, decay-yield and cross-channel correlation, incident-flux,
+MF=32 resonance-parameter and MF=40 production covariance, decay-yield and cross-channel correlation,
 material-composition, response-coefficient and model uncertainty — the `uncovered_remainder` channel names these.
+Absent a requested `flux` channel, incident-flux uncertainty is excluded there too; with `flux` requested, that
+entry instead names the narrower remainder the channel does not cover (systematic flux uncertainty from the
+transport model, geometry and transport nuclear data — the channel covers only the tally's own statistical error).
 
 ### Additional uncertainty reporting
 
@@ -257,6 +286,46 @@ run checks the collapsed nominals against the shielded fold bitwise. The same fo
 A runnable walkthrough lives at `examples/shielding_demo.json`: pure W-186 under a 4–25 keV custom spectrum at
 fixed `sigma0_b = 0.1` — the ledger names every applied factor and W-187 activity lands ~28% below the
 unshielded solve of the same problem.
+
+## Gas production (H and He isotopes)
+
+This option is an [unreleased addition on master](releases.md#current-master).
+
+`options.gas: true` (default `false`) tracks the light charged-particle products of neutron activation — H1, H2,
+H3, He3 and He4 — as real inventory nuclides, exactly as FISPACT-II does. Every neutron reaction's light-particle
+multiplicities (protons, deuterons, tritons, He-3, alphas) are read from a table built from the ENDF-6 reaction
+definitions for MT 11–45 (excluding the 18–21 and 38 fission MTs), 102–117 and 152–200; MT 4 and 51–91 (inelastic)
+and MT 102 emit none. A product row whose MT is not in the table (MT 18, fission, is the practical case: ternary
+gas is not modelled) contributes no ejectiles and is named in the ledger's `gas.uncovered`, keyed by MT, with its
+share of the reaction rate. Each decaying nuclide's own modes also feed the gas states directly: branching × λ
+into He4 for every RTYP digit 4 (alpha) and into H1 for every digit 7 (proton).
+
+Because the five gas states are real chain nuclides, they decay and react further like any other state — H3
+decays to He3 at its own tabulated half-life, and a secondary reaction such as He3(n,p)H3 applies when the
+library carries it — and they appear in the ordinary `inventory`, `activity_Bq_per_g` and `heat_W_per_g` output,
+not only in the block below. If a light nuclide is absent from the decay library, a stable sink stands in for it
+and the ledger's `gas.missing_light_states` names it. Trace mode feeds the gas states from bulk material targets
+through the unit-source mechanism exactly as it feeds any other product, including the hybrid reservoir treatment
+when H or He is itself a bulk material constituent; the gas edges are ordinary edges in the graph pruning already
+operates on, so `options.prune` needs no gas-specific handling.
+
+`options.gas` is refused together with `uncertainty`, and for any `projectile` other than `neutron` (v1). With
+gas off, every byte of `PreparedRun`, the result and the ledger is unchanged from a pre-P92 run; `gas` is absent
+from the spec echo and fingerprint entirely rather than serialized as `false`.
+
+Each step gains a `gas` block when enabled: per species (`H1`, `H2`, `H3`, `He3`, `He4`) it gives `atoms_per_g`
+(the same quantity the main inventory reports for that nuclide), `produced_atoms_per_g` (`atoms_per_g` minus the
+material's initial population of that nuclide, ordinarily zero) and `appm` (`produced_atoms_per_g` per 1e6 atoms
+of the material's total initial population). It also gives `inventory_appm` (`atoms_per_g` per 1e6 initial
+atoms, the initial content included). It also gives `H_appm` (H1+H2+H3), `He_appm` (He3+He4), their inventory
+counterparts `H_inventory_appm` and `He_inventory_appm`, and `initial_atoms_per_g`, the appm normalization
+denominator. The two conventions differ only for a light nuclide the material starts with, e.g. hydrogen in
+a hydrocarbon. FISPACT-II's printed `APPM OF` is the inventory convention (P95); compare against
+`inventory_appm`, not `appm`. These fields are plain `f64` inventory populations and dimensionless ratios computed at
+result serialization, not raw inputs converted at a `Spec::physical_inputs` boundary, so they stay
+outside the P16 typed-quantity inventory (`docs/QUANTITIES.md`, which P16 pins by hash), as
+`inventory[].atoms_per_g` does. The ledger's `gas` block records the ejectile table
+version, `uncovered` and `missing_light_states`.
 
 ## Photon options
 

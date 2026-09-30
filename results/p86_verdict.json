@@ -1,0 +1,57 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "release": "0",
+   "test": "0"
+  },
+  "pass": true,
+  "unit_test_ok": true
+ },
+ "G2": {
+  "binaries": {
+   "actinv": {
+    "built": "0d8dc849e41ee55d6cca65157e87f7c818293aa612e7b0a07f595606f2651eba",
+    "p85_candidate": "38ecc4e4aac48b2671fa959f5795763c0a1193dfc47aee257258b6fb0e7c3448"
+   },
+   "cache_probe": {
+    "built": "67224ff4e0f75f27445f76b624ff64fcada6c6a372f183b2deb96315d07cdfcc",
+    "p85_candidate": "7948711e6a492ce77892110614ad7ccde7bc0dc69849fcb0c77b632ae7f97015"
+   }
+  },
+  "binaries_identical": false,
+  "p85_runtime_gates_pass": true,
+  "p85_speedup": 17.121335520864697,
+  "pass": true,
+  "rerun": {
+   "G2": true,
+   "G3": true,
+   "G5": true,
+   "cand_median_ms": 162.0237865,
+   "ref_median_ms": 2956.1796729999996,
+   "speedup": 18.245343704518348
+  },
+  "rerun_on_this_build": true
+ },
+ "G3": {
+  "failed": [],
+  "pass": true,
+  "steps": 23
+ },
+ "inputs": {
+  "p85_verdict_sha256": "77b4cffbd3485b53cab5f01a3141925c32a57b8ebe62998879576d418251a724",
+  "protocol_sha256": "903adffa6ff3e8a2b06400e0dc062147beea2187eb6206f445161547d7af0f12"
+ },
+ "p85_G4_ci_replay": {
+  "failed": [
+   "p16"
+  ],
+  "pass": false
+ },
+ "pass": true,
+ "protocol": "ACTINV-P86"
+}

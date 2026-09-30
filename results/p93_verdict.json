@@ -1,0 +1,284 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "candidate_sha256": "d12ba06a0118ad1109e660061d1fdb0bdb75cf47be13ecd1b5a030286c11751a",
+  "pass": true,
+  "rc": {
+   "clippy": "0",
+   "fmt": "0",
+   "release": "0",
+   "test": "0"
+  },
+  "reference_sha256": "0d8dc849e41ee55d6cca65157e87f7c818293aa612e7b0a07f595606f2651eba",
+  "unit_test_ok": {
+   "covariance_is_required_unless_channels_is_exactly_flux": true,
+   "descending_flag_maps_reported_group_index_to_the_declared_order": true,
+   "flux_direction_sum_reproduces_nominal_matrix_coarse_custom": true,
+   "flux_direction_sum_reproduces_nominal_matrix_dense_709_group": true,
+   "flux_tangent_matches_central_difference_of_plain_cram_steps": true,
+   "low_burnup_relative_uncertainty_of_product_activity_equals_declared_error": true,
+   "mesh_cell_without_relative_error_names_the_cell": true,
+   "plain_spec_relative_error_honours_descending_reorder": true,
+   "plain_spec_without_relative_error_names_the_spectrum": true,
+   "spectrum_relative_error_length_must_match_flux_per_group": true,
+   "spectrum_relative_error_must_be_finite_and_nonnegative": true
+  }
+ },
+ "G2": {
+  "a": {
+   "mesh": {
+    "fe_coupled": {
+     "pass": true
+    },
+    "fe_p21like": {
+     "pass": true
+    },
+    "ss316_r2s": {
+     "pass": true
+    }
+   },
+   "p75b_count": 783,
+   "p75b_mismatches": [],
+   "pass": true
+  },
+  "b": {
+   "examples": {
+    "examples/optimize_ra_steel/base_spec.json": {
+     "match": false
+    },
+    "examples/optimize_ra_steel/opt_v2_winner.json": {
+     "match": false
+    },
+    "examples/p51_battery/corpus_probe.json": {
+     "match": false
+    }
+   },
+   "pass": false
+  },
+  "c": {
+   "bitwise_identical_count": 43,
+   "failures": [],
+   "pass": true,
+   "specs": 48
+  },
+  "pass": false
+ },
+ "G3": {
+  "comparisons": 2256,
+  "custom10_mesh_route": {
+   "cases": 15,
+   "excluded": 0,
+   "note": "The 5 custom-structure variants (every 10th fispact-709 boundary, flux summed into each block) run through a one-cell mesh, not a single actinv run: single specs must declare exactly the activation library's group count (709) even for structure=\"custom\" -- confirmed empirically, a genuinely 71-group custom spec is refused with 'spectrum has 71 groups but prepared activation library has 709' -- so a source structure coarser than the library cannot be expressed as a single spec at all. The one-cell mesh route accepts a genuinely coarser source (a 71-group flux file) and is rebinned onto the library's 709 groups by rebin_equal_lethargy, so it is also the only way to exercise the flux channel's source-group -> library-group rebin mapping in the sensitivity directions; a same-709-group custom spec never touches that mapping.",
+   "specs": [
+    "A__concrete__fns__1e+10",
+    "A__el_B__fns__1e+15",
+    "A__el_Ca__maxwell__1e+13",
+    "A__el_Cr__mix__1e+10",
+    "A__el_Eu__mix__1e+15"
+   ]
+  },
+  "descending_variant_specs": [
+   "A__concrete__fns__1e+10.descending",
+   "A__el_B__fns__1e+15.descending",
+   "A__el_Ca__maxwell__1e+13.descending"
+  ],
+  "excluded": 0,
+  "exclusion_rate": 0.0,
+  "pass": false,
+  "pass_rate": 0.9703014184397163,
+  "total_cases": 144,
+  "within_100x_tolerance": 2205,
+  "within_tolerance": 2189,
+  "worst": [
+   {
+    "central_difference": 2.3551680312006416e-27,
+    "diff": 2.3551680312042443e-27,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -3.60291842123779e-39,
+    "ratio": 265775261175982.88,
+    "response": "heat.total",
+    "step": 7,
+    "tolerance": 8.861502085571357e-42
+   },
+   {
+    "central_difference": 2.0703201343003024e-27,
+    "diff": 2.0703201343042262e-27,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -3.9237167297806024e-39,
+    "ratio": 228157276158018.25,
+    "response": "heat.total",
+    "step": 7,
+    "tolerance": 9.074092087557856e-42
+   },
+   {
+    "central_difference": 4.1583608500756855e-15,
+    "diff": 4.158360850084973e-15,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -9.286882799362316e-27,
+    "ratio": 149251880587101.3,
+    "response": "activity.total",
+    "step": 7,
+    "tolerance": 2.786136317832331e-29
+   },
+   {
+    "central_difference": 3.9916330541699645e-15,
+    "diff": 3.991633054180014e-15,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -1.0048965299904085e-26,
+    "ratio": 140522887263362.69,
+    "response": "activity.total",
+    "step": 7,
+    "tolerance": 2.8405572443861377e-29
+   },
+   {
+    "central_difference": -4.4765154098474865e-28,
+    "diff": 4.476515409579277e-28,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -2.682099570687007e-38,
+    "ratio": 35844143018313.21,
+    "response": "heat.total",
+    "step": 7,
+    "tolerance": 1.2488833691161677e-41
+   },
+   {
+    "central_difference": 1.6601182906011152e-28,
+    "diff": 1.6601182906102987e-28,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -9.183651419118801e-40,
+    "ratio": 19222243182394.16,
+    "response": "heat.total",
+    "step": 7,
+    "tolerance": 8.636444117671018e-42
+   },
+   {
+    "central_difference": 3.017725781737008e-16,
+    "diff": 3.017725781761175e-16,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -2.416682761149825e-27,
+    "ratio": 11061301536657.898,
+    "response": "activity.total",
+    "step": 7,
+    "tolerance": 2.728183271887335e-29
+   },
+   {
+    "central_difference": -7.165710485714091e-16,
+    "diff": 7.16571048516644e-16,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": -5.476506416164104e-26,
+    "ratio": 10454140034526.87,
+    "response": "activity.total",
+    "step": 7,
+    "tolerance": 6.854423665170221e-29
+   },
+   {
+    "central_difference": -1.143318568592569e-15,
+    "diff": 1.1433185687392365e-15,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": 1.4666741166086012e-25,
+    "ratio": 7797253888868.538,
+    "response": "activity.total",
+    "step": 7,
+    "tolerance": 1.4663092737963208e-28
+   },
+   {
+    "central_difference": -8.638579905734225e-29,
+    "diff": 8.638579908289318e-29,
+    "ok": false,
+    "ok_100x": false,
+    "predicted": 2.555092857533539e-38,
+    "ratio": 6859144247305.299,
+    "response": "heat.total",
+    "step": 7,
+    "tolerance": 1.259425315582639e-41
+   }
+  ]
+ },
+ "G4": {
+  "failed_samples": [],
+  "flux_only_mesh": {
+   "returncode": 0,
+   "wall_s": 59.543078652000986
+  },
+  "nominal_mesh": {
+   "returncode": 0,
+   "wall_s": 10.543931470951065
+  },
+  "pass": true,
+  "sample_wall_s_total": 409.85949105001055,
+  "samples": 64,
+  "seed": 20260930,
+  "summary": {
+   "step0:activity.total": {
+    "cells": 64,
+    "mean_variance_ratio": 0.9949236370547633,
+    "mean_variance_ratio_pass": true,
+    "std_ratio_in_band": 64,
+    "std_ratio_in_band_fraction": 1.0,
+    "std_ratio_pass": true
+   },
+   "step0:heat.total": {
+    "cells": 64,
+    "mean_variance_ratio": 0.9948929164190795,
+    "mean_variance_ratio_pass": true,
+    "std_ratio_in_band": 64,
+    "std_ratio_in_band_fraction": 1.0,
+    "std_ratio_pass": true
+   },
+   "step1:activity.total": {
+    "cells": 64,
+    "mean_variance_ratio": 0.9948818512989759,
+    "mean_variance_ratio_pass": true,
+    "std_ratio_in_band": 64,
+    "std_ratio_in_band_fraction": 1.0,
+    "std_ratio_pass": true
+   },
+   "step1:heat.total": {
+    "cells": 64,
+    "mean_variance_ratio": 0.9946274897768947,
+    "mean_variance_ratio_pass": true,
+    "std_ratio_in_band": 64,
+    "std_ratio_in_band_fraction": 1.0,
+    "std_ratio_pass": true
+   },
+   "step2:activity.total": {
+    "cells": 64,
+    "mean_variance_ratio": 0.9954813598046931,
+    "mean_variance_ratio_pass": true,
+    "std_ratio_in_band": 64,
+    "std_ratio_in_band_fraction": 1.0,
+    "std_ratio_pass": true
+   },
+   "step2:heat.total": {
+    "cells": 64,
+    "mean_variance_ratio": 0.9930566251900785,
+    "mean_variance_ratio_pass": true,
+    "std_ratio_in_band": 64,
+    "std_ratio_in_band_fraction": 1.0,
+    "std_ratio_pass": true
+   }
+  }
+ },
+ "G5": {
+  "failed": [],
+  "pass": false,
+  "steps": 0
+ },
+ "inputs": {
+  "candidate_sha256": "d12ba06a0118ad1109e660061d1fdb0bdb75cf47be13ecd1b5a030286c11751a",
+  "protocol_sha256": "41cfc21bb3081a12312f2ec31735004bf5c02df756e9e97deeb609e0f7b27c5f",
+  "reference_sha256": "0d8dc849e41ee55d6cca65157e87f7c818293aa612e7b0a07f595606f2651eba"
+ },
+ "pass": false,
+ "protocol": "ACTINV-P93"
+}

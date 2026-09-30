@@ -37,9 +37,9 @@ The `numerical_floor_atoms_per_g` field is a CRAM asymptotic scale, **not a boun
 
 ## Read uncertainty with its coverage
 
-An uncertainty response contains its nominal value, propagated standard uncertainty, interval, coverage, and a separate CRAM-order comparison. The default channel is MF=33 cross-section covariance. Half-life and independent fission-yield uncertainties can be enabled explicitly.
+An uncertainty response contains its nominal value, propagated standard uncertainty, interval, coverage, and a separate CRAM-order comparison. The default channel is MF=33 cross-section covariance. Half-life and independent fission-yield uncertainties can be enabled explicitly. Current master also supports a requested transport-tally statistical `flux` channel; [check release availability](releases.md#current-master).
 
-Incomplete evaluated covariance does not become complete by requesting a confidence level. Reported intervals omit flux, composition, response-coefficient, geometry, and model uncertainties, among others. Aggregate activity uncertainty must be propagated as `activity.total`; summing individual standard uncertainties does not preserve correlations.
+Incomplete evaluated covariance does not become complete by requesting a confidence level. Incident-flux uncertainty is excluded unless the `flux` channel is requested. That channel uses supplied groupwise tally errors and a diagonal model; systematic transport-model, geometry, and nuclear-data errors remain excluded. Composition, response-coefficient, and other model uncertainties also remain outside the band. Aggregate activity uncertainty must be propagated as `activity.total`; summing individual standard uncertainties does not preserve correlations.
 
 You can declare an additional unmodeled relative term directly or through a hash-pinned calibration/evaluation-spread table. That declared contribution supplements the band; it cannot account for a missing reaction channel or establish complete uncertainty coverage. See [additional uncertainty reporting](specification.md#additional-uncertainty-reporting).
 

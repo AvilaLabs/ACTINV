@@ -122,6 +122,26 @@ fn decide(py: Python<'_>, decision_json: &str, base_dir: Option<&str>) -> PyResu
         .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
 }
 
+/// budget(budget_json: str, base_dir=None, verify=True) -> str — run the P79
+/// impurity budget (actinv-budget-1 spec text) and return the
+/// actinv-budget-result-1 document. Paths in the budget spec (`base_spec`,
+/// `limits`) resolve against `base_dir`.
+#[pyfunction]
+#[pyo3(signature = (budget_json, base_dir=None, verify=true))]
+fn budget(
+    py: Python<'_>,
+    budget_json: &str,
+    base_dir: Option<&str>,
+    verify: bool,
+) -> PyResult<String> {
+    let base = std::path::PathBuf::from(base_dir.unwrap_or("."));
+    let doc = py
+        .detach(|| actinv_cli::budget::run_budget_doc(budget_json, &base, verify))
+        .map_err(pyo3::exceptions::PyRuntimeError::new_err)?;
+    serde_json::to_string(&doc)
+        .map_err(|e| pyo3::exceptions::PyRuntimeError::new_err(e.to_string()))
+}
+
 /// optimize(optspec_path: str, outdir=None, resume=False) -> str — run the
 /// P49/P56 design search for an actinv-optimize-1 file and return the result
 /// summary JSON (the full ledger lands in `outdir`).
@@ -162,6 +182,7 @@ fn actinv(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(broaden, m)?)?;
     m.add_function(wrap_pyfunction!(run, m)?)?;
     m.add_function(wrap_pyfunction!(decide, m)?)?;
+    m.add_function(wrap_pyfunction!(budget, m)?)?;
     m.add_function(wrap_pyfunction!(optimize, m)?)?;
     m.add_function(wrap_pyfunction!(reverse, m)?)?;
     m.add_function(wrap_pyfunction!(validate, m)?)?;

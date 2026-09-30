@@ -30,6 +30,26 @@ pub struct Library {
 /// Implementations may keep the original dense group rows, compact nonzero spans, or exact
 /// spectrum-collapsed values. The solver computes the flux denominator and nonzero flux window
 /// once, then delegates only the per-row numerator work through this interface.
+/// The flux normalisation of a collapse: the sequential sum of the first `group_count` fluxes and
+/// the half-open group range from the first to the last nonzero flux. Reaction assembly and the
+/// batched mesh collapse both call this, so their denominators and windows are the same bits.
+pub fn flux_window(phi: &[f64], group_count: usize) -> (f64, usize, usize) {
+    let mut flux_denominator = 0.0;
+    for flux in &phi[..group_count] {
+        flux_denominator += *flux;
+    }
+    let first_flux_group = phi[..group_count]
+        .iter()
+        .position(|flux| *flux != 0.0)
+        .unwrap_or(group_count);
+    let last_flux_group = phi[..group_count]
+        .iter()
+        .rposition(|flux| *flux != 0.0)
+        .map(|group| group + 1)
+        .unwrap_or(first_flux_group);
+    (flux_denominator, first_flux_group, last_flux_group)
+}
+
 pub trait ReactionLibrary {
     fn rows(&self) -> &[Row];
     fn group_count(&self) -> usize;

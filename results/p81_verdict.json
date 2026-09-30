@@ -1,0 +1,131 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "release": "0",
+   "test": "0"
+  },
+  "pass": true,
+  "unit_test_ok": true
+ },
+ "G2": {
+  "pass": true,
+  "profiles": {
+   "fe_coupled": {
+    "differing_records": [],
+    "pass": true,
+    "records": 62
+   },
+   "fe_p21like": {
+    "differing_records": [],
+    "pass": true,
+    "records": 62
+   },
+   "ss316_r2s": {
+    "differing_records": [],
+    "pass": true,
+    "records": 62
+   }
+  },
+  "variants": {
+   "chunk1": {
+    "differing_records": [],
+    "pass": true,
+    "records": 62
+   },
+   "threads3": {
+    "differing_records": [],
+    "pass": true,
+    "records": 62
+   }
+  }
+ },
+ "G3": {
+  "cand_total_wall_s": 1161.1207635078463,
+  "differing_or_failed": [],
+  "pass": true,
+  "ref_total_wall_s": 1197.0970704650972,
+  "specs": 783
+ },
+ "G5": {
+  "gated_profile": "fe_coupled",
+  "pass": true,
+  "profiles": {
+   "fe_coupled": {
+    "cand_median_s": 3.2045150860212743,
+    "cand_wall_s": [
+     3.214760628005024,
+     3.202499323990196,
+     3.2045150860212743
+    ],
+    "ref_median_s": 5.68155093799578,
+    "ref_wall_s": [
+     5.68155093799578,
+     5.663662275997922,
+     5.684950627037324
+    ],
+    "speedup": 1.7729830521877785
+   },
+   "fe_p21like": {
+    "cand_median_s": 3.6835033090319484,
+    "cand_wall_s": [
+     3.6559918469865806,
+     3.7150168559746817,
+     3.6835033090319484
+    ],
+    "ref_median_s": 6.204554731026292,
+    "ref_wall_s": [
+     6.094199759012554,
+     6.204554731026292,
+     6.256592103978619
+    ],
+    "speedup": 1.6844167659121485
+   },
+   "ss316_r2s": {
+    "cand_median_s": 13.018751617986709,
+    "cand_wall_s": [
+     13.018751617986709,
+     12.827432324003894,
+     14.659271782962605
+    ],
+    "ref_median_s": 17.299726944009308,
+    "ref_wall_s": [
+     18.621568958973512,
+     17.299726944009308,
+     15.550920727022458
+    ],
+    "speedup": 1.328831477213837
+   }
+  },
+  "threshold": 1.3
+ },
+ "G5_single_pass_timing": {
+  "mesh": {
+   "fe_coupled": {
+    "cand_wall_s": 3.16608052700758,
+    "ref_wall_s": 5.7095662109786645,
+    "speedup": 1.8033547037968296
+   },
+   "fe_p21like": {
+    "cand_wall_s": 3.656370274955407,
+    "ref_wall_s": 6.1334432100411505,
+    "speedup": 1.677467747742248
+   },
+   "ss316_r2s": {
+    "cand_wall_s": 16.100568113964982,
+    "ref_wall_s": 18.271013955003582,
+    "speedup": 1.1348055438587936
+   }
+  }
+ },
+ "inputs": {
+  "candidate_sha256": "c2b2d6880465d4dd51fd1eb2857c8e9dd07a72d2d3d81be5122af42fbad4a714",
+  "protocol_sha256": "843f514a48995f63f2868dc835764afeea6e139a17b4a5ebc640ab2b54bf26e7",
+  "reference_sha256": "d85abd2e0693c514b4af6684d5249266e0f0d0ad3759ec6e9f9deed8d0a8ad39"
+ },
+ "protocol": "ACTINV-P81"
+}

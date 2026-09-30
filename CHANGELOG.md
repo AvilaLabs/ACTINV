@@ -8,6 +8,54 @@
   with the spec margin factor, single-impurity limits (or the reason none exists), top nuclides and
   uncovered activity per target. Every emitted limit is re-solved at its composition and compared
   with the prediction; `--no-verify` skips that. See `docs/BUDGET.md`. (P79)
+- `contrib/openmc_r2s`: an OpenMC 0.15.3 `R2SManager` subclass that replaces OpenMC's depletion step
+  with an `actinv mesh` run and hands the decay photon sources back to OpenMC. Step 1 tallies only
+  the flux, so 709-group runs do not tally every chain reaction. Unit tests run without OpenMC
+  installed (skipped) or with it; known limits are listed in its README.
+- Python: `actinv.budget(budget, base_dir=None, verify=True)` runs an `actinv-budget-1` mapping or file
+  and returns the `actinv-budget-result-1` document, identical to `actinv budget` apart from timing
+  keys. A file is passed through verbatim, so `budget_sha256` is the file's hash, as on the command
+  line. A failed verification is returned in the document, not raised (P87, P89).
+- `options.gas` (off by default): hydrogen and helium isotope production. Light ejectiles of every
+  covered MT, and decay alphas and protons, enter the chain as ordinary nuclides (H1, H2, H3, He3,
+  He4). Each step reports per-species `atoms_per_g`, `produced_atoms_per_g`, produced `appm` and
+  `inventory_appm`, the FISPACT-II `APPM OF` convention with initial content included. Against
+  FISPACT-II/TENDL-2017 on the 132 FNS experiments, 403/403 gated pairs agree within ±10 %.
+  With gas off, output is byte-identical (P92, P95).
+- Transport-tally statistical error as an uncertainty channel: `uncertainty.channels: ["flux"]` with a
+  per-group `spectrum.relative_error` propagates each group's declared relative error to first order
+  (sensitivity dR/d ln φ_g, diagonal), flux-only with `covariance` omitted or alongside MF=33. Each
+  response reports `flux_sensitivities` and the fully correlated bound `flux_fully_correlated_bound`.
+  Checked against central finite differences on an unseen spec set (2097/2097 within tolerance) and
+  against sampling on the P32 cube (P93, P96, P97).
+
+**Fixed**
+
+- Trace mode dropped production into nuclides that are also bulk constituents: from a tracked precursor
+  (Fe-59 → Co-59 in a cobalt-bearing alloy) silently, from another bulk nuclide into the
+  `bulk_production_dropped` ledger. Such products now get a tracked state beside their constant reservoir,
+  so trace mode approximates only the constancy of the bulk. Composition additivity in trace mode went
+  from 0.51 to 6.8e-12 (P75b → P77). Trace-mode results for multi-element materials move; coupled mode is
+  bitwise unchanged.
+- A tracked nuclide's activity overwrote the bulk activity of the same nuclide in the output and the
+  response snapshot instead of adding to it.
+
+**Performance**
+
+- Groupwise collapse loops only over the intersection of the flux window and each row's stored span:
+  bitwise identical, mesh runs 2.0–3.4× faster (P77).
+- Mesh runs collapse the cross sections of up to 16 cells in one pass over the library, each cell
+  in its own accumulator in the original order, and single runs no longer clone the decay table
+  when no `decay_scale` is given: bitwise identical, one-thread mesh runs 1.33–1.77× faster (P81).
+- Mesh cell records carry the cell's result text verbatim instead of parsing it back and serializing
+  it again on the writer thread: byte-identical output; SS316 with photon output 1.77× faster at
+  3 threads, small records unchanged (P83).
+- Prepared-run cache (workbench sweeps, `actinv worker` and the other cached-run commands): once a
+  cache has seen two spectra for otherwise identical inputs, it keeps groupwise prepared data in
+  memory and collapses each new spectrum from it. Before this change, every new flux level built,
+  wrote and read back a 6.9 MB collapsed artifact under the prepared cache. Results are bitwise
+  identical. A flux-only slider move on SS316 went from about 2.5 s to about 0.15 s (17×). The
+  groupwise slot holds about 275 MB in memory for TENDL-2025 at 709 groups (P85, P86).
 
 **Changed**
 

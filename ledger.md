@@ -1611,3 +1611,410 @@ refused (self_shielding, uncertainty, options.screen, schedule feed).
 - **Known limitation:** an impurity whose activation products have no entry in the limits table shows
   "no clearance-index response" (Ag: Ag-108m is missing from the bundled IAEA table). Its activity
   appears under uncovered nuclides, not as cleared. A verified Ag-108m limit is still needed.
+
+## Entry 60 — P77 landed on master (2026-09-29)
+
+The P77 changes (trace hybrid reservoir, activity merge, span-bounded collapse; verdict in entry 57)
+were applied onto master unchanged from branch `p77-trace-mesh`. The branch had been held for the
+uncommitted lane-2 work in the main checkout; that work is parked (handoff note dated 2026-09-28), so
+P77 lands first and lane 2 rebases onto it. Local replay of the CI runtime steps with the patched code:
+every step passes except, as expected, the two that pin the trace-mode end-to-end case
+(`ci_end_to_end`, and `g6_p8_scaling_regression` through it): `pruned_states` 36 → 40 because
+production into bulk iron isotopes is now tracked. Heat per step moves by ≤ 1.4e-20 W/g against the
+1e-17 criterion. `controls/ci_expected.json` is re-baselined for the state count only, with a note.
+FNS iron and fusion-isotope workflows pass unchanged.
+
+## Entry 61 — P80 reachable-row assembly: FAIL as frozen, not merged (2026-09-29)
+
+P80 (`3eb0daab…`) tested an exact restriction for mesh speed: before collapsing a library row, skip
+it when its target cannot be reached from the material or feed and the row only feeds the matrix
+(not a loss, fission or ledger row). Candidate code is kept on branch `p80-reachable-rows`
+(`2f6bdca`); master is unchanged. Verdict `results/p80_verdict.json` from `controls/check_p80.py`:
+
+- G0, G1 PASS (fmt, clippy, 113 core tests including the new masked-assembly test).
+- G2 mesh FAIL on all three profiles. Every per-cell record is identical; the only differing fields
+  are `wall_time_s` and `cells_per_s` in the summary record, timing keys the protocol's normalisation
+  list did not name.
+- G3 single runs FAIL on all 783 P75b specs. Diagnosed on `A__concrete__fns__1e+10` (a reference
+  rerun is bitwise identical): the only differing field is the diagnostic
+  `ledger.assembly.n_reaction_triplets`, 127,645 → 125,941. The other 782 were not diagnosed
+  individually.
+- G5 descriptive: mesh 0.89× (fe_coupled), 0.88× (fe_p21like), 1.03× (ss316_r2s); the singles took
+  1214 s vs 1207 s in total.
+
+No amendment was written. Relabelling those fields could turn G2/G3 into a pass, but the change still
+would not be worth merging. Structural reachability from a real material covers almost the whole chain:
+capture climbs upward and (n,p)/(n,α) step downward, so only about 1.3 % of triplets were skipped and the
+reachability search costs more than it saves. The per-cell cost has to be cut some other way; the next
+step is to measure it stage by stage inside network preparation.
+
+## Entry 62 — clearance table provenance correction (2026-09-29)
+
+Entry 59 says Ag-108m is missing from the bundled IAEA table. It is also absent from IAEA RS-G-1.7
+Table 2 itself. GSR Part 3 Table I.1 gives 10 Bq/g, but that table is for exemption of moderate
+quantities, not bulk clearance, so it is not substituted. The bundled table (`data/clearance_iaea_2004.json`,
+svalinn/ALARA transcription) also carries RS-G-1.7 Table 1 natural-origin values (K-40 10 Bq/g;
+Gd-152, Hf-174, Re-187 1 Bq/g) although its `source` field names Table 2 only. The data file is left
+unchanged; `docs/BUDGET.md` now states both points.
+
+## Entry 63 — P81 chunk-batched mesh collapse: PASS, merged (2026-09-29)
+
+P81 (`843f514a…`) replaces P80's approach. A throwaway instrumented build (never committed) showed that
+collapsing all 167,735 library rows takes 38.6 of about 70 ms per iron mesh cell. Each row is one
+sequential chain of additions over roughly 34 M stored values, so the collapse is bound by addition
+latency and by streaming the 275 MB library once per cell. A further 9.9 ms per cell went to cloning
+the decay table. The change:
+
+- collapse up to 16 cells in one pass (rows outer, groups, cells in fixed-width lanes), each cell adding
+  exactly its own terms in the original order;
+- each cell's run takes its values from the batch only when its base spectrum is bitwise the batch
+  spectrum;
+- borrow the decay table when no `decay_scale` is given.
+
+Verdict `results/p81_verdict.json` from `controls/check_p81.py`; reference = master release
+`d85abd2e…`, candidate `c2b2d688…`:
+
+- G0 PASS. G1 PASS: fmt, clippy on core/data/cli, and core and data tests, including a bit-for-bit
+  batched-vs-single collapse test on both the mixed-window path and the fixed-lane path.
+- G2 PASS: all records identical on `fe_coupled`, `fe_p21like` and `ss316_r2s`, and on `fe_coupled`
+  with `threads` 3 and with `chunk_cells` 1.
+- G3 PASS: all 783 P75b single runs identical.
+- G4 PASS: local replay of the CI runtime steps, every step exit 0.
+- G5 PASS against the pre-registered 1.3× threshold. One-thread median wall time, fe_coupled
+  5.68 → 3.20 s (1.77×); reported only: fe_p21like 6.20 → 3.68 s (1.68×), ss316_r2s
+  17.3 → 13.0 s (1.33×).
+
+Two process notes:
+
+- **Rebuild after the first gate run.** The first candidate build ran the gates up to the speed step
+  (`target/p81/first_candidate_run.out`, not committed). It showed `chunk_cells` 1 slower than the
+  reference (7.5 vs 5.5 s), because a lone cell paid for all 16 lanes. Single-cell batches now use the
+  ordinary collapse, and every gate was rerun on the final build. No gate or threshold was changed.
+- **Checker overwrote the P80 verdict.** `check_p81.py` was derived from `check_p80.py` and at first
+  wrote its verdict to `results/p80_verdict.json`. The sealed P80 file was restored from git before this
+  commit, and the P81 verdict was re-derived from the unchanged run log.
+
+SS316 cells are now dominated by the CRAM solve: 16 sparse LU factorizations and refined solves per
+cell. That is the next target.
+
+## Entry 64 — P82 verbatim mesh cell result text: FAIL as frozen, not merged (2026-09-29)
+
+P82 (`d3739dbf…`) targeted the part of an SS316 mesh cell spent outside the solver. A throwaway probe
+measured per cell: solve 70 ms, result → `Value` 34 ms, `Value` → text 29 ms, for 9.2 MB of text per
+cell (553 MB for 60 cells). The runner then parsed that text back and serialized it again to write
+the cell record. The candidate writes the text verbatim as a `RawValue`. That is byte-identical because
+`float_roundtrip` makes the parse/serialize round trip exact. Code is on branch
+`p82-raw-cell-result` (`9210217`); master is unchanged. Verdict `results/p82_verdict.json`:
+
+- G0, G1 PASS, including a byte-equality test of spliced vs round-tripped records with −0.0,
+  subnormals, extremes, non-finite values, 64-bit integer extremes and escaped strings.
+- G2: all three profiles byte-identical and the resumed run identical. **FAIL** on the
+  `group_workloads` variant. Diagnosed after the verdict: reference and candidate are byte-identical
+  when given the same `group_workloads` spec. The only differing line against the protocol's plain
+  reference is the header, whose spec fingerprint includes `group_workloads` by design. This is a
+  protocol design error, not an output change.
+- G5 **FAIL**: `ss316_r2s` one-thread median 16.20 → 12.47 s = 1.299× against the pre-registered
+  1.3×. `fe_coupled` and `fe_p21like` are unchanged (1.00×), as expected for their small records.
+
+No amendment was written: the threshold stands. One observation that was not measured: with
+`threads` > 1, cells are solved and serialized in parallel, but the parse and write happen serially on
+the collecting thread. The saved round trip may therefore matter more in multi-threaded runs. That
+would need its own protocol and gate before it counts.
+
+## Entry 65 — P83 verbatim mesh cell result text, multi-thread gate: PASS, merged (2026-09-29)
+
+P83 (`73d4d9a4…`) is the second and final test of the P82 change (ledger 64), approved by the owner
+after P82 failed its one-thread gate at 1.299× against 1.3×. P82's FAIL stands. The code is the P82
+candidate unchanged; the build is byte-identical (`53dedafb…`). The gate was fixed before any
+multi-threaded timing: `ss316_r2s` with `threads` 3. The reason, a hypothesis at the time: cells are
+serialized in parallel, but the parse-and-reserialize happened serially on the writer thread. If P83
+had failed, the change would have been abandoned. Reference is master `831a256`, i.e. the P81 build
+`c2b2d688…`. Verdict `results/p83_verdict.json` from `controls/check_p83.py`:
+
+- G0 PASS. G1 PASS (fmt, clippy, tests including the spliced-record byte-equality test).
+- G2 PASS: byte-identical on all three profiles at 1 and 3 threads. Also identical on
+  `group_workloads` (reference run on the same spec, correcting P82's comparison) and on the resumed
+  run (20 cells, then `resume`) against the reference's one-pass run of the same spec.
+- G4 PASS: every CI runtime step exits 0 in the local replay. The replay was first started by mistake
+  alongside the gate run. It was stopped at the start of clippy, having overlapped only the first
+  untimed byte comparisons, and was rerun after the gates finished.
+- G5 PASS: `ss316_r2s` at 3 threads, median 10.53 → 5.96 s, **1.77×** against 1.3×. Reported only:
+  `ss316_r2s` at 1 thread 15.17 → 10.54 s (1.44×); iron profiles 0.98–1.02× at 1 and 3 threads.
+
+The one-thread SS316 speedup was 1.299× in P82 and 1.44× here, for the same code and the same
+reference. Run-to-run variance on this laptop is therefore larger than P82's margin to its gate.
+Future adoption thresholds should use more repeats or a wider margin.
+
+## Entry 66 — P84 withdrawn untested; P85 groupwise prepared data after a spectrum-only miss: G4 FAIL, not merged (2026-09-29)
+
+**P84** (`310e389e…`) proposed memoizing parsed decay data to speed up flux-only reruns in the
+workbench live sweep and in the worker. Before any candidate build, its measurement probe
+(`cache_probe`) was run on the reference. The probe showed that P84's motivation was incomplete. In a
+warm process, a flux-only change to a spectrum total not seen before cost about 4 s. About 3 s of that
+built a new spectrum-collapsed artifact: open and verify the 275 MB prepared library, collapse it, write
+6.9 MB under `~/.cache/actinv/prepared-v1` (984 MB accumulated at the time), and read it back. Decay
+parsing was about 0.65 s. The probe also showed that P84's timing design was biased: reference and
+candidate would have shared the on-disk prepared cache. P84 was withdrawn untested. Its file and hash
+stay on record.
+
+**P85** (`169269e7…`) was registered before its candidate build. `PreparedCache` also records a base
+fingerprint: the same canonical object without the spectrum's flux values and total, without
+`collapse_flux` and without `multi_spectrum`. On a miss that differs from the slot only by spectrum,
+it prepares groupwise activation data, the route that multi-spectrum and mesh runs already use. That
+slot then serves every later spectrum with the same base fingerprint, collapsing in memory and
+writing nothing to disk. Reference `53dedafb…` (master `feb0c68` plus the probe); candidate
+`38ecc4e4…`. Each probe got a fresh, empty `ACTINV_CACHE_DIR`. Verdict `results/p85_verdict.json`:
+
+- G0, G1 PASS, including the unit test that the collapsed artifact's values and fission energies equal
+  the groupwise values bit for bit for five spectra.
+- G2 PASS: SS316, Eurofer97 and concrete, 10-factor flux sequences. All result hashes are identical
+  across reference and candidate, cold and warm. Candidate warm hits read F, F, T×8; the reference
+  never hits.
+- G3 PASS: 783 single runs identical after timing keys are removed.
+- G5 PASS: SS316 warm runs 3–10, repeat medians 2446/2489/2497 ms → 148.9/142.6/145.4 ms,
+  **17.12×** against 3×. Reported only: the second warm run on the candidate (the groupwise
+  preparation) takes 1.7–2.2 s; later runs take 128–285 ms.
+- **G4 FAIL**: in the local CI replay, step `p16` exited 1; the other 22 steps exited 0. The P16
+  control `g1_p16_quantities.py` checks, by a fixed source string, that `PreparedRun::prepare` goes
+  through the shared profiled preparation. P85's added `groupwise` argument changed that call, so
+  `wiring.shared_prepare` read false. This is a source-structure control, not a change in results,
+  but the gate was pre-registered and the FAIL stands. P85 is not merged as built. The replay log is
+  archived at `target/p85/ci_replay_summary.log`, and the machine-readable record is in
+  `results/p86_verdict.json` (`p85_G4_ci_replay`).
+
+## Entry 67 — P86 P85 with the shared-prepare wiring kept: PASS, merged (2026-09-29)
+
+P86 (`903adffa…`) was registered after P85's G4 FAIL (entry 66) and before its build. It is the P85
+change with one refactor. `prepare_profiled(spec, physical, profiler)` keeps its signature and forwards
+to a new private `prepare_profiled_with(…, groupwise)`, so the P16 wiring control holds unchanged. The
+first build failed fmt on one line wrap, which `cargo fmt` fixed, and the whole build script was then
+rerun. The final build is `actinv` `0d8dc849…` and `cache_probe` `67224ff4…`. It is not
+byte-identical to the P85 candidate: line numbers moved, and panic locations are embedded in the
+binary. So the protocol's fallback applied, and P85's runtime gates were rerun on this build by
+`controls/check_p86_rerun.py`, which calls `check_p85.py` unchanged with its work directory and
+verdict path redirected (`results/p86_p85_gates.json`). Verdict `results/p86_verdict.json` from
+`controls/check_p86.py`:
+
+- G0 PASS. G1 PASS (fmt, clippy, tests including the artifact-vs-groupwise bit-equality test).
+- G2 PASS via rerun on this build. Sequences: all hashes identical across reference and candidate,
+  cold and warm, for all three specs; candidate warm hits F, F, T×8. Singles: 783 identical. SS316
+  warm runs 3–10: repeat medians 3363/2956/2807 ms → 162/174/159 ms, **18.25×** against 3×.
+- G3 PASS: every local CI replay step exits 0, including `p16`.
+
+Adopted. Effect: in the workbench live sweep and the other cached-run paths, a flux-only change after
+the second distinct spectrum reuses in-memory groupwise data. No collapsed artifact is written per
+flux level any more, so these writes no longer accumulate under `~/.cache/actinv/prepared-v1`. The cost
+is about 275 MB resident for the groupwise slot (TENDL-2025, 709 groups).
+
+## Entry 68 — P87 Python `budget` binding: G2 FAIL; P88 direct canonical mesh cell text: G5 FAIL; neither merged (2026-09-30)
+
+**P87** (`cb9f187e…`, registered before the binding was written) adds `actinv.budget` to the Python
+module, as native `budget`/`budget_json` plus a `budget(budget, *, base_dir=None, verify=True)`
+wrapper modelled on `decide`, with docs and two unit tests. Verdict `results/p87_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: Python crate fmt and clippy clean; the wheel builds; 4/4 Python tests pass.
+- G3 PASS: every local CI replay step exits 0.
+- **G2 FAIL:** on both P79 inputs, the Python and CLI documents differ in exactly one field,
+  `budget_sha256`. The wrapper parsed the budget file and serialized it again, so the native call
+  hashed different text from the file. Every physics, verification and summary field was equal. The
+  defect is real: from Python, the recorded provenance hash of a budget file did not identify the
+  file. Fixed under P89 (entry 69).
+
+**P88** (`c16d6287…`) wrote mesh cell result text directly in the `serde_json::Value` route's
+canonical order: keys sorted, last duplicate wins, scalars formatted through `Value`, and anything
+unusual falling back to the `Value` route. Reference `0d8dc849…` (master `ba97c5d`); candidate
+`73ca83a0…`. Verdict `results/p88_verdict.json`:
+
+- G0, G1 PASS, including four byte-equality unit tests. G1 deviation: the protocol named a unit test
+  on "a real `RunResult` from a fixture run". The crate has no in-crate solver fixture, so the test
+  uses a hand-built `RunResult` with every output field kind populated. Real solver output is covered
+  by G2.
+- G2 PASS: byte-identical on `fe_coupled`, `fe_p21like` and `ss316_r2s` at 1 and 3 threads, and on
+  the `group_workloads`, resume and `cell_result_fields` variants.
+- G3 PASS: every local CI replay step exits 0.
+- **G5 FAIL:** `ss316_r2s` at 1 thread, median 9.34 → 9.19 s, **1.02×** against 1.15×. Reported
+  only: 3 threads 0.93×; iron profiles 0.97–1.01×.
+
+Diagnosed after the verdict with a throwaway per-cell timing build, not committed. Every
+`ss316_r2s` cell took the new writer; none fell back. The writer took 33–78 ms per cell, against
+26–58 ms for `to_value` plus `to_string` on the same cells, so the generic sorted writer spends about
+as much as it saves. The main costs are the per-number `Value` conversion, per-object key and slot
+buffers, and re-copying every object whose fields arrive unsorted (every inventory entry and every
+step). The FAIL stands. The code is kept on local branch `p88-canonical-json` (`bd7ebdc`); master is
+unchanged.
+
+## Entry 69 — P89 Python `budget` passes a budget file through verbatim: PASS, merged (2026-09-30)
+
+P89 (`a81b425c…`) was registered after P87's G2 FAIL and before the fix. It is the P87 binding with
+one change: for a path, the wrapper reads the file's text and passes it to the native call unchanged,
+so `budget_sha256` is the file's hash, as on the command line. A mapping is serialized with
+`json.dumps`, and its hash covers that text; the docstring and `docs/BUDGET.md` say so. One new
+unit test writes a budget with formatting `json.dumps` would not reproduce and checks
+`budget_sha256` against the file's bytes. Verdict `results/p89_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: fmt and clippy clean; the wheel builds; 5/5 Python tests pass.
+- G2 PASS: `ss316ln_exvessel` and `eurofer97_exvessel`, verification on. The Python and CLI documents
+  are equal after removing `ms` and `elapsed_ms`, `budget_sha256` included, and both verified.
+- G3 PASS: every local CI replay step exits 0, with release `actinv` `0d8dc849…`, byte-identical to
+  master's.
+
+Adopted: `actinv.budget` ships in the Python module.
+
+## Entry 70 — LU symbolic reuse across CRAM poles: measured, not pursued (2026-09-30)
+
+The remaining roadmap item was to reuse the LU symbolic structure (the Gilbert–Peierls reach) across
+the eight poles of a CRAM step. With partial pivoting that is exact only if every column is shown to
+pick the same pivot. A throwaway timing build, not committed, measured one-thread `ss316_r2s` over
+60 cells (`target/p88/lu_probe_ss316.txt`, local):
+
+- The solve is 57 ms per cell; LU is 13.3 ms of that over 16 calls (2 steps × 8 poles).
+- The reach is 5.3 ms, 40 % of LU time.
+- A whole cell takes about 156 ms, so the reach is 3.4 % of it.
+- On `fe_coupled` the reach is 0.17 ms of an 18.6 ms solve.
+
+Reuse can save at most 7/8 of the reach, about 3 % end-to-end on the heaviest profile and under 1 %
+on the iron profiles. That is below this laptop's run-to-run spread, about ±10 % (P82/P83), so an
+adoption gate could not measure it honestly. No protocol was registered and the item is closed.
+
+## Entry 71 — P92 gas production: G5 FAIL; P95 inventory-appm successor: PASS, merged (2026-09-30)
+
+**P91** (`d6a8381e…`) was withdrawn untested, before any code: it routed light ejectiles into stable
+sink states, which is wrong for tritium. It was replaced by **P92** (`dae429bb…`). P92 adds optional
+gas production (`options.gas`), off by default:
+
+- Every covered MT's light ejectiles (H1, H2, H3, He3, He4) enter the chain as ordinary inventory
+  nuclides. The table `endf6-mt-ejectiles-v1` is Z/A-balanced against each row's products.
+- Decay alphas and protons feed He4 and H1.
+- Each step reports a `gas` block. The ledger records the table version, the uncovered MTs and any
+  missing light states.
+
+With gas off, the prepared-run signature is unchanged. Candidate `87904010…`, reference `0d8dc849…`.
+Verdict `results/p92_verdict.json`:
+
+- G0, G1 PASS.
+- G2 PASS: Z/A balance with 0 failures over 36,451 TENDL-2017 rows and 93,417 TENDL-2025 rows.
+- G3 PASS: with gas off, 783 P75b specs and 3 mesh profiles are bitwise identical to the reference.
+- G4 PASS: with gas on, the inventory and activity of every non-light nuclide are exactly identical
+  over the same 783 specs.
+  - The heat clause needed one correction, recorded here. The first form,
+    `|(Q_on − L_on) − (Q_off − L_off)| ≤ 1e-9 |Q_off − L_off|`, failed where tritium dominates the
+    heat: there Q_off − L_off is a small difference of large terms. The light-nuclide heat implied
+    by the output was exactly H3's MF=8/MT=457 E_LP of 5,690 eV.
+  - After that first G4 run failed, the checker clause gained a floor, `+ 1e-12 |Q_on|`. This was
+    a change to a gate after its result, made because the relative form cannot be met at roundoff
+    under cancellation, not because physics disagreed. The worst residual against gas-on total heat
+    is 6.6e-16, so the rerun passes at roundoff. P95 registered the clause with the floor before
+    its own G4 ran.
+- **G5 FAIL:** P92 compared ACTINV with FISPACT-II/TENDL-2017 on the 132 CB3 FNS experiments.
+  - 400 of 403 gated pairs were within ±10 %.
+  - Pooled geometric-mean ratios: He4 0.99997, H2 0.99969, H3 0.9999993, **H1 0.513**
+    ([0.97, 1.03] required).
+  - The H1 miss is entirely the three hydrogenous samples (I, Br, Cl; 2000exp_5min). FISPACT-II
+    prints `APPM OF H 1` ≈ 3.3–3.8 × 10⁵ for them, the initial hydrogen atom fraction. Its printed
+    APPM is therefore inventory per 10⁶ initial atoms, including initial content. P92 compared it
+    with ACTINV's produced appm. The FAIL stands; P92 did not merge on its own.
+- G6 not run.
+
+**P95** (`3c39871e…`) was registered after the diagnosis and before the change. It
+adds `inventory_appm` per species (atoms_per_g / initial_atoms_per_g × 10⁶, FISPACT-II's printed
+convention) and `H_inventory_appm` / `He_inventory_appm`. `appm` keeps its meaning: produced appm.
+The protocol states that the outcome was largely known in advance. The checker is `check_p92.py`
+with `ACTINV_GAS_PROTOCOL=P95`; logs are in `target/p95/`. Candidate `ba842d89…`. Verdict
+`results/p95_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: fmt and clippy clean; 15/15 named tests pass.
+  - The new test uses a 10 at% H1 material. ACTINV emits no t = 0 step, so a zero-flux first step
+    stands in for it. H1 `inventory_appm` equals 1e5 to 1e-12.
+  - Produced `appm` there is 4.4e-11, the cancellation roundoff of atoms minus initial content. The
+    test bounds it at 1e-12 of the inventory, not at exact zero.
+- G2 PASS: Z/A balance.
+- G3 PASS: gas off, 783 specs + 3 mesh profiles bitwise.
+- G4 PASS: non-perturbation. Worst heat residual 6.6e-16 of gas-on total.
+- G5 PASS: **403 of 403** gated pairs within ±10 %. Geometric means: He4 0.99997, H1 0.99962,
+  H2 0.99969, H3 0.9999993. The worst pair is Gd 2000exp_5min H1 at 0.986.
+  - For species with no initial content these numbers repeat P92's. P95 is a definitional
+    correction; P92's G5 is the independent test of the gas physics.
+- G6 PASS: every local CI replay step exits 0 (23/23). The first replay failed one step, `p16`.
+  The P92 implementation had added a paragraph to `docs/QUANTITIES.md`, which P16 pins by hash.
+  The paragraph was moved to the gas section of `docs/SPEC.md` and the file restored, as in
+  `f874e61`; the second replay passed. The candidate binary was unchanged (docs only).
+
+Adopted: `options.gas` ships. Limits (v1):
+- refused with `uncertainty` and for non-neutron projectiles;
+- fission ejectiles are uncovered and listed in the ledger.
+
+## Entry 72 — Transport-tally statistical error as a flux channel: P93 FAIL, P96 FAIL, P97 PASS, merged (2026-09-30)
+
+The feature propagates each transport tally group's declared statistical relative error as a
+first-order, diagonal flux channel: `uncertainty.channels: ["flux"]` and
+`spectrum.relative_error`. The sensitivity is s_g = dR/d ln φ_g. The channel runs flux-only,
+with covariance omitted, or alongside MF=33.
+
+**P93** (`41cfc21b…`, candidate `d12ba06a…`, reference `0d8dc849…`). Verdict
+`results/p93_verdict.json`, **FAIL**:
+- G1 PASS.
+- **G2(b) FAIL.** The three uncertainty examples were not bitwise identical. The candidate's
+  ledger uncertainty record, rebuilt from a shared runtime record, dropped
+  `ledger.uncertainty.band_name`, while the certificate kept it. This is a real defect.
+- G2(a) PASS: 783 P75b specs and 3 mesh profiles bitwise.
+- G2(c) PASS.
+- **G3 FAIL as registered.** Directional derivatives against central finite differences.
+  - Run 1 is void because of two checker defects, and its files are kept
+    (`target/p93/g3_run1_checker_defect.json`):
+    - The FD perturbed `flux_per_group` while leaving `spectrum.total` in place, so the
+      perturbation was renormalized away. The fix perturbs the absolute flux and drops `total`.
+    - The custom-10 baseline was compared as a tuple against a list.
+  - A G2 aggregation crash (list against dict indexing of `run_single_hash`) was also fixed
+    before any G2 outcome was read.
+  - Run 2: 2189 of 2256 comparisons within tolerance (97.0 %, 99 % required); 2205 within 100×.
+    All 67 failures sit at late cooling steps with |R|/peak ≤ 2.4e-13. There, CRAM is at its
+    precision floor and the central difference is noise, not a derivative.
+- G4 PASS: P32 cube, K = 64. Mean variance ratios 0.993–0.996; every cell's std ratio in band.
+- G5 not run.
+- Evidence in `target/p93_record/`.
+
+**P96** (`f9e4ef16…`), the G3 successor, is **FAIL**:
+- New checker `controls/check_p96.py`: fresh spec set (offset 10, seed base 20261001), central
+  differences at h = 1e-4 and h′ = 1e-3, and exclusion rule (b), which drops a comparison when
+  the two step sizes disagree (unconverged reference), capped at 5 %.
+- It carried P93's G2 over whatever its outcome, so it fails on G2(b).
+- Its G3 was stopped once that FAIL was certain: 8 of 42 nominal pairs had run and no comparison
+  had been computed, so the offset-10 set stayed unseen.
+- The first launch, with 3 workers, was OOM-killed inside its 6 GB scope. The relaunch used 2
+  workers and 8 GB.
+
+**P97** (`18665790…`) re-gates everything on a candidate with one added line: the ledger record
+gains `band_name` from the same runtime value the certificate uses.
+- It ran twice.
+  - First on the branch alone (candidate `015f0d4c…`): G1–G4 all passed.
+  - Then again after merging master, which brought in the P95 gas code that also touches
+    `run.rs`. The merge had conflicts: the gas ledger block and the flux-aware uncertainty
+    record, and the two test modules. Each side's new tests also needed the other's added
+    parameter (`gas: false`; the mesh `flux_origin` `None`).
+- The P93 checker's run caches (`g3_runs/`, `g3_custom10_runs/`) are keyed by case content, not
+  by binary. They were moved aside, so the merged rerun computed everything fresh.
+- The verdict is on the merged candidate `c7b8923d…` (`results/p97_verdict.json`):
+  - G0 PASS.
+  - G1 PASS.
+  - G2 PASS: (a) bitwise, (b) bitwise, now including `band_name`, (c).
+  - G3 PASS:
+    - 141 cases, 2160 comparisons; rule (a) excluded 0;
+    - rule (b) excluded 63 (2.9 %, cap 5 %), all with |R|/peak ≤ 5.1e-15;
+    - **2097 of 2097** remaining comparisons within tolerance, all within 100×;
+    - identical to the pre-merge run.
+  - G4 PASS: mean variance ratios 0.993–0.996, all 64 cells in band.
+  - G5 PASS: CI replay, every step exits 0 (23/23).
+
+Adopted: the flux channel ships.
+- Diagonal only: the fully correlated bound `sum(|s_g| e_g)` is reported beside it.
+- Energy-dependent fission-yield selection, pruning and mode are held at the nominal run's
+  choices.
+- Systematic flux uncertainty (transport model, geometry, transport nuclear data) is still
+  excluded and named in the ledger.
+
+Performance note for later: a flux-only run costs about 6× a nominal run (46 s against 7.5 s on
+the G4 cube). One tangent solve per group direction is the obvious reduction. It is not pursued
+here.

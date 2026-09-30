@@ -67,4 +67,4 @@ problem["schedule"] = (
 )
 ```
 
-Feed units are atoms s⁻¹ g⁻¹ and removal units are s⁻¹. Other helpers include `reverse`, `decide`, and `optimize`; see the [Python package reference](https://github.com/AvilaLabs/ACTINV/blob/master/python/README.md) and [Advanced workflows](workflows.md) for their document contracts and limits.
+Feed units are atoms s⁻¹ g⁻¹ and removal units are s⁻¹. Other helpers include `reverse`, `decide`, and `optimize`; current master also adds `actinv.budget(budget, base_dir=None, verify=True)`. A failed budget verification is returned in the document rather than raised as an exception. See the [Python package reference](https://github.com/AvilaLabs/ACTINV/blob/master/python/README.md), [Advanced workflows](workflows.md), and [release availability](releases.md#current-master).

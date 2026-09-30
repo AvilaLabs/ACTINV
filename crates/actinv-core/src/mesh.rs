@@ -5,7 +5,7 @@ use crate::flux::{
     atomic_output, rebin_equal_lethargy, sha256_file, FluxCell, FluxGeometry, FluxSource,
     FluxStream, RebinResult,
 };
-use crate::run::{PreparedRun, RunResult};
+use crate::run::{CellCollapse, MeshFluxOrigin, PreparedRun, RunResult};
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options,
     PhotonOptions, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum, Step,
@@ -215,6 +215,10 @@ impl MeshSpec {
                 total: None,
                 boundaries_eV: Some(boundaries_eV),
                 descending: false,
+                // P93: the flux channel's mesh input is the flux file's own
+                // (pre-rebin) source groups, carried separately via
+                // `MeshFluxOrigin`; this rebinned spectrum never carries it.
+                relative_error: None,
             },
             schedule: self.schedule.clone(),
             options: self.options.clone(),
@@ -290,7 +294,9 @@ struct MeshCellRecord {
     #[serde(skip_serializing_if = "Option::is_none")]
     source_relative_error: Option<Vec<f64>>,
     rebin: RebinLedger,
-    result: serde_json::Value,
+    /// The cell's result text, written verbatim (P82). With `float_roundtrip`, parsing it into a
+    /// `Value` and serializing again would reproduce it byte for byte, so the round trip is skipped.
+    result: Box<serde_json::value::RawValue>,
 }
 
 #[derive(Debug, Serialize)]
@@ -427,11 +433,26 @@ fn resolved_path(path: &Path) -> Result<PathBuf, String> {
 /// SHA-256 of the rebinned activation-group flux vector — the workload
 /// signature. Two cells with equal rebinned flux produce equal results, so
 /// the second is served from the memo rather than re-solved.
-fn flux_signature(flux_per_group: &[f64], material_sha: &[u8; 32]) -> [u8; 32] {
+///
+/// P93: when the flux channel is requested, the caller also passes the cell's
+/// own (pre-rebin) source `relative_error`: two cells with equal flux but
+/// different tally statistical error propagate different bands and must not
+/// be deduplicated together. With `None` the digest is the pre-P93 one.
+fn flux_signature(
+    flux_per_group: &[f64],
+    relative_error: Option<&[f64]>,
+    material_sha: &[u8; 32],
+) -> [u8; 32] {
     let mut hasher = Sha256::new();
     hasher.update(material_sha);
     for value in flux_per_group {
         hasher.update(value.to_le_bytes());
+    }
+    if let Some(errors) = relative_error {
+        hasher.update([1u8]);
+        for value in errors {
+            hasher.update(value.to_le_bytes());
+        }
     }
     hasher.finalize().into()
 }
@@ -445,19 +466,112 @@ fn hex32(digest: &[u8; 32]) -> String {
     digest.iter().map(|byte| format!("{byte:02x}")).collect()
 }
 
+/// Cells whose flux collapse shares one pass over the library (P81); bounds the batch buffer to
+/// `COLLAPSE_BATCH_CELLS` values per library row.
+const COLLAPSE_BATCH_CELLS: usize = 16;
+/// Library rows per parallel task of a batched collapse.
+const COLLAPSE_ROW_BLOCK: usize = 4096;
+
+/// Solve the cells `to_solve` (chunk indices), in order, collapsing each batch of cells in one
+/// pass over the library. Every cell's result is the same as solving it alone.
+#[allow(clippy::too_many_arguments)]
+fn solve_cells(
+    mesh_spec: &MeshSpec,
+    prepared: &PreparedRun,
+    pool: &rayon::ThreadPool,
+    source_boundaries: &[f64],
+    activation_boundaries: &[f64],
+    rebinned: &[RebinResult],
+    cell_materials: &[&Material],
+    input_cells: &[FluxCell],
+    to_solve: &[usize],
+) -> Vec<Result<(String, usize), String>> {
+    // P93: a mesh cell's flux channel uses the flux file's own (pre-rebin)
+    // source groups, not `cell_spec`'s activation-group-rebinned spectrum
+    // (which never carries relative_error — see `cell_spec`). Built once
+    // per cell only when the channel is actually requested, so a run
+    // without it is unaffected.
+    let flux_channel_requested = mesh_spec
+        .uncertainty
+        .as_ref()
+        .is_some_and(|options| options.channels.iter().any(|name| name == "flux"));
+    let mut solved = Vec::with_capacity(to_solve.len());
+    for batch in to_solve.chunks(COLLAPSE_BATCH_CELLS) {
+        let specs: Vec<Spec> = batch
+            .iter()
+            .map(|&index| {
+                mesh_spec.cell_spec(
+                    activation_boundaries.to_vec(),
+                    rebinned[index].flux_per_group.clone(),
+                    cell_materials[index],
+                )
+            })
+            .collect();
+        let fluxes: Vec<Vec<f64>> = specs.iter().map(Spec::flux_ascending).collect();
+        let phis: Vec<&[f64]> = fluxes.iter().map(Vec::as_slice).collect();
+        let rows = prepared.library_row_count();
+        // A lone cell gains nothing from a shared pass (the pass costs a fixed number of lanes),
+        // so it keeps the ordinary per-row collapse; the result is the same either way.
+        let batch_worthwhile = phis.len() >= 2;
+        let mut values = vec![0.0f64; rows * phis.len() * usize::from(batch_worthwhile)];
+        let batched = batch_worthwhile
+            && pool.install(|| {
+                values
+                    .par_chunks_mut(COLLAPSE_ROW_BLOCK * phis.len())
+                    .enumerate()
+                    .map(|(block, out)| {
+                        let start = block * COLLAPSE_ROW_BLOCK;
+                        let end = (start + COLLAPSE_ROW_BLOCK).min(rows);
+                        prepared.collapse_rows_batched(&phis, start..end, out)
+                    })
+                    .collect::<Vec<bool>>()
+                    .into_iter()
+                    .all(|done| done)
+            });
+        let results: Vec<Result<(String, usize), String>> = pool.install(|| {
+            batch
+                .par_iter()
+                .enumerate()
+                .map(|(slot, &index)| {
+                    let cell = batched.then_some(CellCollapse {
+                        phi: phis[slot],
+                        values: &values,
+                        stride: phis.len(),
+                        offset: slot,
+                    });
+                    let flux_origin = flux_channel_requested.then(|| MeshFluxOrigin {
+                        source_boundaries_eV: source_boundaries,
+                        source_flux_per_group: &input_cells[index].flux_per_group,
+                        source_relative_error: input_cells[index].relative_error.as_deref(),
+                    });
+                    solve_result(
+                        mesh_spec,
+                        prepared,
+                        &specs[slot],
+                        cell,
+                        flux_origin,
+                        &input_cells[index].id,
+                    )
+                })
+                .collect()
+        });
+        solved.extend(results);
+    }
+    solved
+}
+
 fn solve_result(
     mesh_spec: &MeshSpec,
     prepared: &PreparedRun,
-    activation_boundaries: &[f64],
-    flux_per_group: Vec<f64>,
-    material: &Material,
+    spec: &Spec,
+    cell: Option<CellCollapse<'_>>,
+    flux_origin: Option<MeshFluxOrigin<'_>>,
     cell_id: &str,
 ) -> Result<(String, usize), String> {
-    let spec = mesh_spec.cell_spec(activation_boundaries.to_vec(), flux_per_group, material);
     spec.validate()
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let result = prepared
-        .run(&spec, "mesh")
+        .run_with_collapse_and_flux_origin(spec, "mesh", cell, flux_origin)
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
     let mut result =
         result_without_timing(result).map_err(|error| format!("cell '{cell_id}': {error}"))?;
@@ -481,7 +595,7 @@ fn solve_result(
 fn cell_record(
     cell: &FluxCell,
     rebinned: &RebinResult,
-    result: serde_json::Value,
+    result: Box<serde_json::value::RawValue>,
     material_sha256: String,
 ) -> MeshCellRecord {
     MeshCellRecord {
@@ -672,6 +786,10 @@ fn write_mesh_body(
     // of cell count and per-record size.
     let mut memo: HashMap<[u8; 32], (String, usize)> = HashMap::new();
     let mut memo_bytes = 0usize;
+    let flux_channel = spec
+        .uncertainty
+        .as_ref()
+        .is_some_and(|options| options.channels.iter().any(|channel| channel == "flux"));
     loop {
         let input_cells = stream.read_chunk(spec.chunk_cells)?;
         if input_cells.is_empty() {
@@ -699,8 +817,14 @@ fn write_mesh_body(
             cell_materials.iter().map(|m| material_sha256(m)).collect();
         let signatures: Vec<[u8; 32]> = rebinned
             .iter()
+            .zip(input_cells.iter())
             .zip(cell_material_sha.iter())
-            .map(|(value, sha)| flux_signature(&value.flux_per_group, sha))
+            .map(|((value, cell), sha)| {
+                // Errors join the signature only when the flux channel consumes them, so
+                // memoization without the channel is exactly the pre-P93 behavior.
+                let errors = cell.relative_error.as_deref().filter(|_| flux_channel);
+                flux_signature(&value.flux_per_group, errors, sha)
+            })
             .collect();
         let mut pending: HashMap<[u8; 32], Pending> = HashMap::new();
         let mut to_solve: Vec<usize> = Vec::new();
@@ -768,21 +892,17 @@ fn write_mesh_body(
             pending.insert(signature, Pending::Solve(index));
             to_solve.push(index);
         }
-        let solved: Vec<Result<(String, usize), String>> = pool.install(|| {
-            to_solve
-                .par_iter()
-                .map(|&index| {
-                    solve_result(
-                        spec,
-                        prepared,
-                        activation_boundaries,
-                        rebinned[index].flux_per_group.clone(),
-                        cell_materials[index],
-                        &input_cells[index].id,
-                    )
-                })
-                .collect()
-        });
+        let solved = solve_cells(
+            spec,
+            prepared,
+            pool,
+            source_groups,
+            activation_boundaries,
+            &rebinned,
+            &cell_materials,
+            &input_cells,
+            &to_solve,
+        );
         for (result, &index) in solved.into_iter().zip(to_solve.iter()) {
             let (text, pruned) = result?;
             if spec.group_workloads
@@ -809,11 +929,10 @@ fn write_mesh_body(
                 continue;
             }
             let (text, pruned) = resolved[index]
-                .as_ref()
+                .take()
                 .expect("every unsolved cell resolves to a result string");
-            let result: serde_json::Value = serde_json::from_str(text)
+            let result = serde_json::value::RawValue::from_string(text)
                 .map_err(|error| format!("cell '{}': {error}", cell.id))?;
-            let pruned = *pruned;
             let record = cell_record(
                 cell,
                 &rebinned[index],
@@ -919,6 +1038,7 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
         spec.radiological.as_ref(),
         spec.damage.as_ref(),
         spec.self_shielding.as_ref(),
+        spec.options.gas,
     )?;
     let activation_boundaries = prepared.library_boundaries_eV().to_vec();
     if activation_boundaries.len() != prepared.library_groups() + 1 {
@@ -1081,6 +1201,66 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn spliced_result_text_equals_round_tripped_record_byte_for_byte() {
+        #[derive(serde::Serialize)]
+        struct Record<T> {
+            record: &'static str,
+            ordinal: u64,
+            result: T,
+        }
+        let mut result = serde_json::Map::new();
+        let floats = [
+            -0.0,
+            0.0,
+            f64::MIN_POSITIVE / 3.0,
+            5e-324,
+            f64::MAX,
+            -1.7976931348623157e308,
+            0.1,
+            1.0 / 3.0,
+            2.0f64.powi(60) + 1.0,
+            123456789.12345679,
+            6.02214076e23,
+            1e-17,
+            f64::NAN,
+            f64::INFINITY,
+        ];
+        result.insert("floats".into(), serde_json::json!(floats));
+        result.insert(
+            "u64".into(),
+            serde_json::json!([u64::MAX, 0u64, 1u64 << 53]),
+        );
+        result.insert("i64".into(), serde_json::json!([i64::MIN, -1i64, i64::MAX]));
+        result.insert(
+            "strings".into(),
+            serde_json::json!([
+                "quote \" backslash \\ tab \t",
+                "\u{1}\u{1f}",
+                "é ☢ 𝔸",
+                "</script>"
+            ]),
+        );
+        result.insert(
+            "nested".into(),
+            serde_json::json!({"z": [1.5, {"b": -0.0, "a": null}], "a": true}),
+        );
+        let text = serde_json::to_string(&serde_json::Value::Object(result)).unwrap();
+        let round_tripped = serde_json::to_string(&Record {
+            record: "cell",
+            ordinal: 7,
+            result: serde_json::from_str::<serde_json::Value>(&text).unwrap(),
+        })
+        .unwrap();
+        let spliced = serde_json::to_string(&Record {
+            record: "cell",
+            ordinal: 7,
+            result: serde_json::value::RawValue::from_string(text).unwrap(),
+        })
+        .unwrap();
+        assert_eq!(spliced, round_tripped);
+    }
+
     use super::*;
     use std::collections::BTreeMap;
 
@@ -1219,5 +1399,28 @@ mod tests {
             resolved_path(&alias).unwrap()
         );
         std::fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn flux_signature_without_relative_error_matches_the_pre_p93_digest() {
+        // The dedup signature must be byte-identical to its pre-flux-channel
+        // form whenever `relative_error` is not passed (i.e. whenever the mesh
+        // spec did not request the flux channel), so memoization for every
+        // existing mesh run is completely unaffected by P93.
+        let flux = [0.0_f64, 1.25, -3.5, f64::MIN_POSITIVE, 6.02214076e23];
+        let material_sha: [u8; 32] = Sha256::digest(b"fixture material").into();
+        let mut expected = Sha256::new();
+        expected.update(material_sha);
+        for value in &flux {
+            expected.update(value.to_le_bytes());
+        }
+        let expected: [u8; 32] = expected.finalize().into();
+        assert_eq!(flux_signature(&flux, None, &material_sha), expected);
+        // Passing errors changes the digest (this is the P93 extension).
+        let errors = [0.0_f64, 0.05, 0.0, 0.1, 0.0];
+        assert_ne!(
+            flux_signature(&flux, Some(&errors), &material_sha),
+            expected
+        );
     }
 }

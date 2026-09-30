@@ -1,0 +1,91 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "release": "0",
+   "test": "0"
+  },
+  "pass": true,
+  "unit_test_ok": true
+ },
+ "G2": {
+  "fe_coupled": {
+   "differing_records": [
+    61
+   ],
+   "pass": false,
+   "records": 62
+  },
+  "fe_p21like": {
+   "differing_records": [
+    61
+   ],
+   "pass": false,
+   "records": 62
+  },
+  "ss316_r2s": {
+   "differing_records": [
+    61
+   ],
+   "pass": false,
+   "records": 62
+  }
+ },
+ "G3": {
+  "cand_total_wall_s": 1206.7258752834168,
+  "differing_or_failed": [
+   "A__concrete__fns__1e+10.json",
+   "A__concrete__fns__1e+13.json",
+   "A__concrete__fns__1e+15.json",
+   "A__concrete__maxwell__1e+10.json",
+   "A__concrete__maxwell__1e+13.json",
+   "A__concrete__maxwell__1e+15.json",
+   "A__concrete__mix__1e+10.json",
+   "A__concrete__mix__1e+13.json",
+   "A__concrete__mix__1e+15.json",
+   "A__el_Al__fns__1e+10.json",
+   "A__el_Al__fns__1e+13.json",
+   "A__el_Al__fns__1e+15.json",
+   "A__el_Al__maxwell__1e+10.json",
+   "A__el_Al__maxwell__1e+13.json",
+   "A__el_Al__maxwell__1e+15.json",
+   "A__el_Al__mix__1e+10.json",
+   "A__el_Al__mix__1e+13.json",
+   "A__el_Al__mix__1e+15.json",
+   "A__el_B__fns__1e+10.json",
+   "A__el_B__fns__1e+13.json"
+  ],
+  "pass": false,
+  "ref_total_wall_s": 1213.7203503347118,
+  "specs": 783
+ },
+ "G5_descriptive": {
+  "mesh": {
+   "fe_coupled": {
+    "cand_wall_s": 7.693930743029341,
+    "ref_wall_s": 6.841162868018728,
+    "speedup": 0.889163562359433
+   },
+   "fe_p21like": {
+    "cand_wall_s": 7.867607326013967,
+    "ref_wall_s": 6.892005589033943,
+    "speedup": 0.8759976576672515
+   },
+   "ss316_r2s": {
+    "cand_wall_s": 19.877606876019854,
+    "ref_wall_s": 20.399245656037237,
+    "speedup": 1.0262425342885055
+   }
+  }
+ },
+ "inputs": {
+  "candidate_sha256": "e6661f61634c76227f84446f6f6a6f118da4f5fcfe77b2fb83799e3e3e157e2d",
+  "protocol_sha256": "3eb0daab8ec4c3b50c03a89ac76730892c3b08411eb4ad889e4856023affd1c3",
+  "reference_sha256": "d85abd2e0693c514b4af6684d5249266e0f0d0ad3759ec6e9f9deed8d0a8ad39"
+ },
+ "protocol": "ACTINV-P80"
+}

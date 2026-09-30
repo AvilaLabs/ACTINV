@@ -1,3 +1,4 @@
+#![allow(non_snake_case)] // field names carry their physical units (eV), matching the JSON wire format
 //! First-order MF=33 response propagation and its explicit reporting types.
 
 use serde::Serialize;
@@ -73,6 +74,36 @@ pub struct YieldParameter {
     pub standard_uncertainty: f64,
     /// Whether the yield evaluation provides an uncertainty for this entry.
     pub covered: bool,
+}
+
+/// A P93 flux-channel uncertainty parameter: one transport-tally input
+/// group's absolute flux, ln-parameterized (`s = dR/d ln(phi_g)`), with a
+/// diagonal (uncorrelated) variance contribution `(s * e_g)^2`.
+#[derive(Clone, Debug, Serialize)]
+pub struct FluxParameter {
+    /// Which schedule spectrum this group belongs to: 0 is the base
+    /// spectrum. P93 propagates the base spectrum only (index 0); schedule
+    /// steps that override the spectrum carry no flux-channel direction.
+    pub spectrum: usize,
+    /// Group index in the input group's own ascending-energy order: the
+    /// spectrum's declared group order for a plain spec, or the flux file's
+    /// source-group order (before rebinning) for a mesh cell.
+    pub group: usize,
+    pub lower_bound_eV: f64,
+    pub upper_bound_eV: f64,
+    /// Absolute group flux phi_g (particles cm^-2 s^-1), after any declared
+    /// `total` scaling.
+    pub flux_per_cm2_s: f64,
+    /// Standard uncertainty e_g (relative, dimensionless).
+    pub standard_uncertainty_relative: f64,
+}
+
+#[derive(Debug, Serialize)]
+pub struct FluxSensitivityOut {
+    pub parameter: FluxParameter,
+    /// Response derivative with respect to ln(phi_g).
+    pub value: f64,
+    pub unit: String,
 }
 
 /// Per-channel uncertainty breakdown for one response band.
@@ -167,6 +198,15 @@ pub struct ResponseUncertainty {
     pub decay_sensitivities: Vec<DecaySensitivityOut>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub yield_sensitivities: Vec<YieldSensitivityOut>,
+    /// P93: flux-channel per-group sensitivities; present only when
+    /// `uncertainty.channels` requests `"flux"`.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub flux_sensitivities: Vec<FluxSensitivityOut>,
+    /// P93: `sum_g |s_g| * e_g`, an upper bound on the flux channel's
+    /// standard uncertainty under any correlation between groups. Present
+    /// only when the flux channel is propagated.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub flux_fully_correlated_bound: Option<f64>,
     pub sensitivities: Vec<SensitivityOut>,
     /// P50 value-of-information table; present only when the spec requested
     /// `uncertainty.voi`. Absence is byte-identical to pre-P50 output.
@@ -369,6 +409,11 @@ pub struct BandInput {
     pub decay_channel: Option<ChannelData<DecaySensitivityOut>>,
     /// `Some` when the `fission_yields` channel was requested.
     pub fission_yield_channel: Option<ChannelData<YieldSensitivityOut>>,
+    /// `Some` when the `flux` channel (P93) was requested.
+    pub flux_channel: Option<ChannelData<FluxSensitivityOut>>,
+    /// P93: `sum_g |s_g * e_g|` for the flux channel; `Some` exactly when
+    /// `flux_channel` is `Some`.
+    pub flux_fully_correlated_bound: Option<f64>,
     /// P63 declared unmodeled relative error u ≥ 0. When `Some(u)`, the
     /// combined variance gains `(u · nominal)²` in quadrature before
     /// `standard_uncertainty` and the intervals are formed. `None`
@@ -490,7 +535,9 @@ fn channel_coverage(covered: usize, total: usize) -> &'static str {
 }
 
 pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
-    let extra_channels = input.decay_channel.is_some() || input.fission_yield_channel.is_some();
+    let extra_channels = input.decay_channel.is_some()
+        || input.fission_yield_channel.is_some()
+        || input.flux_channel.is_some();
     if !input.nominal.is_finite()
         || !input.alternate.is_finite()
         || !input.variance.is_finite()
@@ -501,6 +548,10 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             .is_some_and(|channel| !channel.variance.is_finite() || channel.variance < 0.0)
         || input
             .fission_yield_channel
+            .as_ref()
+            .is_some_and(|channel| !channel.variance.is_finite() || channel.variance < 0.0)
+        || input
+            .flux_channel
             .as_ref()
             .is_some_and(|channel| !channel.variance.is_finite() || channel.variance < 0.0)
     {
@@ -514,6 +565,10 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             .map_or(0.0, |channel| channel.variance)
         + input
             .fission_yield_channel
+            .as_ref()
+            .map_or(0.0, |channel| channel.variance)
+        + input
+            .flux_channel
             .as_ref()
             .map_or(0.0, |channel| channel.variance);
     let modeled_standard_uncertainty = modeled_variance.sqrt();
@@ -558,11 +613,16 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
         .fission_yield_channel
         .as_ref()
         .map(|channel| channel_coverage(channel.covered_parameters, channel.total_parameters));
+    let flux_coverage = input
+        .flux_channel
+        .as_ref()
+        .map(|channel| channel_coverage(channel.covered_parameters, channel.total_parameters));
     let band_complete = mf33_coverage == "complete"
         && decay_coverage.is_none_or(|coverage| coverage == "complete")
-        && yield_coverage.is_none_or(|coverage| coverage == "complete");
+        && yield_coverage.is_none_or(|coverage| coverage == "complete")
+        && flux_coverage.is_none_or(|coverage| coverage == "complete");
     let channel_coverage = if band_complete { "complete" } else { "partial" };
-    let channels = vec![
+    let mut channels = vec![
         ChannelReport {
             channel: "cross_section_mf33",
             status: "propagated",
@@ -627,11 +687,28 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             coverage: None,
             covered_parameters: None,
             total_parameters: None,
-            note: Some(
-                "incident-flux, material-composition, response-coefficient and model-discrepancy terms are named uncovered",
-            ),
+            note: Some(if input.flux_channel.is_some() {
+                "systematic flux (transport model, geometry, transport nuclear data), material-composition, response-coefficient and model-discrepancy terms are named uncovered; statistical flux tally error is covered by the flux channel"
+            } else {
+                "incident-flux, material-composition, response-coefficient and model-discrepancy terms are named uncovered"
+            }),
         },
     ];
+    // P93: the flux ChannelReport is appended only when requested, so the
+    // pre-P93 array shape (and byte output) is unchanged when it is absent.
+    if let Some(channel) = &input.flux_channel {
+        channels.push(ChannelReport {
+            channel: "flux",
+            status: "propagated",
+            standard_uncertainty: Some(channel.variance.sqrt()),
+            coverage: Some(flux_coverage.unwrap_or("partial").into()),
+            covered_parameters: Some(channel.covered_parameters),
+            total_parameters: Some(channel.total_parameters),
+            note: Some(
+                "transport-tally statistical error (P93), one first-order parameter per input flux group, propagated as an uncorrelated diagonal variance; see flux_fully_correlated_bound for an upper bound under correlation",
+            ),
+        });
+    }
     Ok(ResponseUncertainty {
         nominal: input.nominal,
         unit: input.unit,
@@ -664,6 +741,11 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
             .fission_yield_channel
             .map(|channel| channel.sensitivities)
             .unwrap_or_default(),
+        flux_sensitivities: input
+            .flux_channel
+            .map(|channel| channel.sensitivities)
+            .unwrap_or_default(),
+        flux_fully_correlated_bound: input.flux_fully_correlated_bound,
         sensitivities: input.sensitivities,
         voi: None,
         isomer: None,

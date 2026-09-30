@@ -417,11 +417,14 @@ pub fn emit_r2s_joint(
         }
     }
     let library = actinv_data::library::read_npz(&spec.library.path)?;
-    let cov_sha = sha256_file(&uncertainty.covariance.path)?;
-    if !cov_sha.eq_ignore_ascii_case(&uncertainty.covariance.sha256) {
+    let covariance_ref = uncertainty.covariance.as_ref().ok_or(
+        "r2s uncertainty propagation requires uncertainty.covariance (P93 flux-only mode is not supported by r2s)",
+    )?;
+    let cov_sha = sha256_file(&covariance_ref.path)?;
+    if !cov_sha.eq_ignore_ascii_case(&covariance_ref.sha256) {
         return Err("covariance sidecar does not match the spec's declared hash".into());
     }
-    let covariance = actinv_data::covariance::read_npz(&uncertainty.covariance.path)?;
+    let covariance = actinv_data::covariance::read_npz(&covariance_ref.path)?;
 
     // ---- per-cell spectra (collapse weights), flux-file order -------------
     let mut stream = FluxStream::open(&spec.flux.path)?;
