@@ -39,6 +39,10 @@ preferred for thermal/mixed-spectrum problems where its zeroed (n,p) leak matter
 `tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after `fetch` or `verify`.
 Shared decay files are reused when multiple bundles use the same output directory.
 
+`build-library --projectile gamma` reads raw TENDL-2025 `g`-sublibrary (photonuclear) ENDF-6 evaluations directly
+(public, CC-BY-4.0, 2,850 targets to 200 MeV on the CCFE-162 group structure); a built gamma library is not yet a
+`data fetch` catalog bundle — publishing one is a separate release decision.
+
 Installed artifacts can be referenced symbolically from problem files: `"path": "catalog:<artifact-id>"` (and the
 decay `primary`/`fallback` strings) resolve against the embedded catalog under `<data-root>/v<catalog-version>/`.
 The data root is `$ACTINV_DATA_DIR` when set, else `./actinv-data`; an artifact that is not installed, or a declared

@@ -581,7 +581,9 @@ fn validate_options(options: &BuildOptions) -> Result<(), String> {
         }
         let expected_groups = match projectile {
             Projectile::Neutron => 709,
-            Projectile::Proton | Projectile::Deuteron | Projectile::Alpha => 162,
+            Projectile::Proton | Projectile::Deuteron | Projectile::Alpha | Projectile::Gamma => {
+                162
+            }
         };
         if options.groups.name.starts_with("fispact-") && options.groups.groups() != expected_groups
         {
@@ -1345,6 +1347,26 @@ fn residual_product(
     (z > 0 && a > 0 && a >= z).then_some(z * 1000 + a)
 }
 
+/// Ground-state residual delta (P94 missing-MF=8 rule) for gamma MTs whose reaction
+/// definition is single-neutron production but that are absent from the vendored
+/// `mt_products.json` table: MT=50 (ground state), MT=51-90 (discrete levels) and
+/// MT=91 (continuum), plus the MT=4 total when it is the only coverage of that
+/// channel. All four share the same neutron-incidence-convention net delta as
+/// MT=16's per-neutron encoding for a single neutron removed: charge unchanged,
+/// one nucleon lighter under a neutron-equivalent incidence (delta (0, 0), which
+/// `residual_product` then generalizes for the actual projectile mass). This
+/// deliberately discards excitation-level attribution (ground-state residual only),
+/// exactly as the protocol's "ENDF MT reaction definition (ground state)" wording
+/// specifies, and is applied only where MF=8 is absent and `mt_products.json` has no
+/// entry, so it never overrides a declared product.
+fn missing_mf8_ground_state_delta(mt: i32) -> Option<(i32, i32)> {
+    if mt == 4 || (50..=91).contains(&mt) {
+        Some((0, 0))
+    } else {
+        None
+    }
+}
+
 fn remap_eaf_levels(rows: &mut [BuiltRow], ledger: &mut Vec<String>) {
     let mut levels: BTreeMap<(i32, i32), BTreeSet<i32>> = BTreeMap::new();
     for row in rows.iter().filter(|row| row.lfs > 0) {
@@ -2020,8 +2042,40 @@ fn map_product_states(
     Ok(())
 }
 
+/// P98: TENDL-2017 gamma evaluations write the MT18 total photofission cross
+/// section as one MF=10 IZAP=0 LFS=0 section (optionally declared by an MF=8
+/// ZAP=0 LMF=10 LFS=0 descriptor, with no MF=3 MT18) instead of the IZAP=-1
+/// total-fission sentinel. Under a normalization profile exactly that shape is
+/// read as the sentinel; any other shape is left to the fail-closed path.
+fn read_zero_izap_photofission_total(evaluation: &mut Evaluation) -> Option<String> {
+    if evaluation.mf3.contains_key(&18) {
+        return None;
+    }
+    let sections = evaluation.mf10.get(&18)?;
+    if sections.len() != 1 || sections[0].zap != 0 || sections[0].lfs != 0 {
+        return None;
+    }
+    let descriptors = evaluation.mf8.get(&18).map(Vec::as_slice).unwrap_or(&[]);
+    if !descriptors
+        .iter()
+        .all(|descriptor| descriptor.zap == 0 && descriptor.lmf == 10 && descriptor.lfs == 0)
+    {
+        return None;
+    }
+    evaluation.mf10.get_mut(&18)?[0].zap = -1;
+    if let Some(descriptors) = evaluation.mf8.get_mut(&18) {
+        for descriptor in descriptors {
+            descriptor.zap = -1;
+        }
+    }
+    Some(
+        "MT18: MF=10 IZAP=0 LFS=0 total-photofission encoding (TENDL-2017) read as the IZAP=-1 total-fission sentinel under the normalization profile"
+            .into(),
+    )
+}
+
 fn build_evaluation(
-    evaluation: Evaluation,
+    mut evaluation: Evaluation,
     format: LibraryFormat,
     file: &str,
     source_sha256: &str,
@@ -2036,8 +2090,11 @@ fn build_evaluation(
         normalize_state_sums,
         drop_orphan_sections,
     } = settings;
-    let metadata = &evaluation.metadata;
     let mut ledger = Vec::new();
+    if normalize_state_sums && evaluation.metadata.projectile.is_gamma() {
+        ledger.extend(read_zero_izap_photofission_total(&mut evaluation));
+    }
+    let metadata = &evaluation.metadata;
     if metadata.projectile != Projectile::Neutron && temperature_K != 0.0 {
         return Err(format!(
             "{} target requires 0 K, requested {temperature_K} K",
@@ -2271,6 +2328,36 @@ fn build_evaluation(
             }
             continue;
         }
+        // Gamma-specific: ENDF-6 defines MT=4 as the total single-neutron-production
+        // channel, the sum of the discrete/continuum detail MTs 50-91, so exactly one of
+        // the two may emit rows. Scoped to the gamma projectile only (neutron already
+        // special-cases 4/51-91 via `inelastic`, and proton/deuteron/alpha corpora that
+        // reach here today do so without MT50-91 detail present, so widening this to them
+        // would change already-shipped charged-particle library bytes).
+        // - MT=4 with its own MF=8 declaration (TENDL-2025 Ta-181, W-186: state-resolved
+        //   MF=10 residual production) carries the channel through the normal descriptor
+        //   path, and every MT50-91 detail section is skipped.
+        // - MT=4 without MF=8 is skipped when MT50-91 detail is present; the detail MTs
+        //   carry the channel through the missing-MF=8 ground-state rule.
+        if metadata.projectile.is_gamma()
+            && (50..=91).contains(&mt)
+            && evaluation.mf8.contains_key(&4)
+        {
+            ledger.push(format!(
+                "MT{mt}: gamma single-neutron-production detail duplicates MT4, which carries its own MF=8 state-resolved declaration; skipped to avoid double counting"
+            ));
+            continue;
+        }
+        if mt == 4
+            && metadata.projectile.is_gamma()
+            && !evaluation.mf8.contains_key(&mt)
+            && (50..=91).any(|detail_mt| evaluation.mf3.contains_key(&detail_mt))
+        {
+            ledger.push(
+                "MT4: gamma total single-neutron-production duplicates MT50-91 detail already present (no MF=8 declaration of its own); skipped to avoid double counting".into(),
+            );
+            continue;
+        }
         if format != LibraryFormat::Tendl {
             mf10_products = unique_product_tables(
                 evaluation.mf10.get(&mt).map(Vec::as_slice).unwrap_or(&[]),
@@ -2400,6 +2487,12 @@ fn build_evaluation(
                 .filter(|product| product.zap >= 0)
                 .map(|product| (product.zap, product.lfs))
                 .collect();
+            if metadata.projectile.is_gamma() && mt == 18 && !actual.is_empty() {
+                return Err(format!(
+                    "MT18: {} declared photofission product yield(s) present; photofission yields are out of scope for v1 (the total-fission IZAP=-1 sentinel is the only permitted MT18 content for gamma)",
+                    actual.len()
+                ));
+            }
             if let Some(note) =
                 validate_descriptors(descriptors, 10, &actual, drop_orphan_sections)?
             {
@@ -2675,6 +2768,34 @@ fn build_evaluation(
                         sigma: total,
                         raw_state: None,
                     });
+                } else {
+                    rows.push(BuiltRow {
+                        mt,
+                        zap: 0,
+                        lfs: 0,
+                        lmf: -2,
+                        sigma: total,
+                        raw_state: None,
+                    });
+                    ledger.push(format!(
+                        "MT{mt}: residual arithmetic is not a bound nuclide"
+                    ));
+                }
+            } else if metadata.projectile.is_gamma() && missing_mf8_ground_state_delta(mt).is_some()
+            {
+                let delta = missing_mf8_ground_state_delta(mt).expect("checked Some above");
+                if let Some(zap) = residual_product(metadata.za, metadata.projectile, delta) {
+                    rows.push(BuiltRow {
+                        mt,
+                        zap,
+                        lfs: 0,
+                        lmf: -1,
+                        sigma: total,
+                        raw_state: None,
+                    });
+                    ledger.push(format!(
+                        "MT{mt}: no MF=8 product declaration; residual resolved from the ENDF MT reaction definition (ground state, missing_mf8_ground_state_delta)"
+                    ));
                 } else {
                     rows.push(BuiltRow {
                         mt,
@@ -4245,6 +4366,403 @@ mod tests {
         assert_eq!(built.rows[0].zap, -1);
         assert_eq!(built.rows[1].zap, 27057);
         assert_eq!(built.rows[1].sigma, vec![2.0]);
+    }
+
+    #[test]
+    fn gamma_residual_arithmetic_shifts_by_one_mass_unit() {
+        // MT=102 (radiative capture, mt_products.json delta (0,1), written for a neutron
+        // incident) on Fe-56: for gamma the projectile mass is (0,0), so the formula's
+        // "+incident.1-1" correction contributes -1 instead of neutron's 0, cancelling the
+        // delta table's "+1 neutron absorbed" baseline exactly. Net: target unchanged
+        // (26056), unlike the same MT/delta on a proton file (27057, Z+1/A+0).
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let products = BTreeMap::from([(102, (0, 1))]);
+        let built = build_evaluation(
+            evaluation(Projectile::Gamma),
+            LibraryFormat::Tendl,
+            "g-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &products,
+        )
+        .unwrap();
+        assert_eq!(built.rows.len(), 2);
+        assert_eq!(built.rows[1].zap, 26056);
+        assert_eq!(built.rows[1].sigma, vec![2.0]);
+    }
+
+    #[test]
+    fn gamma_missing_mf8_resolves_ground_state_from_mt_definition() {
+        // MT=50 ((gamma,n0)) with MF=3 but no MF=8 and no mt_products.json entry: the P94
+        // missing-MF=8 rule must resolve the ground-state residual rather than dropping the
+        // row or leaving it as unmapped leakage.
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Gamma);
+        input.mf3 = BTreeMap::from([(50, table([2.0, 2.0]))]);
+        let built = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "g-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let row = built
+            .rows
+            .iter()
+            .find(|row| row.mt == 50 && row.zap > 0)
+            .expect("MT50 product row present");
+        assert_eq!(row.zap, 26055, "(gamma,n0): Z unchanged, A-1");
+        assert_eq!(row.lmf, -1);
+        assert!(
+            built
+                .index
+                .ledger
+                .iter()
+                .any(|line| line.contains("MT50") && line.contains("ENDF MT reaction definition")),
+            "ledger: {:?}",
+            built.index.ledger
+        );
+    }
+
+    #[test]
+    fn gamma_mt4_skipped_when_detail_present_but_resolved_when_sole_coverage() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        // MT4 duplicates MT50 detail already present: MT4 must be skipped, not double-counted.
+        let mut with_detail = evaluation(Projectile::Gamma);
+        with_detail.mf3 = BTreeMap::from([(4, table([9.0, 9.0])), (50, table([2.0, 2.0]))]);
+        let built = build_evaluation(
+            with_detail,
+            LibraryFormat::Tendl,
+            "g-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        assert!(!built.rows.iter().any(|row| row.mt == 4));
+        assert!(built.rows.iter().any(|row| row.mt == 50 && row.zap > 0));
+
+        // MT4 is the only coverage of the channel: it must be resolved, not dropped.
+        let mut sole = evaluation(Projectile::Gamma);
+        sole.mf3 = BTreeMap::from([(4, table([9.0, 9.0]))]);
+        let built = build_evaluation(
+            sole,
+            LibraryFormat::Tendl,
+            "g-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let row = built
+            .rows
+            .iter()
+            .find(|row| row.mt == 4 && row.zap > 0)
+            .expect("MT4 product row present as sole coverage");
+        assert_eq!(row.zap, 26055);
+
+        // Real TENDL-2025 evaluations (Ta-181, W-186) carry genuine MF=8+MF=10 state
+        // data for MT=4 *simultaneously* with MT50/51/91 detail in MF=3. The declared
+        // MT=4 carries the channel (state-resolved) and the detail MTs are skipped, so
+        // the single-neutron channel is counted exactly once.
+        let mut both = evaluation(Projectile::Gamma);
+        both.mf3 = BTreeMap::from([(4, table([9.0, 9.0])), (50, table([2.0, 2.0]))]);
+        both.mf8.insert(
+            4,
+            vec![ProductRef {
+                zap: 26055,
+                elfs_ev: 0.0,
+                lfs: 0,
+                lmf: 10,
+            }],
+        );
+        both.mf10
+            .insert(4, vec![state_product(26055, 0, table([9.0, 9.0]))]);
+        let built = build_evaluation(
+            both,
+            LibraryFormat::Tendl,
+            "g-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let mt4_row = built
+            .rows
+            .iter()
+            .find(|row| row.mt == 4 && row.zap > 0)
+            .expect("MT4 product row present via its own MF=8 declaration, not skipped");
+        assert_eq!(mt4_row.zap, 26055);
+        assert!(
+            !built.rows.iter().any(|row| row.mt == 50),
+            "MT50 detail must be skipped when MT4 carries its own MF=8 declaration"
+        );
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|line| line.starts_with("MT50:") && line.contains("duplicates MT4")));
+    }
+
+    #[test]
+    fn gamma_photofission_yields_fail_closed() {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Gamma);
+        input.mf3.clear();
+        input.mf10.insert(
+            18,
+            vec![
+                state_product(-1, -1, table([1.0, 1.0])),
+                state_product(54140, 0, table([0.1, 0.1])),
+            ],
+        );
+        let error = build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "g-U238",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: false,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap_err();
+        assert!(
+            error.contains("photofission") && error.contains("out of scope"),
+            "{error}"
+        );
+    }
+
+    fn zero_izap_photofission_build(
+        mf3_total: bool,
+        sections: Vec<ProductTable>,
+        normalize_state_sums: bool,
+    ) -> Result<BuiltTarget, String> {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut input = evaluation(Projectile::Gamma);
+        input.mf3.clear();
+        input.mf6.clear();
+        input.mf8.clear();
+        input.mf9.clear();
+        input.mf10.clear();
+        if mf3_total {
+            input.mf3.insert(18, table([1.0, 1.0]));
+        }
+        input.mf8.insert(
+            18,
+            vec![ProductRef {
+                zap: 0,
+                elfs_ev: 0.0,
+                lfs: 0,
+                lmf: 10,
+            }],
+        );
+        input.mf10.insert(18, sections);
+        build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "g-Pb208",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+    }
+
+    #[test]
+    fn gamma_zero_izap_photofission_total_is_the_sentinel_under_a_profile() {
+        let built =
+            zero_izap_photofission_build(false, vec![state_product(0, 0, table([2.0, 2.0]))], true)
+                .unwrap();
+        assert!(
+            built
+                .index
+                .ledger
+                .iter()
+                .any(|line| line.contains("IZAP=0 LFS=0 total-photofission encoding")),
+            "{:?}",
+            built.index.ledger
+        );
+        // The same rows as the TENDL-2025 IZAP=-1 sentinel encoding of the same data.
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 4.0],
+        };
+        let mut sentinel = evaluation(Projectile::Gamma);
+        sentinel.mf3.clear();
+        sentinel.mf6.clear();
+        sentinel.mf8.clear();
+        sentinel.mf9.clear();
+        sentinel.mf10.clear();
+        sentinel
+            .mf10
+            .insert(18, vec![state_product(-1, 0, table([2.0, 2.0]))]);
+        let reference = build_evaluation(
+            sentinel,
+            LibraryFormat::Tendl,
+            "g-Pb208",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums: true,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap();
+        let shape = |target: &BuiltTarget| {
+            target
+                .rows
+                .iter()
+                .map(|row| (row.mt, row.zap, row.lfs, row.lmf, row.sigma.clone()))
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(shape(&built), shape(&reference));
+        assert!(shape(&built).iter().all(|row| row.0 != 18 || row.1 <= 0));
+    }
+
+    #[test]
+    fn gamma_zero_izap_photofission_total_fails_closed_without_a_profile() {
+        let error = zero_izap_photofission_build(
+            false,
+            vec![state_product(0, 0, table([2.0, 2.0]))],
+            false,
+        )
+        .unwrap_err();
+        assert!(error.contains("photofission"), "{error}");
+    }
+
+    #[test]
+    fn gamma_zero_izap_photofission_rejects_other_shapes() {
+        let second_section = zero_izap_photofission_build(
+            false,
+            vec![
+                state_product(0, 0, table([2.0, 2.0])),
+                state_product(54140, 0, table([0.1, 0.1])),
+            ],
+            true,
+        );
+        let with_mf3 =
+            zero_izap_photofission_build(true, vec![state_product(0, 0, table([1.0, 1.0]))], true);
+        let isomer =
+            zero_izap_photofission_build(false, vec![state_product(0, 1, table([2.0, 2.0]))], true);
+        for (name, result) in [
+            ("second MF=10 section", second_section),
+            ("MF=3 MT18 present", with_mf3),
+            ("LFS=1", isomer),
+        ] {
+            let error = match result {
+                Ok(_) => panic!("{name}: the IZAP=0 reading must not apply"),
+                Err(error) => error,
+            };
+            assert!(error.contains("photofission"), "{name}: {error}");
+        }
+    }
+
+    #[test]
+    fn gamma_build_options_reject_nonzero_temperature() {
+        let options = BuildOptions {
+            format: LibraryFormat::Tendl,
+            projectile: Some(Projectile::Gamma),
+            groups: GroupStructure::fispact_162().unwrap(),
+            temperature_K: 293.6,
+            workers: 1,
+            cache: None,
+            grid_density: 1.0,
+            strict_states: false,
+            decay_path: None,
+            decay_fallback_path: None,
+            normalize_profile: NormalizeProfile::None,
+            continue_on_error: false,
+        };
+        let error = validate_options(&options).unwrap_err();
+        assert!(error.contains("gamma") && error.contains("0 K"), "{error}");
+    }
+
+    #[test]
+    fn gamma_build_options_require_162_groups() {
+        let options = BuildOptions {
+            format: LibraryFormat::Tendl,
+            projectile: Some(Projectile::Gamma),
+            groups: GroupStructure::fispact_709().unwrap(),
+            temperature_K: 0.0,
+            workers: 1,
+            cache: None,
+            grid_density: 1.0,
+            strict_states: false,
+            decay_path: None,
+            decay_fallback_path: None,
+            normalize_profile: NormalizeProfile::None,
+            continue_on_error: false,
+        };
+        let error = validate_options(&options).unwrap_err();
+        assert!(error.contains("162"), "{error}");
     }
 
     #[test]

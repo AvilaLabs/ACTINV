@@ -1322,18 +1322,20 @@ pub fn import_openmc(
         .ok()
         .filter(|value| *value > 0)
         .ok_or("OpenMC tally n_realizations must be positive")?;
-    if hdf5_i64_scalar(&file, &format!("{tally_base}/n_filters"))? != 2 {
+    let n_filters = hdf5_i64_scalar(&file, &format!("{tally_base}/n_filters"))?;
+    if n_filters != 2 && n_filters != 3 {
         return Err(format!(
-            "unsupported OpenMC tally {tally_id}: expected exactly MeshFilter and EnergyFilter"
+            "unsupported OpenMC tally {tally_id}: expected MeshFilter and EnergyFilter, optionally with a single-bin ParticleFilter"
         ));
     }
     let filter_ids = hdf5_i64(&file, &format!("{tally_base}/filters"))?;
-    if filter_ids.len() != 2 || filter_ids[0] == filter_ids[1] {
+    let unique_filter_ids: HashSet<i64> = filter_ids.iter().copied().collect();
+    if filter_ids.len() != n_filters as usize || unique_filter_ids.len() != filter_ids.len() {
         return Err(format!(
-            "unsupported OpenMC tally {tally_id} filter IDs {filter_ids:?}; expected two distinct filters"
+            "unsupported OpenMC tally {tally_id} filter IDs {filter_ids:?}; expected {n_filters} distinct filters"
         ));
     }
-    let mut filter_types = Vec::with_capacity(2);
+    let mut filter_types = Vec::with_capacity(filter_ids.len());
     for id in &filter_ids {
         let base = format!("tallies/filters/filter {id}");
         let filter_group = hdf5_context(file.group(&base), &format!("filter group '{base}'"))?;
@@ -1351,20 +1353,67 @@ pub fn import_openmc(
         }
         filter_types.push(hdf5_string(&file, &format!("{base}/type"))?);
     }
-    if !matches!(filter_types.as_slice(), [mesh, energy] if mesh == "mesh" && energy == "energy")
-        && !matches!(filter_types.as_slice(), [energy, mesh] if energy == "energy" && mesh == "mesh")
+    let mesh_count = filter_types.iter().filter(|value| *value == "mesh").count();
+    let energy_count = filter_types
+        .iter()
+        .filter(|value| *value == "energy")
+        .count();
+    let particle_count = filter_types
+        .iter()
+        .filter(|value| *value == "particle")
+        .count();
+    if mesh_count != 1
+        || energy_count != 1
+        || particle_count != filter_types.len() - 2
+        || particle_count > 1
     {
         return Err(format!(
-            "unsupported OpenMC tally {tally_id} filters {filter_types:?}; expected exactly mesh and energy in either order"
+            "unsupported OpenMC tally {tally_id} filters {filter_types:?}; expected exactly one mesh, one energy and at most one particle filter"
         ));
     }
     let mesh_position = filter_types
         .iter()
         .position(|value| value == "mesh")
         .expect("validated filter types");
-    let energy_position = 1 - mesh_position;
+    let energy_position = filter_types
+        .iter()
+        .position(|value| value == "energy")
+        .expect("validated filter types");
     let mesh_filter_id = filter_ids[mesh_position];
     let energy_filter_id = filter_ids[energy_position];
+    // The ParticleFilter, when present, records which particle type the tally scored.
+    // It is required to carry exactly one bin: a multi-particle tally would mix flux
+    // from different particle types into one row, which this importer cannot attribute.
+    // An absent ParticleFilter is legacy behaviour, accepted only for neutron flux (the
+    // solver default), so that pre-existing neutron statepoints import byte-identically.
+    let particle_label: Option<String> = match filter_types
+        .iter()
+        .position(|value| value == "particle")
+    {
+        Some(position) => {
+            let particle_filter_id = filter_ids[position];
+            let base = format!("tallies/filters/filter {particle_filter_id}");
+            if hdf5_i64_scalar(&file, &format!("{base}/n_bins"))? != 1 {
+                return Err(format!(
+                    "unsupported OpenMC ParticleFilter {particle_filter_id}: expected exactly one particle bin"
+                ));
+            }
+            let bins = hdf5_strings(&file, &format!("{base}/bins"))?;
+            if bins.len() != 1 {
+                return Err(format!(
+                    "unsupported OpenMC ParticleFilter {particle_filter_id}: expected exactly one particle bin"
+                ));
+            }
+            let particle = bins[0].clone();
+            if particle != "neutron" && particle != "photon" {
+                return Err(format!(
+                    "unsupported OpenMC ParticleFilter {particle_filter_id} particle '{particle}'; expected neutron or photon"
+                ));
+            }
+            Some(particle)
+        }
+        None => None,
+    };
     let mesh_filter_base = format!("tallies/filters/filter {mesh_filter_id}");
     let energy_filter_base = format!("tallies/filters/filter {energy_filter_id}");
     let mesh_ids = hdf5_i64(&file, &format!("{mesh_filter_base}/bins"))?;
@@ -1389,7 +1438,7 @@ pub fn import_openmc(
             "OpenMC EnergyFilter {energy_filter_id} bin count does not match its boundaries"
         ));
     }
-    if mesh_position == 0 && group_count > window_rows {
+    if mesh_position < energy_position && group_count > window_rows {
         return Err(format!(
             "OpenMC HDF5 row window {window_rows} is smaller than the {group_count}-group cell row; increase --window-rows"
         ));
@@ -1428,6 +1477,19 @@ pub fn import_openmc(
     {
         metadata.insert("openmc_version".into(), serde_json::json!(openmc_version));
     }
+    // Only a non-neutron ParticleFilter adds a new metadata key: a neutron tally, whether
+    // it carries an explicit ParticleFilter or (the legacy, still-accepted case) none at
+    // all, keeps producing the same metadata shape it always has. Neutron-flux output
+    // bytes for the unlabelled legacy case are therefore unchanged by this import path.
+    let is_photon = particle_label.as_deref() == Some("photon");
+    if is_photon {
+        metadata.insert("particle".into(), serde_json::json!("photon"));
+    }
+    let flux_units = if is_photon {
+        PARTICLE_FLUX_UNITS
+    } else {
+        FLUX_UNITS
+    };
     let header = FluxHeader {
         record: "header".into(),
         schema: FLUX_SCHEMA.into(),
@@ -1454,7 +1516,7 @@ pub fn import_openmc(
             metadata,
         },
         energy_boundaries_eV: boundaries_eV,
-        flux_units: FLUX_UNITS.into(),
+        flux_units: flux_units.into(),
         cell_count: cell_count as u64,
         geometry: Some(geometry.clone()),
         energy_floor,
@@ -1462,7 +1524,7 @@ pub fn import_openmc(
 
     let footer = atomic_output(output_path, |output| {
         let mut writer = CanonicalWriter::new(output, header)?;
-        if mesh_position == 0 {
+        if mesh_position < energy_position {
             let chunk_cells = (window_rows / group_count).max(1);
             for start_cell in (0..cell_count).step_by(chunk_cells) {
                 let count = chunk_cells.min(cell_count - start_cell);
@@ -2467,5 +2529,191 @@ tfc 0 1 1 1 1 1 1 3 1
             2.14182e-103
         );
         assert_eq!(parse_mcnp_float("1.0D+03", "test").unwrap(), 1000.0);
+    }
+
+    /// Writes a minimal single-cell, single-group synthetic OpenMC statepoint (major
+    /// version 18) with a MeshFilter and EnergyFilter, and (when `particle` is given) a
+    /// single-bin ParticleFilter, sufficient to exercise `import_openmc`'s P94 particle
+    /// handling without a real OpenMC run.
+    fn write_openmc_fixture(path: &Path, particle: Option<&str>) {
+        use hdf5_pure::{AttrValue, FileBuilder};
+
+        let mut builder = FileBuilder::new();
+        builder.set_attr("filetype", AttrValue::AsciiString("statepoint".into()));
+        builder.set_attr("version", AttrValue::I64Array(vec![18, 0]));
+        builder.set_attr("tallies_present", AttrValue::I64(1));
+
+        let mut tallies = builder.create_group("tallies");
+
+        let mut meshes = tallies.create_group("meshes");
+        let mut mesh = meshes.create_group("mesh 1");
+        mesh.set_attr("id", AttrValue::I64(1));
+        mesh.create_dataset("type").with_vlen_strings(&["regular"]);
+        mesh.create_dataset("dimension").with_i64_data(&[1, 1, 1]);
+        mesh.create_dataset("lower_left")
+            .with_f64_data(&[0.0, 0.0, 0.0]);
+        mesh.create_dataset("upper_right")
+            .with_f64_data(&[1.0, 1.0, 1.0]);
+        mesh.create_dataset("width").with_f64_data(&[1.0, 1.0, 1.0]);
+        meshes.add_group(mesh.finish());
+        tallies.add_group(meshes.finish());
+
+        let mut filters = tallies.create_group("filters");
+        let mut mesh_filter = filters.create_group("filter 1");
+        mesh_filter
+            .create_dataset("type")
+            .with_vlen_strings(&["mesh"]);
+        mesh_filter.create_dataset("bins").with_i64_data(&[1]);
+        mesh_filter.create_dataset("n_bins").with_i64_data(&[1]);
+        filters.add_group(mesh_filter.finish());
+
+        let energy_boundaries = [1.0e6_f64, 2.0e7_f64];
+        let mut energy_filter = filters.create_group("filter 2");
+        energy_filter
+            .create_dataset("type")
+            .with_vlen_strings(&["energy"]);
+        energy_filter
+            .create_dataset("bins")
+            .with_f64_data(&energy_boundaries);
+        energy_filter.create_dataset("n_bins").with_i64_data(&[1]);
+        filters.add_group(energy_filter.finish());
+
+        let mut filter_ids = vec![1i64, 2];
+        if let Some(particle) = particle {
+            let mut particle_filter = filters.create_group("filter 3");
+            particle_filter
+                .create_dataset("type")
+                .with_vlen_strings(&["particle"]);
+            particle_filter
+                .create_dataset("bins")
+                .with_vlen_strings(&[particle]);
+            particle_filter.create_dataset("n_bins").with_i64_data(&[1]);
+            filters.add_group(particle_filter.finish());
+            filter_ids.push(3);
+        }
+        tallies.add_group(filters.finish());
+
+        let mut tally = tallies.create_group("tally 1");
+        tally
+            .create_dataset("estimator")
+            .with_vlen_strings(&["tracklength"]);
+        tally.create_dataset("filters").with_i64_data(&filter_ids);
+        tally
+            .create_dataset("n_filters")
+            .with_i64_data(&[filter_ids.len() as i64]);
+        tally.create_dataset("n_realizations").with_i64_data(&[1]);
+        tally.create_dataset("n_score_bins").with_i64_data(&[1]);
+        tally
+            .create_dataset("nuclides")
+            .with_vlen_strings(&["total"]);
+        tally
+            .create_dataset("score_bins")
+            .with_vlen_strings(&["flux"]);
+        // One cell, one group: results shape [1, 1, 2] = (sum, sum_sq); realizations=1
+        // takes the no-variance path in `openmc_result_pair`.
+        tally
+            .create_dataset("results")
+            .with_f64_data(&[10.0, 100.0])
+            .with_shape(&[1, 1, 2]);
+        tallies.add_group(tally.finish());
+
+        builder.add_group(tallies.finish());
+        builder.write(path).unwrap();
+    }
+
+    fn fixture_path(label: &str) -> PathBuf {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "actinv-p94-openmc-fixture-{label}-{}-{}.h5",
+            std::process::id(),
+            NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+        ))
+    }
+
+    #[test]
+    fn openmc_photon_particle_filter_writes_photon_units_and_label() {
+        let source = fixture_path("photon");
+        write_openmc_fixture(&source, Some("photon"));
+        let output = fixture_path("photon-out");
+        let summary = import_openmc(&source, &output, 1, 1.0, None, 16_384).unwrap();
+        assert_eq!(summary.cells, 1);
+        assert_eq!(summary.groups, 1);
+        let header_line = BufReader::new(File::open(&output).unwrap())
+            .lines()
+            .next()
+            .unwrap()
+            .unwrap();
+        let header: serde_json::Value = serde_json::from_str(&header_line).unwrap();
+        assert_eq!(header["flux_units"], "particles cm^-2 s^-1");
+        assert_eq!(header["source"]["metadata"]["particle"], "photon");
+        std::fs::remove_file(&source).unwrap();
+        std::fs::remove_file(&output).unwrap();
+    }
+
+    #[test]
+    fn openmc_unlabelled_and_neutron_filtered_tallies_stay_neutron_units_with_no_particle_key() {
+        for particle in [None, Some("neutron")] {
+            let source = fixture_path("neutron");
+            write_openmc_fixture(&source, particle);
+            let output = fixture_path("neutron-out");
+            import_openmc(&source, &output, 1, 1.0, None, 16_384).unwrap();
+            let header_line = BufReader::new(File::open(&output).unwrap())
+                .lines()
+                .next()
+                .unwrap()
+                .unwrap();
+            let header: serde_json::Value = serde_json::from_str(&header_line).unwrap();
+            assert_eq!(header["flux_units"], "n cm^-2 s^-1");
+            assert!(header["source"]["metadata"].get("particle").is_none());
+            std::fs::remove_file(&source).unwrap();
+            std::fs::remove_file(&output).unwrap();
+        }
+    }
+
+    #[test]
+    fn openmc_unsupported_particle_filter_fails_closed() {
+        let source = fixture_path("electron");
+        write_openmc_fixture(&source, Some("electron"));
+        let output = fixture_path("electron-out");
+        let error = import_openmc(&source, &output, 1, 1.0, None, 16_384).unwrap_err();
+        assert!(error.contains("electron"), "{error}");
+        assert!(!output.exists());
+        std::fs::remove_file(&source).unwrap();
+    }
+
+    #[test]
+    fn legacy_unlabelled_neutron_import_is_byte_identical_to_pre_p94() {
+        // A tally with no ParticleFilter (the shape every neutron statepoint predating P94
+        // has) must import to exactly the same bytes it always has: the P94 particle-label
+        // logic must be strictly additive for the unlabelled/neutron path.
+        let a_source = fixture_path("byte-a");
+        let b_source = fixture_path("byte-b");
+        write_openmc_fixture(&a_source, None);
+        write_openmc_fixture(&b_source, None);
+        let a_out = fixture_path("byte-a-out");
+        let b_out = fixture_path("byte-b-out");
+        import_openmc(&a_source, &a_out, 1, 1.0, None, 16_384).unwrap();
+        import_openmc(&b_source, &b_out, 1, 1.0, None, 16_384).unwrap();
+        let a_bytes = std::fs::read(&a_out).unwrap();
+        let b_bytes = std::fs::read(&b_out).unwrap();
+        // The two sources differ only in path (embedded in the header's source.path field);
+        // strip that one line-local field by comparing parsed headers minus path/sha256.
+        let a_text = String::from_utf8(a_bytes).unwrap();
+        let b_text = String::from_utf8(b_bytes).unwrap();
+        let mut a_lines = a_text.lines();
+        let mut b_lines = b_text.lines();
+        let mut a_header: serde_json::Value =
+            serde_json::from_str(a_lines.next().unwrap()).unwrap();
+        let mut b_header: serde_json::Value =
+            serde_json::from_str(b_lines.next().unwrap()).unwrap();
+        for header in [&mut a_header, &mut b_header] {
+            header["source"]["path"] = serde_json::json!("");
+            header["source"]["sha256"] = serde_json::json!("");
+        }
+        assert_eq!(a_header, b_header);
+        assert_eq!(a_lines.collect::<Vec<_>>(), b_lines.collect::<Vec<_>>());
+        for path in [a_source, b_source, a_out, b_out] {
+            std::fs::remove_file(path).unwrap();
+        }
     }
 }

@@ -22,6 +22,7 @@ pub enum Projectile {
     Proton,
     Deuteron,
     Alpha,
+    Gamma,
 }
 
 impl Projectile {
@@ -31,8 +32,9 @@ impl Projectile {
             "proton" => Ok(Self::Proton),
             "deuteron" => Ok(Self::Deuteron),
             "alpha" => Ok(Self::Alpha),
+            "gamma" => Ok(Self::Gamma),
             _ => Err(format!(
-                "unknown projectile '{value}'; expected neutron, proton, deuteron or alpha"
+                "unknown projectile '{value}'; expected neutron, proton, deuteron, alpha or gamma"
             )),
         }
     }
@@ -43,11 +45,16 @@ impl Projectile {
             Self::Proton => "proton",
             Self::Deuteron => "deuteron",
             Self::Alpha => "alpha",
+            Self::Gamma => "gamma",
         }
     }
 
     pub fn is_neutron(self) -> bool {
         self == Self::Neutron
+    }
+
+    pub fn is_gamma(self) -> bool {
+        self == Self::Gamma
     }
 
     pub fn nsub(self) -> usize {
@@ -56,6 +63,7 @@ impl Projectile {
             Self::Proton => 10_010,
             Self::Deuteron => 10_020,
             Self::Alpha => 20_040,
+            Self::Gamma => 0,
         }
     }
 
@@ -66,6 +74,7 @@ impl Projectile {
             Self::Proton => (1, 1),
             Self::Deuteron => (1, 2),
             Self::Alpha => (2, 4),
+            Self::Gamma => (0, 0),
         }
     }
 
@@ -75,11 +84,24 @@ impl Projectile {
             10_010 => Ok(Self::Proton),
             10_020 => Ok(Self::Deuteron),
             20_040 => Ok(Self::Alpha),
+            0 => Ok(Self::Gamma),
             _ => Err(format!("unsupported incident-particle NSUB={nsub}")),
         }
     }
 
     fn validate_awi(self, awi: f64) -> Result<(), String> {
+        if self == Self::Gamma {
+            // The photon carries no rest mass in the ENDF AWI convention; the relative-mass check
+            // below does not apply. A nonzero AWI on a gamma evaluation fails closed rather than
+            // being tolerantly rounded to zero.
+            if awi != 0.0 {
+                return Err(format!(
+                    "AWI={awi} is inconsistent with gamma NSUB={} (gamma requires AWI exactly 0.0)",
+                    self.nsub()
+                ));
+            }
+            return Ok(());
+        }
         let nominal_mass = f64::from(self.za().1);
         if !awi.is_finite() || awi <= 0.0 || (awi - nominal_mass).abs() > 0.1 * nominal_mass {
             return Err(format!(
@@ -688,5 +710,70 @@ mod tests {
 
         let error = parse_evaluations(&basic_tape(&[]), Some(Projectile::Alpha)).unwrap_err();
         assert!(error.contains("expected alpha"), "{error}");
+    }
+
+    fn gamma_tape(extra: &[String]) -> String {
+        let mut lines = vec![
+            record(["26056", "55.45", "0", "0", "0", "0"], 2634, 1, 451, 1),
+            record(["0", "0", "0", "0", "0", "0"], 2634, 1, 451, 2),
+            // AWI=0, NSUB=0: gamma incident-particle record.
+            record(["0", "2e8", "0", "0", "0", "0"], 2634, 1, 451, 3),
+            record(["0", "0", "0", "0", "0", "0"], 2634, 1, 451, 4),
+            send(2634, 1),
+        ];
+        lines.extend_from_slice(extra);
+        lines.join("\n")
+    }
+
+    #[test]
+    fn projectile_gamma_parse_name_nsub_za() {
+        assert_eq!(Projectile::parse("gamma"), Ok(Projectile::Gamma));
+        assert_eq!(Projectile::Gamma.name(), "gamma");
+        assert_eq!(Projectile::Gamma.nsub(), 0);
+        assert_eq!(Projectile::Gamma.za(), (0, 0));
+        assert!(!Projectile::Gamma.is_neutron());
+        assert!(Projectile::Gamma.is_gamma());
+        assert_eq!(
+            Projectile::from_nsub(0).expect("NSUB=0 is gamma via metadata()"),
+            Projectile::Gamma
+        );
+    }
+
+    #[test]
+    fn projectile_gamma_parses_from_endf_metadata() {
+        let evaluations = parse_evaluations(&gamma_tape(&[]), Some(Projectile::Gamma)).unwrap();
+        assert_eq!(evaluations.len(), 1);
+        let metadata = &evaluations[0].metadata;
+        assert_eq!(metadata.projectile, Projectile::Gamma);
+        assert_eq!(metadata.nsub, 0);
+        assert_eq!(metadata.awi, 0.0);
+    }
+
+    #[test]
+    fn projectile_gamma_rejects_nonzero_awi() {
+        let error = Projectile::Gamma.validate_awi(1.0).unwrap_err();
+        assert!(error.contains("AWI=1"), "{error}");
+        assert!(Projectile::Gamma.validate_awi(0.0).is_ok());
+    }
+
+    #[test]
+    fn projectile_gamma_index_with_neutron_spec_fails_closed() {
+        // A gamma evaluation (NSUB=0) read against an expected neutron projectile fails closed.
+        let error = parse_evaluations(&gamma_tape(&[]), Some(Projectile::Neutron)).unwrap_err();
+        assert!(error.contains("expected neutron"), "{error}");
+    }
+
+    #[test]
+    fn neutron_index_with_gamma_spec_fails_closed() {
+        // The reverse: a neutron evaluation (NSUB=10) read against an expected gamma
+        // projectile also fails closed, not silently accepted.
+        let error = parse_evaluations(&basic_tape(&[]), Some(Projectile::Gamma)).unwrap_err();
+        assert!(error.contains("expected gamma"), "{error}");
+    }
+
+    #[test]
+    fn unsupported_nsub_fails_closed() {
+        let error = Projectile::from_nsub(99).unwrap_err();
+        assert!(error.contains("NSUB=99"), "{error}");
     }
 }

@@ -1377,6 +1377,28 @@ mod duration_tests {
     }
 
     #[test]
+    fn gamma_spec_requires_zero_kelvin_and_no_fission_yields() {
+        let mut value = minimal_spec();
+        value["projectile"] = serde_json::json!("gamma");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("temperature_K: 0"));
+
+        value["options"] = serde_json::json!({"temperature_K": 0.0});
+        assert_eq!(
+            Spec::from_json(&value.to_string()).unwrap().projectile,
+            Projectile::Gamma
+        );
+
+        value["fission_yields"] = serde_json::json!({
+            "files": [{"path": "yield.endf", "sha256": "0".repeat(64)}],
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("not supported for gamma"));
+    }
+
+    #[test]
     fn feed_and_removal_are_optional_and_validated() {
         let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
         assert!(spec.schedule[0].feed.is_none() && spec.schedule[0].removal.is_none());

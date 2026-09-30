@@ -61,8 +61,10 @@ Re-running the same executable and inputs is useful but is not an independent ve
 - Ordinary photon exporters use a point at the origin. Mesh calculations preserve cell indices and bounds, but users
   must construct any distributed transport source and verify its spatial interpretation.
 - Mesh cells are independent; there is no material, temperature, or flux feedback between cells.
-- Incident-particle support is neutron, proton, deuteron, and alpha. Triton, helion, and gamma activation are outside
-  v1.0.
+- Incident-particle support is neutron, proton, deuteron, alpha, and gamma (photonuclear, TENDL-2025 `g` sublibrary).
+  Triton and helion activation are outside v1.0. Gamma v1 does not build photofission product yields (only the
+  MF=10 IZAP=-1 total-fission sentinel is recognized) and, like the other non-neutron projectiles, has no
+  Doppler/temperature treatment (0 K only).
 - Unresolved-resonance processing is infinite dilution. Finite-dilution self-shielding, probability tables, and
   Bondarenko treatment are not implemented.
 - Products absent from configured decay data remain explicit leakage. ACTINV does not infer missing decay modes,

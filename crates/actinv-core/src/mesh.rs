@@ -980,6 +980,26 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
             spec.projectile.name()
         ));
     }
+    // P94: the unit string only separates neutron from every other projectile, so the particle
+    // label decides between them. `import-flux openmc` writes `source.metadata.particle` only
+    // for a photon tally. A gamma run needs that label; a file carrying it serves only gamma.
+    // Unlabelled `particles` files keep their pre-P94 meaning for proton, deuteron and alpha.
+    let particle_label = source_header
+        .source
+        .metadata
+        .get("particle")
+        .and_then(serde_json::Value::as_str);
+    let label_matches = match spec.projectile {
+        Projectile::Gamma => particle_label == Some("photon"),
+        _ => particle_label.is_none(),
+    };
+    if !label_matches {
+        return Err(format!(
+            "canonical flux particle label {} does not match {} projectile",
+            particle_label.map_or_else(|| "(none)".to_string(), |label| format!("'{label}'")),
+            spec.projectile.name()
+        ));
+    }
     let prepared = PreparedRun::prepare_inputs_with_extensions(
         &spec.library,
         &spec.decay,
@@ -1272,6 +1292,134 @@ mod tests {
         spec.chunk_cells = 1;
         spec.threads = MAX_THREADS + 1;
         assert!(spec.validate().unwrap_err().contains("threads"));
+    }
+
+    fn write_minimal_canonical_flux(path: &Path, flux_units: &str) -> String {
+        // `run_mesh`'s projectile/particle-label check fires immediately after
+        // `FluxStream::open`, which only parses and validates the header line; no
+        // cell or footer record is needed to exercise it.
+        let header = serde_json::json!({
+            "record": "header",
+            "schema": "actinv-flux-1",
+            "source": {
+                "format": "test-fixture",
+                "path": "fixture",
+                "sha256": "0".repeat(64),
+            },
+            "energy_boundaries_eV": [1.0, 2.0],
+            "flux_units": flux_units,
+            "cell_count": 1,
+            "geometry": null,
+            "energy_floor": null,
+        });
+        std::fs::write(path, format!("{}\n", header)).unwrap();
+        sha256_file(path).unwrap()
+    }
+
+    fn fixture_temp_path(label: &str) -> PathBuf {
+        static NEXT: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+        std::env::temp_dir().join(format!(
+            "actinv-p94-mesh-fixture-{label}-{}-{}.ndjson",
+            std::process::id(),
+            NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+        ))
+    }
+
+    #[test]
+    fn gamma_mesh_run_rejects_legacy_unlabelled_neutron_flux() {
+        let flux_path = fixture_temp_path("gamma-vs-neutron-flux");
+        let sha256 = write_minimal_canonical_flux(&flux_path, "n cm^-2 s^-1");
+        let mut spec = minimal_spec();
+        spec.projectile = Projectile::Gamma;
+        spec.options.temperature_K = 0.0;
+        spec.flux = HashedFileRef {
+            path: flux_path.display().to_string(),
+            sha256,
+        };
+        let output = fixture_temp_path("gamma-vs-neutron-out");
+        let error = run_mesh(&spec, &output).unwrap_err();
+        assert!(
+            error.contains("canonical flux units") && error.contains("gamma"),
+            "{error}"
+        );
+        assert!(!output.exists());
+        std::fs::remove_file(&flux_path).unwrap();
+    }
+
+    #[test]
+    fn neutron_mesh_run_rejects_particle_labelled_flux() {
+        let flux_path = fixture_temp_path("neutron-vs-particles-flux");
+        let sha256 = write_minimal_canonical_flux(&flux_path, "particles cm^-2 s^-1");
+        let mut spec = minimal_spec();
+        spec.projectile = Projectile::Neutron;
+        spec.flux = HashedFileRef {
+            path: flux_path.display().to_string(),
+            sha256,
+        };
+        let output = fixture_temp_path("neutron-vs-particles-out");
+        let error = run_mesh(&spec, &output).unwrap_err();
+        assert!(
+            error.contains("canonical flux units") && error.contains("neutron"),
+            "{error}"
+        );
+        assert!(!output.exists());
+        std::fs::remove_file(&flux_path).unwrap();
+    }
+
+    fn write_particle_flux(path: &Path, particle: Option<&str>) -> String {
+        let mut source = serde_json::json!({
+            "format": "test-fixture",
+            "path": "fixture",
+            "sha256": "0".repeat(64),
+        });
+        if let Some(particle) = particle {
+            source["metadata"] = serde_json::json!({ "particle": particle });
+        }
+        let header = serde_json::json!({
+            "record": "header",
+            "schema": "actinv-flux-1",
+            "source": source,
+            "energy_boundaries_eV": [1.0, 2.0],
+            "flux_units": "particles cm^-2 s^-1",
+            "cell_count": 1,
+        });
+        std::fs::write(path, format!("{}\n", header)).unwrap();
+        sha256_file(path).unwrap()
+    }
+
+    fn particle_label_error(projectile: Projectile, particle: Option<&str>) -> String {
+        let flux_path = fixture_temp_path("particle-label-flux");
+        let sha256 = write_particle_flux(&flux_path, particle);
+        let mut spec = minimal_spec();
+        spec.projectile = projectile;
+        spec.options.temperature_K = 0.0;
+        spec.flux = HashedFileRef {
+            path: flux_path.display().to_string(),
+            sha256,
+        };
+        let output = fixture_temp_path("particle-label-out");
+        let error = run_mesh(&spec, &output).unwrap_err();
+        assert!(!output.exists());
+        std::fs::remove_file(&flux_path).unwrap();
+        error
+    }
+
+    #[test]
+    fn gamma_mesh_run_rejects_unlabelled_particle_flux() {
+        let error = particle_label_error(Projectile::Gamma, None);
+        assert!(
+            error.contains("particle label (none)") && error.contains("gamma"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn charged_mesh_run_rejects_photon_labelled_flux() {
+        let error = particle_label_error(Projectile::Proton, Some("photon"));
+        assert!(
+            error.contains("particle label 'photon'") && error.contains("proton"),
+            "{error}"
+        );
     }
 
     #[test]

@@ -88,7 +88,7 @@ hash-pinned — `actinv new` emits catalog references by default.
 
 | field | meaning |
 |---|---|
-| `projectile` | `neutron`, `proton`, `deuteron` or `alpha`; omission preserves the historical neutron default. |
+| `projectile` | `neutron`, `proton`, `deuteron`, `alpha` or `gamma`; omission preserves the historical neutron default. |
 | `library.path` | ACTINV `.npz` activation library; the adjacent `<stem>_index.json` is also required. |
 | `library.sha256` | Optional declared hash. ACTINV always computes the library hash and fails if a declaration differs. The index's recorded library hash is checked too. |
 | `decay.primary` | ENDF-6 radioactive-decay sublibrary. |
@@ -365,9 +365,9 @@ is named in the ledger under `feed_removal.removal_reservoir_exempt`, along with
 the declared removals. Pathway attribution covers production chains only and is suppressed when a schedule
 declares feed or removal.
 
-For charged projectiles, steps expose the generic `fluence_particles_cm2` and identify the projectile in the result,
-ledger, certificate and prepared/mesh compatibility records. Neutron results retain their historical bytes and
-`fluence_n_cm2` field when `projectile` is omitted.
+For non-neutron projectiles (proton, deuteron, alpha and gamma), steps expose the generic `fluence_particles_cm2`
+and identify the projectile in the result, ledger, certificate and prepared/mesh compatibility records. Neutron
+results retain their historical bytes and `fluence_n_cm2` field when `projectile` is omitted.
 
 ## Build an activation library
 
@@ -380,10 +380,26 @@ actinv build-library INPUT OUTPUT.npz \
 ```
 
 `INPUT` is one ENDF-6 evaluation or a directory. `--format` accepts `auto`, `tendl` or `eaf`; `--projectile` accepts
-`auto`, `neutron`, `proton`, `deuteron` or `alpha`; `--groups` accepts `fispact-709`, `fispact-162` or a custom
-boundary file. Neutron defaults are 709 groups and 293.6 K; charged defaults are 162 groups and 0 K. The adjacent
-`<stem>_index.json` records source hashes, normalized options, group hash, builder fingerprint, target ledgers and the
-final NPZ hash. A content-addressed cache is optional and revalidated before reuse.
+`auto`, `neutron`, `proton`, `deuteron`, `alpha` or `gamma`; `--groups` accepts `fispact-709`, `fispact-162` or a
+custom boundary file. Neutron defaults are 709 groups and 293.6 K; proton/deuteron/alpha/gamma defaults are 162
+groups and 0 K (gamma, like the other non-neutron projectiles, refuses a nonzero temperature — TENDL does not carry
+a Doppler-broadened gamma sublibrary). The adjacent `<stem>_index.json` records source hashes, normalized options,
+group hash, builder fingerprint, target ledgers and the final NPZ hash. A content-addressed cache is optional and
+revalidated before reuse.
+
+### Gamma (photonuclear) projectile
+
+`--projectile gamma` builds from the TENDL `g` sublibrary (public, TENDL-2025): NSUB 0, projectile ZA `(0, 0)`, AWI
+required to be exactly `0.0`. Residual arithmetic is target + photon − emitted particles on the CCFE-162 group
+structure, the same structure and MF=3/6/8/10 families the proton/deuteron/alpha path already uses. Some gamma MTs
+(for example 50, 51 and 91 — single-neutron production to the ground state, a discrete level, or the continuum) carry
+MF=3/6 cross sections without an MF=8 product declaration; the builder resolves their ground-state residual from the
+ENDF MT reaction definition instead of dropping the row, and records every such resolution in the target ledger.
+MT=4, when it duplicates MT50-91 detail already present in the same evaluation, is skipped as redundant rather than
+double-counted. Photofission is recognized only as the MF=10 IZAP=-1 total-fission sentinel; an evaluation that
+declares actual photofission product yields under MT=18 fails closed, since photofission yields are out of scope for
+v1. Gamma activation libraries are not yet published through `actinv data fetch` — that is a separate release
+decision.
 
 ## Build a damage-energy table
 
@@ -442,10 +458,11 @@ geometry, a missing step, an unrequested photon output, or an inconsistent group
 ## Flux interchange (`actinv-flux-1`)
 
 Transport spectra are canonicalized before activation. The format is newline-delimited JSON: exactly one `header`,
-the declared number of ordered `cell` records, and one closing `footer`. A cell value is integrated neutron flux in
-`n cm^-2 s^-1` for that energy group—not flux density per eV or lethargy. Every ID is unique and every ordinal begins
-at zero and increases by one. The strict reader rejects blank, malformed, missing, duplicate, extra and trailing
-records, invalid totals, nonfinite/negative values and inconsistent geometry.
+the declared number of ordered `cell` records, and one closing `footer`. A cell value is integrated flux in
+`n cm^-2 s^-1` (neutron) or `particles cm^-2 s^-1` (photon and the other non-neutron projectiles) for that energy
+group—not flux density per eV or lethargy. Every ID is unique and every ordinal begins at zero and increases by one.
+The strict reader rejects blank, malformed, missing, duplicate, extra and trailing records, invalid totals,
+nonfinite/negative values and inconsistent geometry.
 
 ```bash
 actinv import-flux openmc statepoint.h5 flux.ndjson \
@@ -466,7 +483,12 @@ rename only after the footer closes.
 Supported subsets are deliberately narrow:
 
 - OpenMC statepoint major 18, one selected `flux`/`total`/tracklength tally with exactly one 3D Cartesian regular or
-  rectilinear `MeshFilter` and one `EnergyFilter`, in either order;
+  rectilinear `MeshFilter` and one `EnergyFilter`, in either order, plus an optional single-bin `ParticleFilter`
+  (`neutron` or `photon`; more than one particle bin is refused, since a multi-particle tally mixes flux across
+  particle types into one row). A tally with no `ParticleFilter` is legacy behaviour and is accepted only when the
+  mesh spec's projectile is `neutron`; a photon `ParticleFilter` writes `particles cm^-2 s^-1` flux and a `particle`
+  metadata field, and a mesh run whose projectile disagrees with the imported flux's particle units fails before
+  solving. Importing an unfiltered or neutron-filtered tally writes byte-identical output to the pre-P94 importer;
 - MCNP traditional rectangular XYZ neutron FMESH `meshtal` column output with energy rows and optional checked totals;
 - MCNP energy-binned F4:N `mctal` with one cell-ID F dimension, singleton remaining dimensions and optional checked
   total energy bins;
