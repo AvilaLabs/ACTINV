@@ -1368,7 +1368,7 @@ pub fn import_openmc(
         || particle_count > 1
     {
         return Err(format!(
-            "unsupported OpenMC tally {tally_id} filters {filter_types:?}; expected exactly one mesh, one energy and at most one particle filter"
+            "unsupported OpenMC tally {tally_id} filters {filter_types:?}: expected exactly MeshFilter and EnergyFilter, plus at most one ParticleFilter"
         ));
     }
     let mesh_position = filter_types
