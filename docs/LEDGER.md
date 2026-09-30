@@ -66,9 +66,14 @@ counted for inspection only and never appear as production sources.
 
 ## MF=33 uncertainty accounting
 
-When an `uncertainty` object is present, `ledger.uncertainty` names the method and the **MF=33 nuclear-data band**,
-records the confidence/multiplier, selected and comparison CRAM orders, exact collapse convention, builder/source
-identities and all excluded uncertainty sources. Its coverage diagnostics are:
+When an `uncertainty` object is present, `ledger.uncertainty` names the method and band (the **MF=33 nuclear-data
+band**, or — in flux-only mode, `channels: ["flux"]` with `covariance` omitted — the **transport-tally
+statistical-error band**), records the confidence/multiplier, selected and comparison CRAM orders, exact collapse
+convention, builder/source identities and all excluded uncertainty sources. In flux-only mode the coverage
+diagnostics below are empty (there is no MF=33 propagation to report on) and `flux_channel_requested`,
+`flux_parameters` and `flux_held_at_nominal` are added instead, naming the choices (self-shielding row scale,
+`rate_scale`, fission-yield selection, mode and pruning) held at the nominal run's values while the channel is
+propagated. Its coverage diagnostics are:
 
 - `active_parameters`, `covered_parameters`, `uncovered_library_rows` — the pruned matrix rows with local influence,
   which of them have valid MF=33 self-covariance, and the exact uncovered library-row indices;
@@ -91,10 +96,21 @@ declared standard uncertainty, a `channels` report of each channel's own coverag
 `uncovered_decay_constants` and `uncovered_yield_products` (parameters with no declared uncertainty). Requested
 channels extend `require_complete`; `uncovered_remainder` is always named and never propagated.
 
+When `uncertainty.channels` requests `flux`, each response additionally reports `flux_sensitivities` (one entry per
+input group with a positive sensitivity and a declared `relative_error`; each parameter carries the group's energy
+bounds, flux and declared relative error) and `flux_fully_correlated_bound` (`sum(|s_g| * e_g)`, an alternative,
+worst-case fully-correlated bound alongside the channel's own diagonal variance). The flux channel is diagonal by
+construction (group-to-group tally errors are uncorrelated) and carries no coverage gap of its own to name — every
+group with a declared error is used. It is excluded from `voi`, `isomer` and `design`: it is not a nuclear-data
+parameter, so it does not belong in a "which measurement buys down this band" ranking.
+
 The excluded list is substantive: MF=32 resonance-parameter covariance, MF=40 production covariance, decay-yield
-and cross-channel correlation, incident-flux uncertainty, material-composition uncertainty, response-coefficient
-uncertainty and model discrepancy are not included. Decay-constant and independent-yield uncertainties are included
-only when their channels are requested. Neither reported interval is a licensing safety margin.
+and cross-channel correlation, material-composition uncertainty, response-coefficient uncertainty and model
+discrepancy are not included. Absent a requested `flux` channel, incident-flux uncertainty is excluded too; with
+`flux` requested, the excluded entry instead names the narrower remainder the channel does not cover — systematic
+flux uncertainty from the transport model, geometry and transport nuclear data, as opposed to the tally's own
+statistical error, which the channel does cover. Decay-constant, independent-yield and flux uncertainties are
+included only when their channels are requested. Neither reported interval is a licensing safety margin.
 
 ## Photon accounting
 

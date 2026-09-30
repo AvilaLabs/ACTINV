@@ -1877,3 +1877,144 @@ pick the same pivot. A throwaway timing build, not committed, measured one-threa
 Reuse can save at most 7/8 of the reach, about 3 % end-to-end on the heaviest profile and under 1 %
 on the iron profiles. That is below this laptop's run-to-run spread, about ±10 % (P82/P83), so an
 adoption gate could not measure it honestly. No protocol was registered and the item is closed.
+
+## Entry 71 — P92 gas production: G5 FAIL; P95 inventory-appm successor: PASS, merged (2026-09-30)
+
+**P91** (`d6a8381e…`) was withdrawn untested, before any code: it routed light ejectiles into stable
+sink states, which is wrong for tritium. It was replaced by **P92** (`dae429bb…`). P92 adds optional
+gas production (`options.gas`), off by default:
+
+- Every covered MT's light ejectiles (H1, H2, H3, He3, He4) enter the chain as ordinary inventory
+  nuclides. The table `endf6-mt-ejectiles-v1` is Z/A-balanced against each row's products.
+- Decay alphas and protons feed He4 and H1.
+- Each step reports a `gas` block. The ledger records the table version, the uncovered MTs and any
+  missing light states.
+
+With gas off, the prepared-run signature is unchanged. Candidate `87904010…`, reference `0d8dc849…`.
+Verdict `results/p92_verdict.json`:
+
+- G0, G1 PASS.
+- G2 PASS: Z/A balance with 0 failures over 36,451 TENDL-2017 rows and 93,417 TENDL-2025 rows.
+- G3 PASS: with gas off, 783 P75b specs and 3 mesh profiles are bitwise identical to the reference.
+- G4 PASS: with gas on, the inventory and activity of every non-light nuclide are exactly identical
+  over the same 783 specs.
+  - The heat clause needed one correction, recorded here. The first form,
+    `|(Q_on − L_on) − (Q_off − L_off)| ≤ 1e-9 |Q_off − L_off|`, failed where tritium dominates the
+    heat: there Q_off − L_off is a small difference of large terms. The light-nuclide heat implied
+    by the output was exactly H3's MF=8/MT=457 E_LP of 5,690 eV.
+  - After that first G4 run failed, the checker clause gained a floor, `+ 1e-12 |Q_on|`. This was
+    a change to a gate after its result, made because the relative form cannot be met at roundoff
+    under cancellation, not because physics disagreed. The worst residual against gas-on total heat
+    is 6.6e-16, so the rerun passes at roundoff. P95 registered the clause with the floor before
+    its own G4 ran.
+- **G5 FAIL:** P92 compared ACTINV with FISPACT-II/TENDL-2017 on the 132 CB3 FNS experiments.
+  - 400 of 403 gated pairs were within ±10 %.
+  - Pooled geometric-mean ratios: He4 0.99997, H2 0.99969, H3 0.9999993, **H1 0.513**
+    ([0.97, 1.03] required).
+  - The H1 miss is entirely the three hydrogenous samples (I, Br, Cl; 2000exp_5min). FISPACT-II
+    prints `APPM OF H 1` ≈ 3.3–3.8 × 10⁵ for them, the initial hydrogen atom fraction. Its printed
+    APPM is therefore inventory per 10⁶ initial atoms, including initial content. P92 compared it
+    with ACTINV's produced appm. The FAIL stands; P92 did not merge on its own.
+- G6 not run.
+
+**P95** (`3c39871e…`) was registered after the diagnosis and before the change. It
+adds `inventory_appm` per species (atoms_per_g / initial_atoms_per_g × 10⁶, FISPACT-II's printed
+convention) and `H_inventory_appm` / `He_inventory_appm`. `appm` keeps its meaning: produced appm.
+The protocol states that the outcome was largely known in advance. The checker is `check_p92.py`
+with `ACTINV_GAS_PROTOCOL=P95`; logs are in `target/p95/`. Candidate `ba842d89…`. Verdict
+`results/p95_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: fmt and clippy clean; 15/15 named tests pass.
+  - The new test uses a 10 at% H1 material. ACTINV emits no t = 0 step, so a zero-flux first step
+    stands in for it. H1 `inventory_appm` equals 1e5 to 1e-12.
+  - Produced `appm` there is 4.4e-11, the cancellation roundoff of atoms minus initial content. The
+    test bounds it at 1e-12 of the inventory, not at exact zero.
+- G2 PASS: Z/A balance.
+- G3 PASS: gas off, 783 specs + 3 mesh profiles bitwise.
+- G4 PASS: non-perturbation. Worst heat residual 6.6e-16 of gas-on total.
+- G5 PASS: **403 of 403** gated pairs within ±10 %. Geometric means: He4 0.99997, H1 0.99962,
+  H2 0.99969, H3 0.9999993. The worst pair is Gd 2000exp_5min H1 at 0.986.
+  - For species with no initial content these numbers repeat P92's. P95 is a definitional
+    correction; P92's G5 is the independent test of the gas physics.
+- G6 PASS: every local CI replay step exits 0 (23/23). The first replay failed one step, `p16`.
+  The P92 implementation had added a paragraph to `docs/QUANTITIES.md`, which P16 pins by hash.
+  The paragraph was moved to the gas section of `docs/SPEC.md` and the file restored, as in
+  `f874e61`; the second replay passed. The candidate binary was unchanged (docs only).
+
+Adopted: `options.gas` ships. Limits (v1):
+- refused with `uncertainty` and for non-neutron projectiles;
+- fission ejectiles are uncovered and listed in the ledger.
+
+## Entry 72 — Transport-tally statistical error as a flux channel: P93 FAIL, P96 FAIL, P97 PASS, merged (2026-09-30)
+
+The feature propagates each transport tally group's declared statistical relative error as a
+first-order, diagonal flux channel: `uncertainty.channels: ["flux"]` and
+`spectrum.relative_error`. The sensitivity is s_g = dR/d ln φ_g. The channel runs flux-only,
+with covariance omitted, or alongside MF=33.
+
+**P93** (`41cfc21b…`, candidate `d12ba06a…`, reference `0d8dc849…`). Verdict
+`results/p93_verdict.json`, **FAIL**:
+- G1 PASS.
+- **G2(b) FAIL.** The three uncertainty examples were not bitwise identical. The candidate's
+  ledger uncertainty record, rebuilt from a shared runtime record, dropped
+  `ledger.uncertainty.band_name`, while the certificate kept it. This is a real defect.
+- G2(a) PASS: 783 P75b specs and 3 mesh profiles bitwise.
+- G2(c) PASS.
+- **G3 FAIL as registered.** Directional derivatives against central finite differences.
+  - Run 1 is void because of two checker defects, and its files are kept
+    (`target/p93/g3_run1_checker_defect.json`):
+    - The FD perturbed `flux_per_group` while leaving `spectrum.total` in place, so the
+      perturbation was renormalized away. The fix perturbs the absolute flux and drops `total`.
+    - The custom-10 baseline was compared as a tuple against a list.
+  - A G2 aggregation crash (list against dict indexing of `run_single_hash`) was also fixed
+    before any G2 outcome was read.
+  - Run 2: 2189 of 2256 comparisons within tolerance (97.0 %, 99 % required); 2205 within 100×.
+    All 67 failures sit at late cooling steps with |R|/peak ≤ 2.4e-13. There, CRAM is at its
+    precision floor and the central difference is noise, not a derivative.
+- G4 PASS: P32 cube, K = 64. Mean variance ratios 0.993–0.996; every cell's std ratio in band.
+- G5 not run.
+- Evidence in `target/p93_record/`.
+
+**P96** (`f9e4ef16…`), the G3 successor, is **FAIL**:
+- New checker `controls/check_p96.py`: fresh spec set (offset 10, seed base 20261001), central
+  differences at h = 1e-4 and h′ = 1e-3, and exclusion rule (b), which drops a comparison when
+  the two step sizes disagree (unconverged reference), capped at 5 %.
+- It carried P93's G2 over whatever its outcome, so it fails on G2(b).
+- Its G3 was stopped once that FAIL was certain: 8 of 42 nominal pairs had run and no comparison
+  had been computed, so the offset-10 set stayed unseen.
+- The first launch, with 3 workers, was OOM-killed inside its 6 GB scope. The relaunch used 2
+  workers and 8 GB.
+
+**P97** (`18665790…`) re-gates everything on a candidate with one added line: the ledger record
+gains `band_name` from the same runtime value the certificate uses.
+- It ran twice.
+  - First on the branch alone (candidate `015f0d4c…`): G1–G4 all passed.
+  - Then again after merging master, which brought in the P95 gas code that also touches
+    `run.rs`. The merge had conflicts: the gas ledger block and the flux-aware uncertainty
+    record, and the two test modules. Each side's new tests also needed the other's added
+    parameter (`gas: false`; the mesh `flux_origin` `None`).
+- The P93 checker's run caches (`g3_runs/`, `g3_custom10_runs/`) are keyed by case content, not
+  by binary. They were moved aside, so the merged rerun computed everything fresh.
+- The verdict is on the merged candidate `c7b8923d…` (`results/p97_verdict.json`):
+  - G0 PASS.
+  - G1 PASS.
+  - G2 PASS: (a) bitwise, (b) bitwise, now including `band_name`, (c).
+  - G3 PASS:
+    - 141 cases, 2160 comparisons; rule (a) excluded 0;
+    - rule (b) excluded 63 (2.9 %, cap 5 %), all with |R|/peak ≤ 5.1e-15;
+    - **2097 of 2097** remaining comparisons within tolerance, all within 100×;
+    - identical to the pre-merge run.
+  - G4 PASS: mean variance ratios 0.993–0.996, all 64 cells in band.
+  - G5 PASS: CI replay, every step exits 0 (23/23).
+
+Adopted: the flux channel ships.
+- Diagonal only: the fully correlated bound `sum(|s_g| e_g)` is reported beside it.
+- Energy-dependent fission-yield selection, pruning and mode are held at the nominal run's
+  choices.
+- Systematic flux uncertainty (transport model, geometry, transport nuclear data) is still
+  excluded and named in the ledger.
+
+Performance note for later: a flux-only run costs about 6× a nominal run (46 s against 7.5 s on
+the G4 cube). One tangent solve per group direction is the obvious reduction. It is not pursued
+here.

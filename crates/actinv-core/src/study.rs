@@ -776,6 +776,7 @@ impl StudySpectrum {
             total: self.total,
             boundaries_eV: self.boundaries_eV.clone(),
             descending: self.descending,
+            relative_error: None,
         })
     }
 }
@@ -3063,10 +3064,10 @@ fn evaluate_robustness_inner(
             let mut uspec = spec.clone();
             uspec.options.rate_scale = None;
             uspec.uncertainty = Some(crate::spec::UncertaintyOptions {
-                covariance: crate::spec::HashedFileRef {
+                covariance: Some(crate::spec::HashedFileRef {
                     path: cov_ref.path.clone(),
                     sha256: cov_ref.sha256.clone().unwrap_or_default(),
-                },
+                }),
                 responses: vec![
                     "activity:*".to_string(),
                     "activity.total".to_string(),
@@ -3277,7 +3278,7 @@ impl PreparedCache {
 /// flux vector (`validate_flux` fails closed on a different spectrum),
 /// so spectrum is part of the reuse identity.
 fn prepared_signature(spec: &Spec) -> String {
-    canonical_json(&json!({
+    let mut signature = json!({
         "library": spec.library,
         "decay": spec.decay,
         "photon_response": spec.photon.response,
@@ -3296,7 +3297,13 @@ fn prepared_signature(spec: &Spec) -> String {
         "radiological": spec.radiological,
         "damage": spec.damage,
         "self_shielding": spec.self_shielding,
-    }))
+    });
+    // P92: gas adds light states to the prepared chain. The key joins only when gas is on, so
+    // every gas-off signature is unchanged.
+    if spec.options.gas {
+        signature["gas"] = json!(true);
+    }
+    canonical_json(&signature)
 }
 
 /// A prior case record is resumable only when every recorded artifact
@@ -3666,10 +3673,10 @@ mod robustness_tests {
         assert_eq!(prepared_signature(&spec2), sig0);
         // uncertainty options form their own signature
         spec2.uncertainty = Some(crate::spec::UncertaintyOptions {
-            covariance: crate::spec::HashedFileRef {
+            covariance: Some(crate::spec::HashedFileRef {
                 path: "c.npz".into(),
                 sha256: "ab".repeat(32),
-            },
+            }),
             responses: vec![],
             channels: vec![],
             confidence_level: 0.95,
@@ -3682,6 +3689,16 @@ mod robustness_tests {
             unmodeled_evalspread: None,
         });
         assert_ne!(prepared_signature(&spec2), sig0);
+    }
+
+    #[test]
+    fn prepared_signature_separates_gas_and_keeps_gas_off_unchanged() {
+        let spec = min_spec();
+        let off = prepared_signature(&spec);
+        assert!(!off.contains("\"gas\""));
+        let mut gas = min_spec();
+        gas.options.gas = true;
+        assert_ne!(prepared_signature(&gas), off);
     }
 
     #[test]

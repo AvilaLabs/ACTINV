@@ -16,6 +16,18 @@
   and returns the `actinv-budget-result-1` document, identical to `actinv budget` apart from timing
   keys. A file is passed through verbatim, so `budget_sha256` is the file's hash, as on the command
   line. A failed verification is returned in the document, not raised (P87, P89).
+- `options.gas` (off by default): hydrogen and helium isotope production. Light ejectiles of every
+  covered MT, and decay alphas and protons, enter the chain as ordinary nuclides (H1, H2, H3, He3,
+  He4). Each step reports per-species `atoms_per_g`, `produced_atoms_per_g`, produced `appm` and
+  `inventory_appm`, the FISPACT-II `APPM OF` convention with initial content included. Against
+  FISPACT-II/TENDL-2017 on the 132 FNS experiments, 403/403 gated pairs agree within ±10 %.
+  With gas off, output is byte-identical (P92, P95).
+- Transport-tally statistical error as an uncertainty channel: `uncertainty.channels: ["flux"]` with a
+  per-group `spectrum.relative_error` propagates each group's declared relative error to first order
+  (sensitivity dR/d ln φ_g, diagonal), flux-only with `covariance` omitted or alongside MF=33. Each
+  response reports `flux_sensitivities` and the fully correlated bound `flux_fully_correlated_bound`.
+  Checked against central finite differences on an unseen spec set (2097/2097 within tolerance) and
+  against sampling on the P32 cube (P93, P96, P97).
 
 **Fixed**
 

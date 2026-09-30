@@ -1,0 +1,38 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "candidate_built_before_result": true,
+  "candidate_recorded": true,
+  "pass": true,
+  "source": "target/p93/g1.json"
+ },
+ "G2": {
+  "candidate_built_before_result": true,
+  "candidate_recorded": false,
+  "pass": false,
+  "source": "target/p93/g2.json"
+ },
+ "G3": {
+  "note": "NOT RUN (stopped before any comparison was computed)",
+  "pass": false
+ },
+ "G4": {
+  "candidate_built_before_result": true,
+  "candidate_recorded": false,
+  "pass": true,
+  "source": "target/p93/g4.json"
+ },
+ "G5": {
+  "failed": [],
+  "pass": false,
+  "steps": 0
+ },
+ "inputs": {
+  "candidate_sha256": "d12ba06a0118ad1109e660061d1fdb0bdb75cf47be13ecd1b5a030286c11751a",
+  "protocol_sha256": "f9e4ef16f9e7e42e5d93b4cc0083e7227c80a9dc7e9edd1bbe23cb060829d120"
+ },
+ "pass": false,
+ "protocol": "ACTINV-P96"
+}

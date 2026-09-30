@@ -233,9 +233,12 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
     }
 
     let unc = spec.uncertainty.as_ref().unwrap();
+    let covariance = unc.covariance.as_ref().ok_or(
+        "decide requires uncertainty.covariance (P93 flux-only mode is not supported by decide)",
+    )?;
     let u_cov = json!({
-        "covariance_path": unc.covariance.path,
-        "covariance_sha256": unc.covariance.sha256,
+        "covariance_path": covariance.path,
+        "covariance_sha256": covariance.sha256,
         "confidence_level": unc.confidence_level,
         "unmodeled_relative": unc.unmodeled_relative,
     });
@@ -248,7 +251,7 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
             "certified: all {} constraints satisfied at their declared band edges \
              under covariance {} at confidence {:.2}{}",
             constraints.len(),
-            unc.covariance.sha256,
+            covariance.sha256,
             unc.confidence_level,
             u_label
         )
@@ -261,7 +264,7 @@ pub fn run_decide_doc(dtext: &str, base_dir: &Path, spec_path: &str) -> Result<V
                 .filter(|c| !c["satisfied"].as_bool().unwrap())
                 .count(),
             constraints.len(),
-            unc.covariance.sha256,
+            covariance.sha256,
             unc.confidence_level,
             u_label
         )

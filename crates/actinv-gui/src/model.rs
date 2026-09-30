@@ -320,7 +320,7 @@ mod tests {
             Path::new("/project").join("extra.json").to_string_lossy()
         );
         assert_eq!(
-            spec.uncertainty.unwrap().covariance.path,
+            spec.uncertainty.unwrap().covariance.unwrap().path,
             Path::new("/project").join("extra.json").to_string_lossy()
         );
         assert_eq!(
