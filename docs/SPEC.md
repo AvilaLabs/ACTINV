@@ -308,6 +308,44 @@ A runnable walkthrough lives at `examples/shielding_demo.json`: pure W-186 under
 fixed `sigma0_b = 0.1` — the ledger names every applied factor and W-187 activity lands ~28% below the
 unshielded solve of the same problem.
 
+## Gas production (H and He isotopes)
+
+`options.gas: true` (default `false`) tracks the light charged-particle products of neutron activation — H1, H2,
+H3, He3 and He4 — as real inventory nuclides, exactly as FISPACT-II does. Every neutron reaction's light-particle
+multiplicities (protons, deuterons, tritons, He-3, alphas) are read from a table built from the ENDF-6 reaction
+definitions for MT 11–45 (excluding the 18–21 and 38 fission MTs), 102–117 and 152–200; MT 4 and 51–91 (inelastic)
+and MT 102 emit none. A product row whose MT is not in the table (MT 18, fission, is the practical case: ternary
+gas is not modelled) contributes no ejectiles and is named in the ledger's `gas.uncovered`, keyed by MT, with its
+share of the reaction rate. Each decaying nuclide's own modes also feed the gas states directly: branching × λ
+into He4 for every RTYP digit 4 (alpha) and into H1 for every digit 7 (proton).
+
+Because the five gas states are real chain nuclides, they decay and react further like any other state — H3
+decays to He3 at its own tabulated half-life, and a secondary reaction such as He3(n,p)H3 applies when the
+library carries it — and they appear in the ordinary `inventory`, `activity_Bq_per_g` and `heat_W_per_g` output,
+not only in the block below. If a light nuclide is absent from the decay library, a stable sink stands in for it
+and the ledger's `gas.missing_light_states` names it. Trace mode feeds the gas states from bulk material targets
+through the unit-source mechanism exactly as it feeds any other product, including the hybrid reservoir treatment
+when H or He is itself a bulk material constituent; the gas edges are ordinary edges in the graph pruning already
+operates on, so `options.prune` needs no gas-specific handling.
+
+`options.gas` is refused together with `uncertainty`, and for any `projectile` other than `neutron` (v1). With
+gas off, every byte of `PreparedRun`, the result and the ledger is unchanged from a pre-P92 run; `gas` is absent
+from the spec echo and fingerprint entirely rather than serialized as `false`.
+
+Each step gains a `gas` block when enabled: per species (`H1`, `H2`, `H3`, `He3`, `He4`) it gives `atoms_per_g`
+(the same quantity the main inventory reports for that nuclide), `produced_atoms_per_g` (`atoms_per_g` minus the
+material's initial population of that nuclide, ordinarily zero) and `appm` (`produced_atoms_per_g` per 1e6 atoms
+of the material's total initial population). It also gives `inventory_appm` (`atoms_per_g` per 1e6 initial
+atoms, the initial content included). It also gives `H_appm` (H1+H2+H3), `He_appm` (He3+He4), their inventory
+counterparts `H_inventory_appm` and `He_inventory_appm`, and `initial_atoms_per_g`, the appm normalization
+denominator. The two conventions differ only for a light nuclide the material starts with, e.g. hydrogen in
+a hydrocarbon. FISPACT-II's printed `APPM OF` is the inventory convention (P95); compare against
+`inventory_appm`, not `appm`. These fields are plain `f64` inventory populations and dimensionless ratios computed at
+result serialization, not raw inputs converted at a `Spec::physical_inputs` boundary, so they stay
+outside the P16 typed-quantity inventory (`docs/QUANTITIES.md`, which P16 pins by hash), as
+`inventory[].atoms_per_g` does. The ledger's `gas` block records the ejectile table
+version, `uncovered` and `missing_light_states`.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon
