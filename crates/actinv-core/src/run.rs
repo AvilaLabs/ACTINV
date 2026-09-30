@@ -3,6 +3,7 @@
 use crate::chain::{self, RateLedger};
 use crate::cram::{step as cram_step, step_with_tangents, Cram};
 use crate::damage::{DamageStepOut, PreparedDamageTable};
+use crate::gas;
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
 use crate::quantity::{AtomsPerGram, Kelvin, Seconds};
 use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
@@ -98,6 +99,37 @@ pub struct Heat {
     pub beta: f64,
     pub gamma: f64,
 }
+/// P92 gas: one light nuclide's current inventory, production and appm.
+#[derive(serde::Serialize)]
+pub struct GasSpecies {
+    pub atoms_per_g: f64,
+    /// `atoms_per_g` minus this nuclide's initial (material) population.
+    pub produced_atoms_per_g: f64,
+    /// `produced_atoms_per_g` per 1e6 initial atoms of the whole material.
+    pub appm: f64,
+    /// P95: `atoms_per_g` (initial content included) per 1e6 initial atoms of the whole
+    /// material — the convention of FISPACT-II's printed `APPM OF`.
+    pub inventory_appm: f64,
+}
+/// P92 gas: emitted only when `options.gas` is true.
+#[derive(serde::Serialize)]
+pub struct GasOut {
+    pub H1: GasSpecies,
+    pub H2: GasSpecies,
+    pub H3: GasSpecies,
+    pub He3: GasSpecies,
+    pub He4: GasSpecies,
+    /// H1 + H2 + H3 appm.
+    pub H_appm: f64,
+    /// He3 + He4 appm.
+    pub He_appm: f64,
+    /// H1 + H2 + H3 inventory appm (P95).
+    pub H_inventory_appm: f64,
+    /// He3 + He4 inventory appm (P95).
+    pub He_inventory_appm: f64,
+    /// The material's total initial atoms per gram — the appm normalization denominator.
+    pub initial_atoms_per_g: f64,
+}
 #[derive(serde::Serialize)]
 pub struct StepOut {
     pub step: usize,
@@ -138,6 +170,9 @@ pub struct StepOut {
     /// NRT damage observables; present only when the spec carries a `damage` section.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub damage: Option<DamageStepOut>,
+    /// P92 gas production; present only when `options.gas` is true.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub gas: Option<GasOut>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -578,6 +613,9 @@ pub struct PreparedRun {
     nuclides: HashMap<(i32, i32), decay::Nuclide>,
     decay_fallback_keys: std::collections::HashSet<(i32, i32)>,
     chain: chain::Chain,
+    /// P92 gas: ZA of light ground states absent from the decay library and given a stable
+    /// stand-in. Always empty when `options.gas` is false.
+    gas_missing_light_states: Vec<(i32, i32)>,
     decay_nuclides_from_fallback: usize,
     photon_options: PhotonOptions,
     response: Option<PhotonResponse>,
@@ -2063,6 +2101,7 @@ impl PreparedRun {
                 collapsible_spectrum(physical.flux.values())
             },
             Some(&spec.spectrum.structure),
+            spec.options.gas,
             profiler,
         )?;
         prepared.unmodeled_table = unmodeled_table;
@@ -2109,6 +2148,7 @@ impl PreparedRun {
             None,
             None,
             None,
+            false,
         )
     }
 
@@ -2124,6 +2164,7 @@ impl PreparedRun {
         radiological_options: Option<&RadiologicalOptions>,
         damage_options: Option<&DamageOptions>,
         shielding_options: Option<&SelfShieldingOptions>,
+        gas: bool,
     ) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
         let temperature_K = Kelvin::new(temperature_K)
@@ -2141,6 +2182,7 @@ impl PreparedRun {
             shielding_options,
             None,
             None,
+            gas,
             &mut profiler,
         )
     }
@@ -2159,6 +2201,7 @@ impl PreparedRun {
         shielding_options: Option<&SelfShieldingOptions>,
         collapse_flux: Option<&[f64]>,
         collapse_group_structure: Option<&str>,
+        gas: bool,
         profiler: &mut RunProfiler,
     ) -> Result<Self, String> {
         let validation_started = profiler.start();
@@ -2452,7 +2495,32 @@ impl PreparedRun {
         }
 
         let chain_started = profiler.start();
-        let chain = chain::build(&nuclides);
+        let mut chain = chain::build(&nuclides);
+        // P92 gas: ensure the five light ground states exist (a stable stand-in when the decay
+        // library itself lacks one), then add the alpha/proton decay-gas edges. Both are no-ops
+        // when gas is disabled, so chain::build's own output — and every gas-off byte — is
+        // untouched (G3).
+        let mut gas_missing_light_states: Vec<(i32, i32)> = Vec::new();
+        if gas {
+            let (augmented, missing) = chain::ensure_light_states(chain);
+            chain = augmented;
+            for za in &missing {
+                nuclides.entry(*za).or_insert_with(|| decay::Nuclide {
+                    mat: 0,
+                    za: za.0,
+                    awr: (za.0 % 1000) as f64,
+                    liso: za.1,
+                    nst: 1,
+                    half_life: 0.0,
+                    d_half_life: 0.0,
+                    energies: Vec::new(),
+                    modes: Vec::new(),
+                    spectra: Vec::new(),
+                });
+            }
+            gas_missing_light_states = missing;
+            chain::add_gas_decay_edges(&nuclides, &mut chain);
+        }
         if let Some(options) = uncertainty_options {
             let known: std::collections::HashSet<_> =
                 nuclides.keys().map(|key| name_of(key.0, key.1)).collect();
@@ -2492,6 +2560,7 @@ impl PreparedRun {
             nuclides,
             decay_fallback_keys,
             chain,
+            gas_missing_light_states,
             decay_nuclides_from_fallback,
             photon_options: photon_options.clone(),
             response,
@@ -3171,6 +3240,7 @@ impl PreparedRun {
                 &mut led,
                 shield_plan.as_ref(),
                 rate_scales.as_ref(),
+                spec.options.gas,
             )
         } else {
             let batched = cell_collapse
@@ -3197,6 +3267,7 @@ impl PreparedRun {
                     &mut led,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
+                    spec.options.gas,
                 ),
                 None => chain::reaction_rates(
                     lib,
@@ -3207,6 +3278,7 @@ impl PreparedRun {
                     &mut led,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
+                    spec.options.gas,
                 ),
             };
             chain::ReactionAssembly {
@@ -3275,6 +3347,7 @@ impl PreparedRun {
                     &mut scratch,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
+                    spec.options.gas,
                 );
                 react_extra.push(assembly.triplets.clone());
                 react_extra_assembly.push(assembly);
@@ -3288,6 +3361,7 @@ impl PreparedRun {
                     &mut scratch,
                     shield_plan.as_ref(),
                     rate_scales.as_ref(),
+                    spec.options.gas,
                 ));
             }
         }
@@ -4354,6 +4428,71 @@ impl PreparedRun {
                 beta: hb,
                 gamma: hg,
             };
+            // ---- P92 gas: per-species inventory, production and appm. Mirrors the damage
+            // section's composition-resolved-atoms idiom below: coupled mode reads the tracked
+            // state directly, trace mode adds any tracked delta onto a bulk reservoir's constant
+            // baseline (or, for the common case of a non-bulk gas product fed through the unit
+            // source, reads the tracked state directly too).
+            let gas_out = if spec.options.gas {
+                let initial_atoms_per_g: f64 = bulk_inv.values().sum();
+                let gas_atoms = |za: (i32, i32)| -> f64 {
+                    let mut atoms = bulk_inv.get(&za).copied().unwrap_or(0.0);
+                    if let Some(&g) = ch.index.get(&za) {
+                        if pos[g] != usize::MAX {
+                            if mode == "coupled" {
+                                atoms = y[pos[g]];
+                            } else if tracked_reservoir.contains(&g) {
+                                atoms += y[pos[g]];
+                            } else if !bulk.contains_key(&g) {
+                                atoms = y[pos[g]];
+                            }
+                        }
+                    }
+                    atoms
+                };
+                let species = |za: (i32, i32)| -> GasSpecies {
+                    let atoms_per_g = gas_atoms(za);
+                    let initial = bulk_inv.get(&za).copied().unwrap_or(0.0);
+                    let produced_atoms_per_g = atoms_per_g - initial;
+                    let (appm, inventory_appm) = if initial_atoms_per_g > 0.0 {
+                        (
+                            produced_atoms_per_g / initial_atoms_per_g * 1e6,
+                            atoms_per_g / initial_atoms_per_g * 1e6,
+                        )
+                    } else {
+                        (0.0, 0.0)
+                    };
+                    GasSpecies {
+                        atoms_per_g,
+                        produced_atoms_per_g,
+                        appm,
+                        inventory_appm,
+                    }
+                };
+                let h1 = species(gas::H1);
+                let h2 = species(gas::H2);
+                let h3 = species(gas::H3);
+                let he3 = species(gas::HE3);
+                let he4 = species(gas::HE4);
+                let h_appm = h1.appm + h2.appm + h3.appm;
+                let he_appm = he3.appm + he4.appm;
+                let h_inventory_appm = h1.inventory_appm + h2.inventory_appm + h3.inventory_appm;
+                let he_inventory_appm = he3.inventory_appm + he4.inventory_appm;
+                Some(GasOut {
+                    H1: h1,
+                    H2: h2,
+                    H3: h3,
+                    He3: he3,
+                    He4: he4,
+                    H_appm: h_appm,
+                    He_appm: he_appm,
+                    H_inventory_appm: h_inventory_appm,
+                    He_inventory_appm: he_inventory_appm,
+                    initial_atoms_per_g,
+                })
+            } else {
+                None
+            };
             let uncertainty = match (&uncertainty_runtime, &spec.uncertainty) {
                 (Some(runtime), Some(options)) => {
                     // P72/P77: a declared unmodeled source resolves to the
@@ -4509,6 +4648,7 @@ impl PreparedRun {
                 uncertainty,
                 radiological,
                 damage,
+                gas: gas_out,
             });
         }
         profiler.finish("schedule_solve_diagnostics", solve_started);
@@ -5320,6 +5460,20 @@ impl PreparedRun {
                 }),
             );
         }
+        if spec.options.gas {
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "gas".into(),
+                serde_json::json!({
+                    "table_version": gas::TABLE_VERSION,
+                    "uncovered": &led.gas_uncovered,
+                    "missing_light_states": self
+                        .gas_missing_light_states
+                        .iter()
+                        .map(|(z, l)| name_of(*z, *l))
+                        .collect::<Vec<_>>(),
+                }),
+            );
+        }
         if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {
             let flux_running = runtime.flux_channel_requested;
             let flux_excluded_entry = if flux_running {
@@ -5712,6 +5866,12 @@ fn prepared_fingerprint(
         "damage": spec.damage,
         "self_shielding": spec.self_shielding,
         "spectrum": spec.spectrum,
+        // options.gas changes what PreparedRun.chain contains (light-state stand-ins and their
+        // decay edges), unlike every other options.* field, which only affects how a prepared
+        // chain is solved. It must be part of the cache key or a worker session could reuse a
+        // gas-off PreparedRun for a gas-on spec sharing the same library/decay/etc (or the
+        // reverse), silently omitting or fabricating gas output.
+        "gas": spec.options.gas,
         "multi_spectrum": multi_spectrum,
         "collapse_flux": collapse
             .map(|flux| flux.iter().map(|v| v.to_bits()).collect::<Vec<u64>>()),
@@ -5813,6 +5973,7 @@ mod projectile_output_tests {
             uncertainty: None,
             radiological: None,
             damage: None,
+            gas: None,
         }
     }
 
@@ -5977,6 +6138,7 @@ mod flux_channel_tests {
             &mut ledger,
             None,
             None,
+            false,
         );
 
         let mut nominal: BTreeMap<(usize, usize), C64> = BTreeMap::new();
@@ -6232,6 +6394,7 @@ mod flux_channel_tests {
             &mut ledger,
             None,
             None,
+            false,
         );
         let mut derivative_sub_base: BTreeMap<usize, Vec<(usize, usize, C64)>> = BTreeMap::new();
         for derivative in &assembly.derivatives {
@@ -6289,5 +6452,237 @@ mod flux_channel_tests {
             assert_eq!(ascending.flux_per_cm2_s, descending.flux_per_cm2_s);
             assert_eq!(descending.group, ngroups - 1 - ascending.group);
         }
+    }
+}
+
+/// P92 gas end-to-end tests: a hand-built `PreparedRun` wired directly from Rust structs (no
+/// files, no ENDF text, no on-disk caching), exercising the same `run_started_profiled` path
+/// `run()` uses. This is the minimal way to run a real schedule through trace and coupled mode
+/// and compare, which needs the full per-step solve — not reachable from `chain.rs`'s own
+/// triplet-assembly tests.
+#[cfg(test)]
+mod gas_prepared_tests {
+    use super::*;
+    use std::collections::HashSet;
+
+    const TARGET: (i32, i32) = (26_056, 0); // stand-in "T"; Fe56 only because "Fe56" is a
+                                            // material-composition key the real element table accepts
+
+    fn stand_in(za: (i32, i32)) -> decay::Nuclide {
+        decay::Nuclide {
+            mat: 0,
+            za: za.0,
+            awr: (za.0 % 1000) as f64,
+            liso: za.1,
+            nst: 1,
+            half_life: 0.0,
+            d_half_life: 0.0,
+            energies: Vec::new(),
+            modes: Vec::new(),
+            spectra: Vec::new(),
+        }
+    }
+
+    /// One stable target with a single covered (n,alpha) channel (MT 107): a loss row books the
+    /// target's total depletion, and an unmapped-residual product row (matching the existing
+    /// H3 case in `chain.rs`'s `gas_test_fixture`) still adds the He4 ejectile. Both rows carry
+    /// the same tiny cross section, so the loss row's rate is exactly the one channel's rate.
+    fn synthetic_gas_prepared(mode: &str) -> (Spec, PreparedRun) {
+        let spec: Spec = serde_json::from_value(serde_json::json!({
+            "spec": "actinv-spec-1",
+            "library": {"path": "synthetic.npz"},
+            "decay": {"primary": "synthetic.dat"},
+            "material": {"mass_g": 1.0, "basis": "wt_percent", "composition": {"Fe56": 100.0}},
+            "spectrum": {"structure": "custom", "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+                         "flux_per_group": [1.0e-2, 1.0e-2, 1.0e-2, 1.0e-2], "descending": false},
+            "schedule": [{"dt": "1 s", "flux": 1.0}],
+            "options": {"mode": mode, "prune": "none", "gas": true}
+        }))
+        .expect("synthetic gas spec parses");
+
+        let lib = library::Library {
+            rows: vec![
+                library::Row {
+                    target: 0,
+                    mt: 1,
+                    zap: -1,
+                    lfs: 0,
+                    lmf: 0,
+                }, // total loss
+                library::Row {
+                    target: 0,
+                    mt: 107,
+                    zap: 999_999,
+                    lfs: 0,
+                    lmf: -2,
+                }, // (n,alpha); unmapped residual, gas still applies
+            ],
+            sig: vec![1.0e-4; 2 * 4],
+            ngroups: 4,
+            bounds: vec![1.0, 2.0, 3.0, 4.0, 5.0],
+        };
+        let mut nuclides: HashMap<(i32, i32), decay::Nuclide> =
+            HashMap::from([(TARGET, stand_in(TARGET))]);
+        let chain = chain::build(&nuclides);
+        let (mut chain, missing) = chain::ensure_light_states(chain);
+        for za in &missing {
+            nuclides.entry(*za).or_insert_with(|| stand_in(*za));
+        }
+        chain::add_gas_decay_edges(&nuclides, &mut chain);
+
+        let prepared = PreparedRun {
+            library_path: "synthetic.npz".into(),
+            library_sha_declared: None,
+            library_sha: "0".repeat(64),
+            index_path: "synthetic_index.json".into(),
+            index_sha: "0".repeat(64),
+            index: serde_json::json!({}),
+            library: ActivationLibrary::Dense(lib),
+            library_targets: vec![TARGET],
+            decay_primary: "synthetic.dat".into(),
+            decay_primary_sha: "0".repeat(64),
+            decay_fallback: None,
+            decay_fallback_sha: None,
+            decay_overrides_sha: None,
+            decay_overrides_applied: Vec::new(),
+            nuclides,
+            decay_fallback_keys: HashSet::new(),
+            chain,
+            gas_missing_light_states: missing,
+            decay_nuclides_from_fallback: 0,
+            photon_options: PhotonOptions::default(),
+            response: None,
+            response_sha: None,
+            fission_options: FissionYieldOptions::default(),
+            fission_yields: HashMap::new(),
+            fission_yield_inputs: Vec::new(),
+            projectile: Projectile::Neutron,
+            library_group_structure: None,
+            temperature_K: Kelvin::new(293.6).expect("293.6 K is valid"), // spec.options.temperature_K default
+            uncertainty_options: None,
+            covariance: None,
+            unmodeled_table: None,
+            unmodeled_evalspread: None,
+            radiological: None,
+            damage: None,
+            shielding: None,
+        };
+        (spec, prepared)
+    }
+
+    fn run_he4_appm(mode: &str) -> f64 {
+        let (spec, prepared) = synthetic_gas_prepared(mode);
+        let physical = spec.physical_inputs().expect("physical inputs resolve");
+        let mut profiler = RunProfiler::disabled();
+        let result = prepared
+            .run_started_profiled(
+                &spec,
+                &physical,
+                "test",
+                std::time::Instant::now(),
+                &mut profiler,
+                None,
+                None,
+            )
+            .expect("run succeeds");
+        assert_eq!(result.mode, mode);
+        let last = result.steps.last().expect("at least one step");
+        let gas = last
+            .gas
+            .as_ref()
+            .expect("gas block present when options.gas is true");
+        assert!(
+            gas.He4.produced_atoms_per_g > 0.0,
+            "the (n,alpha) channel must produce He4"
+        );
+        gas.He4.appm
+    }
+
+    #[test]
+    fn trace_and_coupled_gas_agree_at_low_fluence() {
+        let trace = run_he4_appm("trace");
+        let coupled = run_he4_appm("coupled");
+        let rel = (trace - coupled).abs() / coupled.abs();
+        assert!(
+            rel < 1e-6,
+            "trace He4 appm {trace} vs coupled {coupled}, relative difference {rel}"
+        );
+    }
+
+    #[test]
+    fn gas_disabled_leaves_the_step_gas_block_absent() {
+        let (mut spec, prepared) = synthetic_gas_prepared("coupled");
+        spec.options.gas = false;
+        let physical = spec.physical_inputs().expect("physical inputs resolve");
+        let mut profiler = RunProfiler::disabled();
+        let result = prepared
+            .run_started_profiled(
+                &spec,
+                &physical,
+                "test",
+                std::time::Instant::now(),
+                &mut profiler,
+                None,
+                None,
+            )
+            .expect("run succeeds");
+        assert!(result.steps.last().unwrap().gas.is_none());
+    }
+
+    /// P95 G1: `inventory_appm` is FISPACT-II's printed `APPM OF` convention, which counts the
+    /// initial content. ACTINV emits no t = 0 step, so a zero-flux first step stands in for it:
+    /// at that step a material that is 10 at% H1 has H1 `inventory_appm` = 0.1 × 1e6 and produced
+    /// `appm` = 0.
+    #[test]
+    fn inventory_appm_counts_initial_hydrogen_and_appm_does_not() {
+        let (mut spec, prepared) = synthetic_gas_prepared("coupled");
+        spec.material = serde_json::from_value(serde_json::json!({
+            "mass_g": 1.0, "basis": "atom_fraction", "composition": {"Fe56": 0.9, "H1": 0.1}
+        }))
+        .expect("material parses");
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 0.0},
+            {"dt": "1 s", "flux": 1.0}
+        ]))
+        .expect("schedule parses");
+        let physical = spec.physical_inputs().expect("physical inputs resolve");
+        let mut profiler = RunProfiler::disabled();
+        let result = prepared
+            .run_started_profiled(
+                &spec,
+                &physical,
+                "test",
+                std::time::Instant::now(),
+                &mut profiler,
+                None,
+                None,
+            )
+            .expect("run succeeds");
+        let first = result.steps[0].gas.as_ref().expect("gas block present");
+        let rel = (first.H1.inventory_appm - 1.0e5).abs() / 1.0e5;
+        assert!(
+            rel < 1e-12,
+            "H1 inventory_appm {} vs 1e5",
+            first.H1.inventory_appm
+        );
+        // Produced appm is atoms minus the initial content, so zero up to the cancellation
+        // roundoff of that subtraction (observed 4.4e-11 appm against a 1e5 inventory).
+        assert!(
+            first.H1.appm.abs() <= 1e-12 * first.H1.inventory_appm,
+            "H1 produced appm {} at zero flux",
+            first.H1.appm
+        );
+        assert_eq!(first.H_inventory_appm, first.H1.inventory_appm);
+        assert_eq!(first.He_inventory_appm, 0.0);
+        // After irradiation, a species with no initial content has inventory_appm == appm.
+        let last = result.steps.last().unwrap().gas.as_ref().unwrap();
+        assert!(last.He4.appm > 0.0);
+        let rel_he4 = (last.He4.inventory_appm - last.He4.appm).abs() / last.He4.appm;
+        assert!(
+            rel_he4 < 1e-12,
+            "He4 inventory_appm {} vs appm {}",
+            last.He4.inventory_appm,
+            last.He4.appm
+        );
     }
 }

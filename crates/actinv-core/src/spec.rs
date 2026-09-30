@@ -455,6 +455,13 @@ pub struct Options {
     /// The applied factors are named in the run ledger.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub yield_scale: Option<BTreeMap<String, f64>>,
+    /// P92: gas production (H and He isotopes, appm). Default false; absent from any spec
+    /// echo or fingerprint when false, so gas-off output is byte-identical to pre-P92 output.
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub gas: bool,
+}
+fn is_false(b: &bool) -> bool {
+    !*b
 }
 fn auto() -> String {
     "auto".into()
@@ -485,6 +492,7 @@ impl Default for Options {
             rate_scale: None,
             decay_scale: None,
             yield_scale: None,
+            gas: false,
         }
     }
 }
@@ -902,6 +910,17 @@ impl Spec {
         }
         if !self.options.bmin_atoms_per_g.is_finite() || self.options.bmin_atoms_per_g < 0.0 {
             return Err("options.bmin_atoms_per_g must be finite and nonnegative".into());
+        }
+        if self.options.gas {
+            if self.uncertainty.is_some() {
+                return Err("options.gas cannot be combined with uncertainty".into());
+            }
+            if !self.projectile.is_neutron() {
+                return Err(format!(
+                    "options.gas is supported only for neutron activation, not {}",
+                    self.projectile.name()
+                ));
+            }
         }
         if !self.options.temperature_K.is_finite() || self.options.temperature_K < 0.0 {
             return Err("options.temperature_K must be finite and nonnegative".into());
@@ -1406,6 +1425,47 @@ mod duration_tests {
         let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
         assert_eq!(spec.projectile, Projectile::Neutron);
         assert_eq!(spec.options.temperature_K, 293.6);
+    }
+
+    #[test]
+    fn gas_false_is_absent_from_the_serialized_options_others_default_present() {
+        // G3: options.gas must vanish from the spec echo/fingerprint when false, exactly like
+        // pre-P92 output, and appear only when explicitly turned on.
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert!(!spec.options.gas);
+        let echoed = serde_json::to_value(&spec.options).unwrap();
+        assert!(echoed.get("gas").is_none(), "{echoed}");
+
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"gas": true});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert!(spec.options.gas);
+        let echoed = serde_json::to_value(&spec.options).unwrap();
+        assert_eq!(echoed["gas"], serde_json::json!(true));
+    }
+
+    #[test]
+    fn gas_is_refused_with_uncertainty_and_with_non_neutron_projectiles() {
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"gas": true});
+        value["uncertainty"] = serde_json::json!({
+            "covariance": {"path": "cov.npz", "sha256": "0".repeat(64)},
+        });
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("options.gas cannot be combined with uncertainty"));
+
+        let mut value = minimal_spec();
+        value["projectile"] = serde_json::json!("proton");
+        value["options"] = serde_json::json!({"gas": true, "temperature_K": 0.0});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("options.gas is supported only for neutron activation"));
+
+        // gas alone (neutron, no uncertainty) is a valid spec.
+        let mut value = minimal_spec();
+        value["options"] = serde_json::json!({"gas": true});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
     }
 
     #[test]
