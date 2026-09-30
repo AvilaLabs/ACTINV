@@ -1,0 +1,475 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "build_returncode": 0,
+  "candidate_sha256": "8790401032a1ea602aec8d0e8e71e5840086bc09343fb2e5efc1cabb1612ef8a",
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "release": "0",
+   "test": "0"
+  },
+  "pass": true,
+  "unit_tests": {
+   "chain::tests::add_gas_decay_edges_tallies_one_digit_per_alpha_or_proton": true,
+   "chain::tests::decay_alpha_case_feeds_he4_at_the_parents_lambda": true,
+   "chain::tests::gas_ejectiles_are_added_for_normal_and_unmapped_rows_and_fission_is_uncovered": true,
+   "chain::tests::gas_off_adds_no_ejectiles_or_uncovered_ledger_entries": true,
+   "chain::tests::gas_produced_from_a_constant_reservoir_matches_the_exact_linear_integral": true,
+   "chain::tests::h3_ejectiles_decay_to_he3_at_the_tabulated_lambda": true,
+   "gas::tests::gas_products_excludes_neutrons_and_orders_h_then_he": true,
+   "gas::tests::inelastic_mts_balance_to_no_za_change": true,
+   "gas::tests::table_za_balances_against_vendored_mt_products": true,
+   "gas::tests::uncovered_mts_are_none": true,
+   "run::gas_prepared_tests::gas_disabled_leaves_the_step_gas_block_absent": true,
+   "run::gas_prepared_tests::trace_and_coupled_gas_agree_at_low_fluence": true,
+   "spec::duration_tests::gas_false_is_absent_from_the_serialized_options_others_default_present": true,
+   "spec::duration_tests::gas_is_refused_with_uncertainty_and_with_non_neutron_projectiles": true
+  }
+ },
+ "G2": {
+  "libraries": {
+   "tendl2017_fns": {
+    "failure_count": 0,
+    "library": "/home/connoravila/nuclear-data/tendl-2017/build/neutron.n.p10.npz",
+    "pass": true,
+    "returncode": 0,
+    "rows_checked": 36451,
+    "rows_total": 64044,
+    "uncovered_mts": {
+     "18": 164
+    },
+    "uncovered_rate_share_flat_spectrum": 0.00025056948932471466,
+    "uncovered_rows": 164
+   },
+   "tendl2025": {
+    "failure_count": 0,
+    "library": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+    "pass": true,
+    "returncode": 0,
+    "rows_checked": 93417,
+    "rows_total": 167735,
+    "uncovered_mts": {
+     "18": 952
+    },
+    "uncovered_rate_share_flat_spectrum": 7.275216430321884e-07,
+    "uncovered_rows": 952
+   }
+  },
+  "pass": true
+ },
+ "G3": {
+  "differing_or_failed": [],
+  "mesh": {
+   "fe_coupled": {
+    "cand_digest": {
+     "body_lines": 61,
+     "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 63,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 34,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "cand_returncode": 0,
+    "pass": true,
+    "ref_digest": {
+     "body_lines": 61,
+     "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 63,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 34,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "ref_returncode": 0
+   },
+   "fe_p21like": {
+    "cand_digest": {
+     "body_lines": 61,
+     "body_sha256": "7cecf3e8a40adfb6bd87e59425d3de8429ccead6d51fee82810d77eb67091e0c",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 64,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 35,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "cand_returncode": 0,
+    "pass": true,
+    "ref_digest": {
+     "body_lines": 61,
+     "body_sha256": "7cecf3e8a40adfb6bd87e59425d3de8429ccead6d51fee82810d77eb67091e0c",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 64,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 35,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "ref_returncode": 0
+   },
+   "ss316_r2s": {
+    "cand_digest": {
+     "body_lines": 61,
+     "body_sha256": "91dac06bea508ccafdb327c1fb25398a3042144f1bf0a048271e907791606ec0",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 1056,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 460,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "cand_returncode": 0,
+    "pass": true,
+    "ref_digest": {
+     "body_lines": 61,
+     "body_sha256": "91dac06bea508ccafdb327c1fb25398a3042144f1bf0a048271e907791606ec0",
+     "footer": {
+      "cell_count": 60,
+      "cells_served_from_reuse": 0,
+      "destination_flux_sum_over_cells": 81081375288509.38,
+      "max_pruned_states": 1056,
+      "max_rebin_relative_closure": 0.0,
+      "min_pruned_states": 460,
+      "overflow_sum_over_cells": 0.0,
+      "record": "footer",
+      "source_flux_sum_over_cells": 81081375288509.38,
+      "underflow_sum_over_cells": 0.0
+     }
+    },
+    "ref_returncode": 0
+   }
+  },
+  "pass": true,
+  "specs": 783
+ },
+ "G4": {
+  "failed": [],
+  "heat_clause": "|(Q_on - L_on) - (Q_off - L_off)| <= 1e-9 |Q_off - L_off| + 1e-12 |Q_on|, per component; L = light-nuclide activity x MF=8/MT=457 mean energy",
+  "pass": true,
+  "specs": 783,
+  "worst_activity_rel": 0.0,
+  "worst_heat_minus_light_rel": {
+   "alpha": 0.0,
+   "beta": 1.340828130081733e-06,
+   "gamma": 0.0,
+   "total": 1.346665378300413e-08
+  },
+  "worst_heat_minus_light_rel_to_gas_on_total": {
+   "alpha": 0.0,
+   "beta": 6.57290190140443e-16,
+   "gamma": 0.0,
+   "total": 4.27028441520235e-16
+  },
+  "worst_inventory_rel": 0.0,
+  "worst_total_activity_minus_light_rel": 0.0
+ },
+ "G5": {
+  "errors": [],
+  "experiments": 132,
+  "fraction_pass": true,
+  "fraction_within": 0.9925558312655087,
+  "gate": "G5",
+  "gated_pairs": 403,
+  "gated_pairs_with_nonpositive_actinv": 0,
+  "gated_pairs_within_10pct": 400,
+  "geometric_mean_by_species": {
+   "H1": {
+    "geometric_mean": 0.513482759988977,
+    "pairs": 132
+   },
+   "H2": {
+    "geometric_mean": 0.9996922833603692,
+    "pairs": 129
+   },
+   "H3": {
+    "geometric_mean": 0.9999992652739952,
+    "pairs": 13
+   },
+   "He3": {
+    "geometric_mean": null,
+    "pairs": 0
+   },
+   "He4": {
+    "geometric_mean": 0.9999671085496669,
+    "pairs": 129
+   }
+  },
+  "geometric_mean_pass": false,
+  "pass": false,
+  "tail": [
+   {
+    "actinv": 1.56194599784089e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 384490.0,
+    "gated": true,
+    "material": "I",
+    "ratio": 4.062383931547998e-14,
+    "species": "H1"
+   },
+   {
+    "actinv": 3.391322430530034e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 333530.0,
+    "gated": true,
+    "material": "Br",
+    "ratio": 1.016796819035779e-13,
+    "species": "H1"
+   },
+   {
+    "actinv": 5.225595435699411e-07,
+    "experiment": "2000exp_5min",
+    "fispact": 333350.0,
+    "gated": true,
+    "material": "Cl",
+    "ratio": 1.5676002506972885e-12,
+    "species": "H1"
+   },
+   {
+    "actinv": 8.138847618785303e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 8.2505e-08,
+    "gated": true,
+    "material": "Gd",
+    "ratio": 0.986467198204388,
+    "species": "H1"
+   },
+   {
+    "actinv": 4.3948734714984835e-05,
+    "experiment": "1996exp_7hour",
+    "fispact": 4.4449e-05,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9887451847057265,
+    "species": "H1"
+   },
+   {
+    "actinv": 4.845899156920319e-07,
+    "experiment": "2000exp_5min",
+    "fispact": 4.9006e-07,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9888379294209523,
+    "species": "H1"
+   },
+   {
+    "actinv": 4.872110472721421e-07,
+    "experiment": "1996exp_5min",
+    "fispact": 4.927e-07,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9888594424033734,
+    "species": "H1"
+   },
+   {
+    "actinv": 3.306382093940559e-09,
+    "experiment": "2000exp_5min",
+    "fispact": 3.2704e-09,
+    "gated": true,
+    "material": "Os",
+    "ratio": 1.0110023525992413,
+    "species": "He4"
+   },
+   {
+    "actinv": 1.1465073158694934e-06,
+    "experiment": "2000exp_5min",
+    "fispact": 1.1361e-06,
+    "gated": true,
+    "material": "Zn",
+    "ratio": 1.0091605632158203,
+    "species": "H1"
+   },
+   {
+    "actinv": 1.0374464159303951e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 1.0284e-08,
+    "gated": true,
+    "material": "Os",
+    "ratio": 1.0087965926977782,
+    "species": "H1"
+   },
+   {
+    "actinv": 5.88068767434912e-10,
+    "experiment": "2000exp_5min",
+    "fispact": 5.8327e-10,
+    "gated": true,
+    "material": "Os",
+    "ratio": 1.0082273517151783,
+    "species": "H2"
+   },
+   {
+    "actinv": 7.5492229107349e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 7.609e-08,
+    "gated": true,
+    "material": "Se",
+    "ratio": 0.9921438967978577,
+    "species": "H1"
+   },
+   {
+    "actinv": 3.3749902922608095e-09,
+    "experiment": "2000exp_5min",
+    "fispact": 3.4014e-09,
+    "gated": true,
+    "material": "Se",
+    "ratio": 0.9922356359913005,
+    "species": "H2"
+   },
+   {
+    "actinv": 3.7395396981075377e-07,
+    "experiment": "2000exp_5min",
+    "fispact": 3.7109e-07,
+    "gated": true,
+    "material": "Zn",
+    "ratio": 1.0077177229533367,
+    "species": "He4"
+   },
+   {
+    "actinv": 1.3011437384223653e-06,
+    "experiment": "1996exp_7hour",
+    "fispact": 1.3109e-06,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9925575851875545,
+    "species": "H2"
+   },
+   {
+    "actinv": 1.6209472941157605e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 1.6327e-08,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9928016745977586,
+    "species": "H2"
+   },
+   {
+    "actinv": 1.6865741914948264e-08,
+    "experiment": "1996exp_5min",
+    "fispact": 1.6987e-08,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9928617127773159,
+    "species": "H2"
+   },
+   {
+    "actinv": 2.5078943296125075e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 2.5238e-08,
+    "gated": true,
+    "material": "Se",
+    "ratio": 0.9936977294605387,
+    "species": "He4"
+   },
+   {
+    "actinv": 3.32562121729249e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 3.3063e-08,
+    "gated": true,
+    "material": "Zn",
+    "ratio": 1.0058437580656594,
+    "species": "H2"
+   },
+   {
+    "actinv": 4.097735161132908e-06,
+    "experiment": "1996exp_7hour",
+    "fispact": 4.1154e-06,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9957076252935093,
+    "species": "He4"
+   },
+   {
+    "actinv": 4.708536327312861e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 4.7285e-08,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9957780114862769,
+    "species": "He4"
+   },
+   {
+    "actinv": 4.7850210548705127e-08,
+    "experiment": "1996exp_5min",
+    "fispact": 4.8052e-08,
+    "gated": true,
+    "material": "Mo",
+    "ratio": 0.9958006024453744,
+    "species": "He4"
+   },
+   {
+    "actinv": 3.905119160140292e-10,
+    "experiment": "2000exp_5min",
+    "fispact": 3.9136e-10,
+    "gated": true,
+    "material": "Pt",
+    "ratio": 0.9978329824561254,
+    "species": "H2"
+   },
+   {
+    "actinv": 3.4255859676979626e-09,
+    "experiment": "2000exp_5min",
+    "fispact": 3.4327e-09,
+    "gated": true,
+    "material": "Pt",
+    "ratio": 0.9979275694636766,
+    "species": "He4"
+   },
+   {
+    "actinv": 1.1835615429172059e-08,
+    "experiment": "2000exp_5min",
+    "fispact": 1.1856e-08,
+    "gated": true,
+    "material": "Pt",
+    "ratio": 0.9982806536076297,
+    "species": "H1"
+   }
+  ]
+ },
+ "G6": {
+  "failed": [],
+  "pass": false,
+  "steps": 0
+ },
+ "inputs": {
+  "candidate_sha256": "8790401032a1ea602aec8d0e8e71e5840086bc09343fb2e5efc1cabb1612ef8a",
+  "protocol_sha256": "dae429bb127ac3268590ce18a8f5d751c192856fdbae14526e1d8d2e2c06c353",
+  "reference_sha256": "0d8dc849e41ee55d6cca65157e87f7c818293aa612e7b0a07f595606f2651eba"
+ },
+ "pass": false,
+ "protocol": "ACTINV-P92"
+}

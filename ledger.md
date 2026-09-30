@@ -1877,3 +1877,71 @@ pick the same pivot. A throwaway timing build, not committed, measured one-threa
 Reuse can save at most 7/8 of the reach, about 3 % end-to-end on the heaviest profile and under 1 %
 on the iron profiles. That is below this laptop's run-to-run spread, about ±10 % (P82/P83), so an
 adoption gate could not measure it honestly. No protocol was registered and the item is closed.
+
+## Entry 71 — P92 gas production: G5 FAIL; P95 inventory-appm successor: PASS, merged (2026-09-30)
+
+**P91** (`d6a8381e…`) was withdrawn untested, before any code: it routed light ejectiles into stable
+sink states, which is wrong for tritium. It was replaced by **P92** (`dae429bb…`). P92 adds optional
+gas production (`options.gas`), off by default:
+
+- Every covered MT's light ejectiles (H1, H2, H3, He3, He4) enter the chain as ordinary inventory
+  nuclides. The table `endf6-mt-ejectiles-v1` is Z/A-balanced against each row's products.
+- Decay alphas and protons feed He4 and H1.
+- Each step reports a `gas` block. The ledger records the table version, the uncovered MTs and any
+  missing light states.
+
+With gas off, the prepared-run signature is unchanged. Candidate `87904010…`, reference `0d8dc849…`.
+Verdict `results/p92_verdict.json`:
+
+- G0, G1 PASS.
+- G2 PASS: Z/A balance with 0 failures over 36,451 TENDL-2017 rows and 93,417 TENDL-2025 rows.
+- G3 PASS: with gas off, 783 P75b specs and 3 mesh profiles are bitwise identical to the reference.
+- G4 PASS: with gas on, the inventory and activity of every non-light nuclide are exactly identical
+  over the same 783 specs.
+  - The heat clause needed one correction, recorded here. The first form,
+    `|(Q_on − L_on) − (Q_off − L_off)| ≤ 1e-9 |Q_off − L_off|`, failed where tritium dominates the
+    heat: there Q_off − L_off is a small difference of large terms. The light-nuclide heat implied
+    by the output was exactly H3's MF=8/MT=457 E_LP of 5,690 eV.
+  - After that first G4 run failed, the checker clause gained a floor, `+ 1e-12 |Q_on|`. This was
+    a change to a gate after its result, made because the relative form cannot be met at roundoff
+    under cancellation, not because physics disagreed. The worst residual against gas-on total heat
+    is 6.6e-16, so the rerun passes at roundoff. P95 registered the clause with the floor before
+    its own G4 ran.
+- **G5 FAIL:** P92 compared ACTINV with FISPACT-II/TENDL-2017 on the 132 CB3 FNS experiments.
+  - 400 of 403 gated pairs were within ±10 %.
+  - Pooled geometric-mean ratios: He4 0.99997, H2 0.99969, H3 0.9999993, **H1 0.513**
+    ([0.97, 1.03] required).
+  - The H1 miss is entirely the three hydrogenous samples (I, Br, Cl; 2000exp_5min). FISPACT-II
+    prints `APPM OF H 1` ≈ 3.3–3.8 × 10⁵ for them, the initial hydrogen atom fraction. Its printed
+    APPM is therefore inventory per 10⁶ initial atoms, including initial content. P92 compared it
+    with ACTINV's produced appm. The FAIL stands; P92 did not merge on its own.
+- G6 not run.
+
+**P95** (`3c39871e…`) was registered after the diagnosis and before the change. It
+adds `inventory_appm` per species (atoms_per_g / initial_atoms_per_g × 10⁶, FISPACT-II's printed
+convention) and `H_inventory_appm` / `He_inventory_appm`. `appm` keeps its meaning: produced appm.
+The protocol states that the outcome was largely known in advance. The checker is `check_p92.py`
+with `ACTINV_GAS_PROTOCOL=P95`; logs are in `target/p95/`. Candidate `ba842d89…`. Verdict
+`results/p95_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: fmt and clippy clean; 15/15 named tests pass.
+  - The new test uses a 10 at% H1 material. ACTINV emits no t = 0 step, so a zero-flux first step
+    stands in for it. H1 `inventory_appm` equals 1e5 to 1e-12.
+  - Produced `appm` there is 4.4e-11, the cancellation roundoff of atoms minus initial content. The
+    test bounds it at 1e-12 of the inventory, not at exact zero.
+- G2 PASS: Z/A balance.
+- G3 PASS: gas off, 783 specs + 3 mesh profiles bitwise.
+- G4 PASS: non-perturbation. Worst heat residual 6.6e-16 of gas-on total.
+- G5 PASS: **403 of 403** gated pairs within ±10 %. Geometric means: He4 0.99997, H1 0.99962,
+  H2 0.99969, H3 0.9999993. The worst pair is Gd 2000exp_5min H1 at 0.986.
+  - For species with no initial content these numbers repeat P92's. P95 is a definitional
+    correction; P92's G5 is the independent test of the gas physics.
+- G6 PASS: every local CI replay step exits 0 (23/23). The first replay failed one step, `p16`.
+  The P92 implementation had added a paragraph to `docs/QUANTITIES.md`, which P16 pins by hash.
+  The paragraph was moved to the gas section of `docs/SPEC.md` and the file restored, as in
+  `f874e61`; the second replay passed. The candidate binary was unchanged (docs only).
+
+Adopted: `options.gas` ships. Limits (v1):
+- refused with `uncertainty` and for non-neutron projectiles;
+- fission ejectiles are uncovered and listed in the ledger.

@@ -991,6 +991,7 @@ pub fn run_mesh(spec: &MeshSpec, output: impl AsRef<Path>) -> Result<MeshSummary
         spec.radiological.as_ref(),
         spec.damage.as_ref(),
         spec.self_shielding.as_ref(),
+        spec.options.gas,
     )?;
     let activation_boundaries = prepared.library_boundaries_eV().to_vec();
     if activation_boundaries.len() != prepared.library_groups() + 1 {
