@@ -12,6 +12,8 @@
 [![Download ACTINV](https://img.shields.io/badge/Download-ACTINV-1800AD?style=for-the-badge)](https://actinv.avilalabs.org/download/)
 [![Open in browser](https://img.shields.io/badge/Open_in-browser-1800AD?style=for-the-badge)](https://actinv.avilalabs.org/)
 
+[Read the ACTINV Handbook](https://actinv.avilalabs.org/docs/)
+
 **Download ACTINV** selects the desktop installer for your computer when the browser can identify it.
 If it cannot, choose from the downloads shown. No Rust or Python is needed.
 **Windows:** open the installer, then launch
@@ -108,7 +110,7 @@ actinv run problem.json result.json
 
 `actinv new` creates the complete FNS iron example, including its spectrum, without overwriting an existing file.
 Use `--data-dir /path/to/actinv-data` if you installed data elsewhere. Edit its material and history for your study.
-`validate` checks the specification without requiring downloaded data. Add `--files` to check readable inputs
+`validate` checks the specification; symbolic catalog references must resolve to installed artifacts. Add `--files` to check readable inputs
 (including library indexes), or `--hashes` to also check declared hashes. Evaluated-data compatibility is checked during a run.
 Use `actinv doctor problem.json` to diagnose setup and `actinv COMMAND --help` for command help.
 
@@ -339,16 +341,14 @@ evidence and complete limitations.
 
 ## Documentation
 
-[Desktop guide](docs/DESKTOP.md) · [Browser guide](docs/WEB.md) ·
-[Specification](docs/SPEC.md) · [Data sources](docs/DATA.md) · [Method](docs/METHOD.md) ·
-[Validation](docs/VALIDATION.md) · [Qualification boundary](docs/QUALIFICATION.md) ·
-[Known data limitations](docs/DATA_LIMITATIONS.md) ·
-[Competitive benchmark](COMPETITIVE_BENCHMARK.md) · [Ledger](docs/LEDGER.md) ·
-[P17 held-out validation](docs/P17_HELDOUT_VALIDATION.md) ·
-[Harness](docs/HARNESS.md) · [Roadmap](docs/ROADMAP.md) ·
-[v1.0 release notes](docs/RELEASE_NOTES_v1.0.md)
+Read the [ACTINV Handbook](https://actinv.avilalabs.org/docs/) for installation, a first calculation, results, data setup, troubleshooting, benchmark interpretation, and CLI/Python reference. You can also [browse its Markdown source](docs/guide/index.md) in this repository.
 
-Maintainers can run the bounded release preflight described in [docs/PREFLIGHT.md](docs/PREFLIGHT.md).
+[Start a calculation](docs/guide/quick-start.md) · [Problem specification](docs/guide/specification.md) ·
+[Data setup](docs/guide/data.md) · [Competitive benchmark explained](docs/guide/benchmarks.md) · [Scope and qualification](docs/guide/qualification.md)
+
+Technical evidence and contributor material remain in the repository:
+[benchmark report](COMPETITIVE_BENCHMARK.md), [validation records](docs/VALIDATION.md),
+[data-source record](docs/DATA.md), and [maintainer documentation](docs/maintainers/DOCUMENTATION.md).
 
 ## Contributing and licence
 

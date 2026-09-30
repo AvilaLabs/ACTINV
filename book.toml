@@ -1,10 +1,33 @@
 [book]
-title = "ACTINV"
-src = "docs"
+title = "ACTINV Handbook"
+authors = ["Avila Labs"]
+description = "Install ACTINV, calculate activation and decay, and understand your results."
+language = "en"
+src = "docs/guide"
 
 [build]
-build-dir = "scratch/mdbook-demo/book"
+build-dir = "dist/docs"
+create-missing = false
 
 [output.html]
 default-theme = "rust"
+preferred-dark-theme = "navy"
 mathjax-support = true
+git-repository-url = "https://github.com/AvilaLabs/ACTINV"
+edit-url-template = "https://github.com/AvilaLabs/ACTINV/edit/master/{path}"
+site-url = "/docs/"
+
+[output.html.playground]
+runnable = false
+
+[output.html.redirect]
+"SPEC.html" = "specification.html"
+"DATA.html" = "data.html"
+"DESKTOP.html" = "desktop.html"
+"DESKTOP_INSTALL.html" = "install.html"
+"WEB.html" = "browser.html"
+"METHOD.html" = "method.html"
+"QUALIFICATION.html" = "qualification.html"
+"DATA_LIMITATIONS.html" = "data-limits.html"
+"VALIDATION.html" = "validation.html"
+"COMPETITIVE_BENCHMARK.html" = "benchmarks.html"
