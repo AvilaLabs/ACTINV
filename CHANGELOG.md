@@ -12,6 +12,10 @@
   with an `actinv mesh` run and hands the decay photon sources back to OpenMC. Step 1 tallies only
   the flux, so 709-group runs do not tally every chain reaction. Unit tests run without OpenMC
   installed (skipped) or with it; known limits are listed in its README.
+- Python: `actinv.budget(budget, base_dir=None, verify=True)` runs an `actinv-budget-1` mapping or file
+  and returns the `actinv-budget-result-1` document, identical to `actinv budget` apart from timing
+  keys. A file is passed through verbatim, so `budget_sha256` is the file's hash, as on the command
+  line. A failed verification is returned in the document, not raised (P87, P89).
 
 **Fixed**
 

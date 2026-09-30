@@ -1805,3 +1805,75 @@ Adopted. Effect: in the workbench live sweep and the other cached-run paths, a f
 the second distinct spectrum reuses in-memory groupwise data. No collapsed artifact is written per
 flux level any more, so these writes no longer accumulate under `~/.cache/actinv/prepared-v1`. The cost
 is about 275 MB resident for the groupwise slot (TENDL-2025, 709 groups).
+
+## Entry 68 — P87 Python `budget` binding: G2 FAIL; P88 direct canonical mesh cell text: G5 FAIL; neither merged (2026-09-30)
+
+**P87** (`cb9f187e…`, registered before the binding was written) adds `actinv.budget` to the Python
+module, as native `budget`/`budget_json` plus a `budget(budget, *, base_dir=None, verify=True)`
+wrapper modelled on `decide`, with docs and two unit tests. Verdict `results/p87_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: Python crate fmt and clippy clean; the wheel builds; 4/4 Python tests pass.
+- G3 PASS: every local CI replay step exits 0.
+- **G2 FAIL:** on both P79 inputs, the Python and CLI documents differ in exactly one field,
+  `budget_sha256`. The wrapper parsed the budget file and serialized it again, so the native call
+  hashed different text from the file. Every physics, verification and summary field was equal. The
+  defect is real: from Python, the recorded provenance hash of a budget file did not identify the
+  file. Fixed under P89 (entry 69).
+
+**P88** (`c16d6287…`) wrote mesh cell result text directly in the `serde_json::Value` route's
+canonical order: keys sorted, last duplicate wins, scalars formatted through `Value`, and anything
+unusual falling back to the `Value` route. Reference `0d8dc849…` (master `ba97c5d`); candidate
+`73ca83a0…`. Verdict `results/p88_verdict.json`:
+
+- G0, G1 PASS, including four byte-equality unit tests. G1 deviation: the protocol named a unit test
+  on "a real `RunResult` from a fixture run". The crate has no in-crate solver fixture, so the test
+  uses a hand-built `RunResult` with every output field kind populated. Real solver output is covered
+  by G2.
+- G2 PASS: byte-identical on `fe_coupled`, `fe_p21like` and `ss316_r2s` at 1 and 3 threads, and on
+  the `group_workloads`, resume and `cell_result_fields` variants.
+- G3 PASS: every local CI replay step exits 0.
+- **G5 FAIL:** `ss316_r2s` at 1 thread, median 9.34 → 9.19 s, **1.02×** against 1.15×. Reported
+  only: 3 threads 0.93×; iron profiles 0.97–1.01×.
+
+Diagnosed after the verdict with a throwaway per-cell timing build, not committed. Every
+`ss316_r2s` cell took the new writer; none fell back. The writer took 33–78 ms per cell, against
+26–58 ms for `to_value` plus `to_string` on the same cells, so the generic sorted writer spends about
+as much as it saves. The main costs are the per-number `Value` conversion, per-object key and slot
+buffers, and re-copying every object whose fields arrive unsorted (every inventory entry and every
+step). The FAIL stands. The code is kept on local branch `p88-canonical-json` (`bd7ebdc`); master is
+unchanged.
+
+## Entry 69 — P89 Python `budget` passes a budget file through verbatim: PASS, merged (2026-09-30)
+
+P89 (`a81b425c…`) was registered after P87's G2 FAIL and before the fix. It is the P87 binding with
+one change: for a path, the wrapper reads the file's text and passes it to the native call unchanged,
+so `budget_sha256` is the file's hash, as on the command line. A mapping is serialized with
+`json.dumps`, and its hash covers that text; the docstring and `docs/BUDGET.md` say so. One new
+unit test writes a budget with formatting `json.dumps` would not reproduce and checks
+`budget_sha256` against the file's bytes. Verdict `results/p89_verdict.json`:
+
+- G0 PASS.
+- G1 PASS: fmt and clippy clean; the wheel builds; 5/5 Python tests pass.
+- G2 PASS: `ss316ln_exvessel` and `eurofer97_exvessel`, verification on. The Python and CLI documents
+  are equal after removing `ms` and `elapsed_ms`, `budget_sha256` included, and both verified.
+- G3 PASS: every local CI replay step exits 0, with release `actinv` `0d8dc849…`, byte-identical to
+  master's.
+
+Adopted: `actinv.budget` ships in the Python module.
+
+## Entry 70 — LU symbolic reuse across CRAM poles: measured, not pursued (2026-09-30)
+
+The remaining roadmap item was to reuse the LU symbolic structure (the Gilbert–Peierls reach) across
+the eight poles of a CRAM step. With partial pivoting that is exact only if every column is shown to
+pick the same pivot. A throwaway timing build, not committed, measured one-thread `ss316_r2s` over
+60 cells (`target/p88/lu_probe_ss316.txt`, local):
+
+- The solve is 57 ms per cell; LU is 13.3 ms of that over 16 calls (2 steps × 8 poles).
+- The reach is 5.3 ms, 40 % of LU time.
+- A whole cell takes about 156 ms, so the reach is 3.4 % of it.
+- On `fe_coupled` the reach is 0.17 ms of an 18.6 ms solve.
+
+Reuse can save at most 7/8 of the reach, about 3 % end-to-end on the heaviest profile and under 1 %
+on the iron profiles. That is below this laptop's run-to-run spread, about ±10 % (P82/P83), so an
+adoption gate could not measure it honestly. No protocol was registered and the item is closed.

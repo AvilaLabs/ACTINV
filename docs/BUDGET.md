@@ -73,6 +73,22 @@ them. See `results/p79_verdict.json` and `results/p79a_verdict.json` for the acc
 bundled IAEA table) shows `no clearance-index response`; its activity is listed as uncovered, not
 cleared. Check `top_uncovered_nuclides_Bq_g_at_spec` before trusting such a status.
 
+## Python
+
+```python
+import actinv
+
+doc = actinv.budget("budget.json")                       # verify=True by default
+doc = actinv.budget(mapping, base_dir="components", verify=False)
+```
+
+`budget` accepts a mapping or a path to an `actinv-budget-1` file. For a path, `base_dir` defaults
+to the file's own directory, so a relative `base_spec` resolves as it does on the command line. A
+file is passed through verbatim, so `budget_sha256` is the hash of its bytes; for a mapping it is
+the hash of the `json.dumps` text. A failed verification is not an exception: the
+`actinv-budget-result-1` document is still returned, and its `verification` block records the
+failure (the CLI's exit code 3 has no Python equivalent).
+
 **Table provenance.** `data/clearance_iaea_2004.json` is the svalinn/ALARA transcription
 (`IAEA.clearance.2004.Bq_kg`, converted to Bq/g). Its `source` field says RS-G-1.7 Table 2, but it
 also carries Table 1 natural-origin values (K-40 at 10 Bq/g; Gd-152, Hf-174 and Re-187 at 1 Bq/g).

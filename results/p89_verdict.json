@@ -1,0 +1,54 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "install": "0",
+   "pytest": "0",
+   "wheel": "0"
+  },
+  "pass": true,
+  "unit_tests": {
+   "test_budget_file_hash_is_the_file_bytes": true,
+   "test_budget_mapping_and_path_parity": true,
+   "test_budget_schema_error_raises": true
+  }
+ },
+ "G2": {
+  "inputs": {
+   "eurofer97_exvessel": {
+    "cli_returncode": 0,
+    "documents_equal": true,
+    "pass": true,
+    "verified_cli_python": [
+     true,
+     true
+    ]
+   },
+   "ss316ln_exvessel": {
+    "cli_returncode": 0,
+    "documents_equal": true,
+    "pass": true,
+    "verified_cli_python": [
+     true,
+     true
+    ]
+   }
+  },
+  "pass": true
+ },
+ "G3": {
+  "failed": [],
+  "pass": true,
+  "steps": 23
+ },
+ "inputs": {
+  "cli_sha256": "0d8dc849e41ee55d6cca65157e87f7c818293aa612e7b0a07f595606f2651eba",
+  "protocol_sha256": "a81b425c5b7a14edb448eb2404112bad2753d5b9df0e8be150a970ec9dd6ef76"
+ },
+ "pass": true,
+ "protocol": "ACTINV-P89"
+}

@@ -163,7 +163,8 @@ def reverse(problem, measurements, *, segments=False):
 
 
 decide_json = _decide_json = decide      # native bindings, before the
-optimize_json = _optimize_json = optimize  # wrapper functions shadow them
+budget_json = _budget_json = budget      # wrapper functions shadow them
+optimize_json = _optimize_json = optimize
 
 
 def decide(decision, *, base_dir=None):
@@ -180,6 +181,31 @@ def decide(decision, *, base_dir=None):
         None if base_dir is None else _os.fspath(base_dir)))
 
 
+def budget(budget, *, base_dir=None, verify=True):
+    """Run an actinv-budget-1 mapping (or file path) and return the
+    actinv-budget-result-1 document. `base_spec` and `limits` paths inside
+    the budget resolve against `base_dir`, which for a file path defaults to
+    that file's directory, and for a mapping defaults to the current
+    directory.
+
+    A file is passed through verbatim, so `budget_sha256` is the hash of its
+    bytes, as on the command line; for a mapping it is the hash of the
+    `json.dumps` text sent to the solver.
+
+    A failed verification is not an exception: the document is still
+    returned and its `verification` block records the failure (the `actinv
+    budget` CLI exits 3 in that case; there is no Python equivalent)."""
+    if isinstance(budget, (_os.PathLike, str)):
+        budget = _Path(budget)
+        if base_dir is None:
+            base_dir = str(budget.resolve().parent)
+        text = budget.read_bytes().decode("utf-8")
+    else:
+        text = _json.dumps(dict(budget), allow_nan=False)
+    return _json.loads(_budget_json(
+        text, None if base_dir is None else _os.fspath(base_dir), verify))
+
+
 def optimize(optspec_path, *, outdir=None, resume=False):
     """Run an actinv-optimize-1 design search by path; returns the result
     summary dict. The ledger lands in `outdir` (default: `optimize_out`
@@ -194,4 +220,4 @@ def optimize(optspec_path, *, outdir=None, resume=False):
 __all__ = ["__version__", "_cli", "cram_step", "broaden", "run", "run_json",
            "reverse", "reverse_json", "validate", "Material", "Spectrum",
            "Schedule", "Problem", "Result", "solve", "decide", "optimize",
-           "decide_json", "optimize_json"]
+           "decide_json", "optimize_json", "budget", "budget_json"]
