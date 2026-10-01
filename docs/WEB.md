@@ -38,7 +38,9 @@ Install the `wasm32-unknown-unknown` Rust target and [Trunk](https://github.com/
 
 ```sh
 trunk build --config crates/actinv-gui/Trunk.toml --release --locked --public-url ./
-python3 scripts/prepare_web.py dist/web
+mdbook build
+python3 scripts/check_docs.py dist/docs
+python3 scripts/prepare_web.py dist/web --docs dist/docs
 python3 -m http.server 8080 --directory dist/web --bind 127.0.0.1
 ```
 
@@ -49,7 +51,8 @@ With that server running, `npm ci --prefix web` installs the pinned browser-test
 Run `web/node_modules/.bin/playwright install chromium`, `npm test --prefix web`, and
 `npm run smoke --prefix web` to check platform detection, browser startup, and installer selection.
 
-The `web.yml` workflow checks and builds the bundle, then saves an `actinv-web` artifact.
+The `web.yml` workflow checks and builds the app, download page, and handbook at `/docs/`, then saves an `actinv-web` artifact.
+Use mdBook 0.5.4; see [handbook maintenance](maintainers/DOCUMENTATION.md) for documentation-only builds and checks.
 Hosting uses Cloudflare Workers Static Assets. After building and checking the bundle, run
 `npx wrangler@4 deploy --config wrangler.jsonc` from an authenticated maintainer checkout.
 The config connects `actinv.avilalabs.org`; Cloudflare manages its DNS record and TLS certificate.

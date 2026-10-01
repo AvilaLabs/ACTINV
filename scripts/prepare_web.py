@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Add the download page to a built ACTINV browser bundle.
+"""Add the download page and optional handbook to an ACTINV browser bundle.
 
 Desktop asset names follow scripts/package_desktop.py. The release version is
 read from packaging/desktop.json so the site and installers stay together.
@@ -14,7 +14,14 @@ import shutil
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def prepare(destination: Path) -> None:
+def prepare(destination: Path, docs: Path | None = None) -> None:
+    if docs is not None and not (docs / "index.html").is_file():
+        raise ValueError(f"Handbook is not built at {docs}; run mdbook build first")
+    if docs is not None:
+        source = docs.resolve()
+        target = (destination / "docs").resolve()
+        if source.is_relative_to(target) or target.is_relative_to(source):
+            raise ValueError("Handbook source and packaged destination must not overlap")
     desktop = json.loads((ROOT / "packaging/desktop.json").read_text())
     version = desktop["version"]
     release = f"https://github.com/AvilaLabs/ACTINV/releases/download/desktop-v{version}"
@@ -38,9 +45,18 @@ def prepare(destination: Path) -> None:
         json.dumps({"version": version, "platforms": platforms}, indent=2) + "\n"
     )
     (destination / ".nojekyll").touch()
+    if docs is not None:
+        handbook = destination / "docs"
+        # Replacing the generated directory removes chapters retired since the
+        # previous build, including their old search index and assets.
+        if handbook.exists():
+            shutil.rmtree(handbook)
+        shutil.copytree(docs, handbook)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("destination", type=Path)
-    prepare(parser.parse_args().destination)
+    parser.add_argument("--docs", type=Path, help="Built mdBook directory to serve at /docs/")
+    args = parser.parse_args()
+    prepare(args.destination, args.docs)

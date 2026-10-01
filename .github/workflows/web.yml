@@ -10,6 +10,10 @@ on:
       - 'Cargo.lock'
       - 'packaging/desktop.json'
       - 'scripts/prepare_web.py'
+      - 'scripts/check_docs.py'
+      - 'scripts/test_prepare_web.py'
+      - 'book.toml'
+      - 'docs/guide/**'
       - 'web/**'
       - '.github/workflows/web.yml'
   pull_request:
@@ -20,6 +24,10 @@ on:
       - 'Cargo.lock'
       - 'packaging/desktop.json'
       - 'scripts/prepare_web.py'
+      - 'scripts/check_docs.py'
+      - 'scripts/test_prepare_web.py'
+      - 'book.toml'
+      - 'docs/guide/**'
       - 'web/**'
       - '.github/workflows/web.yml'
   workflow_dispatch:
@@ -48,15 +56,19 @@ jobs:
           node-version: '22'
       - name: Check platform detection
         run: node --test web/download/platform.test.mjs
+      - name: Check static bundle packaging
+        run: python3 scripts/test_prepare_web.py
       - name: Check browser Rust
         run: cargo clippy --locked -p actinv-gui --lib --no-default-features --target wasm32-unknown-unknown -- -D warnings
       - uses: taiki-e/install-action@dfae9bf3d6f6c6f20ef4ebb3486c01a51341ff12 # v2.87.18
         with:
-          tool: trunk
-      - name: Build browser bundle and download page
+          tool: trunk,mdbook@0.5.4
+      - name: Build browser bundle, download page, and handbook
         run: |
           trunk build --config crates/actinv-gui/Trunk.toml --release --locked --public-url ./
-          python3 scripts/prepare_web.py dist/web
+          mdbook build
+          python3 scripts/check_docs.py dist/docs
+          python3 scripts/prepare_web.py dist/web --docs dist/docs
       - name: Check built app and downloads in Chromium
         run: |
           npm ci --prefix web --ignore-scripts
