@@ -28,6 +28,10 @@
   response reports `flux_sensitivities` and the fully correlated bound `flux_fully_correlated_bound`.
   Checked against central finite differences on an unseen spec set (2097/2097 within tolerance) and
   against sampling on the P32 cube (P93, P96, P97).
+- Mesh `cell_result_fields` accepts dotted `steps.<field>[.<key>...]` entries, built directly from the
+  selected fields without serializing the whole result. The OpenMC R2S adapter now keeps only
+  `steps.photon_source.groups` per step: `ss316_r2s` cells are 1.26x faster at 1 thread and write 4.6 %
+  of the bytes. Output without dotted entries is unchanged (P90).
 
 **Fixed**
 

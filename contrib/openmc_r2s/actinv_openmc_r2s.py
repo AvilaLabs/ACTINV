@@ -283,7 +283,10 @@ class ActinvR2SManager(openmc.deplete.R2SManager):
             "flux": {"path": str(flux_path.resolve()),
                      "sha256": hashlib.sha256(flux_path.read_bytes()).hexdigest()},
             "schedule": schedule, "options": self.options, "photon": self.photon,
-            "threads": self.threads, "cell_result_fields": ["mode", "steps", "ledger"],
+            "threads": self.threads,
+            # P90: step 3 only reads photon_source.groups (parse_photon_groups below), so the
+            # mesh output no longer carries the full inventory/activity/heat per step.
+            "cell_result_fields": ["mode", "ledger", "steps.photon_source.groups"],
         }
         spec_path = output_dir / "mesh.json"
         spec_path.write_text(json.dumps(spec, indent=1))

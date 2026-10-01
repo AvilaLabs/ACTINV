@@ -12,7 +12,7 @@ Use `actinv --version` for the executable. `actinv data manifest` prints its emb
 
 ## Current master
 
-The source branch also contains unreleased impurity-budget workflows, the Python `budget` helper, hydrogen/helium isotope production through `options.gas`, and transport-tally statistical error propagation through the `flux` uncertainty channel. These additions are described in the [Unreleased changelog](https://github.com/AvilaLabs/ACTINV/blob/master/CHANGELOG.md#unreleased); they are not promised by the published 1.3.1 packages or older desktop preview.
+The source branch also contains unreleased impurity-budget workflows, the Python `budget` helper, hydrogen/helium isotope production through `options.gas`, transport-tally statistical error propagation through the `flux` uncertainty channel, and lean mesh output through dotted `steps.<field>` entries in `cell_result_fields`. These additions are described in the [Unreleased changelog](https://github.com/AvilaLabs/ACTINV/blob/master/CHANGELOG.md#unreleased); they are not promised by the published 1.3.1 packages or older desktop preview.
 
 For these features, use a source build at a recorded commit and the current field reference. The workspace version can still read 1.3.1 before the next release, so record the commit as well as `actinv --version`.
 

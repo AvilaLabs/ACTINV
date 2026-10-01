@@ -9,7 +9,7 @@ The [complete mesh reference](guide/specification.md#independent-mesh-specificat
 | Field | Purpose |
 | --- | --- |
 | `group_workloads` | Reuse results for identical compatible cell spectra; set to `false` for the identity comparison |
-| `cell_result_fields` | Select the top-level result fields retained in each cell record |
+| `cell_result_fields` | Select the top-level result fields, or dotted `steps.<field>[.<key>...]` paths, retained in each cell record |
 | `memory_limit_bytes` | Check process peak memory after each completed chunk and abort on a breach; it is a post-hoc guard |
 | `resume` | Continue a compatible checkpoint using complete, ordered cell records |
 | `spec_fingerprint_sha256` | Header identity for calculation content; scheduling, resume, and memory-guard settings are excluded |

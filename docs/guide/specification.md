@@ -568,7 +568,22 @@ solved result (keyed by the SHA-256 of the f64 little-endian group bytes, memo b
 Reuse changes only scheduling — every cell record is bit-identical to a `group_workloads: false` run, and the
 footer records the count as `cells_served_from_reuse`. `cell_result_fields` keeps only the named top-level
 `RunResult` fields in each cell record; absent means the complete record, and an unknown name is rejected at
-validation. `memory_limit_bytes` is a post-hoc guard: after each completed chunk the process peak RSS
+validation.
+
+An entry can also be dotted, `steps.<field>[.<key>...]` (P90), to keep only part of each step instead of the
+whole `steps` array: `<field>` must be a `StepOut` field (e.g. `heat_W_per_g`, `photon_source`), and further
+segments descend through JSON objects — `steps.photon_source.groups` keeps only `photon_source.groups` (with
+every key of each group entry, since the path ends there), dropping `photon_source`'s other fields and every
+other step field. `steps` and a `steps.<field>` entry cannot both appear. A path that reaches an array or a
+scalar with segments still to consume is rejected at validation, as is a key that does not exist at that point
+in `StepOut`'s shape — except inside a nuclide- or response-keyed map (`activity_Bq_per_g`, `uncertainty.responses`,
+`damage.elements`), which can only be selected whole, not narrowed to one dynamic key. A selected field that is
+absent in a given step (e.g. `photon_source` with no photon output) is left out of that step's object, exactly as
+in the complete record; every emitted step object otherwise holds `step` plus the selected paths. With any dotted
+entry present, the cell text is assembled directly from `RunResult`/`StepOut` fields rather than by serializing
+and then pruning the whole result, so a large unselected field (e.g. the per-nuclide inventory) is never built.
+
+`memory_limit_bytes` is a post-hoc guard: after each completed chunk the process peak RSS
 (`/proc/self/status` `VmHWM`) is compared to the limit and the run aborts with a named error carrying both numbers.
 It is refused at validation on platforms without that accounting (it could never fire there). Without `resume`
 the output is written atomically, so a tripped guard keeps no completed cells; pair it with `resume: true`.
