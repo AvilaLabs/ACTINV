@@ -1,4 +1,6 @@
-# Nuclear data
+# Nuclear data — source and processing record
+
+For current setup, bundle selection, and cache behavior, start with the [ACTINV Handbook data guide](guide/data.md). This technical record retains provider identities, extraction details, and historical controls.
 
 ## Easiest setup
 
@@ -33,8 +35,8 @@ actinv data manifest
 The default is `tendl-2025-neutron`, the full 2,850-target TENDL-2025 neutron sublibrary — flipped from the
 `tendl-2025-patched-neutron` subset after the P46 corpus comparison measured the subset as worst on the FNS
 benchmark (coverage loss on 1,172 fail-closed targets outweighed its confirmed-signature repair; see
-`DATA_LIMITATIONS.md`). `tendl-2025-patched-neutron` remains the required pairing for covariance work and is
-preferred for thermal/mixed-spectrum problems where its zeroed (n,p) leak matters. Other bundles:
+`DATA_LIMITATIONS.md`). Each neutron corpus has its own matching covariance sidecar; full/full and patched/patched
+pairings are supported. The patched corpus is preferred for thermal/mixed-spectrum problems where its zeroed (n,p) leak matters. Other bundles:
 `tendl-2025-patched-neutron`, `tendl-2025-neutron-covariance`, `tendl-2025-patched-neutron-covariance`,
 `tendl-2025-proton`, `tendl-2025-deuteron`, and `tendl-2025-alpha`; pass one after `fetch` or `verify`.
 Shared decay files are reused when multiple bundles use the same output directory.

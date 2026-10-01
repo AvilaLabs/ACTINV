@@ -2018,3 +2018,34 @@ Adopted: the flux channel ships.
 Performance note for later: a flux-only run costs about 6× a nominal run (46 s against 7.5 s on
 the G4 cube). One tangent solve per group direction is the obvious reduction. It is not pursued
 here.
+
+## Entry 73 — P90 lean R2S mesh output: PASS, merged (2026-09-30)
+
+**P90** (`c0b4cdad…`).
+- **Change:** `cell_result_fields` accepts dotted `steps.<field>[.<key>…]` entries. With any
+  dotted entry, the cell text is assembled from the selected `RunResult`/`StepOut` fields through
+  explicit accessors, and the whole result is never serialized. The OpenMC R2S adapter's default
+  becomes `["mode", "ledger", "steps.photon_source.groups"]`.
+- **Branch history:** built from `e546292`, then master was merged in before any gated run. Master
+  then carried the P95 gas and P97 flux-channel code. The merge needed `gas` added to the step
+  accessor lists, to the maximal `StepOut` shape and to the minimal test step. The accessor
+  completeness tests exist to catch exactly that.
+- **Reference:** `0d8dc849…`.
+
+Verdict `results/p90_verdict.json` on candidate `35ff18d4…`, **PASS**:
+- G0 PASS.
+- G1 PASS: fmt, clippy `-D warnings`, tests, release build.
+- G2 PASS: `fe_coupled`, `fe_p21like` and `ss316_r2s` at 1 and 3 threads, bitwise apart from footer
+  timing. The `group_workloads`, `cell_result_fields` and `resume` variants also pass.
+- G3 PASS: subtree equality on `fe_coupled` and `ss316_r2s` between the lean and the full output.
+- G4 PASS: the adapter's 25 unit tests pass with the new default.
+- G5 PASS: CI replay 23/23.
+- G6 PASS: `ss316_r2s` at 1 thread, median of 5 alternating repetitions. The candidate took 7.98 s
+  against the reference's 10.04 s, **1.259×** against a 1.25× gate. That is a thin margin; the
+  result stands as measured. Reported only: 1.40× at 3 threads (3.90 s against 5.48 s); output
+  bytes 4.6 % of the full record.
+
+After the verdict, master's docs-only handbook commits (`bc760a7`, `c7c9b48`, `02db9b1`) were
+merged. They have no Rust changes, and the binary embeds no docs. `docs/SPEC.md` became a stub
+there, so P90's dotted-field paragraph moved to `docs/guide/specification.md`, and the stub's field
+table names the dotted form.

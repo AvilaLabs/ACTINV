@@ -75,8 +75,10 @@ names, or links. Author and committer stay the repo owner's identity.
   upstream bugs — but treat them as internal QA, not leadership levers.
   The axes that matter are accuracy, speed, and capability breadth.
 
-- Future public docs site (owner picked the look, 2026-09-25): **mdBook**,
+- Public handbook (owner picked the look, 2026-09-25): **mdBook**,
   rust theme — i.e. the rust-analyzer manual style, not Sphinx/MkDocs.
-  Untracked demo scaffold left in place: `book.toml` + generated
-  `docs/SUMMARY.md` (grouping is auto-guessed, needs curation; many docs
-  are stale). Binary + build output under `scratch/mdbook-demo/`.
+  Current user documentation lives in `docs/guide/`, with curated
+  `SUMMARY.md` navigation. See `docs/maintainers/DOCUMENTATION.md` for
+  builds, checks, and web packaging. Historical records and maintainer
+  procedures stay outside the public book source. The original demo
+  binary and reference build remain under `scratch/mdbook-demo/`.

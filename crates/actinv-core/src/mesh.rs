@@ -1,20 +1,26 @@
 #![allow(non_snake_case)] // JSON wire names carry their physical units.
 //! Deterministic, bounded-memory independent-cell activation runner.
 
+use crate::damage::DamageStepOut;
 use crate::flux::{
     atomic_output, rebin_equal_lethargy, sha256_file, FluxCell, FluxGeometry, FluxSource,
     FluxStream, RebinResult,
 };
-use crate::run::{CellCollapse, MeshFluxOrigin, PreparedRun, RunResult};
+use crate::photon::PhotonSourceOut;
+use crate::radiological::RadiologicalStepOut;
+use crate::run::{
+    CellCollapse, GasOut, GasSpecies, Heat, MeshFluxOrigin, PreparedRun, RunResult, StepOut,
+};
 use crate::spec::{
     DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, Material, Options,
     PhotonOptions, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum, Step,
     UncertaintyOptions,
 };
+use crate::uncertainty::StepUncertainty;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::fs::File;
 use std::io::{BufRead, BufWriter, Seek, SeekFrom, Write};
 use std::path::{Path, PathBuf};
@@ -54,6 +60,82 @@ const RESULT_FIELDS: &[&str] = &[
     "ledger",
     "certificate",
     "ms",
+];
+
+/// Every key `RunResult` serializes to (a superset of `RESULT_FIELDS`: `screen`
+/// and `isomer_pathway_shares` are not selectable through `cell_result_fields`,
+/// but `run_result_field` still has to know them so a future field can't be
+/// added to the struct without a matching accessor arm going unnoticed). Used
+/// only by the accessor-completeness unit tests: `run_result_field`'s match
+/// arms are checked against this list there, not read at runtime.
+#[cfg(test)]
+const RUN_RESULT_ACCESSOR_FIELDS: &[&str] = &[
+    "spec_title",
+    "entry_point",
+    "projectile",
+    "mode",
+    "pruned_states",
+    "total_states",
+    "steps",
+    "pathways",
+    "screen",
+    "pathway_closure",
+    "isomer_pathway_shares",
+    "ledger",
+    "certificate",
+    "ms",
+];
+
+/// `RunResult` fields that are absent (key omitted) rather than serialized as
+/// `null` when unset (`#[serde(skip_serializing_if = "Option::is_none")]`).
+/// `run_result_field` reports these as `Value::Null` when unset; none of them
+/// can otherwise ever serialize to a literal `null`, so the sentinel is
+/// unambiguous for exactly this set.
+const RESULT_OPTIONAL_FIELDS: &[&str] = &["projectile", "screen", "isomer_pathway_shares"];
+
+/// Every key `StepOut` serializes to. Used both to validate `steps.<field>`
+/// selections and, together with `RUN_RESULT_ACCESSOR_FIELDS`, to check that
+/// `step_field`/`run_result_field` have a match arm for every field a future
+/// change might add.
+const STEP_FIELDS: &[&str] = &[
+    "step",
+    "t_s",
+    "flux",
+    "flux_weighted_time_s",
+    "fluence_n_cm2",
+    "fluence_particles_cm2",
+    "inventory",
+    "activity_Bq_per_g",
+    "heat_W_per_g",
+    "leakage_atoms_per_g",
+    "removed_atoms_per_g",
+    "negative_atoms_zeroed",
+    "total_atoms_per_g",
+    "n_states_populated",
+    "numerical_floor_atoms_per_g",
+    "n_states_below_floor",
+    "atoms_below_floor",
+    "heat_bound_from_below_floor_W_per_g",
+    "photon_source",
+    "uncertainty",
+    "radiological",
+    "damage",
+    "gas",
+];
+
+/// `StepOut` fields that are absent (key omitted) rather than serialized as
+/// `null` when unset. See `RESULT_OPTIONAL_FIELDS`: none of these can
+/// otherwise serialize to a literal `null`, so `Value::Null` is an
+/// unambiguous "unset" sentinel for exactly this set.
+const STEP_OPTIONAL_FIELDS: &[&str] = &[
+    "fluence_n_cm2",
+    "fluence_particles_cm2",
+    "removed_atoms_per_g",
+    "photon_source",
+    "uncertainty",
+    "radiological",
+    "damage",
+    "gas",
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -144,12 +226,28 @@ impl MeshSpec {
             return Err(format!("threads must be between 1 and {MAX_THREADS}"));
         }
         if let Some(fields) = &self.cell_result_fields {
+            let mut has_plain_steps = false;
+            let mut has_dotted_steps = false;
             for field in fields {
+                if field == "steps" {
+                    has_plain_steps = true;
+                    continue;
+                }
+                if let Some(rest) = field.strip_prefix("steps.") {
+                    has_dotted_steps = true;
+                    validate_step_path(rest)?;
+                    continue;
+                }
                 if !RESULT_FIELDS.contains(&field.as_str()) {
                     return Err(format!(
                         "cell_result_fields entry '{field}' is not a run-result field"
                     ));
                 }
+            }
+            if has_plain_steps && has_dotted_steps {
+                return Err(
+                    "cell_result_fields cannot combine 'steps' with a 'steps.<field>' entry".into(),
+                );
             }
         }
         if self.memory_limit_bytes.is_some_and(|limit| limit == 0) {
@@ -560,6 +658,347 @@ fn solve_cells(
     solved
 }
 
+/// Selected `steps.<field>[.<key>...]` entries of `cell_result_fields`, split
+/// on `.` past the `steps.` prefix. Empty when there are none (P90's
+/// unchanged route then applies).
+fn dotted_step_paths(fields: &[String]) -> Vec<Vec<&str>> {
+    fields
+        .iter()
+        .filter_map(|field| {
+            field
+                .strip_prefix("steps.")
+                .map(|rest| rest.split('.').collect())
+        })
+        .collect()
+}
+
+/// Validate one `steps.<rest>` entry: `<rest>`'s first segment must be a
+/// `StepOut` field, and every further segment must descend through a JSON
+/// object (checked against `maximal_step_out`'s shape — a `StepOut` with
+/// every optional field populated, so absence in a particular run's step
+/// never makes a structurally valid path look invalid). A dynamic map
+/// (`activity_Bq_per_g`, `uncertainty.responses`, `damage.elements`) is left
+/// empty in that shape, so a path cannot go past it into a data-dependent
+/// key; only the map itself is selectable.
+fn validate_step_path(rest: &str) -> Result<(), String> {
+    let segments: Vec<&str> = rest.split('.').collect();
+    if segments.iter().any(|segment| segment.is_empty()) {
+        return Err(format!(
+            "cell_result_fields entry 'steps.{rest}' has an empty path segment"
+        ));
+    }
+    let (field, tail) = segments
+        .split_first()
+        .expect("split on a non-empty string yields at least one segment");
+    if !STEP_FIELDS.contains(field) {
+        return Err(format!(
+            "cell_result_fields entry 'steps.{rest}': '{field}' is not a StepOut field"
+        ));
+    }
+    let shape = serde_json::to_value(maximal_step_out())
+        .expect("a fully populated StepOut always serializes");
+    let mut node = &shape[*field];
+    for segment in tail {
+        let object = node.as_object().ok_or_else(|| {
+            format!(
+                "cell_result_fields entry 'steps.{rest}' reaches a non-object value \
+                 with segments remaining"
+            )
+        })?;
+        node = object.get(*segment).ok_or_else(|| {
+            format!("cell_result_fields entry 'steps.{rest}': '{segment}' is not a key there")
+        })?;
+    }
+    Ok(())
+}
+
+/// A `StepOut` with every optional field populated (and every
+/// `skip_serializing_if`-when-empty `Vec` given one placeholder element), used
+/// only to learn the static JSON shape `steps.<field>[.<key>...]` validation
+/// checks against. Values are placeholders; only key presence and whether a
+/// node is an object, array or scalar matter. Kept in sync with `StepOut` by
+/// `step_field_names_cover_every_key_a_populated_step_out_serializes` (a new
+/// field left out here fails that test, not silently falls through).
+fn maximal_step_out() -> StepOut {
+    StepOut {
+        step: 0,
+        t_s: 0.0,
+        flux: 0.0,
+        flux_weighted_time_s: 0.0,
+        fluence_n_cm2: Some(0.0),
+        fluence_particles_cm2: Some(0.0),
+        inventory: Vec::new(),
+        activity_Bq_per_g: BTreeMap::new(),
+        heat_W_per_g: Heat {
+            total: 0.0,
+            alpha: 0.0,
+            beta: 0.0,
+            gamma: 0.0,
+        },
+        leakage_atoms_per_g: 0.0,
+        removed_atoms_per_g: Some(0.0),
+        negative_atoms_zeroed: 0.0,
+        total_atoms_per_g: 0.0,
+        n_states_populated: 0,
+        numerical_floor_atoms_per_g: 0.0,
+        n_states_below_floor: 0,
+        atoms_below_floor: 0.0,
+        heat_bound_from_below_floor_W_per_g: 0.0,
+        photon_source: Some(PhotonSourceOut {
+            group_structure: String::new(),
+            boundaries_eV: Vec::new(),
+            lines: Vec::new(),
+            groups: Vec::new(),
+            by_nuclide: Vec::new(),
+            grouped_photons_s_g: 0.0,
+            grouped_photons_s: 0.0,
+            total_photons_s_g: 0.0,
+            total_photons_s: 0.0,
+            source_power_W_g: 0.0,
+            source_power_W: 0.0,
+            ungrouped_power_W_g: 0.0,
+            unrepresented_gamma_power_W_g: 0.0,
+            represented_gamma_power_fraction: 0.0,
+            contact_gamma_air_dose_proxy_Gy_h: None,
+            dose_response_power_coverage: None,
+        }),
+        uncertainty: Some(StepUncertainty {
+            method: "shape",
+            uncovered_library_rows: Vec::new(),
+            absent_cross_parameter_pairs: 0,
+            maximum_covariance_asymmetry_barn2: 0.0,
+            excluded_blocks: Vec::new(),
+            uncovered_decay_constants: vec!["shape".into()],
+            uncovered_yield_products: vec!["shape".into()],
+            responses: BTreeMap::new(),
+        }),
+        radiological: Some(RadiologicalStepOut {
+            responses: Vec::new(),
+        }),
+        damage: Some(DamageStepOut {
+            dpa_rate_per_s: 0.0,
+            dpa: 0.0,
+            damage_energy_eV_per_g_s: 0.0,
+            covered_atom_fraction: 0.0,
+            elements: BTreeMap::new(),
+        }),
+        gas: Some(GasOut {
+            H1: placeholder_gas_species(),
+            H2: placeholder_gas_species(),
+            H3: placeholder_gas_species(),
+            He3: placeholder_gas_species(),
+            He4: placeholder_gas_species(),
+            H_appm: 0.0,
+            He_appm: 0.0,
+            H_inventory_appm: 0.0,
+            He_inventory_appm: 0.0,
+            initial_atoms_per_g: 0.0,
+        }),
+    }
+}
+
+fn placeholder_gas_species() -> GasSpecies {
+    GasSpecies {
+        atoms_per_g: 0.0,
+        produced_atoms_per_g: 0.0,
+        appm: 0.0,
+        inventory_appm: 0.0,
+    }
+}
+
+/// Explicit accessor for one `RunResult` top-level field's `serde_json::Value`.
+/// `None` for a name that is not a `RunResult` field at all;
+/// `Some(Ok(Value::Null))` for a `RESULT_OPTIONAL_FIELDS` name whose `Option`
+/// is unset (never otherwise reachable, since none of those fields serialize
+/// to a literal `null` when set — see `RESULT_OPTIONAL_FIELDS`).
+fn run_result_field(result: &RunResult, name: &str) -> Option<Result<serde_json::Value, String>> {
+    let value = match name {
+        "spec_title" => serde_json::to_value(&result.spec_title),
+        "entry_point" => serde_json::to_value(&result.entry_point),
+        "projectile" => match &result.projectile {
+            Some(projectile) => serde_json::to_value(projectile),
+            None => Ok(serde_json::Value::Null),
+        },
+        "mode" => serde_json::to_value(&result.mode),
+        "pruned_states" => serde_json::to_value(result.pruned_states),
+        "total_states" => serde_json::to_value(result.total_states),
+        "steps" => serde_json::to_value(&result.steps),
+        "pathways" => serde_json::to_value(&result.pathways),
+        "screen" => match &result.screen {
+            Some(screen) => serde_json::to_value(screen),
+            None => Ok(serde_json::Value::Null),
+        },
+        "pathway_closure" => serde_json::to_value(result.pathway_closure),
+        "isomer_pathway_shares" => match &result.isomer_pathway_shares {
+            Some(shares) => serde_json::to_value(shares),
+            None => Ok(serde_json::Value::Null),
+        },
+        "ledger" => serde_json::to_value(&result.ledger),
+        "certificate" => serde_json::to_value(&result.certificate),
+        "ms" => serde_json::to_value(result.ms),
+        _ => return None,
+    };
+    Some(value.map_err(|error| error.to_string()))
+}
+
+/// Explicit accessor for one `StepOut` top-level field's `serde_json::Value`.
+/// See `run_result_field`; `STEP_OPTIONAL_FIELDS` is the analogous unset-sentinel set here.
+fn step_field(step: &StepOut, name: &str) -> Option<Result<serde_json::Value, String>> {
+    let value = match name {
+        "step" => serde_json::to_value(step.step),
+        "t_s" => serde_json::to_value(step.t_s),
+        "flux" => serde_json::to_value(step.flux),
+        "flux_weighted_time_s" => serde_json::to_value(step.flux_weighted_time_s),
+        "fluence_n_cm2" => match step.fluence_n_cm2 {
+            Some(value) => serde_json::to_value(value),
+            None => Ok(serde_json::Value::Null),
+        },
+        "fluence_particles_cm2" => match step.fluence_particles_cm2 {
+            Some(value) => serde_json::to_value(value),
+            None => Ok(serde_json::Value::Null),
+        },
+        "inventory" => serde_json::to_value(&step.inventory),
+        "activity_Bq_per_g" => serde_json::to_value(&step.activity_Bq_per_g),
+        "heat_W_per_g" => serde_json::to_value(&step.heat_W_per_g),
+        "leakage_atoms_per_g" => serde_json::to_value(step.leakage_atoms_per_g),
+        "removed_atoms_per_g" => match step.removed_atoms_per_g {
+            Some(value) => serde_json::to_value(value),
+            None => Ok(serde_json::Value::Null),
+        },
+        "negative_atoms_zeroed" => serde_json::to_value(step.negative_atoms_zeroed),
+        "total_atoms_per_g" => serde_json::to_value(step.total_atoms_per_g),
+        "n_states_populated" => serde_json::to_value(step.n_states_populated),
+        "numerical_floor_atoms_per_g" => serde_json::to_value(step.numerical_floor_atoms_per_g),
+        "n_states_below_floor" => serde_json::to_value(step.n_states_below_floor),
+        "atoms_below_floor" => serde_json::to_value(step.atoms_below_floor),
+        "heat_bound_from_below_floor_W_per_g" => {
+            serde_json::to_value(step.heat_bound_from_below_floor_W_per_g)
+        }
+        "photon_source" => match &step.photon_source {
+            Some(photon_source) => serde_json::to_value(photon_source),
+            None => Ok(serde_json::Value::Null),
+        },
+        "uncertainty" => match &step.uncertainty {
+            Some(uncertainty) => serde_json::to_value(uncertainty),
+            None => Ok(serde_json::Value::Null),
+        },
+        "radiological" => match &step.radiological {
+            Some(radiological) => serde_json::to_value(radiological),
+            None => Ok(serde_json::Value::Null),
+        },
+        "damage" => match &step.damage {
+            Some(damage) => serde_json::to_value(damage),
+            None => Ok(serde_json::Value::Null),
+        },
+        "gas" => match &step.gas {
+            Some(gas) => serde_json::to_value(gas),
+            None => Ok(serde_json::Value::Null),
+        },
+        _ => return None,
+    };
+    Some(value.map_err(|error| error.to_string()))
+}
+
+/// Prune `value` (a JSON object) to the keys named by `tails`' first segments;
+/// a tail that ends there keeps that key's value whole, one that continues
+/// recurses. Called only on paths `validate_step_path` already accepted, so
+/// `value` is always an object here and every requested key is present.
+fn prune_object(value: &serde_json::Value, tails: &[&[&str]]) -> Result<serde_json::Value, String> {
+    let object = value
+        .as_object()
+        .ok_or("cell_result_fields: a dotted path reaches a non-object value")?;
+    let mut grouped: BTreeMap<&str, Vec<&[&str]>> = BTreeMap::new();
+    for tail in tails {
+        let (head, rest) = tail
+            .split_first()
+            .expect("prune_object is never called with an empty tail");
+        grouped.entry(*head).or_default().push(rest);
+    }
+    let mut out = serde_json::Map::new();
+    for (key, rests) in grouped {
+        let Some(child) = object.get(key) else {
+            continue;
+        };
+        let value = if rests.iter().any(|rest| rest.is_empty()) {
+            child.clone()
+        } else {
+            prune_object(child, &rests)?
+        };
+        out.insert(key.to_string(), value);
+    }
+    Ok(serde_json::Value::Object(out))
+}
+
+/// Build one step's lean object: `"step"` plus each selected `StepOut` field,
+/// pruned to the selected keys. A selected field whose value is unset in this
+/// step (`STEP_OPTIONAL_FIELDS`, e.g. `photon_source` without photon output)
+/// is left out entirely, as in the full output.
+fn build_lean_step(
+    step: &StepOut,
+    step_paths: &[Vec<&str>],
+) -> Result<serde_json::Map<String, serde_json::Value>, String> {
+    let mut grouped: BTreeMap<&str, Vec<&[&str]>> = BTreeMap::new();
+    for path in step_paths {
+        let (head, tail) = path
+            .split_first()
+            .expect("validate_step_path rejects an empty path");
+        grouped.entry(*head).or_default().push(tail);
+    }
+    let mut out = serde_json::Map::new();
+    out.insert("step".to_string(), serde_json::Value::from(step.step));
+    for (field, tails) in grouped {
+        if field == "step" {
+            continue; // already emitted unconditionally
+        }
+        let whole = step_field(step, field)
+            .ok_or_else(|| format!("internal: unvalidated step field '{field}'"))??;
+        if STEP_OPTIONAL_FIELDS.contains(&field) && whole.is_null() {
+            continue;
+        }
+        let value = if tails.iter().any(|tail| tail.is_empty()) {
+            whole
+        } else {
+            prune_object(&whole, &tails)?
+        };
+        out.insert(field.to_string(), value);
+    }
+    Ok(out)
+}
+
+/// Build the lean cell text directly from `result`'s fields, never
+/// serializing the whole `RunResult`. `top_fields` are the non-`steps.`
+/// `cell_result_fields` entries; `"ms"` is always left out (it is removed
+/// unconditionally in the unchanged route too, via `result_without_timing`).
+fn lean_cell_text(
+    result: &RunResult,
+    top_fields: &[&str],
+    step_paths: &[Vec<&str>],
+) -> Result<String, String> {
+    let mut map: BTreeMap<String, serde_json::Value> = BTreeMap::new();
+    for &field in top_fields {
+        if field == "steps" || field == "ms" {
+            continue;
+        }
+        let value = run_result_field(result, field)
+            .ok_or_else(|| format!("cell_result_fields entry '{field}' is not a run-result field"))?
+            .map_err(|error| format!("field '{field}': {error}"))?;
+        if RESULT_OPTIONAL_FIELDS.contains(&field) && value.is_null() {
+            continue;
+        }
+        map.insert(field.to_string(), value);
+    }
+    if !step_paths.is_empty() {
+        let mut steps = Vec::with_capacity(result.steps.len());
+        for step in &result.steps {
+            steps.push(serde_json::Value::Object(build_lean_step(
+                step, step_paths,
+            )?));
+        }
+        map.insert("steps".to_string(), serde_json::Value::Array(steps));
+    }
+    serde_json::to_string(&map).map_err(|error| error.to_string())
+}
+
 fn solve_result(
     mesh_spec: &MeshSpec,
     prepared: &PreparedRun,
@@ -573,6 +1012,28 @@ fn solve_result(
     let result = prepared
         .run_with_collapse_and_flux_origin(spec, "mesh", cell, flux_origin)
         .map_err(|error| format!("cell '{cell_id}': {error}"))?;
+    let step_paths = mesh_spec
+        .cell_result_fields
+        .as_deref()
+        .map(dotted_step_paths)
+        .unwrap_or_default();
+    if !step_paths.is_empty() {
+        // P90 lean route: no whole-`RunResult` `Value` is ever built.
+        let pruned = result.pruned_states;
+        let top_fields: Vec<&str> = mesh_spec
+            .cell_result_fields
+            .as_deref()
+            .unwrap_or(&[])
+            .iter()
+            .filter(|field| !field.starts_with("steps."))
+            .map(String::as_str)
+            .collect();
+        let text = lean_cell_text(&result, &top_fields, &step_paths)
+            .map_err(|error| format!("cell '{cell_id}': {error}"))?;
+        return Ok((text, pruned));
+    }
+    // Unchanged route (P82/P88): byte-for-byte identical to pre-P90 behavior
+    // when `cell_result_fields` has no `steps.` entry (including `None`).
     let mut result =
         result_without_timing(result).map_err(|error| format!("cell '{cell_id}': {error}"))?;
     // The field filter may strip `pruned_states` from the emitted record;
@@ -1527,6 +1988,247 @@ mod tests {
             .unwrap_err()
             .contains("fingerprint"));
         std::fs::remove_file(&path).unwrap();
+    }
+
+    use std::collections::BTreeSet;
+
+    /// A `StepOut` with every optional field unset and every collection
+    /// empty — the opposite extreme from `maximal_step_out`, used to test
+    /// the accessors' and the lean route's absence handling.
+    fn minimal_step() -> StepOut {
+        StepOut {
+            step: 3,
+            t_s: 1.5,
+            flux: 2.5,
+            flux_weighted_time_s: 0.25,
+            fluence_n_cm2: None,
+            fluence_particles_cm2: None,
+            inventory: Vec::new(),
+            activity_Bq_per_g: BTreeMap::new(),
+            heat_W_per_g: Heat {
+                total: 0.0,
+                alpha: 0.0,
+                beta: 0.0,
+                gamma: 0.0,
+            },
+            leakage_atoms_per_g: 0.0,
+            removed_atoms_per_g: None,
+            negative_atoms_zeroed: 0.0,
+            total_atoms_per_g: 0.0,
+            n_states_populated: 0,
+            numerical_floor_atoms_per_g: 0.0,
+            n_states_below_floor: 0,
+            atoms_below_floor: 0.0,
+            heat_bound_from_below_floor_W_per_g: 0.0,
+            photon_source: None,
+            uncertainty: None,
+            radiological: None,
+            damage: None,
+            gas: None,
+        }
+    }
+
+    /// A `RunResult` with every optional field populated (one step from
+    /// `maximal_step_out`, one from `minimal_step`, exercising both the
+    /// present and the absent case for every `steps.*` optional field).
+    fn populated_result() -> RunResult {
+        RunResult {
+            spec_title: "t".into(),
+            entry_point: "run".into(),
+            projectile: Some("triton".into()),
+            mode: "auto".into(),
+            pruned_states: 5,
+            total_states: 9,
+            steps: vec![maximal_step_out(), minimal_step()],
+            pathways: vec![BTreeMap::new()],
+            screen: Some(serde_json::json!({"ok": true})),
+            pathway_closure: 0.01,
+            isomer_pathway_shares: Some(Vec::new()),
+            ledger: serde_json::json!({"k": 1}),
+            certificate: serde_json::json!({"c": 2}),
+            ms: 12.5,
+        }
+    }
+
+    /// A `RunResult` with every optional field unset — the opposite extreme.
+    fn minimal_result() -> RunResult {
+        RunResult {
+            spec_title: String::new(),
+            entry_point: String::new(),
+            projectile: None,
+            mode: String::new(),
+            pruned_states: 0,
+            total_states: 0,
+            steps: Vec::new(),
+            pathways: Vec::new(),
+            screen: None,
+            pathway_closure: 0.0,
+            isomer_pathway_shares: None,
+            ledger: serde_json::Value::Null,
+            certificate: serde_json::Value::Null,
+            ms: 0.0,
+        }
+    }
+
+    #[test]
+    fn run_result_field_matches_the_value_route_for_every_name() {
+        for result in [populated_result(), minimal_result()] {
+            let whole = serde_json::to_value(&result).unwrap();
+            for &name in RUN_RESULT_ACCESSOR_FIELDS {
+                let expected = whole.get(name).cloned().unwrap_or(serde_json::Value::Null);
+                let actual = run_result_field(&result, name).unwrap().unwrap();
+                assert_eq!(actual, expected, "field {name}");
+            }
+        }
+        assert!(run_result_field(&populated_result(), "not-a-field").is_none());
+    }
+
+    #[test]
+    fn step_field_matches_the_value_route_for_every_name() {
+        for step in [maximal_step_out(), minimal_step()] {
+            let whole = serde_json::to_value(&step).unwrap();
+            for &name in STEP_FIELDS {
+                let expected = whole.get(name).cloned().unwrap_or(serde_json::Value::Null);
+                let actual = step_field(&step, name).unwrap().unwrap();
+                assert_eq!(actual, expected, "field {name}");
+            }
+        }
+        assert!(step_field(&maximal_step_out(), "not-a-field").is_none());
+    }
+
+    #[test]
+    fn run_result_accessor_fields_cover_every_key_a_populated_result_serializes() {
+        let whole = serde_json::to_value(populated_result()).unwrap();
+        let keys: BTreeSet<&str> = whole
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect();
+        let names: BTreeSet<&str> = RUN_RESULT_ACCESSOR_FIELDS.iter().copied().collect();
+        assert_eq!(names, keys);
+    }
+
+    #[test]
+    fn step_field_names_cover_every_key_a_populated_step_out_serializes() {
+        let whole = serde_json::to_value(maximal_step_out()).unwrap();
+        let keys: BTreeSet<&str> = whole
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect();
+        let names: BTreeSet<&str> = STEP_FIELDS.iter().copied().collect();
+        assert_eq!(names, keys);
+    }
+
+    #[test]
+    fn cell_result_fields_rejects_a_non_step_field_dotted_path() {
+        let mut spec = minimal_spec();
+        spec.cell_result_fields = Some(vec!["steps.not_a_field".into()]);
+        assert!(spec.validate().unwrap_err().contains("not_a_field"));
+    }
+
+    #[test]
+    fn cell_result_fields_rejects_a_path_past_a_scalar() {
+        let mut spec = minimal_spec();
+        spec.cell_result_fields = Some(vec!["steps.t_s.extra".into()]);
+        assert!(spec.validate().unwrap_err().contains("non-object"));
+    }
+
+    #[test]
+    fn cell_result_fields_rejects_an_unknown_key_under_an_object_field() {
+        let mut spec = minimal_spec();
+        spec.cell_result_fields = Some(vec!["steps.photon_source.not_a_key".into()]);
+        assert!(spec.validate().unwrap_err().contains("not_a_key"));
+    }
+
+    #[test]
+    fn cell_result_fields_accepts_a_dynamic_map_field_whole_but_not_a_key_inside_it() {
+        // `activity_Bq_per_g` is a nuclide -> f64 map: its keys are data, not part of the
+        // static shape, so only the whole field is a valid selection.
+        let mut spec = minimal_spec();
+        spec.cell_result_fields = Some(vec!["steps.activity_Bq_per_g".into()]);
+        assert!(spec.validate().is_ok());
+        spec.cell_result_fields = Some(vec!["steps.activity_Bq_per_g.FE56".into()]);
+        assert!(spec.validate().is_err());
+    }
+
+    #[test]
+    fn cell_result_fields_rejects_plain_steps_combined_with_a_dotted_entry() {
+        let mut spec = minimal_spec();
+        spec.cell_result_fields = Some(vec!["steps".into(), "steps.t_s".into()]);
+        assert!(spec.validate().unwrap_err().contains("cannot combine"));
+        spec.cell_result_fields = Some(vec!["steps.t_s".into()]);
+        assert!(spec.validate().is_ok());
+        spec.cell_result_fields = Some(vec!["steps".into()]);
+        assert!(spec.validate().is_ok());
+    }
+
+    #[test]
+    fn cell_result_fields_accepts_the_g3_selection() {
+        let mut spec = minimal_spec();
+        spec.cell_result_fields = Some(vec![
+            "mode".into(),
+            "ledger".into(),
+            "pruned_states".into(),
+            "steps.photon_source.groups".into(),
+            "steps.heat_W_per_g".into(),
+            "steps.t_s".into(),
+        ]);
+        assert!(spec.validate().is_ok());
+    }
+
+    #[test]
+    fn lean_cell_text_always_excludes_ms_even_if_selected() {
+        let result = populated_result();
+        let text = lean_cell_text(&result, &["ms", "mode"], &[vec!["t_s"]]).unwrap();
+        let value: serde_json::Value = serde_json::from_str(&text).unwrap();
+        assert!(!value.as_object().unwrap().contains_key("ms"));
+        assert!(value.as_object().unwrap().contains_key("mode"));
+    }
+
+    #[test]
+    fn lean_text_matches_the_pruned_subtree_of_the_full_value_route() {
+        // The full route: the whole `RunResult` as a `Value`, minus `ms` (as
+        // `result_without_timing` does for the unchanged route).
+        let result = populated_result();
+        let mut full = serde_json::to_value(&result).unwrap();
+        full.as_object_mut().unwrap().remove("ms");
+
+        let top_fields = ["mode", "ledger", "pruned_states"];
+        let step_paths: Vec<Vec<&str>> = vec![
+            vec!["photon_source", "groups"],
+            vec!["heat_W_per_g"],
+            vec!["t_s"],
+        ];
+        let lean_text = lean_cell_text(&result, &top_fields, &step_paths).unwrap();
+        let lean: serde_json::Value = serde_json::from_str(&lean_text).unwrap();
+
+        let full_steps = full["steps"].as_array().unwrap();
+        let mut expected_steps = Vec::new();
+        for step in full_steps {
+            let mut expected = serde_json::Map::new();
+            expected.insert("step".into(), step["step"].clone());
+            if let Some(photon) = step.get("photon_source") {
+                let mut pruned_photon = serde_json::Map::new();
+                pruned_photon.insert("groups".into(), photon["groups"].clone());
+                expected.insert(
+                    "photon_source".into(),
+                    serde_json::Value::Object(pruned_photon),
+                );
+            }
+            expected.insert("heat_W_per_g".into(), step["heat_W_per_g"].clone());
+            expected.insert("t_s".into(), step["t_s"].clone());
+            expected_steps.push(serde_json::Value::Object(expected));
+        }
+        let mut expected_top = serde_json::Map::new();
+        expected_top.insert("mode".into(), full["mode"].clone());
+        expected_top.insert("ledger".into(), full["ledger"].clone());
+        expected_top.insert("pruned_states".into(), full["pruned_states"].clone());
+        expected_top.insert("steps".into(), serde_json::Value::Array(expected_steps));
+
+        assert_eq!(lean, serde_json::Value::Object(expected_top));
     }
 
     #[test]

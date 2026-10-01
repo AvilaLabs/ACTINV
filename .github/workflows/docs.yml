@@ -1,0 +1,65 @@
+name: Build handbook
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'book.toml'
+      - 'docs/guide/**'
+      - 'docs/maintainers/DOCUMENTATION.md'
+      - 'Cargo.toml'
+      - 'scripts/check_docs.py'
+      - 'scripts/prepare_web.py'
+      - 'scripts/test_prepare_web.py'
+      - 'web/docs-smoke.mjs'
+      - 'web/package*.json'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    paths:
+      - 'book.toml'
+      - 'docs/guide/**'
+      - 'docs/maintainers/DOCUMENTATION.md'
+      - 'Cargo.toml'
+      - 'scripts/check_docs.py'
+      - 'scripts/prepare_web.py'
+      - 'scripts/test_prepare_web.py'
+      - 'web/docs-smoke.mjs'
+      - 'web/package*.json'
+      - '.github/workflows/docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: taiki-e/install-action@dfae9bf3d6f6c6f20ef4ebb3486c01a51341ff12 # v2.87.18
+        with:
+          tool: mdbook@0.5.4
+      - name: Build and check handbook
+        run: |
+          mdbook build
+          python3 scripts/check_docs.py dist/docs
+          python3 scripts/test_prepare_web.py
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+      - name: Check navigation, search, and mobile layout
+        run: |
+          npm ci --prefix web --ignore-scripts
+          web/node_modules/.bin/playwright install --with-deps chromium
+          python3 -m http.server 8080 --directory dist --bind 127.0.0.1 &
+          server_pid=$!
+          trap 'kill "$server_pid"; wait "$server_pid" || true' EXIT
+          timeout 120s node web/docs-smoke.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: actinv-handbook
+          path: dist/docs

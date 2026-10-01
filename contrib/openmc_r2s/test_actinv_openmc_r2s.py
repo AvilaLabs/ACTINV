@@ -280,6 +280,34 @@ class ResultsShimTests(unittest.TestCase):
             self.assertIsNone(per_step[1]["100"])
             self.assertIsNone(per_step[1]["101"])
 
+    def test_parse_photon_groups_reads_the_lean_default_selection(self):
+        # P90: the manager's default cell_result_fields is
+        # ["mode", "ledger", "steps.photon_source.groups"], so a real mesh result carries only
+        # "step" plus "photon_source" (itself pruned to "groups") in each step object, and no
+        # "photon_source" key at all in a step whose photon output is unset (the dotted route
+        # omits it, exactly like the full route's skip_serializing_if). parse_photon_groups must
+        # not depend on any of the keys P90 strips (inventory, activity_Bq_per_g, heat_W_per_g, ...).
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            result_path = Path(tmp) / "mesh_result.ndjson"
+            records = [
+                {"record": "cell", "id": "0", "result": {
+                    "mode": "auto", "ledger": {}, "steps": [
+                        {"step": 0, "photon_source": {
+                            "groups": [{"centroid_eV": 1.0e6, "photons_s": 5.0},
+                                       {"centroid_eV": 2.0e6, "photons_s": 0.0}]}},
+                        {"step": 1},  # photon output unset for this step: key omitted entirely
+                    ]}},
+                {"record": "footer", "cell_count": 1},
+            ]
+            self._write_result(result_path, records)
+            mats = self._fake_mats(1)
+
+            per_step = m.parse_photon_groups(result_path, mats, n_steps=2)
+
+            self.assertEqual(per_step[0]["100"], [(1.0e6, 5.0)])
+            self.assertIsNone(per_step[1]["100"])
+
     def test_build_results_shim_index_zero_is_pre_irradiation(self):
         per_step = [{"100": [(1.0e6, 5.0)]}, {"100": None}]
 

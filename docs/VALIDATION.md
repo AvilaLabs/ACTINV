@@ -1,5 +1,7 @@
 # Validation — FNS decay-heat benchmark (IAEA CoNDERC)
 
+This is a historical evidence record. Start with the [handbook validation guide](guide/validation.md) for interpretation and links to later comparisons. The opening figures below describe the recorded EAF-2010 run, not the current default-library result.
+
 Generated from `results/fns/*.json` (P3 run: EAF-2010 709-group library, ENDF/B-VIII.0 + JEFF-3.3 decay, rate-significance pruning at 1e-8 atoms/g, trace-activation formulation). Reference: FISPACT-II with TENDL-2017 as distributed with the benchmark set. Accuracy is reported, not claimed; the instrument gate is the checker's re-derivation of every C/E.
 
 - experiments: 132 (73 materials); with both codes and matched measurements: 132
