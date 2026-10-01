@@ -11,7 +11,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
 e777feccd7b5aa3ce294d0ace6e63a4c56e062a2fd6cc7fdf55eaaba5efe1ffa  ./CHANGELOG.md
-04795cfec8c6241d33edbf94ef2df47637d939380563bf3470d5f5f7ddc521ca  ./COMPETITIVE_BENCHMARK.md
+6e88882dfb9932ca9187a1e641a5d67e99cc1395a8abec9e24e294bd3b427574  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a5a361eb24c1459e44a7456f2503049b003470ada418e176013fe7afa2e1592  ./Cargo.lock
 d091f97fdcc1a3df12dfb50ebfaa3ec8ea0bbfeece1b2356b78b47c5aa36cafb  ./Cargo.toml
@@ -883,7 +883,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 245f5933ab759ab1961691ab03111502c748ae54395af2fa3802b818ab2f5c9f  ./docs/defects/tendl2023-orphan-product-sections.md
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
 ab71228fc6681591f9fa87d16145d85d8c2664a5105640935ed8f878f085bd96  ./docs/guide/SUMMARY.md
-d47db7f8f43122ef8d4f51fba7671945476d4011206271b6e82db4a86deccd7e  ./docs/guide/benchmarks.md
+34bd9b0eb1a32db26279edb70adf8fe269bc087b9cc17fd1995716be98ede377  ./docs/guide/benchmarks.md
 367e375bec3102f4f24b41f1119c560b7ae7363848d33dd54e37e3641e4ff4e3  ./docs/guide/browser.md
 5e822ed5a6be1eb7693988b049dbff566d7a201acd7ea2a842dc149bbaf76fd0  ./docs/guide/cli.md
 07928f227e9685aae31bf6abb134ac9e33addb3196a8e28ba932f100547a74c7  ./docs/guide/data-limits.md
