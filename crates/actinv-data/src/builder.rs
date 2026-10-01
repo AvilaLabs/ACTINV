@@ -2032,7 +2032,13 @@ fn map_product_states(
         .filter(|(_, row)| row.raw_state.is_some())
         .map(|(idx, _)| idx)
         .collect();
-    debug_assert_eq!(raw_row_indices.len(), mappings.len());
+    if raw_row_indices.len() != mappings.len() {
+        return Err(format!(
+            "state mapping produced {} records for {} raw-state rows; isomer collision check cannot align them",
+            mappings.len(),
+            raw_row_indices.len()
+        ));
+    }
 
     let mut collision_groups: BTreeMap<(i32, i32), Vec<usize>> = BTreeMap::new();
     for (map_idx, mapping) in mappings.iter().enumerate() {
