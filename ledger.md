@@ -2049,3 +2049,46 @@ After the verdict, master's docs-only handbook commits (`bc760a7`, `c7c9b48`, `0
 merged. They have no Rust changes, and the binary embeds no docs. `docs/SPEC.md` became a stub
 there, so P90's dotted-field paragraph moved to `docs/guide/specification.md`, and the stub's field
 table names the dotted form.
+
+## Entry 74 — P99 isomer labels without decay data: PASS, merged (2026-09-30)
+
+Found during P94. Without decay data, `build-library` assigns isomer labels from the target catalog,
+then falls back to the label's rank inside its (MT, ZAP) declared set. That rank ignores catalog-
+matched labels, so one canonical (ZAP, LISO) could name two physical states. Example: Bi-196 via MT5,
+where the 169 keV level ranked to LISO 1 and the 271 keV level matched catalog LISO 1. The inventory
+then merged isomers with different half-lives.
+- Builds with `--decay` were never affected, including the P94/P98 gamma G3 build.
+- The shipped neutron libraries were not affected: one maps through decay data, the patched one
+  routes unmatched labels to leakage.
+
+**P99** (`dfb57f1d…`).
+- **Rule:** a rank-mapped row whose excitation disagrees with every anchored row of its (ZAP, LISO)
+  group becomes explicit leakage (`lmf −3`, decision `no_catalog_rank_collision_to_leakage`). Its
+  production is retained, and a ledger line recommends `--decay`. The same applies to every row of
+  an unanchored group of rank rows that disagree with each other.
+- **Implementation:** a Sonnet agent wrote it to the frozen protocol; I reviewed the diff and the
+  checker's approach.
+- **Change after the agent's run:** the release build now returns an error, instead of only a debug
+  assertion, if the mappings and rows ever misalign. That was a fail-closed hardening, made before
+  the gated run.
+- **Re-gating:** master (P90) was merged before the gated run.
+
+Verdict `results/p99_verdict.json` on candidate `c1777524…`, reference `c7b8923d…`, **PASS**:
+- G0 PASS.
+- G1 PASS: five `p99_` unit tests.
+- G2 PASS: the TENDL-2025 proton library built with decay data is byte-identical (`afbffaf0…`). The
+  index differs only in `builder_fingerprint`, which hashes the builder source.
+- G3 PASS: on the proton library without decay data, 691 rows were rerouted in 485 groups across
+  477 targets.
+  - (a) No merged state remains.
+  - (b) The rerouted set equals an independent Python re-derivation of the rule from the reference
+    index.
+  - (c) Per target, the row multisets match after relabeling. No cross section changed and no row
+    was added or lost.
+  - Spot check: p-At199 MT5 Bi-196 raw LFS 2 (169 keV) became leakage; raw LFS 3 (271 keV) keeps
+    catalog LISO 1.
+- G4 PASS: CI replay 23/23.
+
+The count differs from the protocol's 545 groups because the protocol counted (MT, ZAP, LISO)
+groups, while the rule groups by (ZAP, LISO) across MTs. The cross-MT pairs are included, as the
+defect section anticipated.

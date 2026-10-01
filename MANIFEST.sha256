@@ -10,7 +10,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
-e777feccd7b5aa3ce294d0ace6e63a4c56e062a2fd6cc7fdf55eaaba5efe1ffa  ./CHANGELOG.md
+203f7f58731c120c201ca11deb13979c2545879de727ae09752a518e922a0f2f  ./CHANGELOG.md
 6e88882dfb9932ca9187a1e641a5d67e99cc1395a8abec9e24e294bd3b427574  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a5a361eb24c1459e44a7456f2503049b003470ada418e176013fe7afa2e1592  ./Cargo.lock
@@ -231,6 +231,7 @@ d90b5030445782d08bbab664f2fe4d15ccbfcd67de651246e0caeb59644bdaf3  ./controls/che
 da5954f86fc1b4dea053412091e0c2df638451b9da186001bcc63752d298d37b  ./controls/check_p92.py
 b392d01467cc9ead5d739d524b790b6f1632e66d423425165fa60845c19d5558  ./controls/check_p93.py
 6f504c367bd9cbc630d59499de5800814b81eb3c2e63a8b1430c6ffaa8af38a0  ./controls/check_p96.py
+8cc9a0a020da3d6edeaddc593304a474471ea465062f1f168831b03dddad71ec  ./controls/check_p99.py
 684b885fe29b6cc0acbd50b2e23d226073a9c29a13dcf9721511bb42a0df541a  ./controls/check_prior_verdicts.py
 93e4ad814a873d713b64508d706f609dc7d9cbb94e39dcf1019e8485b9077fc0  ./controls/check_public_examples.py
 29eda62c1a9a9372f5e714f6ee5bc3c714bb892ac097da55dadb917c0185e1e3  ./controls/check_release_notes.py
@@ -781,7 +782,7 @@ a69ee5083a48b6512c77cdffbb1eb0fa6d7e0a65ea00930ed4a808aaf33c2888  ./crates/actin
 570eaa5c84956e3aa0c96d0c7fb684ba3fa8174c18b7a1ec392497fa1927bf56  ./crates/actinv-data/src/bin/p20_collapse_probe.rs
 fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b  ./crates/actinv-data/src/bin/p20_corpus_probe.rs
 446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366  ./crates/actinv-data/src/bin/prepared_data_probe.rs
-905c626b68cdbe372f571c0586d88fcbf88050d29910af7563e509eecd592b1a  ./crates/actinv-data/src/builder.rs
+5666379ecadb27de3c19f195e4dbf8ff3c3d3e7f6e7858261210baacef532dcf  ./crates/actinv-data/src/builder.rs
 584399c14c25b24db09311622696bd2e5691dd3045cbaec0ce406ba1fefbf024  ./crates/actinv-data/src/composition.rs
 6165db1e3338634fb9320a1b22988836e8f16d68b47bd732715238886c9a26d4  ./crates/actinv-data/src/covariance.rs
 4be7dff38361d3e28775ed387b6cd8553768fbac69eea518176a3ffa23b385cf  ./crates/actinv-data/src/decay.rs
@@ -965,7 +966,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-bf94ea0783441453a9f56f93bf84609d85852a292801b9ffa8cd137725ee4537  ./ledger.md
+93ac23547336fbebed468359c20d853c964654d2966dafacf713df968a1bbf8e  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -3676,6 +3677,7 @@ a4f0f455653e57cb8d18d4072ddbd94254991aaf6037e89c4d7b7f1f35b2a555  ./results/p93_
 545343264ecfe0d28da2e7403b8d1f238088d0f60237075ac989ccf205880893  ./results/p95_verdict.json
 ef582f6f105eec350ea11d88d4886f07863af8fa37ed191f512fc8c404e683dc  ./results/p96_verdict.json
 c5d58d97b1a6c7a01ba9a246488a79cbe48d7a507c3a918bdaf047cc53dd7b0c  ./results/p97_verdict.json
+151c846ef7116083160593d47c3ffe00ef3efb37095946acd58c0bd2851861ff  ./results/p99_verdict.json
 82ac3b499737b867bcdfc40f3fc5c0ef5a0a0b25b9f1978841ea350a0fcfde3e  ./results/qa_unitarity_actinv_tendl2023_709g.json
 9024a4ac890ce631a8fe58f3e913cf98a80f84e9fc0c1b661014b5920506e41a  ./results/qa_unitarity_tendl-2025-neutron-709g.json
 5216fed4ffd48269e7b2153af4d17e241b2324f1b83cf68351a5ab26a4a1716b  ./results/release_v1.2.0.json

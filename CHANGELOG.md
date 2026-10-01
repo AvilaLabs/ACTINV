@@ -35,6 +35,10 @@
 
 **Fixed**
 
+- `build-library` without `--decay` could label two physically different isomer states with one
+  canonical LISO: rank-compressed labels collided with catalog-matched ones. Such rank-mapped rows are now
+  explicit leakage with a ledger line recommending `--decay`. Builds with decay data are byte-identical
+  (P99).
 - Trace mode dropped production into nuclides that are also bulk constituents: from a tracked precursor
   (Fe-59 → Co-59 in a cobalt-bearing alloy) silently, from another bulk nuclide into the
   `bulk_production_dropped` ledger. Such products now get a tracked state beside their constant reservoir,
