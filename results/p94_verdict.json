@@ -1,0 +1,432 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "build_returncode": 0,
+  "candidate_sha256": "debe514a65d391c810f8d1e92494b5100848389ff2c1ed0bf7d009ae21b7edbc",
+  "exit_codes": {
+   "clippy": "0",
+   "fmt": "0",
+   "pymodule": "0",
+   "release": "0",
+   "runtime": "0",
+   "test": "0"
+  },
+  "gamma_runtime": {
+   "analytic_relative_error": 1.6439942021424526e-14,
+   "analytic_tolerance": 2e-12,
+   "binary_sha256": "debe514a65d391c810f8d1e92494b5100848389ff2c1ed0bf7d009ae21b7edbc",
+   "certificates": {
+    "cli": {
+     "decay_primary": {
+      "match": true,
+      "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+      "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+     },
+     "library": {
+      "match": true,
+      "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+      "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+     },
+     "library_index": {
+      "match": true,
+      "recomputed": "a3f0ef361c921505b6a6417272e3f6aa2843635abf0e6d8b0c1c5479c2c0f601",
+      "recorded": "a3f0ef361c921505b6a6417272e3f6aa2843635abf0e6d8b0c1c5479c2c0f601"
+     }
+    },
+    "prepared_mesh": {
+     "decay_primary": {
+      "match": true,
+      "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+      "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+     },
+     "library": {
+      "match": true,
+      "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+      "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+     },
+     "library_index": {
+      "match": true,
+      "recomputed": "a3f0ef361c921505b6a6417272e3f6aa2843635abf0e6d8b0c1c5479c2c0f601",
+      "recorded": "a3f0ef361c921505b6a6417272e3f6aa2843635abf0e6d8b0c1c5479c2c0f601"
+     }
+    },
+    "python": {
+     "decay_primary": {
+      "match": true,
+      "recomputed": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598",
+      "recorded": "afe6c6151765590606ef003c5e75d56d9f29f209b4657a908ba29817c255a598"
+     },
+     "library": {
+      "match": true,
+      "recomputed": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f",
+      "recorded": "1c6a2b713348f96ffc43f7aad26c7e27e6c0559da17b67a13ca1fe4ad9b54d2f"
+     },
+     "library_index": {
+      "match": true,
+      "recomputed": "a3f0ef361c921505b6a6417272e3f6aa2843635abf0e6d8b0c1c5479c2c0f601",
+      "recorded": "a3f0ef361c921505b6a6417272e3f6aa2843635abf0e6d8b0c1c5479c2c0f601"
+     }
+    }
+   },
+   "entry_points_identical": true,
+   "fluence_particles_cm2_ok": true,
+   "mesh_certificate": {
+    "canonical_flux_sha256": "01df08665a67da000ecde79835a770003bbabe40b1e632726968180b1aa9055a",
+    "checks": {
+     "canonical_computed": true,
+     "canonical_declared": true,
+     "upstream_path": true,
+     "upstream_source": true
+    },
+    "upstream_source_sha256": "a1e9e918338b8bb2a63a17c1735f52b2995eb8a266a830de2eda8f71e1bfbe36"
+   },
+   "pass": true,
+   "projectile": "gamma",
+   "python_extension": "python/target/release/libactinv.so",
+   "python_extension_sha256": "abb8f939fa4f917f8b0ea05db8f2aea2520643a729d1472088280fdf4f56c8c8"
+  },
+  "pass": true,
+  "unit_tests": {
+   "activation::tests::neutron_index_with_gamma_spec_fails_closed": true,
+   "activation::tests::projectile_gamma_index_with_neutron_spec_fails_closed": true,
+   "activation::tests::projectile_gamma_parse_name_nsub_za": true,
+   "activation::tests::projectile_gamma_parses_from_endf_metadata": true,
+   "activation::tests::projectile_gamma_rejects_nonzero_awi": true,
+   "activation::tests::unsupported_nsub_fails_closed": true,
+   "builder::tests::gamma_build_options_reject_nonzero_temperature": true,
+   "builder::tests::gamma_build_options_require_162_groups": true,
+   "builder::tests::gamma_missing_mf8_resolves_ground_state_from_mt_definition": true,
+   "builder::tests::gamma_mt4_skipped_when_detail_present_but_resolved_when_sole_coverage": true,
+   "builder::tests::gamma_photofission_yields_fail_closed": true,
+   "builder::tests::gamma_residual_arithmetic_shifts_by_one_mass_unit": true,
+   "flux::tests::legacy_unlabelled_neutron_import_is_byte_identical_to_pre_p94": true,
+   "flux::tests::openmc_photon_particle_filter_writes_photon_units_and_label": true,
+   "flux::tests::openmc_unlabelled_and_neutron_filtered_tallies_stay_neutron_units_with_no_particle_key": true,
+   "flux::tests::openmc_unsupported_particle_filter_fails_closed": true,
+   "mesh::tests::charged_mesh_run_rejects_photon_labelled_flux": true,
+   "mesh::tests::gamma_mesh_run_rejects_legacy_unlabelled_neutron_flux": true,
+   "mesh::tests::gamma_mesh_run_rejects_unlabelled_particle_flux": true,
+   "mesh::tests::neutron_mesh_run_rejects_particle_labelled_flux": true,
+   "spec::duration_tests::gamma_spec_requires_zero_kelvin_and_no_fission_yields": true
+  }
+ },
+ "G2": {
+  "a_p75b_and_mesh": {
+   "differing_or_failed": [],
+   "mesh": {
+    "fe_coupled": {
+     "cand_digest": {
+      "body_lines": 61,
+      "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+      "footer": {
+       "cell_count": 60,
+       "cells_served_from_reuse": 0,
+       "destination_flux_sum_over_cells": 81081375288509.38,
+       "max_pruned_states": 63,
+       "max_rebin_relative_closure": 0.0,
+       "min_pruned_states": 34,
+       "overflow_sum_over_cells": 0.0,
+       "record": "footer",
+       "source_flux_sum_over_cells": 81081375288509.38,
+       "underflow_sum_over_cells": 0.0
+      }
+     },
+     "cand_returncode": 0,
+     "pass": true,
+     "ref_digest": {
+      "body_lines": 61,
+      "body_sha256": "bf6c3d512d1bc58f89180fcf6acf146907e9a4498a9a5d6308e760fcc1eafa54",
+      "footer": {
+       "cell_count": 60,
+       "cells_served_from_reuse": 0,
+       "destination_flux_sum_over_cells": 81081375288509.38,
+       "max_pruned_states": 63,
+       "max_rebin_relative_closure": 0.0,
+       "min_pruned_states": 34,
+       "overflow_sum_over_cells": 0.0,
+       "record": "footer",
+       "source_flux_sum_over_cells": 81081375288509.38,
+       "underflow_sum_over_cells": 0.0
+      }
+     },
+     "ref_returncode": 0
+    },
+    "fe_p21like": {
+     "cand_digest": {
+      "body_lines": 61,
+      "body_sha256": "7cecf3e8a40adfb6bd87e59425d3de8429ccead6d51fee82810d77eb67091e0c",
+      "footer": {
+       "cell_count": 60,
+       "cells_served_from_reuse": 0,
+       "destination_flux_sum_over_cells": 81081375288509.38,
+       "max_pruned_states": 64,
+       "max_rebin_relative_closure": 0.0,
+       "min_pruned_states": 35,
+       "overflow_sum_over_cells": 0.0,
+       "record": "footer",
+       "source_flux_sum_over_cells": 81081375288509.38,
+       "underflow_sum_over_cells": 0.0
+      }
+     },
+     "cand_returncode": 0,
+     "pass": true,
+     "ref_digest": {
+      "body_lines": 61,
+      "body_sha256": "7cecf3e8a40adfb6bd87e59425d3de8429ccead6d51fee82810d77eb67091e0c",
+      "footer": {
+       "cell_count": 60,
+       "cells_served_from_reuse": 0,
+       "destination_flux_sum_over_cells": 81081375288509.38,
+       "max_pruned_states": 64,
+       "max_rebin_relative_closure": 0.0,
+       "min_pruned_states": 35,
+       "overflow_sum_over_cells": 0.0,
+       "record": "footer",
+       "source_flux_sum_over_cells": 81081375288509.38,
+       "underflow_sum_over_cells": 0.0
+      }
+     },
+     "ref_returncode": 0
+    },
+    "ss316_r2s": {
+     "cand_digest": {
+      "body_lines": 61,
+      "body_sha256": "91dac06bea508ccafdb327c1fb25398a3042144f1bf0a048271e907791606ec0",
+      "footer": {
+       "cell_count": 60,
+       "cells_served_from_reuse": 0,
+       "destination_flux_sum_over_cells": 81081375288509.38,
+       "max_pruned_states": 1056,
+       "max_rebin_relative_closure": 0.0,
+       "min_pruned_states": 460,
+       "overflow_sum_over_cells": 0.0,
+       "record": "footer",
+       "source_flux_sum_over_cells": 81081375288509.38,
+       "underflow_sum_over_cells": 0.0
+      }
+     },
+     "cand_returncode": 0,
+     "pass": true,
+     "ref_digest": {
+      "body_lines": 61,
+      "body_sha256": "91dac06bea508ccafdb327c1fb25398a3042144f1bf0a048271e907791606ec0",
+      "footer": {
+       "cell_count": 60,
+       "cells_served_from_reuse": 0,
+       "destination_flux_sum_over_cells": 81081375288509.38,
+       "max_pruned_states": 1056,
+       "max_rebin_relative_closure": 0.0,
+       "min_pruned_states": 460,
+       "overflow_sum_over_cells": 0.0,
+       "record": "footer",
+       "source_flux_sum_over_cells": 81081375288509.38,
+       "underflow_sum_over_cells": 0.0
+      }
+     },
+     "ref_returncode": 0
+    }
+   },
+   "pass": true,
+   "specs": 783
+  },
+  "b_proton_rebuild": {
+   "builds": {
+    "cand": {
+     "returncode": 0,
+     "stderr_tail": "endl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv-wt-p94/target/p94/g2b_proton_cand_index.json\n",
+     "stdout_tail": "2773 targets, 517422 rows, 0 cache hits, proton /home/connoravila/Documents/actinv-wt-p94/target/p94/g2b_proton_cand.npz, sha256 cc465b7e12a39b2c81dc204d21c08f490ec15abfc4f6a2971ccbf1f8b48ec9f4\n"
+    },
+    "ref": {
+     "returncode": 0,
+     "stderr_tail": "tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv-wt-p94/target/p94/g2b_proton_ref_index.json\n",
+     "stdout_tail": "2773 targets, 517422 rows, 0 cache hits, proton /home/connoravila/Documents/actinv-wt-p94/target/p94/g2b_proton_ref.npz, sha256 cc465b7e12a39b2c81dc204d21c08f490ec15abfc4f6a2971ccbf1f8b48ec9f4\n"
+    }
+   },
+   "cand_npz_sha256": "cc465b7e12a39b2c81dc204d21c08f490ec15abfc4f6a2971ccbf1f8b48ec9f4",
+   "identity_fields_excluded": [
+    "builder_fingerprint"
+   ],
+   "index_diff": null,
+   "index_identical_apart_from_identity": true,
+   "npz_identical": true,
+   "pass": true,
+   "ref_npz_sha256": "cc465b7e12a39b2c81dc204d21c08f490ec15abfc4f6a2971ccbf1f8b48ec9f4"
+  },
+  "c_p32_import": {
+   "cand_returncode": 0,
+   "cand_sha256": "7067a8050c6cacb310036b1943f52e4cfb46a294795f666b60f88a9a9dfad8d6",
+   "pass": true,
+   "ref_returncode": 0,
+   "ref_sha256": "7067a8050c6cacb310036b1943f52e4cfb46a294795f666b60f88a9a9dfad8d6"
+  },
+  "pass": true
+ },
+ "G3": {
+  "build_failures_sample": [],
+  "convergence_ledger_entries": [],
+  "n_build_failures": 0,
+  "n_convergence_ledger_entries": 0,
+  "n_distinct_mt": 34,
+  "n_distinct_zap": 3226,
+  "n_mt4_dedup_skips": 2080,
+  "n_mt50_91_skips_for_declared_mt4": 2996,
+  "n_photofission_sentinel_only_targets": 499,
+  "n_rows": 488955,
+  "n_rows_resolved_by_missing_mf8_rule": 7121,
+  "n_targets_built": 2850,
+  "n_targets_on_disk": 2850,
+  "n_unsupported_ledger_entries": 0,
+  "npz_sha256": "d4590b8e65a4814e066083d0b211af36e7c9b2a016ab73a358790e8c2ce16e7d",
+  "pass": true,
+  "peak_rss_kb": 2391896,
+  "returncode": 0,
+  "smoke_test_gamma_spec": {
+   "pass": true,
+   "returncode": 0,
+   "stderr_tail": "2 steps, 1 of 3873 states, 7775.1 ms -> /home/connoravila/Documents/actinv-wt-p94/target/p94/g3_smoke_out.json\n",
+   "stdout_tail": "",
+   "za": 26056
+  },
+  "stderr_tail": "index -> /home/connoravila/Documents/actinv-wt-p94/target/p94/g3_gamma_index.json\n\tCommand being timed: \"/home/connoravila/Documents/actinv-wt-p94/target/release/actinv build-library /home/connoravila/nuclear-data/tendl-2025/files/g /home/connoravila/Documents/actinv-wt-p94/target/p94/g3_gamma.npz --format tendl --projectile gamma --groups fispact-162 --temperature-K 0 --workers 3 --decay /home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat --decay-fallback /home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat\"\n\tUser time (seconds): 138.68\n\tSystem time (seconds): 4.82\n\tPercent of CPU this job got: 139%\n\tElapsed (wall clock) time (h:mm:ss or m:ss): 1:42.67\n\tAverage shared text size (kbytes): 0\n\tAverage unshared data size (kbytes): 0\n\tAverage stack size (kbytes): 0\n\tAverage total size (kbytes): 0\n\tMaximum resident set size (kbytes): 2391896\n\tAverage resident set size (kbytes): 0\n\tMajor (requiring I/O) page faults: 0\n\tMinor (reclaiming a frame) page faults: 735272\n\tVoluntary context switches: 8215\n\tInvoluntary context switches: 15899\n\tSwaps: 0\n\tFile system inputs: 2464464\n\tFile system outputs: 630696\n\tSocket messages sent: 0\n\tSocket messages received: 0\n\tSignals delivered: 0\n\tPage size (bytes): 4096\n\tExit status: 0\n",
+  "stdout_tail": "2850 targets, 488955 rows, 0 cache hits, gamma /home/connoravila/Documents/actinv-wt-p94/target/p94/g3_gamma.npz, sha256 d4590b8e65a4814e066083d0b211af36e7c9b2a016ab73a358790e8c2ce16e7d\n",
+  "unsupported_ledger_entries": [],
+  "wall_s": 102.68078687699744
+ },
+ "G4": {
+  "library_duplicate_keys_summed": 99824,
+  "nuclides": {
+   "g-Cu063.tendl": {
+    "above_200MeV_nonzero_independent": [],
+    "above_200MeV_nonzero_library": [],
+    "envelope_violations": [],
+    "ledger": [
+     "MT4 skipped (dedup with MT50-91 detail, no MF=8 of its own)",
+     "MT22/MF=10 ZAP=27058: 2 group(s) scaled by T/S (max relative excess 2.485444e-07), 2 floor-accepted",
+     "MT106/MF=10 ZAP=27060: 0 group(s) scaled by T/S (max relative excess 0.000000e+00), 2 floor-accepted",
+     "MT115/MF=10 ZAP=27060: 0 group(s) scaled by T/S (max relative excess 0.000000e+00), 1 floor-accepted"
+    ],
+    "n_rows_independent": 141,
+    "non_ground_label_merges": [],
+    "pass": true,
+    "rows_compared": 141,
+    "rows_missing_in_independent": [],
+    "rows_missing_in_library": [],
+    "unlabelled_independent_rows": [],
+    "worst_rel": 2.0533769462158928e-14,
+    "worst_rel_where": "MT5 ZAP24057 LFS0 group134"
+   },
+   "g-Fe056.tendl": {
+    "above_200MeV_nonzero_independent": [],
+    "above_200MeV_nonzero_library": [],
+    "envelope_violations": [],
+    "ledger": [
+     "MT4 skipped (dedup with MT50-91 detail, no MF=8 of its own)"
+    ],
+    "n_rows_independent": 130,
+    "non_ground_label_merges": [],
+    "pass": true,
+    "rows_compared": 130,
+    "rows_missing_in_independent": [],
+    "rows_missing_in_library": [],
+    "unlabelled_independent_rows": [],
+    "worst_rel": 2.8233482084876774e-14,
+    "worst_rel_where": "MT5 ZAP20044 LFS0 group129"
+   },
+   "g-Ta181.tendl": {
+    "above_200MeV_nonzero_independent": [],
+    "above_200MeV_nonzero_library": [],
+    "envelope_violations": [],
+    "ledger": [
+     "MT4/MF=10 ZAP=73180: 7 group(s) scaled by T/S (max relative excess 7.533821e-08), 0 floor-accepted",
+     "MT22/MF=10 ZAP=71176: 3 group(s) scaled by T/S (max relative excess 1.459979e-07), 3 floor-accepted",
+     "MT28/MF=10 ZAP=72179: 5 group(s) scaled by T/S (max relative excess 1.384460e-07), 2 floor-accepted",
+     "MT32/MF=10 ZAP=72178: 2 group(s) scaled by T/S (max relative excess 3.698533e-08), 0 floor-accepted",
+     "MT41/MF=10 ZAP=72178: 1 group(s) scaled by T/S (max relative excess 2.350459e-07), 0 floor-accepted",
+     "MT50 skipped (MT4 carries its own MF=8 state-resolved declaration)",
+     "MT51 skipped (MT4 carries its own MF=8 state-resolved declaration)",
+     "MT91 skipped (MT4 carries its own MF=8 state-resolved declaration)",
+     "MT103/MF=10 ZAP=72180: 8 group(s) scaled by T/S (max relative excess 2.031994e-07), 11 floor-accepted",
+     "MT104/MF=10 ZAP=72179: 5 group(s) scaled by T/S (max relative excess 1.338396e-07), 1 floor-accepted",
+     "MT105/MF=10 ZAP=72178: 2 group(s) scaled by T/S (max relative excess 4.743364e-07), 4 floor-accepted",
+     "MT107/MF=10 ZAP=71177: 7 group(s) scaled by T/S (max relative excess 3.645466e-07), 68 floor-accepted"
+    ],
+    "n_rows_independent": 170,
+    "non_ground_label_merges": [],
+    "pass": true,
+    "rows_compared": 170,
+    "rows_missing_in_independent": [],
+    "rows_missing_in_library": [],
+    "unlabelled_independent_rows": [],
+    "worst_rel": 5.415019245487182e-14,
+    "worst_rel_where": "MT5 ZAP70161 LFS0 group139"
+   },
+   "g-W186.tendl": {
+    "above_200MeV_nonzero_independent": [],
+    "above_200MeV_nonzero_library": [],
+    "envelope_violations": [],
+    "ledger": [
+     "MT4/MF=10 ZAP=74185: 15 group(s) scaled by T/S (max relative excess 2.656957e-07), 1 floor-accepted",
+     "MT24/MF=10 ZAP=72180: 0 group(s) scaled by T/S (max relative excess 0.000000e+00), 3 floor-accepted",
+     "MT33/MF=10 ZAP=73182: 1 group(s) scaled by T/S (max relative excess 2.625733e-08), 2 floor-accepted",
+     "MT50 skipped (MT4 carries its own MF=8 state-resolved declaration)",
+     "MT51 skipped (MT4 carries its own MF=8 state-resolved declaration)",
+     "MT91 skipped (MT4 carries its own MF=8 state-resolved declaration)",
+     "MT107/MF=10 ZAP=72182: 8 group(s) scaled by T/S (max relative excess 3.879095e-07), 21 floor-accepted"
+    ],
+    "n_rows_independent": 159,
+    "non_ground_label_merges": [],
+    "pass": true,
+    "rows_compared": 159,
+    "rows_missing_in_independent": [],
+    "rows_missing_in_library": [],
+    "unlabelled_independent_rows": [],
+    "worst_rel": 1.6967526983072208e-13,
+    "worst_rel_where": "MT4 ZAP74185 LFS0 group96"
+   }
+  },
+  "pass": true,
+  "tolerance": {
+   "floor_fraction": 1e-12,
+   "max_group_energy_eV": 200000000.0,
+   "rel": 1e-09
+  },
+  "worst_rel_overall": 1.6967526983072208e-13,
+  "worst_rel_where": "g-W186.tendl MT4 ZAP74185 LFS0 group96"
+ },
+ "G5": {
+  "default_profile_build": {
+   "all_failures_continue_on_error": [
+    "/home/connoravila/nuclear-data/tendl-2017/files/g/g-Cu063.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-Cu063.tendl: MT106/MF=10 ZAP=27060 group 121: emitted state sum 2.12638547978925764e-14 barn exceeds runtime total 1.55835478313001202e-14 barn by relative excess 3.645067e-1 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2925 ZA=29063 source_sha256=fad99af75a8dee8563460301b42bd3108fbb4e71f827fdaa7d356656cb7a64bf; construction fails closed and no state row is emitted, scaled or relabeled",
+    "/home/connoravila/nuclear-data/tendl-2017/files/g/g-Nb093.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-Nb093.tendl: MT16/MF=10 ZAP=41091 group 117: emitted state sum 1.56136934215629197e-3 barn exceeds runtime total 0.00000000000000000e0 barn by relative excess inf (outside the frozen 0.001 standard envelope); MAT=4125 ZA=41093 source_sha256=1322cbc4cd42a42b77734dac4de97d3b26d1d1eca2b2b2dd83504599b4e6241f; construction fails closed and no state row is emitted, scaled or relabeled",
+    "/home/connoravila/nuclear-data/tendl-2017/files/g/g-Pb208.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-Pb208.tendl: MT4/MF=10 ZAP=82207 group 100: emitted state sum 6.73994899406633267e-3 barn exceeds runtime total 0.00000000000000000e0 barn by relative excess inf (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=8237 ZA=82208 source_sha256=222d9875e80090edb78b728873c74f3c3a6aa26f3817a83c5c349f86626a9fca; construction fails closed and no state row is emitted, scaled or relabeled",
+    "/home/connoravila/nuclear-data/tendl-2017/files/g/g-Ta181.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-Ta181.tendl: MT4/MF=10 ZAP=73180 group 99: emitted state sum 3.84177350457104395e-3 barn exceeds runtime total 0.00000000000000000e0 barn by relative excess inf (outside the frozen 0.001 standard envelope); MAT=7328 ZA=73181 source_sha256=b0ca1c21ba0080243d5dde14920b2bb4008d8e30d5c37a8c6fdaa8da3a10deb0; construction fails closed and no state row is emitted, scaled or relabeled",
+    "/home/connoravila/nuclear-data/tendl-2017/files/g/g-W186.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-W186.tendl: MT4/MF=10 ZAP=74185 group 97: emitted state sum 3.32921216990219020e-3 barn exceeds runtime total 0.00000000000000000e0 barn by relative excess inf (outside the frozen 0.001 standard envelope); MAT=7443 ZA=74186 source_sha256=401df005167c188feca54292e976bc4c07de1c52fe52a3c45d31121df05e51c7; construction fails closed and no state row is emitted, scaled or relabeled"
+   ],
+   "first_error": "/home/connoravila/nuclear-data/tendl-2017/files/g/g-Cu063.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-Cu063.tendl: MT106/MF=10 ZAP=27060 group 121: emitted state sum 2.12638547978925764e-14 barn exceeds runtime total 1.55835478313001202e-14 barn by relative excess 3.645067e-1 (outside the frozen 0.001 standard envelope and the mechanism-gated 0.03 interpolation-artifact envelope); MAT=2925 ZA=29063 source_sha256=fad99af75a8dee8563460301b42bd3108fbb4e71f827fdaa7d356656cb7a64bf; construction fails closed and no state row is emitted, scaled or relabeled\n",
+   "returncode": 1
+  },
+  "fispact_values_read": false,
+  "outcome": "FAIL: the candidate cannot build every registered G5 input; FISPACT-II comparison never run",
+  "pass": false,
+  "successor": "ACTINV-P98 (a72c9d31...)",
+  "tendl_profile_build": {
+   "error": "/home/connoravila/nuclear-data/tendl-2017/files/g/g-Pb208.tendl: /home/connoravila/nuclear-data/tendl-2017/files/g/g-Pb208.tendl: MT18: 1 declared photofission product yield(s) present; photofission yields are out of scope for v1 (the total-fission IZAP=-1 sentinel is the only permitted MT18 content for gamma)\n",
+   "note": "--profile tendl chosen after run 1 was seen; recorded as diagnostic only",
+   "returncode": 1
+  }
+ },
+ "G6": {
+  "failed": [],
+  "pass": false,
+  "steps": 0
+ },
+ "inputs": {
+  "candidate_sha256": "debe514a65d391c810f8d1e92494b5100848389ff2c1ed0bf7d009ae21b7edbc",
+  "protocol_sha256": "b27a9754dbb5cf4e92b2a62cd04d28f027a1ee12370133ece37d335168b9a7a8",
+  "reference_sha256": "0d8dc849e41ee55d6cca65157e87f7c818293aa612e7b0a07f595606f2651eba"
+ },
+ "pass": false,
+ "protocol": "ACTINV-P94"
+}

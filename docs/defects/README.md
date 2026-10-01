@@ -33,3 +33,5 @@ collected and reported together.
 | [tendl2023-o18-width-inconsistency.md](tendl2023-o18-width-inconsistency.md) | TENDL-2023 | see entry |
 | [tendl2023-orphan-product-sections.md](tendl2023-orphan-product-sections.md) | TENDL-2023 | see entry |
 | [unitarity-violating-partial-cross-sections.md](unitarity-violating-partial-cross-sections.md) | TENDL-2025 (242 exotic files, new in 2025); TENDL-2023 Cl-35 (n,2n) | held |
+| [tendl2017-gamma-threshold-and-photofission-encoding.md](tendl2017-gamma-threshold-and-photofission-encoding.md) | TENDL-2017 gamma (Al-27, Nb-93, Cu-63, Ta-181, W-186, Pb-208) | held |
+| [processed-mt5-product-drops-doubled-threshold-point.md](processed-mt5-product-drops-doubled-threshold-point.md) | FISPACT-II TENDL-2017 gamma gxs-162 | held |
