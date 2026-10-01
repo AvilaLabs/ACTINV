@@ -35,6 +35,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import struct
 import sys
 import zipfile
@@ -54,6 +55,24 @@ TARGETS = {
     "g-Ta181.tendl": 73181,
     "g-W186.tendl": 74186,
 }
+
+# P100 G4 (protocols/ACTINV-P100_PROTOCOL.md): the second, independent run against the 8-nuclide
+# TENDL-2017 set that the P98/P100 G5 library is built from (--dataset tendl2017), used together
+# with --profile-normalize (the profile's threshold extension + per-group normalization).
+GAMMA_DATA_2017 = Path.home() / "nuclear-data" / "tendl-2017" / "files" / "g"
+TARGETS_2017 = {
+    "g-Fe056.tendl": 26056,
+    "g-Cu063.tendl": 29063,
+    "g-Ni058.tendl": 28058,
+    "g-Nb093.tendl": 41093,
+    "g-W186.tendl": 74186,
+    "g-Ta181.tendl": 73181,
+    "g-Al027.tendl": 13027,
+    "g-Pb208.tendl": 82208,
+}
+# Prefix every "MF=3 threshold extension" ledger line must start with (protocol G3/G4 wording,
+# also matched by controls/check_p94.py's G3 comparison -- kept as one literal in both places).
+EXTENSION_LEDGER_PREFIX = re.compile(r"^MT(\d+): MF=3 threshold extension:")
 
 REL_TOL = 1e-9
 FLOOR_FRACTION = 1e-12
@@ -383,6 +402,115 @@ def collapse_product(tables, boundaries):
     return out
 
 
+# ------------------------------------------------- P100: MF=3 threshold extension (independent)
+#
+# Re-derived only from protocols/ACTINV-P100_PROTOCOL.md's "Change under test" section --
+# crates/actinv-data/src/builder.rs is deliberately NOT read for this rule (the task's
+# independence requirement for the new G4 checker). Everything else in this module (evaluate,
+# collapse, reconcile_states, ...) was already independent of builder.rs from P94/P98 and is
+# reused unchanged.
+
+def left_value_at(table, e):
+    """The value of a TAB1 table at energy e, approached from below ("left limit"): at an exact
+    tabulated energy that is doubled (two consecutive points sharing one x, i.e. a discontinuity),
+    this returns the FIRST (lower-side) of the two y-values, not the second. Off-grid energies are
+    evaluated by the table's own interpolation law via evaluate(); energies outside [x[0], x[-1]]
+    are 0.0 (same convention evaluate() already uses elsewhere in this module).
+
+    This is a different reading from evaluate()'s own doubled-point handling (which, via
+    bisect_right, resolves to the LAST/upper-side value at an exact doubled point) -- evaluate()
+    is used elsewhere for right-continuous group collapse, while the protocol's threshold
+    extension explicitly asks for each MF=10 section's own "left limit" at E3."""
+    x, y = table["x"], table["y"]
+    if not x or e < x[0] or e > x[-1]:
+        return 0.0
+    import bisect
+    first = bisect.bisect_left(x, e)
+    last = bisect.bisect_right(x, e) - 1
+    if first <= last and x[first] == e:
+        return y[first]
+    return evaluate(table, e)
+
+
+def apply_mf3_threshold_extension(mt, mf3_table, mf10_zap_ge0_sections):
+    """protocols/ACTINV-P100_PROTOCOL.md, "Change under test" -> "MF=3 threshold extension".
+
+    Applies (separately per MT, gamma only -- every file this module reads is gamma) when:
+      - the MT has an MF=3 table, whose first energy is E3 (mf3_table["x"][0]);
+      - the MT has MF=10 sections with ZAP >= 0 (mf10_zap_ge0_sections, already filtered by the
+        caller);
+      - at least one of those sections has a positive tabulated value below E3, or a positive
+        left limit at E3 (the "trigger").
+    Then the MF=3 table is extended below E3 by the summed MF=10 ZAP>=0 sections: one point at
+    every energy any of those sections tabulates below E3 (summed value there), then a point at
+    E3 carrying the summed left limit, followed by the original first MF=3 point (a doubled point
+    when the two differ), the added region lin-lin (INT=2), original regions kept. The rule only
+    applies when every one of those sections is lin-lin on every segment below E3 ("linearity
+    condition"); otherwise the table is unchanged and a ledger line names the reason.
+
+    Returns (table_to_use, applied: bool, ledger_line_or_None). A ledger line is produced on
+    application (naming the MT, E3, first added energy and points added, per the protocol's
+    "Ledger" bullet) and on a linearity-condition failure (naming the reason); not when the rule
+    simply does not trigger (no positive value below/at E3 -- "no change when every state is zero
+    below E3" per this protocol's G1 list, which does not ask for a ledger line in that case)."""
+    if not mf10_zap_ge0_sections:
+        return mf3_table, False, None
+    e3 = mf3_table["x"][0]
+    triggered = any(y > 0.0 for t in mf10_zap_ge0_sections for x, y in zip(t["x"], t["y"]) if x < e3)
+    triggered = triggered or any(left_value_at(t, e3) > 0.0 for t in mf10_zap_ge0_sections)
+    if not triggered:
+        return mf3_table, False, None
+    for t in mf10_zap_ge0_sections:
+        for i in range(len(t["x"]) - 1):
+            if t["x"][i] < e3 and _law_for_segment(t, i) != 2:
+                reason = (f"MT{mt}: MF=3 threshold extension not applied (a MF=10 ZAP>=0 section "
+                          f"is not lin-lin on a segment below E3={e3!r})")
+                return mf3_table, False, reason
+    added_x = sorted({x for t in mf10_zap_ge0_sections for x in t["x"] if x < e3})
+    added_y = [sum(left_value_at(t, x) for t in mf10_zap_ge0_sections) for x in added_x]
+    joining_y = sum(left_value_at(t, e3) for t in mf10_zap_ge0_sections)
+    orig_x0, orig_y0 = mf3_table["x"][0], mf3_table["y"][0]
+    new_x = added_x + [e3, orig_x0] + list(mf3_table["x"][1:])
+    new_y = added_y + [joining_y, orig_y0] + list(mf3_table["y"][1:])
+    offset = len(added_x) + 1  # points inserted before the original table's own first point
+    new_interp = [(len(added_x) + 2, 2)] + [(nbt + offset, law) for nbt, law in mf3_table["interp"]]
+    new_table = {**mf3_table, "x": new_x, "y": new_y, "interp": new_interp}
+    n_added = len(added_x) + 1  # added-below-E3 points, plus the new joining point at E3
+    ledger = (f"MT{mt}: MF=3 threshold extension: E3={e3!r}, "
+              f"first_added_energy={(added_x[0] if added_x else e3)!r}, points_added={n_added}")
+    return new_table, True, ledger
+
+
+def classify_mt18(ev):
+    """P98's IZAP=0 photofission rule (P98 protocol, "Why this protocol exists"), re-applied here
+    under --profile-normalize: an MT18 with no MF=3 MT18, exactly one MF=10 MT18 section with
+    IZAP=0 LFS=0, and MF=8 MT18 declaring nothing or only ZAP=0 LMF=10 LFS=0, is the total-
+    photofission sentinel -- not a residual, produces no inventory row. This mirrors how MT18's
+    TENDL-2025 IZAP=-1 sentinel is already treated by build_rows (`if mt == 18: continue`, reached
+    only when MT18 HAS an MF=3 entry -- that path is untouched by this function). When MT18 has no
+    MF=3 entry, build_rows never visits it at all (the mf3-keyed loop simply never reaches MT18),
+    so no row-suppression code is needed here; this function only validates the shape so an
+    unrecognized MT18 encoding fails loud instead of silently producing zero rows.
+
+    Returns a dict describing the shape found (or "absent"); raises ValueError for a shape that
+    matches neither the TENDL-2025 nor the TENDL-2017 sentinel pattern."""
+    has_mf3 = 18 in ev["mf3"]
+    mf10_18 = ev["mf10"].get(18, [])
+    mf8_18 = ev["mf8"].get(18, [])
+    if has_mf3:
+        izap_neg1 = [p for p in mf10_18 if p["zap"] == -1]
+        return {"shape": "mf3_present_tendl2025_style", "izap_neg1_sections": len(izap_neg1)}
+    if not mf10_18 and not mf8_18:
+        return {"shape": "absent"}
+    izap0 = [p for p in mf10_18 if p["zap"] == 0 and p["lfs"] == 0]
+    mf8_only_sentinel = all(d["zap"] == 0 and d["lmf"] == 10 and d["lfs"] == 0 for d in mf8_18)
+    if len(mf10_18) == 1 and len(izap0) == 1 and mf8_only_sentinel:
+        return {"shape": "izap0_total_photofission_sentinel"}
+    raise ValueError(
+        f"MT18 declared photofission product yield present: n_mf10_sections={len(mf10_18)}, "
+        f"n_izap0_lfs0={len(izap0)}, mf8_mt18={mf8_18}")
+
+
 # ----------------------------------------------------------------- residual rows
 
 def residual_product(target_za, neutron_delta):
@@ -401,13 +529,22 @@ def missing_mf8_ground_state_delta(mt):
     return None
 
 
-def build_rows(ev, target_za, mt_products, boundaries):
-    """Returns {(mt, zap, lfs): [group values]} replicating the P94 gamma rules."""
+def build_rows(ev, target_za, mt_products, boundaries, profile_normalize=False):
+    """Returns {(mt, zap, lfs): [group values]} replicating the P94 gamma rules.
+
+    profile_normalize=False (the default) preserves P94/P98 behaviour exactly -- the P100 MF=3
+    threshold extension and the profile's per-group state-sum normalization (reconcile_states)
+    are both gated behind this flag and never run otherwise."""
     rows = {}
     ledger = []
     for mt, table in sorted(ev["mf3"].items()):
         if mt in (1, 2, 3, 27, 101) or mt >= 500:
             continue  # totals/non-physical/redundant summary MTs, not activation products
+        if profile_normalize:
+            mf10_zap_ge0 = [p["table"] for p in ev["mf10"].get(mt, []) if p["zap"] >= 0]
+            table, _applied, ext_line = apply_mf3_threshold_extension(mt, table, mf10_zap_ge0)
+            if ext_line:
+                ledger.append(ext_line)
         has_mf8 = mt in ev["mf8"] and ev["mf8"][mt]
         # MT=4 dedup: only when MT=4 itself has no MF=8 of its own.
         if mt == 4 and not has_mf8 and any(dmt in ev["mf3"] for dmt in range(50, 92)):
@@ -467,7 +604,8 @@ def build_rows(ev, target_za, mt_products, boundaries):
             # MT8 descriptor across Fe-56/Cu-63/Ta-181/W-186 (surveyed directly) and is left
             # unhandled here rather than guessed at.
         if ev["mf10"].get(mt):
-            reconcile_states(mt, table, ev["mf10"][mt], rows, ledger, boundaries)
+            reconcile_states(mt, table, ev["mf10"][mt], rows, ledger, boundaries,
+                              profile_normalize=profile_normalize)
     return rows, ledger
 
 
@@ -478,13 +616,17 @@ def build_rows(ev, target_za, mt_products, boundaries):
 # accepted unchanged; an excess inside the 0.001 standard envelope scales every state row of
 # that ZAP in that group by the common factor T/S. The builder's at-most-few-ULP closure
 # correction is below this gate's 1e-9 tolerance and is not replicated. An excess outside the
-# envelope would have failed construction closed, so it is reported as a G4 failure here.
+# envelope would have failed construction closed, so it is reported as a G4 failure here --
+# UNLESS profile_normalize is set (P100's --profile-normalize), re-deriving the profile's own
+# per-group normalization from its documented specification (task instructions, not builder.rs):
+# under a profile, that same out-of-envelope excess is instead scaled by T/S exactly like the
+# in-envelope case, and recorded as "state_sum_normalized" rather than an envelope violation.
 FLOOR_EXCESS_ABS_B = 1e-15
 STANDARD_ENVELOPE_REL = 1e-3
 STANDARD_ZERO_TOTAL_ABS_B = 1e-3
 
 
-def reconcile_states(mt, mf3_table, mf10_products, rows, ledger, boundaries):
+def reconcile_states(mt, mf3_table, mf10_products, rows, ledger, boundaries, profile_normalize=False):
     total = collapse(mf3_table, boundaries)
     by_zap = {}
     for product in mf10_products:
@@ -492,7 +634,7 @@ def reconcile_states(mt, mf3_table, mf10_products, rows, ledger, boundaries):
             by_zap.setdefault(product["zap"], []).append(product)
     for zap, products in sorted(by_zap.items()):
         states = [collapse(p["table"], boundaries) for p in products]
-        scaled = floor = 0
+        scaled = floor = normalized = 0
         max_excess = 0.0
         for g, t in enumerate(total):
             s = sum(state[g] for state in states)
@@ -503,6 +645,19 @@ def reconcile_states(mt, mf3_table, mf10_products, rows, ledger, boundaries):
                 continue
             inside = (s - t <= STANDARD_ENVELOPE_REL * t) if t > 0 else (s <= STANDARD_ZERO_TOTAL_ABS_B)
             if not inside:
+                if profile_normalize and s > 0:
+                    scale = t / s
+                    for state in states:
+                        state[g] *= scale
+                    normalized += 1
+                    if t > 0:
+                        max_excess = max(max_excess, (s - t) / t)
+                    # One line per normalized group (not one summary line per ZAP), matching the
+                    # granularity the candidate's --profile tendl build is documented to use
+                    # (controls/p94_g5_actinv.py: "records every group as state_sum_normalized").
+                    ledger.append(f"MT{mt}/MF=10 ZAP={zap} group {g}: state_sum_normalized "
+                                  f"(state sum {s!r} exceeds MF=3 total {t!r})")
+                    continue
                 ledger.append(f"MT{mt}/MF=10 ZAP={zap} group {g}: state sum {s!r} exceeds MF=3 total "
                               f"{t!r} outside the standard envelope (builder would fail closed)")
                 continue
@@ -566,18 +721,38 @@ def load_state_labels(npz_path: Path) -> dict:
     return out
 
 
+def load_target_ledgers(npz_path: Path) -> dict:
+    """{target_za: [ledger lines]} from the index -- P100's extension/state_sum_normalized count
+    comparison reads the candidate's own claims from here; it is never used to decide the group
+    values themselves, only to cross-check counts (see main())."""
+    index_path = npz_path.with_name(npz_path.stem + "_index.json")
+    idx = json.loads(index_path.read_text())
+    return {t["za"]: t.get("ledger", []) for t in idx["targets"]}
+
+
 # ----------------------------------------------------------------- main
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--library", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--dataset", choices=["tendl2025", "tendl2017"], default="tendl2025",
+                     help="Raw ENDF-6 source set (default tendl2025: P94/P98's 4-nuclide set). "
+                          "tendl2017 selects the 8-nuclide P98/P100 G5 set.")
+    ap.add_argument("--profile-normalize", action="store_true",
+                     help="Apply the P100 MF=3 threshold extension and the profile's per-group "
+                          "state-sum normalization (protocols/ACTINV-P100_PROTOCOL.md), matching "
+                          "a candidate library built with --profile tendl. Default off, which "
+                          "preserves P94/P98 behaviour exactly.")
     args = ap.parse_args()
 
     boundaries = json.loads(GROUPS_JSON.read_text())["boundaries_eV"]
     if boundaries[0] > boundaries[-1]:
         boundaries = list(reversed(boundaries))
     mt_products = json.loads(MT_PRODUCTS_JSON.read_text())["table"]
+
+    dataset_dir = GAMMA_DATA_2017 if args.dataset == "tendl2017" else GAMMA_DATA
+    dataset_targets = TARGETS_2017 if args.dataset == "tendl2017" else TARGETS
 
     npz_path = Path(args.library)
     lib_rows, lib_sig, lib_bounds = read_npz_library(npz_path)
@@ -602,13 +777,19 @@ def main():
             lib_by_key[key] = [a + float(b) for a, b in zip(lib_by_key[key], lib_sig[i])]
         else:
             lib_by_key[key] = [float(v) for v in lib_sig[i]]
+    # The 2017 library is built with --decay (decay-data isomer mapping); labels are joined
+    # through the index's state_mappings exactly as for the 2025 G3 library -- load_state_labels
+    # is dataset-agnostic and already does this.
     state_labels = load_state_labels(npz_path)
+    target_ledgers = load_target_ledgers(npz_path) if args.profile_normalize else {}
 
-    report = {"nuclides": {}, "pass": True, "tolerance": {"rel": REL_TOL, "floor_fraction": FLOOR_FRACTION,
+    report = {"nuclides": {}, "pass": True, "dataset": args.dataset,
+              "profile_normalize": args.profile_normalize,
+              "tolerance": {"rel": REL_TOL, "floor_fraction": FLOOR_FRACTION,
               "max_group_energy_eV": MAX_GROUP_E}, "worst_rel_overall": 0.0, "worst_rel_where": None}
 
-    for filename, target_za in TARGETS.items():
-        path = GAMMA_DATA / filename
+    for filename, target_za in dataset_targets.items():
+        path = dataset_dir / filename
         if not path.exists():
             report["nuclides"][filename] = {"pass": False, "error": f"missing {path}"}
             report["pass"] = False
@@ -619,7 +800,15 @@ def main():
                                              "error": f"ZA mismatch {ev['meta']['za']} != {target_za}"}
             report["pass"] = False
             continue
-        raw_rows, ledger = build_rows(ev, target_za, mt_products, boundaries)
+        mt18_info, mt18_error = None, None
+        if args.profile_normalize:
+            # P98's IZAP=0 photofission rule, treated the same way as the IZAP=-1 sentinel.
+            try:
+                mt18_info = classify_mt18(ev)
+            except ValueError as exc:
+                mt18_error = str(exc)
+        raw_rows, ledger = build_rows(ev, target_za, mt_products, boundaries,
+                                       profile_normalize=args.profile_normalize)
         labels = state_labels.get(target_za, {})
         rows = {}
         unlabelled = []
@@ -639,6 +828,23 @@ def main():
              "worst_rel": 0.0, "worst_rel_where": None, "above_200MeV_nonzero_independent": [],
              "above_200MeV_nonzero_library": [],
              "envelope_violations": [line for line in ledger if "builder would fail closed" in line]}
+        if args.profile_normalize:
+            n["mt18"] = mt18_info
+            if mt18_error:
+                n["mt18_error"] = mt18_error
+            cand_ledger = target_ledgers.get(target_za, [])
+            n["extension_count_independent"] = sum(1 for line in ledger if EXTENSION_LEDGER_PREFIX.match(line))
+            n["extension_count_candidate_ledger"] = sum(
+                1 for line in cand_ledger if EXTENSION_LEDGER_PREFIX.match(line))
+            n["state_sum_normalized_count_independent"] = sum(1 for line in ledger if "state_sum_normalized" in line)
+            # The builder writes one line per (MT, ZAP) ending "... in N of 162 group(s) ..."; count
+            # groups, matching the independent per-group lines above.
+            n["state_sum_normalized_count_candidate_ledger"] = sum(
+                int(m.group(1)) for line in cand_ledger if "state_sum_normalized" in line
+                for m in [re.search(r" in (\d+) of \d+ group\(s\)", line)] if m)
+            n["ledger_counts_match"] = (
+                n["extension_count_independent"] == n["extension_count_candidate_ledger"]
+                and n["state_sum_normalized_count_independent"] == n["state_sum_normalized_count_candidate_ledger"])
         ok = True
 
         for (mt, zap, lfs), values in rows.items():
@@ -681,7 +887,8 @@ def main():
                 n["rows_missing_in_independent"].append([mt, zap, lfs])
 
         n["pass"] = (ok and not n["rows_missing_in_library"] and not n["rows_missing_in_independent"]
-                     and not unlabelled and not n["envelope_violations"])
+                     and not unlabelled and not n["envelope_violations"]
+                     and (not args.profile_normalize or (mt18_error is None and n["ledger_counts_match"])))
         if not n["pass"]:
             ok = False
         report["nuclides"][filename] = n

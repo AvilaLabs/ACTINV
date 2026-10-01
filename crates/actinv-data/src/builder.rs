@@ -2200,6 +2200,108 @@ fn read_zero_izap_photofission_total(evaluation: &mut Evaluation) -> Option<Stri
     )
 }
 
+/// The interpolation law of a TAB1 segment (segment `i` ends at one-based point `i + 2`).
+fn segment_law(table: &Tabulated, segment: usize) -> Option<i32> {
+    let endpoint = segment + 2;
+    table
+        .interpolation
+        .iter()
+        .find_map(|&(nbt, law)| (endpoint <= nbt).then_some(law))
+}
+
+/// P100: TENDL-2017 gamma evaluations often start an MT's MF=3 total at a round energy above the
+/// reaction threshold, while the MT's MF=10 states ramp from the threshold. Below the first MF=3
+/// point the total would be zero and the state rows would be scaled away with it. Under a
+/// normalization profile the MF=3 table is extended below that point by the summed MF=10 states
+/// (ZAP >= 0), which is exact when every such state is lin-lin there; otherwise the MT is left
+/// unchanged and the reason is ledgered.
+fn extend_mf3_below_states(evaluation: &mut Evaluation) -> Result<Vec<String>, String> {
+    let mut ledger = Vec::new();
+    let mts: Vec<i32> = evaluation.mf10.keys().copied().collect();
+    for mt in mts {
+        let Some(total) = evaluation.mf3.get(&mt) else {
+            continue;
+        };
+        let start = total.x[0];
+        let states: Vec<&ProductTable> = evaluation.mf10[&mt]
+            .iter()
+            .filter(|section| section.zap >= 0)
+            .collect();
+        let mut left = 0.0;
+        for state in &states {
+            left += state.table.evaluate_left_limit(start)?;
+        }
+        let positive_below = states.iter().any(|state| {
+            state
+                .table
+                .x
+                .iter()
+                .zip(&state.table.y)
+                .any(|(&x, &y)| x < start && y > 0.0)
+        });
+        if !positive_below && left <= 0.0 {
+            continue;
+        }
+        if let Some(state) = states.iter().find(|state| {
+            (0..state.table.x.len().saturating_sub(1)).any(|segment| {
+                state.table.x[segment] < start && segment_law(&state.table, segment) != Some(2)
+            })
+        }) {
+            ledger.push(format!(
+                "MT{mt}: MF=3 threshold extension not applied: MF=10 ZAP={}/LFS={} is not lin-lin below the first MF=3 energy {start:e} eV",
+                state.zap, state.lfs
+            ));
+            continue;
+        }
+        let mut energies: Vec<f64> = states
+            .iter()
+            .flat_map(|state| state.table.x.iter().copied().filter(|&x| x < start))
+            .collect();
+        energies.sort_by(f64::total_cmp);
+        energies.dedup();
+        let mut x = Vec::with_capacity(energies.len() + 1 + total.x.len());
+        let mut y = Vec::with_capacity(x.capacity());
+        for &energy in &energies {
+            let mut sum = 0.0;
+            for state in &states {
+                sum += state.table.evaluate(energy)?;
+            }
+            x.push(energy);
+            y.push(sum);
+        }
+        if left != total.y[0] {
+            x.push(start);
+            y.push(left);
+        }
+        let added = x.len();
+        if added == 0 {
+            continue;
+        }
+        let first_added = x[0];
+        x.extend_from_slice(&total.x);
+        y.extend_from_slice(&total.y);
+        let mut interpolation = vec![(added + 1, 2)];
+        interpolation.extend(
+            total
+                .interpolation
+                .iter()
+                .map(|&(nbt, law)| (nbt + added, law))
+                .filter(|&(nbt, _)| nbt > added + 1),
+        );
+        let extended = Tabulated {
+            interpolation,
+            x,
+            y,
+        };
+        extended.validate()?;
+        evaluation.mf3.insert(mt, extended);
+        ledger.push(format!(
+            "MT{mt}: MF=3 threshold extension: the MF=3 table starts at {start:e} eV; below it the total is the MF=10 state sum from {first_added:e} eV ({added} added point(s)) under the normalization profile"
+        ));
+    }
+    Ok(ledger)
+}
+
 fn build_evaluation(
     mut evaluation: Evaluation,
     format: LibraryFormat,
@@ -2219,6 +2321,7 @@ fn build_evaluation(
     let mut ledger = Vec::new();
     if normalize_state_sums && evaluation.metadata.projectile.is_gamma() {
         ledger.extend(read_zero_izap_photofission_total(&mut evaluation));
+        ledger.extend(extend_mf3_below_states(&mut evaluation)?);
     }
     let metadata = &evaluation.metadata;
     if metadata.projectile != Projectile::Neutron && temperature_K != 0.0 {
@@ -4711,6 +4814,178 @@ mod tests {
             error.contains("photofission") && error.contains("out of scope"),
             "{error}"
         );
+    }
+
+    fn threshold_ramp(y_at_start: f64, law: i32) -> Tabulated {
+        Tabulated {
+            interpolation: vec![(3, law)],
+            x: vec![13.2, 14.0, 20.0],
+            y: vec![0.0, y_at_start, y_at_start],
+        }
+    }
+
+    fn threshold_evaluation(projectile: Projectile, states: Vec<ProductTable>) -> Evaluation {
+        let mut input = evaluation(projectile);
+        input.mf3.clear();
+        input.mf3.insert(
+            4,
+            Tabulated {
+                interpolation: vec![(2, 2)],
+                x: vec![14.0, 20.0],
+                y: vec![1.0e-3, 1.0e-3],
+            },
+        );
+        input.mf8.insert(
+            4,
+            states
+                .iter()
+                .map(|state| ProductRef {
+                    zap: state.zap,
+                    elfs_ev: state.qm_ev - state.qi_ev,
+                    lfs: state.lfs,
+                    lmf: 10,
+                })
+                .collect(),
+        );
+        input.mf10.insert(4, states);
+        input
+    }
+
+    fn threshold_build(input: Evaluation, normalize_state_sums: bool) -> BuiltTarget {
+        let groups = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![13.0, 14.0, 20.0],
+        };
+        build_evaluation(
+            input,
+            LibraryFormat::Tendl,
+            "g-Fe056",
+            &"0".repeat(64),
+            EvaluationBuildSettings {
+                groups: &groups,
+                temperature_K: 0.0,
+                grid_density: 1.0,
+                strict_states: false,
+                normalize_state_sums,
+                drop_orphan_sections: false,
+            },
+            &BTreeMap::new(),
+        )
+        .unwrap()
+    }
+
+    fn mt4_group_sum(built: &BuiltTarget, group: usize) -> f64 {
+        built
+            .rows
+            .iter()
+            .filter(|row| row.mt == 4 && row.zap > 0)
+            .map(|row| row.sigma[group])
+            .sum()
+    }
+
+    #[test]
+    fn p100_threshold_extension_prepends_the_state_sum_under_a_profile() {
+        let states = vec![
+            state_product(26055, 0, threshold_ramp(0.4e-3, 2)),
+            state_product(26055, 1, threshold_ramp(0.5e-3, 2)),
+        ];
+        let mut input = threshold_evaluation(Projectile::Gamma, states.clone());
+        let ledger = extend_mf3_below_states(&mut input).unwrap();
+        assert_eq!(ledger.len(), 1, "{ledger:?}");
+        assert!(
+            ledger[0].starts_with("MT4: MF=3 threshold extension:"),
+            "{ledger:?}"
+        );
+        let extended = &input.mf3[&4];
+        assert_eq!(extended.x, vec![13.2, 14.0, 14.0, 20.0]);
+        assert_eq!(extended.y, vec![0.0, 0.9e-3, 1.0e-3, 1.0e-3]);
+        assert_eq!(extended.interpolation, vec![(3, 2), (4, 2)]);
+
+        let built = threshold_build(threshold_evaluation(Projectile::Gamma, states), true);
+        assert!(
+            mt4_group_sum(&built, 0) > 0.0,
+            "threshold group lost: {:?}",
+            built.index.ledger
+        );
+        assert!(built
+            .index
+            .ledger
+            .iter()
+            .any(|line| line.starts_with("MT4: MF=3 threshold extension:")));
+    }
+
+    #[test]
+    fn p100_threshold_extension_is_absent_without_a_profile() {
+        let states = vec![
+            state_product(26055, 0, threshold_ramp(0.4e-3, 2)),
+            state_product(26055, 1, threshold_ramp(0.5e-3, 2)),
+        ];
+        let built = threshold_build(threshold_evaluation(Projectile::Gamma, states), false);
+        assert_eq!(mt4_group_sum(&built, 0), 0.0);
+        assert!(!built
+            .index
+            .ledger
+            .iter()
+            .any(|line| line.contains("MF=3 threshold extension")));
+    }
+
+    #[test]
+    fn p100_threshold_extension_is_gamma_only() {
+        let states = vec![state_product(26055, 0, threshold_ramp(0.9e-3, 2))];
+        let input = threshold_evaluation(Projectile::Neutron, states);
+        let built = threshold_build(input, true);
+        assert_eq!(mt4_group_sum(&built, 0), 0.0);
+        assert!(!built
+            .index
+            .ledger
+            .iter()
+            .any(|line| line.contains("MF=3 threshold extension")));
+    }
+
+    #[test]
+    fn p100_threshold_extension_requires_lin_lin_states_below_the_first_point() {
+        let states = vec![
+            state_product(26055, 0, threshold_ramp(0.4e-3, 2)),
+            state_product(26055, 1, threshold_ramp(0.5e-3, 1)),
+        ];
+        let mut input = threshold_evaluation(Projectile::Gamma, states);
+        let original = input.mf3[&4].clone();
+        let ledger = extend_mf3_below_states(&mut input).unwrap();
+        assert_eq!(input.mf3[&4], original);
+        assert_eq!(ledger.len(), 1, "{ledger:?}");
+        assert!(
+            ledger[0].starts_with("MT4: MF=3 threshold extension not applied:")
+                && ledger[0].contains("ZAP=26055/LFS=1"),
+            "{ledger:?}"
+        );
+    }
+
+    #[test]
+    fn p100_threshold_extension_ignores_states_that_are_zero_below_the_first_point() {
+        let zero_below = Tabulated {
+            interpolation: vec![(3, 2)],
+            x: vec![13.2, 14.0, 20.0],
+            y: vec![0.0, 0.0, 0.9e-3],
+        };
+        let mut input =
+            threshold_evaluation(Projectile::Gamma, vec![state_product(26055, 0, zero_below)]);
+        let original = input.mf3[&4].clone();
+        assert!(extend_mf3_below_states(&mut input).unwrap().is_empty());
+        assert_eq!(input.mf3[&4], original);
+    }
+
+    #[test]
+    fn p100_threshold_extension_joins_without_a_doubled_point_when_values_agree() {
+        let mut input = threshold_evaluation(
+            Projectile::Gamma,
+            vec![state_product(26055, 0, threshold_ramp(1.0e-3, 2))],
+        );
+        let ledger = extend_mf3_below_states(&mut input).unwrap();
+        assert_eq!(ledger.len(), 1, "{ledger:?}");
+        let extended = &input.mf3[&4];
+        assert_eq!(extended.x, vec![13.2, 14.0, 20.0]);
+        assert_eq!(extended.y, vec![0.0, 1.0e-3, 1.0e-3]);
+        assert_eq!(extended.interpolation, vec![(2, 2), (3, 2)]);
     }
 
     fn zero_izap_photofission_build(

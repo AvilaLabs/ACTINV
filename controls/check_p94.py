@@ -31,15 +31,20 @@ import tempfile
 import time
 from pathlib import Path
 
+import numpy as np
+
 ROOT = Path(__file__).resolve().parents[1]
 MAIN = Path.home() / "Documents" / "actinv"
 # ACTINV_GAMMA_PROTOCOL=P98 selects the P94 successor (protocols/ACTINV-P98_PROTOCOL.md): its own
 # work directory and verdict, the same reference binary, and P98's added G1 tests and G3 identity.
+# P100 (protocols/ACTINV-P100_PROTOCOL.md) is P98's successor: its own work directory/verdict and
+# its own reference binary (target/p100/ref_actinv, per that protocol's Gates section -- P94 and
+# P98 keep target/p94/ref_actinv).
 GAMMA_PROTOCOL = os.environ.get("ACTINV_GAMMA_PROTOCOL", "P94")
-if GAMMA_PROTOCOL not in ("P94", "P98"):
+if GAMMA_PROTOCOL not in ("P94", "P98", "P100"):
     sys.exit(f"unknown ACTINV_GAMMA_PROTOCOL {GAMMA_PROTOCOL}")
 WORK = ROOT / "target" / GAMMA_PROTOCOL.lower()
-REF = ROOT / "target" / "p94" / "ref_actinv"
+REF = ROOT / "target" / ("p100" if GAMMA_PROTOCOL == "P100" else "p94") / "ref_actinv"
 CAND = ROOT / "target" / "release" / "actinv"
 SPECS = MAIN / "target" / "p75b" / "specs"
 MESH = ["fe_coupled", "fe_p21like", "ss316_r2s"]
@@ -87,12 +92,18 @@ G1_UNIT_TESTS = (
     "mesh::tests::charged_mesh_run_rejects_photon_labelled_flux",
     "spec::duration_tests::gamma_spec_requires_zero_kelvin_and_no_fission_yields",
 )
-if GAMMA_PROTOCOL == "P98":
+# P100 G1 ("P100 includes everything P98 runs") carries P98's additions forward in full.
+if GAMMA_PROTOCOL in ("P98", "P100"):
     G1_UNIT_TESTS += (
         "builder::tests::gamma_zero_izap_photofission_total_is_the_sentinel_under_a_profile",
         "builder::tests::gamma_zero_izap_photofission_total_fails_closed_without_a_profile",
         "builder::tests::gamma_zero_izap_photofission_rejects_other_shapes",
     )
+
+# P100 G1 also adds unit tests whose leaf name starts with "p100_" (exact names are the
+# implementer's choice; this checker does not hard-code them, it scans the full `cargo test`
+# output -- see g1_p100_tests below). At least this many must run, and every one must pass.
+P100_MIN_UNIT_TESTS = 5
 
 
 def sha(p: Path) -> str:
@@ -121,6 +132,21 @@ def registered() -> bool:
     return f"{sha(PROTOCOL)}  protocols/{PROTOCOL.name}" in (ROOT / "protocols/protocol_hash.txt").read_text()
 
 
+def g1_p100_tests(tests_text: str) -> dict:
+    """P100 G1 addition: unit tests whose leaf name (after the last '::') starts with 'p100_'.
+    These run as part of the same unfiltered `cargo test --release -p actinv-core -p actinv-data`
+    sweep that target/p100/build.sh already captures to test.txt (mirroring P94/P98's build.sh),
+    so no separate filtered `cargo test ... p100_` invocation is needed here -- every test in the
+    crate, including any p100_-prefixed one, is already present in that output. At least
+    P100_MIN_UNIT_TESTS must have run, and every one of them must have passed."""
+    found = re.findall(r"^test (\S+) \.\.\. (ok|FAILED)$", tests_text, re.M)
+    p100 = [(name, status) for name, status in found if name.rsplit("::", 1)[-1].startswith("p100_")]
+    ok = len(p100) >= P100_MIN_UNIT_TESTS and all(status == "ok" for _, status in p100)
+    return {"pass": ok, "n_ran": len(p100), "min_required": P100_MIN_UNIT_TESTS,
+            "all_passed": all(status == "ok" for _, status in p100) if p100 else False,
+            "tests": [{"name": name, "status": status} for name, status in p100]}
+
+
 # ---------------------------------------------------------------- build (G1)
 
 def cmd_build() -> int:
@@ -136,12 +162,16 @@ def cmd_build() -> int:
             for name in G1_UNIT_TESTS}
     runtime_path = WORK / "g1_gamma_runtime.json"
     runtime = json.loads(runtime_path.read_text()) if runtime_path.exists() else {"pass": False}
+    p100_tests = g1_p100_tests(tests) if GAMMA_PROTOCOL == "P100" else None
     g1 = (p.returncode == 0
           and all(rc.get(k) == "0" for k in ("fmt", "clippy", "test", "release", "pymodule", "runtime"))
-          and all(unit.values()) and runtime.get("pass") is True)
+          and all(unit.values()) and runtime.get("pass") is True
+          and (p100_tests is None or p100_tests["pass"]))
     out = {"pass": g1, "build_returncode": p.returncode, "exit_codes": rc, "unit_tests": unit,
            "gamma_runtime": runtime,
            "candidate_sha256": sha(CAND) if CAND.exists() else None}
+    if p100_tests is not None:
+        out["p100_unit_tests"] = p100_tests
     (WORK / "g1_summary.json").write_text(json.dumps(out, indent=1, sort_keys=True))
     print(json.dumps(out, indent=1))
     return 0 if g1 else 1
@@ -327,6 +357,97 @@ def cmd_g2() -> int:
 
 DECAY_PRIMARY = MAIN / "actinv-data" / "v1.1.0" / "decay" / "endf-b-viii-0_decay.dat"
 DECAY_FALLBACK = MAIN / "actinv-data" / "v1.1.0" / "decay" / "jeff-3-3_decay.dat"
+# P100 G3: the prefix every "MF=3 threshold extension" ledger line must start with, naming the MT
+# it was applied to (protocols/ACTINV-P100_PROTOCOL.md G3; the same prefix controls/p94_g4_endf.py
+# matches for its own ledger-count comparison).
+P100_EXTENSION_LEDGER_PREFIX = re.compile(r"^MT(\d+): MF=3 threshold extension:")
+
+
+def read_npz_library(npz_path: Path):
+    """Plain zip-of-npy read (rows/sig/bounds), same layout as p94_g4_endf.read_npz_library."""
+    import zipfile
+    import numpy.lib.format as npfmt
+    with zipfile.ZipFile(npz_path) as zf:
+        with zf.open("rows.npy") as f:
+            rows = npfmt.read_array(f)
+        with zf.open("sig.npy") as f:
+            sig = npfmt.read_array(f)
+        with zf.open("bounds.npy") as f:
+            bounds = npfmt.read_array(f)
+    return rows, sig, bounds
+
+
+def g3_p100_extension_vs_p98_baseline(cand_npz: Path, cand_idx: dict) -> dict:
+    """P100 G3: the TENDL-2025 gamma .npz must equal P98's candidate build (the frozen
+    P94_G3_NPZ_SHA256 baseline) row for row, except rows whose (target ZA, MT) carries an
+    'MF=3 threshold extension' ledger line in the candidate's own index. Rows are keyed by
+    (target ZA, MT, ZAP, LFS, LMF); because rows can repeat under one key, the comparison is of
+    the multiset of sig rows per key (exact float equality), not a single row per key."""
+    baseline_npz = ROOT / "target" / "p98" / "g3_gamma.npz"
+    baseline_idx_path = baseline_npz.with_name(baseline_npz.stem + "_index.json")
+    report = {"pass": False, "baseline_npz": str(baseline_npz), "baseline_index": str(baseline_idx_path)}
+    if not baseline_npz.exists() or not baseline_idx_path.exists():
+        report["error"] = f"P98 baseline missing: {baseline_npz} and/or {baseline_idx_path}"
+        return report
+    baseline_sha256 = sha(baseline_npz)
+    report["baseline_npz_sha256"] = baseline_sha256
+    report["baseline_sha256_verified"] = baseline_sha256 == P94_G3_NPZ_SHA256
+    if not report["baseline_sha256_verified"]:
+        report["error"] = (f"P98 baseline g3_gamma.npz sha256 {baseline_sha256} != pinned "
+                            f"{P94_G3_NPZ_SHA256}")
+        return report
+
+    cand_rows, cand_sig, cand_bounds = read_npz_library(cand_npz)
+    base_rows, base_sig, base_bounds = read_npz_library(baseline_npz)
+    base_idx = json.loads(baseline_idx_path.read_text())
+    bounds_identical = bool(np.array_equal(cand_bounds, base_bounds))
+
+    def keyed(rows, sig, idx):
+        za_by_index = [t["za"] for t in idx["targets"]]
+        out = {}
+        for i in range(rows.shape[0]):
+            ti, mt, zap, lfs, lmf = (int(x) for x in rows[i])
+            key = (za_by_index[ti], mt, zap, lfs, lmf)
+            out.setdefault(key, []).append(tuple(float(v) for v in sig[i]))
+        return out
+
+    cand_by_key = keyed(cand_rows, cand_sig, cand_idx)
+    base_by_key = keyed(base_rows, base_sig, base_idx)
+
+    extended_pairs = set()
+    n_extension_lines = 0
+    for t in cand_idx.get("targets", []):
+        za = t["za"]
+        for line in t.get("ledger", []):
+            m = P100_EXTENSION_LEDGER_PREFIX.match(line)
+            if m:
+                n_extension_lines += 1
+                extended_pairs.add((za, int(m.group(1))))
+
+    diffs = []
+    unexplained = []
+    for key in sorted(set(cand_by_key) | set(base_by_key)):
+        za, mt, zap, lfs, lmf = key
+        if sorted(cand_by_key.get(key, [])) == sorted(base_by_key.get(key, [])):
+            continue
+        diffs.append(key)
+        if (za, mt) not in extended_pairs:
+            unexplained.append(key)
+
+    changed_pairs = sorted({(za, mt) for za, mt, zap, lfs, lmf in diffs})
+    ok = bounds_identical and not unexplained
+    report.update({
+        "pass": ok,
+        "bounds_identical": bounds_identical,
+        "n_extension_ledger_lines": n_extension_lines,
+        "n_changed_target_mt_pairs": len(changed_pairs),
+        "changed_target_mt_pairs_sample": [list(p) for p in changed_pairs[:20]],
+        "n_diff_keys": len(diffs),
+        "n_unexplained_diff_keys": len(unexplained),
+        "unexplained_examples": [list(k) for k in unexplained[:20]],
+        "diff_examples": [list(k) for k in diffs[:20]],
+    })
+    return report
 
 
 def cmd_g3() -> int:
@@ -433,6 +554,10 @@ def cmd_g3() -> int:
     ok = (p.returncode == 0 and not build_failures and len(target_list) == len(targets) == 2850
           and not unsupported and not convergence and smoke["pass"]
           and (GAMMA_PROTOCOL != "P98" or identical_to_p94))
+    p100_extension = None
+    if GAMMA_PROTOCOL == "P100":
+        p100_extension = g3_p100_extension_vs_p98_baseline(out, idx)
+        ok = ok and p100_extension["pass"]
     report.update({
         "pass": ok,
         "n_targets_built": len(target_list),
@@ -453,6 +578,8 @@ def cmd_g3() -> int:
         "npz_identical_to_p94_candidate_build": identical_to_p94,
         "smoke_test_gamma_spec": smoke,
     })
+    if p100_extension is not None:
+        report["p100_mf3_extension_vs_p98_baseline"] = p100_extension
     (WORK / "g3_summary.json").write_text(json.dumps(report, indent=1, sort_keys=True))
     print(json.dumps({k: v for k, v in report.items() if k not in ("stdout_tail", "stderr_tail")}, indent=1))
     return 0 if ok else 1
@@ -468,10 +595,40 @@ def cmd_g4() -> int:
     lib = WORK / "g3_gamma.npz"
     if not lib.exists():
         sys.exit(f"{lib} is missing; run g3 first to build the gamma library")
-    p = subprocess.run([sys.executable, str(script), "--library", str(lib), "--out", str(WORK / "g4_summary.json")])
-    if (WORK / "g4_summary.json").exists():
-        print((WORK / "g4_summary.json").read_text())
-    return p.returncode
+
+    if GAMMA_PROTOCOL != "P100":
+        p = subprocess.run([sys.executable, str(script), "--library", str(lib),
+                             "--out", str(WORK / "g4_summary.json")])
+        if (WORK / "g4_summary.json").exists():
+            print((WORK / "g4_summary.json").read_text())
+        return p.returncode
+
+    # P100 G4: the existing TENDL-2025 run (default --dataset/--profile, unchanged), plus a
+    # second independent run on the 8 TENDL-2017 inputs against the --profile tendl G5 build
+    # (target/p100/g5_gamma_2017.npz, built by controls/p94_g5_actinv.py under
+    # ACTINV_GAMMA_PROTOCOL=P100). Both must pass. Combined into g4_summary.json so cmd_verdict
+    # needs no protocol-specific change.
+    out2025 = WORK / "g4_2025_summary.json"
+    p1 = subprocess.run([sys.executable, str(script), "--library", str(lib), "--out", str(out2025)])
+    r2025 = json.loads(out2025.read_text()) if out2025.exists() else {"pass": False, "returncode": p1.returncode}
+
+    lib2017 = WORK / "g5_gamma_2017.npz"
+    out2017 = WORK / "g4_2017_summary.json"
+    if not lib2017.exists():
+        r2017 = {"pass": False, "error": f"{lib2017} is missing; build the TENDL-2017 G5 library "
+                                          f"first (ACTINV_GAMMA_PROTOCOL=P100 "
+                                          f"python3 controls/p94_g5_actinv.py)"}
+    else:
+        p2 = subprocess.run([sys.executable, str(script), "--library", str(lib2017),
+                              "--dataset", "tendl2017", "--profile-normalize", "--out", str(out2017)])
+        r2017 = json.loads(out2017.read_text()) if out2017.exists() else {"pass": False, "returncode": p2.returncode}
+
+    combined = {"pass": bool(r2025.get("pass")) and bool(r2017.get("pass")),
+                "tendl2025": r2025, "tendl2017": r2017}
+    (WORK / "g4_summary.json").write_text(json.dumps(combined, indent=1, sort_keys=True))
+    print(json.dumps({"pass": combined["pass"], "tendl2025_pass": r2025.get("pass"),
+                       "tendl2017_pass": r2017.get("pass")}, indent=1))
+    return 0 if combined["pass"] else 1
 
 
 # ------------------------------------------------------------------- verdict
