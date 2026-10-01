@@ -1005,6 +1005,7 @@ cf63b45da39584710fe7f93495a4e97faa816b47bb9d24be7059c29fb0d79bfc  ./paper/tendl-
 0da56e7f511c367e0f4320fbe0f38cb52bace1db5f7b050cf7c4f75245dacf5e  ./paper/tendl-threshold-note/supplement/environment.json
 b743b0b20c68c0f24330a36f8724b87bac93a8b263c990ace1cbe7b9cba2f34a  ./paper/tendl-threshold-note/supplement/reproduce_tendl2025_thresholds.py
 627990751a4730fe22e457ea2fa334fca25ae0eae7f463c8677e488e5dbb7398  ./protocols/ACTINV-CB1_PROTOCOL.md
+85b8966d8ada7b2cb248f0e9986224ccff56031b0f624e4e8d03d31e96d39578  ./protocols/ACTINV-P100_PROTOCOL.md
 e7fb61dc755f02675c92c57d2f13f6872a6087e24165b0b3fd128dc86df140fd  ./protocols/ACTINV-P10_AMENDMENT_A.md
 36fe887080b03af2851c00a92ebcd5fe93fa4f4bded69c37415ead2626f8cc23  ./protocols/ACTINV-P10_AMENDMENT_B.md
 afa3f1ab58236a36148fe51265cc1d3fe2ae1de31b9b4a9a4a18d0fdd45145de  ./protocols/ACTINV-P10_AMENDMENT_C.md
@@ -1173,7 +1174,7 @@ df264797e6e0f798d0f84d45ecc6a76b68fb070f24ce73f4397f87bd709a5914  ./protocols/HY
 f16e43ed6d79f0ab1da8505d0b62aa0ee167b5fde29efda5f759fca4e7948936  ./protocols/desktop-historical-checks-v1.md
 08d360c85b47152e78b4fa20b79d6f807778d2c630854bd09b2c047ca0e99c9f  ./protocols/desktop-interface-v1.md
 0f52d7bf346d077afb6cd52a4999101b92050a20dbc9e2d713bf1ff5f3efda6b  ./protocols/desktop-packaging-v1.md
-068b60e514f5428cef9d728608ac4246d0db34ab06b0df047edd63019848cbad  ./protocols/protocol_hash.txt
+3a4a307b94ff7716a6ff00ae1f1aeaec88ad481bf2f4540704ba99fbc9b0a2cc  ./protocols/protocol_hash.txt
 4a8925d08996b759120238021ff7af4c8ac9f814082ec1aa1183372c81ca0545  ./protocols/w-matcmp.p36.study.json
 7837466957fcd65be7bbe633fa7b07a2ddccab74b034c5ddf195814e0100632d  ./prototypes/p26_campaign.py
 846abac070437d1c99b6165549f1891e2ef2d58fc7b8b4de3555868e9025bae6  ./python/Cargo.lock
