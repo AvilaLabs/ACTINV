@@ -422,7 +422,10 @@ def left_value_at(table, e):
     is used elsewhere for right-continuous group collapse, while the protocol's threshold
     extension explicitly asks for each MF=10 section's own "left limit" at E3."""
     x, y = table["x"], table["y"]
-    if not x or e < x[0] or e > x[-1]:
+    # Nothing is tabulated below the first point, so the limit from below there is 0 (P100 run 1
+    # read the first point's own value, triggering a spurious zero-width extension at MTs whose
+    # states start exactly at E3; corrected after that run, disclosed in the ledger).
+    if not x or e <= x[0] or e > x[-1]:
         return 0.0
     import bisect
     first = bisect.bisect_left(x, e)
@@ -467,7 +470,7 @@ def apply_mf3_threshold_extension(mt, mf3_table, mf10_zap_ge0_sections):
                           f"is not lin-lin on a segment below E3={e3!r})")
                 return mf3_table, False, reason
     added_x = sorted({x for t in mf10_zap_ge0_sections for x in t["x"] if x < e3})
-    added_y = [sum(left_value_at(t, x) for t in mf10_zap_ge0_sections) for x in added_x]
+    added_y = [sum(evaluate(t, x) for t in mf10_zap_ge0_sections) for x in added_x]  # the value there
     joining_y = sum(left_value_at(t, e3) for t in mf10_zap_ge0_sections)
     orig_x0, orig_y0 = mf3_table["x"][0], mf3_table["y"][0]
     new_x = added_x + [e3, orig_x0] + list(mf3_table["x"][1:])

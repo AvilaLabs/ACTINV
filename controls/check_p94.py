@@ -41,10 +41,10 @@ MAIN = Path.home() / "Documents" / "actinv"
 # its own reference binary (target/p100/ref_actinv, per that protocol's Gates section -- P94 and
 # P98 keep target/p94/ref_actinv).
 GAMMA_PROTOCOL = os.environ.get("ACTINV_GAMMA_PROTOCOL", "P94")
-if GAMMA_PROTOCOL not in ("P94", "P98", "P100"):
+if GAMMA_PROTOCOL not in ("P94", "P98", "P100", "P101"):
     sys.exit(f"unknown ACTINV_GAMMA_PROTOCOL {GAMMA_PROTOCOL}")
 WORK = ROOT / "target" / GAMMA_PROTOCOL.lower()
-REF = ROOT / "target" / ("p100" if GAMMA_PROTOCOL == "P100" else "p94") / "ref_actinv"
+REF = ROOT / "target" / (GAMMA_PROTOCOL.lower() if GAMMA_PROTOCOL in ("P100", "P101") else "p94") / "ref_actinv"
 CAND = ROOT / "target" / "release" / "actinv"
 SPECS = MAIN / "target" / "p75b" / "specs"
 MESH = ["fe_coupled", "fe_p21like", "ss316_r2s"]
@@ -93,7 +93,7 @@ G1_UNIT_TESTS = (
     "spec::duration_tests::gamma_spec_requires_zero_kelvin_and_no_fission_yields",
 )
 # P100 G1 ("P100 includes everything P98 runs") carries P98's additions forward in full.
-if GAMMA_PROTOCOL in ("P98", "P100"):
+if GAMMA_PROTOCOL in ("P98", "P100", "P101"):
     G1_UNIT_TESTS += (
         "builder::tests::gamma_zero_izap_photofission_total_is_the_sentinel_under_a_profile",
         "builder::tests::gamma_zero_izap_photofission_total_fails_closed_without_a_profile",
@@ -162,7 +162,7 @@ def cmd_build() -> int:
             for name in G1_UNIT_TESTS}
     runtime_path = WORK / "g1_gamma_runtime.json"
     runtime = json.loads(runtime_path.read_text()) if runtime_path.exists() else {"pass": False}
-    p100_tests = g1_p100_tests(tests) if GAMMA_PROTOCOL == "P100" else None
+    p100_tests = g1_p100_tests(tests) if GAMMA_PROTOCOL in ("P100", "P101") else None
     g1 = (p.returncode == 0
           and all(rc.get(k) == "0" for k in ("fmt", "clippy", "test", "release", "pymodule", "runtime"))
           and all(unit.values()) and runtime.get("pass") is True
@@ -403,12 +403,16 @@ def g3_p100_extension_vs_p98_baseline(cand_npz: Path, cand_idx: dict) -> dict:
     bounds_identical = bool(np.array_equal(cand_bounds, base_bounds))
 
     def keyed(rows, sig, idx):
+        # Each sig row is reduced to the SHA-256 of its exact float64 bytes, so the multiset
+        # comparison stays exact while ~5e5 x 162 values are never held as Python floats (the
+        # first P100 G3 run, which did, was killed by the 6 GB cap before any comparison).
         za_by_index = [t["za"] for t in idx["targets"]]
+        contiguous = np.ascontiguousarray(sig, dtype="<f8")
         out = {}
         for i in range(rows.shape[0]):
             ti, mt, zap, lfs, lmf = (int(x) for x in rows[i])
             key = (za_by_index[ti], mt, zap, lfs, lmf)
-            out.setdefault(key, []).append(tuple(float(v) for v in sig[i]))
+            out.setdefault(key, []).append(hashlib.sha256(contiguous[i].tobytes()).digest())
         return out
 
     cand_by_key = keyed(cand_rows, cand_sig, cand_idx)
@@ -555,7 +559,7 @@ def cmd_g3() -> int:
           and not unsupported and not convergence and smoke["pass"]
           and (GAMMA_PROTOCOL != "P98" or identical_to_p94))
     p100_extension = None
-    if GAMMA_PROTOCOL == "P100":
+    if GAMMA_PROTOCOL in ("P100", "P101"):
         p100_extension = g3_p100_extension_vs_p98_baseline(out, idx)
         ok = ok and p100_extension["pass"]
     report.update({
@@ -596,7 +600,7 @@ def cmd_g4() -> int:
     if not lib.exists():
         sys.exit(f"{lib} is missing; run g3 first to build the gamma library")
 
-    if GAMMA_PROTOCOL != "P100":
+    if GAMMA_PROTOCOL not in ("P100", "P101"):
         p = subprocess.run([sys.executable, str(script), "--library", str(lib),
                              "--out", str(WORK / "g4_summary.json")])
         if (WORK / "g4_summary.json").exists():
