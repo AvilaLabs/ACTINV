@@ -10,8 +10,8 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
-203f7f58731c120c201ca11deb13979c2545879de727ae09752a518e922a0f2f  ./CHANGELOG.md
-6e88882dfb9932ca9187a1e641a5d67e99cc1395a8abec9e24e294bd3b427574  ./COMPETITIVE_BENCHMARK.md
+31e043de693191b8d738c4fb162767ac072917c3901d380c0a2fa970a335b867  ./CHANGELOG.md
+19356fe59b98c92c3d8a4868c85964de27ea6e2031d402901dcf81613e3ea437  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 4a5a361eb24c1459e44a7456f2503049b003470ada418e176013fe7afa2e1592  ./Cargo.lock
 d091f97fdcc1a3df12dfb50ebfaa3ec8ea0bbfeece1b2356b78b47c5aa36cafb  ./Cargo.toml
@@ -889,8 +889,8 @@ c901b2287ed994f65a3517003d1d667aa669ba6c7f807edc0e4c86957935523a  ./docs/TENDL20
 05e8830ccdb59aa282fb2c1bcbc5314c8923d3b44fae15533ac099416cbda82f  ./docs/WEB.md
 3d13dfa1b8a1cc2c9ad0c6320cb26ff46b02d91423a38772468dd8881f2b70d9  ./docs/defects/README.md
 dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects/pb208-nan-field.md
-097d6e01d35b2ffc45728efb89f2e282241192688cf2c2cfaa5429f732206508  ./docs/defects/processed-mt5-product-drops-doubled-threshold-point.md
-38b8037a5799b75a1398b01b688bcdb1ca7031ed5cd4bb52fef815c63b06e9e5  ./docs/defects/tendl2017-gamma-threshold-and-photofission-encoding.md
+09883998a9588c7dbde703731fa8b6e3fe129526c4b25f5c945068c6d1e6dae5  ./docs/defects/processed-mt5-product-drops-doubled-threshold-point.md
+46326fd76c20ec38fa779bfeb607097c9a416cc40eb5f24262e3e37b6e5891d7  ./docs/defects/tendl2017-gamma-threshold-and-photofission-encoding.md
 2a77dcfdc893688d4fea08eb30bb4092038d30df4826a69c19e4abdc2931f97f  ./docs/defects/tendl2023-o18-width-inconsistency.md
 245f5933ab759ab1961691ab03111502c748ae54395af2fa3802b818ab2f5c9f  ./docs/defects/tendl2023-orphan-product-sections.md
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
@@ -906,11 +906,11 @@ d6b802b64e1de3706585ff54dc1d3e9cf2303a717367701422909cdc4c8ace92  ./docs/guide/i
 989c944f098054d01032bcb52b008c3b7a25c6e2f9dad23d547cd664e5f42eb1  ./docs/guide/method.md
 e2b5e857553bd5bfcac04a7a8882f88ea316acff8594c16a61239957ba3fc860  ./docs/guide/problems.md
 9f55ff6259cd89bd3fe6452efb324d2b92602baaa69b261433ea0666dd69d3b6  ./docs/guide/python.md
-7032ad2092a2d9bf207a422c427391683d62ddfa03bbd58fba5ce1df0a6968dd  ./docs/guide/qualification.md
+92f85fbc60f809c9b9e8adcfdccefabcd874aad7fa349c563df87183cd31b8b6  ./docs/guide/qualification.md
 6b827c7dfc13e20fc0f2e663472859ce2b9779179b56b4ef49b2df29f2629ae6  ./docs/guide/quick-start.md
 4023730f669f8f1cc7a8eaf8eb21d64c1e07d0eaa94141f1be210abd477a131c  ./docs/guide/releases.md
 9d1e15e42548b69dd8c5816a11447ed4445039fa4ba29f666e8cce87830cc99b  ./docs/guide/results.md
-49d154d90c8bb61f1f122da4c4a3d146287546388b161a0d8f10300f18051c14  ./docs/guide/specification.md
+9054a83630d5c348c7adead81411dc1f35bda9e22bf1434ed36eede4040363a5  ./docs/guide/specification.md
 e7d781c721fd6bd9d9177f96d870b20b104975585c54e3f01be77697e356cf7a  ./docs/guide/troubleshooting.md
 ac4c91f970b5e192efe4efdec60bafd00c6569ec6e672e2ef061610c66df0081  ./docs/guide/validation.md
 f7bfecab8e08ad9179e18a5a819d7448d0f771cef617cec3d1bd94c608a59c63  ./docs/guide/workflows.md
@@ -977,7 +977,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-9c4894cf109da243ccc63470740e87f8dae59eff5a9bf7952e890d7975bdd49c  ./ledger.md
+a8942f38691aad9dd47b9c527e9f97f113a4417d3138cb1a718925acec1c744c  ./ledger.md
 03a2c5ab61b86a1feab235bf5a2b9a15727745380227a52959ccf30e1b87e271  ./packaging/actinv.ico
 2c1f5aaf1917f228e34adb205aaed84066179f125fa5ae94391df539f7122dd9  ./packaging/desktop.json
 371becebd005e36a596da0a9c2b9ceae85acdb870a659b55ca3fc1350c783e7e  ./packaging/install-linux.sh
@@ -3406,6 +3406,7 @@ b429642e58b630fd0df91b5fdd25559fc655b92cc2010bfd7ba106fd847939e7  ./results/mani
 2854484244b7198a7d3e5d7c8f0aafb2a311b7934a3c9152883eda000ba1d45d  ./results/openmc_fns_headtohead.json
 ce9fdb9858b23c663b64051b9008dec3f4b4119cd0161813184c33ab3cddca63  ./results/openmc_r2s_demo.json
 76835e7788d9e07274346c79f373e9b603d01165fdc4396718d2c5f0b7a40ec9  ./results/p100_verdict.json
+76b89b46b1aa234ce35ad9a9e741f013e2b5e8db0b65c5a314eab54c54a77d1e  ./results/p101_verdict.json
 52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e  ./results/p14_performance.json
 db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_quality.json
 2f5669d71f0959bb25571e189dd9de733ef237e314d78b0e790e778f2f63da0f  ./results/p15_cache_integrity.json

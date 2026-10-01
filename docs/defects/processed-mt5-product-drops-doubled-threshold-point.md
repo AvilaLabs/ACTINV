@@ -66,4 +66,8 @@ product exactly, as the ENDF-6 interpolation laws define it.
 
 None. ACTINV's build is unchanged. P98 G5, which compares one-group values against this record
 within 2e-3, failed on these differences together with the threshold class in
-`tendl2017-gamma-threshold-and-photofission-encoding.md` (ledger Entry 75).
+`tendl2017-gamma-threshold-and-photofission-encoding.md` (ledger Entry 75). P100 and P101 (ledger
+Entry 76) instead compare FISPACT-II's processed MT5 sections with the rule described above. In
+P101 all 1,002 sections agree within one unit of the last printed digit, at worst 0.89 units, so
+FISPACT-II's own arithmetic adds slightly to rounding. ACTINV's exact MT5 integration is checked
+against independent code instead (to 1.4e-13).

@@ -437,9 +437,17 @@ Photofission is recognized only as a total cross section: the MF=10 IZAP=−1 to
 or, under a normalization profile such as `--profile tendl`, the TENDL-2017 encoding of the same quantity as a single
 MF=10 IZAP=0 LFS=0 section with no MF=3 MT=18 (P98, recorded in the ledger). An evaluation that declares actual
 photofission product yields under MT=18 fails closed, since photofission yields are out of scope for v1. TENDL-2017
-gamma files also contain MF=3 tables that start above the reaction threshold; under the default profile they fail
-closed on the emitted-state sum, and under `--profile tendl` they are reconciled per group and recorded as
-`state_sum_normalized`.
+gamma files also contain MF=3 tables that start above the reaction threshold while the MF=10 states carry the ramp
+from threshold. Under the default profile these fail closed on the emitted-state sum, or, where the state sum
+stays within the standard zero-total envelope, are scaled to the zero total with a ledger record, so build TENDL-2017
+gamma files with `--profile tendl`. Under `--profile tendl` the
+builder applies the MF=3 threshold extension (P100): for each such MT it extends the MF=3 table below its first
+energy E3 with the summed MF=10 states (ZAP ≥ 0), one point at each energy below E3 that a state tabulates, plus a
+joining point at E3 carrying the states' summed left limit, interpolated lin-lin. The extension applies only when
+every state is lin-lin below E3; otherwise the MT is left unchanged and the ledger says why. Each extension writes a
+`MT<n>: MF=3 threshold extension: …` ledger line, and remaining per-group differences are reconciled and recorded as
+`state_sum_normalized`. Without the extension the threshold group's production would be scaled to the zero MF=3
+total and lost. No TENDL-2025 gamma file triggers it.
 
 Pass `--decay` (and `--decay-fallback`) when building a gamma library: isomer labels then resolve against the decay
 sublibrary the runtime uses. Without decay data the builder falls back to its target catalog and label ranks.

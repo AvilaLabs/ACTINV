@@ -16,7 +16,7 @@ The certificate identifies the files used. It does not establish that those inpu
 
 | Capability | Boundary |
 | --- | --- |
-| Neutron, proton, deuteron, alpha, and gamma (photonuclear) activation | No triton or helion activation; no photofission product yields and no temperature treatment for gamma |
+| Neutron, proton, deuteron, alpha, and gamma (photonuclear) activation | No triton or helion activation. Gamma is current master only: no photofission product yields, no temperature treatment, and no published library (build from the TENDL `g` sublibrary); cross-code agreement with FISPACT-II is established below 30 MeV, and above it only against FISPACT-II's own MT5 processing rule |
 | Single-material and independent-cell inventories | No particle transport, criticality, spatial material exchange, or thermal/flux feedback |
 | Photon sources and contact gamma response | Contact response is a semi-infinite-slab screening proxy; ordinary exports use a point at the origin |
 | Finite-dilution neutron self-shielding | Explicit unresolved-range Bondarenko table required; no resolved-region pointwise shielding; damage is not shielded |

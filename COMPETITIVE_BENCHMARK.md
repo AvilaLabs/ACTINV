@@ -42,10 +42,11 @@ absent; `?` = not verified from sufficient current official evidence. "Unverifie
 | transport-tally statistical error as a flux uncertainty channel | V‡ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
 | lean R2S mesh output (dotted `cell_result_fields`) | V§ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
 | impurity budgets for clearance | V¶ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
+| photonuclear (incident-gamma) activation | P‖ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
 
 None of the 17 CB1-era axis cells (rows above the gas-production row) changed tier since CB1: no
 protocol/verdict evidence from 2026-08-28 to 2026-09-30 moved any of them from one of `V`/`P`/`A`/`?`
-to another. The four rows below them are new axes CB1 did not score; the competitor cells there are
+to another. The five rows below them are new axes CB1 did not score (the photonuclear row was added 2026-10-01); the competitor cells there are
 marked `not surveyed` rather than guessed, as CB1 did not evaluate ALARA, OpenMC, FISPACT-II, or
 SCALE/ORIGEN on these specific axes.
 
@@ -99,6 +100,21 @@ only on its second attempt: **P87 FAILed** (CLI and Python documents differed in
 activation products are absent from the bundled IAEA clearance table reports no clearance-index
 response rather than an invented value (e.g., Ag-108m). Ledger Entries 59, 68, 69; `CHANGELOG.md`
 Unreleased; `docs/guide/workflows.md`, `docs/BUDGET.md`.
+
+`‖` **Photonuclear (incident-gamma) activation.** `build-library --projectile gamma` builds
+162-group libraries from the TENDL `g` sublibrary, and `projectile: "gamma"` runs them with
+photon-labelled flux. Scored `P`, not `V`: photofission is a total only (product yields fail
+closed), there is no temperature treatment, and no gamma library is published through
+`actinv data fetch`. The CB1 "projectiles and energy domain" cell stays `P` (no triton or helion).
+**P94 FAILed** (the candidate could not build the TENDL-2017 inputs of its FISPACT-II gate) and **P98 FAILed** (162/323 cross-code values within 2e-3,
+against 95 %). **P100 FAILed** (a checker crash, a checker left-limit error, and a false premise
+about the reference's printed digits). **P101 PASSed** (`results/p101_verdict.json`, `"pass":
+true`). Against FISPACT-II's processed TENDL-2017 `gxs-162` records on 8 nuclides, 95/95 non-MT5
+one-group values agree within 2e-3 (max 1.3e-6), all below 30 MeV. Above 30 MeV TENDL-2017
+carries only MT5, where FISPACT-II's processing follows a different rule. That rule is reproduced
+within one unit of FISPACT-II's last printed digit on all 1,002 sections, and ACTINV's exact
+integration matches an independent code to 1.4e-13. Ledger Entries 75, 76; `CHANGELOG.md`
+Unreleased; `docs/guide/specification.md`, `docs/guide/qualification.md`.
 
 A capability existing does not establish its accuracy for every application or material; see the
 per-row evidence above and the limits named in each cited verdict before relying on a `V`.

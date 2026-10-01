@@ -32,6 +32,17 @@
   selected fields without serializing the whole result. The OpenMC R2S adapter now keeps only
   `steps.photon_source.groups` per step: `ss316_r2s` cells are 1.26x faster at 1 thread and write 4.6 %
   of the bytes. Output without dotted entries is unchanged (P90).
+- Photonuclear (incident-gamma) activation: `build-library --projectile gamma` builds 162-group libraries
+  from the TENDL `g` sublibrary, and `projectile: "gamma"` runs them with photon-labelled flux, including
+  OpenMC photon tallies and mesh runs. Single-neutron production is counted once, MTs without MF=8 resolve
+  their ground-state residual from the MT definition, and photofission is a total only (yields fail
+  closed). Under `--profile tendl`, the TENDL-2017 IZAP=0 photofission total is accepted (P98) and MF=3
+  tables that start above threshold are extended below their first point by the MF=10 state sum, so the
+  threshold group is kept (P100). Against FISPACT-II's processed TENDL-2017 `gxs-162` records on 8
+  nuclides, 95/95 non-MT5 one-group values agree within 2e-3 (max 1.3e-6). FISPACT-II's MT5 residual
+  production follows a different processing rule, which is reproduced within its printed precision on all
+  1,002 sections; ACTINV integrates the MT5 product exactly (P101). Gamma libraries are not yet
+  published through `actinv data fetch`.
 
 **Fixed**
 

@@ -39,9 +39,13 @@ residual nuclide.
 
 - **Default profile (`none`):** construction fails closed on both classes. Five of the eight files
   are refused.
-- **`--profile tendl`:** class 1 is reconciled per group and recorded as `state_sum_normalized`.
-  The state rows are scaled to the MF=3 total, which is zero below the first MF=3 point, so the
-  threshold-ramp group is lost.
+- **`--profile tendl`:** class 1 is handled by the MF=3 threshold extension (P100, merged after
+  P101 PASS, ledger Entry 76). The MF=3 table is extended below its first point by the MF=10
+  state sum, so the threshold-ramp group is kept, and each extension is recorded in the ledger.
+  Before P100 the state rows were scaled to the zero MF=3 total and that group was lost.
+- **Default profile, small ramps:** a file whose lost state sum stays within the standard
+  zero-total envelope (≤ 1e-3 b, as for Al-27 MT4) still builds without the extension, with the
+  group scaled to zero and recorded. Build TENDL-2017 gamma files with `--profile tendl`.
 - **Class 2:** handled by the P98 rule. Under a normalization profile, exactly this shape is read
   as the IZAP=-1 sentinel and recorded in the ledger. Any other shape still fails closed.
 
@@ -61,7 +65,9 @@ In each case, the CCFE-162 group just below the first MF=3 point has a zero MF=3
 nonzero MF=10 state sum.
 - **ACTINV:** the state rows in that group are scaled to the zero total. This happens under the
   standard zero-total envelope (≤ 1e-3 b, as for Al-27) or under `--profile tendl`. The group's
-  production is lost, and the loss is recorded in the ledger.
+  production is lost, and the loss is recorded in the ledger. Since P100 (ledger Entry 76),
+  `--profile tendl` keeps it; P101 G5a then found 95 of 95 non-MT5 values within 2e-3 of
+  FISPACT-II (maximum 1.3e-6).
 - **FISPACT-II (`tal2017-g/gxs-162`):** keeps the MF=10 ramp. For example, Al-27 → Al-26 in
   13–14 MeV is 4.29e-4 b in FISPACT-II and 0 in ACTINV.
 

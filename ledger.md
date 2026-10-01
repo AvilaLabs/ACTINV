@@ -2226,3 +2226,86 @@ sum would stand in for a zero MF=3 total below the first MF=3 point, for gamma u
 Cause 1 makes FISPACT-II's processed MT5 groups unusable as a 2e-3 reference near 30–35 MeV. How a
 successor's cross-code gate treats a reference whose processing differs by a known, reproduced rule
 is left open here.
+
+## Entry 76 — Photonuclear activation: P100 FAIL, P101 PASS; merged (2026-10-01)
+
+**P100** (`85b8966d…`) was registered before the threshold-extension code was written. It was
+designed after P98's diagnosis, so FISPACT-II values had already been read; the protocol
+disclosed this and kept P98's bands.
+- **Change:** P98's change plus the MF=3 threshold extension. For gamma under a normalization
+  profile, an MT whose MF=3 table starts above a positive MF=10 state ramp gets the summed states
+  (ZAP ≥ 0) prepended below its first energy E3, with a joining point at E3 carrying the summed
+  left limit. The added region is lin-lin; a non-lin-lin state below E3 leaves the MT unchanged
+  with a ledger reason. Branch `p100-gamma`, code `2a555cb`; 6 new unit tests.
+- **Reference:** master release built from `410c485` (`c1777524…`). **Candidate:** `b70d4953…`.
+
+Verdict `results/p100_verdict.json`, **FAIL**:
+- G0, G1, G2 and G6 PASS. G5a PASS: 95 of 95 non-MT5 values within 2e-3, maximum 1.26e-6.
+- **G3 not completed.** The checker's new row comparison held about 5e5 × 162 values as Python
+  floats and was killed by the 6 GB cap (exit 137). No comparison result exists; the crash is
+  recorded in `target/p100/g3_summary.json` (`"completed": false`).
+- **G4 FAIL on TENDL-2017.** Every value matched to 1e-13, but the independent extension count
+  was one higher than the builder's for Nb-93, Ta-181 and W-186. The checker's `left_value_at`
+  returned a table's first-point value at its own first energy, where the left limit is 0, which
+  produced a zero-width extension at MTs whose states start exactly at E3 (MT102, MT107). A checker
+  defect; the builder was right. TENDL-2025 passed.
+- **G5b FAIL.** 751 of 1,002 MT5 sections were within 1e-5 of rule R; the rest were within
+  4.36e-5. The protocol's premise that the processed files carry 7 significant digits is false:
+  their 10-character E fields carry 5 digits with a two-digit exponent and 6 with a one-digit
+  exponent. Every deviation inspected sits in a 5-digit value.
+
+The FAIL stands.
+
+**P101** (`bb232197…`) was registered after the P100 run and before any P101 gate ran.
+- Identical to P100 except G5b, which compares at the reference's printed precision: pass if
+  |F − R| ≤ one unit in F's last printed digit (half for rounding, an equal allowance for the
+  reference's own arithmetic); a printed zero with R ≥ 1e-12 b fails.
+- It discloses that P100's G5b deviations were seen before it was written, and that the G3
+  comparator (now SHA-256 digests of each row's bytes) and G4's `left_value_at` (now the true left
+  limit, 0 at a table's first energy) changed after a P100 run. Both are implementation fixes to
+  P100's text; no threshold changed.
+- No builder code changed: the candidate is again `b70d4953…` from `2a555cb`. The branch later
+  gained only master merges and checker files.
+
+Verdict `results/p101_verdict.json`, **PASS**, all gates run afresh into `target/p101/`:
+- **G1:** fmt, clippy, tests, release and Python module exit 0; all P98 tests and 6 of 6 P100
+  tests pass; gamma runtime analytic error 1.6e-14; CLI, Python and prepared-mesh certificates
+  match.
+- **G2:** 783 specs and the 3 mesh profiles bitwise identical to the reference; the 2,773-target
+  proton library byte-identical (`34b42cee…`); P32 import identical.
+- **G3:** 2,850 TENDL-2025 gamma targets, 488,955 rows, zero failures; the library is
+  byte-identical to P98's (`d4590b8e…`). No TENDL-2025 file triggers the extension (0 ledger
+  lines, 0 changed (target, MT) pairs). Peak RSS 2.4 GB.
+- **G4:** the independent code matches the builder to 1.70e-13 on the 4 TENDL-2025 nuclides and
+  1.36e-13 on the 8 TENDL-2017 inputs, with exact zeros at or above 200 MeV, two-way row
+  existence, and extension and `state_sum_normalized` counts equal to the builder ledger's
+  (36 extension lines, 17 `state_sum_normalized` lines).
+- **G5:** all 8 TENDL-2017 inputs build (36 extension lines).
+  - G5a: 95 of 95 non-MT5 values within 2e-3, maximum 1.26e-6, every nuclide covered under
+    `gdr_flat_8_30_MeV` and `brems_20_MeV`. `hard_60_MeV` contributes no non-MT5 value: in these
+    files the non-MT5 totals there are exactly 0 on both sides, and production above 30 MeV is
+    MT5 alone. Cross-code agreement is therefore established below 30 MeV.
+  - G5b: all 1,002 MT5 sections equal rule R within one unit of the last printed digit. The
+    largest deviation is 0.89 units (4.36e-5 relative). Some values exceed half a unit, so
+    FISPACT-II's own processing arithmetic contributes beyond rounding; this is inside the stated
+    allowance and is disclosed here.
+  - Reported, not gated: P98's all-MT comparison is now 172 of 323 within 2e-3 (P98: 162), with
+    the remaining failures in `hard_60_MeV` (77 of 228), where MT5 dominates. Group rows: 0 of 988
+    within 2.5e-3, as before; every row has a 30–35 MeV MT5 group.
+- **G6:** CI replay, all 23 steps exit 0 (`target/p101/ci_replay_summary.log`).
+  - **Input wiring error, found and corrected after the first verdict.** Both the P100 and P101
+    chains copied `target/ci-replay/summary.log` into the run directory, but that file was a
+    stale replay from 2026-09-30 (`END 21:31:48`). Each run's own replay went to
+    `replay_console.log`. The first P101 verdict's G6 therefore read the stale file. I replaced
+    `ci_replay_summary.log` with this run's own replay (`END 17:18:31`, 23 of 23 steps exit 0),
+    kept the stale copy as `ci_replay_summary.stale_2026-09-30.log`, and re-ran only the verdict
+    assembly; the G6 rule is unchanged and so is the result.
+  - P100's verdict carries the same stale input. P100's own replay (`target/p100/replay_console.log`,
+    `END 16:54:10`) also has all 23 steps exit 0, so its G6 PASS holds on the right input.
+
+**Merged** to master with the docs: `docs/guide/specification.md` (gamma section),
+`docs/guide/qualification.md` (gamma boundary), `CHANGELOG.md` Unreleased,
+`COMPETITIVE_BENCHMARK.md` (new photonuclear row, scored `P`). Gamma libraries are not published
+through `actinv data fetch`; that remains a separate release decision. The two FISPACT-II and
+TENDL-2017 notes in `docs/defects/` stay held. Evidence: `target/p100/`, `target/p101/` on the
+branch worktree.
