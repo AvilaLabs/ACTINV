@@ -7,7 +7,8 @@ Inputs:
   - the pinned FISPACT-II archive, verified by size and SHA-256, with the gamma gxs-162 records
     stream-extracted by ~/nuclear-data/scripts/extract_fispact_gamma.py.
 
-FISPACT-II side: group values reconstructed with the P10 G5 reader (parse_independent,
+FISPACT-II side (records carry no MF=6/MF=8; MT5 residuals are MF=10 with ordinally relabelled
+LFS, recovered by rank from the raw evaluation): group values reconstructed with the P10 G5 reader (parse_independent,
 production_terms, evaluate at each group's lower bound, as processed_row does). The reader's
 term logic is split per MT here so each raw LFS can be mapped through the candidate index's
 (MT, ZAP, raw LFS) -> canonical LISO record; the split is checked against production_terms for
@@ -195,7 +196,7 @@ def main() -> int:
     for target_index, target in enumerate(index["targets"]):
         za = int(target["za"])
         stem = Path(target["file"]).stem.split("-")[-1]
-        candidates = sorted(EXTRACTED.glob(f"{stem}*"))
+        candidates = sorted(EXTRACTED.glob(f"{stem}g.asc"))  # exact: Nb093mg.asc is the isomer target
         if len(candidates) != 1:
             raise ValueError(f"expected one FISPACT gamma record for {stem}, found {[p.name for p in candidates]}")
         processed = candidates[0]
@@ -216,6 +217,36 @@ def main() -> int:
 
         terms = per_mt_terms(evaluation)
         split_keys = check_split(evaluation, terms, bounds)
+        # The processed record carries no MF=6/MF=8; MT5 residuals are MF=10 sections whose LFS
+        # FISPACT-II has relabelled ordinally (raw 0, 10 -> 0, 1). Recover each raw LFS by rank
+        # within its (MT, ZAP) from the raw evaluation the candidate built, then map it through
+        # the candidate index. A count mismatch leaves the state unmapped (unmatched).
+        raw = parse_independent(RAW_DIR / target["file"])
+        raw_states: dict[tuple[int, int], set[int]] = {}
+        for mt, descriptors in raw["mf8"].items():
+            for descriptor in descriptors:
+                raw_states.setdefault((mt, descriptor["zap"]), set()).add(descriptor["lfs"])
+        for kind in ("mf9", "mf10"):
+            for mt, products in raw[kind].items():
+                for product in products:
+                    raw_states.setdefault((mt, product["zap"]), set()).add(product["lfs"])
+        processed_states: dict[tuple[int, int], set[int]] = {}
+        for mt, zap, lfs, _, _ in terms:
+            if lfs is not None:
+                processed_states.setdefault((mt, zap), set()).add(lfs)
+        relabelled = []
+
+        def raw_lfs(mt: int, zap: int, lfs: int) -> int | None:
+            ours_raw = sorted(raw_states.get((mt, zap), ()))
+            theirs = sorted(processed_states[(mt, zap)])
+            if ours_raw == theirs:
+                return lfs
+            if len(ours_raw) != len(theirs):
+                return None
+            recovered = ours_raw[theirs.index(lfs)]
+            relabelled.append({"mt": mt, "zap": zap, "processed_lfs": lfs, "raw_lfs": recovered})
+            return recovered
+
         fispact_rows: dict[tuple[int, int], np.ndarray] = {}
         unmapped = []
         sources = {}
@@ -223,13 +254,14 @@ def main() -> int:
             if zap <= 1:  # photons/sentinels, and the emitted free neutron (not a residual)
                 continue
             sources[source] = sources.get(source, 0) + 1
+            recovered = None if lfs is None else raw_lfs(mt, zap, lfs)
             if lfs is None:
                 liso = 0
-            elif (mt, zap, lfs) in mapping:
-                liso = mapping[(mt, zap, lfs)]
+            elif recovered is not None and (mt, zap, recovered) in mapping:
+                liso = mapping[(mt, zap, recovered)]
             else:
-                unmapped.append({"mt": mt, "zap": zap, "raw_lfs": lfs, "source": source,
-                                 "row": group_values(tables, bounds)})
+                unmapped.append({"mt": mt, "zap": zap, "processed_lfs": lfs, "raw_lfs": recovered,
+                                 "source": source, "row": group_values(tables, bounds)})
                 continue
             key = (zap, liso)
             fispact_rows[key] = fispact_rows.get(key, 0.0) + group_values(tables, bounds)
@@ -265,7 +297,8 @@ def main() -> int:
             for u in unmapped:
                 share = one_group(u["row"]) / their_total if their_total > 0 else 0.0
                 if share >= SHARE_FLOOR:
-                    unmatched.append({"za": za, "zap": u["zap"], "raw_lfs": u["raw_lfs"], "mt": u["mt"],
+                    unmatched.append({"za": za, "zap": u["zap"], "processed_lfs": u["processed_lfs"],
+                                      "raw_lfs": u["raw_lfs"], "mt": u["mt"],
                                       "spectrum": spectrum, "fispact_share": share,
                                       "reason": "no candidate state mapping for this raw LFS"})
         for key in sorted(set(candidate_rows) & set(fispact_rows)):
@@ -280,6 +313,7 @@ def main() -> int:
                                "max_relative": deviations[worst],
                                "worst_group_eV": [float(bounds[group]), float(bounds[group + 1])],
                                "within_row_tolerance": deviations[worst] <= ROW_TOLERANCE})
+        nuclide_summary["relabelled_states"] = relabelled
         nuclide_summary["unmapped_raw_states"] = [{k: v for k, v in u.items() if k != "row"} for u in unmapped]
         nuclides[str(za)] = nuclide_summary
 
