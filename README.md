@@ -50,6 +50,19 @@ standalone command.
 > safety, waste classification, or regulatory decisions. See [Qualification boundary](docs/QUALIFICATION.md) before
 > using results in a formal analysis chain.
 
+## External review and integrations
+
+ACTINV support was merged into [JADE](https://github.com/JADE-V-V/JADE)'s `developing` branch on
+October 1, 2026. The [reviewed integration](https://github.com/JADE-V-V/JADE/pull/549) runs ACTINV
+locally and compares the initial FNS iron five-minute decay-heat case at all 20 measured cooling times.
+The accompanying [benchmark input and measurement package](https://github.com/IAEA-NDS/open-benchmarks/pull/26)
+was accepted into the IAEA Nuclear Data Section's Open Benchmarks repository the same day.
+
+See [external review, integrations, and validation](EXTERNAL_EVIDENCE.md) for the dated evidence and scope,
+and the [JADE setup guide](contrib/jade/README.md) for the merged upstream workflow. These records document
+acceptance of the integration and benchmark package; scientific benchmark results remain in the
+[validation documentation](docs/guide/validation.md).
+
 ## Quick start
 
 ### 1. Install ACTINV
@@ -348,7 +361,8 @@ Read the [ACTINV Handbook](https://actinv.avilalabs.org/docs/) for installation,
 
 Technical evidence and contributor material remain in the repository:
 [benchmark report](COMPETITIVE_BENCHMARK.md), [validation records](docs/VALIDATION.md),
-[data-source record](docs/DATA.md), and [maintainer documentation](docs/maintainers/DOCUMENTATION.md).
+[external evidence](EXTERNAL_EVIDENCE.md), [data-source record](docs/DATA.md), and
+[maintainer documentation](docs/maintainers/DOCUMENTATION.md).
 
 ## Contributing and licence
 

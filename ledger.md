@@ -2049,3 +2049,180 @@ After the verdict, master's docs-only handbook commits (`bc760a7`, `c7c9b48`, `0
 merged. They have no Rust changes, and the binary embeds no docs. `docs/SPEC.md` became a stub
 there, so P90's dotted-field paragraph moved to `docs/guide/specification.md`, and the stub's field
 table names the dotted form.
+
+## Entry 74 — P99 isomer labels without decay data: PASS, merged (2026-09-30)
+
+Found during P94. Without decay data, `build-library` assigns isomer labels from the target catalog,
+then falls back to the label's rank inside its (MT, ZAP) declared set. That rank ignores catalog-
+matched labels, so one canonical (ZAP, LISO) could name two physical states. Example: Bi-196 via MT5,
+where the 169 keV level ranked to LISO 1 and the 271 keV level matched catalog LISO 1. The inventory
+then merged isomers with different half-lives.
+- Builds with `--decay` were never affected, including the P94/P98 gamma G3 build.
+- The shipped neutron libraries were not affected: one maps through decay data, the patched one
+  routes unmatched labels to leakage.
+
+**P99** (`dfb57f1d…`).
+- **Rule:** a rank-mapped row whose excitation disagrees with every anchored row of its (ZAP, LISO)
+  group becomes explicit leakage (`lmf −3`, decision `no_catalog_rank_collision_to_leakage`). Its
+  production is retained, and a ledger line recommends `--decay`. The same applies to every row of
+  an unanchored group of rank rows that disagree with each other.
+- **Implementation:** a Sonnet agent wrote it to the frozen protocol; I reviewed the diff and the
+  checker's approach.
+- **Change after the agent's run:** the release build now returns an error, instead of only a debug
+  assertion, if the mappings and rows ever misalign. That was a fail-closed hardening, made before
+  the gated run.
+- **Re-gating:** master (P90) was merged before the gated run.
+
+Verdict `results/p99_verdict.json` on candidate `c1777524…`, reference `c7b8923d…`, **PASS**:
+- G0 PASS.
+- G1 PASS: five `p99_` unit tests.
+- G2 PASS: the TENDL-2025 proton library built with decay data is byte-identical (`afbffaf0…`). The
+  index differs only in `builder_fingerprint`, which hashes the builder source.
+- G3 PASS: on the proton library without decay data, 691 rows were rerouted in 485 groups across
+  477 targets.
+  - (a) No merged state remains.
+  - (b) The rerouted set equals an independent Python re-derivation of the rule from the reference
+    index.
+  - (c) Per target, the row multisets match after relabeling. No cross section changed and no row
+    was added or lost.
+  - Spot check: p-At199 MT5 Bi-196 raw LFS 2 (169 keV) became leakage; raw LFS 3 (271 keV) keeps
+    catalog LISO 1.
+- G4 PASS: CI replay 23/23.
+
+The count differs from the protocol's 545 groups because the protocol counted (MT, ZAP, LISO)
+groups, while the rule groups by (ZAP, LISO) across MTs. The cross-MT pairs are included, as the
+defect section anticipated.
+
+## Entry 75 — Photonuclear (incident-gamma) activation: P94 FAIL, P98 FAIL; not merged (2026-10-01)
+
+**P94** (`b27a9754…`; candidate `debe514a…`, reference `0d8dc849…`).
+- **Change:**
+  - `Projectile::Gamma` (NSUB 0, ZA (0, 0), AWI exactly 0, CCFE-162 at 0 K);
+  - the missing-MF=8 ground-state rule;
+  - single-neutron production counted once (MT4 with its own MF=8 takes precedence over MT50–91
+    detail, otherwise detail over MT4);
+  - photon-labelled OpenMC flux import;
+  - a mesh check that the projectile matches the flux particle.
+- **The implementing agent's hand-off had gaps, which I closed before any gate ran:**
+  - MT4 and MT50–91 were double counted for Ta-181 and W-186;
+  - the G1 multi-path runtime test was missing;
+  - the mesh particle check was incomplete;
+  - G2(b) lacked continue-on-error on both sides;
+  - G3 lacked the unsupported/convergence ledger checks;
+  - G4 had an undefined helper and did not join labels through the index;
+  - the verdict read the wrong G5 file.
+
+Verdict `results/p94_verdict.json`, **FAIL**:
+- G0–G3 PASS.
+  - G2: 783 specs and 3 mesh profiles bitwise; proton library byte-identical; P32 import
+    identical.
+  - G3: 2,850 TENDL-2025 gamma targets with zero failures, zero unsupported fallbacks and zero
+    convergence flags. Built with `--decay`, because without it the catalog-plus-rank fallback
+    merged isomer states, later fixed by P99 (Entry 74).
+- **G4 PASS after a checker change made after a result.**
+  - Run 1 failed on MF=10 rows at up to 4.7e-7: the builder's documented T/S state-sum
+    reconciliation was not replicated.
+  - Run 2 re-derives that rule from its specification and agrees to 1.7e-13. Its scaled-group
+    counts match the builder ledger's counts.
+- **G5 FAIL:** the candidate could not build the 8 registered TENDL-2017 inputs.
+  - Under the default profile, 5 of 8 fail closed. MF=3 tables start above threshold, while the
+    MF=10 states carry the threshold ramp.
+  - Under `--profile tendl`, Pb-208 still fails: the MT18 photofission total is written as MF=10
+    IZAP=0.
+  - No FISPACT-II value was read.
+- G6 not run.
+
+**P98** (`a72c9d31…`) was registered before the fix and before any FISPACT-II value was read.
+- **Change:** P94's change plus one rule. Under a normalization profile, exactly the TENDL-2017
+  shape is read as the IZAP=−1 sentinel. The shape is one MF=10 IZAP=0 LFS=0 section, no MF=3
+  MT18, and MF=8 declaring nothing or only ZAP 0 LMF 10.
+- **Merges before gating:** the branch was re-gated after each master merge (P95/P97, then P90).
+  A replay of the P95/P97-merged branch failed `p8`. The P94 change had reworded the OpenMC
+  filter error, which the P8 control greps for "exactly MeshFilter and EnergyFilter". The message
+  was restored to name that premise.
+- **Gated candidate:** `931db08f…` (branch `59378c7`). A later merge of P99 made G2(b) differ
+  from the archived reference: the proton build without decay data then hashes to `34b42cee…`,
+  P99's own output. P98 therefore stayed on the pre-P99 candidate.
+
+**G5 control** (`controls/p98_g5_fispact.py`, SHA-256 `2c490ed6…`). It was committed in two steps
+before any comparison value was computed: `4527a35` before the archive finished downloading, and
+`208badb` after inspecting only the processed records' structure.
+- **Rule 1, the gamma single-neutron channel.**
+  - The P10 reader the protocol names was written for charged particles. It has no rule for MT4 or
+    MT50–91, which are absent from `mt_products.json`.
+  - The reconstruction adds P94's own rule. MT4 with an explicit product is read by the P10 logic;
+    otherwise MT50–91 detail gives residual (Z, A−1) ground, and MT4 does only when there is no
+    detail.
+  - The per-MT split of the reader is asserted equal to `production_terms` for every (ZAP, LFS).
+- **Rule 2, the free neutron.** The emitted free neutron (ZAP 1) is not a residual on either side.
+  This follows the candidate's inventory rule and P10.
+- **Rule 3, MT5 labels.** The processed records carry no MF=6 or MF=8. MT5 residuals are MF=10
+  sections whose LFS FISPACT-II has relabelled ordinally (raw 0, 10 → 0, 1).
+  - Every nonzero ZAP has the same state count raw and processed. Each raw LFS is recovered by
+    rank, then mapped through the candidate index as the protocol requires.
+  - A count mismatch would have left the state unmatched.
+- **Record names are exact (`<stem>g.asc`).** `Nb093mg.asc` is the isomer target.
+
+**Archive:** 2,595,437,294 bytes, SHA-256 `7f305df2…bec8`, verified. 2,808 `tal2017-g/gxs-162`
+records were extracted.
+
+Verdict `results/p98_verdict.json` on `931db08f…`, **FAIL**:
+- G0 PASS.
+- G1 PASS: P94's tests plus the three IZAP=0 tests.
+- G2 PASS.
+- G3 PASS: `.npz` byte-identical to P94's candidate build (`d4590b8e…`).
+- G4 PASS: re-run from scratch, 1.7e-13.
+- G6 PASS: CI replay 23/23.
+- **G5 FAIL.**
+  - All 8 built (1,321 rows), with 16 `state_sum_normalized` ledger lines and 3 IZAP=0 reads
+    (Pb-208, Ta-181, W-186).
+  - 323 (nuclide, residual, spectrum) values carry at least 1e-3 of their nuclide's production.
+    Only **162 (50.2 %)** agree within 2e-3, against 95 % required. The maximum is **0.179**
+    (Ta-181 → Ta-178m, `hard_60_MeV`), against 2e-2.
+
+    | Spectrum | Within 2e-3 |
+    |---|---|
+    | `gdr_flat_8_30_MeV` | 52 / 58 |
+    | `brems_20_MeV` | 33 / 37 |
+    | `hard_60_MeV` | 77 / 228 |
+
+  - Unmatched residuals: none on either side.
+  - Group rows: 0 of 988 within P10's 2.5e-3. Every row has a threshold or 30–35 MeV group where
+    the two disagree.
+
+**Diagnosis, after the verdict.** The two causes below account for the disagreement. Below 30 MeV,
+outside threshold groups, the per-MT group values agree to the printed digits (Al-27 MT28 and MT104
+checked).
+
+1. **FISPACT-II's processed MT5 residual production.**
+   - Its values equal the lethargy average of σ(E)·y(E), formed pointwise on the union grid,
+     interpolated lin-lin, and taking the left value (0) at TENDL-2017's doubled 30 MeV MT5
+     threshold point. The model reproduces the processed values to 1e-6 in every group checked.
+   - In the 30–35 MeV group this keeps only 23–33 % of the exact product integral. Above 35 MeV,
+     linearising the product overstates it by 1–3 % in 35–40 MeV and by under 0.1 % from 60 MeV.
+   - The candidate integrates the product of the two lin-lin tables exactly, as ENDF-6 defines.
+   - MF=3 MT5 itself matches to 7 digits.
+   - This causes the `hard_60_MeV` failures. It is documented and held in
+     `docs/defects/processed-mt5-product-drops-doubled-threshold-point.md`.
+2. **TENDL-2017 MF=3 tables starting above threshold** (Al-27 MT4, Ta-181 and W-186 MT17, Nb-93
+   MT16, plus the P94 cases).
+   - The candidate scales the MF=10 states in the group below the first MF=3 point to the zero
+     total, as the profile or zero-total envelope directs, and records it. FISPACT-II keeps the
+     MF=10 ramp.
+   - Effect: Al-26 `brems_20_MeV` −11.7 %, Ta-178 and W-183 `gdr_flat_8_30_MeV` −8 to −9 %, Nb-91
+     −3.2 %.
+   - Here FISPACT-II's handling is the physical one. This is a candidate-side loss.
+   - It is added to `docs/defects/tendl2017-gamma-threshold-and-photofission-encoding.md` (held).
+
+The FAIL stands, and no threshold or comparison domain changes. Photonuclear activation is not
+merged.
+- **Code:** kept on local branch `p94-gamma` (`ebc2334`, gated state `59378c7`).
+- **Evidence:** `target/p98/`, on the branch worktree. The superseded runs are in `premerge`,
+  `merge1`, `merge2`, `merge3` and `merge4_postP99_record`.
+- The P99 landing checks were not run, since there is no landing.
+
+**Successor:** not registered. Cause 2 is a builder improvement worth a protocol: the MF=10 state
+sum would stand in for a zero MF=3 total below the first MF=3 point, for gamma under the profile.
+Cause 1 makes FISPACT-II's processed MT5 groups unusable as a 2e-3 reference near 30–35 MeV. How a
+successor's cross-code gate treats a reference whose processing differs by a known, reproduced rule
+is left open here.

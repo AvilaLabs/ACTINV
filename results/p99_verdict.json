@@ -1,0 +1,92 @@
+{
+ "G0": {
+  "pass": true
+ },
+ "G1": {
+  "candidate_sha256": "c17775244dd6cdf253ece9416331afedac79c80d67a7a86d2efdb1d2e76b0311",
+  "pass": true,
+  "rc": {
+   "clippy": 0,
+   "fmt": 0,
+   "release": 0,
+   "test": 0
+  },
+  "reference_sha256": "c7b8923d6ddf2a26e941b8ca37a098bf1e16f1d78f6752d481f9de0408b0006a",
+  "unit_test_ok": {
+   "p99_agreeing_rank_row_in_shared_group_is_kept": true,
+   "p99_anchored_collision_rank_row_becomes_leakage_catalog_row_unchanged": true,
+   "p99_cross_mt_rank_collision_without_anchor_leaks_all": true,
+   "p99_excitation_less_rank_row_in_shared_group_becomes_leakage": true,
+   "p99_same_evaluation_with_decay_data_is_untouched": true
+  }
+ },
+ "G2": {
+  "builds": {
+   "cand": {
+    "returncode": 0,
+    "stderr_tail": "elope); MAT=6974 ZA=70151 source_sha256=c6849ef67f394e8608c55c303a30847cc8a48e1620e68179539b29a1d509223d; construction fails closed and no state row is emitted, scaled or relabeled\nskipping failed input: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv-wt-p99/target/p99/g2_proton_cand_index.json\n",
+    "stdout_tail": "2773 targets, 517422 rows, 0 cache hits, proton /home/connoravila/Documents/actinv-wt-p99/target/p99/g2_proton_cand.npz, sha256 afbffaf09c9318a620befb96357838d9591652f3a3fbc87b6a6e924c854c635a\n"
+   },
+   "ref": {
+    "returncode": 0,
+    "stderr_tail": "velope); MAT=6974 ZA=70151 source_sha256=c6849ef67f394e8608c55c303a30847cc8a48e1620e68179539b29a1d509223d; construction fails closed and no state row is emitted, scaled or relabeled\nskipping failed input: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv-wt-p99/target/p99/g2_proton_ref_index.json\n",
+    "stdout_tail": "2773 targets, 517422 rows, 0 cache hits, proton /home/connoravila/Documents/actinv-wt-p99/target/p99/g2_proton_ref.npz, sha256 afbffaf09c9318a620befb96357838d9591652f3a3fbc87b6a6e924c854c635a\n"
+   }
+  },
+  "cand_npz_sha256": "afbffaf09c9318a620befb96357838d9591652f3a3fbc87b6a6e924c854c635a",
+  "identity_fields_excluded": [
+   "builder_fingerprint"
+  ],
+  "index_diff": null,
+  "index_identical_apart_from_identity": true,
+  "npz_identical": true,
+  "pass": true,
+  "ref_npz_sha256": "afbffaf09c9318a620befb96357838d9591652f3a3fbc87b6a6e924c854c635a"
+ },
+ "G3": {
+  "a_no_remaining_violations_in_candidate": {
+   "pass": true,
+   "violation_count_in_candidate": 0
+  },
+  "b_leaked_rows_match_reference_violating_set": {
+   "mismatched_targets_sample": [],
+   "n_mismatched_targets": 0,
+   "pass": true
+  },
+  "builds": {
+   "cand": {
+    "returncode": 0,
+    "stderr_tail": "elope); MAT=6974 ZA=70151 source_sha256=c6849ef67f394e8608c55c303a30847cc8a48e1620e68179539b29a1d509223d; construction fails closed and no state row is emitted, scaled or relabeled\nskipping failed input: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv-wt-p99/target/p99/g3_proton_cand_index.json\n",
+    "stdout_tail": "2773 targets, 517422 rows, 0 cache hits, proton /home/connoravila/Documents/actinv-wt-p99/target/p99/g3_proton_cand.npz, sha256 34b42cee54ef9c66af04e38624edbb6909d8454c962e3fd0951196f2ebfab476\n"
+   },
+   "ref": {
+    "returncode": 0,
+    "stderr_tail": "velope); MAT=6974 ZA=70151 source_sha256=c6849ef67f394e8608c55c303a30847cc8a48e1620e68179539b29a1d509223d; construction fails closed and no state row is emitted, scaled or relabeled\nskipping failed input: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: /home/connoravila/nuclear-data/tendl-2025/files/p/p-Zr090.tendl: MT103/MF=10 ZAP=40090 group 63: emitted state sum 3.22740887623054798e-9 barn exceeds runtime total 1.58451930454214486e-10 barn by relative excess 1.936838e1 (outside the frozen 0.001 standard envelope); MAT=4025 ZA=40090 source_sha256=4a9247ffe94bb90ec0687e41a7a154bc54b873a8891ae9bb4139f980c6a0b7ce; construction fails closed and no state row is emitted, scaled or relabeled\nindex -> /home/connoravila/Documents/actinv-wt-p99/target/p99/g3_proton_ref_index.json\n",
+    "stdout_tail": "2773 targets, 517422 rows, 0 cache hits, proton /home/connoravila/Documents/actinv-wt-p99/target/p99/g3_proton_ref.npz, sha256 cc465b7e12a39b2c81dc204d21c08f490ec15abfc4f6a2971ccbf1f8b48ec9f4\n"
+   }
+  },
+  "c_npz_multiset_identical_after_simulated_relabel": {
+   "mismatched_targets_sample": [],
+   "n_mismatched_targets": 0,
+   "pass": true
+  },
+  "cand_npz_sha256": "34b42cee54ef9c66af04e38624edbb6909d8454c962e3fd0951196f2ebfab476",
+  "groups_affected": 485,
+  "pass": true,
+  "ref_npz_sha256": "cc465b7e12a39b2c81dc204d21c08f490ec15abfc4f6a2971ccbf1f8b48ec9f4",
+  "rows_rerouted": 691,
+  "targets_affected": 477
+ },
+ "G4": {
+  "failed": [],
+  "pass": true,
+  "steps": 23
+ },
+ "inputs": {
+  "candidate_sha256": "c17775244dd6cdf253ece9416331afedac79c80d67a7a86d2efdb1d2e76b0311",
+  "protocol_sha256": "dfb57f1d04cb5bb055d59ad749a80b5efe07c20ed87d931e38af11548c412817",
+  "reference_sha256": "c7b8923d6ddf2a26e941b8ca37a098bf1e16f1d78f6752d481f9de0408b0006a"
+ },
+ "pass": true,
+ "protocol": "ACTINV-P99"
+}

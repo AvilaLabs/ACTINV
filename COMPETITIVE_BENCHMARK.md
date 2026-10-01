@@ -5,6 +5,104 @@ isomer-routing fix arm), then CB3 identical-data FISPACT comparison
 (2026-09-20), then the CB2 refresh (2026-09-18). Frozen/superseded
 records live in `docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`.*
 
+## Capability scorecard — 2026-09-30 refresh (ACTINV column only)
+
+This refresh updates the **ACTINV column only**. The competitor columns (ALARA, OpenMC,
+FISPACT-II, SCALE/ORIGEN) below are copied unchanged from the CB1 capability scorecard
+(`docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`, dated **2026-08-28, ACTINV 1.0.0**). They are
+the CB1 survey, not re-surveyed here, and are not upgraded, downgraded, or supplemented from
+outside knowledge in this refresh. The legend and `V*`/`V**` footnote markers are CB1's own and
+are reused exactly; new rows below use fresh footnote markers (`†‡§¶`) scoped to this section.
+
+`V` = verified complete for the named axis; `P` = meaningful partial support; `A` = confirmed
+absent; `?` = not verified from sufficient current official evidence. "Unverified" is not a hidden
+"no." CB1 per-cell evidence is in
+[`results/cb1_capabilities.json`](results/cb1_capabilities.json).
+
+| capability axis | ACTINV | ALARA | OpenMC | FISPACT-II | SCALE/ORIGEN |
+|---|:---:|:---:|:---:|:---:|:---:|
+| licence/access model established | V | V | V | V | V |
+| install path established | V | V | V | V | V |
+| projectiles and energy domain | P | P | V | V | P |
+| finite-dilution self-shielding | V* | ? | V | V | V |
+| irradiation schedules | V | V | V | V | V |
+| fission yields | V | ? | V | V | V |
+| covariance/uncertainty | P | ? | P | V | P |
+| activation responses | V | V | P | V | V |
+| transport coupling | P | P | V | P | V |
+| CLI and programmatic API | V | P | V | V | P |
+| deterministic input provenance | V | ? | ? | ? | ? |
+| spatial/mesh operation | V | V | V | ? | P |
+| continuous feed/removal | V** | ? | V | ? | V |
+| reverse calculation | V** | V | ? | ? | ? |
+| damage observables | V** | ? | V | V | ? |
+| documented operating-system routes | V | P | V | V | V |
+| compile-time physical unit types | A | ? | ? | ? | ? |
+| hydrogen/helium gas production (produced + inventory appm) | V† | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
+| transport-tally statistical error as a flux uncertainty channel | V‡ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
+| lean R2S mesh output (dotted `cell_result_fields`) | V§ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
+| impurity budgets for clearance | V¶ | *not surveyed* | *not surveyed* | *not surveyed* | *not surveyed* |
+
+None of the 17 CB1-era axis cells (rows above the gas-production row) changed tier since CB1: no
+protocol/verdict evidence from 2026-08-28 to 2026-09-30 moved any of them from one of `V`/`P`/`A`/`?`
+to another. The four rows below them are new axes CB1 did not score; the competitor cells there are
+marked `not surveyed` rather than guessed, as CB1 did not evaluate ALARA, OpenMC, FISPACT-II, or
+SCALE/ORIGEN on these specific axes.
+
+`V*` and `V**` keep their CB1 meaning (Bondarenko self-shielding only; the scoped P23 surfaces) —
+see the archive for their full text.
+
+`†` **Hydrogen/helium gas production.** `options.gas` (off by default; refused together with
+`uncertainty`, and for any non-neutron projectile) routes light ejectiles of every covered MT, plus
+decay alphas and protons, into the chain as ordinary nuclides (H1, H2, H3, He3, He4); each step
+reports produced `appm` and FISPACT-II's `inventory_appm` convention (includes initial content).
+Fission ejectiles are uncovered and named in the ledger. **P92** first compared ACTINV against
+FISPACT-II/TENDL-2017 on the 132 CB3 FNS experiments and **FAILed** gate G5 (H1 was compared on the
+wrong convention — produced appm vs. FISPACT-II's inventory appm). **P95**, the gate-G5 successor
+that added `inventory_appm`, **PASSed**: 403/403 gated pairs within ±10 %
+(`results/p95_verdict.json`, `"pass": true`). Ledger Entry 71; `CHANGELOG.md` Unreleased;
+`docs/guide/qualification.md`.
+
+`‡` **Transport-tally statistical error as a flux uncertainty channel.**
+`uncertainty.channels: ["flux"]` with a per-group `spectrum.relative_error` (or a mesh cell's own
+flux-file error) propagates each group's declared statistical error to first order
+(sensitivity d*R*/d ln φ_g, diagonal); it can run flux-only with no covariance sidecar, or alongside
+MF=33. It excludes systematic transport error (model, geometry, transport nuclear data). **P93**
+**FAILed** (a real ledger-serialization defect plus two checker defects in its finite-difference
+gate). **P96**, a fresh-spec successor, **FAILed** too (it carried P93's defect forward). **P97**,
+which added the one missing field, **PASSed** on the merged candidate: 2097/2097 finite-difference
+comparisons within tolerance, sampling-variance ratios 0.993–0.996 on the P32 cube
+(`results/p97_verdict.json`, `"pass": true`). Ledger Entry 72; `CHANGELOG.md` Unreleased;
+`docs/guide/specification.md`, `docs/guide/qualification.md`, `docs/guide/workflows.md`.
+
+`§` **Lean R2S mesh output.** Mesh `cell_result_fields` accepts dotted `steps.<field>[.<key>...]`
+entries, assembling each cell's text from the selected `RunResult`/`StepOut` fields through
+explicit accessors instead of serializing the whole result; the OpenMC R2S adapter's default is now
+`["mode", "ledger", "steps.photon_source.groups"]`. Output without dotted entries is byte-unchanged.
+**P90 PASSed**: bitwise agreement with the full record on two profiles, 1.26× faster at 1 thread
+(gate margin 1.259× against a 1.25× pass bound — thin, reported as measured), output 4.6 % of the
+full record's bytes (`results/p90_verdict.json`, `"pass": true`). Ledger Entry 73; `CHANGELOG.md`
+Unreleased; `docs/guide/specification.md`.
+
+`¶` **Impurity budgets for clearance.** `actinv budget` reports, from one coupled/reach solve per
+element (composition superposition, P75b), the clearance index (matrix-only and at-spec), the spec
+margin factor *k*, per-impurity gradients and contributions, joint and sole-impurity limits, and
+uncovered nuclides; every emitted limit is re-solved at its composition before being reported
+(`--no-verify` skips that check). **P79 PASSed** (G0–G2 all pass; EUROFER97 re-solved
+independently to max relative deviation 2.6e-15; SS316LN not exercised because the matrix alone
+already exceeds the clearance limit, so no edge exists) and **Amendment A PASSed**
+(adds sole-impurity limits; 16 points, max relative deviation 2.6e-15) — `results/p79_verdict.json`
+and `results/p79a_verdict.json` (both all-gates-pass; these verdicts record gate status per field
+rather than one top-level `pass` boolean). The Python binding reached the CLI's verbatim output
+only on its second attempt: **P87 FAILed** (CLI and Python documents differed in one field), and
+**P89 PASSed** (`results/p89_verdict.json`, G0–G3 all pass). Known limitation: an impurity whose
+activation products are absent from the bundled IAEA clearance table reports no clearance-index
+response rather than an invented value (e.g., Ag-108m). Ledger Entries 59, 68, 69; `CHANGELOG.md`
+Unreleased; `docs/guide/workflows.md`, `docs/BUDGET.md`.
+
+A capability existing does not establish its accuracy for every application or material; see the
+per-row evidence above and the limits named in each cited verdict before relying on a `V`.
+
 ## Decay-aware TENDL-2023 FNS corpus — 2026-09-26 · latest
 
 Isomer routing was the last structural accuracy defect: the legacy Python
@@ -248,7 +346,11 @@ bit-identical to the pre-change record. The whole-product speed
 comparison is unchanged in kind — a kernel result, not a product-speed
 verdict.
 
-**Not re-measured.** Install/first-use timings and the
-capability-survey legs remain the v1.0.0-era CB1 record, archived at
-`docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`; nothing in them is
-claimed to have improved or regressed.
+**Not re-measured.** Install/first-use timings remain the v1.0.0-era
+CB1 record, archived at `docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`;
+nothing in them is claimed to have improved or regressed. The
+capability-survey legs' competitor columns (ALARA, OpenMC, FISPACT-II,
+SCALE/ORIGEN) also remain that dated CB1 survey and were not
+re-surveyed; the ACTINV column has a dated refresh in
+[Capability scorecard — 2026-09-30 refresh](#capability-scorecard--2026-09-30-refresh-actinv-column-only)
+above.

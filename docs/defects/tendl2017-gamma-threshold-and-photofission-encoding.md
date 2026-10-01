@@ -44,3 +44,32 @@ residual nuclide.
   threshold-ramp group is lost.
 - **Class 2:** handled by the P98 rule. Under a normalization profile, exactly this shape is read
   as the IZAP=-1 sentinel and recorded in the ledger. Any other shape still fails closed.
+
+## Cross-code consequence (P98 G5, 2026-10-01)
+
+Class 1 is wider than the five files that fail closed under the default profile. The P98 G5
+comparison with FISPACT-II found the same shape in these places:
+
+| File | MT | MF=3 first point | MF=10 first point |
+|---|---|---|---|
+| g-Al027 (`88308268…`) | 4 | 14.0 MeV | 13.286 MeV |
+| g-Ta181 | 17 | 24.0 MeV | 22.055 MeV |
+| g-W186 | 17 | 22.0 MeV | 20.358 MeV |
+| g-Nb093 | 16 | 17.0 MeV | 16.717 MeV |
+
+In each case, the CCFE-162 group just below the first MF=3 point has a zero MF=3 total and a
+nonzero MF=10 state sum.
+- **ACTINV:** the state rows in that group are scaled to the zero total. This happens under the
+  standard zero-total envelope (≤ 1e-3 b, as for Al-27) or under `--profile tendl`. The group's
+  production is lost, and the loss is recorded in the ledger.
+- **FISPACT-II (`tal2017-g/gxs-162`):** keeps the MF=10 ramp. For example, Al-27 → Al-26 in
+  13–14 MeV is 4.29e-4 b in FISPACT-II and 0 in ACTINV.
+
+Effect on one-group values:
+
+| Residual | Spectrum | ACTINV vs FISPACT-II |
+|---|---|---|
+| Al-26 | `brems_20_MeV` | −11.7 % |
+| Ta-178 | `gdr_flat_8_30_MeV` | −9.3 % |
+| W-183 | `gdr_flat_8_30_MeV` | −8.3 % |
+| Nb-91 | `brems_20_MeV` | −3.2 % |

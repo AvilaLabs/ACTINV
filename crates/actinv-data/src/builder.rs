@@ -2038,6 +2038,132 @@ fn map_product_states(
             decision: decision.into(),
         });
     }
+
+    // P99: without decay data, step 3 (rank inside the declared (MT, ZAP)
+    // LFS set) knows nothing about catalog- or decay-anchored labels on
+    // other MTs. A rank ordinal can collide with an anchored LISO that
+    // names a different physical state, merging two isomers under one
+    // canonical label. Only `no_catalog_rank_mapped_lfs` rows are eligible
+    // to move; everything else (catalog/decay/ground rows) keeps its label
+    // and bytes. Builds with `--decay` have no rank-mapped rows, so this is
+    // a no-op for them.
+    let raw_row_indices: Vec<usize> = target
+        .rows
+        .iter()
+        .enumerate()
+        .filter(|(_, row)| row.raw_state.is_some())
+        .map(|(idx, _)| idx)
+        .collect();
+    if raw_row_indices.len() != mappings.len() {
+        return Err(format!(
+            "state mapping produced {} records for {} raw-state rows; isomer collision check cannot align them",
+            mappings.len(),
+            raw_row_indices.len()
+        ));
+    }
+
+    let mut collision_groups: BTreeMap<(i32, i32), Vec<usize>> = BTreeMap::new();
+    for (map_idx, mapping) in mappings.iter().enumerate() {
+        if mapping.zap > 0 {
+            if let Some(liso) = mapping.canonical_liso {
+                if liso > 0 {
+                    collision_groups
+                        .entry((mapping.zap, liso))
+                        .or_default()
+                        .push(map_idx);
+                }
+            }
+        }
+    }
+
+    let excitations_agree = |a: f64, b: f64| (a - b).abs() <= excitation_tolerance(a, b);
+
+    let mut leaked_map_indices: Vec<usize> = Vec::new();
+    for members in collision_groups.into_values() {
+        let anchored: Vec<usize> = members
+            .iter()
+            .copied()
+            .filter(|&i| mappings[i].decision != "no_catalog_rank_mapped_lfs")
+            .collect();
+        let rank_rows: Vec<usize> = members
+            .iter()
+            .copied()
+            .filter(|&i| mappings[i].decision == "no_catalog_rank_mapped_lfs")
+            .collect();
+        if rank_rows.is_empty() {
+            continue;
+        }
+        if !anchored.is_empty() {
+            // A group with at least one anchored row: a rank-mapped row
+            // whose excitation agrees with no anchored row's excitation
+            // (including one with no excitation at all) becomes leakage.
+            for &i in &rank_rows {
+                let agrees = mappings[i].mapping_excitation_eV.is_some_and(|e| {
+                    anchored.iter().any(|&a| {
+                        mappings[a]
+                            .mapping_excitation_eV
+                            .is_some_and(|anchor_e| excitations_agree(e, anchor_e))
+                    })
+                });
+                if !agrees {
+                    leaked_map_indices.push(i);
+                }
+            }
+        } else if rank_rows.len() >= 2 {
+            // A group of only rank-mapped rows: kept only if every pair
+            // agrees (a row with no excitation can agree with nothing);
+            // otherwise the whole group leaks.
+            let mut all_agree = true;
+            'pairs: for (pos, &i) in rank_rows.iter().enumerate() {
+                for &j in &rank_rows[pos + 1..] {
+                    let agree = match (
+                        mappings[i].mapping_excitation_eV,
+                        mappings[j].mapping_excitation_eV,
+                    ) {
+                        (Some(a), Some(b)) => excitations_agree(a, b),
+                        _ => false,
+                    };
+                    if !agree {
+                        all_agree = false;
+                        break 'pairs;
+                    }
+                }
+            }
+            if !all_agree {
+                leaked_map_indices.extend(rank_rows.iter().copied());
+            }
+        }
+        // A lone rank-mapped row with no anchor and no sibling in its group
+        // has nothing to collide with; it is kept.
+    }
+    leaked_map_indices.sort_unstable();
+
+    for map_idx in leaked_map_indices {
+        let row_idx = raw_row_indices[map_idx];
+        let (mt, zap, raw_lfs, excitation, conflicting_liso) = {
+            let mapping = &mappings[map_idx];
+            (
+                mapping.mt,
+                mapping.zap,
+                mapping.raw_lfs,
+                mapping.mapping_excitation_eV,
+                mapping.canonical_liso.unwrap_or_default(),
+            )
+        };
+        target.rows[row_idx].zap = 0;
+        target.rows[row_idx].lfs = 0;
+        target.rows[row_idx].lmf = -3;
+        target.index.ledger.push(format!(
+            "MT{mt}->{zap}: raw LFS {raw_lfs} excitation {} collides with canonical LISO {conflicting_liso} rank-mapped without decay data; production retained as explicit leakage (use --decay to resolve the isomer)",
+            excitation
+                .map(|value| format!("{value:.3e} eV"))
+                .unwrap_or_else(|| "missing".into()),
+        ));
+        let mapping = &mut mappings[map_idx];
+        mapping.canonical_liso = None;
+        mapping.decision = "no_catalog_rank_collision_to_leakage".into();
+    }
+
     target.index.state_mappings = mappings;
     Ok(())
 }
@@ -6538,5 +6664,169 @@ mod tests {
             .map(|v| v.as_str().unwrap())
             .collect();
         assert_eq!(names, ["Mn57", "Mn57m1"]);
+    }
+
+    #[test]
+    fn p99_anchored_collision_rank_row_becomes_leakage_catalog_row_unchanged() {
+        // One catalog-anchored isomer (LISO=1 at 250 keV) and a per-MT
+        // rank label in a different MT that ranks to the same canonical
+        // LISO=1 but at an excitation nowhere near the catalog state: the
+        // rank row collides with an anchored identity rather than
+        // observing it, so only the rank row leaks.
+        let catalog_source = BuiltSource {
+            format: LibraryFormat::Tendl,
+            projectile: Projectile::Neutron,
+            targets: vec![state_target("iso.endf", 26056, 1, 2, 250_000.0, Vec::new())],
+            from_cache: false,
+        };
+        let catalog = build_state_catalog(&[catalog_source]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 26056, 2, Some(250_000.0)),
+                state_row(16, 26056, 1, Some(900_000.0)),
+            ],
+        );
+        map_product_states(&mut target, &catalog, None).unwrap();
+
+        let catalog_row = &target.rows[0];
+        let catalog_mapping = &target.index.state_mappings[0];
+        assert_eq!(
+            (catalog_row.zap, catalog_row.lfs, catalog_row.lmf),
+            (26056, 1, 10)
+        );
+        assert_eq!(catalog_mapping.decision, "catalog_excitation_match");
+        assert_eq!(catalog_mapping.canonical_liso, Some(1));
+
+        let rank_row = &target.rows[1];
+        let rank_mapping = &target.index.state_mappings[1];
+        assert_eq!((rank_row.zap, rank_row.lfs, rank_row.lmf), (0, 0, -3));
+        assert_eq!(rank_mapping.canonical_liso, None);
+        assert_eq!(
+            rank_mapping.decision,
+            "no_catalog_rank_collision_to_leakage"
+        );
+    }
+
+    #[test]
+    fn p99_cross_mt_rank_collision_without_anchor_leaks_all() {
+        // No catalog state for the product at all: both rows rank-map to
+        // the same canonical LISO=1 from their own (MT, ZAP) declared
+        // sets, but their excitations are far apart. Nothing anchors
+        // either one as the true identity, so both leak.
+        let catalog = build_state_catalog(&[]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 26056, 1, Some(250_000.0)),
+                state_row(16, 26056, 1, Some(900_000.0)),
+            ],
+        );
+        map_product_states(&mut target, &catalog, None).unwrap();
+
+        for (row, mapping) in target.rows.iter().zip(target.index.state_mappings.iter()) {
+            assert_eq!((row.zap, row.lfs, row.lmf), (0, 0, -3));
+            assert_eq!(mapping.canonical_liso, None);
+            assert_eq!(mapping.decision, "no_catalog_rank_collision_to_leakage");
+        }
+    }
+
+    #[test]
+    fn p99_agreeing_rank_row_in_shared_group_is_kept() {
+        // Same shape as the no-anchor collision above, but the two
+        // rank-mapped excitations agree within tolerance: the group is
+        // kept exactly as rank mapping produced it.
+        let catalog = build_state_catalog(&[]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 26056, 1, Some(250_000.0)),
+                state_row(16, 26056, 1, Some(250_000.3)),
+            ],
+        );
+        map_product_states(&mut target, &catalog, None).unwrap();
+
+        for (row, mapping) in target.rows.iter().zip(target.index.state_mappings.iter()) {
+            assert_eq!((row.zap, row.lfs, row.lmf), (26056, 1, 10));
+            assert_eq!(mapping.canonical_liso, Some(1));
+            assert_eq!(mapping.decision, "no_catalog_rank_mapped_lfs");
+        }
+    }
+
+    #[test]
+    fn p99_excitation_less_rank_row_in_shared_group_becomes_leakage() {
+        // A rank-mapped row with no declared excitation at all cannot be
+        // shown to agree with anything. Sharing a canonical LISO with
+        // another rank-mapped row makes both of them unprovable, so both
+        // leak even though the second row does carry an excitation.
+        let catalog = build_state_catalog(&[]).unwrap();
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 26056, 1, None),
+                state_row(16, 26056, 1, Some(250_000.0)),
+            ],
+        );
+        map_product_states(&mut target, &catalog, None).unwrap();
+
+        for (row, mapping) in target.rows.iter().zip(target.index.state_mappings.iter()) {
+            assert_eq!((row.zap, row.lfs, row.lmf), (0, 0, -3));
+            assert_eq!(mapping.canonical_liso, None);
+            assert_eq!(mapping.decision, "no_catalog_rank_collision_to_leakage");
+        }
+    }
+
+    #[test]
+    fn p99_same_evaluation_with_decay_data_is_untouched() {
+        // Same raw rows as the no-anchor cross-MT collision above, but
+        // built with decay data: both rows resolve through the decay
+        // sublibrary by their LIS label, so neither ever becomes
+        // `no_catalog_rank_mapped_lfs` — the collision rule, which only
+        // ever touches that decision, has nothing to act on even though
+        // the two excitations are as far apart as before.
+        let catalog = build_state_catalog(&[]).unwrap();
+        let mut decay = HashMap::new();
+        decay.insert(
+            26056,
+            vec![DecayStateEntry {
+                liso: 1,
+                lis: 1,
+                elis_eV: 1.0,
+            }],
+        );
+        let mut target = state_target(
+            "source.endf",
+            27059,
+            0,
+            0,
+            0.0,
+            vec![
+                state_row(102, 26056, 1, Some(250_000.0)),
+                state_row(16, 26056, 1, Some(900_000.0)),
+            ],
+        );
+        map_product_states(&mut target, &catalog, Some(&decay_tables(decay))).unwrap();
+
+        for (row, mapping) in target.rows.iter().zip(target.index.state_mappings.iter()) {
+            assert_eq!((row.zap, row.lfs, row.lmf), (26056, 1, 10));
+            assert_eq!(mapping.canonical_liso, Some(1));
+            assert_eq!(mapping.decision, "decay_lis_label_match");
+        }
     }
 }
