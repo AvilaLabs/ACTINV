@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+**Added**
+
+- `actinv export-source alara`: adds ALARA to the pinned `export-source` photon-source adapter
+  surface (P57). Writes one `.photonSrc` file per cell (`TOTAL\t<time>\t<densities…>`) under
+  `OUT_DIR`, plus a provenance index `actinv-alara-index.json` carrying the group centroid grid
+  and per-cell σ. `--shutdown-t-s T` is required; cooling is `step_t_s - T`, refused if cells
+  disagree on `step_t_s` or cooling is negative. Verified against `nucleide` 0.16.0's own ALARA
+  photon-source reader and `r2s` zone-tagging API (`contrib/nucleide_r2s`), and against PyNE's
+  `photon_source_to_hdf5` splitting/indexing rules (PyNE itself not installed). (P102)
+
 ## v1.4.0 — 2026-10-01
 
 **Added**

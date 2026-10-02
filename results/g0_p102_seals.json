@@ -1,0 +1,60 @@
+{
+  "artifacts": {
+    "cargo_lock": {
+      "path": "Cargo.lock",
+      "sha256": "bb3630a92adc6773f322a1be8795d80d64f51403877cf79ea6e2b3724044fc4f"
+    },
+    "cli_command_module": {
+      "path": "crates/actinv-cli/src/command.rs",
+      "sha256": "cbe13e53f99bba5bedeb2d6f598b0cdf2634420589943c1ddfc3ded0de188586"
+    },
+    "core_source_adapter": {
+      "path": "crates/actinv-core/src/source_adapter.rs",
+      "sha256": "f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f"
+    },
+    "g1_mechanics": {
+      "path": "controls/g1_p102_mechanics.py",
+      "sha256": "5c7df7c9b090c2909b390713827d7ab3e55efcab30d10f81b9cb7d979ee7bfaf"
+    },
+    "g2_exactness": {
+      "path": "controls/g2_p102_exactness.py",
+      "sha256": "6e37ce8257c550be88cbb1901e3702d152a279acac8a46829df9cbff3aa21f56"
+    },
+    "g3_demo": {
+      "path": "controls/g3_p102_demo.py",
+      "sha256": "2d4ee64950b7ff32dae1d2e0db076e36879d2aff1769fb7010a925b4ea42391c"
+    },
+    "g4_determinism": {
+      "path": "controls/g4_p102_determinism.py",
+      "sha256": "6f695d42107daf17e026d0e50c26eabb3c39a8d766448e6791b2bbd087fb5fcd"
+    },
+    "g5_checker": {
+      "path": "controls/check_g5_p102.py",
+      "sha256": "3d516f801a1c4eeda3c532fcf4cedce04dc53a8f9070253b856bad7d4e2299a8"
+    },
+    "g6_regression": {
+      "path": "controls/g6_p102_regression.py",
+      "sha256": "a495458264cd10bd87e10803e63017485b543f4e4e03722b40d24cbf121c69a1"
+    },
+    "interchange_doc": {
+      "path": "docs/INTERCHANGE_TRANSPORT.md",
+      "sha256": "0402a7d303967fe66e0eefb6163096d2c7214a6167076b43bafb62e1b2138ba9"
+    },
+    "p102_case": {
+      "path": "controls/p102_case.py",
+      "sha256": "4fdd3e0cfe1671a794e0ba7a71054107071f1d241050438d11ab2762ae2ba07d"
+    },
+    "protocol": {
+      "path": "protocols/ACTINV-P102_PROTOCOL.md",
+      "sha256": "761a5c76aed9d07da2d8f941c09f619a7c02aec08b70cec01a60ad345a516d6f"
+    },
+    "workspace_manifest": {
+      "path": "Cargo.toml",
+      "sha256": "3d03b03be75feb26047852cd1c87f1b25d7ae1f770c990404925048f972b282c"
+    }
+  },
+  "opening_commit": "24bfb1e88ee896299afd4f1226526d0f54c2c42e",
+  "protocol_sha256": "761a5c76aed9d07da2d8f941c09f619a7c02aec08b70cec01a60ad345a516d6f",
+  "schema": "actinv-p102-seal-1",
+  "sealed_at_utc": "2026-10-02T17:19:37Z"
+}

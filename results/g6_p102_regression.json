@@ -1,0 +1,39 @@
+{
+ "checks": {
+  "corpus_mcnp_byte_identical": true,
+  "corpus_openmc_byte_identical": true,
+  "corpus_serpent_byte_identical": true,
+  "p57_fixture_mcnp_byte_identical": true,
+  "p57_fixture_openmc_byte_identical": true,
+  "p57_fixture_serpent_byte_identical": true,
+  "reference_binary_present": true
+ },
+ "pass": true,
+ "schema": "actinv-p102-g6-regression-1",
+ "sha256": {
+  "corpus": {
+   "candidate": {
+    "mcnp": "efb6ea4f43140ba2ff42eb1efe7f290f732b63a7533f92417ac5b7284f375efa",
+    "openmc": "20eac9e994d599bf8bd3809429c2b5a24c851c6aa3b2c1abe8fee296fa62bf37",
+    "serpent": "cf085a46be134fc7467b30d6d4949415f31f9f7453b458e64435008ac8a76d19"
+   },
+   "ref": {
+    "mcnp": "efb6ea4f43140ba2ff42eb1efe7f290f732b63a7533f92417ac5b7284f375efa",
+    "openmc": "20eac9e994d599bf8bd3809429c2b5a24c851c6aa3b2c1abe8fee296fa62bf37",
+    "serpent": "cf085a46be134fc7467b30d6d4949415f31f9f7453b458e64435008ac8a76d19"
+   }
+  },
+  "p57_fixture": {
+   "candidate": {
+    "mcnp": "633c4ddd9e4b6957ab426f3e828f3269a66543501600cf22676e0a3b2869754c",
+    "openmc": "2703b437ed925b61ae0c657e184ee7d4dfa86da4a7e319036a923b52478dcabe",
+    "serpent": "2e1df3d3288e6882229127bed18e29284029e8da403f12bf2dceb8e66874b017"
+   },
+   "ref": {
+    "mcnp": "633c4ddd9e4b6957ab426f3e828f3269a66543501600cf22676e0a3b2869754c",
+    "openmc": "2703b437ed925b61ae0c657e184ee7d4dfa86da4a7e319036a923b52478dcabe",
+    "serpent": "2e1df3d3288e6882229127bed18e29284029e8da403f12bf2dceb8e66874b017"
+   }
+  }
+ }
+}

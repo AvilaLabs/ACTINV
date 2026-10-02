@@ -46,6 +46,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson\n\
                     actinv export-r2s-joint MESH_RESULT.ndjson SPEC.json STEP OUT.ndjson\n\
                     actinv export-source {openmc|mcnp|serpent} R2S_SOURCE.ndjson OUT\n\
+                    actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T\n\
                     actinv clearance INPUT STEP [--limits PATH] [--confidence T] OUT.ndjson\n\
                     actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson\n\
                     actinv export-mcnp RESULT.json STEP OUT.sdef";
@@ -1148,6 +1149,71 @@ pub fn main_from(a: Vec<String>) {
             eprintln!(
                 "step {} joint r2s source: {} cells, sigma_correlated {} -> {}",
                 step, summary["cells"], summary["sigma_total_correlated"], a[5]
+            );
+        }
+        "export-source" if a.len() >= 3 && a[2] == "alara" => {
+            // actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T
+            if a.len() < 5 {
+                die(USAGE, 2);
+            }
+            let out_dir = a[4].clone();
+            let mut shutdown_t_s: Option<f64> = None;
+            let mut i = 5;
+            while i < a.len() {
+                match a[i].as_str() {
+                    "--shutdown-t-s" => {
+                        shutdown_t_s = Some(
+                            a.get(i + 1)
+                                .and_then(|s| s.parse().ok())
+                                .unwrap_or_else(|| die("--shutdown-t-s requires a number", 2)),
+                        );
+                        i += 2;
+                    }
+                    flag => die(format!("unknown export-source alara argument '{flag}'"), 2),
+                }
+            }
+            let shutdown_t_s = shutdown_t_s
+                .unwrap_or_else(|| die("export-source alara requires --shutdown-t-s T", 2));
+            let out_path = std::path::Path::new(&out_dir);
+            if out_path.exists() {
+                let empty = out_path.is_dir()
+                    && std::fs::read_dir(out_path)
+                        .map(|mut rd| rd.next().is_none())
+                        .unwrap_or(false);
+                if !empty {
+                    die(
+                        format!("export-source alara: {out_dir} exists and is not empty"),
+                        1,
+                    );
+                }
+            }
+            let bytes = std::fs::read(&a[3])
+                .unwrap_or_else(|e| die(format!("cannot read {}: {e}", a[3]), 2));
+            let export = actinv_core::source_adapter::export_source_alara(&bytes, shutdown_t_s)
+                .unwrap_or_else(|e| die(e, 1));
+            std::fs::create_dir_all(out_path)
+                .unwrap_or_else(|e| die(format!("cannot create {out_dir}: {e}"), 1));
+            for file in &export.files {
+                std::fs::write(out_path.join(&file.name), &file.text).unwrap_or_else(|e| {
+                    die(format!("cannot write {}/{}: {e}", out_dir, file.name), 1)
+                });
+            }
+            let index_text = serde_json::to_string_pretty(&export.index)
+                .unwrap_or_else(|e| die(format!("cannot serialize alara index: {e}"), 1));
+            std::fs::write(out_path.join("actinv-alara-index.json"), index_text).unwrap_or_else(
+                |e| {
+                    die(
+                        format!("cannot write {out_dir}/actinv-alara-index.json: {e}"),
+                        1,
+                    )
+                },
+            );
+            eprintln!(
+                "step {} alara source: {} cells, cooling {} s -> {}",
+                export.index["step"],
+                export.files.len(),
+                export.index["cooling_s"],
+                out_dir
             );
         }
         "export-source" => {

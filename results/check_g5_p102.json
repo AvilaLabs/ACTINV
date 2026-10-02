@@ -1,0 +1,12 @@
+{
+ "mutations_detected": {
+  "density_scaled": true,
+  "file_removed": true,
+  "group_swapped": true,
+  "index_sha_edited": true,
+  "time_token_edited": true
+ },
+ "pass": true,
+ "problems": [],
+ "schema": "actinv-p102-check-g5-1"
+}

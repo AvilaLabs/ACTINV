@@ -50,9 +50,12 @@ actinv export-r2s MESH_RESULT.ndjson STEP OUT.ndjson
 actinv export-source openmc R2S_SOURCE.ndjson OUT
 actinv export-source mcnp R2S_SOURCE.ndjson OUT
 actinv export-source serpent R2S_SOURCE.ndjson OUT
+actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T
 ```
 
 `STEP` is one-based. The selected step must contain the requested photon source. Ordinary result exports place a point source at the origin; mesh sources need recorded geometry and independent spatial review.
+
+`export-source alara` writes one ALARA `.photonSrc` file per cell under `OUT_DIR` (which must not exist, or exist and be empty) plus a provenance index `OUT_DIR/actinv-alara-index.json`. `--shutdown-t-s T` is required; cooling time is `step_t_s - T`, and every cell must share the same `step_t_s`. See [Advanced workflows](workflows.md#transport-flux-and-mesh-calculations) and `docs/INTERCHANGE_TRANSPORT.md` for the full contract.
 
 ## Build data
 

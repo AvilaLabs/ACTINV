@@ -1,0 +1,19 @@
+{
+ "checks": {
+  "byte_identical_all_reps": true,
+  "same_file_set_all_reps": true
+ },
+ "pass": true,
+ "schema": "actinv-p102-g4-determinism-1",
+ "sha256": {
+  "0_cell-0.photonSrc": "eeef35e0da809b5e3a2abc157cf36b4096a14023798cc655659951e7fc1b6364",
+  "1_cell-1.photonSrc": "4ce50c4841d5ac7ef7145e2d8bdeed1181ec5b80217103ac70f60b33b0668bdf",
+  "2_cell-2.photonSrc": "1d8b83d1f365d25361d8a69d63c5919646daf3b0f2ef6d32ca5fd703e2d3db4b",
+  "3_cell-3.photonSrc": "b21f07cf7e63e0f29ee0dcf2c24f4f3f9368b81c6cc853f0da99233decce97ba",
+  "4_cell-4.photonSrc": "8dab4f7bead53c1968c713b8f9b07535e48a510327b13546895bf1e40fbb7834",
+  "5_cell-5.photonSrc": "ca0d02761534148b56239b42f87706c4e0f5f8271cf7265e6694708b36262ca0",
+  "6_cell-6.photonSrc": "bab485c44e8ab0f1de59f0fdba85a3d2bf26a7105651ce1aa1c2c73b0a72ee9a",
+  "7_cell-7.photonSrc": "b1296df7b16302c19e17d6984bbd2d860870a2564574e03ca1b9edbd23979abb",
+  "actinv-alara-index.json": "efd51f802a206171df64f6dca67b4f4b9c29e9503f76a19a7dfe14c20e5999f7"
+ }
+}

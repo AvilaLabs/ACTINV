@@ -10,6 +10,8 @@ Import supported OpenMC statepoints, MCNP MESHTAL/MCTAL files, or FISPACT fluxes
 
 Photon exports turn computed sources into transport inputs. Ordinary exports use a point at the origin; mesh exports require cell bounds. Check spatial interpretation in the receiving transport code.
 
+`export-source` converts a banded `actinv-r2s-source-1` document into the format a transport code or activation-adjacent R2S tool reads directly: OpenMC settings-XML, an MCNP SDEF deck, a Serpent `src` card block, or — for ALARA-based R2S tools such as `nucleide` and PyNE — one ALARA `.photonSrc` file per cell plus a provenance index (`export-source alara`, requires `--shutdown-t-s`). See the [command reference](cli.md#export-photon-sources), `docs/INTERCHANGE_TRANSPORT.md` for the pinned format contract, and `contrib/nucleide_r2s/demo.py` for a working round-trip through nucleide's own ALARA reader.
+
 ## Build libraries and response tables
 
 `build-library` converts supported evaluated ENDF-6 data into an activation library and adjacent index. Projectile, group structure, temperature, product-state identity, and builder options determine compatibility.

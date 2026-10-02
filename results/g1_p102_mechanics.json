@@ -1,0 +1,24 @@
+{
+ "checks": {
+  "emits_ok": true,
+  "file_count_equals_cell_count": true,
+  "grid_length_matches_declared": true,
+  "group_count_identical_across_files": true,
+  "index_cells_complete": true,
+  "index_has_required_fields": true,
+  "one_row_per_file": true,
+  "reject_bad_volume": true,
+  "reject_missing_footer": true,
+  "reject_missing_shutdown_flag": true,
+  "reject_negative_cooling": true,
+  "reject_nonempty_out_dir": true,
+  "reject_unequal_step_t_s": true,
+  "reject_wrong_schema": true,
+  "total_row_0_cell-alpha.photonSrc": true,
+  "total_row_1_cell-beta-__.photonSrc": true,
+  "total_row_2_cell-gamma-zero.photonSrc": true,
+  "zero_cell_all_zeros": true
+ },
+ "pass": true,
+ "schema": "actinv-p102-g1-mechanics-1"
+}

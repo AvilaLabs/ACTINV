@@ -1,0 +1,27 @@
+{
+ "cells": 8,
+ "checks": {
+  "conservation_within_1e-12": true,
+  "cooling_matches": true,
+  "corpus_single_step_t_s": true,
+  "each_file_nuclide_total": true,
+  "each_file_one_row": true,
+  "each_file_time_s_equals_cooling": true,
+  "emits_ok": true,
+  "file_count_equals_cell_count": true,
+  "g_equals_grid_length": true,
+  "g_identical_across_files": true,
+  "max_relative_error": 0.0,
+  "nucleide_run_ok": true,
+  "pyne_itself_not_installed": "PyNE needs PyTables/MOAB \u2014 not installed; the PyNE-rule parse above applies photon_source_to_hdf5's own splitting/indexing rules without the PyNE package",
+  "pyne_rule_parse_all_files": true,
+  "tag_zone_strength_conserves_total": true,
+  "tag_zone_strength_per_cell": true
+ },
+ "corpus": "results/p52_r2s_source.ndjson",
+ "max_relative_error": 0.0,
+ "nucleide_version": "0.16.0",
+ "pass": true,
+ "persisted": "results/p102_alara",
+ "schema": "actinv-p102-g3-demo-1"
+}
