@@ -946,7 +946,7 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintainers/DOCUMENTATION.md
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
-764727b27b2cba063b3d403cb83b63a9ad9f180026f88c53c6bcf286ad9792dd  ./docs/releases/desktop-v0.2.0-preview.1.md
+9bb3dbba1663ea48dec5a97c59b14878f15ed61969619856f683e61899e9a7ac  ./docs/releases/desktop-v0.2.0-preview.1.md
 ad130acc00de295fd0c0dec13ca2d42a4a485ef2debb1933cbc8ba042a2f74a0  ./examples/README.md
 8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1  ./examples/damage_demo.json
 b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/damage_table_demo.json
@@ -1306,6 +1306,7 @@ b8faf0024acf50d78c66c65586a112086e9d7c08d93ef51ea7faeb9bb2746cbd  ./results/chec
 a5b3f8c5dc00aab283a9993e1034e1c320423d8886cbfab97699a39d391c8bcc  ./results/d2_calibration.json
 51e7bad1b26eedb9a2caf9231cfee7d6e72290eb50be1415e56443ddad9c5649  ./results/desktop-interface-v1.json
 854b9a3dffefb077ae7570357466b6b61c03886e77a32f0d2d238a28f65f8a11  ./results/desktop-packaging-local.json
+3578dcddb4d42635f6f796d81bf8ef9ea03c1a3b2b44e8c93c4dd330b751a782  ./results/desktop-packaging-v2-local.json
 fb2f2f790ea26b84a4b9d8f770525e85a209e81ced2fbae908fd15a2dc316bf4  ./results/desktop-ui-verification-v1.json
 6cba493dd816be638c81cb8428226bf93908241605890d37d5978ee092968091  ./results/endf8_fns_headtohead.json
 43ed46882768d670bf71b80a1d3766baf33a8c694bb347a12224f5d48d7c2e79  ./results/exfor_isomer_channels.json

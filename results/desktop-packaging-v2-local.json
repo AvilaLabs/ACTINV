@@ -1,0 +1,35 @@
+{
+ "desktop_version": "0.2.0-preview.1",
+ "release": "https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.2.0-preview.1",
+ "package": {
+  "file": "ACTINV-Desktop-0.2.0-preview.1-linux-x86_64.AppImage",
+  "sha256": "e7d1e7e3592131a9d9b64c599e30dabb806958f9cd30ff4c548cf9bfe5a8d8f3",
+  "source": "downloaded from the published pre-release; matches its SHA256SUMS.txt"
+ },
+ "machine": "maintainer's Linux laptop, Wayland session, real GPU (not software rendering)",
+ "packaged_app_harness": {
+  "script": "scripts/verify_desktop_package.py --label linux-x86_64",
+  "returncode": 0,
+  "model_open_save_data_paths_solve_json_csv": true,
+  "native_rendering": true,
+  "captures": 21,
+  "launch_target_sha256": "e7d1e7e3592131a9d9b64c599e30dabb806958f9cd30ff4c548cf9bfe5a8d8f3",
+  "launch_target_matches_ci": true,
+  "menu_entry_install": "passed (Terminal=false entry and installed AppImage present)",
+  "first_attempt": "failed at install-linux.sh because actinv.png was not staged beside it (harness staging error); passed once staged as in the release"
+ },
+ "captures_inspected": "all 21 viewed: eight pages and thirteen walkthrough steps render; no layout defects seen",
+ "real_data_parity": {
+  "spec": "crates/actinv-cli/data/iron-example.json (TENDL-2025 709g, ENDF/B-VIII.0 + JEFF-3.3 decay, data v1.1.0)",
+  "desktop": "packaged AppImage model path (ACTINV_GUI_SMOKE_MODEL_ONLY), rc 0",
+  "cli": "actinv 1.4.0 from crates.io, rc 0",
+  "steps": 21,
+  "result": "identical apart from entry_point (desktop/cli), displayed data paths (absolute/relative) and run time; data hashes in the certificates equal"
+ },
+ "not_covered": [
+  "native file dialogs and OS download notices (no input automation on this Wayland session)",
+  "the sweep, live slider, Pareto and assay panels (not driven by the harness; verified at source level by P48, P68, P69, P71, P78)",
+  "macOS and Windows (no such machines here); Windows native rendering remains unverified on CI (runner OpenGL < 2.0)"
+ ],
+ "observation": "the iron example's Input base defaults to the AppImage's temporary extraction folder; pre-existing behaviour, documented (check Input base)"
+}
