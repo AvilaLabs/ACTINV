@@ -40,3 +40,11 @@ Desktop versioning and `desktop-v…` tags are separate from the solver's versio
 [ACTINV qualification limits](../guide/qualification.md) apply. Mesh execution, transport import,
 bulk library building and specialized source exports remain CLI workflows. Nuclear-data inputs are
 downloaded separately and never bundled. No automatic update service is included.
+
+## Release record
+
+Published as a pre-release on 2026-10-02 and promoted the same day. The protocol called for a
+maintainer manual test before promotion; the maintainer instead approved promotion on a local
+Linux test (real display and GPU, all package checks, a real-data run matching the 1.4.0 CLI).
+macOS and Windows were not manually tested. The download page at actinv.avilalabs.org now offers
+this version. Evidence: `results/desktop-packaging-v2-local.json`.

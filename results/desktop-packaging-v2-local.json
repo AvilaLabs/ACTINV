@@ -31,5 +31,15 @@
   "the sweep, live slider, Pareto and assay panels (not driven by the harness; verified at source level by P48, P68, P69, P71, P78)",
   "macOS and Windows (no such machines here); Windows native rendering remains unverified on CI (runner OpenGL < 2.0)"
  ],
- "observation": "the iron example's Input base defaults to the AppImage's temporary extraction folder; pre-existing behaviour, documented (check Input base)"
+ "observation": "the iron example's Input base defaults to the AppImage's temporary extraction folder; pre-existing behaviour, documented (check Input base)",
+ "promotion": {
+  "date": "2026-10-02",
+  "decision": "maintainer approved promotion on this local Linux test in place of a maintainer manual test (deviation from protocols/desktop-packaging-v2.md, disclosed)",
+  "github": "pre-release flag removed; v1.4.0 remains the Latest release"
+ },
+ "website": {
+  "bundle": "actinv-web artifact of Build browser workbench run 36958018960 at efea75f",
+  "worker_version_id": "b0eba104-5741-4356-80b3-a89a7be07f95",
+  "checked": "/, /download/, /docs/ return 200; download/releases.json lists desktop-v0.2.0-preview.1 and all four installer links return 200 (edge cache refreshed within about a minute); handbook install page reads 0.2.0-preview.1"
+ }
 }
