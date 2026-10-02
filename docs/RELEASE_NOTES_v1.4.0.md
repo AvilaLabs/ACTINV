@@ -117,8 +117,9 @@ All bitwise identical:
 
 ## Desktop and browser
 
-The software release does not change the published desktop preview, which has its own release
-history. See [Versions and releases](guide/releases.md) for the desktop version and its solver.
+The desktop has its own release history. Desktop preview `0.2.0-preview.1` packages the existing
+interface on the 1.4.0 solver; its editor has no dedicated controls yet for the new options, which
+can be set through advanced JSON editing. See [Versions and releases](guide/releases.md).
 
 ## Known limitations
 

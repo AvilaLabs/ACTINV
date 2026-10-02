@@ -13,7 +13,7 @@ Open the [ACTINV download page](https://actinv.avilalabs.org/download/) and choo
 | Mac, Intel | Intel disk image | Open the DMG and drag ACTINV to Applications |
 | Linux, Intel or AMD 64-bit | AppImage | Allow execution in file properties, then double-click |
 
-The published **0.1.0-preview.1** desktop is unsigned and uses solver **1.0.1**. The CLI/Python software release is **1.4.0**; features added afterward require a newer desktop build or the current CLI/Python package. Download filenames identify the desktop version and architecture.
+The published **0.2.0-preview.1** desktop is unsigned and uses solver **1.4.0**, the same as the CLI/Python software release. Its editor has no dedicated controls yet for gamma projectiles, gas production, or the `flux` uncertainty channel; set those through advanced JSON editing or use the CLI/Python package. Download filenames identify the desktop version and architecture.
 
 For platform launch notices and the optional Linux application-menu shortcut, see the [desktop installation details](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DESKTOP_INSTALL.md). Use the [desktop walkthrough](desktop.md) for calculation setup.
 

@@ -20,7 +20,7 @@ If it cannot, choose from the downloads shown. No Rust or Python is needed.
 ACTINV from Start. **macOS:** open the disk image and drag ACTINV to Applications. **Linux:** allow the AppImage
 to run in its file properties, then double-click it. Windows and Linux downloads are for x86_64 computers.
 
-Desktop **0.1.0-preview.1** is unsigned. See [first-launch help and installation details](docs/DESKTOP_INSTALL.md)
+Desktop **0.2.0-preview.1** (solver 1.4.0) is unsigned. See [first-launch help and installation details](docs/DESKTOP_INSTALL.md)
 if your system shows a security notice, or for an optional Linux application-menu shortcut.
 
 **Open in browser** lets you try the results tutorial, inspect and compare result files, and edit and download
@@ -39,7 +39,7 @@ other inventory codes. The numerical core is written in Rust and shared by the d
 standalone command.
 
 [PyPI](https://pypi.org/project/actinv/) · [crates.io](https://crates.io/crates/actinv-cli) ·
-[Desktop preview downloads — Windows, macOS, Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1) ·
+[Desktop preview downloads — Windows, macOS, Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.2.0-preview.1) ·
 [v1.4.0 software release](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.4.0) ·
 [v1.1.0 nuclear-data release](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) ·
 [Documentation](#documentation)
@@ -177,7 +177,7 @@ This launches a native application window. After building, the executable is `ta
 desktop preview installers and application bundles are prepared separately from the published v1.4.0 release. PyPI and
 `cargo install actinv-cli` install the command-line interface, not the desktop.
 
-Download the [unsigned desktop preview for Windows, macOS, and Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1).
+Download the [unsigned desktop preview for Windows, macOS, and Linux](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.2.0-preview.1).
 The [desktop installation guide](docs/DESKTOP_INSTALL.md) covers first-launch notices, data setup, and verification.
 
 ### Build an irradiation and cooling schedule

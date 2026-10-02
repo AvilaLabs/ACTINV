@@ -1,9 +1,9 @@
 # Install ACTINV Desktop preview
 
-Desktop **0.1.0-preview.1** uses solver **1.0.1**. Desktop packaging has its own
+Desktop **0.2.0-preview.1** uses solver **1.4.0**. Desktop packaging has its own
 version and `desktop-v…` tags; it does not change the scientific release verdicts.
-Download the [unsigned desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1).
-The older v1.0.1 release does not contain the desktop. Development candidates remain
+Download the [unsigned desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.2.0-preview.1).
+Software releases (`v…` tags) do not contain the desktop. Development candidates remain
 available from successful [desktop builds](https://github.com/AvilaLabs/ACTINV/actions/workflows/desktop.yml).
 
 ## Choose a download
@@ -16,7 +16,7 @@ available from successful [desktop builds](https://github.com/AvilaLabs/ACTINV/a
 | Intel Mac | `macos-x86_64.dmg` | Same steps using the Intel download |
 | Linux x86_64 | `linux-x86_64.AppImage` | Allow execution in file properties, then double-click |
 
-All filenames start with `ACTINV-Desktop-0.1.0-preview.1-`. No Rust compiler or
+All filenames start with `ACTINV-Desktop-0.2.0-preview.1-`. No Rust compiler or
 Python installation is needed to run the application. macOS packages target 12+
 and Linux packages are built on Ubuntu 22.04; actual test platforms are recorded
 in each package's verification file. A working graphics driver is required.

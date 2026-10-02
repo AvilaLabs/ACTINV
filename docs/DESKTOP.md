@@ -106,4 +106,4 @@ configured in Actions; their runtime behavior has not been verified locally.
 
 See [Desktop installation](DESKTOP_INSTALL.md) for Windows installers and portable
 downloads, macOS application bundles, and Linux AppImages. Desktop preview version
-0.1.0-preview.1 is separate from solver version 1.0.1.
+0.2.0-preview.1 is separate from solver version 1.4.0.

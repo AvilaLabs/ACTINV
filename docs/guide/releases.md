@@ -6,7 +6,7 @@ Software, nuclear data, and desktop packages have separate release histories. Re
 | --- | --- | --- |
 | CLI, Python, and Rust workspace | 1.4.0 | [v1.4.0](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.4.0) |
 | Embedded nuclear-data catalog | 1.1.0 | [data-v1.1.0](https://github.com/AvilaLabs/ACTINV/releases/tag/data-v1.1.0) |
-| Published desktop preview | 0.1.0-preview.1, using solver 1.0.1 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.1.0-preview.1) |
+| Published desktop preview | 0.2.0-preview.1, using solver 1.4.0 | [desktop preview](https://github.com/AvilaLabs/ACTINV/releases/tag/desktop-v0.2.0-preview.1) |
 
 Use `actinv --version` for the executable. `actinv data manifest` prints its embedded catalog. Source-built desktop candidates may use a newer solver than the published preview; inspect their package/build record.
 
