@@ -1,0 +1,63 @@
+{
+  "phase": "P102",
+  "status": "P102-PASS",
+  "opening_commit": "24bfb1e88ee896299afd4f1226526d0f54c2c42e",
+  "final_commit": "c4041bcb87715f664ddbcfe032c80ed63dff6fc3",
+  "amendments": 0,
+  "protocol_sha256": "761a5c76aed9d07da2d8f941c09f619a7c02aec08b70cec01a60ad345a516d6f",
+  "gates": {
+    "g0": {
+      "pass": true,
+      "seal": "results/g0_p102_seals.json",
+      "opening_commit": "24bfb1e88ee896299afd4f1226526d0f54c2c42e"
+    },
+    "g1": {
+      "pass": true,
+      "result": "results/g1_p102_mechanics.json",
+      "checks": 18,
+      "note": "synthetic fixture (3 cells: mixed group sets, one all-zero cell, one non-ASCII id) emits the ALARA directory: file count == cell count, one TOTAL row per file, group count G identical across files, index carries every required field, zero-strength cell writes a zero row; 7 refusal paths fire by name (missing --shutdown-t-s, negative cooling, unequal step_t_s, bad volume, non-empty OUT_DIR, wrong schema, missing footer), each leaving no partial directory"
+    },
+    "g2": {
+      "pass": true,
+      "result": "results/g2_p102_exactness.json",
+      "checks": 45,
+      "note": "independent Python re-derivation of every emitted token from the fixture bytes at machine precision: index fields (input sha256, step, step_t_s, shutdown_t_s, cooling_s, time token, units, group order, group centroid grid), per-cell file names (zero-padded ordinal + byte-wise-sanitized id), exact photonSrc row text, and every index cell entry (bounds, volume, photons_s, both sigma fields incl. null when absent, nonzero group count, file sha256, ordinal, id)"
+    },
+    "g3": {
+      "pass": true,
+      "result": "results/g3_p102_demo.json",
+      "checks": 16,
+      "max_relative_error": 0.0,
+      "note": "results/p52_r2s_source.ndjson (8 cells, 220.3034526122621 photons/s, 115-entry group grid) -> alara; nucleide 0.16.0 (pinned, throwaway venv target/p102-venv) parses every file with its own reader (nucleide.r2s.photon_group_sums, nucleide.alara.alara_photon_total_strength): one TOTAL row per file, time_s equals the declared cooling, G equals the grid length for every file; per-cell Sigma_g density*volume_cm3 reproduces photons_s to 0.0 relative error (exact to the bit); nucleide.r2s.tag_zone_strength conserves the total and every per-cell value; an independent PyNE-rule parse (tab split, G from line 1, element index stays 0 since every file carries exactly one TOTAL row) passes on all 8 files; PyNE itself is not installed (PyTables/MOAB) — recorded, not run"
+    },
+    "g4": {
+      "pass": true,
+      "result": "results/g4_p102_determinism.json",
+      "note": "3 reruns of the corpus export, byte-identical directory contents (all 9 files: 8 .photonSrc + the index) across every rerun"
+    },
+    "g5": {
+      "pass": true,
+      "result": "results/check_g5_p102.json",
+      "note": "independent reparse of the persisted G3 output with its own parser (no shared code with the Rust writer or the other P102 controls): every numeric token recomputed from the actinv-r2s-source-1 corpus bytes, index sha256 verified, conservation re-checked; all 5 planted mutations caught (a density scaled, a group pair swapped, the time token edited, an index sha256 edited, a file removed); 0 problems on the unmutated output"
+    },
+    "g6": {
+      "pass": true,
+      "result": "results/g6_p102_regression.json",
+      "note": "OpenMC/MCNP/Serpent export-source emits are byte-identical before (reference built from master 24bfb1e) and after this change, on both the P57 synthetic fixture and the p52 corpus document (6 of 6 byte-identity checks); cargo fmt --all -- --check, cargo clippy -p actinv-core -p actinv-cli --all-targets --all-features -- -D warnings, and cargo test -p actinv-core -p actinv-cli --all-targets --all-features all pass (207 tests across both crates' test binaries, 0 failed)"
+    }
+  },
+  "emitted_surface": {
+    "command": "actinv export-source alara R2S_SOURCE.ndjson OUT_DIR --shutdown-t-s T",
+    "format": "one ALARA .photonSrc file per cell (TOTAL\\t<time>\\t<densities...>, tab-separated) under OUT_DIR, plus a provenance index OUT_DIR/actinv-alara-index.json carrying the group centroid grid and per-cell sigma",
+    "consumers_verified": "nucleide 0.16.0 (own ALARA photon-source reader + r2s zone-tagging API) and an independently applied PyNE photon_source_to_hdf5 splitting/indexing rule; PyNE itself not installed",
+    "demo": "contrib/nucleide_r2s/demo.py",
+    "contract": "docs/INTERCHANGE_TRANSPORT.md"
+  },
+  "limits": [
+    "TOTAL rows only — actinv-r2s-source-1 carries per-cell photon totals, not per-nuclide group spectra; per-nuclide ALARA rows are a separate protocol",
+    "centroid grid, not energy bounds — the user writes the matching ALARA photon_source bin bounds from the index's group_centroids_eV",
+    "verification is by the consumers' own parsers (nucleide) and an independently applied PyNE rule, not by running ALARA or a transport code",
+    "nucleide is pre-alpha; the round-trip is pinned to 0.16.0 — later versions are a re-run, not a claim"
+  ],
+  "amendment_note": "none — no change to the protocol text was needed; the implementation followed decisions 1-8 as written"
+}

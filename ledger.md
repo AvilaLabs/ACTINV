@@ -2309,3 +2309,76 @@ Verdict `results/p101_verdict.json`, **PASS**, all gates run afresh into `target
 through `actinv data fetch`; that remains a separate release decision. The two FISPACT-II and
 TENDL-2017 notes in `docs/defects/` stay held. Evidence: `target/p100/`, `target/p101/` on the
 branch worktree.
+
+## Entry 77 — ALARA photon-source export: P102 PASS, `nucleide` round-trip (2026-10-02)
+
+`actinv export-source` (P57) gained a fourth format, `alara`, so `nucleide`'s and PyNE's existing
+ALARA-based R2S readers take ACTINV's banded `actinv-r2s-source-1` output directly: one
+`.photonSrc` file per cell (`TOTAL\t<time>\t<densities…>`, tab-separated) under `OUT_DIR`, plus a
+provenance sidecar `actinv-alara-index.json` (in-file comments would break PyNE's reader, which
+reads the first line to count groups). `--shutdown-t-s T` is a new required flag; cooling =
+`step_t_s − T`, refused if cells disagree on `step_t_s` or cooling is negative. The group grid is
+the union of nonzero `centroid_eV` values across cells, sorted ascending; zero-strength cells write
+a row of zeros, not silence. Branch `p102-alara-export`, protocol
+`protocols/ACTINV-P102_PROTOCOL.md` (opened 2026-10-02, no amendments — decisions 1–8 implemented
+as written).
+
+**Implementation:** `crates/actinv-core/src/source_adapter.rs` gained `export_source_alara`
+(reusing the shared `parse_r2s`, extended to read each cell's `step_t_s`) plus a byte-wise ASCII id
+sanitizer and a zero-padded ordinal width helper so file names sort in document order; the CLI arm
+for `alara` lives in `crates/actinv-cli/src/command.rs` ahead of the unchanged three-format arm
+(matched by an `if a[2] == "alara"` guard, so the existing `export-source {openmc|mcnp|serpent}`
+code path is untouched). 9 new unit tests in `source_adapter.rs` (sanitizer, ordinal width, row
+emission with a mixed-group/zero-group/non-ASCII-id fixture, shutdown-token at zero cooling, and
+the five refusal paths).
+
+Verdict `results/verdict_p102.json`, **P102-PASS**:
+- **G0:** sealed, `protocols/ACTINV-P102_PROTOCOL.md` plus `source_adapter.rs`, `command.rs`,
+  `INTERCHANGE_TRANSPORT.md`, and the P102 controls hashed into `results/g0_p102_seals.json`.
+- **G1:** 18 of 18 checks. A 3-cell fixture (mixed group sets, one all-zero cell, one cell whose id
+  is `cell-beta-ß`) emits a well-formed directory: file count equals cell count, exactly one
+  `TOTAL` row per file, group count `G` identical across files, every index field present, the
+  zero-strength cell's row is all zeros. All 7 named refusals fire with no partial directory:
+  missing `--shutdown-t-s`, negative cooling, unequal `step_t_s`, bad `volume_cm3`, non-empty
+  `OUT_DIR`, wrong schema, missing footer.
+- **G2:** 45 of 45 checks. An independent Python re-derivation of every emitted token — index
+  fields (input sha256, step, `step_t_s`, `shutdown_t_s`, `cooling_s`, time token, units, group
+  order, the centroid grid), per-cell file names (zero-padded ordinal plus the byte-wise sanitized
+  id — confirmed on the two-byte UTF-8 `ß`), the exact `photonSrc` row text, and every index cell
+  entry including the `null` sigma fields when the input cell carries none — all exact at machine
+  precision.
+- **G3:** `results/p52_r2s_source.ndjson` (8 cells, 220.3034526122621 photons/s, a 115-entry group
+  grid) → `alara`, persisted at `results/p102_alara/`. `nucleide` 0.16.0, pinned, installed into a
+  throwaway venv (`target/p102-venv`, `pip install nucleide==0.16.0`), parses every file with its
+  own reader (`nucleide.r2s.photon_group_sums`, `nucleide.alara.alara_photon_total_strength`): one
+  `TOTAL` row per file, `time_s` equal to the declared cooling, `G` equal to the grid length for
+  every file. Per-cell Σ_g density × `volume_cm3` reproduces `photons_s` to **0.0 relative error**
+  (exact to the bit on this corpus) for all 8 cells, and `nucleide.r2s.tag_zone_strength` conserves
+  both the per-cell and total strength. An independently applied PyNE `photon_source_to_hdf5` rule
+  (tab split, `G` from line 1, element index stays 0 since every file carries exactly one `TOTAL`
+  row) passes on all 8 files; PyNE itself needs PyTables/MOAB and is not installed — recorded, not
+  run.
+- **G4:** 3 reruns of the corpus export are byte-identical across all 9 files (8 `.photonSrc` +
+  the index).
+- **G5:** independent checker (`controls/check_g5_p102.py`, no shared code with the Rust writer or
+  the other P102 controls) reparses the persisted G3 output, recomputes every number from the
+  corpus bytes, 0 problems on the unmutated output, and catches all 5 planted mutations: a density
+  scaled, a group pair swapped (chosen to actually differ, so the swap isn't a silent no-op on an
+  equal-zero pair), the time token edited, an index sha256 edited, a file removed.
+- **G6:** the OpenMC/MCNP/Serpent `export-source` emits are byte-identical before (a reference
+  binary built from master `24bfb1e` in a throwaway `git worktree` under `target/`, removed after)
+  and after this change, on both the P57 synthetic fixture and the p52 corpus document (6 of 6
+  checks). `cargo fmt --all -- --check`, `cargo clippy -p actinv-core -p actinv-cli --all-targets
+  --all-features -- -D warnings`, and `cargo test -p actinv-core -p actinv-cli --all-targets
+  --all-features` all pass (207 tests across both crates' test binaries, 0 failed) — scoped to the
+  touched crates per the repo's own CI guidance, not the whole workspace (`actinv-gui` was not
+  built).
+
+**Merged** to the `p102-alara-export` branch with the docs: `docs/INTERCHANGE_TRANSPORT.md` (new
+ALARA section), `docs/guide/cli.md` and `docs/guide/workflows.md` (export-source alara pointers),
+`CHANGELOG.md` Unreleased. New contrib package `contrib/nucleide_r2s/` (README, `demo.py`,
+`test_nucleide_r2s.py` — skips cleanly when `nucleide` is absent, following the `contrib/openmc_r2s`
+pattern). Candidate commit `c4041bcb87715f664ddbcfe032c80ed63dff6fc3` on `p102-alara-export`. Not
+pushed; not merged to master — that is a separate release decision. Evidence:
+`results/g0_p102_seals.json` through `results/check_g5_p102.json`, `results/g6_p102_regression.json`,
+`results/p102_alara/` on the branch worktree (`~/Documents/actinv-wt-p102`).
