@@ -2379,6 +2379,21 @@ ALARA section), `docs/guide/cli.md` and `docs/guide/workflows.md` (export-source
 `CHANGELOG.md` Unreleased. New contrib package `contrib/nucleide_r2s/` (README, `demo.py`,
 `test_nucleide_r2s.py` — skips cleanly when `nucleide` is absent, following the `contrib/openmc_r2s`
 pattern). Candidate commit `c4041bcb87715f664ddbcfe032c80ed63dff6fc3` on `p102-alara-export`. Not
-pushed; not merged to master — that is a separate release decision. Evidence:
+pushed; not merged to master — that is a separate release decision.
+
+**Amendment A1 and merge (2026-10-02).**
+- **Review finding:** the G3/G5 corpus shutdown reference (4000 s) was arbitrary. The p52 corpus
+  irradiates for 300 s, so the persisted files labelled step 4 as 34210700 s after shutdown instead
+  of 34214400 s.
+- **Fix:** corrected to 300 s. The demo default also moves from 0 to 300 s. G3, G4 and G5 were
+  re-run and pass (nucleide round-trip still exact; 5/5 mutations caught). G0 was resealed. No
+  Rust source changed.
+- **G6 re-check:** re-run independently against the published, checksum-verified v1.4.0 release
+  binary, because the agent's reference build had been removed: 6/6 byte-identical.
+- **Other changes:**
+  - The contrib README wording about nucleide was neutralised so it describes its ALARA-based
+    design without characterising its fallback.
+  - The protocol hash was registered in `protocols/protocol_hash.txt`.
+- **Merged to master;** P102-PASS stands. Evidence:
 `results/g0_p102_seals.json` through `results/check_g5_p102.json`, `results/g6_p102_regression.json`,
 `results/p102_alara/` on the branch worktree (`~/Documents/actinv-wt-p102`).

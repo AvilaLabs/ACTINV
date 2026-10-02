@@ -145,4 +145,20 @@ network step is `pip install nucleide==0.16.0` into a throwaway venv for G3.
 
 ## Amendments
 
-(none)
+- **A1 (post-G0, reference value; 2026-10-02):**
+  - The G3/G5 corpus shutdown reference was `4000.0` s, an arbitrary value. The p52 corpus
+    irradiates for `IRR_S = 300` s (`controls/p52_openmc_parity.py`), then cools 1 d, 30 d and 1 y,
+    so its shutdown is at t = 300 s. G3 and G5 now use `300.0`, and the persisted
+    `results/p102_alara/` files carry the physical cooling of step 4 (34214400 s after shutdown)
+    instead of 34210700 s.
+  - The gates were unaffected: G3 checks that the written time token equals the declared cooling,
+    whatever its value.
+  - `contrib/nucleide_r2s/demo.py` defaulted to `--shutdown-t-s 0` and now defaults to `300`, with
+    the README stating why.
+  - The synthetic G1/G2 fixture keeps its own `4000.0` (its `step_t_s` is synthetic).
+  - G3, G4 and G5 were re-run and G0 resealed over the changed control artifacts. No Rust source
+    changed, so no emitted byte changed for a given `--shutdown-t-s`.
+  - G6 was additionally re-checked against the published v1.4.0 Linux release binary (SHA256SUMS
+    verified; `source_adapter.rs` and `r2s.rs` are unchanged between v1.4.0 and `24bfb1e`). The
+    OpenMC, MCNP and Serpent emits on the P57 fixture and the p52 corpus were byte-identical, 6 of
+    6.

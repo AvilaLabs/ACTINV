@@ -12,7 +12,8 @@ Usage:
     python3 contrib/nucleide_r2s/demo.py [R2S_SOURCE.ndjson] [--shutdown-t-s T]
 
 Defaults to the repository's corpus document
-(``results/p52_r2s_source.ndjson``) and ``--shutdown-t-s 0`` (shutdown).
+(``results/p52_r2s_source.ndjson``) and ``--shutdown-t-s 300``, the corpus's end of irradiation (it irradiates for
+300 s, then cools 1 d, 30 d and 1 y).
 Requires ``nucleide`` importable (``pip install nucleide==0.16.0``) and an
 ``actinv`` binary on ``PATH`` or at ``target/release/actinv`` /
 ``target/debug/actinv`` relative to the repository root.
@@ -47,7 +48,7 @@ def main() -> int:
     parser.add_argument("source", nargs="?",
                         default=str(ROOT / "results/p52_r2s_source.ndjson"),
                         help="actinv-r2s-source-1 NDJSON document")
-    parser.add_argument("--shutdown-t-s", type=float, default=0.0,
+    parser.add_argument("--shutdown-t-s", type=float, default=300.0,
                         help="shutdown reference time (seconds); cooling = "
                              "step_t_s - this value")
     parser.add_argument("--out", default=None,

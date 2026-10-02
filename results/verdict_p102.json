@@ -2,9 +2,9 @@
   "phase": "P102",
   "status": "P102-PASS",
   "opening_commit": "24bfb1e88ee896299afd4f1226526d0f54c2c42e",
-  "final_commit": "c4041bcb87715f664ddbcfe032c80ed63dff6fc3",
-  "amendments": 0,
-  "protocol_sha256": "761a5c76aed9d07da2d8f941c09f619a7c02aec08b70cec01a60ad345a516d6f",
+  "final_commit": null,
+  "amendments": 1,
+  "protocol_sha256": "2e3aea8927d3c96aa29626e9803ae9010d9687815d6be10fd8c6d369e6ff22df",
   "gates": {
     "g0": {
       "pass": true,
@@ -43,7 +43,8 @@
     "g6": {
       "pass": true,
       "result": "results/g6_p102_regression.json",
-      "note": "OpenMC/MCNP/Serpent export-source emits are byte-identical before (reference built from master 24bfb1e) and after this change, on both the P57 synthetic fixture and the p52 corpus document (6 of 6 byte-identity checks); cargo fmt --all -- --check, cargo clippy -p actinv-core -p actinv-cli --all-targets --all-features -- -D warnings, and cargo test -p actinv-core -p actinv-cli --all-targets --all-features all pass (207 tests across both crates' test binaries, 0 failed)"
+      "note": "OpenMC/MCNP/Serpent export-source emits are byte-identical before (reference built from master 24bfb1e) and after this change, on both the P57 synthetic fixture and the p52 corpus document (6 of 6 byte-identity checks); cargo fmt --all -- --check, cargo clippy -p actinv-core -p actinv-cli --all-targets --all-features -- -D warnings, and cargo test -p actinv-core -p actinv-cli --all-targets --all-features all pass (207 tests across both crates' test binaries, 0 failed)",
+      "independent_recheck": "re-checked against the published v1.4.0 linux-x86_64 release binary (SHA256SUMS verified; source_adapter.rs and r2s.rs unchanged between v1.4.0 and 24bfb1e): OpenMC/MCNP/Serpent emits byte-identical on the P57 fixture and the p52 corpus, 6/6"
     }
   },
   "emitted_surface": {
@@ -59,5 +60,9 @@
     "verification is by the consumers' own parsers (nucleide) and an independently applied PyNE rule, not by running ALARA or a transport code",
     "nucleide is pre-alpha; the round-trip is pinned to 0.16.0 — later versions are a re-run, not a claim"
   ],
-  "amendment_note": "none — no change to the protocol text was needed; the implementation followed decisions 1-8 as written"
+  "amendment_note": "none — no change to the protocol text was needed; the implementation followed decisions 1-8 as written",
+  "amendment_notes": [
+    "A1: corpus shutdown reference corrected from an arbitrary 4000 s to the p52 corpus's end of irradiation (300 s); persisted results/p102_alara/ now carry the physical cooling 34214400 s; demo default 0 -> 300; G3/G4/G5 re-run PASS; G0 resealed over the changed control artifacts (the reseal's opening_commit field records the commit it was resealed at, 2d071be; the phase opened at 24bfb1e)"
+  ],
+  "final_commit_note": "the merge commit that carries A1 is recorded in ledger Entry 77; this file cannot name its own commit"
 }

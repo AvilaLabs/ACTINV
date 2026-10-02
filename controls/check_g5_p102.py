@@ -18,7 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULT = ROOT / "results/check_g5_p102.json"
 CORPUS = ROOT / "results/p52_r2s_source.ndjson"
 SRC = ROOT / "results/p102_alara"
-SHUTDOWN_T_S = 4000.0
+SHUTDOWN_T_S = 300.0  # corpus shutdown, as in g3_p102_demo.py (amendment A1)
 
 
 # ---------- independent arithmetic (own implementation) ----------

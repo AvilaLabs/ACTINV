@@ -22,7 +22,7 @@
     },
     "g3_demo": {
       "path": "controls/g3_p102_demo.py",
-      "sha256": "2d4ee64950b7ff32dae1d2e0db076e36879d2aff1769fb7010a925b4ea42391c"
+      "sha256": "ce091b2b0467c1d8fe4579510613b9ceca4df60e594b77f0a0b7f7dced6ad309"
     },
     "g4_determinism": {
       "path": "controls/g4_p102_determinism.py",
@@ -30,7 +30,7 @@
     },
     "g5_checker": {
       "path": "controls/check_g5_p102.py",
-      "sha256": "3d516f801a1c4eeda3c532fcf4cedce04dc53a8f9070253b856bad7d4e2299a8"
+      "sha256": "7d7aa75b3bd9dc0c74ae9a8913a1578527fd988552992dc72ab79a5b1ca78ece"
     },
     "g6_regression": {
       "path": "controls/g6_p102_regression.py",
@@ -46,15 +46,15 @@
     },
     "protocol": {
       "path": "protocols/ACTINV-P102_PROTOCOL.md",
-      "sha256": "761a5c76aed9d07da2d8f941c09f619a7c02aec08b70cec01a60ad345a516d6f"
+      "sha256": "2e3aea8927d3c96aa29626e9803ae9010d9687815d6be10fd8c6d369e6ff22df"
     },
     "workspace_manifest": {
       "path": "Cargo.toml",
       "sha256": "3d03b03be75feb26047852cd1c87f1b25d7ae1f770c990404925048f972b282c"
     }
   },
-  "opening_commit": "24bfb1e88ee896299afd4f1226526d0f54c2c42e",
-  "protocol_sha256": "761a5c76aed9d07da2d8f941c09f619a7c02aec08b70cec01a60ad345a516d6f",
+  "opening_commit": "2d071be01cba964e6bc993f83dca852fd22a600e",
+  "protocol_sha256": "2e3aea8927d3c96aa29626e9803ae9010d9687815d6be10fd8c6d369e6ff22df",
   "schema": "actinv-p102-seal-1",
-  "sealed_at_utc": "2026-10-02T17:19:37Z"
+  "sealed_at_utc": "2026-10-02T17:29:09Z"
 }

@@ -20,7 +20,9 @@ import p102_case as p102  # noqa: E402
 RESULT = ROOT / "results/g3_p102_demo.json"
 CORPUS = ROOT / "results/p52_r2s_source.ndjson"
 PERSIST = ROOT / "results/p102_alara"  # G4/G5 repurpose these bytes
-SHUTDOWN_T_S = 4000.0
+# Corpus shutdown: p52 irradiates IRR_S = 300 s (controls/p52_openmc_parity.py), then
+# cools 1 d, 30 d and 1 y, so step 4 (step_t_s 34214700 s) is 34214400 s after shutdown.
+SHUTDOWN_T_S = 300.0
 NUCLEIDE_PY = ROOT / "target/p102-venv/bin/python3"
 
 

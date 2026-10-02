@@ -20,7 +20,7 @@
       "nonzero_groups": 19,
       "ordinal": 0,
       "photons_s": 28.12274932564945,
-      "sha256": "eeef35e0da809b5e3a2abc157cf36b4096a14023798cc655659951e7fc1b6364",
+      "sha256": "d91f0e311f3615390460568051fa370e3d0ec5b734dacd27d185b1f4c8478e2d",
       "sigma_photons_s_conservative": 5.879896920286964,
       "sigma_photons_s_independent": 4.17108649789121,
       "volume_cm3": 1.0
@@ -45,7 +45,7 @@
       "nonzero_groups": 18,
       "ordinal": 1,
       "photons_s": 29.09804628525831,
-      "sha256": "4ce50c4841d5ac7ef7145e2d8bdeed1181ec5b80217103ac70f60b33b0668bdf",
+      "sha256": "1368e0ec6761b7444d7c73aa92f3f51a34f5a933ab9784b7ffbe8d9a1e71c11b",
       "sigma_photons_s_conservative": 6.072233612352923,
       "sigma_photons_s_independent": 4.305486402929796,
       "volume_cm3": 1.0
@@ -70,7 +70,7 @@
       "nonzero_groups": 19,
       "ordinal": 2,
       "photons_s": 26.247307261328572,
-      "sha256": "1d8b83d1f365d25361d8a69d63c5919646daf3b0f2ef6d32ca5fd703e2d3db4b",
+      "sha256": "4bfdd9ab6ede979c3e4b0cd048afee0af1797c5c762cc901c2f6874ef2879d7e",
       "sigma_photons_s_conservative": 5.473825644750224,
       "sigma_photons_s_independent": 3.882757931431515,
       "volume_cm3": 1.0
@@ -95,7 +95,7 @@
       "nonzero_groups": 18,
       "ordinal": 3,
       "photons_s": 26.260156861973094,
-      "sha256": "b21f07cf7e63e0f29ee0dcf2c24f4f3f9368b81c6cc853f0da99233decce97ba",
+      "sha256": "f0b7b2ecfad9339093bdb4c9ce8f66852ade8cd58bec28bcce46c08e31c83dfc",
       "sigma_photons_s_conservative": 5.518919656612485,
       "sigma_photons_s_independent": 3.9207944497636045,
       "volume_cm3": 1.0
@@ -120,7 +120,7 @@
       "nonzero_groups": 18,
       "ordinal": 4,
       "photons_s": 28.959139491231525,
-      "sha256": "8dab4f7bead53c1968c713b8f9b07535e48a510327b13546895bf1e40fbb7834",
+      "sha256": "c07042b3a2543225eae6fe735d0aa58084374e685463aa159923363ded15d7da",
       "sigma_photons_s_conservative": 6.067938089507284,
       "sigma_photons_s_independent": 4.30477969225368,
       "volume_cm3": 1.0
@@ -145,7 +145,7 @@
       "nonzero_groups": 19,
       "ordinal": 5,
       "photons_s": 28.920913752520185,
-      "sha256": "ca0d02761534148b56239b42f87706c4e0f5f8271cf7265e6694708b36262ca0",
+      "sha256": "935bcd1faac93f0303d79a68225f2203c505e5d98f3f3f4922e0d36411260573",
       "sigma_photons_s_conservative": 6.019188545185148,
       "sigma_photons_s_independent": 4.265714693934183,
       "volume_cm3": 1.0
@@ -170,7 +170,7 @@
       "nonzero_groups": 19,
       "ordinal": 6,
       "photons_s": 26.47129656132973,
-      "sha256": "bab485c44e8ab0f1de59f0fdba85a3d2bf26a7105651ce1aa1c2c73b0a72ee9a",
+      "sha256": "a782fec90eb55fd555b185f5f3c35ddf299471a187f08fd4b4faf93de7e4abd1",
       "sigma_photons_s_conservative": 5.489831343163241,
       "sigma_photons_s_independent": 3.8932655955445936,
       "volume_cm3": 1.0
@@ -195,13 +195,13 @@
       "nonzero_groups": 18,
       "ordinal": 7,
       "photons_s": 26.223843072971246,
-      "sha256": "b1296df7b16302c19e17d6984bbd2d860870a2564574e03ca1b9edbd23979abb",
+      "sha256": "627c4a8bdb4795fe2ff93282b480d7ba8ef78033e17b48ef496f9a2c64af0290",
       "sigma_photons_s_conservative": 5.551678290323507,
       "sigma_photons_s_independent": 3.9511717241682067,
       "volume_cm3": 1.0
     }
   ],
-  "cooling_s": 34210700.0,
+  "cooling_s": 34214400.0,
   "emitter": "actinv-source-adapter-1",
   "format": "alara",
   "group_centroids_eV": [
@@ -323,9 +323,9 @@
   ],
   "group_order": "ascending centroid_eV",
   "input_sha256": "932ba6cde4a93c5fa8a1cfa74dda3f85f734cdf5f91049ae1a88b38553782a73",
-  "shutdown_t_s": 4000.0,
+  "shutdown_t_s": 300.0,
   "step": 4,
   "step_t_s": 34214700.0,
-  "time_token": "34210700 s",
+  "time_token": "34214400 s",
   "units": "photons/s/cm3"
 }

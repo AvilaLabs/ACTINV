@@ -1,14 +1,12 @@
 # ACTINV as the photon-source input of nucleide's/PyNE's ALARA-based R2S
 
 `nucleide` (nukehub-dev/nucleide, BSD-2) and PyNE build rigorous two-step (R2S) shutdown-dose
-workflows around ALARA, and both read ALARA's plain-text photon-source file directly — their
-roadmap states that "transport and activation solving stay out of scope". Without an ALARA run,
-`nucleide`'s `r2s` crate falls back to a uniform split of each zone total across groups, which its
-own documentation calls a placeholder.
+workflows around ALARA: they write the ALARA inputs and read ALARA's plain-text photon-source file,
+and leave the activation solve to ALARA.
 
 `actinv export-source alara` (P102) writes ACTINV's banded `actinv-r2s-source-1` document as ALARA
 `.photonSrc` files — one per cell, `TOTAL\t<time>\t<densities…>` — so `nucleide`'s and PyNE's
-existing readers take real per-group ACTINV spectra in place of the placeholder, with no change on
+existing readers can take ACTINV's per-group spectra where they would read ALARA's, with no change on
 their side. This is the same zero-compute adapter lane as `contrib/openmc_r2s` (P57): no solver
 path is invoked here either.
 
@@ -28,7 +26,8 @@ python3 contrib/nucleide_r2s/demo.py [R2S_SOURCE.ndjson] [--shutdown-t-s T] [--o
 ```
 
 Defaults to the repository's corpus document (`results/p52_r2s_source.ndjson`) and
-`--shutdown-t-s 0` (shutdown). The demo:
+`--shutdown-t-s 300`, the corpus's end of irradiation (it irradiates for 300 s, then cools
+1 d, 30 d and 1 y, so the exported step is 34214400 s after shutdown). The demo:
 
 1. Runs `actinv export-source alara R2S_SOURCE.ndjson OUT --shutdown-t-s T`.
 2. Loads every emitted `.photonSrc` file with nucleide's own ALARA photon-source reader
