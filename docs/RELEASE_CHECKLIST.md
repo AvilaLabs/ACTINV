@@ -163,17 +163,28 @@ green; PyPI/crates verified at both versions (records in `results/release_v1.3.0
 
 ## v1.4.0 (feature release)
 
-- [ ] Bump the workspace, `python`, `pyproject.toml` and inter-crate versions to 1.4.0; update
+- [x] Bump the workspace, `python`, `pyproject.toml` and inter-crate versions to 1.4.0; update
   `release-artifacts.yml`, README release links, the DATA_LIMITATIONS header and the handbook's
   version references; refresh `MANIFEST.sha256`.
-- [ ] Rename the changelog's Unreleased section to v1.4.0 and write `docs/RELEASE_NOTES_v1.4.0.md`.
-- [ ] Pre-tag gates: `cargo publish --dry-run` for `actinv-data`, `actinv-core` and `actinv-cli`,
+- [x] Rename the changelog's Unreleased section to v1.4.0 and write `docs/RELEASE_NOTES_v1.4.0.md`.
+- [x] Pre-tag gates: `cargo publish --dry-run` for `actinv-data`, `actinv-core` and `actinv-cli`,
   and every `include_str!`/`include_bytes!` in `crates/` resolving inside its package; local CI
   replay green.
-- [ ] Push the release commit and the `v1.4.0` tag in one atomic push; re-run `controls` on the
+- [x] Push the release commit and the `v1.4.0` tag in one atomic push; re-run `controls` on the
   release commit after the tag exists.
-- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+- [x] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
   wheel/sdist set land at 1.4.0.
-- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.4.0` GitHub release; paste the
+- [x] Attach packaged platform archives and `SHA256SUMS` to the `v1.4.0` GitHub release; paste the
   release notes.
-- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.4.0.json`.
+- [x] Production smoke from PyPI and crates.io; record the release in `results/release_v1.4.0.json`.
+- [x] Handbook and website updated with the release (standing rule from 2026-10-01): handbook
+  version references in the release commit; the `actinv-web` bundle CI built from the release
+  commit deployed with `npx wrangler@4 deploy --config wrangler.jsonc`; `/`, `/download/` and
+  `/docs/` checked live.
+
+v1.4.0 execution: release commit and tag `85247cf` pushed atomically, so `controls` (run
+36954992700) saw the tag and passed without a re-run. The local replay's single `p16` failure was
+the fresh worktree's missing `target/tmp`, reproduced, then passed on rerun. Crates run 36954993114
+and PyPI run 36954993352 green; environment gates approved via the API on the maintainer's
+approval. Record: `results/release_v1.4.0.json`. From this release on, every release also deploys
+the website and handbook (add the step above to each future section).

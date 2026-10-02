@@ -867,7 +867,7 @@ d8bedc530e1a0c41fb71e2120cce056fca62c63c8e551deb9b0fcb5af600100a  ./docs/PARKING
 a556994c6546b47f35f3559ae5854586f1ef49b035c800acc3cf7862d6a56b1c  ./docs/PYPI_RELEASE.md
 27da2990913ba71b6dd45f39b3f0e974f1dd6835dd61e130dd90008d616d8db7  ./docs/QUALIFICATION.md
 348ff7eb3a53adef7a431191bf429ab6dc3be291ac80978795d270abe627330a  ./docs/QUANTITIES.md
-d7a440f17ba61a94d923a1bdf35f79b48852ad0c4b75436d3cf9fc75813bf91b  ./docs/RELEASE_CHECKLIST.md
+12b905aa69e2c9bd7300544c8e3868208e60eb1b3a287cb5c37dcddfa207f932  ./docs/RELEASE_CHECKLIST.md
 7480766801e1a921e007f2baa5f78c204c23ffab9fc18e03f0f24ed9fa296aed  ./docs/RELEASE_NOTES_v0.1.md
 a535a3613f3e05acf780e61ec46fdec9be355bd0c08b3bb1b88b7406bff3d8a2  ./docs/RELEASE_NOTES_v0.2.md
 f0a32b0cdc308b42b1a3f2b9c30ffed929ca93e8bc5a4fbdb3287d7912b597d9  ./docs/RELEASE_NOTES_v0.5.md
@@ -3704,6 +3704,7 @@ c5d58d97b1a6c7a01ba9a246488a79cbe48d7a507c3a918bdaf047cc53dd7b0c  ./results/p97_
 f6d34b9d6bad0d892f904ad7f1a49b4a795309ced71311d8bf8c0fb1ede43db7  ./results/release_v1.2.1.json
 580fe8793c040b1bfe9070e8f1ce398fa91e5cf7277a6f5b1fed1b706d43bbbd  ./results/release_v1.3.0.json
 5c8d39cf6d08091016a94c02a431fe45b4be2dd18f2310f63baafe3bac2c04f8  ./results/release_v1.3.1.json
+ae5929eac7869dced63feabcaf4f95b88c45a8f7a519664d623b2edf9a504482  ./results/release_v1.4.0.json
 b2fa431b0d73afd7b3fe8cb523300722f509f55b4b8c0ef61d236699d6efd9f2  ./results/session_cb1.json
 6b7bb6069d172812b4600c384732cf4f81df02aa852fddcae10fd6e7a48b71c4  ./results/session_p13.json
 13ca8c1ed7f0e3d4629d117ff1a14f4967737af4beaec1389f449352bde2b4f7  ./results/session_p14.json

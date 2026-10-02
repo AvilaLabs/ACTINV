@@ -1,0 +1,84 @@
+{
+ "release": "v1.4.0",
+ "tag": {
+  "name": "v1.4.0",
+  "object": "2fe65ce912c8efd400c73c1b7911ca8f240b3050",
+  "commit": "85247cf109e4acc072728b120f20715057e2a544",
+  "message": "ACTINV 1.4.0",
+  "signed": false
+ },
+ "pre_tag_gates": {
+  "cargo_publish_dry_run": "cargo publish --dry-run --locked -p actinv-data -p actinv-core -p actinv-cli: all three packaged and verify-built at 1.4.0",
+  "sdist": "maturin sdist actinv-1.4.0.tar.gz contains every non-test include_str!/include_bytes! target (the one escaping include, crates/actinv-core/src/gas.rs, is #[cfg(test)] only)",
+  "local_ci_replay": "23/23 steps exit 0 on 85247cf; p16 first failed because the fresh worktree lacked target/tmp (the P16 control's TMPDIR), reproduced and confirmed, then passed on rerun with the directory present"
+ },
+ "workflows": {
+  "controls": 36954992700,
+  "release_artifacts": 36954992962,
+  "publish_crates": 36954993114,
+  "publish_pypi": 36954993352,
+  "desktop_builds": 36954992738,
+  "browser_workbench": 36954992635,
+  "handbook": 36954992708,
+  "fns_iron": 36954992756,
+  "fusion_isotope": 36954992720,
+  "all_conclusion": "success"
+ },
+ "environment_approvals": "crates.io (actinv-data, actinv-core, actinv-cli) and pypi approved via the API on the maintainer's explicit approval",
+ "github_release": {
+  "url": "https://github.com/AvilaLabs/ACTINV/releases/tag/v1.4.0",
+  "id": "RE_kwDOUDaWv84X7oDZ",
+  "published_at": "2026-10-02T02:53:32Z",
+  "notes": "docs/RELEASE_NOTES_v1.4.0.md (relative links made absolute to the v1.4.0 tag)",
+  "assets_sha256": {
+   "actinv-1.4.0-linux-x86_64.tar.gz": "27473a53a914b3f1dd360a9cb781d1cef41757c91a49f0411501531f04391057",
+   "actinv-1.4.0-macos-aarch64.tar.gz": "f1692af6060db36b1bb4350cc96a3677076a362209c8d82f625bd9047661ae25",
+   "actinv-1.4.0-macos-x86_64.tar.gz": "5db8d514b9ccff7abf4277de3b9081a3d37dba86641a505b23d0bac65680c8eb",
+   "actinv-1.4.0-windows-x86_64.zip": "f0f838a1cf2d1dfcbca387e1e4006c9e2d726e82f7daae2bdc0ec4e9d2f35d90"
+  },
+  "sha256sums_asset": "SHA256SUMS",
+  "archives": "repacked from the release-artifacts run in the v1.3.1 layout; executable bits restored"
+ },
+ "published": {
+  "pypi": {
+   "package": "actinv",
+   "version": "1.4.0",
+   "files": {
+    "actinv-1.4.0-cp39-abi3-macosx_10_12_x86_64.whl": "90332b3d56256f414a65a8dfb5b2537a7f7fef0012b7daa21068c519ef190cd2",
+    "actinv-1.4.0-cp39-abi3-macosx_11_0_arm64.whl": "3f94c4c84577313adb70f107d062bacb4a70127c3512516a1791ff33fa3efd15",
+    "actinv-1.4.0-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl": "e041bd7a0acd32de7f5070392a3d0efdde24daa8081e48050211f6b88dda07d5",
+    "actinv-1.4.0-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl": "c7cfa32906a62cbadf3bb0de23d29f0881e809f5b8c7d7a3b25556dbcb5ac501",
+    "actinv-1.4.0-cp39-abi3-win_amd64.whl": "614e908b7f5f67309d4253749907d0717e0319355f21ff5b1ccf961dfce9797c",
+    "actinv-1.4.0.tar.gz": "003ce84fda47477d32ae56633ddbefc0283891bf3ca9de316d1ff7abb928bb73"
+   },
+   "verified_via": "pypi.org/pypi/actinv/1.4.0/json; fresh venv pip install actinv==1.4.0: actinv --version -> actinv 1.4.0, import actinv -> 1.4.0, actinv.budget present"
+  },
+  "crates_io": {
+   "actinv-data": {
+    "version": "1.4.0",
+    "created_at": "2026-10-02T02:50:58.140940Z",
+    "checksum": "9038a1c4837eceb2170d834df5b7870bb9e0ecdea8012c8ec380a937a851b810",
+    "yanked": false
+   },
+   "actinv-core": {
+    "version": "1.4.0",
+    "created_at": "2026-10-02T02:51:55.531242Z",
+    "checksum": "d51c2489c8bb1c079c9bcdd103fb57d8cc4413cbbbc9d0dbe7dfe5eb1b12d99e",
+    "yanked": false
+   },
+   "actinv-cli": {
+    "version": "1.4.0",
+    "created_at": "2026-10-02T02:53:30.203877Z",
+    "checksum": "fc289c982412c8ecacdde7a4b116621a74c5e07ae0c1cdb4f8abcba3ed7ee99b",
+    "yanked": false
+   }
+  },
+  "crates_smoke": "cargo install --locked actinv-cli --version 1.4.0 into a clean root: actinv --version -> actinv 1.4.0"
+ },
+ "website": {
+  "url": "https://actinv.avilalabs.org/",
+  "bundle": "actinv-web artifact of Build browser workbench run 36954992635 at 85247cf",
+  "worker_version_id": "b1e5ebf9-9fbb-4dc1-ad40-faa9c630fc2f",
+  "checked": "/, /download/, /docs/ return 200; handbook reads ACTINV 1.4.0 and New in 1.4.0; download page still points at desktop-v0.1.0-preview.1, whose installers return 200"
+ }
+}
