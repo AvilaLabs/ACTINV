@@ -1,7 +1,7 @@
 1 ICON "../../packaging/actinv.ico"
 1 VERSIONINFO
-FILEVERSION 0,2,0,1
-PRODUCTVERSION 0,2,0,1
+FILEVERSION 0,3,0,1
+PRODUCTVERSION 0,3,0,1
 FILETYPE 0x1L
 BEGIN
   BLOCK "StringFileInfo"
@@ -10,9 +10,9 @@ BEGIN
     BEGIN
       VALUE "CompanyName", "Avila Labs\0"
       VALUE "FileDescription", "ACTINV Desktop\0"
-      VALUE "FileVersion", "0.2.0-preview.1\0"
+      VALUE "FileVersion", "0.3.0-preview.1\0"
       VALUE "ProductName", "ACTINV\0"
-      VALUE "ProductVersion", "0.2.0-preview.1\0"
+      VALUE "ProductVersion", "0.3.0-preview.1\0"
     END
   END
   BLOCK "VarFileInfo"

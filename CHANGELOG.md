@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+**Added (GUI only; solver, CLI and Python stay at 1.4.0)**
+
+- Desktop 0.3.0-preview.1 and the browser workbench: optional Avila Labs account sign-in. The
+  browser has a Sign in button and a first-visit prompt; the desktop uses a device sign-in
+  approved in the browser. Nothing from a calculation is sent, and every feature works without an
+  account. Handbook page "Avila Labs account (optional)".
+- Tool launcher, new application icon and tool marks (window icon, favicon, installer icons).
+
 **Added**
 
 - `actinv export-source alara`: adds ALARA to the pinned `export-source` photon-source adapter

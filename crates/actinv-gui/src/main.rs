@@ -25,7 +25,7 @@ fn main() -> eframe::Result {
     {
         return Ok(());
     }
-    let icon = eframe::icon_data::from_png_bytes(include_bytes!("../assets/avila-labs-logo.png"))
+    let icon = eframe::icon_data::from_png_bytes(include_bytes!("../assets/actinv-icon.png"))
         .expect("embedded Avila Labs icon");
     eframe::run_native(
         "ACTINV · Avila Labs",

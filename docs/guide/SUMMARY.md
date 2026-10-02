@@ -8,6 +8,7 @@
 - [Your first calculation](quick-start.md)
 - [Use the desktop](desktop.md)
 - [Use the browser workbench](browser.md)
+- [Avila Labs account (optional)](account.md)
 
 # Working with calculations
 

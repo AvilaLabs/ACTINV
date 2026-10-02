@@ -41,6 +41,7 @@ pub struct Workbench {
     filter: String,
     log_time: bool,
     dark: bool,
+    suite: avila_account::ui_web::WebSuite,
 }
 
 impl Workbench {
@@ -76,6 +77,7 @@ impl Workbench {
             filter: String::new(),
             log_time: false,
             dark: false,
+            suite: avila_account::ui_web::WebSuite::new(&cc.egui_ctx, "actinv"),
         }
     }
 
@@ -568,30 +570,37 @@ impl eframe::App for Workbench {
     }
 
     fn ui(&mut self, ui: &mut egui::Ui, _: &mut eframe::Frame) {
-        egui::Panel::top("navigation").show(ui, |ui| {
-            ui.horizontal_wrapped(|ui| {
-                for (index, title) in ["Welcome", "Problem", "Results", "Result record"]
-                    .iter()
-                    .enumerate()
-                {
-                    ui.selectable_value(&mut self.page, index, *title);
-                }
-                ui.separator();
-                if ui.checkbox(&mut self.dark, "Dark theme").changed() {
-                    ui.ctx().set_theme(if self.dark {
-                        egui::ThemePreference::Dark
-                    } else {
-                        egui::ThemePreference::Light
+        let nav = egui::Panel::top("navigation").show(ui, |ui| {
+            egui::containers::Sides::new().shrink_left().show(
+                ui,
+                |ui| {
+                    ui.horizontal_wrapped(|ui| {
+                        for (index, title) in ["Welcome", "Problem", "Results", "Result record"]
+                            .iter()
+                            .enumerate()
+                        {
+                            ui.selectable_value(&mut self.page, index, *title);
+                        }
+                        ui.separator();
+                        if ui.checkbox(&mut self.dark, "Dark theme").changed() {
+                            ui.ctx().set_theme(if self.dark {
+                                egui::ThemePreference::Dark
+                            } else {
+                                egui::ThemePreference::Light
+                            });
+                        }
+                        if self.pending_file.is_some() {
+                            ui.spinner();
+                        }
+                        if self.raw_dirty || self.problem != self.saved {
+                            ui.label("Problem has unsaved changes");
+                        }
                     });
-                }
-                if self.pending_file.is_some() {
-                    ui.spinner();
-                }
-                if self.raw_dirty || self.problem != self.saved {
-                    ui.label("Problem has unsaved changes");
-                }
-            })
+                },
+                |ui| self.suite.controls(ui),
+            );
         });
+        self.suite.prompt(ui.ctx(), nav.response.rect.bottom());
         egui::Panel::bottom("status").show(ui, |ui| {
             ui.label(RichText::new(&self.status).color(if self.error {
                 ui.visuals().error_fg_color

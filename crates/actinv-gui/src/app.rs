@@ -87,6 +87,7 @@ pub struct Desktop {
     scene_view: egui::Rect,
     pathway_node: String,
     capture: Option<crate::capture::Capture>,
+    suite: avila_account::ui_desktop::DesktopSuite,
     result_unsaved: bool,
     result_guard: Option<ResultAction>,
     /// A result file being read and validated off the UI thread: (is comparison, outcome).
@@ -219,7 +220,7 @@ impl Desktop {
             s.spacing.item_spacing = Vec2::new(10., 9.);
             s.spacing.button_padding = Vec2::new(12., 7.);
         });
-        let decoded = image::load_from_memory(include_bytes!("../assets/avila-labs-logo.png"))
+        let decoded = image::load_from_memory(include_bytes!("../assets/actinv-mark.png"))
             .expect("embedded logo")
             .into_rgba8();
         let logo = ctx.load_texture(
@@ -241,7 +242,7 @@ impl Desktop {
             descending:true, reset_plot:false, isotope:String::new(), amount:0.,
             raw:String::new(), raw_dirty:false, raw_source:Value::Null, tour:Tour::default(), help:false,
             pending:None, undo:vec![], redo:vec![], allow_close:false,
-            downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(),
+            downloaded:None, scene_view:egui::Rect::ZERO, pathway_node:String::new(), capture:crate::capture::Capture::from_env(), suite:avila_account::ui_desktop::DesktopSuite::new(ctx,"actinv"),
             result_unsaved:false, result_guard:None, result_load:None, spectrum_text:String::new(), log_time:false,
             theme:"Light".into(),
             transport:crate::transport::Import::default(), imported:None,
@@ -471,7 +472,7 @@ impl Desktop {
     }
     fn toolbar(&mut self, ui: &mut egui::Ui) {
         let accent = crate::visuals::accent(ui);
-        egui::Panel::top("toolbar").show(ui,|ui| {
+        let bar = egui::Panel::top("toolbar").show(ui,|ui| {
             ui.horizontal(|ui| {
                 ui.image((self.logo.id(),Vec2::splat(44.)));
                 ui.vertical(|ui|{ui.label(RichText::new("ACTINV").size(24.).strong());ui.label(RichText::new("AVILA LABS  /  ACTIVATION & INVENTORY").size(10.).color(accent));});
@@ -480,13 +481,17 @@ impl Desktop {
                 if ui.button(if self.dirty(){"Save •"}else{"Save"}).on_hover_text("Save problem (Ctrl+S)").clicked(){self.save_problem();}
                 let valid=ui.button("Validate");self.tour.mark("validate",valid.rect);if valid.clicked(){let r=self.validate().map(|_|"Specification and input locations are valid. File hashes and evaluated data are checked during the solve.".into());self.report(r);}
                 let run=ui.add_enabled(self.job.is_none(),egui::Button::new(RichText::new("▶ Run").color(Color32::WHITE)).fill(BLUE));self.tour.mark("run",run.rect);if run.clicked(){self.run(ui.ctx());}
-                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{if ui.button("? Help").clicked(){self.help=true;}
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center),|ui|{self.suite.controls(ui);if ui.button("? Help").clicked(){self.help=true;}
                 let before = self.theme.clone();
                 egui::ComboBox::from_id_salt("appearance").selected_text(&self.theme).width(80.).show_ui(ui,|ui| { for choice in ["Light","Dark","System"] { ui.selectable_value(&mut self.theme,choice.into(),choice); } });
                 if before != self.theme { self.apply_theme(ui.ctx()); }
 if self.job.is_some(){ui.spinner();}});
             });
         });
+        self.suite.show(ui.ctx(), bar.response.rect.bottom());
+        if let Some(notice) = self.suite.take_notice() {
+            self.report(Err(notice));
+        }
     }
     fn navigation(&mut self, ui: &mut egui::Ui) {
         let accent = crate::visuals::accent(ui);
