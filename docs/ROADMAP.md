@@ -2376,3 +2376,21 @@ exists to carry it.
   73% (pooled 71%). Honest tail: z2 reaches 80% not 95% — the residual tail is
   non-Gaussian, concentrated in the TENDL-2025 regression materials (Re, Bi, Pr,
   Cd, Cs, Lu, Hf); the certificate names them rather than reporting u≈18.
+
+## Draft candidates — 2026-10-01 (draft, unhashed)
+
+Added after the v1.4.0 release, at the principal's request, from a review of an outside
+recommendation. Of its six directions, four describe surfaces ACTINV already ships: reverse and
+design work (`budget`, `reverse`, `optimize`, first-order sensitivities), the facility twin and
+assay fusion, hash-pinned provenance, and the embeddable Python/Rust surface. A "differentiable
+solver" would rebuild sensitivities that already exist. Further facility-twin work needs real
+operating-facility data more than code. Two directions are scoped here. Each enters its own
+hashed protocol per the standing rules; nothing below is a commitment until then.
+
+| Lane | What it is | Acceptance (to be frozen in its protocol) | Needs |
+|---|---|---|---|
+| **E1 — calibrated-band domain** | Test the D2b unmodeled-error calibration on a second, independent experimental corpus, and report a calibrated-domain flag on every banded result. | Coverage targets (z1 and z2) frozen before any holdout value is read. A result outside the calibrated domain (material, spectrum, library) says so with the reason and the next step; it is never shown as calibrated. | A second integral activation corpus with measured uncertainties, not used in D2b. JADE's benchmark set is the first place to look. Today's state: one corpus (P44, 132 FNS experiments). z1 holdout coverage is 73 %, but z2 is 80 % against 95 % nominal, with the tail concentrated in named TENDL-2025 regression materials. |
+| **E2 — `actinv data audit`** | One command that runs the builder's fail-closed checks over a whole library release and writes a report of defect classes per evaluation, with ledger references, without building a library. | On the TENDL-2017 gamma inputs it reproduces the known classes (MF=3 starting above threshold, IZAP=0 photofission encoding). On the TENDL-2025 neutron, proton and gamma releases it agrees with the existing build ledgers count for count. The report is deterministic and hash-pinned. | Existing builder checks only. The report documents findings; sending any of them stays with the principal (held-defect policy). |
+
+Not scoped: a differentiable-solver rewrite, regulatory-positioning claims, and further
+facility-twin work without facility data.
