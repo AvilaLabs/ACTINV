@@ -188,3 +188,25 @@ the fresh worktree's missing `target/tmp`, reproduced, then passed on rerun. Cra
 and PyPI run 36954993352 green; environment gates approved via the API on the maintainer's
 approval. Record: `results/release_v1.4.0.json`. From this release on, every release also deploys
 the website and handbook (add the step above to each future section).
+
+## desktop-v0.3.0-preview.1 (GUI-only release)
+
+The solver, CLI and Python stay at 1.4.0; the workspace version does not move and no `v…` tag is
+created.
+
+- [ ] Version 0.3.0-preview.1 in `crates/actinv-gui/Cargo.toml`, `packaging/desktop.json`,
+  `packaging/windows.rc` and the README/handbook/install references; `docs/releases/desktop-v0.3.0-preview.1.md`
+  written; CHANGELOG Unreleased entries; refresh `MANIFEST.sha256`.
+- [ ] Merge the sign-in PR with `web.yml`, `ci.yml` and `desktop.yml` green.
+- [ ] Web: build from the merge commit as `web.yml` does (`trunk build … --release --locked`,
+  `mdbook build`, `scripts/check_docs.py dist/docs`), then deploy the `actinv-web` bundle with
+  `npx wrangler@4 deploy --config wrangler.jsonc`; check `/`, `/download/` and `/docs/` live,
+  including the Sign in button and the new handbook page.
+- [ ] Desktop: run `desktop.yml` on the merge commit; attach its Windows, macOS and Linux
+  artifacts and checksums to a `desktop-v0.3.0-preview.1` GitHub release (pre-release first) and
+  paste `docs/releases/desktop-v0.3.0-preview.1.md`; record the per-platform check results.
+- [ ] Manual check of the desktop device sign-in against the live account service, and of sign
+  out removing `~/.config/avila/credentials.json`.
+- [ ] Handbook and website updated with the release: handbook version references (this PR),
+  actinv.avilalabs.org download page, and avilalabs.org/actinv (+ `/docs`) through the
+  website-live PR.

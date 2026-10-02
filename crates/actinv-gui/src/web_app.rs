@@ -600,8 +600,7 @@ impl eframe::App for Workbench {
                 |ui| self.suite.controls(ui),
             );
         });
-        self.suite
-            .prompt(ui.ctx(), nav.response.rect.bottom());
+        self.suite.prompt(ui.ctx(), nav.response.rect.bottom());
         egui::Panel::bottom("status").show(ui, |ui| {
             ui.label(RichText::new(&self.status).color(if self.error {
                 ui.visuals().error_fg_color

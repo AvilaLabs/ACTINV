@@ -489,7 +489,9 @@ if self.job.is_some(){ui.spinner();}});
             });
         });
         self.suite.show(ui.ctx(), bar.response.rect.bottom());
-        if let Some(notice) = self.suite.take_notice() { self.report(Err(notice)); }
+        if let Some(notice) = self.suite.take_notice() {
+            self.report(Err(notice));
+        }
     }
     fn navigation(&mut self, ui: &mut egui::Ui) {
         let accent = crate::visuals::accent(ui);

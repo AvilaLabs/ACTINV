@@ -58,7 +58,7 @@ dependencies = [
 
 [[package]]
 name = "actinv-gui"
-version = "0.2.0-preview.1"
+version = "0.3.0-preview.1"
 dependencies = [
  "actinv-cli",
  "actinv-core",
@@ -356,6 +356,8 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "avila-account"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a7eace2f70357f52163292fabd8aa2f1c2ea95ecd2b97f2bfb856847634087f7"
 dependencies = [
  "egui",
  "image",
@@ -3311,7 +3313,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "32497e9a4c7b38532efcdebeef879707aa9f794296a4f0244f6f69e9bc8574bd"
 dependencies = [
  "fastrand",
- "getrandom 0.3.4",
+ "getrandom 0.4.3",
  "once_cell",
  "rustix 1.1.4",
  "windows-sys 0.61.2",
