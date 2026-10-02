@@ -914,6 +914,7 @@ dfb8c8f7c7ffbd5aaac73e21a5198af7b662b862fb416c90f6418086da05ae45  ./docs/defects
 245f5933ab759ab1961691ab03111502c748ae54395af2fa3802b818ab2f5c9f  ./docs/defects/tendl2023-orphan-product-sections.md
 8e502b8b5b1c79654008fbfec98882f6ab4f437f5a3490a4d103a299993dbeb1  ./docs/defects/unitarity-violating-partial-cross-sections.md
 986e1e5286e9a4031a0168e59de70f03981930d0d51341d897b973e2ad5ae66f  ./docs/guide/SUMMARY.md
+29b9a4871b61c1e5af86963b6f73f4319b50a1fe0c1e5a7e0461c3afe3ac1fd9  ./docs/guide/account.md
 f586f3b25716d6c0a3fb61afe1e0eb1d7eb9a5ebc656bb73e6ce48bfbdf0731c  ./docs/guide/benchmarks.md
 367e375bec3102f4f24b41f1119c560b7ae7363848d33dd54e37e3641e4ff4e3  ./docs/guide/browser.md
 bce95cc28a0f0561a221b2319a9c72581d01fde033ede3bb02e9298b282418ee  ./docs/guide/cli.md
@@ -965,6 +966,7 @@ ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintai
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
 d49b0040214a08c1be18825fe12bef4df9bdf2d009d1112d43955ee182fae5fd  ./docs/releases/desktop-v0.2.0-preview.1.md
+e69634b0202dad6d7451986843b22b959bbccef749c7b3ddbc0e56dbe1e984a5  ./docs/releases/desktop-v0.3.0-preview.1.md
 ad130acc00de295fd0c0dec13ca2d42a4a485ef2debb1933cbc8ba042a2f74a0  ./examples/README.md
 8e2cb8857363a87d3f0bd0dee6788d3a1d256102dfe7cd770aa47f89fd5f78c1  ./examples/damage_demo.json
 b585b8f3f4761cbd47d998a846a0e6cdf8d5848450b3f163b462a804da1ec972  ./examples/damage_table_demo.json
