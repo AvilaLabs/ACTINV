@@ -13,7 +13,7 @@ Open the [ACTINV download page](https://actinv.avilalabs.org/download/) and choo
 | Mac, Intel | Intel disk image | Open the DMG and drag ACTINV to Applications |
 | Linux, Intel or AMD 64-bit | AppImage | Allow execution in file properties, then double-click |
 
-The published **0.1.0-preview.1** desktop is unsigned and uses solver **1.0.1**. The CLI/Python software release is **1.3.1**; features added afterward require a newer desktop build or the current CLI/Python package. Download filenames identify the desktop version and architecture.
+The published **0.1.0-preview.1** desktop is unsigned and uses solver **1.0.1**. The CLI/Python software release is **1.4.0**; features added afterward require a newer desktop build or the current CLI/Python package. Download filenames identify the desktop version and architecture.
 
 For platform launch notices and the optional Linux application-menu shortcut, see the [desktop installation details](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DESKTOP_INSTALL.md). Use the [desktop walkthrough](desktop.md) for calculation setup.
 
@@ -26,18 +26,18 @@ python -m pip install actinv
 actinv --version
 ```
 
-Supported platforms have prebuilt wheels. If a matching wheel is unavailable, pip may attempt a source build; use a [standalone executable](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.3.1) if you want to avoid setting up a compiler.
+Supported platforms have prebuilt wheels. If a matching wheel is unavailable, pip may attempt a source build; use a [standalone executable](https://github.com/AvilaLabs/ACTINV/releases/tag/v1.4.0) if you want to avoid setting up a compiler.
 
 For a reproducible installation of this handbook's software version:
 
 ```bash
-python -m pip install actinv==1.3.1
+python -m pip install actinv==1.4.0
 ```
 
 If you already use Rust, install just the CLI from crates.io:
 
 ```bash
-cargo install --locked actinv-cli --version 1.3.1
+cargo install --locked actinv-cli --version 1.4.0
 ```
 
 The Python package and `cargo install actinv-cli` install the terminal interface. Get the desktop from the download page.

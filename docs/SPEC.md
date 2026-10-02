@@ -19,6 +19,6 @@ The [complete mesh reference](guide/specification.md#independent-mesh-specificat
 
 The [uncertainty reference](guide/specification.md#mf33-uncertainty) documents `uncertainty.covariance` and feature-specific `require_complete` coverage checks. The [options reference](guide/specification.md#options-and-result) documents `options.cram_order`, the selected numerical approximation order.
 
-Current master also documents transport-tally statistics through `spectrum.relative_error` and `uncertainty.channels: ["flux"]`, and [hydrogen/helium gas production](guide/specification.md#gas-production-h-and-he-isotopes) through `options.gas`. These are [unreleased additions](guide/releases.md#current-master); the handbook retains their complete scope and data requirements.
+Since 1.4.0 it also documents transport-tally statistics through `spectrum.relative_error` and `uncertainty.channels: ["flux"]`, [hydrogen/helium gas production](guide/specification.md#gas-production-h-and-he-isotopes) through `options.gas`, and photonuclear activation through `projectile: "gamma"`; the handbook retains their complete scope and data requirements.
 
 Start with [Your first calculation](guide/quick-start.md) for a complete runnable example, or [Describe a problem](guide/problems.md) for material, spectrum, schedule, and path conventions.

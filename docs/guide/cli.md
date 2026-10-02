@@ -1,6 +1,6 @@
 # Command line
 
-The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv --help` to see its commands. The examples here cover 1.3.1.
+The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv --help` to see its commands. The examples here cover 1.4.0.
 
 ## Create, check, and solve
 

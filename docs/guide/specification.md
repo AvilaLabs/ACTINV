@@ -134,7 +134,7 @@ evaluations carry no correlation data — and each reports its own sensitivity l
 coverage. A nuclide or product with no declared uncertainty is named in `uncovered_decay_constants` /
 `uncovered_yield_products`.
 
-The `flux` channel is an [unreleased addition on master](releases.md#current-master). It propagates each input group's transport-tally statistical error (`spectrum.relative_error`, or a mesh
+The `flux` channel (1.4.0) propagates each input group's transport-tally statistical error (`spectrum.relative_error`, or a mesh
 cell's own flux-file `relative_error` — a mesh cell without one is an error naming that cell) as a first-order,
 diagonal (uncorrelated group-to-group) channel: the parameter is the log of that group's absolute flux after
 `total` scaling, its direction is the reaction-only burn matrix a unit flux confined to that group alone would
@@ -289,7 +289,7 @@ unshielded solve of the same problem.
 
 ## Gas production (H and He isotopes)
 
-This option is an [unreleased addition on master](releases.md#current-master).
+This option was added in 1.4.0.
 
 `options.gas: true` (default `false`) tracks the light charged-particle products of neutron activation — H1, H2,
 H3, He3 and He4 — as real inventory nuclides, exactly as FISPACT-II does. Every neutron reaction's light-particle

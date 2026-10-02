@@ -2,7 +2,7 @@
 
 The competitive benchmark compares ACTINV with other inventory and depletion codes on **accuracy, speed, and capability**. It helps you judge which measured differences matter for an activation workflow. The [full benchmark report](https://github.com/AvilaLabs/ACTINV/blob/master/COMPETITIVE_BENCHMARK.md) retains the dated results and links to their evidence.
 
-The comparisons below are recorded experiments from September 2026, including ACTINV 1.1.2-era runs. They are not fresh measurements of every 1.3.1 feature or a ranking for every material, spectrum, and operating regime.
+The comparisons below are recorded experiments from September 2026, including ACTINV 1.1.2-era runs. They are not fresh measurements of every 1.4.0 feature or a ranking for every material, spectrum, and operating regime.
 
 ## Three different comparison questions
 

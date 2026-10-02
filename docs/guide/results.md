@@ -37,7 +37,7 @@ The `numerical_floor_atoms_per_g` field is a CRAM asymptotic scale, **not a boun
 
 ## Read uncertainty with its coverage
 
-An uncertainty response contains its nominal value, propagated standard uncertainty, interval, coverage, and a separate CRAM-order comparison. The default channel is MF=33 cross-section covariance. Half-life and independent fission-yield uncertainties can be enabled explicitly. Current master also supports a requested transport-tally statistical `flux` channel; [check release availability](releases.md#current-master).
+An uncertainty response contains its nominal value, propagated standard uncertainty, interval, coverage, and a separate CRAM-order comparison. The default channel is MF=33 cross-section covariance. Half-life and independent fission-yield uncertainties can be enabled explicitly. Since 1.4.0 a transport-tally statistical `flux` channel can also be requested.
 
 Incomplete evaluated covariance does not become complete by requesting a confidence level. Incident-flux uncertainty is excluded unless the `flux` channel is requested. That channel uses supplied groupwise tally errors and a diagonal model; systematic transport-model, geometry, and nuclear-data errors remain excluded. Composition, response-coefficient, and other model uncertainties also remain outside the band. Aggregate activity uncertainty must be propagated as `activity.total`; summing individual standard uncertainties does not preserve correlations.
 

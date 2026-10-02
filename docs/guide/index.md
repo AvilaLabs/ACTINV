@@ -2,9 +2,9 @@
 
 ACTINV calculates which nuclides a material contains during irradiation and cooling. Supply a material composition, a particle-flux spectrum, a schedule, and evaluated nuclear data. ACTINV calculates inventories, activity, decay heat, and requested source terms and responses.
 
-This handbook covers **ACTINV 1.3.1** and nuclear-data catalog **1.1.0**. The downloadable desktop preview has a separate release history; [check its solver version](releases.md) before using a feature described here.
+This handbook covers **ACTINV 1.4.0** and nuclear-data catalog **1.1.0**. The downloadable desktop preview has a separate release history; [check its solver version](releases.md) before using a feature described here.
 
-The reference also includes additions on current `master`. Gas production, transport-tally error propagation, and impurity budgets are currently unreleased; [Versions and releases](releases.md#current-master) distinguishes them from the installed packages.
+Gas production, transport-tally error propagation, impurity budgets, lean mesh output, and photonuclear activation are new in 1.4.0; [Versions and releases](releases.md) lists what each release and the desktop include.
 
 ## Choose how to work
 

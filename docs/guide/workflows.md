@@ -22,7 +22,7 @@ See the [specification reference](specification.md#build-an-activation-library) 
 
 The `uncertainty` section selects response bands and coverage policy. MF=33 cross sections are the default channel; half-life and independent fission-yield uncertainties are optional. [Results](results.md#read-uncertainty-with-its-coverage) explains how to read the bands.
 
-Current master adds `channels: ["flux"]` with groupwise `spectrum.relative_error`, or each mesh cell's own supplied errors. This propagates tally statistics and can run without covariance when it is the only requested channel. It excludes systematic transport errors and is omitted from measurement-design rankings. See the [uncertainty reference](specification.md#mf33-uncertainty) and [release availability](releases.md#current-master).
+Since 1.4.0, `channels: ["flux"]` is available with groupwise `spectrum.relative_error`, or each mesh cell's own supplied errors. This propagates tally statistics and can run without covariance when it is the only requested channel. It excludes systematic transport errors and is omitted from measurement-design rankings. See the [uncertainty reference](specification.md#mf33-uncertainty).
 
 The `self_shielding` section selects a hash-pinned neutron table and composition-derived or fixed background dilution. It supports bounded unresolved-range Bondarenko treatment; it does not apply resolved-region pointwise shielding or shield damage observables. Use the [self-shielding reference](specification.md#self-shielding) for the supported table contract and completeness option.
 

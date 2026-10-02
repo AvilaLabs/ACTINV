@@ -160,3 +160,20 @@ canonical hash for the `decay_overrides_applied` schema key) and `6e86cad` (v1.3
 tags `v1.3.0`/`v1.3.1`; controls runs 36428795353+36429728374 (v1.3.0) and 36451256724 (v1.3.1)
 green; PyPI/crates verified at both versions (records in `results/release_v1.3.0.json` and
 `results/release_v1.3.1.json`).
+
+## v1.4.0 (feature release)
+
+- [ ] Bump the workspace, `python`, `pyproject.toml` and inter-crate versions to 1.4.0; update
+  `release-artifacts.yml`, README release links, the DATA_LIMITATIONS header and the handbook's
+  version references; refresh `MANIFEST.sha256`.
+- [ ] Rename the changelog's Unreleased section to v1.4.0 and write `docs/RELEASE_NOTES_v1.4.0.md`.
+- [ ] Pre-tag gates: `cargo publish --dry-run` for `actinv-data`, `actinv-core` and `actinv-cli`,
+  and every `include_str!`/`include_bytes!` in `crates/` resolving inside its package; local CI
+  replay green.
+- [ ] Push the release commit and the `v1.4.0` tag in one atomic push; re-run `controls` on the
+  release commit after the tag exists.
+- [ ] Approve the `crates.io` and `pypi` environment gates; confirm all three crates and the
+  wheel/sdist set land at 1.4.0.
+- [ ] Attach packaged platform archives and `SHA256SUMS` to the `v1.4.0` GitHub release; paste the
+  release notes.
+- [ ] Production smoke from PyPI and crates.io; record the release in `results/release_v1.4.0.json`.
