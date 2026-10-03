@@ -14,6 +14,7 @@
 
 - [Describe a problem](problems.md)
 - [Read your results](results.md)
+- [Component waste classes and impurity limits](waste.md)
 - [Choose and install nuclear data](data.md)
 - [Known data limitations](data-limits.md)
 - [Troubleshoot setup and runs](troubleshooting.md)

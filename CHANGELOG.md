@@ -12,6 +12,11 @@
 
 **Added**
 
+- `actinv waste` and `actinv waste budget`: nominal U.S. Part 61 component
+  classification and verified class-specific impurity limits under an explicitly
+  selected rule pack. Component mass/volume, aggregate categories, table margins
+  and external-tritium coverage are reported. (P105; nominal single-component scope)
+
 - `actinv export-source alara`: adds ALARA to the pinned `export-source` photon-source adapter
   surface (P57). Writes one `.photonSrc` file per cell (`TOTAL\t<time>\t<densities…>`) under
   `OUT_DIR`, plus a provenance index `actinv-alara-index.json` carrying the group centroid grid

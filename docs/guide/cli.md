@@ -1,6 +1,6 @@
 # Command line
 
-The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv --help` to see its commands. The examples here cover 1.4.0.
+The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv --help` to see its commands. The established examples here cover 1.4.0; the waste commands are documented separately in [Component waste classes and impurity limits](waste.md).
 
 ## Create, check, and solve
 
@@ -79,6 +79,8 @@ actinv reverse-qualified PROBLEM.json MEASUREMENTS.json OUT.ndjson
 actinv optimize OPTSPEC.json [OUTDIR] [--resume]
 actinv decide DECISION.json [OUT.json]
 actinv budget BUDGET.json [OUT.json] [--no-verify]
+actinv waste WASTE.json [OUT.json]
+actinv waste budget BUDGET.json [OUT.json]
 ```
 
 Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Run `actinv COMMAND --help` for available help; some commands print the shared usage rather than a dedicated page.

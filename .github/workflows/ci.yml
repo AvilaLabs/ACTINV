@@ -78,6 +78,7 @@ jobs:
         run: |
           python controls/test_p105_children.py
           python controls/check_p105.py --no-write
+          python controls/check_p105_verdict.py
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

@@ -45,3 +45,8 @@ The study schema also describes refinement and seeded robustness sampling. Consu
 `optimize` searches declared composition fractions, flux scale, and schedule durations with a seeded optimizer. Constraints can use propagated uncertainty edges. Banded candidates can take minutes each; use it as a batch workflow. Read the [optimization schema](https://github.com/AvilaLabs/ACTINV/blob/master/docs/OPTIMIZE.md) and [steel example](https://github.com/AvilaLabs/ACTINV/tree/master/examples/optimize_ra_steel).
 
 `decide` evaluates declared response constraints and ranks measurement targets. `budget` estimates and verifies impurity limits against a supplied clearance calculation. These workflows inherit the selected response table's applicability; they do not choose a jurisdiction or establish regulatory acceptance. See the [budget schema](https://github.com/AvilaLabs/ACTINV/blob/master/docs/BUDGET.md).
+
+For an explicitly selected U.S. Part 61 rule pack, `waste` reports nominal
+component classes and `waste budget` verifies class-specific impurity limits.
+See [component waste classes and impurity limits](waste.md) for geometry,
+inventory coverage and external-tritium declarations.

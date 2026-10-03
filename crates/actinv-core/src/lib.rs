@@ -23,3 +23,4 @@ pub mod sparse;
 pub mod spec;
 pub mod study;
 pub mod uncertainty;
+pub mod waste;

@@ -266,7 +266,7 @@ fn ci_of_step(step: &Value, limits: &BTreeMap<String, f64>) -> Result<ElementSte
     Ok(out)
 }
 
-fn solve_doc(
+pub(crate) fn solve_doc(
     base: &Value,
     composition: &BTreeMap<String, f64>,
     title: &str,
@@ -292,7 +292,7 @@ fn solve_doc(
     Ok((serde_json::to_value(result).map_err(|e| e.to_string())?, ms))
 }
 
-fn step_of(result: &Value, step: u64) -> Result<&Value, String> {
+pub(crate) fn step_of(result: &Value, step: u64) -> Result<&Value, String> {
     result
         .get("steps")
         .and_then(Value::as_array)
