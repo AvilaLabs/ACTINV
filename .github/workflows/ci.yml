@@ -66,6 +66,11 @@ jobs:
       - name: Build workspace
         run: cargo build --release --workspace
 
+      - name: P103 waste classification, aggregation, and budget controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: python controls/check_p103.py --no-write
+
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
 

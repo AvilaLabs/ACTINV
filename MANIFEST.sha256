@@ -1,4 +1,4 @@
-b57f276538005d9a84327e30da3556062e054dcd917d98199ba7b313c0e4f9b7  ./.github/workflows/ci.yml
+db84e98c44bb5fcdb3455f394c50b1295fb8b0d484ac984f1c5078a9e8678df3  ./.github/workflows/ci.yml
 69406f6c45e3d42c106e286778600dd93e8685bcdaaebf2c16dd240dc3a00a22  ./.github/workflows/desktop.yml
 8ba8e292fd0afb868e23358bf6a2405c0e396bd0d78fbe4b7bee36ca582f8725  ./.github/workflows/docs.yml
 bccd68cceb68ae9c46ab421c9f080877e268bfad6901198d3192ca0d8abe2c7b  ./.github/workflows/fns-iron.yml
@@ -193,7 +193,7 @@ b6bb457ecc5c93c61e9134882f5f0f8fab75be3e08e0428b7d9af5bf9e5a1dbc  ./controls/che
 663be309badb82e392ec6b9daf62c2b12967a7c31b4b7e5ed68e2cd22820e2fc  ./controls/check_g_d2_calib.py
 883072667893fc52158302cb63baba050c7ca9ad1c0513972ba773f7579b5c07  ./controls/check_p1.py
 efc365ebd4f0d35d45a10c7f403da8ea8601bc72f9e8eb09435ab3953a4199d8  ./controls/check_p10.py
-7698853f290e37504361cbc05280dcd1fcc9241b410683dcafa3b3f6d1dadf32  ./controls/check_p103.py
+3b82731f249821db51070555f6262755c5703eb271fd7303b0b242ee53961823  ./controls/check_p103.py
 9c1dd4c5ecfcbde66064b69b7719147adb1592e4e51af3106488c9e191ca9ab5  ./controls/check_p11.py
 73e0b5d47e38574daf159973a5e915267f42b3aad5bf46487f0bd89e15a9d9ff  ./controls/check_p12.py
 2425641f91ff4ebd7a0c185e30bae31219a01d2816949ea4ddc6c9c14c530f9b  ./controls/check_p13.py
@@ -616,6 +616,7 @@ db7d585e651377ce94994b1bc40aba3f460986e088ae9871b660b92a04fae0f3  ./controls/p10
 97c58e43e8785670ebaf0d1336a429bd40d284f692b2bb6ea0e2792bf0353bf3  ./controls/p101_g5_fispact.py
 74e734f0846b9144ff2145190ff298c097aa24d11f114ab30b786dfeed9bb05d  ./controls/p102_artifacts.py
 4fdd3e0cfe1671a794e0ba7a71054107071f1d241050438d11ab2762ae2ba07d  ./controls/p102_case.py
+5645b1b8872810878799f45d21b87c95727776e256f60c2f49f6d08a349fd1a8  ./controls/p103_budget_control.py
 89c05549d8a9b71c256e3688f64b56cb62f24b2e59b7d5ab4a7e79ff6adbd284  ./controls/p103_vector_fixture.py
 d15a10084c4689e550a4ca45b38d4d94d74bf8e90fe3022ecb698b625348b7c7  ./controls/p11_covariance.py
 6281020bd7f489513f10a3330a9205c75ebda3e868520491a887ac47f2842c24  ./controls/p11_fixtures.py
@@ -3043,6 +3044,7 @@ ff33d34462ef7d4d6d057020e059aaa915641ef7a3d5d4aa1afa19921326b0cd  ./results/g0_p
 a3a846da215940f66bb5f428a0aa4931b9a26250ea14a12d0bc5c5369cfd9293  ./results/g0b_p103_vectors.json
 9154a4f72a875e1d5e29ad5ba613634643572ca7eb8e1f60a1c06d7bfc896d28  ./results/g0b_p103_vectors_v1.json
 d5f25075ef7aa14357faec9a5354687166736b0a9231e99c113ee372c9604eac  ./results/g0b_p103_vectors_v2.json
+e894e85e2e031bbc5a58a99f8b55a48335cd848d8a269b432b9894a3db6fee66  ./results/g0c_p103_runtime_controls.json
 80a643c7e0d4e23ed8b0594ded18e82157d4ac6b2bde32ca4ad0bcc1ee10aea3  ./results/g1_collapse.json
 c127ca953462f60e707ae832dc1551c4fc2661db4cda7392313e07be711b8cdb  ./results/g1_d3_twin.json
 563bc4769dfbfa964db42c81a0398821105b8531ddaab8fa7b6319974ae033cb  ./results/g1_d5_assimilate.json
