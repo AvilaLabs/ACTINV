@@ -12,6 +12,12 @@
 
 **Added**
 
+- `actinv waste composition COMPOSITION.json [OUT.json]` projects caller-declared
+  fixed-rate affine pure-element responses over explicit natural-element
+  wt-percent bounds summing to 100%. It reuses the conservative P107 activity-box
+  evaluator; it does not run activation or qualify the caller's physical
+  linearity assumption. See the public waste handbook for the schema and limits.
+
 - `actinv waste bounds BOUNDS.json [OUT.json]` classifies whole-component,
   caller-declared absolute activity intervals under the bundled U.S. Part 61
   pack. It emits endpoint evaluations, row and constraint ranges, coverage, and

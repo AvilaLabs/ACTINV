@@ -43,6 +43,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv waste WASTE.json [OUT.json]\n\
                     actinv waste budget BUDGET.json [OUT.json]\n\
                     actinv waste bounds BOUNDS.json [OUT.json]\n\
+                    actinv waste composition COMPOSITION.json [OUT.json]\n\
                     actinv study {validate|build|run} STUDY.json [OUTDIR] [--revocations FILE]\n\
                     actinv export-openmc RESULT.json STEP OUT.py\n\
                     actinv export-openmc-mesh MESH_RESULT.ndjson STEP OUT.py\n\
@@ -650,7 +651,7 @@ pub fn main_from(a: Vec<String>) {
             "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
             "optimize" => println!("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]\nRun a bounded, seeded design search over an actinv-optimize-1 document.\nEvery candidate is solved through the identical run path and recorded in\nOUTDIR/optimize_ledger.jsonl (append-only); the ranked result lands in\nOUTDIR/optimize_result.json. --resume skips already-ledgered evaluations."),
             "budget" => println!("usage: actinv budget BUDGET.json [OUT.json] [--no-verify]\nImpurity budgets for the IAEA clearance index from one coupled solve per element\n(activation at fixed flux is linear in composition). Every emitted limit is re-solved\nat that composition and compared with the prediction unless --no-verify is given.\nSee docs/BUDGET.md for the actinv-budget-1 schema."),
-            "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\nNominal component classification, verified class impurity budgets, and conservative classification of declared activity boxes under the bundled U.S. Part 61 rule pack. Bounds are deterministic user-declared enclosures, not probabilities or propagated uncertainty. See the public waste handbook at docs/guide/waste.md."),
+            "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\nNominal component classification, verified class impurity budgets, conservative classification of declared activity boxes, and projection over caller-declared fixed-rate affine composition ranges under the bundled U.S. Part 61 rule pack. Activity boxes and composition ranges are deterministic declared enclosures, not probabilities or propagated uncertainty; the affine response model is a caller assumption. See the public waste handbook at docs/guide/waste.md."),
             "study" => println!("usage: actinv study validate STUDY.json\n       actinv study build STUDY.json [OUTDIR] [--revocations FILE]\n       actinv study run STUDY.json [OUTDIR] [--revocations FILE]\nValidate an actinv-study-1 document, expand it deterministically into actinv-spec-1 cases plus a manifest, or run the population and write study_record.json.\nSee docs/STUDY.md for the schema."),
             _ => println!("{USAGE}\n\nSee docs/SPEC.md for format details and examples."),
         }
@@ -658,7 +659,16 @@ pub fn main_from(a: Vec<String>) {
     }
     match a[1].as_str() {
         "waste" => {
-            if a.get(2).is_some_and(|arg| arg == "bounds") {
+            if a.get(2).is_some_and(|arg| arg == "composition") {
+                if a.len() < 4 || a.len() > 5 {
+                    die(
+                        "usage: actinv waste composition COMPOSITION.json [OUT.json]",
+                        2,
+                    );
+                }
+                crate::waste_composition::run(&a[3], a.get(4).map(String::as_str))
+                    .unwrap_or_else(|e| die(e, 1));
+            } else if a.get(2).is_some_and(|arg| arg == "bounds") {
                 if a.len() < 4 || a.len() > 5 {
                     die("usage: actinv waste bounds BOUNDS.json [OUT.json]", 2);
                 }

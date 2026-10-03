@@ -82,6 +82,7 @@ actinv budget BUDGET.json [OUT.json] [--no-verify]
 actinv waste WASTE.json [OUT.json]
 actinv waste budget BUDGET.json [OUT.json]
 actinv waste bounds BOUNDS.json [OUT.json]
+actinv waste composition COMPOSITION.json [OUT.json]
 ```
 
 Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Run `actinv COMMAND --help` for available help; some commands print the shared usage rather than a dedicated page.

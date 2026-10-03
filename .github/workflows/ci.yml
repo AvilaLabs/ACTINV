@@ -86,8 +86,17 @@ jobs:
         run: |
           python controls/test_p106_bounds.py
           python controls/test_p107_seal.py
+          python controls/test_p107_history.py
           python controls/check_p107.py --no-write
-          python controls/check_p107_verdict.py
+          python controls/check_p107_history.py
+
+      - name: P108 conservative composition response bounds
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p108_seal.py
+          python controls/check_p108.py --no-write
+          python controls/check_p108_verdict.py
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

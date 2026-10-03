@@ -1,0 +1,9 @@
+{
+  "failures": [],
+  "g1_result_sha256": "52547ec42a0baac25f1878fa97214ac3e5d916f1d35069fe18132e7e2690753e",
+  "pass": true,
+  "phase": "P108",
+  "protocol_sha256": "ae503d3fe2ff9569c793f162d3b9c19975815f80a53d20458513ee8b9d267fdd",
+  "schema": "actinv-p108-composition-g2-1",
+  "separate_output_paths_byte_identical": true
+}

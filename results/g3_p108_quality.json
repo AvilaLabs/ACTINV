@@ -1,0 +1,222 @@
+{
+  "ci_status": "pending",
+  "gates": {
+    "composition_oracle_regressions": {
+      "exit_code": 0,
+      "log": "target/p108-oracle-seal-tests.log",
+      "log_sha256": "74c834ac5fd3f2a25f625776abdc1046e4d7b2e0ad276a2454b687f826afb5f4"
+    },
+    "control_child_lifecycle": {
+      "exit_code": 0,
+      "log": "target/p108-child-tests.log",
+      "log_sha256": "0c6843707176529156f2fef07ba3664e7c2dfb8b0f5bdc6d46c8e9e453f12a1f"
+    },
+    "full_control_read_only_replay": {
+      "exit_code": 0,
+      "log": "target/p108-full-replay.log",
+      "log_sha256": "75690ea37a49113ec2fa861694ff6b9830e857fd1b537e9791ae6a8595be4fda"
+    },
+    "g1_read_only_replay": {
+      "exit_code": 0,
+      "log": "target/p108-g1-replay.log",
+      "log_sha256": "d42264a15a7111b81d1aedc08221e8db1068ab8c0f83788a61cfe327c0d0b19d"
+    },
+    "handbook_build": {
+      "exit_code": 0,
+      "log": "target/p108-docs-build.log",
+      "log_sha256": "94ffc4a2aff44b4cd45c3300d253febd7373d90046c0668eb2e0e724eeb4a04b"
+    },
+    "handbook_chromium": {
+      "exit_code": 0,
+      "log": "target/p108-docs-browser.log",
+      "log_sha256": "d91bab3039f240a5591381946359a137a7ec3014b5b628fe20625083c06e1296"
+    },
+    "handbook_links": {
+      "exit_code": 0,
+      "log": "target/p108-docs-links.log",
+      "log_sha256": "4fdd0f9920d9fd5da8a2251efe2631938a83614bba778e9b8b47fa77b119b0ad"
+    },
+    "historical_p107_regressions": {
+      "exit_code": 0,
+      "log": "target/p108-history-tests.log",
+      "log_sha256": "49bac13f6d33d0d681206ca8f9aae1533bb37fc5f9f63daa1eda44114f750d16"
+    },
+    "historical_p107_replay": {
+      "exit_code": 0,
+      "log": "target/p108-history-replay.log",
+      "log_sha256": "9a45bac9e2f91ff5090eb82c6475447869e86c6dab85e0a61df6885a124839e5"
+    },
+    "p105_scientific_replay": {
+      "exit_code": 0,
+      "log": "target/p108-p105-replay.log",
+      "log_sha256": "f02bc2fe67b77e8796df156f9f0387ad3cfdb281bc12d29831ad3f223d4d0d80"
+    },
+    "p107_scientific_replay": {
+      "exit_code": 0,
+      "log": "target/p108-p107-replay.log",
+      "log_sha256": "fd3e6da90ab5931b342dbaab7485e7aedf241bccfe3e83b3c199cdd81e62ff4e"
+    },
+    "rust_check_all_targets_features": {
+      "exit_code": 0,
+      "log": "target/p108-workspace-check.log",
+      "log_sha256": "92b93998d7f17f3d8469ea9c24b50cd7ca4862b4843edc465f02cffdb934853e"
+    },
+    "rust_clippy_all_targets_features": {
+      "exit_code": 0,
+      "log": "target/p108-workspace-clippy.log",
+      "log_sha256": "544474abcb4b354442341ba19aca92ace8ad1c80417991c9671a79cfdb051e66"
+    },
+    "rust_fmt": {
+      "exit_code": 0,
+      "log": "target/p108-workspace-fmt.log",
+      "log_sha256": "9ff046604202851d98fc8ff522d89cb52b64c8e681f4c9aa73219a6aeee42167"
+    },
+    "rust_test_all_targets_features": {
+      "exit_code": 0,
+      "log": "target/p108-workspace-test.log",
+      "log_sha256": "e6df9646740f333169d60fea8d9fb4f9d5b71a82d403bcc5d91d3d6c0806c377"
+    },
+    "seal_identity_regressions": {
+      "exit_code": 0,
+      "log": "target/p108-oracle-seal-tests.log",
+      "log_sha256": "74c834ac5fd3f2a25f625776abdc1046e4d7b2e0ad276a2454b687f826afb5f4"
+    }
+  },
+  "pass": true,
+  "passed_composition_regressions": [
+    "bounded_external_h3_is_merged_once_by_the_bounds_evaluator",
+    "empty_response_maps_still_require_an_exactly_feasible_polytope",
+    "invalid_later_component_does_not_replace_existing_output",
+    "projects_bounds_and_reuses_flat_p107_result_fields",
+    "rejects_aliases_instead_of_merging_coordinates",
+    "all_zero_response_is_exact_zero_and_still_has_feasible_witnesses",
+    "bounded_two_coordinate_projection_has_witnesses_and_dual_bounds",
+    "coefficient_ties_use_canonical_coordinate_order_for_both_witnesses",
+    "feasibility_uses_exact_binary_sum_not_tolerant_witness_roundoff",
+    "invalid_boxes_coordinate_sets_and_overflow_are_refused",
+    "signed_zero_coefficients_use_canonical_tie_order",
+    "subnormal_response_is_enclosed_and_signed_zero_stays_exact_zero"
+  ],
+  "phase": "P108",
+  "production_rust_sha256": {
+    "crates/actinv-cli/src/assimilate.rs": "b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237",
+    "crates/actinv-cli/src/bin/actinv.rs": "1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e",
+    "crates/actinv-cli/src/budget.rs": "fa7627d38648f8808006894309b3c3c1ad5e93c7ccef74604ff013eb8ba8455c",
+    "crates/actinv-cli/src/command.rs": "f1d9b800cc6c7968ca9cc290cf29da624a0f661cc991c7003ea7e5abead2f765",
+    "crates/actinv-cli/src/decide.rs": "f94367b7bff4b23b0db198c08e8894b06e17b5fc1b43d01fe4a7a5cd78ce35e2",
+    "crates/actinv-cli/src/evalspread.rs": "dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c",
+    "crates/actinv-cli/src/lib.rs": "231cb22593668b9b5f66ab5bc7576dfb1357ee00b1404f237d259d3e76e27aea",
+    "crates/actinv-cli/src/optimize.rs": "7d4f384ac0075b5246757fe30fe53c6efd023da3ba11f54c77d95a7037830c28",
+    "crates/actinv-cli/src/surrogate.rs": "4f5170c98d54041561921d33223ad8568fa212b2d68ebf5b832f54288786740c",
+    "crates/actinv-cli/src/twin.rs": "bb633c6e63f9afcffdac08195cb1bf8dd2d8de38e9ed84fd93600520af2953a2",
+    "crates/actinv-cli/src/waste.rs": "52374c2862765f64d5d9bd8df266e2a9cc89171e35a39ebdb575d7dd645ae9b8",
+    "crates/actinv-cli/src/waste_bounds.rs": "b86508174f96e692959b186b59a28a11f918989bf2f848eccfe6d6a7df09f507",
+    "crates/actinv-cli/src/waste_budget.rs": "23a41809157ce20357d4a0b4cdf805f79ba83aed28e8ca437f3262da68c162da",
+    "crates/actinv-cli/src/waste_composition.rs": "469ab922b61c8cd0256420b7304c30d82d699bf6c801f18336e3cb5e98848cc2",
+    "crates/actinv-cli/src/worker.rs": "1e99fbd1109027fbb2587686c9fcbbee1c8805bfe45134888181f40e252f4d51",
+    "crates/actinv-cli/src/workflow.rs": "d5b166fe18acf3332c110a405097642dc6037f517a9373c5631b576589135edd",
+    "crates/actinv-cli/tests/data_command.rs": "d88714714fb240cca43c69b78652a0473b363f3a394c53500fb2e4dd047e9cf4",
+    "crates/actinv-cli/tests/validation.rs": "4ce61a0b0447bf63bef9d89403c16e0bfaa281c68c96340aaac82b572f5b69ee",
+    "crates/actinv-cli/tests/version.rs": "d821ad302a2fa82e0ce91e9aae194c42488d05b71b2453d40c8d683b3ad8c3a1",
+    "crates/actinv-core/examples/p92_balance.rs": "129fcd87769fdd9cf208940ed4115e2a1b36f5a82e60ba1df2e219ab12f53917",
+    "crates/actinv-core/src/bin/cache_probe.rs": "ade32188ff57bb40e9f763a59a2c33e3f7b447779a0fb3495b5257472609ae03",
+    "crates/actinv-core/src/bin/cram_probe.rs": "27dbf073400a7ad3afb64f913fa809951eb800d0de3f8f11688606a1c2f64943",
+    "crates/actinv-core/src/bin/fission_probe.rs": "ea3e12d69ed22100717638e89c8573e4a850f3ce7671c8aa34a0fe34d2d1f49c",
+    "crates/actinv-core/src/bin/flux_probe.rs": "a55ee49f8d0544fc05fec3e6d1ec5363de814db041b298087aeeb983362899b3",
+    "crates/actinv-core/src/bin/parser_fuzz_probe.rs": "520cbeebb16e0cd289992f32dc7e302b3abfb459f5a1faf88946f23e42c53146",
+    "crates/actinv-core/src/bin/photon_probe.rs": "abc4a8dff5025eceb8a7bad5aead22763961e3208b8b693ad0e99bca2f9cc66c",
+    "crates/actinv-core/src/bin/prepared_probe.rs": "b5df928a0dc4ade085d8d3c8d5a03cadb61c9aebd6f2befef1f6214228723582",
+    "crates/actinv-core/src/bin/uncertainty_probe.rs": "a95e9328bfe93b23db3134930b2a0a8cedfcd0e076f6784bd5bc403151b93798",
+    "crates/actinv-core/src/bin/unit_probe.rs": "81eba337cb1d0e7c2ae060de43b21b989936dd2106a17db5ef5af8d6526e1a0f",
+    "crates/actinv-core/src/chain.rs": "6c6a77f00e8c3a832e5c4b4c006cf78b3f1402c1530621b685b2f468e0862b23",
+    "crates/actinv-core/src/clearance.rs": "d6a725cea709c2eb48ecfe1716e02d0c64f265451c387adc49dc2be9b15b74d8",
+    "crates/actinv-core/src/cram.rs": "79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba",
+    "crates/actinv-core/src/cram_coeffs.rs": "ad87f5e6af18c6b4c4a0bb79d93d6530d7e45ae521e8521080f6106ca3b847a9",
+    "crates/actinv-core/src/damage.rs": "d005ca5ab2b6d127002d903c504a95241a7e8b562a30742779d8e54aabbb1b37",
+    "crates/actinv-core/src/doppler.rs": "92e693b957514a6889a5e4bde3182f498385289c306fd0d03becf572a2cd8c6f",
+    "crates/actinv-core/src/finite.rs": "a14163d327d3792e1936a18e5cae84f8cfa2ac57b8d083a747b588e56c9e6a2f",
+    "crates/actinv-core/src/flux.rs": "303429ede4c69afccf05e347dbe820f241c623a70cad4b43356c349528f940dd",
+    "crates/actinv-core/src/gas.rs": "f358759dc25c7bb42d81006074a2f0b8ef679c0623725a3eef85cbe1bccbf6d4",
+    "crates/actinv-core/src/lib.rs": "58550c328d2e7cd955538d8982cb8d6b5eac3c13e154838d3d17cd06acb161ca",
+    "crates/actinv-core/src/mesh.rs": "f27b3774c6de095eaf1179da86c85575defcfd42d6b6af24ce41ba73d10a6e89",
+    "crates/actinv-core/src/photon.rs": "39cb950426d3eb528e0695ef1c87af865f155bf999b545d3452ad81241d1e728",
+    "crates/actinv-core/src/prune.rs": "f243c865a425bb35b5f71978148a422a52945bd1d06b857369c3ea7f26a74435",
+    "crates/actinv-core/src/quantity.rs": "ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9",
+    "crates/actinv-core/src/r2s.rs": "f511d47d3fd36c6df5ab8b0aad85b31b010d2add9113611022a0b78baf9b5db4",
+    "crates/actinv-core/src/radiological.rs": "0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2",
+    "crates/actinv-core/src/reverse.rs": "0539da50e2eac494d0e0aacff9c7f1f5a254b098e5cba338da53633ee9a5113a",
+    "crates/actinv-core/src/run.rs": "7705049c6fccebc388fd7bfaee75b5bd8d3d109e73b001557c2635ea62ba05b3",
+    "crates/actinv-core/src/shielding.rs": "0ebf3068ace5641afe5fa4034eca7c12a8914d3d7f3760606007fbceda93c21e",
+    "crates/actinv-core/src/source_adapter.rs": "f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f",
+    "crates/actinv-core/src/sparse.rs": "0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc",
+    "crates/actinv-core/src/spec.rs": "7ae5c4c8b2b3adcf75ec7a8b9457b276b06a8e79816e66be33c43c145b2df480",
+    "crates/actinv-core/src/study.rs": "eaece838acf380190719c9157dfad1d1fd3538b7f8c62bacc1120c11550a3226",
+    "crates/actinv-core/src/uncertainty.rs": "fc680cbc0d3aeb479867c6c9ef86b7e33f6fb03642062172d7350c9c4606f8a5",
+    "crates/actinv-core/src/waste.rs": "a2b32982034f3a166a1e46ff8b45e242e0261cff0fcc6c840f21ca8ccdbc0ed8",
+    "crates/actinv-core/src/waste_bounds.rs": "be9e39811dd496fc2622c5412beba3f5548f8153723a283f872815e652888d7f",
+    "crates/actinv-core/src/waste_composition.rs": "de783f5d4eb301e8846839d9e54c9ba3da68824c1e85f7e020cef64bcace2f3c",
+    "crates/actinv-data/src/activation.rs": "4a977463891ed236c6ab73cce785f1e70c2362fc4103934239f900d7ed2820c9",
+    "crates/actinv-data/src/bin/dump.rs": "6faac1a95a31f3a6f2f7d0dc29fafcabd36768737070580c3e6e12f47d2d0464",
+    "crates/actinv-data/src/bin/p18_corpus_probe.rs": "4f7afb6c2b4e388596f235f05d63555d03d573d18061e17463c863cdda0aa9e8",
+    "crates/actinv-data/src/bin/p18b_corpus_probe.rs": "8dcf50a0b11631db0877e30be9397750b0b4c64eb3435ad601b2f753939effef",
+    "crates/actinv-data/src/bin/p18b_oracle_probe.rs": "558b6ed1e6c1689196b0fe8b1467bd122a44113869e0754614f286b0d38bb66a",
+    "crates/actinv-data/src/bin/p20_collapse_probe.rs": "570eaa5c84956e3aa0c96d0c7fb684ba3fa8174c18b7a1ec392497fa1927bf56",
+    "crates/actinv-data/src/bin/p20_corpus_probe.rs": "fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b",
+    "crates/actinv-data/src/bin/prepared_data_probe.rs": "446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366",
+    "crates/actinv-data/src/builder.rs": "4d86b97ae1dde51c6ce6590f980e77bb19786b891da4080596ccc4dafa111ff8",
+    "crates/actinv-data/src/composition.rs": "584399c14c25b24db09311622696bd2e5691dd3045cbaec0ce406ba1fefbf024",
+    "crates/actinv-data/src/covariance.rs": "6165db1e3338634fb9320a1b22988836e8f16d68b47bd732715238886c9a26d4",
+    "crates/actinv-data/src/decay.rs": "4be7dff38361d3e28775ed387b6cd8553768fbac69eea518176a3ffa23b385cf",
+    "crates/actinv-data/src/doppler.rs": "8c9a0ef4a16ea5a54f14f087e9c66a258e7f1d9bee51f49b891318b958e89588",
+    "crates/actinv-data/src/endf.rs": "53d7df649c930efa373c97127c817df9a0c1c712c60d97b409a5bd509282e252",
+    "crates/actinv-data/src/fission.rs": "f2e4dce7d2bc566cbf5c32cf68b0fe3007f2b722b65eeecad17f2d81661b2011",
+    "crates/actinv-data/src/groups.rs": "3c331b49d8464947c27fb8299152d4faa7658f18c658a476e416eaf08296e0f3",
+    "crates/actinv-data/src/lib.rs": "91567ccc466c91bb10866f82545b1b929eeefa008a19920075cfe8f0bf669018",
+    "crates/actinv-data/src/library.rs": "f1f80249839874ce695f530f662182663f888e87949d8aaeca8638ae5326c871",
+    "crates/actinv-data/src/normalize.rs": "7041f7a53856f6409ac8d95fd44f683a5c18f496537339668d1953bd49261e6d",
+    "crates/actinv-data/src/prepared.rs": "43bc4ea5590a4069fb5b503b798222a661a9c14718727bfddd77c55366414762",
+    "crates/actinv-data/src/processing.rs": "b80de2abfc574df37e79db771aa164a754d3bad62c8fc2205b732609376b9700",
+    "crates/actinv-data/src/resonance.rs": "8ad5bdfae5acaf6083729c2e4161c7e1f8c584cabf6c6ddc0d57d8b63edf1b54",
+    "crates/actinv-data/src/shielding.rs": "b5596655068fd267e3422f60ea77ab69857d68cd6b3b4f8556dc084f041b98cc",
+    "crates/actinv-data/src/tables.rs": "888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f",
+    "crates/actinv-gui/build.rs": "ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6",
+    "crates/actinv-gui/src/app.rs": "866620532f9eea91b35af5587ac9b7453cf6a4fc546a753c9c6e3e3bad52366d",
+    "crates/actinv-gui/src/capture.rs": "b5bfdb71a16a36b954d52770c8ce0258f961c89d41ee9f8a3a95c7dae30dfc9e",
+    "crates/actinv-gui/src/lib.rs": "a25925117a2fe9daf1f6e7692750004c90ebbf4a273993af149cf8f822e91f9f",
+    "crates/actinv-gui/src/main.rs": "b7ef2af84b0ee8b6131803590a421027375c821220611557b6d17f87795d93c6",
+    "crates/actinv-gui/src/model.rs": "a2b345b2da356ed5953c8830f94e183c6d563b33c88b477f01e27ea93ce67764",
+    "crates/actinv-gui/src/options.rs": "0d9a2fcdd592060a5b8a5ee3e71822af940fb18fbfa2d51600c554815528d0e4",
+    "crates/actinv-gui/src/smoke.rs": "580f83ada2dd1d061f2e162b62a540a980ef813716c0f0a8f094deba7eb19e0d",
+    "crates/actinv-gui/src/sweep.rs": "7b4d57895ef1d06348f1dd1411fe94f3c80cc76fa7b56d62453301813f63443c",
+    "crates/actinv-gui/src/tour.rs": "0869eb3e7b2e0d8468a4708484d173905d56b979f3cfe21eb20b9d5613225685",
+    "crates/actinv-gui/src/transport.rs": "6b3fd8795175e8b95be412719615e6018752353ea6dc30271d68966d01088a43",
+    "crates/actinv-gui/src/visuals.rs": "35842c494d2e654999d1e065cbcbf1e833e8d63f1c46004924c40cc345eafe25",
+    "crates/actinv-gui/src/web.rs": "6d6a672fc17c024234adc6fa887876131e5fdec8d5b33ca43d94fa868e86ca84",
+    "crates/actinv-gui/src/web_app.rs": "5644807412fbe51d0e381d6be5e9b314f420088f629ab82ab2f5e7b665da30b9",
+    "crates/actinv-gui/src/worker.rs": "cbc1185941ba34139062108560d2ab8931c94c24ac7281e9c86bc022dd4c7d0a"
+  },
+  "release_build": {
+    "binary_sha256": "248582be33783b65b0c64c3e938d58e32f19f66a539a6e37db8fcff58b181ce3",
+    "exit_code": 0,
+    "log": "target/p108-release-build.log",
+    "log_sha256": "b2867314a1a00413d12336d65c3bc21157630d0a1aa9786b34b293d0b7a87141"
+  },
+  "resource_limits": {
+    "coordinator_jobs": "serial",
+    "cpu_quota_percent": 200,
+    "disk_tmpdir": "target/preflight-tmp",
+    "memory_max_bytes": 6442450944,
+    "memory_swap_max_bytes": 0,
+    "tasks_max": 128
+  },
+  "resource_limits_inspection": {
+    "log": "target/p108-resource-limits.log",
+    "log_sha256": "bcc51857ee373f298a98e478c2051f2c0e74c6cf3028f8cee56145ba77416bf7"
+  },
+  "schema": "actinv-p108-quality-1",
+  "workspace_tests": {
+    "failed": 0,
+    "ignored": 2,
+    "passed": 454
+  }
+}

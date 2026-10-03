@@ -51,5 +51,9 @@ component classes and `waste budget` verifies class-specific impurity limits.
 `waste bounds` classifies user-declared absolute whole-component activity boxes
 under the bundled pack and returns a conservative class superset. These boxes
 are deterministic enclosures, not probabilities or propagated uncertainty.
-See [component waste classes and impurity limits](waste.md) for geometry,
-inventory coverage, external-tritium declarations, and the bounds input schema.
+`waste composition` projects caller-declared fixed-rate affine pure-element
+responses over bounded natural-element weight percentages that sum to 100%; it
+does not generate responses or establish physical linearity. Separate nuclide
+projections produce a conservative class superset. See
+[component waste classes and impurity limits](waste.md) for geometry, inventory
+coverage, external-tritium declarations, and both range input schemas.

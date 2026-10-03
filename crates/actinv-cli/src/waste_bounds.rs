@@ -20,7 +20,7 @@ const RULE_SHA256: &str = "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe
 
 #[derive(Clone, Copy, Debug, Deserialize, serde::Serialize)]
 #[serde(rename_all = "snake_case")]
-enum InventoryCoverage {
+pub(crate) enum InventoryCoverage {
     Complete,
     Incomplete,
 }
@@ -71,7 +71,7 @@ struct TargetSpec {
 
 #[derive(Debug, Deserialize, serde::Serialize)]
 #[serde(tag = "status", rename_all = "snake_case", deny_unknown_fields)]
-enum ExternalTritium {
+pub(crate) enum ExternalTritium {
     NotApplicable,
     Required,
     Bounded {
@@ -82,7 +82,9 @@ enum ExternalTritium {
     },
 }
 
-fn deserialize_unique_map<'de, D, V>(deserializer: D) -> Result<BTreeMap<String, V>, D::Error>
+pub(crate) fn deserialize_unique_map<'de, D, V>(
+    deserializer: D,
+) -> Result<BTreeMap<String, V>, D::Error>
 where
     D: Deserializer<'de>,
     V: Deserialize<'de>,
@@ -372,7 +374,7 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
     run_doc(&text, output)
 }
 
-fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String> {
+pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String> {
     let spec: BoundsSpec = serde_json::from_str(text)
         .map_err(|error| format!("cannot parse waste bounds spec: {error}"))?;
     validate_spec(&spec)?;

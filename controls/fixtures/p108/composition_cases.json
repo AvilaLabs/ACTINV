@@ -1,0 +1,885 @@
+{
+  "records": [
+    {
+      "exact": {
+        "id": "single_fixed",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Nb": "100"
+                },
+                "maximum_exact_bq": "14800",
+                "min_witness_exact_wt_percent": {
+                  "Nb": "100"
+                },
+                "minimum_exact_bq": "14800",
+                "vertex_count": 1
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Nb": {
+            "lower_wt_percent": 100.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "single_fixed",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Nb": {
+                "C14": 14800.0
+              }
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "all_zero",
+        "targets": [
+          {
+            "projections": {},
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          },
+          "Si": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "all_zero",
+        "mass_g": 1.0,
+        "nuclide_properties": {},
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {},
+              "Si": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "correlated_two",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "44400",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "70",
+                  "Nb": "20",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "14800",
+                "vertex_count": 2
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 30.0,
+            "upper_wt_percent": 70.0
+          },
+          "Nb": {
+            "lower_wt_percent": 20.0,
+            "upper_wt_percent": 60.0
+          },
+          "Si": {
+            "lower_wt_percent": 10.0,
+            "upper_wt_percent": 10.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "correlated_two",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {},
+              "Nb": {
+                "C14": 74000.0
+              },
+              "Si": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "opposite_products",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "177600",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "70",
+                  "Nb": "20",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "59200",
+                "vertex_count": 2
+              },
+              "Tc99": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "70",
+                  "Nb": "20",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "77700",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "33300",
+                "vertex_count": 2
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 30.0,
+            "upper_wt_percent": 70.0
+          },
+          "Nb": {
+            "lower_wt_percent": 20.0,
+            "upper_wt_percent": 60.0
+          },
+          "Si": {
+            "lower_wt_percent": 10.0,
+            "upper_wt_percent": 10.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "opposite_products",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          },
+          "Tc99": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 43
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {
+                "Tc99": 111000.0
+              },
+              "Nb": {
+                "C14": 296000.0
+              },
+              "Si": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "fixed_three",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "177600",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "177600",
+                "vertex_count": 1
+              },
+              "Tc99": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "33300",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "33300",
+                "vertex_count": 1
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 30.0,
+            "upper_wt_percent": 30.0
+          },
+          "Nb": {
+            "lower_wt_percent": 60.0,
+            "upper_wt_percent": 60.0
+          },
+          "Si": {
+            "lower_wt_percent": 10.0,
+            "upper_wt_percent": 10.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "fixed_three",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          },
+          "Tc99": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 43
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {
+                "Tc99": 111000.0
+              },
+              "Nb": {
+                "C14": 296000.0
+              },
+              "Si": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "coefficient_tie",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "100",
+                  "Si": "0"
+                },
+                "maximum_exact_bq": "14800",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "100",
+                  "Si": "0"
+                },
+                "minimum_exact_bq": "14800",
+                "vertex_count": 2
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          },
+          "Si": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "coefficient_tie",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {
+                "C14": 14800.0
+              },
+              "Si": {
+                "C14": 14800.0
+              }
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "zero_crossing",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "44400",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "90",
+                  "Nb": "0",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "0",
+                "vertex_count": 2
+              },
+              "Tc99": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "90",
+                  "Nb": "0",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "5550",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "90",
+                  "Nb": "0",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "5550",
+                "vertex_count": 2
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 30.0,
+            "upper_wt_percent": 90.0
+          },
+          "Nb": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 60.0
+          },
+          "Si": {
+            "lower_wt_percent": 10.0,
+            "upper_wt_percent": 10.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "zero_crossing",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          },
+          "Tc99": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 43
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {},
+              "Nb": {
+                "C14": 74000.0
+              },
+              "Si": {
+                "Tc99": 55500.0
+              }
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "external_h3",
+        "targets": [
+          {
+            "projections": {},
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Nb": {
+            "lower_wt_percent": 100.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "activity_bounds_bq": {
+            "1": {
+              "lower_bq": 740000.0,
+              "upper_bq": 2220000.0
+            }
+          },
+          "excludes_activation": true,
+          "source": "artificial disjoint external H-3",
+          "status": "bounded"
+        },
+        "id": "external_h3",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "H3": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 1
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Nb": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "external_merge",
+        "targets": [
+          {
+            "projections": {
+              "H3": {
+                "max_witness_exact_wt_percent": {
+                  "Nb": "100"
+                },
+                "maximum_exact_bq": "888000",
+                "min_witness_exact_wt_percent": {
+                  "Nb": "100"
+                },
+                "minimum_exact_bq": "888000",
+                "vertex_count": 1
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Nb": {
+            "lower_wt_percent": 100.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "activity_bounds_bq": {
+            "1": {
+              "lower_bq": 888000.0,
+              "upper_bq": 888000.0
+            }
+          },
+          "excludes_activation": true,
+          "source": "artificial disjoint external H-3",
+          "status": "bounded"
+        },
+        "id": "external_merge",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "H3": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 1
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Nb": {
+                "H3": 888000.0
+              }
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "incomplete",
+        "targets": [
+          {
+            "projections": {},
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          },
+          "Si": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "incomplete",
+        "mass_g": 1.0,
+        "nuclide_properties": {},
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {},
+              "Si": {}
+            },
+            "inventory_coverage": "incomplete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": [
+              "artificial unbounded inventory"
+            ]
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "missing_properties",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Nb": "100",
+                  "Si": "0"
+                },
+                "maximum_exact_bq": "74000",
+                "min_witness_exact_wt_percent": {
+                  "Nb": "0",
+                  "Si": "100"
+                },
+                "minimum_exact_bq": "0",
+                "vertex_count": 2
+              }
+            },
+            "step": 1
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Nb": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          },
+          "Si": {
+            "lower_wt_percent": 0.0,
+            "upper_wt_percent": 100.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "missing_properties",
+        "mass_g": 1.0,
+        "nuclide_properties": {},
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Nb": {
+                "C14": 74000.0
+              },
+              "Si": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    },
+    {
+      "exact": {
+        "id": "two_times",
+        "targets": [
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "30",
+                  "Nb": "60",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "44400",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "70",
+                  "Nb": "20",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "14800",
+                "vertex_count": 2
+              }
+            },
+            "step": 1
+          },
+          {
+            "projections": {
+              "C14": {
+                "max_witness_exact_wt_percent": {
+                  "Fe": "70",
+                  "Nb": "20",
+                  "Si": "10"
+                },
+                "maximum_exact_bq": "5920",
+                "min_witness_exact_wt_percent": {
+                  "Fe": "70",
+                  "Nb": "20",
+                  "Si": "10"
+                },
+                "minimum_exact_bq": "5920",
+                "vertex_count": 2
+              }
+            },
+            "step": 2
+          }
+        ]
+      },
+      "input": {
+        "composition_wt_percent_bounds": {
+          "Fe": {
+            "lower_wt_percent": 30.0,
+            "upper_wt_percent": 70.0
+          },
+          "Nb": {
+            "lower_wt_percent": 20.0,
+            "upper_wt_percent": 60.0
+          },
+          "Si": {
+            "lower_wt_percent": 10.0,
+            "upper_wt_percent": 10.0
+          }
+        },
+        "displaced_volume_cm3": 1.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "two_times",
+        "mass_g": 1.0,
+        "nuclide_properties": {
+          "C14": {
+            "alpha_emitting": false,
+            "half_life_s": 315576000.0,
+            "z": 6
+          }
+        },
+        "targets": [
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {},
+              "Nb": {
+                "C14": 74000.0
+              },
+              "Si": {}
+            },
+            "inventory_coverage": "complete",
+            "step": 1,
+            "t_s": 0.0,
+            "unbounded_inventory_reasons": []
+          },
+          {
+            "bounds_assumptions": "fixed affine model; supplied products exact within this model",
+            "bounds_source": "P108 artificial pure-constituent basis",
+            "element_activity_bq_per_g": {
+              "Fe": {
+                "C14": 5920.0
+              },
+              "Nb": {
+                "C14": 5920.0
+              },
+              "Si": {
+                "C14": 5920.0
+              }
+            },
+            "inventory_coverage": "complete",
+            "step": 2,
+            "t_s": 100.0,
+            "unbounded_inventory_reasons": []
+          }
+        ],
+        "waste_type": "general"
+      }
+    }
+  ],
+  "schema": "actinv-p108-composition-cases-1",
+  "source": "artificial declared affine composition models"
+}

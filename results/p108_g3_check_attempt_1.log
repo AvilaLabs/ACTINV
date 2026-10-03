@@ -1,0 +1,42 @@
+Running as unit: run-p252860-i8644053.scope; invocation ID: 5698dee1221f434ebfa7975712d529d2
+    Checking actinv-core v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-core)
+error[E0277]: the trait bound `std::string::String: Borrow<&std::string::String>` is not satisfied
+   --> crates/actinv-core/src/waste_composition.rs:216:41
+    |
+216 |         let left_coefficient = response[left];
+    |                                         ^^^^ the trait `Borrow<&std::string::String>` is not implemented for `std::string::String`
+    |
+help: the trait `Borrow<&std::string::String>` is not implemented for `std::string::String`
+      but trait `Borrow<str>` is implemented for it
+   --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/alloc/src/str.rs:229:0
+    = help: for that trait implementation, expected `str`, found `&std::string::String`
+    = note: required for `BTreeMap<std::string::String, f64>` to implement `std::ops::Index<&&std::string::String>`
+
+error[E0277]: the trait bound `std::string::String: Borrow<&std::string::String>` is not satisfied
+   --> crates/actinv-core/src/waste_composition.rs:217:42
+    |
+217 |         let right_coefficient = response[right];
+    |                                          ^^^^^ the trait `Borrow<&std::string::String>` is not implemented for `std::string::String`
+    |
+help: the trait `Borrow<&std::string::String>` is not implemented for `std::string::String`
+      but trait `Borrow<str>` is implemented for it
+   --> /rustc/48a229ceaefd4985c50990b14116b6d856af0985/library/alloc/src/str.rs:229:0
+    = help: for that trait implementation, expected `str`, found `&std::string::String`
+    = note: required for `BTreeMap<std::string::String, f64>` to implement `std::ops::Index<&&std::string::String>`
+
+error[E0282]: type annotations needed
+   --> crates/actinv-core/src/waste_composition.rs:284:17
+    |
+284 |             let sum = q + component;
+    |                 ^^^
+285 |             if !sum.is_finite() {
+    |                 --- type must be known at this point
+    |
+help: consider giving `sum` an explicit type
+    |
+284 |             let sum: /* Type */ = q + component;
+    |                    ++++++++++++
+
+Some errors have detailed explanations: E0277, E0282.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `actinv-core` (lib) due to 3 previous errors
