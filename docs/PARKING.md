@@ -319,3 +319,7 @@ priority — each needs its own protocol before any code changes.
   The initial phase covers nominal single-component U.S. Part 61 classification and verified class impurity
   budgets. Uncertainty/composition-range classification and the opt-in draft fusion screen are separately gated;
   mixed packages, scaling factors and additional jurisdictions remain later scope. No phase is open or hashed.
+- 2026-10-03 — **Nominal waste layer closed P105-PASS.** `actinv waste` and `actinv waste budget` are implemented
+  and all six workflows on `a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2` are green. The earlier entries above
+  describe the promotion-time status. Conservative activity bounds, composition ranges and the draft fusion
+  screen still require separate protocols; P103/P104 failures remain unchanged.

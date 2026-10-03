@@ -1,10 +1,14 @@
 # Planned extension: `actinv waste`, U.S. low-level waste classification
 
-Status: **planned, owner-approved 2026-10-03; unopened and unhashed**. Nothing has been built. Accepted scope and
+Status: **nominal classification and verified class budgets implemented, P105-PASS, 2026-10-03**. All six
+implementation-commit workflows are green; see `results/p105_verdict.json` and `results/p105_ci_runs.json`.
+Accepted scope and
 sequencing live in [ROADMAP.md](ROADMAP.md#planned-extension--component-waste-classification-and-material-impurity-budgets-2026-10-03):
 nominal single-component classification and verified nominal class budgets first; uncertainty/composition-range
 classification and an opt-in draft fusion intrusion screen have separate follow-up gates. This page retains the
-supporting design and preliminary source notes. See also the dated promotion entry in `PARKING.md`.
+supporting design and preliminary source notes. The public CLI contract is in [the handbook](guide/waste.md).
+The preliminary intrusion-source notes below are historical and do not qualify an intrusion screen. See also
+the dated promotion and closure entries in `PARKING.md`.
 
 ## What it would answer
 

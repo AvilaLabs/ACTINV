@@ -20,7 +20,7 @@ with auditable ENDF identity, but its complete G2 scan finds the frozen state-pa
 violated across the four TENDL corpora. No diagnostic or held-out ratio was read, G3 onward is not authorized, and
 v1.1.0 cannot ship from this phase. Source/evidence commit `a460b6e4092d57ff228c6fb04ec41a12f575dd25` passed all
 42 substantive steps in GitHub Actions run `33257767713`; that green workflow validates the failure record rather
-than converting it into a scientific pass. P18b is open from the green closure under protocol
+than converting it into a scientific pass. P18b subsequently closed **P18b-FAIL** under protocol
 `69076fa2656b239addbb15fbb4727caaa2c8ea37b3aa82a141f3a2b0b619eabe`. G0 has frozen provenance for all 11,400
 source files plus the 245-file official-checker sample; no checker output, new corpus classification or measurement
 value was read before that seal. G1 now fixes the exact-decimal, printed-quantum, interpolation, standard-envelope,
@@ -29,7 +29,9 @@ pinned IAEA CHECKR/FIZCON decisions agree. Production and the public v1.0.1 arti
 Amendment 1 (`8eb3f3bc657a49ebeff7cc5d7ca124cb4e4debbf094fee9d6417c01f740aa9e0`) quarantines five families whose
 dependent rows were accidentally displayed by an incorrect fixed-column redaction before G0. They are diagnostic
 only; the remaining held-out partition stays sealed. It had capped a successful close at P18-CONDITIONAL; the later
-G2 threshold failure now requires P18-FAIL.
+G2 threshold failure now requires P18-FAIL. This opening paragraph retains the historical
+qualification account; `results/verdict_p18b.json` is the terminal P18b disposition. A future
+successor requires a new protocol rather than changing that failure record.
 
 ## What v1.0 means (acceptance criteria — all measurable)
 
@@ -1431,10 +1433,12 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
 
 ## Planned extension — component waste classification and material impurity budgets (2026-10-03)
 
-**Status: planned, owner-approved 2026-10-03; unopened and unhashed.** Medium-high priority after the current
-accuracy and uncertainty work closes, ahead of mixed-package handling and additional jurisdictions. This entry
-changes no open phase or frozen protocol. Assign a phase number and freeze the minimum inputs, interpretation
-choices and acceptance thresholds before implementation. The supporting design is
+**Status: initial nominal phase implemented and closed P105-PASS, 2026-10-03.** The owner prioritized this
+extension. Nominal single-component classification and verified class budgets passed local gates and all six
+GitHub Actions workflows on implementation commit `a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2`; see
+`results/p105_verdict.json` and `results/p105_ci_runs.json`. P103/P104 remain closed FAIL. The follow-ups below
+remain separately gated; freeze each phase's minimum inputs, interpretation choices and acceptance thresholds
+before implementation. The supporting design is
 [WASTE_CLASSIFICATION_EXTENSION.md](WASTE_CLASSIFICATION_EXTENSION.md); this roadmap owns the accepted scope.
 
 **Product outcome.** Extend ACTINV's activation decision tools with component-specific U.S. Part 61 classification
@@ -1512,6 +1516,7 @@ rule controls do not establish regulatory approval, waste-form compliance or sit
    showed 91–97 % of the cost in one kernel.*
 
 ## Changelog
+- 2026-10-03 — P105 closed PASS after all six implementation-commit workflows reported green, including controls run `37153295218`. Updated the stale initial waste and P18b status summaries while retaining every historical verdict and execution entry. The next prioritized waste follow-up is conservative declared activity-box classification; composition ranges and draft intrusion screening remain separate gates.
 - 2026-10-03 — P105 local G0/G1/G2 and complete read-only replay pass after its recorded synthetic decay integer-encoding repair. Nominal component waste classification and fully verified class budgets are implemented; GitHub Actions remains pending before closure. Uncertainty/ranges and intrusion screening remain separate phases.
 - 2026-10-03 — P104 closed FAIL: repaired G1 write passed, but required read-only replay inserted a diagnostic field before repeating equality and stopped before G2. P105 opens with unchanged scientific contract and correct replay ordering; retain both failed predecessors.
 - 2026-08-26 — roadmap written after P3b (v0.1 = P4–P6, v0.2 = P7–P8, v0.5 = P9–P10, v1.0 = P11–P12).

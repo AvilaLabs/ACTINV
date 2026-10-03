@@ -1,4 +1,5 @@
 {
+  "ci_evidence_sha256": "9cc923e1075561253e27ea6b5c45d0dc2930f659283491d6ce34e536c10507c4",
   "evidence_sha256": {
     "g0_p105_successor.json": "53f478d4274515c4c4fb51661a7add371af719b241fc5e02acbe34a531d1ca6a",
     "g1_p105_classes.json": "2010e03dd3bf6ad91eeba94c25fd1a02a6ba2cfc561f03912f860fa38f28dfab",
@@ -9,9 +10,10 @@
     "G0": "PASS",
     "G1": "PASS",
     "G2": "PASS",
-    "G3_CI": "PENDING",
+    "G3_CI": "PASS",
     "G3_local": "PASS"
   },
+  "implementation_commit": "a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2",
   "phase": "P105",
   "predecessors": {
     "P103": "FAIL",
@@ -20,5 +22,5 @@
   "qualification": "Nominal single-component U.S. Part 61 arithmetic and fixed-rate composition budgets; artificial activation control, no disposal acceptance or predictive library qualification.",
   "repair_rounds": 1,
   "schema": "actinv-p105-verdict-1",
-  "verdict": "P105-LOCAL-PASS"
+  "verdict": "P105-PASS"
 }
