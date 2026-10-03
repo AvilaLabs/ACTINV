@@ -57,7 +57,7 @@ def _write_synthetic_decay(path: Path) -> None:
         if not stable:
             # Six energy slots: light, uncertainty, EM, uncertainty, heavy, uncertainty.
             records.append(_endf_record([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], mat, 8, 457, seq)); seq += 1
-        records.append(_endf_record([0.0] * 6, mat, 8, 457, seq)); seq += 1
+        records.append(_endf_record([0.0, 0.0, 0, 0, 0, 0], mat, 8, 457, seq)); seq += 1
         records.append(_endf_record([0.0] * 6, mat, 8, 0, seq))
     path.write_text("\n".join(records) + "\n")
 

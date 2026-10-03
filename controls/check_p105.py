@@ -29,6 +29,8 @@ SUCCESSOR_PROTOCOL = ROOT / "protocols/ACTINV-P105_PROTOCOL.md"
 SUCCESSOR_PROTOCOL_SHA256 = "f38b973532010f4a7e4dc644faaffe6c8c420e42aa2e27c898e029ecef035075"
 SUCCESSOR_AMENDMENT = ROOT / "protocols/ACTINV-P104_AMENDMENT_A.md"
 SUCCESSOR_AMENDMENT_SHA256 = "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54"
+PHASE_REPAIR_AMENDMENT = ROOT / "protocols/ACTINV-P105_AMENDMENT_A.md"
+PHASE_REPAIR_SHA256 = "023766635d97829284705d485848657e38065a6da3dec95e982811cb62f30b40"
 SUCCESSOR_RESULT = ROOT / "results/g0_p105_successor.json"
 ACTINV = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 FIVE_YEAR_S = 5.0 * 365.25 * 86400.0
@@ -46,6 +48,8 @@ def verify_successor_g0(no_write: bool = False) -> int:
     amendment_hash = sha256(SUCCESSOR_AMENDMENT) if SUCCESSOR_AMENDMENT.is_file() else None
     amendment_registration = f"{SUCCESSOR_AMENDMENT_SHA256}  {SUCCESSOR_AMENDMENT.relative_to(ROOT)}"
     amendment_registered = amendment_registration in (ROOT / "protocols/protocol_hash.txt").read_text(encoding="utf-8").splitlines()
+    phase_repair_hash = sha256(PHASE_REPAIR_AMENDMENT) if PHASE_REPAIR_AMENDMENT.is_file() else None
+    phase_repair_registered = f"{PHASE_REPAIR_SHA256}  {PHASE_REPAIR_AMENDMENT.relative_to(ROOT)}" in (ROOT / "protocols/protocol_hash.txt").read_text(encoding="utf-8").splitlines()
     try:
         inherited_source = json.loads(RESULT.read_text(encoding="utf-8"))
         inherited_source_ok = inherited_source.get("sealed") is True and inherited_source.get("verdict") == "P103-G0-SEALED"
@@ -76,6 +80,12 @@ def verify_successor_g0(no_write: bool = False) -> int:
         },
     }
     code_hashes = {name: sha256(path) for name, path in control_files.items() if path.is_file()}
+    checks["phase_repair_amendment_registered"] = {
+        "expected_sha256": PHASE_REPAIR_SHA256,
+        "actual_sha256": phase_repair_hash,
+        "registered": phase_repair_registered,
+        "pass": phase_repair_hash == PHASE_REPAIR_SHA256 and phase_repair_registered,
+    }
     code_hashes_complete = len(code_hashes) == len(control_files)
     sealed = all(check["pass"] for check in checks.values()) and code_hashes_complete
     result = {
