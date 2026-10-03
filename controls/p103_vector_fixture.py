@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import math
+from decimal import Decimal
 from pathlib import Path
 
 
@@ -16,7 +17,7 @@ DAY = 86400.0
 FIVE_YEARS = 5.0 * 365.25 * DAY
 CI_BQ_PER_CM3 = 37_000.0
 NCI_BQ_PER_G = 37.0
-DELTA = 1.0e-10
+DELTA = Decimal("1e-10")
 
 PROPS = {
     "C14": {"z": 6, "half_life_s": 1.8e11, "alpha_emitting": False},
@@ -62,9 +63,14 @@ T2_NAMED = {"H3", "Co60", "Ni63", "Sr90", "Cs137"}
 
 
 def concentration_activity(value: float, unit: str, mass_g: float, volume_cm3: float) -> float:
+    value = Decimal(str(value))
+    mass_g = Decimal(str(mass_g))
+    volume_cm3 = Decimal(str(volume_cm3))
     if unit == "Ci/m3":
-        return value * CI_BQ_PER_CM3 * volume_cm3 / mass_g
-    return value * NCI_BQ_PER_G
+        activity = value * Decimal("37000") * volume_cm3 / mass_g
+    else:
+        activity = value * Decimal("37")
+    return float(activity)
 
 
 def nuclide_fraction(activity_bq_per_g: float, unit: str, limit: float, mass_g: float, volume_cm3: float) -> float:
@@ -212,9 +218,10 @@ def build_vectors() -> list[dict]:
     for row_id, isotope, applicability, unit, limit in T1_ROWS:
         vector_isotope = "Am241" if isotope == "alpha_transuranic_gt5y" else isotope
         waste_type = "activated_metal" if applicability == "activated_metal" else "general"
-        for threshold, outputs in ((0.1, ("A", "A", "C")), (1.0, ("C", "C", "above_class_c"))):
+        for threshold, outputs in ((Decimal("0.1"), ("A", "A", "C")), (Decimal("1"), ("C", "C", "above_class_c"))):
             for side, factor, class_name in zip(("below", "equal", "above"), (threshold * (1 - DELTA), threshold, threshold * (1 + DELTA)), outputs):
-                add_vector(vectors, f"t1-{row_id}-{threshold:g}-{side}", waste_type, {vector_isotope: (limit * factor, unit)}, expected_class=class_name)
+                exact_value = Decimal(str(limit)) * factor
+                add_vector(vectors, f"t1-{row_id}-{threshold:g}-{side}", waste_type, {vector_isotope: (exact_value, unit)}, expected_class=class_name)
 
     # Every finite Table 2 column boundary, including both explicit Ni-63 forms.
     for row_id, isotope, applicability, limits in T2_ROWS:
@@ -228,16 +235,17 @@ def build_vectors() -> list[dict]:
             classes = (("A", "A", "B") if column == 0 else
                        ("B", "B", "C") if column == 1 else
                        ("C", "C", "above_class_c"))
-            for side, factor, class_name in zip(("below", "equal", "above"), (1 - DELTA, 1.0, 1 + DELTA), classes):
-                add_vector(vectors, f"t2-{row_id}-col{column + 1}-{side}", waste_type, {vector_isotope: (limit * factor, "Ci/m3")}, expected_class=class_name)
+            for side, factor, class_name in zip(("below", "equal", "above"), (1 - DELTA, Decimal("1"), 1 + DELTA), classes):
+                exact_value = Decimal(str(limit)) * factor
+                add_vector(vectors, f"t2-{row_id}-col{column + 1}-{side}", waste_type, {vector_isotope: (exact_value, "Ci/m3")}, expected_class=class_name)
 
     # Strict mixture boundaries in Table 1, using two distinct named rows.
     t1_pairs = (("Tc99", 3.0), ("I129", 0.08))
-    for threshold in (0.1, 1.0):
-        classes = (("A", "C", "C") if threshold == 0.1 else ("C", "above_class_c", "above_class_c"))
-        for side, scale, class_name in zip(("below", "equal", "above"), (1 - DELTA, 1.0, 1 + DELTA), classes):
+    for threshold in (Decimal("0.1"), Decimal("1")):
+        classes = (("A", "C", "C") if threshold == Decimal("0.1") else ("C", "above_class_c", "above_class_c"))
+        for side, scale, class_name in zip(("below", "equal", "above"), (1 - DELTA, Decimal("1"), 1 + DELTA), classes):
             add_vector(vectors, f"t1-mixture-{threshold:g}-{side}", "general", {
-                name: (limit * threshold * scale / 2.0, "Ci/m3") for name, limit in t1_pairs
+                name: (Decimal(str(limit)) * threshold * scale / Decimal("2"), "Ci/m3") for name, limit in t1_pairs
             }, expected_class=class_name)
 
     # Strict Table 2 mixture boundaries in all three columns. Fractions 1/4
@@ -247,10 +255,10 @@ def build_vectors() -> list[dict]:
         classes = (("A", "B", "B") if column == 0 else
                    ("B", "C", "C") if column == 1 else
                    ("C", "above_class_c", "above_class_c"))
-        for side, scale, class_name in zip(("below", "equal", "above"), (1 - DELTA, 1.0, 1 + DELTA), classes):
+        for side, scale, class_name in zip(("below", "equal", "above"), (1 - DELTA, Decimal("1"), 1 + DELTA), classes):
             add_vector(vectors, f"t2-mixture-col{column + 1}-{side}", "general", {
-                name: (limits[column] * fraction * scale, "Ci/m3")
-                for name, limits, fraction in (("Sr90", t2_pair_limits["Sr90"], 0.25), ("Cs137", t2_pair_limits["Cs137"], 0.75))
+                name: (Decimal(str(limits[column])) * fraction * scale, "Ci/m3")
+                for name, limits, fraction in (("Sr90", t2_pair_limits["Sr90"], Decimal("0.25")), ("Cs137", t2_pair_limits["Cs137"], Decimal("0.75")))
             }, expected_class=class_name)
 
     # Frozen edge/category interactions and coverage vectors.

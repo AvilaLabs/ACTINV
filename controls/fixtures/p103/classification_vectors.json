@@ -12,18 +12,18 @@
   "vectors": [
     {
       "activity_Bq_per_g": {
-        "C14": 29599.999997040002
+        "C14": 29599.99999704
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:C-14": 0.09999999999
+          "T1:C-14": 0.09999999998999999
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.09999999999
+          "sum_fractions": 0.09999999998999999
         },
         "table2": {
           "column_contributors": {
@@ -768,18 +768,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Nb94": 739.9999999260001
+        "Nb94": 739.999999926
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Nb-94_activated_metal": 0.09999999999000002
+          "T1:Nb-94_activated_metal": 0.09999999999
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.09999999999000002
+          "sum_fractions": 0.09999999999
         },
         "table2": {
           "column_contributors": {
@@ -810,18 +810,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Nb94": 740.0000000000001
+        "Nb94": 740.0
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Nb-94_activated_metal": 0.10000000000000002
+          "T1:Nb-94_activated_metal": 0.1
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.10000000000000002
+          "sum_fractions": 0.1
         },
         "table2": {
           "column_contributors": {
@@ -894,18 +894,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Nb94": 7399.999999260001
+        "Nb94": 7399.99999926
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "C",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Nb-94_activated_metal": 0.9999999999000001
+          "T1:Nb-94_activated_metal": 0.9999999999
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.9999999999000001
+          "sum_fractions": 0.9999999999
         },
         "table2": {
           "column_contributors": {
@@ -1020,18 +1020,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Tc99": 11099.999998890002
+        "Tc99": 11099.99999889
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Tc-99": 0.09999999999000002
+          "T1:Tc-99": 0.09999999999
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.09999999999000002
+          "sum_fractions": 0.09999999999
         },
         "table2": {
           "column_contributors": {
@@ -1062,18 +1062,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Tc99": 11100.000000000002
+        "Tc99": 11100.0
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Tc-99": 0.10000000000000002
+          "T1:Tc-99": 0.1
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.10000000000000002
+          "sum_fractions": 0.1
         },
         "table2": {
           "column_contributors": {
@@ -1104,18 +1104,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Tc99": 11100.000001110002
+        "Tc99": 11100.00000111
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "C",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Tc-99": 0.10000000001000002
+          "T1:Tc-99": 0.10000000001
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.10000000001000002
+          "sum_fractions": 0.10000000001
         },
         "table2": {
           "column_contributors": {
@@ -1272,18 +1272,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "I129": 295.99999997040004
+        "I129": 295.9999999704
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:I-129": 0.09999999999000002
+          "T1:I-129": 0.09999999998999999
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.09999999999000002
+          "sum_fractions": 0.09999999998999999
         },
         "table2": {
           "column_contributors": {
@@ -1776,18 +1776,18 @@
     },
     {
       "activity_Bq_per_g": {
-        "Pu241": 12949.999998705001
+        "Pu241": 12949.999998705
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "A",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Pu-241": 0.09999999999
+          "T1:Pu-241": 0.09999999998999999
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.09999999999
+          "sum_fractions": 0.09999999998999999
         },
         "table2": {
           "column_contributors": {
@@ -2114,19 +2114,19 @@
     },
     {
       "activity_Bq_per_g": {
-        "Cm242": 74000.00000740001
+        "Cm242": 74000.0000074
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
         "class": "C",
         "coverage": "complete",
         "row_fractions": {
-          "T1:Cm-242": 0.10000000001000002,
-          "T2:half_life_lt5y:col1": 0.0028571428574285717
+          "T1:Cm-242": 0.10000000000999999,
+          "T2:half_life_lt5y:col1": 0.0028571428574285713
         },
         "table1": {
           "contributors": 1,
-          "sum_fractions": 0.10000000001000002
+          "sum_fractions": 0.10000000000999999
         },
         "table2": {
           "column_contributors": {
@@ -2135,7 +2135,7 @@
             "3": 0
           },
           "column_sums": {
-            "1": 0.0028571428574285717,
+            "1": 0.0028571428574285713,
             "2": 0.0,
             "3": 0.0
           }
@@ -4249,7 +4249,7 @@
     {
       "activity_Bq_per_g": {
         "I129": 147.9999999852,
-        "Tc99": 5549.999999445001
+        "Tc99": 5549.999999445
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
@@ -4257,7 +4257,7 @@
         "coverage": "complete",
         "row_fractions": {
           "T1:I-129": 0.049999999994999995,
-          "T1:Tc-99": 0.04999999999500001
+          "T1:Tc-99": 0.049999999995
         },
         "table1": {
           "contributors": 2,
@@ -4298,7 +4298,7 @@
     {
       "activity_Bq_per_g": {
         "I129": 148.0,
-        "Tc99": 5550.000000000001
+        "Tc99": 5550.0
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
@@ -4306,7 +4306,7 @@
         "coverage": "complete",
         "row_fractions": {
           "T1:I-129": 0.05,
-          "T1:Tc-99": 0.05000000000000001
+          "T1:Tc-99": 0.05
         },
         "table1": {
           "contributors": 2,
@@ -4347,7 +4347,7 @@
     {
       "activity_Bq_per_g": {
         "I129": 148.0000000148,
-        "Tc99": 5550.000000555001
+        "Tc99": 5550.000000555
       },
       "displaced_volume_cm3": 1.0,
       "expected": {
@@ -4355,7 +4355,7 @@
         "coverage": "complete",
         "row_fractions": {
           "T1:I-129": 0.050000000005,
-          "T1:Tc-99": 0.05000000000500001
+          "T1:Tc-99": 0.050000000005
         },
         "table1": {
           "contributors": 2,
