@@ -1437,12 +1437,15 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
 extension. Nominal single-component classification and verified class budgets passed local gates and all six
 GitHub Actions workflows on implementation commit `a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2`; see
 `results/p105_verdict.json` and `results/p105_ci_runs.json`. P103/P104 remain closed FAIL. P106's amended G0
-read-only replay closed **P106-FAIL** before any bounds CLI case; G1/G2 were not executed. P107 now has
-**P107-LOCAL-PASS; CI pending** under the unchanged declared-activity-box contract. Its 146 components, 150 targets,
-and 300 endpoints passed G0/G1/G2 and local G3; 20 mutations and 27 refusal controls were rejected as expected,
-repeated output was byte-identical, and the full read-only replay passed. Do not claim final P107-PASS until CI is green.
-See the [P106 failure session](history/sessions/P106.md) and [P107 session](history/sessions/P107.md); the follow-ups
-below remain separately gated, and each phase requires its own protocol and acceptance threshold. The supporting design is
+read-only replay closed **P106-FAIL** before any bounds CLI case; G1/G2 were not executed. P107 closed
+**P107-PASS** on implementation commit `27d5636ad5331a3dacd8130a6b5e3516fb661e9f` under the unchanged
+declared-activity-box contract. Its 146 components, 150 targets, and 300 endpoints passed G0/G1/G2 and local G3;
+20 mutations and 27 refusal controls were rejected, repeated output was byte-identical, the full read-only replay
+passed, and all six implementation workflows are green. Workflow runs: controls `37157999276`, desktop
+`37157999216`, handbook `37157999194`, browser workbench `37157999180`, fusion `37157999255`, and FNS `37157999179`.
+See the [P106 failure session](history/sessions/P106.md) and [P107 session](history/sessions/P107.md); composition
+ranges, the draft intrusion screen, and twin/workbench integration remain separately scoped phases, each requiring
+its own protocol and acceptance threshold. The supporting design is
 [WASTE_CLASSIFICATION_EXTENSION.md](WASTE_CLASSIFICATION_EXTENSION.md); this roadmap owns the accepted scope.
 
 **Product outcome.** Extend ACTINV's activation decision tools with component-specific U.S. Part 61 classification
@@ -1520,6 +1523,12 @@ rule controls do not establish regulatory approval, waste-form compliance or sit
    showed 91–97 % of the cost in one kernel.*
 
 ## Changelog
+- 2026-10-03 — **P107 closed P107-PASS** on implementation commit
+  `27d5636ad5331a3dacd8130a6b5e3516fb661e9f`. G0/G1/G2 and local quality passed for 146 components, 150 targets,
+  and 300 endpoints; 20 mutations and 27 refusal controls were rejected, repeat output was byte-identical, and the
+  full read-only replay passed. All six workflows passed: controls `37157999276`, desktop `37157999216`, handbook
+  `37157999194`, browser workbench `37157999180`, fusion `37157999255`, and FNS `37157999179`. See
+  `results/p107_verdict.json`, `results/p107_ci_runs.json`, and `results/p107_implementation_commit.json`.
 - 2026-10-03 — **P107 local gates passed; CI pending.** G0/G1/G2 and local G3 passed for 146 components, 150 targets,
   and 300 endpoints; all 20 mutations and 27 refusal controls were rejected, repeated output was byte-identical, and
   the full read-only replay passed. The workspace suite reported 442 passed and 2 ignored, including 13 bounds

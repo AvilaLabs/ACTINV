@@ -927,7 +927,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 00f9febfdbaf33bcac7485964e206c958a9cfa92c5f73e98070788a04105fd0f  ./docs/RELEASE_NOTES_v1.2.1.md
 7adc25adea21fb02c54bdee2ed7d04054a952063aa44d9ac150c86675edbe21a  ./docs/RELEASE_NOTES_v1.3.1.md
 8e644c8f26e481106af627823f567a34a7d8d6cdd466eedd4b013b958020e6ed  ./docs/RELEASE_NOTES_v1.4.0.md
-5603b43b5c21978efae01f2a44b5caee07a2a1cb6c590bfc3db95c2a485acbf3  ./docs/ROADMAP.md
+89d02ac4786ec2f5fe645547153cfc3f66d8e095485b3d44ccd3d6e13cce8b31  ./docs/ROADMAP.md
 be98e3a2dd93bea898c74dd4151888e3449ad9688549a0937593559bd98e4725  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 c64390f4fb68751f12bd94b66474a84fca2ed93d689a3a4ab24a784fcdd7fa88  ./docs/SUMMARY.md
@@ -974,7 +974,7 @@ c8f263e28da25558cce796788110dffeaf458377307092f5dc183ad3bf5aa00e  ./docs/history
 b0a5bd015f37f815c5ecc0049c6f8aa27118dc19d12a11a0e772e10a9af9fb3a  ./docs/history/sessions/P104.md
 26a235d6f2858f43ea7772658ae5aa645d430f8265392d90745ffdc8b90550fb  ./docs/history/sessions/P105.md
 08966fa14c38459c7699daae76ea1e32ab1de6b5ddd6c3a64707cb5fc4eb68c9  ./docs/history/sessions/P106.md
-bd303877d040b559ac0b4e647100bc917daca3dd4329a5afaa5bcd16626da4b9  ./docs/history/sessions/P107.md
+0dfd9fab02adf5d80ce94436c08c883187de97c27cbfb04ac5efb2df25a60841  ./docs/history/sessions/P107.md
 b6cfff1525f2ec5d6b81fd5830ec3ec3c5e646c3b41af1ea90fc424c4891229c  ./docs/history/sessions/P11.md
 34e5eda5d8a3f6052f4c9a5f212cdd8b0f48bbed5915013f4a498e0440bbe900  ./docs/history/sessions/P12.md
 29d947f0d7b26052090a9f36e6223c3021fb01a3f095c996f40ce6b6cd41fa98  ./docs/history/sessions/P14.md
@@ -1001,7 +1001,7 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintainers/DOCUMENTATION.md
 57508903af7b17826b47a27a59ee9fb5f78bb035ab2f710933c4d52ae9f3aaba  ./docs/maintainers/E2_AUDIT_PLAN.md
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
-314e022b5f80ec2921ae35b9fc4d2724ce68a1d8ef69dfe91e327a0b34fd2e41  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
+7248a438fa5d006ed7d5ddf4e3841231c12c293c07b65f7c6413d36a76a3d62c  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
 4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64  ./docs/maintainers/WASTE_RULE_SOURCE_REVIEW.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
 d49b0040214a08c1be18825fe12bef4df9bdf2d009d1112d43955ee182fae5fd  ./docs/releases/desktop-v0.2.0-preview.1.md
@@ -1038,7 +1038,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-0dc75f5cd6f8763962a3debeac2332d91f24b1408602a1acef83188fa4873b0f  ./ledger.md
+1e9410fc8cceb2ebad0307d02039f9204e84d5f57a1a9e3d92545701dbf8ee6f  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 adbd7aee816d7bc64cc91830d57216c83d85a06bda77e7fbe54f8472b2926bea  ./packaging/desktop.json
@@ -3530,8 +3530,10 @@ ffbe247ed827204ee85b25c52c46c07127e9f05a96ab9cf2de0fb4932677f0e4  ./results/p104
 654e88caf9dfd9e4e44d636fb5c66873c1631d11fae63e49464b3c90d358006e  ./results/p106_g0_attempt_1.log
 bc09166b8e97cbb9988475250d4c76f65b3639310f6b182f27b893db77934a74  ./results/p106_g0_replay_failure.log
 a37f8a505db4d834fcab03105c37dd126ec120fc79a8f216418836de540412c3  ./results/p106_verdict.json
+65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a  ./results/p107_ci_runs.json
 3a47c8064e53f5d9b375b2638b6b5c756220fe4119e6f13f17c5a5190d5c39c1  ./results/p107_g3_clippy_attempt_1.log
-bcce4467ff45561528b6e4b976c8a88a8c7ad0f7a63d3f2effe53a5a83a56fe7  ./results/p107_verdict.json
+1be5e25cc80a7b62ca5a231a7f4af7cacb5bd93508512bacddd59c6a267775d7  ./results/p107_implementation_commit.json
+5e5bae7ebf1f5c244a84f6e03ffe19c3e148f3678d939bc12a09f26053aea3aa  ./results/p107_verdict.json
 52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e  ./results/p14_performance.json
 db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_quality.json
 2f5669d71f0959bb25571e189dd9de733ef237e314d78b0e790e778f2f63da0f  ./results/p15_cache_integrity.json

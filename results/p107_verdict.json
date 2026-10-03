@@ -1,7 +1,28 @@
 {
   "checks": {
     "artifact_read_errors": {},
-    "ci": null,
+    "ci": {
+      "all_completed_success": true,
+      "ci_head_sha_matches_implementation": true,
+      "implementation_commit_sha": "27d5636ad5331a3dacd8130a6b5e3516fb661e9f",
+      "implementation_record_valid": true,
+      "observed_workflows": [
+        "Build browser workbench",
+        "Build handbook",
+        "controls",
+        "desktop builds",
+        "fns-iron",
+        "fusion-isotope"
+      ],
+      "pass": true,
+      "required_workflows": [
+        "Build browser workbench",
+        "Build handbook",
+        "controls",
+        "desktop builds"
+      ],
+      "single_head_sha": true
+    },
     "p107_amendment_registered": true,
     "predecessor_p105_terminal_pass": true,
     "predecessor_p106_terminal_fail": true,
@@ -116,7 +137,7 @@
       "workspace_tests_reported_green": true
     }
   },
-  "ci_evidence_sha256": null,
+  "ci_evidence_sha256": "65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a",
   "evidence_sha256": {
     "g0_p106_bounds.json": "69eeef0702031ea569bd38173696b06e554b58857c48305da581163c3084ea34",
     "g0_p106_replay_failure.json": "ba805c1b3739c4bd400736b3c2725ebbc020a4d6be29518c2b25c5ff573b3e9e",
@@ -131,9 +152,11 @@
     "G0": "PASS",
     "G1": "PASS",
     "G2": "PASS",
-    "G3_CI": "PENDING",
+    "G3_CI": "PASS",
     "G3_local": "PASS"
   },
+  "implementation_commit": "27d5636ad5331a3dacd8130a6b5e3516fb661e9f",
+  "implementation_record_sha256": "1be5e25cc80a7b62ca5a231a7f4af7cacb5bd93508512bacddd59c6a267775d7",
   "phase": "P107",
   "predecessors": {
     "P105": "PASS",
@@ -142,5 +165,5 @@
   "qualification": "Conservative class supersets for declared whole-component rectangular activity bounds under the pinned 10 CFR Part 61.55 rule pack; no uncertainty propagation, upstream completeness qualification, or disposal-acceptance conclusion.",
   "repair_rounds": 1,
   "schema": "actinv-p107-verdict-1",
-  "verdict": "P107-LOCAL-PASS"
+  "verdict": "P107-PASS"
 }
