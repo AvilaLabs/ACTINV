@@ -1,5 +1,4 @@
 {
-  "amendment_sha256": "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54",
   "checks": {
     "inherited_p103_source_seal": {
       "pass": true,
@@ -11,18 +10,11 @@
       "expected_sha256": "75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b",
       "pass": true,
       "registered": true
-    },
-    "repair_amendment_registered": {
-      "actual_sha256": "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54",
-      "expected_sha256": "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54",
-      "pass": true,
-      "registered": true
     }
   },
   "control_hashes": {
-    "budget_helper_sha256": "77e28e9ec0cee60d4a933c858eab85bb74a46586b631f8a0a593bd77d74498fc",
-    "checker_sha256": "4731925b00d6438575db81b28c7067c0ca6f81c84103efbf98c127b9f7a781a1",
-    "child_regression_sha256": "b5fe426645736023b86547702cd6ba0720b891123040ff79e6ba63444f20509b"
+    "budget_helper_sha256": "c4dd73874dee6eaa47682850e59f12aa6dc78f1a16d7dd9fd78000498af2e0b9",
+    "checker_sha256": "f6da7987e1c8627784fb44f6cc9d2b67300262238a5c835a434cd20a9a221443"
   },
   "inherited_protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
   "inherited_source_seal_sha256": "31a87b130be75f290569d0bea083ec4e687e498a0627eeed25cf8c0209e38367",

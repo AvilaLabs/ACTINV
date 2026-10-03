@@ -62,20 +62,33 @@ def _write_synthetic_decay(path: Path) -> None:
     path.write_text("\n".join(records) + "\n")
 
 
-def _run(argv: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+def _run(argv: list[str], cwd: Path, *, timeout_s: float = 120) -> subprocess.CompletedProcess[str]:
     """Bounded child invocation with explicit terminate/kill/reap on timeout."""
     child = subprocess.Popen(argv, cwd=cwd, text=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE, start_new_session=True)
     try:
-        out, err = child.communicate(timeout=120)
+        out, err = child.communicate(timeout=timeout_s)
     except subprocess.TimeoutExpired:
-        child.terminate()
+        try:
+            child.terminate()
+        except ProcessLookupError:
+            pass
         try:
             child.communicate(timeout=3)
         except subprocess.TimeoutExpired:
-            child.kill()
-            child.communicate()
-        raise RuntimeError(f"command timed out after 120s: {argv[1:3]}")
+            try:
+                child.kill()
+            except ProcessLookupError:
+                pass
+            try:
+                child.communicate(timeout=3)
+            except subprocess.TimeoutExpired:
+                child.wait(timeout=3)
+                if child.stdout is not None:
+                    child.stdout.close()
+                if child.stderr is not None:
+                    child.stderr.close()
+        raise RuntimeError(f"command timed out after {timeout_s}s: {argv[1:3]}")
     return subprocess.CompletedProcess(argv, child.returncode, out, err)
 
 
@@ -144,7 +157,68 @@ def _activity_map(target: dict) -> dict[str, float]:
     return {str(k): float(v) for k, v in inventory.items()}
 
 
-def _validate_target(target: dict, rows: list[dict], props: dict, volume: float) -> tuple[list[str], dict]:
+def _binding_matches(actual: object, expected: dict) -> bool:
+    if not isinstance(actual, dict):
+        return expected.get("step") is None and actual is None
+    return (
+        actual.get("step") == expected.get("step")
+        and actual.get("table") == expected.get("table")
+        and actual.get("column") == expected.get("column")
+        and actual.get("contributor_count") == expected.get("contributor_count")
+        and actual.get("strict") == expected.get("strict")
+        and actual.get("nuclides") == expected.get("contributors")
+    )
+
+
+def _validate_row_fractions(actual_list: object, expected_rows: list[dict]) -> list[str]:
+    errors = []
+    if not isinstance(actual_list, list):
+        return ["row_fractions_type"]
+    if len(actual_list) != len(expected_rows):
+        errors.append("row_fractions_count")
+    def key(row: dict) -> tuple:
+        return (row.get("table"), row.get("column"), row.get("row_id"), row.get("nuclide"))
+    expected = {key(row): row for row in expected_rows}
+    actual = {key(row): row for row in actual_list}
+    if len(expected) != len(expected_rows) or len(actual) != len(actual_list) or expected.keys() != actual.keys():
+        return errors + ["row_fractions_keys"]
+    for row_key, want in expected.items():
+        got = actual[row_key]
+        for field in ("table", "column", "row_id", "nuclide", "unit"):
+            if got.get(field) != want.get(field):
+                errors.append(f"row_fraction_{field}")
+        for field in ("concentration", "limit", "fraction"):
+            expected_value = want.get(field)
+            actual_value = got.get(field)
+            if expected_value is None:
+                if actual_value is not None:
+                    errors.append(f"row_fraction_{field}")
+            elif actual_value is None or not _close(float(actual_value), float(expected_value)):
+                errors.append(f"row_fraction_{field}")
+    return errors
+
+
+def _constraint_records_match(actual_list: object, expected_list: list[dict]) -> bool:
+    if not isinstance(actual_list, list) or len(actual_list) != len(expected_list):
+        return False
+    key = lambda x: (x.get("target_class"), x.get("table"), x.get("column"))
+    expected = {key(item): item for item in expected_list}
+    actual = {key(item): item for item in actual_list}
+    if len(expected) != len(expected_list) or len(actual) != len(actual_list) or expected.keys() != actual.keys():
+        return False
+    for item_key, want in expected.items():
+        got = actual[item_key]
+        for field in ("target_class", "table", "column", "strict", "passes", "contributor_count", "contributors"):
+            if got.get(field) != want.get(field):
+                return False
+        for field in ("source_sum_fraction", "normalized_sum", "normalized_margin"):
+            if not _close(float(got.get(field, math.nan)), float(want.get(field, math.nan))):
+                return False
+    return True
+
+
+def _validate_target(target: dict, rows: list[dict], props: dict, volume: float,
+                     *, require_class_pass: bool = True) -> tuple[list[str], dict]:
     errors: list[str] = []
     activity = _activity_map(target)
     case = {"activity_Bq_per_g": activity, "mass_g": 1.0,
@@ -153,16 +227,12 @@ def _validate_target(target: dict, rows: list[dict], props: dict, volume: float)
     independent = _independent(case, rows)
     if independent["class"] != target.get("class"):
         errors.append("class")
-    expected = {(int(x["table"]), x.get("column"), x["row_id"], x["nuclide"]): x.get("fraction")
-                for x in independent["row_details"] if x.get("fraction") is not None}
-    actual_list = target.get("row_fractions", [])
-    if not isinstance(actual_list, list):
-        errors.append("row_fractions_type")
-    else:
-        actual = {(int(x["table"]), x.get("column"), x["row_id"], x["nuclide"]): x.get("fraction")
-                  for x in actual_list if x.get("fraction") is not None}
-        if expected.keys() != actual.keys() or any(not _close(float(actual[k]), float(v)) for k, v in expected.items()):
-            errors.append("row_fractions")
+    errors.extend(_validate_row_fractions(target.get("row_fractions", []), independent["row_details"]))
+    if not _close(float(target.get("external_tritium_activity_bq", math.nan)), 0.0):
+        errors.append("external_tritium_activity")
+    expected_class_pass = independent["class"] in ("A", "B", "C")
+    if target.get("class_passes") is not expected_class_pass:
+        errors.append("class_passes")
     items = target.get("constraint_sums", [])
     expected_keys = {(1, None), (2, 3)}
     actual_keys = {(int(item["table"]), item.get("column")) for item in items}
@@ -172,15 +242,22 @@ def _validate_target(target: dict, rows: list[dict], props: dict, volume: float)
         match = next((x for x in independent["constraints"]
                       if x["target_class"] == "C" and x["table"] == item["table"]
                       and x["column"] == item.get("column")), None)
-        if match is None or not _close(float(item["solved_normalized_sum"]), float(match["normalized_sum"])):
+        if match is None or not _close(float(item.get("solved_normalized_sum", math.nan)), float(match["normalized_sum"])):
             errors.append("constraint_sum")
         predicted = float(item.get("predicted_normalized_sum", math.nan))
         solved = float(item.get("solved_normalized_sum", math.nan))
+        if match is not None and not _close(predicted, float(match["normalized_sum"])):
+            errors.append("predicted_constraint_sum")
         agrees = _close(predicted, solved)
         if not agrees:
             errors.append("predicted_solved_agreement")
         if item.get("pass") is not agrees:
             errors.append("sum_pass_flag")
+    expected_target_pass = all(item.get("pass") is True for item in items)
+    if require_class_pass:
+        expected_target_pass &= expected_class_pass
+    if target.get("pass") is not expected_target_pass:
+        errors.append("target_pass")
     if target.get("coverage") != "complete":
         errors.append("coverage")
     return errors, independent
@@ -259,26 +336,16 @@ def _g3_waste_identity(binary: Path, root: Path, work: Path, base_path: Path,
             raise RuntimeError(f"G3 independent class differs at step {step_no}")
         if evaluation.get("coverage") != "complete" or waste_target.get("coverage") != "complete":
             raise RuntimeError(f"G3 component coverage is not complete at step {step_no}")
-        expected_rows = {(x["table"], x.get("column"), x["row_id"], x["nuclide"]): x.get("fraction")
-                         for x in independent["row_details"] if x.get("fraction") is not None}
-        actual_rows = {(int(x["table"]), x.get("column"), x["row_id"], x["nuclide"]): x.get("fraction")
-                       for x in evaluation.get("row_fractions", []) if x.get("fraction") is not None}
-        if expected_rows.keys() != actual_rows.keys() or any(
-            not _close(float(actual_rows[k]), float(v)) for k, v in expected_rows.items()
-        ):
+        if _validate_row_fractions(evaluation.get("row_fractions", []), independent["row_details"]):
             raise RuntimeError(f"G3 row fractions differ independently at step {step_no}")
-        expected_constraints = {(x["target_class"], x["table"], x.get("column")): x
-                                for x in independent["constraints"]}
-        actual_constraints = {(x["target_class"], int(x["table"]), x.get("column")): x
-                              for x in evaluation.get("constraints", [])}
-        if expected_constraints.keys() != actual_constraints.keys():
-            raise RuntimeError(f"G3 class constraint keys differ independently at step {step_no}")
-        for key, expected in expected_constraints.items():
-            actual = actual_constraints[key]
-            if (not _close(float(actual["normalized_sum"]), float(expected["normalized_sum"]))
-                or bool(actual["strict"]) != bool(expected["strict"])
-                or actual["contributors"] != expected["contributors"]):
-                raise RuntimeError(f"G3 class constraint differs independently at step {step_no}: {key}")
+        if not _constraint_records_match(evaluation.get("constraints"), independent["constraints"]):
+            raise RuntimeError(f"G3 class constraint fields differ independently at step {step_no}")
+        if not _constraint_records_match(evaluation.get("binding_constraints"), independent["binding_constraints"]):
+            raise RuntimeError(f"G3 binding constraint fields differ independently at step {step_no}")
+        if (evaluation.get("calculated_only_class") != independent["calculated_only_class"]
+                or waste_target.get("calculated_only_class") != independent["calculated_only_class"]
+                or not _close(float(waste_target.get("external_tritium_activity_bq", math.nan)), 0.0)):
+            raise RuntimeError(f"G3 calculated-only or external H-3 fields differ at step {step_no}")
         classes.append(independent["class"])
     return {"checked": True, "class_by_target": classes,
             "target_times_s": [1e6, 2e6], "repeat_byte_identical": deterministic}
@@ -360,8 +427,10 @@ def _validate_emitted_limit(baseline: dict, candidate: dict, label: str,
     expected_attained = not binding["strict"] if expected < 100.0 else False
     return (_close(float(original["upper_supremum_wt_pct"]), expected)
             and original.get("supremum_attained") == expected_attained
+            and _binding_matches(original.get("binding_constraint"), binding)
             and _close(float(altered["upper_supremum_wt_pct"]), expected)
-            and altered.get("supremum_attained") == expected_attained)
+            and altered.get("supremum_attained") == expected_attained
+            and _binding_matches(altered.get("binding_constraint"), binding))
 
 
 def run_g2_budget(no_write: bool = False) -> dict:
@@ -427,12 +496,21 @@ def run_g2_budget(no_write: bool = False) -> dict:
     checked_targets = 0
     for point in verification:
         for target in point.get("targets", []):
-            errors, independent = _validate_target(target, rows, props, volume)
+            errors, independent = _validate_target(
+                target, rows, props, volume,
+                require_class_pass=point.get("id") != "at_spec",
+            )
             failures.extend(f"{point.get('id')} step {target.get('step')}: independent check {e}" for e in errors)
             if point.get("id") != "at_spec":
                 if independent["class"] == "above_class_c" or not target.get("class_passes"):
                     failures.append(f"{point.get('id')} step {target.get('step')}: independent class exceeds C")
             checked_targets += 1
+    expected_verified = all(
+        target.get("pass") is True
+        for point in verification for target in point.get("targets", [])
+    )
+    if not expected_verified or output.get("verification", {}).get("verified") is not True:
+        failures.append("verification summary does not report all targets as passing")
 
     # Basis superposition: reconstruct each verification point per nuclide from
     # the pure-element basis inventories at its full composition.
@@ -464,10 +542,19 @@ def run_g2_budget(no_write: bool = False) -> dict:
     # all targets, using the verification inventories as ground truth.
     budget_rows = output.get("impurities", {}).get("Nb", {})
     usable: list[tuple[str, dict]] = []
+    expected_interval_groups = {"sole", "others_at_spec"}
+    if not isinstance(budget_rows, dict) or not expected_interval_groups.issubset(budget_rows):
+        failures.append("budget output is missing a required Nb interval group")
     for group in ("sole", "others_at_spec"):
         item = budget_rows.get(group, {})
-        if isinstance(item, dict) and item.get("feasible") and item.get("verified_value") is not None:
+        if not isinstance(item, dict):
+            failures.append(f"Nb.{group}: interval is missing")
+        elif item.get("feasible") is not True or item.get("verified_value") is None:
+            failures.append(f"Nb.{group}: interval is not feasible and verified")
+        else:
             usable.append((f"Nb.{group}.", item))
+    if {label.split(".")[1] for label, _ in usable} != expected_interval_groups:
+        failures.append("not all expected Nb intervals are independently checkable")
     for label, interval in usable:
         group = label.split(".")[1]
         expected_id = "sole_Nb_interior" if group == "sole" else "others_at_spec_Nb_interior"
@@ -488,12 +575,15 @@ def run_g2_budget(no_write: bool = False) -> dict:
         expected_attained = (not expected_binding["strict"]) if expected_upper < 100.0 else False
         if interval.get("supremum_attained") is not expected_attained:
             failures.append(f"{label}: upper attainment differs from independent strictness")
+        if interval.get("status") != "limit" or interval.get("no_response") is not False:
+            failures.append(f"{label}: finite impurity bound has an unexpected status")
         if expected_binding.get("step") is not None and (
             binding.get("step") != expected_binding["step"]
             or binding.get("table") != expected_binding["table"]
             or binding.get("column") != expected_binding["column"]
             or binding.get("contributor_count") != expected_binding["contributor_count"]
             or binding.get("strict") != expected_binding["strict"]
+            or binding.get("nuclides") != expected_binding["contributors"]
         ):
             failures.append(f"{label}: binding constraint/contributor metadata differs")
         point_id = interval.get("verification_point_id")
@@ -511,7 +601,10 @@ def run_g2_budget(no_write: bool = False) -> dict:
                        for t in verified_point.get("targets", [])):
                 failures.append(f"{label}: interior point failed a target")
     joint = output.get("joint_specification_margin", {})
-    if joint.get("feasible") and joint.get("verified_value") is not None:
+    joint_usable = isinstance(joint, dict) and joint.get("feasible") is True and joint.get("verified_value") is not None
+    if not joint_usable:
+        failures.append("joint specification margin is missing, infeasible, or unverified")
+    if joint_usable:
         if joint.get("verification_point_id") != "joint_interior":
             failures.append("joint margin point id differs from frozen contract")
         point = next((p for p in verification if p.get("id") == "joint_interior"), None)
@@ -524,6 +617,8 @@ def run_g2_budget(no_write: bool = False) -> dict:
         joint_attained = (not expected_binding["strict"]) if expected_upper < 100.0 else False
         if joint.get("supremum_attained") is not joint_attained:
             failures.append("joint upper attainment differs from independent strictness")
+        if joint.get("status") != "limit" or joint.get("no_response") is not False:
+            failures.append("joint finite margin has an unexpected status")
         if not _close(float(joint.get("lower_scale_factor", math.nan)), 0.0) or joint.get("lower_open") is not False:
             failures.append("joint lower bound is not zero and closed")
         if point is None:
@@ -542,10 +637,7 @@ def run_g2_budget(no_write: bool = False) -> dict:
         joint_binding = joint.get("binding_constraint") or {}
         if usable:
             _, expected_binding = _expected_nb_upper(output, props, rows, volume)
-            if expected_binding.get("step") is not None and any(
-                joint_binding.get(field) != expected_binding.get(field)
-                for field in ("step", "table", "column", "contributor_count", "strict")
-            ):
+            if expected_binding.get("step") is not None and not _binding_matches(joint_binding, expected_binding):
                 failures.append("joint binding constraint metadata differs from the independent Nb edge")
 
     # Full fresh solve immediately above the computed Nb limit must classify
@@ -556,7 +648,7 @@ def run_g2_budget(no_write: bool = False) -> dict:
         if upper >= 100.0:
             failures.append("no positive-composition headroom exists for the above-C perturbation")
         else:
-            above_nb = min(100.0 - 1e-9, upper + max(abs(upper) * 1e-6, 1e-6))
+            above_nb = min(100.0 - 1e-9, upper + max(abs(upper) * 1e-4, 1e-6))
             changed = json.loads(base_path.read_text())
             changed["material"]["composition"] = {"Fe": 100.0 - above_nb, "Nb": above_nb}
             above_spec = work / "above_limit_run.json"
@@ -590,7 +682,10 @@ def run_g2_budget(no_write: bool = False) -> dict:
     g3_waste = _g3_waste_identity(binary, root, work, base_path, rows, props, volume)
 
     # Planted mutations must be detected by the independent comparisons.
-    mutation_controls = {"inventory_rejected": False, "sum_rejected": False, "limit_rejected": False}
+    mutation_controls = {
+        "inventory_rejected": False, "sum_rejected": False, "limit_rejected": False,
+        "row_limit_rejected": False, "binding_contributors_rejected": False,
+    }
     if verification and verification[0].get("targets"):
         original_target = verification[0]["targets"][0]
         candidate = copy.deepcopy(original_target)
@@ -603,6 +698,11 @@ def run_g2_budget(no_write: bool = False) -> dict:
         if candidate.get("constraint_sums"):
             candidate["constraint_sums"][0]["solved_normalized_sum"] += 0.05
             mutation_controls["sum_rejected"] = bool(_validate_target(candidate, rows, props, volume)[0])
+        candidate = copy.deepcopy(original_target)
+        finite_row = next((row for row in candidate.get("row_fractions", []) if row.get("limit") is not None), None)
+        if finite_row is not None:
+            finite_row["limit"] = float(finite_row["limit"]) + 1.0
+            mutation_controls["row_limit_rejected"] = bool(_validate_target(candidate, rows, props, volume)[0])
     if usable:
         altered_output = copy.deepcopy(output)
         group = usable[0][0].split(".")[1]
@@ -611,6 +711,12 @@ def run_g2_budget(no_write: bool = False) -> dict:
         location["upper_supremum_wt_pct"] = original + max(abs(original) * 0.05, 1e-8)
         mutation_controls["limit_rejected"] = not _validate_emitted_limit(
             output, altered_output, usable[0][0], props, rows, volume)
+        altered_output = copy.deepcopy(output)
+        contributor_binding = altered_output["impurities"]["Nb"][group].get("binding_constraint")
+        if isinstance(contributor_binding, dict) and contributor_binding.get("nuclides"):
+            contributor_binding["nuclides"][0] = "P104-PLANTED-INVALID"
+            mutation_controls["binding_contributors_rejected"] = not _validate_emitted_limit(
+                output, altered_output, usable[0][0], props, rows, volume)
 
     # Closed-form Nb-93 capture / Nb-94 decay prediction, independently using
     # the frozen 1 barn, 1e12 n cm-2 s-1 and one million second irradiation.

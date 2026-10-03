@@ -74,7 +74,9 @@ jobs:
       - name: P104 waste classification, aggregation, and budget controls
         env:
           ACTINV_BIN: target/release/actinv
-        run: python controls/check_p104.py --no-write
+        run: |
+          python controls/test_p104_children.py
+          python controls/check_p104.py --no-write
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

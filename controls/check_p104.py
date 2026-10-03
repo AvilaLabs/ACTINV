@@ -27,6 +27,8 @@ VECTOR_SEAL = ROOT / "results/g0b_p103_vectors.json"
 CLASS_RESULT = ROOT / "results/g1_p104_classes.json"
 SUCCESSOR_PROTOCOL = ROOT / "protocols/ACTINV-P104_PROTOCOL.md"
 SUCCESSOR_PROTOCOL_SHA256 = "75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b"
+SUCCESSOR_AMENDMENT = ROOT / "protocols/ACTINV-P104_AMENDMENT_A.md"
+SUCCESSOR_AMENDMENT_SHA256 = "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54"
 SUCCESSOR_RESULT = ROOT / "results/g0_p104_successor.json"
 ACTINV = Path(os.environ.get("ACTINV_BIN", ROOT / "target/release/actinv"))
 FIVE_YEAR_S = 5.0 * 365.25 * 86400.0
@@ -41,6 +43,9 @@ def verify_successor_g0(no_write: bool = False) -> int:
     protocol_hash = sha256(SUCCESSOR_PROTOCOL) if SUCCESSOR_PROTOCOL.is_file() else None
     registration = f"{SUCCESSOR_PROTOCOL_SHA256}  {SUCCESSOR_PROTOCOL.relative_to(ROOT)}"
     registered = registration in (ROOT / "protocols/protocol_hash.txt").read_text(encoding="utf-8").splitlines()
+    amendment_hash = sha256(SUCCESSOR_AMENDMENT) if SUCCESSOR_AMENDMENT.is_file() else None
+    amendment_registration = f"{SUCCESSOR_AMENDMENT_SHA256}  {SUCCESSOR_AMENDMENT.relative_to(ROOT)}"
+    amendment_registered = amendment_registration in (ROOT / "protocols/protocol_hash.txt").read_text(encoding="utf-8").splitlines()
     try:
         inherited_source = json.loads(RESULT.read_text(encoding="utf-8"))
         inherited_source_ok = inherited_source.get("sealed") is True and inherited_source.get("verdict") == "P103-G0-SEALED"
@@ -49,6 +54,7 @@ def verify_successor_g0(no_write: bool = False) -> int:
     control_files = {
         "checker_sha256": ROOT / "controls/check_p104.py",
         "budget_helper_sha256": ROOT / "controls/p104_budget_control.py",
+        "child_regression_sha256": ROOT / "controls/test_p104_children.py",
     }
     checks = {
         "protocol_registered": {
@@ -62,22 +68,30 @@ def verify_successor_g0(no_write: bool = False) -> int:
             "read_only": True,
             "pass": inherited_source_ok,
         },
+        "repair_amendment_registered": {
+            "expected_sha256": SUCCESSOR_AMENDMENT_SHA256,
+            "actual_sha256": amendment_hash,
+            "registered": amendment_registered,
+            "pass": amendment_hash == SUCCESSOR_AMENDMENT_SHA256 and amendment_registered,
+        },
     }
     code_hashes = {name: sha256(path) for name, path in control_files.items() if path.is_file()}
     code_hashes_complete = len(code_hashes) == len(control_files)
+    sealed = all(check["pass"] for check in checks.values()) and code_hashes_complete
     result = {
         "schema": "actinv-p104-successor-g0-1",
         "phase": "P104",
         "protocol": "ACTINV-P104",
         "protocol_sha256": protocol_hash,
+        "amendment_sha256": amendment_hash,
         "inherited_protocol_sha256": sha256(PROTOCOL),
         "inherited_source_seal_sha256": sha256(RESULT),
         "inherited_vector_fixture_sha256": sha256(VECTOR_FIXTURE),
         "inherited_vector_seal_sha256": sha256(VECTOR_SEAL),
         "control_hashes": code_hashes,
         "checks": checks,
-        "sealed": checks["protocol_registered"]["pass"] and inherited_source_ok and code_hashes_complete,
-        "verdict": "P104-G0-SEALED" if checks["protocol_registered"]["pass"] and inherited_source_ok and code_hashes_complete else "P104-G0-FAIL",
+        "sealed": sealed,
+        "verdict": "P104-G0-SEALED" if sealed else "P104-G0-FAIL",
     }
     if no_write:
         try:
@@ -675,8 +689,8 @@ def run_g1_invalid_inputs(work: Path) -> dict:
 
     two_cells = [
         {"record": "header", "schema": "actinv-mesh-result-1", "cell_count": 2},
-        {"record": "cell", "id": "cell-a", "result": cell_result},
-        {"record": "cell", "id": "cell-b", "result": cell_result},
+        {"record": "cell", "id": "cell-a", "result": copy.deepcopy(cell_result)},
+        {"record": "cell", "id": "cell-b", "result": copy.deepcopy(cell_result)},
         {"record": "footer", "cell_count": 2},
     ]
     overlap_spec = copy.deepcopy(valid_mesh_spec)
