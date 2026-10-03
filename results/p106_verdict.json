@@ -1,0 +1,50 @@
+{
+  "checks": {
+    "artifact_read_errors": {
+      "g1_p106_bounds.json": "[Errno 2] No such file or directory: '/home/connoravila/Documents/actinv/target/roadmap-waste/results/g1_p106_bounds.json'",
+      "g2_p106_bounds.json": "[Errno 2] No such file or directory: '/home/connoravila/Documents/actinv/target/roadmap-waste/results/g2_p106_bounds.json'",
+      "g3_p106_quality.json": "[Errno 2] No such file or directory: '/home/connoravila/Documents/actinv/target/roadmap-waste/results/g3_p106_quality.json'"
+    },
+    "ci": null,
+    "p106_amendment_registered": true,
+    "predecessor_p105_terminal_pass": true,
+    "quality": {
+      "all_recorded_gate_exit_codes_zero": false,
+      "reported_gate_count": 0,
+      "required_gate_names_present": false,
+      "resource_limits": {
+        "coordinator_jobs": false,
+        "cpu_quota_percent": false,
+        "disk_tmpdir": false,
+        "memory_max_bytes": false,
+        "memory_swap_max_bytes": false,
+        "tasks_max": false
+      },
+      "workspace_tests_reported_green": false
+    }
+  },
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "g0_p106_bounds.json": "69eeef0702031ea569bd38173696b06e554b58857c48305da581163c3084ea34",
+    "g0_p106_replay_failure.json": "ba805c1b3739c4bd400736b3c2725ebbc020a4d6be29518c2b25c5ff573b3e9e",
+    "g1_p106_bounds.json": null,
+    "g2_p106_bounds.json": null,
+    "g3_p106_quality.json": null,
+    "p105_verdict.json": "0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41"
+  },
+  "gates": {
+    "G0": "FAIL",
+    "G1": "FAIL",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL"
+  },
+  "phase": "P106",
+  "predecessors": {
+    "P105": "PASS"
+  },
+  "qualification": "Conservative class supersets for declared whole-component rectangular activity bounds under the pinned 10 CFR Part 61.55 rule pack; no uncertainty propagation, upstream completeness qualification, or disposal-acceptance conclusion.",
+  "repair_rounds": 1,
+  "schema": "actinv-p106-verdict-1",
+  "verdict": "P106-FAIL"
+}

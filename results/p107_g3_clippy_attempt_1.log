@@ -1,0 +1,19 @@
+Running as unit: run-p198609-i8590372.scope; invocation ID: 662d7128e36f469997ab48bdf976ffe0
+    Checking actinv-core v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-core)
+    Checking actinv-cli v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli)
+    Checking actinv-gui v0.3.0-preview.1 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-gui)
+error: items after a test module
+   --> crates/actinv-cli/src/waste_bounds.rs:376:1
+    |
+376 | mod tests {
+    | ^^^^^^^^^
+...
+564 | fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String> {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: for further information visit https://rust-lang.github.io/rust-clippy/rust-1.98.0/index.html#items_after_test_module
+    = note: `-D clippy::items-after-test-module` implied by `-D warnings`
+    = help: to override `-D warnings` add `#[allow(clippy::items_after_test_module)]`
+    = help: move the items to before the test module was defined
+
+error: could not compile `actinv-cli` (lib test) due to 1 previous error

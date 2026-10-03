@@ -1436,9 +1436,13 @@ reach once the core claim holds. Each enters its own hashed protocol per standin
 **Status: initial nominal phase implemented and closed P105-PASS, 2026-10-03.** The owner prioritized this
 extension. Nominal single-component classification and verified class budgets passed local gates and all six
 GitHub Actions workflows on implementation commit `a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2`; see
-`results/p105_verdict.json` and `results/p105_ci_runs.json`. P103/P104 remain closed FAIL. The follow-ups below
-remain separately gated; freeze each phase's minimum inputs, interpretation choices and acceptance thresholds
-before implementation. The supporting design is
+`results/p105_verdict.json` and `results/p105_ci_runs.json`. P103/P104 remain closed FAIL. P106's amended G0
+read-only replay closed **P106-FAIL** before any bounds CLI case; G1/G2 were not executed. P107 now has
+**P107-LOCAL-PASS; CI pending** under the unchanged declared-activity-box contract. Its 146 components, 150 targets,
+and 300 endpoints passed G0/G1/G2 and local G3; 20 mutations and 27 refusal controls were rejected as expected,
+repeated output was byte-identical, and the full read-only replay passed. Do not claim final P107-PASS until CI is green.
+See the [P106 failure session](history/sessions/P106.md) and [P107 session](history/sessions/P107.md); the follow-ups
+below remain separately gated, and each phase requires its own protocol and acceptance threshold. The supporting design is
 [WASTE_CLASSIFICATION_EXTENSION.md](WASTE_CLASSIFICATION_EXTENSION.md); this roadmap owns the accepted scope.
 
 **Product outcome.** Extend ACTINV's activation decision tools with component-specific U.S. Part 61 classification
@@ -1516,6 +1520,21 @@ rule controls do not establish regulatory approval, waste-form compliance or sit
    showed 91–97 % of the cost in one kernel.*
 
 ## Changelog
+- 2026-10-03 — **P107 local gates passed; CI pending.** G0/G1/G2 and local G3 passed for 146 components, 150 targets,
+  and 300 endpoints; all 20 mutations and 27 refusal controls were rejected, repeated output was byte-identical, and
+  the full read-only replay passed. The workspace suite reported 442 passed and 2 ignored, including 13 bounds
+  regressions; 2 population, 3 seal, and 4 child-lifecycle tests passed, as did handbook build/links/Chromium checks.
+  Keep final P107-PASS pending green CI. Amendment A's ordering lint repair is registered as
+  `cfb4e6e723489d0041192cf257a05fd7a3cda16dbe7208e31a85a350ea2cd09e`; retain its failed-attempt log.
+- 2026-10-03 — **P106 closed P106-FAIL; P107 opened** under frozen protocol
+  `8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b`. P106's amended G0 read-only replay compared
+  expected Python tuples directly with persisted JSON arrays and failed `persisted_seal_matches`; no P106 CLI cases
+  ran and G1/G2 were not executed. The 442-pass/two-ignored workspace run is implementation evidence only. Preserve
+  `results/g0_p106_replay_failure.json`, `results/p106_g0_replay_failure.log`, the first failure, P106 protocol and
+  Amendment A unchanged. P107 keeps the identical declared whole-component activity-box contract and changes only
+  stable-report JSON normalization/comparison ordering plus a persisted-seal regression. See
+  `docs/history/sessions/P106.md` and `docs/history/sessions/P107.md`.
+- 2026-10-03 — P106 opened under frozen protocol `163a7a265363583c42b8d27a28ec11664b87d393a0b2565fcc76ec3904d606ee`: conservative classification of directly declared whole-component activity boxes, with fixed rule pack/geometry/properties, explicit inventory and external-H-3 coverage, endpoint sums and a conservative class superset. Minimum gate population is the unchanged 126 public vectors plus 20 specified artificial interval/coverage cases. No automatic uncertainty propagation, composition solver or intrusion screen is included.
 - 2026-10-03 — P105 closed PASS after all six implementation-commit workflows reported green, including controls run `37153295218`. Updated the stale initial waste and P18b status summaries while retaining every historical verdict and execution entry. The next prioritized waste follow-up is conservative declared activity-box classification; composition ranges and draft intrusion screening remain separate gates.
 - 2026-10-03 — P105 local G0/G1/G2 and complete read-only replay pass after its recorded synthetic decay integer-encoding repair. Nominal component waste classification and fully verified class budgets are implemented; GitHub Actions remains pending before closure. Uncertainty/ranges and intrusion screening remain separate phases.
 - 2026-10-03 — P104 closed FAIL: repaired G1 write passed, but required read-only replay inserted a diagnostic field before repeating equality and stopped before G2. P105 opens with unchanged scientific contract and correct replay ordering; retain both failed predecessors.

@@ -48,5 +48,8 @@ The study schema also describes refinement and seeded robustness sampling. Consu
 
 For an explicitly selected U.S. Part 61 rule pack, `waste` reports nominal
 component classes and `waste budget` verifies class-specific impurity limits.
+`waste bounds` classifies user-declared absolute whole-component activity boxes
+under the bundled pack and returns a conservative class superset. These boxes
+are deterministic enclosures, not probabilities or propagated uncertainty.
 See [component waste classes and impurity limits](waste.md) for geometry,
-inventory coverage and external-tritium declarations.
+inventory coverage, external-tritium declarations, and the bounds input schema.

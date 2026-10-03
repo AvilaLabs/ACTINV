@@ -10,6 +10,7 @@ pub mod optimize;
 pub mod surrogate;
 pub mod twin;
 pub mod waste;
+pub mod waste_bounds;
 pub mod waste_budget;
 pub mod worker;
 pub mod workflow;

@@ -80,6 +80,15 @@ jobs:
           python controls/check_p105.py --no-write
           python controls/check_p105_verdict.py
 
+      - name: P107 conservative whole-component waste bounds
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p106_bounds.py
+          python controls/test_p107_seal.py
+          python controls/check_p107.py --no-write
+          python controls/check_p107_verdict.py
+
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
 

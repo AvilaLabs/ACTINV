@@ -12,6 +12,12 @@
 
 **Added**
 
+- `actinv waste bounds BOUNDS.json [OUT.json]` classifies whole-component,
+  caller-declared absolute activity intervals under the bundled U.S. Part 61
+  pack. It emits endpoint evaluations, row and constraint ranges, coverage, and
+  a conservative class superset. These rectangular bounds are not probabilities
+  or propagated uncertainty; see the public waste handbook.
+
 - `actinv waste` and `actinv waste budget`: nominal U.S. Part 61 component
   classification and verified class-specific impurity limits under an explicitly
   selected rule pack. Component mass/volume, aggregate categories, table margins

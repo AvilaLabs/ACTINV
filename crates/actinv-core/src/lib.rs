@@ -24,3 +24,4 @@ pub mod spec;
 pub mod study;
 pub mod uncertainty;
 pub mod waste;
+pub mod waste_bounds;

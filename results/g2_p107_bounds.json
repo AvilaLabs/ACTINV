@@ -1,0 +1,9 @@
+{
+  "failures": [],
+  "g1_result_sha256": "6943673898e994118091e1a4c62b3bbfdf046e1699f4cbe6abbdec01e1c4732e",
+  "pass": true,
+  "phase": "P107",
+  "protocol_sha256": "8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b",
+  "schema": "actinv-p107-bounds-g2-1",
+  "separate_output_paths_byte_identical": true
+}

@@ -1,0 +1,23 @@
+Running as unit: run-p188949-i8578704.scope; invocation ID: d0f21ad2568a401ea7b348f416088f2d
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/check_p106.py", line 643, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/check_p106.py", line 624, in main
+    raise SystemExit(g0())
+                     ~~^^
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/check_p106.py", line 101, in g0
+    pack, population = _derive_population()
+                       ~~~~~~~~~~~~~~~~~~^^
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/check_p106.py", line 72, in _derive_population
+    cases = generate_cases()
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/p106_bounds_control.py", line 103, in generate_cases
+    n, b = frac("C14", "C-14", .1)
+           ~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/p106_bounds_control.py", line 93, in frac
+    limit, unit = row_limit(table, selector, col, applicability)
+                  ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/p106_bounds_control.py", line 87, in row_limit
+    row = next(r for r in rows if r["table"] == table and r["selector"] == selector
+               and (r["applicability"] == applicability or r["applicability"] == "all"))
+StopIteration

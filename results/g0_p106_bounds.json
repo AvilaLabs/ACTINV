@@ -1,0 +1,555 @@
+{
+  "amendment_registered": true,
+  "amendment_sha256": "a9b8568fb5e7fde35b8325b525646fbc441e6989c4292fa6ef8735ce84c17f97",
+  "case_count": 146,
+  "case_fixture_sha256": "6041be8d54015e604a6aec0578d05fcc6f1cf4aed82322cb03459d108d293ff4",
+  "control_hashes": {
+    "controls/check_p105.py": "fad7a5e78f3f4b29941a3f4c340f875f5a31095ba429fa6c7857a47084810ef1",
+    "controls/check_p106.py": "fd9c63240ad5907ecfc8428da19f5bda0ce93e8726dac160fd6dedd5db514acd",
+    "controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+    "controls/p106_bounds_control.py": "b50425a970a5776cb65f603d1c0aa452c564441be14f7ce5110eb6092c56f142",
+    "controls/test_p105_children.py": "adcbe6d06a2e39b7e45e17b59728f35788d9104dfc8b24e8a85669babcb6c4ce",
+    "controls/test_p106_bounds.py": "3883f9ab149e2c0518c3446119eecb30ec94f7b34ffc053bc3877a8e66042cc2"
+  },
+  "expected_labels": {
+    "actual": {
+      "alpha_tru": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "cm242_cross_table": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "dedicated_co60": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_complete": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_incomplete": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_cross": [
+        [
+          "A",
+          "B",
+          [
+            "A",
+            "B"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_merge": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "inactive_and_malformed_properties": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "long_lived_unlisted": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "metal_nb94": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "missing_active_properties": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "mixture_t1_strict_box": [
+        [
+          "C",
+          "above_class_c",
+          [
+            "C",
+            "above_class_c"
+          ],
+          false,
+          null
+        ]
+      ],
+      "required_h3": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "single_t1_boundary_box": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ],
+      "sr90_cs137_example": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "t1_t2_separate": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "t2_three_columns": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_bounds_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_coverage_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "zero_crossing_contributor": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ]
+    },
+    "expected": {
+      "alpha_tru": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "cm242_cross_table": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "dedicated_co60": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_complete": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_incomplete": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_cross": [
+        [
+          "A",
+          "B",
+          [
+            "A",
+            "B"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_merge": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "inactive_and_malformed_properties": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "long_lived_unlisted": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "metal_nb94": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "missing_active_properties": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "mixture_t1_strict_box": [
+        [
+          "C",
+          "above_class_c",
+          [
+            "C",
+            "above_class_c"
+          ],
+          false,
+          null
+        ]
+      ],
+      "required_h3": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "single_t1_boundary_box": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ],
+      "sr90_cs137_example": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "t1_t2_separate": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "t2_three_columns": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_bounds_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_coverage_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "zero_crossing_contributor": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ]
+    },
+    "pass": true
+  },
+  "inherited_p103_vector_sha256": "bfefb655b2df52da7ccb7a93cfd7c22bdc18762917e900e828ebd97d58b2bb42",
+  "inherited_p105_verdict": "P105-PASS",
+  "inherited_p105_verdict_sha256": "0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41",
+  "pack_mirror_identical": true,
+  "pass": true,
+  "phase": "P106",
+  "pinned_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+  "protocol_registered": true,
+  "protocol_sha256": "163a7a265363583c42b8d27a28ec11664b87d393a0b2565fcc76ec3904d606ee",
+  "schema": "actinv-p106-bounds-g0-seal-1"
+}

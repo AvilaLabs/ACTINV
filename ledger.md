@@ -2417,3 +2417,27 @@ All 126 source vectors and complete read-only replay pass. Amendment A records o
 ## Entry 82 — P105 closed PASS with green implementation CI (2026-10-03)
 
 Implementation commit a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2 passed every scheduled workflow: controls 37153295218, desktop builds 37153295186, handbook 37153295170, browser workbench 37153295221, fusion-isotope 37153295198, and fns-iron 37153295211. `results/p105_ci_runs.json` retains the completed successful API records; `controls/check_p105_verdict.py --write` derives P105-PASS from those records and unchanged G0/G1/G2/local-quality evidence. Controls also confirmed the unchanged P15 result baseline. This closes only nominal single-component rule arithmetic and verified fixed-rate class budgets. Preserve P103/P104 FAIL and all attempts; conservative activity bounds, composition ranges and draft intrusion screening remain separately gated.
+
+## Entry 83 — P106 conservative declared activity bounds opened (2026-10-03)
+
+Protocol `163a7a265363583c42b8d27a28ec11664b87d393a0b2565fcc76ec3904d606ee` was registered before production implementation. Fixed pack, geometry, properties and declared rectangular whole-component Bq intervals define the claim. Bounds are supplied with source/assumptions; they are not inferred confidence intervals or proof of physical model completeness. Complete endpoint agreement may qualify a class stable within that box; any declared incomplete inventory, upper-positive missing properties or required external H-3 leaves the whole-box envelope unknown while retaining known-subset arithmetic. G0 must seal 126 inherited public point cases and 20 protocol-specified interval/coverage cases plus independent controls before CLI evidence. Composition variables, uncertainty-aware budgets, intrusion screening and site acceptance remain outside this phase.
+
+## Entry 84 — P105 closure push CI verified (2026-10-03)
+
+Closure documentation/evidence commit 1018f509ecb6ef7498ccc65fbf8f31e5113bc5ed passed all four scheduled workflows: controls 37154577398, desktop builds 37154577348, fusion-isotope 37154577376, fns-iron 37154577408. P105-PASS remains derived from the retained six-workflow implementation snapshot. No prior gate, verdict or numerical evidence changed.
+
+## Entry 85 — P106 G0 control construction Amendment A (2026-10-03)
+
+First G0 execution stopped with StopIteration before sealing or any CLI evidence: `frac` forwarded default applicability `all`, excluding the general C-14 selector. Preserve `results/p106_g0_attempt_1.log`. Amendment `a9b8568fb5e7fde35b8325b525646fbc441e6989c4292fa6ef8735ce84c17f97` changes that default to `general` and constructs exact-boundary activities against their full denominators, with the exact Tc-99 regression value 5,550 Bq. All inherited vector bytes, 20 mathematical cases, class labels, thresholds and production arithmetic stay fixed. One repair round is now consumed; a further failed gate must close FAIL under a successor protocol.
+
+## Entry 86 — P106 closed FAIL; P107 seal-replay successor opened (2026-10-03)
+
+Amended P106 G0 sealed successfully, but mandatory read-only replay failed before any CLI case: independently derived expected label tuples differed from their persisted JSON array representation. Retain `results/p106_g0_replay_failure.log`, its parsed report, the original successful seal and first failed attempt. `results/p106_verdict.json` derives P106-FAIL; G1/G2 were not executed. The implementation workspace tests passed 442 tests with two ignored, without establishing a classification-control pass. Frozen P107 protocol `8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b` corrects only the stable seal representation and adds a persisted-roundtrip regression. All P106 product semantics, production Rust, 146 component / 150 target / 300 endpoint population, source/vector bytes and thresholds remain unchanged. P105 remains terminal PASS.
+
+## Entry 87 — P107 G3 ordering-lint Amendment A (2026-10-03)
+
+Workspace Clippy on Rust 1.98 rejected a production function after the CLI bounds test module. Retain `results/p107_g3_clippy_attempt_1.log`. Amendment `cfb4e6e723489d0041192cf257a05fd7a3cda16dbe7208e31a85a350ea2cd09e` was registered before moving the unchanged function ahead of the test module. No scientific or schema behavior changed and no P107 CLI class-control outcome had yet been observed. Final source quality/release build and G0 seal must bind the repair; one repair round is consumed.
+
+## Entry 88 — P107 local activity-box gates passed; CI pending (2026-10-03)
+
+G0 independently seals the unchanged 146-component / 150-target / 300-endpoint population and preserved P106/P105 lineage. G1 compares all endpoint arithmetic, envelopes, metadata/coverage and H-3 merges, rejects all 20 planted mutations and 27 invalid-input controls, and repeats output byte-identically. G2 and both G1/full read-only replay pass. Final workspace fmt/check/Clippy/test pass (442 tests, two ignored, including 13 bounds regressions); two population, three seal write/replay/mutation and four bounded child lifecycle regressions pass, as do handbook build/link/Chromium checks. Twelve local quality gates and exact source hashes are retained. `results/p107_verdict.json` derives P107-LOCAL-PASS; CI remains pending. Green CI must bind the exact recorded implementation commit and current G0/G3 artifacts before final PASS. The claim is a conservative class superset for caller-declared activity boxes, not uncertainty propagation or disposal acceptance.
