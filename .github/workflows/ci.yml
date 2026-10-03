@@ -66,10 +66,15 @@ jobs:
       - name: Build workspace
         run: cargo build --release --workspace
 
-      - name: P103 waste classification, aggregation, and budget controls
+      - name: P103 source-seal integrity (historical)
+        run: |
+          python controls/check_p103.py --g0-only --no-write
+          python controls/check_p103_failure.py
+
+      - name: P104 waste classification, aggregation, and budget controls
         env:
           ACTINV_BIN: target/release/actinv
-        run: python controls/check_p103.py --no-write
+        run: python controls/check_p104.py --no-write
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

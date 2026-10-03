@@ -1,0 +1,29 @@
+{
+  "checks": {
+    "inherited_p103_source_seal": {
+      "pass": true,
+      "read_only": true,
+      "result_path": "results/g0_p103_seals.json"
+    },
+    "protocol_registered": {
+      "actual_sha256": "75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b",
+      "expected_sha256": "75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b",
+      "pass": true,
+      "registered": true
+    }
+  },
+  "control_hashes": {
+    "budget_helper_sha256": "c4dd73874dee6eaa47682850e59f12aa6dc78f1a16d7dd9fd78000498af2e0b9",
+    "checker_sha256": "f6da7987e1c8627784fb44f6cc9d2b67300262238a5c835a434cd20a9a221443"
+  },
+  "inherited_protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+  "inherited_source_seal_sha256": "31a87b130be75f290569d0bea083ec4e687e498a0627eeed25cf8c0209e38367",
+  "inherited_vector_fixture_sha256": "bfefb655b2df52da7ccb7a93cfd7c22bdc18762917e900e828ebd97d58b2bb42",
+  "inherited_vector_seal_sha256": "a3a846da215940f66bb5f428a0aa4931b9a26250ea14a12d0bc5c5369cfd9293",
+  "phase": "P104",
+  "protocol": "ACTINV-P104",
+  "protocol_sha256": "75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b",
+  "schema": "actinv-p104-successor-g0-1",
+  "sealed": true,
+  "verdict": "P104-G0-SEALED"
+}

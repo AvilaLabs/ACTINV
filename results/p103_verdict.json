@@ -1,0 +1,36 @@
+{
+  "basis": "G1 failed after the recorded Amendment A repair round; retained control-premise failures require an explicit successor.",
+  "failed_controls": {
+    "declared_h3_relocation": {
+      "errors": [
+        "t2-H-3-col1-above: unexpected external tritium activity"
+      ],
+      "external_h3_activity_bq": 1480000.000148,
+      "pass": false,
+      "source_vector": "t2-H-3-col1-above",
+      "zero_activation_calculated_only_class": "A"
+    },
+    "invalid_inputs": {
+      "unequal_cell_timestamps": {
+        "output_published": true,
+        "pass": false,
+        "returncode": 0,
+        "stderr_tail": ""
+      }
+    }
+  },
+  "g1_result_sha256": "76be1f6961a78f179b4c3e97fe5a282e3c120f41eca75329c23874b598347f7a",
+  "gates": {
+    "G0": "PASS under Amendment A",
+    "G1": "FAIL",
+    "G2": "NOT EXECUTED",
+    "G3": "NOT COMPLETE"
+  },
+  "phase": "P103",
+  "production_rust_changed_by_successor_premise_corrections": false,
+  "schema": "actinv-phase-verdict-1",
+  "source_vector_count": 126,
+  "source_vectors_passed": 126,
+  "successor": "P104",
+  "verdict": "P103-FAIL"
+}
