@@ -1,0 +1,5532 @@
+{
+  "conversions": {
+    "Ci_per_m3_to_Bq_per_g": "value * 37000 * volume_cm3 / mass_g",
+    "nCi_per_g_to_Bq_per_g": "value * 37"
+  },
+  "description": "Frozen synthetic vectors derived from the checked-in 10 CFR 61.55 tables; no nuclear-data library inputs.",
+  "geometry": {
+    "displaced_volume_cm3": 1.0,
+    "mass_g": 1.0
+  },
+  "schema": "actinv-p103-classification-vectors-1",
+  "vectors": [
+    {
+      "activity_Bq_per_g": {
+        "C14": 29599.999997040002
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14": 0.09999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 29600.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14": 0.1
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 29600.00000296
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14": 0.10000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 295999.9999704
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 296000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 296000.0000296
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 295999.9999704
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 0.09999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14_activated_metal-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 296000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 0.1
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14_activated_metal-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 296000.0000296
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 0.10000000000999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000000999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14_activated_metal-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 2959999.999704
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14_activated_metal-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 2960000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14_activated_metal-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 2960000.000296
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-C-14_activated_metal-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni59": 813999.9999186
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Ni-59_activated_metal": 0.09999999998999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999998999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Ni-59_activated_metal-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni59": {
+          "alpha_emitting": false,
+          "half_life_s": 2400000000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni59": 814000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Ni-59_activated_metal": 0.1
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Ni-59_activated_metal-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni59": {
+          "alpha_emitting": false,
+          "half_life_s": 2400000000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni59": 814000.0000814
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Ni-59_activated_metal": 0.10000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Ni-59_activated_metal-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni59": {
+          "alpha_emitting": false,
+          "half_life_s": 2400000000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni59": 8139999.999186
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Ni-59_activated_metal": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Ni-59_activated_metal-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni59": {
+          "alpha_emitting": false,
+          "half_life_s": 2400000000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni59": 8140000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Ni-59_activated_metal": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Ni-59_activated_metal-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni59": {
+          "alpha_emitting": false,
+          "half_life_s": 2400000000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni59": 8140000.000814
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Ni-59_activated_metal": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Ni-59_activated_metal-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni59": {
+          "alpha_emitting": false,
+          "half_life_s": 2400000000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Nb94": 739.9999999260001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Nb-94_activated_metal": 0.09999999999000002
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Nb-94_activated_metal-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Nb94": {
+          "alpha_emitting": false,
+          "half_life_s": 640000000000.0,
+          "z": 41
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Nb94": 740.0000000000001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Nb-94_activated_metal": 0.10000000000000002
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000000000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Nb-94_activated_metal-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Nb94": {
+          "alpha_emitting": false,
+          "half_life_s": 640000000000.0,
+          "z": 41
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Nb94": 740.000000074
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Nb-94_activated_metal": 0.10000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Nb-94_activated_metal-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Nb94": {
+          "alpha_emitting": false,
+          "half_life_s": 640000000000.0,
+          "z": 41
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Nb94": 7399.999999260001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Nb-94_activated_metal": 0.9999999999000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Nb-94_activated_metal-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Nb94": {
+          "alpha_emitting": false,
+          "half_life_s": 640000000000.0,
+          "z": 41
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Nb94": 7400.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Nb-94_activated_metal": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Nb-94_activated_metal-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Nb94": {
+          "alpha_emitting": false,
+          "half_life_s": 640000000000.0,
+          "z": 41
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Nb94": 7400.00000074
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Nb-94_activated_metal": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Nb-94_activated_metal-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Nb94": {
+          "alpha_emitting": false,
+          "half_life_s": 640000000000.0,
+          "z": 41
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Tc99": 11099.999998890002
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 0.09999999999000002
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Tc-99-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Tc99": 11100.000000000002
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 0.10000000000000002
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000000000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Tc-99-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Tc99": 11100.000001110002
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 0.10000000001000002
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Tc-99-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Tc99": 110999.9999889
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Tc-99-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Tc99": 111000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Tc-99-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Tc99": 111000.0000111
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Tc-99-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 295.99999997040004
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.09999999999000002
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-I-129-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 296.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.1
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-I-129-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 296.0000000296
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.10000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-I-129-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 2959.999999704
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-I-129-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 2960.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-I-129-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 2960.000000296
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-I-129-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 369.999999963
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 0.09999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-alpha_transuranic_gt5y-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 370.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 0.1
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-alpha_transuranic_gt5y-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 370.000000037
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 0.10000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-alpha_transuranic_gt5y-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 3699.99999963
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-alpha_transuranic_gt5y-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 3700.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-alpha_transuranic_gt5y-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 3700.00000037
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-alpha_transuranic_gt5y-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 12949.999998705001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 0.09999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Pu-241-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 12950.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 0.1
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Pu-241-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 12950.000001295
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 0.10000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Pu-241-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 129499.99998705
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 0.9999999999
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Pu-241-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 129500.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Pu-241-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 129500.00001295
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 1.0000000001
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Pu-241-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 73999.9999926
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 0.09999999999,
+          "T2:half_life_lt5y:col1": 0.002857142856857143
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.09999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.002857142856857143,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Cm-242-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 74000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 0.1,
+          "T2:half_life_lt5y:col1": 0.002857142857142857
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.002857142857142857,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Cm-242-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 74000.00000740001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 0.10000000001000002,
+          "T2:half_life_lt5y:col1": 0.0028571428574285717
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.10000000001000002
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0028571428574285717,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Cm-242-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 739999.999926
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 0.9999999999,
+          "T2:half_life_lt5y:col1": 0.02857142856857143
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.02857142856857143,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Cm-242-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 740000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 1.0,
+          "T2:half_life_lt5y:col1": 0.02857142857142857
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.02857142857142857,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Cm-242-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 740000.000074
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 1.0000000001,
+          "T2:half_life_lt5y:col1": 0.028571428574285712
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.028571428574285712,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-Cm-242-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Xe135": 25899999.99741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:half_life_lt5y:col1": 0.9999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-half_life_lt5y-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Xe135": {
+          "alpha_emitting": false,
+          "half_life_s": 33000.0,
+          "z": 54
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Xe135": 25900000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:half_life_lt5y:col1": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-half_life_lt5y-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Xe135": {
+          "alpha_emitting": false,
+          "half_life_s": 33000.0,
+          "z": 54
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Xe135": 25900000.00259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:half_life_lt5y:col1": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-half_life_lt5y-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Xe135": {
+          "alpha_emitting": false,
+          "half_life_s": 33000.0,
+          "z": 54
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "H3": 1479999.999852
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:H-3:col1": 0.9999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-H-3-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "H3": {
+          "alpha_emitting": false,
+          "half_life_s": 390000000.0,
+          "z": 1
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "H3": 1480000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:H-3:col1": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-H-3-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "H3": {
+          "alpha_emitting": false,
+          "half_life_s": 390000000.0,
+          "z": 1
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "H3": 1480000.000148
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:H-3:col1": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-H-3-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "H3": {
+          "alpha_emitting": false,
+          "half_life_s": 390000000.0,
+          "z": 1
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Co60": 25899999.99741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Co-60:col1": 0.9999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Co-60-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Co60": {
+          "alpha_emitting": false,
+          "half_life_s": 166000000.0,
+          "z": 27
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Co60": 25900000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Co-60:col1": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Co-60-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Co60": {
+          "alpha_emitting": false,
+          "half_life_s": 166000000.0,
+          "z": 27
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Co60": 25900000.00259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Co-60:col1": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Co-60-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Co60": {
+          "alpha_emitting": false,
+          "half_life_s": 166000000.0,
+          "z": 27
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 129499.99998705
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 0.9999999999,
+          "T2:Ni-63:col2": 0.049999999995,
+          "T2:Ni-63:col3": 0.0049999999995
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.049999999995,
+            "3": 0.0049999999995
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 129500.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 1.0,
+          "T2:Ni-63:col2": 0.05,
+          "T2:Ni-63:col3": 0.005
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.05,
+            "3": 0.005
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 129500.00001295
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 1.0000000001,
+          "T2:Ni-63:col2": 0.050000000004999996,
+          "T2:Ni-63:col3": 0.0050000000004999995
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.050000000004999996,
+            "3": 0.0050000000004999995
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 2589999.999741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 19.999999998,
+          "T2:Ni-63:col2": 0.9999999999000001,
+          "T2:Ni-63:col3": 0.09999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 19.999999998,
+            "2": 0.9999999999000001,
+            "3": 0.09999999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col2-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 2590000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 20.0,
+          "T2:Ni-63:col2": 1.0,
+          "T2:Ni-63:col3": 0.1
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 20.0,
+            "2": 1.0,
+            "3": 0.1
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col2-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 2590000.000259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 20.000000002,
+          "T2:Ni-63:col2": 1.0000000001,
+          "T2:Ni-63:col3": 0.10000000000999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 20.000000002,
+            "2": 1.0000000001,
+            "3": 0.10000000000999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col2-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 25899999.99741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 199.99999997999998,
+          "T2:Ni-63:col2": 9.999999999,
+          "T2:Ni-63:col3": 0.9999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 199.99999997999998,
+            "2": 9.999999999,
+            "3": 0.9999999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col3-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 25900000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 200.0,
+          "T2:Ni-63:col2": 10.0,
+          "T2:Ni-63:col3": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 200.0,
+            "2": 10.0,
+            "3": 1.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col3-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 25900000.00259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63:col1": 200.00000002000002,
+          "T2:Ni-63:col2": 10.000000001,
+          "T2:Ni-63:col3": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 200.00000002000002,
+            "2": 10.000000001,
+            "3": 1.0000000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63-col3-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 1294999.9998705
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 0.9999999999000001,
+          "T2:Ni-63_activated_metal:col2": 0.049999999995,
+          "T2:Ni-63_activated_metal:col3": 0.0049999999995
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 0.9999999999000001,
+            "2": 0.049999999995,
+            "3": 0.0049999999995
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 1295000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 1.0,
+          "T2:Ni-63_activated_metal:col2": 0.05,
+          "T2:Ni-63_activated_metal:col3": 0.005
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.05,
+            "3": 0.005
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 1295000.0001295
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 1.0000000001,
+          "T2:Ni-63_activated_metal:col2": 0.050000000004999996,
+          "T2:Ni-63_activated_metal:col3": 0.0050000000004999995
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.050000000004999996,
+            "3": 0.0050000000004999995
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 25899999.99741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 19.999999998,
+          "T2:Ni-63_activated_metal:col2": 0.9999999999,
+          "T2:Ni-63_activated_metal:col3": 0.09999999998999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 19.999999998,
+            "2": 0.9999999999,
+            "3": 0.09999999998999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col2-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 25900000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 20.0,
+          "T2:Ni-63_activated_metal:col2": 1.0,
+          "T2:Ni-63_activated_metal:col3": 0.1
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 20.0,
+            "2": 1.0,
+            "3": 0.1
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col2-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 25900000.00259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 20.000000002,
+          "T2:Ni-63_activated_metal:col2": 1.0000000001,
+          "T2:Ni-63_activated_metal:col3": 0.10000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 20.000000002,
+            "2": 1.0000000001,
+            "3": 0.10000000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col2-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 258999999.9741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 199.99999997999998,
+          "T2:Ni-63_activated_metal:col2": 9.999999999,
+          "T2:Ni-63_activated_metal:col3": 0.9999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 199.99999997999998,
+            "2": 9.999999999,
+            "3": 0.9999999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col3-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 259000000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 200.0,
+          "T2:Ni-63_activated_metal:col2": 10.0,
+          "T2:Ni-63_activated_metal:col3": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 200.0,
+            "2": 10.0,
+            "3": 1.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col3-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 259000000.0259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 200.00000002000002,
+          "T2:Ni-63_activated_metal:col2": 10.000000001,
+          "T2:Ni-63_activated_metal:col3": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 200.00000002000002,
+            "2": 10.000000001,
+            "3": 1.0000000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Ni-63_activated_metal-col3-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 1479.999999852
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 0.9999999999,
+          "T2:Sr-90:col2": 0.00026666666664,
+          "T2:Sr-90:col3": 5.714285713714286e-06
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.00026666666664,
+            "3": 5.714285713714286e-06
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 1480.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 1.0,
+          "T2:Sr-90:col2": 0.0002666666666666667,
+          "T2:Sr-90:col3": 5.7142857142857145e-06
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.0002666666666666667,
+            "3": 5.7142857142857145e-06
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 1480.000000148
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 1.0000000001,
+          "T2:Sr-90:col2": 0.00026666666669333334,
+          "T2:Sr-90:col3": 5.714285714857143e-06
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.00026666666669333334,
+            "3": 5.714285714857143e-06
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 5549999.999445
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 3749.999999625,
+          "T2:Sr-90:col2": 0.9999999999,
+          "T2:Sr-90:col3": 0.02142857142642857
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 3749.999999625,
+            "2": 0.9999999999,
+            "3": 0.02142857142642857
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col2-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 5550000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 3750.0,
+          "T2:Sr-90:col2": 1.0,
+          "T2:Sr-90:col3": 0.02142857142857143
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 3750.0,
+            "2": 1.0,
+            "3": 0.02142857142857143
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col2-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 5550000.000555
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 3750.000000375,
+          "T2:Sr-90:col2": 1.0000000001,
+          "T2:Sr-90:col3": 0.021428571430714288
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 3750.000000375,
+            "2": 1.0000000001,
+            "3": 0.021428571430714288
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col2-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 258999999.9741
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 174999.99998249998,
+          "T2:Sr-90:col2": 46.666666662,
+          "T2:Sr-90:col3": 0.9999999999
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 174999.99998249998,
+            "2": 46.666666662,
+            "3": 0.9999999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col3-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 259000000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 175000.0,
+          "T2:Sr-90:col2": 46.666666666666664,
+          "T2:Sr-90:col3": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 175000.0,
+            "2": 46.666666666666664,
+            "3": 1.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col3-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 259000000.0259
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Sr-90:col1": 175000.00001750002,
+          "T2:Sr-90:col2": 46.66666667133333,
+          "T2:Sr-90:col3": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 175000.00001750002,
+            "2": 46.66666667133333,
+            "3": 1.0000000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Sr-90-col3-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 36999.9999963
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 0.9999999999,
+          "T2:Cs-137:col2": 0.022727272725,
+          "T2:Cs-137:col3": 0.00021739130432608697
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.022727272725,
+            "3": 0.00021739130432608697
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 37000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 1.0,
+          "T2:Cs-137:col2": 0.022727272727272728,
+          "T2:Cs-137:col3": 0.0002173913043478261
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.022727272727272728,
+            "3": 0.0002173913043478261
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 37000.0000037
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 1.0000000001,
+          "T2:Cs-137:col2": 0.022727272729545455,
+          "T2:Cs-137:col3": 0.00021739130436956522
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.022727272729545455,
+            "3": 0.00021739130436956522
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 1627999.9998372
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 43.9999999956,
+          "T2:Cs-137:col2": 0.9999999999,
+          "T2:Cs-137:col3": 0.009565217390347826
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 43.9999999956,
+            "2": 0.9999999999,
+            "3": 0.009565217390347826
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col2-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 1628000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 44.0,
+          "T2:Cs-137:col2": 1.0,
+          "T2:Cs-137:col3": 0.009565217391304347
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 44.0,
+            "2": 1.0,
+            "3": 0.009565217391304347
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col2-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 1628000.0001628
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 44.0000000044,
+          "T2:Cs-137:col2": 1.0000000001,
+          "T2:Cs-137:col3": 0.00956521739226087
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 44.0000000044,
+            "2": 1.0000000001,
+            "3": 0.00956521739226087
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col2-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 170199999.98298
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 4599.99999954,
+          "T2:Cs-137:col2": 104.545454535,
+          "T2:Cs-137:col3": 0.9999999999000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 4599.99999954,
+            "2": 104.545454535,
+            "3": 0.9999999999000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col3-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 170200000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 4600.0,
+          "T2:Cs-137:col2": 104.54545454545455,
+          "T2:Cs-137:col3": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 4600.0,
+            "2": 104.54545454545455,
+            "3": 1.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col3-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 170200000.01702
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 4600.00000046,
+          "T2:Cs-137:col2": 104.54545455590909,
+          "T2:Cs-137:col3": 1.0000000001
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 4600.00000046,
+            "2": 104.54545455590909,
+            "3": 1.0000000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-Cs-137-col3-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 147.9999999852,
+        "Tc99": 5549.999999445001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.049999999994999995,
+          "T1:Tc-99": 0.04999999999500001
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 0.09999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-mixture-0.1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 148.0,
+        "Tc99": 5550.000000000001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.05,
+          "T1:Tc-99": 0.05000000000000001
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-mixture-0.1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 148.0000000148,
+        "Tc99": 5550.000000555001
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.050000000005,
+          "T1:Tc-99": 0.05000000000500001
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 0.10000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-mixture-0.1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 1479.999999852,
+        "Tc99": 55499.99999445
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.49999999995,
+          "T1:Tc-99": 0.49999999995
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 0.9999999999
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-mixture-1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 1480.0,
+        "Tc99": 55500.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.5,
+          "T1:Tc-99": 0.5
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-mixture-1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "I129": 1480.000000148,
+        "Tc99": 55500.00000555
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:I-129": 0.50000000005,
+          "T1:Tc-99": 0.50000000005
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 1.0000000001
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t1-mixture-1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "I129": {
+          "alpha_emitting": false,
+          "half_life_s": 495000000000000.0,
+          "z": 53
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 27749.999997225,
+        "Sr90": 369.999999963
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 0.749999999925,
+          "T2:Cs-137:col2": 0.01704545454375,
+          "T2:Cs-137:col3": 0.0001630434782445652,
+          "T2:Sr-90:col1": 0.249999999975,
+          "T2:Sr-90:col2": 6.666666666e-05,
+          "T2:Sr-90:col3": 1.4285714284285714e-06
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 0.9999999999,
+            "2": 0.017112121210410003,
+            "3": 0.00016447204967299378
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col1-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 27750.0,
+        "Sr90": 370.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 0.75,
+          "T2:Cs-137:col2": 0.017045454545454544,
+          "T2:Cs-137:col3": 0.00016304347826086958,
+          "T2:Sr-90:col1": 0.25,
+          "T2:Sr-90:col2": 6.666666666666667e-05,
+          "T2:Sr-90:col3": 1.4285714285714286e-06
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.01711212121212121,
+            "3": 0.00016447204968944102
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col1-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 27750.000002775,
+        "Sr90": 370.000000037
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 0.750000000075,
+          "T2:Cs-137:col2": 0.01704545454715909,
+          "T2:Cs-137:col3": 0.00016304347827717392,
+          "T2:Sr-90:col1": 0.250000000025,
+          "T2:Sr-90:col2": 6.666666667333333e-05,
+          "T2:Sr-90:col3": 1.4285714287142858e-06
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 1.0000000001,
+            "2": 0.017112121213832425,
+            "3": 0.0001644720497058882
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col1-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 1220999.9998779,
+        "Sr90": 1387499.99986125
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 32.9999999967,
+          "T2:Cs-137:col2": 0.7499999999249999,
+          "T2:Cs-137:col3": 0.007173913042760869,
+          "T2:Sr-90:col1": 937.49999990625,
+          "T2:Sr-90:col2": 0.249999999975,
+          "T2:Sr-90:col3": 0.0053571428566071425
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 970.49999990295,
+            "2": 0.9999999998999999,
+            "3": 0.012531055899368012
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col2-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 1221000.0,
+        "Sr90": 1387500.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 33.0,
+          "T2:Cs-137:col2": 0.75,
+          "T2:Cs-137:col3": 0.007173913043478261,
+          "T2:Sr-90:col1": 937.5,
+          "T2:Sr-90:col2": 0.25,
+          "T2:Sr-90:col3": 0.005357142857142857
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 970.5,
+            "2": 1.0,
+            "3": 0.012531055900621119
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col2-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 1221000.0001221,
+        "Sr90": 1387500.00013875
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 33.0000000033,
+          "T2:Cs-137:col2": 0.7500000000750001,
+          "T2:Cs-137:col3": 0.007173913044195653,
+          "T2:Sr-90:col1": 937.50000009375,
+          "T2:Sr-90:col2": 0.250000000025,
+          "T2:Sr-90:col3": 0.005357142857678572
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 970.50000009705,
+            "2": 1.0000000001,
+            "3": 0.012531055901874224
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col2-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 127649999.987235,
+        "Sr90": 64749999.993525
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 3449.999999655,
+          "T2:Cs-137:col2": 78.40909090125,
+          "T2:Cs-137:col3": 0.749999999925,
+          "T2:Sr-90:col1": 43749.999995624996,
+          "T2:Sr-90:col2": 11.6666666655,
+          "T2:Sr-90:col3": 0.249999999975
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 47199.99999528,
+            "2": 90.07575756675,
+            "3": 0.9999999999
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col3-below",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 127650000.0,
+        "Sr90": 64750000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 3450.0,
+          "T2:Cs-137:col2": 78.4090909090909,
+          "T2:Cs-137:col3": 0.75,
+          "T2:Sr-90:col1": 43750.0,
+          "T2:Sr-90:col2": 11.666666666666666,
+          "T2:Sr-90:col3": 0.25
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 47200.0,
+            "2": 90.07575757575758,
+            "3": 1.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col3-equal",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cs137": 127650000.012765,
+        "Sr90": 64750000.006475
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Cs-137:col1": 3450.000000345,
+          "T2:Cs-137:col2": 78.40909091693182,
+          "T2:Cs-137:col3": 0.750000000075,
+          "T2:Sr-90:col1": 43750.000004375004,
+          "T2:Sr-90:col2": 11.666666667833333,
+          "T2:Sr-90:col3": 0.250000000025
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 2,
+            "2": 2,
+            "3": 2
+          },
+          "column_sums": {
+            "1": 47200.00000472,
+            "2": 90.07575758476514,
+            "3": 1.0000000001
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "t2-mixture-col3-above",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cs137": {
+          "alpha_emitting": false,
+          "half_life_s": 950000000.0,
+          "z": 55
+        },
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Xe135": 25900000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:half_life_lt5y:col1": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "aggregate-short-lived",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Xe135": {
+          "alpha_emitting": false,
+          "half_life_s": 33000.0,
+          "z": 54
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Am241": 3700.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:alpha_transuranic_gt5y": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "alpha-transuranic-aggregate",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Am241": {
+          "alpha_emitting": true,
+          "half_life_s": 13600000000.0,
+          "z": 95
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 129500.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "pu241-dedicated-precedence",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Cm242": 740000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Cm-242": 1.0,
+          "T2:half_life_lt5y:col1": 0.02857142857142857
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.02857142857142857,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "cm242-both-tables",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Cm242": {
+          "alpha_emitting": true,
+          "half_life_s": 14000000.0,
+          "z": 96
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "H3": 1480000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:H-3:col1": 1.0
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "h3-named-table2-precedence",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "H3": {
+          "alpha_emitting": false,
+          "half_life_s": 390000000.0,
+          "z": 1
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "C14": 2960000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "C",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:C-14_activated_metal": 1.0
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "activated-metal-c14-substitution",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "C14": {
+          "alpha_emitting": false,
+          "half_life_s": 180000000000.0,
+          "z": 6
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Ni63": 1295000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {
+          "T2:Ni-63_activated_metal:col1": 1.0,
+          "T2:Ni-63_activated_metal:col2": 0.05,
+          "T2:Ni-63_activated_metal:col3": 0.005
+        },
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 1.0,
+            "2": 0.05,
+            "3": 0.005
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "activated-metal-ni63-substitution",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Ni63": {
+          "alpha_emitting": false,
+          "half_life_s": 3150000000.0,
+          "z": 28
+        }
+      },
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Pu241": 64750.0,
+        "Tc99": 55500.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "above_class_c",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Pu-241": 0.5,
+          "T1:Tc-99": 0.5
+        },
+        "table1": {
+          "contributors": 2,
+          "sum_fractions": 1.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "mixed-unit-t1",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Pu241": {
+          "alpha_emitting": true,
+          "half_life_s": 450000000.0,
+          "z": 94
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Be10": 0.00037
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "A",
+        "coverage": "complete",
+        "row_fractions": {},
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "no-covered-rows",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Be10": {
+          "alpha_emitting": false,
+          "half_life_s": 500000000000000.0,
+          "z": 4
+        }
+      },
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Xe135": 370000.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "calculated_only_class": "A",
+        "class": "unknown",
+        "coverage": "incomplete",
+        "row_fractions": {},
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        },
+        "unknown_nuclides": [
+          "Xe135"
+        ]
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "unknown-short-lived-metadata",
+      "mass_g": 1.0,
+      "nuclide_properties": {},
+      "waste_type": "general"
+    },
+    {
+      "activity_Bq_per_g": {},
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "calculated_only_class": "A",
+        "class": "unknown",
+        "coverage": "incomplete",
+        "row_fractions": {},
+        "table1": {
+          "contributors": 0,
+          "sum_fractions": 0.0
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 0,
+            "2": 0,
+            "3": 0
+          },
+          "column_sums": {
+            "1": 0.0,
+            "2": 0.0,
+            "3": 0.0
+          }
+        },
+        "unknown_nuclides": [
+          "H3"
+        ]
+      },
+      "external_tritium": {
+        "status": "required"
+      },
+      "id": "missing-required-external-h3",
+      "mass_g": 1.0,
+      "nuclide_properties": {},
+      "waste_type": "activated_metal"
+    },
+    {
+      "activity_Bq_per_g": {
+        "Sr90": 2960.0,
+        "Tc99": 11100.0
+      },
+      "displaced_volume_cm3": 1.0,
+      "expected": {
+        "class": "B",
+        "coverage": "complete",
+        "row_fractions": {
+          "T1:Tc-99": 0.1,
+          "T2:Sr-90:col1": 2.0,
+          "T2:Sr-90:col2": 0.0005333333333333334,
+          "T2:Sr-90:col3": 1.1428571428571429e-05
+        },
+        "table1": {
+          "contributors": 1,
+          "sum_fractions": 0.1
+        },
+        "table2": {
+          "column_contributors": {
+            "1": 1,
+            "2": 1,
+            "3": 1
+          },
+          "column_sums": {
+            "1": 2.0,
+            "2": 0.0005333333333333334,
+            "3": 1.1428571428571429e-05
+          }
+        }
+      },
+      "external_tritium": {
+        "status": "not_applicable"
+      },
+      "id": "mixed-tables-table1-a-table2-b",
+      "mass_g": 1.0,
+      "nuclide_properties": {
+        "Sr90": {
+          "alpha_emitting": false,
+          "half_life_s": 910000000.0,
+          "z": 38
+        },
+        "Tc99": {
+          "alpha_emitting": false,
+          "half_life_s": 6700000000000.0,
+          "z": 43
+        }
+      },
+      "waste_type": "general"
+    }
+  ]
+}
