@@ -1051,7 +1051,14 @@ def main(no_write: bool = False) -> int:
         else:
             persisted_pass = persisted.get("sealed") is True and persisted.get("verdict") == "P103-G0-SEALED"
             same_inputs = persisted.get("input_sha256") == identities
-            same_result = persisted == result
+            # Amendment A: the initial G0 seal predates three extra descriptive
+            # metadata fields. All original evidence must remain byte-for-value
+            # identical, and the expanded source checks above must still pass.
+            comparable = copy.deepcopy(result)
+            for field in ("version", "ecfr_source_url", "source_as_of"):
+                if field not in persisted.get("checks", {}).get("pack_identity_and_units", {}):
+                    comparable["checks"]["pack_identity_and_units"].pop(field, None)
+            same_result = persisted == comparable
             result["checks"]["persisted_seal"] = {
                 "sealed": persisted.get("sealed"),
                 "verdict": persisted.get("verdict"),

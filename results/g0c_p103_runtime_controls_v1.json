@@ -1,0 +1,11 @@
+{
+  "basis": "Reviewed control code frozen before any production waste CLI invocation. G1 uses sealed source vectors and inventory-preserving structure transformations; G2 uses the exact artificial activation inputs declared by the protocol. No measured production output used to select acceptance expectations.",
+  "control_sha256": {
+    "controls/check_p103.py": "3b82731f249821db51070555f6262755c5703eb271fd7303b0b242ee53961823",
+    "controls/p103_budget_control.py": "5645b1b8872810878799f45d21b87c95727776e256f60c2f49f6d08a349fd1a8"
+  },
+  "phase": "P103",
+  "protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+  "revision": 1,
+  "schema": "actinv-p103-runtime-control-seal-1"
+}
