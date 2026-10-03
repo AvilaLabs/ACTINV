@@ -1512,6 +1512,7 @@ rule controls do not establish regulatory approval, waste-form compliance or sit
    showed 91–97 % of the cost in one kernel.*
 
 ## Changelog
+- 2026-10-03 — P104 closed FAIL: repaired G1 write passed, but required read-only replay inserted a diagnostic field before repeating equality and stopped before G2. P105 opens with unchanged scientific contract and correct replay ordering; retain both failed predecessors.
 - 2026-08-26 — roadmap written after P3b (v0.1 = P4–P6, v0.2 = P7–P8, v0.5 = P9–P10, v1.0 = P11–P12).
 - 2026-08-26 — standing rule 7 added (cost is designed, not discovered): minimum gate input, profile first, checkpoint.
   Phases P7–P12 are re-read under it — each now states its minimum gate input before its full deliverable.

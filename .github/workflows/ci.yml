@@ -70,13 +70,14 @@ jobs:
         run: |
           python controls/check_p103.py --g0-only --no-write
           python controls/check_p103_failure.py
+          python controls/check_p104_failure.py
 
-      - name: P104 waste classification, aggregation, and budget controls
+      - name: P105 waste classification, aggregation, and budget controls
         env:
           ACTINV_BIN: target/release/actinv
         run: |
-          python controls/test_p104_children.py
-          python controls/check_p104.py --no-write
+          python controls/test_p105_children.py
+          python controls/check_p105.py --no-write
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

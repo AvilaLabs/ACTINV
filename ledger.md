@@ -2405,3 +2405,7 @@ Owner prioritized the nominal waste extension. Frozen protocol `22bbaada0e757b0c
 ## Entry 79 — P103 closed FAIL; nominal waste successor P104 opened (2026-10-03)
 
 P103 source G0 passed. Amendment A records a persisted-output descriptive metadata comparison repair before production CLI execution. Subsequent G1 passed all 126 source vectors but failed two supplemental control premises: a relocated external-H3 inventory was checked against zero, and a timestamp rejection plant placed cells in separate components. The failed result and checker-derived P103-FAIL are retained; G2 was not executed. P104 inherits the same production contract, source pack and vectors, corrects these premises explicitly, and is frozen under protocol SHA 75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b. No prior failure verdict, numerical threshold or source population changes.
+
+## Entry 80 — P104 closed FAIL; control replay successor P105 opened (2026-10-03)
+
+P104 Amendment A records its one repair round. The repaired G1 write passed all 126 source vectors and supplemental gates; required read-only replay failed because the checker inserted a diagnostic field before repeating whole-result equality. G2 did not execute. Retained replay and checker-derived P104-FAIL remain immutable. P105 protocol f38b973532010f4a7e4dc644faaffe6c8c420e42aa2e27c898e029ecef035075 inherits all scientific inputs, thresholds, scope and production Rust, correcting only comparison ordering. No historical failure is rewritten.

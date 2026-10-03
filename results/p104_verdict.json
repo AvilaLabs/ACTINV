@@ -1,0 +1,18 @@
+{
+  "g1_result_sha256": "89b2872c000da0793380e7e1d5d5f5808d10eb463fee3844ed4b92f486aa1059",
+  "gates": {
+    "G0": "PASS",
+    "G1_read_only_replay": "FAIL",
+    "G1_write": "PASS",
+    "G2": "NOT EXECUTED",
+    "G3": "NOT COMPLETE"
+  },
+  "phase": "P104",
+  "reason": "Checker inserts a diagnostic field before repeating equality; required read-only replay fails before G2.",
+  "repair_rounds": 1,
+  "replay_attempt_sha256": "ee108440c8c96555334abd22cfd184cc74b39f858c4cd325c6e7407dce07ff5f",
+  "schema": "actinv-p104-verdict-1",
+  "source_vectors_passed": 126,
+  "successor": "P105",
+  "verdict": "P104-FAIL"
+}
