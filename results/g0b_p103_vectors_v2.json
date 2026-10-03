@@ -1,0 +1,12 @@
+{
+  "basis": "Source-derived synthetic categories frozen by P103 G0; exact vectors committed before any production CLI execution. No measured outcome used to choose them.",
+  "fixture_sha256": "c2d910f49140dd1415665a64a8d02b74ccda70f1df46ab3cb664bc2003c85c27",
+  "generator_sha256": "430a387ede46da21b02de37396a327bbade518233ccb380a97f3749ecad273aa",
+  "phase": "P103",
+  "previous_fixture_sha256": "02c814b054e84ec21e6d3032266a1b6b0d19bd485433b7f1305109a26067cb1a",
+  "protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+  "revision": 2,
+  "revision_reason": "Pre-runtime static review: construct exact source boundary activities with Decimal, converting once to f64, so an equality vector is not actually above its declared boundary. No implementation outcome read; no expected classes or gates changed.",
+  "schema": "actinv-p103-vector-seal-1",
+  "vector_count": 126
+}

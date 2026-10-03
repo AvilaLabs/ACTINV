@@ -89,6 +89,7 @@ def expected(case: dict) -> dict:
     row_fractions = {}
     t1_contributors = []
     t2_fraction_by_col = [[], [], []]
+    t2_names_by_col = [set(), set(), set()]
 
     def active(name: str) -> bool:
         return activity.get(name, 0.0) > 0.0
@@ -132,45 +133,53 @@ def expected(case: dict) -> dict:
                     for name in names
                 )
                 row_fractions[f"T2:{row_id}:col{index + 1}"] = contribution
-                t2_fraction_by_col[index].append((contribution, len(names)))
+                t2_fraction_by_col[index].append(contribution)
+                t2_names_by_col[index].update(names)
 
     t1_sum = math.fsum(row_fractions[key] for key in row_fractions if key.startswith("T1:"))
     t1_count = len(set(t1_contributors))
-    t2_sums = [math.fsum(item[0] for item in col) for col in t2_fraction_by_col]
-    t2_counts = [sum(item[1] for item in col) for col in t2_fraction_by_col]
+    t2_sums = [math.fsum(col) for col in t2_fraction_by_col]
+    t2_counts = [len(names) for names in t2_names_by_col]
 
-    def within(sum_fraction: float, contributors: int) -> bool:
-        return sum_fraction <= 1.0 if contributors <= 1 else sum_fraction < 1.0
-
-    if not t1_contributors and not any(t2_counts):
-        result_class = "A"
-    else:
-        t2_class = "A"
-        if any(t2_counts) and not within(t2_sums[0], t2_counts[0]):
-            t2_class = "B"
-            if t2_counts[1] and not within(t2_sums[1], t2_counts[1]):
-                t2_class = "C"
-                if t2_counts[2] and not within(t2_sums[2], t2_counts[2]):
-                    t2_class = "above_class_c"
-        if not t1_contributors:
-            result_class = t2_class
-        elif t1_count == 1:
-            result_class = "A" if t1_sum <= 0.1 else ("C" if t1_sum <= 1.0 else "above_class_c")
-        else:
-            result_class = "A" if t1_sum < 0.1 else ("C" if t1_sum < 1.0 else "above_class_c")
-        if result_class == "A":
-            result_class = t2_class
-        elif result_class == "C" and t2_class == "above_class_c":
-            result_class = "above_class_c"
+    t1_names_sorted = sorted(set(t1_contributors))
+    constraint_rows = []
+    for target, t2_column in (("A", 0), ("B", 1), ("C", 2)):
+        t1_threshold = 1.0 if target == "C" else 0.1
+        for table, column, source_sum, contributors in (
+            (1, None, t1_sum, t1_names_sorted),
+            (2, t2_column + 1, t2_sums[t2_column], sorted(t2_names_by_col[t2_column])),
+        ):
+            normalized_sum = source_sum / t1_threshold if table == 1 else source_sum
+            strict = len(contributors) > 1
+            constraint_rows.append({
+                "target_class": target,
+                "table": table,
+                "column": column,
+                "source_sum_fraction": source_sum,
+                "normalized_sum": normalized_sum,
+                "strict": strict,
+                "passes": normalized_sum < 1.0 if strict else normalized_sum <= 1.0,
+                "contributor_count": len(contributors),
+                "contributors": contributors,
+            })
+    result_class = next(
+        (target for target in ("A", "B", "C") if all(
+            constraint["passes"] for constraint in constraint_rows if constraint["target_class"] == target
+        )),
+        "above_class_c",
+    )
 
     return {
         "class": result_class,
+        "calculated_only_class": result_class,
         "coverage": "complete",
+        "unknown_nuclides": [],
         "table1": {"sum_fractions": t1_sum, "contributors": t1_count},
         "table2": {
             "column_sums": {str(i + 1): value for i, value in enumerate(t2_sums)},
             "column_contributors": {str(i + 1): value for i, value in enumerate(t2_counts)},
         },
+        "constraints": constraint_rows,
         "row_fractions": row_fractions,
     }
 
@@ -206,8 +215,7 @@ def add_vector(vectors: list[dict], vector_id: str, waste_type: str, concentrati
     if case["external_tritium"].get("status") == "required":
         case["expected"]["calculated_only_class"] = case["expected"]["class"]
         case["expected"]["class"] = "unknown"
-        case["expected"]["coverage"] = "incomplete"
-        case["expected"]["unknown_nuclides"] = ["H3"]
+        case["expected"]["external_unknown_reason"] = "required external H-3 not declared"
     vectors.append(case)
 
 
