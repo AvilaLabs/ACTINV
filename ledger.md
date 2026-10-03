@@ -2397,3 +2397,7 @@ pushed; not merged to master — that is a separate release decision.
 - **Merged to master;** P102-PASS stands. Evidence:
 `results/g0_p102_seals.json` through `results/check_g5_p102.json`, `results/g6_p102_regression.json`,
 `results/p102_alara/` on the branch worktree (`~/Documents/actinv-wt-p102`).
+
+## 78 — 2026-10-03 — P103 source/interpretation opening
+
+Owner prioritized the nominal waste extension. Frozen protocol `22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e` and `results/g0_p103_seals.json` independently bind current-rule values to official CFR source and a crate-local mirror. G0 passed before implementation. Specific rows replace categories within a table; Cm-242 also contributes to Table 2's short-lived aggregate across tables under the selected conservative interpretation. Single-nuclide boundaries inclusive, mixture boundaries strict. Declared single-component denominator under 61.55(a)(8); no full BTP/package, site acceptance or draft-screen qualification. User's existing tangent-restriction edits remain untouched in the original checkout.

@@ -1429,6 +1429,65 @@ Ordering rationale: C1 makes the unique claim true under external scrutiny; C2 m
 demo-able at interactive speed; C3 makes it a product instead of a solver. C4/C5 widen
 reach once the core claim holds. Each enters its own hashed protocol per standing rules.
 
+## Planned extension — component waste classification and material impurity budgets (2026-10-03)
+
+**Status: planned, owner-approved 2026-10-03; unopened and unhashed.** Medium-high priority after the current
+accuracy and uncertainty work closes, ahead of mixed-package handling and additional jurisdictions. This entry
+changes no open phase or frozen protocol. Assign a phase number and freeze the minimum inputs, interpretation
+choices and acceptance thresholds before implementation. The supporting design is
+[WASTE_CLASSIFICATION_EXTENSION.md](WASTE_CLASSIFICATION_EXTENSION.md); this roadmap owns the accepted scope.
+
+**Product outcome.** Extend ACTINV's activation decision tools with component-specific U.S. Part 61 classification
+and nominal impurity budgets for research and design screening. Given a component, prescribed spectrum and schedule,
+report its concentration-based Class A/B/C or above-Class-C result at selected cooling times, the table fractions
+and binding nuclides, and the impurity specifications that keep it within a selected class. The value is practical
+material selection and cooling-time decisions, using the existing solver and `budget` element solves. This is an
+application layer over inventories; it introduces no transport or intrusion-dose solver and makes no claim that
+classification or fusion element limits are new.
+
+### Initial phase — nominal classification and verified class budgets
+
+Dependencies: the fixed-flux composition-linearity controls (P75b), the verified `budget` command (P79/P79a;
+[BUDGET.md](BUDGET.md)), and closure of the in-flight accuracy/uncertainty work. CLI first, with one shared Rust
+inventory/rule evaluator for classification and class-budget verification.
+
+| Gate | Accepted scope | Acceptance condition |
+|---|---|---|
+| **G0 — current-rule pack** | Explicitly selected, versioned U.S. 10 CFR 61.55 pack and single-component concentration-averaging basis. Table values and source metadata are data; classification predicates are reviewed code. | Independent source checks cover every value, unit, aggregate nuclide category, activated-metal variant, table-combination rule, no-limit entry and exact boundary interpretation. Regulatory ambiguities are resolved and documented before the protocol is sealed. |
+| **G1 — `actinv waste`** | Nominal class and margins per component at selected cooling times; declared mass, displaced volume and waste type; external retained/fuel tritium combined with the calculated inventory without double counting. Mesh cells contribute total activity before division by component volume or mass. | The regulation's Sr-90/Cs-137 worked example and independent vectors for both-table mixtures, aggregate categories, metal variants, units and component aggregation agree exactly where arithmetic permits. Missing/overlapping cells and invalid mass/volume inputs fail visibly; missing required inventory inputs leave affected conclusions conditional or unknown. |
+| **G2 — class impurity budgets** | Class A/B/C impurity limits, specification margin factors, binding table/column/nuclides and tightest limits across selected times. Reuse per-element inventories under `budget`'s coupled, reach-pruned, fixed-rate configuration. | Every reported limit and joint margin is re-solved with the full material and all applicable class constraints checked to 1e-6. Boundary perturbations demonstrate the controlling constraint where physically feasible; infeasible, no-response and composition bounds are explicit. |
+| **G3 — integrated controls** | One small end-to-end component case plus independent arithmetic and planted input/coverage failures. | The checker rederives classification and budgets from emitted inventories; threshold-adjacent cases, mixed units and missing external tritium cannot produce an unsupported unconditional result. Required repository checks pass before closure. |
+
+The class-budget shortcut inherits `budget`'s exclusions: self-shielding, uncertainty, composition-dependent
+screening and schedule feed are refused. Nominal classification may consume inventories from other supported run
+configurations; that does not authorize linear composition budgets for those configurations. Multiple table
+constraints remain separate, and the binding constraint determines the permissible composition.
+
+The minimum gate inputs are source-derived and synthetic inventory fixtures plus one bounded component/impurity
+verification case, chosen before the protocol hash. Published Fetter, Cheng & Mann element limits may be used as
+context or a separately frozen physics comparison with matched assumptions; their derived disposal limits are not
+an exact oracle for current Part 61 classification.
+
+### Separately gated follow-ups
+
+1. **Classification across uncertainty and composition ranges.** Propagate uncertainty on the actual table sums
+   with correlations, or use explicitly conservative bounds. Define the joint confidence/bounding interpretation
+   and validate declared composition ranges; element-run standard deviations are not additive. Report the possible
+   classes and binding assumptions when a boundary is crossed. MF=33-only agreement does not establish total
+   uncertainty coverage; missing channels and inventory coverage remain explicit. Uncertainty-aware impurity budgets
+   require their own validated method.
+2. **Opt-in draft fusion intrusion screen.** Keep its result separate from current-rule classification and disposal
+   acceptance. Reconcile the March 2025 preliminary draft (ML24295A002) with the February 2026 draft identified in
+   91 FR 9476 (ML24092A377), recheck the recorded Cs-137 and table-numbering discrepancies, and freeze the selected
+   version and interpretation. Independently control all presence tests and threshold transitions; missing WAC
+   inputs leave the affected screen incomplete. Activity-share presence tests are composition-dependent, so limits
+   for this screen do not inherit the simple class-budget shortcut without a separate gate.
+
+Later scope: mixed packages and encapsulation under the BTP, measurement-supported scaling factors, additional
+jurisdictions, and workbench/`twin` integration after the CLI contract is established. Classification, intrusion
+screening and site acceptance are distinct outputs. The research-grade qualification boundary remains in force;
+rule controls do not establish regulatory approval, waste-form compliance or site acceptance.
+
 ## Standing rules (from P0–P3b, binding on every phase)
 
 1. Protocol hashed before evidence; verdict by checker; ledger append-only; manifest once at close; commit and push
@@ -2394,3 +2453,13 @@ hashed protocol per the standing rules; nothing below is a commitment until then
 
 Not scoped: a differentiable-solver rewrite, regulatory-positioning claims, and further
 facility-twin work without facility data.
+
+- 2026-10-03 — **Component waste classification and material impurity budgets added to the planned roadmap at
+  the owner's direction.** Medium-high priority after the current accuracy/uncertainty work closes. Initial scope
+  combines single-component nominal U.S. Part 61 classification with verified nominal Class A/B/C impurity budgets;
+  uncertainty/composition-range classification and the opt-in draft fusion intrusion screen have separate gates.
+  Mixed packages, scaling factors, additional jurisdictions and workbench/`twin` integration follow later. The
+  draft-guidance source version and D1/D2 must be reconciled before a screening pack is frozen. No phase opened,
+  protocol sealed, implementation started or existing qualification claim expanded by this entry.
+
+- 2026-10-03 — **P103 opened: nominal component waste classification and verified class budgets**, prioritized now at the owner's direction ahead of unrelated carried uncertainty conditions. Technical dependencies P75b coupled/reach and P79/P79a are complete. G0 independently checked all 16 regulatory rows/units/footnotes against official 2025 CFR XML and current eCFR, then sealed protocol `22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e`; source/pack/mirror identities are in `results/g0_p103_seals.json`. No production implementation was present at the seal. The dated open-item inventory is `docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md`; P18b is formally CLOSED FAIL despite the historical opening summary. No prior scientific verdict is changed. Full BTP package qualification and the draft intrusion screen remain separate follow-ups.

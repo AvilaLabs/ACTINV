@@ -308,3 +308,14 @@ priority — each needs its own protocol before any code changes.
   held-out u@68% = 0.306). The banded leg lands when the cov inputs are
   fetched/built → re-run corpus with `uncertainty` → re-emit
   `actinv-calibration-1` → compare coverage vs the sealed 0.360 baseline.
+
+- 2026-10-03 — **Proposed extension: `actinv waste` (U.S. Part 61 classification + fusion intrusion screen +
+  impurity limits per waste class).** Not scheduled. Classification rules alone are not novel (RADMAN, 1982); the
+  value is reuse of the `budget` composition linearity for class limits and band-aware classification. Design,
+  sources and two discrepancies found in draft NUREG-1556 Vol. 22 (Cs-137 Class C 460 vs §61.55's 4,600; table
+  numbering) in `WASTE_CLASSIFICATION_EXTENSION.md`.
+- 2026-10-03 — **`actinv waste` promoted to the planned roadmap at the owner's direction.** See
+  [ROADMAP.md — planned component waste classification extension](ROADMAP.md#planned-extension--component-waste-classification-and-material-impurity-budgets-2026-10-03).
+  The initial phase covers nominal single-component U.S. Part 61 classification and verified class impurity
+  budgets. Uncertainty/composition-range classification and the opt-in draft fusion screen are separately gated;
+  mixed packages, scaling factors and additional jurisdictions remain later scope. No phase is open or hashed.

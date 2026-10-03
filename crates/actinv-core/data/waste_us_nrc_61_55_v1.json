@@ -1,0 +1,187 @@
+{
+  "schema": "actinv-waste-rules-1",
+  "id": "us-nrc-10cfr61.55-v1",
+  "version": 1,
+  "source_url": "https://www.ecfr.gov/current/title-10/chapter-I/part-61/subpart-D/section-61.55",
+  "source_as_of": "2026-10-01",
+  "annual_source_url": "https://www.govinfo.gov/content/pkg/CFR-2025-title10-vol2/xml/CFR-2025-title10-vol2-sec61-55.xml",
+  "annual_source_sha256": "7c08a6cb64d21e082ecf62a94fc3ef0be42c64fb68443658eff393ddc0bc0864",
+  "ci_bq": 37000000000,
+  "year_s": 31557600,
+  "rows": [
+    {
+      "table": 1,
+      "id": "C-14",
+      "selector": "C-14",
+      "applicability": "general",
+      "unit": "Ci/m3",
+      "limits": [
+        8
+      ]
+    },
+    {
+      "table": 1,
+      "id": "C-14_activated_metal",
+      "selector": "C-14",
+      "applicability": "activated_metal",
+      "unit": "Ci/m3",
+      "limits": [
+        80
+      ]
+    },
+    {
+      "table": 1,
+      "id": "Ni-59_activated_metal",
+      "selector": "Ni-59",
+      "applicability": "activated_metal",
+      "unit": "Ci/m3",
+      "limits": [
+        220
+      ]
+    },
+    {
+      "table": 1,
+      "id": "Nb-94_activated_metal",
+      "selector": "Nb-94",
+      "applicability": "activated_metal",
+      "unit": "Ci/m3",
+      "limits": [
+        0.2
+      ]
+    },
+    {
+      "table": 1,
+      "id": "Tc-99",
+      "selector": "Tc-99",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        3
+      ]
+    },
+    {
+      "table": 1,
+      "id": "I-129",
+      "selector": "I-129",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        0.08
+      ]
+    },
+    {
+      "table": 1,
+      "id": "alpha_transuranic_gt5y",
+      "selector": "alpha_transuranic_gt5y",
+      "applicability": "all",
+      "unit": "nCi/g",
+      "limits": [
+        100
+      ]
+    },
+    {
+      "table": 1,
+      "id": "Pu-241",
+      "selector": "Pu-241",
+      "applicability": "all",
+      "unit": "nCi/g",
+      "limits": [
+        3500
+      ]
+    },
+    {
+      "table": 1,
+      "id": "Cm-242",
+      "selector": "Cm-242",
+      "applicability": "all",
+      "unit": "nCi/g",
+      "limits": [
+        20000
+      ]
+    },
+    {
+      "table": 2,
+      "id": "half_life_lt5y",
+      "selector": "half_life_lt5y",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        700,
+        null,
+        null
+      ]
+    },
+    {
+      "table": 2,
+      "id": "H-3",
+      "selector": "H-3",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        40,
+        null,
+        null
+      ]
+    },
+    {
+      "table": 2,
+      "id": "Co-60",
+      "selector": "Co-60",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        700,
+        null,
+        null
+      ]
+    },
+    {
+      "table": 2,
+      "id": "Ni-63",
+      "selector": "Ni-63",
+      "applicability": "general",
+      "unit": "Ci/m3",
+      "limits": [
+        3.5,
+        70,
+        700
+      ]
+    },
+    {
+      "table": 2,
+      "id": "Ni-63_activated_metal",
+      "selector": "Ni-63",
+      "applicability": "activated_metal",
+      "unit": "Ci/m3",
+      "limits": [
+        35,
+        700,
+        7000
+      ]
+    },
+    {
+      "table": 2,
+      "id": "Sr-90",
+      "selector": "Sr-90",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        0.04,
+        150,
+        7000
+      ]
+    },
+    {
+      "table": 2,
+      "id": "Cs-137",
+      "selector": "Cs-137",
+      "applicability": "all",
+      "unit": "Ci/m3",
+      "limits": [
+        1,
+        44,
+        4600
+      ]
+    }
+  ]
+}
