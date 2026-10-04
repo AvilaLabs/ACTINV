@@ -375,6 +375,15 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
 }
 
 pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String> {
+    run_doc_inner(text, output, true)
+}
+
+/// Evaluate a bounds document without writing or printing a report.
+pub(crate) fn evaluate_doc(text: &str) -> Result<Value, String> {
+    run_doc_inner(text, None, false)
+}
+
+fn run_doc_inner(text: &str, output: Option<&str>, emit_stdout: bool) -> Result<Value, String> {
     let spec: BoundsSpec = serde_json::from_str(text)
         .map_err(|error| format!("cannot parse waste bounds spec: {error}"))?;
     validate_spec(&spec)?;
@@ -488,7 +497,9 @@ pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String>
             "source_as_of": rules.source_as_of, "sha256": rules.sha256},
         "components": components_out,
     });
-    crate::waste::output_doc(&result, output)?;
+    if emit_stdout || output.is_some() {
+        crate::waste::output_doc(&result, output)?;
+    }
     Ok(result)
 }
 

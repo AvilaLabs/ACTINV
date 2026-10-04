@@ -1925,6 +1925,21 @@ fn build_flux_parameters(
 }
 
 impl PreparedRun {
+    /// Immutable activation-library index loaded and validated during preparation.
+    ///
+    /// Callers that need target-specific builder limitations should use this exact
+    /// index rather than reopening a potentially different file from disk.
+    pub fn activation_index(&self) -> &serde_json::Value {
+        &self.index
+    }
+
+    /// Effective decay records after primary/fallback merge and curated overrides.
+    ///
+    /// This map is the same data used to construct the prepared decay chain.
+    pub fn decay_nuclides(&self) -> &HashMap<(i32, i32), decay::Nuclide> {
+        &self.nuclides
+    }
+
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
         let mut profiler = RunProfiler::disabled();
         let physical = spec.physical_inputs()?;

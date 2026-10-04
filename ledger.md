@@ -2465,3 +2465,19 @@ G0 sealed and replayed before CLI execution. G1/G2 and complete read-only replay
 ## Entry 94 — P108 closed PASS with green implementation CI (2026-10-03)
 
 Implementation `78204834caeace66c050989c73259c1bf2f9969c` passed all six scheduled workflows: controls `37161964465`, desktop builds `37161964524`, handbook `37161964469`, browser workbench `37161964495`, fusion-isotope `37161964510` and fns-iron `37161964485`. The retained CI snapshot and implementation record bind the exact SHA to unchanged G0/G3 artifacts. The checker verifies all 95 recorded Rust blobs against that implementation tree and derives P108-PASS; terminal read-only replay matched. CI also passed the unchanged P15 baseline and P105/P107 scientific controls. Preserve P103/P104/P106 FAIL and P105/P107 PASS. Native activation basis generation/full-material witness verification, statistical uncertainty/budgets, draft intrusion screening and twin/workbench remain separate open scopes.
+
+## Entry 95 — P108 closure push CI verified (2026-10-03)
+
+Closure push `d675cf80dfd2574c41e0008c7880494151c1100e` passed all four scheduled workflows: controls `37163338322`, desktop builds `37163338319`, fusion-isotope `37163338325` and fns-iron `37163338341`. P108-PASS remains derived from its unchanged six-workflow implementation snapshot and source-bound G0/G3 artifacts.
+
+## Entry 96 — P109 native composition basis and verification opened (2026-10-03)
+
+Protocol `03aa601e2b1c85bbe4058763f11031e90f732b8adeac89af4b1bd40ee358d485` was registered before implementation or native CLI evidence. Luna read-only reviews checked the nine artificial requests / 18 targets / 36 endpoints, analytic capture-decay formulas, explicit target/row identities and class expectations. The new path uses one immutable prepared dataset per component, derived effective nuclide metadata, ledger+audit and reached activation-target coverage, then full native verification of all unique affine activity extrema. Arithmetic bounds do not bound numerical solver/model error. Caller/detected incomplete coverage keeps the regulatory envelope unknown. The P105 helper's omission of the opt-in audit is parked for a separate budget coverage scope; no historical verdict is changed. G0 must seal the controls and generated artificial artifacts before production native CLI cases.
+
+## Entry 97 — P109 mechanical repair frozen (2026-10-03)
+
+The first bounded formatting attempt exited 1: the coordinator suggested a let chain for a Rust 2021 crate, which the formatter cannot parse. Preserve `results/p109_format_failure.log` (SHA-256 `0a9ee2fb99edbbcd617c3db2763bf981948c4fc48d20f76f4c02052f12b00c10`). Amendment A `0778cb569a3ce347fc271a182477fe05b66955ffdc37571a271aba64dbb4bf3c` was registered before repair and consumes the single repair round. Only edition compatibility is repaired; frozen scientific scope and thresholds stay fixed. No G0 or native CLI evidence has executed. Another failed gate requires terminal FAIL and a successor.
+
+## Entry 98 — P109 closed FAIL before native solves (2026-10-03)
+
+G0 sealed/replayed, eleven Python regressions, all workspace gates (463 tests, zero failed, two ignored), historical/child regressions, handbook QA and P105/P107/P108 science replays passed. Native G1 failed all nine valid requests in preparation because the generated index filenames retain `.npz` before `_index.json`; the native reader replaces the NPZ suffix. No basis/witness solve completed and no native scientific comparison was obtained. All 43 sentinel refusals returned refusal, but do not qualify valid preparation. G0/G1/partial G3 and the first failed format log remain preserved; G2/read-only native replay was not executed. The checker derives P109-FAIL under the exhausted repair budget. Correct fixture naming and any subsequent demonstrated defects only in a separately frozen successor. No native qualification or GitHub CI pass is claimed for P109.

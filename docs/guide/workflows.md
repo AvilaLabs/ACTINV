@@ -57,3 +57,11 @@ does not generate responses or establish physical linearity. Separate nuclide
 projections produce a conservative class superset. See
 [component waste classes and impurity limits](waste.md) for geometry, inventory
 coverage, external-tritium declarations, and both range input schemas.
+
+`waste composition solve` generates those pure-element responses from one
+prepared native ACTINV run per component, checks every distinct projected
+extremum composition plus a canonical feasible reference against full native
+runs, and retains audit evidence. It verifies selected points and does not
+bound solver or nuclear-data error. The fixed-rate affine model remains
+qualified only within its declared domain; see the P109 section of the public
+[waste handbook](waste.md#generate-and-verify-a-native-composition-basis).

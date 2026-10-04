@@ -1523,6 +1523,16 @@ rule controls do not establish regulatory approval, waste-form compliance or sit
    showed 91–97 % of the cost in one kernel.*
 
 ## Changelog
+- 2026-10-03 — **P108 closed P108-PASS; P109 native composition scope opened.** P108's declared
+  affine composition-range layer passed all six workflows on implementation
+  `78204834caeace66c050989c73259c1bf2f9969c`; its closure push
+  `d675cf80dfd2574c41e0008c7880494151c1100e` also passed all four workflows. See
+  `results/p108_verdict.json` and its immutable CI/implementation records. P109 protocol
+  `03aa601e2b1c85bbe4058763f11031e90f732b8adeac89af4b1bd40ee358d485` is frozen before edits/evidence:
+  native pure-element basis generation, effective-data coverage and full extremum-witness
+  verification, with nine artificial requests / 18 targets / 36 endpoints. This qualifies the
+  generated affine model and selected witness checks; solver/model error, statistical uncertainty,
+  draft screening and waste twin/workbench remain separately scoped. Preserve all prior verdicts.
 - 2026-10-03 — **P107 closed P107-PASS** on implementation commit
   `27d5636ad5331a3dacd8130a6b5e3516fb661e9f`. G0/G1/G2 and local quality passed for 146 components, 150 targets,
   and 300 endpoints; 20 mutations and 27 refusal controls were rejected, repeat output was byte-identical, and the
@@ -2500,3 +2510,5 @@ facility-twin work without facility data.
 - 2026-10-03 — **P103 opened: nominal component waste classification and verified class budgets**, prioritized now at the owner's direction ahead of unrelated carried uncertainty conditions. Technical dependencies P75b coupled/reach and P79/P79a are complete. G0 independently checked all 16 regulatory rows/units/footnotes against official 2025 CFR XML and current eCFR, then sealed protocol `22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e`; source/pack/mirror identities are in `results/g0_p103_seals.json`. No production implementation was present at the seal. The dated open-item inventory is `docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md`; P18b is formally CLOSED FAIL despite the historical opening summary. No prior scientific verdict is changed. Full BTP package qualification and the draft intrusion screen remain separate follow-ups.
 
 - 2026-10-03 — **P103 closed FAIL; P104 nominal waste successor opened.** G1 passed all 126 public-rule vectors but two supplemental control-premise failures remained after Amendment A. The original failed result and verdict are retained in `results/g1_p103_classes.json` and `results/p103_verdict.json`. P104 corrects external-H3 relocation and within-component timestamp test premises explicitly; product scope, rules, vectors and numerical thresholds are unchanged. Protocol `75498fb685bdb4e91370c7f7af0c590c463b29f34e1e0681a25045f51436567b` is frozen before successor CLI evidence. No waste qualification or completion is claimed yet.
+
+- 2026-10-03 — **P109 closed P109-FAIL before native solves.** G0 sealed/replayed and workspace/handbook/historical controls passed, but native G1 preparation refused all nine requests because the generated index filename retained `.npz` before `_index.json`. No native science comparison completed. The earlier edition-compatibility repair had consumed the one repair round. Preserve G0, failed G1, partial G3, format failure and terminal verdict; correct the fixture under a separately frozen successor. P105/P107/P108 PASS stay unchanged.

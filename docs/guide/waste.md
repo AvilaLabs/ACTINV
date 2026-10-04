@@ -12,6 +12,7 @@ actinv waste component.json component-waste.json
 actinv waste budget class-budget.json class-budget-result.json
 actinv waste bounds activity-bounds.json activity-bounds-result.json
 actinv waste composition composition.json composition-result.json
+actinv waste composition solve native-composition.json native-composition-result.json
 ```
 
 This is a concentration calculation for research and design screening. It does
@@ -98,6 +99,86 @@ multipliers, plus the complete flat P107 endpoint, row, constraint, coverage,
 binding and class-envelope fields. External H-3 is passed unchanged to the P107
 evaluator and added once. Invalid input is fully checked before the output file
 is written.
+
+## Generate and verify a native composition basis
+
+The native composition path is experimental and has not passed its scientific
+control suite.
+
+`actinv waste composition solve` generates pure-element responses by running
+ACTINV, projects them over a bounded natural-element composition whose
+coordinates sum to exactly 100 wt%, then runs every distinct projection witness
+and a canonical feasible reference. This adds native basis generation and
+selected-point verification to the caller-declared `composition` workflow. It
+does not prove physical completeness, bound CRAM or solver error, establish
+nuclear-data accuracy, or determine disposal acceptance. Selected witness
+agreement does not prove that every solver value lies within the arithmetic
+projection box.
+
+The `actinv-waste-composition-solve-spec-1` schema uses the bundled Part 61
+rule pack. Each component supplies an `actinv-spec-1` `base_spec` (embedded
+object or file path), component mass and exactly one geometry denominator,
+waste type, external-tritium declaration, `composition_wt_percent_bounds`
+coordinates, selected one-based result steps, inventory coverage declaration
+and reasons, plus model source and assumptions. ACTINV replaces the base
+material composition for each pure-element run and fixes the requested
+component mass. The command enforces the P75b-qualified natural-element set
+`Al, B, C, Ca, Co, Cr, Cu, Eu, Fe, H, K, Mg, Mn, Mo, N, Na, Nb, Ni, O, P, S,
+Si, Ta, Ti, V, W` and supported fixed-rate neutron features. It refuses unsupported nonlinear
+options and duplicate JSON keys. A request may contain at most four components,
+eight elements and four target steps per component, 32 pure-element runs, and
+64 distinct full witness compositions. The wrapper and each path-based base
+spec are limited to 8 MiB; a final result is limited to 32 MiB. Unsupported
+features include non-neutron projectiles, feed/removal/per-step spectra,
+screening, uncertainty, shielding and radiological/damage extensions, scale
+overrides, gas output, non-default photon settings, and CRAM orders other than
+16.
+
+The element set comes from P75b's tested mixtures. Its superposition results
+apply to the tested neutron spectra and schedules; passing these witness checks
+does not extend that physical qualification to new conditions.
+
+For a path `base_spec`, that path resolves relative to the wrapper JSON file.
+Paths inside the base spec, including nuclear-data references, retain ordinary
+ACTINV current-working-directory and catalog resolution. A `PreparedRun` is
+reused for the basis and witness runs of that component. External H-3 remains
+a separate whole-component Bq interval and is added once to the waste
+evaluator; the command infers no permeation model.
+
+The result preserves the P108 projections and adds solver certificates and
+audit evidence for each pure-element basis and verified witness. Activity
+responses use Bq/g, whole-component class inputs use Bq, composition weights
+use wt%, and atom inventories use atoms/g. Coverage defects downgrade selected
+targets to unknown while retaining known-subset calculations. The exact
+generated P108 document is embedded for reuse. These deterministic calculations
+do not claim probability or propagated uncertainty.
+
+```json
+{
+  "schema": "actinv-waste-composition-solve-spec-1",
+  "rules": "us-nrc-10cfr61.55-v1",
+  "components": [{
+    "id": "declared-alloy",
+    "base_spec": "activation-base.json",
+    "mass_g": 1,
+    "displaced_volume_cm3": 1,
+    "waste_type": "activated_metal",
+    "external_tritium": {"status": "not_applicable"},
+    "composition_wt_percent_bounds": {
+      "Fe": {"lower_wt_percent": 40, "upper_wt_percent": 80},
+      "Nb": {"lower_wt_percent": 20, "upper_wt_percent": 60}
+    },
+    "targets": [1, 2],
+    "inventory_coverage": "complete",
+    "unbounded_inventory_reasons": [],
+    "model_source": "declared fixed-rate material envelope",
+    "model_assumptions": "composition fractions form one exact 100 wt% mixture"
+  }]
+}
+```
+
+Here the two weight bounds jointly admit a 100 wt% mixture. The command checks
+exact binary-float feasibility rather than normalizing an infeasible box.
 
 ## Classify declared activity bounds
 

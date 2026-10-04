@@ -1,0 +1,8 @@
+Running as unit: run-p516805-i8906032.scope; invocation ID: eb6bddf11dc345e7a18033acfae8b746
+error: let chains are only allowed in Rust 2024 or later
+   --> /home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli/src/waste_composition_solve.rs:284:8
+    |
+284 |     if let Some(photon) = obj.get("photon")
+    |        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Error writing files: failed to resolve mod `waste_composition_solve`: cannot parse /home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli/src/waste_composition_solve.rs

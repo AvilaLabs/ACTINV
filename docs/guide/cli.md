@@ -2,6 +2,13 @@
 
 The `actinv` command is included with the Python package or can be installed independently with Rust. Run `actinv --version` to identify your executable and `actinv --help` to see its commands. The established examples here cover 1.4.0; the waste commands are documented separately in [Component waste classes and impurity limits](waste.md).
 
+The native waste composition workflow is `actinv waste composition solve
+SPEC.json [OUT.json]`. It runs the bounded pure-element basis and every
+distinct projection witness allowed by the wrapper limits, then emits one
+result only after all requested runs and comparisons succeed. Its base-spec
+path is relative to the wrapper file; paths inside that base spec retain the
+usual current-working-directory/catalog rules. See the [waste handbook](waste.md#generate-and-verify-a-native-composition-basis) for its schema and scientific scope.
+
 ## Create, check, and solve
 
 ```text

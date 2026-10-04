@@ -323,3 +323,25 @@ priority — each needs its own protocol before any code changes.
   and all six workflows on `a1d2dc3397ace8b3d22c2e8ade8127cf4d5086e2` are green. The earlier entries above
   describe the promotion-time status. Conservative activity bounds, composition ranges and the draft fusion
   screen still require separate protocols; P103/P104 failures remain unchanged.
+- 2026-10-03 — **Native/budget modeled-inventory audit coverage.** Review after P108 found
+  `budget::solve_doc` forces outputs to `ledger`, omitting the optional P61 `audit` report;
+  the waste-budget evaluator's coverage checks concern rule-property coverage and do not establish
+  reaction/decay completeness. P109's separate native composition path explicitly requests audit,
+  checks reached activation-target metadata and downgrades modeled coverage. A future separately
+  frozen budget coverage phase must address the older helper, preserve P105's historical evidence
+  and distinguish arithmetic qualification from physical completeness. No P105 behavior/verdict
+  is silently changed in P109.
+- 2026-10-03 — **P108 intermediate stdout emission.** Static native integration review found
+  the existing P108 wrapper calls the P107 output-producing helper internally, so it can emit an
+  intermediate P107 JSON report before its final P108 report. P109 adds quiet internal evaluator
+  routes needed to avoid preliminary native output, preserving historical P107/P108 wrapper
+  side effects during this frozen phase. A small separate follow-up should make the existing
+  composition CLI emit exactly one final JSON document and test stdout as well as file output.
+  No class arithmetic, rule pack, projected interval or historical verdict is changed.
+- 2026-10-03 — **Independent public benchmark feasibility.** Luna read-only review found
+  unrestricted SINBAD FNG-SS/Bulk foil reaction-rate metadata and an FNG Dose Rate file listing
+  containing a small local cell-620 flux; wider foil spectra still need exact mapping or transport.
+  Public IRDFF-II benchmark spectra and measured SACS may support a separately frozen P46 direct-
+  fold comparison without licensed transport. These are candidates, not executed/qualified
+  evidence. Preserve consumed partitions and freeze observable, lawful input bytes, thresholds
+  and data exposure before any new scoring/calibration phase.

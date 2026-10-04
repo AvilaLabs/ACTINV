@@ -326,6 +326,17 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
 }
 
 pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String> {
+    run_doc_inner(text, output, true)
+}
+
+/// Evaluate a declared composition document without emitting its intermediate
+/// P107 bounds report. Native composition orchestration uses this after every
+/// witness run has succeeded.
+pub(crate) fn evaluate_doc(text: &str) -> Result<Value, String> {
+    run_doc_inner(text, None, false)
+}
+
+fn run_doc_inner(text: &str, output: Option<&str>, emit_stdout: bool) -> Result<Value, String> {
     let spec: CompositionSpec = serde_json::from_str(text)
         .map_err(|error| format!("cannot parse waste composition spec: {error}"))?;
     validate_spec(&spec)?;
@@ -420,7 +431,13 @@ pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String>
         serde_json::to_string(&projected_spec).map_err(|error| error.to_string())?;
     let projected_input_sha256 = sha256(projected_text.as_bytes());
     // This validates/evaluates the complete projected P107 document without writing.
-    let mut result = crate::waste_bounds::run_doc(&projected_text, None)?;
+    // Preserve the sealed P108 command's historical intermediate stdout report.
+    // P109 calls evaluate_doc and therefore follows the quiet branch.
+    let mut result = if emit_stdout {
+        crate::waste_bounds::run_doc(&projected_text, None)?
+    } else {
+        crate::waste_bounds::evaluate_doc(&projected_text)?
+    };
     let components_out = result["components"]
         .as_array_mut()
         .ok_or("bounds result has no components")?;
@@ -459,7 +476,9 @@ pub(crate) fn run_doc(text: &str, output: Option<&str>) -> Result<Value, String>
     result["response_unit"] = json!("Bq/g");
     result["activity_unit"] = json!("Bq");
     result["composition_unit"] = json!("wt_percent");
-    crate::waste::output_doc(&result, output)?;
+    if emit_stdout || output.is_some() {
+        crate::waste::output_doc(&result, output)?;
+    }
     Ok(result)
 }
 
