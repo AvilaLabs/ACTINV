@@ -1,0 +1,20 @@
+=== stdout ===
+{
+  "1996": {
+    "points": 20,
+    "geometric_mean_CE": 0.9262795135759171,
+    "min_CE": 0.883112154161339,
+    "max_CE": 0.9622689142907596,
+    "max_absolute_relative_residual": 0.11688784583866096,
+    "points_inside_reported_error_bars": 5
+  },
+  "2000": {
+    "points": 21,
+    "geometric_mean_CE": 1.0594975056945672,
+    "min_CE": 1.0253269836803742,
+    "max_CE": 1.0835851075422924,
+    "points_inside_reported_error_bars": 8
+  }
+}
+
+=== stderr ===

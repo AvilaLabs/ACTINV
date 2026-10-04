@@ -23,6 +23,8 @@ jobs:
         with: { python-version: "3.12" }
       - name: Build ACTINV CLI
         run: cargo build --release -p actinv-cli --bin actinv
+      - name: Install exact-byte CI source seed
+        run: python scripts/fetch_ci_seed.py --mode fns --destination target/fns-data --fns-archive target/fns-iron/fns.zip
       - name: Fetch and verify pinned release data
         run: target/release/actinv data fetch --output target/fns-data
       - name: Plotting dependency

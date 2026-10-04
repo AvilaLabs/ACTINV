@@ -167,7 +167,18 @@ jobs:
           python scripts/test_run_p116_gate.py
           python controls/test_p105_children.py
           python controls/check_p116.py --no-write
-          python controls/check_p116_verdict.py
+          python controls/test_p116_history.py
+          python controls/check_p116_history.py
+
+      - name: P117 verified CI input seed and unchanged twin qualification
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p117.py
+          python controls/test_p117_verdict.py
+          python scripts/test_run_p117_gate.py
+          python controls/check_p117.py --no-write
+          python controls/check_p117_verdict.py
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
@@ -349,7 +360,9 @@ jobs:
         run: python controls/test_ci_result.py
 
       - name: Fetch the pinned data subset
-        run: bash scripts/fetch_ci_data.sh
+        run: |
+          python scripts/test_fetch_ci_seed.py
+          bash scripts/fetch_ci_data.sh
 
       - name: Build the Python module
         run: |

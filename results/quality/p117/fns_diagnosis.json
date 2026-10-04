@@ -1,0 +1,42 @@
+{
+  "argv": [
+    "python3",
+    "controls/fns_iron_diagnose.py",
+    "--data-root",
+    "target/p117-fns-data",
+    "--baseline",
+    "target/p117-fns-run",
+    "--output",
+    "target/p117-fns-run/diagnosis"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "fns_diagnosis",
+  "log_path": "target/p117-fns_diagnosis.log",
+  "log_sha256": "84faf79ea53f2b08d095be325a71458200cf6b84f33785bdbb926b167c9d6f18",
+  "phase": "P117",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1574124-i9952460.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 1200.0
+}
