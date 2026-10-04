@@ -1,0 +1,39 @@
+{
+  "argv": [
+    "target/release/actinv",
+    "data",
+    "fetch",
+    "--output",
+    "target/p117-fns-data"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "native_data_fetch",
+  "log_path": "target/p117-native_data_fetch.log",
+  "log_sha256": "88107b104d53a2a284e83e3267b610a3099abb0ee57619d46884ad3d680666a5",
+  "phase": "P117",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1572945-i9947218.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 1200.0
+}

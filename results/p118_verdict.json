@@ -1,0 +1,29 @@
+{
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "results/g0_p118_twin_waste.json": null,
+    "results/g1_p118_twin_waste.json": null,
+    "results/g2_p118_twin_waste.json": null,
+    "results/g3_p118_quality.json": null
+  },
+  "gates": {
+    "CI_evidence_consistent": "FAIL",
+    "G0": "FAIL",
+    "G1": "FAIL",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "predecessor_history": "FAIL",
+    "protocol": "PASS",
+    "source_commit": "FAIL"
+  },
+  "historical_p116_verified": false,
+  "historical_p117_verified": false,
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "phase": "P118",
+  "repair_amendment_sha256": null,
+  "repair_rounds": null,
+  "schema": "actinv-p118-verdict-1",
+  "verdict": "P118-FAIL"
+}

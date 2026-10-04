@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "python3",
+    "controls/test_p117.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "p117_regressions",
+  "log_path": "target/p117-p117_regressions.log",
+  "log_sha256": "f12d57477faca3bfbaf06fd9dfa135741071ad453ff4e42219bbbd39c210a551",
+  "phase": "P117",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1956850-i10341051.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

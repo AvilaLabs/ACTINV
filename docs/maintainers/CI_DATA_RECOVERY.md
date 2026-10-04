@@ -1,5 +1,43 @@
 # Pinned-data CI recovery
 
+## Paused checkpoint — 2026-10-04
+
+The owner requested a good stopping point with docs updated. Work is paused
+after terminal **P118-FAIL**; the next phase is not registered. The cache
+transport below is verified, but waste twin qualification remains incomplete.
+P116/P117/P118 failures and all earlier qualifications retain their recorded
+dispositions. The failed recovery sources and workflow stay in local
+checkpoints; no new push or green CI result is claimed.
+
+P118's fresh formatting, fourteen recorder regressions and nine verdict
+regressions passed. Its next required history suite returned one with twelve
+tests, one failure and six errors. The checker expects `file_count: 70` in
+the pinned original P117 discovery. That record instead supplies the exact
+seventy-entry `preserved_files_sha256` map; the outer terminal descriptor
+supplies the count. The missing-field assumption is in the checker, while
+the immutable archive bytes remain intact. Amendment A consumed P118's only
+repair, so the sources stay frozen. The unchanged writer persisted
+[P118-FAIL](../../results/p118_verdict.json); seven remaining fresh gates were
+not run and G0/G1/G2/G3, clean-candidate proof and CI are absent.
+
+On resumption:
+
+1. Register a separate successor before changing the failed history checker.
+   Bind the actual pinned discovery schema and complete file maps; cover the
+   real archived records in regressions. Diagnose any later failure honestly.
+2. Retain both P118 failure episodes, predecessor archives, exact source
+   identities, actual receipts/logs and the terminal verdict. Repeat required
+   fresh gates; adopt prior observations only under explicit source binding.
+3. Require local qualification, exact-candidate clean-worktree replay and
+   green exact-SHA implementation and closure workflows before feature work.
+
+Waste Python APIs and workbench integration are still unimplemented.
+Statistical uncertainty/budgets, mixed packages/encapsulation,
+measurement-supported scaling and additional jurisdictions remain separate
+open scopes. See [the open-items inventory](ROADMAP_OPEN_ITEMS-2026-10-03.md)
+and [P118's session](../history/sessions/P118.md). Unrelated roadmap work
+has not resumed, and waste completion is not claimed.
+
 ## Observed cache recovery
 
 The authorized [CI cache release](https://github.com/AvilaLabs/ACTINV/releases/tag/ci-data-cache-2026-10-04-v1)
@@ -15,7 +53,8 @@ with networking disabled, fresh release downloads, unchanged native catalog
 fetch, both FNS source regression suites, the 20-measurement FNS campaign and
 the unchanged heat reconstruction/second-campaign diagnosis. These establish
 a working exact-byte transport. Successor twin controls, quality closure and
-exact-commit GitHub CI remain required before P117 qualification.
+exact-commit GitHub CI remain required for terminal twin qualification;
+P117 and P118 themselves are terminal FAIL.
 
 ## P117 authorized cache plan
 
@@ -26,8 +65,8 @@ total 166,789,318 bytes (159.06 MiB), excluding notice/manifest/container
 overhead. The matching source and attribution notice is
 [`CI_DATA_CACHE_NOTICE.md`](CI_DATA_CACHE_NOTICE.md). Neither nuclear payloads
 nor this cache should be committed to Git. Release publication and all
-download/install evidence remain coordinator-owned and are not represented as
-complete by this note.
+download/install evidence remain coordinator-owned. The observed completion
+is recorded above; the original recovery plan does not itself qualify CI.
 
 | Seed path | Existing local source |
 |---|---|
@@ -170,3 +209,12 @@ The separate cache and its verified inputs remain intact. Preserve both P117
 failure episodes, then register a successor that fixes the static CI dependency
 on ignored target logs and requires a clean-worktree source-only verdict replay
 before any push. No CI qualification or waste roadmap closure is claimed.
+
+P118 is now registered against terminal checkpoint
+`b81e8c3365a5a08ed55e9f99c0c88f945709996d` and the exact 100-file terminal
+archive discovery `0c736be95e42413481378d38ebaea66424caa5caab1aa7712699e93f1866a26e`.
+Its protocol SHA is `81ceb65891eae00b9ec0ade95d32bb0e8bae7ec23ef56bafd670c92e4980df1b`.
+It preserves both failures, verifies complete historical Git/source identities,
+uses portable durable-log replay, and requires eleven fresh bounded gates plus
+an exact-candidate clean-worktree verdict before push. No source-data or Rust
+change is permitted. P118 implementation and exact-SHA CI remain pending.

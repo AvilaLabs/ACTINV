@@ -1,0 +1,27 @@
+{
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "results/g0_p117_twin_waste.json": "7c5770a8b0d60e13450513f0b54ed4d43ad68dbf5d8c43a328206e3704972c68",
+    "results/g1_p117_twin_waste.json": "c5d4cc7c77c3ce2134f14aa9d756dddb1d7a672f169c2648d5551f47f2aa2516",
+    "results/g2_p117_twin_waste.json": null,
+    "results/g3_p117_quality.json": null
+  },
+  "gates": {
+    "CI_evidence_consistent": "PASS",
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "historical_p116_ci_failure": "PASS",
+    "protocol": "PASS",
+    "source_commit": "PASS"
+  },
+  "historical_source_verification": false,
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "p116_terminal_verdict_sha256": "7d782e476b051cc2e7d9666e984511167f30d6e1e5ec73afc127d34ac9dac710",
+  "phase": "P117",
+  "schema": "actinv-p117-verdict-1",
+  "verdict": "P117-FAIL"
+}

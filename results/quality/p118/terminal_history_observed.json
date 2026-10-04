@@ -1,0 +1,70 @@
+{
+  "schema": "actinv-p118-terminal-history-observation-1",
+  "phase": "P118",
+  "gate": "p117_history_regressions",
+  "status": "completed",
+  "exit_code": 1,
+  "execution_interface": "exec_command",
+  "tool_wall_time_s": 0.624849678,
+  "entry_point": [
+    "python3",
+    "scripts/run_p118_gate.py",
+    "--phase",
+    "P118",
+    "--name",
+    "p117_history_regressions",
+    "--timeout-s",
+    "600",
+    "--log",
+    "target/p118-p117_history_regressions.log",
+    "--receipt",
+    "results/quality/p118/p117_history_regressions.json",
+    "--",
+    "python3",
+    "controls/test_p117_history.py"
+  ],
+  "returned_recorder_report": {
+    "argv": [
+      "python3",
+      "controls/test_p117_history.py"
+    ],
+    "child_exit_code": 1,
+    "cwd": ".",
+    "elapsed_s": 0.42047037999145687,
+    "error": null,
+    "gate": "p117_history_regressions",
+    "log_path": "target/p118-p117_history_regressions.log",
+    "log_sha256": "8d942433101d4236c6e05b7777f02fe6c410896be093a2d174d778240c22af2d",
+    "phase": "P118",
+    "resources": {
+      "cgroup_limits": {
+        "cpu.max": "200000 100000",
+        "memory.max": "6442450944",
+        "memory.swap.max": "0",
+        "pids.max": "128"
+      },
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2290641-i10668387.scope",
+      "environment": {
+        "CARGO_BUILD_JOBS": "1",
+        "RAYON_NUM_THREADS": "2",
+        "RUST_TEST_THREADS": "1"
+      },
+      "platform": "linux",
+      "tmpdir": {
+        "filesystem": "ext4",
+        "mount_point": "/",
+        "path": "target/preflight-tmp"
+      }
+    },
+    "schema": "actinv-roadmap-gate-receipt-1",
+    "status": "child_failed",
+    "timeout_s": 600
+  },
+  "outer_output_path": "results/quality/p118/terminal_history_outer.log",
+  "scope_header": "Running as unit: run-p2290641-i10668387.scope; invocation ID: 032daa4071aa41fe89e01fff3a724c84",
+  "G0_status": "not_sealed",
+  "G1_status": "not_run",
+  "G2_status": "not_run",
+  "G3_status": "not_run",
+  "repair_rounds_consumed": 1
+}

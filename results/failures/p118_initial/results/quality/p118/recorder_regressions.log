@@ -1,0 +1,18 @@
+=== stdout ===
+
+=== stderr ===
+........gate result could not be durably recorded: OSError: receipt filesystem failure
+...F..
+======================================================================
+FAIL: test_setup_resource_failure_is_recorded_without_launching_runner (__main__.P118GateTests.test_setup_resource_failure_is_recorded_without_launching_runner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/scripts/test_run_p118_gate.py", line 200, in test_setup_resource_failure_is_recorded_without_launching_runner
+    self.assertIn("memory.max", receipt["error"])
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'memory.max' not found in 'memory limit unavailable; resource inspection cgroup limits do not match P118'
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.197s
+
+FAILED (failures=1)

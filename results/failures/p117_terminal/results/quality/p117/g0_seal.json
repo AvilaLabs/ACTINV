@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "python3",
+    "controls/check_p117.py",
+    "--g0-only"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "g0_seal",
+  "log_path": "target/p117-g0_seal.log",
+  "log_sha256": "8a9ff68de636df27199bc483af7edf783143d418f12830d0fa3bccc9f6a5d3d5",
+  "phase": "P117",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2000120-i10366605.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

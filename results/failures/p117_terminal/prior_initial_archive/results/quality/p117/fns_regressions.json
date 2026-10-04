@@ -1,0 +1,42 @@
+{
+  "argv": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "controls",
+    "-p",
+    "test_fns_iron*.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "fns_regressions",
+  "log_path": "target/p117-fns_regressions.log",
+  "log_sha256": "cfac0c82abe32517343767efaee85ed2aae9139d511ec435456c2b051e8ec1db",
+  "phase": "P117",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1573291-i9963947.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

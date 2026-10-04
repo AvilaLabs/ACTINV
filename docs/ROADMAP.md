@@ -2559,3 +2559,27 @@ calculations and the verified external CI cache remain intact; no new numerical
 failure occurred. Preserve both P117 failure episodes and freeze a verification
 successor before further controls or feature work. The full roadmap goal and
 waste priority remain open; Python/workbench work still waits for green CI.
+
+2026-10-04: P118 protocol `81ceb65891eae00b9ec0ade95d32bb0e8bae7ec23ef56bafd670c92e4980df1b`
+opens the serialized qualification successor after the exact terminal P117
+archive was preserved. Fix CI log portability, repeat frozen waste controls,
+and require clean-candidate replay plus green implementation/closure CI before
+Python/workbench or other features. The full roadmap objective remains open.
+
+2026-10-04: **P118 terminal FAIL; work paused at the owner's requested
+stopping point.** After its sole registered repair, formatting, fourteen
+recorder regressions and nine verdict regressions passed. The twelve history
+regressions returned one with one failure/six errors: the checker expects a
+`file_count` field absent from the pinned original discovery, whose actual
+file map remains intact. Seven remaining fresh gates were not run; no G0,
+G1/G2/G3, clean-candidate proof or CI qualification exists. Preserve frozen
+sources, actual receipts/logs and the unchanged P118-FAIL verdict in a local
+checkpoint. No known-failed checkpoint is pushed and no successor is opened.
+
+The verified external cache remains available outside Git. On resumption,
+register a separate recovery successor and qualify green CI before waste
+Python APIs, workbench integration, statistical uncertainty/budgets, mixed
+packages/encapsulation, measurement-supported scaling or additional
+jurisdictions. Waste is incomplete; unrelated roadmap work stays paused.
+See `docs/maintainers/CI_DATA_RECOVERY.md` and the dated open-items inventory
+for the restart boundary and remaining scope.

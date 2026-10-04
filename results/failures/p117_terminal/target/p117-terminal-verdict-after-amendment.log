@@ -1,0 +1,17 @@
+Running as unit: run-p2131388-i10509711.scope; invocation ID: e7273be54a514eef88a7464f7644dc54
+{"errors": [], "resources": {"cgroup_limits": {"cpu.max": "200000 100000", "memory.max": "6442450944", "memory.swap.max": "0", "pids.max": "128"}, "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2131388-i10509711.scope", "environment": {"CARGO_BUILD_JOBS": "1", "RAYON_NUM_THREADS": "2", "RUST_TEST_THREADS": "1"}, "platform": "linux", "tmpdir": {"filesystem": "ext4", "mount_point": "/", "path": "target/preflight-tmp"}}}
+{
+  "gates": {
+    "CI_evidence_consistent": "PASS",
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "historical_p116_ci_failure": "PASS",
+    "protocol": "PASS",
+    "source_commit": "PASS"
+  },
+  "persisted_matches": true,
+  "verdict": "P117-FAIL"
+}

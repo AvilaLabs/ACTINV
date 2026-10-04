@@ -1,0 +1,15 @@
+{
+  "schema": "actinv-p117-initial-verdict-observation-1",
+  "status": "completed",
+  "exit_code": 1,
+  "entry_point": ["python3", "controls/check_p117_verdict.py", "--write"],
+  "argv": ["python3", "-c", "import sys, json; sys.path[:0] = [\"scripts\", \"controls\"]; import run_p117_gate as r; resources, errors = r.inspect_resources(); errors += r._resource_snapshot_errors(resources); print(json.dumps({\"resources\": resources, \"errors\": errors}, sort_keys=True)); assert not errors, errors; import check_p117_verdict; raise SystemExit(check_p117_verdict.main([\"--write\"]))"],
+  "inspection_errors": [],
+  "resources": {
+    "platform": "linux",
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1836316-i10218387.scope",
+    "cgroup_limits": {"cpu.max": "200000 100000", "memory.max": "6442450944", "memory.swap.max": "0", "pids.max": "128"},
+    "environment": {"CARGO_BUILD_JOBS": "1", "RAYON_NUM_THREADS": "2", "RUST_TEST_THREADS": "1"},
+    "tmpdir": {"filesystem": "ext4", "mount_point": "/", "path": "target/preflight-tmp"}
+  }
+}

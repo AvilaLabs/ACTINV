@@ -1,0 +1,4 @@
+=== stdout ===
+{"files": 13, "installed": 13, "mode": "all", "release": "ci-data-cache-2026-10-04-v1", "reused": 0, "schema": "actinv-ci-data-seed-install-1"}
+
+=== stderr ===
