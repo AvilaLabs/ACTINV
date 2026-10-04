@@ -147,3 +147,46 @@ their status in the February 2026 draft remains to be checked):
 - CA BTP Rev. 1 (ADAMS ML12254B065), as quoted in
   [EPRI 3002008189](https://restservice.epri.com/publicdownload/000000003002008189/0/Product)
 - [Fetter, Cheng & Mann (1990)](https://dgi.umd.edu/sites/default/files/2019-08/1990-FED-RadWaste.pdf)
+
+## Draft intrusion source reconciliation — 2026-10-03
+
+The earlier March 2025 notes above are retained as historical notes. The February 2026
+NUREG-1556 Vol. 22 source is represented by pinned PDF and extracted-text snapshots.
+Manual visual PDF review covered February pages 8-70, 8-71 and Q-6, and March pages
+8-71 and 8-72. Other excerpted material was transcribed from the extracted-text
+snapshots and was not independently checked against rendered PDF pages. The source
+snapshots and compact excerpts are recorded in
+[`controls/fixtures/p111/source_reconciliation.json`](../controls/fixtures/p111/source_reconciliation.json).
+G0 controls validate pinned excerpt bytes and a literal 25-row transcription; they do not
+download or parse the complete PDFs, and do not claim CI reviewed the full PDF.
+
+The selected pack is `us-nrc-nureg1556-v22-draft-2026-02-v1`. The NRC Volume 22 page
+still labels ML24092A377 “Draft Report for Comment”; comments were due May 27, 2026.
+The NRC [fusion rulemaking status](https://www.nrc.gov/materials/fusion/rulemaking-status)
+continues to list the February 2026 proposed rule/draft guidance, and its
+[strategy page](https://www.nrc.gov/materials/fusion/vision-strategy) describes final
+rule and guidance in 2027. The proposed rule is [91 FR 9476](https://www.govinfo.gov/content/pkg/FR-2026-02-26/pdf/2026-03865.pdf).
+This remains a draft-screen source, not final guidance or a legal determination.
+
+The reviewed Table 8-5 contains 25 rows. All numeric values and all explicit “No limit”
+cells match the March 2025 preliminary draft. The source defects are preserved: Cs-137
+Class C is 460 Ci/m³ (Part 61 Table 2 says 4,600); activated-metal Nb-94 is
+0.2/0.2/2 Ci/m³ (the general Nb-94 Class C value and Part 61 value are 0.2); body and
+Appendix Q references to Table 8-4 point to the displayed Table 8-5; Appendix Q says
+“activity or is”; and the DOT appendix title quoted in the draft is inaccurate. The pack
+uses the actual printed rows and keeps every no-limit cell as a typed null, not a numeric
+substitute. The short-lived aggregate uses strict half-life <5 Julian years and the printed
+alpha aggregate uses its fixed eight nuclides; both remain separate constraints from any
+individual named row.
+
+The software follows the four “present” criteria as an opt-in, three-valued draft screen:
+strict `>` for 1% of a supplied WAC concentration limit; strict `>` 0.26 MBq/cm³ with
+criterion 2 indeterminate when only one of §61.55/WAC lists the nuclide; caller-declared
+DOT RQs in whole-container Bq with individual `activity >= RQ` sufficient, while a
+mixture-only crossing does not assign presence to below-RQ nuclides; and inclusive
+`activity >= 1%` of declared whole-container total. Missing inputs remain visible as
+unknown/indeterminate. The source gives competing cues at equality between its caption
+(“below which”) and prose (>); equality therefore remains indeterminate as an assessment
+indicator. No dose calculation, compliance, waste acceptance or disposal-class promotion
+is implied. The declared DOT RQs and WAC are caller-supplied data, not an embedded legal
+catalog or WAC.

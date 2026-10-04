@@ -65,6 +65,20 @@ pub(crate) struct InputResults {
     pub(crate) source_sha256: String,
 }
 
+pub(crate) struct WasteTargetInventory {
+    pub(crate) component_id: String,
+    pub(crate) step: u64,
+    pub(crate) t_s: f64,
+    /// Activation-only whole-component Bq, before separately declared H-3.
+    pub(crate) activation_activities_bq: BTreeMap<String, f64>,
+    pub(crate) external_tritium_activity_bq: f64,
+}
+
+pub(crate) struct WasteDocumentEvaluation {
+    pub(crate) document: Value,
+    pub(crate) target_inventories: Vec<WasteTargetInventory>,
+}
+
 fn sha256(bytes: &[u8]) -> String {
     use sha2::{Digest, Sha256};
     Sha256::digest(bytes)
@@ -84,7 +98,7 @@ fn one_based_targets(targets: &[u64]) -> Result<(), String> {
     Ok(())
 }
 
-fn waste_geometry(component: &ComponentSpec) -> Result<WasteGeometry, String> {
+pub(crate) fn waste_geometry(component: &ComponentSpec) -> Result<WasteGeometry, String> {
     if !(component.mass_g.is_finite() && component.mass_g > 0.0) {
         return Err(format!(
             "component {} mass_g must be finite and positive",
@@ -183,11 +197,9 @@ fn parse_steps(result: &Value, where_: &str) -> Result<BTreeMap<u64, Value>, Str
     Ok(steps)
 }
 
-fn load_input(path: &Path) -> Result<InputResults, String> {
-    let bytes = std::fs::read(path)
-        .map_err(|error| format!("cannot read input {}: {error}", path.display()))?;
-    let digest = sha256(&bytes);
-    if let Ok(value) = serde_json::from_slice::<Value>(&bytes) {
+pub(crate) fn load_input_bytes(bytes: &[u8]) -> Result<InputResults, String> {
+    let digest = sha256(bytes);
+    if let Ok(value) = serde_json::from_slice::<Value>(bytes) {
         let steps = parse_steps(&value, "input")?;
         return Ok(InputResults {
             kind: "run",
@@ -196,7 +208,7 @@ fn load_input(path: &Path) -> Result<InputResults, String> {
         });
     }
     let text =
-        std::str::from_utf8(&bytes).map_err(|error| format!("mesh input is not UTF-8: {error}"))?;
+        std::str::from_utf8(bytes).map_err(|error| format!("mesh input is not UTF-8: {error}"))?;
     let mut header = false;
     let mut header_count = None;
     let mut footer_count = None;
@@ -277,9 +289,9 @@ fn selected_rules(rules: &str, base: &Path) -> Result<RulePack, String> {
     }
 }
 
-type ComponentActivities = BTreeMap<u64, (f64, BTreeMap<String, f64>)>;
+pub(crate) type ComponentActivities = BTreeMap<u64, (f64, BTreeMap<String, f64>)>;
 
-fn activity_for_component(
+pub(crate) fn activity_for_component(
     input: &InputResults,
     component: &ComponentSpec,
     targets: &[u64],
@@ -401,6 +413,28 @@ pub fn run(path: &str, output: Option<&str>) -> Result<Value, String> {
 }
 
 pub(crate) fn run_doc(text: &str, base: &Path, output: Option<&str>) -> Result<Value, String> {
+    let evaluated = evaluate_doc_inner(text, base, None, false)?;
+    write_output(&evaluated.document, output)?;
+    Ok(evaluated.document)
+}
+
+/// Evaluate a nominal waste document using already-read input bytes, without
+/// writing output. The intrusion screen uses this to validate and consume the
+/// same bytes exactly once while preserving the nominal waste result schema.
+pub(crate) fn evaluate_doc_with_input_details(
+    text: &str,
+    base: &Path,
+    input_bytes: &[u8],
+) -> Result<WasteDocumentEvaluation, String> {
+    evaluate_doc_inner(text, base, Some(input_bytes), true)
+}
+
+fn evaluate_doc_inner(
+    text: &str,
+    base: &Path,
+    input_bytes: Option<&[u8]>,
+    capture_details: bool,
+) -> Result<WasteDocumentEvaluation, String> {
     let spec: WasteSpec =
         serde_json::from_str(text).map_err(|error| format!("cannot parse waste spec: {error}"))?;
     if spec.schema != "actinv-waste-spec-1" {
@@ -411,10 +445,18 @@ pub(crate) fn run_doc(text: &str, base: &Path, output: Option<&str>) -> Result<V
         return Err("components must contain at least one component".into());
     }
     let rules = selected_rules(&spec.rules, base)?;
-    let input_path = base.join(&spec.input);
-    let input = load_input(&input_path)?;
+    let input = match input_bytes {
+        Some(bytes) => load_input_bytes(bytes)?,
+        None => {
+            let input_path = base.join(&spec.input);
+            let bytes = std::fs::read(&input_path)
+                .map_err(|error| format!("cannot read input {}: {error}", input_path.display()))?;
+            load_input_bytes(&bytes)?
+        }
+    };
     let mut global_cells = BTreeSet::new();
     let mut results = Vec::new();
+    let mut target_inventories = Vec::new();
     let mut component_ids = BTreeSet::new();
     for component in &spec.components {
         if component.id.is_empty() || !component_ids.insert(component.id.as_str()) {
@@ -498,6 +540,15 @@ pub(crate) fn run_doc(text: &str, base: &Path, output: Option<&str>) -> Result<V
                 &calculated_only_activities,
                 &spec.nuclide_properties,
             )?;
+            if capture_details {
+                target_inventories.push(WasteTargetInventory {
+                    component_id: component.id.clone(),
+                    step,
+                    t_s,
+                    activation_activities_bq: calculated_only_activities,
+                    external_tritium_activity_bq: external,
+                });
+            }
             let evaluation = evaluate_component(
                 &rules,
                 component.waste_type,
@@ -549,8 +600,10 @@ pub(crate) fn run_doc(text: &str, base: &Path, output: Option<&str>) -> Result<V
         "status": if all_nominal { "nominal" } else { "conditional" },
         "components": results,
     });
-    write_output(&doc, output)?;
-    Ok(doc)
+    Ok(WasteDocumentEvaluation {
+        document: doc,
+        target_inventories,
+    })
 }
 
 fn write_output(value: &Value, output: Option<&str>) -> Result<(), String> {

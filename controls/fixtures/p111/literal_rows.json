@@ -1,0 +1,32 @@
+{
+  "schema": "actinv-waste-draft-rows-1",
+  "source_version": "february_2026_draft_ML24092A377",
+  "table_id": "8-5",
+  "rows": [
+    {"id":"short_half_life_lt5y_sum","label":"Sum of Radionuclides with less than a 5-year half-life","selector":"half_life_lt5y","members":[],"applicability":"all","unit":"Ci/m3","limits":[700,null,null],"basis_note":"a,b"},
+    {"id":"H-3","label":"H-3","selector":"H-3","members":["H-3"],"applicability":"all","unit":"Ci/m3","limits":[40,110000000,null],"basis_note":"a,c,d"},
+    {"id":"C-14","label":"C-14","selector":"C-14","members":["C-14"],"applicability":"general","unit":"Ci/m3","limits":[0.8,0.8,8],"basis_note":"a"},
+    {"id":"C-14_activated_metal","label":"C-14 in activated metal","selector":"C-14","members":["C-14"],"applicability":"activated_metal","unit":"Ci/m3","limits":[8,8,80],"basis_note":"a"},
+    {"id":"Cl-36","label":"Cl-36","selector":"Cl-36","members":["Cl-36"],"applicability":"all","unit":"Ci/m3","limits":[110,110,1100],"basis_note":"c"},
+    {"id":"Co-60","label":"Co-60","selector":"Co-60","members":["Co-60"],"applicability":"all","unit":"Ci/m3","limits":[700,67000,null],"basis_note":"a,c,d"},
+    {"id":"Ni-59","label":"Ni-59","selector":"Ni-59","members":["Ni-59"],"applicability":"general","unit":"Ci/m3","limits":[2.2,2.2,22],"basis_note":"e"},
+    {"id":"Ni-59_activated_metal","label":"Ni-59 in activated metal","selector":"Ni-59","members":["Ni-59"],"applicability":"activated_metal","unit":"Ci/m3","limits":[22,22,220],"basis_note":"a"},
+    {"id":"Ni-63","label":"Ni-63","selector":"Ni-63","members":["Ni-63"],"applicability":"general","unit":"Ci/m3","limits":[3.5,70,700],"basis_note":"e"},
+    {"id":"Ni-63_activated_metal","label":"Ni-63 in activated metal","selector":"Ni-63","members":["Ni-63"],"applicability":"activated_metal","unit":"Ci/m3","limits":[35,700,7000],"basis_note":"a"},
+    {"id":"Sr-90","label":"Sr-90","selector":"Sr-90","members":["Sr-90"],"applicability":"all","unit":"Ci/m3","limits":[0.04,150,7000],"basis_note":"a"},
+    {"id":"Nb-94","label":"Nb-94","selector":"Nb-94","members":["Nb-94"],"applicability":"general","unit":"Ci/m3","limits":[0.02,0.02,0.2],"basis_note":"e"},
+    {"id":"Nb-94_activated_metal","label":"Nb-94 in activated metal","selector":"Nb-94","members":["Nb-94"],"applicability":"activated_metal","unit":"Ci/m3","limits":[0.2,0.2,2],"basis_note":"a"},
+    {"id":"Tc-99","label":"Tc-99","selector":"Tc-99","members":["Tc-99"],"applicability":"all","unit":"Ci/m3","limits":[0.3,0.3,3],"basis_note":"a"},
+    {"id":"I-129","label":"I-129","selector":"I-129","members":["I-129"],"applicability":"all","unit":"Ci/m3","limits":[0.008,0.008,0.08],"basis_note":"a"},
+    {"id":"Cs-135","label":"Cs-135","selector":"Cs-135","members":["Cs-135"],"applicability":"all","unit":"Ci/m3","limits":[84,84,840],"basis_note":"e"},
+    {"id":"Cs-137","label":"Cs-137","selector":"Cs-137","members":["Cs-137"],"applicability":"all","unit":"Ci/m3","limits":[1,44,460],"basis_note":"a"},
+    {"id":"Eu-152","label":"Eu-152","selector":"Eu-152","members":["Eu-152"],"applicability":"all","unit":"Ci/m3","limits":[0.06,6.2,null],"basis_note":"c"},
+    {"id":"Eu-154","label":"Eu-154","selector":"Eu-154","members":["Eu-154"],"applicability":"all","unit":"Ci/m3","limits":[0.02,1.5,5100000],"basis_note":"c"},
+    {"id":"U-235","label":"U-235","selector":"U-235","members":["U-235"],"applicability":"all","unit":"Ci/m3","limits":[0.04,0.04,0.4],"basis_note":"e"},
+    {"id":"U-238","label":"U-238","selector":"U-238","members":["U-238"],"applicability":"all","unit":"Ci/m3","limits":[0.05,0.05,0.5],"basis_note":"e"},
+    {"id":"Np-237","label":"Np-237","selector":"Np-237","members":["Np-237"],"applicability":"all","unit":"nCi/g","limits":[10,10,100],"basis_note":"f"},
+    {"id":"Pu-241","label":"Pu-241","selector":"Pu-241","members":["Pu-241"],"applicability":"all","unit":"nCi/g","limits":[350,350,3500],"basis_note":"a"},
+    {"id":"alpha_transuranic_gt5y","label":"Pu-238, Pu-239, Pu-240, Pu-242, Am-241, Am-243, Cm-243, Cm-244","selector":"alpha_transuranic_fixed8","members":["Pu-238","Pu-239","Pu-240","Pu-242","Am-241","Am-243","Cm-243","Cm-244"],"applicability":"all","unit":"nCi/g","limits":[10,10,100],"basis_note":"g"},
+    {"id":"Cm-242","label":"Cm-242","selector":"Cm-242","members":["Cm-242"],"applicability":"all","unit":"nCi/g","limits":[2000,2000,20000],"basis_note":"a"}
+  ]
+}

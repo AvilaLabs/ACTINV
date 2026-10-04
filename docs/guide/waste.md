@@ -13,6 +13,7 @@ actinv waste budget class-budget.json class-budget-result.json
 actinv waste bounds activity-bounds.json activity-bounds-result.json
 actinv waste composition composition.json composition-result.json
 actinv waste composition solve native-composition.json native-composition-result.json
+actinv waste intrusion-screen intrusion.json intrusion-result.json
 ```
 
 This is a concentration calculation for research and design screening. It does
@@ -24,8 +25,91 @@ propagation, or evidence that an upstream physical model is qualified. Bounds
 are absolute total Bq for the whole component, not concentration. They are
 simultaneous rectangular intervals across nuclides; all combinations in the box
 are admitted. The command does not infer time evolution between target steps or
-derive bounds from a `RunResult`. None of these commands applies the separate
-proposed fusion intrusion screen.
+derive bounds from a `RunResult`. The separate `intrusion-screen` command applies
+the selected draft screen to nominal inventories.
+
+## Screen a whole container against the fusion draft
+
+`actinv waste intrusion-screen` evaluates the February 2026 draft NUREG-1556
+Volume 22 Table 8-5. Select this draft explicitly with
+`us-nrc-nureg1556-v22-draft-2026-02-v1`. The result keeps the complete nominal
+Part 61 `classification` and a separate `draft_intrusion_screen`. It reports
+`review_indicated`, `indeterminate`, or
+`not_indicated_by_implemented_checks`; it does not calculate intrusion dose or
+determine legal compliance or disposal acceptance.
+
+Embed one ordinary waste specification representing the whole disposal container.
+Its input result path resolves relative to this outer document. Native run
+activities are multiplied by component mass; mesh cell activities are weighted
+by each cell's mass before aggregation. External H-3 is added once. The following
+quantities and properties are artificial examples:
+
+```json
+{
+  "schema": "actinv-waste-intrusion-screen-spec-1",
+  "draft_rules": "us-nrc-nureg1556-v22-draft-2026-02-v1",
+  "package_basis": "single_component_container",
+  "waste_form": "equipment",
+  "inventory_coverage": "complete",
+  "unbounded_inventory_reasons": [],
+  "waste_spec": {
+    "schema": "actinv-waste-spec-1",
+    "rules": "us-nrc-10cfr61.55-v1",
+    "input": "component-result.json",
+    "targets": [2],
+    "nuclide_properties": {
+      "C14": {"z": 6, "half_life_s": 315576000, "alpha_emitting": false}
+    },
+    "components": [{
+      "id": "whole-container",
+      "mass_g": 1000,
+      "displaced_volume_cm3": 128.2,
+      "waste_type": "general",
+      "external_tritium": {"status": "not_applicable"}
+    }]
+  },
+  "site_wac": {
+    "source": "artificial site-WAC example",
+    "membership_coverage": "complete",
+    "nuclides": {
+      "C14": {"status": "listed", "limit": {"value": 100, "unit": "nCi/g"}}
+    }
+  },
+  "dot_rq": {
+    "source": "artificial caller-declared RQ example",
+    "coverage": "complete",
+    "nuclides": {"C14": 40000}
+  }
+}
+```
+
+Site WAC and whole-activity DOT RQs are optional caller declarations. The command
+supplies no default WAC or RQ catalog. WAC entries can also declare
+`listed_no_numeric_limit` or `unlisted`; missing entries in an incomplete map
+remain unknown. RQs are positive finite Bq. An individual activity at its RQ is
+present; a mixture ratio at or above one does not by itself settle each
+below-RQ contributor's presence. The result preserves all four presence
+predicates and their supporting quantities, including unresolved source inputs.
+
+`inventory_coverage: "complete"` declares that the whole container inventory is
+accounted for; ACTINV cannot verify that physical claim. Use `incomplete` or
+`unknown` with nonempty reasons when inventory is missing. Required undeclared
+H-3 or missing properties also leave the total-container denominator unknown.
+The 1% activity-share test never uses a known subtotal as a complete container.
+`metal` form requires `activated_metal`; the other forms use `general`.
+
+Rows use the computed nominal A/B/C column. Unknown and above-Class-C inventories
+have no selected column. The strict less-than-five-year sum includes matching
+named nuclides, while the alpha row uses only its printed eight members. Printed
+no-limit cells remain explicit; row equality is indeterminate. The literal draft
+values include Cs-137 Class C at 460 Ci/m³ and activated-metal Nb-94 at
+0.2/0.2/2 Ci/m³. These differ from Part 61 and remain separate in the result.
+
+The screen accepts 1–64 selected steps, at most 128 mesh cells, and at most 1024
+properties, WAC entries, RQs and positive nuclides per target. Input files must
+be regular files: the outer document is limited to 8 MiB and the result input to
+64 MiB. Duplicate keys, duplicate normalized nuclide identities, nonfinite
+arithmetic and outputs above 32 MiB are refused before writing a result.
 
 ## Classify declared composition ranges
 

@@ -1,0 +1,70 @@
+{
+  "schema": "actinv-waste-source-reconciliation-1",
+  "review_date": "2026-10-03",
+  "review_scope": "source-version comparison and literal transcription for the opt-in draft intrusion screen; no dose, compliance, or site-acceptance conclusion",
+  "selected_pack_id": "us-nrc-nureg1556-v22-draft-2026-02-v1",
+  "selected_pack_path": "data/waste_us_nrc_nureg1556_v22_draft_2026_02_v1.json",
+  "selected_pack_sha256": "071c238917ac0f3cb3436df958e78ac5868f1de4ed39b0c25781e8f2b7a4ffc7",
+  "core_pack_mirror_path": "crates/actinv-core/data/waste_us_nrc_nureg1556_v22_draft_2026_02_v1.json",
+  "literal_fixture_path": "controls/fixtures/p111/literal_rows.json",
+  "literal_fixture_sha256": "3457cab1c51d4d23589015092e04243162ac0a5cec105d2ae123dc1fefcea8d5",
+  "selected_source": {
+    "version": "February 2026 draft",
+    "adams": "ML24092A377",
+    "pdf_url": "https://www.nrc.gov/docs/ML2409/ML24092A377.pdf",
+    "pdf_sha256": "2deae800fc1a2ac3a7134481e81b75c90df98a1c9dade4393816719b55d27359",
+    "text_sha256": "ef1a98961cef3465461400395f384cb1296a8ead9e505ef6a53975041544f3ca",
+    "excerpt_path": "controls/fixtures/p111/source_excerpt_feb2026.txt",
+    "excerpt_sha256": "d00c44ca9747f14eb97bcaab7c85202577a36b6920ad9f4bb2f73c20d49d4e06"
+  },
+  "compared_source": {
+    "version": "March 2025 preliminary draft",
+    "adams": "ML24295A002",
+    "pdf_url": "https://www.nrc.gov/docs/ML2429/ML24295A002.pdf",
+    "pdf_sha256": "094b9e266a7143893f77a5908d22b42ceaae59a81c050b51ff7d59990bdca762",
+    "text_sha256": "6f33834adc759c99a7e01c8192ffc8c998e14d618ca92bbb1f51fb273e796e5f",
+    "excerpt_path": "controls/fixtures/p111/source_excerpt_mar2025.txt",
+    "excerpt_sha256": "4c09a8bcefc7b49b75fdae04d3dc7e7a5b339c4ff726c0773012a19b2aec3f42"
+  },
+  "primary_status_sources": [
+    {
+      "url": "https://www.nrc.gov/regulations-legislation/nureg-series-publications/publications-prepared-by-nrc-staff/consolidated-guidance-about-materials-licenses-nureg-1556/v22",
+      "finding": "NRC page labels Volume 22 Draft Report for Comment, identifies February 2026 and ML24092A377, and listed comments through May 27, 2026."
+    },
+    {
+      "url": "https://www.nrc.gov/materials/fusion/rulemaking-status",
+      "finding": "NRC fusion rulemaking status page continues to list the February 2026 proposed rule and draft guidance."
+    },
+    {
+      "url": "https://www.nrc.gov/materials/fusion/vision-strategy",
+      "finding": "NRC strategy page describes internal/public comment followed by a final rule and guidance in 2027."
+    },
+    {
+      "url": "https://www.govinfo.gov/content/pkg/FR-2026-02-26/pdf/2026-03865.pdf",
+      "finding": "Federal Register proposed fusion machine rule, 91 FR 9476, dated February 26, 2026."
+    }
+  ],
+  "manual_pdf_review": {
+    "performed": true,
+    "visually_checked_pdf_pages": ["February 2026: 8-70, 8-71, Q-6", "March 2025: 8-71, 8-72"],
+    "text_snapshot_inspected_for_excerpt_transcription": ["February 2026: 8-69–8-71 and Q-5–Q-6", "March 2025: intrusion section, Table 8-5 and Appendix Q presence text"],
+    "automation_boundary": "G0 checks the pinned excerpt bytes and literal fixture offline. It does not download or parse the complete PDFs and does not claim CI performed a PDF review. Visual PDF review is limited to the pages listed above; other excerpt text was inspected in the pinned extracted-text snapshots."
+  },
+  "comparison": {
+    "literal_row_count": 25,
+    "all_25_rows_match_between_versions": true,
+    "source_table_id": "8-5",
+    "source_table_caption": "Radionuclides Considered Quantitatively During the Development of 10 CFR 61.55 with Constraints Below Which a Site-Specific Intrusion Assessment Is Not Needed",
+    "presence_text_locations": ["Section 8.11, printed page 8-69", "Appendix Q, printed pages Q-5–Q-6"],
+    "row_selector_policy": "Four paired nuclides (C-14, Ni-59, Ni-63, Nb-94) have general and activated-metal rows. The general row applies to nonmetal/general form; the activated-metal row replaces it for activated metal, so both variants never apply to one component. The other 17 rows use all waste forms. Printed labels remain in `label`; canonical selectors are in `selector`; fixed group membership is enumerated in `members`.",
+    "status": "draft_report_for_comment; not final rule or final guidance"
+  },
+  "printed_source_defects_preserved": [
+    {"id":"D1","detail":"Cs-137 Table 8-5 Class C is literally 460 Ci/m3; Part 61 Table 2 gives 4600. The selected draft screen retains 460."},
+    {"id":"D2","detail":"Activated-metal Nb-94 is literally 0.2/0.2/2 Ci/m3; the general Nb-94 row is 0.02/0.02/0.2 and Part 61 Class C is 0.2."},
+    {"id":"D3","detail":"Section 8.11 prose and Appendix Q refer to Table 8-4, but displayed Table 8-5 is the intrusion table and Table 8-4 is tritium bioassay."},
+    {"id":"D4","detail":"Appendix Q has the typo 'the activity or is 0.01 or more'."},
+    {"id":"D5","detail":"The draft cites 49 CFR 172.101, Appendix A but supplies the unrelated title 'Office of Hazardous Materials Transportation Color Tolerance Charts and Tables'."}
+  ],
+  "interpretation_boundary": "P111's frozen policies are explicit software interpretations of draft text. Results do not determine disposal acceptance, legal compliance, or intrusion dose. DOT RQs and site WAC data are caller declarations, not embedded regulatory catalogs."
+}

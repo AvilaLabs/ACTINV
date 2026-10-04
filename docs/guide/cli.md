@@ -9,6 +9,12 @@ result only after all requested runs and comparisons succeed. Its base-spec
 path is relative to the wrapper file; paths inside that base spec retain the
 usual current-working-directory/catalog rules. See the [waste handbook](waste.md#generate-and-verify-a-native-composition-basis) for its schema and scientific scope.
 
+`actinv waste intrusion-screen SPEC.json [OUT.json]` keeps nominal Part 61
+classification and the explicitly selected February 2026 draft fusion screen
+separate. It screens one declared whole container at selected nominal steps.
+See the [draft-screen format](waste.md#screen-a-whole-container-against-the-fusion-draft)
+for caller-supplied WAC/RQ data, coverage and assessment indicators.
+
 ## Create, check, and solve
 
 ```text
@@ -90,6 +96,8 @@ actinv waste WASTE.json [OUT.json]
 actinv waste budget BUDGET.json [OUT.json]
 actinv waste bounds BOUNDS.json [OUT.json]
 actinv waste composition COMPOSITION.json [OUT.json]
+actinv waste composition solve NATIVE_COMPOSITION.json [OUT.json]
+actinv waste intrusion-screen INTRUSION.json [OUT.json]
 ```
 
 Each workflow consumes its own document format. [Advanced workflows](workflows.md) links the schemas, examples, and applicability limits. Run `actinv COMMAND --help` for available help; some commands print the shared usage rather than a dedicated page.

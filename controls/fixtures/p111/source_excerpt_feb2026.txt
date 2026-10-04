@@ -1,0 +1,86 @@
+Source: NRC NUREG-1556 Volume 22, February 2026 draft, ADAMS ML24092A377
+Source PDF SHA-256: 2deae800fc1a2ac3a7134481e81b75c90df98a1c9dade4393816719b55d27359
+Source text SHA-256: ef1a98961cef3465461400395f384cb1296a8ead9e505ef6a53975041544f3ca
+This file contains quoted text excerpts plus a normalized table transcription (spacing is normalized; labels and cell values are literal). Content was transcribed from the pinned extracted-text snapshot. Visual PDF review was limited to pages 8-70, 8-71, and Q-6; text-snippet content outside those pages was not independently checked against rendered PDF pages. Automated controls inspect this excerpt, not the complete PDF.
+
+[Section 8.11, printed page 8-69: source table references and presence tests]
+Table 8-4, below, shows the radionuclides the NRC considered quantitatively during the
+development of 10 CFR Part 61. The table includes radionuclide concentrations that the NRC
+staff calculated to protect individuals from inadvertent intrusion at that time. Table 8-4 provides
+guidance for determining when a site-specific inadvertent intrusion analysis is needed.
+
+To assess whether radionuclides other than those in Table 8-4 are present in fusion machine
+waste, licensees should use the guidance in NUREG/BR-0204 for providing a radiological
+description of a waste. That is, a licensee should consider a radionuclide to be present in waste
+if it meets any of the following criteria:
+
+• the concentration is greater than 0.01 times the concentration limit for that radionuclide
+  in the disposal facility WAC,
+• the radionuclide does not appear in 10 CFR 61.55 tables or the disposal facility WAC
+  and the concentration is greater than 0.26 megabecquerel (MBq) per cubic centimeter,
+• the activity represents a reportable quantity under DOT regulations (see 49 CFR
+  172.101, Appendix A, “Office of Hazardous Materials Transportation Color Tolerance
+  Charts and Tables”), or
+• the activity is 0.01 or more of the total activity within the disposal container.
+
+If a licensee determines there are radionuclides in the waste that were not considered
+quantitatively during the development of the 10 CFR 61.55 waste classification tables, the fusion
+machine licensee may propose a different method to demonstrate the waste is consistent with
+the description of the applicable waste class in 10 CFR 61.7. If the licensee does not make that
+determination, to comply with 10 CFR 20.2008(a) the licensee must ensure the disposal site has
+completed a site-specific intrusion assessment that considers the radionuclides in the fusion
+machine waste. The site-specific intrusion assessment must demonstrate that individuals who
+inadvertently intrude into the waste after the period of active instructional controls (e.g., typically
+100 years after disposal site closure) will not receive a dose greater than 5 mSv (500 mrem)
+from the waste.
+
+[Table 8-5, printed pages 8-70–8-71: complete row text and footnotes]
+Table 8-5      Radionuclides Considered Quantitatively During the Development of 10
+               CFR 61.55 with Constraints Below Which a Site-Specific Intrusion
+               Assessment Is Not Needed
+             Radionuclide                         Unit       Class A       Class B       Class C   Basis
+Sum of Radionuclides with less than a 5-year half-life
+                                                   Ci/m3       700          No limit      No limit   a,b
+H-3                                                Ci/m3        40          1.1 x 108     No limit   a,c,d
+C-14                                               Ci/m3       0.8           0.8             8       a
+C-14 in activated metal                            Ci/m3        8             8             80       a
+Cl-36                                              Ci/m3       110           110           1100      c
+Co-60                                              Ci/m3       700         67,000        No limit   a,c,d
+Ni-59                                              Ci/m3       2.2           2.2            22       e
+Ni-59 in activated metal                           Ci/m3       22            22            220       a
+Ni-63                                              Ci/m3       3.5            70           700       e
+Ni-63 in activated metal                           Ci/m3       35            700          7000       a
+Sr-90                                              Ci/m3       0.04          150          7000       a
+Nb-94                                              Ci/m3       0.02         0.02           0.2       e
+Nb-94 in activated metal                           Ci/m3       0.2           0.2             2       a
+Tc-99                                              Ci/m3       0.3           0.3             3       a
+I-129                                              Ci/m3       0.008        0.008          0.08      a
+Cs-135                                             Ci/m3       84             84           840       e
+Cs-137                                             Ci/m3        1             44           460       a
+Eu-152                                             Ci/m3       0.06          6.2         No limit   c
+Eu-154                                             Ci/m3       0.02          1.5        5,100,000   c
+U-235                                              Ci/m3       0.04         0.04            0.4      e
+U-238                                              Ci/m3       0.05         0.05            0.5      e
+Np-237                                             nCi/g        10            10             100      f
+Pu-241                                             nCi/g       350           350           3,500     a
+Pu-238, Pu-239, Pu-240, Pu-242, Am-241, Am-243,
+Cm-243, Cm-244                                    nCi/g        10            10             100      g
+Cm-242                                             nCi/g      2,000         2,000         20,000     a
+
+Notes:
+a) Values in 10 CFR 61.55.
+b) Analyses performed during the development of 10 CFR Part 61 and subsequent NRC staff analyses confirming analysis was bounding for other radionuclides with a half-life less than 5 years.
+c) Values calculated with the codes and data used during the development of 10 CFR Part 61. The NRC staff determined these values provide a level of protection provided by that regulation.
+d) No Class C limit because calculated value exceeds specific activity of radionuclide.
+e) Values calculated during the development of 10 CFR Part 61. The NRC staff determined these values provide a level of protection provided by that regulation.
+f) During the development of the waste classification tables, Np-237 was grouped with other alpha emitting transuranic nuclides despite having a lower calculated dose constraint because the NRC staff did not expect it to be present in significant quantities in LLW. Subsequent NRC staff calculations found that changes in dosimetry after the development of the waste classification tables reduced the projected dose such that it is not expected to pose excess risk to an inadvertent intruder if disposed of at the existing waste classification limits for alpha emitting transuranic nuclides with half-life greater than 5 years.
+g) Values calculated for individual radionuclides during the development of 10 CFR Part 61 were found sufficiently similar to be combined as “alpha emitting transuranic nuclides with half-life greater than 5 years.”
+
+[Appendix Q, printed pages Q-5–Q-6: model procedure wording]
+Compare the radionuclides in the waste to the radionuclides in Table 8-4 in Section 8.11. A licensee should consider a radionuclide to be present in waste if it meets any of the following criteria, either by direct measurement or an indirect method (e.g., use of scaling factors):
+• the concentration is greater than 0.01 times the concentration limit for that radionuclide in the disposal facility WAC;
+• the radionuclide does not appear in 10 CFR 61.55 tables or the disposal facility WAC and the concentration is greater than 0.26 megabecquerel (MBq) per cubic centimeter;
+• the activity represents a reportable quantity under DOT regulations (see 49 CFR 172.101, Appendix A, “Office of Hazardous Materials Transportation Color Tolerance Charts and Tables,”); or
+• the activity or is 0.01 or more of the total activity within the disposal container.
+
+If the waste contains radionuclides that are not in Table 8-4 of Section 8.11 of this NUREG or contains radionuclides in greater concentrations than the values in that table for the applicable disposal waste class, the licensee should either develop another method to demonstrate that the waste is consistent with the description of the applicable waste class in 10 CFR 61.7 or indicate that the disposal site has performed a site-specific inadvertent intrusion assessment as required by 10 CFR 20.2008(a).

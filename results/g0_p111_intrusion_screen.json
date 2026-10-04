@@ -1,0 +1,88 @@
+{
+  "case_count": 61,
+  "case_fixture_check": {
+    "case_count": 61,
+    "errors": [],
+    "pass": true,
+    "target_count": 62
+  },
+  "case_fixture_matches": true,
+  "column_checks": 75,
+  "control_sha256": {
+    "controls/check_p111.py": "abf52d1b83afc8aaf2e678e5cb7432acc1276ae0161cce218fa4df93f71ab542",
+    "controls/check_p111_verdict.py": "46fc4a7295f79c23a166c3339fbd2abbc11decd541158be0edcc2d9d18423f8f",
+    "controls/fixtures/p111/cases.json": "a7a3d5b553b0856a9bcb04ffaee15ac1ebbc59b8ef640bd93d78c7884d5dffd3",
+    "controls/fixtures/p111/literal_rows.json": "3457cab1c51d4d23589015092e04243162ac0a5cec105d2ae123dc1fefcea8d5",
+    "controls/fixtures/p111/source_excerpt_feb2026.txt": "d00c44ca9747f14eb97bcaab7c85202577a36b6920ad9f4bb2f73c20d49d4e06",
+    "controls/fixtures/p111/source_excerpt_mar2025.txt": "4c09a8bcefc7b49b75fdae04d3dc7e7a5b339c4ff726c0773012a19b2aec3f42",
+    "controls/fixtures/p111/source_reconciliation.json": "8fe08b31d1e79fb46bc7471666caaa04b8b115f600bc6f24ee884b53b7a01e6a",
+    "controls/p111_intrusion_control.py": "a8152cf68719b6384610f2f8b08f2a3a46b901b8f3af7f9b3db8c61414e7c153",
+    "controls/test_p111_oracle.py": "8a5cad29f3ffa9694ae4792b17ecb6f4b68f941165f83d1d1852d87237c327d2",
+    "controls/test_p111_seal.py": "662ae914f8f6c13b9f03793943a713c0c6f7407f0f0100b8e1db6549abf88727",
+    "controls/test_p111_verdict.py": "c37d0557139819bf0993ee5fa01eaafbc6e31c0c81f28966c0f138e3fecba4b2",
+    "crates/actinv-core/data/waste_us_nrc_nureg1556_v22_draft_2026_02_v1.json": "071c238917ac0f3cb3436df958e78ac5868f1de4ed39b0c25781e8f2b7a4ffc7",
+    "data/waste_us_nrc_nureg1556_v22_draft_2026_02_v1.json": "071c238917ac0f3cb3436df958e78ac5868f1de4ed39b0c25781e8f2b7a4ffc7"
+  },
+  "historical_p110_verified": true,
+  "pack_mirror_identical": true,
+  "pack_sha256": "071c238917ac0f3cb3436df958e78ac5868f1de4ed39b0c25781e8f2b7a4ffc7",
+  "pass": true,
+  "phase": "P111",
+  "predicate_boundary_count": 12,
+  "prior_verdict_details": {
+    "P105": {
+      "sha256": "0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41",
+      "verdict": "P105-PASS"
+    },
+    "P107": {
+      "sha256": "5e5bae7ebf1f5c244a84f6e03ffe19c3e148f3678d939bc12a09f26053aea3aa",
+      "verdict": "P107-PASS"
+    },
+    "P108": {
+      "sha256": "231071d8f4009294a2eec3ca1029054ec9542d9d1cdc29b12c282fd8d19041ef",
+      "verdict": "P108-PASS"
+    },
+    "P109": {
+      "sha256": "b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398",
+      "verdict": "P109-FAIL"
+    },
+    "P110": {
+      "sha256": "1a2f7254e22333778c456139f19b231b76c7f2c3232115c1a104b61b2d43503d",
+      "verdict": "P110-PASS"
+    }
+  },
+  "prior_verdict_sha256": {
+    "results/p105_verdict.json": "0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41",
+    "results/p107_verdict.json": "5e5bae7ebf1f5c244a84f6e03ffe19c3e148f3678d939bc12a09f26053aea3aa",
+    "results/p108_verdict.json": "231071d8f4009294a2eec3ca1029054ec9542d9d1cdc29b12c282fd8d19041ef",
+    "results/p109_verdict.json": "b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398",
+    "results/p110_verdict.json": "1a2f7254e22333778c456139f19b231b76c7f2c3232115c1a104b61b2d43503d"
+  },
+  "prior_verdicts_match": true,
+  "protocol_registered": true,
+  "protocol_sha256": "c2ffdb958682090803702c1de4adf670b3838b87db47eb8312356278199f231f",
+  "repair_amendment_sha256": "dc9e8a4619a4a67e7295cbfd77df4ce242e4355ada01ea323893138ac1291d17",
+  "repair_evidence_sha256": {
+    "results/failures/p111_initial/check_p111_before_amendment.py": "bb811a5c9348fb84a3b87fa6e19b915e6f408e9a5a238f4d454984cf85553dd7",
+    "results/failures/p111_initial/g0_before_amendment.json": "b2f356eb3007845a68724b6bdd2b2504005cef85dafd954ce0b75ce2074f0696",
+    "results/failures/p111_initial/waste_intrusion_before_repair.rs": "63e7d2bd52b80b4ea45cfbe05251a26226b4e87902a489dae4b24918fbf61409",
+    "results/failures/p111_initial/workspace_check.log": "b8dbdb381c7526470068864b231b671eaa253f4937b0a6d7501fec1d3af09128"
+  },
+  "repair_metadata_valid": true,
+  "repair_rounds": 1,
+  "schema": "actinv-p111-intrusion-screen-g0-1",
+  "source_review": {
+    "column_checks": 75,
+    "errors": [],
+    "excerpt_sha256": {
+      "february_2026": "d00c44ca9747f14eb97bcaab7c85202577a36b6920ad9f4bb2f73c20d49d4e06",
+      "march_2025": "4c09a8bcefc7b49b75fdae04d3dc7e7a5b339c4ff726c0773012a19b2aec3f42"
+    },
+    "literal_rows_sha256": "3457cab1c51d4d23589015092e04243162ac0a5cec105d2ae123dc1fefcea8d5",
+    "pack_sha256": "071c238917ac0f3cb3436df958e78ac5868f1de4ed39b0c25781e8f2b7a4ffc7",
+    "pass": true,
+    "row_count": 25
+  },
+  "source_rows_checked": 25,
+  "target_count": 62
+}

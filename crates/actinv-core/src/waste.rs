@@ -59,6 +59,59 @@ impl RulePack {
         Self::parse(BUNDLED_RULES)
     }
 
+    /// Whether a nuclide belongs to an applicable named or aggregate Part 61 row.
+    ///
+    /// Missing properties leave aggregate membership unknown. This queries the
+    /// selected pack's rows without substituting a separate draft catalog.
+    pub fn nuclide_listed(
+        &self,
+        waste_type: WasteType,
+        key: &str,
+        properties: Option<NuclideProperties>,
+    ) -> Result<Option<bool>, String> {
+        self.validate()?;
+        let canonical = canonical_nuclide(key)?;
+        if let Some(value) = properties {
+            let expected_z = nuclide_z(&canonical)?;
+            if value.z != expected_z {
+                return Err(format!(
+                    "nuclide properties Z={} does not match {canonical} (Z={expected_z})",
+                    value.z
+                ));
+            }
+            if !value.half_life_s.is_finite() || value.half_life_s <= 0.0 {
+                return Err(format!(
+                    "nuclide {canonical} half_life_s must be positive and finite"
+                ));
+            }
+        }
+        let mut unknown = false;
+        for row in self
+            .applicable_rows(1, waste_type)
+            .chain(self.applicable_rows(2, waste_type))
+        {
+            match row.selector.as_str() {
+                T1_ALPHA_SELECTOR | T2_SHORT_SELECTOR => match properties {
+                    None => unknown = true,
+                    Some(value) => {
+                        let years = value.half_life_s / self.year_s;
+                        let member = if row.selector == T1_ALPHA_SELECTOR {
+                            value.z > 92 && value.alpha_emitting && years > 5.0
+                        } else {
+                            years < 5.0
+                        };
+                        if member {
+                            return Ok(Some(true));
+                        }
+                    }
+                },
+                _ if canonical_nuclide(&row.selector)? == canonical => return Ok(Some(true)),
+                _ => {}
+            }
+        }
+        Ok(if unknown { None } else { Some(false) })
+    }
+
     fn validate(&self) -> Result<(), String> {
         if self.schema != "actinv-waste-rules-1" {
             return Err(format!("unsupported waste rule schema '{}'", self.schema));
@@ -843,6 +896,103 @@ fn binding_constraints(
 mod tests {
     use super::*;
     use serde_json::Value;
+
+    #[test]
+    fn listing_uses_part61_applicability_and_keeps_missing_properties_unknown() {
+        let pack = RulePack::bundled().unwrap();
+        let long_lived = |z| {
+            Some(NuclideProperties {
+                z,
+                half_life_s: 100.0 * YEAR_S,
+                alpha_emitting: false,
+            })
+        };
+        assert_eq!(
+            pack.nuclide_listed(WasteType::General, "C-14", None)
+                .unwrap(),
+            Some(true)
+        );
+        for (name, z) in [("Ni59", 28), ("Nb94", 41)] {
+            assert_eq!(
+                pack.nuclide_listed(WasteType::General, name, long_lived(z))
+                    .unwrap(),
+                Some(false)
+            );
+            assert_eq!(
+                pack.nuclide_listed(WasteType::ActivatedMetal, name, long_lived(z))
+                    .unwrap(),
+                Some(true)
+            );
+        }
+        assert_eq!(
+            pack.nuclide_listed(WasteType::General, "Cl36", long_lived(17))
+                .unwrap(),
+            Some(false)
+        );
+        assert_eq!(
+            pack.nuclide_listed(WasteType::General, "Mg24", None)
+                .unwrap(),
+            None
+        );
+        assert_eq!(
+            pack.nuclide_listed(WasteType::General, "Mg24", long_lived(12))
+                .unwrap(),
+            Some(false)
+        );
+    }
+
+    #[test]
+    fn listing_uses_strict_half_life_groups_and_rejects_invalid_properties() {
+        let pack = RulePack::bundled().unwrap();
+        for (half_life_s, expected) in [
+            (5.0 * YEAR_S - 1.0, Some(true)),
+            (5.0 * YEAR_S, Some(false)),
+            (5.0 * YEAR_S + 1.0, Some(false)),
+        ] {
+            assert_eq!(
+                pack.nuclide_listed(
+                    WasteType::General,
+                    "Xe135",
+                    Some(NuclideProperties {
+                        z: 54,
+                        half_life_s,
+                        alpha_emitting: false,
+                    }),
+                )
+                .unwrap(),
+                expected
+            );
+        }
+        let alpha = NuclideProperties {
+            z: 95,
+            half_life_s: 100.0 * YEAR_S,
+            alpha_emitting: true,
+        };
+        assert_eq!(
+            pack.nuclide_listed(WasteType::General, "Am242", Some(alpha))
+                .unwrap(),
+            Some(true)
+        );
+        assert!(pack
+            .nuclide_listed(
+                WasteType::General,
+                "Am242",
+                Some(NuclideProperties { z: 94, ..alpha }),
+            )
+            .is_err());
+        for half_life_s in [0.0, -1.0, f64::INFINITY, f64::NAN] {
+            assert!(pack
+                .nuclide_listed(
+                    WasteType::General,
+                    "Am242",
+                    Some(NuclideProperties {
+                        half_life_s,
+                        ..alpha
+                    }),
+                )
+                .is_err());
+        }
+    }
 
     fn props(entries: &[(&str, i32, f64, bool)]) -> BTreeMap<String, NuclideProperties> {
         entries

@@ -1,0 +1,46 @@
+Running as unit: run-p657625-i9053267.scope; invocation ID: 04b699dee948492f9346abd207824118
+    Checking actinv-core v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-core)
+    Checking actinv-cli v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli)
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:628:18
+    |
+628 |     let result = json!({
+    |                  ^^^^
+
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:613:18
+    |
+613 |     let screen = json!({
+    |                  ^^^^
+
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:607:44
+    |
+607 |         target_object.insert("t_s".into(), json!(inventory.t_s));
+    |                                            ^^^^
+
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:606:45
+    |
+606 |         target_object.insert("step".into(), json!(step));
+    |                                             ^^^^
+
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:404:5
+    |
+404 |     json!({
+    |     ^^^^
+
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:393:19
+    |
+393 |     let rq_meta = json!({
+    |                   ^^^^
+
+error: cannot find macro `json` in this scope
+   --> crates/actinv-cli/src/waste_intrusion.rs:388:20
+    |
+388 |     let wac_meta = json!({
+    |                    ^^^^
+
+error: could not compile `actinv-cli` (lib) due to 7 previous errors

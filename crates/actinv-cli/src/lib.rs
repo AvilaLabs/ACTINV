@@ -15,6 +15,7 @@ pub mod waste_budget;
 pub mod waste_composition;
 pub mod waste_composition_solve;
 pub mod waste_composition_verify;
+pub mod waste_intrusion;
 pub mod worker;
 pub mod workflow;
 
