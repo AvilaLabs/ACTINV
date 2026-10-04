@@ -1,5 +1,5 @@
 {
-  "ci_evidence_sha256": null,
+  "ci_evidence_sha256": "20fe05c616515ec635fcab34134acae0bf902db45134af92b8a9cbc0c3d9fe7d",
   "evidence_sha256": {
     "results/g0_p112_intrusion_screen.json": "da06735bacade33eeb543e08300d09efcb5e995e9c9f8b80904cd5f8d9be1906",
     "results/g1_p112_intrusion_screen.json": "1193312d504ef6e21c7be973d79b22c32b85ae619f9b6341b2269885013c61e6",
@@ -10,7 +10,7 @@
     "G0": "PASS",
     "G1": "PASS",
     "G2": "PASS",
-    "G3_CI": "PENDING",
+    "G3_CI": "PASS",
     "G3_CI_evidence_consistent": "PASS",
     "G3_local": "PASS",
     "prior_verdict_hashes": "PASS",
@@ -19,8 +19,8 @@
     "repair_policy": "PASS",
     "source_controls_bound": "PASS"
   },
-  "implementation_commit": null,
-  "implementation_record_sha256": null,
+  "implementation_commit": "5fc35ac83b360d03c7b0d0056112de61abd62ee0",
+  "implementation_record_sha256": "6c7ac49555c8ed383005175fa651413dd262a388e1e28d34813bf2277c84e117",
   "phase": "P112",
   "qualification": "Nominal whole-container screening against literal February 2026 draft Table 8-5 with explicit conditional presence interpretations and coverage outcomes; no disposal acceptance, intrusion dose, legal compliance, statistical uncertainty or physical inventory completeness qualification.",
   "quality_checks": {
@@ -30,12 +30,12 @@
     "fresh_gate_count": 10,
     "fresh_gate_entries_green": true,
     "handbook_file_count": 27,
-    "historical_source_verification": false,
+    "historical_source_verification": true,
     "public_handbook_matches_checkpoint": true,
     "quality_sha256": "18caa3dced925f47ba5f3bbe2bdc2935a0d3db838b6137acd221126a80fb309e",
     "release_binary_sha256": "bb73bd5e6d43d33bb14adff1ee7d5393cacb2dd149ca983f29330cd631b6931f",
     "rust_hashes_match_checkpoint_and_worktree": true
   },
   "schema": "actinv-p112-verdict-1",
-  "verdict": "P112-LOCAL-PASS"
+  "verdict": "P112-PASS"
 }

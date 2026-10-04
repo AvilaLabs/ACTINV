@@ -975,7 +975,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 00f9febfdbaf33bcac7485964e206c958a9cfa92c5f73e98070788a04105fd0f  ./docs/RELEASE_NOTES_v1.2.1.md
 7adc25adea21fb02c54bdee2ed7d04054a952063aa44d9ac150c86675edbe21a  ./docs/RELEASE_NOTES_v1.3.1.md
 8e644c8f26e481106af627823f567a34a7d8d6cdd466eedd4b013b958020e6ed  ./docs/RELEASE_NOTES_v1.4.0.md
-ae1fc76e173485ee578920d1397099458d18e7defa186fe5fc127ec3db4fbc9e  ./docs/ROADMAP.md
+a5d5b9717ebed0591183d29da326b6657af9dcc488457f06ef07b6f9392077dc  ./docs/ROADMAP.md
 be98e3a2dd93bea898c74dd4151888e3449ad9688549a0937593559bd98e4725  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 c64390f4fb68751f12bd94b66474a84fca2ed93d689a3a4ab24a784fcdd7fa88  ./docs/SUMMARY.md
@@ -1028,7 +1028,7 @@ b78bbf6e9050f602d43a4977b4927640342799a961eff56d239e5221abdc6bb0  ./docs/history
 b6cfff1525f2ec5d6b81fd5830ec3ec3c5e646c3b41af1ea90fc424c4891229c  ./docs/history/sessions/P11.md
 1f45169acd4a62ef5008a37f7365109ed69495a89e309d53055d01f7da17f8f9  ./docs/history/sessions/P110.md
 7d6061928c0fc917139b442db81a8173ec6127e28bd0cd46d1dac1a9b5e72251  ./docs/history/sessions/P111.md
-4392a8ccca3f34be4e2ec0a754d751cfe421942ef579b941caa48c79c10b8c4d  ./docs/history/sessions/P112.md
+b9cd50ca13c5d48b040b17ddf813c08192196bd971bcc5aca442fa3313cb3efa  ./docs/history/sessions/P112.md
 34e5eda5d8a3f6052f4c9a5f212cdd8b0f48bbed5915013f4a498e0440bbe900  ./docs/history/sessions/P12.md
 29d947f0d7b26052090a9f36e6223c3021fb01a3f095c996f40ce6b6cd41fa98  ./docs/history/sessions/P14.md
 d7d3ea8efcef5ed0aee92f9dbb9726075a853b76796dccd39041f3ba889f822e  ./docs/history/sessions/P15.md
@@ -1054,7 +1054,7 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintainers/DOCUMENTATION.md
 57508903af7b17826b47a27a59ee9fb5f78bb035ab2f710933c4d52ae9f3aaba  ./docs/maintainers/E2_AUDIT_PLAN.md
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
-f75e7ef87bef35870f0bee3f00f4cd939da2dc696130bf37ae34cb048056e7a6  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
+80bc254c15c9c4cfd6267fb7854b63d81211d7155e4ef6ed0d1e6478bd565c9f  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
 4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64  ./docs/maintainers/WASTE_RULE_SOURCE_REVIEW.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
 d49b0040214a08c1be18825fe12bef4df9bdf2d009d1112d43955ee182fae5fd  ./docs/releases/desktop-v0.2.0-preview.1.md
@@ -1091,7 +1091,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-408db54b1c8b7ac4b0f9154fa77adb5330616a8d052081f150fa5588facbac12  ./ledger.md
+ec90269ede4f2d717b5a78b6f39347d29fcddc4a0c8b8f10fc22a562cea60021  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 adbd7aee816d7bc64cc91830d57216c83d85a06bda77e7fbe54f8472b2926bea  ./packaging/desktop.json
@@ -3637,7 +3637,9 @@ d982f22213590625260244389211db73157525701551a26d33d7236089e6a03f  ./results/p110
 1a2f7254e22333778c456139f19b231b76c7f2c3232115c1a104b61b2d43503d  ./results/p110_verdict.json
 d5d29b405a44147472c4831881ebce4ef176a24225d3e12ddd7d790dd171abfa  ./results/p111_failure_commit.json
 35c3b5eb4ef12fcad7e78f90a9103b476cdb51b29cb7974b7ec0a3ddae25579c  ./results/p111_verdict.json
-cef08ef731de4458e985d3b079994cc3ae51d9bf5bd4116e9904d6d424764031  ./results/p112_verdict.json
+20fe05c616515ec635fcab34134acae0bf902db45134af92b8a9cbc0c3d9fe7d  ./results/p112_ci_runs.json
+6c7ac49555c8ed383005175fa651413dd262a388e1e28d34813bf2277c84e117  ./results/p112_implementation_commit.json
+b94cdab3a9776d51df74b793b889f80198e8e5f6d9c0af04d7fba671d248e91e  ./results/p112_verdict.json
 52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e  ./results/p14_performance.json
 db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_quality.json
 2f5669d71f0959bb25571e189dd9de733ef237e314d78b0e790e778f2f63da0f  ./results/p15_cache_integrity.json
