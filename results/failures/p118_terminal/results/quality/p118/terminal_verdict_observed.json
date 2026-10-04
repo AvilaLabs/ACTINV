@@ -1,0 +1,54 @@
+{
+  "schema": "actinv-p118-terminal-verdict-observation-1",
+  "phase": "P118",
+  "status": "completed",
+  "exit_code": 1,
+  "execution_interface": "exec_command",
+  "tool_wall_time_s": 0.598918341,
+  "entry_point": [
+    "python3",
+    "-c",
+    "import sys,json; sys.path[:0]=[\"scripts\",\"controls\"]; import run_p117_gate as r; resources,errors=r.inspect_resources(); errors+=r._resource_snapshot_errors(resources); print(json.dumps({\"resources\":resources,\"errors\":errors},sort_keys=True),flush=True); assert not errors,errors; import check_p118_verdict; raise SystemExit(check_p118_verdict.main([\"--write\"]))"
+  ],
+  "timeout_s": 1200,
+  "termination_grace_s": 30,
+  "raw_output_path": "target/p118-terminal-verdict.log",
+  "durable_output_path": "results/quality/p118/terminal_verdict.log",
+  "output_sha256": "c66e86d954a16e07135257da7dd8fac19992b99681170256c8d9a4e8141eeffe",
+  "verdict_path": "results/p118_verdict.json",
+  "verdict_sha256": "11e82faa9325641fa53f52d05be22cc3ca26ea6af8e65e9c55ed37e6da884743",
+  "verdict": "P118-FAIL",
+  "persisted_matches": true,
+  "scope_header": "Running as unit: run-p2292432-i10665055.scope; invocation ID: daca13d2d22541ffb002718d88e5b94d",
+  "scope_completion": {
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "Result": "success"
+  },
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2292432-i10665055.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "repair_rounds_consumed": 1,
+  "G0_status": "not_sealed",
+  "G1_status": "not_run",
+  "G2_status": "not_run",
+  "G3_status": "not_run",
+  "successor_phase": "not_registered"
+}

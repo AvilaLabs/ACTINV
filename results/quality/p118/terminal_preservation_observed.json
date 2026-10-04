@@ -1,0 +1,56 @@
+{
+  "schema": "actinv-p118-terminal-preservation-observation-1",
+  "phase": "P118",
+  "status": "completed",
+  "observed_exit_code": 0,
+  "execution_interface": "exec_command/write_stdin",
+  "entry_point": [
+    "python3",
+    "target/p118-preserve-terminal.py",
+    "6f3f964cf06ad4e969392b90effbe4f835d183a3"
+  ],
+  "timeout_s": 1200,
+  "termination_grace_s": 30,
+  "tool_calls": [
+    {
+      "interface": "exec_command",
+      "chunk_id": "bf2a52",
+      "wall_time_seconds": 1.001036708,
+      "session_id": 57972,
+      "original_token_count": 0,
+      "output": ""
+    },
+    {
+      "interface": "write_stdin",
+      "chunk_id": "745441",
+      "wall_time_seconds": 0.000013715,
+      "exit_code": 0,
+      "original_token_count": 0,
+      "output": ""
+    }
+  ],
+  "scope_header": "Running as unit: run-p2312284-i10693955.scope; invocation ID: 24d3c503e9d44c6382ea345fcc5d4b77",
+  "scope_completion": {
+    "ActiveState": "inactive",
+    "SubState": "dead",
+    "Result": "success"
+  },
+  "raw_output_path": "target/p118-terminal-preservation.log",
+  "durable_output_path": "results/quality/p118/terminal_preservation.log",
+  "output_sha256": "a268150482b885100c99d9c4286c064b256229e399ac0ad017cebb7b47819951",
+  "discovery_path": "results/failures/p118_terminal/discovery.json",
+  "discovery_sha256": "4d7f99aabec30439317c7de1bed2a70a26c63cb722c88d78a821038687d5de7a",
+  "returned_preservation_report": {
+    "archive_files": 42,
+    "checkpoint_commit": "6f3f964cf06ad4e969392b90effbe4f835d183a3",
+    "discovery_sha256": "4d7f99aabec30439317c7de1bed2a70a26c63cb722c88d78a821038687d5de7a",
+    "handbook_files": 27,
+    "preserved_files": 41,
+    "rust_files": 100,
+    "source_files": 319,
+    "terminal_verdict": "P118-FAIL"
+  },
+  "qualification_status": "terminal P118-FAIL unchanged",
+  "successor_phase": "not_registered",
+  "pushed": false
+}

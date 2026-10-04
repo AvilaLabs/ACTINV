@@ -1,0 +1,38 @@
+Running as unit: run-p2290641-i10668387.scope; invocation ID: 032daa4071aa41fe89e01fff3a724c84
+{
+  "argv": [
+    "python3",
+    "controls/test_p117_history.py"
+  ],
+  "child_exit_code": 1,
+  "cwd": ".",
+  "elapsed_s": 0.42047037999145687,
+  "error": null,
+  "gate": "p117_history_regressions",
+  "log_path": "target/p118-p117_history_regressions.log",
+  "log_sha256": "8d942433101d4236c6e05b7777f02fe6c410896be093a2d174d778240c22af2d",
+  "phase": "P118",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2290641-i10668387.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "child_failed",
+  "timeout_s": 600.0
+}

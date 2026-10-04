@@ -1,0 +1,50 @@
+{
+  "G0_status": "not_sealed",
+  "G1_status": "not_run",
+  "G2_status": "not_run",
+  "G3_status": "not_run",
+  "actual_child_exit_code": 1,
+  "actual_outer_exit_code": 1,
+  "base_commit": "b81e8c3365a5a08ed55e9f99c0c88f945709996d",
+  "executed_source_sha256": {
+    "controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+    "protocols/ACTINV-P118_PROTOCOL.md": "81ceb65891eae00b9ec0ade95d32bb0e8bae7ec23ef56bafd670c92e4980df1b",
+    "protocols/protocol_hash.txt": "df33906bd4d77cfe5a781259b7d1fa91cd2a357c70de8e067a8b617e26b9667a",
+    "scripts/run_p117_gate.py": "ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78",
+    "scripts/run_p118_gate.py": "0c90a5bda677c67a7af1f310fe0ec8ccc0e675fc6d8e2ae648d7687737adb252",
+    "scripts/test_run_p118_gate.py": "8e8e96109cb2d8a6241e459d2ec1ce03623ae846717b2bb938f67762f43b9085"
+  },
+  "failed_gate": "recorder_regressions",
+  "failed_test": "test_setup_resource_failure_is_recorded_without_launching_runner",
+  "observation_sha256": "e58773f6adbc90a7e864be67e9d66b032c6535781f975110296412d642f96169",
+  "outer_output_sha256": "ec0302c153e3f278cbb6f3a27a6e37426f909064cd4fb77bc6624052635866ab",
+  "preserved_files_sha256": {
+    "controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+    "preserve_initial.py": "4432099b0e4499c9b338d5d96d441e52bac5d321efd210d2999243d8a088f809",
+    "protocols/ACTINV-P118_PROTOCOL.md": "81ceb65891eae00b9ec0ade95d32bb0e8bae7ec23ef56bafd670c92e4980df1b",
+    "protocols/protocol_hash.txt": "df33906bd4d77cfe5a781259b7d1fa91cd2a357c70de8e067a8b617e26b9667a",
+    "results/quality/p118/initial_failure_observed.json": "e58773f6adbc90a7e864be67e9d66b032c6535781f975110296412d642f96169",
+    "results/quality/p118/initial_failure_outer.log": "ec0302c153e3f278cbb6f3a27a6e37426f909064cd4fb77bc6624052635866ab",
+    "results/quality/p118/recorder_regressions.json": "8a240a0b1078f855c3c95ea355eb2905dea32e0e2f63d9a880864c5d0ff5dc1c",
+    "results/quality/p118/recorder_regressions.log": "ca806c9d525d2234440ae8ae3b30dc2e8ca39432b70da62c4ddf6658727cccfc",
+    "results/quality/p118/rust_fmt.json": "f7c8f207917487fcabe4454a747b0241a5a18eb343068d98279c1a7150343e82",
+    "results/quality/p118/rust_fmt.log": "d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1",
+    "scripts/run_p117_gate.py": "ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78",
+    "scripts/run_p118_gate.py": "0c90a5bda677c67a7af1f310fe0ec8ccc0e675fc6d8e2ae648d7687737adb252",
+    "scripts/test_run_p118_gate.py": "8e8e96109cb2d8a6241e459d2ec1ce03623ae846717b2bb938f67762f43b9085",
+    "target/p118-recorder_regressions.log": "ca806c9d525d2234440ae8ae3b30dc2e8ca39432b70da62c4ddf6658727cccfc",
+    "target/p118-rust_fmt.log": "d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1"
+  },
+  "protocol_sha256": "81ceb65891eae00b9ec0ade95d32bb0e8bae7ec23ef56bafd670c92e4980df1b",
+  "repair_rounds_at_failure": 0,
+  "schema": "actinv-p118-initial-preservation-1",
+  "successful_gates": [
+    "rust_fmt"
+  ],
+  "test_count": 14,
+  "test_failure_count": 1,
+  "unchanged_helper_git_sha256": {
+    "controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+    "scripts/run_p117_gate.py": "ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78"
+  }
+}

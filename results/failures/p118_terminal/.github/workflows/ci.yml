@@ -1,0 +1,428 @@
+name: controls
+
+# Builds the workspace and runs every control that does not need a bulk nuclear-data library.
+# The data subset is fetched from its public host and pinned by SHA-256; nothing nuclear is stored in this repository.
+on:
+  push: { branches: [master, main] }
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-control:
+    runs-on: ubuntu-latest
+    env:
+      ACTINV_CI_DATA: /tmp/actinv-ci-data
+      ACTINV_CI_OUT: /tmp/actinv-ci
+      ACTINV_P8_WORK: /tmp/actinv-p8
+      ACTINV_P9_WORK: /tmp/actinv-p9
+      ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+      ACTINV_P10_WORK: /tmp/actinv-p10
+    steps:
+      - uses: actions/checkout@v7
+        with: { fetch-depth: 0, persist-credentials: false }
+
+      - name: Reject AI attribution trailers in commit messages
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            base="origin/${{ github.base_ref }}"
+          else
+            base="${{ github.event.before }}"
+          fi
+          range="$base..HEAD"
+          git rev-parse --verify "$base" >/dev/null 2>&1 || range="HEAD~30"
+          if git log --format=%B "$range" | grep -nE 'Generated with|[Cc]o-[Aa]uthored-[Bb]y|devin-ai-integration|devin\.ai'; then
+            echo "::error::commit message contains a banned AI attribution trailer" >&2
+            exit 1
+          fi
+          echo "commit messages in $range are clean"
+
+      - name: Check tracked-file manifest before building
+        run: python3 scripts/refresh_manifest.py
+
+      - name: Preflight orchestration regression
+        run: python3 scripts/test_preflight.py
+
+      - name: Fusion isotope benchmark opening audit (no inventory reproduction claim)
+        run: |
+          python3 controls/test_fusion_isotope_001.py
+          python3 controls/check_fusion_isotope_001.py
+
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+
+      - name: Native desktop build dependencies
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libgl1-mesa-dev
+
+      - name: Rust quality gates
+        run: |
+          cargo fmt --all -- --check
+          cargo check --workspace --all-targets --all-features
+          cargo clippy --workspace --all-targets --all-features -- -D warnings
+          cargo test --workspace --all-targets --all-features
+
+      - name: Build workspace
+        run: cargo build --release --workspace
+
+      - name: P103 source-seal integrity (historical)
+        run: |
+          python controls/check_p103.py --g0-only --no-write
+          python controls/check_p103_failure.py
+          python controls/check_p104_failure.py
+
+      - name: P105 waste classification, aggregation, and budget controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p105_children.py
+          python controls/check_p105.py --no-write
+          python controls/check_p105_verdict.py
+
+      - name: P107 conservative whole-component waste bounds
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p106_bounds.py
+          python controls/test_p107_seal.py
+          python controls/test_p107_history.py
+          python controls/check_p107.py --no-write
+          python controls/check_p107_history.py
+
+      - name: P108 conservative composition response bounds
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p108_seal.py
+          python controls/check_p108.py --no-write
+          python controls/check_p108_verdict.py
+
+      - name: P109 preserved failure checkpoint
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p109_native_identity.py
+          python controls/test_p109_history.py
+          python controls/check_p109.py --g0-only --no-write
+          python controls/check_p109_history.py
+
+      - name: P110 native composition basis and witness verification
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p110_seal.py
+          python controls/test_p110_native_identity.py
+          python controls/check_p110.py --no-write
+          python controls/check_p110_verdict.py
+
+      - name: P111 draft intrusion screen controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p111_oracle.py
+          python controls/test_p111_seal.py
+          python controls/test_p111_verdict.py
+          python controls/test_p111_history.py
+          python controls/check_p111.py --no-write
+          python controls/check_p111_history.py
+
+      - name: P112 draft intrusion screen successor controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p112_seal.py
+          python controls/test_p112_verdict.py
+          python controls/check_p112.py --no-write
+          python controls/check_p112_verdict.py
+
+      - name: P113 terminal failure history remains immutable
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p113_history.py
+          python controls/check_p113_history.py
+
+      - name: P114 terminal failure remains immutable
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p114_history.py
+          python controls/check_p114_history.py
+
+      - name: P115 terminal failure remains immutable
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p115_history.py
+          python controls/check_p115_history.py
+
+      - name: P116 unchanged twin verification successor controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p116_oracle.py
+          python controls/test_p116_seal.py
+          python controls/test_p116_verdict.py
+          python scripts/test_run_p116_gate.py
+          python controls/test_p105_children.py
+          python controls/check_p116.py --no-write
+          python controls/test_p116_history.py
+          python controls/check_p116_history.py
+
+      - name: P117 terminal failure remains immutable
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p117_history.py
+          python controls/check_p117_history.py
+
+      - name: P118 verified cached inputs and unchanged twin qualification
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p118.py
+          python controls/test_p118_verdict.py
+          python scripts/test_run_p118_gate.py
+          python controls/check_p118.py --no-write
+          python controls/check_p118_verdict.py
+
+      - name: Unit probe (constant source, analytic answer)
+        run: ./target/release/unit_probe
+
+      - uses: actions/setup-python@v7
+        with: { python-version: "3.12" }
+
+      - name: Python environment
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-ci.txt
+
+      - name: Desktop and CLI scientific parity
+        run: python controls/check_desktop.py
+
+      - name: P18b authority, provenance, and quarantine seal
+        run: python controls/check_g0_p18b.py --no-write
+
+      - name: P18b decimal and official-checker oracle
+        env:
+          ACTINV_P18B_PROBE: target/release/p18b_oracle_probe
+        run: python controls/check_g1_p18b.py --no-write
+
+      - name: P18b corpus classification evidence integrity
+        run: python controls/check_g2_p18b.py --no-write
+
+      - name: P18b conservative-builder runtime reconciliation
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: python controls/check_g3_p18b.py --no-write
+
+      - name: P18b diagnostic report arithmetic and ledger integrity
+        run: python controls/check_g4_p18b.py --no-write
+
+      - name: P18b formal closure preserves the frozen failure verdict
+        run: python controls/check_p18b.py --no-write
+
+      - name: P20 opening gate — protocol, verdicts, identity baseline, MF=33 census
+        run: python controls/check_g0_p20.py --no-write
+
+      - name: P20 census reproduction — aggregates and MF=33 structure walk
+        run: python controls/check_g1_p20.py --no-write
+
+      - name: P20 defect exclusion — absent-section identity and named reasons
+        run: python controls/check_g2_p20.py --no-write
+
+      - name: P20 correlated sampling oracle — quantiles, variance, floor gating
+        run: python controls/check_g3_p20.py --no-write
+
+      - name: P20 decay/yield channels — FD agreement, channel sums, coverage
+        run: python controls/check_g4_p20.py --no-write
+
+      - name: P20 closure — re-run all gates, re-derive arithmetic, verdict
+        run: python controls/check_p20.py --no-write
+
+      - name: P21 opening gate — protocol, verdicts, identity baseline, profile
+        run: python controls/check_g0_p21.py --no-write
+
+      - name: P21 grouping/selection/guard — digests, reuse recount, named errors
+        run: python controls/check_g1_p21.py --no-write
+
+      - name: P21 resume/checkpoint — line-digest identity, rejections
+        run: python controls/check_g2_p21.py --no-write
+
+      - name: P21 executed scale — memory gates, hardware record, reuse recount
+        run: python controls/check_g3_p21.py --no-write
+
+      - name: P21 docs/performance — supersede and claims record
+        run: python controls/check_g4_p21.py --no-write
+
+      - name: P21 closure — re-run all gates, re-derive arithmetic, verdict
+        run: python controls/check_p21.py --no-write
+
+      - name: P22 opening gate — protocol, verdicts, CB1 seals, executed-evidence binding
+        run: python controls/check_g0_p22.py --no-write
+
+      - name: P22 CB1 re-score — numerical/ALARA/FNS comparisons reproduced
+        run: python controls/check_g1_p22.py --no-write
+
+      - name: P22 exercises — install, released-binary performance, clean clone, mesh
+        run: python controls/check_g2_p22.py --no-write
+
+      - name: P22 held-out — sealed P17 metrics reproduced, failure preserved
+        run: python controls/check_g3_p22.py --no-write
+
+      - name: P22 release candidate — scorecard tokens, artifacts, amended identity gate
+        run: python controls/check_g4_p22.py --no-write
+
+      - name: P22 closure — re-run all gates, re-derive arithmetic, verdict
+        run: python controls/check_p22.py --no-write
+
+      - name: P18 metadata-only evidence seal
+        run: python controls/check_g0_p18.py --no-write
+
+      - name: P18 physical product-state identity evidence
+        run: python controls/check_g1_p18.py --no-write
+
+      - name: P18 complete corpus audit preserves the frozen G2 failure
+        run: python controls/check_g2_p18.py --no-write
+
+      - name: P18 formal closure preserves the frozen failure verdict
+        run: python controls/check_p18.py --no-write
+
+      - name: P16 typed-boundary control and independent verdict
+        run: |
+          python controls/test_p16_dependency_history.py
+          python controls/g1_p16_quantities.py --no-write
+          python controls/check_p16.py --no-write
+
+      - name: P15 prepared-cache integrity and verdict
+        env:
+          ACTINV_BIN: target/release/actinv
+          ACTINV_CACHE_DIR: /tmp/actinv-p15-ci-cache
+        run: |
+          python controls/g3_p15_cache_integrity.py
+          git diff --exit-code -- results/p15_cache_integrity.json
+          python controls/check_p15.py --no-write
+
+      - name: CRAM coefficient control (G0 — needs no nuclear data)
+        run: python controls/g0_cram_coefficients.py
+
+      - name: Generated sources are reproducible
+        run: |
+          python controls/gen_cram.py
+          git diff --exit-code -- crates/actinv-core/src/cram_coeffs.rs
+
+      - name: Release notes carry every known limitation
+        run: python controls/check_release_notes.py
+
+      - name: Prior phase verdict evidence remains green
+        run: python controls/check_prior_verdicts.py
+
+      - name: CB1 competitive scorecard remains reproducible
+        run: python controls/check_cb1.py --no-write
+
+      - name: P17 open diagnostic evidence and cause ledger
+        run: python controls/check_g4_p17.py --no-write
+
+      - name: P17 held-out unseal authorization
+        run: python controls/check_p17_unseal.py --no-write
+
+      - name: P17 held-out failure evidence and post-failure diagnostics
+        run: python controls/check_g5_p17.py --no-write
+
+      - name: P17 formal closure preserves the frozen failure verdict
+        run: python controls/check_p17.py --no-write
+
+      - name: P14 performance close remains reproducible
+        run: python controls/check_p14.py --no-write
+
+      - name: P12 release metadata and documentation
+        run: python controls/g5_p12_release.py --source-only
+
+      - name: Rust release workflow contract
+        run: python scripts/check_crates_release_workflow.py
+
+      - name: P12 release payload evidence
+        run: |
+          python scripts/test_check_python_release_set.py
+          python controls/test_check_p12.py
+          python controls/check_p12.py --through-g5
+
+      - name: No undeclared dependencies
+        run: python controls/check_dependencies.py
+
+      - name: P13 verified data-distribution contract
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/g1_p13_data_distribution.py
+          python controls/check_p13.py
+
+      - name: Public examples are portable
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: python controls/check_public_examples.py
+
+      - name: CI result tolerance regression
+        run: python controls/test_ci_result.py
+
+      - name: Fetch the pinned data subset
+        run: |
+          python scripts/test_fetch_ci_seed.py
+          bash scripts/fetch_ci_data.sh
+
+      - name: Build the Python module
+        run: |
+          cd python
+          maturin build --release --locked --out ../dist
+          python ../scripts/smoke_python_wheel.py ../dist
+          pip install ../dist/*.whl
+          python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
+          python ../scripts/test_python_objects.py
+
+      - name: Python binding Rust quality
+        run: |
+          cargo fmt --manifest-path python/Cargo.toml -- --check
+          cargo check --manifest-path python/Cargo.toml --all-targets --all-features
+          cargo clippy --manifest-path python/Cargo.toml --all-targets --all-features -- -D warnings
+
+      - name: End-to-end spec through both entry points
+        run: python controls/ci_end_to_end.py
+
+      - name: P8 flux-import and mesh controls
+        run: |
+          python controls/g1_p8_canonical_rebin.py
+          python controls/g2_p8_openmc.py
+          python controls/g3_p8_mcnp.py
+          python controls/g4_p8_provenance.py
+          python controls/g5_p8_mesh_identity.py
+          python controls/g6_p8_scaling_regression.py
+          python controls/check_p8.py
+
+      - name: P21 grouping and resume runtime controls
+        run: |
+          python controls/g1_p21_scaling.py
+          python controls/g2_p21_resume.py
+
+      - name: P9 deterministic fission and coupled-mode subset
+        run: |
+          python controls/g2_p9_fission_matrix.py
+          python controls/g3_p9_coupled_auto.py
+
+      - name: P10 charged-projectile runtime contract
+        run: python controls/g6_p10_projectile_runtime.py
+
+      - name: P11 synthetic uncertainty and entry-point controls
+        run: |
+          python controls/g3_p11_sensitivity.py
+          python controls/g4_p11_propagation.py
+          python controls/g5_p11_entry_points.py
+
+      - name: P12 data-independent response control
+        run: python controls/g1_p12_radiological.py
+
+      - name: P12 bounded input reliability
+        run: python controls/g3_p12_parser_fuzz.py --smoke
+
+      - name: Repository is self-contained
+        run: python controls/g1_self_contained.py

@@ -1,0 +1,9 @@
+=== stdout ===
+
+=== stderr ===
+........gate result could not be durably recorded: OSError: receipt filesystem failure
+......
+----------------------------------------------------------------------
+Ran 14 tests in 0.224s
+
+OK

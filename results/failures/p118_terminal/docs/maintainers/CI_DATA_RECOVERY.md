@@ -9,19 +9,6 @@ P116/P117/P118 failures and all earlier qualifications retain their recorded
 dispositions. The failed recovery sources and workflow stay in local
 checkpoints; no new push or green CI result is claimed.
 
-The terminal source/evidence checkpoint is local commit
-`6f3f964cf06ad4e969392b90effbe4f835d183a3` on `roadmap-waste` in
-`target/roadmap-waste`. The reviewed bounded preservation writer returned
-actual zero and verified 319 current/checkpoint control inputs, all 100
-unchanged Rust inputs, all 27 unchanged handbook inputs, the complete
-100-file P117 terminal archive and 16-file P118 initial archive. It retained
-41 terminal files plus [discovery](../../results/failures/p118_terminal/discovery.json)
-with SHA `4d7f99aabec30439317c7de1bed2a70a26c63cb722c88d78a821038687d5de7a`.
-The [outer observation](../../results/quality/p118/terminal_preservation_observed.json)
-records actual completion and the inactive scope. This preserves failure;
-it does not qualify the stopped gates. The owner's dirty main checkout was
-left untouched.
-
 P118's fresh formatting, fourteen recorder regressions and nine verdict
 regressions passed. Its next required history suite returned one with twelve
 tests, one failure and six errors. The checker expects `file_count: 70` in
