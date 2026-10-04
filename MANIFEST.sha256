@@ -954,7 +954,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 00f9febfdbaf33bcac7485964e206c958a9cfa92c5f73e98070788a04105fd0f  ./docs/RELEASE_NOTES_v1.2.1.md
 7adc25adea21fb02c54bdee2ed7d04054a952063aa44d9ac150c86675edbe21a  ./docs/RELEASE_NOTES_v1.3.1.md
 8e644c8f26e481106af627823f567a34a7d8d6cdd466eedd4b013b958020e6ed  ./docs/RELEASE_NOTES_v1.4.0.md
-30da9357cda1e5cdf77c3b497f1fc3e1b77d66db9fec20c3ab45a91beb58bdda  ./docs/ROADMAP.md
+07c4993a1dee7426e2832a201e6eb13f9ad20badbeeb2638e8feccdb484980f3  ./docs/ROADMAP.md
 be98e3a2dd93bea898c74dd4151888e3449ad9688549a0937593559bd98e4725  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 c64390f4fb68751f12bd94b66474a84fca2ed93d689a3a4ab24a784fcdd7fa88  ./docs/SUMMARY.md
@@ -1005,7 +1005,7 @@ b0a5bd015f37f815c5ecc0049c6f8aa27118dc19d12a11a0e772e10a9af9fb3a  ./docs/history
 b78bbf6e9050f602d43a4977b4927640342799a961eff56d239e5221abdc6bb0  ./docs/history/sessions/P108.md
 071edc0376662059092212a3aa5813ccc6115ca5982ce7bd3f5c71926a5d2ba3  ./docs/history/sessions/P109.md
 b6cfff1525f2ec5d6b81fd5830ec3ec3c5e646c3b41af1ea90fc424c4891229c  ./docs/history/sessions/P11.md
-6e3480b6203d2d40fadfab6d9d5787ce5a969d8272581f731cb2fd155504cdbe  ./docs/history/sessions/P110.md
+1f45169acd4a62ef5008a37f7365109ed69495a89e309d53055d01f7da17f8f9  ./docs/history/sessions/P110.md
 34e5eda5d8a3f6052f4c9a5f212cdd8b0f48bbed5915013f4a498e0440bbe900  ./docs/history/sessions/P12.md
 29d947f0d7b26052090a9f36e6223c3021fb01a3f095c996f40ce6b6cd41fa98  ./docs/history/sessions/P14.md
 d7d3ea8efcef5ed0aee92f9dbb9726075a853b76796dccd39041f3ba889f822e  ./docs/history/sessions/P15.md
@@ -1031,7 +1031,7 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintainers/DOCUMENTATION.md
 57508903af7b17826b47a27a59ee9fb5f78bb035ab2f710933c4d52ae9f3aaba  ./docs/maintainers/E2_AUDIT_PLAN.md
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
-006281551551c9a78fdfe0103fdcc39712b025c0f60fc1f056b7f60a5e022402  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
+f75e7ef87bef35870f0bee3f00f4cd939da2dc696130bf37ae34cb048056e7a6  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
 4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64  ./docs/maintainers/WASTE_RULE_SOURCE_REVIEW.md
 b5af5ac838f97ad029e6b102322b2af593399e06e9730ffcd78a4df9b5fe769f  ./docs/releases/desktop-v0.1.0-preview.1.md
 d49b0040214a08c1be18825fe12bef4df9bdf2d009d1112d43955ee182fae5fd  ./docs/releases/desktop-v0.2.0-preview.1.md
@@ -1068,7 +1068,7 @@ f9d2b037ba5d8a42d81f740cef8e2ae625655c4b3192ecc1d59e63283e2e6f20  ./examples/stu
 cfd86c2c5ac15d76ec2358c6bd196a6362b46bcc889160c06439975dc5ae8f3a  ./interchange/INTERCHANGE.md
 057dd636e1814f93c0869d4839887ff28a361f5c845f24153c4e93cbee1918d1  ./interchange/actinv_core_adapter.py
 4c42c2d68d375681621d6d3828b6daab4e2fdfc37f23cacbfc3b5a1c3fd3beec  ./interchange/run_case.py
-06af080846c7cedd03c517cb782bee3a335dd605fc0c529423b72890cb6dc023  ./ledger.md
+6abde869a51a6544f092df704c6abdd3c92de46e378ac0c502310cb8a14b5231  ./ledger.md
 588e9f4f4ff74df627a1a15306214db678531d7334f2f6e95a1603eabd1f1c55  ./packaging/actinv.ico
 9897482011f194d9495fc80965177f0632ae4166917a7f240d80c0fc3c8fb83e  ./packaging/actinv.png
 adbd7aee816d7bc64cc91830d57216c83d85a06bda77e7fbe54f8472b2926bea  ./packaging/desktop.json
@@ -3590,10 +3590,12 @@ fd1315ea97a13231df7ff3d342fe95119a6cfa8bfc2f96111bb48ca9305ac940  ./results/p109
 0a9ee2fb99edbbcd617c3db2763bf981948c4fc48d20f76f4c02052f12b00c10  ./results/p109_format_failure.log
 b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398  ./results/p109_verdict.json
 428c56482e8a59a74d33dacbd734a3c7444f373a44c2e5151ab294136b279466  ./results/p110_child_invocation_failure.log
+6c543f0b2e91aed75651401229f5267f14e8d0fa0f257ae2fcf0c8f695a65adc  ./results/p110_ci_runs.json
 70fa3b77bc9fa70fc4859b2babee1cd94d5e339e3e17533945e016592c768139  ./results/p110_control_failure.log
+e6ec1d095393074606b2ffcb5bc63b9522483123c646917b6dac08c497e4af7d  ./results/p110_implementation_commit.json
 d982f22213590625260244389211db73157525701551a26d33d7236089e6a03f  ./results/p110_initial_oracle_diagnostic.log
 36b442caa1cd19c8eec14797f9b117d091bfb123fb7786dd7932145cd7a1f12c  ./results/p110_oracle_before_amendment.py
-847f6c6839bf957fe59e4b19670e204ae14727a7d9be19f7665b1c6a78df5148  ./results/p110_verdict.json
+1a2f7254e22333778c456139f19b231b76c7f2c3232115c1a104b61b2d43503d  ./results/p110_verdict.json
 52690bdfbba3bda122304cde0a5eba425dc0620936ab75e4ca460e7ab042e44e  ./results/p14_performance.json
 db055602666b88ae234489291726d8f1add6d2f5b28b388057f24fda465abc67  ./results/p14_quality.json
 2f5669d71f0959bb25571e189dd9de733ef237e314d78b0e790e778f2f63da0f  ./results/p15_cache_integrity.json
