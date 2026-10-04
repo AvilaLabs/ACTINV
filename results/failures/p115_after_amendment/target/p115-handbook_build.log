@@ -1,0 +1,6 @@
+=== stdout ===
+
+=== stderr ===
+ INFO Book building has started
+ INFO Running the html backend
+ INFO HTML book written to `/home/connoravila/Documents/actinv/target/roadmap-waste/dist/docs`

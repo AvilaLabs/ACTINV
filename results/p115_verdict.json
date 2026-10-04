@@ -1,0 +1,34 @@
+{
+  "checker_error": {
+    "exception_type": "NameError",
+    "failure_projection": "unsealed_G0_forced_false_only",
+    "message": "name 'historical_p114' is not defined",
+    "name": "historical_p114",
+    "original_derivation_completed": false
+  },
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "results/g0_p115_twin_waste.json": null,
+    "results/g1_p115_twin_waste.json": null,
+    "results/g2_p115_twin_waste.json": null,
+    "results/g3_p115_quality.json": "9f48cde1106ebc7174961aa594fbf57e5c772c3aeed3a06a133558a6946aa45d"
+  },
+  "gates": {
+    "CI_evidence_consistent": "PASS",
+    "G0": "FAIL",
+    "G1": "FAIL",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "historical_p113_failure": "PASS",
+    "historical_p114_failure": "PASS",
+    "protocol": "PASS",
+    "source_commit": "PASS"
+  },
+  "historical_source_verification": false,
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "phase": "P115",
+  "schema": "actinv-p115-verdict-1",
+  "verdict": "P115-FAIL"
+}

@@ -1,0 +1,37 @@
+Running as unit: run-p984807-i9373803.scope; invocation ID: 7ae5e6f217f94e108ed11be97f3d8832
+{
+  "argv": [
+    "python3",
+    "controls/test_p115_verdict.py"
+  ],
+  "child_exit_code": 1,
+  "cwd": ".",
+  "error": null,
+  "gate": "p115_verdict_regressions",
+  "log_path": "target/p115-p115_verdict_regressions.log",
+  "log_sha256": "b5f4ed19ca056a563cda1b3fe5f11a542c9e6edc788d8524766c543aaa870c6c",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p984807-i9373803.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "child_failed",
+  "timeout_s": 600.0
+}

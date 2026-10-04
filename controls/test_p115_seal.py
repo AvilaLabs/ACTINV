@@ -18,7 +18,12 @@ class P115SealTests(unittest.TestCase):
         report = controls._g0_base()
         self.assertTrue(report["pass"], report)
         self.assertEqual(report["phase"], "P115")
-        self.assertEqual(report["repair_rounds"], 0)
+        self.assertEqual(report["repair_rounds"], 1)
+        self.assertEqual(report["repair_amendment_sha256"], controls.P115_AMENDMENT_A_SHA256)
+        self.assertEqual(report["repair_discovery_sha256"], controls.P115_DISCOVERY_SHA256)
+        self.assertTrue(report["repair_evidence_matches"])
+        self.assertEqual(len(report["repair_source_sha256"]), controls.P115_SOURCE_FILE_COUNT)
+        self.assertEqual(len(report["repair_evidence_sha256"]), controls.P115_RETAINED_FILE_COUNT)
         self.assertEqual(report["request_count"], 35)
         self.assertEqual(report["component_target_count"], 138)
         self.assertTrue(report["historical_p113_verified"])
@@ -34,22 +39,79 @@ class P115SealTests(unittest.TestCase):
         self.assertTrue(report["inherited_rust_population_matches"])
         self.assertEqual(set(report["control_sha256"]), set(controls.CONTROL_FILES))
 
-    def test_p115_starts_at_zero_and_rejects_amendment_or_failure_archive(self):
-        with tempfile.TemporaryDirectory(prefix="p115-round-zero-") as temp:
+    def test_round_one_archive_verifier_rejects_missing_changed_extra_and_git_drift(self):
+        with tempfile.TemporaryDirectory(prefix="p115-repair-archive-") as temp:
             root = Path(temp)
-            (root / "protocols").mkdir(parents=True)
-            (root / "protocols/protocol_hash.txt").write_text("", encoding="utf-8")
-            with patch.object(controls, "ROOT", root), \
-                    patch.object(controls, "P115_AMENDMENT_A", root / "protocols/ACTINV-P115_AMENDMENT_A.md"):
-                self.assertTrue(controls._current_repair_round_valid())
-                amendment = root / "protocols/ACTINV-P115_AMENDMENT_A.md"
-                amendment.parent.mkdir(parents=True, exist_ok=True)
-                amendment.write_text("unregistered", encoding="utf-8")
-                self.assertFalse(controls._current_repair_round_valid())
-                amendment.unlink()
-                archive = root / "results/failures/p115_initial"
-                archive.mkdir(parents=True)
-                self.assertFalse(controls._current_repair_round_valid())
+            prefix = "results/failures/p115_initial/"
+            archive = root / "results/failures/p115_initial"
+            receipt_rel = prefix + "results/quality/p115/p115_verdict_regressions.json"
+            log_rel = prefix + "target/p115-p115_verdict_regressions.log"
+            extra_rel = prefix + "writer.log"
+            receipt = {"schema": "actinv-roadmap-gate-receipt-1", "phase": "P115",
+                "gate": "p115_verdict_regressions", "argv": ["python3", "controls/test_p115_verdict.py"],
+                "cwd": ".", "status": "child_failed", "child_exit_code": 1,
+                "log_path": "target/p115-p115_verdict_regressions.log",
+                "log_sha256": "pending"}
+            receipt_path = root / receipt_rel
+            log_path = root / log_rel
+            extra_path = root / extra_rel
+            receipt_path.parent.mkdir(parents=True)
+            log_path.parent.mkdir(parents=True)
+            receipt_path.write_text(json.dumps(receipt, sort_keys=True), encoding="utf-8")
+            log_path.write_bytes(b"actual failed test output\n")
+            extra_path.write_bytes(b"writer record\n")
+            log_hash = controls._sha(log_path)
+            receipt["log_sha256"] = log_hash
+            receipt_path.write_text(json.dumps(receipt, sort_keys=True), encoding="utf-8")
+            source_files = {"crates/mock/src/lib.rs": b"rust source", "controls/mock.py": b"control source"}
+            retained = {rel: controls._sha(root / rel) for rel in (receipt_rel, log_rel, extra_rel)}
+            gate_codes = {"p115_verdict_regressions": 1, "other_success": 0}
+            discovery = {"schema": "actinv-p115-initial-failure-1", "phase": "P115",
+                "gate": "p115_verdict_regressions", "exit_code": 1, "failed_gate_count": 1,
+                "source_file_count": 2, "rust_source_file_count": 1, "retained_file_count": 3,
+                "observed_test_count": 8, "observed_error_count": 1, "g0_sealed": False,
+                "g1_executed": False, "g2_executed": False,
+                "source_sha256": {name: controls._sha_bytes(raw) for name, raw in source_files.items()},
+                "files_sha256": retained, "observed_gate_exit_codes": gate_codes}
+            discovery_path = archive / "discovery.json"
+            discovery_path.parent.mkdir(parents=True, exist_ok=True)
+            discovery_path.write_text(json.dumps(discovery, sort_keys=True), encoding="utf-8")
+            discovery_hash = controls._sha(discovery_path)
+            git_map = {**source_files,
+                       **{rel: (root / rel).read_bytes() for rel in retained}}
+
+            def git_blob(_commit, path):
+                return git_map[path]
+
+            patches = (
+                patch.object(controls, "ROOT", root),
+                patch.object(controls, "P115_DISCOVERY", discovery_path),
+                patch.object(controls, "P115_DISCOVERY_SHA256", discovery_hash),
+                patch.object(controls, "P115_ARCHIVE_PREFIX", prefix),
+                patch.object(controls, "P115_FAILURE_LOG_SHA256", log_hash),
+                patch.object(controls, "P115_SOURCE_FILE_COUNT", 2),
+                patch.object(controls, "P115_RUST_SOURCE_COUNT", 1),
+                patch.object(controls, "P115_RETAINED_FILE_COUNT", 3),
+                patch.object(controls, "P115_OBSERVED_GATE_COUNT", 2),
+                patch.object(controls, "P115_SUCCESSFUL_GATE_COUNT", 1),
+                patch.object(controls, "_git_blob", side_effect=git_blob),
+            )
+            with contextlib.ExitStack() as stack:
+                for item in patches:
+                    stack.enter_context(item)
+                self.assertTrue(controls._p115_repair_evidence()[2])
+                unexpected_path = archive / "unexpected.log"
+                unexpected_path.write_bytes(b"unlisted physical file\n")
+                self.assertFalse(controls._p115_repair_evidence()[2])
+                unexpected_path.unlink()
+                extra_path.unlink()
+                self.assertFalse(controls._p115_repair_evidence()[2])
+                extra_path.write_bytes(b"writer record\n")
+                log_path.write_bytes(b"changed bytes\n")
+                self.assertFalse(controls._p115_repair_evidence()[2])
+                log_path.write_bytes(b"actual failed test output\n")
+                git_map["controls/mock.py"] = b"changed checkpoint blob"
+                self.assertFalse(controls._p115_repair_evidence()[2])
 
     def test_control_hash_seal_rejects_missing_traversal_and_symlink_entries(self):
         with tempfile.TemporaryDirectory(prefix="p115-control-seal-") as temp:

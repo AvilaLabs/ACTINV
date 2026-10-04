@@ -1,0 +1,40 @@
+Running as unit: run-p976093-i9357137.scope; invocation ID: 11e6e38d9ae742ba857c398d18f4df4d
+{
+  "argv": [
+    "cargo",
+    "test",
+    "--workspace",
+    "--all-targets",
+    "--all-features"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "workspace_tests",
+  "log_path": "target/p115-workspace_tests.log",
+  "log_sha256": "24cf53e279a1314de473ed51df2020e4cd90a7a5abf148f58dcc60ffce8a041a",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p976093-i9357137.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 1200.0
+}

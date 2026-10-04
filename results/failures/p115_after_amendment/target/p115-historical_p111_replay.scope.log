@@ -1,0 +1,37 @@
+Running as unit: run-p978467-i9384084.scope; invocation ID: 3b74bdda740a424a8b7b4bf854d6c597
+{
+  "argv": [
+    "python3",
+    "controls/check_p111_history.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "historical_p111_replay",
+  "log_path": "target/p115-historical_p111_replay.log",
+  "log_sha256": "0e213749c847f8026099fd16a169ace7a912be4be64003a2d39e4a22e0f6cbe7",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p978467-i9384084.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

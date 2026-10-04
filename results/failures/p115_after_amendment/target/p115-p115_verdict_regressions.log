@@ -1,0 +1,19 @@
+=== stdout ===
+
+=== stderr ===
+......E.
+======================================================================
+ERROR: test_registered_round_one_requires_exact_archive_evidence (__main__.P115VerdictTests.test_registered_round_one_requires_exact_archive_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/test_p115_verdict.py", line 121, in test_registered_round_one_requires_exact_archive_evidence
+    report = controls._g0_base()
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/check_p115.py", line 582, in _g0_base
+    "historical_p113_verified": historical_p113, "historical_p114_verified": historical_p114,
+                                                                             ^^^^^^^^^^^^^^^
+NameError: name 'historical_p114' is not defined. Did you mean: 'historical_p112'?
+
+----------------------------------------------------------------------
+Ran 8 tests in 15.675s
+
+FAILED (errors=1)

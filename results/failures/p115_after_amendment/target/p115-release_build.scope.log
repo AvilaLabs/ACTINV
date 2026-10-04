@@ -1,0 +1,40 @@
+Running as unit: run-p976748-i9379949.scope; invocation ID: 176d306f4b954dba9cc09b68f0a2f153
+{
+  "argv": [
+    "cargo",
+    "build",
+    "--release",
+    "-p",
+    "actinv-cli"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "release_build",
+  "log_path": "target/p115-release_build.log",
+  "log_sha256": "e3552d871c95501ecf6b0f37a2d98ede9e43b41bfe54bb326ad68e5ed7a79abc",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p976748-i9379949.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 1200.0
+}

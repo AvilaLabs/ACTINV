@@ -29,6 +29,17 @@ ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/ACTINV-P115_PROTOCOL.md"
 PROTOCOL_SHA256 = "266dd88898b2e64b77c517d18a221576bf9d1c6fda107ccdf62c45e0321f95ba"
 P115_AMENDMENT_A = ROOT / "protocols/ACTINV-P115_AMENDMENT_A.md"
+P115_AMENDMENT_A_SHA256 = "d2c6543d4a420e50b8697538411a163542e16d4fcb3fd3d2ff61b75af86170b3"
+P115_INITIAL_CHECKPOINT = "887b28d94f32342ea2e3b3410dbb0f0e2aaf2a14"
+P115_DISCOVERY = ROOT / "results/failures/p115_initial/discovery.json"
+P115_DISCOVERY_SHA256 = "22f03d9115f7c2ef5b4c98d19d9fe1cce85e62c38747036f1e130e4c711632db"
+P115_ARCHIVE_PREFIX = "results/failures/p115_initial/"
+P115_FAILURE_LOG_SHA256 = "51a89379d6fde40f857f9f5b499d79f571b220976ac667ffb420bbf7bcc4945c"
+P115_SOURCE_FILE_COUNT = 180
+P115_RUST_SOURCE_COUNT = 100
+P115_RETAINED_FILE_COUNT = 68
+P115_OBSERVED_GATE_COUNT = 22
+P115_SUCCESSFUL_GATE_COUNT = 21
 INHERITED_PROTOCOL = ROOT / "protocols/ACTINV-P113_PROTOCOL.md"
 INHERITED_PROTOCOL_SHA256 = "0495157f3e8308d6a28475b94363e24b932f462c10f901518fa1c809a68ebbfa"
 AMENDMENT = ROOT / "protocols/ACTINV-P113_AMENDMENT_A.md"
@@ -67,6 +78,7 @@ CLASS_NAMES = ("A", "B", "C", "above_class_c", "unknown")
 
 CONTROL_FILES = (
     "protocols/ACTINV-P115_PROTOCOL.md",
+    "protocols/ACTINV-P115_AMENDMENT_A.md",
     "protocols/ACTINV-P114_PROTOCOL.md",
     "protocols/ACTINV-P114_AMENDMENT_A.md",
     "controls/check_p115.py", "controls/check_p115_verdict.py", "controls/test_p115_oracle.py",
@@ -105,6 +117,7 @@ CONTROL_FILES = (
     "controls/check_p114_history.py", "controls/test_p114_history.py",
     "results/p114_failure_commit.json", "results/p114_verdict.json", "results/g3_p114_quality.json",
     "results/failures/p114_initial/discovery.json",
+    "results/failures/p115_initial/discovery.json",
     "scripts/run_p115_gate.py", "scripts/test_run_p115_gate.py",
 )
 
@@ -230,17 +243,146 @@ def _safe_control_hashes(hashes: object) -> bool:
     return True
 
 
-def _current_repair_round_valid() -> bool:
-    """P115 opens at round zero and has no amendment or failure archive."""
-    failure_archive = ROOT / "results/failures/p115_initial"
-    registry = ROOT / "protocols/protocol_hash.txt"
-    try:
-        amendment_registered = any(line.split(maxsplit=1)[-1:] == ["protocols/ACTINV-P115_AMENDMENT_A.md"]
-                                  for line in registry.read_text(encoding="utf-8").splitlines())
-    except OSError:
+def _p115_repair_evidence() -> tuple[dict[str, str], dict[str, str], bool]:
+    """Verify P115's registered one-round failure archive and checkpoint blobs."""
+    discovery = _read_json(P115_DISCOVERY)
+    if (P115_DISCOVERY.is_symlink() or not P115_DISCOVERY.is_file()
+            or _sha(P115_DISCOVERY) != P115_DISCOVERY_SHA256
+            or not isinstance(discovery, dict)
+            or discovery.get("schema") != "actinv-p115-initial-failure-1"
+            or discovery.get("phase") != "P115"
+            or discovery.get("gate") != "p115_verdict_regressions"
+            or type(discovery.get("exit_code")) is not int or discovery.get("exit_code") != 1
+            or type(discovery.get("failed_gate_count")) is not int or discovery.get("failed_gate_count") != 1
+            or type(discovery.get("source_file_count")) is not int
+            or discovery.get("source_file_count") != P115_SOURCE_FILE_COUNT
+            or type(discovery.get("rust_source_file_count")) is not int
+            or discovery.get("rust_source_file_count") != P115_RUST_SOURCE_COUNT
+            or type(discovery.get("retained_file_count")) is not int
+            or discovery.get("retained_file_count") != P115_RETAINED_FILE_COUNT
+            or type(discovery.get("observed_test_count")) is not int
+            or discovery.get("observed_test_count") != 8
+            or type(discovery.get("observed_error_count")) is not int
+            or discovery.get("observed_error_count") != 1
+            or discovery.get("g0_sealed") is not False
+            or discovery.get("g1_executed") is not False
+            or discovery.get("g2_executed") is not False):
+        return {}, {}, False
+    source_map = discovery.get("source_sha256")
+    retained_map = discovery.get("files_sha256")
+    gate_codes = discovery.get("observed_gate_exit_codes")
+    if (not isinstance(source_map, dict) or len(source_map) != P115_SOURCE_FILE_COUNT
+            or not isinstance(retained_map, dict) or len(retained_map) != P115_RETAINED_FILE_COUNT
+            or not isinstance(gate_codes, dict) or len(gate_codes) != P115_OBSERVED_GATE_COUNT
+            or type(sum(1 for value in gate_codes.values() if type(value) is int and value == 0)) is not int
+            or sum(1 for value in gate_codes.values() if type(value) is int and value == 0) != P115_SUCCESSFUL_GATE_COUNT
+            or any(type(value) is not int for value in gate_codes.values())
+            or gate_codes.get("p115_verdict_regressions") != 1
+            or sum(1 for value in gate_codes.values() if value == 1) != 1):
+        return {}, {}, False
+
+    safe_root = ROOT.resolve(strict=True)
+    observed_sources: dict[str, str] = {}
+    rust_sources: dict[str, str] = {}
+    for relative, expected in source_map.items():
+        if (not isinstance(relative, str) or relative.startswith("/")
+                or ".." in Path(relative).parts or Path(relative).as_posix() != relative
+                or not isinstance(expected, str) or re.fullmatch(r"[0-9a-f]{64}", expected) is None):
+            return {}, {}, False
+        try:
+            raw = _git_blob(P115_INITIAL_CHECKPOINT, relative)
+        except (OSError, ValueError, RuntimeError, KeyError):
+            return {}, {}, False
+        actual = _sha_bytes(raw)
+        if actual != expected:
+            return observed_sources, {}, False
+        observed_sources[relative] = actual
+        if relative.startswith("crates/") and relative.endswith(".rs"):
+            rust_sources[relative] = actual
+    if len(rust_sources) != P115_RUST_SOURCE_COUNT:
+        return observed_sources, {}, False
+    # The archived source map is verified against the pinned Git checkpoint
+    # here. Fresh G0 independently compares the live Rust population to that
+    # checkpoint; keeping that check outside this history helper lets later
+    # verdict derivation validate the sealed historical evidence.
+
+    observed_files: dict[str, str] = {}
+    expected_physical = set(retained_map) | {P115_DISCOVERY.relative_to(ROOT).as_posix()}
+    archive_root = ROOT / "results/failures/p115_initial"
+    if archive_root.is_symlink() or not archive_root.is_dir():
+        return observed_sources, {}, False
+    physical: set[str] = set()
+    for directory, directories, filenames in os.walk(archive_root, followlinks=False):
+        base = Path(directory)
+        for name in directories:
+            if (base / name).is_symlink():
+                return observed_sources, {}, False
+        for name in filenames:
+            path = base / name
+            if path.is_symlink() or not path.is_file():
+                return observed_sources, {}, False
+            physical.add(path.relative_to(ROOT).as_posix())
+    if physical != expected_physical:
+        return observed_sources, {}, False
+    for relative, expected in retained_map.items():
+        if (not isinstance(relative, str) or not relative.startswith(P115_ARCHIVE_PREFIX)
+                or relative.startswith("/") or ".." in Path(relative).parts
+                or Path(relative).as_posix() != relative
+                or not isinstance(expected, str) or re.fullmatch(r"[0-9a-f]{64}", expected) is None):
+            return observed_sources, observed_files, False
+        path = ROOT / relative
+        try:
+            path.resolve(strict=True).relative_to(safe_root)
+        except (OSError, ValueError):
+            return observed_sources, observed_files, False
+        cursor = ROOT
+        if any((cursor := cursor / part).is_symlink() for part in Path(relative).parts):
+            return observed_sources, observed_files, False
+        if not path.is_file():
+            return observed_sources, observed_files, False
+        current = _sha(path)
+        try:
+            git_current = _sha_bytes(_git_blob(P115_INITIAL_CHECKPOINT, relative))
+        except (OSError, ValueError, RuntimeError, KeyError):
+            return observed_sources, observed_files, False
+        observed_files[relative] = current
+        if current != expected or git_current != expected:
+            return observed_sources, observed_files, False
+
+    receipt_rel = P115_ARCHIVE_PREFIX + "results/quality/p115/p115_verdict_regressions.json"
+    log_rel = P115_ARCHIVE_PREFIX + "target/p115-p115_verdict_regressions.log"
+    receipt = _read_json(ROOT / receipt_rel)
+    receipt_ok = (isinstance(receipt, dict)
+        and receipt.get("schema") == "actinv-roadmap-gate-receipt-1"
+        and receipt.get("phase") == "P115" and receipt.get("gate") == "p115_verdict_regressions"
+        and receipt.get("argv") == ["python3", "controls/test_p115_verdict.py"]
+        and receipt.get("cwd") == "." and receipt.get("status") == "child_failed"
+        and type(receipt.get("child_exit_code")) is int and receipt.get("child_exit_code") == 1
+        and receipt.get("log_path") == "target/p115-p115_verdict_regressions.log"
+        and receipt.get("log_sha256") == P115_FAILURE_LOG_SHA256
+        and observed_files.get(log_rel) == P115_FAILURE_LOG_SHA256
+        and observed_files.get(receipt_rel) == _sha(ROOT / receipt_rel))
+    return observed_sources, observed_files, bool(receipt_ok)
+
+
+def _repair_policy(g0: object) -> bool:
+    if not isinstance(g0, dict) or type(g0.get("repair_rounds")) is not int or g0["repair_rounds"] != 1:
         return False
-    return (not P115_AMENDMENT_A.exists() and not P115_AMENDMENT_A.is_symlink()
-            and not amendment_registered and not failure_archive.exists() and not failure_archive.is_symlink())
+    registry = ROOT / "protocols/protocol_hash.txt"
+    amendment_line = f"{P115_AMENDMENT_A_SHA256}  protocols/ACTINV-P115_AMENDMENT_A.md"
+    try:
+        amendment_ok = (P115_AMENDMENT_A.is_file() and not P115_AMENDMENT_A.is_symlink()
+                        and _sha(P115_AMENDMENT_A) == P115_AMENDMENT_A_SHA256
+                        and amendment_line in registry.read_text(encoding="utf-8").splitlines())
+    except OSError:
+        amendment_ok = False
+    sources, evidence, evidence_ok = _p115_repair_evidence()
+    return (amendment_ok and evidence_ok
+        and g0.get("repair_amendment_sha256") == P115_AMENDMENT_A_SHA256
+        and g0.get("repair_discovery_sha256") == P115_DISCOVERY_SHA256
+        and g0.get("repair_source_sha256") == sources
+        and g0.get("repair_evidence_sha256") == evidence
+        and g0.get("repair_evidence_matches") is True)
 
 
 def _prior_verdicts() -> tuple[dict, bool, bool, bool, bool]:
@@ -380,7 +522,10 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
         retained_hashes, retained_matches = _repair_evidence()
     except (OSError, ValueError, TypeError, KeyError, RuntimeError):
         retained_hashes, retained_matches = {}, False
-    repair_rounds = 0
+    try:
+        repair_source_hashes, repair_evidence_hashes, repair_evidence_matches = _p115_repair_evidence()
+    except (OSError, ValueError, TypeError, KeyError, RuntimeError):
+        repair_source_hashes, repair_evidence_hashes, repair_evidence_matches = {}, {}, False
     request_ids = fixture_check.get("request_ids", [])
     counts = fixture_check.get("request_component_target_counts", [])
     p113_failure = _read_json(ROOT / "results/p113_verdict.json")
@@ -439,7 +584,12 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
           **prior, "prior_verdicts_match": prior_hashes_present,
           "request_count": fixture_check.get("request_count", 0), "request_ids": request_ids,
           "case_targets": counts, "request_component_target_counts": counts,
-          "repair_rounds": 0,
+          "repair_rounds": 1,
+          "repair_amendment_sha256": _sha(P115_AMENDMENT_A),
+          "repair_discovery_sha256": _sha(P115_DISCOVERY),
+          "repair_source_sha256": repair_source_hashes,
+          "repair_evidence_sha256": repair_evidence_hashes,
+          "repair_evidence_matches": repair_evidence_matches,
           "p113_inherited_g0_sha256": INITIAL_G0_SHA256,
           "p113_g0_file_sha256": _sha(ROOT / "results/g0_p113_twin_waste.json"),
           "p113_failure_verdict_sha256": _sha(ROOT / "results/p113_verdict.json"),
@@ -493,7 +643,7 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
         and type(g0["request_count"]) is int and g0["request_count"] >= 24
         and type(g0["component_target_count"]) is int and g0["component_target_count"] >= 32
         and all(hashes.values()) and _safe_control_hashes(hashes)
-        and repair_rounds == 0 and _current_repair_round_valid()
+        and _repair_policy(g0)
         and g0["p113_failure_verdict_is_terminal_fail"]
         and g0["p113_failure_record_matches"]
         and g0["p113_g0_file_sha256"] == INITIAL_G0_SHA256

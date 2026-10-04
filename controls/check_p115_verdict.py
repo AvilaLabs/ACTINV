@@ -169,8 +169,8 @@ def _g0_ok(g0: dict) -> bool:
         and len(g0["p114_initial_archive_sha256"]) == 176
         and isinstance(g0.get("p114_final_archive_sha256"), dict)
         and len(g0["p114_final_archive_sha256"]) == 196
-        and type(g0.get("repair_rounds")) is int and g0.get("repair_rounds") == 0
-        and __import__("check_p115")._current_repair_round_valid()
+        and type(g0.get("repair_rounds")) is int and g0.get("repair_rounds") == 1
+        and __import__("check_p115")._repair_policy(g0)
         and type(g0.get("inherited_rust_source_count")) is int
         and g0.get("inherited_rust_source_count") == 100
         and g0.get("inherited_rust_population_matches") is True and _prior_ok(g0))
@@ -296,7 +296,7 @@ def _quality_ok(g3: dict, g0: dict) -> bool:
     return (g3.get("schema") == EXPECTED_G3_SCHEMA and g3.get("phase") == "P115"
         and g3.get("pass") is True and type(g3.get("repair_rounds")) is int
         and g3.get("repair_rounds") == g0.get("repair_rounds")
-        and g0.get("repair_rounds") == 0
+        and g0.get("repair_rounds") == 1
         and g3.get("resource_limits") == RESOURCES
         and isinstance(gates, dict) and set(gates) == REQUIRED_GATES
         and all(isinstance(gate, dict) and gate.get("name") == name and _receipt_ok(name, gate)

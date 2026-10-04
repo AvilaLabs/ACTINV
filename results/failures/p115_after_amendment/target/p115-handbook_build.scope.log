@@ -1,0 +1,37 @@
+Running as unit: run-p976757-i9368649.scope; invocation ID: 25c7f1b703414e2698b8cfd3331b1e16
+{
+  "argv": [
+    "/home/connoravila/Documents/actinv/scratch/mdbook-demo/bin/mdbook",
+    "build"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "handbook_build",
+  "log_path": "target/p115-handbook_build.log",
+  "log_sha256": "52c3c6019765112a0cf9a1823b19a000586fe39a97ad78b81216a7cbdb5d516c",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p976757-i9368649.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 120.0
+}

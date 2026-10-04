@@ -60,8 +60,8 @@ class P115VerdictTests(unittest.TestCase):
             name = "p115_oracle_regressions"
             receipt_path = root / f"results/quality/p115/{name}.json"
             log_path = root / f"results/quality/p115/{name}.log"
-            receipt_path.parent.mkdir(parents=True)
-            log_path.parent.mkdir(parents=True)
+            receipt_path.parent.mkdir(parents=True, exist_ok=True)
+            log_path.parent.mkdir(parents=True, exist_ok=True)
             raw_log = b"gate exited zero\n"
             log_path.write_bytes(raw_log)
             argv = ["python", "controls/test_p115_oracle.py"]
@@ -117,16 +117,14 @@ class P115VerdictTests(unittest.TestCase):
                 self.assertFalse(verdict._resource_inspection_ok({**evidence, "limits": {**limits, "pids.max": "129"}}))
                 self.assertFalse(verdict._resource_inspection_ok({**evidence, "log_sha256": "0" * 64}))
 
-    def test_current_p115_round_is_zero_only(self):
-        with tempfile.TemporaryDirectory(prefix="p115-round-") as temp:
-            root = Path(temp)
-            with patch.object(controls, "ROOT", root), patch.object(
-                    controls, "P115_AMENDMENT_A", root / "protocols/ACTINV-P115_AMENDMENT_A.md"):
-                (root / "protocols").mkdir()
-                (root / "protocols/protocol_hash.txt").write_text("", encoding="utf-8")
-                self.assertTrue(controls._current_repair_round_valid())
-                (root / "protocols/ACTINV-P115_AMENDMENT_A.md").write_text("x", encoding="utf-8")
-                self.assertFalse(controls._current_repair_round_valid())
+    def test_registered_round_one_requires_exact_archive_evidence(self):
+        report = controls._g0_base()
+        self.assertEqual(type(report.get("repair_rounds")), int)
+        self.assertEqual(report.get("repair_rounds"), 1)
+        self.assertTrue(controls._repair_policy(report))
+        self.assertFalse(controls._repair_policy({**report, "repair_rounds": True}))
+        self.assertFalse(controls._repair_policy({**report, "repair_evidence_matches": False}))
+        self.assertFalse(controls._repair_policy({**report, "repair_evidence_sha256": {}}))
 
     def test_g1_request_evidence_requires_each_identity_digest(self):
         counts = [4] * 33 + [3, 3]
