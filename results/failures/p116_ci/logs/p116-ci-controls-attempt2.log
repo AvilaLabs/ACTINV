@@ -1,0 +1,24 @@
+build-and-control	Fetch the pinned data subset	﻿2026-10-04T16:43:52.5274944Z ##[group]Run bash scripts/fetch_ci_data.sh
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5275332Z [36;1mbash scripts/fetch_ci_data.sh[0m
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5340276Z shell: /usr/bin/bash -e {0}
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5340587Z env:
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5340839Z   ACTINV_CI_DATA: /tmp/actinv-ci-data
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5341195Z   ACTINV_CI_OUT: /tmp/actinv-ci
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5341502Z   ACTINV_P8_WORK: /tmp/actinv-p8
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5341807Z   ACTINV_P9_WORK: /tmp/actinv-p9
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5342128Z   ACTINV_P9_RESULTS: /tmp/actinv-p9-results
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5342619Z   ACTINV_P10_WORK: /tmp/actinv-p10
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5342943Z   CARGO_HOME: /home/runner/.cargo
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5343249Z   CARGO_INCREMENTAL: 0
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5343521Z   CARGO_TERM_COLOR: always
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5343801Z   CACHE_ON_FAILURE: false
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5344147Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5344945Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5345523Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5345990Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5346457Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5346951Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5347346Z ##[endgroup]
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.5480939Z fetching endf-b-viii-0_decay.sublib.zip
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.7841390Z curl: (22) The requested URL returned error: 403
+build-and-control	Fetch the pinned data subset	2026-10-04T16:43:52.7882361Z ##[error]Process completed with exit code 22.

@@ -1,0 +1,32 @@
+measured-decay-heat	Fetch and verify pinned release data	﻿2026-10-04T16:35:01.9714594Z ##[group]Run target/release/actinv data fetch --output target/fns-data
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9714940Z [36;1mtarget/release/actinv data fetch --output target/fns-data[0m
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768174Z shell: /usr/bin/bash -e {0}
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768330Z env:
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768442Z   CARGO_BUILD_JOBS: 1
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768568Z   RUST_TEST_THREADS: 1
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768691Z   RAYON_NUM_THREADS: 2
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768829Z   CARGO_HOME: /home/runner/.cargo
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9768979Z   CARGO_INCREMENTAL: 0
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9769105Z   CARGO_TERM_COLOR: always
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9769241Z   CACHE_ON_FAILURE: false
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9769412Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9769672Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9769908Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9770128Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9770366Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9770584Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9770770Z ##[endgroup]
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:01.9849641Z fetching tendl-2025-neutron-709g
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:02.5098430Z   download tendl-2025-neutron-709g: 13.6% (16792373/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:02.6639466Z   download tendl-2025-neutron-709g: 27.1% (33567313/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:02.7511258Z   download tendl-2025-neutron-709g: 40.6% (50347018/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:02.8975609Z   download tendl-2025-neutron-709g: 54.2% (67122732/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:02.9915966Z   download tendl-2025-neutron-709g: 67.7% (83886080/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:03.1499905Z   download tendl-2025-neutron-709g: 81.3% (100678646/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:03.3075819Z   download tendl-2025-neutron-709g: 94.8% (117455332/123897743 bytes)
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:03.9406353Z   download tendl-2025-neutron-709g: verified ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:04.0089434Z fetching tendl-2025-neutron-709g-index
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:04.3406853Z   download tendl-2025-neutron-709g-index: verified 8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:04.3420890Z fetching endfb-viii-0-decay
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:04.6059631Z download request failed: http status: 403
+measured-decay-heat	Fetch and verify pinned release data	2026-10-04T16:35:04.6075380Z ##[error]Process completed with exit code 1.

@@ -1,0 +1,93 @@
+{
+  "artifact_sha256": {
+    "results/g0_p116_twin_waste.json": "7e08a5f94e2cce3d62229c1e1233938270420c27556abb1a81e3f304ebc4cf78",
+    "results/g1_p116_twin_waste.json": "74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9",
+    "results/g2_p116_twin_waste.json": "5e1cb32140fa7fe3000bf2d22e54b30af021d992f689d1a1a7ff1038b979fb6b",
+    "results/g3_p116_quality.json": "746876fc7c2d9da2432c5e1a816702a648f18c9ae920798c2639f9670082dd5b"
+  },
+  "attempt_count": 4,
+  "attempt_history": {
+    "controls": [
+      {
+        "attempt": 1,
+        "conclusion": "failure",
+        "log_path": "logs/p116-ci-controls-attempt1.log",
+        "log_sha256": "c37a90530459fbcf47869e2de29b90467f9cc477444818440f127e75d8c414dd",
+        "metadata_path": "metadata/p116-ci-controls-attempt1.json",
+        "metadata_sha256": "d092a73a48fbcb1ad53e6cfb5dccdf252e32bde7fba3645801dac3befb88746e",
+        "status": "completed"
+      },
+      {
+        "attempt": 2,
+        "conclusion": "failure",
+        "log_path": "logs/p116-ci-controls-attempt2.log",
+        "log_sha256": "1f4ec06167f63c4e5511dd82e9a0d0c759b32e76c71190fcde0f731d1a101094",
+        "metadata_path": "metadata/p116-ci-controls-attempt2.json",
+        "metadata_sha256": "4c5d40173bd00792ff12c92fd6513b0a9f6b00e38e3bb788fbb4e3b4ce1bccfb",
+        "status": "completed"
+      }
+    ],
+    "fns-iron": [
+      {
+        "attempt": 1,
+        "conclusion": "failure",
+        "log_path": "logs/p116-ci-fns-iron-attempt1.log",
+        "log_sha256": "2bf0241b25f347b88d9be960a8612a0008fe36f9f2c5495b45f57264810322bc",
+        "metadata_path": "metadata/p116-ci-fns-iron-attempt1.json",
+        "metadata_sha256": "735bcb2bf9b505190acd1dc2ab2f9ee711f577cf703b223f1446c72ecf428cc5",
+        "status": "completed"
+      },
+      {
+        "attempt": 2,
+        "conclusion": "failure",
+        "log_path": "logs/p116-ci-fns-iron-attempt2.log",
+        "log_sha256": "289747aba4aa751790eeb707ddea1ee69397ae70cbcf3954142b7e160e9ab292",
+        "metadata_path": "metadata/p116-ci-fns-iron-attempt2.json",
+        "metadata_sha256": "6334e98097c75f2e3814ac012791feab3226d8ff723c755a0b05d94e70b78ca5",
+        "status": "completed"
+      }
+    ]
+  },
+  "failed_workflows": [
+    "controls",
+    "fns-iron"
+  ],
+  "failure_reason": "pinned IAEA archive HTTP 403",
+  "files_sha256": {
+    "logs/p116-ci-controls-attempt1.log": "c37a90530459fbcf47869e2de29b90467f9cc477444818440f127e75d8c414dd",
+    "logs/p116-ci-controls-attempt2.log": "1f4ec06167f63c4e5511dd82e9a0d0c759b32e76c71190fcde0f731d1a101094",
+    "logs/p116-ci-fns-iron-attempt1.log": "2bf0241b25f347b88d9be960a8612a0008fe36f9f2c5495b45f57264810322bc",
+    "logs/p116-ci-fns-iron-attempt2.log": "289747aba4aa751790eeb707ddea1ee69397ae70cbcf3954142b7e160e9ab292",
+    "metadata/p116-ci-controls-attempt1.json": "d092a73a48fbcb1ad53e6cfb5dccdf252e32bde7fba3645801dac3befb88746e",
+    "metadata/p116-ci-controls-attempt2.json": "4c5d40173bd00792ff12c92fd6513b0a9f6b00e38e3bb788fbb4e3b4ce1bccfb",
+    "metadata/p116-ci-fns-iron-attempt1.json": "735bcb2bf9b505190acd1dc2ab2f9ee711f577cf703b223f1446c72ecf428cc5",
+    "metadata/p116-ci-fns-iron-attempt2.json": "6334e98097c75f2e3814ac012791feab3226d8ff723c755a0b05d94e70b78ca5",
+    "metadata/p116-ci-iaea-headers.txt": "e09724cfccc8e04ad6892379c25eb6ef4f6ac3813535d0b3a3f9687b8689099a",
+    "metadata/p116-ci-terminal.json": "78b5f445eaa230093f3c169fa062ca48e152c5627201f54c8585d82e070b6217",
+    "pre_ci_local_verdict.json": "f3be6d6ada4afbfe28f9f32a06be300c219c94b0fda45f31051124ebf6fad606",
+    "source/p116-preserve-ci-failure.py": "8c72ee70265e710a46bd4e768bc6ee53d5bbb6c3aac08138317e0b47c2357220"
+  },
+  "implementation_commit": "2117f3b5df715ce832658f58250103789be845bb",
+  "phase": "P116",
+  "pre_ci_local_verdict_sha256": "f3be6d6ada4afbfe28f9f32a06be300c219c94b0fda45f31051124ebf6fad606",
+  "preservation_script_source": "target/p116-preserve-ci-failure.py",
+  "schema": "actinv-p116-ci-failure-archive-1",
+  "source_inputs_sha256": {
+    "target/p116-ci-controls-attempt1.json": "d092a73a48fbcb1ad53e6cfb5dccdf252e32bde7fba3645801dac3befb88746e",
+    "target/p116-ci-controls-attempt1.log": "c37a90530459fbcf47869e2de29b90467f9cc477444818440f127e75d8c414dd",
+    "target/p116-ci-controls-attempt2.json": "4c5d40173bd00792ff12c92fd6513b0a9f6b00e38e3bb788fbb4e3b4ce1bccfb",
+    "target/p116-ci-controls-attempt2.log": "1f4ec06167f63c4e5511dd82e9a0d0c759b32e76c71190fcde0f731d1a101094",
+    "target/p116-ci-fns-iron-attempt1.json": "735bcb2bf9b505190acd1dc2ab2f9ee711f577cf703b223f1446c72ecf428cc5",
+    "target/p116-ci-fns-iron-attempt1.log": "2bf0241b25f347b88d9be960a8612a0008fe36f9f2c5495b45f57264810322bc",
+    "target/p116-ci-fns-iron-attempt2.json": "6334e98097c75f2e3814ac012791feab3226d8ff723c755a0b05d94e70b78ca5",
+    "target/p116-ci-fns-iron-attempt2.log": "289747aba4aa751790eeb707ddea1ee69397ae70cbcf3954142b7e160e9ab292",
+    "target/p116-ci-iaea-headers.txt": "e09724cfccc8e04ad6892379c25eb6ef4f6ac3813535d0b3a3f9687b8689099a",
+    "target/p116-ci-terminal.json": "78b5f445eaa230093f3c169fa062ca48e152c5627201f54c8585d82e070b6217"
+  },
+  "terminal_completed_count": 6,
+  "terminal_failure_count": 2,
+  "terminal_runs_sha256": "78b5f445eaa230093f3c169fa062ca48e152c5627201f54c8585d82e070b6217",
+  "terminal_runs_source": "target/p116-ci-terminal.json",
+  "terminal_success_count": 4,
+  "terminal_workflow_count": 6
+}
