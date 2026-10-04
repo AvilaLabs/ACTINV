@@ -1,0 +1,12 @@
+{
+  "basis": "Source-derived synthetic categories frozen by P103 G0; exact vectors committed before any production CLI execution. No measured outcome used to choose them.",
+  "fixture_sha256": "bfefb655b2df52da7ccb7a93cfd7c22bdc18762917e900e828ebd97d58b2bb42",
+  "generator_sha256": "89c05549d8a9b71c256e3688f64b56cb62f24b2e59b7d5ab4a7e79ff6adbd284",
+  "phase": "P103",
+  "previous_fixture_sha256": "c2d910f49140dd1415665a64a8d02b74ccda70f1df46ab3cb664bc2003c85c27",
+  "protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+  "revision": 3,
+  "revision_reason": "Pre-runtime static clarification: freeze every A/B/C constraint, positive nuclide contributor identity, unlisted-activity reporting, and distinct required-external-H3 unknown status. No production CLI execution or measured implementation outcome; source thresholds and acceptance gates unchanged.",
+  "schema": "actinv-p103-vector-seal-1",
+  "vector_count": 126
+}

@@ -1,0 +1,31 @@
+{
+  "ci_evidence_sha256": "d3a8a7e1960fa591304344859460fc93acaa4d8456f65e65392d3c701f0c1a18",
+  "evidence_sha256": {
+    "g0_p108_composition.json": "5877ba27fd8dbfe3439e35564111d50f95373131a028b2673535f85fab8ee6f4",
+    "g1_p108_composition.json": "52547ec42a0baac25f1878fa97214ac3e5d916f1d35069fe18132e7e2690753e",
+    "g2_p108_composition.json": "2fa2b0f683add74ab96e6a8bd608a6024a3c97c35fed9780da8eba780aaaac51",
+    "g3_p108_quality.json": "1324e2adebc55a5ba82156bca8db00fac44d68e4b486028b24d9fdd4482fe22b"
+  },
+  "gates": {
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3_CI": "PASS",
+    "G3_local": "PASS",
+    "P107": "PASS"
+  },
+  "implementation_commit": "78204834caeace66c050989c73259c1bf2f9969c",
+  "implementation_record_sha256": "3016897150f1877af3c568c79088bd74c02d3b69f888c938c083be1a4cc1de75",
+  "phase": "P108",
+  "qualification": "Conservative classification supersets for a caller-declared fixed affine activity model over feasible natural-element weight-percent intervals constrained to sum to 100%; no native model generation, physical completeness, statistical uncertainty or disposal-acceptance conclusion.",
+  "quality_checks": {
+    "historical_source_verification": true,
+    "required_gate_names_present": true,
+    "resource_limits_match": true,
+    "source_hashes_match": true,
+    "workspace_tests_reported_green": true
+  },
+  "repair_rounds": 1,
+  "schema": "actinv-p108-verdict-1",
+  "verdict": "P108-PASS"
+}

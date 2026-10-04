@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "python3",
+    "scripts/test_run_roadmap_gate.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "gate_recorder_regressions",
+  "log_path": "target/p114-gate_recorder_regressions.log",
+  "log_sha256": "5be684fd3835ecf2f780fdd6ebdc6cbee56f4c1dbefe0e2d7bbf07bf97ae1e1c",
+  "phase": "P114",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p908911-i9310355.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

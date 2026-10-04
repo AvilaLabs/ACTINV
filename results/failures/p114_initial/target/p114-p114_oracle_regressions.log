@@ -1,0 +1,26 @@
+=== stdout ===
+
+=== stderr ===
+.........................E.E
+======================================================================
+ERROR: test_external_tritium_is_applied_once_and_known_subset_is_separate (__main__.P114OracleTests.test_external_tritium_is_applied_once_and_known_subset_is_separate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/test_p114_oracle.py", line 65, in test_external_tritium_is_applied_once_and_known_subset_is_separate
+    self.assertEqual(target["activation_activity_bq"]["H3"], 3_000_000.0)
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'activation_activity_bq'
+
+======================================================================
+ERROR: test_inherited_nominal_boundaries_groups_and_unknowns_remain_explicit (__main__.P114OracleTests.test_inherited_nominal_boundaries_groups_and_unknowns_remain_explicit) (request='coverage_unknown')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/test_p114_oracle.py", line 47, in test_inherited_nominal_boundaries_groups_and_unknowns_remain_explicit
+    case = self.by_id[request_id]
+           ~~~~~~~~~~^^^^^^^^^^^^
+KeyError: 'coverage_unknown'
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.357s
+
+FAILED (errors=2)

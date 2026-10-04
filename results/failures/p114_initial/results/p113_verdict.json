@@ -1,0 +1,26 @@
+{
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "results/g0_p113_twin_waste.json": "61d8c6faaf7eb93d8f3a4d9e369e8710eee45b93f946d405f54c216dd730a037",
+    "results/g1_p113_twin_waste.json": null,
+    "results/g2_p113_twin_waste.json": null,
+    "results/g3_p113_quality.json": "529fb6b0f5c1542165300240a2d59cd2cd6ad9fa84c11d4f0748d48b72da2b01"
+  },
+  "gates": {
+    "CI_evidence_consistent": "PASS",
+    "G0": "FAIL",
+    "G1": "FAIL",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "historical_p112": "PASS",
+    "protocol": "PASS",
+    "source_commit": "PASS"
+  },
+  "historical_source_verification": false,
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "phase": "P113",
+  "schema": "actinv-p113-verdict-1",
+  "verdict": "P113-FAIL"
+}

@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "python3",
+    "controls/test_p114_oracle.py"
+  ],
+  "child_exit_code": 1,
+  "cwd": ".",
+  "error": null,
+  "gate": "p114_oracle_regressions",
+  "log_path": "target/p114-p114_oracle_regressions.log",
+  "log_sha256": "c3e803d8d1aa8f0838086bbfae21f310abf00e308e3374e54b88bb8778f2c41f",
+  "phase": "P114",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p902158-i9284367.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "child_failed",
+  "timeout_s": 600.0
+}

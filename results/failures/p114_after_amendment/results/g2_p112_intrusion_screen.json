@@ -1,0 +1,10 @@
+{
+  "exact_replay_equal": true,
+  "g0_exact_replay_equal": true,
+  "g1_result_sha256": "1193312d504ef6e21c7be973d79b22c32b85ae619f9b6341b2269885013c61e6",
+  "pass": true,
+  "phase": "P112",
+  "protocol_sha256": "ca19ccc59603ae97e84f5b2a50620a4ae3d87d8d6515a7b04b7d2af5d9cd56be",
+  "schema": "actinv-p112-intrusion-screen-g2-1",
+  "separate_output_paths_byte_identical": true
+}

@@ -1,0 +1,158 @@
+{
+  "above_class_c_perturbation": {
+    "checked": true,
+    "classes": [
+      "above_class_c",
+      "above_class_c"
+    ],
+    "composition_wt_pct": 2.1117933104799533
+  },
+  "algebra": {
+    "composition_bound": {
+      "b": 0.0,
+      "cap": 2.0,
+      "expected_status": "composition_bound",
+      "expected_upper": 2.0,
+      "g": -0.1
+    },
+    "matrix_infeasible": {
+      "b": 1.1,
+      "expected_feasible": false,
+      "expected_status": "infeasible",
+      "g": 0.0
+    },
+    "negative_slope": {
+      "b": 2.0,
+      "cap": 3.0,
+      "expected_lower": 1.0,
+      "expected_status": "limit",
+      "expected_upper": 3.0,
+      "g": -1.0
+    },
+    "no_response": {
+      "b": 0.25,
+      "cap": 2.0,
+      "expected_no_response": true,
+      "expected_status": "no_response",
+      "expected_upper": 2.0,
+      "g": 0.0
+    },
+    "rust_regressions": [
+      "negative_gradient_creates_a_lower_composition_bound",
+      "infeasible_constant_and_strict_boundary_are_rejected",
+      "constant_threshold_with_positive_composition_strictness_is_a_closed_zero_singleton",
+      "no_response_and_positive_balance_cap_keep_distinct_statuses"
+    ],
+    "zero_slope_contributor_change": {
+      "b": 1.0,
+      "contributors_at_zero": 1,
+      "contributors_for_positive_x": 2,
+      "expected_interval": [
+        0.0,
+        0.0
+      ],
+      "expected_upper_open": false,
+      "g": 0.0,
+      "rust_regression": "constant_threshold_with_positive_composition_strictness_is_a_closed_zero_singleton"
+    }
+  },
+  "analytic_nb94": {
+    "passed": true,
+    "step1_Bq_per_g": 44929.246427871636,
+    "step1_actual_Bq_per_g": 44929.246427870414,
+    "step2_Bq_per_g": 44928.93500314609,
+    "step2_actual_Bq_per_g": 44928.93500314489
+  },
+  "deterministic": true,
+  "failures": [],
+  "fixture": "target/p105-g2-controls",
+  "g3_waste_identity": {
+    "checked": true,
+    "class_by_target": [
+      "A",
+      "A"
+    ],
+    "repeat_byte_identical": true,
+    "target_times_s": [
+      1000000.0,
+      2000000.0
+    ]
+  },
+  "joint_margin": {
+    "binding_constraint": {
+      "column": null,
+      "contributor_count": 1,
+      "nuclides": [
+        "Nb94"
+      ],
+      "step": 1,
+      "strict": false,
+      "table": 1
+    },
+    "lower_scale_factor": 0.0,
+    "status": "limit",
+    "supremum_attained": true,
+    "upper_supremum_scale_factor": 211.1582152264727,
+    "verified_value": 211.1581096473651
+  },
+  "mutation_controls": {
+    "binding_contributors_rejected": true,
+    "inventory_rejected": true,
+    "limit_rejected": true,
+    "row_limit_rejected": true,
+    "sum_rejected": true
+  },
+  "pass": true,
+  "refusal_controls": {
+    "nonlinear": true,
+    "required_h3": true,
+    "unknown_metadata": true
+  },
+  "required_rust_regressions": [
+    "negative_gradient_creates_a_lower_composition_bound",
+    "infeasible_constant_and_strict_boundary_are_rejected",
+    "constant_threshold_with_positive_composition_strictness_is_a_closed_zero_singleton",
+    "no_response_and_positive_balance_cap_keep_distinct_statuses"
+  ],
+  "rust_regressions_executed_by_control": false,
+  "schema": "actinv-p105-g2-budget-control-1",
+  "usable_interval_count": 2,
+  "usable_intervals": [
+    {
+      "binding_constraint": {
+        "column": null,
+        "contributor_count": 1,
+        "nuclides": [
+          "Nb94"
+        ],
+        "step": 1,
+        "strict": false,
+        "table": 1
+      },
+      "limit": "Nb.sole.",
+      "lower_wt_pct": 0.0,
+      "supremum_attained": true,
+      "upper_supremum_wt_pct": 2.111582152264727,
+      "verified_value_wt_pct": 2.1115810964736506
+    },
+    {
+      "binding_constraint": {
+        "column": null,
+        "contributor_count": 1,
+        "nuclides": [
+          "Nb94"
+        ],
+        "step": 1,
+        "strict": false,
+        "table": 1
+      },
+      "limit": "Nb.others_at_spec.",
+      "lower_wt_pct": 0.0,
+      "supremum_attained": true,
+      "upper_supremum_wt_pct": 2.111582152264727,
+      "verified_value_wt_pct": 2.1115810964736506
+    }
+  ],
+  "verified_point_count": 4,
+  "verified_target_count": 8
+}

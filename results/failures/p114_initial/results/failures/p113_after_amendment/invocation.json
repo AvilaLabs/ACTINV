@@ -1,0 +1,14 @@
+{
+  "schema": "actinv-p113-terminal-invocation-1",
+  "phase": "P113",
+  "gate": "workspace_tests_confirmation_invocation",
+  "command": "undefined timeout --kill-after=30s 1200s bash -c 'cargo test --workspace --all-targets --all-features > target/p113-workspace-tests-final-confirmed.log 2>&1; p113_status=$?; printf \"%s\\n\" \"$p113_status\" > target/p113-workspace-tests-final-confirmed.exit; exit \"$p113_status\"' > target/p113-workspace-tests-final-confirmed.scope.log 2>&1",
+  "observed_exit_code": 127,
+  "cgroup_started": false,
+  "cargo_started": false,
+  "amended_g0_executed": false,
+  "g1_executed": false,
+  "g2_executed": false,
+  "reason": "The automatic continuation did not retain the in-memory scope prefix. The coordinator concatenated an undefined value without validating it before launch.",
+  "log": "results/failures/p113_after_amendment/target/p113-workspace-tests-final-confirmed.scope.log"
+}

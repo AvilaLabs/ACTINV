@@ -1,0 +1,32 @@
+{
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "g0_p109_composition_solve.json": "cad2351bf53e7f0165c6a899bcd8b97ba302d73effbb3e52bd220dcf598c1c09",
+    "g1_p109_composition_solve.json": "a74fc950793785af5fa667eca793aca5934fc54ab366435004f88093b2451986",
+    "g2_p109_composition_solve.json": null,
+    "g3_p109_quality.json": "d7b42c419704e21dcbe1fadfa3a3970a55b390851890e910598272571fcb1e36"
+  },
+  "gates": {
+    "G0": "PASS",
+    "G1": "FAIL",
+    "G2": "FAIL",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "P108": "PASS",
+    "amendment": "PASS"
+  },
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "phase": "P109",
+  "qualification": "Conservative class supersets for a generated fixed-rate coupled/reach affine composition basis, with full native selected-extremum witness verification and explicit modeled-inventory coverage downgrades; no global numerical solver/model-error bound, physical completeness, statistical uncertainty or disposal-acceptance conclusion.",
+  "quality_checks": {
+    "historical_source_verification": false,
+    "required_gate_names_present": false,
+    "resource_limits_match": true,
+    "source_hashes_match": true,
+    "workspace_tests_reported_green": true
+  },
+  "repair_rounds": 1,
+  "schema": "actinv-p109-verdict-1",
+  "verdict": "P109-FAIL"
+}
