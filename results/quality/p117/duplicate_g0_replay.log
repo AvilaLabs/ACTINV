@@ -1,0 +1,40 @@
+Running as unit: run-p2074371-i10473668.scope; invocation ID: be0bf6f8d8864f3386d9a09e0053f2e2
+gate result could not be durably recorded: FileExistsError: [Errno 17] File exists: '/home/connoravila/Documents/actinv/target/roadmap-waste/results/quality/p117/.p117-spnc3zhe.tmp' -> '/home/connoravila/Documents/actinv/target/roadmap-waste/results/quality/p117/g0_replay.json'
+{
+  "argv": [
+    "python3",
+    "controls/check_p117.py",
+    "--g0-only",
+    "--no-write"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": "log persistence failed: FileExistsError: [Errno 17] File exists: '/home/connoravila/Documents/actinv/target/roadmap-waste/target/.p117-a70jl_1s.tmp' -> '/home/connoravila/Documents/actinv/target/roadmap-waste/target/p117-g0_replay.log'",
+  "gate": "g0_replay",
+  "log_path": "target/p117-g0_replay.log",
+  "log_sha256": null,
+  "phase": "P117",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2074371-i10473668.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "setup_failed",
+  "timeout_s": 600.0
+}

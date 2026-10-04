@@ -1,16 +1,16 @@
 {
   "ci_evidence_sha256": null,
   "evidence_sha256": {
-    "results/g0_p117_twin_waste.json": "fa86567838c012d193dbfb9786c67e6565167ef78e23c1a7e961dd835643d6b0",
+    "results/g0_p117_twin_waste.json": "7c5770a8b0d60e13450513f0b54ed4d43ad68dbf5d8c43a328206e3704972c68",
     "results/g1_p117_twin_waste.json": "c5d4cc7c77c3ce2134f14aa9d756dddb1d7a672f169c2648d5551f47f2aa2516",
-    "results/g2_p117_twin_waste.json": "38e69b7229145b0364a809fbf5d0428144930c952e2b4c8f466f262a00480278",
-    "results/g3_p117_quality.json": "818c2aedea29a8127ee4a9b3cb56e82866fe52dcc6fa055249ed258c2087f964"
+    "results/g2_p117_twin_waste.json": null,
+    "results/g3_p117_quality.json": null
   },
   "gates": {
     "CI_evidence_consistent": "PASS",
     "G0": "PASS",
     "G1": "PASS",
-    "G2": "PASS",
+    "G2": "FAIL",
     "G3_CI": "PENDING",
     "G3_local": "FAIL",
     "historical_p116_ci_failure": "PASS",

@@ -1,0 +1,70 @@
+{
+  "schema": "actinv-p117-post-amendment-recorder-observation-1",
+  "phase": "P117",
+  "gate": "g0_replay",
+  "execution_interface": "exec_command/write_stdin",
+  "exec_session_id": 80083,
+  "status": "completed",
+  "observed_exit_code": 1,
+  "resource_inspection_errors": [],
+  "scope": "run-p2074371-i10473668.scope",
+  "argv": [
+    "python3",
+    "scripts/run_p117_gate.py",
+    "--phase",
+    "P117",
+    "--name",
+    "g0_replay",
+    "--timeout-s",
+    "600",
+    "--log",
+    "target/p117-g0_replay.log",
+    "--receipt",
+    "results/quality/p117/g0_replay.json",
+    "--",
+    "python3",
+    "controls/check_p117.py",
+    "--g0-only",
+    "--no-write"
+  ],
+  "returned_recorder_report": {
+    "argv": [
+      "python3",
+      "controls/check_p117.py",
+      "--g0-only",
+      "--no-write"
+    ],
+    "child_exit_code": 0,
+    "cwd": ".",
+    "error": "log persistence failed: FileExistsError: [Errno 17] File exists: '/home/connoravila/Documents/actinv/target/roadmap-waste/target/.p117-a70jl_1s.tmp' -> '/home/connoravila/Documents/actinv/target/roadmap-waste/target/p117-g0_replay.log'",
+    "gate": "g0_replay",
+    "log_path": "target/p117-g0_replay.log",
+    "log_sha256": null,
+    "phase": "P117",
+    "resources": {
+      "cgroup_limits": {
+        "cpu.max": "200000 100000",
+        "memory.max": "6442450944",
+        "memory.swap.max": "0",
+        "pids.max": "128"
+      },
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2074371-i10473668.scope",
+      "environment": {
+        "CARGO_BUILD_JOBS": "1",
+        "RAYON_NUM_THREADS": "2",
+        "RUST_TEST_THREADS": "1"
+      },
+      "platform": "linux",
+      "tmpdir": {
+        "filesystem": "ext4",
+        "mount_point": "/",
+        "path": "target/preflight-tmp"
+      }
+    },
+    "schema": "actinv-roadmap-gate-receipt-1",
+    "status": "setup_failed",
+    "timeout_s": 600
+  },
+  "terminal_output_path": "results/quality/p117/duplicate_g0_replay.log",
+  "interpretation": "Duplicate recorder invocation: source replay child exited integer zero; atomic log and receipt persistence refused pre-existing original successful evidence. Outer recorder exited integer one after Amendment A consumed the sole repair. P117 is terminal FAIL; no subsequent required gates were run."
+}

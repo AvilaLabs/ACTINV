@@ -27,9 +27,41 @@ class P117ControlsTests(unittest.TestCase):
         self.assertTrue(g0["historical_p116_verified"])
         self.assertTrue(g0["predecessor_p116_fail_preserved"])
         self.assertEqual(g0["prior_p116"]["verdict"], "P116-FAIL")
+        self.assertEqual(g0["repair_rounds"], 1)
+        self.assertEqual(g0["repair_amendment_sha256"], check_p117.AMENDMENT_SHA256)
+        self.assertTrue(g0["repair_amendment_registered"])
+        self.assertTrue(g0["repair_evidence_matches"])
+        self.assertEqual(len(g0["repair_evidence_sha256"]), 70)
+        self.assertEqual(g0["initial_failure"]["verdict"], "P117-FAIL")
+        self.assertEqual(len(g0["initial_failure"]["adopted_initial_gates"]),
+                         len(check_p117.ADOPTED_INITIAL_GATES))
         self.assertEqual(g0["seed_file_count"], 13)
         self.assertEqual(g0["seed_total_bytes"], 166789318)
         self.assertTrue(g0["pass"], g0)
+
+    def test_registered_repair_rejects_archived_and_checkpoint_source_tampering(self):
+        real_archive_file = check_p117._archive_file
+        with tempfile.TemporaryDirectory(prefix="p117-repair-tamper-") as temp:
+            corrupted = Path(temp) / "corrupted.json"
+            corrupted.write_bytes(b"{}")
+
+            def changed_archive(relative):
+                if relative == "results/g1_p117_twin_waste.json":
+                    return corrupted
+                return real_archive_file(relative)
+
+            with patch.object(check_p117, "_archive_file", side_effect=changed_archive):
+                self.assertFalse(check_p117._repair_evidence()["pass"])
+
+        original_git_blob = check_p116._git_blob
+
+        def changed_checkpoint_blob(commit, path):
+            if path == "controls/check_p117.py":
+                return b"changed checkpoint source"
+            return original_git_blob(commit, path)
+
+        with patch.object(check_p116, "_git_blob", side_effect=changed_checkpoint_blob):
+            self.assertFalse(check_p117._repair_evidence()["pass"])
 
     def test_current_source_seal_is_exact_and_path_complete(self):
         old = check_p117._read(check_p117.P116_G0)

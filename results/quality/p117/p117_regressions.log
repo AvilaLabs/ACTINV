@@ -395,7 +395,7 @@
   "g0_exact_replay_equal": false,
   "g0_result_sha256": null,
   "g1_exact_replay_equal": false,
-  "g1_result_sha256": null,
+  "g1_result_sha256": "c5d4cc7c77c3ce2134f14aa9d756dddb1d7a672f169c2648d5551f47f2aa2516",
   "p116_g1_sha256": "74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9",
   "pass": false,
   "persisted_result_matches": true,
@@ -406,8 +406,8 @@
 }
 
 === stderr ===
-.........
+..........
 ----------------------------------------------------------------------
-Ran 9 tests in 192.360s
+Ran 10 tests in 225.051s
 
 OK

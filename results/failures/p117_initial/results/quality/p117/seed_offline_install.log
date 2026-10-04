@@ -1,0 +1,22 @@
+=== stdout ===
+{
+  "controls": {
+    "files": 11,
+    "installed": 11,
+    "mode": "controls",
+    "release": "ci-data-cache-2026-10-04-v1",
+    "reused": 0,
+    "schema": "actinv-ci-data-seed-install-1"
+  },
+  "fns": {
+    "files": 3,
+    "installed": 3,
+    "mode": "fns",
+    "release": "ci-data-cache-2026-10-04-v1",
+    "reused": 0,
+    "schema": "actinv-ci-data-seed-install-1"
+  },
+  "network_disabled": true
+}
+
+=== stderr ===

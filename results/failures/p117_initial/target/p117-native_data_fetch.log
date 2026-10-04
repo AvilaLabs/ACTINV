@@ -1,0 +1,84 @@
+=== stdout ===
+{
+  "schema": "actinv-data-operation-1",
+  "operation": "fetch",
+  "catalog_version": "1.1.0",
+  "bundle": "tendl-2025-neutron",
+  "root": "target/p117-fns-data/v1.1.0",
+  "downloaded": 3,
+  "reused": 2,
+  "files": [
+    {
+      "id": "tendl-2025-neutron-709g",
+      "role": "activation-library",
+      "path": "target/p117-fns-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "bytes": 123897743,
+      "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+      "status": "downloaded"
+    },
+    {
+      "id": "tendl-2025-neutron-709g-index",
+      "role": "activation-index",
+      "path": "target/p117-fns-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+      "bytes": 2653304,
+      "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+      "status": "downloaded"
+    },
+    {
+      "id": "endfb-viii-0-decay",
+      "role": "decay-primary",
+      "path": "target/p117-fns-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+      "bytes": 68313052,
+      "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+      "status": "reused"
+    },
+    {
+      "id": "jeff-3-3-decay",
+      "role": "decay-fallback",
+      "path": "target/p117-fns-data/v1.1.0/decay/jeff-3-3_decay.dat",
+      "bytes": 45718116,
+      "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+      "status": "reused"
+    },
+    {
+      "id": "actinv-data-notice-v1",
+      "role": "notice",
+      "path": "target/p117-fns-data/v1.1.0/legacy/ACTINV-DATA-NOTICE-v1.0.0.md",
+      "bytes": 3538,
+      "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
+      "status": "downloaded"
+    }
+  ],
+  "problem_fragment": {
+    "decay": {
+      "fallback": "target/p117-fns-data/v1.1.0/decay/jeff-3-3_decay.dat",
+      "primary": "target/p117-fns-data/v1.1.0/decay/endf-b-viii-0_decay.dat"
+    },
+    "library": {
+      "path": "target/p117-fns-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+    },
+    "options": {
+      "temperature_K": 293.6
+    },
+    "projectile": "neutron",
+    "spectrum": {
+      "structure": "fispact-709"
+    }
+  }
+}
+
+=== stderr ===
+fetching tendl-2025-neutron-709g
+  download tendl-2025-neutron-709g: 13.6% (16792054/123897743 bytes)
+  download tendl-2025-neutron-709g: 27.1% (33568717/123897743 bytes)
+  download tendl-2025-neutron-709g: 40.6% (50346723/123897743 bytes)
+  download tendl-2025-neutron-709g: 54.2% (67123714/123897743 bytes)
+  download tendl-2025-neutron-709g: 67.7% (83886080/123897743 bytes)
+  download tendl-2025-neutron-709g: 81.3% (100669376/123897743 bytes)
+  download tendl-2025-neutron-709g: 94.8% (117456491/123897743 bytes)
+  download tendl-2025-neutron-709g: verified ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44
+fetching tendl-2025-neutron-709g-index
+  download tendl-2025-neutron-709g-index: verified 8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb
+fetching actinv-data-notice-v1
+  download actinv-data-notice-v1: verified 191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c

@@ -111,8 +111,28 @@ def _g0_ok(g0: object) -> bool:
         and bool(g0["public_handbook_sha256"])
         and g0.get("public_handbook_matches_p116") is True
         and g0.get("seed_file_count") == 13 and g0.get("seed_total_bytes") == 166789318
-        and type(g0.get("repair_rounds")) is int and g0.get("repair_rounds") == 0
+        and _repair_metadata_matches(g0, g0)
         and _bound_control_sources(g0.get("control_sha256")))
+
+
+def _repair_metadata_matches(report: dict, g0: dict) -> bool:
+    initial = g0.get("initial_failure")
+    return (type(report.get("repair_rounds")) is int and report.get("repair_rounds") == 1
+        and report.get("repair_amendment_sha256") == check_p117.AMENDMENT_SHA256
+        and report.get("repair_amendment_registered") is True
+        and report.get("repair_discovery_sha256") == check_p117.INITIAL_DISCOVERY_SHA256
+        and report.get("repair_evidence_matches") is True
+        and isinstance(report.get("repair_evidence_sha256"), dict)
+        and len(report["repair_evidence_sha256"]) == 70
+        and report.get("repair_evidence_sha256") == g0.get("repair_evidence_sha256")
+        and isinstance(initial, dict)
+        and report.get("initial_failure") == initial
+        and initial.get("checkpoint_commit") == check_p117.INITIAL_CHECKPOINT
+        and initial.get("verdict") == "P117-FAIL"
+        and initial.get("verdict_exit_code") == 1
+        and initial.get("verdict_status") == "completed"
+        and initial.get("adopted_gate_names") == sorted(check_p117.ADOPTED_INITIAL_GATES)
+        and initial.get("rerun_gate_names") == sorted(check_p117.RERUN_GATES))
 
 
 def _expected_g1() -> dict:
@@ -246,12 +266,23 @@ def _g3_ok(g3: object, g0: dict, implementation_record: dict | None) -> bool:
     fresh = g3.get("fresh_gates")
     if not isinstance(adopted, dict) or len(adopted) != 32 or g3.get("adopted_p116_gates") != adopted:
         return False
-    if not isinstance(fresh, dict) or set(fresh) != check_p117.FRESH_GATES:
+    if not isinstance(fresh, dict) or set(fresh) != check_p117.RERUN_GATES:
         return False
     if any(not _safe_p117_receipt(name, entry) for name, entry in fresh.items()):
         return False
     g1 = read(check_p117.G1)
     if not isinstance(g1, dict) or g1.get("pass") is not True:
+        return False
+    adopted_initial = g3.get("adopted_initial_gates")
+    expected_initial = g0.get("initial_failure", {}).get("adopted_initial_gates")
+    if (not isinstance(adopted_initial, dict)
+            or set(adopted_initial) != check_p117.ADOPTED_INITIAL_GATES
+            or adopted_initial != expected_initial
+            or g3.get("adopted_initial_gate_names") != sorted(check_p117.ADOPTED_INITIAL_GATES)
+            or g3.get("rerun_gate_names") != sorted(check_p117.RERUN_GATES)):
+        return False
+    if any(not check_p117._adopted_initial_entry_matches(name, adopted_initial[name])
+           for name in sorted(check_p117.ADOPTED_INITIAL_GATES)):
         return False
     release = old_g3.get("release_build") if isinstance(old_g3, dict) else None
     if not isinstance(release, dict):
@@ -270,7 +301,7 @@ def _g3_ok(g3: object, g0: dict, implementation_record: dict | None) -> bool:
     }
     source_map = g0.get("control_sha256")
     return (g3.get("schema") == "actinv-p117-quality-1" and g3.get("phase") == "P117"
-        and g3.get("pass") is True and type(g3.get("repair_rounds")) is int and g3.get("repair_rounds") == 0
+        and g3.get("pass") is True and _repair_metadata_matches(g3, g0)
         and g3.get("resource_limits") == check_p117.RESOURCES
         and g3.get("p116_adopted") == expected_adoption
         and g3.get("fresh_gate_names") == sorted(fresh)
@@ -280,7 +311,7 @@ def _g3_ok(g3: object, g0: dict, implementation_record: dict | None) -> bool:
         and g3.get("source_sha256") == source_map
         and g3.get("p117_science_evidence_matches") is True
         and g3.get("public_handbook_matches_p116") is True
-        and g3.get("public_handbook_sha256") == g0.get("public_handbook_sha256")
+        and g3.get("p116_adopted", {}).get("public_handbook_sha256") == g0.get("public_handbook_sha256")
         and g3.get("qualified_binary_matches_p116") is True
         and isinstance(release.get("binary_sha256"), str)
         and g3.get("qualified_binary_sha256") == release.get("binary_sha256")

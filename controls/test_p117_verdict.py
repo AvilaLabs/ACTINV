@@ -93,59 +93,120 @@ class P117VerdictTests(unittest.TestCase):
                 with patch.object(check_p116, "_git_blob", return_value=b"changed"):
                     self.assertFalse(verdict._source_commit_matches(g0, record))
 
-    def test_g3_validation_accepts_bound_report_and_rejects_changed_source_map(self):
+    def test_actual_quality_producer_g3_shape_validates_and_nested_handbook_tampering_fails(self):
         old_gates = {f"old-gate-{index}": {"exit_code": 0} for index in range(32)}
-        old_rust = {"crates/core/src/lib.rs": "1" * 64}
-        old_g3 = {"gates": old_gates, "release_build": {"binary_sha256": "2" * 64},
+        rust_bytes = b"old Rust source"
+        rust_hash = hashlib.sha256(rust_bytes).hexdigest()
+        old_rust = {f"crates/core/src/file-{index}.rs": rust_hash for index in range(100)}
+        handbook_bytes = b"pinned handbook source"
+        handbook_hash = hashlib.sha256(handbook_bytes).hexdigest()
+        handbook = {"docs/guide/index.md": handbook_hash}
+        release_hash = "2" * 64
+        old_g3 = {"pass": True, "gates": old_gates, "release_build": {"binary_sha256": release_hash},
                   "workspace_tests": {"passed": 485, "failed": 0, "ignored": 2},
                   "production_rust_sha256": old_rust}
-        handbook = {"docs/guide/intro.md": "3" * 64}
         source_map = {"controls/check_p117.py": "4" * 64}
+        artifact_hashes = {check_p117.G0: "5" * 64, check_p117.G1: "6" * 64,
+                           check_p117.G2: "7" * 64}
+        old_science = {"schema": "immutable-p116-report"}
         g0 = {"pass": True, "control_sha256": source_map,
               "public_handbook_sha256": handbook}
-        fresh = {name: {"name": name} for name in check_p117.FRESH_GATES}
-        artifacts = {path: "5" * 64 for path in
-                     (check_p117.G0, check_p117.G1, check_p117.G2)}
-        adopted = {
-            "quality_sha256": check_p117.P116_G3_SHA256,
-            "implementation_commit": check_p117.IMPLEMENTATION_COMMIT,
-            "verdict_sha256": check_p117.P116_VERDICT_SHA256,
-            "gates": old_gates, "gate_names": sorted(old_gates), "successful_gate_count": 32,
-            "workspace_tests": old_g3["workspace_tests"],
-            "release_build": old_g3["release_build"],
-            "production_rust_sha256": old_rust,
-            "public_handbook_sha256": handbook,
-            "quality_validated": True, "not_rerun": True,
+        g1 = {"pass": True, "fresh_p117_report": old_science}
+        g2 = {"pass": True, "g0_result_sha256": artifact_hashes[check_p117.G0],
+              "g1_result_sha256": artifact_hashes[check_p117.G1]}
+        adopted_initial = {name: {"name": name, "receipt_sha256": "8" * 64,
+                                  "log_sha256": "9" * 64}
+                           for name in check_p117.ADOPTED_INITIAL_GATES}
+        evidence_hashes = {
+            f"results/failures/p117_initial/file-{index}.json": "a" * 64
+            for index in range(70)
         }
-        g3 = {
-            "schema": "actinv-p117-quality-1", "phase": "P117", "pass": True,
-            "repair_rounds": 0, "resource_limits": check_p117.RESOURCES,
-            "p116_adopted": adopted, "adopted_p116_gates": old_gates,
-            "fresh_gates": fresh, "fresh_gate_names": sorted(fresh),
-            "p116_history_verified": True, "current_rust_matches_p116": True,
-            "current_rust_sha256": old_rust, "source_sha256": source_map,
-            "p117_science_evidence_matches": True,
-            "public_handbook_matches_p116": True, "public_handbook_sha256": handbook,
-            "qualified_binary_matches_p116": True, "qualified_binary_sha256": "2" * 64,
-            "failures": [], "g0_sha256": "5" * 64, "g1_sha256": "5" * 64,
-            "g2_sha256": "5" * 64,
+        initial_failure = {
+            "checkpoint_commit": check_p117.INITIAL_CHECKPOINT, "verdict": "P117-FAIL",
+            "verdict_exit_code": 1, "verdict_status": "completed",
+            "adopted_gate_names": sorted(check_p117.ADOPTED_INITIAL_GATES),
+            "rerun_gate_names": sorted(check_p117.RERUN_GATES),
+            "adopted_initial_gates": adopted_initial,
         }
+        repair = {
+            "pass": True, "amendment_sha256": check_p117.AMENDMENT_SHA256,
+            "amendment_registered": True, "discovery_sha256": check_p117.INITIAL_DISCOVERY_SHA256,
+            "evidence_sha256": evidence_hashes, "initial_failure": initial_failure,
+        }
+        g0.update({
+            "repair_rounds": 1, "repair_amendment_sha256": repair["amendment_sha256"],
+            "repair_amendment_registered": True, "repair_discovery_sha256": repair["discovery_sha256"],
+            "repair_evidence_sha256": evidence_hashes, "repair_evidence_matches": True,
+            "initial_failure": initial_failure,
+        })
+        live_log = b"fresh rerun gate output\n"
+        live_log_sha = hashlib.sha256(live_log).hexdigest()
+        rerun_entries = {name: {"name": name, "log_sha256": live_log_sha}
+                         for name in check_p117.RERUN_GATES}
+        with tempfile.TemporaryDirectory(prefix="p117-producer-g3-") as temp:
+            log_path = Path(temp) / "gate.log"
+            log_path.write_bytes(live_log)
+            handbook_file = ROOT / "docs/guide/index.md"
 
-        def read_stub(path):
-            if path == check_p117.P116_G3:
-                return old_g3
-            if path == check_p117.G1:
-                return {"pass": True}
-            return None
+            def source_bytes(_commit, path):
+                return rust_bytes if path in old_rust else handbook_bytes
 
-        with patch.object(verdict, "read", side_effect=read_stub), \
-             patch.object(verdict, "sha", side_effect=lambda path: artifacts.get(path)), \
-             patch.object(verdict, "_handbook_from_commit", return_value=handbook), \
-             patch.object(verdict, "_safe_p117_receipt", return_value=True):
-            self.assertTrue(verdict._g3_ok(g3, g0, None))
-            changed = copy.deepcopy(g3)
-            changed["source_sha256"]["controls/check_p117.py"] = "0" * 64
-            self.assertFalse(verdict._g3_ok(changed, g0, None))
+            def source_hash(path):
+                if path == check_p117.ACTINV:
+                    return release_hash
+                if path in artifact_hashes:
+                    return artifact_hashes[path]
+                if path == handbook_file:
+                    return handbook_hash
+                return None
+
+            def read_p117(path):
+                return {check_p117.P116_G3: old_g3, check_p117.G0: g0,
+                        check_p117.G1: g1, check_p117.G2: g2,
+                        check_p117.P116_G1: old_science}.get(path)
+
+            def fake_safe_file(relative):
+                if relative.startswith("target/p117-") or relative.startswith("results/quality/p117/"):
+                    return log_path
+                raise AssertionError(f"unexpected file read by producer: {relative}")
+
+            with patch.object(check_p117, "_read", side_effect=read_p117), \
+                 patch.object(check_p117, "_repair_evidence", return_value=repair), \
+                 patch.object(check_p117, "_source_population_ok", return_value=(True, source_map, old_rust)), \
+                 patch.object(check_p117, "_safe_receipt", side_effect=lambda name: (None, rerun_entries[name])), \
+                 patch.object(check_p117, "_adopted_initial_entry_matches", return_value=True), \
+                 patch.object(check_p117, "_safe_file", side_effect=fake_safe_file), \
+                 patch.object(check_p117, "_persist", return_value=(True, b"")), \
+                 patch.object(check_p117, "_sha", side_effect=source_hash), \
+                 patch.object(check_p116, "_rust_paths_at_commit", return_value=set(old_rust)), \
+                 patch.object(check_p116, "_git_blob", side_effect=source_bytes), \
+                 patch.object(check_p117.check_p116_history, "verify", return_value={"pass": True}), \
+                 patch.object(check_p117.check_p116_verdict, "_quality_ok", return_value=True), \
+                 patch.object(check_p117.check_p112_verdict, "_handbook_paths", return_value=set(handbook)), \
+                 patch("builtins.print"):
+                # The P117 quality builder must emit its genuine nested shape;
+                # the verdict then checks that object without an invented copy.
+                code, produced = check_p117.quality()
+            self.assertEqual(code, 0)
+            self.assertNotIn("public_handbook_sha256", produced)
+            self.assertEqual(produced["p116_adopted"]["public_handbook_sha256"], handbook)
+
+            def verdict_read(path):
+                return {check_p117.P116_G3: old_g3, check_p117.G1: g1}.get(path)
+
+            with patch.object(verdict, "read", side_effect=verdict_read), \
+                 patch.object(verdict, "sha", side_effect=lambda path: artifact_hashes.get(path)), \
+                 patch.object(verdict, "_handbook_from_commit", return_value=handbook), \
+                 patch.object(verdict, "_safe_p117_receipt", return_value=True), \
+                 patch.object(check_p117, "_adopted_initial_entry_matches", return_value=True):
+                self.assertTrue(verdict._g3_ok(produced, g0, None))
+                changed = copy.deepcopy(produced)
+                first_source = next(iter(changed["source_sha256"]))
+                changed["source_sha256"][first_source] = "0" * 64
+                self.assertFalse(verdict._g3_ok(changed, g0, None))
+                changed = copy.deepcopy(produced)
+                changed["p116_adopted"]["public_handbook_sha256"]["docs/guide/index.md"] = "0" * 64
+                self.assertFalse(verdict._g3_ok(changed, g0, None))
 
     def test_implementation_record_binds_all_four_artifact_git_blobs(self):
         with tempfile.TemporaryDirectory(prefix="p117-impl-record-") as temp:

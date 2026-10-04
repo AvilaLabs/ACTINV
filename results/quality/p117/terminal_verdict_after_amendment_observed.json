@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "python3",
+    "-c",
+    "import sys,json; sys.path[:0] = [\"scripts\",\"controls\"]; import run_p117_gate as r; resources,errors=r.inspect_resources(); errors+=r._resource_snapshot_errors(resources); print(json.dumps({\"resources\":resources,\"errors\":errors},sort_keys=True),flush=True); assert not errors, errors; import check_p117_verdict; raise SystemExit(check_p117_verdict.main([\"--write\"]))"
+  ],
+  "entry_point": [
+    "python3",
+    "controls/check_p117_verdict.py",
+    "--write"
+  ],
+  "exit_code": 1,
+  "inspection_errors": [],
+  "raw_log_sha256": "83d93954f39128770afbe7f45c5968a939013b0d7bda47cc7ee514ee7f94b059",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p2131388-i10509711.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-p117-terminal-verdict-observation-1",
+  "status": "completed"
+}

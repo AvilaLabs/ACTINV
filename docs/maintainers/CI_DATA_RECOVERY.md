@@ -144,3 +144,29 @@ and seven verdict regressions also passed. The final full read-only replay is
 still running; G3, the local verdict, the push, and all six required CI
 workflows remain pending. These results are intermediate evidence, not a
 terminal P117 PASS. P116's FAIL disposition remains immutable.
+
+The final replay subsequently passed, completing all nineteen initial gates.
+The quality collector passed, but its independent verdict failed only at
+G3_local: the checker requested an absent top-level handbook map instead of
+the already-qualified nested map. The complete actual failure is preserved
+in initial checkpoint `24929f477ab56ed026eabee4260e39572c226428` and the
+70-file archive plus discovery
+`73f2cbec3a4a69b9dfe2b14301d283802ffa2fc00d71ce09c7eeab02c014232a`.
+Registered Amendment A
+`3b992672b5339f520beaff6450c227dd62d05516a70bc854b6df8dbe147b4025`
+permits the one metadata repair, real-producer regression coverage, seven
+repeated affected checks and explicitly adopted unchanged initial evidence.
+It changes no data, transport, Rust or scientific criteria. No push or green
+CI qualification exists yet.
+
+2026-10-04 terminal update: P117 stopped after the consumed amendment. Four
+amended source/seal gates completed zero, but a duplicate G0 replay recorder
+returned actual one at the atomic no-overwrite log/receipt guard. The source
+replay itself passed; original successful evidence was preserved. Remaining
+amended G1/G2/full replay and G3 were not run. The unchanged independent
+verdict derived terminal P117-FAIL with SHA
+`11ea137a5362b5cc42c771137771cbad08b5cd7084939480138b80e656ee4e9b`.
+The separate cache and its verified inputs remain intact. Preserve both P117
+failure episodes, then register a successor that fixes the static CI dependency
+on ignored target logs and requires a clean-worktree source-only verdict replay
+before any push. No CI qualification or waste roadmap closure is claimed.
