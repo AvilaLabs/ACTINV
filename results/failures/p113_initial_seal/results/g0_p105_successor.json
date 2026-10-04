@@ -1,0 +1,43 @@
+{
+  "amendment_sha256": "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54",
+  "checks": {
+    "inherited_p103_source_seal": {
+      "pass": true,
+      "read_only": true,
+      "result_path": "results/g0_p103_seals.json"
+    },
+    "phase_repair_amendment_registered": {
+      "actual_sha256": "023766635d97829284705d485848657e38065a6da3dec95e982811cb62f30b40",
+      "expected_sha256": "023766635d97829284705d485848657e38065a6da3dec95e982811cb62f30b40",
+      "pass": true,
+      "registered": true
+    },
+    "protocol_registered": {
+      "actual_sha256": "f38b973532010f4a7e4dc644faaffe6c8c420e42aa2e27c898e029ecef035075",
+      "expected_sha256": "f38b973532010f4a7e4dc644faaffe6c8c420e42aa2e27c898e029ecef035075",
+      "pass": true,
+      "registered": true
+    },
+    "repair_amendment_registered": {
+      "actual_sha256": "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54",
+      "expected_sha256": "b83a177adcd2614b771da62726a0e3d941f9e986c62cd218f8baea3a7ec8bf54",
+      "pass": true,
+      "registered": true
+    }
+  },
+  "control_hashes": {
+    "budget_helper_sha256": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+    "checker_sha256": "fad7a5e78f3f4b29941a3f4c340f875f5a31095ba429fa6c7857a47084810ef1",
+    "child_regression_sha256": "adcbe6d06a2e39b7e45e17b59728f35788d9104dfc8b24e8a85669babcb6c4ce"
+  },
+  "inherited_protocol_sha256": "22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e",
+  "inherited_source_seal_sha256": "31a87b130be75f290569d0bea083ec4e687e498a0627eeed25cf8c0209e38367",
+  "inherited_vector_fixture_sha256": "bfefb655b2df52da7ccb7a93cfd7c22bdc18762917e900e828ebd97d58b2bb42",
+  "inherited_vector_seal_sha256": "a3a846da215940f66bb5f428a0aa4931b9a26250ea14a12d0bc5c5369cfd9293",
+  "phase": "P105",
+  "protocol": "ACTINV-P105",
+  "protocol_sha256": "f38b973532010f4a7e4dc644faaffe6c8c420e42aa2e27c898e029ecef035075",
+  "schema": "actinv-p105-successor-g0-1",
+  "sealed": true,
+  "verdict": "P105-G0-SEALED"
+}

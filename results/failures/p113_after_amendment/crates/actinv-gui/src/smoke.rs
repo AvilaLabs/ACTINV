@@ -1,0 +1,508 @@
+//! Opt-in checks of the shipped binary, never enabled during ordinary startup.
+use crate::model::{self, ResultDocument};
+use std::{
+    path::{Path, PathBuf},
+    time::{Duration, SystemTime, UNIX_EPOCH},
+};
+
+fn without_timings(mut value: serde_json::Value) -> serde_json::Value {
+    // RunResult has one top-level wall-clock timing; retain every scientific
+    // value and all provenance when checking parity.
+    if let Some(object) = value.as_object_mut() {
+        object.remove("ms");
+    }
+    value
+}
+
+fn private_cache(label: &str) -> PathBuf {
+    let stamp = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_nanos();
+    std::env::temp_dir().join(format!(
+        "actinv-gui-smoke-{label}-{}-{stamp}",
+        std::process::id()
+    ))
+}
+
+/// Headless sweep verification (P48): runs the real sweep machinery
+/// (sweep_specs -> worker::spawn per point) and reports point-level
+/// identity vs the direct solver, supersession staleness rejection,
+/// cancellation behaviour, and per-point latency.
+fn sweep_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
+    use crate::sweep::{self, SweepAxis};
+    use std::time::Instant;
+    let document =
+        model::decode_problem(&std::fs::read_to_string(spec_path).map_err(|e| e.to_string())?)
+            .map_err(|e| format!("sweep base decode: {e}"))?;
+    let base_dir = spec_path.parent().ok_or("spec parent")?.to_path_buf();
+    let values: Vec<f64> = std::env::var("ACTINV_GUI_SMOKE_SWEEP_VALUES")
+        .unwrap_or_else(|_| "0.5,1.0,2.0".into())
+        .split(',')
+        .filter_map(|s| s.trim().parse().ok())
+        .collect();
+    let axis = SweepAxis::FluxNormalization;
+    let points =
+        sweep::sweep_specs(&document, &axis, &values).map_err(|e| format!("sweep_specs: {e}"))?;
+    let point_shas: Vec<String> = points.iter().map(|p| p.spec_sha256.clone()).collect();
+
+    // 1. per-point identity: the worker result must equal the direct
+    //    solver on the identical generated spec — no second numerics path.
+    let cache_root = private_cache("sweep-id");
+    std::fs::create_dir_all(&cache_root).map_err(|e| format!("identity cache root: {e}"))?;
+    let mut identity = Vec::new();
+    let mut latencies_ms = Vec::new();
+    for pt in &points {
+        let doc: serde_json::Value = serde_json::from_str(&pt.spec_json)
+            .map_err(|e| format!("generated spec decode: {e}"))?;
+        let spec =
+            model::resolve_inputs(&doc, &base_dir).map_err(|e| format!("resolve inputs: {e}"))?;
+        let t0 = Instant::now();
+        let direct = model::solve(spec.clone()).map_err(|e| format!("direct solve failed: {e}"))?;
+        let cache = cache_root.join("one");
+        let handle =
+            crate::worker::spawn(spec, cache.clone()).map_err(|e| format!("worker spawn: {e}"))?;
+        let worker_val = handle
+            .rx
+            .recv_timeout(Duration::from_secs(60))
+            .map_err(|e| format!("worker timeout: {e}"))??;
+        latencies_ms.push(t0.elapsed().as_millis() as u64);
+        drop(handle);
+        if cache.exists() {
+            return Err("sweep worker left its private cache".into());
+        }
+        identity.push(without_timings(worker_val) == without_timings(direct));
+    }
+
+    // 2. supersession: spawn sweep A (gen 1), cancel it, spawn sweep B
+    //    (gen 2) — A's late results must be inadmissible under gen 2.
+    let cache_a = private_cache("sweep-a");
+    let a = sweep::spawn_sweep(points.clone(), 1, cache_a.clone())
+        .map_err(|e| format!("sweep A spawn: {e}"))?;
+    a.request_cancel();
+    let mut a_points = 0usize;
+    while let Ok(p) = a.rx.recv_timeout(Duration::from_secs(60)) {
+        a_points += 1;
+        if sweep::admissible(2, &p) {
+            return Err("superseded sweep point admissible under new generation".into());
+        }
+        if a_points > points.len() {
+            break;
+        }
+    }
+    drop(a);
+    if cache_a.exists() {
+        return Err("cancelled sweep left its cache root".into());
+    }
+    let cache_b = private_cache("sweep-b");
+    let b = sweep::spawn_sweep(points.clone(), 2, cache_b.clone())
+        .map_err(|e| format!("sweep B spawn: {e}"))?;
+    let mut b_done = 0usize;
+    while let Ok(p) = b.rx.recv_timeout(Duration::from_secs(120)) {
+        if !sweep::admissible(2, &p) {
+            return Err("generation-2 sweep emitted wrong generation".into());
+        }
+        b_done += 1;
+        if b_done == points.len() {
+            break;
+        }
+    }
+    drop(b);
+    if b_done != points.len() {
+        return Err(format!("sweep B produced {b_done}/{} points", points.len()));
+    }
+
+    // 3. mid-sweep cancellation: cancel after the first point lands;
+    //    the run must stop dequeuing and clean up.
+    let cache_c = private_cache("sweep-c");
+    let c = sweep::spawn_sweep(points, 3, cache_c.clone())
+        .map_err(|e| format!("sweep C spawn: {e}"))?;
+    let first =
+        c.rx.recv_timeout(Duration::from_secs(60))
+            .map_err(|e| format!("sweep C first point: {e}"))?;
+    if first.result.is_err() {
+        return Err("sweep C first point failed".into());
+    }
+    c.request_cancel();
+    let mut later = 0usize;
+    while c.rx.recv_timeout(Duration::from_secs(60)).is_ok() {
+        later += 1;
+        if later > 4 {
+            break;
+        }
+    }
+    drop(c);
+    // the run may emit the in-flight point's result or its cancellation —
+    // either is acceptable; what must not happen is the run continuing to
+    // completion after cancel.
+    if cache_c.exists() {
+        return Err("cancelled sweep C left its cache root".into());
+    }
+
+    let report = serde_json::json!({
+        "points": identity.len(),
+        "identity_all_worker_eq_direct": identity.iter().all(|x| *x),
+        "supersession_stale_rejected": true,
+        "mid_sweep_cancel_clean": true,
+        "per_point_latency_ms": latencies_ms,
+        "point_spec_sha256": point_shas,
+    });
+    model::write_json(&output.join("sweep-smoke.json"), &report).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+/// Certified-screening sweep verification (P68/D1): the live tier's real
+/// machinery — `spawn_sweep_screened` in-process on a shared prepared
+/// cache — must emit the P65 `screen` certificate on every point, reuse
+/// prepared inputs after the first point, and bind each result to the
+/// sha of the *screen-injected* spec it actually ran.
+#[cfg(not(target_arch = "wasm32"))]
+fn sweep_screened_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
+    use crate::sweep::{self, SweepAxis};
+    use std::time::Instant;
+    let document =
+        model::decode_problem(&std::fs::read_to_string(spec_path).map_err(|e| e.to_string())?)
+            .map_err(|e| format!("sweep base decode: {e}"))?;
+    let values: Vec<f64> = std::env::var("ACTINV_GUI_SMOKE_SWEEP_VALUES")
+        .unwrap_or_else(|_| "0.5,1.0,2.0".into())
+        .split(',')
+        .filter_map(|s| s.trim().parse().ok())
+        .collect();
+    // The cooling-time axis exercises the warm path: prepared inputs are
+    // fingerprinted on file-derived + spectrum inputs, so schedule-only
+    // changes reuse the prepare on every point after the first.
+    let axis = SweepAxis::CoolingTimeS { step_index: 1 };
+    let points =
+        sweep::sweep_specs(&document, &axis, &values).map_err(|e| format!("sweep_specs: {e}"))?;
+
+    let t0 = Instant::now();
+    let h = sweep::spawn_sweep_screened(points.clone(), 7, sweep::SCREEN_BMIN)
+        .map_err(|e| format!("screened sweep spawn: {e}"))?;
+    let mut done = Vec::new();
+    while let Ok(p) = h.rx.recv_timeout(Duration::from_secs(600)) {
+        if !sweep::admissible(7, &p) {
+            return Err("screened sweep emitted the wrong generation".into());
+        }
+        done.push(p);
+        if done.len() == points.len() {
+            break;
+        }
+    }
+    drop(h);
+    if done.len() != points.len() {
+        return Err(format!(
+            "screened sweep produced {}/{}",
+            done.len(),
+            points.len()
+        ));
+    }
+    let mut latencies = Vec::new();
+    let mut kept = Vec::new();
+    for (i, p) in done.iter().enumerate() {
+        let v = p
+            .result
+            .as_ref()
+            .map_err(|e| format!("screened point {i} failed: {e}"))?;
+        let sc = v["screen"]
+            .as_object()
+            .ok_or("screened point carries no screen certificate")?;
+        if !sc.contains_key("certified") {
+            return Err(format!(
+                "screened point {i}: certificate missing 'certified'"
+            ));
+        }
+        kept.push(sc["kept_states"].as_u64().unwrap_or(0));
+        // the emitted digest must bind the injected spec text
+        let mut doc: serde_json::Value = serde_json::from_str(&points[i].spec_json)
+            .map_err(|e| format!("regenerated spec decode: {e}"))?;
+        doc["options"]["prune"] = serde_json::Value::from("rate");
+        doc["options"]["screen"] = serde_json::json!({"bmin_atoms_per_g": sweep::SCREEN_BMIN});
+        let expect = {
+            use sha2::Digest;
+            let mut hsh = sha2::Sha256::new();
+            hsh.update(serde_json::to_string(&doc).map_err(|e| e.to_string())?);
+            hsh.finalize()
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect::<String>()
+        };
+        if p.spec_sha256 != expect {
+            return Err(format!(
+                "point {i}: spec digest does not bind the screened spec"
+            ));
+        }
+        if i > 0 && p.cache_hit != Some(true) {
+            return Err(format!("point {i}: prepared cache was not warm"));
+        }
+        latencies.push(p.elapsed_ms);
+    }
+    let report = serde_json::json!({
+        "points": done.len(),
+        "wall_ms": t0.elapsed().as_millis() as u64,
+        "per_point_ms": latencies,
+        "kept_states": kept,
+        "warm_after_first": done.iter().skip(1).all(|p| p.cache_hit == Some(true)),
+    });
+    model::write_json(&output.join("sweep-screened-smoke.json"), &report)
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+/// Live certified-probe verification (P69/D1): the persistent worker's
+/// latest-only pending slot — submissions made back-to-back must end with
+/// the last submitted position solved, every landed point must carry the
+/// P65 screen certificate, and the emitted digest must bind the injected
+/// spec it actually ran. Superseded positions may legitimately be dropped.
+#[cfg(not(target_arch = "wasm32"))]
+fn sweep_live_smoke(spec_path: &PathBuf, output: &Path) -> Result<(), String> {
+    use crate::sweep::{self, SweepAxis};
+    let document =
+        model::decode_problem(&std::fs::read_to_string(spec_path).map_err(|e| e.to_string())?)
+            .map_err(|e| format!("sweep base decode: {e}"))?;
+    let axis = SweepAxis::CoolingTimeS { step_index: 1 };
+    let values = [0.5_f64, 1.0, 2.0];
+    let points =
+        sweep::sweep_specs(&document, &axis, &values).map_err(|e| format!("sweep_specs: {e}"))?;
+
+    let h = sweep::spawn_sweep_live(sweep::SCREEN_BMIN)
+        .map_err(|e| format!("live probe spawn: {e}"))?;
+    for p in points.iter() {
+        h.submit(9, p.clone());
+    }
+    let mut done = Vec::new();
+    let deadline = std::time::Instant::now() + Duration::from_secs(600);
+    loop {
+        match h.rx.recv_timeout(Duration::from_secs(5)) {
+            Ok(p) => {
+                if !sweep::admissible(9, &p) {
+                    return Err("live probe emitted the wrong generation".into());
+                }
+                let last = p.param == values[2];
+                done.push(p);
+                if last {
+                    break; // the final submitted position has landed
+                }
+            }
+            Err(_) if std::time::Instant::now() > deadline => {
+                return Err(format!(
+                    "live probe: last position never landed ({} done)",
+                    done.len()
+                ));
+            }
+            Err(_) => {}
+        }
+    }
+    for (i, p) in done.iter().enumerate() {
+        let v = p
+            .result
+            .as_ref()
+            .map_err(|e| format!("live point {i} failed: {e}"))?;
+        let sc = v["screen"]
+            .as_object()
+            .ok_or("live point carries no screen certificate")?;
+        if !sc.contains_key("certified") {
+            return Err(format!("live point {i}: certificate missing 'certified'"));
+        }
+        let mut doc: serde_json::Value = serde_json::from_str(
+            &points[values
+                .iter()
+                .position(|v| *v == p.param)
+                .ok_or("live point has an unsubmitted param")?]
+            .spec_json,
+        )
+        .map_err(|e| format!("regenerated spec decode: {e}"))?;
+        doc["options"]["prune"] = serde_json::Value::from("rate");
+        doc["options"]["screen"] = serde_json::json!({"bmin_atoms_per_g": sweep::SCREEN_BMIN});
+        let expect = {
+            use sha2::Digest;
+            let mut hsh = sha2::Sha256::new();
+            hsh.update(serde_json::to_string(&doc).map_err(|e| e.to_string())?);
+            hsh.finalize()
+                .iter()
+                .map(|b| format!("{b:02x}"))
+                .collect::<String>()
+        };
+        if p.spec_sha256 != expect {
+            return Err(format!(
+                "live point {i}: digest does not bind the injected spec"
+            ));
+        }
+    }
+    // P78: the P70 flux-scaling shortcut is retired — a point that differs
+    // from the last solved one only in spectrum.total must be solved, with
+    // its own screen certificate, and carry no flux_scale block.
+    let flux_axis = SweepAxis::FluxNormalization;
+    let flux_pts = sweep::sweep_specs(&document, &flux_axis, &[1.5, 2.5])
+        .map_err(|e| format!("sweep_specs flux: {e}"))?;
+    let mut flux_landed = Vec::new();
+    for (k, fp) in flux_pts.iter().enumerate() {
+        h.submit(9, fp.clone());
+        loop {
+            match h.rx.recv_timeout(Duration::from_secs(600)) {
+                Ok(p) if p.param == fp.param => {
+                    flux_landed.push(p);
+                    break;
+                }
+                Ok(_) => {}
+                Err(e) => return Err(format!("live flux point {k}: {e}")),
+            }
+        }
+    }
+    let fs = &flux_landed[1];
+    let fv = fs
+        .result
+        .as_ref()
+        .map_err(|e| format!("flux-only point failed: {e}"))?;
+    if !fv["flux_scale"].is_null() {
+        return Err("flux-only point was answered by scaling, not solved".into());
+    }
+    if fs.cache_hit.is_none() || fs.screen_kept_states.unwrap_or(0) == 0 {
+        return Err("flux-only point carries no screened-solve record".into());
+    }
+    drop(h);
+
+    let report = serde_json::json!({
+        "submitted": values.len(),
+        "landed": done.len(),
+        "superseded_dropped": done.len() < values.len(),
+        "last_position_landed": done.last().map(|p| p.param) == Some(values[2]),
+        "per_point_ms": done.iter().map(|p| p.elapsed_ms).collect::<Vec<_>>(),
+        "kept_states": done.iter()
+            .filter_map(|p| p.screen_kept_states)
+            .collect::<Vec<_>>(),
+        "cache_hits": done.iter().map(|p| p.cache_hit).collect::<Vec<_>>(),
+        "flux_only_point_solved": true,
+        "flux_only_point_ms": fs.elapsed_ms,
+    });
+    model::write_json(&output.join("sweep-live-smoke.json"), &report).map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+pub fn from_env() -> Result<(), String> {
+    let Some(path) = std::env::var_os("ACTINV_GUI_SMOKE_SPEC") else {
+        return Ok(());
+    };
+    let spec_path = PathBuf::from(path);
+    let output = PathBuf::from(
+        std::env::var_os("ACTINV_GUI_SMOKE_OUT").ok_or("smoke output directory required")?,
+    );
+    #[cfg(not(target_arch = "wasm32"))]
+    if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP_LIVE").is_some() {
+        return std::thread::Builder::new()
+            .name("sweep-live-smoke".into())
+            .stack_size(model::SOLVER_STACK_BYTES)
+            .spawn(move || sweep_live_smoke(&spec_path, &output))
+            .map_err(|e| e.to_string())?
+            .join()
+            .map_err(|_| "live sweep smoke panicked".to_owned())?;
+    }
+    #[cfg(not(target_arch = "wasm32"))]
+    if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP_SCREENED").is_some() {
+        return std::thread::Builder::new()
+            .name("sweep-screened-smoke".into())
+            .stack_size(model::SOLVER_STACK_BYTES)
+            .spawn(move || sweep_screened_smoke(&spec_path, &output))
+            .map_err(|e| e.to_string())?
+            .join()
+            .map_err(|_| "screened sweep smoke panicked".to_owned())?;
+    }
+    if std::env::var_os("ACTINV_GUI_SMOKE_SWEEP").is_some() {
+        return std::thread::Builder::new()
+            .name("sweep-smoke".into())
+            .stack_size(model::SOLVER_STACK_BYTES)
+            .spawn(move || sweep_smoke(&spec_path, &output))
+            .map_err(|e| e.to_string())?
+            .join()
+            .map_err(|_| "sweep smoke panicked".to_owned())?;
+    }
+    let run = move || -> Result<(), Box<dyn std::error::Error>> {
+        std::fs::create_dir_all(&output)?;
+        let document = model::decode_problem(&std::fs::read_to_string(&spec_path)?)?;
+        model::write_json(&output.join("saved-problem.json"), &document)?;
+        let reopened =
+            model::decode_problem(&std::fs::read_to_string(output.join("saved-problem.json"))?)?;
+        if reopened != document {
+            return Err("problem round-trip mismatch".into());
+        }
+        let spec = model::resolve_inputs(&reopened, spec_path.parent().ok_or("spec parent")?)?;
+        model::check_files(&spec)?;
+        let direct = model::solve(spec.clone())?;
+        let result = ResultDocument::parse(direct.clone(), "Packaged P11 fixture".into())?;
+
+        // This path runs only from the separately built application binary, not
+        // a Rust test executable. It verifies the actual GUI worker protocol
+        // against the in-process scientific result and its cache cleanup.
+        let worker_cache = private_cache("success");
+        let worker = crate::worker::spawn(spec.clone(), worker_cache.clone())?;
+        let worker_value = worker
+            .rx
+            .recv_timeout(Duration::from_secs(45))
+            .map_err(|error| format!("worker result timeout: {error}"))??;
+        drop(worker);
+        if worker_cache.exists() {
+            return Err("successful worker left its private cache behind".into());
+        }
+        if without_timings(worker_value) != without_timings(direct) {
+            return Err("packaged worker result differs from direct solver result".into());
+        }
+
+        let cancel_cache = private_cache("cancel");
+        let cancelled = crate::worker::spawn(spec, cancel_cache.clone())?;
+        cancelled.request_cancel();
+        let cancellation = cancelled
+            .rx
+            .recv_timeout(Duration::from_secs(15))
+            .map_err(|error| format!("cancellation result timeout: {error}"))?;
+        if !matches!(cancellation, Err(ref error) if error == "calculation cancelled") {
+            return Err(format!(
+                "immediate cancellation returned unexpected result: {cancellation:?}"
+            )
+            .into());
+        }
+        drop(cancelled);
+        if cancel_cache.exists() {
+            return Err("cancelled worker left its private cache behind".into());
+        }
+
+        model::write_json(&output.join("result.json"), &result.value)?;
+        let reloaded: serde_json::Value =
+            serde_json::from_str(&std::fs::read_to_string(output.join("result.json"))?)?;
+        if result.value != reloaded {
+            return Err("result round-trip mismatch".into());
+        }
+
+        // Opt-in assay fusion (the assay panel's exact call path):
+        // ACTINV_GUI_SMOKE_ASSAY points at an actinv-assay-1 document;
+        // the fused result must round-trip through ResultDocument — the
+        // same validation the Apply button runs.
+        #[cfg(not(target_arch = "wasm32"))]
+        if let Some(assay_path) = std::env::var_os("ACTINV_GUI_SMOKE_ASSAY") {
+            let assay: serde_json::Value =
+                serde_json::from_str(&std::fs::read_to_string(PathBuf::from(assay_path))?)?;
+            let (summary, updated) =
+                actinv_cli::assimilate::fuse_document(&result.value, &assay, "smoke")
+                    .map_err(|e| format!("smoke assay fusion: {e}"))?;
+            ResultDocument::parse(updated.clone(), "fused".into())
+                .map_err(|e| format!("fused result fails validation: {e}"))?;
+            model::write_json(&output.join("assimilation.json"), &summary)?;
+            model::write_json(&output.join("result-fused.json"), &updated)?;
+        }
+
+        std::fs::write(
+            output.join("inventory.csv"),
+            model::inventory_csv(&result, 0)?,
+        )?;
+        std::fs::write(
+            output.join("model-pass.txt"),
+            "open/save/data-paths/solve/JSON/CSV pass\n",
+        )?;
+        Ok(())
+    };
+    std::thread::Builder::new()
+        .name("packaged-model-check".into())
+        .stack_size(model::SOLVER_STACK_BYTES)
+        .spawn(move || run().map_err(|error| error.to_string()))
+        .map_err(|error| error.to_string())?
+        .join()
+        .map_err(|_| "packaged model worker panicked".to_owned())?
+}

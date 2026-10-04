@@ -136,6 +136,16 @@ jobs:
           python controls/check_p112.py --no-write
           python controls/check_p112_verdict.py
 
+      - name: P113 nominal waste facility twin controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p113_oracle.py
+          python controls/test_p113_seal.py
+          python controls/test_p113_verdict.py
+          python controls/check_p113.py --no-write
+          python controls/check_p113_verdict.py
+
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
 

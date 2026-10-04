@@ -1,0 +1,8 @@
+{
+  "commit_sha": "5fc35ac83b360d03c7b0d0056112de61abd62ee0",
+  "g0_sha256": "da06735bacade33eeb543e08300d09efcb5e995e9c9f8b80904cd5f8d9be1906",
+  "g1_sha256": "1193312d504ef6e21c7be973d79b22c32b85ae619f9b6341b2269885013c61e6",
+  "g2_sha256": "ff81ceacceac180039884c7c5d53525c4db107bb2cddcbf5d261d12d618538b4",
+  "g3_sha256": "332445c7b022744dda5219bbbd8312440470db98f2b803ad6cbf5a8386ab865a",
+  "schema": "actinv-p112-implementation-1"
+}

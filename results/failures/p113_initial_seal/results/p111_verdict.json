@@ -1,0 +1,35 @@
+{
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "results/g0_p111_intrusion_screen.json": "a89640ce1c7517ad14ea8c047dade510a1645c2fd6eb49d8a5db0aee2b297940",
+    "results/g1_p111_intrusion_screen.json": "f23fe8837def36420486e1007799f27d29cff488808c611dc28166b862262c23",
+    "results/g2_p111_intrusion_screen.json": "de311b2981ec09f0eea8c05a19a84ac5bc83dd3f46e6596ce075de537837e1fd",
+    "results/g3_p111_quality.json": "18caa3dced925f47ba5f3bbe2bdc2935a0d3db838b6137acd221126a80fb309e"
+  },
+  "gates": {
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3_CI": "PENDING",
+    "G3_local": "FAIL",
+    "prior_dispositions": "PASS",
+    "prior_verdicts_preserved": "PASS",
+    "protocol": "PASS",
+    "repair_policy": "PASS"
+  },
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "phase": "P111",
+  "qualification": "Nominal whole-container screening against literal February 2026 draft Table 8-5 with explicit conditional presence interpretations and coverage outcomes; no disposal acceptance, intrusion dose, legal compliance, statistical uncertainty or physical inventory completeness qualification.",
+  "quality_checks": {
+    "fresh_release_reported_green": true,
+    "historical_source_verification": false,
+    "required_gate_names_present": false,
+    "resource_limits_match": true,
+    "source_hashes_match": true,
+    "workspace_tests_reported_green": true
+  },
+  "repair_rounds": 1,
+  "schema": "actinv-p111-verdict-1",
+  "verdict": "P111-FAIL"
+}

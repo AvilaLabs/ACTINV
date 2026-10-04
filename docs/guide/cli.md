@@ -53,6 +53,23 @@ actinv mesh SPEC.json OUT.ndjson
 
 Additional import options and mesh fields are in the [specification reference](specification.md#flux-interchange-actinv-flux-1). Supply a physically justified source-rate normalization for transport tallies.
 
+### Facility twins and optional waste classes
+
+`actinv twin TWINSPEC.json [OUT.json]` evaluates certified clearance bands for
+the existing mesh components. To also classify each component's nominal
+activity, add the optional `waste` block documented in [Component waste
+classes](waste.md#classify-declared-waste-components-in-a-facility-twin). It
+requires caller-supplied component mass, displaced volume or density, waste
+type, cell-mass mapping, selected steps, nuclide properties, and an explicit
+Part 61 rule-pack ID. The component groups already in the twin remain the only
+source of cell membership.
+
+The added `waste_classification` and `waste_facility_coverage` fields use the
+original mesh activity maps. Cell and dose assays affect the existing twin
+band results but leave both waste fields unchanged. The class summary counts
+components separately; it does not make a facility class or determine disposal
+acceptance. Omitting the `waste` block retains the existing twin result fields.
+
 ## Export photon sources
 
 ```text

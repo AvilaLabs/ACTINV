@@ -1,0 +1,4 @@
+Running as unit: run-p800906-i9181896.scope; invocation ID: ccfa76a10bfb432b8234a64620f3b0c5
+    Checking actinv-cli v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli)
+    Checking actinv-gui v0.3.0-preview.1 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 6.05s

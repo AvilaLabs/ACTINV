@@ -28,6 +28,58 @@ are admitted. The command does not infer time evolution between target steps or
 derive bounds from a `RunResult`. The separate `intrusion-screen` command applies
 the selected draft screen to nominal inventories.
 
+## Classify declared waste components in a facility twin
+
+`actinv twin` can optionally add nominal Part 61 classifications for components
+that already group mesh cells. This uses the original mesh activities and the
+same `actinv waste` evaluator; cell assay, mixture, propagated and dose updates
+change the twin's certified-band results, but do not change the waste
+classification. Each component needs an explicit mass, either a displaced
+volume or density, its waste type, and cell masses that match its existing twin
+group and close to the component mass. ACTINV does not infer mass or volume from
+mesh geometry.
+
+```json
+{
+  "spec": "actinv-twin-1",
+  "mesh_output": "facility-mesh.ndjson",
+  "limits": [{"name":"heat","response":"heat.total","limit":2.0}],
+  "components": {"primary": ["cell-1", "cell-2"]},
+  "waste": {
+    "schema": "actinv-twin-waste-spec-1",
+    "rules": "us-nrc-10cfr61.55-v1",
+    "targets": [1, 2],
+    "nuclide_properties": {
+      "C14": {"z":6,"half_life_s":1.808e11,"alpha_emitting":false}
+    },
+    "components": {
+      "primary": {
+        "mass_g": 2.0,
+        "displaced_volume_cm3": 1.5,
+        "waste_type": "general",
+        "cell_masses_g": {"cell-1":0.5,"cell-2":1.5},
+        "external_tritium": {"status":"not_applicable"}
+      }
+    }
+  }
+}
+```
+
+The `components` groups remain the only source of cell membership; names must
+match the waste components, groups cannot overlap, and each `cell_masses_g`
+map must contain exactly that group's cells. Selected steps must exist in each
+cell, and timestamps within a component must match exactly. External H-3 is
+declared separately and counted once. Missing active-nuclide properties or
+required-but-undeclared H-3 preserve an unknown/conditional nominal result.
+
+The twin output adds `waste_classification`, an ordinary
+`actinv-waste-result-1` document with per-component, per-target margins and
+constraints, and `waste_facility_coverage`, which lists assigned and unassigned
+mesh cells and counts separate component classes at each requested step. The
+summary does not combine components into a package class or determine disposal
+acceptance. This classification is nominal screening only; upstream physical
+reaction and decay completeness remains a separate question.
+
 ## Screen a whole container against the fusion draft
 
 `actinv waste intrusion-screen` evaluates the February 2026 draft NUREG-1556

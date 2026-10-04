@@ -1,0 +1,646 @@
+Running as unit: run-p801577-i9199795.scope; invocation ID: 7e13b10a7775407f85045d7318957e26
+   Compiling actinv-cli v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli)
+   Compiling actinv-gui v0.3.0-preview.1 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-gui)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 4m 48s
+     Running unittests src/lib.rs (target/build/debug/deps/actinv_cli-94bd8232bbc3b075)
+
+running 61 tests
+test budget::tests::budget_algebra_on_a_synthetic_table ... ok
+test budget::tests::budget_refuses_nonlinear_inputs ... ok
+test budget::tests::budget_rejects_bad_compositions ... ok
+test budget::tests::budget_sole_limit_reaches_ci_one_alone ... ok
+test budget::tests::budget_statuses_for_no_response_and_infeasible ... ok
+test optimize::tests::axis_constraint_validation ... ok
+test optimize::tests::composition_axes_renormalize_jointly ... ok
+test optimize::tests::constraint_ranking_prefers_feasible ... ok
+test optimize::tests::corner_variant_evaluates_corners_first ... ok
+test optimize::tests::infeasible_landscape_stays_infeasible ... ok
+test optimize::tests::lhs_is_seeded_and_deterministic ... ok
+test optimize::tests::recovers_planted_optimum ... ok
+test tests::archive_and_extracted_identities_are_both_required ... ok
+test tests::embedded_catalog_is_strict_and_matches_release_evidence ... ok
+test tests::fetch_is_atomic_reuses_valid_files_and_requires_force_for_repair ... ok
+test tests::fetch_rejects_a_symlinked_destination_component ... ok
+test tests::truncated_excess_bad_hash_and_failed_download_publish_nothing ... ok
+test tests::verification_rejects_a_symlinked_artifact_directory ... ok
+test twin::tests::legacy_twin_outer_spec_must_be_regular_bounded_and_preserves_output ... ok
+test twin_waste::tests::activity_aliases_and_required_external_tritium_fail_closed ... ok
+test twin_waste::tests::adapter_evaluation_orders_rows_without_changing_inventory_or_null_columns ... ok
+test twin_waste::tests::canonical_external_step_keys_are_required ... ok
+test twin_waste::tests::component_timestamp_equality_is_exact_and_membership_is_disjoint ... ok
+test twin_waste::tests::explicit_null_and_recursive_duplicate_waste_specs_are_rejected ... ok
+test twin_waste::tests::output_limit_counts_the_emitted_newline ... ok
+test twin_waste::tests::partial_membership_is_reported_without_inventing_component_class ... ok
+test twin_waste::tests::shared_nominal_evaluator_aggregates_mass_and_external_h3_once ... ok
+test twin_waste::tests::upper_positive_missing_properties_yield_unknown_nominal_class ... ok
+test waste::tests::external_tritium_merges_with_activation_h3_alias ... ok
+test waste::tests::rejects_invalid_schema_and_ambiguous_geometry ... ok
+test waste::tests::rejects_mesh_component_membership_for_missing_cell ... ok
+test waste::tests::required_external_tritium_keeps_nominal_class_unknown ... ok
+test waste_bounds::tests::bounded_external_h3_merges_lower_and_upper_once_with_activation ... ok
+test waste_bounds::tests::duplicate_json_map_keys_and_canonical_activity_aliases_are_refused ... ok
+test waste_bounds::tests::invalid_later_component_does_not_publish_partial_output ... ok
+test waste_bounds::tests::missing_positive_upper_properties_and_incomplete_coverage_are_unknown ... ok
+test waste_bounds::tests::rejects_nonbundled_pack_and_null_geometry_presence ... ok
+test waste_bounds::tests::required_external_h3_forces_unknown_even_when_inventory_is_declared_complete ... ok
+test waste_budget::tests::constant_threshold_with_positive_composition_strictness_is_a_closed_zero_singleton ... ok
+test waste_budget::tests::infeasible_constant_and_strict_boundary_are_rejected ... ok
+test waste_budget::tests::negative_gradient_creates_a_lower_composition_bound ... ok
+test waste_budget::tests::no_response_and_positive_balance_cap_keep_distinct_statuses ... ok
+test waste_composition::tests::bounded_external_h3_is_merged_once_by_the_bounds_evaluator ... ok
+test waste_composition::tests::empty_response_maps_still_require_an_exactly_feasible_polytope ... ok
+test waste_composition::tests::invalid_later_component_does_not_replace_existing_output ... ok
+test waste_composition::tests::projects_bounds_and_reuses_flat_p107_result_fields ... ok
+test waste_composition::tests::rejects_aliases_instead_of_merging_coordinates ... ok
+test waste_composition_solve::tests::invalid_native_request_preserves_existing_output_sentinel ... ok
+test waste_composition_solve::tests::recursively_rejects_duplicate_object_keys ... ok
+test waste_composition_verify::tests::activation_index_requires_unique_targets_and_retains_reached_metadata ... ok
+test waste_composition_verify::tests::activity_l1_disagreement_does_not_cancel_opposite_sign_errors ... ok
+test waste_composition_verify::tests::alpha_metadata_uses_positive_branch_composite_rtyp_digits ... ok
+test waste_composition_verify::tests::external_tritium_is_added_once_after_activation_mass_scaling ... ok
+test waste_composition_verify::tests::incomplete_or_missing_audit_always_downgrades_coverage ... ok
+test waste_composition_verify::tests::native_evaluation_comparison_rejects_predicate_metadata_drift ... ok
+test waste_composition_verify::tests::tolerance_is_symmetric_and_classification_has_no_tolerance_path ... ok
+test waste_intrusion::tests::intrusion_screen_reuses_nominal_result_and_writes_one_complete_report ... ok
+test waste_intrusion::tests::invalid_late_target_preserves_existing_output_sentinel ... ok
+test waste_intrusion::tests::recursive_duplicate_keys_are_rejected_before_value_conversion ... ok
+test workflow::tests::example_is_complete_and_relocatable ... ok
+test workflow::tests::missing_files_include_sidecars_and_recovery ... ok
+
+test result: ok. 61 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.35s
+
+     Running unittests src/bin/actinv.rs (target/build/debug/deps/actinv-d5128d46607e73ad)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/data_command.rs (target/build/debug/deps/data_command-d896bfa86b73ded6)
+
+running 3 tests
+test lists_embedded_data_bundles ... ok
+test prints_the_strict_embedded_manifest ... ok
+test rejects_bad_data_arguments_without_network_access ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+     Running tests/validation.rs (target/build/debug/deps/validation-5f593f16403336b0)
+
+running 1 test
+test default_validation_does_not_require_downloaded_data ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.04s
+
+     Running tests/version.rs (target/build/debug/deps/version-5e60a2c227f952ea)
+
+running 2 tests
+test reports_help_without_error ... ok
+test reports_package_version ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src/lib.rs (target/build/debug/deps/actinv_core-0c7df3f1a1ea5825)
+
+running 212 tests
+test chain::tests::a_radioactive_state_without_decay_modes_decays_into_leakage ... ok
+test chain::tests::a_transition_resolving_to_its_own_parent_is_booked_to_leakage ... ok
+test chain::tests::add_gas_decay_edges_is_a_no_op_without_light_states ... ok
+test chain::tests::add_gas_decay_edges_tallies_one_digit_per_alpha_or_proton ... ok
+test chain::tests::branching_shortfall_goes_to_leakage_and_excess_is_scaled_away ... ok
+test chain::tests::decay_alpha_case_feeds_he4_at_the_parents_lambda ... ok
+test chain::tests::derivative_free_assembly_preserves_rates_and_ledger ... ok
+test chain::tests::ensure_light_states_appends_stand_ins_and_remaps_leak_references ... ok
+test chain::tests::ensure_light_states_is_a_no_op_when_all_present ... ok
+test chain::tests::gas_ejectiles_are_added_for_normal_and_unmapped_rows_and_fission_is_uncovered ... ok
+test chain::tests::gas_off_adds_no_ejectiles_or_uncovered_ledger_entries ... ok
+test chain::tests::gas_produced_from_a_constant_reservoir_matches_the_exact_linear_integral ... ok
+test chain::tests::h3_ejectiles_decay_to_he3_at_the_tabulated_lambda ... ok
+test chain::tests::rounding_level_branching_sums_are_left_exact ... ok
+test cram::tests::decay_semigroup_matches_analytic_parent_and_daughter ... ok
+test cram::tests::recurrence_tangent_matches_five_point_difference ... ok
+test cram::tests::stable_background_cannot_create_absent_radioactive_parent ... ok
+test cram::tests::trace_daughter_matches_bateman_despite_large_stable_background ... ok
+test damage::tests::boundaries_strictly_ascending_positive ... ok
+test damage::tests::canonical_names_required ... ok
+test damage::tests::fold_matches_nrt_closed_form ... ok
+test damage::tests::plan_names_uncovered_and_requires_ed ... ok
+test damage::tests::projectile_must_match ... ok
+test damage::tests::rows_must_be_finite_nonnegative_and_sized ... ok
+test doppler::tests::invalid_inputs_are_errors_not_panics ... ok
+test doppler::tests::one_over_v_is_preserved ... ok
+test finite::tests::non_finite_numbers_are_named_by_path_and_finite_results_pass ... ok
+test flux::tests::exact_grid_rebin_is_bit_identical ... ok
+test flux::tests::fispact_requires_a_nonblank_identifying_title ... ok
+test flux::tests::imported_mesh_cell_counts_are_checked_and_bounded ... ok
+test flux::tests::legacy_unlabelled_neutron_import_is_byte_identical_to_pre_p94 ... ok
+test flux::tests::mcnp_three_digit_exponent_is_supported ... ok
+test flux::tests::mctal_pairs_values_and_drops_checked_total_bin ... ok
+test flux::tests::meshtal_restores_i_fastest_canonical_order ... ok
+test flux::tests::openmc_photon_particle_filter_writes_photon_units_and_label ... ok
+test flux::tests::openmc_unlabelled_and_neutron_filtered_tallies_stay_neutron_units_with_no_particle_key ... ok
+test flux::tests::openmc_unsupported_particle_filter_fails_closed ... ok
+test flux::tests::rebin_scales_linearly_after_group_refinement ... ok
+test flux::tests::split_rebin_conserves_with_outside_flux ... ok
+test gas::tests::gas_products_excludes_neutrons_and_orders_h_then_he ... ok
+test gas::tests::inelastic_mts_balance_to_no_za_change ... ok
+test gas::tests::table_za_balances_against_vendored_mt_products ... ok
+test gas::tests::uncovered_mts_are_none ... ok
+test mesh::tests::cell_result_fields_accepts_a_dynamic_map_field_whole_but_not_a_key_inside_it ... ok
+test mesh::tests::cell_result_fields_accepts_the_g3_selection ... ok
+test mesh::tests::cell_result_fields_rejects_a_non_step_field_dotted_path ... ok
+test mesh::tests::cell_result_fields_rejects_a_path_past_a_scalar ... ok
+test mesh::tests::cell_result_fields_rejects_an_unknown_key_under_an_object_field ... ok
+test mesh::tests::cell_result_fields_rejects_plain_steps_combined_with_a_dotted_entry ... ok
+test mesh::tests::charged_mesh_run_rejects_photon_labelled_flux ... ok
+test mesh::tests::flux_signature_without_relative_error_matches_the_pre_p93_digest ... ok
+test mesh::tests::gamma_mesh_run_rejects_legacy_unlabelled_neutron_flux ... ok
+test mesh::tests::gamma_mesh_run_rejects_unlabelled_particle_flux ... ok
+test mesh::tests::lean_cell_text_always_excludes_ms_even_if_selected ... ok
+test mesh::tests::lean_text_matches_the_pruned_subtree_of_the_full_value_route ... ok
+test mesh::tests::mesh_controls_are_bounded ... ok
+test mesh::tests::neutron_mesh_run_rejects_particle_labelled_flux ... ok
+test mesh::tests::output_alias_resolves_to_the_canonical_input ... ok
+test mesh::tests::resume_scan_streams_complete_records_and_stops_at_a_torn_tail ... ok
+test mesh::tests::run_result_accessor_fields_cover_every_key_a_populated_result_serializes ... ok
+test mesh::tests::run_result_field_matches_the_value_route_for_every_name ... ok
+test mesh::tests::spliced_result_text_equals_round_tripped_record_byte_for_byte ... ok
+test mesh::tests::step_field_matches_the_value_route_for_every_name ... ok
+test mesh::tests::step_field_names_cover_every_key_a_populated_step_out_serializes ... ok
+test photon::tests::interpolation_moments_match_dense_reference ... ok
+test photon::tests::mesh_export::emits_box_per_cell_with_absolute_total ... ok
+test photon::tests::mesh_export::normalizes_weights_and_conserves_strength ... ok
+test photon::tests::mesh_export::rejects_degenerate_bounds_and_empty_cells ... ok
+test photon::tests::mesh_export::rejects_non_positive_volume ... ok
+test photon::tests::mesh_export::rejects_omitted_photon_strength ... ok
+test photon::tests::mesh_export::zero_photon_cell_returns_none ... ok
+test photon::tests::repeated_abscissa_is_a_zero_width_segment ... ok
+test quantity::tests::constructors_reject_wrong_sign_and_nonfinite_values ... ok
+test quantity::tests::physical_operations_preserve_expected_binary64_arithmetic ... ok
+test quantity::tests::scalar_quantities_have_exactly_f64_layout ... ok
+test radiological::tests::formulas_and_missing_activity_are_explicit ... ok
+test radiological::tests::selectors_preserve_file_order ... ok
+test radiological::tests::strict_table_rejects_duplicate_and_noncanonical_coefficients ... ok
+test radiological::tests::strict_table_rejects_unknown_fields_and_bad_values ... ok
+test radiological::tests::zero_activity_has_complete_coverage ... ok
+test reverse::tests::cholesky_factors_and_rejects_nondefinite ... ok
+test reverse::tests::dense_solve_singularity_is_relative_to_matrix_scale ... ok
+test reverse::tests::gls_posterior_matches_known_two_measurement_case ... ok
+test reverse::tests::nnls_clamps_to_the_nonnegative_orthant_with_finite_values ... ok
+test run::flux_channel_tests::dense_get_reads_absent_entries_as_zero ... ok
+test run::flux_channel_tests::descending_flag_maps_reported_group_index_to_the_declared_order ... ok
+test run::flux_channel_tests::flux_direction_sum_reproduces_nominal_matrix_coarse_custom ... ok
+test run::flux_channel_tests::flux_direction_sum_reproduces_nominal_matrix_dense_709_group ... ok
+test run::flux_channel_tests::flux_tangent_matches_central_difference_of_plain_cram_steps ... ok
+test run::flux_channel_tests::low_burnup_relative_uncertainty_of_product_activity_equals_declared_error ... ok
+test run::flux_channel_tests::mesh_cell_relative_error_takes_priority_over_the_specs_own ... ok
+test run::flux_channel_tests::mesh_cell_without_relative_error_names_the_cell ... ok
+test run::flux_channel_tests::plain_spec_relative_error_honours_descending_reorder ... ok
+test run::flux_channel_tests::plain_spec_relative_error_is_used_when_no_mesh_origin ... ok
+test run::flux_channel_tests::plain_spec_without_relative_error_names_the_spectrum ... ok
+test run::gas_prepared_tests::gas_disabled_leaves_the_step_gas_block_absent ... ok
+test run::gas_prepared_tests::inventory_appm_counts_initial_hydrogen_and_appm_does_not ... ok
+test run::gas_prepared_tests::trace_and_coupled_gas_agree_at_low_fluence ... ok
+test run::projectile_output_tests::group_structure_comparison_distinguishes_absent_custom_and_mismatch ... ok
+test run::projectile_output_tests::isomer_name_detection ... ok
+test run::projectile_output_tests::neutron_and_charged_fluence_fields_are_disjoint ... ok
+test run::projectile_output_tests::zero_spectrum_is_not_collapsed ... ok
+test shielding::tests::composition_dilution_and_overlap_blend ... ok
+test shielding::tests::factor_clamps_at_grid_ends ... ok
+test shielding::tests::factor_interpolates_in_ln_sigma0 ... ok
+test shielding::tests::factor_interpolates_in_sqrt_temperature ... ok
+test shielding::tests::factor_weights_follow_the_nearer_sigma0_row ... ok
+test shielding::tests::fixed_dilution_applies_user_sigma0 ... ok
+test shielding::tests::group_factors_supersede_the_flat_blend ... ok
+test shielding::tests::malformed_tables_are_rejected ... ok
+test shielding::tests::uncovered_composition_members_are_named ... ok
+test source_adapter::tests::alara_emits_one_row_per_file_with_union_grid ... ok
+test source_adapter::tests::alara_ordinal_width_sorts_lexicographically ... ok
+test source_adapter::tests::alara_rejects_bad_volume ... ok
+test source_adapter::tests::alara_rejects_missing_step_t_s ... ok
+test source_adapter::tests::alara_rejects_negative_cooling ... ok
+test source_adapter::tests::alara_rejects_non_finite_shutdown_flag ... ok
+test source_adapter::tests::alara_rejects_unequal_step_t_s ... ok
+test source_adapter::tests::alara_sanitizes_ids_byte_wise ... ok
+test source_adapter::tests::alara_shutdown_token_at_zero_cooling ... ok
+test source_adapter::tests::emitted_mev_and_probability_exact ... ok
+test source_adapter::tests::probs_are_exact_ratios ... ok
+test source_adapter::tests::rejects_degenerate_bounds ... ok
+test source_adapter::tests::rejects_wrong_schema_and_missing_footer ... ok
+test sparse::tests::refinement_preserves_zero_component_next_to_large_background ... ok
+test sparse::tests::refinement_supports_complex_system_requiring_pivoting ... ok
+test spec::duration_tests::all_scale_maps_coexist_on_one_spec ... ok
+test spec::duration_tests::charged_projectiles_require_zero_kelvin_and_no_fission_yields ... ok
+test spec::duration_tests::contradictory_or_unbounded_inputs_fail_validation ... ok
+test spec::duration_tests::covariance_is_required_unless_channels_is_exactly_flux ... ok
+test spec::duration_tests::decay_scale_requires_explicit_nuclide_positive_factors ... ok
+test spec::duration_tests::descending_reorder_keeps_a_groups_error_paired_with_its_flux ... ok
+test spec::duration_tests::equivalent_duration_spellings_share_the_physical_boundary ... ok
+test spec::duration_tests::feed_and_removal_are_optional_and_validated ... ok
+test spec::duration_tests::feed_requires_explicit_nuclides ... ok
+test spec::duration_tests::gamma_spec_requires_zero_kelvin_and_no_fission_yields ... ok
+test spec::duration_tests::gas_false_is_absent_from_the_serialized_options_others_default_present ... ok
+test spec::duration_tests::gas_is_refused_with_uncertainty_and_with_non_neutron_projectiles ... ok
+test spec::duration_tests::misspelt_composition_element_fails_validation ... ok
+test spec::duration_tests::omitted_projectile_is_backward_compatible_neutron ... ok
+test spec::duration_tests::per_step_spectrum_accepts_uncertainty ... ok
+test spec::duration_tests::per_step_spectrum_parses_and_validates ... ok
+test spec::duration_tests::per_step_spectrum_requires_matching_structure_and_groups ... ok
+test spec::duration_tests::relative_error_is_optional_and_unused_without_the_flux_channel ... ok
+test spec::duration_tests::removal_rates_are_finite_and_nonnegative ... ok
+test spec::duration_tests::scientific_notation_is_not_a_unit_suffix ... ok
+test spec::duration_tests::self_shielding_accepts_uncertainty_combination ... ok
+test spec::duration_tests::self_shielding_dilution_modes_are_validated ... ok
+test spec::duration_tests::spectrum_relative_error_length_must_match_flux_per_group ... ok
+test spec::duration_tests::spectrum_relative_error_must_be_finite_and_nonnegative ... ok
+test spec::duration_tests::yield_scale_requires_parent_product_nuclide_pairs ... ok
+test study::robustness_tests::case_resumable_requires_matching_digests ... ok
+test study::robustness_tests::jacobi_recovers_known_eigensystem ... ok
+test study::robustness_tests::p43_channel_validation ... ok
+test study::robustness_tests::perturb_spec_preserves_composition_sum ... ok
+test study::robustness_tests::prepared_signature_separates_gas_and_keeps_gas_off_unchanged ... ok
+test study::robustness_tests::prepared_signature_tracks_compatible_fields ... ok
+test study::robustness_tests::psd_factor_reproduces_spd_and_clips_indefinite ... ok
+test study::robustness_tests::rate_scale_spec_validation ... ok
+test study::robustness_tests::rng_deterministic ... ok
+test study::robustness_tests::robustness_validation ... ok
+test study::robustness_tests::rule_predicate_evaluates_paired_sample_values ... ok
+test study::tests::array_responses_compare_by_identity_not_position ... ok
+test study::tests::canonical_json_is_key_stable ... ok
+test study::tests::case_id_separator_is_reserved_in_names ... ok
+test study::tests::comparison_counts_undefined_groups ... ok
+test study::tests::criterion_verdict_semantics ... ok
+test study::tests::duplicate_axis_names_are_refused ... ok
+test study::tests::expansion_order_and_cooling_steps ... ok
+test study::tests::refinement_criteria_are_validated ... ok
+test study::tests::scalar_only_consumers_refuse_array_responses ... ok
+test study::tests::spectrum_form_exactly_one ... ok
+test study::tests::study_steps_do_not_accept_per_step_spectra ... ok
+test study::tests::study_too_large_is_named ... ok
+test study::tests::unqualified_families_are_named ... ok
+test study::tests::unqualified_response_and_rule_kinds_refused ... ok
+test study::tests::version_and_unknown_fields_are_refused ... ok
+test uncertainty::tests::cross_covariance_is_retained ... ok
+test uncertainty::tests::materially_negative_variance_fails ... ok
+test waste::tests::activated_metal_variants_replace_general_rows ... ok
+test waste::tests::class_normalization_overflow_is_an_error ... ok
+test waste::tests::exposes_separate_zero_and_nonzero_class_constraints ... ok
+test waste::tests::listing_uses_part61_applicability_and_keeps_missing_properties_unknown ... ok
+test waste::tests::listing_uses_strict_half_life_groups_and_rejects_invalid_properties ... ok
+test waste::tests::malformed_rule_pack_fails_closed ... ok
+test waste::tests::pu241_uses_its_specific_mass_based_limit ... ok
+test waste::tests::rejects_alias_duplicates_invalid_properties_and_nonfinite_activity ... ok
+test waste::tests::short_lived_aggregate_captures_cm242_and_dedicated_table1_row ... ok
+test waste::tests::sr90_cs137_worked_example_is_class_b ... ok
+test waste::tests::table1_single_nuclide_boundaries_are_inclusive_and_mix_boundaries_strict ... ok
+test waste::tests::table2_mixture_column_boundaries_are_strict ... ok
+test waste::tests::unknown_active_nuclide_makes_class_unknown_but_keeps_calculated_only_class ... ok
+test waste_bounds::tests::aliases_invalid_intervals_bad_properties_and_overflow_are_rejected ... ok
+test waste_bounds::tests::complete_zero_and_unlisted_intervals_are_stable_a ... ok
+test waste_bounds::tests::incomplete_empty_inventory_is_unknown_but_keeps_calculated_class ... ok
+test waste_bounds::tests::row_ranges_fill_absent_endpoint_with_zero_and_constraint_margins_are_signed ... ok
+test waste_bounds::tests::table2_null_columns_preserve_null_fraction_ranges ... ok
+test waste_bounds::tests::upper_positive_unknown_metadata_forces_both_endpoints_unknown ... ok
+test waste_bounds::tests::zero_crossing_contributor_makes_exact_table1_boundary_strict ... ok
+test waste_composition::tests::all_zero_response_is_exact_zero_and_still_has_feasible_witnesses ... ok
+test waste_composition::tests::bounded_two_coordinate_projection_has_witnesses_and_dual_bounds ... ok
+test waste_composition::tests::coefficient_ties_use_canonical_coordinate_order_for_both_witnesses ... ok
+test waste_composition::tests::feasibility_uses_exact_binary_sum_not_tolerant_witness_roundoff ... ok
+test waste_composition::tests::invalid_boxes_coordinate_sets_and_overflow_are_refused ... ok
+test waste_composition::tests::signed_zero_coefficients_use_canonical_tie_order ... ok
+test waste_composition::tests::subnormal_response_is_enclosed_and_signed_zero_stays_exact_zero ... ok
+test waste_intrusion::tests::all_75_row_class_cells_compare_below_equal_and_above_boundaries ... ok
+test waste_intrusion::tests::bundled_table_has_exact_25_rows_and_all_75_class_cells ... ok
+test waste_intrusion::tests::external_tritium_is_merged_once_and_keeps_separate_evidence ... ok
+test waste_intrusion::tests::malformed_declarations_and_alias_duplicates_are_refused ... ok
+test waste_intrusion::tests::strict_wac_and_share_boundaries_keep_the_frozen_comparators ... ok
+test waste_intrusion::tests::unknown_short_group_membership_remains_conditional_below_the_known_limit ... ok
+
+test result: ok. 212 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+
+     Running unittests src/bin/cache_probe.rs (target/build/debug/deps/cache_probe-fd1fd95355b6ecee)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/cram_probe.rs (target/build/debug/deps/cram_probe-1957fe6e8b7332ce)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/fission_probe.rs (target/build/debug/deps/fission_probe-e745927aa674a16d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/flux_probe.rs (target/build/debug/deps/flux_probe-899a18edb22491de)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/parser_fuzz_probe.rs (target/build/debug/deps/parser_fuzz_probe-71c52d58393be608)
+
+running 2 tests
+test tests::fixed_partitions_have_the_required_totals ... ok
+test tests::transformations_are_deterministic_and_bounded ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/photon_probe.rs (target/build/debug/deps/photon_probe-1a9c409a9fe7fbaf)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/prepared_probe.rs (target/build/debug/deps/prepared_probe-2c107b622df4b3c2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/uncertainty_probe.rs (target/build/debug/deps/uncertainty_probe-bb9e3329a3ce1936)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/unit_probe.rs (target/build/debug/deps/unit_probe-80409c51a0ec2868)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests examples/p92_balance.rs (target/build/debug/examples/p92_balance-9b7fbabee5a43df0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/build/debug/deps/actinv_data-2610b7a6422e5952)
+
+running 168 tests
+test activation::tests::neutron_index_with_gamma_spec_fails_closed ... ok
+test activation::tests::parses_reaction_and_all_product_table_families ... ok
+test activation::tests::projectile_gamma_index_with_neutron_spec_fails_closed ... ok
+test activation::tests::projectile_gamma_parse_name_nsub_za ... ok
+test activation::tests::projectile_gamma_parses_from_endf_metadata ... ok
+test activation::tests::projectile_gamma_rejects_nonzero_awi ... ok
+test activation::tests::rejects_unconsumed_and_projectile_mismatch ... ok
+test activation::tests::unsupported_nsub_fails_closed ... ok
+test builder::tests::aggregate_mt1_and_mt3_values_cannot_change_emitted_rows ... ok
+test builder::tests::ambiguous_catalog_and_conflicting_excitation_fail_closed ... ok
+test builder::tests::ambiguous_loose_energy_refuses_to_choose_between_isomers ... ok
+test builder::tests::catalog_file_liso_relabels_through_decay_state_table ... ok
+test builder::tests::charged_residual_arithmetic_includes_projectile ... ok
+test builder::tests::checkpoint_restores_exact_target_float_bits ... ok
+test builder::tests::collapsed_state_partial_audit_uses_the_stricter_frozen_tolerance ... ok
+test builder::tests::damage_and_shielding_checkpoints_are_keyed_by_projectile ... ok
+test builder::tests::distinct_isomers_map_by_physics_without_rank_compression ... ok
+test builder::tests::duplicate_catalog_agreement_is_order_independent_and_conflict_fails ... ok
+test builder::tests::duplicate_product_declarations_require_exact_agreement ... ok
+test builder::tests::duplicate_target_error_names_both_sources ... ok
+test builder::tests::duplicated_lis_label_cannot_resolve_isomer_identity ... ok
+test builder::tests::emitted_mf10_states_fail_closed_outside_the_envelope ... ok
+test builder::tests::emitted_mf10_states_reconcile_inside_the_envelope_and_audit_stays_diagnostic ... ok
+test builder::tests::emitted_mf9_production_reconciles_against_the_runtime_total ... ok
+test builder::tests::fallback_decay_table_resolves_state_the_primary_numbers_differently ... ok
+test builder::tests::gamma_build_options_reject_nonzero_temperature ... ok
+test builder::tests::gamma_build_options_require_162_groups ... ok
+test builder::tests::gamma_missing_mf8_resolves_ground_state_from_mt_definition ... ok
+test builder::tests::gamma_mt4_skipped_when_detail_present_but_resolved_when_sole_coverage ... ok
+test builder::tests::gamma_photofission_yields_fail_closed ... ok
+test builder::tests::gamma_residual_arithmetic_shifts_by_one_mass_unit ... ok
+test builder::tests::gamma_zero_izap_photofission_rejects_other_shapes ... ok
+test builder::tests::gamma_zero_izap_photofission_total_fails_closed_without_a_profile ... ok
+test builder::tests::gamma_zero_izap_photofission_total_is_the_sentinel_under_a_profile ... ok
+test builder::tests::generated_endf_fixture_builds_a_v2_physical_state_index ... ok
+test builder::tests::identical_elis_isomers_cannot_resolve_by_energy ... ok
+test builder::tests::inelastic_descriptors_validate_ground_and_metastable_before_ground_omission ... ok
+test builder::tests::isomer_label_matches_when_excitation_is_unreliable_or_missing ... ok
+test builder::tests::isomer_target_identity_relabels_through_decay_state_table ... ok
+test builder::tests::level_index_labels_rank_compress_onto_isomer_ordinals ... ok
+test builder::tests::lumped_channels_synthesize_only_when_summary_coverage_is_absent ... ok
+test builder::tests::no_catalog_product_resolves_through_decay_state_table ... ok
+test builder::tests::p100_threshold_extension_ignores_states_that_are_zero_below_the_first_point ... ok
+test builder::tests::p100_threshold_extension_is_absent_without_a_profile ... ok
+test builder::tests::p100_threshold_extension_is_gamma_only ... ok
+test builder::tests::p100_threshold_extension_joins_without_a_doubled_point_when_values_agree ... ok
+test builder::tests::p100_threshold_extension_prepends_the_state_sum_under_a_profile ... ok
+test builder::tests::p100_threshold_extension_requires_lin_lin_states_below_the_first_point ... ok
+test builder::tests::p99_agreeing_rank_row_in_shared_group_is_kept ... ok
+test builder::tests::p99_anchored_collision_rank_row_becomes_leakage_catalog_row_unchanged ... ok
+test builder::tests::p99_cross_mt_rank_collision_without_anchor_leaks_all ... ok
+test builder::tests::p99_excitation_less_rank_row_in_shared_group_becomes_leakage ... ok
+test builder::tests::p99_same_evaluation_with_decay_data_is_untouched ... ok
+test builder::tests::physical_state_mapping_uses_excitation_and_catalog_liso ... ok
+test builder::tests::pointwise_state_partial_audit_checks_left_side_of_double_points ... ok
+test builder::tests::pointwise_state_partial_audit_counts_union_grid_and_state_sum ... ok
+test builder::tests::product_coverage_counts_emitted_states_without_targets ... ok
+test builder::tests::product_sections_without_a_reaction_fail_instead_of_vanishing ... ok
+test builder::tests::resonance_only_capture_uses_an_explicit_zero_background ... ok
+test builder::tests::resonance_sections_fail_closed_until_processed ... ok
+test builder::tests::runtime_reconciliation_fails_closed_outside_the_standard_envelope ... ok
+test builder::tests::runtime_reconciliation_leaves_conformant_sums_byte_identical ... ok
+test builder::tests::runtime_reconciliation_scales_inside_envelope_preserving_ratios_and_zero ... ok
+test builder::tests::runtime_reconciliation_strict_option_rejects_every_excess ... ok
+test builder::tests::runtime_reconciliation_zero_total_uses_the_absolute_bound ... ok
+test builder::tests::sentinel_excitation_maps_ground_but_plausible_excitation_fails ... ok
+test builder::tests::sole_candidate_loose_energy_resolves_cross_library_scheme_drift ... ok
+test builder::tests::state_mapping_is_independent_of_reaction_and_row_order ... ok
+test builder::tests::strict_states_option_rejects_an_envelope_compatible_excess ... ok
+test builder::tests::unmapped_state_rank_maps_to_isomer_ordinal_without_changing_strength ... ok
+test builder::tests::unmatched_isomer_level_routes_to_ground_under_decay_table ... ok
+test builder::tests::unmatched_isomer_target_cannot_alias_a_decay_occupied_ordinal ... ok
+test builder::tests::unsupported_rml_cannot_fall_back_to_mf3 ... ok
+test builder::tests::unsupported_state_metadata_is_explicit_and_tolerance_is_inclusive ... ok
+test composition::tests::atom_fraction_and_atoms_per_gram_have_declared_meaning ... ok
+test composition::tests::explicit_key_aliases_are_canonical ... ok
+test composition::tests::misspelt_or_abundance_free_elements_are_rejected ... ok
+test composition::tests::response_mass_fractions_follow_basis ... ok
+test covariance::tests::joint_collapse_is_cross_spectrum_consistent ... ok
+test covariance::tests::joint_collapse_matches_single_spectrum_bitwise ... ok
+test covariance::tests::oversized_dense_blocks_are_refused_before_allocation ... ok
+test covariance::tests::relative_matrix_collapses_on_boundary_union ... ok
+test covariance::tests::sidecar_round_trip_is_deterministic ... ok
+test covariance::tests::symmetric_lb5_parses_and_expands ... ok
+test covariance::tests::weighted_collapse_applies_per_row_group_scales ... ok
+test covariance::tests::weighted_collapse_matches_unweighted_at_unit_scale ... ok
+test decay::tests::duplicate_records_are_an_error_not_last_wins ... ok
+test decay::tests::overrides_parse_and_apply ... ok
+test decay::tests::overrides_reject_bad_documents ... ok
+test decay::tests::overrides_reject_unsafe_values ... ok
+test decay::tests::parses_minimal_decay_section ... ok
+test decay::tests::rejects_declared_spectra_before_reserving_memory ... ok
+test decay::tests::state_table_reads_elis_lis_liso_from_mf1 ... ok
+test doppler::tests::exact_double_point_step_is_finite ... ok
+test doppler::tests::high_energy_double_point_step_is_stable_and_monotone ... ok
+test doppler::tests::one_over_v_is_invariant ... ok
+test doppler::tests::zero_kelvin_is_identity_on_input_grid ... ok
+test endf::tests::checked_records_reject_counts_larger_than_the_remaining_payload ... ok
+test endf::tests::exponent_without_e_is_rounded_once ... ok
+test endf::tests::fixed_width_helpers_reject_non_ascii_without_slicing_inside_a_codepoint ... ok
+test endf::tests::ordinary_blank_and_invalid_fields_retain_their_semantics ... ok
+test fission::tests::effective_yields_use_union_and_zero_for_absent_endpoint ... ok
+test fission::tests::fields_use_the_canonical_endf_parsers ... ok
+test fission::tests::parses_minimal_independent_yield_evaluation ... ok
+test fission::tests::rejects_declared_incident_energies_before_reserving_memory ... ok
+test fission::tests::rejects_truncated_declared_payload_before_reserving_memory ... ok
+test groups::tests::double_points_are_right_continuous ... ok
+test groups::tests::interpolation_laws_integrate_in_lethargy ... ok
+test groups::tests::many_interval_product_fallback_respects_group_tolerance ... ok
+test groups::tests::narrow_log_intervals_use_a_local_coordinate ... ok
+test groups::tests::narrow_product_fallback_uses_a_normalized_coordinate ... ok
+test groups::tests::non_power_product_retains_adaptive_quadrature ... ok
+test groups::tests::official_group_counts_and_order ... ok
+test groups::tests::power_product_respects_internal_factor_breakpoints ... ok
+test groups::tests::power_product_uses_the_exact_lethargy_antiderivative ... ok
+test groups::tests::refined_rejects_extreme_factors ... ok
+test groups::tests::refined_splits_each_group_log_uniformly ... ok
+test groups::tests::resolve_named_handles_suffix_and_rejects_paths ... ok
+test library::tests::archive_reader_rejects_invalid_cross_sections_during_decode ... ok
+test library::tests::declared_shape_must_fit_inside_the_archive_member ... ok
+test library::tests::deterministic_npz_round_trip ... ok
+test library::tests::truncated_fixed_width_arrays_fail_closed ... ok
+test normalize::tests::bw_lrx0_omitted_and_deficit_totals_normalize ... ok
+test normalize::tests::dump_real_tape_entries ... ignored
+test normalize::tests::lrf0_range_normalizes ... ok
+test normalize::tests::none_profile_is_byte_identical ... ok
+test normalize::tests::rml_photon_pair_normalizes ... ok
+test prepared::tests::a_dead_writers_lock_is_reclaimed_instead_of_timing_out ... ok
+test prepared::tests::batched_collapse_equals_single_cell_collapse_bit_for_bit ... ok
+test prepared::tests::collapsed_artifact_equals_groupwise_collapse_bit_for_bit ... ok
+test prepared::tests::corrupted_final_artifact_fails_instead_of_regenerating ... ok
+test prepared::tests::deterministic_exact_round_trip_and_indexed_selection ... ok
+test prepared::tests::validate_flux_accepts_rescaled_shape_and_rejects_shape_change ... ok
+test prepared::tests::validate_flux_accepts_zero_cache_only_for_zero_request ... ok
+test processing::tests::distant_threshold_ordinate_does_not_hide_local_thermal_kink ... ok
+test processing::tests::exact_discontinuity_records_both_one_sided_limits ... ok
+test processing::tests::linearization_reaches_a_deep_seeded_kink ... ok
+test processing::tests::sharp_background_kink_gets_a_thermal_transition_grid ... ok
+test processing::tests::ultra_narrow_finite_temperature_uses_exact_delta_kernel ... ok
+test processing::tests::ultra_narrow_range_edge_decomposition_is_finite ... ok
+test processing::tests::ultra_narrow_zero_k_collapse_preserves_area_and_product_factor ... ok
+test resonance::tests::coulomb_barrier_suppresses ... ok
+test resonance::tests::coulomb_neutral_limit ... ok
+test resonance::tests::coulomb_reference_values ... ok
+test resonance::tests::coulomb_region_dispatch ... ok
+test resonance::tests::coulomb_wronskian_is_one ... ok
+test resonance::tests::hwang_samples_preserve_probability_and_declared_mean ... ok
+test resonance::tests::omitted_fission_total_is_narrowly_accepted_and_reconstructed_from_components ... ok
+test resonance::tests::reich_moore_far_tail_capture_avoids_total_elastic_cancellation ... ok
+test resonance::tests::resolved_naps_outside_the_defined_set_fails_closed ... ok
+test resonance::tests::riccati_bessel_matches_closed_forms ... ok
+test resonance::tests::rml_channel_thresholds_report_in_range_openings ... ok
+test resonance::tests::rml_eliminated_capture_tail_is_smooth_1_over_v ... ok
+test resonance::tests::rml_extensions_and_reduced_widths_fail_closed ... ok
+test resonance::tests::rml_negative_spin_parity_encoding_is_admitted ... ok
+test resonance::tests::scalar_rml_capture_matches_breit_wigner_peak ... ok
+test resonance::tests::undeclared_competitive_width_is_accepted_and_reconstructed ... ok
+test resonance::tests::unrelated_breit_wigner_total_mismatches_still_fail_closed ... ok
+test resonance::tests::unresolved_cross_section_mesh_matches_unresr_refinement_rule ... ok
+test resonance::tests::unresolved_interpolates_averaged_cross_sections_between_parameter_nodes ... ok
+test shielding::tests::gnrx_identity_consistent_widths ... ok
+test shielding::tests::knots_merge_overlapping_windows ... ok
+test shielding::tests::resolved_quadrature_captures_narrow_resonance ... ok
+test shielding::tests::resolved_segment_moments_empty_outside_ranges ... ok
+test shielding::tests::shield_node_uncovered_has_no_sigf ... ok
+test shielding::tests::stratified_draws_are_a_fixed_permutation_of_the_quantile_grid ... ok
+test shielding::tests::stratified_streams_differ_by_purpose ... ok
+test shielding::tests::uw2_asymptotic_matches_c1_over_x2 ... ok
+
+test result: ok. 167 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.67s
+
+     Running unittests src/bin/dump.rs (target/build/debug/deps/dump-881b8e9525ba97f9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/p18_corpus_probe.rs (target/build/debug/deps/p18_corpus_probe-d53ceb66a3fe225a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/p18b_corpus_probe.rs (target/build/debug/deps/p18b_corpus_probe-b37bc6445fc58b78)
+
+running 8 tests
+test tests::inelastic_ground_is_excluded_from_constructed_loss ... ok
+test tests::negative_q_threshold_contract_is_specific_to_mf10 ... ok
+test tests::p18_bitmap_uses_stable_little_endian_bit_order ... ok
+test tests::p18_violation_preserves_the_frozen_operation_order ... ok
+test tests::primary_class_obeys_frozen_precedence ... ok
+test tests::printed_quantum_covers_all_endf_real_forms ... ok
+test tests::resume_header_rejects_stale_probe_source ... ok
+test tests::standard_ceiling_is_closed_at_positive_and_zero_totals ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/bin/p18b_oracle_probe.rs (target/build/debug/deps/p18b_oracle_probe-b0d8d1663493b582)
+
+running 3 tests
+test tests::printed_intervals_distinguish_overlap_from_definite_excess ... ok
+test tests::quantum_tracks_all_three_endf_real_forms ... ok
+test tests::standard_envelope_is_closed_at_positive_and_zero_boundaries ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/p20_collapse_probe.rs (target/build/debug/deps/p20_collapse_probe-e60df3d4f4826c3d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/p20_corpus_probe.rs (target/build/debug/deps/p20_corpus_probe-6911a7fbd8ff6836)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/bin/prepared_data_probe.rs (target/build/debug/deps/prepared_data_probe-313541ddb2970805)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/build/debug/deps/actinv_web-cf806572ddb7c6c7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/build/debug/deps/actinv_gui-387013b1f33dcdaa)
+
+running 26 tests
+test app::ui_tests::every_page_and_setup_walkthrough_renders_at_minimum_size ... ok
+test app::ui_tests::scientific_views_and_optional_editors_render_in_both_themes_without_mutating_inputs ... ok
+test app::ui_tests::startup_with_a_restored_dark_preference_keeps_theme_styles_distinct ... ok
+test model::integration_control::desktop_worker_preserves_solver_output ... ignored, requires the generated P11 fixture; run controls/check_desktop.py
+test model::tests::all_optional_file_references_resolve_and_hashes_survive ... ok
+test model::tests::editor_preserves_optional_fields_and_rejects_unknowns ... ok
+test model::tests::malformed_inventory_is_not_silently_plotted_as_zero ... ok
+test model::tests::metrics_link_selection_and_reject_invalid_results ... ok
+test model::tests::numeric_editors_refuse_non_finite_text ... ok
+test model::tests::omitted_optional_fields_use_solver_defaults_in_the_editor ... ok
+test model::tests::pasted_spectra_reject_bad_counts_negative_and_multiple_columns ... ok
+test model::tests::paths_resolve_without_mutating_saved_document ... ok
+test model::tests::tutorial_halves_inventory_in_one_hour_and_is_explicitly_labelled ... ok
+test sweep::tests::composition_renormalizes_rest ... ok
+test sweep::tests::cooling_sets_dt ... ok
+test sweep::tests::distinct_points_have_distinct_digests ... ok
+test sweep::tests::flux_scales_total ... ok
+test sweep::tests::nondominated_marks_frontier_members ... ok
+test sweep::tests::point_cap_enforced ... ok
+test sweep::tests::stale_generation_rejected ... ok
+test tour::tests::tours_have_valid_targets_and_pages ... ok
+test tour::tests::walkthrough_accepts_next_and_escape_input ... ok
+test transport::tests::import_preserves_absolute_flux_and_requires_explicit_safe_rebin ... ok
+test worker::tests::bounded_reader_reports_overflow_without_spawning ... ok
+test worker::tests::cancelled_result_has_priority_over_success ... ok
+test worker::tests::failed_exit_preserves_bounded_error_text ... ok
+
+test result: ok. 25 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 1.44s
+

@@ -1,0 +1,2 @@
+Running as unit: run-p743051-i9120966.scope; invocation ID: 7ef32b223f574d9882dbbc54edc3857f
+{"cpu.max": "200000 100000", "memory.max": "6442450944", "memory.swap.max": "0", "pids.max": "128"}
