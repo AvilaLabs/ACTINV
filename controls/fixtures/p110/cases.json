@@ -1,0 +1,69 @@
+{
+  "schema": "actinv-p110-composition-cases-1",
+  "source": "artificial native Fe/Si/Nb capture and decay model; no evaluated nuclear data",
+  "cases": [
+    {
+      "id": "ranged_volume_1",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "complete"
+    },
+    {
+      "id": "high_fixed_volume_7",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 10.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 40.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 7.0,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "complete"
+    },
+    {
+      "id": "ranged_volume_point_1",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 0.1,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "complete"
+    },
+    {
+      "id": "low_fixed_external_h3",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 1.0}, "Si": {"lower_wt_percent": 49.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "bounded", "source": "artificial external H3 offset control", "excludes_activation": true, "activity_bounds_bq": {"1": {"lower_bq": 740000.0, "upper_bq": 2220000.0}, "2": {"lower_bq": 740000.0, "upper_bq": 2220000.0}}},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "complete"
+    },
+    {
+      "id": "required_external_h3",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "required"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "complete"
+    },
+    {
+      "id": "caller_incomplete",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "incomplete", "unbounded_inventory_reasons": ["artificial caller-declared unbounded inventory"], "variant": "complete"
+    },
+    {
+      "id": "missing_fe58_target",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "omit_fe58_target"
+    },
+    {
+      "id": "missing_nb94_decay",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Nb": {"lower_wt_percent": 1.0, "upper_wt_percent": 10.0}, "Si": {"lower_wt_percent": 40.0, "upper_wt_percent": 49.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "omit_nb94_decay"
+    },
+    {
+      "id": "zero_response_reference",
+      "composition_wt_percent_bounds": {"Fe": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}, "Si": {"lower_wt_percent": 50.0, "upper_wt_percent": 50.0}},
+      "targets": [1, 2], "displaced_volume_cm3": 1.0,
+      "external_tritium": {"status": "not_applicable"},
+      "inventory_coverage": "complete", "unbounded_inventory_reasons": [], "variant": "complete"
+    }
+  ]
+}

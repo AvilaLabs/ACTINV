@@ -1,0 +1,22 @@
+Running as unit: run-p554175-i8936588.scope; invocation ID: f28251a246b545148b3e3d55d5da104c
+{
+  "errors": {
+    "caller_incomplete": [],
+    "high_fixed_volume_7": [],
+    "low_fixed_external_h3": [],
+    "missing_fe58_target": [
+      "Nb audit does not independently show positive Fe58 without target",
+      "Si audit does not independently show positive Fe58 without target"
+    ],
+    "missing_nb94_decay": [
+      "Fe audit does not independently show missing Nb94 decay data",
+      "Nb audit does not independently show missing Nb94 decay data",
+      "Si audit does not independently show missing Nb94 decay data"
+    ],
+    "ranged_volume_1": [],
+    "ranged_volume_point_1": [],
+    "required_external_h3": [],
+    "zero_response_reference": []
+  },
+  "purpose": "pre-repair diagnostic only; not a qualification gate"
+}

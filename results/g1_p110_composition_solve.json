@@ -1,0 +1,347 @@
+{
+  "case_count": 9,
+  "case_evidence": [
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 2,
+      "generated_response_input_sha256": "88874ea868b8d0c174c9b818a528be4dc920494b3c683e5c9fcddf1c998ae197",
+      "id": "ranged_volume_1",
+      "input_sha256": "f2ddbe12697404df891e57827fb6df8a56cfe87d7e828d365bb3feb5d8859628",
+      "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+      "maximum_atom_l1_error_per_g": 8208384.000001907,
+      "output_sha256": "9083a3e6031734ca77c02e47618840307def1e22fe1b7a2a67bf33b19ed9dca5",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "A",
+            "B",
+            "C"
+          ],
+          "lower_class": "A",
+          "step": 1,
+          "upper_class": "C"
+        },
+        {
+          "class_envelope": [
+            "A",
+            "B",
+            "C"
+          ],
+          "lower_class": "A",
+          "step": 2,
+          "upper_class": "C"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 1,
+      "generated_response_input_sha256": "37d62d08bd9ae745fddd9e9658a34cff443203674347a34300375d41523db72d",
+      "id": "high_fixed_volume_7",
+      "input_sha256": "0e5ce1885ad4cbbc7f36c077c17bd79ba779797401dcd48066e4aac78165eb88",
+      "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+      "maximum_atom_l1_error_per_g": 8208384.000001907,
+      "output_sha256": "728fb2a94ca61f5ceec506f4aa4ce8b52298a5c5d75ff4e7e6f439f6144a810a",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "A"
+          ],
+          "lower_class": "A",
+          "step": 1,
+          "upper_class": "A"
+        },
+        {
+          "class_envelope": [
+            "A"
+          ],
+          "lower_class": "A",
+          "step": 2,
+          "upper_class": "A"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 2,
+      "generated_response_input_sha256": "7dbd32135204442f0b4ff0dca5aef90cdfe3201dded601e47b62223e4e931c28",
+      "id": "ranged_volume_point_1",
+      "input_sha256": "89d2de0f8f72fb180c19da27d8adb2bf8da39734a708effbeb0f85bb89cf68af",
+      "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+      "maximum_atom_l1_error_per_g": 8208384.000001907,
+      "output_sha256": "6f4de67a65d63f1b25fd951ff774f333d77a250a2d14f3f15e0959f5eebad074",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "C",
+            "above_class_c"
+          ],
+          "lower_class": "C",
+          "step": 1,
+          "upper_class": "above_class_c"
+        },
+        {
+          "class_envelope": [
+            "C",
+            "above_class_c"
+          ],
+          "lower_class": "C",
+          "step": 2,
+          "upper_class": "above_class_c"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 1,
+      "generated_response_input_sha256": "e9e008d05113d5095f698d83ca076de9acc47e95c8d3c015fe4b54e9294438f3",
+      "id": "low_fixed_external_h3",
+      "input_sha256": "fd93f159e1e1ea37864dc9c5add91d45254a9e06e7fe4b7ea727c40663c833a6",
+      "maximum_activity_l1_error_bq_per_g": 6.821210263296962e-13,
+      "maximum_atom_l1_error_per_g": 4038656.0937508345,
+      "output_sha256": "dc2636b2266e8c483c15f65020e3d967028275aeafb4962a7894cf8ceb513423",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "A",
+            "B"
+          ],
+          "lower_class": "A",
+          "step": 1,
+          "upper_class": "B"
+        },
+        {
+          "class_envelope": [
+            "A",
+            "B"
+          ],
+          "lower_class": "A",
+          "step": 2,
+          "upper_class": "B"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 2,
+      "generated_response_input_sha256": "487b1c82e5138d38712ca945f7c3c0a62cd97a312d80e3bff36fc4fcc9b3f0be",
+      "id": "required_external_h3",
+      "input_sha256": "c55715c7c48f126ba03c9edbe7a29afc6d1f023d7af35698ec617498d09df153",
+      "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+      "maximum_atom_l1_error_per_g": 8208384.000001907,
+      "output_sha256": "2a6ba453b58e6a9284f7f4b6535e4c4136a616a1db841c749ab39454b5b29a3f",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 1,
+          "upper_class": "unknown"
+        },
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 2,
+          "upper_class": "unknown"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 2,
+      "generated_response_input_sha256": "4bac6c8ebf29a8d97a474b4af2cae6fea30e33918f909fbf6bc0e7c51d416225",
+      "id": "caller_incomplete",
+      "input_sha256": "595f4964a5026a114db97ddbc3ca1a91a111a3f5441574318f2ebec1334b95be",
+      "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+      "maximum_atom_l1_error_per_g": 8208384.000001907,
+      "output_sha256": "d409ecff40d5e312adb59144199d3874ddaefb2f0b49f178ce3746b674b54bc0",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 1,
+          "upper_class": "unknown"
+        },
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 2,
+          "upper_class": "unknown"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 2,
+      "generated_response_input_sha256": "f904caaa2b5def5120e87f752ba18d48f6523656efc83a595c363b8e0047c72a",
+      "id": "missing_fe58_target",
+      "input_sha256": "96c27d172416e09388e050194886e29401da86e86f664fc58c107221e0b31038",
+      "maximum_activity_l1_error_bq_per_g": 9.094947017729282e-13,
+      "maximum_atom_l1_error_per_g": 8208384.000001907,
+      "output_sha256": "27ffda3eeab6035149542da0d93aa8a941435dcdc7d4fe7ff567dcc8231c6a04",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 1,
+          "upper_class": "unknown"
+        },
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 2,
+          "upper_class": "unknown"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 3,
+      "full_witness_solve_count": 1,
+      "generated_response_input_sha256": "79ff437e4be011c011ad2771b82378194908b39e389e05aafd554312e3056a17",
+      "id": "missing_nb94_decay",
+      "input_sha256": "9bf174fe530d7b1723f248e9bd686570979bbc7bd1073132d4c43af4cb2d3733",
+      "maximum_activity_l1_error_bq_per_g": -0.0,
+      "maximum_atom_l1_error_per_g": 5963776.0,
+      "output_sha256": "3066f8f27b8636dc3df7cd3044cc86af4309d2ab716f3194c5d0ad7c916c31b0",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 1,
+          "upper_class": "unknown"
+        },
+        {
+          "class_envelope": [
+            "unknown"
+          ],
+          "lower_class": "unknown",
+          "step": 2,
+          "upper_class": "unknown"
+        }
+      ]
+    },
+    {
+      "basis_solve_count": 2,
+      "full_witness_solve_count": 1,
+      "generated_response_input_sha256": "fc95c78674e314e14e5401c2b3f42395a013262b7ced88a499bc743426e6e9bf",
+      "id": "zero_response_reference",
+      "input_sha256": "f3c65497fa231a404f0bc34b9833e92782344fcb0de64c56c5a3297feed11367",
+      "maximum_activity_l1_error_bq_per_g": -0.0,
+      "maximum_atom_l1_error_per_g": 0.0,
+      "output_sha256": "5018aad05d3e8ecb5abcf18f5ee3d76bd2d53ca9117d213acda27b9c3f1ab13e",
+      "selected_steps": [
+        {
+          "class_envelope": [
+            "A"
+          ],
+          "lower_class": "A",
+          "step": 1,
+          "upper_class": "A"
+        },
+        {
+          "class_envelope": [
+            "A"
+          ],
+          "lower_class": "A",
+          "step": 2,
+          "upper_class": "A"
+        }
+      ]
+    }
+  ],
+  "endpoint_count": 36,
+  "failures": [],
+  "independent_comparison_count": 9,
+  "mutations_rejected": {
+    "ranged_volume_1:basis_activity": true,
+    "ranged_volume_1:basis_atoms": true,
+    "ranged_volume_1:basis_duplicate_element": true,
+    "ranged_volume_1:basis_duplicate_step": true,
+    "ranged_volume_1:basis_missing_step": true,
+    "ranged_volume_1:basis_step": true,
+    "ranged_volume_1:class_envelope": true,
+    "ranged_volume_1:component_id": true,
+    "ranged_volume_1:generated_input_sha": true,
+    "ranged_volume_1:native_pass": true,
+    "ranged_volume_1:outer_input_sha": true,
+    "ranged_volume_1:outer_schema": true,
+    "ranged_volume_1:projection_lower": true,
+    "ranged_volume_1:projection_upper": true,
+    "ranged_volume_1:projection_witness": true,
+    "ranged_volume_1:rules_sha": true,
+    "ranged_volume_1:target_time": true,
+    "ranged_volume_1:weight_bounds": true,
+    "ranged_volume_1:witness_activity": true,
+    "ranged_volume_1:witness_atoms": true,
+    "ranged_volume_1:witness_class": true,
+    "ranged_volume_1:witness_count": true,
+    "ranged_volume_1:witness_pass": true
+  },
+  "pass": true,
+  "phase": "P110",
+  "protocol_sha256": "8ad8870d42d30f3f8c330021b15e7f4f570032deba1ee5b79f57b9411e40e7f9",
+  "refusal_controls": {
+    "checks": {
+      "absent_target": true,
+      "bad_external": true,
+      "blank_assumptions": true,
+      "blank_source": true,
+      "both_geometries": true,
+      "complete_with_reason": true,
+      "duplicate_bound_coordinate": true,
+      "duplicate_component_id": true,
+      "duplicate_component_mass": true,
+      "duplicate_embedded_base_spec_key": true,
+      "duplicate_external_key": true,
+      "duplicate_outer_key": true,
+      "duplicate_path_base_spec_key": true,
+      "duplicate_target": true,
+      "empty_bounds": true,
+      "empty_component_id": true,
+      "infeasible_sum": true,
+      "malformed_bounds": true,
+      "missing_external_step": true,
+      "missing_reason": true,
+      "negative_h3": true,
+      "negative_mass": true,
+      "negative_weight": true,
+      "noncanonical_external_step": true,
+      "null_volume": true,
+      "reversed_weight": true,
+      "too_many_components": true,
+      "unknown_element": true,
+      "unknown_waste_type": true,
+      "unsupported_component_key": true,
+      "unsupported_cram_order": true,
+      "unsupported_damage": true,
+      "unsupported_gas": true,
+      "unsupported_screen": true,
+      "unsupported_top_key": true,
+      "unsupported_uncertainty": true,
+      "wrong_base_spec": true,
+      "wrong_projectile": true,
+      "wrong_rules": true,
+      "wrong_schema": true,
+      "zero_density": true,
+      "zero_mass": true,
+      "zero_target": true
+    },
+    "pass": true
+  },
+  "repeat_byte_identical": true,
+  "schema": "actinv-p110-composition-solve-g1-1",
+  "target_count": 18
+}

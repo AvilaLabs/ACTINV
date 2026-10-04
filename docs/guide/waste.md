@@ -102,8 +102,8 @@ is written.
 
 ## Generate and verify a native composition basis
 
-The native composition path is experimental and has not passed its scientific
-control suite.
+The native composition path passed its artificial fixed-rate basis and selected-
+witness control suite (P110: nine cases, 18 targets and 36 endpoints).
 
 `actinv waste composition solve` generates pure-element responses by running
 ACTINV, projects them over a bounded natural-element composition whose

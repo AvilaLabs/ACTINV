@@ -98,14 +98,23 @@ jobs:
           python controls/check_p108.py --no-write
           python controls/check_p108_verdict.py
 
-      - name: P109 native composition basis and witness verification
+      - name: P109 preserved failure checkpoint
         env:
           ACTINV_BIN: target/release/actinv
         run: |
-          python controls/test_p109_seal.py
           python controls/test_p109_native_identity.py
-          python controls/check_p109.py --no-write
-          python controls/check_p109_verdict.py
+          python controls/test_p109_history.py
+          python controls/check_p109.py --g0-only --no-write
+          python controls/check_p109_history.py
+
+      - name: P110 native composition basis and witness verification
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p110_seal.py
+          python controls/test_p110_native_identity.py
+          python controls/check_p110.py --no-write
+          python controls/check_p110_verdict.py
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

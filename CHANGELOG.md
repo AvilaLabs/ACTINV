@@ -13,8 +13,7 @@
 **Added**
 
 - `actinv waste composition solve SPEC.json [OUT.json]` creates pure-element
-  responses in an experimental implementation awaiting scientific qualification.
-  It uses native ACTINV runs, projects the declared bounded mixture,
+  responses with native ACTINV runs, projects the declared bounded mixture,
   and verifies each distinct extremum witness composition plus a canonical
   feasible reference with full runs. It retains solver/audit evidence and
   preserves P108 projections. This checks selected points; it does not bound

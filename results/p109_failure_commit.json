@@ -1,0 +1,13 @@
+{
+  "schema": "actinv-p109-failure-implementation-1",
+  "commit_sha": "495d6bf99248d3b99af43ca82894631c3e6b8c87",
+  "artifact_sha256": {
+    "results/g0_p109_composition_solve.json": "cad2351bf53e7f0165c6a899bcd8b97ba302d73effbb3e52bd220dcf598c1c09",
+    "results/g1_p109_composition_solve.json": "a74fc950793785af5fa667eca793aca5934fc54ab366435004f88093b2451986",
+    "results/g3_p109_quality.json": "d7b42c419704e21dcbe1fadfa3a3970a55b390851890e910598272571fcb1e36",
+    "results/p109_verdict.json": "b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398"
+  },
+  "verdict": "P109-FAIL",
+  "native_solver_evidence_obtained": false,
+  "ci_qualification": "none; local failed checkpoint"
+}

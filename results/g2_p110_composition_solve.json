@@ -1,0 +1,8 @@
+{
+  "g1_result_sha256": "9f02e1f81c509b4b25a055cc265404ba4145bf517355edc18f59b3b159074fc0",
+  "pass": true,
+  "phase": "P110",
+  "protocol_sha256": "8ad8870d42d30f3f8c330021b15e7f4f570032deba1ee5b79f57b9411e40e7f9",
+  "schema": "actinv-p110-composition-solve-g2-1",
+  "separate_output_paths_byte_identical": true
+}
