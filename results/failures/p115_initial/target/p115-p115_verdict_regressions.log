@@ -1,0 +1,20 @@
+=== stdout ===
+
+=== stderr ===
+......E.
+======================================================================
+ERROR: test_receipt_binds_exit_argv_resources_and_committed_log_bytes (__main__.P115VerdictTests.test_receipt_binds_exit_argv_resources_and_committed_log_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/connoravila/Documents/actinv/target/roadmap-waste/controls/test_p115_verdict.py", line 64, in test_receipt_binds_exit_argv_resources_and_committed_log_bytes
+    log_path.parent.mkdir(parents=True)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/pathlib/__init__.py", line 1012, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/home/connoravila/Documents/actinv/target/roadmap-waste/target/preflight-tmp/p115-receipt-j_imhbvn/results/quality/p115'
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.010s
+
+FAILED (errors=1)

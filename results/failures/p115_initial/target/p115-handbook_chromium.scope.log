@@ -1,0 +1,37 @@
+Running as unit: run-p947059-i9336168.scope; invocation ID: f0d986a6d3804f79a7096d384f6fea0f
+{
+  "argv": [
+    "python3",
+    "target/p103-docs-smoke.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "handbook_chromium",
+  "log_path": "target/p115-handbook_chromium.log",
+  "log_sha256": "06f03eb63927581f62ac311fd32c781c05f61cce653b473fab76de1fac1137bb",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p947059-i9336168.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 150.0
+}

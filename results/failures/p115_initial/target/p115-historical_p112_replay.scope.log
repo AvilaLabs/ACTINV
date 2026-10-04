@@ -1,0 +1,37 @@
+Running as unit: run-p949236-i9344252.scope; invocation ID: 2a85bd45f9744682be6d185a9b1cf5a1
+{
+  "argv": [
+    "python3",
+    "controls/check_p112_verdict.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "historical_p112_replay",
+  "log_path": "target/p115-historical_p112_replay.log",
+  "log_sha256": "abdecdf0cd55632437f418a609d0d21f1424cf0fad6659cf5e73d4bf8edef6eb",
+  "phase": "P115",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p949236-i9344252.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

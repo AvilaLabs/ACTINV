@@ -143,17 +143,24 @@ jobs:
           python controls/test_p113_history.py
           python controls/check_p113_history.py
 
-      - name: P114 nominal waste facility twin successor controls
+      - name: P114 terminal failure remains immutable
         env:
           ACTINV_BIN: target/release/actinv
         run: |
-          python controls/test_p114_oracle.py
-          python controls/test_p114_seal.py
-          python controls/test_p114_verdict.py
-          python scripts/test_run_roadmap_gate.py
+          python controls/test_p114_history.py
+          python controls/check_p114_history.py
+
+      - name: P115 unchanged twin verification successor controls
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p115_oracle.py
+          python controls/test_p115_seal.py
+          python controls/test_p115_verdict.py
+          python scripts/test_run_p115_gate.py
           python controls/test_p105_children.py
-          python controls/check_p114.py --no-write
-          python controls/check_p114_verdict.py
+          python controls/check_p115.py --no-write
+          python controls/check_p115_verdict.py
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
