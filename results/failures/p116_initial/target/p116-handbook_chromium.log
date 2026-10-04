@@ -1,0 +1,43 @@
+=== stdout ===
+Handbook navigation, search, themes, and mobile layout pass.
+
+=== stderr ===
+127.0.0.1 - - [04/Oct/2026 10:34:41] "GET /docs/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/ HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/css/variables-8adf115d.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/fonts/fonts-9644e21d.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/highlight-493f70e1.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/tomorrow-night-4c0ae647.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/ayu-highlight-3fdfc3ac.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/css/general-e96d0476.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/css/chrome-d279d366.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/toc-d87b5a58.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/elasticlunr-ef4e11c1.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/searcher-09f2665d.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/mark-09e88c2c.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/clipboard-1626706a.min.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/book-609e4cb8.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/highlight-abc7f01d.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/css/print-9e4910d8.css HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/fonts/open-sans-v17-all-charsets-700-c22fe8c7.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/fonts/open-sans-v17-all-charsets-regular-2e3b1d34.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/fonts/source-code-pro-v11-all-charsets-500-2bdd9410.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/fonts/open-sans-v17-all-charsets-300-7736aa35.woff2 HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/quick-start.html HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:42] "GET /docs/searchindex-98e367eb.js HTTP/1.1" 200 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/css/general-e96d0476.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/css/variables-8adf115d.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/ayu-highlight-3fdfc3ac.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/fonts/fonts-9644e21d.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/highlight-493f70e1.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/toc-d87b5a58.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/css/chrome-d279d366.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/tomorrow-night-4c0ae647.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/elasticlunr-ef4e11c1.min.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/highlight-abc7f01d.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/searcher-09f2665d.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/mark-09e88c2c.min.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/clipboard-1626706a.min.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/book-609e4cb8.js HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/css/print-9e4910d8.css HTTP/1.1" 304 -
+127.0.0.1 - - [04/Oct/2026 10:34:43] "GET /docs/results.html HTTP/1.1" 200 -

@@ -1,0 +1,38 @@
+Running as unit: run-p1012711-i9417080.scope; invocation ID: 5a9c9ea6b213455bb572bdf4ffff1c0b
+{
+  "argv": [
+    "python3",
+    "scripts/check_docs.py",
+    "dist/docs"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "handbook_links",
+  "log_path": "target/p116-handbook_links.log",
+  "log_sha256": "042e133be84546e38529b23b64e332216b7c7d90bf8c04fc001dc401e117cf5c",
+  "phase": "P116",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1012711-i9417080.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 120.0
+}

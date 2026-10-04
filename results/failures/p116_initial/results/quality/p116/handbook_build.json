@@ -1,0 +1,36 @@
+{
+  "argv": [
+    "/home/connoravila/Documents/actinv/scratch/mdbook-demo/bin/mdbook",
+    "build"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "handbook_build",
+  "log_path": "target/p116-handbook_build.log",
+  "log_sha256": "52c3c6019765112a0cf9a1823b19a000586fe39a97ad78b81216a7cbdb5d516c",
+  "phase": "P116",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1012547-i9397793.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 120.0
+}

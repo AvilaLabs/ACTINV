@@ -1,0 +1,971 @@
+{
+  "cells": 4,
+  "components": {
+    "component-a": {
+      "cells": [
+        "cell-0",
+        "cell-1"
+      ],
+      "missing_cells": [],
+      "verdict": "cleared"
+    },
+    "component-b": {
+      "cells": [
+        "cell-2",
+        "cell-3"
+      ],
+      "missing_cells": [],
+      "verdict": "cleared"
+    }
+  },
+  "dose_points": [],
+  "facility": {
+    "assay_recommendations": [],
+    "assimilated_cells": [],
+    "binding_cells": {
+      "heat@0": {
+        "band": [
+          0.8,
+          1.2
+        ],
+        "cell": "cell-0",
+        "limit": 2.0,
+        "margin": 0.4
+      },
+      "heat@86400": {
+        "band": [
+          0.8,
+          1.2
+        ],
+        "cell": "cell-0",
+        "limit": 2.0,
+        "margin": 0.4
+      }
+    },
+    "cleared": 4,
+    "dose_assimilations": [],
+    "restricted": 0
+  },
+  "limits": [
+    {
+      "limit": 2.0,
+      "name": "heat",
+      "response": "heat.total",
+      "sense": "le"
+    }
+  ],
+  "mesh_output": "/home/connoravila/Documents/actinv/target/roadmap-waste/target/p116-controls/inputs/two_table_mixture/mesh.ndjson",
+  "note": "clearance is on the certified band edge, not the nominal — a cell clears only when its conservative interval clears the limit. dose_points flux is a point-kernel screening estimate (no scatter/buildup transport), not a certified band",
+  "per_cell": [
+    {
+      "cell": "cell-0",
+      "entries": [
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 0.0
+        },
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 86400.0
+        }
+      ],
+      "ordinal": 0,
+      "verdict": "cleared",
+      "worst_margin": 0.4
+    },
+    {
+      "cell": "cell-1",
+      "entries": [
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 0.0
+        },
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 86400.0
+        }
+      ],
+      "ordinal": 1,
+      "verdict": "cleared",
+      "worst_margin": 0.4
+    },
+    {
+      "cell": "cell-2",
+      "entries": [
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 0.0
+        },
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 86400.0
+        }
+      ],
+      "ordinal": 2,
+      "verdict": "cleared",
+      "worst_margin": 0.4
+    },
+    {
+      "cell": "cell-3",
+      "entries": [
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 0.0
+        },
+        {
+          "band": [
+            0.8,
+            1.2
+          ],
+          "clears": true,
+          "limit": "heat",
+          "margin": 0.4,
+          "t_s": 86400.0
+        }
+      ],
+      "ordinal": 3,
+      "verdict": "cleared",
+      "worst_margin": 0.4
+    }
+  ],
+  "schema": "actinv-twin-1",
+  "waste_classification": {
+    "components": [
+      {
+        "displaced_volume_cm3": 3.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "component-a",
+        "mass_g": 1.0,
+        "status": "nominal",
+        "targets": [
+          {
+            "calculated_only_class": "C",
+            "class": "C",
+            "coverage": "complete",
+            "evaluation": {
+              "binding_constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.88,
+                  "normalized_sum": 0.12,
+                  "passes": true,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                }
+              ],
+              "calculated_only_class": "C",
+              "class": "C",
+              "constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -0.19999999999999996,
+                  "normalized_sum": 1.2,
+                  "passes": false,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "A"
+                },
+                {
+                  "column": 1,
+                  "contributor_count": 1,
+                  "contributors": [
+                    "Co60"
+                  ],
+                  "normalized_margin": 0.30000000000000016,
+                  "normalized_sum": 0.6999999999999998,
+                  "passes": true,
+                  "source_sum_fraction": 0.6999999999999998,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "A"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -0.19999999999999996,
+                  "normalized_sum": 1.2,
+                  "passes": false,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "B"
+                },
+                {
+                  "column": 2,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "B"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.88,
+                  "normalized_sum": 0.12,
+                  "passes": true,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                },
+                {
+                  "column": 3,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "C"
+                }
+              ],
+              "coverage": "complete",
+              "row_fractions": [
+                {
+                  "column": null,
+                  "concentration": 0.48,
+                  "fraction": 0.06,
+                  "limit": 8.0,
+                  "nuclide": "C14",
+                  "row_id": "C-14",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": null,
+                  "concentration": 0.18,
+                  "fraction": 0.06,
+                  "limit": 3.0,
+                  "nuclide": "Tc99",
+                  "row_id": "Tc-99",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 1,
+                  "concentration": 489.99999999999983,
+                  "fraction": 0.6999999999999998,
+                  "limit": 700.0,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 2,
+                  "concentration": 489.99999999999983,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 3,
+                  "concentration": 489.99999999999983,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                }
+              ],
+              "unknown_nuclides": [],
+              "unlisted_activity_bq": 0.0,
+              "unlisted_nuclides": []
+            },
+            "external_tritium_activity_bq": 0.0,
+            "external_tritium_status": "not_applicable",
+            "inventory_activity_bq": {
+              "C14": 53280.0,
+              "Co60": 54389999.999999985,
+              "Tc99": 19980.0
+            },
+            "status": "nominal",
+            "step": 1,
+            "t_s": 0.0,
+            "unknown_reason": null
+          },
+          {
+            "calculated_only_class": "C",
+            "class": "C",
+            "coverage": "complete",
+            "evaluation": {
+              "binding_constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.76,
+                  "normalized_sum": 0.24,
+                  "passes": true,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                }
+              ],
+              "calculated_only_class": "C",
+              "class": "C",
+              "constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -1.4,
+                  "normalized_sum": 2.4,
+                  "passes": false,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "A"
+                },
+                {
+                  "column": 1,
+                  "contributor_count": 1,
+                  "contributors": [
+                    "Co60"
+                  ],
+                  "normalized_margin": -0.3999999999999997,
+                  "normalized_sum": 1.3999999999999997,
+                  "passes": false,
+                  "source_sum_fraction": 1.3999999999999997,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "A"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -1.4,
+                  "normalized_sum": 2.4,
+                  "passes": false,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "B"
+                },
+                {
+                  "column": 2,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "B"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.76,
+                  "normalized_sum": 0.24,
+                  "passes": true,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                },
+                {
+                  "column": 3,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "C"
+                }
+              ],
+              "coverage": "complete",
+              "row_fractions": [
+                {
+                  "column": null,
+                  "concentration": 0.96,
+                  "fraction": 0.12,
+                  "limit": 8.0,
+                  "nuclide": "C14",
+                  "row_id": "C-14",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": null,
+                  "concentration": 0.36,
+                  "fraction": 0.12,
+                  "limit": 3.0,
+                  "nuclide": "Tc99",
+                  "row_id": "Tc-99",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 1,
+                  "concentration": 979.9999999999997,
+                  "fraction": 1.3999999999999997,
+                  "limit": 700.0,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 2,
+                  "concentration": 979.9999999999997,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 3,
+                  "concentration": 979.9999999999997,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                }
+              ],
+              "unknown_nuclides": [],
+              "unlisted_activity_bq": 0.0,
+              "unlisted_nuclides": []
+            },
+            "external_tritium_activity_bq": 0.0,
+            "external_tritium_status": "not_applicable",
+            "inventory_activity_bq": {
+              "C14": 106560.0,
+              "Co60": 108779999.99999997,
+              "Tc99": 39960.0
+            },
+            "status": "nominal",
+            "step": 2,
+            "t_s": 86400.0,
+            "unknown_reason": null
+          }
+        ],
+        "waste_type": "general"
+      },
+      {
+        "displaced_volume_cm3": 3.0,
+        "external_tritium": {
+          "status": "not_applicable"
+        },
+        "id": "component-b",
+        "mass_g": 2.0,
+        "status": "nominal",
+        "targets": [
+          {
+            "calculated_only_class": "C",
+            "class": "C",
+            "coverage": "complete",
+            "evaluation": {
+              "binding_constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.88,
+                  "normalized_sum": 0.12,
+                  "passes": true,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                }
+              ],
+              "calculated_only_class": "C",
+              "class": "C",
+              "constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -0.19999999999999996,
+                  "normalized_sum": 1.2,
+                  "passes": false,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "A"
+                },
+                {
+                  "column": 1,
+                  "contributor_count": 1,
+                  "contributors": [
+                    "Co60"
+                  ],
+                  "normalized_margin": 0.30000000000000016,
+                  "normalized_sum": 0.6999999999999998,
+                  "passes": true,
+                  "source_sum_fraction": 0.6999999999999998,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "A"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -0.19999999999999996,
+                  "normalized_sum": 1.2,
+                  "passes": false,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "B"
+                },
+                {
+                  "column": 2,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "B"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.88,
+                  "normalized_sum": 0.12,
+                  "passes": true,
+                  "source_sum_fraction": 0.12,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                },
+                {
+                  "column": 3,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "C"
+                }
+              ],
+              "coverage": "complete",
+              "row_fractions": [
+                {
+                  "column": null,
+                  "concentration": 0.48,
+                  "fraction": 0.06,
+                  "limit": 8.0,
+                  "nuclide": "C14",
+                  "row_id": "C-14",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": null,
+                  "concentration": 0.18,
+                  "fraction": 0.06,
+                  "limit": 3.0,
+                  "nuclide": "Tc99",
+                  "row_id": "Tc-99",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 1,
+                  "concentration": 489.99999999999983,
+                  "fraction": 0.6999999999999998,
+                  "limit": 700.0,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 2,
+                  "concentration": 489.99999999999983,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 3,
+                  "concentration": 489.99999999999983,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                }
+              ],
+              "unknown_nuclides": [],
+              "unlisted_activity_bq": 0.0,
+              "unlisted_nuclides": []
+            },
+            "external_tritium_activity_bq": 0.0,
+            "external_tritium_status": "not_applicable",
+            "inventory_activity_bq": {
+              "C14": 53280.0,
+              "Co60": 54389999.999999985,
+              "Tc99": 19980.0
+            },
+            "status": "nominal",
+            "step": 1,
+            "t_s": 0.0,
+            "unknown_reason": null
+          },
+          {
+            "calculated_only_class": "C",
+            "class": "C",
+            "coverage": "complete",
+            "evaluation": {
+              "binding_constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.76,
+                  "normalized_sum": 0.24,
+                  "passes": true,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                }
+              ],
+              "calculated_only_class": "C",
+              "class": "C",
+              "constraints": [
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -1.4,
+                  "normalized_sum": 2.4,
+                  "passes": false,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "A"
+                },
+                {
+                  "column": 1,
+                  "contributor_count": 1,
+                  "contributors": [
+                    "Co60"
+                  ],
+                  "normalized_margin": -0.3999999999999997,
+                  "normalized_sum": 1.3999999999999997,
+                  "passes": false,
+                  "source_sum_fraction": 1.3999999999999997,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "A"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": -1.4,
+                  "normalized_sum": 2.4,
+                  "passes": false,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "B"
+                },
+                {
+                  "column": 2,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "B"
+                },
+                {
+                  "column": null,
+                  "contributor_count": 2,
+                  "contributors": [
+                    "C14",
+                    "Tc99"
+                  ],
+                  "normalized_margin": 0.76,
+                  "normalized_sum": 0.24,
+                  "passes": true,
+                  "source_sum_fraction": 0.24,
+                  "strict": true,
+                  "table": 1,
+                  "target_class": "C"
+                },
+                {
+                  "column": 3,
+                  "contributor_count": 0,
+                  "contributors": [],
+                  "normalized_margin": 1.0,
+                  "normalized_sum": 0.0,
+                  "passes": true,
+                  "source_sum_fraction": 0.0,
+                  "strict": false,
+                  "table": 2,
+                  "target_class": "C"
+                }
+              ],
+              "coverage": "complete",
+              "row_fractions": [
+                {
+                  "column": null,
+                  "concentration": 0.96,
+                  "fraction": 0.12,
+                  "limit": 8.0,
+                  "nuclide": "C14",
+                  "row_id": "C-14",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": null,
+                  "concentration": 0.36,
+                  "fraction": 0.12,
+                  "limit": 3.0,
+                  "nuclide": "Tc99",
+                  "row_id": "Tc-99",
+                  "table": 1,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 1,
+                  "concentration": 979.9999999999997,
+                  "fraction": 1.3999999999999997,
+                  "limit": 700.0,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 2,
+                  "concentration": 979.9999999999997,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                },
+                {
+                  "column": 3,
+                  "concentration": 979.9999999999997,
+                  "fraction": null,
+                  "limit": null,
+                  "nuclide": "Co60",
+                  "row_id": "Co-60",
+                  "table": 2,
+                  "unit": "Ci/m3"
+                }
+              ],
+              "unknown_nuclides": [],
+              "unlisted_activity_bq": 0.0,
+              "unlisted_nuclides": []
+            },
+            "external_tritium_activity_bq": 0.0,
+            "external_tritium_status": "not_applicable",
+            "inventory_activity_bq": {
+              "C14": 106560.0,
+              "Co60": 108779999.99999997,
+              "Tc99": 39960.0
+            },
+            "status": "nominal",
+            "step": 2,
+            "t_s": 86400.0,
+            "unknown_reason": null
+          }
+        ],
+        "waste_type": "general"
+      }
+    ],
+    "input": "mesh.ndjson",
+    "input_kind": "mesh",
+    "input_sha256": "c21e99e3b0c9b916287fc9c6aac1f4d860e1c2e9392a837fab7017c965b63d78",
+    "rule_pack": {
+      "id": "us-nrc-10cfr61.55-v1",
+      "sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+      "source_as_of": "2026-10-01",
+      "source_url": "https://www.ecfr.gov/current/title-10/chapter-I/part-61/subpart-D/section-61.55",
+      "version": 1
+    },
+    "rule_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+    "rules": "us-nrc-10cfr61.55-v1",
+    "schema": "actinv-waste-result-1",
+    "status": "nominal",
+    "targets": [
+      1,
+      2
+    ],
+    "waste_sha256": "5632eaef925e31c4ed9e07e4ef289f7e504e1d9c001b959d6f84fc74fd528501"
+  },
+  "waste_facility_coverage": {
+    "assay_adjustment": "not_applied",
+    "assigned_cell_count": 4,
+    "assigned_cell_ids": [
+      "cell-0",
+      "cell-1",
+      "cell-2",
+      "cell-3"
+    ],
+    "component_count": 2,
+    "inventory_basis": "original_mesh_activity_Bq_per_g",
+    "membership_coverage": "complete",
+    "schema": "actinv-twin-waste-summary-1",
+    "target_class_counts": [
+      {
+        "counts": {
+          "A": 0,
+          "B": 0,
+          "C": 2,
+          "above_class_c": 0,
+          "unknown": 0
+        },
+        "step": 1
+      },
+      {
+        "counts": {
+          "A": 0,
+          "B": 0,
+          "C": 2,
+          "above_class_c": 0,
+          "unknown": 0
+        },
+        "step": 2
+      }
+    ],
+    "unassigned_cell_count": 0,
+    "unassigned_cell_ids": []
+  }
+}

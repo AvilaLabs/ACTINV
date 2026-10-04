@@ -1,0 +1,37 @@
+Running as unit: run-p1026973-i9418915.scope; invocation ID: 29d0ef6521a54249aa3c9f83be5da032
+{
+  "argv": [
+    "python3",
+    "controls/test_p115_history.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "p115_history_regressions",
+  "log_path": "target/p116-p115_history_regressions.log",
+  "log_sha256": "ab2c1495e24f7a3c390c5d0f30f6ef9503ef955fc92d529b9d3ef72a773f15f2",
+  "phase": "P116",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1026973-i9418915.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

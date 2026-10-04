@@ -1,0 +1,37 @@
+Running as unit: run-p1013986-i9394341.scope; invocation ID: 99bc2359ed2f45d884cb59769e619b22
+{
+  "argv": [
+    "python3",
+    "controls/check_p109_history.py"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "historical_p109_replay",
+  "log_path": "target/p116-historical_p109_replay.log",
+  "log_sha256": "793ec2baa8a240394504c37aeea8a90f49b6fdc015b8d95c3b30a331348263ce",
+  "phase": "P116",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1013986-i9394341.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

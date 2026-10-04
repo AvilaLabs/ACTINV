@@ -1,0 +1,20 @@
+=== stdout ===
+{
+  "gates": {
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3_CI": "PASS",
+    "G3_CI_evidence_consistent": "PASS",
+    "G3_local": "PASS",
+    "prior_verdict_hashes": "PASS",
+    "prior_verdicts": "PASS",
+    "protocol": "PASS",
+    "repair_policy": "PASS",
+    "source_controls_bound": "PASS"
+  },
+  "persisted_matches": true,
+  "verdict": "P112-PASS"
+}
+
+=== stderr ===
