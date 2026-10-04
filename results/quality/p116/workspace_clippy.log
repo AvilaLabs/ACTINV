@@ -1,0 +1,6 @@
+=== stdout ===
+
+=== stderr ===
+    Checking actinv-cli v1.4.0 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-cli)
+    Checking actinv-gui v0.3.0-preview.1 (/home/connoravila/Documents/actinv/target/roadmap-waste/crates/actinv-gui)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.87s

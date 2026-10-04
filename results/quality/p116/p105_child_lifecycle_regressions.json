@@ -8,7 +8,7 @@
   "error": null,
   "gate": "p105_child_lifecycle_regressions",
   "log_path": "target/p116-p105_child_lifecycle_regressions.log",
-  "log_sha256": "b26d86ec05de4412cd5e3454291090a118cabe5ba4123acb1bd9b328effb6cce",
+  "log_sha256": "0143566113177c34c01617619f7684529a6fabf297c6f757c0b478e5b4602da2",
   "phase": "P116",
   "resources": {
     "cgroup_limits": {
@@ -17,7 +17,7 @@
       "memory.swap.max": "0",
       "pids.max": "128"
     },
-    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1013495-i9397864.scope",
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1237671-i9627260.scope",
     "environment": {
       "CARGO_BUILD_JOBS": "1",
       "RAYON_NUM_THREADS": "2",

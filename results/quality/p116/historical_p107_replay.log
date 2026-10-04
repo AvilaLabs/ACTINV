@@ -1,0 +1,13 @@
+=== stdout ===
+{
+  "ci_sha256": "65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a",
+  "g0_sha256": "3a072b15502a09ff99ff5082c19d6add8f806bfb9f93f7d19e7977317ac5d2f0",
+  "g3_sha256": "b942af69d778490ee6ee5f369d71782f57320cc048363a2256ae1ba763184b3a",
+  "implementation_commit": "27d5636ad5331a3dacd8130a6b5e3516fb661e9f",
+  "pass": true,
+  "persisted_verdict_matches_historical_derivation": true,
+  "source_file_count": 93,
+  "source_hashes_verified": true
+}
+
+=== stderr ===

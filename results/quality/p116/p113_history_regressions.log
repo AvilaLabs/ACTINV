@@ -1,0 +1,10 @@
+=== stdout ===
+
+=== stderr ===
+./usr/lib/python3.14/tempfile.py:961: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/home/connoravila/Documents/actinv/target/roadmap-waste/target/preflight-tmp/p113-rust-snapshot-xslw1531/p113-rust-mfc32h__'>
+  _warnings.warn(warn_message, ResourceWarning)
+.....
+----------------------------------------------------------------------
+Ran 6 tests in 3.276s
+
+OK

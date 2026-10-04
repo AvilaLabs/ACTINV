@@ -1,0 +1,18 @@
+=== stdout ===
+{
+  "gates": {
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3_CI": "PASS",
+    "G3_local": "PASS",
+    "P108": "PASS",
+    "P109_preserved_FAIL": "PASS",
+    "predecessor_amendment": "PASS",
+    "repair_amendment": "PASS"
+  },
+  "persisted_matches": true,
+  "verdict": "P110-PASS"
+}
+
+=== stderr ===

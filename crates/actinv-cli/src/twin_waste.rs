@@ -101,6 +101,44 @@ fn sha256(bytes: &[u8]) -> String {
         .collect()
 }
 
+/// Serde's internally tagged unit variants accept and discard extra map
+/// entries, even when the enum has `deny_unknown_fields`. Check the raw
+/// extension first so every external-tritium status has an exact wire shape;
+/// typed deserialization below remains responsible for field values/types.
+fn validate_external_tritium_keys(extension: &Value) -> Result<(), String> {
+    let Some(components) = extension.get("components").and_then(Value::as_object) else {
+        return Ok(());
+    };
+    for (component_id, component) in components {
+        let Some(external) = component.get("external_tritium").and_then(Value::as_object) else {
+            continue;
+        };
+        let Some(status) = external.get("status").and_then(Value::as_str) else {
+            continue;
+        };
+        let expected: Option<BTreeSet<&str>> = match status {
+            "not_applicable" | "required" => Some(BTreeSet::from(["status"])),
+            "declared" => Some(BTreeSet::from([
+                "status",
+                "source",
+                "excludes_activation",
+                "activity_bq",
+            ])),
+            _ => None,
+        };
+        if let Some(expected) = expected {
+            let actual: BTreeSet<&str> = external.keys().map(String::as_str).collect();
+            if actual != expected {
+                return Err(format!(
+                    "component '{component_id}' external_tritium status '{status}' must contain exactly these fields: {}",
+                    expected.into_iter().collect::<Vec<_>>().join(", ")
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
 fn validate_component_membership(
     groups: &HashMap<String, Vec<String>>,
     extension: &WasteExtension,
@@ -331,6 +369,7 @@ pub(crate) fn evaluate(
     input_name: &str,
     base: &Path,
 ) -> Result<(Value, Value), String> {
+    validate_external_tritium_keys(extension_value)?;
     let extension: WasteExtension = serde_json::from_value(extension_value.clone())
         .map_err(|error| format!("invalid twin waste block: {error}"))?;
     if extension.schema != WASTE_SCHEMA {
@@ -523,6 +562,42 @@ mod tests {
         }))
         .unwrap();
         assert!(validate_external_step_keys(&component, &[1]).is_err());
+    }
+
+    #[test]
+    fn raw_external_tritium_keys_are_exact_for_each_status() {
+        let extension = |external| serde_json::json!({"components":{"component-a":{"external_tritium":external}}});
+        for status in ["not_applicable", "required"] {
+            let valid = serde_json::json!({"status":status});
+            assert!(validate_external_tritium_keys(&extension(valid.clone())).is_ok());
+            let mut extra = valid;
+            extra["surprise"] = serde_json::json!(true);
+            let error = validate_external_tritium_keys(&extension(extra)).unwrap_err();
+            assert!(
+                error.contains("must contain exactly these fields"),
+                "{error}"
+            );
+        }
+
+        let declared = serde_json::json!({
+            "status":"declared", "source":"test source",
+            "excludes_activation":true, "activity_bq":{"1":2.0}
+        });
+        assert!(validate_external_tritium_keys(&extension(declared.clone())).is_ok());
+        assert!(serde_json::from_value::<ExternalTritium>(declared.clone()).is_ok());
+
+        let mut extra_declared = declared.clone();
+        extra_declared["surprise"] = serde_json::json!(true);
+        assert!(validate_external_tritium_keys(&extension(extra_declared)).is_err());
+
+        let mut missing = declared.clone();
+        missing.as_object_mut().unwrap().remove("activity_bq");
+        assert!(validate_external_tritium_keys(&extension(missing)).is_err());
+
+        let mut wrong_type = declared;
+        wrong_type["source"] = serde_json::json!(false);
+        assert!(validate_external_tritium_keys(&extension(wrong_type.clone())).is_ok());
+        assert!(serde_json::from_value::<ExternalTritium>(wrong_type).is_err());
     }
 
     #[test]

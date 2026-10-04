@@ -30,6 +30,14 @@ PROTOCOL = ROOT / "protocols/ACTINV-P116_PROTOCOL.md"
 PROTOCOL_SHA256 = "cf5841dafbd2470604b36d75fdafa2e2fc730e33abb26f6e44a4068e6388a8aa"
 P116_CHECKPOINT = "6db45f75b96fbcdfd2bfda0f6a603c10fbf88672"
 P116_AMENDMENT = ROOT / "protocols/ACTINV-P116_AMENDMENT_A.md"
+P116_AMENDMENT_SHA256 = "3fa71d7c7537dbe9132f5de8d9f4a64d33126f065f4f41aef7496fab38be372c"
+P116_DISCOVERY = ROOT / "results/failures/p116_initial/discovery.json"
+P116_DISCOVERY_SHA256 = "15f73cb664ff13a4ca75d7edcf098d2ee2ce557ff00f9d95cb23c366b612e441"
+P116_ORIGINAL_CHECKPOINT = "cb786f75acc456cb0157c6d5f38d9b6308140d85"
+P116_ORIGINAL_G0_SHA256 = "2b1b8cbaad1073be4b16e5d21f284d41702ad2c0b53a36e6ee7b7f4e3e32af93"
+P116_ORIGINAL_G1_SHA256 = "75e94554ac5d9d909e5eac59bd676c649db685eb52ffbba8a2340d5603251c21"
+P116_ORIGINAL_G1_LOG_SHA256 = "a836211e55cbd461718935edf88e91b07f9ecd572007f9eadd0028623a15cde2"
+PRODUCTION_CHANGE_PATH = "crates/actinv-cli/src/twin_waste.rs"
 P115_HISTORY_RECORD = ROOT / "results/p115_failure_commit.json"
 P115_PROTOCOL_SHA256 = "266dd88898b2e64b77c517d18a221576bf9d1c6fda107ccdf62c45e0321f95ba"
 P115_VERDICT_SHA256 = "4e09b66d5b1c74cafecdc278d9d5ce786292007a7dea0ab6e8c8588f7255faac"
@@ -85,8 +93,11 @@ CLASS_NAMES = ("A", "B", "C", "above_class_c", "unknown")
 
 CONTROL_FILES = (
     "protocols/ACTINV-P116_PROTOCOL.md",
+    "protocols/ACTINV-P116_AMENDMENT_A.md",
+    "results/failures/p116_initial/discovery.json",
     "controls/check_p116.py", "controls/check_p116_verdict.py",
     "controls/test_p116_oracle.py", "controls/test_p116_seal.py", "controls/test_p116_verdict.py",
+    "controls/p116_repair_control.py", "controls/test_p116_repair.py",
     "controls/check_p107_history.py",
     "controls/check_p115_history.py", "controls/test_p115_history.py",
     "results/p115_failure_commit.json", "results/p115_verdict.json", "results/g3_p115_quality.json",
@@ -383,15 +394,42 @@ def _p115_repair_evidence() -> tuple[dict[str, str], dict[str, str], bool]:
     return observed_sources, observed_files, bool(receipt_ok)
 
 
-def _repair_policy(g0: object) -> bool:
-    return (isinstance(g0, dict) and type(g0.get("repair_rounds")) is int
-            and g0.get("repair_rounds") == 0
-            and g0.get("historical_p115_verified") is True
-            and _current_round_is_zero())
+def _p116_amendment_registered() -> bool:
+    registry = ROOT / "protocols/protocol_hash.txt"
+    expected = f"{P116_AMENDMENT_SHA256}  protocols/ACTINV-P116_AMENDMENT_A.md"
+    try:
+        return (_sha(P116_AMENDMENT) == P116_AMENDMENT_SHA256
+                and expected in registry.read_text(encoding="utf-8").splitlines())
+    except OSError:
+        return False
+
+
+def _p116_repair_evidence() -> dict:
+    try:
+        import p116_repair_control
+        return p116_repair_control.verify(ROOT)
+    except (ImportError, OSError, ValueError, RuntimeError, KeyError, TypeError, AttributeError):
+        return {"pass": False}
+
+
+def _repair_policy(g0: object, repair_evidence: object | None = None) -> bool:
+    if (not isinstance(g0, dict) or type(g0.get("repair_rounds")) is not int
+            or g0.get("repair_rounds") != 1 or g0.get("historical_p115_verified") is not True
+            or g0.get("repair_amendment_sha256") != P116_AMENDMENT_SHA256
+            or g0.get("repair_amendment_registered") is not True or not _p116_amendment_registered()):
+        return False
+    current = repair_evidence if isinstance(repair_evidence, dict) else _p116_repair_evidence()
+    recorded = g0.get("p116_repair_evidence")
+    if not isinstance(current, dict) or current.get("pass") is not True:
+        return False
+    try:
+        return _json_bytes(current) == _json_bytes(recorded)
+    except (TypeError, ValueError, OverflowError):
+        return False
 
 
 def _current_round_is_zero() -> bool:
-    """P116 opens with no amendment and no P116 failure archive."""
+    """Historical opening-state check; the live registered P116 round is one."""
     amendment_path = ROOT / "protocols/ACTINV-P116_AMENDMENT_A.md"
     failure_archive = ROOT / "results/failures/p116_initial"
     registry = ROOT / "protocols/protocol_hash.txt"
@@ -514,6 +552,33 @@ def _current_rust_source_hashes() -> dict[str, str]:
     return {path: _sha(ROOT / path) for path in sorted(paths)}
 
 
+def _production_population_allowed(inherited: object, production: object) -> bool:
+    """Allow exactly the registered production edit in the 100-file Rust tree."""
+    if not isinstance(inherited, dict) or not isinstance(production, dict):
+        return False
+    if set(inherited) != set(production) or len(inherited) != 100:
+        return False
+    if any(not isinstance(path, str) or not isinstance(value, str)
+           or re.fullmatch(r"[0-9a-f]{64}", value) is None
+           for mapping in (inherited, production) for path, value in mapping.items()):
+        return False
+    changed = {path for path in inherited if inherited[path] != production[path]}
+    return changed == {PRODUCTION_CHANGE_PATH}
+
+
+def _production_rust_candidate(checkpoint_hashes: dict[str, str], *, verify_current_sources: bool) -> dict[str, str]:
+    if verify_current_sources:
+        return _current_rust_source_hashes()
+    sealed = _read_json(G0)
+    candidate = sealed.get("production_rust_sha256") if isinstance(sealed, dict) else None
+    if not isinstance(candidate, dict):
+        raise ValueError("round-one G0 production Rust map is missing")
+    normalized = dict(candidate)
+    if not _production_population_allowed(checkpoint_hashes, normalized):
+        raise ValueError("sealed production map is outside the single permitted Rust change")
+    return normalized
+
+
 def _g0_base(*, verify_current_sources: bool = True) -> dict:
     fixture_check = _fixture_check()
     prior, historical_p105, historical_p112, historical_p113, prior_hashes_present = _prior_verdicts()
@@ -531,16 +596,20 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
     hashes = {name: _sha(ROOT / name) for name in CONTROL_FILES}
     try:
         checkpoint_hashes = _checkpoint_source_hashes()
-        current_hashes = _current_rust_source_hashes() if verify_current_sources else dict(checkpoint_hashes)
-        checkpoint_sources_match = (len(checkpoint_hashes) == 100 and len(current_hashes) == 100
+        production_hashes = _production_rust_candidate(checkpoint_hashes,
+                                                       verify_current_sources=verify_current_sources)
+        checkpoint_sources_match = (len(checkpoint_hashes) == 100 and len(production_hashes) == 100
             and all(isinstance(value, str) and len(value) == 64 for value in checkpoint_hashes.values())
-            and current_hashes == checkpoint_hashes)
+            and production_hashes == checkpoint_hashes)
+        production_sources_allowed = _production_population_allowed(checkpoint_hashes, production_hashes)
     except (OSError, ValueError, RuntimeError, KeyError, TypeError):
-        checkpoint_hashes, current_hashes, checkpoint_sources_match = {}, {}, False
+        checkpoint_hashes, production_hashes, checkpoint_sources_match = {}, {}, False
+        production_sources_allowed = False
     try:
         retained_hashes, retained_matches = _repair_evidence()
     except (OSError, ValueError, TypeError, KeyError, RuntimeError):
         retained_hashes, retained_matches = {}, False
+    repair_evidence = _p116_repair_evidence()
     request_ids = fixture_check.get("request_ids", [])
     counts = fixture_check.get("request_component_target_counts", [])
     p113_failure = _read_json(ROOT / "results/p113_verdict.json")
@@ -655,7 +724,12 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
           **prior, "prior_verdicts_match": prior_hashes_present,
           "request_count": fixture_check.get("request_count", 0), "request_ids": request_ids,
           "case_targets": counts, "request_component_target_counts": counts,
-          "repair_rounds": 0,
+          "repair_rounds": (1 if repair_evidence.get("pass") is True
+                            and _p116_amendment_registered() else None),
+          "repair_amendment_sha256": P116_AMENDMENT_SHA256,
+          "repair_amendment_registered": _p116_amendment_registered(),
+          "repair_discovery_sha256": _sha(P116_DISCOVERY),
+          "p116_repair_evidence": repair_evidence,
           "p113_inherited_g0_sha256": INITIAL_G0_SHA256,
           "p113_g0_file_sha256": _sha(ROOT / "results/g0_p113_twin_waste.json"),
           "p113_failure_verdict_sha256": _sha(ROOT / "results/p113_verdict.json"),
@@ -711,8 +785,11 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
           "inherited_rust_checkpoint": P116_CHECKPOINT,
           "inherited_rust_source_count": len(checkpoint_hashes),
           "inherited_rust_sha256": checkpoint_hashes,
-          "inherited_rust_current_sha256": current_hashes,
+          "inherited_rust_current_sha256": production_hashes,
           "inherited_rust_population_matches": checkpoint_sources_match,
+          "production_rust_sha256": production_hashes,
+          "production_rust_source_count": len(production_hashes),
+          "production_rust_population_allowed": production_sources_allowed,
           "initial_g0_sha256": INITIAL_G0_SHA256,
           "original_fixture_sha256": FIXTURE_SHA256,
           "component_target_count": fixture_check.get("component_target_count", 0),
@@ -722,7 +799,7 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
         and pack_mirror and g0["fixture_population_matches"]
         and historical_p105 and historical_p112 and historical_p113 and historical_p114_verified
         and historical_p115_verified and p115_failure_record_matches
-        and g0["p115_unexecuted_artifacts_absent"] and g0["repair_rounds"] == 0
+        and g0["p115_unexecuted_artifacts_absent"]
         and isinstance(g0["p115_initial_archive_sha256"], dict)
         and len(g0["p115_initial_archive_sha256"]) == 68
         and isinstance(g0["p115_amended_archive_sha256"], dict)
@@ -733,7 +810,10 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
         and type(g0["request_count"]) is int and g0["request_count"] >= 24
         and type(g0["component_target_count"]) is int and g0["component_target_count"] >= 32
         and all(hashes.values()) and _safe_control_hashes(hashes)
-        and _repair_policy(g0)
+        and _sha(P116_DISCOVERY) == P116_DISCOVERY_SHA256
+        and g0["repair_amendment_registered"] is True
+        and repair_evidence.get("pass") is True
+        and _repair_policy(g0, repair_evidence)
         and g0["p113_failure_verdict_is_terminal_fail"]
         and g0["p113_failure_record_matches"]
         and g0["p113_g0_file_sha256"] == INITIAL_G0_SHA256
@@ -742,7 +822,7 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
         and retained_matches and len(retained_hashes) == 59
         and g0["initial_g0_sha256"] == INITIAL_G0_SHA256
         and g0["original_fixture_sha256"] == FIXTURE_SHA256
-        and checkpoint_sources_match and len(checkpoint_hashes) == 100
+        and production_sources_allowed and len(production_hashes) == 100
         and g0["p114_failure_record_matches"]
         and g0["p114_failure_verdict_sha256"] == P114_FAILURE_VERDICT_SHA256
         and g0["p114_partial_g3_sha256"] == P114_FAILURE_G3_SHA256
@@ -791,11 +871,22 @@ def _compare(actual: object, expected: object, path: str = "result") -> list[str
         return errors
     if isinstance(expected, bool):
         return [] if type(actual) is bool and actual is expected else [f"{path}: boolean differs"]
+    if (re.fullmatch(r".*\.evaluation\.row_fractions\[\d+\]\.limit", path)
+            and isinstance(expected, (int, float)) and not isinstance(expected, bool)):
+        return [] if _close(actual, expected) else [f"{path}: numeric limit differs"]
     if isinstance(expected, (int,float)):
         if isinstance(expected, int):
             return [] if type(actual) is int and actual == expected else [f"{path}: integer value/type differs"]
         return [] if _close(actual,expected) else [f"{path}: numeric value differs"]
     return [] if actual == expected else [f"{path}: value differs"]
+
+
+def _same_json_document(left: object, right: object) -> bool:
+    """Compare mutation documents without Python's int/float equality alias."""
+    try:
+        return _json_dump(left) == _json_dump(right)
+    except (TypeError, ValueError, OverflowError):
+        return False
 
 
 def validate_waste_output(output: object, case: dict) -> list[str]:
@@ -1057,7 +1148,7 @@ def _mutations(records: list[tuple[dict, Path, dict]]) -> dict[str, bool]:
     mutations.append(("facility_component_count", doc))
     for name, changed in mutations:
         errors = validate_waste_output(changed, case)
-        tests[name] = bool(errors and changed != baseline)
+        tests[name] = bool(errors and not _same_json_document(changed, baseline))
     for unknown_id in ("missing_metadata", "required_h3"):
         pair = next((row for row in records if row[0].get("id") == unknown_id), None)
         if pair is None:
@@ -1075,7 +1166,8 @@ def _mutations(records: list[tuple[dict, Path, dict]]) -> dict[str, bool]:
             else:
                 target[field] = None if target[field] is not None else "invented"
             tests[f"{unknown_id}_{field}"] = bool(
-                validate_waste_output(changed, unknown_case) and changed != unknown_report)
+                validate_waste_output(changed, unknown_case)
+                and not _same_json_document(changed, unknown_report))
     return tests
 
 

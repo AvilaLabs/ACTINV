@@ -1,0 +1,37 @@
+{
+  "argv": [
+    "python3",
+    "controls/check_p107.py",
+    "--no-write"
+  ],
+  "child_exit_code": 0,
+  "cwd": ".",
+  "error": null,
+  "gate": "p107_scientific_replay",
+  "log_path": "target/p116-p107_scientific_replay.log",
+  "log_sha256": "8c59c021d6c9268d82a4bb29624bb2bdae5682d9d436b89c6d5ed9d6d1a1b725",
+  "phase": "P116",
+  "resources": {
+    "cgroup_limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1252136-i9643800.scope",
+    "environment": {
+      "CARGO_BUILD_JOBS": "1",
+      "RAYON_NUM_THREADS": "2",
+      "RUST_TEST_THREADS": "1"
+    },
+    "platform": "linux",
+    "tmpdir": {
+      "filesystem": "ext4",
+      "mount_point": "/",
+      "path": "target/preflight-tmp"
+    }
+  },
+  "schema": "actinv-roadmap-gate-receipt-1",
+  "status": "completed",
+  "timeout_s": 600.0
+}

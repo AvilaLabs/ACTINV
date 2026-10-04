@@ -11,15 +11,23 @@ from pathlib import Path
 from unittest.mock import patch
 
 import check_p116 as controls
+import p116_repair_control as repair
+from test_p116_repair import P116RepairControlTests
 
 
 class P116SealTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # Full historical/source verification is deliberately performed once;
+        # policy and write/read tests below reuse this immutable report.
+        cls.g0_report = controls._g0_base()
+
     def test_g0_binds_frozen_population_p115_failure_and_current_checkpoint(self):
-        report = controls._g0_base()
+        report = self.g0_report
         self.assertTrue(report["pass"], report)
         self.assertEqual(report["schema"], "actinv-p116-twin-waste-g0-1")
         self.assertEqual(report["phase"], "P116")
-        self.assertEqual(report["repair_rounds"], 0)
+        self.assertEqual(report["repair_rounds"], 1)
         self.assertEqual(report["request_count"], 35)
         self.assertEqual(report["component_target_count"], 138)
         self.assertTrue(report["historical_p113_verified"])
@@ -31,29 +39,38 @@ class P116SealTests(unittest.TestCase):
         self.assertTrue(report["p115_unexecuted_artifacts_absent"])
         self.assertEqual(report["inherited_rust_checkpoint"], controls.P116_CHECKPOINT)
         self.assertEqual(report["inherited_rust_source_count"], 100)
-        self.assertTrue(report["inherited_rust_population_matches"])
-        self.assertTrue(controls._repair_policy(report))
+        self.assertFalse(report["inherited_rust_population_matches"])
+        self.assertEqual(report["production_rust_source_count"], 100)
+        self.assertTrue(report["production_rust_population_allowed"])
+        old_rust = report["inherited_rust_sha256"]
+        new_rust = report["production_rust_sha256"]
+        self.assertEqual(set(new_rust), set(old_rust))
+        self.assertEqual({path for path in old_rust if old_rust[path] != new_rust[path]},
+                         {"crates/actinv-cli/src/twin_waste.rs"})
+        evidence = report["p116_repair_evidence"]
+        self.assertTrue(evidence["pass"])
+        self.assertEqual(evidence["checkpoint"], repair.CHECKPOINT)
+        self.assertEqual(len(evidence["original_source_sha256"]), 200)
+        self.assertEqual(len(evidence["original_retained_sha256"]), 88)
+        self.assertEqual(len(evidence["original_rust_sha256"]), 100)
+        self.assertEqual(evidence["original_g0_sha256"], repair.ORIGINAL_G0_SHA256)
+        self.assertEqual(evidence["original_g1_sha256"], repair.ORIGINAL_G1_SHA256)
+        self.assertEqual(evidence["original_quality_gate_count"], 25)
+        self.assertTrue(controls._repair_policy(report, evidence))
         self.assertEqual(set(report["control_sha256"]), set(controls.CONTROL_FILES))
 
-    def test_p116_opening_round_is_strict_zero_separate_from_p115_history(self):
-        report = controls._g0_base()
-        self.assertTrue(controls._repair_policy(report))
+    def test_registered_repair_round_is_strict_one_separate_from_p115_history(self):
+        report = self.g0_report
+        evidence = report["p116_repair_evidence"]
+        self.assertTrue(controls._repair_policy(report, evidence))
         self.assertFalse(controls._repair_policy({**report, "repair_rounds": False}))
-        self.assertFalse(controls._repair_policy({**report, "repair_rounds": 1}))
-        self.assertFalse(controls._repair_policy({**report, "historical_p115_verified": False}))
-        with tempfile.TemporaryDirectory(prefix="p116-current-round-") as temp:
-            root = Path(temp)
-            (root / "protocols").mkdir()
-            registry = root / "protocols/protocol_hash.txt"
-            registry.write_text("", encoding="utf-8")
-            with patch.object(controls, "ROOT", root):
-                self.assertTrue(controls._current_round_is_zero())
-                amendment = root / "protocols/ACTINV-P116_AMENDMENT_A.md"
-                amendment.write_text("unregistered amendment", encoding="utf-8")
-                self.assertFalse(controls._current_round_is_zero())
-                amendment.unlink()
-                (root / "results/failures/p116_initial").mkdir(parents=True)
-                self.assertFalse(controls._current_round_is_zero())
+        self.assertFalse(controls._repair_policy({**report, "repair_rounds": 0}, evidence))
+        self.assertFalse(controls._repair_policy({**report, "historical_p115_verified": False}, evidence))
+        self.assertFalse(controls._repair_policy({**report, "repair_amendment_sha256": "0" * 64}, evidence))
+        altered_evidence = copy.deepcopy(evidence)
+        altered_evidence["original_g1_sha256"] = "0" * 64
+        self.assertFalse(controls._repair_policy(report, altered_evidence))
+        self.assertFalse(controls._repair_policy({**report, "p116_repair_evidence": altered_evidence}, evidence))
 
     def test_control_hash_seal_rejects_missing_traversal_and_symlink_entries(self):
         with tempfile.TemporaryDirectory(prefix="p116-control-seal-") as temp:
@@ -80,7 +97,8 @@ class P116SealTests(unittest.TestCase):
     def test_g0_seal_write_read_replay_and_prior_history_mutation(self):
         with tempfile.TemporaryDirectory(prefix="p116-g0-") as temp:
             path = Path(temp) / "g0.json"
-            with patch.object(controls, "G0", path):
+            with patch.object(controls, "G0", path), patch.object(
+                    controls, "_g0_base", return_value=copy.deepcopy(self.g0_report)):
                 with contextlib.redirect_stdout(io.StringIO()):
                     self.assertEqual(controls.g0(seal=True), 0)
                     persisted = json.loads(path.read_text(encoding="utf-8"))

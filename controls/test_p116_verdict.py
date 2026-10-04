@@ -117,14 +117,24 @@ class P116VerdictTests(unittest.TestCase):
                 self.assertFalse(verdict._resource_inspection_ok({**evidence, "limits": {**limits, "pids.max": "129"}}))
                 self.assertFalse(verdict._resource_inspection_ok({**evidence, "log_sha256": "0" * 64}))
 
-    def test_current_round_zero_is_strict_and_p115_history_is_separate(self):
-        report = {"repair_rounds": 0, "historical_p115_verified": True}
-        with patch.object(controls, "_current_round_is_zero", return_value=True):
+    def test_current_round_one_requires_registered_matching_evidence(self):
+        evidence = {"pass": True, "discovery_sha256": "1" * 64}
+        report = {"repair_rounds": 1, "historical_p115_verified": True,
+                  "p116_repair_evidence": evidence,
+                  "repair_amendment_sha256": controls.P116_AMENDMENT_SHA256,
+                  "repair_amendment_registered": True}
+        with patch.object(controls, "_p116_amendment_registered", return_value=True), \
+             patch.object(controls, "_p116_repair_evidence", return_value=evidence):
             self.assertTrue(controls._repair_policy(report))
-            self.assertFalse(controls._repair_policy({"repair_rounds": False}))
-            self.assertFalse(controls._repair_policy({"repair_rounds": 1}))
-        with patch.object(controls, "_current_round_is_zero", return_value=False):
-            self.assertFalse(controls._repair_policy(report))
+            for invalid_round in (False, True, 0, 1.0, 2):
+                self.assertFalse(controls._repair_policy({**report, "repair_rounds": invalid_round}))
+            self.assertFalse(controls._repair_policy({**report, "historical_p115_verified": False}))
+            self.assertFalse(controls._repair_policy({**report, "p116_repair_evidence": {
+                **evidence, "discovery_sha256": "2" * 64}}))
+        with patch.object(controls, "_p116_amendment_registered", return_value=False):
+            self.assertFalse(controls._repair_policy(report, evidence))
+        with patch.object(controls, "_p116_amendment_registered", return_value=True):
+            self.assertFalse(controls._repair_policy(report, {**evidence, "pass": False}))
 
     def test_g1_request_evidence_requires_each_identity_digest(self):
         counts = [4] * 33 + [3, 3]
@@ -169,18 +179,47 @@ class P116VerdictTests(unittest.TestCase):
     def test_history_source_validation_uses_full_implementation_tree(self):
         historical = b"checkpoint source"
         source_hash = _sha(historical)
-        paths = {f"crates/mock/src/{index}.rs" for index in range(100)}
-        hashes = {path: source_hash for path in paths}
+        twin_path = "crates/actinv-cli/src/twin_waste.rs"
+        repaired = b"strict twin parser"
+        paths = {f"crates/mock/src/{index}.rs" for index in range(99)} | {twin_path}
+        inherited = {path: source_hash for path in paths}
+        hashes = {**inherited, twin_path: _sha(repaired)}
         g3 = {"production_rust_sha256": hashes}
         record = {"commit_sha": "c" * 40}
+        def git_blob(commit, path):
+            self.assertEqual(commit, record["commit_sha"])
+            return repaired if path == twin_path else historical
         with patch("check_p116._rust_paths_at_commit", return_value=paths), \
-             patch("check_p116._checkpoint_source_hashes", return_value=hashes), \
-             patch("check_p116._git_blob", return_value=historical):
+             patch("check_p116._checkpoint_source_hashes", return_value=inherited), \
+             patch("check_p116._git_blob", side_effect=git_blob):
             self.assertTrue(verdict._source_commit_matches(g3, record))
+            wrong_hash = {**hashes, twin_path: "f" * 64}
+            self.assertFalse(verdict._source_commit_matches({"production_rust_sha256": wrong_hash}, record))
         with patch("check_p116._rust_paths_at_commit", return_value=paths | {"crates/extra.rs"}), \
-             patch("check_p116._checkpoint_source_hashes", return_value=hashes), \
-             patch("check_p116._git_blob", return_value=historical):
+             patch("check_p116._checkpoint_source_hashes", return_value=inherited), \
+             patch("check_p116._git_blob", side_effect=git_blob):
             self.assertFalse(verdict._source_commit_matches(g3, record))
+        with patch("check_p116._checkpoint_source_hashes", return_value=inherited), \
+             patch("check_p116._current_rust_source_hashes", return_value=hashes):
+            self.assertTrue(verdict._source_commit_matches(g3, None))
+        with patch("check_p116._checkpoint_source_hashes", return_value=inherited), \
+             patch("check_p116._current_rust_source_hashes", return_value=inherited):
+            self.assertFalse(verdict._source_commit_matches(g3, None))
+
+    def test_production_source_allowance_rejects_other_changes_and_population_drift(self):
+        twin_path = "crates/actinv-cli/src/twin_waste.rs"
+        inherited = {f"crates/mock/src/{index}.rs": "a" * 64 for index in range(99)}
+        inherited[twin_path] = "a" * 64
+        repaired = {**inherited, twin_path: "b" * 64}
+        self.assertTrue(verdict._production_population_ok(repaired, inherited))
+        self.assertFalse(verdict._production_population_ok(inherited, inherited))
+        self.assertFalse(verdict._production_population_ok({**repaired,
+            "crates/mock/src/0.rs": "c" * 64}, inherited))
+        self.assertFalse(verdict._production_population_ok({**repaired,
+            "crates/extra.rs": "c" * 64}, inherited))
+        self.assertFalse(verdict._production_population_ok({**repaired, twin_path: False}, inherited))
+        self.assertFalse(verdict._production_population_ok({path: value for path, value in repaired.items()
+            if path != "crates/mock/src/0.rs"}, inherited))
 
 
 if __name__ == "__main__":

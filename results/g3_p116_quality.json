@@ -1,0 +1,1190 @@
+{
+  "ci_status": "pending exact-commit implementation CI",
+  "gates": {
+    "full_p116_read_only_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p116.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/full_p116_read_only_replay.log",
+      "log_sha256": "fb9195f87534194d8aab6a16b730bf97d7c7b00c5fe2d5c07cbccd157d3adbed",
+      "name": "full_p116_read_only_replay",
+      "receipt_path": "results/quality/p116/full_p116_read_only_replay.json",
+      "receipt_sha256": "2c41bf31c4530854b4ffd72b918e3cd2ef1e3aff6a11c3fbd86bedcee4ceb458",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1254048-i9625402.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "gate_recorder_regressions": {
+      "argv": [
+        "python3",
+        "scripts/test_run_p116_gate.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/gate_recorder_regressions.log",
+      "log_sha256": "da7c66ca30e1f3ede6305ce3ff0257060360c84ee24a7665d84c4ae523328b77",
+      "name": "gate_recorder_regressions",
+      "receipt_path": "results/quality/p116/gate_recorder_regressions.json",
+      "receipt_sha256": "7584312532baff27edfcfbf57613b603d81afc34dea1f23a21577de5a133e7e8",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177689-i9569584.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "handbook_build": {
+      "argv": [
+        "/home/connoravila/Documents/actinv/scratch/mdbook-demo/bin/mdbook",
+        "build"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/handbook_build.log",
+      "log_sha256": "52c3c6019765112a0cf9a1823b19a000586fe39a97ad78b81216a7cbdb5d516c",
+      "name": "handbook_build",
+      "receipt_path": "results/quality/p116/handbook_build.json",
+      "receipt_sha256": "50659b2b9cf5c861bf8292d020e85b15941dab380c875b2fbc235f575e69f61f",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1251526-i9650339.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "handbook_chromium": {
+      "argv": [
+        "python3",
+        "target/p103-docs-smoke.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/handbook_chromium.log",
+      "log_sha256": "6fea601703061aba45cb74649d28b8403679568fd9436d4a96416185c96c644b",
+      "name": "handbook_chromium",
+      "receipt_path": "results/quality/p116/handbook_chromium.json",
+      "receipt_sha256": "46d5ac08548c9caad0b278a3054d76bc1d783392cc6fe3fa921aea960ac60b7b",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1251601-i9625023.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "handbook_links": {
+      "argv": [
+        "python3",
+        "scripts/check_docs.py",
+        "dist/docs"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/handbook_links.log",
+      "log_sha256": "042e133be84546e38529b23b64e332216b7c7d90bf8c04fc001dc401e117cf5c",
+      "name": "handbook_links",
+      "receipt_path": "results/quality/p116/handbook_links.json",
+      "receipt_sha256": "895251d790bcc0806b11ff4b202e61d5a5b038b25c65ff4f6dde4e39910c80c9",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1251587-i9640277.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p107_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p107_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p107_replay.log",
+      "log_sha256": "e0be01d08c791e4d9b4baed6b5299cecf687776088a2e4d012814bb2cab3678e",
+      "name": "historical_p107_replay",
+      "receipt_path": "results/quality/p116/historical_p107_replay.json",
+      "receipt_sha256": "8e8667a5f678bd4f9a967ca416459a113c81271e157813175c364de280aad739",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1237694-i9615899.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p108_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p108_verdict.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p108_replay.log",
+      "log_sha256": "1c9032456fecedb646b1d959bebf5bcefb14fa103d850c489e1a3269cb49d0b8",
+      "name": "historical_p108_replay",
+      "receipt_path": "results/quality/p116/historical_p108_replay.json",
+      "receipt_sha256": "972a45e5733945adea2fe11325cfeae5bd6dbdb24e429569efb176ee81c58a04",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1237803-i9642056.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p109_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p109_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p109_replay.log",
+      "log_sha256": "793ec2baa8a240394504c37aeea8a90f49b6fdc015b8d95c3b30a331348263ce",
+      "name": "historical_p109_replay",
+      "receipt_path": "results/quality/p116/historical_p109_replay.json",
+      "receipt_sha256": "e39d0431f8d84956683fde481c3866df631f4132586177346f6fde673adf5ad8",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1237915-i9634520.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p110_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p110_verdict.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p110_replay.log",
+      "log_sha256": "4a20b711c03cec9d8a1c8c785d20fbc7ad00ac64a4bbebf9bc4eb3778cfdd694",
+      "name": "historical_p110_replay",
+      "receipt_path": "results/quality/p116/historical_p110_replay.json",
+      "receipt_sha256": "1d0f032433e808f10defba88addd2476a019b747e9c7f92fb1e66deb7e1596b2",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1238031-i9630839.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p111_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p111_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p111_replay.log",
+      "log_sha256": "0e213749c847f8026099fd16a169ace7a912be4be64003a2d39e4a22e0f6cbe7",
+      "name": "historical_p111_replay",
+      "receipt_path": "results/quality/p116/historical_p111_replay.json",
+      "receipt_sha256": "611df0e11ea2f35a5b2b0c403e3cc086d67cc65dc99295a5e205e27fd68c6470",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1238146-i9642093.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p112_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p112_verdict.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p112_replay.log",
+      "log_sha256": "abdecdf0cd55632437f418a609d0d21f1424cf0fad6659cf5e73d4bf8edef6eb",
+      "name": "historical_p112_replay",
+      "receipt_path": "results/quality/p116/historical_p112_replay.json",
+      "receipt_sha256": "4030b5a57ae605983c4394faba5fb2a5f6c90c03acb2111a90fb6c1f7e9918bb",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1238295-i9634561.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p113_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p113_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p113_replay.log",
+      "log_sha256": "ce00515469f4a8a63d685c8fd2b693dcde73fe7ec5297bd4e2caea01124ce4a5",
+      "name": "historical_p113_replay",
+      "receipt_path": "results/quality/p116/historical_p113_replay.json",
+      "receipt_sha256": "6d7c002a88c55de6def7467066b539f0f2a7ba96c2a97330840abe80a5c550b2",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1238566-i9642161.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p114_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p114_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p114_replay.log",
+      "log_sha256": "4c19ee7f1495e8ee509d24511bbdea1a7bb65573c9f15443b742dc56af999d6b",
+      "name": "historical_p114_replay",
+      "receipt_path": "results/quality/p116/historical_p114_replay.json",
+      "receipt_sha256": "ae75e27b8ef0636d29c228e11aa6754f56d3d50ff4a412e47ca4edcc66a1f11c",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1239189-i9642233.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "historical_p115_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p115_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/historical_p115_replay.log",
+      "log_sha256": "a8405fc946aa07f744a860e8533c57b5c3c18848c3605a8d50fb836009c90899",
+      "name": "historical_p115_replay",
+      "receipt_path": "results/quality/p116/historical_p115_replay.json",
+      "receipt_sha256": "4cb17142e6f4273c67d1b9d724d1b816f1d91473d26067956beaa7f7ce3984f6",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1241433-i9631229.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p105_child_lifecycle_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p105_children.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p105_child_lifecycle_regressions.log",
+      "log_sha256": "0143566113177c34c01617619f7684529a6fabf297c6f757c0b478e5b4602da2",
+      "name": "p105_child_lifecycle_regressions",
+      "receipt_path": "results/quality/p116/p105_child_lifecycle_regressions.json",
+      "receipt_sha256": "9c8e325cc884c2f3f83a0a666d8450d618da80d71d45fe2250ed0026f1f8a21a",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1237671-i9627260.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p105_scientific_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p105.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p105_scientific_replay.log",
+      "log_sha256": "a5eab8cdde178d49f9e1ffcffc95f95af52129eb77acafed2135d99a95f47b67",
+      "name": "p105_scientific_replay",
+      "receipt_path": "results/quality/p116/p105_scientific_replay.json",
+      "receipt_sha256": "1555243b4f51f71d639b72d6b5ea6fdcfd14e673489eb106775228d4f8d437e8",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1252054-i9625084.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p107_scientific_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p107.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p107_scientific_replay.log",
+      "log_sha256": "8c59c021d6c9268d82a4bb29624bb2bdae5682d9d436b89c6d5ed9d6d1a1b725",
+      "name": "p107_scientific_replay",
+      "receipt_path": "results/quality/p116/p107_scientific_replay.json",
+      "receipt_sha256": "57d91395af46fb044246d9080904f96cbb23165d5d1dac244031b85906f2a463",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1252136-i9643800.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p108_scientific_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p108.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p108_scientific_replay.log",
+      "log_sha256": "3afc5b535e3ad9bab18990c480e17028c0663a3fcbf734e34d4133588e695a34",
+      "name": "p108_scientific_replay",
+      "receipt_path": "results/quality/p116/p108_scientific_replay.json",
+      "receipt_sha256": "1a0cd3b8b47921620e61d06d67e60ea3d63e59e9e6a6baec8bcbb1c05e9b87c1",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1252171-i9628984.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p110_scientific_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p110.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p110_scientific_replay.log",
+      "log_sha256": "2987537e35dcdc70763eb73a86111296394078b6dd6cbec732f14281cb3c2f13",
+      "name": "p110_scientific_replay",
+      "receipt_path": "results/quality/p116/p110_scientific_replay.json",
+      "receipt_sha256": "bfc7c297b57b6d1abd537e02de13acc4f474b3653534946cf69d13ef287eeb4d",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1252321-i9636243.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p111_scientific_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p111.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p111_scientific_replay.log",
+      "log_sha256": "12f90e6b98502eba63db25b0f53073b30e9ba794924ad5b19f9fb255ac6fa62f",
+      "name": "p111_scientific_replay",
+      "receipt_path": "results/quality/p116/p111_scientific_replay.json",
+      "receipt_sha256": "3de743cf7ff0c39c105d85ef82e88cbdd564cde5f29d8d89dc3681b76b357ce4",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1252683-i9643899.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p112_scientific_replay": {
+      "argv": [
+        "python3",
+        "controls/check_p112.py",
+        "--no-write"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p112_scientific_replay.log",
+      "log_sha256": "ffe342777c33a7bada89105286856625060de9b868ae6981513598cc12c2f872",
+      "name": "p112_scientific_replay",
+      "receipt_path": "results/quality/p116/p112_scientific_replay.json",
+      "receipt_sha256": "6bee740c581cd378172a68e3e6a6ff2eaaf42d44cbab7c5933d7f7fe8a1e62d6",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1253148-i9646452.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p113_history_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p113_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p113_history_regressions.log",
+      "log_sha256": "8fcf0ee705912ed332326e974b0f25c957302b24d27509202931a1556cf2ab9b",
+      "name": "p113_history_regressions",
+      "receipt_path": "results/quality/p116/p113_history_regressions.json",
+      "receipt_sha256": "b6622dafa46204c9a2068a67daf68af1914d55da032c239f6b73c66498a593b7",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1234715-i9622963.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p114_history_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p114_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p114_history_regressions.log",
+      "log_sha256": "5b40119de7c7467d84cae48b923db85fcce04173527ea384437cf21b36e3526a",
+      "name": "p114_history_regressions",
+      "receipt_path": "results/quality/p116/p114_history_regressions.json",
+      "receipt_sha256": "ca631b32c6946085d9d73680915a0ff7dd920db9898970a4091574f8a2a565a2",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1235388-i9613007.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p115_history_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p115_history.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p115_history_regressions.log",
+      "log_sha256": "9c7d32233b2c859694cf8b6827fa44da47d897fcb7ab012e27f426f06252f36c",
+      "name": "p115_history_regressions",
+      "receipt_path": "results/quality/p116/p115_history_regressions.json",
+      "receipt_sha256": "a5516ba89522f886e86530108ff07d225b19aa6eecbba81464a0774321a92be6",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1237638-i9619804.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p116_oracle_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p116_oracle.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p116_oracle_regressions.log",
+      "log_sha256": "5fa769cf82eb2c407ee183680beef4f8d0dc757a9fb2fab81dcd3d39174a6797",
+      "name": "p116_oracle_regressions",
+      "receipt_path": "results/quality/p116/p116_oracle_regressions.json",
+      "receipt_sha256": "8eacce7a4405ce706b532cd5ed14bdec0f3e59ca91700ca82d1f7c61891fbc69",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177641-i9565982.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p116_seal_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p116_seal.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p116_seal_regressions.log",
+      "log_sha256": "2b70b63f61d25c202fcc969f2120b9a0eaebc713ce035acd298a430454dc85eb",
+      "name": "p116_seal_regressions",
+      "receipt_path": "results/quality/p116/p116_seal_regressions.json",
+      "receipt_sha256": "9cf006d04dc5e37e02a88cdf414958e02dd6eed02f6f4eff4fb74b4462e382bf",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1180206-i9569896.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "p116_verdict_regressions": {
+      "argv": [
+        "python3",
+        "controls/test_p116_verdict.py"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/p116_verdict_regressions.log",
+      "log_sha256": "35b4472250deee3366eea17752a99fe8adb54d1eca8e0beba86d45aa03300219",
+      "name": "p116_verdict_regressions",
+      "receipt_path": "results/quality/p116/p116_verdict_regressions.json",
+      "receipt_sha256": "82a8b3882dbe0f33336e90c06a8547def6e69203f974b4ad9ad25c23662c62b4",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177668-i9576841.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "release_build": {
+      "argv": [
+        "cargo",
+        "build",
+        "--release",
+        "-p",
+        "actinv-cli"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/release_build.log",
+      "log_sha256": "270d1956188977e71a281ab1f8b5a01456cac69c6f4cfc75f72a54009c1b4649",
+      "name": "release_build",
+      "receipt_path": "results/quality/p116/release_build.json",
+      "receipt_sha256": "ec4986f3329dce746fbe8daf8729b1dc201e6f8c1658ddccd1f25cfcf1574008",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1179690-i9577132.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "rust_fmt": {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/rust_fmt.log",
+      "log_sha256": "d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1",
+      "name": "rust_fmt",
+      "receipt_path": "results/quality/p116/rust_fmt.json",
+      "receipt_sha256": "059aa108a9b89bbc2cbe81e5958dea37bf4027743d28328210a7fc37d644a6a7",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177761-i9554661.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "workspace_check": {
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/workspace_check.log",
+      "log_sha256": "c6a0ea85a98afe3bfd9e52324c0f8e9bd1664dba9afc3d25c358a4297a7a7d46",
+      "name": "workspace_check",
+      "receipt_path": "results/quality/p116/workspace_check.json",
+      "receipt_sha256": "f60d75630c570aed67d41f75beaac86b1832f07f09b56153cd55da59749a16a3",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177794-i9554665.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "workspace_clippy": {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/workspace_clippy.log",
+      "log_sha256": "f0a54df55b91fa4984629f70a0c8ddc2125c57b02387826d4236d2b078410b3d",
+      "name": "workspace_clippy",
+      "receipt_path": "results/quality/p116/workspace_clippy.json",
+      "receipt_sha256": "c2932bd7bf8719bd6cea211fc2556e00b178d3a2f4506c0f0d1a138e70d59505",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177874-i9562567.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    },
+    "workspace_tests": {
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--all-targets",
+        "--all-features"
+      ],
+      "exit_code": 0,
+      "log_path": "results/quality/p116/workspace_tests.log",
+      "log_sha256": "12730ded6429777add3349e958a2abd14fd355eac3c29ba2ecdcb0fcb754e998",
+      "name": "workspace_tests",
+      "receipt_path": "results/quality/p116/workspace_tests.json",
+      "receipt_sha256": "422fd1bf54c9bdfa91e94568ab7105f1016cef95487651ceba4ca104ecbc2f96",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177943-i9573772.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      }
+    }
+  },
+  "pass": true,
+  "phase": "P116",
+  "production_rust_sha256": {
+    "crates/actinv-cli/src/assimilate.rs": "b0f78a7666b9752c35948029d02cd52cd03a8b9596566a425b5512f30bd72237",
+    "crates/actinv-cli/src/bin/actinv.rs": "1b47334f832ba5a39dfb16cd01f108c1ddc7926c89506cdadd13c9d75b16b78e",
+    "crates/actinv-cli/src/budget.rs": "fa7627d38648f8808006894309b3c3c1ad5e93c7ccef74604ff013eb8ba8455c",
+    "crates/actinv-cli/src/command.rs": "6049aa941b749bd18f5dc4851304492f0db920ff5ded1e7de941b582f0df85d5",
+    "crates/actinv-cli/src/decide.rs": "f94367b7bff4b23b0db198c08e8894b06e17b5fc1b43d01fe4a7a5cd78ce35e2",
+    "crates/actinv-cli/src/evalspread.rs": "dd9d19b9f71194417bc089ecb995d73cc631970c02305340999beb5fec8db59c",
+    "crates/actinv-cli/src/lib.rs": "192fe4ad229d242dc07d5bf6378f54fdec4d09c0a1ea04161320dba7199dbe71",
+    "crates/actinv-cli/src/optimize.rs": "7d4f384ac0075b5246757fe30fe53c6efd023da3ba11f54c77d95a7037830c28",
+    "crates/actinv-cli/src/surrogate.rs": "4f5170c98d54041561921d33223ad8568fa212b2d68ebf5b832f54288786740c",
+    "crates/actinv-cli/src/twin.rs": "ce6088b610747b49bf7f56a037f4a003d1927bd6efc3dfe37b449cf66e880e61",
+    "crates/actinv-cli/src/twin_waste.rs": "e125e4a03e44d4175d9c82a10cd143888aecdcdf97084a2f2a5c92bd73416d5b",
+    "crates/actinv-cli/src/waste.rs": "18acc9564e52f5286f33a4b6edc33c0a00ee5ba903f0c3bcb031d92568ff8c15",
+    "crates/actinv-cli/src/waste_bounds.rs": "86e3199305a8a8526bfd95dbdedb587de932118d9a71027884ebb215801315e4",
+    "crates/actinv-cli/src/waste_budget.rs": "23a41809157ce20357d4a0b4cdf805f79ba83aed28e8ca437f3262da68c162da",
+    "crates/actinv-cli/src/waste_composition.rs": "5f24307f0b6674dff0a692bfe74dd694c025e151e12c77640b6d102ed5e3cb30",
+    "crates/actinv-cli/src/waste_composition_solve.rs": "bacb623a8229cc4f86b3c5fe3f76a89c3c5c99f1cc364cdbaa5e8f1a7eafc569",
+    "crates/actinv-cli/src/waste_composition_verify.rs": "363ae16501e33ff002db3afe5d12e76f39168cf516472350e59779fe2442a1b0",
+    "crates/actinv-cli/src/waste_intrusion.rs": "32fd0c623960581995bea73744fadd52c07f1f3d0e9b7d9cbe03a03edfe1688c",
+    "crates/actinv-cli/src/worker.rs": "1e99fbd1109027fbb2587686c9fcbbee1c8805bfe45134888181f40e252f4d51",
+    "crates/actinv-cli/src/workflow.rs": "d5b166fe18acf3332c110a405097642dc6037f517a9373c5631b576589135edd",
+    "crates/actinv-cli/tests/data_command.rs": "d88714714fb240cca43c69b78652a0473b363f3a394c53500fb2e4dd047e9cf4",
+    "crates/actinv-cli/tests/validation.rs": "4ce61a0b0447bf63bef9d89403c16e0bfaa281c68c96340aaac82b572f5b69ee",
+    "crates/actinv-cli/tests/version.rs": "d821ad302a2fa82e0ce91e9aae194c42488d05b71b2453d40c8d683b3ad8c3a1",
+    "crates/actinv-core/examples/p92_balance.rs": "129fcd87769fdd9cf208940ed4115e2a1b36f5a82e60ba1df2e219ab12f53917",
+    "crates/actinv-core/src/bin/cache_probe.rs": "ade32188ff57bb40e9f763a59a2c33e3f7b447779a0fb3495b5257472609ae03",
+    "crates/actinv-core/src/bin/cram_probe.rs": "27dbf073400a7ad3afb64f913fa809951eb800d0de3f8f11688606a1c2f64943",
+    "crates/actinv-core/src/bin/fission_probe.rs": "ea3e12d69ed22100717638e89c8573e4a850f3ce7671c8aa34a0fe34d2d1f49c",
+    "crates/actinv-core/src/bin/flux_probe.rs": "a55ee49f8d0544fc05fec3e6d1ec5363de814db041b298087aeeb983362899b3",
+    "crates/actinv-core/src/bin/parser_fuzz_probe.rs": "520cbeebb16e0cd289992f32dc7e302b3abfb459f5a1faf88946f23e42c53146",
+    "crates/actinv-core/src/bin/photon_probe.rs": "abc4a8dff5025eceb8a7bad5aead22763961e3208b8b693ad0e99bca2f9cc66c",
+    "crates/actinv-core/src/bin/prepared_probe.rs": "b5df928a0dc4ade085d8d3c8d5a03cadb61c9aebd6f2befef1f6214228723582",
+    "crates/actinv-core/src/bin/uncertainty_probe.rs": "a95e9328bfe93b23db3134930b2a0a8cedfcd0e076f6784bd5bc403151b93798",
+    "crates/actinv-core/src/bin/unit_probe.rs": "81eba337cb1d0e7c2ae060de43b21b989936dd2106a17db5ef5af8d6526e1a0f",
+    "crates/actinv-core/src/chain.rs": "6c6a77f00e8c3a832e5c4b4c006cf78b3f1402c1530621b685b2f468e0862b23",
+    "crates/actinv-core/src/clearance.rs": "d6a725cea709c2eb48ecfe1716e02d0c64f265451c387adc49dc2be9b15b74d8",
+    "crates/actinv-core/src/cram.rs": "79f13e05c2111f1dae06f5069bcc569939f0d3c55d6456b4d6cba5fb5e474cba",
+    "crates/actinv-core/src/cram_coeffs.rs": "ad87f5e6af18c6b4c4a0bb79d93d6530d7e45ae521e8521080f6106ca3b847a9",
+    "crates/actinv-core/src/damage.rs": "d005ca5ab2b6d127002d903c504a95241a7e8b562a30742779d8e54aabbb1b37",
+    "crates/actinv-core/src/doppler.rs": "92e693b957514a6889a5e4bde3182f498385289c306fd0d03becf572a2cd8c6f",
+    "crates/actinv-core/src/finite.rs": "a14163d327d3792e1936a18e5cae84f8cfa2ac57b8d083a747b588e56c9e6a2f",
+    "crates/actinv-core/src/flux.rs": "303429ede4c69afccf05e347dbe820f241c623a70cad4b43356c349528f940dd",
+    "crates/actinv-core/src/gas.rs": "f358759dc25c7bb42d81006074a2f0b8ef679c0623725a3eef85cbe1bccbf6d4",
+    "crates/actinv-core/src/lib.rs": "3fb7ac6b8c9a7380a0f3b1809303f288720d55b0d77d293c693acc833c368ef0",
+    "crates/actinv-core/src/mesh.rs": "f27b3774c6de095eaf1179da86c85575defcfd42d6b6af24ce41ba73d10a6e89",
+    "crates/actinv-core/src/photon.rs": "39cb950426d3eb528e0695ef1c87af865f155bf999b545d3452ad81241d1e728",
+    "crates/actinv-core/src/prune.rs": "f243c865a425bb35b5f71978148a422a52945bd1d06b857369c3ea7f26a74435",
+    "crates/actinv-core/src/quantity.rs": "ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9",
+    "crates/actinv-core/src/r2s.rs": "f511d47d3fd36c6df5ab8b0aad85b31b010d2add9113611022a0b78baf9b5db4",
+    "crates/actinv-core/src/radiological.rs": "0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2",
+    "crates/actinv-core/src/reverse.rs": "0539da50e2eac494d0e0aacff9c7f1f5a254b098e5cba338da53633ee9a5113a",
+    "crates/actinv-core/src/run.rs": "9fccfee575f1ddfad229a7e7d225150f10f4e8aa776cc2e6e748850b9c558eb7",
+    "crates/actinv-core/src/shielding.rs": "0ebf3068ace5641afe5fa4034eca7c12a8914d3d7f3760606007fbceda93c21e",
+    "crates/actinv-core/src/source_adapter.rs": "f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f",
+    "crates/actinv-core/src/sparse.rs": "0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc",
+    "crates/actinv-core/src/spec.rs": "7ae5c4c8b2b3adcf75ec7a8b9457b276b06a8e79816e66be33c43c145b2df480",
+    "crates/actinv-core/src/study.rs": "eaece838acf380190719c9157dfad1d1fd3538b7f8c62bacc1120c11550a3226",
+    "crates/actinv-core/src/uncertainty.rs": "fc680cbc0d3aeb479867c6c9ef86b7e33f6fb03642062172d7350c9c4606f8a5",
+    "crates/actinv-core/src/waste.rs": "3ed8bb1d468cc19b1fb12dfe17d64065e00ddbfa5f47936e2b6cf638a6cbb607",
+    "crates/actinv-core/src/waste_bounds.rs": "be9e39811dd496fc2622c5412beba3f5548f8153723a283f872815e652888d7f",
+    "crates/actinv-core/src/waste_composition.rs": "de783f5d4eb301e8846839d9e54c9ba3da68824c1e85f7e020cef64bcace2f3c",
+    "crates/actinv-core/src/waste_intrusion.rs": "efd2a4aa216652e627f70f854b9bff400228c4dd8cdfeb1070d11ab9841aaed6",
+    "crates/actinv-data/src/activation.rs": "4a977463891ed236c6ab73cce785f1e70c2362fc4103934239f900d7ed2820c9",
+    "crates/actinv-data/src/bin/dump.rs": "6faac1a95a31f3a6f2f7d0dc29fafcabd36768737070580c3e6e12f47d2d0464",
+    "crates/actinv-data/src/bin/p18_corpus_probe.rs": "4f7afb6c2b4e388596f235f05d63555d03d573d18061e17463c863cdda0aa9e8",
+    "crates/actinv-data/src/bin/p18b_corpus_probe.rs": "8dcf50a0b11631db0877e30be9397750b0b4c64eb3435ad601b2f753939effef",
+    "crates/actinv-data/src/bin/p18b_oracle_probe.rs": "558b6ed1e6c1689196b0fe8b1467bd122a44113869e0754614f286b0d38bb66a",
+    "crates/actinv-data/src/bin/p20_collapse_probe.rs": "570eaa5c84956e3aa0c96d0c7fb684ba3fa8174c18b7a1ec392497fa1927bf56",
+    "crates/actinv-data/src/bin/p20_corpus_probe.rs": "fa5a5d5a1cd0f73f79aa83fa7f2907ce431b0e1c425075cd86bfe6f8a1361e1b",
+    "crates/actinv-data/src/bin/prepared_data_probe.rs": "446faa941069cc65c28a35d331197fc6865b5f0e6e8163c9d7fcf55e57685366",
+    "crates/actinv-data/src/builder.rs": "4d86b97ae1dde51c6ce6590f980e77bb19786b891da4080596ccc4dafa111ff8",
+    "crates/actinv-data/src/composition.rs": "584399c14c25b24db09311622696bd2e5691dd3045cbaec0ce406ba1fefbf024",
+    "crates/actinv-data/src/covariance.rs": "6165db1e3338634fb9320a1b22988836e8f16d68b47bd732715238886c9a26d4",
+    "crates/actinv-data/src/decay.rs": "4be7dff38361d3e28775ed387b6cd8553768fbac69eea518176a3ffa23b385cf",
+    "crates/actinv-data/src/doppler.rs": "8c9a0ef4a16ea5a54f14f087e9c66a258e7f1d9bee51f49b891318b958e89588",
+    "crates/actinv-data/src/endf.rs": "53d7df649c930efa373c97127c817df9a0c1c712c60d97b409a5bd509282e252",
+    "crates/actinv-data/src/fission.rs": "f2e4dce7d2bc566cbf5c32cf68b0fe3007f2b722b65eeecad17f2d81661b2011",
+    "crates/actinv-data/src/groups.rs": "3c331b49d8464947c27fb8299152d4faa7658f18c658a476e416eaf08296e0f3",
+    "crates/actinv-data/src/lib.rs": "91567ccc466c91bb10866f82545b1b929eeefa008a19920075cfe8f0bf669018",
+    "crates/actinv-data/src/library.rs": "f1f80249839874ce695f530f662182663f888e87949d8aaeca8638ae5326c871",
+    "crates/actinv-data/src/normalize.rs": "7041f7a53856f6409ac8d95fd44f683a5c18f496537339668d1953bd49261e6d",
+    "crates/actinv-data/src/prepared.rs": "43bc4ea5590a4069fb5b503b798222a661a9c14718727bfddd77c55366414762",
+    "crates/actinv-data/src/processing.rs": "b80de2abfc574df37e79db771aa164a754d3bad62c8fc2205b732609376b9700",
+    "crates/actinv-data/src/resonance.rs": "8ad5bdfae5acaf6083729c2e4161c7e1f8c584cabf6c6ddc0d57d8b63edf1b54",
+    "crates/actinv-data/src/shielding.rs": "b5596655068fd267e3422f60ea77ab69857d68cd6b3b4f8556dc084f041b98cc",
+    "crates/actinv-data/src/tables.rs": "888923a68d6a7841c75883615f7cc738fc4a06ca5ec4f1e13ce3ea9146146d2f",
+    "crates/actinv-gui/build.rs": "ba3dad3e79ca77e324554f943598000c523e4d777c4190b1682926d37bba8ab6",
+    "crates/actinv-gui/src/app.rs": "866620532f9eea91b35af5587ac9b7453cf6a4fc546a753c9c6e3e3bad52366d",
+    "crates/actinv-gui/src/capture.rs": "b5bfdb71a16a36b954d52770c8ce0258f961c89d41ee9f8a3a95c7dae30dfc9e",
+    "crates/actinv-gui/src/lib.rs": "a25925117a2fe9daf1f6e7692750004c90ebbf4a273993af149cf8f822e91f9f",
+    "crates/actinv-gui/src/main.rs": "b7ef2af84b0ee8b6131803590a421027375c821220611557b6d17f87795d93c6",
+    "crates/actinv-gui/src/model.rs": "a2b345b2da356ed5953c8830f94e183c6d563b33c88b477f01e27ea93ce67764",
+    "crates/actinv-gui/src/options.rs": "0d9a2fcdd592060a5b8a5ee3e71822af940fb18fbfa2d51600c554815528d0e4",
+    "crates/actinv-gui/src/smoke.rs": "580f83ada2dd1d061f2e162b62a540a980ef813716c0f0a8f094deba7eb19e0d",
+    "crates/actinv-gui/src/sweep.rs": "7b4d57895ef1d06348f1dd1411fe94f3c80cc76fa7b56d62453301813f63443c",
+    "crates/actinv-gui/src/tour.rs": "0869eb3e7b2e0d8468a4708484d173905d56b979f3cfe21eb20b9d5613225685",
+    "crates/actinv-gui/src/transport.rs": "6b3fd8795175e8b95be412719615e6018752353ea6dc30271d68966d01088a43",
+    "crates/actinv-gui/src/visuals.rs": "35842c494d2e654999d1e065cbcbf1e833e8d63f1c46004924c40cc345eafe25",
+    "crates/actinv-gui/src/web.rs": "6d6a672fc17c024234adc6fa887876131e5fdec8d5b33ca43d94fa868e86ca84",
+    "crates/actinv-gui/src/web_app.rs": "5644807412fbe51d0e381d6be5e9b314f420088f629ab82ab2f5e7b665da30b9",
+    "crates/actinv-gui/src/worker.rs": "cbc1185941ba34139062108560d2ab8931c94c24ac7281e9c86bc022dd4c7d0a"
+  },
+  "release_build": {
+    "binary_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+    "exit_code": 0,
+    "log_sha256": "270d1956188977e71a281ab1f8b5a01456cac69c6f4cfc75f72a54009c1b4649"
+  },
+  "repair_rounds": 1,
+  "resource_inspection": {
+    "exit_code": 0,
+    "limits": {
+      "cpu.max": "200000 100000",
+      "memory.max": "6442450944",
+      "memory.swap.max": "0",
+      "pids.max": "128"
+    },
+    "log_path": "results/quality/p116/resource_inspection.log",
+    "log_sha256": "5cfbbf8179e776c109b2ecdda9d0f27a7c6858173677f606aa1a9815138905c7"
+  },
+  "resource_limits": {
+    "coordinator_jobs": "serial",
+    "cpu_quota_percent": 200,
+    "disk_tmpdir": "target/preflight-tmp",
+    "memory_max_bytes": 6442450944,
+    "memory_swap_max_bytes": 0,
+    "tasks_max": 128
+  },
+  "schema": "actinv-p116-quality-1",
+  "workspace_tests": {
+    "failed": 0,
+    "ignored": 2,
+    "passed": 485
+  }
+}

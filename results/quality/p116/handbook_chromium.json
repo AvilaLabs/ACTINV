@@ -8,7 +8,7 @@
   "error": null,
   "gate": "handbook_chromium",
   "log_path": "target/p116-handbook_chromium.log",
-  "log_sha256": "acee73fd1086b592436e6c5d7854d66c55cf7b120613a0ef8fb489e89e9f8e17",
+  "log_sha256": "6fea601703061aba45cb74649d28b8403679568fd9436d4a96416185c96c644b",
   "phase": "P116",
   "resources": {
     "cgroup_limits": {
@@ -17,7 +17,7 @@
       "memory.swap.max": "0",
       "pids.max": "128"
     },
-    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1012737-i9390614.scope",
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1251601-i9625023.scope",
     "environment": {
       "CARGO_BUILD_JOBS": "1",
       "RAYON_NUM_THREADS": "2",

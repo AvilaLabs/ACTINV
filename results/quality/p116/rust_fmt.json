@@ -20,7 +20,7 @@
       "memory.swap.max": "0",
       "pids.max": "128"
     },
-    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1011573-i9405740.scope",
+    "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p1177761-i9554661.scope",
     "environment": {
       "CARGO_BUILD_JOBS": "1",
       "RAYON_NUM_THREADS": "2",

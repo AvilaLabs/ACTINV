@@ -1,0 +1,11 @@
+{
+  "exact_replay_equal": true,
+  "g0_exact_replay_equal": true,
+  "g0_result_sha256": "7e08a5f94e2cce3d62229c1e1233938270420c27556abb1a81e3f304ebc4cf78",
+  "g1_result_sha256": "74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9",
+  "pass": true,
+  "phase": "P116",
+  "protocol_sha256": "cf5841dafbd2470604b36d75fdafa2e2fc730e33abb26f6e44a4068e6388a8aa",
+  "schema": "actinv-p116-twin-waste-g2-1",
+  "separate_output_paths_byte_identical": true
+}

@@ -181,11 +181,17 @@ def _g0_ok(g0: dict) -> bool:
         and len(g0["p114_initial_archive_sha256"]) == 176
         and isinstance(g0.get("p114_final_archive_sha256"), dict)
         and len(g0["p114_final_archive_sha256"]) == 196
-        and type(g0.get("repair_rounds")) is int and g0.get("repair_rounds") == 0
-        and __import__("check_p116")._repair_policy(g0)
+        and type(g0.get("repair_rounds")) is int and g0.get("repair_rounds") == 1
+        and check_p116._repair_policy(g0, independently_derived.get("p116_repair_evidence"))
         and type(g0.get("inherited_rust_source_count")) is int
         and g0.get("inherited_rust_source_count") == 100
-        and g0.get("inherited_rust_population_matches") is True and _prior_ok(g0))
+        and g0.get("inherited_rust_population_matches") is False
+        and type(g0.get("production_rust_source_count")) is int
+        and g0.get("production_rust_source_count") == 100
+        and g0.get("production_rust_population_allowed") is True
+        and _production_population_ok(g0.get("production_rust_sha256"),
+                                      g0.get("inherited_rust_sha256"))
+        and _prior_ok(g0))
 
 
 def _g1_ok(g1: dict, g0: dict) -> bool:
@@ -308,7 +314,7 @@ def _quality_ok(g3: dict, g0: dict) -> bool:
     return (g3.get("schema") == EXPECTED_G3_SCHEMA and g3.get("phase") == "P116"
         and g3.get("pass") is True and type(g3.get("repair_rounds")) is int
         and g3.get("repair_rounds") == g0.get("repair_rounds")
-        and g0.get("repair_rounds") == 0
+        and type(g0.get("repair_rounds")) is int and g0.get("repair_rounds") == 1
         and g3.get("resource_limits") == RESOURCES
         and isinstance(gates, dict) and set(gates) == REQUIRED_GATES
         and all(isinstance(gate, dict) and gate.get("name") == name and _receipt_ok(name, gate)
@@ -323,8 +329,8 @@ def _quality_ok(g3: dict, g0: dict) -> bool:
         and release.get("log_sha256") == gates["release_build"].get("log_sha256")
         and _resource_inspection_ok(inspection)
         and isinstance(source_hashes, dict) and len(source_hashes) == 100
-        and source_hashes == g0.get("inherited_rust_sha256")
-        and all(digest(v) for v in source_hashes.values()))
+        and source_hashes == g0.get("production_rust_sha256")
+        and _production_population_ok(source_hashes, g0.get("inherited_rust_sha256")))
 
 
 def _resource_inspection_ok(inspection: object) -> bool:
@@ -343,6 +349,16 @@ def _resource_inspection_ok(inspection: object) -> bool:
         and inspection.get("limits") == expected_limits)
 
 
+def _production_population_ok(hashes: object, inherited: object) -> bool:
+    """Amendment A allows exactly the twin parser change in the 100-file tree."""
+    if (not isinstance(hashes, dict) or not isinstance(inherited, dict)
+            or len(hashes) != 100 or set(hashes) != set(inherited)
+            or not all(digest(value) for value in (*hashes.values(), *inherited.values()))):
+        return False
+    changed = {path for path in hashes if hashes[path] != inherited[path]}
+    return changed == {"crates/actinv-cli/src/twin_waste.rs"}
+
+
 def _source_commit_matches(g3: dict, record: dict | None) -> bool:
     hashes = g3.get("production_rust_sha256")
     if not isinstance(hashes, dict) or len(hashes) != 100:
@@ -351,7 +367,8 @@ def _source_commit_matches(g3: dict, record: dict | None) -> bool:
         try:
             from check_p116 import _current_rust_source_hashes, _checkpoint_source_hashes
 
-            return hashes == _current_rust_source_hashes() == _checkpoint_source_hashes()
+            return (hashes == _current_rust_source_hashes()
+                    and _production_population_ok(hashes, _checkpoint_source_hashes()))
         except (ImportError, OSError, ValueError, RuntimeError, KeyError):
             return False
     commit = record.get("commit_sha")
@@ -364,8 +381,9 @@ def _source_commit_matches(g3: dict, record: dict | None) -> bool:
                 or set(hashes) != set(_checkpoint_source_hashes())):
             return False
         checkpoint_hashes = _checkpoint_source_hashes()
-        return all(_sha_bytes(_git_blob(commit, path)) == expected == checkpoint_hashes[path]
-                   for path, expected in hashes.items())
+        return (_production_population_ok(hashes, checkpoint_hashes)
+                and all(_sha_bytes(_git_blob(commit, path)) == expected
+                        for path, expected in hashes.items()))
     except (ImportError, OSError, ValueError, RuntimeError, KeyError):
         return False
 

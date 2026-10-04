@@ -1,0 +1,28 @@
+{
+  "ci_evidence_sha256": null,
+  "evidence_sha256": {
+    "results/g0_p116_twin_waste.json": "7e08a5f94e2cce3d62229c1e1233938270420c27556abb1a81e3f304ebc4cf78",
+    "results/g1_p116_twin_waste.json": "74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9",
+    "results/g2_p116_twin_waste.json": "5e1cb32140fa7fe3000bf2d22e54b30af021d992f689d1a1a7ff1038b979fb6b",
+    "results/g3_p116_quality.json": "746876fc7c2d9da2432c5e1a816702a648f18c9ae920798c2639f9670082dd5b"
+  },
+  "gates": {
+    "CI_evidence_consistent": "PASS",
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3_CI": "PENDING",
+    "G3_local": "PASS",
+    "historical_p113_failure": "PASS",
+    "historical_p114_failure": "PASS",
+    "historical_p115_failure": "PASS",
+    "protocol": "PASS",
+    "source_commit": "PASS"
+  },
+  "historical_source_verification": false,
+  "implementation_commit": null,
+  "implementation_record_sha256": null,
+  "phase": "P116",
+  "schema": "actinv-p116-verdict-1",
+  "verdict": "P116-LOCAL-PASS"
+}

@@ -100,6 +100,20 @@ class P116OracleTests(unittest.TestCase):
         self.assertIsNone(controls.normalized_output_sha256(
             output, root_b / relative, relative))
 
+    def test_row_limits_accept_numeric_representation_but_reject_bad_numbers(self):
+        path = "waste_classification.components[0].targets[0].evaluation.row_fractions[0].limit"
+        self.assertEqual(controls._compare(67000.0, 67000, path), [])
+        self.assertTrue(controls._compare(67000.01, 67000, path))
+        self.assertTrue(controls._compare(True, 1, path))
+        self.assertTrue(controls._compare(float("inf"), 1, path))
+        self.assertTrue(controls._compare(float("nan"), 1, path))
+        self.assertTrue(controls._compare(4.0, 4, "result.assigned_cell_count"))
+        self.assertTrue(controls._compare(2.0, 2, "result.table"))
+
+    def test_mutation_document_comparison_distinguishes_int_from_float(self):
+        self.assertFalse(controls._same_json_document({"count": 4.0}, {"count": 4}))
+        self.assertTrue(controls._same_json_document({"count": 4}, {"count": 4}))
+
 
 if __name__ == "__main__":
     unittest.main()

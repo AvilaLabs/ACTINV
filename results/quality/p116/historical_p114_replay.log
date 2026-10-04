@@ -1,0 +1,21 @@
+=== stdout ===
+{
+  "checkpoint_commit": "88e9251a6c7a61db2293ee9772457e4f51842253",
+  "derived_verdict": "P114-FAIL",
+  "derived_verdict_matches_persisted": true,
+  "executed_gate_receipts_verified": 9,
+  "failure_record_verified": true,
+  "final_amended_archive_files_verified": 196,
+  "frozen_p114_control_files_verified": 62,
+  "g0_unsealed_g1_g2_unrun": true,
+  "historical_source_verification": false,
+  "initial_archive_files_verified": 176,
+  "initial_oracle_failure_receipt_verified": true,
+  "pass": true,
+  "rust_files_verified_against_checkpoint": 100,
+  "successful_gate_receipts_verified": 8,
+  "terminal_seal_failure_exit_1_verified": true,
+  "verdict": "P114-FAIL"
+}
+
+=== stderr ===
