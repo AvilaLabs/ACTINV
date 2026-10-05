@@ -347,3 +347,26 @@ priority — each needs its own protocol before any code changes.
   and data exposure before any new scoring/calibration phase.
 - 2026-10-04 — **Local preflight/self-contained child bounds.** Read-only review while waiting for P112 closure CI found unbounded subprocess calls in `controls/g1_self_contained.py` and `scripts/preflight.py`; the self-contained helper also changes HOME. Neither was executed locally in this review. Before future local execution, separately scope bounded child lifecycles, disk-backed temporary paths and task-specific home/cache variables with regression coverage. Existing remote CI success does not override workstation cgroup and child-lifecycle requirements. This is outside P113's nominal twin scope.
 - 2026-10-04 — **Dedicated-row missing-property oracle gap.** P113 static review found the frozen P105 independent oracle includes active dedicated-row nuclides in row arithmetic even when their properties are absent. The production core excludes those nuclides and reports incomplete coverage with the known-subtotal class. Preserve the historical P105 source and verdict bytes. P113 independently filters the known-property inventory before delegating row arithmetic and restores unknown metadata from the full inventory; literal missing-property regressions pin this behavior. A separately scoped audit should identify other consumers of the frozen oracle that need the same distinction.
+
+- 2026-10-05 — **Gaps found while scoping the FARIS coupling** (FARIS release 0.2 plan: per-component activation
+  and decay heat at each outage and replacement of a 30-year tokamak operating history). Not scheduled; each needs
+  its own protocol before code changes.
+  1. **`actinv run` has no opt-in rebinning.** A single-point neutron spectrum must have exactly 709 values or
+     `custom` boundaries matching the library to 1e-12 (specification.md "Projectile and spectrum"). The
+     equal-flux-per-unit-lethargy rebin exists only in the mesh path (`mesh.rs`, `rebin_equal_lethargy`), so a
+     user with a VITAMIN-J 175, CCFE 315 or arbitrary-boundary spectrum must wrap it as a one-cell mesh or rebin
+     it outside ACTINV. FISPACT-II users expect GRPCONVERT here. Proposed: an explicit `rebin` option on the
+     ordinary spec and the Python `Spectrum`, reusing the mesh rule, reporting `source_total`,
+     `destination_total`, underflow and overflow as the mesh path does, and marking the result as assuming a
+     within-group shape (threshold and resonance reaction rates depend on it). Refusing silent rebinning stays
+     the default. Acceptance sketch: flux integral conserved to 1e-12 relative on the covered range; results
+     bit-identical to the one-cell mesh route; a spectrum with energy outside the library range or a 0 eV lower
+     edge refused unless an explicit floor/cap is given, as in mesh mode.
+  2. **Mesh mode uses one material and one schedule for all cells** (specification.md "Independent mesh
+     specification"). Mixed-material tallies (steel, water, coil in one mesh) must be split into one mesh run per
+     material. Proposed: an optional per-cell material reference (a material table keyed by id, cells naming
+     one), keeping prepared-data reuse per (material, rebinned flux) pair. Larger schema change; the
+     single-material form stays valid.
+  Not ACTINV gaps, recorded so they are not re-raised: the coarse (10-group) FARIS spectrum is a FARIS tally
+  choice, fixed by tallying 709 groups there; flux uncertainty is documented as outside the propagated band
+  (qualification.md), and sampling the spectrum belongs to the caller's transport ensemble.
