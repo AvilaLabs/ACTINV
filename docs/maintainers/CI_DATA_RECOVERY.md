@@ -2,12 +2,20 @@
 
 ## Paused checkpoint — 2026-10-04
 
+Later owner direction: publish the saved checkpoint to GitHub even with a
+failing check. This explicitly overrides the earlier no-red-push restriction
+for this publication. The push carries the documented failure and paused
+state; it does not reopen roadmap work or qualify P118. Required pre-push
+hygiene and exact-SHA CI observation still apply. The push result and observed
+CI status are reported separately from the preserved qualification evidence.
+
 The owner requested a good stopping point with docs updated. Work is paused
 after terminal **P118-FAIL**; the next phase is not registered. The cache
 transport below is verified, but waste twin qualification remains incomplete.
 P116/P117/P118 failures and all earlier qualifications retain their recorded
-dispositions. The failed recovery sources and workflow stay in local
-checkpoints; no new push or green CI result is claimed.
+dispositions. The failed recovery sources and workflow were first preserved
+in local checkpoints. Their later publication is owner-authorized; no green
+CI qualification is claimed.
 
 The terminal source/evidence checkpoint is local commit
 `6f3f964cf06ad4e969392b90effbe4f835d183a3` on `roadmap-waste` in
