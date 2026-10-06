@@ -2446,6 +2446,22 @@ mod tests {
     }
 
     #[test]
+    fn equal_lethargy_rebin_matches_independent_overlap_integrals() {
+        let result =
+            rebin_equal_lethargy(&[1.0, 4.0, 16.0], &[8.0, 16.0], &[1.0, 2.0, 8.0, 16.0]).unwrap();
+        for (actual, expected) in result.flux_per_group.iter().zip([4.0, 12.0, 8.0]) {
+            assert!(
+                (actual - expected).abs() < 1.0e-12,
+                "{actual} != {expected}"
+            );
+        }
+        let narrow = rebin_equal_lethargy(&[1.0, 4.0, 16.0], &[8.0, 16.0], &[2.0, 8.0]).unwrap();
+        assert!((narrow.underflow - 4.0).abs() < 1.0e-12);
+        assert!((narrow.destination_total - 12.0).abs() < 1.0e-12);
+        assert!((narrow.overflow - 8.0).abs() < 1.0e-12);
+    }
+
+    #[test]
     fn fispact_requires_a_nonblank_identifying_title() {
         let path = std::env::temp_dir().join(format!(
             "actinv-fispact-blank-title-{}.fluxes",

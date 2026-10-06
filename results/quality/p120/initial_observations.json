@@ -1,0 +1,352 @@
+{
+  "automatic_approval_rejection": {
+    "action": "release build into shared target/nucleide-e2e-build",
+    "process_launched": false,
+    "reason": "Would overwrite the preserved reference CLI before hashing/copying it.",
+    "resolution": "Built candidate in a new separate target/p120-candidate-build directory; reference SHA unchanged and matched the freshly rebuilt registered-base CLI."
+  },
+  "evaluated_raw_shape_attempt": {
+    "disposition": "Positive-only sparse records differ for roundoff-scale populations (largest unmatched inventory 4.405991375498419e-52 atoms/g). The optional evaluated comparison aligns the complete union of nuclides with omitted entries as zero under the unchanged 1e-12 numeric tolerances. Every unmatched value and raw shape mismatch is retained. Mandatory synthetic shape comparisons were not changed.",
+    "receipt": {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/p120_evaluated_smoke.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--data-dir",
+        "/home/connoravila/Documents/actinv/actinv-data"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 1,
+      "log_sha256": "13ed4e8ee7fb30ba36e03156185c29686cccf3121614fe7b98544e42e8f547e9",
+      "name": "evaluated-data-smoke",
+      "receipt_sha256": "a4ef27a103f98e3a727efbeeb50ec87814c908157b8d4b71d7e3f8c536aac295",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3838763-i12239348.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    "report": {
+      "candidate_bin": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+      "candidate_sha256": "780e596dbf36060bcfa6009bace51a402bea10acabe21b682ceb4655290c3706",
+      "checks": {
+        "mapped_heat_W_per_g_by_endpoint": [
+          3.280826580054508e-07,
+          2.507582496375854e-07
+        ],
+        "mapped_matches_independent_explicit_groups": {
+          "absolute_tolerance": 1e-12,
+          "complete_scientific_vector_fields": [
+            "time",
+            "flux",
+            "inventory",
+            "activity",
+            "heat"
+          ],
+          "differences": [
+            "/0/inventory: length differs",
+            "/0/activity_Bq_per_g: keys differ",
+            "/1/inventory: length differs",
+            "/1/activity_Bq_per_g: keys differ"
+          ],
+          "pass": false,
+          "relative_tolerance": 1e-12
+        },
+        "positive_mapped_activity": {
+          "pass": true,
+          "total_activity_Bq_per_g_by_endpoint": [
+            811782.5485980073,
+            620466.7272172584
+          ]
+        },
+        "source_range_inside_library": {
+          "library_boundaries_eV": [
+            1e-05,
+            1000000000.0
+          ],
+          "pass": true,
+          "source_boundaries_eV": [
+            1.0,
+            14000000.0
+          ]
+        },
+        "uniform_lethargy_flux_normalization": {
+          "assumption": "constant flux per unit lethargy within each source group",
+          "fine_group_total_n_cm-2-s-1": 1000000000000.0,
+          "library_group_count": 709,
+          "pass": true,
+          "source_total_n_cm-2-s-1": 1000000000000.0
+        }
+      },
+      "commands": [
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+            "--version"
+          ],
+          "exit_code": 0,
+          "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/version.log",
+          "log_sha256": "34c90e11b43118f1dd4b088e9712215f6e3e93fd93adcceb220817b0a2910dbf",
+          "name": "version"
+        },
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+            "data",
+            "verify",
+            "tendl-2025-neutron",
+            "--output",
+            "/home/connoravila/Documents/actinv/actinv-data"
+          ],
+          "exit_code": 0,
+          "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/data-verify.log",
+          "log_sha256": "b4c1bd13037936dfd602369b63ba13425a1917eb05e8da7ed781d10e6c7312a3",
+          "name": "data-verify"
+        },
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+            "run",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/mapped.json",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/mapped.result.json"
+          ],
+          "exit_code": 0,
+          "input_sha256": "ff8e1d323d5950f8ad35e040a15f6f265b052e73487828d12134b7f7aa37c5ca",
+          "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/mapped.log",
+          "log_sha256": "baecf8510ad0c1d706c28281dedba573dcd121fb0c899b681ee61462bcd6f765",
+          "name": "mapped",
+          "output": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/mapped.result.json",
+          "output_sha256": "bdf5dcbfa2c597f99fac8b2988adf60fa1bfedeb0d8edb02a656792004f1a920"
+        },
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+            "run",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/direct.json",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/direct.result.json"
+          ],
+          "exit_code": 0,
+          "input_sha256": "5dd0f8547d2bfda2d47521a2410ec0f906fbb8e12a633234e39605dacc40592b",
+          "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/direct.log",
+          "log_sha256": "c11e87b4b3941902b1d1a50e32fe044ee39f5b8dc50e8a37c382f2f0d375f68e",
+          "name": "direct",
+          "output": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb/direct.result.json",
+          "output_sha256": "dec49d36b56c64b617dd5111a701eb2dd7845043b378a29351f8677c56b9fed5"
+        }
+      ],
+      "control_sha256": "164e55824a98533b8a2f8efb50615f4761c93f6021185aaf4a6ec545992a837c",
+      "created_utc": "20261006T214413.321900Z",
+      "data": {
+        "artifacts": {
+          "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+          "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+          "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+          "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+        },
+        "bundle": "tendl-2025-neutron",
+        "catalog_version": "1.1.0",
+        "evaluation": "TENDL-2025",
+        "verified_files": [
+          {
+            "bytes": 123897743,
+            "id": "tendl-2025-neutron-709g",
+            "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+            "role": "activation-library",
+            "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+            "status": "verified"
+          },
+          {
+            "bytes": 2653304,
+            "id": "tendl-2025-neutron-709g-index",
+            "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+            "role": "activation-index",
+            "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+            "status": "verified"
+          },
+          {
+            "bytes": 68313052,
+            "id": "endfb-viii-0-decay",
+            "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+            "role": "decay-primary",
+            "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+            "status": "verified"
+          },
+          {
+            "bytes": 45718116,
+            "id": "jeff-3-3-decay",
+            "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+            "role": "decay-fallback",
+            "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+            "status": "verified"
+          },
+          {
+            "bytes": 3538,
+            "id": "actinv-data-notice-v1",
+            "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/legacy/ACTINV-DATA-NOTICE-v1.0.0.md",
+            "role": "notice",
+            "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
+            "status": "verified"
+          }
+        ]
+      },
+      "data_dir": "/home/connoravila/Documents/actinv/actinv-data",
+      "errors": [
+        "mapped/direct complete scientific vectors differ"
+      ],
+      "pass": false,
+      "schema": "actinv-p120-evaluated-smoke-1",
+      "scope": "evaluated-data mapping smoke; not measurement or physics validation",
+      "script_sha256": "164e55824a98533b8a2f8efb50615f4761c93f6021185aaf4a6ec545992a837c",
+      "software": {
+        "actinv_version_output": "actinv 1.4.0",
+        "numpy": "2.5.3",
+        "python": "3.14.4"
+      },
+      "work_dir": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214413.321900Z-c46699fb"
+    }
+  },
+  "exact_equality_checker_attempt": {
+    "disposition": "Initial checker imposed raw equality beyond the registered protocol. The frozen scientific tolerances and fixtures were unchanged; raw equality is recorded as an observation and remains false.",
+    "proof": {
+      "candidate_bin": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+      "candidate_sha256": "780e596dbf36060bcfa6009bace51a402bea10acabe21b682ceb4655290c3706",
+      "checks": [
+        {
+          "detail": "4 steps, 5 of 5 states, 23.4 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/direct.result.json\n",
+          "name": "run:direct",
+          "pass": true
+        },
+        {
+          "detail": "4 steps, 5 of 5 states, 0.9 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/reference-default.result.json\n",
+          "name": "run:reference-default",
+          "pass": true
+        },
+        {
+          "name": "default-document-unchanged",
+          "pass": true
+        },
+        {
+          "detail": "4 steps, 5 of 5 states, 1.1 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/coarse.result.json\n",
+          "name": "run:coarse",
+          "pass": true
+        },
+        {
+          "detail": [],
+          "name": "analytic-kinetics",
+          "pass": true
+        },
+        {
+          "detail": [],
+          "name": "direct-fine-parity",
+          "pass": true
+        },
+        {
+          "name": "direct-fine-raw-scientific-equality",
+          "pass": false
+        }
+      ],
+      "commands": [
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+            "run",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/direct.spec.json",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/direct.result.json"
+          ],
+          "exit_code": 0,
+          "input_sha256": "a46d9ef56b805dde8664d2214dee76c0029af8ff0228dd7966d9f479f02114b4",
+          "log_sha256": "99f85b761b4deb946eeafbb0f18f39eb850d63aa266363a423afcc8e7f310d05",
+          "name": "direct"
+        },
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/nucleide-e2e-build/release/actinv",
+            "run",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/reference-default.spec.json",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/reference-default.result.json"
+          ],
+          "exit_code": 0,
+          "input_sha256": "a46d9ef56b805dde8664d2214dee76c0029af8ff0228dd7966d9f479f02114b4",
+          "log_sha256": "977a8d8f56f75bd97f2fdd63dfc6a40c688dee6823382fe05af4b5ec5191e411",
+          "name": "reference-default"
+        },
+        {
+          "argv": [
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+            "run",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/coarse.spec.json",
+            "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791320935192763462/coarse.result.json"
+          ],
+          "exit_code": 0,
+          "input_sha256": "e26ebc8951804121966e986aa6de25b34d386c7b553c95b4d4229bf073baf76e",
+          "log_sha256": "32d4c6041203aaefb8de50eb64948ec9fcee543e53b93812b152fb56ff8769c2",
+          "name": "coarse"
+        }
+      ],
+      "error": "AssertionError: direct-fine-raw-scientific-equality: None",
+      "evaluated_data": "not used; independent synthetic controls",
+      "fixture_sha256": "a1e906986c56aa3a395ab2ce384d1dec3473c070ca7003df1c217e2dffba7ef2",
+      "numpy": "2.5.3",
+      "pass": false,
+      "protocol_sha256": "9707a33b791a57e3435039478c4c475415754d84b66d33fb8dda820b072245de",
+      "python": "3.14.4",
+      "reference_bin": "/home/connoravila/Documents/actinv/target/nucleide-e2e-build/release/actinv",
+      "reference_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+      "schema": "actinv-p120-proof-1"
+    },
+    "receipt": {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/check_p120.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--reference-bin",
+        "/home/connoravila/Documents/actinv/target/nucleide-e2e-build/release/actinv"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 1,
+      "log_sha256": "804fa3c216cfc8ebca8655ed4e614e56bbd025148a8925f0db9b1d20838f5b02",
+      "name": "bootstrap-cli-proof",
+      "receipt_sha256": "f540c42f56ca1f35970e64a16960260fc8257abea47a020da9d0a957d26ccd59",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3613027-i12014075.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    }
+  },
+  "schema": "actinv-p120-initial-observations-1"
+}

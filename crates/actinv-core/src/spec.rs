@@ -326,6 +326,17 @@ pub struct Spectrum {
     /// unused otherwise.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub relative_error: Option<Vec<f64>>,
+    /// Explicit within-group shape for mapping a custom neutron spectrum to
+    /// the activation-library grid. Absence preserves the strict exact-grid
+    /// behavior.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub rebin: Option<SpectrumRebin>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SpectrumRebin {
+    EqualLethargy,
 }
 
 impl Spectrum {
@@ -612,6 +623,25 @@ impl Spec {
                 return Err("library.sha256 must contain 64 hexadecimal digits".into());
             }
         }
+        if self.spectrum.rebin.is_some() {
+            if !self.projectile.is_neutron() {
+                return Err("spectrum.rebin is supported only for neutron spectra".into());
+            }
+            if self.spectrum.structure != "custom" {
+                return Err("spectrum.rebin requires spectrum.structure 'custom'".into());
+            }
+            if self.schedule.iter().any(|step| step.spectrum.is_some()) {
+                return Err("spectrum.rebin does not support schedule step spectra".into());
+            }
+            let boundaries = self
+                .spectrum
+                .boundaries_eV
+                .as_deref()
+                .ok_or("spectrum.rebin requires explicit boundaries_eV")?;
+            if boundaries.iter().any(|value| *value <= 0.0) {
+                return Err("spectrum.rebin boundaries_eV must be strictly positive".into());
+            }
+        }
         if let Some(uncertainty) = &self.uncertainty {
             let flux_only = uncertainty.channels.len() == 1 && uncertainty.channels[0] == "flux";
             match &uncertainty.covariance {
@@ -846,6 +876,16 @@ impl Spec {
             return Err("schedule is empty".into());
         }
         for st in &self.schedule {
+            if st
+                .spectrum
+                .as_ref()
+                .is_some_and(|spectrum| spectrum.rebin.is_some())
+            {
+                return Err(
+                    "schedule step spectrum rebin is unsupported; set rebin on the base spectrum"
+                        .into(),
+                );
+            }
             let d = parse_duration(&st.dt)?;
             if !d.is_finite() || d < 0.0 {
                 return Err(format!("negative duration '{}'", st.dt));
