@@ -66,123 +66,16 @@ jobs:
       - name: Build workspace
         run: cargo build --release --workspace
 
-      - name: P103 source-seal integrity (historical)
-        run: |
-          python controls/check_p103.py --g0-only --no-write
-          python controls/check_p103_failure.py
-          python controls/check_p104_failure.py
+      - name: P103-P118 historical replay on registered checkpoint
+        run: >-
+          python3 scripts/run_p120_history.py
+          --candidate-bin "$GITHUB_WORKSPACE/target/release/actinv"
+          --summary-out "$GITHUB_WORKSPACE/target/p120-history-summary.json"
 
-      - name: P105 waste classification, aggregation, and budget controls
+      - name: P116 unchanged twin campaign on candidate binary
         env:
           ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p105_children.py
-          python controls/check_p105.py --no-write
-          python controls/check_p105_verdict.py
-
-      - name: P107 conservative whole-component waste bounds
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p106_bounds.py
-          python controls/test_p107_seal.py
-          python controls/test_p107_history.py
-          python controls/check_p107.py --no-write
-          python controls/check_p107_history.py
-
-      - name: P108 conservative composition response bounds
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p108_seal.py
-          python controls/check_p108.py --no-write
-          python controls/check_p108_verdict.py
-
-      - name: P109 preserved failure checkpoint
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p109_native_identity.py
-          python controls/test_p109_history.py
-          python controls/check_p109.py --g0-only --no-write
-          python controls/check_p109_history.py
-
-      - name: P110 native composition basis and witness verification
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p110_seal.py
-          python controls/test_p110_native_identity.py
-          python controls/check_p110.py --no-write
-          python controls/check_p110_verdict.py
-
-      - name: P111 draft intrusion screen controls
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p111_oracle.py
-          python controls/test_p111_seal.py
-          python controls/test_p111_verdict.py
-          python controls/test_p111_history.py
-          python controls/check_p111.py --no-write
-          python controls/check_p111_history.py
-
-      - name: P112 draft intrusion screen successor controls
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p112_seal.py
-          python controls/test_p112_verdict.py
-          python controls/check_p112.py --no-write
-          python controls/check_p112_verdict.py
-
-      - name: P113 terminal failure history remains immutable
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p113_history.py
-          python controls/check_p113_history.py
-
-      - name: P114 terminal failure remains immutable
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p114_history.py
-          python controls/check_p114_history.py
-
-      - name: P115 terminal failure remains immutable
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p115_history.py
-          python controls/check_p115_history.py
-
-      - name: P116 unchanged twin verification successor controls
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p116_oracle.py
-          python controls/test_p116_seal.py
-          python controls/test_p116_verdict.py
-          python scripts/test_run_p116_gate.py
-          python controls/test_p105_children.py
-          python controls/check_p116.py --no-write
-          python controls/test_p116_history.py
-          python controls/check_p116_history.py
-
-      - name: P117 terminal failure remains immutable
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p117_history.py
-          python controls/check_p117_history.py
-
-      - name: P118 terminal failure remains immutable
-        env:
-          ACTINV_BIN: target/release/actinv
-        run: |
-          python controls/test_p118_history.py
-          python controls/check_p118_history.py
+        run: python controls/check_p116.py --g1-only --no-write
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe
@@ -194,6 +87,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-ci.txt
+
+      - name: P120 rebin controls and historical runner regressions
+        run: |
+          python controls/test_p120.py
+          python scripts/test_run_p120_history.py
+          python controls/check_p120.py \
+            --candidate-bin "$GITHUB_WORKSPACE/target/release/actinv" \
+            --reference-bin "$(python3 -c 'import json; print(json.load(open("target/p120-history-summary.json"))["reference_binary"]["path"])')"
 
       - name: Desktop and CLI scientific parity
         run: python controls/check_desktop.py
@@ -376,6 +277,7 @@ jobs:
           pip install ../dist/*.whl
           python -c "import actinv, pathlib, tomllib; expected=tomllib.loads(pathlib.Path('pyproject.toml').read_text())['project']['version']; assert actinv.__version__ == expected"
           python ../scripts/test_python_objects.py
+          ACTINV_BIN="$GITHUB_WORKSPACE/target/release/actinv" python ../scripts/test_p120_python.py
 
       - name: Python binding Rust quality
         run: |

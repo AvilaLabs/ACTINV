@@ -12,14 +12,25 @@ class Material(dict):
 
 
 class Spectrum(dict):
-    """Group-integrated values, with explicit ordering and optional total flux."""
+    """Group-integrated values, with explicit ordering, total, and rebin rule.
+
+    ``rebin="equal_lethargy"`` opts a custom neutron spectrum into conservative
+    mapping onto the activation-library groups. Omitted means the ordinary
+    exact-grid contract. ``relative_error`` stays in the supplied source-group
+    order, alongside ``values`` and ``descending``.
+    """
     def __init__(self, values, *, structure="fispact-709", total=None,
-                 descending=False, boundaries_eV=None):
+                 descending=False, boundaries_eV=None, rebin=None,
+                 relative_error=None):
         super().__init__(structure=structure, flux_per_group=list(values), descending=descending)
         if total is not None:
             self["total"] = total
         if boundaries_eV is not None:
             self["boundaries_eV"] = list(boundaries_eV)
+        if rebin is not None:
+            self["rebin"] = rebin
+        if relative_error is not None:
+            self["relative_error"] = list(relative_error)
 
 
 class Schedule(list):

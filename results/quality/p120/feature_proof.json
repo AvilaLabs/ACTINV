@@ -1,0 +1,920 @@
+{
+  "candidate_bin": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+  "candidate_sha256": "780e596dbf36060bcfa6009bace51a402bea10acabe21b682ceb4655290c3706",
+  "checks": [
+    {
+      "detail": "4 steps, 5 of 5 states, 1.1 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/direct.result.json\n",
+      "name": "run:direct",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 0.9 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/reference-default.result.json\n",
+      "name": "run:reference-default",
+      "pass": true
+    },
+    {
+      "name": "default-document-unchanged",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/coarse.result.json\n",
+      "name": "run:coarse",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "analytic-kinetics",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "direct-fine-parity",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "run:mesh",
+      "pass": true
+    },
+    {
+      "name": "one-cell-mesh",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "mesh-parity",
+      "pass": true
+    },
+    {
+      "name": "opt-in-ledger-present",
+      "pass": true
+    },
+    {
+      "name": "declared-source-retained",
+      "pass": true
+    },
+    {
+      "detail": {
+        "destination_boundaries_eV": [
+          1.0,
+          4.0,
+          16.0
+        ],
+        "destination_total": 1.0000000000000001e+24,
+        "method": "equal_lethargy",
+        "overflow": 0.0,
+        "relative_closure_error": 1.34217728e-16,
+        "source_boundaries_eV": [
+          1.0,
+          16.0
+        ],
+        "source_spectrum": {
+          "boundaries_eV": [
+            1.0,
+            16.0
+          ],
+          "descending": false,
+          "flux_per_group": [
+            1.0
+          ],
+          "rebin": "equal_lethargy",
+          "structure": "custom",
+          "total": 1e+24
+        },
+        "source_total": 1e+24,
+        "underflow": 0.0,
+        "within_group_assumption": "constant lethargy density"
+      },
+      "name": "rebin-closure",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/double-total.result.json\n",
+      "name": "run:double-total",
+      "pass": true
+    },
+    {
+      "detail": "",
+      "name": "worker-exit",
+      "pass": true
+    },
+    {
+      "name": "worker-responses",
+      "pass": true
+    },
+    {
+      "name": "worker-cache-reused",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "cached-fresh-parity:0",
+      "pass": true
+    },
+    {
+      "name": "cached-source-total:0",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "cached-fresh-parity:1",
+      "pass": true
+    },
+    {
+      "name": "cached-source-total:1",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "cached-fresh-parity:2",
+      "pass": true
+    },
+    {
+      "name": "cached-source-total:2",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/absolute.result.json\n",
+      "name": "run:absolute",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "parity:absolute",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.3 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/normalized-shape.result.json\n",
+      "name": "run:normalized-shape",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "parity:normalized-shape",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.1 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-coarse.result.json\n",
+      "name": "run:descending-coarse",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "parity:descending-coarse",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/identity.result.json\n",
+      "name": "run:identity",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "parity:identity",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-fine.result.json\n",
+      "name": "run:descending-fine",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "parity:descending-fine",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-unequal.result.json\n",
+      "name": "run:descending-unequal",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.3 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-unequal-direct.result.json\n",
+      "name": "run:descending-unequal-direct",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "descending-unequal-nonidentity-parity",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/null.result.json\n",
+      "name": "run:null",
+      "pass": true
+    },
+    {
+      "name": "null-keeps-default",
+      "pass": true
+    },
+    {
+      "detail": "spectrum has 1 groups but prepared activation library has 2\n",
+      "name": "refuse:missing-option",
+      "pass": true
+    },
+    {
+      "detail": "spec: unknown variant `linear`, expected `equal_lethargy` at line 1 column 855\n",
+      "name": "refuse:unknown-method",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin boundaries_eV must be strictly positive\n",
+      "name": "refuse:zero-edge",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin source boundaries must lie within the activation-library range\n",
+      "name": "refuse:out-of-range-low",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin source boundaries must lie within the activation-library range\n",
+      "name": "refuse:out-of-range-high",
+      "pass": true
+    },
+    {
+      "detail": "boundaries_eV must be finite and strictly ascending\n",
+      "name": "refuse:reverse-bounds",
+      "pass": true
+    },
+    {
+      "detail": "boundaries_eV must be finite and strictly ascending\n",
+      "name": "refuse:duplicate-bounds",
+      "pass": true
+    },
+    {
+      "detail": "boundaries_eV has 3 entries; 1 groups need 2\n",
+      "name": "refuse:wrong-length",
+      "pass": true
+    },
+    {
+      "detail": "group fluxes must be finite and nonnegative\n",
+      "name": "refuse:negative-flux",
+      "pass": true
+    },
+    {
+      "detail": "invalid problem JSON: expected value at line 57 column 7\n",
+      "name": "refuse:nonfinite-flux",
+      "pass": true
+    },
+    {
+      "detail": "invalid problem JSON: expected value at line 53 column 7\n",
+      "name": "refuse:nonfinite-bounds",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin requires explicit boundaries_eV\n",
+      "name": "refuse:missing-bounds",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.total is positive but flux_per_group sums to zero: there is no shape to scale\n",
+      "name": "refuse:zero-shape-with-total",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin requires spectrum.structure 'custom'\n",
+      "name": "refuse:named-grid",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin is supported only for neutron spectra\n",
+      "name": "refuse:non-neutron",
+      "pass": true
+    },
+    {
+      "detail": "spectrum.rebin does not support schedule step spectra\n",
+      "name": "refuse:step-spectrum",
+      "pass": true
+    },
+    {
+      "detail": "schedule step spectrum rebin is unsupported; set rebin on the base spectrum\n",
+      "name": "refuse:step-only-rebin",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.0 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero.result.json\n",
+      "name": "run:zero",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 0.9 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-direct.result.json\n",
+      "name": "run:zero-direct",
+      "pass": true
+    },
+    {
+      "detail": [],
+      "name": "zero-flux-parity",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.2 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/flux-uncertainty.result.json\n",
+      "name": "run:flux-uncertainty",
+      "pass": true
+    },
+    {
+      "name": "one-source-error-parameter",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.0 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/fd-plus.result.json\n",
+      "name": "run:fd-plus",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.1 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/fd-minus.result.json\n",
+      "name": "run:fd-minus",
+      "pass": true
+    },
+    {
+      "name": "source-basis:0:activity.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 0.08389876927777928,
+        "sensitivity": 0.08389876923649368,
+        "tolerance": 8.38988810315238e-06
+      },
+      "name": "finite-difference:0:activity.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:0:heat.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 4.182557175061817e-14,
+        "sensitivity": 4.18255717299984e-14,
+        "tolerance": 4.182562748667836e-18
+      },
+      "name": "finite-difference:0:heat.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:1:activity.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 0.07875416277537683,
+        "sensitivity": 0.078754162736869,
+        "tolerance": 7.875426767428203e-06
+      },
+      "name": "finite-difference:1:activity.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:1:heat.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 3.917647439849654e-14,
+        "sensitivity": 3.9176474379337594e-14,
+        "tolerance": 3.917652660362521e-18
+      },
+      "name": "finite-difference:1:heat.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:2:activity.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 0.08465031061916095,
+        "sensitivity": 0.0846503104028355,
+        "tolerance": 8.465047980522932e-06
+      },
+      "name": "finite-difference:2:activity.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:2:heat.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 4.1982263602303674e-14,
+        "sensitivity": 4.1982263494312383e-14,
+        "tolerance": 4.19823477443919e-18
+      },
+      "name": "finite-difference:2:heat.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:3:activity.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 0.07008830292740131,
+        "sensitivity": 0.07008830274838021,
+        "tolerance": 7.0088442952306225e-06
+      },
+      "name": "finite-difference:3:activity.total",
+      "pass": true
+    },
+    {
+      "name": "source-basis:3:heat.total",
+      "pass": true
+    },
+    {
+      "detail": {
+        "finite_difference": 3.452665687340029e-14,
+        "sensitivity": 3.4526656784581425e-14,
+        "tolerance": 3.4526726052143233e-18
+      },
+      "name": "finite-difference:3:heat.total",
+      "pass": true
+    },
+    {
+      "detail": "uncertainty channel 'flux' requires spectrum's source relative_error\n",
+      "name": "refuse:missing-errors",
+      "pass": true
+    },
+    {
+      "detail": "4 steps, 5 of 5 states, 1.3 ms -> /home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-errors.result.json\n",
+      "name": "run:descending-errors",
+      "pass": true
+    },
+    {
+      "name": "descending-error-order",
+      "pass": true
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/direct.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/direct.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "e9de9580a4ca6875d0d0c54f971f39c63f42f3bd4a9528b1669e786b5036c2ea",
+      "log_sha256": "d1dfee291658651387c63324a5368a786e9074e56322323c79ed0b1e69869499",
+      "name": "direct"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-history/1791321042780610052-3613668/reference-target/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/reference-default.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/reference-default.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "e9de9580a4ca6875d0d0c54f971f39c63f42f3bd4a9528b1669e786b5036c2ea",
+      "log_sha256": "9389b9c01cf914be66eadffed6783f9a6d0c39b99718b218590675a1a8043fd2",
+      "name": "reference-default"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/coarse.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/coarse.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "cab70c5590c876ad7d9ac6b3d0e893a08faaecb347012301faafdd6fad862a98",
+      "log_sha256": "68fe519c90fc950116327441af8c9f8b8cb681a9d56910fc9dfa7082d0ee54ab",
+      "name": "coarse"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "mesh",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/mesh.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/mesh.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "aa62f6285d0139d9f5bb972b5691b26f12167a4343fb90f88b82277da944e9c2",
+      "log_sha256": "907973d28b1583a8d4a3b7e87f8081b1105d2d7b1cc16e398ee9605202e56be7",
+      "name": "mesh"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/double-total.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/double-total.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "9cb5990408e8b61d8707d695854a9ca15ab6f891857e42e366e785b2c5be25f9",
+      "log_sha256": "4ea1fc69979bbfaddebdbe4f9a19f2d6404ddad309c7e7f20f9f6c460406a54d",
+      "name": "double-total"
+    },
+    {
+      "argv": [
+        "bash",
+        "-c",
+        "exec \"$1\" worker < \"$2\"",
+        "p120-worker",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/worker-requests.ndjson"
+      ],
+      "exit_code": 0,
+      "input_sha256": "9e33e6e9725a4631f80ce20f3f62d9f22df8b4de8fffaa8f4a81d3e1bd10c171",
+      "log_sha256": "d93a0051f4c24ac755a7b52a849b898a719a3958396c630be527915e2ba9449f",
+      "name": "cached-worker"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/absolute.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/absolute.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "36e4df9df11ca46cbd6f780037e5e2cd8f1a07e5df17d57134a6cda25ba7f4a3",
+      "log_sha256": "bfe04b63754902befd37b9063f33014469488536658ee5628c09db5953e4f5c8",
+      "name": "absolute"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/normalized-shape.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/normalized-shape.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "6cf8485336577afe91dfc21d1798030b927f7a69e38f5f060f12706a82521d5e",
+      "log_sha256": "3f46659e032104ed5e020da59a9192c8fc8e31fae44e8eb0b91ed1f6598cfe75",
+      "name": "normalized-shape"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-coarse.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-coarse.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "72997ef527b55436c437b18e9e68a3c593b5ccbba3f2976cc81765120235eb86",
+      "log_sha256": "745071ab6c1cf4ee33fb354ef6f524d5ed00e92d42cbf1ebb0bf98a004b10d35",
+      "name": "descending-coarse"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/identity.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/identity.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "06ac9f8e3d068210207e6bb6ac0a6c4858cac64744d0a6154901518bc086a732",
+      "log_sha256": "076af5321d9310acbc7337f235d2371c935c3b433c9d457c0750890088b9cc25",
+      "name": "identity"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-fine.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-fine.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "1198b5b7212b7630a288ed178ecf430085c890635a378e4a703f083da5156200",
+      "log_sha256": "f2d9498c42e6b1155385a3640556b8a41fddd0f37efb44b33d24174d7271718a",
+      "name": "descending-fine"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-unequal.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-unequal.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "4a5a4958fd4999821b7c32daeaf1fdccc0e8819278cbb7c70ab4aa49f24742f6",
+      "log_sha256": "2bea61716be3ec192cbc1fe0bc698aeb01ebf8ed379062c1804cfba3cd023963",
+      "name": "descending-unequal"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-unequal-direct.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-unequal-direct.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "4efbd84bfb1824ea3e3dc0f39d9814578bcac90a16b7db878c8acc7b220317f6",
+      "log_sha256": "d8d66879988ddd77a64e4e3df4b9b12076a332796056d39b78c2907776a97516",
+      "name": "descending-unequal-direct"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/null.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/null.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "a69b9758699effb0c04df39883e74f27efcb693ce13a8cd38814bc13b777bd11",
+      "log_sha256": "ec5ecbfd385984e13482a890eb158a7387edba54b1b5bd87796c3fa0b60f5e17",
+      "name": "null"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/missing-option.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/missing-option.result.json"
+      ],
+      "exit_code": 1,
+      "input_sha256": "cca2f3a2dd8723439fb96e56026595cfad28fc0f8bfb466b7bbef406463382b2",
+      "log_sha256": "9609f0fc2f994941c9f45b74d847fdb16f7c4a68e9f4bd884ee9e88d56734911",
+      "name": "missing-option"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/unknown-method.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/unknown-method.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "0ad9cd2a8bcc7dfc84fc75a1da92cef7cdf884c746062ab99e744614dad1217d",
+      "log_sha256": "89ddfacc63dafea3cf2332bb4c4ceb0a2ae3e34305c090b5155cac80ac281f62",
+      "name": "unknown-method"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-edge.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-edge.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "38566b84d93b5bb17bb7eec86d6fcbe01ef50bb01d9de28a03f9d05ea5c05791",
+      "log_sha256": "3caf0650f7dcfb186421c1f52162139627e38c42a7f9c7011d16323fb96566b4",
+      "name": "zero-edge"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/out-of-range-low.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/out-of-range-low.result.json"
+      ],
+      "exit_code": 1,
+      "input_sha256": "fffeb1a7567abca571d74b5f9cd19e87fba259b67418d7a224337297b4d053a2",
+      "log_sha256": "65021793d4940bfcdc33690a52f980cabda2eb36bfb857320884d06d66d99764",
+      "name": "out-of-range-low"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/out-of-range-high.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/out-of-range-high.result.json"
+      ],
+      "exit_code": 1,
+      "input_sha256": "7e2a9e1c9abc8c25654b190137ae8597d647412546ea43e3bce18d11a6c68693",
+      "log_sha256": "65021793d4940bfcdc33690a52f980cabda2eb36bfb857320884d06d66d99764",
+      "name": "out-of-range-high"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/reverse-bounds.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/reverse-bounds.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "268fce23f78bcfb13b765baf9c524448fca84fc5ef7703aefe4fe9fa78d02c3c",
+      "log_sha256": "a802166b178904aae4f1d81252164a27adba52830603b8053aa7d47a6b6d47c6",
+      "name": "reverse-bounds"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/duplicate-bounds.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/duplicate-bounds.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "fac717bd872d4509df3a210ae2988a61ffd7b502ad3fa96fcdf40ad6f573553d",
+      "log_sha256": "a802166b178904aae4f1d81252164a27adba52830603b8053aa7d47a6b6d47c6",
+      "name": "duplicate-bounds"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/wrong-length.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/wrong-length.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "5cadc6b3946bddd7e5d538e1bd7a5b8d9d0b53edd4df3629d38d72b2213648e0",
+      "log_sha256": "9576223c1309e8217c83e7de751538e260ef20fa2c90c43aa5df0f6cbe0caf27",
+      "name": "wrong-length"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/negative-flux.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/negative-flux.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "0330fc5c8806eb3dc58000250410b2dda4ec35f313755f447d12c4c303eaa76d",
+      "log_sha256": "d3188821eee2c12c04c638f0275e4e4aa4872a855b3a7a19dc84723a9e9c0df2",
+      "name": "negative-flux"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/nonfinite-flux.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/nonfinite-flux.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "cecdcdffdf3c6e28345184a0818b248eff0a04deba5cdc52f8865c47cf5b077d",
+      "log_sha256": "b01ec507b28d064286e66d391125a6ab2e6a58df536ca8f25aae8cac8b7fa2b8",
+      "name": "nonfinite-flux"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/nonfinite-bounds.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/nonfinite-bounds.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "b4e987623f6845f27784b34ded515f6faea9425280af20ce827fc414031f6f92",
+      "log_sha256": "ac3e23d761940eff48c661211c4ef32ae83f36bb344d8bbc0abd9e8884dabd4f",
+      "name": "nonfinite-bounds"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/missing-bounds.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/missing-bounds.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "fe286f3da0acc8341ca1880d9d3ad6396a21b674415ed932c4c01e7b0ddd0857",
+      "log_sha256": "9db2bdddc3ed6047414385ca5fc280bd6cc0094d9adee8852fab8b021b1957cd",
+      "name": "missing-bounds"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-shape-with-total.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-shape-with-total.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "764744a105b4b93e04a625e4e37352718c43cbf10bfc4c6f98f42a613ec07b47",
+      "log_sha256": "d5ad3e08abb64d9829e3c0ad548222f6d6f816e1de457e553c33ce553aeae01f",
+      "name": "zero-shape-with-total"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/named-grid.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/named-grid.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "5ee2ca9cc9d7fef2fb915735b88ba9888a1daa4d57365d2684bb25d1594dad86",
+      "log_sha256": "6e0cb78fd8a32119e15f2b6d2b66ab30ca5a9c69523ad49bbbc9620622ea005a",
+      "name": "named-grid"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/non-neutron.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/non-neutron.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "c71fd81fae0dac9a8f9f5b531e74ef50985c89b805734cc3e279da87f862aa57",
+      "log_sha256": "4a60ed735731c08ccdfa48566b027e0f3a946c672cbabde9e4d29191723b6dd8",
+      "name": "non-neutron"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/step-spectrum.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/step-spectrum.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "494ff060bb34ef5da6b1697ad28874c136e200cd6be6da8b2890bbcea6c017d2",
+      "log_sha256": "d07fd31a9959cdf26d2a729114ce0948586b40212870a32b323d7651b29cfb51",
+      "name": "step-spectrum"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/step-only-rebin.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/step-only-rebin.result.json"
+      ],
+      "exit_code": 2,
+      "input_sha256": "ee3e2bdd74b310db2e12dd596d3e2cb7cddccdf430c3fdf7a0bf0a757329f57d",
+      "log_sha256": "4dee78bd3e3ef56faa405156bc8ad103b5a2ec64dafc14617c2dfc5de99b6bb7",
+      "name": "step-only-rebin"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "55953c739bc04e341dd6d51ed5da96934fe17c06b1a7b591915fd21c136d87b5",
+      "log_sha256": "7351b147d02f2e00751b70a80fc793d79f45fe503213082759c2297d870d1106",
+      "name": "zero"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-direct.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/zero-direct.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "b59ced5dbb9c2bbfc17aaa25000810ee31bf165b608efc7ff3a64767237a9b81",
+      "log_sha256": "80f73a9c871d099beaee96762f6d65b90a998c271f5b2e8711270a61d16d4188",
+      "name": "zero-direct"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/flux-uncertainty.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/flux-uncertainty.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "51c3c04f129fd5e0242b18a09c5e53710a9bcc3e7375eecd6b0c6c6b98c22b51",
+      "log_sha256": "79e4e427366cf67a88bf95756da80f4b999ea20668245f4c15b3468768ae2179",
+      "name": "flux-uncertainty"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/fd-plus.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/fd-plus.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "118344fca2161f6575e3be582c428796d5ac14bafe6ab88f7d65de89b1c1617c",
+      "log_sha256": "e6a504450f0ee7d5ab486478e48e88dce076fa01e0e4c4f9a1e840511d04c02d",
+      "name": "fd-plus"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/fd-minus.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/fd-minus.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "fc6a9d489975d88fb04e6c8fe30ef1d368139512736632567ec3cbc562d5d145",
+      "log_sha256": "7648dac0ad2c5aedaec8c3110c529fb79d77de999602e083848d629bcb9393af",
+      "name": "fd-minus"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/missing-errors.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/missing-errors.result.json"
+      ],
+      "exit_code": 1,
+      "input_sha256": "aa50831a6967cfd7b41acc90d9d72368a55590cd85e396543d90d00fd3278864",
+      "log_sha256": "fdf9e9c5a3f9410e7d462c1746a08e10eabd8f7db3b33cd51199c8ab7bfe92a4",
+      "name": "missing-errors"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-errors.spec.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-controls/1791322726993287687/descending-errors.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "63a45f7e71307e42d2791a425e6038ac657063d05e60df6f957abca003ecf67e",
+      "log_sha256": "94366930d3eab1e9870f1cd19877dee6b57fc2fd9b6167072d551ab1e553dea2",
+      "name": "descending-errors"
+    }
+  ],
+  "evaluated_data": "not used; independent synthetic controls",
+  "fixture_sha256": "a1e906986c56aa3a395ab2ce384d1dec3473c070ca7003df1c217e2dffba7ef2",
+  "numpy": "2.5.3",
+  "observations": {
+    "direct_fine_raw_scientific_equality": false
+  },
+  "pass": true,
+  "protocol_sha256": "9707a33b791a57e3435039478c4c475415754d84b66d33fb8dda820b072245de",
+  "python": "3.14.4",
+  "reference_bin": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-history/1791321042780610052-3613668/reference-target/release/actinv",
+  "reference_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+  "schema": "actinv-p120-proof-1"
+}

@@ -317,6 +317,7 @@ impl MeshSpec {
                 // (pre-rebin) source groups, carried separately via
                 // `MeshFluxOrigin`; this rebinned spectrum never carries it.
                 relative_error: None,
+                rebin: None,
             },
             schedule: self.schedule.clone(),
             options: self.options.clone(),
@@ -641,6 +642,8 @@ fn solve_cells(
                         source_boundaries_eV: source_boundaries,
                         source_flux_per_group: &input_cells[index].flux_per_group,
                         source_relative_error: input_cells[index].relative_error.as_deref(),
+                        source_descending: false,
+                        source_label: "the mesh cell's",
                     });
                     solve_result(
                         mesh_spec,

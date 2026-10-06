@@ -777,6 +777,7 @@ impl StudySpectrum {
             boundaries_eV: self.boundaries_eV.clone(),
             descending: self.descending,
             relative_error: None,
+            rebin: None,
         })
     }
 }

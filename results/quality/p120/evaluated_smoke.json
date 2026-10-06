@@ -1,0 +1,335 @@
+{
+  "candidate_bin": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+  "candidate_sha256": "780e596dbf36060bcfa6009bace51a402bea10acabe21b682ceb4655290c3706",
+  "checks": {
+    "mapped_heat_W_per_g_by_endpoint": [
+      3.280826580054508e-07,
+      2.507582496375854e-07
+    ],
+    "mapped_matches_independent_explicit_groups": {
+      "absolute_tolerance": 1e-12,
+      "differences": [],
+      "inventory_activity_convention": "sparse nuclide maps; missing IDs compare as zero",
+      "pass": true,
+      "relative_tolerance": 1e-12,
+      "scientific_fields": [
+        "time",
+        "flux",
+        "inventory",
+        "activity",
+        "heat"
+      ]
+    },
+    "positive_mapped_activity": {
+      "pass": true,
+      "total_activity_Bq_per_g_by_endpoint": [
+        811782.5485980073,
+        620466.7272172584
+      ]
+    },
+    "raw_full_shape_observation": {
+      "differences": [
+        "/0/inventory: length differs",
+        "/0/activity_Bq_per_g: keys differ",
+        "/1/inventory: length differs",
+        "/1/activity_Bq_per_g: keys differ"
+      ],
+      "meaning": "diagnostic only; sparse omission differences are checked below",
+      "pass": false
+    },
+    "source_range_inside_library": {
+      "library_boundaries_eV": [
+        1e-05,
+        1000000000.0
+      ],
+      "pass": true,
+      "source_boundaries_eV": [
+        1.0,
+        14000000.0
+      ]
+    },
+    "sparse_inventory_activity_details": {
+      "differences": [],
+      "pass": true,
+      "sparse_zero_convention": true,
+      "unmatched_activity": [
+        {
+          "actual_Bq_per_g": 2.9867548227758195e-69,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "Cr61",
+          "step": 0
+        },
+        {
+          "actual_Bq_per_g": 0.0,
+          "expected_Bq_per_g": 1.532778577988305e-148,
+          "nuclide": "Fe68",
+          "step": 0
+        },
+        {
+          "actual_Bq_per_g": 0.0,
+          "expected_Bq_per_g": 7.779535862816502e-160,
+          "nuclide": "Fe69",
+          "step": 0
+        },
+        {
+          "actual_Bq_per_g": 0.0,
+          "expected_Bq_per_g": 4.0720006659975526e-51,
+          "nuclide": "V59",
+          "step": 0
+        },
+        {
+          "actual_Bq_per_g": 2.1344255771218466e-107,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "Al32",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 8.171327273876674e-283,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "As80",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 7.352699040316734e-304,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "As82",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 3.44422144e-316,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "As83",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 7.690163972681578e-104,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "Co64",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 6.898703574121419e-104,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "Fe64",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 0.0,
+          "expected_Bq_per_g": 3.897601409521521e-259,
+          "nuclide": "Ga78",
+          "step": 1
+        },
+        {
+          "actual_Bq_per_g": 6.20413256e-316,
+          "expected_Bq_per_g": 0.0,
+          "nuclide": "Ge83",
+          "step": 1
+        }
+      ],
+      "unmatched_inventory": [
+        {
+          "actual_atoms_per_g": 1.1634236202158648e-69,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "Cr61",
+          "step": 0
+        },
+        {
+          "actual_atoms_per_g": 0.0,
+          "expected_atoms_per_g": 4.1351909395673365e-149,
+          "nuclide": "Fe68",
+          "step": 0
+        },
+        {
+          "actual_atoms_per_g": 0.0,
+          "expected_atoms_per_g": 1.22336126125765e-160,
+          "nuclide": "Fe69",
+          "step": 0
+        },
+        {
+          "actual_atoms_per_g": 0.0,
+          "expected_atoms_per_g": 4.405991375498419e-52,
+          "nuclide": "V59",
+          "step": 0
+        },
+        {
+          "actual_atoms_per_g": 1.016177314435883e-108,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "Al32",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 1.7918874669963967e-281,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "As80",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 2.0260711665392728e-302,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "As82",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 6.658408017e-315,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "As83",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 3.328368428103205e-104,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "Co64",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 1.9905450869895879e-103,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "Fe64",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 0.0,
+          "expected_atoms_per_g": 2.862132564463173e-258,
+          "nuclide": "Ga78",
+          "step": 1
+        },
+        {
+          "actual_atoms_per_g": 1.65587419e-315,
+          "expected_atoms_per_g": 0.0,
+          "nuclide": "Ge83",
+          "step": 1
+        }
+      ]
+    },
+    "uniform_lethargy_flux_normalization": {
+      "assumption": "constant flux per unit lethargy within each source group",
+      "fine_group_total_n_cm-2-s-1": 1000000000000.0,
+      "library_group_count": 709,
+      "pass": true,
+      "source_total_n_cm-2-s-1": 1000000000000.0
+    }
+  },
+  "commands": [
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--version"
+      ],
+      "exit_code": 0,
+      "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/version.log",
+      "log_sha256": "34c90e11b43118f1dd4b088e9712215f6e3e93fd93adcceb220817b0a2910dbf",
+      "name": "version"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "data",
+        "verify",
+        "tendl-2025-neutron",
+        "--output",
+        "/home/connoravila/Documents/actinv/actinv-data"
+      ],
+      "exit_code": 0,
+      "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/data-verify.log",
+      "log_sha256": "b4c1bd13037936dfd602369b63ba13425a1917eb05e8da7ed781d10e6c7312a3",
+      "name": "data-verify"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/mapped.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/mapped.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "ff8e1d323d5950f8ad35e040a15f6f265b052e73487828d12134b7f7aa37c5ca",
+      "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/mapped.log",
+      "log_sha256": "0560a4d9621f2f3cce1c8d43bb0a0561ab8434baa05fbbda5c23366497de43a8",
+      "name": "mapped",
+      "output": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/mapped.result.json",
+      "output_sha256": "4e6bd749217b39b643365629878631d88acd546849c0032c7b4be771039da08c"
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "run",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/direct.json",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/direct.result.json"
+      ],
+      "exit_code": 0,
+      "input_sha256": "5dd0f8547d2bfda2d47521a2410ec0f906fbb8e12a633234e39605dacc40592b",
+      "log": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/direct.log",
+      "log_sha256": "adfcaea1b5ba33d8de7044a4b21c681226dc1c1f8af1b643f2fee7802e7c0f86",
+      "name": "direct",
+      "output": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427/direct.result.json",
+      "output_sha256": "ea786e54618f19f57ac8e1f354e34c13493262f82ed1209fdc05c4a5678eef3e"
+    }
+  ],
+  "control_sha256": "964c1e055bab165bf2d8ef3fcba9274eab1ce11b716babf2e675a91854bc428f",
+  "created_utc": "20261006T214823.453506Z",
+  "data": {
+    "artifacts": {
+      "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+      "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+      "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+      "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+    },
+    "bundle": "tendl-2025-neutron",
+    "catalog_version": "1.1.0",
+    "evaluation": "TENDL-2025",
+    "verified_files": [
+      {
+        "bytes": 123897743,
+        "id": "tendl-2025-neutron-709g",
+        "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+        "role": "activation-library",
+        "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44",
+        "status": "verified"
+      },
+      {
+        "bytes": 2653304,
+        "id": "tendl-2025-neutron-709g-index",
+        "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+        "role": "activation-index",
+        "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb",
+        "status": "verified"
+      },
+      {
+        "bytes": 68313052,
+        "id": "endfb-viii-0-decay",
+        "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+        "role": "decay-primary",
+        "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb",
+        "status": "verified"
+      },
+      {
+        "bytes": 45718116,
+        "id": "jeff-3-3-decay",
+        "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+        "role": "decay-fallback",
+        "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123",
+        "status": "verified"
+      },
+      {
+        "bytes": 3538,
+        "id": "actinv-data-notice-v1",
+        "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/legacy/ACTINV-DATA-NOTICE-v1.0.0.md",
+        "role": "notice",
+        "sha256": "191117ff8aaff8d9981a93c9bb59b418cfe54505dc7363128d2bc5e728a6a62c",
+        "status": "verified"
+      }
+    ]
+  },
+  "data_dir": "/home/connoravila/Documents/actinv/actinv-data",
+  "errors": [],
+  "pass": true,
+  "schema": "actinv-p120-evaluated-smoke-1",
+  "scope": "evaluated-data mapping smoke; not measurement or physics validation",
+  "script_sha256": "964c1e055bab165bf2d8ef3fcba9274eab1ce11b716babf2e675a91854bc428f",
+  "software": {
+    "actinv_version_output": "actinv 1.4.0",
+    "numpy": "2.5.3",
+    "python": "3.14.4"
+  },
+  "work_dir": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-evaluated/20261006T214823.453506Z-25766427"
+}

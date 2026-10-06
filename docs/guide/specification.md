@@ -33,6 +33,7 @@ actinv validate problem.json
 | `decay.fallback` | Optional second decay sublibrary; records absent from the primary are taken from it. |
 | `material.composition` | Natural element symbols or explicit nuclides (`U235`, `Ba137m1`) and nonnegative values interpreted by `material.basis`. |
 | `spectrum.flux_per_group` | Group-integrated fluxes. `descending: true` reverses the supplied order before use. |
+| `spectrum.rebin` | Opt-in `equal_lethargy` rebinning for custom neutron spectra; omitted means exact library-grid matching. |
 | `schedule` | At least one duration/flux-multiplier pair. Accepted duration units: seconds, minutes, hours, days and years. |
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
@@ -68,15 +69,38 @@ aggregates explicit isotopes back to elemental mass fractions.
 
 Neutrons use `fispact-709` with exactly 709 values. Proton, deuteron and alpha use `fispact-162` with exactly 162
 values and require `options.temperature_K: 0`; charged specs reject fission-yield files. `custom` requires one more
-strictly increasing boundary than flux values. Those boundaries must match the activation library to `1e-12`
-relative. `total`, when present, rescales group values while preserving shape; a positive `total` with an all-zero
+strictly increasing boundary than flux values. Unless `rebin` is enabled, those boundaries must match the activation
+library to `1e-12` relative. `total`, when present, rescales group values while preserving shape; a positive
+`total` with an all-zero
 `flux_per_group` has no shape to scale and is rejected. The spec, library index, group
 structure and temperature must all identify the same projectile/data build before matrix assembly.
+
+For an explicitly supplied neutron grid, `"rebin": "equal_lethargy"` opts a custom spectrum into conservative rebinning onto the activation-library groups. This option requires the development source revision; the published 1.4.0 package does not include it. Source values remain group-integrated physical flux in particles cm⁻² s⁻¹. `boundaries_eV` must be finite, positive, strictly ascending and wholly inside the activation-library energy range; any source edge outside that range, zero edges, and unknown methods are errors. The method assumes flux is uniform per unit lethargy within each source group. Conservation of the integrated flux does not establish accurate reaction rates where cross sections change sharply, including near thresholds or resonances. No rebinning occurs when this field is absent, and rebinning cannot be combined with per-step `spectrum` overrides because this contract has one source-grid origin.
+
+Python callers can pass the same explicit option through `Spectrum`:
+
+```python
+from actinv import Problem, Spectrum, solve
+
+problem = Problem.example()
+problem["spectrum"] = Spectrum(
+    [1.0], structure="custom", boundaries_eV=[1.0, 14.0e6],
+    total=1.0e12, rebin="equal_lethargy", relative_error=[0.1],
+)
+result = solve(problem)
+```
+
+An opted-in result records `spectrum_rebin` in both its ledger and certificate: the method and within-group
+assumption, original declared source spectrum, source and destination boundaries, source and destination flux
+totals, underflow, overflow, and relative closure error. The original spectrum identity is preserved even though the
+solver uses the library-group values internally. The field is absent from ordinary results when `rebin` is omitted.
 
 `spectrum.relative_error` is an optional array, the same length and order as `flux_per_group` (honouring
 `descending`): each group's transport-tally statistical relative standard uncertainty. It is accepted and carried
 but otherwise unused unless `uncertainty.channels` requests `"flux"` (see below); requesting that channel with no
 `relative_error` given is an error naming the spectrum.
+When rebinning, uncertainties retain the source-group basis; splitting a source group does not create independent
+destination-group tally errors.
 
 ## Fission yields
 
@@ -557,8 +581,9 @@ file variants produce a named error rather than a guessed interpretation.
 ## Independent mesh specification (`actinv-mesh-spec-1`)
 
 Mesh mode replaces the ordinary `spectrum` with a mandatory canonical-file path and SHA-256. All cells receive the
-same explicit library, decay data, optional fission-yield files, material, schedule, options, photon configuration,
-uncertainty configuration, and radiological configuration, and solve independently. Covariance and radiological
+same explicit library, decay data, optional fission-yield files, schedule, options, photon configuration,
+uncertainty configuration, and radiological configuration, and solve independently. The top-level `material` is
+the default for every cell; optional `materials` maps cell IDs to material overrides for those cells. Covariance and radiological
 data are verified and prepared once; workers borrow them rather than re-reading or cloning them per cell.
 
 ```json
@@ -575,6 +600,13 @@ data are verified and prepared once; workers borrow them rather than re-reading 
     "mass_g": 1.0,
     "basis": "wt_percent",
     "composition": {"Fe": 100.0}
+  },
+  "materials": {
+    "1,1,1": {
+      "mass_g": 1.0,
+      "basis": "wt_percent",
+      "composition": {"Fe": 90.0, "Cr": 10.0}
+    }
   },
   "flux": {
     "path": "flux.ndjson",
@@ -601,7 +633,9 @@ data are verified and prepared once; workers borrow them rather than re-reading 
 
 `chunk_cells` defaults to 64 and is bounded to 1–65,536. `threads` defaults to 1 and is bounded to 1–256. Execute it
 with `actinv mesh mesh.json mesh-result.ndjson`. Immutable activation/decay/response data are verified, decompressed
-and prepared once. Canonical cells are read a chunk at a time, restored to input order after Rayon execution, and
+and prepared once. The `materials` object is keyed by exact flux-cell ID; listed cells use that material and all
+others use the top-level default. The schedule is shared by every cell. Canonical cells are read a chunk at a time,
+restored to input order after Rayon execution, and
 written as `actinv-mesh-result-1` header/cell/footer records.
 
 `group_workloads` defaults to true: cells whose rebinned activation-group flux vectors are byte-identical share one

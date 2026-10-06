@@ -506,18 +506,17 @@ pub struct CellCollapse<'a> {
     pub offset: usize,
 }
 
-/// P93: a mesh cell's pre-rebin flux-file origin, carried alongside the
-/// rebinned `Spec.spectrum` so the flux channel's input-group parameters are
-/// the flux file's own source groups (its own boundaries and per-group
-/// statistical error), not the activation-library-aligned spectrum the cell
-/// actually solves with. `source_flux_per_group` and `source_relative_error`
-/// are in ascending-energy order (canonical flux files carry no `descending`
-/// concept).
+/// A pre-rebin source spectrum, carried alongside the rebinned `Spec.spectrum`
+/// so the flux channel's input-group parameters retain the authored source
+/// groups and their statistical errors. Flux and errors are in ascending
+/// energy order; `source_descending` restores declared group labels.
 #[derive(Clone, Copy)]
 pub struct MeshFluxOrigin<'a> {
     pub source_boundaries_eV: &'a [f64],
     pub source_flux_per_group: &'a [f64],
     pub source_relative_error: Option<&'a [f64]>,
+    pub source_descending: bool,
+    pub source_label: &'a str,
 }
 
 /// The groupwise library with one cell's batched row values in place of `collapse_row` for the
@@ -1740,8 +1739,10 @@ fn resolve_flux_relative_error(
             .source_relative_error
             .map(|errors| errors.to_vec())
             .ok_or_else(|| {
-                "uncertainty channel 'flux' requires the mesh cell's source relative_error"
-                    .to_string()
+                format!(
+                    "uncertainty channel 'flux' requires {} source relative_error",
+                    origin.source_label
+                )
             }),
         None => spectrum.ascending_relative_error().ok_or_else(|| {
             "uncertainty channel 'flux' requires spectrum.relative_error".to_string()
@@ -1771,6 +1772,7 @@ enum FluxInputGroups<'a> {
         boundaries_ev: &'a [f64],
         flux_per_group: &'a [f64],
         relative_error: &'a [f64],
+        descending: bool,
         /// Per source group: the (library group, equal-lethargy weight)
         /// pairs its flux is distributed across.
         weights: Vec<Vec<(usize, f64)>>,
@@ -1875,8 +1877,14 @@ fn build_flux_parameters(
             boundaries_ev,
             flux_per_group,
             relative_error,
+            descending,
             ..
-        } => (*boundaries_ev, *flux_per_group, *relative_error, false),
+        } => (
+            *boundaries_ev,
+            *flux_per_group,
+            *relative_error,
+            *descending,
+        ),
     };
     let mut parameters = Vec::new();
     let mut directions = Vec::new();
@@ -2067,7 +2075,7 @@ impl PreparedRun {
         physical: &PhysicalInputs,
         profiler: &mut RunProfiler,
     ) -> Result<Self, String> {
-        Self::prepare_profiled_with(spec, physical, profiler, false)
+        Self::prepare_profiled_with(spec, physical, profiler, spec.spectrum.rebin.is_some())
     }
 
     /// `groupwise` keeps groupwise activation data even for a single spectrum (P85).
@@ -2077,6 +2085,7 @@ impl PreparedRun {
         profiler: &mut RunProfiler,
         groupwise: bool,
     ) -> Result<Self, String> {
+        let groupwise = groupwise || spec.spectrum.rebin.is_some();
         // A spectrum-collapsed artifact is bound to one spectrum; per-step
         // spectra need the groupwise rows so each step collapses on its own.
         let multi_spectrum = physical
@@ -2928,6 +2937,17 @@ impl PreparedRun {
     ) -> Result<RunResult, String> {
         let mut profiler = RunProfiler::disabled();
         let physical = spec.physical_inputs()?;
+        if spec.spectrum.rebin.is_some() {
+            if flux_origin.is_some() || cell.is_some() {
+                return Err("spectrum.rebin cannot be combined with mesh cell inputs".into());
+            }
+            return self.run_rebinned_profiled(
+                spec,
+                entry_point,
+                std::time::Instant::now(),
+                &mut profiler,
+            );
+        }
         self.run_started_profiled(
             spec,
             &physical,
@@ -2937,6 +2957,84 @@ impl PreparedRun {
             cell,
             flux_origin,
         )
+    }
+
+    fn run_rebinned_profiled(
+        &self,
+        source_spec: &Spec,
+        entry_point: &str,
+        started: std::time::Instant,
+        profiler: &mut RunProfiler,
+    ) -> Result<RunResult, String> {
+        let source_bounds = source_spec
+            .spectrum
+            .boundaries_eV
+            .as_deref()
+            .ok_or("spectrum.rebin requires explicit boundaries_eV")?;
+        let dest_bounds = self.library_boundaries_eV();
+        let source_low = *source_bounds
+            .first()
+            .ok_or("spectrum.rebin requires at least two boundaries_eV")?;
+        let source_high = *source_bounds
+            .last()
+            .ok_or("spectrum.rebin requires at least two boundaries_eV")?;
+        if source_low < dest_bounds[0] || source_high > *dest_bounds.last().unwrap() {
+            return Err(
+                "spectrum.rebin source boundaries must lie within the activation-library range"
+                    .into(),
+            );
+        }
+        let source_flux = source_spec.spectrum.ascending_flux();
+        let rebinned = crate::flux::rebin_equal_lethargy(source_bounds, &source_flux, dest_bounds)?;
+        if rebinned.underflow != 0.0 || rebinned.overflow != 0.0 {
+            return Err(
+                "spectrum.rebin cannot discard flux outside the activation-library range".into(),
+            );
+        }
+        let mut transformed = source_spec.clone();
+        transformed.spectrum.boundaries_eV = Some(dest_bounds.to_vec());
+        transformed.spectrum.flux_per_group = rebinned.flux_per_group.clone();
+        transformed.spectrum.total = None;
+        transformed.spectrum.descending = false;
+        transformed.spectrum.relative_error = None;
+        transformed.spectrum.rebin = None;
+        let physical = transformed.physical_inputs()?;
+        let source_errors = source_spec.spectrum.ascending_relative_error();
+        let origin = MeshFluxOrigin {
+            source_boundaries_eV: source_bounds,
+            source_flux_per_group: &source_flux,
+            source_relative_error: source_errors.as_deref(),
+            source_descending: source_spec.spectrum.descending,
+            source_label: "spectrum's",
+        };
+        let mut result = self.run_started_profiled(
+            &transformed,
+            &physical,
+            entry_point,
+            started,
+            profiler,
+            None,
+            Some(origin),
+        )?;
+        let record = serde_json::json!({
+            "method": "equal_lethargy",
+            "within_group_assumption": "constant lethargy density",
+            "source_spectrum": source_spec.spectrum,
+            "source_boundaries_eV": source_bounds,
+            "destination_boundaries_eV": dest_bounds,
+            "source_total": rebinned.source_total,
+            "destination_total": rebinned.destination_total,
+            "underflow": rebinned.underflow,
+            "overflow": rebinned.overflow,
+            "relative_closure_error": rebinned.relative_closure,
+        });
+        for field in [&mut result.ledger, &mut result.certificate] {
+            field
+                .as_object_mut()
+                .ok_or("result record must be an object")?
+                .insert("spectrum_rebin".into(), record.clone());
+        }
+        Ok(result)
     }
 
     /// Number of activation-library rows (the row range of [`Self::collapse_rows_batched`]).
@@ -3920,6 +4018,7 @@ impl PreparedRun {
                         boundaries_ev: origin.source_boundaries_eV,
                         flux_per_group: origin.source_flux_per_group,
                         relative_error,
+                        descending: origin.source_descending,
                         weights: weights.clone(),
                     },
                     _ => FluxInputGroups::Identity {
@@ -5929,7 +6028,7 @@ pub fn run_with_cache(
     cache.last_hit = hit;
     if !hit {
         // Only the spectrum changed: prepare groupwise data that serve every spectrum (P85).
-        let groupwise = same_base;
+        let groupwise = same_base || spec.spectrum.rebin.is_some();
         let prepared =
             PreparedRun::prepare_profiled_with(spec, &physical, &mut profiler, groupwise)?;
         cache.slot = Some((fingerprint, prepared));
@@ -5937,15 +6036,19 @@ pub fn run_with_cache(
         cache.groupwise = groupwise;
     }
     let prepared = &cache.slot.as_ref().expect("cache slot populated").1;
-    let result = prepared.run_started_profiled(
-        spec,
-        &physical,
-        entry_point,
-        started,
-        &mut profiler,
-        None,
-        None,
-    )?;
+    let result = if spec.spectrum.rebin.is_some() {
+        prepared.run_rebinned_profiled(spec, entry_point, started, &mut profiler)?
+    } else {
+        prepared.run_started_profiled(
+            spec,
+            &physical,
+            entry_point,
+            started,
+            &mut profiler,
+            None,
+            None,
+        )?
+    };
     profiler.emit(started.elapsed());
     Ok(result)
 }
@@ -6325,6 +6428,7 @@ mod flux_channel_tests {
             boundaries_eV: None,
             descending: false,
             relative_error,
+            rebin: None,
         }
     }
 
@@ -6344,6 +6448,8 @@ mod flux_channel_tests {
             source_boundaries_eV: &boundaries,
             source_flux_per_group: &flux,
             source_relative_error: None,
+            source_descending: false,
+            source_label: "the mesh cell's",
         };
         let err = resolve_flux_relative_error(&spectrum, Some(&origin)).unwrap_err();
         assert!(err.contains("mesh cell"), "{err}");
@@ -6359,6 +6465,8 @@ mod flux_channel_tests {
             source_boundaries_eV: &boundaries,
             source_flux_per_group: &flux,
             source_relative_error: Some(&cell_error),
+            source_descending: false,
+            source_label: "the mesh cell's",
         };
         let resolved = resolve_flux_relative_error(&spectrum, Some(&origin)).unwrap();
         assert_eq!(resolved, vec![0.05, 0.06]);

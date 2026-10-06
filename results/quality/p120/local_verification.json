@@ -1,0 +1,1554 @@
+{
+  "all_observed_gates": [
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/check_p120.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--reference-bin",
+        "/home/connoravila/Documents/actinv/target/nucleide-e2e-build/release/actinv"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "802f6236b1e2b81e9ce5388db8608d4d3dfb74402c773e3c10b32fb666d620fa",
+      "name": "bootstrap-cli-proof-2",
+      "receipt_sha256": "c252df8b2fb633b5372cb701c8e92fbeeb48d835f0def06ee11d2c35fe5dbf17",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3613413-i11993027.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/check_p120.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--reference-bin",
+        "/home/connoravila/Documents/actinv/target/nucleide-e2e-build/release/actinv"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 1,
+      "log_sha256": "804fa3c216cfc8ebca8655ed4e614e56bbd025148a8925f0db9b1d20838f5b02",
+      "name": "bootstrap-cli-proof",
+      "receipt_sha256": "f540c42f56ca1f35970e64a16960260fc8257abea47a020da9d0a957d26ccd59",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3613027-i12014075.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-python/bin/python",
+        "controls/check_p116.py",
+        "--g1-only",
+        "--no-write"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "356b32968a802ae9e1a078fe7ca6280f3587aaade0fcc34ac1feda747309f956",
+      "name": "candidate-p116-g1",
+      "receipt_sha256": "e7db44d683b437f0ef5727138fb7573dddedc4ed4f95a5f0266f3eb79a51c56f",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3835645-i12239028.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "cargo-format",
+      "receipt_sha256": "603506f34f1c7f3d63f54ad5266be976b21b73e65f1b82ff3d57d1864988368e",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3595411-i11990857.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "actinv-cli",
+        "--tests",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "900a76723c2ecfdbdf40ba2fb5f11c227190adabcbb70d4898664f5c4a0cebcd",
+      "name": "cli-test-compilation",
+      "receipt_sha256": "84cba96a58d5e49fd6627e44699ae3480121a9ce39148dab4da1525c5d8eae5b",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3842160-i12224545.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "npm",
+        "install",
+        "--prefix",
+        "target/p120-docs",
+        "--no-audit",
+        "--no-fund",
+        "--no-save",
+        "--package-lock=false",
+        "playwright@1.62.1"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "02ed82e91ee8392d03a6dc9200d2fd5208044efec9d77606bdc7d852904d716a",
+      "name": "docs-browser-dependencies",
+      "receipt_sha256": "a6d7067683155406edc5dc0ee1f1660d71b05186343651bccef7dbe3eeea941d",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3841907-i12236059.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/p120_evaluated_smoke.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--data-dir",
+        "/home/connoravila/Documents/actinv/actinv-data"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "d555e7089af0f6d56cd39e41e89e9a97d9049f8c90b4d018f2748a66cbc79a46",
+      "name": "evaluated-data-smoke-2",
+      "receipt_sha256": "191286ada4414486204613b5a35ed117302881ec1ee847989772481171a5daad",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3841588-i12243065.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/p120_evaluated_smoke.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--data-dir",
+        "/home/connoravila/Documents/actinv/actinv-data"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 1,
+      "log_sha256": "13ed4e8ee7fb30ba36e03156185c29686cccf3121614fe7b98544e42e8f547e9",
+      "name": "evaluated-data-smoke",
+      "receipt_sha256": "a4ef27a103f98e3a727efbeeb50ec87814c908157b8d4b71d7e3f8c536aac295",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3838763-i12239348.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-python/bin/python",
+        "controls/check_p120.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--reference-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-history/1791321042780610052-3613668/reference-target/release/actinv"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "95362a58020eb06d6da06c1db0c1d8dec4d3d4a805e08dc2b3be149161b58dfe",
+      "name": "final-cli-proof",
+      "receipt_sha256": "cd38f841d258c7d080b24efabbb85c1afa37ca131db6dc2c454c1599c7339e9d",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3836122-i12213670.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/test_run_p120_history.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "a920561848f864ceb4d66614fab2f3afa799fe3ba33232b4dafd4d0e07b59ddf",
+      "name": "final-history-runner-regressions",
+      "receipt_sha256": "ce50e773d39f1016094ac6d3cbe6efb5712104804e68c0ebd7417755131b3f31",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3838681-i12235676.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "controls/test_p120.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "75ff54e727b57e4bd7b88956ed0c92c4b9a416e6f0976707e8fb54aa385ac0bd",
+      "name": "final-p120-oracle-regressions",
+      "receipt_sha256": "05e865c0ad644ac4f57ac45e698914a98f92cce7a1057f29fc4635227c063853",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3841517-i12235996.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "python3",
+        "target/p120-docs-browser.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "3490af4f0fbf6ac7f3d217054821d4521f21265ee6924ea9ba2163f4320c7280",
+      "name": "handbook-browser-smoke",
+      "receipt_sha256": "05019887e310ef5b99d30e7e105cfd00cb5a2811b2f2134e6346e7fabacf0cfb",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3842004-i12224526.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "/home/connoravila/.cargo/bin/mdbook",
+        "build"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "4a599e9bcdfc82bfcf5733dc1a31de5f0bce5c01e60f031aaccb6f9b59054aa9",
+      "name": "handbook-build",
+      "receipt_sha256": "0374a0550b22c84658a453c9bae7a3b16bb527f9883a3e62b74e3662f82127a2",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3841685-i12232275.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/check_docs.py",
+        "dist/docs"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "432df1d992e5e6dadd1faef0aee865d6969513a4972c20b9132dacbc935f20a5",
+      "name": "handbook-links",
+      "receipt_sha256": "09872d18252659b35e7df88ec9f4856ab91ca3897cdd6e24d78a8ca2437ff145",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3841751-i12239674.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/run_p120_history.py",
+        "--candidate-bin",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-candidate-build/release/actinv",
+        "--summary-out",
+        "/home/connoravila/Documents/actinv/target/run-spectrum-rebin/target/p120-history-summary.json"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "e96d5e715858e960d9c9871f8ea9c6d3781560c958e583ab72f307b4ef2fcbe8",
+      "name": "historical-replay",
+      "receipt_sha256": "2589d5f46ca6fff0e4f5a94817682889b522d2178193cd84f49dbf75db0137bf",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3613607-i11998456.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/test_run_p120_history.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "3dd37e8f26caa525a51d23bcb7823b6a241cf32e11c35dbed5afbbea7745ebce",
+      "name": "p120-history-cancellation-regressions",
+      "receipt_sha256": "4a9badb498b6224d695f8dd1aad35cc93e322ac3ec7a7c30b3e00fd8465380a5",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3835498-i12213602.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/test_run_p120_history.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "b9ea8ff74292d1d33c821a5718b20032d76288143a9af19c326b96e9a8b87d17",
+      "name": "p120-history-runner-regressions",
+      "receipt_sha256": "5cdf93d8c16c1b0cec59d44958abe606eaa26e532ca086b2702987b5d76a1ee8",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3595222-i11967631.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "/home/connoravila/Documents/actinv/target/ci-venv/bin/python",
+        "controls/test_p120.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "d094b1bd2c8318c96097f80c50da282add5b2972970a77046de8db6c8935f6ca",
+      "name": "p120-oracle-regressions",
+      "receipt_sha256": "ccf1157aeb65a290bee4887ebfae51b66b07308b117d34bff574247774b09008",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3592325-i11971100.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "venv",
+        "target/p120-python"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "python-env-create",
+      "receipt_sha256": "ca4d433013d0bec7ec3db23688c402d53567b77823aadde9c18ef0ab2e9e469f",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3592533-i11967295.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "scripts/test_python_objects.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "b0dd04239029a366af42e7a16c28cfbd2a9f7d5319e0614ad07a350ecb2ef585",
+      "name": "python-existing-object-tests",
+      "receipt_sha256": "ee7934a6dbce3f0b1eed4c9c6eded9db1c4a1fef6598448e33059dab88ba48f5",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3838593-i12224137.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-cache-dir",
+        "numpy==2.5.3"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "10e265e3dda4508da122c1389e3f7903137a7277ff0a7437f52ec0b6b65ebe9e",
+      "name": "python-numpy-install",
+      "receipt_sha256": "689782097bc73b63aa0bcaed20f576bc4ba78728b45385c652a3581e9e88d5b0",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3593017-i11990576.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 120.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "scripts/test_p120_python.py"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "174f73311db407ab971f6d83724f703588626473a65f7701c386bb4b85a7c3e0",
+      "name": "python-rebin-tests",
+      "receipt_sha256": "d9a90fdf6adbf2bc20ec2c6bb50a836524bdcd7c5465e93377b7968753f7a202",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3838515-i12224134.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--manifest-path",
+        "python/Cargo.toml",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "d8d8da8092eda67b109364c591dc473b5ad3ab76ba5f3db915398450e978222b",
+      "name": "python-rust-check",
+      "receipt_sha256": "a0022f4d121803aa3ffd405fad3c41f92eea9076049ace58e3e4aec11f4c20d2",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3839479-i12214095.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--manifest-path",
+        "python/Cargo.toml",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "82f7ffbc99f5b6175f0c38b786008a1273c4225ba80592a789f0735c3558e509",
+      "name": "python-rust-clippy",
+      "receipt_sha256": "22a3fad68ccc0a19350a23b73cfe288a560b268cb0f0970cfdb61b65ffafb6fd",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3841427-i12228146.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--manifest-path",
+        "python/Cargo.toml",
+        "--",
+        "--check"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "python-rust-format",
+      "receipt_sha256": "7079820c8c14b134bd47d08b71eea07cbc5bfcc8da6fa2f468b8445e2bd725c0",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3839402-i12224225.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "/home/connoravila/.local/bin/maturin",
+        "build",
+        "--manifest-path",
+        "python/Cargo.toml",
+        "--release",
+        "--locked",
+        "--out",
+        "target/p120-wheels",
+        "--interpreter",
+        "target/p120-python/bin/python"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "c469e4808694209c5255ed778ab71c248872b7ea03d6fa486169261fed75d62d",
+      "name": "python-wheel-build",
+      "receipt_sha256": "6f296f187d4c8c1b766913023249540ed221429bc08a1c6c06977d881f4e9680",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3836352-i12239101.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "target/p120-python/bin/python",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "target/p120-wheels/actinv-1.4.0-cp39-abi3-manylinux_2_35_x86_64.whl"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "0a0942f9fb24f76f17e9e4e1adb7e89e08275d15b8035cd86d6770b96ba2aa64",
+      "name": "python-wheel-install",
+      "receipt_sha256": "72fce93a0683180a8cb5da1014f66559e4610eaf6b92aab029f0ed61c70f22f7",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3838432-i12213949.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/refresh_manifest.py",
+        "--write",
+        "--index"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "bc5a44c0a1cbcf2bf6714473896b83db555cc55f8a2151e98047677b004a61e8",
+      "name": "registration-manifest",
+      "receipt_sha256": "49ba6c517afd1e95ed58618308fd658508c69eec015c1a70e66952b3078a9481",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3580935-i11965870.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 180.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "build",
+        "--release",
+        "-p",
+        "actinv-cli",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "df3576cb6dae37e4829b1fc60f95e9002bf152a3f6df8ae7c1fda9bf25650b79",
+      "name": "release-cli",
+      "receipt_sha256": "2ac28993efb728a478bab8ca172f5e1670a03fff9e39f27cadbd9c874b711a0e",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3609963-i11997956.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "45959d7c0ad7d5262257efa6a381911670d688feaabb13c5a479ba2a348b204b",
+      "name": "workspace-check",
+      "receipt_sha256": "a737fa83ba008f8c08e196dc8829a9fe77dfd19e353ee504272b98011727901c",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3595536-i11983076.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "c00dd09c426b05104ecce3088f9202d2a17b3442973e57a98cb7ed6b14ebfb20",
+      "name": "workspace-clippy",
+      "receipt_sha256": "067ef1cde2c08ebf1902759679f6fa56a3fbd1bcb7bf82ab42668790dcffedc7",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3601199-i11987938.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--locked",
+        "--offline"
+      ],
+      "cwd": "/home/connoravila/Documents/actinv/target/run-spectrum-rebin",
+      "exit_code": 0,
+      "log_sha256": "7e99a0ae6d080fad26a7508029dacdde662bf21761fe50547551c8740d717925",
+      "name": "workspace-tests",
+      "receipt_sha256": "45632d0c650098605c9f1bbcc7cf8ee6996bcb88a99f4e51fb67b8106f0760bc",
+      "resources": {
+        "cgroup_limits": {
+          "cpu.max": "200000 100000",
+          "memory.max": "6442450944",
+          "memory.swap.max": "0",
+          "pids.max": "128"
+        },
+        "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3601729-i11968476.scope",
+        "environment": {
+          "CARGO_BUILD_JOBS": "1",
+          "RAYON_NUM_THREADS": "2",
+          "RUST_TEST_THREADS": "1"
+        },
+        "platform": "linux",
+        "tmpdir": {
+          "filesystem": "ext4",
+          "mount_point": "/",
+          "path": "target/preflight-tmp"
+        }
+      },
+      "timeout_s": 1800.0
+    }
+  ],
+  "base_commit": "d1d14b33471f1286baa50f3ffd6615cfd11070a1",
+  "candidate_sha256": "780e596dbf36060bcfa6009bace51a402bea10acabe21b682ceb4655290c3706",
+  "existing_python_object_tests": 5,
+  "focused_feature_checks": 80,
+  "github_actions": "not yet observed; publication requires exact-candidate green workflows",
+  "historical_commands": 50,
+  "historical_runner_note": "The 50-command local replay preceded the caller-cancellation hardening; all command bindings and acceptance predicates are unchanged. The final handler/runner source passed 12 cancellation/fidelity regressions. Candidate CI will replay all 50 with the final runner.",
+  "history_runner_regressions": 12,
+  "new_python_tests": 8,
+  "oracle_regressions": 8,
+  "p116_g1": {
+    "comparisons": 138,
+    "frozen_sha256": "74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9",
+    "mutations": 43,
+    "observed_document": {
+      "component_target_count": 138,
+      "failures": [],
+      "independent_comparison_count": 138,
+      "mutations_rejected": {
+        "assay_adjustment": true,
+        "assigned_count": true,
+        "basis": true,
+        "binding_contributor_count_2": true,
+        "binding_normalized_margin_1": true,
+        "binding_normalized_sum_0": true,
+        "binding_passes_4": true,
+        "binding_strict_3": true,
+        "class": true,
+        "class_counts_first_target": true,
+        "class_counts_unknown": true,
+        "component_mass": true,
+        "constraint_contributor_count_3": true,
+        "constraint_normalized_margin_0": true,
+        "constraint_normalized_sum_2": true,
+        "constraint_passes_5": true,
+        "constraint_source_sum_fraction_1": true,
+        "constraint_strict_4": true,
+        "constraint_table_7": true,
+        "constraint_target_class_6": true,
+        "coverage": true,
+        "external_activity": true,
+        "external_status": true,
+        "facility_component_count": true,
+        "integer_count_type": true,
+        "inventory": true,
+        "membership": true,
+        "membership_coverage": true,
+        "missing_metadata_coverage": true,
+        "missing_metadata_unknown_nuclides": true,
+        "missing_metadata_unknown_reason": true,
+        "required_h3_coverage": true,
+        "required_h3_unknown_nuclides": true,
+        "required_h3_unknown_reason": true,
+        "result_status": true,
+        "row_concentration_1": true,
+        "row_fraction_0": true,
+        "row_limit_2": true,
+        "row_nuclide_4": true,
+        "row_row_id_3": true,
+        "unassigned_ids": true,
+        "volume": true,
+        "waste_type": true
+      },
+      "pass": true,
+      "persisted_result_matches": true,
+      "phase": "P116",
+      "protocol_sha256": "cf5841dafbd2470604b36d75fdafa2e2fc730e33abb26f6e44a4068e6388a8aa",
+      "refusal_controls": {
+        "checks": {
+          "alias_property_duplicate": true,
+          "assay_file_size_cap": true,
+          "bad_assay_missing": true,
+          "bad_component_name": true,
+          "bad_external_alias": true,
+          "bad_external_exclusion": true,
+          "bad_mass_value": true,
+          "bad_type": true,
+          "both_geometry": true,
+          "canonical_activity_alias_collision": true,
+          "duplicate_cell": true,
+          "duplicate_mesh_cell": true,
+          "duplicate_target": true,
+          "empty_twin_group": true,
+          "extra_mass_cell": true,
+          "extra_waste_component": true,
+          "invalid_property_z": true,
+          "invalid_unselected_activity": true,
+          "malformed_footer": true,
+          "malformed_mesh_json": true,
+          "mass_closure": true,
+          "mesh_cell_count_cap": true,
+          "mesh_size_cap": true,
+          "missing_assigned_mesh_cell": true,
+          "missing_external_step": true,
+          "missing_mass_cell": true,
+          "missing_waste_component": true,
+          "neither_geometry": true,
+          "nonregular_input_path": true,
+          "nuclide_property_count_cap": true,
+          "null_external": true,
+          "null_properties": true,
+          "null_waste": true,
+          "outer_spec_size_cap": true,
+          "overlap": true,
+          "positive_activity_count_cap": true,
+          "raw_duplicate_key": true,
+          "raw_duplicate_mesh_record_key": true,
+          "selected_target_missing_step": true,
+          "serialized_output_size_cap": true,
+          "too_many_targets": true,
+          "truncated_mesh": true,
+          "unequal_component_timestamps": true,
+          "unknown_component_field": true,
+          "unknown_external_field": true,
+          "unknown_property_field": true,
+          "unknown_rules": true,
+          "unknown_waste_field": true,
+          "zero_half_life": true,
+          "zero_target": true
+        },
+        "pass": true
+      },
+      "repeat_byte_identical": true,
+      "request_count": 35,
+      "request_evidence": [
+        {
+          "component_target_count": 4,
+          "id": "class_a",
+          "input_sha256": "741fa275fb6541aa60738bc1ac20ed99969548ea598446d93423a26660b4c8ae",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "716572bbe798d4c43e57a3ce25b7e662a437e555ed7496c2edef0dade37b38b9"
+        },
+        {
+          "component_target_count": 4,
+          "id": "class_b",
+          "input_sha256": "c3f297ca8400c465342382558e7ae78b6ec7eb868b3cc635a3ac64cf63bdba94",
+          "ordinary_waste_sha256": "51b2ef61eb331416dfa5f08db0a931d87f5373bdf10e6e48cbca47302443ae50",
+          "output_sha256": "e270150299715d9ba3a5982f88f71e8e8124c436894789aa1adcba9b13896b10"
+        },
+        {
+          "component_target_count": 4,
+          "id": "class_c",
+          "input_sha256": "0728e2664dbe99c69f5ce60626dcccd3392bf4bd6bfe89725f2678dbdde20f1c",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "a43eb30592a4046c71b7d4420bfd79f2f7adbc772e531828aea8e4cd9c1136d4"
+        },
+        {
+          "component_target_count": 4,
+          "id": "above_class_c",
+          "input_sha256": "17b593ca98da392977537952c64eb1cd0f121a999448992f991a045b3ece920e",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "f75f3398a574b005c47e1332daaa52e756808c95d0df7bbe497c70a7d64bdea0"
+        },
+        {
+          "component_target_count": 4,
+          "id": "two_table_mixture",
+          "input_sha256": "c21e99e3b0c9b916287fc9c6aac1f4d860e1c2e9392a837fab7017c965b63d78",
+          "ordinary_waste_sha256": "5632eaef925e31c4ed9e07e4ef289f7e504e1d9c001b959d6f84fc74fd528501",
+          "output_sha256": "669b9a480e4012c98e7007ead97015ad9e6d7916ddfea2d433fed6de219786ee"
+        },
+        {
+          "component_target_count": 4,
+          "id": "short_group",
+          "input_sha256": "3aa26ce9438035a7fb24e7ac6234a2a2b3bd81278ffdc2be3029511650f0148e",
+          "ordinary_waste_sha256": "4c4d470bf12b9219d06066f4beda509e825259193a4502b1cd009bd20b3f85dd",
+          "output_sha256": "67aaaeea56ca74e9346466d64f8c66e5a44a7d6b1501c6e66a5cb3efdf7b9fbc"
+        },
+        {
+          "component_target_count": 4,
+          "id": "metal_c14",
+          "input_sha256": "e54c1715d1c0b183d8142ad5c1840911e5c385f16037ea8b77ec47e2c5cf18c2",
+          "ordinary_waste_sha256": "9bbde6d542727f0f24f0db20cf398f3f5ba617dc737abe1cd174d9e32b85d5cc",
+          "output_sha256": "90a8cd6930578b38c594be474d6a61bb594813d47935d846182e88dfcc599e61"
+        },
+        {
+          "component_target_count": 4,
+          "id": "metal_ni59",
+          "input_sha256": "1b3fc3b8a3b17552d651a8050efd2cce06b6318f1f5d1adfd5ccc8ac575bcd45",
+          "ordinary_waste_sha256": "0c1a3c02016a9355f58049d9554c77c3a52ea0caa4448f935ea5acf426283009",
+          "output_sha256": "237d3ca62aec6e334c5b9670deb6cc609651c5916063add0591fac89249cfcb7"
+        },
+        {
+          "component_target_count": 4,
+          "id": "metal_ni63",
+          "input_sha256": "6ae7d7bd329744a9225e2338ec2c9c63d785652ac715d3bd2b349ef7cca8dcfb",
+          "ordinary_waste_sha256": "44b77c9a941a468bb69eaa195dfcd558fbdc735c84a10f8200f96c2564edcb61",
+          "output_sha256": "785ff4b8bdd47a0d3ed2bae8ac425218f5bfe81124083068c053ecdf83b6278b"
+        },
+        {
+          "component_target_count": 4,
+          "id": "metal_nb94",
+          "input_sha256": "fca5ea192592d5906aea86f5495ef5870efdd0e8a85b382f37a9fe21e97c402b",
+          "ordinary_waste_sha256": "6723d97b01322f3bd094bb24957b69ce8d7856ef01819a4191ce629d6f049774",
+          "output_sha256": "eb3be881588d935f5de1f2467dfcff598c48b9c89e31d24cf151e92ac65d66ca"
+        },
+        {
+          "component_target_count": 4,
+          "id": "mass_normalized_alpha",
+          "input_sha256": "7e87983365290a7f251146efa1569225a198d4dcea6bd51f9a788c9ee104521b",
+          "ordinary_waste_sha256": "98bf5fda179922f8d96ca301adb956331cc5113bd6bc6aafd3218a2453b29d73",
+          "output_sha256": "63aa07b24a83c0c1f2ef02b6fd77f654433c95c44c3c10581ba4b92867784789"
+        },
+        {
+          "component_target_count": 4,
+          "id": "alpha_group",
+          "input_sha256": "9599f3de39c9d30ac4bc62b699a7a4bfb665ae833a35778ad61a130d2591546a",
+          "ordinary_waste_sha256": "4d0f0dc587ba131f52a9f5d059ec8dc754e88e3e63845cfb225dae3f8c547f93",
+          "output_sha256": "80df1b98d377dc1bf13f258943cf81a1dd1a2710b64e6b939cf6d043ee9a32e5"
+        },
+        {
+          "component_target_count": 4,
+          "id": "density_geometry",
+          "input_sha256": "3ebb0a37b32383754de7ab312eda9cff52663466b7634a37462ef06123d80488",
+          "ordinary_waste_sha256": "951a456337d24a9e365104fb4515fa0cfb874d3fa75efc267c1a290098097fb9",
+          "output_sha256": "679c58b590d43b34758ded0bb2a2a3096f88fec24d11b1e57a9e0dcb6c0e99c0"
+        },
+        {
+          "component_target_count": 4,
+          "id": "volume_geometry",
+          "input_sha256": "3ebb0a37b32383754de7ab312eda9cff52663466b7634a37462ef06123d80488",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "1a02ac958a628d3ba3f4019627c480b41a59f7051736e4073ac9c62900f1fc5b"
+        },
+        {
+          "component_target_count": 4,
+          "id": "external_h3_once",
+          "input_sha256": "edf536c6e173d5c182a96d38eeb950a33c1bbb36ba08a9e903f3487b6d5a94d0",
+          "ordinary_waste_sha256": "237f6c71dda79f084b439c4e84f84bbc12f8171fc928890e605821a7ded0d58a",
+          "output_sha256": "b4f84b63b430361a55cd8aa53d26af3814c60656166e45ad242846cd240d6453"
+        },
+        {
+          "component_target_count": 4,
+          "id": "required_h3",
+          "input_sha256": "6c1f716fa43b31d1aff9dca792359637dcf3d905a4c5e8c763a758594186aab5",
+          "ordinary_waste_sha256": "c9fb7ec3e4d077512a5c058e34de3e2e39d2f93586932ada8d52c7214ec5e501",
+          "output_sha256": "71e95d02eccdc893f3053c9a6d09c5b0a9a56fdbae59e2bbfe9ccc8c890f8eb0"
+        },
+        {
+          "component_target_count": 4,
+          "id": "missing_metadata",
+          "input_sha256": "fd390969a9c374e84654c0ccfb0e2803a6549cc7ee2959ef02292035bd1ce831",
+          "ordinary_waste_sha256": "7f1da7a14bb61af1a3dcfacc6886b7739110b1a830b0f50cd42d2258ac16012d",
+          "output_sha256": "a74e6efa438a115f87d980d9e76a90f871629c4ab872bd6d34283b1d184a0e3e"
+        },
+        {
+          "component_target_count": 4,
+          "id": "empty_inventory",
+          "input_sha256": "41f4899f854a53d469269b9425828152b3f773a47a90ab844d637991caa95561",
+          "ordinary_waste_sha256": "7f1da7a14bb61af1a3dcfacc6886b7739110b1a830b0f50cd42d2258ac16012d",
+          "output_sha256": "ee903227adf14573ae8226479b79d927afbb71e99aff928d19194434a22f536c"
+        },
+        {
+          "component_target_count": 2,
+          "id": "unassigned_cell",
+          "input_sha256": "6c1f716fa43b31d1aff9dca792359637dcf3d905a4c5e8c763a758594186aab5",
+          "ordinary_waste_sha256": "36c763334b9a60231f27cb87c4f8299a1e6f779fe1e193b08dfdea25d9360209",
+          "output_sha256": "ba4649cb68914869cda601c78d97de653d8b4055ca8cf65d2fc3e58938f779ad"
+        },
+        {
+          "component_target_count": 4,
+          "id": "boundary_below",
+          "input_sha256": "9408aeb80c0049065aec7873715b8a32fab635ee8bfcf37374d6d68341aa843e",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "44baaade0d861a5c8ab9019bd35181b72c05ac6dfd4fb8501a25522bd3b0b99d"
+        },
+        {
+          "component_target_count": 4,
+          "id": "boundary_equal",
+          "input_sha256": "33a281ff82379af6f3573b973381f3d11d1fadfe1ec38ee276a8c61f36c4d5d7",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "bb96540c0d469427c626d26b3afb63e44c12b20adf88ee88cf33be3654e7bdcd"
+        },
+        {
+          "component_target_count": 4,
+          "id": "boundary_above",
+          "input_sha256": "ac5c5ddbd772b57a90b9b0f4c4b742e38cf2d1d8229270c3d586c3c2904fa95a",
+          "ordinary_waste_sha256": "9d4d0457ad0ea974e9e2f2e0b2be6157e46b4dc7cfb95351b1258e401de23517",
+          "output_sha256": "da40eff67240dd2bdafa036c5ea28401bd4a657f2781c8d6574ed4ee9b37e524"
+        },
+        {
+          "component_target_count": 4,
+          "id": "mixture_boundary_below",
+          "input_sha256": "546f15ee4d85d5a856d9c97158ec2a83581d35dc6fd0d6bcf0cf753e7f89d390",
+          "ordinary_waste_sha256": "47637b8a10eefec323d10063e240a102cb77991690caed3b1a1bd1f31082568f",
+          "output_sha256": "5d385fc578f3d0b1199acc4ef09fe5fef48ada332ab11b0bd83cf58bec207425"
+        },
+        {
+          "component_target_count": 4,
+          "id": "mixture_boundary_equal",
+          "input_sha256": "b36f76d6a06b6e38fda50cd27318d4fe3ea6342539986d939d451d4d3f921f8a",
+          "ordinary_waste_sha256": "47637b8a10eefec323d10063e240a102cb77991690caed3b1a1bd1f31082568f",
+          "output_sha256": "9d998a84cca835d9fdd2825b42aac0889fd66beff61a1cdc67a0d4ac46e89e0e"
+        },
+        {
+          "component_target_count": 4,
+          "id": "mixture_boundary_above",
+          "input_sha256": "ef544f6f4f62ad5a8db712949be7e75fcaaef63e0b668f430db2a339fa418e41",
+          "ordinary_waste_sha256": "47637b8a10eefec323d10063e240a102cb77991690caed3b1a1bd1f31082568f",
+          "output_sha256": "043a171ccd8b2d643c74519dd4f56585cfe0a74a59b3293ce3b5d144be5ba6cb"
+        },
+        {
+          "component_target_count": 4,
+          "id": "assay_baseline",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "8fb7445eff75dbd6541559baa37ae4fb47a483fd6eef6708cf3c0c9b2e6ffadd"
+        },
+        {
+          "component_target_count": 4,
+          "id": "scalar_assay",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "aeae15b6ef238330cf51ba3a948b52f7723a6491ce9a776df4254114222f94bb"
+        },
+        {
+          "component_target_count": 4,
+          "id": "mixture_assay",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "aeae15b6ef238330cf51ba3a948b52f7723a6491ce9a776df4254114222f94bb"
+        },
+        {
+          "component_target_count": 4,
+          "id": "propagated_assay",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "8cf3b72cc538e15428961fbe459e73941f2a7f6262073a0d242238ad598f8357"
+        },
+        {
+          "component_target_count": 4,
+          "id": "dose_assay",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "b4a5b217059cd3b9e119e15f6775ac64d00dcb0e8f2af1a8037ec7cfb54ca843"
+        },
+        {
+          "component_target_count": 4,
+          "id": "repeat_deterministic",
+          "input_sha256": "d6472f230e39f67f83d8f2ddf552d052cad53df98ab84a0831a174a379353da5",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "8e0b136452bed602fa4f39779b9ad15613cd4a6e4a4e75c551fa5fa5d15a3074"
+        },
+        {
+          "component_target_count": 4,
+          "id": "uniform_split_reference",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "8fb7445eff75dbd6541559baa37ae4fb47a483fd6eef6708cf3c0c9b2e6ffadd"
+        },
+        {
+          "component_target_count": 4,
+          "id": "unequal_cell_split_equivalent",
+          "input_sha256": "3cec8777a5f82592a8d02f72cfe68f929e25ce8db410202a0e13d1950150b261",
+          "ordinary_waste_sha256": "4378636d5263f157deaaf4e5654566b58d495bcf3781e43dfdbc6a980e92e610",
+          "output_sha256": "c4356a95688880ebc1c55a6ae618d289482c035ce2e4531c6b48d3678f8b27d3"
+        },
+        {
+          "component_target_count": 4,
+          "id": "single_cell_unsplit_equivalent",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "c6bd5c9c090246253ef13317a57ade2d7606f1e425747070a9c83ea2772559a9",
+          "output_sha256": "60f5e7a0823b3ecd2c4ac120d978f8a97c26a7f45c4156aac61955458fd9be55"
+        },
+        {
+          "component_target_count": 4,
+          "id": "selected_step_reordering",
+          "input_sha256": "7e25ba76a8f2db27e1476119bd1fa324e2beea5955d8119f144403c4f147825d",
+          "ordinary_waste_sha256": "09e2549b76b064e0f59a554852dbeac9e0d9411374e5323ea8ffa01bffac4bfb",
+          "output_sha256": "cd2067c4ca0ea6640d6a21cfed2f67b31b3bb86ac779163fe0489c406d90f957"
+        }
+      ],
+      "schema": "actinv-p116-twin-waste-g1-1"
+    },
+    "requests": 35
+  },
+  "reference_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+  "registration_commit": "bc4f70006ab3576b27e63389f42c543083416b42",
+  "required_gate_names": [
+    "cargo-format",
+    "workspace-check",
+    "workspace-clippy",
+    "workspace-tests",
+    "release-cli",
+    "historical-replay",
+    "candidate-p116-g1",
+    "final-cli-proof",
+    "final-history-runner-regressions",
+    "final-p120-oracle-regressions",
+    "python-wheel-build",
+    "python-wheel-install",
+    "python-rebin-tests",
+    "python-existing-object-tests",
+    "python-rust-format",
+    "python-rust-check",
+    "python-rust-clippy",
+    "evaluated-data-smoke-2",
+    "handbook-build",
+    "handbook-links",
+    "handbook-browser-smoke",
+    "cli-test-compilation"
+  ],
+  "required_local_gates_passed": true,
+  "schema": "actinv-p120-local-verification-1",
+  "scientific_boundary": "Synthetic analytic kinetics/input mapping and compatibility; evaluated smoke is not measurement validation. Broader waste qualification remains open and prior FAIL archives unchanged.",
+  "software": {
+    "actinv_package": "1.4.0",
+    "actinv_release_status": "1.4.0 development source; opt-in is not in the published 1.4.0 package",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "maturin": "maturin 1.15.0",
+    "mdbook": "mdbook v0.5.4",
+    "numpy": "2.5.3",
+    "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)"
+  },
+  "wheel_sha256": "f4da2df671f74f46ed3cc85dd0e5de6b075ecaa54ef5a92cbded1cea4076b105",
+  "workspace_tests": {
+    "ignored": 2,
+    "ignored_cases": [
+      "normalize::tests::dump_real_tape_entries (diagnostic real tape)",
+      "model::integration_control::desktop_worker_preserves_solver_output (requires generated fixture; separate desktop parity control is wired in CI)"
+    ],
+    "passed": 486
+  }
+}

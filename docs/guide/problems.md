@@ -32,7 +32,7 @@ Inventory, activity, and heat are reported per gram. `mass_g` scales total photo
 
 `descending: true` means the values are supplied from highest energy to lowest. When `total` is present, ACTINV scales the vector to that total while preserving its shape. A positive total with an all-zero vector is rejected.
 
-Custom spectra require increasing energy boundaries, one more boundary than group values, and a compatible activation library. The projectile, temperature, and group structure must match the library. Use [transport import](workflows.md#transport-flux-and-mesh-calculations) for supported transport tallies and review the source-rate normalization.
+Custom spectra require increasing energy boundaries, one more boundary than group values, and a compatible activation library. Without an explicit rebin option, the boundaries must match the library. A custom neutron grid can request `"rebin": "equal_lethargy"`; its positive ascending boundaries must stay wholly within the activation-library range. This maps group-integrated physical flux under the assumption that flux is uniform per unit lethargy inside each source group. Integral conservation does not validate reaction rates near cross-section thresholds or resonances. Rebinning is opt-in, supports no out-of-range loss or extrapolation, and cannot be combined with per-step spectrum overrides. Use [transport import](workflows.md#transport-flux-and-mesh-calculations) for supported transport tallies and review the source-rate normalization.
 
 ## Irradiation and cooling
 

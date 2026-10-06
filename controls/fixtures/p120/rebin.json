@@ -1,0 +1,32 @@
+{
+  "schema": "actinv-p120-rebin-controls-1",
+  "overlap": {
+    "source_bounds_eV": [1, 4, 16],
+    "source_flux": [8, 16],
+    "destination_bounds_eV": [1, 2, 8, 16],
+    "expected_flux": [4, 12, 8],
+    "expected_total": 24,
+    "narrow_bounds_eV": [2, 8],
+    "narrow_expected": {"underflow": 4, "destination_total": 12, "overflow": 8}
+  },
+  "kinetics": {
+    "library_bounds_eV": [1, 4, 16],
+    "sigma_barns": [[0.2, 0.8], [0.2, 0.8], [0.1, 0.4], [0.1, 0.4]],
+    "source_bounds_eV": [1, 16],
+    "source_shape": [1],
+    "source_total_n_cm2_s": 1e24,
+    "expected_library_flux": [5e23, 5e23],
+    "initial_atoms_per_g": {"Fe56": 1},
+    "removal_rate_s": 0.75,
+    "production_rate_s": {"Mn56": 0.5, "Mn57": 0.25},
+    "half_life_s": {"Mn56": 2, "Mn57": 3},
+    "mean_decay_energy_eV": {"Mn56": [1e6, 2e6, 0.5e6], "Mn57": [0.7e6, 1.1e6, 0.2e6]},
+    "schedule": [{"dt_s": 0.7, "flux": 1}, {"dt_s": 0.2, "flux": 0}, {"dt_s": 0.4, "flux": 2}, {"dt_s": 0.6, "flux": 0}],
+    "inventory_rel_tol": 1e-10,
+    "inventory_abs_tol": 1e-12,
+    "parity_rel_tol": 1e-12,
+    "parity_abs_tol": 1e-12,
+    "flux_relative_error": [0.1],
+    "finite_difference_h": 1e-4
+  }
+}

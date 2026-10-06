@@ -17,7 +17,8 @@ The certificate identifies the files used. It does not establish that those inpu
 | Capability | Boundary |
 | --- | --- |
 | Neutron, proton, deuteron, alpha, and gamma (photonuclear) activation | No triton or helion activation. Gamma (1.4.0): no photofission product yields, no temperature treatment, and no published library (build from the TENDL `g` sublibrary); cross-code agreement with FISPACT-II is established below 30 MeV, and above it only against FISPACT-II's own MT5 processing rule |
-| Single-material and independent-cell inventories | No particle transport, criticality, spatial material exchange, or thermal/flux feedback |
+| Single-run and independent-cell mesh inventories | Mesh cells may override the default material by cell ID, but share one schedule; there is no particle transport, criticality, spatial material exchange, or thermal/flux feedback |
+| Opt-in neutron spectrum rebinning | Custom source groups map by uniform flux per unit lethargy; conservation does not validate threshold or resonance reaction rates, and per-step rebin source grids are unsupported |
 | Photon sources and contact gamma response | Contact response is a semi-infinite-slab screening proxy; ordinary exports use a point at the origin |
 | Finite-dilution neutron self-shielding | Explicit unresolved-range Bondarenko table required; no resolved-region pointwise shielding; damage is not shielded |
 | Cross-section, half-life, independent-yield, and transport-tally uncertainty | Only requested, retained channels propagate; flux statistics use supplied groupwise errors, not systematic transport errors |
