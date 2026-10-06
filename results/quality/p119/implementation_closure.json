@@ -1,0 +1,104 @@
+{
+  "broader_waste_twin_qualification": "open; not claimed by this CI repair",
+  "clean_candidate_proof": {
+    "clean_checkout": true,
+    "commit_sha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+    "gates": {
+      "clean-p117-history-replay": {
+        "argv": [
+          "python3",
+          "controls/check_p117_history.py"
+        ],
+        "exit_code": 0,
+        "matches_prior_report_exactly": true,
+        "receipt_sha256": "56cc2732f02db5d1a54bfb42b1c99abff5783dfef265de45907f116ee6aae1b6",
+        "report_sha256": "bb764d725359e9501596f517ed291d4f18c520d52e6e01515fcb12c16082dfaa"
+      },
+      "clean-p118-history-replay": {
+        "argv": [
+          "python3",
+          "controls/check_p118_history.py"
+        ],
+        "exit_code": 0,
+        "matches_prior_report_exactly": true,
+        "receipt_sha256": "2789a23f42b6eb580b000dae1771ae7b631ce877aef30db8b0c995647bd29716",
+        "report_sha256": "b015a0641065b03e1dd32db37e43ad88fd5cce5dd02dbed1e6368a0746b90c3d"
+      }
+    },
+    "schema": "actinv-p119-clean-candidate-proof-1",
+    "transient_p117_p118_target_logs_absent": true
+  },
+  "closure_workflows": "pending; observed after this closure commit is pushed",
+  "implementation_commit": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+  "implementation_workflows": [
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T18:24:13Z",
+      "databaseId": 37511033441,
+      "event": "workflow_dispatch",
+      "headSha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+      "status": "completed",
+      "updatedAt": "2026-10-06T18:26:08Z",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37511033441",
+      "workflowName": "Build browser workbench"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T18:24:08Z",
+      "databaseId": 37511022711,
+      "event": "workflow_dispatch",
+      "headSha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+      "status": "completed",
+      "updatedAt": "2026-10-06T18:25:45Z",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37511022711",
+      "workflowName": "Build handbook"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T18:24:03Z",
+      "databaseId": 37511011096,
+      "event": "workflow_dispatch",
+      "headSha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+      "status": "completed",
+      "updatedAt": "2026-10-06T18:29:09Z",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37511011096",
+      "workflowName": "desktop builds"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T18:23:47Z",
+      "databaseId": 37510976414,
+      "event": "pull_request",
+      "headSha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+      "status": "completed",
+      "updatedAt": "2026-10-06T18:51:32Z",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37510976414",
+      "workflowName": "controls"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T18:23:46Z",
+      "databaseId": 37510976094,
+      "event": "pull_request",
+      "headSha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+      "status": "completed",
+      "updatedAt": "2026-10-06T18:25:42Z",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37510976094",
+      "workflowName": "fusion-isotope"
+    },
+    {
+      "conclusion": "success",
+      "createdAt": "2026-10-06T18:23:46Z",
+      "databaseId": 37510976162,
+      "event": "pull_request",
+      "headSha": "5cec278d03acb83075b52f7d1191c4a5d84eaac5",
+      "status": "completed",
+      "updatedAt": "2026-10-06T18:28:13Z",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37510976162",
+      "workflowName": "fns-iron"
+    }
+  ],
+  "local_verification_sha256": "ed0a6fbc7ed2fac5fc8af6e546ea32fb8a70acd56954f85650788c831ea700f0",
+  "schema": "actinv-p119-implementation-closure-1",
+  "scope": "CI history repair; P116/P117/P118 FAIL dispositions unchanged"
+}

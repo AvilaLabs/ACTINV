@@ -84,7 +84,7 @@ class P117HistoryTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     history._archive_map("archive", {"a.txt": history._sha(b"a")})
 
-    def test_ci_transition_requires_exact_single_step_replacement(self):
+    def test_ci_transition_accepts_only_registered_p118_states(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             workflow = root / ".github/workflows/ci.yml"
@@ -92,18 +92,41 @@ class P117HistoryTests(unittest.TestCase):
             prefix = b"name: CI\njobs:\n  controls:\n    steps:\n"
             suffix = b"      - name: unchanged\n        run: true\n"
             previous = prefix + history.OLD_P117_CI_STEP + suffix
-            replacement = history.NEW_P117_CI_STEP + b"\n" + history.NEW_P118_CI_STEP
-            expected = prefix + replacement + suffix
-            workflow.write_bytes(expected)
+            legacy_expected = prefix + history.NEW_P117_CI_STEP + b"\n" + history.NEW_P118_CI_STEP + suffix
+            history_expected = (prefix + history.NEW_P117_CI_STEP + b"\n"
+                                + history.NEW_P118_HISTORY_CI_STEP + suffix)
+            workflow.write_bytes(legacy_expected)
             with patch.object(history, "ROOT", root), \
                     patch.object(history.p116, "_git_blob", return_value=previous):
                 self.assertTrue(history._ci_transition_matches())
-                workflow.write_bytes(expected + b"# unrelated edit\n")
+                workflow.write_bytes(history_expected)
+                self.assertTrue(history._ci_transition_matches())
+                workflow.write_bytes(history_expected + b"# unrelated edit\n")
                 self.assertFalse(history._ci_transition_matches())
                 workflow.write_bytes(prefix + history.NEW_P117_CI_STEP + suffix)
                 self.assertFalse(history._ci_transition_matches())
                 workflow.write_bytes(prefix + history.OLD_P117_CI_STEP + suffix)
                 self.assertFalse(history._ci_transition_matches())
+
+    def test_genuine_initial_discovery_schema_has_no_file_count(self):
+        raw = history._safe_file(f"{history.INITIAL}/discovery.json").read_bytes()
+        discovery = history._unique(raw)
+        expected = discovery["preserved_files_sha256"]
+        self.assertEqual(discovery["schema"], "actinv-p117-initial-preservation-1")
+        self.assertEqual(len(expected), 70)
+        self.assertNotIn("file_count", discovery)
+        history._validate_initial_discovery(discovery, expected)
+
+        wrong_count = copy.deepcopy(discovery)
+        del wrong_count["preserved_files_sha256"][next(iter(expected))]
+        with self.assertRaises(ValueError):
+            history._validate_initial_discovery(wrong_count, expected)
+
+        wrong_hash = copy.deepcopy(discovery)
+        first_path = next(iter(expected))
+        wrong_hash["preserved_files_sha256"][first_path] = "0" * 64
+        with self.assertRaises(ValueError):
+            history._validate_initial_discovery(wrong_hash, expected)
 
     def test_initial_archive_manifest_mutation_is_rejected(self):
         _discovery, _terminal_map, _initial_map = history._terminal_archive()

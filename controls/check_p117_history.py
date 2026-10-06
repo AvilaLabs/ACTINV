@@ -64,6 +64,13 @@ NEW_P118_CI_STEP = b"""      - name: P118 verified cached inputs and unchanged t
           python controls/check_p118.py --no-write
           python controls/check_p118_verdict.py
 """
+NEW_P118_HISTORY_CI_STEP = b"""      - name: P118 terminal failure remains immutable
+        env:
+          ACTINV_BIN: target/release/actinv
+        run: |
+          python controls/test_p118_history.py
+          python controls/check_p118_history.py
+"""
 
 
 def _sha(raw: bytes) -> str:
@@ -174,13 +181,18 @@ def _resource_ok(resource: object) -> bool:
 
 
 def _ci_transition_matches() -> bool:
-    """Require the sole P117 workflow edit to be the pinned full-step replacement."""
+    """Require the P117 edit and either registered P118 workflow state."""
     try:
         previous = p116._git_blob(CHECKPOINT, ".github/workflows/ci.yml")
         current = _safe_file(".github/workflows/ci.yml").read_bytes()
-        replacement = NEW_P117_CI_STEP + b"\n" + NEW_P118_CI_STEP
-        return previous.count(OLD_P117_CI_STEP) == 1 and current == previous.replace(
-            OLD_P117_CI_STEP, replacement, 1)
+        if previous.count(OLD_P117_CI_STEP) != 1:
+            return False
+        candidates = (
+            NEW_P117_CI_STEP + b"\n" + NEW_P118_CI_STEP,
+            NEW_P117_CI_STEP + b"\n" + NEW_P118_HISTORY_CI_STEP,
+        )
+        return any(current == previous.replace(OLD_P117_CI_STEP, candidate, 1)
+                   for candidate in candidates)
     except (OSError, ValueError, RuntimeError, TypeError):
         return False
 
@@ -217,11 +229,9 @@ def _terminal_archive() -> tuple[dict, dict[str, str], dict[str, str]]:
     # Verify the nested initial discovery is byte-identical to the pinned original.
     nested = _safe_file(f"{INITIAL}/discovery.json").read_bytes()
     original = _unique(nested)
-    if (_sha(nested) != INITIAL_DISCOVERY_SHA256
-            or original.get("preserved_files_sha256") != initial_files
-            or original.get("checkpoint_commit") != INITIAL_CHECKPOINT
-            or original.get("file_count") != 70):
-        raise ValueError("nested original discovery mismatch")
+    if _sha(nested) != INITIAL_DISCOVERY_SHA256:
+        raise ValueError("nested original discovery digest mismatch")
+    _validate_initial_discovery(original, initial_files)
     initial_current_expected = dict(initial_files)
     initial_current_expected["discovery.json"] = INITIAL_DISCOVERY_SHA256
     _archive_map("results/failures/p117_initial", initial_current_expected)
@@ -234,6 +244,16 @@ def _terminal_archive() -> tuple[dict, dict[str, str], dict[str, str]]:
     if discovery.get("amended_g0_rust_sha256") is None or len(discovery["amended_g0_rust_sha256"]) != 100:
         raise ValueError("terminal Rust map missing")
     return discovery, terminal_map, initial_map
+
+
+def _validate_initial_discovery(original: dict, initial_files: dict[str, str]) -> None:
+    """Validate the actual P117 initial discovery schema and complete file map."""
+    original_files = original.get("preserved_files_sha256")
+    if (original.get("schema") != "actinv-p117-initial-preservation-1"
+            or original.get("checkpoint_commit") != INITIAL_CHECKPOINT
+            or not isinstance(original_files, dict) or len(original_files) != 70
+            or original_files != initial_files):
+        raise ValueError("nested original discovery mismatch")
 
 
 def _verify_initial(initial_files: dict[str, str]) -> dict:
