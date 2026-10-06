@@ -16,6 +16,16 @@ to a pass. The checkpoint and observations below remain the historical record;
 P116/P117/P118 retain their FAIL dispositions. P119 verification results and
 exact-commit CI observations are recorded separately at closure.
 
+Implementation commit `5cec278d03acb83075b52f7d1191c4a5d84eaac5` passed all
+six required workflows on 2026-10-06, including the full
+[controls run](https://github.com/AvilaLabs/ACTINV/actions/runs/37510976414).
+The clean detached checkout reproduced both history reports exactly. The
+[closure record](../../results/quality/p119/implementation_closure.json)
+binds these observations and the 69 local regression tests, unchanged
+35-case/138-comparison scientific replay, formatting and test compilation.
+Closure-push CI and the subsequent master push are verified separately before
+reporting recovery complete.
+
 ## Paused checkpoint — 2026-10-04
 
 Later owner direction: publish the saved checkpoint to GitHub even with a
