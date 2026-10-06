@@ -1,0 +1,211 @@
+{
+  "base_commit": "0353d5e3288a90cfefaabe7d2263b22fbaeeecad",
+  "clean_candidate_replay": "pending; proof is outside this candidate",
+  "gates": [
+    {
+      "argv": [
+        "python3",
+        "controls/test_p105_children.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3460894-i11847386.scope",
+      "exit_code": 0,
+      "log_sha256": "cace6105d151d6939fe124c20360860a3df0e64042925dabbf30657b457390b3",
+      "name": "child-lifecycle-tests",
+      "receipt_sha256": "ba645cd00166652697320c3519768211a9ad9afc01236e2df03cd765190d05b4",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "check",
+        "-p",
+        "actinv-cli",
+        "--tests",
+        "--locked",
+        "--offline"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3488924-i11879705.scope",
+      "exit_code": 0,
+      "log_sha256": "3a4ce2a4f7f0bda4d7e3183b603321a60488cb8be251baae133bd541e50e943e",
+      "name": "cli-test-compilation",
+      "receipt_sha256": "e242b526fc3a4eaaa6f78cf7b9761ef00d904fe6a6ab40eaeefbf9434cea1f3a",
+      "timeout_s": 1200.0
+    },
+    {
+      "argv": [
+        "python3",
+        "controls/check_p116.py",
+        "--no-write"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3461105-i11832190.scope",
+      "exit_code": 0,
+      "log_sha256": "0a4826b33f5617c6e4e1ea2e2248a4195fc46d60d40a4d378cc6e90eb54ff5e5",
+      "name": "p116-scientific-replay",
+      "receipt_sha256": "27fb214f1afdaefd59e5ec64982006561fe31fc48bdc3b4ef8a749910b797cf2",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "controls/check_p117_history.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3412063-i11812954.scope",
+      "exit_code": 0,
+      "log_sha256": "bb764d725359e9501596f517ed291d4f18c520d52e6e01515fcb12c16082dfaa",
+      "name": "p117-history-replay",
+      "receipt_sha256": "a05f2fd058832101d07028b40517ec0ebf674136e160822891256ee46779d116",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "controls/test_p117_history.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3370798-i11758211.scope",
+      "exit_code": 0,
+      "log_sha256": "c1cd6c3abbd06ac72f408f0f3a1a66436d7589f4f9d70b660fd21f6b653ed978",
+      "name": "p117-history-tests",
+      "receipt_sha256": "8b65fed7d3d86eeaf5ed990ce4d67b3ab40276fe3fac57ae06fcddd82be4b930",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "controls/check_p118_history.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3460207-i11839899.scope",
+      "exit_code": 0,
+      "log_sha256": "b015a0641065b03e1dd32db37e43ad88fd5cce5dd02dbed1e6368a0746b90c3d",
+      "name": "p118-history-replay",
+      "receipt_sha256": "d010d00205176ce7f83497de0c954af1fdd39c88735dabff72219a878d566daa",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "controls/test_p118_history.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3459519-i11851454.scope",
+      "exit_code": 0,
+      "log_sha256": "d2a78297ebfe869a4f3a168e5676d8177aa9ef5f9dc22006e6f3f55d6bcb46c2",
+      "name": "p118-history-tests",
+      "receipt_sha256": "16b2970e416283721d86f955a0254f24f4f3d740d1d757e3a0265b9f9f7d4efc",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/test_run_p118_gate.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3460754-i11851615.scope",
+      "exit_code": 0,
+      "log_sha256": "ca0fd7b66cf5cc6ace751191cc5522323e8ec7eea3abc35b397034d244432bf9",
+      "name": "p118-recorder-tests",
+      "receipt_sha256": "68339e035f951399fce370d8569b479a0b0c3642f8196c37db854f97345f1da7",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "controls/test_p118_verdict.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3460817-i11832156.scope",
+      "exit_code": 0,
+      "log_sha256": "b8c3650c99e71d5db289d1082a07d4b6c6f5f827bb44f8811ba55088faf0b3f6",
+      "name": "p118-verdict-tests",
+      "receipt_sha256": "6e7bae52507183d54f82f5eb45e9afc18bbc2bba482e9b97cc084f583aaa0908",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/test_preflight.py"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3460961-i11855798.scope",
+      "exit_code": 0,
+      "log_sha256": "d7f8291f7d67c06b2c0780c552ae474999923afe9c96d574402e5ab76f9adcdf",
+      "name": "preflight-tests",
+      "receipt_sha256": "641f4f1e0cf2454a7a13d2d74a294de8138afd131c9e39d46c806e60acb1cce0",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "python3",
+        "scripts/refresh_manifest.py",
+        "--write",
+        "--index"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3453539-i11835265.scope",
+      "exit_code": 0,
+      "log_sha256": "da831d9a14624456557c863e1dbfcadf681a2783c99001abd14ab718c2b9b2f1",
+      "name": "registration-manifest",
+      "receipt_sha256": "804197b17baa50cfa4ae67d30961ae4b2779ee8ac9a56f16a5c53661af88d855",
+      "timeout_s": 600.0
+    },
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "cgroup_path": "/user.slice/user-1000.slice/user@1000.service/app.slice/run-p3488437-i11887459.scope",
+      "exit_code": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "name": "rust-format",
+      "receipt_sha256": "c51fd2be6819613100c8d0dc434ed60941b0d9aa4b1c37a2cd5e44d4703f6327",
+      "timeout_s": 600.0
+    }
+  ],
+  "github_actions": "pending",
+  "registration_commit": "728c0b4a0b7015413aa1e152fbfd948232c944e5",
+  "regression_tests": {
+    "child_lifecycle": 4,
+    "p117_history": 13,
+    "p118_history": 14,
+    "p118_recorder": 14,
+    "p118_verdict": 9,
+    "preflight": 15,
+    "total": 69
+  },
+  "resources": {
+    "cargo_build_jobs": 1,
+    "coordinator_jobs": "serial",
+    "cpu_quota_percent": 200,
+    "memory_max_bytes": 6442450944,
+    "memory_swap_max_bytes": 0,
+    "rayon_num_threads": 2,
+    "rust_test_threads": 1,
+    "tasks_max": 128,
+    "temporary_filesystem": "ext4"
+  },
+  "schema": "actinv-p119-local-verification-1",
+  "scientific_replay": {
+    "binary_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+    "command": [
+      "python3",
+      "controls/check_p116.py",
+      "--no-write"
+    ],
+    "comparisons": 138,
+    "data": "unchanged synthetic control fixtures; no evaluated data changed",
+    "exact_replay_equal": true,
+    "requests": 35
+  },
+  "scope": "CI/history repair; earlier scientific FAIL verdicts unchanged",
+  "software": {
+    "cargo": "1.98.1",
+    "python": "3.14.4",
+    "rustc": "1.98.1"
+  },
+  "source_sha256": {
+    ".github/workflows/ci.yml": "e60c5a22639d6f8890612ca713df84b0d0affda594616ef7e710fc8d779b3c9b",
+    "controls/check_p117_history.py": "74ab893b7f11414c0718161e8f2d9acaead05cff3f6a2020b0dc6ffeece69f88",
+    "controls/check_p118_history.py": "86500c0068eb2cc2952dcee7b62206f9dacba9c677e57cec2b33e0ad492e4470",
+    "controls/test_p117_history.py": "ab6b7f71270018f7bf532f2ae27dfdf9218f9176bc980157b777d4cb99879c81",
+    "controls/test_p118_history.py": "8f4d043d5cf52f4ec52cee8cf771c3d470f6ea0e4d14f4c0f5dede639ad2fcb3",
+    "protocols/ACTINV-P119_PROTOCOL.md": "ba32fb5cd131297f4d7999b03531652c665638ebe2ccedd85b09a30fd7e52972",
+    "protocols/protocol_hash.txt": "3d40b5d3186ca9412ee042bc0c82dffd9c1491d0624fa46d5c4c3d1ce7f99a6e"
+  }
+}

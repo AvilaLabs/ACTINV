@@ -177,15 +177,12 @@ jobs:
           python controls/test_p117_history.py
           python controls/check_p117_history.py
 
-      - name: P118 verified cached inputs and unchanged twin qualification
+      - name: P118 terminal failure remains immutable
         env:
           ACTINV_BIN: target/release/actinv
         run: |
-          python controls/test_p118.py
-          python controls/test_p118_verdict.py
-          python scripts/test_run_p118_gate.py
-          python controls/check_p118.py --no-write
-          python controls/check_p118_verdict.py
+          python controls/test_p118_history.py
+          python controls/check_p118_history.py
 
       - name: Unit probe (constant source, analytic answer)
         run: ./target/release/unit_probe

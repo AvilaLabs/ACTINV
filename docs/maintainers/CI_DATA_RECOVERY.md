@@ -1,5 +1,21 @@
 # Pinned-data CI recovery
 
+## CI history repair — 2026-10-06
+
+The owner resumed CI recovery. [P119](../../protocols/ACTINV-P119_PROTOCOL.md)
+registers a scoped repair of the history reader and CI wiring. The original
+P117 discovery is checked using its actual schema and complete file map.
+CI now verifies the preserved P118 terminal failure through
+`controls/test_p118_history.py` and `controls/check_p118_history.py`, alongside
+the existing P117 history checks. No archived artifact or historical verdict
+is rewritten. Exact workflow comparisons reject unrelated workflow edits.
+
+P119 restores executable CI verification of those failed records. It does not
+complete the broader waste twin qualification or convert any unrun P118 gate
+to a pass. The checkpoint and observations below remain the historical record;
+P116/P117/P118 retain their FAIL dispositions. P119 verification results and
+exact-commit CI observations are recorded separately at closure.
+
 ## Paused checkpoint — 2026-10-04
 
 Later owner direction: publish the saved checkpoint to GitHub even with a
