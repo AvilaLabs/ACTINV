@@ -1,0 +1,2 @@
+nucleide==0.16.0
+numpy==2.5.3

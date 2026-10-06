@@ -1,0 +1,10 @@
+{
+  "components": [
+    {
+      "composition_g": {"Fe56": 1.0},
+      "mass_fraction": 1.0
+    }
+  ],
+  "density_g_cm3": 7.874,
+  "bounds_cm": [[0.0, 2.0], [0.0, 1.0], [0.0, 1.0]]
+}
