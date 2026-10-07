@@ -370,3 +370,20 @@ priority — each needs its own protocol before any code changes.
   Not ACTINV gaps, recorded so they are not re-raised: the coarse (10-group) FARIS spectrum is a FARIS tally
   choice, fixed by tallying 709 groups there; flux uncertainty is documented as outside the propagated band
   (qualification.md), and sampling the spectrum belongs to the caller's transport ensemble.
+
+- 2026-10-06 — **Contact-dose proxy refused for light-element materials (found by the FARIS maintenance coupling
+  validation).** With `options.outputs` `["heat", "dose"]` and the all-element NIST response
+  (`build_photon_response.py --elements all`, SHA-256 `9efa4048…acd8`), activated FLiBe (Li-6, Li-7, Be-9, F-19)
+  gets `contact_gamma_air_dose_proxy_Gy_h: null` at every step, while a titanium-hydride shield in the same study
+  gets values. Cause, read in `photon.rs`: the proxy is `None` whenever `response_excluded_power_W_g > 0`, and the
+  activated salt emits light-element K X-rays (183–849 eV lines from F-18, N-16, B-12, C-11, O-15, Na-22 and
+  others) below the response's 1 keV lower end. The excluded fraction is about 6e-7
+  (`dose_response_power_coverage` 0.99999936), but any excluded power refuses the whole proxy. The refusal is
+  correct as a fail-closed rule; the gap is that a physically negligible sub-keV contribution blocks the proxy for
+  any material with light activation products. Proposed (needs its own protocol): count photon power below the
+  response's lowest energy as self-absorbed (zero contact contribution, conservative-low by at most that power's
+  share), report it in the ledger and in a per-step `dose_response_subthreshold_power_W_g`, and keep refusing for
+  power above the top energy or for missing elements. Alternative: extend the response tables below 1 keV.
+  Acceptance sketch: the FLiBe case gets a proxy whose value matches the current formula over the covered power;
+  materials with no sub-keV lines are bit-identical to today; a test pins the refusal for over-range power and
+  missing elements. FARIS record: `docs/notes/MAINTENANCE_COUPLING_VALIDATION_RESULT.md` (variant V1).
