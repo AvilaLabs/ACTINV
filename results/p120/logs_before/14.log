@@ -1,0 +1,105 @@
+..............
+----------------------------------------------------------------------
+Ran 14 tests in 2.571s
+
+OK
+{
+  "checkpoint_commit": "6f3f964cf06ad4e969392b90effbe4f835d183a3",
+  "current_source_matches_except_p119_edits": true,
+  "fresh_gates": {
+    "p117_history_regressions": {
+      "exit_code": 1,
+      "log_sha256": "8d942433101d4236c6e05b7777f02fe6c410896be093a2d174d778240c22af2d",
+      "receipt_sha256": "027e8988d9fda198a44d86ff8b1b781980ba2841b983465edcedb6a3c4b22c2b"
+    },
+    "p118_verdict_regressions": {
+      "exit_code": 0,
+      "log_sha256": "9fe85f85013e85960b3f7f4b0b3e5e7115b216bc7990a09926843591e4fdef69",
+      "receipt_sha256": "191bffb846825c32e199d5aa471dc6cfab9c644b18de5529df3f849c83e142a8"
+    },
+    "recorder_regressions": {
+      "exit_code": 0,
+      "log_sha256": "d64299dc83d0b81d24f870fd9fee80e44be593a3e023964980ccdc46aa17df49",
+      "receipt_sha256": "f83d6ae3afe1c33fce3de8621bcf7b3bbfd0c2b5e8b0540ebb10b3bb6906b64d"
+    },
+    "rust_fmt": {
+      "exit_code": 0,
+      "log_sha256": "d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1",
+      "receipt_sha256": "cc1ce9db62c376d4323db24bbbf7e78a469f45cdea2123029899b959e4f7b320"
+    }
+  },
+  "history_failure": {
+    "actual_child_exit_code": 1,
+    "actual_outer_exit_code": 1,
+    "errors": 6,
+    "failures": 1,
+    "log_sha256": "8d942433101d4236c6e05b7777f02fe6c410896be093a2d174d778240c22af2d",
+    "observation_sha256": "4dfe2e80c23bb5ead758e641e1a73f6e028ef6a1356fb965a6af0214b0ff2031",
+    "outer_log_sha256": "69a973d7520dffd8f52cd2c47ab1919f142227c327319fb448ce56c309c6b87f",
+    "receipt_sha256": "027e8988d9fda198a44d86ff8b1b781980ba2841b983465edcedb6a3c4b22c2b",
+    "tests": 12
+  },
+  "initial_archive_file_count": 16,
+  "initial_failure": {
+    "actual_child_exit_code": 1,
+    "actual_outer_exit_code": 1,
+    "discovery_sha256": "21a94cd256bbbb858d9cfc9ebb342e15f3ada0b6d8e73ea39bf9112ac837f080",
+    "failed_gate": "recorder_regressions",
+    "failed_test": "test_setup_resource_failure_is_recorded_without_launching_runner",
+    "failure_log_sha256": "ca806c9d525d2234440ae8ae3b30dc2e8ca39432b70da62c4ddf6658727cccfc",
+    "failure_receipt_sha256": "8a240a0b1078f855c3c95ea355eb2905dea32e0e2f63d9a880864c5d0ff5dc1c",
+    "outer_log_sha256": "ec0302c153e3f278cbb6f3a27a6e37426f909064cd4fb77bc6624052635866ab",
+    "outer_observation_sha256": "e58773f6adbc90a7e864be67e9d66b032c6535781f975110296412d642f96169",
+    "pass": true,
+    "preserved_files_sha256": {
+      "results/failures/p118_initial/controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+      "results/failures/p118_initial/preserve_initial.py": "4432099b0e4499c9b338d5d96d441e52bac5d321efd210d2999243d8a088f809",
+      "results/failures/p118_initial/protocols/ACTINV-P118_PROTOCOL.md": "81ceb65891eae00b9ec0ade95d32bb0e8bae7ec23ef56bafd670c92e4980df1b",
+      "results/failures/p118_initial/protocols/protocol_hash.txt": "df33906bd4d77cfe5a781259b7d1fa91cd2a357c70de8e067a8b617e26b9667a",
+      "results/failures/p118_initial/results/quality/p118/initial_failure_observed.json": "e58773f6adbc90a7e864be67e9d66b032c6535781f975110296412d642f96169",
+      "results/failures/p118_initial/results/quality/p118/initial_failure_outer.log": "ec0302c153e3f278cbb6f3a27a6e37426f909064cd4fb77bc6624052635866ab",
+      "results/failures/p118_initial/results/quality/p118/recorder_regressions.json": "8a240a0b1078f855c3c95ea355eb2905dea32e0e2f63d9a880864c5d0ff5dc1c",
+      "results/failures/p118_initial/results/quality/p118/recorder_regressions.log": "ca806c9d525d2234440ae8ae3b30dc2e8ca39432b70da62c4ddf6658727cccfc",
+      "results/failures/p118_initial/results/quality/p118/rust_fmt.json": "f7c8f207917487fcabe4454a747b0241a5a18eb343068d98279c1a7150343e82",
+      "results/failures/p118_initial/results/quality/p118/rust_fmt.log": "d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1",
+      "results/failures/p118_initial/scripts/run_p117_gate.py": "ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78",
+      "results/failures/p118_initial/scripts/run_p118_gate.py": "0c90a5bda677c67a7af1f310fe0ec8ccc0e675fc6d8e2ae648d7687737adb252",
+      "results/failures/p118_initial/scripts/test_run_p118_gate.py": "8e8e96109cb2d8a6241e459d2ec1ce03623ae846717b2bb938f67762f43b9085",
+      "results/failures/p118_initial/target/p118-recorder_regressions.log": "ca806c9d525d2234440ae8ae3b30dc2e8ca39432b70da62c4ddf6658727cccfc",
+      "results/failures/p118_initial/target/p118-rust_fmt.log": "d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1"
+    },
+    "rust_fmt_exit_code": 0,
+    "test_count": 14,
+    "test_failure_count": 1
+  },
+  "p117_predecessor": {
+    "archive_file_count": 100,
+    "checkpoint_commit": "b81e8c3365a5a08ed55e9f99c0c88f945709996d",
+    "terminal_verdict": "P117-FAIL"
+  },
+  "pass": true,
+  "phase": "P118",
+  "predecessor_archive_file_count": 100,
+  "public_handbook_file_count": 27,
+  "rust_source_file_count": 100,
+  "schema": "actinv-p118-history-verification-1",
+  "terminal_archive_file_count": 42,
+  "terminal_discovery_sha256": "4d7f99aabec30439317c7de1bed2a70a26c63cb722c88d78a821038687d5de7a",
+  "terminal_source_file_count": 319,
+  "terminal_verdict": {
+    "actual_exit_code": 1,
+    "log_sha256": "c66e86d954a16e07135257da7dd8fac19992b99681170256c8d9a4e8141eeffe",
+    "observation_sha256": "314806ed542edaf763ba0a07f0d9752d89c2a521969f2924bba461e24067b25f",
+    "verdict": "P118-FAIL",
+    "verdict_sha256": "11e82faa9325641fa53f52d05be22cc3ca26ea6af8e65e9c55ed37e6da884743"
+  },
+  "unrun_artifacts_absent": [
+    "results/g0_p118_twin_waste.json",
+    "results/g1_p118_twin_waste.json",
+    "results/g2_p118_twin_waste.json",
+    "results/g3_p118_quality.json",
+    "results/p118_implementation_commit.json",
+    "results/p118_ci_runs.json"
+  ],
+  "verdict": "P118-FAIL"
+}

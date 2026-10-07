@@ -1,0 +1,149 @@
+{
+  "schema": "actinv-p120-ci-steps-1",
+  "label": "before",
+  "head": "8b711bcad8f6bd2a61a3f57b4cdf7fd6cbcd6da7",
+  "actinv_bin_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+  "workflow_sha256": "e60c5a22639d6f8890612ca713df84b0d0affda594616ef7e710fc8d779b3c9b",
+  "steps": [
+    {
+      "index": 1,
+      "name": "P103 source-seal integrity (historical)",
+      "run": "python controls/check_p103.py --g0-only --no-write\npython controls/check_p103_failure.py\npython controls/check_p104_failure.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/01.log",
+      "log_sha256": "9239e44d9fbd721df52b4bf52fda7c0ff27e00634b5333c84488b9633e992349",
+      "log_tail": "t does not qualify full CA BTP conformity\",\n        \"unknown_metadata_fails_closed\": \"Missing metadata on any active nuclide yields an unknown class\"\n      },\n      \"pass\": true,\n      \"protocol_anchors_present\": {\n        \"cm242_table2_aggregate\": true,\n        \"equal_five_year_boundary\": true,\n        \"external_tritium_no_implicit_zero\": true,\n        \"metal_variants_replace_general\": true,\n        \"pu241_dedicated_precedence\": true,\n        \"short_lived_named_row_precedence\": true,\n        \"single_component_volume_basis\": true,\n        \"unknown_metadata_fails_closed\": true\n      }\n    },\n    \"source_table_rows\": {\n      \"expected_row_count\": 16,\n      \"pack_matches_independent_transcription\": true,\n      \"pass\": true,\n      \"rows_match_independent_transcription\": true,\n      \"source_row_count\": 16\n    }\n  },\n  \"input_sha256\": {\n    \"core_mirror_sha256\": \"890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7\",\n    \"pack_sha256\": \"890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7\",\n    \"protocol_sha256\": \"22bbaada0e757b0c1ffd5a914ca4835c12ebc6af2c61eb971c48f6e36150983e\",\n    \"source_review_sha256\": \"4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64\",\n    \"source_xml_sha256\": \"7c08a6cb64d21e082ecf62a94fc3ef0be42c64fb68443658eff393ddc0bc0864\"\n  },\n  \"protocol\": \"ACTINV-P103\",\n  \"schema\": \"actinv-p103-g0-seal-1\",\n  \"sealed\": true,\n  \"verdict\": \"P103-G0-SEALED\"\n}\nP103 retained failure integrity: PASS\nP104 retained failure integrity: PASS\n",
+      "tree_changes": []
+    },
+    {
+      "index": 2,
+      "name": "P105 waste classification, aggregation, and budget controls",
+      "run": "python controls/test_p105_children.py\npython controls/check_p105.py --no-write\npython controls/check_p105_verdict.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/02.log",
+      "log_sha256": "6ee9a52ce91a0032e605415db25528df1adb0b95da9d642f9d4bb9b1972494fc",
+      "log_tail": "\"pass\": true,\n  \"refusal_controls\": {\n    \"nonlinear\": true,\n    \"required_h3\": true,\n    \"unknown_metadata\": true\n  },\n  \"required_rust_regressions\": [\n    \"negative_gradient_creates_a_lower_composition_bound\",\n    \"infeasible_constant_and_strict_boundary_are_rejected\",\n    \"constant_threshold_with_positive_composition_strictness_is_a_closed_zero_singleton\",\n    \"no_response_and_positive_balance_cap_keep_distinct_statuses\"\n  ],\n  \"rust_regressions_executed_by_control\": false,\n  \"schema\": \"actinv-p105-g2-budget-control-1\",\n  \"usable_interval_count\": 2,\n  \"usable_intervals\": [\n    {\n      \"binding_constraint\": {\n        \"column\": null,\n        \"contributor_count\": 1,\n        \"nuclides\": [\n          \"Nb94\"\n        ],\n        \"step\": 1,\n        \"strict\": false,\n        \"table\": 1\n      },\n      \"limit\": \"Nb.sole.\",\n      \"lower_wt_pct\": 0.0,\n      \"supremum_attained\": true,\n      \"upper_supremum_wt_pct\": 2.111582152264727,\n      \"verified_value_wt_pct\": 2.1115810964736506\n    },\n    {\n      \"binding_constraint\": {\n        \"column\": null,\n        \"contributor_count\": 1,\n        \"nuclides\": [\n          \"Nb94\"\n        ],\n        \"step\": 1,\n        \"strict\": false,\n        \"table\": 1\n      },\n      \"limit\": \"Nb.others_at_spec.\",\n      \"lower_wt_pct\": 0.0,\n      \"supremum_attained\": true,\n      \"upper_supremum_wt_pct\": 2.111582152264727,\n      \"verified_value_wt_pct\": 2.1115810964736506\n    }\n  ],\n  \"verified_point_count\": 4,\n  \"verified_target_count\": 8\n}\nP105-PASS evidence matches\n",
+      "tree_changes": []
+    },
+    {
+      "index": 3,
+      "name": "P107 conservative whole-component waste bounds",
+      "run": "python controls/test_p106_bounds.py\npython controls/test_p107_seal.py\npython controls/test_p107_history.py\npython controls/check_p107.py --no-write\npython controls/check_p107_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/03.log",
+      "log_sha256": "1ef528c3376a800b526d91bff6cc193350651f1485cadda39a5360b71325449c",
+      "log_tail": "es_activation\": true,\n      \"incomplete_without_reason\": true,\n      \"invalid_geometry\": true,\n      \"missing_activity_bounds\": true,\n      \"missing_assumptions\": true,\n      \"missing_bounded_step\": true,\n      \"missing_external_declaration\": true,\n      \"missing_property_field\": true,\n      \"missing_source\": true,\n      \"missing_target_boxes\": true,\n      \"negative_bound\": true,\n      \"negative_target_time\": true,\n      \"noncanonical_external_step\": true,\n      \"nonfinite_bound\": true,\n      \"nonpositive_half_life\": true,\n      \"reversed_bound\": true\n    },\n    \"pass\": true\n  },\n  \"repeat_byte_identical\": true,\n  \"schema\": \"actinv-p107-bounds-g1-1\",\n  \"target_count\": 150\n}\n{\n  \"failures\": [],\n  \"g1_result_sha256\": \"6943673898e994118091e1a4c62b3bbfdf046e1699f4cbe6abbdec01e1c4732e\",\n  \"pass\": true,\n  \"persisted_result_matches\": true,\n  \"phase\": \"P107\",\n  \"protocol_sha256\": \"8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b\",\n  \"schema\": \"actinv-p107-bounds-g2-1\",\n  \"separate_output_paths_byte_identical\": true\n}\n{\n  \"ci_sha256\": \"65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a\",\n  \"g0_sha256\": \"3a072b15502a09ff99ff5082c19d6add8f806bfb9f93f7d19e7977317ac5d2f0\",\n  \"g3_sha256\": \"b942af69d778490ee6ee5f369d71782f57320cc048363a2256ae1ba763184b3a\",\n  \"implementation_commit\": \"27d5636ad5331a3dacd8130a6b5e3516fb661e9f\",\n  \"pass\": true,\n  \"persisted_verdict_matches_historical_derivation\": true,\n  \"source_file_count\": 93,\n  \"source_hashes_verified\": true\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 4,
+      "name": "P108 conservative composition response bounds",
+      "run": "python controls/test_p108_seal.py\npython controls/check_p108.py --no-write\npython controls/check_p108_verdict.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/04.log",
+      "log_sha256": "a6e2b340780c67e09037495890b5b152b7d2527ac0e317427eff4b652f64b556",
+      "log_tail": ",\n  \"p103_verdict_sha256\": \"fa5418af444d3aa9b48eb11e5d2be5600d6fb50cda07205f986984409b550e4c\",\n  \"p104_terminal_verdict\": \"P104-FAIL\",\n  \"p104_verdict_sha256\": \"ffbe247ed827204ee85b25c52c46c07127e9f05a96ab9cf2de0fb4932677f0e4\",\n  \"p105_terminal_verdict\": \"P105-PASS\",\n  \"p105_verdict_sha256\": \"0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41\",\n  \"p106_terminal_verdict\": \"P106-FAIL\",\n  \"p106_verdict_sha256\": \"a37f8a505db4d834fcab03105c37dd126ec120fc79a8f216418836de540412c3\",\n  \"p107_ci_record_sha256\": \"65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a\",\n  \"p107_historical_replay_sha256\": \"5817de21292b00e911fb53b6802ce0c271efc56c48aac87b8aeed4d65f7339d4\",\n  \"p107_implementation_record_sha256\": \"1be5e25cc80a7b62ca5a231a7f4af7cacb5bd93508512bacddd59c6a267775d7\",\n  \"p107_terminal_verdict\": \"P107-PASS\",\n  \"p107_verdict_sha256\": \"5e5bae7ebf1f5c244a84f6e03ffe19c3e148f3678d939bc12a09f26053aea3aa\",\n  \"pack_mirror_identical\": true,\n  \"pack_sha256\": \"890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7\",\n  \"pass\": true,\n  \"persisted_seal_matches\": true,\n  \"phase\": \"P108\",\n  \"protocol_registered\": true,\n  \"protocol_sha256\": \"ae503d3fe2ff9569c793f162d3b9c19975815f80a53d20458513ee8b9d267fdd\",\n  \"schema\": \"actinv-p108-composition-g0-1\",\n  \"target_count\": 13\n}\n{\n  \"gates\": {\n    \"G0\": \"PASS\",\n    \"G1\": \"PASS\",\n    \"G2\": \"PASS\",\n    \"G3_CI\": \"PASS\",\n    \"G3_local\": \"PASS\",\n    \"P107\": \"PASS\"\n  },\n  \"persisted_matches\": true,\n  \"verdict\": \"P108-PASS\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 5,
+      "name": "P109 preserved failure checkpoint",
+      "run": "python controls/test_p109_native_identity.py\npython controls/test_p109_history.py\npython controls/check_p109.py --g0-only --no-write\npython controls/check_p109_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/05.log",
+      "log_sha256": "82b7403c0c2689c534299d0c693cd09725385f64fc5f0b5c3ae10c7895fe05a1",
+      "log_tail": "  4101,\n          4201,\n          1001,\n          2001\n        ],\n        \"decay_sha256\": \"04795215b9b232acdf63ce48d27bc21b6def0258adc52c5e7cea44e6da81ea5a\",\n        \"index_sha256\": \"55f5a22a6b0b9d8be576ab00bf235d1e7dee7a355af6ef17d943ca1b3e389221\",\n        \"library_sha256\": \"99c312c293829cfec2f33188464ed4e962207f0689c5a861455a04cc421e5500\",\n        \"row_count\": 11,\n        \"target_mats\": [\n          2601,\n          2602,\n          2603,\n          2604,\n          1401,\n          1402,\n          1403,\n          4101,\n          4102,\n          4201\n        ]\n      }\n    }\n  },\n  \"target_count\": 18\n}\n{\n  \"artifact_blobs_verified\": true,\n  \"checkpoint_commit\": \"495d6bf99248d3b99af43ca82894631c3e6b8c87\",\n  \"derived_verdict\": \"P109-FAIL\",\n  \"derived_verdict_matches_persisted\": true,\n  \"expected_artifact_sha256\": {\n    \"results/g0_p109_composition_solve.json\": \"cad2351bf53e7f0165c6a899bcd8b97ba302d73effbb3e52bd220dcf598c1c09\",\n    \"results/g1_p109_composition_solve.json\": \"a74fc950793785af5fa667eca793aca5934fc54ab366435004f88093b2451986\",\n    \"results/g3_p109_quality.json\": \"d7b42c419704e21dcbe1fadfa3a3970a55b390851890e910598272571fcb1e36\",\n    \"results/p109_verdict.json\": \"b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398\"\n  },\n  \"g2_absent\": true,\n  \"historical_source_verification\": false,\n  \"pass\": true,\n  \"persisted_verdict_sha256\": \"b6d370e3e560d0d7f780b0a7bb6344413fee87eb69eab865ac9e5ac58b449398\",\n  \"rust_source_count\": 97,\n  \"rust_sources_materialized\": true\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 6,
+      "name": "P110 native composition basis and witness verification",
+      "run": "python controls/test_p110_seal.py\npython controls/test_p110_native_identity.py\npython controls/check_p110.py --no-write\npython controls/check_p110_verdict.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/06.log",
+      "log_sha256": "f2e8b350e8036ed86ec1d856591f7ca1e6ce00cc77913e2f75858c66eaa048d6",
+      "log_tail": " true,\n      \"negative_mass\": true,\n      \"negative_weight\": true,\n      \"noncanonical_external_step\": true,\n      \"null_volume\": true,\n      \"reversed_weight\": true,\n      \"too_many_components\": true,\n      \"unknown_element\": true,\n      \"unknown_waste_type\": true,\n      \"unsupported_component_key\": true,\n      \"unsupported_cram_order\": true,\n      \"unsupported_damage\": true,\n      \"unsupported_gas\": true,\n      \"unsupported_screen\": true,\n      \"unsupported_top_key\": true,\n      \"unsupported_uncertainty\": true,\n      \"wrong_base_spec\": true,\n      \"wrong_projectile\": true,\n      \"wrong_rules\": true,\n      \"wrong_schema\": true,\n      \"zero_density\": true,\n      \"zero_mass\": true,\n      \"zero_target\": true\n    },\n    \"pass\": true\n  },\n  \"repeat_byte_identical\": true,\n  \"schema\": \"actinv-p110-composition-solve-g1-1\",\n  \"target_count\": 18\n}\n{\n  \"g1_result_sha256\": \"9f02e1f81c509b4b25a055cc265404ba4145bf517355edc18f59b3b159074fc0\",\n  \"pass\": true,\n  \"persisted_result_matches\": true,\n  \"phase\": \"P110\",\n  \"protocol_sha256\": \"8ad8870d42d30f3f8c330021b15e7f4f570032deba1ee5b79f57b9411e40e7f9\",\n  \"schema\": \"actinv-p110-composition-solve-g2-1\",\n  \"separate_output_paths_byte_identical\": true\n}\n{\n  \"gates\": {\n    \"G0\": \"PASS\",\n    \"G1\": \"PASS\",\n    \"G2\": \"PASS\",\n    \"G3_CI\": \"PASS\",\n    \"G3_local\": \"PASS\",\n    \"P108\": \"PASS\",\n    \"P109_preserved_FAIL\": \"PASS\",\n    \"predecessor_amendment\": \"PASS\",\n    \"repair_amendment\": \"PASS\"\n  },\n  \"persisted_matches\": true,\n  \"verdict\": \"P110-PASS\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 7,
+      "name": "P111 draft intrusion screen controls",
+      "run": "python controls/test_p111_oracle.py\npython controls/test_p111_seal.py\npython controls/test_p111_verdict.py\npython controls/test_p111_history.py\npython controls/check_p111.py --no-write\npython controls/check_p111_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/07.log",
+      "log_sha256": "b20f91388a84e1a55a631d3f5dd50d1ad25766d43a3bbe0a279ccd57e01ae65c",
+      "log_tail": "  \"target_count\": 62\n}\n{\n  \"exact_replay_equal\": true,\n  \"g0_exact_replay_equal\": true,\n  \"g1_result_sha256\": \"f23fe8837def36420486e1007799f27d29cff488808c611dc28166b862262c23\",\n  \"pass\": true,\n  \"persisted_result_matches\": true,\n  \"phase\": \"P111\",\n  \"protocol_sha256\": \"c2ffdb958682090803702c1de4adf670b3838b87db47eb8312356278199f231f\",\n  \"schema\": \"actinv-p111-intrusion-screen-g2-1\",\n  \"separate_output_paths_byte_identical\": true\n}\n{\n  \"artifact_blobs_verified\": true,\n  \"checkpoint_commit\": \"ff7e42e9f106946e610297d46f9f2b8787813f7e\",\n  \"derived_verdict\": \"P111-FAIL\",\n  \"derived_verdict_matches_persisted\": true,\n  \"expected_artifact_sha256\": {\n    \"results/g0_p111_intrusion_screen.json\": \"a89640ce1c7517ad14ea8c047dade510a1645c2fd6eb49d8a5db0aee2b297940\",\n    \"results/g1_p111_intrusion_screen.json\": \"f23fe8837def36420486e1007799f27d29cff488808c611dc28166b862262c23\",\n    \"results/g2_p111_intrusion_screen.json\": \"de311b2981ec09f0eea8c05a19a84ac5bc83dd3f46e6596ce075de537837e1fd\",\n    \"results/g3_p111_quality.json\": \"18caa3dced925f47ba5f3bbe2bdc2935a0d3db838b6137acd221126a80fb309e\",\n    \"results/p111_verdict.json\": \"35c3b5eb4ef12fcad7e78f90a9103b476cdb51b29cb7974b7ec0a3ddae25579c\"\n  },\n  \"failure_log_exit_2_and_bound\": true,\n  \"g0_g1_g2_pass_g3_local_fail\": true,\n  \"historical_source_verification\": false,\n  \"pass\": true,\n  \"persisted_verdict_sha256\": \"35c3b5eb4ef12fcad7e78f90a9103b476cdb51b29cb7974b7ec0a3ddae25579c\",\n  \"rust_source_count\": 99,\n  \"rust_sources_materialized\": true\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 8,
+      "name": "P112 draft intrusion screen successor controls",
+      "run": "python controls/test_p112_seal.py\npython controls/test_p112_verdict.py\npython controls/check_p112.py --no-write\npython controls/check_p112_verdict.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/08.log",
+      "log_sha256": "badc31ed1e53a77bc5adcd60b143f83626e23411dabe598f053c24860bd9f25c",
+      "log_tail": "   \"nonfinite_activity\": true,\n      \"nonfinite_rq\": true,\n      \"nonfinite_wac\": true,\n      \"outer_schema\": true,\n      \"outer_size_cap\": true,\n      \"property_count_cap\": true,\n      \"raw_duplicate_embedded_waste_key\": true,\n      \"raw_duplicate_mesh_record_key\": true,\n      \"raw_duplicate_native_input_key\": true,\n      \"raw_duplicate_outer_key\": true,\n      \"raw_duplicate_rq_nuclide_key\": true,\n      \"raw_duplicate_wac_nuclide_key\": true,\n      \"rq_ratio_overflow\": true,\n      \"zero_half_life\": true,\n      \"zero_mass\": true,\n      \"zero_rq\": true,\n      \"zero_step\": true\n    },\n    \"pass\": true\n  },\n  \"repeat_byte_identical\": true,\n  \"schema\": \"actinv-p112-intrusion-screen-g1-1\",\n  \"target_count\": 62\n}\n{\n  \"exact_replay_equal\": true,\n  \"g0_exact_replay_equal\": true,\n  \"g1_result_sha256\": \"1193312d504ef6e21c7be973d79b22c32b85ae619f9b6341b2269885013c61e6\",\n  \"pass\": true,\n  \"persisted_result_matches\": true,\n  \"phase\": \"P112\",\n  \"protocol_sha256\": \"ca19ccc59603ae97e84f5b2a50620a4ae3d87d8d6515a7b04b7d2af5d9cd56be\",\n  \"schema\": \"actinv-p112-intrusion-screen-g2-1\",\n  \"separate_output_paths_byte_identical\": true\n}\n{\n  \"gates\": {\n    \"G0\": \"PASS\",\n    \"G1\": \"PASS\",\n    \"G2\": \"PASS\",\n    \"G3_CI\": \"PASS\",\n    \"G3_CI_evidence_consistent\": \"PASS\",\n    \"G3_local\": \"PASS\",\n    \"prior_verdict_hashes\": \"PASS\",\n    \"prior_verdicts\": \"PASS\",\n    \"protocol\": \"PASS\",\n    \"repair_policy\": \"PASS\",\n    \"source_controls_bound\": \"PASS\"\n  },\n  \"persisted_matches\": true,\n  \"verdict\": \"P112-PASS\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 9,
+      "name": "P113 terminal failure history remains immutable",
+      "run": "python controls/test_p113_history.py\npython controls/check_p113_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/09.log",
+      "log_sha256": "ff53eaed7e0c02a068b0fd3dc59d9e962a128d56b7976087ede695e5d0149b70",
+      "log_tail": "./usr/lib/python3.14/tempfile.py:961: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/home/connoravila/.cache/avila-night/actinv-park-202610062234/target/preflight-tmp/p113-rust-snapshot-l6s9rpwe/p113-rust-mkjbo0ja'>\n  _warnings.warn(warn_message, ResourceWarning)\n.....\n----------------------------------------------------------------------\nRan 6 tests in 2.829s\n\nOK\n{\n  \"amended_g0_g1_g2_not_run\": true,\n  \"amended_source_archive_files_verified\": 109,\n  \"checkpoint_commit\": \"81db5c03eeb876a88b6ddd7a2d2b8975308178e5\",\n  \"derived_verdict\": \"P113-FAIL\",\n  \"derived_verdict_matches_persisted\": true,\n  \"failure_artifacts_verified\": true,\n  \"historical_rust_files_materialized\": 100,\n  \"historical_source_verification\": false,\n  \"initial_g0_archive_files_verified\": 59,\n  \"pass\": true,\n  \"terminal_control_sources_verified\": 44,\n  \"terminal_invocation_exit_127_no_children\": true,\n  \"verdict\": \"P113-FAIL\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 10,
+      "name": "P114 terminal failure remains immutable",
+      "run": "python controls/test_p114_history.py\npython controls/check_p114_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/10.log",
+      "log_sha256": "809daddf2d4c1539abd4b59a1671b246ecba3b62d137d601002c954f6a3e5047",
+      "log_tail": "......\n----------------------------------------------------------------------\nRan 6 tests in 10.125s\n\nOK\n{\n  \"checkpoint_commit\": \"88e9251a6c7a61db2293ee9772457e4f51842253\",\n  \"derived_verdict\": \"P114-FAIL\",\n  \"derived_verdict_matches_persisted\": true,\n  \"executed_gate_receipts_verified\": 9,\n  \"failure_record_verified\": true,\n  \"final_amended_archive_files_verified\": 196,\n  \"frozen_p114_control_files_verified\": 62,\n  \"g0_unsealed_g1_g2_unrun\": true,\n  \"historical_source_verification\": false,\n  \"initial_archive_files_verified\": 176,\n  \"initial_oracle_failure_receipt_verified\": true,\n  \"pass\": true,\n  \"rust_files_verified_against_checkpoint\": 100,\n  \"successful_gate_receipts_verified\": 8,\n  \"terminal_seal_failure_exit_1_verified\": true,\n  \"verdict\": \"P114-FAIL\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 11,
+      "name": "P115 terminal failure remains immutable",
+      "run": "python controls/test_p115_history.py\npython controls/check_p115_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/11.log",
+      "log_sha256": "6a7f559d6b88112af9983f39b6764b74ec4ed9ceace1edf1729419ea6ceb0e7a",
+      "log_tail": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.005s\n\nOK\n{\n  \"checkpoint_commit\": \"6db45f75b96fbcdfd2bfda0f6a603c10fbf88672\",\n  \"fail_only_projection_matches\": true,\n  \"failure_record_verified\": true,\n  \"historical_name_error_reproduced\": true,\n  \"historical_source_verification\": false,\n  \"initial_gate_receipts_verified\": 22,\n  \"initial_retained_files_verified\": 68,\n  \"initial_source_files_verified\": 180,\n  \"original_derivation_completed\": false,\n  \"pass\": true,\n  \"schema\": \"actinv-p115-history-verification-1\",\n  \"terminal_gate_receipts_verified\": 22,\n  \"terminal_retained_files_verified\": 68,\n  \"terminal_rust_files_verified\": 100,\n  \"terminal_source_files_verified\": 182,\n  \"terminal_verdict\": \"P115-FAIL\",\n  \"unearned_records_absent\": true,\n  \"verdict\": \"P115-FAIL\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 12,
+      "name": "P116 unchanged twin verification successor controls",
+      "run": "python controls/test_p116_oracle.py\npython controls/test_p116_seal.py\npython controls/test_p116_verdict.py\npython scripts/test_run_p116_gate.py\npython controls/test_p105_children.py\npython controls/check_p116.py --no-write\npython controls/test_p116_history.py\npython controls/check_p116_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/12.log",
+      "log_sha256": "18fda2b3eeaba1437c9fdb4e8c88c74e0e9592bc0354cce8fe29cae85b73b1b4",
+      "log_tail": "9a\",\n    \"metadata/p116-ci-terminal.json\": \"78b5f445eaa230093f3c169fa062ca48e152c5627201f54c8585d82e070b6217\",\n    \"pre_ci_local_verdict.json\": \"f3be6d6ada4afbfe28f9f32a06be300c219c94b0fda45f31051124ebf6fad606\",\n    \"source/p116-preserve-ci-failure.py\": \"8c72ee70265e710a46bd4e768bc6ee53d5bbb6c3aac08138317e0b47c2357220\"\n  },\n  \"ci_runs_sha256\": \"df939adb6bcb2a81bb9bca58df8638ea16ce0cdfcf94f89f1e07b3d302ff3c73\",\n  \"control_source_count\": 99,\n  \"control_sources_match_git\": true,\n  \"derived_verdict_matches_persisted\": true,\n  \"failed_workflows\": [\n    \"controls\",\n    \"fns-iron\"\n  ],\n  \"implementation_sha256\": \"be2e96c12e5fd5356eb493bc14909a782f6f6cba2fb739645d264ae0f1b249fa\",\n  \"local_science_pass\": true,\n  \"p116_artifact_sha256\": {\n    \"results/g0_p116_twin_waste.json\": \"7e08a5f94e2cce3d62229c1e1233938270420c27556abb1a81e3f304ebc4cf78\",\n    \"results/g1_p116_twin_waste.json\": \"74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9\",\n    \"results/g2_p116_twin_waste.json\": \"5e1cb32140fa7fe3000bf2d22e54b30af021d992f689d1a1a7ff1038b979fb6b\",\n    \"results/g3_p116_quality.json\": \"746876fc7c2d9da2432c5e1a816702a648f18c9ae920798c2639f9670082dd5b\"\n  },\n  \"pass\": true,\n  \"phase\": \"P116\",\n  \"protocol_sha256\": \"cf5841dafbd2470604b36d75fdafa2e2fc730e33abb26f6e44a4068e6388a8aa\",\n  \"schema\": \"actinv-p116-history-verification-1\",\n  \"successful_workflow_count\": 4,\n  \"terminal_verdict_sha256\": \"7d782e476b051cc2e7d9666e984511167f30d6e1e5ec73afc127d34ac9dac710\",\n  \"verdict\": \"P116-FAIL\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 13,
+      "name": "P117 terminal failure remains immutable",
+      "run": "python controls/test_p117_history.py\npython controls/check_p117_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/13.log",
+      "log_sha256": "cf51dae25503d9ee40787789f538c3960d52e425ab96f889c6c421fa354ad222",
+      "log_tail": "a18639828e9bca06268510d3679448de2f5\",\n    \"scripts/ci_data_seed.json\": \"905a71a71084f721b5dba4cf85697a0f84e04e5b6cb086d7d65e6e296ba8ff99\",\n    \"scripts/ci_tendl_files.txt\": \"475eb2706733b10957324ad94ec106cba94972cc86fb0504e253be1037715cf9\",\n    \"scripts/fetch_ci_data.sh\": \"e3b59683775fe379d73b0b307a145c499ecf21ba8d98e0fdf6bad2b082be7bd9\",\n    \"scripts/fetch_ci_seed.py\": \"be23680249616710739ba26ad3286aa2b68123f3c54e8669ae2ec60c0e016ec7\",\n    \"scripts/run_p115_gate.py\": \"5d584b8314628cd7f3bd188bc427012a2ad6002889fe3a316fe65b742fa02a15\",\n    \"scripts/run_p116_gate.py\": \"31098eb7182c06ecb2648553fc6703fcd8ea05d817d3beeaff6b2953be71cab0\",\n    \"scripts/run_p117_gate.py\": \"ae1e8cbfa837a10266af00474c4f963daf685bf942322ff868fe6c0b9300be78\",\n    \"scripts/run_roadmap_gate.py\": \"e78a811fa44629c1fcdf2adcc7c8f80c74216dcc4dbfec58506396b6bc75421d\",\n    \"scripts/test_fetch_ci_seed.py\": \"30ae894d33d552ed16a9470a31a755f9c2578b50abd5bd2946bda5a6020bf52f\",\n    \"scripts/test_run_p115_gate.py\": \"1b517b675328ef6c27049bbd1ece3fd8258782283a984165952c61a134b7f1f4\",\n    \"scripts/test_run_p116_gate.py\": \"e9090787569cb63a4646dcc1350fc4a1494b73023f3a8300089ec10a39b61175\",\n    \"scripts/test_run_p117_gate.py\": \"ca49f491ed03f6e7c1192873beaab76b42b594299eed60a15a499102c04d4539\",\n    \"scripts/test_run_roadmap_gate.py\": \"45d988ecf347e606053ddee8d49778e9ee8b53a9389602786220ba59bf291213\"\n  },\n  \"terminal_verdict_sha256\": \"11ea137a5362b5cc42c771137771cbad08b5cd7084939480138b80e656ee4e9b\",\n  \"verdict\": \"P117-FAIL\"\n}\n",
+      "tree_changes": []
+    },
+    {
+      "index": 14,
+      "name": "P118 terminal failure remains immutable",
+      "run": "python controls/test_p118_history.py\npython controls/check_p118_history.py\n",
+      "exit": 0,
+      "log": "target/p120-ci-steps/before/14.log",
+      "log_sha256": "be6eb63469b05e3b1d3ef1a58adc46df971d5d6e2fedb3d8462f77c332606912",
+      "log_tail": "18-recorder_regressions.log\": \"ca806c9d525d2234440ae8ae3b30dc2e8ca39432b70da62c4ddf6658727cccfc\",\n      \"results/failures/p118_initial/target/p118-rust_fmt.log\": \"d089e3fd1b6af72738fef9c8184fde8091a1e32d01cca07029facb83bbf17ea1\"\n    },\n    \"rust_fmt_exit_code\": 0,\n    \"test_count\": 14,\n    \"test_failure_count\": 1\n  },\n  \"p117_predecessor\": {\n    \"archive_file_count\": 100,\n    \"checkpoint_commit\": \"b81e8c3365a5a08ed55e9f99c0c88f945709996d\",\n    \"terminal_verdict\": \"P117-FAIL\"\n  },\n  \"pass\": true,\n  \"phase\": \"P118\",\n  \"predecessor_archive_file_count\": 100,\n  \"public_handbook_file_count\": 27,\n  \"rust_source_file_count\": 100,\n  \"schema\": \"actinv-p118-history-verification-1\",\n  \"terminal_archive_file_count\": 42,\n  \"terminal_discovery_sha256\": \"4d7f99aabec30439317c7de1bed2a70a26c63cb722c88d78a821038687d5de7a\",\n  \"terminal_source_file_count\": 319,\n  \"terminal_verdict\": {\n    \"actual_exit_code\": 1,\n    \"log_sha256\": \"c66e86d954a16e07135257da7dd8fac19992b99681170256c8d9a4e8141eeffe\",\n    \"observation_sha256\": \"314806ed542edaf763ba0a07f0d9752d89c2a521969f2924bba461e24067b25f\",\n    \"verdict\": \"P118-FAIL\",\n    \"verdict_sha256\": \"11e82faa9325641fa53f52d05be22cc3ca26ea6af8e65e9c55ed37e6da884743\"\n  },\n  \"unrun_artifacts_absent\": [\n    \"results/g0_p118_twin_waste.json\",\n    \"results/g1_p118_twin_waste.json\",\n    \"results/g2_p118_twin_waste.json\",\n    \"results/g3_p118_quality.json\",\n    \"results/p118_implementation_commit.json\",\n    \"results/p118_ci_runs.json\"\n  ],\n  \"verdict\": \"P118-FAIL\"\n}\n",
+      "tree_changes": []
+    }
+  ]
+}

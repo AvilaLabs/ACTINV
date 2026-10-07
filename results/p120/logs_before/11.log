@@ -1,0 +1,25 @@
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.005s
+
+OK
+{
+  "checkpoint_commit": "6db45f75b96fbcdfd2bfda0f6a603c10fbf88672",
+  "fail_only_projection_matches": true,
+  "failure_record_verified": true,
+  "historical_name_error_reproduced": true,
+  "historical_source_verification": false,
+  "initial_gate_receipts_verified": 22,
+  "initial_retained_files_verified": 68,
+  "initial_source_files_verified": 180,
+  "original_derivation_completed": false,
+  "pass": true,
+  "schema": "actinv-p115-history-verification-1",
+  "terminal_gate_receipts_verified": 22,
+  "terminal_retained_files_verified": 68,
+  "terminal_rust_files_verified": 100,
+  "terminal_source_files_verified": 182,
+  "terminal_verdict": "P115-FAIL",
+  "unearned_records_absent": true,
+  "verdict": "P115-FAIL"
+}
