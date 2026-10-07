@@ -265,3 +265,13 @@ It preserves both failures, verifies complete historical Git/source identities,
 uses portable durable-log replay, and requires eleven fresh bounded gates plus
 an exact-candidate clean-worktree verdict before push. No source-data or Rust
 change is permitted. P118 implementation and exact-SHA CI remain pending.
+
+P120 (protocol `protocols/ACTINV-P120_PROTOCOL.md`, with Amendment A) narrows the
+P116, P117 and P118 history verifiers to history: their frozen source, Rust and
+handbook maps are checked against the pinned commits' Git objects (`2117f3b`,
+`b81e8c3`, `6f3f964`), no longer against the working tree, and `check_p116.py
+--no-write` re-derives its sealed G0 from `2117f3b`. Archives, receipts, logs,
+verdicts, absent-artifact lists and the `ci.yml` transition guards are
+unchanged, and the P116 twin replay still guards present behaviour. Later Rust,
+handbook and control changes therefore no longer fail these checks. Evidence and
+verdict: `controls/check_p120.py`, `results/p120/`, `results/p120_verdict.json`.

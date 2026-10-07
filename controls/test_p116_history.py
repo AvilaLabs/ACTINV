@@ -49,18 +49,20 @@ class P116HistoryTests(unittest.TestCase):
         self.assertEqual(count, len(control_hashes))
         self.assertFalse(okay)
 
-    def test_current_rust_tree_must_match_the_implementation_commit(self):
-        g3 = {"production_rust_sha256": {f"src/{index}.rs": f"{index:064x}" for index in range(100)}}
-        paths = set(g3["production_rust_sha256"])
+    def test_rust_sources_must_match_the_implementation_commit_git_objects(self):
+        # P120: the sealed production map is checked against the implementation commit's Git objects; the working
+        # tree is not consulted, so later source changes cannot fail this history check.
+        blobs = {f"src/{index}.rs": f"fn f{index}() {{}}\n".encode() for index in range(100)}
+        g3 = {"production_rust_sha256": {path: history._sha(data) for path, data in blobs.items()}}
         implementation = {"commit_sha": history.COMMIT}
-        with patch.object(check_p116, "_rust_paths_at_commit", return_value=paths), \
-             patch.object(check_p116, "_current_rust_source_hashes",
-                          return_value=g3["production_rust_sha256"]), \
+        with patch.object(check_p116, "_rust_paths_at_commit", return_value=set(blobs)), \
+             patch.object(check_p116, "_git_blob", side_effect=lambda commit, path: blobs[path]), \
+             patch.object(check_p116, "_current_rust_source_hashes", side_effect=AssertionError("working tree read")), \
              patch.object(check_p116_verdict, "_source_commit_matches", return_value=True):
             self.assertTrue(history._current_rust_matches(g3, implementation))
-            changed = dict(g3["production_rust_sha256"])
-            changed["src/0.rs"] = "f" * 64
-            with patch.object(check_p116, "_current_rust_source_hashes", return_value=changed):
+            changed = dict(blobs)
+            changed["src/0.rs"] = b"changed\n"
+            with patch.object(check_p116, "_git_blob", side_effect=lambda commit, path: changed[path]):
                 self.assertFalse(history._current_rust_matches(g3, implementation))
 
 

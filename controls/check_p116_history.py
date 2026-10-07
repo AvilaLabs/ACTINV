@@ -182,8 +182,8 @@ def _check_control_sources(g0: dict) -> tuple[int, bool]:
         for relative, expected in controls.items():
             if not isinstance(expected, str) or not re.fullmatch(r"[0-9a-f]{64}", expected):
                 return len(controls), False
-            raw = _safe_file(relative).read_bytes()
-            if _sha(raw) != expected or _sha(check_p116._git_blob(COMMIT, relative)) != expected:
+            # P120: checked against the implementation commit's Git object, not the working tree.
+            if _sha(check_p116._git_blob(COMMIT, relative)) != expected:
                 return len(controls), False
     except (ImportError, OSError, ValueError, RuntimeError, KeyError, TypeError):
         return len(controls), False
@@ -202,9 +202,10 @@ def _current_rust_matches(g3: dict, implementation: dict) -> bool:
 
         sealed = g3.get("production_rust_sha256")
         paths = check_p116._rust_paths_at_commit(COMMIT)
+        # P120: the implementation commit's Git objects, not the working tree.
         return (isinstance(sealed, dict) and len(sealed) == 100 and len(paths) == 100
                 and set(sealed) == paths
-                and check_p116._current_rust_source_hashes() == sealed
+                and {path: _sha(check_p116._git_blob(COMMIT, path)) for path in paths} == sealed
                 and check_p116_verdict._source_commit_matches(g3, implementation))
     except (ImportError, OSError, ValueError, RuntimeError, KeyError, TypeError):
         return False

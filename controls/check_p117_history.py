@@ -365,20 +365,9 @@ def _verify_terminal_sources(discovery: dict) -> tuple[dict[str, str], dict[str,
     for relative, digest in rust.items():
         if _sha(p116._git_blob(CHECKPOINT, relative)) != digest:
             raise ValueError(f"terminal Rust Git blob mismatch: {relative}")
-    current_sources_match = True
-    for relative, digest in sources.items():
-        try:
-            current = _sha(_safe_file(relative).read_bytes())
-        except (OSError, ValueError):
-            current = None
-        if relative == ".github/workflows/ci.yml":
-            if current is None or not _ci_transition_matches():
-                current_sources_match = False
-        elif current != digest:
-            current_sources_match = False
-    current_rust = p116._current_rust_source_hashes()
-    if current_rust != rust:
-        raise ValueError("current Rust sources differ from the terminal P117 snapshot")
+    # P120: the frozen maps are checked against the checkpoint's Git objects (above); of the current tree only the
+    # registered CI workflow transition is still required.
+    current_sources_match = ".github/workflows/ci.yml" not in sources or _ci_transition_matches()
     return sources, rust, current_sources_match
 
 

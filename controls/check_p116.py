@@ -29,6 +29,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "protocols/ACTINV-P116_PROTOCOL.md"
 PROTOCOL_SHA256 = "cf5841dafbd2470604b36d75fdafa2e2fc730e33abb26f6e44a4068e6388a8aa"
 P116_CHECKPOINT = "6db45f75b96fbcdfd2bfda0f6a603c10fbf88672"
+# P120: the implementation commit whose Git objects equal the sealed G0 control map.
+P116_IMPLEMENTATION_COMMIT = "2117f3b5df715ce832658f58250103789be845bb"
 P116_AMENDMENT = ROOT / "protocols/ACTINV-P116_AMENDMENT_A.md"
 P116_AMENDMENT_SHA256 = "3fa71d7c7537dbe9132f5de8d9f4a64d33126f065f4f41aef7496fab38be372c"
 P116_DISCOVERY = ROOT / "results/failures/p116_initial/discovery.json"
@@ -252,13 +254,18 @@ def _repair_evidence() -> tuple[dict[str, str | None], bool]:
     return observed, bool(matches)
 
 
-def _safe_control_hashes(hashes: object) -> bool:
+def _safe_control_hashes(hashes: object, *, live: bool = True) -> bool:
     if not isinstance(hashes, dict) or set(hashes) != set(CONTROL_FILES):
         return False
     root = ROOT.resolve(strict=True)
     for relative, digest in hashes.items():
         if not isinstance(relative, str) or relative.startswith("/") or ".." in Path(relative).parts:
             return False
+        if not live:
+            # P120: digests read from pinned Git objects; the working tree is not consulted.
+            if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+                return False
+            continue
         path = ROOT / relative
         try:
             path.resolve(strict=True).relative_to(root)
@@ -593,7 +600,11 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
     pack_hash = _sha(PACK)
     mirror_hash = _sha(MIRROR)
     pack_mirror = bool(pack_hash and pack_hash == mirror_hash and PACK.read_bytes() == MIRROR.read_bytes())
-    hashes = {name: _sha(ROOT / name) for name in CONTROL_FILES}
+    if verify_current_sources:
+        hashes = {name: _sha(ROOT / name) for name in CONTROL_FILES}
+    else:
+        # P120: re-derive the sealed report from the implementation commit, not the working tree.
+        hashes = {name: _sha_bytes(_git_blob(P116_IMPLEMENTATION_COMMIT, name)) for name in CONTROL_FILES}
     try:
         checkpoint_hashes = _checkpoint_source_hashes()
         production_hashes = _production_rust_candidate(checkpoint_hashes,
@@ -809,7 +820,7 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
         and source_vectors and prior_hashes_present
         and type(g0["request_count"]) is int and g0["request_count"] >= 24
         and type(g0["component_target_count"]) is int and g0["component_target_count"] >= 32
-        and all(hashes.values()) and _safe_control_hashes(hashes)
+        and all(hashes.values()) and _safe_control_hashes(hashes, live=verify_current_sources)
         and _sha(P116_DISCOVERY) == P116_DISCOVERY_SHA256
         and g0["repair_amendment_registered"] is True
         and repair_evidence.get("pass") is True
@@ -836,7 +847,8 @@ def _g0_base(*, verify_current_sources: bool = True) -> dict:
 
 
 def g0(*, seal: bool = False, no_write: bool = False) -> int:
-    report = _g0_base()
+    # P120: --no-write verifies the sealed record from pinned Git objects; sealing still reads the working tree.
+    report = _g0_base(verify_current_sources=not no_write)
     if no_write:
         equal = G0.is_file() and G0.read_bytes() == _json_bytes(report)
         report["persisted_seal_matches"] = equal

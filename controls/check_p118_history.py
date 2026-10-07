@@ -147,18 +147,16 @@ def _verify_source_maps(discovery: dict) -> tuple[dict, dict, dict]:
             archived = f"{ARCHIVE}/{path}"
             if discovery["preserved_files_sha256"].get(path) != digest or _sha(_read(archived)) != digest:
                 raise ValueError(f"P118 prior source bytes not preserved: {path}")
-        elif _sha(_read(path)) != digest:
-            raise ValueError(f"current source differs from P118 checkpoint: {path}")
-    if (set(rust) != p116._rust_paths_at_commit(CHECKPOINT)
-            or p116._current_rust_source_hashes() != rust):
+    # P120: the frozen maps are checked against the checkpoint's Git objects only; later source changes are not
+    # history and are guarded by regression tests and behavioural replays instead.
+    if set(rust) != p116._rust_paths_at_commit(CHECKPOINT):
         raise ValueError("P118 Rust source population differs")
     for path, digest in rust.items():
-        if _sha(p116._git_blob(CHECKPOINT, path)) != digest or _sha(_read(path)) != digest:
+        if _sha(p116._git_blob(CHECKPOINT, path)) != digest:
             raise ValueError(f"P118 Rust source differs: {path}")
     for path, digest in handbook.items():
         if (not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None
-                or _sha(p116._git_blob(CHECKPOINT, path)) != digest
-                or _sha(_read(path)) != digest):
+                or _sha(p116._git_blob(CHECKPOINT, path)) != digest):
             raise ValueError(f"P118 public handbook input differs: {path}")
     if not _workflow_transition_matches():
         raise ValueError("P119 CI workflow transition differs")
