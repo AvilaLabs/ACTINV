@@ -89,6 +89,15 @@ Response coefficients use log-log interpolation while retaining duplicate absorp
 does not cover a contributing energy or material element, the dose is unavailable and the excluded power/elements are
 ledgered.
 
+Photon groups whose centroid lies below the response's lowest tabulated energy (the largest first energy among the air
+curve and the material's element curves; 1 keV for the shipped NIST response) are sub-threshold, for example the
+sub-keV K X-rays of F-18 or N-16. They add nothing to the contact proxy and are reported as
+`dose_response_subthreshold_power_W_g`, not as excluded power. The proxy is still reported while the sub-threshold power
+is at most `1e-4` of the response's total photon power for the step (per nuclide, of that nuclide's power). Below 1 keV
+the air-to-material ratio is not tabulated and in low-Z materials can move by up to about an order of magnitude, so a
+share of `1e-4` leaves the proxy low by at most about `1e-3`. Centroids above the response's highest energy, missing
+elements and power outside the group structure still make the proxy unavailable (P121).
+
 ## Transport-flux interchange and independent cells (P8)
 
 Canonical neutron values are group integrals `Phi_g` in `n cm^-2 s^-1`. OpenMC tracklength flux tallies are integrated

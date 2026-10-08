@@ -120,10 +120,13 @@ included only when their channels are requested. Neither reported interval is a 
   transport-source scale;
 - `nuclides_with_em_energy_but_no_photon_spectrum` — no invented photons, plus the omitted gamma-power bound;
 - `group_underflow_*` and `group_overflow_*` — photon rates and powers outside the selected group structure;
-- `response_excluded_power_W_g`, `response_missing_elements` — why a contact-dose response is incomplete.
+- `response_excluded_power_W_g`, `response_missing_elements` — why a contact-dose response is incomplete;
+- `response_subthreshold_power_W_g` — power in groups with centroid below the response's lowest energy, left out of the
+  proxy and not counted in `response_excluded_power_W_g`. Present only when non-zero.
 
 The step source repeats the user-facing consequences as `unrepresented_gamma_power_W_g`,
-`represented_gamma_power_fraction`, `ungrouped_power_W_g` and `dose_response_power_coverage`.
+`represented_gamma_power_fraction`, `ungrouped_power_W_g` and `dose_response_power_coverage`, plus `dose_response_subthreshold_power_W_g` when it is non-zero. The contact proxy
+stays available while that sub-threshold power is at most `1e-4` of the step's response power.
 
 ## Mesh rebin accounting
 

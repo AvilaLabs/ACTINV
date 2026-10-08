@@ -761,6 +761,7 @@ fn maximal_step_out() -> StepOut {
             represented_gamma_power_fraction: 0.0,
             contact_gamma_air_dose_proxy_Gy_h: None,
             dose_response_power_coverage: None,
+            dose_response_subthreshold_power_W_g: 0.0,
         }),
         uncertainty: Some(StepUncertainty {
             method: "shape",

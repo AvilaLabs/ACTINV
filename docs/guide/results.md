@@ -23,7 +23,7 @@ For a sample of known mass in grams, multiply the per-gram activity or heat by t
 
 Photon sources, dose-response quantities, pathways, uncertainty, radiological responses, and damage observables depend on the requested options and required data. An absent field means that output was not emitted; it is not a zero result.
 
-Photon group values represent source strength integrated over each energy group. Contact gamma dose is a semi-infinite-slab screening proxy; use separate transport for geometry-dependent dose. Radiological indices use your selected coefficient table. NRT dpa uses the supplied damage-energy table and displacement energies. [Scope and qualification](qualification.md) explains these boundaries.
+Photon group values represent source strength integrated over each energy group. Contact gamma dose is a semi-infinite-slab screening proxy; use separate transport for geometry-dependent dose. Photon power below the response's lowest energy (1 keV for the NIST response) is left out of the proxy and shown as `dose_response_power_coverage` below one and as `dose_response_subthreshold_power_W_g`. The proxy is still reported when that power is at most `1e-4` of the step's photon power, because the missing low-energy response then changes it by at most about `1e-3`; above that share it is `null`. Radiological indices use your selected coefficient table. NRT dpa uses the supplied damage-energy table and displacement energies. [Scope and qualification](qualification.md) explains these boundaries.
 
 Pathways identify a source and first product with ranked contributions in trace mode. They do not enumerate every intermediate member of a reaction chain.
 

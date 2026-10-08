@@ -343,6 +343,14 @@ sources and energy-closure diagnostics, but dose fields are `null`.
 Build response data with `scripts/build_photon_response.py`; see the [data-source record](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md). A response must contain attenuation
 curves for every material element to produce the contact-dose proxy.
 
+Photon power in groups whose centroid is below the response's lowest tabulated energy (1 keV for the shipped NIST
+response) does not enter the proxy. It is reported as `dose_response_subthreshold_power_W_g`. The proxy is still given
+when that power is at most `1e-4` of the step's total photon power; a nuclide's own proxy follows the same rule with
+that nuclide's power. The limit is fixed. Below 1 keV the air-to-material ratio is not tabulated and can move by up to
+about an order of magnitude in light elements, so a `1e-4` share leaves the proxy low by at most about `1e-3`. If the
+share is larger, the proxy is `null`; use a response that reaches lower energies or a transport calculation. Groups
+above the response's highest energy, missing elements and power outside the group structure still make the proxy `null`.
+
 ## Options and result
 
 `mode` is `auto`, `trace`, or `coupled`. `cram_order` is `16` (default) or `48`; an uncertainty run evaluates the
@@ -489,7 +497,8 @@ When photons are requested (or `outputs` is omitted), `steps[].photon_source` co
 - group photon rates, energy centroids and emitted powers, per gram and for `material.mass_g`;
 - raw energy moments, explicit `E_EM` normalization factors and represented-power fraction;
 - specific gamma constants in `Gy m2/(Bq s)` and `mGy m2/(GBq h)` when a response is supplied;
-- `contact_gamma_air_dose_proxy_Gy_h`, response coverage, and explicit ungrouped/unrepresented power.
+- `contact_gamma_air_dose_proxy_Gy_h`, response coverage, and explicit ungrouped/unrepresented power;
+- `dose_response_subthreshold_power_W_g`, only when non-zero: photon power below the response's lowest energy, omitted from the proxy.
 
 Use one-based result step numbers for transport export:
 

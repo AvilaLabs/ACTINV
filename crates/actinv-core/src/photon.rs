@@ -148,6 +148,14 @@ pub struct PhotonSourceOut {
     pub represented_gamma_power_fraction: f64,
     pub contact_gamma_air_dose_proxy_Gy_h: Option<f64>,
     pub dose_response_power_coverage: Option<f64>,
+    /// Power (W/g) in groups whose centroid lies below the response's lowest tabulated energy.
+    /// It is omitted from the proxy; present only when non-zero.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub dose_response_subthreshold_power_W_g: f64,
+}
+
+fn is_zero(v: &f64) -> bool {
+    *v == 0.0
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -175,6 +183,8 @@ pub struct PhotonDiagnostics {
     pub group_underflow_power_W_g: f64,
     pub group_overflow_power_W_g: f64,
     pub response_excluded_power_W_g: f64,
+    #[serde(skip_serializing_if = "is_zero")]
+    pub response_subthreshold_power_W_g: f64,
     pub response_missing_elements: Vec<String>,
 }
 
@@ -510,6 +520,25 @@ fn gamma_constant(
     )
 }
 
+/// Largest sub-threshold power share (of the response's total photon power) for which the
+/// contact proxy is still reported. Below the response's lowest energy the air/material
+/// ratio is not tabulated; in low-Z materials it moves by up to about an order of magnitude,
+/// so a share of 1e-4 leaves the proxy low by at most about 1e-3.
+const SUBTHRESHOLD_POWER_TOLERANCE: f64 = 1e-4;
+
+/// Lowest energy at which the air curve and every material element curve are all tabulated.
+/// Zero (no sub-threshold groups) when an element curve is missing.
+fn response_lowest_energy(response: &PhotonResponse, fractions: &BTreeMap<String, f64>) -> f64 {
+    let mut e_lo = response.air_mass_energy_absorption.energy_eV[0];
+    for element in fractions.keys() {
+        match response.element_mass_attenuation.get(element) {
+            Some(curve) => e_lo = e_lo.max(curve.energy_eV[0]),
+            None => return 0.0,
+        }
+    }
+    e_lo
+}
+
 /// Build one step's source from `(name, decay record, activity Bq/g)` entries.
 #[allow(clippy::too_many_arguments)]
 pub fn source_for_step(
@@ -537,6 +566,13 @@ pub fn source_for_step(
     let mut contact_available = response.is_some() && material_response_complete;
     let mut response_included_power = 0.0;
     let mut response_total_power = 0.0;
+    let mut total_subthreshold = 0.0;
+    let response_e_lo = match response {
+        Some(r) if material_response_complete => {
+            response_lowest_energy(r, material_mass_fractions)
+        }
+        _ => 0.0,
+    };
 
     if response.is_some() && !material_response_complete {
         diag.response_missing_elements = material_mass_fractions
@@ -619,8 +655,11 @@ pub fn source_for_step(
         };
         let mut contact_nuclide = 0.0;
         let mut contact_ok = contact_available;
+        let mut nuclide_subthreshold = 0.0;
+        let mut nuclide_response_power = 0.0;
         if let Some(r) = response {
             response_total_power += activity * sh.source_energy;
+            nuclide_response_power = activity * sh.source_energy;
             if sh.under_energy > 0.0 || sh.over_energy > 0.0 {
                 diag.response_excluded_power_W_g +=
                     activity * (sh.under_energy + sh.over_energy) * EV;
@@ -632,6 +671,11 @@ pub fn source_for_step(
                     continue;
                 }
                 let e = sh.group_moment[g] / sh.group_count[g];
+                if e < response_e_lo {
+                    nuclide_subthreshold += moment_rate;
+                    diag.response_subthreshold_power_W_g += moment_rate * EV;
+                    continue;
+                }
                 match (
                     curve_value(&r.air_mass_energy_absorption, e),
                     material_mu(r, material_mass_fractions, e),
@@ -653,9 +697,14 @@ pub fn source_for_step(
                 }
             }
         }
+        total_subthreshold += nuclide_subthreshold;
         if contact_ok {
             contact_total += contact_nuclide;
         }
+        // A nuclide's own share above the tolerance withholds its proxy, not its covered
+        // contribution to the total (which is governed by the total share).
+        let nuclide_share_ok =
+            nuclide_subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * nuclide_response_power;
         by_nuclide.push(NuclidePhotonOut {
             nuclide: name.into(),
             activity_Bq_g: activity,
@@ -667,7 +716,7 @@ pub fn source_for_step(
             source_power_W_g: activity * sh.source_energy * EV,
             gamma_constant_Gy_m2_Bq_s: response.map(|_| gc),
             gamma_constant_mGy_m2_GBq_h: response.map(|_| gc * 3.6e15),
-            contact_gamma_air_dose_proxy_Gy_h: if contact_ok {
+            contact_gamma_air_dose_proxy_Gy_h: if contact_ok && nuclide_share_ok {
                 Some(contact_nuclide)
             } else {
                 None
@@ -745,12 +794,14 @@ pub fn source_for_step(
             },
             contact_gamma_air_dose_proxy_Gy_h: if contact_available
                 && diag.response_excluded_power_W_g == 0.0
+                && total_subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * response_total_power
             {
                 Some(contact_total)
             } else {
                 None
             },
             dose_response_power_coverage: coverage,
+            dose_response_subthreshold_power_W_g: diag.response_subthreshold_power_W_g,
         },
         diag,
     ))
@@ -1004,6 +1055,230 @@ mod tests {
         }
     }
 
+    mod subthreshold {
+        use super::super::{source_for_step, PhotonResponse, ResponseCurve};
+        use crate::run::EV;
+        use actinv_data::decay::{DiscreteRadiation, Nuclide, Spectrum};
+        use std::collections::BTreeMap;
+
+        // Group 0 holds the sub-keV lines, group 3 lies above the response's top energy.
+        const BOUNDS: [f64; 5] = [100.0, 1.0e3, 1.0e5, 1.0e7, 1.0e8];
+
+        fn curve(values: [f64; 4]) -> ResponseCurve {
+            ResponseCurve {
+                energy_eV: vec![1.0e3, 1.0e4, 1.0e6, 1.0e7],
+                values_cm2_g: values.to_vec(),
+            }
+        }
+
+        /// Air and element "H" are tabulated at 1 keV, 10 keV, 1 MeV and 10 MeV, so a line
+        /// at a tabulated energy has an exact response: air/H = 2 at 10 keV, 0.5 at 1 MeV.
+        fn response() -> PhotonResponse {
+            let mut elements = BTreeMap::new();
+            elements.insert("H".to_string(), curve([4500.0, 5.0, 0.06, 0.03]));
+            PhotonResponse {
+                schema: "actinv-photon-response-1".into(),
+                provenance: serde_json::Value::Null,
+                air_mass_energy_absorption: curve([3000.0, 10.0, 0.03, 0.02]),
+                element_mass_attenuation: elements,
+            }
+        }
+
+        fn fractions(elements: &[&str]) -> BTreeMap<String, f64> {
+            let w = 1.0 / elements.len() as f64;
+            elements.iter().map(|e| (e.to_string(), w)).collect()
+        }
+
+        /// Discrete lines `(energy_eV, intensity)`; the mean EM energy equals the line sum,
+        /// so the source scale is one.
+        fn nuclide(lines: &[(f64, f64)]) -> Nuclide {
+            let discrete = lines
+                .iter()
+                .map(|&(energy, intensity)| DiscreteRadiation {
+                    energy,
+                    d_energy: 0.0,
+                    rtyp: 0.0,
+                    transition_type: 0.0,
+                    intensity,
+                    d_intensity: 0.0,
+                    pair_intensity: 0.0,
+                    d_pair_intensity: 0.0,
+                    conversion_total: 0.0,
+                    d_conversion_total: 0.0,
+                    conversion_k: 0.0,
+                    d_conversion_k: 0.0,
+                    conversion_l: 0.0,
+                    d_conversion_l: 0.0,
+                })
+                .collect();
+            Nuclide {
+                mat: 0,
+                za: 1001,
+                awr: 1.0,
+                liso: 0,
+                nst: 0,
+                half_life: 1.0,
+                d_half_life: 0.0,
+                energies: vec![0.0, 0.0, lines.iter().map(|&(e, i)| e * i).sum()],
+                modes: Vec::new(),
+                spectra: vec![Spectrum {
+                    styp: 0.0,
+                    lcon: 0,
+                    lcov: 0,
+                    fd: 1.0,
+                    d_fd: 0.0,
+                    average_energy: 0.0,
+                    d_average_energy: 0.0,
+                    fc: 0.0,
+                    d_fc: 0.0,
+                    discrete,
+                    continuous: None,
+                }],
+            }
+        }
+
+        fn run(
+            active: &[(&str, &Nuclide, f64)],
+            elements: &[&str],
+            complete: bool,
+        ) -> (super::super::PhotonSourceOut, super::super::PhotonDiagnostics) {
+            source_for_step(
+                active,
+                &BOUNDS,
+                "test",
+                1.0,
+                Some(&response()),
+                &fractions(elements),
+                complete,
+                2.0,
+                0.0,
+            )
+            .unwrap()
+        }
+
+        /// Gy/h from `eV/s/g` of photons at a given air/material ratio, with B = 2.
+        fn gy_h(ev_per_s_g: f64, ratio: f64) -> f64 {
+            ratio * ev_per_s_g * EV * 1000.0 * 3600.0
+        }
+
+        fn close(a: f64, b: f64) -> bool {
+            (a - b).abs() <= 1e-12 * b.abs().max(1e-300)
+        }
+
+        #[test]
+        fn small_subthreshold_share_keeps_the_proxy() {
+            let n = nuclide(&[(500.0, 1.0e-6), (1.0e4, 1.0), (1.0e6, 1.0)]);
+            let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
+            let expected = gy_h(1.0e4, 2.0) + gy_h(1.0e6, 0.5);
+            let total = src.contact_gamma_air_dose_proxy_Gy_h.unwrap();
+            assert!(close(total, expected), "{total} vs {expected}");
+            let own = src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.unwrap();
+            assert!(close(own, expected));
+            assert!(close(
+                src.dose_response_subthreshold_power_W_g,
+                500.0e-6 * EV
+            ));
+            assert_eq!(
+                diag.response_subthreshold_power_W_g,
+                src.dose_response_subthreshold_power_W_g
+            );
+            assert_eq!(diag.response_excluded_power_W_g, 0.0);
+            assert!(src.dose_response_power_coverage.unwrap() < 1.0);
+        }
+
+        #[test]
+        fn large_subthreshold_share_withholds_the_proxy() {
+            let n = nuclide(&[(500.0, 1.0), (1.0e6, 1.0)]);
+            let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
+            assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(close(src.dose_response_subthreshold_power_W_g, 500.0 * EV));
+            assert_eq!(diag.response_excluded_power_W_g, 0.0);
+        }
+
+        #[test]
+        fn nuclide_share_over_tolerance_still_adds_to_a_total_within_tolerance() {
+            // A: own share 5e-4 (over 1e-4). The step's share is ~5e-10 (under 1e-4).
+            let a = nuclide(&[(500.0, 1.0), (1.0e6, 1.0)]);
+            let b = nuclide(&[(1.0e4, 1.0)]);
+            let (src, _) = run(&[("A", &a, 1.0e-3), ("B", &b, 1.0e6)], &["H"], true);
+            assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+            let expected_b = gy_h(1.0e6 * 1.0e4, 2.0);
+            let own_b = src.by_nuclide[1].contact_gamma_air_dose_proxy_Gy_h.unwrap();
+            assert!(close(own_b, expected_b));
+            let expected_total = gy_h(1.0e-3 * 1.0e6, 0.5) + expected_b;
+            let total = src.contact_gamma_air_dose_proxy_Gy_h.unwrap();
+            assert!(close(total, expected_total), "{total} vs {expected_total}");
+        }
+
+        #[test]
+        fn subthreshold_with_centroid_above_top_energy_is_refused() {
+            let n = nuclide(&[(500.0, 1.0e-6), (1.0e6, 1.0), (5.0e7, 1.0e-3)]);
+            let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
+            assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(close(diag.response_excluded_power_W_g, 5.0e4 * EV));
+            assert!(diag.response_subthreshold_power_W_g > 0.0);
+        }
+
+        #[test]
+        fn subthreshold_with_missing_element_is_refused() {
+            let n = nuclide(&[(500.0, 1.0e-6), (1.0e6, 1.0)]);
+            let (src, diag) = run(&[("A", &n, 1.0)], &["H", "Xx"], false);
+            assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert_eq!(diag.response_missing_elements, vec!["Xx".to_string()]);
+            assert!(diag.response_excluded_power_W_g > 0.0);
+        }
+
+        #[test]
+        fn subthreshold_with_group_under_or_overflow_is_refused() {
+            for stray in [50.0, 2.0e8] {
+                let n = nuclide(&[(500.0, 1.0e-6), (1.0e6, 1.0), (stray, 1.0e-3)]);
+                let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
+                assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none(), "{stray}");
+                assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+                assert!(diag.response_excluded_power_W_g > 0.0);
+                assert!(diag.response_subthreshold_power_W_g > 0.0);
+            }
+        }
+
+        #[test]
+        fn no_subthreshold_group_leaves_results_and_json_unchanged() {
+            let n = nuclide(&[(1.0e4, 1.0), (1.0e6, 1.0)]);
+            let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
+            let expected = gy_h(1.0e4, 2.0) + gy_h(1.0e6, 0.5);
+            assert!(close(
+                src.contact_gamma_air_dose_proxy_Gy_h.unwrap(),
+                expected
+            ));
+            assert!(close(src.dose_response_power_coverage.unwrap(), 1.0));
+            assert_eq!(src.dose_response_subthreshold_power_W_g, 0.0);
+            assert_eq!(diag.response_subthreshold_power_W_g, 0.0);
+            let json = serde_json::to_string(&src).unwrap();
+            assert!(!json.contains("dose_response_subthreshold_power_W_g"));
+            let diag_json = serde_json::to_string(&diag).unwrap();
+            assert!(!diag_json.contains("response_subthreshold_power_W_g"));
+        }
+
+        #[test]
+        fn subthreshold_field_serializes_when_present_and_reads_back_when_absent() {
+            let n = nuclide(&[(500.0, 1.0e-6), (1.0e6, 1.0)]);
+            let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
+            let json = serde_json::to_string(&src).unwrap();
+            assert!(json.contains("dose_response_subthreshold_power_W_g"));
+            assert!(serde_json::to_string(&diag)
+                .unwrap()
+                .contains("response_subthreshold_power_W_g"));
+            let mut value: serde_json::Value = serde_json::from_str(&json).unwrap();
+            value
+                .as_object_mut()
+                .unwrap()
+                .remove("dose_response_subthreshold_power_W_g");
+            let back: super::super::PhotonSourceOut = serde_json::from_value(value).unwrap();
+            assert_eq!(back.dose_response_subthreshold_power_W_g, 0.0);
+        }
+    }
+
     mod mesh_export {
         use super::super::{
             export_openmc_mesh, mesh_cell_from_source, MeshPhotonCell, PhotonGroupOut,
@@ -1040,6 +1315,7 @@ mod tests {
                 represented_gamma_power_fraction: 1.0,
                 contact_gamma_air_dose_proxy_Gy_h: None,
                 dose_response_power_coverage: None,
+                dose_response_subthreshold_power_W_g: 0.0,
             }
         }
 

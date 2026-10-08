@@ -387,3 +387,5 @@ priority — each needs its own protocol before any code changes.
   Acceptance sketch: the FLiBe case gets a proxy whose value matches the current formula over the covered power;
   materials with no sub-keV lines are bit-identical to today; a test pins the refusal for over-range power and
   missing elements. FARIS record: `docs/notes/MAINTENANCE_COUPLING_VALIDATION_RESULT.md` (variant V1).
+  **Resolved by P121 (2026-10-07):** sub-threshold groups are omitted from the proxy and reported as
+  `dose_response_subthreshold_power_W_g`; the proxy is given while that share is at most 1e-4.
