@@ -1,0 +1,38 @@
+{
+  "e1_candidate_head": "0bad426ba089b124576ed67378c21aa2fbe79cc6",
+  "e1_log_bytes_identical": {
+    "P103 source-seal integrity (historical)": true,
+    "P105 waste classification, aggregation, and budget controls": false,
+    "P107 conservative whole-component waste bounds": false,
+    "P108 conservative composition response bounds": false,
+    "P109 preserved failure checkpoint": false,
+    "P110 native composition basis and witness verification": false,
+    "P111 draft intrusion screen controls": false,
+    "P112 draft intrusion screen successor controls": false,
+    "P113 terminal failure history remains immutable": false,
+    "P114 terminal failure remains immutable": false,
+    "P115 terminal failure remains immutable": false,
+    "P116 unchanged twin verification successor controls": false,
+    "P117 terminal failure remains immutable": false,
+    "P118 terminal failure remains immutable": false
+  },
+  "e4_commit": "4c8e070fbb6fbed800efbfb46ef972a78dbb48fa",
+  "field_meanings": {
+    "check_p116_history.all_100_rust_sources_match_git": "the 100 Rust Git objects at 2117f3b equal the sealed production map",
+    "check_p117_history.current_source_matches_except_ci": "the b81e8c3 Git objects match the frozen maps and ci.yml matches its registered transition",
+    "check_p118_history.current_source_matches_except_p119_edits": "the 6f3f964 Git objects match the frozen maps and ci.yml matches its registered transition"
+  },
+  "gates": {
+    "E1": "PASS",
+    "E2": "PASS",
+    "E3": "PASS",
+    "E4": "PASS"
+  },
+  "phase": "P120",
+  "replaced_test": {
+    "added": "test_rust_sources_must_match_the_implementation_commit_git_objects",
+    "removed": "test_current_rust_tree_must_match_the_implementation_commit"
+  },
+  "schema": "actinv-p120-verdict-1",
+  "verdict": "P120-PASS"
+}

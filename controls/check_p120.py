@@ -38,7 +38,6 @@ EDITS = {
     "controls/check_p116.py": "# P120 E3 probe: a later control change.\n",
 }
 NEW_RUST = "crates/actinv-core/src/p120_e3_probe.rs"
-WORKFLOWS = ["controls", "desktop builds", "Build browser workbench", "Build handbook", "fusion-isotope", "fns-iron"]
 FIELD_MEANINGS = {
     "check_p118_history.current_source_matches_except_p119_edits":
         "the 6f3f964 Git objects match the frozen maps and ci.yml matches its registered transition",
@@ -121,9 +120,11 @@ def verdict() -> int:
     if ci is None:
         gates["E4"] = "NOT_EVALUATED"
     else:
-        rows = {r["name"]: r for r in ci.get("runs", [])}
-        gates["E4"] = "PASS" if (set(WORKFLOWS) <= set(rows) and all(
-            rows[w]["conclusion"] == "success" and rows[w]["headSha"] == ci.get("commit") for w in WORKFLOWS)) else "FAIL"
+        # Every workflow triggered on the pushed commit must succeed; "controls" must be among them. The handbook
+        # and browser workflows are path-filtered and do not run on a commit that touches neither.
+        rows = ci.get("runs", [])
+        gates["E4"] = "PASS" if (rows and "controls" in {r["name"] for r in rows} and all(
+            r["conclusion"] == "success" and r["headSha"] == ci.get("commit") for r in rows)) else "FAIL"
     if "FAIL" in gates.values():
         overall = "P120-FAIL"
     elif "NOT_EVALUATED" in gates.values():

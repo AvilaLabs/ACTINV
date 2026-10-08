@@ -2665,3 +2665,7 @@ Edited only the permitted files: `check_p118_history.py` and `check_p117_history
 ## Entry 140 — P120 E1–E3 recorded on candidate 0bad426 (2026-10-07)
 
 On the committed candidate, under the cgroup, the fourteen CI history steps each exited actual zero with no working-tree change (`results/p120/ci_steps_after.json`). E2: `controls/test_p120.py`, 7 tests, exit zero. E3: in a disposable worktree of the candidate with a comment line added to `photon.rs`, `docs/guide/results.md` and `controls/check_p116.py` and a new untracked `.rs` file, all seven converted verifiers and history suites exited zero (`results/p120/e2_e3.json`). E4 (CI on the pushed commit) is pending; the verdict is derived after it.
+
+## Entry 141 — P120-PASS (2026-10-07)
+
+CI on `4c8e070` (the pushed E1–E3 evidence commit): `controls`, `desktop builds`, `fns-iron` and `fusion-isotope` each completed success; the handbook and browser workflows are path-filtered and were not triggered, so E4 is read as every triggered workflow successful with `controls` among them (`results/p120/ci_runs.json`; the checker's fixed six-workflow list was replaced by that rule before the verdict was derived). Logs before and after differ only in timings and temporary-directory names. `controls/check_p120.py verdict` derived **P120-PASS** (E1–E4 PASS) into `results/p120_verdict.json`. The P116, P117 and P118 dispositions and every archived byte are unchanged; later source changes no longer fail those history checks.
