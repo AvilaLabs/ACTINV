@@ -20,7 +20,8 @@ class P116SealTests(unittest.TestCase):
     def setUpClass(cls):
         # Full historical/source verification is deliberately performed once;
         # policy and write/read tests below reuse this immutable report.
-        cls.g0_report = controls._g0_base()
+        # P120 Amendment B: verify the sealed production map and pinned Git objects.
+        cls.g0_report = controls._g0_base(verify_current_sources=False)
 
     def test_g0_binds_frozen_population_p115_failure_and_current_checkpoint(self):
         report = self.g0_report

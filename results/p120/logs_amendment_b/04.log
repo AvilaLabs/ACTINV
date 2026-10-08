@@ -1,0 +1,208 @@
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.250s
+
+OK
+{
+  "amendment_registered": true,
+  "amendment_sha256": "ce4fa1fa0abff041ee57349be7ca6009ed864a3368edeeb21089354b48f33d9f",
+  "case_count": 12,
+  "case_fixture_matches": true,
+  "case_fixture_sha256": "2a49a52705af1ad61f374daa763910ccbc2d7070f072c04b833d8af17209c83c",
+  "control_hashes": {
+    "controls/check_p107_history.py": "5817de21292b00e911fb53b6802ce0c271efc56c48aac87b8aeed4d65f7339d4",
+    "controls/check_p108.py": "349e957ef1382aa435cccbe7c3e85ee9a596240546dd4f6246756237d0a9ca6a",
+    "controls/check_p108_verdict.py": "731d3585724b6df9a0d26b67eda58f218b121452d7ce4f23e16909406a337928",
+    "controls/p108_composition_control.py": "72b5196afecd9d94f92bb4e81b8ddbb3f24ca6af6cf6a8f52a4a51e7eb1c5852",
+    "controls/test_p107_history.py": "fdd4c47b9751c73a346b9210f33b4f2f9b983ade13255a68ac8e88822ff1adf1",
+    "controls/test_p108_seal.py": "8022d0bf0c57d11d99d7ff905abed133f97b74d4cd7d60bc49b9439b0bd10dec"
+  },
+  "endpoint_count": 26,
+  "expected_labels": {
+    "frozen_labels": {
+      "all_zero": [
+        [
+          "A"
+        ]
+      ],
+      "coefficient_tie": [
+        [
+          "A"
+        ]
+      ],
+      "correlated_two": [
+        [
+          "A",
+          "B",
+          "C"
+        ]
+      ],
+      "external_h3": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "external_merge": [
+        [
+          "B"
+        ]
+      ],
+      "fixed_three": [
+        [
+          "C"
+        ]
+      ],
+      "incomplete": [
+        [
+          "unknown"
+        ]
+      ],
+      "missing_properties": [
+        [
+          "unknown"
+        ]
+      ],
+      "opposite_products": [
+        [
+          "C",
+          "above_class_c"
+        ]
+      ],
+      "single_fixed": [
+        [
+          "A"
+        ]
+      ],
+      "two_times": [
+        [
+          "A",
+          "B",
+          "C"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "zero_crossing": [
+        [
+          "A",
+          "B",
+          "C"
+        ]
+      ]
+    },
+    "labels": {
+      "all_zero": [
+        [
+          "A"
+        ]
+      ],
+      "coefficient_tie": [
+        [
+          "A"
+        ]
+      ],
+      "correlated_two": [
+        [
+          "A",
+          "B",
+          "C"
+        ]
+      ],
+      "external_h3": [
+        [
+          "A",
+          "B"
+        ]
+      ],
+      "external_merge": [
+        [
+          "B"
+        ]
+      ],
+      "fixed_three": [
+        [
+          "C"
+        ]
+      ],
+      "incomplete": [
+        [
+          "unknown"
+        ]
+      ],
+      "missing_properties": [
+        [
+          "unknown"
+        ]
+      ],
+      "opposite_products": [
+        [
+          "C",
+          "above_class_c"
+        ]
+      ],
+      "single_fixed": [
+        [
+          "A"
+        ]
+      ],
+      "two_times": [
+        [
+          "A",
+          "B",
+          "C"
+        ],
+        [
+          "A"
+        ]
+      ],
+      "zero_crossing": [
+        [
+          "A",
+          "B",
+          "C"
+        ]
+      ]
+    },
+    "opposite_products_every_vertex_fraction": "0.9",
+    "pass": true
+  },
+  "g3_check_failure_log_matches": true,
+  "g3_check_failure_log_sha256": "c14f21651e7aeee55834f97f20ffaa203fdf8c6d661478ec030c02baa0265b90",
+  "historical_p107_verified": true,
+  "p103_terminal_verdict": "P103-FAIL",
+  "p103_verdict_sha256": "fa5418af444d3aa9b48eb11e5d2be5600d6fb50cda07205f986984409b550e4c",
+  "p104_terminal_verdict": "P104-FAIL",
+  "p104_verdict_sha256": "ffbe247ed827204ee85b25c52c46c07127e9f05a96ab9cf2de0fb4932677f0e4",
+  "p105_terminal_verdict": "P105-PASS",
+  "p105_verdict_sha256": "0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41",
+  "p106_terminal_verdict": "P106-FAIL",
+  "p106_verdict_sha256": "a37f8a505db4d834fcab03105c37dd126ec120fc79a8f216418836de540412c3",
+  "p107_ci_record_sha256": "65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a",
+  "p107_historical_replay_sha256": "5817de21292b00e911fb53b6802ce0c271efc56c48aac87b8aeed4d65f7339d4",
+  "p107_implementation_record_sha256": "1be5e25cc80a7b62ca5a231a7f4af7cacb5bd93508512bacddd59c6a267775d7",
+  "p107_terminal_verdict": "P107-PASS",
+  "p107_verdict_sha256": "5e5bae7ebf1f5c244a84f6e03ffe19c3e148f3678d939bc12a09f26053aea3aa",
+  "pack_mirror_identical": true,
+  "pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+  "pass": true,
+  "persisted_seal_matches": true,
+  "phase": "P108",
+  "protocol_registered": true,
+  "protocol_sha256": "ae503d3fe2ff9569c793f162d3b9c19975815f80a53d20458513ee8b9d267fdd",
+  "schema": "actinv-p108-composition-g0-1",
+  "target_count": 13
+}
+{
+  "gates": {
+    "G0": "PASS",
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3_CI": "PASS",
+    "G3_local": "PASS",
+    "P107": "PASS"
+  },
+  "persisted_matches": true,
+  "verdict": "P108-PASS"
+}
