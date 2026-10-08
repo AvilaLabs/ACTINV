@@ -389,3 +389,13 @@ priority — each needs its own protocol before any code changes.
   missing elements. FARIS record: `docs/notes/MAINTENANCE_COUPLING_VALIDATION_RESULT.md` (variant V1).
   **Resolved by P121 (2026-10-07):** sub-threshold groups are omitted from the proxy and reported as
   `dose_response_subthreshold_power_W_g`; the proxy is given while that share is at most 1e-4.
+
+- 2026-10-08 — **Second user for per-cell material in mesh mode (found by FARIS 0.2 computed maintenance).** The
+  2026-10-05 item 2 above now has a measured cost. FARIS's restart continuation method starts each zero-flux cooling
+  run from the inventory at a shutdown (`atoms_per_g`), so every run has its own material and all share one schedule
+  (40 log-spaced steps, 1 h to 365 d). Mesh mode cannot batch them, because cells share one material. Each `actinv
+  run` takes about 0.85 s, most of it loading and verifying data, so shortening the history gained only about 1.2×,
+  while the coupling test made about 26,000 such runs. A per-cell material (or initial-inventory) reference with
+  data prepared once would remove the per-run load. Alternative with the same effect: an `actinv run` batch form that
+  takes many specs sharing one library and decay file. Not scheduled; needs its own protocol. FARIS record:
+  `docs/notes/RESTART_CONTINUATION.md` on branch `continuation-restart`.
