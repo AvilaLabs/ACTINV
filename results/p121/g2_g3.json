@@ -1,0 +1,157 @@
+{
+  "candidate_sha256": "2e921707c05f5d0d8f7eddca3a34db83991f46e1ec9d073731c8eee82096cb2c",
+  "missing_specs": [],
+  "pass": true,
+  "protocol": "ACTINV-P121",
+  "reference_sha256": "d2c0fb6dd931b3a9e052abdf30f265ead408bc6a386554b8bd0a074b1a6ca4dd",
+  "specs": {
+    "fe_vessel_first_shutdown": {
+      "g2": {
+        "canonical_equal_without_ms": true,
+        "pass": true,
+        "precondition_reference_proxy_nonnull_every_step": true,
+        "raw_bytes_identical": false,
+        "raw_differs_only_in_ms_line": true,
+        "reference_null_steps": [],
+        "steps": 42
+      },
+      "gate": "G2",
+      "moved_to_g3_rules": false,
+      "pass": true,
+      "path": "/home/connoravila/.cache/avila-night/faris-wt/mval-20261006/variants/V1/out/cases/port__reference/f1.0/fixed/decay/vessel__inst001__cont20657152__bare_lower_bound.spec.json",
+      "spec_sha256": "44c7d9c608268874b4162f5cb4e70788b3685d333ee637039684b07de2de38a0"
+    },
+    "flibe_installation_1_first_shutdown": {
+      "g3": {
+        "a": {
+          "borderline_steps": [],
+          "expected_nonnull": 41,
+          "expected_null": 0,
+          "got_nonnull": 41,
+          "got_null": 0,
+          "mismatches": [],
+          "other_refusal_steps": 0,
+          "other_refusals_unchanged": true,
+          "pass": true,
+          "sub_only_steps": 41
+        },
+        "b": {
+          "mismatches": [],
+          "pass": true,
+          "steps_with_subthreshold": 41,
+          "worst_relative_difference": 0.0
+        },
+        "build_up": 2.0,
+        "c": {
+          "mismatches": [],
+          "pass": true,
+          "steps_compared": 42,
+          "steps_skipped_null": 0,
+          "worst_relative_difference": 4.237563897670289e-09
+        },
+        "d": {
+          "excluded_drop_mismatches": [],
+          "excluded_drop_worst_relative_error": 0.0,
+          "masked_results_equal": true,
+          "pass": true
+        },
+        "mass_fractions": {
+          "Be": 0.09268339809383146,
+          "F": 0.7815360832223088,
+          "Li": 0.12578051868385978
+        },
+        "pass": true,
+        "response_lowest_energy_eV": 1000.0,
+        "response_lowest_energy_is_1keV": true,
+        "steps": 42
+      },
+      "gate": "G3",
+      "moved_to_g3_rules": false,
+      "pass": true,
+      "path": "/home/connoravila/.cache/avila-night/faris-wt/mval-20261006/variants/V1/out/cases/port__reference/f1.0/fixed/decay/blanket__inst001__cont20657152__bare_lower_bound.spec.json",
+      "spec_sha256": "ab5a864eb12c33ada52fc315bd79f6f70af877543844ec82e3271f85b012c958"
+    },
+    "flibe_installation_9": {
+      "g3": {
+        "a": {
+          "borderline_steps": [],
+          "expected_nonnull": 41,
+          "expected_null": 0,
+          "got_nonnull": 41,
+          "got_null": 0,
+          "mismatches": [],
+          "other_refusal_steps": 0,
+          "other_refusals_unchanged": true,
+          "pass": true,
+          "sub_only_steps": 41
+        },
+        "b": {
+          "mismatches": [],
+          "pass": true,
+          "steps_with_subthreshold": 41,
+          "worst_relative_difference": 0.0
+        },
+        "build_up": 2.0,
+        "c": {
+          "mismatches": [],
+          "pass": true,
+          "steps_compared": 41,
+          "steps_skipped_null": 0,
+          "worst_relative_difference": 4.237568904614714e-09
+        },
+        "d": {
+          "excluded_drop_mismatches": [],
+          "excluded_drop_worst_relative_error": 0.0,
+          "masked_results_equal": true,
+          "pass": true
+        },
+        "mass_fractions": {
+          "Be": 0.09268339809383146,
+          "F": 0.7815360832223088,
+          "Li": 0.12578051868385978
+        },
+        "pass": true,
+        "response_lowest_energy_eV": 1000.0,
+        "response_lowest_energy_is_1keV": true,
+        "steps": 41
+      },
+      "gate": "G3",
+      "moved_to_g3_rules": false,
+      "pass": true,
+      "path": "/home/connoravila/.cache/avila-night/faris-wt/mval-20261006/variants/V1/out/cases/port__reference/f1.0/fixed/decay/blanket__inst009__cont814248704__bare_lower_bound.spec.json",
+      "spec_sha256": "cb7b2956574288e7e012a8a8dcaf26202120ba920ab79768520b54149e28af09"
+    },
+    "tih2_first_shutdown": {
+      "g2": {
+        "canonical_equal_without_ms": true,
+        "pass": true,
+        "precondition_reference_proxy_nonnull_every_step": true,
+        "raw_bytes_identical": false,
+        "raw_differs_only_in_ms_line": true,
+        "reference_null_steps": [],
+        "steps": 42
+      },
+      "gate": "G2",
+      "moved_to_g3_rules": false,
+      "pass": true,
+      "path": "/home/connoravila/.cache/avila-night/faris-wt/mval-20261006/variants/V1/out/cases/port__reference/f1.0/fixed/decay/shield__inst001__cont20657152__bare_lower_bound.spec.json",
+      "spec_sha256": "18c51ce8cd809fd7f668fd42f649ec6f966f8e7963b4616d01457340657e86bd"
+    },
+    "w_first_wall_first_shutdown": {
+      "g2": {
+        "canonical_equal_without_ms": true,
+        "pass": true,
+        "precondition_reference_proxy_nonnull_every_step": true,
+        "raw_bytes_identical": false,
+        "raw_differs_only_in_ms_line": true,
+        "reference_null_steps": [],
+        "steps": 42
+      },
+      "gate": "G2",
+      "moved_to_g3_rules": false,
+      "pass": true,
+      "path": "/home/connoravila/.cache/avila-night/faris-wt/mval-20261006/variants/V1/out/cases/port__reference/f1.0/fixed/decay/first-wall__inst001__cont20657152__bare_lower_bound.spec.json",
+      "spec_sha256": "cbaa2de997c81cffa86bc6810dcff6a00670431a26ddc380c79d4dc4d9976871"
+    }
+  }
+}
