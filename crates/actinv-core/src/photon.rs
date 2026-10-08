@@ -568,9 +568,7 @@ pub fn source_for_step(
     let mut response_total_power = 0.0;
     let mut total_subthreshold = 0.0;
     let response_e_lo = match response {
-        Some(r) if material_response_complete => {
-            response_lowest_energy(r, material_mass_fractions)
-        }
+        Some(r) if material_response_complete => response_lowest_energy(r, material_mass_fractions),
         _ => 0.0,
     };
 
@@ -1141,7 +1139,10 @@ mod tests {
             active: &[(&str, &Nuclide, f64)],
             elements: &[&str],
             complete: bool,
-        ) -> (super::super::PhotonSourceOut, super::super::PhotonDiagnostics) {
+        ) -> (
+            super::super::PhotonSourceOut,
+            super::super::PhotonDiagnostics,
+        ) {
             source_for_step(
                 active,
                 &BOUNDS,
@@ -1191,7 +1192,9 @@ mod tests {
             let n = nuclide(&[(500.0, 1.0), (1.0e6, 1.0)]);
             let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
             assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none());
-            assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(src.by_nuclide[0]
+                .contact_gamma_air_dose_proxy_Gy_h
+                .is_none());
             assert!(close(src.dose_response_subthreshold_power_W_g, 500.0 * EV));
             assert_eq!(diag.response_excluded_power_W_g, 0.0);
         }
@@ -1202,7 +1205,9 @@ mod tests {
             let a = nuclide(&[(500.0, 1.0), (1.0e6, 1.0)]);
             let b = nuclide(&[(1.0e4, 1.0)]);
             let (src, _) = run(&[("A", &a, 1.0e-3), ("B", &b, 1.0e6)], &["H"], true);
-            assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(src.by_nuclide[0]
+                .contact_gamma_air_dose_proxy_Gy_h
+                .is_none());
             let expected_b = gy_h(1.0e6 * 1.0e4, 2.0);
             let own_b = src.by_nuclide[1].contact_gamma_air_dose_proxy_Gy_h.unwrap();
             assert!(close(own_b, expected_b));
@@ -1216,7 +1221,9 @@ mod tests {
             let n = nuclide(&[(500.0, 1.0e-6), (1.0e6, 1.0), (5.0e7, 1.0e-3)]);
             let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
             assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none());
-            assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+            assert!(src.by_nuclide[0]
+                .contact_gamma_air_dose_proxy_Gy_h
+                .is_none());
             assert!(close(diag.response_excluded_power_W_g, 5.0e4 * EV));
             assert!(diag.response_subthreshold_power_W_g > 0.0);
         }
@@ -1236,7 +1243,9 @@ mod tests {
                 let n = nuclide(&[(500.0, 1.0e-6), (1.0e6, 1.0), (stray, 1.0e-3)]);
                 let (src, diag) = run(&[("A", &n, 1.0)], &["H"], true);
                 assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_none(), "{stray}");
-                assert!(src.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.is_none());
+                assert!(src.by_nuclide[0]
+                    .contact_gamma_air_dose_proxy_Gy_h
+                    .is_none());
                 assert!(diag.response_excluded_power_W_g > 0.0);
                 assert!(diag.response_subthreshold_power_W_g > 0.0);
             }
