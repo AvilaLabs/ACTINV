@@ -1,0 +1,38 @@
+{
+  "schema": "actinv-p121-ci-runs-1",
+  "commit": "804a9c7ebdadaa59da676f26e7db1fadc36c97b5",
+  "runs": [
+    {
+      "conclusion": "success",
+      "databaseId": 37719680467,
+      "headSha": "804a9c7ebdadaa59da676f26e7db1fadc36c97b5",
+      "name": "fusion-isotope",
+      "status": "completed",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37719680467"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 37719680387,
+      "headSha": "804a9c7ebdadaa59da676f26e7db1fadc36c97b5",
+      "name": "fns-iron",
+      "status": "completed",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37719680387"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 37719680370,
+      "headSha": "804a9c7ebdadaa59da676f26e7db1fadc36c97b5",
+      "name": "desktop builds",
+      "status": "completed",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37719680370"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 37719680402,
+      "headSha": "804a9c7ebdadaa59da676f26e7db1fadc36c97b5",
+      "name": "controls",
+      "status": "completed",
+      "url": "https://github.com/AvilaLabs/ACTINV/actions/runs/37719680402"
+    }
+  ]
+}
