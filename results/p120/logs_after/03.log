@@ -1,0 +1,676 @@
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.006s
+
+OK
+...
+----------------------------------------------------------------------
+Ran 3 tests in 0.002s
+
+OK
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+OK
+{
+  "amendment_registered": true,
+  "amendment_sha256": "cfb4e6e723489d0041192cf257a05fd7a3cda16dbe7208e31a85a350ea2cd09e",
+  "case_count": 146,
+  "case_fixture_matches": true,
+  "case_fixture_sha256": "6041be8d54015e604a6aec0578d05fcc6f1cf4aed82322cb03459d108d293ff4",
+  "control_hashes": {
+    "controls/check_p105.py": "fad7a5e78f3f4b29941a3f4c340f875f5a31095ba429fa6c7857a47084810ef1",
+    "controls/check_p106.py": "fd9c63240ad5907ecfc8428da19f5bda0ce93e8726dac160fd6dedd5db514acd",
+    "controls/check_p107.py": "c472ac563bc7e8d8873473b30360f13a670874178cf957e2393cfe15d645667c",
+    "controls/check_p107_verdict.py": "80dcfc775050301f36318bc32a0ed2c2002241177f042e1f70f8a7fc3dcee77e",
+    "controls/p105_budget_control.py": "b9b69dc424a37d45b41b165276884c3d032d32ea968e3fd0f4c85add653c41bb",
+    "controls/p106_bounds_control.py": "b50425a970a5776cb65f603d1c0aa452c564441be14f7ce5110eb6092c56f142",
+    "controls/test_p105_children.py": "adcbe6d06a2e39b7e45e17b59728f35788d9104dfc8b24e8a85669babcb6c4ce",
+    "controls/test_p106_bounds.py": "3883f9ab149e2c0518c3446119eecb30ec94f7b34ffc053bc3877a8e66042cc2",
+    "controls/test_p107_seal.py": "ca67828bf3045a71dfb3d8598fb222b44cdd864b97ca46ec529bac3cf69f2ddd"
+  },
+  "expected_labels": {
+    "actual": {
+      "alpha_tru": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "cm242_cross_table": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "dedicated_co60": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_complete": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_incomplete": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_cross": [
+        [
+          "A",
+          "B",
+          [
+            "A",
+            "B"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_merge": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "inactive_and_malformed_properties": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "long_lived_unlisted": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "metal_nb94": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "missing_active_properties": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "mixture_t1_strict_box": [
+        [
+          "C",
+          "above_class_c",
+          [
+            "C",
+            "above_class_c"
+          ],
+          false,
+          null
+        ]
+      ],
+      "required_h3": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "single_t1_boundary_box": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ],
+      "sr90_cs137_example": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "t1_t2_separate": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "t2_three_columns": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_bounds_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_coverage_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "zero_crossing_contributor": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ]
+    },
+    "expected": {
+      "alpha_tru": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "cm242_cross_table": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "dedicated_co60": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_complete": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "empty_incomplete": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_cross": [
+        [
+          "A",
+          "B",
+          [
+            "A",
+            "B"
+          ],
+          false,
+          null
+        ]
+      ],
+      "external_h3_merge": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "inactive_and_malformed_properties": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "long_lived_unlisted": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ]
+      ],
+      "metal_nb94": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "missing_active_properties": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "mixture_t1_strict_box": [
+        [
+          "C",
+          "above_class_c",
+          [
+            "C",
+            "above_class_c"
+          ],
+          false,
+          null
+        ]
+      ],
+      "required_h3": [
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "single_t1_boundary_box": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ],
+      "sr90_cs137_example": [
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ]
+      ],
+      "t1_t2_separate": [
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "t2_three_columns": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "B",
+          "B",
+          [
+            "B"
+          ],
+          true,
+          "B"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_bounds_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "C",
+          "C",
+          [
+            "C"
+          ],
+          true,
+          "C"
+        ]
+      ],
+      "target_coverage_change": [
+        [
+          "A",
+          "A",
+          [
+            "A"
+          ],
+          true,
+          "A"
+        ],
+        [
+          "unknown",
+          "unknown",
+          [
+            "unknown"
+          ],
+          false,
+          null
+        ]
+      ],
+      "zero_crossing_contributor": [
+        [
+          "A",
+          "C",
+          [
+            "A",
+            "B",
+            "C"
+          ],
+          false,
+          null
+        ]
+      ]
+    },
+    "pass": true
+  },
+  "frozen_case_fixture_sha256_matches": true,
+  "inherited_control_hashes_unchanged": true,
+  "inherited_p103_vector_sha256": "bfefb655b2df52da7ccb7a93cfd7c22bdc18762917e900e828ebd97d58b2bb42",
+  "inherited_p105_verdict": "P105-PASS",
+  "inherited_p105_verdict_sha256": "0e2c770096662aaef1a9f4fd4a78d9aa8c71c775e86f1e27924708c84b361b41",
+  "inherited_p106_amendment_registered": true,
+  "inherited_p106_amendment_sha256": "a9b8568fb5e7fde35b8325b525646fbc441e6989c4292fa6ef8735ce84c17f97",
+  "inherited_p106_fixture_matches_regeneration": true,
+  "inherited_p106_fixture_sha256": "6041be8d54015e604a6aec0578d05fcc6f1cf4aed82322cb03459d108d293ff4",
+  "inherited_p106_g0_sha256": "69eeef0702031ea569bd38173696b06e554b58857c48305da581163c3084ea34",
+  "inherited_p106_protocol_registered": true,
+  "inherited_p106_protocol_sha256": "163a7a265363583c42b8d27a28ec11664b87d393a0b2565fcc76ec3904d606ee",
+  "inherited_p106_replay_failure_sha256": "ba805c1b3739c4bd400736b3c2725ebbc020a4d6be29518c2b25c5ff573b3e9e",
+  "inherited_p106_terminal_failure": true,
+  "inherited_p106_verdict": "P106-FAIL",
+  "inherited_p106_verdict_sha256": "a37f8a505db4d834fcab03105c37dd126ec120fc79a8f216418836de540412c3",
+  "pack_mirror_identical": true,
+  "pass": true,
+  "persisted_seal_matches": true,
+  "phase": "P107",
+  "pinned_pack_sha256": "890268af81a53815b8e11c238e4a1694eabb79664a1ca087fd7fe22b9fabe5d7",
+  "protocol_registered": true,
+  "protocol_sha256": "8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b",
+  "schema": "actinv-p107-bounds-g0-seal-1",
+  "seal_json_roundtrip_regression": true
+}
+{
+  "case_count": 146,
+  "endpoint_count": 300,
+  "failures": [],
+  "independent_comparison_count": 146,
+  "mutations_rejected": {
+    "binding_margin": true,
+    "class_envelope": true,
+    "constraint_sum": true,
+    "contributor_count": true,
+    "coverage_completeness": true,
+    "duplicate_constraint_range": true,
+    "duplicate_row_range": true,
+    "external_exclusion": true,
+    "external_interval": true,
+    "external_source": true,
+    "geometry": true,
+    "input_sha": true,
+    "nested_geometry": true,
+    "row_fraction": true,
+    "rules_sha": true,
+    "stable_class": true,
+    "strictness": true,
+    "target_time": true,
+    "upper_activity": true,
+    "upper_positive_missing_metadata": true
+  },
+  "output_sha256": "9a05261988c567c328870c0a640b337aa7ac25b005fbf08fb0737043da59dda6",
+  "pass": true,
+  "persisted_result_matches": true,
+  "protocol_sha256": "8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b",
+  "refusal_controls": {
+    "checks": {
+      "activity_accumulation_overflow": true,
+      "bad_metadata": true,
+      "complete_with_reason": true,
+      "custom_rule_pack": true,
+      "duplicate_alias": true,
+      "duplicate_component_id": true,
+      "duplicate_json_activity_key": true,
+      "duplicate_json_key": true,
+      "duplicate_property_alias": true,
+      "duplicate_target_step": true,
+      "empty_external_source": true,
+      "external_includes_activation": true,
+      "incomplete_without_reason": true,
+      "invalid_geometry": true,
+      "missing_activity_bounds": true,
+      "missing_assumptions": true,
+      "missing_bounded_step": true,
+      "missing_external_declaration": true,
+      "missing_property_field": true,
+      "missing_source": true,
+      "missing_target_boxes": true,
+      "negative_bound": true,
+      "negative_target_time": true,
+      "noncanonical_external_step": true,
+      "nonfinite_bound": true,
+      "nonpositive_half_life": true,
+      "reversed_bound": true
+    },
+    "pass": true
+  },
+  "repeat_byte_identical": true,
+  "schema": "actinv-p107-bounds-g1-1",
+  "target_count": 150
+}
+{
+  "failures": [],
+  "g1_result_sha256": "6943673898e994118091e1a4c62b3bbfdf046e1699f4cbe6abbdec01e1c4732e",
+  "pass": true,
+  "persisted_result_matches": true,
+  "phase": "P107",
+  "protocol_sha256": "8fe3c19a4c662092c1fb3ed0021857c8bb9337e265f76cd7903ea4f537ffe42b",
+  "schema": "actinv-p107-bounds-g2-1",
+  "separate_output_paths_byte_identical": true
+}
+{
+  "ci_sha256": "65b0b75227ec48c7cdbc7564902a55d62f459acc6038b1488af1d40dcafb5b6a",
+  "g0_sha256": "3a072b15502a09ff99ff5082c19d6add8f806bfb9f93f7d19e7977317ac5d2f0",
+  "g3_sha256": "b942af69d778490ee6ee5f369d71782f57320cc048363a2256ae1ba763184b3a",
+  "implementation_commit": "27d5636ad5331a3dacd8130a6b5e3516fb661e9f",
+  "pass": true,
+  "persisted_verdict_matches_historical_derivation": true,
+  "source_file_count": 93,
+  "source_hashes_verified": true
+}

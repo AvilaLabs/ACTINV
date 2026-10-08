@@ -1,0 +1,22 @@
+./usr/lib/python3.14/tempfile.py:961: ResourceWarning: Implicitly cleaning up <TemporaryDirectory '/home/connoravila/.cache/avila-night/actinv-park-202610062234/target/preflight-tmp/p113-rust-snapshot-sgzp6ep7/p113-rust-f_4molpx'>
+  _warnings.warn(warn_message, ResourceWarning)
+.....
+----------------------------------------------------------------------
+Ran 6 tests in 1.909s
+
+OK
+{
+  "amended_g0_g1_g2_not_run": true,
+  "amended_source_archive_files_verified": 109,
+  "checkpoint_commit": "81db5c03eeb876a88b6ddd7a2d2b8975308178e5",
+  "derived_verdict": "P113-FAIL",
+  "derived_verdict_matches_persisted": true,
+  "failure_artifacts_verified": true,
+  "historical_rust_files_materialized": 100,
+  "historical_source_verification": false,
+  "initial_g0_archive_files_verified": 59,
+  "pass": true,
+  "terminal_control_sources_verified": 44,
+  "terminal_invocation_exit_127_no_children": true,
+  "verdict": "P113-FAIL"
+}

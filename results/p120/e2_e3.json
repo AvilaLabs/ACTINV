@@ -1,0 +1,87 @@
+{
+  "schema": "actinv-p120-e2e3-1",
+  "head": "0bad426ba089b124576ed67378c21aa2fbe79cc6",
+  "e2": {
+    "argv": [
+      "python3",
+      "controls/test_p120.py"
+    ],
+    "exit": 0,
+    "log_tail": ".......\n----------------------------------------------------------------------\nRan 7 tests in 12.982s\n\nOK\n"
+  },
+  "e3": {
+    "probe_changes": [
+      " M crates/actinv-core/src/photon.rs",
+      " M docs/guide/results.md",
+      "?? crates/actinv-core/src/p120_e3_probe.rs",
+      "M controls/check_p116.py"
+    ],
+    "runs": [
+      {
+        "argv": [
+          "python3",
+          "controls/check_p116.py",
+          "--g0-only",
+          "--no-write"
+        ],
+        "exit": 0,
+        "log_sha256": "783b29163ec2aea960487812bb6f9302b0f2627c1e7080266f35a52077eb4c2a",
+        "log_tail": ",\n    \"two_table_mixture\",\n    \"short_group\",\n    \"metal_c14\",\n    \"metal_ni59\",\n    \"metal_ni63\",\n    \"metal_nb94\",\n    \"mass_normalized_alpha\",\n    \"alpha_group\",\n    \"density_geometry\",\n    \"volume_geometry\",\n    \"external_h3_once\",\n    \"required_h3\",\n    \"missing_metadata\",\n    \"empty_inventory\",\n    \"unassigned_cell\",\n    \"boundary_below\",\n    \"boundary_equal\",\n    \"boundary_above\",\n    \"mixture_boundary_below\",\n    \"mixture_boundary_equal\",\n    \"mixture_boundary_above\",\n    \"assay_baseline\",\n    \"scalar_assay\",\n    \"mixture_assay\",\n    \"propagated_assay\",\n    \"dose_assay\",\n    \"repeat_deterministic\",\n    \"uniform_split_reference\",\n    \"unequal_cell_split_equivalent\",\n    \"single_cell_unsplit_equivalent\",\n    \"selected_step_reordering\"\n  ],\n  \"schema\": \"actinv-p116-twin-waste-g0-1\"\n}\n"
+      },
+      {
+        "argv": [
+          "python3",
+          "controls/check_p116_history.py"
+        ],
+        "exit": 0,
+        "log_sha256": "1032df0667c6ecc677222a5380c3d9e58606178eeb79c3e91da089f3ff468c80",
+        "log_tail": "ss\": true,\n  \"p116_artifact_sha256\": {\n    \"results/g0_p116_twin_waste.json\": \"7e08a5f94e2cce3d62229c1e1233938270420c27556abb1a81e3f304ebc4cf78\",\n    \"results/g1_p116_twin_waste.json\": \"74f6eab80ee223c81b6f7391f3f4147d7fa38ffeac55485f3d2a05e8618a65b9\",\n    \"results/g2_p116_twin_waste.json\": \"5e1cb32140fa7fe3000bf2d22e54b30af021d992f689d1a1a7ff1038b979fb6b\",\n    \"results/g3_p116_quality.json\": \"746876fc7c2d9da2432c5e1a816702a648f18c9ae920798c2639f9670082dd5b\"\n  },\n  \"pass\": true,\n  \"phase\": \"P116\",\n  \"protocol_sha256\": \"cf5841dafbd2470604b36d75fdafa2e2fc730e33abb26f6e44a4068e6388a8aa\",\n  \"schema\": \"actinv-p116-history-verification-1\",\n  \"successful_workflow_count\": 4,\n  \"terminal_verdict_sha256\": \"7d782e476b051cc2e7d9666e984511167f30d6e1e5ec73afc127d34ac9dac710\",\n  \"verdict\": \"P116-FAIL\"\n}\n"
+      },
+      {
+        "argv": [
+          "python3",
+          "controls/check_p117_history.py"
+        ],
+        "exit": 0,
+        "log_sha256": "bb764d725359e9501596f517ed291d4f18c520d52e6e01515fcb12c16082dfaa",
+        "log_tail": "4f963daf685bf942322ff868fe6c0b9300be78\",\n    \"scripts/run_roadmap_gate.py\": \"e78a811fa44629c1fcdf2adcc7c8f80c74216dcc4dbfec58506396b6bc75421d\",\n    \"scripts/test_fetch_ci_seed.py\": \"30ae894d33d552ed16a9470a31a755f9c2578b50abd5bd2946bda5a6020bf52f\",\n    \"scripts/test_run_p115_gate.py\": \"1b517b675328ef6c27049bbd1ece3fd8258782283a984165952c61a134b7f1f4\",\n    \"scripts/test_run_p116_gate.py\": \"e9090787569cb63a4646dcc1350fc4a1494b73023f3a8300089ec10a39b61175\",\n    \"scripts/test_run_p117_gate.py\": \"ca49f491ed03f6e7c1192873beaab76b42b594299eed60a15a499102c04d4539\",\n    \"scripts/test_run_roadmap_gate.py\": \"45d988ecf347e606053ddee8d49778e9ee8b53a9389602786220ba59bf291213\"\n  },\n  \"terminal_verdict_sha256\": \"11ea137a5362b5cc42c771137771cbad08b5cd7084939480138b80e656ee4e9b\",\n  \"verdict\": \"P117-FAIL\"\n}\n"
+      },
+      {
+        "argv": [
+          "python3",
+          "controls/check_p118_history.py"
+        ],
+        "exit": 0,
+        "log_sha256": "b015a0641065b03e1dd32db37e43ad88fd5cce5dd02dbed1e6368a0746b90c3d",
+        "log_tail": "file_count\": 42,\n  \"terminal_discovery_sha256\": \"4d7f99aabec30439317c7de1bed2a70a26c63cb722c88d78a821038687d5de7a\",\n  \"terminal_source_file_count\": 319,\n  \"terminal_verdict\": {\n    \"actual_exit_code\": 1,\n    \"log_sha256\": \"c66e86d954a16e07135257da7dd8fac19992b99681170256c8d9a4e8141eeffe\",\n    \"observation_sha256\": \"314806ed542edaf763ba0a07f0d9752d89c2a521969f2924bba461e24067b25f\",\n    \"verdict\": \"P118-FAIL\",\n    \"verdict_sha256\": \"11e82faa9325641fa53f52d05be22cc3ca26ea6af8e65e9c55ed37e6da884743\"\n  },\n  \"unrun_artifacts_absent\": [\n    \"results/g0_p118_twin_waste.json\",\n    \"results/g1_p118_twin_waste.json\",\n    \"results/g2_p118_twin_waste.json\",\n    \"results/g3_p118_quality.json\",\n    \"results/p118_implementation_commit.json\",\n    \"results/p118_ci_runs.json\"\n  ],\n  \"verdict\": \"P118-FAIL\"\n}\n"
+      },
+      {
+        "argv": [
+          "python3",
+          "controls/test_p116_history.py"
+        ],
+        "exit": 0,
+        "log_sha256": "6d51a3da44f893afa6f3d68fcc1d3c86d06a531b345da893161b5f226b836a2d",
+        "log_tail": "....\n----------------------------------------------------------------------\nRan 4 tests in 177.973s\n\nOK\n"
+      },
+      {
+        "argv": [
+          "python3",
+          "controls/test_p117_history.py"
+        ],
+        "exit": 0,
+        "log_sha256": "2d4da87606b49989d9ed6b420a2d99f66bcd0b64dc867bbcca368b410d29e53f",
+        "log_tail": ".............\n----------------------------------------------------------------------\nRan 13 tests in 181.214s\n\nOK\n"
+      },
+      {
+        "argv": [
+          "python3",
+          "controls/test_p118_history.py"
+        ],
+        "exit": 0,
+        "log_sha256": "f79b704a25817945ce46f39fcd081a980ad480e0916f9752d9c393a7d145deeb",
+        "log_tail": "..............\n----------------------------------------------------------------------\nRan 14 tests in 1.943s\n\nOK\n"
+      }
+    ]
+  }
+}
