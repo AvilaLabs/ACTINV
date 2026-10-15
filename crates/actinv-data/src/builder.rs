@@ -4708,9 +4708,10 @@ mod tests {
                 decay_fallback_path: None,
                 normalize_profile: NormalizeProfile::None,
                 continue_on_error: false,
+                spallation: None,
             };
             let error = validate_options(&options).unwrap_err();
-            assert!(error.contains("162-group"), "{error}");
+            assert!(error.contains("require fispact-162"), "{error}");
             options.groups = GroupStructure::fispact_162().unwrap();
             assert!(validate_options(&options).is_ok());
             options.temperature_K = 293.6;
