@@ -292,6 +292,11 @@ pub fn rate_per_barn_s(flux_ascending: &[f64]) -> Vec<f64> {
         .collect()
 }
 
+/// Square centimetres per barn, from the quantity layer that holds the crate's one barn factor.
+pub(crate) fn square_cm_per_barn() -> f64 {
+    RatePerBarnSecond::from_particle_flux(ParticleFlux::sum_groups(&[1.0])).get()
+}
+
 /// Heating of one atom at unit flux multiplier in W, and its MT=444 damage energy in eV/s.
 /// `None` for the first when the table has no row for the state.
 pub fn per_atom_rates(
@@ -335,10 +340,13 @@ mod tests {
         let phi = [3.0e13, 7.0e12];
         let rates = rate_per_barn_s(&phi);
         let (watts_per_atom, damage) = per_atom_rates(&table, 26056, 0, &rates).unwrap();
-        // closed form: (K1 phi1 + K2 phi2) * 1e-24 cm^2/b * 1.602176634e-19 J/eV
-        let expected = (2.0e3 * 3.0e13 + 5.0e5 * 7.0e12) * 1.0e-24 * 1.602176634e-19;
+        // closed form: (K1 phi1 + K2 phi2) * (cm^2 per barn) * 1.602176634e-19 J/eV
+        let expected = (2.0e3 * 3.0e13 + 5.0e5 * 7.0e12)
+            * crate::power::square_cm_per_barn()
+            * 1.602176634e-19;
         assert!((watts_per_atom - expected).abs() < 1e-12 * expected);
-        let expected_damage = (1.0e3 * 3.0e13 + 4.0e4 * 7.0e12) * 1.0e-24;
+        let expected_damage =
+            (1.0e3 * 3.0e13 + 4.0e4 * 7.0e12) * crate::power::square_cm_per_barn();
         assert!((damage.unwrap() - expected_damage).abs() < 1e-12 * expected_damage);
         assert!(per_atom_rates(&table, 28058, 0, &rates).is_none());
 

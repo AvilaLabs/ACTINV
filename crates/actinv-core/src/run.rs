@@ -7175,7 +7175,7 @@ impl PreparedRun {
                     "table_sha256": &loaded.sha256,
                     "require_complete": loaded.options.require_complete,
                     "uncovered_composition_targets": &kerma_uncovered,
-                    "model": "heating = flux_multiplier * sum_i N_i * sum_g K_ig * phi_g * 1e-24 * 1.602176634e-19 W; N_i are the tracked or reservoir inventories at the step end, so transmutation products with a table row contribute and products without one contribute nothing",
+                    "model": "heating = flux_multiplier * sum_i N_i * sum_g K_ig * phi_g * 10^-24 cm^2/b * 1.602176634e-19 W; N_i are the tracked or reservoir inventories at the step end, so transmutation products with a table row contribute and products without one contribute nothing",
                     "units": {
                         "heating_W_per_g": "watts per gram of material",
                         "heating_W_cm3": "watts per cubic centimetre; present only with material.density_g_cm3",
@@ -8757,7 +8757,7 @@ mod gas_prepared_tests {
 
     /// Heating of one atom at unit flux multiplier for a flat kerma factor, in W.
     fn watts_per_atom(kerma_barn_ev: f64) -> f64 {
-        4.0 * kerma_barn_ev * PHI * 1.0e-24 * EV
+        4.0 * kerma_barn_ev * PHI * crate::power::square_cm_per_barn() * EV
     }
 
     /// Replace the library with one whose total-loss row has cross section `sigma_b` in every
@@ -8913,7 +8913,7 @@ mod gas_prepared_tests {
         // constant power P burns c = P * b / w atoms/g/s, where b is the loss rate per atom at
         // unit multiplier and w the heating per atom; choose P to burn 58% of the inventory
         let burn_fraction = 0.58;
-        let loss_per_unit_multiplier = 4.0 * 1.0e3 * PHI * 1.0e-24;
+        let loss_per_unit_multiplier = 4.0 * 1.0e3 * PHI * crate::power::square_cm_per_barn();
         let target = burn_fraction * n0 * watts_per_atom(1.0) / loss_per_unit_multiplier;
         spec.schedule = serde_json::from_value(serde_json::json!([
             {"dt": "1 s", "power_W_per_g": target}
@@ -9225,7 +9225,7 @@ mod gas_prepared_tests {
 /// Schedule library overrides (`Step.library`) on a synthetic chain: two dense libraries over one decay chain,
 /// solved by the full per-step path. Library A (4 groups) converts Fe56 to Fe57 at 0.5 s^-1 under the base
 /// spectrum; library B (2 groups) converts Fe56 to Co59 at 0.3 s^-1 under its own spectrum. Every cross section
-/// is 1 b, so a library's rate is 1e-24 times its spectrum's total flux.
+/// is 1 b, so a library's rate is 10^-24 times its spectrum's total flux.
 #[cfg(test)]
 mod step_library_tests {
     use super::*;

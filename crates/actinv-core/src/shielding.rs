@@ -660,7 +660,11 @@ impl ResonanceLine {
     /// with `Sigma_tot = N * sigma_peak` for the nuclide's own number density
     /// `N` (cm^-3) and the target's effective length `y` (cm).
     fn z(&self, number_density_per_cm3: f64, effective_length_cm: f64) -> f64 {
-        number_density_per_cm3 * self.peak_b * 1.0e-24 * effective_length_cm * self.capture_root
+        number_density_per_cm3
+            * self.peak_b
+            * crate::power::square_cm_per_barn()
+            * effective_length_cm
+            * self.capture_root
     }
 }
 

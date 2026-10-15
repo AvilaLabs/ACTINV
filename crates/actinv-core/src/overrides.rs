@@ -382,7 +382,9 @@ mod tests {
 
     const TARGETS: [(i32, i32); 1] = [(26_056, 0)];
     const PHI: [f64; 1] = [1.0e14];
-    const PER_BARN: f64 = 1.0e-24 * 1.0e14;
+    fn per_barn() -> f64 {
+        crate::power::square_cm_per_barn() * 1.0e14
+    }
 
     fn rates(library: &dyn ReactionLibrary) -> Vec<(usize, usize, f64)> {
         chain::reaction_rates(
@@ -420,9 +422,15 @@ mod tests {
         // The effective rate follows: the unmodified library burns at 10 b, the view at 5 b.
         let plain = rates(&library);
         let changed = rates(&view);
-        assert!((plain[0].2 + 10.0 * PER_BARN).abs() < 1e-22, "{plain:?}");
-        assert!((changed[0].2 + 5.0 * PER_BARN).abs() < 1e-22, "{changed:?}");
-        assert!((changed[1].2 - 3.0 * PER_BARN).abs() < 1e-22, "{changed:?}");
+        assert!((plain[0].2 + 10.0 * per_barn()).abs() < 1e-22, "{plain:?}");
+        assert!(
+            (changed[0].2 + 5.0 * per_barn()).abs() < 1e-22,
+            "{changed:?}"
+        );
+        assert!(
+            (changed[1].2 - 3.0 * per_barn()).abs() < 1e-22,
+            "{changed:?}"
+        );
     }
 
     #[test]
