@@ -41,7 +41,7 @@ waste classes; open source and open data.
 | 16 | Spontaneous-fission products (`READSF`) | **parity** (MT=454 SF yields; uncovered branches listed; P125-PASS) | P125 |
 | 17 | Fissioning-actinide selection, cumulative yields (`FISYIELD`, `CUMFYLD`, `USEFISSION`, `NOFISS`) | partial (actinide selection by the yield files supplied; cumulative yields inspectable via `actinv inspect yields`, P131; no keyword-level switch) | P125 |
 | 18 | Number of fissions, actinide burn-up, SF neutron source | **parity** (fission count as the rate integral, a documented difference; burn-up; SF neutron source; P125-PASS) | P125 |
-| 19 | Depletion rates with uncertainty (`DEPLETION`) | absent | P125 |
+| 19 | Depletion rates with uncertainty (`DEPLETION`) | **parity** (`summary.depletion`: per-channel rates from the solver's own matrices, shares summing to one, MF=33 channel uncertainties; P135-PASS) | P135 |
 | 20 | Power normalization by kerma (`POWER`); kerma, gas and dpa from library MTs | **ahead**: power held on adaptive sub-intervals within a step (B-10 end-of-step power error −39.3 % with FISPACT-II's single start-of-step normalization, −0.097 % adaptive); `max_substeps: 1` reproduces FISPACT-II (P126-PASS) | P126 |
 | 21 | Pathways and routes: multi-link paths with loops, `PATH`, `ROUTES`, generic pathways, `LOOKAHEAD`, `PATHRESET` | **ahead**: routes integrated exactly through every step, with a per-target closure (total, Σ routes, unexplained residual) FISPACT-II does not report (P127-PASS; trace attribution repaired by P134) | P127 |
 | 22 | Triton and helion projectiles; projectile or library change mid-schedule (`PROJECTILE 6/7`, `GETXS` in inventory phase) | **parity** (step library switches verified; triton/helion implemented and unit-tested, not exercised on real data: no sublibrary installed; P128-PASS) | P128 |
@@ -49,11 +49,137 @@ waste classes; open source and open data.
 | 24 | High-energy data to 1 GeV, 1102 groups, spallation splice (`USESPALLATION`, `USEXSEXTRA`) | **parity**: every FISPACT-II group structure (66–1102, to 1 GeV), opt-in residual-production splice (P130-PASS) | P130 |
 | 25 | Library inspection (`PRINTLIB`, `EXTRACTXS`) | **parity** (`actinv inspect`: decay, group and spectrum-collapsed cross sections, yields, group bounds, as JSON or tables, without a run; P131-PASS) | P131 |
 | 26 | Tabular and plot output (`TAB1`–`TAB4`, `GRAPH`, `NUCGRAPH`) | **parity** (`actinv report`: exact CSV/TSV, six-digit markdown/text, plot-ready `timeseries`; P137-PASS) | P132 |
-| 27 | FISPACT-II input decks | **parity** (`actinv import-fispact`: all 132 FNS decks import, per-keyword status sidecar, `--strict`; P132-PASS) | P132 |
-| 28 | Monte Carlo sensitivity distributions and correlation tables (`SENSITIVITY`, `MCSAMPLE`) | partial (lognormal correlated sampling) | P125/P127 |
+| 27 | FISPACT-II input decks | **parity** (`actinv import-fispact`: all 132 FNS decks import, per-keyword status sidecar, `--strict`; parity keywords mapped; P132-PASS, P138-PASS) | P132, P138 |
+| 28 | Monte Carlo sensitivity distributions and correlation tables (`SENSITIVITY`, `MCSAMPLE`) | **parity** (`study.robustness.statistics`: distributions, exact percentiles, Pearson/Spearman tables, bootstrap errors; P136-PASS) | P136 |
 
 Order: Wave 1 (P122–P124) → Wave 2 (P125–P127) → Wave 3 (P128–P130) → Wave 4 (P131–P132), then a
 closing scorecard mapping every keyword. Each phase has its own protocol, checker and verdict.
+
+## FISPACT-II keyword scorecard — 2026-10-15
+
+Closing map of every control keyword the `actinv import-fispact` keyword table recognizes (94) to its ACTINV
+equivalent. Statuses follow the parity tracker above and are not raised past its rows; a keyword the tracker does not
+name takes the status of the capability it belongs to. *Not applicable* marks a keyword that exists only because of
+FISPACT-II's own architecture (deck syntax, log and print switches, library preparation, solver tolerances). "Not
+mapped by import-fispact" means the capability exists in ACTINV but the importer reports the keyword `unsupported` and
+you add the spec section by hand. Sources: `crates/actinv-cli/src/fispact_import.rs`,
+`docs/guide/fispact-migration.md`, `docs/guide/specification.md`, `docs/guide/cli.md`, ledger entries 146–166.
+
+| keyword | ACTINV equivalent | status | note |
+|---|---|---|---|
+| *Control and initialization* | | | |
+| `CLOBBER` | none | not applicable | ACTINV writes only the files you name |
+| `END` | end of the JSON spec | not applicable | no deck terminator in a JSON spec |
+| `FISPACT` | `title` | **parity** | title line imported |
+| `JSON` | result JSON | not applicable | results are always JSON |
+| `LOGLEVEL` | none | not applicable | run-log verbosity |
+| `MONITOR` | none | not applicable | run-log verbosity |
+| `SAVELINES` | none | not applicable | library-preparation printing switch |
+| `TOLERANCE` | CRAM, `cram_order` 16 or 48 | not applicable | CRAM has no solver tolerance |
+| `PROJECTILE` | `projectile` (neutron, deuteron, proton, alpha, gamma, triton, helion) | **parity** | triton and helion not exercised on real data; P128-PASS |
+| *Material and irradiation* | | | |
+| `MASS` | `material.mass_g`, basis `wt_percent` | **parity** | imported |
+| `FUEL` | `material`, basis `atoms_per_g` | **parity** | imported; mass taken from mass numbers |
+| `DENSITY` | `material.density_g_cm3` | **parity** | per-cm³ totals; imported only when POWER needs it |
+| `FLUX` | `spectrum.total`, step `flux` multiplier | **parity** | imported |
+| `ZERO` | zero-flux step | **parity** | imported as flux 0 |
+| `TIME` | `schedule` durations | **parity** | each run becomes one step |
+| `PULSE` | explicit `schedule` steps | **parity** | loops expanded on import |
+| `ENDPULSE` | explicit `schedule` steps | **parity** | closes a PULSE loop on import |
+| `POWER` | `power_W_cm3` with `kerma` | **ahead** | adaptive sub-intervals; import needs a kerma table the deck lacks |
+| `WALL` | `wall_loading_MW_m2` | **parity** | imported |
+| `PARTITION` | `schedule[].partition` | **parity** | plus continuous removal |
+| `OVER` | `overrides` (cross section, half-life) | **parity** | ADCROSS and ADLAM not imported |
+| `GRPCONVERT` | `spectrum.rebin` | **parity** | imported for FISPACT-II standard structures |
+| `CNVTYPE` | `spectrum.rebin.convention` | **parity** | imported |
+| `LIMGRP` | `spectrum.rebin` energy limits | **parity** | imported as eV limits |
+| `SSFGEOMETRY` | `self_shielding.geometry` | **parity** | foil, wire, sphere, cylinder; not mapped by import-fispact |
+| `SSFCHOOSE` | `self_shielding.geometry.choose` | **parity** | not mapped by import-fispact |
+| `SSFFUEL` | `geometry.density_g_cm3` with the material | **parity** | density replaces atoms per area; not mapped by import-fispact |
+| `SSFMASS` | `geometry.density_g_cm3` with the material | **parity** | density replaces atoms per area; not mapped by import-fispact |
+| `SSFDILUTION` | `self_shielding.dilution_overrides` | **parity** | table mode only; not mapped by import-fispact |
+| `PROBTABLE` | `self_shielding.table` (Bondarenko) | partial | tables built from evaluations; not mapped by import-fispact |
+| `ALLDISPEN` | `damage` (NRT dpa) | partial | needs a user-built MT=444 table; not mapped by import-fispact |
+| `ATDISPEN` | `damage` (NRT dpa) | partial | needs a user-built MT=444 table; not mapped by import-fispact |
+| *Output* | | | |
+| `ATOMS` | `summary`, `actinv report` | **parity** | per-nuclide atoms, grams, Bq per step |
+| `STEP` | step results | **parity** | every step reported in full |
+| `SPECTRUM` | `photon` source per group | **parity** | per-step decay-photon spectra |
+| `HALF` | `summary` half-life column | **parity** | in every result step |
+| `NOCOMP` | `summary.elements` | **parity** | element table is optional |
+| `NOSORT` | `summary.dominant_top` | **parity** | dominant lists optional |
+| `SORTDOMINANT` | `summary.dominant_top` | **parity** | plus cumulative percent and counts to 90 % and 99 % |
+| `MIND` | `summary.min_atoms` | **parity** | imported |
+| `NOSTABLE` | `summary.include_stable` | **parity** | imported |
+| `DOSE` | `photon.point_source` | **parity** | importer maps DOSE 2 only |
+| `BREMSSTRAHLUNG` | `photon.bremsstrahlung` | **parity** | reported separately from decay-photon dose |
+| `GROUP` | `photon.group_structure`, `steiner-22` | **parity** | importer maps GROUP 0 and 1 |
+| `SPEK` | none | absent | unrepresented power is reported, not estimated |
+| `READGG` | custom `photon.group_structure` | **parity** | not mapped by import-fispact |
+| `ATWO` | `radiological` A2 index | **parity** | bundled 49 CFR 173 A2 table |
+| `HAZARDS` | `radiological`, bundled regulatory tables | **parity** | ICRP 119 coefficients by local script |
+| `CLEAR` | `radiological` clearance tables, `actinv clearance` | **parity** | Euratom tables opt-in |
+| `TAB1` | `actinv report --tables tab1` | **parity** | exact CSV or TSV |
+| `TAB2` | `actinv report --tables tab2` | **parity** | activity, heat, alpha/beta/gamma split |
+| `TAB3` | `actinv report --tables tab3` | **parity** | needs a `radiological` dose response |
+| `TAB4` | `actinv report --tables tab4` | **parity** | decay-photon source per group |
+| `NOT1` | none | not applicable | suppresses a tab file ACTINV does not write |
+| `NOT2` | none | not applicable | suppresses a tab file ACTINV does not write |
+| `NOT3` | none | not applicable | suppresses a tab file ACTINV does not write |
+| `NOT4` | none | not applicable | suppresses a tab file ACTINV does not write |
+| `CULTAB` | none | not applicable | output selector; result JSON holds every step |
+| `GRAPH` | `actinv report --tables timeseries` | **parity** | plot-ready rows |
+| `NUCGRAPH` | `actinv report --tables timeseries` | **parity** | `--nuclides` columns |
+| `SPLIT` | none | not applicable | output file format selector |
+| *Uncertainty and pathways* | | | |
+| `UNCERTAINTY` | `uncertainty` (MF=33) | **ahead** | full-covariance bands; levels 1 and 2 imported |
+| `NOERROR` | no `uncertainty` block | **parity** | imported |
+| `UNCTYPE` | `uncertainty.channels` | **parity** | not mapped by import-fispact |
+| `ERROR` | `overrides` relative uncertainties | **parity** | not mapped by import-fispact |
+| `COVARIANCE` | `uncertainty.covariance` sidecar | **ahead** | not mapped by import-fispact |
+| `SENSITIVITY` | `study.robustness.statistics` | **parity** | P136; not mapped by import-fispact |
+| `MCSAMPLE` | `study.robustness.statistics` | **parity** | P136; not mapped by import-fispact |
+| `DEPLETION` | `summary.depletion` | **parity** | P135; not mapped by import-fispact |
+| `PATH` | `pathways` | **ahead** | targets imported; numeric arguments not interpreted |
+| `ROUTES` | `pathways` | **ahead** | exact route integration with closure |
+| `RESULT` | `pathways.targets`, `rank_by` | **parity** | not mapped by import-fispact |
+| `LOOKAHEAD` | `pathways.max_depth`, `path_floor` | **parity** | pathways, row 21 |
+| `PATHRESET` | `pathways` floors | **parity** | pathways, row 21 |
+| `GENERIC` | `pathways` | **parity** | generic pathways grouped by edge-type sequence |
+| `INDEXPATH` | `pathways` route listing | **parity** | not named in tracker row 21 |
+| *Library and data* | | | |
+| `GETXS` | `library`, `spectrum.structure`, step `library` | **parity** | mid-schedule GETXS not mapped (needs second library) |
+| `GETDECAY` | `decay`; decay-only runs | **parity** | cooling-only runs need no library |
+| `LIBVERSION` | none | not applicable | library-preparation printing switch |
+| `COMPRESSXS` | none | not applicable | library-preparation switch |
+| `FULLXS` | none | not applicable | library-preparation printing switch |
+| `PRINTLIB` | `actinv inspect` | **parity** | decay, group and collapsed data without a run |
+| `EXTRACTXS` | `actinv inspect` | **parity** | cross sections as JSON or tables |
+| `USESPALLATION` | `build-library --spallation` | **parity** | splice table user-supplied; not mapped by import-fispact |
+| `USEXSEXTRA` | `build-library --spallation`, group structures to 1 GeV | **parity** | tracker row 24; not mapped by import-fispact |
+| `XSTHRESHOLD` | none | absent | no cross-section threshold switch |
+| `NOXRAY` | none | absent | no decay-data X-ray switch |
+| `IRON` | none | absent | no iron background removal |
+| `READSF` | `fission_yields.spontaneous` | **parity** | MT=454 SF yields; not mapped by import-fispact |
+| `FISYIELD` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
+| `CUMFYLD` | `actinv inspect yields` | partial | cumulative yields inspectable; no keyword switch |
+| `USEFISSION` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
+| `NOFISS` | omit `fission_yields` | partial | selection by yield files supplied; no keyword switch |
+| `FISCHOOSE` | `fission_yields.files` | partial | selection by yield files supplied; no keyword switch |
+
+Counts over the 94 keywords: 61 parity, 5 ahead, 8 partial, 4 absent, 16 not applicable. *Ahead* is claimed only where a closed verdict or the "Already ahead" paragraph shows it: `POWER`, `UNCERTAINTY`, `COVARIANCE`, `PATH`, `ROUTES` (power renormalized within the step, P126; full-covariance uncertainty; exact route integration with closure, P127). `RESULT` and `INDEXPATH` are counted *parity* on judgement: the `pathways` section covers target selection and route listing, though tracker row 21 does not name them.
+
+Remaining gaps (every keyword with status partial or absent):
+
+- `SPEK` (absent): approximate γ spectra for nuclides without spectral data; needs an estimator for the unrepresented power now reported.
+- `XSTHRESHOLD` (absent): no cross-section threshold switch; needs a spec option, specified from the manual.
+- `NOXRAY` (absent): no decay-data switch of that name; needs a decay-data selection option, specified from the manual.
+- `IRON` (absent): fictitious-matrix iron background removal is not available; needs a design.
+- `FISYIELD`, `USEFISSION`, `NOFISS`, `FISCHOOSE` (partial): actinides are chosen by the yield files supplied; needs a keyword-level selection among them and an importer mapping.
+- `CUMFYLD` (partial): cumulative yields are inspectable with `actinv inspect yields`; needs a keyword-level switch.
+- `PROBTABLE` (partial): self-shielding tables come from evaluations; needs an importer mapping, since the deck names no table.
+- `ALLDISPEN`, `ATDISPEN` (partial): `damage` needs a user-built MT=444 table and none ships; needs a shipped table and an importer mapping.
+- Importer mapping gaps, status unchanged: `DEPLETION`, `SENSITIVITY`, `MCSAMPLE`, `SSFGEOMETRY`, `SSFCHOOSE`, `SSFFUEL`, `SSFMASS`, `SSFDILUTION`, `READGG`, `READSF`, `USESPALLATION`, `USEXSEXTRA`, `UNCTYPE`, `ERROR`, `COVARIANCE`, `RESULT`, `ADCROSS`/`ADLAM` under `OVER`, and a `GETXS` after the first `TIME` need the importer to build the spec section or name its hash-pinned data.
 
 ## Capability scorecard — 2026-09-30 refresh (ACTINV column only)
 

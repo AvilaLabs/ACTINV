@@ -3066,3 +3066,12 @@ data-limited as recorded), **P127-PASS**, **P128-PASS** (G4 data-limited: no tri
 installed) and **P132-PASS**; with entries 154 and 159, **P126-PASS** under Amendment A (its initial G5 failure stays
 preserved); with entry 158, **P134-PASS** under Amendment A; with entry 161, **P137-PASS**; with entry 162,
 **P139-PASS** under Amendment A (its initial G4 failure stays preserved).
+
+## Entry 167 — P135, P136 and P138 PASS (2026-10-15)
+
+G-CI is green on `308e262`, the pushed commit carrying entries 163–165 and their records: `controls` 38816236288,
+`desktop builds` 38816236097, `fns-iron` 38816236063 and `fusion-isotope` 38816236228 completed success; the
+handbook and browser workflows are path-filtered and were not triggered. With the evidence of entries 163–165 this
+records **P135-PASS** under Amendment A (its initial G2 record stays preserved; the joint-total uncertainty is not
+evaluable on Fe), **P136-PASS** (input correlations against MF=33, decay and yield parameters not recomputable from
+the record) and **P138-PASS**.
