@@ -1,9 +1,59 @@
 # ACTINV competitive benchmark
 
-*Latest first: the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
+*Latest first: the FISPACT-II parity tracker (2026-10-15, live), the decay-aware TENDL-2023 FNS corpus (2026-09-26 — the
 isomer-routing fix arm), then CB3 identical-data FISPACT comparison
 (2026-09-20), then the CB2 refresh (2026-09-18). Frozen/superseded
 records live in `docs/history/COMPETITIVE_BENCHMARK_ARCHIVE.md`.*
+
+## FISPACT-II feature parity tracker — opened 2026-10-15 · live
+
+Owner direction 2026-10-15: reach feature parity with FISPACT-II, and surpass it wherever a better
+modern method exists. The reference is the FISPACT-II user manual — UKAEA-R(18)001 (Release 4.0)
+and UKAEA-CCFE-RE(21)02 (Release 5.0/5.1) — read keyword by keyword (≈95 control keywords plus the
+output chapter), each checked against ACTINV source on `2f3daa4`. Status: **absent** (no
+equivalent), **partial**, **parity**, **ahead**. A row moves only on a closed phase verdict; a
+row marked *ahead* names the specific respect in which ACTINV goes beyond FISPACT-II.
+
+Already ahead before this tracker (unchanged): CRAM-16/48 with compensated-residual verified solves
+(FISPACT-II: LSODES with user tolerances); full-covariance first-order bands plus correlated sampling,
+value-of-information and measurement design (FISPACT-II: pathway sum-of-squares and per-pair Monte
+Carlo); per-step spectra with uncertainty; mesh/R2S with OpenMC, MCNP, Serpent and ALARA source export;
+reverse calculation, optimizer, impurity budgets, `decide`, assimilation and facility twins; US Part 61
+waste classes; open source and open data.
+
+| # | FISPACT-II capability (keywords) | ACTINV status | phase |
+|---:|---|---|---|
+| 1 | Per-nuclide inventory columns: grams, Bq, α/β/γ power, half-life, flags (`ATOMS`, `HALF`) | absent (atoms and Bq only; trace-mode bulk material and states without decay records are not listed) | P122 |
+| 2 | Step totals: Ci, α/β/γ Bq, activity and heat excluding tritium, total mass, per-cm³ with `DENSITY` | absent | P122 |
+| 3 | Inventory by element (`NOCOMP` to suppress) | absent | P122 |
+| 4 | Dominant-nuclide lists per quantity (`SORTDOMINANT`, `NOSORT`) | absent | P122 |
+| 5 | Output filters `MIND`, `NOSTABLE` | absent | P122 |
+| 6 | Point-source dose at distance (`DOSE 2`) | absent | P123 |
+| 7 | Bremsstrahlung dose correction (`BREMSSTRAHLUNG`) | absent | P123 |
+| 8 | Approximate γ spectra for nuclides without spectral data (`SPEK`) | absent (unrepresented power reported) | P123 |
+| 9 | Transport index / A2 (`ATWO`); bundled hazard, clearance and A2 data (`HAZARDS`, `CLEAR`) | partial (user tables; IAEA clearance bundled) | P123 |
+| 10 | 22-group Steiner photon structure (`GROUP 1`), user γ groups (`READGG`) | partial (custom groups) | P123 |
+| 11 | Arbitrary input group structure with conversion (`GRPCONVERT`, `CNVTYPE`, `LIMGRP`) | partial (mesh/import only) | P124 |
+| 12 | First-wall-loading normalization (`WALL`) | absent | P124 |
+| 13 | Instantaneous elemental partition (`PARTITION`) | partial (continuous removal only) | P124 |
+| 14 | Named cross-section / half-life overrides (`OVER ACROSS/ALAM/ADCROSS/ADLAM`) | partial (row-index rate scales, decay overrides file) | P124 |
+| 15 | Cooling-only runs from decay data alone (`GETDECAY` without `GETXS`) | absent | P124 |
+| 16 | Spontaneous-fission products (`READSF`) | absent (SF branches to leakage) | P125 |
+| 17 | Fissioning-actinide selection, cumulative yields (`FISYIELD`, `CUMFYLD`, `USEFISSION`, `NOFISS`) | partial | P125 |
+| 18 | Number of fissions, actinide burn-up, SF neutron source | absent | P125 |
+| 19 | Depletion rates with uncertainty (`DEPLETION`) | absent | P125 |
+| 20 | Power normalization by kerma (`POWER`); kerma, gas and dpa from library MTs | absent (gas from ejectiles; dpa from damage tables) | P126 |
+| 21 | Pathways and routes: multi-link paths with loops, `PATH`, `ROUTES`, generic pathways, `LOOKAHEAD`, `PATHRESET` | partial (trace-mode first-product attribution) | P127 |
+| 22 | Triton and helion projectiles; projectile or library change mid-schedule (`PROJECTILE 6/7`, `GETXS` in inventory phase) | absent (γ, n, p, d, α supported) | P128 |
+| 23 | Geometry self-shielding (`SSFGEOMETRY`), per-group dilution override (`SSFDILUTION`) | absent (composition/fixed dilution) | P129 |
+| 24 | High-energy data to 1 GeV, 1102 groups, spallation splice (`USESPALLATION`, `USEXSEXTRA`) | absent | P130 |
+| 25 | Library inspection (`PRINTLIB`, `EXTRACTXS`) | absent | P131 |
+| 26 | Tabular and plot output (`TAB1`–`TAB4`, `GRAPH`, `NUCGRAPH`) | partial (JSON; desktop CSV/plots) | P132 |
+| 27 | FISPACT-II input decks | absent (fluxes files import only) | P132 |
+| 28 | Monte Carlo sensitivity distributions and correlation tables (`SENSITIVITY`, `MCSAMPLE`) | partial (lognormal correlated sampling) | P125/P127 |
+
+Order: Wave 1 (P122–P124) → Wave 2 (P125–P127) → Wave 3 (P128–P130) → Wave 4 (P131–P132), then a
+closing scorecard mapping every keyword. Each phase has its own protocol, checker and verdict.
 
 ## Capability scorecard — 2026-09-30 refresh (ACTINV column only)
 
