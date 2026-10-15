@@ -28,28 +28,28 @@ waste classes; open source and open data.
 | 3 | Inventory by element (`NOCOMP` to suppress) | **parity** (P122-PASS) | P122 |
 | 4 | Dominant-nuclide lists per quantity (`SORTDOMINANT`, `NOSORT`) | **parity** (plus cumulative percent and counts to 90 %/99 %; P122-PASS) | P122 |
 | 5 | Output filters `MIND`, `NOSTABLE` | **parity** (P122-PASS) | P122 |
-| 6 | Point-source dose at distance (`DOSE 2`) | absent | P123 |
-| 7 | Bremsstrahlung dose correction (`BREMSSTRAHLUNG`) | absent | P123 |
+| 6 | Point-source dose at distance (`DOSE 2`) | **parity** (`photon.point_source`, manual Eq. 63, no build-up; P123-PASS) | P123 |
+| 7 | Bremsstrahlung dose correction (`BREMSSTRAHLUNG`) | **parity** (thick-target component reported separately; P123-PASS) | P123 |
 | 8 | Approximate γ spectra for nuclides without spectral data (`SPEK`) | absent (unrepresented power reported) | P123 |
-| 9 | Transport index / A2 (`ATWO`); bundled hazard, clearance and A2 data (`HAZARDS`, `CLEAR`) | partial (user tables; IAEA clearance bundled) | P123 |
-| 10 | 22-group Steiner photon structure (`GROUP 1`), user γ groups (`READGG`) | partial (custom groups) | P123 |
-| 11 | Arbitrary input group structure with conversion (`GRPCONVERT`, `CNVTYPE`, `LIMGRP`) | partial (mesh/import only) | P124 |
-| 12 | First-wall-loading normalization (`WALL`) | absent | P124 |
-| 13 | Instantaneous elemental partition (`PARTITION`) | partial (continuous removal only) | P124 |
-| 14 | Named cross-section / half-life overrides (`OVER ACROSS/ALAM/ADCROSS/ADLAM`) | partial (row-index rate scales, decay overrides file) | P124 |
-| 15 | Cooling-only runs from decay data alone (`GETDECAY` without `GETXS`) | absent | P124 |
-| 16 | Spontaneous-fission products (`READSF`) | absent (SF branches to leakage) | P125 |
-| 17 | Fissioning-actinide selection, cumulative yields (`FISYIELD`, `CUMFYLD`, `USEFISSION`, `NOFISS`) | partial | P125 |
-| 18 | Number of fissions, actinide burn-up, SF neutron source | absent | P125 |
+| 9 | Transport index / A2 (`ATWO`); bundled hazard, clearance and A2 data (`HAZARDS`, `CLEAR`) | **parity** (A2 index; opt-in A1/A2/exempt and Euratom clearance tables; ICRP 119 coefficients by local fetch script, not bundled; P123-PASS) | P123 |
+| 10 | 22-group Steiner photon structure (`GROUP 1`), user γ groups (`READGG`) | **parity** (`steiner-22`, custom groups; P123-PASS) | P123 |
+| 11 | Arbitrary input group structure with conversion (`GRPCONVERT`, `CNVTYPE`, `LIMGRP`) | **parity** (`spectrum.rebin` with the flux-conservation residual in the ledger; P124-PASS) | P124 |
+| 12 | First-wall-loading normalization (`WALL`) | **parity** (P124-PASS) | P124 |
+| 13 | Instantaneous elemental partition (`PARTITION`) | **parity** (plus continuous removal; P124-PASS) | P124 |
+| 14 | Named cross-section / half-life overrides (`OVER ACROSS/ALAM/ADCROSS/ADLAM`) | **parity** (per-nuclide, per-MT `overrides`; P124-PASS) | P124 |
+| 15 | Cooling-only runs from decay data alone (`GETDECAY` without `GETXS`) | **parity** (P124-PASS) | P124 |
+| 16 | Spontaneous-fission products (`READSF`) | **parity** (MT=454 SF yields; uncovered branches listed; P125-PASS) | P125 |
+| 17 | Fissioning-actinide selection, cumulative yields (`FISYIELD`, `CUMFYLD`, `USEFISSION`, `NOFISS`) | partial (actinide selection by the yield files supplied; cumulative yields inspectable via `actinv inspect yields`, P131; no keyword-level switch) | P125 |
+| 18 | Number of fissions, actinide burn-up, SF neutron source | **parity** (fission count as the rate integral, a documented difference; burn-up; SF neutron source; P125-PASS) | P125 |
 | 19 | Depletion rates with uncertainty (`DEPLETION`) | absent | P125 |
-| 20 | Power normalization by kerma (`POWER`); kerma, gas and dpa from library MTs | absent (gas from ejectiles; dpa from damage tables) | P126 |
-| 21 | Pathways and routes: multi-link paths with loops, `PATH`, `ROUTES`, generic pathways, `LOOKAHEAD`, `PATHRESET` | partial (trace-mode first-product attribution) | P127 |
-| 22 | Triton and helion projectiles; projectile or library change mid-schedule (`PROJECTILE 6/7`, `GETXS` in inventory phase) | absent (γ, n, p, d, α supported) | P128 |
-| 23 | Geometry self-shielding (`SSFGEOMETRY`), per-group dilution override (`SSFDILUTION`) | **parity**: foil, wire, sphere, cylinder by the universal sigmoid curve, per-group dilution overrides (P129-PASS) | P129 |
+| 20 | Power normalization by kerma (`POWER`); kerma, gas and dpa from library MTs | **ahead**: power held on adaptive sub-intervals within a step (B-10 end-of-step power error −39.3 % with FISPACT-II's single start-of-step normalization, −0.097 % adaptive); `max_substeps: 1` reproduces FISPACT-II (P126-PASS) | P126 |
+| 21 | Pathways and routes: multi-link paths with loops, `PATH`, `ROUTES`, generic pathways, `LOOKAHEAD`, `PATHRESET` | **ahead**: routes integrated exactly through every step, with a per-target closure (total, Σ routes, unexplained residual) FISPACT-II does not report (P127-PASS; trace attribution repaired by P134) | P127 |
+| 22 | Triton and helion projectiles; projectile or library change mid-schedule (`PROJECTILE 6/7`, `GETXS` in inventory phase) | **parity** (step library switches verified; triton/helion implemented and unit-tested, not exercised on real data: no sublibrary installed; P128-PASS) | P128 |
+| 23 | Geometry self-shielding (`SSFGEOMETRY`), per-group dilution override (`SSFDILUTION`) | **parity**: foil, wire, sphere, cylinder by the universal sigmoid curve, per-group dilution overrides (P129-PASS); also from R-matrix-limited (LRF=7) evaluations such as ENDF/B-VIII and FENDL-3.2c (P139-PASS) | P129, P139 |
 | 24 | High-energy data to 1 GeV, 1102 groups, spallation splice (`USESPALLATION`, `USEXSEXTRA`) | **parity**: every FISPACT-II group structure (66–1102, to 1 GeV), opt-in residual-production splice (P130-PASS) | P130 |
 | 25 | Library inspection (`PRINTLIB`, `EXTRACTXS`) | **parity** (`actinv inspect`: decay, group and spectrum-collapsed cross sections, yields, group bounds, as JSON or tables, without a run; P131-PASS) | P131 |
-| 26 | Tabular and plot output (`TAB1`–`TAB4`, `GRAPH`, `NUCGRAPH`) | partial (JSON; desktop CSV/plots) | P132 |
-| 27 | FISPACT-II input decks | absent (fluxes files import only) | P132 |
+| 26 | Tabular and plot output (`TAB1`–`TAB4`, `GRAPH`, `NUCGRAPH`) | **parity** (`actinv report`: exact CSV/TSV, six-digit markdown/text, plot-ready `timeseries`; P137-PASS) | P132 |
+| 27 | FISPACT-II input decks | **parity** (`actinv import-fispact`: all 132 FNS decks import, per-keyword status sidecar, `--strict`; P132-PASS) | P132 |
 | 28 | Monte Carlo sensitivity distributions and correlation tables (`SENSITIVITY`, `MCSAMPLE`) | partial (lognormal correlated sampling) | P125/P127 |
 
 Order: Wave 1 (P122–P124) → Wave 2 (P125–P127) → Wave 3 (P128–P130) → Wave 4 (P131–P132), then a

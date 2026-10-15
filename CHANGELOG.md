@@ -50,11 +50,25 @@
   (mean, std, skewness, exact order-statistic percentiles, histogram), input-output Pearson and Spearman
   correlation tables by sampled parameter, a response-response correlation matrix, and bootstrap standard errors
   of the sampled std and percentiles next to the first-order std. Absent by default; existing records unchanged.
-- Merged and unit-tested, qualification pending:
-  - Steiner 22-group photon structure, point-source dose, a separately reported bremsstrahlung component and the
-    A2 index (P123a);
-  - full pathways and routes analysis with exact chain integration and a closure diagnostic (P127);
-  - triton and helion projectiles, and schedule-level library switching (P128).
+- Photon and regulatory outputs (P123): the Steiner 22-group photon structure, point-source dose rate in air at a
+  distance (`photon.point_source`), a separately reported bremsstrahlung component (`photon.bremsstrahlung`), the A2
+  index, and opt-in bundled tables (IAEA SSR-6 A1/A2/exempt values from 49 CFR 173.435/436; Euratom 2013/59 Annex VII
+  clearance and exemption levels). ICRP 119 dose coefficients are not shipped; `scripts/regulatory/fetch_icrp119.py` builds the table locally.
+- Schedule and data controls (P124): in-run spectrum conversion between group structures (`spectrum.rebin`),
+  first-wall-loading normalization (`wall_loading_MW_m2`), instantaneous elemental partition at step start,
+  per-nuclide and per-MT cross-section, half-life and uncertainty `overrides`, and decay-only runs without a library.
+- Fission (P125): spontaneous-fission products from MT=454 yields, cumulative fission count, burn-up (% FIMA and
+  MWd/kg HM) and the spontaneous-fission neutron source (`options.fission`).
+- Power normalization (P126): a groupwise kerma table (`scripts/build_kerma_table.py` from NJOY HEATR output),
+  instantaneous nuclear heating per step, and `power_W_cm3`/`power_W_per_g` steps whose flux is renormalized on
+  adaptive sub-intervals. FISPACT-II normalizes once per step; `max_substeps: 1` reproduces that.
+- Pathways and routes (P127): multi-link routes with loops and generic pathways, each integrated exactly through
+  every schedule step, with a per-target closure of what the listed routes leave unexplained.
+- Triton and helion projectiles, and schedule-level library switching (P128).
+- `actinv import-fispact DECK.i` (P132, P138): converts a FISPACT-II input deck into an ACTINV spec, with a sidecar
+  reporting every keyword as mapped, approximated, noted or unsupported (`--strict` fails on unsupported). All 132
+  public FNS decks import; POWER, WALL, PARTITION, OVER, GRPCONVERT, DOSE 2, GROUP, BREMSSTRAHLUNG, PATH/ROUTES and
+  ATWO are mapped.
 
 **Added**
 

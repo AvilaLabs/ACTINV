@@ -3053,3 +3053,16 @@ Candidate `0b62b47c…1170`. Checker `controls/check_p138.py`, record `results/p
   a specific non-mapped status; none produces a spec that silently differs from the deck.
 
 G5 (CI) pending.
+
+## Entry 166 — P123, P124, P125, P126, P127, P128, P132, P134, P137 and P139 PASS (2026-10-15)
+
+G-CI is green on `7a387e0`, the pushed commit carrying entries 151–162 and their records: `controls` 38813236548,
+`desktop builds` 38813236493, `fns-iron` 38813236627, `fusion-isotope` 38813236811, `Build handbook` 38813236557 and
+`Build browser workbench` 38813236695 all completed success, with the committed run-output baselines unchanged. The
+red `controls` run on `56fbb0e` (entry 161) involved no gate criterion or computed value.
+
+With the evidence of entries 151–153 and 155–157 this records **P123-PASS**, **P124-PASS**, **P125-PASS** (G5
+data-limited as recorded), **P127-PASS**, **P128-PASS** (G4 data-limited: no triton or helion sublibrary is
+installed) and **P132-PASS**; with entries 154 and 159, **P126-PASS** under Amendment A (its initial G5 failure stays
+preserved); with entry 158, **P134-PASS** under Amendment A; with entry 161, **P137-PASS**; with entry 162,
+**P139-PASS** under Amendment A (its initial G4 failure stays preserved).
