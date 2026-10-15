@@ -10,6 +10,7 @@ pub mod doppler;
 pub mod endf;
 pub mod fission;
 pub mod groups;
+pub mod kerma;
 pub mod library;
 pub mod normalize;
 pub mod prepared;

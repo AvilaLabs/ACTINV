@@ -343,6 +343,9 @@ pub fn solve(
             "reverse: feed/removal schedules are outside the linear reverse problem".into(),
         );
     }
+    if spec.schedule.iter().any(|step| step.is_power_driven()) {
+        return Err("reverse: power-driven steps are outside the linear reverse problem".into());
+    }
     let n_steps = spec.schedule.len();
     let measurements = parse_measurements(measurements_json, n_steps)?;
     let irradiation: Vec<usize> = (0..n_steps)
@@ -650,6 +653,11 @@ pub fn solve_qualified(
         return Err(
             "reverse-qualified: feed/removal schedules are outside the linear inverse problem"
                 .into(),
+        );
+    }
+    if spec.schedule.iter().any(|step| step.is_power_driven()) {
+        return Err(
+            "reverse-qualified: power-driven steps are outside the linear inverse problem".into(),
         );
     }
     let uncertainty = spec

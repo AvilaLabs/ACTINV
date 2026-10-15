@@ -23,7 +23,7 @@ For a sample of known mass in grams, multiply the per-gram activity or heat by t
 
 Photon sources, dose-response quantities, pathways, uncertainty, radiological responses, and damage observables depend on the requested options and required data. An absent field means that output was not emitted; it is not a zero result.
 
-Photon group values represent source strength integrated over each energy group. Contact gamma dose is a semi-infinite-slab screening proxy; use separate transport for geometry-dependent dose. Photon power below the response's lowest energy (1 keV for the NIST response) is left out of the proxy and shown as `dose_response_power_coverage` below one and as `dose_response_subthreshold_power_W_g`. The proxy is still reported when that power is at most `1e-4` of the step's photon power, because the missing low-energy response then changes it by at most about `1e-3`; above that share it is `null`. Radiological indices use your selected coefficient table (including the `a2` transport index, which needs your A2 table). NRT dpa uses the supplied damage-energy table and displacement energies. [Scope and qualification](qualification.md) explains these boundaries.
+Photon group values represent source strength integrated over each energy group. Contact gamma dose is a semi-infinite-slab screening proxy; use separate transport for geometry-dependent dose. Photon power below the response's lowest energy (1 keV for the NIST response) is left out of the proxy and shown as `dose_response_power_coverage` below one and as `dose_response_subthreshold_power_W_g`. The proxy is still reported when that power is at most `1e-4` of the step's photon power, because the missing low-energy response then changes it by at most about `1e-3`; above that share it is `null`. Radiological indices use your selected coefficient table (including the `a2` transport index, which needs your A2 table). NRT dpa uses the supplied damage-energy table and displacement energies. Kerma heating uses the supplied kerma table. [Scope and qualification](qualification.md) explains these boundaries.
 
 Two photon components are emitted only when the specification asks for them. With `photon.point_source`, `photon_source.point_source_dose` holds the dose rate in Sv/h at the configured distance from the step's photon source treated as a point source of `material.mass_g` (1 g by default, FISPACT-II's convention), plus the same dose per gram. It is the manual's Eq. (63): group-centroid energies, air energy absorption, optional air transmission, no build-up. A `null` dose carries an `unavailable_reason`, and `subthreshold_power_W` and `excluded_power_W` show the power it could not use. With `photon.bremsstrahlung`, `photon_source.bremsstrahlung` is a separate source and dose for the listed beta emitters, following the manual's thin-target approximation from each nuclide's mean beta energy and the material's mean atomic number. It is never merged into the decay-photon groups or dose proxies, so the total dose from both is the sum of the two fields. Nuclides whose inputs are missing are named in `missing_inputs`, and `inputs_complete` is then `false`. Both are screening estimates with the limits described under [photon options](specification.md#photon-options), not transport results.
 
@@ -133,6 +133,43 @@ stated convention, so state the energy you compare with. The source covers only 
 have both a spontaneous-fission branch and a ν̄; ledger `spontaneous_fission.nubar_uncovered` names the populated
 ones that lack it, and `uncovered_to_leakage` names the populated ones whose SF branch still goes to leakage for lack
 of a yield evaluation.
+
+## Kerma heating and power-driven steps
+
+A problem with a `kerma` section ([specification](specification.md#kerma-heating-and-power-driven-steps)) adds a
+`kerma` block to every step and a `power` block to every power-driven step. Both are absent otherwise; absence is not
+a zero result.
+
+| `kerma` field | Meaning | Unit |
+| --- | --- | --- |
+| `heating_W_per_g` | Instantaneous nuclear heating at the end of the step: `sum_i N_i * k_i * flux_multiplier` | W/g |
+| `heating_W_cm3` | The same per volume; present only with `material.density_g_cm3` | W/cm3 |
+| `flux_multiplier` | The multiplier the heating is evaluated at (a power step's last sub-interval) | dimensionless |
+| `damage_energy_eV_per_g_s` | MT=444 damage-energy production; present only when the table has damage-energy rows | eV/(g s) |
+| `top_contributors[]` | The largest contributors by magnitude: `nuclide`, `atoms_per_g`, `heating_W_per_g`, `fraction` of the total | |
+| `n_contributing_nuclides`, `other_heating_W_per_g` | Nuclides with nonzero heating, and the heating of those not listed | W/g |
+| `covered_atom_fraction` | Share of the step's atoms carried by nuclides with a kerma row; the rest contribute nothing | |
+
+Heating comes only from nuclides with a table row. A transmutation product without a row adds no heating, so
+`covered_atom_fraction` below one is a lower bound on the heating, not a zero.
+
+| `power` field | Meaning |
+| --- | --- |
+| `requested_W_per_g`, `requested_W_cm3` | The target (the second only when it was written in W/cm3) |
+| `tolerance`, `max_substeps` | The `kerma.power_tolerance` and `kerma.max_substeps` in force |
+| `substeps`, `substep_duration_s` | Equal sub-intervals the accepted solve used, and their length |
+| `flux_multiplier_per_substep`, `flux_per_substep_cm2_s` | The achieved multiplier in each sub-interval and the resulting total flux (particles cm-2 s-1) |
+| `mean_flux_multiplier` | Time-weighted mean multiplier; this is the step's top-level `flux`, and drives `flux_weighted_time_s` and fluence |
+| `max_power_drift` | Largest relative departure of a sub-interval's end power from the request |
+| `converged` | `max_power_drift <= tolerance`. `false` means `max_substeps` was reached first |
+| `refinement[]` | Each attempt, coarsest first: `substeps` tried and its `max_power_drift` |
+| `estimated_flux_multiplier` | The start-of-run estimate used for pruning and the burnup-mode choice before the solve |
+
+The ledger's `kerma` entry records the table hash, `require_complete`, the material nuclides without a row, the
+heating model and units, and for power runs the number of power steps, total sub-intervals, worst drift and the
+step numbers that did not converge. The certificate's `kerma` entry carries the table's provenance and
+`inputs.kerma_table` its computed hash. The schedule ledger's `flux_weighted_time_s` and `fluence_n_cm2` use the
+achieved multipliers of power-driven steps.
 
 ## Check the ledger
 

@@ -516,6 +516,12 @@ impl Study {
                         s.name
                     ));
                 }
+                if step.is_power_driven() {
+                    return Err(format!(
+                        "schedule '{}': power-driven steps are not part of actinv-study-1",
+                        s.name
+                    ));
+                }
                 parse_duration(&step.dt).map_err(|e| format!("schedule '{}': {e}", s.name))?;
                 if !step.flux.is_finite() || step.flux < 0.0 {
                     return Err(format!(
@@ -601,6 +607,8 @@ impl Study {
                     removal: None,
                     library: None,
                     projectile: None,
+                    power_W_cm3: None,
+                    power_W_per_g: None,
                 });
             }
         }
@@ -627,6 +635,7 @@ impl Study {
             self_shielding: None,
             summary: None,
             pathways: None,
+            kerma: None,
         })
     }
 

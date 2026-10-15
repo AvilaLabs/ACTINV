@@ -205,6 +205,20 @@ pub fn check_linear_base(base: &Value) -> Result<(), String> {
         );
     }
     if base
+        .get("schedule")
+        .and_then(Value::as_array)
+        .is_some_and(|steps| {
+            steps.iter().any(|step| {
+                step.get("power_W_cm3").is_some() || step.get("power_W_per_g").is_some()
+            })
+        })
+    {
+        return Err(
+            "budget refuses power-driven steps: the flux amplitude depends on composition, so CI is not linear in it"
+                .into(),
+        );
+    }
+    if base
         .pointer("/options/screen")
         .is_some_and(|v| !v.is_null())
     {

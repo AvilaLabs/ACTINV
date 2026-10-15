@@ -6,13 +6,15 @@ use crate::damage::{DamageStepOut, PreparedDamageTable};
 use crate::fission_count::{self, FissionStepOut};
 use crate::gas;
 use crate::photon::{self, PhotonDiagnostics, PhotonResponse, PhotonSourceOut};
-use crate::quantity::{AtomsPerGram, Kelvin, Seconds};
+use crate::power::{self, summarize_kerma, KermaStepOut, PowerStepOut};
+use crate::quantity::{AtomsPerGram, FluxMultiplier, Kelvin, Seconds};
 use crate::radiological::{PreparedRadiologicalTable, RadiologicalStepOut};
 use crate::sparse::Csc;
 use crate::spec::{
-    DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, LibraryRef, PhotonOptions,
-    PhysicalInputs, Projectile, RadiologicalOptions, SelfShieldingOptions, Spec, Spectrum,
-    StepLibrary, SpontaneousFissionOptions, UncertaintyOptions,
+    DamageOptions, DecayRef, FissionYieldOptions, HashedFileRef, KermaOptions, LibraryRef,
+    PhotonOptions, PhysicalInputs, PhysicalStep, Projectile, RadiologicalOptions,
+    SelfShieldingOptions, Spec, Spectrum, SpontaneousFissionOptions, StepLibrary,
+    UncertaintyOptions,
 };
 use crate::summary::{self, StateAtoms, StepSummary};
 use crate::uncertainty::{
@@ -25,6 +27,7 @@ use crate::uncertainty::{
 use actinv_data::{
     composition, covariance, decay, fission,
     groups::GroupStructure,
+    kerma::KermaTable,
     library::{self, ReactionLibrary},
     prepared as prepared_data,
 };
@@ -182,6 +185,13 @@ pub struct StepOut {
     /// `options.fission` is set or `fission_yields.spontaneous` supplies nu-bar data.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub fission: Option<FissionStepOut>,
+    /// P126 instantaneous kerma heating at the end of the step; present only when the spec
+    /// carries a `kerma` section.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kerma: Option<KermaStepOut>,
+    /// P126 power-normalization record; present only on power-driven steps.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub power: Option<PowerStepOut>,
 }
 #[derive(serde::Serialize)]
 pub struct Pathway {
@@ -769,6 +779,66 @@ struct PreparedShielding {
     geometry: Option<crate::shielding::PreparedGeometry>,
     /// Computed hash of each `geometry.resonance_files` entry, in order.
     resonance_sha256: Vec<String>,
+}
+
+/// P126: the verified kerma table of one run. It is read per run rather than prepared with the
+/// activation data: it depends on neither the library nor the decay chain, only on the spec.
+struct LoadedKerma {
+    options: KermaOptions,
+    sha256: String,
+    table: KermaTable,
+}
+
+impl LoadedKerma {
+    fn load(
+        options: &KermaOptions,
+        projectile: &str,
+        library_boundaries_ev: &[f64],
+    ) -> Result<Self, String> {
+        let (text, sha256) = read_verified_text(&options.table.path, Some(&options.table.sha256))
+            .map_err(|error| format!("kerma table: {error}"))?;
+        let table = KermaTable::from_json(&text, projectile)?;
+        if table.boundaries_eV() != library_boundaries_ev {
+            return Err(
+                "kerma table boundaries_eV do not match the activation library boundaries".into(),
+            );
+        }
+        Ok(Self {
+            options: options.clone(),
+            sha256,
+            table,
+        })
+    }
+}
+
+/// Heating of one atom of chain state `state` at unit flux multiplier under one spectrum.
+struct KermaTerm {
+    state: usize,
+    key: (i32, i32),
+    watts_per_atom: f64,
+    damage_eV_per_s_per_atom: Option<f64>,
+}
+
+/// Every chain nuclide with a kerma row, folded with `flux_ascending` (one entry per spectrum).
+fn kerma_terms_for(
+    table: &KermaTable,
+    keys: &[(i32, i32)],
+    flux_ascending: &[f64],
+) -> Vec<KermaTerm> {
+    let rates = power::rate_per_barn_s(flux_ascending);
+    keys.iter()
+        .enumerate()
+        .filter_map(|(state, &(za, liso))| {
+            power::per_atom_rates(table, za, liso, &rates).map(|(watts_per_atom, damage)| {
+                KermaTerm {
+                    state,
+                    key: (za, liso),
+                    watts_per_atom,
+                    damage_eV_per_s_per_atom: damage,
+                }
+            })
+        })
+        .collect()
 }
 
 struct PreparedCovariance {
@@ -3792,6 +3862,92 @@ impl PreparedRun {
                 step_spectrum_id.push(None);
             }
         }
+        // ---- kerma and power (P126): the heating table, the heating of one atom under each
+        // spectrum, and for power-driven steps the start-of-run flux amplitude that pruning and
+        // the burnup-mode decision need before the schedule is solved. The step loop
+        // renormalizes the flux from the evolving composition; the estimate only sizes the
+        // reaction graph.
+        let kerma_loaded = match &spec.kerma {
+            Some(options) => Some(LoadedKerma::load(
+                options,
+                spec.projectile.name(),
+                lib.boundaries_ev(),
+            )?),
+            None => None,
+        };
+        let kerma_uncovered: Vec<String> = match &kerma_loaded {
+            Some(loaded) => bulk_inv
+                .keys()
+                .filter(|(za, liso)| !loaded.table.covers(*za, *liso))
+                .map(|(za, liso)| name_of(*za, *liso))
+                .collect(),
+            None => Vec::new(),
+        };
+        if let Some(loaded) = &kerma_loaded {
+            if loaded.options.require_complete && !kerma_uncovered.is_empty() {
+                return Err(format!(
+                    "kerma: material nuclides lack table coverage: {}",
+                    kerma_uncovered.join(", ")
+                ));
+            }
+        }
+        let kerma_terms: Vec<Vec<KermaTerm>> = match &kerma_loaded {
+            Some(loaded) => std::iter::once(phi)
+                .chain(extra_spectra.iter().copied())
+                .map(|spectrum| kerma_terms_for(&loaded.table, &ch.keys, spectrum))
+                .collect(),
+            None => Vec::new(),
+        };
+        let has_power = sched.iter().any(|step| step.power_w_per_g.is_some());
+        if has_power {
+            if kerma_loaded.is_none() {
+                return Err("power-driven schedule steps require a kerma section".into());
+            }
+            if spec.uncertainty.is_some() {
+                return Err(
+                    "power-driven schedule steps cannot be combined with uncertainty".into(),
+                );
+            }
+        }
+        let mut estimated_multiplier: Vec<Option<f64>> = vec![None; sched.len()];
+        let sched_estimated: Vec<PhysicalStep>;
+        let sched: &[PhysicalStep] = if has_power {
+            let mut resolved = Vec::with_capacity(sched.len());
+            for (si, step) in sched.iter().enumerate() {
+                match step.power_w_per_g {
+                    Some(target) => {
+                        let terms = &kerma_terms[step_spectrum_id[si].map_or(0, |id| id + 1)];
+                        let heating_per_unit: f64 = terms
+                            .iter()
+                            .map(|term| {
+                                term.watts_per_atom * bulk.get(&term.state).copied().unwrap_or(0.0)
+                            })
+                            .sum();
+                        if !heating_per_unit.is_finite() || heating_per_unit <= 0.0 {
+                            return Err(format!(
+                                "schedule step {}: the starting material has no kerma heating under \
+                                 this step's spectrum, so a power target cannot set a flux",
+                                si + 1
+                            ));
+                        }
+                        let estimate = target / heating_per_unit;
+                        estimated_multiplier[si] = Some(estimate);
+                        resolved.push(
+                            step.with_multiplier(
+                                FluxMultiplier::new(estimate).map_err(|error| {
+                                    format!("schedule step {}: {error}", si + 1)
+                                })?,
+                            ),
+                        );
+                    }
+                    None => resolved.push(step.clone()),
+                }
+            }
+            sched_estimated = resolved;
+            &sched_estimated
+        } else {
+            sched
+        };
         let mut react_extra: Vec<Vec<(usize, usize, f64)>> = Vec::new();
         // Extra spectra carry their own derivative sets under uncertainty: a
         // row's tangent direction is the collapse of its derivative edges under
@@ -4982,21 +5138,16 @@ impl PreparedRun {
         });
         let mut induced_cum = 0.0f64;
         let mut spontaneous_cum = 0.0f64;
-        for (si, schedule_step) in sched.iter().enumerate() {
-            let dt = schedule_step.duration();
-            let fl = schedule_step.multiplier();
-            // the step's spectrum (index into rsubs: 0 = base, 1.. = overrides)
-            let rs = match step_spectrum_id[si] {
-                Some(id) => &rsubs[id + 1],
-                None => &rsubs[0],
-            };
+        // One step's matrix triplets: decay, the step spectrum's reactions scaled by the flux
+        // multiplier, and the declaring step's feed/removal terms (not flux-scaled).
+        let assemble_triplets =
+            |si: usize, rs: &[(usize, usize, C64)], multiplier: f64| -> Vec<(usize, usize, C64)> {
             let mut trip = dsub.clone();
-            if fl.get() > 0.0 {
+            if multiplier > 0.0 {
                 for (i, j, v) in rs.iter() {
-                    trip.push((*i, *j, v * C64::new(fl.get(), 0.0)));
+                    trip.push((*i, *j, v * C64::new(multiplier, 0.0)));
                 }
             }
-            // feed/removal terms apply during the declaring step and are not flux-scaled
             for edges in [&step_feed[si], &step_removal[si]] {
                 for &(i, j, v) in edges {
                     if pos[i] != usize::MAX && pos[j] != usize::MAX {
@@ -5004,6 +5155,115 @@ impl PreparedRun {
                     }
                 }
             }
+            trip
+        };
+        let assemble = |si: usize, rs: &[(usize, usize, C64)], multiplier: f64| -> Csc {
+            Csc::from_triplets(m, &assemble_triplets(si, rs, multiplier))
+        };
+        // Multiplier each step actually ran at: the schedule's for flux-driven steps, the
+        // time-weighted mean of the solved sub-intervals for power-driven ones.
+        let mut achieved_multiplier: Vec<f64> =
+            sched.iter().map(|step| step.multiplier().get()).collect();
+        for (si, schedule_step) in sched.iter().enumerate() {
+            let dt = schedule_step.duration();
+            let scheduled_fl = schedule_step.multiplier();
+            // the step's spectrum (index into rsubs: 0 = base, 1.. = overrides)
+            let rs = match step_spectrum_id[si] {
+                Some(id) => &rsubs[id + 1],
+                None => &rsubs[0],
+            };
+            // atoms per gram of chain state g in `state`: tracked states directly, a trace-mode
+            // reservoir nuclide as its constant bulk plus any tracked delta (the gas and damage
+            // folds read inventories the same way)
+            let atoms_of = |g: usize, state: &[f64]| -> f64 {
+                let tracked = if pos[g] != usize::MAX {
+                    state[pos[g]]
+                } else {
+                    0.0
+                };
+                if mode == "coupled" {
+                    tracked
+                } else {
+                    match bulk.get(&g) {
+                        Some(reservoir) => {
+                            reservoir
+                                + if tracked_reservoir.contains(&g) {
+                                    tracked
+                                } else {
+                                    0.0
+                                }
+                        }
+                        None => tracked,
+                    }
+                }
+            };
+            let mut power_out: Option<PowerStepOut> = None;
+            let mut power_zeroed = 0.0f64;
+            let mut power_last_multiplier: Option<f64> = None;
+            let fl = match (schedule_step.power_w_per_g, kerma_loaded.as_ref()) {
+                (Some(target), Some(loaded)) => {
+                    // P126: split the step into equal sub-intervals and renormalize the flux at
+                    // the start of each from the composition then reached.
+                    let terms = &kerma_terms[step_spectrum_id[si].map_or(0, |id| id + 1)];
+                    let heating = |state: &[f64]| -> f64 {
+                        terms
+                            .iter()
+                            .map(|term| term.watts_per_atom * atoms_of(term.state, state))
+                            .sum()
+                    };
+                    let propagate = |state: &[f64],
+                                     multiplier: f64,
+                                     h: f64|
+                     -> Result<(Vec<f64>, f64), String> {
+                        let a = assemble(si, rs, multiplier);
+                        let mut next = cram_step(&a, state, h, &c)?.0;
+                        let mut clipped = 0.0f64;
+                        for (k, v) in next.iter_mut().enumerate() {
+                            if *v < 0.0
+                                && keep[k] != ch.leak
+                                && keep[k] != ch.unit
+                                && Some(keep[k]) != removed
+                            {
+                                clipped += -*v;
+                                *v = 0.0;
+                            }
+                        }
+                        Ok((next, clipped))
+                    };
+                    let solved = power::solve_power_step(
+                        &y,
+                        dt.get(),
+                        target,
+                        loaded.options.power_tolerance,
+                        loaded.options.max_substeps,
+                        heating,
+                        propagate,
+                    )
+                    .map_err(|error| format!("schedule step {}: {error}", si + 1))?;
+                    let unit_spectrum_total: f64 = match step_spectrum_id[si] {
+                        Some(id) => extra_spectra[id].iter().sum(),
+                        None => base_flux_total.get(),
+                    };
+                    let mean_multiplier = solved.mean_multiplier();
+                    power_out = Some(PowerStepOut::new(
+                        &solved,
+                        target,
+                        spec.schedule[si].power_W_cm3,
+                        loaded.options.power_tolerance,
+                        loaded.options.max_substeps,
+                        estimated_multiplier[si].unwrap_or(0.0),
+                        unit_spectrum_total,
+                    ));
+                    power_zeroed = solved.zeroed_atoms;
+                    power_last_multiplier = solved.multipliers.last().copied();
+                    y = solved.state;
+                    achieved_multiplier[si] = mean_multiplier;
+                    FluxMultiplier::new(mean_multiplier)
+                        .map_err(|error| format!("schedule step {}: {error}", si + 1))?
+                }
+                _ => scheduled_fl,
+            };
+            let trip = assemble_triplets(si, rs, fl.get());
             let a = Csc::from_triplets(m, &trip);
             if want_routes {
                 // reservoir supply split by origin: (row position, reservoir, atoms g^-1 s^-1)
@@ -5099,7 +5359,7 @@ impl PreparedRun {
                     alternate_c.as_ref().expect("alternate CRAM is prepared"),
                 )?
                 .0;
-            } else {
+            } else if power_out.is_none() {
                 y = cram_step(&a, &y, dt.get(), &c)?.0;
             }
             t_cum += dt;
@@ -5110,7 +5370,7 @@ impl PreparedRun {
                 None => base_flux_total.get(),
             };
             fluence_cum += dt.get() * fl.get() * step_flux_total;
-            let mut zeroed = 0.0;
+            let mut zeroed = power_zeroed;
             for (k, v) in y.iter_mut().enumerate() {
                 if *v < 0.0 && keep[k] != ch.leak && keep[k] != ch.unit && Some(keep[k]) != removed
                 {
@@ -5417,6 +5677,46 @@ impl PreparedRun {
                 }
                 _ => None,
             };
+            let kerma_out = kerma_loaded.as_ref().map(|loaded| {
+                let terms = &kerma_terms[step_spectrum_id[si].map_or(0, |id| id + 1)];
+                let multiplier = power_last_multiplier.unwrap_or(fl.get());
+                let mut contributions = Vec::new();
+                let mut covered_atoms = 0.0f64;
+                for term in terms {
+                    let atoms = atoms_of(term.state, &y);
+                    if atoms > 0.0 {
+                        covered_atoms += atoms;
+                        contributions.push((
+                            term.key,
+                            atoms,
+                            multiplier * term.watts_per_atom * atoms,
+                        ));
+                    }
+                }
+                let total_atoms: f64 = (0..ch.keys.len())
+                    .map(|g| atoms_of(g, &y))
+                    .filter(|atoms| *atoms > 0.0)
+                    .sum();
+                let damage_energy = loaded.table.has_damage_energy().then(|| {
+                    multiplier
+                        * terms
+                            .iter()
+                            .filter_map(|term| {
+                                term.damage_eV_per_s_per_atom
+                                    .map(|damage| damage * atoms_of(term.state, &y))
+                            })
+                            .sum::<f64>()
+                });
+                summarize_kerma(
+                    &contributions,
+                    covered_atoms,
+                    total_atoms,
+                    loaded.options.top,
+                    multiplier,
+                    spec.material.density_g_cm3,
+                    damage_energy,
+                )
+            });
             let photon_source = if want_photons {
                 let active_refs: Vec<_> = photon_active
                     .iter()
@@ -5539,6 +5839,8 @@ impl PreparedRun {
                 gas: gas_out,
                 summary: step_summary,
                 fission: fission_out,
+                kerma: kerma_out,
+                power: power_out,
             });
         }
         profiler.finish("schedule_solve_diagnostics", solve_started);
@@ -5559,9 +5861,11 @@ impl PreparedRun {
         // Feed/removal boundary sources and sinks are not production chains: when a schedule
         // declares them, pathway attribution is suppressed rather than silently mis-attributed.
         // A schedule that switches library is suppressed the same way: the source terms and the pathway solve
-        // below carry the base library's rates only.
-        let pathways_suppressed =
-            want_paths && mode == "trace" && (has_feed || has_removal || has_step_library);
+        // below carry the base library's rates only. So is a power-driven schedule, whose flux amplitude varies
+        // within the step.
+        let pathways_suppressed = want_paths
+            && mode == "trace"
+            && (has_feed || has_removal || has_step_library || has_power);
         if mode == "trace" && want_paths && !sources.is_empty() && !pathways_suppressed {
             let mut agg: BTreeMap<(usize, (i32, i32)), f64> = BTreeMap::new();
             for (row, rate, from) in &sources {
@@ -6031,6 +6335,16 @@ impl PreparedRun {
                 })
             })
             .collect();
+        // a power-driven step's multiplier is solved, not scheduled: report what it ran at
+        let flux_weighted_time_s: f64 = if has_power {
+            sched
+                .iter()
+                .enumerate()
+                .map(|(si, step)| step.duration().get() * achieved_multiplier[si])
+                .sum()
+        } else {
+            flux_weighted_time_s
+        };
         let fluence_total: f64 = sched
             .iter()
             .enumerate()
@@ -6039,7 +6353,7 @@ impl PreparedRun {
                     Some(id) => extra_spectra[id].iter().sum(),
                     None => base_flux_total.get(),
                 };
-                (step.duration() * step.multiplier()).get() * total_i
+                step.duration().get() * achieved_multiplier[si] * total_i
             })
             .sum();
         let n_step_spectra = step_spectrum_id.iter().filter(|s| s.is_some()).count();
@@ -6486,6 +6800,48 @@ impl PreparedRun {
                 }),
             );
         }
+        if let Some(loaded) = &kerma_loaded {
+            let powered: Vec<(usize, &PowerStepOut)> = steps
+                .iter()
+                .filter_map(|step| step.power.as_ref().map(|power| (step.step, power)))
+                .collect();
+            ledger.as_object_mut().expect("ledger is an object").insert(
+                "kerma".into(),
+                serde_json::json!({
+                    "table_sha256": &loaded.sha256,
+                    "require_complete": loaded.options.require_complete,
+                    "uncovered_composition_targets": &kerma_uncovered,
+                    "model": "heating = flux_multiplier * sum_i N_i * sum_g K_ig * phi_g * 1e-24 * 1.602176634e-19 W; N_i are the tracked or reservoir inventories at the step end, so transmutation products with a table row contribute and products without one contribute nothing",
+                    "units": {
+                        "heating_W_per_g": "watts per gram of material",
+                        "heating_W_cm3": "watts per cubic centimetre; present only with material.density_g_cm3",
+                        "damage_energy_eV_per_g_s": "eV per gram per second from MT=444 rows",
+                    },
+                    "power": if has_power {
+                        Some(serde_json::json!({
+                            "steps": powered.len(),
+                            "power_tolerance": loaded.options.power_tolerance,
+                            "max_substeps": loaded.options.max_substeps,
+                            "substeps_total": powered.iter().map(|(_, power)| power.substeps).sum::<usize>(),
+                            "max_power_drift": powered
+                                .iter()
+                                .map(|(_, power)| power.max_power_drift)
+                                .fold(0.0f64, f64::max),
+                            "steps_not_converged": powered
+                                .iter()
+                                .filter(|(_, power)| !power.converged)
+                                .map(|(step, _)| *step)
+                                .collect::<Vec<_>>(),
+                            "model": "power = flux_multiplier * sum_i N_i * k_i; each step is split into equal sub-intervals, the multiplier is set at the start of each from the composition then reached, and the split doubles up to max_substeps until every sub-interval's end power is within power_tolerance of the request (relative); the reported drift is that end-of-interval departure",
+                            "estimate": "the start-of-run composition sizes the flux used for rate pruning and the burnup-mode decision before the schedule is solved; achieved multipliers are reported per step",
+                            "pathways_suppressed": "pathway attribution is not emitted for power-driven schedules",
+                        }))
+                    } else {
+                        None
+                    },
+                }),
+            );
+        }
         if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
             let (model, channel_map) = if plan.geometry.is_some() {
                 (
@@ -6880,6 +7236,32 @@ impl PreparedRun {
                     }),
                 );
         }
+        if let Some(loaded) = &kerma_loaded {
+            let mut metadata = loaded.table.certificate_metadata();
+            let metadata_object = metadata
+                .as_object_mut()
+                .expect("kerma metadata is an object");
+            metadata_object.insert(
+                "require_complete".into(),
+                serde_json::Value::Bool(loaded.options.require_complete),
+            );
+            let certificate_object = certificate
+                .as_object_mut()
+                .expect("certificate is an object");
+            certificate_object.insert("kerma".into(), metadata);
+            certificate_object
+                .get_mut("inputs")
+                .and_then(serde_json::Value::as_object_mut)
+                .expect("certificate inputs is an object")
+                .insert(
+                    "kerma_table".into(),
+                    serde_json::json!({
+                        "path": &loaded.options.table.path,
+                        "sha256_declared": &loaded.options.table.sha256,
+                        "sha256": &loaded.sha256,
+                    }),
+                );
+        }
         if let (Some(prepared), Some(plan)) = (&self.shielding, &shield_plan) {
             let certificate_object = certificate
                 .as_object_mut()
@@ -7265,6 +7647,8 @@ mod projectile_output_tests {
             gas: None,
             summary: None,
             fission: None,
+            kerma: None,
+            power: None,
         }
     }
 
@@ -7977,6 +8361,250 @@ mod gas_prepared_tests {
             last.He4.inventory_appm,
             last.He4.appm
         );
+    }
+
+    // ---- P126 power normalization and kerma, end to end on the same hand-built PreparedRun.
+
+    /// Group flux of every one of the four synthetic groups (spec.spectrum.flux_per_group).
+    const PHI: f64 = 1.0e-2;
+
+    /// Heating of one atom at unit flux multiplier for a flat kerma factor, in W.
+    fn watts_per_atom(kerma_barn_ev: f64) -> f64 {
+        4.0 * kerma_barn_ev * PHI * 1.0e-24 * EV
+    }
+
+    /// Replace the library with one whose total-loss row has cross section `sigma_b` in every
+    /// group (the (n,alpha) product row keeps the same value).
+    fn with_cross_section(prepared: &mut PreparedRun, sigma_b: f64) {
+        prepared.library = ActivationLibrary::Dense(library::Library {
+            rows: vec![
+                library::Row {
+                    target: 0,
+                    mt: 1,
+                    zap: -1,
+                    lfs: 0,
+                    lmf: 0,
+                },
+                library::Row {
+                    target: 0,
+                    mt: 107,
+                    zap: 999_999,
+                    lfs: 0,
+                    lmf: -2,
+                },
+            ],
+            sig: vec![sigma_b; 2 * 4],
+            ngroups: 4,
+            bounds: vec![1.0, 2.0, 3.0, 4.0, 5.0],
+        });
+    }
+
+    /// Write a one-nuclide kerma table and point the spec at it; the caller removes the file.
+    fn attach_kerma(
+        spec: &mut Spec,
+        tag: &str,
+        kerma_barn_ev: f64,
+        tolerance: f64,
+        max_substeps: usize,
+    ) -> std::path::PathBuf {
+        let path =
+            std::env::temp_dir().join(format!("actinv-kerma-{}-{tag}.json", std::process::id()));
+        let table = serde_json::json!({
+            "format": "actinv-kerma-table-1",
+            "source": {"citation": "synthetic", "edition": "test", "url": "local"},
+            "projectile": "neutron",
+            "group_structure": "test-4g",
+            "boundaries_eV": [1.0, 2.0, 3.0, 4.0, 5.0],
+            "units": "kerma_barn_eV_per_group",
+            "targets": {"Fe56": vec![kerma_barn_ev; 4]},
+        });
+        std::fs::write(&path, table.to_string()).expect("kerma table is written");
+        let location = path.to_string_lossy().into_owned();
+        spec.kerma = Some(KermaOptions {
+            table: HashedFileRef {
+                sha256: file_sha256(&location).expect("kerma table hashes"),
+                path: location,
+            },
+            require_complete: true,
+            power_tolerance: tolerance,
+            max_substeps,
+            top: 5,
+        });
+        path
+    }
+
+    fn initial_atoms(spec: &Spec, prepared: &PreparedRun) -> f64 {
+        composition::material_atoms_per_gram(
+            &spec.material.composition,
+            &spec.material.basis,
+            &prepared.nuclides,
+        )
+        .expect("composition resolves")
+        .0
+        .values()
+        .sum()
+    }
+
+    fn run_prepared(spec: &Spec, prepared: &PreparedRun) -> Result<RunResult, String> {
+        let physical = spec.physical_inputs()?;
+        let mut profiler = RunProfiler::disabled();
+        prepared.run_started_profiled(
+            spec,
+            &physical,
+            "test",
+            std::time::Instant::now(),
+            &mut profiler,
+            None,
+            None,
+        )
+    }
+
+    fn fe56_atoms(step: &StepOut) -> f64 {
+        step.inventory
+            .iter()
+            .find(|nuclide| nuclide.nuclide == "Fe56")
+            .expect("Fe56 is populated")
+            .atoms_per_g
+    }
+
+    #[test]
+    fn power_step_reproduces_the_requested_power_without_substeps_when_burnup_is_negligible() {
+        for (mode, tag) in [("trace", "static-trace"), ("coupled", "static-coupled")] {
+            let (mut spec, mut prepared) = synthetic_gas_prepared(mode);
+            with_cross_section(&mut prepared, 1.0e-4);
+            let path = attach_kerma(&mut spec, tag, 1.0, 1.0e-3, 8);
+            let n0 = initial_atoms(&spec, &prepared);
+            let target = 1.0; // W/g
+            spec.material.density_g_cm3 = Some(7.874);
+            spec.schedule = serde_json::from_value(serde_json::json!([
+                {"dt": "1 s", "power_W_cm3": target * 7.874}
+            ]))
+            .expect("schedule parses");
+            spec.validate().expect("spec validates");
+            let result = run_prepared(&spec, &prepared).expect("run succeeds");
+            std::fs::remove_file(&path).ok();
+            let step = &result.steps[0];
+            let power = step.power.as_ref().expect("power record present");
+            assert_eq!(power.substeps, 1, "{mode}");
+            assert!(power.converged, "{mode}");
+            assert!((power.requested_W_per_g - target).abs() < 1e-12, "{mode}");
+            assert_eq!(power.requested_W_cm3, Some(target * 7.874));
+            let expected = target / (watts_per_atom(1.0) * n0);
+            let rel = (step.flux - expected).abs() / expected;
+            assert!(rel < 1e-9, "{mode}: flux {} vs {expected}", step.flux);
+            assert!(
+                (power.flux_per_substep_cm2_s[0] - expected * 4.0 * PHI).abs()
+                    < 1e-9 * expected * 4.0 * PHI,
+                "{mode}"
+            );
+            let kerma = step.kerma.as_ref().expect("kerma record present");
+            assert!(
+                (kerma.heating_W_per_g - target).abs() < 1e-6 * target,
+                "{mode}"
+            );
+            assert!(
+                (kerma.heating_W_cm3.unwrap() - target * 7.874).abs() < 1e-6 * target * 7.874,
+                "{mode}"
+            );
+            assert_eq!(kerma.top_contributors[0].nuclide, "Fe56");
+            assert_eq!(result.ledger["kerma"]["power"]["steps"], 1);
+            assert_eq!(
+                result.certificate["inputs"]["kerma_table"]["sha256"]
+                    .as_str()
+                    .map(str::len),
+                Some(64)
+            );
+        }
+    }
+
+    #[test]
+    fn power_step_substeps_when_the_inventory_burns_during_the_step() {
+        let (mut spec, mut prepared) = synthetic_gas_prepared("coupled");
+        with_cross_section(&mut prepared, 1.0e3);
+        let path = attach_kerma(&mut spec, "burn", 1.0, 5.0e-2, 256);
+        let n0 = initial_atoms(&spec, &prepared);
+        // constant power P burns c = P * b / w atoms/g/s, where b is the loss rate per atom at
+        // unit multiplier and w the heating per atom; choose P to burn 58% of the inventory
+        let burn_fraction = 0.58;
+        let loss_per_unit_multiplier = 4.0 * 1.0e3 * PHI * 1.0e-24;
+        let target = burn_fraction * n0 * watts_per_atom(1.0) / loss_per_unit_multiplier;
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "power_W_per_g": target}
+        ]))
+        .expect("schedule parses");
+        spec.validate().expect("spec validates");
+        let result = run_prepared(&spec, &prepared).expect("run succeeds");
+        std::fs::remove_file(&path).ok();
+        let step = &result.steps[0];
+        let power = step.power.as_ref().expect("power record present");
+        assert!(power.substeps > 1, "substeps {}", power.substeps);
+        assert!(power.converged);
+        assert!(power.max_power_drift <= 5.0e-2);
+        assert!(power.refinement.len() > 1);
+        assert_eq!(power.refinement[0].substeps, 1);
+        assert!(power.refinement[0].max_power_drift > 5.0e-2);
+        assert_eq!(power.flux_multiplier_per_substep.len(), power.substeps);
+        assert!(
+            power.flux_multiplier_per_substep.last() > power.flux_multiplier_per_substep.first()
+        );
+        let expected = (1.0 - burn_fraction) * n0;
+        assert!(
+            (fe56_atoms(step) - expected).abs() < 0.05 * expected,
+            "Fe56 {} vs {expected}",
+            fe56_atoms(step)
+        );
+        let kerma = step.kerma.as_ref().expect("kerma record present");
+        assert!(
+            (kerma.heating_W_per_g - target).abs() / target <= power.max_power_drift * (1.0 + 1e-9),
+            "end-of-step heating {} vs {target}",
+            kerma.heating_W_per_g
+        );
+    }
+
+    #[test]
+    fn flux_driven_step_reports_kerma_and_no_power_record() {
+        let (mut spec, mut prepared) = synthetic_gas_prepared("coupled");
+        with_cross_section(&mut prepared, 1.0e-4);
+        let path = attach_kerma(&mut spec, "flux", 2.0, 1.0e-3, 8);
+        let n0 = initial_atoms(&spec, &prepared);
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "flux": 3.0},
+            {"dt": "1 s", "flux": 0.0}
+        ]))
+        .expect("schedule parses");
+        let result = run_prepared(&spec, &prepared).expect("run succeeds");
+        std::fs::remove_file(&path).ok();
+        assert!(result.steps.iter().all(|step| step.power.is_none()));
+        let expected = 3.0 * watts_per_atom(2.0) * n0;
+        let heating = result.steps[0].kerma.as_ref().unwrap().heating_W_per_g;
+        assert!(
+            (heating - expected).abs() < 1e-6 * expected,
+            "{heating} vs {expected}"
+        );
+        // cooling: no flux, no heating, no listed contributors
+        let cooled = result.steps[1].kerma.as_ref().unwrap();
+        assert_eq!(cooled.heating_W_per_g, 0.0);
+        assert!(cooled.top_contributors.is_empty());
+        // the kerma block is a pure addition: the JSON of a spec without it carries neither key
+        let (plain_spec, plain_prepared) = synthetic_gas_prepared("coupled");
+        let plain = run_prepared(&plain_spec, &plain_prepared).expect("run succeeds");
+        let value = serde_json::to_value(&plain.steps[0]).unwrap();
+        assert!(value.get("kerma").is_none() && value.get("power").is_none());
+        assert!(plain.ledger.get("kerma").is_none());
+    }
+
+    #[test]
+    fn power_step_without_a_kerma_section_is_refused() {
+        let (mut spec, prepared) = synthetic_gas_prepared("coupled");
+        spec.schedule = serde_json::from_value(serde_json::json!([
+            {"dt": "1 s", "power_W_per_g": 1.0}
+        ]))
+        .expect("schedule parses");
+        let error = match run_prepared(&spec, &prepared) {
+            Ok(_) => panic!("a power step with no kerma table must fail"),
+            Err(error) => error,
+        };
+        assert!(error.contains("kerma"), "{error}");
     }
 }
 

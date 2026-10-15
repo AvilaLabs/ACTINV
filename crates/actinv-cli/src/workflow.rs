@@ -26,6 +26,9 @@ pub fn resolve_inputs(spec: &mut Spec, base: &Path) {
     if let Some(r) = &mut spec.radiological {
         resolve(&mut r.table.path);
     }
+    if let Some(r) = &mut spec.kerma {
+        resolve(&mut r.table.path);
+    }
     for r in &mut spec.fission_yields.files {
         resolve(&mut r.path);
     }
@@ -55,6 +58,9 @@ pub fn check_files(spec: &Spec, hashes: bool) -> Result<(), String> {
     }
     if let Some(r) = &spec.radiological {
         inputs.push(("Radiological table", &r.table.path, Some(&r.table.sha256)));
+    }
+    if let Some(r) = &spec.kerma {
+        inputs.push(("Kerma table", &r.table.path, Some(&r.table.sha256)));
     }
     for r in &spec.fission_yields.files {
         inputs.push(("Fission yields", &r.path, Some(&r.sha256)));

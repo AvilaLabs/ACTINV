@@ -13,6 +13,7 @@ pub mod gas;
 pub mod mesh;
 pub mod pathways;
 pub mod photon;
+pub mod power;
 pub mod prune;
 pub mod quantity;
 pub mod r2s;

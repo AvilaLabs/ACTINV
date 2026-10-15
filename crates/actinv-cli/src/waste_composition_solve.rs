@@ -330,7 +330,13 @@ fn validate_base(
     if !projectile.eq_ignore_ascii_case("neutron") {
         return Err("native composition solve requires a neutron projectile".into());
     }
-    for key in ["uncertainty", "radiological", "damage", "self_shielding"] {
+    for key in [
+        "uncertainty",
+        "radiological",
+        "damage",
+        "self_shielding",
+        "kerma",
+    ] {
         if obj.get(key).is_some_and(|v| !v.is_null()) {
             return Err(format!(
                 "base_spec.{key} is unsupported for native composition solve"
@@ -642,7 +648,7 @@ fn positive_exposure(spec: &Spec) -> bool {
             .total
             .unwrap_or_else(|| spectrum.flux_per_group.iter().sum());
         parse_duration(&step.dt).is_ok_and(|duration| duration > 0.0)
-            && step.flux > 0.0
+            && (step.flux > 0.0 || step.is_power_driven())
             && total > 0.0
     })
 }

@@ -33,11 +33,12 @@ actinv validate problem.json
 | `decay.fallback` | Optional second decay sublibrary; records absent from the primary are taken from it. |
 | `material.composition` | Natural element symbols or explicit nuclides (`U235`, `Ba137m1`) and nonnegative values interpreted by `material.basis`. |
 | `spectrum.flux_per_group` | Group-integrated fluxes. `descending: true` reverses the supplied order before use. |
-| `schedule` | At least one duration/flux-multiplier pair. Accepted duration units: seconds, minutes, hours, days and years. |
+| `schedule` | At least one duration/flux-multiplier pair (or, with a `kerma` section, a duration/power target). Accepted duration units: seconds, minutes, hours, days and years. |
 | `fission_yields` | Optional hash-pinned ENDF-6 neutron-induced fission-yield evaluations, and optional spontaneous-fission yields and neutron multiplicities; see below. Empty/omitted preserves the explicit no-yields leakage path. |
 | `uncertainty` | Optional neutron-only MF=33 sidecar and response selection; omission reads no covariance file and preserves the ordinary path. |
 | `radiological` | Optional hash-pinned clearance, waste, ingestion, or inhalation response table; omission reads no table. |
 | `damage` | Optional hash-pinned `actinv-damage-table-1` damage-energy table plus per-element displacement energies; required when `outputs` contains `damage`. |
+| `kerma` | Optional hash-pinned `actinv-kerma-table-1` heating table; adds per-step kerma heating and enables power-driven schedule steps (`power_W_cm3` / `power_W_per_g`, with `material.density_g_cm3` for the former). |
 
 The certificate records computed SHA-256 values for the activation library, its index, primary/fallback decay data,
 every fission-yield evaluation, the photon response, covariance sidecar, and radiological table when present. A
@@ -305,6 +306,104 @@ targets, model, and units; the certificate records the table's provenance and th
 
 Damage-energy production comes from ENDF-6 MF=3/MT=444 sections. TENDL-2025 and EAF-2010 as distributed do not
 carry MT=444; build tables from `heatr`-processed or equivalent damage-energy evaluations.
+
+## Kerma heating and power-driven steps
+
+`kerma` is optional. It adds an instantaneous nuclear-heating output to every step and lets a schedule step name a
+heating power instead of a flux, as FISPACT-II's `POWER` keyword does. Without a `kerma` section, and without a
+step that names a power, the problem, its result and its ledger are byte-for-byte what they were before.
+
+```json
+"material": {"composition": {"Fe": 100.0}, "density_g_cm3": 7.874},
+"kerma": {
+  "table": {"path": "/data/kerma/fe_kerma.json", "sha256": "64 hexadecimal digits"},
+  "power_tolerance": 0.001,
+  "max_substeps": 64,
+  "top": 10
+},
+"schedule": [
+  {"dt": "1 y", "power_W_cm3": 150.0},
+  {"dt": "10 y", "flux": 0}
+]
+```
+
+`kerma.table` is a hash-pinned `actinv-kerma-table-1` file; the declared SHA-256 is recomputed before the run.
+`require_complete: true` rejects the run when a material nuclide has no heating row (otherwise such nuclides add no
+heating and are named in the ledger's `kerma.uncovered_composition_targets`). `power_tolerance` (default `0.001`,
+open interval (0, 1)), `max_substeps` (default 64, 1 to 4096) and `top` (default 10, the number of contributors listed
+per step) are described below.
+
+**Table format.** Strict JSON; unknown fields are an error.
+
+| field | meaning |
+|---|---|
+| `format` | `actinv-kerma-table-1`. |
+| `source` | `citation`, `edition`, `url`, all nonempty. |
+| `projectile`, `group_structure`, `boundaries_eV` | The projectile must match the problem; `boundaries_eV` must equal the activation library's boundaries exactly. |
+| `units` | `kerma_barn_eV_per_group`. |
+| `targets` | Canonical explicit nuclide (`Fe56`, `Ta180m1`) or element (`Fe`) keys, each with one finite barn·eV value per group. A nuclide row wins over its element's row. |
+| `damage_energy_targets` | Optional, same keys; nonnegative barn·eV damage-energy production. |
+| `temperature_K`, `files`, `uncovered` | Optional provenance: the table's temperature, per-file SHA-256s, and the evaluations that had no kerma section. |
+
+A `targets` row is the group average of NJOY HEATR's total heating kerma, ENDF MT=301, in eV·barn per atom; the
+optional `damage_energy_targets` rows are the group-averaged total damage-energy production, MT=444 (NJOY2016
+`heatr.f90` header: MT=301 total kerma, 444 total damage energy). An atom of nuclide `i` in group fluxes `phi_g`
+(particles cm⁻² s⁻¹) deposits `k_i = sum_g K_ig * phi_g * 1e-24 * 1.602176634e-19` watts. Whether the photon energy
+of a capture is counted as heating depends on HEATR's `local` flag when the table was made (default 0: gamma rays
+are transported and their energy is not deposited at the reaction site); ACTINV reads the table as given and cannot
+see that choice, so state it in the table's `source.edition`. A negative group value (energy-balance kerma can go
+negative where an evaluation's photon-production data are inconsistent) is accepted and named in the certificate's
+`targets_with_negative_group_values`; a negative damage-energy value is an error. A table is built from NJOY output
+with `scripts/build_kerma_table.py` (below).
+
+**Power-driven steps.** A step names `power_W_cm3` or `power_W_per_g` instead of `flux`; the three are mutually
+exclusive (`flux: 0` beside a power target is accepted because that is what a result echo carries; any other flux
+with a power target is an error). A power must be finite and positive, so cooling stays `flux: 0`. `power_W_cm3`
+needs `material.density_g_cm3` (finite, positive; otherwise unused) and is converted to W per gram with it; the
+gram-based inventories need no density. A power-driven step requires a `kerma` section, uses the step's own
+`spectrum` when it has one, and may combine with `feed`/`removal`. It is refused with `uncertainty`,
+`options.screen`, the reverse and study tools and mesh specs, and its pathway attribution is not emitted.
+
+The flux multiplier on the step's spectrum is chosen so that the instantaneous heating
+`sum_i N_i(t) * k_i(spectrum) * multiplier` equals the requested power, with `N_i` the evolving atoms per gram of
+every nuclide that has a kerma row (transmutation products with a row contribute). FISPACT-II fixes the flux once
+per `POWER` card from the inventory at the start of the interval, and the user is expected to break a long
+irradiation into sub-steps by hand. ACTINV does that automatically: the step is split into equal sub-intervals, the
+multiplier is set at the start of each from the composition then reached, and every sub-interval's end-of-interval
+power is compared with the request. If the largest relative departure (the *power drift*) exceeds `power_tolerance`
+the number of sub-intervals doubles (up to `max_substeps`) and the step is solved again from its start. A cap of 1
+reproduces FISPACT-II's start-of-step normalization. The achieved multipliers, the total flux in each sub-interval
+and the worst drift are reported (see [results](results.md#kerma-heating-and-power-driven-steps)); a step that hits
+`max_substeps` above the tolerance is reported with `converged: false` and listed in the ledger, not hidden. The
+drift measures the interval end only, which bounds the interior when power varies monotonically across a
+sub-interval.
+
+Rate pruning and the automatic burnup-mode choice are decided before the schedule is solved, so for a power-driven
+step they use the flux amplitude implied by the starting composition (reported per step as
+`estimated_flux_multiplier`). If the achieved multipliers differ greatly from it, set `options.prune` and
+`options.mode` explicitly.
+
+**Kerma output.** With a `kerma` section every step reports its instantaneous heating at the step's end. Flux-driven
+steps use their `flux` multiplier; a power step uses its final sub-interval's. See the results guide for the fields.
+
+## Build a kerma table
+
+```bash
+python3 scripts/build_kerma_table.py OUTPUT.json --pendf fe56.pendf \
+  --boundaries-from damage_table.json --group-structure fispact-709 \
+  --temperature-K 293.6 --damage-energy
+python3 scripts/build_kerma_table.py OUTPUT.json --gendf fe56.gendf --group-structure my-groups
+```
+
+The script reads ENDF-6 tapes written by NJOY2016 and runs no NJOY. `--pendf` takes a HEATR-processed PENDF: its
+pointwise MF=3/MT=301 (and with `--damage-energy` MT=444) section is collapsed onto the boundaries of
+`--boundaries-from` (any JSON with a `boundaries_eV` list) with a flat-in-lethargy weight, the weighting
+`actinv build-damage` uses; linear-linear sections only, and zero outside the section's energy range. `--gendf` takes
+GROUPR output, whose own group averages and `EGN` boundaries are used; GROUPR must have been run with `lord=0`,
+`nsigz=1` and one temperature per tape, and a GENDF names every material as a ground state because it carries no
+isomer designation. A material without MT=301 is listed under `uncovered`, never zero-filled. Several tapes may be
+combined into one table; two materials mapping to the same target are an error. The output file's SHA-256 is printed
+for pinning into `kerma.table`.
 
 ## Self-shielding
 

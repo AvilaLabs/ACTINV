@@ -8,6 +8,7 @@ use crate::flux::{
     FluxStream, RebinResult,
 };
 use crate::photon::PhotonSourceOut;
+use crate::power::{KermaStepOut, PowerStepOut};
 use crate::radiological::RadiologicalStepOut;
 use crate::run::{
     CellCollapse, GasOut, GasSpecies, Heat, MeshFluxOrigin, PreparedRun, RunResult, StepOut,
@@ -131,6 +132,8 @@ const STEP_FIELDS: &[&str] = &[
     "gas",
     "summary",
     "fission",
+    "kerma",
+    "power",
 ];
 
 /// `StepOut` fields that are absent (key omitted) rather than serialized as
@@ -148,6 +151,8 @@ const STEP_OPTIONAL_FIELDS: &[&str] = &[
     "gas",
     "summary",
     "fission",
+    "kerma",
+    "power",
 ];
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -286,6 +291,9 @@ impl MeshSpec {
         {
             return Err("mesh schedule steps cannot declare a library override".into());
         }
+        if self.schedule.iter().any(|step| step.is_power_driven()) {
+            return Err("mesh specs do not support power-driven schedule steps".into());
+        }
 
         // Reuse the ordinary-spec validator for every shared field. The placeholder spectrum
         // is valid by construction and is replaced with each rebinned cell before execution.
@@ -352,6 +360,7 @@ impl MeshSpec {
             self_shielding: self.self_shielding.clone(),
             summary: self.summary.clone(),
             pathways: None,
+            kerma: None,
         }
     }
 }
@@ -840,6 +849,31 @@ fn maximal_step_out() -> StepOut {
                 uncovered_sf_decays_per_s_per_g: 0.0,
             }),
         }),
+        kerma: Some(KermaStepOut {
+            flux_multiplier: 0.0,
+            heating_W_per_g: 0.0,
+            heating_W_cm3: Some(0.0),
+            damage_energy_eV_per_g_s: Some(0.0),
+            n_contributing_nuclides: 0,
+            top_contributors: Vec::new(),
+            other_heating_W_per_g: 0.0,
+            covered_atom_fraction: 0.0,
+        }),
+        power: Some(PowerStepOut {
+            requested_W_per_g: 0.0,
+            requested_W_cm3: Some(0.0),
+            tolerance: 0.0,
+            substeps: 0,
+            max_substeps: 0,
+            substep_duration_s: 0.0,
+            max_power_drift: 0.0,
+            converged: true,
+            estimated_flux_multiplier: 0.0,
+            mean_flux_multiplier: 0.0,
+            flux_multiplier_per_substep: Vec::new(),
+            flux_per_substep_cm2_s: Vec::new(),
+            refinement: Vec::new(),
+        }),
     }
 }
 
@@ -950,6 +984,14 @@ fn step_field(step: &StepOut, name: &str) -> Option<Result<serde_json::Value, St
         },
         "fission" => match &step.fission {
             Some(fission) => serde_json::to_value(fission),
+            None => Ok(serde_json::Value::Null),
+        },
+        "kerma" => match &step.kerma {
+            Some(kerma) => serde_json::to_value(kerma),
+            None => Ok(serde_json::Value::Null),
+        },
+        "power" => match &step.power {
+            Some(power) => serde_json::to_value(power),
             None => Ok(serde_json::Value::Null),
         },
         _ => return None,
@@ -1835,6 +1877,8 @@ mod tests {
                 removal: None,
                 library: None,
                 projectile: None,
+                power_W_cm3: None,
+                power_W_per_g: None,
             }],
             options: Options::default(),
             photon: PhotonOptions::default(),
@@ -2108,6 +2152,8 @@ mod tests {
             gas: None,
             summary: None,
             fission: None,
+            kerma: None,
+            power: None,
         }
     }
 

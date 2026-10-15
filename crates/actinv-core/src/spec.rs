@@ -45,6 +45,10 @@ pub struct Spec {
     /// Opt-in full pathways/routes analysis (P127). Absence is byte-identical to pre-P127 output.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub pathways: Option<PathwayOptions>,
+    /// P126: groupwise kerma table; required by power-driven steps and, when present, adds a
+    /// per-step `kerma` block to the result. Absent from any spec echo when not declared.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub kerma: Option<KermaOptions>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -203,6 +207,43 @@ pub struct DamageOptions {
     pub displacement_energy_eV: BTreeMap<String, f64>,
     #[serde(default)]
     pub require_complete: bool,
+}
+
+/// P126 kerma and power normalization: a hash-pinned `actinv-kerma-table-1` supplies per-group
+/// heating kerma factors (NJOY HEATR MT=301, optionally MT=444 damage energy). A step that declares
+/// `power_W_cm3` or `power_W_per_g` instead of `flux` takes its flux amplitude from the table and
+/// the evolving composition, renormalized at sub-step boundaries until the power drift inside a
+/// sub-interval is at most `power_tolerance`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct KermaOptions {
+    pub table: HashedFileRef,
+    /// Fail closed when a material nuclide lacks a heating row. Default false: uncovered
+    /// nuclides contribute no heating and are named in the ledger.
+    #[serde(default)]
+    pub require_complete: bool,
+    /// Largest relative departure of a sub-interval's end-of-interval power from the requested
+    /// power before the step is split further. Open interval (0, 1).
+    #[serde(default = "default_power_tolerance")]
+    pub power_tolerance: f64,
+    /// Cap on the equal sub-intervals one power-driven step is split into (1..=4096).
+    #[serde(default = "default_max_substeps")]
+    pub max_substeps: usize,
+    /// How many of the largest heating contributors the per-step `kerma` block lists.
+    #[serde(default = "default_kerma_top")]
+    pub top: usize,
+}
+
+fn default_power_tolerance() -> f64 {
+    1.0e-3
+}
+
+fn default_max_substeps() -> usize {
+    64
+}
+
+fn default_kerma_top() -> usize {
+    10
 }
 
 /// Finite-dilution self-shielding (P19): a hash-pinned `actinv-shield-table-1`
@@ -539,7 +580,8 @@ pub struct Material {
     #[serde(default = "wt")]
     pub basis: String,
     pub composition: BTreeMap<String, f64>,
-    /// Material density in g/cm^3; only the step summary's per-cm^3 totals use it.
+    /// Material mass density in g/cm^3. Converts a step's `power_W_cm3` to W per gram (P126) and
+    /// supplies the step summary's per-cm^3 totals (P122).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub density_g_cm3: Option<f64>,
 }
@@ -686,22 +728,20 @@ fn g709() -> String {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[serde(try_from = "StepWire")]
 pub struct Step {
     /// duration with a unit: "300 s", "5 min", "7 h", "1 d", "100 y"
     pub dt: String,
-    /// multiplier on the spectrum's total during this step; 0 is cooling
+    /// multiplier on the spectrum's total during this step; 0 is cooling. A power-driven step
+    /// (`power_W_cm3` / `power_W_per_g`) carries 0 here: its multipliers are solved at run time.
     pub flux: f64,
     /// optional per-step spectrum replacing the base `spectrum` for this step's duration;
     /// the `flux` multiplier scales this spectrum's total. Must share the base spectrum's
     /// structure and group count.
-    #[serde(default)]
     pub spectrum: Option<Spectrum>,
     /// optional constant feed during this step: explicit nuclide key -> atoms s^-1 g^-1 of material
-    #[serde(default)]
     pub feed: Option<BTreeMap<String, f64>>,
     /// optional first-order removal during this step: nuclide or element key -> s^-1
-    #[serde(default)]
     pub removal: Option<BTreeMap<String, f64>>,
     /// optional activation-library override from this step onward (until a later step names another
     /// library, or names the base `library` again to return to it). The step must also declare its own
@@ -713,6 +753,87 @@ pub struct Step {
     /// and rejected without a `library`
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub projectile: Option<Projectile>,
+    /// P126: irradiate at the flux amplitude that makes the material's kerma heating equal this
+    /// power density (W cm^-3, needs `material.density_g_cm3`). Alternative to `flux`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub power_W_cm3: Option<f64>,
+    /// P126: as `power_W_cm3`, in W per gram of material. Alternative to `flux`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub power_W_per_g: Option<f64>,
+}
+
+impl Step {
+    /// True when the step's flux amplitude is solved from a power target rather than given.
+    pub fn is_power_driven(&self) -> bool {
+        self.power_W_cm3.is_some() || self.power_W_per_g.is_some()
+    }
+}
+
+/// The step as written. `flux` is optional here because a power-driven step omits it; `Step`
+/// itself keeps `flux` a plain multiplier so every flux-driven consumer is unchanged.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct StepWire {
+    dt: String,
+    #[serde(default)]
+    flux: Option<f64>,
+    #[serde(default)]
+    spectrum: Option<Spectrum>,
+    #[serde(default)]
+    feed: Option<BTreeMap<String, f64>>,
+    #[serde(default)]
+    removal: Option<BTreeMap<String, f64>>,
+    #[serde(default)]
+    library: Option<LibraryRef>,
+    #[serde(default)]
+    projectile: Option<Projectile>,
+    #[serde(default)]
+    power_W_cm3: Option<f64>,
+    #[serde(default)]
+    power_W_per_g: Option<f64>,
+}
+
+impl TryFrom<StepWire> for Step {
+    type Error = String;
+
+    fn try_from(wire: StepWire) -> Result<Self, Self::Error> {
+        let power_driven = wire.power_W_cm3.is_some() || wire.power_W_per_g.is_some();
+        if wire.power_W_cm3.is_some() && wire.power_W_per_g.is_some() {
+            return Err(
+                "schedule step declares both power_W_cm3 and power_W_per_g; they are mutually exclusive"
+                    .into(),
+            );
+        }
+        // A power-driven step serializes `flux: 0`, so an explicit zero beside a power target is
+        // accepted; any other flux contradicts it.
+        let flux = match wire.flux {
+            Some(flux) if power_driven && flux != 0.0 => {
+                return Err(
+                    "schedule step declares both flux and a power target (power_W_cm3 / power_W_per_g); they are mutually exclusive"
+                        .into(),
+                );
+            }
+            Some(flux) => flux,
+            None if power_driven => 0.0,
+            None => {
+                return Err(
+                    "schedule step needs flux, or a power target (power_W_cm3 / power_W_per_g)"
+                        .into(),
+                );
+            }
+        };
+        Ok(Step {
+            dt: wire.dt,
+            flux,
+            spectrum: wire.spectrum,
+            feed: wire.feed,
+            removal: wire.removal,
+            library: wire.library,
+            projectile: wire.projectile,
+            power_W_cm3: wire.power_W_cm3,
+            power_W_per_g: wire.power_W_per_g,
+        })
+    }
 }
 
 /// An activation library a schedule step switches to, with the projectile its index must declare.
@@ -881,9 +1002,21 @@ pub(crate) struct PhysicalStep {
     pub(crate) feed: Vec<((i32, i32), f64)>,
     /// (selector, s^-1) first-order removal during this step
     pub(crate) removal: Vec<(RemovalSelector, f64)>,
+    /// P126: requested kerma heating power in W per gram of material. When set, `multiplier` is
+    /// only a placeholder until the run solves the flux amplitude.
+    pub(crate) power_w_per_g: Option<f64>,
 }
 
 impl PhysicalStep {
+    /// This step with a different flux multiplier (the run's estimate or achieved value for a
+    /// power-driven step).
+    pub(crate) fn with_multiplier(&self, multiplier: FluxMultiplier) -> Self {
+        Self {
+            multiplier,
+            ..self.clone()
+        }
+    }
+
     pub(crate) const fn duration(&self) -> Seconds {
         self.duration
     }
@@ -1180,6 +1313,45 @@ impl Spec {
                 }
             }
         }
+        if let Some(kerma) = &self.kerma {
+            if kerma.table.path.is_empty()
+                || kerma.table.sha256.len() != 64
+                || !kerma
+                    .table
+                    .sha256
+                    .bytes()
+                    .all(|byte| byte.is_ascii_hexdigit())
+            {
+                return Err("kerma.table requires a path and a 64-hex-digit sha256".into());
+            }
+            if !kerma.power_tolerance.is_finite()
+                || kerma.power_tolerance <= 0.0
+                || kerma.power_tolerance >= 1.0
+            {
+                return Err("kerma.power_tolerance must be in the open interval (0, 1)".into());
+            }
+            if !(1..=4096).contains(&kerma.max_substeps) {
+                return Err("kerma.max_substeps must be between 1 and 4096".into());
+            }
+            if kerma.top == 0 {
+                return Err("kerma.top must be at least 1".into());
+            }
+        }
+        if self.schedule.iter().any(Step::is_power_driven) {
+            if self.kerma.is_none() {
+                return Err("a power-driven schedule step requires a kerma section".into());
+            }
+            if self.uncertainty.is_some() {
+                return Err(
+                    "power-driven schedule steps cannot be combined with uncertainty".into(),
+                );
+            }
+            if self.options.screen.is_some() {
+                return Err(
+                    "power-driven schedule steps cannot be combined with options.screen".into(),
+                );
+            }
+        }
         if self.decay.primary.is_empty() {
             return Err("decay.primary is empty".into());
         }
@@ -1219,6 +1391,34 @@ impl Spec {
             }
             if !st.flux.is_finite() || st.flux < 0.0 {
                 return Err("flux multiplier must be finite and nonnegative".into());
+            }
+            if st.power_W_cm3.is_some() && st.power_W_per_g.is_some() {
+                return Err(
+                    "schedule step declares both power_W_cm3 and power_W_per_g; they are mutually exclusive"
+                        .into(),
+                );
+            }
+            if st.is_power_driven() && st.flux != 0.0 {
+                return Err(
+                    "schedule step declares both flux and a power target (power_W_cm3 / power_W_per_g); they are mutually exclusive"
+                        .into(),
+                );
+            }
+            for (name, power) in [
+                ("power_W_cm3", st.power_W_cm3),
+                ("power_W_per_g", st.power_W_per_g),
+            ] {
+                if power.is_some_and(|value| !value.is_finite() || value <= 0.0) {
+                    return Err(format!(
+                        "schedule step {name} must be finite and positive; cool with flux 0"
+                    ));
+                }
+            }
+            if st.power_W_cm3.is_some() && self.material.density_g_cm3.is_none() {
+                return Err(
+                    "schedule step power_W_cm3 requires material.density_g_cm3 (or use power_W_per_g)"
+                        .into(),
+                );
             }
             if let Some(feed) = &st.feed {
                 for (key, rate) in feed {
@@ -1734,6 +1934,21 @@ impl Spec {
                     Seconds::new(parsed).map_err(|_| format!("negative duration '{}'", step.dt))?;
                 let multiplier = FluxMultiplier::new(step.flux)
                     .map_err(|_| "flux multiplier must be finite and nonnegative".to_string())?;
+                let power_w_per_g = match (step.power_W_per_g, step.power_W_cm3) {
+                    (Some(power), None) => Some(power),
+                    (None, Some(power)) => {
+                        let density = self.material.density_g_cm3.ok_or_else(|| {
+                            "schedule step power_W_cm3 requires material.density_g_cm3".to_string()
+                        })?;
+                        Some(power / density)
+                    }
+                    (None, None) => None,
+                    (Some(_), Some(_)) => {
+                        return Err(
+                            "schedule step declares both power_W_cm3 and power_W_per_g".to_string()
+                        );
+                    }
+                };
                 let feed = step
                     .feed
                     .iter()
@@ -1808,6 +2023,7 @@ impl Spec {
                     library: context.library,
                     feed,
                     removal,
+                    power_w_per_g,
                 })
             })
             .collect::<Result<Vec<_>, String>>()?;
@@ -3055,5 +3271,127 @@ mod duration_tests {
 
         // The same spec without the conflict is valid.
         assert!(Spec::from_json(&library_switch_spec().to_string()).is_ok());
+    }
+
+    fn power_spec(step: serde_json::Value) -> serde_json::Value {
+        let mut value = minimal_spec();
+        value["schedule"] = serde_json::json!([step]);
+        value["kerma"] = serde_json::json!({
+            "table": {"path": "kerma.json", "sha256": "0".repeat(64)},
+        });
+        value["material"]["density_g_cm3"] = serde_json::json!(7.874);
+        value
+    }
+
+    #[test]
+    fn power_target_and_flux_are_mutually_exclusive() {
+        let both = power_spec(serde_json::json!({"dt": "1 s", "flux": 2.0, "power_W_per_g": 1.0}));
+        assert!(Spec::from_json(&both.to_string())
+            .unwrap_err()
+            .contains("mutually exclusive"));
+        let both_powers =
+            power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0, "power_W_cm3": 7.0}));
+        assert!(Spec::from_json(&both_powers.to_string())
+            .unwrap_err()
+            .contains("mutually exclusive"));
+        // neither flux nor power is still an error
+        let neither = power_spec(serde_json::json!({"dt": "1 s"}));
+        assert!(Spec::from_json(&neither.to_string())
+            .unwrap_err()
+            .contains("needs flux"));
+        // a power step on its own parses and carries the zero multiplier
+        let power_only = power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0}));
+        let spec = Spec::from_json(&power_only.to_string()).unwrap();
+        assert!(spec.schedule[0].is_power_driven());
+        assert_eq!(spec.schedule[0].flux, 0.0);
+        // a hand-built contradictory step fails validation too
+        let mut spec = spec;
+        spec.schedule[0].flux = 3.0;
+        assert!(spec.validate().unwrap_err().contains("mutually exclusive"));
+    }
+
+    #[test]
+    fn power_steps_serialize_and_reparse_and_flux_steps_are_unchanged() {
+        let power_only = power_spec(serde_json::json!({"dt": "1 s", "power_W_cm3": 7.0}));
+        let spec = Spec::from_json(&power_only.to_string()).unwrap();
+        let echoed = serde_json::to_string(&spec).unwrap();
+        assert!(Spec::from_json(&echoed).is_ok());
+        // a flux-driven step echoes exactly its four historical keys
+        let plain = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        let echoed = serde_json::to_value(&plain).unwrap();
+        let step = echoed["schedule"][0].as_object().unwrap();
+        let mut keys: Vec<&str> = step.keys().map(String::as_str).collect();
+        keys.sort_unstable();
+        assert_eq!(keys, vec!["dt", "feed", "flux", "removal", "spectrum"]);
+        assert!(echoed.get("kerma").is_none());
+        assert!(echoed["material"].get("density_g_cm3").is_none());
+    }
+
+    #[test]
+    fn power_steps_need_kerma_density_and_a_compatible_run() {
+        let step = serde_json::json!({"dt": "1 s", "power_W_cm3": 7.0});
+        let mut value = power_spec(step.clone());
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        value["material"]
+            .as_object_mut()
+            .unwrap()
+            .remove("density_g_cm3");
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("density_g_cm3"));
+        // power per gram needs no density
+        let per_gram = {
+            let mut v = power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0}));
+            v["material"]
+                .as_object_mut()
+                .unwrap()
+                .remove("density_g_cm3");
+            v
+        };
+        assert!(Spec::from_json(&per_gram.to_string()).is_ok());
+        let mut no_kerma = power_spec(step);
+        no_kerma.as_object_mut().unwrap().remove("kerma");
+        assert!(Spec::from_json(&no_kerma.to_string())
+            .unwrap_err()
+            .contains("kerma section"));
+        for bad in [0.0, -1.0] {
+            let invalid = power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": bad}));
+            assert!(Spec::from_json(&invalid.to_string()).is_err(), "{bad}");
+        }
+        let mut with_uncertainty =
+            power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0}));
+        with_uncertainty["uncertainty"] = serde_json::json!({
+            "covariance": {"path": "cov.npz", "sha256": "0".repeat(64)},
+        });
+        assert!(Spec::from_json(&with_uncertainty.to_string())
+            .unwrap_err()
+            .contains("uncertainty"));
+    }
+
+    #[test]
+    fn kerma_options_are_validated() {
+        let mut value = power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0}));
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let kerma = spec.kerma.as_ref().unwrap();
+        assert_eq!(kerma.power_tolerance, 1.0e-3);
+        assert_eq!(kerma.max_substeps, 64);
+        assert_eq!(kerma.top, 10);
+        for (key, bad) in [
+            ("power_tolerance", serde_json::json!(0.0)),
+            ("power_tolerance", serde_json::json!(1.0)),
+            ("max_substeps", serde_json::json!(0)),
+            ("max_substeps", serde_json::json!(5000)),
+            ("top", serde_json::json!(0)),
+        ] {
+            value["kerma"][key] = bad.clone();
+            assert!(Spec::from_json(&value.to_string()).is_err(), "{key}={bad}");
+            value["kerma"].as_object_mut().unwrap().remove(key);
+        }
+        value["kerma"]["table"]["sha256"] = serde_json::json!("abc");
+        assert!(Spec::from_json(&value.to_string()).is_err());
+        value["material"]["density_g_cm3"] = serde_json::json!(-1.0);
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("density"));
     }
 }
