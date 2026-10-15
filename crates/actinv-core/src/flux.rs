@@ -948,6 +948,15 @@ fn parse_fispact_fluxes(path: &Path, groups: usize) -> Result<(Vec<f64>, f64, St
     Ok((flux, wall_loading, title))
 }
 
+/// Read a FISPACT-II fluxes file of `groups` values (highest energy first) with its first-wall
+/// loading and identifying title, under the same strict layout rules as `import_fispact`.
+pub fn read_fispact_fluxes(
+    path: impl AsRef<Path>,
+    groups: usize,
+) -> Result<(Vec<f64>, f64, String), String> {
+    parse_fispact_fluxes(path.as_ref(), groups)
+}
+
 pub fn import_fispact(
     source_path: impl AsRef<Path>,
     group_path: impl AsRef<Path>,

@@ -33,6 +33,7 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
                     actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
+                    actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]\n\
                     actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\
                     actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|triton|helion|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
@@ -665,6 +666,7 @@ pub fn main_from(a: Vec<String>) {
             "validate" => println!("usage: actinv validate SPEC.json [--schema|--files|--hashes]\nDefault: check the specification without requiring downloaded data.\n--files also checks readable input files and library indexes. --hashes also checks declared file hashes.\nEvaluated-data compatibility is checked by the solver during a run."),
             "new" => println!("usage: actinv new OUT.json [--data-dir DIR]\nCreate the complete FNS iron example without overwriting an existing file.\nReferences default to portable catalog IDs resolved against ./actinv-data or $ACTINV_DATA_DIR; --data-dir saves absolute paths instead.\nNext: actinv data fetch, then actinv run OUT.json result.json"),
             "doctor" => println!("usage: actinv doctor [SPEC.json]\nShow environment and check the example or supplied problem's input files."),
+            "import-fispact" => println!("{}\nConvert a FISPACT-II input deck into an actinv-spec-1 problem. The group fluxes come from --fluxes, else from the `fluxes` entry of the files file (--files, else DECK_files or files beside the deck). OUT.import.json lists every keyword with its line and a status: mapped, approximated, noted or unsupported. --strict fails when any keyword is unsupported. See docs/guide/fispact-migration.md.", crate::fispact_import::USAGE),
             "optimize" => println!("usage: actinv optimize OPTSPEC.json [OUTDIR] [--resume]\nRun a bounded, seeded design search over an actinv-optimize-1 document.\nEvery candidate is solved through the identical run path and recorded in\nOUTDIR/optimize_ledger.jsonl (append-only); the ranked result lands in\nOUTDIR/optimize_result.json. --resume skips already-ledgered evaluations."),
             "budget" => println!("usage: actinv budget BUDGET.json [OUT.json] [--no-verify]\nImpurity budgets for the IAEA clearance index from one coupled solve per element\n(activation at fixed flux is linear in composition). Every emitted limit is re-solved\nat that composition and compared with the prediction unless --no-verify is given.\nSee docs/BUDGET.md for the actinv-budget-1 schema."),
             "waste" => println!("usage: actinv waste WASTE.json [OUT.json]\n       actinv waste budget BUDGET.json [OUT.json]\n       actinv waste bounds BOUNDS.json [OUT.json]\n       actinv waste composition COMPOSITION.json [OUT.json]\n       actinv waste composition solve SPEC.json [OUT.json]\n       actinv waste intrusion-screen SPEC.json [OUT.json]\nNominal component classification, verified class impurity budgets, conservative classification of declared activity boxes, caller-declared affine composition ranges, native solver-generated composition responses, and opt-in screening against a pinned 2026 draft intrusion table. Draft screening is a review aid only; it does not assess dose, acceptance, or legal compliance. See the public waste handbook at docs/guide/waste.md."),
@@ -789,6 +791,13 @@ pub fn main_from(a: Vec<String>) {
         "build-library" => build_library(&a[2..]),
         "build-shielding" => build_shielding(&a[2..]),
         "data" => data_command(&a[2..]),
+        "import-fispact" => {
+            let cli = crate::fispact_import::parse_cli(&a[2..]).unwrap_or_else(|e| die(e, 2));
+            println!(
+                "{}",
+                crate::fispact_import::run(&cli).unwrap_or_else(|e| die(e, 1))
+            );
+        }
         "import-flux" => {
             let summary = import_flux(&a[2..]);
             println!(

@@ -90,6 +90,14 @@ band results but leave both waste fields unchanged. The class summary counts
 components separately; it does not make a facility class or determine disposal
 acceptance. Omitting the `waste` block retains the existing twin result fields.
 
+## Convert a FISPACT-II deck
+
+```text
+actinv import-fispact DECK.i OUT.json [--fluxes FLUXES] [--files FILES] [--library LIB.npz] [--decay DECAY] [--covariance COV.npz] [--strict]
+```
+
+Writes an `actinv-spec-1` problem and an `OUT.import.json` report that lists every deck keyword as mapped, approximated, noted or unsupported. `--strict` fails when any keyword is unsupported. See [Move a FISPACT-II deck to ACTINV](fispact-migration.md) for the keyword table and limits.
+
 ## Export photon sources
 
 ```text

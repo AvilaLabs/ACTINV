@@ -6,6 +6,7 @@ pub mod budget;
 pub mod command;
 pub mod decide;
 pub mod evalspread;
+pub mod fispact_import;
 pub mod inspect;
 pub mod optimize;
 pub mod surrogate;

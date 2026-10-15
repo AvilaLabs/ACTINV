@@ -25,6 +25,7 @@
 - [Python](python.md)
 - [Problem specification](specification.md)
 - [Advanced workflows](workflows.md)
+- [Move a FISPACT-II deck to ACTINV](fispact-migration.md)
 
 # Science and releases
 
