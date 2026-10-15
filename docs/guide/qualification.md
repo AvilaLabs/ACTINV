@@ -17,6 +17,7 @@ The certificate identifies the files used. It does not establish that those inpu
 | Capability | Boundary |
 | --- | --- |
 | Neutron, proton, deuteron, alpha, and gamma (photonuclear) activation | No triton or helion activation. Gamma (1.4.0): no photofission product yields, no temperature treatment, and no published library (build from the TENDL `g` sublibrary); cross-code agreement with FISPACT-II is established below 30 MeV, and above it only against FISPACT-II's own MT5 processing rule |
+| Incident energy range | A library holds cross sections only where its source evaluation tabulates them and only up to the top of its group structure: TENDL neutron evaluations reach 200 MeV, the 709- and 1102-group neutron grids and the 162-group charged-particle grid reach 1 GeV, and the EAF-family grids stop at 20 MeV (55 MeV for 211 and 351). Above an evaluation's upper energy groups are zero, not extrapolated. The opt-in spallation splice adds user-supplied residual-production data above a chosen energy; ACTINV supplies none and does not qualify the table |
 | Single-material and independent-cell inventories | No particle transport, criticality, spatial material exchange, or thermal/flux feedback |
 | Photon sources and contact gamma response | Contact response is a semi-infinite-slab screening proxy; ordinary exports use a point at the origin |
 | Finite-dilution neutron self-shielding | Explicit unresolved-range Bondarenko table required; no resolved-region pointwise shielding; damage is not shielded |

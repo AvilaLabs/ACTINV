@@ -86,11 +86,14 @@ fn file(ui: &mut egui::Ui, label: &str, text: &mut String) {
 fn boundaries(doc: &Value) -> Result<Vec<f64>, String> {
     use actinv_data::groups::GroupStructure;
     match doc["spectrum"]["structure"].as_str() {
-        Some("fispact-709") => GroupStructure::fispact_709().map(|g| g.boundaries_ev),
-        Some("fispact-162") => GroupStructure::fispact_162().map(|g| g.boundaries_ev),
         Some("custom") => serde_json::from_value(doc["spectrum"]["boundaries_eV"].clone())
             .map_err(|e| format!("Set custom energy boundaries first: {e}")),
-        _ => Err("Choose a recognized group structure first.".into()),
+        Some(name) => GroupStructure::named(name).and_then(|group| {
+            group
+                .map(|g| g.boundaries_ev)
+                .ok_or_else(|| "Choose a recognized group structure first.".to_string())
+        }),
+        None => Err("Choose a recognized group structure first.".into()),
     }
 }
 pub fn run(request: Request) -> Result<Preview, String> {

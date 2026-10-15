@@ -568,6 +568,60 @@ fn exact_power_product_integral(
     }
 }
 
+/// FISPACT-II standard group structures, one vendored JSON per structure. Each file carries the boundaries
+/// verbatim from the matching `ebins_N` file of FISPACT-II's `ebins.tar.bz2` (as unpacked at
+/// `~/nuclear-data/fispact-tendl2017/ebins`) and records that file's SHA-256 in its `source` field. All
+/// but CCFE-162 are neutron structures; the EAF-family grids stop at 20 or 55 MeV, the CCFE-709 and UKAEA-1102
+/// grids at 1 GeV.
+pub const NAMED_STRUCTURES: [(&str, &str); 13] = [
+    ("fispact-66", include_str!("../data/fispact_66_groups.json")),
+    ("fispact-69", include_str!("../data/fispact_69_groups.json")),
+    (
+        "fispact-100",
+        include_str!("../data/fispact_100_groups.json"),
+    ),
+    (
+        "fispact-162",
+        include_str!("../data/fispact_162_groups.json"),
+    ),
+    (
+        "fispact-172",
+        include_str!("../data/fispact_172_groups.json"),
+    ),
+    (
+        "fispact-175",
+        include_str!("../data/fispact_175_groups.json"),
+    ),
+    (
+        "fispact-211",
+        include_str!("../data/fispact_211_groups.json"),
+    ),
+    (
+        "fispact-315",
+        include_str!("../data/fispact_315_groups.json"),
+    ),
+    (
+        "fispact-351",
+        include_str!("../data/fispact_351_groups.json"),
+    ),
+    (
+        "fispact-586",
+        include_str!("../data/fispact_586_groups.json"),
+    ),
+    (
+        "fispact-616",
+        include_str!("../data/fispact_616_groups.json"),
+    ),
+    (
+        "fispact-709",
+        include_str!("../data/fispact_709_groups.json"),
+    ),
+    (
+        "fispact-1102",
+        include_str!("../data/fispact_1102_groups.json"),
+    ),
+];
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct GroupStructure {
     pub name: String,
@@ -588,6 +642,28 @@ impl GroupStructure {
 
     pub fn fispact_162() -> Result<Self, String> {
         Self::from_json(include_str!("../data/fispact_162_groups.json"))
+    }
+
+    /// A FISPACT-II standard structure by canonical name ("fispact-709", "fispact-1102", ...), loaded from
+    /// the vendored `ebins` boundary file. `Ok(None)` for any other name. See [`NAMED_STRUCTURES`].
+    pub fn named(name: &str) -> Result<Option<Self>, String> {
+        let Some((_, text)) = NAMED_STRUCTURES.iter().find(|(known, _)| *known == name) else {
+            return Ok(None);
+        };
+        let groups = Self::from_json(text)?;
+        if groups.name != name {
+            return Err(format!(
+                "vendored group file for '{name}' declares structure '{}'",
+                groups.name
+            ));
+        }
+        Ok(Some(groups))
+    }
+
+    /// True for a FISPACT-II standard neutron structure: every named structure except the CCFE-162 grid, which
+    /// is reserved for charged-particle and photon projectiles.
+    pub fn is_neutron_named(name: &str) -> bool {
+        name != "fispact-162" && NAMED_STRUCTURES.iter().any(|(known, _)| *known == name)
     }
 
     pub fn from_json(text: &str) -> Result<Self, String> {
@@ -657,7 +733,7 @@ impl GroupStructure {
     }
 
     /// Resolve a group-structure specifier: a named structure
-    /// ("fispact-709", "fispact-162"), a named structure with an `xN`
+    /// ("fispact-709", "fispact-162", "fispact-1102", ...), a named structure with an `xN`
     /// refinement suffix ("fispact-709x4" → 2836 groups), or a path to
     /// a group JSON file. The suffix is only honoured on named bases —
     /// a file path already carries explicit boundaries.
@@ -666,21 +742,15 @@ impl GroupStructure {
             .rsplit_once('x')
             .and_then(|(b, n)| n.parse::<usize>().ok().map(|n| (b, n)))
         {
-            let base = match base {
-                "fispact-709" => Some(Self::fispact_709()?),
-                "fispact-162" => Some(Self::fispact_162()?),
-                _ => None,
-            };
-            if let Some(base) = base {
+            if let Some(base) = Self::named(base)? {
                 return base.refined(n);
             }
         }
-        match spec {
-            "fispact-709" => Self::fispact_709(),
-            "fispact-162" => Self::fispact_162(),
-            path => {
-                let text = std::fs::read_to_string(path)
-                    .map_err(|e| format!("cannot read group structure {path}: {e}"))?;
+        match Self::named(spec)? {
+            Some(named) => Ok(named),
+            None => {
+                let text = std::fs::read_to_string(spec)
+                    .map_err(|e| format!("cannot read group structure {spec}: {e}"))?;
                 Self::from_json(&text)
             }
         }
@@ -698,10 +768,8 @@ impl GroupStructure {
                 .unwrap_or((spec, None)),
             None => (spec, None),
         };
-        let base = match base {
-            "fispact-709" => Self::fispact_709()?,
-            "fispact-162" => Self::fispact_162()?,
-            _ => return Ok(None),
+        let Some(base) = Self::named(base)? else {
+            return Ok(None);
         };
         match n {
             None => Ok(Some(base)),
@@ -1048,5 +1116,109 @@ mod tests {
             .unwrap()
             .is_none());
         assert!(GroupStructure::resolve_named("fispact-709x1").is_err());
+    }
+
+    /// (groups, first, second, entry at index (n+1)/2, penultimate, last) of each vendored structure in the
+    /// published descending order, read from the `ebins_N` source files.
+    const EBINS_SPOT_CHECKS: [(usize, [f64; 5]); 11] = [
+        (66, [2.5e7, 2.0e7, 454.0, 0.0005, 1e-5]),
+        (69, [1.0e7, 6.066e6, 1.097, 0.005, 1e-5]),
+        (100, [14918000.0, 13498300.0, 86515.5, 0.413987, 1e-5]),
+        (172, [19640300.0, 17332500.0, 8.31529, 0.003, 1e-5]),
+        (175, [19640300.0, 17332500.0, 247235.0, 0.100001, 1e-5]),
+        (211, [5.5e7, 5.4e7, 672055.0, 0.100001, 1e-5]),
+        (315, [19640000.0, 17330000.0, 6267.0, 0.00011, 1e-5]),
+        (351, [5.5e7, 5.4e7, 21870.0, 0.00011, 1e-5]),
+        (586, [2.0e7, 17332000.0, 6.9, 0.005, 1e-5]),
+        (616, [2.0e7, 19952600.0, 14.4544, 1.04713e-5, 1e-5]),
+        (1102, [1.0e9, 954990000.0, 8.4, 1.0471e-5, 1e-5]),
+    ];
+
+    #[test]
+    fn every_fispact_structure_has_its_published_count_order_and_endpoints() {
+        for (n, [first, second, middle, penultimate, last]) in EBINS_SPOT_CHECKS {
+            let name = format!("fispact-{n}");
+            let groups = GroupStructure::named(&name).unwrap().unwrap();
+            assert_eq!(groups.name, name);
+            assert_eq!(groups.groups(), n, "{name}");
+            assert_eq!(groups.boundaries_ev.len(), n + 1, "{name}");
+            assert!(
+                groups.boundaries_ev.windows(2).all(|w| w[1] > w[0]),
+                "{name} boundaries are not strictly increasing"
+            );
+            let mut published = groups.boundaries_ev.clone();
+            published.reverse();
+            assert_eq!(published[0], first, "{name} top");
+            assert_eq!(published[1], second, "{name} second");
+            assert_eq!(published[(n + 1) / 2], middle, "{name} middle");
+            assert_eq!(published[n - 1], penultimate, "{name} penultimate");
+            assert_eq!(published[n], last, "{name} bottom");
+        }
+    }
+
+    #[test]
+    fn named_registry_matches_the_dedicated_constructors() {
+        assert_eq!(
+            GroupStructure::named("fispact-709").unwrap().unwrap(),
+            GroupStructure::fispact_709().unwrap()
+        );
+        assert_eq!(
+            GroupStructure::named("fispact-162").unwrap().unwrap(),
+            GroupStructure::fispact_162().unwrap()
+        );
+        assert!(GroupStructure::named("fispact-24").unwrap().is_none());
+        assert!(GroupStructure::named("custom").unwrap().is_none());
+        // Every registry entry parses, carries its own name and is distinct.
+        let mut hashes = std::collections::BTreeSet::new();
+        for (name, _) in NAMED_STRUCTURES {
+            let groups = GroupStructure::named(name).unwrap().unwrap();
+            assert_eq!(groups.name, name);
+            assert!(
+                hashes.insert(groups.hash()),
+                "{name} duplicates another structure"
+            );
+        }
+        assert_eq!(hashes.len(), 13);
+    }
+
+    #[test]
+    fn high_energy_structures_reach_one_gev() {
+        for name in ["fispact-709", "fispact-1102"] {
+            let groups = GroupStructure::resolve(name).unwrap();
+            assert_eq!(*groups.boundaries_ev.last().unwrap(), 1.0e9, "{name}");
+        }
+        // 200 MeV is a CCFE-709 boundary; the log-spaced UKAEA-1102 grid has none there.
+        let g709 = GroupStructure::fispact_709().unwrap();
+        assert!(g709.boundaries_ev.contains(&2.0e8));
+        let g1102 = GroupStructure::resolve("fispact-1102").unwrap();
+        assert!(!g1102.boundaries_ev.contains(&2.0e8));
+        for name in ["fispact-175", "fispact-315", "fispact-586", "fispact-616"] {
+            let top = *GroupStructure::resolve(name)
+                .unwrap()
+                .boundaries_ev
+                .last()
+                .unwrap();
+            assert!(top < 2.1e7, "{name} tops out at {top} eV");
+        }
+    }
+
+    #[test]
+    fn new_structures_resolve_with_refinement_and_neutron_classification() {
+        let base = GroupStructure::resolve("fispact-1102").unwrap();
+        let refined = GroupStructure::resolve("fispact-1102x2").unwrap();
+        assert_eq!(refined.groups(), 2204);
+        assert_eq!(refined.boundaries_ev[0], base.boundaries_ev[0]);
+        assert_eq!(
+            GroupStructure::resolve_named("fispact-175")
+                .unwrap()
+                .unwrap()
+                .groups(),
+            175
+        );
+        assert!(GroupStructure::is_neutron_named("fispact-1102"));
+        assert!(GroupStructure::is_neutron_named("fispact-709"));
+        assert!(!GroupStructure::is_neutron_named("fispact-162"));
+        assert!(!GroupStructure::is_neutron_named("fispact-24"));
+        assert!(!GroupStructure::is_neutron_named("custom"));
     }
 }

@@ -14,18 +14,15 @@ pub fn spectrum(ui: &mut egui::Ui, doc: &Value) {
     let Ok(spec) = serde_json::from_value::<actinv_core::spec::Spec>(doc.clone()) else {
         return;
     };
-    let bounds = match spec.spectrum.structure.as_str() {
-        "fispact-709" => {
-            actinv_data::groups::GroupStructure::fispact_709().map(|g| g.boundaries_ev)
-        }
-        "fispact-162" => {
-            actinv_data::groups::GroupStructure::fispact_162().map(|g| g.boundaries_ev)
-        }
-        _ => spec
+    let bounds = match actinv_data::groups::GroupStructure::named(spec.spectrum.structure.as_str())
+    {
+        Ok(Some(group)) => Ok(group.boundaries_ev),
+        Ok(None) => spec
             .spectrum
             .boundaries_eV
             .clone()
             .ok_or_else(|| "Custom boundaries not yet provided".into()),
+        Err(error) => Err(error),
     };
     let Ok(bounds) = bounds else { return };
     let flux = spec.flux_ascending();

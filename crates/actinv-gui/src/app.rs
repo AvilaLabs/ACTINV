@@ -892,9 +892,9 @@ if ui.button("Choose folder").clicked(){if let Some(p)=rfd::FileDialog::new().pi
                 }
                 ui.add(egui::TextEdit::multiline(&mut self.spectrum_text).desired_rows(5).hint_text("flux\n1.2e10\n3.4e9\n…"));
                 if ui.button("Check and apply group values").clicked() {
-                    let count = match self.document["spectrum"]["structure"].as_str() {
-                        Some("fispact-709") => 709,
-                        Some("fispact-162") => 162,
+                    let named = self.document["spectrum"]["structure"].as_str().map(actinv_data::groups::GroupStructure::named);
+                    let count = match named {
+                        Some(Ok(Some(group))) => group.groups(),
                         _ => self.document["spectrum"]["boundaries_eV"].as_array().map_or(0, |v| v.len().saturating_sub(1)),
                     };
                     match model::parse_group_values(&self.spectrum_text,count) {

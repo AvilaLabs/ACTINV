@@ -1134,7 +1134,14 @@ impl Spec {
                 "fispact-162" => {
                     return Err("fispact-162 is reserved for charged-particle spectra".into());
                 }
-                value => return Err(format!("unknown spectrum.structure '{value}'")),
+                // The remaining FISPACT-II standard structures (66 ... 1102) are neutron grids; the group
+                // count comes from the vendored boundary file, never from a hardcoded table.
+                value => match actinv_data::groups::GroupStructure::named(value)? {
+                    Some(base) if actinv_data::groups::GroupStructure::is_neutron_named(value) => {
+                        (base.groups() * factor, Projectile::Neutron)
+                    }
+                    _ => return Err(format!("unknown spectrum.structure '{value}'")),
+                },
             };
             if self.projectile != expected_projectile {
                 return Err(format!(
@@ -1926,5 +1933,49 @@ mod duration_tests {
             ascending_flux.into_iter().zip(ascending_error).collect();
         reordered.reverse();
         assert_eq!(declared, reordered);
+    }
+
+    #[test]
+    fn fispact_neutron_structures_validate_flux_length_and_projectile() {
+        for (name, groups) in [
+            ("fispact-66", 66usize),
+            ("fispact-175", 175),
+            ("fispact-709", 709),
+            ("fispact-1102", 1102),
+        ] {
+            let mut value = minimal_spec();
+            value["spectrum"] =
+                serde_json::json!({"structure": name, "flux_per_group": vec![1.0; groups]});
+            assert!(Spec::from_json(&value.to_string()).is_ok(), "{name}");
+            value["spectrum"]["flux_per_group"] = serde_json::json!(vec![1.0; groups - 1]);
+            let error = Spec::from_json(&value.to_string()).unwrap_err();
+            assert!(
+                error.contains(&format!("requires {groups} flux values")),
+                "{name}: {error}"
+            );
+        }
+        // An `xN` refinement multiplies the vendored group count.
+        let mut value = minimal_spec();
+        value["spectrum"] =
+            serde_json::json!({"structure": "fispact-1102x2", "flux_per_group": vec![1.0; 2204]});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        // The neutron grids reject other projectiles; the CCFE-162 rule is unchanged.
+        let mut value = minimal_spec();
+        value["projectile"] = serde_json::json!("proton");
+        value["spectrum"] =
+            serde_json::json!({"structure": "fispact-1102", "flux_per_group": vec![1.0; 1102]});
+        let error = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(error.contains("requires projectile 'neutron'"), "{error}");
+        let mut value = minimal_spec();
+        value["spectrum"] =
+            serde_json::json!({"structure": "fispact-162", "flux_per_group": vec![1.0; 162]});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("reserved for charged-particle"));
+        value["spectrum"] =
+            serde_json::json!({"structure": "fispact-24", "flux_per_group": vec![1.0; 24]});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("unknown spectrum.structure"));
     }
 }

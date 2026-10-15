@@ -67,8 +67,9 @@ aggregates explicit isotopes back to elemental mass fractions.
 
 ## Projectile and spectrum
 
-Neutrons use `fispact-709` with exactly 709 values. Proton, deuteron and alpha use `fispact-162` with exactly 162
-values and require `options.temperature_K: 0`; charged specs reject fission-yield files. `custom` requires one more
+Neutrons use `fispact-709` with exactly 709 values, or any other FISPACT-II neutron structure listed under
+[Group structures](#group-structures) with exactly that structure's group count. Proton, deuteron and alpha use
+`fispact-162` with exactly 162 values and require `options.temperature_K: 0`; charged specs reject fission-yield files. `custom` requires one more
 strictly increasing boundary than flux values. Those boundaries must match the activation library to `1e-12`
 relative. `total`, when present, rescales group values while preserving shape; a positive `total` with an all-zero
 `flux_per_group` has no shape to scale and is rejected. The spec, library index, group
@@ -449,12 +450,90 @@ actinv build-library INPUT OUTPUT.npz \
 ```
 
 `INPUT` is one ENDF-6 evaluation or a directory. `--format` accepts `auto`, `tendl` or `eaf`; `--projectile` accepts
-`auto`, `neutron`, `proton`, `deuteron`, `alpha` or `gamma`; `--groups` accepts `fispact-709`, `fispact-162` or a
-custom boundary file. Neutron defaults are 709 groups and 293.6 K; proton/deuteron/alpha/gamma defaults are 162
+`auto`, `neutron`, `proton`, `deuteron`, `alpha` or `gamma`; `--groups` accepts any named structure under
+[Group structures](#group-structures) (a neutron build takes `fispact-709` or another neutron grid; the
+charged-particle and gamma builds take `fispact-162`) or a custom boundary file. Neutron defaults are 709 groups and 293.6 K; proton/deuteron/alpha/gamma defaults are 162
 groups and 0 K (gamma, like the other non-neutron projectiles, refuses a nonzero temperature — TENDL does not carry
 a Doppler-broadened gamma sublibrary). The adjacent `<stem>_index.json` records source hashes, normalized options,
 group hash, builder fingerprint, target ledgers and the final NPZ hash. A content-addressed cache is optional and
 revalidated before reuse.
+
+### Group structures
+
+The named structures are FISPACT-II's own standard grids. Each is vendored as a JSON file under
+`crates/actinv-data/data/fispact_<N>_groups.json` whose `source` field names the `ebins_<N>` file of FISPACT-II's
+`ebins.tar.bz2` and that file's SHA-256; the boundaries are copied verbatim and are checked in the unit tests against
+the published first, second, middle, penultimate and last values. Boundaries are stored ascending after loading.
+
+| Name | Groups | Upper edge | Use |
+| --- | --- | --- | --- |
+| `fispact-66` (WIMS/LANL) | 66 | 25 MeV | neutron |
+| `fispact-69` (WIMS) | 69 | 10 MeV | neutron |
+| `fispact-100` (GAM-II) | 100 | 14.918 MeV | neutron |
+| `fispact-172` (XMAS) | 172 | 19.6403 MeV | neutron |
+| `fispact-175` (VITAMIN-J) | 175 | 19.6403 MeV | neutron |
+| `fispact-211` (VITAMIN-J+) | 211 | 55 MeV | neutron |
+| `fispact-315` (TRIPOLI) | 315 | 19.64 MeV | neutron |
+| `fispact-351` (TRIPOLI+) | 351 | 55 MeV | neutron |
+| `fispact-586` (CASMO) | 586 | 20 MeV | neutron |
+| `fispact-616` (RED/LLNL) | 616 | 20 MeV | neutron |
+| `fispact-709` (CCFE) | 709 | 1 GeV | neutron (default) |
+| `fispact-1102` (UKAEA) | 1102 | 1 GeV | neutron |
+| `fispact-162` (CCFE) | 162 | 1 GeV (5 keV floor) | proton, deuteron, alpha, gamma |
+
+An `xN` suffix (`fispact-1102x2`) refines each group log-uniformly into `N` subgroups, as it does for 709. A spectrum
+on any of these structures must supply exactly the structure's group count, and its library must have been built on
+the same named structure: the name, group count and boundary hash are all checked, and a flux on a different grid
+must be rebinned to the library first or given as `custom` boundaries matching the library. Group edges above an evaluation's
+upper energy carry zero cross section, so a 20 MeV grid is the natural pairing for a 20 MeV evaluation and only the
+709, 1102 and 162 grids reach the 200 MeV upper limit of the TENDL neutron evaluations and beyond.
+
+### High-energy spallation splice
+
+`build-library --spallation TABLE.json [--splice-energy-MeV MEV]` is the counterpart of FISPACT-II's
+`USESPALLATION`: above a splice energy (default 200 MeV) the residual-production cross sections of a separate,
+user-supplied high-energy library are merged into the activation library. Nothing is fetched or generated; the table
+is the only source of the spliced values and ACTINV ships none.
+
+The table is JSON with schema `actinv-spallation-residuals-1` (unknown fields are rejected):
+
+```json
+{
+  "schema": "actinv-spallation-residuals-1",
+  "description": "required free text naming the code, version and run that produced the data",
+  "projectile": "proton",
+  "boundaries_eV": [2.0e8, 2.4e8, 2.8e8, "...", 1.0e9],
+  "targets": [
+    {"za": 82208, "liso": 0, "channels": [
+      {"mt": 5,
+       "loss_barns": [0.9, 0.8, "..."],
+       "products": [{"zap": 80200, "lfs": 0, "sigma_barns": [0.002, 0.003, "..."]}]}
+    ]}
+  ]
+}
+```
+
+- `boundaries_eV` are ascending and must equal the library's group boundaries from the effective splice energy to the
+  top of the library (to `1e-12` relative), so each table group is exactly one library group. Every `sigma_barns` and
+  `loss_barns` array has one finite, nonnegative value per table group.
+- The splice energy snaps up to the nearest library boundary, so no group mixes two sources. `splice 200 MeV` is
+  exact on `fispact-709` and `fispact-162`; on the log-spaced `fispact-1102` it becomes 208.93 MeV. Both the
+  requested and the effective energy are recorded. A splice at or below the lowest boundary, or leaving no group
+  above it (an EAF-range 20 MeV grid), is an error.
+- A product is the row `(mt, zap, lfs, MF=10)` of its target; `loss_barns`, if given, is the matching target-depletion
+  row. An existing row with the same key has its spliced groups replaced; a new row is appended after the target's
+  rows with zero cross section below the splice. Rows the table does not name, and every group below the splice,
+  keep their values bit for bit. Spliced channels leave the other MTs of the same target untouched, so an evaluation
+  that already tabulates overlapping reactions above the splice counts them as well; as in FISPACT-II, the user
+  chooses the splice energy and the table's content.
+- Use an MT that carries no gas-production accounting (MT 5 is conventional); a channel whose MT is in the
+  hydrogen/helium table also receives its ejectile counts under `options.gas`.
+- Table targets absent from the library are skipped and listed. The table's `projectile` must equal the library's.
+
+The index gains a `spallation` block (omitted without the option, leaving the index unchanged) with the table path
+and SHA-256, its description, the requested and effective splice energies, the first spliced group, the rows
+replaced and added in total and per target, and the skipped targets. Each affected target's ledger carries a line with
+the same counts.
 
 ### Gamma (photonuclear) projectile
 

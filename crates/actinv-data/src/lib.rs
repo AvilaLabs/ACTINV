@@ -16,4 +16,5 @@ pub mod prepared;
 pub mod processing;
 pub mod resonance;
 pub mod shielding;
+pub mod spallation;
 pub mod tables;

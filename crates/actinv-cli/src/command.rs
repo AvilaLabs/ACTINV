@@ -18,6 +18,7 @@ use actinv_data::{
     covariance::{build_covariance as build_covariance_sidecar, CovarianceBuildOptions},
     groups::GroupStructure,
     normalize::NormalizeProfile,
+    spallation::SpallationSplice,
 };
 use std::collections::BTreeMap;
 
@@ -32,8 +33,8 @@ const USAGE: &str = "usage: actinv run SPEC.json [OUT.json]\n\
                     actinv import-flux openmc SOURCE.h5 OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV] [--window-rows N]\n\
                     actinv import-flux {meshtal|mctal} SOURCE OUT.ndjson --tally ID --source-rate RATE [--energy-floor-eV EV]\n\
                     actinv import-flux fispact FLUXES OUT.ndjson --groups GROUPS.json\n\
-                    actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha|gamma] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false]\n\
-                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|alpha|gamma] [--groups fispact-709|fispact-162|PATH] [--temperature-K K] [--cache DIR]\n\
+                    actinv build-library INPUT OUTPUT.npz [--format auto|tendl|eaf] [--projectile auto|neutron|proton|deuteron|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--workers N] [--cache DIR] [--grid-density D] [--strict-states true|false] [--profile none|endfb8|tendl] [--decay PATH] [--decay-fallback PATH] [--continue-on-error true|false] [--spallation TABLE.json] [--splice-energy-MeV MEV]\n\
+                    actinv build-damage EVALUATION_DIR OUT.json [--projectile auto|neutron|proton|deuteron|alpha|gamma] [--groups fispact-709|fispact-162|fispact-66|...|fispact-1102|PATH] [--temperature-K K] [--cache DIR]\n\
                     actinv build-shielding EVALUATION_DIR OUT.json [--projectile auto|neutron] [--groups fispact-709|PATH] [--cache DIR]\n\
                     actinv build-covariance INPUT ACTIVATION.npz OUTPUT.cov.npz [--workers N] [--cache DIR]\n\
                     actinv mesh SPEC.json OUT.ndjson\n\
@@ -460,6 +461,8 @@ fn build_library(args: &[String]) {
             "--decay",
             "--decay-fallback",
             "--continue-on-error",
+            "--spallation",
+            "--splice-energy-MeV",
         ],
     );
     let format = LibraryFormat::parse(options.get("--format").copied().unwrap_or("auto"))
@@ -486,6 +489,15 @@ fn build_library(args: &[String]) {
     } else {
         0.0
     };
+    if options.contains_key("--splice-energy-MeV") && !options.contains_key("--spallation") {
+        die("--splice-energy-MeV needs --spallation TABLE.json", 2);
+    }
+    let spallation = options.get("--spallation").map(|path| {
+        // The splice energy is given in MeV, as FISPACT's USESPALLATION cutoff is.
+        let splice_mev: f64 = parsed_option(&options, "--splice-energy-MeV")
+            .unwrap_or(actinv_data::spallation::DEFAULT_SPLICE_EV / 1.0e6);
+        SpallationSplice::from_file(path, splice_mev * 1.0e6).unwrap_or_else(|error| die(error, 2))
+    });
     let build_options = BuildOptions {
         format,
         projectile: requested_projectile,
@@ -501,6 +513,7 @@ fn build_library(args: &[String]) {
             .map(std::path::PathBuf::from),
         normalize_profile: profile,
         continue_on_error: parsed_option(&options, "--continue-on-error").unwrap_or(false),
+        spallation,
     };
     let summary =
         builder::build_library(input, output, &build_options).unwrap_or_else(|error| die(error, 1));

@@ -14,6 +14,7 @@ use crate::resonance::{
     omitted_fission_total_width_count, undeclared_competitive_width_count,
     validate_rmatrix_limited, RangeData,
 };
+use crate::spallation::SpallationSplice;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
@@ -83,6 +84,10 @@ pub struct BuildOptions {
     /// intended for mixed target/catalog input sets where auxiliary isomer
     /// evaluations carry defects that cannot be normalized.
     pub continue_on_error: bool,
+    /// Opt-in high-energy splice (USESPALLATION parity): a user-supplied residual-production table that
+    /// replaces or extends the rows in every group at and above the splice energy. `None` leaves the library
+    /// and its index byte-identical to a build without the option.
+    pub spallation: Option<SpallationSplice>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -165,6 +170,10 @@ struct BuildIndex {
     /// D6c: emitted product states versus the built target set — the
     /// population-leak surface for secondary activation.
     product_coverage: serde_json::Value,
+    /// Present only when a spallation table was spliced in: table identity, effective splice energy and the
+    /// rows replaced or added per target.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    spallation: Option<serde_json::Value>,
     n_rows: usize,
     columns: &'static str,
     sha256_npz: String,
@@ -279,6 +288,7 @@ pub fn builder_fingerprint() -> String {
             hash.update(include_bytes!("resonance.rs"));
             hash.update(include_bytes!("processing.rs"));
             hash.update(include_bytes!("library.rs"));
+            hash.update(include_bytes!("spallation.rs"));
             hash.update(include_bytes!("../data/mt_products.json"));
             format!("{:x}", hash.finalize())
         })
@@ -555,6 +565,39 @@ fn os_bytes(value: Option<&OsStr>) -> &[u8] {
     value.map(OsStr::as_encoded_bytes).unwrap_or_default()
 }
 
+/// A `fispact-*` structure must suit the projectile: the CCFE-162 grid for charged-particle and photon
+/// products, any vendored FISPACT-II neutron grid (`fispact-66` ... `fispact-1102`) for neutrons. Custom
+/// structures with other names carry their own boundaries and are not constrained.
+fn check_fispact_structure(
+    groups: &GroupStructure,
+    projectile: Projectile,
+    what: &str,
+) -> Result<(), String> {
+    if !groups.name.starts_with("fispact-") {
+        return Ok(());
+    }
+    let (fits, expected) = if projectile.is_neutron() {
+        let canonical = GroupStructure::named(&groups.name)?;
+        (
+            GroupStructure::is_neutron_named(&groups.name)
+                && canonical.is_some_and(|canonical| canonical.groups() == groups.groups()),
+            "a FISPACT neutron structure (fispact-66 ... fispact-1102)",
+        )
+    } else {
+        (groups.groups() == 162, "fispact-162")
+    };
+    if fits {
+        Ok(())
+    } else {
+        Err(format!(
+            "{} {what} require {expected}, got {} ({} groups)",
+            projectile.name(),
+            groups.name,
+            groups.groups()
+        ))
+    }
+}
+
 fn validate_options(options: &BuildOptions) -> Result<(), String> {
     options.groups.validate()?;
     if !options.temperature_K.is_finite() || options.temperature_K < 0.0 {
@@ -579,21 +622,7 @@ fn validate_options(options: &BuildOptions) -> Result<(), String> {
                 projectile.name()
             ));
         }
-        let expected_groups = match projectile {
-            Projectile::Neutron => 709,
-            Projectile::Proton | Projectile::Deuteron | Projectile::Alpha | Projectile::Gamma => {
-                162
-            }
-        };
-        if options.groups.name.starts_with("fispact-") && options.groups.groups() != expected_groups
-        {
-            return Err(format!(
-                "{} uses the {}-group structure, not {} groups",
-                projectile.name(),
-                expected_groups,
-                options.groups.groups()
-            ));
-        }
+        check_fispact_structure(&options.groups, projectile, "libraries")?;
     }
     Ok(())
 }
@@ -3409,20 +3438,7 @@ pub fn build_library(
     if projectile != Projectile::Neutron && options.temperature_K != 0.0 {
         return Err(format!("{} libraries require 0 K", projectile.name()));
     }
-    if options.groups.name.starts_with("fispact-") {
-        let expected = if projectile == Projectile::Neutron {
-            709
-        } else {
-            162
-        };
-        if options.groups.groups() != expected {
-            return Err(format!(
-                "{} requires fispact-{expected}, got {}",
-                projectile.name(),
-                options.groups.name
-            ));
-        }
-    }
+    check_fispact_structure(&options.groups, projectile, "libraries")?;
 
     let mut targets = Vec::new();
     let mut seen_targets = BTreeMap::new();
@@ -3448,11 +3464,32 @@ pub fn build_library(
             targets.push(target.index);
         }
     }
-    let library = Library {
+    let mut library = Library {
         rows,
         sig,
         ngroups: options.groups.groups(),
         bounds: options.groups.boundaries_ev.clone(),
+    };
+    let spallation = match &options.spallation {
+        Some(splice) => {
+            let keys: Vec<(i32, i32)> = targets.iter().map(|t| (t.za, t.liso)).collect();
+            let report = splice
+                .table
+                .apply(&mut library, &keys, projectile, splice.splice_ev)?;
+            for spliced in &report.targets {
+                let target = &mut targets[spliced.target];
+                target.n_rows += spliced.rows_added;
+                target.ledger.push(format!(
+                    "spallation splice at {:.6e} eV: {} row(s) replaced, {} row(s) added from {}",
+                    report.effective_splice_eV,
+                    spliced.rows_replaced,
+                    spliced.rows_added,
+                    splice.source_sha256
+                ));
+            }
+            Some(report.provenance(splice))
+        }
+        None => None,
     };
     library.validate()?;
     write_npz(output, &library)?;
@@ -3495,6 +3532,7 @@ pub fn build_library(
         targets,
         build_failures,
         product_coverage,
+        spallation,
         n_rows: library.rows.len(),
         columns: "rows: (target, MT, ZAP, LFS, LMF)",
         sha256_npz: npz_hash.clone(),
@@ -3731,16 +3769,7 @@ pub fn build_damage(
     if !projectile.is_neutron() && options.temperature_K != 0.0 {
         return Err(format!("{} damage tables require 0 K", projectile.name()));
     }
-    if options.groups.name.starts_with("fispact-") {
-        let expected = if projectile.is_neutron() { 709 } else { 162 };
-        if options.groups.groups() != expected {
-            return Err(format!(
-                "{} damage tables require fispact-{expected}, got {}",
-                projectile.name(),
-                options.groups.name
-            ));
-        }
-    }
+    check_fispact_structure(&options.groups, projectile, "damage tables")?;
     let mut targets: BTreeMap<String, Vec<f64>> = BTreeMap::new();
     let mut target_files: BTreeMap<String, String> = BTreeMap::new();
     let mut provenance = Vec::new();
@@ -4460,6 +4489,7 @@ mod tests {
                 decay_fallback_path: None,
                 normalize_profile: NormalizeProfile::None,
                 continue_on_error: false,
+                spallation: None,
             },
         )
         .unwrap();
@@ -5141,6 +5171,7 @@ mod tests {
             decay_fallback_path: None,
             normalize_profile: NormalizeProfile::None,
             continue_on_error: false,
+            spallation: None,
         };
         let error = validate_options(&options).unwrap_err();
         assert!(error.contains("gamma") && error.contains("0 K"), "{error}");
@@ -5161,9 +5192,38 @@ mod tests {
             decay_fallback_path: None,
             normalize_profile: NormalizeProfile::None,
             continue_on_error: false,
+            spallation: None,
         };
         let error = validate_options(&options).unwrap_err();
         assert!(error.contains("162"), "{error}");
+    }
+
+    #[test]
+    fn fispact_structures_are_matched_to_projectiles() {
+        for name in [
+            "fispact-66",
+            "fispact-175",
+            "fispact-616",
+            "fispact-709",
+            "fispact-1102",
+        ] {
+            let groups = GroupStructure::resolve(name).unwrap();
+            check_fispact_structure(&groups, Projectile::Neutron, "libraries").unwrap();
+            let error =
+                check_fispact_structure(&groups, Projectile::Proton, "libraries").unwrap_err();
+            assert!(error.contains("fispact-162"), "{name}: {error}");
+        }
+        let ccfe_162 = GroupStructure::fispact_162().unwrap();
+        check_fispact_structure(&ccfe_162, Projectile::Gamma, "libraries").unwrap();
+        assert!(check_fispact_structure(&ccfe_162, Projectile::Neutron, "libraries").is_err());
+        // Custom names carry their own boundaries; a refined fispact name is still not a vendored grid.
+        let custom = GroupStructure {
+            name: "custom".into(),
+            boundaries_ev: vec![1.0, 2.0],
+        };
+        check_fispact_structure(&custom, Projectile::Neutron, "libraries").unwrap();
+        let refined = GroupStructure::resolve("fispact-709x2").unwrap();
+        assert!(check_fispact_structure(&refined, Projectile::Neutron, "libraries").is_err());
     }
 
     #[test]
