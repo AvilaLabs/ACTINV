@@ -1551,7 +1551,13 @@ mod tests {
             (vec![-3.0, 0.5, 0.0, 2.0, -4.0, 0.0, 0.0, 1.0e-3, -0.1], 3),
         ];
         for (n, magnitude) in [(3usize, 1.0), (4, 40.0), (5, 3.0e3), (6, 0.2)] {
-            cases.push(((0..n * n).map(|_| magnitude * next()).collect(), n));
+            // Rate-matrix shaped: a negative, dominant diagonal keeps every eigenvalue in the
+            // left half-plane (Gershgorin), so the exponential stays finite as in real chains.
+            let mut a: Vec<f64> = (0..n * n).map(|_| magnitude * next()).collect();
+            for i in 0..n {
+                a[i * n + i] = -(magnitude * n as f64) - a[i * n + i].abs();
+            }
+            cases.push((a, n));
         }
         for (a, n) in &cases {
             let new = expm(a, *n).unwrap();
