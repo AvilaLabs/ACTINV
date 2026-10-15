@@ -4481,6 +4481,12 @@ impl PreparedRun {
                     .keys()
                     .all(|e| r.element_mass_attenuation.contains_key(e))
             });
+        // Bremsstrahlung Z_eff (manual Eq. 68) from the declared material's atom fractions.
+        let brems_z_eff = spec
+            .photon
+            .bremsstrahlung
+            .as_ref()
+            .map(|_| photon::material_z_eff(&bulk_inv, &cdiag.unknown));
         let mut photon_diagnostics: Vec<PhotonDiagnostics> = Vec::new();
         let mut steps = Vec::new();
         let mut damage_cumulative: f64 = 0.0;
@@ -4880,7 +4886,7 @@ impl PreparedRun {
                         nuclides.get(key).map(|nu| (name.as_str(), nu, *activity))
                     })
                     .collect();
-                let (source, diagnostics) = photon::source_for_step(
+                let (mut source, diagnostics) = photon::source_for_step(
                     &active_refs,
                     photon_boundaries,
                     &spec.photon.group_structure,
@@ -4891,6 +4897,29 @@ impl PreparedRun {
                     spec.photon.build_up_factor,
                     physical.gamma_cutoff.get(),
                 )?;
+                // Opt-in components, added after the decay-photon source and never merged into it.
+                // Bremsstrahlung first, so the point-source dose can also cover it.
+                if let (Some(brems), Some(z_eff)) = (&spec.photon.bremsstrahlung, &brems_z_eff) {
+                    photon::add_bremsstrahlung(
+                        &mut source,
+                        &active_refs,
+                        brems,
+                        z_eff,
+                        physical.mass.get(),
+                        response.as_ref(),
+                        &material_mass_fractions,
+                        material_response_complete,
+                        spec.photon.build_up_factor,
+                    );
+                }
+                if let Some(point) = &spec.photon.point_source {
+                    photon::add_point_source_dose(
+                        &mut source,
+                        response.as_ref(),
+                        point,
+                        physical.mass.get(),
+                    );
+                }
                 photon_diagnostics.push(diagnostics);
                 Some(source)
             } else {
@@ -5709,6 +5738,9 @@ impl PreparedRun {
                     "coverage_per_step": coverage_per_step,
                 }),
             );
+            if prepared.table.has_a2() {
+                ledger["radiological"]["formula"]["a2"] = "sum(activity_Bq_per_g / A2_Bq)".into();
+            }
         }
         if let (Some(prepared), Some(plan)) = (&self.damage, &damage_plan) {
             ledger.as_object_mut().expect("ledger is an object").insert(
@@ -5894,6 +5926,23 @@ impl PreparedRun {
                 "selection": fission_yield_selection,
             },
         });
+        // Opt-in photon components are recorded only when requested, so default certificates
+        // keep their bytes.
+        if let Some(point) = &spec.photon.point_source {
+            certificate["photon"]["point_source"] = serde_json::json!({
+                "formula": "FISPACT-II manual Eq. 63: D = C sum_i mu_a(E_i) exp(-mu(E_i) r) m_s S(E_i) / (4 pi r^2), group centroids, no build-up",
+                "distance_m": point.distance_m,
+                "air_attenuation": point.air_attenuation,
+                "air_density_g_cm3": point.air_attenuation.then_some(point.air_density_g_cm3),
+            });
+        }
+        if let Some(brems) = &spec.photon.bremsstrahlung {
+            certificate["photon"]["bremsstrahlung"] = serde_json::json!({
+                "model": "FISPACT-II manual appendix C.7.4, Eqs. 65-68: one beta-minus per decay at the mean beta energy, atom-fraction Z_eff",
+                "nuclides": &brems.nuclides,
+                "mean_beta_energy": "STYP=1 spectrum average energy of the decay record; never inferred",
+            });
+        }
         if let (Some(options), Some(runtime)) = (&spec.uncertainty, &uncertainty_runtime) {
             let flux_running = runtime.flux_channel_requested;
             let flux_excluded_entry = if flux_running {

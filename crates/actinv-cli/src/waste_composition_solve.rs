@@ -406,6 +406,8 @@ fn validate_base(
     }
     if obj.get("photon").is_some_and(|photon| {
         photon.get("response").is_some_and(|v| !v.is_null())
+            || photon.get("point_source").is_some_and(|v| !v.is_null())
+            || photon.get("bremsstrahlung").is_some_and(|v| !v.is_null())
             || photon
                 .get("group_boundaries_eV")
                 .is_some_and(|v| !v.is_null())

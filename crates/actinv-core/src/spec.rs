@@ -409,6 +409,14 @@ pub struct PhotonOptions {
     pub build_up_factor: f64,
     #[serde(default = "gamma_cutoff")]
     pub gamma_constant_cutoff_eV: f64,
+    /// FISPACT-II `DOSE 2` analog: also report the dose rate at a distance from the step's
+    /// photon source treated as a point source. Absent leaves every output unchanged.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source: Option<PointSourceOptions>,
+    /// FISPACT-II `BREMSSTRAHLUNG` analog: a separately reported bremsstrahlung photon
+    /// component for the listed beta emitters. Absent leaves every output unchanged.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bremsstrahlung: Option<BremsstrahlungOptions>,
 }
 fn photon_groups() -> String {
     "fispact-24".into()
@@ -427,8 +435,46 @@ impl Default for PhotonOptions {
             response: None,
             build_up_factor: build_up_two(),
             gamma_constant_cutoff_eV: gamma_cutoff(),
+            point_source: None,
+            bremsstrahlung: None,
         }
     }
+}
+
+/// Smallest source-to-detector distance FISPACT-II accepts for `DOSE 2` (manual section 4.14:
+/// a smaller `dist` is reset to 0.3 m). ACTINV rejects it instead of clamping.
+pub const POINT_SOURCE_MIN_DISTANCE_M: f64 = 0.3;
+
+/// Dry air near sea level, density 1.20479e-3 g/cm3: NIST Hubbell & Seltzer, X-Ray Mass
+/// Attenuation Coefficients (NISTIR 5632), Table 2 (the material of the table-4 air curve).
+const NIST_DRY_AIR_DENSITY_G_CM3: f64 = 1.20479e-3;
+
+fn point_source_air_attenuation() -> bool {
+    true
+}
+fn point_source_air_density() -> f64 {
+    NIST_DRY_AIR_DENSITY_G_CM3
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct PointSourceOptions {
+    /// Source-to-detector distance in metres; at least `POINT_SOURCE_MIN_DISTANCE_M`.
+    pub distance_m: f64,
+    /// Apply the air transmission `exp(-mu r)` of manual Eq. (63). Needs an
+    /// `air_mass_attenuation` curve in the photon response.
+    #[serde(default = "point_source_air_attenuation")]
+    pub air_attenuation: bool,
+    /// Air density converting the response's air mass attenuation to a linear coefficient.
+    #[serde(default = "point_source_air_density")]
+    pub air_density_g_cm3: f64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct BremsstrahlungOptions {
+    /// Canonical nuclide names (`Cl36`, `Ar42`, `K42`), as FISPACT-II's `BREMSSTRAHLUNG` list.
+    pub nuclides: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1329,7 +1375,7 @@ impl Spec {
         }
         self.spectrum.check_total_has_shape("spectrum")?;
         match self.photon.group_structure.as_str() {
-            "fispact-24" => {
+            "fispact-24" | "steiner-22" => {
                 if self.photon.group_boundaries_eV.is_some() {
                     return Err(
                         "photon.group_boundaries_eV is only valid with group_structure 'custom'"
@@ -1360,6 +1406,48 @@ impl Spec {
             || self.photon.gamma_constant_cutoff_eV < 0.0
         {
             return Err("photon.gamma_constant_cutoff_eV must be nonnegative".into());
+        }
+        if let Some(point) = &self.photon.point_source {
+            if !point.distance_m.is_finite() || point.distance_m < POINT_SOURCE_MIN_DISTANCE_M {
+                return Err(format!(
+                    "photon.point_source.distance_m must be finite and at least {POINT_SOURCE_MIN_DISTANCE_M} m"
+                ));
+            }
+            if !point.air_density_g_cm3.is_finite() || point.air_density_g_cm3 <= 0.0 {
+                return Err("photon.point_source.air_density_g_cm3 must be positive".into());
+            }
+        }
+        if let Some(brems) = &self.photon.bremsstrahlung {
+            if brems.nuclides.is_empty() {
+                return Err("photon.bremsstrahlung.nuclides must not be empty".into());
+            }
+            let mut listed = std::collections::HashSet::new();
+            for raw in &brems.nuclides {
+                match actinv_data::composition::material_key(raw) {
+                    Ok(actinv_data::composition::MaterialKey::Nuclide { canonical, .. })
+                        if canonical == *raw => {}
+                    Ok(actinv_data::composition::MaterialKey::Nuclide { canonical, .. }) => {
+                        return Err(format!(
+                            "photon.bremsstrahlung.nuclides entry '{raw}' is not canonical; use '{canonical}'"
+                        ));
+                    }
+                    Ok(_) => {
+                        return Err(format!(
+                            "photon.bremsstrahlung.nuclides entry '{raw}' is an element, not a nuclide"
+                        ));
+                    }
+                    Err(error) => {
+                        return Err(format!(
+                            "photon.bremsstrahlung.nuclides entry '{raw}': {error}"
+                        ));
+                    }
+                }
+                if !listed.insert(raw.as_str()) {
+                    return Err(format!(
+                        "photon.bremsstrahlung.nuclides lists '{raw}' more than once"
+                    ));
+                }
+            }
         }
         if let Some(r) = &self.photon.response {
             if r.path.is_empty()
@@ -1542,9 +1630,13 @@ impl Spec {
     }
 
     pub fn photon_boundaries(&self) -> Vec<f64> {
-        match &self.photon.group_boundaries_eV {
-            Some(v) => v.clone(),
-            None => crate::photon::FISPACT_24_BOUNDARIES_EV.to_vec(),
+        match (
+            &self.photon.group_boundaries_eV,
+            self.photon.group_structure.as_str(),
+        ) {
+            (Some(v), _) => v.clone(),
+            (None, "steiner-22") => crate::photon::STEINER_22_BOUNDARIES_EV.to_vec(),
+            (None, _) => crate::photon::FISPACT_24_BOUNDARIES_EV.to_vec(),
         }
     }
 }
@@ -2262,5 +2354,81 @@ mod duration_tests {
         assert!(Spec::from_json(&value.to_string())
             .unwrap_err()
             .contains("unknown spectrum.structure"));
+    }
+
+    #[test]
+    fn steiner_22_selects_the_manual_table_and_rejects_custom_boundaries() {
+        let mut value = minimal_spec();
+        value["photon"] = serde_json::json!({"group_structure": "steiner-22"});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        assert_eq!(
+            spec.photon_boundaries(),
+            crate::photon::STEINER_22_BOUNDARIES_EV.to_vec()
+        );
+        assert_eq!(spec.photon_boundaries().len(), 23);
+        // The default structure is unchanged.
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert_eq!(
+            spec.photon_boundaries(),
+            crate::photon::FISPACT_24_BOUNDARIES_EV.to_vec()
+        );
+        value["photon"]["group_boundaries_eV"] = serde_json::json!([0.0, 1.0]);
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("only valid with group_structure 'custom'"));
+    }
+
+    #[test]
+    fn photon_parity_options_are_opt_in_and_absent_from_the_default_echo() {
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert!(spec.photon.point_source.is_none());
+        assert!(spec.photon.bremsstrahlung.is_none());
+        let echoed = serde_json::to_value(&spec.photon).unwrap();
+        assert!(echoed.get("point_source").is_none(), "{echoed}");
+        assert!(echoed.get("bremsstrahlung").is_none(), "{echoed}");
+    }
+
+    #[test]
+    fn point_source_distance_and_air_density_are_validated() {
+        let mut value = minimal_spec();
+        value["photon"] = serde_json::json!({"point_source": {"distance_m": 1.0}});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let point = spec.photon.point_source.unwrap();
+        assert_eq!(point.distance_m, 1.0);
+        assert!(point.air_attenuation);
+        assert_eq!(point.air_density_g_cm3, 1.20479e-3);
+        // FISPACT-II raises a shorter distance to 0.3 m; ACTINV refuses it.
+        for bad in [0.29, 0.0, -1.0] {
+            value["photon"] = serde_json::json!({"point_source": {"distance_m": bad}});
+            assert!(Spec::from_json(&value.to_string())
+                .unwrap_err()
+                .contains("at least 0.3 m"));
+        }
+        value["photon"] = serde_json::json!({"point_source": {"distance_m": 0.3}});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        value["photon"] =
+            serde_json::json!({"point_source": {"distance_m": 1.0, "air_density_g_cm3": 0.0}});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("air_density_g_cm3"));
+        value["photon"] = serde_json::json!({"point_source": {"distance_m": 1.0, "typo": 1}});
+        assert!(Spec::from_json(&value.to_string()).is_err());
+    }
+
+    #[test]
+    fn bremsstrahlung_nuclides_must_be_canonical_unique_nuclides() {
+        let mut value = minimal_spec();
+        value["photon"] = serde_json::json!({"bremsstrahlung": {"nuclides": ["Cl36", "K42"]}});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        for (bad, message) in [
+            (serde_json::json!([]), "must not be empty"),
+            (serde_json::json!(["cl36"]), "not canonical"),
+            (serde_json::json!(["Cl"]), "element"),
+            (serde_json::json!(["Cl36", "Cl36"]), "more than once"),
+        ] {
+            value["photon"] = serde_json::json!({"bremsstrahlung": {"nuclides": bad}});
+            let error = Spec::from_json(&value.to_string()).unwrap_err();
+            assert!(error.contains(message), "{error}");
+        }
     }
 }

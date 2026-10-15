@@ -78,6 +78,13 @@ def main() -> None:
     )
     parser.add_argument("--cache-dir", type=Path, help="optional raw-page cache")
     parser.add_argument("--offline", action="store_true", help="read only from --cache-dir")
+    parser.add_argument(
+        "--air-attenuation",
+        action="store_true",
+        help="also write the dry-air mass attenuation (mu/rho) curve from the same NIST page, "
+        "needed for the point-source dose's air transmission; omitted by default so existing "
+        "outputs are unchanged",
+    )
     args = parser.parse_args()
 
     requested = SYMBOLS if args.elements.lower() == "all" else [
@@ -89,7 +96,7 @@ def main() -> None:
     requested = sorted(set(requested), key=SYMBOLS.index)
 
     air_raw = fetch(AIR_URL, args.cache_dir, args.offline)
-    air_e, _, air_mu_en = table_rows(air_raw)
+    air_e, air_mu, air_mu_en = table_rows(air_raw)
     provenance: dict[str, object] = {
         "builder": "scripts/build_photon_response.py",
         "source": "NIST X-Ray Mass Attenuation Coefficients, tables 3 and 4",
@@ -113,6 +120,8 @@ def main() -> None:
         "air_mass_energy_absorption": {"energy_eV": air_e, "values_cm2_g": air_mu_en},
         "element_mass_attenuation": element_curves,
     }
+    if args.air_attenuation:
+        payload["air_mass_attenuation"] = {"energy_eV": air_e, "values_cm2_g": air_mu}
     encoded = (json.dumps(payload, indent=2, sort_keys=True, allow_nan=False) + "\n").encode()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(encoded)

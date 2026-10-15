@@ -180,6 +180,10 @@ eV and excludes timestamps/machine paths so identical pages produce identical by
 the raw-page cache. Declare the generated file's printed SHA-256 in `photon.response`; the core recomputes it and fails
 closed on a mismatch.
 
+Add `--air-attenuation` to also write the dry-air mass attenuation (mu/rho) curve from the same NIST air page as
+`air_mass_attenuation`. Only the optional `photon.point_source` dose's air transmission reads it; without the flag the
+output bytes are unchanged, and the new key makes the file a different hashed input.
+
 The P7 gate file (dry air + Fe) has SHA-256
 `4f00824ac66ef941cddbe20b93966523b7f0ff2271b35cdf8be538c48e404307`. It remains outside the repository under
 `~/nuclear-data/photon-response/`, in accordance with the no-bundled-data rule.

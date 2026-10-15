@@ -11,10 +11,19 @@ use actinv_data::decay::{ContinuousRadiation, Nuclide};
 use serde::{Deserialize, Serialize};
 
 use crate::run::EV;
+use crate::spec::{BremsstrahlungOptions, PointSourceOptions};
 
 pub const FISPACT_24_BOUNDARIES_EV: [f64; 25] = [
     0.0, 1.0e4, 2.0e4, 5.0e4, 1.0e5, 2.0e5, 3.0e5, 4.0e5, 6.0e5, 8.0e5, 1.0e6, 1.22e6, 1.44e6,
     1.66e6, 2.0e6, 2.5e6, 3.0e6, 4.0e6, 5.0e6, 6.5e6, 8.0e6, 1.0e7, 1.2e7, 1.4e7, 2.0e7,
+];
+
+/// The 22-group "Steiner" gamma structure (`GROUP 1`): FISPACT-II User Manual, UKAEA-R(18)001
+/// Table 6 (Table 5 of UKAEA-CCFE-RE(21)02), "22 Group" column, MeV converted to eV. The table
+/// ends at 14 MeV, so photons above it fall in the overflow diagnostics.
+pub const STEINER_22_BOUNDARIES_EV: [f64; 23] = [
+    0.0, 1.0e4, 1.0e5, 2.0e5, 4.0e5, 1.0e6, 1.5e6, 2.0e6, 2.5e6, 3.0e6, 3.5e6, 4.0e6, 4.5e6, 5.0e6,
+    5.5e6, 6.0e6, 6.5e6, 7.0e6, 7.5e6, 8.0e6, 1.0e7, 1.2e7, 1.4e7,
 ];
 
 #[derive(Clone, Debug, Deserialize)]
@@ -31,6 +40,10 @@ pub struct PhotonResponse {
     #[serde(default)]
     pub provenance: serde_json::Value,
     pub air_mass_energy_absorption: ResponseCurve,
+    /// Dry-air mass attenuation (mu/rho, cm2/g), NIST table 4. Optional: only the point-source
+    /// dose's air transmission uses it, and a response built without it still loads.
+    #[serde(default)]
+    pub air_mass_attenuation: Option<ResponseCurve>,
     pub element_mass_attenuation: BTreeMap<String, ResponseCurve>,
 }
 
@@ -41,6 +54,9 @@ impl PhotonResponse {
             return Err(format!("unsupported photon response schema '{}'", r.schema));
         }
         validate_curve("air_mass_energy_absorption", &r.air_mass_energy_absorption)?;
+        if let Some(curve) = &r.air_mass_attenuation {
+            validate_curve("air_mass_attenuation", curve)?;
+        }
         for (element, curve) in &r.element_mass_attenuation {
             validate_curve(&format!("element_mass_attenuation.{element}"), curve)?;
         }
@@ -126,8 +142,81 @@ pub struct NuclidePhotonOut {
     pub gamma_constant_Gy_m2_Bq_s: Option<f64>,
     pub gamma_constant_mGy_m2_GBq_h: Option<f64>,
     pub contact_gamma_air_dose_proxy_Gy_h: Option<f64>,
+    /// This nuclide's share of the point-source dose; present only with `photon.point_source`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source_gamma_air_dose_Sv_h: Option<f64>,
     pub lines: Vec<NuclideLineOut>,
     pub groups: Vec<PhotonGroupOut>,
+}
+
+/// Point-source dose (FISPACT-II `DOSE 2`, manual Eq. 63): the grouped photon source of the
+/// step's `mass_g` of material as a point source, seen through `distance_m` of air.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct PointSourceDoseOut {
+    pub distance_m: f64,
+    pub mass_g: f64,
+    pub air_attenuation: bool,
+    /// Present only when `air_attenuation` is applied.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub air_density_g_cm3: Option<f64>,
+    /// Photon dose in air at the detector; numerically Gy/h and Sv/h coincide at unit quality factor.
+    pub gamma_air_dose_Sv_h: Option<f64>,
+    /// `gamma_air_dose_Sv_h / mass_g`, the FISPACT-II 1 g convention.
+    pub gamma_air_dose_Sv_h_per_g: Option<f64>,
+    /// Power (W) in groups whose centroid is below the response's lowest tabulated energy.
+    pub subthreshold_power_W: f64,
+    /// Power (W) outside the group structure or above the response's highest energy.
+    pub excluded_power_W: f64,
+    /// Why the dose is `null`, when it is.
+    pub unavailable_reason: Option<String>,
+}
+
+/// One nuclide's bremsstrahlung photon source.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct BremsstrahlungNuclideOut {
+    pub nuclide: String,
+    pub activity_Bq_g: f64,
+    pub mean_beta_energy_eV: f64,
+    pub photons_s_g: f64,
+    pub power_W_g: f64,
+    pub contact_gamma_air_dose_proxy_Gy_h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source_gamma_air_dose_Sv_h: Option<f64>,
+    pub groups: Vec<PhotonGroupOut>,
+}
+
+/// A requested bremsstrahlung nuclide that could not be evaluated, and the input it lacks.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct BremsstrahlungMissingInput {
+    pub nuclide: String,
+    pub missing: String,
+}
+
+/// FISPACT-II `BREMSSTRAHLUNG` analog (manual appendix C.7.4). Always a separate component:
+/// nothing here is added into the step's decay-photon groups, powers or dose proxies.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct BremsstrahlungOut {
+    pub model: String,
+    pub z_eff: Option<f64>,
+    pub z_eff_unavailable_reason: Option<String>,
+    pub groups: Vec<PhotonGroupOut>,
+    pub by_nuclide: Vec<BremsstrahlungNuclideOut>,
+    pub photons_s_g: f64,
+    pub photons_s: f64,
+    pub power_W_g: f64,
+    pub power_W: f64,
+    /// Energy the model emits into a group whose lower edge is 0 eV; Eq. (66) diverges there,
+    /// so that group is left empty and its exact energy is reported instead.
+    pub zero_lower_edge_group_power_W_g: f64,
+    pub contact_gamma_air_dose_proxy_Gy_h: Option<f64>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source_gamma_air_dose_Sv_h: Option<f64>,
+    /// False when a requested nuclide with activity lacks an input; its dose is then absent
+    /// from the totals above.
+    pub inputs_complete: bool,
+    pub missing_inputs: Vec<BremsstrahlungMissingInput>,
+    /// Requested nuclides that have no positive activity at this step.
+    pub requested_nuclides_without_activity: Vec<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -152,6 +241,12 @@ pub struct PhotonSourceOut {
     /// It is omitted from the proxy; present only when non-zero.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub dose_response_subthreshold_power_W_g: f64,
+    /// FISPACT-II `DOSE 2` analog; present only with `photon.point_source`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub point_source_dose: Option<PointSourceDoseOut>,
+    /// FISPACT-II `BREMSSTRAHLUNG` analog; present only with `photon.bremsstrahlung`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bremsstrahlung: Option<BremsstrahlungOut>,
 }
 
 fn is_zero(v: &f64) -> bool {
@@ -719,6 +814,7 @@ pub fn source_for_step(
             } else {
                 None
             },
+            point_source_gamma_air_dose_Sv_h: None,
             lines: n_lines,
             groups: n_groups,
         });
@@ -800,9 +896,390 @@ pub fn source_for_step(
             },
             dose_response_power_coverage: coverage,
             dose_response_subthreshold_power_W_g: diag.response_subthreshold_power_W_g,
+            point_source_dose: None,
+            bremsstrahlung: None,
         },
         diag,
     ))
+}
+
+/// The point-source dose of one set of groups, with the power it could not evaluate.
+struct PointDoseTerms {
+    dose_Sv_h: Option<f64>,
+    subthreshold_W: f64,
+    excluded_W: f64,
+}
+
+/// FISPACT-II manual Eq. (63) over `groups`, each taken at its centroid energy:
+/// `D = C sum_i mu_a(E_i) exp(-mu(E_i) r) m_s S(E_i) / (4 pi r^2)`. There is no build-up factor.
+/// `reference_power_W_g` is everything the groups' owner emits per gram, including power
+/// outside the group structure, which can never reach the sum and withholds the dose.
+fn point_source_dose(
+    groups: &[PhotonGroupOut],
+    reference_power_W_g: f64,
+    mass_g: f64,
+    response: &PhotonResponse,
+    options: &PointSourceOptions,
+) -> Result<PointDoseTerms, String> {
+    let attenuation = if options.air_attenuation {
+        Some(response.air_mass_attenuation.as_ref().ok_or(
+            "photon.point_source.air_attenuation needs an air_mass_attenuation curve in the \
+             photon response (build it with scripts/build_photon_response.py --air-attenuation) \
+             or air_attenuation: false",
+        )?)
+    } else {
+        None
+    };
+    let mut e_lo = response.air_mass_energy_absorption.energy_eV[0];
+    if let Some(curve) = attenuation {
+        e_lo = e_lo.max(curve.energy_eV[0]);
+    }
+    let r = options.distance_m;
+    let (mut dose, mut subthreshold, mut excluded) = (0.0, 0.0, 0.0);
+    let mut grouped_power_W_g = 0.0;
+    for g in groups {
+        grouped_power_W_g += g.power_W_g;
+        let power_W = g.power_W_g * mass_g;
+        if power_W <= 0.0 {
+            continue;
+        }
+        let e = g.centroid_eV;
+        if e < e_lo {
+            subthreshold += power_W;
+            continue;
+        }
+        let Some(mu_en) = curve_value(&response.air_mass_energy_absorption, e) else {
+            excluded += power_W;
+            continue;
+        };
+        let transmission = match attenuation {
+            None => 1.0,
+            Some(curve) => match curve_value(curve, e) {
+                // mu/rho [cm2/g] * rho [g/cm3] = mu [1/cm]; 100 cm per m.
+                Some(mu_rho) => (-mu_rho * options.air_density_g_cm3 * 100.0 * r).exp(),
+                None => {
+                    excluded += power_W;
+                    continue;
+                }
+            },
+        };
+        // mu_en: cm2/g -> 0.1 m2/kg; power in W = J/s, so the sum is Gy/s; x 3600 for Gy/h.
+        dose +=
+            mu_en * 0.1 * transmission * power_W / (4.0 * std::f64::consts::PI * r * r) * 3600.0;
+    }
+    let ungrouped_W_g = (reference_power_W_g - grouped_power_W_g).max(0.0);
+    if ungrouped_W_g > 1e-9 * reference_power_W_g {
+        excluded += ungrouped_W_g * mass_g;
+    }
+    let total_W = reference_power_W_g * mass_g;
+    let complete = excluded == 0.0 && subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * total_W;
+    Ok(PointDoseTerms {
+        dose_Sv_h: complete.then_some(dose),
+        subthreshold_W: subthreshold,
+        excluded_W: excluded,
+    })
+}
+
+/// Add the FISPACT-II `DOSE 2` point-source dose to a built step source. `mass_g` is the
+/// material mass the source rates were scaled by (`material.mass_g`, 1 g by default). When
+/// `bremsstrahlung` has been added to `source` first, its point-source dose is filled too.
+pub fn add_point_source_dose(
+    source: &mut PhotonSourceOut,
+    response: Option<&PhotonResponse>,
+    options: &PointSourceOptions,
+    mass_g: f64,
+) {
+    let mut out = PointSourceDoseOut {
+        distance_m: options.distance_m,
+        mass_g,
+        air_attenuation: options.air_attenuation,
+        air_density_g_cm3: options.air_attenuation.then_some(options.air_density_g_cm3),
+        gamma_air_dose_Sv_h: None,
+        gamma_air_dose_Sv_h_per_g: None,
+        subthreshold_power_W: 0.0,
+        excluded_power_W: 0.0,
+        unavailable_reason: None,
+    };
+    match response {
+        None => out.unavailable_reason = Some("no photon.response was supplied".into()),
+        Some(r) => {
+            match point_source_dose(&source.groups, source.source_power_W_g, mass_g, r, options) {
+                Err(reason) => out.unavailable_reason = Some(reason),
+                Ok(terms) => {
+                    out.subthreshold_power_W = terms.subthreshold_W;
+                    out.excluded_power_W = terms.excluded_W;
+                    out.gamma_air_dose_Sv_h = terms.dose_Sv_h;
+                    out.gamma_air_dose_Sv_h_per_g = terms.dose_Sv_h.map(|d| d / mass_g);
+                    if terms.dose_Sv_h.is_none() {
+                        out.unavailable_reason = Some(
+                            "photon power outside the response's energy range or the group \
+                             structure exceeds the tolerance"
+                                .into(),
+                        );
+                    }
+                    for n in &mut source.by_nuclide {
+                        if let Ok(t) =
+                            point_source_dose(&n.groups, n.source_power_W_g, mass_g, r, options)
+                        {
+                            n.point_source_gamma_air_dose_Sv_h = t.dose_Sv_h;
+                        }
+                    }
+                    if let Some(b) = source.bremsstrahlung.as_mut() {
+                        for n in &mut b.by_nuclide {
+                            if let Ok(t) =
+                                point_source_dose(&n.groups, n.power_W_g, mass_g, r, options)
+                            {
+                                n.point_source_gamma_air_dose_Sv_h = t.dose_Sv_h;
+                            }
+                        }
+                        if let Ok(t) = point_source_dose(&b.groups, b.power_W_g, mass_g, r, options)
+                        {
+                            b.point_source_gamma_air_dose_Sv_h = t.dose_Sv_h;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    source.point_source_dose = Some(out);
+}
+
+/// `a` of FISPACT-II manual Eq. (65), the bremsstrahlung yield constant, 2.76e-6 per keV.
+const BREMSSTRAHLUNG_A_PER_KEV: f64 = 2.76e-6;
+
+/// Photons per electron emitted into `[lo, hi]` keV by a mono-energetic electron of `e0` keV in
+/// a matrix of mean atomic number `z`: manual Eq. (66). `lo` must be positive.
+fn bremsstrahlung_photons_per_electron(z: f64, e0_keV: f64, lo_keV: f64, hi_keV: f64) -> f64 {
+    if e0_keV <= lo_keV {
+        0.0
+    } else if e0_keV >= hi_keV {
+        BREMSSTRAHLUNG_A_PER_KEV * z * (e0_keV * (hi_keV / lo_keV).ln() - (hi_keV - lo_keV))
+    } else {
+        BREMSSTRAHLUNG_A_PER_KEV * z * (e0_keV * (e0_keV / lo_keV).ln() - (e0_keV - lo_keV))
+    }
+}
+
+/// Exact energy (keV per electron) the Eq. (65) spectrum puts below `hi` keV, i.e. in a group
+/// whose lower edge is 0, where Eq. (66)'s photon number diverges.
+fn bremsstrahlung_energy_below_keV(z: f64, e0_keV: f64, hi_keV: f64) -> f64 {
+    let top = e0_keV.min(hi_keV);
+    BREMSSTRAHLUNG_A_PER_KEV * z * (e0_keV * top - 0.5 * top * top)
+}
+
+/// Mean beta-minus energy per decay (eV): the decay record's STYP=1 spectrum average energy.
+/// `None` when the record carries no such spectrum; the electron/light-particle mean energy
+/// is not substituted because it also counts conversion and Auger electrons.
+fn mean_beta_energy_eV(nu: &Nuclide) -> Option<f64> {
+    let total: f64 = nu
+        .spectra
+        .iter()
+        .filter(|s| s.styp.round() as i32 == 1)
+        .map(|s| s.average_energy)
+        .sum();
+    (total.is_finite() && total > 0.0).then_some(total)
+}
+
+/// Mean atomic number of the material, FISPACT-II manual Eq. (68): `Z = sum_j Z_j f_j`
+/// with `f_j` the atom fraction of element j. `atoms_per_g` is the composition-resolved
+/// material inventory keyed by `(ZA, LISO)`; `unresolved_elements` are material elements
+/// without natural-isotope data, which make the mean unavailable rather than approximate.
+pub fn material_z_eff(
+    atoms_per_g: &BTreeMap<(i32, i32), f64>,
+    unresolved_elements: &[String],
+) -> Result<f64, String> {
+    if !unresolved_elements.is_empty() {
+        return Err(format!(
+            "material elements without natural-isotope data: {}",
+            unresolved_elements.join(", ")
+        ));
+    }
+    let total: f64 = atoms_per_g.values().sum();
+    if !(total.is_finite() && total > 0.0) {
+        return Err("material has no atoms".into());
+    }
+    let z_sum: f64 = atoms_per_g
+        .iter()
+        .map(|(&(za, _), atoms)| f64::from(za / 1000) * atoms)
+        .sum();
+    Ok(z_sum / total)
+}
+
+fn group_out(lo: f64, hi: f64, rate: f64, moment_rate: f64, mass_g: f64) -> PhotonGroupOut {
+    PhotonGroupOut {
+        low_eV: lo,
+        high_eV: hi,
+        centroid_eV: if rate > 0.0 { moment_rate / rate } else { 0.0 },
+        photons_s_g: rate,
+        photons_s: rate * mass_g,
+        power_W_g: moment_rate * EV,
+        power_W: moment_rate * EV * mass_g,
+    }
+}
+
+/// Contact (semi-infinite slab) dose of bremsstrahlung `groups` in Gy/h, by the same
+/// `B/2 * mu_a/mu_m` formula and sub-threshold rule as the decay-photon proxy.
+fn contact_dose_from_groups(
+    groups: &[PhotonGroupOut],
+    response: Option<&PhotonResponse>,
+    material_mass_fractions: &BTreeMap<String, f64>,
+    material_response_complete: bool,
+    build_up: f64,
+) -> Option<f64> {
+    let r = response.filter(|_| material_response_complete)?;
+    let e_lo = response_lowest_energy(r, material_mass_fractions);
+    let total: f64 = groups.iter().map(|g| g.power_W_g).sum();
+    let (mut dose, mut subthreshold) = (0.0, 0.0);
+    for g in groups {
+        if g.power_W_g <= 0.0 {
+            continue;
+        }
+        if g.centroid_eV < e_lo {
+            subthreshold += g.power_W_g;
+            continue;
+        }
+        let mu_air = curve_value(&r.air_mass_energy_absorption, g.centroid_eV)?;
+        let mu_mat = material_mu(r, material_mass_fractions, g.centroid_eV)?;
+        dose += (build_up / 2.0) * (mu_air / mu_mat) * g.power_W_g * 1000.0 * 3600.0;
+    }
+    (subthreshold <= SUBTHRESHOLD_POWER_TOLERANCE * total).then_some(dose)
+}
+
+/// Add the FISPACT-II `BREMSSTRAHLUNG` correction (manual appendix C.7.4) to a built step source
+/// as the separate `bremsstrahlung` component. Each requested nuclide with positive activity
+/// emits one beta-minus per decay at its mean beta energy `E0`; Eqs. (66)-(67) give the photons
+/// and mean-energy intensity in every group of the source's structure for the material's
+/// `z_eff`. A nuclide lacking `E0`, or every nuclide when `z_eff` is unavailable, is listed in
+/// `missing_inputs` and contributes nothing. The decay-photon fields of `source` are untouched.
+#[allow(clippy::too_many_arguments)]
+pub fn add_bremsstrahlung(
+    source: &mut PhotonSourceOut,
+    active: &[(&str, &Nuclide, f64)],
+    options: &BremsstrahlungOptions,
+    z_eff: &Result<f64, String>,
+    mass_g: f64,
+    response: Option<&PhotonResponse>,
+    material_mass_fractions: &BTreeMap<String, f64>,
+    material_response_complete: bool,
+    build_up: f64,
+) {
+    let boundaries = source.boundaries_eV.clone();
+    let ng = boundaries.len().saturating_sub(1);
+    let mut aggregate_count = vec![0.0; ng];
+    let mut aggregate_moment = vec![0.0; ng];
+    let mut zero_edge_power = 0.0;
+    let mut by_nuclide = Vec::new();
+    let mut missing_inputs = Vec::new();
+    for &(name, nu, activity) in active {
+        if activity <= 0.0 || nu.lambda() <= 0.0 || !options.nuclides.iter().any(|n| n == name) {
+            continue;
+        }
+        let e0_eV = mean_beta_energy_eV(nu);
+        let mut reasons = Vec::new();
+        if e0_eV.is_none() {
+            reasons.push(
+                "mean beta-minus energy (the decay record has no STYP=1 spectrum average energy)"
+                    .to_string(),
+            );
+        }
+        if let Err(reason) = z_eff {
+            reasons.push(format!("material Z_eff: {reason}"));
+        }
+        let (Some(e0_eV), Ok(z)) = (e0_eV, z_eff) else {
+            missing_inputs.push(BremsstrahlungMissingInput {
+                nuclide: name.into(),
+                missing: reasons.join("; "),
+            });
+            continue;
+        };
+        let e0_keV = e0_eV / 1000.0;
+        let mut groups = Vec::with_capacity(ng);
+        let (mut photons, mut moment_total) = (0.0, 0.0);
+        for g in 0..ng {
+            let (lo, hi) = (boundaries[g], boundaries[g + 1]);
+            if lo <= 0.0 {
+                zero_edge_power += activity
+                    * bremsstrahlung_energy_below_keV(*z, e0_keV, hi / 1000.0)
+                    * 1000.0
+                    * EV;
+                groups.push(group_out(lo, hi, 0.0, 0.0, mass_g));
+                continue;
+            }
+            let per_electron =
+                bremsstrahlung_photons_per_electron(*z, e0_keV, lo / 1000.0, hi / 1000.0);
+            let rate = activity * per_electron;
+            // Eq. (67): the group's energy is its photon number times the bin midpoint.
+            let moment_rate = rate * 0.5 * (lo + hi);
+            aggregate_count[g] += rate;
+            aggregate_moment[g] += moment_rate;
+            photons += rate;
+            moment_total += moment_rate;
+            groups.push(group_out(lo, hi, rate, moment_rate, mass_g));
+        }
+        let contact = contact_dose_from_groups(
+            &groups,
+            response,
+            material_mass_fractions,
+            material_response_complete,
+            build_up,
+        );
+        by_nuclide.push(BremsstrahlungNuclideOut {
+            nuclide: name.into(),
+            activity_Bq_g: activity,
+            mean_beta_energy_eV: e0_eV,
+            photons_s_g: photons,
+            power_W_g: moment_total * EV,
+            contact_gamma_air_dose_proxy_Gy_h: contact,
+            point_source_gamma_air_dose_Sv_h: None,
+            groups,
+        });
+    }
+    let requested_nuclides_without_activity: Vec<String> = options
+        .nuclides
+        .iter()
+        .filter(|n| {
+            !active.iter().any(|&(name, nu, activity)| {
+                name == n.as_str() && activity > 0.0 && nu.lambda() > 0.0
+            })
+        })
+        .cloned()
+        .collect();
+    let groups: Vec<_> = (0..ng)
+        .map(|g| {
+            group_out(
+                boundaries[g],
+                boundaries[g + 1],
+                aggregate_count[g],
+                aggregate_moment[g],
+                mass_g,
+            )
+        })
+        .collect();
+    let photons: f64 = aggregate_count.iter().sum();
+    let power: f64 = aggregate_moment.iter().sum::<f64>() * EV;
+    let contact = contact_dose_from_groups(
+        &groups,
+        response,
+        material_mass_fractions,
+        material_response_complete,
+        build_up,
+    );
+    source.bremsstrahlung = Some(BremsstrahlungOut {
+        model: "fispact-ii-c74-jarvis-mean-beta-energy".into(),
+        z_eff: z_eff.as_ref().ok().copied(),
+        z_eff_unavailable_reason: z_eff.as_ref().err().cloned(),
+        groups,
+        by_nuclide,
+        photons_s_g: photons,
+        photons_s: photons * mass_g,
+        power_W_g: power,
+        power_W: power * mass_g,
+        zero_lower_edge_group_power_W_g: zero_edge_power,
+        contact_gamma_air_dose_proxy_Gy_h: contact,
+        point_source_gamma_air_dose_Sv_h: None,
+        inputs_complete: missing_inputs.is_empty(),
+        missing_inputs,
+        requested_nuclides_without_activity,
+    });
 }
 
 fn nonzero_distribution(source: &PhotonSourceOut) -> Result<(Vec<f64>, Vec<f64>), String> {
@@ -1078,6 +1555,7 @@ mod tests {
                 schema: "actinv-photon-response-1".into(),
                 provenance: serde_json::Value::Null,
                 air_mass_energy_absorption: curve([3000.0, 10.0, 0.03, 0.02]),
+                air_mass_attenuation: None,
                 element_mass_attenuation: elements,
             }
         }
@@ -1288,6 +1766,457 @@ mod tests {
         }
     }
 
+    mod parity {
+        use super::super::{
+            add_bremsstrahlung, add_point_source_dose, material_z_eff, source_for_step,
+            PhotonResponse, PhotonSourceOut, ResponseCurve, FISPACT_24_BOUNDARIES_EV,
+            STEINER_22_BOUNDARIES_EV,
+        };
+        use crate::run::EV;
+        use crate::spec::{BremsstrahlungOptions, PointSourceOptions};
+        use actinv_data::decay::{DiscreteRadiation, Nuclide, Spectrum};
+        use std::collections::BTreeMap;
+
+        // Group 0 is 0.5-1.5 MeV, so a 1 MeV line sits on its midpoint and on a tabulated energy.
+        const BOUNDS: [f64; 3] = [5.0e5, 1.5e6, 1.0e8];
+        // Manual Eq. (65): a = 2.76e-6 per keV.
+        const A: f64 = 2.76e-6;
+
+        fn curve(values: [f64; 4]) -> ResponseCurve {
+            ResponseCurve {
+                energy_eV: vec![1.0e3, 1.0e4, 1.0e6, 1.0e7],
+                values_cm2_g: values.to_vec(),
+            }
+        }
+
+        /// Air mu_en/rho 0.03 and element "H" mu/rho 0.06 cm2/g at 1 MeV; air mu/rho 0.06 there.
+        fn response(with_air_attenuation: bool) -> PhotonResponse {
+            let mut elements = BTreeMap::new();
+            elements.insert("H".to_string(), curve([4500.0, 5.0, 0.06, 0.03]));
+            PhotonResponse {
+                schema: "actinv-photon-response-1".into(),
+                provenance: serde_json::Value::Null,
+                air_mass_energy_absorption: curve([3000.0, 10.0, 0.03, 0.02]),
+                air_mass_attenuation: with_air_attenuation
+                    .then(|| curve([3100.0, 11.0, 0.06, 0.04])),
+                element_mass_attenuation: elements,
+            }
+        }
+
+        fn fractions() -> BTreeMap<String, f64> {
+            BTreeMap::from([("H".to_string(), 1.0)])
+        }
+
+        fn line(energy: f64, intensity: f64) -> DiscreteRadiation {
+            DiscreteRadiation {
+                energy,
+                d_energy: 0.0,
+                rtyp: 0.0,
+                transition_type: 0.0,
+                intensity,
+                d_intensity: 0.0,
+                pair_intensity: 0.0,
+                d_pair_intensity: 0.0,
+                conversion_total: 0.0,
+                d_conversion_total: 0.0,
+                conversion_k: 0.0,
+                d_conversion_k: 0.0,
+                conversion_l: 0.0,
+                d_conversion_l: 0.0,
+            }
+        }
+
+        fn spectrum(styp: f64, average_energy: f64, discrete: Vec<DiscreteRadiation>) -> Spectrum {
+            Spectrum {
+                styp,
+                lcon: 0,
+                lcov: 0,
+                fd: 1.0,
+                d_fd: 0.0,
+                average_energy,
+                d_average_energy: 0.0,
+                fc: 0.0,
+                d_fc: 0.0,
+                discrete,
+                continuous: None,
+            }
+        }
+
+        /// A decaying nuclide with gamma lines `(energy_eV, intensity)` whose mean EM energy
+        /// equals the line sum (source scale one), and a STYP=1 spectrum when `beta_mean_eV` is set.
+        fn nuclide(gamma_lines: &[(f64, f64)], beta_mean_eV: Option<f64>) -> Nuclide {
+            let mut spectra = Vec::new();
+            if !gamma_lines.is_empty() {
+                let discrete = gamma_lines.iter().map(|&(e, i)| line(e, i)).collect();
+                spectra.push(spectrum(0.0, 0.0, discrete));
+            }
+            if let Some(mean) = beta_mean_eV {
+                spectra.push(spectrum(1.0, mean, Vec::new()));
+            }
+            Nuclide {
+                mat: 0,
+                za: 19042,
+                awr: 1.0,
+                liso: 0,
+                nst: 0,
+                half_life: 1.0,
+                d_half_life: 0.0,
+                energies: vec![0.0, 0.0, gamma_lines.iter().map(|&(e, i)| e * i).sum()],
+                modes: Vec::new(),
+                spectra,
+            }
+        }
+
+        fn build(n: &Nuclide, activity: f64, mass_g: f64, r: &PhotonResponse) -> PhotonSourceOut {
+            source_for_step(
+                &[("X", n, activity)],
+                &BOUNDS,
+                "test",
+                mass_g,
+                Some(r),
+                &fractions(),
+                true,
+                2.0,
+                0.0,
+            )
+            .unwrap()
+            .0
+        }
+
+        fn point(distance_m: f64, air_attenuation: bool) -> PointSourceOptions {
+            PointSourceOptions {
+                distance_m,
+                air_attenuation,
+                air_density_g_cm3: 1.0e-3,
+            }
+        }
+
+        fn brems(names: &[&str]) -> BremsstrahlungOptions {
+            BremsstrahlungOptions {
+                nuclides: names.iter().map(|n| n.to_string()).collect(),
+            }
+        }
+
+        fn close(a: f64, b: f64) -> bool {
+            (a - b).abs() <= 1e-12 * b.abs().max(1e-300)
+        }
+
+        #[test]
+        fn steiner_22_matches_the_manual_table() {
+            let b = STEINER_22_BOUNDARIES_EV;
+            assert_eq!(b.len(), 23); // 22 groups
+            assert_eq!(b[0], 0.0);
+            assert_eq!(b[22], 1.4e7); // table ends at 14 MeV
+            assert!(b.windows(2).all(|w| w[1] > w[0]));
+            // Spot checks against Table 6: group 2 is 0.01-0.10 MeV, group 5 is 0.40-1.00 MeV,
+            // group 20 is 8.00-10.00 MeV.
+            assert_eq!((b[1], b[2]), (1.0e4, 1.0e5));
+            assert_eq!((b[4], b[5]), (4.0e5, 1.0e6));
+            assert_eq!((b[19], b[20]), (8.0e6, 1.0e7));
+            // Where the two tables share an edge they agree.
+            for edge in [1.0e4, 1.0e5, 2.0e5, 4.0e5, 1.0e6, 2.0e6, 1.0e7, 1.4e7] {
+                assert!(FISPACT_24_BOUNDARIES_EV.contains(&edge));
+                assert!(b.contains(&edge));
+            }
+        }
+
+        #[test]
+        fn steiner_22_bins_a_line_into_its_manual_group_and_overflows_above_14_mev() {
+            let n = nuclide(&[(1.1e7, 1.0), (1.5e7, 0.5)], None);
+            let (src, diag) = source_for_step(
+                &[("X", &n, 1.0)],
+                &STEINER_22_BOUNDARIES_EV,
+                "steiner-22",
+                1.0,
+                None,
+                &BTreeMap::new(),
+                false,
+                2.0,
+                0.0,
+            )
+            .unwrap();
+            assert_eq!(src.groups.len(), 22);
+            assert_eq!(src.groups[20].photons_s_g, 1.0); // group 21: 10-12 MeV
+            let others: f64 = (0..22)
+                .filter(|g| *g != 20)
+                .map(|g| src.groups[g].photons_s_g)
+                .sum();
+            assert_eq!(others, 0.0);
+            assert_eq!(diag.group_overflow_photons_s_g, 0.5);
+        }
+
+        #[test]
+        fn point_source_dose_matches_a_hand_computed_single_line() {
+            // 2 Bq/g of a 1 MeV, one-photon line in 3 g, seen at 2 m through air of 1e-3 g/cm3.
+            let n = nuclide(&[(1.0e6, 1.0)], None);
+            let r = response(true);
+            let mut src = build(&n, 2.0, 3.0, &r);
+            add_point_source_dose(&mut src, Some(&r), &point(2.0, true), 3.0);
+            let power_W = 2.0 * 1.0e6 * EV * 3.0;
+            let transmission = (-0.06_f64 * 1.0e-3 * 100.0 * 2.0).exp();
+            let expected = 0.03 * 0.1 * transmission * power_W
+                / (4.0 * std::f64::consts::PI * 2.0 * 2.0)
+                * 3600.0;
+            let out = src.point_source_dose.as_ref().unwrap();
+            let dose = out.gamma_air_dose_Sv_h.unwrap();
+            assert!(close(dose, expected), "{dose} vs {expected}");
+            assert!(close(
+                out.gamma_air_dose_Sv_h_per_g.unwrap(),
+                expected / 3.0
+            ));
+            assert_eq!(out.distance_m, 2.0);
+            assert_eq!(out.mass_g, 3.0);
+            assert_eq!(out.air_density_g_cm3, Some(1.0e-3));
+            assert!(out.unavailable_reason.is_none());
+            // The only nuclide carries the whole dose.
+            let own = src.by_nuclide[0].point_source_gamma_air_dose_Sv_h.unwrap();
+            assert!(close(own, expected));
+            // The contact proxy is untouched by the new component.
+            assert!(src.contact_gamma_air_dose_proxy_Gy_h.is_some());
+        }
+
+        #[test]
+        fn point_source_dose_scales_as_inverse_square_distance_and_linearly_in_mass() {
+            let n = nuclide(&[(1.0e6, 1.0)], None);
+            let r = response(true);
+            let dose = |distance: f64, mass: f64, air: bool| {
+                let mut src = build(&n, 2.0, mass, &r);
+                add_point_source_dose(&mut src, Some(&r), &point(distance, air), mass);
+                src.point_source_dose.unwrap().gamma_air_dose_Sv_h.unwrap()
+            };
+            // Without air attenuation the dose is exactly 1/d^2.
+            assert!(close(dose(1.0, 1.0, false) / dose(2.0, 1.0, false), 4.0));
+            assert!(close(dose(0.5, 1.0, false) / dose(1.5, 1.0, false), 9.0));
+            // Air attenuation only lowers it, and more so farther away.
+            assert!(dose(2.0, 1.0, true) < dose(2.0, 1.0, false));
+            assert!(
+                dose(2.0, 1.0, true) / dose(2.0, 1.0, false)
+                    < dose(1.0, 1.0, true) / dose(1.0, 1.0, false)
+            );
+            // Linear in the source mass, with or without attenuation.
+            assert!(close(dose(1.0, 3.0, true) / dose(1.0, 1.0, true), 3.0));
+            assert!(close(dose(1.0, 7.0, false) / dose(1.0, 1.0, false), 7.0));
+        }
+
+        #[test]
+        fn point_source_dose_reports_missing_inputs_instead_of_inferring_them() {
+            let n = nuclide(&[(1.0e6, 1.0)], None);
+            // Air attenuation requested but the response carries no air mu/rho curve.
+            let r = response(false);
+            let mut src = build(&n, 1.0, 1.0, &r);
+            add_point_source_dose(&mut src, Some(&r), &point(1.0, true), 1.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            assert!(out.gamma_air_dose_Sv_h.is_none());
+            assert!(out
+                .unavailable_reason
+                .as_ref()
+                .unwrap()
+                .contains("air_mass_attenuation"));
+            // Choosing no attenuation explicitly is a different, allowed calculation.
+            add_point_source_dose(&mut src, Some(&r), &point(1.0, false), 1.0);
+            assert!(src
+                .point_source_dose
+                .as_ref()
+                .unwrap()
+                .gamma_air_dose_Sv_h
+                .is_some());
+            // No response at all.
+            add_point_source_dose(&mut src, None, &point(1.0, false), 1.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            assert!(out.gamma_air_dose_Sv_h.is_none());
+            assert!(out
+                .unavailable_reason
+                .as_ref()
+                .unwrap()
+                .contains("photon.response"));
+        }
+
+        #[test]
+        fn point_source_dose_is_withheld_when_power_falls_outside_the_response() {
+            // A 5e7 eV line is above the response's 1e7 eV ceiling.
+            let n = nuclide(&[(1.0e6, 1.0), (5.0e7, 1.0e-3)], None);
+            let r = response(true);
+            let mut src = build(&n, 1.0, 1.0, &r);
+            add_point_source_dose(&mut src, Some(&r), &point(1.0, true), 1.0);
+            let out = src.point_source_dose.as_ref().unwrap();
+            assert!(out.gamma_air_dose_Sv_h.is_none());
+            assert!(close(out.excluded_power_W, 5.0e4 * EV));
+            assert!(out.unavailable_reason.is_some());
+        }
+
+        #[test]
+        fn bremsstrahlung_and_point_source_are_off_by_default() {
+            let n = nuclide(&[(1.0e6, 1.0)], Some(1.0e6));
+            let r = response(true);
+            let src = build(&n, 2.0, 3.0, &r);
+            assert!(src.bremsstrahlung.is_none());
+            assert!(src.point_source_dose.is_none());
+            let json = serde_json::to_string(&src).unwrap();
+            for key in [
+                "bremsstrahlung",
+                "point_source_dose",
+                "point_source_gamma_air_dose_Sv_h",
+            ] {
+                assert!(!json.contains(key), "{key} leaked into the default output");
+            }
+            // Older result files without the new keys still read back.
+            let back: PhotonSourceOut = serde_json::from_str(&json).unwrap();
+            assert!(back.bremsstrahlung.is_none() && back.point_source_dose.is_none());
+        }
+
+        #[test]
+        fn bremsstrahlung_is_a_separate_additive_component_matching_eq_66() {
+            // K42-like emitter: 1 MeV mean beta energy, Z_eff 26, 2 Bq/g, 3 g.
+            let n = nuclide(&[(1.0e6, 1.0)], Some(1.0e6));
+            let r = response(true);
+            let before = build(&n, 2.0, 3.0, &r);
+            let mut src = before.clone();
+            add_bremsstrahlung(
+                &mut src,
+                &[("X", &n, 2.0)],
+                &brems(&["X"]),
+                &Ok(26.0),
+                3.0,
+                Some(&r),
+                &fractions(),
+                true,
+                2.0,
+            );
+            // Nothing outside the new component moved: the decay-photon source is not merged.
+            let mut after = serde_json::to_value(&src).unwrap();
+            after.as_object_mut().unwrap().remove("bremsstrahlung");
+            assert_eq!(after, serde_json::to_value(&before).unwrap());
+
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            assert!(b.inputs_complete && b.missing_inputs.is_empty());
+            assert_eq!(b.z_eff, Some(26.0));
+            assert!(b.requested_nuclides_without_activity.is_empty());
+            assert_eq!(b.zero_lower_edge_group_power_W_g, 0.0);
+            // Group 0 is 500-1500 keV and E0 = 1000 keV lies inside it: Eq. (66) case 2.
+            let per_decay = A * 26.0 * (1000.0 * 2.0_f64.ln() - 500.0);
+            assert!(close(b.groups[0].photons_s_g, 2.0 * per_decay));
+            assert!(close(b.groups[0].photons_s, 6.0 * per_decay));
+            // Eq. (67): energy is the photon number times the 1 MeV bin midpoint.
+            assert!(close(b.groups[0].centroid_eV, 1.0e6));
+            assert!(close(b.power_W_g, 2.0 * per_decay * 1.0e6 * EV));
+            assert!(close(b.power_W, 3.0 * b.power_W_g));
+            // Group 1 starts above E0: Eq. (66) case 3.
+            assert_eq!(b.groups[1].photons_s_g, 0.0);
+            assert!(close(b.photons_s_g, b.by_nuclide[0].photons_s_g));
+            // Contact dose by the same B/2 mu_a/mu_m formula: B = 2, mu_a/mu_m = 0.03/0.06.
+            let contact = b.contact_gamma_air_dose_proxy_Gy_h.unwrap();
+            assert!(close(contact, 0.5 * b.power_W_g * 1000.0 * 3600.0));
+            assert!(close(
+                b.by_nuclide[0].contact_gamma_air_dose_proxy_Gy_h.unwrap(),
+                contact
+            ));
+            // The decay-photon contact dose is a different, unchanged number.
+            assert_eq!(
+                src.contact_gamma_air_dose_proxy_Gy_h,
+                before.contact_gamma_air_dose_proxy_Gy_h
+            );
+
+            // With a point-source dose requested after it, the component gets its own point dose.
+            add_point_source_dose(&mut src, Some(&r), &point(2.0, false), 3.0);
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            let expected = 0.03 * 0.1 * b.power_W / (4.0 * std::f64::consts::PI * 4.0) * 3600.0;
+            assert!(close(b.point_source_gamma_air_dose_Sv_h.unwrap(), expected));
+            assert!(close(
+                b.by_nuclide[0].point_source_gamma_air_dose_Sv_h.unwrap(),
+                expected
+            ));
+        }
+
+        #[test]
+        fn bremsstrahlung_lowest_edge_group_is_left_empty_and_its_energy_reported() {
+            // Boundaries 0, 10 keV, 10 MeV; E0 = 500 keV, Z = 26.
+            let n = nuclide(&[], Some(5.0e5));
+            let (mut src, _) = source_for_step(
+                &[("X", &n, 4.0)],
+                &[0.0, 1.0e4, 1.0e7],
+                "test",
+                1.0,
+                None,
+                &BTreeMap::new(),
+                false,
+                2.0,
+                0.0,
+            )
+            .unwrap();
+            add_bremsstrahlung(
+                &mut src,
+                &[("X", &n, 4.0)],
+                &brems(&["X"]),
+                &Ok(26.0),
+                1.0,
+                None,
+                &BTreeMap::new(),
+                false,
+                2.0,
+            );
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            assert_eq!(b.groups[0].photons_s_g, 0.0);
+            // Exact energy below 10 keV: aZ (E0 u - u^2/2) with u = 10 keV.
+            let zero_edge = 4.0 * A * 26.0 * (500.0 * 10.0 - 50.0) * 1000.0 * EV;
+            assert!(close(b.zero_lower_edge_group_power_W_g, zero_edge));
+            // Group 1 is 10-10000 keV with E0 inside: case 2.
+            let per_decay = A * 26.0 * (500.0 * (500.0_f64 / 10.0).ln() - (500.0 - 10.0));
+            assert!(close(b.groups[1].photons_s_g, 4.0 * per_decay));
+            // No response: no dose, but nothing is invented either.
+            assert!(b.contact_gamma_air_dose_proxy_Gy_h.is_none());
+        }
+
+        #[test]
+        fn bremsstrahlung_reports_missing_inputs_and_inactive_nuclides() {
+            let r = response(true);
+            let no_beta = nuclide(&[(1.0e6, 1.0)], None);
+            let mut src = build(&no_beta, 1.0, 1.0, &r);
+            add_bremsstrahlung(
+                &mut src,
+                &[("X", &no_beta, 1.0)],
+                &brems(&["X", "Y"]),
+                &Err("no data for Tc".to_string()),
+                1.0,
+                Some(&r),
+                &fractions(),
+                true,
+                2.0,
+            );
+            let b = src.bremsstrahlung.as_ref().unwrap();
+            assert!(!b.inputs_complete);
+            assert!(b.by_nuclide.is_empty());
+            assert_eq!(b.photons_s_g, 0.0);
+            assert_eq!(b.z_eff, None);
+            assert_eq!(
+                b.z_eff_unavailable_reason.as_deref(),
+                Some("no data for Tc")
+            );
+            assert_eq!(b.missing_inputs.len(), 1);
+            assert_eq!(b.missing_inputs[0].nuclide, "X");
+            assert!(b.missing_inputs[0]
+                .missing
+                .contains("mean beta-minus energy"));
+            assert!(b.missing_inputs[0]
+                .missing
+                .contains("material Z_eff: no data for Tc"));
+            // "Y" was requested but is not in the active inventory.
+            assert_eq!(b.requested_nuclides_without_activity, vec!["Y".to_string()]);
+        }
+
+        #[test]
+        fn z_eff_is_the_atom_fraction_mean_atomic_number() {
+            let iron = BTreeMap::from([((26054, 0), 1.0), ((26056, 0), 3.0)]);
+            assert!(close(material_z_eff(&iron, &[]).unwrap(), 26.0));
+            // H2O: (2*1 + 8) / 3 atoms.
+            let water = BTreeMap::from([((1001, 0), 2.0), ((8016, 0), 1.0)]);
+            assert!(close(material_z_eff(&water, &[]).unwrap(), 10.0 / 3.0));
+            assert!(material_z_eff(&water, &["Tc".to_string()])
+                .unwrap_err()
+                .contains("Tc"));
+            assert!(material_z_eff(&BTreeMap::new(), &[]).is_err());
+        }
+    }
+
     mod mesh_export {
         use super::super::{
             export_openmc_mesh, mesh_cell_from_source, MeshPhotonCell, PhotonGroupOut,
@@ -1325,6 +2254,8 @@ mod tests {
                 contact_gamma_air_dose_proxy_Gy_h: None,
                 dose_response_power_coverage: None,
                 dose_response_subthreshold_power_W_g: 0.0,
+                point_source_dose: None,
+                bremsstrahlung: None,
             }
         }
 

@@ -25,6 +25,9 @@ pub enum RadiologicalKind {
     WasteIndex,
     IngestionDose,
     InhalationDose,
+    /// FISPACT-II `ATWO` transport index: activity over the nuclide's A2 value, summed.
+    #[serde(rename = "a2")]
+    A2,
 }
 
 impl RadiologicalKind {
@@ -34,6 +37,7 @@ impl RadiologicalKind {
             Self::WasteIndex => "waste_index",
             Self::IngestionDose => "ingestion_dose",
             Self::InhalationDose => "inhalation_dose",
+            Self::A2 => "a2",
         }
     }
 
@@ -41,6 +45,7 @@ impl RadiologicalKind {
         match self {
             Self::ClearanceIndex | Self::WasteIndex => "dimensionless",
             Self::IngestionDose | Self::InhalationDose => "Sv/g_material_intake",
+            Self::A2 => "A2_per_g_material",
         }
     }
 
@@ -48,6 +53,7 @@ impl RadiologicalKind {
         match self {
             Self::ClearanceIndex | Self::WasteIndex => "Bq/kg",
             Self::IngestionDose | Self::InhalationDose => "Sv/Bq",
+            Self::A2 => "Bq",
         }
     }
 
@@ -59,6 +65,7 @@ impl RadiologicalKind {
             Self::IngestionDose | Self::InhalationDose => {
                 "sum(activity_Bq_per_g * dose_coefficient_Sv_per_Bq)"
             }
+            Self::A2 => "sum(activity_Bq_per_g / A2_Bq)",
         }
     }
 
@@ -66,6 +73,7 @@ impl RadiologicalKind {
         match self {
             Self::ClearanceIndex | Self::WasteIndex => 1000.0 * activity / coefficient,
             Self::IngestionDose | Self::InhalationDose => activity * coefficient,
+            Self::A2 => activity / coefficient,
         }
     }
 }
@@ -338,6 +346,13 @@ impl PreparedRadiologicalTable {
         Ok(RadiologicalStepOut { responses: outputs })
     }
 
+    /// True when a selected response is an A2 transport index.
+    pub fn has_a2(&self) -> bool {
+        self.responses
+            .iter()
+            .any(|response| response.kind == RadiologicalKind::A2)
+    }
+
     pub fn certificate_metadata(&self) -> serde_json::Value {
         serde_json::json!({
             "format": TABLE_FORMAT,
@@ -398,6 +413,42 @@ mod tests {
         assert_eq!(result.responses[1].value, 0.5);
         assert_eq!(result.responses[1].unit, "Sv/g_material_intake");
         assert!(prepared.evaluate(&activity, true).is_err());
+    }
+
+    #[test]
+    fn a2_kind_sums_activity_over_the_supplied_a2_values() {
+        // The A2 values are the table author's (Bq); nothing is built in.
+        let text = table("").replace(
+            r#"{"id":"ingest", "kind":"ingestion_dose", "basis":"dose", "coefficients":{"Co60":0.25}}"#,
+            r#"{"id":"a2", "kind":"a2", "basis":"A2 in Bq", "coefficients":{"Co60":4.0,"Cs137":6.0}}"#,
+        );
+        let prepared = PreparedRadiologicalTable::from_json(&text, &[]).unwrap();
+        assert!(prepared.has_a2());
+        let activity = BTreeMap::from([
+            ("Co60".to_owned(), 2.0),
+            ("Cs137".to_owned(), 3.0),
+            ("H3".to_owned(), 5.0),
+        ]);
+        let result = prepared.evaluate(&activity, false).unwrap();
+        let a2 = &result.responses[1];
+        assert_eq!(a2.id, "a2");
+        assert_eq!(a2.value, 2.0 / 4.0 + 3.0 / 6.0);
+        assert_eq!(a2.unit, "A2_per_g_material");
+        assert_eq!(a2.contributing_nuclide_count, 2);
+        // A nuclide with no A2 value is reported, not counted as zero.
+        assert_eq!(a2.missing_active_nuclides, vec!["H3".to_owned()]);
+        assert_eq!(a2.missing_activity_Bq_per_g, 5.0);
+        assert!(prepared.evaluate(&activity, true).is_err());
+        let metadata = prepared.certificate_metadata();
+        assert_eq!(metadata["responses"][1]["kind"], "a2");
+        assert_eq!(metadata["responses"][1]["coefficient_unit"], "Bq");
+        assert_eq!(
+            metadata["responses"][1]["formula"],
+            "sum(activity_Bq_per_g / A2_Bq)"
+        );
+        // A table without an A2 response does not claim one.
+        let plain = PreparedRadiologicalTable::from_json(&table(""), &[]).unwrap();
+        assert!(!plain.has_a2());
     }
 
     #[test]

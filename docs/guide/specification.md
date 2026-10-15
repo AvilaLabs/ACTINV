@@ -216,8 +216,10 @@ scenario selection. A minimal table is:
 ```
 
 Response IDs and canonical nuclide keys must be unique. `kind` is `clearance_index`, `waste_index`,
-`ingestion_dose`, or `inhalation_dose`. Clearance/waste coefficients are limits in Bq/kg; ingestion/inhalation
-coefficients are in Sv/Bq. Every coefficient must be finite and positive. An empty `responses` selector chooses every
+`ingestion_dose`, `inhalation_dose`, or `a2`. Clearance/waste coefficients are limits in Bq/kg; ingestion/inhalation
+coefficients are in Sv/Bq; `a2` coefficients are A2 transport values in Bq (the FISPACT-II `ATWO` index
+`sum(A_i / A2_i)`, reported per gram of material). ACTINV ships no A2 values: supply the table, converting IAEA TBq values
+to Bq. Every coefficient must be finite and positive. An empty `responses` selector chooses every
 table response in table order; otherwise only the named unique IDs are evaluated.
 
 Each step reports the selected value, unit, covered and missing activity, activity-coverage fraction, contributing
@@ -431,11 +433,13 @@ sources and energy-closure diagnostics, but dose fields are `null`.
 
 | field | meaning | default |
 |---|---|---|
-| `group_structure` | `fispact-24`, or `custom` with `group_boundaries_eV`. | `fispact-24` |
+| `group_structure` | `fispact-24`, `steiner-22`, or `custom` with `group_boundaries_eV`. | `fispact-24` |
 | `group_boundaries_eV` | Finite, nonnegative, strictly increasing photon boundaries. | none |
 | `response` | External `actinv-photon-response-1` JSON and mandatory SHA-256 declaration. | none |
 | `build_up_factor` | Semi-infinite-slab screening factor `B`. | 2 |
 | `gamma_constant_cutoff_eV` | Lower energy cutoff for specific gamma constants. | 20,000 eV |
+| `point_source` | Optional point-source dose, the FISPACT-II `DOSE 2` analog; see below. | none |
+| `bremsstrahlung` | Optional bremsstrahlung component, the FISPACT-II `BREMSSTRAHLUNG` analog; see below. | none |
 
 Build response data with `scripts/build_photon_response.py`; see the [data-source record](https://github.com/AvilaLabs/ACTINV/blob/master/docs/DATA.md). A response must contain attenuation
 curves for every material element to produce the contact-dose proxy.
@@ -447,6 +451,65 @@ that nuclide's power. The limit is fixed. Below 1 keV the air-to-material ratio 
 about an order of magnitude in light elements, so a `1e-4` share leaves the proxy low by at most about `1e-3`. If the
 share is larger, the proxy is `null`; use a response that reaches lower energies or a transport calculation. Groups
 above the response's highest energy, missing elements and power outside the group structure still make the proxy `null`.
+
+### Steiner 22-group structure
+
+`group_structure: "steiner-22"` selects the 22-group "Steiner" gamma structure that FISPACT-II uses for `GROUP 1`.
+The boundaries are the "22 Group" column of Table 6 of the FISPACT-II User Manual (UKAEA-R(18)001; Table 5 of
+UKAEA-CCFE-RE(21)02): 0, 0.01, 0.10, 0.20, 0.40, 1.00, 1.50, then 0.5 MeV steps to 8.00, then 10.00, 12.00 and
+14.00 MeV. Unlike the 24-group structure, which extends to 20 MeV here, the table stops at 14 MeV; photons above it are
+counted in the overflow diagnostics and, as for any structure that omits source photons, make the contact and
+point-source doses `null`. Combining `steiner-22` with `group_boundaries_eV` is an error.
+
+### Point-source dose (`photon.point_source`)
+
+Absent by default; when present every step's `photon_source` gains `point_source_dose`. It is the FISPACT-II `DOSE 2`
+analog: manual Eq. (63), `D = C sum_i mu_a(E_i) exp(-mu(E_i) r) m_s S(E_i) / (4 pi r^2)`, where the step's grouped
+photon source is a point source and each group acts at its centroid energy, as in the contact dose. `mu_a` is the
+response's air mass energy-absorption coefficient, the same curve the contact dose uses. Eq. (63) has no build-up
+factor, so `build_up_factor` plays no part.
+
+| field | meaning | default |
+|---|---|---|
+| `distance_m` | Source-to-detector distance in metres. Must be at least 0.3. | required |
+| `air_attenuation` | Apply the air transmission `exp(-mu r)` of Eq. (63). | `true` |
+| `air_density_g_cm3` | Converts the air mass attenuation to a linear coefficient. | 1.20479e-3 (NIST dry air near sea level) |
+
+FISPACT-II raises a `dist` below 0.3 m to 0.3 m and prints a message; ACTINV rejects it so the configured distance is
+the one used. The source mass is `material.mass_g`, which defaults to 1 g, so the default matches FISPACT-II's 1 g
+convention; for another mass the dose scales linearly and `gamma_air_dose_Sv_h_per_g` gives the 1 g value. Air
+transmission needs an `air_mass_attenuation` curve (NIST table 4 mu/rho) in the photon response: build it with
+`scripts/build_photon_response.py --air-attenuation`. A response without that curve gives a `null` dose and an
+`unavailable_reason` when `air_attenuation` is `true`; set it `false` to ask for the unattenuated dose. The dose is
+`null` with a reason under the same conditions as the contact proxy: no response, power above the response's top
+energy or outside the group structure, or a sub-threshold share above `1e-4`.
+
+### Bremsstrahlung (`photon.bremsstrahlung`)
+
+Absent by default. `nuclides` lists canonical nuclide names (`Cl36`, `Ar42`, `K42`), as FISPACT-II's
+`BREMSSTRAHLUNG` keyword does; duplicates, elements and non-canonical spellings are errors. Each listed nuclide with
+positive activity at a step is treated as emitting one beta-minus per decay at its mean beta energy `E0`. Manual
+Eqs. (65)-(67) then give, per electron and group `[E_i, E_i+1]` (keV, `a = 2.76e-6` per keV), `aZ[E0 ln(E_i+1/E_i) -
+(E_i+1 - E_i)]` photons when `E0 >= E_i+1`, `aZ[E0 ln(E0/E_i) - (E0 - E_i)]` when `E_i < E0 < E_i+1`, and none when
+`E0 <= E_i`, carrying the bin-midpoint energy `(E_i + E_i+1)/2`. The same expressions are applied to the continuous
+beta spectrum through its mean energy, as the manual does. The result is a separate `photon_source.bremsstrahlung`
+block with its own groups, per-nuclide groups, contact dose (the `B/2 mu_a/mu_m` slab formula, in Gy/h) and, when
+`point_source` is set, point-source dose. It is never added to the decay-photon groups, powers or dose proxies; add
+the two doses yourself if you want the total.
+
+Inputs are never inferred. `E0` is the average energy of the decay record's beta-minus (STYP 1) spectrum; the
+light-particle mean energy, which also counts conversion and Auger electrons, is not substituted. `Z` is the atom-fraction
+mean atomic number of the declared `material` (Eq. 68; the manual says atom fractions even though mass fractions are
+used elsewhere), taken from the initial composition. A nuclide that lacks `E0`, or any nuclide when `Z` is unavailable
+(a material element without natural-isotope data), is listed in `missing_inputs` with the missing input, contributes
+nothing, and sets `inputs_complete` to `false`; the totals then cover only the nuclides that were evaluated. Listed
+nuclides without activity appear in `requested_nuclides_without_activity`.
+
+Approximations: this is the manual's thin approximation, not electron transport. Eq. (66) diverges in a group whose
+lower edge is 0 eV, such as the first group of both built-in structures; the manual does not say how FISPACT-II
+treats it, so ACTINV leaves that group empty and reports the exact energy the model places there as
+`zero_lower_edge_group_power_W_g`. FISPACT-II selects candidates by half-life and mean-energy criteria (appendix C.7.5)
+for its `PRINTLIB 4` listing; ACTINV applies no such filter and evaluates exactly the nuclides you list.
 
 ## Options and result
 
@@ -674,6 +737,8 @@ When photons are requested (or `outputs` is omitted), `steps[].photon_source` co
 - specific gamma constants in `Gy m2/(Bq s)` and `mGy m2/(GBq h)` when a response is supplied;
 - `contact_gamma_air_dose_proxy_Gy_h`, response coverage, and explicit ungrouped/unrepresented power;
 - `dose_response_subthreshold_power_W_g`, only when non-zero: photon power below the response's lowest energy, omitted from the proxy.
+- `point_source_dose`, only with `photon.point_source`: distance, mass, dose in Sv/h and per gram, excluded power and the reason a dose is `null`; each `by_nuclide` entry gains `point_source_gamma_air_dose_Sv_h`;
+- `bremsstrahlung`, only with `photon.bremsstrahlung`: the separate component described above.
 
 Use one-based result step numbers for transport export:
 
