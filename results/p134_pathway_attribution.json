@@ -1,0 +1,58 @@
+{
+ "candidate_sha256": "73786dbf9aa50ea2337b337253136bff2017f9a86ad8a171a4c8331ea8d1d410",
+ "checker_sha256": "c72ffb3ed314d21be42ce3ec77f9f2bbf63fc4df4a84f7b4511b18654e56f0ce",
+ "gates": {
+  "G2": {
+   "pass": true,
+   "specs": {
+    "fns_fe_5min": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    },
+    "shielding_demo": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+    }
+   }
+  },
+  "G3": {
+   "cases": {
+    "pulsed": {
+     "bad": [],
+     "compared": 566,
+     "mode": "trace",
+     "pass": true,
+     "pathway_closure": 1.0,
+     "worst": 4.6897634093125835e-15
+    },
+    "scaled": {
+     "bad": [],
+     "compared": 517,
+     "mode": "trace",
+     "pass": true,
+     "pathway_closure": 7.282257267463544e+33,
+     "worst": 4.581826523282772e-15
+    },
+    "softened": {
+     "bad": [],
+     "compared": 517,
+     "mode": "trace",
+     "pass": true,
+     "pathway_closure": 44.901823883239395,
+     "worst": 3.749638552723187e-15
+    }
+   },
+   "pass": true
+  },
+  "G4": {
+   "bad": [],
+   "compared": 1532,
+   "pass": true,
+   "worst_relative": 3.524036310353419e-15
+  }
+ },
+ "protocol": "protocols/ACTINV-P134_PROTOCOL.md",
+ "protocol_sha256": "ae98c30fdc1139c4483858ebaa60bbe755d29c0d80854f79b65fd96fdd0c6494",
+ "reference_sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f",
+ "verdict": "PASS"
+}

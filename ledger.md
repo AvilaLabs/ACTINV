@@ -2915,3 +2915,34 @@ Checker `controls/check_p132.py`. Record `results/p132_import.json`.
   to `examples/fns_fe_5min.json` apart from echoes.
 
 Final verdicts for P123, P124, P125, P127, P128 and P132 wait on G-CI for a pushed commit carrying them.
+
+## Entry 158 — P134: first run preserved, G2–G4 recorded under Amendment A (2026-10-15)
+
+Candidate: release build of `2708493` (P134 repair), SHA-256 `73786dbf…d410`. Reference `2f3daa4`. Checker
+`controls/check_p134.py`.
+
+The first run (`results/failures/p134_initial/`) passed G2 and failed G3 and G4 on gate definitions:
+`pathway_closure` has no significance floor (the reference's own FNS example reports 3.05e48 from nuclides near
+1e-68 atoms/g), and multi-reaction chains scale as a power of the multiplier. Amendment A (registered before any
+further run) gates G3 on the per-nuclide closure and replaces G4 with the multiplier/spectrum-scaling equivalence.
+
+- **G2:** `fns_fe_5min` and `shielding_demo` byte-identical apart from `ms`.
+- **G3:** decomposition totals equal the inventory for every nuclide above 1e-12 of the tracked inventory: flux 0.37
+  (517 nuclides, worst 4.6e-15), irradiate–cool–irradiate (566, 4.7e-15), step spectrum (517, 3.8e-15). Before the
+  repair these were off by 1/0.37, missing the second pulse, and on base-spectrum rates respectively.
+- **G4:** flux 0.37 against the spectrum scaled by 0.37 at multiplier 1.0: 1,532 inventory and pathway values agree,
+  worst 3.5e-15.
+
+Record: `results/p134_pathway_attribution.json`. G5 (CI) pending.
+
+## Entry 159 — P126 under Amendment A: G0–G5 recorded
+
+Candidate `2708493` (`73786dbf…d410`), the same checker. Record `results/p126_power.json`.
+
+- G0–G4 as in entry 154 (NJOY Fe-56 MT=301 within 1e-12; heating exact).
+- **G5:** `max_substeps: 1` is now byte-identical to the flux-driven run at the start-of-step multiplier apart from
+  the allowed echoes; Fe power steps and the B-10 refinement replay pass.
+- **G6 (report-only):** B-10 end-of-step power error −39.3 % at 1 sub-interval (FISPACT-II's once-per-step
+  normalization), −1.52 % at 64, −0.097 % at 4096.
+
+G7 (CI) pending.

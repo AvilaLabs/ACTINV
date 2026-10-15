@@ -420,3 +420,10 @@ priority — each needs its own protocol before any code changes.
   Any run starting from an activated inventory in `auto` or `trace` mode was affected. That includes cooling
   continuations such as the FARIS restart method (2026-10-08 entry) unless they set `coupled`. Those results should
   be rerun after P133.
+
+## 2026-10-15 — `pathway_closure` has no significance floor
+
+`pathway_closure` is the largest relative mismatch over every populated nuclide, including nuclides near 1e-68
+atoms/g where CRAM round-off is order one; `examples/fns_fe_5min.json` reports 3.05e48. It cannot flag a real
+attribution error (P134's defects were invisible behind it). A floored companion (for example over nuclides above
+1e-12 of the tracked inventory) would be useful; adding it changes default output, so it needs its own registration.

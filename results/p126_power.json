@@ -1,0 +1,874 @@
+{
+ "candidate_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+  "sha256": "73786dbf9aa50ea2337b337253136bff2017f9a86ad8a171a4c8331ea8d1d410"
+ },
+ "checker": {
+  "path": "/home/connoravila/Documents/actinv/controls/check_p126.py",
+  "sha256": "65fe066631d3dc0dbe39954e6b678fa5dcd19ee39a28220f8a6011ab86905f25"
+ },
+ "external_gates": {
+  "G1_rust": "fmt, clippy -D warnings, workspace tests: run by the coordinator",
+  "G7": "CI on the pushed commit and the committed baselines: run by the coordinator"
+ },
+ "fns_spec": {
+  "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+  "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+ },
+ "gates": {
+  "G0": {
+   "first_commit_listing_the_hash": "2fb0af2d729faa7fa10b69669d6c493e92c34f74",
+   "in_protocol_hash_txt": true,
+   "pass": true,
+   "protocol": "protocols/ACTINV-P126_PROTOCOL.md",
+   "sha256": "7674d6e3a0059f33ba04341a28899917542838cc4059c648a9cf9b6488cfd2bc"
+  },
+  "G1_python": {
+   "exit_code": 0,
+   "output_tail": [
+    ".........",
+    "----------------------------------------------------------------------",
+    "Ran 9 tests in 0.004s",
+    "",
+    "OK"
+   ],
+   "pass": true,
+   "script": {
+    "path": "/home/connoravila/Documents/actinv/scripts/test_build_kerma_table.py",
+    "sha256": "59f3f779d2bbd4da4d03d91106ae5ac44e91edfbf5a45bc3b58b76565b6e0274"
+   }
+  },
+  "G2": {
+   "canonical_equal_without_timing": true,
+   "pass": true,
+   "steps": 21,
+   "timing_keys_dropped": [
+    "/ms"
+   ]
+  },
+  "G3": {
+   "command": [
+    "/usr/bin/python3",
+    "/home/connoravila/Documents/actinv/controls/p126_njoy_fe56.py",
+    "--workdir",
+    "/home/connoravila/Documents/actinv/target/p126-work-a/njoy",
+    "--out",
+    "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/njoy_fe56.json",
+    "--timeout",
+    "3600",
+    "--njoy",
+    "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+    "--library",
+    "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz"
+   ],
+   "exit_code": 0,
+   "pass": true,
+   "summary": {
+    "criteria": {
+     "mt301_equal_within_tolerance": true,
+     "mt301_has_nonzero_groups": true,
+     "table_boundaries_equal_tape": true,
+     "tape_boundaries_equal_library": true,
+     "tape_boundaries_equal_vendored": true
+    },
+    "deck": {
+     "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/input",
+     "sha256": "f710eca1c6b980c548e606145a01b1f27935623c33fab9159ee5edb4d85cf347"
+    },
+    "endf": {
+     "path": "/home/connoravila/nuclear-data/tendl-2025/files/n/n-Fe056.tendl",
+     "sha256": "f33f867a4f9c4579a62954fe31dc6e70768ab2424dc8f282a122a93f156d2e1e"
+    },
+    "error": null,
+    "evaluation": {
+     "awr": 55.45443,
+     "mat": 2631,
+     "za": 26056
+    },
+    "groups": {
+     "library": {
+      "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+      "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+     },
+     "n_groups": 709,
+     "vendored": {
+      "path": "/home/connoravila/Documents/actinv/crates/actinv-data/data/fispact_709_groups.json",
+      "sha256": "ce4bf523498ffbb38d42aa9415fc014882b8bc7a7ecfb89f859ba3259d8fb34f"
+     },
+     "vendored_equals_library_exactly": true
+    },
+    "heatr_local": 0,
+    "mt301": {
+     "groups": 709,
+     "mismatches": [],
+     "n_bad": 0,
+     "nonzero_groups": 689,
+     "worst_relative_error": 0.0
+    },
+    "mt444_report_only": {
+     "groups": 709,
+     "mismatches": [],
+     "n_bad": 0,
+     "nonzero_groups": 689,
+     "worst_relative_error": 0.0
+    },
+    "njoy": {
+     "path": "/home/connoravila/nuclear-data/njoy2016.79-build/njoy",
+     "sha256": "57e74621f41e7f7f881f933ae0f1b8754274f41e50c60c0cfaf630180a0f1f30"
+    },
+    "pendf_collapse_report_only": {
+     "error": null,
+     "exit_code": 0,
+     "groupr_vs_pendf_collapse": {
+      "groups_compared": 689,
+      "max_relative_difference": 8.958880390623568e-05,
+      "median_relative_difference": 7.422013918028259e-06,
+      "note": "GROUPR integrates the kerma against 1/E on its own union grid; the converter collapses the PENDF's linear-linear points with the same weight. Report only."
+     },
+     "table": {
+      "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/fe56_kerma_pendf.json",
+      "sha256": "de954e789c24077f945c823f34972a58926db29efea3261a970afc6b282dc71c"
+     }
+    },
+    "reconr_tolerance": 0.001,
+    "table": {
+     "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/fe56_kerma_gendf.json",
+     "sha256": "c72a60e924f6f9a0a0fad542a3f86266eb368e70f0c693fc5fd0753ecddd3c8d"
+    },
+    "tapes": {
+     "gendf": {
+      "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/tape27",
+      "sha256": "e0964674a910d0b1d77c70ea395ffba39b9e672cdb909b8ce6f72bc4c0144d91"
+     },
+     "output": {
+      "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/output",
+      "sha256": "de7ec21364a1d981a06364cbe3684d8dc29e310afe51bd54433ce9867147e98b"
+     },
+     "pendf": {
+      "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/tape25",
+      "sha256": "91082d357a717154c9fa7d831a6635591fcf2dfe928a12cc116892f6c6e52b5f"
+     }
+    },
+    "temperature_K": 293.6,
+    "weighting": {
+     "description": "1/E (flat in lethargy)",
+     "groupr_iwt": 3,
+     "legendre_order": 0,
+     "sigma0": 10000000000.0
+    }
+   },
+   "summary_file": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/njoy_fe56.json",
+   "table_for_g4": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/fe56_kerma_gendf.json",
+    "sha256": "c72a60e924f6f9a0a0fad542a3f86266eb368e70f0c693fc5fd0753ecddd3c8d"
+   }
+  },
+  "G4": {
+   "cases": {
+    "njoy_fe56": {
+     "pass": true,
+     "problems": [],
+     "steps": [
+      {
+       "covered_atom_fraction": 0.9175399999982351,
+       "error_by_quantity": {
+        "heating:Fe56": 0.0,
+        "multiplier_echo": 0.0,
+        "n_contributing": 0.0,
+        "other_heating_zero": 0.0,
+        "total_heating": 0.0
+       },
+       "heating_W_per_g_expected": 3.405274890304377e-05,
+       "heating_W_per_g_run": 3.405274890304377e-05,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 1.0,
+       "n_contributors": 1,
+       "step": 1,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 0.0
+      },
+      {
+       "covered_atom_fraction": 0.9175399999982362,
+       "error_by_quantity": {
+        "heating_W_cm3": 0.0,
+        "multiplier_echo": 0.0,
+        "n_contributing": 0.0,
+        "other_heating_zero": 0.0,
+        "total_heating": 0.0
+       },
+       "heating_W_per_g_expected": 0.0,
+       "heating_W_per_g_run": 0.0,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 0.0,
+       "n_contributors": 0,
+       "step": 2,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 0.0
+      },
+      {
+       "covered_atom_fraction": 0.917539999992552,
+       "error_by_quantity": {
+        "heating:Fe56": 0.0,
+        "multiplier_echo": 0.0,
+        "n_contributing": 0.0,
+        "other_heating_zero": 0.0,
+        "total_heating": 0.0
+       },
+       "heating_W_per_g_expected": 9.405959419482475e-06,
+       "heating_W_per_g_run": 9.405959419482475e-06,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 0.5,
+       "n_contributors": 1,
+       "step": 3,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 0.0
+      },
+      {
+       "covered_atom_fraction": 0.9175399999922002,
+       "error_by_quantity": {
+        "heating:Fe56": 0.0,
+        "multiplier_echo": 0.0,
+        "n_contributing": 0.0,
+        "other_heating_zero": 0.0,
+        "total_heating": 0.0
+       },
+       "heating_W_per_g_expected": 6.810549780611187e-05,
+       "heating_W_per_g_run": 6.810549780611187e-05,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 2.0,
+       "n_contributors": 1,
+       "step": 4,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 0.0
+      }
+     ],
+     "tolerance": 1e-09,
+     "worst_relative_error": 0.0
+    },
+    "synthetic": {
+     "pass": true,
+     "problems": [],
+     "steps": [
+      {
+       "covered_atom_fraction": 1.0,
+       "error_by_quantity": {
+        "damage_energy": 1.664916151364421e-16,
+        "heating:Fe54": 0.0,
+        "heating:Fe56": 0.0,
+        "heating:Fe57": 0.0,
+        "multiplier_echo": 0.0
+       },
+       "heating_W_per_g_expected": 6.171422796466029e-05,
+       "heating_W_per_g_run": 6.171422796466029e-05,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 1.0,
+       "n_contributors": 34,
+       "step": 1,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 1.664916151364421e-16
+      },
+      {
+       "covered_atom_fraction": 1.0,
+       "error_by_quantity": {
+        "heating_W_cm3": 0.0,
+        "multiplier_echo": 0.0,
+        "n_contributing": 0.0,
+        "other_heating_zero": 0.0,
+        "total_heating": 0.0
+       },
+       "heating_W_per_g_expected": 0.0,
+       "heating_W_per_g_run": 0.0,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 0.0,
+       "n_contributors": 0,
+       "step": 2,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 0.0
+      },
+      {
+       "covered_atom_fraction": 1.0,
+       "error_by_quantity": {
+        "damage_energy": 1.4215461190737622e-16,
+        "heating:Fe54": 0.0,
+        "heating:Fe56": 0.0,
+        "heating:Fe57": 0.0,
+        "multiplier_echo": 0.0
+       },
+       "heating_W_per_g_expected": 1.7165987498895703e-05,
+       "heating_W_per_g_run": 1.7165987498895703e-05,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 0.5,
+       "n_contributors": 34,
+       "step": 3,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 1.4215461190737622e-16
+      },
+      {
+       "covered_atom_fraction": 1.0,
+       "error_by_quantity": {
+        "damage_energy": 1.6649161513568846e-16,
+        "heating:Fe54": 0.0,
+        "heating:Fe56": 0.0,
+        "heating:Fe57": 0.0,
+        "multiplier_echo": 0.0
+       },
+       "heating_W_per_g_expected": 0.0001234284559302689,
+       "heating_W_per_g_run": 0.0001234284559302689,
+       "inventory_nuclides_with_rows_missing_from_list": [],
+       "multiplier": 2.0,
+       "n_contributors": 34,
+       "step": 4,
+       "worst_contributor_atoms_vs_inventory": 0.0,
+       "worst_relative_error": 1.6649161513568846e-16
+      }
+     ],
+     "tolerance": 1e-09,
+     "worst_relative_error": 1.664916151364421e-16
+    }
+   },
+   "pass": true
+  },
+  "G5": {
+   "b10": {
+    "cases": {
+     "default_64": {
+      "converged_expected": false,
+      "converged_run": false,
+      "end_power_W_per_g_run": 1687.4583560175945,
+      "end_power_relative_error_expected": -0.015180344191233023,
+      "end_power_relative_error_run": -0.015180344191231827,
+      "first_multiplier": 1.0,
+      "label": "default_64",
+      "last_multiplier": 1.9585725081360856,
+      "max_power_drift_expected": 0.015180344191233023,
+      "max_power_drift_run": 0.015180344191231696,
+      "max_substeps": 64,
+      "mean_flux_multiplier": 1.3754390094020803,
+      "multiplier_relative_error_worst": 3.945298026645172e-14,
+      "pass": true,
+      "population_end_expected": 5.02825221796844e+21,
+      "population_end_over_start": 0.502825221796844,
+      "problems": [],
+      "refinement_drift_error_worst": 8.741985309454744e-14,
+      "refinement_expected": [
+       {
+        "max_power_drift": 0.39337811217181984,
+        "substeps": 1
+       },
+       {
+        "max_power_drift": 0.2744938031572876,
+        "substeps": 2
+       },
+       {
+        "max_power_drift": 0.1747263128773402,
+        "substeps": 4
+       },
+       {
+        "max_power_drift": 0.10225260794486357,
+        "substeps": 8
+       },
+       {
+        "max_power_drift": 0.05612471274365338,
+        "substeps": 16
+       },
+       {
+        "max_power_drift": 0.029545965926374217,
+        "substeps": 32
+       },
+       {
+        "max_power_drift": 0.015180344191233023,
+        "substeps": 64
+       }
+      ],
+      "refinement_run": [
+       {
+        "max_power_drift": 0.39337811217181357,
+        "substeps": 1
+       },
+       {
+        "max_power_drift": 0.27449380315728045,
+        "substeps": 2
+       },
+       {
+        "max_power_drift": 0.1747263128773341,
+        "substeps": 4
+       },
+       {
+        "max_power_drift": 0.10225260794485987,
+        "substeps": 8
+       },
+       {
+        "max_power_drift": 0.0561247127436498,
+        "substeps": 16
+       },
+       {
+        "max_power_drift": 0.029545965926371962,
+        "substeps": 32
+       },
+       {
+        "max_power_drift": 0.015180344191231696,
+        "substeps": 64
+       }
+      ],
+      "start_power_relative_error_worst": 2.919352295606019e-14,
+      "substeps_expected": 64,
+      "substeps_run": 64
+     },
+     "max_substeps_1": {
+      "converged_expected": false,
+      "converged_run": false,
+      "end_power_W_per_g_run": 1039.4280491062952,
+      "end_power_relative_error_expected": -0.39337811217181984,
+      "end_power_relative_error_run": -0.39337811217181357,
+      "first_multiplier": 1.0,
+      "label": "max_substeps_1",
+      "last_multiplier": 1.0,
+      "max_power_drift_expected": 0.39337811217181984,
+      "max_power_drift_run": 0.39337811217181357,
+      "max_substeps": 1,
+      "mean_flux_multiplier": 1.0,
+      "multiplier_relative_error_worst": 0.0,
+      "pass": true,
+      "population_end_expected": 6.066218878281802e+21,
+      "population_end_over_start": 0.6066218878281802,
+      "problems": [],
+      "refinement_drift_error_worst": 1.5945879791075706e-14,
+      "refinement_expected": [
+       {
+        "max_power_drift": 0.39337811217181984,
+        "substeps": 1
+       }
+      ],
+      "refinement_run": [
+       {
+        "max_power_drift": 0.39337811217181357,
+        "substeps": 1
+       }
+      ],
+      "start_power_relative_error_worst": 0.0,
+      "substeps_expected": 1,
+      "substeps_run": 1
+     },
+     "max_substeps_4096": {
+      "converged_expected": true,
+      "converged_run": true,
+      "end_power_W_per_g_run": 1711.8001149313877,
+      "end_power_relative_error_expected": -0.000974220200216289,
+      "end_power_relative_error_run": -0.000974220200215891,
+      "first_multiplier": 1.0,
+      "label": "max_substeps_4096",
+      "last_multiplier": 1.99677610920245,
+      "max_power_drift_expected": 0.000974220200216289,
+      "max_power_drift_run": 0.0009742202002157583,
+      "max_substeps": 4096,
+      "mean_flux_multiplier": 1.3854339934599769,
+      "multiplier_relative_error_worst": 7.969787991222749e-14,
+      "pass": true,
+      "population_end_expected": 5.003193774181993e+21,
+      "population_end_over_start": 0.5003193774181993,
+      "problems": [],
+      "refinement_drift_error_worst": 5.447607874624532e-13,
+      "refinement_expected": [
+       {
+        "max_power_drift": 0.39337811217181984,
+        "substeps": 1
+       },
+       {
+        "max_power_drift": 0.2744938031572876,
+        "substeps": 2
+       },
+       {
+        "max_power_drift": 0.1747263128773402,
+        "substeps": 4
+       },
+       {
+        "max_power_drift": 0.10225260794486357,
+        "substeps": 8
+       },
+       {
+        "max_power_drift": 0.05612471274365338,
+        "substeps": 16
+       },
+       {
+        "max_power_drift": 0.029545965926374217,
+        "substeps": 32
+       },
+       {
+        "max_power_drift": 0.015180344191233023,
+        "substeps": 64
+       },
+       {
+        "max_power_drift": 0.007697147790602267,
+        "substeps": 128
+       },
+       {
+        "max_power_drift": 0.003876001074844856,
+        "substeps": 256
+       },
+       {
+        "max_power_drift": 0.0019449455103880276,
+        "substeps": 512
+       },
+       {
+        "max_power_drift": 0.000974220200216289,
+        "substeps": 1024
+       }
+      ],
+      "refinement_run": [
+       {
+        "max_power_drift": 0.39337811217181357,
+        "substeps": 1
+       },
+       {
+        "max_power_drift": 0.27449380315728045,
+        "substeps": 2
+       },
+       {
+        "max_power_drift": 0.1747263128773341,
+        "substeps": 4
+       },
+       {
+        "max_power_drift": 0.10225260794485987,
+        "substeps": 8
+       },
+       {
+        "max_power_drift": 0.0561247127436498,
+        "substeps": 16
+       },
+       {
+        "max_power_drift": 0.029545965926371962,
+        "substeps": 32
+       },
+       {
+        "max_power_drift": 0.015180344191231696,
+        "substeps": 64
+       },
+       {
+        "max_power_drift": 0.007697147790601073,
+        "substeps": 128
+       },
+       {
+        "max_power_drift": 0.0038760010748437944,
+        "substeps": 256
+       },
+       {
+        "max_power_drift": 0.0019449455103877622,
+        "substeps": 512
+       },
+       {
+        "max_power_drift": 0.0009742202002157583,
+        "substeps": 1024
+       }
+      ],
+      "start_power_relative_error_worst": 5.891783723859421e-14,
+      "substeps_expected": 1024,
+      "substeps_run": 1024
+     }
+    },
+    "pass": true,
+    "setup": {
+     "duration_s": 1304000.0,
+     "exhaustion_time_s_at_constant_power": 2608784.7142200754,
+     "flux_cm2_s": 100000000000000.0,
+     "heating_per_atom_W": 1.713469411444469e-19,
+     "loss_rows": 18,
+     "n0_atoms_per_g": 1e+22,
+     "power_W_per_g": 1713.469411444469,
+     "q_eV": 2790000.0,
+     "removal_rate_per_atom_s": 3.8332024660722565e-07,
+     "table": {
+      "path": "/home/connoravila/Documents/actinv/target/p126-work-a/synthetic_b10_kerma.json",
+      "sha256": "6702838e6074800a2a378475e0dd19bc9dfa54355f6518ced4a696458229b8d8"
+     },
+     "thermal_group": 170,
+     "thermal_group_bounds_eV": [
+      0.02511886,
+      0.02630268
+     ]
+    }
+   },
+   "cap1_equals_flux_driven": {
+    "allowed": "/ms, /steps[*]/power, /ledger/kerma, /certificate (spec echo)",
+    "differences_outside_allowed": [],
+    "estimated_multiplier_equals_start_multiplier": true,
+    "n_differences": 3,
+    "pass": true,
+    "start_of_step_multiplier": 0.9999314912514732
+   },
+   "fe": {
+    "pass": true,
+    "problems": [],
+    "requested_W_per_g": 6.171e-05,
+    "steps": [
+     {
+      "converged": true,
+      "drift_absolute_difference": 0.0,
+      "estimated_flux_multiplier": 0.9999314912514732,
+      "flux_per_substep_error": 1.7092108528969615e-16,
+      "kerma_flux_multiplier_is_last": 0.0,
+      "last_interval_end_drift_recomputed": 2.206046593464773e-12,
+      "max_power_drift_run": 2.206046593464773e-12,
+      "mean_multiplier_error": 0.0,
+      "multiplier_first_substep": 0.9999314912514656,
+      "refinement": [
+       {
+        "max_power_drift": 2.206046593464773e-12,
+        "substeps": 1
+       }
+      ],
+      "requested_W_cm3": null,
+      "requested_W_per_g": 6.171e-05,
+      "start_power_relative_error": 0.0,
+      "step": 2,
+      "step_flux_equals_mean": 0.0,
+      "substeps": 1,
+      "tolerance": 0.001
+     },
+     {
+      "converged": true,
+      "drift_absolute_difference": 0.0,
+      "estimated_flux_multiplier": 0.9999314912514732,
+      "flux_per_substep_error": 1.709210852900732e-16,
+      "kerma_flux_multiplier_is_last": 0.0,
+      "last_interval_end_drift_recomputed": 2.2053877443079392e-12,
+      "max_power_drift_run": 2.2053877443079392e-12,
+      "mean_multiplier_error": 0.0,
+      "multiplier_first_substep": 0.9999314912492597,
+      "refinement": [
+       {
+        "max_power_drift": 2.2053877443079392e-12,
+        "substeps": 1
+       }
+      ],
+      "requested_W_cm3": 0.00048590454,
+      "requested_W_per_g": 6.171e-05,
+      "start_power_relative_error": 0.0,
+      "step": 3,
+      "step_flux_equals_mean": 0.0,
+      "substeps": 1,
+      "tolerance": 0.001,
+      "w_cm3_to_w_g": 0.0
+     }
+    ],
+    "tolerance_drift_abs": 1e-12,
+    "tolerance_start_power": 1e-12,
+    "worst_drift_difference": 0.0,
+    "worst_start_power_error": 0.0
+   },
+   "fe_power_target_W_per_g": 6.171e-05,
+   "fe_unit_multiplier_heating_W_per_g": 6.171438669885394e-05,
+   "pass": true
+  },
+  "G6": {
+   "case": "B-10, thermal flux, power held constant for half the exhaustion time",
+   "report_only": true,
+   "table": [
+    {
+     "converged": false,
+     "end_of_step_power_error_replay": -0.39337811217181984,
+     "end_of_step_power_error_run": -0.39337811217181357,
+     "first_multiplier": 1.0,
+     "last_multiplier": 1.0,
+     "max_substeps": 1,
+     "population_end_over_start": 0.6066218878281802,
+     "reported_max_power_drift": 0.39337811217181357,
+     "substeps_used": 1
+    },
+    {
+     "converged": false,
+     "end_of_step_power_error_replay": -0.015180344191233023,
+     "end_of_step_power_error_run": -0.015180344191231827,
+     "first_multiplier": 1.0,
+     "last_multiplier": 1.9585725081360856,
+     "max_substeps": 64,
+     "population_end_over_start": 0.502825221796844,
+     "reported_max_power_drift": 0.015180344191231696,
+     "substeps_used": 64
+    },
+    {
+     "converged": true,
+     "end_of_step_power_error_replay": -0.000974220200216289,
+     "end_of_step_power_error_run": -0.000974220200215891,
+     "first_multiplier": 1.0,
+     "last_multiplier": 1.99677610920245,
+     "max_substeps": 4096,
+     "population_end_over_start": 0.5003193774181993,
+     "reported_max_power_drift": 0.0009742202002157583,
+     "substeps_used": 1024
+    }
+   ]
+  }
+ },
+ "inputs": {
+  "decay_fallback": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/jeff-3-3_decay.dat",
+   "sha256": "850b8b7f85f8d88b6ad826c4cd341aaaffabd525c8ecf3c588a0ad437bf5d123"
+  },
+  "decay_primary": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/decay/endf-b-viii-0_decay.dat",
+   "sha256": "6f04cf009086c179021f243a58dadc2d5bb078de5ba39c4fe46ccad77d228ddb"
+  },
+  "library": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g.npz",
+   "sha256": "ec4c72bf598dc8ad3d533d9cfafdcf493e2d1f949a3e4db6251495659b68cc44"
+  },
+  "library_index": {
+   "path": "/home/connoravila/Documents/actinv/actinv-data/v1.1.0/activation/tendl-2025-neutron-709g_index.json",
+   "sha256": "8bd19b4001c246758e739cd0067a0087e1ce5c2157438dae97bd52e1d3beb3fb"
+  }
+ },
+ "njoy_script": {
+  "path": "/home/connoravila/Documents/actinv/controls/p126_njoy_fe56.py",
+  "sha256": "47302a336d77ce2617425b9b5129f23de74f54e56bc29d1df15f57679122a179"
+ },
+ "protocol": "ACTINV-P126",
+ "protocol_file": {
+  "path": "/home/connoravila/Documents/actinv/protocols/ACTINV-P126_PROTOCOL.md",
+  "sha256": "7674d6e3a0059f33ba04341a28899917542838cc4059c648a9cf9b6488cfd2bc"
+ },
+ "reference_binary": {
+  "path": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+  "sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f"
+ },
+ "runs": {
+  "g2_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g2_candidate.json",
+    "sha256": "e2548aff4f71561cbfd0f3021e54f80414b2332298fd940018dd1a18809ff8d0"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g2_reference": {
+   "binary": "/home/connoravila/Documents/actinv/target/ref-build/release/actinv",
+   "cwd": "/home/connoravila/Documents/actinv",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g2_reference.json",
+    "sha256": "1dd3d3247cdedb519ce4f98296de1bae918f16d20b622abdc0973b59f52bbaf5"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/examples/fns_fe_5min.json",
+    "sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+   }
+  },
+  "g3_njoy_summary": {
+   "path": "/home/connoravila/Documents/actinv/target/p126-work-a/njoy/njoy_fe56.json",
+   "sha256": "56ebcb61ddc609da25971b67ff1a8824abe2abccfb5e0e6b880737354cdc9252"
+  },
+  "g4_njoy_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g4_njoy_candidate.json",
+    "sha256": "b513377c30f06570dc91bb66e4ef28be474ebf5dffafe1c42b716e73f24743bc"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g4_njoy.spec.json",
+    "sha256": "c2586dbb424f1c47c2804c7080ec7c4137e61dd7c8040cbfc94e3d7e1170edcf"
+   }
+  },
+  "g4_synthetic_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g4_synthetic_candidate.json",
+    "sha256": "5dbb2ba60c10f3448cf9ab02dc0bd19ef13becdb9ae2126e9c94823e472b40d3"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g4_synthetic.spec.json",
+    "sha256": "5a491628a3c749f88539f634d41a138320ca6e55964795c5600fc9946f83c195"
+   }
+  },
+  "g5_b10_default_64_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_b10_default_64_candidate.json",
+    "sha256": "af3c4131400b96a367cefaf4ef3e0199947b1c53b480dd8ff71eec02f50fff2f"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_b10_default_64.spec.json",
+    "sha256": "f599368a0f635a05bea388ddcf405acd69c43eac7b257bbe602dfa4f4837b54b"
+   }
+  },
+  "g5_b10_max_substeps_1_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_b10_max_substeps_1_candidate.json",
+    "sha256": "843220e5f62735026b52b4767c76f3f5c4ec2f480b1e5a1c5eaafcea4e7440ff"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_b10_max_substeps_1.spec.json",
+    "sha256": "f92c22f92914eab4fdd67e97265b65dbdc594ba10d9b2ee267d9aac42ca58374"
+   }
+  },
+  "g5_b10_max_substeps_4096_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_b10_max_substeps_4096_candidate.json",
+    "sha256": "4ab2b83229459fda6412472248a8f8887950d8c42d785a0f126ca6f1dd7c33e7"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_b10_max_substeps_4096.spec.json",
+    "sha256": "2f5bf0de31bcca32b3193fea2676e3cad96cb2b61341559d8fc0cec68a20f125"
+   }
+  },
+  "g5_cap1_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_cap1_candidate.json",
+    "sha256": "aaa6a1a3d3954b3fb20d258df497229104e5b96e4fe42ee8be1b74abd9f28ea6"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_cap1.spec.json",
+    "sha256": "9795a99a73713b7a460e1eb9110293ae43df6efd9c42f156277eaeb29a24372f"
+   }
+  },
+  "g5_fe_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_fe_candidate.json",
+    "sha256": "8791d317e92c08b6f18a2b611f84449d4d34382ef0b8074b7904091e23e42937"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_fe.spec.json",
+    "sha256": "59702ba8603190e9ecb8428dff7aefe5f848dd3eedca851f278b67e9aaea6d19"
+   }
+  },
+  "g5_flux_candidate": {
+   "binary": "/home/connoravila/Documents/actinv/target/cand4-actinv",
+   "cwd": "/home/connoravila/Documents/actinv/target/p126-work-a",
+   "exit_code": 0,
+   "output": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_flux_candidate.json",
+    "sha256": "4a070356efb889f105d78aca856711743621cfb76f4b938fa303c1a34cf7c85c"
+   },
+   "spec": {
+    "path": "/home/connoravila/Documents/actinv/target/p126-work-a/g5_flux.spec.json",
+    "sha256": "7e5a9cb75323713c66d18d6f60a2a6bcfb7b97b0b162e8786b8dc2cbf4605972"
+   }
+  }
+ },
+ "synthetic_table": {
+  "path": "/home/connoravila/Documents/actinv/target/p126-work-a/synthetic_fe_kerma.json",
+  "sha256": "7a3071cc32e67f14bc8f55b282974b80817d2abf8517eb6e486b266619e2cea8"
+ },
+ "verdict": "PASS"
+}
