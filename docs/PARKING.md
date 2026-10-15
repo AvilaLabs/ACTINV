@@ -399,3 +399,9 @@ priority — each needs its own protocol before any code changes.
   data prepared once would remove the per-run load. Alternative with the same effect: an `actinv run` batch form that
   takes many specs sharing one library and decay file. Not scheduled; needs its own protocol. FARIS record:
   `docs/notes/RESTART_CONTINUATION.md` on branch `continuation-restart`.
+
+- 2026-10-15 — **Stale table hash in `examples/shielding_demo.json` (found by the P129 gate run).** `e333402` (D6e)
+  regenerated `results/g1_p19_shield_artifact.json` without updating the SHA-256 the example declares. Since then the
+  example has been refused by every binary, and no control runs it: `controls/check_p18b.py` only hashes it as a
+  file. Repaired under P129 Amendment A, which updates the declared hash only. Open: add a cheap CI step that runs
+  `actinv validate --hashes` on every example spec, so a regenerated artifact cannot silently break an example again.

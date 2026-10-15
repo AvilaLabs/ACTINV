@@ -1448,7 +1448,7 @@
  "self_shielding": {
   "table": {
    "path": "results/g1_p19_shield_artifact.json",
-   "sha256": "b81225195e18096c538723f43f341392244aac1e2d4feefddca97f8e3aa81384"
+   "sha256": "8f46bde47a9ac390057aa4a9eb1af36ec5d043536693f8a6c96efb212e1c9fe1"
   },
   "dilution": "fixed",
   "sigma0_b": 0.1
