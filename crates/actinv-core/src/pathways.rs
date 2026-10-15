@@ -254,8 +254,65 @@ fn solve(mut a: Vec<f64>, mut b: Vec<f64>, n: usize) -> Result<Vec<f64>, String>
     Ok(b)
 }
 
+/// `sinh(x) / x`, with a short series where the quotient would lose digits.
+fn sinhc(x: f64) -> f64 {
+    if x.abs() < 0.1 {
+        let x2 = x * x;
+        1.0 + x2 / 6.0
+            * (1.0 + x2 / 20.0 * (1.0 + x2 / 42.0 * (1.0 + x2 / 72.0 * (1.0 + x2 / 110.0))))
+    } else {
+        x.sinh() / x
+    }
+}
+
+/// Off-diagonal entry of `exp([[a11, 0], [off, a22]])` (or its transpose, which is the same value): Higham,
+/// Functions of Matrices (2008), eq. (10.42), `off * exp((a11 + a22) / 2) * sinhc((a22 - a11) / 2)`. For well
+/// separated diagonal entries the algebraically equal divided difference avoids overflow of the half-sum form.
+fn block_off_diagonal(a11: f64, a22: f64, off: f64) -> f64 {
+    if off == 0.0 {
+        return 0.0;
+    }
+    let half_gap = 0.5 * (a22 - a11);
+    if half_gap.abs() < 1.0 {
+        off * (0.5 * (a11 + a22)).exp() * sinhc(half_gap)
+    } else {
+        off * (a22.exp() - a11.exp()) / (a22 - a11)
+    }
+}
+
+/// Overwrite the diagonal and first off-diagonal of the triangular `r ~ exp(factor * a)` with values computed
+/// directly from `a` (Al-Mohy and Higham, SIAM J. Matrix Anal. Appl. 31(3):970-989, 2009, section 2 and Code
+/// Fragment 2.1). Repeated squaring otherwise multiplies the rounding error of a tiny leading exponential into
+/// the slow modes ("overscaling"); the exact diagonal and first off-diagonal stop that.
+fn triangular_refresh(r: &mut [f64], a: &[f64], n: usize, lower: bool, factor: f64) {
+    for i in 0..n {
+        r[i * n + i] = (factor * a[i * n + i]).exp();
+    }
+    for i in 0..n.saturating_sub(1) {
+        let (row, col) = if lower { (i + 1, i) } else { (i, i + 1) };
+        r[row * n + col] = block_off_diagonal(
+            factor * a[i * n + i],
+            factor * a[(i + 1) * n + i + 1],
+            factor * a[row * n + col],
+        );
+    }
+}
+
+/// `Some(true)` when every entry above the diagonal is exactly zero, `Some(false)` when every entry below it is
+/// (and some above is not), `None` for a general matrix.
+fn triangular_kind(a: &[f64], n: usize) -> Option<bool> {
+    let upper_zero = (0..n).all(|i| (i + 1..n).all(|j| a[i * n + j] == 0.0));
+    if upper_zero {
+        return Some(true);
+    }
+    let lower_zero = (0..n).all(|i| (0..i).all(|j| a[i * n + j] == 0.0));
+    lower_zero.then_some(false)
+}
+
 /// Dense matrix exponential of a row-major `n x n` matrix: scaling and squaring with the degree-13 Pade
-/// approximant (Higham, SIAM J. Matrix Anal. Appl. 26, 2005).
+/// approximant (Higham, SIAM J. Matrix Anal. Appl. 26, 2005). Exactly triangular input (the chain matrices)
+/// additionally gets the Al-Mohy and Higham (2009) diagonal and first off-diagonal correction after the Pade
+/// step and after every squaring, so a huge norm from a short-lived nuclide does not cost the slow modes digits.
 pub(crate) fn expm(a: &[f64], n: usize) -> Result<Vec<f64>, String> {
     if a.len() != n * n {
         return Err(format!(
@@ -329,8 +386,16 @@ pub(crate) fn expm(a: &[f64], n: usize) -> Result<Vec<f64>, String> {
     let numerator: Vec<f64> = v.iter().zip(&u).map(|(v, u)| v + u).collect();
     let denominator: Vec<f64> = v.iter().zip(&u).map(|(v, u)| v - u).collect();
     let mut r = solve(denominator, numerator, n)?;
-    for _ in 0..squarings {
-        r = matmul(&r, &r, n);
+    if let Some(lower) = triangular_kind(a, n) {
+        triangular_refresh(&mut r, a, n, lower, scale);
+        for j in 1..=squarings {
+            r = matmul(&r, &r, n);
+            triangular_refresh(&mut r, a, n, lower, 0.5f64.powi((squarings - j) as i32));
+        }
+    } else {
+        for _ in 0..squarings {
+            r = matmul(&r, &r, n);
+        }
     }
     if r.iter().any(|x| !x.is_finite()) {
         return Err("matrix exponential: result is not finite".into());
@@ -1337,6 +1402,194 @@ mod tests {
         assert_close(e[3], (-2.0f64).exp(), 1e-13, "slow mode");
     }
 
+    /// The dense exponential as it was before the triangular refresh: Pade 13 scaling and squaring only.
+    fn expm_plain(a: &[f64], n: usize) -> Vec<f64> {
+        let norm = (0..n)
+            .map(|j| (0..n).map(|i| a[i * n + j].abs()).sum::<f64>())
+            .fold(0.0, f64::max);
+        let squarings = if norm > THETA13 {
+            ((norm / THETA13).log2().ceil() as usize).min(1000)
+        } else {
+            0
+        };
+        let scale = 0.5f64.powi(squarings as i32);
+        let a1: Vec<f64> = a.iter().map(|x| x * scale).collect();
+        let a2 = matmul(&a1, &a1, n);
+        let a4 = matmul(&a2, &a2, n);
+        let a6 = matmul(&a4, &a2, n);
+        let ident = identity(n);
+        let b = &PADE13;
+        let combine = |terms: &[(f64, &[f64])]| -> Vec<f64> {
+            let mut out = vec![0.0; n * n];
+            for (coefficient, matrix) in terms {
+                for (o, x) in out.iter_mut().zip(matrix.iter()) {
+                    *o += coefficient * x;
+                }
+            }
+            out
+        };
+        let inner_u = combine(&[
+            (b[13], a6.as_slice()),
+            (b[11], a4.as_slice()),
+            (b[9], a2.as_slice()),
+        ]);
+        let mut w = matmul(&a6, &inner_u, n);
+        let low_u = combine(&[
+            (b[7], a6.as_slice()),
+            (b[5], a4.as_slice()),
+            (b[3], a2.as_slice()),
+            (b[1], ident.as_slice()),
+        ]);
+        for (x, y) in w.iter_mut().zip(&low_u) {
+            *x += y;
+        }
+        let u = matmul(&a1, &w, n);
+        let inner_v = combine(&[
+            (b[12], a6.as_slice()),
+            (b[10], a4.as_slice()),
+            (b[8], a2.as_slice()),
+        ]);
+        let mut v = matmul(&a6, &inner_v, n);
+        let low_v = combine(&[
+            (b[6], a6.as_slice()),
+            (b[4], a4.as_slice()),
+            (b[2], a2.as_slice()),
+            (b[0], ident.as_slice()),
+        ]);
+        for (x, y) in v.iter_mut().zip(&low_v) {
+            *x += y;
+        }
+        let numerator: Vec<f64> = v.iter().zip(&u).map(|(v, u)| v + u).collect();
+        let denominator: Vec<f64> = v.iter().zip(&u).map(|(v, u)| v - u).collect();
+        let mut r = solve(denominator, numerator, n).unwrap();
+        for _ in 0..squarings {
+            r = matmul(&r, &r, n);
+        }
+        r
+    }
+
+    /// Entry `(i, j)` of `exp(t M)` for the chain `M` with `M[k][k] = -rates[k]` and `M[k+1][k] = rates[k]`, by the
+    /// Bateman sum over distinct rates.
+    fn bateman_entry(rates: &[f64], t: f64, i: usize, j: usize) -> f64 {
+        if i < j {
+            return 0.0;
+        }
+        let feed: f64 = rates[j..i].iter().product();
+        let mut sum = 0.0;
+        for k in j..=i {
+            let mut denominator = 1.0;
+            for (l, rate) in rates.iter().enumerate().take(i + 1).skip(j) {
+                if l != k {
+                    denominator *= rate - rates[k];
+                }
+            }
+            sum += (-rates[k] * t).exp() / denominator;
+        }
+        feed * sum
+    }
+
+    #[test]
+    fn expm_of_a_stiff_lower_bidiagonal_chain_matches_the_bateman_solution() {
+        // rates span 1e3 .. 1e-9 /s over 1e8 s: the matrix 1-norm is 1e11 (about 34 squarings)
+        let rates: [f64; 4] = [1.0e3, 3.0e-8, 1.0e-8, 1.0e-9];
+        let t: f64 = 1.0e8;
+        let n = rates.len();
+        let mut lower = vec![0.0; n * n];
+        for (k, rate) in rates.iter().enumerate() {
+            lower[k * n + k] = -(rate * t);
+            if k + 1 < n {
+                lower[(k + 1) * n + k] = rate * t;
+            }
+        }
+        let mut upper = vec![0.0; n * n];
+        for i in 0..n {
+            for j in 0..n {
+                upper[j * n + i] = lower[i * n + j];
+            }
+        }
+        let e_lower = expm(&lower, n).unwrap();
+        let e_upper = expm(&upper, n).unwrap();
+        let mut checked = 0;
+        for i in 0..n {
+            for j in 0..n {
+                let expected = bateman_entry(&rates, t, i, j);
+                let what = format!("lower ({i},{j})");
+                if expected > 1e-300 {
+                    assert_close(e_lower[i * n + j], expected, 1e-12, &what);
+                    assert_close(
+                        e_upper[j * n + i],
+                        expected,
+                        1e-12,
+                        &format!("upper ({j},{i})"),
+                    );
+                    checked += 1;
+                } else {
+                    assert!(e_lower[i * n + j].abs() < 1e-300, "{what} should vanish");
+                    assert!(
+                        e_upper[j * n + i].abs() < 1e-300,
+                        "{what} (upper) should vanish"
+                    );
+                }
+            }
+        }
+        // everything on and below the diagonal survives except the fast mode itself
+        assert_eq!(checked, 9);
+    }
+
+    #[test]
+    fn expm_of_a_non_triangular_matrix_is_unchanged_by_the_triangular_refresh() {
+        let mut state = 0x2545_f491_4f6c_dd1du64;
+        let mut next = || {
+            state ^= state << 13;
+            state ^= state >> 7;
+            state ^= state << 17;
+            (state >> 11) as f64 / (1u64 << 53) as f64 - 0.5
+        };
+        let mut cases: Vec<(Vec<f64>, usize)> = vec![
+            (vec![0.0, -25.0, 25.0, 0.0], 2),
+            (vec![-1.0e6, 1.0, 1.0, -2.0], 2),
+            (vec![-3.0, 0.5, 0.0, 2.0, -4.0, 0.0, 0.0, 1.0e-3, -0.1], 3),
+        ];
+        for (n, magnitude) in [(3usize, 1.0), (4, 40.0), (5, 3.0e3), (6, 0.2)] {
+            cases.push(((0..n * n).map(|_| magnitude * next()).collect(), n));
+        }
+        for (a, n) in &cases {
+            let new = expm(a, *n).unwrap();
+            let old = expm_plain(a, *n);
+            let new_bits: Vec<u64> = new.iter().map(|x| x.to_bits()).collect();
+            let old_bits: Vec<u64> = old.iter().map(|x| x.to_bits()).collect();
+            assert_eq!(new_bits, old_bits, "{n}x{n} case");
+        }
+    }
+
+    #[test]
+    fn triangular_refresh_handles_equal_and_close_diagonal_entries() {
+        // equal diagonal: exp([[a, 0], [c, a]]) = e^a [[1, 0], [c, 1]]
+        let (a, c): (f64, f64) = (-2.5, 4.0);
+        let e = expm(&[a, 0.0, c, a], 2).unwrap();
+        assert_close(e[2], c * a.exp(), 1e-14, "equal diagonal");
+        // nearly equal diagonal still agrees with the confluent limit
+        let e = expm(&[a, 0.0, c, a * (1.0 + 1e-12)], 2).unwrap();
+        assert_close(e[2], c * a.exp(), 1e-10, "close diagonal");
+        // block formula and the divided difference agree where they meet
+        let (a11, a22, off): (f64, f64, f64) = (-1.2, -0.2, 3.0);
+        let direct = off * (f64::exp(a22) - f64::exp(a11)) / (a22 - a11);
+        assert_close(
+            block_off_diagonal(a11, a22, off),
+            direct,
+            1e-14,
+            "half gap 0.5",
+        );
+        let (a11, a22): (f64, f64) = (-2.0, 0.0);
+        let direct = off * (f64::exp(a22) - f64::exp(a11)) / (a22 - a11);
+        assert_close(
+            block_off_diagonal(a11, a22, off),
+            direct,
+            1e-14,
+            "half gap 1",
+        );
+    }
+
     #[test]
     fn linear_chain_single_path_equals_the_full_solution() {
         let (la, lb, n0, t): (f64, f64, f64, f64) = (1.0e-3, 3.0e-4, 1.0e20, 5000.0);
@@ -1488,7 +1741,11 @@ mod tests {
         // r*t1 = 2e13, where plain scaling and squaring overscales and loses about 1e-4.
         let a1 = r / l * (1.0 - (-l * t1).exp());
         let after1 = [a1, r * t1 - a1, 1.0];
-        let after2 = [a1 * (-l * t2).exp(), after1[1] + a1 * (1.0 - (-l * t2).exp()), 1.0];
+        let after2 = [
+            a1 * (-l * t2).exp(),
+            after1[1] + a1 * (1.0 - (-l * t2).exp()),
+            1.0,
+        ];
         let graph = input(
             &["Mn54", "Fe54"],
             &["Cr54"],
