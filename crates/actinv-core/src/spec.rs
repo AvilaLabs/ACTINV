@@ -1678,6 +1678,28 @@ impl Spec {
                     "power-driven schedule steps cannot be combined with options.screen".into(),
                 );
             }
+            if self.options.fission.is_some() {
+                return Err(
+                    "power-driven schedule steps cannot be combined with options.fission: the \
+                     fission count integrates one flux multiplier per step, not the solved \
+                     sub-interval multipliers"
+                        .into(),
+                );
+            }
+            if self.pathways.is_some() {
+                return Err(
+                    "power-driven schedule steps cannot be combined with pathways: the routes \
+                     analysis records one matrix per step, not one per solved sub-interval"
+                        .into(),
+                );
+            }
+        }
+        if self.pathways.is_some() && self.schedule.iter().any(|step| step.partition.is_some()) {
+            return Err(
+                "schedule partition cannot be combined with pathways: the routes analysis \
+                 integrates the step matrices and does not see the instantaneous split"
+                    .into(),
+            );
         }
         if self.decay.primary.is_empty() {
             return Err("decay.primary is empty".into());
@@ -2315,6 +2337,11 @@ impl Spec {
         if self.uncertainty.is_some() {
             return Err(format!("uncertainty is not available: {NOTE}"));
         }
+        if self.schedule.iter().any(|step| step.library.is_some()) {
+            return Err(format!(
+                "schedule step library overrides are not available: {NOTE}"
+            ));
+        }
         if self.self_shielding.is_some() {
             return Err(format!("self_shielding is not available: {NOTE}"));
         }
@@ -2535,15 +2562,9 @@ impl Spec {
                                         s.structure, self.spectrum.structure
                                     ));
                                 }
-                                if s.flux_per_group.len() != flux.values().len() {
-                                    return Err(format!(
-                                        "schedule step spectrum has {} groups; the base spectrum declares {}",
-                                        s.flux_per_group.len(),
-                                        flux.values().len()
-                                    ));
-                                }
                             }
                         }
+                        // the group count is compared after any `rebin` conversion
                         let (f, conversion) =
                             s.resolved_flux(&format!("schedule[{index}].spectrum"))?;
                         if step.spectrum.is_some() {
@@ -2564,9 +2585,8 @@ impl Spec {
                     None => step.flux,
                     Some(wall) => {
                         let total = spectrum_flux.as_ref().unwrap_or(&flux).total().get();
-                        let reference = step
+                        let reference = context
                             .spectrum
-                            .as_ref()
                             .unwrap_or(&self.spectrum)
                             .wall_loading_MW_m2;
                         let (multiplier, basis) = wall_flux_multiplier(wall, reference, total)?;
@@ -2676,6 +2696,26 @@ impl Spec {
             Some("fission_yields")
         } else if self.options.rate_scale.is_some() {
             Some("options.rate_scale")
+        } else if self.schedule.iter().any(Step::is_power_driven) {
+            // the flux amplitude is solved from the base library's kerma and rates
+            Some("power-driven schedule steps")
+        } else if self.kerma.is_some() {
+            // the kerma table is on the base spectrum's group structure
+            Some("kerma")
+        } else if self.schedule.iter().any(|step| step.partition.is_some()) {
+            Some("schedule partition")
+        } else if self.options.fission.is_some() {
+            // the fission count integrates the base library's MT=18 rates
+            Some("options.fission")
+        } else if self
+            .overrides
+            .iter()
+            .any(|item| item.kind.starts_with("cross_section"))
+        {
+            // the named rows belong to the base library
+            Some("cross-section overrides")
+        } else if self.pathways.is_some() {
+            Some("pathways")
         } else {
             None
         }
@@ -2737,6 +2777,12 @@ impl Spec {
                     }
                 }
                 (None, None) => {}
+            }
+            if active.is_some() && step.spectrum.as_ref().is_some_and(|s| s.rebin.is_some()) {
+                return Err(format!(
+                    "schedule step {number}: spectrum.rebin cannot accompany a step library override; \
+                     give the spectrum in the new library's own groups"
+                ));
             }
             contexts.push(StepContext {
                 library: active,
@@ -3892,7 +3938,7 @@ mod duration_tests {
         let neither = power_spec(serde_json::json!({"dt": "1 s"}));
         assert!(Spec::from_json(&neither.to_string())
             .unwrap_err()
-            .contains("needs flux"));
+            .contains("needs one of flux"));
         // a power step on its own parses and carries the zero multiplier
         let power_only = power_spec(serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0}));
         let spec = Spec::from_json(&power_only.to_string()).unwrap();
@@ -3987,6 +4033,182 @@ mod duration_tests {
         assert!(Spec::from_json(&value.to_string())
             .unwrap_err()
             .contains("density"));
+    }
+
+    #[test]
+    fn step_driver_wire_accepts_exactly_one_of_flux_wall_and_power() {
+        let error_of =
+            |step: serde_json::Value| Spec::from_json(&power_spec(step).to_string()).unwrap_err();
+        // flux 0 beside a power target is the form a power step serializes
+        let zero_flux =
+            power_spec(serde_json::json!({"dt": "1 s", "flux": 0.0, "power_W_per_g": 1.0}));
+        let spec = Spec::from_json(&zero_flux.to_string()).unwrap();
+        assert!(spec.schedule[0].is_power_driven());
+        assert!(spec.schedule[0].irradiates());
+        assert!(
+            error_of(serde_json::json!({"dt": "1 s", "flux": 1.0, "power_W_cm3": 7.0}))
+                .contains("mutually exclusive")
+        );
+        assert!(error_of(
+            serde_json::json!({"dt": "1 s", "wall_loading_MW_m2": 1.0, "power_W_per_g": 1.0})
+        )
+        .contains("wall_loading_MW_m2 and a power target"));
+        assert!(
+            error_of(serde_json::json!({"dt": "1 s", "flux": 0.0, "wall_loading_MW_m2": 1.0}))
+                .contains("both flux and wall_loading_MW_m2")
+        );
+        assert!(error_of(serde_json::json!({"dt": "1 s"})).contains("needs one of flux"));
+        // a hand-built wall plus power step fails validation too
+        let mut spec = Spec::from_json(&zero_flux.to_string()).unwrap();
+        spec.schedule[0].wall_loading_MW_m2 = Some(1.0);
+        assert!(spec.validate().unwrap_err().contains("mutually exclusive"));
+        // a power step with a partition and a flux step with a library echo and reparse
+        let mut value = power_spec(
+            serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0, "partition": {"Fe": 0.5}}),
+        );
+        value["options"] = serde_json::json!({"mode": "coupled"});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let echoed = serde_json::to_string(&spec).unwrap();
+        assert!(Spec::from_json(&echoed).is_ok());
+        let spec = Spec::from_json(&library_switch_spec().to_string()).unwrap();
+        let echoed = serde_json::to_string(&spec).unwrap();
+        assert!(Spec::from_json(&echoed).is_ok());
+    }
+
+    #[test]
+    fn step_libraries_refuse_the_features_built_on_one_library() {
+        let refused = |edit: &dyn Fn(&mut serde_json::Value), feature: &str| {
+            let mut value = library_switch_spec();
+            edit(&mut value);
+            let error = Spec::from_json(&value.to_string()).unwrap_err();
+            assert!(
+                error.contains(&format!(
+                    "schedule step library overrides cannot be combined with {feature}"
+                )),
+                "{feature}: {error}"
+            );
+        };
+        let kerma = serde_json::json!({
+            "table": {"path": "kerma.json", "sha256": "0".repeat(64)},
+        });
+        refused(
+            &|value: &mut serde_json::Value| {
+                value["kerma"] = kerma.clone();
+                value["schedule"][2] = serde_json::json!({"dt": "3 s", "power_W_per_g": 1.0});
+            },
+            "power-driven schedule steps",
+        );
+        refused(
+            &|value: &mut serde_json::Value| value["kerma"] = kerma.clone(),
+            "kerma",
+        );
+        refused(
+            &|value: &mut serde_json::Value| {
+                value["schedule"][2] =
+                    serde_json::json!({"dt": "3 s", "flux": 0.0, "partition": {"Fe": 0.5}});
+            },
+            "schedule partition",
+        );
+        refused(
+            &|value: &mut serde_json::Value| value["options"] = serde_json::json!({"fission": {}}),
+            "options.fission",
+        );
+        refused(
+            &|value: &mut serde_json::Value| {
+                value["overrides"] = serde_json::json!([
+                    {"nuclide": "Fe56", "kind": "cross_section", "mt": 102, "value": 1.0}
+                ]);
+            },
+            "cross-section overrides",
+        );
+        refused(
+            &|value: &mut serde_json::Value| {
+                value["pathways"] = serde_json::json!({"targets": ["Fe57"]})
+            },
+            "pathways",
+        );
+        // Spontaneous-fission routing reads decay data only, so it composes with a library switch.
+        let mut value = library_switch_spec();
+        value["fission_yields"] = serde_json::json!({
+            "spontaneous": {"files": [{"path": "sfy.endf", "sha256": "0".repeat(64)}]},
+        });
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        // A named half-life override is decay data too.
+        let mut value = library_switch_spec();
+        value["overrides"] =
+            serde_json::json!([{"nuclide": "Fe56", "kind": "half_life", "value": 10.0}]);
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+    }
+
+    #[test]
+    fn step_library_spectra_cannot_be_rebinned_and_decay_only_runs_have_no_libraries() {
+        let mut value = library_switch_spec();
+        value["schedule"][1]["spectrum"]["structure"] = serde_json::json!("fispact-709");
+        value["schedule"][1]["spectrum"]["rebin"] = serde_json::json!({});
+        let error = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(
+            error.contains("spectrum.rebin cannot accompany a step library override"),
+            "{error}"
+        );
+        let decay_only = serde_json::json!({
+            "spec": "actinv-spec-1",
+            "decay": {"primary": "decay.endf"},
+            "material": {"basis": "wt_percent", "composition": {"FE": 100.0}},
+            "schedule": [{
+                "dt": "1 s",
+                "flux": 0.0,
+                "library": {"path": "second.npz"},
+                "spectrum": {
+                    "structure": "custom",
+                    "boundaries_eV": [1.0, 3.0, 5.0],
+                    "flux_per_group": [1.0, 2.0],
+                },
+            }],
+        });
+        let error = Spec::from_json(&decay_only.to_string()).unwrap_err();
+        assert!(
+            error.contains("schedule step library overrides are not available"),
+            "{error}"
+        );
+    }
+
+    #[test]
+    fn power_steps_and_partitions_refuse_the_per_step_matrix_analyses() {
+        let step = serde_json::json!({"dt": "1 s", "power_W_per_g": 1.0});
+        let mut value = power_spec(step.clone());
+        value["options"] = serde_json::json!({"fission": {}});
+        let error = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(
+            error.contains("power-driven schedule steps cannot be combined with options.fission"),
+            "{error}"
+        );
+        let mut value = power_spec(step);
+        value["pathways"] = serde_json::json!({"targets": ["Fe57"]});
+        let error = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(
+            error.contains("power-driven schedule steps cannot be combined with pathways"),
+            "{error}"
+        );
+        let mut value = minimal_spec();
+        value["schedule"] =
+            serde_json::json!([{"dt": "1 s", "flux": 1.0, "partition": {"Fe": 0.5}}]);
+        value["pathways"] = serde_json::json!({"targets": ["Fe57"]});
+        let error = Spec::from_json(&value.to_string()).unwrap_err();
+        assert!(
+            error.contains("schedule partition cannot be combined with pathways"),
+            "{error}"
+        );
+        // a power step and a partition, and a fission count with a partition, are allowed together
+        let mut value = power_spec(serde_json::json!({
+            "dt": "1 s", "power_W_per_g": 1.0, "partition": {"Fe": 0.5}
+        }));
+        value["options"] = serde_json::json!({"mode": "coupled"});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
+        let mut value = minimal_spec();
+        value["schedule"] =
+            serde_json::json!([{"dt": "1 s", "flux": 1.0, "partition": {"Fe": 0.5}}]);
+        value["options"] = serde_json::json!({"mode": "coupled", "fission": {}});
+        assert!(Spec::from_json(&value.to_string()).is_ok());
     }
 }
 

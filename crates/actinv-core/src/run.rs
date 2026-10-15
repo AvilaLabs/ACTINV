@@ -4073,6 +4073,19 @@ impl PreparedRun {
                     "power-driven schedule steps cannot be combined with uncertainty".into(),
                 );
             }
+            // The fission count and the routes analysis each run one matrix per step; a power step
+            // is solved as several sub-intervals at different multipliers.
+            if spec.options.fission.is_some() {
+                return Err(
+                    "power-driven schedule steps cannot be combined with options.fission".into(),
+                );
+            }
+            if spec.pathways.is_some() {
+                return Err("power-driven schedule steps cannot be combined with pathways".into());
+            }
+        }
+        if spec.pathways.is_some() && sched.iter().any(|step| !step.partition.is_empty()) {
+            return Err("schedule partition cannot be combined with pathways".into());
         }
         let mut estimated_multiplier: Vec<Option<f64>> = vec![None; sched.len()];
         let sched_estimated: Vec<PhysicalStep>;
@@ -5382,21 +5395,21 @@ impl PreparedRun {
         // multiplier, and the declaring step's feed/removal terms (not flux-scaled).
         let assemble_triplets =
             |si: usize, rs: &[(usize, usize, C64)], multiplier: f64| -> Vec<(usize, usize, C64)> {
-            let mut trip = dsub.clone();
-            if multiplier > 0.0 {
-                for (i, j, v) in rs.iter() {
-                    trip.push((*i, *j, v * C64::new(multiplier, 0.0)));
-                }
-            }
-            for edges in [&step_feed[si], &step_removal[si]] {
-                for &(i, j, v) in edges {
-                    if pos[i] != usize::MAX && pos[j] != usize::MAX {
-                        trip.push((pos[i], pos[j], C64::new(v, 0.0)));
+                let mut trip = dsub.clone();
+                if multiplier > 0.0 {
+                    for (i, j, v) in rs.iter() {
+                        trip.push((*i, *j, v * C64::new(multiplier, 0.0)));
                     }
                 }
-            }
-            trip
-        };
+                for edges in [&step_feed[si], &step_removal[si]] {
+                    for &(i, j, v) in edges {
+                        if pos[i] != usize::MAX && pos[j] != usize::MAX {
+                            trip.push((pos[i], pos[j], C64::new(v, 0.0)));
+                        }
+                    }
+                }
+                trip
+            };
         let assemble = |si: usize, rs: &[(usize, usize, C64)], multiplier: f64| -> Csc {
             Csc::from_triplets(m, &assemble_triplets(si, rs, multiplier))
         };

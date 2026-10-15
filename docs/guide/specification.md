@@ -129,7 +129,7 @@ A partition removes bulk atoms, which the `trace` formulation cannot represent (
 `options.mode: "trace"` with a partition is an error, and `auto` selects `coupled`. The ledger gains `partition`:
 `applied` (per step and element: `step`, `element`, `fraction_kept`, `removed_atoms_per_g`), `mode`,
 `mode_forced_coupled` and `removed_atoms_per_g_final`. Partition is not accepted by mesh specs, study specs, reverse
-solves or the waste-composition solve.
+solves or the waste-composition solve, and is refused together with `pathways` and schedule `library` overrides.
 
 ## Named data overrides (`overrides`)
 
@@ -239,7 +239,10 @@ With any `nubar_*` input every step gains `fission.spontaneous_neutron_source` (
 `energy_per_fission_MeV` defaults to 200, a conventional round figure and not a nuclide-specific energy; it affects
 only the MWd/kg burn-up and must be finite and positive. The option works without fission-yield files: every library
 fission (MT=18) row is counted, whether or not yields exist for it. Both this option and
-`fission_yields.spontaneous` are refused by the native waste composition solve.
+`fission_yields.spontaneous` are refused by the native waste composition solve. The count integrates one flux
+multiplier per step, so `options.fission` is refused with power-driven steps (whose multiplier is solved per
+sub-interval) and with schedule `library` overrides (the count reads the base library's MT=18 rates).
+`fission_yields.spontaneous` reads decay data only and combines with both.
 
 ## MF=33 uncertainty
 
@@ -444,7 +447,8 @@ with a power target is an error). A power must be finite and positive, so coolin
 needs `material.density_g_cm3` (finite, positive; otherwise unused) and is converted to W per gram with it; the
 gram-based inventories need no density. A power-driven step requires a `kerma` section, uses the step's own
 `spectrum` when it has one, and may combine with `feed`/`removal`. It is refused with `uncertainty`,
-`options.screen`, the reverse and study tools and mesh specs, and its pathway attribution is not emitted.
+`options.screen`, `options.fission`, `pathways`, schedule `library` overrides, the reverse and study tools and mesh
+specs, and its pathway attribution is not emitted. It does combine with `partition`.
 
 The flux multiplier on the step's spectrum is chosen so that the instantaneous heating
 `sum_i N_i(t) * k_i(spectrum) * multiplier` equals the requested power, with `N_i` the evolving atoms per gram of
@@ -705,6 +709,20 @@ never repeat a nuclide are reported as ordinary routes. A walk that revisits a n
 and reports `loop_gain`, its contribution relative to that base path. The floors apply to routes and loop walks
 separately, so a route below `path_floor` alone is not promoted by the loops attached to it.
 
+## Combining schedule features
+
+The schedule features were built independently, and some pairs would be half-applied rather than wrong, so they are
+refused when the spec is validated, with a message naming both features:
+
+| feature | refused together with |
+|---|---|
+| power-driven steps (`power_W_cm3` / `power_W_per_g`) | `uncertainty`, `options.screen`, `options.fission`, `pathways`, schedule `library` overrides, `wall_loading_MW_m2` on the same step |
+| schedule `partition` | `pathways`, schedule `library` overrides, `options.mode: "trace"` |
+| schedule `library` overrides | `uncertainty`, `options.gas`, `self_shielding`, `damage`, `fission_yields.files`, `options.rate_scale`, power-driven steps, `kerma`, `partition`, `options.fission`, cross-section `overrides`, `pathways`, `spectrum.rebin` on a step spectrum, decay-only runs |
+
+`wall_loading_MW_m2`, `spectrum.rebin`, half-life `overrides` and `fission_yields.spontaneous`
+combine with all of these. A power step may carry a `partition`.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon
@@ -838,7 +856,9 @@ with the steps it served and its fluence, and the library and index hashes appea
 its projectile; the per-library fluence is the one to read across a switch. Pathway attribution covers the base
 library only and is suppressed (named in `ledger.step_libraries.pathways_suppressed`). Overrides cannot be combined
 with `uncertainty`, `options.gas`, `self_shielding`, `damage`, `fission_yields` or `options.rate_scale` (each is built
-on one library's rows), with mesh mode, or inside a study; the spec is refused rather than half-applied.
+on one library's rows), nor with power-driven steps, `kerma`, `partition`, `options.fission`, cross-section `overrides`
+or the full `pathways` analysis (each reads the base library's rates, groups or per-step matrix), with mesh mode, or
+inside a study; the spec is refused rather than half-applied.
 
 Any step may also declare optional `feed` and `removal` maps. `feed` entries are explicit nuclides
 (`Co60`, `Ta180m1`) with constant rates in atoms s⁻¹ g⁻¹, applied during the declaring step regardless of the
