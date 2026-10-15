@@ -211,6 +211,10 @@ pub struct RunResult {
     /// pre-P58 output.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub isomer_pathway_shares: Option<Vec<IsomerPathwayShare>>,
+    /// P127: full routes analysis (`crate::pathways::PathwayReport`); emitted only when the spec declares
+    /// `pathways`. Absence is byte-identical to pre-P127 output.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pathway_routes: Option<serde_json::Value>,
     pub ledger: serde_json::Value,
     pub certificate: serde_json::Value,
     pub ms: f64,
@@ -3913,6 +3917,11 @@ impl PreparedRun {
             }
             None => None,
         };
+        // P127: the bulk state behind every unit-state production edge, as (row, bulk state, rate); the routes
+        // analysis splits the aggregated unit column back into its reservoirs with these. Filled only on request.
+        let want_routes = spec.pathways.is_some();
+        let mut unit_origin_decay: Vec<(usize, usize, f64)> = Vec::new();
+        let mut unit_origin_react: Vec<Vec<(usize, usize, f64)>> = Vec::new();
         let mut sources: Vec<(usize, f64, (i32, i32))> = Vec::new(); // (product row fed, rate, bulk nuclide it came from)
         let mut d_src: Vec<(usize, usize, f64)> = Vec::new();
         // r_srcs[0] is the base spectrum; one entry per distinct step override follows
@@ -3937,6 +3946,9 @@ impl PreparedRun {
                 if bulk.contains_key(c) {
                     if r != c && (!bulk.contains_key(r) || tracked_reservoir.contains(r)) {
                         d_src.push((*r, ch.unit, v * bulk[c]));
+                        if want_routes {
+                            unit_origin_decay.push((*r, *c, v * bulk[c]));
+                        }
                         if lambda_c > 0.0 {
                             decay_derivatives.push((*c, *r, ch.unit, v * bulk[c] / lambda_c));
                         }
@@ -3965,6 +3977,7 @@ impl PreparedRun {
                 std::iter::once(&react).chain(react_extra.iter()).collect();
             for (si_react, react_i) in reacts.iter().enumerate() {
                 let mut r_i: Vec<(usize, usize, f64)> = Vec::new();
+                let mut origin_i: Vec<(usize, usize, f64)> = Vec::new();
                 for (r, c, v) in react_i.iter() {
                     if bulk.contains_key(c) {
                         if r == c {
@@ -3987,6 +4000,9 @@ impl PreparedRun {
                             r_i.push((*r, *c, *v));
                         }
                         r_i.push((*r, ch.unit, v * bulk[c]));
+                        if want_routes {
+                            origin_i.push((*r, *c, v * bulk[c]));
+                        }
                         if si_react == 0 {
                             sources.push((*r, v * bulk[c], ch.keys[*c]));
                         }
@@ -3995,6 +4011,7 @@ impl PreparedRun {
                     }
                 }
                 r_srcs.push(r_i);
+                unit_origin_react.push(origin_i);
             }
             r_src = r_srcs[0].clone();
             let derivative_remap =
@@ -4774,6 +4791,28 @@ impl PreparedRun {
             .iter()
             .map(|(name, _, activity)| (name.clone(), *activity))
             .collect();
+        // P127: reservoirs the routes analysis starts from (trace mode bulk nuclides, then the schedule's feed) and
+        // the per-step graphs recorded from the matrices the solve assembles
+        let mut route_reservoir_states: Vec<Option<usize>> = Vec::new();
+        if want_routes {
+            if mode == "trace" {
+                let mut states: Vec<usize> = bulk.keys().copied().collect();
+                states.sort_unstable();
+                route_reservoir_states.extend(states.into_iter().map(Some));
+            }
+            if has_feed {
+                route_reservoir_states.push(None);
+            }
+        }
+        let route_index_of: HashMap<usize, usize> = route_reservoir_states
+            .iter()
+            .enumerate()
+            .filter_map(|(p, state)| state.map(|c| (c, p)))
+            .collect();
+        let route_feed_index = route_reservoir_states
+            .iter()
+            .position(|state| state.is_none());
+        let mut route_steps: Vec<crate::pathways::StepGraph> = Vec::new();
         for (si, schedule_step) in sched.iter().enumerate() {
             let dt = schedule_step.duration();
             let fl = schedule_step.multiplier();
@@ -4797,6 +4836,41 @@ impl PreparedRun {
                 }
             }
             let a = Csc::from_triplets(m, &trip);
+            if want_routes {
+                // reservoir supply split by origin: (row position, reservoir, atoms g^-1 s^-1)
+                let mut supply: Vec<(usize, usize, f64)> = Vec::new();
+                for &(row, state, rate) in &unit_origin_decay {
+                    if let (true, Some(&p)) = (pos[row] != usize::MAX, route_index_of.get(&state)) {
+                        supply.push((pos[row], p, rate));
+                    }
+                }
+                if fl.get() > 0.0 {
+                    let slot = step_spectrum_id[si].map_or(0, |id| id + 1);
+                    let origins = unit_origin_react
+                        .get(slot)
+                        .map_or(&[][..], |origins| origins.as_slice());
+                    for &(row, state, rate) in origins {
+                        if let (true, Some(&p)) =
+                            (pos[row] != usize::MAX, route_index_of.get(&state))
+                        {
+                            supply.push((pos[row], p, rate * fl.get()));
+                        }
+                    }
+                }
+                if let Some(p) = route_feed_index {
+                    for &(state, _, rate) in &step_feed[si] {
+                        if pos[state] != usize::MAX {
+                            supply.push((pos[state], p, rate));
+                        }
+                    }
+                }
+                route_steps.push(crate::pathways::StepGraph::from_matrix(
+                    dt.get(),
+                    &trip,
+                    pos[ch.unit],
+                    supply,
+                ));
+            }
             if let Some(runtime) = uncertainty_runtime.as_mut() {
                 // Each (spectrum, parameter) direction acts only on steps that
                 // use its own spectrum — index 0 is the base spectrum — and
@@ -5357,6 +5431,95 @@ impl PreparedRun {
             }
         }
         profiler.finish("pathway_decomposition", pathways_started);
+
+        // ---- P127 routes: every source-to-target route, integrated exactly over the matrices the solve used
+        let pathway_routes = match spec.pathways.as_ref() {
+            Some(options) => {
+                let routes_started = profiler.start();
+                let node_names: Vec<String> = keep
+                    .iter()
+                    .map(|&g| {
+                        if g == ch.leak {
+                            "leak".to_owned()
+                        } else if g == ch.unit {
+                            "unit".to_owned()
+                        } else if Some(g) == removed {
+                            "removed".to_owned()
+                        } else {
+                            name_of(ch.keys[g].0, ch.keys[g].1)
+                        }
+                    })
+                    .collect();
+                let reservoirs: Vec<String> = route_reservoir_states
+                    .iter()
+                    .map(|state| match state {
+                        Some(c) => name_of(ch.keys[*c].0, ch.keys[*c].1),
+                        None => "feed".to_owned(),
+                    })
+                    .collect();
+                // coupled mode starts from the initial nuclides; trace mode starts from its reservoirs
+                let initial: Vec<(usize, f64)> = if mode == "coupled" {
+                    keep.iter()
+                        .enumerate()
+                        .filter(|(_, g)| **g != ch.unit && **g != ch.leak && Some(**g) != removed)
+                        .filter_map(|(k, g)| (n0[*g] > 0.0).then_some((k, n0[*g])))
+                        .collect()
+                } else {
+                    Vec::new()
+                };
+                let mut global_labels = crate::pathways::GlobalLabels::new();
+                crate::pathways::decay_edge_labels(nuclides, ch, &mut global_labels);
+                crate::pathways::reaction_edge_labels(
+                    &mut global_labels,
+                    lib.rows(),
+                    lib_targets,
+                    ch,
+                    &effective_fission_yields,
+                    spec.projectile.is_neutron(),
+                );
+                let labels = crate::pathways::position_labels(
+                    &global_labels,
+                    &pos,
+                    &route_reservoir_states,
+                    m,
+                );
+                let mut final_atoms: HashMap<String, f64> = HashMap::new();
+                let mut activity: HashMap<String, f64> = HashMap::new();
+                let mut heat: HashMap<String, f64> = HashMap::new();
+                if let Some(last) = steps.last() {
+                    for entry in &last.inventory {
+                        final_atoms.insert(entry.nuclide.clone(), entry.atoms_per_g);
+                        if let Some(nu) = nuclides.get(&(entry.Z * 1000 + entry.A, entry.LISO)) {
+                            let decays = nu.lambda() * entry.atoms_per_g;
+                            activity.insert(entry.nuclide.clone(), decays);
+                            heat.insert(
+                                entry.nuclide.clone(),
+                                decays * (nu.e_light() + nu.e_em() + nu.e_heavy()),
+                            );
+                        }
+                    }
+                }
+                let report = crate::pathways::analyse(
+                    &crate::pathways::PathwayInput {
+                        node_names,
+                        reservoirs,
+                        steps: route_steps,
+                        initial,
+                        labels,
+                        final_atoms,
+                        activity,
+                        heat,
+                    },
+                    options,
+                )?;
+                profiler.finish("pathway_routes", routes_started);
+                Some(
+                    serde_json::to_value(&report)
+                        .map_err(|error| format!("pathway routes: {error}"))?,
+                )
+            }
+            None => None,
+        };
 
         // P58: per-step pathway aggregation by isomer product, emitted only
         // when the spec requested uncertainty.isomer.
@@ -6534,6 +6697,7 @@ impl PreparedRun {
             screen: screen_block,
             pathway_closure: closure,
             isomer_pathway_shares,
+            pathway_routes,
             ledger,
             certificate,
             ms: t0.elapsed().as_secs_f64() * 1e3,

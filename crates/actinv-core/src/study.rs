@@ -626,6 +626,7 @@ impl Study {
             damage: None,
             self_shielding: None,
             summary: None,
+            pathways: None,
         })
     }
 

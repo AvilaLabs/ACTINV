@@ -27,7 +27,41 @@ Photon group values represent source strength integrated over each energy group.
 
 Two photon components are emitted only when the specification asks for them. With `photon.point_source`, `photon_source.point_source_dose` holds the dose rate in Sv/h at the configured distance from the step's photon source treated as a point source of `material.mass_g` (1 g by default, FISPACT-II's convention), plus the same dose per gram. It is the manual's Eq. (63): group-centroid energies, air energy absorption, optional air transmission, no build-up. A `null` dose carries an `unavailable_reason`, and `subthreshold_power_W` and `excluded_power_W` show the power it could not use. With `photon.bremsstrahlung`, `photon_source.bremsstrahlung` is a separate source and dose for the listed beta emitters, following the manual's thin-target approximation from each nuclide's mean beta energy and the material's mean atomic number. It is never merged into the decay-photon groups or dose proxies, so the total dose from both is the sum of the two fields. Nuclides whose inputs are missing are named in `missing_inputs`, and `inputs_complete` is then `false`. Both are screening estimates with the limits described under [photon options](specification.md#photon-options), not transport results.
 
-Pathways identify a source and first product with ranked contributions in trace mode. They do not enumerate every intermediate member of a reaction chain.
+The `pathways` array identifies a source and first product with ranked contributions in trace mode. It does not enumerate every intermediate member of a reaction chain; the opt-in [`pathway_routes`](#read-the-pathway-routes) analysis does.
+
+## Read the pathway routes
+
+When the spec carries a [`pathways` section](specification.md#pathways-and-routes-analysis), the result gains a
+top-level `pathway_routes` object. It is absent otherwise. (The older `pathways` array identifies a source and
+first product only, in trace mode; `pathway_routes` enumerates the whole reaction and decay chain.)
+
+`pathway_routes.targets[]` has one entry per target nuclide:
+
+| Field | Meaning |
+| --- | --- |
+| `total_atoms_per_g` | The real run's final-step inventory of the target. |
+| `paths_atoms_per_g` | Sum of the reported routes. |
+| `residual_atoms_per_g`, `residual_fraction` | `total - paths`: the part of the inventory no reported route explains. |
+| `explained_fraction` | `paths / total`. |
+| `loop_atoms_per_g` | Portion of the reported routes carried by loop walks. |
+| `paths_dropped_by_cap` | Routes that passed the floors but fell outside `max_paths`. |
+| `paths[]` | Routes ranked by contribution (see below). |
+| `generic[]` | Routes grouped by their edge-type sequence, for example `(n,g) b-`, with `n_paths`, `atoms_per_g` and `fraction`. |
+
+Each route in `paths[]` gives its `source`, the `nuclides` from source to target, the `edges` between them (a
+reaction such as `(n,g)`, `(n,2n)`, `fission`, or a decay mode: `b-`, `b+/EC`, `IT`, `a`, `n`, `p`), `atoms_per_g`
+at the final step, `fraction` of the target's total, and `is_loop`. Loop walks add `loop_gain` and `base_path`;
+`by_step: true` adds `atoms_per_g_by_step`. Reaction names follow neutron conventions; other projectiles use the ENDF
+`MTnnn` number. An edge that the label tables do not cover is named `edge`.
+
+The residual is the accounting check. It is small when the floors keep the routes that matter and `max_depth` is
+long enough; a large residual means the target is fed by many small routes, by chains longer than `max_depth`, or
+by loops beyond `loop_floor`. Lower `path_floor` and raise `max_depth` and `max_paths` to chase it, and read
+`search_truncated`, `explored_walks` and `candidates_dropped_by_cap` for the search's own limits. In a coupled run a
+source that is also the target has a one-node route (the surviving initial atoms).
+Contributions are exact for the routes listed, but the dense integration works to the absolute precision of its
+largest term, so a route carrying under about 1e-10 of the largest term in its own chain is below the method's
+resolution.
 
 ## Step summary
 

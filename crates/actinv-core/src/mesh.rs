@@ -63,8 +63,8 @@ const RESULT_FIELDS: &[&str] = &[
     "ms",
 ];
 
-/// Every key `RunResult` serializes to (a superset of `RESULT_FIELDS`: `screen`
-/// and `isomer_pathway_shares` are not selectable through `cell_result_fields`,
+/// Every key `RunResult` serializes to (a superset of `RESULT_FIELDS`: `screen`,
+/// `isomer_pathway_shares` and `pathway_routes` are not selectable through `cell_result_fields`,
 /// but `run_result_field` still has to know them so a future field can't be
 /// added to the struct without a matching accessor arm going unnoticed). Used
 /// only by the accessor-completeness unit tests: `run_result_field`'s match
@@ -82,6 +82,7 @@ const RUN_RESULT_ACCESSOR_FIELDS: &[&str] = &[
     "screen",
     "pathway_closure",
     "isomer_pathway_shares",
+    "pathway_routes",
     "ledger",
     "certificate",
     "ms",
@@ -92,7 +93,12 @@ const RUN_RESULT_ACCESSOR_FIELDS: &[&str] = &[
 /// `run_result_field` reports these as `Value::Null` when unset; none of them
 /// can otherwise ever serialize to a literal `null`, so the sentinel is
 /// unambiguous for exactly this set.
-const RESULT_OPTIONAL_FIELDS: &[&str] = &["projectile", "screen", "isomer_pathway_shares"];
+const RESULT_OPTIONAL_FIELDS: &[&str] = &[
+    "projectile",
+    "screen",
+    "isomer_pathway_shares",
+    "pathway_routes",
+];
 
 /// Every key `StepOut` serializes to. Used both to validate `steps.<field>`
 /// selections and, together with `RUN_RESULT_ACCESSOR_FIELDS`, to check that
@@ -342,6 +348,7 @@ impl MeshSpec {
             damage: self.damage.clone(),
             self_shielding: self.self_shielding.clone(),
             summary: self.summary.clone(),
+            pathways: None,
         }
     }
 }
@@ -851,6 +858,10 @@ fn run_result_field(result: &RunResult, name: &str) -> Option<Result<serde_json:
         "pathway_closure" => serde_json::to_value(result.pathway_closure),
         "isomer_pathway_shares" => match &result.isomer_pathway_shares {
             Some(shares) => serde_json::to_value(shares),
+            None => Ok(serde_json::Value::Null),
+        },
+        "pathway_routes" => match &result.pathway_routes {
+            Some(routes) => serde_json::to_value(routes),
             None => Ok(serde_json::Value::Null),
         },
         "ledger" => serde_json::to_value(&result.ledger),
@@ -2092,6 +2103,7 @@ mod tests {
             screen: Some(serde_json::json!({"ok": true})),
             pathway_closure: 0.01,
             isomer_pathway_shares: Some(Vec::new()),
+            pathway_routes: Some(serde_json::json!({"schema": "actinv-pathways-1"})),
             ledger: serde_json::json!({"k": 1}),
             certificate: serde_json::json!({"c": 2}),
             ms: 12.5,
@@ -2112,6 +2124,7 @@ mod tests {
             screen: None,
             pathway_closure: 0.0,
             isomer_pathway_shares: None,
+            pathway_routes: None,
             ledger: serde_json::Value::Null,
             certificate: serde_json::Value::Null,
             ms: 0.0,

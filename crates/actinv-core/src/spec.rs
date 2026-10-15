@@ -1,6 +1,7 @@
 #![allow(non_snake_case)] // field names are the JSON wire format (boundaries_eV, temperature_K)
 //! `actinv-spec-1`: the one problem description the CLI, the Python API and the harness all consume.
 //! Unknown fields are an error (`deny_unknown_fields`) — a misspelt option must never be silently ignored.
+use crate::pathways::PathwayOptions;
 use crate::quantity::{
     AtomsPerGram, ElectronVolts, EnergyBoundaries, FluxMultiplier, Grams, GroupFluxes, Kelvin,
     Seconds,
@@ -41,6 +42,9 @@ pub struct Spec {
     /// byte-identical to pre-P122 output.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub summary: Option<SummaryOptions>,
+    /// Opt-in full pathways/routes analysis (P127). Absence is byte-identical to pre-P127 output.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub pathways: Option<PathwayOptions>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -1293,6 +1297,9 @@ impl Spec {
                 return Err("options.outputs 'damage' requires a damage section".into());
             }
         }
+        if let Some(pathways) = &self.pathways {
+            pathways.validate()?;
+        }
         if let Some(shielding) = &self.self_shielding {
             // Checked here, not only at prepare time, so validate-only tooling agrees.
             if !self.projectile.is_neutron() {
@@ -2307,6 +2314,35 @@ mod duration_tests {
             let error = spec_with(overrides.clone()).unwrap_err();
             assert!(error.contains(want), "{overrides}: {error}");
         }
+    }
+
+    #[test]
+    fn pathways_section_is_opt_in_validated_and_absent_from_the_echo() {
+        let spec = Spec::from_json(&minimal_spec().to_string()).unwrap();
+        assert!(spec.pathways.is_none());
+        assert!(serde_json::to_value(&spec)
+            .unwrap()
+            .get("pathways")
+            .is_none());
+
+        let mut value = minimal_spec();
+        value["pathways"] = serde_json::json!({"targets": ["Mn56"], "max_depth": 6});
+        let spec = Spec::from_json(&value.to_string()).unwrap();
+        let options = spec.pathways.unwrap();
+        assert_eq!(options.max_depth, 6);
+        assert_eq!(options.path_floor, 0.005);
+        assert_eq!(options.loop_floor, 0.01);
+
+        value["pathways"] = serde_json::json!({"max_depth": 0});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("pathways.max_depth"));
+        value["pathways"] = serde_json::json!({"targets": ["Fe"]});
+        assert!(Spec::from_json(&value.to_string())
+            .unwrap_err()
+            .contains("explicit nuclide"));
+        value["pathways"] = serde_json::json!({"depth": 3});
+        assert!(Spec::from_json(&value.to_string()).is_err());
     }
 
     #[test]

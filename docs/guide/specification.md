@@ -426,6 +426,54 @@ accepted by the mesh specification and applies to every cell.
 
 [Read your results](results.md#step-summary) describes the emitted fields.
 
+## Pathways and routes analysis
+
+The optional `pathways` object asks for a full source-to-target route analysis (FISPACT-II's `ROUTES` and
+`UNCERTAINTY` pathway tables). It is opt-in: without it the result is byte-identical to a run that never heard of
+it, and it is independent of the older `options.outputs` entry `pathways`, which keeps the trace-mode
+first-product table.
+
+```json
+"pathways": {
+  "targets": ["Mn54", "Co60"],
+  "sources": [],
+  "max_depth": 10,
+  "path_floor": 0.005,
+  "loop_floor": 0.01,
+  "max_paths": 100
+}
+```
+
+| Field | Default | Meaning |
+| --- | --- | --- |
+| `targets` | `[]` | Target nuclides. Empty selects the dominant nuclides of the final step automatically. |
+| `rank_by` | `"activity"` | Ranking for automatic targets: `"activity"` or `"heat"` at the final step. |
+| `top_targets` | `10` | Number of automatic targets. |
+| `sources` | `[]` | Source nuclides. Empty selects every initial nuclide (in trace mode the bulk material's nuclides, plus `feed` when the schedule declares one). |
+| `max_depth` | `10` | Largest number of edges between a source and a target (1 to 64). |
+| `path_floor` | `0.005` | A route is kept when it carries at least this fraction of its target's inventory. |
+| `loop_floor` | `0.01` | A walk that revisits a nuclide is kept when it raises its loop-erased path's contribution by at least this fraction. |
+| `max_paths` | `100` | Routes reported per target; the excess is dropped smallest first and shows up in the residual. |
+| `by_step` | `false` | Also report every route's atoms at the end of each schedule step. |
+
+Nuclide names are explicit nuclides such as `Mn54` or `Co60m1`. A source that is not an initial nuclide, or a target
+that is not a tracked state of the run, is named in the result's `notes` rather than failing the run.
+
+Each route is integrated exactly rather than estimated. For a route `x0 -> x1 -> ... -> xk`, ACTINV solves the
+linear chain with every node's full removal rate (decay, all reactions and declared removal) on the diagonal and
+only the route's own edge as the source, through every schedule step, using the same per-step rates the main solve
+used. The solve is a dense matrix exponential of the small bidiagonal system, so there is no Bateman closed form
+and equal rates are harmless. The analysis is linear in the source atoms and works in both trace and coupled
+modes. A route is at most `max_depth` edges long; the search discards a branch as soon as an upper bound on what
+it can still deliver falls below the smallest target's `path_floor`, so default settings stay fast on large
+networks.
+
+The target inventory is the sum over every walk through the graph of that walk's chain contribution. Walks that
+never repeat a nuclide are reported as ordinary routes. A walk that revisits a nuclide (for example a
+`(n,g)` reaction followed by a decay back to the parent) has `is_loop: true`, names its loop-erased `base_path`,
+and reports `loop_gain`, its contribution relative to that base path. The floors apply to routes and loop walks
+separately, so a route below `path_floor` alone is not promoted by the loops attached to it.
+
 ## Photon options
 
 The entire `photon` object is optional. Without a response file, ACTINV still emits evaluated line/multigroup photon
