@@ -2785,3 +2785,26 @@ Candidate: release build of `cfff234`, SHA-256 `a394e3a9…628c`. Reference: `2f
   a report-only gate carries no pass flag.
 
 Record: `results/p130_groups.json`. G6 (CI) is pending.
+
+## Entry 150 — P133 candidate: G2–G4 recorded (2026-10-15)
+
+Defect (pre-existing in the released base): trace mode held radioactive initial material constant, and `auto` chose
+trace from reaction burn-up alone. On the base release, Co-60 at 1e20 atoms/g decayed for one half-life reported
+4.17e11 Bq/g (correct 2.08e11). Restart and continuation inventories that did not set `coupled` are affected. The fix
+(`b09a298`) adds a bulk decay depth (`decay_edges` × total schedule time): `auto` selects coupled when it reaches
+1e-6, explicit trace is refused, and the ledger keys `bulk_decay_fraction_max`/`bulk_decay_nuclide` appear only when
+triggered.
+
+Candidate: release build of `b09a298`, SHA-256 `72896398…c5d0`. Reference: `2f3daa4` (`3d34d7ca…2b5f`). Checker:
+`controls/check_p133.py`.
+
+- **G2:** `fns_fe_5min`, a natural KCl variant (K-40 in the bulk) and `shielding_demo` are byte-identical apart from
+  `ms`.
+- **G3:** Co-60 1e20 atoms/g, zero flux, 5.27 y, `auto`: the candidate selects coupled; Co-60 activity and Ni-60
+  atoms agree with the analytic decay (half-life from an independent MT=457 read) to 2.9e-16 and 3.3e-16. Ledger:
+  `bulk_decay_fraction_max` 0.49993 on Co60.
+- **G4:** the FNS Fe step-1 inventory restarted as `atoms_per_g` with a 1 d cooling step selects coupled and matches
+  the continued coupled run exactly (worst relative 0.0) on the 5 nuclides above 1e-12 of total atoms. Report-only:
+  all 7 activity contributors above 1e-12 of total activity also match exactly (520.2776 Bq/g both ways).
+
+Record: `results/p133_trace_decay.json`. G5 (CI with sealed baselines unchanged) is pending.

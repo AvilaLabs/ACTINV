@@ -1,0 +1,56 @@
+{
+ "candidate_sha256": "728963981dfa25809bc43b93721e185a7af02d1831f80ae84cf22aed3ae5c618",
+ "checker_sha256": "411e12f8b494ac3636c32f94bb5af5d938b353655e117f08c1b853e2e17a0338",
+ "gates": {
+  "G2": {
+   "pass": true,
+   "specs": {
+    "fns_fe_5min": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "ed55ed00f6c00fc4a2351e18332e98e7feb33d9b7ca65e7ba861e0e5e8feef39"
+    },
+    "kcl": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "5f7676f00876af946cac48a4ecfa3575f3d5ccb4a85fe96da0efc124bce844e6"
+    },
+    "shielding_demo": {
+     "identical_apart_from_ms": true,
+     "spec_sha256": "5da1f8e0d1028bba93a51c5b21125d6145aaf24d0f1a65c2c90acf735616afb1"
+    }
+   }
+  },
+  "G3": {
+   "co60_activity": 208378215337.02194,
+   "co60_expected": 208378215337.022,
+   "half_life_s": 166344200.0,
+   "ledger_bulk_decay": {
+    "bulk_decay_fraction_max": 0.49992572285061837,
+    "bulk_decay_nuclide": "Co60"
+   },
+   "mode": "coupled",
+   "ni60": 4.9992572285061825e+19,
+   "ni60_expected": 4.999257228506184e+19,
+   "pass": true,
+   "rel_activity": 2.9290564827654536e-16,
+   "rel_ni60": 3.277286855050598e-16
+  },
+  "G4": {
+   "bad": [],
+   "compared": 5,
+   "pass": true,
+   "report_activity": {
+    "compared": 7,
+    "total_continued": 520.2775668885848,
+    "total_restart": 520.2775668885848,
+    "worst_nuclide": "Cr51",
+    "worst_relative": 0.0
+   },
+   "restart_mode": "coupled",
+   "worst_relative": 0.0
+  }
+ },
+ "protocol": "protocols/ACTINV-P133_PROTOCOL.md",
+ "protocol_sha256": "bf213d0784682bc54056ee2f877a15a08581ad6545ae6b5267c2304467fc5e74",
+ "reference_sha256": "3d34d7ca5887be03e19b81f8ae06d784ed53ec1310a69764ed70b8672bc42b5f",
+ "verdict": "PASS"
+}
