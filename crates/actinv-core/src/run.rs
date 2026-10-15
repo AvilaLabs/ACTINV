@@ -28,7 +28,7 @@ use actinv_data::{
 };
 use num_complex::Complex64 as C64;
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::io::Read;
 use std::sync::{Mutex, OnceLock};
 
@@ -690,9 +690,27 @@ struct UncertaintyRuntime {
     /// needed to emit a `propagated` channel report even with zero parameters.
     decay_channel_requested: bool,
     yield_channel_requested: bool,
+    /// Tangent states, indexed by *propagation* order — dense under the
+    /// default path (one per declared parameter), covered-restricted under
+    /// `restrict_tangents_to_covered`.
     tangents: Vec<Vec<f64>>,
+    /// compact tangent index -> dense parameter position (parameters, then
+    /// decay_parameters, then yield_parameters). Identity in the default
+    /// path; under restriction, uncovered cross-section parameters keep
+    /// their dense positions for reporting but have no tangent row.
+    propagated_parameter_positions: Vec<usize>,
     covered_parameter_positions: Vec<usize>,
     covariance_barn2: Vec<f64>,
+    /// Nonzero `(row, column, value)` entries of `covariance_barn2` in
+    /// row-major order — populated only under tangent restriction, where the
+    /// per-response quadratic form iterates them instead of the dense n^2
+    /// scan. Summation order matches the dense loop restricted to nonzero
+    /// terms, which contributes exactly +-0.0 each — bitwise identical.
+    covariance_pairs: Vec<(u32, u32, f64)>,
+    /// True under tangent restriction: the quadratic form contracts
+    /// `covariance_pairs` (possibly empty when every covered entry is zero)
+    /// and `covariance_barn2` is empty.
+    contract_pairs: bool,
     uncovered_library_rows: Vec<usize>,
     absent_cross_parameter_pairs: usize,
     maximum_covariance_asymmetry_barn2: f64,
@@ -1423,7 +1441,9 @@ fn build_step_uncertainty(
 ) -> Result<StepUncertainty, String> {
     let mut responses = BTreeMap::new();
     for response in selected_responses(options, nominal) {
-        let values: Vec<f64> = runtime
+        // Compact tangents -> dense parameter positions: uncovered
+        // parameters (no propagated row) emit zero sensitivity.
+        let compact: Vec<f64> = runtime
             .tangents
             .iter()
             .map(|tangent| {
@@ -1437,13 +1457,26 @@ fn build_step_uncertainty(
                 )
             })
             .collect();
+        let mut values = vec![
+            0.0;
+            runtime.parameters.len()
+                + runtime.decay_parameters.len()
+                + runtime.yield_parameters.len()
+                + runtime.flux_parameters.len()
+        ];
+        for (t, &position) in runtime.propagated_parameter_positions.iter().enumerate() {
+            values[position] = compact[t];
+        }
         let covered: Vec<f64> = runtime
             .covered_parameter_positions
             .iter()
             .map(|position| values[*position])
             .collect();
-        let (variance, residue) =
-            uncertainty_report::propagated_variance(&covered, &runtime.covariance_barn2)?;
+        let (variance, residue) = if runtime.contract_pairs {
+            uncertainty_report::propagated_variance_pairs(&covered, &runtime.covariance_pairs)?
+        } else {
+            uncertainty_report::propagated_variance(&covered, &runtime.covariance_barn2)?
+        };
         let response_unit = if response.starts_with("heat.") {
             "W g^-1"
         } else {
@@ -1572,16 +1605,33 @@ fn build_step_uncertainty(
         } else {
             (None, None)
         };
-        let sensitivities: Vec<SensitivityOut> = values
-            .into_iter()
-            .take(xs_count)
-            .zip(&runtime.parameters)
-            .map(|(value, parameter)| SensitivityOut {
-                parameter: parameter.clone(),
-                value,
-                unit: sensitivity_unit.clone(),
-            })
-            .collect();
+        // Restricted runs emit per-parameter records only for propagated
+        // parameters — uncovered positions have no tangent and would emit
+        // meaningless zeros at O(responses × all-rows) serialization cost.
+        let sensitivities: Vec<SensitivityOut> = if options.restrict_tangents_to_covered {
+            runtime
+                .propagated_parameter_positions
+                .iter()
+                .filter(|&&position| position < xs_count)
+                .map(|&position| SensitivityOut {
+                    parameter: runtime.parameters[position].clone(),
+                    value: values[position],
+                    unit: sensitivity_unit.clone(),
+                })
+                .collect()
+        } else {
+            values
+                .iter()
+                .copied()
+                .take(xs_count)
+                .zip(&runtime.parameters)
+                .map(|(value, parameter)| SensitivityOut {
+                    parameter: parameter.clone(),
+                    value,
+                    unit: sensitivity_unit.clone(),
+                })
+                .collect()
+        };
         let voi = if let Some(voi_options) = &options.voi {
             // Same total the band uses: MF=33 propagated variance plus the
             // declared diagonal channels.
@@ -1941,9 +1991,12 @@ impl PreparedRun {
     }
 
     pub fn prepare(spec: &Spec) -> Result<Self, String> {
-        let mut profiler = RunProfiler::disabled();
+        let started = std::time::Instant::now();
+        let mut profiler = RunProfiler::from_environment();
         let physical = spec.physical_inputs()?;
-        Self::prepare_profiled(spec, &physical, &mut profiler)
+        let prepared = Self::prepare_profiled(spec, &physical, &mut profiler);
+        profiler.emit(started.elapsed());
+        prepared
     }
 
     /// P72: resolve an `actinv-unmodeled-table-1` artifact into a declared
@@ -2926,17 +2979,20 @@ impl PreparedRun {
         cell: Option<CellCollapse<'_>>,
         flux_origin: Option<MeshFluxOrigin<'_>>,
     ) -> Result<RunResult, String> {
-        let mut profiler = RunProfiler::disabled();
+        let started = std::time::Instant::now();
+        let mut profiler = RunProfiler::from_environment();
         let physical = spec.physical_inputs()?;
-        self.run_started_profiled(
+        let result = self.run_started_profiled(
             spec,
             &physical,
             entry_point,
-            std::time::Instant::now(),
+            started,
             &mut profiler,
             cell,
             flux_origin,
-        )
+        );
+        profiler.emit(started.elapsed());
+        result
     }
 
     /// Number of activation-library rows (the row range of [`Self::collapse_rows_batched`]).
@@ -4047,11 +4103,50 @@ impl PreparedRun {
                 // spectrum, and the joint covariance rows keep the
                 // cross-spectrum correlations.
                 let n_spectra = phis.len();
+                let restrict = options.restrict_tangents_to_covered;
+                // Per-parameter reports index the emitted sensitivity vector
+                // positionally — incompatible with a compact tangent set.
+                // The flag is internal (study comparison); keep the guard
+                // so any future caller gets an error, not wrong data.
+                if restrict
+                    && (options.voi.is_some()
+                        || options.isomer.is_some()
+                        || options.design.is_some())
+                {
+                    return Err("restrict_tangents_to_covered cannot combine with \
+                         uncertainty.voi/isomer/design reporting"
+                        .into());
+                }
+                // A covered parameter with zero collapsed variance has an
+                // identically zero covariance row (Σ is PSD, so Σ_ii = 0
+                // forces Σ_i* = 0): it contributes exactly zero to every
+                // contraction and its tangent may be skipped without
+                // approximation. Restricted runs drop it.
+                let n_cov = n_covered_rows.min(collapsed.row_indices.len());
+                let n_cov_total = n_spectra * n_cov;
+                let mut zero_variance_pairs: HashSet<(usize, usize)> = HashSet::new();
+                for spectrum in 0..n_spectra {
+                    for (pi, &row_index) in collapsed.row_indices[..n_cov].iter().enumerate() {
+                        let diag = spectrum * n_cov + pi;
+                        if collapsed.covariance_barn2[diag * n_cov_total + diag] == 0.0 {
+                            zero_variance_pairs.insert((spectrum, row_index));
+                        }
+                    }
+                }
+                if std::env::var_os("ACTINV_TRACE").is_some() {
+                    eprintln!(
+                        "ACTINV_TRACE cov covered_rows={n_covered_rows} \
+                         covered_params={n_cov_total} zero_diag={} \
+                         spectra={n_spectra}",
+                        zero_variance_pairs.len()
+                    );
+                }
                 let mut parameters = Vec::with_capacity(active_rows.len() * n_spectra);
                 let mut directions = Vec::with_capacity(parameters.capacity());
                 let mut parameter_spectrum = Vec::with_capacity(parameters.capacity());
                 let mut position_of: HashMap<(usize, usize), usize> =
                     HashMap::with_capacity(parameters.capacity());
+                let mut propagated_parameter_positions = Vec::new();
                 for spectrum in 0..n_spectra {
                     let phi_s = phis[spectrum];
                     for &row_index in &active_rows {
@@ -4077,11 +4172,23 @@ impl PreparedRun {
                             covariance_covered: covered,
                             covariance_excluded: excluded,
                         });
-                        let triplets = derivative_subs[spectrum]
-                            .get(&row_index)
-                            .map_or(&[][..], |triplets| triplets.as_slice());
-                        directions.push(Csc::from_triplets(m, triplets));
-                        parameter_spectrum.push(Some(spectrum));
+                        // Restricted mode integrates a tangent only for
+                        // covariance-covered rows: an uncovered parameter's
+                        // tangent never enters the covered contraction, so
+                        // integrating it is pure cost — its sensitivity
+                        // record emits zero instead. A covered row whose
+                        // collapsed variance is zero likewise contributes an
+                        // exactly-zero row to every contraction — skipped.
+                        if !restrict
+                            || (covered && !zero_variance_pairs.contains(&(spectrum, row_index)))
+                        {
+                            propagated_parameter_positions.push(parameters.len() - 1);
+                            let triplets = derivative_subs[spectrum]
+                                .get(&row_index)
+                                .map_or(&[][..], |triplets| triplets.as_slice());
+                            directions.push(Csc::from_triplets(m, triplets));
+                            parameter_spectrum.push(Some(spectrum));
+                        }
                     }
                 }
                 // covered_parameter_positions aligns `parameters` positions to
@@ -4089,10 +4196,7 @@ impl PreparedRun {
                 let mut covered_parameter_positions =
                     Vec::with_capacity(n_covered_rows * n_spectra);
                 for spectrum in 0..n_spectra {
-                    for &row_index in collapsed.row_indices
-                        [..n_covered_rows.min(collapsed.row_indices.len())]
-                        .iter()
-                    {
+                    for &row_index in collapsed.row_indices[..n_cov].iter() {
                         if let Some(&position) = position_of.get(&(spectrum, row_index)) {
                             covered_parameter_positions.push(position);
                         }
@@ -4184,14 +4288,49 @@ impl PreparedRun {
                     directions.push(direction);
                     parameter_spectrum.push(Some(0));
                 }
+                // decay/yield parameters always propagate (declared-uncertainty
+                // channels, few in number); their dense positions follow the
+                // cross-section block.
+                let xs_count = parameters.len();
+                for i in 0..decay_parameters.len() {
+                    propagated_parameter_positions.push(xs_count + i);
+                }
+                for i in 0..yield_parameters.len() {
+                    propagated_parameter_positions.push(xs_count + decay_parameters.len() + i);
+                }
+                // P93 flux-channel parameters likewise always propagate; their
+                // directions were pushed after the yield block.
+                for i in 0..flux_parameters.len() {
+                    propagated_parameter_positions
+                        .push(xs_count + decay_parameters.len() + yield_parameters.len() + i);
+                }
+                // Restricted runs contract the quadratic form over nonzero
+                // covariance entries only — MF=33 blocks are block-sparse, so
+                // on wide-coverage chains this replaces a covered^2 scan per
+                // response with one per stored pair. Row-major traversal is
+                // bitwise-identical to the dense loop's nonzero terms.
+                let (covariance_barn2, covariance_pairs) = if restrict {
+                    let mut pairs = Vec::with_capacity(collapsed.covariance_barn2.len() / 16);
+                    for row in 0..n_cov_total {
+                        let base = row * n_cov_total;
+                        for (column, &value) in collapsed.covariance_barn2[base..base + n_cov_total]
+                            .iter()
+                            .enumerate()
+                        {
+                            if value != 0.0 {
+                                pairs.push((row as u32, column as u32, value));
+                            }
+                        }
+                    }
+                    (Vec::new(), Some(pairs))
+                } else {
+                    (collapsed.covariance_barn2, None)
+                };
                 Some(UncertaintyRuntime {
-                    tangents: vec![
-                        vec![0.0; m];
-                        parameters.len()
-                            + decay_parameters.len()
-                            + yield_parameters.len()
-                            + flux_parameters.len()
-                    ],
+                    tangents: vec![vec![0.0; m]; propagated_parameter_positions.len()],
+                    propagated_parameter_positions,
+                    contract_pairs: covariance_pairs.is_some(),
+                    covariance_pairs: covariance_pairs.unwrap_or_default(),
                     directions,
                     parameter_spectrum,
                     decay_channel_requested,
@@ -4204,7 +4343,7 @@ impl PreparedRun {
                     yield_parameters,
                     flux_parameters,
                     covered_parameter_positions,
-                    covariance_barn2: collapsed.covariance_barn2,
+                    covariance_barn2,
                     uncovered_library_rows: collapsed.uncovered_rows,
                     absent_cross_parameter_pairs: collapsed.absent_cross_parameter_pairs,
                     maximum_covariance_asymmetry_barn2: collapsed.maximum_asymmetry_barn2,
@@ -4231,6 +4370,7 @@ impl PreparedRun {
                 }
                 Some(UncertaintyRuntime {
                     tangents: vec![vec![0.0; m]; flux_parameters.len()],
+                    propagated_parameter_positions: (0..flux_parameters.len()).collect(),
                     directions,
                     parameter_spectrum,
                     decay_channel_requested: false,
@@ -4244,6 +4384,8 @@ impl PreparedRun {
                     flux_parameters,
                     covered_parameter_positions: Vec::new(),
                     covariance_barn2: Vec::new(),
+                    covariance_pairs: Vec::new(),
+                    contract_pairs: false,
                     uncovered_library_rows: Vec::new(),
                     absent_cross_parameter_pairs: 0,
                     maximum_covariance_asymmetry_barn2: 0.0,
@@ -4258,6 +4400,21 @@ impl PreparedRun {
             _ => return Err("prepared covariance state does not match the run spec".into()),
         };
         profiler.finish("material_network_preparation", network_started);
+        if std::env::var_os("ACTINV_TRACE").is_some() {
+            eprintln!(
+                "ACTINV_TRACE net_done tangents={} params={} cov_entries={} covered_params={}",
+                uncertainty_runtime.as_ref().map_or(0, |r| r.tangents.len()),
+                uncertainty_runtime
+                    .as_ref()
+                    .map_or(0, |r| r.parameters.len()),
+                uncertainty_runtime
+                    .as_ref()
+                    .map_or(0, |r| r.covariance_barn2.len()),
+                uncertainty_runtime
+                    .as_ref()
+                    .map_or(0, |r| r.covered_parameter_positions.len()),
+            );
+        }
 
         let solve_started = profiler.start();
         // ---- solve
@@ -4331,6 +4488,9 @@ impl PreparedRun {
                         Some(_) => 0.0,
                     })
                     .collect();
+                if std::env::var_os("ACTINV_TRACE").is_some() {
+                    eprintln!("ACTINV_TRACE step={si} tangent_step_start");
+                }
                 let tangent_step = step_with_tangents(
                     &a,
                     &y,
@@ -4340,6 +4500,9 @@ impl PreparedRun {
                     dt.get(),
                     &c,
                 )?;
+                if std::env::var_os("ACTINV_TRACE").is_some() {
+                    eprintln!("ACTINV_TRACE step={si} tangent_step_done");
+                }
                 y = tangent_step.state;
                 runtime.tangents = tangent_step.tangents;
                 runtime.alternate_y = cram_step(
@@ -4546,7 +4709,10 @@ impl PreparedRun {
                         bulk_heat_split,
                         &bulk_activity,
                     );
-                    Some(build_step_uncertainty(
+                    if std::env::var_os("ACTINV_TRACE").is_some() {
+                        eprintln!("ACTINV_TRACE step={si} unc_emit_start");
+                    }
+                    let built = Some(build_step_uncertainty(
                         runtime,
                         options,
                         &nominal,
@@ -4557,7 +4723,11 @@ impl PreparedRun {
                             chain: ch,
                             nuclides,
                         },
-                    )?)
+                    )?);
+                    if std::env::var_os("ACTINV_TRACE").is_some() {
+                        eprintln!("ACTINV_TRACE step={si} unc_emit_done");
+                    }
+                    built
                 }
                 (None, None) => None,
                 _ => return Err("uncertainty runtime state is inconsistent".into()),
@@ -4667,6 +4837,9 @@ impl PreparedRun {
             });
         }
         profiler.finish("schedule_solve_diagnostics", solve_started);
+        if std::env::var_os("ACTINV_TRACE").is_some() {
+            eprintln!("ACTINV_TRACE solve_done");
+        }
 
         let pathways_started = profiler.start();
         // ---- pathways (trace mode only): give every source its own unit state so one factorisation serves all of them,
@@ -5555,6 +5728,12 @@ impl PreparedRun {
                 .as_object_mut()
                 .expect("ledger is an object")
                 .insert("uncertainty".into(), record);
+            if options.restrict_tangents_to_covered {
+                // Only emitted under restriction — byte-identical ledger for
+                // the dense path (sealed result hashes must not move).
+                ledger["uncertainty"]["tangents_integrated"] = runtime.tangents.len().into();
+                ledger["uncertainty"]["per_parameter_sensitivities"] = "covered_rows_only".into();
+            }
         }
         let mut certificate = serde_json::json!({
             "solver": concat!("actinv-core ", env!("CARGO_PKG_VERSION")),

@@ -3082,6 +3082,13 @@ fn evaluate_robustness_inner(
                 unmodeled_relative: None,
                 unmodeled_table: None,
                 unmodeled_evalspread: None,
+                // The comparison consumes only response stds — a covered
+                // contraction — so uncovered tangents never enter; on wide
+                // fission chains this drops the tangent solve ~150x.
+                // ACTINV_DENSE_COMPARISON_TANGENTS forces the dense build —
+                // the mechanics gate uses it to demonstrate std equality.
+                restrict_tangents_to_covered: std::env::var_os("ACTINV_DENSE_COMPARISON_TANGENTS")
+                    .is_none(),
             });
             match prep.run_prepared(&uspec) {
                 Ok(urr) => {
@@ -3112,12 +3119,30 @@ fn evaluate_robustness_inner(
                         }
                         comparisons.insert(response.clone(), Value::Object(per_time));
                     }
-                    local_vs_nonlinear = json!({
-                        "method": "first-order local propagation (P11) vs nonlinear sample spread",
-                        "comparisons": comparisons,
-                        "total_activity_approximation":
-                            "activity.total propagated directly through the full covariance (s^T Σ s); no root-sum-square combination",
-                    });
+                    let mut lvn = Map::new();
+                    lvn.insert(
+                        "method".into(),
+                        "first-order local propagation (P11) vs nonlinear sample spread".into(),
+                    );
+                    lvn.insert("comparisons".into(), Value::Object(comparisons));
+                    // restricted tangent runs declare their working set —
+                    // the mechanics gate verifies the count collapsed to
+                    // the covered row set while stds stayed identical.
+                    if let Some(n) = uv
+                        .pointer("/ledger/uncertainty/tangents_integrated")
+                        .cloned()
+                    {
+                        lvn.insert("tangents_integrated".into(), n);
+                    }
+                    if let Some(n) = uv.pointer("/ledger/uncertainty/active_parameters").cloned() {
+                        lvn.insert("active_parameters".into(), n);
+                    }
+                    lvn.insert(
+                        "total_activity_approximation".into(),
+                        "activity.total propagated directly through the full covariance (s^T Σ s); no root-sum-square combination"
+                            .into(),
+                    );
+                    local_vs_nonlinear = Value::Object(lvn);
                 }
                 Err(e) => {
                     local_vs_nonlinear = json!({
@@ -3687,6 +3712,7 @@ mod robustness_tests {
             unmodeled_relative: None,
             unmodeled_table: None,
             unmodeled_evalspread: None,
+            restrict_tangents_to_covered: false,
         });
         assert_ne!(prepared_signature(&spec2), sig0);
     }

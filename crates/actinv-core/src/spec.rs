@@ -120,6 +120,15 @@ pub struct UncertaintyOptions {
     /// `unmodeled_relative` and `unmodeled_table`.
     #[serde(default)]
     pub unmodeled_evalspread: Option<HashedFileRef>,
+    /// Internal: integrate tangents for covariance-covered cross-section
+    /// parameters only. Response standard deviations are unchanged —
+    /// uncovered parameters contribute nothing to the covered contraction —
+    /// but per-parameter sensitivity records for uncovered rows read zero,
+    /// so this is for internal diagnostics (the study robustness
+    /// first_order_comparison) whose consumption is the response std only.
+    /// Never serialized; never valid in a user spec.
+    #[serde(skip)]
+    pub restrict_tangents_to_covered: bool,
 }
 
 /// A sha-bound reference to an `actinv-unmodeled-table-1` artifact.

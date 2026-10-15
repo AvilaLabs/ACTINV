@@ -510,6 +510,51 @@ pub fn propagated_variance(
     }
 }
 
+/// Sparse-pair variant of `propagated_variance`: the pairs list holds every
+/// nonzero `(row, column, value)` of the same covariance matrix in row-major
+/// order. Since the dense loop's skipped terms are exactly zero, the two
+/// sums are bitwise identical — same accumulation sequence.
+pub fn propagated_variance_pairs(
+    sensitivities: &[f64],
+    pairs: &[(u32, u32, f64)],
+) -> Result<(f64, f64), String> {
+    if sensitivities.iter().any(|value| !value.is_finite())
+        || pairs.iter().any(|&(_, _, value)| !value.is_finite())
+    {
+        return Err("nonfinite sensitivity or covariance component".into());
+    }
+    let size = sensitivities.len();
+    if let Some(&(row, column, _)) = pairs
+        .iter()
+        .find(|&&(row, column, _)| row as usize >= size || column as usize >= size)
+    {
+        return Err(format!(
+            "covariance pair ({row}, {column}) is outside {size} sensitivities"
+        ));
+    }
+    let mut variance = 0.0;
+    let mut absolute_sum = 0.0;
+    for &(row, column, value) in pairs {
+        let term = sensitivities[row as usize] * value * sensitivities[column as usize];
+        variance += term;
+        absolute_sum += term.abs();
+    }
+    if !variance.is_finite() || !absolute_sum.is_finite() {
+        return Err("propagated response variance overflowed".into());
+    }
+    let tolerance = 128.0 * f64::EPSILON * absolute_sum;
+    if variance < -tolerance {
+        return Err(format!(
+            "materially negative propagated response variance {variance:.17e} (round-off bound {tolerance:.17e})"
+        ));
+    }
+    if variance < 0.0 {
+        Ok((0.0, -variance))
+    } else {
+        Ok((variance, 0.0))
+    }
+}
+
 pub fn normal_multiplier(confidence_level: f64) -> f64 {
     let target = 0.5 * (1.0 + confidence_level);
     let mut low = 0.0;
@@ -755,7 +800,46 @@ pub fn response_band(input: BandInput) -> Result<ResponseUncertainty, String> {
 
 #[cfg(test)]
 mod tests {
-    use super::propagated_variance;
+
+    #[test]
+    fn pair_contraction_is_bitwise_dense_contraction() {
+        // Block-sparse PSD covariance with exact zeros, including a
+        // zero-variance row, and mixed-sign sensitivities.
+        let size = 5;
+        let mut covariance = vec![0.0; size * size];
+        let entries = [
+            (0, 0, 2.5e-3),
+            (0, 1, -7.25e-4),
+            (1, 0, -7.25e-4),
+            (1, 1, 1.125e-3),
+            (3, 3, 4.0e-2),
+            (3, 4, 1.3e-2),
+            (4, 3, 1.3e-2),
+            (4, 4, 9.0e-3),
+        ];
+        for (row, column, value) in entries {
+            covariance[row * size + column] = value;
+        }
+        let pairs: Vec<(u32, u32, f64)> = (0..size)
+            .flat_map(|row| (0..size).map(move |column| (row, column)))
+            .filter(|&(row, column)| covariance[row * size + column] != 0.0)
+            .map(|(row, column)| (row as u32, column as u32, covariance[row * size + column]))
+            .collect();
+        let sensitivities = [3.0e-1, -1.7, 4.4e2, 2.0e-5, -6.5e-1];
+        let dense = propagated_variance(&sensitivities, &covariance).unwrap();
+        let sparse = propagated_variance_pairs(&sensitivities, &pairs).unwrap();
+        assert_eq!(dense.0.to_bits(), sparse.0.to_bits());
+        assert_eq!(dense.1.to_bits(), sparse.1.to_bits());
+        // Every covered entry zero: an empty pair list is a zero variance,
+        // not an error.
+        assert_eq!(
+            propagated_variance_pairs(&sensitivities, &[]).unwrap(),
+            (0.0, 0.0)
+        );
+        assert!(propagated_variance_pairs(&sensitivities, &[(5, 0, 1.0)]).is_err());
+        assert!(propagated_variance_pairs(&sensitivities, &[(0, 0, f64::NAN)]).is_err());
+    }
+    use super::{propagated_variance, propagated_variance_pairs};
 
     #[test]
     fn cross_covariance_is_retained() {

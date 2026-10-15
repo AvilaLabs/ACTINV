@@ -10,7 +10,7 @@ db5deaf339bbe487e8910e1227a1c08ffc3aa362973b7b2c4981e7e3261d6288  ./.github/work
 45506fb0fb8f0a34c49c35c97d5e7a4584894562c516f2e77c712134bea58d2e  ./.github/workflows/web.yml
 089ebaddee0fb463b39ba662955716c09c4405a2d831997dcc8674eb68d6a9c3  ./.gitignore
 9d5bea15c985dcb2fbb60fb5fc92c5aceaaee39ded7d93ed469ab7fce8b5f5bf  ./AGENTS.md
-fa0eaa3070e9988b66775cf6154f2ad43b5ccea1a61afce52c8b6b8784fb3689  ./CHANGELOG.md
+cc287c3e1c60c0b139a1d64aa6fed1a9d942739066aa2767fc9f196672e732a8  ./CHANGELOG.md
 19356fe59b98c92c3d8a4868c85964de27ea6e2031d402901dcf81613e3ea437  ./COMPETITIVE_BENCHMARK.md
 06debfb88cbe4179817b24708768586cc46b4ef0a9c94a4d6de3007a2f1fe8a1  ./CONTRIBUTING.md
 a660d036fc7139f431df7754f831fcc6e1eb8686e49b04336aefcd83063301b4  ./Cargo.lock
@@ -385,6 +385,7 @@ f89b77d20454c9eff38e66c9c7db8ffe74a64f15e6112856639963df073e9910  ./controls/g0_
 f9c99fc68a6ca6f97e6f410d4dee66bbdd8946b3a654b61cd3fe769a173a78ed  ./controls/g0_p67_seal.py
 192c28f4dd9aa8ea75134a58011b4c366672de88492b569ed0af819dbcc9d163  ./controls/g0_p68_seal.py
 33dc5c0ada5ce8b84c0fe563516492c7a74362e2bfcbb313e8d55b92117fe176  ./controls/g1_collapse.py
+65be0bc9819f26c7133670af01e543fcfa7e388e66dba368a15273ff6d301c68  ./controls/g1_d2_tangent_restriction.py
 b346e08b50db5454a0519e0aa8b5c80f99db4c40a16e006736f4bbc846f2e42d  ./controls/g1_d3_twin.py
 54287735ee6df323a42c7cc514bbe26477b2f6084d2525cb89232e8c1947f847  ./controls/g1_d5_assimilate.py
 b35c894fb4028ba6617bbfbe7ffcabd5ca310c5eff98b728b733b4beb5b7d12b  ./controls/g1_d5_covariance.py
@@ -906,13 +907,13 @@ ff87d2bcbd3efef668bc9563240e1bcc27072e466d39659dab1a2525950e46d9  ./crates/actin
 f511d47d3fd36c6df5ab8b0aad85b31b010d2add9113611022a0b78baf9b5db4  ./crates/actinv-core/src/r2s.rs
 0de7344850fbea048f2690a609d0f1fc8dd8205e8dedd3bc2684b157d99372a2  ./crates/actinv-core/src/radiological.rs
 0539da50e2eac494d0e0aacff9c7f1f5a254b098e5cba338da53633ee9a5113a  ./crates/actinv-core/src/reverse.rs
-9fccfee575f1ddfad229a7e7d225150f10f4e8aa776cc2e6e748850b9c558eb7  ./crates/actinv-core/src/run.rs
+6b52414899a62306ca6ed6b9c2b0f552657aef591b35486b43a62043d5295743  ./crates/actinv-core/src/run.rs
 0ebf3068ace5641afe5fa4034eca7c12a8914d3d7f3760606007fbceda93c21e  ./crates/actinv-core/src/shielding.rs
 f5d25dc6e3e471873e5fbc07c267269eb6da6d940587a6c36ca28635f1922e5f  ./crates/actinv-core/src/source_adapter.rs
 0ab2864aacdfb87a2522132df003c00388ce2cd0e49a445ed4c87f67c99f0fbc  ./crates/actinv-core/src/sparse.rs
-7ae5c4c8b2b3adcf75ec7a8b9457b276b06a8e79816e66be33c43c145b2df480  ./crates/actinv-core/src/spec.rs
-eaece838acf380190719c9157dfad1d1fd3538b7f8c62bacc1120c11550a3226  ./crates/actinv-core/src/study.rs
-fc680cbc0d3aeb479867c6c9ef86b7e33f6fb03642062172d7350c9c4606f8a5  ./crates/actinv-core/src/uncertainty.rs
+80cf042dbf1e2fc3aaf7ac57e464fd34b3c557179c73ee409dc9225a33305b28  ./crates/actinv-core/src/spec.rs
+420fad72374b8b991af977ff8ecfcd569d5592445482f48b7d9b8722ea42f59a  ./crates/actinv-core/src/study.rs
+5086cf7a466bdaccdbc090a262dfd3be2d7a499071e7216931317286586948f2  ./crates/actinv-core/src/uncertainty.rs
 3ed8bb1d468cc19b1fb12dfe17d64065e00ddbfa5f47936e2b6cf638a6cbb607  ./crates/actinv-core/src/waste.rs
 be9e39811dd496fc2622c5412beba3f5548f8153723a283f872815e652888d7f  ./crates/actinv-core/src/waste_bounds.rs
 de783f5d4eb301e8846839d9e54c9ba3da68824c1e85f7e020cef64bcace2f3c  ./crates/actinv-core/src/waste_composition.rs
@@ -1026,7 +1027,7 @@ b006d2efb4e280ebc93fcdbe27e0bc27dba4b82cccb82fa14b655f40cac21a8c  ./docs/RELEASE
 00f9febfdbaf33bcac7485964e206c958a9cfa92c5f73e98070788a04105fd0f  ./docs/RELEASE_NOTES_v1.2.1.md
 7adc25adea21fb02c54bdee2ed7d04054a952063aa44d9ac150c86675edbe21a  ./docs/RELEASE_NOTES_v1.3.1.md
 8e644c8f26e481106af627823f567a34a7d8d6cdd466eedd4b013b958020e6ed  ./docs/RELEASE_NOTES_v1.4.0.md
-8622b1a66d63723e3762f37a3cb043ccc581675e0c2b411e020e2d03bd99f866  ./docs/ROADMAP.md
+749decdcab1a89da3ec427d8706208cfdd5ef910c9b300073da066f0556394cd  ./docs/ROADMAP.md
 be98e3a2dd93bea898c74dd4151888e3449ad9688549a0937593559bd98e4725  ./docs/SPEC.md
 a4962ca919d0a8fbefcb4fa0920e9de0e1fb95bb7afdf7963c2289ee1940c938  ./docs/STUDY.md
 c64390f4fb68751f12bd94b66474a84fca2ed93d689a3a4ab24a784fcdd7fa88  ./docs/SUMMARY.md
@@ -1112,6 +1113,7 @@ d0a980eaa3928f2d3c65f1410ae0a0781c59aafce9adf3695d212f27bc475b6b  ./docs/images/
 ee09626af6c747dccb4630c53851469ba9fead0aea5414b3409e995bd0221eda  ./docs/maintainers/CI_DATA_RECOVERY.md
 ea83f46c2f23d8ad2550ccfbf2ab7ab5d5e3160afd3874b7830bea512f9213ff  ./docs/maintainers/DOCUMENTATION.md
 57508903af7b17826b47a27a59ee9fb5f78bb035ab2f710933c4d52ae9f3aaba  ./docs/maintainers/E2_AUDIT_PLAN.md
+4d2265352063405c42aeae75a9b705d7c305fb2b391429a8946faaebc0808af8  ./docs/maintainers/HANDOFF-lane2-tangent-restriction.md
 c6478bb6ee8983660b76737d77de339ea26ea40e9bd891193ac883229f6bd8e7  ./docs/maintainers/PREPARED_DATA.md
 60e9d796db46bd390f461da5007a62cee256502f5383a5d79272b57e877c80c3  ./docs/maintainers/ROADMAP_OPEN_ITEMS-2026-10-03.md
 4d316aacee158dbcc36daf4bd191d84ee7c511d471555ec3084115dabaeefd64  ./docs/maintainers/WASTE_RULE_SOURCE_REVIEW.md
@@ -4255,6 +4257,7 @@ d5f25075ef7aa14357faec9a5354687166736b0a9231e99c113ee372c9604eac  ./results/g0b_
 7ae5e54bb623dc664307941852991e86dca2d1877b3637b254e4296b2c82b25d  ./results/g0c_p103_runtime_controls.json
 e894e85e2e031bbc5a58a99f8b55a48335cd848d8a269b432b9894a3db6fee66  ./results/g0c_p103_runtime_controls_v1.json
 80a643c7e0d4e23ed8b0594ded18e82157d4ac6b2bde32ca4ad0bcc1ee10aea3  ./results/g1_collapse.json
+00098218881a35becdca726c504a13eb997c0f49e44b621f16e6ae8bb1a76abc  ./results/g1_d2_tangent_restriction.json
 c127ca953462f60e707ae832dc1551c4fc2661db4cda7392313e07be711b8cdb  ./results/g1_d3_twin.json
 563bc4769dfbfa964db42c81a0398821105b8531ddaab8fa7b6319974ae033cb  ./results/g1_d5_assimilate.json
 45dbcd83997e1c8ef805ebcc97e516a7b7b3e6fc3249b174ca8ee22b528d3703  ./results/g1_d5_covariance.json

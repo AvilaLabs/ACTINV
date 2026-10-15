@@ -123,6 +123,15 @@
 
 **Changed**
 
+- Study `first_order_comparison`: the internal first-order leg now solves tangents only for
+  covariance-covered cross-section rows with nonzero variance and contracts the covariance over its
+  nonzero entries. Uncovered and zero-variance parameters contribute exactly zero, so first-order
+  standard deviations are bitwise identical to the dense path (Fe gate 7/7,
+  `results/g1_d2_tangent_restriction.json`); the leg reports `tangents_integrated` and
+  `active_parameters`. Ordinary runs are unchanged. `ACTINV_DENSE_COMPARISON_TANGENTS=1` forces the
+  dense path. Restricted mode refuses `voi`, `design` and `isomer`, which index sensitivities
+  positionally. The U-235 end-to-end comparison remains unverified.
+
 - Workbench live sweep: the P70 flux-scaling shortcut is removed, so every slider position is
   solved, including positions that change only `spectrum.total`. Its optical-depth bound did not
   cover bulk burn-up or second-order production, and on TENDL-2025 it never certified at realistic

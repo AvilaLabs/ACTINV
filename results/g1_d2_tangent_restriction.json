@@ -1,0 +1,41 @@
+{
+ "pass": true,
+ "n": 7,
+ "checks": [
+  {
+   "name": "both runs complete",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "local_vs_nonlinear evaluated on both",
+   "pass": true,
+   "detail": "4 vs 4 comparisons"
+  },
+  {
+   "name": "comparison keys match",
+   "pass": true,
+   "detail": "4 shared"
+  },
+  {
+   "name": "restricted first_order_std == dense first_order_std (bitwise)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "name": "fe__fns_709__pulse_5min: tangents_integrated emitted",
+   "pass": true,
+   "detail": "lvn keys: ['active_parameters', 'comparisons', 'method', 'tangents_integrated', 'total_activity_approximation']"
+  },
+  {
+   "name": "fe__fns_709__pulse_5min: tangents_integrated < active_parameters",
+   "pass": true,
+   "detail": "989 vs 2208"
+  },
+  {
+   "name": "fe__fns_709__pulse_5min: dense emits no tangents_integrated",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

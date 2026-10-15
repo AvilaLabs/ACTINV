@@ -2583,3 +2583,9 @@ packages/encapsulation, measurement-supported scaling or additional
 jurisdictions. Waste is incomplete; unrelated roadmap work stays paused.
 See `docs/maintainers/CI_DATA_RECOVERY.md` and the dated open-items inventory
 for the restart boundary and remaining scope.
+- 2026-10-15 — **Lane 2 (covered-row-restricted tangents) committed.** The study first-order comparison solves
+  tangents only for covered, nonzero-variance MF=33 rows and contracts the covariance over nonzero pairs; the Fe
+  dense-vs-restricted gate passes 7/7 bitwise on the committed code, after merging with the P93/P97 flux channel (`results/g1_d2_tangent_restriction.json`). On
+  U-235 the restricted leg ran under the 6 GiB cap to `unc_emit` (19,649 of 37,057 tangents) but the end-to-end run
+  was stopped; the P43 fissile condition stays **open** pending that run (~50–70 min release). Adjoint-mode
+  sensitivity is the follow-up lane for fissile chains; it is not part of this change.
