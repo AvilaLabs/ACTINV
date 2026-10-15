@@ -1150,7 +1150,7 @@ mod tests {
             published.reverse();
             assert_eq!(published[0], first, "{name} top");
             assert_eq!(published[1], second, "{name} second");
-            assert_eq!(published[(n + 1) / 2], middle, "{name} middle");
+            assert_eq!(published[n.div_ceil(2)], middle, "{name} middle");
             assert_eq!(published[n - 1], penultimate, "{name} penultimate");
             assert_eq!(published[n], last, "{name} bottom");
         }

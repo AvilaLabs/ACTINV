@@ -2339,6 +2339,7 @@ mod duration_tests {
         // The neutron grids reject other projectiles; the CCFE-162 rule is unchanged.
         let mut value = minimal_spec();
         value["projectile"] = serde_json::json!("proton");
+        value["options"]["temperature_K"] = serde_json::json!(0.0);
         value["spectrum"] =
             serde_json::json!({"structure": "fispact-1102", "flux_per_group": vec![1.0; 1102]});
         let error = Spec::from_json(&value.to_string()).unwrap_err();
